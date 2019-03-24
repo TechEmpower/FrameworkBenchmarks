@@ -35,7 +35,6 @@ docker run \
   --results-name "$TFB_RUN_NAME" \
   --results-environment "$TFB_ENVIRONMENT" \
   --results-upload-uri "$TFB_UPLOAD_URI" \
-  --benchmark-env "$TFB_ENVIRONMENT" \
   --quiet
 
 echo "zipping the results"

@@ -4,7 +4,7 @@
 
 	<groupId>com.ociweb.gl.benchmark</groupId>
 	<artifactId>benchmark-test</artifactId>
-	<version>1.0.33</version> 
+	<version>1.0.35</version> 
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -65,8 +65,8 @@ public class FrameworkTest implements GreenApp {
     	this(System.getProperty("host","0.0.0.0"), 
     		 8080,    	//default port for test 
     		 c,         //pipes per track
-    		 c*4,       //(router to module)
-    		 1<<11,     //default total size of network buffer used by blocks 
+    		 c*16,       //(router to module)
+    		 1<<12,     //default total size of network buffer used by blocks 
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
     		 "hello_world",
@@ -96,13 +96,13 @@ public class FrameworkTest implements GreenApp {
     	this.telemetryPort = telemetryPort;
     	this.pipelineBits = 15;//max concurrent in flight database requests 1<<pipelineBits
     	            
-    	this.dbCallMaxResponseCount = c*2;//1<<6;
-    	this.jsonMaxResponseCount = c*2;//1<<14;
+    	this.dbCallMaxResponseCount = c;
+    	this.jsonMaxResponseCount = c*32;
     	
     	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
     	this.jsonMaxResponseSize = 1<<8;
 
-    	this.maxQueueOut = 4;   	
+    	this.maxQueueOut = 8;   	
     	this.maxConnectionBits = 14; //16K connections, for test plus overhead
     	
     	this.maxRequestSize = 1<<9;
@@ -147,22 +147,7 @@ public class FrameworkTest implements GreenApp {
 	    		}
 	    	});
 			pool.close();
-	    	
-//	    	pool.preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(1), r -> {
-//				if (r.succeeded()) {
-//
-//					PgIterator resultSet = r.result().iterator();
-//					Tuple row = resultSet.next();			        
-//					System.out.println("successfull query");
-//
-//				} else {
-//					System.out.println("fail: "+r.cause().getLocalizedMessage());
-//					 
-//				}		
-//				
-//			});	
-	    	
-	    	
+
     	} catch (Throwable t) {
     		//t.printStackTrace();
     		System.out.println("No database in use");
@@ -174,7 +159,7 @@ public class FrameworkTest implements GreenApp {
 	@Override
     public void declareConfiguration(GreenFramework framework) {
 		
-		framework.setDefaultRate(60_000L);			
+		framework.setDefaultRate(64_000L);			
 	
 		//for 14 cores this is expected to use less than 16G, must use next largest prime to ensure smaller groups are not multiples.
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
@@ -182,9 +167,10 @@ public class FrameworkTest implements GreenApp {
     			 .setMaxConnectionBits(maxConnectionBits)
     			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)                //16K   14 bits
     	
-    			 //TODO: not sure this is optimal..
-    			 .setConcurrentChannelsPerEncryptUnit(Math.max(1,concurrentWritesPerChannel/4))  //4K    
-    		//	 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
+    			 //NOTE: not sure this is optimal yet ...
+    			// .setConcurrentChannelsPerEncryptUnit(Math.max(1,concurrentWritesPerChannel/2))  //8K    
+    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
+    			 
     			 .disableEPoll()
  						 
     			 .setMaxQueueIn(queueLengthOfPendingRequests)
@@ -243,14 +229,14 @@ public class FrameworkTest implements GreenApp {
 
 	public void parallelBehavior(GreenRuntime runtime) {
 
-
 		SimpleRest restTest = new SimpleRest(runtime, jsonMaxResponseCount, jsonMaxResponseSize);		
 		runtime.registerListener("Simple", restTest)
 		       .includeRoutes(Struct.PLAINTEXT_ROUTE, restTest::plainRestRequest)
-		       .includeRoutes(Struct.JSON_ROUTE, restTest::jsonRestRequest);
-		 
+		       .includeRoutes(Struct.JSON_ROUTE, restTest::jsonRestRequest);		 
 
-		DBRest dbRestInstance = new DBRest(runtime, options, pipelineBits, dbCallMaxResponseCount, dbCallMaxResponseSize);
+		DBRest dbRestInstance = new DBRest(runtime, options, pipelineBits, 
+				                           dbCallMaxResponseCount, dbCallMaxResponseSize);		
+		
 		runtime.registerListener("DBReadWrite", dbRestInstance)
 				.includeRoutes(Struct.DB_SINGLE_ROUTE, dbRestInstance::singleRestRequest)
 				.includeRoutes(Struct.DB_MULTI_ROUTE_TEXT, dbRestInstance::multiRestRequest)		
