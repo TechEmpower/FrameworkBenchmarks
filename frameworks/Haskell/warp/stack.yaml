@@ -3,6 +3,7 @@ resolver: lts-13.13
 packages:
 - ./warp-hasql
 - ./warp-postgres-wire
+- ./warp-mysql-haskell
 
 extra-deps:
 - socket-0.8.2.0
