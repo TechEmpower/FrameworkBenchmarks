@@ -37,6 +37,11 @@ func InitDB(dbDriver, dbConnectionString string, maxConnectionCount int) (DB, er
 		if err != nil {
 			return nil, fmt.Errorf("Error opening postgresql database with pgx driver: %s", err)
 		}
+	} else if dbDriver == "mongo" {
+		db, err = NewMongoDB(dbConnectionString, maxConnectionCount)
+		if err != nil {
+			return nil, fmt.Errorf("Error opening postgresql database with official mongo driver: %s", err)
+		}
 	} else if dbDriver == "none" {
 		db = nil
 	} else {
