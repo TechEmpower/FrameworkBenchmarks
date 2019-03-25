@@ -153,11 +153,11 @@ class Results:
                             if m != None:
                                 rawData['5xx'] = int(m.group(1))
                         if "STARTTIME" in line:
-                            m = re.search("[0-9]+\.*[0-9]*", line)
-                            rawData["startTime"] = float(m.group(0))
+                            m = re.search("[0-9]+", line)
+                            rawData["startTime"] = int(m.group(0))
                         if "ENDTIME" in line:
-                            m = re.search("[0-9]+\.*[0-9]*", line)
-                            rawData["endTime"] = float(m.group(0))
+                            m = re.search("[0-9]+", line)
+                            rawData["endTime"] = int(m.group(0))
                             test_stats = self.__parse_stats(
                                 framework_test, test_type,
                                 rawData["startTime"], rawData["endTime"], 1)

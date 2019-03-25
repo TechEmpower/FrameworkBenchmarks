@@ -28,10 +28,8 @@ echo " wrk -H 'Host: $server_host' -H 'Accept: $accept' -H 'Connection: keep-ali
 echo "---------------------------------------------------------"
 echo ""
 STARTTIME=$(date +"%s")
-/usr/bin/time -o elapsed --format="STARTTIME 0\nENDTIME %e" wrk -H "Host: $server_host" -H "Accept: $accept" -H "Connection: keep-alive" --latency -d $duration -c $max_concurrency --timeout 8 -t $max_threads "$url$c"
-ENDTIME=$(cat elapsed)
-ENDTIME=$(echo "$ENDTIME + $STARTTIME" | bc)
+wrk -H "Host: $server_host" -H "Accept: $accept" -H "Connection: keep-alive" --latency -d $duration -c $max_concurrency --timeout 8 -t $max_threads "$url$c"
 echo "STARTTIME $STARTTIME"
-echo "ENDTIME $ENDTIME"
+echo "ENDTIME $(date +"%s")"
 sleep 2
 done
