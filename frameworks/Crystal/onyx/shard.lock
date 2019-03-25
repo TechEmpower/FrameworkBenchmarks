@@ -12,25 +12,29 @@ shards:
     github: gdotdesign/cr-dotenv
     version: 0.1.0
 
+  exception_page:
+    github: crystal-loot/exception_page
+    version: 0.1.2
+
   http-params-serializable:
     github: vladfaust/http-params-serializable
     version: 0.3.0
 
+  kilt:
+    github: jeromegn/kilt
+    version: 0.4.0
+
   onyx:
     github: onyxframework/onyx
-    version: 0.1.2
+    version: 0.3.1
 
   onyx-http:
     github: onyxframework/http
-    version: 0.1.1
-
-  onyx-rest:
-    github: onyxframework/rest
-    version: 0.6.3
+    version: 0.7.1
 
   onyx-sql:
     github: onyxframework/sql
-    version: 0.6.2
+    version: 0.7.1
 
   pg:
     github: will/crystal-pg

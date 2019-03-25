@@ -4,6 +4,9 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeOperators         #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE UndecidableInstances  #-}
+
 module ServantBench (run) where
 
 import           Control.Exception          (bracket)
@@ -11,7 +14,7 @@ import           Control.Monad              (replicateM)
 import           Control.Monad.IO.Class     (liftIO)
 import           Data.Aeson                 hiding (json)
 import qualified Data.ByteString            as BS
-import           Data.ByteString.Lazy
+import           Data.ByteString.Lazy       (ByteString)
 import qualified Data.ByteString.Lazy.Char8 as LBSC
 import           Data.Functor.Contravariant (contramap)
 import           Data.Either                (fromRight, partitionEithers)
@@ -20,6 +23,7 @@ import           Data.List                  (sortOn)
 import           Data.Maybe                 (maybe)
 import           Data.Monoid                ((<>))
 import qualified Data.Text                  as Text
+import           Data.Text                  (Text)
 import           GHC.Exts                   (IsList (fromList))
 import           GHC.Generics               (Generic)
 import qualified Hasql.Decoders             as HasqlDec
@@ -27,19 +31,20 @@ import qualified Hasql.Encoders             as HasqlEnc
 import           Hasql.Pool                 (Pool, acquire, release, use)
 import qualified Hasql.Statement            as HasqlStatement
 import           Hasql.Session              (statement)
-import           Lucid
+import qualified Html
+import           Html ((#), type (#), type (>))
 import qualified Network.Wai.Handler.Warp   as Warp
-import           Network.HTTP.Media         ((//))
+import           Network.HTTP.Media         ((//), (/:))
 import           Servant
-import           Servant.HTML.Lucid         (HTML)
 import           System.Random.MWC          (GenIO, createSystemRandom,
                                              uniformR)
+import qualified Data.List.NonEmpty as NE
 
 type API =
        "json" :> Get '[JSON] Value
   :<|> "db" :> Get '[JSON] World
   :<|> "queries" :> QueryParam "queries" QueryId :> Get '[JSON] [World]
-  :<|> "fortune" :> Get '[HTML] (Html ())
+  :<|> "fortune" :> Get '[HTML] FortunesHtml
   :<|> "updates" :> QueryParam "queries" QueryId :> Get '[JSON] [World]
   :<|> "plaintext" :> Get '[Plain] ByteString
 
@@ -57,6 +62,7 @@ server pool gen =
 
 run :: Warp.Port -> BS.ByteString -> IO ()
 run port dbSettings = do
+  putStrLn "Launching servant hasql"
   gen <- createSystemRandom
   bracket (acquire settings) release $ \pool ->
     Warp.run port $ serve api $ server pool gen
@@ -99,6 +105,17 @@ instance Accept Plain where contentType _ = "text" // "plain"
 instance MimeRender Plain ByteString where
   mimeRender _ = id
   {-# INLINE mimeRender #-}
+  
+-- * HTML
+-- TODO: package the following block of code into a library akin to 'servant-lucid'
+
+data HTML
+instance Accept HTML where
+    contentTypes _ =
+      "text" // "html" /: ("charset", "utf-8") NE.:|
+      ["text" // "html"]
+instance Html.Document a => MimeRender HTML a where
+    mimeRender _ = Html.renderByteString
 
 ------------------------------------------------------------------------------
 
@@ -148,6 +165,30 @@ multipleDb pool gen mQueryId = do
 
 -- * Test 4: Fortunes
 
+type FortunesHtml
+  = (('Html.DOCTYPE Html.> ())
+  # ('Html.Html
+    > (('Html.Head > ('Html.Title > Html.Raw Text))
+      # ('Html.Body
+        > ('Html.Table
+          > (
+              ('Html.Tr
+              > ( ('Html.Th > Html.Raw Text)
+                # ('Html.Th > Html.Raw Text)
+                )
+              )
+            # ['Html.Tr
+              > ( ('Html.Td > Int)
+                # ('Html.Td > Text)
+                )
+              ]
+            )
+          )
+        )
+      )
+    )
+  )
+
 selectFortunes :: HasqlStatement.Statement () [Fortune]
 selectFortunes = HasqlStatement.Statement q encoder decoder True
   where
@@ -157,23 +198,25 @@ selectFortunes = HasqlStatement.Statement q encoder decoder True
    decoder = HasqlDec.rowList $ Fortune <$> intValDec <*> HasqlDec.column HasqlDec.text
 {-# INLINE selectFortunes #-}
 
-fortunes :: Pool -> Handler (Html ())
+fortunes :: Pool -> Handler FortunesHtml
 fortunes pool = do
   r <- liftIO $ use pool (statement () selectFortunes)
   case r of
     Left e -> throwError err500 { errBody = LBSC.pack . show $ e }
     Right fs -> return $ do
       let new = Fortune 0 "Additional fortune added at request time."
-      doctypehtml_ $ do
-        head_ $ title_ "Fortunes"
-        body_ $ do
-          table_ $ do
-            tr_ $ do
-              th_ "id"
-              th_ "message"
-            mapM_ (\f -> tr_ $ do
-              td_ (toHtml . show $ fId f)
-              td_ (toHtml $ fMessage f)) (sortOn fMessage (new : fs))
+      let header = Html.tr_ $ Html.th_ (Html.Raw "id") # Html.th_ (Html.Raw "message")
+      let mkRow f = Html.tr_ $ Html.td_ (fromIntegral $ fId f) # Html.td_ (fMessage f)
+      let rows = fmap mkRow $ sortOn fMessage (new : fs)
+      Html.doctype_ #
+        Html.html_ (
+          Html.head_ (
+            Html.title_ (Html.Raw "Fortunes")
+          ) #
+          Html.body_ ( Html.table_ $
+            header # rows
+          )
+        )
 {-# INLINE fortunes #-}
 
 

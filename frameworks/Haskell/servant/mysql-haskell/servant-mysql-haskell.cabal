@@ -21,8 +21,7 @@ executable servant-mysql-haskell
       base >= 4.7 && < 5
     , servant >= 0.7
     , servant-server >= 0.7
-    , servant-lucid >= 0.7
-    , lucid
+    , type-of-html
     , aeson >= 0.11
     , resource-pool
     , mysql-haskell
