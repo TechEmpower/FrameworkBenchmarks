@@ -16,6 +16,6 @@ libte_benchmark_la_SOURCES = ../TeBkFortune.cpp \
 				../TeBkWorld.cpp
 
 libte_benchmark_la_LDFLAGS = -no-undefined 
-libte_benchmark_la_LIBADD = -L"${fprefix}/lib" -lffead_common -lffead_framework
+libte_benchmark_la_LIBADD = -L"${fprefix}/lib" -lffead-modules -lffead-framework
 
 #dist_noinst_SCRIPTS = autogen.sh

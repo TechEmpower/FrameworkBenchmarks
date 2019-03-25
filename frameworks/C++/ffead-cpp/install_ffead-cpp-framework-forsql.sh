@@ -65,6 +65,10 @@ cp resources/sample-odbc.ini ${IROOT}/odbc.ini
 
 cd ${IROOT}/ffead-cpp-src/
 
+cd ${IROOT}/ffead-cpp-src/
+#Build for sql now
+cp -f web/te-benchmark/sql-src/TeBkWorldsql.h web/te-benchmark/include/TeBkWorld.h
+cp -f web/te-benchmark/sql-src/TeBkWorldsql.cpp web/te-benchmark/src/TeBkWorld.cpp
 make install -j4
 cd ffead-cpp-3.0-bin
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
