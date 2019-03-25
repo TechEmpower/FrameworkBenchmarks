@@ -38,7 +38,6 @@ public class VoovanTFB {
 		webServer.get("/plaintext", new HttpRouter() {
 			public void process(HttpRequest req, HttpResponse resp) throws Exception {
 				resp.header().put(HttpStatic.CONTENT_TYPE_STRING, "text/plain");
-				resp.header().remove(HttpStatic.CONNECTION_STRING);
 				resp.write(HELLO_WORLD);
 			}
 		});
