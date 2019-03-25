@@ -28,10 +28,8 @@ echo " wrk -H 'Host: $server_host' -H 'Accept: $accept' -H 'Connection: keep-ali
 echo "---------------------------------------------------------"
 echo ""
 STARTTIME=$(date +"%s")
-/usr/bin/time -o elapsed --format="%e" wrk -H "Host: $server_host" -H "Accept: $accept" -H "Connection: keep-alive" --latency -d $duration -c $c --timeout 8 -t "$(($c>$max_threads?$max_threads:$c))" $url -s pipeline.lua -- $pipeline
-ENDTIME=$(cat elapsed)
-ENDTIME=$(echo "$ENDTIME + $STARTTIME" | bc)
+wrk -H "Host: $server_host" -H "Accept: $accept" -H "Connection: keep-alive" --latency -d $duration -c $c --timeout 8 -t "$(($c>$max_threads?$max_threads:$c))" $url -s pipeline.lua -- $pipeline
 echo "STARTTIME $STARTTIME"
-echo "ENDTIME $ENDTIME"
+echo "ENDTIME $(date +"%s")"
 sleep 2
 done
