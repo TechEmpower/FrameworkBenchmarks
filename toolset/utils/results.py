@@ -1,5 +1,3 @@
-from toolset.utils.output_helper import log
-
 import os
 import subprocess
 import uuid
@@ -10,7 +8,6 @@ import threading
 import re
 import math
 import csv
-import traceback
 from datetime import datetime
 
 # Cross-platform colored text
@@ -23,6 +20,7 @@ class Results:
         Constructor
         '''
         self.benchmarker = benchmarker
+        self.log = benchmarker.log
         self.config = benchmarker.config
         self.directory = os.path.join(self.config.results_root,
                                       self.config.timestamp)
@@ -207,7 +205,7 @@ class Results:
                     headers={'Content-Type': 'application/json'},
                     data=json.dumps(self.__to_jsonable(), indent=2))
             except Exception:
-                log("Error uploading results.json")
+                self.log("Error uploading results.json")
 
     def load(self):
         '''
@@ -284,12 +282,12 @@ class Results:
             # Normally you don't have to use Fore.BLUE before each line, but
             # Travis-CI seems to reset color codes on newline (see travis-ci/travis-ci#2692)
             # or stream flush, so we have to ensure that the color code is printed repeatedly
-            log("Verification Summary",
+            self.log("Verification Summary",
                 border='=',
                 border_bottom='-',
                 color=Fore.CYAN)
             for test in self.benchmarker.tests:
-                log(Fore.CYAN + "| {!s}".format(test.name))
+                self.log(Fore.CYAN + "| {!s}".format(test.name))
                 if test.name in self.verify.keys():
                     for test_type, result in self.verify[
                             test.name].iteritems():
@@ -299,14 +297,14 @@ class Results:
                             color = Fore.YELLOW
                         else:
                             color = Fore.RED
-                        log(Fore.CYAN + "|       " + test_type.ljust(13) +
+                        self.log(Fore.CYAN + "|       " + test_type.ljust(13) +
                             ' : ' + color + result.upper())
                 else:
-                    log(Fore.CYAN + "|      " + Fore.RED +
+                    self.log(Fore.CYAN + "|      " + Fore.RED +
                         "NO RESULTS (Did framework launch?)")
-            log('', border='=', border_bottom='', color=Fore.CYAN)
+            self.log('', border='=', border_bottom='', color=Fore.CYAN)
 
-        log("Results are saved in " + self.directory)
+        self.log("Results are saved in " + self.directory)
 
     #############################################################################
     # PRIVATE FUNCTIONS
@@ -343,7 +341,7 @@ class Results:
             with open(self.file, 'w') as f:
                 f.write(json.dumps(self.__to_jsonable(), indent=2))
         except IOError:
-            log("Error writing results.json")
+            self.log("Error writing results.json")
 
     def __count_sloc(self):
         '''
@@ -364,15 +362,15 @@ class Results:
             # one file listed.
             command = "cloc --yaml --follow-links . | grep code | tail -1 | cut -d: -f 2"
 
-            log("Running \"%s\" (cwd=%s)" % (command, wd))
+            self.log("Running \"%s\" (cwd=%s)" % (command, wd))
             try:
                 line_count = int(subprocess.check_output(command, cwd=wd, shell=True))
             except (subprocess.CalledProcessError, ValueError) as e:
-                log("Unable to count lines of code for %s due to error '%s'" %
+                self.log("Unable to count lines of code for %s due to error '%s'" %
                     (framework, e))
                 continue
 
-            log("Counted %s lines of code" % line_count)
+            self.log("Counted %s lines of code" % line_count)
             framework_to_count[framework] = line_count
 
         self.rawData['slocCounts'] = framework_to_count

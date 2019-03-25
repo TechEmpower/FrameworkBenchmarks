@@ -4,12 +4,11 @@ import os
 from HTMLParser import HTMLParser
 from difflib import unified_diff
 
-from toolset.utils.output_helper import log
-
 
 class FortuneHTMLParser(HTMLParser):
-    def __init__(self):
+    def __init__(self, config):
         HTMLParser.__init__(self)
+        self.log = config.log
         self.body = []
 
     valid_fortune = '''<!doctype html><html>
@@ -185,5 +184,5 @@ class FortuneHTMLParser(HTMLParser):
                 headers_left -= 1
                 if headers_left <= 0:
                     output += os.linesep
-            log(output, prefix="%s: " % name)
+            self.log(output, prefix="%s: " % name)
         return (same, diff_lines)

@@ -1,7 +1,7 @@
-FROM buildpack-deps:xenial
+FROM buildpack-deps:bionic
 
 ENV IROOT=/installs
-ENV FFEAD_CPP_PATH=${IROOT}/ffead-cpp-2.0
+ENV FFEAD_CPP_PATH=${IROOT}/ffead-cpp-3.0
 ENV PATH=${FFEAD_CPP_PATH}:${PATH}
 
 RUN mkdir /installs
@@ -16,7 +16,7 @@ RUN ./install_ffead-cpp-dependencies.sh
 
 WORKDIR /
 
-RUN ./install_ffead-cpp-framework.sh
+RUN ./install_ffead-cpp-framework-forsql.sh
 
 WORKDIR /
 

@@ -1,5 +1,4 @@
 import copy
-import sys
 import json
 import requests
 import MySQLdb
@@ -8,7 +7,6 @@ import pymongo
 import traceback
 
 from colorama import Fore
-from toolset.utils.output_helper import log
 
 
 class FrameworkTestType:
@@ -29,6 +27,7 @@ class FrameworkTestType:
                  accept_header=None,
                  args=[]):
         self.config = config
+        self.log = config.log
         self.name = name
         self.requires_db = requires_db
         self.args = args
@@ -74,7 +73,7 @@ class FrameworkTestType:
         Downloads a URL and returns the HTTP response headers
         and body content as a tuple
         '''
-        log("Accessing URL {!s}: ".format(url), color=Fore.CYAN)
+        self.log("Accessing URL {!s}: ".format(url), color=Fore.CYAN)
 
         headers = {'Accept': self.accept_header}
         r = requests.get(url, timeout=15, headers=headers)
@@ -84,8 +83,8 @@ class FrameworkTestType:
         return self.headers, self.body
 
     def output_headers_and_body(self):
-        log(str(self.headers))
-        log(self.body)
+        self.log(str(self.headers))
+        self.log(self.body)
 
     def verify(self, base_url):
         '''
@@ -161,9 +160,9 @@ class FrameworkTestType:
                 db.close()
             except Exception:
                 tb = traceback.format_exc()
-                log("ERROR: Unable to load current MySQL World table.",
+                self.log("ERROR: Unable to load current MySQL World table.",
                     color=Fore.RED)
-                log(tb)
+                self.log(tb)
         elif database_name == "postgres":
             try:
                 db = psycopg2.connect(
@@ -183,9 +182,9 @@ class FrameworkTestType:
                 db.close()
             except Exception:
                 tb = traceback.format_exc()
-                log("ERROR: Unable to load current Postgres World table.",
+                self.log("ERROR: Unable to load current Postgres World table.",
                     color=Fore.RED)
-                log(tb)
+                self.log(tb)
         elif database_name == "mongodb":
             try:
                 worlds_json = {}
@@ -205,9 +204,9 @@ class FrameworkTestType:
                 connection.close()
             except Exception:
                 tb = traceback.format_exc()
-                log("ERROR: Unable to load current MongoDB World table.",
+                self.log("ERROR: Unable to load current MongoDB World table.",
                     color=Fore.RED)
-                log(tb)
+                self.log(tb)
         else:
             raise ValueError(
                 "Database: {!s} does not exist".format(database_name))

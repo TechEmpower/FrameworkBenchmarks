@@ -1,4 +1,4 @@
-from toolset.utils.output_helper import log, FNULL
+from toolset.utils.output_helper import FNULL
 from toolset.utils.docker_helper import DockerHelper
 from toolset.utils.time_logger import TimeLogger
 from toolset.utils.metadata import Metadata
@@ -14,6 +14,7 @@ import shlex
 from pprint import pprint
 
 from colorama import Fore
+import numbers
 
 
 class Benchmarker:
@@ -22,7 +23,8 @@ class Benchmarker:
         Initialize the benchmarker.
         '''
         self.config = config
-        self.time_logger = TimeLogger()
+        self.log = config.log
+        self.time_logger = TimeLogger(config)
         self.metadata = Metadata(self)
         self.audit = Audit(self)
 
@@ -48,7 +50,7 @@ class Benchmarker:
 
         any_failed = False
         # Run tests
-        log("Running Tests...", border='=')
+        self.log("Running Tests...", border='=')
 
         # build wrk and all databases needed for current run
         self.docker_helper.build_wrk()
@@ -57,7 +59,7 @@ class Benchmarker:
         with open(os.path.join(self.results.directory, 'benchmark.log'),
                   'w') as benchmark_log:
             for test in self.tests:
-                log("Running Test: %s" % test.name, border='-')
+                self.log("Running Test: %s" % test.name, border='-')
                 with self.config.quiet_out.enable():
                     if not self.__run_test(test, benchmark_log):
                         any_failed = True
@@ -66,7 +68,7 @@ class Benchmarker:
 
         # Parse results
         if self.config.mode == "benchmark":
-            log("Parsing Results ...", border='=')
+            self.log("Parsing Results ...", border='=')
             self.results.parse(self.tests)
 
         self.results.set_completion_time()
@@ -76,7 +78,7 @@ class Benchmarker:
         return any_failed
 
     def stop(self, signal=None, frame=None):
-        log("Shutting down (may take a moment)")
+        self.log("Shutting down (may take a moment)")
         self.docker_helper.stop()
         sys.exit(0)
 
@@ -86,7 +88,7 @@ class Benchmarker:
 
     def __exit_test(self, success, prefix, file, message=None):
         if message:
-            log(message,
+            self.log(message,
                 prefix=prefix,
                 file=file,
                 color=Fore.RED if success else '')
@@ -154,6 +156,9 @@ class Benchmarker:
                     break
                 time.sleep(1)
 
+            if hasattr(test, 'wait_before_sending_requests') and isinstance(test.wait_before_sending_requests, numbers.Integral) and test.wait_before_sending_requests > 0:
+                time.sleep(test.wait_before_sending_requests)
+
             if not accepting_requests:
                 self.docker_helper.stop([container, database_container])
                 message = "ERROR: Framework is not accepting requests from client machine"
@@ -168,7 +173,7 @@ class Benchmarker:
 
             # Debug mode blocks execution here until ctrl+c
             if self.config.mode == "debug":
-                log("Entering debug mode. Server has started. CTRL-c to stop.",
+                self.log("Entering debug mode. Server has started. CTRL-c to stop.",
                     prefix=log_prefix,
                     file=benchmark_log,
                     color=Fore.YELLOW)
@@ -176,14 +181,14 @@ class Benchmarker:
                     time.sleep(1)
 
             # Verify URLs and audit
-            log("Verifying framework URLs", prefix=log_prefix)
+            self.log("Verifying framework URLs", prefix=log_prefix)
             self.time_logger.mark_verify_start()
             passed_verify = test.verify_urls()
             self.audit.audit_test_dir(test.directory)
 
             # Benchmark this test
             if self.config.mode == "benchmark":
-                log("Benchmarking %s" % test.name,
+                self.log("Benchmarking %s" % test.name,
                     file=benchmark_log,
                     border='-')
                 self.time_logger.mark_benchmarking_start()
@@ -220,7 +225,7 @@ class Benchmarker:
             tb = traceback.format_exc()
             self.results.write_intermediate(test.name,
                                             "error during test: " + str(e))
-            log(tb, prefix=log_prefix, file=benchmark_log)
+            self.log(tb, prefix=log_prefix, file=benchmark_log)
             return self.__exit_test(
                 success=False,
                 message="Error during test: %s" % test.name,
@@ -236,7 +241,7 @@ class Benchmarker:
         '''
 
         def benchmark_type(test_type):
-            log("BENCHMARKING %s ... " % test_type.upper(), file=benchmark_log)
+            self.log("BENCHMARKING %s ... " % test_type.upper(), file=benchmark_log)
 
             test = framework_test.runTests[test_type]
             raw_file = self.results.get_raw_file(framework_test.name,
@@ -264,13 +269,13 @@ class Benchmarker:
                 self.__end_logging()
 
             results = self.results.parse_test(framework_test, test_type)
-            log("Benchmark results:", file=benchmark_log)
+            self.log("Benchmark results:", file=benchmark_log)
             # TODO move into log somehow
             pprint(results)
 
             self.results.report_benchmark_results(framework_test, test_type,
                                                   results['results'])
-            log("Complete", file=benchmark_log)
+            self.log("Complete", file=benchmark_log)
 
         for test_type in framework_test.runTests:
             benchmark_type(test_type)
@@ -298,3 +303,4 @@ class Benchmarker:
         '''
         self.subprocess_handle.terminate()
         self.subprocess_handle.communicate()
+
