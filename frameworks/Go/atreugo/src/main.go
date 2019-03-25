@@ -27,8 +27,8 @@ func main() {
 	bindHost := flag.String("bind", ":8080", "set bind host")
 	prefork := flag.Bool("prefork", false, "use prefork")
 	child := flag.Bool("child", false, "is child proc")
-	jsonEncoder := flag.String("json_encoder", "none", "json encoder: none|easyjson|gojay|sjson")
-	dbDriver := flag.String("db", "none", "db connection driver [values: pgx || none]")
+	jsonEncoder := flag.String("json_encoder", "none", "json encoder: none or easyjson or gojay or sjson")
+	dbDriver := flag.String("db", "none", "db connection driver [values: none or pgx or mongo]")
 	dbConnectionString := flag.String("db_connection_string",
 		"host=tfb-database user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world sslmode=disable",
 		"db connection string")
