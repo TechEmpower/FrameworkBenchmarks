@@ -1,5 +1,5 @@
 {
-  "framework": "servant",
+  "framework": "warp",
   "tests": [{
     "default": {
       "json_url": "/json",
@@ -12,17 +12,40 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "Postgres",
-      "framework": "Servant",
+      "framework": "Warp",
       "language": "Haskell",
-      "flavor": "GHC863",
+      "flavor": "GHC683",
       "orm": "Raw",
       "platform": "Wai",
-      "webserver": "Warp",
+      "webserver": "Wai",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "servant+hasql",
+      "display_name": "Warp+Postgres-wire",
+      "notes": "Pure haskell.",
+      "dockerfile": "warp.dockerfile"
+    },
+    "hasql": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortune",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 7041,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "Warp",
+      "language": "Haskell",
+      "flavor": "GHC683",
+      "orm": "Raw",
+      "platform": "Wai",
+      "webserver": "Wai",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Warp+Hasql",
       "notes": "Uses libpq system dependency.",
-      "dockerfile": "servant.dockerfile"
+      "dockerfile": "warp.dockerfile"
     },
     "mysql-haskell": {
       "json_url": "/json",
@@ -35,17 +58,17 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MySQL",
-      "framework": "Servant",
+      "framework": "Warp",
       "language": "Haskell",
-      "flavor": "GHC863",
+      "flavor": "GHC683",
       "orm": "Raw",
       "platform": "Wai",
-      "webserver": "Warp",
+      "webserver": "Wai",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "servant+mysql-haskell",
+      "display_name": "Warp+mysql-haskell",
       "notes": "Pure Haskell.",
-      "dockerfile": "servant.dockerfile"
+      "dockerfile": "warp.dockerfile"
     }
   }]
 }
