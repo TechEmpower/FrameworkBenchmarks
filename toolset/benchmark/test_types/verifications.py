@@ -3,7 +3,7 @@ import re
 import traceback
 
 from datetime import datetime
-from toolset.utils.output_helper import log
+from toolset.utils.output_helper import Logger
 from time import sleep
 
 def basic_body_verification(body, url, is_json_check=True):
@@ -71,7 +71,6 @@ def verify_headers(request_headers_and_body, headers, url, should_be='json'):
     # Make sure that the date object isn't cached
     sleep(3)
     second_headers, body2 = request_headers_and_body(url)
-    second_date = second_headers.get('Date')
 
     date2 = second_headers.get('Date')
     if date == date2:
@@ -285,7 +284,7 @@ def verify_updates(old_worlds, new_worlds, updates_expected, url):
                         successful_updates += 1
             except Exception:
                 tb = traceback.format_exc()
-                log(tb)
+                Logger.log(tb, squash=False)
         n += 1
 
     if successful_updates == 0:

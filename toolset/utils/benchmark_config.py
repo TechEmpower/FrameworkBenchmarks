@@ -1,5 +1,5 @@
 from toolset.benchmark.test_types import *
-from toolset.utils.output_helper import QuietOutputStream
+from toolset.utils.output_helper import Logger, QuietOutputStream
 
 import os
 import time
@@ -10,6 +10,8 @@ class BenchmarkConfig:
         '''
         Configures this BenchmarkConfig given the arguments provided.
         '''
+
+        self.log = Logger().log
 
         # Map type strings to their objects
         types = dict()
