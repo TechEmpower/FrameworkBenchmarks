@@ -96,25 +96,29 @@ func (m Mongo) UpdateWorlds(selectedWorlds []World) error {
 func (m Mongo) GetFortunes() ([]templates.Fortune, error) {
 	fortunes := make([]templates.Fortune, 0, 16)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 
-	cur, err := m.fortunes.Find(ctx, bson.D{})
+	cur, err := m.fortunes.Find(ctx, bson.M{})
 	if err != nil {
-		return fortunes, nil
+		return fortunes, err
 	}
 	defer cur.Close(ctx)
 
 	var fortune templates.Fortune
 	for cur.Next(context.Background()) {
 		err = cur.Decode(&fortune)
+		log.Println(fortune)
 		if err != nil {
-			return nil, err
+			return fortunes, err
 		}
 		fortunes = append(fortunes, fortune)
 	}
+
+	log.Println(fortunes)
+
 	if err := cur.Err(); err != nil {
-		return nil, err
+		return fortunes, err
 	}
 
 	return fortunes, nil
@@ -127,9 +131,9 @@ func (m Mongo) GetFortunesPool() ([]templates.Fortune, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	cur, err := m.fortunes.Find(ctx, bson.D{})
+	cur, err := m.fortunes.Find(ctx, bson.M{})
 	if err != nil {
-		return fortunes, nil
+		return fortunes, err
 	}
 	defer cur.Close(ctx)
 
@@ -137,12 +141,12 @@ func (m Mongo) GetFortunesPool() ([]templates.Fortune, error) {
 	for cur.Next(context.Background()) {
 		err = cur.Decode(&fortune)
 		if err != nil {
-			return nil, err
+			return fortunes, err
 		}
 		fortunes = append(fortunes, fortune)
 	}
 	if err := cur.Err(); err != nil {
-		return nil, err
+		return fortunes, err
 	}
 
 	return fortunes, nil
