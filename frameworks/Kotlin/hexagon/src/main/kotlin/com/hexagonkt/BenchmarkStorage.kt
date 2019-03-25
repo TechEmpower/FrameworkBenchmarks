@@ -11,7 +11,7 @@ import com.zaxxer.hikari.HikariDataSource
 import java.sql.Connection
 import java.util.concurrent.ThreadLocalRandom
 
-internal const val WORLD_ROWS: Int = 10000
+internal const val WORLD_ROWS: Int = 10_000
 
 private val worldName: String = defaultSetting("worldCollection", "world")
 private val fortuneName: String = defaultSetting("fortuneCollection", "fortune")
@@ -121,16 +121,13 @@ internal class BenchmarkSqlStore(engine: String) : BenchmarkStore {
                 val rs = stmtSelect.executeQuery()
                 rs.next()
                 rs.getInt(2) // Read 'randomNumber' to comply with Test type 5, point 6
-                rs.close()
 
                 worlds += World(worldId, worldId, newRandomNumber)
 
                 stmtUpdate.setInt(1, newRandomNumber)
                 stmtUpdate.setInt(2, worldId)
-                stmtUpdate.addBatch()
+                stmtUpdate.executeUpdate()
             }
-
-            stmtUpdate.executeBatch()
         }
 
         return worlds
