@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "name": "polkadot-tfb",
+  "version": "0.0.0",
+  "main": "app.js",
+  "dependencies": {
+    "polkadot": "1.0.0"
+  }
+}

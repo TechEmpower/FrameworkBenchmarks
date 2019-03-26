@@ -1,0 +1,25 @@
+  "framework": "polkadot",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "polkadot",
+        "language": "JavaScript",
+        "flavor": "NodeJS",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "polkadot",
+        "notes": "",
+        "versus": "nodejs"
+      }
+    }
+  ]
+}
