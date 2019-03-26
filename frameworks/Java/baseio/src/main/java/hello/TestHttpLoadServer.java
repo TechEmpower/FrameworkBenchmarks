@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import com.firenio.baseio.Options;
-import com.firenio.baseio.codec.http11.HttpAttrListener;
 import com.firenio.baseio.codec.http11.HttpCodec;
 import com.firenio.baseio.codec.http11.HttpConnection;
 import com.firenio.baseio.codec.http11.HttpContentType;
@@ -133,7 +132,6 @@ public class TestHttpLoadServer {
         group.setEventLoopSize(Util.availableProcessors() * core);
         group.setConcurrentFrameStack(false);
         context.addProtocolCodec(new HttpCodec("baseio", fcache, lite, inline));
-        context.addChannelEventListener(new HttpAttrListener());
         context.addChannelEventListener(new ChannelEventListenerAdapter() {
 
             @Override
