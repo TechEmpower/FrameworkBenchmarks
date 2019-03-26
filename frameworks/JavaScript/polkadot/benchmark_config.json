@@ -1,3 +1,4 @@
+{
   "framework": "polkadot",
   "tests": [
     {
@@ -8,6 +9,28 @@
         "approach": "Realistic",
         "classification": "Platform",
         "database": "None",
+        "framework": "polkadot",
+        "language": "JavaScript",
+        "flavor": "NodeJS",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "polkadot",
+        "notes": "",
+        "versus": "nodejs"
+      },
+      "mysql": {
+        "dockerfile": "polkadot-mysql.dockerfile",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "MySQL",
         "framework": "polkadot",
         "language": "JavaScript",
         "flavor": "NodeJS",

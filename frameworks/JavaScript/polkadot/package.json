@@ -4,6 +4,8 @@
   "version": "0.0.0",
   "main": "app.js",
   "dependencies": {
+    "html-escaper": "1.0.1",
+    "mysql": "2.16.0",
     "polkadot": "1.0.0"
   }
 }
