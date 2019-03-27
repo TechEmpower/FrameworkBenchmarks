@@ -92,6 +92,9 @@ class Benchmarker:
                 file=file,
                 color=Fore.RED if success else '')
         self.time_logger.log_test_end(log_prefix=prefix, file=file)
+        # Stop all the containers if the test failed / errored
+        if not success:
+            self.docker_helper.stop()
         return success
 
     def __run_test(self, test, benchmark_log):
