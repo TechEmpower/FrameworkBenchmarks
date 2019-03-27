@@ -8,6 +8,7 @@ import traceback
 from threading import Thread
 from colorama import Fore, Style
 
+from toolset.utils.output_helper import log
 from toolset.utils.database_helper import test_database
 
 from psutil import virtual_memory
@@ -18,7 +19,6 @@ mem_limit = int(round(virtual_memory().total * .95))
 class DockerHelper:
     def __init__(self, benchmarker=None):
         self.benchmarker = benchmarker
-        self.log = benchmarker.log
 
         self.client = docker.DockerClient(
             base_url=self.benchmarker.config.client_docker_host)
@@ -59,7 +59,7 @@ class DockerHelper:
                         index = buffer.index("\n")
                         line = buffer[:index]
                         buffer = buffer[index + 1:]
-                        self.log(line,
+                        log(line,
                             prefix=log_prefix,
                             file=build_log,
                             color=Fore.WHITE + Style.BRIGHT \
@@ -67,28 +67,25 @@ class DockerHelper:
                     # Kill docker builds if they exceed 60 mins. This will only
                     # catch builds that are still printing output.
                     if self.benchmarker.time_logger.time_since_start() > 3600:
-                        self.log("Build time exceeded 60 minutes",
+                        log("Build time exceeded 60 minutes",
                             prefix=log_prefix,
                             file=build_log,
                             color=Fore.RED)
                         raise Exception
 
                 if buffer:
-                    self.log(buffer,
+                    log(buffer,
                         prefix=log_prefix,
                         file=build_log,
                         color=Fore.WHITE + Style.BRIGHT \
                             if re.match(r'^Step \d+\/\d+', buffer) else '')
             except Exception:
                 tb = traceback.format_exc()
-                self.log("Docker build failed; terminating",
+                log("Docker build failed; terminating",
                     prefix=log_prefix,
                     file=build_log,
                     color=Fore.RED)
-                self.log(tb,
-                    squash=False,
-                    prefix=log_prefix,
-                    file=build_log)
+                log(tb, prefix=log_prefix, file=build_log)
                 self.benchmarker.time_logger.log_build_end(
                     log_prefix=log_prefix, file=build_log)
                 raise
@@ -173,7 +170,7 @@ class DockerHelper:
                             run_log_dir, "%s.log" % docker_file.replace(
                                 ".dockerfile", "").lower()), 'w') as run_log:
                     for line in docker_container.logs(stream=True):
-                        self.log(line, prefix=log_prefix, file=run_log)
+                        log(line, prefix=log_prefix, file=run_log)
 
             extra_hosts = None
             name = "tfb-server"
@@ -236,14 +233,11 @@ class DockerHelper:
                     os.path.join(run_log_dir, "%s.log" % test.name.lower()),
                     'w') as run_log:
                 tb = traceback.format_exc()
-                self.log("Running docker container: %s.dockerfile failed" %
+                log("Running docker container: %s.dockerfile failed" %
                     test.name,
                     prefix=log_prefix,
                     file=run_log)
-                self.log(tb,
-                    squash=False,
-                    prefix=log_prefix,
-                    file=run_log)
+                log(tb, prefix=log_prefix, file=run_log)
 
         return container
 
@@ -348,7 +342,7 @@ class DockerHelper:
             database_ready = test_database(self.benchmarker.config, database)
 
         if not database_ready:
-            self.log("Database was not ready after startup", prefix=log_prefix)
+            log("Database was not ready after startup", prefix=log_prefix)
 
         return container
 
@@ -400,7 +394,7 @@ class DockerHelper:
         def watch_container(container):
             with open(raw_file, 'w') as benchmark_file:
                 for line in container.logs(stream=True):
-                    self.log(line, file=benchmark_file)
+                    log(line, file=benchmark_file)
 
         sysctl = {'net.core.somaxconn': 65535}
 

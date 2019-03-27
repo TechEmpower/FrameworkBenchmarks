@@ -2,6 +2,8 @@ import os
 import traceback
 from requests import ConnectionError, Timeout
 
+from toolset.utils.output_helper import log
+
 # Cross-platform colored text
 from colorama import Fore, Style
 
@@ -30,7 +32,6 @@ class FrameworkTest:
         self.notes = ""
         self.port = ""
         self.versus = ""
-        self.log = benchmarker.log
 
         self.__dict__.update(args)
 
@@ -96,7 +97,7 @@ class FrameworkTest:
             with open(os.path.join(verificationPath, 'verification.txt'),
                       'w') as verification:
                 test = self.runTests[test_type]
-                self.log("VERIFYING %s" % test_type.upper(),
+                log("VERIFYING %s" % test_type.upper(),
                     file=verification,
                     border='-',
                     color=Fore.WHITE + Style.BRIGHT)
@@ -120,13 +121,13 @@ class FrameworkTest:
                 except ConnectionError as e:
                     results = [('fail', "Server did not respond to request",
                                 base_url)]
-                    self.log("Verifying test %s for %s caused an exception: %s" %
+                    log("Verifying test %s for %s caused an exception: %s" %
                         (test_type, self.name, e),
                         color=Fore.RED)
                 except Timeout as e:
                     results = [('fail', "Connection to server timed out",
                                 base_url)]
-                    self.log("Verifying test %s for %s caused an exception: %s" %
+                    log("Verifying test %s for %s caused an exception: %s" %
                         (test_type, self.name, e),
                         color=Fore.RED)
                 except Exception as e:
@@ -135,7 +136,7 @@ class FrameworkTest:
             but also that you have found a bug. Please submit an issue
             including this message: %s\n%s""" % (e, traceback.format_exc()),
                                 base_url)]
-                    self.log("Verifying test %s for %s caused an exception: %s" %
+                    log("Verifying test %s for %s caused an exception: %s" %
                         (test_type, self.name, e),
                         color=Fore.RED)
                     traceback.format_exc()
@@ -155,14 +156,14 @@ class FrameworkTest:
                     elif result.upper() == "FAIL":
                         color = Fore.RED
 
-                    self.log("   {!s}{!s}{!s} for {!s}".format(
+                    log("   {!s}{!s}{!s} for {!s}".format(
                         color, result.upper(), Style.RESET_ALL, url),
                         file=verification)
                     if reason is not None and len(reason) != 0:
                         for line in reason.splitlines():
-                            self.log("     " + line, file=verification)
+                            log("     " + line, file=verification)
                         if not test.passed:
-                            self.log("     See {!s}".format(specific_rules_url),
+                            log("     See {!s}".format(specific_rules_url),
                                 file=verification)
 
                 [output_result(r1, r2, url) for (r1, r2, url) in results]

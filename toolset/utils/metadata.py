@@ -4,6 +4,7 @@ import json
 
 from collections import OrderedDict
 
+from toolset.utils.output_helper import log
 from colorama import Fore
 
 
@@ -19,7 +20,6 @@ class Metadata:
 
     def __init__(self, benchmarker=None):
         self.benchmarker = benchmarker
-        self.log = benchmarker.log
 
     def gather_languages(self):
         '''
@@ -99,8 +99,7 @@ class Metadata:
                 try:
                     config = json.load(config_file)
                 except ValueError:
-                    self.log("Error loading config: {!s}".format(config_file_name),
-                        squash=False,
+                    log("Error loading config: {!s}".format(config_file_name),
                         color=Fore.RED)
                     raise Exception("Error loading config file")
 
@@ -183,7 +182,7 @@ class Metadata:
             tests_to_run = [name for (name, keys) in test.iteritems()]
 
             if "default" not in tests_to_run:
-                self.log("Framework %s does not define a default test in benchmark_config.json"
+                log("Framework %s does not define a default test in benchmark_config.json"
                     % config['framework'],
                     color=Fore.YELLOW)
 
@@ -206,7 +205,7 @@ class Metadata:
                         # This is quite common - most tests don't support all types
                         # Quitely log it and move on (debug logging is on in travis and this causes
                         # ~1500 lines of debug, so I'm totally ignoring it for now
-                        # self.log("Missing arguments for test type %s for framework test %s" % (type_name, test_name))
+                        # log("Missing arguments for test type %s for framework test %s" % (type_name, test_name))
                         pass
 
                 # We need to sort by test_type to run

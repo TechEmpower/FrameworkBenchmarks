@@ -8,6 +8,7 @@ from toolset.utils.scaffolding import Scaffolding
 from toolset.utils.audit import Audit
 from toolset.utils import cleaner
 from toolset.utils.benchmark_config import BenchmarkConfig
+from toolset.utils.output_helper import log
 
 # Enable cross-platform colored output
 from colorama import init, Fore
@@ -211,7 +212,7 @@ def main(argv=None):
             all_tests = benchmarker.metadata.gather_tests()
 
             for test in all_tests:
-                config.log(test.name)
+                log(test.name)
 
         elif config.parse:
             all_tests = benchmarker.metadata.gather_tests()
@@ -227,8 +228,8 @@ def main(argv=None):
                 return any_failed
     except Exception:
         tb = traceback.format_exc()
-        config.log("A fatal error has occurred", color=Fore.RED)
-        config.log(tb)
+        log("A fatal error has occurred", color=Fore.RED)
+        log(tb)
         # try one last time to stop docker containers on fatal error
         try:
             benchmarker.stop()
