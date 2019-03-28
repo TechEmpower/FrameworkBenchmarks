@@ -14,6 +14,7 @@ import shlex
 from pprint import pprint
 
 from colorama import Fore
+import numbers
 
 
 class Benchmarker:
@@ -153,6 +154,9 @@ class Benchmarker:
                         or not self.docker_helper.server_container_exists(container.id):
                     break
                 time.sleep(1)
+
+            if hasattr(test, 'wait_before_sending_requests') and isinstance(test.wait_before_sending_requests, numbers.Integral) and test.wait_before_sending_requests > 0:
+                time.sleep(test.wait_before_sending_requests)
 
             if not accepting_requests:
                 self.docker_helper.stop([container, database_container])
@@ -298,3 +302,4 @@ class Benchmarker:
         '''
         self.subprocess_handle.terminate()
         self.subprocess_handle.communicate()
+

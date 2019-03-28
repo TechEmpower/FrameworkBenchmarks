@@ -1,5 +1,5 @@
 name: onyx
-version: 0.1.0
+version: 0.2.0
 
 authors:
   - Vlad Faust
@@ -12,13 +12,13 @@ license: MIT
 dependencies:
   onyx:
     github: onyxframework/onyx
-    version: ~> 0.1.2
-  onyx-rest:
-    github: onyxframework/rest
-    version: ~> 0.6.2
+    version: ~> 0.3.0
+  onyx-http:
+    github: onyxframework/http
+    version: ~> 0.7.0
   onyx-sql:
     github: onyxframework/sql
-    version: ~> 0.6.2
+    version: ~> 0.7.0
   pg:
     github: will/crystal-pg
     version: ~> 0.15.0
