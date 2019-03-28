@@ -16,7 +16,6 @@ import java.util.Map;
 
 public class VoovanTFB {
 	private static final byte[] HELLO_WORLD = "Hello, World!".getBytes();
-	private static final Map MAP = TObject.asMap("message", "Hello, World!");
 
 
 	public static void main(String[] args) {
@@ -45,7 +44,7 @@ public class VoovanTFB {
 		webServer.get("/json", new HttpRouter() {
 			public void process(HttpRequest req, HttpResponse resp) throws Exception {
 				resp.header().put("Content-Type", "application/json");
-				resp.write(JSON.toJSON(MAP, false, false));
+				resp.write(JSON.toJSON(TObject.asMap("message", "Hello, World!")));
 			}
 		});
 
