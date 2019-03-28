@@ -136,7 +136,6 @@ class Benchmarker:
             container = test.start()
             self.time_logger.mark_test_starting()
             if container is None:
-                self.docker_helper.stop([container, database_container])
                 message = "ERROR: Problem starting {name}".format(
                     name=test.name)
                 self.results.write_intermediate(test.name, message)
@@ -159,7 +158,6 @@ class Benchmarker:
                 time.sleep(test.wait_before_sending_requests)
 
             if not accepting_requests:
-                self.docker_helper.stop([container, database_container])
                 message = "ERROR: Framework is not accepting requests from client machine"
                 self.results.write_intermediate(test.name, message)
                 return self.__exit_test(
@@ -202,9 +200,6 @@ class Benchmarker:
                 log_prefix, benchmark_log)
             self.time_logger.log_verify_end(log_prefix, benchmark_log)
 
-            # Stop this test
-            self.docker_helper.stop([container, database_container])
-
             # Save results thus far into the latest results directory
             self.results.write_intermediate(test.name,
                                             time.strftime(
@@ -230,6 +225,8 @@ class Benchmarker:
                 message="Error during test: %s" % test.name,
                 prefix=log_prefix,
                 file=benchmark_log)
+        finally:
+            self.docker_helper.stop()
 
         return self.__exit_test(
             success=True, prefix=log_prefix, file=benchmark_log)
