@@ -272,9 +272,10 @@ class DockerHelper:
             for container in containers:
                 DockerHelper.__stop_container(container)
         else:
-            self.__stop_all(self.server)
+            DockerHelper.__stop_all(self.server)
             if is_multi_setup:
-                self.__stop_all(self.database)
+                DockerHelper.__stop_all(self.database)
+                DockerHelper.__stop_all(self.client)
 
         self.database.containers.prune()
         if is_multi_setup:
