@@ -50,5 +50,8 @@ public class VoovanTFB {
 
 
 		webServer.syncServe();
+		
+		TEnv.sleep(2000);
+		Logger.setEnable(false);
 	}
 }
