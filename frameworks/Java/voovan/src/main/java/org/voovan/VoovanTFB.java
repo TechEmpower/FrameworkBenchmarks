@@ -7,6 +7,7 @@ import org.voovan.http.server.HttpRouter;
 import org.voovan.http.server.WebServer;
 import org.voovan.http.server.context.WebContext;
 import org.voovan.http.server.context.WebServerConfig;
+import org.voovan.tools.TEnv;
 import org.voovan.tools.TObject;
 import org.voovan.tools.json.JSON;
 import org.voovan.tools.log.Logger;
@@ -31,7 +32,6 @@ public class VoovanTFB {
 		webServerConfig.getModuleonfigs().clear();
 		webServerConfig.getRouterConfigs().clear();
 		WebServer webServer = WebServer.newInstance(webServerConfig);
-		Logger.setEnable(false);
 
 		//性能测试请求;
 		webServer.get("/plaintext", new HttpRouter() {
@@ -49,6 +49,9 @@ public class VoovanTFB {
 		});
 
 
-		webServer.syncServe();		
+		webServer.syncServe();	
+		
+		TEnv.sleep(2000);
+		Logger.setEnable(false);	
 	}
 }
