@@ -13,6 +13,9 @@
     "@vertx/web-templ-handlebars": "^3.6.3",
     "@reactiverse/reactive-pg-client": "^0.11.2"
   },
+  "mvnDependencies": [
+    "io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.30.Final"
+  ],
   "files": [
     "util.js",
     "templates/fortunes.hbs"
@@ -20,7 +23,6 @@
   "scripts": {
     "start": "benchmark",
     "test": "benchmark test index.test.js",
-    "postinstall": "es4x install",
-    "dockerfile": "es4x dockerfile"
+    "postinstall": "es4x install -f"
   }
 }

@@ -48,7 +48,6 @@ func QueriesHandlerEasyJSON(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 	return func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
 
-		// worlds := make([]storage.World, queries)
 		worlds := storage.WorldsPool.Get().([]storage.World)[:queries]
 
 		var err error
@@ -78,10 +77,8 @@ func UpdateHandlerEasyJSON(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
 		var err error
 
-		// worlds := make([]storage.World, queries)
 		worlds := storage.WorldsPool.Get().([]storage.World)[:queries]
 
-		// for _, world := range worlds {
 		for i := 0; i < queries; i++ {
 			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
 				log.Println(err)

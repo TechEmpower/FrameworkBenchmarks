@@ -64,6 +64,14 @@ class DockerHelper:
                             file=build_log,
                             color=Fore.WHITE + Style.BRIGHT \
                                 if re.match(r'^Step \d+\/\d+', line) else '')
+                    # Kill docker builds if they exceed 60 mins. This will only
+                    # catch builds that are still printing output.
+                    if self.benchmarker.time_logger.time_since_start() > 3600:
+                        log("Build time exceeded 60 minutes",
+                            prefix=log_prefix,
+                            file=build_log,
+                            color=Fore.RED)
+                        raise Exception
 
                 if buffer:
                     log(buffer,
@@ -264,9 +272,10 @@ class DockerHelper:
             for container in containers:
                 DockerHelper.__stop_container(container)
         else:
-            self.__stop_all(self.server)
+            DockerHelper.__stop_all(self.server)
             if is_multi_setup:
-                self.__stop_all(self.database)
+                DockerHelper.__stop_all(self.database)
+                DockerHelper.__stop_all(self.client)
 
         self.database.containers.prune()
         if is_multi_setup:

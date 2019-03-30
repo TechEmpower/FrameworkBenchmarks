@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"iris/src/templates"
-	"runtime"
 )
 
 const (
@@ -26,20 +25,16 @@ type DB interface {
 }
 
 // InitDB with appropriate driver
-func InitDB(dbDriver, dbConnectionString string) (DB, error) {
+func InitDB(dbDriver, dbConnectionString string, maxConnectionCount int) (DB, error) {
 	var err error
 	var db DB
 	if dbDriver == "pq" {
-		db, err = NewPqDB(
-			dbConnectionString,
-			runtime.NumCPU())
+		db, err = NewPqDB(dbConnectionString, maxConnectionCount)
 		if err != nil {
 			return nil, fmt.Errorf("Error opening pq database: %s", err)
 		}
 	} else if dbDriver == "pgx" {
-		db, err = NewPgxDB(
-			dbConnectionString,
-			runtime.NumCPU())
+		db, err = NewPgxDB(dbConnectionString, maxConnectionCount)
 		if err != nil {
 			return nil, fmt.Errorf("Error opening pgx database: %s", err)
 		}

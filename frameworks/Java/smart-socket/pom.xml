@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.smartboot.http</groupId>
         <artifactId>smart-http-parent</artifactId>
-        <version>1.0.10.0221-beta</version>
+        <version>1.0.10.0324-beta</version>
     </parent>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,7 +25,7 @@
         <dependency>
             <groupId>org.smartboot.socket</groupId>
             <artifactId>aio-core</artifactId>
-            <version>1.4.0-rc.5</version>
+            <version>1.4.0-rc.9</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
