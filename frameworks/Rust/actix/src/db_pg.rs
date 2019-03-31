@@ -6,7 +6,7 @@ use futures::{stream, Future, Stream};
 use rand::{thread_rng, Rng, ThreadRng};
 use tokio_postgres::{connect, Client, Statement, TlsMode};
 
-use models::{Fortune, World};
+use crate::models::{Fortune, World};
 
 /// Postgres interface
 pub struct PgConnection {
@@ -68,7 +68,8 @@ impl PgConnection {
                     act.cl = Some(cl);
                     Arbiter::spawn(conn.map_err(|e| panic!("{}", e)));
                     fut::ok(())
-                }).wait(ctx);
+                })
+                .wait(ctx);
 
             act
         })
@@ -227,7 +228,8 @@ impl Handler<TellFortune> for PgConnection {
                         message: row.get(1),
                     });
                     Ok::<_, io::Error>(items)
-                }).map_err(|e| io::Error::new(io::ErrorKind::Other, e))
+                })
+                .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
                 .and_then(|mut items| {
                     items.sort_by(|it, next| it.message.cmp(&next.message));
                     Ok(items)

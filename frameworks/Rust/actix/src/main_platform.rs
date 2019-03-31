@@ -327,7 +327,8 @@ fn main() {
             dbs,
             useall: num_cpus::get() > 4,
         }]
-    }).backlog(8192)
+    })
+    .backlog(8192)
     .keep_alive(KeepAlive::Os)
     .bind("0.0.0.0:8080")
     .unwrap()

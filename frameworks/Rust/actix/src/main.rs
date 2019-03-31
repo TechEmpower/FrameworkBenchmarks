@@ -1,10 +1,3 @@
-extern crate actix;
-extern crate actix_web;
-extern crate bytes;
-extern crate futures;
-extern crate serde;
-extern crate serde_json;
-extern crate url;
 #[macro_use]
 extern crate serde_derive;
 
@@ -36,6 +29,7 @@ fn plaintext(req: &HttpRequest) -> HttpResponse {
 }
 
 fn main() {
+    env_logger::init();
     let sys = System::new("techempower");
 
     // start http server
@@ -43,7 +37,8 @@ fn main() {
         App::new()
             .resource("/json", |r| r.f(json))
             .resource("/plaintext", |r| r.f(plaintext))
-    }).backlog(8192)
+    })
+    .backlog(8192)
     .bind("0.0.0.0:8080")
     .unwrap()
     .start();

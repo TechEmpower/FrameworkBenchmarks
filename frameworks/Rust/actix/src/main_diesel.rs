@@ -1,18 +1,7 @@
-extern crate actix;
-extern crate actix_web;
-extern crate bytes;
-extern crate futures;
-extern crate num_cpus;
-extern crate rand;
-extern crate serde;
-extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
 #[macro_use]
 extern crate diesel;
-#[macro_use]
-extern crate askama;
-extern crate url;
 
 use actix::prelude::*;
 use actix_web::{
@@ -50,7 +39,8 @@ fn world_row(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
                     .body(body))
             }
             Err(_) => Ok(HttpResponse::InternalServerError().into()),
-        }).responder()
+        })
+        .responder()
 }
 
 fn queries(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
@@ -78,7 +68,8 @@ fn queries(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
             } else {
                 Ok(HttpResponse::InternalServerError().into())
             }
-        }).responder()
+        })
+        .responder()
 }
 
 fn updates(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
@@ -107,7 +98,8 @@ fn updates(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
             } else {
                 Ok(HttpResponse::InternalServerError().into())
             }
-        }).responder()
+        })
+        .responder()
 }
 
 #[derive(Template)]
@@ -133,7 +125,8 @@ fn fortune(req: &HttpRequest<State>) -> FutureResponse<HttpResponse> {
                     .body(res))
             }
             Err(_) => Ok(HttpResponse::InternalServerError().into()),
-        }).responder()
+        })
+        .responder()
 }
 
 fn main() {
@@ -159,7 +152,8 @@ fn main() {
             .resource("/fortune", |r| r.route().f(fortune))
             .resource("/queries", |r| r.route().f(queries))
             .resource("/updates", |r| r.route().f(updates))
-    }).backlog(8192)
+    })
+    .backlog(8192)
     .bind("0.0.0.0:8080")
     .unwrap()
     .start();

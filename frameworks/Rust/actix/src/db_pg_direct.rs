@@ -5,7 +5,7 @@ use futures::{stream, Future, Stream};
 use rand::{thread_rng, Rng};
 use tokio_postgres::{connect, Client, Statement, TlsMode};
 
-use models::{Fortune, World};
+use crate::models::{Fortune, World};
 
 /// Postgres interface
 pub struct PgConnection {
@@ -63,7 +63,8 @@ impl PgConnection {
     }
 
     pub fn get_worlds(
-        &self, num: usize,
+        &self,
+        num: usize,
     ) -> impl Future<Item = Vec<World>, Error = io::Error> {
         let mut worlds = Vec::with_capacity(num);
         for _ in 0..num {
@@ -87,7 +88,8 @@ impl PgConnection {
     }
 
     pub fn update(
-        &self, num: usize,
+        &self,
+        num: usize,
     ) -> impl Future<Item = Vec<World>, Error = io::Error> {
         let mut worlds = Vec::with_capacity(num);
         for _ in 0..num {
@@ -148,7 +150,8 @@ impl PgConnection {
                     message: row.get(1),
                 });
                 Ok::<_, io::Error>(items)
-            }).map_err(|e| io::Error::new(io::ErrorKind::Other, e))
+            })
+            .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
             .and_then(|mut items| {
                 items.sort_by(|it, next| it.message.cmp(&next.message));
                 Ok(items)

@@ -6,7 +6,7 @@ use diesel::result::Error;
 use rand::{thread_rng, Rng, ThreadRng};
 use std::io;
 
-use models;
+use crate::models;
 
 pub struct DbExecutor {
     conn: PgConnection,
@@ -39,7 +39,7 @@ impl Handler<RandomWorld> for DbExecutor {
     type Result = io::Result<models::World>;
 
     fn handle(&mut self, _: RandomWorld, _: &mut Self::Context) -> Self::Result {
-        use schema::world::dsl::*;
+        use crate::schema::world::dsl::*;
 
         let random_id = self.rng.gen_range(1, 10_001);
         match world
@@ -62,7 +62,7 @@ impl Handler<RandomWorlds> for DbExecutor {
     type Result = io::Result<Vec<models::World>>;
 
     fn handle(&mut self, msg: RandomWorlds, _: &mut Self::Context) -> Self::Result {
-        use schema::world::dsl::*;
+        use crate::schema::world::dsl::*;
 
         let mut worlds = Vec::with_capacity(msg.0 as usize);
         for _ in 0..msg.0 {
@@ -70,7 +70,7 @@ impl Handler<RandomWorlds> for DbExecutor {
             let w = match world.filter(id.eq(w_id)).load::<models::World>(&self.conn) {
                 Ok(mut items) => items.pop().unwrap(),
                 Err(_) => {
-                    return Err(io::Error::new(io::ErrorKind::Other, "Database error"))
+                    return Err(io::Error::new(io::ErrorKind::Other, "Database error"));
                 }
             };
             worlds.push(w)
@@ -89,7 +89,7 @@ impl Handler<UpdateWorld> for DbExecutor {
     type Result = io::Result<Vec<models::World>>;
 
     fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> Self::Result {
-        use schema::world::dsl::*;
+        use crate::schema::world::dsl::*;
 
         let mut worlds = Vec::with_capacity(msg.0);
         for _ in 0..msg.0 {
@@ -98,7 +98,7 @@ impl Handler<UpdateWorld> for DbExecutor {
             {
                 Ok(mut items) => items.pop().unwrap(),
                 Err(_) => {
-                    return Err(io::Error::new(io::ErrorKind::Other, "Database error"))
+                    return Err(io::Error::new(io::ErrorKind::Other, "Database error"));
                 }
             };
             w.randomnumber = self.rng.gen_range(1, 10_001);
@@ -130,7 +130,7 @@ impl Handler<TellFortune> for DbExecutor {
     type Result = io::Result<Vec<models::Fortune>>;
 
     fn handle(&mut self, _: TellFortune, _: &mut Self::Context) -> Self::Result {
-        use schema::fortune::dsl::*;
+        use crate::schema::fortune::dsl::*;
 
         match fortune.load::<models::Fortune>(&self.conn) {
             Ok(mut items) => {
