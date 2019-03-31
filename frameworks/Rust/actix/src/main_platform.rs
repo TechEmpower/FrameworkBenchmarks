@@ -6,14 +6,13 @@ extern crate diesel;
 use std::io::Write;
 
 use actix_http::body::Body;
-use actix_http::http::{HeaderValue, StatusCode};
+use actix_http::http::{header::CONTENT_TYPE, header::SERVER, HeaderValue, StatusCode};
 use actix_http::{Error, HttpService, KeepAlive, Request, Response};
 use actix_server::{Server, ServerConfig};
 use actix_service::{NewService, Service};
 use bytes::{Bytes, BytesMut};
 use futures::future::{join_all, ok, Either, FutureResult};
 use futures::{Async, Future, Poll};
-use rand::{thread_rng, Rng};
 
 mod db_pg_direct;
 mod models;
@@ -31,12 +30,30 @@ const FORTUNES_END: &[u8] = b"</table></body></html>";
 struct App {
     dbs: Vec<PgConnection>,
     useall: bool,
+    next: usize,
+}
+
+#[derive(PartialEq, Copy, Clone)]
+enum Db {
+    Update,
+    Fortune,
+    Other,
 }
 
 impl App {
-    fn get_db(&self) -> &PgConnection {
+    fn get_db(&mut self, db: Db) -> &PgConnection {
         if self.useall {
-            thread_rng().choose(&self.dbs).unwrap()
+            match db {
+                Db::Update => &self.dbs[0],
+                Db::Fortune => {
+                    self.next = (self.next + 1) % self.dbs.len();
+                    &self.dbs[self.next]
+                }
+                Db::Other => {
+                    self.next = (self.next + 1) % 4;
+                    &self.dbs[self.next]
+                }
+            }
         } else {
             &self.dbs[0]
         }
@@ -66,11 +83,9 @@ impl Service for App {
                     Body::Bytes(Bytes::from_static(b"Hello, World!")),
                 );
                 res.headers_mut()
-                    .insert(http::header::SERVER, HeaderValue::from_static("Actix"));
-                res.headers_mut().insert(
-                    http::header::CONTENT_TYPE,
-                    HeaderValue::from_static("text/plain"),
-                );
+                    .insert(SERVER, HeaderValue::from_static("Actix"));
+                res.headers_mut()
+                    .insert(CONTENT_TYPE, HeaderValue::from_static("text/plain"));
                 Either::A(ok(res))
             }
             5 if path == "/json" => {
@@ -83,31 +98,30 @@ impl Service for App {
                 let mut res =
                     Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
                 res.headers_mut()
-                    .insert(http::header::SERVER, HeaderValue::from_static("Actix"));
-                res.headers_mut().insert(
-                    http::header::CONTENT_TYPE,
-                    HeaderValue::from_static("application/json"),
-                );
+                    .insert(SERVER, HeaderValue::from_static("Actix"));
+                res.headers_mut()
+                    .insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
                 Either::A(ok(res))
             }
             3 if path == "/db" => {
-                let fut = self.get_db().get_world();
+                let fut = self.get_db(Db::Other).get_world();
+
                 Either::B(Box::new(fut.from_err().and_then(move |row| {
                     let mut body = BytesMut::with_capacity(31);
                     serde_json::to_writer(JsonWriter(&mut body), &row).unwrap();
                     let mut res =
                         Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
                     res.headers_mut()
-                        .insert(http::header::SERVER, HeaderValue::from_static("Actix"));
+                        .insert(SERVER, HeaderValue::from_static("Actix"));
                     res.headers_mut().insert(
-                        http::header::CONTENT_TYPE,
+                        CONTENT_TYPE,
                         HeaderValue::from_static("application/json"),
                     );
                     Ok(res)
                 })))
             }
             8 if path == "/fortune" => {
-                let fut = self.get_db().tell_fortune();
+                let fut = self.get_db(Db::Fortune).tell_fortune();
 
                 Either::B(Box::new(fut.from_err().and_then(move |fortunes| {
                     let mut body = BytesMut::with_capacity(2048);
@@ -125,9 +139,9 @@ impl Service for App {
                     let mut res =
                         Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
                     res.headers_mut()
-                        .insert(http::header::SERVER, HeaderValue::from_static("Actix"));
+                        .insert(SERVER, HeaderValue::from_static("Actix"));
                     res.headers_mut().insert(
-                        http::header::CONTENT_TYPE,
+                        CONTENT_TYPE,
                         HeaderValue::from_static("text/html; charset=utf-8"),
                     );
                     Ok(res)
@@ -135,24 +149,7 @@ impl Service for App {
             }
             8 if path == "/queries" => {
                 let q = utils::get_query_param(req.uri().query().unwrap_or("")) as usize;
-                let fut = self.get_db().get_worlds(q);
-                Either::B(Box::new(fut.from_err().and_then(move |worlds| {
-                    let mut body = BytesMut::with_capacity(35 * worlds.len());
-                    serde_json::to_writer(JsonWriter(&mut body), &worlds).unwrap();
-                    let mut res =
-                        Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
-                    res.headers_mut()
-                        .insert(http::header::SERVER, HeaderValue::from_static("Actix"));
-                    res.headers_mut().insert(
-                        http::header::CONTENT_TYPE,
-                        HeaderValue::from_static("application/json"),
-                    );
-                    Ok(res)
-                })))
-            }
-            8 if path == "/updates" => {
-                let q = utils::get_query_param(req.uri().query().unwrap_or("")) as usize;
-                let fut = self.get_db().update(q);
+                let fut = self.get_db(Db::Other).get_worlds(q);
 
                 Either::B(Box::new(fut.from_err().and_then(move |worlds| {
                     let mut body = BytesMut::with_capacity(35 * worlds.len());
@@ -160,9 +157,27 @@ impl Service for App {
                     let mut res =
                         Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
                     res.headers_mut()
-                        .insert(http::header::SERVER, HeaderValue::from_static("Actix"));
+                        .insert(SERVER, HeaderValue::from_static("Actix"));
                     res.headers_mut().insert(
-                        http::header::CONTENT_TYPE,
+                        CONTENT_TYPE,
+                        HeaderValue::from_static("application/json"),
+                    );
+                    Ok(res)
+                })))
+            }
+            8 if path == "/updates" => {
+                let q = utils::get_query_param(req.uri().query().unwrap_or("")) as usize;
+                let fut = self.get_db(Db::Update).update(q);
+
+                Either::B(Box::new(fut.from_err().and_then(move |worlds| {
+                    let mut body = BytesMut::with_capacity(35 * worlds.len());
+                    serde_json::to_writer(JsonWriter(&mut body), &worlds).unwrap();
+                    let mut res =
+                        Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+                    res.headers_mut()
+                        .insert(SERVER, HeaderValue::from_static("Actix"));
+                    res.headers_mut().insert(
+                        CONTENT_TYPE,
                         HeaderValue::from_static("application/json"),
                     );
                     Ok(res)
@@ -189,11 +204,12 @@ impl NewService<ServerConfig> for AppFactory {
             "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
         let mut conns = Vec::new();
-        for _ in 0..3 {
+        for _ in 0..4 {
             conns.push(PgConnection::connect(DB_URL));
         }
         Box::new(join_all(conns).map(|dbs| App {
             dbs,
+            next: 0,
             useall: num_cpus::get() > 4,
         }))
     }
