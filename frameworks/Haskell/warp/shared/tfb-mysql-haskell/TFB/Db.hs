@@ -1,6 +1,7 @@
+{-# OPTIONS -funbox-strict-fields #-}
 {-# LANGUAGE OverloadedStrings     #-}
 
-module Lib.Db (
+module TFB.Db (
     Pool
   , mkPool
   , Config(..)
@@ -11,7 +12,7 @@ module Lib.Db (
   , Error
 ) where
 
-import qualified Lib.Types as Types
+import qualified TFB.Types as Types
 import qualified Data.Either as Either
 import           Control.Monad (forM, forM_)
 
@@ -95,21 +96,23 @@ decodeWorld [] = Left "MarshalError: Expected 2 columns for World, found 0"
 decodeWorld (_:[]) = Left "MarshalError: Expected 2 columns for World, found 1"
 decodeWorld (c1:c2:_) = Types.World <$> intValDec c1 <*> intValDec c2
 
-queryWorldById :: Connection -> Types.QId -> IO (Either Error [Types.World])
-queryWorldById conn wId = do
+queryWorldById :: Pool -> Types.QId -> IO (Either Error Types.World)
+queryWorldById dbPool wId = Pool.withResource dbPool $ \conn -> do
   (_, rowsS) <- MySQL.query conn s [intValEnc wId]
   rows <- Streams.toList rowsS
   let eWorlds = fmap decodeWorld rows
   let (err, oks) = Either.partitionEithers eWorlds
   return $ case err of
-    [] -> pure oks
-    _ -> Left . head $ err
+    [] -> case oks of
+      [] -> Left "World not found!"
+      ws  -> pure $ head ws
+    _ -> Left . mconcat $ err
   where
     s = "SELECT * FROM World WHERE id = ?"
 
-queryWorldByIds :: Connection -> [Types.QId] -> IO (Either [Error] [Types.World])
+queryWorldByIds :: Pool -> [Types.QId] -> IO (Either Error [Types.World])
 queryWorldByIds _ [] = pure . pure $ mempty
-queryWorldByIds conn wIds = do
+queryWorldByIds dbPool wIds = Pool.withResource dbPool $ \conn -> do
   sId <- MySQL.prepareStmt conn "SELECT * FROM World WHERE id = ?"
   res <- forM wIds $ \wId -> do
     (_, rowsS) <- MySQL.queryStmt conn sId [intValEnc wId]
@@ -119,11 +122,11 @@ queryWorldByIds conn wIds = do
   let (errs, ws) = Either.partitionEithers . mconcat $ res
   return $ case errs of
     [] -> pure ws
-    _ -> Left errs
+    _ -> Left . mconcat $ errs
 
-updateWorlds :: Connection -> [(Types.World, Int)] -> IO (Either [Error] [Types.World])
+updateWorlds :: Pool -> [(Types.World, Int)] -> IO (Either Error [Types.World])
 updateWorlds _ [] = pure . pure $ mempty
-updateWorlds conn wsUpdates = do
+updateWorlds dbPool wsUpdates = Pool.withResource dbPool $ \conn -> do
   let ws = fmap updateW wsUpdates
   sId <- MySQL.prepareStmt conn "UPDATE World SET randomNumber = ? WHERE id = ?"
   forM_ wsUpdates $ \(w, wNum) ->
@@ -141,12 +144,12 @@ decodeFortune [] = Left "MarshalError: Expected 2 columns for Fortune, found 0"
 decodeFortune (_:[]) = Left "MarshalError: Expected 2 columns for Fortune, found 1"
 decodeFortune (c1:c2:_) = Types.Fortune <$> intValDec c1 <*> textValDec c2
 
-queryFortunes :: Connection -> IO (Either [Error] [Types.Fortune])
-queryFortunes conn = do
+queryFortunes :: Pool -> IO (Either Error [Types.Fortune])
+queryFortunes dbPool = Pool.withResource dbPool $ \conn -> do
   (_, rowsS) <- MySQL.query_ conn "SELECT * FROM Fortune"
   rows <- Streams.toList rowsS
   let eFortunes = fmap decodeFortune rows
   let (err, oks) = Either.partitionEithers eFortunes
   return $ case err of
     [] -> pure oks
-    _ -> Left err
+    _ -> Left $ head err

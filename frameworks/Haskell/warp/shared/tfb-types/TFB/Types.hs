@@ -1,8 +1,9 @@
+{-# OPTIONS -funbox-strict-fields #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE DataKinds             #-}
 {-# LANGUAGE TypeOperators         #-}
 
-module Lib.Types (
+module TFB.Types (
     unsafeJsonString
   , parseCount
   , getCount
@@ -15,7 +16,6 @@ module Lib.Types (
 
 import qualified Data.Either as Either
 import qualified Data.Char as Char
-import           Data.Word (Word16)
 
 import           Data.ByteString (ByteString)
 import qualified Data.Attoparsec.ByteString.Char8 as Parsec
@@ -51,12 +51,12 @@ parseIntDigit = digit
     digit = Parsec.satisfy isDigit
     isDigit c = c >= '0' && c <= '9'
 
-type QId = Word16
+type QId = Int
 
 -------------------------------------------------------------------------------
 -- * Outputs
 
-data World = World { wId :: Int , wRandomNumber :: Int }
+data World = World { wId :: QId , wRandomNumber :: QId }
   deriving Show
 
 instance Json.ToJson World where
@@ -65,14 +65,8 @@ instance Json.ToJson World where
     $ "id"           .= wId w
    <> "randomNumber" .= wRandomNumber w
 
-data Fortune = Fortune { fId :: Int , fMessage :: Text }
+data Fortune = Fortune { fId :: QId , fMessage :: Text }
   deriving Show
-
-instance Json.ToJson Fortune where
-  toJson f
-    = Json.toJson
-    $ "id"      .= fId f
-   <> "message" .= fMessage f
 
 type FortunesHtml
   = (('Html.DOCTYPE Html.> ())
@@ -87,7 +81,7 @@ type FortunesHtml
                 )
               )
             # ['Html.Tr
-              > ( ('Html.Td > Int)
+              > ( ('Html.Td > QId)
                 # ('Html.Td > Text)
                 )
               ]

@@ -1,6 +1,7 @@
+{-# OPTIONS -funbox-strict-fields #-}
 {-# LANGUAGE OverloadedStrings     #-}
 
-module Lib.Db (
+module TFB.Db (
     Pool
   , mkPool
   , Config(..)
@@ -11,7 +12,7 @@ module Lib.Db (
   , Error
 ) where
 
-import qualified Lib.Types as Types
+import qualified TFB.Types as Types
 import           Control.Monad (forM, forM_)
 
 import qualified Hasql.Decoders             as HasqlDec
@@ -56,9 +57,9 @@ mkPool :: Config -> IO Pool
 mkPool c = acquire (configPoolSize c, 0.5, mkSettings c)
 
 intValEnc :: HasqlEnc.Params Types.QId
-intValEnc = HasqlEnc.param HasqlEnc.int2
+intValEnc = contramap fromIntegral $ HasqlEnc.param HasqlEnc.int2
 intValDec :: HasqlDec.Row Types.QId
-intValDec = HasqlDec.column HasqlDec.int2
+intValDec = fmap fromIntegral $ HasqlDec.column HasqlDec.int2
 
 -------------------------------------------------------------------------------
 -- * World

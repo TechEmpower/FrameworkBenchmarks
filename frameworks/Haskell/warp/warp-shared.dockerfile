@@ -5,16 +5,17 @@ RUN apt install -yqq libpq-dev
 
 WORKDIR /app
 
-COPY ./stack.yaml .
-COPY ./warp-postgres-wire/warp-postgres-wire.cabal ./warp-postgres-wire/
-COPY ./warp-hasql/warp-hasql.cabal ./warp-hasql/
-COPY ./warp-mysql-haskell/warp-mysql-haskell.cabal ./warp-mysql-haskell/
+COPY stack.yaml ./
+COPY ./shared/tfb-types/tfb-types.cabal ./shared/tfb-types/
+COPY ./shared/tfb-hasql/tfb-hasql.cabal ./shared/tfb-hasql/
+COPY ./shared/tfb-mysql-haskell/tfb-mysql-haskell.cabal ./shared/tfb-mysql-haskell/
+COPY ./shared/tfb-postgres-wire/tfb-postgres-wire.cabal ./shared/tfb-postgres-wire/
+COPY ./warp-shared/warp-shared.cabal ./warp-shared/
 RUN stack setup
 RUN stack install --dependencies-only
 
-ADD ./warp-postgres-wire/ ./warp-postgres-wire
-ADD ./warp-hasql/ ./warp-hasql
-ADD ./warp-mysql-haskell/ ./warp-mysql-haskell
+ADD ./shared ./shared
+ADD ./warp-shared ./warp-shared
 RUN stack build --pedantic --copy-bins
 RUN ln -s ~/.local/bin/warp-postgres-wire ~/.local/bin/warp
 

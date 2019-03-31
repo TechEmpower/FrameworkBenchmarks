@@ -4,15 +4,16 @@ module Main where
 
 import qualified Lib
 import qualified GHC.Conc
-import           System.Environment (getArgs)
+import           System.Environment (getArgs, lookupEnv)
 
 main :: IO ()
 main = do
+  testName <- lookupEnv "TFB_TEST_NAME"
+  putStrLn $ "Test is: " ++ show testName
   args <- getArgs
   dbHost <- case args of
     [x] -> pure x
     _ -> pure "0.0.0.0"
-    -- _ -> fail "Usage: warp-postgres-wire <DATABASE_HOST>"
   numCaps <- GHC.Conc.getNumCapabilities
   Lib.main $ Lib.Config {
     Lib.configHost    = dbHost,

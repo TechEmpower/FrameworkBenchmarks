@@ -1,6 +1,6 @@
-name:                warp-postgres-wire
+name:                tfb-postgres-wire
 version:             0.1.0.0
-homepage:            https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Haskell/warp/warp-postgres-wire
+homepage:            https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Haskell/warp/shared/tfb-postgres-wire
 license:             BSD3
 author:              Naushadh
 maintainer:          naushadh@protonmail.com
@@ -11,32 +11,14 @@ cabal-version:       >=1.10
 extra-source-files:  README.md
 
 library
-  hs-source-dirs:      src
+  hs-source-dirs:      .
   default-language:    Haskell2010
-  exposed-modules:     Lib
-  other-modules:
-      Lib.Db
-    , Lib.Types
+  exposed-modules:     TFB.Db
   build-depends:
       base >= 4.7 && < 5
-    , bytestring
-    , attoparsec
-    , buffer-builder
-    , postgres-wire
-    , vector
-    , mwc-random
-    , type-of-html
-    , wai
-    , warp
-    , http-types
+    , tfb-types
     , resource-pool
+    , postgres-wire
+    , bytestring
+    , vector
     , text
-
-executable warp-postgres-wire
-  hs-source-dirs:      exe
-  main-is:             Main.hs
-  default-language:    Haskell2010
-  ghc-options:         -Wall -threaded -rtsopts -O2 -funbox-strict-fields
-  build-depends:
-      base >= 4.7 && < 5
-    , warp-postgres-wire
