@@ -1,9 +1,11 @@
 #[macro_use]
 extern crate serde_derive;
 
+use actix_http::{HttpService, KeepAlive};
+use actix_server::Server;
 use actix_web::dev::Body;
 use actix_web::http::{header::CONTENT_TYPE, header::SERVER, HeaderValue, StatusCode};
-use actix_web::{web, App, HttpResponse, HttpServer};
+use actix_web::{web, App, HttpResponse};
 use bytes::{Bytes, BytesMut};
 
 mod utils;
@@ -41,14 +43,14 @@ fn main() -> std::io::Result<()> {
     let sys = actix_rt::System::new("techempower");
 
     // start http server
-    HttpServer::new(move || {
-        App::new()
-            .service(web::resource("/json").to(json))
-            .service(web::resource("/plaintext").to(plaintext))
-    })
-    .backlog(1024)
-    .bind("0.0.0.0:8080")?
-    .start();
+    Server::build()
+        .backlog(1024)
+        .bind("0.0.0.0:8080", "techempower", || {
+            HttpService::build().keep_alive(KeepAlive::Os).h1(App::new()
+                .service(web::resource("/json").to(json))
+                .service(web::resource("/plaintext").to(plaintext)))
+        })?
+        .start();
 
     println!("Started http server: 127.0.0.1:8080");
     sys.run()

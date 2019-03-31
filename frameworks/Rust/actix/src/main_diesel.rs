@@ -4,7 +4,9 @@ extern crate serde_derive;
 extern crate diesel;
 
 use actix::prelude::*;
-use actix_web::{http, web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use actix_http::{HttpService, KeepAlive};
+use actix_server::Server;
+use actix_web::{http, web, App, Error, HttpRequest, HttpResponse};
 use askama::Template;
 use bytes::BytesMut;
 use futures::Future;
@@ -113,17 +115,17 @@ fn main() -> std::io::Result<()> {
         SyncArbiter::start(num_cpus::get() * 3, move || db::DbExecutor::new(db_url));
 
     // start http server
-    HttpServer::new(move || {
-        App::new()
-            .data(addr.clone())
-            .service(web::resource("/db").to_async(world_row))
-            .service(web::resource("/fortune").to_async(fortune))
-            .service(web::resource("/queries").to_async(queries))
-            .service(web::resource("/updates").to_async(updates))
-    })
-    .backlog(1024)
-    .bind("0.0.0.0:8080")?
-    .start();
+    Server::build()
+        .backlog(1024)
+        .bind("0.0.0.0:8080", "techempower", move || {
+            HttpService::build().keep_alive(KeepAlive::Os).h1(App::new()
+                .data(addr.clone())
+                .service(web::resource("/db").to_async(world_row))
+                .service(web::resource("/fortune").to_async(fortune))
+                .service(web::resource("/queries").to_async(queries))
+                .service(web::resource("/updates").to_async(updates)))
+        })?
+        .start();
 
     println!("Started http server: 127.0.0.1:8080");
     sys.run()
