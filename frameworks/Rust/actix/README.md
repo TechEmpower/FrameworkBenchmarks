@@ -29,7 +29,7 @@ PostgreSQL.
 
 ## Test URLs
 
-### Test 1: JSON Encoding 
+### Test 1: JSON Encoding
 
     http://localhost:8080/json
 
@@ -37,7 +37,7 @@ PostgreSQL.
 
     http://localhost:8080/db
 
-### Test 3: Multi Row Query 
+### Test 3: Multi Row Query
 
     http://localhost:8080/queries?q=20
 
