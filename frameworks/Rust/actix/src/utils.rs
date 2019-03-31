@@ -55,7 +55,7 @@ impl<'a> fmt::Write for StackWriter<'a> {
 
 pub fn get_query_param(query: &str) -> u16 {
     let q = if let Some(pos) = query.find("q") {
-        query.split_at(pos + 1).1.parse::<u16>().ok().unwrap_or(1)
+        query.split_at(pos + 2).1.parse::<u16>().ok().unwrap_or(1)
     } else {
         1
     };

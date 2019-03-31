@@ -2,7 +2,7 @@ use std::io;
 
 use futures::future::join_all;
 use futures::{stream, Future, Stream};
-use rand::{thread_rng, Rng};
+use rand::{thread_rng, Rng, ThreadRng};
 use tokio_postgres::{connect, Client, Statement, TlsMode};
 
 use crate::models::{Fortune, World};
@@ -12,6 +12,8 @@ pub struct PgConnection {
     cl: Client,
     fortune: Statement,
     world: Statement,
+    update: Statement,
+    rng: ThreadRng,
 }
 
 impl PgConnection {
@@ -25,21 +27,28 @@ impl PgConnection {
                 join_all(vec![
                     cl.prepare("SELECT id, message FROM fortune"),
                     cl.prepare("SELECT id, randomnumber FROM world WHERE id=$1"),
+                    cl.prepare("SELECT id FROM world WHERE id=$1"),
                 ])
                 .map_err(|_| ())
                 .map(move |mut st| {
                     let fortune = st.pop().unwrap();
                     let world = st.pop().unwrap();
-
-                    PgConnection { cl, fortune, world }
+                    let update = st.pop().unwrap();
+                    PgConnection {
+                        cl,
+                        fortune,
+                        world,
+                        update,
+                        rng: thread_rng(),
+                    }
                 })
             })
     }
 }
 
 impl PgConnection {
-    pub fn get_world(&self) -> impl Future<Item = World, Error = io::Error> {
-        let random_id = thread_rng().gen_range::<i32>(1, 10_001);
+    pub fn get_world(&mut self) -> impl Future<Item = World, Error = io::Error> {
+        let random_id = self.rng.gen_range::<i32>(1, 10_001);
 
         self.cl
             .query(&self.world, &[&random_id])
@@ -55,12 +64,12 @@ impl PgConnection {
     }
 
     pub fn get_worlds(
-        &self,
+        &mut self,
         num: usize,
     ) -> impl Future<Item = Vec<World>, Error = io::Error> {
         let mut worlds = Vec::with_capacity(num);
         for _ in 0..num {
-            let w_id: i32 = thread_rng().gen_range(1, 10_001);
+            let w_id: i32 = self.rng.gen_range(1, 10_001);
             worlds.push(
                 self.cl
                     .query(&self.world, &[&w_id])
@@ -80,16 +89,16 @@ impl PgConnection {
     }
 
     pub fn update(
-        &self,
+        &mut self,
         num: usize,
     ) -> impl Future<Item = Vec<World>, Error = io::Error> {
         let mut worlds = Vec::with_capacity(num);
         for _ in 0..num {
-            let id: i32 = thread_rng().gen_range(1, 10_001);
-            let w_id: i32 = thread_rng().gen_range(1, 10_001);
+            let id: i32 = self.rng.gen_range(1, 10_001);
+            let w_id: i32 = self.rng.gen_range(1, 10_001);
             worlds.push(
                 self.cl
-                    .query(&self.world, &[&w_id])
+                    .query(&self.update, &[&w_id])
                     .into_future()
                     .map_err(|e| io::Error::new(io::ErrorKind::Other, e.0))
                     .and_then(move |(row, _)| {

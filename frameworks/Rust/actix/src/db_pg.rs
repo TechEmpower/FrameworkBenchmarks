@@ -56,7 +56,7 @@ impl PgConnection {
                             }),
                     );
                     ctx.wait(
-                        cl.prepare("SELECT id FROM world WHERE id=$1")
+                        cl.prepare("SELECT id, randomnumber FROM world WHERE id=$1")
                             .map_err(|_| ())
                             .into_actor(act)
                             .and_then(|st, act, _| {

@@ -35,27 +35,27 @@ struct App {
 
 #[derive(PartialEq, Copy, Clone)]
 enum Db {
+    All,
+    Multi,
     Update,
-    Fortune,
-    Other,
 }
 
 impl App {
-    fn get_db(&mut self, db: Db) -> &PgConnection {
+    fn get_db(&mut self, db: Db) -> &mut PgConnection {
         if self.useall {
             match db {
-                Db::Update => &self.dbs[0],
-                Db::Fortune => {
-                    self.next = (self.next + 1) % self.dbs.len();
-                    &self.dbs[self.next]
+                Db::All => {
+                    self.next = (self.next + 1) % 5;
+                    &mut self.dbs[self.next]
                 }
-                Db::Other => {
-                    self.next = (self.next + 1) % 4;
-                    &self.dbs[self.next]
+                Db::Update => &mut self.dbs[0],
+                Db::Multi => {
+                    self.next = (self.next + 1) % 2;
+                    &mut self.dbs[self.next]
                 }
             }
         } else {
-            &self.dbs[0]
+            &mut self.dbs[0]
         }
     }
 }
@@ -104,7 +104,7 @@ impl Service for App {
                 Either::A(ok(res))
             }
             3 if path == "/db" => {
-                let fut = self.get_db(Db::Other).get_world();
+                let fut = self.get_db(Db::All).get_world();
 
                 Either::B(Box::new(fut.from_err().and_then(move |row| {
                     let mut body = BytesMut::with_capacity(31);
@@ -121,7 +121,7 @@ impl Service for App {
                 })))
             }
             8 if path == "/fortune" => {
-                let fut = self.get_db(Db::Fortune).tell_fortune();
+                let fut = self.get_db(Db::All).tell_fortune();
 
                 Either::B(Box::new(fut.from_err().and_then(move |fortunes| {
                     let mut body = BytesMut::with_capacity(2048);
@@ -149,7 +149,7 @@ impl Service for App {
             }
             8 if path == "/queries" => {
                 let q = utils::get_query_param(req.uri().query().unwrap_or("")) as usize;
-                let fut = self.get_db(Db::Other).get_worlds(q);
+                let fut = self.get_db(Db::Multi).get_worlds(q);
 
                 Either::B(Box::new(fut.from_err().and_then(move |worlds| {
                     let mut body = BytesMut::with_capacity(35 * worlds.len());
@@ -204,7 +204,7 @@ impl NewService<ServerConfig> for AppFactory {
             "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
         let mut conns = Vec::new();
-        for _ in 0..4 {
+        for _ in 0..5 {
             conns.push(PgConnection::connect(DB_URL));
         }
         Box::new(join_all(conns).map(|dbs| App {
@@ -216,12 +216,15 @@ impl NewService<ServerConfig> for AppFactory {
 }
 
 fn main() -> std::io::Result<()> {
-    let sys = actix_rt::System::new("techempower");
+    let sys = actix_rt::System::builder()
+        .name("techempower")
+        .stop_on_panic(false)
+        .build();
 
     // start http server
     Server::build()
         .backlog(1024)
-        .bind("0.0.0.0:8080", "techempower", || {
+        .bind("techempower", "0.0.0.0:8080", || {
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
                 .h1(AppFactory)

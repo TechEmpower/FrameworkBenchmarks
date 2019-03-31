@@ -117,7 +117,7 @@ fn main() -> std::io::Result<()> {
     // start http server
     Server::build()
         .backlog(1024)
-        .bind("0.0.0.0:8080", "techempower", move || {
+        .bind("techempower", "0.0.0.0:8080", move || {
             HttpService::build().keep_alive(KeepAlive::Os).h1(App::new()
                 .data(addr.clone())
                 .service(web::resource("/db").to_async(world_row))

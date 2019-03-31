@@ -127,7 +127,7 @@ fn main() -> std::io::Result<()> {
     // start http server
     Server::build()
         .backlog(1024)
-        .bind("0.0.0.0:8080", "techempower", || {
+        .bind("techempower", "0.0.0.0:8080", || {
             let addr = PgConnection::connect(DB_URL);
             HttpService::build().keep_alive(KeepAlive::Os).h1(App::new()
                 .data(addr)

@@ -45,7 +45,7 @@ fn main() -> std::io::Result<()> {
     // start http server
     Server::build()
         .backlog(1024)
-        .bind("0.0.0.0:8080", "techempower", || {
+        .bind("techempower", "0.0.0.0:8080", || {
             HttpService::build().keep_alive(KeepAlive::Os).h1(App::new()
                 .service(web::resource("/json").to(json))
                 .service(web::resource("/plaintext").to(plaintext)))
