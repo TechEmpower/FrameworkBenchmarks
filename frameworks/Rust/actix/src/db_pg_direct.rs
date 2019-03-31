@@ -146,10 +146,7 @@ impl PgConnection {
                 });
                 Ok::<_, io::Error>(items)
             })
-            .map_err(|e| {
-                println!("E: {:?}", e);
-                io::Error::new(io::ErrorKind::Other, e)
-            })
+            .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
             .and_then(|mut items| {
                 items.sort_by(|it, next| it.message.cmp(&next.message));
                 Ok(items)
