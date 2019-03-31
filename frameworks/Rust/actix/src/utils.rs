@@ -1,9 +1,7 @@
 #![allow(dead_code)]
-use bytes::BytesMut;
 use std::{cmp, fmt, io};
 
-use actix_web::http::Uri;
-use url::form_urlencoded;
+use bytes::BytesMut;
 
 pub const SIZE: usize = 31;
 
@@ -55,18 +53,13 @@ impl<'a> fmt::Write for StackWriter<'a> {
     }
 }
 
-pub fn get_query_param(uri: &Uri) -> u16 {
-    let mut q = None;
-    let q_str = if let Some(s) = uri.query() { s } else { "" };
-    for (key, val) in form_urlencoded::parse(q_str.as_ref()) {
-        if key == "q" {
-            q = Some(val);
-            break;
-        }
-    }
-
-    q.map(|q| cmp::min(500, cmp::max(1, q.parse::<u16>().ok().unwrap_or(1))))
-        .unwrap_or(1)
+pub fn get_query_param(query: &str) -> u16 {
+    let q = if let Some(pos) = query.find("q") {
+        query.split_at(pos + 1).1.parse::<u16>().ok().unwrap_or(1)
+    } else {
+        1
+    };
+    cmp::min(500, cmp::max(1, q))
 }
 
 fn escapable(b: u8) -> bool {

@@ -1,10 +1,11 @@
 //! Db executor actor
+use std::io;
+
 use actix::prelude::*;
 use diesel;
 use diesel::prelude::*;
 use diesel::result::Error;
 use rand::{thread_rng, Rng, ThreadRng};
-use std::io;
 
 use crate::models;
 
@@ -79,7 +80,7 @@ impl Handler<RandomWorlds> for DbExecutor {
     }
 }
 
-pub struct UpdateWorld(pub usize);
+pub struct UpdateWorld(pub u16);
 
 impl Message for UpdateWorld {
     type Result = io::Result<Vec<models::World>>;
@@ -91,7 +92,7 @@ impl Handler<UpdateWorld> for DbExecutor {
     fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> Self::Result {
         use crate::schema::world::dsl::*;
 
-        let mut worlds = Vec::with_capacity(msg.0);
+        let mut worlds = Vec::with_capacity(msg.0 as usize);
         for _ in 0..msg.0 {
             let w_id = self.rng.gen_range::<i32>(1, 10_001);
             let mut w = match world.filter(id.eq(w_id)).load::<models::World>(&self.conn)

@@ -1,6 +1,6 @@
 use std::io;
 
-use actix::prelude::*;
+use futures::future::join_all;
 use futures::{stream, Future, Stream};
 use rand::{thread_rng, Rng};
 use tokio_postgres::{connect, Client, Statement, TlsMode};
@@ -12,7 +12,6 @@ pub struct PgConnection {
     cl: Client,
     fortune: Statement,
     world: Statement,
-    update: Statement,
 }
 
 impl PgConnection {
@@ -21,26 +20,19 @@ impl PgConnection {
 
         hs.map_err(|_| panic!("can not connect to postgresql"))
             .and_then(|(cl, conn)| {
-                Arbiter::spawn(conn.map_err(|e| panic!("{}", e)));
-                cl.prepare("SELECT id, message FROM fortune")
-                    .map_err(|_| ())
-                    .and_then(move |fortune| {
-                        cl.prepare("SELECT id, randomnumber FROM world WHERE id=$1")
-                            .map_err(|_| ())
-                            .and_then(move |world| {
-                                let st = (fortune, world);
-                                cl.prepare("SELECT id FROM world WHERE id=$1")
-                                    .map_err(|_| ())
-                                    .and_then(|update| {
-                                        Ok(PgConnection {
-                                            cl,
-                                            fortune: st.0,
-                                            world: st.1,
-                                            update,
-                                        })
-                                    })
-                            })
-                    })
+                actix_rt::spawn(conn.map_err(|e| panic!("{}", e)));
+
+                join_all(vec![
+                    cl.prepare("SELECT id, message FROM fortune"),
+                    cl.prepare("SELECT id, randomnumber FROM world WHERE id=$1"),
+                ])
+                .map_err(|_| ())
+                .map(move |mut st| {
+                    let fortune = st.pop().unwrap();
+                    let world = st.pop().unwrap();
+
+                    PgConnection { cl, fortune, world }
+                })
             })
     }
 }
@@ -97,7 +89,7 @@ impl PgConnection {
             let w_id: i32 = thread_rng().gen_range(1, 10_001);
             worlds.push(
                 self.cl
-                    .query(&self.update, &[&w_id])
+                    .query(&self.world, &[&w_id])
                     .into_future()
                     .map_err(|e| io::Error::new(io::ErrorKind::Other, e.0))
                     .and_then(move |(row, _)| {
