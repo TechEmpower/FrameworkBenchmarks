@@ -119,8 +119,6 @@ impl PgConnection {
                 for w in &worlds {
                     update.push_str(&format!("({}, {}),", w.id, w.randomnumber));
                 }
-                worlds.sort_by_key(|w| w.id);
-
                 update.pop();
                 update.push_str(
                     " ORDER BY 1) AS temp(id, randomnumber) WHERE temp.id = world.id",
