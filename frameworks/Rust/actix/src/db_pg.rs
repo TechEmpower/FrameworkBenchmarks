@@ -13,7 +13,6 @@ pub struct PgConnection {
     cl: Option<Client>,
     fortune: Option<Statement>,
     world: Option<Statement>,
-    update: Option<Statement>,
     rng: ThreadRng,
 }
 
@@ -30,7 +29,6 @@ impl PgConnection {
                 cl: None,
                 fortune: None,
                 world: None,
-                update: None,
                 rng: thread_rng(),
             };
 
@@ -52,15 +50,6 @@ impl PgConnection {
                             .into_actor(act)
                             .and_then(|st, act, _| {
                                 act.world = Some(st);
-                                fut::ok(())
-                            }),
-                    );
-                    ctx.wait(
-                        cl.prepare("SELECT id, randomnumber FROM world WHERE id=$1")
-                            .map_err(|_| ())
-                            .into_actor(act)
-                            .and_then(|st, act, _| {
-                                act.update = Some(st);
                                 fut::ok(())
                             }),
                     );
@@ -158,7 +147,7 @@ impl Handler<UpdateWorld> for PgConnection {
                 self.cl
                     .as_mut()
                     .unwrap()
-                    .query(self.update.as_ref().unwrap(), &[&w_id])
+                    .query(self.world.as_ref().unwrap(), &[&w_id])
                     .into_future()
                     .map_err(|e| io::Error::new(io::ErrorKind::Other, e.0))
                     .and_then(move |(row, _)| {

@@ -39,7 +39,7 @@ futures = "0.1.25"
 http = "0.1"
 diesel = { version = "1.2", features = ["postgres"] }
 url = { version="1.7", features=["query_encoding"] }
-log = { version = "0.4", features = ["release_max_level_off"] }
+log = { version = "0.4" } #, features = ["release_max_level_off"] }
 phf = "0.7.22"
 tokio-postgres = { git="https://github.com/fafhrd91/rust-postgres.git" }
 

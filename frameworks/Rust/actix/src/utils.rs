@@ -1,5 +1,5 @@
 #![allow(dead_code)]
-use std::{cmp, fmt, io};
+use std::{cmp, io};
 
 use bytes::BytesMut;
 
@@ -18,37 +18,6 @@ impl<'a> io::Write for Writer<'a> {
         Ok(buf.len())
     }
     fn flush(&mut self) -> io::Result<()> {
-        Ok(())
-    }
-}
-
-pub struct StackWriter<'a>(pub &'a mut [u8], pub usize);
-
-impl<'a> io::Write for StackWriter<'a> {
-    #[inline]
-    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-        let l = buf.len();
-        let new = self.1 + l;
-        self.0[self.1..new].copy_from_slice(buf);
-        self.1 = new;
-        Ok(l)
-    }
-    #[inline]
-    fn flush(&mut self) -> io::Result<()> {
-        Ok(())
-    }
-}
-
-impl<'a> fmt::Write for StackWriter<'a> {
-    #[inline]
-    fn write_str(&mut self, s: &str) -> Result<(), fmt::Error> {
-        if !s.is_empty() {
-            let b = s.as_bytes();
-            let l = b.len();
-            let new = self.1 + l;
-            self.0[self.1..new].copy_from_slice(b);
-            self.1 = new;
-        }
         Ok(())
     }
 }

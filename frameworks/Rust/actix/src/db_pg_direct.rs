@@ -12,7 +12,6 @@ pub struct PgConnection {
     cl: Client,
     fortune: Statement,
     world: Statement,
-    update: Statement,
     rng: ThreadRng,
 }
 
@@ -27,18 +26,15 @@ impl PgConnection {
                 join_all(vec![
                     cl.prepare("SELECT id, message FROM fortune"),
                     cl.prepare("SELECT id, randomnumber FROM world WHERE id=$1"),
-                    cl.prepare("SELECT id FROM world WHERE id=$1"),
                 ])
                 .map_err(|_| ())
                 .map(move |mut st| {
-                    let fortune = st.pop().unwrap();
                     let world = st.pop().unwrap();
-                    let update = st.pop().unwrap();
+                    let fortune = st.pop().unwrap();
                     PgConnection {
                         cl,
                         fortune,
                         world,
-                        update,
                         rng: thread_rng(),
                     }
                 })
@@ -98,7 +94,7 @@ impl PgConnection {
             let w_id: i32 = self.rng.gen_range(1, 10_001);
             worlds.push(
                 self.cl
-                    .query(&self.update, &[&w_id])
+                    .query(&self.world, &[&w_id])
                     .into_future()
                     .map_err(|e| io::Error::new(io::ErrorKind::Other, e.0))
                     .and_then(move |(row, _)| {
@@ -152,7 +148,10 @@ impl PgConnection {
                 });
                 Ok::<_, io::Error>(items)
             })
-            .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
+            .map_err(|e| {
+                println!("E: {:?}", e);
+                io::Error::new(io::ErrorKind::Other, e)
+            })
             .and_then(|mut items| {
                 items.sort_by(|it, next| it.message.cmp(&next.message));
                 Ok(items)

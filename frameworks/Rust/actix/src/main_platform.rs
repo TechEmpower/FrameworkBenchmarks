@@ -19,7 +19,7 @@ mod models;
 mod utils;
 
 use crate::db_pg_direct::PgConnection;
-use crate::utils::{escape, Message, StackWriter, Writer as JsonWriter, SIZE};
+use crate::utils::{escape, Message, Writer, SIZE};
 
 const FORTUNES_START: &[u8] = b"<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
 const FORTUNES_ROW_START: &[u8] = b"<tr><td>";
@@ -93,7 +93,7 @@ impl Service for App {
                     message: "Hello, World!",
                 };
                 let mut body = BytesMut::with_capacity(SIZE);
-                serde_json::to_writer(JsonWriter(&mut body), &message).unwrap();
+                serde_json::to_writer(Writer(&mut body), &message).unwrap();
 
                 let mut res =
                     Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
@@ -108,7 +108,7 @@ impl Service for App {
 
                 Either::B(Box::new(fut.from_err().and_then(move |row| {
                     let mut body = BytesMut::with_capacity(31);
-                    serde_json::to_writer(JsonWriter(&mut body), &row).unwrap();
+                    serde_json::to_writer(Writer(&mut body), &row).unwrap();
                     let mut res =
                         Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
                     res.headers_mut()
@@ -125,7 +125,7 @@ impl Service for App {
 
                 Either::B(Box::new(fut.from_err().and_then(move |fortunes| {
                     let mut body = BytesMut::with_capacity(2048);
-                    let mut writer = StackWriter(&mut body, 0);
+                    let mut writer = Writer(&mut body);
                     let _ = writer.write(FORTUNES_START);
                     fortunes.into_iter().fold((), |_, row| {
                         let _ = writer.write(FORTUNES_ROW_START);
@@ -153,7 +153,7 @@ impl Service for App {
 
                 Either::B(Box::new(fut.from_err().and_then(move |worlds| {
                     let mut body = BytesMut::with_capacity(35 * worlds.len());
-                    serde_json::to_writer(JsonWriter(&mut body), &worlds).unwrap();
+                    serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
                     let mut res =
                         Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
                     res.headers_mut()
@@ -171,7 +171,7 @@ impl Service for App {
 
                 Either::B(Box::new(fut.from_err().and_then(move |worlds| {
                     let mut body = BytesMut::with_capacity(35 * worlds.len());
-                    serde_json::to_writer(JsonWriter(&mut body), &worlds).unwrap();
+                    serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
                     let mut res =
                         Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
                     res.headers_mut()
