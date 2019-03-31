@@ -4,7 +4,9 @@ extern crate serde_derive;
 extern crate diesel;
 
 use actix::prelude::*;
-use actix_web::{http, web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use actix_web::dev::Body;
+use actix_web::http::{header::CONTENT_TYPE, header::SERVER, HeaderValue, StatusCode};
+use actix_web::{web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use askama::Template;
 use bytes::BytesMut;
 use futures::Future;
@@ -24,10 +26,13 @@ fn world_row(
             Ok(row) => {
                 let mut body = BytesMut::with_capacity(31);
                 serde_json::to_writer(Writer(&mut body), &row).unwrap();
-                Ok(HttpResponse::Ok()
-                    .header(http::header::SERVER, "Actix")
-                    .header(http::header::CONTENT_TYPE, "application/json")
-                    .body(body))
+                let mut res =
+                    HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+                res.headers_mut()
+                    .insert(SERVER, HeaderValue::from_static("Actix"));
+                res.headers_mut()
+                    .insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+                Ok(res)
             }
             Err(_) => Ok(HttpResponse::InternalServerError().into()),
         })
@@ -45,10 +50,13 @@ fn queries(
         if let Ok(worlds) = res {
             let mut body = BytesMut::with_capacity(35 * worlds.len());
             serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
-            Ok(HttpResponse::Ok()
-                .header(http::header::SERVER, "Actix")
-                .header(http::header::CONTENT_TYPE, "application/json")
-                .body(body))
+            let mut res =
+                HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+            res.headers_mut()
+                .insert(SERVER, HeaderValue::from_static("Actix"));
+            res.headers_mut()
+                .insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+            Ok(res)
         } else {
             Ok(HttpResponse::InternalServerError().into())
         }
@@ -67,10 +75,13 @@ fn updates(
         if let Ok(worlds) = res {
             let mut body = BytesMut::with_capacity(35 * worlds.len());
             serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
-            Ok(HttpResponse::Ok()
-                .header(http::header::SERVER, "Actix")
-                .header(http::header::CONTENT_TYPE, "application/json")
-                .body(body))
+            let mut res =
+                HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+            res.headers_mut()
+                .insert(SERVER, HeaderValue::from_static("Actix"));
+            res.headers_mut()
+                .insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+            Ok(res)
         } else {
             Ok(HttpResponse::InternalServerError().into())
         }
@@ -91,12 +102,17 @@ fn fortune(
         .and_then(move |res| match res {
             Ok(rows) => {
                 let tmpl = FortuneTemplate { items: &rows };
-                let res = tmpl.render().unwrap();
+                let body = tmpl.render().unwrap();
 
-                Ok(HttpResponse::Ok()
-                    .header(http::header::SERVER, "Actix")
-                    .header(http::header::CONTENT_TYPE, "text/html; charset=utf-8")
-                    .body(res))
+                let mut res =
+                    HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.into()));
+                res.headers_mut()
+                    .insert(SERVER, HeaderValue::from_static("Actix"));
+                res.headers_mut().insert(
+                    CONTENT_TYPE,
+                    HeaderValue::from_static("text/html; charset=utf-8"),
+                );
+                Ok(res)
             }
             Err(_) => Ok(HttpResponse::InternalServerError().into()),
         })

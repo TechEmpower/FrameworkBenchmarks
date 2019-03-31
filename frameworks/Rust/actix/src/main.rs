@@ -1,8 +1,10 @@
 #[macro_use]
 extern crate serde_derive;
 
-use actix_web::{http, web, App, HttpResponse, HttpServer};
-use bytes::BytesMut;
+use actix_web::dev::Body;
+use actix_web::http::{header::CONTENT_TYPE, header::SERVER, HeaderValue, StatusCode};
+use actix_web::{web, App, HttpResponse, HttpServer};
+use bytes::{Bytes, BytesMut};
 
 mod utils;
 use utils::{Message, Writer, SIZE};
@@ -14,17 +16,24 @@ fn json() -> HttpResponse {
     let mut body = BytesMut::with_capacity(SIZE);
     serde_json::to_writer(Writer(&mut body), &message).unwrap();
 
-    HttpResponse::Ok()
-        .header(http::header::SERVER, "Actix")
-        .header(http::header::CONTENT_TYPE, "application/json")
-        .body(body)
+    let mut res = HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Actix"));
+    res.headers_mut()
+        .insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+    res
 }
 
 fn plaintext() -> HttpResponse {
-    HttpResponse::Ok()
-        .header(http::header::SERVER, "Actix")
-        .header(http::header::CONTENT_TYPE, "text/plain")
-        .body("Hello, World!")
+    let mut res = HttpResponse::with_body(
+        StatusCode::OK,
+        Body::Bytes(Bytes::from_static(b"Hello, World!")),
+    );
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Actix"));
+    res.headers_mut()
+        .insert(CONTENT_TYPE, HeaderValue::from_static("text/plain"));
+    res
 }
 
 fn main() -> std::io::Result<()> {
