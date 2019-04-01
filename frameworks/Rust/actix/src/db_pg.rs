@@ -6,14 +6,13 @@ use futures::{stream, Future, Stream};
 use rand::{thread_rng, Rng, ThreadRng};
 use tokio_postgres::{connect, Client, Statement, TlsMode};
 
-use models::{Fortune, World};
+use crate::models::{Fortune, World};
 
 /// Postgres interface
 pub struct PgConnection {
     cl: Option<Client>,
     fortune: Option<Statement>,
     world: Option<Statement>,
-    update: Option<Statement>,
     rng: ThreadRng,
 }
 
@@ -30,7 +29,6 @@ impl PgConnection {
                 cl: None,
                 fortune: None,
                 world: None,
-                update: None,
                 rng: thread_rng(),
             };
 
@@ -55,20 +53,12 @@ impl PgConnection {
                                 fut::ok(())
                             }),
                     );
-                    ctx.wait(
-                        cl.prepare("SELECT id FROM world WHERE id=$1")
-                            .map_err(|_| ())
-                            .into_actor(act)
-                            .and_then(|st, act, _| {
-                                act.update = Some(st);
-                                fut::ok(())
-                            }),
-                    );
 
                     act.cl = Some(cl);
                     Arbiter::spawn(conn.map_err(|e| panic!("{}", e)));
                     fut::ok(())
-                }).wait(ctx);
+                })
+                .wait(ctx);
 
             act
         })
@@ -157,7 +147,7 @@ impl Handler<UpdateWorld> for PgConnection {
                 self.cl
                     .as_mut()
                     .unwrap()
-                    .query(self.update.as_ref().unwrap(), &[&w_id])
+                    .query(self.world.as_ref().unwrap(), &[&w_id])
                     .into_future()
                     .map_err(|e| io::Error::new(io::ErrorKind::Other, e.0))
                     .and_then(move |(row, _)| {
@@ -227,7 +217,8 @@ impl Handler<TellFortune> for PgConnection {
                         message: row.get(1),
                     });
                     Ok::<_, io::Error>(items)
-                }).map_err(|e| io::Error::new(io::ErrorKind::Other, e))
+                })
+                .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
                 .and_then(|mut items| {
                     items.sort_by(|it, next| it.message.cmp(&next.message));
                     Ok(items)

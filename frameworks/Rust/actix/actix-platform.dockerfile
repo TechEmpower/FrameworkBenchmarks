@@ -1,4 +1,4 @@
-FROM rust:1.29.1
+FROM rust:1.33.0
 
 ADD ./ /actix
 WORKDIR /actix
@@ -6,4 +6,4 @@ WORKDIR /actix
 RUN cargo clean
 RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
 
-CMD ./target/release/actix-raw
+CMD ./target/release/actix-platform
