@@ -25,7 +25,7 @@ class RawController extends AppController
     public function queries($count = 1)
     {
         //$queries = ($queries < 1) ? 1 : (($queries > 500) ? 500 : $queries);
-        $count = is_numeric($count) ? min(max($count, 1), 500) : 1;
+        $count = min(max($count, 1), 500);
         $res = $this->pdo->prepare('SELECT randomNumber FROM World WHERE id = ?');
         $worlds = [];
         for ($i = 0; $i < $count; ++$i) {
@@ -38,7 +38,7 @@ class RawController extends AppController
 
     public function update($count = 1)
     {
-        $count = is_numeric($count) ? min(max($count, 1), 500) : 1;
+        $count = min(max($count, 1), 500);
         $worlds = [];
         
         $sth = $this->pdo->prepare('SELECT * FROM World WHERE id = ?');
