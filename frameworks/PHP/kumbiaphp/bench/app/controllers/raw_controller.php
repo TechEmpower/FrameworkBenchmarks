@@ -16,22 +16,18 @@ class RawController extends AppController
 
     public function index()
     {
-        $res = $this->pdo->prepare('SELECT randomNumber FROM World WHERE id = ?');
-        $id = mt_rand(1, 10000);
-        $res->execute(array($id));
-        echo json_encode(['id' => $id, 'randomNumber' => $res->fetchColumn()]);
+        $statement = $this->pdo->query( 'SELECT id,randomNumber FROM World WHERE id = '. mt_rand(1, 10000) );
+        echo json_encode($statement->fetch(PDO::FETCH_ASSOC));
     }
 
     public function queries($count = 1)
     {
-        //$queries = ($queries < 1) ? 1 : (($queries > 500) ? 500 : $queries);
         $count = min(max($count, 1), 500);
-        $res = $this->pdo->prepare('SELECT randomNumber FROM World WHERE id = ?');
+        $res = $this->pdo->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
         $worlds = [];
         for ($i = 0; $i < $count; ++$i) {
-            $id = mt_rand(1, 10000);
-            $res->execute(array($id));
-            $worlds[] = array('id' => $id, 'randomNumber' => $res->fetchColumn());
+            $res->execute([mt_rand(1, 10000)]);
+            $worlds[] = $res->fetch(PDO::FETCH_ASSOC);
         }
         echo json_encode($worlds);
     }
