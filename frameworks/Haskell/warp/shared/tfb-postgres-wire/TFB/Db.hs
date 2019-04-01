@@ -1,6 +1,7 @@
+{-# OPTIONS -funbox-strict-fields #-}
 {-# LANGUAGE OverloadedStrings     #-}
 
-module Lib.Db (
+module TFB.Db (
     Pool
   , mkPool
   , Config(..)
@@ -11,7 +12,7 @@ module Lib.Db (
   , Error
 ) where
 
-import qualified Lib.Types as Types
+import qualified TFB.Types as Types
 import qualified Data.Either as Either
 import qualified System.IO.Error as Error
 import           Control.Monad (replicateM, forM)
@@ -56,7 +57,11 @@ instance Show Config where
 
 type Connection = PG.Connection
 type Pool = Pool.Pool Connection
-type Error = PG.Error
+data Error
+  = DbError PG.Error
+  | DbErrors [PG.Error]
+  | NotFound
+  deriving Show
 
 connect :: Config -> IO Connection
 connect c = simplifyError =<< PG.connect pgc
@@ -107,15 +112,19 @@ decodeWorld = PGCD.dataRowHeader *> decoder
         <$> decodeInt
         <*> decodeInt
 
-queryWorldById :: Connection -> Types.QId -> IO (Either Error (V.Vector Types.World))
-queryWorldById conn wId = runQuery conn decodeWorld q
+queryWorldById :: Pool -> Types.QId -> IO (Either Error Types.World)
+queryWorldById dbPool wId = Pool.withResource dbPool $ \conn -> do
+  fmap go $ runQuery conn decodeWorld q
   where
     s = "SELECT * FROM World WHERE id = $1"
     q = mkQuery s [encodeInt wId]
+    mkW [] = Left NotFound
+    mkW ws = pure . head $ ws
+    go = Either.either (Left . DbError) (mkW . V.toList)
 
-queryWorldByIds :: Connection -> [Types.QId] -> IO (Either [Error] [Types.World])
+queryWorldByIds :: Pool -> [Types.QId] -> IO (Either Error [Types.World])
 queryWorldByIds _ [] = pure . pure $ mempty
-queryWorldByIds conn wIds = do
+queryWorldByIds dbPool wIds = Pool.withResource dbPool $ \conn -> do
   let s = "SELECT * FROM World WHERE id = $1"
   let mkQ wId = mkQuery s [encodeInt wId]
   let qs = fmap mkQ wIds
@@ -125,11 +134,11 @@ queryWorldByIds conn wIds = do
   let (errs, rowsList) = Either.partitionEithers eRowsMany
   return $ case errs of
     [] -> pure . mconcat $ fmap (V.toList . PGD.decodeManyRows decodeWorld) rowsList
-    _ -> Left errs
+    _ -> Left . DbErrors $ errs
 
-updateWorlds :: Connection -> [(Types.World, Int)] -> IO (Either [Error] [Types.World])
+updateWorlds :: Pool -> [(Types.World, Int)] -> IO (Either Error [Types.World])
 updateWorlds _ [] = pure . pure $ mempty
-updateWorlds conn wsUpdates = do
+updateWorlds dbPool wsUpdates = Pool.withResource dbPool $ \conn -> do
   let ws = fmap updateW wsUpdates
   let qs = fmap mkQ ws
   eRowsMany <- forM qs $ \q -> do
@@ -140,7 +149,7 @@ updateWorlds conn wsUpdates = do
   let (errs, _) = Either.partitionEithers eRowsMany
   return $ case errs of
     [] -> pure ws
-    _ -> Left errs
+    _ -> Left . DbErrors $ errs
   where
     s = "UPDATE World SET randomNumber = $1 WHERE id = $2"
     updateW (w,wNum) = w { Types.wRandomNumber = wNum }
@@ -156,8 +165,10 @@ decodeFortune = PGCD.dataRowHeader *> decoder
         <$> decodeInt
         <*> decodeText
 
-queryFortunes :: Connection -> IO (Either Error (V.Vector Types.Fortune))
-queryFortunes conn = runQuery conn decodeFortune q
+queryFortunes :: Pool -> IO (Either Error [Types.Fortune])
+queryFortunes dbPool = Pool.withResource dbPool $ \conn -> do
+  fmap go $ runQuery conn decodeFortune q
   where
     s = "SELECT * FROM Fortune"
     q = mkQuery s []
+    go = Either.either (Left . DbError) (pure . V.toList)

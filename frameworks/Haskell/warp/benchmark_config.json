@@ -22,7 +22,7 @@
       "database_os": "Linux",
       "display_name": "Warp+Postgres-wire",
       "notes": "Pure haskell.",
-      "dockerfile": "warp.dockerfile"
+      "dockerfile": "warp-shared.dockerfile"
     },
     "hasql": {
       "json_url": "/json",
@@ -45,7 +45,7 @@
       "database_os": "Linux",
       "display_name": "Warp+Hasql",
       "notes": "Uses libpq system dependency.",
-      "dockerfile": "warp.dockerfile"
+      "dockerfile": "warp-shared.dockerfile"
     },
     "mysql-haskell": {
       "json_url": "/json",
@@ -68,7 +68,7 @@
       "database_os": "Linux",
       "display_name": "Warp+mysql-haskell",
       "notes": "Pure Haskell.",
-      "dockerfile": "warp.dockerfile"
+      "dockerfile": "warp-shared.dockerfile"
     }
   }]
 }

@@ -5,14 +5,12 @@ module Lib (
   , Db.Config(..)
 ) where
 
-import qualified Lib.Types as Types
-import qualified Lib.Db as Db
+import qualified TFB.Types as Types
+import qualified TFB.Db as Db
 import qualified Data.Either as Either
-import qualified Data.Maybe as Maybe
 import           Data.List (sortOn)
 import           Control.Monad (replicateM, join)
 
-import qualified Data.Pool as Pool
 import qualified Data.ByteString.Lazy as LBS
 import qualified Data.ByteString.Lazy.Char8 as LBSC
 import qualified Network.HTTP.Types.Status as Status
@@ -22,7 +20,6 @@ import qualified Network.Wai.Handler.Warp as Warp
 import qualified Data.BufferBuilder.Json as Json
 import           Data.BufferBuilder.Json ((.=))
 import qualified System.Random.MWC as MWC
-import qualified Data.Vector as V
 import qualified Html
 import           Html ((#))
 
@@ -35,7 +32,7 @@ main dbConfig = do
   dbPool <- Db.mkPool dbConfig
   putStrLn "Initializing PRNG seed..."
   gen <- MWC.create
-  putStrLn "Warp core online: using postgres-wire"
+  putStrLn "Warp core online"
   Warp.run 7041 $ app gen dbPool
 
 -- router
@@ -87,17 +84,11 @@ respondHtml = Wai.responseLBS Status.status200 contentHtml . Html.renderByteStri
 routeNotFound :: Wai.Response
 routeNotFound = respondText Status.status400 "Bad route"
 
-entityNotFound :: Wai.Response
-entityNotFound = respondText Status.status404 "Not Found"
-
 respondInternalError :: LBS.ByteString -> Wai.Response
 respondInternalError = respondText Status.status500
 
 respondDbError :: Db.Error -> Wai.Response
 respondDbError = respondInternalError . LBSC.pack . show
-
-respondDbErrors :: [Db.Error] -> Wai.Response
-respondDbErrors = respondInternalError . LBSC.pack . show
 
 -- * route implementations
 
@@ -112,34 +103,30 @@ getJson = respondJson $ "message" .= Types.unsafeJsonString "Hello, World!"
 getWorld :: MWC.GenIO -> Db.Pool -> IO Wai.Response
 getWorld gen dbPool = do
   wId <- randomId gen
-  Pool.withResource dbPool $ \conn -> do
-    res <- Db.queryWorldById conn wId
-    pure . mkResponse $ res
+  res <- Db.queryWorldById dbPool wId
+  pure . mkResponse $ res
   where
-    mkSuccess = Maybe.maybe entityNotFound respondJson . flip (V.!?) 0
-    mkResponse = Either.either respondDbError mkSuccess
+    mkResponse = Either.either respondDbError respondJson
 {-# INLINE getWorld #-}
 
 getWorlds :: MWC.GenIO -> Db.Pool -> Maybe Types.Count -> IO Wai.Response
 getWorlds gen dbPool mCount = do
   wIds <- replicateM count $ randomId gen
-  Pool.withResource dbPool $ \conn -> do
-    res <- Db.queryWorldByIds conn wIds
-    pure . mkResponse $ res
+  res <- Db.queryWorldByIds dbPool wIds
+  pure . mkResponse $ res
   where
     count = Types.getCount mCount
-    mkResponse = Either.either respondDbErrors respondJson
+    mkResponse = Either.either respondDbError respondJson
 {-# INLINE getWorlds #-}
 
 updateWorlds :: MWC.GenIO -> Db.Pool -> Maybe Types.Count -> IO Wai.Response
 updateWorlds gen dbPool mCount = do
   wIds <- replicateM count $ randomId gen
-  Pool.withResource dbPool $ \conn -> do
-    res <- Db.queryWorldByIds conn wIds
-    Either.either (pure . respondDbErrors) (go conn) res
+  res <- Db.queryWorldByIds dbPool wIds
+  Either.either (pure . respondDbError) (go dbPool) res
   where
     count = Types.getCount mCount
-    mkResponse = Either.either respondDbErrors respondJson
+    mkResponse = Either.either respondDbError respondJson
     go conn ws = do
       wNumbers <- replicateM count $ randomId gen
       wsUp <- Db.updateWorlds conn . zip ws $ fmap fromIntegral wNumbers
@@ -148,24 +135,23 @@ updateWorlds gen dbPool mCount = do
 
 getFortunes :: Db.Pool -> IO Wai.Response
 getFortunes dbPool = do
-  Pool.withResource dbPool $ \conn -> do
-    res <- Db.queryFortunes conn
-    return $ case res of
-      Left e -> respondDbError e
-      Right fs -> respondHtml $ do
-        let new = Types.Fortune 0 "Additional fortune added at request time."
-        let header = Html.tr_ $ Html.th_ (Html.Raw "id") # Html.th_ (Html.Raw "message")
-        let mkRow f = Html.tr_ $ Html.td_ (fromIntegral $ Types.fId f) # Html.td_ (Types.fMessage $ f)
-        let rows = fmap mkRow $ sortOn Types.fMessage (new : V.toList fs)
-        Html.doctype_ #
-          Html.html_ (
-            Html.head_ (
-              Html.title_ (Html.Raw "Fortunes")
-            ) #
-            Html.body_ ( Html.table_ $
-              header # rows
-            )
+  res <- Db.queryFortunes dbPool
+  return $ case res of
+    Left e -> respondDbError e
+    Right fs -> respondHtml $ do
+      let new = Types.Fortune 0 "Additional fortune added at request time."
+      let header = Html.tr_ $ Html.th_ (Html.Raw "id") # Html.th_ (Html.Raw "message")
+      let mkRow f = Html.tr_ $ Html.td_ (fromIntegral $ Types.fId f) # Html.td_ (Types.fMessage $ f)
+      let rows = fmap mkRow $ sortOn Types.fMessage (new : fs)
+      Html.doctype_ #
+        Html.html_ (
+          Html.head_ (
+            Html.title_ (Html.Raw "Fortunes")
+          ) #
+          Html.body_ ( Html.table_ $
+            header # rows
           )
+        )
 {-# INLINE getFortunes #-}
 
 randomId :: MWC.GenIO -> IO Types.QId
