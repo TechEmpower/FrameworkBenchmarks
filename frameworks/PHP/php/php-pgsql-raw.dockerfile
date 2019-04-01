@@ -13,6 +13,7 @@ ADD ./ /php
 WORKDIR /php
 
 RUN sed -i "s|PDO('mysql:|PDO('pgsql:|g" dbraw.php
+RUN sed -i "s|PDO('mysql:|PDO('pgsql:|g" dbquery.php
 RUN sed -i "s|PDO('mysql:|PDO('pgsql:|g" fortune.php
 RUN sed -i "s|PDO('mysql:|PDO('pgsql:|g" updateraw.php
 
