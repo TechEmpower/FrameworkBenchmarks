@@ -65,8 +65,8 @@ public class FrameworkTest implements GreenApp {
     	this(System.getProperty("host","0.0.0.0"), 
     		 8080,    	//default port for test 
     		 c,         //pipes per track
-    		 c*16,       //(router to module)
-    		 1<<12,     //default total size of network buffer used by blocks 
+    		 c*16,      //(router to module) pipeline of 16 used for plain text test
+    		 1<<13,     //default total size of network buffer used by blocks 
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
     		 "hello_world",
@@ -128,12 +128,10 @@ public class FrameworkTest implements GreenApp {
     		options = new PgPoolOptions()
     				.setPort(connectionPort)
     				.setPipeliningLimit(1<<pipelineBits)
-    				.setTcpFastOpen(true)
     				.setHost(connectionHost)
     				.setDatabase(connectionDB)
     				.setUser(connectionUser)
-    				.setIdleTimeout(20)
-    				.setPassword(connectionPassword)
+    				.setPassword(connectionPassword)    		
     				.setCachePreparedStatements(true)
     				.setMaxSize(connectionsPerTrack);	    	
 
@@ -145,7 +143,7 @@ public class FrameworkTest implements GreenApp {
 	    		if (null!=a.result()) {
 	    			a.result().close();
 	    		}
-	    	});
+	    	});			
 			pool.close();
 
     	} catch (Throwable t) {
@@ -159,7 +157,7 @@ public class FrameworkTest implements GreenApp {
 	@Override
     public void declareConfiguration(GreenFramework framework) {
 		
-		framework.setDefaultRate(64_000L);			
+		framework.setDefaultRate(50_000L);			
 	
 		//for 14 cores this is expected to use less than 16G, must use next largest prime to ensure smaller groups are not multiples.
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
