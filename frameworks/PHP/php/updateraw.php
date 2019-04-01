@@ -9,7 +9,7 @@ $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 
 
 // Read number of queries to run from URL parameter
 $query_count = 1;
-if (isset($_GET['queries']) && $_GET['queries'] > 1) {
+if ($_GET['queries'] > 1) {
   $query_count = $_GET['queries'] > 500 ? 500 : $_GET['queries'];
 }
 
