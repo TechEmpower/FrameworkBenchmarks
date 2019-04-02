@@ -49,7 +49,7 @@ class CachedQueryTestType(FrameworkTestType):
             self.config.duration,
             'levels':
             " ".join(
-                "{}".format(item) for item in self.config.concurrency_levels),
+                "{}".format(item) for item in self.config.cached_query_levels),
             'server_host':
             self.config.server_host,
             'url':
