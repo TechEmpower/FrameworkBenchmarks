@@ -11,6 +11,7 @@ import std.conv;
 import std.json;
 import std.socket;
 import std.string;
+import std.stdio;
 
 import http.Parser;
 import http.Processor;
@@ -19,18 +20,23 @@ shared static this() {
 	DateTimeHelper.startClock();
 }
 
+
 /**
 */
 abstract class AbstractTcpServer {
 	protected EventLoopGroup _group = null;
 	protected bool _isStarted = false;
 	protected Address _address;
+	protected int _workersCount;
 	TcpStreamOption _tcpStreamoption;
 
-	this(Address address, int thread = (totalCPUs - 1)) {
+	this(Address address, int thread = (totalCPUs - 1), int workersCount = 0) {
 		this._address = address;
 		_tcpStreamoption = TcpStreamOption.createOption();
+		_tcpStreamoption.bufferSize = 1024 * 2;
+		_tcpStreamoption.isKeepalive = false;
 		_group = new EventLoopGroup(cast(uint) thread);
+		this._workersCount = workersCount;
 	}
 
 	@property Address bindingAddress() {
@@ -40,31 +46,44 @@ abstract class AbstractTcpServer {
 	void start() {
 		if (_isStarted)
 			return;
-		debug trace("start to listen:");
 		_isStarted = true;
 
 		Socket server = new TcpSocket();
 		server.setOption(SocketOptionLevel.SOCKET, SocketOption.REUSEADDR, true);
 		server.bind(new InternetAddress("0.0.0.0", 8080));
-		server.listen(1000);
+		server.listen(8192);
 
-		debug trace("Launching server");
+		trace("Launching server");
+		debug {
+			_group.start();
+		} else {
+			_group.start(100);
+		}
 
-		_group.start();
+		if (_workersCount) {
+			defaultPoolThreads = _workersCount;
+			workerPool(); // Initilize worker poll
+		}
+		writefln("worker count: %d", _workersCount);
+		writefln("IO thread: %d", _group.size);
+		
 
 		while (true) {
 			try {
 				version (HUNT_DEBUG)
 					trace("Waiting for server.accept()");
+
 				Socket socket = server.accept();
 				version (HUNT_DEBUG) {
-					infof("new client from %s, fd=%d", socket.remoteAddress.toString(), socket.handle());
+					infof("new connection from %s, fd=%d",
+							socket.remoteAddress.toString(), socket.handle());
 				}
-				EventLoop loop = _group.nextLoop();
+				// EventLoop loop = _group.nextLoop();
+				EventLoop loop = _group.nextLoop(socket.handle);
 				TcpStream stream = new TcpStream(loop, socket, _tcpStreamoption);
 				onConnectionAccepted(stream);
 			} catch (Exception e) {
-				warningf("Failure on accept %s", e);
+				warningf("Failure on accepting %s", e);
 				break;
 			}
 		}
@@ -98,7 +117,7 @@ class HttpServer : AbstractTcpServer {
 	}
 
 	override protected void onConnectionAccepted(TcpStream client) {
-		if(processorCreater !is null) {
+		if (processorCreater !is null) {
 			HttpProcessor httpProcessor = processorCreater(client);
 			httpProcessor.run();
 		}

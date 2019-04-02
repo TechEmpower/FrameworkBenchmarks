@@ -15,7 +15,7 @@ class DbController extends AppController
 
     public function queries($count = 1)
     {
-        $count = is_numeric($count) ? min(max($count, 1), 500) : 1;
+        $count = min(max($count, 1), 500);
         $worlds = [];
         for ($i = 0; $i < $count; ++$i) {
             $worlds[] = World::byId(mt_rand(1, 10000));
@@ -25,7 +25,7 @@ class DbController extends AppController
 
     public function update($count = 1)
     {
-        $count = is_numeric($count) ? min(max($count, 1), 500) : 1;
+        $count = min(max($count, 1), 500);
         $worlds = [];
         for ($i = 0; $i < $count; ++$i) {
             $row = World::byId(mt_rand(1, 10000));

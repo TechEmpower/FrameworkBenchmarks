@@ -22,7 +22,6 @@
 #define FORTUNE_H_
 
 #include <h2o.h>
-#include <postgresql/libpq-fe.h>
 
 #include "list.h"
 

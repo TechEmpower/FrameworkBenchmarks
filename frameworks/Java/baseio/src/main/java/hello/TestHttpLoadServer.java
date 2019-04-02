@@ -61,8 +61,9 @@ public class TestHttpLoadServer {
         boolean lite = Util.getBooleanProperty("lite");
         boolean read = Util.getBooleanProperty("read");
         boolean pool = Util.getBooleanProperty("pool");
-        boolean direct = Util.getBooleanProperty("direct");
         boolean epoll = Util.getBooleanProperty("epoll");
+        boolean direct = Util.getBooleanProperty("direct");
+        boolean inline = Util.getBooleanProperty("inline");
         boolean unsafeBuf = Util.getBooleanProperty("unsafeBuf");
         int core = Util.getIntProperty("core", 1);
         int frame = Util.getIntProperty("frame", 16);
@@ -82,6 +83,7 @@ public class TestHttpLoadServer {
         DebugUtil.info("frame: {}", frame);
         DebugUtil.info("level: {}", level);
         DebugUtil.info("direct: {}", direct);
+        DebugUtil.info("inline: {}", inline);
         DebugUtil.info("readBuf: {}", readBuf);
 
         IoEventHandle eventHandle = new IoEventHandle() {
@@ -104,25 +106,32 @@ public class TestHttpLoadServer {
                     f.setContentType(HttpContentType.text_plain);
                     f.setStatus(HttpStatus.C404);
                 }
-                f.setDate(HttpDateUtil.getDate());
+                f.setDate(HttpDateUtil.getDateLine());
                 ch.writeAndFlush(f);
                 ch.release(f);
             }
 
         };
-
+        
+        int fcache = 1024 * 16;
+        int pool_cap = 1024 * 128;
+        int pool_unit = 256;
+        if (inline) {
+            pool_cap = 1024 * 8;
+            pool_unit = 256 * 16;
+        }
         HttpDateUtil.start();
         NioEventLoopGroup group = new NioEventLoopGroup();
         ChannelAcceptor context = new ChannelAcceptor(group, 8080);
-        group.setMemoryPoolCapacity(1024 * 128);
+        group.setMemoryPoolCapacity(pool_cap);
         group.setEnableMemoryPoolDirect(direct);
         group.setEnableMemoryPool(pool);
-        group.setMemoryPoolUnit(256);
+        group.setMemoryPoolUnit(pool_unit);
         group.setWriteBuffers(32);
         group.setChannelReadBuffer(1024 * readBuf);
         group.setEventLoopSize(Util.availableProcessors() * core);
         group.setConcurrentFrameStack(false);
-        context.addProtocolCodec(new HttpCodec("baseio", 1024 * 16, lite));
+        context.addProtocolCodec(new HttpCodec("baseio", fcache, lite, inline));
         context.addChannelEventListener(new ChannelEventListenerAdapter() {
 
             @Override

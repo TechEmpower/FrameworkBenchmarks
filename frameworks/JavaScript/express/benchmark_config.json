@@ -50,7 +50,7 @@
     },
     "mysql": {
       "db_url": "/mysql-orm",
-      "query_url": "/mysql-orm?queries=",
+      "query_url": "/mysql-orm-query?queries=",
       "fortune_url": "/mysql-orm-fortune",
       "update_url": "/mysql-orm-update?queries=",
       "port": 8080,

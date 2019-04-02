@@ -1,0 +1,15 @@
+{% func FortunePage(rows []Fortune) %}<!DOCTYPE html>
+<html>
+<head>
+<title>Fortunes</title>
+</head>
+<body>
+<table>
+<tr><th>id</th><th>message</th></tr>
+{% for _, r := range rows %}
+<tr><td>{%d int(r.ID) %}</td><td>{%s r.Message %}</td></tr>
+{% endfor %}
+</table>
+</body>
+</html>
+{% endfunc %}

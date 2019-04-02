@@ -4,7 +4,7 @@
 
 	<groupId>com.ociweb.gl.benchmark</groupId>
 	<artifactId>benchmark-test</artifactId>
-	<version>1.0.28</version>
+	<version>1.0.36</version> 
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,7 +14,7 @@
 		<dependency>
 			<groupId>com.ociweb</groupId>
 			<artifactId>greenlightning</artifactId>
-			<version>1.0.28</version> <!-- must be a fixed version for techempower releases -->
+			<version>${project.version}</version> <!-- must be a fixed version for techempower releases -->
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -37,7 +37,7 @@
 		<dependency>
 		    <groupId>io.reactiverse</groupId>
 		    <artifactId>reactive-pg-client</artifactId>
-		    <version>0.11.1</version>
+		    <version>0.11.2</version>
 		</dependency>
 
 	</dependencies>

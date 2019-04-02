@@ -26,17 +26,21 @@ void main(string[] args) {
 		return;
 	}
 
-version(POSTGRESQL) {
-	debug {
-		dbConnection = new Database("postgresql://benchmarkdbuser:benchmarkdbpass@10.1.11.44:5432/hello_world?charset=utf-8");
-		dbConnection.getOption().setMinimumConnection(64);
-	} else {
-		dbConnection = new Database("postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?charset=utf-8");
-		dbConnection.getOption().setMinimumConnection(64);
+	version (POSTGRESQL) {
+		DatabaseOption options;
+		debug {
+			options = new DatabaseOption(
+					"postgresql://benchmarkdbuser:benchmarkdbpass@10.1.11.44:5432/hello_world?charset=utf-8");
+		} else {
+			options = new DatabaseOption(
+					"postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?charset=utf-8");
+		}
+		options.setMinimumConnection(totalCPUs*2);
+		options.setMaximumConnection(totalCPUs*2);
+		dbConnection = new Database(options);
 	}
-		dbConnection.getOption().setMaximumConnection(64);
-}
-	HttpServer httpServer = new HttpServer("0.0.0.0", port, totalCPUs-1);
+	
+	HttpServer httpServer = new HttpServer("0.0.0.0", port, totalCPUs);
 	httpServer.onProcessorCreate(delegate HttpProcessor (TcpStream client) {
 		return new DemoProcessor(client);
 	});

@@ -34,7 +34,7 @@ Edit `.travis.yml` to ensure that Travis-CI will automatically run our verificat
 
 6. Fix this `README.md` and open a pull request
 
-Starting on line 59 is your actual `README.md` that will sit with your test implementation. Update all the dummy values to their correct values so that when people visit your test in our Github repository, they will be greated with information on how your test implementation works and where to look for useful source code.
+Starting on line 49 is your actual `README.md` that will sit with your test implementation. Update all the dummy values to their correct values so that when people visit your test in our Github repository, they will be greated with information on how your test implementation works and where to look for useful source code.
 
 After you have the real `README.md` file in place, delete everything above line 59 and you are ready to open a pull request.
 

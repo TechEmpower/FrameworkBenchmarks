@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net"
 	"runtime"
 
 	"github.com/jackc/pgx"
@@ -22,10 +23,16 @@ var (
 )
 
 func main() {
+	bindHost := flag.String("bind", ":8080", "set bind host")
+	prefork := flag.Bool("prefork", false, "use prefork")
+	child := flag.Bool("child", false, "is child proc")
 	flag.Parse()
 
 	var err error
 	maxConnectionCount := runtime.NumCPU() * 4
+	if *child {
+		maxConnectionCount = runtime.NumCPU()
+	}
 	if db, err = initDatabase("tfb-database", "benchmarkdbuser", "benchmarkdbpass", "hello_world", 5432, maxConnectionCount); err != nil {
 		log.Fatalf("Error opening database: %s", err)
 	}
@@ -34,7 +41,14 @@ func main() {
 		Handler: mainHandler,
 		Name:    "go",
 	}
-	ln := common.GetListener()
+
+	var ln net.Listener
+	if *prefork {
+		ln = common.DoPrefork(*child, *bindHost)
+	} else {
+		ln = common.GetListener(*bindHost)
+	}
+
 	if err = s.Serve(ln); err != nil {
 		log.Fatalf("Error when serving incoming connections: %s", err)
 	}
@@ -63,7 +77,13 @@ func mainHandler(ctx *fasthttp.RequestCtx) {
 func dbHandler(ctx *fasthttp.RequestCtx) {
 	var w common.World
 	fetchRandomWorld(&w)
-	common.JSONMarshal(ctx, &w)
+	wb, err := w.MarshalJSON()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	ctx.SetContentType("application/json")
+	ctx.Write(wb)
 }
 
 func queriesHandler(ctx *fasthttp.RequestCtx) {
@@ -72,7 +92,13 @@ func queriesHandler(ctx *fasthttp.RequestCtx) {
 	for i := 0; i < n; i++ {
 		fetchRandomWorld(&worlds[i])
 	}
-	common.JSONMarshal(ctx, worlds)
+	wb, err := common.Worlds(worlds).MarshalJSON()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	ctx.SetContentType("application/json")
+	ctx.Write(wb)
 }
 
 func fortuneHandler(ctx *fasthttp.RequestCtx) {
@@ -126,7 +152,13 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 		log.Fatalf("Error when commiting world rows: %s", err)
 	}
 
-	common.JSONMarshal(ctx, worlds)
+	wb, err := common.Worlds(worlds).MarshalJSON()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	ctx.SetContentType("application/json")
+	ctx.Write(wb)
 }
 
 func fetchRandomWorld(w *common.World) {

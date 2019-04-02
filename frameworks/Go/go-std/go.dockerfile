@@ -1,11 +1,16 @@
-FROM golang:1.10.1
+FROM golang:1.12
 
-ADD ./ /go-std
+ENV GO111MODULE on
 WORKDIR /go-std
 
-RUN mkdir bin
-ENV GOPATH /go-std
-ENV PATH ${GOPATH}/bin:${PATH}
+COPY ./src /go-std
 
-RUN go get github.com/go-sql-driver/mysql
-CMD go run hello_mysql.go
+RUN go get github.com/valyala/quicktemplate/qtc
+RUN go get -u github.com/mailru/easyjson/...
+RUN go mod download
+
+RUN go generate ./templates
+RUN easyjson -pkg
+RUN go build -ldflags="-s -w" -o app .
+
+CMD ./app

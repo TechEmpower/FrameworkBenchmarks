@@ -8,7 +8,7 @@ import de.heikoseeberger.akkahttpcirce.ErrorAccumulatingCirceSupport._
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.Try
 
-class UpdateRoute(wr: WorldRepository, ud: ExecutionContextExecutor, sd: ExecutionContextExecutor) {
+class UpdateRoute(wr: WorldRepository, sd: ExecutionContextExecutor) {
 
   implicit private val jss: JsonEntityStreamingSupport =
     EntityStreamingSupport.json().withParallelMarshalling(5, unordered = true)
@@ -27,10 +27,12 @@ class UpdateRoute(wr: WorldRepository, ud: ExecutionContextExecutor, sd: Executi
   }
 
   private def source(n: Int): Source[World, NotUsed] = {
+    val t = if (1 <= n && n < 5) n else 5
+
     Source(1 to n)
       .map(rand)
-      .mapAsync(n)(wr.require)
-      .mapAsync(n) { w =>
+      .mapAsync(t)(wr.require)
+      .mapAsync(t) { w =>
         val wn = w.copy(randomNumber = rand())
         wr.update(wn).map(_ => wn)(sd)
       }
@@ -38,10 +40,8 @@ class UpdateRoute(wr: WorldRepository, ud: ExecutionContextExecutor, sd: Executi
 
   def route() = {
     path("updates") {
-      withExecutionContext(ud) {
-        parameter('queries.?) { pn =>
-          complete(source(parse(pn)))
-        }
+      parameter('queries.?) { pn =>
+        complete(source(parse(pn)))
       }
     }
   }

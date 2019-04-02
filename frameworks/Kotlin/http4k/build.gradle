@@ -40,7 +40,6 @@ allprojects {
 dependencies {
     compile project(":core")
     compile project(":apache")
-    compile project(":apache-asyncdb")
     compile project(":jetty")
     compile project(":ktorcio")
     compile project(":netty")

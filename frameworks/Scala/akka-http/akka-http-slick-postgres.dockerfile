@@ -1,4 +1,4 @@
-FROM hseeberger/scala-sbt:8u151-2.12.4-1.1.1
+FROM hseeberger/scala-sbt:8u181_2.12.6_1.2.3
 
 WORKDIR /akka-http-slick-postgres
 

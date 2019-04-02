@@ -7,9 +7,11 @@ import core.stdc.stdlib;
 import core.thread, core.atomic;
 import http.Parser;
 
-import hunt.util.DateTime;
+import hunt.collection.ByteBuffer;
 import hunt.logging;
 import hunt.io;
+import hunt.util.DateTime;
+
 
 struct HttpHeader {
 	string name, value;
@@ -21,6 +23,10 @@ struct HttpRequest {
 	string uri;
 }
 
+version(NO_HTTPPARSER) {
+enum string ResponseData = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\nConnection: Keep-Alive\r\nContent-Type: text/plain\r\nServer: Hunt/1.0\r\nDate: Wed, 17 Apr 2013 12:00:00 GMT\r\n\r\nHello, World!";
+}
+
 abstract class HttpProcessor {
 private:
 	enum State {
@@ -30,7 +36,6 @@ private:
 		done
 	}
 
-	ubyte[] buffer;
 	Appender!(char[]) outBuf;
 	HttpHeader[] headers; // buffer for headers
 	size_t header; // current header
@@ -48,20 +53,26 @@ public:
 	this(TcpStream sock) {
 		serving = true;
 		client = sock;
-		buffer = new ubyte[2048];
 		headers = new HttpHeader[1];
 		pad = ScratchPad(16 * 1024);
 		parser = httpParser(this, HttpParserType.request);
 	}
 
 	void run() {
-		client.onDataReceived((const ubyte[] data) { 
-			parser.execute(data);
+		client.onDataReceived((ByteBuffer buffer) { 
+			version(NO_HTTPPARSER) {
+				client.write(cast(ubyte[])ResponseData);
+			} else {
+				parser.execute(cast(ubyte[]) buffer.getRemaining());
+			}
+
 		})
 		.onClosed(() {
-			notifyClientClosed();
+			// notifyClientClosed();
 		})
-		.onError((string msg) { warning("Error: ", msg); })
+		.onError((string msg) { 
+			debug warning("Error: ", msg); 
+		})
 		.start();
 	}
 
@@ -74,6 +85,7 @@ public:
 	}
 
 	void respondWith(const(ubyte)[] _body, uint status, HttpHeader[] headers...) {
+		outBuf.clear();
 		formattedWrite(outBuf, "HTTP/1.1 %s OK\r\n", status);
 		outBuf.put("Server: Hunt/1.0\r\n");
 

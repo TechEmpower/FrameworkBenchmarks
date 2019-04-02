@@ -6,7 +6,7 @@ name := "akka-http-benchmark"
 
 version := "0.1.0-SNAPSHOT"
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.8"
 
 resolvers += "Akka Snapshot Repository" at "http://repo.akka.io/snapshots/"
 
@@ -16,7 +16,7 @@ libraryDependencies ++= Seq(
   "de.heikoseeberger" %% "akka-http-jsoniter-scala" % "1.23.0",
   "mysql" % "mysql-connector-java" % "5.1.47",
   "com.zaxxer" % "HikariCP" % "3.3.0",
-  "org.scalatra.scalate" %% "scalate-core" % "1.8.0",
+  "org.scalatra.scalate" %% "scalate-core" % "1.9.1",
   "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 )
 

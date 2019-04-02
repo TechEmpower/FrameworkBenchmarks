@@ -11,7 +11,7 @@ pub struct World {
 }
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Queryable)]
+#[derive(Serialize, Queryable, Debug)]
 pub struct Fortune {
     pub id: i32,
     pub message: String,

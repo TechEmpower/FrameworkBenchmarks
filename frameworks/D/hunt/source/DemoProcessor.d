@@ -30,7 +30,7 @@ class DemoProcessor : HttpProcessor {
     }
 
     override void onComplete(HttpRequest req) {
-        debug trace(req.uri);
+        // debug trace(req.uri);
         HttpURI uri = new HttpURI(req.uri);
 
         version (POSTGRESQL) {
@@ -138,15 +138,18 @@ class DemoProcessor : HttpProcessor {
     }
 
     private void respondWith404() {
-        respondWith("The available paths are: /plaintext, /json, /db, /queries?queries=number", 404);
+        version (POSTGRESQL) {
+            respondWith("The available paths are: /plaintext, /json, /db, /fortunes, /queries?queries=number, /updates?queries=number", 404);
+        } else {
+            respondWith("The available paths are: /plaintext, /json", 404);
+        }
     }
 
     version (POSTGRESQL) {
         private void respondSingleQuery() {
             int id = uniform(1, 10000);
             string query = "SELECT randomNumber FROM world WHERE id = " ~ id.to!string;
-            Statement statement = dbConnection.prepare(query);
-            ResultSet rs = statement.query();
+            ResultSet rs = dbConnection.query(query);
 
             JSONValue js = JSONValue(["id" : JSONValue(id), "randomNumber"
                     : JSONValue(to!int(rs.front()[0]))]);

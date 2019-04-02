@@ -19,15 +19,17 @@ ActiveRecord\Config::initialize(function($cfg)
 
 // Read number of queries to run from URL parameter
 $query_count = 1;
-if (isset($_GET['queries']) && $_GET['queries'] > 0) {
-  $query_count = $_GET["queries"] > 500 ? 500 : $_GET['queries'];
+$query_param = isset($_GET['queries']);
+if ($query_param && $_GET['queries'] > 0) {
+    $query_count = $_GET['queries'] > 500 ? 500 : $_GET['queries'];
 }
 
 // Create an array with the response string.
 $arr = array();
 
 // For each query, store the result set values in the response array
-for ($i = 0; $i < $query_count; $i++) {
+$query_counter = $query_count;
+while (0 < $query_counter--) {
   // Choose a random row
   // http://www.php.net/mt_rand
   $id = mt_rand(1, 10000);
@@ -37,9 +39,11 @@ for ($i = 0; $i < $query_count; $i++) {
   // Store result in array.
   $arr[] = $world->to_array();
 }
-if ($query_count === 1) {
-  $arr = $arr[0];
+
+if ($query_count === 1 && !$query_param) {
+    $arr = $arr[0];
 }
+
 // Use the PHP standard JSON encoder.
 // http://www.php.net/manual/en/function.json-encode.php
 echo json_encode($arr);

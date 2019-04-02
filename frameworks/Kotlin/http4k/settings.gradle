@@ -1,7 +1,6 @@
 rootProject.name = 'http4k-benchmark'
 include 'core'
 include 'apache'
-include 'apache-asyncdb'
 include 'jetty'
 include 'ktorcio'
 include 'netty'

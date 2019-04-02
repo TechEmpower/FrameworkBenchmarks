@@ -3,28 +3,26 @@ package controllers
 import javax.inject.{Inject, Singleton}
 
 import play.api.mvc._
-import play.mvc.Http
 import play.api.libs.json.Json
 import java.util.concurrent._
 import models.{WorldDAO, FortunesDAO, World, Fortune}
 import utils.DbOperation
-import scala.concurrent.{Future, ExecutionContext}
 
 @Singleton()
-class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO, dbOperation: DbOperation, val controllerComponents: ControllerComponents)(implicit ec: ExecutionContext)
+class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO, dbOperation: DbOperation, val controllerComponents: ControllerComponents)
   extends BaseController {
 
-  def getRandomWorlds(n: Int): Future[Seq[World]] = dbOperation.asyncDbOp { implicit connection =>
+  def getRandomWorlds(n: Int): Seq[World] = dbOperation.syncDbOp { implicit connection =>
     for (_ <- 1 to n) yield {
       worldDAO.findById(getNextRandom)
     }
   }
 
-  def getFortunes: Future[Seq[Fortune]] = dbOperation.asyncDbOp { implicit connection =>
+  def getFortunes: Seq[Fortune] = dbOperation.syncDbOp { implicit connection =>
     fortunesDAO.getAll
   }
 
-  def updateWorlds(n: Int): Future[Seq[World]] = dbOperation.asyncDbOp { implicit connection =>
+  def updateWorlds(n: Int): Seq[World] = dbOperation.syncDbOp { implicit connection =>
     for(_ <- 1 to n) yield {
       val world = worldDAO.findById(getNextRandom)
       val updatedWorld = world.copy(randomNumber = getNextRandom)
@@ -44,31 +42,23 @@ class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO, dbOpe
 
   import models.WorldJsonHelpers.toJson
 
-  def db = Action.async {
-    getRandomWorlds(1).map { worlds =>
-      Ok(Json.toJson(worlds.head))
-    }
+  def db = Action {
+    Ok(Json.toJson(getRandomWorlds(1).head))
   }
 
-  def queries(countString: String) = Action.async {
+  def queries(countString: String) = Action {
     val n = parseCount(countString)
-    getRandomWorlds(n).map { worlds =>
-      Ok(Json.toJson(worlds))
-    }
+    Ok(Json.toJson(getRandomWorlds(n)))
   }
 
-  def fortunes() = Action.async {
-    getFortunes.map { dbFortunes =>
-      val appendedFortunes =  Fortune(0, "Additional fortune added at request time.") :: dbFortunes.to[List]
-      Ok(views.html.fortune(appendedFortunes))
-    }
+  def fortunes() = Action {
+    val appendedFortunes =  Fortune(0, "Additional fortune added at request time.") :: getFortunes.to[List]
+    Ok(views.html.fortune(appendedFortunes))
   }
 
-  def update(queries: String) = Action.async {
+  def update(queries: String) = Action {
     val n = parseCount(queries)
-    updateWorlds(n).map { worlds =>
-      Ok(Json.toJson(worlds))
-    }
+    Ok(Json.toJson(updateWorlds(n)))
   }
 
   private def parseCount(s: String): Int = {
