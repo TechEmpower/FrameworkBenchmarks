@@ -5,6 +5,8 @@
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
     <property name="hibernate.cache.use_query_cache">false</property>
     <property name="hibernate.show_sql">false</property>
+    <property name="hibernate.jdbc.batch_size">30</property>
+    <property name="hibernate.jdbc.batch_versioned_data">true</property>
     <property name="hibernate.hikari.minimumIdle">256</property>
     <property name="hibernate.hikari.maximumPoolSize">256</property>
     <property name="hibernate.hikari.idleTimeout">30000</property>
