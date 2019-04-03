@@ -8,9 +8,9 @@ use actix_http::{HttpService, KeepAlive};
 use actix_server::Server;
 use actix_web::http::{header::CONTENT_TYPE, header::SERVER, HeaderValue, StatusCode};
 use actix_web::{dev::Body, web, App, Error, HttpRequest, HttpResponse};
-use askama::Template;
 use bytes::BytesMut;
 use futures::Future;
+use yarte::Template;
 
 mod db_pg;
 mod models;
@@ -90,7 +90,7 @@ fn updates(
 }
 
 #[derive(Template)]
-#[template(path = "fortune.html")]
+#[template(path = "fortune.hbs")]
 struct FortuneTemplate<'a> {
     items: &'a Vec<models::Fortune>,
 }
@@ -103,7 +103,7 @@ fn fortune(
         .and_then(move |res| match res {
             Ok(rows) => {
                 let tmpl = FortuneTemplate { items: &rows };
-                let body = tmpl.render().unwrap();
+                let body = tmpl.call().unwrap();
 
                 let mut res =
                     HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.into()));
