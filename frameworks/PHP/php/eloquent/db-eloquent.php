@@ -2,7 +2,7 @@
 // Set content type
 header("Content-type: application/json");
 
-require_once __DIR__ . '/boot-eloquent.php';
+require __DIR__ . '/boot-eloquent.php';
 
 if (! isset($_GET['queries'])) {
     echo json_encode(World::find(mt_rand(1, 10000))->toArray());
@@ -18,10 +18,8 @@ if ($_GET['queries'] > 1) {
 $arr = array();
 // For each query, store the result set values in the response array
 while (0 < $query_count--) {
-    //$world = World::find(mt_rand(1, 10000));
     // Store result in array.
     $arr[] = World::find(mt_rand(1, 10000))->toArray();
-    //$arr[] = $world->toArray();
 }
 
 // Use the PHP standard JSON encoder.

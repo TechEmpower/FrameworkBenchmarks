@@ -2,7 +2,7 @@
 // Set content type
 header('Content-type: application/json');
 
-require_once __DIR__.'/init-capsule.php';
+require __DIR__.'/init-capsule.php';
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
