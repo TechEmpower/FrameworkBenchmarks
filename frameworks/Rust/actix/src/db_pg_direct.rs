@@ -110,7 +110,7 @@ impl PgConnection {
         let cl = self.cl.clone();
         stream::futures_unordered(worlds)
             .collect()
-            .and_then(move |mut worlds| {
+            .and_then(move |worlds| {
                 let mut update = String::with_capacity(120 + 6 * num as usize);
                 update.push_str(
                     "UPDATE world SET randomnumber = temp.randomnumber FROM (VALUES ",
