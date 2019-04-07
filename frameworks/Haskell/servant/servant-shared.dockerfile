@@ -5,14 +5,17 @@ RUN apt install -yqq libpq-dev
 
 WORKDIR /app
 
-COPY ./stack.yaml .
-COPY ./hasql/servant-hasql.cabal ./hasql/
-COPY ./mysql-haskell/servant-mysql-haskell.cabal ./mysql-haskell/
+COPY stack.yaml ./
+COPY ./shared/tfb-types/tfb-types.cabal ./shared/tfb-types/
+COPY ./shared/tfb-hasql/tfb-hasql.cabal ./shared/tfb-hasql/
+COPY ./shared/tfb-mysql-haskell/tfb-mysql-haskell.cabal ./shared/tfb-mysql-haskell/
+COPY ./shared/tfb-postgres-wire/tfb-postgres-wire.cabal ./shared/tfb-postgres-wire/
+COPY ./servant-shared/servant-shared.cabal ./servant-shared/
 RUN stack setup
 RUN stack install --dependencies-only
 
-ADD ./hasql/ ./hasql/
-ADD ./mysql-haskell/ ./mysql-haskell/
+ADD ./shared ./shared
+ADD ./servant-shared ./servant-shared
 RUN stack build --pedantic --copy-bins
 RUN ln -s ~/.local/bin/servant-hasql ~/.local/bin/servant
 

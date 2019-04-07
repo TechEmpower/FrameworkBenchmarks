@@ -1,213 +1,104 @@
-{-# LANGUAGE DataKinds             #-}
-{-# LANGUAGE DeriveGeneric         #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
-{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE DataKinds             #-}
 {-# LANGUAGE TypeOperators         #-}
-{-# LANGUAGE FlexibleInstances     #-}
-{-# LANGUAGE UndecidableInstances  #-}
 
-module ServantBench (run) where
+module Lib (
+    main
+  , Db.Config(..)
+) where
 
-import           Control.Exception          (bracket)
-import           Control.Monad              (replicateM)
+import qualified TFB.Types as Types
+import qualified TFB.Db as Db
+import           MIME (Plain, HTML, Json)
+import qualified Data.Either as Either
+import           Data.List (sortOn)
+import           Control.Monad (replicateM)
+
 import           Control.Monad.IO.Class     (liftIO)
-import           Data.Aeson                 hiding (json)
-import qualified Data.ByteString            as BS
+import qualified Data.BufferBuilder.Json    as Json
+import           Data.BufferBuilder.Json    ((.=))
 import           Data.ByteString.Lazy       (ByteString)
 import qualified Data.ByteString.Lazy.Char8 as LBSC
-import           Data.Functor.Contravariant (contramap)
-import           Data.Either                (fromRight, partitionEithers)
-import           Data.Int                   (Int32)
-import           Data.List                  (sortOn)
-import           Data.Maybe                 (maybe)
-import           Data.Monoid                ((<>))
-import qualified Data.Text                  as Text
-import           Data.Text                  (Text)
-import           GHC.Exts                   (IsList (fromList))
-import           GHC.Generics               (Generic)
-import qualified Hasql.Decoders             as HasqlDec
-import qualified Hasql.Encoders             as HasqlEnc
-import           Hasql.Pool                 (Pool, acquire, release, use)
-import qualified Hasql.Statement            as HasqlStatement
-import           Hasql.Session              (statement)
 import qualified Html
-import           Html ((#), type (#), type (>))
+import           Html                       ((#))
 import qualified Network.Wai.Handler.Warp   as Warp
-import           Network.HTTP.Media         ((//), (/:))
 import           Servant
-import           System.Random.MWC          (GenIO, createSystemRandom,
-                                             uniformR)
-import qualified Data.List.NonEmpty as NE
+import qualified System.Random.MWC          as MWC
+
+-- * API contracts
 
 type API =
-       "json" :> Get '[JSON] Value
-  :<|> "db" :> Get '[JSON] World
-  :<|> "queries" :> QueryParam "queries" QueryId :> Get '[JSON] [World]
-  :<|> "fortune" :> Get '[HTML] FortunesHtml
-  :<|> "updates" :> QueryParam "queries" QueryId :> Get '[JSON] [World]
-  :<|> "plaintext" :> Get '[Plain] ByteString
+       "json"       :> Get '[Json] Json.ObjectBuilder
+  :<|> "db"         :> Get '[Json] Types.World
+  :<|> "queries"    :> QueryParam "queries" Types.Count :> Get '[Json] [Types.World]
+  :<|> "fortune"    :> Get '[HTML] Types.FortunesHtml
+  :<|> "updates"    :> QueryParam "queries" Types.Count :> Get '[Json] [Types.World]
+  :<|> "plaintext"  :> Get '[Plain] ByteString
 
 api :: Proxy API
 api = Proxy
 
-server :: Pool -> GenIO -> Server API
-server pool gen =
-      json
- :<|> singleDb pool gen
- :<|> multipleDb pool gen
- :<|> fortunes pool
- :<|> updates pool gen
+server :: MWC.GenIO -> Db.Pool -> Server API
+server gen dbPool =
+      getJson
+ :<|> getWorld gen dbPool
+ :<|> getWorlds gen dbPool
+ :<|> getFortunes dbPool
+ :<|> updateWorlds gen dbPool
  :<|> plaintext
 
-run :: Warp.Port -> BS.ByteString -> IO ()
-run port dbSettings = do
-  putStrLn "Launching servant hasql"
-  gen <- createSystemRandom
-  bracket (acquire settings) release $ \pool ->
-    Warp.run port $ serve api $ server pool gen
-  where
-    halfSecond = 0.5
-    settings = (512, halfSecond, dbSettings)
-
-newtype QueryId = QueryId { unQueryId :: Int }
-instance FromHttpApiData QueryId where
-  parseQueryParam
-    = pure . QueryId . fromRight 1 . parseQueryParam
-
-data World = World { wId :: !Int32 , wRandomNumber :: !Int32 }
-  deriving (Show, Generic)
-
-instance ToJSON World where
-  toEncoding w =
-    pairs (  "id"           .= wId w
-          <> "randomNumber" .= wRandomNumber w
-          )
-
-data Fortune = Fortune { fId :: !Int32 , fMessage :: Text.Text }
-  deriving (Show, Generic)
-
-instance ToJSON Fortune where
-  toEncoding f =
-    pairs (  "id"      .= fId f
-          <> "message" .= fMessage f
-          )
-
-intValEnc :: HasqlEnc.Params Int32
-intValEnc = HasqlEnc.param HasqlEnc.int4
-intValDec :: HasqlDec.Row Int32
-intValDec = HasqlDec.column HasqlDec.int4
-
--- * PlainText without charset
-
-data Plain
-instance Accept Plain where contentType _ = "text" // "plain"
-instance MimeRender Plain ByteString where
-  mimeRender _ = id
-  {-# INLINE mimeRender #-}
-  
--- * HTML
--- TODO: package the following block of code into a library akin to 'servant-lucid'
-
-data HTML
-instance Accept HTML where
-    contentTypes _ =
-      "text" // "html" /: ("charset", "utf-8") NE.:|
-      ["text" // "html"]
-instance Html.Document a => MimeRender HTML a where
-    mimeRender _ = Html.renderByteString
+-- | entry point
+main :: Db.Config -> IO ()
+main dbConfig = do
+  putStrLn "Config is:"
+  print dbConfig
+  putStrLn "Initializing database connection pool..."
+  dbPool <- Db.mkPool dbConfig
+  putStrLn "Initializing PRNG seed..."
+  gen <- MWC.create
+  putStrLn "Servant is ready to serve you"
+  Warp.run 7041 $ serve api $ server gen dbPool
 
 ------------------------------------------------------------------------------
 
 -- * Test 1: JSON serialization
 
-json :: Handler Value
-json = return . Object $ fromList [("message", "Hello, World!")]
-{-# INLINE json #-}
-
+getJson :: Handler Json.ObjectBuilder
+getJson = return $ "message" .= Types.unsafeJsonString "Hello, World!"
+{-# INLINE getJson #-}
 
 -- * Test 2: Single database query
 
-selectSingle :: HasqlStatement.Statement Int32 World
-selectSingle = HasqlStatement.Statement q intValEnc decoder True
-  where
-   q = "SELECT * FROM World WHERE (id = $1)"
-   decoder = HasqlDec.singleRow $ World <$> intValDec <*> intValDec
-{-# INLINE selectSingle #-}
-
-singleDb :: Pool -> GenIO -> Handler World
-singleDb pool gen = do
-  v <- liftIO $ uniformR (1, 10000) gen
-  r <- liftIO $ use pool (statement v selectSingle)
-  case r of
-    Left e -> throwError err500 { errBody = LBSC.pack . show $ e }
-    Right world -> return world
-{-# INLINE singleDb #-}
-
+getWorld :: MWC.GenIO -> Db.Pool -> Handler Types.World
+getWorld gen dbPool = do
+  wId <- liftIO $ randomId gen
+  res <- liftIO $ Db.queryWorldById dbPool wId
+  Either.either respondDbError pure $ res
+{-# INLINE getWorld #-}
 
 -- * Test 3: Multiple database query
 
-multipleDb :: Pool -> GenIO -> Maybe QueryId -> Handler [World]
-multipleDb pool gen mQueryId = do
-  results <- getResults
-  let (errs, oks) = partitionEithers results
-  case errs of
-    [] -> return oks
-    _ -> throwError err500 { errBody = LBSC.pack . show $ errs }
+getWorlds :: MWC.GenIO -> Db.Pool -> Maybe Types.Count -> Handler [Types.World]
+getWorlds gen dbPool mCount = do
+  wIds <- liftIO $ replicateM count $ randomId gen
+  res <- liftIO $ Db.queryWorldByIds dbPool wIds
+  Either.either respondDbError pure $ res
   where
-    c = maybe 1 unQueryId mQueryId
-    count_ = max 1 (min c 500)
-    getResults = replicateM count_ . liftIO . use pool $ do
-      v <- liftIO $ uniformR (1, 10000) gen
-      statement v selectSingle
-{-# INLINE multipleDb #-}
-
+    count = Types.getCount mCount
+{-# INLINE getWorlds #-}
 
 -- * Test 4: Fortunes
 
-type FortunesHtml
-  = (('Html.DOCTYPE Html.> ())
-  # ('Html.Html
-    > (('Html.Head > ('Html.Title > Html.Raw Text))
-      # ('Html.Body
-        > ('Html.Table
-          > (
-              ('Html.Tr
-              > ( ('Html.Th > Html.Raw Text)
-                # ('Html.Th > Html.Raw Text)
-                )
-              )
-            # ['Html.Tr
-              > ( ('Html.Td > Int)
-                # ('Html.Td > Text)
-                )
-              ]
-            )
-          )
-        )
-      )
-    )
-  )
-
-selectFortunes :: HasqlStatement.Statement () [Fortune]
-selectFortunes = HasqlStatement.Statement q encoder decoder True
-  where
-   q = "SELECT * FROM Fortune"
-   encoder = HasqlEnc.unit
-   -- TODO: investigate whether 'rowList' is worth the more expensive 'cons'.
-   decoder = HasqlDec.rowList $ Fortune <$> intValDec <*> HasqlDec.column HasqlDec.text
-{-# INLINE selectFortunes #-}
-
-fortunes :: Pool -> Handler FortunesHtml
-fortunes pool = do
-  r <- liftIO $ use pool (statement () selectFortunes)
-  case r of
-    Left e -> throwError err500 { errBody = LBSC.pack . show $ e }
+getFortunes :: Db.Pool -> Handler Types.FortunesHtml
+getFortunes dbPool = do
+  res <- liftIO $ Db.queryFortunes dbPool
+  case res of
+    Left e -> respondDbError e
     Right fs -> return $ do
-      let new = Fortune 0 "Additional fortune added at request time."
+      let new = Types.Fortune 0 "Additional fortune added at request time."
       let header = Html.tr_ $ Html.th_ (Html.Raw "id") # Html.th_ (Html.Raw "message")
-      let mkRow f = Html.tr_ $ Html.td_ (fromIntegral $ fId f) # Html.td_ (fMessage f)
-      let rows = fmap mkRow $ sortOn fMessage (new : fs)
+      let mkRow f = Html.tr_ $ Html.td_ (fromIntegral $ Types.fId f) # Html.td_ (Types.fMessage $ f)
+      let rows = fmap mkRow $ sortOn Types.fMessage (new : fs)
       Html.doctype_ #
         Html.html_ (
           Html.head_ (
@@ -217,39 +108,35 @@ fortunes pool = do
             header # rows
           )
         )
-{-# INLINE fortunes #-}
-
+{-# INLINE getFortunes #-}
 
 -- * Test 5: Updates
 
-updateSingle :: HasqlStatement.Statement (Int32, Int32) ()
-updateSingle = HasqlStatement.Statement q encoder decoder True
+updateWorlds :: MWC.GenIO -> Db.Pool -> Maybe Types.Count -> Handler [Types.World]
+updateWorlds gen dbPool mCount = do
+  wIds <- liftIO $ replicateM count $ randomId gen
+  res <- liftIO $ Db.queryWorldByIds dbPool wIds
+  Either.either respondDbError (go dbPool) res
   where
-    q = "UPDATE World SET randomNumber = $1 WHERE id = $2"
-    encoder = contramap fst intValEnc <> contramap snd intValEnc
-    decoder = HasqlDec.unit
-{-# INLINE updateSingle #-}
-
-updates :: Pool -> GenIO -> Maybe QueryId -> Handler [World]
-updates pool gen mQueryId = do
-  results <- getResults
-  let (errs, oks) = partitionEithers results
-  case errs of
-    [] -> return oks
-    _ -> throwError err500 { errBody = LBSC.pack . show $ errs }
-  where
-    c = maybe 1 unQueryId mQueryId
-    count_ = max 1 (min c 500)
-    getResults = replicateM count_ . liftIO . use pool $ do
-      v1 <- liftIO $ uniformR (1, 10000) gen
-      res <- statement v1 selectSingle
-      v2 <- liftIO $ uniformR (1, 10000) gen
-      _ <- statement (wId res, v2) updateSingle
-      return $ res { wRandomNumber = v2 }
-{-# INLINE updates #-}
+    count = Types.getCount mCount
+    go conn ws = do
+      wNumbers <- liftIO $ replicateM count $ randomId gen
+      wsUp <- liftIO $ Db.updateWorlds conn . zip ws $ fmap fromIntegral wNumbers
+      Either.either respondDbError pure wsUp
+{-# INLINE updateWorlds #-}
 
 -- * Test 6: Plaintext endpoint
 
 plaintext :: Handler ByteString
 plaintext = return "Hello, World!"
 {-# INLINE plaintext #-}
+
+------------------------------------------------------------------------------
+
+-- * utils
+
+respondDbError :: Db.Error -> Handler a
+respondDbError e = throwError err500 { errBody = LBSC.pack . show $ e }
+
+randomId :: MWC.GenIO -> IO Types.QId
+randomId = MWC.uniformR (1, 10000)
