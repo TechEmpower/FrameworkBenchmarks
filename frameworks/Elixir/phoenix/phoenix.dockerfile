@@ -1,4 +1,4 @@
-FROM elixir:1.6.5
+FROM elixir:1.8.1
 
 ADD ./ /phoenix
 WORKDIR /phoenix
@@ -10,4 +10,4 @@ RUN mix local.rebar --force
 RUN mix deps.get --force --only prod
 RUN mix compile --force
 
-CMD ["elixir", "--erl", "+K true +sbwt very_long +swt very_low", "-S", "mix", "phoenix.server"]
+CMD ["elixir", "--erl", "+K true +sbwt very_long +swt very_low", "-S", "mix", "phx.server"]

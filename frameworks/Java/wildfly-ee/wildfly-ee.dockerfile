@@ -1,5 +1,5 @@
 FROM maven:3.6.0-jdk-11-slim as maven
-ENV wfly=15.0.0.Final
+ENV wfly=16.0.0.Final
 ENV JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Xms2g -Xmx2g"
 WORKDIR /wildfly
 COPY src src

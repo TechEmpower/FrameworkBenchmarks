@@ -11,14 +11,14 @@
 import std.getopt;
 import std.stdio;
 
+import hunt.database;
 import hunt.io;
-import hunt.util.memory : totalCPUs;
+import hunt.system.Memory : totalCPUs;
 import http.Processor;
 import http.Server;
 import DemoProcessor;
 
 void main(string[] args) {
-
 	ushort port = 8080;
 	GetoptResult o = getopt(args, "port|p", "Port (default 8080)", &port);
 	if (o.helpWanted) {
@@ -26,7 +26,21 @@ void main(string[] args) {
 		return;
 	}
 
-	HttpServer httpServer = new HttpServer("0.0.0.0", port, totalCPUs-1);
+	version (POSTGRESQL) {
+		DatabaseOption options;
+		debug {
+			options = new DatabaseOption(
+					"postgresql://benchmarkdbuser:benchmarkdbpass@10.1.11.44:5432/hello_world?charset=utf-8");
+		} else {
+			options = new DatabaseOption(
+					"postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?charset=utf-8");
+		}
+		options.setMinimumConnection(totalCPUs*2);
+		options.setMaximumConnection(totalCPUs*2);
+		dbConnection = new Database(options);
+	}
+	
+	HttpServer httpServer = new HttpServer("0.0.0.0", port, totalCPUs);
 	httpServer.onProcessorCreate(delegate HttpProcessor (TcpStream client) {
 		return new DemoProcessor(client);
 	});

@@ -6,19 +6,18 @@ import com.github.susom.database.ConfigFrom;
 import com.github.susom.database.DatabaseProviderVertx;
 import com.github.susom.database.DatabaseProviderVertx.Builder;
 import com.github.susom.database.SqlInsert;
-import com.julienviet.pgclient.*;
+import io.reactiverse.pgclient.*;
 import io.vertx.benchmark.model.Fortune;
 import io.vertx.benchmark.model.Message;
 import io.vertx.benchmark.model.World;
 import io.vertx.core.*;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.Json;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.templ.HandlebarsTemplateEngine;
+import io.vertx.ext.web.templ.handlebars.HandlebarsTemplateEngine;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -51,7 +50,7 @@ public class App extends AbstractVerticle {
       mongoConfig.remove("password");
 
       this.database = MongoClient.createShared(vertx, mongoConfig);
-      this.engine = HandlebarsTemplateEngine.create();
+      this.engine = HandlebarsTemplateEngine.create(vertx);
     }
 
     public final void dbHandler(final RoutingContext ctx) {
@@ -122,7 +121,7 @@ public class App extends AbstractVerticle {
         ctx.put("fortunes", fortunes);
 
         // and now delegate to the engine to render it.
-        engine.render(ctx, "templates/fortunes.hbs", res -> {
+        engine.render(ctx.data(), "templates/fortunes.hbs", res -> {
           if (res.succeeded()) {
             ctx.response()
                 .putHeader(HttpHeaders.SERVER, SERVER)
@@ -194,123 +193,91 @@ public class App extends AbstractVerticle {
     private static final String SELECT_FORTUNE = "SELECT id, message from FORTUNE";
 
     private final PgClient client;
-    private final PgConnectionPool pool;
 
     // In order to use a template we first need to create an engine
     private final HandlebarsTemplateEngine engine;
 
     public PgClientBenchmark(Vertx vertx, JsonObject config) {
-      PgClientOptions options = new PgClientOptions();
+      PgPoolOptions options = new PgPoolOptions();
       options.setDatabase(config.getString("database"));
       options.setHost(config.getString("host"));
       options.setPort(config.getInteger("port", 5432));
-      options.setUsername(config.getString("username"));
+      options.setUser(config.getString("username"));
       options.setPassword(config.getString("password"));
       options.setCachePreparedStatements(true);
-      client = PgClient.create(vertx, options);
-      pool = client.createPool(new PgPoolOptions().setMode(PoolingMode.STATEMENT));
-      this.engine = HandlebarsTemplateEngine.create();
+      client = PgClient.pool(vertx, new PgPoolOptions(options).setMaxSize(4));
+      this.engine = HandlebarsTemplateEngine.create(vertx);
     }
 
     public final void dbHandler(final RoutingContext ctx) {
-      pool.getConnection(getConnection -> {
-        if (getConnection.failed()) {
-          ctx.fail(getConnection.cause());
-          return;
-        }
-
-        final PgConnection conn = getConnection.result();
-        final PgPreparedStatement worldSelect = conn.prepare(SELECT_WORLD);
-
-        worldSelect.query(randomWorld()).execute(res -> {
-          conn.close();
-          if (res.succeeded()) {
-            final List<JsonArray> resultSet = res.result().getResults();
-            if (resultSet.isEmpty()) {
-              ctx.response()
-                .setStatusCode(404)
-                .end();
-              return;
-            }
-            final JsonArray row = resultSet.get(0);
+      client.preparedQuery(SELECT_WORLD, Tuple.of(randomWorld()), res -> {
+        if (res.succeeded()) {
+          final PgIterator resultSet = res.result().iterator();
+          if (!resultSet.hasNext()) {
             ctx.response()
-              .putHeader(HttpHeaders.SERVER, SERVER)
-              .putHeader(HttpHeaders.DATE, date)
-              .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-              .end(Json.encodeToBuffer(new World(row.getInteger(0), row.getInteger(1))));
-          } else {
-            ctx.fail(res.cause());
+              .setStatusCode(404)
+              .end();
+            return;
           }
-        });
+          final Row row = resultSet.next();
+          ctx.response()
+            .putHeader(HttpHeaders.SERVER, SERVER)
+            .putHeader(HttpHeaders.DATE, date)
+            .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+            .end(Json.encodeToBuffer(new World(row.getInteger(0), row.getInteger(1))));
+        } else {
+          ctx.fail(res.cause());
+        }
       });
     }
 
     public final void queriesHandler(final RoutingContext ctx) {
 
-      pool.getConnection(getConnection -> {
-        if (getConnection.failed()) {
-          ctx.fail(getConnection.cause());
-          return;
-        }
+      final int queries = Helper.getQueries(ctx.request());
+      final World[] worlds = new World[queries];
+      final boolean[] failed = { false };
+      final int[] cnt = { 0 };
 
-        final PgConnection conn = getConnection.result();
-        final PgPreparedStatement worldSelect = conn.prepare(SELECT_WORLD);
-        final int queries = Helper.getQueries(ctx.request());
-        final World[] worlds = new World[queries];
-        final boolean[] failed = { false };
-        final int[] cnt = { 0 };
-
-        for (int i = 0; i < queries; i++) {
-          worldSelect.query(randomWorld()).execute(ar -> {
-            if (!failed[0]) {
-              if (ar.failed()) {
-                conn.close();
-                failed[0] = true;
-                ctx.fail(ar.cause());
-                return;
-              }
-
-              // we need a final reference
-              final JsonArray row = ar.result().getResults().get(0);
-              worlds[cnt[0]++] = new World(row.getInteger(0), row.getInteger(1));
-
-              // stop condition
-              if (cnt[0] == queries) {
-                conn.close();
-                ctx.response()
-                  .putHeader(HttpHeaders.SERVER, SERVER)
-                  .putHeader(HttpHeaders.DATE, date)
-                  .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-                  .end(Json.encodeToBuffer(worlds));
-              }
+      for (int i = 0; i < queries; i++) {
+        client.preparedQuery(SELECT_WORLD, Tuple.of(randomWorld()), res -> {
+          if (!failed[0]) {
+            if (res.failed()) {
+              failed[0] = true;
+              ctx.fail(res.cause());
+              return;
             }
-          });
-        }
-      });
+
+            // we need a final reference
+            final Row row = res.result().iterator().next();
+            worlds[cnt[0]++] = new World(row.getInteger(0), row.getInteger(1));
+
+            // stop condition
+            if (cnt[0] == queries) {
+              ctx.response()
+                .putHeader(HttpHeaders.SERVER, SERVER)
+                .putHeader(HttpHeaders.DATE, date)
+                .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+                .end(Json.encodeToBuffer(worlds));
+            }
+          }
+        });
+      }
     }
 
     public final void fortunesHandler(final RoutingContext ctx) {
 
-      pool.getConnection(getConnection -> {
-        if (getConnection.failed()) {
-          ctx.fail(getConnection.cause());
-          return;
-        }
-
-        final PgConnection conn = getConnection.result();
-        final PgPreparedStatement fortuneSelect = conn.prepare(SELECT_FORTUNE);
-        fortuneSelect.query().execute(ar -> {
-          conn.close();
+      client.preparedQuery(SELECT_FORTUNE, ar -> {
           if (ar.succeeded()) {
-            final List<JsonArray> resultSet = ar.result().getResults();
-            if (resultSet == null || resultSet.size() == 0) {
+            final PgIterator resultSet = ar.result().iterator();
+            if (!resultSet.hasNext()) {
               ctx.fail(404);
               return;
             }
 
-            final List<Fortune> fortunes = new ArrayList<>(resultSet.size() + 1);
+            final List<Fortune> fortunes = new ArrayList<>();
 
-            for (JsonArray row : resultSet) {
+            while (resultSet.hasNext()) {
+                final Row row = resultSet.next();
               fortunes.add(new Fortune(row.getInteger(0), row.getString(1)));
             }
 
@@ -320,7 +287,7 @@ public class App extends AbstractVerticle {
             ctx.put("fortunes", fortunes);
 
             // and now delegate to the engine to render it.
-            engine.render(ctx, "templates", "/fortunes.hbs", res -> {
+            engine.render(ctx.data(), "templates/fortunes.hbs", res -> {
               if (res.succeeded()) {
                 ctx.response()
                         .putHeader(HttpHeaders.SERVER, SERVER)
@@ -335,65 +302,52 @@ public class App extends AbstractVerticle {
             ctx.fail(ar.cause());
           }
         });
-      });
     }
 
     public final void updateHandler(final RoutingContext ctx) {
 
-      pool.getConnection(getConnection -> {
-        if (getConnection.failed()) {
-          ctx.fail(getConnection.cause());
-          return;
-        }
+         final int queries = Helper.getQueries(ctx.request());
+         final World[] worlds = new World[queries];
+         final boolean[] failed = { false };
+         final int[] queryCount = { 0 };
 
-        final PgConnection conn = getConnection.result();
+         for (int i = 0; i < worlds.length; i++) {
+           int id = randomWorld();
+           client.preparedQuery(SELECT_WORLD, Tuple.of(id), ar2 -> {
+             if (!failed[0]) {
+               if (ar2.failed()) {
+                 failed[0] = true;
+                 ctx.fail(ar2.cause());
+                 return;
+               }
 
-        final PgPreparedStatement worldSelect = conn.prepare(SELECT_WORLD);
-        final int queries = Helper.getQueries(ctx.request());
-        final World[] worlds = new World[queries];
-        final boolean[] failed = { false };
-        final int[] queryCount = { 0 };
+               final Row row = ar2.result().iterator().next();
+               worlds[queryCount[0]++] = new World(row.getInteger(0), randomWorld());
 
-        for (int i = 0; i < worlds.length; i++) {
-          int id = randomWorld();
-          worldSelect.query(id).execute(ar2 -> {
-            if (!failed[0]) {
-              if (ar2.failed()) {
-                failed[0] = true;
-                conn.close();
-                ctx.fail(ar2.cause());
-                return;
-              }
+               if (queryCount[0] == worlds.length) {
+                 Arrays.sort(worlds);
+                 List<Tuple> batch = new ArrayList<>();
 
-              final JsonArray row = ar2.result().getResults().get(0);
-              worlds[queryCount[0]++] = new World(row.getInteger(0), randomWorld());
+                 for (World world : worlds) {
+                   batch.add(Tuple.of(world.getRandomNumber(), world.getId()));
+                 }
 
-              if (queryCount[0] == worlds.length) {
-                Arrays.sort(worlds);
-                PgPreparedStatement worldUpdate = conn.prepare(UPDATE_WORLD);
-                PgBatch batch = worldUpdate.batch();
+                 client.preparedBatch(UPDATE_WORLD, batch, ar3 -> {
+                   if (ar3.failed()) {
+                     ctx.fail(ar3.cause());
+                     return;
+                   }
 
-                for (World world : worlds) {
-                  batch.add(world.getRandomNumber(), world.getId());
-                }
-                batch.execute(ar3 -> {
-                  conn.close();
-                  if (ar3.failed()) {
-                    ctx.fail(ar3.cause());
-                    return;
-                  }
-
-                  ctx.response()
-                    .putHeader(HttpHeaders.SERVER, SERVER)
-                    .putHeader(HttpHeaders.DATE, date)
-                    .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-                    .end(Json.encodeToBuffer(worlds));
-                });
-              }
-            }
-          });
-        }
-      });
+                   ctx.response()
+                     .putHeader(HttpHeaders.SERVER, SERVER)
+                     .putHeader(HttpHeaders.DATE, date)
+                     .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+                     .end(Json.encodeToBuffer(worlds));
+                 });
+               }
+             }
+           });
+         }
     }
   }
 
@@ -414,7 +368,7 @@ public class App extends AbstractVerticle {
           .value("database.url", "jdbc:postgresql://" + jsonConfig.getString("host") + "/" + jsonConfig.getString("database"))
           .get();
       dbBuilder = DatabaseProviderVertx.pooledBuilder(vertx, config);
-      engine = HandlebarsTemplateEngine.create();
+      engine = HandlebarsTemplateEngine.create(vertx);
     }
 
     void dbHandler(final RoutingContext ctx) {
@@ -482,7 +436,7 @@ public class App extends AbstractVerticle {
             ctx.fail(404);
           } else {
             ctx.put("fortunes", call.result());
-            engine.render(ctx, "templates/fortunes.hbs", res -> {
+            engine.render(ctx.data(), "templates/fortunes.hbs", res -> {
               if (res.succeeded()) {
                 ctx.response()
                     .putHeader(HttpHeaders.SERVER, SERVER)

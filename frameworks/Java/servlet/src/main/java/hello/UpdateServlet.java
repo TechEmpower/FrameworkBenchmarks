@@ -24,7 +24,6 @@ public class UpdateServlet extends HttpServlet {
 	// Database details.
 	private static final String DB_QUERY = "SELECT * FROM World WHERE id = ?";
 	private static final String UPDATE_QUERY = "UPDATE World SET randomNumber = ? WHERE id = ?";
-	private static final int DB_ROWS = 10000;
 
 	// Database connection pool.
 	@Resource(name = "jdbc/hello_world")
@@ -37,16 +36,16 @@ public class UpdateServlet extends HttpServlet {
 		final DataSource source = mysqlDataSource;
 		final int count = Common.normalise(req.getParameter(PARAMETER_QUERIES));
 		final World[] worlds = new World[count];
-		final Random random = ThreadLocalRandom.current();
 
 		try (Connection conn = source.getConnection();
 				PreparedStatement statement = conn.prepareStatement(DB_QUERY,
 						ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 				PreparedStatement statement2 = conn.prepareStatement(UPDATE_QUERY,
 						ResultSet.TYPE_FORWARD_ONLY)) {
+			Common.modifySQLConnectionSettings(conn);
 			// Run the query the number of times requested.
 			for (int i = 0; i < count; i++) {
-				final int id = random.nextInt(DB_ROWS) + 1;
+				final int id = Common.getRandom();
 				statement.setInt(1, id);
 
 				try (ResultSet results = statement.executeQuery()) {
@@ -54,7 +53,7 @@ public class UpdateServlet extends HttpServlet {
 						worlds[i] = new World(id, results.getInt("randomNumber"));
 
 						// Update row
-						worlds[i].setRandomNumber(random.nextInt(DB_ROWS) + 1);
+						worlds[i].setRandomNumber(Common.getRandom());
 						statement2.setInt(1, worlds[i].getRandomNumber());
 						statement2.setInt(2, id);
 

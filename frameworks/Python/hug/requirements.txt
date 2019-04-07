@@ -1,0 +1,6 @@
+Cython==0.28.5
+hug==2.3.2
+uWSGI==2.0.17.1
+greenlet==0.4.14
+gunicorn==19.9.0
+meinheld==0.6.1

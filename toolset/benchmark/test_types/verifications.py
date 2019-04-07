@@ -4,7 +4,7 @@ import traceback
 
 from datetime import datetime
 from toolset.utils.output_helper import log
-
+from time import sleep
 
 def basic_body_verification(body, url, is_json_check=True):
     '''
@@ -36,7 +36,7 @@ def basic_body_verification(body, url, is_json_check=True):
     return None, []
 
 
-def verify_headers(headers, url, should_be='json'):
+def verify_headers(request_headers_and_body, headers, url, should_be='json'):
     '''
     Verifies the headers of a framework response
     param `should_be` is a switch for the three acceptable content types
@@ -66,6 +66,19 @@ def verify_headers(headers, url, should_be='json'):
                 'warn',
                 'Invalid Date header, found \"%s\", did not match \"%s\".'
                 % (date, expected_date_format), url))
+
+    # Verify response content
+    # Make sure that the date object isn't cached
+    sleep(3)
+    second_headers, body2 = request_headers_and_body(url)
+    second_date = second_headers.get('Date')
+
+    date2 = second_headers.get('Date')
+    if date == date2:
+        problems.append((
+        'fail',
+        'Invalid Cached Date. Found \"%s\" and \"%s\" on separate requests.'
+        % (date, date2), url))
 
     content_type = headers.get('Content-Type')
     if content_type is not None:
@@ -338,7 +351,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
 
             problems += verify_randomnumber_list(expected_len, headers, body,
                                                  case_url, max_infraction)
-            problems += verify_headers(headers, case_url)
+            problems += verify_headers(self.request_headers_and_body, headers, case_url)
 
             # Only check update changes if we are doing an Update verification and if we're testing
             # the highest number of queries, to ensure that we don't accidentally FAIL for a query
@@ -368,6 +381,6 @@ def verify_query_cases(self, cases, url, check_updates=False):
                 # parameter input
                 problems += verify_randomnumber_list(
                     expected_len, headers, body, case_url, max_infraction)
-                problems += verify_headers(headers, case_url)
+                problems += verify_headers(self.request_headers_and_body, headers, case_url)
 
     return problems

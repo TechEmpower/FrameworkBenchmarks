@@ -1,52 +1,54 @@
 package com.ociweb.gl.benchmark;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.ociweb.gl.api.HTTPRequestReader;
 import com.ociweb.gl.api.HTTPResponseService;
 import com.ociweb.pronghorn.network.config.HTTPContentTypeDefaults;
 import com.ociweb.pronghorn.pipe.ObjectPipe;
 
+import io.reactiverse.pgclient.PgConnection;
 import io.reactiverse.pgclient.PgIterator;
+import io.reactiverse.pgclient.PgPreparedQuery;
 import io.reactiverse.pgclient.Tuple;
 
 public class ProcessUpdate {
 	
 	private transient ObjectPipe<ResultObject> DBUpdateInFlight;	
-	private boolean collectionPendingDBUpdate = false;	
 	private final transient List<ResultObject> collectorDBUpdate = new ArrayList<ResultObject>();
 	private final transient ThreadLocalRandom localRandom = ThreadLocalRandom.current();
 	private final HTTPResponseService service;
 	private final transient PoolManager pm;
+	private final AtomicInteger requestsInFlight = new AtomicInteger();
 	
 	public ProcessUpdate(int pipelineBits, HTTPResponseService service, PoolManager pm) {
 		this.DBUpdateInFlight = new ObjectPipe<ResultObject>(pipelineBits, ResultObject.class,	ResultObject::new);
 		this.service = service;
 		this.pm = pm;
+				
 	}
 	
-	
-	public void tickEvent() { 
-
-		{
-			ResultObject temp = DBUpdateInFlight.tailObject();
-			while (isReadyDBUpdate(temp)) {			
-				if (consumeResultObjectDBUpdate(temp)) {
-					temp = DBUpdateInFlight.tailObject();
-				} else {
-					break;
-				}
-			}	   
-		}
-			
-	}
-	
-
 	private int randomValue() {
 		return 1+localRandom.nextInt(10000);
 	}
+	
+	public void tickEvent() { 
+
+			ResultObject temp = DBUpdateInFlight.tailObject();
+			while (null!=temp && temp.getStatus()>=0) {			
+				consumeResultObjectDBUpdate(temp);
+				temp = DBUpdateInFlight.tailObject();				
+			}	   
+		
+	}
+	
+	//AtomicBoolean run = new AtomicBoolean(true);
 	
 	public boolean updateRestRequest(HTTPRequestReader request) {
 		int queries;
@@ -55,11 +57,39 @@ public class ProcessUpdate {
 		} else {
 			queries = 1;
 		}
+		
+		
 		long conId = request.getConnectionId();
-		long seqCode = request.getSequenceCode();
-
-		if (DBUpdateInFlight.hasRoomFor(queries)) {		
-				    	
+		long seqCode = request.getSequenceCode();		
+		
+		int temp = requestsInFlight.get();
+		
+		if ( DBUpdateInFlight.hasRoomFor(queries) || service.hasRoomFor(1+temp) ) {		
+			
+				PgConnection connection = null;
+				PgPreparedQuery pQuery = null;
+				try {					
+					connection = findConnection();
+					pQuery = prepQuery(connection, "SELECT * FROM world WHERE id=$1");		
+				} catch (InterruptedException e) {
+					if (null!=connection) {
+						connection.close();
+					}
+					return false;
+				} catch (ExecutionException e) {
+					if (null!=connection) {
+						connection.close();
+					}
+					return false;
+				}
+			    
+				final PgConnection con = connection;
+				final PgPreparedQuery pu = pQuery;
+				
+				final AtomicInteger outstanding = new AtomicInteger(queries);
+				final List<ResultObject> toUpdate = new ArrayList<ResultObject>();
+				requestsInFlight.incrementAndGet();
+				
 				int q = queries;
 				while (--q >= 0) {
 				
@@ -72,50 +102,8 @@ public class ProcessUpdate {
 						worldObject.setGroupSize(queries);
 						
 						worldObject.setId(randomValue());
-												
-						pm.pool().preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(worldObject.getId()), r -> {
-								if (r.succeeded()) {
-																		
-									PgIterator resultSet = r.result().iterator();
-							        Tuple row = resultSet.next();			        
-							        
-							        assert(worldObject.getId()==row.getInteger(0));
-							        
-							        //read the existing random value and store it in the world object
-							        worldObject.setResult(row.getInteger(1));
-							        
-							        ///////////////////////////////////
-							        //set the new random value in this object
-							        worldObject.setResult(randomValue());
-							        							       
-							        
-							        pm.pool().preparedQuery("UPDATE world SET randomnumber=$1 WHERE id=$2", 							        		
-							        			Tuple.of(worldObject.getResult(), worldObject.getId()), ar -> {							        	
-										if (ar.succeeded()) {
-											
-								        	worldObject.setStatus(200);							
-								        	
-										} else {	
-											System.out.println("unable to update");
-											if (ar.cause()!=null) {
-												ar.cause().printStackTrace();
-											}
-											
-											worldObject.setStatus(500);
-										}	
-																													
-							        });
-								} else {	
-									System.out.println("unable to query");
-									if (r.cause()!=null) {
-										r.cause().printStackTrace();
-									}
-									
-									worldObject.setStatus(500);
-								}		
-								
-								
-							});	
+							
+						exeQuery(pQuery, con, pu, outstanding, toUpdate, worldObject);	
 									
 						DBUpdateInFlight.moveHeadForward(); //always move to ensure this can be read.
 				
@@ -127,34 +115,125 @@ public class ProcessUpdate {
 		}
 	}
 
-	private boolean isReadyDBUpdate(ResultObject temp) {
-
-		if (collectionPendingDBUpdate) {
-			//now ready to send, we have all the data	
-			if (!publishMultiResponseDBUpdate(collectorDBUpdate.get(0).getConnectionId(), collectorDBUpdate.get(0).getSequenceId() )) {
-				return false;
-			}
-		}
+	private void exeQuery(PgPreparedQuery pQuery, final PgConnection con, final PgPreparedQuery pu,
+			final AtomicInteger outstanding, final List<ResultObject> toUpdate, final ResultObject worldObject) {
 		
-		return null!=temp && temp.getStatus()>=0;
+		pQuery.execute(
+				Tuple.of(worldObject.getId()), r -> {
+				if (r.succeeded()) {
+														
+					PgIterator resultSet = r.result().iterator();
+			        Tuple row = resultSet.next();			        
+			        
+			        assert(worldObject.getId()==row.getInteger(0));
+			        
+			        //read the existing random value and store it in the world object
+			        worldObject.setResult(row.getInteger(1));
+			        ///////////////////////////////////
+			        //the object can be used here with the old value
+			        ///////////////////////////////////
+			        //set the new random value in this object
+			        worldObject.setResult(randomValue());							        
+			        toUpdate.add(worldObject);
+			        
+			        
+				} else {	
+					//TODO: urgent, unable to call so we must back off and try again!!!!
+					exeQuery(pQuery, con, pu, outstanding, toUpdate, worldObject);
+					return;
+					
+//					System.out.println("unable to query");
+//					if (r.cause()!=null) {
+//						r.cause().printStackTrace();
+//					}
+//					
+//					worldObject.setStatus(500);
+				}		
+				
+				if (0 == outstanding.decrementAndGet()) {
+					//call update for all the query updates...
+														
+					List<Tuple> args = new ArrayList<Tuple>();
+					toUpdate.forEach(w-> {										
+						args.add(Tuple.of(w.getResult(), w.getId()));										
+					});
+					Collections.sort(args, (a,b) -> {
+						return Integer.compare( ((Tuple)a).getInteger(0),
+										        ((Tuple)b).getInteger(0));
+					
+					});
+
+					execUpdate(con, pu, toUpdate, args);
+				}
+			});
 	}
 
-	private boolean consumeResultObjectDBUpdate(final ResultObject t) {
-		boolean ok;
+	private void execUpdate(final PgConnection con, final PgPreparedQuery pu, final List<ResultObject> toUpdate,
+			List<Tuple> args) {
+		con.preparedBatch("UPDATE world SET randomnumber=$1 WHERE id=$2", 							        		
+				args, ar -> {	
+					
+			int status;		
+			if (ar.succeeded()) {
+		    	status = 200;	
+			} else {	
+				execUpdate(con, pu, toUpdate, args);
+				return;
+//				System.out.println("unable to update");
+//				if (ar.cause()!=null) {
+//					ar.cause().printStackTrace();
+//				}			
+//				status = 500;
+			}
+			toUpdate.forEach(w->{
+				w.setStatus(status);
+			});
+			pu.close();
+			con.close();
+
+		});
+	}
+
+	private PgConnection findConnection() throws InterruptedException, ExecutionException {
+		PgConnection connection;
+		CompletableFuture<PgConnection> conFu = new CompletableFuture<PgConnection>();
+		pm.pool().getConnection(h-> {
+			if (h.succeeded()) {
+				conFu.complete(h.result());				
+			} else {
+				conFu.completeExceptionally(h.cause());
+			}			
+		});
+		
+		return conFu.get();
+	}
+	
+
+	private PgPreparedQuery prepQuery(PgConnection con, String sql) throws InterruptedException, ExecutionException {
+		
+		CompletableFuture<PgPreparedQuery> prepFu = new CompletableFuture<PgPreparedQuery>();
+		con.prepare(sql, h->{
+			if (h.succeeded()) {
+				prepFu.complete(h.result());
+			} else {
+				prepFu.completeExceptionally(h.cause());
+			}
+		});
+		return prepFu.get();
+	}
+
+	private void consumeResultObjectDBUpdate(final ResultObject t) {
+
 		//collect all the objects
 		collectorDBUpdate.add(t);
 		DBUpdateInFlight.moveTailForward();//only move forward when it is consumed.
 		if (collectorDBUpdate.size() == t.getGroupSize()) {
 			//now ready to send, we have all the data						
-			ok =publishMultiResponseDBUpdate(t.getConnectionId(), t.getSequenceId());
-		} else {
-			ok = true;//added to list
-		}				
-		
-		return ok;
+			publishMultiResponseDBUpdate(t.getConnectionId(), t.getSequenceId());
+		}
 	}
 
-	private boolean publishMultiResponseDBUpdate(long conId, long seqCode) {
+	private void publishMultiResponseDBUpdate(long conId, long seqCode) {
 		boolean result =  service.publishHTTPResponse(conId, seqCode, 200,
 					    				   HTTPContentTypeDefaults.JSON,
 					    				   w-> {
@@ -168,8 +247,8 @@ public class ProcessUpdate {
 					    					   collectorDBUpdate.clear();
 					    					   DBUpdateInFlight.publishTailPosition();
 					    				   });
-		collectionPendingDBUpdate = !result;
-		return result;
+		assert(result) : "internal error, we should not pick up more work than we can send";
+		requestsInFlight.decrementAndGet();
 	}
 	
 	

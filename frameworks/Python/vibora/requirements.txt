@@ -1,0 +1,9 @@
+django-jsonresponse==0.10.0
+pendulum==2.0.4
+psycopg2-binary==2.7.7
+python-dateutil==2.7.5
+pytzdata==2018.7
+six==1.12.0
+ujson==1.35
+uvloop==0.12.0
+vibora==0.0.6

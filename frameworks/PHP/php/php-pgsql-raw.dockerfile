@@ -4,8 +4,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
-RUN apt update -yqq
-RUN apt install -yqq nginx git unzip php7.3 php7.3-common php7.3-cli php7.3-fpm php7.3-pgsql  > /dev/null
+RUN apt-get update -yqq > /dev/null && \
+    apt install -yqq nginx git unzip php7.3 php7.3-common php7.3-cli php7.3-fpm php7.3-pgsql  > /dev/null
 
 COPY deploy/conf/* /etc/php/7.3/fpm/
 
@@ -13,6 +13,7 @@ ADD ./ /php
 WORKDIR /php
 
 RUN sed -i "s|PDO('mysql:|PDO('pgsql:|g" dbraw.php
+RUN sed -i "s|PDO('mysql:|PDO('pgsql:|g" dbquery.php
 RUN sed -i "s|PDO('mysql:|PDO('pgsql:|g" fortune.php
 RUN sed -i "s|PDO('mysql:|PDO('pgsql:|g" updateraw.php
 

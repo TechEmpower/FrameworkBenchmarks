@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "name": "polkadot-tfb",
+  "version": "0.0.0",
+  "main": "app.js",
+  "dependencies": {
+    "html-escaper": "1.0.1",
+    "mongodb": "3.2.2",
+    "mysql": "2.16.0",
+    "pg": "7.9.0",
+    "polkadot": "1.0.0"
+  }
+}

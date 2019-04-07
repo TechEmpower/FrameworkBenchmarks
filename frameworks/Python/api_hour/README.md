@@ -4,7 +4,7 @@ This is the AsyncIO/aiohttp/API-Hour portion of a [benchmarking tests suite](../
 comparing a variety of web development platforms.
 
 The information below is specific to AsyncIO/API-Hour. For further guidance, 
-review the [documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/). 
+review the [documentation](https://github.com/TechEmpower/FrameworkBenchmarks/wiki). 
 Also note that there is additional information provided in 
 the [Python README](../).
 

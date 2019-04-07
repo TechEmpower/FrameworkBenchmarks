@@ -2,14 +2,15 @@ defmodule Hello.Mixfile do
   use Mix.Project
 
   def project do
-   [app: :hello,
-    version: "0.1.0",
-    elixir: "~> 1.6.5",
-    elixirc_paths: elixirc_paths(Mix.env),
-    compilers: [:phoenix] ++ Mix.compilers,
-    build_embedded: Mix.env == :prod,
-    start_permanent: Mix.env == :prod,
-    deps: deps()]
+    [
+      app: :hello,
+      version: "0.1.0",
+      elixir: "~> 1.8",
+      elixirc_paths: elixirc_paths(Mix.env()),
+      compilers: [:phoenix] ++ Mix.compilers(),
+      start_permanent: Mix.env() == :prod,
+      deps: deps()
+    ]
   end
 
   # Configuration for the OTP application
@@ -25,12 +26,15 @@ defmodule Hello.Mixfile do
   #
   # Type `mix help deps` for examples and options
   defp deps do
-    [{:phoenix, "~> 1.3.2"},
-     {:phoenix_ecto, "~> 3.3"},
-     {:postgrex, ">= 0.0.0"},
-     {:cowboy, "~> 1.0"},
-     {:jason, "~> 1.0"},
-     {:phoenix_html, "~> 2.11"},
-     {:phoenix_live_reload, "~> 1.1", only: :dev}]
+    [
+      {:phoenix, "~> 1.4.0"},
+      {:phoenix_ecto, "~> 4.0"},
+      {:ecto_sql, "~> 3.0"},
+      {:postgrex, "~> 0.14"},
+      {:plug_cowboy, "~> 2.0"},
+      {:jason, "~> 1.0"},
+      {:phoenix_html, "~> 2.11"},
+      {:phoenix_live_reload, "~> 1.2", only: :dev}
+    ]
   end
 end

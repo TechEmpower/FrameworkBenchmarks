@@ -4,7 +4,10 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
   host: 'tfb-database',
   dialect: 'postgres',
-  logging: false
+  logging: false,
+  pool: {
+    min: 20, max: 20
+  }
 });
 
 const Worlds = sequelize.define('world', {
@@ -74,7 +77,6 @@ module.exports = {
   Updates: (queries, req, res) => {
     const worldPromises = [];
 
-    console.log('queries: ', queries);
     for (let i = 0; i < queries; i++) {
       worldPromises.push(randomWorldPromise());
     }

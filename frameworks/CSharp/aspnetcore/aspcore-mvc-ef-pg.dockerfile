@@ -10,4 +10,4 @@ WORKDIR /app
 COPY --from=build /app/out ./
 COPY Benchmarks/appsettings.postgresql.json ./appsettings.json
 
-ENTRYPOINT ["dotnet", "Benchmarks.dll", "scenarios=MvcDbSingleQueryEf,MvcDbMultiQueryEf,MvcDbMultiUpdateEf,MvcDbFortunesEf"]
+ENTRYPOINT ["dotnet", "Benchmarks.dll", "scenarios=MvcDbSingleQueryEf,MvcDbMultiQueryEf,MvcDbFortunesEf"]
