@@ -54,6 +54,7 @@ namespace Benchmarks
             mApiServer.Options.Port = 8080;
             mApiServer.Options.BufferPoolMaxMemory = 500;
             mApiServer.Options.MaxConnections = 100000;
+            mApiServer.Options.Statistical = false;
             mApiServer.Options.UrlIgnoreCase = false;
             mApiServer.Options.LogLevel = BeetleX.EventArgs.LogType.Warring;
             mApiServer.Options.LogToConsole = true;
