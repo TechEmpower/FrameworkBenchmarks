@@ -133,7 +133,7 @@
       "plaintext_url": "/hello",
       "json_url": "/json",
       "db_url": "/dbraw",
-      "query_url": "/dbraw?queries=",
+      "query_url": "/dbquery?queries=",
       "fortune_url": "/fortune",
       "update_url": "/updateraw?queries=",
       "port": 8080,
