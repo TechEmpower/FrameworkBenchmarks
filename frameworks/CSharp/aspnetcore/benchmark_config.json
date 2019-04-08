@@ -98,7 +98,7 @@
       "versus": "aspcore-ado-pg"
     },
     "rhtx-pg-up": {
-      "query_url": "/queries/queries=",
+      "update_url": "/updates/queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -480,7 +480,7 @@
       "versus": "aspcore-ado-pg"
     },
     "mvc-dap-pg-up": {
-      "query_url": "/mvc/queries/dapper?queries=",
+      "update_url": "/mvc/updates/dapper?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",

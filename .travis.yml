@@ -33,7 +33,7 @@ env:
     - "TESTLANG=FSharp"
     - 'TESTDIR="Go/chi Go/gin Go/goji Go/aah Go/beego Go/echo"'
     - 'TESTDIR="Go/falcore Go/kami Go/martini Go/revel Go/webgo"'
-    - 'TESTDIR="Go/evio Go/fasthttp Go/go-std Go/iris Go/atreugo Go/gramework"'
+    - 'TESTDIR="Go/evio Go/fasthttp Go/go-std Go/atreugo Go/gramework"'
     - "TESTLANG=Groovy"
     - "TESTDIR=Haskell/snap"
     - "TESTDIR=Haskell/yesod"

@@ -1,9 +1,11 @@
 resolver: lts-13.13
 
 packages:
-- ./warp-hasql
-- ./warp-postgres-wire
-- ./warp-mysql-haskell
+- ./shared/tfb-types
+- ./shared/tfb-hasql
+- ./shared/tfb-mysql-haskell
+- ./shared/tfb-postgres-wire
+- ./warp-shared
 
 extra-deps:
 - socket-0.8.2.0

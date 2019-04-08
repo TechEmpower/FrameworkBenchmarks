@@ -22,8 +22,9 @@
     },
     "jersey": {
       "json_url": "/json",
-      "db_url": "/db?single=true",
-      "query_url": "/db?queries=",
+      "db_url": "/db",
+      "query_url": "/db/queries?queries=",
+      "update_url": "/db/updates?queries=",
       "fortune_url": "/fortunes",
       "plaintext_url": "/plaintext",
       "port": 8080,

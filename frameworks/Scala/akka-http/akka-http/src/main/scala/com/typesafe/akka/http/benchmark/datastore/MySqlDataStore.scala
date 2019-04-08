@@ -2,6 +2,8 @@ package com.typesafe.akka.http.benchmark.datastore
 
 import java.sql.PreparedStatement
 import java.sql.ResultSet
+import java.util
+import java.util.Comparator
 import java.util.concurrent.Executors
 
 import com.typesafe.akka.http.benchmark.Infrastructure
@@ -37,7 +39,7 @@ trait MySqlDataStore extends DataStore { _: Infrastructure =>
     withStatement("select id, randomNumber from World where id = ?") { stmt =>
       stmt.setInt(1, id)
       val rs = stmt.executeQuery()
-      if (rs.next()) Some(World(rs.getInt("id"), rs.getInt("randomNumber")))
+      if (rs.next()) Some(World(rs.getInt(1), rs.getInt(2)))
       else None
     }
 
@@ -48,11 +50,16 @@ trait MySqlDataStore extends DataStore { _: Infrastructure =>
       stmt.executeUpdate() > 0
     }
 
-  override def getFortunes: Future[immutable.Seq[Fortune]] =
+  override def getFortunes: Future[Seq[Fortune]] =
     withStatement("select id, message from Fortune") { stmt =>
       val rs = stmt.executeQuery()
-      (Fortune(0, "Additional fortune added at request time.") +: rs.map(r => Fortune(r.getInt("id"), r.getString("message"))).toVector)
-        .sortBy(_.message)
+      val fortunes = (
+        Iterator.single(Fortune(0, "Additional fortune added at request time."))
+        ++ rs.map(r => Fortune(r.getInt(1), r.getString(2)))
+      ).toArray
+
+      util.Arrays.sort(fortunes, Ordering.by((f: Fortune) => f.message): Comparator[Fortune])
+      fortunes
     }
 
   private def withStatement[T](statement: String)(f: PreparedStatement => T): Future[T] =
