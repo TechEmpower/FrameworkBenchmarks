@@ -7,7 +7,8 @@ extern crate serde_derive;
 use actix_http::{HttpService, KeepAlive};
 use actix_server::Server;
 use actix_web::dev::Body;
-use actix_web::http::{header::CONTENT_TYPE, header::SERVER, HeaderValue, StatusCode};
+use actix_web::http::header::{CONTENT_TYPE, SERVER};
+use actix_web::http::{HeaderValue, StatusCode};
 use actix_web::{web, App, HttpResponse};
 use bytes::{Bytes, BytesMut};
 
