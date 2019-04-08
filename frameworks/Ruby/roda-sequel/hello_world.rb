@@ -26,17 +26,17 @@ class HelloWorld < Roda
   end
 
   # Test type 1: JSON serialization
-  static_get '/json' do
+  static_get '/json' do |_|
     { :message=>'Hello, World!' }
   end
 
   # Test type 2: Single database query
-  static_get '/db' do
+  static_get '/db' do |_|
     World.with_pk(rand1).values
   end
 
   # Test type 3: Multiple database queries
-  static_get '/queries' do
+  static_get '/queries' do |_|
     worlds =
       DB.synchronize do
         Array.new(bounded_queries) do
@@ -48,7 +48,7 @@ class HelloWorld < Roda
   end
 
   # Test type 4: Fortunes
-  static_get '/fortunes' do
+  static_get '/fortunes' do |_|
     @fortunes = Fortune.all
     @fortunes << Fortune.new(
       :id=>0,
@@ -60,7 +60,7 @@ class HelloWorld < Roda
   end
 
   # Test type 5: Database updates
-  static_get '/updates' do
+  static_get '/updates' do |_|
     worlds =
       DB.synchronize do
         Array.new(bounded_queries) do
@@ -74,7 +74,7 @@ class HelloWorld < Roda
   end
 
   # Test type 6: Plaintext
-  static_get '/plaintext' do
+  static_get '/plaintext' do |_|
     response['Content-Type'] = 'text/plain'
 
     'Hello, World!'
