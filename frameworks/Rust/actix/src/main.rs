@@ -1,3 +1,6 @@
+#[global_allocator]
+static ALLOC: jemallocator::Jemalloc = jemallocator::Jemalloc;
+
 #[macro_use]
 extern crate serde_derive;
 
@@ -39,7 +42,6 @@ fn plaintext() -> HttpResponse {
 }
 
 fn main() -> std::io::Result<()> {
-    env_logger::init();
     let sys = actix_rt::System::new("techempower");
 
     // start http server
