@@ -222,10 +222,10 @@ def verify_randomnumber_list(expected_len,
         return problems
 
     # This path will be hit when the framework returns a single JSON object
-    # rather than a list containing one element. We allow this with a warn,
-    # then verify the supplied object
+    # rather than a list containing one element.
     if type(response) is not list:
-        problems.append(('warn', 'Top-level JSON is an object, not an array',
+        problems.append((max_infraction,
+                         'Top-level JSON is an object, not an array',
                          url))
         problems += verify_randomnumber_object(response, url, max_infraction)
         return problems
