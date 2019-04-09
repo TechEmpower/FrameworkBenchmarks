@@ -52,7 +52,7 @@ public class MysqlController
 		}
 		catch(NumberFormatException nfexc)
 		{
-			// do nothing
+			queriesParam = true;
 		}
 
 		// Fetch some rows from the database.
