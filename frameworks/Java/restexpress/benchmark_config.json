@@ -23,8 +23,8 @@
       "versus": "netty"
     },
     "mysql-raw": {
-      "db_url": "/restexpress/mysql",
-      "query_url": "/restexpress/mysql?queries=",
+      "db_url": "/restexpress/mysql/db",
+      "query_url": "/restexpress/mysql/query?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
