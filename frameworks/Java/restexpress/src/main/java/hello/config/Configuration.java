@@ -1,9 +1,10 @@
 package hello.config;
 
+import hello.controller.DbMongodbController;
 import hello.controller.DbMysqlController;
 import hello.controller.JsonController;
-import hello.controller.MongodbController;
 import hello.controller.PlaintextController;
+import hello.controller.QueriesMongodbController;
 import hello.controller.QueriesMysqlController;
 import hello.controller.persistence.WorldsMongodbRepository;
 
@@ -30,7 +31,8 @@ public class Configuration extends Environment {
 	private JsonController jsonController;
 	private DbMysqlController dbMysqlController;
 	private QueriesMysqlController queriesMysqlController;
-	private MongodbController mongodbController;
+	private DbMongodbController dbMongodbController;
+	private QueriesMongodbController queriesMongodbController;
 	private PlaintextController plaintextController;
 
 	@Override
@@ -58,7 +60,8 @@ public class Configuration extends Environment {
 				return Long.valueOf(id);
 			}
 		});
-		mongodbController = new MongodbController(worldMongodbRepository);
+		dbMongodbController = new DbMongodbController(worldMongodbRepository);
+		queriesMongodbController = new QueriesMongodbController(worldMongodbRepository);
 	}
 
 	public String getDefaultFormat() {
@@ -89,8 +92,12 @@ public class Configuration extends Environment {
 		return queriesMysqlController;
 	}
 
-	public MongodbController getMongodbController() {
-		return mongodbController;
+	public DbMongodbController getDbMongodbController() {
+		return dbMongodbController;
+	}
+	
+	public QueriesMongodbController getQueriesMongodbController() {
+		return queriesMongodbController;
 	}
 
 	public PlaintextController getPlaintextController() {

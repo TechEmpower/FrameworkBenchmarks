@@ -4,8 +4,8 @@
     "default": {
       "json_url": "/restexpress/json",
       "plaintext_url": "/restexpress/plaintext",
-      "db_url": "/restexpress/mongodb",
-      "query_url": "/restexpress/mongodb?queries=",
+      "db_url": "/restexpress/mongo/db",
+      "query_url": "/restexpress/mongo/query?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",

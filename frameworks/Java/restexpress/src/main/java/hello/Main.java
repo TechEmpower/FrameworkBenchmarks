@@ -32,7 +32,9 @@ public class Main {
 		server.uri("/restexpress/mysql/query", config.getQueriesMysqlController()).method(
 				HttpMethod.GET);
 
-		server.uri("/restexpress/mongodb", config.getMongodbController()).method(HttpMethod.GET);
+		server.uri("/restexpress/mongo/db", config.getDbMongodbController()).method(HttpMethod.GET);
+		
+		server.uri("/restexpress/mongo/query", config.getQueriesMongodbController()).method(HttpMethod.GET);
 
 		server.addPostprocessor((request, response) -> {
 			response.addHeader("Server", "RestExpress");
