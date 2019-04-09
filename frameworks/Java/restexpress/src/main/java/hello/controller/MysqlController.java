@@ -35,10 +35,11 @@ public class MysqlController
 
 		// Get the count of queries to run.
 		int count = 1;
+		boolean queriesParam = false;
 		try
 		{
 			count = Integer.parseInt(request.getHeader("queries"));
-		
+			queriesParam = true;
 			// Bounds check.
 			if (count > 500)
 			{
@@ -76,7 +77,8 @@ public class MysqlController
 			}
 		}
 
-		if (count == 1)
+		//if the request is not containing parameter assume the `db` test case for expecting single result
+		if (count == 1 && !queriesParam)
 		{
 			return worlds[0];
 		}
