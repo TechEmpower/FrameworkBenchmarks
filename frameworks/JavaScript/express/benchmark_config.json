@@ -31,7 +31,7 @@
     },
     "mongodb": {
       "db_url": "/mongoose",
-      "query_url": "/mongoose?queries=",
+      "query_url": "/mongooseq?queries=",
       "update_url": "/mongoose-update?queries=",
       "fortune_url": "/mongoose-fortune",
       "port": 8080,
