@@ -1,4 +1,4 @@
-FROM dlang2/ldc-ubuntu:latest
+FROM dlang2/ldc-ubuntu:1.15.0
 
 WORKDIR /dlang/app
 COPY . .
