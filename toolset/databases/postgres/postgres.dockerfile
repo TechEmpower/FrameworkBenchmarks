@@ -13,10 +13,11 @@ ADD pg_hba.conf pg_hba.conf
 ADD 60-postgresql-shm.conf 60-postgresql-shm.conf
 ADD create-postgres-database.sql create-postgres-database.sql
 ADD create-postgres.sql create-postgres.sql
+ADD pgdg.list pgdg.list
 
 # prepare PostgreSQL APT repository
-RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+RUN cp pgdg.list /etc/apt/sources.list.d/
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ACCC4CF8
 
 # install postgresql on database machine
 RUN apt-get -y update > /dev/null
