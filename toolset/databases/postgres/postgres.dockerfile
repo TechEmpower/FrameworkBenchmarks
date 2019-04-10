@@ -14,11 +14,15 @@ ADD 60-postgresql-shm.conf 60-postgresql-shm.conf
 ADD create-postgres-database.sql create-postgres-database.sql
 ADD create-postgres.sql create-postgres.sql
 
+# prepare PostgreSQL APT repository
+RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+
 # install postgresql on database machine
 RUN apt-get -y update > /dev/null
 RUN apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql > /dev/null
 
-ENV PG_VERSION 9.5
+ENV PG_VERSION 11.2
 
 # Make sure all the configuration files in main belong to postgres
 RUN mv postgresql.conf /etc/postgresql/${PG_VERSION}/main/postgresql.conf
