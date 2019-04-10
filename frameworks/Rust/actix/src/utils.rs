@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 use std::{cmp, io};
 
-use bytes::BytesMut;
+use bytes::{BufMut, BytesMut};
 
 pub const SIZE: usize = 31;
 
@@ -14,7 +14,7 @@ pub struct Writer<'a>(pub &'a mut BytesMut);
 
 impl<'a> io::Write for Writer<'a> {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-        self.0.extend_from_slice(buf);
+        self.0.put_slice(buf);
         Ok(buf.len())
     }
     fn flush(&mut self) -> io::Result<()> {
@@ -38,38 +38,38 @@ fn escapable(b: u8) -> bool {
     }
 }
 
-pub fn escape<T: io::Write>(writer: &mut T, s: String) {
+pub fn escape(writer: &mut Writer, s: String) {
     let bytes = s.as_bytes();
     let mut last_pos = 0;
     for (idx, b) in s.as_bytes().iter().enumerate() {
         if escapable(*b) {
-            let _ = writer.write(&bytes[last_pos..idx]);
+            let _ = writer.0.put_slice(&bytes[last_pos..idx]);
 
             last_pos = idx + 1;
             match *b {
                 b'<' => {
-                    let _ = writer.write(b"&lt;");
+                    let _ = writer.0.put_slice(b"&lt;");
                 }
                 b'>' => {
-                    let _ = writer.write(b"&gt;");
+                    let _ = writer.0.put_slice(b"&gt;");
                 }
                 b'&' => {
-                    let _ = writer.write(b"&amp;");
+                    let _ = writer.0.put_slice(b"&amp;");
                 }
                 b'"' => {
-                    let _ = writer.write(b"&quot;");
+                    let _ = writer.0.put_slice(b"&quot;");
                 }
                 b'\'' => {
-                    let _ = writer.write(b"&#x27;");
+                    let _ = writer.0.put_slice(b"&#x27;");
                 }
                 b'/' => {
-                    let _ = writer.write(b"&#x2f;");
+                    let _ = writer.0.put_slice(b"&#x2f;");
                 }
                 _ => panic!("incorrect indexing"),
             }
         }
     }
     if last_pos < bytes.len() - 1 {
-        let _ = writer.write(&bytes[last_pos..]);
+        let _ = writer.0.put_slice(&bytes[last_pos..]);
     }
 }

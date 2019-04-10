@@ -19,7 +19,7 @@
       "notes": "",
       "versus": ""
     },
-    "platform": {
+    "core": {
       "fortune_url": "/fortune",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
@@ -37,7 +37,7 @@
       "webserver": "actix-web",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Actix [raw]",
+      "display_name": "Actix [Platform]",
       "notes": "",
       "versus": ""
     },
