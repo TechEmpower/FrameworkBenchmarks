@@ -72,7 +72,7 @@ class WebInterface {
 	void getDB(HTTPServerResponse res)
 	{
 		auto conn = client.lockConnection();
-		scope(exit)	delete conn;
+		scope(exit)	destroy(conn);
 
 		immutable id = _uniformVariable(_gen);
 		immutable query = "SELECT randomNumber FROM world WHERE id = " ~  id.to!string;
