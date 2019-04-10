@@ -2,6 +2,7 @@
   "framework": "nodejs",
   "tests": [{
     "default": {
+      "docker_context": "../",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/db",

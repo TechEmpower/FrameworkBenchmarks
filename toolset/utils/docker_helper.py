@@ -1,4 +1,6 @@
 import os
+from io import BytesIO
+import tarfile
 import socket
 import json
 import docker
@@ -28,18 +30,46 @@ class DockerHelper:
             base_url=self.benchmarker.config.database_docker_host)
 
     def __build(self, base_url, path, build_log_file, log_prefix, dockerfile,
-                tag, buildargs={}):
+                tag, buildargs={}, context=None):
         '''
         Builds docker containers using docker-py low-level api
         '''
 
+        fileobj = None
+        custom_context = False
+
         self.benchmarker.time_logger.mark_build_start()
         with open(build_log_file, 'w') as build_log:
+            # Handle custom contexts
+            if context is not None:
+                try:
+                    # Create a temporary tarfile for context
+                    tar = tarfile.open("tmp_docker_context", "w:gz")
+                    # Add the named dockerfile to the root of the tarfile
+                    tar.add(path + "/" + dockerfile, dockerfile)
+                    # Add the user defined context path to the root
+                    tar.add(os.path.join(path, context), "/")
+                    tar.close()
+                    fileobj = open("tmp_docker_context", "r")
+                    path = None
+                    custom_context = True
+                except Exception:
+                    tb = traceback.format_exc()
+                    log("Problem preparing custom context; terminating",
+                        prefix=log_prefix,
+                        file=build_log,
+                        color=Fore.RED)
+                    log(tb, prefix=log_prefix, file=build_log)
+                    self.benchmarker.time_logger.log_build_end(
+                        log_prefix=log_prefix, file=build_log)
+                    raise
             try:
                 client = docker.APIClient(base_url=base_url)
                 output = client.build(
                     path=path,
+                    fileobj=fileobj,
                     dockerfile=dockerfile,
+                    custom_context=custom_context,
                     tag=tag,
                     forcerm=True,
                     timeout=3600,
@@ -135,6 +165,10 @@ class DockerHelper:
                 build_log_dir,
                 "%s.log" % test_docker_file.replace(".dockerfile", "").lower())
 
+        docker_context = None
+        if hasattr(test, 'docker_context'):
+            docker_context = test.docker_context
+
         try:
             self.__build(
                 base_url=self.benchmarker.config.server_docker_host,
@@ -142,6 +176,7 @@ class DockerHelper:
                 log_prefix=log_prefix,
                 path=test.directory,
                 dockerfile=test_docker_file,
+                context=docker_context,
                 buildargs=({
                     'BENCHMARK_ENV':
                         self.benchmarker.config.results_environment,

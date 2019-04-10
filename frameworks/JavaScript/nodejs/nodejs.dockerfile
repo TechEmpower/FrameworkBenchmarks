@@ -2,7 +2,7 @@ FROM node:10.12.0
 
 ARG TFB_TEST_NAME
 
-COPY ./ ./
+COPY ./nodejs ./
 
 RUN npm install
 
