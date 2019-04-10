@@ -14,7 +14,7 @@ use actix_http::http::{HeaderValue, StatusCode};
 use actix_http::{Error, HttpService, KeepAlive, Request, Response};
 use actix_server::{Server, ServerConfig};
 use actix_service::{NewService, Service};
-use bytes::{Bytes, BytesMut};
+use bytes::{BufMut, Bytes, BytesMut};
 use futures::future::{join_all, ok, Either, FutureResult};
 use futures::{Async, Future, Poll};
 
@@ -23,7 +23,7 @@ mod models;
 mod utils;
 
 use crate::db_pg_direct::PgConnection;
-use crate::utils::{escape, Message, Writer, SIZE};
+use crate::utils::{Message, Writer, SIZE};
 
 const FORTUNES_START: &[u8] = b"<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
 const FORTUNES_ROW_START: &[u8] = b"<tr><td>";
@@ -133,13 +133,17 @@ impl Service for App {
                 Either::B(Box::new(fut.from_err().and_then(move |fortunes| {
                     let mut body = BytesMut::with_capacity(2048);
                     let mut writer = Writer(&mut body);
-                    let _ = writer.write(FORTUNES_START);
+                    let _ = writer.0.put_slice(FORTUNES_START);
                     fortunes.into_iter().fold((), |_, row| {
-                        let _ = writer.write(FORTUNES_ROW_START);
+                        let _ = writer.0.put_slice(FORTUNES_ROW_START);
                         let _ = write!(&mut writer, "{}", row.id);
-                        let _ = writer.write(FORTUNES_COLUMN);
-                        escape(&mut writer, row.message);
-                        let _ = writer.write(FORTUNES_ROW_END);
+                        let _ = writer.0.put_slice(FORTUNES_COLUMN);
+                        let _ = write!(
+                            &mut writer,
+                            "{}",
+                            v_htmlescape::escape(&row.message)
+                        );
+                        let _ = writer.0.put_slice(FORTUNES_ROW_END);
                         ()
                     });
                     let _ = writer.write(FORTUNES_END);
