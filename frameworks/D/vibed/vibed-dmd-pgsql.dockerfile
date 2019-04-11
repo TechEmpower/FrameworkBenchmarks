@@ -5,6 +5,6 @@ COPY . .
 
 RUN apt update -yqq && apt install -yqq libpq-dev zlib1g-dev
 
-RUN dub build -b release-nobounds --config=postgresql
+RUN dub build -b release --config=postgresql
 
 CMD ["/dlang/app/fwb"]

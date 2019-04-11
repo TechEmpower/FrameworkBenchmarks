@@ -32,5 +32,15 @@
         "vibe-d-postgresql": "2.0.2"
       }
     }
-  ]
+  ],
+  "buildTypes": {
+      "debug": {
+          "buildOptions": ["debugMode", "optimize"]
+      },
+      "release": {
+          "buildOptions": ["releaseMode", "optimize", "inline"],
+          "dflags": ["-boundscheck=off"],
+          "dflags-ldc": ["-flto=thin"]
+      }
+  }
 }
