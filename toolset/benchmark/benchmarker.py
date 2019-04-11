@@ -170,7 +170,7 @@ class Benchmarker:
 
             # Debug mode blocks execution here until ctrl+c
             if self.config.mode == "debug":
-                log("Entering debug mode. Server has started. CTRL-c to stop.",
+                log("Entering debug mode. Server http://localhost:28080 has started. CTRL-c to stop.",
                     prefix=log_prefix,
                     file=benchmark_log,
                     color=Fore.YELLOW)
