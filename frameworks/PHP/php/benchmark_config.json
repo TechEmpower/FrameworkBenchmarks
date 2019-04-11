@@ -248,7 +248,7 @@
       "framework": "None",
       "language": "PHP",
       "flavor": "PHP7",
-      "orm": "Full",
+      "orm": "Micro",
       "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
