@@ -53,49 +53,19 @@ def quit_diffing():
     exit(0)
 
 
-print("TRAVIS_COMMIT_RANGE: {!s}".format(os.getenv("TRAVIS_COMMIT_RANGE")))
-print("TRAVIS_COMMIT      : {!s}".format(os.getenv("TRAVIS_COMMIT")))
-
 is_PR = (os.getenv("TRAVIS_PULL_REQUEST") != "false")
-commit_range = ""
-first_commit = ""
 last_commit  = ""
 
 if is_PR:
     print('I am testing a pull request')
-    first_commit = os.getenv("TRAVIS_COMMIT_RANGE").split('...')[0]
     last_commit = subprocess.check_output(
         "git rev-list -n 1 FETCH_HEAD^2", shell=True).rstrip('\n')
-    print("Guessing that first commit in PR is : {!s}".format(first_commit))
-    print("Guessing that final commit in PR is : {!s}".format(last_commit))
 
-    if first_commit == "":
-        print("No first commit, using Github's automerge commit")
-        commit_range = "--first-parent -1 -m FETCH_HEAD"
-    elif first_commit == last_commit:
-        print("Only one commit in range, examining {!s}".format(last_commit))
-        commit_range = "-m --first-parent -1 {!s}".format(last_commit)
-    else:
-        commit_range = "--first-parent {!s}...{!s}".format(
-            first_commit, last_commit)
-
-if not is_PR:
-    print('I am not testing a pull request')
-    commit_range = "--first-parent -m {!s}".format(
-        os.getenv("TRAVIS_COMMIT_RANGE"))
-
-    # Handle 1
-    if commit_range == "":
-        commit_range = "--first-parent -m -1 {!s}".format(
-            os.getenv("TRAVIS_COMMIT"))
-
-print("Using commit range `{!s}`".format(commit_range))
-print("Running `git log --name-only --pretty=\"format:\" {!s}`".format(
-    commit_range))
+# https://stackoverflow.com/questions/25071579/list-all-files-changed-in-a-pull-request-in-git-github
 changes = clean_output(
     subprocess.check_output([
         'bash', '-c',
-        'git log --name-only --pretty="format:" {!s}'.format(commit_range)
+        'git --no-pager diff --name-only FETCH_HEAD $(git merge-base FETCH_HEAD master)'
     ]))
 print("Determining what to run based on the following file changes: \n{!s}"
     .format('\n'.join(changes.split('\n')[0:10])))
