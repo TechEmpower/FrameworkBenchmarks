@@ -19,5 +19,6 @@ CMD java                       \
     -Dlevel=1                  \
     -Dread=false               \
     -Depoll=true               \
+    -Dnodelay=false            \
     -DunsafeBuf=true           \
     -jar /baseio/target/baseio-example-0.1-jar-with-dependencies.jar

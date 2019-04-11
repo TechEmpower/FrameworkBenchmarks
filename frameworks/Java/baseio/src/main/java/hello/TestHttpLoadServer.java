@@ -1,12 +1,12 @@
 /*
  * Copyright 2015 The Baseio Project
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import com.firenio.baseio.codec.http11.HttpContentType;
 import com.firenio.baseio.codec.http11.HttpDateUtil;
 import com.firenio.baseio.codec.http11.HttpFrame;
 import com.firenio.baseio.codec.http11.HttpStatus;
+import com.firenio.baseio.collection.ByteTree;
 import com.firenio.baseio.common.Util;
 import com.firenio.baseio.component.Channel;
 import com.firenio.baseio.component.ChannelAcceptor;
@@ -58,17 +59,18 @@ public class TestHttpLoadServer {
     }
 
     public static void main(String[] args) throws Exception {
-        boolean lite = Util.getBooleanProperty("lite");
-        boolean read = Util.getBooleanProperty("read");
-        boolean pool = Util.getBooleanProperty("pool");
-        boolean epoll = Util.getBooleanProperty("epoll");
-        boolean direct = Util.getBooleanProperty("direct");
-        boolean inline = Util.getBooleanProperty("inline");
+        boolean lite      = Util.getBooleanProperty("lite");
+        boolean read      = Util.getBooleanProperty("read");
+        boolean pool      = Util.getBooleanProperty("pool");
+        boolean epoll     = Util.getBooleanProperty("epoll");
+        boolean direct    = Util.getBooleanProperty("direct");
+        boolean inline    = Util.getBooleanProperty("inline");
+        boolean nodelay   = Util.getBooleanProperty("nodelay");
         boolean unsafeBuf = Util.getBooleanProperty("unsafeBuf");
-        int core = Util.getIntProperty("core", 1);
-        int frame = Util.getIntProperty("frame", 16);
-        int level = Util.getIntProperty("level", 1);
-        int readBuf = Util.getIntProperty("readBuf", 16);
+        int     core      = Util.getIntProperty("core", 1);
+        int     frame     = Util.getIntProperty("frame", 16);
+        int     level     = Util.getIntProperty("level", 1);
+        int     readBuf   = Util.getIntProperty("readBuf", 16);
         LoggerFactory.setEnableSLF4JLogger(false);
         LoggerFactory.setLogLevel(LoggerFactory.LEVEL_INFO);
         Options.setBufAutoExpansion(false);
@@ -85,13 +87,14 @@ public class TestHttpLoadServer {
         DebugUtil.info("direct: {}", direct);
         DebugUtil.info("inline: {}", inline);
         DebugUtil.info("readBuf: {}", readBuf);
+        DebugUtil.info("nodelay: {}", nodelay);
 
         IoEventHandle eventHandle = new IoEventHandle() {
 
             @Override
             public void accept(Channel ch, Frame frame) throws Exception {
-                HttpFrame f = (HttpFrame) frame;
-                String action = f.getRequestURL();
+                HttpFrame f      = (HttpFrame) frame;
+                String    action = f.getRequestURL();
                 if ("/plaintext".equals(action)) {
                     f.setContent(STATIC_PLAINTEXT);
                     f.setContentType(HttpContentType.text_plain);
@@ -112,17 +115,20 @@ public class TestHttpLoadServer {
             }
 
         };
-        
-        int fcache = 1024 * 16;
-        int pool_cap = 1024 * 128;
+
+        int fcache    = 1024 * 16;
+        int pool_cap  = 1024 * 128;
         int pool_unit = 256;
         if (inline) {
             pool_cap = 1024 * 8;
             pool_unit = 256 * 16;
         }
+        ByteTree<String> cachedUrls = new ByteTree<>();
+        cachedUrls.add("/plaintext");
+        cachedUrls.add("/json");
         HttpDateUtil.start();
-        NioEventLoopGroup group = new NioEventLoopGroup();
-        ChannelAcceptor context = new ChannelAcceptor(group, 8080);
+        NioEventLoopGroup group   = new NioEventLoopGroup();
+        ChannelAcceptor   context = new ChannelAcceptor(group, 8080);
         group.setMemoryPoolCapacity(pool_cap);
         group.setEnableMemoryPoolDirect(direct);
         group.setEnableMemoryPool(pool);
@@ -131,16 +137,18 @@ public class TestHttpLoadServer {
         group.setChannelReadBuffer(1024 * readBuf);
         group.setEventLoopSize(Util.availableProcessors() * core);
         group.setConcurrentFrameStack(false);
-        context.addProtocolCodec(new HttpCodec("baseio", fcache, lite, inline));
-        context.addChannelEventListener(new ChannelEventListenerAdapter() {
+        if (nodelay) {
+            context.addChannelEventListener(new ChannelEventListenerAdapter() {
 
-            @Override
-            public void channelOpened(Channel ch) throws Exception {
-                ch.setOption(SocketOptions.TCP_NODELAY, 1);
-                ch.setOption(SocketOptions.TCP_QUICKACK, 1);
-                ch.setOption(SocketOptions.SO_KEEPALIVE, 0);
-            }
-        });
+                @Override
+                public void channelOpened(Channel ch) throws Exception {
+                    ch.setOption(SocketOptions.TCP_NODELAY, 1);
+                    ch.setOption(SocketOptions.TCP_QUICKACK, 1);
+                    ch.setOption(SocketOptions.SO_KEEPALIVE, 0);
+                }
+            });
+        }
+        context.addProtocolCodec(new HttpCodec("baseio", fcache, lite, inline, cachedUrls));
         context.setIoEventHandle(eventHandle);
         context.bind();
     }
