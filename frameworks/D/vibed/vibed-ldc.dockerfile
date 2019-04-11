@@ -1,11 +1,10 @@
-FROM dlanguage/ldc:1.7.0
+FROM dlang2/ldc-ubuntu:1.15.0
 
-ADD ./ /vibed
-WORKDIR /vibed
+WORKDIR /dlang/app
+COPY . .
 
 RUN apt update -yqq && apt install -yqq zlib1g-dev
 
-RUN dub upgrade --verbose
-RUN dub build -b release --compiler=ldc2 --combined --verbose
+RUN dub build -b release-nobounds --compiler=ldc2 --verbose
 
-CMD ["./fwb"]
+CMD ["/dlang/app/fwb"]

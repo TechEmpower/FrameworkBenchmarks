@@ -3,7 +3,7 @@ use std::io;
 use futures::future::join_all;
 use futures::{stream, Future, Stream};
 use rand::{thread_rng, Rng, ThreadRng};
-use tokio_postgres::{connect, Client, Statement, TlsMode};
+use tokio_postgres::{connect, Client, NoTls, Statement};
 
 use crate::models::{Fortune, World};
 
@@ -17,10 +17,10 @@ pub struct PgConnection {
 
 impl PgConnection {
     pub fn connect(db_url: &str) -> impl Future<Item = PgConnection, Error = ()> {
-        let hs = connect(db_url.parse().unwrap(), TlsMode::None);
+        let hs = connect(db_url, NoTls);
 
         hs.map_err(|_| panic!("can not connect to postgresql"))
-            .and_then(|(cl, conn)| {
+            .and_then(|(mut cl, conn)| {
                 actix_rt::spawn(conn.map_err(|e| panic!("{}", e)));
 
                 join_all(vec![
@@ -49,7 +49,7 @@ impl PgConnection {
         self.cl
             .query(&self.world, &[&random_id])
             .into_future()
-            .map_err(|e| io::Error::new(io::ErrorKind::Other, e.0))
+            .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e.0)))
             .and_then(|(row, _)| {
                 let row = row.unwrap();
                 Ok(World {
@@ -70,7 +70,9 @@ impl PgConnection {
                 self.cl
                     .query(&self.world, &[&w_id])
                     .into_future()
-                    .map_err(|e| io::Error::new(io::ErrorKind::Other, e.0))
+                    .map_err(|e| {
+                        io::Error::new(io::ErrorKind::Other, format!("{:?}", e.0))
+                    })
                     .and_then(|(row, _)| {
                         let row = row.unwrap();
                         Ok(World {
@@ -96,7 +98,9 @@ impl PgConnection {
                 self.cl
                     .query(&self.world, &[&w_id])
                     .into_future()
-                    .map_err(|e| io::Error::new(io::ErrorKind::Other, e.0))
+                    .map_err(|e| {
+                        io::Error::new(io::ErrorKind::Other, format!("{:?}", e.0))
+                    })
                     .and_then(move |(row, _)| {
                         let row = row.unwrap();
                         Ok(World {
@@ -107,7 +111,7 @@ impl PgConnection {
             );
         }
 
-        let cl = self.cl.clone();
+        let mut cl = self.cl.clone();
         stream::futures_unordered(worlds)
             .collect()
             .and_then(move |worlds| {
@@ -124,13 +128,18 @@ impl PgConnection {
                     " ORDER BY 1) AS temp(id, randomnumber) WHERE temp.id = world.id",
                 );
 
-                cl.batch_execute(&update)
-                    .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
+                cl.simple_query(&update)
+                    .collect()
+                    .map_err(|e| {
+                        io::Error::new(io::ErrorKind::Other, format!("{:?}", e))
+                    })
                     .and_then(|_| Ok(worlds))
             })
     }
 
-    pub fn tell_fortune(&self) -> impl Future<Item = Vec<Fortune>, Error = io::Error> {
+    pub fn tell_fortune(
+        &mut self,
+    ) -> impl Future<Item = Vec<Fortune>, Error = io::Error> {
         let mut items = Vec::new();
         items.push(Fortune {
             id: 0,
@@ -139,6 +148,7 @@ impl PgConnection {
 
         self.cl
             .query(&self.fortune, &[])
+            .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))
             .fold(items, move |mut items, row| {
                 items.push(Fortune {
                     id: row.get(0),
@@ -146,7 +156,7 @@ impl PgConnection {
                 });
                 Ok::<_, io::Error>(items)
             })
-            .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
+            .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))
             .and_then(|mut items| {
                 items.sort_by(|it, next| it.message.cmp(&next.message));
                 Ok(items)

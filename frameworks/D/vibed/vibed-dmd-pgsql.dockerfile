@@ -1,11 +1,10 @@
-FROM dlanguage/ldc:1.7.0
+FROM dlang2/dmd-ubuntu:2.085.1
 
-ADD ./ /vibed
-WORKDIR /vibed
+WORKDIR /dlang/app
+COPY . .
 
 RUN apt update -yqq && apt install -yqq libpq-dev zlib1g-dev
 
-RUN dub upgrade --verbose
-RUN dub build -b release --combined --config=postgresql
+RUN dub build -b release-nobounds --config=postgresql
 
-CMD ["./fwb"]
+CMD ["/dlang/app/fwb"]

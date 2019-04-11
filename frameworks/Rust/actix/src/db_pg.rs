@@ -4,7 +4,7 @@ use actix::fut;
 use actix::prelude::*;
 use futures::{stream, Future, Stream};
 use rand::{thread_rng, Rng, ThreadRng};
-use tokio_postgres::{connect, Client, Statement, TlsMode};
+use tokio_postgres::{connect, Client, NoTls, Statement};
 
 use crate::models::{Fortune, World};
 
@@ -22,7 +22,7 @@ impl Actor for PgConnection {
 
 impl PgConnection {
     pub fn connect(db_url: &str) -> Addr<PgConnection> {
-        let hs = connect(db_url.parse().unwrap(), TlsMode::None);
+        let hs = connect(db_url, NoTls);
 
         PgConnection::create(move |ctx| {
             let act = PgConnection {
@@ -34,7 +34,7 @@ impl PgConnection {
 
             hs.map_err(|_| panic!("can not connect to postgresql"))
                 .into_actor(&act)
-                .and_then(|(cl, conn), act, ctx| {
+                .and_then(|(mut cl, conn), act, ctx| {
                     ctx.wait(
                         cl.prepare("SELECT id, message FROM fortune")
                             .map_err(|_| ())
@@ -83,7 +83,7 @@ impl Handler<RandomWorld> for PgConnection {
                 .unwrap()
                 .query(self.world.as_ref().unwrap(), &[&random_id])
                 .into_future()
-                .map_err(|e| io::Error::new(io::ErrorKind::Other, e.0))
+                .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e.0)))
                 .and_then(|(row, _)| {
                     let row = row.unwrap();
                     Ok(World {
@@ -114,7 +114,9 @@ impl Handler<RandomWorlds> for PgConnection {
                     .unwrap()
                     .query(self.world.as_ref().unwrap(), &[&w_id])
                     .into_future()
-                    .map_err(|e| io::Error::new(io::ErrorKind::Other, e.0))
+                    .map_err(|e| {
+                        io::Error::new(io::ErrorKind::Other, format!("{:?}", e.0))
+                    })
                     .and_then(|(row, _)| {
                         let row = row.unwrap();
                         Ok(World {
@@ -149,7 +151,9 @@ impl Handler<UpdateWorld> for PgConnection {
                     .unwrap()
                     .query(self.world.as_ref().unwrap(), &[&w_id])
                     .into_future()
-                    .map_err(|e| io::Error::new(io::ErrorKind::Other, e.0))
+                    .map_err(|e| {
+                        io::Error::new(io::ErrorKind::Other, format!("{:?}", e.0))
+                    })
                     .and_then(move |(row, _)| {
                         let row = row.unwrap();
                         Ok(World {
@@ -181,8 +185,9 @@ impl Handler<UpdateWorld> for PgConnection {
                     act.cl
                         .as_mut()
                         .unwrap()
-                        .batch_execute(&update)
-                        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
+                        .simple_query(&update)
+                        .collect()
+                        .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))
                         .into_actor(act)
                         .and_then(|_, _, _| fut::ok(worlds))
                 }),
@@ -211,6 +216,7 @@ impl Handler<TellFortune> for PgConnection {
                 .as_mut()
                 .unwrap()
                 .query(self.fortune.as_ref().unwrap(), &[])
+                .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))
                 .fold(items, move |mut items, row| {
                     items.push(Fortune {
                         id: row.get(0),
@@ -218,7 +224,7 @@ impl Handler<TellFortune> for PgConnection {
                     });
                     Ok::<_, io::Error>(items)
                 })
-                .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
+                .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))
                 .and_then(|mut items| {
                     items.sort_by(|it, next| it.message.cmp(&next.message));
                     Ok(items)

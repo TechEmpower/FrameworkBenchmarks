@@ -1,50 +1,55 @@
 package com.techempower;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fizzed.rocker.runtime.ArrayOfByteArraysOutput;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import io.jooby.Context;
 import io.jooby.Env;
 import io.jooby.Jooby;
+import io.jooby.ServerOptions;
 import io.jooby.hikari.Hikari;
 import io.jooby.json.Jackson;
+import io.jooby.rocker.Rockerby;
 
-import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.StringJoiner;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.sql.DataSource;
 
 import static io.jooby.ExecutionMode.EVENT_LOOP;
-import static io.jooby.MediaType.html;
-import static io.jooby.MediaType.json;
-import static java.sql.ResultSet.CONCUR_READ_ONLY;
-import static java.sql.ResultSet.TYPE_FORWARD_ONLY;
+import static io.jooby.MediaType.JSON;
 
 public class App extends Jooby {
-
-  private static final String UPDATE_WORLD = "update world set randomNumber=? where id=?";
 
   private static final String SELECT_WORLD = "select * from world where id=?";
 
   private static final int DB_ROWS = 10000;
 
-  private static final String HELLO_WORLD = "Hello, World!";
+  private static final String MESSAGE = "Hello, World!";
+
+  private static final ByteBuffer MESSAGE_BUFFER = (ByteBuffer) ByteBuffer
+      .allocateDirect(MESSAGE.length())
+      .put(MESSAGE.getBytes(StandardCharsets.US_ASCII))
+      .flip();
 
   public static class Message {
-    public final String message = HELLO_WORLD;
+    public final String message = MESSAGE;
   }
 
   {
     Env env = Env.defaultEnvironment(getClass().getClassLoader());
+
+    /** Server options (netty only): */
+    setServerOptions(new ServerOptions().setSingleLoop(true));
 
     /** JSON: */
     ObjectMapper mapper = Jackson.defaultObjectMapper();
@@ -53,12 +58,15 @@ public class App extends Jooby {
     HikariConfig conf = new Hikari.Builder().build(env);
     DataSource ds = new HikariDataSource(conf);
 
+    /** Template engine: */
+    install(new Rockerby());
+
     get("/plaintext", ctx ->
-        ctx.sendString(HELLO_WORLD)
+        ctx.sendBytes(MESSAGE_BUFFER.duplicate())
     );
 
     get("/json", ctx -> ctx
-        .setContentType(json)
+        .setContentType(JSON)
         .sendBytes(mapper.writeValueAsBytes(new Message()))
     );
 
@@ -66,57 +74,79 @@ public class App extends Jooby {
     dispatch(() -> {
 
       /** Single query: */
-      get("/db", ctx -> ctx
-          .setContentType(json)
-          .sendBytes(mapper.writeValueAsBytes(findOne(ds, rndId(ThreadLocalRandom.current()))))
-      );
-
-      /** Multiple queries: */
-      get("/queries", ctx -> {
-        // bound count
-        int count = queries(ctx);
-        List<World> result = new ArrayList<>();
+      get("/db", ctx -> {
         Random rnd = ThreadLocalRandom.current();
+        World result;
         try (Connection conn = ds.getConnection()) {
-          for (int i = 0; i < count; i++) {
-            int id = rndId(rnd);
-            try (final PreparedStatement query = conn
-                .prepareStatement(SELECT_WORLD, TYPE_FORWARD_ONLY,
-                    CONCUR_READ_ONLY)) {
-              result.add(findOne(query, id));
+          int id = nextRandom(rnd);
+          try (final PreparedStatement statement = conn.prepareStatement(SELECT_WORLD)) {
+            statement.setInt(1, id);
+            try (ResultSet rs = statement.executeQuery()) {
+              rs.next();
+              result = new World(rs.getInt("id"), rs.getInt("randomNumber"));
             }
           }
         }
-        ctx.setContentType(json);
-        return ctx.sendBytes(mapper.writeValueAsBytes(result));
+        return ctx
+            .setContentType(JSON)
+            .sendBytes(mapper.writeValueAsBytes(result));
+      });
+
+      /** Multiple queries: */
+      get("/queries", ctx -> {
+        World[] result = new World[queries(ctx)];
+        Random rnd = ThreadLocalRandom.current();
+        try (Connection conn = ds.getConnection()) {
+          for (int i = 0; i < result.length; i++) {
+            int id = nextRandom(rnd);
+            try (final PreparedStatement statement = conn.prepareStatement(SELECT_WORLD)) {
+              statement.setInt(1, id);
+              try (ResultSet rs = statement.executeQuery()) {
+                rs.next();
+                result[i] = new World(rs.getInt("id"), rs.getInt("randomNumber"));
+              }
+            }
+          }
+        }
+        return ctx
+            .setContentType(JSON)
+            .sendBytes(mapper.writeValueAsBytes(result));
       });
 
       /** Updates: */
       get("/updates", ctx -> {
-        // bound count
-        int count = queries(ctx);
-        List<World> result = new ArrayList<>();
+        World[] result = new World[queries(ctx)];
         Random rnd = ThreadLocalRandom.current();
-        try (Connection conn = ds.getConnection()) {
-          for (int i = 0; i < count; i++) {
-            int id = rndId(rnd);
-            int newRandomNumber = rndId(rnd);
-            try (final PreparedStatement query = conn
-                .prepareStatement(SELECT_WORLD, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY);
-                final PreparedStatement update = conn.prepareStatement(UPDATE_WORLD)) {
-              // find
-              World world = findOne(query, id);
 
-              // update
-              update.setInt(1, newRandomNumber);
-              update.setInt(2, id);
-              update.execute();
+        StringJoiner updateSql = new StringJoiner(
+            ", ",
+            "UPDATE world SET randomNumber = temp.randomNumber FROM (VALUES ",
+            " ORDER BY 1) AS temp(id, randomNumber) WHERE temp.id = world.id");
 
-              result.add(new World(world.id, newRandomNumber));
+        try (Connection connection = ds.getConnection()) {
+          try (PreparedStatement statement = connection.prepareStatement(SELECT_WORLD)) {
+            for (int i = 0; i < result.length; i++) {
+              statement.setInt(1, nextRandom(rnd));
+              try (ResultSet rs = statement.executeQuery()) {
+                rs.next();
+                result[i] = new World(rs.getInt("id"), rs.getInt("randomNumber"));
+              }
+              // prepare update query
+              updateSql.add("(?, ?)");
             }
           }
+
+          try (PreparedStatement statement = connection.prepareStatement(updateSql.toString())) {
+            int i = 0;
+            for (World world : result) {
+              world.randomNumber = nextRandom(rnd);
+              statement.setInt(++i, world.id);
+              statement.setInt(++i, world.randomNumber);
+            }
+            statement.executeUpdate();
+          }
         }
-        ctx.setContentType(json);
+        ctx.setContentType(JSON);
         return ctx.sendBytes(mapper.writeValueAsBytes(result));
       });
 
@@ -124,8 +154,7 @@ public class App extends Jooby {
       get("/fortunes", ctx -> {
         List<Fortune> fortunes = new ArrayList<>();
         try (Connection connection = ds.getConnection()) {
-          try (PreparedStatement stt = connection
-              .prepareStatement("select * from fortune", TYPE_FORWARD_ONLY, CONCUR_READ_ONLY)) {
+          try (PreparedStatement stt = connection.prepareStatement("select * from fortune")) {
             try (ResultSet rs = stt.executeQuery()) {
               while (rs.next()) {
                 fortunes.add(new Fortune(rs.getInt("id"), rs.getString("message")));
@@ -137,46 +166,20 @@ public class App extends Jooby {
         Collections.sort(fortunes);
 
         /** render view: */
-        views.fortunes template = views.fortunes.template(fortunes);
-        ArrayOfByteArraysOutput buff = template.render(ArrayOfByteArraysOutput.FACTORY);
-        ctx.setContentLength(buff.getByteLength());
-        try (OutputStream output = ctx.responseStream(html)) {
-          for (byte[] chunk : buff.getArrays()) {
-            output.write(chunk);
-          }
-        }
-        return ctx;
+        return views.fortunes.template(fortunes);
       });
     });
   }
 
   public static void main(final String[] args) {
-    run(App::new, EVENT_LOOP, args);
+    runApp(EVENT_LOOP, args, App::new);
   }
 
-  private World findOne(DataSource ds, int id) throws SQLException {
-    try (Connection conn = ds.getConnection()) {
-      try (PreparedStatement query = conn
-          .prepareStatement(SELECT_WORLD, TYPE_FORWARD_ONLY,
-              CONCUR_READ_ONLY)) {
-        return findOne(query, id);
-      }
-    }
-  }
-
-  private World findOne(PreparedStatement query, int id) throws SQLException {
-    query.setInt(1, id);
-    try (ResultSet resultSet = query.executeQuery()) {
-      resultSet.next();
-      return new World(resultSet.getInt("id"), resultSet.getInt("randomNumber"));
-    }
-  }
-
-  private final int rndId(Random rnd) {
+  private final int nextRandom(Random rnd) {
     return rnd.nextInt(DB_ROWS) + 1;
   }
 
-  private int   queries(Context ctx) {
+  private int queries(Context ctx) {
     String value = ctx.query("queries").value("");
     if (value.length() == 0) {
       return 1;
