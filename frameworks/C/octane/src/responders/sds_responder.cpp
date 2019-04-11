@@ -29,14 +29,14 @@ void create_json_response_sds(write_batch* batch) {
     // volatile is used to ensure that the object is instantiated every time
 	// the function is called.
 	const volatile struct {
-		const unsigned char *message;
+		const char *message;
     } object = {PLAINTEXT_CONTENT};
 
     StringBuffer s;
     Writer<StringBuffer> writer(s);
     writer.StartObject();
     writer.Key("message");
-    writer.String((const unsigned char *)object.message, strlen(object.message));
+    writer.String((const char *)object.message, strlen(object.message));
     writer.EndObject();
 
     sds response_buffer = sdsnew("HTTP/1.1 200 OK\r\n");
