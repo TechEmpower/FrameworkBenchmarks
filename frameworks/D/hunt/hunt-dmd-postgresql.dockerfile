@@ -1,4 +1,4 @@
-FROM dlangchina/dlang-dmd:latest
+FROM dlang2/dmd-ubuntu:2.085.1
 
 ADD ./ /hunt
 WORKDIR /hunt
@@ -8,7 +8,7 @@ RUN apt update -y && apt install -y --no-install-recommends git && rm -rf /var/l
 RUN git clone https://github.com/nodejs/http-parser.git && \
     cd http-parser && \
     make package
-    
+
 RUN dub upgrade --verbose
 RUN dub build --build=release --arch=x86_64 --config=postgresql --compiler=dmd -f
 

@@ -1,4 +1,4 @@
-FROM dlangchina/dlang-ldc:latest
+FROM dlang2/ldc-ubuntu:1.15.0
 
 ADD ./ /hunt
 WORKDIR /hunt
