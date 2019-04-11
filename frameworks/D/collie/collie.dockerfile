@@ -4,6 +4,6 @@ ADD ./ /collie
 WORKDIR /collie
 
 RUN dub upgrade --verbose
-RUN dub build -f -b release
+RUN dub build -f -b release-nobounds
 
 CMD ["./http"]

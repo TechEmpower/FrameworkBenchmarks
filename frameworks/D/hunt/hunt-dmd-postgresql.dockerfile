@@ -10,6 +10,6 @@ RUN git clone https://github.com/nodejs/http-parser.git && \
     make package
 
 RUN dub upgrade --verbose
-RUN dub build --build=release --arch=x86_64 --config=postgresql --compiler=dmd -f
+RUN dub build --build=release-nobounds --arch=x86_64 --config=postgresql --compiler=dmd -f
 
 CMD ["./hunt-minihttp"]
