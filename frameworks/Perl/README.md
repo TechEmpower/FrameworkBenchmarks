@@ -1,22 +1,3 @@
-# Installation and Bash Configuration
-
-In order to declare that your framework requires Perl, you should have an `install.sh`
-that contains at least
-
-    #!/bin/bash
-    export PERL_HOME=${IROOT}/perl-5.18
-    export PATH="$PERL_HOME/bin:$PATH"
-
-    fw_depends perl
-
-This installs the Perl interpreter and some basic modules (see Dependency Management).
-The `install.sh` file should then install any required perl modules or other supporting
-applications.
-
-Perl is installed in the `$IROOT` directory. Currently, the Perl interpreter
-used by the test is in version 5.18 family. This will provide the `$PERL_HOME` path - should you need it - and 
-allow all apps installed by Perl to be used directly.
-
 # Dependency Management
 
 While installing Perl, the [`cpanm`](https://metacpan.org/pod/distribution/App-cpanminus/bin/cpanm)

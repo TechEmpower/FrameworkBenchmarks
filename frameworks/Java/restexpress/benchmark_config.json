@@ -4,8 +4,8 @@
     "default": {
       "json_url": "/restexpress/json",
       "plaintext_url": "/restexpress/plaintext",
-      "db_url": "/restexpress/mongodb",
-      "query_url": "/restexpress/mongodb?queries=",
+      "db_url": "/restexpress/mongo/db",
+      "query_url": "/restexpress/mongo/query?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
@@ -23,8 +23,8 @@
       "versus": "netty"
     },
     "mysql-raw": {
-      "db_url": "/restexpress/mysql",
-      "query_url": "/restexpress/mysql?queries=",
+      "db_url": "/restexpress/mysql/db",
+      "query_url": "/restexpress/mysql/query?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",

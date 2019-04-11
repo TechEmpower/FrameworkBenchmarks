@@ -72,7 +72,7 @@ class WebInterface {
 	void getDB(HTTPServerResponse res)
 	{
 		auto conn = client.lockConnection();
-		scope(exit)	delete conn;
+		scope(exit)	destroy(conn);
 
 		immutable id = _uniformVariable(_gen);
 		immutable query = "SELECT randomNumber FROM world WHERE id = " ~  id.to!string;
@@ -87,7 +87,7 @@ class WebInterface {
 		import std.algorithm : min, max;
 
 		auto conn = client.lockConnection();
-		scope(exit)	delete conn;
+		scope(exit)	destroy(conn);
 
 		// Convert the "queries" parameter to int and ignore any conversion errors
 		// Note that you'd usually declare queries as int instead. However, the
@@ -115,7 +115,7 @@ class WebInterface {
 		import std.algorithm : map, sort;
 
 		auto conn = client.lockConnection();
-		scope(exit)	delete conn;
+		scope(exit)	destroy(conn);
 
 		FortuneResponse[] data;
 		immutable query = "SELECT id, message::text FROM Fortune";
@@ -132,7 +132,7 @@ class WebInterface {
 		import std.algorithm : min, max;
 
 		auto conn = client.lockConnection();
-		scope(exit)	delete conn;
+		scope(exit)	destroy(conn);
 
 		int count = 1;
 		try count = min(max(queries.to!int, 1), 500);

@@ -12,5 +12,5 @@ trait DataStore {
 
   def updateWorld(world: World): Future[Boolean]
 
-  def getFortunes: Future[immutable.Seq[Fortune]]
+  def getFortunes: Future[Seq[Fortune]]
 }
