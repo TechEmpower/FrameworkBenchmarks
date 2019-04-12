@@ -1,41 +1,26 @@
-/*
- * Copyright 2015 The Baseio Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package hello;
 
 import java.io.IOException;
 import java.util.Arrays;
 
-import com.firenio.baseio.Options;
-import com.firenio.baseio.codec.http11.HttpCodec;
-import com.firenio.baseio.codec.http11.HttpConnection;
-import com.firenio.baseio.codec.http11.HttpContentType;
-import com.firenio.baseio.codec.http11.HttpDateUtil;
-import com.firenio.baseio.codec.http11.HttpFrame;
-import com.firenio.baseio.codec.http11.HttpStatus;
-import com.firenio.baseio.collection.ByteTree;
-import com.firenio.baseio.common.Util;
-import com.firenio.baseio.component.Channel;
-import com.firenio.baseio.component.ChannelAcceptor;
-import com.firenio.baseio.component.ChannelEventListenerAdapter;
-import com.firenio.baseio.component.Frame;
-import com.firenio.baseio.component.IoEventHandle;
-import com.firenio.baseio.component.NioEventLoopGroup;
-import com.firenio.baseio.component.SocketOptions;
-import com.firenio.baseio.log.DebugUtil;
-import com.firenio.baseio.log.LoggerFactory;
+import com.firenio.Options;
+import com.firenio.codec.http11.HttpCodec;
+import com.firenio.codec.http11.HttpConnection;
+import com.firenio.codec.http11.HttpContentType;
+import com.firenio.codec.http11.HttpDateUtil;
+import com.firenio.codec.http11.HttpFrame;
+import com.firenio.codec.http11.HttpStatus;
+import com.firenio.collection.ByteTree;
+import com.firenio.common.Util;
+import com.firenio.component.Channel;
+import com.firenio.component.ChannelAcceptor;
+import com.firenio.component.ChannelEventListenerAdapter;
+import com.firenio.component.Frame;
+import com.firenio.component.IoEventHandle;
+import com.firenio.component.NioEventLoopGroup;
+import com.firenio.component.SocketOptions;
+import com.firenio.log.DebugUtil;
+import com.firenio.log.LoggerFactory;
 import com.jsoniter.output.JsonStream;
 import com.jsoniter.output.JsonStreamPool;
 import com.jsoniter.spi.JsonException;
@@ -148,7 +133,7 @@ public class TestHttpLoadServer {
                 }
             });
         }
-        context.addProtocolCodec(new HttpCodec("baseio", fcache, lite, inline, cachedUrls));
+        context.addProtocolCodec(new HttpCodec("firenio", fcache, lite, inline, cachedUrls));
         context.setIoEventHandle(eventHandle);
         context.bind();
     }

@@ -1,5 +1,5 @@
 {
-  "framework": "baseio",
+  "framework": "firenio",
   "tests": [{
       "default": {
         "json_url": "/json",
@@ -12,13 +12,13 @@
         "language": "Java",
         "flavor": "None",
         "orm": "None",
-        "platform": "baseio",
+        "platform": "firenio",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "baseio",
+        "display_name": "firenio",
         "notes": "",
-        "versus": "baseio"
+        "versus": "firenio"
       },
       "http-lite": {
         "json_url": "/json",
@@ -31,13 +31,13 @@
         "language": "Java",
         "flavor": "None",
         "orm": "None",
-        "platform": "baseio",
+        "platform": "firenio",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "baseio-http-lite",
+        "display_name": "firenio-http-lite",
         "notes": "",
-        "versus": "baseio-http-lite"
+        "versus": "firenio-http-lite"
       }
     }
   ]
