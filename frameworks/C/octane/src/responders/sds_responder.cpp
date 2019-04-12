@@ -27,9 +27,9 @@ void create_plaintext_response_sds(write_batch* batch) {
 void create_json_response_sds(write_batch* batch) {
     // Taken from H20 implementation.
     // volatile is used to ensure that the object is instantiated every time
-	// the function is called.
-	const volatile struct {
-		const char *message;
+    // the function is called.
+    const volatile struct {
+        const char *message;
     } object = {PLAINTEXT_CONTENT};
 
     StringBuffer s;
