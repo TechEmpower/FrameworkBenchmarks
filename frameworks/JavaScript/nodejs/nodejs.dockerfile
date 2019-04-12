@@ -6,4 +6,6 @@ COPY ./ ./
 
 RUN npm install
 
+ENV TFB_TEST_NAME=$TFB_TEST_NAME
+
 CMD ["node", "app.js"]
