@@ -1,11 +1,14 @@
 use std::io;
 
+use actix_http::Error;
+use bytes::{Bytes, BytesMut};
 use futures::future::join_all;
 use futures::{stream, Future, Stream};
 use rand::{thread_rng, Rng, ThreadRng};
 use tokio_postgres::{connect, Client, NoTls, Statement};
 
 use crate::models::{Fortune, World};
+use crate::utils::{Writer, SIZE};
 
 /// Postgres interface
 pub struct PgConnection {
@@ -43,19 +46,27 @@ impl PgConnection {
 }
 
 impl PgConnection {
-    pub fn get_world(&mut self) -> impl Future<Item = World, Error = io::Error> {
+    pub fn get_world(&mut self) -> impl Future<Item = Bytes, Error = Error> {
         let random_id = self.rng.gen_range::<i32>(1, 10_001);
 
         self.cl
             .query(&self.world, &[&random_id])
             .into_future()
-            .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e.0)))
-            .and_then(|(row, _)| {
+            .map_err(|e| {
+                Error::from(io::Error::new(io::ErrorKind::Other, format!("{:?}", e.0)))
+            })
+            .map(|(row, _)| {
                 let row = row.unwrap();
-                Ok(World {
-                    id: row.get(0),
-                    randomnumber: row.get(1),
-                })
+                let mut body = BytesMut::with_capacity(SIZE);
+                serde_json::to_writer(
+                    Writer(&mut body),
+                    &World {
+                        id: row.get(0),
+                        randomnumber: row.get(1),
+                    },
+                )
+                .unwrap();
+                body.freeze()
             })
     }
 
@@ -73,12 +84,12 @@ impl PgConnection {
                     .map_err(|e| {
                         io::Error::new(io::ErrorKind::Other, format!("{:?}", e.0))
                     })
-                    .and_then(|(row, _)| {
+                    .map(|(row, _)| {
                         let row = row.unwrap();
-                        Ok(World {
+                        World {
                             id: row.get(0),
                             randomnumber: row.get(1),
-                        })
+                        }
                     }),
             );
         }
@@ -101,12 +112,12 @@ impl PgConnection {
                     .map_err(|e| {
                         io::Error::new(io::ErrorKind::Other, format!("{:?}", e.0))
                     })
-                    .and_then(move |(row, _)| {
+                    .map(move |(row, _)| {
                         let row = row.unwrap();
-                        Ok(World {
+                        World {
                             id: row.get(0),
                             randomnumber: id,
-                        })
+                        }
                     }),
             );
         }
@@ -133,18 +144,17 @@ impl PgConnection {
                     .map_err(|e| {
                         io::Error::new(io::ErrorKind::Other, format!("{:?}", e))
                     })
-                    .and_then(|_| Ok(worlds))
+                    .map(|_| worlds)
             })
     }
 
     pub fn tell_fortune(
         &mut self,
     ) -> impl Future<Item = Vec<Fortune>, Error = io::Error> {
-        let mut items = Vec::new();
-        items.push(Fortune {
+        let items = vec![Fortune {
             id: 0,
             message: "Additional fortune added at request time.".to_string(),
-        });
+        }];
 
         self.cl
             .query(&self.fortune, &[])
@@ -157,9 +167,9 @@ impl PgConnection {
                 Ok::<_, io::Error>(items)
             })
             .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))
-            .and_then(|mut items| {
+            .map(|mut items| {
                 items.sort_by(|it, next| it.message.cmp(&next.message));
-                Ok(items)
+                items
             })
     }
 }

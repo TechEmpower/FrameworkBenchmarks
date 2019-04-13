@@ -17,6 +17,7 @@ use actix_service::{NewService, Service};
 use bytes::{BufMut, Bytes, BytesMut};
 use futures::future::{join_all, ok, Either, FutureResult};
 use futures::{Async, Future, Poll};
+use serde_json::to_writer;
 
 mod db_pg_direct;
 mod models;
@@ -45,7 +46,6 @@ struct App {
 enum Db {
     All,
     Multi,
-    Update,
 }
 
 impl App {
@@ -56,7 +56,6 @@ impl App {
                     self.next = (self.next + 1) % 5;
                     &mut self.dbs[self.next]
                 }
-                Db::Update => &mut self.dbs[0],
                 Db::Multi => {
                     self.next = (self.next + 1) % 2;
                     &mut self.dbs[self.next]
@@ -100,8 +99,7 @@ impl Service for App {
                     message: "Hello, World!",
                 };
                 let mut body = BytesMut::with_capacity(SIZE);
-                serde_json::to_writer(Writer(&mut body), &message).unwrap();
-
+                to_writer(Writer(&mut body), &message).unwrap();
                 let mut res =
                     Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
                 let hdrs = res.headers_mut();
@@ -110,19 +108,16 @@ impl Service for App {
                 Either::A(ok(res))
             }
             3 if path == "/db" => {
-                let fut = self.get_db(Db::All).get_world();
+                let fut = self.dbs[0].get_world();
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
 
-                Either::B(Box::new(fut.from_err().and_then(move |row| {
-                    let mut body = BytesMut::with_capacity(31);
-                    serde_json::to_writer(Writer(&mut body), &row).unwrap();
-                    let mut res =
-                        Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+                Either::B(Box::new(fut.map(move |body| {
+                    let mut res = Response::with_body(StatusCode::OK, Body::Bytes(body));
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
                     hdrs.insert(CONTENT_TYPE, h_ct);
-                    Ok(res)
+                    res
                 })))
             }
             8 if path == "/fortune" => {
@@ -130,7 +125,7 @@ impl Service for App {
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_cthtml.clone();
 
-                Either::B(Box::new(fut.from_err().and_then(move |fortunes| {
+                Either::B(Box::new(fut.from_err().map(move |fortunes| {
                     let mut body = BytesMut::with_capacity(2048);
                     let mut writer = Writer(&mut body);
                     let _ = writer.0.put_slice(FORTUNES_START);
@@ -152,7 +147,7 @@ impl Service for App {
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
                     hdrs.insert(CONTENT_TYPE, h_ct);
-                    Ok(res)
+                    res
                 })))
             }
             8 if path == "/queries" => {
@@ -161,32 +156,32 @@ impl Service for App {
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
 
-                Either::B(Box::new(fut.from_err().and_then(move |worlds| {
+                Either::B(Box::new(fut.from_err().map(move |worlds| {
                     let mut body = BytesMut::with_capacity(35 * worlds.len());
-                    serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
+                    to_writer(Writer(&mut body), &worlds).unwrap();
                     let mut res =
                         Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
                     hdrs.insert(CONTENT_TYPE, h_ct);
-                    Ok(res)
+                    res
                 })))
             }
             8 if path == "/updates" => {
                 let q = utils::get_query_param(req.uri().query().unwrap_or("")) as usize;
-                let fut = self.get_db(Db::Update).update(q);
+                let fut = self.dbs[0].update(q);
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
 
-                Either::B(Box::new(fut.from_err().and_then(move |worlds| {
+                Either::B(Box::new(fut.from_err().map(move |worlds| {
                     let mut body = BytesMut::with_capacity(35 * worlds.len());
-                    serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
+                    to_writer(Writer(&mut body), &worlds).unwrap();
                     let mut res =
                         Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
                     hdrs.insert(CONTENT_TYPE, h_ct);
-                    Ok(res)
+                    res
                 })))
             }
             _ => Either::A(ok(Response::new(http::StatusCode::NOT_FOUND))),
