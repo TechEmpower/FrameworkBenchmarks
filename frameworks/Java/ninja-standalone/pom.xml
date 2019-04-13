@@ -22,9 +22,9 @@
         <hibernate.version>5.2.16.Final</hibernate.version>
         <hibernate-validator.version>6.0.9.Final</hibernate-validator.version>
         <jaxb-api.version>2.3.0</jaxb-api.version>
-        <jetty.version>9.3.15.v20161220</jetty.version>
+        <jetty.version>9.4.16.v20190411</jetty.version>
         <mysql.version>5.1.47</mysql.version>
-        <ninja.version>6.2.2</ninja.version>
+        <ninja.version>6.4.2</ninja.version>
         <xml-apis.version>2.0.2</xml-apis.version>
     </properties>
 
