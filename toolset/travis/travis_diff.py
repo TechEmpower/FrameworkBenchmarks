@@ -59,7 +59,7 @@ if is_PR:
 else:
     curr_branch = os.getenv("TRAVIS_COMMIT")
     # Also fetch master to compare against
-    subprocess.check_output(['bash', '-c', 'git fetch origin master'])
+    subprocess.check_output(['bash', '-c', 'git fetch origin master:master'])
 
 # https://stackoverflow.com/questions/25071579/list-all-files-changed-in-a-pull-request-in-git-github
 changes = clean_output(
