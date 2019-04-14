@@ -129,11 +129,8 @@ if re.search(r'\[ci lang .+\]', last_commit_msg, re.M):
                 run_tests.append(test)
 
 
-# Ignore travis and docker directory changes
-# Also for now, ignore the old linux setup folders, as we don't want to
-# trigger a full run as we remove old fw_depends scripts. [ci run-all] will
-# still work if it's needed.
-if re.search(r'^toolset\/(?!(travis\/|continuous\/|scaffolding\/))|^tfb|^Dockerfile', changes, re.M) is not None:
+# Ignore travis, continuous and scaffolding changes
+if re.search(r'^toolset\/(?!(travis\/|continuous\/|scaffolding\/))', changes, re.M) is not None:
     print("Found changes to core toolset. Running all tests.")
     run_tests = test_dirs
     quit_diffing()
