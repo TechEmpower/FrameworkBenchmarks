@@ -52,13 +52,21 @@ def quit_diffing():
         print("No tests to run.")
     exit(0)
 
-last_commit = os.getenv("TRAVIS_COMMIT")
+curr_branch = ""
+is_PR = (os.getenv("TRAVIS_PULL_REQUEST") != "false")
+if is_PR:
+    curr_branch = "FETCH_HEAD"
+else:
+    curr_branch = os.getenv("TRAVIS_COMMIT")
+    # Also fetch master to compare against
+    subprocess.check_output(['bash', '-c', 'git fetch origin master'])
+
 # https://stackoverflow.com/questions/25071579/list-all-files-changed-in-a-pull-request-in-git-github
 changes = clean_output(
     subprocess.check_output([
         'bash', '-c',
         'git --no-pager diff --name-only {0} $(git merge-base {0} master)'
-            .format(last_commit)
+            .format(curr_branch)
     ]))
 print("Determining what to run based on the following file changes: \n{!s}"
     .format('\n'.join(changes.split('\n')[0:10])))
