@@ -52,20 +52,13 @@ def quit_diffing():
         print("No tests to run.")
     exit(0)
 
-
-is_PR = (os.getenv("TRAVIS_PULL_REQUEST") != "false")
-last_commit  = ""
-
-if is_PR:
-    print('I am testing a pull request')
-    last_commit = subprocess.check_output(
-        "git rev-list -n 1 FETCH_HEAD^2", shell=True).rstrip('\n')
-
+last_commit = os.getenv("TRAVIS_COMMIT")
 # https://stackoverflow.com/questions/25071579/list-all-files-changed-in-a-pull-request-in-git-github
 changes = clean_output(
     subprocess.check_output([
         'bash', '-c',
-        'git --no-pager diff --name-only FETCH_HEAD $(git merge-base FETCH_HEAD master)'
+        'git --no-pager diff --name-only {0} $(git merge-base {0} master)'
+            .format(last_commit)
     ]))
 print("Determining what to run based on the following file changes: \n{!s}"
     .format('\n'.join(changes.split('\n')[0:10])))
@@ -76,10 +69,7 @@ if len(changes.split('\n')) > 10:
 # COMMIT MESSAGES:
 # Before any complicated diffing, check for forced runs from the commit message
 # Use -2 because travis now inserts a merge commit as the last commit
-last_commit_msg = subprocess.check_output(
-    ["bash", "-c", "git log --format=%B -n 1 {!s}".format(last_commit)])
-print("Parsing commit message for travis commands: {!s}"
-    .format(last_commit_msg))
+last_commit_msg = os.getenv("TRAVIS_COMMIT_MESSAGE")
 
 test_dirs = []
 run_tests = []
