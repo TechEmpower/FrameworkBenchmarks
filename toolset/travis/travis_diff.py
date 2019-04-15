@@ -57,8 +57,10 @@ def quit_diffing():
 
 
 curr_branch = ""
-is_master = os.getenv("TRAVIS_BRANCH") == "master"
 is_PR = (os.getenv("TRAVIS_PULL_REQUEST") != "false")
+# TRAVIS_BRANCH is the target branch when it's a pull request or the name
+# of the branch when it isn't
+is_master = not is_PR and os.getenv("TRAVIS_BRANCH") == "master"
 
 if is_PR:
     curr_branch = "FETCH_HEAD"
