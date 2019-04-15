@@ -1,6 +1,6 @@
 package com.typesafe.akka.http.benchmark.handlers
 
-import akka.http.scaladsl.marshalling.{Marshaller, ToEntityMarshaller}
+import akka.http.scaladsl.marshalling.{ Marshaller, ToEntityMarshaller }
 import akka.http.scaladsl.model.HttpCharsets._
 import akka.http.scaladsl.model.MediaTypes._
 import akka.http.scaladsl.model._
@@ -16,7 +16,7 @@ trait FortunesHandler { _: Infrastructure with DataStore with Templating =>
   def fortunesEndpoint: Route =
     get {
       path("fortunes") {
-        onSuccess(getFortunes)(complete(_))
+        complete(getFortunes)
       }
     }
 

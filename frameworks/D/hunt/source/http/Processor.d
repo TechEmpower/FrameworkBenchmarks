@@ -46,7 +46,7 @@ private:
 	HttpRequest request;
 	State state;
 	bool serving;
-	
+
 public:
 	TcpStream client;
 
@@ -59,7 +59,7 @@ public:
 	}
 
 	void run() {
-		client.onDataReceived((ByteBuffer buffer) { 
+		client.onReceived((ByteBuffer buffer) {
 			version(NO_HTTPPARSER) {
 				client.write(cast(ubyte[])ResponseData);
 			} else {
@@ -70,8 +70,8 @@ public:
 		.onClosed(() {
 			// notifyClientClosed();
 		})
-		.onError((string msg) { 
-			debug warning("Error: ", msg); 
+		.onError((string msg) {
+			debug warning("Error: ", msg);
 		})
 		.start();
 	}

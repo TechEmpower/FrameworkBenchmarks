@@ -1,6 +1,6 @@
-FROM dlangchina/dlang-ldc:latest
+FROM dlang2/ldc-ubuntu:1.15.0
 
-RUN apt update -y && apt install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apt/*
+RUN apt update -y && apt install -y --no-install-recommends git && apt install -yqq libpq-dev libsqlite3-dev libmysqlclient-dev zlib1g-dev  && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apt/*
 
 ADD ./ /hunt
 WORKDIR /hunt

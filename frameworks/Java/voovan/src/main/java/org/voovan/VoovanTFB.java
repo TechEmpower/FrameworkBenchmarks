@@ -7,6 +7,7 @@ import org.voovan.http.server.HttpRouter;
 import org.voovan.http.server.WebServer;
 import org.voovan.http.server.context.WebContext;
 import org.voovan.http.server.context.WebServerConfig;
+import org.voovan.tools.TEnv;
 import org.voovan.tools.TObject;
 import org.voovan.tools.json.JSON;
 import org.voovan.tools.log.Logger;
@@ -16,7 +17,6 @@ import java.util.Map;
 
 public class VoovanTFB {
 	private static final byte[] HELLO_WORLD = "Hello, World!".getBytes();
-	private static final Map MAP = TObject.asMap("message", "Hello, World!");
 
 
 	public static void main(String[] args) {
@@ -32,7 +32,6 @@ public class VoovanTFB {
 		webServerConfig.getModuleonfigs().clear();
 		webServerConfig.getRouterConfigs().clear();
 		WebServer webServer = WebServer.newInstance(webServerConfig);
-		Logger.setEnable(false);
 
 		//性能测试请求;
 		webServer.get("/plaintext", new HttpRouter() {
@@ -45,11 +44,14 @@ public class VoovanTFB {
 		webServer.get("/json", new HttpRouter() {
 			public void process(HttpRequest req, HttpResponse resp) throws Exception {
 				resp.header().put("Content-Type", "application/json");
-				resp.write(JSON.toJSON(MAP, false, false));
+				resp.write(JSON.toJSON(TObject.asMap("message", "Hello, World!")));
 			}
 		});
 
 
-		webServer.syncServe();
+		webServer.syncServe();	
+		
+		TEnv.sleep(2000);
+		Logger.setEnable(false);	
 	}
 }

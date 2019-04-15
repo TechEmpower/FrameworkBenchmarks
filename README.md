@@ -13,7 +13,7 @@ If you find yourself in a directory or file that you're not sure what the purpos
 
 ## Quick Start Guide
 
-To get started developing you'll need to install [docker](https://docs.docker.com/install/) or see our [Quick Start Guide using vagrant](.#quick-start-guide-(vagrant))
+To get started developing you'll need to install [docker](https://docs.docker.com/install/) or see our [Quick Start Guide using vagrant](#quick-start-guide-vagrant)
 
 1. Clone TFB.
 

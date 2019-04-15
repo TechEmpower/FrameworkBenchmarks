@@ -5,13 +5,14 @@
 #
 # @description: This script is only for use within Travis-CI. It is meant to
 # look through the commit history and determine whether or not the current
-# framework test directory needs to be run. It compares the state of the PR branch
-# against the target branch.
+# framework test directory needs to be run. It compares the state of the PR
+# branch against the target branch.
 #
-# Any changes found in the toolset/* directory other than continuous/*, travis/* and
-# scaffolding/* will cause all tests to be run.
+# Any changes found in the toolset/* directory other than continuous/*, travis/*
+# and scaffolding/* will cause all tests to be run.
 #
-# The following commands can be put in commit messages to affect which tests will run:
+# The following commands can be put in commit messages to affect which tests
+# will run:
 #
 # [ci skip] - Provided by Travis. Travis won't trigger any builds.
 # [ci run-all] - This will force all tests to run.
@@ -21,12 +22,14 @@
 # [ci lang-only Java C++] - Ensures that only Java and C++ run despite detected changes.
 # [ci lang Java C++] - Forces Java and C++ tests to run in addition to detected changes.
 #
-# If only a single test within a language group is forced to run, none of the other tests
-# in that language group will run.
+# If only a single test within a language group is forced to run, none of the
+# other tests in that language group will run.
 #
-# IMPORTANT: the [ci *] commands must be added to every commit message. We do not look at
-#  previous commit messages. Make sure to keep your PR branch up-to-date with the target
-#  branch to avoid running unwanted tests.
+# The master branch will run the full suite of tests.
+#
+# IMPORTANT: the [ci *] commands must be added to every commit message. We do
+# not look at previous commit messages. Make sure to keep your PR branch
+# up-to-date with the target branch to avoid running unwanted tests.
 
 
 import subprocess
@@ -53,49 +56,25 @@ def quit_diffing():
     exit(0)
 
 
-print("TRAVIS_COMMIT_RANGE: {!s}".format(os.getenv("TRAVIS_COMMIT_RANGE")))
-print("TRAVIS_COMMIT      : {!s}".format(os.getenv("TRAVIS_COMMIT")))
-
+curr_branch = ""
 is_PR = (os.getenv("TRAVIS_PULL_REQUEST") != "false")
-commit_range = ""
-first_commit = ""
-last_commit  = ""
+# TRAVIS_BRANCH is the target branch when it's a pull request or the name
+# of the branch when it isn't
+is_master = not is_PR and os.getenv("TRAVIS_BRANCH") == "master"
 
 if is_PR:
-    print('I am testing a pull request')
-    first_commit = os.getenv("TRAVIS_COMMIT_RANGE").split('...')[0]
-    last_commit = subprocess.check_output(
-        "git rev-list -n 1 FETCH_HEAD^2", shell=True).rstrip('\n')
-    print("Guessing that first commit in PR is : {!s}".format(first_commit))
-    print("Guessing that final commit in PR is : {!s}".format(last_commit))
+    curr_branch = "FETCH_HEAD"
+elif not is_master:
+    curr_branch = os.getenv("TRAVIS_COMMIT")
+    # Also fetch master to compare against
+    subprocess.check_output(['bash', '-c', 'git fetch origin master:master'])
 
-    if first_commit == "":
-        print("No first commit, using Github's automerge commit")
-        commit_range = "--first-parent -1 -m FETCH_HEAD"
-    elif first_commit == last_commit:
-        print("Only one commit in range, examining {!s}".format(last_commit))
-        commit_range = "-m --first-parent -1 {!s}".format(last_commit)
-    else:
-        commit_range = "--first-parent {!s}...{!s}".format(
-            first_commit, last_commit)
-
-if not is_PR:
-    print('I am not testing a pull request')
-    commit_range = "--first-parent -m {!s}".format(
-        os.getenv("TRAVIS_COMMIT_RANGE"))
-
-    # Handle 1
-    if commit_range == "":
-        commit_range = "--first-parent -m -1 {!s}".format(
-            os.getenv("TRAVIS_COMMIT"))
-
-print("Using commit range `{!s}`".format(commit_range))
-print("Running `git log --name-only --pretty=\"format:\" {!s}`".format(
-    commit_range))
+# https://stackoverflow.com/questions/25071579/list-all-files-changed-in-a-pull-request-in-git-github
 changes = clean_output(
     subprocess.check_output([
         'bash', '-c',
-        'git log --name-only --pretty="format:" {!s}'.format(commit_range)
+        'git --no-pager diff --name-only {0} $(git merge-base {0} master)'
+            .format(curr_branch)
     ]))
 print("Determining what to run based on the following file changes: \n{!s}"
     .format('\n'.join(changes.split('\n')[0:10])))
@@ -106,10 +85,7 @@ if len(changes.split('\n')) > 10:
 # COMMIT MESSAGES:
 # Before any complicated diffing, check for forced runs from the commit message
 # Use -2 because travis now inserts a merge commit as the last commit
-last_commit_msg = subprocess.check_output(
-    ["bash", "-c", "git log --format=%B -n 1 {!s}".format(last_commit)])
-print("Parsing commit message for travis commands: {!s}"
-    .format(last_commit_msg))
+last_commit_msg = os.getenv("TRAVIS_COMMIT_MESSAGE")
 
 test_dirs = []
 run_tests = []
@@ -123,7 +99,7 @@ elif os.getenv("TESTDIR"):
     test_dirs = os.getenv("TESTDIR").split(' ')
 
 # Forced full run
-if re.search(r'\[ci run-all\]', last_commit_msg, re.M):
+if is_master or re.search(r'\[ci run-all\]', last_commit_msg, re.M):
     print("All tests have been forced to run from the commit message.")
     run_tests = test_dirs
     quit_diffing()
@@ -169,11 +145,8 @@ if re.search(r'\[ci lang .+\]', last_commit_msg, re.M):
                 run_tests.append(test)
 
 
-# Ignore travis and docker directory changes
-# Also for now, ignore the old linux setup folders, as we don't want to
-# trigger a full run as we remove old fw_depends scripts. [ci run-all] will
-# still work if it's needed.
-if re.search(r'^toolset\/(?!(travis\/|continuous\/|scaffolding\/))|^tfb|^Dockerfile', changes, re.M) is not None:
+# Ignore travis, continuous and scaffolding changes
+if re.search(r'^toolset\/(?!(travis\/|continuous\/|scaffolding\/))', changes, re.M) is not None:
     print("Found changes to core toolset. Running all tests.")
     run_tests = test_dirs
     quit_diffing()

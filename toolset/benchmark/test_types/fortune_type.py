@@ -5,7 +5,6 @@ from toolset.benchmark.test_types.verifications import basic_body_verification, 
 
 class FortuneTestType(FrameworkTestType):
     def __init__(self, config):
-        self.config = config
         self.fortune_url = ""
         kwargs = {
             'name': 'fortune',
@@ -33,7 +32,7 @@ class FortuneTestType(FrameworkTestType):
         if len(problems) > 0:
             return problems
 
-        parser = FortuneHTMLParser(self.config)
+        parser = FortuneHTMLParser()
         parser.feed(body)
         (valid, diff) = parser.isValidFortune(self.name, body)
 

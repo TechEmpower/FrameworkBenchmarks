@@ -25,15 +25,15 @@ namespace Benchmarks
             builder.Build().Run();
         }
 
-        public object plaintext(IHttpContext context)
+        public object plaintext(HttpResponse response)
         {
-            context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
+            response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToString("r");
             return plaintextResult;
         }
 
-        public object json(IHttpContext context)
+        public object json(HttpResponse response)
         {
-            context.Response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToUniversalTime().ToString("r");
+            response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToString("r");
             return new JsonResult(new JsonMessage { message = "Hello, World!" });
         }
         public class JsonMessage
@@ -57,6 +57,7 @@ namespace Benchmarks
             mApiServer.Options.UrlIgnoreCase = false;
             mApiServer.Options.LogLevel = BeetleX.EventArgs.LogType.Warring;
             mApiServer.Options.LogToConsole = true;
+            mApiServer.Options.Statistical = false;
             mApiServer.Open();
             Console.WriteLine("BeetleX FastHttpApi server");
             Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");

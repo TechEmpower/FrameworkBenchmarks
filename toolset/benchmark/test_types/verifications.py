@@ -3,7 +3,7 @@ import re
 import traceback
 
 from datetime import datetime
-from toolset.utils.output_helper import Logger
+from toolset.utils.output_helper import log
 from time import sleep
 
 def basic_body_verification(body, url, is_json_check=True):
@@ -71,6 +71,7 @@ def verify_headers(request_headers_and_body, headers, url, should_be='json'):
     # Make sure that the date object isn't cached
     sleep(3)
     second_headers, body2 = request_headers_and_body(url)
+    second_date = second_headers.get('Date')
 
     date2 = second_headers.get('Date')
     if date == date2:
@@ -221,10 +222,10 @@ def verify_randomnumber_list(expected_len,
         return problems
 
     # This path will be hit when the framework returns a single JSON object
-    # rather than a list containing one element. We allow this with a warn,
-    # then verify the supplied object
+    # rather than a list containing one element.
     if type(response) is not list:
-        problems.append(('warn', 'Top-level JSON is an object, not an array',
+        problems.append((max_infraction,
+                         'Top-level JSON is an object, not an array',
                          url))
         problems += verify_randomnumber_object(response, url, max_infraction)
         return problems
@@ -284,7 +285,7 @@ def verify_updates(old_worlds, new_worlds, updates_expected, url):
                         successful_updates += 1
             except Exception:
                 tb = traceback.format_exc()
-                Logger.log(tb, squash=False)
+                log(tb)
         n += 1
 
     if successful_updates == 0:
