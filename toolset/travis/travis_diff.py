@@ -5,13 +5,14 @@
 #
 # @description: This script is only for use within Travis-CI. It is meant to
 # look through the commit history and determine whether or not the current
-# framework test directory needs to be run. It compares the state of the PR branch
-# against the target branch.
+# framework test directory needs to be run. It compares the state of the PR
+# branch against the target branch.
 #
-# Any changes found in the toolset/* directory other than continuous/*, travis/* and
-# scaffolding/* will cause all tests to be run.
+# Any changes found in the toolset/* directory other than continuous/*, travis/*
+# and scaffolding/* will cause all tests to be run.
 #
-# The following commands can be put in commit messages to affect which tests will run:
+# The following commands can be put in commit messages to affect which tests
+# will run:
 #
 # [ci skip] - Provided by Travis. Travis won't trigger any builds.
 # [ci run-all] - This will force all tests to run.
@@ -21,12 +22,14 @@
 # [ci lang-only Java C++] - Ensures that only Java and C++ run despite detected changes.
 # [ci lang Java C++] - Forces Java and C++ tests to run in addition to detected changes.
 #
-# If only a single test within a language group is forced to run, none of the other tests
-# in that language group will run.
+# If only a single test within a language group is forced to run, none of the
+# other tests in that language group will run.
 #
-# IMPORTANT: the [ci *] commands must be added to every commit message. We do not look at
-#  previous commit messages. Make sure to keep your PR branch up-to-date with the target
-#  branch to avoid running unwanted tests.
+# The master branch will run the full suite of tests.
+#
+# IMPORTANT: the [ci *] commands must be added to every commit message. We do
+# not look at previous commit messages. Make sure to keep your PR branch
+# up-to-date with the target branch to avoid running unwanted tests.
 
 
 import subprocess
@@ -52,11 +55,14 @@ def quit_diffing():
         print("No tests to run.")
     exit(0)
 
+
 curr_branch = ""
+is_master = os.getenv("TRAVIS_BRANCH") == "master"
 is_PR = (os.getenv("TRAVIS_PULL_REQUEST") != "false")
+
 if is_PR:
     curr_branch = "FETCH_HEAD"
-else:
+elif not is_master:
     curr_branch = os.getenv("TRAVIS_COMMIT")
     # Also fetch master to compare against
     subprocess.check_output(['bash', '-c', 'git fetch origin master:master'])
@@ -91,7 +97,7 @@ elif os.getenv("TESTDIR"):
     test_dirs = os.getenv("TESTDIR").split(' ')
 
 # Forced full run
-if re.search(r'\[ci run-all\]', last_commit_msg, re.M):
+if is_master or re.search(r'\[ci run-all\]', last_commit_msg, re.M):
     print("All tests have been forced to run from the commit message.")
     run_tests = test_dirs
     quit_diffing()
