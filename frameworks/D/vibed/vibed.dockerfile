@@ -5,6 +5,6 @@ COPY . .
 
 RUN apt update -yqq && apt install -yqq libpq-dev zlib1g-dev
 
-RUN dub build -b release-nobounds --verbose
+RUN dub build -b release --verbose
 
 CMD ["/dlang/app/fwb"]

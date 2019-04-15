@@ -20,9 +20,9 @@ name = "actix-pg"
 path = "src/main_pg.rs"
 
 [dependencies]
-actix = { version="0.8.0-alpha.2", features=["http"] }
-actix-web = { version="1.0.0-alpha.4", default-features = false }
-actix-http = { version="0.1.0-alpha.4", default-features = false }
+actix = { version="0.8.0-alpha.3", features=["http"] }
+actix-web = { version="1.0.0-alpha.5", default-features = false }
+actix-http = { version="0.1.0-alpha.5", default-features = false }
 actix-rt = "0.2.2"
 actix-server = "0.4.2"
 actix-service = "0.3.6"

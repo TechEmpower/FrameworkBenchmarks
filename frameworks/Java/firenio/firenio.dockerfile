@@ -1,5 +1,5 @@
 FROM maven:3.5.3-jdk-10-slim as maven
-WORKDIR /baseio
+WORKDIR /firenio
 COPY pom.xml pom.xml
 COPY src src
 RUN mvn compile assembly:single -q
@@ -19,5 +19,6 @@ CMD java                       \
     -Dlevel=1                  \
     -Dread=false               \
     -Depoll=true               \
+    -Dnodelay=false            \
     -DunsafeBuf=true           \
-    -jar /baseio/target/baseio-example-0.1-jar-with-dependencies.jar
+    -jar /firenio/target/firenio-example-0.1-jar-with-dependencies.jar

@@ -1,6 +1,6 @@
 asyncpg==0.16.0
 gunicorn==19.9.0
 responder >= 0.0.4
-jinja2==2.10
+jinja2==2.10.1
 ujson==1.35
 uvicorn >= 0.3.13
