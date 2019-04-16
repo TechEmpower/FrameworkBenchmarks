@@ -43,7 +43,7 @@ protected:
 
 	final @property bool isVaild(){return _erroCode == HTTPErrorCode.NO_ERROR;}
 
-	pragma(inline,true)
+	pragma(inline)
 	final string printDate() {
 		DateTime date = cast(DateTime)Clock.currTime;
 		return format(

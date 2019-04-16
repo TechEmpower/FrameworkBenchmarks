@@ -1,6 +1,6 @@
 package module;
 
-import io.reactiverse.rxjava.pgclient.PgClient;
+import io.reactiverse.reactivex.pgclient.PgClient;
 
 import java.util.Collection;
 import java.util.Iterator;

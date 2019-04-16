@@ -13,12 +13,17 @@ ADD pg_hba.conf pg_hba.conf
 ADD 60-postgresql-shm.conf 60-postgresql-shm.conf
 ADD create-postgres-database.sql create-postgres-database.sql
 ADD create-postgres.sql create-postgres.sql
+ADD pgdg.list pgdg.list
+
+# prepare PostgreSQL APT repository
+RUN cp pgdg.list /etc/apt/sources.list.d/
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ACCC4CF8
 
 # install postgresql on database machine
 RUN apt-get -y update > /dev/null
 RUN apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql > /dev/null
 
-ENV PG_VERSION 9.5
+ENV PG_VERSION 11
 
 # Make sure all the configuration files in main belong to postgres
 RUN mv postgresql.conf /etc/postgresql/${PG_VERSION}/main/postgresql.conf

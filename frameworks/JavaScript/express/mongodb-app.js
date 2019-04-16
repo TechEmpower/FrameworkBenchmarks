@@ -55,7 +55,7 @@ if (cluster.isMaster) {
   app.set('views', __dirname + '/views');
 
   // Routes
-  app.get('/mongoose', async (req, res) => {
+  app.get('/mongooseq', async (req, res) => {
     const queries = Math.min(parseInt(req.query.queries) || 1, 500),
       results = [];
 
@@ -63,7 +63,13 @@ if (cluster.isMaster) {
       results.push(await MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1) }));
     }
 
-    res.send(queries > 1 ? results : results[0]);
+    res.send(results);
+  });
+
+  app.get('/mongoose', async (req, res) => {
+    let results = await MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1) });
+
+    res.send(results);
   });
 
   app.get('/mongoose-fortune', (req, res) => {

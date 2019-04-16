@@ -5,6 +5,7 @@ plugins {
 
 apply(from: "$gradleScripts/kotlin.gradle")
 apply(from: "$gradleScripts/service.gradle")
+apply(from: "$gradleScripts/testng.gradle")
 
 apply(plugin: "war")
 
@@ -20,20 +21,15 @@ war {
 installDist.dependsOn("war")
 
 dependencies {
-    compile("com.hexagonkt:store_mongodb:$hexagonVersion")
-    compile("com.hexagonkt:http_server_jetty:$hexagonVersion")
-    compile("com.hexagonkt:templates_pebble:$hexagonVersion")
+    implementation("com.hexagonkt:store_mongodb:$hexagonVersion")
+    implementation("com.hexagonkt:http_server_jetty:$hexagonVersion")
+    implementation("com.hexagonkt:templates_pebble:$hexagonVersion")
 
-    compile("com.zaxxer:HikariCP:$hikariVersion")
-    compile("org.postgresql:postgresql:$postgresqlVersion")
+    implementation("com.zaxxer:HikariCP:$hikariVersion")
+    implementation("org.postgresql:postgresql:$postgresqlVersion")
 
     // providedCompile excludes the dependency only in the WAR, not in the distribution
     providedCompile("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
 
-    testCompile("com.hexagonkt:port_http_client:$hexagonVersion")
-    testCompile("org.testng:testng:$testngVersion")
-}
-
-test {
-    useTestNG()
+    testImplementation("com.hexagonkt:port_http_client:$hexagonVersion")
 }
