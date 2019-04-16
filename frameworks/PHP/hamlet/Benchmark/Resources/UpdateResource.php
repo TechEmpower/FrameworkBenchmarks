@@ -2,14 +2,15 @@
 
 namespace Benchmark\Resources;
 
+use Benchmark\Entities\RandomNumber;
 use Hamlet\Database\Database;
-use Hamlet\Entities\JsonEntity;
-use Hamlet\Requests\Request;
-use Hamlet\Resources\WebResource;
-use Hamlet\Responses\Response;
-use Hamlet\Responses\SimpleOKResponse;
+use Hamlet\Http\Entities\JsonEntity;
+use Hamlet\Http\Requests\Request;
+use Hamlet\Http\Resources\HttpResource;
+use Hamlet\Http\Responses\Response;
+use Hamlet\Http\Responses\SimpleOKResponse;
 
-class UpdateResource implements WebResource
+class UpdateResource implements HttpResource
 {
     private $database;
 
@@ -20,7 +21,7 @@ class UpdateResource implements WebResource
 
     public function getResponse(Request $request): Response
     {
-        $count = $request->getQueryParams()['queries'] ?? null;
+        $count = $request->parameter('queries');
         if ($count !== null && $count > 0) {
             $count = min($count, 500);
         } else {
@@ -48,14 +49,16 @@ class UpdateResource implements WebResource
             $randomNumber = mt_rand(1, 10000);
 
             $selectProcedure->bindInteger($id);
-            $entry = $selectProcedure->fetchOne();
-            $entry['randomNumber'] = $randomNumber;
+            /** @var RandomNumber $entry */
+            $entry = $selectProcedure->processOne()->selectAll()->cast(RandomNumber::class)->collectHead();
 
-            $updateProcedure->bindInteger($randomNumber);
-            $updateProcedure->bindInteger($id);
+            $modifiedEntry = $entry->withNumber($randomNumber);
+
+            $updateProcedure->bindInteger($modifiedEntry->number());
+            $updateProcedure->bindInteger($modifiedEntry->id());
             $updateProcedure->execute();
 
-            $payload[] = $entry;
+            $payload[] = $modifiedEntry;
         }
 
         return new SimpleOKResponse(new JsonEntity($payload));
