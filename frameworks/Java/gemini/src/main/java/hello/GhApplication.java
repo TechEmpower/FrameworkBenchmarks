@@ -1,5 +1,7 @@
 package hello;
 
+import com.techempower.data.*;
+import com.techempower.data.jdbc.*;
 import com.techempower.*;
 import com.techempower.gemini.*;
 import com.techempower.gemini.exceptionhandler.*;
@@ -80,6 +82,12 @@ public class GhApplication
           .add(new BasicExceptionHandler(this));
 
     return new PathDispatcher<>(this, config);
+  }
+
+  @Override
+  protected ConnectorFactory constructConnectorFactory()
+  {
+    return new BasicConnectorFactory(this, null);
   }
 
   //

@@ -10,7 +10,7 @@ import com.techempower.gemini.transport.*;
  * then invokes the Dispatcher.  The Dispatcher determines what happens
  * next.
  *
- * @see com.techempower.gemini.InfrastructureServlet
+ * @see com.techempower.gemini.transport.InfrastructureServlet
  *
  * Development history:
  *   2012-04-19 - mh - Created

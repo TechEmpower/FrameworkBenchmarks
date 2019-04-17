@@ -29,12 +29,17 @@
         <dependency>
             <groupId>com.techempower</groupId>
             <artifactId>gemini</artifactId>
-            <version>2.21.1</version>
+            <version>2.24.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.techempower</groupId>
+            <artifactId>gemini-jdbc</artifactId>
+            <version>2.24.0</version>
         </dependency>
         <dependency>
             <groupId>com.techempower</groupId>
             <artifactId>gemini-resin</artifactId>
-            <version>2.21.1</version>
+            <version>2.24.0</version>
         </dependency>
     </dependencies>
 
