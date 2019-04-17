@@ -11,6 +11,15 @@ class Controller_Bench extends Controller
 
     public function action_db()
     {
+        $worlds = Model_World::find(mt_rand(1, 10000))->toJson();
+
+        return new Response(json_encode($worlds), 200, array(
+            'Content-Type' => 'application/json'
+        ));
+    }
+
+    public function action_dbquery()
+    {
         $queries = Input::get('queries', 1);
         $queries = is_numeric($queries) ? min(max($queries, 1), 500) : 1;
 
@@ -18,10 +27,6 @@ class Controller_Bench extends Controller
 
         for($i = 0; $i < $queries; ++$i) {
             $worlds[] = Model_World::find(mt_rand(1, 10000))->toJson();
-        }
-
-        if($queries == 1) {
-            $worlds = $worlds[0];
         }
 
         return new Response(json_encode($worlds), 200, array(

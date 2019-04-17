@@ -202,12 +202,18 @@ class DockerHelper:
             if hasattr(test, 'docker_cmd'):
                 docker_cmd = test.docker_cmd
 
+            # Expose ports in debugging mode
+            ports = {}
+            if self.benchmarker.config.mode == "debug":
+                ports = {test.port: test.port}
+
             container = self.server.containers.run(
                 "techempower/tfb.test.%s" % test.name,
                 name=name,
                 command=docker_cmd,
                 network=self.benchmarker.config.network,
                 network_mode=self.benchmarker.config.network_mode,
+                ports=ports,
                 stderr=True,
                 detach=True,
                 init=True,

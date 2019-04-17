@@ -11,7 +11,7 @@ import com.zaxxer.hikari.HikariDataSource
 import java.sql.Connection
 import java.util.concurrent.ThreadLocalRandom
 
-internal const val WORLD_ROWS: Int = 10000
+internal const val WORLD_ROWS: Int = 10_000
 
 private val worldName: String = defaultSetting("worldCollection", "world")
 private val fortuneName: String = defaultSetting("fortuneCollection", "fortune")
