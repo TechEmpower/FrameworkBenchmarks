@@ -10,7 +10,7 @@ use Hamlet\Http\Resources\HttpResource;
 use Hamlet\Http\Responses\Response;
 use Hamlet\Http\Responses\SimpleOKResponse;
 
-class DbResource implements HttpResource
+class QueriesResource implements HttpResource
 {
     private $database;
 
@@ -21,7 +21,13 @@ class DbResource implements HttpResource
 
     public function getResponse(Request $request): Response
     {
-        $id = mt_rand(1, 10000);
+        $count = $request->parameter('queries');
+        if ($count === null || $count < 1) {
+            $count = 1;
+        } else {
+            $count = min($count, 500);
+        }
+
         $query = '
             SELECT id,
                    randomNumber 
@@ -29,9 +35,14 @@ class DbResource implements HttpResource
              WHERE id = ?
         ';
         $procedure = $this->database->prepare($query);
-        $procedure->bindInteger($id);
-        $record = $procedure->processOne()->selectAll()->cast(RandomNumber::class)->collectHead();
 
-        return new SimpleOKResponse(new JsonEntity($record));
+        $payload = [];
+        while ($count-- > 0) {
+            $id = mt_rand(1, 10000);
+            $procedure->bindInteger($id);
+            $payload[] = $procedure->processOne()->selectAll()->cast(RandomNumber::class)->collectHead();
+        }
+
+        return new SimpleOKResponse(new JsonEntity($payload));
     }
 }

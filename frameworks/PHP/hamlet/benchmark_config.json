@@ -15,7 +15,7 @@
       "framework": "hamlet",
       "language": "PHP",
       "flavor": "PHP7",
-      "orm": "Raw",
+      "orm": "micro",
       "platform": "None",
       "webserver": "nginx",
       "os": "Linux",
@@ -25,7 +25,6 @@
       "versus": "php"
     },
     "swoole": {
-      "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -38,7 +37,7 @@
       "framework": "hamlet",
       "language": "PHP",
       "flavor": "PHP7",
-      "orm": "Raw",
+      "orm": "micro",
       "platform": "None",
       "webserver": "swoole",
       "os": "Linux",
@@ -47,13 +46,9 @@
       "notes": "",
       "versus": "php"
     },
-    "react": {
+    "peachpie": {
       "plaintext_url": "/plaintext",
       "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/queries?queries=",
-      "fortune_url": "/fortunes",
-      "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -61,12 +56,12 @@
       "framework": "hamlet",
       "language": "PHP",
       "flavor": "PHP7",
-      "orm": "Raw",
-      "platform": "None",
-      "webserver": "react",
+      "orm": "micro",
+      "platform": ".NET",
+      "webserver": "kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "hamlet-react",
+      "display_name": "hamlet-peachpie",
       "notes": "",
       "versus": "php"
     }
