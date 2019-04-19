@@ -51,6 +51,7 @@ public class TestHttpLoadServer {
         boolean direct    = Util.getBooleanProperty("direct");
         boolean inline    = Util.getBooleanProperty("inline");
         boolean nodelay   = Util.getBooleanProperty("nodelay");
+        boolean cachedurl = Util.getBooleanProperty("cachedurl");
         boolean unsafeBuf = Util.getBooleanProperty("unsafeBuf");
         int     core      = Util.getIntProperty("core", 1);
         int     frame     = Util.getIntProperty("frame", 16);
@@ -67,12 +68,15 @@ public class TestHttpLoadServer {
         DebugUtil.info("read: {}", read);
         DebugUtil.info("pool: {}", pool);
         DebugUtil.info("core: {}", core);
+        DebugUtil.info("epoll: {}", epoll);
         DebugUtil.info("frame: {}", frame);
         DebugUtil.info("level: {}", level);
         DebugUtil.info("direct: {}", direct);
         DebugUtil.info("inline: {}", inline);
         DebugUtil.info("readBuf: {}", readBuf);
         DebugUtil.info("nodelay: {}", nodelay);
+        DebugUtil.info("cachedurl: {}", cachedurl);
+        DebugUtil.info("unsafeBuf: {}", unsafeBuf);
 
         IoEventHandle eventHandle = new IoEventHandle() {
 
@@ -108,9 +112,6 @@ public class TestHttpLoadServer {
             pool_cap = 1024 * 8;
             pool_unit = 256 * 16;
         }
-        ByteTree<String> cachedUrls = new ByteTree<>();
-        cachedUrls.add("/plaintext");
-        cachedUrls.add("/json");
         HttpDateUtil.start();
         NioEventLoopGroup group   = new NioEventLoopGroup();
         ChannelAcceptor   context = new ChannelAcceptor(group, 8080);
@@ -132,6 +133,12 @@ public class TestHttpLoadServer {
                     ch.setOption(SocketOptions.SO_KEEPALIVE, 0);
                 }
             });
+        }
+        ByteTree cachedUrls = null;
+        if (cachedurl){
+            cachedUrls = new ByteTree();
+            cachedUrls.add("/plaintext");
+            cachedUrls.add("/json");
         }
         context.addProtocolCodec(new HttpCodec("firenio", fcache, lite, inline, cachedUrls));
         context.setIoEventHandle(eventHandle);
