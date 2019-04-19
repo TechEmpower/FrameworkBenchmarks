@@ -7,12 +7,12 @@
         <th>id</th>
         <th>message</th>
     </tr>
-    {% for id, message in messages %}
+    {{# messages }}
         <tr>
-            <td>{{id}}</td>
-            <td>{{message|escape}}</td>
+            <td>{{ id }}</td>
+            <td>{{ message }}</td>
         </tr>
-    {% endfor %}
+    {{/ messages }}
 </table>
 </body>
 </html>

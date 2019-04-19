@@ -111,5 +111,5 @@ private fun Call.updateWorlds(store: BenchmarkStore) {
 @WebListener class Web : ServletServer(router)
 
 fun main() {
-    benchmarkServer.run()
+    benchmarkServer.start()
 }

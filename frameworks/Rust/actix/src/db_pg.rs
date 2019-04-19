@@ -205,11 +205,10 @@ impl Handler<TellFortune> for PgConnection {
     type Result = ResponseFuture<Vec<Fortune>, io::Error>;
 
     fn handle(&mut self, _: TellFortune, _: &mut Self::Context) -> Self::Result {
-        let mut items = Vec::with_capacity(16);
-        items.push(Fortune {
+        let items = vec![Fortune {
             id: 0,
             message: "Additional fortune added at request time.".to_string(),
-        });
+        }];
 
         Box::new(
             self.cl

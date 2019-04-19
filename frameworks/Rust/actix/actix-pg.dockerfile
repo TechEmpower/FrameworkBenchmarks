@@ -1,4 +1,4 @@
-FROM rust:1.33.0
+FROM rust:1.34.0
 
 ADD ./ /actix
 WORKDIR /actix
