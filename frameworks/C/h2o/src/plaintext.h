@@ -25,6 +25,7 @@
 
 #define HELLO_RESPONSE "Hello, World!"
 
-int plaintext(struct st_h2o_handler_t *self, h2o_req_t *req);
+void initialize_plaintext_handler(h2o_hostconf_t *hostconf,
+                                  h2o_access_log_filehandle_t *log_handle);
 
 #endif // PLAINTEXT_H_

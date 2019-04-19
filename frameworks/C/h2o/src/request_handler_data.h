@@ -17,13 +17,17 @@
  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef JSON_SERIALIZER_H_
+#ifndef REQUEST_HANDLER_DATA_H_
 
-#define JSON_SERIALIZER_H_
+#define REQUEST_HANDLER_DATA_H_
 
-#include <h2o.h>
+#include "cache.h"
 
-void initialize_json_serializer_handler(h2o_hostconf_t *hostconf,
-                                        h2o_access_log_filehandle_t *log_handle);
+struct mustache_token_t;
 
-#endif // JSON_SERIALIZER_H_
+typedef struct {
+	struct mustache_token_t *fortunes_template;
+	cache_t world_cache;
+} request_handler_data_t;
+
+#endif // REQUEST_HANDLER_DATA_H_

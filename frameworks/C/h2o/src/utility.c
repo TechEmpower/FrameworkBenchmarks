@@ -18,16 +18,22 @@
 */
 
 #include <assert.h>
+#include <h2o.h>
+#include <errno.h>
 #include <inttypes.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <yajl/yajl_gen.h>
 
+#include "error.h"
 #include "list.h"
 #include "utility.h"
+
+#define DEFAULT_CACHE_LINE_SIZE 128
 
 void free_json_generator(json_generator_t *gen, list_t **pool, size_t *gen_num, size_t max_gen)
 {
@@ -48,12 +54,12 @@ void free_json_generator(json_generator_t *gen, list_t **pool, size_t *gen_num, 
 	}
 }
 
-yajl_gen_status gen_integer(int64_t number, char *buf, size_t len, yajl_gen gen)
+yajl_gen_status gen_integer(long long number, char *buf, size_t len, yajl_gen gen)
 {
 	if (!len)
 		return yajl_gen_invalid_number;
-	else if (number == INT64_MIN) {
-		const size_t l = snprintf(buf, len, "%" PRId64, number);
+	else if (number == LLONG_MIN) {
+		const size_t l = snprintf(buf, len, "%lld", number);
 
 		if (l >= len)
 			return yajl_gen_invalid_number;
@@ -116,6 +122,33 @@ json_generator_t *get_json_generator(list_t **pool, size_t *gen_num)
 			}
 		}
 	}
+
+	return ret;
+}
+
+size_t get_maximum_cache_line_size(void)
+{
+	const int name[] = {_SC_LEVEL1_DCACHE_LINESIZE,
+	                    _SC_LEVEL2_CACHE_LINESIZE,
+	                    _SC_LEVEL3_CACHE_LINESIZE,
+	                    _SC_LEVEL4_CACHE_LINESIZE};
+	size_t ret = 0;
+
+	for (size_t i = 0; i < ARRAY_SIZE(name); i++) {
+		errno = 0;
+
+		const long rc = sysconf(name[i]);
+
+		if (rc < 0) {
+			if (errno)
+				STANDARD_ERROR("sysconf");
+		}
+		else if ((size_t) rc > ret)
+			ret = rc;
+	}
+
+	if (!ret)
+		ret = DEFAULT_CACHE_LINE_SIZE;
 
 	return ret;
 }

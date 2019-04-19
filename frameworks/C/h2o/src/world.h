@@ -23,9 +23,12 @@
 
 #include <h2o.h>
 
-int cached_queries(struct st_h2o_handler_t *self, h2o_req_t *req);
-int multiple_queries(struct st_h2o_handler_t *self, h2o_req_t *req);
-int single_query(struct st_h2o_handler_t *self, h2o_req_t *req);
-int updates(struct st_h2o_handler_t *self, h2o_req_t *req);
+#include "global_data.h"
+
+void cleanup_world_handlers(global_data_t *global_data);
+void initialize_world_handlers(const config_t *config,
+                               global_data_t *global_data,
+                               h2o_hostconf_t *hostconf,
+                               h2o_access_log_filehandle_t *log_handle);
 
 #endif // WORLD_H_

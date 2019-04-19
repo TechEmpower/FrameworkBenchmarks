@@ -23,14 +23,12 @@
 
 #include <h2o.h>
 
-#include "list.h"
+#include "global_data.h"
 
-typedef struct {
-	list_t l;
-	h2o_iovec_t id;
-	h2o_iovec_t message;
-} fortune_t;
-
-int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req);
+void cleanup_fortunes_handler(global_data_t *global_data);
+void initialize_fortunes_handler(const config_t *config,
+                                 global_data_t *global_data,
+                                 h2o_hostconf_t *hostconf,
+                                 h2o_access_log_filehandle_t *log_handle);
 
 #endif // FORTUNE_H_

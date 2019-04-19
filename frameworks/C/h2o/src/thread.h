@@ -29,7 +29,7 @@
 
 #include "database.h"
 #include "event_loop.h"
-#include "utility.h"
+#include "global_data.h"
 
 typedef struct thread_context_t thread_context_t;
 
@@ -50,7 +50,6 @@ struct thread_context_t {
 	list_t *json_generator;
 	size_t json_generator_num;
 	unsigned random_seed;
-	pid_t tid;
 	db_state_t db_state;
 	event_loop_t event_loop;
 };

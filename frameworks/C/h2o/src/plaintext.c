@@ -24,7 +24,7 @@
 #include "request_handler.h"
 #include "utility.h"
 
-int plaintext(struct st_h2o_handler_t *self, h2o_req_t *req)
+static int plaintext(struct st_h2o_handler_t *self, h2o_req_t *req)
 {
 	IGNORE_FUNCTION_PARAMETER(self);
 
@@ -36,4 +36,9 @@ int plaintext(struct st_h2o_handler_t *self, h2o_req_t *req)
 	h2o_start_response(req, &generator);
 	h2o_send(req, &body, 1, H2O_SEND_STATE_FINAL);
 	return 0;
+}
+
+void initialize_plaintext_handler(h2o_hostconf_t *hostconf, h2o_access_log_filehandle_t *log_handle)
+{
+	register_request_handler("/plaintext", plaintext, hostconf, log_handle);
 }

@@ -29,7 +29,7 @@
 #include "thread.h"
 #include "utility.h"
 
-int json_serializer(struct st_h2o_handler_t *self, h2o_req_t *req)
+static int json_serializer(struct st_h2o_handler_t *self, h2o_req_t *req)
 {
 	IGNORE_FUNCTION_PARAMETER(self);
 
@@ -65,4 +65,10 @@ error_yajl:
 
 	send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 	return 0;
+}
+
+void initialize_json_serializer_handler(h2o_hostconf_t *hostconf,
+                                        h2o_access_log_filehandle_t *log_handle)
+{
+	register_request_handler("/json", json_serializer, hostconf, log_handle);
 }
