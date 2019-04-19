@@ -1,12 +1,9 @@
 {
 	"name": "hunt-minihttp",
 	"targetType": "executable",
-	"authors": [
-		"Putao"
-	],
 	"description": "A mini http server powered by Hunt.",
     "copyright": "Copyright (C) 2017-2019, HuntLabs",
-    "homepage": "https://www.huntlabs.net/",
+    "homepage": "https://www.huntlabs.net",
 	"license": "Apache-2.0",
 	"libs-posix": [ "http_parser" ],
 	"lflags-posix": ["-Lhttp-parser/"],
