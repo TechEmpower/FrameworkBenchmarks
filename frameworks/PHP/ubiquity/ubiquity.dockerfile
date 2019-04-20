@@ -18,7 +18,7 @@ RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children =
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
-RUN chmod 777 -R /ubiquity/cache/*
+RUN chmod 777 -R /ubiquity/app/cache/*
 
 CMD service php7.3-fpm start && \
     nginx -c /ubiquity/deploy/nginx.conf -g "daemon off;"
