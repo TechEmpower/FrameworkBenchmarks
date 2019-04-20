@@ -66,28 +66,28 @@ The tests were run with:
 ## Test URLs
 ### JSON
 
-http://localhost:8080/json
+http://localhost:8080/Json
 
 ### PLAINTEXT
 
-http://localhost:8080/plaintext
+http://localhost:8080/Plaintext
 
 ### DB
 
-http://localhost:8080/db
+http://localhost:8080/Db
 
 ### QUERY
 
-http://localhost:8080/query?queries=
+http://localhost:8080/Db/query/
 
 ### CACHED QUERY
 
-http://localhost:8080/cached_query?queries=
+http://localhost:8080/Db/query/
 
 ### UPDATE
 
-http://localhost:8080/update?queries=
+http://localhost:8080/Db/update/
 
 ### FORTUNES
 
-http://localhost:8080/fortunes
+http://localhost:8080/Fortunes

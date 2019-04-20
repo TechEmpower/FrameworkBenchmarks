@@ -3,10 +3,10 @@ return array(
 		"database"=>[
 				"type"=>"mysql",
 				"dbName"=>"hello_world",
-				"serverName"=>"127.0.0.1",//tfbdata
+				"serverName"=>"tfb-database",//tfb-database
 				"port"=>"3306",
-				"user"=>"root",//benchmarkdbuser
-				"password"=>"",//benchmarkdbpass
+				"user"=>"benchmarkdbuser",//benchmarkdbuser
+				"password"=>"benchmarkdbpass",//benchmarkdbpass
 				"options"=>[PDO::ATTR_PERSISTENT => true],
 				"cache"=>false
 		],
