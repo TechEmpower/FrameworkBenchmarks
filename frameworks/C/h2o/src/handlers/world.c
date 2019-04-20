@@ -373,14 +373,15 @@ static void fetch_from_cache(uint64_t now, cache_t *world_cache, multiple_query_
 	for (size_t i = 0; i < query_ctx->num_query; i++) {
 		key.base = (char *) &query_ctx->res[i].id;
 
-		h2o_cache_ref_t * const r = cache_fetch(world_cache, now, key);
+		const h2o_cache_hashcode_t keyhash = h2o_cache_calchash(key.base, key.len);
+		h2o_cache_ref_t * const r = cache_fetch(world_cache, now, key, keyhash);
 
 		if (r) {
 			query_ctx->res[i].id = query_ctx->res[query_ctx->num_result].id;
 			memcpy(query_ctx->res + query_ctx->num_result++,
 			       r->value.base,
 			       sizeof(*query_ctx->res));
-			cache_release(world_cache, r);
+			cache_release(world_cache, r, keyhash);
 		}
 	}
 }
@@ -477,6 +478,7 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 				*r = query_ctx->res[query_ctx->num_result];
 				cache_set(h2o_now(query_ctx->ctx->event_loop.h2o_ctx.loop),
 				          key,
+				          0,
 				          value,
 				          &query_ctx->ctx->global_data->request_handler_data.world_cache);
 			}
