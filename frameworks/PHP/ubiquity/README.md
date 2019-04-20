@@ -1,18 +1,19 @@
-# ubiquity Benchmarking Test
+# Ubiquity Benchmarking Test
 
 ## Test Type Implementation Source Code
-The tests are separated into 3 controllers:
+The tests are separated into 4 controllers:
 - `Json` for JSON answers
+  * [JSON](app/controllers/Json.php)
 - `Db` for database access
+  * [DB](app/controllers/Db.php)
+  * [QUERY](app/controllers/Db.php)
+  * [CACHED QUERY (not implemented)]()
+  * [UPDATE](app/controllers/Db.php)
 - `Fortunes` for using the Twig template engine
+  * [FORTUNES](app/controllers/Fortunes.php)
+- `Plaintext` for Plaintext response
+  * [PLAINTEXT](app/controllers/Plaintext.php)
 
-* [JSON](app/controllers/Json.php)
-* [PLAINTEXT](app/controllers/Plaintext.php)
-* [DB](app/controllers/Db.php)
-* [QUERY](app/controllers/Db.php)
-* [CACHED QUERY]()
-* [UPDATE](app/controllers/Db.php)
-* [FORTUNES](app/controllers/Fortunes.php)
 
 ## Important Libraries
 The tests were run with:
