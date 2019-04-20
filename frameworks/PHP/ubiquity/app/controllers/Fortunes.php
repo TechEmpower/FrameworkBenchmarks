@@ -10,7 +10,7 @@ use models\Fortune;
 
 class Fortunes extends Controller {
 	public function initialize(){
-		Startup::$templateEngine=new Twig([]);
+		Startup::$templateEngine=new Twig(['cache' => true]);
 		$config=Startup::getConfig();
 		\Ubiquity\orm\DAO::startDatabase($config);
 	}
