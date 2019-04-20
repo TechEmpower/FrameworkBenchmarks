@@ -1,0 +1,13 @@
+.head{
+	background-color: #1f1f1f;
+}
+
+.menu.links{
+	background-color: #f8f9fa!important;
+	padding: 10px 0;
+}
+
+.version{
+	background-color: #D39D38!important;
+	color: white!important;
+}

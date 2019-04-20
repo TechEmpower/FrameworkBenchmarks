@@ -1,0 +1,16 @@
+{
+	"require" : {
+		"php" : "^7.1",
+		"twig/twig" : "^2.0",
+		"mindplay/annotations" : "^1.3",
+		"phpmv/ubiquity" : "^2.1"
+	},
+	"require-dev" : {
+		"monolog/monolog" : "^1.24"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"" : "app/"
+		}
+	}
+}
