@@ -3,11 +3,11 @@ return array(
 		"siteUrl"=>"http://127.0.0.1/ubiquity/",
 		"database"=>[
 				"type"=>"mysql",
-				"dbName"=>"",
-				"serverName"=>"127.0.0.1",
+				"dbName"=>"hello_world",
+				"serverName"=>"tfbdata",
 				"port"=>"3306",
-				"user"=>"root",
-				"password"=>"",
+				"user"=>"benchmarkdbuser",
+				"password"=>"benchmarkdbpass",
 				"options"=>[],
 				"cache"=>false
 		],

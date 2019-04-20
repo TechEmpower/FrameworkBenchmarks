@@ -3,15 +3,15 @@
   "tests": [
     {
       "default": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
+        "json_url": "/index.php?c=bench/json",
+        "plaintext_url": "/index.php?c=bench/plaintext",
         "port": 8080,
-        "approach": "Stripped",
+        "approach": "Realistic",
         "classification": "Fullstack",
         "database": "MySQL",
         "framework": "ubiquity",
         "language": "PHP",
-        "flavor": "None",
+        "flavor": "PHP7",
         "orm": "Full",
         "platform": "None",
         "webserver": "nginx",
@@ -19,7 +19,7 @@
         "database_os": "Linux",
         "display_name": "ubiquity",
         "notes": "",
-        "versus": "None"
+        "versus": "php"
       }
     }
   ]
