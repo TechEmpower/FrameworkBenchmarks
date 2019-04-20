@@ -3,8 +3,12 @@
   "tests": [
     {
       "default": {
-        "json_url": "/index.php?c=bench/json",
-        "plaintext_url": "/index.php?c=bench/plaintext",
+        "json_url": "/Json",
+        "plaintext_url": "/Plaintext",
+        "db_url": "/Db",
+        "update_url": "/Db/update/",
+        "query_url": "/Db/query/",
+        "fortune_url": "/Fortunes",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",

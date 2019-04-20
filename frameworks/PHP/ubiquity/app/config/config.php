@@ -1,21 +1,17 @@
 <?php
 return array(
-		"siteUrl"=>"http://127.0.0.1/ubiquity/",
 		"database"=>[
 				"type"=>"mysql",
 				"dbName"=>"hello_world",
-				"serverName"=>"tfbdata",
+				"serverName"=>"127.0.0.1",//tfbdata
 				"port"=>"3306",
-				"user"=>"benchmarkdbuser",
-				"password"=>"benchmarkdbpass",
-				"options"=>[],
+				"user"=>"root",//benchmarkdbuser
+				"password"=>"",//benchmarkdbpass
+				"options"=>[PDO::ATTR_PERSISTENT => true],
 				"cache"=>false
 		],
-		"templateEngine"=>'Ubiquity\\views\\engine\\Twig',
-		"templateEngineOptions"=>array("cache"=>false),
 		"test"=>false,
 		"debug"=>false,
-		"di"=>[],
 		"cache"=>["directory"=>"cache/","system"=>"Ubiquity\\cache\\system\\ArrayCache","params"=>[]],
 		"mvcNS"=>["models"=>"models","controllers"=>"controllers","rest"=>""]
 );
