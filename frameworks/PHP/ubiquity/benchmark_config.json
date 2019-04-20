@@ -1,0 +1,26 @@
+{
+  "framework": "ubiquity",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Stripped",
+        "classification": "Fullstack",
+        "database": "MySQL",
+        "framework": "ubiquity",
+        "language": "PHP",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "nginx",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ubiquity",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
