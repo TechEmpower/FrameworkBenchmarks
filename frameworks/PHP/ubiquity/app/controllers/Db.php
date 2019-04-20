@@ -11,7 +11,7 @@ use Ubiquity\controllers\Startup;
  **/
 class Db extends Controller{
 	public function initialize(){
-		\header( 'Content-Type', 'application/json' );
+		\header( 'Content-Type: application/json;charset= utf-8' );
 		$config=Startup::getConfig();
 		\Ubiquity\orm\DAO::startDatabase($config);
 	}

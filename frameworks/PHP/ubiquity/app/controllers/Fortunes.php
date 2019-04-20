@@ -10,7 +10,7 @@ use models\Fortune;
 
 class Fortunes extends Controller {
 	public function initialize(){
-		Startup::$templateEngine=new Twig(['cache' => true]);
+		Startup::$templateEngine=new Twig([]);
 		$config=Startup::getConfig();
 		\Ubiquity\orm\DAO::startDatabase($config);
 	}
@@ -21,7 +21,7 @@ class Fortunes extends Controller {
 		usort($fortunes, function($left, $right) {
 			return strcmp($left->message, $right->message);
 		});
-			$this->loadView('Fortunes/index.html',['fortunes' => $fortunes]);
+		$this->loadView('Fortunes/index.html',['fortunes' => $fortunes]);
 	}
 }
 
