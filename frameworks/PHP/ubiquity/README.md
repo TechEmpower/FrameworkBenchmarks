@@ -2,7 +2,7 @@
 
 ## Test Type Implementation Source Code
 The tests are separated into 4 controllers:
-- `Json` for JSON answers
+- `Json` for JSON response
   * [JSON](app/controllers/Json.php)
 - `Db` for database access
   * [DB](app/controllers/Db.php)
@@ -11,7 +11,7 @@ The tests are separated into 4 controllers:
   * [UPDATE](app/controllers/Db.php)
 - `Fortunes` for using the Twig template engine
   * [FORTUNES](app/controllers/Fortunes.php)
-- `Plaintext` for Plaintext response
+- `Plaintext` for plaintext response
   * [PLAINTEXT](app/controllers/Plaintext.php)
 
 
