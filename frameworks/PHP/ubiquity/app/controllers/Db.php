@@ -17,7 +17,7 @@ class Db extends Controller{
 	}
 
 	public function index() {
-		$world=DAO::getOne(World::class, mt_rand(1, 2),false);
+		$world=DAO::getOne(World::class, mt_rand(1, 10000),false);
 		echo json_encode($world->_rest);
 	}
 	
