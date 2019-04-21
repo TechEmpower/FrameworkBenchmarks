@@ -22,14 +22,14 @@
 #include <string.h>
 #include <yajl/yajl_gen.h>
 
-#include "fortune.h"
 #include "global_data.h"
-#include "json_serializer.h"
-#include "plaintext.h"
 #include "request_handler.h"
 #include "thread.h"
 #include "utility.h"
-#include "world.h"
+#include "handlers/fortune.h"
+#include "handlers/json_serializer.h"
+#include "handlers/plaintext.h"
+#include "handlers/world.h"
 
 static const char *status_code_to_string(http_status_code_t status_code)
 {

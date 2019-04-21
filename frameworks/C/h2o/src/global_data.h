@@ -29,7 +29,7 @@
 
 #include "cache.h"
 #include "list.h"
-#include "request_handler_data.h"
+#include "handlers/request_handler_data.h"
 
 typedef struct global_thread_data_t global_thread_data_t;
 
