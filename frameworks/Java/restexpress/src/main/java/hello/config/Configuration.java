@@ -26,6 +26,7 @@ public class Configuration extends Environment {
 	private String defaultFormat;
 	private String baseUrl;
 	private int executorThreadPoolSize;
+	private Database database = null;
 
 	private JsonController jsonController;
 	private MysqlController mysqlController;
@@ -40,15 +41,24 @@ public class Configuration extends Environment {
 		this.baseUrl = p.getProperty(BASE_URL_PROPERTY, "http://localhost:" + String.valueOf(port));
 		this.executorThreadPoolSize = Integer.parseInt(p.getProperty(EXECUTOR_THREAD_POOL_SIZE,
 				DEFAULT_EXECUTOR_THREAD_POOL_SIZE));
-		MongoConfig mongoSettings = new MongoConfig(p);
-		MysqlConfig mysqlSettings = new MysqlConfig(p);
-		initialize(mysqlSettings, mongoSettings);
+		if (p.containsKey("mongodb.uri")) {
+			MongoConfig mongoSettings = new MongoConfig(p);
+			initialize(mongoSettings);
+			database = Database.MongoDB;
+		} else if (p.containsKey("mysql.uri")) {
+			MysqlConfig mysqlSettings = new MysqlConfig(p);
+			initialize(mysqlSettings);
+			database = Database.MySQL;
+		}
 	}
 
-	private void initialize(MysqlConfig mysqlSettings, MongoConfig mongo) {
+	private void initialize(MysqlConfig mysqlSettings) {
 		jsonController = new JsonController();
 		mysqlController = new MysqlController(mysqlSettings.getDataSource());
 		queriesMysqlController = new QueriesMysqlController(mysqlSettings.getDataSource());
+	}
+
+	private void initialize(MongoConfig mongo) {
 		WorldsMongodbRepository worldMongodbRepository = new WorldsMongodbRepository(
 				mongo.getClient(), mongo.getDbName());
 		mongodbController = new MongodbController(worldMongodbRepository);
@@ -71,6 +81,10 @@ public class Configuration extends Environment {
 		return executorThreadPoolSize;
 	}
 
+	public Database getDatabase() {
+		return database;
+	}
+
 	public JsonController getJsonController() {
 		return jsonController;
 	}
@@ -82,11 +96,11 @@ public class Configuration extends Environment {
 	public QueriesMysqlController getQueriesMysqlController() {
 		return queriesMysqlController;
 	}
-	
+
 	public MongodbController getMongodbController() {
 		return mongodbController;
 	}
-	
+
 	public QueriesMongodbController getQueriesMongodbController() {
 		return queriesMongodbController;
 	}

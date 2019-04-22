@@ -1,6 +1,7 @@
 FROM maven:3.5.3-jdk-10 as maven
 WORKDIR /restexpress
 COPY src src
+COPY src/main/resources/config/dev/mongodb-environment.properties src/main/resources/config/dev/environment.properties
 COPY pom.xml pom.xml
 RUN mvn package -q
 
