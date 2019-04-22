@@ -10,6 +10,7 @@ import com.strategicgains.repoexpress.mongodb.MongoConfig;
 import hello.controller.JsonController;
 import hello.controller.MongodbController;
 import hello.controller.MysqlController;
+import hello.controller.PlaintextController;
 import hello.controller.QueriesMongodbController;
 import hello.controller.QueriesMysqlController;
 import hello.controller.persistence.WorldsMongodbRepository;
@@ -28,6 +29,7 @@ public class Configuration extends Environment {
 	private int executorThreadPoolSize;
 	private Database database = null;
 
+	private PlaintextController plaintextController;
 	private JsonController jsonController;
 	private MysqlController mysqlController;
 	private QueriesMysqlController queriesMysqlController;
@@ -53,6 +55,7 @@ public class Configuration extends Environment {
 	}
 
 	private void initialize(MysqlConfig mysqlSettings) {
+		plaintextController = new PlaintextController();
 		jsonController = new JsonController();
 		mysqlController = new MysqlController(mysqlSettings.getDataSource());
 		queriesMysqlController = new QueriesMysqlController(mysqlSettings.getDataSource());
@@ -85,6 +88,10 @@ public class Configuration extends Environment {
 		return database;
 	}
 
+	public PlaintextController getPlaintextController() {
+		return plaintextController;
+	}
+	
 	public JsonController getJsonController() {
 		return jsonController;
 	}

@@ -29,24 +29,24 @@ public class Main {
 
 		switch (config.getDatabase()) {
 		case MongoDB: {
-			server.uri("/restexpress/mongodb/db", config.getMongodbController()).method(
+			server.uri("/plaintext", config.getPlaintextController()).method(HttpMethod.GET);
+			server.uri("/json", config.getJsonController()).action("helloWorld",
 					HttpMethod.GET);
-			server.uri("/restexpress/mongodb/query", config.getQueriesMongodbController()).method(
+			server.uri("/db", config.getMongodbController()).method(
+					HttpMethod.GET);
+			server.uri("/query", config.getQueriesMongodbController()).method(
 					HttpMethod.GET);
 		}
 			break;
 		case MySQL: {
-			server.uri("/restexpress/json", config.getJsonController()).action("helloWorld",
-					HttpMethod.GET);
-
-			server.uri("/restexpress/mysql/db", config.getMysqlController()).method(HttpMethod.GET);
-			server.uri("/restexpress/mysql/query", config.getQueriesMysqlController()).method(
+			server.uri("/db", config.getMysqlController()).method(HttpMethod.GET);
+			server.uri("/query", config.getQueriesMysqlController()).method(
 					HttpMethod.GET);
 		}
 			break;
 		default:
 			throw new ConfigurationException(
-					"No Datablse configured in the environment.properties file.");
+					"No Database configured in the environment.properties file.");
 		}
 
 		server.bind(config.getPort());

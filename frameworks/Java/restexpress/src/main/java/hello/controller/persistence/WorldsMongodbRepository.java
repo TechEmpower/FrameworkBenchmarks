@@ -12,7 +12,7 @@ public class WorldsMongodbRepository extends MongodbRepository<World> {
 		//TODO from zloster
 		// This is a nice example for one kind of problem with the
 		// object-oriented approach. You have a piece of functionality which is
-		// not separated in a object/function. But you have to modify it. The
+		// not separated in an object/function. But you have to modify it. The
 		// solution is to rewrite and unwind the whole thing. But this requires time, effort and devotion.
 		// So copy-pasty approach was chosen.
 		super(mongo, dbName, true, World.class);
