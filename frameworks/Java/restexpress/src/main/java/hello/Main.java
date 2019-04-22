@@ -24,7 +24,8 @@ public class Main {
 				.setKeepAlive(true)
 				.noCompression()
 				.setEnforceHttpSpec(true)
-				.alias("HelloWorld", HelloWorld.class);
+				.alias("HelloWorld", HelloWorld.class)
+				.addPostprocessor(new RequiredResponseHeaders());
 
 		switch (config.getDatabase()) {
 		case MongoDB: {
