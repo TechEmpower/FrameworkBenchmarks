@@ -35,6 +35,59 @@
 
 #define DEFAULT_CACHE_LINE_SIZE 128
 
+static list_t *get_sorted_sublist(list_t *head, int (*compare)(const list_t *, const list_t *));
+static list_t *merge_lists(list_t *head1,
+                           list_t *head2,
+                           int (*compare)(const list_t *, const list_t *));
+
+static list_t *get_sorted_sublist(list_t *head, int (*compare)(const list_t *, const list_t *))
+{
+	list_t *tail = head;
+
+	if (head) {
+		head = head->next;
+
+		while (head && compare(tail, head) <= 0) {
+			tail = head;
+			head = head->next;
+		}
+	}
+
+	return tail;
+}
+
+static list_t *merge_lists(list_t *head1,
+                           list_t *head2,
+                           int (*compare)(const list_t *, const list_t *))
+{
+	list_t *ret = NULL;
+	list_t **current = &ret;
+
+	while (1) {
+		if (!head1) {
+			*current = head2;
+			break;
+		}
+		else if (!head2) {
+			*current = head1;
+			break;
+		}
+		// Checking for equality makes this algorithm a stable sort.
+		else if (compare(head1, head2) <= 0) {
+			*current = head1;
+			current = &head1->next;
+			head1 = head1->next;
+		}
+		else {
+			*current = head2;
+			current = &head2->next;
+			head2 = head2->next;
+		}
+	}
+
+	return ret;
+}
+
 void free_json_generator(json_generator_t *gen, list_t **pool, size_t *gen_num, size_t max_gen)
 {
 	if (gen) {
@@ -173,6 +226,37 @@ uint32_t get_random_number(uint32_t max_rand, unsigned int *seed)
 bool is_power_of_2(size_t x)
 {
 	return !!x & !(x & (x - 1));
+}
+
+// merge sort
+list_t *sort_list(list_t *head, int (*compare)(const list_t *, const list_t *))
+{
+	list_t **new_head;
+
+	do {
+		new_head = &head;
+
+		for (list_t *iter = head; iter;) {
+			list_t * const tail1 = get_sorted_sublist(iter, compare);
+			list_t * const head2 = tail1->next;
+
+			if (!head2) {
+				*new_head = iter;
+				break;
+			}
+
+			list_t * const tail2 = get_sorted_sublist(head2, compare);
+			list_t * const head1 = iter;
+
+			iter = tail2->next;
+			tail1->next = NULL;
+			tail2->next = NULL;
+			*new_head = merge_lists(head1, head2, compare);
+			new_head = tail1->next ? &tail2->next : &tail1->next;
+		}
+	} while (new_head != &head);
+
+	return head;
 }
 
 size_t round_up_to_power_of_2(size_t x)
