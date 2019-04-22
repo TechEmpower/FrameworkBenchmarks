@@ -16,7 +16,7 @@ public class Main {
 		ResourceLeakDetector.setLevel(Level.DISABLED);
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Throwable {
 		Configuration config = Environment.load(args, Configuration.class);
 		RestExpress server = new RestExpress().setName("RestExpress")
 				.setExecutorThreadCount(config.getExecutorThreadPoolSize()).setUseTcpNoDelay(true)
