@@ -19,11 +19,12 @@ public class Main {
 	public static void main(String[] args) throws Throwable {
 		Configuration config = Environment.load(args, Configuration.class);
 		RestExpress server = new RestExpress().setName("RestExpress")
-				.setExecutorThreadCount(config.getExecutorThreadPoolSize()).setUseTcpNoDelay(true)
-				.setKeepAlive(true).alias("HelloWorld", HelloWorld.class);
-		// TODO from zloster
-		// response compression takes time... AND it's forbidden by the rules
-		// .noCompression();
+				.setExecutorThreadCount(config.getExecutorThreadPoolSize())
+				.setUseTcpNoDelay(true)
+				.setKeepAlive(true)
+				.noCompression()
+				.setEnforceHttpSpec(true)
+				.alias("HelloWorld", HelloWorld.class);
 
 		switch (config.getDatabase()) {
 		case MongoDB: {
