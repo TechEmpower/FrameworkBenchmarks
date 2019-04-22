@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2016 Anton Valentinov Kirilov
+ Copyright (c) 2019 Anton Valentinov Kirilov
 
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -17,20 +17,50 @@
  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef FORTUNE_H_
+#ifndef GLOBAL_DATA_H_
 
-#define FORTUNE_H_
+#define GLOBAL_DATA_H_
 
 #include <h2o.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <h2o/cache.h>
+#include <openssl/ssl.h>
 
+#include "cache.h"
 #include "list.h"
+#include "handlers/request_handler_data.h"
+
+typedef struct global_thread_data_t global_thread_data_t;
 
 typedef struct {
-	list_t l;
-	h2o_iovec_t id;
-	h2o_iovec_t message;
-} fortune_t;
+	const char *bind_address;
+	const char *cert;
+	const char *db_host;
+	const char *key;
+	const char *log;
+	const char *root;
+	const char *template_path;
+	size_t max_accept;
+	size_t max_db_conn_num;
+	size_t max_json_generator;
+	size_t max_query_num;
+	size_t thread_num;
+	uint16_t https_port;
+	uint16_t port;
+} config_t;
 
-int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req);
+typedef struct {
+	h2o_logger_t *file_logger;
+	global_thread_data_t *global_thread_data;
+	list_t *prepared_statements;
+	h2o_socket_t *signals;
+	SSL_CTX *ssl_ctx;
+	size_t memory_alignment;
+	int signal_fd;
+	bool shutdown;
+	h2o_globalconf_t h2o_config;
+	request_handler_data_t request_handler_data;
+} global_data_t;
 
-#endif // FORTUNE_H_
+#endif // GLOBAL_DATA_H_

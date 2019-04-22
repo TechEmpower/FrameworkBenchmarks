@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2016 Anton Valentinov Kirilov
+ Copyright (c) 2019 Anton Valentinov Kirilov
 
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -17,12 +17,17 @@
  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef TEMPLATE_H_
+#ifndef REQUEST_HANDLER_DATA_H_
 
-#define TEMPLATE_H_
+#define REQUEST_HANDLER_DATA_H_
 
-#include <mustache.h>
+#include "cache.h"
 
-mustache_template_t *get_fortunes_template(const char *path);
+struct mustache_token_t;
 
-#endif // TEMPLATE_H_
+typedef struct {
+	struct mustache_token_t *fortunes_template;
+	cache_t world_cache;
+} request_handler_data_t;
+
+#endif // REQUEST_HANDLER_DATA_H_

@@ -39,14 +39,31 @@
 #include "utility.h"
 #include "world.h"
 
+#define CACHE_CAPACITY 131072
+#define CACHE_DURATION 3600000
 #define DO_CLEANUP 4
 #define DO_UPDATE 1
 #define ID_KEY "id"
 #define IS_COMPLETED 8
+#define MAX_ID 10000
 #define MAX_QUERIES 500
 #define QUERIES_PARAMETER "queries="
 #define RANDOM_NUM_KEY "randomNumber"
+
+#define UPDATE_QUERY_BEGIN \
+	"UPDATE " WORLD_TABLE_NAME " SET randomNumber = v.randomNumber " \
+	"FROM (VALUES(%" PRIu32 ", %" PRIu32 ")"
+
+#define UPDATE_QUERY_ELEM ", (%" PRIu32 ", %" PRIu32 ")"
+#define UPDATE_QUERY_END ") AS v (id, randomNumber) WHERE " WORLD_TABLE_NAME ".id = v.id;"
+
+#define MAX_UPDATE_QUERY_LEN(n) \
+	(sizeof(UPDATE_QUERY_BEGIN) + sizeof(UPDATE_QUERY_END) - sizeof(UPDATE_QUERY_ELEM) + \
+	 (n) * (sizeof(UPDATE_QUERY_ELEM) - 1 + \
+	        2 * (sizeof(MKSTR(MAX_ID)) - 1) - 2 * (sizeof(PRIu32) - 1) - 2))
+
 #define USE_CACHE 2
+#define WORLD_TABLE_NAME "World"
 
 typedef struct multiple_query_ctx_t multiple_query_ctx_t;
 typedef struct update_ctx_t update_ctx_t;
@@ -87,6 +104,7 @@ struct multiple_query_ctx_t {
 	query_result_t res[];
 };
 
+static int cached_queries(struct st_h2o_handler_t *self, h2o_req_t *req);
 static void cleanup_multiple_query(multiple_query_ctx_t *query_ctx);
 static void cleanup_multiple_query_request(void *data);
 static void cleanup_single_query(single_query_ctx_t *query_ctx);
@@ -96,8 +114,10 @@ static void complete_multiple_query(multiple_query_ctx_t *query_ctx);
 static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req);
 static void do_updates(multiple_query_ctx_t *query_ctx);
 static void fetch_from_cache(uint64_t now, cache_t *world_cache, multiple_query_ctx_t *query_ctx);
+static void free_world_cache_entry(h2o_iovec_t value);
 static size_t get_query_number(h2o_req_t *req);
 static void initialize_ids(size_t num_query, query_result_t *res, unsigned int *seed);
+static int multiple_queries(struct st_h2o_handler_t *self, h2o_req_t *req);
 static void on_multiple_query_error(db_query_param_t *param, const char *error_string);
 static result_return_t on_multiple_query_result(db_query_param_t *param, PGresult *result);
 static void on_multiple_query_timeout(db_query_param_t *param);
@@ -111,6 +131,15 @@ static void serialize_items(const query_result_t *res,
                             size_t num_result,
                             json_generator_t **gen,
                             h2o_req_t *req);
+static int single_query(struct st_h2o_handler_t *self, h2o_req_t *req);
+static int updates(struct st_h2o_handler_t *self, h2o_req_t *req);
+
+
+static int cached_queries(struct st_h2o_handler_t *self, h2o_req_t *req)
+{
+	IGNORE_FUNCTION_PARAMETER(self);
+	return do_multiple_queries(false, true, req);
+}
 
 static void cleanup_multiple_query(multiple_query_ctx_t *query_ctx)
 {
@@ -229,7 +258,7 @@ static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 		if (use_cache) {
 			query_ctx->flags |= USE_CACHE;
 			fetch_from_cache(h2o_now(ctx->event_loop.h2o_ctx.loop),
-			                 &ctx->global_data->world_cache,
+			                 &ctx->global_data->request_handler_data.world_cache,
 			                 query_ctx);
 
 			if (query_ctx->num_result == query_ctx->num_query) {
@@ -356,6 +385,11 @@ static void fetch_from_cache(uint64_t now, cache_t *world_cache, multiple_query_
 	}
 }
 
+static void free_world_cache_entry(h2o_iovec_t value)
+{
+	free(value.base);
+}
+
 static size_t get_query_number(h2o_req_t *req)
 {
 	int num_query = 0;
@@ -394,6 +428,12 @@ static void initialize_ids(size_t num_query, query_result_t *res, unsigned int *
 		BITSET_SET(res[i].id++, bitset);
 		max_rand++;
 	}
+}
+
+static int multiple_queries(struct st_h2o_handler_t *self, h2o_req_t *req)
+{
+	IGNORE_FUNCTION_PARAMETER(self);
+	return do_multiple_queries(false, false, req);
 }
 
 static void on_multiple_query_error(db_query_param_t *param, const char *error_string)
@@ -438,7 +478,7 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 				cache_set(h2o_now(query_ctx->ctx->event_loop.h2o_ctx.loop),
 				          key,
 				          value,
-				          &query_ctx->ctx->global_data->world_cache);
+				          &query_ctx->ctx->global_data->request_handler_data.world_cache);
 			}
 		}
 
@@ -666,19 +706,7 @@ error_yajl:
 	send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 }
 
-int cached_queries(struct st_h2o_handler_t *self, h2o_req_t *req)
-{
-	IGNORE_FUNCTION_PARAMETER(self);
-	return do_multiple_queries(false, true, req);
-}
-
-int multiple_queries(struct st_h2o_handler_t *self, h2o_req_t *req)
-{
-	IGNORE_FUNCTION_PARAMETER(self);
-	return do_multiple_queries(false, false, req);
-}
-
-int single_query(struct st_h2o_handler_t *self, h2o_req_t *req)
+static int single_query(struct st_h2o_handler_t *self, h2o_req_t *req)
 {
 	IGNORE_FUNCTION_PARAMETER(self);
 
@@ -720,8 +748,33 @@ int single_query(struct st_h2o_handler_t *self, h2o_req_t *req)
 	return 0;
 }
 
-int updates(struct st_h2o_handler_t *self, h2o_req_t *req)
+static int updates(struct st_h2o_handler_t *self, h2o_req_t *req)
 {
 	IGNORE_FUNCTION_PARAMETER(self);
 	return do_multiple_queries(true, false, req);
+}
+
+void cleanup_world_handlers(global_data_t *global_data)
+{
+	cache_destroy(&global_data->request_handler_data.world_cache);
+}
+
+void initialize_world_handlers(const config_t *config,
+                               global_data_t *global_data,
+                               h2o_hostconf_t *hostconf,
+                               h2o_access_log_filehandle_t *log_handle)
+{
+	add_prepared_statement(WORLD_TABLE_NAME,
+	                       "SELECT * FROM " WORLD_TABLE_NAME " WHERE id = $1::integer;",
+	                       &global_data->prepared_statements);
+	register_request_handler("/db", single_query, hostconf, log_handle);
+	register_request_handler("/queries", multiple_queries, hostconf, log_handle);
+	register_request_handler("/updates", updates, hostconf, log_handle);
+
+	if (!cache_create(config->thread_num,
+	                  CACHE_CAPACITY,
+	                  CACHE_DURATION,
+	                  free_world_cache_entry,
+	                  &global_data->request_handler_data.world_cache))
+		register_request_handler("/cached-worlds", cached_queries, hostconf, log_handle);
 }

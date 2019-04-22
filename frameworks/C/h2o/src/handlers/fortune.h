@@ -17,13 +17,18 @@
  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef TLS_H_
+#ifndef FORTUNE_H_
 
-#define TLS_H_
+#define FORTUNE_H_
+
+#include <h2o.h>
 
 #include "global_data.h"
 
-void cleanup_openssl(global_data_t *global_data);
-void initialize_openssl(const config_t *config, global_data_t *global_data);
+void cleanup_fortunes_handler(global_data_t *global_data);
+void initialize_fortunes_handler(const config_t *config,
+                                 global_data_t *global_data,
+                                 h2o_hostconf_t *hostconf,
+                                 h2o_access_log_filehandle_t *log_handle);
 
-#endif // TLS_H_
+#endif // FORTUNE_H_

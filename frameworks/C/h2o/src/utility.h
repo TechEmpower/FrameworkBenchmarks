@@ -21,15 +21,11 @@
 
 #define UTILITY_H_
 
-#include <h2o.h>
-#include <mustache.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
-#include <h2o/cache.h>
-#include <openssl/ssl.h>
 #include <yajl/yajl_gen.h>
 
-#include "cache.h"
 #include "list.h"
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(*(a)))
@@ -42,48 +38,15 @@
 #define TOSTRING(x) # x
 #define YAJL_STRLIT(s) (const unsigned char *) (s), sizeof(s) - 1
 
-typedef struct global_thread_data_t global_thread_data_t;
-
-typedef struct {
-	const char *bind_address;
-	const char *cert;
-	const char *db_host;
-	const char *key;
-	const char *log;
-	const char *root;
-	const char *template_path;
-	uint64_t world_cache_duration;
-	size_t max_accept;
-	size_t max_db_conn_num;
-	size_t max_json_generator;
-	size_t max_query_num;
-	size_t thread_num;
-	size_t world_cache_capacity;
-	uint16_t https_port;
-	uint16_t port;
-} config_t;
-
-typedef struct {
-	h2o_logger_t *file_logger;
-	mustache_template_t *fortunes_template;
-	global_thread_data_t *global_thread_data;
-	h2o_socket_t *signals;
-	SSL_CTX *ssl_ctx;
-	size_t memory_alignment;
-	int signal_fd;
-	bool shutdown;
-	h2o_globalconf_t h2o_config;
-	cache_t world_cache;
-} global_data_t;
-
 typedef struct {
 	list_t l;
 	yajl_gen gen;
 } json_generator_t;
 
 void free_json_generator(json_generator_t *gen, list_t **pool, size_t *gen_num, size_t max_gen);
-yajl_gen_status gen_integer(int64_t number, char *buf, size_t len, yajl_gen gen);
+yajl_gen_status gen_integer(long long number, char *buf, size_t len, yajl_gen gen);
 json_generator_t *get_json_generator(list_t **pool, size_t *gen_num);
+size_t get_maximum_cache_line_size(void);
 uint32_t get_random_number(uint32_t max_rand, unsigned int *seed);
 bool is_power_of_2(size_t x);
 size_t round_up_to_power_of_2(size_t x);
