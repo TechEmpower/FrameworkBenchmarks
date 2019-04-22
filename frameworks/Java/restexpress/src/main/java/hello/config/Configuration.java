@@ -1,19 +1,18 @@
 package hello.config;
 
-import hello.controller.DbMongodbController;
-import hello.controller.DbMysqlController;
+import java.util.Properties;
+
+import org.restexpress.Format;
+import org.restexpress.util.Environment;
+
+import com.strategicgains.repoexpress.mongodb.MongoConfig;
+
 import hello.controller.JsonController;
-import hello.controller.PlaintextController;
+import hello.controller.MongodbController;
+import hello.controller.MysqlController;
 import hello.controller.QueriesMongodbController;
 import hello.controller.QueriesMysqlController;
 import hello.controller.persistence.WorldsMongodbRepository;
-
-import java.util.Properties;
-
-import com.strategicgains.repoexpress.adapter.IdentiferAdapter;
-import com.strategicgains.repoexpress.exception.InvalidObjectIdException;
-import com.strategicgains.restexpress.Format;
-import com.strategicgains.restexpress.util.Environment;
 
 public class Configuration extends Environment {
 	private static final String DEFAULT_EXECUTOR_THREAD_POOL_SIZE = "20";
@@ -29,11 +28,10 @@ public class Configuration extends Environment {
 	private int executorThreadPoolSize;
 
 	private JsonController jsonController;
-	private DbMysqlController dbMysqlController;
+	private MysqlController mysqlController;
 	private QueriesMysqlController queriesMysqlController;
-	private DbMongodbController dbMongodbController;
+	private MongodbController mongodbController;
 	private QueriesMongodbController queriesMongodbController;
-	private PlaintextController plaintextController;
 
 	@Override
 	protected void fillValues(Properties p) {
@@ -49,18 +47,11 @@ public class Configuration extends Environment {
 
 	private void initialize(MysqlConfig mysqlSettings, MongoConfig mongo) {
 		jsonController = new JsonController();
-		plaintextController = new PlaintextController();
-		dbMysqlController = new DbMysqlController(mysqlSettings.getDataSource());
+		mysqlController = new MysqlController(mysqlSettings.getDataSource());
 		queriesMysqlController = new QueriesMysqlController(mysqlSettings.getDataSource());
 		WorldsMongodbRepository worldMongodbRepository = new WorldsMongodbRepository(
 				mongo.getClient(), mongo.getDbName());
-		worldMongodbRepository.setIdentifierAdapter(new IdentiferAdapter<Long>() {
-			@Override
-			public Long convert(String id) throws InvalidObjectIdException {
-				return Long.valueOf(id);
-			}
-		});
-		dbMongodbController = new DbMongodbController(worldMongodbRepository);
+		mongodbController = new MongodbController(worldMongodbRepository);
 		queriesMongodbController = new QueriesMongodbController(worldMongodbRepository);
 	}
 
@@ -84,23 +75,19 @@ public class Configuration extends Environment {
 		return jsonController;
 	}
 
-	public DbMysqlController getDbMysqlController() {
-		return dbMysqlController;
+	public MysqlController getMysqlController() {
+		return mysqlController;
 	}
 
 	public QueriesMysqlController getQueriesMysqlController() {
 		return queriesMysqlController;
 	}
-
-	public DbMongodbController getDbMongodbController() {
-		return dbMongodbController;
+	
+	public MongodbController getMongodbController() {
+		return mongodbController;
 	}
 	
 	public QueriesMongodbController getQueriesMongodbController() {
 		return queriesMongodbController;
-	}
-
-	public PlaintextController getPlaintextController() {
-		return plaintextController;
 	}
 }

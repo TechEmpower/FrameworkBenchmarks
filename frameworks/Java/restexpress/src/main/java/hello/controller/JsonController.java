@@ -1,21 +1,18 @@
 package hello.controller;
 
-import com.strategicgains.restexpress.Request;
-import com.strategicgains.restexpress.Response;
+import org.restexpress.Request;
+import org.restexpress.Response;
 
-public class JsonController
-{
-	public HelloWorld helloWorld(Request request, Response response)
-	{
+public class JsonController {
+	public HelloWorld helloWorld(Request request, Response response) {
 		return new HelloWorld();
 	}
 
 	/**
 	 * Inner class just to illustrate JSON serialization.
 	 */
-	public static class HelloWorld
-	{
+	public static class HelloWorld {
 		@SuppressWarnings("unused")
-        private String message = "Hello, World!";
+		private String message = "Hello, World!";
 	}
 }

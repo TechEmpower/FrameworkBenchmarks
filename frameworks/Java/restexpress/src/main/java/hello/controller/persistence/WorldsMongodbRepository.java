@@ -1,21 +1,25 @@
 package hello.controller.persistence;
 
-import hello.domain.World;
+import java.util.List;
 
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.strategicgains.repoexpress.mongodb.MongodbRepository;
 
-public class WorldsMongodbRepository
-extends MongodbRepository<World, Long>
-{
-	@SuppressWarnings("unchecked")
-    public WorldsMongodbRepository(Mongo mongo, String dbName)
-    {
-	    super(mongo, dbName, World.class);
-    }
+import hello.domain.World;
 
-	public World find(int id)
-	{
-		return getDataStore().find(World.class, "id", (long) id).retrievedFields(false, "_id").get();
+public class WorldsMongodbRepository extends MongodbRepository<World> {
+	@SuppressWarnings("unchecked")
+	public WorldsMongodbRepository(MongoClient mongo, String dbName) {
+		super(mongo, dbName, World.class);
+	}
+
+	public World find(int id) {
+		return getDataStore().find(World.class, "id", (long) id).retrievedFields(false, "_id")
+				.get();
+	}
+
+	public World findAll(List<Integer> ids) {
+		return getDataStore().find(World.class).field("id").in(ids).retrievedFields(false, "_id")
+				.get();
 	}
 }
