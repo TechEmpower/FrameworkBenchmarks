@@ -8,4 +8,4 @@ RUN mvn package -q
 FROM openjdk:10-jre-slim
 WORKDIR /restexpress
 COPY --from=maven /restexpress/target/world-1.0-SNAPSHOT.jar app.jar
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-Dio.netty.noUnsafe=true", "-jar", "app.jar"]
