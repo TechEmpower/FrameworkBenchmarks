@@ -1,6 +1,6 @@
-# Play framework Benchmarking Test
+# Play 1 framework Benchmarking Test
 
-[Play framework](https://www.playframework.com/) - the high velocity web framework for Java and Scala.
+[Play 1 framework](https://www.playframework.com/) - the high velocity web framework for Java and Scala. This is the old version - it's not Play 2.
 
 ### Test sources
 
