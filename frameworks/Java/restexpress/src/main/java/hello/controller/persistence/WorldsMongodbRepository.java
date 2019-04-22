@@ -3,14 +3,19 @@ package hello.controller.persistence;
 import java.util.List;
 
 import com.mongodb.MongoClient;
-import com.strategicgains.repoexpress.mongodb.MongodbRepository;
 
 import hello.domain.World;
 
 public class WorldsMongodbRepository extends MongodbRepository<World> {
 	@SuppressWarnings("unchecked")
 	public WorldsMongodbRepository(MongoClient mongo, String dbName) {
-		super(mongo, dbName, World.class);
+		//TODO from zloster
+		// This is a nice example for one kind of problem with the
+		// object-oriented approach. You have a piece of functionality which is
+		// not separated in a object/function. But you have to modify it. The
+		// solution is to rewrite and unwind the whole thing. But this requires time, effort and devotion.
+		// So copy-pasty approach was chosen.
+		super(mongo, dbName, true, World.class);
 	}
 
 	public World find(int id) {
