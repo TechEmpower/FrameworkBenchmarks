@@ -19,29 +19,24 @@ public class Main {
 	public static void main(String[] args) throws Throwable {
 		Configuration config = Environment.load(args, Configuration.class);
 		RestExpress server = new RestExpress().setName("RestExpress")
-				.setExecutorThreadCount(config.getExecutorThreadPoolSize())
-				.setUseTcpNoDelay(true)
-				.setKeepAlive(true)
-				.noCompression()
-				.setEnforceHttpSpec(true)
+				.setExecutorThreadCount(config.getExecutorThreadPoolSize()).setUseTcpNoDelay(true)
+				.setKeepAlive(true).noCompression().setEnforceHttpSpec(true)
 				.alias("HelloWorld", HelloWorld.class)
 				.addPostprocessor(new RequiredResponseHeaders());
 
 		switch (config.getDatabase()) {
 		case MongoDB: {
-			server.uri("/plaintext", config.getPlaintextController()).method(HttpMethod.GET);
-			server.uri("/json", config.getJsonController()).action("helloWorld",
+			server.uri("/plaintext", config.getPlaintextController()).action("sayHello",
 					HttpMethod.GET);
-			server.uri("/db", config.getMongodbController()).method(
-					HttpMethod.GET);
-			server.uri("/query", config.getQueriesMongodbController()).method(
-					HttpMethod.GET);
+			server.uri("/json", config.getJsonController()).action("sayHello", HttpMethod.GET);
+			
+			server.uri("/db", config.getMongodbController()).method(HttpMethod.GET);
+			server.uri("/query", config.getQueriesMongodbController()).method(HttpMethod.GET);
 		}
 			break;
 		case MySQL: {
 			server.uri("/db", config.getMysqlController()).method(HttpMethod.GET);
-			server.uri("/query", config.getQueriesMysqlController()).method(
-					HttpMethod.GET);
+			server.uri("/query", config.getQueriesMysqlController()).method(HttpMethod.GET);
 		}
 			break;
 		default:

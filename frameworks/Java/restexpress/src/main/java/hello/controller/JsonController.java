@@ -4,7 +4,8 @@ import org.restexpress.Request;
 import org.restexpress.Response;
 
 public class JsonController {
-	public HelloWorld helloWorld(Request request, Response response) {
+
+	public HelloWorld sayHello(Request request, Response response) {
 		return new HelloWorld();
 	}
 

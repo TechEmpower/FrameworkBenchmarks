@@ -1,37 +1,46 @@
-#RestExpress Benchmarking Test
+# RestExpress Benchmarking Test
 
-This is the Java RestExpress portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+[RestExpress](http://www.restexpress.org/) - composes tools to form a lightweight, minimalist Java framework for quickly creating RESTful microservices.
 
-### JSON Encoding Test
-For raw Servlets there is no broad consensus on JSON encoding so we have selected the fastest available JSON encoder for Java: [Jackson](http://wiki.fasterxml.com/JacksonHome).
+Test implementations with MongoDB and MySQL as a backing datastore. MongoDB is using Morphia framework for object persistance.
 
-* [JSON test source](src/main/java/hello/JsonController.java)
+### Test sources
 
-### MongoDB Data-Store/Database Mapping Test
-* [DB test source](src/main/java/hello/MongodbController.java)
+Which `Controllers` will be instantiated and wired is determined from the existense of the MongoDB or MySQL connection string.
 
-### MySQL Data-Store/Database Mapping Test
-* [DB test source](src/main/java/hello/MysqlController.java)
+**Important** 
+ * The build is using a 0.12.0-SNAPSHOT version of the RestExpress. There were problems at startup with the bundled Netty in the 0.11.3 version;
+ * The MongoDB repository class is copy-pasted and new argument is introduced to get around the mandatory initialization of MongoDB indexes and collection caps.
 
-## Infrastructure Software Versions
+### MongoDB
+ * [Plaintext](src/main/java/hello/PlaintextController.java)
+ * [JSON](src/main/java/hello/JsonController.java)
+ * [DB](src/main/java/hello/MongodbController.java)
+ * [Queries](src/main/java/hello/QueriesMongodbController.java)
+
+### MySQL
+
+The `Updates` test is using JDBC batch updates and manual transaction handling.
+
+ * [DB](src/main/java/hello/MysqlController.java)
+ * [Queries](src/main/java/hello/QueriesMysqlController.java)
+
+## Software Versions
+
 The tests were run with:
 
-* [Java OpenJDK 1.7.0_09](http://openjdk.java.net/)
-* [Netty 4.0.29](http://netty.io)
-* [Jackson 2.4.2](http://wiki.fasterxml.com/JacksonHome)
-* [Morphia 1.0.1](https://github.com/mongodb/morphia)
-* [RepoExpress 0.4.7](https://github.com/RestExpress/RepoExpress)
-* [MySQL Connector 5.1.36](https://dev.mysql.com/)
+ * [Oracle Java 10](https://www.oracle.com/java/)
+ * [MySQL 5.7](http://www.mysql.com/)
+ * [MongoDB](http://www.mongodb.com/)
+ * [Morphia](https://morphia.dev/)
+
+Please check the versions in the install and build scripts of TFB project.
 
 ## Test URLs
-### JSON Encoding Test
 
-http://localhost:8080/restexpress/json
+All implementations use the same URLs.
 
-### MySQL Database Mapping Test
-
-http://localhost:8080/restexpress/mysql?queries=5
-
-### MongoDB Database Mapping Test
-
-http://localhost:8080/restexpress/mongodb?queries=5
+ * Plaintext - `http://localhost:8080/plaintext`
+ * JSON - `http://localhost:8080/json`
+ * DB - `http://localhost:8080/db`
+ * Queries - `http://localhost:8080/query?queries=`

@@ -54,18 +54,18 @@ public class Configuration extends Environment {
 		}
 	}
 
-	private void initialize(MysqlConfig mysqlSettings) {
-		plaintextController = new PlaintextController();
-		jsonController = new JsonController();
-		mysqlController = new MysqlController(mysqlSettings.getDataSource());
-		queriesMysqlController = new QueriesMysqlController(mysqlSettings.getDataSource());
-	}
-
 	private void initialize(MongoConfig mongo) {
 		WorldsMongodbRepository worldMongodbRepository = new WorldsMongodbRepository(
 				mongo.getClient(), mongo.getDbName());
+		plaintextController = new PlaintextController();
+		jsonController = new JsonController();
 		mongodbController = new MongodbController(worldMongodbRepository);
 		queriesMongodbController = new QueriesMongodbController(worldMongodbRepository);
+	}
+	
+	private void initialize(MysqlConfig mysqlSettings) {
+		mysqlController = new MysqlController(mysqlSettings.getDataSource());
+		queriesMysqlController = new QueriesMysqlController(mysqlSettings.getDataSource());
 	}
 
 	public String getDefaultFormat() {

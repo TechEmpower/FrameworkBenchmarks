@@ -7,7 +7,7 @@ public class PlaintextController
 {
 	private static final String MESSAGE = "Hello, World!";
 
-	public String helloWorld(Request request, Response response)
+	public String sayHello(Request request, Response response)
 	{
 		response.setContentType("text/plain");
 		return MESSAGE;

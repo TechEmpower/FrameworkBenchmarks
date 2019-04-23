@@ -2,8 +2,6 @@ package hello;
 import static io.netty.handler.codec.http.HttpHeaderNames.DATE;
 import static io.netty.handler.codec.http.HttpHeaderNames.SERVER;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
