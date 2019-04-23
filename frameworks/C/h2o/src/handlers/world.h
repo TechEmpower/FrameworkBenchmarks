@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2019 Anton Valentinov Kirilov
+ Copyright (c) 2016 Anton Valentinov Kirilov
 
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -17,12 +17,18 @@
  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef JSON_SERIALIZER_H_
+#ifndef WORLD_H_
 
-#define JSON_SERIALIZER_H_
+#define WORLD_H_
 
 #include <h2o.h>
 
-int json_serializer(struct st_h2o_handler_t *self, h2o_req_t *req);
+#include "global_data.h"
 
-#endif // JSON_SERIALIZER_H_
+void cleanup_world_handlers(global_data_t *global_data);
+void initialize_world_handlers(const config_t *config,
+                               global_data_t *global_data,
+                               h2o_hostconf_t *hostconf,
+                               h2o_access_log_filehandle_t *log_handle);
+
+#endif // WORLD_H_

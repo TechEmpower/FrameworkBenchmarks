@@ -17,23 +17,15 @@
  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#ifndef PLAINTEXT_H_
+
+#define PLAINTEXT_H_
+
 #include <h2o.h>
-#include <string.h>
 
-#include "plaintext.h"
-#include "request_handler.h"
-#include "utility.h"
+#define HELLO_RESPONSE "Hello, World!"
 
-int plaintext(struct st_h2o_handler_t *self, h2o_req_t *req)
-{
-	IGNORE_FUNCTION_PARAMETER(self);
+void initialize_plaintext_handler(h2o_hostconf_t *hostconf,
+                                  h2o_access_log_filehandle_t *log_handle);
 
-	h2o_generator_t generator;
-	h2o_iovec_t body = {.base = HELLO_RESPONSE, .len = sizeof(HELLO_RESPONSE) - 1};
-
-	memset(&generator, 0, sizeof(generator));
-	set_default_response_param(PLAIN, sizeof(HELLO_RESPONSE) - 1, req);
-	h2o_start_response(req, &generator);
-	h2o_send(req, &body, 1, H2O_SEND_STATE_FINAL);
-	return 0;
-}
+#endif // PLAINTEXT_H_

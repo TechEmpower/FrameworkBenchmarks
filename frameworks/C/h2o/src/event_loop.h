@@ -24,7 +24,7 @@
 #include <h2o.h>
 #include <stdbool.h>
 
-#include "utility.h"
+#include "global_data.h"
 
 typedef struct thread_context_t thread_context_t;
 

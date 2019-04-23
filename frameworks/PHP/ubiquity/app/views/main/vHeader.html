@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+{% block header %}
+	<base href="{{config["siteUrl"]}}">
+	<meta charset="UTF-8">
+	<title>ubiquity</title>
+{% endblock %}
+{% block css %}
+	{{ css('https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css') }}
+	{{css('css/style.css') | raw}}
+{% endblock %}
+</head>
+<body>
+{% block head %}
+{% endblock %}
