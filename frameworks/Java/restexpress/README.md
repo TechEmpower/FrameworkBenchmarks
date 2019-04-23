@@ -13,17 +13,17 @@ Which `Controllers` will be instantiated and wired is determined from the existe
  * The MongoDB repository class is copy-pasted and new argument is introduced to get around the mandatory initialization of MongoDB indexes and collection caps.
 
 ### MongoDB
- * [Plaintext](src/main/java/hello/PlaintextController.java)
- * [JSON](src/main/java/hello/JsonController.java)
- * [DB](src/main/java/hello/MongodbController.java)
- * [Queries](src/main/java/hello/QueriesMongodbController.java)
+ * [Plaintext](src/main/java/hello/controller/PlaintextController.java)
+ * [JSON](src/main/java/hello/controller/JsonController.java)
+ * [DB](src/main/java/hello/controller/MongodbController.java)
+ * [Queries](src/main/java/hello/controller/QueriesMongodbController.java)
 
 ### MySQL
 
 The `Updates` test is using JDBC batch updates and manual transaction handling.
 
- * [DB](src/main/java/hello/MysqlController.java)
- * [Queries](src/main/java/hello/QueriesMysqlController.java)
+ * [DB](src/main/java/hello/controller/MysqlController.java)
+ * [Queries](src/main/java/hello/controller/QueriesMysqlController.java)
 
 ## Software Versions
 
