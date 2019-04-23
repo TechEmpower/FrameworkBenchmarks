@@ -20,8 +20,6 @@ Which `Controllers` will be instantiated and wired is determined from the existe
 
 ### MySQL
 
-The `Updates` test is using JDBC batch updates and manual transaction handling.
-
  * [DB](src/main/java/hello/controller/MysqlController.java)
  * [Queries](src/main/java/hello/controller/QueriesMysqlController.java)
 
