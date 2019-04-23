@@ -8,7 +8,7 @@ use rand::{thread_rng, Rng, ThreadRng};
 use tokio_postgres::{connect, Client, NoTls, Statement};
 
 use crate::models::{Fortune, World};
-use crate::utils::{Writer, SIZE};
+use crate::utils::Writer;
 
 /// Postgres interface
 pub struct PgConnection {
@@ -57,7 +57,7 @@ impl PgConnection {
             })
             .map(|(row, _)| {
                 let row = row.unwrap();
-                let mut body = BytesMut::with_capacity(SIZE);
+                let mut body = BytesMut::with_capacity(33);
                 serde_json::to_writer(
                     Writer(&mut body),
                     &World {

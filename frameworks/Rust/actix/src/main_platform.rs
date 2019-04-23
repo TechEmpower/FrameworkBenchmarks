@@ -221,10 +221,7 @@ impl NewService<ServerConfig> for AppFactory {
 }
 
 fn main() -> std::io::Result<()> {
-    let sys = actix_rt::System::builder()
-        .name("techempower")
-        .stop_on_panic(false)
-        .build();
+    let sys = actix_rt::System::builder().stop_on_panic(false).build();
 
     // start http server
     Server::build()
