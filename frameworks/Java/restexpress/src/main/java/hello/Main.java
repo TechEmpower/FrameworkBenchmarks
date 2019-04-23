@@ -27,7 +27,7 @@ public class Main {
 		switch (config.getDatabase()) {
 		case MongoDB: {
 			server.uri("/plaintext", config.getPlaintextController()).action("sayHello",
-					HttpMethod.GET);
+					HttpMethod.GET).noSerialization();
 			server.uri("/json", config.getJsonController()).action("sayHello", HttpMethod.GET);
 			
 			server.uri("/db", config.getMongodbController()).method(HttpMethod.GET);
