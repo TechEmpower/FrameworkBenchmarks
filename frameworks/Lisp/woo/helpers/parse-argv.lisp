@@ -9,10 +9,13 @@
           if (not (starts-with option "--"))
             do (error "Invalid option: ~S" option)
           else
-            if (equal option "--worker")
-              append (list :worker-num (parse-int-value option value))
+            if (equal option "--address")
+              append (list :address value)
           else
             if (equal option "--port")
               append (list :port (parse-int-value option value))
+          else
+            if (equal option "--worker")
+              append (list :worker-num (parse-int-value option value))
           else
             do (error "Unknown option: ~S" option))))
