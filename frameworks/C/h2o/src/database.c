@@ -34,12 +34,6 @@
 
 typedef struct {
 	list_t l;
-	const char *name;
-	const char *query;
-} prepared_statement_t;
-
-typedef struct {
-	list_t l;
 	PGconn *conn;
 	thread_context_t *ctx;
 	db_query_param_t *param;
@@ -48,6 +42,12 @@ typedef struct {
 	uint_fast32_t flags;
 	h2o_timeout_entry_t h2o_timeout_entry;
 } db_conn_t;
+
+typedef struct {
+	list_t l;
+	const char *name;
+	const char *query;
+} prepared_statement_t;
 
 static int do_database_write(db_conn_t *db_conn);
 static int do_execute_query(db_conn_t *db_conn, bool direct_notification);
