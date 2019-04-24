@@ -10,38 +10,38 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javax.sql.DataSource;
 
-import com.strategicgains.restexpress.Request;
-import com.strategicgains.restexpress.Response;
+import org.restexpress.Request;
+import org.restexpress.Response;
 
-public class DbMysqlController {
+public class MysqlController {
 	// Database details.
 	private static final String DB_QUERY = "SELECT * FROM World WHERE id = ?";
 	private static final int DB_ROWS = 10000;
 
 	private DataSource mysqlDataSource;
 
-	public DbMysqlController(DataSource dataSource) {
+	public MysqlController(DataSource dataSource) {
 		super();
 		this.mysqlDataSource = dataSource;
 	}
 
 	public Object read(Request request, Response response) throws SQLException {
-		final int random = 1 + ThreadLocalRandom.current().nextInt(DB_ROWS);
-
 		World world = null;
 
 		// Fetch some rows from the database.
 		try (Connection conn = mysqlDataSource.getConnection()) {
 			try (PreparedStatement statement = conn.prepareStatement(DB_QUERY,
 					ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
-				statement.setInt(1, random);
+				final Long id = (long) (ThreadLocalRandom.current().nextInt(DB_ROWS) + 1);
+				statement.setLong(1, id);
 				try (ResultSet results = statement.executeQuery()) {
-					results.next(); // Here the expectation is ONLY one
+					results.next(); // Here the expectation is ONLY only one
 									// result row
 					world = new World(results.getLong("id"), results.getInt("randomNumber"));
 				}
 			}
 		}
+		
 		return world;
 	}
 }

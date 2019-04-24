@@ -1,19 +1,19 @@
 package hello.config;
 
-import hello.controller.DbMongodbController;
-import hello.controller.DbMysqlController;
+import java.util.Properties;
+
+import org.restexpress.Format;
+import org.restexpress.util.Environment;
+
+import com.strategicgains.repoexpress.mongodb.MongoConfig;
+
 import hello.controller.JsonController;
+import hello.controller.MongodbController;
+import hello.controller.MysqlController;
 import hello.controller.PlaintextController;
 import hello.controller.QueriesMongodbController;
 import hello.controller.QueriesMysqlController;
 import hello.controller.persistence.WorldsMongodbRepository;
-
-import java.util.Properties;
-
-import com.strategicgains.repoexpress.adapter.IdentiferAdapter;
-import com.strategicgains.repoexpress.exception.InvalidObjectIdException;
-import com.strategicgains.restexpress.Format;
-import com.strategicgains.restexpress.util.Environment;
 
 public class Configuration extends Environment {
 	private static final String DEFAULT_EXECUTOR_THREAD_POOL_SIZE = "20";
@@ -27,13 +27,14 @@ public class Configuration extends Environment {
 	private String defaultFormat;
 	private String baseUrl;
 	private int executorThreadPoolSize;
+	private Database database = null;
 
-	private JsonController jsonController;
-	private DbMysqlController dbMysqlController;
-	private QueriesMysqlController queriesMysqlController;
-	private DbMongodbController dbMongodbController;
-	private QueriesMongodbController queriesMongodbController;
 	private PlaintextController plaintextController;
+	private JsonController jsonController;
+	private MysqlController mysqlController;
+	private QueriesMysqlController queriesMysqlController;
+	private MongodbController mongodbController;
+	private QueriesMongodbController queriesMongodbController;
 
 	@Override
 	protected void fillValues(Properties p) {
@@ -42,26 +43,29 @@ public class Configuration extends Environment {
 		this.baseUrl = p.getProperty(BASE_URL_PROPERTY, "http://localhost:" + String.valueOf(port));
 		this.executorThreadPoolSize = Integer.parseInt(p.getProperty(EXECUTOR_THREAD_POOL_SIZE,
 				DEFAULT_EXECUTOR_THREAD_POOL_SIZE));
-		MongoConfig mongoSettings = new MongoConfig(p);
-		MysqlConfig mysqlSettings = new MysqlConfig(p);
-		initialize(mysqlSettings, mongoSettings);
+		if (p.containsKey("mongodb.uri")) {
+			MongoConfig mongoSettings = new MongoConfig(p);
+			initialize(mongoSettings);
+			database = Database.MongoDB;
+		} else if (p.containsKey("mysql.uri")) {
+			MysqlConfig mysqlSettings = new MysqlConfig(p);
+			initialize(mysqlSettings);
+			database = Database.MySQL;
+		}
 	}
 
-	private void initialize(MysqlConfig mysqlSettings, MongoConfig mongo) {
-		jsonController = new JsonController();
-		plaintextController = new PlaintextController();
-		dbMysqlController = new DbMysqlController(mysqlSettings.getDataSource());
-		queriesMysqlController = new QueriesMysqlController(mysqlSettings.getDataSource());
+	private void initialize(MongoConfig mongo) {
 		WorldsMongodbRepository worldMongodbRepository = new WorldsMongodbRepository(
 				mongo.getClient(), mongo.getDbName());
-		worldMongodbRepository.setIdentifierAdapter(new IdentiferAdapter<Long>() {
-			@Override
-			public Long convert(String id) throws InvalidObjectIdException {
-				return Long.valueOf(id);
-			}
-		});
-		dbMongodbController = new DbMongodbController(worldMongodbRepository);
+		plaintextController = new PlaintextController();
+		jsonController = new JsonController();
+		mongodbController = new MongodbController(worldMongodbRepository);
 		queriesMongodbController = new QueriesMongodbController(worldMongodbRepository);
+	}
+	
+	private void initialize(MysqlConfig mysqlSettings) {
+		mysqlController = new MysqlController(mysqlSettings.getDataSource());
+		queriesMysqlController = new QueriesMysqlController(mysqlSettings.getDataSource());
 	}
 
 	public String getDefaultFormat() {
@@ -80,27 +84,31 @@ public class Configuration extends Environment {
 		return executorThreadPoolSize;
 	}
 
+	public Database getDatabase() {
+		return database;
+	}
+
+	public PlaintextController getPlaintextController() {
+		return plaintextController;
+	}
+	
 	public JsonController getJsonController() {
 		return jsonController;
 	}
 
-	public DbMysqlController getDbMysqlController() {
-		return dbMysqlController;
+	public MysqlController getMysqlController() {
+		return mysqlController;
 	}
 
 	public QueriesMysqlController getQueriesMysqlController() {
 		return queriesMysqlController;
 	}
 
-	public DbMongodbController getDbMongodbController() {
-		return dbMongodbController;
-	}
-	
-	public QueriesMongodbController getQueriesMongodbController() {
-		return queriesMongodbController;
+	public MongodbController getMongodbController() {
+		return mongodbController;
 	}
 
-	public PlaintextController getPlaintextController() {
-		return plaintextController;
+	public QueriesMongodbController getQueriesMongodbController() {
+		return queriesMongodbController;
 	}
 }
