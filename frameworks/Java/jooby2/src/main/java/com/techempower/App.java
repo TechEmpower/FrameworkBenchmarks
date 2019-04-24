@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import io.jooby.Context;
-import io.jooby.Env;
+import io.jooby.Environment;
 import io.jooby.Jooby;
 import io.jooby.ServerOptions;
 import io.jooby.hikari.Hikari;
@@ -46,7 +46,7 @@ public class App extends Jooby {
   }
 
   {
-    Env env = Env.defaultEnvironment(getClass().getClassLoader());
+    Environment env = getEnvironment();
 
     /** Server options (netty only): */
     setServerOptions(new ServerOptions().setSingleLoop(true));
@@ -62,12 +62,12 @@ public class App extends Jooby {
     install(new Rockerby());
 
     get("/plaintext", ctx ->
-        ctx.sendBytes(MESSAGE_BUFFER.duplicate())
+        ctx.send(MESSAGE_BUFFER.duplicate())
     );
 
     get("/json", ctx -> ctx
-        .setContentType(JSON)
-        .sendBytes(mapper.writeValueAsBytes(new Message()))
+        .setResponseType(JSON)
+        .send(ByteBuffer.wrap(mapper.writeValueAsBytes(new Message())))
     );
 
     /** Go blocking: */
@@ -88,8 +88,8 @@ public class App extends Jooby {
           }
         }
         return ctx
-            .setContentType(JSON)
-            .sendBytes(mapper.writeValueAsBytes(result));
+            .setResponseType(JSON)
+            .send(ByteBuffer.wrap(mapper.writeValueAsBytes(result)));
       });
 
       /** Multiple queries: */
@@ -109,8 +109,8 @@ public class App extends Jooby {
           }
         }
         return ctx
-            .setContentType(JSON)
-            .sendBytes(mapper.writeValueAsBytes(result));
+            .setResponseType(JSON)
+            .send(ByteBuffer.wrap(mapper.writeValueAsBytes(result)));
       });
 
       /** Updates: */
@@ -146,8 +146,8 @@ public class App extends Jooby {
             statement.executeUpdate();
           }
         }
-        ctx.setContentType(JSON);
-        return ctx.sendBytes(mapper.writeValueAsBytes(result));
+        ctx.setResponseType(JSON);
+        return ctx.send(ByteBuffer.wrap(mapper.writeValueAsBytes(result)));
       });
 
       /** Fortunes: */
@@ -172,7 +172,7 @@ public class App extends Jooby {
   }
 
   public static void main(final String[] args) {
-    runApp(EVENT_LOOP, args, App::new);
+    runApp(args, EVENT_LOOP, App::new);
   }
 
   private final int nextRandom(Random rnd) {
