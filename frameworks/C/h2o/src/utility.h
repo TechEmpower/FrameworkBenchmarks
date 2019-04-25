@@ -49,6 +49,8 @@ json_generator_t *get_json_generator(list_t **pool, size_t *gen_num);
 size_t get_maximum_cache_line_size(void);
 uint32_t get_random_number(uint32_t max_rand, unsigned int *seed);
 bool is_power_of_2(size_t x);
+// stable sort
+list_t *sort_list(list_t *head, int (*compare)(const list_t *, const list_t *));
 size_t round_up_to_power_of_2(size_t x);
 
 #endif // UTILITY_H_

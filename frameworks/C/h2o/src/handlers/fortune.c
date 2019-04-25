@@ -88,8 +88,6 @@ static void cleanup_request(void *data);
 static int compare_fortunes(const list_t *x, const list_t *y);
 static void complete_fortunes(struct st_h2o_generator_t *self, h2o_req_t *req);
 static int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req);
-static list_t *get_sorted_sublist(list_t *head);
-static list_t *merge_lists(list_t *head1, list_t *head2);
 static void on_fortune_error(db_query_param_t *param, const char *error_string);
 static result_return_t on_fortune_result(db_query_param_t *param, PGresult *result);
 static uintmax_t on_fortune_section(mustache_api_t *api,
@@ -109,7 +107,6 @@ static uintmax_t read_template(mustache_api_t *api,
                                void *userdata,
                                char *buffer,
                                uintmax_t buffer_size);
-static list_t *sort_fortunes(list_t *head);
 static void template_error(mustache_api_t *api,
                            void *userdata,
                            uintmax_t lineno,
@@ -229,52 +226,6 @@ static int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req)
 	return 0;
 }
 
-static list_t *get_sorted_sublist(list_t *head)
-{
-	list_t *tail = head;
-
-	if (head) {
-		head = head->next;
-
-		while (head && compare_fortunes(tail, head) <= 0) {
-			tail = head;
-			head = head->next;
-		}
-	}
-
-	return tail;
-}
-
-static list_t *merge_lists(list_t *head1, list_t *head2)
-{
-	list_t *ret = NULL;
-	list_t **current = &ret;
-
-	while (1) {
-		if (!head1) {
-			*current = head2;
-			break;
-		}
-		else if (!head2) {
-			*current = head1;
-			break;
-		}
-		// Checking for equality makes this algorithm a stable sort.
-		else if (compare_fortunes(head1, head2) <= 0) {
-			*current = head1;
-			current = &head1->next;
-			head1 = head1->next;
-		}
-		else {
-			*current = head2;
-			current = &head2->next;
-			head2 = head2->next;
-		}
-	}
-
-	return ret;
-}
-
 static void on_fortune_error(db_query_param_t *param, const char *error_string)
 {
 	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t, param, param);
@@ -335,7 +286,7 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 		memset(iovec_list, 0, offsetof(iovec_list_t, iov));
 		iovec_list->max_iovcnt = iovcnt;
 		fortune_ctx->iovec_list_iter = iovec_list;
-		fortune_ctx->result = sort_fortunes(fortune_ctx->result);
+		fortune_ctx->result = sort_list(fortune_ctx->result, compare_fortunes);
 
 		if (mustache_render(&api,
 		                    fortune_ctx,
@@ -461,37 +412,6 @@ static uintmax_t read_template(mustache_api_t *api,
 	const template_input_t * const template_input = userdata;
 
 	return fread(buffer, sizeof(*buffer), buffer_size, template_input->input);
-}
-
-// merge sort
-static list_t *sort_fortunes(list_t *head)
-{
-	list_t **new_head;
-
-	do {
-		new_head = &head;
-
-		for (list_t *iter = head; iter;) {
-			list_t * const tail1 = get_sorted_sublist(iter);
-			list_t * const head2 = tail1->next;
-
-			if (!head2) {
-				*new_head = iter;
-				break;
-			}
-
-			list_t * const tail2 = get_sorted_sublist(head2);
-			list_t * const head1 = iter;
-
-			iter = tail2->next;
-			tail1->next = NULL;
-			tail2->next = NULL;
-			*new_head = merge_lists(head1, head2);
-			new_head = tail1->next ? &tail2->next : &tail1->next;
-		}
-	} while (new_head != &head);
-
-	return head;
 }
 
 static void template_error(mustache_api_t *api,
