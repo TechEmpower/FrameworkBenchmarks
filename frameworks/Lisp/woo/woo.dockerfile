@@ -50,7 +50,7 @@ ADD  . .
 RUN ros build woo.ros
 
 
-FROM roswell
+FROM debian
 
 RUN apt-get update -q \
     && apt-get install --no-install-recommends -q -y \

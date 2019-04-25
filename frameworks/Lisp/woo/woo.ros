@@ -98,7 +98,7 @@ exec ros -Q -- $0 "$@"
     (sort (copy-list records-p-one) #'string-lessp :key #'second)))
 
 (defun fortunes ()
-  "FORTUNES handler using Jonathan to encode JSON, Postmodern to access PostgreSQL and Spinneret to build the HTML"
+  "FORTUNES handler using Jonathan to encode JSON, Postmodern to access PostgreSQL and CL-Markup to build the HTML"
   `(
      200
      (:content-type "text/html; charset=UTF-8" :server "Woo")
