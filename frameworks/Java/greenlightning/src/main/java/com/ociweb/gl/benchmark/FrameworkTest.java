@@ -170,10 +170,11 @@ public class FrameworkTest implements GreenApp {
     			 .setConcurrentChannelsPerDecryptUnit(concurrentWritesPerChannel)                //16K   14 bits
     	
     			 //NOTE: not sure this is optimal yet ...
+    			 //TODO: neeed to allow for multiple writes one pipe! big dif.
     			// .setConcurrentChannelsPerEncryptUnit(Math.max(1,concurrentWritesPerChannel/2))  //8K    
-    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel)
+    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel/4)//4)
     			 
-    	//		 .disableEPoll()
+    			 .disableEPoll() //provides advantage in JSON test....
  						 
     			 .setMaxQueueIn(queueLengthOfPendingRequests)
     			 .setMaxRequestSize(maxRequestSize)
