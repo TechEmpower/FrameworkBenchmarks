@@ -13,15 +13,15 @@
                 "approach": "Realistic",
                 "classification": "Micro",
                 "database": "Postgres",
-                "framework": "woo",
+                "framework": "Woo",
                 "language": "Lisp",
                 "flavor": "None",
                 "orm": "Raw",
                 "platform": "Lisp",
-                "webserver": "None",
+                "webserver": "Woo",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "woo",
+                "display_name": "Woo",
                 "notes": "",
                 "versus": ""
             }
