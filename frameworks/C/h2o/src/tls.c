@@ -29,8 +29,8 @@
 #include <openssl/ssl.h>
 
 #include "error.h"
+#include "global_data.h"
 #include "tls.h"
-#include "utility.h"
 
 #define CHECK_OPENSSL_ERROR(function, ...) \
 	do { \

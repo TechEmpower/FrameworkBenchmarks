@@ -1,0 +1,12 @@
+<Project Sdk="Peachpie.NET.Sdk/0.9.40">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Website</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile
+        Include="index.php;Benchmark/**/*.php;vendor/**/*.php;"
+        Exclude="**/phpunit/**;**/tests/**;**/*Test.php;**/*TestCase.php"/>
+  </ItemGroup>
+</Project>

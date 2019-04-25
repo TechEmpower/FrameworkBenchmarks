@@ -6,7 +6,7 @@ COPY src src
 COPY pom.xml pom.xml
 
 RUN mvn -q compile
-RUN mv src/main/webapp/WEB-INF/gemini-mysql.conf src/main/webapp/WEB-INF/GeminiHello.conf
+RUN mv src/main/webapp/WEB-INF/configuration/gemini-mysql.conf src/main/webapp/WEB-INF/configuration/Base.conf
 RUN mvn -q war:war
 
 FROM openjdk:10-jdk
