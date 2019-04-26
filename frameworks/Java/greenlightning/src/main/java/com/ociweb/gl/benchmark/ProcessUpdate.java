@@ -1,6 +1,7 @@
 package com.ociweb.gl.benchmark;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -60,6 +61,8 @@ public class ProcessUpdate {
 		
 		if (DBUpdateInFlight.hasRoomFor(queries) || service.hasRoomFor(temp)) {		
 			    
+				List<Tuple> args = new ArrayList<Tuple>(queries);
+				List<ResultObject> objs = new ArrayList<ResultObject>(queries);
 				int q = queries;
 				while (--q >= 0) {
 				
@@ -72,7 +75,8 @@ public class ProcessUpdate {
 						worldObject.setGroupSize(queries);
 						
 						worldObject.setId(randomValue());
-											 	
+						objs.add(worldObject);					
+						
 						pm.pool().preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(worldObject.getId()), r -> {
 								if (r.succeeded()) {
 																		
@@ -89,21 +93,28 @@ public class ProcessUpdate {
 							        //set the new random value in this object
 							        worldObject.setResult(randomValue());							        
 							        
+							      //  
+							      //  Use of batch updates is acceptable but not required. 
+							      //   To be clear: batches are not permissible for selecting/reading the rows,
+							      //   but batches are acceptable for writing the updates.
+							      //  
+							        
 							        //TODO: can we prep this only once and hold it?
 							        
-							        pm.pool().preparedQuery("UPDATE world SET randomnumber=$1 WHERE id=$2", 							        		
-							        			Tuple.of(worldObject.getResult(), worldObject.getId()), ar -> {							        	
-										if (ar.succeeded()) {
-								        	worldObject.setStatus(200);	
-										} else {	
-											System.out.println("unable to update");
-											if (ar.cause()!=null) {
-												ar.cause().printStackTrace();
-											}
-											
-											worldObject.setStatus(500);
-										}																			
-							        });
+							        Tuple of = Tuple.of(worldObject.getResult(), worldObject.getId());
+							        args.add(of);
+							        
+							        //only call for update when we have each of the args
+							        if (args.size()==queries) {
+							        	Collections.sort(args, (a,b) -> {
+											return Integer.compare( ((Tuple)a).getInteger(0),
+															        ((Tuple)b).getInteger(0));
+										
+										});
+							        	
+							        	execUpdate(objs,args);							        	
+							        	
+							        }							        
 							        
 								} else {	
 									System.out.println("unable to query");
@@ -134,6 +145,33 @@ public class ProcessUpdate {
 		}
 	}
 
+	
+	private void execUpdate(List<ResultObject> toUpdate, List<Tuple> args) {
+				
+		pm.pool().preparedBatch("UPDATE world SET randomnumber=$1 WHERE id=$2", 							        		
+				args, ar -> {	
+					
+			int status;		
+			if (ar.succeeded()) {
+		    	status = 200;	
+			} else {	
+				execUpdate(toUpdate, args);
+				return;
+//				System.out.println("unable to update");
+//				if (ar.cause()!=null) {
+//					ar.cause().printStackTrace();
+//				}			
+//				status = 500;
+			}
+			toUpdate.forEach(w->{
+				w.setStatus(status);
+			});
+
+
+		});
+			
+	}
+	
 	private void consumeResultObjectDBUpdate(final ResultObject t) {
 
 		//collect all the objects
