@@ -1,4 +1,4 @@
-FROM debian:stretch AS debian
+FROM debian:stretch-slim AS debian
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TERM=linux
@@ -7,17 +7,6 @@ RUN echo 'APT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/00-genera
     && echo 'APT::Get::Install-Suggests "false";' >> /etc/apt/apt.conf.d/00-general \
     && echo 'APT::Get::Assume-Yes "true";' >> /etc/apt/apt.conf.d/00-general \
     && echo 'APT::Get::force-yes "true";' >> /etc/apt/apt.conf.d/00-general
-
-RUN echo "Europe/Berlin" > /etc/timezone \
-    && dpkg-reconfigure -f noninteractive tzdata
-
-RUN apt-get update -q \
-    && apt-get install --no-install-recommends -q -y \
-         locales \
-    && rm -rf /var/lib/apt/lists/* \
-	  && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-
-ENV LANG en_US.utf8
 
 
 FROM debian AS roswell
