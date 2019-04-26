@@ -1,13 +1,10 @@
-FROM php:7.3-rc-cli
+FROM php:7.3
 
 RUN pecl install swoole > /dev/null && \
     docker-php-ext-enable swoole
 
 RUN docker-php-ext-install mysqli > /dev/null && \
     docker-php-ext-enable mysqli
-
-RUN pecl install apcu > /dev/null && \
-    docker-php-ext-enable apcu
 
 RUN apt-get update > /dev/null && \
     apt-get install -y git unzip > /dev/null
@@ -18,6 +15,8 @@ ADD ./ /php
 WORKDIR /php
 RUN chmod -R 777 /php
 
-RUN composer update --quiet --no-dev --optimize-autoloader --classmap-authoritative
+RUN composer require hamlet-framework/http-swoole:dev-master
+RUN composer require hamlet-framework/db-mysql-swoole:dev-master
+RUN composer update --no-dev
 
 CMD php /php/swoole.php

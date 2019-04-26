@@ -17,7 +17,7 @@
         <dependency>
             <groupId>org.voovan</groupId>
             <artifactId>voovan-framework</artifactId>
-            <version>4.1.6</version>
+            <version>4.1.6.2</version>
         </dependency>
     </dependencies>
     <build>

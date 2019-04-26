@@ -3,7 +3,7 @@ use std::{cmp, io};
 
 use bytes::{BufMut, BytesMut};
 
-pub const SIZE: usize = 31;
+pub const SIZE: usize = 27;
 
 #[derive(Serialize, Deserialize)]
 pub struct Message {
