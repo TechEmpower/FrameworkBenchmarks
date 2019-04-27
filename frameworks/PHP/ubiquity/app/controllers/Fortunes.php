@@ -19,7 +19,7 @@ class Fortunes extends Controller {
 		$fortunes = DAO::getAll(Fortune::class,'',false);
 		$fortunes[] = (new Fortune())->setId(0)->setMessage('Additional fortune added at request time.');
 		usort($fortunes, function($left, $right) {
-			return strcmp($left->message, $right->message);
+			return $left->message<=>$right->message;
 		});
 		$this->loadView('Fortunes/index.html',['fortunes' => $fortunes]);
 	}
