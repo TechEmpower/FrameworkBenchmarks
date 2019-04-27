@@ -1,7 +1,6 @@
 {
 	"require" : {
 		"php" : "^7.1",
-		"twig/twig" : "^2.0",
 		"phpmv/ubiquity" : "dev-master"
 	},
 	"require-dev" : {

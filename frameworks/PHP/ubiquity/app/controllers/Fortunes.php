@@ -5,12 +5,12 @@ namespace controllers;
 use Ubiquity\controllers\Controller;
 use Ubiquity\controllers\Startup;
 use Ubiquity\orm\DAO;
-use Ubiquity\views\engine\Twig;
+use Ubiquity\views\engine\micro\MicroTemplateEngine;
 use models\Fortune;
 
 class Fortunes extends Controller {
 	public function initialize(){
-		Startup::$templateEngine=new Twig(['cache' => true]);
+		Startup::$templateEngine=new MicroTemplateEngine();
 		$config=Startup::getConfig();
 		\Ubiquity\orm\DAO::startDatabase($config);
 	}
@@ -21,7 +21,7 @@ class Fortunes extends Controller {
 		usort($fortunes, function($left, $right) {
 			return $left->message<=>$right->message;
 		});
-		$this->loadView('Fortunes/index.html',['fortunes' => $fortunes]);
+		$this->loadView('Fortunes/index.php',['fortunes' => $fortunes]);
 	}
 }
 
