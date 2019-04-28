@@ -17,15 +17,15 @@ exec ros -Q -- $0 "$@"
 
 ;; Woo - https://github.com/fukamachi/woo
 ;; Clack - https://github.com/fukamachi/clack
-;; Alexandria - https://github.com/keithj/alexandria
-;; Optima - https://github.com/m2ym/optima
 ;; Jonathan - https://github.com/fukamachi/jonathan
 ;; CL-MARKUP - https://github.com/arielnetworks/cl-markup
 ;; Postmodern - https://github.com/marijnh/Postmodern
 ;; QURI - https://github.com/fukamachi/quri
 
-(ql:quickload '(:alexandria :cl-markup :jonathan :optima :postmodern :quri :uiop :woo) :silent t)
-(use-package :optima)
+(ql:quickload '(:cl-markup :jonathan :postmodern :quri :uiop :woo) :silent t)
+
+
+(declaim (optimize (debug 0) (safety 0) (speed 3)))
 
 
 (load "./helpers/starts-with.lisp")
@@ -98,7 +98,7 @@ exec ros -Q -- $0 "$@"
     (sort (copy-list records-p-one) #'string-lessp :key #'second)))
 
 (defun fortunes ()
-  "FORTUNES handler using Jonathan to encode JSON, Postmodern to access PostgreSQL and Spinneret to build the HTML"
+  "FORTUNES handler using Jonathan to encode JSON, Postmodern to access PostgreSQL and CL-Markup to build the HTML"
   `(
      200
      (:content-type "text/html; charset=UTF-8" :server "Woo")
@@ -145,33 +145,14 @@ exec ros -Q -- $0 "$@"
    ))
 
 (defun handler (env)
-  "Woo router using Alexandria and Optima pattern matching"
-  (optima:match env
-    (
-      (guard (property :path-info path) (alexandria:starts-with-subseq "/plaintext" path))
-      (funcall 'plaintext)
-    )
-    (
-      (guard (property :path-info path) (alexandria:starts-with-subseq "/json" path))
-      (funcall 'json)
-    )
-    (
-      (guard (property :path-info path) (alexandria:starts-with-subseq "/db" path))
-      (funcall 'db)
-    )
-    (
-      (guard (property :path-info path) (alexandria:starts-with-subseq "/queries" path))
-      (funcall 'queries env)
-    )
-    (
-      (guard (property :path-info path) (alexandria:starts-with-subseq "/fortunes" path))
-      (funcall 'fortunes)
-    )
-    (
-      (guard (property :path-info path) (alexandria:starts-with-subseq "/updates" path))
-      (funcall 'updates env)
-    )
-  ))
+  "Woo router"
+  (let ((path (getf env :path-info)))
+    (cond ((starts-with path "/plaintext") (funcall 'plaintext  ))
+          ((starts-with path "/json"     ) (funcall 'json       ))
+          ((starts-with path "/db"       ) (funcall 'db         ))
+          ((starts-with path "/queries"  ) (funcall 'queries env))
+          ((starts-with path "/fortunes" ) (funcall 'fortunes   ))
+          ((starts-with path "/updates"  ) (funcall 'updates env)))))
 
 (defun main (&rest argv)
   "Create and start the server, applying argv to the env"
