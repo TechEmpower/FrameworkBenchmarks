@@ -22,10 +22,12 @@
   (+ 1 (random 10000)))
 
 (define pgc
-  (postgresql-connect #:database "hello_world"
-                      #:user "benchmarkdbuser"
-                      #:password "benchmarkdbpass"
-                      #:server "tfb-database"))
+  (virtual-connection
+    (λ ()
+      (postgresql-connect #:database "hello_world"
+                          #:user "benchmarkdbuser"
+                          #:password "benchmarkdbpass"
+                          #:server "tfb-database"))))
 
 (define (get-a-random-record id)
   (hash 'id id 'randomNumber (query-value pgc "select randomnumber from world where id = $1" id)))
