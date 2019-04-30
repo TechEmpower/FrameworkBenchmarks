@@ -12,8 +12,8 @@
 (define (plaintext req)
   (response
     200 #"OK" (current-seconds) #"text/plain" empty
-    (λ (op)
-      (write-bytes #"Hello, World!" op))))
+    (λ (out)
+      (write-bytes #"Hello, World!" out))))
 
 (define (json req)
   (response/json (hash 'message "Hello, World!")))
