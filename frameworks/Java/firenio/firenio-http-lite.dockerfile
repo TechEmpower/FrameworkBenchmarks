@@ -20,6 +20,6 @@ CMD java                       \
     -Dread=false               \
     -Depoll=true               \
     -Dnodelay=true             \
-    -Dcachedurl=false          \
+    -Dcachedurl=true           \
     -DunsafeBuf=true           \
     -jar /firenio/target/firenio-example-0.1-jar-with-dependencies.jar
