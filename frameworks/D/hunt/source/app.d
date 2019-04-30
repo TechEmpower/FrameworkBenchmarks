@@ -40,10 +40,12 @@ void main(string[] args) {
 		dbConnection = new Database(options);
 	}
 	
-	HttpServer httpServer = new HttpServer("0.0.0.0", port, totalCPUs);
-	httpServer.onProcessorCreate(delegate HttpProcessor (TcpStream client) {
+	HttpProcessor onProcessorCreate(TcpStream client) {
 		return new DemoProcessor(client);
-	});
+	}
+
+	HttpServer httpServer = new HttpServer("0.0.0.0", port, totalCPUs);
+	httpServer.processorCreater = &onProcessorCreate;
 
 	writefln("listening on http://%s", httpServer.bindingAddress.toString());
 	httpServer.start();
