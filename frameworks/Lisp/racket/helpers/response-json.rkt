@@ -4,23 +4,10 @@
          racket/list
          web-server/http)
 
-(define APPLICATION/JSON-MIME-TYPE #"application/json; charset=utf-8")
-
-(define (response/json
-         output
-         #:code [code 200]
-         #:message [message #"Okay"]
-         #:seconds [seconds (current-seconds)]
-         #:mime-type [mime-type APPLICATION/JSON-MIME-TYPE]
-         #:cookies [cooks empty]
-         #:headers [hdrs empty]
-         #:preamble [preamble #""])
+(define (response/json output)
   (response
-    code message seconds mime-type
-    ; rfc2109 also recommends some cache-control stuff here for cookies
-    (append hdrs (map cookie->header cooks))
+    200 #"Okay" (current-seconds) #"application/json; charset=utf-8" empty
     (λ (out)
-      (write-bytes preamble out)
       (write-bytes (jsexpr->bytes output) out))))
 
 (provide (all-defined-out))

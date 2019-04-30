@@ -7,12 +7,13 @@
          web-server/dispatch
          web-server/http
          web-server/servlet-env
-         "./helpers/response-json.rkt"
-         "./helpers/response-plain.rkt")
+         "./helpers/response-json.rkt")
 
 (define (plaintext req)
-  (response/plain
-    "Hello, World!"))
+  (response
+    200 #"OK" (current-seconds) #"text/plain" empty
+    (λ (op)
+      (write-bytes #"Hello, World!" op))))
 
 (define (json req)
   (response/json (hash 'message "Hello, World!")))
