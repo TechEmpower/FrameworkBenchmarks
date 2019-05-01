@@ -22,7 +22,7 @@ exec ros -Q -- $0 "$@"
 ;; Postmodern - https://github.com/marijnh/Postmodern
 ;; QURI - https://github.com/fukamachi/quri
 
-(push #p"./libraries/ninglex/" asdf:*central-registry*)
+(push "./libraries/ninglex/" asdf:*central-registry*)
 (ql:quickload '(:cl-markup :jonathan :ninglex :postmodern :quri :uiop :woo) :silent t)
 (use-package :ninglex)
 
