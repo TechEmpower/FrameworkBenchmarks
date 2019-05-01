@@ -30,7 +30,7 @@
                           #:server "tfb-database"))))
 
 (define (get-a-random-record id)
-  (hash 'id id 'randomNumber (query-value pgc "select randomnumber from world where id = $1" id)))
+  (hash 'id id 'randomNumber (query-maybe-value pgc "select randomnumber from world where id = $1" id)))
 
 (define (db req)
   (response/json (get-a-random-record (get-a-random-number))))
