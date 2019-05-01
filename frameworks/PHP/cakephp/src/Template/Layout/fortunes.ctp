@@ -7,7 +7,14 @@
 		<th>id</th>
 		<th>message</th>
 	</tr>
-	<?= $this->fetch('content') ?>
+	<?php
+	foreach ($fortunes as $fortune) {
+		?>
+        <tr>
+            <td><?php echo $fortune->id; ?></td>
+            <td><?php echo h($fortune->message); ?></td>
+        </tr>
+	<?php } ?>
 </table>
 </body>
 </html>
