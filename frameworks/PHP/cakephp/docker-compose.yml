@@ -1,0 +1,39 @@
+version: '3.3'
+services:
+   
+  cakeapp:
+    build:
+      context: .
+      dockerfile: cakephp.dockerfile
+    container_name: cakeapp
+    tty: true
+    volumes:
+      - .:/cakephp
+    expose:
+      - 8080
+    ports:
+      - 10950:8080
+    networks:
+      - cake-network
+    links:
+      - cakedb
+  cakedb:
+    image: techempower/mysql:latest
+    container_name: cakedb
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+    expose:
+      # Opens port 3306 on the container
+      - 3306
+      # Where our data will be persisted
+    volumes:
+      - cakedb:/var/lib/mysql
+    networks:
+      - cake-network
+
+volumes:
+  cakedb:
+
+networks:
+    cake-network:
+        driver: bridge

@@ -1,0 +1,240 @@
+@font-face {
+    font-family: 'cakefont';
+    src: url('../font/cakedingbats-webfont.eot');
+    src: url('../font/cakedingbats-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../font/cakedingbats-webfont.woff2') format('woff2'),
+    url('../font/cakedingbats-webfont.woff') format('woff'),
+    url('../font/cakedingbats-webfont.ttf') format('truetype'),
+    url('../font/cakedingbats-webfont.svg#cake_dingbatsregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.home {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    line-height: 27px;
+    color: #404041;
+}
+
+a {
+    color: #0071BC;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+a:hover, a:active {
+    color: #d33d44;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+ul, ol, dl, p {
+    font-size: 0.85rem;
+}
+
+p {
+    line-height: 2;
+}
+
+header {
+    height: auto;
+    line-height: 1em;
+    padding: 0;
+    box-shadow: none;
+}
+
+header.row {
+    margin-bottom: 30px;
+}
+
+header .header-image {
+    text-align: center;
+    padding: 64px 0;
+}
+
+header .header-title {
+    padding: 0;
+    display: block;
+    background: #404041;
+    text-align: center;
+}
+
+header .header-title h1 {
+    font-family: 'Raleway', sans-serif;
+    margin: 0;
+    font-style: italic;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 18px 30px;
+    color: #DEDED5;
+}
+
+header h1 {
+    color: #fff;
+}
+
+h3, h4 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 27px;
+    line-height: 30px;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.more {
+    color: #ffffff;
+    background-color: #d33d44;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+.row {
+    max-width: 1000px;
+}
+
+.alert {
+    background-color: #fff9e1;
+    font-size: 12px;
+    text-align: center;
+    display: block;
+    padding: 12px;
+    border-bottom: 2px solid #ffcf06;
+}
+
+.alert {
+    background-color: #fff9e1;
+    font-size: 12px;
+    display: block;
+    padding: 12px;
+    border-bottom: 2px solid #ffcf06;
+    margin-bottom: 30px;
+    color: #404041;
+}
+
+.alert p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.alert p:before {
+    color: #ffcf06;
+    content: "\0055";
+    font-family: 'cakefont', sans-serif;
+    font-size: 21px;
+    margin-left: -0.8em;
+    width: 2.3em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: 0 10px 0 15px;
+    vertical-align: -2px;
+}
+
+.alert ul {
+    margin: 0;
+    font-size: 12px;
+}
+
+.alert.url-rewriting {
+    background-color: #F0F0F0;
+    border-color: #cccccc;
+    display: none;
+}
+
+.text-center {
+    text-align: center;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0 0 30px 0;
+}
+
+li {
+    padding-left: 1.8em;
+}
+
+ul li ul, ul li ul li {
+    margin: 0;
+    padding: 0;
+}
+
+.bullet:before {
+    font-family: 'cakefont', sans-serif;
+    font-size: 18px;
+    display: inline-block;
+    margin-left: -1.3em;
+    width: 1.2em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    vertical-align: -1px;
+}
+
+.success:before {
+    color: #88c671;
+    content: "\0056";
+}
+
+.problem:before {
+    color: #d33d44;
+    content: "\0057";
+}
+
+.cutlery:before {
+    color: #404041;
+    content: "\0059";
+}
+
+.book:before {
+    color: #404041;
+    content: "\0042";
+    width: 1.7em;
+}
+
+hr {
+    border-bottom: 1px solid #e7e7e7;
+    border-top: 0;
+    margin-bottom: 35px;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+
+.icon {
+    color: #404041;
+    font-style: normal;
+    font-family: 'cakefont', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.icon.support {
+    font-size: 60px;
+}
+.icon.docs {
+    font-size: 57px;
+}
+.icon.training {
+    font-size: 39px;
+}
+
+@media (min-width: 768px) {
+    .columns {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+}
+
+@media (min-width: 992px) {
+    header.row {
+        max-width: 940px;
+    }
+}
