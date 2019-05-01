@@ -94,7 +94,10 @@ env:
     - "TESTDIR=Java/wizzardo-http"
     - "TESTLANG=JavaScript"
     - "TESTLANG=Kotlin"
-    - 'TESTDIR="Lisp/ningle Lisp/ninglex Lisp/racket Lisp/woo"'
+    - "TESTDIR=Lisp/ningle"
+    - "TESTDIR=Lisp/ninglex"
+    - "TESTDIR=Lisp/racket"
+    - "TESTDIR=Lisp/woo"
     - "TESTLANG=Lua"
     - "TESTLANG=Nim"
     - "TESTLANG=Perl"
