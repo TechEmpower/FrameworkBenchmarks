@@ -20,6 +20,11 @@ public class SimpleRest implements RestMethodListener {
 	}
 	
 
+//	JSONRenderer<HTTPRequestReader> renderJSON = new JSONRenderer<HTTPRequestReader>()
+//			.startObject()
+//			.string(messageBytes, (o,t) -> t.write(FrameworkTest.payload) )
+//			.endObject();
+	
 	public boolean jsonRestRequest(HTTPRequestReader request) {
 	
 		//this check is to postpone the work if the network has become saturated
@@ -31,7 +36,7 @@ public class SimpleRest implements RestMethodListener {
 					.startObject()
 					.string(messageBytes, (o,t) -> t.write(FrameworkTest.payload) )
 					.endObject();
-					
+			
 			return responseService.publishHTTPResponse(request, 
 					                            HTTPContentTypeDefaults.JSON,
 					                            w -> renderJSON.render(w,request)
