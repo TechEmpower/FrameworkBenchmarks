@@ -31,7 +31,12 @@ RUN apt-get update -q \
     && apt-get install --no-install-recommends -q -y \
          build-essential \
          libev-dev \
+         git-core \
     && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p ${HOME}/common-lisp/ \
+    && cd ${HOME}/common-lisp/ \
+    && git clone https://github.com/defunkydrummer/ninglex.git
 
 WORKDIR /ninglex
 ADD  . .
