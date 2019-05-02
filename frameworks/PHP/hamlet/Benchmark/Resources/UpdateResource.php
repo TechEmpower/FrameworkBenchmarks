@@ -3,8 +3,6 @@
 namespace Benchmark\Resources;
 
 use Benchmark\Entities\RandomNumber;
-use function Hamlet\Cast\_class;
-use function Hamlet\Cast\_int;
 use Hamlet\Http\Entities\JsonEntity;
 use Hamlet\Http\Requests\Request;
 use Hamlet\Http\Responses\Response;
