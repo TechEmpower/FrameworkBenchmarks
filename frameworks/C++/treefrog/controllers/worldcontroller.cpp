@@ -12,8 +12,8 @@ void WorldController::index()
 
 void WorldController::plain()
 {
-    setContentType("text/plain");
-    renderText(QLatin1String("Hello, World!"));
+    setContentType(QByteArrayLiteral("text/plain"));
+    renderText(QStringLiteral("Hello, World!"));
 }
 
 void WorldController::show(const QString &pk)
