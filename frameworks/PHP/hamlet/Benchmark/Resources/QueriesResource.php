@@ -3,6 +3,7 @@
 namespace Benchmark\Resources;
 
 use Benchmark\Entities\RandomNumber;
+use function Hamlet\Cast\_int;
 use Hamlet\Database\Database;
 use Hamlet\Http\Entities\JsonEntity;
 use Hamlet\Http\Requests\Request;
@@ -12,7 +13,7 @@ use Hamlet\Http\Responses\SimpleOKResponse;
 
 class QueriesResource implements HttpResource
 {
-    private $database;
+    protected $database;
 
     public function __construct(Database $database)
     {
@@ -21,12 +22,7 @@ class QueriesResource implements HttpResource
 
     public function getResponse(Request $request): Response
     {
-        $count = $request->parameter('queries');
-        if ($count === null || $count < 1) {
-            $count = 1;
-        } else {
-            $count = min($count, 500);
-        }
+        $count = $this->getQueriesCount($request);
 
         $query = '
             SELECT id,
@@ -44,5 +40,21 @@ class QueriesResource implements HttpResource
         }
 
         return new SimpleOKResponse(new JsonEntity($payload));
+    }
+
+    protected function getQueriesCount(Request $request): int
+    {
+        if ($request->hasQueryParam('queries')) {
+            $count = $request->getQueryParam('queries', _int());
+            if ($count < 1) {
+                return 1;
+            } elseif (500 < $count) {
+                return 500;
+            } else {
+                return $count;
+            }
+        } else {
+            return 1;
+        }
     }
 }

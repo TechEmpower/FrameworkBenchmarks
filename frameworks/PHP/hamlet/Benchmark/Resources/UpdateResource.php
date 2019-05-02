@@ -6,27 +6,14 @@ use Benchmark\Entities\RandomNumber;
 use Hamlet\Database\Database;
 use Hamlet\Http\Entities\JsonEntity;
 use Hamlet\Http\Requests\Request;
-use Hamlet\Http\Resources\HttpResource;
 use Hamlet\Http\Responses\Response;
 use Hamlet\Http\Responses\SimpleOKResponse;
 
-class UpdateResource implements HttpResource
+class UpdateResource extends QueriesResource
 {
-    private $database;
-
-    public function __construct(Database $database)
-    {
-        $this->database = $database;
-    }
-
     public function getResponse(Request $request): Response
     {
-        $count = $request->parameter('queries');
-        if ($count !== null && $count > 0) {
-            $count = min($count, 500);
-        } else {
-            $count = 1;
-        }
+        $count = $this->getQueriesCount($request);
 
         $selectQuery = '
             SELECT id,
