@@ -34,7 +34,7 @@ void WorldController::queries(const QString &num)
     int d = qMin(qMax(num.toInt(), 1), 500);
 
     for (int i = 0; i < d; ++i) {
-        int id = Tf::random(9999) + 1;
+        int id = Tf::random(1, 10000);
         worlds << World::get(id).toVariantMap();
     }
     renderJson(worlds);
@@ -42,7 +42,7 @@ void WorldController::queries(const QString &num)
 
 void WorldController::random()
 {
-    int id = Tf::random(9999) + 1;
+    int id = Tf::random(1, 10000);
     World world = World::get(id);
     renderJson(world.toVariantMap());
 }
@@ -133,9 +133,9 @@ void WorldController::updates(const QString &num)
     World world;
 
     for (int i = 0; i < d; ++i) {
-        int id = Tf::random(9999) + 1;
+        int id = Tf::random(1, 10000);
         world = World::get(id);
-        world.setRandomNumber( Tf::random(9999) + 1 );
+        world.setRandomNumber( Tf::random(1, 10000) );
         world.update();
         worlds << world.toVariantMap();
     }
@@ -169,7 +169,7 @@ void WorldController::mqueries(const QString &num)
     int d = qMin(qMax(num.toInt(), 1), 500);
 
     for (int i = 0; i < d; ++i) {
-        QString id = QString::number(Tf::random(9999) + 1);
+        QString id = QString::number(Tf::random(1, 10000));
         worlds << MngWorld::get(id).toVariantMap();
     }
     renderJson(worlds);
@@ -177,8 +177,8 @@ void WorldController::mqueries(const QString &num)
 
 void WorldController::mrandom()
 {
-    int id = Tf::random(9999) + 1;
-    World world = World::get(id);
+    QString id = QString::number(Tf::random(1, 10000));
+    auto world = MngWorld::get(id);
     renderJson(world.toVariantMap());
 }
 
@@ -194,9 +194,9 @@ void WorldController::mupdates(const QString &num)
     MngWorld world;
 
     for (int i = 0; i < d; ++i) {
-        QString id = QString::number(Tf::random(9999) + 1);
+        QString id = QString::number(Tf::random(1, 10000));
         world = MngWorld::get(id);
-        world.setRandomNumber( Tf::random(9999) + 1 );
+        world.setRandomNumber( Tf::random(1, 10000) );
         world.update();
         worlds << world.toVariantMap();
     }
