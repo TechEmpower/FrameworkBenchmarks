@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.smartboot.http</groupId>
         <artifactId>smart-http-parent</artifactId>
-        <version>1.0.10.0324-beta</version>
+        <version>1.0.10.0501-beta</version>
     </parent>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,11 +22,11 @@
             <groupId>org.smartboot.http</groupId>
             <artifactId>smart-http-server</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.smartboot.socket</groupId>
-            <artifactId>aio-core</artifactId>
-            <version>1.4.1.rc-2</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.smartboot.socket</groupId>-->
+            <!--<artifactId>aio-core</artifactId>-->
+            <!--<version>1.4.1.rc-2</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
