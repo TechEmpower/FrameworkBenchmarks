@@ -39,12 +39,8 @@ void main(string[] args) {
 		options.setMaximumConnection(totalCPUs*2);
 		dbConnection = new Database(options);
 	}
-	
-	HttpServer httpServer = new HttpServer("0.0.0.0", port, totalCPUs);
-	httpServer.onProcessorCreate(delegate HttpProcessor (TcpStream client) {
-		return new DemoProcessor(client);
-	});
 
+	AbstractTcpServer httpServer = new HttpServer!(DemoProcessor)("0.0.0.0", port, totalCPUs);
 	writefln("listening on http://%s", httpServer.bindingAddress.toString());
 	httpServer.start();
 }

@@ -5,8 +5,8 @@ import hello.domain.World;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.strategicgains.restexpress.Request;
-import com.strategicgains.restexpress.Response;
+import org.restexpress.Request;
+import org.restexpress.Response;
 
 public class QueriesMongodbController {
 	// Database details.
@@ -21,21 +21,7 @@ public class QueriesMongodbController {
 
 	public Object read(Request request, Response response) {
 		// Get the count of queries to run.
-		int count = 1;
-		try {
-			count = Integer.parseInt(request.getHeader("queries"));
-
-			// Bounds check.
-			if (count > 500) {
-				count = 500;
-			}
-			if (count < 1) {
-				count = 1;
-			}
-		} catch (NumberFormatException nfexc) {
-			// do nothing
-		}
-
+		int count = determineQueryCount(request);
 		// Fetch some rows from the database.
 		final World[] worlds = new World[count];
 		final int random = 1 + ThreadLocalRandom.current().nextInt(DB_ROWS);
@@ -44,5 +30,16 @@ public class QueriesMongodbController {
 		}
 
 		return worlds;
+	}
+
+	private int determineQueryCount(Request request) {
+		String value = request.getHeader("queries");
+
+		try {
+			int parsedValue = Integer.parseInt(value);
+			return Math.min(500, Math.max(1, parsedValue));
+		} catch (NumberFormatException e) {
+			return 1;
+		}
 	}
 }

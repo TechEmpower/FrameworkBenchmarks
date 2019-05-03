@@ -34,6 +34,7 @@
 #include "database.h"
 #include "error.h"
 #include "event_loop.h"
+#include "global_data.h"
 #include "thread.h"
 #include "utility.h"
 
@@ -128,8 +129,7 @@ void initialize_thread_context(global_thread_data_t *global_thread_data,
 	ctx->config = global_thread_data->config;
 	ctx->global_data = global_thread_data->global_data;
 	ctx->global_thread_data = global_thread_data;
-	ctx->tid = syscall(SYS_gettid);
-	ctx->random_seed = ctx->tid;
+	ctx->random_seed = syscall(SYS_gettid);
 	initialize_event_loop(is_main_thread,
 	                      global_thread_data->global_data,
 	                      &global_thread_data->h2o_receiver,

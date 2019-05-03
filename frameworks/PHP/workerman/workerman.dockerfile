@@ -9,6 +9,9 @@ RUN apt-get update -yqq > /dev/null && \
 
 RUN apt-get install -yqq composer > /dev/null
 
+RUN apt-get install -y php-pear php-dev libevent-dev > /dev/null
+RUN printf "\n\n /usr/lib/x86_64-linux-gnu/\n\n\nno\n\n\n" | pecl install event > /dev/null && echo "extension=event.so" > /etc/php/7.3/cli/conf.d/event.ini
+
 COPY deploy/conf/* /etc/php/7.3/fpm/
 
 ADD ./ /workerman

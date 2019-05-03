@@ -21,7 +21,7 @@
 
 #define TLS_H_
 
-#include "utility.h"
+#include "global_data.h"
 
 void cleanup_openssl(global_data_t *global_data);
 void initialize_openssl(const config_t *config, global_data_t *global_data);

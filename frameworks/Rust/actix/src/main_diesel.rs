@@ -27,7 +27,7 @@ fn world_row(
         .from_err()
         .and_then(move |res| match res {
             Ok(row) => {
-                let mut body = BytesMut::with_capacity(31);
+                let mut body = BytesMut::with_capacity(33);
                 serde_json::to_writer(Writer(&mut body), &row).unwrap();
                 Ok(HttpResponse::Ok()
                     .header(http::header::SERVER, "Actix")
@@ -110,7 +110,7 @@ fn fortune(
 }
 
 fn main() -> std::io::Result<()> {
-    let sys = actix_rt::System::new("techempower");
+    let sys = actix_rt::System::builder().stop_on_panic(false).build();
     let db_url = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
     // Start db executor actors

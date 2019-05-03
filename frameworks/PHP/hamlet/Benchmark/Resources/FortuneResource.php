@@ -4,21 +4,12 @@ namespace Benchmark\Resources;
 
 use Benchmark\Entities\FortuneEntity;
 use Benchmark\Entities\Message;
-use Hamlet\Database\Database;
 use Hamlet\Http\Requests\Request;
-use Hamlet\Http\Resources\HttpResource;
 use Hamlet\Http\Responses\Response;
 use Hamlet\Http\Responses\SimpleOKResponse;
 
-class FortuneResource implements HttpResource
+class FortuneResource extends DbResource
 {
-    private $database;
-
-    public function __construct(Database $database)
-    {
-        $this->database = $database;
-    }
-
     public function getResponse(Request $request): Response
     {
         $query = '
