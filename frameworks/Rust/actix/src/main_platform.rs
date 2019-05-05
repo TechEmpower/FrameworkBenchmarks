@@ -47,7 +47,7 @@ impl App {
         if self.useall {
             match db {
                 Db::All => {
-                    self.next = (self.next + 1) % 5;
+                    self.next = (self.next + 1) % 4;
                     &mut self.dbs[self.next]
                 }
                 Db::Multi => {
@@ -185,7 +185,7 @@ impl NewService<ServerConfig> for AppFactory {
             "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
         let mut conns = Vec::new();
-        for _ in 0..5 {
+        for _ in 0..4 {
             conns.push(PgConnection::connect(DB_URL));
         }
         Box::new(join_all(conns).map(|dbs| App {
