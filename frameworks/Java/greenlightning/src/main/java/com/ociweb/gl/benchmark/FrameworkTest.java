@@ -66,7 +66,7 @@ public class FrameworkTest implements GreenApp {
     		 8080,    	//default port for test 
     		 c,         //pipes per track
     		 c*16,      //(router to module) pipeline of 16 used for plain text test    		 
-    		 1<<12,     //default total size of network buffer used by blocks     		 
+    		 1<<13,     //default total size of network buffer used by blocks     		 
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
     		 "hello_world",
@@ -86,7 +86,7 @@ public class FrameworkTest implements GreenApp {
     		             String dbPass) {
     	
     	
-    	this.connectionsPerTrack = 6;
+    	this.connectionsPerTrack = 1;
     	this.connectionPort = 5432;
     	this.bindPort = port;
     	this.host = host;
@@ -172,7 +172,8 @@ public class FrameworkTest implements GreenApp {
     			 //NOTE: not sure this is optimal yet ...
     			 //TODO: neeed to allow for multiple writes one pipe! big dif.
     			// .setConcurrentChannelsPerEncryptUnit(Math.max(1,concurrentWritesPerChannel/2))  //8K    
-    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel/4)//4)
+    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel/80)  ///80) ///16) // /8)//4)
+    			 //TODO: we need smaller count of connections but MORE writers.
     			 
     			 .disableEPoll() //provides advantage in JSON test....
  						 
@@ -180,7 +181,7 @@ public class FrameworkTest implements GreenApp {
     			 .setMaxRequestSize(maxRequestSize)
     	
     			 .setMinimumInputPipeMemory(minMemoryOfInputPipes)
-    			 .setMaxQueueOut(maxQueueOut)
+    			 .setMaxQueueOut(maxQueueOut*30)
     			 .setMaxResponseSize(dbCallMaxResponseSize) //big enough for large mult db response
     	         .useInsecureServer(); //turn off TLS
 

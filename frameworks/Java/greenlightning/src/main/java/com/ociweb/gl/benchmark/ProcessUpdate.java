@@ -57,7 +57,7 @@ public class ProcessUpdate {
 		long seqCode = request.getSequenceCode();
 		int temp = requestsInFlight.incrementAndGet();
 		
-		if ((pause.get()==0) && DBUpdateInFlight.hasRoomFor(queries) && service.hasRoomFor(temp) ) {		
+		if ((pause.get()<20) && DBUpdateInFlight.hasRoomFor(queries) && service.hasRoomFor(temp) ) {		
 			    
 				List<Tuple> args = new ArrayList<Tuple>(queries);
 				List<ResultObject> objs = new ArrayList<ResultObject>(queries);
@@ -152,8 +152,7 @@ public class ProcessUpdate {
 			if (ar.succeeded()) {
 		    	status = 200;
 		    	pause.decrementAndGet();
-			} else {	
-
+			} else {
 				execUpdate(toUpdate, args, 0);
 				return;
 //				System.out.println("unable to update");
