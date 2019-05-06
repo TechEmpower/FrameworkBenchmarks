@@ -24,30 +24,59 @@ enum HttpHeader textHeader = HttpHeader("Content-Type", "text/plain; charset=UTF
 enum HttpHeader htmlHeader = HttpHeader("Content-Type", "text/html; charset=UTF-8");
 enum HttpHeader jsonHeader = HttpHeader("Content-Type", "application/json; charset=UTF-8");
 
+
+enum plaintextLength = "/plaintext".length;
+enum jsonLength = "/json".length;
+enum dbLength = "/db".length;
+enum fortunesLength = "/fortunes".length;
+
 class DemoProcessor : HttpProcessor {
+    version (POSTGRESQL) HttpURI uri;
+
     this(TcpStream client) {
+        version (POSTGRESQL) uri = new HttpURI();
         super(client);
     }
 
     override void onComplete(HttpRequest req) {
-        // debug trace(req.uri);
-        HttpURI uri = new HttpURI(req.uri);
+        string path = req.uri;
+        if(path.length == plaintextLength) { // plaintext
+            respondWith("Hello, World!", 200, textHeader);
+        } else if(path.length == jsonLength) { // json
+            JSONValue js = JSONValue(["message" : JSONValue("Hello, World!")]);
+            respondWith(js.toJSON(), 200, jsonHeader);
+        } else {
 
         version (POSTGRESQL) {
-            switch (uri.getPath) {
-            case "/plaintext":
-                respondWith("Hello, World!", 200, textHeader);
-                break;
-
-            case "/json":
-                JSONValue js = JSONValue(["message" : JSONValue("Hello, World!")]);
-                respondWith(js.toJSON(), 200, jsonHeader);
-                break;
-
-            case "/db":
+            if(path.length == dbLength) {
                 respondSingleQuery();
-                break;
+            } else if(path.length == fortunesLength) {
+                respondFortunes();
+            } else {
+                handleDbUpdate(path);
+            }
 
+        } else {
+            respondWith404();
+        }
+        }    
+    }
+
+
+    private void respondWith404() {
+        version (POSTGRESQL) {
+            respondWith("The available paths are: /plaintext, /json, /db, /fortunes," ~
+             " /queries?queries=number, /updates?queries=number", 404);
+        } else {
+            respondWith("The available paths are: /plaintext, /json", 404);
+        }
+    }
+
+    version (POSTGRESQL) {
+        private void handleDbUpdate(string url) {
+            uri.parse(url);
+            
+            switch(uri.getPath()) {
             case "/queries":
                 UrlEncoded queriesMap = new UrlEncoded();
                 uri.decodeQueryTo(queriesMap);
@@ -80,9 +109,6 @@ class DemoProcessor : HttpProcessor {
                 respondMultipleQuery(number);
                 break;
 
-            case "/fortunes":
-                respondFortunes();
-                break;
 
             case "/updates":
                 UrlEncoded queriesMap = new UrlEncoded();
@@ -118,34 +144,9 @@ class DemoProcessor : HttpProcessor {
                 respondWith404();
                 break;
             }
-
-        } else {
-            switch (uri.getPath) {
-            case "/plaintext":
-                respondWith("Hello, World!", 200, textHeader);
-                break;
-
-            case "/json":
-                JSONValue js = JSONValue(["message" : JSONValue("Hello, World!")]);
-                respondWith(js.toJSON(), 200, jsonHeader);
-                break;
-
-            default:
-                respondWith404();
-                break;
-            }
         }
-    }
 
-    private void respondWith404() {
-        version (POSTGRESQL) {
-            respondWith("The available paths are: /plaintext, /json, /db, /fortunes, /queries?queries=number, /updates?queries=number", 404);
-        } else {
-            respondWith("The available paths are: /plaintext, /json", 404);
-        }
-    }
 
-    version (POSTGRESQL) {
         private void respondSingleQuery() {
             int id = uniform(1, 10000);
             string query = "SELECT randomNumber FROM world WHERE id = " ~ id.to!string;
