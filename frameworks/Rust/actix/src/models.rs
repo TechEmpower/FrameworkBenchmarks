@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 #[derive(Serialize, Deserialize)]
 pub struct Message {
     pub message: &'static str,

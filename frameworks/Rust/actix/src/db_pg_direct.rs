@@ -7,8 +7,8 @@ use futures::{stream, Future, Stream};
 use rand::{thread_rng, Rng, ThreadRng};
 use tokio_postgres::{connect, Client, NoTls, Statement};
 
-use crate::models::{Fortune, World};
-use crate::utils::Writer;
+use crate::models::World;
+use crate::utils::{Fortune, Writer};
 
 /// Postgres interface
 pub struct PgConnection {
