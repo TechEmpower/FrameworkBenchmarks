@@ -3,7 +3,6 @@
 #
 
 sudo: required
-group: deprecated-2017-Q4
 dist: trusty
 language: generic
 python:
