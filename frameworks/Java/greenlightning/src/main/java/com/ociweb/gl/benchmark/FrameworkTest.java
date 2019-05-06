@@ -172,7 +172,7 @@ public class FrameworkTest implements GreenApp {
     			 //NOTE: not sure this is optimal yet ...
     			 //TODO: neeed to allow for multiple writes one pipe! big dif.
     			// .setConcurrentChannelsPerEncryptUnit(Math.max(1,concurrentWritesPerChannel/2))  //8K    
-    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel/80)  ///80) ///16) // /8)//4)
+    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel/80)   // /8)//4)
     			 //TODO: we need smaller count of connections but MORE writers.
     			 
     			 .disableEPoll() //provides advantage in JSON test....
