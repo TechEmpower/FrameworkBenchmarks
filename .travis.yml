@@ -3,7 +3,7 @@
 #
 
 sudo: required
-dist: trusty
+dist: xenial
 language: generic
 python:
   - "2.7"
