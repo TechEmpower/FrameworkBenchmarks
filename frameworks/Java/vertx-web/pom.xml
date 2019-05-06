@@ -7,7 +7,7 @@
 
   <groupId>io.vertx</groupId>
   <artifactId>vertx-web-benchmark</artifactId>
-  <version>3.6.3</version>
+  <version>3.7.0</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -65,7 +65,7 @@
     <dependency>
       <groupId>com.github.susom</groupId>
       <artifactId>database</artifactId>
-      <version>2.5</version>
+      <version>3.0</version>
     </dependency>
 
     <dependency>
