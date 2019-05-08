@@ -110,9 +110,14 @@ void cache_destroy(cache_t *cache)
 		assert(!cache->cache_lock);
 }
 
-h2o_cache_ref_t *cache_fetch(cache_t *cache, uint64_t now, h2o_iovec_t key)
+h2o_cache_ref_t *cache_fetch(cache_t *cache,
+                             uint64_t now,
+                             h2o_iovec_t key,
+                             h2o_cache_hashcode_t keyhash)
 {
-	const h2o_cache_hashcode_t keyhash = h2o_cache_calchash(key.base, key.len);
+	if (!keyhash)
+		keyhash = h2o_cache_calchash(key.base, key.len);
+
 	const size_t idx = get_index(cache->cache_num, keyhash);
 	pthread_mutex_t * const mutex = cache->cache_lock + idx;
 
@@ -124,16 +129,25 @@ h2o_cache_ref_t *cache_fetch(cache_t *cache, uint64_t now, h2o_iovec_t key)
 	return ret;
 }
 
-void cache_release(cache_t *cache, h2o_cache_ref_t *ref)
+void cache_release(cache_t *cache, h2o_cache_ref_t *ref, h2o_cache_hashcode_t keyhash)
 {
-	const size_t idx = get_index(cache->cache_num, h2o_cache_calchash(ref->key.base, ref->key.len));
+	if (!keyhash)
+		keyhash = h2o_cache_calchash(ref->key.base, ref->key.len);
+
+	const size_t idx = get_index(cache->cache_num, keyhash);
 
 	h2o_cache_release(cache->cache[idx], ref);
 }
 
-int cache_set(uint64_t now, h2o_iovec_t key, h2o_iovec_t value, cache_t *cache)
+int cache_set(uint64_t now,
+              h2o_iovec_t key,
+              h2o_cache_hashcode_t keyhash,
+              h2o_iovec_t value,
+              cache_t *cache)
 {
-	const h2o_cache_hashcode_t keyhash = h2o_cache_calchash(key.base, key.len);
+	if (!keyhash)
+		keyhash = h2o_cache_calchash(key.base, key.len);
+
 	const size_t idx = get_index(cache->cache_num, keyhash);
 	pthread_mutex_t * const mutex = cache->cache_lock + idx;
 
