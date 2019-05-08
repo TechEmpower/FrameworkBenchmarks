@@ -94,10 +94,7 @@ env:
     - "TESTDIR=Java/wizzardo-http"
     - "TESTLANG=JavaScript"
     - "TESTLANG=Kotlin"
-    - "TESTDIR=Lisp/ningle"
-    - "TESTDIR=Lisp/ninglex"
-    - "TESTDIR=Lisp/racket"
-    - "TESTDIR=Lisp/woo"
+    - "TESTLANG=Lisp"
     - "TESTLANG=Lua"
     - "TESTLANG=Nim"
     - "TESTLANG=Perl"
@@ -107,7 +104,7 @@ env:
     - 'TESTDIR="Python/aiohttp Python/api_hour Python/blacksheep Python/bottle Python/cherrypy Python/django Python/eve Python/falcon Python/fastapi Python/flask"'
     - 'TESTDIR="Python/hug Python/japronto Python/klein Python/morepath Python/pyramid Python/quart Python/responder Python/sanic Python/spyne Python/starlette"'
     - 'TESTDIR="Python/tornado Python/turbogears Python/uvicorn Python/uwsgi Python/vibora Python/web2py Python/webware Python/weppy Python/wsgi"'
-    - 'TESTDIR="Ruby/grape Ruby/h2o_mruby Ruby/hanami Ruby/padrino Ruby/rack Ruby/rack-sequel"'
+    - 'TESTDIR="Ruby/agoo Ruby/grape Ruby/h2o_mruby Ruby/hanami Ruby/padrino Ruby/rack Ruby/rack-sequel"'
     - 'TESTDIR="Ruby/rails Ruby/roda-sequel Ruby/sinatra Ruby/sinatra-sequel"'
     - 'TESTDIR="Rust/actix Rust/gotham Rust/hyper Rust/iron Rust/saphir"'
     - 'TESTDIR="Rust/may-minihttp Rust/nickel Rust/rocket"'
@@ -115,6 +112,7 @@ env:
     - 'TESTDIR="Scala/akka-http Scala/blaze Scala/cask Scala/colossus Scala/finagle"'
     - 'TESTDIR="Scala/finatra Scala/finch Scala/http4s"'
     - 'TESTDIR="Scala/play2-scala Scala/youi"'
+    - "TESTLANG=Scheme"
     - "TESTLANG=Swift"
     - "TESTLANG=TypeScript"
     - "TESTLANG=Ur"
