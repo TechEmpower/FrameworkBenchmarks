@@ -6,12 +6,13 @@ extern crate serde_derive;
 #[macro_use]
 extern crate diesel;
 
+use std::io::Write;
+
 use actix::prelude::*;
 use actix_http::{HttpService, KeepAlive};
 use actix_server::Server;
 use actix_web::http::{header::CONTENT_TYPE, header::SERVER, HeaderValue, StatusCode};
 use actix_web::{dev::Body, web, App, Error, HttpRequest, HttpResponse};
-use askama::Template;
 use bytes::BytesMut;
 use futures::Future;
 
@@ -19,7 +20,7 @@ mod db_pg;
 mod models;
 mod utils;
 use crate::db_pg::{PgConnection, RandomWorld, RandomWorlds, TellFortune, UpdateWorld};
-use crate::utils::Writer;
+use crate::utils::{FortunesTemplate, Writer};
 
 fn world_row(
     db: web::Data<Addr<PgConnection>>,
@@ -27,11 +28,8 @@ fn world_row(
     db.send(RandomWorld)
         .from_err()
         .and_then(move |res| match res {
-            Ok(row) => {
-                let mut body = BytesMut::with_capacity(33);
-                serde_json::to_writer(Writer(&mut body), &row).unwrap();
-                let mut res =
-                    HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+            Ok(body) => {
+                let mut res = HttpResponse::with_body(StatusCode::OK, Body::Bytes(body));
                 res.headers_mut()
                     .insert(SERVER, HeaderValue::from_static("Actix"));
                 res.headers_mut()
@@ -92,24 +90,21 @@ fn updates(
     })
 }
 
-#[derive(Template)]
-#[template(path = "fortune.html")]
-struct FortuneTemplate<'a> {
-    items: &'a Vec<models::Fortune>,
-}
-
 fn fortune(
     db: web::Data<Addr<PgConnection>>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
     db.send(TellFortune)
         .from_err()
         .and_then(move |res| match res {
-            Ok(rows) => {
-                let tmpl = FortuneTemplate { items: &rows };
-                let body = tmpl.render().unwrap();
+            Ok(fortunes) => {
+                let mut body = BytesMut::with_capacity(2048);
+                let mut writer = Writer(&mut body);
+                let _ = write!(writer, "{}", FortunesTemplate { fortunes });
 
-                let mut res =
-                    HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.into()));
+                let mut res = HttpResponse::with_body(
+                    StatusCode::OK,
+                    Body::Bytes(body.freeze().into()),
+                );
                 res.headers_mut()
                     .insert(SERVER, HeaderValue::from_static("Actix"));
                 res.headers_mut().insert(

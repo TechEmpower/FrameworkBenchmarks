@@ -94,7 +94,7 @@ namespace Benchmarks
 
             if (Scenarios.Any("Update"))
             {
-                BatchUpdateString.Initalize();
+                BatchUpdateString.Initialize(appSettings.Database);
             }
 
             if (Scenarios.Any("Fortunes"))

@@ -54,10 +54,11 @@ public class Bootstrap {
         // 定义服务器接受的消息类型以及各类消息对应的处理器
         AioQuickServer<Http11Request> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), processor);
         server.setReadBufferSize(1024 * 4);
-//        server.setBossShareToWorkerThreadNum(0);
-//        server.setBossThreadNum(Runtime.getRuntime().availableProcessors());
-//        server.setWorkerThreadNum(Runtime.getRuntime().availableProcessors());
-//        server.setWorkerThreadNum(4);
+        int cpuNum = Runtime.getRuntime().availableProcessors();
+        int shareNum = Runtime.getRuntime().availableProcessors() * 3 / 4;
+        server.setBossThreadNum(cpuNum);
+        server.setBossShareToWorkerThreadNum(shareNum);
+        server.setWorkerThreadNum(cpuNum - shareNum);
         try {
             server.start();
         } catch (IOException e) {

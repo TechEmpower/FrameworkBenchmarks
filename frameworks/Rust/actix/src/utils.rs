@@ -3,6 +3,13 @@ use std::{cmp, io};
 
 use bytes::{BufMut, BytesMut};
 
+#[allow(non_snake_case)]
+#[derive(Serialize, Debug)]
+pub struct Fortune {
+    pub id: i32,
+    pub message: String,
+}
+
 pub const SIZE: usize = 27;
 
 #[derive(Serialize, Deserialize)]
@@ -71,5 +78,27 @@ pub fn escape(writer: &mut Writer, s: String) {
     }
     if last_pos < bytes.len() - 1 {
         let _ = writer.0.put_slice(&bytes[last_pos..]);
+    }
+}
+
+markup::define! {
+    FortunesTemplate(fortunes: Vec<Fortune>) {
+        {markup::doctype()}
+        html {
+            head {
+                title { "Fortunes" }
+            }
+            body {
+                table {
+                    tr { th { "id" } th { "message" } }
+                    @for item in {fortunes} {
+                        tr {
+                            td { {item.id} }
+                            td { {markup::raw(v_htmlescape::escape(&item.message))} }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
