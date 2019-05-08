@@ -3,13 +3,13 @@
 namespace Benchmark\Resources;
 
 use Benchmark\Entities\RandomNumber;
-use function Hamlet\Cast\_int;
 use Hamlet\Database\Database;
 use Hamlet\Http\Entities\JsonEntity;
 use Hamlet\Http\Requests\Request;
 use Hamlet\Http\Resources\HttpResource;
 use Hamlet\Http\Responses\Response;
 use Hamlet\Http\Responses\SimpleOKResponse;
+use function Hamlet\Cast\_int;
 
 class DbResource implements HttpResource
 {
