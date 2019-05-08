@@ -3,30 +3,16 @@
 namespace Benchmark\Resources;
 
 use Benchmark\Entities\RandomNumber;
-use Hamlet\Database\Database;
 use Hamlet\Http\Entities\JsonEntity;
 use Hamlet\Http\Requests\Request;
-use Hamlet\Http\Resources\HttpResource;
 use Hamlet\Http\Responses\Response;
 use Hamlet\Http\Responses\SimpleOKResponse;
 
-class QueriesResource implements HttpResource
+class QueriesResource extends DbResource
 {
-    private $database;
-
-    public function __construct(Database $database)
-    {
-        $this->database = $database;
-    }
-
     public function getResponse(Request $request): Response
     {
-        $count = $request->parameter('queries');
-        if ($count === null || $count < 1) {
-            $count = 1;
-        } else {
-            $count = min($count, 500);
-        }
+        $count = $this->getQueriesCount($request);
 
         $query = '
             SELECT id,

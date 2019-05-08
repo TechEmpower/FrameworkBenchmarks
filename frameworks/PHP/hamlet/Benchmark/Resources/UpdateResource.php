@@ -3,30 +3,18 @@
 namespace Benchmark\Resources;
 
 use Benchmark\Entities\RandomNumber;
-use Hamlet\Database\Database;
+use function Hamlet\Cast\_class;
+use function Hamlet\Cast\_int;
 use Hamlet\Http\Entities\JsonEntity;
 use Hamlet\Http\Requests\Request;
-use Hamlet\Http\Resources\HttpResource;
 use Hamlet\Http\Responses\Response;
 use Hamlet\Http\Responses\SimpleOKResponse;
 
-class UpdateResource implements HttpResource
+class UpdateResource extends DbResource
 {
-    private $database;
-
-    public function __construct(Database $database)
-    {
-        $this->database = $database;
-    }
-
     public function getResponse(Request $request): Response
     {
-        $count = $request->parameter('queries');
-        if ($count !== null && $count > 0) {
-            $count = min($count, 500);
-        } else {
-            $count = 1;
-        }
+        $count = $this->getQueriesCount($request);
 
         $selectQuery = '
             SELECT id,
@@ -50,8 +38,9 @@ class UpdateResource implements HttpResource
 
             $selectProcedure->bindInteger($id);
             /** @var RandomNumber $entry */
-            $entry = $selectProcedure->processOne()->selectAll()->cast(RandomNumber::class)->collectHead();
-
+            $entry = $selectProcedure->processOne()
+                ->selectAll()->cast(RandomNumber::class)
+                ->collectHead();
             $modifiedEntry = $entry->withNumber($randomNumber);
 
             $updateProcedure->bindInteger($modifiedEntry->number());
