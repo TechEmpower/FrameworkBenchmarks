@@ -14,7 +14,7 @@
                 "classification": "Micro",
                 "database": "Postgres",
                 "framework": "Ninglex",
-                "language": "Lisp",
+                "language": "Common Lisp",
                 "flavor": "None",
                 "orm": "Raw",
                 "platform": "Lisp",
