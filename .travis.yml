@@ -3,8 +3,7 @@
 #
 
 sudo: required
-group: deprecated-2017-Q4
-dist: trusty
+dist: xenial
 language: generic
 python:
   - "2.7"

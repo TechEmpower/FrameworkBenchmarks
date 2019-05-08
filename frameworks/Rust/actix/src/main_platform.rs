@@ -14,7 +14,7 @@ use actix_http::http::{HeaderValue, StatusCode};
 use actix_http::{Error, HttpService, KeepAlive, Request, Response};
 use actix_server::{Server, ServerConfig};
 use actix_service::{NewService, Service};
-use bytes::{BufMut, Bytes, BytesMut};
+use bytes::{Bytes, BytesMut};
 use futures::future::{join_all, ok, Either, FutureResult};
 use futures::{Async, Future, Poll};
 use serde_json::to_writer;
@@ -24,13 +24,7 @@ mod models;
 mod utils;
 
 use crate::db_pg_direct::PgConnection;
-use crate::utils::{Message, Writer, SIZE};
-
-const FORTUNES_START: &[u8] = b"<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
-const FORTUNES_ROW_START: &[u8] = b"<tr><td>";
-const FORTUNES_COLUMN: &[u8] = b"</td><td>";
-const FORTUNES_ROW_END: &[u8] = b"</td></tr>";
-const FORTUNES_END: &[u8] = b"</table></body></html>";
+use crate::utils::{FortunesTemplate, Message, Writer, SIZE};
 
 struct App {
     dbs: Vec<PgConnection>,
@@ -53,7 +47,7 @@ impl App {
         if self.useall {
             match db {
                 Db::All => {
-                    self.next = (self.next + 1) % 5;
+                    self.next = (self.next + 1) % 4;
                     &mut self.dbs[self.next]
                 }
                 Db::Multi => {
@@ -89,9 +83,8 @@ impl Service for App {
                     StatusCode::OK,
                     Body::Bytes(Bytes::from_static(b"Hello, World!")),
                 );
-                let hdrs = res.headers_mut();
-                hdrs.insert(SERVER, self.hdr_srv.clone());
-                hdrs.insert(CONTENT_TYPE, self.hdr_ct.clone());
+                res.headers_mut().insert(SERVER, self.hdr_srv.clone());
+                res.headers_mut().insert(CONTENT_TYPE, self.hdr_ct.clone());
                 Either::A(ok(res))
             }
             5 if path == "/json" => {
@@ -102,9 +95,9 @@ impl Service for App {
                 to_writer(Writer(&mut body), &message).unwrap();
                 let mut res =
                     Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
-                let hdrs = res.headers_mut();
-                hdrs.insert(SERVER, self.hdr_srv.clone());
-                hdrs.insert(CONTENT_TYPE, self.hdr_ctjson.clone());
+                res.headers_mut().insert(SERVER, self.hdr_srv.clone());
+                res.headers_mut()
+                    .insert(CONTENT_TYPE, self.hdr_ctjson.clone());
                 Either::A(ok(res))
             }
             3 if path == "/db" => {
@@ -128,20 +121,7 @@ impl Service for App {
                 Either::B(Box::new(fut.from_err().map(move |fortunes| {
                     let mut body = BytesMut::with_capacity(2048);
                     let mut writer = Writer(&mut body);
-                    let _ = writer.0.put_slice(FORTUNES_START);
-                    fortunes.into_iter().fold((), |_, row| {
-                        let _ = writer.0.put_slice(FORTUNES_ROW_START);
-                        let _ = write!(&mut writer, "{}", row.id);
-                        let _ = writer.0.put_slice(FORTUNES_COLUMN);
-                        let _ = write!(
-                            &mut writer,
-                            "{}",
-                            v_htmlescape::escape(&row.message)
-                        );
-                        let _ = writer.0.put_slice(FORTUNES_ROW_END);
-                        ()
-                    });
-                    let _ = writer.write(FORTUNES_END);
+                    let _ = write!(writer, "{}", FortunesTemplate { fortunes });
                     let mut res =
                         Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
                     let hdrs = res.headers_mut();
@@ -152,7 +132,7 @@ impl Service for App {
             }
             8 if path == "/queries" => {
                 let q = utils::get_query_param(req.uri().query().unwrap_or("")) as usize;
-                let fut = self.get_db(Db::Multi).get_worlds(q);
+                let fut = self.dbs[0].get_worlds(q);
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
 
@@ -205,7 +185,7 @@ impl NewService<ServerConfig> for AppFactory {
             "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
         let mut conns = Vec::new();
-        for _ in 0..5 {
+        for _ in 0..4 {
             conns.push(PgConnection::connect(DB_URL));
         }
         Box::new(join_all(conns).map(|dbs| App {

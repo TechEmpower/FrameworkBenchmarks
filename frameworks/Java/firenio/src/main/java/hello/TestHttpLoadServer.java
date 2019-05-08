@@ -142,7 +142,7 @@ public class TestHttpLoadServer {
         }
         context.addProtocolCodec(new HttpCodec("firenio", fcache, lite, inline, cachedUrls));
         context.setIoEventHandle(eventHandle);
-        context.bind();
+        context.bind(1024 * 8);
     }
 
     private static byte[] serializeMsg(Message obj) {
