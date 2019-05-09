@@ -14,7 +14,7 @@ The tests are separated into 4 controllers:
   * [QUERY](app/controllers/Db.php)
   * [CACHED QUERY (not implemented)]()
   * [UPDATE](app/controllers/Db.php)
-- `Fortunes` for using the Twig template engine
+- `Fortunes` for using the template engine
   * [FORTUNES](app/controllers/Fortunes.php)
 - `Plaintext` for plaintext response
   * [PLAINTEXT](app/controllers/Plaintext.php)
