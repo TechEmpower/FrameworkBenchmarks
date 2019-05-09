@@ -4,9 +4,9 @@ COPY src src
 COPY pom.xml pom.xml
 RUN mvn compile war:war -q -P mysql
 
-FROM openjdk:10-jdk
+FROM openjdk:11.0.3-jre-stretch
 WORKDIR /resin
-RUN curl -sL http://caucho.com/download/resin-4.0.56.tar.gz | tar xz --strip-components=1
+RUN curl -sL http://caucho.com/download/resin-4.0.61.tar.gz | tar xz --strip-components=1
 RUN rm -rf webapps/*
 COPY --from=maven /servlet/target/servlet.war webapps/ROOT.war
 COPY resin.xml conf/resin.xml
