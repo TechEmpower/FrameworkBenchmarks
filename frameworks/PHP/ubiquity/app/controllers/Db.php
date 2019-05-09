@@ -14,8 +14,6 @@ use Ubiquity\utils\http\UResponse;
 class Db extends Controller{
 	public function initialize(){
 		UResponse::setContentType( 'application/json' );
-		$config=Startup::getConfig();
-		\Ubiquity\orm\DAO::startDatabase($config);
 	}
 
 	public function index() {
