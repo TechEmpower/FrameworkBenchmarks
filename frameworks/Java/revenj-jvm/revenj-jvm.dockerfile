@@ -13,7 +13,7 @@ RUN apt install -yqq mono-complete mono-fastcgi-server
 RUN wget -q https://github.com/ngs-doo/revenj/releases/download/1.4.2/dsl-compiler.zip
 RUN unzip -o dsl-compiler.zip
 RUN rm dsl-compiler.zip
-RUN mvn compile war:war
+RUN mvn compile war:war -q
 
 FROM openjdk:11.0.3-jre-stretch
 WORKDIR /resin
