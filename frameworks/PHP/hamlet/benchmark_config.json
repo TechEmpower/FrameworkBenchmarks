@@ -45,7 +45,7 @@
       "database_os": "Linux",
       "display_name": "hamlet-swoole",
       "notes": "",
-      "versus": "php"
+      "versus": "swoole"
     }
   }]
 }
