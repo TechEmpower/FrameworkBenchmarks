@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>com.fizzed</groupId>
 			<artifactId>rocker-runtime</artifactId>
-			<version>0.20.0</version>
+			<version>1.2.1</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -70,7 +70,7 @@
 			<plugin>
 				<groupId>com.fizzed</groupId>
 				<artifactId>rocker-maven-plugin</artifactId>
-				<version>0.20.0</version>
+				<version>1.2.1</version>
 				<executions>
 					<execution>
 						<id>generate-rocker-templates</id>
