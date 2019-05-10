@@ -34,7 +34,7 @@
           :password "benchmarkdbpass"
           ;;OPTIONAL KEYS
           :delimiters "" ;; remove delimiters
-          :maximum-pool-size 256}))
+          :maximum-pool-size 512}))
 
 ;; Create HikariCP-pooled "raw" jdbc data source
 (defn make-hikari-data-source
@@ -46,14 +46,11 @@
                     :idle-timeout       600000
                     :max-lifetime       1800000
                     :minimum-idle       10
-                    :maximum-pool-size  256
+                    :maximum-pool-size  512
                     :pool-name          "db-pool"
-                    :adapter            "mysql"
+                    :jdbc-url           "//tfb-database:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true&useSSL=false"
                     :username           "benchmarkdbuser"
                     :password           "benchmarkdbpass"
-                    :database-name      "hello_world"
-                    :server-name        "tfb-database"
-                    :port-number        3306
                     :register-mbeans    false}))
 
 ;; Reuse a single HikariCP-pooled data source
