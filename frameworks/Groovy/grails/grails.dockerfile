@@ -1,4 +1,4 @@
-FROM openjdk:11.0.3-jre-stretch
+FROM openjdk:8-jdk
 
 WORKDIR /grails
 COPY grails-app grails-app
@@ -19,7 +19,7 @@ RUN grails -Dgrails.work.dir=${GRAILS_WORK_DIR} -non-interactive -plain-output c
 RUN grails -Dgrails.work.dir=${GRAILS_WORK_DIR} prod -non-interactive -plain-output war
 
 WORKDIR /resin
-RUN curl -sL http://caucho.com/download/resin-4.0.61.tar.gz | tar xz --strip-components=1
+RUN curl -sL http://caucho.com/download/resin-4.0.56.tar.gz | tar xz --strip-components=1
 RUN rm -rf webapps/*
 RUN cp /grails/target/hello-0.1.war webapps/ROOT.war
 COPY resin.xml conf/resin.xml
