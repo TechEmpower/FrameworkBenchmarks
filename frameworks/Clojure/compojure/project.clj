@@ -8,9 +8,9 @@
                  [korma "0.4.2"]
                  [log4j "1.2.15" :exclusions [javax.mail/mail javax.jms/jms com.sun.jdmk/jmxtools com.sun.jmx/jmxri]]
                  [mysql/mysql-connector-java "5.1.47"]
-                 [com.mchange/c3p0 "0.9.5.2"]
-                 [org.clojure/java.jdbc "0.3.7"]
-                 [hikari-cp "1.5.0"]
+                 [com.mchange/c3p0 "0.9.5.4"]
+                 [org.clojure/java.jdbc "0.7.9"]
+                 [hikari-cp "3.3.1"]
                  [hiccup "1.0.5"]]
   :repositories {"Sonatype releases" "https://oss.sonatype.org/content/repositories/releases/"}
   :plugins [[lein-ring "0.9.7"]]
