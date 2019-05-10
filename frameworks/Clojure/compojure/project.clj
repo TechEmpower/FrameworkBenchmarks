@@ -13,7 +13,9 @@
                  [hikari-cp "3.3.1"]
                  [hiccup "1.0.5"]]
   :repositories {"Sonatype releases" "https://oss.sonatype.org/content/repositories/releases/"}
-  :plugins [[lein-ring "0.9.7"]]
+  :plugins [[lein-ring "0.12.5"]
+            [org.clojure/core.unify "0.5.7"]
+            [nightlight/lein-nightlight "RELEASE"]]
   :ring {:handler hello.handler/app}
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
