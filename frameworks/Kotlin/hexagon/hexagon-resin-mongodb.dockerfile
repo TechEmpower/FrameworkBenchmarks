@@ -1,4 +1,3 @@
-
 #
 # BUILD
 #
@@ -14,7 +13,7 @@ RUN gradle --quiet --exclude-task test
 #
 # RUNTIME
 #
-FROM openjdk:11
+FROM openjdk:11.0.3-jre-stretch
 ENV DBSTORE mongodb
 ENV MONGODB_DB_HOST tfb-database
 ENV RESIN 4.0.58
