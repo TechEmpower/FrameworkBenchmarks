@@ -16,8 +16,10 @@ RUN gradle --quiet --exclude-task test
 FROM openjdk:11.0.3-jre-stretch
 ENV DBSTORE mongodb
 ENV MONGODB_DB_HOST tfb-database
-ENV RESIN 4.0.58
 
-RUN curl http://caucho.com/download/resin-$RESIN.tar.gz | tar xvz -C /opt
-COPY --from=gradle_build /hexagon/build/libs/ROOT.war /opt/resin-$RESIN/webapps
-ENTRYPOINT /opt/resin-$RESIN/bin/resin.sh console
+WORKDIR /resin
+RUN curl -sL http://caucho.com/download/resin-4.0.61.tar.gz | tar xz --strip-components=1
+RUN rm -rf webapps/*
+COPY --from=gradle_build /hexagon/build/libs/ROOT.war webapps/ROOT.war
+COPY resin.xml conf/resin.xml
+CMD ["java", "-jar", "lib/resin.jar", "console"]
