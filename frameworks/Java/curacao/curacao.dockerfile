@@ -2,7 +2,7 @@ FROM maven:3.6.1-jdk-11-slim as maven
 WORKDIR /curacao
 COPY pom.xml pom.xml
 COPY src src
-RUN mvn compile war:war
+RUN mvn compile war:war -q
 
 FROM openjdk:11.0.3-jre-stretch
 WORKDIR /resin
