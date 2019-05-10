@@ -10,7 +10,7 @@
                  [mysql/mysql-connector-java "5.1.47"]
                  [com.mchange/c3p0 "0.9.5.4"]
                  [org.clojure/java.jdbc "0.7.9"]
-                 [com.zaxxer/HikariCP "3.3.1"]
+                 [hikari-cp "2.7.1"]
                  [hiccup "1.0.5"]]
   :repositories {"Sonatype releases" "https://oss.sonatype.org/content/repositories/releases/"}
   :plugins [[lein-ring "0.12.5"]
