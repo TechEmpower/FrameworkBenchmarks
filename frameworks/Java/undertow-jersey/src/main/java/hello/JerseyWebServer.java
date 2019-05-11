@@ -48,16 +48,14 @@ public class JerseyWebServer
     config.register(org.glassfish.jersey.server.mvc.MvcFeature.class);
     config.register(
         org.glassfish.jersey.server.mvc.mustache.MustacheMvcFeature.class);
-
-    config.register(new AbstractBinder()
-    {
-      @Override
-      protected void configure()
-      {
-        bindFactory(SessionFactoryProvider.class).to(SessionFactory.class).in(
-          Singleton.class);
-      }
-    });
+	config.property("jersey.config.server.mvc.caching.mustache", "true");
+	config.register(new AbstractBinder() {
+		@Override
+		protected void configure() {
+			bindFactory(SessionFactoryFactory.class).to(SessionFactory.class).in(
+					Singleton.class);
+		}
+	});
 
     UndertowJerseyContainer container = new UndertowJerseyContainer(config);
 
