@@ -24,6 +24,7 @@
 		<maven-jar-plugin.version>3.1.0</maven-jar-plugin.version>
 		<maven-shade-plugin.version>3.1.1</maven-shade-plugin.version>
 		<main.class>com.example.helloworld.HelloWorldService</main.class>
+		<hibernate.version>5.4.2.Final</hibernate.version>
 	</properties>
 
 	<profiles>
@@ -81,6 +82,11 @@
 					<artifactId>jta</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.dropwizard</groupId>
