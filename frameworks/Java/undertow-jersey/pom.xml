@@ -100,6 +100,18 @@
       <version>${jersey.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.glassfish.jersey.inject</groupId>
+      <artifactId>jersey-hk2</artifactId>
+      <version>${jersey.version}</version>
+      <exclusions>
+          <exclusion>
+          <artifactId>javax.inject</artifactId>
+          <groupId>javax.inject</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
       <groupId>org.glassfish.jersey.ext</groupId>
       <artifactId>jersey-mvc-mustache</artifactId>
       <version>${jersey.version}</version>
