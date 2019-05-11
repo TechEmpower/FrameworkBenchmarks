@@ -30,31 +30,13 @@ struct App {
     dbs: Vec<PgConnection>,
     useall: bool,
     next: usize,
-    hdr_srv: HeaderValue,
-    hdr_ct: HeaderValue,
-    hdr_ctjson: HeaderValue,
-    hdr_cthtml: HeaderValue,
-}
-
-#[derive(PartialEq, Copy, Clone)]
-enum Db {
-    All,
-    Multi,
 }
 
 impl App {
-    fn get_db(&mut self, db: Db) -> &mut PgConnection {
+    fn get_db(&mut self) -> &mut PgConnection {
         if self.useall {
-            match db {
-                Db::All => {
-                    self.next = (self.next + 1) % 4;
-                    &mut self.dbs[self.next]
-                }
-                Db::Multi => {
-                    self.next = (self.next + 1) % 2;
-                    &mut self.dbs[self.next]
-                }
-            }
+            self.next = (self.next + 1) % 4;
+            &mut self.dbs[self.next]
         } else {
             &mut self.dbs[0]
         }
@@ -83,8 +65,10 @@ impl Service for App {
                     StatusCode::OK,
                     Body::Bytes(Bytes::from_static(b"Hello, World!")),
                 );
-                res.headers_mut().insert(SERVER, self.hdr_srv.clone());
-                res.headers_mut().insert(CONTENT_TYPE, self.hdr_ct.clone());
+                res.headers_mut()
+                    .insert(SERVER, HeaderValue::from_static("Actix"));
+                res.headers_mut()
+                    .insert(CONTENT_TYPE, HeaderValue::from_static("text/plain"));
                 Either::A(ok(res))
             }
             5 if path == "/json" => {
@@ -95,28 +79,28 @@ impl Service for App {
                 to_writer(Writer(&mut body), &message).unwrap();
                 let mut res =
                     Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
-                res.headers_mut().insert(SERVER, self.hdr_srv.clone());
                 res.headers_mut()
-                    .insert(CONTENT_TYPE, self.hdr_ctjson.clone());
+                    .insert(SERVER, HeaderValue::from_static("Actix"));
+                res.headers_mut()
+                    .insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
                 Either::A(ok(res))
             }
             3 if path == "/db" => {
                 let fut = self.dbs[0].get_world();
-                let h_srv = self.hdr_srv.clone();
-                let h_ct = self.hdr_ctjson.clone();
 
                 Either::B(Box::new(fut.map(move |body| {
                     let mut res = Response::with_body(StatusCode::OK, Body::Bytes(body));
-                    let hdrs = res.headers_mut();
-                    hdrs.insert(SERVER, h_srv);
-                    hdrs.insert(CONTENT_TYPE, h_ct);
+                    res.headers_mut()
+                        .insert(SERVER, HeaderValue::from_static("Actix"));
+                    res.headers_mut().insert(
+                        CONTENT_TYPE,
+                        HeaderValue::from_static("application/json"),
+                    );
                     res
                 })))
             }
             8 if path == "/fortune" => {
-                let fut = self.get_db(Db::All).tell_fortune();
-                let h_srv = self.hdr_srv.clone();
-                let h_ct = self.hdr_cthtml.clone();
+                let fut = self.dbs[0].tell_fortune();
 
                 Either::B(Box::new(fut.from_err().map(move |fortunes| {
                     let mut body = BytesMut::with_capacity(2048);
@@ -124,43 +108,48 @@ impl Service for App {
                     let _ = write!(writer, "{}", FortunesTemplate { fortunes });
                     let mut res =
                         Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
-                    let hdrs = res.headers_mut();
-                    hdrs.insert(SERVER, h_srv);
-                    hdrs.insert(CONTENT_TYPE, h_ct);
+                    res.headers_mut()
+                        .insert(SERVER, HeaderValue::from_static("Actix"));
+                    res.headers_mut().insert(
+                        CONTENT_TYPE,
+                        HeaderValue::from_static("text/html; charset=utf-8"),
+                    );
                     res
                 })))
             }
             8 if path == "/queries" => {
                 let q = utils::get_query_param(req.uri().query().unwrap_or("")) as usize;
                 let fut = self.dbs[0].get_worlds(q);
-                let h_srv = self.hdr_srv.clone();
-                let h_ct = self.hdr_ctjson.clone();
 
                 Either::B(Box::new(fut.from_err().map(move |worlds| {
                     let mut body = BytesMut::with_capacity(35 * worlds.len());
                     to_writer(Writer(&mut body), &worlds).unwrap();
                     let mut res =
                         Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
-                    let hdrs = res.headers_mut();
-                    hdrs.insert(SERVER, h_srv);
-                    hdrs.insert(CONTENT_TYPE, h_ct);
+                    res.headers_mut()
+                        .insert(SERVER, HeaderValue::from_static("Actix"));
+                    res.headers_mut().insert(
+                        CONTENT_TYPE,
+                        HeaderValue::from_static("application/json"),
+                    );
                     res
                 })))
             }
             8 if path == "/updates" => {
                 let q = utils::get_query_param(req.uri().query().unwrap_or("")) as usize;
                 let fut = self.dbs[0].update(q);
-                let h_srv = self.hdr_srv.clone();
-                let h_ct = self.hdr_ctjson.clone();
 
                 Either::B(Box::new(fut.from_err().map(move |worlds| {
                     let mut body = BytesMut::with_capacity(35 * worlds.len());
                     to_writer(Writer(&mut body), &worlds).unwrap();
                     let mut res =
                         Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
-                    let hdrs = res.headers_mut();
-                    hdrs.insert(SERVER, h_srv);
-                    hdrs.insert(CONTENT_TYPE, h_ct);
+                    res.headers_mut()
+                        .insert(SERVER, HeaderValue::from_static("Actix"));
+                    res.headers_mut().insert(
+                        CONTENT_TYPE,
+                        HeaderValue::from_static("application/json"),
+                    );
                     res
                 })))
             }
@@ -192,10 +181,6 @@ impl NewService<ServerConfig> for AppFactory {
             dbs,
             next: 0,
             useall: num_cpus::get() > 4,
-            hdr_srv: HeaderValue::from_static("Actix"),
-            hdr_ct: HeaderValue::from_static("text/plain"),
-            hdr_ctjson: HeaderValue::from_static("application/json"),
-            hdr_cthtml: HeaderValue::from_static("text/html; charset=utf-8"),
         }))
     }
 }

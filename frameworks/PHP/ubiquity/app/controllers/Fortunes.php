@@ -11,8 +11,6 @@ use models\Fortune;
 class Fortunes extends Controller {
 	public function initialize(){
 		Startup::$templateEngine=new MicroTemplateEngine();
-		$config=Startup::getConfig();
-		\Ubiquity\orm\DAO::startDatabase($config);
 	}
 	
 	public function index() {

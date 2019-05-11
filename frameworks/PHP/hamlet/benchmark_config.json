@@ -25,6 +25,7 @@
       "versus": "php"
     },
     "swoole": {
+      "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -44,26 +45,7 @@
       "database_os": "Linux",
       "display_name": "hamlet-swoole",
       "notes": "",
-      "versus": "php"
-    },
-    "peachpie": {
-      "plaintext_url": "/plaintext",
-      "json_url": "/json",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "mysql",
-      "framework": "hamlet",
-      "language": "PHP",
-      "flavor": "PHP7",
-      "orm": "micro",
-      "platform": ".NET",
-      "webserver": "kestrel",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "hamlet-peachpie",
-      "notes": "",
-      "versus": "php"
+      "versus": "swoole"
     }
   }]
 }

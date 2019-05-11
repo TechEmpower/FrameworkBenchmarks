@@ -12,7 +12,7 @@ enum Constants {
     static let serverName = "SwiftNIO"
 
     static let plainTextResponse: StaticString = "Hello, World!"
-    static let plainTextResponseLength = plainTextResponse.count
+    static let plainTextResponseLength = plainTextResponse.utf8CodeUnitCount
     static let plainTextResponseLengthString = String(plainTextResponseLength)
 
     static let jsonResponseLength = try! JSONEncoder().encode(JSONTestResponse()).count
@@ -34,50 +34,50 @@ private final class HTTPHandler: ChannelInboundHandler {
         let allocator = ByteBufferAllocator()
 
         plaintextBuffer = allocator.buffer(capacity: Constants.plainTextResponseLength)
-        plaintextBuffer.write(staticString: Constants.plainTextResponse)
+        plaintextBuffer.writeStaticString(Constants.plainTextResponse)
 
         jsonBuffer = allocator.buffer(capacity: Constants.jsonResponseLength)
     }
 
-    func channelRead(ctx: ChannelHandlerContext, data: NIOAny) {
+    func channelRead(context: ChannelHandlerContext, data: NIOAny) {
         let reqPart = self.unwrapInboundIn(data)
 
         switch reqPart {
         case .head(let request):
             switch request.uri {
             case "/plaintext":
-                processPlaintext(ctx: ctx)
+                processPlaintext(context: context)
             case "/json":
-                processJSON(ctx: ctx)
+                processJSON(context: context)
             default:
-                _ = ctx.close()
+                _ = context.close()
             }
         case .body:
             break
         case .end:
-            _ = ctx.write(self.wrapOutboundOut(.end(nil)))
+            _ = context.write(self.wrapOutboundOut(.end(nil)))
         }
     }
 
-    func channelReadComplete(ctx: ChannelHandlerContext) {
-        ctx.flush()
-        ctx.fireChannelReadComplete()
+    func channelReadComplete(context: ChannelHandlerContext) {
+        context.flush()
+        context.fireChannelReadComplete()
     }
 
-    private func processPlaintext(ctx: ChannelHandlerContext) {
+    private func processPlaintext(context: ChannelHandlerContext) {
         let responseHead = plainTextResponseHead(contentLength: Constants.plainTextResponseLengthString)
-        ctx.write(self.wrapOutboundOut(.head(responseHead)), promise: nil)
-        ctx.write(self.wrapOutboundOut(.body(.byteBuffer(plaintextBuffer))), promise: nil)
+        context.write(self.wrapOutboundOut(.head(responseHead)), promise: nil)
+        context.write(self.wrapOutboundOut(.body(.byteBuffer(plaintextBuffer))), promise: nil)
     }
 
-    private func processJSON(ctx: ChannelHandlerContext) {
+    private func processJSON(context: ChannelHandlerContext) {
         let responseHead = jsonResponseHead(contentLength: Constants.jsonResponseLengthString)
-        ctx.write(self.wrapOutboundOut(.head(responseHead)), promise: nil)
+        context.write(self.wrapOutboundOut(.head(responseHead)), promise: nil)
 
         let responseData = try! jsonEncoder.encode(JSONTestResponse())
         jsonBuffer.clear()
-        jsonBuffer.write(bytes: responseData)
-        ctx.write(self.wrapOutboundOut(.body(.byteBuffer(jsonBuffer))), promise: nil)
+        jsonBuffer.writeBytes(responseData)
+        context.write(self.wrapOutboundOut(.body(.byteBuffer(jsonBuffer))), promise: nil)
     }
 
     private func jsonResponseHead(contentLength: String) -> HTTPResponseHead {
@@ -108,8 +108,8 @@ let bootstrap = ServerBootstrap(group: group)
     .serverChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_TCP), TCP_NODELAY), value: 1)
 
     .childChannelInitializer { channel in
-        channel.pipeline.configureHTTPServerPipeline(withPipeliningAssistance: false).then {
-            channel.pipeline.add(handler: HTTPHandler())
+        channel.pipeline.configureHTTPServerPipeline(withPipeliningAssistance: false).flatMap {
+            channel.pipeline.addHandler(HTTPHandler())
         }
     }
 

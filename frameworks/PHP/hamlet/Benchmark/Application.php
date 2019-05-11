@@ -21,28 +21,49 @@ class Application extends AbstractApplication
     /** @var CacheItemPoolInterface|null */
     private $cache;
 
-    /** @var Database */
-    private $database;
+    /** @var HttpResource */
+    private $helloTextResource;
+
+    /** @var HttpResource */
+    private $helloJsonResource;
+
+    /** @var HttpResource */
+    private $dbResource;
+
+    /** @var HttpResource */
+    private $queriesResource;
+
+    /** @var HttpResource */
+    private $fortuneResource;
+
+    /** @var HttpResource */
+    private $updateResource;
 
     public function __construct(Database $database)
     {
-        $this->database = $database;
+        $this->helloJsonResource = new HelloJsonResource();
+        $this->helloTextResource = new HelloTextResource();
+        $this->dbResource        = new DbResource($database);
+        $this->queriesResource   = new QueriesResource($database);
+        $this->fortuneResource   = new FortuneResource($database);
+        $this->updateResource    = new UpdateResource($database);
     }
+
     public function findResource(Request $request): HttpResource
     {
         switch ($request->getPath()) {
             case '/plaintext':
-                return new HelloTextResource();
+                return $this->helloTextResource;
             case '/json':
-                return new HelloJsonResource();
+                return $this->helloJsonResource;
             case '/db':
-                return new DbResource($this->database);
+                return $this->dbResource;
             case '/queries':
-                return new QueriesResource($this->database);
+                return $this->queriesResource;
             case '/fortunes':
-                return new FortuneResource($this->database);
+                return $this->fortuneResource;
             case '/update':
-                return new UpdateResource($this->database);
+                return $this->updateResource;
         }
         return new NotFoundResource();
     }
