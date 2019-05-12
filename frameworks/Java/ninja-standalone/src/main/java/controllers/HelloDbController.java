@@ -42,8 +42,8 @@ public class HelloDbController {
         for (int i = 0; i < queries; i++) {
             worlds[i] = getRandomWorld();
         }
-
-        return Results.json().render(worlds);
+        //Cache control header is set to disable the double setting of the date header.
+        return Results.json().render(worlds).addHeader(Result.CACHE_CONTROL, "");
     }
 
     @UnitOfWork
@@ -66,7 +66,7 @@ public class HelloDbController {
             world.randomNumber = ThreadLocalRandom.current().nextInt(DB_ROWS) + 1;
             this.updateWorld(world);
         }
-      //Cache control header is set to disable the double setting of the date header.
+        //Cache control header is set to disable the double setting of the date header.
         return Results.json().render(worlds).addHeader(Result.CACHE_CONTROL, "");
     }
 
