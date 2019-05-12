@@ -9,8 +9,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>10</maven.compiler.source>
-        <maven.compiler.target>10</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
 
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
@@ -19,12 +19,12 @@
         <maven-war-plugin.version>3.2.0</maven-war-plugin.version>
 
         <h2.version>1.4.197</h2.version>
-        <hibernate.version>5.2.16.Final</hibernate.version>
+        <hibernate.version>5.4.2.Final</hibernate.version>
         <hibernate-validator.version>6.0.9.Final</hibernate-validator.version>
         <jaxb-api.version>2.3.0</jaxb-api.version>
-        <jetty.version>9.4.16.v20190411</jetty.version>
+        <jetty.version>9.4.18.v20190429</jetty.version>
         <mysql.version>5.1.47</mysql.version>
-        <ninja.version>6.4.2</ninja.version>
+        <ninja.version>6.5.0</ninja.version>
         <xml-apis.version>2.0.2</xml-apis.version>
     </properties>
 
