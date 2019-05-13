@@ -10,6 +10,10 @@
 	</parent>
 	<artifactId>woof_benchmark_spring</artifactId>
 	<packaging>jar</packaging>
+	<properties>
+		<maven.compiler.source>10</maven.compiler.source>
+		<maven.compiler.target>10</maven.compiler.target>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>net.officefloor.web</groupId>
