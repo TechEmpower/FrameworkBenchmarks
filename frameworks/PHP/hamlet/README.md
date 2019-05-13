@@ -6,7 +6,6 @@ Current submission tests the following configurations:
 
 - Hamlet
 - Hamlet + Swoole
-- Hamlet + PeachPie
 
 ## (Some) Documentation
 

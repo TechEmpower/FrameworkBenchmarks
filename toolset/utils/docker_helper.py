@@ -250,7 +250,7 @@ class DockerHelper:
     @staticmethod
     def __stop_container(container):
         try:
-            container.kill()
+            container.stop(timeout=2)
             time.sleep(2)
         except:
             # container has already been killed

@@ -5,15 +5,15 @@ use Ubiquity\controllers\Controller;
 use Ubiquity\orm\DAO;
 use models\World;
 use Ubiquity\controllers\Startup;
+use Ubiquity\utils\http\UResponse;
+
 
 /**
  * Bench controller.
  **/
 class Db extends Controller{
 	public function initialize(){
-		\header( 'Content-Type: application/json;charset=utf-8' );
-		$config=Startup::getConfig();
-		\Ubiquity\orm\DAO::startDatabase($config);
+		UResponse::setContentType( 'application/json' );
 	}
 
 	public function index() {

@@ -3,15 +3,11 @@ import akka.actor.{ActorRef, ActorSystem, Terminated}
 import akka.stream.ActorMaterializer
 import com.typesafe.config.Config
 import net.benchmark.akka.http.ApiSupervisor.ApiMessages
-import net.benchmark.akka.http.db.{
-  CustomPostgresProfile,
-  DatabaseConfiguration,
-  DatabaseRepositoryLoader,
-  DatabaseRepositoryLoaderModule
-}
+import net.benchmark.akka.http.db.{DatabaseConfiguration, DatabaseRepositoryLoader, DatabaseRepositoryLoaderModule}
 import net.benchmark.akka.http.util.SameThreadDirectExecutor
 import org.slf4j.{Logger, LoggerFactory}
 import slick.basic.DatabaseConfig
+import slick.jdbc.PostgresProfile
 
 import scala.concurrent.Future
 
@@ -25,7 +21,7 @@ object Main {
 
     val config: Config = system.settings.config
 
-    val dbConfig: DatabaseConfig[CustomPostgresProfile] = DatabaseConfiguration.getDefaultDatabaseConfiguration(config)
+    val dbConfig: DatabaseConfig[PostgresProfile] = DatabaseConfiguration.getDefaultDatabaseConfiguration(config)
     val dbLoader: DatabaseRepositoryLoader = new DatabaseRepositoryLoaderModule(dbConfig)
 
     val api: ActorRef = system.actorOf(ApiSupervisor.props(dbLoader, mat))
