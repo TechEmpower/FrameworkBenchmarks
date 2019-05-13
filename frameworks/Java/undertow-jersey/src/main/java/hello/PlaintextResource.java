@@ -2,7 +2,6 @@ package hello;
 
 import javax.inject.*;
 import javax.ws.rs.*;
-import java.util.*;
 
 @Singleton
 @Path("/plaintext")
