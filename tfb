@@ -55,8 +55,8 @@ _prepend_dir_context_if_necessary() {
 
 _prepend_path_if_relative() {
     case "$2" in
-        /* ) printf '%s\n' "$2" ;;
-         * ) printf '%s\n' "$1/$2" ;;
+    /*) printf '%s\n' "$2" ;;
+    *) printf '%s\n' "$1/$2" ;;
     esac
 }
 
@@ -98,9 +98,9 @@ SCRIPT_PATH="$(realpath "$0")"
 SCRIPT_ROOT="$(dirname "$SCRIPT_PATH")"
 
 if ! docker network inspect tfb >/dev/null 2>&1; then
-  docker network create tfb >/dev/null
+    docker network create tfb >/dev/null
 fi
 
 test -t 1 && USE_TTY="-t"
-docker build -t techempower/tfb - < ${SCRIPT_ROOT}/Dockerfile
+docker build -t techempower/tfb - <${SCRIPT_ROOT}/Dockerfile
 exec docker run -i ${USE_TTY} --rm --network tfb -v /var/run/docker.sock:/var/run/docker.sock -v ${SCRIPT_ROOT}:/FrameworkBenchmarks techempower/tfb "${@}"

@@ -27,7 +27,7 @@ if [ ! -e "~/.firstboot" ]; then
   sudo rm -f /etc/update-motd.d/51-cloudguest
   sudo rm -f /etc/update-motd.d/98-cloudguest
 
-  sudo cat <<EOF > motd
+  sudo cat <<EOF >motd
 Welcome to the FrameworkBenchmarks project!
 
   You can get lots of help:
@@ -39,7 +39,7 @@ Welcome to the FrameworkBenchmarks project!
   This Vagrant environment is already setup and ready to go.
 EOF
 
-  cat <<EOF > /home/vagrant/.bash_aliases
+  cat <<EOF >/home/vagrant/.bash_aliases
 alias tfb="/home/vagrant/FrameworkBenchmarks/tfb"
 EOF
 
