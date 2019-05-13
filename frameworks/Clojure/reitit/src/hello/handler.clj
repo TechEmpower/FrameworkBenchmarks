@@ -13,10 +13,10 @@
   (fn [req]
     (let [exchange ^HttpServerExchange (:server-exchange req)]
       (if (.isInIoThread exchange)
-        (.dispatch exchange ^Runnable ^:once (fn []
-                                               (.startBlocking exchange)
-                                               (immutant/write-response exchange (handler req))
-                                               (.endExchange exchange)))
+        (.dispatch exchange ^Runnable (^:once fn* []
+                                        (.startBlocking exchange)
+                                        (immutant/write-response exchange (handler req))
+                                        (.endExchange exchange)))
         (handler req)))))
 
 (defn random []
@@ -25,7 +25,7 @@
 (def query-one (:query-one (p/compile {:row (p/rs->compiled-record)})))
 
 (defn random-world [ds]
-  (with-open [con (p/get-connection ds)]
+  (let [con (p/get-connection ds)]
     (query-one con ["SELECT id, randomnumber from WORLD where id=?" (random)])))
 
 (defn plain-text-handler [_]
@@ -46,16 +46,14 @@
 
 (defn -main [& _]
   (let [ds (hikari/make-datasource
-             {:read-only true
-              :maximum-pool-size 48
+             {:maximum-pool-size 256
               :pool-name "db-pool"
               :adapter "postgresql"
               :username "benchmarkdbuser"
               :password "benchmarkdbpass"
               :database-name "hello_world"
               :server-name "tfb-database"
-              :port-number 5432
-              :register-mbeans false})]
+              :port-number 5432})]
     (web/run
       (ring/ring-handler
         (ring/router
@@ -67,9 +65,9 @@
          :inject-router? false})
       {:port 8080
        :host "0.0.0.0"
-       :io-threads (* 2 (.availableProcessors (Runtime/getRuntime)))
        :dispatch? false
-       :worker-threads 48
+       :io-threads (* 2 (.availableProcessors (Runtime/getRuntime)))
+       :worker-threads (* 8 (.availableProcessors (Runtime/getRuntime)))
        :server {:always-set-keep-alive false}})))
 
 (comment
