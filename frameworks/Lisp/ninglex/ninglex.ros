@@ -16,12 +16,14 @@ exec ros -Q -- $0 "$@"
 ;; the program runs.
 
 ;; Woo - https://github.com/fukamachi/woo
+;; Ninglex - https://github.com/defunkydrummer/ninglex
 ;; Jonathan - https://github.com/fukamachi/jonathan
 ;; CL-MARKUP - https://github.com/arielnetworks/cl-markup
 ;; Postmodern - https://github.com/marijnh/Postmodern
 ;; QURI - https://github.com/fukamachi/quri
 
-(ql:quickload '(:cl-markup :jonathan :postmodern :quri :uiop :woo) :silent t)
+(ql:quickload '(:cl-markup :jonathan :ninglex :postmodern :quri :uiop :woo) :silent t)
+(use-package :ninglex)
 
 
 (declaim (optimize (debug 0) (safety 0) (speed 3)))
@@ -30,31 +32,36 @@ exec ros -Q -- $0 "$@"
 (load "./helpers/starts-with.lisp")
 (load "./helpers/parse-argv.lisp")
 
+; Ninglex's original `html-response`, `json-response` and `string-response`
+; are very simplistic and unflexible regarding headers
+(load "./helpers/response.lisp")
+
 
 ;; Initialize the global random state by "some means" (e.g. current time)
 (setf *random-state* (make-random-state t))
 
 
-(defun plaintext ()
-  "Plaintext handler."
-  '(200 (:content-type "text/plain" :server "Woo") ("Hello, World!")))
+(defvar *app* (make-instance 'ningle:<app>))
 
-(defun json ()
-  "JSON handler using Jonathan to encode JSON"
-  `(200 (:content-type "application/json" :server "Woo") (,(jonathan:to-json '(:message "Hello, World!")))))
+
+(with-route ("/plaintext" params)
+  (declare (ignore params))
+  (plain-response* "Hello, World!"))
+
+(with-route ("/json" params)
+  (declare (ignore params))
+  (json-response*
+    (jonathan:to-json '(:message "Hello, World!"))))
 
 (defun get-a-random-record (id)
   (declare (integer id))
   `(:|id| ,id :|randomNumber| ,(postmodern:query (:select 'randomnumber :from 'world :where (:= 'id id)) :single!)))
 
-(defun db ()
-  "DB handler using Jonathan to encode JSON and Postmodern to access PostgreSQL"
+(with-route ("/db" params)
+  (declare (ignore params))
   (let ((id (+ 1 (random 10000))))
-    `(
-      200
-      (:content-type "application/json" :server "Woo")
-      (,(jonathan:to-json (get-a-random-record id)))
-     )))
+    (json-response*
+      (jonathan:to-json (get-a-random-record id)))))
 
 (defun ensure-integer-is-between-one-and-five-hundreds (n)
   (declare (integer n))
@@ -64,10 +71,10 @@ exec ros -Q -- $0 "$@"
       (values 500 nil)
       (values n t))))
 
-(defun extract-number-of-records-to-fetch (env)
+(defun extract-number-of-records-to-fetch (n)
   (let ((n (handler-case
-            (parse-integer (cdr (assoc "queries" (quri:url-decode-params (getf env :query-string)) :test #'equal)))
-            (error (c) (values 1 c)))))
+             (parse-integer n)
+             (error (c) (values 1 c)))))
     (ensure-integer-is-between-one-and-five-hundreds n)))
 
 (defun get-some-random-integers-between-one-and-ten-thousand (n)
@@ -80,13 +87,10 @@ exec ros -Q -- $0 "$@"
   (let ((ids (get-some-random-integers-between-one-and-ten-thousand n)))
     (mapcar #'get-a-random-record ids)))
 
-(defun queries (env)
-  "QUERIES handler using Jonathan to encode JSON and Postmodern to access PostgreSQL"
-  `(
-    200
-    (:content-type "application/json" :server "Woo")
-    (,(jonathan:to-json (get-some-random-records (extract-number-of-records-to-fetch env))))
-   ))
+(with-route ("/queries" params)
+  (with-request-params params ((n "queries"))
+    (json-response*
+      (jonathan:to-json (get-some-random-records (extract-number-of-records-to-fetch n))))))
 
 (defun get-all-fortunes ()
   (postmodern:query (:select 'id 'message :from 'fortune) :rows))
@@ -96,25 +100,22 @@ exec ros -Q -- $0 "$@"
          (records-p-one (append records '((0 "Additional fortune added at request time.")))))
     (sort (copy-list records-p-one) #'string-lessp :key #'second)))
 
-(defun fortunes ()
-  "FORTUNES handler using Jonathan to encode JSON, Postmodern to access PostgreSQL and CL-Markup to build the HTML"
-  `(
-     200
-     (:content-type "text/html; charset=UTF-8" :server "Woo")
-     (,(cl-markup:html5
-       (:head
-         (:title "Fortunes"))
-       (:body
-         (:table
-           (:tr
-             (:th "id")
-             (:th "message"))
-           (loop for fortune-row in (get-all-fortunes-plus-one)
-                 collect (cl-markup:markup
-                           (:tr
-                             (:td (format nil "~d" (first fortune-row)))
-                             (:td (second fortune-row)))))))))
-   ))
+(with-route ("/fortunes" params)
+  (declare (ignore params))
+  (html-response*
+    (cl-markup:html5
+      (:head
+        (:title "Fortunes"))
+      (:body
+        (:table
+          (:tr
+            (:th "id")
+            (:th "message"))
+          (loop for fortune-row in (get-all-fortunes-plus-one)
+                collect (cl-markup:markup
+                          (:tr
+                            (:td (format nil "~d" (first fortune-row)))
+                            (:td (second fortune-row))))))))))
 
 (defun get-and-update-some-random-records (n)
   (declare (integer n))
@@ -135,23 +136,10 @@ exec ros -Q -- $0 "$@"
     (postmodern:query (format nil "UPDATE world AS ori SET randomnumber = new.randomnumber FROM (VALUES ~{(~{~a~^, ~})~^, ~}) AS new (id, randomnumber) WHERE ori.id = new.id" record-list))
     (values updated-records)))
 
-(defun updates (env)
-  "UPDATES handler using Jonathan to encode JSON and Postmodern to access PostgreSQL"
-  `(
-    200
-    (:content-type "application/json" :server "Woo")
-    (,(jonathan:to-json (get-and-update-some-random-records (extract-number-of-records-to-fetch env))))
-   ))
-
-(defun handler (env)
-  "Router"
-  (let ((path (getf env :path-info)))
-    (cond ((starts-with path "/plaintext") (funcall 'plaintext  ))
-          ((starts-with path "/json"     ) (funcall 'json       ))
-          ((starts-with path "/db"       ) (funcall 'db         ))
-          ((starts-with path "/queries"  ) (funcall 'queries env))
-          ((starts-with path "/fortunes" ) (funcall 'fortunes   ))
-          ((starts-with path "/updates"  ) (funcall 'updates env)))))
+(with-route ("/updates" params)
+  (with-request-params params ((n "queries"))
+    (json-response*
+      (jonathan:to-json (get-and-update-some-random-records (extract-number-of-records-to-fetch n))))))
 
 (defun main (&rest argv)
   "Create and start the server, applying argv to the env"
@@ -160,7 +148,7 @@ exec ros -Q -- $0 "$@"
       (lambda (env)
         ;; preprocessing
         (let ((res (postmodern:with-connection '("hello_world" "benchmarkdbuser" "benchmarkdbpass" "tfb-database")
-                     (funcall 'handler env))))
+                     (ningle.app::call *app* env))))
           ;; postprocessing
           res))
       :debug nil

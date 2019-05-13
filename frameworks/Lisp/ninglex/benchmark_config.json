@@ -1,5 +1,5 @@
 {
-    "framework": "woo",
+    "framework": "ninglex",
     "tests": [
         {
             "default": {
@@ -13,7 +13,7 @@
                 "approach": "Stripped",
                 "classification": "Micro",
                 "database": "Postgres",
-                "framework": "Woo",
+                "framework": "Ninglex",
                 "language": "Common Lisp",
                 "flavor": "None",
                 "orm": "Raw",
@@ -21,7 +21,7 @@
                 "webserver": "Woo",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "Woo",
+                "display_name": "Ninglex",
                 "notes": "",
                 "versus": ""
             }

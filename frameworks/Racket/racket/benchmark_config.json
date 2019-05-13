@@ -1,5 +1,5 @@
 {
-    "framework": "woo",
+    "framework": "racket",
     "tests": [
         {
             "default": {
@@ -13,15 +13,15 @@
                 "approach": "Stripped",
                 "classification": "Micro",
                 "database": "Postgres",
-                "framework": "Woo",
-                "language": "Common Lisp",
+                "framework": "Racket",
+                "language": "Racket",
                 "flavor": "None",
                 "orm": "Raw",
-                "platform": "Lisp",
-                "webserver": "Woo",
+                "platform": "Racket",
+                "webserver": "Racket",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "Woo",
+                "display_name": "Racket",
                 "notes": "",
                 "versus": ""
             }
