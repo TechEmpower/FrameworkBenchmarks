@@ -55,10 +55,10 @@ public class Bootstrap {
         AioQuickServer<Http11Request> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), processor);
         server.setReadBufferSize(1024 * 4);
         int cpuNum = Runtime.getRuntime().availableProcessors();
-        int shareNum = Runtime.getRuntime().availableProcessors() * 3 / 4;
+        int shareNum = Runtime.getRuntime().availableProcessors() * 7 / 8;
         server.setBossThreadNum(cpuNum);
         server.setBossShareToWorkerThreadNum(shareNum);
-        server.setWorkerThreadNum(cpuNum - shareNum);
+        server.setWorkerThreadNum((cpuNum - shareNum) * 2);
         try {
             server.start();
         } catch (IOException e) {
