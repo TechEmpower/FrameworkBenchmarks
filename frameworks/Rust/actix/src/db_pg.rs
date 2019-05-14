@@ -152,6 +152,7 @@ impl Handler<UpdateWorld> for PgConnection {
     fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> Self::Result {
         let mut worlds = Vec::with_capacity(msg.0 as usize);
         for _ in 0..msg.0 {
+            let id = self.rng.gen_range(1, 10_001);
             let w_id: i32 = self.rng.gen_range(1, 10_001);
             worlds.push(
                 self.cl
@@ -164,15 +165,15 @@ impl Handler<UpdateWorld> for PgConnection {
                     })
                     .map(move |(row, _)| {
                         let row = row.unwrap();
-                        World {
+                        let mut world = World {
                             id: row.get(0),
                             randomnumber: row.get(1),
-                        }
+                        };
+                        world.randomnumber = id;
+                        world
                     }),
             );
         }
-
-        let mut rng = self.rng.clone();
 
         Box::new(
             stream::futures_unordered(worlds)
@@ -184,7 +185,7 @@ impl Handler<UpdateWorld> for PgConnection {
                         .push_str("UPDATE world SET randomnumber = temp.randomnumber FROM (VALUES ");
 
                     for w in &worlds {
-                        let _ = write!(&mut update, "({}, {}),", w.id, rng.gen_range(1, 10_001));
+                        let _ = write!(&mut update, "({}, {}),", w.id, w.randomnumber);
                     }
                     worlds.sort_by_key(|w| w.id);
 

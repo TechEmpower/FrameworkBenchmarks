@@ -104,6 +104,7 @@ impl PgConnection {
     ) -> impl Future<Item = Vec<World>, Error = io::Error> {
         let mut worlds = Vec::with_capacity(num);
         for _ in 0..num {
+            let id: i32 = self.rng.gen_range(1, 10_001);
             let w_id: i32 = self.rng.gen_range(1, 10_001);
             worlds.push(
                 self.cl
@@ -114,10 +115,12 @@ impl PgConnection {
                     })
                     .map(move |(row, _)| {
                         let row = row.unwrap();
-                        World {
+                        let mut world = World {
                             id: row.get(0),
                             randomnumber: row.get(1),
-                        }
+                        };
+                        world.randomnumber = id;
+                        world
                     }),
             );
         }
@@ -133,8 +136,7 @@ impl PgConnection {
                 );
 
                 for w in &worlds {
-                    let _ =
-                        write!(&mut update, "({}, {}),", w.id, rng.gen_range(1, 10_001));
+                    let _ = write!(&mut update, "({}, {}),", w.id, w.randomnumber);
                 }
                 update.pop();
                 update.push_str(
