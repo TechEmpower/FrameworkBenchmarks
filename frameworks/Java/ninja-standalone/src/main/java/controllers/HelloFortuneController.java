@@ -24,7 +24,7 @@ public class HelloFortuneController {
         List<Fortune> fortunes = fortuneDao.getAll();
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
-
-        return Results.html().render("fortunes", fortunes);
+        //Cache control header is set to disable the double setting of the date header.
+        return Results.html().render("fortunes", fortunes).addHeader(Result.CACHE_CONTROL, "");
     }
 }

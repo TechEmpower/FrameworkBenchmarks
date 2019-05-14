@@ -16,7 +16,6 @@ exec ros -Q -- $0 "$@"
 ;; the program runs.
 
 ;; Woo - https://github.com/fukamachi/woo
-;; Clack - https://github.com/fukamachi/clack
 ;; Jonathan - https://github.com/fukamachi/jonathan
 ;; CL-MARKUP - https://github.com/arielnetworks/cl-markup
 ;; Postmodern - https://github.com/marijnh/Postmodern
@@ -145,7 +144,7 @@ exec ros -Q -- $0 "$@"
    ))
 
 (defun handler (env)
-  "Woo router"
+  "Router"
   (let ((path (getf env :path-info)))
     (cond ((starts-with path "/plaintext") (funcall 'plaintext  ))
           ((starts-with path "/json"     ) (funcall 'json       ))

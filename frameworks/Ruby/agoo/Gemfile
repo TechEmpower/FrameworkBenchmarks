@@ -1,0 +1,9 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+gem 'agoo'
+gem 'connection_pool'
+gem 'oj'
+gem 'pg'
+gem 'rack'
