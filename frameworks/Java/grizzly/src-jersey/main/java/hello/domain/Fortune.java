@@ -4,14 +4,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries({
+@NamedQuery(name="Fortune.getFortunes",
+    query="SELECT f FROM Fortune f")          
+})
 public class Fortune implements Comparable<Fortune> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  public int id;
-  public String message;
+  private int id;
+  private String message;
 
   public Fortune() { }
 
