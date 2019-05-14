@@ -1,3 +1,4 @@
+use std::fmt::Write;
 use std::io;
 
 use actix_http::Error;
@@ -103,7 +104,6 @@ impl PgConnection {
     ) -> impl Future<Item = Vec<World>, Error = io::Error> {
         let mut worlds = Vec::with_capacity(num);
         for _ in 0..num {
-            let id: i32 = self.rng.gen_range(1, 10_001);
             let w_id: i32 = self.rng.gen_range(1, 10_001);
             worlds.push(
                 self.cl
@@ -116,13 +116,14 @@ impl PgConnection {
                         let row = row.unwrap();
                         World {
                             id: row.get(0),
-                            randomnumber: id,
+                            randomnumber: row.get(1),
                         }
                     }),
             );
         }
 
         let mut cl = self.cl.clone();
+        let mut rng = self.rng.clone();
         stream::futures_unordered(worlds)
             .collect()
             .and_then(move |worlds| {
@@ -132,7 +133,8 @@ impl PgConnection {
                 );
 
                 for w in &worlds {
-                    update.push_str(&format!("({}, {}),", w.id, w.randomnumber));
+                    let _ =
+                        write!(&mut update, "({}, {}),", w.id, rng.gen_range(1, 10_001));
                 }
                 update.pop();
                 update.push_str(
