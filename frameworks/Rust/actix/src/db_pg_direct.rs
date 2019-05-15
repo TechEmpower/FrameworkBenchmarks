@@ -1,3 +1,4 @@
+use std::fmt::Write;
 use std::io;
 
 use actix_http::Error;
@@ -114,15 +115,18 @@ impl PgConnection {
                     })
                     .map(move |(row, _)| {
                         let row = row.unwrap();
-                        World {
+                        let mut world = World {
                             id: row.get(0),
-                            randomnumber: id,
-                        }
+                            randomnumber: row.get(1),
+                        };
+                        world.randomnumber = id;
+                        world
                     }),
             );
         }
 
         let mut cl = self.cl.clone();
+        let mut rng = self.rng.clone();
         stream::futures_unordered(worlds)
             .collect()
             .and_then(move |worlds| {
@@ -132,7 +136,7 @@ impl PgConnection {
                 );
 
                 for w in &worlds {
-                    update.push_str(&format!("({}, {}),", w.id, w.randomnumber));
+                    let _ = write!(&mut update, "({}, {}),", w.id, w.randomnumber);
                 }
                 update.pop();
                 update.push_str(
