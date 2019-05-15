@@ -8,6 +8,9 @@
 
 package org.smartboot.http;
 
+import com.jsoniter.output.JsonStream;
+import com.jsoniter.output.JsonStreamPool;
+import com.jsoniter.spi.JsonException;
 import org.smartboot.http.server.HttpMessageProcessor;
 import org.smartboot.http.server.decode.Http11Request;
 import org.smartboot.http.server.decode.HttpRequestProtocol;
@@ -40,10 +43,19 @@ public class Bootstrap {
 
             @Override
             public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
-                byte[] b = JSON.toJson(new Message("Hello, World!"));
-                response.setContentLength(b.length);
+
                 response.setContentType("application/json");
-                response.getOutputStream().write(b);
+                JsonStream stream = JsonStreamPool.borrowJsonStream();
+                try {
+                    stream.reset(null);
+                    stream.writeVal(Message.class, new Message("Hello, World!"));
+                    response.setContentLength(stream.buffer().tail());
+                    response.getOutputStream().write(stream.buffer().data(), 0, stream.buffer().tail());
+                } catch (IOException e) {
+                    throw new JsonException(e);
+                } finally {
+                    JsonStreamPool.returnJsonStream(stream);
+                }
             }
         });
         http(processor);
