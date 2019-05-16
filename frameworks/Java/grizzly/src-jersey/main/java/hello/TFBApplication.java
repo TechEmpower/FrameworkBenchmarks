@@ -1,12 +1,12 @@
 package hello;
 
 import javax.inject.Singleton;
+import javax.persistence.EntityManagerFactory;
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.mvc.mustache.MustacheMvcFeature;
-import org.hibernate.SessionFactory;
 
 public class TFBApplication extends ResourceConfig {
 	public TFBApplication() {
@@ -17,8 +17,7 @@ public class TFBApplication extends ResourceConfig {
 		register(new AbstractBinder() {
 			@Override
 			protected void configure() {
-				bindFactory(SessionFactoryFactory.class).to(SessionFactory.class).in(
-						Singleton.class);
+				bindFactory(EMFactory.class).to(EntityManagerFactory.class).in(Singleton.class);
 			}
 		});
 	}
