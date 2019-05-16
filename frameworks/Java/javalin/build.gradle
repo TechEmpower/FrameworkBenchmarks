@@ -6,16 +6,17 @@ version '1.0-SNAPSHOT'
 
 mainClassName = 'com.lostsys.test.javalin.Bench'
 
-sourceCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile 'io.javalin:javalin:2.3.0'
-    compile "com.fasterxml.jackson.core:jackson-databind:2.9.6"
-    compile "org.slf4j:slf4j-simple:1.7.25"
+    compile 'io.javalin:javalin:2.8.0'
+    compile "com.fasterxml.jackson.core:jackson-databind:2.9.8"
+    compile "org.slf4j:slf4j-simple:1.8.0-beta4"
 }
 
 //create a single Jar with all dependencies
