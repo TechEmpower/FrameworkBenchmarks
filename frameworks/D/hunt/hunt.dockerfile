@@ -5,8 +5,9 @@ RUN apt update -y && apt install -y --no-install-recommends git && apt install -
 ADD ./ /hunt
 WORKDIR /hunt
 
-RUN git clone https://github.com/nodejs/http-parser.git && \
-    cd http-parser && \
+RUN git clone https://github.com/h2o/picohttpparser.git && \
+    cp patches/Makefile picohttpparser \
+    cd picohttpparser && \
     make package
 
 RUN dub upgrade --verbose

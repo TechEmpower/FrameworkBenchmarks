@@ -5,8 +5,9 @@ WORKDIR /hunt
 
 RUN apt update -y && apt install -y --no-install-recommends git && apt install -yqq libpq-dev libsqlite3-dev libmysqlclient-dev zlib1g-dev && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apt/*
 
-RUN git clone https://github.com/nodejs/http-parser.git && \
-    cd http-parser && \
+RUN git clone https://github.com/h2o/picohttpparser.git && \
+    cp patches/Makefile picohttpparser \
+    cd picohttpparser && \
     make package
 
 RUN dub upgrade --verbose
