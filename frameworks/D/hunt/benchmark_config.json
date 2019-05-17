@@ -20,7 +20,7 @@
       "notes": "",
       "versus": "Hunt"
   },
-    "ldc": {
+    "dmd": {
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -62,7 +62,7 @@
       "notes": "",
       "versus": "Hunt"
     },
-    "ldc-postgresql": {
+    "postgresql": {
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
