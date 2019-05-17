@@ -12,16 +12,8 @@
 		"hunt-database": "~>1.2.0",
 		"std_data_json": "~>0.18.2"
 	},
+	"versions": ["POSTGRESQL"],
 	"subConfigurations": {
 		"hunt-database": "postgresql"
-	},
-	"configurations": [
-		{
-			"name": "lite"
-		},
-		{
-			"name": "postgresql",
-			"versions": ["POSTGRESQL"]
-		}
-	]
+	}
 }

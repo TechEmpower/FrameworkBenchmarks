@@ -1,9 +1,9 @@
-FROM dlang2/dmd-ubuntu:2.085.1
-
-RUN apt-get update && apt-get install -y --no-install-recommends git && apt install -yqq libpq-dev libsqlite3-dev libmysqlclient-dev zlib1g-dev && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apt/*
+FROM dlangchina/dlang-dmd:latest
 
 ADD ./ /hunt
 WORKDIR /hunt
+
+RUN apt update -y && apt install -y --no-install-recommends git && apt install -yqq libpq-dev libsqlite3-dev libmysqlclient-dev zlib1g-dev && rm -rf /var/lib/apt/lists/* && rm -rf /var/cache/apt/*
 
 RUN git clone https://github.com/h2o/picohttpparser.git && \
     cp -rf patches/Makefile picohttpparser && \
@@ -11,6 +11,6 @@ RUN git clone https://github.com/h2o/picohttpparser.git && \
     make package
 
 RUN dub upgrade --verbose
-RUN dub build -f --arch=x86_64 --build=release --compiler=dmd -c=lite
+RUN dub build --build=release --arch=x86_64 --compiler=dmd -f
 
 CMD ["./hunt-minihttp"]
