@@ -6,7 +6,7 @@ ADD ./ /hunt
 WORKDIR /hunt
 
 RUN git clone https://github.com/h2o/picohttpparser.git && \
-    cp patches/Makefile picohttpparser \
+    cp -rf patches/Makefile picohttpparser && \
     cd picohttpparser && \
     make package
 
