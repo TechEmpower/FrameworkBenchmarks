@@ -11,6 +11,6 @@ RUN git clone https://github.com/h2o/picohttpparser.git && \
     make package
 
 RUN dub upgrade --verbose
-RUN dub build --build=release --arch=x86_64 --compiler=ldc2 -f
+RUN dub build --build=release --arch=x86_64 --compiler=ldc2
 
 CMD ["./hunt-minihttp"]
