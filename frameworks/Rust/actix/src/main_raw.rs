@@ -6,7 +6,7 @@ extern crate serde_derive;
 #[macro_use]
 extern crate diesel;
 
-use std::{io, io::Write};
+use std::io;
 
 use actix_codec::{AsyncRead, AsyncWrite, Decoder};
 use actix_http::h1;
@@ -28,7 +28,8 @@ const HTTPNFOUND: &[u8] = b"HTTP/1.1 400 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: Actix\r\n";
 const HDR_CTPLAIN: &[u8] = b"Content-Type: text/plain\r\n";
 const HDR_CTJSON: &[u8] = b"Content-Type: application/json\r\n";
-const HDR_CLEN: &[u8] = b"Content-Length: ";
+const HDR_PL_LEN: &[u8] = b"Content-Length: 13\r\n";
+const HDR_JS_LEN: &[u8] = b"Content-Length: 27\r\n";
 const BODY: &[u8] = b"Hello, World!";
 
 struct App<T> {
@@ -41,34 +42,29 @@ struct App<T> {
 impl<T: AsyncRead + AsyncWrite> App<T> {
     fn handle_request(&mut self, req: Request) {
         let path = req.path();
-        match path.len() {
-            10 if path == "/plaintext" => {
-                self.write_buf.extend_from_slice(HTTPOK);
-                self.write_buf.extend_from_slice(HDR_SERVER);
-                self.write_buf.extend_from_slice(HDR_CTPLAIN);
-                self.write_buf.extend_from_slice(HDR_CLEN);
-                let _ = write!(Writer(&mut self.write_buf), "{}\r\n", 13);
-                self.codec.config().set_date(&mut self.write_buf);
-                self.write_buf.extend_from_slice(BODY);
-            }
-            5 if path == "/json" => {
+        match path {
+            "/json" => {
                 let message = Message {
                     message: "Hello, World!",
                 };
-
-                self.write_buf.extend_from_slice(HTTPOK);
-                self.write_buf.extend_from_slice(HDR_SERVER);
-                self.write_buf.extend_from_slice(HDR_CTJSON);
-                self.write_buf.extend_from_slice(HDR_CLEN);
-                let _ = write!(Writer(&mut self.write_buf), "{}\r\n", 27);
+                self.write_buf.put_slice(HTTPOK);
+                self.write_buf.put_slice(HDR_SERVER);
+                self.write_buf.put_slice(HDR_CTJSON);
+                self.write_buf.put_slice(HDR_JS_LEN);
                 self.codec.config().set_date(&mut self.write_buf);
                 to_writer(Writer(&mut self.write_buf), &message).unwrap();
             }
+            "/plaintext" => {
+                self.write_buf.put_slice(HTTPOK);
+                self.write_buf.put_slice(HDR_SERVER);
+                self.write_buf.put_slice(HDR_CTPLAIN);
+                self.write_buf.put_slice(HDR_PL_LEN);
+                self.codec.config().set_date(&mut self.write_buf);
+                self.write_buf.put_slice(BODY);
+            }
             _ => {
-                self.write_buf.extend_from_slice(HTTPNFOUND);
-                self.write_buf.extend_from_slice(HDR_SERVER);
-                self.write_buf.extend_from_slice(HDR_CLEN);
-                let _ = write!(Writer(&mut self.write_buf), "0\r\n");
+                self.write_buf.put_slice(HTTPNFOUND);
+                self.write_buf.put_slice(HDR_SERVER);
             }
         }
     }
@@ -79,10 +75,6 @@ impl<T: AsyncRead + AsyncWrite> Future for App<T> {
     type Error = ();
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        if self.write_buf.remaining_mut() < 1024 {
-            self.write_buf.reserve(32_768);
-        }
-
         loop {
             if self.read_buf.remaining_mut() < 4096 {
                 self.read_buf.reserve(32_768);
@@ -102,6 +94,9 @@ impl<T: AsyncRead + AsyncWrite> Future for App<T> {
         }
 
         loop {
+            if self.write_buf.remaining_mut() < 1024 {
+                self.write_buf.reserve(32_768);
+            }
             match self.codec.decode(&mut self.read_buf) {
                 Ok(Some(h1::Message::Item(req))) => self.handle_request(req),
                 Ok(None) => break,
