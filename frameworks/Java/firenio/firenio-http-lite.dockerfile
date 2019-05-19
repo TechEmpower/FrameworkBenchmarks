@@ -16,6 +16,7 @@ CMD java                       \
     -Dpool=true                \
     -Ddirect=true              \
     -Dinline=true              \
+    -Draw=false                \
     -Dlevel=1                  \
     -Dread=false               \
     -Depoll=true               \

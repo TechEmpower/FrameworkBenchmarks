@@ -9,18 +9,18 @@ CMD java                       \
     -XX:+UseNUMA               \
     -XX:+UseParallelGC         \
     -XX:+AggressiveOpts        \
-    -Dlite=false               \
+    -Dlite=true                \
     -Dcore=1                   \
     -Dframe=16                 \
     -DreadBuf=512              \
     -Dpool=true                \
     -Ddirect=true              \
     -Dinline=true              \
-    -Draw=false                \
+    -Draw=true                 \
     -Dlevel=1                  \
     -Dread=false               \
     -Depoll=true               \
     -Dnodelay=true             \
-    -Dcachedurl=false          \
+    -Dcachedurl=true           \
     -DunsafeBuf=true           \
     -jar /firenio/target/firenio-example-0.1-jar-with-dependencies.jar

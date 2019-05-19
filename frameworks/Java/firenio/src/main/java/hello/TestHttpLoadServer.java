@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import com.firenio.Options;
+import com.firenio.buffer.ByteBuf;
+import com.firenio.codec.http11.HttpAttachment;
 import com.firenio.codec.http11.HttpCodec;
 import com.firenio.codec.http11.HttpConnection;
 import com.firenio.codec.http11.HttpContentType;
@@ -44,6 +46,7 @@ public class TestHttpLoadServer {
     }
 
     public static void main(String[] args) throws Exception {
+        boolean raw       = Util.getBooleanProperty("raw");
         boolean lite      = Util.getBooleanProperty("lite");
         boolean read      = Util.getBooleanProperty("read");
         boolean pool      = Util.getBooleanProperty("pool");
@@ -64,6 +67,7 @@ public class TestHttpLoadServer {
         Options.setChannelReadFirst(read);
         Options.setEnableEpoll(epoll);
         Options.setEnableUnsafeBuf(unsafeBuf);
+        DebugUtil.info("raw: {}", raw);
         DebugUtil.info("lite: {}", lite);
         DebugUtil.info("read: {}", read);
         DebugUtil.info("pool: {}", pool);
@@ -78,32 +82,79 @@ public class TestHttpLoadServer {
         DebugUtil.info("cachedurl: {}", cachedurl);
         DebugUtil.info("unsafeBuf: {}", unsafeBuf);
 
-        IoEventHandle eventHandle = new IoEventHandle() {
+        IoEventHandle eventHandle;
+        if (raw) {
+            byte[] HTTPOK  = "HTTP/1.1 200 OK".getBytes();
+            byte[] SERVER  = "\r\nServer: firenio".getBytes();
+            byte[] CTPLAIN = "\r\nContent-Type: text/plain".getBytes();
+            byte[] CTLEN   = "\r\nContent-Length: 13\r\n\r\n".getBytes();
 
-            @Override
-            public void accept(Channel ch, Frame frame) throws Exception {
-                HttpFrame f      = (HttpFrame) frame;
-                String    action = f.getRequestURL();
-                if ("/plaintext".equals(action)) {
-                    f.setContent(STATIC_PLAINTEXT);
-                    f.setContentType(HttpContentType.text_plain);
-                    f.setConnection(HttpConnection.NONE);
-                } else if ("/json".equals(action)) {
-                    f.setContent(serializeMsg(new Message("Hello, World!")));
-                    f.setContentType(HttpContentType.application_json);
-                    f.setConnection(HttpConnection.NONE);
-                } else {
-                    System.err.println("404");
-                    f.setContent("404,page not found!".getBytes());
-                    f.setContentType(HttpContentType.text_plain);
-                    f.setStatus(HttpStatus.C404);
+            eventHandle = new IoEventHandle() {
+
+                @Override
+                public void accept(Channel ch, Frame frame) throws Exception {
+                    HttpFrame f      = (HttpFrame) frame;
+                    String    action = f.getRequestURL();
+                    if ("/plaintext".equals(action)) {
+                        byte[]         DATE = HttpDateUtil.getDateLine();
+                        int            len  = HTTPOK.length + SERVER.length + CTPLAIN.length + CTLEN.length + DATE.length + 2 + STATIC_PLAINTEXT.length;
+                        HttpAttachment att  = (HttpAttachment) ch.getAttachment();
+                        ByteBuf        buf  = att.getLastWriteBuf();
+                        if (buf.isReleased() || buf.capacity() - buf.limit() < len) {
+                            buf = ch.alloc().allocate(len);
+                            att.setLastWriteBuf(buf);
+                            ch.writeAndFlush(buf);
+                        } else {
+                            buf.absPos(buf.absLimit());
+                            buf.limit(buf.capacity());
+                        }
+                        buf.putBytes(HTTPOK);
+                        buf.putBytes(SERVER);
+                        buf.putBytes(CTPLAIN);
+                        buf.putBytes(DATE);
+                        buf.putBytes(CTLEN);
+                        buf.putBytes(STATIC_PLAINTEXT);
+                        buf.flip();
+                    } else {
+                        System.err.println("404");
+                        f.setContent("404,page not found!".getBytes());
+                        f.setContentType(HttpContentType.text_plain);
+                        f.setStatus(HttpStatus.C404);
+                        f.setDate(HttpDateUtil.getDateLine());
+                        ch.writeAndFlush(f);
+                    }
+                    ch.release(f);
                 }
-                f.setDate(HttpDateUtil.getDateLine());
-                ch.writeAndFlush(f);
-                ch.release(f);
-            }
 
-        };
+            };
+        } else {
+            eventHandle = new IoEventHandle() {
+
+                @Override
+                public void accept(Channel ch, Frame frame) throws Exception {
+                    HttpFrame f      = (HttpFrame) frame;
+                    String    action = f.getRequestURL();
+                    if ("/plaintext".equals(action)) {
+                        f.setContent(STATIC_PLAINTEXT);
+                        f.setContentType(HttpContentType.text_plain);
+                        f.setConnection(HttpConnection.NONE);
+                    } else if ("/json".equals(action)) {
+                        f.setContent(serializeMsg(new Message("Hello, World!")));
+                        f.setContentType(HttpContentType.application_json);
+                        f.setConnection(HttpConnection.NONE);
+                    } else {
+                        System.err.println("404");
+                        f.setContent("404,page not found!".getBytes());
+                        f.setContentType(HttpContentType.text_plain);
+                        f.setStatus(HttpStatus.C404);
+                    }
+                    f.setDate(HttpDateUtil.getDateLine());
+                    ch.writeAndFlush(f);
+                    ch.release(f);
+                }
+
+            };
+        }
 
         int fcache    = 1024 * 16;
         int pool_cap  = 1024 * 128;
@@ -135,7 +186,7 @@ public class TestHttpLoadServer {
             });
         }
         ByteTree cachedUrls = null;
-        if (cachedurl){
+        if (cachedurl) {
             cachedUrls = new ByteTree();
             cachedUrls.add("/plaintext");
             cachedUrls.add("/json");
