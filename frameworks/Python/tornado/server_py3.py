@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 import asyncio
-import json
+import ujson as json
 import motor
+import uvloop
 import tornado.ioloop
 import tornado.web
 import tornado.httpserver
@@ -34,11 +35,11 @@ class MultipleQueriesHandler(JsonHandler):
             queries = int(self.get_argument(self.QUERIES))
         except Exception:
             queries = 1
-        else:
-            if queries < 1:
-                queries = 1
-            elif queries > 500:
-                queries = 500
+
+        if queries < 1:
+            queries = 1
+        elif queries > 500:
+            queries = 500
 
         worlds = []
         futures, _ = await asyncio.wait([db.world.find_one(randint(1, 10000)) for _ in range(queries)])
@@ -58,11 +59,11 @@ class UpdateHandler(JsonHandler):
             queries = int(self.get_argument(self.QUERIES))
         except Exception:
             queries = 1
-        else:
-            if queries < 1:
-                queries = 1
-            elif queries > 500:
-                queries = 500
+
+        if queries < 1:
+            queries = 1
+        elif queries > 500:
+            queries = 500
 
         worlds = []
         updates = []
@@ -76,16 +77,14 @@ class UpdateHandler(JsonHandler):
             worlds.append({self.ID: int(world['_id']),
                     self.RANDOM_NUMBER: world[self.RANDOM_NUMBER]})
         await asyncio.wait(updates)
+
         self.finish(json.dumps(worlds))
 
 
 class FortuneHandler(HtmlHandler):
     async def get(self):
-        fortunes = []
-
-        async for fortune in db.fortune.find():
-            fortunes.append(fortune)
-        fortunes.append({self.ID: 0, 'message': 'Additional fortune added at request time.'})
+        fortunes = [fortune async for fortune in db.fortune.find()]
+        fortunes.append({'id': 0, 'message': 'Additional fortune added at request time.'})
 
         fortunes.sort(key=lambda f: f['message'])
         self.render('fortunes.html', fortunes=fortunes)
@@ -104,9 +103,10 @@ application = tornado.web.Application([
 application.ui_modules = {}
 
 if __name__ == "__main__":
+    uvloop.install()
     tornado.options.parse_command_line()
     server = tornado.httpserver.HTTPServer(application)
-    server.bind(options.port, backlog=options.backlog)
+    server.bind(options.port, backlog=options.backlog, reuse_port=True)
     server.start(0)
 
     ioloop = tornado.ioloop.IOLoop.instance()
