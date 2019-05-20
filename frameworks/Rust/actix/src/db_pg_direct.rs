@@ -126,7 +126,6 @@ impl PgConnection {
         }
 
         let mut cl = self.cl.clone();
-        let mut rng = self.rng.clone();
         stream::futures_unordered(worlds)
             .collect()
             .and_then(move |worlds| {
