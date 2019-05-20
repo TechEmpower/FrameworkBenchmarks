@@ -27,10 +27,10 @@ use crate::db_pg_direct::PgConnection;
 use crate::utils::{FortunesTemplate, Writer};
 
 struct App {
+    db: PgConnection,
     hdr_srv: HeaderValue,
     hdr_ctjson: HeaderValue,
     hdr_cthtml: HeaderValue,
-    db: PgConnection,
 }
 
 impl Service for App {
@@ -46,13 +46,12 @@ impl Service for App {
 
     fn call(&mut self, req: Request) -> Self::Future {
         let path = req.path();
-        match path.len() {
-            3 if path == "/db" => {
-                let fut = self.db.get_world();
+        match path {
+            "/db" => {
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
 
-                Box::new(fut.map(move |body| {
+                Box::new(self.db.get_world().map(move |body| {
                     let mut res = Response::with_body(StatusCode::OK, Body::Bytes(body));
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
@@ -60,12 +59,11 @@ impl Service for App {
                     res
                 }))
             }
-            8 if path == "/fortune" => {
-                let fut = self.db.tell_fortune();
+            "/fortune" => {
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_cthtml.clone();
 
-                Box::new(fut.from_err().map(move |fortunes| {
+                Box::new(self.db.tell_fortune().from_err().map(move |fortunes| {
                     let mut body = BytesMut::with_capacity(2048);
                     let mut writer = Writer(&mut body);
                     let _ = write!(writer, "{}", FortunesTemplate { fortunes });
@@ -77,13 +75,12 @@ impl Service for App {
                     res
                 }))
             }
-            8 if path == "/queries" => {
+            "/queries" => {
                 let q = utils::get_query_param(req.uri().query().unwrap_or("")) as usize;
-                let fut = self.db.get_worlds(q);
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
 
-                Box::new(fut.from_err().map(move |worlds| {
+                Box::new(self.db.get_worlds(q).from_err().map(move |worlds| {
                     let mut body = BytesMut::with_capacity(35 * worlds.len());
                     to_writer(Writer(&mut body), &worlds).unwrap();
                     let mut res =
@@ -94,13 +91,12 @@ impl Service for App {
                     res
                 }))
             }
-            8 if path == "/updates" => {
+            "/updates" => {
                 let q = utils::get_query_param(req.uri().query().unwrap_or("")) as usize;
-                let fut = self.db.update(q);
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
 
-                Box::new(fut.from_err().map(move |worlds| {
+                Box::new(self.db.update(q).from_err().map(move |worlds| {
                     let mut body = BytesMut::with_capacity(35 * worlds.len());
                     to_writer(Writer(&mut body), &worlds).unwrap();
                     let mut res =
@@ -144,7 +140,6 @@ impl NewService for AppFactory {
 fn main() -> std::io::Result<()> {
     let sys = actix_rt::System::builder().stop_on_panic(false).build();
 
-    // start http server
     Server::build()
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", || {
