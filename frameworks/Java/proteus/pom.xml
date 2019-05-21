@@ -10,9 +10,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <rocker.version>0.18.0</rocker.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <rocker.version>1.2.1</rocker.version>
     </properties>
 
     <build>
@@ -83,6 +83,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
 				<configuration>
+					<debug>false</debug>
 					<compilerArgument>-parameters</compilerArgument>
 				</configuration>
 			</plugin>
@@ -187,10 +188,10 @@
 				</configuration>
 			</plugin>
 			 
-		  <!-- 	<plugin>
+		  <!-- <plugin>
 				<groupId>com.fizzed</groupId>
 				<artifactId>rocker-maven-plugin</artifactId>
-				<version>0.18.0</version>
+				<version>1.2.1</version>
 				<executions>
 					<execution>
 						<id>generate-rocker-templates</id>
@@ -204,7 +205,7 @@
 					</execution>
 					 
 				</executions>
-			</plugin>   -->
+			</plugin> -->
 		</plugins>
 	</build>
 	<dependencies>
@@ -224,24 +225,24 @@
 			<dependency>
 			<groupId>com.fizzed</groupId>
 			<artifactId>rocker-runtime</artifactId>
-			<version>0.18.0</version>
+			<version>${rocker.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fizzed</groupId>
 			<artifactId>rocker-compiler</artifactId>
-			<version>0.18.0</version>
+			<version>${rocker.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		 <dependency>
-      <groupId>com.github.spullara.mustache.java</groupId>
-      <artifactId>compiler</artifactId>
-      <version>0.9.4</version>
-    </dependency>
+		<dependency>
+			<groupId>com.github.spullara.mustache.java</groupId>
+			<artifactId>compiler</artifactId>
+			<version>0.9.6</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
-			<version>2.6.1</version>
+			<version>3.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
