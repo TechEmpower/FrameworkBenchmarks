@@ -1,4 +1,4 @@
-FROM maven:3.5.4-jdk-10 as maven
+FROM maven:3.6.1-jdk-11-slim as maven
 WORKDIR /officefloor
 COPY src src
 WORKDIR /officefloor/src
@@ -8,7 +8,7 @@ RUN mvn -q clean install
 WORKDIR /officefloor/src/woof_benchmark_thread_affinity
 RUN mvn -q clean package
 
-FROM openjdk:10
+FROM openjdk:11.0.3-jre-slim
 RUN apt-get update && apt-get install -y libjna-java
 WORKDIR /officefloor
 COPY --from=maven /officefloor/src/woof_benchmark_thread_affinity/target/woof_benchmark_thread_affinity-1.0.0.jar server.jar

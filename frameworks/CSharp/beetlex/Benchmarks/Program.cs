@@ -1,10 +1,13 @@
-﻿using BeetleX.FastHttpApi;
+using BeetleX.FastHttpApi;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading;
 using System.Text;
+using BeetleX.Buffers;
+using SpanJson;
+
 namespace Benchmarks
 {
     [BeetleX.FastHttpApi.Controller]
@@ -25,16 +28,14 @@ namespace Benchmarks
             builder.Build().Run();
         }
 
-        public object plaintext(HttpResponse response)
+        public object plaintext(IHttpContext context)
         {
-            response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToString("r");
             return plaintextResult;
         }
 
-        public object json(HttpResponse response)
+        public object json(IHttpContext context)
         {
-            response.Header[HeaderTypeFactory.DATE] = DateTime.Now.ToString("r");
-            return new JsonResult(new JsonMessage { message = "Hello, World!" });
+            return new SpanJsonResult(new JsonMessage { message = "Hello, World!" });
         }
         public class JsonMessage
         {
@@ -42,6 +43,28 @@ namespace Benchmarks
         }
     }
 
+    public class SpanJsonResult : ResultBase
+    {
+        public SpanJsonResult(object data)
+        {
+            Data = data;
+        }
+
+        public object Data { get; set; }
+
+        public override string ContentType => "application/json";
+
+        public override bool HasBody => true;
+
+        public override void Write(PipeStream stream, HttpResponse response)
+        {
+            using (stream.LockFree())
+            {
+                var task = JsonSerializer.NonGeneric.Utf8.SerializeAsync(Data, stream).AsTask();
+                task.Wait();
+            }
+        }
+    }
 
     public class BeetleXHttpServer : IHostedService
     {
@@ -54,10 +77,10 @@ namespace Benchmarks
             mApiServer.Options.Port = 8080;
             mApiServer.Options.BufferPoolMaxMemory = 500;
             mApiServer.Options.MaxConnections = 100000;
-            mApiServer.Options.UrlIgnoreCase = false;
-            mApiServer.Options.LogLevel = BeetleX.EventArgs.LogType.Warring;
-            mApiServer.Options.LogToConsole = true;
             mApiServer.Options.Statistical = false;
+            mApiServer.Options.UrlIgnoreCase = false;
+            mApiServer.Options.LogLevel = BeetleX.EventArgs.LogType.Off;
+            mApiServer.Options.LogToConsole = true;
             mApiServer.Open();
             Console.WriteLine("BeetleX FastHttpApi server");
             Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
