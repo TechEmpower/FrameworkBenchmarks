@@ -1,4 +1,4 @@
-FROM swift:4.2
+FROM swift:5.0.1
 
 ADD ./ /swift-nio
 WORKDIR /swift-nio

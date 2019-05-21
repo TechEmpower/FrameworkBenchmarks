@@ -1,11 +1,11 @@
 package net.benchmark.akka.http.fortune
 
-import net.benchmark.akka.http.db.CustomPostgresProfile
-import net.benchmark.akka.http.db.CustomPostgresProfile.api._
+import slick.jdbc.PostgresProfile
+import slick.jdbc.PostgresProfile.api._
 import slick.basic.{DatabaseConfig, DatabasePublisher}
 import slick.jdbc.{ResultSetConcurrency, ResultSetType}
 
-class FortuneRepositoryModule(val dbConfig: DatabaseConfig[CustomPostgresProfile]) extends FortuneRepository {
+class FortuneRepositoryModule(val dbConfig: DatabaseConfig[PostgresProfile]) extends FortuneRepository {
 
   private val db = dbConfig.db
 
@@ -14,8 +14,8 @@ class FortuneRepositoryModule(val dbConfig: DatabaseConfig[CustomPostgresProfile
   override def all(): DatabasePublisher[Fortune] = {
     db.stream(
       fortunes.result.withStatementParameters(rsType = ResultSetType.ForwardOnly,
-                                              rsConcurrency = ResultSetConcurrency.ReadOnly,
-                                              fetchSize = 100))
+        rsConcurrency = ResultSetConcurrency.ReadOnly,
+        fetchSize = 100))
   }
 
 }

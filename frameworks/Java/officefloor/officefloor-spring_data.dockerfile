@@ -1,4 +1,4 @@
-FROM maven:3.5.4-jdk-10 as maven
+FROM maven:3.6.1-jdk-11-slim as maven
 WORKDIR /officefloor
 COPY src src
 WORKDIR /officefloor/src/woof_benchmark_spring

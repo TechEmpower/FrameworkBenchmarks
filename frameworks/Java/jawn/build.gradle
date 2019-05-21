@@ -3,8 +3,8 @@ apply plugin: 'eclipse'
 apply plugin: 'application'
 
 // compiler options
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 mainClassName = 'app.BenchmarkMain'
 
@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
     // Framework
-    def framework_version = '0.9.12'
+    def framework_version = '0.9.14'
     compile "net.javapla.jawn:jawn:${framework_version}"
 
 
@@ -27,7 +27,7 @@ dependencies {
     compile 'org.postgresql:postgresql:42.2.5'
 
     //Logging
-    runtime group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.3' exclude group: 'org.slf4j'
+    runtime group: 'ch.qos.logback', name: 'logback-classic', version: '1.3.0-alpha4' exclude group: 'org.slf4j'
 }
 
 /* ****************** */

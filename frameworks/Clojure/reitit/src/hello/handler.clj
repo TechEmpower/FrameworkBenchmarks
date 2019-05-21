@@ -4,14 +4,8 @@
             [reitit.ring :as ring]
             [porsas.core :as p]
             [jsonista.core :as j])
-  (:gen-class)
-  (:import (java.util.concurrent ThreadLocalRandom)
-           (io.undertow.server HttpServerExchange)))
-
-(defn blocking [handler]
-  (fn [req]
-    (.startBlocking ^HttpServerExchange (:server-exchange req))
-    (handler req)))
+  (:import (java.util.concurrent ThreadLocalRandom))
+  (:gen-class))
 
 (defn random []
   (unchecked-inc (.nextInt (ThreadLocalRandom/current) 10000)))
@@ -40,29 +34,22 @@
 
 (defn -main [& _]
   (let [ds (hikari/make-datasource
-             {:read-only true
-              :maximum-pool-size 64
-              :pool-name "db-pool"
-              :adapter "postgresql"
+             {:jdbc-url "jdbc:postgresql://tfb-database:5432/hello_world"
               :username "benchmarkdbuser"
               :password "benchmarkdbpass"
-              :database-name "hello_world"
-              :server-name "tfb-database"
-              :port-number 5432
-              :register-mbeans false})]
+              :maximum-pool-size 256})]
     (web/run
       (ring/ring-handler
         (ring/router
           [["/plaintext" plain-text-handler]
            ["/json" json-handler]
-           ["/db" (blocking (db-handler ds))]])
+           ["/db" (web/dispatch (db-handler ds))]])
         (ring/create-default-handler)
-        {:inject-match? false, :inject-router? false})
+        {:inject-match? false
+         :inject-router? false})
       {:port 8080
        :host "0.0.0.0"
        :dispatch? false
-       :worker-threads 64
+       :io-threads (* 2 (.availableProcessors (Runtime/getRuntime)))
+       :worker-threads (* 8 (.availableProcessors (Runtime/getRuntime)))
        :server {:always-set-keep-alive false}})))
-
-(comment
-  (-main))

@@ -1,4 +1,6 @@
-FROM debian:stretch
+FROM ubuntu:19.04
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt update -y \
     && apt install -y gnupg ca-certificates apt-transport-https wget curl \
