@@ -41,7 +41,7 @@
     (web/run
       (ring/ring-handler
         (ring/router
-          [["/plaintext" plain-text-handler]
+          [["/plaintext" (web/constantly plain-text-handler)]
            ["/json" json-handler]
            ["/db" (web/dispatch (db-handler ds))]])
         (ring/create-default-handler)
