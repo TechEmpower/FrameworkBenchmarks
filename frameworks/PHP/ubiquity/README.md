@@ -5,7 +5,7 @@ Ubiquity is a full-stack php framework, These tests involve:
 - the ORM part (Full)
 - the JSON serialization (native php)
 
-Tests are available with NginX and Ubiquity-React servers.
+Tests are available with NginX and PHP-PM servers.
 
 ## Test Type Implementation Source Code
 The tests are separated into 4 controllers:
@@ -27,7 +27,9 @@ The tests were run with:
 * [Ubiquity 2.1.*](https://ubiquity.kobject.net/)
 * [PHP Version 7.3.*](http://www.php.net/) with FPM and APC
 * [nginx 1.14](http://nginx.org/)
+* [PHP-PM](https://github.com/php-pm/php-pm)
 * [Ubiquity-reactphp server](https://github.com/phpMv/ubiquity-reactphp)
+* [Ubiquity-php-pm bridge](https://github.com/phpMv/ubiquity-php-pm)
 * [MySQL 5.7](https://dev.mysql.com/)
 
 ## Test URLs
