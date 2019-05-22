@@ -100,6 +100,7 @@ application = tornado.web.Application([
 ],
     template_path="templates"
 )
+
 application.ui_modules = {}
 
 if __name__ == "__main__":
