@@ -7,7 +7,7 @@ settings:
 
 routes:
   get "/json":
-    const data = $(%*{"message": "Hello, World!"})
+    var data = $(%*{"message": "Hello, World!"})
     resp data, "application/json"
 
   get "/plaintext":
