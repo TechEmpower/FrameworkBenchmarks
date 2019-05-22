@@ -30,6 +30,7 @@
 #include "database.h"
 #include "event_loop.h"
 #include "global_data.h"
+#include "handlers/request_handler_data.h"
 
 typedef struct thread_context_t thread_context_t;
 
@@ -52,6 +53,7 @@ struct thread_context_t {
 	unsigned random_seed;
 	db_state_t db_state;
 	event_loop_t event_loop;
+	request_handler_thread_data_t request_handler_data;
 };
 
 void free_thread_context(thread_context_t *ctx);

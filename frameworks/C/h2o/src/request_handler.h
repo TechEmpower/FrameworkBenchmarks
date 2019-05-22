@@ -44,10 +44,13 @@ typedef enum {
 } http_status_code_t;
 
 void cleanup_request_handlers(global_data_t *global_data);
+void free_request_handler_thread_data(request_handler_thread_data_t *request_handler_thread_data);
 const char *get_query_param(const char *query,
                             size_t query_len,
                             const char *param,
                             size_t param_len);
+void initialize_request_handler_thread_data(
+		const config_t *config, request_handler_thread_data_t *request_handler_thread_data);
 void initialize_request_handlers(const config_t *config,
                                  global_data_t *global_data,
                                  h2o_hostconf_t *hostconf,
