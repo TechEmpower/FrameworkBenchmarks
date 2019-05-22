@@ -35,8 +35,8 @@ void main(string[] args) {
 			options = new DatabaseOption(
 					"postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?charset=utf-8");
 		}
-		options.setMinimumConnection(totalCPUs*2);
-		options.setMaximumConnection(totalCPUs*2);
+		options.setMinimumConnection(totalCPUs*3);
+		options.setMaximumConnection(totalCPUs*3);
 		dbConnection = new Database(options);
 	}
 
