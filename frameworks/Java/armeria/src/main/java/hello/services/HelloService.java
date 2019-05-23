@@ -1,13 +1,12 @@
 package hello.services;
 
-import hello.models.Message;
 import hello.helpers.HttpHeadersHelper;
+import hello.models.Message;
 
 import java.nio.charset.StandardCharsets;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linecorp.armeria.common.HttpData;
 import com.linecorp.armeria.common.HttpResponse;
 import com.linecorp.armeria.common.MediaType;
@@ -22,15 +21,17 @@ public class HelloService {
   @Get("/plaintext")
   public HttpResponse plaintext() {
     return HttpResponse.of(
-        HttpHeadersHelper.getHttpHeader(MediaType.PLAIN_TEXT_UTF_8),
-        HttpData.of(PLAINTEXT));
+    	HttpHeadersHelper.getHttpHeader(MediaType.PLAIN_TEXT_UTF_8),
+        HttpData.of(PLAINTEXT)
+        );
   }
 
   @Get("/json")
   @ProducesJson
   public HttpResponse json() throws JsonProcessingException {
     return HttpResponse.of(
-        HttpHeadersHelper.getHttpHeader(MediaType.JSON_UTF_8),
-        HttpData.of(MAPPER.writeValueAsBytes(new Message("Hello, World!"))));
+    	HttpHeadersHelper.getHttpHeader(MediaType.JSON),
+        HttpData.of(MAPPER.writeValueAsBytes(new Message("Hello, World!")))
+        );
   }
 }

@@ -1,4 +1,4 @@
-FROM gradle:4.7.0-jdk8
+FROM gradle:5.4.1-jdk11 as gradle
 
 USER root
 WORKDIR /wizzardo-http
@@ -8,11 +8,7 @@ COPY src src
 
 RUN gradle --refresh-dependencies clean fatJar
 
-CMD java \
-    -Xmx2G \
-    -Xms2G \
-    -server \
-    -XX:+UseNUMA \
-    -XX:+UseParallelGC \
-    -XX:+AggressiveOpts \
-    -jar build/libs/wizzardo-http-all-1.0-SNAPSHOT.jar env=prod
+FROM openjdk:11.0.3-jre-slim
+WORKDIR /wizzardo-http
+COPY --from=gradle /wizzardo-http/build/libs/wizzardo-http-all-1.0-SNAPSHOT.jar app.jar
+CMD ["java", "-Xmx2G", "-Xms2G", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-jar", "app.jar", "env=prod"]

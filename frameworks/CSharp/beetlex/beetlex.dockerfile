@@ -1,7 +1,9 @@
-FROM microsoft/dotnet:2.1-sdk-stretch AS build
+FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /app
 COPY Benchmarks .
 RUN dotnet publish -c Release -o out
 
-WORKDIR /app/out
+FROM microsoft/dotnet:2.2-aspnetcore-runtime AS runtime
+WORKDIR /app
+COPY --from=build /app/out ./
 ENTRYPOINT ["dotnet", "Benchmarks.dll"]

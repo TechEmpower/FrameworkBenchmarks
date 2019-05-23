@@ -18,17 +18,16 @@ Uses the CakePHP Model functionality.
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Cake Version 2.10.4](https://cakephp.org/)
-* [PHP Version 5.6.32](http://www.php.net/) with FPM and APC
-* [PHP Version 7.2.1](http://www.php.net/) No PHP7 until upgrade the framework version
+* [Cake Version 3.7](https://cakephp.org/)
+* [PHP Version 7.3](http://www.php.net/) No PHP7 until upgrade the framework version
 * [nginx 1.12.0](http://nginx.org/)
 * [MySQL 5.7.20](https://dev.mysql.com/)
 
-Cake Debug mode is set to 0 in [core.php](app/Config/core.php), as
+Cake Debug mode is set to false in [core.php](config/app.php), as
 appropriate for a production deployment.
 
 To support the Cake JsonView and use the recommended URLs, 
-we also made a [routes configuration change](app/Config/routes.php).
+we also made a [routes configuration change](confi/routes.php).
 
 ## Test URLs
 ### JSON Encoding Test

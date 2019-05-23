@@ -21,8 +21,6 @@
     },
     "core": {
       "fortune_url": "/fortune",
-      "json_url": "/json",
-      "plaintext_url": "/plaintext",
       "db_url": "/db",
       "query_url": "/queries?q=",
       "update_url": "/updates?q=",
@@ -38,6 +36,24 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Actix [Platform]",
+      "notes": "",
+      "versus": ""
+    },
+    "raw": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "actix",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "actix-web",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Actix [Raw]",
       "notes": "",
       "versus": ""
     },

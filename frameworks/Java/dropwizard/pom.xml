@@ -12,9 +12,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>10</maven.compiler.source>
-		<maven.compiler.target>10</maven.compiler.target>
-		<dropwizard.version>1.3.9</dropwizard.version>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+		<dropwizard.version>1.3.10</dropwizard.version>
 		<javax-activation.version>1.1.1</javax-activation.version>
 		<jaxb.version>2.3.0</jaxb.version>
 		<mysql-connector-java.version>5.1.47</mysql-connector-java.version>
@@ -24,6 +24,7 @@
 		<maven-jar-plugin.version>3.1.0</maven-jar-plugin.version>
 		<maven-shade-plugin.version>3.1.1</maven-shade-plugin.version>
 		<main.class>com.example.helloworld.HelloWorldService</main.class>
+		<hibernate.version>5.4.2.Final</hibernate.version>
 	</properties>
 
 	<profiles>
@@ -81,6 +82,11 @@
 					<artifactId>jta</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${hibernate.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.dropwizard</groupId>

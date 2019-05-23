@@ -35,16 +35,12 @@ void main(string[] args) {
 			options = new DatabaseOption(
 					"postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?charset=utf-8");
 		}
-		options.setMinimumConnection(totalCPUs*2);
-		options.setMaximumConnection(totalCPUs*2);
+		options.setMinimumConnection(totalCPUs*3);
+		options.setMaximumConnection(totalCPUs*3);
 		dbConnection = new Database(options);
 	}
-	
-	HttpServer httpServer = new HttpServer("0.0.0.0", port, totalCPUs);
-	httpServer.onProcessorCreate(delegate HttpProcessor (TcpStream client) {
-		return new DemoProcessor(client);
-	});
 
+	AbstractTcpServer httpServer = new HttpServer!(DemoProcessor)("0.0.0.0", port, totalCPUs);
 	writefln("listening on http://%s", httpServer.bindingAddress.toString());
 	httpServer.start();
 }

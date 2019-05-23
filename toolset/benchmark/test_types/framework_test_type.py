@@ -1,5 +1,4 @@
 import copy
-import sys
 import json
 import requests
 import MySQLdb
