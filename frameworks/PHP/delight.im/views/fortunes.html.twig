@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>Fortunes</title></head>
+<body>
+<table>
+	<tr><th>id</th><th>message</th></tr>
+
+    {% for key, fortune in fortunes %}
+	<tr><td>{{key}}</td><td>{{fortune}}</td></tr>
+	{%  endfor %}
+</table>
+</body>
+</html>

@@ -1,0 +1,3 @@
+# Ignore the private version of the configuration
+# Keep a public and up-to-date template in '.env.example'
+# .env

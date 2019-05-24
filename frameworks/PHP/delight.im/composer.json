@@ -1,0 +1,17 @@
+{
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/bfinlay/PHP-Foundation-Core"
+		}
+	],
+	"require": {
+		"php": ">=5.6.0",
+		"delight-im/foundation-core": "dev-performance-tests"
+	},
+	"autoload": {
+		"psr-4": {
+			"App\\": "app/"
+		}
+	}
+}

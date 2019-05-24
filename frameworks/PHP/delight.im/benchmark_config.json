@@ -1,0 +1,29 @@
+{
+  "framework": "delight.im",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries/",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates/",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "MySQL",
+        "framework": "delight.im",
+        "language": "PHP",
+        "flavor": "PHP7",
+        "orm": "Micro",
+        "platform": "PHP-FPM",
+        "webserver": "nginx",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "delight.im",
+        "notes": "",
+        "versus": "php"
+      }
+    }
+  ]
+}

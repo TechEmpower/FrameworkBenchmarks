@@ -1,0 +1,120 @@
+### PHP-Foundation (https://github.com/delight-im/PHP-Foundation)
+### Copyright (c) delight.im (https://www.delight.im/)
+### Licensed under the MIT License (https://opensource.org/licenses/MIT)
+
+########## BEGIN MAINTENANCE MODE ##########
+
+<IfModule mod_rewrite.c>
+
+	RewriteEngine On
+
+	# Enable maintenance mode (Uncomment 1 line below)
+	# RewriteRule . maintenance.php [END]
+
+</IfModule>
+
+########## END MAINTENANCE MODE ##########
+
+########## BEGIN PERFORMANCE AND SECURITY (https://github.com/delight-im/htaccess) ##########
+
+<ifModule mod_headers.c>
+
+	# Prevent clickjacking (forbids framing by third-party sites)
+	Header set X-Frame-Options sameorigin
+
+	# Prevent content sniffing (MIME sniffing)
+	Header set X-Content-Type-Options nosniff
+
+	# Attempt to enable XSS filters in browsers, if available, and block reflected XSS
+	Header set X-XSS-Protection "1; mode=block"
+
+	# Cache media files for a month
+	<FilesMatch "\.(js|css|jpg|jpeg|png|svg|webp|gif|ico|ogg|mp4|webm)$">
+		Header set Cache-Control max-age=2629800
+	</FilesMatch>
+
+	# Remove response headers that provide no value but leak information
+	Header unset X-Powered-By
+
+	# Disable "ETag" headers so that browsers rely on the "Cache-Control" and "Expires" headers
+	Header unset ETag
+
+</ifModule>
+
+<IfModule mod_autoindex.c>
+
+	# Turn off directory listings for folders without default documents
+	Options -Indexes
+
+</IfModule>
+
+<IfModule mod_negotiation.c>
+
+	# Disable 'MultiViews' implicit filename pattern matches
+	Options -MultiViews
+
+</IfModule>
+
+# Serve "text/plain" and "text/html" documents as UTF-8 by default
+AddDefaultCharset utf-8
+
+# Disable "ETag" headers so that browsers rely on the "Cache-Control" and "Expires" headers
+FileETag None
+
+########## END PERFORMANCE AND SECURITY ##########
+
+########## BEGIN CUSTOM (YOUR RULES GO HERE) ##########
+
+<ifModule mod_headers.c>
+
+	# Enable HTTP Strict Transport Security (HSTS) with a duration of six months (Uncomment 1 line below)
+	# Header set Strict-Transport-Security max-age=15778800
+
+</ifModule>
+
+<ifModule mod_rewrite.c>
+
+	RewriteEngine On
+
+	# Force 'www' (i.e. prefix the "bare" domain and all subdomains with 'www' through permanent redirects) (Uncomment 4 lines below)
+	# RewriteCond %{HTTP_HOST} !^$
+	# RewriteCond %{HTTP_HOST} !^www\. [NC]
+	# RewriteCond %{HTTPS}s ^on(s)|
+	# RewriteRule ^ http%1://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+	# Force HTTPS (Uncomment 2 lines below)
+	# RewriteCond %{HTTPS} off
+	# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+</IfModule>
+
+# Prevent access to non-minified CSS and JS (Uncomment 3 lines below)
+# <FilesMatch "(?<!.min)\.(css|js)$">
+# 	Require all denied
+# </FilesMatch>
+
+# Announce contact information for security issues (Uncomment 2 lines below)
+# Header set X-Vulnerability-Disclosure "https://www.example.com/security"
+# Header set X-Security-Contact "security@example.com"
+
+########## END CUSTOM ##########
+
+########## BEGIN ROUTING (https://github.com/delight-im/PHP-Router) ##########
+
+<IfModule mod_rewrite.c>
+
+	RewriteEngine On
+
+	# Don't rewrite requests for files in the 'public' directory
+	RewriteRule ^(public)($|/) - [L]
+
+	# For all other files first check if they exist in the 'public' directory
+	RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
+	RewriteRule ^ public%{REQUEST_URI} [L]
+
+	# And let 'index.php' handle everything else
+	RewriteRule . index.php [L]
+
+</IfModule>
+
+########## END ROUTING ##########
