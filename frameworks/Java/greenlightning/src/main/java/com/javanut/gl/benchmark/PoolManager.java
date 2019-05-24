@@ -1,4 +1,4 @@
-package com.ociweb.gl.benchmark;
+package com.javanut.gl.benchmark;
 
 import io.reactiverse.pgclient.PgClient;
 import io.reactiverse.pgclient.PgPool;
