@@ -1,4 +1,4 @@
-package com.ociweb.gl.benchmark;
+package com.javanut.gl.benchmark;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,11 +1,11 @@
-package com.ociweb.gl.benchmark;
+package com.javanut.gl.benchmark;
 
-import com.ociweb.gl.api.GreenRuntime;
-import com.ociweb.gl.api.HTTPRequestReader;
-import com.ociweb.gl.api.HTTPResponseService;
-import com.ociweb.gl.api.RestMethodListener;
-import com.ociweb.json.encode.JSONRenderer;
-import com.ociweb.pronghorn.network.config.HTTPContentTypeDefaults;
+import com.javanut.gl.api.GreenRuntime;
+import com.javanut.gl.api.HTTPRequestReader;
+import com.javanut.gl.api.HTTPResponseService;
+import com.javanut.gl.api.RestMethodListener;
+import com.javanut.json.encode.JSONRenderer;
+import com.javanut.pronghorn.network.config.HTTPContentTypeDefaults;
 
 public class SimpleRest implements RestMethodListener {
 

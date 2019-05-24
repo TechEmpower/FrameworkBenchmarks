@@ -1,11 +1,11 @@
-package com.ociweb.gl.benchmark;
+package com.javanut.gl.benchmark;
 
 import java.util.List;
 
-import com.ociweb.json.encode.JSONRenderer;
-import com.ociweb.pronghorn.util.Appendables;
-import com.ociweb.pronghorn.util.template.StringTemplateBuilder;
-import com.ociweb.pronghorn.util.template.StringTemplateRenderer;
+import com.javanut.json.encode.JSONRenderer;
+import com.javanut.pronghorn.util.Appendables;
+import com.javanut.pronghorn.util.template.StringTemplateBuilder;
+import com.javanut.pronghorn.util.template.StringTemplateRenderer;
 
 public class Templates {
 	

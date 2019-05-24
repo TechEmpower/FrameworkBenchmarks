@@ -1,4 +1,4 @@
-package com.ociweb.gl.benchmark;
+package com.javanut.gl.benchmark;
 
 public class FortuneObject implements Comparable<FortuneObject>{
 
