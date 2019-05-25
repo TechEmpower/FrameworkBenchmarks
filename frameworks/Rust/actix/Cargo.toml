@@ -26,7 +26,7 @@ path = "src/main_raw.rs"
 [dependencies]
 actix = { version="0.8.2", features=["http"] }
 actix-web = { version="1.0.0-rc", default-features = false }
-actix-http = { version="0.2.0", default-features = false }
+actix-http = { version="0.2.1", default-features = false }
 actix-rt = "0.2.2"
 actix-codec = "0.1.2"
 actix-server = "0.5.1"
@@ -60,4 +60,3 @@ codegen-units = 1
 
 [patch.crates-io]
 tokio-reactor = { git="https://github.com/fafhrd91/tokio.git" }
-actix-http = { git="https://github.com/actix/actix-web.git", default-features = false }
