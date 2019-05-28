@@ -3,11 +3,13 @@
 #include <algorithm>
 
 using namespace drogon_model::hello_world;
-void FortuneCtrl::asyncHandleHttpRequest(const HttpRequestPtr &req, const std::function<void(const HttpResponsePtr &)> &callback)
+void FortuneCtrl::asyncHandleHttpRequest(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback)
 {
     auto client = drogon::app().getFastDbClient();
     drogon::orm::Mapper<Fortune> mapper(client);
-    mapper.findAll([callback](std::vector<Fortune> rows) {
+    auto callbackPtr = std::shared_ptr<std::function<void(const HttpResponsePtr &)>>(new std::function<void(const HttpResponsePtr &)>(std::move(callback)));
+
+    mapper.findAll([callbackPtr](std::vector<Fortune> rows) {
                         Fortune newRow;
                         newRow.setId(0);
                         newRow.setMessage("Additional fortune added at request time.");
@@ -25,10 +27,10 @@ void FortuneCtrl::asyncHandleHttpRequest(const HttpRequestPtr &req, const std::f
                         HttpViewData data;
                         data.insert("rows",std::move(rows));
                         auto resp=HttpResponse::newHttpViewResponse("fortune.csp",data);
-                        callback(resp); },
-                   [callback](const DrogonDbException &err) {
+                        (*callbackPtr)(resp); },
+                   [callbackPtr](const DrogonDbException &err) {
                        auto resp = HttpResponse::newHttpResponse();
                        resp->setBody(std::string("error:") + err.base().what());
-                       callback(resp);
+                       (*callbackPtr)(resp);
                    });
 }
