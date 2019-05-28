@@ -93,10 +93,11 @@ impl<T: AsyncRead + AsyncWrite> Future for App<T> {
             }
         }
 
+        if self.write_buf.remaining_mut() < 8192 {
+            self.write_buf.reserve(32_768);
+        }
+
         loop {
-            if self.write_buf.remaining_mut() < 1024 {
-                self.write_buf.reserve(32_768);
-            }
             match self.codec.decode(&mut self.read_buf) {
                 Ok(Some(h1::Message::Item(req))) => self.handle_request(req),
                 Ok(None) => break,

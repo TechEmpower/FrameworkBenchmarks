@@ -4,7 +4,7 @@
 
 using namespace drogon_model::hello_world;
 
-void UpdatesCtrl::asyncHandleHttpRequest(const HttpRequestPtr &req, const std::function<void(const HttpResponsePtr &)> &callback)
+void UpdatesCtrl::asyncHandleHttpRequest(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback)
 {
     //write your application logic here
     static std::once_flag once;
@@ -23,7 +23,7 @@ void UpdatesCtrl::asyncHandleHttpRequest(const HttpRequestPtr &req, const std::f
     }
     auto json = std::make_shared<Json::Value>();
     json->resize(0);
-    auto callbackPtr = std::shared_ptr<std::function<void(const HttpResponsePtr &)>>(new std::function<void(const HttpResponsePtr &)>(callback));
+    auto callbackPtr = std::shared_ptr<std::function<void(const HttpResponsePtr &)>>(new std::function<void(const HttpResponsePtr &)>(std::move(callback)));
     auto counter = std::make_shared<int>(queries);
     auto client = app().getFastDbClient();
     drogon::orm::Mapper<World> mapper(client);

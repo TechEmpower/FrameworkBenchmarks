@@ -1,10 +1,10 @@
-package com.ociweb.gl.benchmark;
+package com.javanut.gl.benchmark;
 
-import com.ociweb.gl.api.HTTPRequestReader;
-import com.ociweb.gl.api.HTTPResponseService;
-import com.ociweb.pronghorn.network.config.HTTPContentTypeDefaults;
-import com.ociweb.pronghorn.pipe.ObjectPipe;
-import com.ociweb.pronghorn.util.AppendableBuilder;
+import com.javanut.gl.api.HTTPRequestReader;
+import com.javanut.gl.api.HTTPResponseService;
+import com.javanut.pronghorn.network.config.HTTPContentTypeDefaults;
+import com.javanut.pronghorn.pipe.ObjectPipe;
+import com.javanut.pronghorn.util.AppendableBuilder;
 
 import io.reactiverse.pgclient.PgIterator;
 import io.reactiverse.pgclient.Row;

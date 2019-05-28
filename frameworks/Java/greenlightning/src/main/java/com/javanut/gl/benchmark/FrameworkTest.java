@@ -1,17 +1,11 @@
-package com.ociweb.gl.benchmark;
+package com.javanut.gl.benchmark;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.ociweb.gl.api.GreenApp;
-import com.ociweb.gl.api.GreenCommandChannel;
-/**
- * ************************************************************************
- * For greenlightning support, training or feature reqeusts please contact:
- *   info@objectcomputing.com   (314) 579-0066
- * ************************************************************************
- */
-import com.ociweb.gl.api.GreenFramework;
-import com.ociweb.gl.api.GreenRuntime;
+import com.javanut.gl.api.GreenApp;
+import com.javanut.gl.api.GreenCommandChannel;
+import com.javanut.gl.api.GreenFramework;
+import com.javanut.gl.api.GreenRuntime;
 
 import io.reactiverse.pgclient.PgClient;
 import io.reactiverse.pgclient.PgPool;
@@ -172,7 +166,7 @@ public class FrameworkTest implements GreenApp {
     			 //NOTE: not sure this is optimal yet ...
     			 //TODO: neeed to allow for multiple writes one pipe! big dif.
     			// .setConcurrentChannelsPerEncryptUnit(Math.max(1,concurrentWritesPerChannel/2))  //8K    
-    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel/80)   // /8)//4)
+    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel/80)  ///80) ///16) // /8)//4)
     			 //TODO: we need smaller count of connections but MORE writers.
     			 
     			 .disableEPoll() //provides advantage in JSON test....
