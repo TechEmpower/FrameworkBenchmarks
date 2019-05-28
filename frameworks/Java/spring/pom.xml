@@ -13,7 +13,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.1.2.RELEASE</version>
+    <version>2.2.0.M2</version>
   </parent>
 
   <properties>
@@ -47,11 +47,34 @@
     </dependency>
   </dependencies>
 
+  <repositories>
+    <repository>
+      <id>spring-libs-snapshot</id>
+        <name>Spring Snapshots</name>
+        <url>https://repo.spring.io/libs-snapshot</url>
+      </repository>
+    </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>spring-libs-snapshot</id>
+      <name>Spring Snapshots</name>
+      <url>https://repo.spring.io/libs-snapshot</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <build>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <debug>false</debug>
+        </configuration>
       </plugin>
     </plugins>
   </build>
