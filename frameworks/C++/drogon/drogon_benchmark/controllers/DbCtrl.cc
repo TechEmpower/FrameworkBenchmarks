@@ -6,7 +6,7 @@
 #include <time.h>
 using namespace drogon_model::hello_world;
 
-void DbCtrl::asyncHandleHttpRequest(const HttpRequestPtr &req, const std::function<void(const HttpResponsePtr &)> &callback)
+void DbCtrl::asyncHandleHttpRequest(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback)
 {
     //write your application logic here
     static std::once_flag once;
@@ -15,7 +15,7 @@ void DbCtrl::asyncHandleHttpRequest(const HttpRequestPtr &req, const std::functi
     });
     auto client = drogon::app().getFastDbClient();
 
-    auto callbackPtr = std::shared_ptr<std::function<void(const HttpResponsePtr &)>>(new std::function<void(const HttpResponsePtr &)>(callback));
+    auto callbackPtr = std::shared_ptr<std::function<void(const HttpResponsePtr &)>>(new std::function<void(const HttpResponsePtr &)>(std::move(callback)));
     drogon::orm::Mapper<World> mapper(client);
     World::PrimaryKeyType id = rand() % 10000 + 1;
     mapper.findByPrimaryKey(id,
