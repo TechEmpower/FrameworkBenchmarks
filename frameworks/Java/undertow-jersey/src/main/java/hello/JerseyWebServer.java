@@ -3,12 +3,15 @@ package hello;
 import hello.undertow.*;
 import io.undertow.*;
 import io.undertow.server.handlers.*;
+
 import org.apache.commons.cli.*;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.*;
 import org.hibernate.*;
 
 import javax.inject.*;
+import javax.persistence.EntityManagerFactory;
+
 import java.util.*;
 
 public class JerseyWebServer
@@ -34,7 +37,7 @@ public class JerseyWebServer
     final String dbHost = cmd.getOptionValue("dbhost", "tfb-database");
     final int dbPort = Integer.parseInt(cmd.getOptionValue("dbport", "3306"));
 
-    ResourceConfig config = new ResourceConfig(DbResource.class,
+    ResourceConfig config = new ResourceConfig(WorldResource.class,
         FortunesResource.class, JsonResource.class, PlaintextResource.class,
         JsonMessageBodyWriter.class, ServerResponseFilter.class, RequestExceptionMapper.class);
 
@@ -52,7 +55,7 @@ public class JerseyWebServer
 	config.register(new AbstractBinder() {
 		@Override
 		protected void configure() {
-			bindFactory(SessionFactoryFactory.class).to(SessionFactory.class).in(
+			bindFactory(EMFactory.class).to(EntityManagerFactory.class).in(
 					Singleton.class);
 		}
 	});

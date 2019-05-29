@@ -2,22 +2,10 @@
   (:require [immutant.web :as web]
             [hikari-cp.core :as hikari]
             [reitit.ring :as ring]
-            [immutant.web.internal.ring :as immutant]
             [porsas.core :as p]
             [jsonista.core :as j])
-  (:gen-class)
-  (:import (java.util.concurrent ThreadLocalRandom)
-           (io.undertow.server HttpServerExchange)))
-
-(defn blocking [handler]
-  (fn [req]
-    (let [exchange ^HttpServerExchange (:server-exchange req)]
-      (if (.isInIoThread exchange)
-        (.dispatch exchange ^Runnable (^:once fn* []
-                                        (.startBlocking exchange)
-                                        (immutant/write-response exchange (handler req))
-                                        (.endExchange exchange)))
-        (handler req)))))
+  (:import (java.util.concurrent ThreadLocalRandom))
+  (:gen-class))
 
 (defn random []
   (unchecked-inc (.nextInt (ThreadLocalRandom/current) 10000)))
@@ -25,7 +13,7 @@
 (def query-one (:query-one (p/compile {:row (p/rs->compiled-record)})))
 
 (defn random-world [ds]
-  (let [con (p/get-connection ds)]
+  (with-open [con (p/get-connection ds)]
     (query-one con ["SELECT id, randomnumber from WORLD where id=?" (random)])))
 
 (defn plain-text-handler [_]
@@ -46,20 +34,16 @@
 
 (defn -main [& _]
   (let [ds (hikari/make-datasource
-             {:maximum-pool-size 256
-              :pool-name "db-pool"
-              :adapter "postgresql"
+             {:jdbc-url "jdbc:postgresql://tfb-database:5432/hello_world"
               :username "benchmarkdbuser"
               :password "benchmarkdbpass"
-              :database-name "hello_world"
-              :server-name "tfb-database"
-              :port-number 5432})]
+              :maximum-pool-size 256})]
     (web/run
       (ring/ring-handler
         (ring/router
-          [["/plaintext" plain-text-handler]
+          [["/plaintext" (web/constantly plain-text-handler)]
            ["/json" json-handler]
-           ["/db" (blocking (db-handler ds))]])
+           ["/db" (web/dispatch (db-handler ds))]])
         (ring/create-default-handler)
         {:inject-match? false
          :inject-router? false})
@@ -69,6 +53,3 @@
        :io-threads (* 2 (.availableProcessors (Runtime/getRuntime)))
        :worker-threads (* 8 (.availableProcessors (Runtime/getRuntime)))
        :server {:always-set-keep-alive false}})))
-
-(comment
-  (-main))

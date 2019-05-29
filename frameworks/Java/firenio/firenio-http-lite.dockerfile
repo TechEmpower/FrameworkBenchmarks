@@ -1,4 +1,4 @@
-FROM maven:3.5.3-jdk-10-slim as maven
+FROM maven:3.6.1-jdk-11-slim as maven
 WORKDIR /firenio
 COPY pom.xml pom.xml
 COPY src src

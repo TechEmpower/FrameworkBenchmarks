@@ -11,7 +11,7 @@ RUN echo 'APT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/00-genera
 
 FROM debian AS racket
 
-ARG RACKET_VERSION=7.2
+ARG RACKET_VERSION=7.3
 
 RUN apt-get update -q \
     && apt-get install --no-install-recommends -q -y \

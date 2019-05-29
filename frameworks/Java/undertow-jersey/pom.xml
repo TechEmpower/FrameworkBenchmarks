@@ -42,10 +42,10 @@
             <directory>src/main/resources/</directory>
             <includes>
               <include>fortunes.mustache</include>
-              <include>hibernate.cfg.xml</include>
+              <include>META-INF/persistence.xml</include>
             </includes>
             <excludes>
-              <exclude>hikarycp/hibernate.cfg.xml</exclude>
+              <exclude>hikarycp/META-INF/persistence.xml</exclude>
             </excludes>
           </resource>
         </resources>
@@ -68,13 +68,13 @@
               <include>fortunes.mustache</include>
             </includes>
             <excludes>
-              <exclude>hibernate.cfg.xml</exclude>
+              <exclude>META-INF/persistence.xml</exclude>
             </excludes>
           </resource>
           <resource>
             <directory>src/main/resources/hikarycp</directory>
             <includes>
-              <include>hibernate.cfg.xml</include>
+              <include>META-INF/persistence.xml</include>
             </includes>
           </resource>
         </resources>
