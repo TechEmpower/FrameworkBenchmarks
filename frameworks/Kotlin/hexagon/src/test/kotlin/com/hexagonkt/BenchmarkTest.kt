@@ -1,74 +1,38 @@
 package com.hexagonkt
 
 import com.hexagonkt.serialization.parse
-import com.hexagonkt.client.Client
+import com.hexagonkt.http.client.Client
+import com.hexagonkt.serialization.Json
 import com.hexagonkt.serialization.parseList
-import com.hexagonkt.server.HttpMethod.GET
+import com.hexagonkt.http.Method.GET
 import org.asynchttpclient.Response
 import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 import java.lang.System.setProperty
-import kotlin.test.assertFailsWith
 
-internal const val THREADS = 4
-internal const val TIMES = 2
+@Test class BenchmarkJettyMongoDbTest : BenchmarkTestBase("jetty", "mongodb")
 
-class BenchmarkJettyMongoDbTest : BenchmarkTest("jetty", "mongodb")
-class BenchmarkJettyPostgreSqlTest : BenchmarkTest("jetty", "postgresql")
+@Test class BenchmarkJettyPostgreSqlTest : BenchmarkTestBase("jetty", "postgresql")
 
-class BenchmarkUndertowMongoDbTest : BenchmarkTest("undertow", "mongodb")
-class BenchmarkUndertowPostgreSqlTest : BenchmarkTest("undertow", "postgresql")
+@Test abstract class BenchmarkTestBase(
+    private val webEngine: String,
+    private val databaseEngine: String,
+    private val templateEngine: String = "pebble"
+) {
+    private val client by lazy { Client("http://localhost:${benchmarkServer.runtimePort}") }
 
-@Test(threadPoolSize = THREADS, invocationCount = TIMES)
-@Suppress("MemberVisibilityCanPrivate")
-abstract class BenchmarkTest(private val webEngine: String, private val databaseEngine: String) {
-    private val client by lazy { Client("http://localhost:${benchmarkServer?.runtimePort}") }
-
-    @BeforeClass fun warmup() {
-        setProperty("DBSTORE", databaseEngine)
+    @BeforeClass fun startUp() {
         setProperty("WEBENGINE", webEngine)
         main()
-
-        @Suppress("ConstantConditionIf")
-        val warmupRounds = if (THREADS > 1) 2 else 0
-        (1..warmupRounds).forEach {
-            json()
-            plaintext()
-            no_query_parameter()
-            empty_query_parameter()
-            text_query_parameter()
-            zero_queries()
-            one_thousand_queries()
-            one_query()
-            ten_queries()
-            one_hundred_queries()
-            five_hundred_queries()
-            fortunes()
-            no_updates_parameter()
-            empty_updates_parameter()
-            text_updates_parameter()
-            zero_updates()
-            one_thousand_updates()
-            one_update()
-            ten_updates()
-            one_hundred_updates()
-            five_hundred_updates()
-        }
     }
 
-    @AfterClass fun cooldown() {
-        benchmarkStore?.close()
-        benchmarkServer?.stop()
+    @AfterClass fun shutDown() {
+        benchmarkStores[databaseEngine]?.close()
+        benchmarkServer.stop()
     }
 
-    fun store() {
-        assertFailsWith<IllegalStateException> {
-            createStore("invalid")
-        }
-    }
-
-    fun web() {
+    @Test fun web() {
         val web = Web()
 
         val webRoutes = web.serverRouter.requestHandlers
@@ -77,24 +41,24 @@ abstract class BenchmarkTest(private val webEngine: String, private val database
         val benchmarkRoutes = listOf(
             GET to "/plaintext",
             GET to "/json",
-            GET to "/fortunes",
-            GET to "/db",
-            GET to "/query",
-            GET to "/update"
+            GET to "/$databaseEngine/$templateEngine/fortunes",
+            GET to "/$databaseEngine/db",
+            GET to "/$databaseEngine/query",
+            GET to "/$databaseEngine/update"
         )
 
         assert(webRoutes.containsAll(benchmarkRoutes))
     }
 
-    fun json() {
+    @Test fun json() {
         val response = client.get("/json")
         val content = response.responseBody
 
-        checkResponse(response, "application/json")
+        checkResponse(response, Json.contentType)
         assert("Hello, World!" == content.parse(Message::class).message)
     }
 
-    fun plaintext() {
+    @Test fun plaintext() {
         val response = client.get("/plaintext")
         val content = response.responseBody
 
@@ -102,59 +66,59 @@ abstract class BenchmarkTest(private val webEngine: String, private val database
         assert("Hello, World!" == content)
     }
 
-    fun fortunes() {
-        val response = client.get("/fortunes")
+    @Test fun fortunes() {
+        val response = client.get("/$databaseEngine/$templateEngine/fortunes")
         val content = response.responseBody
 
         checkResponse(response, "text/html;charset=utf-8")
-        assert(content.contains("<td>&lt;script&gt;alert(&quot;This should not be "))
+        assert(content.contains("<td>&lt;script&gt;alert(&quot;This should not be"))
         assert(content.contains(" displayed in a browser alert box.&quot;);&lt;/script&gt;</td>"))
         assert(content.contains("<td>フレームワークのベンチマーク</td>"))
     }
 
-    fun no_query_parameter() {
-        val response = client.get("/db")
+    @Test fun `no query parameter`() {
+        val response = client.get("/$databaseEngine/db")
         val body = response.responseBody
 
-        checkResponse(response, "application/json")
+        checkResponse(response, Json.contentType)
         val bodyMap = body.parse(Map::class)
         assert(bodyMap.containsKey(World::id.name))
         assert(bodyMap.containsKey(World::randomNumber.name))
     }
 
-    fun no_updates_parameter() {
-        val response = client.get("/update")
+    @Test fun `no updates parameter`() {
+        val response = client.get("/$databaseEngine/update")
         val body = response.responseBody
 
-        checkResponse(response, "application/json")
+        checkResponse(response, Json.contentType)
         val bodyMap = body.parseList(Map::class).first()
         assert(bodyMap.containsKey(World::id.name))
         assert(bodyMap.containsKey(World::randomNumber.name))
     }
 
-    fun empty_query_parameter() = checkDbRequest("/query?queries", 1)
-    fun text_query_parameter() = checkDbRequest("/query?queries=text", 1)
-    fun zero_queries() = checkDbRequest("/query?queries=0", 1)
-    fun one_thousand_queries() = checkDbRequest("/query?queries=1000", 500)
-    fun one_query() = checkDbRequest("/query?queries=1", 1)
-    fun ten_queries() = checkDbRequest("/query?queries=10", 10)
-    fun one_hundred_queries() = checkDbRequest("/query?queries=100", 100)
-    fun five_hundred_queries() = checkDbRequest("/query?queries=500", 500)
+    @Test fun `empty query parameter`() = checkDbRequest("/$databaseEngine/query?queries", 1)
+    @Test fun `text query parameter`() = checkDbRequest("/$databaseEngine/query?queries=text", 1)
+    @Test fun `zero queries`() = checkDbRequest("/$databaseEngine/query?queries=0", 1)
+    @Test fun `one thousand queries`() = checkDbRequest("/$databaseEngine/query?queries=1000", 500)
+    @Test fun `one query`() = checkDbRequest("/$databaseEngine/query?queries=1", 1)
+    @Test fun `ten queries`() = checkDbRequest("/$databaseEngine/query?queries=10", 10)
+    @Test fun `one hundred queries`() = checkDbRequest("/$databaseEngine/query?queries=100", 100)
+    @Test fun `five hundred queries`() = checkDbRequest("/$databaseEngine/query?queries=500", 500)
 
-    fun empty_updates_parameter() = checkDbRequest("/update?queries", 1)
-    fun text_updates_parameter() = checkDbRequest("/update?queries=text", 1)
-    fun zero_updates() = checkDbRequest("/update?queries=0", 1)
-    fun one_thousand_updates() = checkDbRequest("/update?queries=1000", 500)
-    fun one_update() = checkDbRequest("/update?queries=1", 1)
-    fun ten_updates() = checkDbRequest("/update?queries=10", 10)
-    fun one_hundred_updates() = checkDbRequest("/update?queries=100", 100)
-    fun five_hundred_updates() = checkDbRequest("/update?queries=500", 500)
+    @Test fun `empty updates parameter`() = checkDbRequest("/$databaseEngine/update?queries", 1)
+    @Test fun `text updates parameter`() = checkDbRequest("/$databaseEngine/update?queries=text", 1)
+    @Test fun `zero updates`() = checkDbRequest("/$databaseEngine/update?queries=0", 1)
+    @Test fun `one thousand updates`() = checkDbRequest("/$databaseEngine/update?queries=1000", 500)
+    @Test fun `one update`() = checkDbRequest("/$databaseEngine/update?queries=1", 1)
+    @Test fun `ten updates`() = checkDbRequest("/$databaseEngine/update?queries=10", 10)
+    @Test fun `one hundred updates`() = checkDbRequest("/$databaseEngine/update?queries=100", 100)
+    @Test fun `five hundred updates`() = checkDbRequest("/$databaseEngine/update?queries=500", 500)
 
     private fun checkDbRequest(path: String, itemsCount: Int) {
         val response = client.get(path)
         val content = response.responseBody
 
-        checkResponse(response, "application/json")
+        checkResponse(response, Json.contentType)
 
         val resultsList = content.parse(List::class)
         assert(itemsCount == resultsList.size)

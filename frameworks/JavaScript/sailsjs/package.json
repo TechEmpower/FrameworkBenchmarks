@@ -9,13 +9,13 @@
     "bluebird": "3.4.1",
     "ejs": "2.5.7",
     "handlebars": "4.0.5",
-    "mysql": "2.11.0",
+    "mysql": "2.16.0",
     "pg": "6.0.5",
     "pg-hstore": "2.3.2",
     "rc": "1.1.6",
-    "sails": "0.12.3",
+    "sails": "0.12.7",
     "sails-disk": "0.10.10",
-    "sequelize": "3.23.4"
+    "sequelize": "3.32.1"
   },
   "scripts": {
     "start": "node app.js",

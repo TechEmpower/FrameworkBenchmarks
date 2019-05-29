@@ -1,5 +1,5 @@
-const cluster = require('cluster');
-const numCPUs = require('os').cpus().length;
+const cluster = require("cluster");
+const numCPUs = require("os").cpus().length;
 
 if (cluster.isMaster) {
   // Fork workers.
@@ -7,12 +7,12 @@ if (cluster.isMaster) {
     cluster.fork();
   }
 
-  console.log('Master starting ' + new Date().toISOString());
+  console.log("Master starting " + new Date().toISOString());
 
-  cluster.on('exit', () => {
+  cluster.on("exit", () => {
     process.exit(1);
   });
 } else {
   // worker task
-  require('./create-server');
+  require("./create-server");
 }

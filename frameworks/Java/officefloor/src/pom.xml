@@ -9,21 +9,21 @@
 	<packaging>pom</packaging>
 	<name>OfficeFloor Benchmarks</name>
 	<properties>
-		<officefloor.version>3.3.0</officefloor.version>
-		<maven.compiler.source>10</maven.compiler.source>
-		<maven.compiler.target>10</maven.compiler.target>
-		<jackson.version>2.9.7</jackson.version>
+		<officefloor.version>3.9.2</officefloor.version>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<jaxb.version>2.3.0</jaxb.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<modules>
 		<module>woof_benchmark</module>
-		<module>woof_tpr</module>
-		<module>woof_micro</module>
-		<module>woof_thread_affinity</module>
-		<module>woof_raw</module>
-		<module>woof_netty</module>
-		<module>woof_rapidoid</module>
+		<module>woof_benchmark_tpr</module>
+		<module>woof_benchmark_micro</module>
+		<module>woof_benchmark_thread_affinity</module>
+		<module>woof_benchmark_raw</module>
+		<module>woof_benchmark_netty</module>
+		<module>woof_benchmark_rapidoid</module>
+		<module>woof_benchmark_spring</module>
 	</modules>
 	<repositories>
 		<repository>
@@ -35,104 +35,11 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>net.officefloor.web</groupId>
-				<artifactId>woof</artifactId>
+				<groupId>net.officefloor</groupId>
+				<artifactId>bom</artifactId>
 				<version>${officefloor.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.officefloor.server</groupId>
-				<artifactId>officeserver_netty</artifactId>
-				<version>${officefloor.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.officefloor.server</groupId>
-				<artifactId>officeserver_rapidoid</artifactId>
-				<version>${officefloor.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.officefloor.web</groupId>
-				<artifactId>officeweb_executive</artifactId>
-				<version>${officefloor.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.officefloor.web</groupId>
-				<artifactId>officejson_jackson</artifactId>
-				<version>${officefloor.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.module</groupId>
-				<artifactId>jackson-module-afterburner</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.officefloor.persistence</groupId>
-				<artifactId>officejpa</artifactId>
-				<version>${officefloor.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.officefloor.persistence</groupId>
-				<artifactId>officejdbc</artifactId>
-				<version>${officefloor.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.officefloor.persistence</groupId>
-				<artifactId>officejdbc_postgresql</artifactId>
-				<version>${officefloor.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.officefloor.persistence</groupId>
-				<artifactId>officejpa_hibernate</artifactId>
-				<version>${officefloor.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-core</artifactId>
-				<version>5.3.1.Final</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.xml.bind</groupId>
-				<artifactId>jaxb-api</artifactId>
-				<version>${jaxb.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.sun.xml.bind</groupId>
-				<artifactId>jaxb-core</artifactId>
-				<version>${jaxb.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.sun.xml.bind</groupId>
-				<artifactId>jaxb-impl</artifactId>
-				<version>${jaxb.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.activation</groupId>
-				<artifactId>javax.activation-api</artifactId>
-				<version>1.2.0</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.transaction</groupId>
-				<artifactId>javax.transaction-api</artifactId>
-				<version>1.3</version>
-			</dependency>
-			<dependency>
-				<groupId>org.postgresql</groupId>
-				<artifactId>postgresql</artifactId>
-				<version>42.2.5</version>
-			</dependency>
-			<dependency>
-				<groupId>com.zaxxer</groupId>
-				<artifactId>HikariCP</artifactId>
-				<version>3.2.0</version>
-			</dependency>
-			<dependency>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok</artifactId>
-				<version>1.18.0</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 			<dependency>
 				<groupId>net.officefloor.benchmarks</groupId>
@@ -141,7 +48,7 @@
 			</dependency>
 			<dependency>
 				<groupId>net.officefloor.benchmarks</groupId>
-				<artifactId>woof_micro</artifactId>
+				<artifactId>woof_benchmark_micro</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
@@ -160,7 +67,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.1.1</version>
+					<version>3.2.1</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

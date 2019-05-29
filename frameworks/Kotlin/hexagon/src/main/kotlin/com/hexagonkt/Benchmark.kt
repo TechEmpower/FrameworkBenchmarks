@@ -1,21 +1,19 @@
 package com.hexagonkt
 
-import com.hexagonkt.helpers.systemSetting
+import com.hexagonkt.helpers.Jvm.systemSetting
+import com.hexagonkt.serialization.Json
 import com.hexagonkt.serialization.convertToMap
-import com.hexagonkt.serialization.serialize
-import com.hexagonkt.server.*
-import com.hexagonkt.server.jetty.JettyServletEngine
-import com.hexagonkt.server.servlet.ServletServer
-import com.hexagonkt.server.undertow.UndertowEngine
-import com.hexagonkt.settings.SettingsManager.settings
-import com.hexagonkt.templates.pebble.PebbleEngine
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory.getLogger
+import com.hexagonkt.http.server.*
+import com.hexagonkt.http.server.jetty.JettyServletAdapter
+import com.hexagonkt.http.server.servlet.ServletServer
+import com.hexagonkt.settings.SettingsManager
+import com.hexagonkt.templates.TemplateManager.render
+import com.hexagonkt.templates.TemplatePort
+import com.hexagonkt.templates.pebble.PebbleAdapter
 
-import java.util.*
-import java.util.concurrent.ThreadLocalRandom
+import java.util.Locale
+
 import javax.servlet.annotation.WebListener
-import java.net.InetAddress.getByName as address
 
 // DATA CLASSES
 internal data class Message(val message: String)
@@ -24,22 +22,61 @@ internal data class World(val _id: Int, val id: Int, val randomNumber: Int)
 
 // CONSTANTS
 private const val TEXT_MESSAGE: String = "Hello, World!"
-private const val CONTENT_TYPE_JSON = "application/json"
-private const val QUERIES_PARAM = "queries"
+private const val QUERIES_PARAM: String = "queries"
 
-private val LOGGER: Logger = getLogger("BENCHMARK_LOGGER")
-private val defaultLocale: Locale = Locale.getDefault()
-
-// UTILITIES
-internal fun randomWorld() = ThreadLocalRandom.current().nextInt(WORLD_ROWS) + 1
-
-private fun Call.returnWorlds(worldsList: List<World>) {
-    val worlds = worldsList.map { it.convertToMap() - "_id" }
-    ok(worlds.serialize(), CONTENT_TYPE_JSON)
+internal val benchmarkStores: Map<String, BenchmarkStore> by lazy {
+    mapOf(
+        "mongodb" to BenchmarkMongoDbStore("mongodb"),
+        "postgresql" to BenchmarkSqlStore("postgresql")
+    )
 }
 
-private fun Call.getWorldsCount() = (request[QUERIES_PARAM]?.toIntOrNull() ?: 1).let {
+internal val benchmarkTemplateEngines: Map<String, TemplatePort> by lazy {
+    mapOf("pebble" to PebbleAdapter)
+}
+
+private val defaultLocale = Locale.getDefault()
+
+private val engine by lazy {
+    when (systemSetting("WEBENGINE", "jetty")) {
+        "jetty" -> JettyServletAdapter()
+        else -> error("Unsupported server engine")
+    }
+}
+
+private val router: Router by lazy {
+    Router {
+        before {
+            response.setHeader("Server", "Servlet/3.1")
+            response.setHeader("Transfer-Encoding", "chunked")
+        }
+
+        get("/plaintext") { ok(TEXT_MESSAGE, "text/plain") }
+        get("/json") { ok(Message(TEXT_MESSAGE), Json) }
+
+        benchmarkStores.forEach { storeEngine, store ->
+            benchmarkTemplateEngines.forEach { templateKind ->
+                val path = "/$storeEngine/${templateKind.key}/fortunes"
+
+                get(path) { listFortunes(store, templateKind.key, templateKind.value) }
+            }
+
+            get("/$storeEngine/db") { dbQuery(store) }
+            get("/$storeEngine/query") { getWorlds(store) }
+            get("/$storeEngine/update") { updateWorlds(store) }
+        }
+    }
+}
+
+internal val benchmarkServer: Server by lazy { Server(engine, router, SettingsManager.settings) }
+
+// UTILITIES
+private fun returnWorlds(worldsList: List<World>): List<Map<Any?, Any?>> =
+    worldsList.map { it.convertToMap() - "_id" }
+
+private fun Call.getWorldsCount() = parameters[QUERIES_PARAM]?.firstOrNull()?.toIntOrNull().let {
     when {
+        it == null -> 1
         it < 1 -> 1
         it > 500 -> 500
         else -> it
@@ -47,73 +84,32 @@ private fun Call.getWorldsCount() = (request[QUERIES_PARAM]?.toIntOrNull() ?: 1)
 }
 
 // HANDLERS
-private fun Call.listFortunes(store: Store) {
+private fun Call.listFortunes(
+    store: BenchmarkStore, templateKind: String, templateAdapter: TemplatePort) {
+
     val fortunes = store.findAllFortunes() + Fortune(0, "Additional fortune added at request time.")
     val sortedFortunes = fortunes.sortedBy { it.message }
+    val context = mapOf("fortunes" to sortedFortunes)
+
     response.contentType = "text/html;charset=utf-8"
-    template(PebbleEngine, "fortunes.html", defaultLocale, "fortunes" to sortedFortunes)
+    ok(render(templateAdapter, "fortunes.$templateKind.html", defaultLocale, context))
 }
 
-private fun Call.dbQuery(store: Store) {
-    val world = store.findWorlds(1).first().convertToMap() - "_id"
-    ok(world.serialize(), CONTENT_TYPE_JSON)
+private fun Call.dbQuery(store: BenchmarkStore) {
+    ok(returnWorlds(store.findWorlds(1)).first(), Json)
 }
 
-private fun Call.getWorlds(store: Store) {
-    returnWorlds(store.findWorlds(getWorldsCount()))
+private fun Call.getWorlds(store: BenchmarkStore) {
+    ok(returnWorlds(store.findWorlds(getWorldsCount())), Json)
 }
 
-private fun Call.updateWorlds(store: Store) {
-    returnWorlds(store.replaceWorlds(getWorldsCount()))
+private fun Call.updateWorlds(store: BenchmarkStore) {
+    ok(returnWorlds(store.replaceWorlds(getWorldsCount())), Json)
 }
 
-// CONTROLLER
-private fun router(): Router = router {
-    val store = benchmarkStore ?: error("Invalid Store")
+// SERVERS
+@WebListener class Web : ServletServer(router)
 
-    before {
-        response.addHeader("Server", "Servlet/3.1")
-        response.addHeader("Transfer-Encoding", "chunked")
-        response.addHeader("Date", httpDate())
-    }
-
-    get("/plaintext") { ok(TEXT_MESSAGE, "text/plain") }
-    get("/json") { ok(Message(TEXT_MESSAGE).serialize(), CONTENT_TYPE_JSON) }
-    get("/fortunes") { listFortunes(store) }
-    get("/db") { dbQuery(store) }
-    get("/query") { getWorlds(store) }
-    get("/update") { updateWorlds(store) }
-}
-
-@WebListener class Web : ServletServer () {
-    init {
-        if (benchmarkStore == null)
-            benchmarkStore = createStore(systemSetting("DBSTORE", "mongodb"))
-    }
-
-    override fun createRouter() = router()
-}
-
-internal var benchmarkStore: Store? = null
-internal var benchmarkServer: Server? = null
-
-internal fun createEngine(engine: String): ServerEngine = when (engine) {
-    "jetty" -> JettyServletEngine()
-    "undertow" -> UndertowEngine()
-    else -> error("Unsupported server engine")
-}
-
-fun main(vararg args: String) {
-    val engine = createEngine(systemSetting("WEBENGINE", "jetty"))
-    benchmarkStore = createStore(systemSetting("DBSTORE", "mongodb"))
-
-    LOGGER.info("""
-            Benchmark set up:
-                - Engine: {}
-                - Store: {}
-        """.trimIndent(),
-        engine.javaClass.name,
-        benchmarkStore?.javaClass?.name)
-
-    benchmarkServer = Server(engine, settings, router()).apply { run() }
+fun main() {
+    benchmarkServer.start()
 }

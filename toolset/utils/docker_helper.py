@@ -11,6 +11,10 @@ from colorama import Fore, Style
 from toolset.utils.output_helper import log
 from toolset.utils.database_helper import test_database
 
+from psutil import virtual_memory
+
+# total memory limit allocated for the test container
+mem_limit = int(round(virtual_memory().total * .95))
 
 class DockerHelper:
     def __init__(self, benchmarker=None):
@@ -24,7 +28,7 @@ class DockerHelper:
             base_url=self.benchmarker.config.database_docker_host)
 
     def __build(self, base_url, path, build_log_file, log_prefix, dockerfile,
-                tag):
+                tag, buildargs={}):
         '''
         Builds docker containers using docker-py low-level api
         '''
@@ -39,7 +43,9 @@ class DockerHelper:
                     tag=tag,
                     forcerm=True,
                     timeout=3600,
-                    pull=True)
+                    pull=True,
+                    buildargs=buildargs
+                )
                 buffer = ""
                 for token in output:
                     if token.startswith('{"stream":'):
@@ -58,6 +64,14 @@ class DockerHelper:
                             file=build_log,
                             color=Fore.WHITE + Style.BRIGHT \
                                 if re.match(r'^Step \d+\/\d+', line) else '')
+                    # Kill docker builds if they exceed 60 mins. This will only
+                    # catch builds that are still printing output.
+                    if self.benchmarker.time_logger.time_since_start() > 3600:
+                        log("Build time exceeded 60 minutes",
+                            prefix=log_prefix,
+                            file=build_log,
+                            color=Fore.RED)
+                        raise Exception
 
                 if buffer:
                     log(buffer,
@@ -109,7 +123,12 @@ class DockerHelper:
         log_prefix = "%s: " % test.name
 
         # Build the test image
-        test_docker_file = "%s.dockerfile" % test.name
+        test_docker_file = '%s.dockerfile' % test.name
+        if hasattr(test, 'dockerfile'):
+            test_docker_file = test.dockerfile
+        test_database = ''
+        if hasattr(test, 'database'):
+            test_database = test.database
         build_log_file = build_log_dir
         if build_log_dir is not os.devnull:
             build_log_file = os.path.join(
@@ -123,8 +142,13 @@ class DockerHelper:
                 log_prefix=log_prefix,
                 path=test.directory,
                 dockerfile=test_docker_file,
-                tag="techempower/tfb.test.%s" % test_docker_file.replace(
-                    ".dockerfile", ""))
+                buildargs=({
+                    'BENCHMARK_ENV':
+                        self.benchmarker.config.results_environment,
+                    'TFB_TEST_NAME': test.name,
+                    'TFB_TEST_DATABASE': test_database
+                }),
+                tag="techempower/tfb.test.%s" % test.name)
         except Exception:
             return 1
 
@@ -174,17 +198,29 @@ class DockerHelper:
                 'soft': 99
             }]
 
+            docker_cmd = ''
+            if hasattr(test, 'docker_cmd'):
+                docker_cmd = test.docker_cmd
+
+            # Expose ports in debugging mode
+            ports = {}
+            if self.benchmarker.config.mode == "debug":
+                ports = {test.port: test.port}
+
             container = self.server.containers.run(
                 "techempower/tfb.test.%s" % test.name,
                 name=name,
+                command=docker_cmd,
                 network=self.benchmarker.config.network,
                 network_mode=self.benchmarker.config.network_mode,
+                ports=ports,
                 stderr=True,
                 detach=True,
                 init=True,
                 extra_hosts=extra_hosts,
                 privileged=True,
                 ulimits=ulimit,
+                mem_limit=mem_limit,
                 sysctls=sysctl,
                 remove=True,
                 log_config={'type': None})
@@ -214,7 +250,7 @@ class DockerHelper:
     @staticmethod
     def __stop_container(container):
         try:
-            container.kill()
+            container.stop(timeout=2)
             time.sleep(2)
         except:
             # container has already been killed
@@ -242,9 +278,10 @@ class DockerHelper:
             for container in containers:
                 DockerHelper.__stop_container(container)
         else:
-            self.__stop_all(self.server)
+            DockerHelper.__stop_all(self.server)
             if is_multi_setup:
-                self.__stop_all(self.database)
+                DockerHelper.__stop_all(self.database)
+                DockerHelper.__stop_all(self.client)
 
         self.database.containers.prune()
         if is_multi_setup:

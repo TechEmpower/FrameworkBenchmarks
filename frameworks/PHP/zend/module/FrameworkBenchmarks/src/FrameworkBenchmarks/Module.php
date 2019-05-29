@@ -19,7 +19,7 @@ class Module
             'router' => array(
                 'routes' => array(
                     'plaintext' => array(
-                      'type' => 'Zend\Mvc\Router\Http\Literal',
+                      'type' => 'Zend\Router\Http\Literal',
                       'options' => array(
                           'route' => '/plaintext',
                           'defaults' => array(
@@ -29,7 +29,7 @@ class Module
                       ),
                     ),
                     'json' => array(
-                        'type' => 'Zend\Mvc\Router\Http\Literal',
+                        'type' => 'Zend\Router\Http\Literal',
                         'options' => array(
                             'route' => '/json',
                             'defaults' => array(
@@ -39,7 +39,7 @@ class Module
                         ),
                     ),
                     'db' => array(
-                        'type' => 'Zend\Mvc\Router\Http\Literal',
+                        'type' => 'Zend\Router\Http\Literal',
                         'options' => array(
                             'route' => '/db',
                             'defaults' => array(
@@ -48,23 +48,23 @@ class Module
                             ),
                         ),
                     ),
-                    'db-multi' => array(
-                        'type' => 'Zend\Mvc\Router\Http\Literal',
+                    'queries' => array(
+                        'type' => 'Zend\Router\Http\Literal',
                         'options' => array(
-                            'route' => '/db-multi',
+                            'route' => '/queries',
                             'defaults' => array(
                                 'controller' => 'FrameworkBenchmarks\Controller\BenchController',
-                                'action' => 'db-multi',
+                                'action' => 'queries',
                             ),
                         ),
                     ),
-                    'update' => array(
-                        'type' => 'Zend\Mvc\Router\Http\Literal',
+                    'updates' => array(
+                        'type' => 'Zend\Router\Http\Literal',
                         'options' => array(
-                            'route' => '/update',
+                            'route' => '/updates',
                             'defaults' => array(
                                 'controller' => 'FrameworkBenchmarks\Controller\BenchController',
-                                'action' => 'update',
+                                'action' => 'updates',
                             ),
                         ),
                     ),

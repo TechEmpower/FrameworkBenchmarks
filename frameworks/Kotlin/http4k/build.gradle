@@ -1,6 +1,6 @@
 buildscript {
-    ext.kotlin_version = "1.2.50"
-    ext.http4k_version = "3.34.0"
+    ext.kotlin_version = "1.3.31"
+    ext.http4k_version = "3.106.0"
 
     repositories {
         mavenCentral()
@@ -21,7 +21,8 @@ allprojects {
     }
 
     apply plugin: "kotlin"
-    apply plugin: 'com.github.johnrengelman.shadow'
+
+    compileKotlin.kotlinOptions.jvmTarget = "1.8"
 
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
@@ -29,16 +30,9 @@ allprojects {
     version = project.hasProperty('releaseVersion') ? project.releaseVersion : 'LOCAL'
     group = 'org.http4k'
 
-    shadowJar {
-        baseName = "http4k-${project.name}-benchmark"
-        classifier = null
-        version = null
-        mergeServiceFiles()
-    }
-
     compileTestKotlin {
         kotlinOptions {
-            languageVersion = "1.2"
+            languageVersion = "1.3"
         }
     }
 }
@@ -47,7 +41,7 @@ dependencies {
     compile project(":core")
     compile project(":apache")
     compile project(":jetty")
+    compile project(":ktorcio")
     compile project(":netty")
-    compile project(":sunhttp")
     compile project(":undertow")
 }

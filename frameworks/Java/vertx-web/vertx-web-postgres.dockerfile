@@ -1,4 +1,4 @@
-FROM maven:3.5.3-jdk-10-slim as maven
+FROM maven:3.6.1-jdk-11-slim as maven
 WORKDIR /vertx-web
 COPY scripts scripts
 COPY src src
@@ -16,9 +16,12 @@ CMD java \
     -Dvertx.threadChecks=false                        \
     -Dvertx.disableContextTimings=true                \
     -Dvertx.disableTCCL=true                          \
+    -Dvertx.disableHttpHeadersValidation=true         \
     -jar                                              \
-    target/vertx-web-benchmark-3.5.4-fat.jar          \
+    target/vertx-web-benchmark-3.7.0-fat.jar          \
     --instances                                       \
     `grep --count ^processor /proc/cpuinfo`           \
     --conf                                            \
-    src/main/conf/config.json
+    src/main/conf/config.json                         \
+    --options                                         \
+    src/main/conf/vertx.json

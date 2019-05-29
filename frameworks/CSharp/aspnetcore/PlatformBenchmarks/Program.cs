@@ -25,10 +25,13 @@ namespace PlatformBenchmarks
             Console.WriteLine(BenchmarkApplication.Paths.Fortunes);
             Console.WriteLine(BenchmarkApplication.Paths.SingleQuery);
             Console.WriteLine(BenchmarkApplication.Paths.Updates);
+            Console.WriteLine(BenchmarkApplication.Paths.MultipleQueries);
             DateHeader.SyncDateTimer();
-            BatchUpdateString.Initalize();
 
-            BuildWebHost(args).Run();
+            var host = BuildWebHost(args);
+            var config = (IConfiguration)host.Services.GetService(typeof(IConfiguration));
+            BatchUpdateString.Initialize(config.Get<AppSettings>().Database);
+            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args)

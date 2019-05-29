@@ -8,11 +8,13 @@
 
 package org.smartboot.http;
 
+import com.jsoniter.output.JsonStream;
+import com.jsoniter.output.JsonStreamPool;
+import com.jsoniter.spi.JsonException;
 import org.smartboot.http.server.HttpMessageProcessor;
 import org.smartboot.http.server.decode.Http11Request;
 import org.smartboot.http.server.decode.HttpRequestProtocol;
 import org.smartboot.http.server.handle.HttpHandle;
-import org.smartboot.http.utils.HttpHeaderConstant;
 import org.smartboot.socket.MessageProcessor;
 import org.smartboot.socket.transport.AioQuickServer;
 
@@ -22,26 +24,38 @@ public class Bootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
-        System.setProperty("sun.nio.ch.maxCompletionHandlersOnStack","0");
+        System.setProperty("smart-socket.server.pageSize", (8 * 1024 * 1024) + "");
+//        System.setProperty("smart-socket.bufferPool.pageNum", 512 + "");
+        System.setProperty("smart-socket.session.writeChunkSize", (1024 * 4) + "");
+//        System.setProperty("sun.nio.ch.maxCompletionHandlersOnStack","24");
         HttpMessageProcessor processor = new HttpMessageProcessor(System.getProperty("webapps.dir", "./"));
         processor.route("/plaintext", new HttpHandle() {
 
 
             @Override
             public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
-
-                response.setHeader(HttpHeaderConstant.Names.CONTENT_LENGTH, body.length + "");
-                response.setHeader(HttpHeaderConstant.Names.CONTENT_TYPE, "text/plain; charset=UTF-8");
+                response.setContentLength(body.length);
+                response.setContentType("text/plain; charset=UTF-8");
                 response.getOutputStream().write(body);
             }
         });
         processor.route("/json", new HttpHandle() {
+
             @Override
             public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
-                byte[] b = JSON.toJson(new Message("Hello, World!"));
-                response.setHeader(HttpHeaderConstant.Names.CONTENT_LENGTH, b.length + "");
-                response.setHeader(HttpHeaderConstant.Names.CONTENT_TYPE, "application/json");
-                response.getOutputStream().write(b);
+
+                response.setContentType("application/json");
+                JsonStream stream = JsonStreamPool.borrowJsonStream();
+                try {
+                    stream.reset(null);
+                    stream.writeVal(Message.class, new Message("Hello, World!"));
+                    response.setContentLength(stream.buffer().tail());
+                    response.getOutputStream().write(stream.buffer().data(), 0, stream.buffer().tail());
+                } catch (IOException e) {
+                    throw new JsonException(e);
+                } finally {
+                    JsonStreamPool.returnJsonStream(stream);
+                }
             }
         });
         http(processor);
@@ -51,9 +65,12 @@ public class Bootstrap {
     public static void http(MessageProcessor<Http11Request> processor) {
         // 定义服务器接受的消息类型以及各类消息对应的处理器
         AioQuickServer<Http11Request> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), processor);
-        server.setWriteQueueSize(1024);
-        server.setReadBufferSize(1024*4);
-//        server.setThreadNum((int) (Runtime.getRuntime().availableProcessors() * 2));
+        server.setReadBufferSize(1024 * 4);
+        int cpuNum = Runtime.getRuntime().availableProcessors();
+        int shareNum = Runtime.getRuntime().availableProcessors() * 7 / 8;
+        server.setBossThreadNum(cpuNum);
+        server.setBossShareToWorkerThreadNum(shareNum);
+        server.setWorkerThreadNum((cpuNum - shareNum) * 2);
         try {
             server.start();
         } catch (IOException e) {

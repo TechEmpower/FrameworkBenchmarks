@@ -16,14 +16,14 @@ object Main extends App {
     .withHandler("/json", Service.mk { req: Request =>
       val rep = Response()
       rep.content = Buf.ByteArray.Owned(mapper.writeValueAsBytes(Map("message" -> "Hello, World!")))
-      rep.contentType = "application/json"
+      rep.headerMap.setUnsafe("Content-Type", "application/json")
 
       Future.value(rep)
     })
     .withHandler("/plaintext", Service.mk { req: Request => 
       val rep = Response()
       rep.content = helloWorld
-      rep.contentType = "text/plain"
+      rep.headerMap.setUnsafe("Content-Type", "text/plain")
 
       Future.value(rep)
     })
@@ -32,8 +32,8 @@ object Main extends App {
     new SimpleFilter[Request, Response] with (Response => Response) {
 
     def apply(rep: Response): Response = {
-      rep.headerMap.set("Server", "Finagle")
-      rep.headerMap.set("Date", currentTime())
+      rep.headerMap.setUnsafe("Server", "Finagle")
+      rep.headerMap.setUnsafe("Date", currentTime())
 
       rep
     }
@@ -44,7 +44,7 @@ object Main extends App {
 
   Await.ready(Http.server
     .withCompressionLevel(0)
-    .withStack(nilStack)
+    .withStack(nilStack[Request, Response])
     .serve(":8080", serverAndDate.andThen(muxer))
   )
 }

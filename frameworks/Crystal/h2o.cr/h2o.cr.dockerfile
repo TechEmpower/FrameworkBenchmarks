@@ -1,6 +1,12 @@
-FROM alpine:edge
+FROM debian:sid
 
-RUN apk --update --no-cache add gcc git ca-certificates libc-dev openssl1.0-dev h2o-dev wslay-dev crystal shards
+RUN apt update \
+  && apt install -yqq libh2o-evloop-dev libwslay-dev libyaml-0-2 libevent-dev libpcre3-dev \
+    gcc wget git libssl-dev libuv1-dev ca-certificates --no-install-recommends
+
+RUN wget -q https://github.com/crystal-lang/crystal/releases/download/0.26.1/crystal-0.26.1-1-linux-x86_64.tar.gz \
+  && tar --strip-components=1 -xzf crystal-0.26.1-1-linux-x86_64.tar.gz -C /usr/ \
+  && rm -f *.tar.gz
 
 WORKDIR /crystal
 
@@ -10,7 +16,7 @@ COPY ./ ./
 
 RUN shards install
 RUN gcc -shared -O3 lib/h2o/src/ext/h2o.c -I/usr/include -fPIC -o h2o.o
-ENV CRYSTAL_PATH=lib:/usr/lib/crystal/core
+ENV CRYSTAL_PATH=lib:/usr/share/crystal/src
 RUN crystal build --prelude=empty --no-debug --release -Dgc_none -Dfiber_none -Dexcept_none -Dhash_none -Dtime_none -Dregex_none -Dextreme h2o_evloop_hello.cr --link-flags="-Wl,-s $PWD/h2o.o -DH2O_USE_LIBUV=0" -o server.out
 
 CMD sh run.sh

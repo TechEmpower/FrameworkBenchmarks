@@ -48,12 +48,13 @@ public class ExampleApplication extends ProteusApplication
 		
 		Undertow.Builder undertowBuilder = Undertow.builder().addHttpListener(httpPort, config.getString("application.host"))
 				.setBufferSize(16 * 1024)
+				.setDirectBuffers(true)
 				.setIoThreads(Runtime.getRuntime().availableProcessors() * 2)
 				.setSocketOption(org.xnio.Options.BACKLOG, 10000)
 				.setServerOption(UndertowOptions.ALWAYS_SET_KEEP_ALIVE, false)
 				.setServerOption(UndertowOptions.RECORD_REQUEST_START_TIME, false)
 				.setServerOption(UndertowOptions.MAX_ENTITY_SIZE, config.getBytes("undertow.server.maxEntitySize"))
-				.setWorkerThreads(200)
+				.setWorkerThreads(Runtime.getRuntime().availableProcessors() * 8)
 				.setHandler(rootHandler);
 		
 		this.undertow = undertowBuilder.build();

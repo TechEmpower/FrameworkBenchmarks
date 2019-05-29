@@ -21,10 +21,13 @@
 
 #define CACHE_H_
 
+#include <pthread.h>
+#include <stdint.h>
 #include <h2o/cache.h>
 
 typedef struct {
 	h2o_cache_t **cache;
+	pthread_mutex_t *cache_lock;
 	size_t cache_num;
 } cache_t;
 
@@ -34,8 +37,15 @@ int cache_create(size_t concurrency,
                  void (*destroy_cb)(h2o_iovec_t value),
                  cache_t *cache);
 void cache_destroy(cache_t *cache);
-h2o_cache_ref_t *cache_fetch(cache_t *cache, uint64_t now, h2o_iovec_t key);
-void cache_release(cache_t *cache, h2o_cache_ref_t *ref);
-int cache_set(uint64_t now, h2o_iovec_t key, h2o_iovec_t value, cache_t *cache);
+h2o_cache_ref_t *cache_fetch(cache_t *cache,
+                             uint64_t now,
+                             h2o_iovec_t key,
+                             h2o_cache_hashcode_t keyhash);
+void cache_release(cache_t *cache, h2o_cache_ref_t *ref, h2o_cache_hashcode_t keyhash);
+int cache_set(uint64_t now,
+              h2o_iovec_t key,
+              h2o_cache_hashcode_t keyhash,
+              h2o_iovec_t value,
+              cache_t *cache);
 
 #endif // CACHE_H_

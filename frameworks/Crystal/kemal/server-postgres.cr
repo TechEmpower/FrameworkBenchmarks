@@ -4,7 +4,7 @@ require "pg"
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
 
-APPDB = DB.open("postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world")
+APPDB = DB.open(ENV["DATABASE_URL"])
 
 class CONTENT
   UTF8  = "; charset=UTF-8"

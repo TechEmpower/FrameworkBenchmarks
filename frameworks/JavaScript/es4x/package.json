@@ -1,26 +1,28 @@
 {
-  "name": "es4x",
+  "name": "benchmark",
   "version": "0.0.1",
   "private": true,
   "main": "index.js",
-  "scripts": {
-    "postinstall": "vertx-scripts init",
-    "package": "vertx-scripts package"
-  },
   "devDependencies": {
-    "vertx-scripts": "latest",
-    "@vertx/unit": "latest"
+    "@vertx/unit": "3.7.0",
+    "es4x-pm": "0.7.3"
   },
   "dependencies": {
-    "@vertx/core": "3.5.3",
-    "@vertx/web": "3.5.3",
-    "@reactiverse/reactive-pg-client": "0.10.3"
+    "@vertx/core": "3.7.0",
+    "@vertx/web": "3.7.0",
+    "@vertx/web-templ-handlebars": "3.7.0",
+    "@reactiverse/reactive-pg-client": "0.11.2"
   },
-  "mvnDependencies": {
-    "io.vertx:vertx-web-templ-handlebars": "3.5.3"
-  },
+  "mvnDependencies": [
+    "io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.30.Final"
+  ],
   "files": [
     "util.js",
     "templates/fortunes.hbs"
-  ]
+  ],
+  "scripts": {
+    "start": "benchmark",
+    "test": "benchmark test index.test.js",
+    "postinstall": "es4x install -f"
+  }
 }

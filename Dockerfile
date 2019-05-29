@@ -10,11 +10,11 @@ RUN apt -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--
   cloc dstat                    `# Collect resource usage statistics` \
   python-dev \
   python-pip \
-  python-software-properties \
+  software-properties-common \
   libmysqlclient-dev            `# Needed for MySQL-python` \
   libpq-dev                     `# Needed for psycopg2`
 
-RUN pip install colorama==0.3.1 requests MySQL-python psycopg2-binary pymongo docker==3.5.0
+RUN pip install colorama==0.3.1 requests MySQL-python psycopg2-binary pymongo docker==3.5.0 psutil
 
 ENV PYTHONPATH /FrameworkBenchmarks
 ENV FWROOT /FrameworkBenchmarks

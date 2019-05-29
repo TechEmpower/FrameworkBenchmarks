@@ -43,7 +43,7 @@ func MySQLFetchRandomWorld(w *World) error {
 }
 
 // MySQLRandomWorlds method returns world record from db randomly.
-func MySQLRandomWorlds(count int) (*[]World, error) {
+func MySQLRandomWorlds(count int) ([]World, error) {
 	worlds := make([]World, count)
 	var err error
 	for i := 0; i < count; i++ {
@@ -52,11 +52,11 @@ func MySQLRandomWorlds(count int) (*[]World, error) {
 			return nil, err
 		}
 	}
-	return &worlds, nil
+	return worlds, nil
 }
 
 // MySQLUpdateRandomWorlds method updates random world records.
-func MySQLUpdateRandomWorlds(count int) (*[]World, error) {
+func MySQLUpdateRandomWorlds(count int) ([]World, error) {
 	worlds := make([]World, count)
 	var err error
 	for i := 0; i < count; i++ {
@@ -70,7 +70,7 @@ func MySQLUpdateRandomWorlds(count int) (*[]World, error) {
 			return nil, err
 		}
 	}
-	return &worlds, nil
+	return worlds, nil
 }
 
 // MySQLFortunes method returns fortunes records
@@ -105,7 +105,7 @@ func PGFetchRandomWorld(w *World) error {
 }
 
 // PGRandomWorlds method returns world record from db randomly.
-func PGRandomWorlds(count int) (*[]World, error) {
+func PGRandomWorlds(count int) ([]World, error) {
 	worlds := make([]World, count)
 	var err error
 	for i := 0; i < count; i++ {
@@ -114,11 +114,11 @@ func PGRandomWorlds(count int) (*[]World, error) {
 			return nil, err
 		}
 	}
-	return &worlds, nil
+	return worlds, nil
 }
 
 // PGUpdateRandomWorlds method updates random world records.
-func PGUpdateRandomWorlds(count int) (*[]World, error) {
+func PGUpdateRandomWorlds(count int) ([]World, error) {
 	worlds := make([]World, count)
 	var err error
 	for i := 0; i < count; i++ {
@@ -146,7 +146,7 @@ func PGUpdateRandomWorlds(count int) (*[]World, error) {
 		return nil, fmt.Errorf("Error when commiting world rows: %s", err)
 	}
 
-	return &worlds, nil
+	return worlds, nil
 }
 
 // PGFortunes method returns fortunes records
