@@ -2,36 +2,27 @@
 ///
 module http.Processor;
 
-import std.conv;
+version(HTTP) :
+
 import std.array, std.exception, std.format, std.algorithm.mutation, std.socket;
 import core.stdc.stdlib;
 import core.thread, core.atomic;
 import http.Parser;
 
 import hunt.collection.ByteBuffer;
-import http.Common;
 import hunt.logging;
 import hunt.io;
 import hunt.util.DateTime;
 
 
-private	alias Parser = HttpParser!HttpProcessor;
-
+struct HttpHeader {
+	string name, value;
+}
 
 struct HttpRequest {
-	private Parser* parser;
-
-	HttpHeader[] headers(bool canCopy=false)() @property {
-		return parser.headers!canCopy();
-	}
-
-	HttpMethod method() @property {
-		return parser.method();
-	}
-
-	string uri(bool canCopy=false)() @property {
-		return parser.uri!(canCopy)();
-	}
+	HttpHeader[] headers;
+	HttpMethod method;
+	string uri;
 }
 
 version(NO_HTTPPARSER) {
@@ -39,12 +30,23 @@ enum string ResponseData = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\nConnection:
 }
 
 abstract class HttpProcessor {
-	
-package:
+private:
+	enum State {
+		url,
+		field,
+		value,
+		done
+	}
+
 	Appender!(char[]) outBuf;
 	HttpHeader[] headers; // buffer for headers
+	size_t header; // current header
+	string url; // url
+	alias Parser = HttpParser!HttpProcessor;
 	Parser parser;
+	ScratchPad pad;
 	HttpRequest request;
+	State state;
 	bool serving;
 	
 public:
@@ -54,8 +56,8 @@ public:
 		serving = true;
 		client = sock;
 		headers = new HttpHeader[1];
-		parser = httpParser(this);
-		request.parser = &parser;
+		pad = ScratchPad(16 * 1024);
+		parser = httpParser(this, HttpParserType.request);
 	}
 
 	void run() {
@@ -63,12 +65,9 @@ public:
 			version(NO_HTTPPARSER) {
 				client.write(cast(ubyte[])ResponseData);
 			} else {
-				try {
-					parser.execute(cast(ubyte[]) buffer.getRemaining());
-				} catch(Exception ex) {
-					respondWith(ex.msg, 500);
-				}
+				parser.execute(cast(ubyte[]) buffer.getRemaining());
 			}
+
 		})
 		.onClosed(() {
 			// notifyClientClosed();
@@ -106,28 +105,125 @@ public:
 		client.write(cast(ubyte[]) outBuf.data); // TODO: short-writes are quite possible
 	}
 
-	void onChunk(ref HttpRequest req, const(ubyte)[] chunk) {
-		// TODO: Tasks pending completion - 5/16/2019, 5:40:18 PM
-		// 
+	void onStart(HttpRequest req) {
 	}
 
-	void onComplete(ref HttpRequest req);
+	void onChunk(HttpRequest req, const(ubyte)[] chunk) {
+	}
 
+	void onComplete(HttpRequest req);
+
+	final int onMessageBegin(Parser* parser) {
+		outBuf.clear();
+		header = 0;
+		pad.reset();
+		state = State.url;
+		return 0;
+	}
+
+	final int onUrl(Parser* parser, const(ubyte)[] chunk) {
+		pad.put(chunk);
+		return 0;
+	}
 
 	final int onBody(Parser* parser, const(ubyte)[] chunk) {
 		onChunk(request, chunk);
 		return 0;
 	}
 
-	final int onMessageComplete() {
-		try {
-			onComplete(request);
-		} catch(Exception ex) {
-			respondWith(ex.msg, 500);
+	final int onHeaderField(Parser* parser, const(ubyte)[] chunk) {
+		final switch (state) {
+		case State.url:
+			url = pad.sliceStr;
+			break;
+		case State.value:
+			headers[header].value = pad.sliceStr;
+			header += 1;
+			if (headers.length <= header)
+				headers.length += 1;
+			break;
+		case State.field:
+		case State.done:
+			break;
+		}
+		state = State.field;
+		pad.put(chunk);
+		return 0;
+	}
+
+	final int onHeaderValue(Parser* parser, const(ubyte)[] chunk) {
+		if (state == State.field) {
+			headers[header].name = pad.sliceStr;
+		}
+		pad.put(chunk);
+		state = State.value;
+		return 0;
+	}
+
+	final int onHeadersComplete(Parser* parser) {
+		headers[header].value = pad.sliceStr;
+		header += 1;
+		request = HttpRequest(headers[0 .. header], parser.method, url);
+		onStart(request);
+		state = State.done;
+		return 0;
+	}
+
+	final int onMessageComplete(Parser* parser) {
+		import std.stdio;
+
+		if (state == State.done) {
+			try {
+				onComplete(request);
+			} catch(Exception ex) {
+				respondWith(ex.msg, 500);
+			}
 		}
 		if (!parser.shouldKeepAlive)
 			serving = false;
 		return 0;
 	}
 
+}
+
+// ==================================== IMPLEMENTATION DETAILS ==============================================
+private:
+
+struct ScratchPad {
+	ubyte* ptr;
+	size_t capacity;
+	size_t last, current;
+
+	this(size_t size) {
+		ptr = cast(ubyte*) malloc(size);
+		capacity = size;
+	}
+
+	void put(const(ubyte)[] slice) {
+		enforce(current + slice.length <= capacity, "HTTP headers too long");
+		ptr[current .. current + slice.length] = slice[];
+		current += slice.length;
+	}
+
+	const(ubyte)[] slice() {
+		auto data = ptr[last .. current];
+		last = current;
+		return data;
+	}
+
+	string sliceStr() {
+		return cast(string) slice;
+	}
+
+	void reset() {
+		current = 0;
+		last = 0;
+	}
+
+	@disable this(this);
+
+	~this() {
+		free(ptr);
+		ptr = null;
+	}
 }
