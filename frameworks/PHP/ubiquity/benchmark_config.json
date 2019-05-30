@@ -32,7 +32,7 @@
         "update_url": "/Db/update/",
         "query_url": "/Db/query/",
         "fortune_url": "/Fortunes",
-        "port": 8090,
+        "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
         "database": "MySQL",
