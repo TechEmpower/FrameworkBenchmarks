@@ -156,15 +156,23 @@ private {
 					0);
 		debug {
 			infof("buffer: %d bytes, request: %d bytes", chunk.length, pret);
-		} else {
-			if(pret < chunk.length)
-				infof("buffer: %d bytes, request: %d bytes", chunk.length, pret);
-		}
+		} 
 
 		if(pret > 0) {
 			/* successfully parsed the request */
 			onMessageComplete();
+
+			if(pret < chunk.length) {
+				debug infof("try to parse next request");
+				execute(chunk[pret .. $]); // try to parse next http request data
+			}
 		} else if (pret == -1) {
+			warning("wrong data format");
+			num_headers = 0;
+			failure = new HttpException(HttpError.UNKNOWN);
+			throw failure;
+		} else if(pret == -2) {
+			warning("parsing incomplete");
 			num_headers = 0;
 			failure = new HttpException(HttpError.UNKNOWN);
 			throw failure;
