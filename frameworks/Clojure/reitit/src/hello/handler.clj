@@ -22,7 +22,7 @@
    :body (j/write-value-as-bytes {:message "Hello, World!"})})
 
 (defn sync-db-handler [pool]
-  (let [mapper (p/compile {:row (p/rs->compiled-record)})]
+  (let [mapper (p/data-mapper {:row (p/rs->compiled-record)})]
     (fn [_]
       (let [world (with-open [con (p/get-connection pool)]
                     (p/query-one mapper con ["SELECT id, randomnumber from WORLD where id=?" (random)]))]

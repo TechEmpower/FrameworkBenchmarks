@@ -4,8 +4,7 @@
                  [ikitommi/immutant-web "3.0.0-alpha4"]
                  [metosin/reitit "0.3.7"]
                  [metosin/jsonista "0.2.2"]
-                 [metosin/porsas "0.0.1-alpha7"]
-                 [org.postgresql/postgresql "42.2.5"]
+                 [metosin/porsas "0.0.1-alpha8"]
                  [hikari-cp "2.7.1"]]
   :jvm-opts ^:replace ["-Dclojure.compiler.direct-linking=true"]
   :main hello.handler
