@@ -35,6 +35,7 @@
 #include "error.h"
 #include "event_loop.h"
 #include "global_data.h"
+#include "request_handler.h"
 #include "thread.h"
 #include "utility.h"
 

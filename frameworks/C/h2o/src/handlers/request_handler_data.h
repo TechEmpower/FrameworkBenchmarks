@@ -22,6 +22,7 @@
 #define REQUEST_HANDLER_DATA_H_
 
 #include <h2o.h>
+#include <stdbool.h>
 
 struct mustache_token_t;
 
@@ -31,6 +32,7 @@ typedef struct {
 
 typedef struct {
 	h2o_cache_t *world_cache;
+	bool populate_world_cache;
 } request_handler_thread_data_t;
 
 #endif // REQUEST_HANDLER_DATA_H_
