@@ -38,7 +38,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "reitit-async",
+        "display_name": "reitit-reactive",
         "notes": "",
         "versus": "Undertow"
       }
