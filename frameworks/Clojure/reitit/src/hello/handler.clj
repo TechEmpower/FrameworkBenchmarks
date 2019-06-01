@@ -13,7 +13,7 @@
 
 (defn plain-text-handler [_]
   {:status 200
-   :headers {"content-type" "text/plain; charset=utf-8"}
+   :headers {"content-type" "text/plain"}
    :body (.getBytes "Hello, World!")})
 
 (defn json-handler [_]
@@ -41,7 +41,12 @@
           (respond
             {:status 200
              :headers {"Content-Type" "application/json"}
-             :body (j/write-value-as-bytes world)}))))))
+             :body (j/write-value-as-bytes world)}))
+        (fn [^Exception exception]
+          (respond
+            {:status 500
+             :headers {"content-type" "text/plain"}
+             :body (.getMessage exception)}))))))
 
 (defn -main [& [async?]]
   (let [cpus (.availableProcessors (Runtime/getRuntime))
