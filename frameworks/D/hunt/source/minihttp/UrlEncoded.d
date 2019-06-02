@@ -1,6 +1,6 @@
-module http.UrlEncoded;
+module minihttp.UrlEncoded;
 
-version(HTTP) :
+version(MINIHTTP):
 
 import hunt.collection.List;
 import hunt.collection.MultiMap;

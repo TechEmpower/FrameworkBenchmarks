@@ -1,14 +1,16 @@
-module DemoProcessor;
+module minihttp.DemoProcessor;
+
+version(MINIHTTP):
 
 // import stdx.data.json;
 import std.json;
 
 import hunt.database;
 import hunt.io;
-import http.Common;
-import http.Processor;
-import http.HttpURI;
-import http.UrlEncoded;
+import minihttp.Common;
+import minihttp.Processor;
+import minihttp.HttpURI;
+import minihttp.UrlEncoded;
 import hunt.logging.ConsoleLogger : trace, warning, tracef;
 
 import std.algorithm;

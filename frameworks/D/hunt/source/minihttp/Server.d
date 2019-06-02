@@ -1,6 +1,6 @@
-module http.Server;
+module minihttp.Server;
 
-version(HTTP) :
+version(MINIHTTP):
 
 import hunt.event;
 import hunt.io;
@@ -15,8 +15,8 @@ import std.socket;
 import std.string;
 import std.stdio;
 
-import http.Parser;
-import http.Processor;
+import minihttp.Parser;
+import minihttp.Processor;
 
 shared static this() {
 	DateTimeHelper.startClock();
@@ -56,7 +56,7 @@ abstract class AbstractTcpServer {
 		server.bind(new InternetAddress("0.0.0.0", 8080));
 		server.listen(8192);
 
-		trace("Launching http server");
+		trace("Launching mini-http server");
 		debug {
 			_group.start();
 		} else {
