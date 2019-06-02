@@ -10,7 +10,7 @@ using SpanJson;
 
 namespace Benchmarks
 {
-    [BeetleX.FastHttpApi.Controller]
+    [Controller]
     class Program
     {
         private static readonly byte[] _helloWorldPayload = Encoding.UTF8.GetBytes("Hello, World!");
@@ -52,17 +52,13 @@ namespace Benchmarks
 
         public object Data { get; set; }
 
-        public override string ContentType => "application/json";
+        public override IHeaderItem ContentType => ContentTypes.JSON;
 
         public override bool HasBody => true;
 
         public override void Write(PipeStream stream, HttpResponse response)
         {
-            using (stream.LockFree())
-            {
-                var task = JsonSerializer.NonGeneric.Utf8.SerializeAsync(Data, stream).AsTask();
-                task.Wait();
-            }
+            JsonSerializer.NonGeneric.Utf8.SerializeAsync(Data, stream);
         }
     }
 
@@ -81,6 +77,7 @@ namespace Benchmarks
             mApiServer.Options.UrlIgnoreCase = false;
             mApiServer.Options.LogLevel = BeetleX.EventArgs.LogType.Off;
             mApiServer.Options.LogToConsole = true;
+            mApiServer.Options.IOQueueEnabled = true;
             mApiServer.Open();
             Console.WriteLine("BeetleX FastHttpApi server");
             Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
