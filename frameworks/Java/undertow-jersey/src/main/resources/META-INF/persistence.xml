@@ -16,8 +16,8 @@
 			<property name="hibernate.show_sql" value="false" />
 			<property name="hibernate.jdbc.batch_size" value="30" />
 			<property name="hibernate.jdbc.batch_versioned_data" value="true" />
-			<property name="hibernate.c3p0.min_size" value="256" />
-			<property name="hibernate.c3p0.max_size" value="256" />
+			<property name="hibernate.c3p0.min_size" value="192" />
+			<property name="hibernate.c3p0.max_size" value="192" />
 			<property name="hibernate.c3p0.timeout" value="1800" />
 			<property name="hibernate.c3p0.max_statements" value="2048" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
