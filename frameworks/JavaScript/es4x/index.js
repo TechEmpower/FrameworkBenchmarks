@@ -187,7 +187,8 @@ app.route("/updates").handler(ctx => {
 
         const row = ar.result().iterator().next();
 
-        worlds[index] = {id: row.getInteger(0), randomNumber: util.randomWorld()};
+        worlds[index] = {id: row.getInteger(0), randomNumber: row.getInteger(1)};
+        worlds[index].randomNumber = util.randomWorld();
         if (++queryCount === queries) {
           worlds.sort((a, b) => {
             return a.id - b.id;

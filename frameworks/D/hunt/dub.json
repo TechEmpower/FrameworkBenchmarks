@@ -1,40 +1,45 @@
 {
 	"name": "hunt-minihttp",
 	"targetType": "executable",
-	"authors": [
-		"Putao"
-	],
 	"description": "A mini http server powered by Hunt.",
 	"copyright": "Copyright (C) 2017-2019, HuntLabs",
-	"homepage": "https://www.huntlabs.net/",
+	"homepage": "https://www.huntlabs.net",
 	"license": "Apache-2.0",
-	"libs-posix": [ "http_parser" ],
-	"lflags-posix": ["-Lhttp-parser/"],
 	"dependencies": {
-		"hunt": "~>1.2.0-rc.6",
-		"hunt-database": "~>1.2.0-beta.5",
-		"std_data_json": "~>0.18.3"
+		"hunt": "~>1.2.0",
+		"hunt-database": "~>1.2.0",
+		"std_data_json": "~>0.18.2"
 	},
+	"versions": [
+		"POSTGRESQL"
+	],
 	"configurations": [
 		{
-			"name": "lite"
+			"name": "default",
+			"libs-posix": [
+				"http_parser"
+			],
+			"lflags-posix": [
+				"-Lhttp-parser/"
+			],
+			"versions": [
+				"HTTP"
+			]
 		},
 		{
-			"name": "postgresql",
-			"versions": ["POSTGRESQL"],
-			"subConfigurations": {
-				"hunt-database": "postgresql"
-			}
+			"name": "minihttp",
+			"libs-posix": [
+				"picohttpparser"
+			],
+			"lflags-posix": [
+				"-Lpicohttpparser/"
+			],
+			"versions": [
+				"MINIHTTP"
+			]
 		}
 	],
-	"buildTypes": {
-		"debug": {
-			"buildOptions": ["debugMode", "optimize"]
-		},
-		"release": {
-			"buildOptions": ["releaseMode", "optimize", "inline"],
-			"dflags": ["-boundscheck=off"],
-			"dflags-ldc": ["-flto=thin"]
-		}
+	"subConfigurations": {
+		"hunt-database": "postgresql"
 	}
 }

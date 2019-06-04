@@ -19,15 +19,21 @@ path = "src/main_diesel.rs"
 name = "actix-pg"
 path = "src/main_pg.rs"
 
+[[bin]]
+name = "actix-raw"
+path = "src/main_raw.rs"
+
 [dependencies]
-actix = { version="0.8.0-alpha.3", features=["http"] }
-actix-web = { version="1.0.0-alpha.5", default-features = false }
-actix-http = { version="0.1.0-alpha.5", default-features = false }
+actix = { version="0.8.2", features=["http"] }
+actix-web = { version="1.0.0-rc", default-features = false }
+actix-http = { version="0.2.1", default-features = false }
 actix-rt = "0.2.2"
-actix-server = "0.4.2"
-actix-service = "0.3.6"
+actix-codec = "0.1.2"
+actix-server = "0.5.1"
+actix-service = "0.4.0"
 jemallocator = "0.3.0"
 askama = "0.8"
+markup = "0.3.1"
 serde = "1.0"
 serde_json = "1.0"
 serde_derive = "1.0"
@@ -41,6 +47,7 @@ diesel = { version = "1.2", features = ["postgres"] }
 url = { version="1.7", features=["query_encoding"] }
 log = { version = "0.4", features = ["release_max_level_off"] }
 v_htmlescape = "0.4"
+tokio-tcp = "0.1"
 tokio-postgres = { git="https://github.com/fafhrd91/rust-postgres.git" }
 
 [build-dependencies]
@@ -50,3 +57,6 @@ askama = "0.8"
 lto = true
 opt-level = 3
 codegen-units = 1
+
+[patch.crates-io]
+tokio-reactor = { git="https://github.com/fafhrd91/tokio.git" }

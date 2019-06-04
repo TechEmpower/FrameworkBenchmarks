@@ -1,6 +1,6 @@
 #include "QueriesCtrlRaw.h"
 using namespace drogon::orm;
-void QueriesCtrlRaw::asyncHandleHttpRequest(const HttpRequestPtr &req, const std::function<void(const HttpResponsePtr &)> &callback)
+void QueriesCtrlRaw::asyncHandleHttpRequest(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback)
 {
     //write your application logic here
     static std::once_flag once;
@@ -19,7 +19,7 @@ void QueriesCtrlRaw::asyncHandleHttpRequest(const HttpRequestPtr &req, const std
     }
     auto json = std::make_shared<Json::Value>();
     json->resize(0);
-    auto callbackPtr = std::shared_ptr<std::function<void(const HttpResponsePtr &)>>(new std::function<void(const HttpResponsePtr &)>(callback));
+    auto callbackPtr = std::shared_ptr<std::function<void(const HttpResponsePtr &)>>(new std::function<void(const HttpResponsePtr &)>(std::move(callback)));
     auto counter = std::make_shared<int>(queries);
     auto client = app().getFastDbClient();
     for (int i = 0; i < queries; i++)

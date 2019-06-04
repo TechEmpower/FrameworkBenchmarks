@@ -39,7 +39,7 @@
       },
       "release": {
           "buildOptions": ["releaseMode", "optimize", "inline"],
-          "dflags": ["-boundscheck=off"],
+          "dflags": ["-boundscheck=off", "-mcpu=native"],
           "dflags-ldc": ["-flto=thin"]
       }
   }

@@ -1,3 +1,4 @@
+use std::fmt::Write;
 use std::io;
 
 use actix_http::Error;
@@ -7,8 +8,8 @@ use futures::{stream, Future, Stream};
 use rand::{thread_rng, Rng, ThreadRng};
 use tokio_postgres::{connect, Client, NoTls, Statement};
 
-use crate::models::{Fortune, World};
-use crate::utils::{Writer, SIZE};
+use crate::models::World;
+use crate::utils::{Fortune, Writer};
 
 /// Postgres interface
 pub struct PgConnection {
@@ -57,7 +58,7 @@ impl PgConnection {
             })
             .map(|(row, _)| {
                 let row = row.unwrap();
-                let mut body = BytesMut::with_capacity(SIZE);
+                let mut body = BytesMut::with_capacity(33);
                 serde_json::to_writer(
                     Writer(&mut body),
                     &World {
@@ -114,10 +115,12 @@ impl PgConnection {
                     })
                     .map(move |(row, _)| {
                         let row = row.unwrap();
-                        World {
+                        let mut world = World {
                             id: row.get(0),
-                            randomnumber: id,
-                        }
+                            randomnumber: row.get(1),
+                        };
+                        world.randomnumber = id;
+                        world
                     }),
             );
         }
@@ -132,7 +135,7 @@ impl PgConnection {
                 );
 
                 for w in &worlds {
-                    update.push_str(&format!("({}, {}),", w.id, w.randomnumber));
+                    let _ = write!(&mut update, "({}, {}),", w.id, w.randomnumber);
                 }
                 update.pop();
                 update.push_str(

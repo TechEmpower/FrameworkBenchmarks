@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.ociweb.gl.benchmark</groupId>
+	<groupId>com.javanut.gl.benchmark</groupId>
 	<artifactId>benchmark-test</artifactId>
-	<version>1.0.36</version> 
+	<version>1.1.1</version> 
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -12,7 +12,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.ociweb</groupId>
+			<groupId>com.javanut</groupId>
 			<artifactId>greenlightning</artifactId>
 			<version>${project.version}</version> <!-- must be a fixed version for techempower releases -->
 		</dependency>
@@ -97,7 +97,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.ociweb.gl.benchmark.GreenLightning</mainClass>
+							<mainClass>com.javanut.gl.benchmark.GreenLightning</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

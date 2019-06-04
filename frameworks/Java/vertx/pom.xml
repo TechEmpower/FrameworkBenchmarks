@@ -6,12 +6,12 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<!-- the main class -->
 		<main.class>vertx.App</main.class>
-		<stack.version>3.6.0.CR1</stack.version>
-		<netty.version>4.1.27.Final</netty.version>
+		<stack.version>3.7.0</stack.version>
+		<netty.version>4.1.36.Final</netty.version>
 	</properties>
 
 	<dependencies>
@@ -35,12 +35,12 @@
 		<dependency>
 			<groupId>io.reactiverse</groupId>
 			<artifactId>reactive-pg-client</artifactId>
-			<version>0.10.7</version>
+			<version>0.11.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fizzed</groupId>
 			<artifactId>rocker-compiler</artifactId>
-			<version>1.0.0</version>
+			<version>1.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
@@ -55,11 +55,14 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
+				<configuration>
+					<debug>false</debug>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>com.fizzed</groupId>
 				<artifactId>rocker-maven-plugin</artifactId>
-				<version>1.0.0</version>
+				<version>1.2.1</version>
 				<executions>
 					<execution>
 						<id>generate-rocker-templates</id>
@@ -68,7 +71,7 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<javaVersion>1.8</javaVersion>
+							<javaVersion>11</javaVersion>
 							<templateDirectory>${basedir}/src/main/templates</templateDirectory>
 							<outputDirectory>${basedir}/target/generated-sources/rocker</outputDirectory>
 							<discardLogicWhitespace>false</discardLogicWhitespace>

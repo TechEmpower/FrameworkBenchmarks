@@ -1,5 +1,7 @@
 module http.Server;
 
+version(HTTP) :
+
 import hunt.event;
 import hunt.io;
 import hunt.logging.ConsoleLogger;
@@ -20,6 +22,7 @@ shared static this() {
 	DateTimeHelper.startClock();
 }
 
+import hunt.io.channel;
 
 /**
 */
@@ -53,7 +56,7 @@ abstract class AbstractTcpServer {
 		server.bind(new InternetAddress("0.0.0.0", 8080));
 		server.listen(8192);
 
-		trace("Launching server");
+		trace("Launching http server");
 		debug {
 			_group.start();
 		} else {
@@ -66,7 +69,6 @@ abstract class AbstractTcpServer {
 		}
 		writefln("worker count: %d", _workersCount);
 		writefln("IO thread: %d", _group.size);
-		
 
 		while (true) {
 			try {
@@ -104,9 +106,7 @@ alias ProcessorCreater = HttpProcessor delegate(TcpStream client);
 
 /**
 */
-class HttpServer : AbstractTcpServer {
-
-	ProcessorCreater processorCreater;
+class HttpServer(T) : AbstractTcpServer if (is(T : HttpProcessor)) {
 
 	this(string ip, ushort port, int thread = (totalCPUs - 1)) {
 		super(new InternetAddress(ip, port), thread);
@@ -117,14 +117,8 @@ class HttpServer : AbstractTcpServer {
 	}
 
 	override protected void onConnectionAccepted(TcpStream client) {
-		if (processorCreater !is null) {
-			HttpProcessor httpProcessor = processorCreater(client);
-			httpProcessor.run();
-		}
+		HttpProcessor httpProcessor = new T(client);
+		httpProcessor.run();
 	}
 
-	HttpServer onProcessorCreate(ProcessorCreater handler) {
-		this.processorCreater = handler;
-		return this;
-	}
 }

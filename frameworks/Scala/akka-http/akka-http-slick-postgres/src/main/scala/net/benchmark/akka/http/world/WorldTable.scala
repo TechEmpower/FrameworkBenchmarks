@@ -1,6 +1,6 @@
 package net.benchmark.akka.http.world
 
-import net.benchmark.akka.http.db.CustomPostgresProfile.api._
+import slick.jdbc.PostgresProfile.api._
 
 object WorldTable {
 
