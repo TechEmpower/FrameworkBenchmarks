@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {
     "fastify": "1.13.3",
-    "handlebars": "4.0.12",
+    "handlebars": "4.0.14",
     "knex": "0.16.3",
     "mongodb": "3.1.10",
     "mysql2": "1.6.4",
