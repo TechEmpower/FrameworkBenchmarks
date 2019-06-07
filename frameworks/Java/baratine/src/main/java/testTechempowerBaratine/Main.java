@@ -1,6 +1,7 @@
 package testTechempowerBaratine;
 
 import static io.baratine.web.Web.*;
+import io.baratine.web.WebServer;
 
 public class Main
 {
@@ -9,8 +10,8 @@ public class Main
     include(PlaintextService.class);
     include(JsonService.class);
 
-    start();
+    WebServer server = start();
 
-    join();
+    server.join();
   }
 }

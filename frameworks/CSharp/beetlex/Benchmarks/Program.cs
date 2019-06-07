@@ -10,16 +10,11 @@ using SpanJson;
 
 namespace Benchmarks
 {
-    [BeetleX.FastHttpApi.Controller]
+    [Controller]
     class Program
     {
-        private static readonly byte[] _helloWorldPayload = Encoding.UTF8.GetBytes("Hello, World!");
-
-        private static StringBytes plaintextResult;
-
         public static void Main(string[] args)
         {
-            plaintextResult = new StringBytes(_helloWorldPayload);
             var builder = new HostBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {
@@ -27,20 +22,62 @@ namespace Benchmarks
                 });
             builder.Build().Run();
         }
+    }
 
-        public object plaintext(IHttpContext context)
+
+    public class BeetleXHttpServer : IHostedService
+    {
+
+        private static readonly byte[] _helloWorldPayload = Encoding.UTF8.GetBytes("Hello, World!");
+
+        public static StringBytes plaintextResult;
+
+        private HttpApiServer mApiServer;
+
+        public void OnRequesting(object sender, EventHttpRequestArgs e)
         {
-            return plaintextResult;
+            if (e.Request.BaseUrl == "/plaintext")
+            {
+                e.Response.Result(plaintextResult);
+            }
+            else if (e.Request.BaseUrl == "/json")
+            {
+                var json = new SpanJsonResult(new JsonMessage { message = "Hello, World!" });
+                e.Response.Result(json);
+            }
+            else
+            {
+                e.Response.Result(new NotFoundResult("url not found!"));
+            }
+            e.Cancel = true;
         }
 
-        public object json(IHttpContext context)
+        public virtual Task StartAsync(CancellationToken cancellationToken)
         {
-            return new SpanJsonResult(new JsonMessage { message = "Hello, World!" });
+            plaintextResult = new StringBytes(_helloWorldPayload);
+            mApiServer = new HttpApiServer();
+            mApiServer.Register(typeof(Program).Assembly);
+            mApiServer.Options.Port = 8080;
+            mApiServer.Options.BufferPoolMaxMemory = 500;
+            mApiServer.Options.MaxConnections = 100000;
+            mApiServer.Options.Statistical = false;
+            mApiServer.Options.UrlIgnoreCase = false;
+            mApiServer.Options.LogLevel = BeetleX.EventArgs.LogType.Off;
+            mApiServer.Options.LogToConsole = true;
+            mApiServer.HttpRequesting += OnRequesting;
+            mApiServer.Open();
+            return Task.CompletedTask;
         }
-        public class JsonMessage
+
+        public virtual Task StopAsync(CancellationToken cancellationToken)
         {
-            public string message { get; set; }
+            mApiServer.BaseServer.Dispose();
+            return Task.CompletedTask;
         }
+    }
+    public class JsonMessage
+    {
+        public string message { get; set; }
     }
 
     public class SpanJsonResult : ResultBase
@@ -52,46 +89,13 @@ namespace Benchmarks
 
         public object Data { get; set; }
 
-        public override string ContentType => "application/json";
+        public override IHeaderItem ContentType => ContentTypes.JSON;
 
         public override bool HasBody => true;
 
         public override void Write(PipeStream stream, HttpResponse response)
         {
-            using (stream.LockFree())
-            {
-                var task = JsonSerializer.NonGeneric.Utf8.SerializeAsync(Data, stream).AsTask();
-                task.Wait();
-            }
-        }
-    }
-
-    public class BeetleXHttpServer : IHostedService
-    {
-        private HttpApiServer mApiServer;
-
-        public virtual Task StartAsync(CancellationToken cancellationToken)
-        {
-            mApiServer = new HttpApiServer();
-            mApiServer.Register(typeof(Program).Assembly);
-            mApiServer.Options.Port = 8080;
-            mApiServer.Options.BufferPoolMaxMemory = 500;
-            mApiServer.Options.MaxConnections = 100000;
-            mApiServer.Options.Statistical = false;
-            mApiServer.Options.UrlIgnoreCase = false;
-            mApiServer.Options.LogLevel = BeetleX.EventArgs.LogType.Off;
-            mApiServer.Options.LogToConsole = true;
-            mApiServer.Open();
-            Console.WriteLine("BeetleX FastHttpApi server");
-            Console.WriteLine($"ServerGC:{System.Runtime.GCSettings.IsServerGC}");
-            Console.Write(mApiServer.BaseServer);
-            return Task.CompletedTask;
-        }
-
-        public virtual Task StopAsync(CancellationToken cancellationToken)
-        {
-            mApiServer.BaseServer.Dispose();
-            return Task.CompletedTask;
+            JsonSerializer.NonGeneric.Utf8.SerializeAsync(Data, stream);
         }
     }
 }

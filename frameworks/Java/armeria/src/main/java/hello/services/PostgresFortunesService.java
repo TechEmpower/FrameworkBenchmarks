@@ -1,6 +1,7 @@
 package hello.services;
 
 import com.zaxxer.hikari.HikariDataSource;
+
 import hello.helpers.PostgresDbHelper;
 import hello.models.Fortune;
 import hello.helpers.HttpHeadersHelper;
@@ -11,18 +12,18 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import javax.sql.DataSource;
 
 import com.linecorp.armeria.common.HttpData;
 import com.linecorp.armeria.common.HttpResponse;
+import com.linecorp.armeria.common.HttpStatus;
 import com.linecorp.armeria.common.MediaType;
 import com.linecorp.armeria.server.annotation.Get;
-
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -51,7 +52,8 @@ public class PostgresFortunesService {
 
     return HttpResponse.of(
         HttpHeadersHelper.getHttpHeader(MediaType.HTML_UTF_8),
-        HttpData.ofUtf8(buildMustacheTemplate(fortunes)));
+        HttpData.ofUtf8(buildMustacheTemplate(fortunes))
+        );
   }
 
   private List<Fortune> getFortunes() throws SQLException {

@@ -2,26 +2,44 @@
 	"name": "hunt-minihttp",
 	"targetType": "executable",
 	"description": "A mini http server powered by Hunt.",
-    "copyright": "Copyright (C) 2017-2019, HuntLabs",
-    "homepage": "https://www.huntlabs.net",
+	"copyright": "Copyright (C) 2017-2019, HuntLabs",
+	"homepage": "https://www.huntlabs.net",
 	"license": "Apache-2.0",
-	"libs-posix": [ "http_parser" ],
-	"lflags-posix": ["-Lhttp-parser/"],
 	"dependencies": {
 		"hunt": "~>1.2.0",
-		"hunt-database": "~>1.2.0-rc.1",
+		"hunt-database": "~>1.2.0",
 		"std_data_json": "~>0.18.2"
 	},
-	"subConfigurations": {
-		"hunt-database": "postgresql"
-	},
+	"versions": [
+		"POSTGRESQL"
+	],
 	"configurations": [
 		{
-			"name": "lite"
+			"name": "default",
+			"libs-posix": [
+				"http_parser"
+			],
+			"lflags-posix": [
+				"-Lhttp-parser/"
+			],
+			"versions": [
+				"HTTP"
+			]
 		},
 		{
-			"name": "postgresql",
-			"versions": ["POSTGRESQL"]
+			"name": "minihttp",
+			"libs-posix": [
+				"picohttpparser"
+			],
+			"lflags-posix": [
+				"-Lpicohttpparser/"
+			],
+			"versions": [
+				"MINIHTTP"
+			]
 		}
-	]
+	],
+	"subConfigurations": {
+		"hunt-database": "postgresql"
+	}
 }

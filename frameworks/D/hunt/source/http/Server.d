@@ -1,5 +1,7 @@
 module http.Server;
 
+version(HTTP) :
+
 import hunt.event;
 import hunt.io;
 import hunt.logging.ConsoleLogger;
@@ -54,7 +56,7 @@ abstract class AbstractTcpServer {
 		server.bind(new InternetAddress("0.0.0.0", 8080));
 		server.listen(8192);
 
-		trace("Launching server");
+		trace("Launching http server");
 		debug {
 			_group.start();
 		} else {

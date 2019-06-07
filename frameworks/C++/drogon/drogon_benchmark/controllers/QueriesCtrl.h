@@ -4,7 +4,7 @@ using namespace drogon;
 class QueriesCtrl : public drogon::HttpSimpleController<QueriesCtrl>
 {
   public:
-    virtual void asyncHandleHttpRequest(const HttpRequestPtr &req, const std::function<void(const HttpResponsePtr &)> &callback) override;
+    virtual void asyncHandleHttpRequest(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) override;
     PATH_LIST_BEGIN
     //list path definitions here;
     //PATH_ADD("/path","filter1","filter2",HttpMethod1,HttpMethod2...);

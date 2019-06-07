@@ -109,10 +109,10 @@ class Metadata:
 
             # Filter
             for test in config_tests:
-                if len(include) is 0 and len(exclude) is 0:
-                    # No filters, we are running everything
-                    tests.append(test)
-                elif test.name in include:
+                if len(include) > 0:
+                    if test.name in include:
+                        tests.append(test)
+                elif test.name not in exclude:
                     tests.append(test)
 
         # Ensure we were able to locate everything that was

@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class FortunesLogic {
 
-	public Fortune[] getFortunes(FortunueRepository repository) {
+	public Fortune[] getFortunes(FortuneRepository repository) {
 		List<Fortune> fortunes = new ArrayList<>();
 		repository.findAll().forEach((fortune) -> fortunes.add(fortune));
 		fortunes.add(new Fortune(0, "Additional fortune added at request time."));

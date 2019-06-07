@@ -1,5 +1,7 @@
 module http.HttpURI;
 
+version(HTTP) :
+
 import hunt.collection.MultiMap;
 
 import hunt.Exceptions;

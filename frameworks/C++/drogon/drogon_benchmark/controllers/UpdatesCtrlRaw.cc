@@ -56,7 +56,7 @@ const void update(const std::shared_ptr<std::vector<Result>> &results,
             (*callbackPtr)(resp);
         };
 }
-void UpdatesCtrlRaw::asyncHandleHttpRequest(const HttpRequestPtr &req, const std::function<void(const HttpResponsePtr &)> &callback)
+void UpdatesCtrlRaw::asyncHandleHttpRequest(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback)
 {
     //write your application logic here
     static std::once_flag once;
@@ -75,7 +75,7 @@ void UpdatesCtrlRaw::asyncHandleHttpRequest(const HttpRequestPtr &req, const std
     }
     auto json = std::make_shared<Json::Value>();
     json->resize(0);
-    auto callbackPtr = std::shared_ptr<std::function<void(const HttpResponsePtr &)>>(new std::function<void(const HttpResponsePtr &)>(callback));
+    auto callbackPtr = std::shared_ptr<std::function<void(const HttpResponsePtr &)>>(new std::function<void(const HttpResponsePtr &)>(std::move(callback)));
     auto resultSetPtr = std::make_shared<std::vector<Result>>();
     resultSetPtr->reserve(queries);
     auto client = app().getFastDbClient();

@@ -19,6 +19,11 @@ object Main {
     implicit val system: ActorSystem = ActorSystem("AkkaSlickBenchmarkApp")
     implicit val mat: ActorMaterializer = ActorMaterializer()
 
+    val pus = Runtime.getRuntime.availableProcessors()
+    val pusMessage = s"Runtime.getRuntime.availableProcessors says $pus"
+    log.info(pusMessage)
+    println(pusMessage)
+
     val config: Config = system.settings.config
 
     val dbConfig: DatabaseConfig[PostgresProfile] = DatabaseConfiguration.getDefaultDatabaseConfiguration(config)

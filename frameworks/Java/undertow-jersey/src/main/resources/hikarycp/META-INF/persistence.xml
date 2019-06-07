@@ -16,8 +16,8 @@
 			<property name="hibernate.show_sql" value="false" />
 			<property name="hibernate.jdbc.batch_size" value="30" />
 			<property name="hibernate.jdbc.batch_versioned_data" value="true" />
-			<property name="hibernate.hikari.minimumIdle" value="256" />
-			<property name="hibernate.hikari.maximumPoolSize" value="256" />
+			<property name="hibernate.hikari.minimumIdle" value="192" />
+			<property name="hibernate.hikari.maximumPoolSize" value="192" />
 			<property name="hibernate.hikari.idleTimeout" value="30000" />
 			<property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />

@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <ServerGarbageCollection>true</ServerGarbageCollection>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BeetleX.FastHttpApi" Version="1.4.7" />
+    <PackageReference Include="BeetleX.FastHttpApi" Version="1.4.9.8" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.1.1" />
     <PackageReference Include="SpanJson" Version="2.0.10" />
   </ItemGroup>

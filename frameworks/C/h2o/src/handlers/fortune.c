@@ -41,6 +41,7 @@
 
 #define ID_FIELD_NAME "id"
 #define FORTUNE_TABLE_NAME "Fortune"
+#define FORTUNE_QUERY "SELECT * FROM " FORTUNE_TABLE_NAME ";"
 #define MAX_IOVEC 64
 #define MESSAGE_FIELD_NAME "message"
 #define NEW_FORTUNE_ID "0"
@@ -471,7 +472,7 @@ void initialize_fortunes_handler(const config_t *config,
 	if (template) {
 		global_data->request_handler_data.fortunes_template = template;
 		add_prepared_statement(FORTUNE_TABLE_NAME,
-		                       "SELECT * FROM " FORTUNE_TABLE_NAME ";",
+		                       FORTUNE_QUERY,
 		                       &global_data->prepared_statements);
 		register_request_handler("/fortunes", fortunes, hostconf, log_handle);
 	}
