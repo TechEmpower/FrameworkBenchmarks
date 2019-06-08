@@ -7,7 +7,7 @@ RUN cd /tmp && curl -sSL "https://github.com/swoole/swoole-src/archive/v${SWOOLE
         && phpize && ./configure > /dev/null && make > /dev/null && make install > /dev/null \
         && docker-php-ext-enable swoole
 
-RUN docker-php-ext-install pdo_mysql > /dev/null
+RUN docker-php-ext-install pdo_mysql pcntl > /dev/null
 
 COPY deploy/conf/php-swoole.ini /usr/local/etc/php/
 
