@@ -4,6 +4,7 @@ namespace controllers;
 use Ubiquity\controllers\Startup;
 use Ubiquity\utils\http\UResponse;
 use Ubiquity\orm\DAO;
+use models\World;
 
 /**
  * Bench controller.
