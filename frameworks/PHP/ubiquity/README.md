@@ -36,7 +36,7 @@ The tests were run with:
 
 ## Servers
 PHP-PM server (beta version) is configured with this values:
-- workers: 32
+- workers: 64
 - max-requests: 1024
 
 ## Test URLs
