@@ -23,8 +23,10 @@ RUN deploy/run/install-composer.sh
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq git unzip > /dev/null
 
-RUN composer require phpmv/ubiquity-devtools:dev-master phpmv/ubiquity-swoole:dev-master --quiet
+RUN php composer.phar require phpmv/ubiquity-devtools:dev-master phpmv/ubiquity-swoole:dev-master --quiet
 
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+
+RUN chmod 777 -R /ubiquity/.ubiquity/*
 
 CMD /ubiquity/vendor/bin/Ubiquity serve -t=swoole -p=8080 -h=0.0.0.0
