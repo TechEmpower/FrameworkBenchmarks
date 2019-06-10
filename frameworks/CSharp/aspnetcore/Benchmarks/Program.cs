@@ -59,15 +59,6 @@ namespace Benchmarks
                 Console.WriteLine($"Using Sockets with {x.IOQueueCount} threads");
             });
 
-            System.Threading.ThreadPool.QueueUserWorkItem((o) => {
-                while (true)
-                {
-                    int max, maxio;
-                    System.Threading.ThreadPool.GetMaxThreads(out max, out maxio);
-                    Console.WriteLine($"{max}|{maxio}");
-                    System.Threading.Thread.Sleep(1000);
-                }
-            });
             var webHost = webHostBuilder.Build();
 
             Console.WriteLine($"Server GC is currently {(GCSettings.IsServerGC ? "ENABLED" : "DISABLED")}");
