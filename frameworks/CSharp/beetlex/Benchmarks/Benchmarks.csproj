@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="SpanJson" Version="2.0.10" />
   </ItemGroup>
 
@@ -17,9 +18,6 @@
     </Reference>
     <Reference Include="BeetleX.FastHttpApi">
       <HintPath>Lib\BeetleX.FastHttpApi.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 
