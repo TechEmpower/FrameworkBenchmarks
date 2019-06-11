@@ -1,12 +1,13 @@
 module http.DemoProcessor;
 
-version(HTTP) :
+
 
 // import stdx.data.json;
 import std.json;
 
 import hunt.database;
 import hunt.io;
+import http.Common;
 import http.Processor;
 import http.HttpURI;
 import http.UrlEncoded;
@@ -40,7 +41,8 @@ class DemoProcessor : HttpProcessor {
         super(client);
     }
 
-    override void onComplete(HttpRequest req) {
+    override void onComplete(ref HttpRequest req) {
+
         string path = req.uri;
         if(path.length == plaintextLength) { // plaintext
             respondWith("Hello, World!", 200, textHeader);

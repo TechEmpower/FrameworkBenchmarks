@@ -2,7 +2,7 @@
 /// Used for benchmarks with simple server
 module http.Parser;
 
-version(HTTP) :
+
 
 private:
 

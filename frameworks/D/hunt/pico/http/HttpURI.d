@@ -1,6 +1,6 @@
-module minihttp.HttpURI;
+module http.HttpURI;
 
-version(MINIHTTP):
+
 
 import hunt.collection.MultiMap;
 
@@ -9,7 +9,7 @@ import hunt.text.Charset;
 import hunt.text.Common;
 import hunt.text.StringBuilder;
 import hunt.util.TypeUtils;
-import minihttp.UrlEncoded;
+import http.UrlEncoded;
 
 import std.array;
 import std.conv;

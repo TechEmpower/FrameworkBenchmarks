@@ -1,17 +1,15 @@
 /// An example "HTTP server" with poor usability but sensible performance
 ///
-module minihttp.Processor;
-
-version(MINIHTTP):
+module http.Processor;
 
 import std.conv;
 import std.array, std.exception, std.format, std.algorithm.mutation, std.socket;
 import core.stdc.stdlib;
 import core.thread, core.atomic;
-import minihttp.Parser;
+import http.Parser;
 
 import hunt.collection.ByteBuffer;
-import minihttp.Common;
+import http.Common;
 import hunt.logging;
 import hunt.io;
 import hunt.util.DateTime;
@@ -61,15 +59,19 @@ public:
 	}
 
 	void run() {
-		client.onReceived((ByteBuffer buffer) { 
+		client.onReceived(delegate int (ubyte[] buffer) { 
 			version(NO_HTTPPARSER) {
 				client.write(cast(ubyte[])ResponseData);
 			} else {
+				int len = 0;
 				try {
-					parser.execute(cast(ubyte[]) buffer.getRemaining());
+					len = parser.execute(buffer);
 				} catch(Exception ex) {
 					respondWith(ex.msg, 500);
+					len = cast(int)buffer.length;
 				}
+
+				return len;
 			}
 		})
 		.onClosed(() {

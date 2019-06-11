@@ -1,16 +1,14 @@
-module minihttp.DemoProcessor;
-
-version(MINIHTTP):
+module DemoProcessor;
 
 // import stdx.data.json;
 import std.json;
 
 import hunt.database;
 import hunt.io;
-import minihttp.Common;
-import minihttp.Processor;
-import minihttp.HttpURI;
-import minihttp.UrlEncoded;
+import http.Common;
+import http.Processor;
+import http.HttpURI;
+import http.UrlEncoded;
 import hunt.logging.ConsoleLogger : trace, warning, tracef;
 
 import std.algorithm;
@@ -42,8 +40,23 @@ class DemoProcessor : HttpProcessor {
     }
 
     override void onComplete(ref HttpRequest req) {
+        debug {
+            trace(req.uri());
+            trace(req.method());
+            trace(req.headers());
+        }
 
         string path = req.uri;
+        // auto uri = new HttpURI(req.uri);
+        // uri.parse(req.uri);
+        // if(cmp(path, "/plaintext") == 0) {
+        //     respondWith("Hello, World!", 200, textHeader);
+        // } else if(cmp(path, "/json") == 0) {
+        //     JSONValue js = JSONValue(["message" : JSONValue("Hello, World!")]);
+        //     respondWith(js.toJSON(), 200, jsonHeader);
+        // } else {
+        //     respondWith404();
+        // }
         if(path.length == plaintextLength) { // plaintext
             respondWith("Hello, World!", 200, textHeader);
         } else if(path.length == jsonLength) { // json

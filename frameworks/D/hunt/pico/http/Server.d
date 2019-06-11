@@ -1,6 +1,6 @@
-module minihttp.Server;
+module http.Server;
 
-version(MINIHTTP):
+
 
 import hunt.event;
 import hunt.io;
@@ -15,8 +15,8 @@ import std.socket;
 import std.string;
 import std.stdio;
 
-import minihttp.Parser;
-import minihttp.Processor;
+import http.Parser;
+import http.Processor;
 
 shared static this() {
 	DateTimeHelper.startClock();
