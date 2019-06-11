@@ -56,7 +56,6 @@ namespace Benchmarks
         {
             plaintextResult = new StringBytes(_helloWorldPayload);
             mApiServer = new HttpApiServer();
-            mApiServer.Register(typeof(Program).Assembly);
             mApiServer.Options.Port = 8080;
             mApiServer.Options.BufferPoolMaxMemory = 500;
             mApiServer.Options.MaxConnections = 100000;
@@ -65,6 +64,7 @@ namespace Benchmarks
             mApiServer.Options.LogLevel = BeetleX.EventArgs.LogType.Off;
             mApiServer.Options.LogToConsole = true;
             mApiServer.Options.PrivateBufferPool = true;
+            mApiServer.Register(typeof(Program).Assembly);
             mApiServer.HttpRequesting += OnRequesting;
             mApiServer.Open();
             return Task.CompletedTask;
