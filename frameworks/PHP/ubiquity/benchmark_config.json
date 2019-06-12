@@ -47,6 +47,29 @@
         "display_name": "ubiquity-php-pm",
         "notes": "",
         "versus": "php"
+      },
+      "swoole": {
+        "json_url": "/Json",
+        "plaintext_url": "/Plaintext",
+        "db_url": "/Db",
+        "update_url": "/Db/update/",
+        "query_url": "/Db/query/",
+        "fortune_url": "/Fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "MySQL",
+        "framework": "ubiquity",
+        "language": "PHP",
+        "flavor": "PHP7",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "swoole",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ubiquity-swoole",
+        "notes": "",
+        "versus": "php"
       }
     }
   ]
