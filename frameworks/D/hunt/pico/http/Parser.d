@@ -1,10 +1,10 @@
 /// Minimalistic low-overhead wrapper for nodejs/http-parser
 /// Used for benchmarks with simple server
-module minihttp.Parser;
+module http.Parser;
 
-version(MINIHTTP):
 
-import minihttp.Common;
+
+import http.Common;
 
 import hunt.logging.ConsoleLogger;
 import std.conv;
@@ -141,11 +141,13 @@ private {
 		return cast(ushort)minor_version;
 	}
 
-	void execute(const(char)[] str) {
-		execute(cast(const(ubyte)[]) str);
+	int execute(const(ubyte)[] str) {
+		return doexecute( str);
 	}
 
-	void execute(const(ubyte)[] chunk) {
+	private int doexecute(const(ubyte)[] chunk) {
+		debug trace(cast(string)chunk);
+
 		failure = null;
 		num_headers = cast(int)_headers.length;
 		int pret = phr_parse_request(cast(const char*)chunk.ptr, cast(int)chunk.length, 
@@ -164,19 +166,22 @@ private {
 
 			if(pret < chunk.length) {
 				debug infof("try to parse next request");
-				execute(chunk[pret .. $]); // try to parse next http request data
+				pret += doexecute(chunk[pret .. $]); // try to parse next http request data
 			}
-		} else if (pret == -1) {
-			warning("wrong data format");
-			num_headers = 0;
-			failure = new HttpException(HttpError.UNKNOWN);
-			throw failure;
+
+			debug infof("pret=%d", pret);
+			return pret;
 		} else if(pret == -2) {
-			warning("parsing incomplete");
+			debug warning("parsing incomplete");
 			num_headers = 0;
-			failure = new HttpException(HttpError.UNKNOWN);
-			throw failure;
+			debug infof("pret=%d, chunk=%d", pret, chunk.length);
+			return 0;			
 		}
+
+		warning("wrong data format");
+		num_headers = 0;
+		failure = new HttpException(HttpError.UNKNOWN);
+		throw failure;
 	}
 
 	void onMessageComplete() {

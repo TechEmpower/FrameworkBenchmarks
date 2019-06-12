@@ -2,7 +2,7 @@
 ///
 module http.Processor;
 
-version(HTTP) :
+
 
 import std.array, std.exception, std.format, std.algorithm.mutation, std.socket;
 import core.stdc.stdlib;

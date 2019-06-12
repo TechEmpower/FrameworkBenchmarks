@@ -1,6 +1,6 @@
 module http.HttpURI;
 
-version(HTTP) :
+
 
 import hunt.collection.MultiMap;
 

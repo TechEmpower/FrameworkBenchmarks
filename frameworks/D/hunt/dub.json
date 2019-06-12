@@ -6,7 +6,7 @@
 	"homepage": "https://www.huntlabs.net",
 	"license": "Apache-2.0",
 	"dependencies": {
-		"hunt": "~>1.2.0",
+		"hunt": "~>1.2.2",
 		"hunt-database": "~>1.2.0",
 		"std_data_json": "~>0.18.2"
 	},
@@ -16,6 +16,7 @@
 	"configurations": [
 		{
 			"name": "default",
+			"sourcePaths": ["http"],
 			"libs-posix": [
 				"http_parser"
 			],
@@ -28,6 +29,7 @@
 		},
 		{
 			"name": "minihttp",
+			"sourcePaths": ["pico"],
 			"libs-posix": [
 				"picohttpparser"
 			],
@@ -36,6 +38,19 @@
 			],
 			"versions": [
 				"MINIHTTP"
+			]
+		},
+		{
+			"name": "mmap",
+			"sourcePaths": ["mmap"],
+			"libs-posix": [
+				"picohttpparser"
+			],
+			"lflags-posix": [
+				"-Lpicohttpparser/"
+			],
+			"versions": [
+				"MMAP"
 			]
 		}
 	],
