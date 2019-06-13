@@ -5,7 +5,7 @@ COPY scripts scripts
 COPY src src
 RUN mvn package -DskipTests -q
 
-FROM openjdk:11.0.3-jre-stretch
+FROM openjdk:11.0.3-jdk-stretch
 WORKDIR /resin
 RUN curl -sL http://caucho.com/download/resin-4.0.61.tar.gz | tar xz --strip-components=1
 RUN rm -rf webapps/*

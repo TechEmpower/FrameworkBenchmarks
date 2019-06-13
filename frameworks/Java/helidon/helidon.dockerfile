@@ -4,7 +4,7 @@ COPY src src
 COPY pom.xml pom.xml
 RUN mvn package -q
 
-FROM openjdk:11.0.3-jre-slim
+FROM openjdk:11.0.3-jdk-slim
 WORKDIR /helidon
 COPY --from=maven /helidon/target/libs libs
 COPY --from=maven /helidon/target/benchmark.jar app.jar
