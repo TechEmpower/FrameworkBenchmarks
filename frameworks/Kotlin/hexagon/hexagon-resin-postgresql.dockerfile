@@ -14,7 +14,7 @@ RUN gradle --quiet --exclude-task test
 #
 # RUNTIME
 #
-FROM openjdk:11.0.3-jre-stretch
+FROM openjdk:11.0.3-jdk-stretch
 ENV DBSTORE postgresql
 ENV POSTGRESQL_DB_HOST tfb-database
 
