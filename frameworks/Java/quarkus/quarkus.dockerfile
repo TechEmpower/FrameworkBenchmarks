@@ -1,4 +1,4 @@
-FROM maven:3.6-jdk-11-slim as maven
+FROM maven:3.6.1-jdk-11-slim as maven
 WORKDIR /quarkus
 COPY pom.xml pom.xml
 RUN mvn dependency:go-offline -q
