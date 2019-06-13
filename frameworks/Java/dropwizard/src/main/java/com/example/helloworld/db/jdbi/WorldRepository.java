@@ -1,14 +1,13 @@
 package com.example.helloworld.db.jdbi;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 import org.jdbi.v3.core.Jdbi;
 
 import com.example.helloworld.db.WorldDAO;
 import com.example.helloworld.db.model.World;
 import com.example.helloworld.resources.Helper;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 public class WorldRepository implements WorldDAO {
 	private final Jdbi jdbi;
@@ -30,22 +29,23 @@ public class WorldRepository implements WorldDAO {
 	@Override
 	public World[] updatesQueries(int totalQueries) {
 		return jdbi.withExtension(WorldJDBIImpl.class, dao -> {
-			final List<World> updates = new ArrayList<>(totalQueries);
+			final World updates[] = new World[totalQueries];
 
 			for (int i = 0; i < totalQueries; i++) {
 				final World world = dao.findById(Helper.randomWorld());
 				world.setRandomNumber(Helper.randomWorld());
-				updates.add(i, world);
+				updates[i] = world;
 			}
 
 			// Reason for sorting : https://github.com/TechEmpower/FrameworkBenchmarks/pull/2684
-			updates.sort(Comparator.comparingInt(World::getId));
+//			updates.sort(Comparator.comparingInt(World::getId));
+			Arrays.sort(updates, Comparator.comparingInt(World::getId));
 
-			final World[] updatesArray = updates.toArray(new World[totalQueries]);
+//			final World[] updatesArray = updates.toArray(new World[totalQueries]);
 
-			dao.update(updatesArray);
+			dao.update(updates);
 
-			return updatesArray;
+			return updates;
 		});
 	}
 
