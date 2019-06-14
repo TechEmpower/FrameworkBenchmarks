@@ -3,6 +3,7 @@ package com.example.helloworld.db.jdbi;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
 import com.example.helloworld.db.WorldDAO;
@@ -21,6 +22,18 @@ public class WorldRepository implements WorldDAO {
 		return jdbi.withExtension(WorldJDBIImpl.class, dao -> dao.findById(id));
 	}
 
+
+	@Override
+	public World[] findById(int[] ids) {
+		return jdbi.withExtension(WorldJDBIImpl.class, dao -> {
+			World[] worlds = new World[ids.length];
+			for(int i = 0; i < ids.length; i++) {
+				worlds[i] = dao.findById(ids[i]);
+			}
+			return worlds;
+		});
+	}
+	
 	@Override
 	public World findAndModify(int id, int newRandomNumber) {
 		throw new RuntimeException("Don't call this");
@@ -28,7 +41,9 @@ public class WorldRepository implements WorldDAO {
 
 	@Override
 	public World[] updatesQueries(int totalQueries) {
-		return jdbi.withExtension(WorldJDBIImpl.class, dao -> {
+		try (Handle handle = jdbi.open()) {
+			WorldJDBIImpl dao = handle.attach(WorldJDBIImpl.class);
+
 			final World updates[] = new World[totalQueries];
 
 			for (int i = 0; i < totalQueries; i++) {
@@ -36,17 +51,13 @@ public class WorldRepository implements WorldDAO {
 				world.setRandomNumber(Helper.randomWorld());
 				updates[i] = world;
 			}
-
 			// Reason for sorting : https://github.com/TechEmpower/FrameworkBenchmarks/pull/2684
-//			updates.sort(Comparator.comparingInt(World::getId));
 			Arrays.sort(updates, Comparator.comparingInt(World::getId));
-
-//			final World[] updatesArray = updates.toArray(new World[totalQueries]);
-
 			dao.update(updates);
-
+			handle.commit();
+			
 			return updates;
-		});
+		}
 	}
 
 }
