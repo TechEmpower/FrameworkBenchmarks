@@ -121,6 +121,36 @@
       <groupId>org.glassfish.jersey.media</groupId>
       <artifactId>jersey-media-json-jackson</artifactId>
       <version>${jersey.version}</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>com.fasterxml.jackson.core</artifactId>
+          <groupId>jackson-annotations</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>com.fasterxml.jackson.core</artifactId>
+          <groupId>jackson-databind</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>com.fasterxml.jackson.module</artifactId>
+          <groupId>jackson-module-jaxb-annotations</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.9.9</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.9.9</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-jaxb-annotations</artifactId>
+      <version>2.9.9</version>
     </dependency>
 
     <dependency>
