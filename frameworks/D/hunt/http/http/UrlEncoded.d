@@ -1,6 +1,6 @@
 module http.UrlEncoded;
 
-version(HTTP) :
+
 
 import hunt.collection.List;
 import hunt.collection.MultiMap;

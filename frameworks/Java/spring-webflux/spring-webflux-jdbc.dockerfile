@@ -4,7 +4,7 @@ COPY src src
 COPY pom.xml pom.xml
 RUN mvn package -q
 
-FROM openjdk:11.0.3-jre-slim
+FROM openjdk:11.0.3-jdk-slim
 WORKDIR /spring
 COPY --from=maven /spring/target/spring-webflux-benchmark.jar app.jar
 CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dlogging.level.root=OFF", "-jar", "app.jar", "--spring.profiles.active=jdbc,postgres"]

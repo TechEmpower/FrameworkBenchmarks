@@ -1,6 +1,6 @@
 module http.Server;
 
-version(HTTP) :
+
 
 import hunt.event;
 import hunt.io;

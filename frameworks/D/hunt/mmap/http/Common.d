@@ -1,6 +1,5 @@
-module minihttp.Common;
+module http.Common;
 
-version(MINIHTTP):
 
 public enum HttpParserType : uint {
 	request = 0,
