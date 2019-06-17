@@ -64,6 +64,7 @@ namespace Benchmarks
             mApiServer.Options.LogLevel = BeetleX.EventArgs.LogType.Off;
             mApiServer.Options.LogToConsole = true;
             mApiServer.Options.PrivateBufferPool = true;
+            mApiServer.Options.IOQueueEnabled = true;
             mApiServer.Register(typeof(Program).Assembly);
             mApiServer.HttpRequesting += OnRequesting;
             mApiServer.Open();
