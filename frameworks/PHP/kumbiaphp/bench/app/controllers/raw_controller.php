@@ -9,10 +9,10 @@ class RawController extends AppController
         View::select(null, null);
         header('Content-type: application/json');
 
-        $this->pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
+        $this->pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', [
             PDO::ATTR_PERSISTENT => true,
             PDO::ATTR_EMULATE_PREPARES => false
-        ));
+        ]);
     }
 
     public function index()
@@ -45,7 +45,7 @@ class RawController extends AppController
             $id = mt_rand(1, 10000);
             $randomNumber = mt_rand(1, 10000);
 
-            $sth->execute(array($id));
+            $sth->execute([$id]);
             $row = ['id' => $id, 'randomNumber' => $updateSth->fetchColumn()];
             $row['randomNumber'] = $randomNumber;
             $updateSth->execute([$randomNumber, $id]);
