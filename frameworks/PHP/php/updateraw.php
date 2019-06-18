@@ -3,10 +3,10 @@ header('Content-type: application/json');
 
 // Database connection
 // http://www.php.net/manual/en/ref.pdo-mysql.php
-$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
+$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', [
   PDO::ATTR_PERSISTENT => true,
   PDO::ATTR_EMULATE_PREPARES => false
-));
+]);
 
 // Read number of queries to run from URL parameter
 $query_count = 1;
@@ -15,7 +15,7 @@ if ($_GET['queries'] > 1) {
 }
 
 // Create an array with the response string.
-$arr = array();
+$arr = [];
 
 // Define query
 $statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id = ?');
@@ -26,12 +26,12 @@ while (0 < $query_count--) {
   $id = mt_rand(1, 10000);
   $randomNumber = mt_rand(1, 10000);
 
-  $statement->execute(array($id));
+  $statement->execute( [$id] );
   
   // Store result in array.
-  $world = array('id' => $id, 'randomNumber' => $statement->fetchColumn());
+  $world = ['id' => $id, 'randomNumber' => $statement->fetchColumn()];
   $world['randomNumber'] = $randomNumber;
-  $updateStatement->execute(array($randomNumber, $id));
+  $updateStatement->execute([$randomNumber, $id]);
   
   $arr[] = $world;
 }
