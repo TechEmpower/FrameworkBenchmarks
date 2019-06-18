@@ -40,7 +40,7 @@
 			"flavor": "None",
 			"orm": "Full",
 			"platform": "swoole",
-			"webserver": "swoole",
+			"webserver": "none",
 			"os": "Linux",
 			"database_os": "Linux",
 			"display_name": "laravel-swoole",

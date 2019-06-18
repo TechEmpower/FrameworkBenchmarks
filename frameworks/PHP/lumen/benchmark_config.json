@@ -41,7 +41,7 @@
 			"flavor": "PHP7",
 			"orm": "Full",
 			"platform": "swoole",
-			"webserver": "swoole",
+			"webserver": "none",
 			"os": "Linux",
 			"database_os": "Linux",
 			"display_name": "lumen-swoole",
