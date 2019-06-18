@@ -40,7 +40,7 @@
 			"language": "PHP",
 			"flavor": "PHP7",
 			"orm": "Full",
-			"platform": "None",
+			"platform": "swoole",
 			"webserver": "swoole",
 			"os": "Linux",
 			"database_os": "Linux",
