@@ -6,7 +6,7 @@ return ['default' => [
             'password' => 'benchmarkdbpass',
             'params' => [
                 PDO::ATTR_PERSISTENT => true, //conexión persistente
-                PDO::ATTR_EMULATE_PREPARES => false
+                PDO::ATTR_EMULATE_PREPARES => false,
             ]
         ],
     ];
