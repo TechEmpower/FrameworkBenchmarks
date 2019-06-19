@@ -39,7 +39,6 @@ namespace Benchmarks
             queries = queries < 1 ? 1 : queries > 500 ? 500 : queries;
             var result = await mPgsql.LoadMultipleQueriesRows(queries);
             return new SpanJsonResult(result);
-
         }
 
         public async Task<object> db()

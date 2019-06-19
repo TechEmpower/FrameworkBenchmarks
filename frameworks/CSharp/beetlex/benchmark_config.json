@@ -6,7 +6,7 @@
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "db_url": "/db",
-        "query_url": "/queries/queries=",
+        "query_url": "/queries?queries=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
