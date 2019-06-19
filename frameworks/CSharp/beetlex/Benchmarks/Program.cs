@@ -7,6 +7,7 @@ using System.Threading;
 using System.Text;
 using BeetleX.Buffers;
 using SpanJson;
+using System.Collections.Generic;
 
 namespace Benchmarks
 {
@@ -37,13 +38,14 @@ namespace Benchmarks
         {
             queries = queries < 1 ? 1 : queries > 500 ? 500 : queries;
             var result = await mPgsql.LoadMultipleQueriesRows(queries);
-            return result;
+            return new SpanJsonResult(result);
+
         }
 
         public async Task<object> db()
         {
             var result = await mPgsql.LoadSingleQueryRow();
-            return result;
+            return new SpanJsonResult(result);
         }
 
         private RawDb mPgsql;
