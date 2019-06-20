@@ -7,11 +7,12 @@ using System.Threading;
 using System.Text;
 using BeetleX.Buffers;
 using SpanJson;
+using System.Collections.Generic;
 
 namespace Benchmarks
 {
     [Controller]
-    class Program
+    class Program:IController
     {
         public static void Main(string[] args)
         {
@@ -22,8 +23,38 @@ namespace Benchmarks
                 });
             builder.Build().Run();
         }
-    }
 
+        public object plaintext()
+        {
+            return BeetleXHttpServer.plaintextResult;
+        }
+
+        public object json()
+        {
+            return new SpanJsonResult(new JsonMessage { message = "Hello, World!" });
+        }
+
+        public async Task<object> queries(int queries)
+        {
+            queries = queries < 1 ? 1 : queries > 500 ? 500 : queries;
+            var result = await mPgsql.LoadMultipleQueriesRows(queries);
+            return new SpanJsonResult(result);
+        }
+
+        public async Task<object> db()
+        {
+            var result = await mPgsql.LoadSingleQueryRow();
+            return new SpanJsonResult(result);
+        }
+
+        private RawDb mPgsql;
+
+        [NotAction]
+        public void Init(HttpApiServer server, string path)
+        {
+            mPgsql = new RawDb(new ConcurrentRandom(), Npgsql.NpgsqlFactory.Instance);
+        }
+    }
 
     public class BeetleXHttpServer : IHostedService
     {
@@ -34,24 +65,6 @@ namespace Benchmarks
 
         private HttpApiServer mApiServer;
 
-        public void OnRequesting(object sender, EventHttpRequestArgs e)
-        {
-            if (e.Request.BaseUrl == "/plaintext")
-            {
-                e.Response.Result(plaintextResult);
-            }
-            else if (e.Request.BaseUrl == "/json")
-            {
-                var json = new SpanJsonResult(new JsonMessage { message = "Hello, World!" });
-                e.Response.Result(json);
-            }
-            else
-            {
-                e.Response.Result(new NotFoundResult("url not found!"));
-            }
-            e.Cancel = true;
-        }
-
         public virtual Task StartAsync(CancellationToken cancellationToken)
         {
             plaintextResult = new StringBytes(_helloWorldPayload);
@@ -61,12 +74,11 @@ namespace Benchmarks
             mApiServer.Options.MaxConnections = 100000;
             mApiServer.Options.Statistical = false;
             mApiServer.Options.UrlIgnoreCase = false;
-            mApiServer.Options.LogLevel = BeetleX.EventArgs.LogType.Off;
+            mApiServer.Options.LogLevel = BeetleX.EventArgs.LogType.Error;
             mApiServer.Options.LogToConsole = true;
             mApiServer.Options.PrivateBufferPool = true;
             mApiServer.Options.IOQueueEnabled = true;
             mApiServer.Register(typeof(Program).Assembly);
-            mApiServer.HttpRequesting += OnRequesting;
             mApiServer.Open();
             return Task.CompletedTask;
         }
