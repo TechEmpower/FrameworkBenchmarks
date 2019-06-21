@@ -51,6 +51,7 @@ struct thread_context_t {
 	list_t *json_generator;
 	size_t json_generator_num;
 	unsigned random_seed;
+	bool shutdown;
 	db_state_t db_state;
 	event_loop_t event_loop;
 	request_handler_thread_data_t request_handler_data;

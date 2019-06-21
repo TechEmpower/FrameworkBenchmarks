@@ -61,11 +61,12 @@ static const char *status_code_to_string(http_status_code_t status_code)
 void cleanup_request_handlers(global_data_t *global_data)
 {
 	cleanup_fortunes_handler(global_data);
+	cleanup_world_handlers(global_data);
 }
 
 void free_request_handler_thread_data(request_handler_thread_data_t *request_handler_thread_data)
 {
-	free_world_handler_thread_data(request_handler_thread_data);
+	IGNORE_FUNCTION_PARAMETER(request_handler_thread_data);
 }
 
 const char *get_query_param(const char *query,
@@ -97,7 +98,7 @@ void initialize_request_handler_thread_data(
 		const config_t *config, request_handler_thread_data_t *request_handler_thread_data)
 {
 	IGNORE_FUNCTION_PARAMETER(config);
-	initialize_world_handler_thread_data(request_handler_thread_data);
+	IGNORE_FUNCTION_PARAMETER(request_handler_thread_data);
 }
 
 void initialize_request_handlers(const config_t *config,
@@ -108,7 +109,7 @@ void initialize_request_handlers(const config_t *config,
 	initialize_fortunes_handler(config, global_data, hostconf, log_handle);
 	initialize_json_serializer_handler(hostconf, log_handle);
 	initialize_plaintext_handler(hostconf, log_handle);
-	initialize_world_handlers(global_data, hostconf, log_handle);
+	initialize_world_handlers(config, global_data, hostconf, log_handle);
 }
 
 void register_request_handler(const char *path,

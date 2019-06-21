@@ -52,3 +52,6 @@ database:
 
   # disable comments in SQL queries
   autoCommentsEnabled: false
+
+  # disable autocommit in the JDBC driver
+  autoCommitByDefault: false

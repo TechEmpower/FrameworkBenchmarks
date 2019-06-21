@@ -53,6 +53,7 @@ namespace Benchmarks
             return new FortuneView(data);
         }
 
+
         private RawDb mPgsql;
 
         [NotAction]

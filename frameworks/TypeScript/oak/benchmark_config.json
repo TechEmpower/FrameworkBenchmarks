@@ -1,25 +1,25 @@
 {
-  "framework": "h2o.cr",
+  "framework": "oak",
   "tests": [
     {
       "default": {
         "json_url": "/json",
-        "plaintext_url": "/hello",
-        "port": 7890,
+        "plaintext_url": "/plaintext",
+        "port": 8000,
         "approach": "Realistic",
         "classification": "Micro",
         "database": "None",
-        "framework": "h2o.cr",
-        "language": "Crystal",
-        "flavor": "None",
-        "orm": "Raw",
+        "framework": "Oak",
+        "language": "TypeScript",
+        "flavor": "Deno",
+        "orm": "None",
         "platform": "None",
-        "webserver": "h2o",
+        "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "crystal-h2o",
+        "display_name": "Oak",
         "notes": "",
-        "versus": "None"
+        "versus": "nodejs"
       }
     }
   ]
