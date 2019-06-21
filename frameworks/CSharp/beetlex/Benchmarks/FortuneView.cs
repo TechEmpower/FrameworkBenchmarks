@@ -15,6 +15,8 @@ namespace Benchmarks
         private readonly static AsciiString _fortunesRowEnd = "</td></tr>";
         private readonly static AsciiString _fortunesTableEnd = "</table></body></html>";
 
+        private static HeaderItem HTML_UTF8 = new HeaderItem("Content-Type: text/html; charset=UTF-8\r\n");
+
         public FortuneView(IEnumerable<Fortune> model)
         {
             Model = model;
@@ -24,7 +26,7 @@ namespace Benchmarks
 
         public IEnumerable<Fortune> Model { get; set; }
 
-        public override IHeaderItem ContentType => BeetleX.FastHttpApi.ContentTypes.HTML;
+        public override IHeaderItem ContentType => HTML_UTF8;
 
         public override void Write(PipeStream stream, HttpResponse response)
         {
