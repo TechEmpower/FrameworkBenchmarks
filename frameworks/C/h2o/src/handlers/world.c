@@ -34,6 +34,7 @@
 #include "cache.h"
 #include "database.h"
 #include "error.h"
+#include "global_data.h"
 #include "request_handler.h"
 #include "thread.h"
 #include "utility.h"
@@ -120,7 +121,7 @@ static int compare_items(const void *x, const void *y);
 static void complete_multiple_query(multiple_query_ctx_t *query_ctx);
 static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req);
 static void do_updates(multiple_query_ctx_t *query_ctx);
-static void fetch_from_cache(uint64_t now, h2o_cache_t *cache, multiple_query_ctx_t *query_ctx);
+static void fetch_from_cache(uint64_t now, cache_t *cache, multiple_query_ctx_t *query_ctx);
 static void free_cache_entry(h2o_iovec_t value);
 static size_t get_query_number(h2o_req_t *req);
 static void initialize_ids(size_t num_query, query_result_t *res, unsigned int *seed);
@@ -135,7 +136,7 @@ static void on_single_query_error(db_query_param_t *param, const char *error_str
 static result_return_t on_single_query_result(db_query_param_t *param, PGresult *result);
 static void on_single_query_timeout(db_query_param_t *param);
 static result_return_t on_update_result(db_query_param_t *param, PGresult *result);
-static void populate_cache(thread_context_t *ctx);
+static void populate_cache(thread_context_t *ctx, void *arg);
 static void process_result(PGresult *result, size_t idx, query_result_t *out);
 static int serialize_item(uint32_t id, uint32_t random_number, yajl_gen gen);
 static void serialize_items(const query_result_t *res,
@@ -267,12 +268,9 @@ static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 			query_ctx->flags |= DO_UPDATE;
 
 		if (use_cache) {
-			if (ctx->request_handler_data.populate_world_cache)
-				populate_cache(ctx);
-
 			query_ctx->flags |= USE_CACHE;
 			fetch_from_cache(h2o_now(ctx->event_loop.h2o_ctx.loop),
-			                 ctx->request_handler_data.world_cache,
+			                 &ctx->global_data->request_handler_data.world_cache,
 			                 query_ctx);
 
 			if (query_ctx->num_result == query_ctx->num_query) {
@@ -380,21 +378,22 @@ error:
 	send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, query_ctx->req);
 }
 
-static void fetch_from_cache(uint64_t now, h2o_cache_t *cache, multiple_query_ctx_t *query_ctx)
+static void fetch_from_cache(uint64_t now, cache_t *cache, multiple_query_ctx_t *query_ctx)
 {
 	h2o_iovec_t key = {.len = sizeof(query_ctx->res->id)};
 
 	for (size_t i = 0; i < query_ctx->num_query; i++) {
 		key.base = (char *) &query_ctx->res[i].id;
 
-		h2o_cache_ref_t * const r = h2o_cache_fetch(cache, now, key, 0);
+		const h2o_cache_hashcode_t keyhash = h2o_cache_calchash(key.base, key.len);
+		h2o_cache_ref_t * const r = cache_fetch(cache, now, key, keyhash);
 
 		if (r) {
 			query_ctx->res[i].id = query_ctx->res[query_ctx->num_result].id;
 			memcpy(query_ctx->res + query_ctx->num_result++,
 			       r->value.base,
 			       sizeof(*query_ctx->res));
-			h2o_cache_release(cache, r);
+			cache_release(cache, r, keyhash);
 		}
 	}
 }
@@ -490,11 +489,11 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 				const h2o_iovec_t value = {.base = (char *) r, .len = sizeof(*r)};
 
 				*r = query_ctx->res[query_ctx->num_result];
-				h2o_cache_set(query_ctx->ctx->request_handler_data.world_cache,
-				              h2o_now(query_ctx->ctx->event_loop.h2o_ctx.loop),
-				              key,
-				              0,
-				              value);
+				cache_set(h2o_now(query_ctx->ctx->event_loop.h2o_ctx.loop),
+				          key,
+				          0,
+				          value,
+				          &query_ctx->ctx->global_data->request_handler_data.world_cache);
 			}
 		}
 
@@ -568,11 +567,11 @@ static result_return_t on_populate_cache_result(db_query_param_t *param, PGresul
 				const h2o_iovec_t key = {.base = (char *) &r->id, .len = sizeof(r->id)};
 				const h2o_iovec_t value = {.base = (char *) r, .len = sizeof(*r)};
 
-				h2o_cache_set(query_ctx->ctx->request_handler_data.world_cache,
-				              h2o_now(query_ctx->ctx->event_loop.h2o_ctx.loop),
-				              key,
-				              0,
-				              value);
+				cache_set(h2o_now(query_ctx->ctx->event_loop.h2o_ctx.loop),
+				          key,
+				          0,
+				          value,
+				          &query_ctx->ctx->global_data->request_handler_data.world_cache);
 			}
 		}
 	}
@@ -693,8 +692,10 @@ static result_return_t on_update_result(db_query_param_t *param, PGresult *resul
 	return DONE;
 }
 
-static void populate_cache(thread_context_t *ctx)
+static void populate_cache(thread_context_t *ctx, void *arg)
 {
+	IGNORE_FUNCTION_PARAMETER(arg);
+
 	populate_cache_ctx_t * const query_ctx = calloc(1, sizeof(*query_ctx));
 
 	if (query_ctx) {
@@ -706,8 +707,6 @@ static void populate_cache(thread_context_t *ctx)
 
 		if (execute_query(ctx, &query_ctx->param))
 			free(query_ctx);
-		else
-			ctx->request_handler_data.populate_world_cache = false;
 	}
 }
 
@@ -833,30 +832,27 @@ static int updates(struct st_h2o_handler_t *self, h2o_req_t *req)
 	return do_multiple_queries(true, false, req);
 }
 
-void free_world_handler_thread_data(request_handler_thread_data_t *request_handler_thread_data)
+void cleanup_world_handlers(global_data_t *global_data)
 {
-	h2o_cache_destroy(request_handler_thread_data->world_cache);
+	cache_destroy(&global_data->request_handler_data.world_cache);
 }
 
-void initialize_world_handler_thread_data(request_handler_thread_data_t *request_handler_data)
-{
-	request_handler_data->populate_world_cache = true;
-	request_handler_data->world_cache = h2o_cache_create(0,
-	                                                     CACHE_CAPACITY,
-	                                                     CACHE_DURATION,
-	                                                     free_cache_entry);
-
-	if (!request_handler_data->world_cache)
-		abort();
-}
-
-void initialize_world_handlers(global_data_t *global_data,
+void initialize_world_handlers(const config_t *config,
+                               global_data_t *global_data,
                                h2o_hostconf_t *hostconf,
                                h2o_access_log_filehandle_t *log_handle)
 {
 	add_prepared_statement(WORLD_TABLE_NAME, WORLD_QUERY, &global_data->prepared_statements);
-	register_request_handler("/cached-worlds", cached_queries, hostconf, log_handle);
 	register_request_handler("/db", single_query, hostconf, log_handle);
 	register_request_handler("/queries", multiple_queries, hostconf, log_handle);
 	register_request_handler("/updates", updates, hostconf, log_handle);
+
+	if (!cache_create(config->thread_num,
+	                  CACHE_CAPACITY,
+	                  CACHE_DURATION,
+	                  free_cache_entry,
+	                  &global_data->request_handler_data.world_cache)) {
+		add_postinitialization_task(populate_cache, NULL, &global_data->postinitialization_tasks);
+		register_request_handler("/cached-worlds", cached_queries, hostconf, log_handle);
+	}
 }

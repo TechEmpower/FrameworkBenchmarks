@@ -31,7 +31,8 @@
 #include "list.h"
 #include "handlers/request_handler_data.h"
 
-typedef struct global_thread_data_t global_thread_data_t;
+struct global_thread_data_t;
+struct thread_context_t;
 
 typedef struct {
 	const char *bind_address;
@@ -52,15 +53,19 @@ typedef struct {
 
 typedef struct {
 	h2o_logger_t *file_logger;
-	global_thread_data_t *global_thread_data;
+	struct global_thread_data_t *global_thread_data;
+	list_t *postinitialization_tasks;
 	list_t *prepared_statements;
 	h2o_socket_t *signals;
 	SSL_CTX *ssl_ctx;
 	size_t memory_alignment;
 	int signal_fd;
-	bool shutdown;
 	h2o_globalconf_t h2o_config;
 	request_handler_data_t request_handler_data;
 } global_data_t;
+
+void add_postinitialization_task(void (*task)(struct thread_context_t *, void *),
+                                 void *arg,
+                                 list_t **postinitialization_tasks);
 
 #endif // GLOBAL_DATA_H_
