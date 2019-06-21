@@ -47,6 +47,13 @@ namespace Benchmarks
             return new SpanJsonResult(result);
         }
 
+        public async Task<object> fortunes()
+        {
+            var data = await mPgsql.LoadFortunesRows();
+            return new FortuneView(data);
+        }
+
+
         private RawDb mPgsql;
 
         [NotAction]
@@ -77,7 +84,6 @@ namespace Benchmarks
             mApiServer.Options.LogLevel = BeetleX.EventArgs.LogType.Error;
             mApiServer.Options.LogToConsole = true;
             mApiServer.Options.PrivateBufferPool = true;
-            mApiServer.Options.IOQueueEnabled = true;
             mApiServer.Register(typeof(Program).Assembly);
             mApiServer.Open();
             return Task.CompletedTask;

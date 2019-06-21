@@ -90,5 +90,34 @@ namespace Benchmarks
                 return result;
             }
         }
+
+        public async Task<List<Fortune>> LoadFortunesRows()
+        {
+            var result = new List<Fortune>();
+
+            using (var db = _dbProviderFactory.CreateConnection())
+            using (var cmd = db.CreateCommand())
+            {
+                cmd.CommandText = "SELECT id, message FROM fortune";
+
+                db.ConnectionString = _connectionString;
+                await db.OpenAsync();
+                using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                {
+                    while (await rdr.ReadAsync())
+                    {
+                        result.Add(new Fortune
+                        {
+                            Id = rdr.GetInt32(0),
+                            Message = rdr.GetString(1)
+                        });
+                    }
+                }
+            }
+
+            result.Add(new Fortune { Message = "Additional fortune added at request time." });
+            result.Sort();
+            return result;
+        }
     }
 }
