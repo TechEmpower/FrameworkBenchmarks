@@ -47,6 +47,12 @@ namespace Benchmarks
             return new SpanJsonResult(result);
         }
 
+        public async Task<object> fortunes()
+        {
+            var data = await mPgsql.LoadFortunesRows();
+            return new FortuneView(data);
+        }
+
         private RawDb mPgsql;
 
         [NotAction]
