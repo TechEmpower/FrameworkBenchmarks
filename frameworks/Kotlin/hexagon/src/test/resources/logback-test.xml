@@ -16,5 +16,5 @@
     <appender-ref ref="console" />
   </root>
 
-  <logger name="com.hexagonkt" level="trace" />
+  <logger name="com.hexagonkt" level="off" />
 </configuration>

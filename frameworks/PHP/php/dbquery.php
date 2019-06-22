@@ -3,9 +3,10 @@ header('Content-type: application/json');
 
 // Database connection
 // http://www.php.net/manual/en/ref.pdo-mysql.php
-$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
-    PDO::ATTR_PERSISTENT => true
-));
+$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', [
+    PDO::ATTR_PERSISTENT => true,
+    PDO::ATTR_EMULATE_PREPARES => false
+]);
 
 // Read number of queries to run from URL parameter
 $query_count = 1;
@@ -14,14 +15,14 @@ if ($_GET['queries'] > 1) {
 }
 
 // Create an array with the response string.
-$arr = array();
+$arr = [];
 
 // Define query
 $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
 
 // For each query, store the result set values in the response array
 while (0 < $query_count--) {
-  $statement->execute(array( mt_rand(1, 10000)) );
+  $statement->execute( [mt_rand(1, 10000)] );
   
   // Store result in array.
   $arr[] = $statement->fetch(PDO::FETCH_ASSOC);

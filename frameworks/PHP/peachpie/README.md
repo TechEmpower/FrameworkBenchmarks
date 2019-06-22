@@ -32,5 +32,5 @@ As we want Peachpie to be comparable to the PHP Interpreter, we derived our test
 
 ## Contacts
 
-* [http://github.com/jakubmisek](Jakub Míšek) - Chief developer of Peachpie
-* [http://github.com/roberthusak](Robert Husák) - Author of this contribution
+* [Jakub Míšek](http://github.com/jakubmisek) - Chief developer of Peachpie
+* [Robert Husák](http://github.com/roberthusak) - Author of this contribution

@@ -22,9 +22,9 @@ dependencies {
     compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.9.1"
     compile "io.ktor:ktor-server-netty:$ktor_version"
     compile "io.ktor:ktor-html-builder:$ktor_version"
-    compile "com.github.jasync-sql:jasync-postgresql:0.8.54"
-    compile "io.reactiverse:reactive-pg-client:0.11.1"
-    compile 'io.vertx:vertx-lang-kotlin-coroutines:3.6.2'
+    compile "com.github.jasync-sql:jasync-postgresql:0.9.39"
+    compile "io.reactiverse:reactive-pg-client:0.11.3"
+    compile 'io.vertx:vertx-lang-kotlin-coroutines:3.7.0'
 }
 
 compileKotlin {

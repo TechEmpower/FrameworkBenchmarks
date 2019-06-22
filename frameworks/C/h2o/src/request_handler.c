@@ -64,6 +64,11 @@ void cleanup_request_handlers(global_data_t *global_data)
 	cleanup_world_handlers(global_data);
 }
 
+void free_request_handler_thread_data(request_handler_thread_data_t *request_handler_thread_data)
+{
+	IGNORE_FUNCTION_PARAMETER(request_handler_thread_data);
+}
+
 const char *get_query_param(const char *query,
                             size_t query_len,
                             const char *param,
@@ -87,6 +92,13 @@ const char *get_query_param(const char *query,
 	}
 
 	return ret;
+}
+
+void initialize_request_handler_thread_data(
+		const config_t *config, request_handler_thread_data_t *request_handler_thread_data)
+{
+	IGNORE_FUNCTION_PARAMETER(config);
+	IGNORE_FUNCTION_PARAMETER(request_handler_thread_data);
 }
 
 void initialize_request_handlers(const config_t *config,

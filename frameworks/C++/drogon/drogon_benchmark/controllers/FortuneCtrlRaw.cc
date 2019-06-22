@@ -3,12 +3,14 @@
 #include <algorithm>
 
 using namespace drogon_model::hello_world;
-void FortuneCtrlRaw::asyncHandleHttpRequest(const HttpRequestPtr &req, const std::function<void(const HttpResponsePtr &)> &callback)
+void FortuneCtrlRaw::asyncHandleHttpRequest(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback)
 {
     auto client = drogon::app().getFastDbClient();
+    auto callbackPtr = std::shared_ptr<std::function<void(const HttpResponsePtr &)>>(new std::function<void(const HttpResponsePtr &)>(std::move(callback)));
+
     *client << "select * from fortune where 1=$1"
             << 1 >>
-        [callback](const Result &r) {
+        [callbackPtr](const Result &r) {
             std::vector<std::pair<int, std::string>> rows;
             for (auto row : r)
             {
@@ -23,11 +25,11 @@ void FortuneCtrlRaw::asyncHandleHttpRequest(const HttpRequestPtr &req, const std
             HttpViewData data;
             data.insert("rows", std::move(rows));
             auto resp = HttpResponse::newHttpViewResponse("fortune_raw.csp", data);
-            callback(resp);
+            (*callbackPtr)(resp);
         } >>
-        [callback](const DrogonDbException &err) {
+        [callbackPtr](const DrogonDbException &err) {
             auto resp = HttpResponse::newHttpResponse();
             resp->setBody(std::string("error:") + err.base().what());
-            callback(resp);
+            (*callbackPtr)(resp);
         };
 }

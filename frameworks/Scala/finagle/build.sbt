@@ -1,4 +1,4 @@
-lazy val finagleVersion = "19.4.0"
+lazy val finagleVersion = "19.5.1"
 
 name := "finagle-benchmark"
 scalaVersion := "2.12.5"
@@ -6,7 +6,7 @@ version := finagleVersion
 
 libraryDependencies ++= Seq(
   "com.twitter" %% "finagle-http" % finagleVersion,
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.7"
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.9"
 )
 
 assemblyJarName in assembly := "finagle-benchmark.jar"

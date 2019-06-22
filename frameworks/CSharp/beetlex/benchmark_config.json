@@ -3,18 +3,21 @@
   "tests": [
     {
       "default": {
+        "fortune_url": "/fortunes",
         "plaintext_url": "/plaintext",
         "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
-        "database": "None",
+        "database": "Postgres",
         "framework": "beetlex",
         "language": "C#",
         "orm": "Raw",
         "platform": ".NET",
         "flavor": "CoreCLR",
-        "webserver": "BeetleX",
+        "webserver": "beetlex",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "beetlex",

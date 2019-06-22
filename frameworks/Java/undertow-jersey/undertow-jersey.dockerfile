@@ -4,7 +4,7 @@ COPY src src
 COPY pom.xml pom.xml
 RUN mvn package -q
 
-FROM openjdk:11.0.3-jre-slim
+FROM openjdk:11.0.3-jdk-slim
 WORKDIR /undertow-jersey
 COPY --from=maven /undertow-jersey/target/undertow-jersey.jar app.jar
 CMD ["java", "-jar", "app.jar"]
