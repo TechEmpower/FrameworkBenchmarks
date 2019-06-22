@@ -128,7 +128,6 @@ void cleanup_openssl(global_data_t *global_data)
 	CRYPTO_set_dynlock_create_callback(NULL);
 	CRYPTO_set_dynlock_destroy_callback(NULL);
 	CRYPTO_set_dynlock_lock_callback(NULL);
-	ERR_remove_state(0);
 	ERR_free_strings();
 	CONF_modules_unload(1);
 	EVP_cleanup();
