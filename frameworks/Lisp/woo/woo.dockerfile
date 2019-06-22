@@ -17,10 +17,10 @@ RUN apt-get update -q \
          ca-certificates curl libcurl3-gnutls \
          make \
     && rm -rf /var/lib/apt/lists/* \
-    && curl -L -O https://github.com/roswell/roswell/releases/download/v19.05.10.99/roswell_19.05.10.99-1_amd64.deb \
-    && dpkg -i roswell_19.05.10.99-1_amd64.deb \
+    && curl -L -O https://github.com/roswell/roswell/releases/download/v19.06.10.100/roswell_19.06.10.100-1_amd64.deb \
+    && dpkg -i roswell_19.06.10.100-1_amd64.deb \
     && ros setup \
-    && rm roswell_19.05.10.99-1_amd64.deb
+    && rm roswell_19.06.10.100-1_amd64.deb
 
 RUN echo 'export PATH=$HOME/.roswell/bin:$PATH' >> ~/.bashrc
 

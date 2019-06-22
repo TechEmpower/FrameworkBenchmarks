@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     compile 'io.javalin:javalin:2.8.0'
-    compile "com.fasterxml.jackson.core:jackson-databind:2.9.8"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.9.9"
     compile "org.slf4j:slf4j-simple:1.8.0-beta4"
 }
 

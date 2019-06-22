@@ -5,10 +5,10 @@
       "default": {
         "json_url": "/Json",
         "plaintext_url": "/Plaintext",
-        "db_url": "/Db_",
-        "update_url": "/Db_/update/",
-        "query_url": "/Db_/query/",
-        "fortune_url": "/Fortunes_",
+        "db_url": "/Db",
+        "update_url": "/Db/update/",
+        "query_url": "/Db/query/",
+        "fortune_url": "/Fortunes",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
@@ -40,8 +40,8 @@
         "language": "PHP",
         "flavor": "PHP7",
         "orm": "Full",
-        "platform": "None",
-        "webserver": "php-pm",
+        "platform": "php-pm",
+        "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "ubiquity-php-pm",
@@ -63,13 +63,13 @@
         "language": "PHP",
         "flavor": "PHP7",
         "orm": "Full",
-        "platform": "None",
-        "webserver": "swoole",
+        "platform": "swoole",
+        "webserver": "none",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "ubiquity-swoole",
         "notes": "",
-        "versus": "php"
+        "versus": "swoole"
       }
     }
   ]
