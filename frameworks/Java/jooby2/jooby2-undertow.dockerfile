@@ -5,7 +5,7 @@ COPY src src
 COPY public public
 RUN mvn package -q -P undertow
 
-FROM openjdk:11.0.3-jre-slim
+FROM openjdk:11.0.3-jdk-slim
 WORKDIR /jooby2
 COPY --from=maven /jooby2/target/jooby-2x.jar app.jar
 COPY conf conf

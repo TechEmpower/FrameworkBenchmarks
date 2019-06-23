@@ -18,6 +18,15 @@ public class WorldHibernateImpl extends AbstractDAO<World> implements WorldDAO {
 		return get(id);
 	}
 
+	@Override
+	public World[] findById(int[] ids) {
+		World[] worlds = new World[ids.length];
+		for(int i = 0; i < ids.length; i++) {
+			worlds[i] = get(ids[i]);
+		}
+		return worlds;
+	}
+	
 	public World findAndModify(int id, int newRandomNumber) {
 		final World world = get(id);
 		world.setRandomNumber(newRandomNumber);

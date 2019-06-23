@@ -106,3 +106,4 @@ build/
 # Elixir
 _build/
 deps/
+frameworks/PHP/ubiquity/.buildpath

@@ -2,14 +2,25 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <ServerGarbageCollection>true</ServerGarbageCollection>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BeetleX.FastHttpApi" Version="1.4.7" />
+    <PackageReference Include="BeetleX.FastHttpApi" Version="1.5.2.6" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.1.1" />
+    <PackageReference Include="Npgsql" Version="4.0.7" />
     <PackageReference Include="SpanJson" Version="2.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BeetleX">
+      <HintPath>Lib\BeetleX.dll</HintPath>
+    </Reference>
+    <Reference Include="BeetleX.FastHttpApi">
+      <HintPath>Lib\BeetleX.FastHttpApi.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

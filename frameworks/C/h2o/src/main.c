@@ -46,9 +46,16 @@
 	"[-q <max enqueued database queries per thread>] [-r <root directory>] " \
 	"[-s <HTTPS port>] [-t <thread number>]\n"
 
+typedef struct {
+	list_t l;
+	void *arg;
+	void (*task)(thread_context_t *, void *);
+} task_t;
+
 static void free_global_data(global_data_t *global_data);
 static int initialize_global_data(const config_t *config, global_data_t *global_data);
 static int parse_options(int argc, char *argv[], config_t *config);
+static void run_postinitialization_tasks(list_t **tasks, thread_context_t *ctx);
 static void set_default_options(config_t *config);
 static void setup_process(void);
 
@@ -211,6 +218,18 @@ static int parse_options(int argc, char *argv[], config_t *config)
 	return EXIT_SUCCESS;
 }
 
+static void run_postinitialization_tasks(list_t **tasks, thread_context_t *ctx)
+{
+	if (*tasks)
+		do {
+			task_t * const t = H2O_STRUCT_FROM_MEMBER(task_t, l, *tasks);
+
+			*tasks = (*tasks)->next;
+			t->task(ctx, t->arg);
+			free(t);
+		} while (*tasks);
+}
+
 static void set_default_options(config_t *config)
 {
 	if (!config->max_accept)
@@ -253,6 +272,21 @@ static void setup_process(void)
 	CHECK_ERRNO(setrlimit, RLIMIT_NOFILE, &rlim);
 }
 
+void add_postinitialization_task(void (*task)(struct thread_context_t *, void *),
+                                 void *arg,
+                                 list_t **postinitialization_tasks)
+{
+	task_t * const t = calloc(1, sizeof(*t));
+
+	if (!t)
+		abort();
+
+	t->l.next = *postinitialization_tasks;
+	t->arg = arg;
+	t->task = task;
+	*postinitialization_tasks = &t->l;
+}
+
 int main(int argc, char *argv[])
 {
 	config_t config;
@@ -267,6 +301,7 @@ int main(int argc, char *argv[])
 			setup_process();
 			start_threads(global_data.global_thread_data);
 			initialize_thread_context(global_data.global_thread_data, true, &ctx);
+			run_postinitialization_tasks(&global_data.postinitialization_tasks, &ctx);
 			event_loop(&ctx);
 			// Even though this is global data, we need to close
 			// it before the associated event loop is cleaned up.
