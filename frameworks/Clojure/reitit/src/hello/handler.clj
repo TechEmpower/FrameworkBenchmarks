@@ -55,7 +55,7 @@
                  {:uri "postgresql://tfb-database:5432/hello_world"
                   :user "benchmarkdbuser"
                   :password "benchmarkdbpass"
-                  :size 64})
+                  :size 1})
                (hikari/make-datasource
                  {:jdbc-url "jdbc:postgresql://tfb-database:5432/hello_world"
                   :username "benchmarkdbuser"
