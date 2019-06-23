@@ -70,7 +70,7 @@ public class Bootstrap {
         int shareNum = Runtime.getRuntime().availableProcessors() * 3 / 8;
         server.setBossThreadNum(cpuNum);
         server.setBossShareToWorkerThreadNum(shareNum);
-        server.setWorkerThreadNum((cpuNum - shareNum) * 2);
+        server.setWorkerThreadNum(cpuNum - shareNum);
         try {
             server.start();
         } catch (IOException e) {
