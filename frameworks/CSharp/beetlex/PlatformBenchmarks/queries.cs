@@ -25,6 +25,8 @@ namespace PlatformBenchmarks
             }
             if (count > 500)
                 count = 500;
+            if (count < 1)
+                count = 1;
             try
             {
                 var data = await mPgsql.LoadMultipleQueriesRows(count);
