@@ -155,7 +155,7 @@ public class FrameworkTest implements GreenApp {
 	@Override
     public void declareConfiguration(GreenFramework framework) {
 		
-		framework.setDefaultRate(50_000L);			
+		framework.setDefaultRate(200_000L);		
 	
 		//for 14 cores this is expected to use less than 16G, must use next largest prime to ensure smaller groups are not multiples.
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
