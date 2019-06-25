@@ -21,6 +21,8 @@ namespace PlatformBenchmarks
             serverOptions.DefaultListen.Port = 8080;
             serverOptions.Statistical = false;
             serverOptions.PrivateBufferPool = true;
+            serverOptions.BufferSize = 1024 * 4;
+            serverOptions.PrivateBufferPool = true;
             serverOptions.MaxConnections = 100000;
             serverOptions.BufferPoolMaxMemory = 500;
             mApiServer = SocketFactory.CreateTcpServer<HttpHandler>(serverOptions);
