@@ -25,6 +25,7 @@
         <pgclient.version>0.11.4</pgclient.version>
         <rxjava2-jdbc.version>0.2.4</rxjava2-jdbc.version>
         <r2dbc-postgresql.version>1.0.0.M7</r2dbc-postgresql.version>
+        <r2dbc-pool.version>1.0.0.BUILD-SNAPSHOT</r2dbc-pool.version>
     </properties>
 
     <dependencies>
@@ -64,6 +65,11 @@
             <groupId>io.r2dbc</groupId>
             <artifactId>r2dbc-postgresql</artifactId>
             <version>${r2dbc-postgresql.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.r2dbc</groupId>
+            <artifactId>r2dbc-pool</artifactId>
+            <version>${r2dbc-pool.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -117,6 +123,14 @@
             <id>spring-libs-snapshot</id>
             <name>Spring Snapshots</name>
             <url>https://repo.spring.io/libs-snapshot</url>
+        </repository>
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
     <pluginRepositories>
