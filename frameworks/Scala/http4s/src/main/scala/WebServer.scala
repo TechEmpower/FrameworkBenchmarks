@@ -1,23 +1,22 @@
 package http4s.techempower.benchmark
 
-import com.github.plokhotnyuk.jsoniter_scala.core._
-import com.github.plokhotnyuk.jsoniter_scala.macros._
+import java.util.concurrent.ThreadLocalRandom
 
 import cats.effect._
 import cats.implicits._
-
-import org.http4s._
-import org.http4s.headers.`Content-Type`
-import org.http4s.dsl._
-import org.http4s.server.blaze.BlazeBuilder
-import org.http4s.twirl._
-
-import doobie.hikari.HikariTransactor
-import doobie.util.ExecutionContexts
+import com.github.plokhotnyuk.jsoniter_scala.core._
+import com.github.plokhotnyuk.jsoniter_scala.macros._
 import doobie._
+import doobie.hikari.HikariTransactor
 import doobie.implicits._
-
-import java.util.concurrent.ThreadLocalRandom
+import doobie.util.ExecutionContexts
+import org.http4s._
+import org.http4s.dsl._
+import org.http4s.headers.`Content-Type`
+import org.http4s.implicits._
+import org.http4s.server.Router
+import org.http4s.server.blaze.BlazeServerBuilder
+import org.http4s.twirl._
 
 case class Message(message: String)
 case class World(id: Int, randomNumber: Int)
@@ -161,9 +160,9 @@ object WebServer extends IOApp with Http4sDsl[IO] {
 
   // Given a fully constructed HttpService, start the server and wait for completion
   def startServer(service: HttpRoutes[IO]) =
-    BlazeBuilder[IO]
+    BlazeServerBuilder[IO]
       .bindHttp(8080, "0.0.0.0")
-      .mountService(service, "/")
+      .withHttpApp(Router("/" -> service).orNotFound)
       .resource
 
   // Entry point when starting service
