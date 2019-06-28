@@ -102,7 +102,8 @@ object WebServer extends IOApp with Http4sDsl[IO] {
   // this uses a batch update SQL call.
   def updateWorlds(xa: Transactor[IO], newWorlds: List[World]): IO[Int] = {
     val sql = "update World set randomNumber = ? where id = ?"
-    val update = Update[(Int, Int)](sql).updateMany(newWorlds.map(w => (w.randomNumber, w.id)))
+    // Reason for sorting: https://github.com/TechEmpower/FrameworkBenchmarks/pull/4214#issuecomment-489358881
+    val update = Update[(Int, Int)](sql).updateMany(newWorlds.sortBy(_.id).map(w => (w.randomNumber, w.id)))
     update.transact(xa)
   }
 
