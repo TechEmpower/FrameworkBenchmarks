@@ -20,7 +20,7 @@ namespace Benchmark {
             server.AddMiddleware(ctx =>
                 ctx.Response.SetHeader("Date", DateTime.UtcNow.ToString("r")));
 
-            server.Listen("127.0.0.1", 1234).Wait();
+            server.Listen("0.0.0.0", 1234).Wait();
         }
     }
 }
