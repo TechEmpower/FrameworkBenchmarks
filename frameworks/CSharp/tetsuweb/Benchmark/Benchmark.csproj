@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-      <ProjectReference Include="Tetsu.Web" Version="0.1.1" />
+      <ProjectReference Include="Tetsu.Web" Version="0.1.2" />
       <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
 
