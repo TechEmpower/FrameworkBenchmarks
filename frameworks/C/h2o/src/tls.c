@@ -131,13 +131,18 @@ void cleanup_openssl(global_data_t *global_data)
 	ERR_free_strings();
 	CONF_modules_unload(1);
 	EVP_cleanup();
-	CRYPTO_cleanup_all_ex_data();
 
 	for (size_t i = 0; i < openssl_global_data.num_lock; i++)
 		CHECK_ERROR(pthread_mutex_destroy, openssl_global_data.lock + i);
 
 	free(openssl_global_data.lock);
 	CHECK_ERROR(pthread_mutexattr_destroy, &openssl_global_data.lock_attr);
+}
+
+void cleanup_openssl_thread_state(void)
+{
+	ERR_remove_thread_state(NULL);
+	CRYPTO_cleanup_all_ex_data();
 }
 
 void initialize_openssl(const config_t *config, global_data_t *global_data)

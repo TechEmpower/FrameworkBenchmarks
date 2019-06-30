@@ -93,7 +93,7 @@ static int do_execute_query(db_conn_t *db_conn, bool direct_notification)
 	                                   db_conn->param->paramFormats,
 	                                   db_conn->param->resultFormat) :
 	               PQsendQuery(db_conn->conn, db_conn->param->command);
-	int ret = EXIT_FAILURE;
+	int ret = 1;
 
 	if (ec) {
 		if (db_conn->param->flags & IS_SINGLE_ROW)
@@ -115,7 +115,7 @@ static int do_execute_query(db_conn_t *db_conn, bool direct_notification)
 			on_database_error(db_conn, DB_ERROR);
 		}
 		else {
-			ret = EXIT_SUCCESS;
+			ret = 0;
 
 			if (send_status)
 				h2o_socket_notify_write(db_conn->sock, on_database_write_ready);
@@ -470,7 +470,7 @@ void add_prepared_statement(const char *name, const char *query, list_t **prepar
 
 int execute_query(thread_context_t *ctx, db_query_param_t *param)
 {
-	int ret = EXIT_FAILURE;
+	int ret = 1;
 
 	if (ctx->db_state.free_db_conn_num) {
 		db_conn_t * const db_conn = H2O_STRUCT_FROM_MEMBER(db_conn_t, l, ctx->db_state.db_conn);
@@ -489,7 +489,7 @@ int execute_query(thread_context_t *ctx, db_query_param_t *param)
 			*ctx->db_state.queries.tail = &param->l;
 			ctx->db_state.queries.tail = &param->l.next;
 			ctx->db_state.query_num++;
-			ret = EXIT_SUCCESS;
+			ret = 0;
 		}
 	}
 

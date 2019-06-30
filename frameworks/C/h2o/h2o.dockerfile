@@ -30,4 +30,4 @@ RUN wget -qO "$H2O_ARCHIVE" "https://github.com/h2o/h2o/archive/$H2O_ARCHIVE" &&
           -DCMAKE_AR=/usr/bin/gcc-ar -DCMAKE_RANLIB=/usr/bin/gcc-ranlib . && \
     make -j "$(nproc)" install
 
-CMD ["./start-servers.sh"]
+CMD ["./h2o.sh"]
