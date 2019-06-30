@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.smartboot.http</groupId>
         <artifactId>smart-http-parent</artifactId>
-        <version>1.0.10.0501-beta</version>
+        <version>1.0.10.0630-beta</version>
     </parent>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,11 +22,11 @@
             <groupId>org.smartboot.http</groupId>
             <artifactId>smart-http-server</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.smartboot.socket</groupId>
-            <artifactId>aio-core</artifactId>
-            <version>1.4.1</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.smartboot.socket</groupId>-->
+            <!--<artifactId>aio-core</artifactId>-->
+            <!--<version>1.4.1</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.jsoniter</groupId>
             <artifactId>jsoniter</artifactId>
