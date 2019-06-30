@@ -14,6 +14,9 @@ import com.javanut.pronghorn.pipe.ObjectPipe;
 import io.reactiverse.pgclient.PgIterator;
 import io.reactiverse.pgclient.Tuple;
 
+//this is rolled back to simple solution which has good peformance
+//seems like we could do better but each attempt has not shown any improvement.
+
 public class ProcessUpdate {
 	
 	private transient ObjectPipe<ResultObject> DBUpdateInFlight;	
