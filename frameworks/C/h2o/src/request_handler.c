@@ -135,11 +135,11 @@ int send_json_response(json_generator_t *gen, bool free_gen, h2o_req_t *req)
 {
 	const unsigned char *buf;
 	size_t len;
-	int ret = EXIT_FAILURE;
+	int ret = 1;
 
 	if (yajl_gen_get_buf(gen->gen, &buf, &len) == yajl_gen_status_ok) {
 		set_default_response_param(JSON, len, req);
-		ret = EXIT_SUCCESS;
+		ret = 0;
 
 		if (free_gen) {
 			thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,

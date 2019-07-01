@@ -126,13 +126,13 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 		printf("Number of processors: %zu\nMaximum cache line size: %zu\n",
 		       h2o_numproc(),
 		       global_data->memory_alignment);
-		return EXIT_SUCCESS;
+		return 0;
 	}
 
 error:
 	close(global_data->signal_fd);
 	free_global_data(global_data);
-	return EXIT_FAILURE;
+	return 1;
 }
 
 static int parse_options(int argc, char *argv[], config_t *config)
@@ -158,7 +158,7 @@ static int parse_options(int argc, char *argv[], config_t *config)
 		\
 		if (errno) { \
 			print_library_error(__FILE__, __LINE__, "strtoll", errno); \
-			return EXIT_FAILURE; \
+			return 1; \
 		} \
 		\
 		(out) = n; \
@@ -208,14 +208,14 @@ static int parse_options(int argc, char *argv[], config_t *config)
 				break;
 			default:
 				fprintf(stderr, USAGE_MESSAGE, *argv);
-				return EXIT_FAILURE;
+				return 1;
 
 #undef PARSE_NUMBER
 		}
 	}
 
 	set_default_options(config);
-	return EXIT_SUCCESS;
+	return 0;
 }
 
 static void run_postinitialization_tasks(list_t **tasks, thread_context_t *ctx)
@@ -292,10 +292,10 @@ int main(int argc, char *argv[])
 	config_t config;
 	int rc = EXIT_FAILURE;
 
-	if (parse_options(argc, argv, &config) == EXIT_SUCCESS) {
+	if (!parse_options(argc, argv, &config)) {
 		global_data_t global_data;
 
-		if (initialize_global_data(&config, &global_data) == EXIT_SUCCESS) {
+		if (!initialize_global_data(&config, &global_data)) {
 			thread_context_t ctx;
 
 			setup_process();
