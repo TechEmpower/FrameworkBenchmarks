@@ -107,3 +107,7 @@ build/
 _build/
 deps/
 frameworks/PHP/ubiquity/.buildpath
+
+# swift
+Package.resolved
+.swiftpm
