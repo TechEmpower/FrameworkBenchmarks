@@ -756,9 +756,9 @@ static int serialize_item(uint32_t id, uint32_t random_number, yajl_gen gen)
 	CHECK_YAJL_STATUS(yajl_gen_string, gen, YAJL_STRLIT(RANDOM_NUM_KEY));
 	CHECK_YAJL_STATUS(gen_integer, random_number, buf, sizeof(buf), gen);
 	CHECK_YAJL_STATUS(yajl_gen_map_close, gen);
-	return EXIT_SUCCESS;
+	return 0;
 error_yajl:
-	return EXIT_FAILURE;
+	return 1;
 }
 
 static void serialize_items(const query_result_t *res,

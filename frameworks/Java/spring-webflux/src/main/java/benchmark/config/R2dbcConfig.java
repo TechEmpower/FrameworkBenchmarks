@@ -1,14 +1,17 @@
 package benchmark.config;
 
-import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
-import io.r2dbc.postgresql.PostgresqlConnectionFactory;
+
+import io.r2dbc.spi.ConnectionFactories;
 import io.r2dbc.spi.ConnectionFactory;
 
+import io.r2dbc.spi.ConnectionFactoryOptions;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.r2dbc.core.DatabaseClient;
+
+import static io.r2dbc.spi.ConnectionFactoryOptions.*;
 
 @Configuration
 @Profile("r2dbc")
@@ -41,16 +44,16 @@ public class R2dbcConfig {
     }
 
     @Bean
-    public PostgresqlConnectionFactory connectionFactory() {
-        PostgresqlConnectionConfiguration configuration = PostgresqlConnectionConfiguration
-                .builder()
-                .host(host)
-                .port(port)
-                .database(name)
-                .username(username)
-                .password(password)
-                .build();
-        return new PostgresqlConnectionFactory(configuration);
+    public ConnectionFactory connectionFactory() {
+        return ConnectionFactories.get(ConnectionFactoryOptions.builder()
+                .option(DRIVER,"pool")
+                .option(PROTOCOL,"postgresql")
+                .option(HOST, host)
+                .option(PORT, port)
+                .option(USER, username)
+                .option(PASSWORD, password)
+                .option(DATABASE, name)
+                .build());
     }
 
     @Bean
