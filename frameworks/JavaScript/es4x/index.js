@@ -13,7 +13,7 @@ const SERVER = 'vertx.js';
 
 const app = Router.router(vertx);
 const template = HandlebarsTemplateEngine.create(vertx);
-let date = new Date().toString();
+let date = new Date().toUTCString();
 
 vertx.setPeriodic(1000, t => date = new Date().toUTCString());
 
