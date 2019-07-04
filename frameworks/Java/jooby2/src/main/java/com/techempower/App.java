@@ -1,17 +1,13 @@
 package com.techempower;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import io.jooby.Context;
-import io.jooby.Environment;
 import io.jooby.Jooby;
 import io.jooby.ServerOptions;
-import io.jooby.hikari.Hikari;
-import io.jooby.json.Jackson;
+import io.jooby.hikari.HikariModule;
+import io.jooby.json.JacksonModule;
 import io.jooby.rocker.Rockerby;
 
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,38 +32,34 @@ public class App extends Jooby {
 
   private static final String MESSAGE = "Hello, World!";
 
-  private static final ByteBuffer MESSAGE_BUFFER = (ByteBuffer) ByteBuffer
-      .allocateDirect(MESSAGE.length())
-      .put(MESSAGE.getBytes(StandardCharsets.US_ASCII))
-      .flip();
+  private static final byte[] MESSAGE_BYTES = MESSAGE.getBytes(StandardCharsets.UTF_8);
 
   public static class Message {
     public final String message = MESSAGE;
   }
 
   {
-    Environment env = getEnvironment();
-
     /** Server options (netty only): */
     setServerOptions(new ServerOptions().setSingleLoop(true));
 
     /** JSON: */
-    ObjectMapper mapper = Jackson.defaultObjectMapper();
+    install(new JacksonModule());
+    ObjectMapper mapper = require(ObjectMapper.class);
 
     /** Database: */
-    HikariConfig conf = new Hikari.Builder().build(env);
-    DataSource ds = new HikariDataSource(conf);
+    install(new HikariModule());
+    DataSource ds = require(DataSource.class);
 
     /** Template engine: */
     install(new Rockerby());
 
     get("/plaintext", ctx ->
-        ctx.send(MESSAGE_BUFFER.duplicate())
+        ctx.send(MESSAGE_BYTES)
     );
 
     get("/json", ctx -> ctx
         .setResponseType(JSON)
-        .send(ByteBuffer.wrap(mapper.writeValueAsBytes(new Message())))
+        .send(mapper.writeValueAsBytes(new Message()))
     );
 
     /** Go blocking: */
@@ -89,7 +81,7 @@ public class App extends Jooby {
         }
         return ctx
             .setResponseType(JSON)
-            .send(ByteBuffer.wrap(mapper.writeValueAsBytes(result)));
+            .send(mapper.writeValueAsBytes(result));
       });
 
       /** Multiple queries: */
@@ -110,7 +102,7 @@ public class App extends Jooby {
         }
         return ctx
             .setResponseType(JSON)
-            .send(ByteBuffer.wrap(mapper.writeValueAsBytes(result)));
+            .send(mapper.writeValueAsBytes(result));
       });
 
       /** Updates: */
@@ -147,7 +139,7 @@ public class App extends Jooby {
           }
         }
         ctx.setResponseType(JSON);
-        return ctx.send(ByteBuffer.wrap(mapper.writeValueAsBytes(result)));
+        return ctx.send(mapper.writeValueAsBytes(result));
       });
 
       /** Fortunes: */
