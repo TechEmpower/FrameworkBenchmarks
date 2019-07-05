@@ -81,11 +81,13 @@ namespace PlatformBenchmarks
             base.SessionReceive(server, e);
             PipeStream pipeStream = e.Session.Stream.ToPipeStream();
             HttpToken token = (HttpToken)e.Session.Tag;
-            int len = pipeStream.IndexOf(_line.Data, token.Buffer);
-            if (len <= 0)
+            var result = pipeStream.IndexOf(_line.Data);
+            if(result.End ==null)
             {
                 return;
             }
+            int len = result.Length;
+            pipeStream.Read(token.Buffer, 0, len);
             ReadOnlySpan<byte> line = new Span<byte>(token.Buffer, 0, len);
             ReadOnlySpan<byte> http = line;
             ReadOnlySpan<byte> method = line;
