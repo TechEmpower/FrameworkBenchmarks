@@ -16,7 +16,7 @@
         "language": "Scala",
         "flavor": "None",
         "orm": "Raw",
-        "platform": "vertx",
+        "platform": "Vert.x",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
