@@ -14,7 +14,7 @@
 
 (defn plain-text-handler [_]
   {:status 200
-   :headers {"content-type" "text/plain"}
+   :headers {"Content-Type" "text/plain"}
    :body "Hello, World!"})
 
 (defn json-handler [_]
@@ -47,7 +47,7 @@
                      (async-db-handler
                        (pa/data-mapper {:row (pa/rs->compiled-record)})
                        (pa/pool
-                         {:uri "postgresql://localhost:5432/hello_world"
+                         {:uri "postgresql://tfb-database:5432/hello_world"
                           :user "benchmarkdbuser"
                           :password "benchmarkdbpass"
                           :size size}))
@@ -56,7 +56,7 @@
                      (sync-db-handler
                        (p/data-mapper {:row (p/rs->compiled-record)})
                        (hikari/make-datasource
-                         {:jdbc-url "jdbc:postgresql://localhost:5432/hello_world"
+                         {:jdbc-url "jdbc:postgresql://tfb-database:5432/hello_world"
                           :username "benchmarkdbuser"
                           :password "benchmarkdbpass"
                           :maximum-pool-size size}))
