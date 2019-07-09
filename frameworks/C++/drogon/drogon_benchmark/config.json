@@ -34,7 +34,7 @@
         //any synchronous interface of it.
         "is_fast": true,
         //connection_number:1 by default
-        "connection_number": 1
+        "connection_number": 8
     }],
     "app": {
         //threads_num:the number of IO threads,1 by default, if the value is set to 0, the number of threads
@@ -153,7 +153,7 @@
         "idle_connection_timeout": 60,
         //server_header_field: Set the 'server' header field in each response sent by drogon,
         //empty string by default with which the 'server' header field is set to "Server: drogon/version string\r\n"
-        "server_header_field": "",
+        "server_header_field": "drogon",
         //keepalive_requests: Set the maximum number of requests that can be served through one keep-alive connection. 
         //After the maximum number of requests are made, the connection is closed.
         //The default value of 0 means no limit.
