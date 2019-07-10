@@ -1,5 +1,6 @@
 (ns hello.handler
-  (:require [immutant.web :as web]
+  (:require [pohjavirta.server :as server]
+            [pohjavirta.async :as a]
             [hikari-cp.core :as hikari]
             [reitit.ring :as ring]
             [porsas.core :as p]
@@ -13,69 +14,66 @@
 
 (defn plain-text-handler [_]
   {:status 200
-   :headers {"content-type" "text/plain"}
-   :body (.getBytes "Hello, World!")})
+   :headers {"Content-Type" "text/plain"}
+   :body "Hello, World!"})
 
 (defn json-handler [_]
   {:status 200
    :headers {"Content-Type" "application/json"}
    :body (j/write-value-as-bytes {:message "Hello, World!"})})
 
-(defn sync-db-handler [pool]
-  (let [mapper (p/data-mapper {:row (p/rs->compiled-record)})]
-    (fn [_]
-      (let [world (with-open [con (p/get-connection pool)]
-                    (p/query-one mapper con ["SELECT id, randomnumber from WORLD where id=?" (random)]))]
-        {:status 200
-         :headers {"Content-Type" "application/json"}
-         :body (j/write-value-as-bytes world)}))))
+(defn sync-db-handler [mapper pool]
+  (fn [_]
+    (let [world (with-open [con (p/get-connection pool)]
+                  (p/query-one mapper con ["SELECT id, randomnumber from WORLD where id=?" (random)]))]
+      {:status 200
+       :headers {"Content-Type" "application/json"}
+       :body (j/write-value-as-bytes world)})))
 
-(defn async-db-handler [pool]
-  (let [mapper (pa/data-mapper {:row (pa/rs->compiled-record)})]
-    (fn [_ respond _]
-      (pa/query-one
-        mapper
-        pool
-        ["SELECT id, randomnumber from WORLD where id=$1" (random)]
-        (fn [world]
-          (respond
-            {:status 200
-             :headers {"Content-Type" "application/json"}
-             :body (j/write-value-as-bytes world)}))
-        (fn [^Exception exception]
-          (respond
-            {:status 500
-             :headers {"content-type" "text/plain"}
-             :body (.getMessage exception)}))))))
+(defn async-db-handler [mapper pool]
+  (fn [_]
+    (-> (pa/query-one mapper pool ["SELECT id, randomnumber from WORLD where id=$1" (random)])
+        (pa/then (fn [world]
+                   {:status 200
+                    :headers {"Content-Type" "application/json"}
+                    :body (j/write-value-as-bytes world)})))))
 
-(defn -main [& [async?]]
+(defn -main [& [mode ?size]]
   (let [cpus (.availableProcessors (Runtime/getRuntime))
-        pool (if async?
-               (pa/pool
-                 {:uri "postgresql://tfb-database:5432/hello_world"
-                  :user "benchmarkdbuser"
-                  :password "benchmarkdbpass"
-                  :size 1})
-               (hikari/make-datasource
-                 {:jdbc-url "jdbc:postgresql://tfb-database:5432/hello_world"
-                  :username "benchmarkdbuser"
-                  :password "benchmarkdbpass"
-                  :maximum-pool-size 256}))
-        db-handler (if async?
-                     (web/async (async-db-handler pool))
-                     (web/dispatch (sync-db-handler pool)))]
-    (web/run
-      (ring/ring-handler
-        (ring/router
-          [["/plaintext" (web/constantly plain-text-handler)]
-           ["/json" json-handler]
-           ["/db" db-handler]])
-        (ring/create-default-handler)
-        {:inject-match? false
-         :inject-router? false})
-      {:port 8080
-       :host "0.0.0.0"
-       :dispatch? false
-       :io-threads (* 2 cpus)
-       :worker-threads 256
-       :server {:always-set-keep-alive false}})))
+        size (try (Integer/parseInt ?size) (catch Exception _ (* 2 cpus)))
+        db-handler (cond 
+                     ;; reactive pg-client 
+                     (= mode "async")
+                     (async-db-handler
+                       (pa/data-mapper {:row (pa/rs->compiled-record)})
+                       (pa/pool
+                         {:uri "postgresql://tfb-database:5432/hello_world"
+                          :user "benchmarkdbuser"
+                          :password "benchmarkdbpass"
+                          :size size}))
+                     ;; jdbc
+                     (= mode "sync")
+                     (sync-db-handler
+                       (p/data-mapper {:row (p/rs->compiled-record)})
+                       (hikari/make-datasource
+                         {:jdbc-url "jdbc:postgresql://tfb-database:5432/hello_world"
+                          :username "benchmarkdbuser"
+                          :password "benchmarkdbpass"
+                          :maximum-pool-size size}))
+                     ;; none
+                     :else (constantly nil))]
+    (println "Starting" mode "server, with pool-size" size)
+    (-> (ring/ring-handler
+          (ring/router
+            [["/plaintext" (server/constantly plain-text-handler)]
+             ["/json" json-handler]
+             ["/db" db-handler]])
+          (ring/create-default-handler)
+          {:inject-match? false
+           :inject-router? false})
+        (server/create
+          {:port 8080
+           :host "0.0.0.0"
+           :io-threads (* 2 cpus)
+           :worker-threads 256})
+        (server/start))))
