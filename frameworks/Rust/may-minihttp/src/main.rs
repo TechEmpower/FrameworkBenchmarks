@@ -1,4 +1,5 @@
 extern crate may;
+extern crate mimalloc;
 extern crate num_cpus;
 #[macro_use]
 extern crate serde_derive;
@@ -7,6 +8,11 @@ extern crate serde_json;
 
 use may_minihttp::{HttpServer, HttpService, Request, Response};
 use std::io;
+
+use mimalloc::MiMalloc;
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
 #[derive(Serialize)]
 struct Message<'a> {
@@ -21,19 +27,22 @@ impl HttpService for Techempower {
 
         // Bare-bones router
         match req.path() {
-            "/json" => {
-                resp.header("Content-Type", "application/json");
-                *resp.body_mut() = serde_json::to_vec(&Message {
-                    message: "Hello, World!",
-                })
-                .unwrap();
-            }
             "/plaintext" => {
                 resp.header("Content-Type", "text/plain")
                     .body("Hello, World!");
             }
+            "/json" => {
+                resp.header("Content-Type", "application/json");
+                serde_json::to_writer(
+                    resp.body_mut(),
+                    &Message {
+                        message: "Hello, World!",
+                    },
+                )
+                .unwrap();
+            }
             _ => {
-                resp.status_code(404, "Not Found");
+                resp.status_code("404", "Not Found");
             }
         }
 
