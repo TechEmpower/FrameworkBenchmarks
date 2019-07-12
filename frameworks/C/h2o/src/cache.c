@@ -54,7 +54,7 @@ int cache_create(size_t concurrency,
 	pthread_mutexattr_t attr;
 
 	if (pthread_mutexattr_init(&attr))
-		return EXIT_FAILURE;
+		return 1;
 
 	if (pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ADAPTIVE_NP))
 		goto error;
@@ -83,12 +83,12 @@ int cache_create(size_t concurrency,
 	}
 
 	pthread_mutexattr_destroy(&attr);
-	return EXIT_SUCCESS;
+	return 0;
 error_malloc:
 	free(cache->cache);
 error:
 	pthread_mutexattr_destroy(&attr);
-	return EXIT_FAILURE;
+	return 1;
 }
 
 void cache_destroy(cache_t *cache)

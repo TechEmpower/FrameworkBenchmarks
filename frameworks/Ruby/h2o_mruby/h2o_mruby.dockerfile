@@ -12,7 +12,7 @@ RUN wget -q "https://github.com/h2o/h2o/archive/$H2O_ARCHIVE" && \
     tar xf "$H2O_ARCHIVE" && \
     cd "h2o-$H2O_VERSION" && \
     cmake -DCMAKE_INSTALL_PREFIX="$H2O_HOME" -DCMAKE_C_FLAGS="-flto -march=native" \
-          -DCMAKE_AR=/usr/bin/gcc-ar -DCMAKE_RANLIB=/usr/bin/gcc-ranlib -DWITH_MRUBY=on && \
+          -DCMAKE_AR=/usr/bin/gcc-ar -DCMAKE_RANLIB=/usr/bin/gcc-ranlib -DWITH_MRUBY=on . && \
     make -j "$(nproc)" install
 
 CMD "${H2O_HOME}/bin/h2o" -c h2o.conf
