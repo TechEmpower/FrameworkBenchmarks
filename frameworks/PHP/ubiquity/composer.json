@@ -1,7 +1,7 @@
 {
 	"require" : {
 		"php" : "^7.1",
-		"phpmv/ubiquity" : "dev-master"
+		"phpmv/ubiquity" : "2.3.x-dev"
 	},
 	"require-dev" : {
 		"monolog/monolog" : "^1.24",
