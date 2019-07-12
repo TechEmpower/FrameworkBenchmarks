@@ -20,9 +20,9 @@
         "webserver": "beetlex",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "beetlex webapi",
+        "display_name": "beetlex",
         "notes": "",
-        "versus": "beetlex"
+        "versus": "aspcore-mvc"
       },
       "core": {
         "fortune_url": "/fortunes",
@@ -42,9 +42,9 @@
         "webserver": "beetlex",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "beetlex core",
+        "display_name": "beetlex-core",
         "notes": "",
-        "versus": "beetlex-core"
+        "versus": "aspcore"
       }
     }
   ]
