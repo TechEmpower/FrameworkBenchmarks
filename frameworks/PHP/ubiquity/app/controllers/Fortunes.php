@@ -11,8 +11,7 @@ class Fortunes extends Controller {
 
 	public function initialize() {
 		Startup::$templateEngine = new MicroTemplateEngine();
-		$config = Startup::getConfig();
-		DAO::startDatabase($config);
+		DAO::startDatabase(Startup::$config);
 	}
 
 	public function index() {

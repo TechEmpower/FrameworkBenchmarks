@@ -26,4 +26,4 @@ RUN chmod 777 -R /ubiquity/.ubiquity/*
 
 RUN chmod 777 /ubiquity/vendor/bin/ppm
 
-CMD /ubiquity/vendor/bin/ppm --bridge='\PHPPM\Ubiquity' --bootstrap='\PHPPM\Ubiquity' start --debug 0 --logging 0 --workers 64 --max-requests 1024 --host=0.0.0.0 --port=8080
+CMD /ubiquity/vendor/bin/ppm --bridge='\PHPPM\Ubiquity' --bootstrap='\PHPPM\Ubiquity' start --debug 0 --logging 0 --workers 512 --max-requests 1024 --host=0.0.0.0 --port=8080
