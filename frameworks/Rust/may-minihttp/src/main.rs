@@ -6,7 +6,7 @@ extern crate serde_derive;
 extern crate may_minihttp;
 extern crate serde_json;
 
-use may_minihttp::{HttpServer, HttpService, Request, Response};
+use may_minihttp::{BodyWriter, HttpServer, HttpService, Request, Response};
 use std::io;
 
 use mimalloc::MiMalloc;
@@ -33,8 +33,10 @@ impl HttpService for Techempower {
             }
             "/json" => {
                 resp.header("Content-Type", "application/json");
+                let body = resp.body_mut();
+                body.reserve(27);
                 serde_json::to_writer(
-                    resp.body_mut(),
+                    BodyWriter(body),
                     &Message {
                         message: "Hello, World!",
                     },
