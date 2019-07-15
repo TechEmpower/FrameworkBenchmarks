@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {
     "bluebird": "3.5.1",
-    "handlebars": "4.0.14",
+    "handlebars": "4.1.2",
     "koa": "2.5.0",
     "koa-bodyparser": "4.2.0",
     "koa-hbs": "1.0.0",
@@ -15,6 +15,6 @@
     "mysql2": "1.5.3",
     "pg": "7.4.1",
     "pg-hstore": "2.3.2",
-    "sequelize": "4.37.3"
+    "sequelize": "5.10.0"
   }
 }

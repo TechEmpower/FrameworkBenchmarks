@@ -13,8 +13,8 @@ import io.reactiverse.pgclient.PgPoolOptions;
 
 public class FrameworkTest implements GreenApp {
 
-	static final String payloadText="Hello, World!";
-	static final byte[] payload = payloadText.getBytes();
+	private final String payloadText;
+	private final byte[] payload;
 
 	private int bindPort;
     private String host;
@@ -47,7 +47,7 @@ public class FrameworkTest implements GreenApp {
 	public static String connectionPassword = "postgres";
 	
 	//TODO: add utility to compute this based on need.
-	static final int c = 592; // to reach 16K simultainious calls
+	static final int c = 592; // to reach 16K simultaneous calls
 
     public FrameworkTest() {
     	    	
@@ -60,12 +60,13 @@ public class FrameworkTest implements GreenApp {
     		 8080,    	//default port for test 
     		 c,         //pipes per track
     		 c*16,      //(router to module) pipeline of 16 used for plain text test    		 
-    		 1<<13,     //default total size of network buffer used by blocks     		 
+    		 1<<15,     //default total size of network buffer used by blocks     		 
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
     		 "hello_world",
     		 "benchmarkdbuser",
-    		 "benchmarkdbpass"
+    		 "benchmarkdbpass",
+    		 System.getProperty("custom.payload", "Hello, World!")    		 
     		 );
     }   
         
@@ -77,8 +78,11 @@ public class FrameworkTest implements GreenApp {
     		             String dbHost,
     		             String dbName,
     		             String dbUser,
-    		             String dbPass) {
+    		             String dbPass,
+    		             String payloadResponse) {
     	
+    	this.payloadText = payloadResponse;
+    	this.payload = payloadText.getBytes();
     	
     	this.connectionsPerTrack = 1;
     	this.connectionPort = 5432;
@@ -96,7 +100,7 @@ public class FrameworkTest implements GreenApp {
     	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
     	this.jsonMaxResponseSize = 1<<8;
 
-    	this.maxQueueOut = 8;   	
+    	this.maxQueueOut = 8*30;   	
     	this.maxConnectionBits = 14; //16K connections, for test plus overhead
     	
     	this.maxRequestSize = 1<<9;
@@ -155,7 +159,7 @@ public class FrameworkTest implements GreenApp {
 	@Override
     public void declareConfiguration(GreenFramework framework) {
 		
-		framework.setDefaultRate(200_000L);		
+		framework.setDefaultRate(100_000L);		
 	
 		//for 14 cores this is expected to use less than 16G, must use next largest prime to ensure smaller groups are not multiples.
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
@@ -166,7 +170,7 @@ public class FrameworkTest implements GreenApp {
     			 //NOTE: not sure this is optimal yet ...
     			 //TODO: neeed to allow for multiple writes one pipe! big dif.
     			// .setConcurrentChannelsPerEncryptUnit(Math.max(1,concurrentWritesPerChannel/2))  //8K    
-    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel/80)  ///80) ///16) // /8)//4)
+    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel/25)  ///80) ///16) // /8)//4)
     			 //TODO: we need smaller count of connections but MORE writers.
     			 
     			 .disableEPoll() //provides advantage in JSON test....
@@ -175,7 +179,7 @@ public class FrameworkTest implements GreenApp {
     			 .setMaxRequestSize(maxRequestSize)
     	
     			 .setMinimumInputPipeMemory(minMemoryOfInputPipes)
-    			 .setMaxQueueOut(maxQueueOut*30)
+    			 .setMaxQueueOut(maxQueueOut)
     			 .setMaxResponseSize(dbCallMaxResponseSize) //big enough for large mult db response
     	         .useInsecureServer(); //turn off TLS
 
@@ -227,7 +231,7 @@ public class FrameworkTest implements GreenApp {
 
 	public void parallelBehavior(GreenRuntime runtime) {
 
-		SimpleRest restTest = new SimpleRest(runtime, jsonMaxResponseCount, jsonMaxResponseSize);		
+		SimpleRest restTest = new SimpleRest(runtime, jsonMaxResponseCount, jsonMaxResponseSize, payload);		
 		runtime.registerListener("Simple", restTest)
 		       .includeRoutes(Struct.PLAINTEXT_ROUTE, restTest::plainRestRequest)
 		       .includeRoutes(Struct.JSON_ROUTE, restTest::jsonRestRequest);		 
