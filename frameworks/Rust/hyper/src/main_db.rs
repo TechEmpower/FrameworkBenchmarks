@@ -8,7 +8,7 @@ use std::fmt::Write;
 use std::net::ToSocketAddrs;
 
 use futures::{future, Future};
-use hyper::header::{CONTENT_TYPE, SERVER, HeaderValue};
+use hyper::header::{HeaderValue, CONTENT_TYPE, SERVER};
 use hyper::service::service_fn;
 use hyper::{Body, Response};
 
@@ -37,8 +37,8 @@ fn main() {
         let server_header = HeaderValue::from_static("hyper");
 
         // Before handling any requests, we should grab a DB connection.
-        let db_fut = db::connect(psql_addr, psql_config.clone(), handle.clone())
-            .map(move |mut db_conn| {
+        let db_fut =
+            db::connect(psql_addr, psql_config.clone(), handle.clone()).map(move |mut db_conn| {
                 let html_ct = html_ct.clone();
                 let server_header = server_header.clone();
 
@@ -57,35 +57,28 @@ fn main() {
 
                     match req.uri.path() {
                         "/fortune" => {
-                            future::Either::A(db_conn
-                                .tell_fortune()
-                                .map(move |fortunes| {
-                                    let mut buf = String::with_capacity(2048);
-                                    let _ = write!(&mut buf, "{}", FortunesTemplate {
-                                        fortunes,
-                                    });
-                                    let mut res = Response::new(Body::from(buf));
-                                    *res.headers_mut() = headers;
-                                    res
-                                }))
-                        },
+                            future::Either::A(db_conn.tell_fortune().map(move |fortunes| {
+                                let mut buf = String::with_capacity(2048);
+                                let _ = write!(&mut buf, "{}", FortunesTemplate { fortunes });
+                                let mut res = Response::new(Body::from(buf));
+                                *res.headers_mut() = headers;
+                                res
+                            }))
+                        }
                         _ => {
                             let mut res = Response::new(Body::empty());
                             *res.status_mut() = hyper::StatusCode::NOT_FOUND;
                             *res.headers_mut() = headers;
                             future::Either::B(future::ok(res))
-                        },
+                        }
                     }
                 });
 
-
                 // Spawn the `serve_connection` future into the runtime.
                 handle2.spawn(
-                    http
-                        .serve_connection(socket, svc)
-                        .map_err(|e| eprintln!("connection error: {}", e))
+                    http.serve_connection(socket, svc)
+                        .map_err(|e| eprintln!("connection error: {}", e)),
                 );
-
             });
         handle.spawn(db_fut);
     });

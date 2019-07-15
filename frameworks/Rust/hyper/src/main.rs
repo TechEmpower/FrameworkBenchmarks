@@ -7,12 +7,11 @@ extern crate serde_derive;
 extern crate serde_json;
 extern crate tokio_core;
 
-
 use futures::Future;
 
-use hyper::{Body, Response, StatusCode};
-use hyper::header::{CONTENT_LENGTH, CONTENT_TYPE, SERVER, HeaderValue};
+use hyper::header::{HeaderValue, CONTENT_LENGTH, CONTENT_TYPE, SERVER};
 use hyper::service::service_fn_ok;
+use hyper::{Body, Response, StatusCode};
 
 mod server;
 
@@ -22,7 +21,6 @@ static HELLO_WORLD: &'static [u8] = b"Hello, world!";
 struct JsonResponse<'a> {
     message: &'a str,
 }
-
 
 fn main() {
     // It seems most of the other benchmarks create static header values
@@ -65,7 +63,9 @@ fn main() {
                     Body::from(HELLO_WORLD)
                 }
                 "/json" => {
-                    let rep = JsonResponse { message: "Hello, world!" };
+                    let rep = JsonResponse {
+                        message: "Hello, world!",
+                    };
                     let rep_body = serde_json::to_vec(&rep).unwrap();
                     headers.insert(CONTENT_LENGTH, json_len.clone());
                     headers.insert(CONTENT_TYPE, json_ct.clone());
@@ -76,7 +76,7 @@ fn main() {
                     *res.status_mut() = StatusCode::NOT_FOUND;
                     *res.headers_mut() = headers;
                     return res;
-                },
+                }
             };
 
             headers.insert(SERVER, server_header.clone());
@@ -88,9 +88,8 @@ fn main() {
 
         // Spawn the `serve_connection` future into the runtime.
         handle.spawn(
-            http
-                .serve_connection(socket, svc)
-                .map_err(|e| eprintln!("connection error: {}", e))
+            http.serve_connection(socket, svc)
+                .map_err(|e| eprintln!("connection error: {}", e)),
         );
     })
 }
