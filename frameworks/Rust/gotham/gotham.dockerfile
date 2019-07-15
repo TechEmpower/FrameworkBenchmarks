@@ -1,4 +1,4 @@
-FROM rust:1.36.0
+FROM rust:latest
 
 WORKDIR /gotham
 COPY ./src ./src

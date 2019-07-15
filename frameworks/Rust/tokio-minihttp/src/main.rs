@@ -18,7 +18,7 @@ use std::io;
 
 use futures::future::{self, Either};
 use futures::stream;
-use futures::{BoxFuture, Future, Stream};
+use futures::{Future,Stream};
 use futures_cpupool::{CpuPool, CpuFuture};
 use r2d2_postgres::{TlsMode, PostgresConnectionManager};
 use rand::Rng;
@@ -49,7 +49,7 @@ impl Service for Techempower {
     type Response = Response;
     type Error = std::io::Error;
     type Future = Either<future::Ok<Response, io::Error>,
-                         BoxFuture<Response, io::Error>>;
+                         Box<Future<Item = Response, Error = io::Error>>>;
 
     fn call(&self, req: Request) -> Self::Future {
         // Bare-bones router
@@ -85,17 +85,17 @@ impl Techempower {
         return resp
     }
 
-    fn db(&self) -> BoxFuture<Response, io::Error> {
+    fn db(&self) -> Box<Future<Item = Response, Error = io::Error>> {
         let msg = self.random_world_row();
-        msg.map(|msg| {
+        Box::new(msg.map(|msg| {
             let mut resp = Response::new();
             resp.header("Content-Type", "application/json")
                 .body(&serde_json::to_string(&msg).unwrap());
             return resp
-        }).boxed()
+        }))
     }
 
-    fn queries(&self, req: &Request) -> BoxFuture<Response, io::Error> {
+    fn queries(&self, req: &Request) -> Box<Future<Item = Response, Error = io::Error>> {
         let url = format!("http://localhost{}", req.path());
         let url = Url::parse(&url).unwrap();
         let queries = url.query_pairs().find(|pair| {
@@ -106,7 +106,7 @@ impl Techempower {
 
         let stream = (0..queries).map(|_| self.random_world_row());
 
-        stream::futures_unordered(stream).collect().map(|list| {
+        Box::new(stream::futures_unordered(stream).collect().map(|list| {
             let mut json = Vec::new();
             for row in list {
                 json.push(WorldRow {
@@ -118,7 +118,7 @@ impl Techempower {
             resp.header("Content-Type", "application/json")
                 .body(&serde_json::to_string(&json).unwrap());
             return resp
-        }).boxed()
+        }))
     }
 
     fn random_world_row(&self) -> CpuFuture<WorldRow, io::Error> {

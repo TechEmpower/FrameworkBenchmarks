@@ -1,4 +1,4 @@
-FROM rust:1.36
+FROM rust:latest
 
 RUN apt update -yqq && apt install -yqq cmake
 

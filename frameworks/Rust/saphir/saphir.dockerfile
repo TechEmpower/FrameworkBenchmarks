@@ -1,6 +1,6 @@
-FROM rust:1.31.1
+FROM rust:latest
 
-WORKDIR saphir
+WORKDIR /saphir
 
 ADD . .
 
