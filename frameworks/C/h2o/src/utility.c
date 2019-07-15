@@ -164,15 +164,13 @@ json_generator_t *get_json_generator(list_t **pool, size_t *gen_num)
 		(*gen_num)--;
 	}
 	else {
-		ret = malloc(sizeof(*ret));
+		ret = h2o_mem_alloc(sizeof(*ret));
+		memset(ret, 0, sizeof(*ret));
+		ret->gen = yajl_gen_alloc(NULL);
 
-		if (ret) {
-			ret->gen = yajl_gen_alloc(NULL);
-
-			if (!ret->gen) {
-				free(ret);
-				ret = NULL;
-			}
+		if (!ret->gen) {
+			free(ret);
+			ret = NULL;
 		}
 	}
 

@@ -8,7 +8,6 @@ H2O_APP_PROFILE_URL="http://127.0.0.1:$H2O_APP_PROFILE_PORT"
 SCRIPT_PATH=$(realpath "$0")
 H2O_APP_SRC_ROOT=$(dirname "$SCRIPT_PATH")
 H2O_APP_BUILD_DIR="${H2O_APP_SRC_ROOT}/build"
-NUM_WORKERS="$CPU_COUNT"
 
 if [[ -z "$DBHOST" ]]; then
 	DBHOST=tfb-database
@@ -29,11 +28,9 @@ fi
 # A hacky way to detect whether we are running in the physical hardware or the cloud environment.
 if [[ "$CPU_COUNT" -gt 16 ]]; then
 	echo "Running h2o_app in the physical hardware environment."
-	USE_PROCESSES=false
 	DB_CONN=3
 else
 	echo "Running h2o_app in the cloud environment."
-	USE_PROCESSES=false
 	DB_CONN=5
 fi
 
@@ -54,6 +51,7 @@ run_curl()
 
 run_h2o_app()
 {
+	LD_LIBRARY_PATH="${MUSTACHE_C_PREFIX}/lib:$LD_LIBRARY_PATH" \
 	taskset -c "$1" "$2/h2o_app" -a20 -f "$3/template" -m "$DB_CONN" "$4" "$5" \
 	        -d "host=$DBHOST dbname=hello_world user=benchmarkdbuser sslmode=disable \
 	            password=benchmarkdbpass" &
@@ -86,17 +84,5 @@ make -j "$CPU_COUNT" install
 popd
 rm -rf "$H2O_APP_BUILD_DIR"
 echo "Maximum database connections per thread: $DB_CONN"
-export LD_LIBRARY_PATH="${MUSTACHE_C_PREFIX}/lib:$LD_LIBRARY_PATH"
-
-if "$USE_PROCESSES"; then
-	echo "h2o_app processes: $NUM_WORKERS"
-
-	for ((i = 0; i < NUM_WORKERS; i++)); do
-		run_h2o_app "$i" "${H2O_APP_PREFIX}/bin" "${H2O_APP_PREFIX}/share/h2o_app" -t1
-	done
-else
-	echo "Running h2o_app multithreaded."
-	run_h2o_app 0 "${H2O_APP_PREFIX}/bin" "${H2O_APP_PREFIX}/share/h2o_app"
-fi
-
+run_h2o_app 0 "${H2O_APP_PREFIX}/bin" "${H2O_APP_PREFIX}/share/h2o_app"
 wait

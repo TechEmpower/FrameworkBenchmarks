@@ -276,11 +276,9 @@ void add_postinitialization_task(void (*task)(struct thread_context_t *, void *)
                                  void *arg,
                                  list_t **postinitialization_tasks)
 {
-	task_t * const t = calloc(1, sizeof(*t));
+	task_t * const t = h2o_mem_alloc(sizeof(*t));
 
-	if (!t)
-		abort();
-
+	memset(t, 0, sizeof(*t));
 	t->l.next = *postinitialization_tasks;
 	t->arg = arg;
 	t->task = task;

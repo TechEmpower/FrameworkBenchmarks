@@ -250,67 +250,65 @@ static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 			sz += update_query_len - reuse_size;
 	}
 
-	multiple_query_ctx_t * const query_ctx = calloc(1, sz);
+	multiple_query_ctx_t * const query_ctx = h2o_mem_alloc(sz);
+	multiple_query_ctx_t ** const p = h2o_mem_alloc_shared(&req->pool,
+	                                                       sizeof(*p),
+	                                                       cleanup_multiple_query_request);
 
-	if (query_ctx) {
-		multiple_query_ctx_t ** const p = h2o_mem_alloc_shared(&req->pool,
-		                                                       sizeof(*p),
-		                                                       cleanup_multiple_query_request);
+	*p = query_ctx;
+	memset(query_ctx, 0, sz);
+	query_ctx->ctx = ctx;
+	query_ctx->num_query = num_query;
+	query_ctx->req = req;
+	query_ctx->query_param = (query_param_t *) ((char *) query_ctx + base_size);
+	initialize_ids(num_query, query_ctx->res, &ctx->random_seed);
 
-		*p = query_ctx;
-		query_ctx->ctx = ctx;
-		query_ctx->num_query = num_query;
-		query_ctx->req = req;
-		query_ctx->query_param = (query_param_t *) ((char *) query_ctx + base_size);
-		initialize_ids(num_query, query_ctx->res, &ctx->random_seed);
+	if (do_update)
+		query_ctx->flags |= DO_UPDATE;
 
-		if (do_update)
-			query_ctx->flags |= DO_UPDATE;
+	if (use_cache) {
+		query_ctx->flags |= USE_CACHE;
+		fetch_from_cache(h2o_now(ctx->event_loop.h2o_ctx.loop),
+		                 &ctx->global_data->request_handler_data.world_cache,
+		                 query_ctx);
 
-		if (use_cache) {
-			query_ctx->flags |= USE_CACHE;
-			fetch_from_cache(h2o_now(ctx->event_loop.h2o_ctx.loop),
-			                 &ctx->global_data->request_handler_data.world_cache,
-			                 query_ctx);
-
-			if (query_ctx->num_result == query_ctx->num_query) {
-				complete_multiple_query(query_ctx);
-				return 0;
-			}
-		}
-
-		query_ctx->num_query_in_progress = MIN(num_query_in_progress,
-		                                       query_ctx->num_query - query_ctx->num_result);
-
-		for (size_t i = 0; i < query_ctx->num_query_in_progress; i++) {
-			query_ctx->query_param[i].ctx = query_ctx;
-			// We need a copy of id because the original may be overwritten
-			// by a completed query.
-			query_ctx->query_param[i].id = htonl(query_ctx->res[query_ctx->num_result + i].id);
-			query_ctx->query_param[i].id_format = 1;
-			query_ctx->query_param[i].id_len = sizeof(query_ctx->query_param[i].id);
-			query_ctx->query_param[i].id_pointer = (const char *) &query_ctx->query_param[i].id;
-			query_ctx->query_param[i].param.command = WORLD_TABLE_NAME;
-			query_ctx->query_param[i].param.nParams = 1;
-			query_ctx->query_param[i].param.on_error = on_multiple_query_error;
-			query_ctx->query_param[i].param.on_result = on_multiple_query_result;
-			query_ctx->query_param[i].param.on_timeout = on_multiple_query_timeout;
-			query_ctx->query_param[i].param.paramFormats = &query_ctx->query_param[i].id_format;
-			query_ctx->query_param[i].param.paramLengths = &query_ctx->query_param[i].id_len;
-			query_ctx->query_param[i].param.paramValues = &query_ctx->query_param[i].id_pointer;
-			query_ctx->query_param[i].param.flags = IS_PREPARED;
-			query_ctx->query_param[i].param.resultFormat = 1;
-
-			if (execute_query(ctx, &query_ctx->query_param[i].param)) {
-				query_ctx->num_query_in_progress = i;
-				query_ctx->flags |= DO_CLEANUP;
-				send_service_unavailable_error(DB_REQ_ERROR, req);
-				return 0;
-			}
+		if (query_ctx->num_result == query_ctx->num_query) {
+			complete_multiple_query(query_ctx);
+			return 0;
 		}
 	}
-	else
-		send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
+
+	query_ctx->num_query_in_progress = MIN(num_query_in_progress,
+	                                       query_ctx->num_query - query_ctx->num_result);
+
+	// Keep this loop separate, so that it could be vectorized.
+	for (size_t i = 0; i < query_ctx->num_query_in_progress; i++) {
+		query_ctx->query_param[i].ctx = query_ctx;
+		// We need a copy of id because the original may be overwritten
+		// by a completed query.
+		query_ctx->query_param[i].id = htonl(query_ctx->res[query_ctx->num_result + i].id);
+		query_ctx->query_param[i].id_format = 1;
+		query_ctx->query_param[i].id_len = sizeof(query_ctx->query_param[i].id);
+		query_ctx->query_param[i].id_pointer = (const char *) &query_ctx->query_param[i].id;
+		query_ctx->query_param[i].param.command = WORLD_TABLE_NAME;
+		query_ctx->query_param[i].param.nParams = 1;
+		query_ctx->query_param[i].param.on_error = on_multiple_query_error;
+		query_ctx->query_param[i].param.on_result = on_multiple_query_result;
+		query_ctx->query_param[i].param.on_timeout = on_multiple_query_timeout;
+		query_ctx->query_param[i].param.paramFormats = &query_ctx->query_param[i].id_format;
+		query_ctx->query_param[i].param.paramLengths = &query_ctx->query_param[i].id_len;
+		query_ctx->query_param[i].param.paramValues = &query_ctx->query_param[i].id_pointer;
+		query_ctx->query_param[i].param.flags = IS_PREPARED;
+		query_ctx->query_param[i].param.resultFormat = 1;
+	}
+
+	for (size_t i = 0; i < query_ctx->num_query_in_progress; i++)
+		if (execute_query(ctx, &query_ctx->query_param[i].param)) {
+			query_ctx->num_query_in_progress = i;
+			query_ctx->flags |= DO_CLEANUP;
+			send_service_unavailable_error(DB_REQ_ERROR, req);
+			break;
+		}
 
 	return 0;
 }
@@ -482,19 +480,16 @@ static result_return_t on_multiple_query_result(db_query_param_t *param, PGresul
 		process_result(result, 0, query_ctx->res + query_ctx->num_result);
 
 		if (query_ctx->flags & USE_CACHE) {
-			query_result_t * const r = malloc(sizeof(*r));
+			query_result_t * const r = h2o_mem_alloc(sizeof(*r));
+			const h2o_iovec_t key = {.base = (char *) &r->id, .len = sizeof(r->id)};
+			const h2o_iovec_t value = {.base = (char *) r, .len = sizeof(*r)};
 
-			if (r) {
-				const h2o_iovec_t key = {.base = (char *) &r->id, .len = sizeof(r->id)};
-				const h2o_iovec_t value = {.base = (char *) r, .len = sizeof(*r)};
-
-				*r = query_ctx->res[query_ctx->num_result];
-				cache_set(h2o_now(query_ctx->ctx->event_loop.h2o_ctx.loop),
-				          key,
-				          0,
-				          value,
-				          &query_ctx->ctx->global_data->request_handler_data.world_cache);
-			}
+			*r = query_ctx->res[query_ctx->num_result];
+			cache_set(h2o_now(query_ctx->ctx->event_loop.h2o_ctx.loop),
+			          key,
+			          0,
+			          value,
+			          &query_ctx->ctx->global_data->request_handler_data.world_cache);
 		}
 
 		query_ctx->num_result++;
@@ -559,20 +554,19 @@ static result_return_t on_populate_cache_result(db_query_param_t *param, PGresul
 		const size_t num_rows = PQntuples(result);
 
 		for (size_t i = 0; i < num_rows; i++) {
-			query_result_t * const r = calloc(1, sizeof(*r));
+			query_result_t * const r = h2o_mem_alloc(sizeof(*r));
 
-			if (r) {
-				process_result(result, i, r);
+			memset(r, 0, sizeof(*r));
+			process_result(result, i, r);
 
-				const h2o_iovec_t key = {.base = (char *) &r->id, .len = sizeof(r->id)};
-				const h2o_iovec_t value = {.base = (char *) r, .len = sizeof(*r)};
+			const h2o_iovec_t key = {.base = (char *) &r->id, .len = sizeof(r->id)};
+			const h2o_iovec_t value = {.base = (char *) r, .len = sizeof(*r)};
 
-				cache_set(h2o_now(query_ctx->ctx->event_loop.h2o_ctx.loop),
-				          key,
-				          0,
-				          value,
-				          &query_ctx->ctx->global_data->request_handler_data.world_cache);
-			}
+			cache_set(h2o_now(query_ctx->ctx->event_loop.h2o_ctx.loop),
+			          key,
+			          0,
+			          value,
+			          &query_ctx->ctx->global_data->request_handler_data.world_cache);
 		}
 	}
 	else
@@ -696,18 +690,17 @@ static void populate_cache(thread_context_t *ctx, void *arg)
 {
 	IGNORE_FUNCTION_PARAMETER(arg);
 
-	populate_cache_ctx_t * const query_ctx = calloc(1, sizeof(*query_ctx));
+	populate_cache_ctx_t * const query_ctx = h2o_mem_alloc(sizeof(*query_ctx));
 
-	if (query_ctx) {
-		query_ctx->ctx = ctx;
-		query_ctx->param.command = POPULATE_CACHE_QUERY;
-		query_ctx->param.on_error = on_populate_cache_error;
-		query_ctx->param.on_result = on_populate_cache_result;
-		query_ctx->param.on_timeout = on_populate_cache_timeout;
+	memset(query_ctx, 0, sizeof(*query_ctx));
+	query_ctx->ctx = ctx;
+	query_ctx->param.command = POPULATE_CACHE_QUERY;
+	query_ctx->param.on_error = on_populate_cache_error;
+	query_ctx->param.on_result = on_populate_cache_result;
+	query_ctx->param.on_timeout = on_populate_cache_timeout;
 
-		if (execute_query(ctx, &query_ctx->param))
-			free(query_ctx);
-	}
+	if (execute_query(ctx, &query_ctx->param))
+		free(query_ctx);
 }
 
 static void process_result(PGresult *result, size_t idx, query_result_t *out)
@@ -791,37 +784,33 @@ static int single_query(struct st_h2o_handler_t *self, h2o_req_t *req)
 	thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
 	                                                      event_loop.h2o_ctx,
 	                                                      req->conn->ctx);
-	single_query_ctx_t * const query_ctx = calloc(1, sizeof(*query_ctx));
+	single_query_ctx_t * const query_ctx = h2o_mem_alloc(sizeof(*query_ctx));
+	single_query_ctx_t ** const p = h2o_mem_alloc_shared(&req->pool,
+	                                                     sizeof(*p),
+	                                                     cleanup_single_query_request);
 
-	if (query_ctx) {
-		single_query_ctx_t ** const p = h2o_mem_alloc_shared(&req->pool,
-		                                                     sizeof(*p),
-		                                                     cleanup_single_query_request);
+	*p = query_ctx;
+	memset(query_ctx, 0, sizeof(*query_ctx));
+	query_ctx->id = htonl(get_random_number(MAX_ID, &ctx->random_seed) + 1);
+	query_ctx->id_format = 1;
+	query_ctx->id_len = sizeof(query_ctx->id);
+	query_ctx->id_pointer = (const char *) &query_ctx->id;
+	query_ctx->param.command = WORLD_TABLE_NAME;
+	query_ctx->param.nParams = 1;
+	query_ctx->param.on_error = on_single_query_error;
+	query_ctx->param.on_result = on_single_query_result;
+	query_ctx->param.on_timeout = on_single_query_timeout;
+	query_ctx->param.paramFormats = &query_ctx->id_format;
+	query_ctx->param.paramLengths = &query_ctx->id_len;
+	query_ctx->param.paramValues = &query_ctx->id_pointer;
+	query_ctx->param.flags = IS_PREPARED;
+	query_ctx->param.resultFormat = 1;
+	query_ctx->req = req;
 
-		*p = query_ctx;
-		query_ctx->id = htonl(get_random_number(MAX_ID, &ctx->random_seed) + 1);
-		query_ctx->id_format = 1;
-		query_ctx->id_len = sizeof(query_ctx->id);
-		query_ctx->id_pointer = (const char *) &query_ctx->id;
-		query_ctx->param.command = WORLD_TABLE_NAME;
-		query_ctx->param.nParams = 1;
-		query_ctx->param.on_error = on_single_query_error;
-		query_ctx->param.on_result = on_single_query_result;
-		query_ctx->param.on_timeout = on_single_query_timeout;
-		query_ctx->param.paramFormats = &query_ctx->id_format;
-		query_ctx->param.paramLengths = &query_ctx->id_len;
-		query_ctx->param.paramValues = &query_ctx->id_pointer;
-		query_ctx->param.flags = IS_PREPARED;
-		query_ctx->param.resultFormat = 1;
-		query_ctx->req = req;
-
-		if (execute_query(ctx, &query_ctx->param)) {
-			query_ctx->cleanup = true;
-			send_service_unavailable_error(DB_REQ_ERROR, req);
-		}
+	if (execute_query(ctx, &query_ctx->param)) {
+		query_ctx->cleanup = true;
+		send_service_unavailable_error(DB_REQ_ERROR, req);
 	}
-	else
-		send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 
 	return 0;
 }

@@ -150,8 +150,11 @@ void initialize_openssl(const config_t *config, global_data_t *global_data)
 	SSL_library_init();
 	SSL_load_error_strings();
 	openssl_global_data.num_lock = CRYPTO_num_locks();
-	openssl_global_data.lock = calloc(openssl_global_data.num_lock,
-	                                  sizeof(*openssl_global_data.lock));
+	openssl_global_data.lock =
+			h2o_mem_alloc(openssl_global_data.num_lock * sizeof(*openssl_global_data.lock));
+	memset(openssl_global_data.lock,
+	       0,
+	       openssl_global_data.num_lock * sizeof(*openssl_global_data.lock));
 	CHECK_ERROR(pthread_mutexattr_init, &openssl_global_data.lock_attr);
 	CHECK_ERROR(pthread_mutexattr_settype,
 	            &openssl_global_data.lock_attr,
