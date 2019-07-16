@@ -390,12 +390,8 @@ static void start_database_connect(thread_context_t *ctx, db_conn_t *db_conn)
 	}
 	else {
 		ctx->db_state.db_conn_num++;
-		db_conn = calloc(1, sizeof(*db_conn));
-
-		if (!db_conn) {
-			STANDARD_ERROR("calloc");
-			goto error;
-		}
+		db_conn = h2o_mem_alloc(sizeof(*db_conn));
+		memset(db_conn, 0, sizeof(*db_conn));
 
 		const char * const conninfo = ctx->config->db_host ? ctx->config->db_host : "";
 
@@ -451,17 +447,14 @@ error_dup:
 	PQfinish(db_conn->conn);
 error_connect:
 	free(db_conn);
-error:
 	error_notification(ctx, false, DB_ERROR);
 }
 
 void add_prepared_statement(const char *name, const char *query, list_t **prepared_statements)
 {
-	prepared_statement_t * const p = calloc(1, sizeof(*p));
+	prepared_statement_t * const p = h2o_mem_alloc(sizeof(*p));
 
-	if (!p)
-		abort();
-
+	memset(p, 0, sizeof(*p));
 	p->l.next = *prepared_statements;
 	p->name = name;
 	p->query = query;

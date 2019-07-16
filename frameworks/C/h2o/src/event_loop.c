@@ -233,11 +233,9 @@ static void shutdown_server(h2o_socket_t *listener, const char *err)
 		}
 
 		for (size_t i = ctx->config->thread_num - 1; i > 0; i--) {
-			message_t * const msg = calloc(1, sizeof(*msg));
+			message_t * const msg = h2o_mem_alloc(sizeof(*msg));
 
-			if (!msg)
-				abort();
-
+			memset(msg, 0, sizeof(*msg));
 			msg->type = SHUTDOWN;
 			h2o_multithread_send_message(&ctx->global_thread_data[i].h2o_receiver, &msg->super);
 		}
