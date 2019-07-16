@@ -15,7 +15,11 @@ pub struct Fortune {
     pub message: String,
 }
 
-pub fn connect(addr: SocketAddr, config: Config, handle: Handle) -> impl Future<Item = Db, Error = ()> {
+pub fn connect(
+    addr: SocketAddr,
+    config: Config,
+    handle: Handle,
+) -> impl Future<Item = Db, Error = ()> {
     TcpStream::connect(&addr, &handle)
         .map_err(|e| panic!("error connecting to postgresql: {}", e))
         .and_then(move |tcp| {
@@ -29,12 +33,7 @@ pub fn connect(addr: SocketAddr, config: Config, handle: Handle) -> impl Future<
             client
                 .prepare("SELECT id, message FROM fortune")
                 .map_err(|_| ())
-                .map(move |fortune| {
-                    Db {
-                        client,
-                        fortune,
-                    }
-                })
+                .map(move |fortune| Db { client, fortune })
         })
 }
 

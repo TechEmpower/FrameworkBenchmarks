@@ -4,8 +4,8 @@ use std::thread;
 
 use futures::{Future, Stream};
 use hyper::server::conn::Http;
-use tokio_core::reactor::{Core, Handle};
 use tokio_core::net::{TcpListener, TcpStream};
+use tokio_core::reactor::{Core, Handle};
 
 pub(crate) fn run<F>(per_connection: F)
 where
@@ -35,11 +35,11 @@ where
 
     // Bind to 0.0.0.0:8080
     let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
-    let tcp = reuse_listener(&addr, &handle)
-        .expect("couldn't bind to addr");
+    let tcp = reuse_listener(&addr, &handle).expect("couldn't bind to addr");
 
     // For every accepted connection, spawn an HTTP task
-    let server = tcp.incoming()
+    let server = tcp
+        .incoming()
         .for_each(move |(sock, _addr)| {
             let _ = sock.set_nodelay(true);
             per_connection(sock, &mut http, &handle);
@@ -66,7 +66,7 @@ fn reuse_listener(addr: &SocketAddr, handle: &Handle) -> io::Result<TcpListener>
 
     builder.reuse_address(true)?;
     builder.bind(addr)?;
-    builder.listen(1024).and_then(|l| {
-        TcpListener::from_listener(l, addr, handle)
-    })
+    builder
+        .listen(1024)
+        .and_then(|l| TcpListener::from_listener(l, addr, handle))
 }
