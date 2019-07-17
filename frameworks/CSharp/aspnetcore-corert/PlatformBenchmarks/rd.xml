@@ -44,5 +44,8 @@
         <Assembly Name="Microsoft.Extensions.Configuration.Json">
             <Type Name="Microsoft.Extensions.Configuration.Json.JsonConfigurationSource" Dynamic="Required All" />
         </Assembly>
+        <Assembly Name="RedHat.AspNetCore.Server.Kestrel.Transport.Linux">
+            <Type Name="RedHat.AspNetCore.Server.Kestrel.Transport.Linux.LinuxTransportFactory" Dynamic="Required All" />
+        </Assembly>
     </Application>
 </Directives>
