@@ -1,10 +1,10 @@
-lazy val finatraVersion = "19.5.1"
+lazy val finatraVersion = "19.7.0"
 
 name := "techempower-benchmarks-finatra"
 organization := "com.twitter"
 version := finatraVersion
 
-scalaVersion := "2.12.5"
+scalaVersion := "2.12.8"
 
 resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
