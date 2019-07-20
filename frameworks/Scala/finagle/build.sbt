@@ -1,7 +1,7 @@
-lazy val finagleVersion = "19.5.1"
+lazy val finagleVersion = "19.7.0"
 
 name := "finagle-benchmark"
-scalaVersion := "2.12.5"
+scalaVersion := "2.12.8"
 version := finagleVersion
 
 libraryDependencies ++= Seq(
