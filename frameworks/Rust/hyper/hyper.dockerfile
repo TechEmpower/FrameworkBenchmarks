@@ -1,4 +1,4 @@
-FROM rust:1.35
+FROM rust:1.36
 
 ADD ./ /hyper
 WORKDIR /hyper
