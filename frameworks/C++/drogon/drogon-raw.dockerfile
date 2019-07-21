@@ -34,7 +34,7 @@ RUN git clone https://github.com/an-tao/drogon
 
 WORKDIR $DROGON_ROOT
 
-RUN git checkout d56b71c8a9b2b4bd0dd67052fe87c4768adfeb66
+RUN git checkout 135a2ebb6f63ee91ec1f11817b7bf68f1591ba43
 
 RUN ./build.sh
 
