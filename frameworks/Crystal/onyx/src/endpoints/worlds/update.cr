@@ -2,7 +2,8 @@ struct Endpoints::Worlds::Update
   include Onyx::HTTP::Endpoint
   include RandomID
 
-  QUERY = Models::World.update.set(random_number: 0).where(id: 0).build[0]
+  SELECT_QUERY = Models::World.where(id: 0).build(true)[0]
+  UPDATE_QUERY = Models::World.update.set(random_number: 0).where(id: 0).build[0]
 
   params do
     query do
@@ -16,12 +17,10 @@ struct Endpoints::Worlds::Update
     worlds = Array(Models::World).new
 
     queries.clamp(1..500).times.each do
-      id, number = {random_id, random_id}
-
-      world = Models::World.new(id: id, random_number: number)
+      world = Onyx.query(Models::World, SELECT_QUERY, random_id).first
+      world.random_number = random_id
+      Onyx.exec(UPDATE_QUERY, world.random_number, world.id)
       worlds << world
-
-      Onyx.exec(QUERY, world.random_number, world.id)
     end
 
     return Views::Worlds.new(worlds)

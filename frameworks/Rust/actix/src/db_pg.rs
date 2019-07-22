@@ -1,12 +1,15 @@
+use std::fmt::Write;
 use std::io;
 
 use actix::fut;
 use actix::prelude::*;
+use bytes::{Bytes, BytesMut};
 use futures::{stream, Future, Stream};
 use rand::{thread_rng, Rng, ThreadRng};
 use tokio_postgres::{connect, Client, NoTls, Statement};
 
-use crate::models::{Fortune, World};
+use crate::models::World;
+use crate::utils::{Fortune, Writer};
 
 /// Postgres interface
 pub struct PgConnection {
@@ -68,11 +71,11 @@ impl PgConnection {
 pub struct RandomWorld;
 
 impl Message for RandomWorld {
-    type Result = io::Result<World>;
+    type Result = io::Result<Bytes>;
 }
 
 impl Handler<RandomWorld> for PgConnection {
-    type Result = ResponseFuture<World, io::Error>;
+    type Result = ResponseFuture<Bytes, io::Error>;
 
     fn handle(&mut self, _: RandomWorld, _: &mut Self::Context) -> Self::Result {
         let random_id = self.rng.gen_range::<i32>(1, 10_001);
@@ -84,12 +87,18 @@ impl Handler<RandomWorld> for PgConnection {
                 .query(self.world.as_ref().unwrap(), &[&random_id])
                 .into_future()
                 .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e.0)))
-                .and_then(|(row, _)| {
+                .map(|(row, _)| {
                     let row = row.unwrap();
-                    Ok(World {
-                        id: row.get(0),
-                        randomnumber: row.get(1),
-                    })
+                    let mut body = BytesMut::with_capacity(33);
+                    serde_json::to_writer(
+                        Writer(&mut body),
+                        &World {
+                            id: row.get(0),
+                            randomnumber: row.get(1),
+                        },
+                    )
+                    .unwrap();
+                    body.freeze()
                 }),
         )
     }
@@ -117,12 +126,12 @@ impl Handler<RandomWorlds> for PgConnection {
                     .map_err(|e| {
                         io::Error::new(io::ErrorKind::Other, format!("{:?}", e.0))
                     })
-                    .and_then(|(row, _)| {
+                    .map(|(row, _)| {
                         let row = row.unwrap();
-                        Ok(World {
+                        World {
                             id: row.get(0),
                             randomnumber: row.get(1),
-                        })
+                        }
                     }),
             );
         }
@@ -143,7 +152,7 @@ impl Handler<UpdateWorld> for PgConnection {
     fn handle(&mut self, msg: UpdateWorld, _: &mut Self::Context) -> Self::Result {
         let mut worlds = Vec::with_capacity(msg.0 as usize);
         for _ in 0..msg.0 {
-            let id: i32 = self.rng.gen_range(1, 10_001);
+            let id = self.rng.gen_range(1, 10_001);
             let w_id: i32 = self.rng.gen_range(1, 10_001);
             worlds.push(
                 self.cl
@@ -154,12 +163,14 @@ impl Handler<UpdateWorld> for PgConnection {
                     .map_err(|e| {
                         io::Error::new(io::ErrorKind::Other, format!("{:?}", e.0))
                     })
-                    .and_then(move |(row, _)| {
+                    .map(move |(row, _)| {
                         let row = row.unwrap();
-                        Ok(World {
+                        let mut world = World {
                             id: row.get(0),
-                            randomnumber: id,
-                        })
+                            randomnumber: row.get(1),
+                        };
+                        world.randomnumber = id;
+                        world
                     }),
             );
         }
@@ -174,7 +185,7 @@ impl Handler<UpdateWorld> for PgConnection {
                         .push_str("UPDATE world SET randomnumber = temp.randomnumber FROM (VALUES ");
 
                     for w in &worlds {
-                        update.push_str(&format!("({}, {}),", w.id, w.randomnumber));
+                        let _ = write!(&mut update, "({}, {}),", w.id, w.randomnumber);
                     }
                     worlds.sort_by_key(|w| w.id);
 
@@ -189,7 +200,7 @@ impl Handler<UpdateWorld> for PgConnection {
                         .collect()
                         .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))
                         .into_actor(act)
-                        .and_then(|_, _, _| fut::ok(worlds))
+                        .map(|_, _, _| worlds)
                 }),
         )
     }
@@ -224,9 +235,9 @@ impl Handler<TellFortune> for PgConnection {
                     Ok::<_, io::Error>(items)
                 })
                 .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))
-                .and_then(|mut items| {
+                .map(|mut items| {
                     items.sort_by(|it, next| it.message.cmp(&next.message));
-                    Ok(items)
+                    items
                 }),
         )
     }

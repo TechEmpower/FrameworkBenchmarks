@@ -1,0 +1,29 @@
+{
+  "framework": "vertx-web-scala",
+  "tests": [
+    {
+      "default": {
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "vertx-web",
+        "language": "Scala",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Vert.x",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "vertx-web-scala-postgres",
+        "notes": "",
+        "versus": "vertx-web-postgres"
+      }
+    }
+  ]
+}

@@ -2,6 +2,7 @@
 namespace controllers;
 
 use Ubiquity\controllers\Controller;
+use Ubiquity\utils\http\UResponse;
 
 /**
  * Plaintext controller.
@@ -9,7 +10,7 @@ use Ubiquity\controllers\Controller;
 class Plaintext extends Controller{
 	
 	public function initialize(){
-		\header("Content-Type: text/plain");
+		UResponse::setContentType('text/plain; charset=utf-8');
 	}
 	public function index() {
 		echo "Hello, World!";

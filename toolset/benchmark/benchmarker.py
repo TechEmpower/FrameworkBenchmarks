@@ -105,6 +105,11 @@ class Benchmarker:
         # Start timing the total test duration
         self.time_logger.mark_test_start()
 
+        if self.config.mode == "benchmark":
+            log("Benchmarking %s" % test.name,
+                file=benchmark_log,
+                border='-')
+
         # If the test is in the excludes list, we skip it
         if self.config.exclude and test.name in self.config.exclude:
             message = "Test {name} has been added to the excludes list. Skipping.".format(
@@ -185,9 +190,6 @@ class Benchmarker:
 
             # Benchmark this test
             if self.config.mode == "benchmark":
-                log("Benchmarking %s" % test.name,
-                    file=benchmark_log,
-                    border='-')
                 self.time_logger.mark_benchmarking_start()
                 self.__benchmark(test, benchmark_log)
                 self.time_logger.log_benchmarking_end(

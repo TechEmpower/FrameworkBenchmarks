@@ -30,4 +30,9 @@ typedef struct {
 	cache_t world_cache;
 } request_handler_data_t;
 
+typedef struct {
+	// Replace with any actual fields; structures without members cause compiler warnings.
+	int pad;
+} request_handler_thread_data_t;
+
 #endif // REQUEST_HANDLER_DATA_H_

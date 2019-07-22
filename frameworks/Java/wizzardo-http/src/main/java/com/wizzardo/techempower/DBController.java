@@ -91,7 +91,8 @@ public class DBController extends Controller {
                 if (res.succeeded()) {
                     PgIterator resultSet = res.result().iterator();
                     Tuple row = resultSet.next();
-                    worlds[index] = new World(row.getInteger(0), getRandomNumber());
+                    worlds[index] = new World(row.getInteger(0), row.getInteger(1));
+                    worlds[index].randomNumber = getRandomNumber();
                 } else {
                     res.cause().printStackTrace();
                     if (failed.compareAndSet(false, true)) {

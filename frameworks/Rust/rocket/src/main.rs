@@ -1,10 +1,13 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
 extern crate rand;
-#[macro_use] extern crate rocket;
+#[macro_use]
+extern crate rocket;
 extern crate rocket_contrib;
-#[macro_use] extern crate diesel;
-#[macro_use] extern crate serde_derive;
+#[macro_use]
+extern crate diesel;
+#[macro_use]
+extern crate serde_derive;
 
 use diesel::prelude::*;
 use diesel::result::Error;
@@ -28,7 +31,7 @@ fn plaintext() -> &'static str {
 #[get("/json")]
 fn json() -> Json<models::Message> {
     let message = models::Message {
-        message: "Hello, World!"
+        message: "Hello, World!",
     };
     Json(message)
 }
@@ -68,7 +71,7 @@ fn queries(conn: db::DbConn, q: u16) -> Json<Vec<models::World>> {
         let result = world
             .filter(id.eq(random_number()))
             .first::<models::World>(&*conn)
-            .expect("error loading world");       
+            .expect("error loading world");
         results.push(result);
     }
 
@@ -82,12 +85,12 @@ fn fortunes(conn: db::DbConn) -> Template {
     let mut context = fortune
         .load::<models::Fortune>(&*conn)
         .expect("error loading fortunes");
-    
-    context.push(models::Fortune { 
+
+    context.push(models::Fortune {
         id: 0,
-        message: "Additional fortune added at request time.".to_string()
+        message: "Additional fortune added at request time.".to_string(),
     });
-    
+
     context.sort_by(|a, b| a.message.cmp(&b.message));
 
     Template::render("fortunes", &context)
@@ -136,16 +139,19 @@ fn updates(conn: db::DbConn, q: u16) -> Json<Vec<models::World>> {
 
 fn main() {
     rocket::ignite()
-        .mount("/", routes![
-            json,
-            plaintext,
-            db,
-            queries,
-            queries_empty,
-            fortunes,
-            updates,
-            updates_empty,
-        ])
+        .mount(
+            "/",
+            routes![
+                json,
+                plaintext,
+                db,
+                queries,
+                queries_empty,
+                fortunes,
+                updates,
+                updates_empty,
+            ],
+        )
         .manage(db::init_pool())
         .attach(Template::fairing())
         .launch();

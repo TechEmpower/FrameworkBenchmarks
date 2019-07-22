@@ -7,7 +7,7 @@
   <parent>
     <groupId>io.jooby</groupId>
     <artifactId>jooby-project</artifactId>
-    <version>2.0.0.RC1</version>
+    <version>2.0.0</version>
   </parent>
 
   <artifactId>jooby2</artifactId>
@@ -17,8 +17,11 @@
   <name>jooby 2.x</name>
 
   <properties>
-    <jooby.version>2.0.0.RC1</jooby.version>
+    <jooby.version>2.0.0</jooby.version>
     <postgresql.version>42.2.5</postgresql.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
 
     <!-- Startup class -->
     <application.class>com.techempower.App</application.class>
@@ -61,6 +64,13 @@
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
     </dependency>
+
+    <!-- ASM library -->
+    <dependency>
+      <groupId>org.ow2.asm</groupId>
+      <artifactId>asm</artifactId>
+      <version>7.1</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -85,7 +95,14 @@
           </execution>
         </executions>
       </plugin>
-
+      <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-compiler-plugin</artifactId>
+         <version>3.8.0</version>
+         <configuration>
+           <debug>false</debug>
+         </configuration>
+       </plugin>
       <!-- Build fat jar -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

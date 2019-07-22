@@ -13,7 +13,7 @@ const SERVER = 'vertx.js';
 
 const app = Router.router(vertx);
 const template = HandlebarsTemplateEngine.create(vertx);
-let date = new Date().toString();
+let date = new Date().toUTCString();
 
 vertx.setPeriodic(1000, t => date = new Date().toUTCString());
 
@@ -187,7 +187,8 @@ app.route("/updates").handler(ctx => {
 
         const row = ar.result().iterator().next();
 
-        worlds[index] = {id: row.getInteger(0), randomNumber: util.randomWorld()};
+        worlds[index] = {id: row.getInteger(0), randomNumber: row.getInteger(1)};
+        worlds[index].randomNumber = util.randomWorld();
         if (++queryCount === queries) {
           worlds.sort((a, b) => {
             return a.id - b.id;

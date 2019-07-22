@@ -1,4 +1,4 @@
-FROM oracle/graalvm-ce:1.0.0-rc14
+FROM oracle/graalvm-ce:19.0.2
 # Set working dir
 RUN mkdir /app
 WORKDIR /app
@@ -8,6 +8,7 @@ COPY ./ /app
 # Get dependencies
 RUN npm --unsafe-perm install
 
+# Run the code
 CMD java \
     -server                                             \
     -XX:+UseNUMA                                        \
@@ -20,6 +21,6 @@ CMD java \
     -Dvertx.threadChecks=false                          \
     -Dvertx.disableContextTimings=true                  \
     -Dvertx.disableTCCL=true                            \
-    -jar node_modules/.bin/benchmark.jar                \
+    -jar node_modules/.bin/es4x-launcher.jar            \
     --instances `grep --count ^processor /proc/cpuinfo` \
     --options vertx.json

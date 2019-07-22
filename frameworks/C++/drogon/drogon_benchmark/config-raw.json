@@ -34,7 +34,7 @@
         //any synchronous interface of it.
         "is_fast": true,
         //connection_number:1 by default
-        "connection_number": 1
+        "connection_number": 2
     }],
     "app": {
         //threads_num:the number of IO threads,1 by default, if the value is set to 0, the number of threads
@@ -134,6 +134,41 @@
         ],
         //idle_connection_timeout: defaults to 60 seconds, the lifetime 
         //of the connection without read or write
-        "idle_connection_timeout": 60
-    }
+        "idle_connection_timeout": 60,
+        //server_header_field: Set the 'server' header field in each response sent by drogon,
+        //empty string by default with which the 'server' header field is set to "Server: drogon/version string\r\n"
+        "server_header_field": "drogon",
+        //keepalive_requests: Set the maximum number of requests that can be served through one keep-alive connection. 
+        //After the maximum number of requests are made, the connection is closed.
+        //The default value of 0 means no limit.
+        "keepalive_requests": 0,
+        //pipelining_requests: Set the maximum number of unhandled requests that can be cached in pipelining buffer. 
+        //After the maximum number of requests are made, the connection is closed.
+        //The default value of 0 means no limit.
+        "pipelining_requests": 0,
+        //gzip_static: If it is set to true, when the client requests a static file, drogon first finds the compressed 
+        //file with the extension ".gz" in the same path and send the compressed file to the client.
+        //The default value of gzip_static is true.
+        "gzip_static": true,
+        //client_max_body_size: Set the max body size of HTTP requests received by drogon. The default value is "1M".
+        //One can set it to "1024", "1k", "10M", "1G", etc. Setting it to "" means no limit.
+        "client_max_body_size": "1M",
+        //client_max_websocket_message_size: Set the max size of messages sent by WebSocket client. The default value is "128K".
+        //One can set it to "1024", "1k", "10M", "1G", etc. Setting it to "" means no limit.
+        "client_max_websocket_message_size": "128K"
+    },
+    //plugins: Define all plugins running in the application
+    "plugins": [{
+        //name: The class name of the plugin
+        //"name": "TestPlugin",
+        //dependencies: Plugins that the plugin depends on. It can be commented out
+        "dependencies": [],
+        //config: The configuration of the plugin. This json object is the parameter to initialize the plugin.
+        //It can be commented out
+        "config": {
+            "heartbeat_interval": 2
+        }
+    }],
+    //custom_config: custom configuration for users. This object can be get by the app().getCustomConfig() method. 
+    "custom_config": {}
 }

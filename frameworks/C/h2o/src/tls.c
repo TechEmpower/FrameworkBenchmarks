@@ -128,11 +128,9 @@ void cleanup_openssl(global_data_t *global_data)
 	CRYPTO_set_dynlock_create_callback(NULL);
 	CRYPTO_set_dynlock_destroy_callback(NULL);
 	CRYPTO_set_dynlock_lock_callback(NULL);
-	ERR_remove_state(0);
 	ERR_free_strings();
 	CONF_modules_unload(1);
 	EVP_cleanup();
-	CRYPTO_cleanup_all_ex_data();
 
 	for (size_t i = 0; i < openssl_global_data.num_lock; i++)
 		CHECK_ERROR(pthread_mutex_destroy, openssl_global_data.lock + i);
@@ -141,13 +139,22 @@ void cleanup_openssl(global_data_t *global_data)
 	CHECK_ERROR(pthread_mutexattr_destroy, &openssl_global_data.lock_attr);
 }
 
+void cleanup_openssl_thread_state(void)
+{
+	ERR_remove_thread_state(NULL);
+	CRYPTO_cleanup_all_ex_data();
+}
+
 void initialize_openssl(const config_t *config, global_data_t *global_data)
 {
 	SSL_library_init();
 	SSL_load_error_strings();
 	openssl_global_data.num_lock = CRYPTO_num_locks();
-	openssl_global_data.lock = calloc(openssl_global_data.num_lock,
-	                                  sizeof(*openssl_global_data.lock));
+	openssl_global_data.lock =
+			h2o_mem_alloc(openssl_global_data.num_lock * sizeof(*openssl_global_data.lock));
+	memset(openssl_global_data.lock,
+	       0,
+	       openssl_global_data.num_lock * sizeof(*openssl_global_data.lock));
 	CHECK_ERROR(pthread_mutexattr_init, &openssl_global_data.lock_attr);
 	CHECK_ERROR(pthread_mutexattr_settype,
 	            &openssl_global_data.lock_attr,

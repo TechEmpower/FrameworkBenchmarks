@@ -131,6 +131,7 @@ def main(argv=None):
             'all', 'json', 'db', 'query', 'cached_query', 'fortune', 'update',
             'plaintext'
         ],
+        nargs='+',
         default='all',
         help='which type of test to run')
     parser.add_argument(

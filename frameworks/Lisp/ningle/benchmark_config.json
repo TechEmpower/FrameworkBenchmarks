@@ -1,0 +1,30 @@
+{
+    "framework": "ningle",
+    "tests": [
+        {
+            "default": {
+                "plaintext_url": "/plaintext",
+                "json_url": "/json",
+                "fortune_url": "/fortunes",
+                "db_url": "/db",
+                "query_url": "/queries?queries=",
+                "update_url": "/updates?queries=",
+                "port": 8080,
+                "approach": "Stripped",
+                "classification": "Micro",
+                "database": "Postgres",
+                "framework": "Ningle",
+                "language": "Common Lisp",
+                "flavor": "None",
+                "orm": "Raw",
+                "platform": "Lisp",
+                "webserver": "Woo",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "Ningle",
+                "notes": "",
+                "versus": ""
+            }
+        }
+    ]
+}

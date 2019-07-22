@@ -8,8 +8,8 @@
     <version>0.1</version>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <packaging>jar</packaging>
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.firenio</groupId>
             <artifactId>firenio-all</artifactId>
-            <version>1.1.0</version>
+            <version>1.2.1</version>
         </dependency>
 
         <dependency>
