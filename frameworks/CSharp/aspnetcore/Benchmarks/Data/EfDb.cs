@@ -16,13 +16,11 @@ namespace Benchmarks.Data
     {
         private readonly IRandom _random;
         private readonly ApplicationDbContext _dbContext;
-        private readonly bool _useBatchUpdate;
 
         public EfDb(IRandom random, ApplicationDbContext dbContext, IOptions<AppSettings> appSettings)
         {
             _random = random;
             _dbContext = dbContext;
-            _useBatchUpdate = appSettings.Value.Database != DatabaseServer.PostgreSql;
         }
 
         private static readonly Func<ApplicationDbContext, int, Task<World>> _firstWorldQuery
@@ -66,17 +64,9 @@ namespace Benchmarks.Data
                 _dbContext.Entry(result).Property("RandomNumber").CurrentValue = _random.Next(1, 10001);
 
                 results[i] = result;
-
-                if (!_useBatchUpdate)
-                {
-                    await _dbContext.SaveChangesAsync();
-                }
             }
 
-            if (_useBatchUpdate)
-            {
-                await _dbContext.SaveChangesAsync();
-            }
+            await _dbContext.SaveChangesAsync();
 
             return results;
         }
