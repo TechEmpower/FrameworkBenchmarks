@@ -1,5 +1,4 @@
 import random
-import sys
 from operator import attrgetter
 from functools import partial
 from ujson import dumps as uj_dumps
@@ -8,10 +7,6 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from world.models import World, Fortune
-
-
-if sys.version_info[0] == 3:
-    xrange = range
 
 
 def _get_queries(request):
@@ -60,8 +55,8 @@ def dbs(request):
     # dictionaries on the fly instead of serializing later
     # by creating dicts, we don't need to user the model serializer, which is probably slow and only appropriate
     # for complicated serializations of joins and crazy query sets etc
-    # test xrange vs range if the query number is gigantic
-    worlds = uj_dumps([{'id' : r, 'randomNumber' : g(id=r).randomnumber} for r in [rp() for q in xrange(queries)]])
+    # test range vs range if the query number is gigantic
+    worlds = uj_dumps([{'id' : r, 'randomNumber' : g(id=r).randomnumber} for r in [rp() for q in range(queries)]])
     return HttpResponse(worlds, content_type="application/json")
 
 
@@ -81,7 +76,7 @@ def update(request):
     rp = partial(random.randint, 1, 10000)
 
     worlds = []
-    for r in [rp() for q in xrange(queries)]:
+    for r in [rp() for q in range(queries)]:
         w = g(id=r)
         w.randomnumber = rp()
         w.save()
