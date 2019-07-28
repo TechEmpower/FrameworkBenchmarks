@@ -25,7 +25,7 @@
         <dependency>
             <groupId>org.smartboot.socket</groupId>
             <artifactId>aio-core</artifactId>
-            <version>1.4.3.rc-2</version>
+            <version>1.4.3.rc-3</version>
         </dependency>
         <dependency>
             <groupId>com.jsoniter</groupId>
