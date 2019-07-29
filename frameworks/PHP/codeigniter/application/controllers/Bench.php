@@ -13,7 +13,7 @@ class Bench extends CI_Controller {
         $this->output
             ->set_content_type('text/plain')
             ->set_output('Hello, World!');
-    }
+    } 
 
     public function json() {
         $this->output
