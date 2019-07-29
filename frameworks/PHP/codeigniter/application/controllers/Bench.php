@@ -11,7 +11,7 @@ class Bench extends CI_Controller {
 
     public function plaintext() {
         $this->output
-            ->set_content_type('Content-type: text/plain')
+            ->set_content_type('text/plain')
             ->set_output('Hello, World!');
     }
 
