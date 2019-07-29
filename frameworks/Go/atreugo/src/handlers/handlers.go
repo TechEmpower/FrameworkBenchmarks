@@ -111,6 +111,8 @@ func FortuneQuickHandler(db storage.DB) atreugo.View {
 		newFortune := templates.AcquireFortune()
 		newFortune.Message = "Additional fortune added at request time."
 
+		fortunes = append(fortunes, *newFortune)
+
 		sort.Slice(fortunes, func(i, j int) bool {
 			return fortunes[i].Message < fortunes[j].Message
 		})
