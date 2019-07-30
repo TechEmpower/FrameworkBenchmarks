@@ -3,8 +3,8 @@
             [pohjavirta.exchange :as exchange]
             [hikari-cp.core :as hikari]
             [reitit.ring :as ring]
-            [porsas.core :as p]
-            [porsas.async :as pa]
+            [porsas.jdbc :as jdbc]
+            [porsas.async :as async]
             [jsonista.core :as j])
   (:import (java.util.concurrent ThreadLocalRandom)
            (java.util.function Supplier)
@@ -38,19 +38,19 @@
 
 (defn sync-db-handler [mapper pool]
   (fn [_]
-    (let [world (with-open [con (p/get-connection pool)]
-                  (p/query-one mapper con ["SELECT id, randomnumber from WORLD where id=?" (random)]))]
+    (let [world (with-open [con (jdbc/get-connection pool)]
+                  (jdbc/query-one mapper con ["SELECT id, randomnumber from WORLD where id=?" (random)]))]
       {:status 200
        :headers {"Content-Type" "application/json"}
        :body (j/write-value-as-bytes world)})))
 
-(defn async-db-handler [mapper pool-provider]
+(defn async-db-handler [mapper pool-ref]
   (fn [_]
-    (-> (pa/query-one mapper @pool-provider ["SELECT id, randomnumber from WORLD where id=$1" (random)])
-        (pa/then (fn [world]
-                   {:status 200
-                    :headers {"Content-Type" "application/json"}
-                    :body (j/write-value-as-bytes world)})))))
+    (-> (async/query-one mapper @pool-ref ["SELECT id, randomnumber from WORLD where id=$1" (random)])
+        (async/then (fn [world]
+                      {:status 200
+                       :headers {"Content-Type" "application/json"}
+                       :body (j/write-value-as-bytes world)})))))
 
 ;;
 ;; server
@@ -62,11 +62,11 @@
                      ;; reactive pg-client in NIO-pool
                      (= mode "async")
                      (async-db-handler
-                       (pa/data-mapper {:row (pa/rs->compiled-record)})
+                       (async/context {:row (async/rs->compiled-record)})
                        ;; thread local pool provider
                        (thread-local
-                         (pa/pool
-                           {:uri "postgresql://localhost:5432/hello_world"
+                         (async/pool
+                           {:uri "postgresql://tfb-database:5432/hello_world"
                             :user "benchmarkdbuser"
                             :password "benchmarkdbpass"
                             :size 1})))
@@ -74,9 +74,9 @@
                      (= mode "sync")
                      (exchange/dispatch
                        (sync-db-handler
-                         (p/data-mapper {:row (p/rs->compiled-record)})
+                         (jdbc/context {:row (jdbc/rs->compiled-record)})
                          (hikari/make-datasource
-                           {:jdbc-url "jdbc:postgresql://localhost:5432/hello_world"
+                           {:jdbc-url "jdbc:postgresql://tfb-database:5432/hello_world"
                             :username "benchmarkdbuser"
                             :password "benchmarkdbpass"
                             :maximum-pool-size (* 8 cpus)})))
