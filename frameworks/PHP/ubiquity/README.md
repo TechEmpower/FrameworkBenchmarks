@@ -8,10 +8,10 @@ Ubiquity is a full-stack php framework, These tests involve:
 Tests are available with NginX, Swoole and PHP-PM (beta) servers.
 
 ## Test Type Implementation Source Code
-The tests are separated into 4 controllers:
+The tests are separated into 6 controllers:
 - `Json` for JSON response
   * [JSON](app/controllers/Json.php)
-- `Db` for database access
+- `Db` for database access with ORM
   * [DB](app/controllers/Db.php)
   * [QUERY](app/controllers/Db.php)
   * [CACHED QUERY (not implemented)]()
@@ -20,7 +20,10 @@ The tests are separated into 4 controllers:
   * [FORTUNES](app/controllers/Fortunes.php)
 - `Plaintext` for plaintext response
   * [PLAINTEXT](app/controllers/Plaintext.php)
-
+- `Raw` for database access without ORM
+  * [Raw](app/controllers/Raw.php)
+- `RawFortunes` without ORM and without template engine
+  * [FORTUNES](app/controllers/RawFortunes.php)
 
 ## Important Libraries
 The tests were run with:
