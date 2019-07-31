@@ -7,7 +7,7 @@ use Ubiquity\db\Database;
 class RawFortunes extends Controller {
 	
 	public function index() {
-		$fortunes = Database::start()->fetchAll('SELECT id,message FROM Fortune');
+		$fortunes = Database::start()->fetchAll('SELECT id,message FROM Fortune',\PDO::FETCH_KEY_PAIR);
 		$fortunes[0] = 'Additional fortune added at request time.';
 		\asort($fortunes);
 		?>
