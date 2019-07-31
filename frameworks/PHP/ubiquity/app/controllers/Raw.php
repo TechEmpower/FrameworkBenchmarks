@@ -1,17 +1,15 @@
 <?php
 namespace controllers;
 
-use Ubiquity\controllers\Controller;
-use Ubiquity\db\Database;
-
 /**
  * Bench controller.
  */
-class Raw extends Controller {
+class Raw extends \Ubiquity\controllers\Controller {
 	protected $db;
+	
 	public function initialize() {
 		\header('Content-type: application/json');
-		$this->db=Database::start();
+		$this->db=\Ubiquity\db\Database::start();
 	}
 	
 	public function index() {

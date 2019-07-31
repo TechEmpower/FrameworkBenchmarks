@@ -1,13 +1,10 @@
 <?php
 namespace controllers;
 
-use Ubiquity\controllers\Controller;
-use Ubiquity\db\Database;
-
-class RawFortunes extends Controller {
+class RawFortunes extends \Ubiquity\controllers\Controller {
 	
 	public function index() {
-		$fortunes = Database::start()->fetchAll('SELECT id,message FROM Fortune',\PDO::FETCH_KEY_PAIR);
+		$fortunes = \Ubiquity\db\Database::start()->fetchAll('SELECT id,message FROM Fortune',\PDO::FETCH_KEY_PAIR);
 		$fortunes[0] = 'Additional fortune added at request time.';
 		\asort($fortunes);
 		?>
