@@ -1,12 +1,13 @@
 package storage
 
 import (
-	"atreugo/src/templates"
 	"context"
 	"fmt"
 	"log"
 	"math/rand"
 	"time"
+
+	"atreugo/src/templates"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -74,7 +75,7 @@ func (m Mongo) GetOneRandomWorld(w *World) error {
 }
 
 // UpdateWorlds updates some number of worlds entries, passed as arg
-func (m Mongo) UpdateWorlds(selectedWorlds []World) error {
+func (m Mongo) UpdateWorlds(selectedWorlds Worlds) error {
 	for _, selectedWorld := range selectedWorlds {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
@@ -93,40 +94,8 @@ func (m Mongo) UpdateWorlds(selectedWorlds []World) error {
 }
 
 // GetFortunes selects all fortunes from table
-func (m Mongo) GetFortunes() ([]templates.Fortune, error) {
-	fortunes := make([]templates.Fortune, 0, 16)
-
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-	defer cancel()
-
-	cur, err := m.fortunes.Find(ctx, bson.M{})
-	if err != nil {
-		return fortunes, err
-	}
-	defer cur.Close(ctx)
-
-	var fortune templates.Fortune
-	for cur.Next(context.Background()) {
-		err = cur.Decode(&fortune)
-		log.Println(fortune)
-		if err != nil {
-			return fortunes, err
-		}
-		fortunes = append(fortunes, fortune)
-	}
-
-	log.Println(fortunes)
-
-	if err := cur.Err(); err != nil {
-		return fortunes, err
-	}
-
-	return fortunes, nil
-}
-
-// GetFortunesPool selects all fortunes from table
-func (m Mongo) GetFortunesPool() ([]templates.Fortune, error) {
-	fortunes := templates.FortunesPool.Get().([]templates.Fortune)
+func (m Mongo) GetFortunes() (templates.Fortunes, error) {
+	fortunes := templates.AcquireFortunes()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -137,14 +106,18 @@ func (m Mongo) GetFortunesPool() ([]templates.Fortune, error) {
 	}
 	defer cur.Close(ctx)
 
-	var fortune templates.Fortune
+	fortune := templates.AcquireFortune()
+
 	for cur.Next(context.Background()) {
-		err = cur.Decode(&fortune)
+		err = cur.Decode(fortune)
 		if err != nil {
 			return fortunes, err
 		}
-		fortunes = append(fortunes, fortune)
+		fortunes = append(fortunes, *fortune)
 	}
+
+	templates.ReleaseFortune(fortune)
+
 	if err := cur.Err(); err != nil {
 		return fortunes, err
 	}
