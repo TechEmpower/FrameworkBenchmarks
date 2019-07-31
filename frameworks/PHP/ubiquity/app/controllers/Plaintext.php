@@ -13,7 +13,7 @@ class Plaintext extends Controller{
 		UResponse::setContentType('text/plain; charset=utf-8');
 	}
 	public function index() {
-		echo "Hello, World!";
+		echo 'Hello, World!';
 	}
 
 }

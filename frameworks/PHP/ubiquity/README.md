@@ -24,7 +24,7 @@ The tests are separated into 4 controllers:
 
 ## Important Libraries
 The tests were run with:
-* [Ubiquity 2.1.*](https://ubiquity.kobject.net/)
+* [Ubiquity 2.3.*](https://ubiquity.kobject.net/)
 * [PHP Version 7.3.*](http://www.php.net/) with FPM and APC
 * [nginx 1.14](http://nginx.org/)
 * [PHP-PM](https://github.com/php-pm/php-pm)
