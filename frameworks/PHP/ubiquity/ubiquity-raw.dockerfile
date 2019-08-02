@@ -11,7 +11,7 @@ RUN apt-get install -yqq composer > /dev/null
 
 COPY deploy/conf/* /etc/php/7.3/fpm/
 
-COPY app/config/raw-services.php app/config/services.php
+COPY app/config/raw-index.php index.php
 
 ADD ./ /ubiquity
 WORKDIR /ubiquity
