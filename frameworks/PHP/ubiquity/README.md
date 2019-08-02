@@ -22,7 +22,7 @@ The tests are separated into 6 controllers:
   * [PLAINTEXT](app/controllers/Plaintext.php)
 - `Raw` for database access without ORM
   * [Raw](app/controllers/Raw.php)
-- `RawFortunes` without ORM and without template engine
+- `RawFortunes` without ORM
   * [FORTUNES](app/controllers/RawFortunes.php)
 
 ## Important Libraries
