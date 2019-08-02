@@ -11,7 +11,7 @@ class RawFortunes extends \Ubiquity\controllers\Controller {
 		$fortunes = \Ubiquity\db\Database::start()->fetchAll('SELECT id,message FROM Fortune',\PDO::FETCH_KEY_PAIR);
 		$fortunes[0] = 'Additional fortune added at request time.';
 		\asort($fortunes);
-		$this->loadView('Fortunes/index.php', [
+		$this->loadView('Fortunes/raw-index.php', [
 			'fortunes' => $fortunes
 		]);
 	}

@@ -12,7 +12,6 @@ return array(
 		],
 		"cache" => false
 	],
-	"test" => false,
 	"debug" => false,
 	"cache" => [
 		"directory" => "cache/",
@@ -21,7 +20,6 @@ return array(
 	],
 	"mvcNS" => [
 		"models" => "models",
-		"controllers" => "controllers",
-		"rest" => ""
+		"controllers" => "controllers"
 	]
 );

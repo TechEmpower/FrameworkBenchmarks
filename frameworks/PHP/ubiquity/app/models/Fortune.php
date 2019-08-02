@@ -13,38 +13,37 @@ class Fortune{
 	/**
 	 * @column("name"=>"message","nullable"=>false,"dbType"=>"varchar(100)")
 	 **/
-    public $message;
-    
+	public $message;
 
-    /**
-     * @param integer $id
-     * @return Fortune
-     */
-    public function setId($id){
-        $this->id = $id;
-        return $this;
-    }
+	/**
+	 * @param integer $id
+	 * @return Fortune
+	 */
+	public function setId($id){
+		$this->id = $id;
+		return $this;
+	}
 
-    /**
-     * @return integer
-     */
-    public function getId(){
-        return $this->id;
-    }
+	/**
+	 * @return integer
+	 */
+	public function getId(){
+		return $this->id;
+	}
 
-    /**
-     * @param string $message
-     * @return Fortune
-     */
-    public function setMessage($message){
-        $this->message = $message;
-        return $this;
-    }
+	/**
+	 * @param string $message
+	 * @return Fortune
+	 */
+	public function setMessage($message){
+		$this->message = $message;
+		return $this;
+	}
 
-    /**
-     * @return string
-     */
-    public function getMessage(){
-        return $this->message;
-    }
+	/**
+	 * @return string
+	 */
+	public function getMessage(){
+		return $this->message;
+	}
 }

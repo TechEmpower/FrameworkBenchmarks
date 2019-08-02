@@ -1,19 +1,16 @@
 <?php
 namespace controllers;
 
-use Ubiquity\controllers\Controller;
 use Ubiquity\orm\DAO;
 use models\World;
-use Ubiquity\controllers\Startup;
-use Ubiquity\utils\http\UResponse;
 
 /**
  * Bench controller.
  */
-class Db extends Controller {
+class Db extends \Ubiquity\controllers\Controller {
 
 	public function initialize() {
-		UResponse::setContentType('application/json');
+		\Ubiquity\utils\http\UResponse::setContentType('application/json');
 		DAO::setModelDatabase(World::class);
 	}
 	
