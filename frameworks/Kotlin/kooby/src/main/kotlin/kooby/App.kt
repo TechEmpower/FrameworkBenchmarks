@@ -8,7 +8,7 @@ import io.jooby.MediaType.JSON
 import io.jooby.hikari.HikariModule
 import io.jooby.json.JacksonModule
 import io.jooby.require
-import io.jooby.rocker.Rockerby
+import io.jooby.rocker.RockerModule
 import io.jooby.runApp
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
@@ -35,6 +35,7 @@ fun main(args: Array<String>) {
     /** Server options (netty only): */
     serverOptions {
       singleLoop = true
+      directBuffers = true
     }
 
     /** JSON: */
@@ -46,7 +47,7 @@ fun main(args: Array<String>) {
     val ds = require(DataSource::class)
 
     /** Template engine: */
-    install(Rockerby())
+    install(RockerModule())
 
     get("/plaintext") {
       ctx.send(MESSAGE_BYTES)
