@@ -21,7 +21,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ACCC4CF8
 
 # install postgresql on database machine
 RUN apt-get -y update > /dev/null
-RUN apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql > /dev/null
+RUN apt-get -y --allow-unauthenticated install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql > /dev/null
 
 ENV PG_VERSION 11
 
