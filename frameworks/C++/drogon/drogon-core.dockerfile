@@ -7,9 +7,8 @@ RUN  apt update -yqq && \
 	 apt install -yqq sudo curl wget cmake locales git \
      openssl libssl-dev \
      libjsoncpp-dev \
-     uuid-dev \
-     zlib1g-dev \
-	 postgresql-server-dev-all && \
+     uuid-dev libreadline-dev libbison-dev flex \
+     zlib1g-dev && \
      add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
 	 apt update -yqq && \
 	 apt install -yqq gcc-8 g++-8
@@ -27,19 +26,35 @@ ENV RANLIB=gcc-ranlib-8
 
 ENV IROOT=/install
 ENV DROGON_ROOT=$IROOT/drogon
+ENV PG_ROOT=$IROOT/postgres-batch_mode_ubuntu
 ENV TEST_PATH=/drogon_benchmark/build
+
+WORKDIR $IROOT
+
+RUN wget https://github.com/an-tao/postgres/archive/batch_mode_ubuntu.tar.gz
+RUN tar -xvzf batch_mode_ubuntu.tar.gz
+WORKDIR $PG_ROOT
+
+RUN ./configure --prefix=/usr CFLAGS='-O2 -pipe'
+RUN make && make install
+
 WORKDIR $IROOT
 
 RUN git clone https://github.com/an-tao/drogon
 
 WORKDIR $DROGON_ROOT
 
-RUN git checkout 135a2ebb6f63ee91ec1f11817b7bf68f1591ba43
+RUN git checkout 60ecbb945ece6b7afe289485c098349711810d78
+RUN git submodule update --init
+RUN mkdir build
 
-RUN ./build.sh
+WORKDIR $DROGON_ROOT/build
+
+RUN cmake -DCMAKE_BUILD_TYPE=release ..
+RUN make && make install
 
 WORKDIR $TEST_PATH
 
-RUN cmake ..
+RUN cmake -DCMAKE_BUILD_TYPE=release ..
 RUN make
 CMD ./drogon_benchmark config-core.json
