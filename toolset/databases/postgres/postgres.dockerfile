@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
 RUN apt-get update > /dev/null
-RUN apt-get install -yqq locales > /dev/null
+RUN apt-get install -yqq locales wget > /dev/null
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
@@ -17,11 +17,11 @@ ADD pgdg.list pgdg.list
 
 # prepare PostgreSQL APT repository
 RUN cp pgdg.list /etc/apt/sources.list.d/
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ACCC4CF8
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 
 # install postgresql on database machine
 RUN apt-get -y update > /dev/null
-RUN apt-get -y --allow-unauthenticated install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql > /dev/null
+RUN apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql > /dev/null
 
 ENV PG_VERSION 11
 
