@@ -2,82 +2,101 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerTrait;
+use App\Entity\Fortune;
+use App\Entity\World;
+use Exception;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Entity\Fortune;
-use App\Entity\World;
+use Symfony\Component\Routing\Annotation\Route;
 
-class BenchController extends Controller
+class BenchController extends AbstractController
 {
-    use ControllerTrait;
-
-    public function plaintextAction()
+    /**
+     * @Route("/plaintext")
+     */
+    public function plaintextAction(): Response
     {
-        return new Response("Hello, World!", 200, array('Content-Type' => 'text/plain'));
+        return new Response('Hello, World!', 200, ['Content-Type' => 'text/plain']);
     }
 
-    public function jsonAction()
+    /**
+     * @Route("/json")
+     */
+    public function jsonAction(): JsonResponse
     {
-        return new JsonResponse(array('message' => 'Hello, World!'));
+        return new JsonResponse(['message' => 'Hello, World!']);
     }
 
-    public function dbAction(Request $request)
+    /**
+     * @Route("/db")
+     * @throws Exception
+     */
+    public function dbAction(Request $request): JsonResponse
     {
         $queries = $request->query->getInt('queries', 1);
         $queries = min(max($queries, 1), 500);
 
         // possibility for enhancement is the use of SplFixedArray -> http://php.net/manual/de/class.splfixedarray.php
-        $worlds = array();
+        $worlds = [];
         $repo = $this->getDoctrine()->getRepository(World::class);
 
         for ($i = 0; $i < $queries; ++$i) {
-            $worlds[] = $repo->find(mt_rand(1, 10000));
+            $worlds[] = $repo->find(random_int(1, 10000));
         }
 
-        if ($queries == 1 && !$request->query->has('queries')) {
+        if ($queries === 1 && !$request->query->has('queries')) {
             $worlds = $worlds[0];
         }
 
         return new JsonResponse($worlds);
     }
 
-    public function dbRawAction(Request $request)
+    /**
+     * @Route("/db-raw")
+     * @throws Exception
+     */
+    public function dbRawAction(Request $request): JsonResponse
     {
         $queries = $request->query->getInt('queries', 1);
         $queries = min(max($queries, 1), 500);
 
         // possibility for enhancement is the use of SplFixedArray -> http://php.net/manual/de/class.splfixedarray.php
-        $worlds = array();
+        $worlds = [];
         $conn = $this->get('database_connection');
 
         for ($i = 0; $i < $queries; ++$i) {
-            $worlds[] = $conn->fetchAssoc('SELECT * FROM world WHERE id = ?', array(mt_rand(1, 10000)));
+            $worlds[] = $conn->fetchAssoc('SELECT * FROM world WHERE id = ?', [random_int(1, 10000)]);
         }
 
-        if ($queries == 1 && !$request->query->has('queries')) {
+        if ($queries === 1 && !$request->query->has('queries')) {
             $worlds = $worlds[0];
         }
 
         return new JsonResponse($worlds);
     }
 
-    public function updateAction(Request $request)
+    /**
+     * @Route("/update")
+     * @throws Exception
+     */
+    public function updateAction(Request $request): JsonResponse
     {
       $queries = $request->query->getInt('queries', 1);
       $queries = min(500, max(1, $queries));
 
-      $worlds = array();
+      $worlds = [];
       $em = $this->getDoctrine()->getManager();
       $repo = $this->getDoctrine()->getRepository(World::class);
 
       for ($i = 0; $i < $queries; ++$i) {
-        $world = $repo->find(mt_rand(1, 10000));
-        $randomNumber = mt_rand(1, 10000);
-        $world->setRandomNumber($randomNumber);
-        $worlds[] = $world;
+        $world = $repo->find(random_int(1, 10000));
+        if ($world) {
+            $randomNumber = random_int(1, 10000);
+            $world->setRandomNumber($randomNumber);
+            $worlds[] = $world;
+        }
       }
 
       $em->flush();
@@ -85,25 +104,32 @@ class BenchController extends Controller
       return new JsonResponse($worlds);
     }
 
-    public function updateRawAction(Request $request)
+    /**
+     * @Route("/update-raw")
+     * @throws Exception
+     */
+    public function updateRawAction(Request $request): JsonResponse
     {
       $queries = $request->query->getInt('queries', 1);
       $queries = min(500, max(1, $queries));
 
-      $worlds = array();
+      $worlds = [];
       $conn = $this->get('database_connection');
 
       for ($i = 0; $i < $queries; ++$i) {
-          $id = mt_rand(1, 10000);
-          $randomNumber = mt_rand(1, 10000);
-          $conn->executeUpdate('UPDATE world SET randomNumber=? WHERE id=?', array($randomNumber, $id));
-          $worlds[] = array('id' => $id, 'randomNumber' => $randomNumber);
+          $id = random_int(1, 10000);
+          $randomNumber = random_int(1, 10000);
+          $conn->executeUpdate('UPDATE world SET randomNumber=? WHERE id=?', [$randomNumber, $id]);
+          $worlds[] = ['id' => $id, 'randomNumber' => $randomNumber];
       }
 
       return new JsonResponse($worlds);
     }
 
-    public function fortunesAction()
+    /**
+     * @Route("/fortunes")
+     */
+    public function fortunesAction(): Response
     {
         $repo = $this->getDoctrine()->getRepository(Fortune::class);
         $fortunes = $repo->findAll();
@@ -114,11 +140,12 @@ class BenchController extends Controller
 
         $fortunes[] = $runtimeFortune;
 
-        usort($fortunes, function($left, $right) {
+        usort($fortunes, static function($left, $right) {
             return strcmp($left->message, $right->message);
         });
 
-        return $this->render("bench/fortunes.html.twig", [
+        return $this->render(
+            'bench/fortunes.html.twig', [
             'fortunes' => $fortunes
         ]);
     }

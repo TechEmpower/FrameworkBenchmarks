@@ -21,48 +21,26 @@ class Fortune
      */
     public $message;
 
-    /**
-     * Set id
-     *
-     * @param integer $id
-     * @return Fortune
-     */
-    public function setId($id)
+    public function setId(int $id): Fortune
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set message
-     *
-     * @param string $message
-     * @return Fortune
-     */
-    public function setMessage($message)
+    public function setMessage(string $message): Fortune
     {
         $this->message = $message;
 
         return $this;
     }
 
-    /**
-     * Get message
-     *
-     * @return string
-     */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
