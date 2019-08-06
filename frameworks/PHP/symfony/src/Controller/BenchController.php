@@ -16,7 +16,7 @@ class BenchController extends AbstractController
     /**
      * @Route("/plaintext")
      */
-    public function plaintextAction(): Response
+    public function plaintext(): Response
     {
         return new Response('Hello, World!', 200, ['Content-Type' => 'text/plain']);
     }
@@ -24,7 +24,7 @@ class BenchController extends AbstractController
     /**
      * @Route("/json")
      */
-    public function jsonAction(): JsonResponse
+    public function json(): JsonResponse
     {
         return new JsonResponse(['message' => 'Hello, World!']);
     }
@@ -33,7 +33,7 @@ class BenchController extends AbstractController
      * @Route("/db")
      * @throws Exception
      */
-    public function dbAction(Request $request): JsonResponse
+    public function db(Request $request): JsonResponse
     {
         $queries = $request->query->getInt('queries', 1);
         $queries = min(max($queries, 1), 500);
@@ -57,7 +57,7 @@ class BenchController extends AbstractController
      * @Route("/db-raw")
      * @throws Exception
      */
-    public function dbRawAction(Request $request): JsonResponse
+    public function dbRaw(Request $request): JsonResponse
     {
         $queries = $request->query->getInt('queries', 1);
         $queries = min(max($queries, 1), 500);
@@ -81,7 +81,7 @@ class BenchController extends AbstractController
      * @Route("/update")
      * @throws Exception
      */
-    public function updateAction(Request $request): JsonResponse
+    public function update(Request $request): JsonResponse
     {
       $queries = $request->query->getInt('queries', 1);
       $queries = min(500, max(1, $queries));
@@ -108,7 +108,7 @@ class BenchController extends AbstractController
      * @Route("/update-raw")
      * @throws Exception
      */
-    public function updateRawAction(Request $request): JsonResponse
+    public function updateRaw(Request $request): JsonResponse
     {
       $queries = $request->query->getInt('queries', 1);
       $queries = min(500, max(1, $queries));
@@ -129,14 +129,14 @@ class BenchController extends AbstractController
     /**
      * @Route("/fortunes")
      */
-    public function fortunesAction(): Response
+    public function fortunes(): Response
     {
         $repo = $this->getDoctrine()->getRepository(Fortune::class);
         $fortunes = $repo->findAll();
 
         $runtimeFortune = new Fortune();
-        $runtimeFortune->setId(0)
-            ->setMessage('Additional fortune added at request time.');
+        $runtimeFortune->setId(0);
+        $runtimeFortune->setMessage('Additional fortune added at request time.');
 
         $fortunes[] = $runtimeFortune;
 

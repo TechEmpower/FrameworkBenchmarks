@@ -21,11 +21,9 @@ class Fortune
      */
     public $message;
 
-    public function setId(int $id): Fortune
+    public function setId(int $id): void
     {
         $this->id = $id;
-
-        return $this;
     }
 
     public function getId(): int
@@ -33,11 +31,9 @@ class Fortune
         return $this->id;
     }
 
-    public function setMessage(string $message): Fortune
+    public function setMessage(string $message): void
     {
         $this->message = $message;
-
-        return $this;
     }
 
     public function getMessage(): string

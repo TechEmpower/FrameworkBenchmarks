@@ -21,11 +21,9 @@ class World
      */
     public $randomNumber;
 
-    public function setId(int $id): World
+    public function setId(int $id): void
     {
         $this->id = $id;
-
-        return $this;
     }
 
     public function getId(): int
@@ -33,11 +31,9 @@ class World
         return $this->id;
     }
 
-    public function setRandomNumber(int $randomNumber): World
+    public function setRandomNumber(int $randomNumber): void
     {
         $this->randomNumber = $randomNumber;
-
-        return $this;
     }
 
     public function getRandomNumber(): int
