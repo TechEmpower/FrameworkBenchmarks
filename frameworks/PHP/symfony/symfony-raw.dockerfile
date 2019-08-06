@@ -11,19 +11,14 @@ RUN apt-get install -yqq php7.3-intl php7.3-mbstring php7.3-opcache php7.3-xml >
 RUN apt-get install -yqq composer > /dev/null
 
 COPY deploy/conf/* /etc/php/7.3/fpm/
+RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/7.3/fpm/php-fpm.conf ; fi;
 
 ADD ./ /symfony
 WORKDIR /symfony
-
-RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/7.3/fpm/php-fpm.conf ; fi;
-
 RUN mkdir -m 777 -p /symfony/var/cache/{dev,prod} /symfony/var/log
-
 RUN composer install --classmap-authoritative --no-dev --quiet
-
-RUN composer dump-env prod
-
-RUN php bin/console cache:clear
+RUN composer dump-env prod --quiet
+RUN php bin/console cache:clear --quiet
 
 CMD service php7.3-fpm start && \
     nginx -c /symfony/deploy/nginx.conf -g "daemon off;"
