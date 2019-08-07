@@ -4,8 +4,9 @@ namespace controllers;
 use Ubiquity\orm\DAO;
 use models\Fortune;
 
-class Fortunes extends \Ubiquity\controllers\Controller {
+class SwooleFortunes extends \Ubiquity\controllers\Controller {
 
+	
 	public function initialize() {
 		if(!isset(\Ubiquity\controllers\Startup::$templateEngine)){
 			\Ubiquity\controllers\Startup::$templateEngine = new \Ubiquity\views\engine\micro\MicroTemplateEngine();
