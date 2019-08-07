@@ -3,14 +3,14 @@ namespace controllers;
 
 use Ubiquity\orm\DAO;
 use models\Fortune;
-use Ubiquity\controllers\Startup;
 
 class Fortunes extends \Ubiquity\controllers\Controller {
 
 	public function initialize() {
-		\Ubiquity\cache\CacheManager::startProd(Startup::$config);
-		Startup::$templateEngine = new \Ubiquity\views\engine\micro\MicroTemplateEngine();
-		DAO::setModelDatabase(Fortune::class);
+		if(!isset(\Ubiquity\controllers\Startup::$templateEngine)){
+			\Ubiquity\controllers\Startup::$templateEngine = new \Ubiquity\views\engine\micro\MicroTemplateEngine();
+			DAO::setModelDatabase(Fortune::class);
+		}
 	}
 
 	public function index() {
