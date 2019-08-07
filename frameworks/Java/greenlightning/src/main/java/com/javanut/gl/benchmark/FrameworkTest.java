@@ -15,7 +15,7 @@ import io.reactiverse.pgclient.PgPoolOptions;
 public class FrameworkTest implements GreenApp {
 
 	private final String payloadText;
-	private final byte[] payload;
+	final byte[] payload;
 
 	private int bindPort;
     private String host;
@@ -48,13 +48,15 @@ public class FrameworkTest implements GreenApp {
 	public static String connectionPassword = "postgres";
 	
 	//TODO: add utility to compute this based on need.
-	static final int c = 592; // to reach 16K simultaneous calls
+	static final int c = 148;//592; // to reach 16K simultaneous calls
 
-	private final long defaultRate = Long.parseLong(System.getProperty("xx.rate", "100000")); 
+	private final long defaultRate = Long.parseLong(System.getProperty("xx.rate", "200000")); //2.5K cycles per second
+	                                                                                          // at 512 requests is 1.28M/sec
+	
 	
 	static {
 		ServerSocketWriterStage.BASE_ADJUST = Float.parseFloat(System.getProperty("xx.ratio", "1"));
-		ServerSocketWriterStage.HARD_LIMIT_NS = Long.parseLong(System.getProperty("xx.limitns", "100000"));		
+		ServerSocketWriterStage.HARD_LIMIT_NS = Long.parseLong(System.getProperty("xx.limitns", "200000"));		
 	}
 	
     public FrameworkTest() {
@@ -67,7 +69,7 @@ public class FrameworkTest implements GreenApp {
     	this(System.getProperty("host","0.0.0.0"), 
     		 Integer.parseInt(System.getProperty("port","8080")),    	//default port for test 
     		 c,         //pipes per track    			 
-    		 1<<10,     // default total size of network buffer used by blocks  
+    		 1<<16,     // default total size of network buffer used by blocks  
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
     		 "hello_world",
@@ -106,7 +108,7 @@ public class FrameworkTest implements GreenApp {
     	this.pipelineBits = 15;//max concurrent in flight database requests 1<<pipelineBits
     	            
     	this.dbCallMaxResponseCount = c;
-    	this.jsonMaxResponseCount = c*16;
+    	this.jsonMaxResponseCount = c*16*4;
     	
     	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
     	this.jsonMaxResponseSize = 1<<8;
@@ -187,7 +189,7 @@ public class FrameworkTest implements GreenApp {
     			 .disableEPoll() //provides advantage in JSON test.... 
  						 
     			 .setMaxRequestSize(maxRequestSize)
-    			 .setMaxQueueIn(c*16)
+    			 .setMaxQueueIn(c*16*4)
     	
     			 .setMinimumInputPipeMemory(minMemoryOfInputPipes)
     			 .setMaxQueueOut(maxQueueOut)
