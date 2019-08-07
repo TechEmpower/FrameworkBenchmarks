@@ -6,7 +6,7 @@ import io.jooby.Jooby;
 import io.jooby.ServerOptions;
 import io.jooby.hikari.HikariModule;
 import io.jooby.json.JacksonModule;
-import io.jooby.rocker.Rockerby;
+import io.jooby.rocker.RockerModule;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
@@ -40,7 +40,10 @@ public class App extends Jooby {
 
   {
     /** Server options (netty only): */
-    setServerOptions(new ServerOptions().setSingleLoop(true));
+    setServerOptions(new ServerOptions()
+        .setSingleLoop(true)
+        .setDirectBuffers(true)
+    );
 
     /** JSON: */
     install(new JacksonModule());
@@ -51,7 +54,7 @@ public class App extends Jooby {
     DataSource ds = require(DataSource.class);
 
     /** Template engine: */
-    install(new Rockerby());
+    install(new RockerModule());
 
     get("/plaintext", ctx ->
         ctx.send(MESSAGE_BYTES)

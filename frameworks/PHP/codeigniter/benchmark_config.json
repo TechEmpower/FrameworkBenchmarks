@@ -3,6 +3,7 @@
   "tests": [{
     "default": {
       "json_url": "/index.php/bench/json",
+      "plaintext_url": "/index.php/bench/plaintext",
       "db_url": "/index.php/bench/db",
       "query_url": "/index.php/bench/dbquery/",
       "fortune_url": "/index.php/bench/fortunes",
@@ -14,7 +15,7 @@
       "language": "PHP",
       "flavor": "PHP7",
       "orm": "Raw",
-      "platform": "None",
+      "platform": "FPM/FastCGI",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
