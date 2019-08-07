@@ -1,21 +1,12 @@
 <?php
 namespace controllers;
 
-use Ubiquity\orm\DAO;
 use models\Fortune;
 
 class SwooleFortunes extends \Ubiquity\controllers\Controller {
 
-	
-	public function initialize() {
-		if(!isset(\Ubiquity\controllers\Startup::$templateEngine)){
-			\Ubiquity\controllers\Startup::$templateEngine = new \Ubiquity\views\engine\micro\MicroTemplateEngine();
-			DAO::setModelDatabase(Fortune::class);
-		}
-	}
-
 	public function index() {
-		$fortunes = DAO::getAll(Fortune::class, '', false);
+		$fortunes = \Ubiquity\orm\DAO::getAll(Fortune::class, '', false);
 		$fortunes[] = (new Fortune())->setId(0)->setMessage('Additional fortune added at request time.');
 		\usort($fortunes, function ($left, $right) {
 			return $left->message <=> $right->message;

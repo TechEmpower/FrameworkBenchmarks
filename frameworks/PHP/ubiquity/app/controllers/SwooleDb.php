@@ -11,7 +11,6 @@ class SwooleDb extends \Ubiquity\controllers\Controller {
 
 	public function initialize() {
 		\Ubiquity\utils\http\UResponse::setContentType('application/json');
-		DAO::setModelDatabase(World::class);
 	}
 	
 	public function index() {
