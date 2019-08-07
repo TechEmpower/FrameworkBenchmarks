@@ -20,7 +20,6 @@ class DbRawController
 
     /**
      * @Route("/raw/db")
-     * @throws
      */
     public function db(): JsonResponse
     {
@@ -33,7 +32,6 @@ class DbRawController
 
     /**
      * @Route("/raw/queries")
-     * @throws
      */
     public function queries(Request $request): JsonResponse
     {
@@ -54,7 +52,6 @@ class DbRawController
 
     /**
      * @Route("/raw/updates")
-     * @throws
      */
     public function updates(Request $request): JsonResponse
     {

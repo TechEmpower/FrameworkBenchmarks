@@ -23,7 +23,6 @@ class FortunesController
 
     /**
      * @Route("/fortunes")
-     * @throws
      */
     public function fortunes(): Response
     {

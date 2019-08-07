@@ -23,7 +23,6 @@ class DbController
 
     /**
      * @Route("/db")
-     * @throws
      */
     public function db(): JsonResponse
     {
@@ -31,9 +30,9 @@ class DbController
 
         return new JsonResponse($world);
     }
+
     /**
      * @Route("/queries")
-     * @throws
      */
     public function queries(Request $request): JsonResponse
     {
@@ -52,7 +51,6 @@ class DbController
 
     /**
      * @Route("/updates")
-     * @throws
      */
     public function update(Request $request): JsonResponse
     {
