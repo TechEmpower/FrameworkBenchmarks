@@ -1,4 +1,11 @@
-FROM ubuntu:16.04
+FROM buildpack-deps:bionic
+
+ADD create8.sql create.sql
+ADD my.cnf my.cnf
+ADD mysql.list mysql.list
+
+RUN cp mysql.list /etc/apt/sources.list.d/
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8C718D3B5072E1F5
 
 RUN apt-get update > /dev/null
 RUN apt-get install -yqq locales > /dev/null
@@ -8,13 +15,8 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-ADD create.sql create.sql
-ADD my.cnf my.cnf
-ADD mysql.list mysql.list
-
-RUN cp mysql.list /etc/apt/sources.list.d/
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8C718D3B5072E1F5
-RUN apt-get update > /dev/null
+# https://bugs.mysql.com/bug.php?id=90695
+RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-server mysql-server/lowercase-table-names select Enabled\""]
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-community-server mysql-community-server/data-dir select 'Y'\""]
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-community-server mysql-community-server/root-pass password secret\""]
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-community-server mysql-community-server/re-root-pass password secret\""]
@@ -34,7 +36,7 @@ RUN cp -R -p /var/log/mysql /ssd/log
 # that relies on the mysql server running will explicitly start the server and
 # perform the work required.
 RUN chown -R mysql:mysql /var/lib/mysql /var/log/mysql /var/run/mysqld /ssd && \
-    service mysql start & \
+    mysqld & \
     until mysql -uroot -psecret -e "exit"; do sleep 1; done && \
     mysqladmin -uroot -psecret flush-hosts && \
     mysql -uroot -psecret < create.sql
