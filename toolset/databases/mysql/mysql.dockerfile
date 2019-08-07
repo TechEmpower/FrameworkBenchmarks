@@ -1,6 +1,6 @@
 FROM buildpack-deps:bionic
 
-ADD create8.sql create.sql
+ADD create.sql create.sql
 ADD my.cnf my.cnf
 ADD mysql.list mysql.list
 
