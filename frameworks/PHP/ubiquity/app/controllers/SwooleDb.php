@@ -7,7 +7,7 @@ use models\World;
 /**
  * Bench controller.
  */
-class Db extends \Ubiquity\controllers\Controller {
+class SwooleDb extends \Ubiquity\controllers\Controller {
 
 	public function initialize() {
 		\Ubiquity\utils\http\UResponse::setContentType('application/json');
