@@ -10,4 +10,4 @@ WORKDIR /php
 
 RUN unitd --control unix:/var/run/control.unit.sock && \
     curl -X PUT --data-binary @/php/deploy/nginx-unit.json --unix-socket \
-        /var/run/control.unit.sock http://localhost/config 
+        /var/run/control.unit.sock http://localhost/config
