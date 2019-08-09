@@ -12,5 +12,5 @@ framework:
 
     #esi: true
     #fragments: true
-    php_errors:
-        log: true
+    #php_errors:
+    #    log: true

@@ -5,8 +5,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq nginx git unzip php7.3 php7.3-common php7.3-cli php7.3-fpm php7.3-mysql > /dev/null
-RUN apt-get install -yqq php7.3-curl php7.3-intl php7.3-mbstring php7.3-opcache php7.3-xml > /dev/null
+    apt-get install -yqq nginx git unzip php7.3 php7.3-common php7.3-cli php7.3-fpm php7.3-mysql  > /dev/null
+RUN apt-get install -yqq php7.3-mbstring php7.3-xml  > /dev/null
 
 RUN apt-get install -yqq composer > /dev/null
 

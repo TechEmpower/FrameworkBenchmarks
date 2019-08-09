@@ -21,7 +21,9 @@ services:
     # as action arguments even if you don't extend any base controller class
     App\Controller\:
         resource: '../src/Controller'
-        tags: ['controller.service_arguments']
+        # turn off ControllerArgumentLocators, must make controllers public
+        # tags: ['controller.service_arguments']
+        public: true
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

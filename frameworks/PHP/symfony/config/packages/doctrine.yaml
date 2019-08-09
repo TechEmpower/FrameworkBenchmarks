@@ -10,7 +10,7 @@ doctrine:
 
         url: '%env(resolve:DATABASE_URL)%'
     orm:
-        auto_generate_proxy_classes: '%kernel.debug%'
+        auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.default
         auto_mapping: true
         mappings:
