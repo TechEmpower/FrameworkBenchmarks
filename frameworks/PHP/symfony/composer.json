@@ -37,6 +37,7 @@
         "paragonie/random_compat": "2.*",
         "symfony/polyfill-ctype": "*",
         "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-intl-idn": "*",
         "symfony/polyfill-mbstring": "*",
         "symfony/polyfill-php73": "*",
         "symfony/polyfill-php72": "*",
