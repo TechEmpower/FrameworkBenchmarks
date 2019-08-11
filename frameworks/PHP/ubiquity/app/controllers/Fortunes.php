@@ -1,23 +1,22 @@
 <?php
 namespace controllers;
 
-use Ubiquity\controllers\Controller;
-use Ubiquity\controllers\Startup;
 use Ubiquity\orm\DAO;
-use Ubiquity\views\engine\micro\MicroTemplateEngine;
 use models\Fortune;
+use Ubiquity\controllers\Startup;
 
-class Fortunes extends Controller {
+class Fortunes extends \Ubiquity\controllers\Controller {
 
 	public function initialize() {
-		Startup::$templateEngine = new MicroTemplateEngine();
+		\Ubiquity\cache\CacheManager::startProd(Startup::$config);
+		Startup::$templateEngine = new \Ubiquity\views\engine\micro\MicroTemplateEngine();
 		DAO::setModelDatabase(Fortune::class);
 	}
 
 	public function index() {
 		$fortunes = DAO::getAll(Fortune::class, '', false);
 		$fortunes[] = (new Fortune())->setId(0)->setMessage('Additional fortune added at request time.');
-		usort($fortunes, function ($left, $right) {
+		\usort($fortunes, function ($left, $right) {
 			return $left->message <=> $right->message;
 		});
 		$this->loadView('Fortunes/index.php', [
