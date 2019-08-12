@@ -5,8 +5,8 @@
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
-      "update_url": "/update?queries=",
-      "query_url": "/db?queries=",
+      "update_url": "/updates?queries=",
+      "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
@@ -25,9 +25,9 @@
       "versus": "php"
     },
     "raw": {
-      "db_url": "/db-raw",
-      "update_url": "/update-raw?queries=",
-      "query_url": "/db-raw?queries=",
+      "db_url": "/raw/db",
+      "update_url": "/raw/updates?queries=",
+      "query_url": "/raw/queries?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",

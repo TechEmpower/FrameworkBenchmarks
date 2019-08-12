@@ -7,12 +7,10 @@ use models\World;
 /**
  * Bench controller.
  */
-class Db extends \Ubiquity\controllers\Controller {
+class SwooleDb extends \Ubiquity\controllers\Controller {
 
 	public function initialize() {
-		\header('Content-type: application/json');
-		\Ubiquity\cache\CacheManager::startProd(\Ubiquity\controllers\Startup::$config);
-		DAO::setModelDatabase(World::class);
+		\Ubiquity\utils\http\UResponse::setContentType('application/json');
 	}
 	
 	public function index() {

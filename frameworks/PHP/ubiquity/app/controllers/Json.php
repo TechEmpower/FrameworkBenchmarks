@@ -1,16 +1,13 @@
 <?php
 namespace controllers;
 
-use Ubiquity\controllers\Controller;
-use Ubiquity\utils\http\UResponse;
-
 /**
  * Json controller.
  */
-class Json extends Controller {
+class Json extends \Ubiquity\controllers\Controller {
 
 	public function initialize() {
-		UResponse::setContentType('application/json');
+		\Ubiquity\utils\http\UResponse::setContentType('application/json');
 	}
 
 	public function index() {
