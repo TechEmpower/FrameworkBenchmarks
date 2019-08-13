@@ -1,0 +1,30 @@
+{
+    "framework": "hyperf",
+    "tests": [
+        {
+            "default": {
+                "json_url": "/json",
+                "db_url": "/db",
+                "query_url": "/queries/",
+                "fortune_url": "/fortunes",
+                "update_url": "/updates/",
+                "plaintext_url": "/plaintext",
+                "port": 9501,
+                "approach": "Realistic",
+                "classification": "Fullstack",
+                "database": "MySQL",
+                "framework": "Hyperf",
+                "language": "PHP",
+                "flavor": "None",
+                "orm": "Full",
+                "platform": "swoole",
+                "webserver": "swoole",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "Hyperf",
+                "notes": "",
+                "versus": "swoole"
+            }
+        }
+    ]
+}
