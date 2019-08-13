@@ -1,4 +1,4 @@
-FROM haskell:8.2.1
+FROM haskell:8.6.3
 
 RUN apt update -yqq && apt install -yqq xz-utils make
 RUN apt install -yqq libpq-dev
