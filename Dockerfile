@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM buildpack-deps:bionic
 
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
     echo "deb-src http://archive.ubuntu.com/ubuntu xenial main restricted" >/etc/apt/sources.list && \
@@ -21,19 +21,21 @@ RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
 
 # One -q produces output suitable for logging (mostly hides
 # progress indicators)
-RUN apt update -yqq
+RUN apt-get -yqq update
 
 # WARNING: DONT PUT A SPACE AFTER ANY BACKSLASH OR APT WILL BREAK
-RUN apt -qqy install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+RUN apt-get -yqq install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   git-core \
   cloc dstat                    `# Collect resource usage statistics` \
   python-dev \
   python-pip \
   software-properties-common \
-  libmysqlclient-dev            `# Needed for MySQL-python` \
-  libpq-dev                     `# Needed for psycopg2`
+  libmysqlclient-dev            `# Needed for MySQL-python`
 
-RUN pip install colorama==0.3.1 requests MySQL-python psycopg2-binary pymongo docker==3.5.0 psutil
+RUN pip install colorama==0.3.1 requests MySQL-python psycopg2-binary pymongo docker==4.0.2 psutil
+
+# Fix for docker-py trying to import one package from the wrong location
+RUN cp -r /usr/local/lib/python2.7/dist-packages/backports/ssl_match_hostname/ /usr/lib/python2.7/dist-packages/backports
 
 ENV PYTHONPATH /FrameworkBenchmarks
 ENV FWROOT /FrameworkBenchmarks
