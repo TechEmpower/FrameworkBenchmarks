@@ -462,7 +462,7 @@ class Results:
         with open(stats_file) as stats:
             # dstat doesn't output a completely compliant CSV file - we need to strip the header
             for _ in range(4):
-                print(stats.next())
+                stats.next()
             stats_reader = csv.reader(stats)
             main_header = stats_reader.next()
             sub_header = stats_reader.next()
