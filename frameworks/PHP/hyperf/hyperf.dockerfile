@@ -20,7 +20,6 @@ ENV TIMEZONE=${timezone:-"America/Los_Angeles"} \
 
 # update
 RUN set -ex \
-    && apk update \
     # install composer
     && cd /tmp \
     && wget https://github.com/composer/composer/releases/download/${COMPOSER_VERSION}/composer.phar \
