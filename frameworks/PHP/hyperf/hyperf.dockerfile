@@ -14,7 +14,7 @@ LABEL maintainer="Hyperf Developers <group@hyperf.io>" version="1.0" license="MI
 # --build-arg timezone=Asia/Shanghai
 ARG timezone
 
-ENV TIMEZONE=${timezone:-"Asia/Shanghai"} \
+ENV TIMEZONE=${timezone:-"America/Los_Angeles"} \
     COMPOSER_VERSION=1.8.6 \
     APP_ENV=prod
 
