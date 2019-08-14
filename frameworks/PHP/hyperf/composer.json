@@ -29,7 +29,8 @@
         "hyperf/paginator": "~1.0.0",
         "hyperf/pool": "~1.0.0",
         "hyperf/utils": "~1.0.0",
-        "hyperf/view": "~1.0.0"
+        "hyperf/view": "~1.0.0",
+        "duncan3dc/blade": "^4.6"
     },
     "require-dev": {
         "swoft/swoole-ide-helper": "^4.2",

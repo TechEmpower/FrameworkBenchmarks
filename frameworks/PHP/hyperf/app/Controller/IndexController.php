@@ -14,13 +14,10 @@ namespace App\Controller;
 
 use App\Model\Fortune;
 use App\Model\World;
-use Hyperf\HttpMessage\Stream\SwooleStream;
+use App\Render;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
-use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
-use Hyperf\Utils\Context;
-use Hyperf\View\RenderInterface;
 
 /**
  * @Controller
@@ -61,7 +58,7 @@ class IndexController
     /**
      * @GetMapping(path="/fortunes")
      */
-    public function fortunes(RenderInterface $render)
+    public function fortunes(Render $render)
     {
         $rows = Fortune::all();
 
