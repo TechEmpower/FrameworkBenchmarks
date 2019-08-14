@@ -11,4 +11,4 @@ The tests were run with:
 ## Test URLs
 ### Plaintext Test
 
-http://localhost:8080/
+http://localhost:8080/plaintext
