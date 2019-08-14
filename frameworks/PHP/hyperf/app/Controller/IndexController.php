@@ -20,6 +20,7 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 use Hyperf\Utils\Context;
+use Hyperf\View\RenderInterface;
 
 /**
  * @Controller
@@ -51,7 +52,7 @@ class IndexController
 
         $rows = [];
         while ($queries--) {
-            $rows[] = World::find(random_int(1, 10000))->toArray();
+            $rows[] = World::find(random_int(1, 10000));
         }
 
         return $response->json($rows);
@@ -60,7 +61,7 @@ class IndexController
     /**
      * @GetMapping(path="/fortunes")
      */
-    public function fortunes(ResponseInterface $response)
+    public function fortunes(RenderInterface $render)
     {
         $rows = Fortune::all();
 
@@ -71,15 +72,7 @@ class IndexController
         $rows->add($insert);
         $rows = $rows->sortBy('message');
 
-        $html = '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>';
-        /** @var Fortune $fortune */
-        foreach ($rows as $fortune) {
-            $message = htmlspecialchars((string)$fortune->message, ENT_QUOTES, 'UTF-8');
-            $html .= "<tr><td>{$fortune->id}</td><td>{$message}</td></tr>";
-        }
-
-        $html .= '</table></body></html>';
-        return $response->withAddedHeader('content-type', 'text/html; charset=utf-8')->withStatus(200)->withBody(new SwooleStream($html));
+        return $render->render('fortunes', ['rows' => $rows]);
     }
 
     /**
@@ -96,7 +89,7 @@ class IndexController
             $row->randomNumber = random_int(1, 10000);
             $row->save();
 
-            $rows[] = $row->toArray();
+            $rows[] = $row;
         }
 
         return $response->json($rows);
