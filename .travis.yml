@@ -27,6 +27,7 @@ env:
     - "TESTLANG=Crystal"
     - "TESTLANG=D"
     - "TESTLANG=Dart"
+    - "TESTLANG=Dylan"
     - "TESTLANG=Elixir"
     - "TESTLANG=Erlang"
     - "TESTLANG=FSharp"
