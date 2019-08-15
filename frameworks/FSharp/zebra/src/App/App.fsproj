@@ -13,6 +13,7 @@
     <PackageReference Include="Dapper" Version="1.60.6" />
     <PackageReference Include="Npgsql" Version="4.0.9" />
     <PackageReference Include="Utf8Json" Version="1.3.7" />
+    <PackageReference Update="FSharp.Core" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,10 +28,6 @@
     <Compile Include="Composition.fs" />
     <Compile Include="Middleware.fs" />
     <Compile Include="Program.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="4.7.0" />
   </ItemGroup>
 
 </Project>
