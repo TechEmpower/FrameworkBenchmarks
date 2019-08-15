@@ -108,7 +108,7 @@ let application : HttpHandler =
 
     routes' [
         "/plaintext", text' "Hello, World!"
-        "/json", json' { JsonStructMessage.message = "Hello, World!" }
+        "/json", json' struct {| message = "Hello, World!" |}
         "/fortunes", fortunes'
     ]
 

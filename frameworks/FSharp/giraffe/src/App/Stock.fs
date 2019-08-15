@@ -34,6 +34,6 @@ let application : HttpHandler =
 
     choose [
         route "/plaintext" >=> text "Hello, World!" 
-        route "/json" >=> json { JsonMessage.message = "Hello, World!" }
+        route "/json" >=> json {| message = "Hello, World!" |}
         route "/fortunes" >=> fortunes
     ]
