@@ -11,6 +11,7 @@ open System.IO
 
 let private DefaultCapacity = 1386
 let private MaxBuilderSize = DefaultCapacity * 3
+let private BufferSize = 27
 
 type MemoryStreamCache = 
     
@@ -43,13 +44,12 @@ let application : HttpHandler =
     let inline contentLength x = new Nullable<int64> ( int64 x )
 
     let json' data : HttpHandler =
-        let bytes = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(data)
         fun _ ctx -> 
-            ctx.Response.ContentLength <- contentLength bytes.Length
+            ctx.Response.ContentLength <- contentLength BufferSize
             ctx.Response.ContentType <- "application/json"
             ctx.Response.StatusCode <- 200
             task {
-                do! ctx.Response.Body.WriteAsync(bytes, 0, bytes.Length)
+                do! System.Text.Json.JsonSerializer.SerializeAsync(ctx.Response.Body, data)
                 return Some ctx
             }
 
