@@ -43,7 +43,7 @@ let application : HttpHandler =
     let inline contentLength x = new Nullable<int64> ( int64 x )
 
     let json' data : HttpHandler =
-        let bytes = Utf8Json.JsonSerializer.Serialize(data)
+        let bytes = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(data)
         fun _ ctx -> 
             ctx.Response.ContentLength <- contentLength bytes.Length
             ctx.Response.ContentType <- "application/json"
