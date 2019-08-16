@@ -6,7 +6,7 @@ COPY src src
 COPY nginx.conf nginx.conf
 COPY run.sh run.sh
 
-RUN xbuild src/Benchmarks.build.proj /t:Clean
-RUN xbuild src/Benchmarks.build.proj /t:Build
+RUN msbuild src/Benchmarks.build.proj /t:Clean
+RUN msbuild src/Benchmarks.build.proj /t:Build
 
 CMD bash run.sh

@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Benchmarks.AspNet</RootNamespace>
     <AssemblyName>Benchmarks.AspNet</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -47,10 +47,6 @@
       <Private>True</Private>
       <HintPath>$(SolutionDir)\packages\Microsoft.AspNet.Mvc.5.2.2\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Razor">
-      <Private>True</Private>
-      <HintPath>$(SolutionDir)\packages\Microsoft.AspNet.Razor.3.2.2\lib\net45\System.Web.Razor.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.WebPages">
       <Private>True</Private>
       <HintPath>$(SolutionDir)\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.dll</HintPath>
@@ -65,22 +61,6 @@
     <Reference Include="ServiceStack.Text">
       <HintPath>$(SolutionDir)\packages\ServiceStack.Text.4.0.34\lib\net40\ServiceStack.Text.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework">
-      <Private>True</Private>
-      <HintPath>$(SolutionDir)\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework">
-      <Private>True</Private>
-      <HintPath>$(SolutionDir)\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql">
-      <Private>True</Private>
-      <HintPath>$(SolutionDir)\packages\MySql.Data.6.9.5\lib\net45\MySql.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql">
-      <Private>True</Private>
-      <HintPath>$(SolutionDir)\packages\MySql.Data.Entity.6.9.5\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
-    </Reference>
     <Reference Include="Npgsql">
       <Private>True</Private>
       <HintPath>$(SolutionDir)\packages\Npgsql.2.2.3\lib\net45\Npgsql.dll</HintPath>
@@ -89,10 +69,6 @@
       <Private>True</Private>
       <HintPath>$(SolutionDir)\packages\Npgsql.EntityFramework.2.2.3\lib\net45\Npgsql.EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Npgsql">
-      <Private>True</Private>
-      <HintPath>$(SolutionDir)\packages\Npgsql.2.2.3\lib\net45\Mono.Security.dll</HintPath>
-    </Reference>
     <Reference Include="MongoDB">
       <Private>True</Private>
       <HintPath>$(SolutionDir)\packages\mongocsharpdriver.1.9.2\lib\net35\MongoDB.Bson.dll</HintPath>
@@ -100,6 +76,41 @@
     <Reference Include="MongoDB">
       <Private>True</Private>
       <HintPath>$(SolutionDir)\packages\mongocsharpdriver.1.9.2\lib\net35\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor">
+      <Private>True</Private>
+      <HintPath>$(SolutionDir)\packages\Microsoft.AspNet.Razor.3.2.2\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Renci.SshNet">
+      <HintPath>packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>packages\BouncyCastle.1.8.3.1\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="Google.Protobuf">
+      <HintPath>packages\Google.Protobuf.3.6.1\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data.EntityFramework">
+      <HintPath>packages\MySql.Data.EntityFramework.8.0.17\lib\net452\MySql.Data.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml" />
+    <Reference Include="EntityFramework">
+      <HintPath>packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>packages\MySql.Data.8.0.17\lib\net452\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <Private>False</Private>
+      <HintPath>$(SolutionDir)\packages\Npgsql.2.2.3\lib\net45\Mono.Security.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
