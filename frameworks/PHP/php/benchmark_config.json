@@ -44,6 +44,8 @@
       "versus": "php"
     },
     "raw7-tcp": {
+      "json_url": "/json.php",
+      "plaintext_url": "/plaintext.php",
       "db_url": "/dbraw.php",
       "query_url": "/dbquery.php?queries=",
       "fortune_url": "/fortune.php",
