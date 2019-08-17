@@ -22,16 +22,14 @@
         </Assembly>
         <Assembly Name="Microsoft.AspNetCore.Http">
             <Type Name="Microsoft.AspNetCore.Http.HttpContextFactory" Dynamic="Required All" />
+            <Type Name="Microsoft.AspNetCore.Http.DefaultHttpContextFactory" Dynamic="Required All" />
         </Assembly>
         <Assembly Name="Microsoft.AspNetCore.HostFiltering">
             <Type Name="Microsoft.AspNetCore.HostFiltering.HostFilteringMiddleware" Dynamic="Required All" />
         </Assembly>
-        <Assembly Name="Microsoft.AspNetCore.Hosting" Dynamic="Required All">
-            <Type Name="Microsoft.AspNetCore.Hosting.Internal.ApplicationLifetime" Dynamic="Required All" />
-            <Type Name="Microsoft.AspNetCore.Hosting.Internal.StartupLoader+ConfigureServicesDelegateBuilder`1[[System.Object,System.Private.CoreLib]]" Dynamic="Required All" />
-        </Assembly>
+        <Assembly Name="Microsoft.AspNetCore.Hosting" Dynamic="Required All" />
         <Assembly Name="Microsoft.Extensions.Logging.Abstractions">
-            <Type Name="Microsoft.Extensions.Logging.Logger`1[[Microsoft.AspNetCore.Hosting.Internal.WebHost,Microsoft.AspNetCore.Hosting]]" Dynamic="Required All" />
+
         </Assembly>
         <Assembly Name="Microsoft.Extensions.Logging">
             <Type Name="Microsoft.Extensions.Logging.LoggerFactory" Dynamic="Required All" />
@@ -44,8 +42,8 @@
         <Assembly Name="Microsoft.Extensions.Configuration.Json">
             <Type Name="Microsoft.Extensions.Configuration.Json.JsonConfigurationSource" Dynamic="Required All" />
         </Assembly>
-        <Assembly Name="RedHat.AspNetCore.Server.Kestrel.Transport.Linux">
+        <!--Assembly Name="RedHat.AspNetCore.Server.Kestrel.Transport.Linux">
             <Type Name="RedHat.AspNetCore.Server.Kestrel.Transport.Linux.LinuxTransportFactory" Dynamic="Required All" />
-        </Assembly>
+        </Assembly-->
     </Application>
 </Directives>
