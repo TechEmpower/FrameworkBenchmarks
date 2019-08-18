@@ -1,27 +1,3 @@
-_plaintext:
-    path:  /plaintext
-    controller: App\Controller\BenchController::plaintextAction
-
-_json:
-    path:  /json
-    controller: App\Controller\BenchController::jsonAction
-
-_db:
-    path:  /db
-    controller: App\Controller\BenchController::dbAction
-
-_dbRaw:
-    path:  /db-raw
-    controller: App\Controller\BenchController::dbRawAction
-
-_update:
-    path:  /update
-    controller: App\Controller\BenchController::updateAction
-
-_updateRaw:
-    path:  /update-raw
-    controller: App\Controller\BenchController::updateRawAction
-
-_fortunes:
-    path:  /fortunes
-    controller: App\Controller\BenchController::fortunesAction
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index

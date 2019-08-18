@@ -4,6 +4,8 @@
 using System;
 using System.Buffers.Text;
 using System.IO.Pipelines;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 
@@ -26,6 +28,8 @@ namespace PlatformBenchmarks
 
         private readonly static AsciiString _plainTextBody = "Hello, World!";
 
+        private static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions();
+        
         private readonly static AsciiString _fortunesTableStart = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
         private readonly static AsciiString _fortunesRowStart = "<tr><td>";
         private readonly static AsciiString _fortunesColumn = "</td><td>";

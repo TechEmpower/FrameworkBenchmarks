@@ -7,10 +7,31 @@ import (
 	"github.com/tidwall/sjson"
 )
 
+var worldJSONStr = []byte(`{"id": 0, "randomNumber": 0}`)
+
 //easyjson:json
 type World struct {
 	ID           int `json:"id"`
 	RandomNumber int `json:"randomnumber"`
+}
+
+// WorldPool ...
+var WorldPool = sync.Pool{
+	New: func() interface{} {
+		return new(World)
+	},
+}
+
+// AcquireWorld returns new world from pool
+func AcquireWorld() *World {
+	return WorldPool.Get().(*World)
+}
+
+// ReleaseWorld resets the world and return it to the pool
+func ReleaseWorld(w *World) {
+	w.ID = 0
+	w.RandomNumber = 0
+	WorldPool.Put(w)
 }
 
 // MarshalJSONObject encodes the world as JSON
@@ -27,12 +48,30 @@ func (w *World) IsNil() bool {
 
 // MarshalSJSON marshals the object as json
 func (w World) MarshalSJSON() ([]byte, error) {
-	data, _ := sjson.SetBytesOptions([]byte(`{"id": 0, "randomNumber": 0}`), "id", w.ID, &sjson.Options{Optimistic: true})
+	data, _ := sjson.SetBytesOptions(worldJSONStr, "id", w.ID, &sjson.Options{Optimistic: true})
 	return sjson.SetBytesOptions(data, "randomNumber", w.RandomNumber, &sjson.Options{Optimistic: true, ReplaceInPlace: true})
 }
 
 //easyjson:json
 type Worlds []World
+
+// WorldsPool ...
+var WorldsPool = sync.Pool{
+	New: func() interface{} {
+		return make(Worlds, 0, 512)
+	},
+}
+
+// AcquireWorlds returns new worlds from pool
+func AcquireWorlds() Worlds {
+	return WorldsPool.Get().(Worlds)
+}
+
+// ReleaseWorlds resets the worlds and return it to the pool
+func ReleaseWorlds(w Worlds) {
+	w = w[:0]
+	WorldsPool.Put(w)
+}
 
 // MarshalJSONArray marshals the list of worlds
 func (ws Worlds) MarshalJSONArray(enc *gojay.Encoder) {
@@ -55,28 +94,4 @@ func (ws Worlds) MarshalSJSON() ([]byte, error) {
 	}
 
 	return jsonResult, nil
-}
-
-// WorldPool *sync.Pool
-var WorldPool *sync.Pool
-
-// InitWorldPool ()
-func InitWorldPool() {
-	WorldPool = &sync.Pool{
-		New: func() interface{} {
-			return &World{}
-		},
-	}
-}
-
-// WorldsPool *sync.Pool
-var WorldsPool *sync.Pool
-
-// InitWorldsPool ()
-func InitWorldsPool() {
-	WorldsPool = &sync.Pool{
-		New: func() interface{} {
-			return make([]World, 0, 512)
-		},
-	}
 }

@@ -1,15 +1,15 @@
 
 # GreenLightning Benchmarking Test
+# NathanTippy@gmail.com
 
 ### Test Type Implementation Source Code
 
-* [JSON](src/main/java/com/ociweb/gl/benchmark)
-* [PLAINTEXT](src/main/java/com/ociweb/gl/benchmark)
+* [JSON](src/main/java/com/javanut/gl/benchmark)
+* [PLAINTEXT](src/main/java/com/javanut/gl/benchmark)
 
 ## Important Libraries
 The tests were run with:
-* [Software](https://oci-pronghorn.gitbook.io/greenlightning/)
-* [Example](https://github.com/oci-pronghorn/GreenLightning/tree/master/slipstream)
+* [Example](https://github.com/nathantippy/GreenLightning/tree/master/slipstream)
 
 ### Implemented benchmarks
 - [x] JSON serialization

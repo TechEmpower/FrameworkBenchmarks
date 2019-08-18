@@ -3,7 +3,8 @@ void PlaintextCtrl::asyncHandleHttpRequest(const HttpRequestPtr& req, std::funct
 {
     auto resp = HttpResponse::newHttpResponse();
     resp->setBody("Hello, World!");
-    resp->setContentTypeCode(CT_TEXT_PLAIN);
-//    resp->setExpiredTime(0);
+    resp->setContentTypeCodeAndCustomString(CT_TEXT_PLAIN,
+                                            "Content-Type: text/plain\r\n");
+    //    resp->setExpiredTime(0);
     callback(resp);
 }

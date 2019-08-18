@@ -13,7 +13,7 @@ ENV MUSTACHE_C_PREFIX=/opt/mustache-c
 
 RUN git clone "https://github.com/x86-64/mustache-c.git" "$MUSTACHE_C_BUILD_DIR" && \
     cd "$MUSTACHE_C_BUILD_DIR" && \
-    git checkout 01f1e4732c4862071bbf07242128abf1e28cc105 && \
+    git checkout c1948c599edfe48c6099ed70ab1d5911d8c3ddc8 && \
     CFLAGS="-O3 -flto -march=native" ./autogen.sh --prefix="$MUSTACHE_C_PREFIX" && \
     make -j "$(nproc)" install
 

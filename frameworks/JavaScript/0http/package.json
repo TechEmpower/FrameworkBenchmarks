@@ -1,0 +1,8 @@
+{
+  "name": "0http",
+  "dependencies": {
+    "0http": "1.2.1",
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v15.11.0"
+  },
+  "main": "app.js"
+}

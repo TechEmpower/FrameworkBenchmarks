@@ -30,23 +30,6 @@ metadata = MetaData()
 DatabaseBase = declarative_base()
 
 
-def sqlalchemy_encoder_factory(system_values):
-    return SQLAlchemyEncoder()
-
-
-class SQLAlchemyEncoder(json.JSONEncoder):
-    def __call__(self, obj, system_values):
-        if isinstance(obj, Iterable):
-            return json.dumps([self.default(x) for x in obj])
-        else:
-            return json.dumps(self.default(obj))
-
-    def default(self, obj):
-        if isinstance(obj.__class__, DeclarativeMeta):
-            return obj.__json__()
-        return super(SQLAlchemyEncoder, self).default(obj)
-
-
 class World(DatabaseBase):
     __tablename__ = 'world'
 
@@ -54,7 +37,7 @@ class World(DatabaseBase):
     randomNumber = Column(
         'randomnumber', Integer, nullable=False, server_default='0')
 
-    def __json__(self):
+    def __json__(self, request=None):
         return {'id': self.id, 'randomNumber': self.randomNumber}
 
 
