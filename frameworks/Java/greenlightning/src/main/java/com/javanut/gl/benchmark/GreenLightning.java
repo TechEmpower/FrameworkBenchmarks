@@ -6,8 +6,7 @@ import com.javanut.pronghorn.stage.scheduling.GraphManager;
 public class GreenLightning {
 
 	public static void main(String[] args) {
-		System.setProperty("pronghorn.processors", "28");
-		
+			
 		GraphManager.showThreadIdOnTelemetry = true;		
 		GraphManager.showScheduledRateOnTelemetry = true;
 		
