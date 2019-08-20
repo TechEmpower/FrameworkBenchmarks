@@ -146,10 +146,25 @@
 
     <profile>
       <id>pgclient</id>
+      <properties>
+        <netty.version>4.1.34.Final</netty.version>
+      </properties>
       <dependencies>
         <dependency>
+          <groupId>io.netty</groupId>
+          <artifactId>netty-transport-native-kqueue</artifactId>
+          <version>${netty.version}</version>
+          <classifier>osx-x86_64</classifier>
+        </dependency>
+        <dependency>
+          <groupId>io.netty</groupId>
+          <artifactId>netty-transport-native-epoll</artifactId>
+          <version>${netty.version}</version>
+          <classifier>linux-x86_64</classifier>
+        </dependency>
+        <dependency>
           <groupId>io.jooby</groupId>
-          <artifactId>jooby-utow</artifactId>
+          <artifactId>jooby-netty</artifactId>
           <version>${jooby.version}</version>
         </dependency>
       </dependencies>
