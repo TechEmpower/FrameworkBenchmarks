@@ -13,4 +13,4 @@ FROM azul/zulu-openjdk-alpine:11.0.3
 WORKDIR /greenlightning
 COPY --from=maven /greenlightning/target/greenlightning-test.jar app.jar
 
-CMD java -server -Xmx28g -XX:AutoBoxCacheMax=1000000 -XX:NewSize=64m -XX:+UseNUMA -jar app.jar
+CMD java -server -Xmx29g -XX:AutoBoxCacheMax=1000000 -XX:NewSize=16m -XX:+UseNUMA -jar app.jar
