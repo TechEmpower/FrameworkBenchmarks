@@ -9,7 +9,7 @@ require (
 	github.com/jackc/pgx v3.3.0+incompatible
 	github.com/mailru/easyjson v0.0.0-20190626092158-b2ccc519800e
 	github.com/pkg/errors v0.8.1 // indirect
-	github.com/savsgio/atreugo/v8 v8.1.1
+	github.com/savsgio/atreugo/v8 v8.2.1
 	github.com/tidwall/gjson v1.3.2 // indirect
 	github.com/tidwall/sjson v1.0.4
 	github.com/valyala/quicktemplate v1.1.1
