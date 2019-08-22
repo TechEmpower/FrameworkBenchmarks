@@ -52,9 +52,17 @@ public class FrameworkTest implements GreenApp {
 
 	private final long defaultRate = Long.parseLong(System.getProperty("xx.rate", "200000")); //2.5K cycles per second
 	                                                                                          // at 512 requests is 1.28M/sec
-	
+	//Need to record how many records per pass are done...
 	
 	static {
+		System.setProperty("java.lang.Integer.IntegerCache.high", ""+Integer.MAX_VALUE);
+
+		//TODO: test with normal polll and a very fast reader, vs epoll and slower reader.
+		
+		//TODO: does this work??
+	//	System.setProperty("java.nio.channels.spi.SelectorProvider","sun.nio.ch.PollSelectorProvider");
+		//System.setProperty("java.nio.channels.spi.SelectorProvider","com.javanut.gl.CustomEPollSelectorProvider");//
+		
 		ServerSocketWriterStage.BASE_ADJUST = Float.parseFloat(System.getProperty("xx.ratio", "1"));
 		ServerSocketWriterStage.HARD_LIMIT_NS = Long.parseLong(System.getProperty("xx.limitns", "200000"));		
 	}
@@ -80,6 +88,8 @@ public class FrameworkTest implements GreenApp {
     	   	
     	System.out.println("xx.rate "+defaultRate+"  xx.ratio "+ServerSocketWriterStage.BASE_ADJUST+" xx.limitns "+ServerSocketWriterStage.HARD_LIMIT_NS);
 		
+    	
+    	
 		
     }   
         
@@ -186,7 +196,7 @@ public class FrameworkTest implements GreenApp {
     			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel/25)  ///80) ///16) // /8)//4)
     			 //TODO: we need smaller count of connections but MORE writers.
     			 
-    			 .disableEPoll() //provides advantage in JSON test.... 
+    			// .disableEPoll() //provides advantage in JSON test.... 
  						 
     			 .setMaxRequestSize(maxRequestSize)
     			 .setMaxQueueIn(c*16*4)

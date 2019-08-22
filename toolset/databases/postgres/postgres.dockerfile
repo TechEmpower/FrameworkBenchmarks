@@ -1,12 +1,4 @@
-FROM ubuntu:16.04
-
-RUN apt-get update > /dev/null
-RUN apt-get install -yqq locales wget > /dev/null
-
-RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+FROM buildpack-deps:bionic
 
 ADD postgresql.conf postgresql.conf
 ADD pg_hba.conf pg_hba.conf
@@ -19,11 +11,18 @@ ADD pgdg.list pgdg.list
 RUN cp pgdg.list /etc/apt/sources.list.d/
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 
-# install postgresql on database machine
-RUN apt-get -y update > /dev/null
-RUN apt-get -y install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql > /dev/null
+RUN apt-get -yqq update > /dev/null
+RUN apt-get -yqq install locales
 
 ENV PG_VERSION 11
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+ENV DEBIAN_FRONTEND noninteractive
+
+# install postgresql on database machine
+RUN apt-get -yqq install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" postgresql
 
 # Make sure all the configuration files in main belong to postgres
 RUN mv postgresql.conf /etc/postgresql/${PG_VERSION}/main/postgresql.conf

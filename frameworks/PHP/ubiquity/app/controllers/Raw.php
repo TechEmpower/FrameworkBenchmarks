@@ -2,7 +2,7 @@
 namespace controllers;
 
 /**
- * Bench controller.
+ * Raw Bench controller.
  */
 class Raw extends \Ubiquity\controllers\Controller {
 	protected $db;
@@ -30,7 +30,7 @@ class Raw extends \Ubiquity\controllers\Controller {
 		$queries = \min(\max($queries, 1), 500);
 		for ($i = 0; $i < $queries; ++ $i) {
 			$world = $this->getRandomWorld(\mt_rand(1, 10000));
-			$this->db->prepareAndExecuteUpdate("UPDATE World SET randomNumber = ? WHERE id = ?",[$world['randomNumber'] = \mt_rand(1, 10000),$world['id']]);
+			$this->db->prepareAndExecuteUpdate('UPDATE World SET randomNumber = ? WHERE id = ?',[$world['randomNumber'] = \mt_rand(1, 10000),$world['id']]);
 			$worlds[] = $world;
 		}
 		echo \json_encode($worlds);

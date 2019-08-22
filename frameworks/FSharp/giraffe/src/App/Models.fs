@@ -3,11 +3,6 @@
 open System.Collections.Generic
 open System
 
-type JsonMessage = { message : string }
-
-[<Struct>]
-type JsonStructMessage = { message : string }
-
  [<CLIMutable>]
 type Fortune = { id: int; message: string }
 

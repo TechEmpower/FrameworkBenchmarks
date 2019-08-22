@@ -32,12 +32,6 @@ data class Fortune(val id: Int, var message: String)
 fun main(args: Array<String>) {
   runApp(args, EVENT_LOOP) {
 
-    /** Server options (netty only): */
-    serverOptions {
-      singleLoop = true
-      directBuffers = true
-    }
-
     /** JSON: */
     install(JacksonModule())
     val mapper = require(ObjectMapper::class)
