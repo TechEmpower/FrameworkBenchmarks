@@ -137,11 +137,6 @@ static int get_listener_socket(const char *bind_address, uint16_t port)
 
 		LOCAL_CHECK_ERRNO(setsockopt, s, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
 		LOCAL_CHECK_ERRNO(setsockopt, s, SOL_SOCKET, SO_REUSEPORT, &option, sizeof(option));
-		LOCAL_CHECK_ERRNO(setsockopt, s, IPPROTO_TCP, TCP_QUICKACK, &option, sizeof(option));
-		option = H2O_DEFAULT_HANDSHAKE_TIMEOUT_IN_SECS;
-		LOCAL_CHECK_ERRNO(setsockopt, s, IPPROTO_TCP, TCP_DEFER_ACCEPT, &option, sizeof(option));
-		option = DEFAULT_TCP_FASTOPEN_QUEUE_LEN;
-		LOCAL_CHECK_ERRNO(setsockopt, s, IPPROTO_TCP, TCP_FASTOPEN, &option, sizeof(option));
 		LOCAL_CHECK_ERRNO(bind, s, iter->ai_addr, iter->ai_addrlen);
 		LOCAL_CHECK_ERRNO(listen, s, INT_MAX);
 		ret = s;

@@ -1,4 +1,4 @@
-FROM oracle/graalvm-ce:19.0.2
+FROM oracle/graalvm-ce:19.2.0
 # Set working dir
 RUN mkdir /app
 WORKDIR /app
@@ -7,6 +7,8 @@ COPY ./ /app
 
 # Get dependencies
 RUN npm --unsafe-perm install
+# Compile the template
+RUN npm run template
 
 # Run the code
 CMD java \
