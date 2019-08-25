@@ -24,12 +24,10 @@
       "versus": "rack-puma-mri"
     },
     "postgresql": {
-      "json_url": "/hello_world/json",
       "db_url": "/hello_world/db",
       "query_url": "/hello_world/query?queries=",
       "fortune_url": "/fortune",
       "update_url": "/update?queries=",
-      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
