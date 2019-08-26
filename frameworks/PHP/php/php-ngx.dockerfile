@@ -26,6 +26,6 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --add-module=/ngx_php7 > /dev/null && \
     make > /dev/null && make install > /dev/null
 
-CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'`
+CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'` && \
+         /nginx/sbin/nginx -c /deploy/nginx_php.conf
 
-CMD /nginx/sbin/nginx -c /deploy/nginx_php.conf
