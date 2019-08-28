@@ -50,7 +50,7 @@ public class FrameworkTest implements GreenApp {
 	//TODO: add utility to compute this based on need.
 	static final int c = 148;//592; // to reach 16K simultaneous calls
 
-	private final long defaultRate = Long.parseLong(System.getProperty("xx.rate", "200000")); //2.5K cycles per second
+	private final long defaultRate = Long.parseLong(System.getProperty("xx.rate", "180000")); //2.5K cycles per second
 	                                                                                          // at 512 requests is 1.28M/sec
 	//Need to record how many records per pass are done...
 	
@@ -64,7 +64,7 @@ public class FrameworkTest implements GreenApp {
 		//System.setProperty("java.nio.channels.spi.SelectorProvider","com.javanut.gl.CustomEPollSelectorProvider");//
 		
 		ServerSocketWriterStage.BASE_ADJUST = Float.parseFloat(System.getProperty("xx.ratio", "1"));
-		ServerSocketWriterStage.HARD_LIMIT_NS = Long.parseLong(System.getProperty("xx.limitns", "200000"));		
+		ServerSocketWriterStage.HARD_LIMIT_NS = Long.parseLong(System.getProperty("xx.limitns", "180000"));		
 	}
 	
     public FrameworkTest() {
@@ -77,7 +77,7 @@ public class FrameworkTest implements GreenApp {
     	this(System.getProperty("host","0.0.0.0"), 
     		 Integer.parseInt(System.getProperty("port","8080")),    	//default port for test 
     		 c,         //pipes per track    			 
-    		 1<<16,     // default total size of network buffer used by blocks  
+    		 1<<14,     // default total size of network buffer used by blocks  
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
     		 "hello_world",
@@ -126,7 +126,7 @@ public class FrameworkTest implements GreenApp {
     	this.maxQueueOut = 8*20;   	
     	this.maxConnectionBits = 15;//16K connections, for test plus overhead MUST be 32K
     	
-    	this.maxRequestSize = 1<<9;
+    	this.maxRequestSize = 1<<13;
     	    	
     	if (!"127.0.0.1".equals(System.getProperty("host",null))) { 
     		    		
@@ -199,7 +199,7 @@ public class FrameworkTest implements GreenApp {
     			// .disableEPoll() //provides advantage in JSON test.... 
  						 
     			 .setMaxRequestSize(maxRequestSize)
-    			 .setMaxQueueIn(c*16*4)
+    			 .setMaxQueueIn(c*16)
     	
     			 .setMinimumInputPipeMemory(minMemoryOfInputPipes)
     			 .setMaxQueueOut(maxQueueOut)
