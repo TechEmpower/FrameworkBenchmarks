@@ -23,17 +23,16 @@ $updateStatement = $pdo->prepare('UPDATE World SET randomNumber = ? WHERE id = ?
 
 // For each query, store the result set values in the response array
 while (0 < $query_count--) {
-  $id = mt_rand(1, 10000);
-  $randomNumber = mt_rand(1, 10000);
+    $id = mt_rand(1, 10000);
+    $statement->execute([$id]);
 
-  $statement->execute( [$id] );
-  
-  // Store result in array.
-  $world = ['id' => $id, 'randomNumber' => $statement->fetchColumn()];
-  $world['randomNumber'] = $randomNumber;
-  $updateStatement->execute([$randomNumber, $id]);
-  
-  $arr[] = $world;
+    // Store result in array.
+    $world = ['id' => $id, 'randomNumber' => $statement->fetchColumn()];
+    $updateStatement->execute(
+        [$world['randomNumber'] = mt_rand(1, 10000), $id]
+    );
+
+    $arr[] = $world;
 }
 
 // Use the PHP standard JSON encoder.
