@@ -19,7 +19,7 @@ RUN git clone "https://github.com/x86-64/mustache-c.git" "$MUSTACHE_C_BUILD_DIR"
 
 ### Install h2o
 
-ENV H2O_VERSION=2.2.5
+ENV H2O_VERSION=2.2.6
 ENV H2O_ARCHIVE="v${H2O_VERSION}.tar.gz"
 ENV H2O_PREFIX=/opt/h2o
 
