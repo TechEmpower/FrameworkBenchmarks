@@ -30,7 +30,7 @@ public class ReactivePg extends Jooby {
 
   {
     /** PG client: */
-    PgClient client = database(getConfig().getConfig("db"));
+    PgClients pool = database(getConfig().getConfig("db"));
 
     /** Template engine: */
     install(new RockerModule());
@@ -41,7 +41,7 @@ public class ReactivePg extends Jooby {
 
     /** Single query: */
     get("/db", ctx -> {
-      client.preparedQuery(SELECT_WORLD, Tuple.of(randomWorld()), rsp -> {
+      pool.next().preparedQuery(SELECT_WORLD, Tuple.of(randomWorld()), rsp -> {
         try {
           if (rsp.succeeded()) {
             PgIterator rs = rsp.result().iterator();
@@ -64,6 +64,7 @@ public class ReactivePg extends Jooby {
       AtomicInteger counter = new AtomicInteger();
       AtomicBoolean failed = new AtomicBoolean(false);
       World[] result = new World[queries];
+      PgClient client = pool.next();
       for (int i = 0; i < result.length; i++) {
         client.preparedQuery(SELECT_WORLD, Tuple.of(randomWorld()), rsp -> {
           if (rsp.succeeded()) {
@@ -95,7 +96,7 @@ public class ReactivePg extends Jooby {
       World[] result = new World[queries];
       AtomicInteger counter = new AtomicInteger(0);
       AtomicBoolean failed = new AtomicBoolean(false);
-
+      PgClient client = pool.next();
       for (int i = 0; i < queries; i++) {
         client.preparedQuery(SELECT_WORLD, Tuple.of(randomWorld()), rsp -> {
           if (rsp.succeeded()) {
@@ -136,10 +137,9 @@ public class ReactivePg extends Jooby {
 
     /** Fortunes: */
     get("/fortunes", ctx -> {
-      client.preparedQuery(SELECT_FORTUNE, rsp -> {
+      pool.next().preparedQuery(SELECT_FORTUNE, rsp -> {
         if (rsp.succeeded()) {
           PgIterator rs = rsp.result().iterator();
-
           List<Fortune> fortunes = new ArrayList<>();
 
           while (rs.hasNext()) {
@@ -161,7 +161,7 @@ public class ReactivePg extends Jooby {
     });
   }
 
-  private PgClient database(Config config) {
+  private PgClients database(Config config) {
     PgPoolOptions options = new PgPoolOptions();
     options.setDatabase(config.getString("databaseName"));
     options.setHost(config.getString("serverName"));
@@ -169,7 +169,8 @@ public class ReactivePg extends Jooby {
     options.setUser(config.getString("user"));
     options.setPassword(config.getString("password"));
     options.setCachePreparedStatements(true);
-    return PgClient.pool(new PgPoolOptions(options).setMaxSize(4));
+    options.setMaxSize(1);
+    return PgClients.create(options);
   }
 
   public static void main(String[] args) {

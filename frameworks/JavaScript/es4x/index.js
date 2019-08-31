@@ -5,14 +5,14 @@ import {Router} from '@vertx/web';
 
 import {PgClient, Tuple} from '@reactiverse/reactive-pg-client';
 import {PgPoolOptions} from '@reactiverse/reactive-pg-client/options';
-import {HandlebarsTemplateEngine} from '@vertx/web-templ-handlebars'
+import {RockerTemplateEngine} from '@vertx/web-templ-rocker'
 
 const util = require('./util');
 
 const SERVER = 'vertx.js';
 
 const app = Router.router(vertx);
-const template = HandlebarsTemplateEngine.create(vertx);
+const template = RockerTemplateEngine.create();
 let date = new Date().toUTCString();
 
 vertx.setPeriodic(1000, t => date = new Date().toUTCString());
@@ -147,7 +147,7 @@ app.get("/fortunes").handler(ctx => {
     });
 
     // and now delegate to the engine to render it.
-    template.render({fortunes: fortunes}, "templates/fortunes.hbs", res => {
+    template.render({fortunes: fortunes}, "Fortunes.rocker.html", res => {
       if (res.succeeded()) {
         ctx.response()
           .putHeader("Server", SERVER)

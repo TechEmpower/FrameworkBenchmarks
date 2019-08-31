@@ -19,13 +19,13 @@
 #include <tuple>
 #include <stdint.h>
 #include <iostream>
+
 using namespace drogon::orm;
 
 namespace drogon_model
 {
-namespace hello_world 
+namespace hello_world
 {
-
 class Fortune
 {
   public:
@@ -40,29 +40,35 @@ class Fortune
     const static bool hasPrimaryKey;
     const static std::string primaryKeyName;
     typedef int32_t PrimaryKeyType;
-    const PrimaryKeyType & getPrimaryKey() const;
-    Fortune(const Row &r) noexcept;
+    const PrimaryKeyType &getPrimaryKey() const;
+    explicit Fortune(const Row &r) noexcept;
     Fortune() = default;
-    
+
     /**  For column id  */
-    ///Get the value of the column id, returns the default value if the column is null
-    const int32_t &getValueOfId(const int32_t &defaultValue=int32_t()) const noexcept;
-    ///Returns a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    std::shared_ptr<const int32_t> getId() const noexcept;
-    ///Set the value of the column id
+    /// Get the value of the column id, returns the default value if the column
+    /// is null
+    const int32_t &getValueOfId() const noexcept;
+    /// Return a shared_ptr object pointing to the column const value, or an
+    /// empty shared_ptr object if the column is null
+    const std::shared_ptr<int32_t> &getId() const noexcept;
+    /// Set the value of the column id
     void setId(const int32_t &id) noexcept;
 
     /**  For column message  */
-    ///Get the value of the column message, returns the default value if the column is null
-    const std::string &getValueOfMessage(const std::string &defaultValue=std::string()) const noexcept;
-    ///Returns a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    std::shared_ptr<const std::string> getMessage() const noexcept;
-    ///Set the value of the column message
+    /// Get the value of the column message, returns the default value if the
+    /// column is null
+    const std::string &getValueOfMessage() const noexcept;
+    /// Return a shared_ptr object pointing to the column const value, or an
+    /// empty shared_ptr object if the column is null
+    const std::shared_ptr<std::string> &getMessage() const noexcept;
+    /// Set the value of the column message
     void setMessage(const std::string &message) noexcept;
     void setMessage(std::string &&message) noexcept;
 
-
-    static size_t getColumnNumber() noexcept {  return 2;  }
+    static size_t getColumnNumber() noexcept
+    {
+        return 2;
+    }
     static const std::string &getColumnName(size_t index) noexcept(false);
 
     Json::Value toJson() const;
@@ -73,7 +79,7 @@ class Fortune
     void outputArgs(drogon::orm::internal::SqlBinder &binder) const;
     const std::vector<std::string> updateColumns() const;
     void updateArgs(drogon::orm::internal::SqlBinder &binder) const;
-    ///For mysql only
+    /// For mysql or sqlite3
     void updateId(const uint64_t id);
     std::shared_ptr<int32_t> _id;
     std::shared_ptr<std::string> _message;
@@ -88,8 +94,8 @@ class Fortune
         const bool _notNull;
     };
     static const std::vector<MetaData> _metaData;
-    bool _dirtyFlag[2]={ false };
+    bool _dirtyFlag[2] = {false};
 };
 
-} // namespace hello_world
-} // namespace drogon_model
+}  // namespace hello_world
+}  // namespace drogon_model
