@@ -19,13 +19,13 @@
 #include <tuple>
 #include <stdint.h>
 #include <iostream>
+
 using namespace drogon::orm;
 
 namespace drogon_model
 {
-namespace hello_world 
+namespace hello_world
 {
-
 class World
 {
   public:
@@ -40,28 +40,34 @@ class World
     const static bool hasPrimaryKey;
     const static std::string primaryKeyName;
     typedef int32_t PrimaryKeyType;
-    const PrimaryKeyType & getPrimaryKey() const;
-    World(const Row &r) noexcept;
+    const PrimaryKeyType &getPrimaryKey() const;
+    explicit World(const Row &r) noexcept;
     World() = default;
-    
+
     /**  For column id  */
-    ///Get the value of the column id, returns the default value if the column is null
-    const int32_t &getValueOfId(const int32_t &defaultValue=int32_t()) const noexcept;
-    ///Returns a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    std::shared_ptr<const int32_t> getId() const noexcept;
-    ///Set the value of the column id
+    /// Get the value of the column id, returns the default value if the column
+    /// is null
+    const int32_t &getValueOfId() const noexcept;
+    /// Return a shared_ptr object pointing to the column const value, or an
+    /// empty shared_ptr object if the column is null
+    const std::shared_ptr<int32_t> &getId() const noexcept;
+    /// Set the value of the column id
     void setId(const int32_t &id) noexcept;
 
     /**  For column randomnumber  */
-    ///Get the value of the column randomnumber, returns the default value if the column is null
-    const int32_t &getValueOfRandomnumber(const int32_t &defaultValue=int32_t()) const noexcept;
-    ///Returns a shared_ptr object pointing to the column const value, or an empty shared_ptr object if the column is null
-    std::shared_ptr<const int32_t> getRandomnumber() const noexcept;
-    ///Set the value of the column randomnumber
+    /// Get the value of the column randomnumber, returns the default value if
+    /// the column is null
+    const int32_t &getValueOfRandomnumber() const noexcept;
+    /// Return a shared_ptr object pointing to the column const value, or an
+    /// empty shared_ptr object if the column is null
+    const std::shared_ptr<int32_t> &getRandomnumber() const noexcept;
+    /// Set the value of the column randomnumber
     void setRandomnumber(const int32_t &randomnumber) noexcept;
 
-
-    static size_t getColumnNumber() noexcept {  return 2;  }
+    static size_t getColumnNumber() noexcept
+    {
+        return 2;
+    }
     static const std::string &getColumnName(size_t index) noexcept(false);
 
     Json::Value toJson() const;
@@ -72,7 +78,7 @@ class World
     void outputArgs(drogon::orm::internal::SqlBinder &binder) const;
     const std::vector<std::string> updateColumns() const;
     void updateArgs(drogon::orm::internal::SqlBinder &binder) const;
-    ///For mysql only
+    /// For mysql or sqlite3
     void updateId(const uint64_t id);
     std::shared_ptr<int32_t> _id;
     std::shared_ptr<int32_t> _randomnumber;
@@ -87,8 +93,8 @@ class World
         const bool _notNull;
     };
     static const std::vector<MetaData> _metaData;
-    bool _dirtyFlag[2]={ false };
+    bool _dirtyFlag[2] = {false};
 };
 
-} // namespace hello_world
-} // namespace drogon_model
+}  // namespace hello_world
+}  // namespace drogon_model

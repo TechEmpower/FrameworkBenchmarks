@@ -44,7 +44,7 @@ RUN git clone https://github.com/an-tao/drogon
 
 WORKDIR $DROGON_ROOT
 
-RUN git checkout 673d74191e30f406cce6dc7450c8d7e08ce30f66
+RUN git checkout aa26e9a90388b6a6fe5356e2d12b6f6091c82818
 RUN git submodule update --init
 RUN mkdir build
 

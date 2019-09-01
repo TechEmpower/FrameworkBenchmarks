@@ -9,6 +9,7 @@
 #include <drogon/utils/Utilities.h>
 #include <string>
 
+using namespace drogon;
 using namespace drogon_model::hello_world;
 
 const std::string World::Cols::id = "id";
@@ -17,10 +18,9 @@ const std::string World::primaryKeyName = "id";
 const bool World::hasPrimaryKey = true;
 const std::string World::tableName = "world";
 
-const std::vector<typename World::MetaData> World::_metaData={
-{"id","int32_t","integer",4,0,1,1},
-{"randomnumber","int32_t","integer",4,0,0,1}
-};
+const std::vector<typename World::MetaData> World::_metaData = {
+    {"id", "int32_t", "integer", 4, 0, 1, 1},
+    {"randomnumber", "int32_t", "integer", 4, 0, 0, 1}};
 const std::string &World::getColumnName(size_t index) noexcept(false)
 {
     assert(index < _metaData.size());
@@ -28,22 +28,24 @@ const std::string &World::getColumnName(size_t index) noexcept(false)
 }
 World::World(const Row &r) noexcept
 {
-        if(!r["id"].isNull())
-        {
-            _id=std::make_shared<int32_t>(r["id"].as<int32_t>());
-        }
-        if(!r["randomnumber"].isNull())
-        {
-            _randomnumber=std::make_shared<int32_t>(r["randomnumber"].as<int32_t>());
-        }
+    if (!r["id"].isNull())
+    {
+        _id = std::make_shared<int32_t>(r["id"].as<int32_t>());
+    }
+    if (!r["randomnumber"].isNull())
+    {
+        _randomnumber =
+            std::make_shared<int32_t>(r["randomnumber"].as<int32_t>());
+    }
 }
-const int32_t & World::getValueOfId(const int32_t &defaultValue) const noexcept
+const int32_t &World::getValueOfId() const noexcept
 {
-    if(_id)
+    const static int32_t defaultValue = int32_t();
+    if (_id)
         return *_id;
     return defaultValue;
 }
-std::shared_ptr<const int32_t> World::getId() const noexcept
+const std::shared_ptr<int32_t> &World::getId() const noexcept
 {
     return _id;
 }
@@ -53,19 +55,20 @@ void World::setId(const int32_t &id) noexcept
     _dirtyFlag[0] = true;
 }
 
-const typename World::PrimaryKeyType & World::getPrimaryKey() const
+const typename World::PrimaryKeyType &World::getPrimaryKey() const
 {
     assert(_id);
     return *_id;
 }
 
-const int32_t & World::getValueOfRandomnumber(const int32_t &defaultValue) const noexcept
+const int32_t &World::getValueOfRandomnumber() const noexcept
 {
-    if(_randomnumber)
+    const static int32_t defaultValue = int32_t();
+    if (_randomnumber)
         return *_randomnumber;
     return defaultValue;
 }
-std::shared_ptr<const int32_t> World::getRandomnumber() const noexcept
+const std::shared_ptr<int32_t> &World::getRandomnumber() const noexcept
 {
     return _randomnumber;
 }
@@ -75,23 +78,19 @@ void World::setRandomnumber(const int32_t &randomnumber) noexcept
     _dirtyFlag[1] = true;
 }
 
-
 void World::updateId(const uint64_t id)
 {
 }
 
 const std::vector<std::string> &World::insertColumns() noexcept
 {
-    static const std::vector<std::string> _inCols={
-        "id",
-        "randomnumber"
-    };
+    static const std::vector<std::string> _inCols = {"id", "randomnumber"};
     return _inCols;
 }
 
 void World::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 {
-    if(getId())
+    if (getId())
     {
         binder << getValueOfId();
     }
@@ -99,7 +98,7 @@ void World::outputArgs(drogon::orm::internal::SqlBinder &binder) const
     {
         binder << nullptr;
     }
-    if(getRandomnumber())
+    if (getRandomnumber())
     {
         binder << getValueOfRandomnumber();
     }
@@ -112,9 +111,9 @@ void World::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 const std::vector<std::string> World::updateColumns() const
 {
     std::vector<std::string> ret;
-    for(size_t i=0;i<sizeof(_dirtyFlag);i++)
+    for (size_t i = 0; i < sizeof(_dirtyFlag); i++)
     {
-        if(_dirtyFlag[i])
+        if (_dirtyFlag[i])
         {
             ret.push_back(getColumnName(i));
         }
@@ -124,9 +123,9 @@ const std::vector<std::string> World::updateColumns() const
 
 void World::updateArgs(drogon::orm::internal::SqlBinder &binder) const
 {
-    if(_dirtyFlag[0])
+    if (_dirtyFlag[0])
     {
-        if(getId())
+        if (getId())
         {
             binder << getValueOfId();
         }
@@ -135,9 +134,9 @@ void World::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(_dirtyFlag[1])
+    if (_dirtyFlag[1])
     {
-        if(getRandomnumber())
+        if (getRandomnumber())
         {
             binder << getValueOfRandomnumber();
         }
@@ -150,21 +149,21 @@ void World::updateArgs(drogon::orm::internal::SqlBinder &binder) const
 Json::Value World::toJson() const
 {
     Json::Value ret;
-    if(getId())
+    if (getId())
     {
-        ret["id"]=getValueOfId();
+        ret["id"] = getValueOfId();
     }
     else
     {
-        ret["id"]=Json::Value();
+        ret["id"] = Json::Value();
     }
-    if(getRandomnumber())
+    if (getRandomnumber())
     {
-        ret["randomnumber"]=getValueOfRandomnumber();
+        ret["randomnumber"] = getValueOfRandomnumber();
     }
     else
     {
-        ret["randomnumber"]=Json::Value();
+        ret["randomnumber"] = Json::Value();
     }
     return ret;
 }
