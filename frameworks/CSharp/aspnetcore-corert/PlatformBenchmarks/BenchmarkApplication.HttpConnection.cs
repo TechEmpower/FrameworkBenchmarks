@@ -41,6 +41,13 @@ namespace PlatformBenchmarks
             }
         }
 
+        private static HtmlEncoder CreateHtmlEncoder()
+        {
+            var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);
+            settings.AllowCharacter('\u2014');  // allow EM DASH through
+            return HtmlEncoder.Create(settings);
+        }
+
         private async Task ProcessRequestsAsync()
         {
             while (true)
@@ -103,9 +110,18 @@ namespace PlatformBenchmarks
 
                 if (state == State.Headers)
                 {
-                    if (Parser.ParseHeaders(new ParsingAdapter(this), buffer, out consumed, out examined, out int consumedBytes))
+                    var reader = new SequenceReader<byte>(buffer);
+                    var success = Parser.ParseHeaders(new ParsingAdapter(this), ref reader);
+
+                    consumed = reader.Position;
+                    if (success)
                     {
+                        examined = consumed;
                         state = State.Body;
+                    }
+                    else
+                    {
+                        examined = buffer.End;
                     }
 
                     buffer = buffer.Slice(consumed);
@@ -129,16 +145,13 @@ namespace PlatformBenchmarks
         {
         }
 
+        public void OnHeadersComplete()
+        {
+        }
+
         public async ValueTask OnReadCompletedAsync()
         {
             await Writer.FlushAsync();
-        }
-
-        private static HtmlEncoder CreateHtmlEncoder()
-        {
-            var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);
-            settings.AllowCharacter('\u2014');  // allow EM DASH through
-            return HtmlEncoder.Create(settings);
         }
 
         private static void ThrowUnexpectedEndOfData()
@@ -186,7 +199,9 @@ namespace PlatformBenchmarks
 
             public void OnStartLine(HttpMethod method, HttpVersion version, Span<byte> target, Span<byte> path, Span<byte> query, Span<byte> customMethod, bool pathEncoded)
                 => RequestHandler.OnStartLine(method, version, target, path, query, customMethod, pathEncoded);
+
+            public void OnHeadersComplete()
+                => RequestHandler.OnHeadersComplete();
         }
     }
-
 }
