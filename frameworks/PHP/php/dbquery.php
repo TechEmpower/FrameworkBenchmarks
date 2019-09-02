@@ -4,8 +4,7 @@ header('Content-type: application/json');
 // Database connection
 // http://www.php.net/manual/en/ref.pdo-mysql.php
 $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', [
-    PDO::ATTR_PERSISTENT => true,
-    PDO::ATTR_EMULATE_PREPARES => false
+    PDO::ATTR_PERSISTENT => true
 ]);
 
 // Read number of queries to run from URL parameter

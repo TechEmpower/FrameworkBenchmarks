@@ -10,8 +10,7 @@ class RawController extends AppController
         header('Content-type: application/json');
 
         $this->pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', [
-            PDO::ATTR_PERSISTENT => true,
-            PDO::ATTR_EMULATE_PREPARES => false
+            PDO::ATTR_PERSISTENT => true
         ]);
     }
 
