@@ -29,10 +29,6 @@ public class App extends Jooby {
 
   private static final byte[] MESSAGE_BYTES = MESSAGE.getBytes(StandardCharsets.UTF_8);
 
-  public static class Message {
-    public final String message = MESSAGE;
-  }
-
   {
     /** JSON: */
     install(new JacksonModule());
@@ -51,7 +47,7 @@ public class App extends Jooby {
 
     get("/json", ctx -> ctx
         .setResponseType(JSON)
-        .send(mapper.writeValueAsBytes(new Message()))
+        .send(mapper.writeValueAsBytes(new Message(MESSAGE)))
     );
 
     /** Go blocking: */
@@ -107,7 +103,7 @@ public class App extends Jooby {
               statement.setInt(1, randomWorld());
               try (ResultSet rs = statement.executeQuery()) {
                 rs.next();
-                result[i] = new World(rs.getInt("id"), rs.getInt("randomNumber"));
+                result[i] = new World(rs.getInt("id"), randomWorld());
               }
               // prepare update query
               updateSql.add("(?, ?)");
@@ -117,9 +113,8 @@ public class App extends Jooby {
           try (PreparedStatement statement = connection.prepareStatement(updateSql.toString())) {
             int i = 0;
             for (World world : result) {
-              world.randomNumber = randomWorld();
-              statement.setInt(++i, world.id);
-              statement.setInt(++i, world.randomNumber);
+              statement.setInt(++i, world.getId());
+              statement.setInt(++i, world.getRandomNumber());
             }
             statement.executeUpdate();
           }
