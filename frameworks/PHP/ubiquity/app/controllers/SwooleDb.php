@@ -36,7 +36,7 @@ class SwooleDb extends \Ubiquity\controllers\Controller {
 	    \Swoole\Runtime::enableCoroutine();
 	    $queries = \min(\max($queries, 1), 500);
 	    $worlds = new co\Channel($queries);
-	    $count=\min(5,$queries);
+	    $count=\min(4,$queries);
 	    $rest=$queries%$count;
 	    $nb=($queries-$rest)/$count;
 	    for ($i = 0; $i < $nb; ++ $i) {
