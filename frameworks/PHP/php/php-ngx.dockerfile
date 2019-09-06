@@ -11,9 +11,9 @@ RUN apt-get update -yqq > /dev/null && \
 
 ADD ./ ./
 
-ENV NGINX_VERSION=1.17.0
+ENV NGINX_VERSION=1.17.3
 
-RUN git clone -b v0.0.18 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
+RUN git clone -b v0.0.19 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
 
 RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
     tar -zxf nginx-${NGINX_VERSION}.tar.gz && \
@@ -27,3 +27,5 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
     make > /dev/null && make install > /dev/null
 
 CMD /nginx/sbin/nginx -c /deploy/nginx_php.conf
+
+

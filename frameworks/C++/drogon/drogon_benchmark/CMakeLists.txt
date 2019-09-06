@@ -1,33 +1,50 @@
-cmake_minimum_required(VERSION 3.2)
-Project(drogon_benchmark)
+cmake_minimum_required(VERSION 3.5)
+project(drogon_benchmark)
 
 set(CMAKE_CXX_STANDARD 17)
+set(BENCHMARK_SOURCES
+    main.cc
+    controllers/DbCtrl.cc
+    controllers/DbCtrlRaw.cc
+    controllers/FortuneCtrl.cc
+    controllers/FortuneCtrlRaw.cc
+    controllers/QueriesCtrl.cc
+    controllers/QueriesCtrlRaw.cc
+    controllers/UpdatesCtrl.cc
+    controllers/UpdatesCtrlRaw.cc
+    models/Fortune.cc
+    models/World.cc
+    plugins/SyncPlugin.cc)
 
-find_package(Drogon REQUIRED)
-link_libraries(${DROGON_LIBRARIES})
-include_directories(${DROGON_INCLUDE_DIRS})
-
-AUX_SOURCE_DIRECTORY(./ SRC_DIR)
-AUX_SOURCE_DIRECTORY(controllers CTL_SRC)
-AUX_SOURCE_DIRECTORY(filters FILTER_SRC)
-AUX_SOURCE_DIRECTORY(models MODEL_SRC)
-
-FILE(GLOB SCP_LIST ${CMAKE_CURRENT_SOURCE_DIR}/views/*.csp)
+file(GLOB SCP_LIST ${CMAKE_CURRENT_SOURCE_DIR}/views/*.csp)
 foreach(cspFile ${SCP_LIST})
-    message(STATUS "cspFile:" ${cspFile})
-    EXEC_PROGRAM(basename ARGS "${cspFile} .csp" OUTPUT_VARIABLE classname)
-    message(STATUS "view classname:" ${classname})
-    add_custom_command(OUTPUT ${classname}.h ${classname}.cc
-            COMMAND drogon_ctl
-            ARGS create view ${cspFile}
-            DEPENDS ${cspFile}
-            VERBATIM )
-    set(VIEWSRC ${VIEWSRC} ${classname}.cc)
+  message(STATUS "cspFile:" ${cspFile})
+  exec_program(basename
+               ARGS
+               "${cspFile} .csp"
+               OUTPUT_VARIABLE
+               classname)
+  message(STATUS "view classname:" ${classname})
+  add_custom_command(OUTPUT ${classname}.h ${classname}.cc
+                     COMMAND drogon_ctl
+                             ARGS
+                             create
+                             view
+                             ${cspFile}
+                     DEPENDS ${cspFile}
+                     VERBATIM)
+  set(BENCHMARK_SOURCES ${BENCHMARK_SOURCES} ${classname}.cc)
 endforeach()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-add_executable(drogon_benchmark ${SRC_DIR} ${CTL_SRC} ${FILTER_SRC} ${VIEWSRC} ${MODEL_SRC})
+add_executable(${PROJECT_NAME} ${BENCHMARK_SOURCES})
+find_package(Drogon REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE Drogon::Drogon)
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_custom_command(TARGET drogon_benchmark POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                   ${CMAKE_SOURCE_DIR}/*.json $<TARGET_FILE_DIR:drogon_benchmark>)
+                   COMMAND ${CMAKE_COMMAND}
+                           -E
+                           copy_if_different
+                           ${CMAKE_SOURCE_DIR}/*.json
+                           $<TARGET_FILE_DIR:drogon_benchmark>)
