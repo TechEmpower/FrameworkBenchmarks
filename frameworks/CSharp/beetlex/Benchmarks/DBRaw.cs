@@ -22,82 +22,37 @@ namespace Benchmarks
             _dbProviderFactory = dbProviderFactory;
             _connectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3";
             //_connectionString = "Server=192.168.2.19;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3";
-
-
-            for (int i = 0; i < 256; i++)
-            {
-                DbConnection conn = dbProviderFactory.CreateConnection();
-                conn.ConnectionString = _connectionString;
-                RawDbConnection rawDbConnection = new RawDbConnection(conn, this);
-                mPool.Push(rawDbConnection);
-            }
+            OnCreateCommand();
         }
 
-
-        private ConcurrentStack<RawDbConnection> mPool = new ConcurrentStack<RawDbConnection>();
-
-
-        private RawDbConnection Pop()
+        private void OnCreateCommand()
         {
-            if (mPool.TryPop(out RawDbConnection conn))
-                return conn;
-            else
-                throw new Exception("get raw db connection error!");
+            SingleCommand = new Npgsql.NpgsqlCommand();
+            SingleCommand.CommandText = "SELECT id, randomnumber FROM world WHERE id = @Id";
+            var id = SingleCommand.CreateParameter();
+            id.ParameterName = "@Id";
+            id.DbType = DbType.Int32;
+            id.Value = _random.Next(1, 10001);
+            SingleCommand.Parameters.Add(id);
+            FortuneCommand = new Npgsql.NpgsqlCommand();
+            FortuneCommand.CommandText = "SELECT id, message FROM fortune";
         }
 
-        private void Push(RawDbConnection conn)
-        {
-            mPool.Push(conn);
-        }
+        private DbCommand SingleCommand;
 
-
-        class RawDbConnection : IDisposable
-        {
-            public RawDbConnection(DbConnection connection, RawDb rawdb)
-            {
-                Connection = connection;
-                Connection.Open();
-
-                var cmd = connection.CreateCommand();
-                cmd.CommandText = "SELECT id, randomnumber FROM world WHERE id = @Id";
-                var id = cmd.CreateParameter();
-                id.ParameterName = "@Id";
-                id.DbType = DbType.Int32;
-                id.Value = 0;
-                cmd.Parameters.Add(id);
-                ReadCommand = cmd;
-
-                cmd = connection.CreateCommand();
-                cmd.CommandText = "SELECT id, message FROM fortune";
-                FortuneCommand = cmd;
-
-                DbHandler = rawdb;
-
-            }
-
-            public DbConnection Connection { get; private set; }
-
-            public DbCommand ReadCommand { get; private set; }
-
-            public DbCommand FortuneCommand { get; private set; }
-
-            public RawDb DbHandler { get; private set; }
-
-            public void Dispose()
-            {
-                DbHandler.Push(this);
-            }
-        }
+        private DbCommand FortuneCommand;
 
         public async Task<World> LoadSingleQueryRow()
         {
-            using (var conn = Pop())
+            using (var db = _dbProviderFactory.CreateConnection())
             {
-                var cmd = conn.ReadCommand;
-                cmd.Parameters[0].Value = _random.Next(1, 10001);
-                return await ReadSingleRow(conn.Connection, cmd);
-            }
+                db.ConnectionString = _connectionString;
+                await db.OpenAsync();
+                SingleCommand.Connection = db;
+                SingleCommand.Parameters[0].Value = _random.Next(1, 10001);
+                return await ReadSingleRow(db, SingleCommand);
 
+            }
         }
 
         async Task<World> ReadSingleRow(DbConnection connection, DbCommand cmd)
@@ -114,36 +69,42 @@ namespace Benchmarks
             }
         }
 
-
         public async Task<World[]> LoadMultipleQueriesRows(int count)
         {
-            using (var conn = Pop())
+            using (var db = _dbProviderFactory.CreateConnection())
             {
-                var cmd = conn.ReadCommand;
-                cmd.Parameters[0].Value = _random.Next(1, 10001);
-                return await LoadMultipleRows(count, conn.Connection, conn.ReadCommand);
+                db.ConnectionString = _connectionString;
+                await db.OpenAsync();
+                return await LoadMultipleRows(count, db);
             }
+
         }
 
-        private async Task<World[]> LoadMultipleRows(int count, DbConnection db, DbCommand cmd)
+        private async Task<World[]> LoadMultipleRows(int count, DbConnection db)
         {
-            cmd.Parameters[0].Value = _random.Next(1, 10001);
+            SingleCommand.Connection = db;
+            SingleCommand.Parameters[0].Value = _random.Next(1, 10001);
             var result = new World[count];
             for (int i = 0; i < result.Length; i++)
             {
-                result[i] = await ReadSingleRow(db, cmd);
-                cmd.Parameters[0].Value = _random.Next(1, 10001);
+                result[i] = await ReadSingleRow(db, SingleCommand);
+                SingleCommand.Parameters[0].Value = _random.Next(1, 10001);
             }
             return result;
+
         }
 
         public async Task<List<Fortune>> LoadFortunesRows()
         {
             var result = new List<Fortune>();
-            using (var conn = Pop())
+
+            using (var db = _dbProviderFactory.CreateConnection())
+
             {
-                var cmd = conn.FortuneCommand;
-                using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.Default))
+                db.ConnectionString = _connectionString;
+                await db.OpenAsync();
+                FortuneCommand.Connection = db;
+                using (var rdr = await FortuneCommand.ExecuteReaderAsync(CommandBehavior.CloseConnection))
                 {
                     while (await rdr.ReadAsync())
                     {

@@ -15,6 +15,10 @@ namespace PlatformBenchmarks
             private set;
         }       
 
+        public RawDb Db { get; set; }
+
+        public NextQueue NextQueue { get; set; }
+
         public HttpToken()
         {
             Buffer = new byte[2048];
