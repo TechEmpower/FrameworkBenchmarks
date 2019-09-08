@@ -13,6 +13,8 @@ add_executable(${project_name}
         src/App.cpp
         src/controller/MyController.hpp
         src/dto/DTOs.hpp
+        src/Utils.cpp
+        src/Utils.hpp
 )
 
 ## link libs
