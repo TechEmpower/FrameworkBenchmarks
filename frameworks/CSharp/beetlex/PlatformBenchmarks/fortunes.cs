@@ -20,7 +20,7 @@ namespace PlatformBenchmarks
         {
             try
             {
-                var data = await mPgsql.LoadFortunesRows();
+                var data = await token.Db.LoadFortunesRows();
                 stream.Write(_fortunesTableStart.Data, 0, _fortunesTableStart.Length);
                 foreach (var item in data)
                 {
