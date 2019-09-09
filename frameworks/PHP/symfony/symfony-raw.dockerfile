@@ -18,6 +18,11 @@ WORKDIR /symfony
 RUN mkdir -m 777 -p /symfony/var/cache/{dev,prod} /symfony/var/log
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --classmap-authoritative --no-dev
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env prod
+
+# removes hardcoded option `ATTR_STATEMENT_CLASS` conflicting with `ATTR_PERSISTENT`. Hack not needed when upgrading to Doctrine 3
+# see https://github.com/doctrine/dbal/issues/2315
+RUN sed -i '/PDO::ATTR_STATEMENT_CLASS/d' ./vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php
+
 RUN php bin/console cache:clear
 
 CMD service php7.3-fpm start && \

@@ -26,7 +26,7 @@ class FortunesController
      */
     public function fortunes(): Response
     {
-        $fortunes = $this->fortuneRepository->findAll();
+        $fortunes = $this->fortuneRepository->findBy([]);
 
         $runtimeFortune = new Fortune();
         $runtimeFortune->setId(0);
