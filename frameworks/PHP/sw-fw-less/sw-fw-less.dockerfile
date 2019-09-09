@@ -2,6 +2,8 @@ FROM php:7.1
 
 MAINTAINER luoxiaojun1992 <luoxiaojun1992@sina.cn>
 
+ARG BENCHMARK_ENV
+
 # Version
 ENV PHPREDIS_VERSION 4.0.0
 ENV HIREDIS_VERSION 0.13.3
@@ -78,6 +80,8 @@ WORKDIR /var/www/sw-fw-less
 RUN composer install --no-dev \
     && composer dump-autoload -o \
     && composer clearcache
+
+RUN if [ $BENCHMARK_ENV = Travis ]; then rm .env; fi;
 
 EXPOSE 9501
 
