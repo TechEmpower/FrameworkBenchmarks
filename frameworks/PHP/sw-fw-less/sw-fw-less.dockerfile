@@ -81,8 +81,6 @@ RUN composer install --no-dev \
     && composer dump-autoload -o \
     && composer clearcache
 
-RUN if [ $BENCHMARK_ENV = Travis ]; then rm .env ; fi;
-
 EXPOSE 9501
 
 ENTRYPOINT ["php", "/var/www/sw-fw-less/start.php"]
