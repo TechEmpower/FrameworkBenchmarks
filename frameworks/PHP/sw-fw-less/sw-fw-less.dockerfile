@@ -2,8 +2,6 @@ FROM php:7.1
 
 MAINTAINER luoxiaojun1992 <luoxiaojun1992@sina.cn>
 
-ARG BENCHMARK_ENV
-
 # Version
 ENV PHPREDIS_VERSION 4.0.0
 ENV HIREDIS_VERSION 0.13.3
