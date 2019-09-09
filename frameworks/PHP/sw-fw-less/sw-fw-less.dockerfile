@@ -81,7 +81,7 @@ RUN composer install --no-dev \
     && composer dump-autoload -o \
     && composer clearcache
 
-RUN if [ $BENCHMARK_ENV = Travis ]; then rm .env; fi;
+RUN if [ $BENCHMARK_ENV = Travis ]; then rm .env fi
 
 EXPOSE 9501
 
