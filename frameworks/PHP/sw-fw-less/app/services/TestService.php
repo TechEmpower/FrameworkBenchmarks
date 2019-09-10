@@ -17,7 +17,7 @@ class TestService extends BaseService
     public function db()
     {
         return World::select()->cols(['*'])->where('`id` = :id')
-            ->bindValue([':id' => random_int(1, 10000)])
+            ->bindValue(':id', random_int(1, 10000))
             ->first()
             ->toArray();
     }
@@ -29,7 +29,7 @@ class TestService extends BaseService
         $rows = [];
         while ($queries--) {
             $rows[] = World::select()->cols(['*'])->where('`id` = :id')
-                ->bindValue([':id' => random_int(1, 10000)])
+                ->bindValue(':id', random_int(1, 10000))
                 ->first()
                 ->toArray();
         }
@@ -86,7 +86,7 @@ EOF;
 
         while ($queries--) {
             $row = World::select()->cols(['*'])->where('`id` = :id')
-                ->bindValue([':id' => random_int(1, 10000)])
+                ->bindValue(':id', random_int(1, 10000))
                 ->first();
             $row->randomNumber = random_int(1, 10000);
             $row->save();
