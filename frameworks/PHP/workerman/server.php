@@ -6,13 +6,8 @@ require_once __DIR__ . '/updateraw.php';
 use Workerman\Worker;
 use Workerman\Protocols\Http;
 
-function get_processor_cores_number() {
-  $command = 'cat /proc/cpuinfo | grep processor | wc -l';
-  return  (int) shell_exec($command);
-}
-
 $http_worker = new Worker('http://0.0.0.0:8080');
-$http_worker->count = get_processor_cores_number() ?? 64;
+$http_worker->count = (int) shell_exec('nproc') ?? 64;
 $http_worker->onWorkerStart = function()
 {
   global $pdo;
