@@ -3,7 +3,7 @@
 return [
     //Common Providers
     \SwFwLess\components\swoole\counter\CounterProvider::class,
-    \SwFwLess\components\redis\RedisProvider::class,
+//    \SwFwLess\components\redis\RedisProvider::class,
 
     //App Providers
     \SwFwLess\components\swoole\SwooleProvider::class,
