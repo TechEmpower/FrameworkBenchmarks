@@ -2,12 +2,10 @@
   "framework": "beetlex",
   "tests": [
     {
-      "default": {
-        "fortune_url": "/fortunes",
+      "default": {      
         "plaintext_url": "/plaintext",
         "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
+        "db_url": "/db",      
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
