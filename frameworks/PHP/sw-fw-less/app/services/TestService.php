@@ -16,10 +16,11 @@ class TestService extends BaseService
 
     public function db()
     {
-        return World::select()->cols(['*'])->where('`id` = :id')
+        $world = World::select()->cols(['*'])->where('`id` = :id')
             ->bindValue(':id', random_int(1, 10000))
-            ->first()
-            ->toArray();
+            ->first();
+
+        return $world ? $world->toArray() : [];
     }
 
     public function queries($queries = 1)
@@ -28,10 +29,10 @@ class TestService extends BaseService
 
         $rows = [];
         while ($queries--) {
-            $rows[] = World::select()->cols(['*'])->where('`id` = :id')
+            $row = World::select()->cols(['*'])->where('`id` = :id')
                 ->bindValue(':id', random_int(1, 10000))
-                ->first()
-                ->toArray();
+                ->first();
+            $rows[] = $row ? $row->toArray() : [];
         }
 
         return $rows;
@@ -47,11 +48,11 @@ class TestService extends BaseService
 
         $rows[] = $insert;
 
-        usort($fortunes, function ($left, $right) {
+        usort($rows, function ($left, $right) {
             return strcmp($left->message, $right->message);
         });
 
-        return Response::output($this->renderFortunes($fortunes), 200, ['Content-Type' => 'text/html']);
+        return Response::output($this->renderFortunes($rows), 200, ['Content-Type' => 'text/html']);
     }
 
     private function renderFortunes($fortunes)
@@ -72,7 +73,8 @@ EOF;
 
         $fortuneRows = '';
         foreach ($fortunes as $fortune) {
-            $fortuneRows .= '	<tr><td>' . $fortune->id . '</td><td>' . $fortune->message . '</td></tr>' . PHP_EOL;
+            $fortuneRows .= '	<tr><td>' . htmlspecialchars($fortune->id) .
+                '</td><td>' . htmlspecialchars($fortune->message) . '</td></tr>' . PHP_EOL;
         }
 
         return sprintf($html, $fortuneRows);
@@ -88,10 +90,12 @@ EOF;
             $row = World::select()->cols(['*'])->where('`id` = :id')
                 ->bindValue(':id', random_int(1, 10000))
                 ->first();
-            $row->randomNumber = random_int(1, 10000);
-            $row->save();
+            if ($row) {
+                $row->randomNumber = random_int(1, 10000);
+                $row->save();
 
-            $rows[] = $row->toArray();
+                $rows[] = $row->toArray();
+            }
         }
 
         return $rows;
