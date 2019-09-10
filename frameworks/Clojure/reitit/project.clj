@@ -1,11 +1,11 @@
 (defproject hello "reitit"
-  :description "Immutant-nio, Reitit, Jsonista & Porsas"
+  :description "pohjavirta, reitit, jsonista & porsas"
   :dependencies [[org.clojure/clojure "1.10.1"]
-                 [ikitommi/immutant-web "3.0.0-alpha4"]
-                 [metosin/reitit "0.3.9"]
+                 [metosin/pohjavirta "0.0.1-alpha4"]
+                 [metosin/porsas "0.0.1-alpha13"]
                  [metosin/jsonista "0.2.3"]
-                 [metosin/porsas "0.0.1-alpha10"]
-                 [hikari-cp "2.7.1"]]
+                 [metosin/reitit "0.3.9"]
+                 [hikari-cp "2.8.0"]]
   :jvm-opts ^:replace ["-Dclojure.compiler.direct-linking=true"]
   :main hello.handler
   :aot :all)

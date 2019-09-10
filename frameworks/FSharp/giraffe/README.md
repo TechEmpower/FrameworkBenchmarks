@@ -5,7 +5,7 @@ This includes tests for plaintext and json serialization.
 
 **Language**
 
-* F# 4.1
+* F# 4.6
 
 **Platforms**
 

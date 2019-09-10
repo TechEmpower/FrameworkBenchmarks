@@ -1,10 +1,10 @@
-lazy val finatraVersion = "19.5.1"
+lazy val finatraVersion = "19.8.0"
 
 name := "techempower-benchmarks-finatra"
 organization := "com.twitter"
 version := finatraVersion
 
-scalaVersion := "2.12.5"
+scalaVersion := "2.12.8"
 
 resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")
@@ -21,7 +21,6 @@ libraryDependencies ++= Seq(
   "com.twitter" %% "finatra-http" % finatraVersion,
   "org.slf4j" % "slf4j-nop" % "1.7.25",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.9",
-  "javax.activation" % "activation" % "1.1.1"
 )
 
 excludeDependencies ++= Seq(

@@ -1,6 +1,6 @@
 FROM php:7.3
 
-ENV SWOOLE_VERSION=4.3.4
+ENV SWOOLE_VERSION=4.4.5
 
 RUN cd /tmp && curl -sSL "https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz" | tar xzf - \
         && cd swoole-src-${SWOOLE_VERSION} \

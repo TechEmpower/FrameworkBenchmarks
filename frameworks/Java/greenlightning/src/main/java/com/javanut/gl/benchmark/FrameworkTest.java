@@ -6,6 +6,7 @@ import com.javanut.gl.api.GreenApp;
 import com.javanut.gl.api.GreenCommandChannel;
 import com.javanut.gl.api.GreenFramework;
 import com.javanut.gl.api.GreenRuntime;
+import com.javanut.pronghorn.network.ServerSocketWriterStage;
 
 import io.reactiverse.pgclient.PgClient;
 import io.reactiverse.pgclient.PgPool;
@@ -13,13 +14,13 @@ import io.reactiverse.pgclient.PgPoolOptions;
 
 public class FrameworkTest implements GreenApp {
 
-	static final String payloadText="Hello, World!";
-	static final byte[] payload = payloadText.getBytes();
+	private final String payloadText;
+	final byte[] payload;
 
 	private int bindPort;
     private String host;
     private int concurrentWritesPerChannel;
-    private int queueLengthOfPendingRequests;
+  
     private int telemetryPort;//for monitoring
     private int minMemoryOfInputPipes;
     private int dbCallMaxResponseSize;
@@ -47,8 +48,24 @@ public class FrameworkTest implements GreenApp {
 	public static String connectionPassword = "postgres";
 	
 	//TODO: add utility to compute this based on need.
-	static final int c = 592; // to reach 16K simultainious calls
+	static final int c = 148;//592; // to reach 16K simultaneous calls
 
+	private final long defaultRate = Long.parseLong(System.getProperty("xx.rate", "180000")); //2.5K cycles per second
+	                                                                                          // at 512 requests is 1.28M/sec
+	//Need to record how many records per pass are done...
+	
+	static {
+		System.setProperty("java.lang.Integer.IntegerCache.high", ""+Integer.MAX_VALUE);
+
+		//TODO: test with normal polll and a very fast reader, vs epoll and slower reader.
+		
+	//	System.setProperty("java.nio.channels.spi.SelectorProvider","sun.nio.ch.PollSelectorProvider");
+		//System.setProperty("java.nio.channels.spi.SelectorProvider","com.javanut.gl.CustomEPollSelectorProvider");//
+		
+		ServerSocketWriterStage.BASE_ADJUST = Float.parseFloat(System.getProperty("xx.ratio", "1"));
+		ServerSocketWriterStage.HARD_LIMIT_NS = Long.parseLong(System.getProperty("xx.limitns", "180000"));		
+	}
+	
     public FrameworkTest() {
     	    	
     	// use this in commit messages to narrow travis testing to just this project
@@ -57,49 +74,58 @@ public class FrameworkTest implements GreenApp {
     	
     	//this server works best with  -XX:+UseNUMA    	
     	this(System.getProperty("host","0.0.0.0"), 
-    		 8080,    	//default port for test 
-    		 c,         //pipes per track
-    		 c*16,      //(router to module) pipeline of 16 used for plain text test    		 
-    		 1<<13,     //default total size of network buffer used by blocks     		 
+    		 Integer.parseInt(System.getProperty("port","8080")),    	//default port for test 
+    		 c,         //pipes per track    			 
+    		 1<<14,     // default total size of network buffer used by blocks  
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
     		 "hello_world",
     		 "benchmarkdbuser",
-    		 "benchmarkdbpass"
+    		 "benchmarkdbpass",
+    		 System.getProperty("custom.payload", "Hello, World!")    		 
     		 );
+    	   	
+    	System.out.println("xx.rate "+defaultRate+"  xx.ratio "+ServerSocketWriterStage.BASE_ADJUST+" xx.limitns "+ServerSocketWriterStage.HARD_LIMIT_NS);
+		
+    	
+    	
+		
     }   
         
     public FrameworkTest(String host, int port, 
     		             int concurrentWritesPerChannel, 
-    		             int queueLengthOfPendingRequests, 
+    		            
     		             int minMemoryOfInputPipes,
     		             int telemetryPort,
     		             String dbHost,
     		             String dbName,
     		             String dbUser,
-    		             String dbPass) {
+    		             String dbPass,
+    		             String payloadResponse) {
     	
+    	this.payloadText = payloadResponse;
+    	this.payload = payloadText.getBytes();
     	
     	this.connectionsPerTrack = 1;
     	this.connectionPort = 5432;
     	this.bindPort = port;
     	this.host = host;
     	this.concurrentWritesPerChannel = concurrentWritesPerChannel;
-    	this.queueLengthOfPendingRequests = queueLengthOfPendingRequests;
+
     	this.minMemoryOfInputPipes = minMemoryOfInputPipes;
     	this.telemetryPort = telemetryPort;
     	this.pipelineBits = 15;//max concurrent in flight database requests 1<<pipelineBits
     	            
     	this.dbCallMaxResponseCount = c;
-    	this.jsonMaxResponseCount = c*32;
+    	this.jsonMaxResponseCount = c*16*4;
     	
     	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
     	this.jsonMaxResponseSize = 1<<8;
 
-    	this.maxQueueOut = 8;   	
-    	this.maxConnectionBits = 14; //16K connections, for test plus overhead
+    	this.maxQueueOut = 8*20;   	
+    	this.maxConnectionBits = 15;//16K connections, for test plus overhead MUST be 32K
     	
-    	this.maxRequestSize = 1<<9;
+    	this.maxRequestSize = 1<<13;
     	    	
     	if (!"127.0.0.1".equals(System.getProperty("host",null))) { 
     		    		
@@ -155,7 +181,7 @@ public class FrameworkTest implements GreenApp {
 	@Override
     public void declareConfiguration(GreenFramework framework) {
 		
-		framework.setDefaultRate(200_000L);		
+		framework.setDefaultRate(defaultRate);
 	
 		//for 14 cores this is expected to use less than 16G, must use next largest prime to ensure smaller groups are not multiples.
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
@@ -166,16 +192,16 @@ public class FrameworkTest implements GreenApp {
     			 //NOTE: not sure this is optimal yet ...
     			 //TODO: neeed to allow for multiple writes one pipe! big dif.
     			// .setConcurrentChannelsPerEncryptUnit(Math.max(1,concurrentWritesPerChannel/2))  //8K    
-    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel/80)  ///80) ///16) // /8)//4)
+    			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel/25)  ///80) ///16) // /8)//4)
     			 //TODO: we need smaller count of connections but MORE writers.
     			 
-    			 .disableEPoll() //provides advantage in JSON test....
+    			// .disableEPoll() //provides advantage in JSON test.... 
  						 
-    			 .setMaxQueueIn(queueLengthOfPendingRequests)
     			 .setMaxRequestSize(maxRequestSize)
+    			 .setMaxQueueIn(c*16)
     	
     			 .setMinimumInputPipeMemory(minMemoryOfInputPipes)
-    			 .setMaxQueueOut(maxQueueOut*30)
+    			 .setMaxQueueOut(maxQueueOut)
     			 .setMaxResponseSize(dbCallMaxResponseSize) //big enough for large mult db response
     	         .useInsecureServer(); //turn off TLS
 
@@ -227,7 +253,7 @@ public class FrameworkTest implements GreenApp {
 
 	public void parallelBehavior(GreenRuntime runtime) {
 
-		SimpleRest restTest = new SimpleRest(runtime, jsonMaxResponseCount, jsonMaxResponseSize);		
+		SimpleRest restTest = new SimpleRest(runtime, jsonMaxResponseCount, jsonMaxResponseSize, payload);		
 		runtime.registerListener("Simple", restTest)
 		       .includeRoutes(Struct.PLAINTEXT_ROUTE, restTest::plainRestRequest)
 		       .includeRoutes(Struct.JSON_ROUTE, restTest::jsonRestRequest);		 

@@ -75,7 +75,7 @@ func (psql PGX) GetOneRandomWorld(w *World) error {
 }
 
 // UpdateWorlds updates some number of worlds entries, passed as arg
-func (psql PGX) UpdateWorlds(selectedWorlds []World) error {
+func (psql PGX) UpdateWorlds(selectedWorlds Worlds) error {
 	// against deadlocks
 	sort.Slice(selectedWorlds, func(i, j int) bool {
 		return selectedWorlds[i].ID < selectedWorlds[j].ID
@@ -103,41 +103,24 @@ func (psql PGX) UpdateWorlds(selectedWorlds []World) error {
 }
 
 // GetFortunes selects all fortunes from table
-func (psql PGX) GetFortunes() ([]templates.Fortune, error) {
+func (psql PGX) GetFortunes() (templates.Fortunes, error) {
 	rows, err := psql.db.Query("fortuneStmt")
 	defer rows.Close()
 	if err != nil {
 		return nil, fmt.Errorf("can't query fortunes: %s", err)
 	}
 
-	fortunes := make([]templates.Fortune, 0, 16)
-	var fortune templates.Fortune
+	fortunes := templates.AcquireFortunes()
+	fortune := templates.AcquireFortune()
+
 	for rows.Next() {
 		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {
 			log.Printf("Can't scan fortune: %s\n", err)
 		}
-		fortunes = append(fortunes, fortune)
+		fortunes = append(fortunes, *fortune)
 	}
 
-	return fortunes, nil
-}
-
-// GetFortunesPool selects all fortunes from table
-func (psql PGX) GetFortunesPool() ([]templates.Fortune, error) {
-	rows, err := psql.db.Query("fortuneStmt")
-	defer rows.Close()
-	if err != nil {
-		return nil, fmt.Errorf("can't query fortunes: %s", err)
-	}
-
-	fortunes := templates.FortunesPool.Get().([]templates.Fortune)
-	var fortune templates.Fortune
-	for rows.Next() {
-		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {
-			log.Printf("Can't scan fortune: %s\n", err)
-		}
-		fortunes = append(fortunes, fortune)
-	}
+	templates.ReleaseFortune(fortune)
 
 	return fortunes, nil
 }

@@ -16,17 +16,21 @@ import io.reactivex.Single;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
 import javax.json.JsonStructure;
 import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class DbService implements Service {
+
+    private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
 
     private final DbRepository repository;
     private JsonWriterFactory jsonWriterFactory;
@@ -89,7 +93,7 @@ public class DbService implements Service {
 
     private JsonArray buildArray(List<JsonObject> jsonObjects) {
         return jsonObjects.stream().reduce(
-                Json.createArrayBuilder(),
+                JSON.createArrayBuilder(),
                 JsonArrayBuilder::add,
                 JsonArrayBuilder::addAll)
                 .build();

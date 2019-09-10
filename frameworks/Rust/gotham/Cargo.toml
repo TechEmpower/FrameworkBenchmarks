@@ -2,9 +2,10 @@
 name = "gotham_techempower"
 version = "0.1.0"
 authors = ["Isaac Whitfield <iw@whitfin.io>"]
+edition = "2018"
 
 [dependencies]
-gotham = "0.3"
+gotham = "0.4"
 hyper = "0.12"
 mime = "0.3"
 serde = "1.0"

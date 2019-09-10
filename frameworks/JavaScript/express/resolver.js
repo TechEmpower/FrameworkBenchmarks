@@ -55,7 +55,7 @@ async function arrayOfRandomWorlds(totalWorldToReturn) {
 
     return new Promise(async (resolve, reject) => {
         for(var i = 0; i < totalIterations; i++) {
-            let world = await World.findById(helper.randomizeNum());
+            let world = await World.findByPk(helper.randomizeNum());
             arr.push(world);
         }
         if(arr.length == totalIterations) {
@@ -72,7 +72,7 @@ async function updateRandomWorlds(totalToUpdate) {
     return new Promise(async (resolve, reject) => {
         for(var i = 0; i < total; i++) {
 
-            const world = await World.findById(helper.randomizeNum());
+            const world = await World.findByPk(helper.randomizeNum());
             world.updateAttributes({
                 randomNumber: helper.randomizeNum()
             })
@@ -96,9 +96,9 @@ module.exports = {
     Query: {
         helloWorld: () => sayHello(),
         getAllWorlds: async() => await World.findAll(),
-        singleDatabaseQuery: async() => await World.findById(helper.randomizeNum()),
+        singleDatabaseQuery: async() => await World.findByPk(helper.randomizeNum()),
         multipleDatabaseQueries: async(parent, args) => await arrayOfRandomWorlds(args.total),
-        getWorldById: async(parent, args) => await World.findById(args.id),
+        getWorldById: async(parent, args) => await World.findByPk(args.id),
         getAllFortunes: async() => await Fortune.findAll(),
         getRandomAndUpdate: async(parent, args) => await updateRandomWorlds(args.total)
     },
