@@ -10,7 +10,7 @@ namespace PlatformBenchmarks
     public partial class HttpHandler
     {
 
-        private readonly static AsciiString _fortunesTableStart = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
+        private readonly static AsciiString _fortunesTableStart = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";     
         private readonly static AsciiString _fortunesRowStart = "<tr><td>";
         private readonly static AsciiString _fortunesColumn = "</td><td>";
         private readonly static AsciiString _fortunesRowEnd = "</td></tr>";
@@ -18,11 +18,11 @@ namespace PlatformBenchmarks
 
         public async void fortunes(IFiberRw<HttpToken> fiberRw, WriteBytes write)
         {
-            List<Fortune> data = null;
+         
 
             try
             {
-                data = await mPgsql.LoadFortunesRows();
+                var data = await fiberRw.UserToken.Db.LoadFortunesRows();
 
                 Task<int> WSend()
                 {

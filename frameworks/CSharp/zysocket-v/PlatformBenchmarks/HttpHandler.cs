@@ -45,12 +45,10 @@ namespace PlatformBenchmarks
 
         private static byte _question = 63;
 
-        private RawDb mPgsql;
 
         public HttpHandler()
         {
 
-            mPgsql = new RawDb(new ConcurrentRandom(), Npgsql.NpgsqlFactory.Instance);
         }
 
         public void Default(IFiberRw<HttpToken> fiberRw,ref WriteBytes write)
