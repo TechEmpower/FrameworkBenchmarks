@@ -7,7 +7,6 @@ oatpp::String Utils::renderTime() {
 
   static thread_local time_t lastSecond = 0;
   static thread_local oatpp::String rederedTime;
-  static int count = 0;
 
   auto time = std::chrono::system_clock::now().time_since_epoch();
   time_t seconds = (time_t)std::chrono::duration_cast<std::chrono::seconds>(time).count();

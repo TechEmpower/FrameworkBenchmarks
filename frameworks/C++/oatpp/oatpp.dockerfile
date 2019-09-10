@@ -2,10 +2,10 @@ FROM debian:9
 
 RUN apt-get update
 
-RUN apt-get install -y cmake
-RUN apt-get install -y build-essential
+RUN apt-get install -yqq cmake
+RUN apt-get install -yqq build-essential
 
-RUN apt-get install -y git
+RUN apt-get install -yqq git
 
 #---------------------------------------------------------------
 # install oatpp
