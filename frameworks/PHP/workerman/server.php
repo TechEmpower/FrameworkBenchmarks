@@ -12,7 +12,7 @@ function get_processor_cores_number() {
 }
 
 $http_worker = new Worker('http://0.0.0.0:8080');
-$http_worker->count = ($count = get_processor_cores_number()) ? $count : 64;
+$http_worker->count = get_processor_cores_number() ?? 64;
 $http_worker->onWorkerStart = function()
 {
   global $pdo;
@@ -22,36 +22,40 @@ $http_worker->onWorkerStart = function()
 $http_worker->onMessage = function($connection, $data)
 {
   global $pdo;
-  $base = $_SERVER['REQUEST_URI'];
-  $question = strpos($base, '?');
-  if ($question !== false) {
-    $base = substr($base, 0, $question);
-  }
-  Http::header('Date: '.gmdate('D, d M Y H:i:s', time()).' GMT'); 
-  if ($base == '/fortune.php') {
+  $base = parse_url($_SERVER['REQUEST_URI'])['path'];
+
+  Http::header('Date: '.gmdate('D, d M Y H:i:s', time()).' GMT');
+
+  if ($base === '/fortune') {
     Http::header('Content-Type: text/html; charset=utf-8');
     ob_start();
     fortune($pdo);
     $connection->send(ob_get_clean());
-  } else if ($base == '/dbraw.php') {
+
+  } elseif ($base === '/db') {
     Http::header('Content-Type: application/json');
     ob_start();
     dbraw($pdo);
     $connection->send(ob_get_clean());
-  } else if ($base == '/updateraw.php') {
+
+  } elseif ($base === '/update') {
     Http::header('Content-Type: application/json');
     ob_start();
     updateraw($pdo);
     $connection->send(ob_get_clean());
-  } else if ($base == '/plaintext.php') {
+
+  } elseif ($base === '/plaintext') {
     Http::header('Content-Type: text/plain');
     $connection->send('Hello, World!');
-  } else if ($base == '/json.php') {
+
+  } elseif ($base === '/json') {
     Http::header('Content-Type: application/json');
     $connection->send(json_encode(['message'=>'Hello, World!']));
-  } else {
-    Http::header('Content-Type: application/json');
-    $connection->send(json_encode(['message'=>'Hello, World!']));
+  // } elseif ($base === '/info') {
+  //   Http::header('Content-Type: text/plain');
+  //   ob_start();
+  //   phpinfo();
+  //   $connection->send(ob_get_clean());
   }
 };
 

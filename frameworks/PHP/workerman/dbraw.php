@@ -9,19 +9,15 @@ function dbraw($pdo) {
 
   $query_count = 1;
   if ($_GET['queries'] > 1) {
-    $query_count = $_GET['queries'];
+    $query_count = min($_GET['queries'], 500);
   }
-  if ($query_count > 500) $query_count=500;
-
+ 
   $arr = [];
-  $id = mt_rand(1, 10000);
-  $statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id = :id');
-  $statement->bindParam(':id', $id, PDO::PARAM_INT);
+  $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
 
   while ($query_count--) {
-    $statement->execute();
-    $arr[] = ['id' => $id, 'randomNumber' => $statement->fetchColumn()];
-    $id = mt_rand(1, 10000);
+    $statement->execute([mt_rand(1, 10000)]);
+    $arr[] = $statement->fetch(PDO::FETCH_ASSOC);
   }
 
   echo json_encode($arr);
