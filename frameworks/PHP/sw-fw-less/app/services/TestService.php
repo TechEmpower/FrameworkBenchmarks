@@ -95,6 +95,8 @@ EOF;
                 $row->save();
 
                 $rows[] = $row->toArray();
+            } else {
+                $rows[] = [];
             }
         }
 
