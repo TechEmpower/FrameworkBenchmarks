@@ -1,6 +1,5 @@
 source 'http://rubygems.org'
 
-gem 'mysql2', '0.5.2'
 gem 'unicorn', '5.4.1'
 gem 'puma', '3.12.0'
 gem 'activerecord-import', '0.27.0'
@@ -8,3 +7,11 @@ gem 'activerecord', '5.2.2', :require => 'active_record'
 gem 'rails', '5.2.2'
 gem 'tzinfo-data', '1.2018.7'
 gem 'oj', '3.7.9'
+
+group :mysql do
+  gem 'mysql2', '0.5.2'
+end
+
+group :postgresql do
+  gem 'pg', '1.1.4'
+end

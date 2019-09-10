@@ -10,8 +10,7 @@ class RawController extends AppController
         header('Content-type: application/json');
 
         $this->pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', [
-            PDO::ATTR_PERSISTENT => true,
-            PDO::ATTR_EMULATE_PREPARES => false
+            PDO::ATTR_PERSISTENT => true
         ]);
     }
 
@@ -43,12 +42,12 @@ class RawController extends AppController
         
         for ($i = 0; $i < $count; ++$i) {
             $id = mt_rand(1, 10000);
-            $randomNumber = mt_rand(1, 10000);
 
             $sth->execute([$id]);
-            $row = ['id' => $id, 'randomNumber' => $updateSth->fetchColumn()];
-            $row['randomNumber'] = $randomNumber;
-            $updateSth->execute([$randomNumber, $id]);
+            $row = ['id' => $id, 'randomNumber' => $sth->fetchColumn()];
+            $updateSth->execute(
+                [$row['randomNumber'] = mt_rand(1, 10000), $id]
+            );
             $worlds[] = $row;
         }
         echo json_encode($worlds);

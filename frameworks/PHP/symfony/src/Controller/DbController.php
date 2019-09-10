@@ -36,7 +36,7 @@ class DbController
      */
     public function queries(Request $request): JsonResponse
     {
-        $queries = $request->query->getInt('queries', 1);
+        $queries = (int) $request->query->get('queries', 1);
         $queries = min(max($queries, 1), 500);
 
         // possibility for enhancement is the use of SplFixedArray -> http://php.net/manual/de/class.splfixedarray.php
@@ -54,7 +54,7 @@ class DbController
      */
     public function update(Request $request): JsonResponse
     {
-        $queries = $request->query->getInt('queries', 1);
+        $queries = (int) $request->query->get('queries', 1);
         $queries = min(500, max(1, $queries));
 
         $worlds = [];
