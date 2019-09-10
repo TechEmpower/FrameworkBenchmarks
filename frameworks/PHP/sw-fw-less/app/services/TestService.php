@@ -52,7 +52,7 @@ class TestService extends BaseService
             return strcmp($left->message, $right->message);
         });
 
-        return Response::output($this->renderFortunes($rows), 200, ['Content-Type' => 'text/html']);
+        return Response::output($this->renderFortunes($rows), 200, ['Content-Type' => 'text/html;charset=utf-8']);
     }
 
     private function renderFortunes($fortunes)
