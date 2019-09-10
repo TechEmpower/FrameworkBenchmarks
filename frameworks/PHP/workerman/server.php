@@ -19,7 +19,7 @@ $http_worker->onMessage = function($connection, $data)
   global $pdo;
   $base = parse_url($_SERVER['REQUEST_URI'])['path'];
 
-  Http::header('Date: '.gmdate('D, d M Y H:i:s', time()).' GMT');
+  Http::header('Date: '.gmdate('D, d M Y H:i:s').' GMT');
 
   if ($base === '/fortune') {
     Http::header('Content-Type: text/html; charset=utf-8');
