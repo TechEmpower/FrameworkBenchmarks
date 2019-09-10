@@ -1,5 +1,5 @@
 # [ZYSOCKET-V](ZYSOCKET-V](https://github.com/luyikk/zysocket-v)(.Net) Benchmarking Test
-This includes tests for plaintext, json, db, queries and fortune.
+This includes tests for plaintext, json, db.
 
 ## Infrastructure Software Versions
 **Language**
@@ -21,3 +21,5 @@ This includes tests for plaintext, json, db, queries and fortune.
 * [Single query](PlatformBenchmarks/Program.cs): "/db"
 * [Multiple query](PlatformBenchmarks/Program.cs): "/queries"
 * [Fortune](PlatformBenchmarks/Program.cs): "/fortune"
+
+
