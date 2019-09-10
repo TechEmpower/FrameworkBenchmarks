@@ -59,7 +59,6 @@ public class FrameworkTest implements GreenApp {
 
 		//TODO: test with normal polll and a very fast reader, vs epoll and slower reader.
 		
-		//TODO: does this work??
 	//	System.setProperty("java.nio.channels.spi.SelectorProvider","sun.nio.ch.PollSelectorProvider");
 		//System.setProperty("java.nio.channels.spi.SelectorProvider","com.javanut.gl.CustomEPollSelectorProvider");//
 		
