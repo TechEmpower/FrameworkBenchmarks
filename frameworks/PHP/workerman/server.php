@@ -17,7 +17,7 @@ $http_worker->onWorkerStart = function()
 $http_worker->onMessage = function($connection, $data)
 {
   global $pdo;
-  $base = parse_url($_SERVER['REQUEST_URI'])['path'];
+  $base = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
   Http::header('Date: '.gmdate('D, d M Y H:i:s').' GMT');
 
