@@ -76,7 +76,7 @@ namespace PlatformBenchmarks
            
 
             using (var data_r = fiberRw.GetMemory(4096))
-            using (var data_w = fiberRw.GetMemory(4096))
+            using (var data_w = fiberRw.GetMemory(1024*16))
             {
 
                 for (; ; )
