@@ -12,7 +12,7 @@ if (isset($_GET['queries']) && $_GET['queries'] > 0) {
 $arr = array();
 
 // For each query, store the result set values in the response array
-while (0 < $query_count--) {
+while ($query_count--) {
   $id = mt_rand(1, 10000);
   $randomNumber = mt_rand(1, 10000);
 
