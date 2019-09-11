@@ -3,11 +3,10 @@ FROM php:7.1
 MAINTAINER luoxiaojun1992 <luoxiaojun1992@sina.cn>
 
 # Version
-ENV PHPREDIS_VERSION 4.0.0
 ENV SWOOLE_VERSION v4.4.0
 
 # Libs
-RUN apt-get update -qq \
+RUN apt-get update -yqq \
     && apt-get install -yqq \
         curl wget git zip unzip less vim procps lsof tcpdump htop openssl \
         libz-dev \
