@@ -14,7 +14,7 @@ $http_worker->onWorkerStart = function()
   $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world;charset=utf8',
   'benchmarkdbuser', 'benchmarkdbpass');
 };
-$http_worker->onMessage = function($connection, $data)
+$http_worker->onMessage = function($connection)
 {
   global $pdo;
   $base = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
