@@ -23,13 +23,13 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && composer self-update --clean-backups
 
 # PDO extension
-RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install pdo_mysql > /dev/null
 
 # Bcmath extension required by amqp composer package
-RUN docker-php-ext-install bcmath
+RUN docker-php-ext-install bcmath > /dev/null
 
 # Sockets extension
-RUN docker-php-ext-install sockets
+RUN docker-php-ext-install sockets > /dev/null
 
 # Swoole extension
 RUN wget -q https://github.com/swoole/swoole-src/archive/${SWOOLE_VERSION}.tar.gz -O swoole.tar.gz \
@@ -44,7 +44,7 @@ RUN wget -q https://github.com/swoole/swoole-src/archive/${SWOOLE_VERSION}.tar.g
         && make install --quiet \
     ) \
     && rm -r swoole \
-    && docker-php-ext-enable swoole
+    && docker-php-ext-enable swoole > /dev/null
 
 ADD . /var/www/sw-fw-less
 
