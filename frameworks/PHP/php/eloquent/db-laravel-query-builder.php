@@ -21,7 +21,7 @@ if ($_GET['queries'] > 1) {
 // Create an array with the response string.
 $arr = [];
 // For each query, store the result set values in the response array
-while (0 < $query_count--) {
+while ($query_count--) {
     // Store result in array.
     $arr[] = Capsule::table('World')->where('id', mt_rand(1, 10000))->get()->first();
 }

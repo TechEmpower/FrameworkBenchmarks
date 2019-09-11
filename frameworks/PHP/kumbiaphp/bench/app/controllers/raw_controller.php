@@ -20,12 +20,12 @@ class RawController extends AppController
         echo json_encode($statement->fetch(PDO::FETCH_ASSOC));
     }
 
-    public function queries($count = 1)
+    public function query($count = 1)
     {
         $count = min(max($count, 1), 500);
         $res = $this->pdo->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
         $worlds = [];
-        for ($i = 0; $i < $count; ++$i) {
+        while ($count--) {
             $res->execute([mt_rand(1, 10000)]);
             $worlds[] = $res->fetch(PDO::FETCH_ASSOC);
         }
@@ -40,7 +40,7 @@ class RawController extends AppController
         $sth = $this->pdo->prepare('SELECT * FROM World WHERE id = ?');
         $updateSth = $this->pdo->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
         
-        for ($i = 0; $i < $count; ++$i) {
+        while ($count--) {
             $id = mt_rand(1, 10000);
 
             $sth->execute([$id]);
