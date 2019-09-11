@@ -1,0 +1,30 @@
+{
+    "framework": "sw-fw-less",
+    "tests": [
+        {
+            "default": {
+                "json_url": "/json",
+                "db_url": "/db",
+                "query_url": "/queries/",
+                "fortune_url": "/fortunes",
+                "update_url": "/updates/",
+                "plaintext_url": "/plaintext",
+                "port": 9501,
+                "approach": "Realistic",
+                "classification": "Micro",
+                "database": "MySQL",
+                "framework": "Sw-Fw-Less",
+                "language": "PHP",
+                "flavor": "None",
+                "orm": "Full",
+                "platform": "swoole",
+                "webserver": "None",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "Sw-Fw-Less",
+                "notes": "",
+                "versus": "swoole"
+            }
+        }
+    ]
+}
