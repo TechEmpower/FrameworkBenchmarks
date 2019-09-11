@@ -1,0 +1,24 @@
+{
+  "framework": "oatpp",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8000,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "oatpp-async",
+      "language": "C++",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "oatpp",
+      "notes": "Test of Oat++ Async API",
+      "versus": "None"
+    }
+  }]
+}
