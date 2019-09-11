@@ -8,7 +8,7 @@ return [
     ],
 
     //Timezone
-    'timezone' => env('TIMEZONE', 'PRC'),
+    'timezone' => env('TIMEZONE', null),
 
     //Monitor
     'monitor' => [
