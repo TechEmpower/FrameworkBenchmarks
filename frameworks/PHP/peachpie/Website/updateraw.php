@@ -25,7 +25,7 @@ function updateraw() {
   $randomNumber = mt_rand(1, 1000);
 
   // For each query, store the result set values in the response array
-  while (0 < $query_count--) {
+  while ($query_count--) {
     $result = mysql_query("SELECT randomNumber FROM World WHERE id = $id", $link);
     
     // Store result in array.
