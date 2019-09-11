@@ -40,8 +40,8 @@ RUN wget -q https://github.com/swoole/swoole-src/archive/${SWOOLE_VERSION}.tar.g
         cd swoole \
         && phpize \
         && ./configure --enable-mysqlnd --quiet \
-        && make -j$(nproc) --quiet \
-        && make install --quiet \
+        && make -j$(nproc) > /dev/null \
+        && make install > /dev/null \
     ) \
     && rm -r swoole \
     && docker-php-ext-enable swoole > /dev/null
