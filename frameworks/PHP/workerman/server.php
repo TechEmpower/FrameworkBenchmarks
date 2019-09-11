@@ -6,52 +6,51 @@ require_once __DIR__ . '/updateraw.php';
 use Workerman\Worker;
 use Workerman\Protocols\Http;
 
-function get_processor_cores_number() {
-  $command = 'cat /proc/cpuinfo | grep processor | wc -l';
-  return  (int) shell_exec($command);
-}
-
 $http_worker = new Worker('http://0.0.0.0:8080');
-$http_worker->count = ($count = get_processor_cores_number()) ? $count : 64;
+$http_worker->count = (int) shell_exec('nproc') ?? 64;
 $http_worker->onWorkerStart = function()
 {
   global $pdo;
   $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world;charset=utf8',
   'benchmarkdbuser', 'benchmarkdbpass');
 };
-$http_worker->onMessage = function($connection, $data)
+$http_worker->onMessage = function($connection)
 {
   global $pdo;
-  $base = $_SERVER['REQUEST_URI'];
-  $question = strpos($base, '?');
-  if ($question !== false) {
-    $base = substr($base, 0, $question);
-  }
-  Http::header('Date: '.gmdate('D, d M Y H:i:s', time()).' GMT'); 
-  if ($base == '/fortune.php') {
+  $base = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+  Http::header('Date: '.gmdate('D, d M Y H:i:s').' GMT');
+
+  if ($base === '/fortune') {
     Http::header('Content-Type: text/html; charset=utf-8');
     ob_start();
     fortune($pdo);
     $connection->send(ob_get_clean());
-  } else if ($base == '/dbraw.php') {
+
+  } elseif ($base === '/db') {
     Http::header('Content-Type: application/json');
     ob_start();
     dbraw($pdo);
     $connection->send(ob_get_clean());
-  } else if ($base == '/updateraw.php') {
+
+  } elseif ($base === '/update') {
     Http::header('Content-Type: application/json');
     ob_start();
     updateraw($pdo);
     $connection->send(ob_get_clean());
-  } else if ($base == '/plaintext.php') {
+
+  } elseif ($base === '/plaintext') {
     Http::header('Content-Type: text/plain');
     $connection->send('Hello, World!');
-  } else if ($base == '/json.php') {
+
+  } elseif ($base === '/json') {
     Http::header('Content-Type: application/json');
     $connection->send(json_encode(['message'=>'Hello, World!']));
-  } else {
-    Http::header('Content-Type: application/json');
-    $connection->send(json_encode(['message'=>'Hello, World!']));
+  // } elseif ($base === '/info') {
+  //   Http::header('Content-Type: text/plain');
+  //   ob_start();
+  //   phpinfo();
+  //   $connection->send(ob_get_clean());
   }
 };
 
