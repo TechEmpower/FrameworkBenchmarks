@@ -30,9 +30,9 @@ namespace PlatformBenchmarks
                     foreach (var item in data)
                     {
                         write.Write(_fortunesRowStart.Data, 0, _fortunesRowStart.Length);
-                        write.Write(item.Id.ToString(CultureInfo.InvariantCulture));
+                        write.Write(item.Id.ToString(CultureInfo.InvariantCulture),false);
                         write.Write(_fortunesColumn.Data, 0, _fortunesColumn.Length);
-                        write.Write(System.Web.HttpUtility.HtmlEncode(item.Message));
+                        write.Write(System.Web.HttpUtility.HtmlEncode(item.Message),false);
                         write.Write(_fortunesRowEnd.Data, 0, _fortunesRowEnd.Length);
                     }
                     write.Write(_fortunesTableEnd.Data, 0, _fortunesTableEnd.Length);
