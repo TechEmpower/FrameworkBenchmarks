@@ -7,4 +7,4 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.0 AS runtime
 ENV COMPlus_ReadyToRun 0
 WORKDIR /app
 COPY --from=build /app/out ./
-ENTRYPOINT ["dotnet", "PlatformBenchmarks.dll debug"]
+ENTRYPOINT ["dotnet", "PlatformBenchmarks.dll","debug"]
