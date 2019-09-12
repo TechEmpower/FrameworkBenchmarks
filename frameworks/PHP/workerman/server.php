@@ -1,57 +1,64 @@
 <?php
-require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/fortune.php';
-require_once __DIR__ . '/dbraw.php';
-require_once __DIR__ . '/updateraw.php';
-use Workerman\Worker;
+require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__.'/fortune.php';
+require_once __DIR__.'/dbraw.php';
+require_once __DIR__.'/updateraw.php';
 use Workerman\Protocols\Http;
+use Workerman\Worker;
 
-$http_worker = new Worker('http://0.0.0.0:8080');
-$http_worker->count = (int) shell_exec('nproc') ?? 64;
-$http_worker->onWorkerStart = function()
-{
-  global $pdo;
-  $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world;charset=utf8',
-  'benchmarkdbuser', 'benchmarkdbpass');
+$http_worker                = new Worker('http://0.0.0.0:8080');
+$http_worker->count         = (int) shell_exec('nproc') ?? 64;
+$http_worker->onWorkerStart = function () {
+    global $pdo;
+    $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world;charset=utf8',
+        'benchmarkdbuser', 'benchmarkdbpass');
 };
-$http_worker->onMessage = function($connection)
-{
-  global $pdo;
-  $base = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$http_worker->onMessage = function ($connection) {
+    global $pdo;
 
-  Http::header('Date: '.gmdate('D, d M Y H:i:s').' GMT');
+    Http::header('Date: '.gmdate('D, d M Y H:i:s').' GMT');
 
-  if ($base === '/fortune') {
-    Http::header('Content-Type: text/html; charset=utf-8');
-    ob_start();
-    fortune($pdo);
-    $connection->send(ob_get_clean());
+    switch (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) {
+        case '/plaintext':
+            Http::header('Content-Type: text/plain');
+            $connection->send('Hello, World!');
+            break;
 
-  } elseif ($base === '/db') {
-    Http::header('Content-Type: application/json');
-    ob_start();
-    dbraw($pdo);
-    $connection->send(ob_get_clean());
+        case '/json':
+            Http::header('Content-Type: application/json');
+            $connection->send(json_encode(['message' => 'Hello, World!']));
+            break;
 
-  } elseif ($base === '/update') {
-    Http::header('Content-Type: application/json');
-    ob_start();
-    updateraw($pdo);
-    $connection->send(ob_get_clean());
+        case '/db':
+            Http::header('Content-Type: application/json');
+            ob_start();
+            dbraw($pdo);
+            $connection->send(ob_get_clean());
+            break;
 
-  } elseif ($base === '/plaintext') {
-    Http::header('Content-Type: text/plain');
-    $connection->send('Hello, World!');
+        case '/fortune':
+            Http::header('Content-Type: text/html; charset=utf-8');
+            ob_start();
+            fortune($pdo);
+            $connection->send(ob_get_clean());
+            break;
 
-  } elseif ($base === '/json') {
-    Http::header('Content-Type: application/json');
-    $connection->send(json_encode(['message'=>'Hello, World!']));
-  // } elseif ($base === '/info') {
-  //   Http::header('Content-Type: text/plain');
-  //   ob_start();
-  //   phpinfo();
-  //   $connection->send(ob_get_clean());
-  }
+        case '/update':
+            Http::header('Content-Type: application/json');
+            ob_start();
+            updateraw($pdo);
+            $connection->send(ob_get_clean());
+            break;
+
+            //case '/info':
+            //   Http::header('Content-Type: text/plain');
+            //   ob_start();
+            //   phpinfo();
+            //   $connection->send(ob_get_clean());
+
+            //default:
+            //   $connection->send('error');
+    }
 };
 
 Worker::runAll();
