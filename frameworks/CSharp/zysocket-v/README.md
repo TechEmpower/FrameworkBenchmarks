@@ -21,5 +21,3 @@ This includes tests for plaintext, json, db.
 * [Single query](PlatformBenchmarks/Program.cs): "/db"
 * [Multiple query](PlatformBenchmarks/Program.cs): "/queries"
 * [Fortune](PlatformBenchmarks/Program.cs): "/fortune"
-
-
