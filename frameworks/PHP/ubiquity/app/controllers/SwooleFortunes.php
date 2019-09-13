@@ -7,7 +7,7 @@ use Ubiquity\orm\DAO;
 class SwooleFortunes extends \Ubiquity\controllers\Controller {
 
 	public function index() {
-	    $dbInstance=DAO::pool();
+		$dbInstance=DAO::pool();
 		$fortunes = DAO::getAll(Fortune::class, '', false);
 		DAO::freePool($dbInstance);
 		$fortunes[] = (new Fortune())->setId(0)->setMessage('Additional fortune added at request time.');
