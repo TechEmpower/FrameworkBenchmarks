@@ -12,6 +12,8 @@ return array(
 			"options" => [
 				\PDO::ATTR_PERSISTENT => true
 			],
+			"cache"=>false
+		],
 		'swoole'=>[
 			"wrapper"=>"\\Ubiquity\\db\\providers\\swoole\\SwooleWrapper",
 			"type" => "mysql",
@@ -20,9 +22,9 @@ return array(
 			"port" => "3306",
 			"user" => "benchmarkdbuser", // benchmarkdbuser
 			"password" => "benchmarkdbpass", // benchmarkdbpass
-			"options" => []
-		]],
-		"cache" => false
+			"options" => [],
+			"cache" => false
+		]
 	],
 	"test" => false,
 	"debug" => false,
