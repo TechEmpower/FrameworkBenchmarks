@@ -50,9 +50,7 @@ namespace PlatformBenchmarks
         public HttpHandler()
         {
             int threads = System.Math.Min(Environment.ProcessorCount, 16);
-            if (Environment.ProcessorCount > 20)
-                threads = Environment.ProcessorCount * 2 / 3;
-            NextQueueGroup = new NextQueueGroup(2);
+            NextQueueGroup = new NextQueueGroup(threads);
           
         }
 
@@ -146,14 +144,19 @@ namespace PlatformBenchmarks
             base.SessionReceive(server, e);
             PipeStream pipeStream = e.Session.Stream.ToPipeStream();
             HttpToken token = (HttpToken)e.Session.Tag;
-            
-            //RequestWork work = new RequestWork();
-            //work.Handler = this;
-            //work.Session = e.Session;
-            //work.Stream = pipeStream;
-            //work.Token = token;
-            //token.NextQueue.Enqueue(work);
-            OnProcess(pipeStream, token, e.Session);
+            if (Program.Debug)
+            {
+                RequestWork work = new RequestWork();
+                work.Handler = this;
+                work.Session = e.Session;
+                work.Stream = pipeStream;
+                work.Token = token;
+                token.NextQueue.Enqueue(work);
+            }
+            else
+            {
+                OnProcess(pipeStream, token, e.Session);
+            }
         }
 
 

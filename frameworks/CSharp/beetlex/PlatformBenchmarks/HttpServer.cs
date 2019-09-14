@@ -20,13 +20,13 @@ namespace PlatformBenchmarks
             serverOptions.LogLevel = LogType.Error;
             serverOptions.DefaultListen.Port = 8080;
             serverOptions.Statistical = false;
-            serverOptions.PrivateBufferPool = true;
             serverOptions.BufferSize = 1024 * 4;
             serverOptions.PrivateBufferPool = true;
             serverOptions.MaxConnections = 100000;
-            serverOptions.BufferPoolMaxMemory = 500;
+            serverOptions.BufferPoolMaxMemory = 1000;
             mApiServer = SocketFactory.CreateTcpServer<HttpHandler>(serverOptions);
             mApiServer.Open();
+            mApiServer.Log(LogType.Info,null, $"Debug mode [{Program.Debug}]");
             return Task.CompletedTask;
         }
 
