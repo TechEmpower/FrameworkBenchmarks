@@ -11,7 +11,7 @@ Tests are available with NginX server and Swoole platform.
 The tests are separated into 8 controllers:
 - `Json` for JSON response
   * [JSON](app/controllers/Json.php)
-- `Db` for database access with ORM
+- `Db` for database access with ORM (PDO Mysql)
   * [DB](app/controllers/Db.php)
   * [QUERY](app/controllers/Db.php)
   * [CACHED QUERY (not implemented)]()
@@ -20,13 +20,13 @@ The tests are separated into 8 controllers:
   * [FORTUNES](app/controllers/Fortunes.php)
 - `Plaintext` for plaintext response
   * [PLAINTEXT](app/controllers/Plaintext.php)
-- `Raw` for database access without ORM
+- `Raw` for database access without ORM (PDO Mysql)
   * [Raw](app/controllers/Raw.php)
 - `RawFortunes` without ORM and without template engine
   * [FORTUNES](app/controllers/RawFortunes.php)
-- `SwooleDb` for database access with ORM (Swoole)
+- `SwooleDb` for database access with ORM (Swoole coroutine Mysql)
   * [DB](app/controllers/SwooleDb.php)
-- `SwooleFortunes` for using the internal template engine (Swoole)
+- `SwooleFortunes` for using the internal template engine (PDO Mysql test)
   * [FORTUNES](app/controllers/SwooleFortunes.php)
 
 ## Important Libraries
