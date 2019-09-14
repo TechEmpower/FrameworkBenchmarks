@@ -17,6 +17,7 @@ typings/
 
 # Optional npm cache directory
 .npm
+.npmrc
 
 # Output of 'npm pack'
 *.tgz
