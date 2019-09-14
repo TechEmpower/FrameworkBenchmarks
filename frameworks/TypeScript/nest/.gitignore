@@ -30,3 +30,5 @@ typings/
 tslint.json
 
 *.spec.ts
+
+dist/

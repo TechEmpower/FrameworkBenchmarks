@@ -1,9 +1,9 @@
-FROM node:10.3.0
+FROM node:lts
 
 COPY ./ ./
 
 RUN yarn install
 
-# ENV NODE_ENV production
+ENV NODE_ENV production
 
-CMD ["yarn", "start"]
+CMD ["yarn", "start:prod"]
