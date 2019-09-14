@@ -10,7 +10,6 @@ import { WorldEntity } from './../models/world.entity';
   imports: [TypeOrmModule.forFeature([WorldEntity])],
   controllers: [BenchController],
   providers: [BenchService],
-  components: [BenchService],
   exports: [BenchService],
 })
 export class BenchModule {}

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { WorldEntity } from 'models/world.entity';
+import { WorldEntity } from '../models/world.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()

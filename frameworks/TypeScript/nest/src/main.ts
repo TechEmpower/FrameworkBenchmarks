@@ -1,13 +1,18 @@
 import 'dotenv/config';
-import { NestFactory, FastifyAdapter } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
+import * as cluster from 'express-cluster';
+
 
 const port = process.env.PORT || 8080;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(port);
-  Logger.log(`Listening on port ${port}`, 'Nest Server');
+  await cluster(async (w)=>{
+    const app = await NestFactory.create(AppModule);
+    Logger.log(`Listening on port ${port}`, 'Nest Server');
+    return  app.listen(port)
+  }, {});
 }
+
 bootstrap();
