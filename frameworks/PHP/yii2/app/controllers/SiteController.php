@@ -36,7 +36,7 @@ class SiteController extends Controller
 
         $worlds = [];
 
-        while (0 < $queries--) {
+        while ($queries--) {
             $world = World::findOne(random_int(1, 10000));
             $worlds[] = $world;
         }
@@ -75,7 +75,7 @@ class SiteController extends Controller
 
         $worlds = [];
 
-        while (0 < $queries--) {
+        while ($queries--) {
             $world = World::findOne(random_int(1, 10000));
             $world->randomNumber = random_int(1, 10000);
             $world->save();

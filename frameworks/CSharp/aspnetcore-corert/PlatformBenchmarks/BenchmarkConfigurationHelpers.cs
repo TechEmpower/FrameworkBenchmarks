@@ -6,6 +6,7 @@ using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using System.IO.Pipelines;
 
 namespace PlatformBenchmarks
 {
@@ -38,24 +39,13 @@ namespace PlatformBenchmarks
                     }
                 });
             }
-            // else if (string.Equals(webHost, "LinuxTransport", StringComparison.OrdinalIgnoreCase))
-            // {
-            //     builder.ConfigureServices(services =>
-            //     {
-            //         services.Configure<KestrelServerOptions>(options =>
-            //         {
-            //             // Run callbacks on the transport thread
-            //             options.ApplicationSchedulingMode = SchedulingMode.Inline;
-            //         });
-            //     })
-            //     .UseLinuxTransport(options =>
-            //     {
-            //         if (theadCount.HasValue)
-            //         {
-            //             options.ThreadCount = theadCount.Value;
-            //         }
-            //     });
-            // }
+            else if (string.Equals(webHost, "LinuxTransport", StringComparison.OrdinalIgnoreCase))
+            {
+                builder.UseLinuxTransport(options =>
+                {
+                    options.ApplicationSchedulingMode = PipeScheduler.Inline;
+                });
+            }
 
             return builder;
         }
