@@ -17,4 +17,4 @@ RUN php composer.phar install --optimize-autoloader --classmap-authoritative --n
 RUN ./vendor/bin/spiral get > /dev/null 2>&1
 RUN php app.php configure > /dev/null 2>&1
 
-CMD php app.php up > /dev/null 2>&1 && ./spiral serve -v -d -o "http.workers.pool.numWorkers = 64"
+CMD php app.php up > /dev/null 2>&1 && ./spiral serve -o "http.workers.pool.numWorkers = 64"
