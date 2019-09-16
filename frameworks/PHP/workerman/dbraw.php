@@ -15,8 +15,6 @@ function dbraw($pdo)
         $query_count = min($_GET['queries'], 500);
     }
 
-    $arr = [];
-
     while ($query_count--) {
         $statement->execute([mt_rand(1, 10000)]);
         $arr[] = $statement->fetch(PDO::FETCH_ASSOC);
