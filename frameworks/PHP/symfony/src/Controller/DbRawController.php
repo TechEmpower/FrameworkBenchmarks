@@ -23,7 +23,7 @@ class DbRawController
      */
     public function db(): JsonResponse
     {
-        $statement = $this->connection->prepare('SELECT * FROM world WHERE id = ?');
+        $statement = $this->connection->prepare('SELECT * FROM World WHERE id = ?');
         $statement->execute([mt_rand(1, 10000)]);
         $world = $statement->fetch(FetchMode::ASSOCIATIVE);
 
@@ -41,7 +41,7 @@ class DbRawController
         // possibility for enhancement is the use of SplFixedArray -> http://php.net/manual/de/class.splfixedarray.php
         $worlds = [];
 
-        $statement = $this->connection->prepare('SELECT * FROM world WHERE id = ?');
+        $statement = $this->connection->prepare('SELECT * FROM World WHERE id = ?');
         for ($i = 0; $i < $queries; ++$i) {
             $statement->execute([mt_rand(1, 10000)]);
             $worlds[] = $statement->fetch(FetchMode::ASSOCIATIVE);
@@ -60,12 +60,17 @@ class DbRawController
 
         $worlds = [];
 
-        $statement = $this->connection->prepare('UPDATE world SET randomNumber=? WHERE id=?');
+        $writeStatement = $this->connection->prepare('UPDATE World SET randomNumber= ? WHERE id= ?');
+        $readStatement = $this->connection->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
+
         for ($i = 0; $i < $queries; ++$i) {
             $id = mt_rand(1, 10000);
-            $randomNumber = mt_rand(1, 10000);
-            $statement->execute([$randomNumber, $id]);
-            $worlds[] = ['id' => $id, 'randomNumber' => $randomNumber];
+            $readStatement->execute([$id]);
+            $world =  $readStatement->fetch(FetchMode::ASSOCIATIVE);
+            $writeStatement->execute(
+                [$world['randomNumber'] = mt_rand(1, 10000), $id]
+            );
+            $worlds[] = $world;
         }
 
         return new JsonResponse($worlds);
