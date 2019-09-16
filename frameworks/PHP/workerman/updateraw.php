@@ -21,5 +21,5 @@ function updateraw($pdo) {
     $arr[] = $world;
   }
 
-  echo json_encode($arr);
+  return json_encode($arr);
 }
