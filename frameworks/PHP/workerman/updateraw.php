@@ -5,7 +5,6 @@ function updateraw($pdo) {
     $query_count = min($_GET['queries'], 500);
   }
 
-  $arr = [];
   $statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id = ?');
   $updateStatement = $pdo->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
 
