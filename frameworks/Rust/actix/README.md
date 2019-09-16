@@ -43,7 +43,7 @@ PostgreSQL.
 
 ### Test 4: Fortunes (Template rendering)
 
-    http://localhost:8080/fortunes
+    http://localhost:8080/fortune
 
 ### Test 5: Update Query
 

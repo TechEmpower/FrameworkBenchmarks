@@ -1,4 +1,4 @@
-{
+module.exports = {
     "type": "postgres",
     "host": "tfb-database",
     "port": 5432,
@@ -7,5 +7,5 @@
     "database": "hello_world",
     "synchronize":false,
     "logging": false,
-    "entities": ["./src/**/*.entity.ts", "./dist/**/*.entity.js"]
+    "entities": process.env.NODE_ENV === 'production' ? ["./dist/**/*.entity.js"] : ["./dist/**/*.entity.js", "./src/**/*.entity.ts"]
 }
