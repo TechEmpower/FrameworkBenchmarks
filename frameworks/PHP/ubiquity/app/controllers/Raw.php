@@ -9,7 +9,7 @@ class Raw extends \Ubiquity\controllers\Controller {
 	
 	public function initialize() {
 		\header('Content-type: application/json');
-		$this->db=\Ubiquity\db\Database::start();
+		$this->db=\Ubiquity\db\Database::start('default');
 	}
 	
 	public function index() {
