@@ -20,9 +20,7 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 			      int maxResponseCount, int maxResponseSize) {
 		
 		pm = new PoolManager(options);
-				
-		maxResponseCount = Math.max(maxResponseCount, ((1<<pipelineBits)/20));//match response count to expected db calls
-		
+			
 		HTTPResponseService service = runtime.newCommandChannel().newHTTPResponseService(
 				                maxResponseCount, 
 				                maxResponseSize);

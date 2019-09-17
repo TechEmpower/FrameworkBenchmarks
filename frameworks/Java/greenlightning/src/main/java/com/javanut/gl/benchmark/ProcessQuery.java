@@ -13,6 +13,7 @@ import io.reactiverse.pgclient.PgIterator;
 import io.reactiverse.pgclient.PgPool;
 import io.reactiverse.pgclient.PgRowSet;
 import io.reactiverse.pgclient.Tuple;
+import io.reactiverse.pgclient.impl.RowImpl;
 
 public class ProcessQuery {
 	
@@ -128,10 +129,10 @@ public class ProcessQuery {
 					if (r.succeeded()) {
 						
 						PgIterator resultSet = r.result().iterator();
-				        Tuple row = resultSet.next();			        
+				        RowImpl row = (RowImpl)resultSet.next();			        
 				        
-				        target.setId(row.getInteger(0));
-				        target.setResult(row.getInteger(1));					
+				        target.setId((Integer)row.get(0));
+				        target.setResult((Integer)row.get(1));					
 						target.setStatus(200);
 						
 					} else {
