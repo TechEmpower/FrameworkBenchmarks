@@ -12,6 +12,7 @@ import com.javanut.pronghorn.network.config.HTTPContentTypeDefaults;
 import com.javanut.pronghorn.pipe.ObjectPipe;
 
 import io.reactiverse.pgclient.PgIterator;
+import io.reactiverse.pgclient.PgPool;
 import io.reactiverse.pgclient.Tuple;
 
 public class ProcessUpdate {
@@ -59,6 +60,7 @@ public class ProcessUpdate {
 		
 		if ((pause.get()<20) && DBUpdateInFlight.hasRoomFor(queries) && service.hasRoomFor(temp) ) {		
 			    
+			    PgPool outerPool = pm.pool();
 				//NEW List<Tuple> args = new ArrayList<Tuple>(queries);
 				List<ResultObject> objs = new ArrayList<ResultObject>(queries);
 				int q = queries;
@@ -75,7 +77,7 @@ public class ProcessUpdate {
 						worldObject.setId(randomValue());
 						objs.add(worldObject);					
 						
-						pm.pool().preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(worldObject.getId()), r -> {
+						outerPool.preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(worldObject.getId()), r -> {
 								if (r.succeeded()) {
 																		
 									PgIterator resultSet = r.result().iterator();
@@ -92,7 +94,7 @@ public class ProcessUpdate {
 							        worldObject.setResult(randomValue());							        
 							        
 							        
-							        pm.pool().preparedQuery("UPDATE world SET randomnumber=$1 WHERE id=$2", 							        		
+							        outerPool.preparedQuery("UPDATE world SET randomnumber=$1 WHERE id=$2", 							        		
 						        			Tuple.of(worldObject.getResult(), worldObject.getId()), ar -> {							        	
 													if (ar.succeeded()) {														
 											        	worldObject.setStatus(200);			
@@ -148,7 +150,7 @@ public class ProcessUpdate {
 						DBUpdateInFlight.moveHeadForward(); //always move to ensure this can be read.
 				
 				}
-				
+				//outerPool.close();
 			return true;
 		} else {
 			requestsInFlight.decrementAndGet();

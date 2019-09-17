@@ -10,6 +10,7 @@ public class GreenLightning {
 		
 		GraphManager.showThreadIdOnTelemetry = true;		
 		GraphManager.showScheduledRateOnTelemetry = true;
+		GraphManager.showMessageCountRangeOnTelemetry = true;
 		
 		GreenRuntime.run(new FrameworkTest(),args);
 	

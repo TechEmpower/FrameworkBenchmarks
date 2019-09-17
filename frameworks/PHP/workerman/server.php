@@ -31,23 +31,17 @@ $http_worker->onMessage = function ($connection) {
 
         case '/db':
             Http::header('Content-Type: application/json');
-            ob_start();
-            dbraw($pdo);
-            $connection->send(ob_get_clean());
+            $connection->send(dbraw($pdo));
             break;
 
         case '/fortune':
             Http::header('Content-Type: text/html; charset=utf-8');
-            ob_start();
-            fortune($pdo);
-            $connection->send(ob_get_clean());
+            $connection->send(fortune($pdo));
             break;
 
         case '/update':
             Http::header('Content-Type: application/json');
-            ob_start();
-            updateraw($pdo);
-            $connection->send(ob_get_clean());
+            $connection->send(updateraw($pdo));
             break;
 
             //case '/info':
