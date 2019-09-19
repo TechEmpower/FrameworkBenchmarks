@@ -13,7 +13,7 @@ $http_worker->onWorkerStart = function () {
     $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world;charset=utf8',
         'benchmarkdbuser', 'benchmarkdbpass');
 };
-$http_worker->onMessage = function ($connection) {
+$http_worker->onMessage = static function ($connection) {
     global $pdo;
 
     Http::header('Date: '.gmdate('D, d M Y H:i:s').' GMT');
