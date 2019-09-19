@@ -10,7 +10,7 @@ $http_worker                = new Worker('http://0.0.0.0:8080');
 $http_worker->count         = (int) shell_exec('nproc') ?? 64;
 $http_worker->onWorkerStart = function () {
     global $pdo;
-    $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world;charset=utf8',
+    $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world',
         'benchmarkdbuser', 'benchmarkdbpass');
 };
 $http_worker->onMessage = static function ($connection) {
