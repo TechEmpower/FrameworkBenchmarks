@@ -22,7 +22,7 @@
       "database_os": "Linux",
       "display_name": "workerman",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     }
   }]
 }
