@@ -1,5 +1,6 @@
 <?php
-function updateraw($pdo) {
+function updateraw() {
+  global $pdo;
   $query_count = 1;
   if ($_GET['queries'] > 1) {
     $query_count = min($_GET['queries'], 500);

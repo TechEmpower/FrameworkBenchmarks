@@ -1,6 +1,7 @@
 <?php
-function dbraw($pdo)
+function dbraw()
 {
+    global $pdo;
     static $statement;
 
     $statement = $statement ?? $pdo->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
