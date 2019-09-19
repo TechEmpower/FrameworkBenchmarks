@@ -21,28 +21,23 @@ $http_worker->onMessage = function ($connection) {
     switch (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) {
         case '/plaintext':
             Http::header('Content-Type: text/plain');
-            $connection->send('Hello, World!');
-            break;
+            return $connection->send('Hello, World!');
 
         case '/json':
             Http::header('Content-Type: application/json');
-            $connection->send(json_encode(['message' => 'Hello, World!']));
-            break;
+            return $connection->send(json_encode(['message' => 'Hello, World!']));
 
         case '/db':
             Http::header('Content-Type: application/json');
-            $connection->send(dbraw($pdo));
-            break;
+            return $connection->send(dbraw($pdo));
 
         case '/fortune':
             Http::header('Content-Type: text/html; charset=utf-8');
-            $connection->send(fortune($pdo));
-            break;
+            return $connection->send(fortune($pdo));
 
         case '/update':
             Http::header('Content-Type: application/json');
-            $connection->send(updateraw($pdo));
-            break;
+            return $connection->send(updateraw($pdo));
 
             //case '/info':
             //   Http::header('Content-Type: text/plain');
