@@ -1,6 +1,7 @@
 <?php
-function fortune($pdo)
+function fortune()
 {
+    global $pdo;
     static $statement;
     $statement = $statement ?? $pdo->prepare('SELECT id,message FROM Fortune');
     $statement->execute();

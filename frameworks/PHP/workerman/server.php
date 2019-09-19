@@ -14,7 +14,6 @@ $http_worker->onWorkerStart = function () {
         'benchmarkdbuser', 'benchmarkdbpass');
 };
 $http_worker->onMessage = static function ($connection) {
-    global $pdo;
 
     Http::header('Date: '.gmdate('D, d M Y H:i:s').' GMT');
 
@@ -29,15 +28,15 @@ $http_worker->onMessage = static function ($connection) {
 
         case '/db':
             Http::header('Content-Type: application/json');
-            return $connection->send(dbraw($pdo));
+            return $connection->send(dbraw());
 
         case '/fortune':
             Http::header('Content-Type: text/html; charset=utf-8');
-            return $connection->send(fortune($pdo));
+            return $connection->send(fortune());
 
         case '/update':
             Http::header('Content-Type: application/json');
-            return $connection->send(updateraw($pdo));
+            return $connection->send(updateraw());
 
             //case '/info':
             //   Http::header('Content-Type: text/plain');
