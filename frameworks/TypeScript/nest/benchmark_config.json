@@ -18,6 +18,24 @@
       "database_os": "Linux",
       "display_name": "nestjs",
       "versus": "nodejs"
+    },
+    "mysql": {
+      "json_url": "/bench/json",
+      "plaintext_url": "/bench/plaintext",
+      "update_url": "/bench/updates?queries=",
+      "query_url": "/bench/queries?queries=",
+      "db_url": "/bench/db",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "framework": "nestjs",
+      "language": "TypeScript",
+      "os": "Linux",
+      "orm": "Full",
+      "database": "MySQL",
+      "database_os": "Linux",
+      "display_name": "nestjs",
+      "versus": "nodejs"
     }
   }]
 }
