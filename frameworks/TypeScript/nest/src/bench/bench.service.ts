@@ -20,29 +20,25 @@ export class BenchService {
 
     async getMultiple(totalQueries: string) {
 
-        return new Promise(async (resolve, reject) => {
-            const worldArr = [];
-            const total = this.sanitizeQueries(totalQueries);
-            for (let i = 0; i < total; i++) {
-                worldArr.push(await this.getOne());
-            }
-            resolve(worldArr);
-        });
+        const worldArr = [];
+        const total = this.sanitizeQueries(totalQueries);
+        for (let i = 0; i < total; i++) {
+            worldArr.push(await this.getOne());
+        }
+        return worldArr;
     }
 
     async updateMultiple(totalQueries: string) {
 
-        return new Promise(async (resolve, reject) => {
-            const worldArr = [];
-            const total = this.sanitizeQueries(totalQueries);
-            for (let i = 0; i < total; i++) {
-                let worldToUpdate = await this.getOne();
-                worldToUpdate.randomnumber = Math.floor(Math.random() * 10000) + 1;
-                worldToUpdate = await this.worldRepository.save(worldToUpdate);
-                worldArr.push(worldToUpdate);
-            }
-            resolve(worldArr);
-        });
+        const worldArr = [];
+        const total = this.sanitizeQueries(totalQueries);
+        for (let i = 0; i < total; i++) {
+            let worldToUpdate = await this.getOne();
+            worldToUpdate.randomnumber = Math.floor(Math.random() * 10000) + 1;
+            worldArr.push(worldToUpdate);
+            await this.worldRepository.update(worldToUpdate.id, worldToUpdate);
+        }
+        return worldArr;
     }
 
     async getFortunes(){
