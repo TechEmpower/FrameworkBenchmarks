@@ -7,6 +7,7 @@
       "update_url": "/bench/updates?queries=",
       "query_url": "/bench/queries?queries=",
       "db_url": "/bench/db",
+      "fortune_url": "/bench/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",

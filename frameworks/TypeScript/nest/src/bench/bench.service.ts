@@ -1,13 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { WorldEntity } from '../models/world.entity';
+import { FortuneEntity } from '../models/fortune.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class BenchService {
     constructor(
         @InjectRepository(WorldEntity)
-        private worldRepository: Repository<WorldEntity>){}
+        private worldRepository: Repository<WorldEntity>,
+        @InjectRepository(FortuneEntity)
+        private fortuneRepository: Repository<FortuneEntity>,
+    ){}
 
     getOne(){
 
@@ -38,6 +42,15 @@ export class BenchService {
                 worldArr.push(worldToUpdate);
             }
             resolve(worldArr);
+        });
+    }
+
+    async getFortunes(){
+        return this.fortuneRepository.find().then((fortunes) => {
+            const newFortune = { id: 0, message: "Additional fortune added at request time." };
+            fortunes.push(newFortune);
+            fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
+            return fortunes;
         });
     }
 

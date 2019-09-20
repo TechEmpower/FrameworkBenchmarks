@@ -9,7 +9,7 @@
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "nodemon",
     "start:debug": "nodemon --config nodemon-debug.json",
-    "prestart:prod": "rm -rf dist && tsc",
+    "prestart:prod": "rm -rf dist && tsc && cp -r src/views/ dist/",
     "start:prod": "node dist/main.js"
   },
   "dependencies": {
@@ -21,6 +21,7 @@
     "express-cluster": "^0.0.5",
     "fastify": "2.8.0",
     "fastify-formbody": "3.1.0",
+    "hbs": "^4.0.4",
     "mysql2": "^1.7.0",
     "pg": "7.12.1",
     "reflect-metadata": "0.1.13",
