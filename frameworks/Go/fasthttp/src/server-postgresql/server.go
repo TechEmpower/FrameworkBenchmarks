@@ -1,26 +1,29 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
 	"net"
 	"runtime"
+	"unsafe"
 
-	"github.com/jackc/pgx"
+	pgx "github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/valyala/fasthttp"
 
-	"common"
-	"templates"
+	"fasthttp/src/common"
+	"fasthttp/src/templates"
 )
 
 var (
-	worldSelectStmt   *pgx.PreparedStatement
-	worldUpdateStmt   *pgx.PreparedStatement
-	fortuneSelectStmt *pgx.PreparedStatement
-
-	db *pgx.ConnPool
+	db *pgxpool.Pool
 )
+
+const worldSelectSQL = "SELECT id, randomNumber FROM World WHERE id = $1"
+const worldUpdateSQL = "UPDATE World SET randomNumber = $1 WHERE id = $2"
+const fortuneSelectSQL = "SELECT id, message FROM Fortune"
 
 func main() {
 	bindHost := flag.String("bind", ":8080", "set bind host")
@@ -56,7 +59,7 @@ func main() {
 
 func mainHandler(ctx *fasthttp.RequestCtx) {
 	path := ctx.Path()
-	switch string(path) {
+	switch *(*string)(unsafe.Pointer(&path)) {
 	case "/plaintext":
 		common.PlaintextHandler(ctx)
 	case "/json":
@@ -75,8 +78,7 @@ func mainHandler(ctx *fasthttp.RequestCtx) {
 }
 
 func dbHandler(ctx *fasthttp.RequestCtx) {
-	var w common.World
-	fetchRandomWorld(&w)
+	w := fetchRandomWorld()
 	wb, err := w.MarshalJSON()
 	if err != nil {
 		log.Println(err)
@@ -90,7 +92,7 @@ func queriesHandler(ctx *fasthttp.RequestCtx) {
 	n := common.GetQueriesCount(ctx)
 	worlds := make([]common.World, n)
 	for i := 0; i < n; i++ {
-		fetchRandomWorld(&worlds[i])
+		worlds[i] = fetchRandomWorld()
 	}
 	wb, err := common.Worlds(worlds).MarshalJSON()
 	if err != nil {
@@ -102,7 +104,7 @@ func queriesHandler(ctx *fasthttp.RequestCtx) {
 }
 
 func fortuneHandler(ctx *fasthttp.RequestCtx) {
-	rows, err := db.Query("fortuneSelectStmt")
+	rows, err := db.Query(context.Background(), fortuneSelectSQL)
 	if err != nil {
 		log.Fatalf("Error selecting db data: %v", err)
 	}
@@ -129,27 +131,19 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 
 	worlds := make([]common.World, n)
 	for i := 0; i < n; i++ {
-		w := &worlds[i]
-		fetchRandomWorld(w)
-		w.RandomNumber = int32(common.RandomWorldNum())
+		worlds[i] = fetchRandomWorld()
+		worlds[i].RandomNumber = int32(common.RandomWorldNum())
 	}
 
 	// sorting is required for insert deadlock prevention.
 	common.SortWorldsByID(worlds)
 
-	txn, err := db.Begin()
-	if err != nil {
-		log.Fatalf("Error starting transaction: %s", err)
+	batch := pgx.Batch{}
+	for _, w := range worlds {
+		batch.Queue(worldUpdateSQL, w.RandomNumber, w.Id)
 	}
-
-	for i := 0; i < n; i++ {
-		w := &worlds[i]
-		if _, err = txn.Exec("worldUpdateStmt", w.RandomNumber, w.Id); err != nil {
-			log.Fatalf("Error updating world row %d: %s", i, err)
-		}
-	}
-	if err = txn.Commit(); err != nil {
-		log.Fatalf("Error when commiting world rows: %s", err)
+	if err := db.SendBatch(context.Background(), &batch).Close(); err != nil {
+		log.Fatalf("Error when closing a batch: %s", err)
 	}
 
 	wb, err := common.Worlds(worlds).MarshalJSON()
@@ -161,45 +155,23 @@ func updateHandler(ctx *fasthttp.RequestCtx) {
 	ctx.Write(wb)
 }
 
-func fetchRandomWorld(w *common.World) {
+func fetchRandomWorld() (w common.World) {
 	n := common.RandomWorldNum()
-	if err := db.QueryRow("worldSelectStmt", n).Scan(&w.Id, &w.RandomNumber); err != nil {
+	if err := db.QueryRow(context.Background(), worldSelectSQL, n).Scan(&w.Id, &w.RandomNumber); err != nil {
 		log.Fatalf("Error scanning world row: %s", err)
 	}
+	return w
 }
 
-func mustPrepare(db *pgx.Conn, name, query string) *pgx.PreparedStatement {
-	stmt, err := db.Prepare(name, query)
-	if err != nil {
-		log.Fatalf("Error when preparing statement %q: %s", query, err)
-	}
-	return stmt
-}
-
-func initDatabase(dbHost string, dbUser string, dbPass string, dbName string, dbPort uint16, maxConnectionsInPool int) (*pgx.ConnPool, error) {
+func initDatabase(dbHost string, dbUser string, dbPass string, dbName string, dbPort uint16, maxConnectionsInPool int) (*pgxpool.Pool, error) {
 
 	var successOrFailure string = "OK"
 
-	var config pgx.ConnPoolConfig
-
-	config.Host = dbHost
-	config.User = dbUser
-	config.Password = dbPass
-	config.Database = dbName
-	config.Port = dbPort
-
-	config.MaxConnections = maxConnectionsInPool
-
-	config.AfterConnect = func(conn *pgx.Conn) error {
-		worldSelectStmt = mustPrepare(conn, "worldSelectStmt", "SELECT id, randomNumber FROM World WHERE id = $1")
-		worldUpdateStmt = mustPrepare(conn, "worldUpdateStmt", "UPDATE World SET randomNumber = $1 WHERE id = $2")
-		fortuneSelectStmt = mustPrepare(conn, "fortuneSelectStmt", "SELECT id, message FROM Fortune")
-		return nil
-	}
+	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s pool_max_conns=%d", dbHost, dbPort, dbUser, dbPass, dbName, maxConnectionsInPool)
 
 	fmt.Println("--------------------------------------------------------------------------------------------")
 
-	connPool, err := pgx.NewConnPool(config)
+	connPool, err := pgxpool.Connect(context.Background(), dsn)
 	if err != nil {
 		successOrFailure = "FAILED"
 		log.Println("Connecting to database ", dbName, " as user ", dbUser, " ", successOrFailure, ": \n ", err)
@@ -209,7 +181,7 @@ func initDatabase(dbHost string, dbUser string, dbPass string, dbName string, db
 		log.Println("Fetching one record to test if db connection is valid...")
 		var w common.World
 		n := common.RandomWorldNum()
-		if errPing := connPool.QueryRow("worldSelectStmt", n).Scan(&w.Id, &w.RandomNumber); errPing != nil {
+		if errPing := connPool.QueryRow(context.Background(), worldSelectSQL, n).Scan(&w.Id, &w.RandomNumber); errPing != nil {
 			log.Fatalf("Error scanning world row: %s", errPing)
 		}
 		log.Println("OK")

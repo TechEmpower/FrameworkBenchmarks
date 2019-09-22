@@ -6,9 +6,8 @@ import (
 	"math/rand"
 	"net"
 	"sort"
-	"sync"
 
-	"templates"
+	"fasthttp/src/templates"
 
 	"github.com/valyala/fasthttp"
 )
@@ -27,9 +26,9 @@ type World struct {
 type Worlds []World
 
 func JSONHandler(ctx *fasthttp.RequestCtx) {
-	r := jsonResponsePool.Get().(*JSONResponse)
-	defer jsonResponsePool.Put(r)
-	r.Message = "Hello, World!"
+	r := JSONResponse{
+		Message: "Hello, World!",
+	}
 	rb, err := r.MarshalJSON()
 	if err != nil {
 		log.Println(err)
@@ -37,12 +36,6 @@ func JSONHandler(ctx *fasthttp.RequestCtx) {
 	}
 	ctx.SetContentType("application/json")
 	ctx.Write(rb)
-}
-
-var jsonResponsePool = &sync.Pool{
-	New: func() interface{} {
-		return &JSONResponse{}
-	},
 }
 
 func PlaintextHandler(ctx *fasthttp.RequestCtx) {
