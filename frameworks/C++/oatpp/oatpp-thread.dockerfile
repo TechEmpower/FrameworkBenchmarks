@@ -19,13 +19,13 @@ RUN make install
 #---------------------------------------------------------------
 # build test app
 
-ADD src-async /test/src-async
+ADD src-thread /test/src-thread
 
-WORKDIR /test/src-async/build
+WORKDIR /test/src-thread/build
 
 RUN cmake -DCMAKE_BUILD_TYPE=Release ..
 RUN make
 
 EXPOSE 8000 8000
 
-CMD ./oatpp-async-test
+CMD ./oatpp-thread-test

@@ -13,21 +13,24 @@ namespace PlatformBenchmarks
     {
         private IServer mApiServer;
 
-        public virtual Task StartAsync(CancellationToken cancellationToken)
+        public virtual async Task StartAsync(CancellationToken cancellationToken)
         {
             ArraySegment<byte> date = GMTDate.Default.DATE;
             ServerOptions serverOptions = new ServerOptions();
             serverOptions.LogLevel = LogType.Error;
             serverOptions.DefaultListen.Port = 8080;
             serverOptions.Statistical = false;
-            serverOptions.BufferSize = 1024 * 4;
-            serverOptions.PrivateBufferPool = true;
-            serverOptions.MaxConnections = 100000;
+            serverOptions.BufferSize = 2048;
             serverOptions.BufferPoolMaxMemory = 1000;
+            serverOptions.BufferPoolSize = 1024 * 4;
             mApiServer = SocketFactory.CreateTcpServer<HttpHandler>(serverOptions);
             mApiServer.Open();
-            mApiServer.Log(LogType.Info,null, $"Debug mode [{Program.Debug}]");
-            return Task.CompletedTask;
+            System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
+            var response = await client.GetAsync("http://localhost:8080/json");
+            mApiServer.Log(LogType.Info, null, $"Get josn {response.StatusCode}");
+            response = await client.GetAsync("http://localhost:8080/plaintext");
+            mApiServer.Log(LogType.Info, null, $"Get plaintext {response.StatusCode}");
+            mApiServer.Log(LogType.Info, null, $"Debug mode [{Program.Debug}]");
         }
 
         public virtual Task StopAsync(CancellationToken cancellationToken)
