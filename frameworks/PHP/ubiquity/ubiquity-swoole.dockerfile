@@ -9,7 +9,7 @@ RUN cd /tmp && curl -sSL "https://github.com/swoole/swoole-src/archive/v${SWOOLE
 
 RUN docker-php-ext-install pdo_mysql pcntl > /dev/null
 
-COPY deploy/conf/php-swoole.ini /usr/local/etc/php/
+COPY deploy/conf/php-async.ini /usr/local/etc/php/
 
 ADD ./ /ubiquity
 WORKDIR /ubiquity
