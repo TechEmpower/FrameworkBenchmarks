@@ -19,8 +19,6 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Contract\ResponseInterface;
-use Hyperf\Utils\Coroutine\Concurrent;
-use Hyperf\Utils\WaitGroup;
 
 /**
  * @Controller
@@ -63,20 +61,11 @@ class IndexController
     {
         $queries = $this->clamp($queries);
 
-        $concurrent = new Concurrent(20);
-        $wg = new WaitGroup();
-        $wg->add($queries);
-
         $rows = [];
 
         while ($queries--) {
-            $concurrent->create(function () use (&$rows, $wg) {
-                $rows[] = World::find(random_int(1, 10000));
-                $wg->done();
-            });
+            $rows[] = World::find(random_int(1, 10000));
         }
-
-        $wg->wait();
 
         return $this->response->json($rows);
     }
@@ -105,22 +94,14 @@ class IndexController
     {
         $queries = $this->clamp($queries);
 
-        $concurrent = new Concurrent(20);
-        $wg = new WaitGroup();
-        $wg->add($queries);
         $rows = [];
 
         while ($queries--) {
-            $concurrent->create(function () use (&$rows, $wg) {
-                $row = World::find(random_int(1, 10000));
-                $row->randomNumber = random_int(1, 10000);
-                $row->save();
-                $rows[] = $row;
-                $wg->done();
-            });
+            $row = World::find(random_int(1, 10000));
+            $row->randomNumber = random_int(1, 10000);
+            $row->save();
+            $rows[] = $row;
         }
-
-        $wg->wait();
 
         return $this->response->json($rows);
     }
