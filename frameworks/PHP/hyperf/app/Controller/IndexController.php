@@ -15,21 +15,36 @@ namespace App\Controller;
 use App\Model\Fortune;
 use App\Model\World;
 use App\Render;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Contract\ResponseInterface;
+use Hyperf\Utils\Coroutine\Concurrent;
 
 /**
  * @Controller
  */
 class IndexController
 {
+
+    /**
+     * @Inject()
+     * @var Render
+     */
+    private $render;
+
+    /**
+     * @Inject()
+     * @var ResponseInterface
+     */
+    private $response;
+
     /**
      * @GetMapping(path="/json")
      */
     public function json()
     {
-        return ['message' => 'Hello, World!'];
+        return $this->response->json(['message' => 'Hello, World!']);
     }
 
     /**
@@ -37,28 +52,32 @@ class IndexController
      */
     public function db()
     {
-        return World::find(random_int(1, 10000));
+        return $this->response->json(World::find(random_int(1, 10000)));
     }
 
     /**
      * @GetMapping(path="/queries/[{queries}]")
      */
-    public function queries($queries = 1, ResponseInterface $response)
+    public function queries($queries = 1)
     {
         $queries = $this->clamp($queries);
 
+        $concurrent = new Concurrent(20);
         $rows = [];
+
         while ($queries--) {
-            $rows[] = World::find(random_int(1, 10000));
+            $concurrent->create(function () use (&$rows) {
+                $rows[] = World::find(random_int(1, 10000));
+            });
         }
 
-        return $response->json($rows);
+        return $this->response->json($rows);
     }
 
     /**
      * @GetMapping(path="/fortunes")
      */
-    public function fortunes(Render $render)
+    public function fortunes()
     {
         $rows = Fortune::all();
 
@@ -69,27 +88,29 @@ class IndexController
         $rows->add($insert);
         $rows = $rows->sortBy('message');
 
-        return $render->render('fortunes', ['rows' => $rows]);
+        return $this->render->render('fortunes', ['rows' => $rows]);
     }
 
     /**
      * @GetMapping(path="/updates/[{queries}]")
      */
-    public function updates($queries = 1, ResponseInterface $response)
+    public function updates($queries = 1)
     {
         $queries = $this->clamp($queries);
 
+        $concurrent = new Concurrent(20);
         $rows = [];
 
         while ($queries--) {
-            $row = World::find(random_int(1, 10000));
-            $row->randomNumber = random_int(1, 10000);
-            $row->save();
-
-            $rows[] = $row;
+            $concurrent->create(function () use (&$rows) {
+                $row = World::find(random_int(1, 10000));
+                $row->randomNumber = random_int(1, 10000);
+                $row->save();
+                $rows[] = $row;
+            });
         }
 
-        return $response->json($rows);
+        return $this->response->json($rows);
     }
 
     /**
@@ -97,7 +118,7 @@ class IndexController
      */
     public function plaintext()
     {
-        return 'Hello, World!';
+        return $this->response->raw('Hello, World!');
     }
 
     private function clamp($value): int
