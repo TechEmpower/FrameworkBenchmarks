@@ -5,10 +5,10 @@ Ubiquity is a full-stack php framework, These tests involve:
 - the ORM part (Full)
 - the JSON serialization (native php)
 
-Tests are available with NginX server and Swoole platform.
+Tests are available with NginX server, Swoole and Workerman platforms.
 
 ## Test Type Implementation Source Code
-The tests are separated into 8 controllers:
+The tests are separated into 7 controllers:
 - `Json` for JSON response
   * [JSON](app/controllers/Json.php)
 - `Db` for database access with ORM (PDO Mysql)
@@ -20,14 +20,12 @@ The tests are separated into 8 controllers:
   * [FORTUNES](app/controllers/Fortunes.php)
 - `Plaintext` for plaintext response
   * [PLAINTEXT](app/controllers/Plaintext.php)
-- `Raw` for database access without ORM (PDO Mysql)
-  * [Raw](app/controllers/Raw.php)
-- `RawFortunes` without ORM and without template engine
-  * [FORTUNES](app/controllers/RawFortunes.php)
-- `SwooleDb` for database access with ORM (Swoole coroutine Mysql)
-  * [DB](app/controllers/SwooleDb.php)
-- `SwooleFortunes` for using the internal template engine (PDO Mysql test)
-  * [FORTUNES](app/controllers/SwooleFortunes.php)
+- `SwooleDb` for database access with Swoole coroutine Mysql driver
+  * [SwooleDb](app/controllers/SwooleDb.php)
+- `Workerman` with Mysqli driver
+  * [WorkerDb](app/controllers/WorkerDb.php)
+- `AsyncFortunes` used with Swoole or Workerman
+  * [AsyncFortunes](app/controllers/AsyncFortunes.php)
 
 ## Important Libraries
 The tests were run with:
@@ -36,6 +34,8 @@ The tests were run with:
 * [nginx 1.14](http://nginx.org/)
 * [Swoole](https://www.swoole.com/)
 * [Ubiquity-swoole](https://github.com/phpMv/ubiquity-swoole)
+* [Workerman](https://github.com/walkor/Workerman)
+* [Ubiquity-workerman](https://github.com/phpMv/ubiquity-workerman)
 * [MySQL 5.7](https://dev.mysql.com/)
 
 

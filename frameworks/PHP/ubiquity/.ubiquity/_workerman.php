@@ -14,7 +14,6 @@ $config ["siteUrl"] = 'http://'.$address;
 require ROOT . './../vendor/autoload.php';
 require ROOT.'config/workerServices.php';
 $workerServer=new \Ubiquity\servers\workerman\WorkermanServer();
-$workerServer->daemonize();
 $workerServer->init($config, __DIR__);
 $workerServer->setDefaultCount();
 $workerServer->run($sConfig['host'],$sConfig['port'],$sConfig['socket']??[]);
