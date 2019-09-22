@@ -54,7 +54,7 @@
         "db_url": "/SwooleDb",
         "update_url": "/SwooleDb/update/",
         "query_url": "/SwooleDb/query/",
-        "fortune_url": "/SwooleFortunes",
+        "fortune_url": "/AsyncFortunes",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
