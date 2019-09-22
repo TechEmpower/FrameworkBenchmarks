@@ -5,6 +5,7 @@ import (
 	"log"
 	"math/rand"
 	"net"
+	"runtime"
 	"sort"
 
 	"fasthttp/src/templates"
@@ -70,6 +71,14 @@ func GetListener(listenAddr string) net.Listener {
 		log.Fatal(err)
 	}
 	return ln
+}
+
+func NumCPU() int {
+	n := runtime.NumCPU()
+	if n == 0 {
+		n = 8
+	}
+	return n
 }
 
 func SortFortunesByMessage(fortunes []templates.Fortune) {

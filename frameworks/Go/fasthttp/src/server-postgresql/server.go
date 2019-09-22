@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"runtime"
 	"unsafe"
 
 	pgx "github.com/jackc/pgx/v4"
@@ -32,9 +31,9 @@ func main() {
 	flag.Parse()
 
 	var err error
-	maxConnectionCount := runtime.NumCPU() * 4
+	maxConnectionCount := common.NumCPU() * 4
 	if *child {
-		maxConnectionCount = runtime.NumCPU()
+		maxConnectionCount = common.NumCPU()
 	}
 	if db, err = initDatabase("tfb-database", "benchmarkdbuser", "benchmarkdbpass", "hello_world", 5432, maxConnectionCount); err != nil {
 		log.Fatalf("Error opening database: %s", err)
@@ -164,7 +163,6 @@ func fetchRandomWorld() (w common.World) {
 }
 
 func initDatabase(dbHost string, dbUser string, dbPass string, dbName string, dbPort uint16, maxConnectionsInPool int) (*pgxpool.Pool, error) {
-
 	var successOrFailure string = "OK"
 
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s pool_max_conns=%d", dbHost, dbPort, dbUser, dbPass, dbName, maxConnectionsInPool)

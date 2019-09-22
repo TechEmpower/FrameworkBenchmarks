@@ -5,7 +5,6 @@ import (
 	"net"
 	"os"
 	"os/exec"
-	"runtime"
 )
 
 func DoPrefork(child bool, toBind string) net.Listener {
@@ -23,7 +22,7 @@ func DoPrefork(child bool, toBind string) net.Listener {
 		if err != nil {
 			log.Fatal(err)
 		}
-		children := make([]*exec.Cmd, runtime.NumCPU()/2)
+		children := make([]*exec.Cmd, NumCPU()/2)
 		for i := range children {
 			children[i] = exec.Command(os.Args[0], "-prefork", "-child")
 			children[i].Stdout = os.Stdout
