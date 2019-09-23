@@ -4,7 +4,7 @@ namespace controllers;
 use models\Fortune;
 use Ubiquity\orm\DAO;
 
-class SwooleFortunes extends \Ubiquity\controllers\Controller {
+class AsyncFortunes extends \Ubiquity\controllers\Controller {
 
 	public function index() {
 		$fortunes = DAO::getAll(Fortune::class, '', false);
