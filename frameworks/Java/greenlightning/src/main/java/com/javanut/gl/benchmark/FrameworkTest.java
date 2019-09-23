@@ -98,7 +98,7 @@ public class FrameworkTest implements GreenApp {
     	this.payloadText = payloadResponse;
     	this.payload = payloadText.getBytes();
     	
-    	this.connectionsPerTrack = 1;
+    	this.connectionsPerTrack = 20;
     	this.connectionPort = 5432;
     	this.bindPort = port;
     	this.host = host;

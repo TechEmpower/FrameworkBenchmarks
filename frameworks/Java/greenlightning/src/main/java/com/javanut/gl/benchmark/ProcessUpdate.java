@@ -58,13 +58,14 @@ public class ProcessUpdate {
 		long seqCode = request.getSequenceCode();
 		int temp = requestsInFlight.incrementAndGet();
 		
-		if ((pause.get()<20) && DBUpdateInFlight.hasRoomFor(queries) && service.hasRoomFor(temp) ) {		
+		if (DBUpdateInFlight.hasRoomFor(queries) && service.hasRoomFor(temp) ) {		
 			    
-			    PgPool outerPool = pm.pool();
 				//NEW List<Tuple> args = new ArrayList<Tuple>(queries);
 				List<ResultObject> objs = new ArrayList<ResultObject>(queries);
 				int q = queries;
 				while (--q >= 0) {
+						//testing one per query 
+					    PgPool outerPool = pm.pool();
 				
 						final ResultObject worldObject = DBUpdateInFlight.headObject();
 						assert(null!=worldObject);
@@ -150,7 +151,7 @@ public class ProcessUpdate {
 						DBUpdateInFlight.moveHeadForward(); //always move to ensure this can be read.
 				
 				}
-				//outerPool.close();
+			
 			return true;
 		} else {
 			requestsInFlight.decrementAndGet();
@@ -158,8 +159,6 @@ public class ProcessUpdate {
 		}
 	}
 
-	private final AtomicInteger pause = new AtomicInteger(0);
-	
 	
 //	private void execUpdate(List<ResultObject> toUpdate, List<Tuple> args, int i) {
 //				
