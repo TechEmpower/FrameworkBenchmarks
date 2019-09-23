@@ -5,6 +5,6 @@ COPY ./ ./
 RUN yarn install
 
 ENV NODE_ENV production
-ENV DATABASE_CONFIGURATION_PROFILE=postgres
+ENV DATABASE_CONFIGURATION_PROFILE=mysql
 
 CMD ["yarn", "start:prod"]
