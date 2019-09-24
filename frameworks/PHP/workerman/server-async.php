@@ -34,14 +34,14 @@ $http_worker->onMessage = static function ($connection) {
     switch (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) {
         case '/db':
             Http::header('Content-Type: application/json');
-            $mysql->query('SELECT id,randomNumber FROM World WHERE id='.mt_rand(1, 10000), static function ($command, $mysql) use ($connection) {
+            $mysql->query('SELECT id,randomNumber FROM World WHERE id='.mt_rand(1, 10000), static function ($command) use ($connection) {
                 $connection->send(json_encode($command->resultRows));
             });
             return;
 
         case '/fortune':
             Http::header('Content-Type: text/html; charset=utf-8');
-            $mysql->query('SELECT id,message FROM Fortune', static function ($command, $mysql) use ($connection) {
+            $mysql->query('SELECT id,message FROM Fortune', static function ($command) use ($connection) {
                 $arr    = $command->resultRows;
                 foreach ($arr as $row) {
                     $fortune[$row['id']] = htmlspecialchars($row['message'], ENT_QUOTES, 'UTF-8');
