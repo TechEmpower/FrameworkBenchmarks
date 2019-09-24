@@ -2,7 +2,16 @@ import asyncio
 import asyncpg
 import os
 import jinja2
-from apidaora import MethodType, Request, JSONResponse, HTMLResponse, PlainResponse, Route, asgi_app
+from apidaora import (
+    HTMLResponse,
+    JSONRequestBody,
+    JSONResponse,
+    MethodType,
+    PlainResponse,
+    appdaora,
+    header_param,
+    path,
+)
 from jsondaora import jsondaora
 from random import randint
 from operator import itemgetter
@@ -55,53 +64,37 @@ loop.run_until_complete(setup_database())
 
 
 @jsondaora
-class JsonBody(TypedDict):
-    message: str
-
-
-@jsondaora
 class JsonResponse(JSONResponse):
-    body: JsonBody
+    class Body(TypedDict):
+        message: str
+    body: Body
 
 
-async def json_serialization(req: Request) -> JsonResponse:
+@path('/json', MethodType.GET)
+async def json_serialization() -> JsonResponse:
     return JsonResponse(
-        status_code=HTTPStatus.OK,
-        body=JsonBody(message='Hello, world!')
+        body=JsonResponse.Body(message='Hello, world!')
     )
 
 
 @jsondaora
-class SingleDatabaseBody(TypedDict):
-    id: int
-    randomNumber: float
-
-
-@jsondaora
 class SingleDatabaseResponse(JSONResponse):
-    body: SingleDatabaseBody
+    class Body(TypedDict):
+        id: int
+        randomNumber: float
+    body: Body
 
 
-async def single_database_query(req: Request) -> SingleDatabaseResponse:
+@path('/db', MethodType.GET)
+async def single_database_query() -> SingleDatabaseResponse:
     row_id = randint(1, 10000)
 
     async with connection_pool.acquire() as connection:
         number = await connection.fetchval(READ_ROW_SQL, row_id)
 
     return SingleDatabaseResponse(
-        status_code=HTTPStatus.OK,
-        body=SingleDatabaseBody(id=row_id, randomNumber=number)
+        body=SingleDatabaseResponse.Body(id=row_id, randomNumber=number)
     )
-
-
-@jsondaora
-class MultipleDatabaseRequestQuery(TypedDict):
-    queries: Optional[str] = None
-
-
-@jsondaora
-class MultipleDatabaseRequest(Request):
-    query: MultipleDatabaseRequestQuery
 
 
 @jsondaora
@@ -111,20 +104,15 @@ class MultipleDatabaseObject(TypedDict):
 
 
 @jsondaora
-class MultipleDatabaseBody(TypedDict):
-    id: int
-    randomNumber: float
-
-
-@jsondaora
 class MultipleDatabaseResponse(JSONResponse):
-    body: List[MultipleDatabaseBody]
+    body: List[MultipleDatabaseObject]
 
 
+@path('/queries', MethodType.GET)
 async def multiple_database_queries(
-    req: MultipleDatabaseRequest
+    queries: Optional[str] = None
 ) -> MultipleDatabaseResponse:
-    num_queries = get_num_queries(req.query['queries'])
+    num_queries = get_num_queries(queries)
     row_ids = [randint(1, 10000) for _ in range(num_queries)]
     worlds = []
 
@@ -139,7 +127,7 @@ async def multiple_database_queries(
                 )
             )
 
-    return MultipleDatabaseResponse(status_code=HTTPStatus.OK, body=worlds)
+    return MultipleDatabaseResponse(body=worlds)
 
 
 @jsondaora
@@ -147,7 +135,8 @@ class FortunesResponse(HTMLResponse):
     body: str
 
 
-async def fortunes(req: Request) -> FortunesResponse:
+@path('/fortunes', MethodType.GET)
+async def fortunes() -> FortunesResponse:
     async with connection_pool.acquire() as connection:
         fortunes = await connection.fetch('SELECT * FROM Fortune')
 
@@ -155,15 +144,15 @@ async def fortunes(req: Request) -> FortunesResponse:
     fortunes.sort(key=sort_fortunes_key)
     content = template.render(fortunes=fortunes)
     return FortunesResponse(
-        status_code=HTTPStatus.OK,
         body=content
     )
 
 
+@path('/updates', MethodType.GET)
 async def database_updates(
-    req: MultipleDatabaseRequest
+    queries: Optional[str] = None
 ) -> MultipleDatabaseResponse:
-    num_queries = get_num_queries(req.query['queries'])
+    num_queries = get_num_queries(queries)
     updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
@@ -174,7 +163,6 @@ async def database_updates(
         await connection.executemany(WRITE_ROW_SQL, updates)
 
     return MultipleDatabaseResponse(
-        status_code=HTTPStatus.OK,
         body=worlds
     )
 
@@ -184,19 +172,18 @@ class TextResponse(PlainResponse):
     body: str
 
 
-async def plaintext(req: Request) -> TextResponse:
+@path('/plaintext', MethodType.GET)
+async def plaintext() -> TextResponse:
     return TextResponse(
-        status_code=HTTPStatus.OK,
         body='Hello, world!'
     )
 
 
-routes = [
-    Route('/json', MethodType.GET, json_serialization),
-    Route('/db', MethodType.GET, single_database_query),
-    Route('/queries', MethodType.GET, multiple_database_queries),
-    Route('/fortunes', MethodType.GET, fortunes),
-    Route('/updates', MethodType.GET, database_updates),
-    Route('/plaintext', MethodType.GET, plaintext),
-]
-app = asgi_app(routes)
+app = appdaora(operations=[
+    json_serialization,
+    single_database_query,
+    multiple_database_queries,
+    fortunes,
+    database_updates,
+    plaintext
+])
