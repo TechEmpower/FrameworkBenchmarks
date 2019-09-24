@@ -1,14 +1,13 @@
 <?php
 function dbraw()
 {
-    global $pdo;
-    static $statement;
+    global $statement;
 
-    $statement = $statement ?? $pdo->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
+    //$statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
 
     if ( ! isset($_GET['queries'])) {
         $statement->execute([mt_rand(1, 10000)]);
-        return json_encode($statement->fetch(PDO::FETCH_ASSOC));
+        return json_encode($statement->fetch());
     }
 
     $query_count = 1;
@@ -18,7 +17,7 @@ function dbraw()
 
     while ($query_count--) {
         $statement->execute([mt_rand(1, 10000)]);
-        $arr[] = $statement->fetch(PDO::FETCH_ASSOC);
+        $arr[] = $statement->fetch();
     }
 
     return json_encode($arr);
