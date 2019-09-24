@@ -7,12 +7,16 @@ use Workerman\Protocols\Http;
 use Workerman\Worker;
 
 $http_worker                = new Worker('http://0.0.0.0:8080');
-$http_worker->count         = (int) shell_exec('nproc') ?? 64;
+$http_worker->count         = shell_exec('nproc');
 $http_worker->onWorkerStart = function () {
-    global $pdo;
+    global $pdo, $fortune, $statement;
     $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world',
-        'benchmarkdbuser', 'benchmarkdbpass');
+        'benchmarkdbuser', 'benchmarkdbpass',
+        [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+    $fortune   = $pdo->prepare('SELECT id,message FROM Fortune');
+    $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
 };
+
 $http_worker->onMessage = static function ($connection) {
 
     Http::header('Date: '.gmdate('D, d M Y H:i:s').' GMT');
@@ -45,7 +49,8 @@ $http_worker->onMessage = static function ($connection) {
             //   $connection->send(ob_get_clean());
 
             //default:
-            //   $connection->send('error');
+            //   Http::header('HTTP', true, 404);
+            //   $connection->send('Error 404');
     }
 };
 
