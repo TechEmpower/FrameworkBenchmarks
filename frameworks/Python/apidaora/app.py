@@ -2,6 +2,7 @@ import asyncio
 import asyncpg
 import os
 import jinja2
+from logging import getLogger
 from apidaora import (
     HTMLResponse,
     JSONRequestBody,
@@ -19,7 +20,11 @@ from http import HTTPStatus
 from typing import List, TypedDict, Optional
 
 
+logger = getLogger(__name__)
+
+
 READ_ROW_SQL = 'SELECT "randomnumber" FROM "world" WHERE id = $1'
+READ_ROW_SQL_TO_UPDATE = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
 
@@ -152,14 +157,21 @@ async def fortunes() -> FortunesResponse:
 async def database_updates(
     queries: Optional[str] = None
 ) -> MultipleDatabaseResponse:
-    num_queries = get_num_queries(queries)
-    updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
-    worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
+    worlds = []
+    updates = set()
 
     async with connection_pool.acquire() as connection:
-        statement = await connection.prepare(READ_ROW_SQL)
-        for row_id, number in updates:
-            await statement.fetchval(row_id)
+        statement = await connection.prepare(READ_ROW_SQL_TO_UPDATE)
+
+        for _ in range(get_num_queries(queries)):
+            record = await statement.fetchrow(randint(1, 10000))
+            world = MultipleDatabaseObject(
+                id=record['id'], randomNumber=record['randomnumber']
+            )
+            world['randomNumber'] = randint(1, 10000)
+            worlds.append(world)
+            updates.add((world['id'], world['randomNumber']))
+
         await connection.executemany(WRITE_ROW_SQL, updates)
 
     return MultipleDatabaseResponse(
