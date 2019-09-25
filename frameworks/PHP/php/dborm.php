@@ -36,4 +36,4 @@ while ($query_count--) {
 
 // Use the PHP standard JSON encoder.
 // http://www.php.net/manual/en/function.json-encode.php
-echo json_encode($arr);
+echo json_encode($arr, JSON_NUMERIC_CHECK);

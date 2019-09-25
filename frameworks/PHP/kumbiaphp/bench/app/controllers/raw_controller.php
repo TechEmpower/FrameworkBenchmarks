@@ -16,29 +16,28 @@ class RawController extends AppController
 
     public function index()
     {
-        $statement = $this->pdo->query( 'SELECT id,randomNumber FROM World WHERE id = '. mt_rand(1, 10000) );
-        echo json_encode($statement->fetch(PDO::FETCH_ASSOC));
+        $statement = $this->pdo->query( 'SELECT id,randomNumber FROM World WHERE id='. mt_rand(1, 10000) );
+        echo json_encode($statement->fetch(PDO::FETCH_ASSOC), JSON_NUMERIC_CHECK);
     }
 
     public function query($count = 1)
     {
         $count = min(max($count, 1), 500);
-        $res = $this->pdo->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
-        $worlds = [];
+        $res = $this->pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
+
         while ($count--) {
             $res->execute([mt_rand(1, 10000)]);
             $worlds[] = $res->fetch(PDO::FETCH_ASSOC);
         }
-        echo json_encode($worlds);
+        echo json_encode($worlds, JSON_NUMERIC_CHECK);
     }
 
     public function update($count = 1)
     {
         $count = min(max($count, 1), 500);
-        $worlds = [];
         
-        $sth = $this->pdo->prepare('SELECT * FROM World WHERE id = ?');
-        $updateSth = $this->pdo->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
+        $sth = $this->pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
+        $updateSth = $this->pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
         
         while ($count--) {
             $id = mt_rand(1, 10000);
@@ -50,6 +49,6 @@ class RawController extends AppController
             );
             $worlds[] = $row;
         }
-        echo json_encode($worlds);
+        echo json_encode($worlds, JSON_NUMERIC_CHECK);
     }
 }

@@ -10,29 +10,29 @@ class DbController extends AppController
 
     public function index()
     {
-        echo json_encode(World::byId(mt_rand(1, 10000)));
+        echo json_encode(World::byId(mt_rand(1, 10000)), JSON_NUMERIC_CHECK);
     }
 
     public function query($count = 1)
     {
         $count = min(max($count, 1), 500);
-        $worlds = [];
+
         while ($count--) {
             $worlds[] = World::byId(mt_rand(1, 10000));
         }
-        echo json_encode($worlds);
+        echo json_encode($worlds, JSON_NUMERIC_CHECK);
     }
 
     public function update($count = 1)
     {
         $count = min(max($count, 1), 500);
-        $worlds = [];
+
         while ($count--) {
             $row = World::byId(mt_rand(1, 10000));
             $row->randomNumber = mt_rand(1, 10000);
             $row->update();
             $worlds[] = $row;
         }
-        echo json_encode($worlds);
+        echo json_encode($worlds, JSON_NUMERIC_CHECK);
     }
 }

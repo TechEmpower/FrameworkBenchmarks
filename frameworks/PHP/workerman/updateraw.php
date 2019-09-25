@@ -22,5 +22,5 @@ function updateraw()
         $arr[] = $world;
     }
 
-    return json_encode($arr);
+    return json_encode($arr, JSON_NUMERIC_CHECK);
 }
