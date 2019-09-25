@@ -34,28 +34,32 @@ $http_worker->onMessage = static function ($connection) {
     switch (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) {
         case '/db':
             Http::header('Content-Type: application/json');
-            $mysql->query('SELECT id,randomNumber FROM World WHERE id='.mt_rand(1, 10000), static function ($command) use ($connection) {
-                $connection->send(json_encode($command->resultRows));
-            });
+            $mysql->query('SELECT id,randomNumber FROM World WHERE id='.mt_rand(1, 10000),
+                static function ($command) use ($connection) {
+                    $connection->send(json_encode($command->resultRows, JSON_NUMERIC_CHECK));
+                }
+            );
             return;
 
         case '/fortune':
             Http::header('Content-Type: text/html; charset=utf-8');
-            $mysql->query('SELECT id,message FROM Fortune', static function ($command) use ($connection) {
-                $arr    = $command->resultRows;
-                foreach ($arr as $row) {
-                    $fortune[$row['id']] = htmlspecialchars($row['message'], ENT_QUOTES, 'UTF-8');
-                }
-                $fortune[0] = 'Additional fortune added at request time.';
-                asort($fortune);
+            $mysql->query('SELECT id,message FROM Fortune', 
+                static function ($command) use ($connection) {
+                    $arr    = $command->resultRows;
+                    foreach ($arr as $row) {
+                        $fortune[$row['id']] = htmlspecialchars($row['message'], ENT_QUOTES, 'UTF-8');
+                    }
+                    $fortune[0] = 'Additional fortune added at request time.';
+                    asort($fortune);
 
-                $html = '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>';
-                foreach ($fortune as $id => $message) {
-                    $html .= "<tr><td>$id</td><td>$message</td></tr>";
-                }
+                    $html = '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>';
+                    foreach ($fortune as $id => $message) {
+                        $html .= "<tr><td>$id</td><td>$message</td></tr>";
+                    }
 
-                $connection->send($html.'</table></body></html>');
-            });
+                    $connection->send($html.'</table></body></html>');
+                }
+            );
             return;
 
         //case '/update':
