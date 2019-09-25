@@ -41,7 +41,26 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "workerman postgres",
+      "display_name": "workerman-postgres",
+      "notes": "",
+      "versus": "php"
+    },
+    "async": {
+      "db_url": "/db",
+      "fortune_url": "/fortune",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "None",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "Raw",
+      "platform": "workerman",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "workerman-async-db",
       "notes": "",
       "versus": "php"
     }
