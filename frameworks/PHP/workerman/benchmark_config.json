@@ -41,7 +41,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "workerman postgres",
+      "display_name": "workerman-postgres",
       "notes": "",
       "versus": "php"
     },
@@ -60,7 +60,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "workerman async db",
+      "display_name": "workerman-async-db",
       "notes": "",
       "versus": "php"
     }
