@@ -45,7 +45,7 @@ $http_worker->onMessage = static function ($connection) {
             Http::header('Content-Type: text/html; charset=utf-8');
             $mysql->query('SELECT id,message FROM Fortune', 
                 static function ($command) use ($connection) {
-                    $arr    = $command->resultRows;
+                    $arr = $command->resultRows;
                     foreach ($arr as $row) {
                         $fortune[$row['id']] = htmlspecialchars($row['message'], ENT_QUOTES, 'UTF-8');
                     }
