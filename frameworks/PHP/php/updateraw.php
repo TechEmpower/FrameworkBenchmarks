@@ -14,8 +14,8 @@ if ($_GET['queries'] > 1) {
 }
 
 // Define query
-$statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id = ?');
-$updateStatement = $pdo->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
+$statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
+$updateStatement = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
 
 // For each query, store the result set values in the response array
 while ($query_count--) {
