@@ -17,7 +17,7 @@ ActiveRecord\Config::initialize(function ($cfg) {
 });
 
 if (! isset($_GET['queries'])) {
-    echo json_encode(World::find_by_id(mt_rand(1, 10000))->to_array());
+    echo json_encode(World::find_by_id(mt_rand(1, 10000))->to_array(), JSON_NUMERIC_CHECK);
     return;
 }
 
