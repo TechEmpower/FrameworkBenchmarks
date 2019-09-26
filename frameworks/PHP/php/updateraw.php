@@ -13,12 +13,9 @@ if ($_GET['queries'] > 1) {
   $query_count = min($_GET['queries'], 500);
 }
 
-// Create an array with the response string.
-$arr = [];
-
 // Define query
-$statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id = ?');
-$updateStatement = $pdo->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
+$statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
+$updateStatement = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
 
 // For each query, store the result set values in the response array
 while ($query_count--) {
@@ -36,4 +33,4 @@ while ($query_count--) {
 
 // Use the PHP standard JSON encoder.
 // http://www.php.net/manual/en/function.json-encode.php
-echo json_encode($arr);
+echo json_encode($arr, JSON_NUMERIC_CHECK);

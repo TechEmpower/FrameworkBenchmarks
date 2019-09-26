@@ -17,7 +17,7 @@ ActiveRecord\Config::initialize(function ($cfg) {
 });
 
 if (! isset($_GET['queries'])) {
-    echo json_encode(World::find_by_id(mt_rand(1, 10000))->to_array());
+    echo json_encode( World::find_by_id(mt_rand(1, 10000))->to_array(), JSON_NUMERIC_CHECK);
     return;
 }
 
@@ -36,4 +36,4 @@ while ($query_count--) {
 
 // Use the PHP standard JSON encoder.
 // http://www.php.net/manual/en/function.json-encode.php
-echo json_encode($arr);
+echo json_encode($arr, JSON_NUMERIC_CHECK);
