@@ -7,7 +7,7 @@ function dbraw()
 
     if ( ! isset($_GET['queries'])) {
         $statement->execute([mt_rand(1, 10000)]);
-        return json_encode($statement->fetch());
+        return json_encode($statement->fetch(), JSON_NUMERIC_CHECK);
     }
 
     $query_count = 1;
@@ -20,5 +20,5 @@ function dbraw()
         $arr[] = $statement->fetch();
     }
 
-    return json_encode($arr);
+    return json_encode($arr, JSON_NUMERIC_CHECK);
 }
