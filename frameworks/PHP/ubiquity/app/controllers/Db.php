@@ -10,7 +10,7 @@ use models\World;
 class Db extends \Ubiquity\controllers\Controller {
 
 	public function initialize() {
-		\header('Content-type: application/json');
+		\header('Content-Type: application/json');
 		\Ubiquity\cache\CacheManager::startProd(\Ubiquity\controllers\Startup::$config);
 		DAO::setModelDatabase(World::class);
 	}
