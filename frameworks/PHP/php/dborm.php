@@ -1,6 +1,6 @@
 <?php
 // Set content type
-header('Content-type: application/json');
+header('Content-Type: application/json');
 
 // Database connection
 // http://www.php.net/manual/en/ref.pdo-mysql.php

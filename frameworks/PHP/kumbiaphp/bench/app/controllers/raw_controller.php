@@ -7,7 +7,7 @@ class RawController extends AppController
     protected function before_filter()
     {
         View::select(null, null);
-        header('Content-type: application/json');
+        header('Content-Type: application/json');
 
         $this->pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', [
             PDO::ATTR_PERSISTENT => true
