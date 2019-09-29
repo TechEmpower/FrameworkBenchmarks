@@ -39,7 +39,7 @@ The tests were run with:
 * [nginx 1.14](http://nginx.org/)
 * [Swoole](https://www.swoole.com/), [Ubiquity-swoole](https://github.com/phpMv/ubiquity-swoole)
 * [Workerman](https://github.com/walkor/Workerman), [Ubiquity-workerman](https://github.com/phpMv/ubiquity-workerman)
-* [MySQL 5.7](https://dev.mysql.com/)
+* [MySQL 8.0](https://dev.mysql.com/)
 
 
 ## Test URLs
