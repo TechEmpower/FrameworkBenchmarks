@@ -27,7 +27,7 @@ RUN deploy/run/install-composer.sh
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq git unzip > /dev/null
 
-RUN php composer.phar require phpmv/ubiquity-devtools:dev-master phpmv/ubiquity-workerman:dev-master phpmv/ubiquity-mysqli:dev-master --quiet
+RUN php composer.phar require phpmv/ubiquity-devtools:dev-techempower-benchmarks phpmv/ubiquity-workerman:dev-techempower-benchmarks phpmv/ubiquity-mysqli:dev-techempower-benchmarks --quiet
 
 RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 

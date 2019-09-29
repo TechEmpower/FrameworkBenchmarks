@@ -16,8 +16,7 @@ class Db extends \Ubiquity\controllers\Controller {
 	}
 	
 	public function index() {
-		$world = DAO::getById(World::class, \mt_rand(1, 10000), false);
-		echo \json_encode($world->_rest);
+		echo \json_encode((DAO::getById(World::class, \mt_rand(1, 10000), false))->_rest);
 	}
 	
 	public function query($queries = 1) {
