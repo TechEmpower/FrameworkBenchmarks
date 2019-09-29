@@ -7,8 +7,6 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/valyala/bytebufferpool"
-
 	"go-std/src/storage"
 	"go-std/src/templates"
 )
@@ -193,13 +191,15 @@ func UpdateHandler(db storage.DB) func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+var helloWorld = []byte("Hello, World!")
+
 // PlaintextHandler . Test 6: Plaintext
 func PlaintextHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Server", "Go")
 	w.Header().Set("Content-Type", "text/plain")
-	b := bytebufferpool.Get()
-	b.SetString("Hello, World!")
-	w.Write(b.Bytes())
-	b.Reset()
-	bytebufferpool.Put(b)
+	// As per 6, iv:
+	//  This test is not intended to exercise the allocation of memory or
+	//  instantiation of objects. Therefore it is acceptable but not required
+	//  to re-use a single buffer for the response text.
+	w.Write(helloWorld)
 }
