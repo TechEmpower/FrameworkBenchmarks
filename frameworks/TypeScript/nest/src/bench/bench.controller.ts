@@ -1,4 +1,5 @@
-import { Controller, Get, Header, Query } from '@nestjs/common';
+import { Controller, Get, Header, Query, Res, Render } from '@nestjs/common';
+import { Response } from 'express';
 
 import { BenchService } from './bench.service';
 
@@ -42,4 +43,14 @@ export class BenchController {
 
         return 'Hello, World!';
     }
+
+    @Get('/fortunes')
+    @Render('fortunes')
+    @Header('Server', 'NestJS')
+    fortunes(@Res() res: Response) {
+        return this.benchService.getFortunes().then( fortunes => ({
+            fortunes,
+        }));
+    }
+
 }

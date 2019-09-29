@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.javanut.gl.api.HTTPRequestReader;
@@ -11,8 +12,14 @@ import com.javanut.gl.api.HTTPResponseService;
 import com.javanut.pronghorn.network.config.HTTPContentTypeDefaults;
 import com.javanut.pronghorn.pipe.ObjectPipe;
 
-import io.reactiverse.pgclient.PgIterator;
-import io.reactiverse.pgclient.Tuple;
+import io.vertx.core.AsyncResult;
+import io.vertx.pgclient.PgPool;
+import io.vertx.sqlclient.Row;
+import io.vertx.sqlclient.RowIterator;
+import io.vertx.sqlclient.RowSet;
+import io.vertx.sqlclient.SqlConnection;
+import io.vertx.sqlclient.Tuple;
+
 
 public class ProcessUpdate {
 	
@@ -57,98 +64,28 @@ public class ProcessUpdate {
 		long seqCode = request.getSequenceCode();
 		int temp = requestsInFlight.incrementAndGet();
 		
-		if ((pause.get()<20) && DBUpdateInFlight.hasRoomFor(queries) && service.hasRoomFor(temp) ) {		
-			    
-				//NEW List<Tuple> args = new ArrayList<Tuple>(queries);
-				List<ResultObject> objs = new ArrayList<ResultObject>(queries);
-				int q = queries;
-				while (--q >= 0) {
+		if (DBUpdateInFlight.hasRoomFor(queries) && service.hasRoomFor(temp) ) {		
+	
+		   // final AtomicBoolean ok = new AtomicBoolean();
+		    
+			//pm.pool().getConnection(result -> {
 				
-						final ResultObject worldObject = DBUpdateInFlight.headObject();
-						assert(null!=worldObject);
-											
-						worldObject.setConnectionId(conId);
-						worldObject.setSequenceId(seqCode);
-						worldObject.setStatus(-2);//out for work	
-						worldObject.setGroupSize(queries);
-						
-						worldObject.setId(randomValue());
-						objs.add(worldObject);					
-						
-						pm.pool().preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(worldObject.getId()), r -> {
-								if (r.succeeded()) {
-																		
-									PgIterator resultSet = r.result().iterator();
-							        Tuple row = resultSet.next();			        
-							        
-							        assert(worldObject.getId()==row.getInteger(0));
-							        
-							        //read the existing random value and store it in the world object
-							        worldObject.setResult(row.getInteger(1));
-							        ///////////////////////////////////
-							        //the object can be used here with the old value
-							        ///////////////////////////////////
-							        //set the new random value in this object
-							        worldObject.setResult(randomValue());							        
-							        
-							        
-							        pm.pool().preparedQuery("UPDATE world SET randomnumber=$1 WHERE id=$2", 							        		
-						        			Tuple.of(worldObject.getResult(), worldObject.getId()), ar -> {							        	
-													if (ar.succeeded()) {														
-											        	worldObject.setStatus(200);			
-											        	
-													} else {	
-														System.out.println("unable to update");
-														if (ar.cause()!=null) {
-															ar.cause().printStackTrace();
-														}
-														
-														worldObject.setStatus(500);
-													}																												
-						        			});
-							        
-							        
-//							      //  
-//							      //  Use of batch updates is acceptable but not required. 
-//							      //   To be clear: batches are not permissible for selecting/reading the rows,
-//							      //   but batches are acceptable for writing the updates.
-//							      //  
-//							        
-//							        //TODO: can we prep this only once and hold it?
-//							        
-//							        Tuple of = Tuple.of(worldObject.getResult(), worldObject.getId());
-//							        args.add(of);
-//							        
-//							        //only call for update when we have each of the args
-//							        if (args.size()==queries) {
-//							        	Collections.sort(args, (a,b) -> {
-//											return Integer.compare( ((Tuple)a).getInteger(0),
-//															        ((Tuple)b).getInteger(0));
-//										
-//										});
-//							        	
-//							        	execUpdate(objs, args, 1);							        	
-//							        	
-//							        }							        
-							        
-								} else {	
-								
-									System.out.println("unable to query");
-									if (r.cause()!=null) {
-										r.cause().printStackTrace();
-									}
-									
-									worldObject.setStatus(500);
-								}		
-								
-								//on all N responses.....
-																
-							});	
-									
-						DBUpdateInFlight.moveHeadForward(); //always move to ensure this can be read.
+				//if (result.succeeded()) {
 				
-				}
+					//SqlConnection connection = result.result();					
+					processConnection(queries, conId, seqCode);
+					//connection.close();
+					
+				//	ok.set(true);
+					
+				//} else {
+				//	requestsInFlight.decrementAndGet();			
+				//	ok.set(false);
+				//}
 				
+			//});
+				
+			//return ok.get();
 			return true;
 		} else {
 			requestsInFlight.decrementAndGet();
@@ -156,8 +93,87 @@ public class ProcessUpdate {
 		}
 	}
 
-	private final AtomicInteger pause = new AtomicInteger(0);
-	
+
+	private void processConnection(int queries, long conId, long seqCode) {
+		
+		List<ResultObject> objs = new ArrayList<ResultObject>(queries);
+		int q = queries;
+		while (--q >= 0) {
+				processSingleUpdate(queries, conId, seqCode, objs);
+		
+		}
+	}
+
+
+	private void processSingleUpdate(int queries, long conId, long seqCode, List<ResultObject> objs) {
+		//testing one per query 
+
+		final ResultObject worldObject = DBUpdateInFlight.headObject();
+		assert(null!=worldObject);
+							
+		worldObject.setConnectionId(conId);
+		worldObject.setSequenceId(seqCode);
+		worldObject.setStatus(-2);//out for work	
+		worldObject.setGroupSize(queries);
+		
+		worldObject.setId(randomValue());
+		objs.add(worldObject);					
+		
+		pm.pool().preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(worldObject.getId()), r -> {
+				if (r.succeeded()) {
+														
+					RowIterator<Row> resultSet = r.result().iterator();
+			        Tuple row = resultSet.next();			        
+			        
+			        assert(worldObject.getId()==row.getInteger(0));
+			        
+			        //read the existing random value and store it in the world object
+			        worldObject.setResult(row.getInteger(1));
+			        ///////////////////////////////////
+			        //the object can be used here with the old value
+			        ///////////////////////////////////
+			        //set the new random value in this object
+			        worldObject.setResult(randomValue());							        
+			        
+			        
+			        pm.pool().preparedQuery("UPDATE world SET randomnumber=$1 WHERE id=$2", 							        		
+		        			Tuple.of(worldObject.getResult(), worldObject.getId()), ar -> {							        	
+									setStatus(worldObject, ar);																												
+		        			}
+		        			);					        
+			        
+				} else {	
+				
+					System.out.println("unable to query");
+					if (r.cause()!=null) {
+						r.cause().printStackTrace();
+					}
+					
+					worldObject.setStatus(500);
+				}		
+				
+				//on all N responses.....
+												
+			});	
+					
+		DBUpdateInFlight.moveHeadForward(); //always move to ensure this can be read.
+	}
+
+
+	private static void setStatus(final ResultObject worldObject, AsyncResult<RowSet<Row>> ar) {
+		if (ar.succeeded()) {														
+			worldObject.setStatus(200);			
+			
+		} else {	
+			System.out.println("unable to update");
+			if (ar.cause()!=null) {
+				ar.cause().printStackTrace();
+			}
+			
+			worldObject.setStatus(500);
+		}
+	}
+
 	
 //	private void execUpdate(List<ResultObject> toUpdate, List<Tuple> args, int i) {
 //				

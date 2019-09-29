@@ -33,7 +33,7 @@ $db = function (string $database_type, int $queries = 0) use ($pool): string {
     $db->db_test = $db->db_test ?? $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
 
     // For each query, store the result set values in the response array
-    while (0 < $query_count--) {
+    while ($query_count--) {
         $id = mt_rand(1, 10000);
         $ret = $db->db_test->execute([$id]);
 
@@ -104,7 +104,7 @@ $updates = function (string $database_type, int $queries = 0) use ($pool): strin
     $db->updates_test_select = $db->updates_test_select ?? $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
     $db->updates_test_update = $db->updates_test_update ?? $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
 
-    while (0 < $query_count--) {
+    while ($query_count--) {
         $id = mt_rand(1, 10000);
         $randomNumber = mt_rand(1, 10000);
         $ret = $db->updates_test_select->execute([$id]);
