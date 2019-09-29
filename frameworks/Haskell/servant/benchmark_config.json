@@ -23,6 +23,7 @@
     },
     "beam": {
       "db_url": "/db",
+      "fortune_url": "/fortune",
       "port": 7041,
       "approach": "Realistic",
       "classification": "Micro",
@@ -42,6 +43,7 @@
     },
     "psql-simple": {
       "db_url": "/db",
+      "fortune_url": "/fortune",
       "port": 7041,
       "approach": "Realistic",
       "classification": "Micro",

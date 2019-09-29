@@ -4,6 +4,7 @@
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE FlexibleInstances  #-}
 {-# LANGUAGE OverloadedStrings  #-}
+{-# LANGUAGE RankNTypes         #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TypeFamilies       #-}
 {-# LANGUAGE TypeOperators      #-}
@@ -32,9 +33,12 @@ import qualified Network.Wai.Handler.Warp   as Warp
 import qualified System.Random.SplitMix     as SM
 
 #ifdef HAS_DB
+import           Data.Foldable              (for_)
 import           Data.Int                   (Int32)
+import           Data.List                  (sortOn)
 import           Data.Pool                  (Pool, createPool, withResource)
-
+import           Lucid                      hiding (for_)
+import           Servant.HTML.Lucid
 #endif
 
 #ifdef DB_BEAM
@@ -56,6 +60,7 @@ data Routes route = Routes
     , routeJson      :: route :- "json"      :> Get '[JSON]      JsonData
 #ifdef HAS_DB
     , routeDb        :: route :- "db"        :> Get '[JSON]      World
+    , routeFortune   :: route :- "fortune"   :> Get '[HTML]      FortunePage
 #endif
     }
   deriving (Generic)
@@ -66,6 +71,7 @@ serverRoutes _ctx = Routes
     , routeJson      = handlerJson
 #ifdef HAS_DB
     , routeDb        = handlerDb _ctx
+    , routeFortune   = handlerFortune _ctx
 #endif
     }
 
@@ -150,8 +156,11 @@ handlerJson = return $ JsonData "Hello, World!"
 -- Test 2: Single database query
 -------------------------------------------------------------------------------
 
-#ifdef DB_BEAM
+#ifdef HAS_DB
 handlerDb :: Ctx -> Handler World
+#endif
+
+#ifdef DB_BEAM
 handlerDb ctx = liftIO $
     withConnection ctx $ \conn ->
     withSMGen ctx $ \gen -> do
@@ -169,7 +178,6 @@ handlerDb ctx = liftIO $
 #endif
 
 #ifdef DB_PSQL_SIMPLE
-handlerDb :: Ctx -> Handler World
 handlerDb ctx = liftIO $
     withConnection ctx $ \conn ->
     withSMGen ctx $ \gen -> do
@@ -192,6 +200,46 @@ handlerDb ctx = liftIO $
 -------------------------------------------------------------------------------
 -- Test 4: Fortunes
 -------------------------------------------------------------------------------
+
+#ifdef HAS_DB
+
+newtype FortunePage = FortunePage (forall m. Monad m => HtmlT m ())
+
+instance ToHtml FortunePage where
+    toHtml = toHtmlRaw
+    toHtmlRaw (FortunePage h) = h
+
+renderFortunes :: [Fortune] -> FortunePage
+renderFortunes fs = FortunePage $ doctypehtml_ $ do
+    head_ $ title_ "Fortunes"
+    body_ $ table_ $ do
+        tr_ $ do
+            th_ "id"
+            th_ "message"
+        for_ fs' $ \f -> tr_ $ do
+            td_ $ toHtml $ show $ fortuneId f
+            td_ $ toHtml $ fortuneMessage f
+  where
+    fs' = sortOn fortuneMessage $
+        Fortune 0 "Additional fortune added at request time." : fs
+
+
+handlerFortune :: Ctx -> Handler FortunePage
+#endif
+
+#ifdef DB_BEAM
+handlerFortune ctx = liftIO $ withConnection ctx $ \conn -> do
+    fs <- runBeamPostgres conn $ runSelectReturningList $ select $
+        all_ (tfbFortune tfbDb)
+
+    return $ renderFortunes fs
+#endif
+
+#ifdef DB_PSQL_SIMPLE
+handlerFortune ctx = liftIO $ withConnection ctx $ \conn -> do
+    fs <- query_ conn "SELECT id, message FROM Fortune;"
+    return $ renderFortunes fs
+#endif
 
 -------------------------------------------------------------------------------
 -- Test 5: Updates
@@ -226,9 +274,27 @@ type World = WorldT Identity
 deriving instance Eq World
 deriving instance Show World
 
+-- | Fortune table.
+data FortuneT f = Fortune
+    { fortuneId      :: Columnar f Int32
+    , fortuneMessage :: Columnar f Text
+    }
+  deriving (Generic, Beamable)
+
+instance Table FortuneT where
+   data PrimaryKey FortuneT f = FortuneId (Columnar f Int32) deriving (Generic, Beamable)
+   primaryKey = FortuneId . fortuneId
+
+type Fortune = FortuneT Identity
+-- type FortuneId = PrimaryKey FortuneT Identity
+
+deriving instance Eq Fortune
+deriving instance Show Fortune
+
 -- Database definition.
-newtype TfbDb f = TfbDb
-    { tfbWorld :: f (TableEntity WorldT)
+data TfbDb f = TfbDb
+    { tfbWorld   :: f (TableEntity WorldT)
+    , tfbFortune :: f (TableEntity FortuneT)
     }
  deriving (Generic, Database Postgres)
 
@@ -238,6 +304,10 @@ tfbDb = defaultDbSettings `withDbModification` modification where
         { tfbWorld = modifyEntityName (\_ -> "World") <> modifyTableFields tableModification
             { worldId           = "id"
             , worldRandomNumber = "randomnumber"
+            }
+        , tfbFortune = modifyEntityName (\_ -> "Fortune") <> modifyTableFields tableModification
+            { fortuneId      = "id"
+            , fortuneMessage = "message"
             }
         }
 #endif
@@ -250,6 +320,12 @@ tfbDb = defaultDbSettings `withDbModification` modification where
 data World = World
     { worldId           :: Int32
     , worldRandomNumber :: Int32
+    }
+  deriving (Eq, Show, Generic, FromRow)
+
+data Fortune = Fortune
+    { fortuneId      :: Int32
+    , fortuneMessage :: Text
     }
   deriving (Eq, Show, Generic, FromRow)
 #endif

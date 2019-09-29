@@ -19,7 +19,9 @@ common deps
     , aeson           ^>=1.4.5.0
     , base            ^>=4.12
     , bytestring      ^>=0.10.8.0
+    , lucid           ^>=2.9.11
     , servant         ^>=0.16
+    , servant-lucid   ^>=0.9
     , servant-server  ^>=0.16
     , splitmix        ^>=0.0.3
     , text            ^>=1.2.3.0
