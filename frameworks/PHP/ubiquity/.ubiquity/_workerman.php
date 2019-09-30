@@ -8,7 +8,7 @@ if (! defined ( 'DS' )) {
 }
 $config=include ROOT.'config/config.php';
 $sConfig= include __DIR__.\DS.'workerman-config.php';
-$config["sessionName"]=$sConfig["sessionName"];
+$config["sessionName"]=null;
 $address=$sConfig['host'].':'.$sConfig['port'];
 $config ["siteUrl"] = 'http://'.$address;
 require ROOT . './../vendor/autoload.php';

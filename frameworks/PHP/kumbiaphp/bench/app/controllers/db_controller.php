@@ -5,7 +5,7 @@ class DbController extends AppController
     protected function before_filter()
     {
         View::select(null, null);
-        header('Content-type: application/json');
+        header('Content-Type: application/json');
     }
 
     public function index()

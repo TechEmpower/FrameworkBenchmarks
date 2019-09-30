@@ -2,6 +2,6 @@
 // Plaintext Test
 
 // Set content type
-header('Content-type: text/plain');
+header('Content-Type: text/plain');
 
 echo 'Hello, World!';

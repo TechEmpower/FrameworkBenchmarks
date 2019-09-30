@@ -1,6 +1,6 @@
 <?php
 // Set content type
-header('Content-type: application/json');
+header('Content-Type: application/json');
 
 require __DIR__.'/boot-eloquent.php';
 
