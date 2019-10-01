@@ -25,7 +25,7 @@ public class Bootstrap {
 
     public static void main(String[] args) {
         System.setProperty("smart-socket.server.pageSize", (8 * 1024 * 1024) + "");
-//        System.setProperty("smart-socket.bufferPool.pageNum", 512 + "");
+        System.setProperty("smart-socket.bufferPool.pageNum", 16 + "");
         System.setProperty("smart-socket.session.writeChunkSize", (1024 * 4) + "");
 //        System.setProperty("sun.nio.ch.maxCompletionHandlersOnStack","24");
         HttpMessageProcessor processor = new HttpMessageProcessor(System.getProperty("webapps.dir", "./"));
@@ -67,10 +67,7 @@ public class Bootstrap {
         AioQuickServer<Http11Request> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), processor);
         server.setReadBufferSize(1024 * 4);
         int cpuNum = Runtime.getRuntime().availableProcessors();
-        int shareNum = Runtime.getRuntime().availableProcessors() * 3 / 4;
-        server.setBossThreadNum(cpuNum << 1);
-//        server.setBossShareToWorkerThreadNum(shareNum);
-//        server.setWorkerThreadNum(cpuNum >> 1);
+        server.setThreadNum(cpuNum + 2);
         try {
             server.start();
         } catch (IOException e) {
