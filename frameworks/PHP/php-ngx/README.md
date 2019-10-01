@@ -9,7 +9,7 @@ ngx_php7 draws on the design of ngx_lua and is committed to providing non-blocki
 
 
 ## Infrastructure Software Versions
-The tests were run with [PHP Version 7.3.*](https://www.php.net/) + OPcache
+The tests were run with [PHP Version 7.3.*](https://www.php.net/) without OPcache
 
 ### Platform
 
