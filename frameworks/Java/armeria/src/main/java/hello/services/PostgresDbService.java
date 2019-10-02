@@ -1,29 +1,26 @@
 package hello.services;
 
-import hello.helpers.HttpHeadersHelper;
-import hello.helpers.PostgresDbHelper;
-import hello.models.World;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.sql.DataSource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.linecorp.armeria.common.HttpData;
-import com.linecorp.armeria.common.HttpResponse;
-import com.linecorp.armeria.common.MediaType;
+import com.zaxxer.hikari.HikariDataSource;
+
+import com.linecorp.armeria.server.ServiceRequestContext;
 import com.linecorp.armeria.server.annotation.Default;
 import com.linecorp.armeria.server.annotation.Get;
 import com.linecorp.armeria.server.annotation.Param;
-import com.zaxxer.hikari.HikariDataSource;
+import com.linecorp.armeria.server.annotation.ProducesJson;
+
+import hello.helpers.PostgresDbHelper;
+import hello.models.World;
 
 public class PostgresDbService {
-  private static final ObjectMapper MAPPER = new ObjectMapper();
 
   private static final String SELECT_QUERY = "SELECT * FROM world WHERE id = ?";
   private static final String UPDATE_QUERY =
@@ -36,37 +33,26 @@ public class PostgresDbService {
   }
 
   @Get("/db")
-  public HttpResponse db() throws Exception {
-    return HttpResponse.of(
-    	HttpHeadersHelper.getHttpHeader(MediaType.JSON),
-        HttpData.of(MAPPER.writeValueAsBytes(getWorld(getRandomNumber())))
-        );
+  @ProducesJson
+  public CompletableFuture<World> db() throws Exception {
+    return getWorld(getRandomNumber());
   }
 
   // need to use regex as /queries/{count} doesn't work when count is null
   @Get("regex:^/queries/(?<count>.*)$")
-  public HttpResponse queries(
+  @ProducesJson
+  public CompletableFuture<World[]> queries(
       @Param("count")
-      @Default("")
-          String count) throws JsonProcessingException, SQLException {
-    return HttpResponse.of(
-        HttpHeadersHelper.getHttpHeader(MediaType.JSON),
-        HttpData.of(
-            MAPPER.writeValueAsBytes(getWorlds(getSanitizedCount(count))))
-        );
+      @Default("") String count) {
+    return getWorlds(getSanitizedCount(count));
   }
 
   @Get("regex:^/updates/(?<count>.*)$")
-  public HttpResponse update(
+  @ProducesJson
+  public CompletableFuture<World[]> update(
       @Param("count")
-      @Default("")
-          String count) throws JsonProcessingException, SQLException {
-    return HttpResponse.of(
-        HttpHeadersHelper.getHttpHeader(MediaType.JSON),
-        HttpData.of(
-            MAPPER.writeValueAsBytes(
-                getUpdatedWorlds(getSanitizedCount(count))))
-        );
+      @Default("") String count) {
+    return getUpdatedWorlds(getSanitizedCount(count));
   }
 
   private static int getRandomNumber() {
@@ -88,71 +74,87 @@ public class PostgresDbService {
     }
   }
 
-  private World getWorld(int number) throws SQLException {
-    try (final Connection connection = dataSource.getConnection();
-         final PreparedStatement statement =
-             connection.prepareStatement(SELECT_QUERY)) {
+  private CompletableFuture<World> getWorld(int number) {
+    return CompletableFuture.supplyAsync(
+        () -> {
+          try (final Connection connection = dataSource.getConnection();
+               final PreparedStatement statement =
+                   connection.prepareStatement(SELECT_QUERY)) {
 
-      statement.setInt(1, number);
+            statement.setInt(1, number);
 
-      try (final ResultSet resultSet = statement.executeQuery()) {
-        resultSet.next();
-        return new World(resultSet.getInt(1), resultSet.getInt(2));
-      }
-    }
+            try (final ResultSet resultSet = statement.executeQuery()) {
+              resultSet.next();
+              return new World(resultSet.getInt(1), resultSet.getInt(2));
+            }
+          } catch (SQLException e) {
+            throw new IllegalStateException("Database error", e);
+          }
+        }, ServiceRequestContext.current().blockingTaskExecutor());
   }
 
-  private World[] getWorlds(int count) throws SQLException {
-    World[] worlds = new World[count];
+  private CompletableFuture<World[]> getWorlds(int count) {
+    return CompletableFuture.supplyAsync(
+        () -> {
+          World[] worlds = new World[count];
 
-    try (final Connection connection = dataSource.getConnection()) {
-      for (int i = 0; i < count; i++) {
-        final int id = getRandomNumber();
+          try (final Connection connection = dataSource.getConnection()) {
+            for (int i = 0; i < count; i++) {
+              final int id = getRandomNumber();
 
-        try (final PreparedStatement statement =
-                 connection.prepareStatement(SELECT_QUERY)) {
-          statement.setInt(1, id);
+              try (final PreparedStatement statement =
+                       connection.prepareStatement(SELECT_QUERY)) {
+                statement.setInt(1, id);
 
-          try (final ResultSet resultSet = statement.executeQuery()) {
-            resultSet.next();
-            worlds[i] = new World(id, resultSet.getInt(2));
+                try (final ResultSet resultSet = statement.executeQuery()) {
+                  resultSet.next();
+                  worlds[i] = new World(id, resultSet.getInt(2));
+                }
+              }
+            }
+          } catch (SQLException e) {
+            throw new IllegalStateException("Database error", e);
           }
-        }
-      }
-    }
-    return worlds;
+          return worlds;
+        }, ServiceRequestContext.current().blockingTaskExecutor());
   }
 
-  private World[] getUpdatedWorlds(int count) throws SQLException {
-    World[] worlds = new World[count];
+  private CompletableFuture<World[]> getUpdatedWorlds(int count) {
+    return CompletableFuture.supplyAsync(
+        () -> {
 
-    try (final Connection connection = dataSource.getConnection()) {
-      for (int i = 0; i < count; i++) {
-        final int id = getRandomNumber();
-        final int randomNumber = getRandomNumber();
+          World[] worlds = new World[count];
 
-        try (final PreparedStatement select =
-                 connection.prepareStatement(SELECT_QUERY);
-             final PreparedStatement update =
-                 connection.prepareStatement(UPDATE_QUERY)) {
+          try (final Connection connection = dataSource.getConnection()) {
+            for (int i = 0; i < count; i++) {
+              final int id = getRandomNumber();
+              final int randomNumber = getRandomNumber();
 
-          // get
-          select.setInt(1, id);
+              try (final PreparedStatement select =
+                       connection.prepareStatement(SELECT_QUERY);
+                   final PreparedStatement update =
+                       connection.prepareStatement(UPDATE_QUERY)) {
 
-          try (final ResultSet set = select.executeQuery()) {
-            set.next();
+                // get
+                select.setInt(1, id);
 
-            // update
-            update.setInt(1, randomNumber);
-            update.setInt(2, id);
-            update.execute();
+                try (final ResultSet set = select.executeQuery()) {
+                  set.next();
 
-            worlds[i] = new World(id, set.getInt(2));
-            worlds[i].randomNumber = randomNumber;
+                  // update
+                  update.setInt(1, randomNumber);
+                  update.setInt(2, id);
+                  update.execute();
+
+                  worlds[i] = new World(id, set.getInt(2));
+                  worlds[i].randomNumber = randomNumber;
+                }
+              }
+            }
+          } catch (SQLException e) {
+            throw new IllegalStateException("Database error", e);
           }
-        }
-      }
-    }
-    return worlds;
+          return worlds;
+        }, ServiceRequestContext.current().blockingTaskExecutor());
   }
 }
