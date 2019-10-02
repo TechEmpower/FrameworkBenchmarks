@@ -17,9 +17,9 @@ public final class App {
     ServerBuilder sb = new ServerBuilder();
 
     sb.http(8080)
-      .annotatedService("/", new HelloService())
-      .annotatedService("/", new PostgresDbService())
-      .annotatedService("/", new PostgresFortunesService())
+      .annotatedService(new HelloService())
+      .annotatedService(new PostgresDbService())
+      .annotatedService(new PostgresFortunesService())
       .decorator((delegate, ctx, req) -> {
         ctx.addAdditionalResponseHeader(HttpHeaderNames.SERVER, "armeria");
         ctx.addAdditionalResponseHeader(HttpHeaderNames.DATE,
