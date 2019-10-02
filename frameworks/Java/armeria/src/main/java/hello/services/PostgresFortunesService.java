@@ -48,8 +48,8 @@ public class PostgresFortunesService {
   }
 
   @Get("/fortunes")
-  public CompletableFuture<HttpResponse> fortunes() {
-    return getFortunes().thenApply(fortunes -> {
+  public CompletableFuture<HttpResponse> fortunes(ServiceRequestContext ctx) {
+    return getFortunes(ctx).thenApply(fortunes -> {
       fortunes.add(
           new Fortune(0, "Additional fortune added at request time."));
       fortunes.sort(Comparator.comparing(Fortune::getMessage));
@@ -59,7 +59,7 @@ public class PostgresFortunesService {
     });
   }
 
-  private CompletableFuture<List<Fortune>> getFortunes() {
+  private CompletableFuture<List<Fortune>> getFortunes(ServiceRequestContext ctx) {
     return CompletableFuture.supplyAsync(
         () -> {
           List<Fortune> fortunes = new ArrayList<>();
@@ -79,7 +79,7 @@ public class PostgresFortunesService {
             throw new IllegalStateException("Database error", e);
           }
           return fortunes;
-        }, ServiceRequestContext.current().blockingTaskExecutor()
+        }, ctx.blockingTaskExecutor()
     );
   }
 

@@ -12,7 +12,6 @@ import javax.sql.DataSource;
 import com.zaxxer.hikari.HikariDataSource;
 
 import com.linecorp.armeria.server.ServiceRequestContext;
-import com.linecorp.armeria.server.annotation.Default;
 import com.linecorp.armeria.server.annotation.Get;
 import com.linecorp.armeria.server.annotation.Param;
 import com.linecorp.armeria.server.annotation.ProducesJson;
@@ -34,25 +33,25 @@ public class PostgresDbService {
 
   @Get("/db")
   @ProducesJson
-  public CompletableFuture<World> db() throws Exception {
-    return getWorld(getRandomNumber());
+  public CompletableFuture<World> db(ServiceRequestContext ctx) throws Exception {
+    return getWorld(getRandomNumber(), ctx);
   }
 
   // need to use regex as /queries/{count} doesn't work when count is null
   @Get("regex:^/queries/(?<count>.*)$")
   @ProducesJson
   public CompletableFuture<World[]> queries(
-      @Param("count")
-      @Default("") String count) {
-    return getWorlds(getSanitizedCount(count));
+      @Param("count") String count,
+      ServiceRequestContext ctx) {
+    return getWorlds(getSanitizedCount(count), ctx);
   }
 
   @Get("regex:^/updates/(?<count>.*)$")
   @ProducesJson
   public CompletableFuture<World[]> update(
-      @Param("count")
-      @Default("") String count) {
-    return getUpdatedWorlds(getSanitizedCount(count));
+      @Param("count") String count,
+      ServiceRequestContext ctx) {
+    return getUpdatedWorlds(getSanitizedCount(count), ctx);
   }
 
   private static int getRandomNumber() {
@@ -74,7 +73,7 @@ public class PostgresDbService {
     }
   }
 
-  private CompletableFuture<World> getWorld(int number) {
+  private CompletableFuture<World> getWorld(int number, ServiceRequestContext ctx) {
     return CompletableFuture.supplyAsync(
         () -> {
           try (final Connection connection = dataSource.getConnection();
@@ -90,10 +89,10 @@ public class PostgresDbService {
           } catch (SQLException e) {
             throw new IllegalStateException("Database error", e);
           }
-        }, ServiceRequestContext.current().blockingTaskExecutor());
+        }, ctx.blockingTaskExecutor());
   }
 
-  private CompletableFuture<World[]> getWorlds(int count) {
+  private CompletableFuture<World[]> getWorlds(int count, ServiceRequestContext ctx) {
     return CompletableFuture.supplyAsync(
         () -> {
           World[] worlds = new World[count];
@@ -116,10 +115,10 @@ public class PostgresDbService {
             throw new IllegalStateException("Database error", e);
           }
           return worlds;
-        }, ServiceRequestContext.current().blockingTaskExecutor());
+        }, ctx.blockingTaskExecutor());
   }
 
-  private CompletableFuture<World[]> getUpdatedWorlds(int count) {
+  private CompletableFuture<World[]> getUpdatedWorlds(int count, ServiceRequestContext ctx) {
     return CompletableFuture.supplyAsync(
         () -> {
 
@@ -155,6 +154,6 @@ public class PostgresDbService {
             throw new IllegalStateException("Database error", e);
           }
           return worlds;
-        }, ServiceRequestContext.current().blockingTaskExecutor());
+        }, ctx.blockingTaskExecutor());
   }
 }
