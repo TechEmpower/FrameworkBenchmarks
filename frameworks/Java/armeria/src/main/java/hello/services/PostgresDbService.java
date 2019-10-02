@@ -37,20 +37,43 @@ public class PostgresDbService {
     return getWorld(getRandomNumber(), ctx);
   }
 
-  // need to use regex as /queries/{count} doesn't work when count is null
-  @Get("regex:^/queries/(?<count>.*)$")
+  @Get("/queries/{count}")
   @ProducesJson
   public CompletableFuture<World[]> queries(
-      @Param("count") String count,
-      ServiceRequestContext ctx) {
+          @Param("count") String count,
+          ServiceRequestContext ctx) {
+    return doQueries(count, ctx);
+  }
+
+  @Get("/queries/")
+  @ProducesJson
+  public CompletableFuture<World[]> queries(ServiceRequestContext ctx) {
+    return doQueries("", ctx);
+  }
+
+  private CompletableFuture<World[]> doQueries(
+          @Param("count") String count,
+          ServiceRequestContext ctx) {
     return getWorlds(getSanitizedCount(count), ctx);
   }
 
-  @Get("regex:^/updates/(?<count>.*)$")
+  @Get("/updates/{count}")
   @ProducesJson
   public CompletableFuture<World[]> update(
-      @Param("count") String count,
-      ServiceRequestContext ctx) {
+          @Param("count") String count,
+          ServiceRequestContext ctx) {
+    return doUpdate(count, ctx);
+  }
+
+  @Get("/updates/")
+  @ProducesJson
+  public CompletableFuture<World[]> update(ServiceRequestContext ctx) {
+    return doUpdate("", ctx);
+  }
+
+  private CompletableFuture<World[]> doUpdate(
+          String count,
+          ServiceRequestContext ctx) {
     return getUpdatedWorlds(getSanitizedCount(count), ctx);
   }
 
