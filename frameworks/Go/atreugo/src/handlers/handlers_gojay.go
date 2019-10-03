@@ -6,7 +6,7 @@ import (
 	"atreugo/src/storage"
 
 	"github.com/francoispqt/gojay"
-	"github.com/savsgio/atreugo/v8"
+	"github.com/savsgio/atreugo/v9"
 )
 
 // JSONHandlerGoJay . Test 1: JSON serialization
@@ -54,7 +54,7 @@ func QueriesHandlerGoJay(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 		}
 
 		ctx.SetContentType("application/json")
-		err = gojay.NewEncoder(ctx).EncodeArray(storage.Worlds(worlds))
+		err = gojay.NewEncoder(ctx).EncodeArray(worlds)
 
 		storage.ReleaseWorlds(worlds)
 
@@ -80,7 +80,7 @@ func UpdateHandlerGoJay(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 		}
 
 		ctx.SetContentType("application/json")
-		err = gojay.NewEncoder(ctx).EncodeArray(storage.Worlds(worlds))
+		err = gojay.NewEncoder(ctx).EncodeArray(worlds)
 
 		storage.ReleaseWorlds(worlds)
 
