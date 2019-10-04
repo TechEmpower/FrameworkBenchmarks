@@ -24,6 +24,17 @@ return array(
 			"password" => "benchmarkdbpass", // benchmarkdbpass
 			"options" => [],
 			"cache" => false
+		],
+		'worker'=>[
+			"wrapper"=>"\\Ubiquity\\db\\providers\\mysqli\\MysqliWrapper",
+			"type" => "mysql",
+			"dbName" => "hello_world",
+			"serverName" => "p:tfb-database", // tfb-database
+			"port" => "3306",
+			"user" => "benchmarkdbuser", // benchmarkdbuser
+			"password" => "benchmarkdbpass", // benchmarkdbpass
+			"options" => [],
+			"cache" => false
 		]
 	],
 	"test" => false,

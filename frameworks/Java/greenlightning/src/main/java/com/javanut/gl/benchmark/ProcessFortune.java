@@ -6,8 +6,8 @@ import com.javanut.pronghorn.network.config.HTTPContentTypeDefaults;
 import com.javanut.pronghorn.pipe.ObjectPipe;
 import com.javanut.pronghorn.util.AppendableBuilder;
 
-import io.reactiverse.pgclient.PgPool;
-import io.reactiverse.pgclient.impl.RowImpl;
+import io.vertx.pgclient.PgPool;
+
 
 public class ProcessFortune {
 
@@ -78,9 +78,8 @@ public class ProcessFortune {
 			    //NOTE: we want to do as little work here a s possible since
 			    //      we want this thread to get back to work on other calls.
 				if (r.succeeded()) {
-					r.result().forEach((row)-> {						
-						RowImpl next = (RowImpl)row;
-						target.addFortune((Integer)next.get(0), (String)next.get(1));						
+					r.result().forEach((row)-> {
+						target.addFortune((Integer)row.getInteger(0), (String)row.getString(1));						
 					});
 					target.setStatus(200);
 				} else {

@@ -7,42 +7,40 @@ use Workerman\Protocols\Http;
 use Workerman\Worker;
 
 $http_worker                = new Worker('http://0.0.0.0:8080');
-$http_worker->count         = (int) shell_exec('nproc') ?? 64;
+$http_worker->count         = shell_exec('nproc') * 2;
 $http_worker->onWorkerStart = function () {
-    global $pdo;
-    $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world;charset=utf8',
-        'benchmarkdbuser', 'benchmarkdbpass');
+    global $pdo, $fortune, $statement;
+    $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world',
+        'benchmarkdbuser', 'benchmarkdbpass',
+        [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+    $fortune   = $pdo->prepare('SELECT id,message FROM Fortune');
+    $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
 };
-$http_worker->onMessage = function ($connection) {
-    global $pdo;
+
+$http_worker->onMessage = static function ($connection) {
 
     Http::header('Date: '.gmdate('D, d M Y H:i:s').' GMT');
 
     switch (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) {
         case '/plaintext':
             Http::header('Content-Type: text/plain');
-            $connection->send('Hello, World!');
-            break;
+            return $connection->send('Hello, World!');
 
         case '/json':
             Http::header('Content-Type: application/json');
-            $connection->send(json_encode(['message' => 'Hello, World!']));
-            break;
+            return $connection->send(json_encode(['message' => 'Hello, World!']));
 
         case '/db':
             Http::header('Content-Type: application/json');
-            $connection->send(dbraw($pdo));
-            break;
+            return $connection->send(dbraw());
 
         case '/fortune':
             Http::header('Content-Type: text/html; charset=utf-8');
-            $connection->send(fortune($pdo));
-            break;
+            return $connection->send(fortune());
 
         case '/update':
             Http::header('Content-Type: application/json');
-            $connection->send(updateraw($pdo));
-            break;
+            return $connection->send(updateraw());
 
             //case '/info':
             //   Http::header('Content-Type: text/plain');
@@ -51,7 +49,8 @@ $http_worker->onMessage = function ($connection) {
             //   $connection->send(ob_get_clean());
 
             //default:
-            //   $connection->send('error');
+            //   Http::header('HTTP', true, 404);
+            //   $connection->send('Error 404');
     }
 };
 

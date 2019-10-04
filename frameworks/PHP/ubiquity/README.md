@@ -5,10 +5,11 @@ Ubiquity is a full-stack php framework, These tests involve:
 - the ORM part (Full)
 - the JSON serialization (native php)
 
-Tests are available with NginX server and Swoole platform.
+Tests are available with NginX server, Swoole and Workerman platforms.
 
 ## Test Type Implementation Source Code
-The tests are separated into 8 controllers:
+The tests are separated into 7 controllers:
+### Ubiquity + PDO
 - `Json` for JSON response
   * [JSON](app/controllers/Json.php)
 - `Db` for database access with ORM (PDO Mysql)
@@ -20,23 +21,25 @@ The tests are separated into 8 controllers:
   * [FORTUNES](app/controllers/Fortunes.php)
 - `Plaintext` for plaintext response
   * [PLAINTEXT](app/controllers/Plaintext.php)
-- `Raw` for database access without ORM (PDO Mysql)
-  * [Raw](app/controllers/Raw.php)
-- `RawFortunes` without ORM and without template engine
-  * [FORTUNES](app/controllers/RawFortunes.php)
-- `SwooleDb` for database access with ORM (Swoole coroutine Mysql)
-  * [DB](app/controllers/SwooleDb.php)
-- `SwooleFortunes` for using the internal template engine (PDO Mysql test)
-  * [FORTUNES](app/controllers/SwooleFortunes.php)
+### Ubiquity Swoole + Coroutine Mysql
+- `SwooleDb` for database access with Swoole coroutine Mysql driver
+  * [SwooleDb](app/controllers/SwooleDb.php)
+- `SwooleFortunes` used with Swoole
+  * [SwooleFortunes](app/controllers/SwooleFortunes.php)
+### Ubiquity Workerman + Mysqli
+- `Workerman` with Mysqli driver
+  * [WorkerDb](app/controllers/WorkerDb.php)
+- `WorkerFortunes` used with Workerman
+  * [WorkerFortunes](app/controllers/WorkerFortunes.php)
 
 ## Important Libraries
 The tests were run with:
 * [Ubiquity 2.3.*](https://ubiquity.kobject.net/)
 * [PHP Version 7.3.*](http://www.php.net/) with FPM and APC
 * [nginx 1.14](http://nginx.org/)
-* [Swoole](https://www.swoole.com/)
-* [Ubiquity-swoole](https://github.com/phpMv/ubiquity-swoole)
-* [MySQL 5.7](https://dev.mysql.com/)
+* [Swoole](https://www.swoole.com/), [Ubiquity-swoole](https://github.com/phpMv/ubiquity-swoole)
+* [Workerman](https://github.com/walkor/Workerman), [Ubiquity-workerman](https://github.com/phpMv/ubiquity-workerman)
+* [MySQL 8.0](https://dev.mysql.com/)
 
 
 ## Test URLs
@@ -54,16 +57,22 @@ http://localhost:8080/Db
 
 ### QUERY
 
-http://localhost:8080/Db/query/
+- http://localhost:8080/Db/query/
+- http://localhost:8080/SwooleDb/query/
+- http://localhost:8080/WorkerDb/query/
 
 ### CACHED QUERY
 
-http://localhost:8080/Db/query/
+
 
 ### UPDATE
 
-http://localhost:8080/Db/update/
+- http://localhost:8080/Db/update/
+- http://localhost:8080/SwooleDb/update/
+- http://localhost:8080/WorkerDb/update/
 
 ### FORTUNES
 
-http://localhost:8080/Fortunes
+- http://localhost:8080/Fortunes
+- http://localhost:8080/SwooleFortunes
+- http://localhost:8080/WorkerFortunes
