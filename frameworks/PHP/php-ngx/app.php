@@ -69,8 +69,10 @@ function fortune()
     $html = "";
     foreach ($arr as $id => $message) {
         $message = htmlspecialchars($message, ENT_QUOTES, "UTF-8");
-        $html .= "<tr><td>{$id}</td><td>{$message}</td></tr>";
+        $html .= "<tr><td>$id</td><td>$message</td></tr>";
     }
 
-    echo "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>$html</table></body></html>";
+    echo    "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>",
+            $html,
+            "</table></body></html>";
 }
