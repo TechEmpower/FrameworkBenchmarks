@@ -108,7 +108,7 @@ public class FrameworkTest implements GreenApp {
     	this.telemetryPort = telemetryPort;
     	this.pipelineBits = 15;//max concurrent in flight database requests 1<<pipelineBits
     	            
-    	this.dbCallMaxResponseCount = c;
+    	this.dbCallMaxResponseCount = c*8; //this will limit the in flight DB calls so make it larger
     	this.jsonMaxResponseCount = c*16*4;
     	
     	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
