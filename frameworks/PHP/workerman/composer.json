@@ -1,6 +1,6 @@
 {
 	"require": {
-		"workerman/workerman": "^3.5",
+		"workerman/workerman": "dev-master",
 		"react/mysql": "^0.3.3"
 	}
 }

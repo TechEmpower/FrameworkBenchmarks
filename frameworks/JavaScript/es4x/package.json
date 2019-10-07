@@ -4,12 +4,12 @@
   "private": true,
   "main": "index.js",
   "devDependencies": {
-    "es4x-pm": "0.9.0"
+    "es4x-pm": "0.9.3"
   },
   "dependencies": {
-    "@vertx/core": "3.8.1",
-    "@vertx/web": "3.8.1",
-    "@vertx/web-templ-rocker": "3.8.1",
+    "@vertx/core": "3.8.2",
+    "@vertx/web": "3.8.2",
+    "@vertx/web-templ-rocker": "3.8.2",
     "@reactiverse/reactive-pg-client": "0.11.4"
   },
   "mvnDependencies": [
@@ -26,6 +26,7 @@
     "postinstall": "es4x install -v node_modules/.lib/vendor-templates.jar",
     "pretemplate": "es4x rocker -d node_modules/.rocker templates",
     "template": "javac -cp node_modules/.bin/es4x-launcher.jar @node_modules/.rocker/templates.lst -d node_modules/.rocker/classes",
-    "posttemplate": "jar cvf node_modules/.lib/vendor-templates.jar -C node_modules/.rocker/classes ."
+    "posttemplate": "jar cvf node_modules/.lib/vendor-templates.jar -C node_modules/.rocker/classes .",
+    "start:dev": "java -server -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts -Dvertx.disableMetrics=true -Dvertx.disableH2c=true -Dvertx.disableWebsockets=true -Dvertx.flashPolicyHandler=false -Dvertx.threadChecks=false -Dvertx.disableContextTimings=true -Dvertx.disableTCCL=true -jar node_modules/.bin/es4x-launcher.jar --instances 8 --options vertx.json"
   }
 }

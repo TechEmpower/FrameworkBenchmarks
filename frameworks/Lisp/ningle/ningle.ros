@@ -166,7 +166,7 @@ exec ros -Q -- $0 "$@"
     (apply #'woo:run
       (lambda (env)
         ;; preprocessing
-        (let ((res (postmodern:with-connection '("hello_world" "benchmarkdbuser" "benchmarkdbpass" "tfb-database")
+        (let ((res (postmodern:with-connection '("hello_world" "benchmarkdbuser" "benchmarkdbpass" "tfb-database" :pooled-p t)
                      (ningle.app::call *app* env))))
           ;; postprocessing
           res))
