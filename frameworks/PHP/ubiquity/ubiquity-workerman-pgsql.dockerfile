@@ -33,6 +33,6 @@ RUN php composer.phar install --optimize-autoloader --classmap-authoritative --n
 
 RUN chmod 777 -R /ubiquity/.ubiquity/*
 
-RUN sed -i "s|worker|pgsql|g" /ubiquity/app/config/workerServices.php
+RUN sed -i "s|'worker'|'pgsql'|g" /ubiquity/app/config/workerServices.php
 
 CMD /ubiquity/vendor/bin/Ubiquity serve -t=workerman -p=8080 -h=0.0.0.0
