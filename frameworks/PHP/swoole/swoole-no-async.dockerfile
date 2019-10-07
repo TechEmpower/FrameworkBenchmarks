@@ -9,5 +9,4 @@ WORKDIR /swoole
 COPY swoole-server-noasync.php swoole-server-noasync.php
 COPY php.ini /usr/local/etc/php/
 
-CMD sed -i 's|NUMCORES|'"$(nproc)"'|g' swoole-server-noasync.php && \
-    php swoole-server-noasync.php
+CMD php swoole-server-noasync.php
