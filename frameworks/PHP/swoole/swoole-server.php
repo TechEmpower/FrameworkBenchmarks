@@ -5,7 +5,7 @@ use Swoole\Http\Response;
 
 $server = new swoole_http_server('0.0.0.0', 8080, SWOOLE_BASE);
 $server->set([
-    'worker_num' => NUMCORES
+    'worker_num' => swoole_cpu_num()
 ]);
 
 $pool = new DatabasePool();
