@@ -102,7 +102,7 @@ env:
     - "TESTLANG=Perl"
     - 'TESTDIR="PHP/php"'
     - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/fat-free PHP/fuel PHP/kumbiaphp PHP/phpixie PHP/slim PHP/symfony PHP/yii2 PHP/zend PHP/spiral"'
-    - 'TESTDIR="PHP/amp PHP/hamlet PHP/laravel PHP/lumen PHP/hhvm PHP/peachpie PHP/php-ngx PHP/swoole PHP/workerman PHP/phalcon PHP/ubiquity PHP/hyperf PHP/sw-fw-less"'
+    - 'TESTDIR="PHP/amp PHP/hamlet PHP/laravel PHP/lumen PHP/hhvm PHP/peachpie PHP/php-ngx PHP/swoole PHP/workerman PHP/phalcon PHP/ubiquity PHP/hyperf PHP/sw-fw-less PHP/imi"'
     - 'TESTDIR="Python/aiohttp Python/api_hour Python/apidaora Python/blacksheep Python/bottle Python/cherrypy Python/django Python/eve Python/falcon Python/fastapi Python/flask"'
     - 'TESTDIR="Python/hug Python/japronto Python/klein Python/morepath Python/pyramid Python/quart Python/responder Python/sanic Python/spyne Python/starlette"'
     - 'TESTDIR="Python/tornado Python/turbogears Python/uvicorn Python/uwsgi Python/vibora Python/web2py Python/webware Python/weppy Python/wsgi"'
