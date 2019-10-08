@@ -48,6 +48,27 @@
         "notes": "",
         "versus": "workerman"
       },
+      "workerman-pgsql": {
+        "db_url": "/WorkerDb",
+        "query_url": "/WorkerDb/query/",
+        "fortune_url": "/WorkerFortunes",
+        "update_url": "/WorkerDb/update/",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "Ubiquity",
+        "language": "PHP",
+        "flavor": "PHP7",
+        "orm": "Full",
+        "platform": "workerman",
+        "webserver": "none",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ubiquity-workerman-pgsql",
+        "notes": "",
+        "versus": "workerman"
+      },
       "swoole": {
         "json_url": "/Json",
         "plaintext_url": "/Plaintext",

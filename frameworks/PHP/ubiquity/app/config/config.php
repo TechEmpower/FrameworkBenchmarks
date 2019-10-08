@@ -35,6 +35,19 @@ return array(
 			"password" => "benchmarkdbpass", // benchmarkdbpass
 			"options" => [],
 			"cache" => false
+		],
+		'pgsql'=>[
+			"wrapper"=>"\\Ubiquity\\db\\providers\\pdo\\PDOWrapper",
+			"type" => "pgsql",
+			"dbName" => "hello_world",
+			"serverName" => "tfb-database", // tfb-database
+			"port" => 5432,
+			"user" => "benchmarkdbuser", // benchmarkdbuser
+			"password" => "benchmarkdbpass", // benchmarkdbpass
+			"options" => [
+				\PDO::ATTR_PERSISTENT => true
+			],
+			"cache"=>false
 		]
 	],
 	"test" => false,

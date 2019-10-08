@@ -1,0 +1,12 @@
+with-compiler: ghc-8.6.5
+index-state:   2019-09-28T11:54:13Z
+optimization:  True
+packages:      servant-tfb/
+
+allow-newer: beam-core-0.8.0.0:hashable
+allow-newer: beam-core-0.8.0.0:vector-sized
+allow-newer: beam-postgres-0.4.0.0:hashable
+allow-newer: beam-migrate-0.4.0.1:hashable
+
+constraints: hashable ^>=1.3.0.0
+constraints: primitive ^>=0.7.0.0
