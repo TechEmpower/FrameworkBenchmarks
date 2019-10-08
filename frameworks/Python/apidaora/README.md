@@ -14,7 +14,8 @@ the [Python README](../).
 
 ## Test Paths & Sources
 
-All of the test implementations are located within a single file ([app.py](app.py)).
+The default test implementations are located within the file ([app.py](app.py)).
+The core module test implementations are located within the file ([coreapp.py](coreapp.py)).
 
 All the tests are based on the ones for FastAPI, as APIDaora is an asgi application and have the same principles of using typing annotations for validation/serialization of data.
 

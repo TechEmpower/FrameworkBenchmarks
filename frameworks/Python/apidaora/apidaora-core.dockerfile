@@ -15,6 +15,6 @@ ADD requirements.txt /apidaora/
 
 RUN pip3 install -r /apidaora/requirements.txt
 
-ADD apidaora_conf.py app.py /apidaora/
+ADD apidaora_core_conf.py coreapp.py /apidaora/
 
-CMD gunicorn app:app -k uvicorn.workers.UvicornWorker -c apidaora_conf.py
+CMD gunicorn coreapp:app -k uvicorn.workers.UvicornWorker -c apidaora_core_conf.py
