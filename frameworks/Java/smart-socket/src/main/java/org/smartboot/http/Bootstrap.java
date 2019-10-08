@@ -55,6 +55,7 @@ public class Bootstrap {
                     stream.writeVal(Message.class, new Message("Hello, World!"));
                     response.setContentLength(stream.buffer().tail());
                     response.getOutputStream().write(stream.buffer().data(), 0, stream.buffer().tail());
+                    response.getOutputStream().flush();
                 } catch (IOException e) {
                     throw new JsonException(e);
                 } finally {
