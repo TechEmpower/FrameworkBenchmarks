@@ -3,21 +3,10 @@ import asyncpg
 import os
 import jinja2
 from logging import getLogger
-from apidaora import (
-    HTMLResponse,
-    JSONRequestBody,
-    JSONResponse,
-    MethodType,
-    PlainResponse,
-    appdaora,
-    header_param,
-    path,
-)
-from jsondaora import jsondaora
+from apidaora import appdaora, html, route, text
 from random import randint
 from operator import itemgetter
-from http import HTTPStatus
-from typing import List, TypedDict, Optional
+from typing import TypedDict, Optional
 
 
 logger = getLogger(__name__)
@@ -27,7 +16,6 @@ READ_ROW_SQL = 'SELECT "randomnumber" FROM "world" WHERE id = $1'
 READ_ROW_SQL_TO_UPDATE = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
-
 
 
 async def setup_database():
@@ -68,55 +56,28 @@ loop = asyncio.get_event_loop()
 loop.run_until_complete(setup_database())
 
 
-@jsondaora
-class JsonResponse(JSONResponse):
-    class Body(TypedDict):
-        message: str
-    body: Body
+@route.get('/json')
+async def json_serialization():
+    return {'message': 'Hello, world!'}
 
 
-@path('/json', MethodType.GET)
-async def json_serialization() -> JsonResponse:
-    return JsonResponse(
-        body=JsonResponse.Body(message='Hello, world!')
-    )
+class DatabaseObject(TypedDict):
+    id: int
+    randomNumber: float
 
 
-@jsondaora
-class SingleDatabaseResponse(JSONResponse):
-    class Body(TypedDict):
-        id: int
-        randomNumber: float
-    body: Body
-
-
-@path('/db', MethodType.GET)
-async def single_database_query() -> SingleDatabaseResponse:
+@route.get('/db')
+async def single_database_query():
     row_id = randint(1, 10000)
 
     async with connection_pool.acquire() as connection:
         number = await connection.fetchval(READ_ROW_SQL, row_id)
 
-    return SingleDatabaseResponse(
-        body=SingleDatabaseResponse.Body(id=row_id, randomNumber=number)
-    )
+    return DatabaseObject(id=row_id, randomNumber=number)
 
 
-@jsondaora
-class MultipleDatabaseObject(TypedDict):
-    id: int
-    randomNumber: float
-
-
-@jsondaora
-class MultipleDatabaseResponse(JSONResponse):
-    body: List[MultipleDatabaseObject]
-
-
-@path('/queries', MethodType.GET)
-async def multiple_database_queries(
-    queries: Optional[str] = None
-) -> MultipleDatabaseResponse:
+@route.get('/queries')
+async def multiple_database_queries(queries: Optional[str] = None):
     num_queries = get_num_queries(queries)
     row_ids = [randint(1, 10000) for _ in range(num_queries)]
     worlds = []
@@ -126,37 +87,28 @@ async def multiple_database_queries(
         for row_id in row_ids:
             number = await statement.fetchval(row_id)
             worlds.append(
-                MultipleDatabaseObject(
+                DatabaseObject(
                     id=row_id,
                     randomNumber=number
                 )
             )
 
-    return MultipleDatabaseResponse(body=worlds)
+    return worlds
 
 
-@jsondaora
-class FortunesResponse(HTMLResponse):
-    body: str
-
-
-@path('/fortunes', MethodType.GET)
-async def fortunes() -> FortunesResponse:
+@route.get('/fortunes')
+async def fortunes():
     async with connection_pool.acquire() as connection:
         fortunes = await connection.fetch('SELECT * FROM Fortune')
 
     fortunes.append(ADDITIONAL_ROW)
     fortunes.sort(key=sort_fortunes_key)
     content = template.render(fortunes=fortunes)
-    return FortunesResponse(
-        body=content
-    )
+    return html(content)
 
 
-@path('/updates', MethodType.GET)
-async def database_updates(
-    queries: Optional[str] = None
-) -> MultipleDatabaseResponse:
+@route.get('/updates')
+async def database_updates(queries: Optional[str] = None):
     worlds = []
     updates = set()
 
@@ -165,7 +117,7 @@ async def database_updates(
 
         for _ in range(get_num_queries(queries)):
             record = await statement.fetchrow(randint(1, 10000))
-            world = MultipleDatabaseObject(
+            world = DatabaseObject(
                 id=record['id'], randomNumber=record['randomnumber']
             )
             world['randomNumber'] = randint(1, 10000)
@@ -174,24 +126,15 @@ async def database_updates(
 
         await connection.executemany(WRITE_ROW_SQL, updates)
 
-    return MultipleDatabaseResponse(
-        body=worlds
-    )
+    return worlds
 
 
-@jsondaora
-class TextResponse(PlainResponse):
-    body: str
+@route.get('/plaintext')
+async def plaintext():
+    return text('Hello, world!')
 
 
-@path('/plaintext', MethodType.GET)
-async def plaintext() -> TextResponse:
-    return TextResponse(
-        body='Hello, world!'
-    )
-
-
-app = appdaora(operations=[
+app = appdaora([
     json_serialization,
     single_database_query,
     multiple_database_queries,
