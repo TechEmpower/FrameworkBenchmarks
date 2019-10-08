@@ -2,11 +2,16 @@ import asyncio
 import asyncpg
 import os
 import jinja2
+import orjson
 from logging import getLogger
-from apidaora import appdaora, html, route, text
 from random import randint
 from operator import itemgetter
-from typing import TypedDict, Optional
+from apidaora.asgi.app import asgi_app
+from apidaora.asgi.responses import (
+    JSON_RESPONSE, HTML_RESPONSE, PLAINTEXT_RESPONSE
+)
+from apidaora.asgi.router import Route, make_router
+from apidaora.method import MethodType
 
 
 logger = getLogger(__name__)
@@ -38,7 +43,7 @@ def load_fortunes_template():
 
 def get_num_queries(queries):
     try:
-        query_count = int(queries)
+        query_count = int(queries[0])
     except (ValueError, TypeError):
         return 1
 
@@ -56,29 +61,23 @@ loop = asyncio.get_event_loop()
 loop.run_until_complete(setup_database())
 
 
-@route.get('/json')
-async def json_serialization():
-    return {'message': 'Hello, world!'}
+def json_serialization(path_args, query_dict, headers, body):
+    return JSON_RESPONSE, orjson.dumps({'message': 'Hello, world!'})
 
 
-class DatabaseObject(TypedDict):
-    id: int
-    randomNumber: float
-
-
-@route.get('/db')
-async def single_database_query():
+async def single_database_query(path_args, query_dict, headers, body):
     row_id = randint(1, 10000)
 
     async with connection_pool.acquire() as connection:
         number = await connection.fetchval(READ_ROW_SQL, row_id)
 
-    return DatabaseObject(id=row_id, randomNumber=number)
+    return JSON_RESPONSE, orjson.dumps(
+        {'id': row_id, 'randomNumber': number}
+    )
 
 
-@route.get('/queries')
-async def multiple_database_queries(queries: Optional[str] = None):
-    num_queries = get_num_queries(queries)
+async def multiple_database_queries(path_args, query_dict, headers, body):
+    num_queries = get_num_queries(query_dict.get('queries', 1))
     row_ids = [randint(1, 10000) for _ in range(num_queries)]
     worlds = []
 
@@ -87,37 +86,36 @@ async def multiple_database_queries(queries: Optional[str] = None):
         for row_id in row_ids:
             number = await statement.fetchval(row_id)
             worlds.append(
-                DatabaseObject(
+                dict(
                     id=row_id,
                     randomNumber=number
                 )
             )
 
-    return worlds
+    return JSON_RESPONSE, orjson.dumps(worlds)
 
 
-@route.get('/fortunes')
-async def fortunes():
+async def fortunes(path_args, query_dict, headers, body):
     async with connection_pool.acquire() as connection:
         fortunes = await connection.fetch('SELECT * FROM Fortune')
 
     fortunes.append(ADDITIONAL_ROW)
     fortunes.sort(key=sort_fortunes_key)
-    content = template.render(fortunes=fortunes)
-    return html(content)
+    content = template.render(fortunes=fortunes).encode('utf-8')
+    return HTML_RESPONSE, content
 
 
-@route.get('/updates')
-async def database_updates(queries: Optional[str] = None):
+async def database_updates(path_args, query_dict, headers, body):
     worlds = []
     updates = set()
+    queries = query_dict.get('queries', 1)
 
     async with connection_pool.acquire() as connection:
         statement = await connection.prepare(READ_ROW_SQL_TO_UPDATE)
 
         for _ in range(get_num_queries(queries)):
             record = await statement.fetchrow(randint(1, 10000))
-            world = DatabaseObject(
+            world = dict(
                 id=record['id'], randomNumber=record['randomnumber']
             )
             world['randomNumber'] = randint(1, 10000)
@@ -126,19 +124,20 @@ async def database_updates(queries: Optional[str] = None):
 
         await connection.executemany(WRITE_ROW_SQL, updates)
 
-    return worlds
+    return JSON_RESPONSE, orjson.dumps(worlds)
 
 
-@route.get('/plaintext')
-async def plaintext():
-    return text('Hello, world!')
+def plaintext(path_args, query_dict, headers, body):
+    return PLAINTEXT_RESPONSE, b'Hello, world!'
 
 
-app = appdaora([
-    json_serialization,
-    single_database_query,
-    multiple_database_queries,
-    fortunes,
-    database_updates,
-    plaintext
-])
+routes = (
+    Route('/json', MethodType.GET, json_serialization),
+    Route('/db', MethodType.GET, single_database_query),
+    Route('/queries', MethodType.GET, multiple_database_queries, has_query=True),
+    Route('/fortunes', MethodType.GET, fortunes),
+    Route('/updates', MethodType.GET, database_updates, has_query=True),
+    Route('/plaintext', MethodType.GET, plaintext),
+)
+router = make_router(routes)
+app = asgi_app(router)
