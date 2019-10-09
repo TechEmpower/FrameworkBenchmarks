@@ -2,8 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.IO.Pipelines;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
-using Utf8Json;
 
 namespace PlatformBenchmarks
 {
@@ -27,8 +28,8 @@ namespace PlatformBenchmarks
 
             // Content-Length header
             writer.Write(_headerContentLength);
-            var jsonPayload = JsonSerializer.SerializeUnsafe(new JsonMessage { message = "Hello, World!" });
-            writer.WriteNumeric((uint)jsonPayload.Count);
+            var jsonPayload = JsonSerializer.SerializeToUtf8Bytes(new JsonMessage { message = "Hello, World!" }, SerializerOptions);
+            writer.WriteNumeric((uint)jsonPayload.Length);
 
             // End of headers
             writer.Write(_eoh);

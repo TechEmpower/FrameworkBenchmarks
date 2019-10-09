@@ -21,11 +21,11 @@ class BenchmarkConfig:
         types['plaintext'] = PlaintextTestType(self)
         types['cached_query'] = CachedQueryTestType(self)
 
-        # Turn type into a map instead of a string
-        if args.type == 'all':
+        # Turn type into a map instead of a list of strings
+        if 'all' in args.type:
             self.types = types
         else:
-            self.types = {args.type: types[args.type]}
+            self.types = {t: types[t] for t in args.type}
 
         self.duration = args.duration
         self.exclude = args.exclude

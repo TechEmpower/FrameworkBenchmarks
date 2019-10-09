@@ -1,0 +1,174 @@
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+
+;; Woo is a fast non-blocking HTTP server built on top of
+;; libev. Although Woo is written in Common Lisp, it aims
+;; to be the fastest web server written in any programming
+;; language.
+
+;; https://github.com/fukamachi/woo
+
+;; Quicklisp is a library manager for Common Lisp. Use
+;; QuickLisp's quickload function to retrieve external
+;; packages. These packages are automatically curl'd when
+;; the program runs.
+
+;; Woo - https://github.com/fukamachi/woo
+;; Ningle - https://github.com/fukamachi/ningle
+;; Jonathan - https://github.com/fukamachi/jonathan
+;; CL-MARKUP - https://github.com/arielnetworks/cl-markup
+;; Postmodern - https://github.com/marijnh/Postmodern
+;; QURI - https://github.com/fukamachi/quri
+
+(ql:quickload '(:cl-markup :jonathan :ningle :postmodern :quri :uiop :woo) :silent t)
+(use-package :ningle)
+
+
+(declaim (optimize (debug 0) (safety 0) (speed 3)))
+
+
+(load "./helpers/starts-with.lisp")
+(load "./helpers/parse-argv.lisp")
+
+
+;; Initialize the global random state by "some means" (e.g. current time)
+(setf *random-state* (make-random-state t))
+
+
+(defvar *app* (make-instance 'ningle:<app>))
+
+
+(setf (ningle:route *app* "/plaintext")
+  #'(lambda (params)
+    (declare (ignore params))
+    (setf (lack.response:response-headers *response*)
+          (append (lack.response:response-headers *response*)
+                  (list :content-type "text/plain"
+                        :server "Woo")))
+    "Hello, World!"))
+
+(setf (ningle:route *app* "/json")
+  #'(lambda (params)
+    (declare (ignore params))
+    (setf (lack.response:response-headers *response*)
+          (append (lack.response:response-headers *response*)
+                  (list :content-type "application/json; charset=utf-8"
+                        :server "Woo")))
+    (jonathan:to-json '(:message "Hello, World!"))))
+
+(defun get-a-random-record (id)
+  (declare (integer id))
+  `(:|id| ,id :|randomNumber| ,(postmodern:query (:select 'randomnumber :from 'world :where (:= 'id id)) :single!)))
+
+(setf (ningle:route *app* "/db")
+  #'(lambda (params)
+    (declare (ignore params))
+    (setf (lack.response:response-headers *response*)
+          (append (lack.response:response-headers *response*)
+                  (list :content-type "application/json; charset=utf-8"
+                        :server "Woo")))
+    (let ((id (+ 1 (random 10000))))
+      (jonathan:to-json (get-a-random-record id)))))
+
+(defun ensure-integer-is-between-one-and-five-hundreds (n)
+  (declare (integer n))
+  (if (< n 1)
+    (values 1 nil)
+    (if (> n 500)
+      (values 500 nil)
+      (values n t))))
+
+(defun extract-number-of-records-to-fetch (params)
+  (let ((n (handler-case
+            (parse-integer (cdr (assoc "queries" params :test #'equal)))
+            (error (c) (values 1 c)))))
+    (ensure-integer-is-between-one-and-five-hundreds n)))
+
+(defun get-some-random-integers-between-one-and-ten-thousand (n)
+  (declare (integer n))
+  (loop :repeat n
+        :collect (+ 1 (random 10000))))
+
+(defun get-some-random-records (n)
+  (declare (integer n))
+  (let ((ids (get-some-random-integers-between-one-and-ten-thousand n)))
+    (mapcar #'get-a-random-record ids)))
+
+(setf (ningle:route *app* "/queries")
+  #'(lambda (params)
+    (setf (lack.response:response-headers *response*)
+          (append (lack.response:response-headers *response*)
+                  (list :content-type "application/json; charset=utf-8"
+                        :server "Woo")))
+    (jonathan:to-json (get-some-random-records (extract-number-of-records-to-fetch params)))))
+
+(defun get-all-fortunes ()
+  (postmodern:query (:select 'id 'message :from 'fortune) :rows))
+
+(defun get-all-fortunes-plus-one ()
+  (let* ((records       (get-all-fortunes))
+         (records-p-one (append records '((0 "Additional fortune added at request time.")))))
+    (sort (copy-list records-p-one) #'string-lessp :key #'second)))
+
+(setf (ningle:route *app* "/fortunes")
+  #'(lambda (params)
+    (declare (ignore params))
+    (setf (lack.response:response-headers *response*)
+          (append (lack.response:response-headers *response*)
+                  (list :content-type "text/html; charset=utf-8"
+                        :server "Woo")))
+    (cl-markup:html5
+      (:head
+        (:title "Fortunes"))
+      (:body
+        (:table
+          (:tr
+            (:th "id")
+            (:th "message"))
+          (loop for fortune-row in (get-all-fortunes-plus-one)
+                collect (cl-markup:markup
+                          (:tr
+                            (:td (format nil "~d" (first fortune-row)))
+                            (:td (second fortune-row))))))))))
+
+(defun get-and-update-some-random-records (n)
+  (declare (integer n))
+  (let* ((random-records (get-some-random-records n))
+         (random-numbers (get-some-random-integers-between-one-and-ten-thousand n))
+         (index -1)
+         (updated-records (map 'list
+                               (lambda (row)
+                                       (incf index)
+                                       (list :|id|           (getf row :|id|          )
+                                             :|randomNumber| (nth index random-numbers)))
+                               random-records))
+         (record-list     (map 'list
+                               (lambda (row)
+                                       (list (nth 1 row)
+                                             (nth 3 row)))
+                               updated-records)))
+    (postmodern:query (format nil "UPDATE world AS ori SET randomnumber = new.randomnumber FROM (VALUES ~{(~{~a~^, ~})~^, ~}) AS new (id, randomnumber) WHERE ori.id = new.id" record-list))
+    (values updated-records)))
+
+(setf (ningle:route *app* "/updates")
+  #'(lambda (params)
+    (setf (lack.response:response-headers *response*)
+          (append (lack.response:response-headers *response*)
+                  (list :content-type "application/json; charset=utf-8"
+                        :server "Woo")))
+    (jonathan:to-json (get-and-update-some-random-records (extract-number-of-records-to-fetch params)))))
+
+(defun main (&rest argv)
+  "Create and start the server, applying argv to the env"
+  (let ((args (parse-argv argv)))
+    (apply #'woo:run
+      (lambda (env)
+        ;; preprocessing
+        (let ((res (postmodern:with-connection '("hello_world" "benchmarkdbuser" "benchmarkdbpass" "tfb-database" :pooled-p t)
+                     (ningle.app::call *app* env))))
+          ;; postprocessing
+          res))
+      :debug nil
+      args)))

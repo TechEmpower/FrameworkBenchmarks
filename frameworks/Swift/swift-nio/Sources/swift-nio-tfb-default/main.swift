@@ -1,4 +1,3 @@
-
 import Foundation
 import NIO
 import NIOHTTP1
@@ -12,7 +11,7 @@ enum Constants {
     static let serverName = "SwiftNIO"
 
     static let plainTextResponse: StaticString = "Hello, World!"
-    static let plainTextResponseLength = plainTextResponse.count
+    static let plainTextResponseLength = plainTextResponse.utf8CodeUnitCount
     static let plainTextResponseLengthString = String(plainTextResponseLength)
 
     static let jsonResponseLength = try! JSONEncoder().encode(JSONTestResponse()).count
@@ -34,34 +33,34 @@ private final class HTTPHandler: ChannelInboundHandler {
         let allocator = ByteBufferAllocator()
 
         plaintextBuffer = allocator.buffer(capacity: Constants.plainTextResponseLength)
-        plaintextBuffer.write(staticString: Constants.plainTextResponse)
+        plaintextBuffer.writeStaticString(Constants.plainTextResponse)
 
         jsonBuffer = allocator.buffer(capacity: Constants.jsonResponseLength)
     }
 
-    func channelRead(ctx: ChannelHandlerContext, data: NIOAny) {
+    func channelRead(context: ChannelHandlerContext, data: NIOAny) {
         let reqPart = self.unwrapInboundIn(data)
 
         switch reqPart {
         case .head(let request):
             switch request.uri {
             case "/plaintext":
-                processPlaintext(ctx: ctx)
+                processPlaintext(ctx: context)
             case "/json":
-                processJSON(ctx: ctx)
+                processJSON(ctx: context)
             default:
-                _ = ctx.close()
+                _ = context.close()
             }
         case .body:
             break
         case .end:
-            _ = ctx.write(self.wrapOutboundOut(.end(nil)))
+            _ = context.write(self.wrapOutboundOut(.end(nil)), promise: nil)
         }
     }
 
-    func channelReadComplete(ctx: ChannelHandlerContext) {
-        ctx.flush()
-        ctx.fireChannelReadComplete()
+    func channelReadComplete(context: ChannelHandlerContext) {
+        context.flush()
+        context.fireChannelReadComplete()
     }
 
     private func processPlaintext(ctx: ChannelHandlerContext) {
@@ -76,7 +75,7 @@ private final class HTTPHandler: ChannelInboundHandler {
 
         let responseData = try! jsonEncoder.encode(JSONTestResponse())
         jsonBuffer.clear()
-        jsonBuffer.write(bytes: responseData)
+        jsonBuffer.writeBytes(responseData)
         ctx.write(self.wrapOutboundOut(.body(.byteBuffer(jsonBuffer))), promise: nil)
     }
 
@@ -105,22 +104,22 @@ let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
 let bootstrap = ServerBootstrap(group: group)
     .serverChannelOption(ChannelOptions.backlog, value: 8192)
     .serverChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
-    .serverChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_TCP), TCP_NODELAY), value: 1)
-
     .childChannelInitializer { channel in
-        channel.pipeline.configureHTTPServerPipeline(withPipeliningAssistance: false).then {
-            channel.pipeline.add(handler: HTTPHandler())
+        channel.pipeline.configureHTTPServerPipeline(withPipeliningAssistance: false).flatMap {
+            channel.pipeline.addHandler(HTTPHandler())
         }
     }
-
     .childChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
     .childChannelOption(ChannelOptions.maxMessagesPerRead, value: 16)
-    .childChannelOption(ChannelOptions.recvAllocator, value: AdaptiveRecvByteBufferAllocator())
 
 defer {
     try! group.syncShutdownGracefully()
 }
 
-let channel = try! bootstrap.bind(host: "0.0.0.0", port: 8080).wait()
+let channel = try bootstrap.bind(host: "0.0.0.0", port: 8080).wait()
 
-try! channel.closeFuture.wait()
+guard let localAddress = channel.localAddress else {
+    fatalError("Address was unable to bind. Please check that the socket was not closed or that the address family was understood.")
+}
+
+try channel.closeFuture.wait()

@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson2f1218d5DecodeGoStdSrcTemplates(in *jlexer.Lexer, out *Fortune) {
+func easyjson2f1218d5DecodeAtreugoSrcTemplates(in *jlexer.Lexer, out *Fortune) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -50,18 +50,14 @@ func easyjson2f1218d5DecodeGoStdSrcTemplates(in *jlexer.Lexer, out *Fortune) {
 		in.Consumed()
 	}
 }
-func easyjson2f1218d5EncodeGoStdSrcTemplates(out *jwriter.Writer, in Fortune) {
+func easyjson2f1218d5EncodeAtreugoSrcTemplates(out *jwriter.Writer, in Fortune) {
 	out.RawByte('{')
 	first := true
 	_ = first
 	if in.ID != 0 {
 		const prefix string = ",\"id\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.Int(int(in.ID))
 	}
 	if in.Message != "" {
@@ -80,23 +76,23 @@ func easyjson2f1218d5EncodeGoStdSrcTemplates(out *jwriter.Writer, in Fortune) {
 // MarshalJSON supports json.Marshaler interface
 func (v Fortune) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson2f1218d5EncodeGoStdSrcTemplates(&w, v)
+	easyjson2f1218d5EncodeAtreugoSrcTemplates(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Fortune) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson2f1218d5EncodeGoStdSrcTemplates(w, v)
+	easyjson2f1218d5EncodeAtreugoSrcTemplates(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Fortune) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson2f1218d5DecodeGoStdSrcTemplates(&r, v)
+	easyjson2f1218d5DecodeAtreugoSrcTemplates(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Fortune) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson2f1218d5DecodeGoStdSrcTemplates(l, v)
+	easyjson2f1218d5DecodeAtreugoSrcTemplates(l, v)
 }

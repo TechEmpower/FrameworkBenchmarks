@@ -1,4 +1,4 @@
-FROM gradle:4.7.0-jdk8
+FROM gradle:5.4.1-jdk11 as gradle
 USER root
 WORKDIR /javalin
 COPY build.gradle build.gradle

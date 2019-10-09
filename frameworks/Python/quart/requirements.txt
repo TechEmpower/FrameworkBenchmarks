@@ -8,7 +8,7 @@ hpack==3.0.0
 Hypercorn==0.5.3
 hyperframe==5.2.0
 itsdangerous==1.1.0
-Jinja2==2.10
+Jinja2==2.10.1
 MarkupSafe==1.1.1
 multidict==4.5.2
 pytoml==0.1.20

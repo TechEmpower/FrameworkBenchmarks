@@ -1,42 +1,39 @@
 package com.example.helloworld.db.jdbi;
 
-import org.skife.jdbi.v2.DBI;
+import java.util.Arrays;
+import java.util.Comparator;
+
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.Jdbi;
 
 import com.example.helloworld.db.WorldDAO;
 import com.example.helloworld.db.model.World;
 import com.example.helloworld.resources.Helper;
 
 public class WorldRepository implements WorldDAO {
-	private DBI jdbi;
+	private final Jdbi jdbi;
 
-	public WorldRepository(DBI jdbi) {
-		super();
+	public WorldRepository(Jdbi jdbi) {
 		this.jdbi = jdbi;
 	}
 
 	@Override
 	public World findById(int id) {
-		try (WorldJDBIImpl dao = jdbi.open(WorldJDBIImpl.class)) {
-			return dao.findById(id);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		return jdbi.withExtension(WorldJDBIImpl.class, dao -> dao.findById(id));
 	}
 
+
+	@Override
 	public World[] findById(int[] ids) {
-		final World[] worlds = new World[ids.length];
-		try (WorldJDBIImpl dao = jdbi.open(WorldJDBIImpl.class)) {
-			return dao.inTransaction((conn, status) -> {
-				for (int i = 0; i < ids.length; i++) {
-					worlds[i] = dao.findById(ids[i]);
-				}
-				return worlds;
-			});
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		return jdbi.withExtension(WorldJDBIImpl.class, dao -> {
+			World[] worlds = new World[ids.length];
+			for(int i = 0; i < ids.length; i++) {
+				worlds[i] = dao.findById(ids[i]);
+			}
+			return worlds;
+		});
 	}
-
+	
 	@Override
 	public World findAndModify(int id, int newRandomNumber) {
 		throw new RuntimeException("Don't call this");
@@ -44,19 +41,22 @@ public class WorldRepository implements WorldDAO {
 
 	@Override
 	public World[] updatesQueries(int totalQueries) {
-		final World[] updates = new World[totalQueries];
-		try (WorldJDBIImpl dao = jdbi.open(WorldJDBIImpl.class)) {
-				for (int i = 0; i < totalQueries; i++) {
-					updates[i] = dao.inTransaction((conn, status) -> {
-						final World world = dao.findById(Helper.randomWorld());
-						world.setRandomNumber(Helper.randomWorld());
-						dao.update(world);
-						return world;
-					});
-				}
-				return updates;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		try (Handle handle = jdbi.open()) {
+			WorldJDBIImpl dao = handle.attach(WorldJDBIImpl.class);
+
+			final World updates[] = new World[totalQueries];
+
+			for (int i = 0; i < totalQueries; i++) {
+				final World world = dao.findById(Helper.randomWorld());
+				world.setRandomNumber(Helper.randomWorld());
+				updates[i] = world;
+			}
+			// Reason for sorting : https://github.com/TechEmpower/FrameworkBenchmarks/pull/2684
+			Arrays.sort(updates, Comparator.comparingInt(World::getId));
+			dao.update(updates);
+			handle.commit();
+			
+			return updates;
 		}
 	}
 

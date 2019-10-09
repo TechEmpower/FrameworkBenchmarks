@@ -10,9 +10,12 @@ namespace Benchmarks.AspNet.Controllers
     {
         Random random = new Random();
 
-        public ActionResult Index(string providerName, int? queries)
+        public ActionResult Index(string providerName, string queries)
         {
-            List<World> worlds = new List<World>(Math.Max(1, Math.Min(500, queries ?? 1)));
+            int queryInt = 1;
+            int.TryParse(queries, out queryInt);
+
+            List<World> worlds = new List<World>(Math.Max(1, Math.Min(500, queryInt)));
 
             using (EntityFramework db = new EntityFramework(providerName))
             {

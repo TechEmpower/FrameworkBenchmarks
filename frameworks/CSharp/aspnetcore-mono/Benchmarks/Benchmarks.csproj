@@ -4,8 +4,6 @@
     <OutputType>Exe</OutputType>
     <LangVersion>7.3</LangVersion>
     <RuntimeIdentifiers>linux-x64</RuntimeIdentifiers>
-    <!-- Add the myget feed, without altering any other configurations. -->
-    <RestoreAdditionalProjectSources>https://dotnet.myget.org/F/dotnet-core/api/v3/index.json</RestoreAdditionalProjectSources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,22 +24,9 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets" Version="2.2.1" />
-    <PackageReference Include="MySqlConnector" Version="0.49.2" />
+    <PackageReference Include="MySqlConnector" Version="0.56.0" />
     <PackageReference Include="Npgsql" Version="4.0.4" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.0" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.2"/>
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net471' ">
-    <!-- Make .NET 4.7.1 reference assemblies available even on Linux -->
-    <PackageReference Include="Microsoft.TargetingPack.NETFramework.v4.7.1" Version="1.0.0" ExcludeAssets="All" PrivateAssets="All" />
-    <Reference Include="netstandard" />
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Threading.Tasks" />
-    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
-  </ItemGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net471' ">
-    <!-- Make sure the reference assemblies are available -->
-    <FrameworkPathOverride>$(NuGetPackageRoot)microsoft.targetingpack.netframework.v4.7.1\1.0.0\lib\net471\</FrameworkPathOverride>
-  </PropertyGroup>
 </Project>

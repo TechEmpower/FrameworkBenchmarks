@@ -1,0 +1,26 @@
+{
+	"fileVersion": 1,
+	"versions": {
+		"botan": "1.12.10",
+		"botan-math": "1.0.3",
+		"derelict-pq": "4.0.0-alpha.2",
+		"derelict-util": "3.0.0-beta.2",
+		"diet-ng": "1.5.0",
+		"dpq2": "1.0.10",
+		"eventcore": "0.8.42",
+		"libasync": "0.8.4",
+		"libevent": "2.0.2+2.0.16",
+		"memutils": "0.4.13",
+		"mir-algorithm": "3.3.11",
+		"mir-core": "0.2.2",
+		"mir-linux-kernel": "1.0.1",
+		"mir-random": "2.2.3",
+		"money": "2.3.0",
+		"openssl": "1.1.6+1.0.1g",
+		"stdx-allocator": "2.77.5",
+		"taggedalgebraic": "0.11.3",
+		"vibe-core": "1.6.2",
+		"vibe-d": "0.8.5",
+		"vibe-d-postgresql": "2.0.2"
+	}
+}

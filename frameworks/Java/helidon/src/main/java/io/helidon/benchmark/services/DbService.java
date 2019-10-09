@@ -15,17 +15,22 @@ import io.reactivex.Single;
 
 import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
 import javax.json.JsonStructure;
 import javax.json.JsonWriter;
 import javax.json.JsonWriterFactory;
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class DbService implements Service {
+
+    private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
 
     private final DbRepository repository;
     private JsonWriterFactory jsonWriterFactory;
@@ -47,7 +52,7 @@ public class DbService implements Service {
                           final ServerResponse response) {
         Single<DataChunk> result = repository.getWorld(randomWorldNumber())
                 .map(World::toJson)
-                .map(jsonObject -> getChunk(jsonObject));
+                .map(this::getChunk);
 
         send(response, result);
     }
@@ -80,17 +85,17 @@ public class DbService implements Service {
 
     private Single<DataChunk> marshall(Flowable<JsonObject>[] worlds) {
         return Flowable.mergeArray(worlds)
-                .collect(() -> new ArrayList<JsonObject>(), (worlds1, world) -> worlds1.add(world))
-                .map(jsonObjects -> buildArray(jsonObjects))
-                .map(jsonValues -> getChunk(jsonValues))
+                .toList()
+                .map(this::buildArray)
+                .map(this::getChunk)
                 .doOnError(Throwable::printStackTrace);
     }
 
-    private JsonArray buildArray(ArrayList<JsonObject> jsonObjects) {
+    private JsonArray buildArray(List<JsonObject> jsonObjects) {
         return jsonObjects.stream().reduce(
-                Json.createArrayBuilder(),
-                (jsonArrayBuilder, jsonObject) -> jsonArrayBuilder.add(jsonObject),
-                (jsonArrayBuilder, jsonArrayBuilder2) -> jsonArrayBuilder.addAll(jsonArrayBuilder2))
+                JSON.createArrayBuilder(),
+                JsonArrayBuilder::add,
+                JsonArrayBuilder::addAll)
                 .build();
     }
 

@@ -205,7 +205,8 @@ class Results:
                 requests.post(
                     self.config.results_upload_uri,
                     headers={'Content-Type': 'application/json'},
-                    data=json.dumps(self.__to_jsonable(), indent=2))
+                    data=json.dumps(self.__to_jsonable(), indent=2),
+                    timeout=300)
             except Exception:
                 log("Error uploading results.json")
 
@@ -460,8 +461,8 @@ class Results:
         stats_file = self.get_stats_file(framework_test.name, test_type)
         with open(stats_file) as stats:
             # dstat doesn't output a completely compliant CSV file - we need to strip the header
-            while stats.next() != "\n":
-                pass
+            for _ in range(4):
+                stats.next()
             stats_reader = csv.reader(stats)
             main_header = stats_reader.next()
             sub_header = stats_reader.next()

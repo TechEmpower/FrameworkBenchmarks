@@ -8,11 +8,13 @@
 	<parent>
 		<groupId>org.t-io</groupId>
 		<artifactId>tio-http-parent</artifactId>
-		<version>3.2.4.v20181218-RELEASE</version>
+		<version>3.5.5.v20191010-RELEASE</version>
 	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<main.class>org.tio.http.server.benchmark.TioBenchmarkStarter</main.class>
 	</properties>
 
@@ -45,6 +47,14 @@
 		</resources>
 
 		<plugins>
+			<plugin>
+ 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<configuration>
+					<debug>false</debug>
+				</configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>

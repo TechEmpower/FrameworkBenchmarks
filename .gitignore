@@ -99,3 +99,15 @@ pubspec.lock
 # Gradle
 .gradle/
 build/
+
+# haskell
+.stack-work
+
+# Elixir
+_build/
+deps/
+frameworks/PHP/ubiquity/.buildpath
+
+# swift
+Package.resolved
+.swiftpm

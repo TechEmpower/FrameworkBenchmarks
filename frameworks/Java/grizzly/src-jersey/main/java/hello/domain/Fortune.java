@@ -8,20 +8,29 @@ import javax.persistence.Id;
 @Entity
 public class Fortune implements Comparable<Fortune> {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  public int id;
-  public String message;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
+	private String message;
 
-  public Fortune() { }
+	public Fortune() {
+	}
 
-  public Fortune(int id, String message) {
-    this.id = id;
-    this.message = message;
-  }
+	public Fortune(int id, String message) {
+		this.id = id;
+		this.message = message;
+	}
 
-  @Override
-  public int compareTo(Fortune other) {
-    return message.compareTo(other.message);
-  }
+	public int getId() {
+		return id;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	@Override
+	public int compareTo(Fortune other) {
+		return message.compareTo(other.message);
+	}
 }

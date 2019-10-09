@@ -2,24 +2,68 @@
   "framework": "beetlex",
   "tests": [
     {
-      "default": {
+      "default": {      
+        "fortune_url": "/fortunes",
         "plaintext_url": "/plaintext",
         "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",   
         "port": 8080,
         "approach": "Realistic",
-        "classification": "Micro",
-        "database": "None",
+        "classification": "Fullstack",
+        "database": "Postgres",
         "framework": "beetlex",
         "language": "C#",
         "orm": "Raw",
         "platform": ".NET",
         "flavor": "CoreCLR",
-        "webserver": "BeetleX",
+        "webserver": "beetlex",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "beetlex",
         "notes": "",
-        "versus": "beetlex"
+        "versus": "aspcore-mvc"
+      },
+      "core": {
+        "fortune_url": "/fortunes",
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "beetlex",
+        "language": "C#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "beetlex",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "beetlex-core",
+        "notes": "",
+        "versus": "aspcore"
+      },
+      "debug": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "beetlex",
+        "language": "C#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "beetlex",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "beetlex-core",
+        "notes": "",
+        "versus": "aspcore"
       }
     }
   ]

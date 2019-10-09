@@ -5,7 +5,7 @@ use Swoole\Http\Response;
 
 $server = new swoole_http_server('0.0.0.0', 8080, SWOOLE_BASE);
 $server->set([
-    'worker_num' => NUMCORES
+    'worker_num' => swoole_cpu_num()
 ]);
 
 $pool = new DatabasePool();
@@ -33,7 +33,7 @@ $db = function (string $database_type, int $queries = 0) use ($pool): string {
     $db->db_test = $db->db_test ?? $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
 
     // For each query, store the result set values in the response array
-    while (0 < $query_count--) {
+    while ($query_count--) {
         $id = mt_rand(1, 10000);
         $ret = $db->db_test->execute([$id]);
 
@@ -104,7 +104,7 @@ $updates = function (string $database_type, int $queries = 0) use ($pool): strin
     $db->updates_test_select = $db->updates_test_select ?? $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
     $db->updates_test_update = $db->updates_test_update ?? $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
 
-    while (0 < $query_count--) {
+    while ($query_count--) {
         $id = mt_rand(1, 10000);
         $randomNumber = mt_rand(1, 10000);
         $ret = $db->updates_test_select->execute([$id]);
@@ -133,69 +133,73 @@ $server->on('workerStart', function () use ($pool) {
  * On every request to the (web)server, execute the following code
  */
 $server->on('request', function (Request $req, Response $res) use ($db, $fortunes, $updates) {
+    try {
+        switch ($req->server['request_uri']) {
+            case '/json':
+                $res->header('Content-Type', 'application/json');
+                $res->end(json_encode(['message' => 'Hello, World!']));
+                break;
 
-    switch ($req->server['request_uri']) {
-        case '/json':
-            $res->header('Content-Type', 'application/json');
-            $res->end(json_encode(['message' => 'Hello, World!']));
-            break;
+            case '/plaintext':
+                $res->header('Content-Type', 'text/plain; charset=utf-8');
+                $res->end('Hello, World!');
+                break;
 
-        case '/plaintext':
-            $res->header('Content-Type', 'text/plain; charset=utf-8');
-            $res->end('Hello, World!');
-            break;
+            case '/db':
+                $res->header('Content-Type', 'application/json');
 
-        case '/db':
-            $res->header('Content-Type', 'application/json');
+                if (isset($req->get['queries'])) {
+                    $res->end($db('mysql', (int)$req->get['queries']));
+                } else {
+                    $res->end($db('mysql', -1));
+                }
+                break;
 
-            if (isset($req->get['queries'])) {
-                $res->end($db('mysql', (int)$req->get['queries']));
-            } else {
-                $res->end($db('mysql', -1));
-            }
-            break;
+            case '/fortunes':
+                $res->header('Content-Type', 'text/html; charset=utf-8');
+                $res->end($fortunes('mysql'));
+                break;
 
-        case '/fortunes':
-            $res->header('Content-Type', 'text/html; charset=utf-8');
-            $res->end($fortunes('mysql'));
-            break;
+            case '/updates':
+                $res->header('Content-Type', 'application/json');
 
-        case '/updates':
-            $res->header('Content-Type', 'application/json');
+                if (isset($req->get['queries'])) {
+                    $res->end($updates('mysql', (int)$req->get['queries']));
+                } else {
+                    $res->end($updates('mysql', -1));
+                }
+                break;
 
-            if (isset($req->get['queries'])) {
-                $res->end($updates('mysql', (int)$req->get['queries']));
-            } else {
-                $res->end($updates('mysql', -1));
-            }
-            break;
+            case '/db_postgres':
+                $res->header('Content-Type', 'application/json');
 
-        case '/db_postgres':
-            $res->header('Content-Type', 'application/json');
+                if (isset($req->get['queries'])) {
+                    $res->end($db('postgres', (int)$req->get['queries']));
+                } else {
+                    $res->end($db('postgres', -1));
+                }
+                break;
 
-            if (isset($req->get['queries'])) {
-                $res->end($db('postgres', (int)$req->get['queries']));
-            } else {
-                $res->end($db('postgres', -1));
-            }
-            break;
+            case '/fortunes_postgres':
+                $res->header('Content-Type', 'text/html; charset=utf-8');
+                $res->end($fortunes('postgres'));
+                break;
 
-        case '/fortunes_postgres':
-            $res->header('Content-Type', 'text/html; charset=utf-8');
-            $res->end($fortunes('postgres'));
-            break;
+            case '/updates_postgres':
+                $res->header('Content-Type', 'application/json');
 
-        case '/updates_postgres':
-            $res->header('Content-Type', 'application/json');
+                if (isset($req->get['queries'])) {
+                    $res->end($updates('postgres', (int)$req->get['queries']));
+                } else {
+                    $res->end($updates('postgres', -1));
+                }
+                break;
+        }
 
-            if (isset($req->get['queries'])) {
-                $res->end($updates('postgres', (int)$req->get['queries']));
-            } else {
-                $res->end($updates('postgres', -1));
-            }
-            break;
+    } catch (\Throwable $e) {
+        $res->status(500);
+        $res->end('code ' . $e->getCode(). 'msg: '. $e->getMessage());
     }
-
 });
 
 $server->start();

@@ -1,12 +1,12 @@
 package net.benchmark.akka.http.world
 
-import net.benchmark.akka.http.db.CustomPostgresProfile
-import net.benchmark.akka.http.db.CustomPostgresProfile.api._
 import slick.basic.DatabaseConfig
+import slick.jdbc.PostgresProfile
+import slick.jdbc.PostgresProfile.api._
 
 import scala.concurrent.Future
 
-class WorldRepositoryModule(val dbConfig: DatabaseConfig[CustomPostgresProfile]) extends WorldRepository {
+class WorldRepositoryModule(val dbConfig: DatabaseConfig[PostgresProfile]) extends WorldRepository {
 
   private val db = dbConfig.db
 

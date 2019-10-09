@@ -12,7 +12,7 @@ import std.conv : ConvException, to;
 import std.array;
 
 enum worldSize = 10000;
-enum poolSize = 256;
+enum poolSize = 64;
 
 PostgresClient client;
 
@@ -32,11 +32,13 @@ void main()
 
 void runServer()
 {
+	import std.datetime : seconds;
 	auto router = new URLRouter;
 	router.registerWebInterface(new WebInterface);
 	router.rebuild();
 
 	auto settings = new HTTPServerSettings;
+	settings.keepAliveTimeout = 20.seconds;
 	settings.options |= HTTPServerOption.reusePort;
 	settings.port = 8080;
 	listenHTTP(settings, router);
@@ -72,11 +74,14 @@ class WebInterface {
 	void getDB(HTTPServerResponse res)
 	{
 		auto conn = client.lockConnection();
-		scope(exit)	delete conn;
+		scope(exit)	destroy(conn);
 
-		immutable id = _uniformVariable(_gen);
-		immutable query = "SELECT randomNumber FROM world WHERE id = " ~  id.to!string;
-		immutable result = conn.execStatement(query, ValueFormat.BINARY).rangify.front;
+		int id = _uniformVariable(_gen);
+		QueryParams qp;
+		qp.preparedStatementName("db_prpq");
+		qp.resultFormat = ValueFormat.BINARY;
+		qp.argsVariadic(id);
+		immutable result = conn.execPrepared(qp).rangify.front;
 		auto w = WorldResponse(id, result[0].as!PGinteger);
 		res.writeJsonBody(w, HTTPStatus.ok, "application/json");
 	}
@@ -85,23 +90,31 @@ class WebInterface {
 	void getQueries(HTTPServerResponse res, string queries)
 	{
 		import std.algorithm : min, max;
+		import std.uni : isNumber;
 
 		auto conn = client.lockConnection();
-		scope(exit)	delete conn;
+		scope(exit)	destroy(conn);
 
 		// Convert the "queries" parameter to int and ignore any conversion errors
 		// Note that you'd usually declare queries as int instead. However, the
 		// test required to gracefully handle errors here.
 		int count = 1;
-		try count = min(max(queries.to!int, 1), 500);
-		catch (ConvException) {}
+		if (queries.length && isNumber(queries[0]))
+		{
+			try count = min(max(queries.to!int, 1), 500);
+			catch (ConvException) {}
+		}
 
 		// assemble the response array
 		scope data = new WorldResponse[count];
+		QueryParams qp;
+		qp.preparedStatementName("db_prpq");
+		qp.resultFormat = ValueFormat.BINARY;
 		foreach (ref w; data) {
-			immutable id = _uniformVariable(_gen);
+			int id = _uniformVariable(_gen);
+			qp.argsVariadic(id);
 			immutable query = "SELECT randomNumber FROM world WHERE id = " ~  id.to!string;
-			immutable result = conn.execStatement(query, ValueFormat.BINARY).rangify.front;
+			immutable result = conn.execPrepared(qp).rangify.front;
 			w = WorldResponse(id, result[0].as!PGinteger);
 		}
 
@@ -115,11 +128,12 @@ class WebInterface {
 		import std.algorithm : map, sort;
 
 		auto conn = client.lockConnection();
-		scope(exit)	delete conn;
+		scope(exit)	destroy(conn);
 
 		FortuneResponse[] data;
-		immutable query = "SELECT id, message::text FROM Fortune";
-		auto result = conn.execStatement(query, ValueFormat.BINARY).rangify;
+		QueryParams qp;
+		qp.preparedStatementName("fortune_prpq");
+		auto result = conn.execPrepared(qp).rangify;
 		data = result.map!(f => FortuneResponse(f[0].as!PGinteger, f[1].as!PGtext)).array;
 		data ~= FortuneResponse(0, "Additional fortune added at request time.");
 		data.sort!((a, b) => a.message < b.message);
@@ -130,28 +144,39 @@ class WebInterface {
 	void getUpdates(HTTPServerResponse res, string queries)
 	{
 		import std.algorithm : min, max;
+		import std.uni : isNumber;
 
 		auto conn = client.lockConnection();
-		scope(exit)	delete conn;
+		scope(exit)	destroy(conn);
 
 		int count = 1;
-		try count = min(max(queries.to!int, 1), 500);
-		catch (ConvException e) {}
+		if (queries.length && isNumber(queries[0]))
+		{
+			try count = min(max(queries.to!int, 1), 500);
+			catch (ConvException) {}
+		}
 
 		scope data = new WorldResponse[count];
+		QueryParams qp;
+		qp.preparedStatementName("db_prpq");
+		qp.resultFormat = ValueFormat.BINARY;
+
+		QueryParams qp_update;
+		qp_update.preparedStatementName("db_update_prpq");
+		qp_update.resultFormat = ValueFormat.BINARY;
+
 		foreach (ref w; data) {
-			immutable id = _uniformVariable(_gen);
-			immutable sid = id.to!string;
-			immutable query = "SELECT randomNumber FROM world WHERE id = " ~  sid;
-			immutable result = conn.execStatement(query, ValueFormat.BINARY).rangify.front;
+			int id = _uniformVariable(_gen);
+			qp.argsVariadic(id);
+			immutable query = "SELECT randomNumber FROM world WHERE id = " ~  id.to!string;
+			immutable result = conn.execPrepared(qp).rangify.front;
 			w = WorldResponse(id, result[0].as!PGinteger);
 
 			// update random number
 			w.randomNumber = _uniformVariable(_gen);
-
+			qp_update.argsVariadic(w.randomNumber, id);
 			// persist to DB
-			conn.execStatement("UPDATE world SET randomNumber = " ~ w.randomNumber.to!string ~ "  WHERE id = " ~ sid);
-
+			conn.sendQueryPrepared(qp_update);
 		}
 
 		// write response as JSON
@@ -184,5 +209,9 @@ static this()
 	import std.process : environment;
 	auto connectionInfo = "host=tfb-database port=5432 "
 						~ "dbname=hello_world  user=benchmarkdbuser password=benchmarkdbpass";
-	client = new PostgresClient(connectionInfo, poolSize);
+	client = new PostgresClient(connectionInfo, poolSize, (Connection cn){
+		cn.prepare("fortune_prpq", "SELECT id, message::text FROM Fortune");
+		cn.prepare("db_prpq", "SELECT randomNumber FROM world WHERE id = $1");
+		cn.prepare("db_update_prpq", "UPDATE world SET randomNumber = $1  WHERE id = $2");
+	} );
 }

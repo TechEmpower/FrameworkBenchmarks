@@ -44,7 +44,7 @@ public class FortuneService implements Service {
                     fortunes.sort(comparing(fortune -> fortune.message));
                     return fortunes;
                 })
-            .map(fortunes -> this.getChunk(fortunes));
+            .map(this::getChunk);
 
         send(response, result);
     }

@@ -4,7 +4,7 @@
     "default": {
       "json_url": "/json",
       "db_url": "/db",
-      "query_url": "/db?queries=",
+      "query_url": "/dbquery?queries=",
       "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
@@ -14,7 +14,7 @@
       "language": "PHP",
       "flavor": "PHP7",
       "orm": "Raw",
-      "platform": "None",
+      "platform": "FPM/FastCGI",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",

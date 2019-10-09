@@ -13,6 +13,9 @@ $capsule->addConnection([
     'database' => 'hello_world',
     'username' => 'benchmarkdbuser',
     'password' => 'benchmarkdbpass',
+    'options'=> [
+        PDO::ATTR_PERSISTENT => true,
+    ],
 ]);
 
 $capsule->setAsGlobal();

@@ -1,20 +1,22 @@
 package com.example.helloworld.db.jdbi;
 
-import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.BindBean;
-import org.skife.jdbi.v2.sqlobject.SqlQuery;
-import org.skife.jdbi.v2.sqlobject.SqlUpdate;
-import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
-import org.skife.jdbi.v2.sqlobject.mixins.Transactional;
+import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 
 import com.example.helloworld.db.mappers.WorldMapper;
 import com.example.helloworld.db.model.World;
 
-@RegisterMapper(WorldMapper.class)
-public abstract class WorldJDBIImpl implements Transactional<WorldJDBIImpl>, AutoCloseable  {
-	@SqlQuery("select id, randomNumber from world where id = :id")
-	public abstract World findById(@Bind("id") int id);
+import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.statement.SqlBatch;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.transaction.Transaction;
 
-	@SqlUpdate("update world set randomNumber = :p.randomNumber where id = :p.id")
-	public abstract long update(@BindBean("p") World world);
+@RegisterRowMapper(WorldMapper.class)
+public interface WorldJDBIImpl {
+	@SqlQuery("select id, randomNumber from world where id = :id")
+	World findById(@Bind("id") int id);
+
+	@SqlBatch("update world set randomNumber = :p.randomNumber where id = :p.id")
+	@Transaction
+	void update(@BindBean("p") World...worlds);
 }

@@ -1,0 +1,44 @@
+{
+    "name": "luoxiaojun/sw-fw-less-app",
+    "description": "Swoole Http Server App",
+    "type": "project",
+    "keywords": [
+        "swoole",
+        "framework",
+        "coroutine",
+        "php",
+        "app"
+    ],
+    "require": {
+        "php": ">=7.1",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "ext-swoole": ">=4.4.0",
+        "luoxiaojun/sw-fw-less": "dev-master"
+    },
+    "suggest": {
+        "ext-redis": "*"
+    },
+    "license": "apache-2.0",
+    "authors": [
+        {
+            "name": "luoxiaojun",
+            "email": "luoxiaojun1992@sina.cn"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"App\\": "app/"}
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "preferred-install": "dist"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

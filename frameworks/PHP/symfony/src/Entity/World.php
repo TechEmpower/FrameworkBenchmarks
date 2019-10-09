@@ -5,64 +5,38 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\WorldRepository")
  * @ORM\Table(name="world")
  */
 class World
 {
-   /**
-    * @ORM\Id
-    * @ORM\Column(type="integer")
-    */
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     */
     public $id;
 
-   /**
-    * @ORM\Column(type="integer")
-    */
+    /**
+     * @ORM\Column(type="integer")
+     */
     public $randomNumber;
 
-    /**
-     * Set id
-     *
-     * @param integer $id
-     * @return World
-     */
-    public function setId($id)
+    public function setId(int $id): void
     {
         $this->id = $id;
-    
-        return $this;
     }
 
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set randomNumber
-     *
-     * @param integer $randomNumber
-     * @return World
-     */
-    public function setRandomNumber($randomNumber)
+    public function setRandomNumber(int $randomNumber): void
     {
         $this->randomNumber = $randomNumber;
-    
-        return $this;
     }
 
-    /**
-     * Get randomNumber
-     *
-     * @return integer 
-     */
-    public function getRandomNumber()
+    public function getRandomNumber(): int
     {
         return $this->randomNumber;
     }

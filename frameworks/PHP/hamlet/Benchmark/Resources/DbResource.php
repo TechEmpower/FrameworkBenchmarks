@@ -2,51 +2,59 @@
 
 namespace Benchmark\Resources;
 
+use Benchmark\Entities\RandomNumber;
 use Hamlet\Database\Database;
-use Hamlet\Entities\JsonEntity;
-use Hamlet\Requests\Request;
-use Hamlet\Resources\WebResource;
-use Hamlet\Responses\Response;
-use Hamlet\Responses\SimpleOKResponse;
+use Hamlet\Database\Procedure;
+use Hamlet\Http\Entities\JsonEntity;
+use Hamlet\Http\Requests\Request;
+use Hamlet\Http\Resources\HttpResource;
+use Hamlet\Http\Responses\Response;
+use Hamlet\Http\Responses\SimpleOKResponse;
+use function Hamlet\Cast\_int;
 
-class DbResource implements WebResource
+class DbResource implements HttpResource
 {
-    private $database;
+    /** @var Database */
+    protected $database;
+
+    /** @var Procedure */
+    private $procedure;
 
     public function __construct(Database $database)
     {
         $this->database = $database;
-    }
-
-    public function getResponse(Request $request): Response
-    {
-        $queryParams = $request->getQueryParams();
-        $count = $queryParams['queries'] ?? null;
-        if ($count !== null && $count > 0) {
-            $count = min($count, 500);
-        } else {
-            $count = 1;
-        }
-
         $query = '
             SELECT id,
                    randomNumber 
               FROM World 
              WHERE id = ?
         ';
-        $procedure = $this->database->prepare($query);
+        $this->procedure = $this->database->prepare($query);
+    }
 
-        $payload = [];
-        while ($count-- > 0) {
-            $id = mt_rand(1, 10000);
-            $procedure->bindInteger($id);
-            $payload[] = $procedure->fetchOne();
+    public function getResponse(Request $request): Response
+    {
+        $id = mt_rand(1, 10000);
+        $this->procedure->bindInteger($id);
+        $record = $this->procedure->processOne()
+            ->selectAll()->cast(RandomNumber::class)
+            ->collectHead();
+        return new SimpleOKResponse(new JsonEntity($record));
+    }
+
+    protected function getQueriesCount(Request $request): int
+    {
+        if ($request->hasQueryParam('queries')) {
+            $count = $request->getQueryParam('queries', _int());
+            if ($count < 1) {
+                return 1;
+            } elseif (500 < $count) {
+                return 500;
+            } else {
+                return $count;
+            }
+        } else {
+            return 1;
         }
-
-        if (!isset($queryParams['queries'])) {
-            $payload = $payload[0];
-        }
-
-        return new SimpleOKResponse(new JsonEntity($payload));
     }
 }

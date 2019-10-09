@@ -9,10 +9,9 @@
 	<packaging>pom</packaging>
 	<name>OfficeFloor Benchmarks</name>
 	<properties>
-		<officefloor.version>3.4.0</officefloor.version>
-		<maven.compiler.source>10</maven.compiler.source>
-		<maven.compiler.target>10</maven.compiler.target>
-		<jackson.version>2.9.7</jackson.version>
+		<officefloor.version>3.10.2</officefloor.version>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<jaxb.version>2.3.0</jaxb.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -51,6 +50,11 @@
 				<groupId>net.officefloor.benchmarks</groupId>
 				<artifactId>woof_benchmark_micro</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>2.9.9</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

@@ -3,8 +3,7 @@
 #
 
 sudo: required
-group: deprecated-2017-Q4
-dist: trusty
+dist: xenial
 language: generic
 python:
   - "2.7"
@@ -24,31 +23,34 @@ env:
     - "TESTDIR=C++/ulib"
     - "TESTDIR=C++/wt"
     - "TESTDIR=C++/drogon"
+    - "TESTDIR=C++/oatpp"
     - "TESTLANG=Clojure"
     - "TESTLANG=Crystal"
     - "TESTLANG=D"
     - "TESTLANG=Dart"
+    - "TESTLANG=Dylan"
     - "TESTLANG=Elixir"
     - "TESTLANG=Erlang"
     - "TESTLANG=FSharp"
-    - 'TESTDIR="Go/aah Go/chi Go/falcore Go/gin Go/goji Go/kami Go/martini Go/revel Go/webgo"'
-    - 'TESTDIR="Go/beego Go/echo"'
-    - 'TESTDIR="Go/evio Go/fasthttp Go/go-std Go/iris Go/atreugo Go/gramework"'
+    - 'TESTDIR="Go/chi Go/gin Go/goji Go/aah Go/beego Go/echo"'
+    - 'TESTDIR="Go/falcore Go/kami Go/martini Go/revel Go/webgo"'
+    - 'TESTDIR="Go/evio Go/fasthttp Go/go-std Go/atreugo Go/gramework"'
     - "TESTLANG=Groovy"
     - "TESTDIR=Haskell/snap"
     - "TESTDIR=Haskell/yesod"
     - "TESTDIR=Haskell/servant"
     - "TESTDIR=Haskell/spock"
+    - "TESTDIR=Haskell/warp"
     - "TESTDIR=Java/act"
     - "TESTDIR=Java/activeweb"
     - "TESTDIR=Java/armeria"
     - "TESTDIR=Java/baratine"
-    - "TESTDIR=Java/baseio"
     - "TESTDIR=Java/bayou"
     - "TESTDIR=Java/blade"
     - "TESTDIR=Java/comsat"
     - "TESTDIR=Java/curacao"
     - "TESTDIR=Java/dropwizard"
+    - "TESTDIR=Java/firenio"
     - "TESTDIR=Java/gemini"
     - "TESTDIR=Java/greenlightning"
     - "TESTDIR=Java/grizzly"
@@ -70,6 +72,7 @@ env:
     - "TESTDIR=Java/play1"
     - "TESTDIR=Java/play2-java"
     - "TESTDIR=Java/proteus"
+    - "TESTDIR=Java/quarkus"
     - "TESTDIR=Java/rapidoid"
     - "TESTDIR=Java/ratpack"
     - "TESTDIR=Java/redkale"
@@ -98,12 +101,12 @@ env:
     - "TESTLANG=Nim"
     - "TESTLANG=Perl"
     - 'TESTDIR="PHP/php"'
-    - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/fat-free PHP/fuel PHP/kumbiaphp PHP/laravel PHP/limonade PHP/lithium PHP/lumen PHP/phpixie PHP/slim PHP/symfony PHP/yii2 PHP/zend"'
-    - 'TESTDIR="PHP/amp PHP/hamlet PHP/hhvm PHP/peachpie PHP/swoole PHP/workerman PHP/phalcon"'
-    - 'TESTDIR="Python/aiohttp Python/api_hour Python/blacksheep Python/bottle Python/cherrypy Python/django Python/eve Python/falcon Python/fastapi Python/flask"'
+    - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/fat-free PHP/fuel PHP/kumbiaphp PHP/phpixie PHP/slim PHP/symfony PHP/yii2 PHP/zend PHP/spiral"'
+    - 'TESTDIR="PHP/amp PHP/hamlet PHP/laravel PHP/lumen PHP/hhvm PHP/peachpie PHP/php-ngx PHP/swoole PHP/workerman PHP/phalcon PHP/ubiquity PHP/hyperf PHP/sw-fw-less PHP/imi"'
+    - 'TESTDIR="Python/aiohttp Python/api_hour Python/apidaora Python/blacksheep Python/bottle Python/cherrypy Python/django Python/eve Python/falcon Python/fastapi Python/flask"'
     - 'TESTDIR="Python/hug Python/japronto Python/klein Python/morepath Python/pyramid Python/quart Python/responder Python/sanic Python/spyne Python/starlette"'
     - 'TESTDIR="Python/tornado Python/turbogears Python/uvicorn Python/uwsgi Python/vibora Python/web2py Python/webware Python/weppy Python/wsgi"'
-    - 'TESTDIR="Ruby/grape Ruby/h2o_mruby Ruby/hanami Ruby/padrino Ruby/rack Ruby/rack-sequel"'
+    - 'TESTDIR="Ruby/agoo Ruby/grape Ruby/h2o_mruby Ruby/hanami Ruby/padrino Ruby/rack Ruby/rack-sequel"'
     - 'TESTDIR="Ruby/rails Ruby/roda-sequel Ruby/sinatra Ruby/sinatra-sequel"'
     - 'TESTDIR="Rust/actix Rust/gotham Rust/hyper Rust/iron Rust/saphir"'
     - 'TESTDIR="Rust/may-minihttp Rust/nickel Rust/rocket"'
@@ -111,6 +114,8 @@ env:
     - 'TESTDIR="Scala/akka-http Scala/blaze Scala/cask Scala/colossus Scala/finagle"'
     - 'TESTDIR="Scala/finatra Scala/finch Scala/http4s"'
     - 'TESTDIR="Scala/play2-scala Scala/youi"'
+    - 'TESTDIR="Scala/vertx-web-scala"'
+    - "TESTLANG=Scheme"
     - "TESTLANG=Swift"
     - "TESTLANG=TypeScript"
     - "TESTLANG=Ur"

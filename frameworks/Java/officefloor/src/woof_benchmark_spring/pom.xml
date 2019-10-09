@@ -10,6 +10,7 @@
 	</parent>
 	<artifactId>woof_benchmark_spring</artifactId>
 	<packaging>jar</packaging>
+
 	<dependencies>
 		<dependency>
 			<groupId>net.officefloor.web</groupId>

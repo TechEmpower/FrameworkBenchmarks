@@ -34,7 +34,10 @@
 #include "database.h"
 #include "error.h"
 #include "event_loop.h"
+#include "global_data.h"
+#include "request_handler.h"
 #include "thread.h"
+#include "tls.h"
 #include "utility.h"
 
 static void *run_thread(void *arg);
@@ -88,6 +91,7 @@ void free_thread_context(thread_context_t *ctx)
 {
 	free_database_state(ctx->event_loop.h2o_ctx.loop, &ctx->db_state);
 	free_event_loop(&ctx->event_loop, &ctx->global_thread_data->h2o_receiver);
+	free_request_handler_thread_data(&ctx->request_handler_data);
 
 	if (ctx->json_generator)
 		do {
@@ -98,6 +102,9 @@ void free_thread_context(thread_context_t *ctx)
 			ctx->json_generator = gen->l.next;
 			free_json_generator(gen, NULL, NULL, 0);
 		} while (ctx->json_generator);
+
+	if (ctx->global_data->ssl_ctx)
+		cleanup_openssl_thread_state();
 }
 
 global_thread_data_t *initialize_global_thread_data(const config_t *config,
@@ -116,6 +123,8 @@ global_thread_data_t *initialize_global_thread_data(const config_t *config,
 			ret[i].global_data = global_data;
 		}
 	}
+	else
+		STANDARD_ERROR("aligned_alloc");
 
 	return ret;
 }
@@ -128,13 +137,13 @@ void initialize_thread_context(global_thread_data_t *global_thread_data,
 	ctx->config = global_thread_data->config;
 	ctx->global_data = global_thread_data->global_data;
 	ctx->global_thread_data = global_thread_data;
-	ctx->tid = syscall(SYS_gettid);
-	ctx->random_seed = ctx->tid;
+	ctx->random_seed = syscall(SYS_gettid);
 	initialize_event_loop(is_main_thread,
 	                      global_thread_data->global_data,
 	                      &global_thread_data->h2o_receiver,
 	                      &ctx->event_loop);
 	initialize_database_state(ctx->event_loop.h2o_ctx.loop, &ctx->db_state);
+	initialize_request_handler_thread_data(ctx->config, &ctx->request_handler_data);
 	global_thread_data->ctx = ctx;
 }
 
@@ -145,8 +154,10 @@ void start_threads(global_thread_data_t *global_thread_data)
 	const size_t cpusetsize = CPU_ALLOC_SIZE(num_cpus);
 	cpu_set_t * const cpuset = CPU_ALLOC(num_cpus);
 
-	if (!cpuset)
+	if (!cpuset) {
+		STANDARD_ERROR("CPU_ALLOC");
 		abort();
+	}
 
 	CHECK_ERROR(pthread_attr_init, &attr);
 	// The first thread context is used by the main thread.

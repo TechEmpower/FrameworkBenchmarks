@@ -1,10 +1,10 @@
-FROM maven:3.5.3-jdk-10-slim as maven
+FROM maven:3.6.1-jdk-11-slim as maven
 WORKDIR /proteus
 COPY pom.xml pom.xml
 COPY src src
 RUN mvn package -q --update-snapshots
 
-FROM openjdk:10-jre-slim
+FROM openjdk:11.0.3-jdk-slim
 WORKDIR /proteus
 COPY --from=maven /proteus/target/proteus-techempower-1.0.0.jar app.jar
 COPY --from=maven /proteus/target/lib lib

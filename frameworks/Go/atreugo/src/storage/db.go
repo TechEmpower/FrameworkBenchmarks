@@ -3,7 +3,6 @@ package storage
 import (
 	"errors"
 	"fmt"
-	"runtime"
 
 	"atreugo/src/templates"
 )
@@ -22,23 +21,25 @@ const (
 type DB interface {
 	// GetOneRandomWorld() (World, error)
 	GetOneRandomWorld(*World) error
-	UpdateWorlds([]World) error
-	GetFortunes() ([]templates.Fortune, error)
-	GetFortunesPool() ([]templates.Fortune, error)
+	UpdateWorlds(Worlds) error
+	GetFortunes() (templates.Fortunes, error)
 	Close()
 }
 
 // InitDB with appropriate driver
-func InitDB(dbDriver, dbConnectionString string) (DB, error) {
+func InitDB(dbDriver, dbConnectionString string, maxConnectionCount int) (DB, error) {
 	var err error
 	var db DB
 
 	if dbDriver == "pgx" {
-		db, err = NewPgxDB(
-			dbConnectionString,
-			runtime.NumCPU())
+		db, err = NewPgxDB(dbConnectionString, maxConnectionCount)
 		if err != nil {
 			return nil, fmt.Errorf("Error opening postgresql database with pgx driver: %s", err)
+		}
+	} else if dbDriver == "mongo" {
+		db, err = NewMongoDB(dbConnectionString, maxConnectionCount)
+		if err != nil {
+			return nil, fmt.Errorf("Error opening postgresql database with official mongo driver: %s", err)
 		}
 	} else if dbDriver == "none" {
 		db = nil
