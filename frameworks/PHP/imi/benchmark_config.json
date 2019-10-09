@@ -1,0 +1,30 @@
+{
+  "framework": "imi",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/query?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/update?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "MySQL",
+        "framework": "imi",
+        "language": "PHP",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "Swoole",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "imi",
+        "notes": "",
+        "versus": "Swoole"
+      }
+    }
+  ]
+}

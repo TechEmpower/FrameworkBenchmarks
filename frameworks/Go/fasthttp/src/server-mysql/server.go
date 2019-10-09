@@ -6,12 +6,13 @@ import (
 	"log"
 	"net"
 	"runtime"
+	"unsafe"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/valyala/fasthttp"
 
-	"common"
-	"templates"
+	"fasthttp/src/common"
+	"fasthttp/src/templates"
 )
 
 const connectionString = "benchmarkdbuser:benchmarkdbpass@tcp(tfb-database:3306)/hello_world"
@@ -65,7 +66,7 @@ func main() {
 
 func mainHandler(ctx *fasthttp.RequestCtx) {
 	path := ctx.Path()
-	switch string(path) {
+	switch *(*string)(unsafe.Pointer(&path)) {
 	case "/plaintext":
 		common.PlaintextHandler(ctx)
 	case "/json":
@@ -183,4 +184,5 @@ func mustPrepare(db *sql.DB, query string) *sql.Stmt {
 		log.Fatalf("Error when preparing statement %q: %s", query, err)
 	}
 	return stmt
+	// ?
 }

@@ -6,13 +6,11 @@ import (
 	"net"
 	"os"
 	"runtime"
-	"strconv"
-	"strings"
 
 	"atreugo/src/handlers"
 	"atreugo/src/storage"
 
-	"github.com/savsgio/atreugo/v8"
+	"github.com/savsgio/atreugo/v9"
 )
 
 var bindHost, jsonEncoder, dbDriver, dbConnectionString string
@@ -73,14 +71,9 @@ func main() {
 		updateHandler = handlers.UpdateHandler(db)
 	}
 
-	addr := strings.Split(bindHost, ":")
-	host := addr[0]
-	port, _ := strconv.Atoi(addr[1])
-
 	// init atreugo server
 	server := atreugo.New(&atreugo.Config{
-		Host: host,
-		Port: port,
+		Addr: bindHost,
 	})
 
 	// init handlers

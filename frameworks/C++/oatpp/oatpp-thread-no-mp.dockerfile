@@ -9,7 +9,7 @@ RUN git clone https://github.com/oatpp/oatpp
 
 WORKDIR /test/oatpp
 
-RUN git checkout c178ab488e01ee42fdd0cc1cee3cca424e585169
+RUN git checkout f24a2247098d02975869e8d90a059770ddca8df5
 
 WORKDIR /test/oatpp/build
 

@@ -8,9 +8,10 @@ import com.javanut.gl.api.GreenFramework;
 import com.javanut.gl.api.GreenRuntime;
 import com.javanut.pronghorn.network.ServerSocketWriterStage;
 
-import io.reactiverse.pgclient.PgClient;
-import io.reactiverse.pgclient.PgPool;
-import io.reactiverse.pgclient.PgPoolOptions;
+import io.vertx.pgclient.PgConnectOptions;
+import io.vertx.pgclient.PgPool;
+import io.vertx.sqlclient.PoolOptions;
+
 
 public class FrameworkTest implements GreenApp {
 
@@ -30,8 +31,8 @@ public class FrameworkTest implements GreenApp {
     private final int jsonMaxResponseCount;
     private final int jsonMaxResponseSize;
     
-    private PgPoolOptions options;
-    
+    private PgConnectOptions options;
+    private PoolOptions poolOptions;
     
     private int maxQueueOut;
     private int maxConnectionBits;
@@ -98,7 +99,7 @@ public class FrameworkTest implements GreenApp {
     	this.payloadText = payloadResponse;
     	this.payload = payloadText.getBytes();
     	
-    	this.connectionsPerTrack = 1;
+    	this.connectionsPerTrack = 2;
     	this.connectionPort = 5432;
     	this.bindPort = port;
     	this.host = host;
@@ -107,7 +108,7 @@ public class FrameworkTest implements GreenApp {
     	this.telemetryPort = telemetryPort;
     	this.pipelineBits = 15;//max concurrent in flight database requests 1<<pipelineBits
     	            
-    	this.dbCallMaxResponseCount = c;
+    	this.dbCallMaxResponseCount = c*8; //this will limit the in flight DB calls so make it larger
     	this.jsonMaxResponseCount = c*16*4;
     	
     	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
@@ -137,10 +138,9 @@ public class FrameworkTest implements GreenApp {
     	
 	    		
     	try {
-    		options = new PgPoolOptions()
+    		options = new PgConnectOptions()
     				.setPort(connectionPort)
     				.setPipeliningLimit(1<<pipelineBits)
-    				.setMaxWaitQueueSize(1<<pipelineBits)
     				.setHost(connectionHost)
     				.setDatabase(connectionDB)
     				.setUser(connectionUser)
@@ -148,12 +148,15 @@ public class FrameworkTest implements GreenApp {
     				.setCachePreparedStatements(true)
     				.setTcpNoDelay(true)
     				.setTcpKeepAlive(true)
-    				.setUsePooledBuffers(false)
-    				.setMaxSize(connectionsPerTrack);	    	
+    				
+    				;	    	
 
+    		poolOptions = new PoolOptions()
+    				  .setMaxSize(connectionsPerTrack);
+    		
     		///early check to know if we have a database or not,
 	    	///this helps testing to know which tests should be run on different boxes.
-	    	PgPool pool = PgClient.pool(options);
+	    	PgPool pool = PgPool.pool(options, poolOptions);
 			pool.getConnection(a->{
 	    		foundDB.set(a.succeeded());
 	    		if (null!=a.result()) {
@@ -246,7 +249,7 @@ public class FrameworkTest implements GreenApp {
 		       .includeRoutes(Struct.PLAINTEXT_ROUTE, restTest::plainRestRequest)
 		       .includeRoutes(Struct.JSON_ROUTE, restTest::jsonRestRequest);		 
 
-		DBRest dbRestInstance = new DBRest(runtime, options, pipelineBits, 
+		DBRest dbRestInstance = new DBRest(runtime, options, poolOptions, pipelineBits, 
 				                           dbCallMaxResponseCount, dbCallMaxResponseSize);		
 		
 		runtime.registerListener("DBReadWrite", dbRestInstance)

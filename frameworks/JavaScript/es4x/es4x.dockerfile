@@ -1,4 +1,4 @@
-FROM oracle/graalvm-ce:19.2.0
+FROM oracle/graalvm-ce:19.2.0.1
 # Set working dir
 RUN mkdir /app
 WORKDIR /app
