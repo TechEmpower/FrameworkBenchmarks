@@ -1,24 +1,24 @@
 <?php
-function dbraw($pdo) {
-  if (! isset($_GET['queries'])) {
-    $statement = $pdo->query( 'SELECT id,randomNumber FROM World WHERE id = '. mt_rand(1, 10000) );
-    echo json_encode($statement->fetch(PDO::FETCH_ASSOC));
+function dbraw()
+{
+    global $statement;
 
-    return;
-  }
+    //$statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
 
-  $query_count = 1;
-  if ($_GET['queries'] > 1) {
-    $query_count = min($_GET['queries'], 500);
-  }
- 
-  $arr = [];
-  $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
+    if ( ! isset($_GET['queries'])) {
+        $statement->execute([mt_rand(1, 10000)]);
+        return json_encode($statement->fetch(), JSON_NUMERIC_CHECK);
+    }
 
-  while ($query_count--) {
-    $statement->execute([mt_rand(1, 10000)]);
-    $arr[] = $statement->fetch(PDO::FETCH_ASSOC);
-  }
+    $query_count = 1;
+    if ($_GET['queries'] > 1) {
+        $query_count = min($_GET['queries'], 500);
+    }
 
-  echo json_encode($arr);
+    while ($query_count--) {
+        $statement->execute([mt_rand(1, 10000)]);
+        $arr[] = $statement->fetch();
+    }
+
+    return json_encode($arr, JSON_NUMERIC_CHECK);
 }

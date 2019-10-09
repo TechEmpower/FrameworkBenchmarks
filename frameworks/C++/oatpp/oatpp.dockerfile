@@ -1,11 +1,4 @@
-FROM debian:9
-
-RUN apt-get update
-
-RUN apt-get install -yqq cmake
-RUN apt-get install -yqq build-essential
-
-RUN apt-get install -yqq git
+FROM lganzzzo/ubuntu-cmake
 
 #---------------------------------------------------------------
 # install oatpp
@@ -16,11 +9,11 @@ RUN git clone https://github.com/oatpp/oatpp
 
 WORKDIR /test/oatpp
 
-RUN git checkout 68bbb14ec4bb6b67cfb5917c7c1ed9201f82d341
+RUN git checkout f24a2247098d02975869e8d90a059770ddca8df5
 
 WORKDIR /test/oatpp/build
 
-RUN cmake -DCMAKE_BUILD_TYPE=Release -DOATPP_BUILD_TESTS=OFF ..
+RUN cmake -DOATPP_DISABLE_ENV_OBJECT_COUNTERS=ON -DCMAKE_BUILD_TYPE=Release -DOATPP_BUILD_TESTS=OFF ..
 RUN make install
 
 #---------------------------------------------------------------

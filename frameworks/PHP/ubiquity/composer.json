@@ -1,7 +1,7 @@
 {
 	"require" : {
 		"php" : "^7.1",
-		"phpmv/ubiquity" : "dev-master"
+		"phpmv/ubiquity" : "dev-techempower-benchmarks"
 	},
 	"require-dev" : {
 		"monolog/monolog" : "^1.24",

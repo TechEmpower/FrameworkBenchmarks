@@ -7,7 +7,8 @@ import com.javanut.gl.api.PubSubMethodListener;
 import com.javanut.gl.api.RestMethodListener;
 import com.javanut.gl.api.TickListener;
 
-import io.reactiverse.pgclient.PgPoolOptions;
+import io.vertx.pgclient.PgConnectOptions;
+import io.vertx.sqlclient.PoolOptions;
 
 public class DBRest implements RestMethodListener, PubSubMethodListener, TickListener {
 
@@ -16,13 +17,11 @@ public class DBRest implements RestMethodListener, PubSubMethodListener, TickLis
 	private final ProcessQuery processQuery;
 	private static transient PoolManager pm;
 	
-	public DBRest(GreenRuntime runtime, PgPoolOptions options, int pipelineBits, 
+	public DBRest(GreenRuntime runtime, PgConnectOptions options, PoolOptions poolOptions, int pipelineBits, 
 			      int maxResponseCount, int maxResponseSize) {
 		
-		pm = new PoolManager(options);
-				
-		maxResponseCount = Math.max(maxResponseCount, ((1<<pipelineBits)/20));//match response count to expected db calls
-		
+		pm = new PoolManager(options, poolOptions);
+			
 		HTTPResponseService service = runtime.newCommandChannel().newHTTPResponseService(
 				                maxResponseCount, 
 				                maxResponseSize);

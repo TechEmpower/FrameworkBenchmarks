@@ -1,21 +1,16 @@
-FROM golang:1.12
+FROM golang:1.13
 
-ADD ./ /fasthttp
 WORKDIR /fasthttp
 
-RUN mkdir bin
-ENV GOPATH /fasthttp
-ENV PATH ${GOPATH}/bin:${PATH}
+COPY ./src /fasthttp
 
-RUN rm -rf ./pkg/*
-RUN go get -d -u github.com/go-sql-driver/mysql
-RUN go get -d -u github.com/valyala/fasthttp/...
-RUN go get -u github.com/valyala/quicktemplate/qtc
+RUN go get github.com/valyala/quicktemplate/qtc
 RUN go get -u github.com/mailru/easyjson/...
+RUN go mod download
 
-RUN rm -f ./server-mysql
-RUN go generate templates
+RUN go generate ./templates
+# RUN easyjson -pkg
 # RUN easyjson -all src/common/common.go
-RUN go build -gcflags='-l=4' server-mysql
+RUN go build -o app -gcflags='-l=4' -ldflags="-s -w" ./server-mysql
 
-CMD ./server-mysql -prefork
+CMD ./app -prefork

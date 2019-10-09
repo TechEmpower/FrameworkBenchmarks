@@ -16,6 +16,15 @@
 - `JSON` - [http://127.0.0.1:8000/json](http://127.0.0.1:8000/json)
 - `PLAINTEXT` - [http://127.0.0.1:8000/plaintext](http://127.0.0.1:8000/plaintext) 
 
+### oatpp-thread
+
+- [src-thread](src-thread/) - source code for oatpp test project implemented using oatpp simple API.
+- [src-thread/src/controller/MyController.hpp](src-thread/src/controller/MyController.hpp) - Controller for `JSON` endpoint.
+
+#### Test URLs
+
+- `JSON` - [http://127.0.0.1:8000/json](http://127.0.0.1:8000/json)
+
 ## Contacts
 
 - Leonid Stryzhevskyi (Creator)

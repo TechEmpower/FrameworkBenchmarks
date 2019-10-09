@@ -9,12 +9,10 @@ if (! defined ( 'DS' )) {
 $config=include ROOT.'config/config.php';
 $sConfig= include __DIR__.\DS.'swoole-config.php';
 $config["sessionName"]=null;
-$config["database"]["wrapper"]="\\Ubiquity\\db\\providers\\swoole\\SwooleWrapper";
 $address=$sConfig['host'].':'.$sConfig['port'];
 $config ["siteUrl"] = 'http://'.$address;
 require ROOT . './../vendor/autoload.php';
+$swooleServer=new \Ubiquity\servers\swoole\SwooleServer();
+$swooleServer->init($config, __DIR__);
 require ROOT.'config/services.php';
-$reactServer=new \Ubiquity\servers\swoole\SwooleServer();
-$reactServer->init($config, __DIR__);
-\Ubiquity\orm\DAO::initPooling($config,'default');
-$reactServer->run($sConfig['host'],$sConfig['port']);
+$swooleServer->run($sConfig['host'],$sConfig['port']);

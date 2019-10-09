@@ -6,8 +6,8 @@ import com.javanut.pronghorn.network.config.HTTPContentTypeDefaults;
 import com.javanut.pronghorn.pipe.ObjectPipe;
 import com.javanut.pronghorn.util.AppendableBuilder;
 
-import io.reactiverse.pgclient.PgIterator;
-import io.reactiverse.pgclient.Row;
+import io.vertx.pgclient.PgPool;
+
 
 public class ProcessFortune {
 
@@ -24,6 +24,7 @@ public class ProcessFortune {
 		this.service = service;
 	}
 	
+	private PgPool myPool = null;
 	
 	
 	public void tickEvent() { 
@@ -37,12 +38,15 @@ public class ProcessFortune {
 				} else {
 					break;
 				}
-			}		
+			}	
+			if (null==temp && myPool!=null) { //new test
+				//myPool.close();
+				myPool = null;
+			}
 		}
 		
 	}
 	
-
 	
 	public boolean restFortuneRequest(HTTPRequestReader request) {
 	
@@ -54,28 +58,36 @@ public class ProcessFortune {
 			target.setStatus(-2);//out for work	
 			target.clear();
 
-			pm.pool().preparedQuery( "SELECT id, message FROM fortune", r -> {
-				    //NOTE: we want to do as little work here a s possible since
-				    //      we want this thread to get back to work on other calls.
-					if (r.succeeded()) {
-						PgIterator resultSet = r.result().iterator();						
-						while (	resultSet.hasNext() ) {
-					        Row next = resultSet.next();
-							target.addFortune(next.getInteger(0), next.getString(1));						
-						}
-						target.setStatus(200);
-					} else {
-						System.out.println("fail: "+r.cause().getLocalizedMessage());
-						target.setStatus(500);
-					}		
-					
-				});
+			if (null==myPool) {
+				myPool = pm.pool();
+			}
 			
-			fortuneInFlight.moveHeadForward(); //always move to ensure this can be read.  //TODO: remove and combined with above
+			gatherData(target);
+			
+			fortuneInFlight.moveHeadForward(); //always move to ensure this can be read.  
 			return true;
 		} else {
 			return false;//can not pick up new work now			
 		}		
+	}
+
+
+    //TODO: generate non DB version for tight local testing.
+	private void gatherData(final FortunesObject target) {
+		myPool.preparedQuery( "SELECT id, message FROM fortune", r -> {
+			    //NOTE: we want to do as little work here a s possible since
+			    //      we want this thread to get back to work on other calls.
+				if (r.succeeded()) {
+					r.result().forEach((row)-> {
+						target.addFortune((Integer)row.getInteger(0), (String)row.getString(1));						
+					});
+					target.setStatus(200);
+				} else {
+					System.out.println("fail: "+r.cause().getLocalizedMessage());
+					target.setStatus(500);
+				}		
+				
+			});
 	}
 
 	private boolean isReadyFortune(FortunesObject temp) {

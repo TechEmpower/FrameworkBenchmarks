@@ -25,5 +25,5 @@ while ($query_count--) {
 
 // Use the PHP standard JSON encoder.
 // http://www.php.net/manual/en/function.json-encode.php
-header('Content-type: application/json');
+header('Content-Type: application/json');
 echo json_encode($arr);
