@@ -203,7 +203,7 @@ $server->on('request', function (Request $req, Response $res) use ($db, $fortune
 
     } catch (\Throwable $e) {
         $res->status(500);
-        $res->end('code ' . $e->getCode(). 'msg: '. $e->getMessage());
+        $res->end('Error 500');
     }
 });
 
