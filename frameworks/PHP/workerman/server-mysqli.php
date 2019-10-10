@@ -23,7 +23,7 @@ $http_worker->onMessage = static function ($connection) {
             return $connection->send(db());
 
         case '/fortune':
-            Http::header('Content-Type: text/html; charset=utf-8');
+            //Http::header('Content-Type: text/html; charset=utf-8');
             return $connection->send(fortune());
 
         case '/update':
