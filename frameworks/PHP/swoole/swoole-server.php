@@ -194,6 +194,11 @@ $server->on('request', function (Request $req, Response $res) use ($db, $fortune
                     $res->end($updates('postgres', -1));
                 }
                 break;
+
+            default:
+                $res->header('');
+                $res->end('Error 404');
+
         }
 
     } catch (\Throwable $e) {
