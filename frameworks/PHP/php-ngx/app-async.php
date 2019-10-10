@@ -3,7 +3,7 @@
 
 function fortune()
 {
-    $my = new php\\ngx\mysql();
+    $my = new php\ngx\mysql();
     yield from $my->connect(DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME);
     $ret = yield from $my->query("SELECT id, message FROM Fortune");
     
