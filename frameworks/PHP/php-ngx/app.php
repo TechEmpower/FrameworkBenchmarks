@@ -1,5 +1,9 @@
 <?php
 
+global $pdo;
+$pdo = new PDO("mysql:host=tfb-database;dbname=hello_world", "benchmarkdbuser", "benchmarkdbpass");
+
+
 function db()
 {
     global $pdo;
