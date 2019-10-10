@@ -23,7 +23,7 @@ $db = function (string $database_type, int $queries = 0) use ($pool): string {
 
     // Read number of queries to run from URL parameter
     $query_count = 1;
-    if ($queries > 0) {
+    if ($queries > 1) {
         $query_count = $queries > 500 ? 500 : $queries;
     }
 
@@ -96,7 +96,7 @@ $updates = function (string $database_type, int $queries = 0) use ($pool): strin
     $db = $pool->get($database_type);
 
     $query_count = 1;
-    if ($queries > 0) {
+    if ($queries > 1) {
         $query_count = $queries > 500 ? 500 : $queries;
     }
 
