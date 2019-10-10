@@ -64,24 +64,24 @@ $fortunes = function (string $database_type) use ($pool): string {
 
     $fortune = [];
     $db->fortune_test = $db->fortune_test ?? $db->prepare('SELECT id, message FROM Fortune');
-    $arr = $db->fortune_test->execute([]);
+    $arr = $db->fortune_test->execute();
     foreach ($arr as $row) {
         $fortune[$row['id']] = $row['message'];
     }
     $fortune[0] = 'Additional fortune added at request time.';
     asort($fortune);
 
-    $html = '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>';
+    $html = '';
     foreach ($fortune as $id => $message) {
         $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
         $html .= "<tr><td>{$id}</td><td>{$message}</td></tr>";
     }
 
-    $html .= '</table></body></html>';
-
     $pool->put($db);
 
-    return $html;
+    return '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
+            .$html.
+            '</table></body></html>';
 };
 
 /**
