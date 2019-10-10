@@ -125,9 +125,9 @@ $updates = function (string $database_type, int $queries = 0) use ($pool): strin
 /**
  * On start of the PHP worker. One worker per server process is started.
  */
-$server->on('workerStart', function () use ($pool) {
-    $pool->set_host_ip();
-});
+//$server->on('workerStart', function () use ($pool) {
+
+//});
 
 /**
  * On every request to the (web)server, execute the following code
@@ -224,14 +224,7 @@ class DatabasePool
     function __construct()
     {
         $this->pool = new \SplQueue;
-    }
-
-    function set_host_ip()
-    {
-        if (empty($this->server['host'])) {
-            $tfb_database_ip = Swoole\Coroutine::gethostbyname('tfb-database');
-            $this->server['host'] = $tfb_database_ip;
-        }
+        $this->server['host'] = gethostbyname('tfb-database');
     }
 
     function put($db)
