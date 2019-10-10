@@ -30,15 +30,15 @@ $http_worker->onMessage = static function ($connection) {
             Http::header('Content-Type: application/json');
             return $connection->send(update());
 
-            //case '/info':
-            //   Http::header('Content-Type: text/plain');
-            //   ob_start();
-            //   phpinfo();
-            //   $connection->send(ob_get_clean());
+        //case '/info':
+        //   Http::header('Content-Type: text/plain');
+        //   ob_start();
+        //   phpinfo();
+        //   return $connection->send(ob_get_clean());
 
-            //default:
-            //   Http::header('HTTP', true, 404);
-            //   $connection->send('Error 404');
+        default:
+            Http::responseCode(404);
+            $connection->send('Error 404');
     }
 };
 
