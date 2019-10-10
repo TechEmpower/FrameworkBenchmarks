@@ -258,10 +258,6 @@ class DatabasePool
 
         $db->connect($this->server);
 
-        if ($db == false) {
-            return false;
-        }
-
         return $db;
     }
 }
