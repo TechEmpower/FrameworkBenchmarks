@@ -196,7 +196,7 @@ $server->on('request', function (Request $req, Response $res) use ($db, $fortune
                 break;
 
             default:
-                $res->header('');
+                $res->status(404);
                 $res->end('Error 404');
 
         }
