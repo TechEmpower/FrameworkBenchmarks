@@ -4,6 +4,7 @@ import traceback
 
 from datetime import datetime
 from toolset.utils.output_helper import log
+from toolset.databases import databases
 from toolset.databases.mysql.mysql_check import MysqlCheck
 from toolset.databases.postgres.pgsql_check import PostgresCheck
 from toolset.databases.mongodb.mongodb_check import MongoDbCheck
@@ -342,7 +343,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
     # Only load in the World table if we are doing an Update verification
     world_db_before = {}
     if check_updates:
-        world_db_before = self.get_current_world_table()
+        world_db_before = databases[self.database.lower()].get_current_world_table(self.config)
         expected_queries = 2 * 20 * ab_queries_count
 
     for q, max_infraction in cases:
@@ -368,7 +369,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
             # that only updates 1 item and happens to set its randomNumber to the same value it
             # previously held
             if check_updates and queries >= MAX:
-                world_db_after = self.get_current_world_table()
+                world_db_after = databases[self.database.lower()].get_current_world_table(self.config)
                 problems += verify_updates(world_db_before, world_db_after,
                                            MAX, case_url)
 
