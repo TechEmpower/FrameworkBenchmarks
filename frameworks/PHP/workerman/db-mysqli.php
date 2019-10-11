@@ -70,10 +70,10 @@ function update()
 
         $world = ['id' => $id, 'randomNumber' => $statement->get_result()->fetch_row()];
         
-        $update = mt_rand(1, 10000);
+        $update = $world['randomNumber'] = mt_rand(1, 10000);
         $updateStatement->execute();
 
-        $arr[] = ['id' => $id, 'randomNumber' => $update];
+        $arr[] = $world;
     }
 
     return json_encode($arr, JSON_NUMERIC_CHECK);
