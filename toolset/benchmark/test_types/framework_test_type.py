@@ -129,3 +129,15 @@ class FrameworkTestType:
         Use before calling parse
         '''
         return copy.copy(self)
+
+    def get_db_type(self):
+        '''
+        Return the database type (mysql, postgres, mongodb...).
+        '''
+        database_name = ""
+        try:
+            database_name = self.database.lower()
+        except AttributeError:
+            pass
+
+        return database_name

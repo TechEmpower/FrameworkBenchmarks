@@ -5,10 +5,6 @@ import traceback
 from datetime import datetime
 from toolset.utils.output_helper import log
 from toolset.databases import databases
-from toolset.databases.mysql.mysql_check import MysqlCheck
-from toolset.databases.postgres.pgsql_check import PostgresCheck
-from toolset.databases.mongodb.mongodb_check import MongoDbCheck
-from toolset.databases.database_check import DatabaseCheck
 from time import sleep
 
 # Cross-platform colored text
@@ -408,18 +404,9 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=15000, expe
     dbType=self.get_db_type()
 
     problems = []
-    dbChecker=None
+    if dbType != "":
+        queries, rows = databases[dbType].verify_queries(self.config, tbl_name, url, concurrency, count)
 
-    if dbType == "mysql":
-        dbChecker=MysqlCheck(self.config)
-    elif dbType == "postgres":
-        dbChecker=PostgresCheck(self.config, tbl_name)
-    elif dbType == "mongodb":
-        dbChecker=MongoDbCheck(self.config)
-
-    if isinstance(dbChecker, DatabaseCheck):
-        dbChecker.connect()
-        queries, rows = dbChecker.run(url, concurrency, count)
         if queries < expected_queries :
             problems.append((
             "fail",
