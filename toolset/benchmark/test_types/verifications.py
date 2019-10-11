@@ -4,8 +4,14 @@ import traceback
 
 from datetime import datetime
 from toolset.utils.output_helper import log
-from toolset.databases import databases
+from toolset.databases.mysql.mysql_check import MysqlCheck
+from toolset.databases.postgres.pgsql_check import PostgresCheck
+from toolset.databases.mongodb.mongodb_check import MongoDbCheck
+from toolset.databases.database_check import DatabaseCheck
 from time import sleep
+
+# Cross-platform colored text
+from colorama import Fore, Style
 
 def basic_body_verification(body, url, is_json_check=True):
     '''
@@ -330,11 +336,14 @@ def verify_query_cases(self, cases, url, check_updates=False):
     problems = []
     MAX = 500
     MIN = 1
+    ab_queries_count =10000
+    expected_queries = 20* ab_queries_count
 
     # Only load in the World table if we are doing an Update verification
     world_db_before = {}
     if check_updates:
-        world_db_before = databases[self.database.lower()].get_current_world_table(self.config)
+        world_db_before = self.get_current_world_table()
+        expected_queries = 2 * 20 * ab_queries_count
 
     for q, max_infraction in cases:
         case_url = url + q
@@ -359,7 +368,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
             # that only updates 1 item and happens to set its randomNumber to the same value it
             # previously held
             if check_updates and queries >= MAX:
-                world_db_after = databases[self.database.lower()].get_current_world_table(self.config)
+                world_db_after = self.get_current_world_table()
                 problems += verify_updates(world_db_before, world_db_after,
                                            MAX, case_url)
 
@@ -383,5 +392,43 @@ def verify_query_cases(self, cases, url, check_updates=False):
                 problems += verify_randomnumber_list(
                     expected_len, headers, body, case_url, max_infraction)
                 problems += verify_headers(self.request_headers_and_body, headers, case_url)
+
+    # verify the number of queries and rows read for 20 queries, with a concurrency level of 512, on 10.000 http requests
+    problems+=verify_queries_count(self, "World", url+"20", 512, ab_queries_count, expected_queries, 20 * .99 * ab_queries_count)
+    return problems
+
+
+def verify_queries_count(self, tbl_name, url, concurrency=512, count=15000, expected_queries=15000, expected_rows=15000):
+    '''
+    Checks that the number of executed queries, at the given concurrency level, 
+    corresponds to: the total number of http requests made * the number of queries per request
+    '''
+    log("VERIFYING QUERIES COUNT FOR %s" % url,border='-', color=Fore.WHITE + Style.BRIGHT)
+    dbType=self.get_db_type()
+
+    problems = []
+    dbChecker=None
+
+    if dbType == "mysql":
+        dbChecker=MysqlCheck(self.config)
+    elif dbType == "postgres":
+        dbChecker=PostgresCheck(self.config, tbl_name)
+    elif dbType == "mongodb":
+        dbChecker=MongoDbCheck(self.config)
+
+    if isinstance(dbChecker, DatabaseCheck):
+        dbChecker.connect()
+        queries, rows = dbChecker.run(url, concurrency, count)
+        if queries < expected_queries :
+            problems.append((
+            "fail",
+            "Only %s queries were executed in the database out of roughly %s expected."
+            % (queries, expected_queries), url))
+
+        if rows < expected_rows :
+            problems.append((
+            "fail",
+            "Only %s rows were read from the database out of roughly %s expected."
+            % (rows, expected_rows), url))
 
     return problems

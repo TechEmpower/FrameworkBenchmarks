@@ -15,6 +15,10 @@ RUN apt-get -yqq install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::
 
 RUN pip install colorama==0.3.1 requests MySQL-python psycopg2-binary pymongo docker==4.0.2 psutil
 
+RUN apt-get update && \
+    apt-get install -y apache2-utils && \
+    rm -rf /var/lib/apt/lists/*
+
 # Fix for docker-py trying to import one package from the wrong location
 RUN cp -r /usr/local/lib/python2.7/dist-packages/backports/ssl_match_hostname/ /usr/lib/python2.7/dist-packages/backports
 

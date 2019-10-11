@@ -9,7 +9,7 @@ class QueryTestType(FrameworkTestType):
             'name': 'query',
             'accept_header': self.accept('json'),
             'requires_db': True,
-            'args': ['query_url']
+            'args': ['query_url', 'database']
         }
         FrameworkTestType.__init__(self, config, **kwargs)
 
@@ -29,7 +29,7 @@ class QueryTestType(FrameworkTestType):
         cases = [('2', 'fail'), ('0', 'fail'), ('foo', 'fail'),
                  ('501', 'warn'), ('', 'fail')]
 
-        problems = verify_query_cases(self, cases, url)
+        problems = verify_query_cases(self, cases, url, False)
 
         if len(problems) == 0:
             return [('pass', '', url + case) for case, _ in cases]
