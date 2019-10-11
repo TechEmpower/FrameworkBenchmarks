@@ -4,8 +4,10 @@ import traceback
 
 from colorama import Fore
 from toolset.utils.output_helper import log
+from toolset.databases.abstract_database import AbstractDatabase
 
-class Database:
+
+class Database(AbstractDatabase):
 
     @staticmethod
     def get_connection(config):
