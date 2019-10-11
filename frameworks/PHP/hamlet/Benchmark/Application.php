@@ -14,7 +14,10 @@ use Hamlet\Http\Applications\AbstractApplication;
 use Hamlet\Http\Requests\Request;
 use Hamlet\Http\Resources\HttpResource;
 use Hamlet\Http\Resources\NotFoundResource;
+use Hamlet\Http\Responses\Response;
+use Hamlet\Http\Responses\ServerErrorResponse;
 use Psr\Cache\CacheItemPoolInterface;
+use Throwable;
 
 class Application extends AbstractApplication
 {
@@ -47,6 +50,15 @@ class Application extends AbstractApplication
         $this->queriesResource   = new QueriesResource($database);
         $this->fortuneResource   = new FortuneResource($database);
         $this->updateResource    = new UpdateResource($database);
+    }
+
+    public function run(Request $request): Response
+    {
+        try {
+            return parent::run($request);
+        } catch (Throwable $e) {
+            return new ServerErrorResponse();
+        }
     }
 
     public function findResource(Request $request): HttpResource
