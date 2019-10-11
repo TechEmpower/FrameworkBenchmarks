@@ -23,7 +23,7 @@ $db = function (string $database_type, int $queries = 0) use ($pool): string {
 
     // Read number of queries to run from URL parameter
     $query_count = 1;
-    if ($queries > 0) {
+    if ($queries > 1) {
         $query_count = $queries > 500 ? 500 : $queries;
     }
 
@@ -64,24 +64,24 @@ $fortunes = function (string $database_type) use ($pool): string {
 
     $fortune = [];
     $db->fortune_test = $db->fortune_test ?? $db->prepare('SELECT id, message FROM Fortune');
-    $arr = $db->fortune_test->execute([]);
+    $arr = $db->fortune_test->execute();
     foreach ($arr as $row) {
         $fortune[$row['id']] = $row['message'];
     }
     $fortune[0] = 'Additional fortune added at request time.';
     asort($fortune);
 
-    $html = '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>';
+    $html = '';
     foreach ($fortune as $id => $message) {
         $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
         $html .= "<tr><td>{$id}</td><td>{$message}</td></tr>";
     }
 
-    $html .= '</table></body></html>';
-
     $pool->put($db);
 
-    return $html;
+    return '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
+            .$html.
+            '</table></body></html>';
 };
 
 /**
@@ -96,7 +96,7 @@ $updates = function (string $database_type, int $queries = 0) use ($pool): strin
     $db = $pool->get($database_type);
 
     $query_count = 1;
-    if ($queries > 0) {
+    if ($queries > 1) {
         $query_count = $queries > 500 ? 500 : $queries;
     }
 
@@ -125,9 +125,9 @@ $updates = function (string $database_type, int $queries = 0) use ($pool): strin
 /**
  * On start of the PHP worker. One worker per server process is started.
  */
-$server->on('workerStart', function () use ($pool) {
-    $pool->set_host_ip();
-});
+//$server->on('workerStart', function () use ($pool) {
+
+//});
 
 /**
  * On every request to the (web)server, execute the following code
@@ -194,11 +194,16 @@ $server->on('request', function (Request $req, Response $res) use ($db, $fortune
                     $res->end($updates('postgres', -1));
                 }
                 break;
+
+            default:
+                $res->status(404);
+                $res->end('Error 404');
+
         }
 
     } catch (\Throwable $e) {
         $res->status(500);
-        $res->end('code ' . $e->getCode(). 'msg: '. $e->getMessage());
+        $res->end('Error 500');
     }
 });
 
@@ -224,14 +229,7 @@ class DatabasePool
     function __construct()
     {
         $this->pool = new \SplQueue;
-    }
-
-    function set_host_ip()
-    {
-        if (empty($this->server['host'])) {
-            $tfb_database_ip = Swoole\Coroutine::gethostbyname('tfb-database');
-            $this->server['host'] = $tfb_database_ip;
-        }
+        $this->server['host'] = gethostbyname('tfb-database');
     }
 
     function put($db)
@@ -257,10 +255,6 @@ class DatabasePool
         }
 
         $db->connect($this->server);
-
-        if ($db == false) {
-            return false;
-        }
 
         return $db;
     }
