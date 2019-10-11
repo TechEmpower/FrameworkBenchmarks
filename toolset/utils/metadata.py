@@ -3,20 +3,16 @@ import glob
 import json
 
 from collections import OrderedDict
-
-from toolset.utils.output_helper import log
 from colorama import Fore
+from toolset.databases import databases
+from toolset.utils.output_helper import log
 
 
 class Metadata:
 
-    supported_dbs = [
-        ('MySQL',
-         'One of the most popular databases around the web and in TFB'),
-        ('Postgres',
-         'An advanced SQL database with a larger feature set than MySQL'),
-        ('MongoDB', 'A popular document-store database')
-    ]
+    supported_dbs = []
+    for name in databases:
+        supported_dbs.append((name, '...'))
 
     def __init__(self, benchmarker=None):
         self.benchmarker = benchmarker

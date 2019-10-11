@@ -42,7 +42,7 @@ $http_worker->onMessage = static function ($connection) {
             return;
 
         case '/fortune':
-            Http::header('Content-Type: text/html; charset=utf-8');
+            //Http::header('Content-Type: text/html; charset=utf-8');
             $mysql->query('SELECT id,message FROM Fortune', 
                 static function ($command) use ($connection) {
                     $arr = $command->resultRows;
@@ -70,11 +70,11 @@ $http_worker->onMessage = static function ($connection) {
         //   Http::header('Content-Type: text/plain');
         //   ob_start();
         //   phpinfo();
-        //   $connection->send(ob_get_clean());
+        //   return $connection->send(ob_get_clean());
 
-        //default:
-        //   Http::header('HTTP', true, 404);
-        //   $connection->send('Error 404');
+        default:
+            Http::responseCode(404);
+            $connection->send('Error 404');
     }
 };
 

@@ -175,7 +175,9 @@ class Benchmarker:
 
             # Debug mode blocks execution here until ctrl+c
             if self.config.mode == "debug":
-                log("Entering debug mode. Server has started. CTRL-c to stop.",
+                msg = "Entering debug mode. Server http://localhost:%s has started. CTRL-c to stop.\r\n" % test.port
+                msg = msg + "From outside vagrant: http://localhost:%s" % (int(test.port) + 20000)
+                log(msg,
                     prefix=log_prefix,
                     file=benchmark_log,
                     color=Fore.YELLOW)

@@ -8,10 +8,10 @@ function db()
     global $db;
 
     $statement = $db->prepare('SELECT id,randomNumber FROM World WHERE id=?');
+    $statement->bind_param('i', $id);
 
     if ( ! isset($_GET['queries'])) {
         $id = mt_rand(1, 10000);
-        $statement->bind_param('i', $id);
         $statement->execute();
         return json_encode($statement->get_result()->fetch_assoc(), JSON_NUMERIC_CHECK);
     }
@@ -23,7 +23,6 @@ function db()
 
     while ($query_count--) {
         $id = mt_rand(1, 10000);
-        $statement->bind_param('i', $id);
         $statement->execute();
         $arr[] = $statement->get_result()->fetch_assoc();
     }
@@ -62,15 +61,16 @@ function update()
     $statement       = $db->prepare('SELECT randomNumber FROM World WHERE id=?');
     $updateStatement = $db->prepare('UPDATE World SET randomNumber=? WHERE id=?');
 
+    $statement->bind_param('i', $id);
+    $updateStatement->bind_param('ii',$update, $id);
+
     while ($query_count--) {
         $id = mt_rand(1, 10000);
-        $statement->bind_param('i', $id);
         $statement->execute();
 
         $world = ['id' => $id, 'randomNumber' => $statement->get_result()->fetch_row()];
         
         $update = mt_rand(1, 10000);
-        $updateStatement->bind_param('ii',$update, $id);
         $updateStatement->execute();
 
         $arr[] = ['id' => $id, 'randomNumber' => $update];

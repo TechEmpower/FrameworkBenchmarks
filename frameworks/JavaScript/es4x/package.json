@@ -10,7 +10,7 @@
     "@vertx/core": "3.8.2",
     "@vertx/web": "3.8.2",
     "@vertx/web-templ-rocker": "3.8.2",
-    "@reactiverse/reactive-pg-client": "0.11.4"
+    "@vertx/pg-client": "3.8.2"
   },
   "mvnDependencies": [
     "io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.39.Final",
