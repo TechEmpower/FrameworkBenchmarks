@@ -30,11 +30,8 @@ namespace Benchmarks.Data
         public Task<World> LoadSingleQueryRow()
         {
             var id = _random.Next(1, 10001);
-
-            // TODO: compiled queries are not supported in EF 3.0-preview7
-            // return _firstWorldQuery(_dbContext, id);
             
-            return _dbContext.World.FirstAsync(w => w.Id == id);
+            return _firstWorldQuery(_dbContext, id);
         }
 
         public async Task<World[]> LoadMultipleQueriesRows(int count)
@@ -44,11 +41,8 @@ namespace Benchmarks.Data
             for (var i = 0; i < count; i++)
             {
                 var id = _random.Next(1, 10001);
-
-                // TODO: compiled queries are not supported in EF 3.0-preview7
-                // result[i] = await _firstWorldQuery(_dbContext, id);
-
-                result[i] = await _dbContext.World.FirstAsync(w => w.Id == id);
+                
+                result[i] = await _firstWorldQuery(_dbContext, id);
             }
 
             return result;
@@ -65,11 +59,8 @@ namespace Benchmarks.Data
             for (var i = 0; i < count; i++)
             {
                 var id = _random.Next(1, 10001);
-
-                // TODO: compiled queries are not supported in EF 3.0-preview7
-                // var result = await _firstWorldTrackedQuery(_dbContext, id);
-
-                var result = await _dbContext.World.AsTracking().FirstAsync(w => w.Id == id);
+                
+                var result = await _firstWorldTrackedQuery(_dbContext, id);
 
                 _dbContext.Entry(result).Property("RandomNumber").CurrentValue = _random.Next(1, 10001);
                 results[i] = result;                
@@ -86,11 +77,9 @@ namespace Benchmarks.Data
         public async Task<List<Fortune>> LoadFortunesRows()
         {
             var result = await _dbContext.Fortune.ToListAsync();
-
-            // TODO: compiled queries are not supported in EF 3.0-preview7
-            // await foreach (var element in _fortunesQuery(_dbContext))
-
-            result.Add(new Fortune { Message = "Additional fortune added at request time." });
+            
+            await foreach (var element in _fortunesQuery(_dbContext))
+                result.Add(new Fortune { Message = "Additional fortune added at request time." });
             result.Sort();
 
             return result;
