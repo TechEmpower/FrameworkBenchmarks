@@ -22,7 +22,7 @@ class DBTestType(FrameworkTestType):
         'randomNumber', both of which must map to integers
         '''
 
-        ab_queries_count = 5000
+        ab_queries_count = 1000
         url = base_url + self.db_url
         headers, body = self.request_headers_and_body(url)
 

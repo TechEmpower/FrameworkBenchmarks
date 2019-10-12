@@ -3,8 +3,13 @@ import traceback
 
 from colorama import Fore
 from toolset.utils.output_helper import log
+from toolset.databases.abstract_database import AbstractDatabase
 
-class Database:
+class Database(AbstractDatabase):
+
+    @staticmethod
+    def get_connection(config):
+        return pymongo.MongoClient(host=config.database_host)
 
     @staticmethod
     def get_current_world_table(config):
@@ -18,8 +23,7 @@ class Database:
         try:
             worlds_json = {}
             print("DATABASE_HOST: %s" % config.database_host)
-            connection = pymongo.MongoClient(
-                host=config.database_host)
+            connection = Database.get_connection(config)
             db = connection.hello_world
             for world in db.world.find():
                 if "randomNumber" in world:
@@ -42,10 +46,27 @@ class Database:
     @staticmethod
     def test_connection(config):
         try:
-            connection = pymongo.MongoClient(host=config.database_host)
+            connection = Database.get_connection(config)
             db = connection.hello_world
             db.world.find()
             db.close()
             return True
         except:
             return False
+
+    @staticmethod
+    def get_queries(config, tbl_name):
+        db = Database.get_connection(config)
+        status = db.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
+        return int(status["opcounters"]["query"])
+
+    @staticmethod
+    def get_rows(config, tbl_name):
+        return Database.get_queries()
+
+    @staticmethod
+    def reset_cache(config):
+        db = Database.get_connection(config)
+        db.admin.command({"planCacheClear": "world"})
+        db.admin.command({"planCacheClear": "fortune"})
+        

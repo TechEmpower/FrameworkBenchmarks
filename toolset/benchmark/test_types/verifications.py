@@ -333,7 +333,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
     problems = []
     MAX = 500
     MIN = 1
-    ab_queries_count =10000
+    ab_queries_count =1000
     expected_queries = 20* ab_queries_count
 
     # Only load in the World table if we are doing an Update verification
@@ -404,7 +404,7 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=15000, expe
     dbType=self.get_db_type()
 
     problems = []
-    if dbType != "":
+    if dbType != None:
         queries, rows = databases[dbType].verify_queries(self.config, tbl_name, url, concurrency, count)
 
         if queries < expected_queries :
