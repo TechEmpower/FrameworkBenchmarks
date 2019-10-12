@@ -24,7 +24,7 @@ class Database(AbstractDatabase):
         results_json = []
 
         try:
-            db = cls.get_connection(cls, config)
+            db = cls.get_connection(config)
             cursor = db.cursor()
             cursor.execute("SELECT * FROM World")
             results = cursor.fetchall()
@@ -41,7 +41,7 @@ class Database(AbstractDatabase):
     @classmethod
     def test_connection(cls, config):
         try:
-            db = cls.get_connection(cls, config)
+            db = cls.get_connection(config)
             cursor = db.cursor()
             cursor.execute("SELECT 1")
             cursor.fetchall()
@@ -52,7 +52,7 @@ class Database(AbstractDatabase):
 
     @classmethod
     def get_queries(cls, config):
-        db = cls.get_connection(cls, config)
+        db = cls.get_connection(config)
         cursor = db.cursor()
         cursor.execute("Show session status like 'Queries'")
         record = cursor.fetchone()
@@ -60,7 +60,7 @@ class Database(AbstractDatabase):
 
     @classmethod
     def get_rows(cls, config):
-        db = cls.get_connection(cls, config)
+        db = cls.get_connection(config)
         cursor = db.cursor()
         cursor.execute("show session status like 'Innodb_rows_read'")
         record = cursor.fetchone()

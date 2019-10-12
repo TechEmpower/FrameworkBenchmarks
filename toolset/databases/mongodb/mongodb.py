@@ -23,7 +23,7 @@ class Database(AbstractDatabase):
         try:
             worlds_json = {}
             print("DATABASE_HOST: %s" % config.database_host)
-            connection = cls.get_connection(cls, config)
+            connection = cls.get_connection(config)
             db = connection.hello_world
             for world in db.world.find():
                 if "randomNumber" in world:
@@ -46,7 +46,7 @@ class Database(AbstractDatabase):
     @classmethod
     def test_connection(cls, config):
         try:
-            connection = cls.get_connection(cls, config)
+            connection = cls.get_connection(config)
             db = connection.hello_world
             db.world.find()
             db.close()
@@ -56,17 +56,17 @@ class Database(AbstractDatabase):
 
     @classmethod
     def get_queries(cls, config, tbl_name):
-        db = cls.get_connection(cls,config)
+        db = cls.get_connection(config)
         status = db.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
         return int(status["opcounters"]["query"])
 
     @classmethod
     def get_rows(cls, config, tbl_name):
-        return cls.get_queries(cls, config)
+        return cls.get_queries(config)
 
     @classmethod
     def reset_cache(cls, config):
-        db = cls.get_connection(cls,config)
+        db = cls.get_connection(config)
         db.admin.command({"planCacheClear": "world"})
         db.admin.command({"planCacheClear": "fortune"})
         

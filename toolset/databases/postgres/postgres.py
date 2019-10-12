@@ -30,7 +30,7 @@ class Database(AbstractDatabase):
         results_json = []
 
         try:
-            db = cls.get_connection(cls, config)
+            db = cls.get_connection(config)
             cursor = db.cursor()
             cursor.execute("SELECT * FROM \"World\"")
             results = cursor.fetchall()
@@ -51,7 +51,7 @@ class Database(AbstractDatabase):
     @classmethod
     def test_connection(cls, config):
         try:
-            db = cls.get_connection(cls, config)
+            db = cls.get_connection(config)
             cursor = db.cursor()
             cursor.execute("SELECT 1")
             cursor.fetchall()
@@ -62,7 +62,7 @@ class Database(AbstractDatabase):
 
     @classmethod
     def get_queries(cls, config):
-        db = cls.get_connection(cls, config)
+        db = cls.get_connection(config)
         cursor = db.cursor()
         cursor.execute("SELECT SUM(calls) FROM pg_stat_statements WHERE query ~* ' %s'" % cls.tbl_name)
         record = cursor.fetchone()
@@ -70,7 +70,7 @@ class Database(AbstractDatabase):
 
     @classmethod
     def get_rows(cls, config):
-        db = cls.get_connection(cls, config)
+        db = cls.get_connection(config)
         cursor = db.cursor()
         cursor.execute("SELECT SUM(rows) FROM pg_stat_statements WHERE query ~* ' %s'" % cls.tbl_name)
         record = cursor.fetchone()
