@@ -8,7 +8,32 @@ class AbstractDatabase:
     @classmethod
     @abc.abstractmethod
     def get_connection(cls, config):
-        return
+        pass
+
+    @classmethod
+    @abc.abstractmethod
+    def get_current_world_table(cls, config):
+        pass
+
+    @classmethod
+    @abc.abstractmethod
+    def test_connection(cls, config):
+        pass
+
+    @classmethod
+    @abc.abstractmethod
+    def get_queries(cls, config):
+        pass
+
+    @classmethod
+    @abc.abstractmethod
+    def get_rows(cls, config):
+        pass
+
+    @classmethod
+    @abc.abstractmethod
+    def reset_cache(cls, config):
+        pass
 
     @classmethod
     def verify_queries(cls, config, table_name, url, concurrency=512, count=15000):
