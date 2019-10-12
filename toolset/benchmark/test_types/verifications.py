@@ -391,11 +391,11 @@ def verify_query_cases(self, cases, url, check_updates=False):
                 problems += verify_headers(self.request_headers_and_body, headers, case_url)
 
     # verify the number of queries and rows read for 20 queries, with a concurrency level of 512, on 10.000 http requests
-    problems+=verify_queries_count(self, "World", url+"20", 512, ab_queries_count, expected_queries, 20 * .99 * ab_queries_count)
+    problems+=verify_queries_count(self, "World", url+"20", 512, ab_queries_count, expected_queries, 20 * .99 * ab_queries_count, check_updates)
     return problems
 
 
-def verify_queries_count(self, tbl_name, url, concurrency=512, count=15000, expected_queries=15000, expected_rows=15000):
+def verify_queries_count(self, tbl_name, url, concurrency=512, count=15000, expected_queries=15000, expected_rows=15000, check_updates=False):
     '''
     Checks that the number of executed queries, at the given concurrency level, 
     corresponds to: the total number of http requests made * the number of queries per request
@@ -403,7 +403,7 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=15000, expe
     log("VERIFYING QUERIES COUNT FOR %s" % url,border='-', color=Fore.WHITE + Style.BRIGHT)
 
     problems = []
-    queries, rows = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count)
+    queries, rows, rows_updated = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count, check_updates)
 
     if queries < expected_queries :
         problems.append((
@@ -416,5 +416,12 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=15000, expe
         "fail",
         "Only %s rows were read from the database out of roughly %s expected."
         % (rows, expected_rows), url))
+
+    if check_updates:
+        if rows_updated < expected_rows :
+            problems.append((
+            "fail",
+            "Only %s rows were updated in the database out of roughly %s expected."
+            % (rows, expected_rows), url))
 
     return problems
