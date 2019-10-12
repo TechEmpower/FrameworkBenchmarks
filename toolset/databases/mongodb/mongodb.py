@@ -56,13 +56,15 @@ class Database(AbstractDatabase):
 
     @classmethod
     def get_queries(cls, config):
-        cls.co = co = cls.get_connection(config)
+        co = cls.get_connection(config)
         status = co.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
         return int(status["opcounters"]["query"]) + int(status["opcounters"]["update"]) #get_queries returns all the queries
 
     @classmethod
     def get_rows(cls, config):
-        return cls.get_queries(config)  * cls.get_rows_per_query(cls.co)
+        co = cls.get_connection(config)
+        status = co.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
+        return int(status["opcounters"]["query"]) * cls.get_rows_per_query(co)
 
     @classmethod
     def get_rows_updated(cls, config):
@@ -80,5 +82,5 @@ class Database(AbstractDatabase):
     def get_rows_per_query(cls, co):
         rows_per_query = 1
         if cls.tbl_name == "fortune":
-            rows_per_query = co.hello_world[cls.tbl_name].count()
+            rows_per_query = co.hello_world[cls.tbl_name].find().count()
         return rows_per_query
