@@ -419,15 +419,15 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=15000, expe
         "Only %s rows were read from the database out of roughly %s expected."
         % (rows, expected_rows), url))
     else:
-        problems.append(("pass","Queries: %s/%s" % (rows,expected_rows),url))
+        problems.append(("pass","Rows: %s/%s" % (rows,expected_rows),url))
 
     if check_updates:
         if rows_updated < expected_rows :
             problems.append((
             "fail",
             "Only %s rows were updated in the database out of roughly %s expected."
-            % (rows, expected_rows), url))
+            % (rows_updated, expected_rows), url))
         else:
-            problems.append(("pass","Updates: %s/%s" % (rows,expected_rows),url))
+            problems.append(("pass","Updates: %s/%s" % (rows_updated,expected_rows),url))
 
     return problems
