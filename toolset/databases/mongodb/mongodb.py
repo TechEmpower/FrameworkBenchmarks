@@ -62,6 +62,12 @@ class Database(AbstractDatabase):
 
     @classmethod
     def get_rows(cls, config, tbl_name):
+        #TODO how to get rows read with mongo
+        return cls.get_queries(config)
+
+    @classmethod
+    def get_rows_updated(cls, config):
+        #TODO how to get updated rows count with mongo
         return cls.get_queries(config)
 
     @classmethod

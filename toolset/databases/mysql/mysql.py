@@ -67,6 +67,14 @@ class Database(AbstractDatabase):
         return record[1]
 
     @classmethod
+    def get_rows_updated(cls, config):
+        db = cls.get_connection(config)
+        cursor = db.cursor()
+        cursor.execute("show session status like 'Innodb_rows_updated'")
+        record = cursor.fetchone()
+        return record[1]
+
+    @classmethod
     def reset_cache(cls, config):
         #No more in Mysql 8.0
         #cursor = self.db.cursor()
