@@ -390,8 +390,8 @@ def verify_query_cases(self, cases, url, check_updates=False):
                     expected_len, headers, body, case_url, max_infraction)
                 problems += verify_headers(self.request_headers_and_body, headers, case_url)
 
-    # verify the number of queries and rows read for 20 queries, with a concurrency level of 512, on 10.000 http requests
-    problems+=verify_queries_count(self, "World", url+"20", 512, ab_queries_count, expected_queries, 20 * .99 * ab_queries_count, check_updates)
+    # verify the number of queries and rows read for 20 queries, with a concurrency level of 512, on 1.000 http requests
+    problems+=verify_queries_count(self, "World", url+"20", 512, ab_queries_count, expected_queries, 20 * ab_queries_count, check_updates)
     return problems
 
 
