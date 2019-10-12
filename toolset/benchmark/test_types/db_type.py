@@ -54,7 +54,7 @@ class DBTestType(FrameworkTestType):
         problems += verify_headers(self.request_headers_and_body, headers, url, should_be='json')
 
         if len(problems) == 0:
-            problems += verify_queries_count(self, "World", url, 512, ab_queries_count, ab_queries_count, .99 * ab_queries_count)
+            problems += verify_queries_count(self, "World", url, 512, ab_queries_count, ab_queries_count, ab_queries_count)
         if len(problems) == 0:
             return [('pass', '', url)]
         else:

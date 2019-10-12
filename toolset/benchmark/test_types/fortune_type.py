@@ -39,7 +39,7 @@ class FortuneTestType(FrameworkTestType):
         if valid:
             problems += verify_headers(self.request_headers_and_body, headers, url, should_be='html')
             if len(problems) == 0:
-                problems += verify_queries_count(self, "Fortune", url, 512, ab_queries_count, ab_queries_count, 12 * .99 * ab_queries_count)
+                problems += verify_queries_count(self, "Fortune", url, 512, ab_queries_count, ab_queries_count, 12 * ab_queries_count)
             if len(problems) == 0:
                 return [('pass', '', url)]
             else:
