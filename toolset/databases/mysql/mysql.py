@@ -9,13 +9,13 @@ from toolset.databases.abstract_database import AbstractDatabase
 
 class Database(AbstractDatabase):
 
-    @staticmethod
-    def get_connection(config):
+    @classmethod
+    def get_connection(cls, config):
         return MySQLdb.connect(config.database_host, "benchmarkdbuser",
                                  "benchmarkdbpass", "hello_world")
 
-    @staticmethod
-    def get_current_world_table(config):
+    @classmethod
+    def get_current_world_table(cls, config):
         '''
         Return a JSON object containing all 10,000 World items as they currently
         exist in the database. This is used for verifying that entries in the
@@ -24,7 +24,7 @@ class Database(AbstractDatabase):
         results_json = []
 
         try:
-            db = Database.get_connection(config)
+            db = cls.get_connection(cls, config)
             cursor = db.cursor()
             cursor.execute("SELECT * FROM World")
             results = cursor.fetchall()
@@ -38,10 +38,10 @@ class Database(AbstractDatabase):
 
         return results_json
 
-    @staticmethod
-    def test_connection(config):
+    @classmethod
+    def test_connection(cls, config):
         try:
-            db = Database.get_connection(config)
+            db = cls.get_connection(cls, config)
             cursor = db.cursor()
             cursor.execute("SELECT 1")
             cursor.fetchall()
@@ -50,24 +50,24 @@ class Database(AbstractDatabase):
         except:
             return False
 
-    @staticmethod
-    def get_queries(config):
-        db = Database.get_connection(config)
+    @classmethod
+    def get_queries(cls, config):
+        db = cls.get_connection(cls, config)
         cursor = db.cursor()
         cursor.execute("Show session status like 'Queries'")
         record = cursor.fetchone()
         return record[1]
 
-    @staticmethod
-    def get_rows(config):
-        db = Database.get_connection(config)
+    @classmethod
+    def get_rows(cls, config):
+        db = cls.get_connection(cls, config)
         cursor = db.cursor()
         cursor.execute("show session status like 'Innodb_rows_read'")
         record = cursor.fetchone()
         return record[1]
 
-    @staticmethod
-    def reset_cache(config):
+    @classmethod
+    def reset_cache(cls, config):
         #No more in Mysql 8.0
         #cursor = self.db.cursor()
         #cursor.execute("RESET QUERY CACHE")

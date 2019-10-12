@@ -7,12 +7,12 @@ from toolset.databases.abstract_database import AbstractDatabase
 
 class Database(AbstractDatabase):
 
-    @staticmethod
-    def get_connection(config):
+    @classmethod
+    def get_connection(cls, config):
         return pymongo.MongoClient(host=config.database_host)
 
-    @staticmethod
-    def get_current_world_table(config):
+    @classmethod
+    def get_current_world_table(cls, config):
         '''
         Return a JSON object containing all 10,000 World items as they currently
         exist in the database. This is used for verifying that entries in the
@@ -23,7 +23,7 @@ class Database(AbstractDatabase):
         try:
             worlds_json = {}
             print("DATABASE_HOST: %s" % config.database_host)
-            connection = Database.get_connection(config)
+            connection = cls.get_connection(cls, config)
             db = connection.hello_world
             for world in db.world.find():
                 if "randomNumber" in world:
@@ -43,10 +43,10 @@ class Database(AbstractDatabase):
 
         return results_json
 
-    @staticmethod
-    def test_connection(config):
+    @classmethod
+    def test_connection(cls, config):
         try:
-            connection = Database.get_connection(config)
+            connection = cls.get_connection(cls, config)
             db = connection.hello_world
             db.world.find()
             db.close()
@@ -54,19 +54,19 @@ class Database(AbstractDatabase):
         except:
             return False
 
-    @staticmethod
-    def get_queries(config, tbl_name):
-        db = Database.get_connection(config)
+    @classmethod
+    def get_queries(cls, config, tbl_name):
+        db = cls.get_connection(cls,config)
         status = db.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
         return int(status["opcounters"]["query"])
 
-    @staticmethod
-    def get_rows(config, tbl_name):
-        return Database.get_queries()
+    @classmethod
+    def get_rows(cls, config, tbl_name):
+        return cls.get_queries(cls, config)
 
-    @staticmethod
-    def reset_cache(config):
-        db = Database.get_connection(config)
+    @classmethod
+    def reset_cache(cls, config):
+        db = cls.get_connection(cls,config)
         db.admin.command({"planCacheClear": "world"})
         db.admin.command({"planCacheClear": "fortune"})
         
