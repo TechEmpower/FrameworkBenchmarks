@@ -22,6 +22,7 @@ class DBTestType(FrameworkTestType):
         'randomNumber', both of which must map to integers
         '''
 
+        # Initialization for query counting
         repetitions = 2
         expected_queries = repetitions * 512
 

@@ -41,21 +41,23 @@ class AbstractDatabase:
         pass
 
     @classmethod
-    def verify_queries(cls, config, table_name, url, concurrency=512, count=15000, check_updates=False):
+    def verify_queries(cls, config, table_name, url, concurrency=512, count=2, check_updates=False):
         '''
         Verify queries and rows for table_name
         '''
         rows_updated= None
-        cls.tbl_name=table_name # only for Postgres
+        cls.tbl_name=table_name # used for Postgres and mongodb
+
         queries=int(cls.get_queries(config))
         rows=int(cls.get_rows(config))
         if check_updates:
             rows_updated=int(cls.get_rows_updated(config))
 
         cls.reset_cache(config)
+        #Start siege requests
         path=config.db_root
         os.system("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path))
-        
+
         queries=int(cls.get_queries(config))-queries
         rows=int(cls.get_rows(config))-rows
         if check_updates:

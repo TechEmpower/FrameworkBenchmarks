@@ -333,6 +333,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
     problems = []
     MAX = 500
     MIN = 1
+    # Initialization for query counting
     repetitions = 2
     expected_queries = 20* repetitions * 512
     expected_rows = expected_queries
@@ -392,11 +393,11 @@ def verify_query_cases(self, cases, url, check_updates=False):
                 problems += verify_headers(self.request_headers_and_body, headers, case_url)
 
     # verify the number of queries and rows read for 20 queries, with a concurrency level of 512, with 2 repetitions
-    problems+=verify_queries_count(self, "World", url+"20", 512, repetitions, expected_queries, expected_rows, check_updates)
+    problems+=verify_queries_count(self, "world", url+"20", 512, repetitions, expected_queries, expected_rows, check_updates)
     return problems
 
 
-def verify_queries_count(self, tbl_name, url, concurrency=512, count=15000, expected_queries=15000, expected_rows=15000, check_updates=False):
+def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected_queries=1024, expected_rows=1024, check_updates=False):
     '''
     Checks that the number of executed queries, at the given concurrency level, 
     corresponds to: the total number of http requests made * the number of queries per request
