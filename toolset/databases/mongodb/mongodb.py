@@ -63,7 +63,7 @@ class Database(AbstractDatabase):
     @classmethod
     def get_rows(cls, config, tbl_name):
         # rows doesn't make sense with Mongo
-        return cls.get_queries(config)
+        return cls.get_queries(config, tbl_name)
 
     @classmethod
     def get_rows_updated(cls, config):
