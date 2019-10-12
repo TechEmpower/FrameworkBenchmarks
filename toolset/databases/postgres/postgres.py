@@ -8,8 +8,8 @@ from toolset.databases.abstract_database import AbstractDatabase
 
 class Database(AbstractDatabase):
 
-    @staticmethod
-    def get_connection(config):
+    @classmethod
+    def get_connection(cls, config):
         db = psycopg2.connect(
                 host=config.database_host,
                 port="5432",
@@ -20,8 +20,8 @@ class Database(AbstractDatabase):
         cursor.execute("CREATE EXTENSION IF NOT EXISTS pg_stat_statements")
         return db
 
-    @staticmethod
-    def get_current_world_table(config):
+    @classmethod
+    def get_current_world_table(cls, config):
         '''
         Return a JSON object containing all 10,000 World items as they currently
         exist in the database. This is used for verifying that entries in the
@@ -30,7 +30,7 @@ class Database(AbstractDatabase):
         results_json = []
 
         try:
-            db = Database.get_connection(config)
+            db = cls.get_connection(cls, config)
             cursor = db.cursor()
             cursor.execute("SELECT * FROM \"World\"")
             results = cursor.fetchall()
@@ -48,10 +48,10 @@ class Database(AbstractDatabase):
 
         return results_json
 
-    @staticmethod
-    def test_connection(config):
+    @classmethod
+    def test_connection(cls, config):
         try:
-            db = Database.get_connection(config)
+            db = cls.get_connection(cls, config)
             cursor = db.cursor()
             cursor.execute("SELECT 1")
             cursor.fetchall()
@@ -60,24 +60,24 @@ class Database(AbstractDatabase):
         except:
             return False
 
-    @staticmethod
-    def get_queries(config):
-        db = Database.get_connection(config)
+    @classmethod
+    def get_queries(cls, config):
+        db = cls.get_connection(cls, config)
         cursor = db.cursor()
-        cursor.execute("SELECT SUM(calls) FROM pg_stat_statements WHERE query ~* ' %s'" % Database.tbl_name)
+        cursor.execute("SELECT SUM(calls) FROM pg_stat_statements WHERE query ~* ' %s'" % cls.tbl_name)
         record = cursor.fetchone()
         return record[0]
 
-    @staticmethod
-    def get_rows(config):
-        db = Database.get_connection(config)
+    @classmethod
+    def get_rows(cls, config):
+        db = cls.get_connection(cls, config)
         cursor = db.cursor()
-        cursor.execute("SELECT SUM(rows) FROM pg_stat_statements WHERE query ~* ' %s'" % Database.tbl_name)
+        cursor.execute("SELECT SUM(rows) FROM pg_stat_statements WHERE query ~* ' %s'" % cls.tbl_name)
         record = cursor.fetchone()
         return record[0]
 
-    @staticmethod
-    def reset_cache(config):
+    @classmethod
+    def reset_cache(cls, config):
 #        To fix: DISCARD ALL cannot run inside a transaction block
 #        cursor = self.db.cursor()
 #        cursor.execute("END;DISCARD ALL;")
