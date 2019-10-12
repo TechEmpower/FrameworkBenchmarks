@@ -401,22 +401,20 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=15000, expe
     corresponds to: the total number of http requests made * the number of queries per request
     '''
     log("VERIFYING QUERIES COUNT FOR %s" % url,border='-', color=Fore.WHITE + Style.BRIGHT)
-    dbType=self.get_db_type()
 
     problems = []
-    if dbType != None:
-        queries, rows = databases[dbType].verify_queries(self.config, tbl_name, url, concurrency, count)
+    queries, rows = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count)
 
-        if queries < expected_queries :
-            problems.append((
-            "fail",
-            "Only %s queries were executed in the database out of roughly %s expected."
-            % (queries, expected_queries), url))
+    if queries < expected_queries :
+        problems.append((
+        "fail",
+        "Only %s queries were executed in the database out of roughly %s expected."
+        % (queries, expected_queries), url))
 
-        if rows < expected_rows :
-            problems.append((
-            "fail",
-            "Only %s rows were read from the database out of roughly %s expected."
-            % (rows, expected_rows), url))
+    if rows < expected_rows :
+        problems.append((
+        "fail",
+        "Only %s rows were read from the database out of roughly %s expected."
+        % (rows, expected_rows), url))
 
     return problems
