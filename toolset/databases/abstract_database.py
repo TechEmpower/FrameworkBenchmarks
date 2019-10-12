@@ -54,7 +54,7 @@ class AbstractDatabase:
 
         cls.reset_cache(config)
         
-        os.system("ab -k -c %s -n %s %s" % (concurrency, count, url))
+        os.system("siege -c %s -r %s %s" % (concurrency, count, url))
         
         queries=int(cls.get_queries(config))-queries
         rows=int(cls.get_rows(config))-rows
