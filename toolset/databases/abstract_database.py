@@ -8,7 +8,7 @@ class AbstractDatabase(ABC):
     @classmethod
     @abstractmethod
     def get_connection(cls, config):
-        
+        return
 
     @classmethod
     def verify_queries(cls, config, table_name, url, concurrency=512, count=15000):
