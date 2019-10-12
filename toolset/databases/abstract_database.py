@@ -1,10 +1,14 @@
-import abc
+from abc import ABC
 import os
 
-class AbstractDatabase:
+class AbstractDatabase(ABC):
     '''
     Abstract Database Class
     '''
+    @classmethod
+    @abstractmethod
+    def get_connection(cls, config):
+
     @classmethod
     def verify_queries(cls, config, table_name, url, concurrency=512, count=15000):
         '''
