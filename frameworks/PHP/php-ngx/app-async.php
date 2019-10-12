@@ -1,6 +1,13 @@
 <?php
 // Future app to use Mysql async pool 
 
+require_once "/ngx_php7/t/lib/mysql.php";
+define("DB_HOST", gethostbyname("tfb-database"));
+define("DB_PORT", "3306");
+define("DB_USER", "benchmarkdbuser");
+define("DB_PASS", "benchmarkdbpass");
+define("DB_NAME", "hello_world");
+
 function fortune()
 {
     $my = new php\ngx\mysql();
