@@ -10,12 +10,13 @@ class AbstractDatabase:
         '''
         Verify queries and rows for table_name
         '''
-        queries=int(cls.get_queries(config, table_name))
-        rows=int(cls.get_rows(config, table_name))
+        cls.tbl_name=table_name # only for Postgres
+        queries=int(cls.get_queries(config))
+        rows=int(cls.get_rows(config))
         cls.reset_cache(config)
         
         os.system("ab -k -c %s -n %s %s" % (concurrency, count, url))
         
-        queries=int(cls.get_queries(config, table_name))-queries
-        rows=int(cls.get_rows(config, table_name))-rows
+        queries=int(cls.get_queries(config))-queries
+        rows=int(cls.get_rows(config))-rows
         return queries, rows
