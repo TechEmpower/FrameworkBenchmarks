@@ -64,7 +64,7 @@ class Database(AbstractDatabase):
         cursor = db.cursor()
         cursor.execute("show session status like 'Innodb_rows_read'")
         record = cursor.fetchone()
-        return int(record[1]) #Mysql lowers the number of rows read
+        return int(int(record[1]) * 1.001) #Mysql lowers the number of rows read
 
     @classmethod
     def get_rows_updated(cls, config):
@@ -72,7 +72,7 @@ class Database(AbstractDatabase):
         cursor = db.cursor()
         cursor.execute("show session status like 'Innodb_rows_updated'")
         record = cursor.fetchone()
-        return int(record[1]) #Mysql lowers the number of rows updated
+        return int(int(record[1]) * 1.001) #Mysql lowers the number of rows updated
 
     @classmethod
     def reset_cache(cls, config):
