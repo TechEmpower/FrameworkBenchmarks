@@ -62,13 +62,14 @@ class Database(AbstractDatabase):
 
     @classmethod
     def get_rows(cls, config, tbl_name):
-        #TODO how to get rows read with mongo
+        # rows doesn't make sense with Mongo
         return cls.get_queries(config)
 
     @classmethod
     def get_rows_updated(cls, config):
-        #TODO how to get updated rows count with mongo
-        return cls.get_queries(config)
+        db = cls.get_connection(config)
+        status = db.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
+        return int(status["opcounters"]["update"])
 
     @classmethod
     def reset_cache(cls, config):
