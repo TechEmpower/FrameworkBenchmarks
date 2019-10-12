@@ -82,5 +82,5 @@ class Database(AbstractDatabase):
     def get_rows_per_query(cls, co):
         rows_per_query = 1
         if cls.tbl_name == "fortune":
-            rows_per_query = co["hello_world"][cls.tbl_name].find().count()
+            rows_per_query = co["hello_world"][cls.tbl_name].count_documents({})
         return rows_per_query
