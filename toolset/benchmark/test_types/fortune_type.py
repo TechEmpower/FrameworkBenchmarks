@@ -23,7 +23,7 @@ class FortuneTestType(FrameworkTestType):
         FortuneHTMLParser whether the parsed string is a
         valid fortune response
         '''
-        ab_queries_count= 10000
+        ab_queries_count= 1000
         url = base_url + self.fortune_url
         headers, body = self.request_headers_and_body(url)
 

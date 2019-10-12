@@ -134,7 +134,7 @@ class FrameworkTestType:
         '''
         Return the database type (mysql, postgres, mongodb...).
         '''
-        database_name = ""
+        database_name = None
         try:
             database_name = self.database.lower()
         except AttributeError:
