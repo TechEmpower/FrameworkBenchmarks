@@ -1,7 +1,7 @@
-from abc import ABC
+import abc
 import os
 
-class AbstractDatabase(ABC):
+class AbstractDatabase:
     '''
     Abstract Database Class
     '''
