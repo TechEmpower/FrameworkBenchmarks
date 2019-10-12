@@ -333,14 +333,15 @@ def verify_query_cases(self, cases, url, check_updates=False):
     problems = []
     MAX = 500
     MIN = 1
-    ab_queries_count =1000
-    expected_queries = 20* ab_queries_count
+    repetitions = 2
+    expected_queries = 20* repetitions * 512
+    expected_rows = expected_queries
 
     # Only load in the World table if we are doing an Update verification
     world_db_before = {}
     if check_updates:
         world_db_before = databases[self.database.lower()].get_current_world_table(self.config)
-        expected_queries = 2 * 20 * ab_queries_count
+        expected_queries = 2 * expected_queries
 
     for q, max_infraction in cases:
         case_url = url + q
@@ -390,8 +391,8 @@ def verify_query_cases(self, cases, url, check_updates=False):
                     expected_len, headers, body, case_url, max_infraction)
                 problems += verify_headers(self.request_headers_and_body, headers, case_url)
 
-    # verify the number of queries and rows read for 20 queries, with a concurrency level of 512, on 1.000 http requests
-    problems+=verify_queries_count(self, "World", url+"20", 512, ab_queries_count, expected_queries, 20 * ab_queries_count, check_updates)
+    # verify the number of queries and rows read for 20 queries, with a concurrency level of 512, with 2 repetitions
+    problems+=verify_queries_count(self, "World", url+"20", 512, repetitions, expected_queries, expected_rows, check_updates)
     return problems
 
 

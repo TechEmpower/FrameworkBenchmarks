@@ -22,7 +22,9 @@ class DBTestType(FrameworkTestType):
         'randomNumber', both of which must map to integers
         '''
 
-        ab_queries_count = 1000
+        repetitions = 2
+        expected_queries = repetitions * 512
+
         url = base_url + self.db_url
         headers, body = self.request_headers_and_body(url)
 
@@ -54,7 +56,7 @@ class DBTestType(FrameworkTestType):
         problems += verify_headers(self.request_headers_and_body, headers, url, should_be='json')
 
         if len(problems) == 0:
-            problems += verify_queries_count(self, "World", url, 512, ab_queries_count, ab_queries_count, ab_queries_count)
+            problems += verify_queries_count(self, "World", url, 512, repetitions, expected_queries, expected_queries)
         if len(problems) == 0:
             return [('pass', '', url)]
         else:

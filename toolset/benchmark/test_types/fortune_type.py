@@ -23,7 +23,10 @@ class FortuneTestType(FrameworkTestType):
         FortuneHTMLParser whether the parsed string is a
         valid fortune response
         '''
-        ab_queries_count= 1000
+        repetitions = 2
+        expected_queries = repetitions * 512
+        expected_rows = 12 * expected_queries
+
         url = base_url + self.fortune_url
         headers, body = self.request_headers_and_body(url)
 
@@ -39,7 +42,7 @@ class FortuneTestType(FrameworkTestType):
         if valid:
             problems += verify_headers(self.request_headers_and_body, headers, url, should_be='html')
             if len(problems) == 0:
-                problems += verify_queries_count(self, "Fortune", url, 512, ab_queries_count, ab_queries_count, 12 * ab_queries_count)
+                problems += verify_queries_count(self, "Fortune", url, 512, repetitions, expected_queries, expected_rows)
             if len(problems) == 0:
                 return [('pass', '', url)]
             else:
