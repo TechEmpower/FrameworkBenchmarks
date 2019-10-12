@@ -61,18 +61,18 @@ class Database(AbstractDatabase):
             return False
 
     @staticmethod
-    def get_queries(config, tbl_name):
+    def get_queries(config):
         db = Database.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("SELECT SUM(calls) FROM pg_stat_statements WHERE query ~* ' "+tbl_name+"'")
+        cursor.execute("SELECT SUM(calls) FROM pg_stat_statements WHERE query ~* ' %s'" % Database.tbl_name)
         record = cursor.fetchone()
         return record[0]
 
     @staticmethod
-    def get_rows(config, tbl_name):
+    def get_rows(config):
         db = Database.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("SELECT SUM(rows) FROM pg_stat_statements WHERE query ~* ' "+tbl_name+"'")
+        cursor.execute("SELECT SUM(rows) FROM pg_stat_statements WHERE query ~* ' %s'" % Database.tbl_name)
         record = cursor.fetchone()
         return record[0]
 
