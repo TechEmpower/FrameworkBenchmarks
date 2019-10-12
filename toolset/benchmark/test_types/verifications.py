@@ -410,6 +410,8 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=15000, expe
         "fail",
         "Only %s queries were executed in the database out of roughly %s expected."
         % (queries, expected_queries), url))
+    else
+        problems.append(("pass","Queries: %s/%s" % (queries,expected_queries),url))
 
     if rows < expected_rows :
         problems.append((
