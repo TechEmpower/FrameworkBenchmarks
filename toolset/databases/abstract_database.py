@@ -5,7 +5,7 @@ class AbstractDatabase:
     '''
     Abstract Database Class
     '''
-     @classmethod
+    @classmethod
     def verify_queries(cls, config, table_name, url, concurrency=512, count=15000):
         '''
         Verify queries and rows for table_name
