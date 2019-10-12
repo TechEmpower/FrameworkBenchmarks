@@ -15,7 +15,7 @@ RUN apt-get -yqq install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::
 
 RUN pip install colorama==0.3.1 requests MySQL-python psycopg2-binary pymongo docker==4.0.2 psutil
 
-RUN apt-get install -yqq siege && mkdir ~/.siege && siege.config
+RUN apt-get install -yqq siege
 
 # Fix for docker-py trying to import one package from the wrong location
 RUN cp -r /usr/local/lib/python2.7/dist-packages/backports/ssl_match_hostname/ /usr/lib/python2.7/dist-packages/backports
