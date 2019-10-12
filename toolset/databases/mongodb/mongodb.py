@@ -55,15 +55,15 @@ class Database(AbstractDatabase):
             return False
 
     @classmethod
-    def get_queries(cls, config, tbl_name):
+    def get_queries(cls, config):
         db = cls.get_connection(config)
         status = db.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
         return int(status["opcounters"]["query"])
 
     @classmethod
-    def get_rows(cls, config, tbl_name):
+    def get_rows(cls, config):
         # rows doesn't make sense with Mongo
-        return cls.get_queries(config, tbl_name)
+        return cls.get_queries(config)
 
     @classmethod
     def get_rows_updated(cls, config):
