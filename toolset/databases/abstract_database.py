@@ -6,7 +6,7 @@ class AbstractDatabase:
     Abstract Database Class
     '''
     @classmethod
-    @abstractmethod
+    @abc.abstractmethod
     def get_connection(cls, config):
         return
 
