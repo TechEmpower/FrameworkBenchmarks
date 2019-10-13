@@ -59,7 +59,7 @@ class Database(AbstractDatabase):
     def get_queries(cls, config):
         db = cls.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("SELECT SUM(calls) FROM pg_stat_statements WHERE query ~* '( |\"|\')%s'" % cls.tbl_name)
+        cursor.execute("SELECT SUM(calls) FROM pg_stat_statements WHERE query ~* '([:punct:]|[:space:])%s'" % cls.tbl_name)
         record = cursor.fetchone()
         return record[0]
 
@@ -67,7 +67,7 @@ class Database(AbstractDatabase):
     def get_rows(cls, config):
         db = cls.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("SELECT SUM(rows) FROM pg_stat_statements WHERE query ~* '( |\"|\')%s' AND query ~* 'select'" % cls.tbl_name)
+        cursor.execute("SELECT SUM(rows) FROM pg_stat_statements WHERE query ~* '([:punct:]|[:space:])%s' AND query ~* 'select'" % cls.tbl_name)
         record = cursor.fetchone()
         return record[0]
 
@@ -75,7 +75,7 @@ class Database(AbstractDatabase):
     def get_rows_updated(cls, config):
         db = cls.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("SELECT SUM(rows) FROM pg_stat_statements WHERE query ~* '( |\"|\')%s' AND query ~* 'update'" % cls.tbl_name)
+        cursor.execute("SELECT SUM(rows) FROM pg_stat_statements WHERE query ~* '([:punct:]|[:space:])%s' AND query ~* 'update'" % cls.tbl_name)
         record = cursor.fetchone()
         return record[0]
 
