@@ -9,7 +9,7 @@ from toolset.databases.abstract_database import AbstractDatabase
 
 class Database(AbstractDatabase):
 
-    margin = 1.001
+    margin = 1.0015
 
     @classmethod
     def get_connection(cls, config):
@@ -51,7 +51,7 @@ class Database(AbstractDatabase):
     def get_queries(cls, config):
         db = cls.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("Show global status like 'Queries'")
+        cursor.execute("Show session status like 'Queries'")
         record = cursor.fetchone()
         return record[1]
 
@@ -59,7 +59,7 @@ class Database(AbstractDatabase):
     def get_rows(cls, config):
         db = cls.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("show global status like 'Innodb_rows_read'")
+        cursor.execute("show session status like 'Innodb_rows_read'")
         record = cursor.fetchone()
         return int(int(record[1]) * cls.margin) #Mysql lowers the number of rows read
 
@@ -67,7 +67,7 @@ class Database(AbstractDatabase):
     def get_rows_updated(cls, config):
         db = cls.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("show global status like 'Innodb_rows_updated'")
+        cursor.execute("show session status like 'Innodb_rows_updated'")
         record = cursor.fetchone()
         return int(int(record[1]) * cls.margin) #Mysql lowers the number of rows updated
 
@@ -78,9 +78,3 @@ class Database(AbstractDatabase):
         #cursor.execute("RESET QUERY CACHE")
         #self.db.commit()
         return
-
-    @classmethod
-    def before_stats(cls, config):
-        db = cls.get_connection(config)
-        cursor = db.cursor()
-        cursor.execute("flush status")

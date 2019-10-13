@@ -16,8 +16,6 @@ CREATE USER 'benchmarkdbuser'@'%' IDENTIFIED WITH mysql_native_password BY 'benc
 CREATE USER 'benchmarkdbuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'benchmarkdbpass';
 GRANT SELECT, UPDATE ON hello_world.world TO 'benchmarkdbuser'@'%';
 GRANT SELECT, UPDATE ON hello_world.world TO 'benchmarkdbuser'@'localhost';
-GRANT RELOAD ON *.* TO 'benchmarkdbuser'@'%';
-GRANT RELOAD ON *.* TO 'benchmarkdbuser'@'localhost';
 
 DELIMITER #
 CREATE PROCEDURE load_data()
