@@ -51,7 +51,7 @@ class Database(AbstractDatabase):
     def get_queries(cls, config):
         db = cls.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("Show session status like 'Queries'")
+        cursor.execute("Show global status like 'Queries'")
         record = cursor.fetchone()
         return record[1]
 
@@ -59,7 +59,7 @@ class Database(AbstractDatabase):
     def get_rows(cls, config):
         db = cls.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("show session status like 'Innodb_rows_read'")
+        cursor.execute("show global status like 'Innodb_rows_read'")
         record = cursor.fetchone()
         return int(int(record[1]) * cls.margin) #Mysql lowers the number of rows read
 
@@ -67,7 +67,7 @@ class Database(AbstractDatabase):
     def get_rows_updated(cls, config):
         db = cls.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("show session status like 'Innodb_rows_updated'")
+        cursor.execute("show global status like 'Innodb_rows_updated'")
         record = cursor.fetchone()
         return int(int(record[1]) * cls.margin) #Mysql lowers the number of rows updated
 
