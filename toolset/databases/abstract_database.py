@@ -3,7 +3,8 @@ import os
 
 class AbstractDatabase:
     '''
-    Abstract Database Class
+    Abstract Database Class.
+    To be derived for defining a new concrete Database type
     '''
     @classmethod
     @abc.abstractmethod
