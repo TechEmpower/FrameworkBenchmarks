@@ -78,3 +78,9 @@ class Database(AbstractDatabase):
         #cursor.execute("RESET QUERY CACHE")
         #self.db.commit()
         return
+
+    @classmethod
+    def before_stats(cls, config):
+        db = cls.get_connection(config)
+        cursor = db.cursor()
+        cursor.execute("flush status")
