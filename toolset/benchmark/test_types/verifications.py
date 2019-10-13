@@ -406,31 +406,24 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
     log("VERIFYING QUERY COUNT FOR %s" % url, border='-', color=Fore.WHITE + Style.BRIGHT)
 
     problems = []
+
     queries, rows, rows_updated, margin = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count, check_updates)
 
-    if queries < expected_queries :
-        problems.append((
-        "fail",
-        "Only %s queries were executed in the database out of roughly %s expected."
-        % (queries, expected_queries), url))
-    else:
-        problems.append(("pass","Queries: %s/%s" % (queries,expected_queries), url))
-
-    if rows < expected_rows :
-        problems.append((
-        "fail",
-        "Only %s rows were read from the database out of roughly %s expected."
-        % (int(rows / margin), expected_rows), url))
-    else:
-        problems.append(("pass","Rows: %s/%s" % (int(rows / margin), expected_rows), url))
-
+    problems.append(display_queries_count_result(queries, expected_queries, queries, "executed queries", url))
+    problems.append(display_queries_count_result(rows, expected_rows, int(rows / margin), "rows read", url))
     if check_updates:
-        if rows_updated < expected_rows :
-            problems.append((
-            "fail",
-            "Only %s rows were updated in the database out of roughly %s expected."
-            % (int(rows_updated / margin), expected_rows), url))
-        else:
-            problems.append(("pass","Updates: %s/%s" % (int(rows_updated / margin), expected_rows), url))
+        problems.append(display_queries_count_result(rows_updated, expected_rows, int(rows_updated / margin), "rows updated", url))
 
     return problems
+
+def display_queries_count_result(result, expected_result, displayed_result, caption, url):
+    '''
+    Returns a single result in counting queries, rows read or updated 
+    '''
+    if result < expected_result :
+        return (
+        "fail",
+        "Only %s %s in the database out of roughly %s expected."
+        % (displayed_result, caption, expected_result), url)
+    else:
+        return ("pass","%s: %s/%s" % (caption.capitalize(), displayed_result,expected_result), url)
