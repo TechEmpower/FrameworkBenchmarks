@@ -85,7 +85,7 @@ class AbstractDatabase:
         cls.reset_cache(config)
         #Start siege requests
         path = config.db_root
-        os.system("siege -c %s -r %s %s -v -R %s/.siegerc" % (concurrency, count, url, path))
+        os.system("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path))
 
         queries = int(cls.get_queries(config)) - queries
         rows = int(cls.get_rows(config)) - rows
