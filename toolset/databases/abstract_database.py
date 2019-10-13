@@ -8,42 +8,68 @@ class AbstractDatabase:
     @classmethod
     @abc.abstractmethod
     def get_connection(cls, config):
+        '''
+        Establishes and returns a connection to the database.
+        '''
         pass
 
     @classmethod
     @abc.abstractmethod
     def get_current_world_table(cls, config):
+        '''
+        Returns a JSON object containing all 10,000 World items as they currently
+        exist in the database. This is used for verifying that entries in the
+        database have actually changed during an Update verification test.
+        '''
         pass
 
     @classmethod
     @abc.abstractmethod
     def test_connection(cls, config):
+        '''
+        Tests the connection and returns true if it is established.
+        '''
         pass
 
     @classmethod
     @abc.abstractmethod
     def get_queries(cls, config):
+        '''
+        Returns the number of db queries (all types).
+        '''
         pass
 
     @classmethod
     @abc.abstractmethod
     def get_rows(cls, config):
+        '''
+        Returns the number of db rows read.
+        '''
         pass
 
     @classmethod
     @abc.abstractmethod
     def get_rows_updated(cls, config):
+        '''
+        Return the number of updated db rows.
+        '''
         pass
 
     @classmethod
     @abc.abstractmethod
     def reset_cache(cls, config):
+        '''
+        Reset the query cache.
+        '''
         pass
 
     @classmethod
     def verify_queries(cls, config, table_name, url, concurrency=512, count=2, check_updates=False):
         '''
-        Verify queries and rows for table_name
+        Verify query and row numbers for table_name.
+        Retrieve from the database statistics of the number of queries made, the number of rows read, eventually the number of updated rows.
+        Run 2 repetitions of http requests at the concurrency level 512 with siege.
+        Retrieve statistics again, calculate the number of queries made and the number of rows read.
         '''
         rows_updated= None
         cls.tbl_name=table_name # used for Postgres and mongodb

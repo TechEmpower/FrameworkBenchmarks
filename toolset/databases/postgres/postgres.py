@@ -22,11 +22,6 @@ class Database(AbstractDatabase):
 
     @classmethod
     def get_current_world_table(cls, config):
-        '''
-        Return a JSON object containing all 10,000 World items as they currently
-        exist in the database. This is used for verifying that entries in the
-        database have actually changed during an Update verification test.
-        '''
         results_json = []
 
         try:
