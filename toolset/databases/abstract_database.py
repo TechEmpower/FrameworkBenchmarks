@@ -67,13 +67,6 @@ class AbstractDatabase:
         pass
 
     @classmethod
-    def before_stats(cls, config):
-        '''
-        Eventually flush the statistics.
-        '''
-        return
-
-    @classmethod
     def verify_queries(cls, config, table_name, url, concurrency=512, count=2, check_updates=False):
         '''
         Verify query and row numbers for table_name.
@@ -83,8 +76,6 @@ class AbstractDatabase:
         '''
         rows_updated = None
         cls.tbl_name = table_name # used for Postgres and mongodb
-
-        cls.before_stats(config) # used for Mysql
 
         queries = int(cls.get_queries(config))
         rows = int(cls.get_rows(config))
