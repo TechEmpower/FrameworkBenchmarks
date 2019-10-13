@@ -59,7 +59,7 @@ class Database(AbstractDatabase):
     def get_rows(cls, config):
         db = cls.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("SELECT variable_value FROM INFORMATION_SCHEMA.SESSION_STATUS where Variable_name like 'Innodb_rows_read'")
+        cursor.execute("SELECT variable_value FROM PERFORMANCE_SCHEMA.SESSION_STATUS where Variable_name like 'Innodb_rows_read'")
         record = cursor.fetchone()
         return int(int(record[0]) * cls.margin) #Mysql lowers the number of rows read
 
