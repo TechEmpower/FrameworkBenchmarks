@@ -24,7 +24,7 @@
 #
 # ex: verbose = true|false
 #
-verbose = true
+verbose = false
 
 #
 # Color mode: This option works in conjuction with verbose mode. 
