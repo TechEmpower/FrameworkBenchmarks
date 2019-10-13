@@ -406,7 +406,7 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
     log("VERIFYING QUERY COUNT FOR %s" % url, border='-', color=Fore.WHITE + Style.BRIGHT)
 
     problems = []
-    queries, rows, rows_updated = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count, check_updates)
+    queries, rows, rows_updated, margin = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count, check_updates)
 
     if queries < expected_queries :
         problems.append((
@@ -420,17 +420,17 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
         problems.append((
         "fail",
         "Only %s rows were read from the database out of roughly %s expected."
-        % (rows, expected_rows), url))
+        % (int(rows / margin), expected_rows), url))
     else:
-        problems.append(("pass","Rows: %s/%s" % (rows, expected_rows), url))
+        problems.append(("pass","Rows: %s/%s" % (int(rows / margin), expected_rows), url))
 
     if check_updates:
         if rows_updated < expected_rows :
             problems.append((
             "fail",
             "Only %s rows were updated in the database out of roughly %s expected."
-            % (rows_updated, expected_rows), url))
+            % (int(rows_updated / margin), expected_rows), url))
         else:
-            problems.append(("pass","Updates: %s/%s" % (rows_updated, expected_rows), url))
+            problems.append(("pass","Updates: %s/%s" % (int(rows_updated / margin), expected_rows), url))
 
     return problems

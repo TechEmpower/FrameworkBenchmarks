@@ -6,6 +6,8 @@ class AbstractDatabase:
     Abstract Database Class.
     To be derived for defining a new concrete Database type
     '''
+    margin = 1
+    
     @classmethod
     @abc.abstractmethod
     def get_connection(cls, config):
@@ -90,4 +92,4 @@ class AbstractDatabase:
         if check_updates:
             rows_updated = int(cls.get_rows_updated(config)) - rows_updated
 
-        return queries, rows, rows_updated
+        return queries, rows, rows_updated, cls.margin
