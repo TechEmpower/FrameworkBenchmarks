@@ -16,7 +16,7 @@ class Database(AbstractDatabase):
                 user="benchmarkdbuser",
                 password="benchmarkdbpass",
                 database="hello_world")
-        cursor=db.cursor()
+        cursor = db.cursor()
         cursor.execute("CREATE EXTENSION IF NOT EXISTS pg_stat_statements")
         return db
 

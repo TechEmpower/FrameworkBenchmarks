@@ -335,7 +335,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
     MIN = 1
     # Initialization for query counting
     repetitions = 2
-    expected_queries = 20* repetitions * 512
+    expected_queries = 20 * repetitions * 512
     expected_rows = expected_queries
 
     # Only load in the World table if we are doing an Update verification
@@ -394,16 +394,16 @@ def verify_query_cases(self, cases, url, check_updates=False):
 
     if hasattr(self, 'database'):
         # verify the number of queries and rows read for 20 queries, with a concurrency level of 512, with 2 repetitions
-        problems+=verify_queries_count(self, "world", url+"20", 512, repetitions, expected_queries, expected_rows, check_updates)
+        problems += verify_queries_count(self, "world", url+"20", 512, repetitions, expected_queries, expected_rows, check_updates)
     return problems
 
 
-def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected_queries=1024, expected_rows=1024, check_updates=False):
+def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected_queries=1024, expected_rows = 1024, check_updates = False):
     '''
     Checks that the number of executed queries, at the given concurrency level, 
     corresponds to: the total number of http requests made * the number of queries per request
     '''
-    log("VERIFYING QUERIES COUNT FOR %s" % url,border='-', color=Fore.WHITE + Style.BRIGHT)
+    log("VERIFYING QUERY COUNT FOR %s" % url, border='-', color=Fore.WHITE + Style.BRIGHT)
 
     problems = []
     queries, rows, rows_updated = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count, check_updates)
@@ -414,7 +414,7 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
         "Only %s queries were executed in the database out of roughly %s expected."
         % (queries, expected_queries), url))
     else:
-        problems.append(("pass","Queries: %s/%s" % (queries,expected_queries),url))
+        problems.append(("pass","Queries: %s/%s" % (queries,expected_queries), url))
 
     if rows < expected_rows :
         problems.append((
@@ -422,7 +422,7 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
         "Only %s rows were read from the database out of roughly %s expected."
         % (rows, expected_rows), url))
     else:
-        problems.append(("pass","Rows: %s/%s" % (rows,expected_rows),url))
+        problems.append(("pass","Rows: %s/%s" % (rows, expected_rows), url))
 
     if check_updates:
         if rows_updated < expected_rows :
@@ -431,6 +431,6 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
             "Only %s rows were updated in the database out of roughly %s expected."
             % (rows_updated, expected_rows), url))
         else:
-            problems.append(("pass","Updates: %s/%s" % (rows_updated,expected_rows),url))
+            problems.append(("pass","Updates: %s/%s" % (rows_updated, expected_rows), url))
 
     return problems

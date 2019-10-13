@@ -72,22 +72,22 @@ class AbstractDatabase:
         Run 2 repetitions of http requests at the concurrency level 512 with siege.
         Retrieve statistics again, calculate the number of queries made and the number of rows read.
         '''
-        rows_updated= None
-        cls.tbl_name=table_name # used for Postgres and mongodb
+        rows_updated = None
+        cls.tbl_name = table_name # used for Postgres and mongodb
 
-        queries=int(cls.get_queries(config))
-        rows=int(cls.get_rows(config))
+        queries = int(cls.get_queries(config))
+        rows = int(cls.get_rows(config))
         if check_updates:
-            rows_updated=int(cls.get_rows_updated(config))
+            rows_updated = int(cls.get_rows_updated(config))
 
         cls.reset_cache(config)
         #Start siege requests
-        path=config.db_root
+        path = config.db_root
         os.system("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path))
 
-        queries=int(cls.get_queries(config))-queries
-        rows=int(cls.get_rows(config))-rows
+        queries = int(cls.get_queries(config)) - queries
+        rows = int(cls.get_rows(config)) - rows
         if check_updates:
-            rows_updated=int(cls.get_rows_updated(config))-rows_updated
+            rows_updated = int(cls.get_rows_updated(config)) - rows_updated
 
         return queries, rows, rows_updated

@@ -9,7 +9,7 @@ class Database(AbstractDatabase):
 
     @classmethod
     def get_connection(cls, config):
-        return pymongo.MongoClient(host=config.database_host)
+        return pymongo.MongoClient(host = config.database_host)
 
     @classmethod
     def get_current_world_table(cls, config):
