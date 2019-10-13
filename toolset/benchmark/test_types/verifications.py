@@ -392,8 +392,9 @@ def verify_query_cases(self, cases, url, check_updates=False):
                     expected_len, headers, body, case_url, max_infraction)
                 problems += verify_headers(self.request_headers_and_body, headers, case_url)
 
-    # verify the number of queries and rows read for 20 queries, with a concurrency level of 512, with 2 repetitions
-    problems+=verify_queries_count(self, "world", url+"20", 512, repetitions, expected_queries, expected_rows, check_updates)
+    if hasattr(self, 'database'):
+        # verify the number of queries and rows read for 20 queries, with a concurrency level of 512, with 2 repetitions
+        problems+=verify_queries_count(self, "world", url+"20", 512, repetitions, expected_queries, expected_rows, check_updates)
     return problems
 
 
