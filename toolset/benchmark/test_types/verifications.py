@@ -407,12 +407,15 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
 
     problems = []
 
-    queries, rows, rows_updated, margin = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count, check_updates)
+    queries, rows, rows_updated, margin, infos = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count, check_updates)
 
     problems.append(display_queries_count_result(queries, expected_queries, queries, "executed queries", url))
     problems.append(display_queries_count_result(rows, expected_rows, int(rows / margin), "rows read", url))
     if check_updates:
         problems.append(display_queries_count_result(rows_updated, expected_rows, int(rows_updated / margin), "rows updated", url))
+
+    if len(infos) > 0:
+        problems.append(("info",json.dumps(infos)))
 
     return problems
 
