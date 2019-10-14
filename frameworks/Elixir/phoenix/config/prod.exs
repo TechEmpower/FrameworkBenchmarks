@@ -14,7 +14,7 @@ config :hello, Hello.Repo,
   password: "benchmarkdbpass",
   database: "hello_world",
   hostname: "tfb-database",
-  pool_size: 256
+  pool_size: 14
 
 config :logger,
   compile_time_purge_matching: [
