@@ -99,4 +99,4 @@ class AbstractDatabase:
         if check_updates:
             rows_updated = int(cls.get_rows_updated(config)) - rows_updated
 
-        return queries, rows, rows_updated, cls.margin, cls.get_infos()
+        return queries, rows, rows_updated, cls.margin, cls.get_infos(config)
