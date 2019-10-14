@@ -58,7 +58,7 @@ class Database(AbstractDatabase):
         recordS = cursor.fetchone()
         cursor.execute("Show global status like 'Com_update'")
         recordU = cursor.fetchone()
-        return int(recordS[1]) + int(recordU[1]) -1
+        return int(recordS[1]) + int(recordU[1]) - 1
 
     @classmethod
     def get_rows(cls, config):
@@ -85,3 +85,10 @@ class Database(AbstractDatabase):
         #cursor.execute("RESET QUERY CACHE")
         #self.db.commit()
         return
+
+    @classmethod
+    def get_infos(cls, config):
+        db = cls.get_connection(config)
+        cursor = db.cursor()
+        cursor.execute("Show global status like 'Connection_%'")
+        return cursor.fetchall()

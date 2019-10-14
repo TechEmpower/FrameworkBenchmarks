@@ -67,6 +67,13 @@ class AbstractDatabase:
         pass
 
     @classmethod
+    def get_infos(cls, config):
+        '''
+        Returns an associative array of informations relative to connections.
+        '''
+        return {}
+
+    @classmethod
     def verify_queries(cls, config, table_name, url, concurrency=512, count=2, check_updates=False):
         '''
         Verify query and row numbers for table_name.
@@ -92,4 +99,4 @@ class AbstractDatabase:
         if check_updates:
             rows_updated = int(cls.get_rows_updated(config)) - rows_updated
 
-        return queries, rows, rows_updated, cls.margin
+        return queries, rows, rows_updated, cls.margin, cls.get_infos()
