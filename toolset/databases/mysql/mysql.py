@@ -51,7 +51,7 @@ class Database(AbstractDatabase):
     def get_queries(cls, config):
         db = cls.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("Show session status like 'Queries'")
+        cursor.execute("SELECT variable_value FROM PERFORMANCE_SCHEMA.SESSION_STATUS where Variable_name like 'Com_select' OR Variable_name like 'Com_update'")
         record = cursor.fetchone()
         return record[1]
 
