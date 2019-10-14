@@ -9,7 +9,7 @@ RUN git clone https://github.com/oatpp/oatpp
 
 WORKDIR /test/oatpp
 
-RUN git checkout f24a2247098d02975869e8d90a059770ddca8df5
+RUN git checkout 3670e081af33ae02f8a5b11dafc6a2622f92927a
 
 WORKDIR /test/oatpp/build
 
@@ -19,13 +19,13 @@ RUN make install
 #---------------------------------------------------------------
 # build test app
 
-ADD src-thread /test/src-thread
+ADD src-async /test/src-async
 
-WORKDIR /test/src-thread/build
+WORKDIR /test/src-async/build
 
 RUN cmake -DCMAKE_BUILD_TYPE=Release ..
 RUN make
 
 EXPOSE 8000 8000
 
-CMD ./oatpp-thread-test
+CMD ./oatpp-async-test
