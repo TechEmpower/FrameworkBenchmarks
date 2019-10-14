@@ -6,7 +6,7 @@ RUN pecl install swoole > /dev/null && \
 RUN docker-php-ext-install pdo_mysql > /dev/null
 
 RUN apt -yqq update > /dev/null && \
-    apt -yqq install git zip > /dev/null
+    apt -yqq install git unzip > /dev/null
 
 WORKDIR /imi
 
