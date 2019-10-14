@@ -15,8 +15,8 @@ ADD ./ /php
 WORKDIR /php
 RUN chmod -R 777 /php
 
-RUN composer require hamlet-framework/http-swoole:dev-master
-RUN composer require hamlet-framework/db-mysql-swoole:dev-master
-RUN composer update --no-dev
+RUN composer require hamlet-framework/http-swoole:dev-master --quiet
+RUN composer require hamlet-framework/db-mysql-swoole:dev-master --quiet
+RUN composer update --no-dev --quiet
 
 CMD php /php/swoole.php
