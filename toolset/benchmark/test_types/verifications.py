@@ -415,7 +415,7 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
         problems.append(display_queries_count_result(rows_updated, expected_rows, int(rows_updated / margin), "rows updated", url))
 
     if len(infos) > 0:
-        problems.append(("info",json.dumps(infos)))
+        log(json.dumps(infos))
 
     return problems
 
