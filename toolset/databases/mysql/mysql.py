@@ -90,5 +90,5 @@ class Database(AbstractDatabase):
     def get_infos(cls, config):
         db = cls.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("Show global status like 'Connection_%'")
+        cursor.execute("Show global status like '%error%'")
         return cursor.fetchall()
