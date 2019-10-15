@@ -24,7 +24,7 @@ class FortuneTestType(FrameworkTestType):
         valid fortune response
         '''
         # Initialization for query counting
-        repetitions = 2
+        repetitions = 1
         expected_queries = repetitions * 512
         expected_rows = 12 * expected_queries
 

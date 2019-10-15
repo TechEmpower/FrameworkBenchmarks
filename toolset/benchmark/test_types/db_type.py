@@ -23,7 +23,7 @@ class DBTestType(FrameworkTestType):
         '''
 
         # Initialization for query counting
-        repetitions = 2
+        repetitions = 1
         expected_queries = repetitions * 512
 
         url = base_url + self.db_url

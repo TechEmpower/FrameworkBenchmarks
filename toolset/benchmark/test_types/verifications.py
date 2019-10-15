@@ -334,7 +334,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
     MAX = 500
     MIN = 1
     # Initialization for query counting
-    repetitions = 2
+    repetitions = 1
     expected_queries = 20 * repetitions * 512
     expected_rows = expected_queries
 
