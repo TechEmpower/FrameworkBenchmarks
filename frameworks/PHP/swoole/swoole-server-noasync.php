@@ -8,10 +8,6 @@ $server->set([
     'worker_num' => swoole_cpu_num()
 ]);
 
-$pdo = new PDO("mysql:host=tfb-database;dbname=hello_world", "benchmarkdbuser", "benchmarkdbpass", [
-    PDO::ATTR_PERSISTENT => true
-]);
-
 /**
  * The DB test
  *
@@ -19,7 +15,8 @@ $pdo = new PDO("mysql:host=tfb-database;dbname=hello_world", "benchmarkdbuser", 
  *
  * @return string
  */
-$db = function (int $queries = 1) use ($pdo): string {
+function db(int $queries = 1) : string {
+    global $pdo;
     if ( $queries === -1) {
         $statement = $pdo->prepare("SELECT id,randomNumber FROM World WHERE id=?");
         $statement->execute([mt_rand(1, 10000)]);
@@ -54,8 +51,8 @@ $db = function (int $queries = 1) use ($pdo): string {
  *
  * @return string
  */
-$fortunes = function () use ($pdo): string {
-
+function fortunes() : string {
+    global $pdo;
     $fortune = [];
     $db = $pdo->prepare('SELECT id, message FROM Fortune');
     $db->execute();
@@ -82,7 +79,8 @@ $fortunes = function () use ($pdo): string {
  *
  * @return string
  */
-$updates = function (int $queries) use ($pdo): string {
+function updates(int $queries) : string {
+    global $pdo;
     $query_count = 1;
     if ($queries > 1) {
         $query_count = $queries > 500 ? 500 : $queries;
@@ -110,8 +108,12 @@ $updates = function (int $queries) use ($pdo): string {
 /**
  * On start of the PHP worker. One worker per server process is started.
  */
-//$server->on('workerStart', function () use ($pool) {
-//});
+$server->on('workerStart', function () {
+    global $pdo;
+    $pdo = new PDO("mysql:host=tfb-database;dbname=hello_world", "benchmarkdbuser", "benchmarkdbpass", [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+});
 
 /**
  * On every request to the (web)server, execute the following code
@@ -133,20 +135,20 @@ $server->on('request', function (Request $req, Response $res) use ($db, $fortune
                 $res->header('Content-Type', 'application/json');
 
                 if (isset($req->get['queries'])) {
-                    $res->end($db((int) $req->get['queries']));
+                    $res->end(db((int) $req->get['queries']));
                 } else {
-                    $res->end($db(-1));
+                    $res->end(db(-1));
                 }
                 break; 
 
             case '/fortunes':
                 $res->header('Content-Type', 'text/html; charset=utf-8');
-                $res->end($fortunes());
+                $res->end(fortunes());
                 break;
 
             case '/updates':
                 $res->header('Content-Type', 'application/json');
-                $res->end($updates((int) $req->get['queries'] ?? 1));
+                $res->end(updates((int) $req->get['queries'] ?? 1));
                 break;
         }
 
