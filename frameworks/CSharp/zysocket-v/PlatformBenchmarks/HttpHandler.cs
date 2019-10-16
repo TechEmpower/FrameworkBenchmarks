@@ -69,7 +69,8 @@ namespace PlatformBenchmarks
                 return fiberRw.Flush();
             }
 
-            await await fiberRw.Sync.Ask(WSend);
+            if (fiberRw.UserToken != null)
+                await await fiberRw.Sync.Ask(WSend);
         }
 
         private int AnalysisUrl(ReadOnlySpan<byte> url)

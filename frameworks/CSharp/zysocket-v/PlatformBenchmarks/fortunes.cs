@@ -43,13 +43,12 @@ namespace PlatformBenchmarks
                     write.Flush(false);
                     return fiberRw.Flush();
                 }
-
-                await await fiberRw.Sync.Ask(WSend);
+                if (fiberRw.UserToken != null)
+                    await await fiberRw.Sync.Ask(WSend);
             }
             catch (Exception e_)
             {
                 write.Write(e_.Message);
-
                 OnCompleted(fiberRw, write);
             }
 
