@@ -11,7 +11,7 @@ RUN apt-get update -yqq > /dev/null && \
 
 ADD ./ ./
 
-ENV NGINX_VERSION=1.17.3
+ENV NGINX_VERSION=1.17.4
 
 RUN git clone -b v0.0.19 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
 
@@ -26,7 +26,7 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --add-module=/ngx_php7 > /dev/null && \
     make > /dev/null && make install > /dev/null
 
-RUN sed -i "s|mysql:|pgsql:|g" /deploy/nginx.conf
+RUN sed -i "s|mysql:|pgsql:|g" /app.php
 
 CMD /nginx/sbin/nginx -c /deploy/nginx.conf
 

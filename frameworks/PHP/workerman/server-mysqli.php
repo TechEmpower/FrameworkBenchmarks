@@ -23,22 +23,22 @@ $http_worker->onMessage = static function ($connection) {
             return $connection->send(db());
 
         case '/fortune':
-            Http::header('Content-Type: text/html; charset=utf-8');
+            //Http::header('Content-Type: text/html; charset=utf-8');
             return $connection->send(fortune());
 
         case '/update':
             Http::header('Content-Type: application/json');
             return $connection->send(update());
 
-            //case '/info':
-            //   Http::header('Content-Type: text/plain');
-            //   ob_start();
-            //   phpinfo();
-            //   $connection->send(ob_get_clean());
+        //case '/info':
+        //   Http::header('Content-Type: text/plain');
+        //   ob_start();
+        //   phpinfo();
+        //   return $connection->send(ob_get_clean());
 
-            //default:
-            //   Http::header('HTTP', true, 404);
-            //   $connection->send('Error 404');
+        default:
+            Http::responseCode(404);
+            $connection->send('Error 404');
     }
 };
 

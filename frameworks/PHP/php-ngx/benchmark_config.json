@@ -44,6 +44,24 @@
       "display_name": "PHP-raw-ngx-Postgres",
       "notes": "ngx_php Postgres",
       "versus": "php"
+    },
+    "async": {
+      "fortune_url": "/fortune",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "None",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "Raw",
+      "platform": "ngx_php",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "PHP-raw-ngx-async",
+      "notes": "ngx_php async",
+      "versus": "php"
     }
   }]
 }

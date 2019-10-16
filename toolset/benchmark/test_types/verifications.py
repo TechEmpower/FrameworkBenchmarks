@@ -4,6 +4,7 @@ import traceback
 
 from datetime import datetime
 from toolset.utils.output_helper import log
+from toolset.databases import databases
 from time import sleep
 
 def basic_body_verification(body, url, is_json_check=True):
@@ -333,7 +334,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
     # Only load in the World table if we are doing an Update verification
     world_db_before = {}
     if check_updates:
-        world_db_before = self.get_current_world_table()
+        world_db_before = databases[self.database.lower()].get_current_world_table(self.config)
 
     for q, max_infraction in cases:
         case_url = url + q
@@ -358,7 +359,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
             # that only updates 1 item and happens to set its randomNumber to the same value it
             # previously held
             if check_updates and queries >= MAX:
-                world_db_after = self.get_current_world_table()
+                world_db_after = databases[self.database.lower()].get_current_world_table(self.config)
                 problems += verify_updates(world_db_before, world_db_after,
                                            MAX, case_url)
 
