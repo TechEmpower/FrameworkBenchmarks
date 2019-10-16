@@ -44,7 +44,7 @@ function db(int $queries = 1) : string {
     // http://www.php.net/manual/en/function.json-encode.php
 
     return json_encode($arr, JSON_NUMERIC_CHECK);
-};
+}
 
 /**
  * The Fortunes test
@@ -70,7 +70,7 @@ function fortunes() : string {
     return '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'. 
             $html.
             '</table></body></html>';
-};
+}
 
 /**
  * The Updates test
@@ -103,7 +103,7 @@ function updates(int $queries) : string {
 
 
     return json_encode($arr, JSON_NUMERIC_CHECK);
-};
+}
 
 /**
  * On start of the PHP worker. One worker per server process is started.
