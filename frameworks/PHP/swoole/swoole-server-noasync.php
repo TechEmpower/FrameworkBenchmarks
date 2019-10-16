@@ -9,7 +9,7 @@ $server->set([
 ]);
 
 $pdo = new PDO("mysql:host=tfb-database;dbname=hello_world", "benchmarkdbuser", "benchmarkdbpass", [
-    PDO::ATTR_PERSISTENT => true
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 ]);
 
 /**
@@ -70,8 +70,8 @@ $fortunes = function () use ($pdo): string {
         $html .= "<tr><td>$id</td><td>$message</td></tr>";
     }
 
-    return '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'. 
-            $html.
+    return '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
+            .$html.
             '</table></body></html>';
 };
 
@@ -148,11 +148,15 @@ $server->on('request', function (Request $req, Response $res) use ($db, $fortune
                 $res->header('Content-Type', 'application/json');
                 $res->end($updates((int) $req->get['queries'] ?? 1));
                 break;
+
+            default:
+                $res->status(404);
+                $res->end('Error 404');
         }
 
     } catch (\Throwable $e) {
         $res->status(500);
-        $res->end('code ' . $e->getCode(). 'msg: '. $e->getMessage());
+        $res->end('Error 500');
     }
 });
 
