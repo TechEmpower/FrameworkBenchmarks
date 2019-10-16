@@ -29,17 +29,21 @@ return [
     ],
     'settings' => [
         'enable_coroutine' => true,
-        'worker_num' => swoole_cpu_num() * 2,
+        'reactor_num' => swoole_cpu_num() * 2,
+        'worker_num' => swoole_cpu_num(),
+        'task_worker_num' => swoole_cpu_num(),
         'pid_file' => BASE_PATH . '/runtime/hyperf.pid',
         'open_tcp_nodelay' => true,
-        'max_coroutine' => 1000000,
-        'open_http2_protocol' => false,
-        'max_request' => 1000000,
-        'socket_buffer_size' => 2 * 1024 * 1024,
+        'open_cpu_affinity' => true,
+        'max_connection' => 100000,
+        'log_level' => SWOOLE_LOG_NONE,
     ],
     'callbacks' => [
         SwooleEvent::ON_BEFORE_START => [Hyperf\Framework\Bootstrap\ServerStartCallback::class, 'beforeStart'],
         SwooleEvent::ON_WORKER_START => [Hyperf\Framework\Bootstrap\WorkerStartCallback::class, 'onWorkerStart'],
         SwooleEvent::ON_PIPE_MESSAGE => [Hyperf\Framework\Bootstrap\PipeMessageCallback::class, 'onPipeMessage'],
+        // Task callbacks
+        SwooleEvent::ON_TASK => [Hyperf\Framework\Bootstrap\TaskCallback::class, 'onTask'],
+        SwooleEvent::ON_FINISH => [Hyperf\Framework\Bootstrap\FinishCallback::class, 'onFinish'],
     ],
 ];

@@ -5,7 +5,7 @@ use Swoole\Http\Response;
 
 $server = new swoole_http_server('0.0.0.0', 8080, SWOOLE_BASE);
 $server->set([
-    'worker_num' => NUMCORES
+    'worker_num' => swoole_cpu_num()
 ]);
 
 $pool = new DatabasePool();
@@ -23,7 +23,7 @@ $db = function (string $database_type, int $queries = 0) use ($pool): string {
 
     // Read number of queries to run from URL parameter
     $query_count = 1;
-    if ($queries > 0) {
+    if ($queries > 1) {
         $query_count = $queries > 500 ? 500 : $queries;
     }
 
@@ -33,7 +33,7 @@ $db = function (string $database_type, int $queries = 0) use ($pool): string {
     $db->db_test = $db->db_test ?? $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
 
     // For each query, store the result set values in the response array
-    while (0 < $query_count--) {
+    while ($query_count--) {
         $id = mt_rand(1, 10000);
         $ret = $db->db_test->execute([$id]);
 
@@ -64,24 +64,24 @@ $fortunes = function (string $database_type) use ($pool): string {
 
     $fortune = [];
     $db->fortune_test = $db->fortune_test ?? $db->prepare('SELECT id, message FROM Fortune');
-    $arr = $db->fortune_test->execute([]);
+    $arr = $db->fortune_test->execute();
     foreach ($arr as $row) {
         $fortune[$row['id']] = $row['message'];
     }
     $fortune[0] = 'Additional fortune added at request time.';
     asort($fortune);
 
-    $html = '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>';
+    $html = '';
     foreach ($fortune as $id => $message) {
         $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
         $html .= "<tr><td>{$id}</td><td>{$message}</td></tr>";
     }
 
-    $html .= '</table></body></html>';
-
     $pool->put($db);
 
-    return $html;
+    return '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
+            .$html.
+            '</table></body></html>';
 };
 
 /**
@@ -96,7 +96,7 @@ $updates = function (string $database_type, int $queries = 0) use ($pool): strin
     $db = $pool->get($database_type);
 
     $query_count = 1;
-    if ($queries > 0) {
+    if ($queries > 1) {
         $query_count = $queries > 500 ? 500 : $queries;
     }
 
@@ -104,7 +104,7 @@ $updates = function (string $database_type, int $queries = 0) use ($pool): strin
     $db->updates_test_select = $db->updates_test_select ?? $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
     $db->updates_test_update = $db->updates_test_update ?? $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
 
-    while (0 < $query_count--) {
+    while ($query_count--) {
         $id = mt_rand(1, 10000);
         $randomNumber = mt_rand(1, 10000);
         $ret = $db->updates_test_select->execute([$id]);
@@ -125,77 +125,86 @@ $updates = function (string $database_type, int $queries = 0) use ($pool): strin
 /**
  * On start of the PHP worker. One worker per server process is started.
  */
-$server->on('workerStart', function () use ($pool) {
-    $pool->set_host_ip();
-});
+//$server->on('workerStart', function () use ($pool) {
+
+//});
 
 /**
  * On every request to the (web)server, execute the following code
  */
 $server->on('request', function (Request $req, Response $res) use ($db, $fortunes, $updates) {
+    try {
+        switch ($req->server['request_uri']) {
+            case '/json':
+                $res->header('Content-Type', 'application/json');
+                $res->end(json_encode(['message' => 'Hello, World!']));
+                break;
 
-    switch ($req->server['request_uri']) {
-        case '/json':
-            $res->header('Content-Type', 'application/json');
-            $res->end(json_encode(['message' => 'Hello, World!']));
-            break;
+            case '/plaintext':
+                $res->header('Content-Type', 'text/plain; charset=utf-8');
+                $res->end('Hello, World!');
+                break;
 
-        case '/plaintext':
-            $res->header('Content-Type', 'text/plain; charset=utf-8');
-            $res->end('Hello, World!');
-            break;
+            case '/db':
+                $res->header('Content-Type', 'application/json');
 
-        case '/db':
-            $res->header('Content-Type', 'application/json');
+                if (isset($req->get['queries'])) {
+                    $res->end($db('mysql', (int)$req->get['queries']));
+                } else {
+                    $res->end($db('mysql', -1));
+                }
+                break;
 
-            if (isset($req->get['queries'])) {
-                $res->end($db('mysql', (int)$req->get['queries']));
-            } else {
-                $res->end($db('mysql', -1));
-            }
-            break;
+            case '/fortunes':
+                $res->header('Content-Type', 'text/html; charset=utf-8');
+                $res->end($fortunes('mysql'));
+                break;
 
-        case '/fortunes':
-            $res->header('Content-Type', 'text/html; charset=utf-8');
-            $res->end($fortunes('mysql'));
-            break;
+            case '/updates':
+                $res->header('Content-Type', 'application/json');
 
-        case '/updates':
-            $res->header('Content-Type', 'application/json');
+                if (isset($req->get['queries'])) {
+                    $res->end($updates('mysql', (int)$req->get['queries']));
+                } else {
+                    $res->end($updates('mysql', -1));
+                }
+                break;
 
-            if (isset($req->get['queries'])) {
-                $res->end($updates('mysql', (int)$req->get['queries']));
-            } else {
-                $res->end($updates('mysql', -1));
-            }
-            break;
+            case '/db_postgres':
+                $res->header('Content-Type', 'application/json');
 
-        case '/db_postgres':
-            $res->header('Content-Type', 'application/json');
+                if (isset($req->get['queries'])) {
+                    $res->end($db('postgres', (int)$req->get['queries']));
+                } else {
+                    $res->end($db('postgres', -1));
+                }
+                break;
 
-            if (isset($req->get['queries'])) {
-                $res->end($db('postgres', (int)$req->get['queries']));
-            } else {
-                $res->end($db('postgres', -1));
-            }
-            break;
+            case '/fortunes_postgres':
+                $res->header('Content-Type', 'text/html; charset=utf-8');
+                $res->end($fortunes('postgres'));
+                break;
 
-        case '/fortunes_postgres':
-            $res->header('Content-Type', 'text/html; charset=utf-8');
-            $res->end($fortunes('postgres'));
-            break;
+            case '/updates_postgres':
+                $res->header('Content-Type', 'application/json');
 
-        case '/updates_postgres':
-            $res->header('Content-Type', 'application/json');
+                if (isset($req->get['queries'])) {
+                    $res->end($updates('postgres', (int)$req->get['queries']));
+                } else {
+                    $res->end($updates('postgres', -1));
+                }
+                break;
 
-            if (isset($req->get['queries'])) {
-                $res->end($updates('postgres', (int)$req->get['queries']));
-            } else {
-                $res->end($updates('postgres', -1));
-            }
-            break;
+            default:
+                $res->status(404);
+                $res->end('Error 404');
+
+        }
+
+    } catch (\Throwable $e) {
+        $res->status(500);
+        $res->end('Error 500');
     }
-
 });
 
 $server->start();
@@ -220,14 +229,7 @@ class DatabasePool
     function __construct()
     {
         $this->pool = new \SplQueue;
-    }
-
-    function set_host_ip()
-    {
-        if (empty($this->server['host'])) {
-            $tfb_database_ip = Swoole\Coroutine::gethostbyname('tfb-database');
-            $this->server['host'] = $tfb_database_ip;
-        }
+        $this->server['host'] = gethostbyname('tfb-database');
     }
 
     function put($db)
@@ -253,10 +255,6 @@ class DatabasePool
         }
 
         $db->connect($this->server);
-
-        if ($db == false) {
-            return false;
-        }
 
         return $db;
     }

@@ -9,10 +9,11 @@ import com.javanut.gl.api.HTTPResponseService;
 import com.javanut.pronghorn.network.config.HTTPContentTypeDefaults;
 import com.javanut.pronghorn.pipe.ObjectPipe;
 
-import io.reactiverse.pgclient.PgIterator;
-import io.reactiverse.pgclient.PgPool;
-import io.reactiverse.pgclient.PgRowSet;
-import io.reactiverse.pgclient.Tuple;
+import io.vertx.pgclient.PgPool;
+import io.vertx.sqlclient.Row;
+import io.vertx.sqlclient.RowIterator;
+import io.vertx.sqlclient.Tuple;
+
 
 public class ProcessQuery {
 	
@@ -94,7 +95,7 @@ public class ProcessQuery {
 				p.preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(randomValue()), r -> {
 						if (r.succeeded()) {
 
-							PgIterator resultSet = r.result().iterator();
+							RowIterator<Row> resultSet = r.result().iterator();
 							Tuple row = resultSet.next();			        
 							
 							target.setId(row.getInteger(0));
@@ -127,11 +128,11 @@ public class ProcessQuery {
 			pm.pool().preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(randomValue()), r -> {
 					if (r.succeeded()) {
 						
-						PgIterator resultSet = r.result().iterator();
-				        Tuple row = resultSet.next();			        
+						RowIterator<Row> resultSet = r.result().iterator();
+				        Row row = resultSet.next();			        
 				        
-				        target.setId(row.getInteger(0));
-				        target.setResult(row.getInteger(1));					
+				        target.setId((Integer)row.getInteger(0));
+				        target.setResult((Integer)row.getInteger(1));					
 						target.setStatus(200);
 						
 					} else {

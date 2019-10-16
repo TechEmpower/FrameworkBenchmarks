@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.reactiverse.pgclient.Tuple;
 
 public class FortunesObject {
 

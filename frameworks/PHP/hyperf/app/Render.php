@@ -4,6 +4,8 @@ namespace App;
 
 
 use Hyperf\HttpMessage\Stream\SwooleStream;
+use Hyperf\Task\Task;
+use Hyperf\Task\TaskExecutor;
 use Hyperf\View\Engine\EngineInterface;
 use Hyperf\View\Mode;
 

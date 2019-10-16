@@ -41,7 +41,7 @@ class UpdateResource extends DbResource
         $count = $this->getQueriesCount($request);
 
         $payload = [];
-        while ($count-- > 0) {
+        while ($count--) {
             $id = mt_rand(1, 10000);
             $randomNumber = mt_rand(1, 10000);
 

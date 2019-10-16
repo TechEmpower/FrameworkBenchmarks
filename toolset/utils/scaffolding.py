@@ -205,7 +205,7 @@ class Scaffolding:
         prompt = "Database ["
         options = []
         for db in Metadata.supported_dbs:
-            print("  {!s}) {!s}: {!s}".format(i, db[0], db[1]))
+            print("  {!s}) {!s}".format(i, db[0]))
             prompt += "{!s}/".format(i)
             options.append(db[0])
             i += 1

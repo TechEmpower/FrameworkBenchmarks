@@ -12,6 +12,7 @@
 #include <drogon/orm/SqlBinder.h>
 #include <drogon/orm/Mapper.h>
 #include <trantor/utils/Date.h>
+#include <trantor/utils/Logger.h>
 #include <json/json.h>
 #include <string>
 #include <memory>
@@ -31,8 +32,8 @@ class World
   public:
     struct Cols
     {
-        static const std::string id;
-        static const std::string randomnumber;
+        static const std::string _id;
+        static const std::string _randomnumber;
     };
 
     const static int primaryKeyNumber;
@@ -41,8 +42,54 @@ class World
     const static std::string primaryKeyName;
     typedef int32_t PrimaryKeyType;
     const PrimaryKeyType &getPrimaryKey() const;
-    explicit World(const Row &r) noexcept;
+
+    /**
+     * @brief constructor
+     * @param r One row of records in the SQL query result.
+     * @param indexOffset Set the offset to -1 to access all columns by column
+     * names, otherwise access all columns by offsets.
+     * @note If the SQL is not a style of 'select * from table_name ...' (select
+     * all columns by an asterisk), please set the offset to -1.
+     */
+    explicit World(const Row &r, const ssize_t indexOffset = 0) noexcept;
+
+    /**
+     * @brief constructor
+     * @param pJson The json object to construct a new instance.
+     */
+    explicit World(const Json::Value &pJson) noexcept(false);
+
+    /**
+     * @brief constructor
+     * @param pJson The json object to construct a new instance.
+     * @param pMasqueradingVector The aliases of table columns.
+     */
+    World(const Json::Value &pJson,
+          const std::vector<std::string> &pMasqueradingVector) noexcept(false);
+
     World() = default;
+
+    void updateByJson(const Json::Value &pJson) noexcept(false);
+    void updateByMasqueradedJson(
+        const Json::Value &pJson,
+        const std::vector<std::string> &pMasqueradingVector) noexcept(false);
+    static bool validateJsonForCreation(const Json::Value &pJson,
+                                        std::string &err);
+    static bool validateMasqueradedJsonForCreation(
+        const Json::Value &,
+        const std::vector<std::string> &pMasqueradingVector,
+        std::string &err);
+    static bool validateJsonForUpdate(const Json::Value &pJson,
+                                      std::string &err);
+    static bool validateMasqueradedJsonForUpdate(
+        const Json::Value &,
+        const std::vector<std::string> &pMasqueradingVector,
+        std::string &err);
+    static bool validJsonOfField(size_t index,
+                                 const std::string &fieldName,
+                                 const Json::Value &pJson,
+                                 std::string &err,
+                                 bool isForCreation);
 
     /**  For column id  */
     /// Get the value of the column id, returns the default value if the column
@@ -52,7 +99,7 @@ class World
     /// empty shared_ptr object if the column is null
     const std::shared_ptr<int32_t> &getId() const noexcept;
     /// Set the value of the column id
-    void setId(const int32_t &id) noexcept;
+    void setId(const int32_t &pId) noexcept;
 
     /**  For column randomnumber  */
     /// Get the value of the column randomnumber, returns the default value if
@@ -62,7 +109,7 @@ class World
     /// empty shared_ptr object if the column is null
     const std::shared_ptr<int32_t> &getRandomnumber() const noexcept;
     /// Set the value of the column randomnumber
-    void setRandomnumber(const int32_t &randomnumber) noexcept;
+    void setRandomnumber(const int32_t &pRandomnumber) noexcept;
 
     static size_t getColumnNumber() noexcept
     {
@@ -71,6 +118,8 @@ class World
     static const std::string &getColumnName(size_t index) noexcept(false);
 
     Json::Value toJson() const;
+    Json::Value toMasqueradedJson(
+        const std::vector<std::string> &pMasqueradingVector) const;
 
   private:
     friend Mapper<World>;
@@ -94,7 +143,77 @@ class World
     };
     static const std::vector<MetaData> _metaData;
     bool _dirtyFlag[2] = {false};
-};
 
+  public:
+    static const std::string &sqlForFindingByPrimaryKey()
+    {
+        static const std::string sql =
+            "select * from " + tableName + " where id = $1";
+        return sql;
+    }
+
+    static const std::string &sqlForDeletingByPrimaryKey()
+    {
+        static const std::string sql =
+            "delete from " + tableName + " where id = $1";
+        return sql;
+    }
+    std::string sqlForInserting(bool &needSelection) const
+    {
+        std::string sql = "insert into " + tableName + " (";
+        size_t parametersCount = 0;
+        needSelection = false;
+        if (_dirtyFlag[0])
+        {
+            sql += "id,";
+            ++parametersCount;
+        }
+        sql += "randomnumber,";
+        ++parametersCount;
+        if (!_dirtyFlag[1])
+        {
+            needSelection = true;
+        }
+        if (parametersCount > 0)
+        {
+            sql[sql.length() - 1] = ')';
+            sql += " values (";
+        }
+        else
+            sql += ") values (";
+
+        int placeholder = 1;
+        char placeholderStr[64];
+        size_t n = 0;
+        if (_dirtyFlag[0])
+        {
+            n = sprintf(placeholderStr, "$%d,", placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        if (_dirtyFlag[1])
+        {
+            n = sprintf(placeholderStr, "$%d,", placeholder++);
+            sql.append(placeholderStr, n);
+        }
+        else
+        {
+            sql += "default,";
+        }
+        if (parametersCount > 0)
+        {
+            sql.resize(sql.length() - 1);
+        }
+        if (needSelection)
+        {
+            sql.append(") returning *");
+        }
+        else
+        {
+            sql.append(1, ')');
+        }
+        LOG_TRACE << sql;
+        return sql;
+    }
+};
 }  // namespace hello_world
 }  // namespace drogon_model

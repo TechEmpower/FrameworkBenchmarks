@@ -25,7 +25,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.0.0-preview7.19362.4" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0-preview7.19362.4" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0-preview7.19362.4" />
-    <!--PackageReference Include="RedHat.AspNetCore.Server.Kestrel.Transport.Linux" Version="2.2.0-*" /-->
+    <PackageReference Include="RedHat.AspNetCore.Server.Kestrel.Transport.Linux" Version="3.0.0-*" />
     <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="1.0.0-alpha-*" />
   </ItemGroup>
 </Project>

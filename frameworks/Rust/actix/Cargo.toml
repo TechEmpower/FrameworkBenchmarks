@@ -53,6 +53,7 @@ tokio-postgres = { git="https://github.com/fafhrd91/rust-postgres.git" }
 
 [build-dependencies]
 askama = "0.8"
+bindgen = "0.42"
 
 [profile.release]
 lto = true

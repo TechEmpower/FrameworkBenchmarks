@@ -1,5 +1,5 @@
-FROM adoptopenjdk/maven-openjdk12:latest as maven
-ENV wfly=17.0.0.Final
+FROM adoptopenjdk/maven-openjdk13:latest as maven
+ENV wfly=18.0.0.Final
 ENV JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Xms2g -Xmx2g"
 WORKDIR /wildfly
 COPY src src

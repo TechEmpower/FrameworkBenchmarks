@@ -50,9 +50,7 @@ namespace PlatformBenchmarks
         public HttpHandler()
         {
             int threads = System.Math.Min(Environment.ProcessorCount, 16);
-            if (Environment.ProcessorCount > 20)
-                threads = Environment.ProcessorCount * 2 / 3;
-            NextQueueGroup = new NextQueueGroup(2);
+            NextQueueGroup = new NextQueueGroup(threads);
           
         }
 
@@ -108,34 +106,37 @@ namespace PlatformBenchmarks
 
         private void OnProcess(PipeStream pipeStream,HttpToken token,ISession sessino)
         {
-
-            var result = pipeStream.IndexOf(_line.Data);
-            if (result.End == null)
-            {
-                return;
-            }
-            int len = result.Length;
-            pipeStream.Read(token.Buffer, 0, len);
-            ReadOnlySpan<byte> line = new Span<byte>(token.Buffer, 0, len);
-            ReadOnlySpan<byte> http = line;
-            ReadOnlySpan<byte> method = line;
-            ReadOnlySpan<byte> url = line;
+            var line = _line.AsSpan();
+            int len = (int)pipeStream.FirstBuffer.Length;
+            var receiveData = pipeStream.FirstBuffer.Memory.Span;      
+            ReadOnlySpan<byte> http= line;
+            ReadOnlySpan<byte> method= line;
+            ReadOnlySpan<byte> url= line;
             int offset2 = 0;
             int count = 0;
-            for (int i = 0; i < line.Length; i++)
+            for(int i=0;i<len;i++)
             {
-                if (line[i] == _Space)
+                if(receiveData[i]==line[0])
                 {
-                    if (count != 0)
+                    http = receiveData.Slice(offset2, i - offset2);
+                    break;
+                }
+                else
+                {
+                    if (receiveData[i] == _Space)
                     {
-                        url = line.Slice(offset2, i - offset2);
-                        offset2 = i + 1;
-                        http = line.Slice(offset2, line.Length - offset2 - 2);
-                        break;
+                        if (count != 0)
+                        {
+                            url = receiveData.Slice(offset2, i - offset2);
+                            offset2 = i + 1;
+                        }
+                        else
+                        {
+                            method = receiveData.Slice(offset2, i - offset2);
+                            offset2 = i + 1;
+                            count++;
+                        }
                     }
-                    method = line.Slice(offset2, i - offset2);
-                    offset2 = i + 1;
-                    count++;
                 }
             }
             OnStartLine(http, method, url, sessino, token, pipeStream);
@@ -143,17 +144,23 @@ namespace PlatformBenchmarks
 
         public override void SessionReceive(IServer server, SessionReceiveEventArgs e)
         {
+
             base.SessionReceive(server, e);
             PipeStream pipeStream = e.Session.Stream.ToPipeStream();
             HttpToken token = (HttpToken)e.Session.Tag;
-            
-            //RequestWork work = new RequestWork();
-            //work.Handler = this;
-            //work.Session = e.Session;
-            //work.Stream = pipeStream;
-            //work.Token = token;
-            //token.NextQueue.Enqueue(work);
-            OnProcess(pipeStream, token, e.Session);
+            if (Program.Debug)
+            {
+                RequestWork work = new RequestWork();
+                work.Handler = this;
+                work.Session = e.Session;
+                work.Stream = pipeStream;
+                work.Token = token;
+                token.NextQueue.Enqueue(work);
+            }
+            else
+            {
+                OnProcess(pipeStream, token, e.Session);
+            }
         }
 
 

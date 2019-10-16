@@ -1,1 +1,3 @@
+asyncpg==0.18.2
+jinja2==2.10.1
 sanic==0.7.0

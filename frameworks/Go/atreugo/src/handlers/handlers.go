@@ -7,7 +7,7 @@ import (
 	"atreugo/src/storage"
 	"atreugo/src/templates"
 
-	"github.com/savsgio/atreugo/v8"
+	"github.com/savsgio/atreugo/v9"
 )
 
 func queriesParam(ctx *atreugo.RequestCtx) int {
