@@ -9,7 +9,7 @@ from toolset.databases.abstract_database import AbstractDatabase
 
 class Database(AbstractDatabase):
 
-    margin = 1.0015
+    margin = 1.015
 
     @classmethod
     def get_connection(cls, config):

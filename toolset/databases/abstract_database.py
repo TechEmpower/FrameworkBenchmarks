@@ -6,7 +6,7 @@ class AbstractDatabase:
     Abstract Database Class.
     To be derived for defining a new concrete Database type
     '''
-    margin = 1
+    margin = 1.01
     
     @classmethod
     @abc.abstractmethod

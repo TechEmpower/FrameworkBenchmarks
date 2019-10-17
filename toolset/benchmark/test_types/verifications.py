@@ -334,8 +334,9 @@ def verify_query_cases(self, cases, url, check_updates=False):
     MAX = 500
     MIN = 1
     # Initialization for query counting
-    repetitions = 1
-    expected_queries = 20 * repetitions * 512
+    repetitions = 4
+    concurrency = 128
+    expected_queries = 20 * repetitions * concurrency
     expected_rows = expected_queries
 
     # Only load in the World table if we are doing an Update verification
@@ -394,7 +395,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
 
     if hasattr(self, 'database'):
         # verify the number of queries and rows read for 20 queries, with a concurrency level of 512, with 2 repetitions
-        problems += verify_queries_count(self, "world", url+"20", 512, repetitions, expected_queries, expected_rows, check_updates)
+        problems += verify_queries_count(self, "world", url+"20", concurrency, repetitions, expected_queries, expected_rows, check_updates)
     return problems
 
 
