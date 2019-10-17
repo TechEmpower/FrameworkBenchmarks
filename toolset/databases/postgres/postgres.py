@@ -57,27 +57,15 @@ class Database(AbstractDatabase):
 
     @classmethod
     def get_queries(cls, config):
-        db = cls.get_connection(config)
-        cursor = db.cursor()
-        cursor.execute("SELECT SUM(calls) FROM pg_stat_statements WHERE query ~* '[[:<:]]%s[[:>:]]'" % cls.tbl_name)
-        record = cursor.fetchone()
-        return record[0]
+        return cls.__exec_and_fetchone(config, "SELECT SUM(calls) FROM pg_stat_statements WHERE query ~* '[[:<:]]%s[[:>:]]'" % cls.tbl_name)
 
     @classmethod
     def get_rows(cls, config):
-        db = cls.get_connection(config)
-        cursor = db.cursor()
-        cursor.execute("SELECT SUM(rows) FROM pg_stat_statements WHERE query ~* '[[:<:]]%s[[:>:]]' AND query ~* 'select'" % cls.tbl_name)
-        record = cursor.fetchone()
-        return record[0]
+        return cls.__exec_and_fetchone(config, "SELECT SUM(rows) FROM pg_stat_statements WHERE query ~* '[[:<:]]%s[[:>:]]' AND query ~* 'select'" % cls.tbl_name)
 
     @classmethod
     def get_rows_updated(cls, config):
-        db = cls.get_connection(config)
-        cursor = db.cursor()
-        cursor.execute("SELECT SUM(rows) FROM pg_stat_statements WHERE query ~* '[[:<:]]%s[[:>:]]' AND query ~* 'update'" % cls.tbl_name)
-        record = cursor.fetchone()
-        return record[0]
+        return cls.__exec_and_fetchone(config, "SELECT SUM(rows) FROM pg_stat_statements WHERE query ~* '[[:<:]]%s[[:>:]]' AND query ~* 'update'" % cls.tbl_name)
 
     @classmethod
     def reset_cache(cls, config):
@@ -86,3 +74,11 @@ class Database(AbstractDatabase):
 #        cursor.execute("END;DISCARD ALL;")
 #        self.db.commit()
         return
+
+    @classmethod
+    def __exec_and_fetchone(cls, config, query):
+        db = cls.get_connection(config)
+        cursor = db.cursor()
+        cursor.execute(query)
+        record = cursor.fetchone()
+        return record[0]
