@@ -343,7 +343,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
     world_db_before = {}
     if check_updates:
         world_db_before = databases[self.database.lower()].get_current_world_table(self.config)
-        expected_queries = 2 * expected_queries
+        expected_queries = expected_queries + concurrency * repetitions #eventually bulk updates!
 
     for q, max_infraction in cases:
         case_url = url + q
