@@ -51,8 +51,7 @@ public class FrameworkTest implements GreenApp {
 	//TODO: add utility to compute this based on need.
 	static final int c = 148;//293;//592; // to reach 16K simultaneous calls
 
-	private final long defaultRate = Long.parseLong(System.getProperty("xx.rate", "180000")); //2.5K cycles per second
-	                                                                                          // at 512 requests is 1.28M/sec
+	private final long defaultRate = Long.parseLong(System.getProperty("xx.rate", "120000")); //was 180000
 	//Need to record how many records per pass are done...
 	
 	static {
@@ -81,9 +80,6 @@ public class FrameworkTest implements GreenApp {
     		 );
     	   	
     	System.out.println("xx.rate "+defaultRate+"  xx.ratio "+ServerSocketWriterStage.BASE_ADJUST+" xx.limitns "+ServerSocketWriterStage.HARD_LIMIT_NS);
-		
-    	
-    	
 		
     }   
         
@@ -147,11 +143,9 @@ public class FrameworkTest implements GreenApp {
     				.setPassword(connectionPassword)    		
     				.setCachePreparedStatements(true)
     				.setTcpNoDelay(true)
-    				.setTcpKeepAlive(true)
-    				
-    				;	    	
+    				.setTcpKeepAlive(true);	    	
 
-    		poolOptions = new PoolOptions()
+    		poolOptions = new PoolOptions()    				
     				  .setMaxSize(connectionsPerTrack);
     		
     		///early check to know if we have a database or not,
