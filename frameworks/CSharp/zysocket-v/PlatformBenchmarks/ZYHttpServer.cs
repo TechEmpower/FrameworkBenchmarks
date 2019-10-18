@@ -70,22 +70,20 @@ namespace PlatformBenchmarks
             var fiberRw = await socketAsync.GetFiberRw<HttpToken>();
             fiberRw.UserToken = new HttpToken
             {
-                Db= new RawDb(new ConcurrentRandom(), Npgsql.NpgsqlFactory.Instance)
+                Db = new RawDb(new ConcurrentRandom(), Npgsql.NpgsqlFactory.Instance)
             };
-            
-           
 
-            using (var data_r = fiberRw.GetMemory(4096))
-            using (var data_w = fiberRw.GetMemory(16384))
+
+
+            using var data_r = fiberRw.GetMemory(4096);
+            using var write = new WriteBytes(fiberRw);
+            for (; ; )
             {
-
-                for (; ; )
-                {
-                    await HttpHandler.Receive(fiberRw, data_r.Memory, data_w.Memory);
-                }
-
+                await HttpHandler.Receive(fiberRw, data_r.Memory, write);
             }
-            
+
+
+
         }
     }
 }
