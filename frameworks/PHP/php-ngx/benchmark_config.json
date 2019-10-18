@@ -46,7 +46,10 @@
       "versus": "php"
     },
     "async": {
+      "db_url": "/db",
+      "query_url": "/query?queries=",
       "fortune_url": "/fortune",
+      "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
