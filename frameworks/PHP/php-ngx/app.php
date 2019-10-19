@@ -20,8 +20,9 @@ function query()
     $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
 
     $query_count = 1;
-    if ($_GET['queries'] > 1) {
-        $query_count = min($_GET['queries'], 500);
+    $params      = ngx::query_args()['queries'];
+    if ($params > 1) {
+        $query_count = $params > 500 ? 500 : $params;
     }
 
     while ($query_count--) {
@@ -36,8 +37,9 @@ function update()
 {
     global $pdo;
     $query_count = 1;
-    if ($_GET['queries'] > 1) {
-        $query_count = min($_GET['queries'], 500);
+    $params      = ngx::query_args()['queries'];
+    if ($params > 1) {
+        $query_count = $params > 500 ? 500 : $params;
     }
 
     $statement       = $pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
