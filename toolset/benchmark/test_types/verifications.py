@@ -410,13 +410,18 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
 
     queries, rows, rows_updated, margin = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count, check_updates)
 
+    isBulk = check_updates and (queries < 1.001 * expected_queries) and (queries > 0.999 * expected_queries)
+    
+    if check_updates and not isBulk:#Restore the normal queries number if bulk queries are not used
+        expected_queries = (expected_queries - count * concurrency) * 2
+
     problems.append(display_queries_count_result(queries, expected_queries, queries, "executed queries", url))
 
     problems.append(display_queries_count_result(rows, expected_rows, int(rows / margin), "rows read", url))
 
     if check_updates:
         bulk_marge = 1
-        if (queries < 1.001 * expected_queries) and (queries > 0.999 * expected_queries):#bulk queries
+        if isBulk:#Special marge for bulk queries
             bulk_marge = 1.05
         problems.append(display_queries_count_result(rows_updated * bulk_marge, expected_rows, int(rows_updated / margin), "rows updated", url))
 
@@ -426,7 +431,12 @@ def display_queries_count_result(result, expected_result, displayed_result, capt
     '''
     Returns a single result in counting queries, rows read or updated 
     '''
-    if result < expected_result :
+    if result > expected_result * 1.05:
+        return (
+        "warn",
+        "%s %s in the database instead of %s expected. This number is excessively high."
+        % (displayed_result, caption, expected_result), url)
+    elif result < expected_result :
         return (
         "fail",
         "Only %s %s in the database out of roughly %s expected."
