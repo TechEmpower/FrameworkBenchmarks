@@ -51,14 +51,12 @@ class Database(AbstractDatabase):
     def get_queries(cls, config):
         db = cls.get_connection(config)
         cursor = db.cursor()
-        #Returns an empty result!!!
-        #cursor.execute("SELECT SUM(variable_value) as s FROM PERFORMANCE_SCHEMA.SESSION_STATUS where Variable_name in ('Com_select','Com_update')")
-        #so use of this inelegant solution
-        cursor.execute("Show global status like 'Com_select'")
-        recordS = cursor.fetchone()
-        cursor.execute("Show global status like 'Com_update'")
-        recordU = cursor.fetchone()
-        return int(recordS[1]) + int(recordU[1]) - 1
+        cursor.execute("Show global status where Variable_name in ('Com_select','Com_update')")
+        res = 0
+        records = cursor.fetchall()
+        for row in records:
+            res = res + int(row[1])
+        return res - 1
 
     @classmethod
     def get_rows(cls, config):
