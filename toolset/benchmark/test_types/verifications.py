@@ -416,7 +416,7 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
 
     if check_updates:
         bulk_marge = 1
-        if (queries < 1.001 * expected_queries) && (queries > 0.999 * expected_queries):#bulk queries
+        if (queries < 1.001 * expected_queries) and (queries > 0.999 * expected_queries):#bulk queries
             bulk_marge = 1.05
         problems.append(display_queries_count_result(rows_updated * bulk_marge, expected_rows, int(rows_updated / margin), "rows updated", url))
 
