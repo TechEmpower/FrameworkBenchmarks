@@ -41,7 +41,7 @@ function query()
     $query_count = 1;
     $params      = ngx::query_args()['queries'];
     if ($params > 1) {
-        $query_count = $params > 500 ? 500 : $params;
+        $query_count = min($params, 500);
     }
 
     while ($query_count--) {
@@ -72,7 +72,7 @@ function update()
     $query_count = 1;
     $params      = ngx::query_args()['queries'];
     if ($params > 1) {
-        $query_count = $params > 500 ? 500 : $params;
+        $query_count = min($params, 500);
     }
 
     while ($query_count--) {
