@@ -5,8 +5,9 @@ RUN pecl install swoole > /dev/null && \
 
 RUN docker-php-ext-install pdo_mysql > /dev/null
 
+ADD ./ /swoole
 WORKDIR /swoole
-COPY swoole-server-noasync.php swoole-server-noasync.php
+
 COPY php.ini /usr/local/etc/php/
 
 CMD php swoole-server-noasync.php

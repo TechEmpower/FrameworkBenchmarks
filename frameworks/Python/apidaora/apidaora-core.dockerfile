@@ -1,17 +1,12 @@
-FROM python:3.8-rc-buster
+FROM python:3.8
 
 ADD templates/fortune.html /apidaora/templates/
 
-ADD Cython-3.0a0-py3.8-linux-x86_64.egg \
-    uvloop-0.14.0.dev0-py3.8-linux-x86_64.egg \
-    /apidaora/
-
 WORKDIR /apidaora
 
-RUN easy_install Cython-3.0a0-py3.8-linux-x86_64.egg \
-    uvloop-0.14.0.dev0-py3.8-linux-x86_64.egg
-
 ADD requirements.txt /apidaora/
+
+RUN pip3 install cython==0.29.13
 
 RUN pip3 install -r /apidaora/requirements.txt
 

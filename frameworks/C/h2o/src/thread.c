@@ -102,9 +102,6 @@ void free_thread_context(thread_context_t *ctx)
 			ctx->json_generator = gen->l.next;
 			free_json_generator(gen, NULL, NULL, 0);
 		} while (ctx->json_generator);
-
-	if (ctx->global_data->ssl_ctx)
-		cleanup_openssl_thread_state();
 }
 
 global_thread_data_t *initialize_global_thread_data(const config_t *config,

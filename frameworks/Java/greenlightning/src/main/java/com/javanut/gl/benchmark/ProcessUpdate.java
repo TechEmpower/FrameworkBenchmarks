@@ -95,7 +95,8 @@ public class ProcessUpdate {
 					
 					connection.prepare("SELECT * FROM world WHERE id=$1", ph -> {
 						if (ph.succeeded()) {							
-							selectQuery = ph.result();														
+							selectQuery = ph.result();	
+							
 							building = false;
 							if (updateQuery==null) {
 								updateQuery();
