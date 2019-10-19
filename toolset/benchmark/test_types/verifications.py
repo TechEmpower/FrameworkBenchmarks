@@ -411,9 +411,14 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
     queries, rows, rows_updated, margin = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count, check_updates)
 
     problems.append(display_queries_count_result(queries, expected_queries, queries, "executed queries", url))
+
     problems.append(display_queries_count_result(rows, expected_rows, int(rows / margin), "rows read", url))
+
     if check_updates:
-        problems.append(display_queries_count_result(rows_updated, expected_rows, int(rows_updated / margin), "rows updated", url))
+        bulk_marge = 1
+        if (queries < 1.001 * expected_queries) && (queries > 0.999 * expected_queries):#bulk queries
+            bulk_marge = 1.05
+        problems.append(display_queries_count_result(rows_updated * bulk_marge, expected_rows, int(rows_updated / margin), "rows updated", url))
 
     return problems
 
