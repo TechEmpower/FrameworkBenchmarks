@@ -402,7 +402,8 @@ def verify_query_cases(self, cases, url, check_updates=False):
 def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected_queries=1024, expected_rows = 1024, check_updates = False):
     '''
     Checks that the number of executed queries, at the given concurrency level, 
-    corresponds to: the total number of http requests made * the number of queries per request
+    corresponds to: the total number of http requests made * the number of queries per request.
+    If bulk queries are detected, a margin (5%) is allowed on the number of updated rows. 
     '''
     log("VERIFYING QUERY COUNT FOR %s" % url, border='-', color=Fore.WHITE + Style.BRIGHT)
 
