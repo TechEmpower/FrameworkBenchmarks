@@ -335,7 +335,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
     MIN = 1
     # Initialization for query counting
     repetitions = 1
-    concurrency = 512
+    concurrency = max(self.config.concurrency_levels)
     expected_queries = 20 * repetitions * concurrency
     expected_rows = expected_queries
 
@@ -403,7 +403,9 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
     '''
     Checks that the number of executed queries, at the given concurrency level, 
     corresponds to: the total number of http requests made * the number of queries per request.
-    If bulk queries are detected, a margin (5%) is allowed on the number of updated rows. 
+    No margin is accepted on the number of queries, which seems reliable.
+    On the number of rows read or updated, the margin related to the database applies (1% by default see cls.margin)
+    On updates, if the use of bulk updates is detected (number of requests close to that expected), a margin (5% see bulk_margin) is allowed on the number of updated rows. 
     '''
     log("VERIFYING QUERY COUNT FOR %s" % url, border='-', color=Fore.WHITE + Style.BRIGHT)
 
@@ -421,16 +423,18 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
     problems.append(display_queries_count_result(rows, expected_rows, int(rows / margin), "rows read", url))
 
     if check_updates:
-        bulk_marge = 1
+        bulk_margin = 1
         if isBulk:#Special marge for bulk queries
-            bulk_marge = 1.05
-        problems.append(display_queries_count_result(rows_updated * bulk_marge, expected_rows, int(rows_updated / margin), "rows updated", url))
+            bulk_margin = 1.05
+        problems.append(display_queries_count_result(rows_updated * bulk_margin, expected_rows, int(rows_updated / margin), "rows updated", url))
 
     return problems
 
 def display_queries_count_result(result, expected_result, displayed_result, caption, url):
     '''
-    Returns a single result in counting queries, rows read or updated 
+    Returns a single result in counting queries, rows read or updated.
+    result corresponds to the effective result adjusted by the margin.
+    displayed_result is the effective result (without correction).
     '''
     if result > expected_result * 1.05:
         return (

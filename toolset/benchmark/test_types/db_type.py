@@ -24,7 +24,8 @@ class DBTestType(FrameworkTestType):
 
         # Initialization for query counting
         repetitions = 1
-        expected_queries = repetitions * 512
+        concurrency = max(self.config.concurrency_levels)
+        expected_queries = repetitions * concurrency
 
         url = base_url + self.db_url
         headers, body = self.request_headers_and_body(url)
@@ -57,7 +58,7 @@ class DBTestType(FrameworkTestType):
         problems += verify_headers(self.request_headers_and_body, headers, url, should_be='json')
 
         if len(problems) == 0:
-            problems += verify_queries_count(self, "World", url, 512, repetitions, expected_queries, expected_queries)
+            problems += verify_queries_count(self, "World", url, concurrency, repetitions, expected_queries, expected_queries)
         if len(problems) == 0:
             return [('pass', '', url)]
         else:

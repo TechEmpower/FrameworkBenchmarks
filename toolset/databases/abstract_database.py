@@ -6,6 +6,7 @@ class AbstractDatabase:
     Abstract Database Class.
     To be derived for defining a new concrete Database type
     '''
+    #margin of tolerance on the results (rows read or updated only)
     margin = 1.01
     
     @classmethod

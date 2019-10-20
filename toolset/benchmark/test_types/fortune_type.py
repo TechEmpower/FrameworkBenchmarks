@@ -25,7 +25,8 @@ class FortuneTestType(FrameworkTestType):
         '''
         # Initialization for query counting
         repetitions = 1
-        expected_queries = repetitions * 512
+        concurrency = max(self.config.concurrency_levels)
+        expected_queries = repetitions * concurrency
         expected_rows = 12 * expected_queries
 
         url = base_url + self.fortune_url
@@ -43,7 +44,7 @@ class FortuneTestType(FrameworkTestType):
         if valid:
             problems += verify_headers(self.request_headers_and_body, headers, url, should_be='html')
             if len(problems) == 0:
-                problems += verify_queries_count(self, "fortune", url, 512, repetitions, expected_queries, expected_rows)
+                problems += verify_queries_count(self, "fortune", url, concurrency, repetitions, expected_queries, expected_rows)
             if len(problems) == 0:
                 return [('pass', '', url)]
             else:
