@@ -178,8 +178,8 @@ Amp\Loop::run(function () {
 
     $options = (new Options)
         ->withoutCompression()
-        ->withConnectionLimit(16384)
-        ->withConnectionsPerIpLimit(16384);
+        ->withConnectionLimit(102400)
+        ->withConnectionsPerIpLimit(102400);
 
     $server = new Server($sockets, $router, $logger, $options);
 
