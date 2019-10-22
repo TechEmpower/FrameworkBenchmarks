@@ -18,7 +18,11 @@ define('DB_HOST', gethostbyname('tfb-database'));
 
 Amp\Loop::run(function () {
     $sockets = yield [
-        Cluster::listen('0.0.0.0:8080')
+        Cluster::listen('0.0.0.0:8080', 
+            (new Amp\Socket\BindContext)->withBacklog(102400)
+                                        ->withReusePort()
+                                        ->withTcpNoDelay()
+        )
     ];
 
     $router = new Router;
