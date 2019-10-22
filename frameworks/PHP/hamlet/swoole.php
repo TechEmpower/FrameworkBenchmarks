@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$database = new \Hamlet\Database\MySQLSwoole\MySQLSwooleDatabase(
+$database = new \Hamlet\Database\MySQL\MySQLDatabase(
     'tfb-database',
     'benchmarkdbuser',
     'benchmarkdbpass',
