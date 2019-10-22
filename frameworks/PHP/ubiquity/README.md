@@ -9,7 +9,7 @@ Tests are available with NginX server, Swoole and Workerman platforms.
 
 ## Test Type Implementation Source Code
 The tests are separated into 7 controllers:
-### Ubiquity + PDO
+### Ubiquity + PDO pgsql
 - `Json` for JSON response
   * [JSON](app/controllers/Json.php)
 - `Db` for database access with ORM (PDO Mysql)
@@ -21,13 +21,13 @@ The tests are separated into 7 controllers:
   * [FORTUNES](app/controllers/Fortunes.php)
 - `Plaintext` for plaintext response
   * [PLAINTEXT](app/controllers/Plaintext.php)
-### Ubiquity Swoole + Coroutine Mysql
+### Ubiquity Swoole + PDO Mysql
 - `SwooleDb` for database access with Swoole coroutine Mysql driver
   * [SwooleDb](app/controllers/SwooleDb.php)
 - `SwooleFortunes` used with Swoole
   * [SwooleFortunes](app/controllers/SwooleFortunes.php)
-### Ubiquity Workerman + Mysqli
-- `Workerman` with Mysqli driver
+### Ubiquity Workerman + PDO pgsql
+- `Workerman` with PDO pgsql driver
   * [WorkerDb](app/controllers/WorkerDb.php)
 - `WorkerFortunes` used with Workerman
   * [WorkerFortunes](app/controllers/WorkerFortunes.php)
