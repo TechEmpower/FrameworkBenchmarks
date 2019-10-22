@@ -42,7 +42,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "treefrog-hybrid",
+      "display_name": "treefrog-epoll",
       "notes": "",
       "versus": "treefrog"
     },
