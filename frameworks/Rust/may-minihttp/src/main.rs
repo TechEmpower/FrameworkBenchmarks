@@ -227,7 +227,7 @@ impl HttpService for Techempower {
                 serde_json::to_writer(
                     BodyWriter(rsp.body_mut()),
                     &HeloMessage {
-                        message: "Hello, World",
+                        message: "Hello, World!",
                     },
                 )?;
             }
