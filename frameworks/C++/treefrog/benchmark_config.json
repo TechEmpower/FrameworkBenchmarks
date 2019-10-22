@@ -23,7 +23,7 @@
       "notes": "",
       "versus": ""
     },
-    "hybrid": {
+    "epoll": {
       "json_url": "/json/json",
       "db_url": "/world/random",
       "query_url": "/world/queries/",
