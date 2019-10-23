@@ -6,10 +6,10 @@ use Workerman\Protocols\Http;
 use Workerman\Worker;
 
 $http_worker                = new Worker('http://0.0.0.0:8080');
-$http_worker->count         = shell_exec('nproc');
-$http_worker->onWorkerStart = function () {
+$http_worker->count         = shell_exec('nproc') * 3;
+$http_worker->onWorkerStart = static function () {
     global $db;
-    $db = new mysqli('p:tfb-database', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
+    $db = new mysqli('tfb-database', 'benchmarkdbuser', 'benchmarkdbpass', 'hello_world');
 };
 
 $http_worker->onMessage = static function ($connection) {
