@@ -22,7 +22,7 @@ public class FrameworkTest implements GreenApp {
     private String host;
     private int concurrentWritesPerChannel;
   
-    private int telemetryPort;//for monitoring
+    private int telemetryPort;
     private int minMemoryOfInputPipes;
     private int dbCallMaxResponseSize;
 	private	final int dbCallMaxResponseCount;
