@@ -22,7 +22,7 @@ public class FrameworkTest implements GreenApp {
     private String host;
     private int concurrentWritesPerChannel;
   
-    private int telemetryPort;//for monitoring
+    private int telemetryPort;
     private int minMemoryOfInputPipes;
     private int dbCallMaxResponseSize;
 	private	final int dbCallMaxResponseCount;
@@ -58,7 +58,7 @@ public class FrameworkTest implements GreenApp {
 		System.setProperty("java.lang.Integer.IntegerCache.high", ""+Integer.MAX_VALUE);
 
 		ServerSocketWriterStage.BASE_ADJUST = Float.parseFloat(System.getProperty("xx.ratio", "1"));
-		ServerSocketWriterStage.HARD_LIMIT_NS = Long.parseLong(System.getProperty("xx.limitns", "180000"));		
+		ServerSocketWriterStage.HARD_LIMIT_NS = Long.parseLong(System.getProperty("xx.limitns", "120000"));		
 	}
 	
     public FrameworkTest() {
