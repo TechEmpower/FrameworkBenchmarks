@@ -6,6 +6,7 @@ $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 
 function db()
 {
     global $pdo;
+    ngx_header_set('Content-Type', 'application/json');
 
     $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
 
@@ -16,6 +17,7 @@ function db()
 function query()
 {
     global $pdo;
+    ngx_header_set('Content-Type', 'application/json');
 
     $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
 
@@ -36,6 +38,8 @@ function query()
 function update()
 {
     global $pdo;
+    ngx_header_set('Content-Type', 'application/json');
+
     $query_count = 1;
     $params      = ngx::query_args()['queries'];
     if ($params > 1) {
@@ -63,6 +67,7 @@ function update()
 function fortune()
 {
     global $pdo;
+    ngx_header_set('Content-Type', 'text/html;charset=UTF-8');
 
     $fortune = $pdo->prepare('SELECT id,message FROM Fortune');
     $fortune->execute();
