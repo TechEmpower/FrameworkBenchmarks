@@ -13,6 +13,7 @@ import com.google.inject.Singleton;
 import com.google.inject.persist.Transactional;
 import ninja.jpa.UnitOfWork;
 import ninja.params.Param;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Singleton
 public class HelloDbController {
