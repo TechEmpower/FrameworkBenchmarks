@@ -1,7 +1,12 @@
-FROM swift:4.2
+FROM swift:5.1 as builder
 
-ADD ./ /vapor
-WORKDIR /vapor
+RUN apt-get -y update
+RUN apt-get -y install libssl-dev zlib1g-dev
+COPY ./app /app
+WORKDIR /app
 RUN swift build -c release
 
-CMD .build/release/Run -e production -b 0.0.0.0:8080
+FROM swift:5.1-slim as runtime
+COPY --from=builder /app /app
+WORKDIR /app
+CMD .build/release/app serve -e production -b 0.0.0.0:8080 --log notice
