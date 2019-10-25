@@ -420,9 +420,9 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
         expected_queries = (expected_queries - count * concurrency) * 2
 
     #Add a margin based on the number of processors
-    queries_margin = 1.015 #For a run on Travis 
+    queries_margin = 1.015 #For a run on Travis
     if multiprocessing.cpu_count()>2:
-        queries_margin = 1 # real run (Citrine or Azure)
+        queries_margin = 1 # real run (Citrine or Azure) -> no margin on queries
     problems.append(display_queries_count_result(queries * queries_margin, expected_queries, queries, "executed queries", url))
 
     problems.append(display_queries_count_result(rows, expected_rows, int(rows / margin), "rows read", url))
