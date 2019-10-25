@@ -56,7 +56,7 @@ class Database(AbstractDatabase):
         records = cursor.fetchall()
         for row in records:
             res = res + int(row[1])
-        return res - 1
+        return res
 
     @classmethod
     def get_rows(cls, config):
