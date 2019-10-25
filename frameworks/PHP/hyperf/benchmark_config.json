@@ -26,12 +26,9 @@
                 "versus": "swoole"
             },
             "raw": {
-                "json_url": "/json",
                 "db_url": "/raw-db",
                 "query_url": "/raw-queries/",
-                "fortune_url": "/fortunes",
                 "update_url": "/raw-updates/",
-                "plaintext_url": "/plaintext",
                 "port": 9501,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -49,12 +46,7 @@
                 "versus": "swoole"
             },
             "micro": {
-                "json_url": "/json",
-                "db_url": "/raw-db",
-                "query_url": "/raw-queries/",
                 "fortune_url": "/micro-fortunes",
-                "update_url": "/raw-updates/",
-                "plaintext_url": "/plaintext",
                 "port": 9501,
                 "approach": "Realistic",
                 "classification": "Micro",
