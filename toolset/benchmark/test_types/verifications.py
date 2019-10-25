@@ -1,6 +1,7 @@
 import json
 import re
 import traceback
+import multiprocessing
 
 from datetime import datetime
 from toolset.utils.output_helper import log
@@ -418,7 +419,11 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
     if check_updates and not isBulk:#Restore the normal queries number if bulk queries are not used
         expected_queries = (expected_queries - count * concurrency) * 2
 
-    problems.append(display_queries_count_result(queries, expected_queries, queries, "executed queries", url))
+    #Add a margin based on the number of processors
+    queries_margin = 1.015 #For a run on Travis 
+    if multiprocessing.cpu_count()>2:
+        queries_margin = 1 # real run (Citrine or Azure)
+    problems.append(display_queries_count_result(queries * queries_margin, expected_queries, queries, "executed queries", url))
 
     problems.append(display_queries_count_result(rows, expected_rows, int(rows / margin), "rows read", url))
 
