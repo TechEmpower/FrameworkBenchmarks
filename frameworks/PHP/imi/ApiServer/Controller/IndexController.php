@@ -53,10 +53,13 @@ class IndexController extends HttpController
      */
     public function query($queries)
     {
-        $queryCount = 1;
         if($queries > 1)
         {
             $queryCount = min($queries, 500);
+        }
+        else
+        {
+            $queryCount = 1;
         }
         $list = [];
         while ($queryCount--)
@@ -98,10 +101,13 @@ class IndexController extends HttpController
      */
     public function update($queries)
     {
-        $queryCount = 1;
         if($queries > 1)
         {
             $queryCount = min($queries, 500);
+        }
+        else
+        {
+            $queryCount = 1;
         }
         $list = [];
         while ($queryCount--)
