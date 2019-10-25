@@ -11,9 +11,4 @@ final class World: Model, Content {
     var randomNumber: Int
     
     init() { }
-
-    init(id: Int? = nil, randomNumber: Int) {
-        self.id = id
-        self.randomNumber = randomNumber
-    }
 }
