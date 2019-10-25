@@ -49,15 +49,14 @@ public class Query
     else if (queries > 500) {
       queries = 500;
     }
-    final World[] worlds = new World[queries];
 
-    // For generating a random row ID
-    final Random rand = ThreadLocalRandom.current();
-
-    for (int i = 0; i < queries; i++) {
-      // Read object from database
-      worlds[i] = (World)session.get(World.class, new Integer(rand.nextInt(DB_ROWS) + 1));
-    }
+    final World[] worlds = ThreadLocalRandom
+            .current()
+            .ints(1, DB_ROWS + 1)
+            .distinct()
+            .limit(queries)
+            .mapToObj(id -> session.get(World.class, id))
+            .toArray(World[]::new);
 
     // Send reponse
     String response = "";
