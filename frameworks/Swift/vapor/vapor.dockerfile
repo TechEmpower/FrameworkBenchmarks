@@ -9,4 +9,4 @@ RUN swift build -c release
 FROM swift:5.1-slim as runtime
 COPY --from=builder /app /app
 WORKDIR /app
-CMD .build/release/app serve -e production -b 0.0.0.0:8080 --log notice
+CMD .build/release/app serve -e production -b 0.0.0.0:8080
