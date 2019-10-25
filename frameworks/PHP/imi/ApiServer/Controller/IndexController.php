@@ -5,6 +5,7 @@ use ImiApp\Model\World;
 use ImiApp\Model\Fortune;
 use Imi\Controller\HttpController;
 use Imi\Db\Annotation\Transaction;
+use Imi\RequestContext;
 use Imi\Server\View\Annotation\View;
 use Imi\Server\Route\Annotation\Action;
 use Imi\Server\Route\Annotation\Controller;
@@ -32,7 +33,7 @@ class IndexController extends HttpController
      */
     public function plaintext()
     {
-        return $this->response->withHeader('Content-Type', 'text/plain')->write('Hello, World!');
+        return RequestContext::get('response')->withHeader('Content-Type', 'text/plain')->write('Hello, World!');
     }
 
     /**
@@ -73,7 +74,9 @@ class IndexController extends HttpController
      */
     public function fortunes()
     {
-        $this->response = $this->response->withHeader('Content-Type', 'text/html; charset=UTF-8');
+        RequestContext::use(function(&$context){
+            $context['response'] = $context['response']->withHeader('Content-Type', 'text/html; charset=UTF-8');
+        });
         $list = Fortune::select();
         $rows = [];
         foreach($list as $item)
