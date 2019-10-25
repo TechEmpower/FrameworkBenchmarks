@@ -11,7 +11,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <tapestry-release-version>5.5.0-beta-2</tapestry-release-version>
+        <tapestry-release-version>5.5.0-beta-3</tapestry-release-version>
         <servlet-api-release-version>3.1.0</servlet-api-release-version>
         <jaxb.version>2.4.0-b180830.0438</jaxb.version>
         <testng-release-version>5.14.10</testng-release-version>
