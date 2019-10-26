@@ -61,7 +61,7 @@ class IndexController
      */
     public function rawDb()
     {
-        return $this->response->json(Db::select('SELECT randomNumber FROM World WHERE id = ?', [random_int(1, 10000)]));
+        return $this->response->json(Db::select('SELECT id, randomNumber FROM World WHERE id = ?', [random_int(1, 10000)]));
     }
 
     /**
@@ -90,7 +90,7 @@ class IndexController
         $rows = [];
 
         while ($queries--) {
-            $rows[] = Db::select('SELECT randomNumber FROM World WHERE id = ?', [random_int(1, 10000)]);
+            $rows[] = Db::selectOne('SELECT id, randomNumber FROM World WHERE id = ?', [random_int(1, 10000)]);
         }
 
         return $this->response->json($rows);
