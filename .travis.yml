@@ -2,6 +2,7 @@
 #
 #
 
+arch: arm64
 sudo: required
 dist: xenial
 language: generic

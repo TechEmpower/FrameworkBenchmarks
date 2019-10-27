@@ -1,7 +1,0 @@
-# You may comment out entries below, but any other modifications may be lost.
-# Use command 'dpkg-reconfigure mysql-apt-config' as root for modifications.
-deb http://repo.mysql.com/apt/ubuntu/ bionic mysql-apt-config
-deb http://repo.mysql.com/apt/ubuntu/ bionic mysql-8.0
-deb http://repo.mysql.com/apt/ubuntu/ bionic mysql-tools
-#deb http://repo.mysql.com/apt/ubuntu/ bionic mysql-tools-preview
-deb-src http://repo.mysql.com/apt/ubuntu/ bionic mysql-8.0

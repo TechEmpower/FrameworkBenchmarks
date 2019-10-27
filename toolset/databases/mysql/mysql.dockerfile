@@ -1,11 +1,7 @@
-FROM buildpack-deps:bionic
+FROM buildpack-deps:eoan
 
 ADD create.sql create.sql
 ADD my.cnf my.cnf
-ADD mysql.list mysql.list
-
-RUN cp mysql.list /etc/apt/sources.list.d/
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8C718D3B5072E1F5
 
 RUN apt-get update > /dev/null
 RUN apt-get install -yqq locales > /dev/null
@@ -29,6 +25,7 @@ RUN rm -rf /ssd/mysql
 RUN rm -rf /ssd/log/mysql
 RUN cp -R -p /var/lib/mysql /ssd/
 RUN cp -R -p /var/log/mysql /ssd/log
+RUN install -dm755 /var/run/mysqld
 
 # It may seem weird that we call `service mysql start` several times, but the RUN
 # directive is a 1-time operation for building this image. Subsequent RUN calls
