@@ -18,6 +18,7 @@ import org.smartboot.http.server.handle.HttpHandle;
 import org.smartboot.socket.MessageProcessor;
 import org.smartboot.socket.StateMachineEnum;
 import org.smartboot.socket.extension.plugins.MonitorPlugin;
+import org.smartboot.socket.extension.plugins.SocketOptionPlugin;
 import org.smartboot.socket.extension.processor.AbstractMessageProcessor;
 import org.smartboot.socket.transport.AioQuickServer;
 import org.smartboot.socket.transport.AioSession;
@@ -79,7 +80,8 @@ public class Bootstrap {
                 processor.stateEvent(session, stateMachineEnum, throwable);
             }
         };
-        messageProcessor.addPlugin(new MonitorPlugin(5  ));
+        messageProcessor.addPlugin(new MonitorPlugin(5));
+        messageProcessor.addPlugin(new SocketOptionPlugin());
         // 定义服务器接受的消息类型以及各类消息对应的处理器
         AioQuickServer<Http11Request> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), messageProcessor);
         server.setReadBufferSize(1024 * 4);
