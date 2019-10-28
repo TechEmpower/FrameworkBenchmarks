@@ -12,7 +12,7 @@
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
-        "database": "Postgres",
+        "database": "MySQL",
         "framework": "ubiquity",
         "language": "PHP",
         "flavor": "PHP7",
