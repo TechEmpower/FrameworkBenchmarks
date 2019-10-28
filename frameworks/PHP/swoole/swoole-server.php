@@ -150,24 +150,24 @@ $server->on('request', function (Request $req, Response $res) use ($db, $fortune
                 $res->header('Content-Type', 'application/json');
 
                 if (isset($req->get['queries'])) {
-                    $res->end($db('mysql', (int)$req->get['queries']));
+                    $res->end($db((int)$req->get['queries']));
                 } else {
-                    $res->end($db('mysql', -1));
+                    $res->end($db(-1));
                 }
                 break;
 
             case '/fortunes':
                 $res->header('Content-Type', 'text/html; charset=utf-8');
-                $res->end($fortunes('mysql'));
+                $res->end($fortunes());
                 break;
 
             case '/updates':
                 $res->header('Content-Type', 'application/json');
 
                 if (isset($req->get['queries'])) {
-                    $res->end($updates('mysql', (int)$req->get['queries']));
+                    $res->end($updates((int)$req->get['queries']));
                 } else {
-                    $res->end($updates('mysql', -1));
+                    $res->end($updates(-1));
                 }
                 break;
 
