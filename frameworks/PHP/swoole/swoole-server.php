@@ -240,7 +240,7 @@ class DatabasePool
         $this->pool->push($db);
     }
 
-    public function get(string $server_type)
+    public function get()
     {
         return $this->pool->pop();
     }
