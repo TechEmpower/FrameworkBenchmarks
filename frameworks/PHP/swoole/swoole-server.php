@@ -8,7 +8,14 @@ $server->set([
     'worker_num' => swoole_cpu_num()
 ]);
 
-$pool = new DatabasePool();
+$pool = new \DatabasePool('mysql');
+
+/**
+ * On start of the PHP worker. One worker per server process is started.
+ */
+$server->on('workerStart', function ($srv) use ($pool) {
+	$pool->init(\intdiv(512, $srv->setting['worker_num']));
+});
 
 /**
  * The DB test
@@ -18,8 +25,8 @@ $pool = new DatabasePool();
  *
  * @return string
  */
-$db = function (string $database_type, int $queries = 0) use ($pool): string {
-    $db = $pool->get($database_type);
+$db = function (int $queries = 0) use ($pool): string {
+    $db = $pool->get();
 
     // Read number of queries to run from URL parameter
     $query_count = 1;
@@ -49,7 +56,7 @@ $db = function (string $database_type, int $queries = 0) use ($pool): string {
 
     $pool->put($db);
 
-    return json_encode($arr);
+    return \json_encode($arr);
 };
 
 /**
@@ -59,8 +66,8 @@ $db = function (string $database_type, int $queries = 0) use ($pool): string {
  *
  * @return string
  */
-$fortunes = function (string $database_type) use ($pool): string {
-    $db = $pool->get($database_type);
+$fortunes = function () use ($pool): string {
+    $db = $pool->get();
 
     $fortune = [];
     $db->fortune_test = $db->fortune_test ?? $db->prepare('SELECT id, message FROM Fortune');
@@ -69,11 +76,11 @@ $fortunes = function (string $database_type) use ($pool): string {
         $fortune[$row['id']] = $row['message'];
     }
     $fortune[0] = 'Additional fortune added at request time.';
-    asort($fortune);
+    \asort($fortune);
 
     $html = '';
     foreach ($fortune as $id => $message) {
-        $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+        $message = \htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
         $html .= "<tr><td>{$id}</td><td>{$message}</td></tr>";
     }
 
@@ -92,8 +99,8 @@ $fortunes = function (string $database_type) use ($pool): string {
  *
  * @return string
  */
-$updates = function (string $database_type, int $queries = 0) use ($pool): string {
-    $db = $pool->get($database_type);
+$updates = function (int $queries = 0) use ($pool): string {
+    $db = $pool->get();
 
     $query_count = 1;
     if ($queries > 1) {
@@ -119,15 +126,9 @@ $updates = function (string $database_type, int $queries = 0) use ($pool): strin
 
     $pool->put($db);
 
-    return json_encode($arr);
+    return \json_encode($arr);
 };
 
-/**
- * On start of the PHP worker. One worker per server process is started.
- */
-//$server->on('workerStart', function () use ($pool) {
-
-//});
 
 /**
  * On every request to the (web)server, execute the following code
@@ -149,49 +150,24 @@ $server->on('request', function (Request $req, Response $res) use ($db, $fortune
                 $res->header('Content-Type', 'application/json');
 
                 if (isset($req->get['queries'])) {
-                    $res->end($db('mysql', (int)$req->get['queries']));
+                    $res->end($db((int)$req->get['queries']));
                 } else {
-                    $res->end($db('mysql', -1));
+                    $res->end($db(-1));
                 }
                 break;
 
             case '/fortunes':
                 $res->header('Content-Type', 'text/html; charset=utf-8');
-                $res->end($fortunes('mysql'));
+                $res->end($fortunes());
                 break;
 
             case '/updates':
                 $res->header('Content-Type', 'application/json');
 
                 if (isset($req->get['queries'])) {
-                    $res->end($updates('mysql', (int)$req->get['queries']));
+                    $res->end($updates((int)$req->get['queries']));
                 } else {
-                    $res->end($updates('mysql', -1));
-                }
-                break;
-
-            case '/db_postgres':
-                $res->header('Content-Type', 'application/json');
-
-                if (isset($req->get['queries'])) {
-                    $res->end($db('postgres', (int)$req->get['queries']));
-                } else {
-                    $res->end($db('postgres', -1));
-                }
-                break;
-
-            case '/fortunes_postgres':
-                $res->header('Content-Type', 'text/html; charset=utf-8');
-                $res->end($fortunes('postgres'));
-                break;
-
-            case '/updates_postgres':
-                $res->header('Content-Type', 'application/json');
-
-                if (isset($req->get['queries'])) {
-                    $res->end($updates('postgres', (int)$req->get['queries']));
-                } else {
-                    $res->end($updates('postgres', -1));
+                    $res->end($updates(-1));
                 }
                 break;
 
@@ -224,38 +200,48 @@ class DatabasePool
     ];
 
     private $pool;
-    private $pool_count = 0;
+    
+    private $type;
 
-    function __construct()
+    public function __construct($type)
     {
-        $this->pool = new \SplQueue;
-        $this->server['host'] = gethostbyname('tfb-database');
+        $this->server['host'] = \gethostbyname('tfb-database');
+        $this->type = $type;
     }
-
-    function put($db)
+    
+    public function init($capacity)
     {
-        $this->pool->enqueue($db);
-        $this->pool_count++;
-    }
-
-    function get(string $server_type)
-    {
-        if ($this->pool_count > 0) {
-            $this->pool_count--;
-            return $this->pool->dequeue();
+        $this->pool=new \Swoole\Coroutine\Channel($capacity);
+        while($capacity>0){
+            $db=$this->createDbInstance();
+            if($db!==false){
+                $this->pool->push($db);
+                $capacity--;
+            }
         }
-        
-        // No idle connection, time to create a new connection
-        if ($server_type === 'mysql') {
+    }
+
+    private function createDbInstance()
+    {
+        if ($this->type === 'mysql') {
             $db = new Swoole\Coroutine\Mysql;
         }
-
-        if ($server_type === 'postgres') {
+        if ($this->type === 'postgres') {
             $db = new Swoole\Coroutine\PostgreSql;
         }
+        if ($db->connect($this->server)){
+            return $db;
+        }
+        return false;
+    }
 
-        $db->connect($this->server);
+    public function put($db)
+    {
+        $this->pool->push($db);
+    }
 
-        return $db;
+    public function get()
+    {
+        return $this->pool->pop();
     }
 }
