@@ -1,7 +1,0 @@
-[global]
-template_dir = "src/templates/"
-
-[production]
-port = 8000
-log = "critical"
-secret_key = "dY+Rj2ybjGxKetLawKGSWi6EzESKejvENbQ3stffZg0="

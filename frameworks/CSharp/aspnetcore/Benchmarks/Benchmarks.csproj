@@ -17,7 +17,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0-preview7.19362.6" />
 
     <PackageReference Include="Dapper" Version="1.60.6" />
-    <PackageReference Include="MySqlConnector" Version="0.56.0" />
+    <PackageReference Include="MySqlConnector" Version="0.60.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.0.0-preview7" />
   </ItemGroup>
 </Project>

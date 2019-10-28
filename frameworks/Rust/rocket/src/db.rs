@@ -31,5 +31,5 @@ impl Deref for DbConn {
 
 pub fn init_pool() -> PgPool {
     let manager = ConnectionManager::<PgConnection>::new(env!("DATABASE_URL"));
-    Pool::new(manager).expect("db pool")
+    Pool::builder().max_size((num_cpus::get()*16) as u32).build(manager).expect("db pool")
 }
