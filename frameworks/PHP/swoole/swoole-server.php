@@ -8,7 +8,14 @@ $server->set([
     'worker_num' => swoole_cpu_num()
 ]);
 
-$pool = new DatabasePool('mysql');
+$pool = new \DatabasePool('mysql');
+
+/**
+ * On start of the PHP worker. One worker per server process is started.
+ */
+$server->on('workerStart', function ($srv) use ($pool) {
+	$pool->init(\intdiv(512, $srv->setting['worker_num']));
+});
 
 /**
  * The DB test
@@ -122,12 +129,6 @@ $updates = function (int $queries = 0) use ($pool): string {
     return \json_encode($arr);
 };
 
-/**
- * On start of the PHP worker. One worker per server process is started.
- */
-$server->on('workerStart', function ($srv) use ($pool) {
-	$pool->init(\intdiv(512, $srv->setting['worker_num']));
-});
 
 /**
  * On every request to the (web)server, execute the following code
@@ -202,13 +203,13 @@ class DatabasePool
     
     private $type;
 
-    function __construct($type)
+    public function __construct($type)
     {
         $this->server['host'] = \gethostbyname('tfb-database');
         $this->type = $type;
     }
     
-    function init($capacity)
+    public function init($capacity)
     {
         $this->pool=new \Swoole\Coroutine\Channel($capacity);
         while($capacity>0){
@@ -234,12 +235,12 @@ class DatabasePool
         return false;
     }
 
-    function put($db)
+    public function put($db)
     {
         $this->pool->push($db);
     }
 
-    function get(string $server_type)
+    public function get(string $server_type)
     {
         return $this->pool->pop();
     }
