@@ -6,7 +6,7 @@ return array(
 			"type" => "mysql",
 			"dbName" => "hello_world",
 			"serverName" => "tfb-database", // tfb-database
-			"port" => "3306",
+			"port" => 3306,
 			"user" => "benchmarkdbuser", // benchmarkdbuser
 			"password" => "benchmarkdbpass", // benchmarkdbpass
 			"options" => [
@@ -14,27 +14,18 @@ return array(
 			],
 			"cache"=>false
 		],
-		'swoole'=>[
-			"wrapper"=>"\\Ubiquity\\db\\providers\\swoole\\SwooleWrapper",
-			"type" => "mysql",
+		'pgsql'=>[
+			"wrapper"=>"\\Ubiquity\\db\\providers\\pdo\\PDOWrapper",
+			"type" => "pgsql",
 			"dbName" => "hello_world",
 			"serverName" => "tfb-database", // tfb-database
-			"port" => "3306",
+			"port" => 5432,
 			"user" => "benchmarkdbuser", // benchmarkdbuser
 			"password" => "benchmarkdbpass", // benchmarkdbpass
-			"options" => [],
-			"cache" => false
-		],
-		'worker'=>[
-			"wrapper"=>"\\Ubiquity\\db\\providers\\mysqli\\MysqliWrapper",
-			"type" => "mysql",
-			"dbName" => "hello_world",
-			"serverName" => "p:tfb-database", // tfb-database
-			"port" => "3306",
-			"user" => "benchmarkdbuser", // benchmarkdbuser
-			"password" => "benchmarkdbpass", // benchmarkdbpass
-			"options" => [],
-			"cache" => false
+			"options" => [
+				\PDO::ATTR_PERSISTENT => true
+			],
+			"cache"=>false
 		]
 	],
 	"test" => false,

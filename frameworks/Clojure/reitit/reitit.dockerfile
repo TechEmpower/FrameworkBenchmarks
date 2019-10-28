@@ -1,4 +1,4 @@
-FROM clojure:lein-2.8.1
+FROM clojure:openjdk-11-lein-2.9.1
 WORKDIR /reitit
 COPY src src
 COPY project.clj project.clj

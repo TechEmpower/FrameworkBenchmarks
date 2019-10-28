@@ -22,7 +22,7 @@ public class FrameworkTest implements GreenApp {
     private String host;
     private int concurrentWritesPerChannel;
   
-    private int telemetryPort;//for monitoring
+    private int telemetryPort;
     private int minMemoryOfInputPipes;
     private int dbCallMaxResponseSize;
 	private	final int dbCallMaxResponseCount;
@@ -51,15 +51,14 @@ public class FrameworkTest implements GreenApp {
 	//TODO: add utility to compute this based on need.
 	static final int c = 148;//293;//592; // to reach 16K simultaneous calls
 
-	private final long defaultRate = Long.parseLong(System.getProperty("xx.rate", "180000")); //2.5K cycles per second
-	                                                                                          // at 512 requests is 1.28M/sec
+	private final long defaultRate = Long.parseLong(System.getProperty("xx.rate", "120000")); //was 180000
 	//Need to record how many records per pass are done...
 	
 	static {
 		System.setProperty("java.lang.Integer.IntegerCache.high", ""+Integer.MAX_VALUE);
 
 		ServerSocketWriterStage.BASE_ADJUST = Float.parseFloat(System.getProperty("xx.ratio", "1"));
-		ServerSocketWriterStage.HARD_LIMIT_NS = Long.parseLong(System.getProperty("xx.limitns", "180000"));		
+		ServerSocketWriterStage.HARD_LIMIT_NS = Long.parseLong(System.getProperty("xx.limitns", "120000"));		
 	}
 	
     public FrameworkTest() {
@@ -81,9 +80,6 @@ public class FrameworkTest implements GreenApp {
     		 );
     	   	
     	System.out.println("xx.rate "+defaultRate+"  xx.ratio "+ServerSocketWriterStage.BASE_ADJUST+" xx.limitns "+ServerSocketWriterStage.HARD_LIMIT_NS);
-		
-    	
-    	
 		
     }   
         
@@ -108,7 +104,7 @@ public class FrameworkTest implements GreenApp {
     	this.telemetryPort = telemetryPort;
     	this.pipelineBits = 15;//max concurrent in flight database requests 1<<pipelineBits
     	            
-    	this.dbCallMaxResponseCount = c;
+    	this.dbCallMaxResponseCount = c*8; //this will limit the in flight DB calls so make it larger
     	this.jsonMaxResponseCount = c*16*4;
     	
     	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
@@ -147,11 +143,9 @@ public class FrameworkTest implements GreenApp {
     				.setPassword(connectionPassword)    		
     				.setCachePreparedStatements(true)
     				.setTcpNoDelay(true)
-    				.setTcpKeepAlive(true)
-    				
-    				;	    	
+    				.setTcpKeepAlive(true);	    	
 
-    		poolOptions = new PoolOptions()
+    		poolOptions = new PoolOptions()    				
     				  .setMaxSize(connectionsPerTrack);
     		
     		///early check to know if we have a database or not,

@@ -9,5 +9,4 @@ WORKDIR /swoole
 COPY swoole-server.php swoole-server.php
 COPY php.ini /usr/local/etc/php/
 
-CMD sed -i 's|NUMCORES|'"$(nproc)"'|g' swoole-server.php && \
-    php swoole-server.php
+CMD php swoole-server.php

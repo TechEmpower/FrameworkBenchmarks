@@ -1,10 +1,11 @@
-FROM ubuntu:16.04
+FROM ubuntu:19.10
 
+WORKDIR /h2o_app_src
 COPY ./ ./
 
 RUN apt update && \
     apt install -yqq autoconf bison cmake curl file flex g++ git libnuma-dev libpq-dev libssl-dev \
-                     libtool libyajl-dev make wget
+                     libtool libyajl-dev libz-dev make wget
 
 ### Install mustache-c
 

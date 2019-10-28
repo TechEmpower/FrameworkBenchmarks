@@ -12,7 +12,7 @@
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
-        "database": "MySQL",
+        "database": "Postgres",
         "framework": "ubiquity",
         "language": "PHP",
         "flavor": "PHP7",
@@ -35,7 +35,7 @@
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
-        "database": "MySQL",
+        "database": "Postgres",
         "framework": "Ubiquity",
         "language": "PHP",
         "flavor": "PHP7",
@@ -67,7 +67,7 @@
         "webserver": "none",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ubiquity-swoole",
+        "display_name": "ubiquity-swoole-mysql",
         "notes": "",
         "versus": "swoole"
       }

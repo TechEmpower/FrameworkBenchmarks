@@ -1,10 +1,5 @@
 import copy
-import json
 import requests
-import MySQLdb
-import psycopg2
-import pymongo
-import traceback
 
 from colorama import Fore
 from toolset.utils.output_helper import log
@@ -134,81 +129,3 @@ class FrameworkTestType:
         Use before calling parse
         '''
         return copy.copy(self)
-
-    def get_current_world_table(self):
-        '''
-        Return a JSON object containing all 10,000 World items as they currently
-        exist in the database. This is used for verifying that entries in the
-        database have actually changed during an Update verification test.
-        '''
-        database_name = ""
-        results_json = []
-        try:
-            database_name = self.database.lower()
-        except AttributeError:
-            pass
-
-        if database_name == "mysql":
-            try:
-                db = MySQLdb.connect(self.config.database_host,
-                                     "benchmarkdbuser", "benchmarkdbpass",
-                                     "hello_world")
-                cursor = db.cursor()
-                cursor.execute("SELECT * FROM World")
-                results = cursor.fetchall()
-                results_json.append(json.loads(json.dumps(dict(results))))
-                db.close()
-            except Exception:
-                tb = traceback.format_exc()
-                log("ERROR: Unable to load current MySQL World table.",
-                    color=Fore.RED)
-                log(tb)
-        elif database_name == "postgres":
-            try:
-                db = psycopg2.connect(
-                    host=self.config.database_host,
-                    port="5432",
-                    user="benchmarkdbuser",
-                    password="benchmarkdbpass",
-                    database="hello_world")
-                cursor = db.cursor()
-                cursor.execute("SELECT * FROM \"World\"")
-                results = cursor.fetchall()
-                results_json.append(json.loads(json.dumps(dict(results))))
-                cursor = db.cursor()
-                cursor.execute("SELECT * FROM \"world\"")
-                results = cursor.fetchall()
-                results_json.append(json.loads(json.dumps(dict(results))))
-                db.close()
-            except Exception:
-                tb = traceback.format_exc()
-                log("ERROR: Unable to load current Postgres World table.",
-                    color=Fore.RED)
-                log(tb)
-        elif database_name == "mongodb":
-            try:
-                worlds_json = {}
-                print("DATABASE_HOST: %s" % self.config.database_host)
-                connection = pymongo.MongoClient(
-                    host=self.config.database_host)
-                db = connection.hello_world
-                for world in db.world.find():
-                    if "randomNumber" in world:
-                        if "id" in world:
-                            worlds_json[str(int(world["id"]))] = int(
-                                world["randomNumber"])
-                        elif "_id" in world:
-                            worlds_json[str(int(world["_id"]))] = int(
-                                world["randomNumber"])
-                results_json.append(worlds_json)
-                connection.close()
-            except Exception:
-                tb = traceback.format_exc()
-                log("ERROR: Unable to load current MongoDB World table.",
-                    color=Fore.RED)
-                log(tb)
-        else:
-            raise ValueError(
-                "Database: {!s} does not exist".format(database_name))
-
-        return results_json

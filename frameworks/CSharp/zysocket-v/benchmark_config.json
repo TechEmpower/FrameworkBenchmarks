@@ -1,0 +1,29 @@
+{
+  "framework": "zysocket-v",
+  "tests": [
+    {
+      "default": {    
+        "fortune_url": "/fortunes",  
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",   
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "zysocket-v",
+        "language": "C#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "zysocket-v",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "zysocket-v",
+        "notes": "",
+        "versus": "aspcore-mvc"
+      }
+    }
+  ]
+}

@@ -7,7 +7,7 @@ use Workerman\Protocols\Http;
 use Workerman\Worker;
 
 $http_worker                = new Worker('http://0.0.0.0:8080');
-$http_worker->count         = shell_exec('nproc') * 2;
+$http_worker->count         = shell_exec('nproc') * 3;
 $http_worker->onWorkerStart = function () {
     global $pdo, $fortune, $statement;
     $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world',
@@ -35,22 +35,22 @@ $http_worker->onMessage = static function ($connection) {
             return $connection->send(dbraw());
 
         case '/fortune':
-            Http::header('Content-Type: text/html; charset=utf-8');
+            // By default use 'Content-Type: text/html; charset=utf-8';
             return $connection->send(fortune());
 
         case '/update':
             Http::header('Content-Type: application/json');
             return $connection->send(updateraw());
 
-            //case '/info':
-            //   Http::header('Content-Type: text/plain');
-            //   ob_start();
-            //   phpinfo();
-            //   $connection->send(ob_get_clean());
+        //case '/info':
+        //   Http::header('Content-Type: text/plain');
+        //   ob_start();
+        //   phpinfo();
+        //   return $connection->send(ob_get_clean());
 
-            //default:
-            //   Http::header('HTTP', true, 404);
-            //   $connection->send('Error 404');
+        default:
+            Http::responseCode(404);
+            $connection->send('Error 404');
     }
 };
 

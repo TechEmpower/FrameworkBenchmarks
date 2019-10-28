@@ -18,8 +18,9 @@ public class PoolManager {
 		this.options = options;
 		this.poolOptions = poolOptions;
 		
-		this.vertx = Vertx.vertx(new VertxOptions().
-				  setPreferNativeTransport(true)
+		this.vertx = Vertx.vertx(new VertxOptions()
+				  .setPreferNativeTransport(true)
+				  .setWorkerPoolSize(4)//limit threads for this track
 				);
 		
 		boolean usingNative = vertx.isNativeTransportEnabled();

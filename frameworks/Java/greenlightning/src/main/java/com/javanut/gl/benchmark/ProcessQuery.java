@@ -3,6 +3,7 @@ package com.javanut.gl.benchmark;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.javanut.gl.api.HTTPRequestReader;
 import com.javanut.gl.api.HTTPResponseService;
@@ -18,7 +19,7 @@ import io.vertx.sqlclient.Tuple;
 public class ProcessQuery {
 	
 	private final transient ObjectPipe<ResultObject> DBRestInFlight;
-	private boolean collectionPendingDBRest = false;
+	private AtomicBoolean collectionPendingDBRest = new AtomicBoolean(false);
 	private transient final List<ResultObject> collectorDBRest = new ArrayList<ResultObject>();
 	private final HTTPResponseService service;
 	private transient final PoolManager pm;
@@ -151,9 +152,11 @@ public class ProcessQuery {
 
 	private boolean isReadyDBRest(ResultObject temp) {
 
-		if (collectionPendingDBRest) {
+		if (collectionPendingDBRest.get()) {
 			//now ready to send, we have all the data	
-			if (!publishMultiDBResponse(collectorDBRest.get(0).getConnectionId(), collectorDBRest.get(0).getSequenceId() )) {				
+			ResultObject resultObject = collectorDBRest.get(0);
+			if (!publishMultiDBResponse(resultObject.getConnectionId(), 
+					                    resultObject.getSequenceId() )) {				
 				return false;
 			}
 		}
@@ -226,7 +229,7 @@ public class ProcessQuery {
 					    					   collectorDBRest.clear();					    					   
 					    					   DBRestInFlight.publishTailPosition();
 					    				   });
-		collectionPendingDBRest = !result;
+		collectionPendingDBRest.set(!result);
 		return result;
 	}
 
