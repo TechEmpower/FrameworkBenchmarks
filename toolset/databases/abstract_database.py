@@ -7,7 +7,7 @@ class AbstractDatabase:
     To be derived for defining a new concrete Database type
     '''
     #margin of tolerance on the results (rows read or updated only)
-    margin = 1.01
+    margin = 1.011
     
     @classmethod
     @abc.abstractmethod
