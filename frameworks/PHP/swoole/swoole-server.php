@@ -37,7 +37,7 @@ $db = function (int $queries = 0) use ($pool): string {
     // Create an array with the response string.
     $arr = [];
     // Define query
-    $db->db_test = $db->db_test ?? $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
+    $db->db_test = $db->db_test ?? $db->prepare('SELECT id, randomNumber FROM World WHERE id = ?');
 
     // For each query, store the result set values in the response array
     while ($query_count--) {
@@ -56,7 +56,7 @@ $db = function (int $queries = 0) use ($pool): string {
 
     $pool->put($db);
 
-    return \json_encode($arr);
+    return \json_encode($arr, JSON_NUMERIC_CHECK);
 };
 
 /**
@@ -126,7 +126,7 @@ $updates = function (int $queries = 0) use ($pool): string {
 
     $pool->put($db);
 
-    return \json_encode($arr);
+    return \json_encode($arr, JSON_NUMERIC_CHECK);
 };
 
 
