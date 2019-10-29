@@ -1,5 +1,6 @@
 import abc
-import os
+import commands
+import re
 
 class AbstractDatabase:
     '''
@@ -75,6 +76,7 @@ class AbstractDatabase:
         Run 2 repetitions of http requests at the concurrency level 512 with siege.
         Retrieve statistics again, calculate the number of queries made and the number of rows read.
         '''
+        failures = 0
         rows_updated = None
         cls.tbl_name = table_name # used for Postgres and mongodb
 
@@ -86,11 +88,15 @@ class AbstractDatabase:
         cls.reset_cache(config)
         #Start siege requests
         path = config.db_root
-        os.system("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path))
+        output = commands.getoutput("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path))
+        print output
+        match = re.search('Failed transactions:.*?(\d+)\n', output, re.MULTILINE)
+        if match:
+            failures = int(match.group(1))
 
         queries = int(cls.get_queries(config)) - queries
         rows = int(cls.get_rows(config)) - rows
         if check_updates:
             rows_updated = int(cls.get_rows_updated(config)) - rows_updated
 
-        return queries, rows, rows_updated, cls.margin
+        return queries, rows, rows_updated, cls.margin, failures
