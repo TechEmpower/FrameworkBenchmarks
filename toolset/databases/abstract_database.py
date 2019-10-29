@@ -76,7 +76,7 @@ class AbstractDatabase:
         Run 2 repetitions of http requests at the concurrency level 512 with siege.
         Retrieve statistics again, calculate the number of queries made and the number of rows read.
         '''
-        failures = 0
+        trans_failures = 0
         rows_updated = None
         cls.tbl_name = table_name # used for Postgres and mongodb
 
@@ -90,13 +90,15 @@ class AbstractDatabase:
         path = config.db_root
         output = commands.getoutput("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path))
         print output
+
+        #Search for failed transactions
         match = re.search('Failed transactions:.*?(\d+)\n', output, re.MULTILINE)
         if match:
-            failures = int(match.group(1))
+            trans_failures = int(match.group(1))
 
         queries = int(cls.get_queries(config)) - queries
         rows = int(cls.get_rows(config)) - rows
         if check_updates:
             rows_updated = int(cls.get_rows_updated(config)) - rows_updated
 
-        return queries, rows, rows_updated, cls.margin, failures
+        return queries, rows, rows_updated, cls.margin, trans_failures

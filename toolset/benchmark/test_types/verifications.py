@@ -412,13 +412,14 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
 
     problems = []
 
-    queries, rows, rows_updated, margin, failures = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count, check_updates)
+    queries, rows, rows_updated, margin, trans_failures = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count, check_updates)
 
-    if failures > 0:
+    #Check for transactions failures (socket errors...)
+    if trans_failures > 0:
         problems.append((
         "fail",
         "%s failed transactions."
-        % failures, url))
+        % trans_failures, url))
 
     isBulk = check_updates and (queries < 1.001 * expected_queries) and (queries > 0.999 * expected_queries)
     
