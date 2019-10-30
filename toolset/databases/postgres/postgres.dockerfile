@@ -14,7 +14,7 @@ RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-k
 RUN apt-get -yqq update > /dev/null
 RUN apt-get -yqq install locales
 
-ENV PG_VERSION 11
+ENV PG_VERSION 12
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
