@@ -11,10 +11,10 @@ $database = new MySQLSwooleDatabase(
     'benchmarkdbuser',
     'benchmarkdbpass',
     'hello_world',
-    1024
+    4096
 );
 $application = new Application($database);
 $onWorkerStart = function () use (&$database) {
-    $database->warmUp((int) (512 / swoole_cpu_num()));
+    $database->warmUp((int) (768 / swoole_cpu_num()));
 };
 SwooleBootstrap::run('0.0.0.0', 8080, $application, $onWorkerStart);
