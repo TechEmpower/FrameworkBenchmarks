@@ -13,8 +13,8 @@ function updateraw()
     while ($query_count--) {
         $id = mt_rand(1, 10000);
         $statement->execute([$id]);
-
         $world = ['id' => $id, 'randomNumber' => $statement->fetchColumn()];
+        
         $world['randomNumber'] = mt_rand(1, 10000);
         $update .= "UPDATE World SET randomNumber={$world['randomNumber']} WHERE id=$id;";
 
