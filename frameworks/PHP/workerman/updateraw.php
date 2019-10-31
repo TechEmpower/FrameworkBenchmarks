@@ -20,7 +20,7 @@ function updateraw()
 
         $arr[] = $world;
     }
-    $pdo->exec($update);
+    $pdo->exec($update); 
 
     return json_encode($arr, JSON_NUMERIC_CHECK);
 }
