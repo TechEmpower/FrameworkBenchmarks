@@ -32,11 +32,15 @@ $http_worker->onMessage = static function ($connection) {
 
         case '/db':
             Http::header('Content-Type: application/json');
-            return $connection->send(dbraw());
+            return $connection->send(db());
 
         case '/fortune':
             // By default use 'Content-Type: text/html; charset=utf-8';
             return $connection->send(fortune());
+            
+        case '/query':
+            Http::header('Content-Type: application/json');
+            return $connection->send(query());
 
         case '/update':
             Http::header('Content-Type: application/json');

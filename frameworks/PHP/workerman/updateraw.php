@@ -3,8 +3,8 @@ function updateraw()
 {
     global $pdo;
     $query_count = 1;
-    if ($_GET['queries'] > 1) {
-        $query_count = min($_GET['queries'], 500);
+    if ($_GET['q'] > 1) {
+        $query_count = min($_GET['q'], 500);
     }
 
     $statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
