@@ -414,13 +414,6 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
 
     queries, rows, rows_updated, margin, trans_failures = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count, check_updates)
 
-    #Check for transactions failures (socket errors...)
-    if trans_failures > 0:
-        problems.append((
-        "fail",
-        "%s failed transactions."
-        % trans_failures, url))
-
     isBulk = check_updates and (queries < 1.001 * expected_queries) and (queries > 0.999 * expected_queries)
     
     if check_updates and not isBulk:#Restore the normal queries number if bulk queries are not used
@@ -430,6 +423,13 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
     queries_margin = 1.015 #For a run on Travis
     if multiprocessing.cpu_count()>2:
         queries_margin = 1 # real run (Citrine or Azure) -> no margin on queries
+        #Check for transactions failures (socket errors...)
+        if trans_failures > 0:
+            problems.append((
+            "fail",
+            "%s failed transactions."
+            % trans_failures, url))
+
     problems.append(display_queries_count_result(queries * queries_margin, expected_queries, queries, "executed queries", url))
 
     problems.append(display_queries_count_result(rows, expected_rows, int(rows / margin), "rows read", url))
