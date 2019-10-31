@@ -74,8 +74,8 @@ function update()
     if ($params > 1) {
         $query_count = min($params, 500);
     }
-    $update = '';
 
+    $update = '';
     while ($query_count--) {
         $id     = mt_rand(1, 10000);
         $world  = (yield from $my->query("SELECT id,randomNumber FROM World WHERE id = $id"))[0];
