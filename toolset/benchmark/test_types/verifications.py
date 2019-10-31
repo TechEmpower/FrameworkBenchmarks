@@ -419,7 +419,7 @@ def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected
     if check_updates and not isBulk:#Restore the normal queries number if bulk queries are not used
         expected_queries = (expected_queries - count * concurrency) * 2
 
-    #Add a margin based on the number of processors
+    #Add a margin based on the number of cpu cores
     queries_margin = 1.015 #For a run on Travis
     if multiprocessing.cpu_count()>2:
         queries_margin = 1 # real run (Citrine or Azure) -> no margin on queries
