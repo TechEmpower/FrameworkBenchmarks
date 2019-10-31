@@ -17,8 +17,8 @@ void FortuneCtrlRaw::asyncHandleHttpRequest(
         std::vector<std::pair<string_view, string_view>> rows;
         for (auto const &row : r)
         {
-            rows.emplace_back(row["id"].as<string_view>(),
-                              row["message"].as<string_view>());
+            rows.emplace_back(row[0ul].as<string_view>(),  // id
+                              row[1ul].as<string_view>()); // message
         }
         rows.emplace_back("0", "Additional fortune added at request time.");
         std::sort(rows.begin(),

@@ -1,10 +1,12 @@
 package com.javanut.gl.benchmark;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class ResultObject {
 
 	private long connectionId; 
 	private long sequenceId;
-	private int status;
+	private AtomicInteger status = new AtomicInteger();
 	private int id;
 	private int result;
 	private int groupSize;
@@ -40,12 +42,12 @@ public class ResultObject {
 
 
 	public int getStatus() {
-		return status;
+		return status.get();
 	}
 
 
 	public void setStatus(int status) {
-		this.status = status;
+		this.status.set(status);
 	}
 
 
@@ -73,11 +75,11 @@ public class ResultObject {
 		this.id = id;
 		this.result = result;
 		this.groupSize = 0;
-		this.status = -1;
+		this.status.set(-1);
 	}
 	
 	public ResultObject() {
-		this.status = -1;
+		this.status.set(-1);
 		this.groupSize = 0;
 	}
 	
