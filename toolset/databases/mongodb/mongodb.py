@@ -3,23 +3,22 @@ import traceback
 
 from colorama import Fore
 from toolset.utils.output_helper import log
+from toolset.databases.abstract_database import AbstractDatabase
 
-class Database:
+class Database(AbstractDatabase):
 
-    @staticmethod
-    def get_current_world_table(config):
-        '''
-        Return a JSON object containing all 10,000 World items as they currently
-        exist in the database. This is used for verifying that entries in the
-        database have actually changed during an Update verification test.
-        '''
+    @classmethod
+    def get_connection(cls, config):
+        return pymongo.MongoClient(host = config.database_host)
+
+    @classmethod
+    def get_current_world_table(cls, config):
         results_json = []
 
         try:
             worlds_json = {}
             print("DATABASE_HOST: %s" % config.database_host)
-            connection = pymongo.MongoClient(
-                host=config.database_host)
+            connection = cls.get_connection(config)
             db = connection.hello_world
             for world in db.world.find():
                 if "randomNumber" in world:
@@ -39,13 +38,44 @@ class Database:
 
         return results_json
 
-    @staticmethod
-    def test_connection(config):
+    @classmethod
+    def test_connection(cls, config):
         try:
-            connection = pymongo.MongoClient(host=config.database_host)
+            connection = cls.get_connection(config)
             db = connection.hello_world
             db.world.find()
             db.close()
             return True
         except:
             return False
+
+    @classmethod
+    def get_queries(cls, config):
+        co = cls.get_connection(config)
+        status = co.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
+        return int(status["opcounters"]["query"]) + int(status["opcounters"]["update"]) #get_queries returns all the queries
+
+    @classmethod
+    def get_rows(cls, config):
+        co = cls.get_connection(config)
+        status = co.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
+        return int(status["opcounters"]["query"]) * cls.get_rows_per_query(co)
+
+    @classmethod
+    def get_rows_updated(cls, config):
+        co = cls.get_connection(config)
+        status = co.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
+        return int(status["opcounters"]["update"]) * cls.get_rows_per_query(co)
+
+    @classmethod
+    def reset_cache(cls, config):
+        co = cls.get_connection(config)
+        co.admin.command({"planCacheClear": "world"})
+        co.admin.command({"planCacheClear": "fortune"})
+
+    @classmethod
+    def get_rows_per_query(cls, co):
+        rows_per_query = 1
+        if cls.tbl_name == "fortune":
+            rows_per_query = co["hello_world"][cls.tbl_name].count_documents({})
+        return rows_per_query

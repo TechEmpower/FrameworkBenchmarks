@@ -1,5 +1,5 @@
 from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
-from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers, verify_randomnumber_object
+from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers, verify_randomnumber_object, verify_queries_count
 
 
 class DBTestType(FrameworkTestType):
@@ -9,7 +9,7 @@ class DBTestType(FrameworkTestType):
             'name': 'db',
             'accept_header': self.accept('json'),
             'requires_db': True,
-            'args': ['db_url']
+            'args': ['db_url', 'database']
         }
         FrameworkTestType.__init__(self, config, **kwargs)
 
@@ -21,6 +21,11 @@ class DBTestType(FrameworkTestType):
         Ensures body is valid JSON with a key 'id' and a key 
         'randomNumber', both of which must map to integers
         '''
+
+        # Initialization for query counting
+        repetitions = 1
+        concurrency = max(self.config.concurrency_levels)
+        expected_queries = repetitions * concurrency
 
         url = base_url + self.db_url
         headers, body = self.request_headers_and_body(url)
@@ -52,6 +57,8 @@ class DBTestType(FrameworkTestType):
         problems += verify_randomnumber_object(response, url)
         problems += verify_headers(self.request_headers_and_body, headers, url, should_be='json')
 
+        if len(problems) == 0:
+            problems += verify_queries_count(self, "World", url, concurrency, repetitions, expected_queries, expected_queries)
         if len(problems) == 0:
             return [('pass', '', url)]
         else:
