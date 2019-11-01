@@ -6,6 +6,9 @@ RUN pecl install swoole > /dev/null && \
 RUN docker-php-ext-install mysqli > /dev/null && \
     docker-php-ext-enable mysqli
 
+RUN docker-php-ext-install pdo_mysql > /dev/null && \
+    docker-php-ext-enable pdo_mysql
+
 RUN apt-get update > /dev/null && \
     apt-get install -y git unzip > /dev/null
 
@@ -15,8 +18,8 @@ ADD ./ /php
 WORKDIR /php
 RUN chmod -R 777 /php
 
-RUN composer require hamlet-framework/http-swoole:dev-master --quiet
-RUN composer require hamlet-framework/db-mysql-swoole:dev-master --quiet
+RUN composer require hamlet-framework/http-swoole:dev-master
+RUN composer require hamlet-framework/db-pdo:dev-master
 RUN composer update --no-dev --quiet
 
 CMD php /php/swoole.php

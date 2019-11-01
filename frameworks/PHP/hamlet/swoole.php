@@ -1,20 +1,15 @@
 <?php
 
 use Benchmark\Application;
-use Hamlet\Database\MySQLSwoole\MySQLSwooleDatabase;
+use Hamlet\Database\PDO\PDODatabase;
 use Hamlet\Http\Swoole\Bootstraps\SwooleBootstrap;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$database = new MySQLSwooleDatabase(
-    'tfb-database',
+$database = new PDODatabase(
+    'mysql:host=tfb-database;dbname=hello_world',
     'benchmarkdbuser',
-    'benchmarkdbpass',
-    'hello_world',
-    4096
+    'benchmarkdbpass'
 );
 $application = new Application($database);
-$onWorkerStart = function () use (&$database) {
-    $database->warmUp((int) (1024 / swoole_cpu_num()));
-};
-SwooleBootstrap::run('0.0.0.0', 8080, $application, $onWorkerStart);
+SwooleBootstrap::run('0.0.0.0', 8080, $application);
