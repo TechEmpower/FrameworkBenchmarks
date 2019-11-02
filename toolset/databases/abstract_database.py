@@ -1,5 +1,5 @@
 import abc
-import commands
+import subprocess
 import re
 
 class AbstractDatabase:
@@ -88,13 +88,17 @@ class AbstractDatabase:
         cls.reset_cache(config)
         #Start siege requests
         path = config.db_root
-        output = commands.getoutput("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path))
-        print output
-
-        #Search for failed transactions
-        match = re.search('Failed transactions:.*?(\d+)\n', output, re.MULTILINE)
-        if match:
-            trans_failures = int(match.group(1))
+        process = subprocess.Popen("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path), shell = True, stdout = subprocess.PIPE)
+        try:
+            output, _ = process.communicate(20)#timeout = 20s
+            #Search for failed transactions
+            match = re.search('Failed transactions:.*?(\d+)\n', output, re.MULTILINE)
+            if match:
+                trans_failures = int(match.group(1))
+            print output
+        except TimeoutExpired:
+            process.kill()
+            trans_failures = concurrency * count #Process siege blocked, no transaction is considered to pass
 
         queries = int(cls.get_queries(config)) - queries
         rows = int(cls.get_rows(config)) - rows
