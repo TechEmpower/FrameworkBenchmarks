@@ -106,23 +106,3 @@ class AbstractDatabase:
             rows_updated = int(cls.get_rows_updated(config)) - rows_updated
 
         return queries, rows, rows_updated, cls.margin, trans_failures
-
-    @classmethod
-    def run(cls, cmd, timeout):
-        done = Event()
-        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-
-        watcher = Thread(target=cls.kill_on_timeout, args=(done, timeout, proc))
-        watcher.daemon = True
-        watcher.start()
-
-        data, stderr = proc.communicate()
-        done.set()
-
-        return data
-
-    @staticmethod
-    def kill_on_timeout(done, timeout, proc):
-        if not done.wait(timeout):
-            proc.kill()
-
