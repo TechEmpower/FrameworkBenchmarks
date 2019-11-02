@@ -1,6 +1,8 @@
 import abc
-import subprocess
 import re
+import shlex
+from subprocess import Popen, PIPE
+from threading import Timer
 
 class AbstractDatabase:
     '''
@@ -88,17 +90,15 @@ class AbstractDatabase:
         cls.reset_cache(config)
         #Start siege requests
         path = config.db_root
-        process = subprocess.Popen("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path), shell = True, stdout = subprocess.PIPE)
-        try:
-            output, _ = process.communicate(20)#timeout = 20s
-            #Search for failed transactions
+        output = cls.run("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path),15)
+        #Search for failed transactions
+        if output != False:
             match = re.search('Failed transactions:.*?(\d+)\n', output, re.MULTILINE)
             if match:
                 trans_failures = int(match.group(1))
             print output
-        except TimeoutExpired:
-            process.kill()
-            trans_failures = concurrency * count #Process siege blocked, no transaction is considered to pass
+        else:
+            trans_failures = concurrency * count
 
         queries = int(cls.get_queries(config)) - queries
         rows = int(cls.get_rows(config)) - rows
@@ -106,3 +106,15 @@ class AbstractDatabase:
             rows_updated = int(cls.get_rows_updated(config)) - rows_updated
 
         return queries, rows, rows_updated, cls.margin, trans_failures
+
+    @staticmethod
+    def run(cmd, timeout_sec):
+        stdout = False
+        proc = Popen(cmd, shell=True, stdout=PIPE)
+        timer = Timer(timeout_sec, proc.kill)
+        try:
+            timer.start()
+            stdout, _ = proc.communicate()
+        finally:
+            timer.cancel()
+            return stdout
