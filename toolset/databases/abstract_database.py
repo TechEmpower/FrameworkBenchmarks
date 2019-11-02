@@ -1,8 +1,8 @@
 import abc
 import re
 import shlex
-from subprocess import Popen, PIPE
-from threading import Timer
+import subprocess
+from toolset.utils.popen import PopenTimeout
 
 class AbstractDatabase:
     '''
@@ -90,15 +90,15 @@ class AbstractDatabase:
         cls.reset_cache(config)
         #Start siege requests
         path = config.db_root
-        output = cls.run("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path),15)
+        process = PopenTimeout(shlex.split("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path)), stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
+        output, _ = process.communicate(timeout=15)#timeout 15s if socket errors
         #Search for failed transactions
-        if output != False:
-            match = re.search('Failed transactions:.*?(\d+)\n', output, re.MULTILINE)
-            if match:
-                trans_failures = int(match.group(1))
+        match = re.search('Failed transactions:.*?(\d+)\n', output, re.MULTILINE)
+        if match:
+            trans_failures = int(match.group(1))
             print output
         else:
-            trans_failures = concurrency * count
+            trans_failures = concurrency * count#Failed transactions: 100%
 
         queries = int(cls.get_queries(config)) - queries
         rows = int(cls.get_rows(config)) - rows
@@ -107,14 +107,22 @@ class AbstractDatabase:
 
         return queries, rows, rows_updated, cls.margin, trans_failures
 
+    @classmethod
+    def run(cls, cmd, timeout):
+        done = Event()
+        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+
+        watcher = Thread(target=cls.kill_on_timeout, args=(done, timeout, proc))
+        watcher.daemon = True
+        watcher.start()
+
+        data, stderr = proc.communicate()
+        done.set()
+
+        return data
+
     @staticmethod
-    def run(cmd, timeout_sec):
-        stdout = False
-        proc = Popen(cmd, shell=True, stdout=PIPE)
-        timer = Timer(timeout_sec, proc.kill)
-        try:
-            timer.start()
-            stdout, _ = proc.communicate()
-        finally:
-            timer.cancel()
-            return stdout
+    def kill_on_timeout(done, timeout, proc):
+        if not done.wait(timeout):
+            proc.kill()
+
