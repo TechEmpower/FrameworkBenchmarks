@@ -88,9 +88,9 @@ class AbstractDatabase:
             rows_updated = int(cls.get_rows_updated(config))
 
         cls.reset_cache(config)
-        #Start siege requests
+        #Start siege requests with timeout (20s)
         path = config.db_root
-        process = PopenTimeout(shlex.split("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path)), stdout = subprocess.PIPE, stderr = subprocess.STDOUT, timeout=15)#timeout 15s if socket errors
+        process = PopenTimeout(shlex.split("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path)), stdout = subprocess.PIPE, stderr = subprocess.STDOUT, timeout=20)
         output, _ = process.communicate()
         #Search for failed transactions
         match = re.search('Failed transactions:.*?(\d+)\n', output, re.MULTILINE)
