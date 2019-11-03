@@ -37,18 +37,19 @@ class RawController extends AppController
         $count = min(max($count, 1), 500);
         
         $sth = $this->pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
-        $updateSth = $this->pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
+        $update = '';
         
         while ($count--) {
             $id = mt_rand(1, 10000);
 
             $sth->execute([$id]);
             $row = ['id' => $id, 'randomNumber' => $sth->fetchColumn()];
-            $updateSth->execute(
-                [$row['randomNumber'] = mt_rand(1, 10000), $id]
-            );
+            $row['randomNumber'] = mt_rand(1, 10000);
+            $update .= "UPDATE World SET randomNumber={$row['randomNumber']} WHERE id=$id;";
+
             $worlds[] = $row;
         }
+        $this->pdo->exec($update);
         echo json_encode($worlds, JSON_NUMERIC_CHECK);
     }
 }

@@ -1,25 +1,23 @@
 <?php
 
-$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass');
-
+$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass',
+            [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+$statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
+$fortune = $pdo->prepare('SELECT id,message FROM Fortune');
 
 function db()
 {
-    global $pdo;
+    global $statement;
     ngx_header_set('Content-Type', 'application/json');
 
-    $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
-
     $statement->execute([mt_rand(1, 10000)]);
-    echo json_encode($statement->fetch(PDO::FETCH_ASSOC), JSON_NUMERIC_CHECK);
+    echo json_encode($statement->fetch(), JSON_NUMERIC_CHECK);
 }
 
 function query()
 {
-    global $pdo;
+    global $statement;
     ngx_header_set('Content-Type', 'application/json');
-
-    $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
 
     $query_count = 1;
     $params      = ngx::query_args()['queries'];
@@ -29,7 +27,7 @@ function query()
 
     while ($query_count--) {
         $statement->execute([mt_rand(1, 10000)]);
-        $arr[] = $statement->fetch(PDO::FETCH_ASSOC);
+        $arr[] = $statement->fetch();
     }
 
     echo json_encode($arr, JSON_NUMERIC_CHECK);
@@ -46,30 +44,28 @@ function update()
         $query_count = min($params, 500);
     }
 
-    $statement       = $pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
-    $updateStatement = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
+    $statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
+    $update    = '';
 
     while ($query_count--) {
         $id = mt_rand(1, 10000);
         $statement->execute([$id]);
 
         $world = ['id' => $id, 'randomNumber' => $statement->fetchColumn()];
-        $updateStatement->execute(
-            [$world['randomNumber'] = mt_rand(1, 10000), $id]
-        );
+        $world['randomNumber'] = mt_rand(1, 10000);
+        $update .= "UPDATE World SET randomNumber={$world['randomNumber']} WHERE id=$id;";
 
         $arr[] = $world;
     }
-
+    $pdo->exec($update);
     echo json_encode($arr, JSON_NUMERIC_CHECK);
 }
 
 function fortune()
 {
-    global $pdo;
+    global $fortune;
     ngx_header_set('Content-Type', 'text/html;charset=UTF-8');
 
-    $fortune = $pdo->prepare('SELECT id,message FROM Fortune');
     $fortune->execute();
 
     $arr    = $fortune->fetchAll(PDO::FETCH_KEY_PAIR);

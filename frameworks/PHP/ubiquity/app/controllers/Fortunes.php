@@ -9,8 +9,7 @@ class Fortunes extends \Ubiquity\controllers\Controller {
 
 	public function initialize() {
 		\Ubiquity\cache\CacheManager::startProd(Startup::$config);
-		Startup::$templateEngine = new \Ubiquity\views\engine\micro\MicroTemplateEngine();
-		DAO::setModelDatabase(Fortune::class, 'pgsql');
+		DAO::setModelDatabase(Fortune::class);
 	}
 
 	public function index() {
