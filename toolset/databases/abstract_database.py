@@ -90,8 +90,8 @@ class AbstractDatabase:
         cls.reset_cache(config)
         #Start siege requests
         path = config.db_root
-        process = PopenTimeout(shlex.split("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path)), stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
-        output, _ = process.communicate(timeout=15)#timeout 15s if socket errors
+        process = PopenTimeout(shlex.split("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path)), stdout = subprocess.PIPE, stderr = subprocess.STDOUT, timeout=15)#timeout 15s if socket errors
+        output, _ = process.communicate()
         #Search for failed transactions
         match = re.search('Failed transactions:.*?(\d+)\n', output, re.MULTILINE)
         if match:

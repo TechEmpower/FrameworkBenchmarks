@@ -1,85 +1,43 @@
-import subprocess
-import time
-import select
-import os
+from logging import error
+from subprocess import Popen
+from threading import Event
+from threading import Thread
 
-class PopenTimeout(subprocess.Popen):
+class PopenTimeout(Popen):
     '''
     Popen class with timeout for Python 2.7
     see https://stackoverflow.com/questions/1191374/using-module-subprocess-with-timeout
     '''
-    def communicate(self, input=None, timeout=None):
-        if timeout is None:
-            return subprocess.Popen.communicate(self, input)
+    def __init__(self, *args, **kwargs):
+        self.timeout = kwargs.pop('timeout', 0)
+        self.timer = None
+        self.done = Event()
 
-        if self.stdin:
-            # Flush stdio buffer, this might block if user
-            # has been writing to .stdin in an uncontrolled
-            # fashion.
-            self.stdin.flush()
-            if not input:
-                self.stdin.close()
+        Popen.__init__(self, *args, **kwargs)
 
-        read_set, write_set = [], []
-        stdout = stderr = None
+    def __tkill(self):
+        timeout = self.timeout
+        if not self.done.wait(timeout):
+            error('Terminating process {} by timeout of {} secs.'.format(self.pid, timeout))
+            self.kill()
 
-        if self.stdin and input:
-            write_set.append(self.stdin)
-        if self.stdout:
-            read_set.append(self.stdout)
-            stdout = []
-        if self.stderr:
-            read_set.append(self.stderr)
-            stderr = []
+    def expirable(func):
+        def wrapper(self, *args, **kwargs):
+            # zero timeout means call of parent method
+            if self.timeout == 0:
+                return func(self, *args, **kwargs)
 
-        input_offset = 0
-        deadline = time.time() + timeout
+            # if timer is None, need to start it
+            if self.timer is None:
+                self.timer = thr = Thread(target=self.__tkill)
+                thr.daemon = True
+                thr.start()
 
-        while read_set or write_set:
-            try:
-                rlist, wlist, xlist = select.select(read_set, write_set, [], max(0, deadline - time.time()))
-            except select.error as ex:
-                if ex.args[0] == errno.EINTR:
-                    continue
-                raise
+            result = func(self, *args, **kwargs)
+            self.done.set()
 
-            if not (rlist or wlist):
-                # Just break if timeout
-                # Since we do not close stdout/stderr/stdin, we can call
-                # communicate() several times reading data by smaller pieces.
-                break
+            return result
+        return wrapper
 
-            if self.stdin in wlist:
-                chunk = input[input_offset:input_offset + subprocess._PIPE_BUF]
-                try:
-                    bytes_written = os.write(self.stdin.fileno(), chunk)
-                except OSError as ex:
-                    if ex.errno == errno.EPIPE:
-                        self.stdin.close()
-                        write_set.remove(self.stdin)
-                    else:
-                        raise
-                else:
-                    input_offset += bytes_written
-                    if input_offset >= len(input):
-                        self.stdin.close()
-                        write_set.remove(self.stdin)
-
-            # Read stdout / stderr by 1024 bytes
-            for fn, tgt in (
-                (self.stdout, stdout),
-                (self.stderr, stderr),
-            ):
-                if fn in rlist:
-                    data = os.read(fn.fileno(), 1024)
-                    if data == '':
-                        fn.close()
-                        read_set.remove(fn)
-                    tgt.append(data)
-
-        if stdout is not None:
-            stdout = ''.join(stdout)
-        if stderr is not None:
-            stderr = ''.join(stderr)
-
-        return (stdout, stderr)
+    wait = expirable(Popen.wait)
+    communicate = expirable(Popen.communicate)
