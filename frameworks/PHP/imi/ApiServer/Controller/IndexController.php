@@ -4,7 +4,6 @@ namespace ImiApp\ApiServer\Controller;
 use ImiApp\Model\World;
 use ImiApp\Model\Fortune;
 use Imi\Controller\HttpController;
-use Imi\Db\Annotation\Transaction;
 use Imi\RequestContext;
 use Imi\Server\View\Annotation\View;
 use Imi\Server\Route\Annotation\Action;
@@ -95,7 +94,6 @@ class IndexController extends HttpController
 
     /**
      * @Action
-     * @Transaction
      *
      * @return void
      */
