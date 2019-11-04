@@ -1,6 +1,8 @@
 import abc
-import commands
 import re
+import shlex
+import subprocess
+from toolset.utils.popen import PopenTimeout
 
 class AbstractDatabase:
     '''
@@ -86,15 +88,17 @@ class AbstractDatabase:
             rows_updated = int(cls.get_rows_updated(config))
 
         cls.reset_cache(config)
-        #Start siege requests
+        #Start siege requests with timeout (20s)
         path = config.db_root
-        output = commands.getoutput("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path))
-        print output
-
+        process = PopenTimeout(shlex.split("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path)), stdout = subprocess.PIPE, stderr = subprocess.STDOUT, timeout=20)
+        output, _ = process.communicate()
         #Search for failed transactions
         match = re.search('Failed transactions:.*?(\d+)\n', output, re.MULTILINE)
         if match:
             trans_failures = int(match.group(1))
+            print output
+        else:
+            trans_failures = concurrency * count#Failed transactions: 100%
 
         queries = int(cls.get_queries(config)) - queries
         rows = int(cls.get_rows(config)) - rows
