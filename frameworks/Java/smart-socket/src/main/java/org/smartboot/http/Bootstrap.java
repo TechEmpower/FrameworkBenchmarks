@@ -15,6 +15,7 @@ import org.smartboot.http.server.HttpMessageProcessor;
 import org.smartboot.http.server.decode.Http11Request;
 import org.smartboot.http.server.decode.HttpRequestProtocol;
 import org.smartboot.http.server.handle.HttpHandle;
+import org.smartboot.http.server.handle.RouteHandle;
 import org.smartboot.socket.MessageProcessor;
 import org.smartboot.socket.StateMachineEnum;
 import org.smartboot.socket.extension.plugins.MonitorPlugin;
@@ -32,19 +33,18 @@ public class Bootstrap {
         System.setProperty("smart-socket.server.pageSize", (8 * 1024 * 1024) + "");
 //        System.setProperty("smart-socket.bufferPool.pageNum", 16 + "");
         System.setProperty("smart-socket.session.writeChunkSize", (1024 * 4) + "");
-//        System.setProperty("sun.nio.ch.maxCompletionHandlersOnStack","24");
-        HttpMessageProcessor processor = new HttpMessageProcessor(System.getProperty("webapps.dir", "./"));
-        processor.route("/plaintext", new HttpHandle() {
+//        System.setProperty("sun.nio.ch.maxCompletionHandlersOnStack", "4");
+        RouteHandle routeHandle = new RouteHandle(System.getProperty("webapps.dir", "./"));
+        routeHandle.route("/plaintext", new HttpHandle() {
 
 
             @Override
             public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
                 response.setContentLength(body.length);
                 response.setContentType("text/plain; charset=UTF-8");
-                response.getOutputStream().write(body);
+                response.write(body);
             }
-        });
-        processor.route("/json", new HttpHandle() {
+        }).route("/json", new HttpHandle() {
 
             @Override
             public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
@@ -64,6 +64,8 @@ public class Bootstrap {
                 }
             }
         });
+        HttpMessageProcessor processor = new HttpMessageProcessor();
+        processor.pipeline(routeHandle);
         http(processor);
 //        https(processor);
     }
@@ -86,7 +88,7 @@ public class Bootstrap {
         AioQuickServer<Http11Request> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), messageProcessor);
         server.setReadBufferSize(1024 * 4);
         int cpuNum = Runtime.getRuntime().availableProcessors();
-        server.setThreadNum(cpuNum + 2);
+        server.setThreadNum((cpuNum >> 1) + cpuNum);
         try {
             server.start();
         } catch (IOException e) {
