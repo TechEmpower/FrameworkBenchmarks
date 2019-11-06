@@ -21,7 +21,7 @@ libraryDependencies ++= Seq(
   "com.twitter" %% "finatra-http" % finatraVersion,
   "org.slf4j" % "slf4j-nop" % "1.7.25",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.9",
-  exclude("com.sun", "activation"),
+  exclude("com.sun.activation", "javax.activation"),
 )
 
 excludeDependencies ++= Seq(
