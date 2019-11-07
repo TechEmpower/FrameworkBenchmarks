@@ -17,6 +17,7 @@ COPY php.ini /etc/php/7.3/cli/php.ini
 ADD ./ /workerman
 WORKDIR /workerman
 
+RUN composer require react/mysql "^0.3.3" --quiet
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 CMD php /workerman/server-async.php start
