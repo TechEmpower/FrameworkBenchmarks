@@ -11,12 +11,11 @@ package org.smartboot.http;
 import com.jsoniter.output.JsonStream;
 import com.jsoniter.output.JsonStreamPool;
 import com.jsoniter.spi.JsonException;
+import org.smartboot.http.server.Http11Request;
 import org.smartboot.http.server.HttpMessageProcessor;
-import org.smartboot.http.server.decode.Http11Request;
-import org.smartboot.http.server.decode.HttpRequestProtocol;
+import org.smartboot.http.server.HttpRequestProtocol;
 import org.smartboot.http.server.handle.HttpHandle;
 import org.smartboot.http.server.handle.RouteHandle;
-import org.smartboot.socket.MessageProcessor;
 import org.smartboot.socket.StateMachineEnum;
 import org.smartboot.socket.extension.plugins.MonitorPlugin;
 import org.smartboot.socket.extension.plugins.SocketOptionPlugin;
@@ -70,15 +69,15 @@ public class Bootstrap {
 //        https(processor);
     }
 
-    public static void http(final MessageProcessor<Http11Request> processor) {
-        AbstractMessageProcessor messageProcessor = new AbstractMessageProcessor<Http11Request>() {
+    public static void http(final HttpMessageProcessor processor) {
+        AbstractMessageProcessor<Http11Request> messageProcessor = new AbstractMessageProcessor<Http11Request>() {
             @Override
-            public void process0(AioSession<Http11Request> session, Http11Request msg) {
+            public void process0(AioSession session, Http11Request msg) {
                 processor.process(session, msg);
             }
 
             @Override
-            public void stateEvent0(AioSession<Http11Request> session, StateMachineEnum stateMachineEnum, Throwable throwable) {
+            public void stateEvent0(AioSession session, StateMachineEnum stateMachineEnum, Throwable throwable) {
                 processor.stateEvent(session, stateMachineEnum, throwable);
             }
         };
