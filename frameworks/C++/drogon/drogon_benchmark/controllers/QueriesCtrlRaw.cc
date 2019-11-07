@@ -28,7 +28,7 @@ void QueriesCtrlRaw::asyncHandleHttpRequest(
     for (int i = 0; i < queries; i++)
     {
         int id = rand() % 10000 + 1;
-        *client << "select randomnumber from world where id=$1" << id >>
+        *client << "select * from world where id=$1" << id >>
             [callbackPtr, counter, jsonStr, id](const Result &r) mutable {
                 (*counter)--;
                 if (r.size() > 0)
@@ -37,7 +37,7 @@ void QueriesCtrlRaw::asyncHandleHttpRequest(
                     auto size = sprintf(json,
                                         "{\"id\":%d,\"randomnumber\":%s}",
                                         id,
-                                        r[0]["randomnumber"].c_str());
+                                        r[0][1ul].c_str());
                     jsonStr->append(json, size);
                 }
                 if ((*counter) == 0)

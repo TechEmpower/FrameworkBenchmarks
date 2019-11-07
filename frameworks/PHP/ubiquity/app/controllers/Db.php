@@ -12,7 +12,7 @@ class Db extends \Ubiquity\controllers\Controller {
 	public function initialize() {
 		\header('Content-Type: application/json');
 		\Ubiquity\cache\CacheManager::startProd(\Ubiquity\controllers\Startup::$config);
-		DAO::setModelDatabase(World::class, 'pgsql');
+		DAO::setModelDatabase(World::class);
 	}
 	
 	public function index() {
@@ -34,10 +34,9 @@ class Db extends \Ubiquity\controllers\Controller {
 		for ($i = 0; $i < $queries; ++ $i) {
 			$world = DAO::getById(World::class, \mt_rand(1, 10000), false);
 			$world->randomNumber = \mt_rand(1, 10000);
-			DAO::toUpdate($world);
+			DAO::update($world);
 			$worlds[] = $world->_rest;
 		}
-		DAO::flushUpdates();
 		echo \json_encode($worlds);
 	}
 }

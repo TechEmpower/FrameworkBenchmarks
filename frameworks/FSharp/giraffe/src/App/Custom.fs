@@ -44,12 +44,13 @@ let application : HttpHandler =
     let inline contentLength x = new Nullable<int64> ( int64 x )
 
     let json' data : HttpHandler =
+        let bytes = Utf8Json.JsonSerializer.Serialize(data)
         fun _ ctx -> 
-            ctx.Response.ContentLength <- contentLength BufferSize
+            ctx.Response.ContentLength <- contentLength bytes.Length
             ctx.Response.ContentType <- "application/json"
             ctx.Response.StatusCode <- 200
             task {
-                do! System.Text.Json.JsonSerializer.SerializeAsync(ctx.Response.Body, data)
+                do! ctx.Response.Body.WriteAsync(bytes, 0, bytes.Length)
                 return Some ctx
             }
 

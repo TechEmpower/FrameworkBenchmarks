@@ -12,7 +12,9 @@ $http_worker->onWorkerStart = function () {
     global $pdo, $fortune, $statement;
     $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world',
         'benchmarkdbuser', 'benchmarkdbpass',
-        [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+        [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false]
+    );
     $fortune   = $pdo->prepare('SELECT id,message FROM Fortune');
     $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
 };
@@ -32,11 +34,15 @@ $http_worker->onMessage = static function ($connection) {
 
         case '/db':
             Http::header('Content-Type: application/json');
-            return $connection->send(dbraw());
+            return $connection->send(db());
 
         case '/fortune':
             // By default use 'Content-Type: text/html; charset=utf-8';
             return $connection->send(fortune());
+            
+        case '/query':
+            Http::header('Content-Type: application/json');
+            return $connection->send(query());
 
         case '/update':
             Http::header('Content-Type: application/json');
