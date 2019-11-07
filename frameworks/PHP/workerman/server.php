@@ -12,7 +12,9 @@ $http_worker->onWorkerStart = function () {
     global $pdo, $fortune, $statement;
     $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world',
         'benchmarkdbuser', 'benchmarkdbpass',
-        [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+        [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false]
+    );
     $fortune   = $pdo->prepare('SELECT id,message FROM Fortune');
     $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
 };
