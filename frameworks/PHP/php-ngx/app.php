@@ -48,7 +48,7 @@ function update()
         $id = mt_rand(1, 10000);
         $random->execute([$id]);
 
-        $world = ['id' => $id, 'randomNumber' => $statement->fetchColumn()];
+        $world = ['id' => $id, 'randomNumber' => $random->fetchColumn()];
         $update->execute(
             [$world['randomNumber'] = mt_rand(1, 10000), $id]
         );
