@@ -1,8 +1,7 @@
 <?php
 require_once __DIR__.'/vendor/autoload.php';
-require_once __DIR__.'/fortune.php';
-require_once __DIR__.'/dbraw.php';
-require_once __DIR__.'/updateraw.php';
+require_once __DIR__.'/app.php';
+
 use Workerman\Protocols\Http;
 use Workerman\Worker;
 
