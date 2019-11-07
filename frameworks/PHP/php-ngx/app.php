@@ -1,7 +1,10 @@
 <?php
 
 $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass',
-    [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+            [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false]
+        );
+
 $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
 $fortune   = $pdo->prepare('SELECT id,message FROM Fortune');
 $random    = $pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
