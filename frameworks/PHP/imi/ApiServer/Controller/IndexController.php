@@ -4,7 +4,7 @@ namespace ImiApp\ApiServer\Controller;
 use ImiApp\Model\World;
 use ImiApp\Model\Fortune;
 use Imi\Controller\HttpController;
-use Imi\Db\Annotation\Transaction;
+use Imi\RequestContext;
 use Imi\Server\View\Annotation\View;
 use Imi\Server\Route\Annotation\Action;
 use Imi\Server\Route\Annotation\Controller;
@@ -32,7 +32,7 @@ class IndexController extends HttpController
      */
     public function plaintext()
     {
-        return $this->response->withHeader('Content-Type', 'text/plain')->write('Hello, World!');
+        return RequestContext::get('response')->withHeader('Content-Type', 'text/plain')->write('Hello, World!');
     }
 
     /**
@@ -52,10 +52,13 @@ class IndexController extends HttpController
      */
     public function query($queries)
     {
-        $queryCount = 1;
         if($queries > 1)
         {
             $queryCount = min($queries, 500);
+        }
+        else
+        {
+            $queryCount = 1;
         }
         $list = [];
         while ($queryCount--)
@@ -73,7 +76,9 @@ class IndexController extends HttpController
      */
     public function fortunes()
     {
-        $this->response = $this->response->withHeader('Content-Type', 'text/html; charset=UTF-8');
+        RequestContext::use(function(&$context){
+            $context['response'] = $context['response']->withHeader('Content-Type', 'text/html; charset=UTF-8');
+        });
         $list = Fortune::select();
         $rows = [];
         foreach($list as $item)
@@ -89,16 +94,18 @@ class IndexController extends HttpController
 
     /**
      * @Action
-     * @Transaction
      *
      * @return void
      */
     public function update($queries)
     {
-        $queryCount = 1;
         if($queries > 1)
         {
             $queryCount = min($queries, 500);
+        }
+        else
+        {
+            $queryCount = 1;
         }
         $list = [];
         while ($queryCount--)
