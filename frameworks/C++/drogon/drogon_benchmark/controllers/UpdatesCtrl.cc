@@ -27,15 +27,19 @@ void UpdatesCtrl::asyncHandleHttpRequest(
         std::make_shared<std::function<void(const HttpResponsePtr &)>>(
             std::move(callback));
     auto counter = std::make_shared<int>(queries);
-    auto client = app().getFastDbClient();
-    drogon::orm::Mapper<World> mapper(client);
+    if (!*_dbClient)
+    {
+        *_dbClient = drogon::app().getFastDbClient();
+    }
+    drogon::orm::Mapper<World> mapper(*_dbClient);
 
     for (int i = 0; i < queries; i++)
     {
         World::PrimaryKeyType id = rand() % 10000 + 1;
         mapper.findByPrimaryKey(
             id,
-            [callbackPtr, counter, json, client](World w) mutable {
+            [callbackPtr, counter, json, &client = *_dbClient](
+                World w) mutable {
                 w.setRandomnumber(rand() % 10000 + 1);
                 drogon::orm::Mapper<World> mapper(client);
                 mapper.update(

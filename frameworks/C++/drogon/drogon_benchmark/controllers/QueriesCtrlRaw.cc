@@ -21,14 +21,17 @@ void QueriesCtrlRaw::asyncHandleHttpRequest(
         std::make_shared<std::function<void(const HttpResponsePtr &)>>(
             std::move(callback));
     auto counter = std::make_shared<int>(queries);
-    auto client = app().getFastDbClient();
+    if (!*_dbClient)
+    {
+        *_dbClient = drogon::app().getFastDbClient();
+    }
     auto jsonStr = std::make_shared<std::string>();
     jsonStr->reserve(queries * 36);
     jsonStr->append("[", 1);
     for (int i = 0; i < queries; i++)
     {
         int id = rand() % 10000 + 1;
-        *client << "select * from world where id=$1" << id >>
+        **_dbClient << "select * from world where id=$1" << id >>
             [callbackPtr, counter, jsonStr, id](const Result &r) mutable {
                 (*counter)--;
                 if (r.size() > 0)

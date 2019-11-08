@@ -1,5 +1,7 @@
 #pragma once
 #include <drogon/HttpSimpleController.h>
+#include <drogon/IOThreadStorage.h>
+
 using namespace drogon;
 class FortuneCtrl : public drogon::HttpSimpleController<FortuneCtrl>
 {
@@ -10,4 +12,6 @@ class FortuneCtrl : public drogon::HttpSimpleController<FortuneCtrl>
     PATH_LIST_BEGIN
     // list path definitions here;
     PATH_LIST_END
+  private:
+    IOThreadStorage<orm::DbClientPtr> _dbClient;
 };
