@@ -8,7 +8,7 @@ class Controller_Bench extends Controller
         $res = array();
         do {
             $res[\mt_rand($min, $max)] = 1;
-        } while (\count($res) !== $count);
+        } while (\count($res) < $count);
         return \array_keys($res);
     }
 
