@@ -59,7 +59,7 @@ public class WorldResource {
 			try {
 		        //Pick unique random numbers 
 		        final AtomicInteger i = new AtomicInteger(0);
-		        ThreadLocalRandom.current().ints(1, 10000).distinct().limit(queries).forEach(
+		        ThreadLocalRandom.current().ints(1, 10001).distinct().limit(queries).forEach(
 		            (randomValue)->worlds[i.getAndAdd(1)] = (World) session.byId(World.class).load(randomValue)
 		        );
 				return worlds;
@@ -89,7 +89,7 @@ public class WorldResource {
 
 				// 1. Read and update the entities from the DB
 		        final AtomicInteger ii = new AtomicInteger(0);
-		        ThreadLocalRandom.current().ints(1, 10000).distinct().limit(queries).forEach(
+		        ThreadLocalRandom.current().ints(1, 10001).distinct().limit(queries).forEach(
 		            (randomValue)->{
 		            		final World world = (World) session.byId(World.class).load(randomValue);
 		            		world.setRandomNumber(randomWorld());
