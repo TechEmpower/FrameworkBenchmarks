@@ -69,7 +69,8 @@ namespace PlatformBenchmarks
                 return fiberRw.Flush();
             }
 
-            await await fiberRw.Sync.Ask(WSend);
+            if (fiberRw.UserToken != null)
+                await await fiberRw.Sync.Ask(WSend);
         }
 
         private int AnalysisUrl(ReadOnlySpan<byte> url)
@@ -83,17 +84,17 @@ namespace PlatformBenchmarks
 
         }
 
-        public async Task Receive(IFiberRw<HttpToken> fiberRw, Memory<byte> memory_r, Memory<byte> memory_w)
+        public async Task Receive(IFiberRw<HttpToken> fiberRw, Memory<byte> memory_r, WriteBytes write)
         {
             var data = (await fiberRw.ReadLine(memory_r));
-            ReadHander(fiberRw, ref memory_w,ref data);
+            ReadHander(fiberRw,ref data,ref write);
             fiberRw.StreamReadFormat.Position = fiberRw.StreamReadFormat.Length;
         }
 
 
-        private void ReadHander(IFiberRw<HttpToken> fiberRw,ref Memory<byte> memory_w, ref Memory<byte> linedata)
+        private void ReadHander(IFiberRw<HttpToken> fiberRw,ref Memory<byte> linedata,ref WriteBytes write)
         {
-            WriteBytes write = new WriteBytes(fiberRw, ref memory_w);
+            
             var token = fiberRw.UserToken;
             ReadOnlySpan<byte> line = linedata.Span;
             ReadOnlySpan<byte> url = line;

@@ -5,7 +5,7 @@ return ['default' => [
             'username' => 'benchmarkdbuser',
             'password' => 'benchmarkdbpass',
             'params' => [
-                PDO::ATTR_PERSISTENT => true, //conexión persistente
+                \PDO::ATTR_PERSISTENT => \true, //conexión persistente
             ]
         ],
     ];

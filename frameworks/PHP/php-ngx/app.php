@@ -1,9 +1,14 @@
 <?php
 
 $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass',
-            [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+            [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false]
+        );
+
 $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
-$fortune = $pdo->prepare('SELECT id,message FROM Fortune');
+$fortune   = $pdo->prepare('SELECT id,message FROM Fortune');
+$random    = $pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
+$update    = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
 
 function db()
 {
@@ -24,7 +29,6 @@ function query()
     if ($params > 1) {
         $query_count = min($params, 500);
     }
-
     while ($query_count--) {
         $statement->execute([mt_rand(1, 10000)]);
         $arr[] = $statement->fetch();
@@ -35,7 +39,7 @@ function query()
 
 function update()
 {
-    global $pdo;
+    global $random, $update;
     ngx_header_set('Content-Type', 'application/json');
 
     $query_count = 1;
@@ -43,21 +47,18 @@ function update()
     if ($params > 1) {
         $query_count = min($params, 500);
     }
-
-    $statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
-    $update    = '';
-
     while ($query_count--) {
         $id = mt_rand(1, 10000);
-        $statement->execute([$id]);
+        $random->execute([$id]);
 
-        $world = ['id' => $id, 'randomNumber' => $statement->fetchColumn()];
-        $world['randomNumber'] = mt_rand(1, 10000);
-        $update .= "UPDATE World SET randomNumber={$world['randomNumber']} WHERE id=$id;";
+        $world = ['id' => $id, 'randomNumber' => $random->fetchColumn()];
+        $update->execute(
+            [$world['randomNumber'] = mt_rand(1, 10000), $id]
+        );
 
         $arr[] = $world;
     }
-    $pdo->exec($update);
+
     echo json_encode($arr, JSON_NUMERIC_CHECK);
 }
 
@@ -78,7 +79,7 @@ function fortune()
         $html .= "<tr><td>$id</td><td>$message</td></tr>";
     }
 
-    echo    '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>',
-            $html,
-            '</table></body></html>';
+    echo '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>',
+        $html,
+        '</table></body></html>';
 }
