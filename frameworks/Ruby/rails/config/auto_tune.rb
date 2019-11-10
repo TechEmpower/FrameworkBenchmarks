@@ -27,7 +27,7 @@ def auto_tune
 
   workers = [
     [(1.0 * avail_mem / KB_PER_WORKER).floor, MIN_WORKERS].max,
-    (Etc.nprocessors * MAX_WORKERS_PER_VCPU).ceil
+    [(Etc.nprocessors * MAX_WORKERS_PER_VCPU).ceil, MIN_WORKERS].max
   ].min
 
   threads_per_worker = [
