@@ -33,7 +33,7 @@ public class Bootstrap {
 //        System.setProperty("smart-socket.bufferPool.pageNum", 16 + "");
         System.setProperty("smart-socket.session.writeChunkSize", (1024 * 4) + "");
 //        System.setProperty("sun.nio.ch.maxCompletionHandlersOnStack", "4");
-        RouteHandle routeHandle = new RouteHandle(System.getProperty("webapps.dir", "./"));
+        RouteHandle routeHandle = new RouteHandle();
         routeHandle.route("/plaintext", new HttpHandle() {
 
 
