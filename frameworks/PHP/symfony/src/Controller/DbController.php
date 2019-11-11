@@ -74,7 +74,7 @@ class DbController
 
         $numbers = $this->getUniqueRandomNumbers($queries, 1, 10000);
         foreach ($numbers as $id) {
-            $this->entityManager->transactional(function ($em) use ($id, $worlds) {
+            $this->entityManager->transactional(function ($em) use ($id, &$worlds) {
                 $world = $this->worldRepository->find($id);
                 if ($world) {
                     $randomNumber = mt_rand(1, 10000);
