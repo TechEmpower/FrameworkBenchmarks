@@ -18,10 +18,11 @@ class DbController
 
     private function getUniqueRandomNumbers($count, $min, $max)
     {
-        $res = array();
+        $res = [];
         do {
             $res[\mt_rand($min, $max)] = 1;
         } while (\count($res) < $count);
+
         return \array_keys($res);
     }
 
