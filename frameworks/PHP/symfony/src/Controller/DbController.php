@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use App\Repository\WorldRepository;
@@ -10,10 +9,21 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DbController
 {
+
     /** @var EntityManagerInterface */
     private $entityManager;
+
     /** @var WorldRepository */
     private $worldRepository;
+
+    private function getUniqueRandomNumbers($count, $min, $max)
+    {
+        $res = array();
+        do {
+            $res[\mt_rand($min, $max)] = 1;
+        } while (\count($res) < $count);
+        return \array_keys($res);
+    }
 
     public function __construct(EntityManagerInterface $entityManager, WorldRepository $worldRepository)
     {
@@ -22,6 +32,7 @@ class DbController
     }
 
     /**
+     *
      * @Route("/db")
      */
     public function db(): JsonResponse
@@ -32,6 +43,7 @@ class DbController
     }
 
     /**
+     *
      * @Route("/queries")
      */
     public function queries(Request $request): JsonResponse
@@ -41,15 +53,16 @@ class DbController
 
         // possibility for enhancement is the use of SplFixedArray -> http://php.net/manual/de/class.splfixedarray.php
         $worlds = [];
-
-        for ($i = 0; $i < $queries; ++$i) {
-            $worlds[] = $this->worldRepository->find(mt_rand(1, 10000));
+        $numbers = $this->getUniqueRandomNumbers($queries, 1, 10000);
+        foreach ($numbers as $id) {
+            $worlds[] = $this->worldRepository->find($id);
         }
 
         return new JsonResponse($worlds);
     }
 
     /**
+     *
      * @Route("/updates")
      */
     public function update(Request $request): JsonResponse
@@ -59,8 +72,9 @@ class DbController
 
         $worlds = [];
 
-        for ($i = 0; $i < $queries; ++$i) {
-            $world = $this->worldRepository->find(mt_rand(1, 10000));
+        $numbers = $this->getUniqueRandomNumbers($queries, 1, 10000);
+        foreach ($numbers as $id) {
+            $world = $this->worldRepository->find($id);
             if ($world) {
                 $randomNumber = mt_rand(1, 10000);
                 $world->setRandomNumber($randomNumber);
