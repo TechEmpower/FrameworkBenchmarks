@@ -37,9 +37,7 @@ class DbController
      */
     public function db(): JsonResponse
     {
-        $world = $this->worldRepository->find(mt_rand(1, 10000));
-
-        return new JsonResponse($world);
+        return new JsonResponse($this->worldRepository->find(\mt_rand(1, 10000)));
     }
 
     /**
@@ -49,7 +47,7 @@ class DbController
     public function queries(Request $request): JsonResponse
     {
         $queries = (int) $request->query->get('queries', 1);
-        $queries = min(max($queries, 1), 500);
+        $queries = \min(\max($queries, 1), 500);
 
         // possibility for enhancement is the use of SplFixedArray -> http://php.net/manual/de/class.splfixedarray.php
         $worlds = [];
@@ -68,19 +66,16 @@ class DbController
     public function update(Request $request): JsonResponse
     {
         $queries = (int) $request->query->get('queries', 1);
-        $queries = min(500, max(1, $queries));
+        $queries = \min(500, \max(1, $queries));
 
         $worlds = [];
 
         $numbers = $this->getUniqueRandomNumbers($queries, 1, 10000);
         foreach ($numbers as $id) {
             $world = $this->worldRepository->find($id);
-            if ($world) {
-                $randomNumber = mt_rand(1, 10000);
-                $world->setRandomNumber($randomNumber);
-                $worlds[] = $world;
-                $this->entityManager->flush();
-            }
+            $world->setRandomNumber(\mt_rand(1, 10000));
+            $worlds[] = $world;
+            $this->entityManager->flush();
         }
         return new JsonResponse($worlds);
     }

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\Fortune;
@@ -10,8 +9,10 @@ use Twig\Environment;
 
 class FortunesController
 {
+
     /** @var Environment */
     private $twig;
+
     /** @var FortuneRepository */
     private $fortuneRepository;
 
@@ -22,6 +23,7 @@ class FortunesController
     }
 
     /**
+     *
      * @Route("/fortunes")
      */
     public function fortunes(): Response
@@ -34,19 +36,13 @@ class FortunesController
 
         $fortunes[] = $runtimeFortune;
 
-        usort(
-            $fortunes,
-            static function ($left, $right) {
-                return $left->message <=> $right->message;
-            }
-        );
+        \usort($fortunes, static function ($left, $right) {
+            return $left->message <=> $right->message;
+        });
 
-        $content = $this->twig->render(
-            'fortunes.html.twig',
-            [
-                'fortunes' => $fortunes,
-            ]
-        );
+        $content = $this->twig->render('fortunes.html.twig', [
+            'fortunes' => $fortunes
+        ]);
 
         return new Response($content);
     }
