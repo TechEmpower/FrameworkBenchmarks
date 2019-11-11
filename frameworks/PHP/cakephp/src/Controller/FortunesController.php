@@ -21,15 +21,15 @@ class FortunesController extends AppController {
 
 
 
-	    // stuffing in the dynamic data
+        // stuffing in the dynamic data
         $fortune = $fortunesTable->newEntity([
-	    	'id' => 0,
-		    'message' => 'Additional fortune added at request time.'
-	    ]);
+            'id' => 0,
+            'message' => 'Additional fortune added at request time.'
+        ]);
 
-	    $fortunes = $fortunes->appendItem($fortune);
+        $fortunes = $fortunes->appendItem($fortune);
 
-	    $fortunes = $fortunes->sortBy('message', SORT_ASC, SORT_STRING)->compile(false);
+        $fortunes = $fortunes->sortBy('message', SORT_ASC, SORT_STRING)->compile(false);
 
         $this->set('fortunes', $fortunes);
     }
