@@ -73,15 +73,21 @@ class DbController
         $worlds = [];
 
         $numbers = $this->getUniqueRandomNumbers($queries, 1, 10000);
-        foreach ($numbers as $id) {
-            $world = $this->worldRepository->find($id);
-            if ($world) {
-                $randomNumber = mt_rand(1, 10000);
-                $world->setRandomNumber($randomNumber);
-                $worlds[] = $world;
-                $this->entityManager->persist($world);
+        do {
+            $id = \current($numbers);
+            $res = $this->entityManager->transactional(function ($em) use ($id, &$worlds) {
+                $world = $this->worldRepository->find($id);
+                if ($world) {
+                    $randomNumber = mt_rand(1, 10000);
+                    $world->setRandomNumber($randomNumber);
+                    $worlds[] = $world;
+                    $em->persist($world);
+                }
+            });
+            if ($res) {
+                \array_splice($numbers, 0, 1);
             }
-        }
+        } while (\count($numbers) > 0);
 
         return new JsonResponse($worlds);
     }
