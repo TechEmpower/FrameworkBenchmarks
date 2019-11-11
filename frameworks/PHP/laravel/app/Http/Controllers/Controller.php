@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Fortune;
@@ -9,19 +8,22 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController {
 
 	public function json() {
-		return ['message' => 'Hello, World!'];
+		return [
+			'message' => 'Hello, World!'
+		];
 	}
 
 	public function db() {
-		return World::find(random_int(1, 10000));
+		return World::find(\mt_rand(1, 10000));
 	}
 
 	public function queries($queries = 1) {
 		$queries = $this->clamp($queries);
 
 		$rows = [];
-		while ($queries--) {
-			$rows[] = World::find(random_int(1, 10000));
+		$numbers = $this->getUniqueRandomNumbers($queries, 1, 10000);
+		foreach ($numbers as $id) {
+			$rows[] = World::find($id);
 		}
 
 		return $rows;
@@ -37,7 +39,9 @@ class Controller extends BaseController {
 		$rows->add($insert);
 		$rows = $rows->sortBy("message");
 
-		return view("fortunes", ["rows" => $rows]);
+		return view("fortunes", [
+			"rows" => $rows
+		]);
 	}
 
 	public function updates($queries = 1) {
@@ -45,9 +49,10 @@ class Controller extends BaseController {
 
 		$rows = [];
 
-		while ($queries--) {
-			$row = World::find(random_int(1, 10000));
-			$row->randomNumber = random_int(1, 10000);
+		$numbers = $this->getUniqueRandomNumbers($queries, 1, 10000);
+		foreach ($numbers as $id) {
+			$row = World::find($id);
+			$row->randomNumber = \mt_rand(1, 10000);
 			$row->save();
 
 			$rows[] = $row;
@@ -61,12 +66,20 @@ class Controller extends BaseController {
 	}
 
 	private function clamp($value): int {
-		if (!is_numeric($value) || $value < 1) {
+		if (! \is_numeric($value) || $value < 1) {
 			return 1;
 		} else if ($value > 500) {
 			return 500;
 		} else {
 			return $value;
 		}
+	}
+
+	private function getUniqueRandomNumbers($count, $min, $max) {
+		$res = [];
+		do {
+			$res[\mt_rand($min, $max)] = 1;
+		} while (\count($res) < $count);
+		return \array_keys($res);
 	}
 }
