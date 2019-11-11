@@ -73,15 +73,18 @@ class DbController
         $worlds = [];
 
         $numbers = $this->getUniqueRandomNumbers($queries, 1, 10000);
-        foreach ($numbers as $id) {
+        foreach ($numbers as $index => $id) {
             $world = $this->worldRepository->find($id);
             if ($world) {
                 $randomNumber = mt_rand(1, 10000);
                 $world->setRandomNumber($randomNumber);
                 $worlds[] = $world;
-                $this->entityManager->flush();
+                if ($index % 2 == 0) {
+                    $this->entityManager->flush();
+                }
             }
         }
+        $this->entityManager->flush();
         return new JsonResponse($worlds);
     }
 }
