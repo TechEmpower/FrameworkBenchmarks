@@ -10,7 +10,6 @@ class FortunesController extends AppController {
         $viewBuilder = $this->viewBuilder();
         $viewBuilder->setLayout('fortunes');
         $viewBuilder->setTemplate('/Fortunes/index');
-        $this->loadModel('Fortune');
 
         $fortunesTable = TableRegistry::getTableLocator()->get('Fortune');
 
@@ -23,7 +22,7 @@ class FortunesController extends AppController {
 
 
 	    // stuffing in the dynamic data
-	    $fortune = TableRegistry::getTableLocator()->get('Fortune')->newEntity([
+        $fortune = $fortunesTable->newEntity([
 	    	'id' => 0,
 		    'message' => 'Additional fortune added at request time.'
 	    ]);
