@@ -2,13 +2,14 @@
 
 namespace App\Controller;
 
-use App\Model\Entity\Fortune;
 use Cake\ORM\TableRegistry;
 
 class FortunesController extends AppController {
 
     public function index() {
-        $this->viewBuilder()->setLayout('fortunes');
+        $viewBuilder = $this->viewBuilder();
+        $viewBuilder->setLayout('fortunes');
+        $viewBuilder->setTemplate('/Fortunes/index');
         $this->loadModel('Fortune');
 
         $fortunesTable = TableRegistry::getTableLocator()->get('Fortune');
