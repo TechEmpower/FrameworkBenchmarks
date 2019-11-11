@@ -71,8 +71,7 @@ class DbController
         $numbers = $this->getUniqueRandomNumbers($queries, 1, 10000);
         foreach ($numbers as $id) {
             $world = $this->worldRepository->find($id);
-            while($id === $newId = \mt_rand(1, 10000)) {}
-            $world->setRandomNumber($newId);
+            $world->setRandomNumber(\mt_rand(1, 10000));
             $worlds[] = $world;
             $this->entityManager->flush();
         }
