@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Repository\WorldRepository;
@@ -9,7 +10,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DbController
 {
-
     /** @var EntityManagerInterface */
     private $entityManager;
 
@@ -33,7 +33,6 @@ class DbController
     }
 
     /**
-     *
      * @Route("/db")
      */
     public function db(): JsonResponse
@@ -42,7 +41,6 @@ class DbController
     }
 
     /**
-     *
      * @Route("/queries")
      */
     public function queries(Request $request): JsonResponse
@@ -61,7 +59,6 @@ class DbController
     }
 
     /**
-     *
      * @Route("/updates")
      */
     public function update(Request $request): JsonResponse
@@ -74,7 +71,8 @@ class DbController
         $numbers = $this->getUniqueRandomNumbers($queries, 1, 10000);
         foreach ($numbers as $id) {
             $world = $this->worldRepository->find($id);
-            $world->setRandomNumber(\mt_rand(1, 10000));
+            while($id === $newId = \mt_rand(1, 10000)) {}
+            $world->setRandomNumber($newId);
             $worlds[] = $world;
             $this->entityManager->flush();
         }
