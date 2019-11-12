@@ -16,14 +16,36 @@ class DbController
     /** @var WorldRepository */
     private $worldRepository;
 
-    private function getUniqueRandomNumbers($count, $min, $max)
+    private function getUniqueRandomNumbers($count)
     {
         $res = [];
         do {
-            $res[\mt_rand($min, $max)] = 1;
+            $res[\mt_rand(1, 10000)] = 1;
         } while (\count($res) < $count);
 
         return \array_keys($res);
+    }
+
+    private function flushUpdates(EntityManagerInterface $em, array $worlds)
+    {
+        $co = $em->getConnection();
+        do {
+            try {
+                $co->beginTransaction();
+                $em->flush();
+                $co->commit();
+                $done = true;
+            } catch (\Exception $e) {
+                $done = false;
+                $co->rollback();
+                if (! $em->isOpen()) {
+                    $em = $em->create($co, $em->getConfiguration());
+                    foreach ($worlds as $world) {
+                        $world = $em->merge($world);
+                    }
+                }
+            }
+        } while (! $done);
     }
 
     public function __construct(EntityManagerInterface $entityManager, WorldRepository $worldRepository)
@@ -50,7 +72,7 @@ class DbController
 
         // possibility for enhancement is the use of SplFixedArray -> http://php.net/manual/de/class.splfixedarray.php
         $worlds = [];
-        $numbers = $this->getUniqueRandomNumbers($queries, 1, 10000);
+        $numbers = $this->getUniqueRandomNumbers($queries);
         foreach ($numbers as $id) {
             $worlds[] = $this->worldRepository->find($id);
         }
@@ -68,13 +90,14 @@ class DbController
 
         $worlds = [];
 
-        $numbers = $this->getUniqueRandomNumbers($queries, 1, 10000);
+        $numbers = $this->getUniqueRandomNumbers($queries);
         foreach ($numbers as $id) {
             $world = $this->worldRepository->find($id);
             $world->setRandomNumber(\mt_rand(1, 10000));
             $worlds[] = $world;
-            $this->entityManager->flush();
         }
+        $this->flushUpdates($this->entityManager, $worlds);
+
         return new JsonResponse($worlds);
     }
 }
