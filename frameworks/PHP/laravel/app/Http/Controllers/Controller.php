@@ -18,10 +18,8 @@ class Controller extends BaseController {
 	}
 
 	public function queries($queries = 1) {
-		$queries = $this->clamp($queries);
-
 		$rows = [];
-		$numbers = $this->getUniqueRandomNumbers($queries, 1, 10000);
+		$numbers = $this->getUniqueRandomNumbers($this->clamp($queries), 1, 10000);
 		foreach ($numbers as $id) {
 			$rows[] = World::find($id);
 		}
@@ -34,22 +32,20 @@ class Controller extends BaseController {
 
 		$insert = new Fortune();
 		$insert->id = 0;
-		$insert->message = "Additional fortune added at request time.";
+		$insert->message = 'Additional fortune added at request time.';
 
 		$rows->add($insert);
-		$rows = $rows->sortBy("message");
+		$rows = $rows->sortBy('message');
 
-		return view("fortunes", [
-			"rows" => $rows
+		return view('fortunes', [
+			'rows' => $rows
 		]);
 	}
 
 	public function updates($queries = 1) {
-		$queries = $this->clamp($queries);
-
 		$rows = [];
 
-		$numbers = $this->getUniqueRandomNumbers($queries, 1, 10000);
+		$numbers = $this->getUniqueRandomNumbers($this->clamp($queries), 1, 10000);
 		foreach ($numbers as $id) {
 			$row = World::find($id);
 			$row->randomNumber = \mt_rand(1, 10000);
@@ -62,7 +58,7 @@ class Controller extends BaseController {
 	}
 
 	public function plaintext() {
-		return response("Hello, World!")->header('Content-Type', 'text/plain');
+		return response('Hello, World!')->header('Content-Type', 'text/plain');
 	}
 
 	private function clamp($value): int {
