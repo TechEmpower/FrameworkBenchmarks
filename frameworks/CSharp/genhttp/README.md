@@ -18,5 +18,5 @@ See the [GenHTTP website](https://genhttp.org) for more information.
 
 ## Paths & Source for Tests
 
-* [Plaintext](Benchmarks/Tests/PlaintextProvider.cs): "/plaintext"
+* [Plaintext](Benchmarks/Program.cs): "/plaintext"
 * [JSON](Benchmarks/Tests/JsonResource.cs): "/json"
