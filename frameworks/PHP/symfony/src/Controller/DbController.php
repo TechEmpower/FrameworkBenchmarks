@@ -26,22 +26,22 @@ class DbController
         return \array_keys($res);
     }
 
-    private function flushUpdates(EntityManagerInterface $em, array $worlds)
+    private function flushUpdates(array &$worlds, int $startPosition, int $size)
     {
+        $em = $this->entityManager;
         $co = $em->getConnection();
         do {
             try {
-                $co->beginTransaction();
                 $em->flush();
-                $co->commit();
+                $em->clear();
                 $done = true;
             } catch (\Exception $e) {
                 $done = false;
-                $co->rollback();
                 if (! $em->isOpen()) {
                     $em = $em->create($co, $em->getConfiguration());
-                    foreach ($worlds as $world) {
-                        $world = $em->merge($world);
+                    $max = \min(\count($worlds), $startPosition + $size);
+                    for ($pos = $startPosition; $pos < $max; $pos ++) {
+                        $em->merge($worlds[$pos]);
                     }
                 }
             }
@@ -85,18 +85,26 @@ class DbController
      */
     public function update(Request $request): JsonResponse
     {
+        $batchSize = 5;
         $queries = (int) $request->query->get('queries', 1);
         $queries = \min(500, \max(1, $queries));
 
         $worlds = [];
+        $lastPosition = 0;
 
         $numbers = $this->getUniqueRandomNumbers($queries);
-        foreach ($numbers as $id) {
+        foreach ($numbers as $index=>$id) {
             $world = $this->worldRepository->find($id);
             $world->setRandomNumber(\mt_rand(1, 10000));
             $worlds[] = $world;
+            if($index % $batchSize === 0){
+                $this->flushUpdates($worlds, $lastPosition, $batchSize);
+                $lastPosition = $index + 1;
+            }
         }
-        $this->flushUpdates($this->entityManager, $worlds);
+        if($lastPosition + 1 < $queries){
+            $this->flushUpdates($worlds, $lastPosition, $queries - $lastPosition);
+        }
 
         return new JsonResponse($worlds);
     }
