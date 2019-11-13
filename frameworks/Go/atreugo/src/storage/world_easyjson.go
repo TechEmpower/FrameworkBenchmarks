@@ -4,7 +4,6 @@ package storage
 
 import (
 	json "encoding/json"
-
 	easyjson "github.com/mailru/easyjson"
 	jlexer "github.com/mailru/easyjson/jlexer"
 	jwriter "github.com/mailru/easyjson/jwriter"
@@ -18,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson4da0dabeDecodeGoStdSrcStorage(in *jlexer.Lexer, out *Worlds) {
+func easyjson4da0dabeDecodeAtreugoSrcStorage(in *jlexer.Lexer, out *Worlds) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		in.Skip()
@@ -46,7 +45,7 @@ func easyjson4da0dabeDecodeGoStdSrcStorage(in *jlexer.Lexer, out *Worlds) {
 		in.Consumed()
 	}
 }
-func easyjson4da0dabeEncodeGoStdSrcStorage(out *jwriter.Writer, in Worlds) {
+func easyjson4da0dabeEncodeAtreugoSrcStorage(out *jwriter.Writer, in Worlds) {
 	if in == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 		out.RawString("null")
 	} else {
@@ -64,27 +63,27 @@ func easyjson4da0dabeEncodeGoStdSrcStorage(out *jwriter.Writer, in Worlds) {
 // MarshalJSON supports json.Marshaler interface
 func (v Worlds) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson4da0dabeEncodeGoStdSrcStorage(&w, v)
+	easyjson4da0dabeEncodeAtreugoSrcStorage(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Worlds) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson4da0dabeEncodeGoStdSrcStorage(w, v)
+	easyjson4da0dabeEncodeAtreugoSrcStorage(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Worlds) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson4da0dabeDecodeGoStdSrcStorage(&r, v)
+	easyjson4da0dabeDecodeAtreugoSrcStorage(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Worlds) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson4da0dabeDecodeGoStdSrcStorage(l, v)
+	easyjson4da0dabeDecodeAtreugoSrcStorage(l, v)
 }
-func easyjson4da0dabeDecodeGoStdSrcStorage1(in *jlexer.Lexer, out *World) {
+func easyjson4da0dabeDecodeAtreugoSrcStorage1(in *jlexer.Lexer, out *World) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -117,28 +116,18 @@ func easyjson4da0dabeDecodeGoStdSrcStorage1(in *jlexer.Lexer, out *World) {
 		in.Consumed()
 	}
 }
-func easyjson4da0dabeEncodeGoStdSrcStorage1(out *jwriter.Writer, in World) {
+func easyjson4da0dabeEncodeAtreugoSrcStorage1(out *jwriter.Writer, in World) {
 	out.RawByte('{')
 	first := true
 	_ = first
 	{
 		const prefix string = ",\"id\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix[1:])
 		out.Int(int(in.ID))
 	}
 	{
 		const prefix string = ",\"randomnumber\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Int(int(in.RandomNumber))
 	}
 	out.RawByte('}')
@@ -147,23 +136,23 @@ func easyjson4da0dabeEncodeGoStdSrcStorage1(out *jwriter.Writer, in World) {
 // MarshalJSON supports json.Marshaler interface
 func (v World) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson4da0dabeEncodeGoStdSrcStorage1(&w, v)
+	easyjson4da0dabeEncodeAtreugoSrcStorage1(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v World) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson4da0dabeEncodeGoStdSrcStorage1(w, v)
+	easyjson4da0dabeEncodeAtreugoSrcStorage1(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *World) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson4da0dabeDecodeGoStdSrcStorage1(&r, v)
+	easyjson4da0dabeDecodeAtreugoSrcStorage1(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *World) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson4da0dabeDecodeGoStdSrcStorage1(l, v)
+	easyjson4da0dabeDecodeAtreugoSrcStorage1(l, v)
 }

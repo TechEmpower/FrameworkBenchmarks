@@ -2,6 +2,7 @@
 use std::{cmp, io};
 
 use bytes::{BufMut, BytesMut};
+use yarte::Template;
 
 #[allow(non_snake_case)]
 #[derive(Serialize, Debug)]
@@ -101,4 +102,10 @@ markup::define! {
             }
         }
     }
+}
+
+#[derive(Template)]
+#[template(path = "fortune.hbs")]
+pub struct FortunesYarteTemplate {
+    pub fortunes: Vec<Fortune>
 }

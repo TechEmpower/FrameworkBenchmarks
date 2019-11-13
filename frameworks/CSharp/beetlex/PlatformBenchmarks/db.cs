@@ -14,7 +14,7 @@ namespace PlatformBenchmarks
         {
             try
             {
-                var data = await mPgsql.LoadSingleQueryRow();
+                var data = await token.Db.LoadSingleQueryRow();
                 await JsonSerializer.NonGeneric.Utf8.SerializeAsync(data, stream);
             }
             catch(Exception e_)

@@ -4,26 +4,24 @@ namespace Benchmark\Resources;
 
 use Benchmark\Entities\FortuneEntity;
 use Benchmark\Entities\Message;
-use Hamlet\Database\Database;
-use Hamlet\Database\Procedure;
+use Hamlet\Database\{Procedure, Session};
 use Hamlet\Http\Requests\Request;
-use Hamlet\Http\Responses\Response;
-use Hamlet\Http\Responses\SimpleOKResponse;
+use Hamlet\Http\Resources\HttpResource;
+use Hamlet\Http\Responses\{Response, SimpleOKResponse};
 
-class FortuneResource extends DbResource
+class FortuneResource implements HttpResource
 {
     /** @var Procedure */
     private $procedure;
 
-    public function __construct(Database $database)
+    public function __construct(Session $session)
     {
-        parent::__construct($database);
         $query = '
             SELECT id,
                    message
               FROM Fortune
         ';
-        $this->procedure = $this->database->prepare($query);
+        $this->procedure = $session->prepare($query);
     }
 
     public function getResponse(Request $request): Response

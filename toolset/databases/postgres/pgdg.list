@@ -1,2 +1,2 @@
-deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main
-deb-src http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main
+deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main
+deb-src http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main

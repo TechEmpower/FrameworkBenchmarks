@@ -3,12 +3,10 @@
 
 using System;
 using System.Net;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.Internal;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using System.IO.Pipelines;
 
 namespace PlatformBenchmarks
 {
@@ -31,22 +29,21 @@ namespace PlatformBenchmarks
                 theadCount = value;
             }
 
-            if (string.Equals(webHost, "LinuxTransport", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(webHost, "Sockets", StringComparison.OrdinalIgnoreCase))
             {
-                builder.ConfigureServices(services =>
-                {
-                    services.Configure<KestrelServerOptions>(options =>
-                    {
-                        // Run callbacks on the transport thread
-                        options.ApplicationSchedulingMode = SchedulingMode.Inline;
-                    });
-                })
-                .UseLinuxTransport(options =>
+                builder.UseSockets(options =>
                 {
                     if (theadCount.HasValue)
                     {
-                        options.ThreadCount = theadCount.Value;
+                        options.IOQueueCount = theadCount.Value;
                     }
+                });
+            }
+            else if (string.Equals(webHost, "LinuxTransport", StringComparison.OrdinalIgnoreCase))
+            {
+                builder.UseLinuxTransport(options =>
+                {
+                    options.ApplicationSchedulingMode = PipeScheduler.Inline;
                 });
             }
 
@@ -62,7 +59,7 @@ namespace PlatformBenchmarks
                 return new IPEndPoint(IPAddress.Loopback, 8080);
             }
 
-            var address = ServerAddress.FromUrl(url);
+            var address = BindingAddress.Parse(url);
 
             IPAddress ip;
 

@@ -13,20 +13,23 @@ void DbCtrlRaw::asyncHandleHttpRequest(
     // write your application logic here
     static std::once_flag once;
     std::call_once(once, []() { srand(time(NULL)); });
-    auto client = drogon::app().getFastDbClient();
+    if (!*_dbClient)
+    {
+        *_dbClient = drogon::app().getFastDbClient();
+    }
     int id = rand() % 10000 + 1;
     auto callbackPtr =
         std::make_shared<std::function<void(const HttpResponsePtr &)>>(
             std::move(callback));
 
-    *client << "select randomnumber from world where id=$1" << id >>
+    **_dbClient << "select * from world where id=$1" << id >>
         [callbackPtr, id](const Result &rows) {
             auto resp = HttpResponse::newHttpResponse();
             char json[64];
             auto size = sprintf(json,
                                 "{\"id\":%d,\"randomnumber\":%s}",
                                 id,
-                                rows[0]["randomnumber"].c_str());
+                                rows[0][1ul].c_str());
             resp->setBody(std::string(json, size));
             resp->setContentTypeCode(CT_APPLICATION_JSON);
             (*callbackPtr)(resp);

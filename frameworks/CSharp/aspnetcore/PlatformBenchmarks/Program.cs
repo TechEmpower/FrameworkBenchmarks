@@ -30,7 +30,7 @@ namespace PlatformBenchmarks
 
             var host = BuildWebHost(args);
             var config = (IConfiguration)host.Services.GetService(typeof(IConfiguration));
-            BatchUpdateString.Initialize(config.Get<AppSettings>().Database);
+            BatchUpdateString.DatabaseServer = config.Get<AppSettings>().Database;
             host.Run();
         }
 

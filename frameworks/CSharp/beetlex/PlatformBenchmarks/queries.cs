@@ -29,7 +29,7 @@ namespace PlatformBenchmarks
                 count = 1;
             try
             {
-                var data = await mPgsql.LoadMultipleQueriesRows(count);
+                var data = await token.Db.LoadMultipleQueriesRows(count);
                 await JsonSerializer.NonGeneric.Utf8.SerializeAsync(data, stream);
             }
             catch (Exception e_)

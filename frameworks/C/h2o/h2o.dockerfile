@@ -1,10 +1,11 @@
-FROM ubuntu:16.04
+FROM ubuntu:19.10
 
+WORKDIR /h2o_app_src
 COPY ./ ./
 
 RUN apt update && \
     apt install -yqq autoconf bison cmake curl file flex g++ git libnuma-dev libpq-dev libssl-dev \
-                     libtool libyajl-dev make wget
+                     libtool libyajl-dev libz-dev make wget
 
 ### Install mustache-c
 
@@ -19,7 +20,7 @@ RUN git clone "https://github.com/x86-64/mustache-c.git" "$MUSTACHE_C_BUILD_DIR"
 
 ### Install h2o
 
-ENV H2O_VERSION=2.2.5
+ENV H2O_VERSION=2.2.6
 ENV H2O_ARCHIVE="v${H2O_VERSION}.tar.gz"
 ENV H2O_PREFIX=/opt/h2o
 

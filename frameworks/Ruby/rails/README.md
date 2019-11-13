@@ -17,6 +17,7 @@ The tests were run with:
 - [Unicorn 5.4.1](http://unicorn.bogomips.org/)
 - [Puma 3.12](http://puma.io/)
 - [MySQL 5.5](https://dev.mysql.com/)
+- [PostgreSQL 11](https://www.postgresql.org/)
 
 ## Paths & Source for Tests
 

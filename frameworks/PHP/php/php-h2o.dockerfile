@@ -18,7 +18,7 @@ RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children =
 
 ### Install h2o
 
-ENV H2O_VERSION=2.2.5
+ENV H2O_VERSION=2.2.6
 ENV H2O_ARCHIVE="v${H2O_VERSION}.tar.gz"
 ENV H2O_HOME=/h2o
 

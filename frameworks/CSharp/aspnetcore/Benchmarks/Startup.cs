@@ -22,7 +22,7 @@ namespace Benchmarks
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment hostingEnv, Scenarios scenarios)
+        public Startup(IWebHostEnvironment hostingEnv, Scenarios scenarios)
         {
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
@@ -55,6 +55,8 @@ namespace Benchmarks
             services.AddEntityFrameworkSqlServer();
 
             var appSettings = Configuration.Get<AppSettings>();
+            BatchUpdateString.DatabaseServer = appSettings.Database;
+
             Console.WriteLine($"Database: {appSettings.Database}");
 
             if (appSettings.Database == DatabaseServer.PostgreSql)
@@ -92,11 +94,6 @@ namespace Benchmarks
                 services.AddScoped<DapperDb>();
             }
 
-            if (Scenarios.Any("Update"))
-            {
-                BatchUpdateString.Initialize(appSettings.Database);
-            }
-
             if (Scenarios.Any("Fortunes"))
             {
                 var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);
@@ -113,11 +110,6 @@ namespace Benchmarks
                     .AddMvcCore()
                     .SetCompatibilityVersion(CompatibilityVersion.Latest)
                     ;
-
-                if (Scenarios.MvcJson || Scenarios.Any("MvcDbSingle") || Scenarios.Any("MvcDbMulti"))
-                {
-                    mvcBuilder.AddJsonFormatters();
-                }
 
                 if (Scenarios.MvcViews || Scenarios.Any("MvcDbFortunes"))
                 {
@@ -138,16 +130,6 @@ namespace Benchmarks
             if (Scenarios.Json)
             {
                 app.UseJson();
-            }
-
-            if (Scenarios.Utf8Json)
-            {
-                app.UseUtf8Json();
-            }
-
-            if (Scenarios.SpanJson)
-            {
-                app.UseSpanJson();
             }
 
             // Fortunes endpoints
@@ -216,7 +198,12 @@ namespace Benchmarks
 
             if (Scenarios.Any("Mvc"))
             {
-                app.UseMvc();
+                app.UseRouting();
+            
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                });
             }
 
             if (Scenarios.StaticFiles)

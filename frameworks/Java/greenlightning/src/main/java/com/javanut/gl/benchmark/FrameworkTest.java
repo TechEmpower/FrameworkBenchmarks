@@ -6,21 +6,23 @@ import com.javanut.gl.api.GreenApp;
 import com.javanut.gl.api.GreenCommandChannel;
 import com.javanut.gl.api.GreenFramework;
 import com.javanut.gl.api.GreenRuntime;
+import com.javanut.pronghorn.network.ServerSocketWriterStage;
 
-import io.reactiverse.pgclient.PgClient;
-import io.reactiverse.pgclient.PgPool;
-import io.reactiverse.pgclient.PgPoolOptions;
+import io.vertx.pgclient.PgConnectOptions;
+import io.vertx.pgclient.PgPool;
+import io.vertx.sqlclient.PoolOptions;
+
 
 public class FrameworkTest implements GreenApp {
 
 	private final String payloadText;
-	private final byte[] payload;
+	final byte[] payload;
 
 	private int bindPort;
     private String host;
     private int concurrentWritesPerChannel;
-    private int queueLengthOfPendingRequests;
-    private int telemetryPort;//for monitoring
+  
+    private int telemetryPort;
     private int minMemoryOfInputPipes;
     private int dbCallMaxResponseSize;
 	private	final int dbCallMaxResponseCount;
@@ -29,8 +31,8 @@ public class FrameworkTest implements GreenApp {
     private final int jsonMaxResponseCount;
     private final int jsonMaxResponseSize;
     
-    private PgPoolOptions options;
-    
+    private PgConnectOptions options;
+    private PoolOptions poolOptions;
     
     private int maxQueueOut;
     private int maxConnectionBits;
@@ -47,8 +49,18 @@ public class FrameworkTest implements GreenApp {
 	public static String connectionPassword = "postgres";
 	
 	//TODO: add utility to compute this based on need.
-	static final int c = 592; // to reach 16K simultaneous calls
+	static final int c = 148;//293;//592; // to reach 16K simultaneous calls
 
+	private final long defaultRate = Long.parseLong(System.getProperty("xx.rate", "120000")); //was 180000
+	//Need to record how many records per pass are done...
+	
+	static {
+		System.setProperty("java.lang.Integer.IntegerCache.high", ""+Integer.MAX_VALUE);
+
+		ServerSocketWriterStage.BASE_ADJUST = Float.parseFloat(System.getProperty("xx.ratio", "1"));
+		ServerSocketWriterStage.HARD_LIMIT_NS = Long.parseLong(System.getProperty("xx.limitns", "120000"));		
+	}
+	
     public FrameworkTest() {
     	    	
     	// use this in commit messages to narrow travis testing to just this project
@@ -57,10 +69,8 @@ public class FrameworkTest implements GreenApp {
     	
     	//this server works best with  -XX:+UseNUMA    	
     	this(System.getProperty("host","0.0.0.0"), 
-    		 8080,    	//default port for test 
-    		 c,         //pipes per track
-    		 c*16,      //(router to module) pipeline of 16 used for plain text test    		 
-    		 1<<15,     //default total size of network buffer used by blocks     		 
+    		 Integer.parseInt(System.getProperty("port","8080")),    	//default port for test 
+    		 c,         //pipes per track 
     		 Integer.parseInt(System.getProperty("telemetry.port", "-1")),
     		 "tfb-database", // jdbc:postgresql://tfb-database:5432/hello_world
     		 "hello_world",
@@ -68,12 +78,13 @@ public class FrameworkTest implements GreenApp {
     		 "benchmarkdbpass",
     		 System.getProperty("custom.payload", "Hello, World!")    		 
     		 );
+    	   	
+    	System.out.println("xx.rate "+defaultRate+"  xx.ratio "+ServerSocketWriterStage.BASE_ADJUST+" xx.limitns "+ServerSocketWriterStage.HARD_LIMIT_NS);
+		
     }   
         
     public FrameworkTest(String host, int port, 
     		             int concurrentWritesPerChannel, 
-    		             int queueLengthOfPendingRequests, 
-    		             int minMemoryOfInputPipes,
     		             int telemetryPort,
     		             String dbHost,
     		             String dbName,
@@ -84,26 +95,26 @@ public class FrameworkTest implements GreenApp {
     	this.payloadText = payloadResponse;
     	this.payload = payloadText.getBytes();
     	
-    	this.connectionsPerTrack = 1;
+    	this.connectionsPerTrack = 2;
     	this.connectionPort = 5432;
     	this.bindPort = port;
     	this.host = host;
     	this.concurrentWritesPerChannel = concurrentWritesPerChannel;
-    	this.queueLengthOfPendingRequests = queueLengthOfPendingRequests;
-    	this.minMemoryOfInputPipes = minMemoryOfInputPipes;
+
     	this.telemetryPort = telemetryPort;
     	this.pipelineBits = 15;//max concurrent in flight database requests 1<<pipelineBits
     	            
-    	this.dbCallMaxResponseCount = c;
-    	this.jsonMaxResponseCount = c*32;
+    	this.dbCallMaxResponseCount = c*8; //this will limit the in flight DB calls so make it larger
+    	this.jsonMaxResponseCount = c*16*4;
     	
     	this.dbCallMaxResponseSize = 20_000; //for 500 mult db call in JSON format
     	this.jsonMaxResponseSize = 1<<8;
 
-    	this.maxQueueOut = 8*30;   	
-    	this.maxConnectionBits = 14; //16K connections, for test plus overhead
+    	this.maxQueueOut = 8*20;   	
+    	this.maxConnectionBits = 15;//16K connections, for test plus overhead MUST be 32K
     	
-    	this.maxRequestSize = 1<<9;
+    	//do not make much larger than what is required to hold 16 in flight requests
+    	this.maxRequestSize = 1<<11;//between ServerSocketBulkReader and ServerSocketBulkRouter
     	    	
     	if (!"127.0.0.1".equals(System.getProperty("host",null))) { 
     		    		
@@ -123,23 +134,23 @@ public class FrameworkTest implements GreenApp {
     	
 	    		
     	try {
-    		options = new PgPoolOptions()
+    		options = new PgConnectOptions()
     				.setPort(connectionPort)
     				.setPipeliningLimit(1<<pipelineBits)
-    				.setMaxWaitQueueSize(1<<pipelineBits)
     				.setHost(connectionHost)
     				.setDatabase(connectionDB)
     				.setUser(connectionUser)
     				.setPassword(connectionPassword)    		
     				.setCachePreparedStatements(true)
     				.setTcpNoDelay(true)
-    				.setTcpKeepAlive(true)
-    				.setUsePooledBuffers(false)
-    				.setMaxSize(connectionsPerTrack);	    	
+    				.setTcpKeepAlive(true);	    	
 
+    		poolOptions = new PoolOptions()    				
+    				  .setMaxSize(connectionsPerTrack);
+    		
     		///early check to know if we have a database or not,
 	    	///this helps testing to know which tests should be run on different boxes.
-	    	PgPool pool = PgClient.pool(options);
+	    	PgPool pool = PgPool.pool(options, poolOptions);
 			pool.getConnection(a->{
 	    		foundDB.set(a.succeeded());
 	    		if (null!=a.result()) {
@@ -159,7 +170,7 @@ public class FrameworkTest implements GreenApp {
 	@Override
     public void declareConfiguration(GreenFramework framework) {
 		
-		framework.setDefaultRate(100_000L);		
+		framework.setDefaultRate(defaultRate);
 	
 		//for 14 cores this is expected to use less than 16G, must use next largest prime to ensure smaller groups are not multiples.
 		framework.useHTTP1xServer(bindPort, this::parallelBehavior) //standard auto-scale
@@ -171,14 +182,10 @@ public class FrameworkTest implements GreenApp {
     			 //TODO: neeed to allow for multiple writes one pipe! big dif.
     			// .setConcurrentChannelsPerEncryptUnit(Math.max(1,concurrentWritesPerChannel/2))  //8K    
     			 .setConcurrentChannelsPerEncryptUnit(concurrentWritesPerChannel/25)  ///80) ///16) // /8)//4)
-    			 //TODO: we need smaller count of connections but MORE writers.
-    			 
-    			 .disableEPoll() //provides advantage in JSON test....
- 						 
-    			 .setMaxQueueIn(queueLengthOfPendingRequests)
+
     			 .setMaxRequestSize(maxRequestSize)
+    			 .setMaxQueueIn(c*16)
     	
-    			 .setMinimumInputPipeMemory(minMemoryOfInputPipes)
     			 .setMaxQueueOut(maxQueueOut)
     			 .setMaxResponseSize(dbCallMaxResponseSize) //big enough for large mult db response
     	         .useInsecureServer(); //turn off TLS
@@ -236,7 +243,7 @@ public class FrameworkTest implements GreenApp {
 		       .includeRoutes(Struct.PLAINTEXT_ROUTE, restTest::plainRestRequest)
 		       .includeRoutes(Struct.JSON_ROUTE, restTest::jsonRestRequest);		 
 
-		DBRest dbRestInstance = new DBRest(runtime, options, pipelineBits, 
+		DBRest dbRestInstance = new DBRest(runtime, options, poolOptions, pipelineBits, 
 				                           dbCallMaxResponseCount, dbCallMaxResponseSize);		
 		
 		runtime.registerListener("DBReadWrite", dbRestInstance)

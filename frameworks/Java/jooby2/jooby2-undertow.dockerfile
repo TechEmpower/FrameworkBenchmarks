@@ -9,4 +9,4 @@ FROM openjdk:11.0.3-jdk-slim
 WORKDIR /jooby2
 COPY --from=maven /jooby2/target/jooby-2x.jar app.jar
 COPY conf conf
-CMD ["java", "-server", "-Xms512m", "-Xmx2g", "-jar", "app.jar"]
+CMD ["java", "-server", "-Xms4g", "-Xmx4g", "-XX:+AggressiveOpts", "-XX:-UseBiasedLocking", "-XX:+UseStringDeduplication", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-jar", "app.jar"]

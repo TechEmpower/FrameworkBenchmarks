@@ -8,11 +8,12 @@ using System.Text;
 using BeetleX.Buffers;
 using SpanJson;
 using System.Collections.Generic;
+using BeetleX.EventArgs;
 
 namespace Benchmarks
 {
     [Controller]
-    class Program:IController
+    class Program : IController
     {
         public static void Main(string[] args)
         {
@@ -34,32 +35,37 @@ namespace Benchmarks
             return new SpanJsonResult(new JsonMessage { message = "Hello, World!" });
         }
 
-        public async Task<object> queries(int queries)
+        public async Task<object> queries(int queries, IHttpContext context)
         {
             queries = queries < 1 ? 1 : queries > 500 ? 500 : queries;
-            var result = await mPgsql.LoadMultipleQueriesRows(queries);
+            var result = await GetDB(context).LoadMultipleQueriesRows(queries);
             return new SpanJsonResult(result);
         }
 
-        public async Task<object> db()
+        public RawDb GetDB(IHttpContext context)
         {
-            var result = await mPgsql.LoadSingleQueryRow();
+            return (RawDb)context.Session["DB"];
+        }
+
+        public async Task<object> db(IHttpContext context)
+        {
+            var result = await GetDB(context).LoadSingleQueryRow();
             return new SpanJsonResult(result);
         }
 
-        public async Task<object> fortunes()
+        public async Task<object> fortunes(IHttpContext context)
         {
-            var data = await mPgsql.LoadFortunesRows();
+            var data = await GetDB(context).LoadFortunesRows();
             return new FortuneView(data);
         }
 
 
-        private RawDb mPgsql;
+      
 
         [NotAction]
         public void Init(HttpApiServer server, string path)
         {
-            mPgsql = new RawDb(new ConcurrentRandom(), Npgsql.NpgsqlFactory.Instance);
+           
         }
     }
 
@@ -72,7 +78,7 @@ namespace Benchmarks
 
         private HttpApiServer mApiServer;
 
-        public virtual Task StartAsync(CancellationToken cancellationToken)
+        public async virtual Task StartAsync(CancellationToken cancellationToken)
         {
             plaintextResult = new StringBytes(_helloWorldPayload);
             mApiServer = new HttpApiServer();
@@ -85,8 +91,16 @@ namespace Benchmarks
             mApiServer.Options.LogToConsole = true;
             mApiServer.Options.PrivateBufferPool = true;
             mApiServer.Register(typeof(Program).Assembly);
+            mApiServer.HttpConnected += (o, e) => {
+                e.Session["DB"] = new RawDb(new ConcurrentRandom(), Npgsql.NpgsqlFactory.Instance);
+            };
             mApiServer.Open();
-            return Task.CompletedTask;
+            System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
+            var response = await client.GetAsync("http://localhost:8080/json");
+            mApiServer.BaseServer.Log(LogType.Info, null, $"Get josn {response.StatusCode}");
+            response = await client.GetAsync("http://localhost:8080/plaintext");
+            mApiServer.BaseServer.Log(LogType.Info, null, $"Get plaintext {response.StatusCode}");
+          
         }
 
         public virtual Task StopAsync(CancellationToken cancellationToken)

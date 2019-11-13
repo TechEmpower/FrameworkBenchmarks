@@ -7,17 +7,15 @@ namespace PlatformBenchmarks
 {
     public class HttpToken
     {
-        private byte[] mLengthBuffer = new byte[10];
+        private byte[] mLengthBuffer = new byte[10];   
 
-        public byte[] Buffer
-        {
-            get;
-            private set;
-        }       
+        public RawDb Db { get; set; }
+
+        public NextQueue NextQueue { get; set; }
 
         public HttpToken()
         {
-            Buffer = new byte[2048];
+            
         }
 
         public byte[] GetLengthBuffer(string length)

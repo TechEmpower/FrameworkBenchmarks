@@ -1,32 +1,36 @@
 package hello.services;
 
-import com.zaxxer.hikari.HikariDataSource;
-
-import hello.helpers.PostgresDbHelper;
-import hello.models.Fortune;
-import hello.helpers.HttpHeadersHelper;
-
-import java.io.InputStreamReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UncheckedIOException;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import javax.sql.DataSource;
 
-import com.linecorp.armeria.common.HttpData;
-import com.linecorp.armeria.common.HttpResponse;
-import com.linecorp.armeria.common.HttpStatus;
-import com.linecorp.armeria.common.MediaType;
-import com.linecorp.armeria.server.annotation.Get;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import com.zaxxer.hikari.HikariDataSource;
+
+import com.linecorp.armeria.common.HttpResponse;
+import com.linecorp.armeria.common.HttpStatus;
+import com.linecorp.armeria.common.MediaType;
+import com.linecorp.armeria.server.ServiceRequestContext;
+import com.linecorp.armeria.server.annotation.Get;
+
+import hello.helpers.PostgresDbHelper;
+import hello.models.Fortune;
 
 public class PostgresFortunesService {
   private static final String SELECT_QUERY = "SELECT * FROM fortune";
@@ -44,43 +48,51 @@ public class PostgresFortunesService {
   }
 
   @Get("/fortunes")
-  public HttpResponse fortunes() throws SQLException, IOException {
-    List<Fortune> fortunes = getFortunes();
-    fortunes.add(
-        new Fortune(0, "Additional fortune added at request time."));
-    fortunes.sort(Comparator.comparing(Fortune::getMessage));
+  public CompletableFuture<HttpResponse> fortunes(ServiceRequestContext ctx) {
+    return getFortunes(ctx).thenApply(fortunes -> {
+      fortunes.add(
+          new Fortune(0, "Additional fortune added at request time."));
+      fortunes.sort(Comparator.comparing(Fortune::getMessage));
 
-    return HttpResponse.of(
-        HttpHeadersHelper.getHttpHeader(MediaType.HTML_UTF_8),
-        HttpData.ofUtf8(buildMustacheTemplate(fortunes))
-        );
+      return HttpResponse.of(
+              HttpStatus.OK, MediaType.HTML_UTF_8, buildMustacheTemplate(fortunes));
+    });
   }
 
-  private List<Fortune> getFortunes() throws SQLException {
-    List<Fortune> fortunes = new ArrayList<>();
+  private CompletableFuture<List<Fortune>> getFortunes(ServiceRequestContext ctx) {
+    return CompletableFuture.supplyAsync(
+        () -> {
+          List<Fortune> fortunes = new ArrayList<>();
 
-    try (final Connection connection = dataSource.getConnection();
-         final PreparedStatement statement =
-             connection.prepareStatement(SELECT_QUERY);
-         final ResultSet resultSet = statement.executeQuery()) {
+          try (final Connection connection = dataSource.getConnection();
+               final PreparedStatement statement =
+                   connection.prepareStatement(SELECT_QUERY);
+               final ResultSet resultSet = statement.executeQuery()) {
 
-      while (resultSet.next()) {
-        fortunes.add(
-            new Fortune(
-                resultSet.getInt(1),
-                resultSet.getString(2)));
-      }
-    }
-    return fortunes;
+            while (resultSet.next()) {
+              fortunes.add(
+                  new Fortune(
+                      resultSet.getInt(1),
+                      resultSet.getString(2)));
+            }
+          } catch (SQLException e) {
+            throw new IllegalStateException("Database error", e);
+          }
+          return fortunes;
+        }, ctx.blockingTaskExecutor()
+    );
   }
 
-  private String buildMustacheTemplate(List<Fortune> fortunes)
-      throws IOException {
+  private byte[] buildMustacheTemplate(List<Fortune> fortunes) {
     Mustache mustache = mustacheFactory.compile("fortunes.mustache");
-    StringWriter stringWriter = new StringWriter();
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 
-    mustache.execute(stringWriter, fortunes).flush();
+    try (Writer writer = new OutputStreamWriter(bytes, StandardCharsets.UTF_8)) {
+      mustache.execute(writer, fortunes);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
 
-    return stringWriter.toString();
+    return bytes.toByteArray();
   }
 }

@@ -3,37 +3,35 @@
 namespace Benchmark\Resources;
 
 use Benchmark\Entities\RandomNumber;
-use Hamlet\Database\Database;
-use Hamlet\Database\Procedure;
+use Hamlet\Database\{Procedure, Session};
 use Hamlet\Http\Entities\JsonEntity;
 use Hamlet\Http\Requests\Request;
-use Hamlet\Http\Responses\Response;
-use Hamlet\Http\Responses\SimpleOKResponse;
+use Hamlet\Http\Resources\HttpResource;
+use Hamlet\Http\Responses\{Response, SimpleOKResponse};
 
-class UpdateResource extends DbResource
+class UpdateResource implements HttpResource
 {
+    use QueriesCountTrait;
+
     /** @var Procedure */
     private $selectProcedure;
 
     /** @var Procedure */
     private $updateProcedure;
 
-    public function __construct(Database $database)
+    public function __construct(Session $session)
     {
-        parent::__construct($database);
-        $selectQuery = '
+        $this->selectProcedure = $session->prepare('
             SELECT id,
                    randomNumber 
               FROM World
              WHERE id = ?
-        ';
-        $this->selectProcedure = $this->database->prepare($selectQuery);
-        $updateQuery = '
-            UPDATE World 
+        ');
+        $this->updateProcedure = $session->prepare('
+            UPDATE World
                SET randomNumber = ? 
              WHERE id = ?
-        ';
-        $this->updateProcedure = $this->database->prepare($updateQuery);
+        ');
     }
 
     public function getResponse(Request $request): Response
@@ -41,7 +39,7 @@ class UpdateResource extends DbResource
         $count = $this->getQueriesCount($request);
 
         $payload = [];
-        while ($count-- > 0) {
+        while ($count--) {
             $id = mt_rand(1, 10000);
             $randomNumber = mt_rand(1, 10000);
 

@@ -1,226 +1,60 @@
 {
   "framework": "reitit",
-  "tests": [
-    {
-      "default": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "None",
-        "framework": "reitit",
-        "language": "Clojure",
-        "flavor": "None",
-        "orm": "Raw",
-        "platform": "Undertow",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "reitit",
-        "notes": "",
-        "versus": "Undertow"
-      }
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "reitit",
+      "language": "Clojure",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Undertow",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "reitit",
+      "notes": "",
+      "versus": "undertow"
     },
-    {
-      "jdbc16": {
-        "db_url": "/db",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "reitit",
-        "language": "Clojure",
-        "flavor": "None",
-        "orm": "Raw",
-        "platform": "Undertow",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "reitit-reactive",
-        "notes": "",
-        "versus": "Undertow"
-      }
+    "jdbc": {
+      "db_url": "/db",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "reitit",
+      "language": "Clojure",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Undertow",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "reitit-jdbc",
+      "notes": "",
+      "versus": ""
     },
-    {
-      "jdbc32": {
-        "db_url": "/db",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "reitit",
-        "language": "Clojure",
-        "flavor": "None",
-        "orm": "Raw",
-        "platform": "Undertow",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "reitit-reactive",
-        "notes": "",
-        "versus": "Undertow"
-      }
-    },
-    {
-      "jdbc64": {
-        "db_url": "/db",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "reitit",
-        "language": "Clojure",
-        "flavor": "None",
-        "orm": "Raw",
-        "platform": "Undertow",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "reitit-reactive",
-        "notes": "",
-        "versus": "Undertow"
-      }
-    },
-    {
-      "jdbc128": {
-        "db_url": "/db",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "reitit",
-        "language": "Clojure",
-        "flavor": "None",
-        "orm": "Raw",
-        "platform": "Undertow",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "reitit-reactive",
-        "notes": "",
-        "versus": "Undertow"
-      }
-    },
-    {
-      "jdbc256": {
-        "db_url": "/db",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "reitit",
-        "language": "Clojure",
-        "flavor": "None",
-        "orm": "Raw",
-        "platform": "Undertow",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "reitit-reactive",
-        "notes": "",
-        "versus": "Undertow"
-      }
-    },
-    {
-      "async16": {
-        "db_url": "/db",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "reitit",
-        "language": "Clojure",
-        "flavor": "None",
-        "orm": "Raw",
-        "platform": "Undertow",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "reitit-reactive",
-        "notes": "",
-        "versus": "Undertow"
-      }
-    },
-    {
-      "async32": {
-        "db_url": "/db",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "reitit",
-        "language": "Clojure",
-        "flavor": "None",
-        "orm": "Raw",
-        "platform": "Undertow",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "reitit-reactive",
-        "notes": "",
-        "versus": "Undertow"
-      }
-    },
-    {
-      "async64": {
-        "db_url": "/db",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "reitit",
-        "language": "Clojure",
-        "flavor": "None",
-        "orm": "Raw",
-        "platform": "Undertow",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "reitit-reactive",
-        "notes": "",
-        "versus": "Undertow"
-      }
-    },
-    {
-      "async128": {
-        "db_url": "/db",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "reitit",
-        "language": "Clojure",
-        "flavor": "None",
-        "orm": "Raw",
-        "platform": "Undertow",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "reitit-reactive",
-        "notes": "",
-        "versus": "Undertow"
-      }
-    },
-    {
-      "async256": {
-        "db_url": "/db",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "reitit",
-        "language": "Clojure",
-        "flavor": "None",
-        "orm": "Raw",
-        "platform": "Undertow",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "reitit-reactive",
-        "notes": "",
-        "versus": "Undertow"
-      }
+    "async": {
+      "db_url": "/db",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "reitit",
+      "language": "Clojure",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Undertow",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "reitit-async",
+      "notes": "",
+      "versus": "undertow"
     }
-  ]
+  }]
 }

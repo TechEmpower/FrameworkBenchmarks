@@ -21,7 +21,7 @@ allowed by this benchmark. As we use PHP 5.5, which comes
 with opcache built in, we recommend you use this. However, 
 some frameworks utilize APC instead as switching can be 
 problematic (e.g. APC allows arbitrary data caching, while 
-opcache). 
+opcache does not). 
 
 Caching the output of parsing your configuration files is 
 also expressly allowed (e.g. file caching, metadata caching).

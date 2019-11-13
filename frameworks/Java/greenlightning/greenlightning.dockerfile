@@ -13,7 +13,4 @@ FROM azul/zulu-openjdk-alpine:11.0.3
 WORKDIR /greenlightning
 COPY --from=maven /greenlightning/target/greenlightning-test.jar app.jar
 
-#records to our log all the known network settings on the host connection 
-#CMD sysctl -a && java -server -Xmx26g -XX:+UseNUMA -jar app.jar
-
-CMD java -server -Xmx26g -XX:+UseNUMA -jar app.jar
+CMD java -server -Xmx29g -XX:AutoBoxCacheMax=1000000 -XX:NewSize=64m -XX:+UseNUMA -jar app.jar

@@ -87,12 +87,15 @@ void UpdatesCtrlRaw::asyncHandleHttpRequest(
             std::move(callback));
     auto resultSetPtr = std::make_shared<std::vector<Result>>();
     resultSetPtr->reserve(queries);
-    auto client = app().getFastDbClient();
+    if (!*_dbClient)
+    {
+        *_dbClient = drogon::app().getFastDbClient();
+    }
     for (size_t i = 0; i < queries; i++)
     {
         int id = rand() % 10000 + 1;
-        *client << "select * from world where id=$1" << id >>
-            [callbackPtr, resultSetPtr, client, queries](
+        **_dbClient << "select * from world where id=$1" << id >>
+            [callbackPtr, resultSetPtr, &client = *_dbClient, queries](
                 const Result &r) mutable {
                 resultSetPtr->push_back(r);
                 if (resultSetPtr->size() == queries)

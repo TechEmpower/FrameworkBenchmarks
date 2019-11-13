@@ -1,15 +1,15 @@
 FROM php:7.3
 
-ENV SWOOLE_VERSION=4.3.4
+RUN apt-get update
 
-RUN cd /tmp && curl -sSL "https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz" | tar xzf - \
-        && cd swoole-src-${SWOOLE_VERSION} \
-        && phpize && ./configure > /dev/null && make > /dev/null && make install > /dev/null \
-        && docker-php-ext-enable swoole
+RUN pecl install swoole-4.4.7 > /dev/null && \
+    docker-php-ext-enable swoole
 
-RUN docker-php-ext-install pdo_mysql pcntl > /dev/null
+RUN apt-get install -y libpq-dev \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo pdo_pgsql pgsql
 
-COPY deploy/conf/php-swoole.ini /usr/local/etc/php/
+COPY deploy/conf/php-async.ini /usr/local/etc/php/
 
 ADD ./ /ubiquity
 WORKDIR /ubiquity
@@ -23,7 +23,7 @@ RUN deploy/run/install-composer.sh
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq git unzip > /dev/null
 
-RUN php composer.phar require phpmv/ubiquity-devtools:dev-master phpmv/ubiquity-swoole:dev-master --quiet
+RUN php composer.phar require phpmv/ubiquity-devtools:dev-techempower-benchmarks phpmv/ubiquity-swoole:dev-techempower-benchmarks --quiet
 
 RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
