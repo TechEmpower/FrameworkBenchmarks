@@ -13,7 +13,7 @@ services:
         class: Symfony\Component\Cache\DoctrineProvider
         public: false
         arguments:
-            - '@doctrine.system_cache_pool'
+        - '@doctrine.system_cache_pool'
 
 framework:
     cache:
