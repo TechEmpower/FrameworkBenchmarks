@@ -3,60 +3,51 @@
 namespace Benchmark\Resources;
 
 use Benchmark\Entities\RandomNumber;
-use Hamlet\Database\{Procedure, Session};
+use Hamlet\Database\Session;
 use Hamlet\Http\Entities\JsonEntity;
 use Hamlet\Http\Requests\Request;
 use Hamlet\Http\Resources\HttpResource;
 use Hamlet\Http\Responses\{Response, SimpleOKResponse};
 
-class UpdateResource implements HttpResource
+class UpdateResource extends DbResource
 {
     use QueriesCountTrait;
-
-    /** @var Procedure */
-    private $selectProcedure;
-
-    /** @var Procedure */
-    private $updateProcedure;
-
-    public function __construct(Session $session)
-    {
-        $this->selectProcedure = $session->prepare('
-            SELECT id,
-                   randomNumber 
-              FROM World
-             WHERE id = ?
-        ');
-        $this->updateProcedure = $session->prepare('
-            UPDATE World
-               SET randomNumber = ? 
-             WHERE id = ?
-        ');
-    }
 
     public function getResponse(Request $request): Response
     {
         $count = $this->getQueriesCount($request);
-
-        $payload = [];
+        $callables = [];
         while ($count--) {
-            $id = mt_rand(1, 10000);
-            $randomNumber = mt_rand(1, 10000);
+            $callables[] = function (Session $session) {
+                $id = mt_rand(1, 10000);
+                $randomNumber = mt_rand(1, 10000);
 
-            $this->selectProcedure->bindInteger($id);
-            /** @var RandomNumber $entry */
-            $entry = $this->selectProcedure->processOne()
-                ->selectAll()->cast(RandomNumber::class)
-                ->collectHead();
-            $modifiedEntry = $entry->withNumber($randomNumber);
+                $selectProcedure = $session->prepare('
+                    SELECT id,
+                           randomNumber 
+                      FROM World
+                     WHERE id = ?
+                ');
+                $selectProcedure->bindInteger($id);
+                /** @var RandomNumber $entry */
+                $entry = $selectProcedure->processOne()
+                    ->selectAll()->cast(RandomNumber::class)
+                    ->collectHead();
+                $modifiedEntry = $entry->withNumber($randomNumber);
 
-            $this->updateProcedure->bindInteger($modifiedEntry->number());
-            $this->updateProcedure->bindInteger($modifiedEntry->id());
-            $this->updateProcedure->execute();
+                $updateProcedure = $session->prepare('
+                    UPDATE World
+                       SET randomNumber = ? 
+                     WHERE id = ?
+                ');
+                $updateProcedure->bindInteger($modifiedEntry->number());
+                $updateProcedure->bindInteger($modifiedEntry->id());
+                $updateProcedure->execute();
 
-            $payload[] = $modifiedEntry;
+                return $modifiedEntry;
+            };
         }
-
+        $payload = $this->database->withSessions($callables);
         return new SimpleOKResponse(new JsonEntity($payload));
     }
 }
