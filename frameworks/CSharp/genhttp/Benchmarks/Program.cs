@@ -18,8 +18,6 @@ namespace Benchmarks
         {
             try
             {
-                ThreadPool.SetMaxThreads(16384, 16384);
-
                 var waitEvent = new AutoResetEvent(false);
 
                 AppDomain.CurrentDomain.ProcessExit += (s, e) =>
