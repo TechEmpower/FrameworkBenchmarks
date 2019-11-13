@@ -23,29 +23,9 @@ class DbController
             $res[\mt_rand(1, 10000)] = 1;
         } while (\count($res) < $count);
 
-        return \array_keys($res);
-    }
+        \ksort($res);// prevent deadlocks (see https://github.com/TechEmpower/FrameworkBenchmarks/pull/5230#discussion_r345780701)
 
-    private function flushUpdates(array &$worlds, int $startPosition, int $size)
-    {
-        $em = $this->entityManager;
-        $co = $em->getConnection();
-        do {
-            try {
-                $em->flush();
-                $em->clear();
-                $done = true;
-            } catch (\Exception $e) {
-                $done = false;
-                if (! $em->isOpen()) {
-                    $em = $em->create($co, $em->getConfiguration());
-                    $max = \min(\count($worlds), $startPosition + $size);
-                    for ($pos = $startPosition; $pos < $max; $pos ++) {
-                        $em->merge($worlds[$pos]);
-                    }
-                }
-            }
-        } while (! $done);
+        return \array_keys($res);
     }
 
     public function __construct(EntityManagerInterface $entityManager, WorldRepository $worldRepository)
@@ -85,26 +65,23 @@ class DbController
      */
     public function update(Request $request): JsonResponse
     {
-        $batchSize = 5;
         $queries = (int) $request->query->get('queries', 1);
         $queries = \min(500, \max(1, $queries));
 
         $worlds = [];
-        $lastPosition = 0;
 
         $numbers = $this->getUniqueRandomNumbers($queries);
-        foreach ($numbers as $index=>$id) {
-            $world = $this->worldRepository->find($id);
-            $world->setRandomNumber(\mt_rand(1, 10000));
-            $worlds[] = $world;
-            if($index % $batchSize === 0){
-                $this->flushUpdates($worlds, $lastPosition, $batchSize);
-                $lastPosition = $index + 1;
-            }
+
+        foreach ($numbers as $id) {
+            $worlds[] = $world = $this->worldRepository->find($id);
+            do {
+                $newId = \mt_rand(1, 10000);
+            } while($id === $newId);//doctrine won't perform the update if the new id is the same
+
+            $world->setRandomNumber($newId);
         }
-        if($lastPosition + 1 < $queries){
-            $this->flushUpdates($worlds, $lastPosition, $queries - $lastPosition);
-        }
+
+        $this->entityManager->flush();
 
         return new JsonResponse($worlds);
     }
