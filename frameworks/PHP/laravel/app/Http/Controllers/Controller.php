@@ -19,7 +19,7 @@ class Controller extends BaseController {
 
 	public function queries($queries = 1) {
 		$rows = [];
-		$numbers = $this->getUniqueRandomNumbers($this->clamp($queries), 1, 10000);
+		$numbers = $this->getUniqueRandomNumbers($this->clamp($queries));
 		foreach ($numbers as $id) {
 			$rows[] = World::find($id);
 		}
@@ -45,7 +45,7 @@ class Controller extends BaseController {
 	public function updates($queries = 1) {
 		$rows = [];
 
-		$numbers = $this->getUniqueRandomNumbers($this->clamp($queries), 1, 10000);
+		$numbers = $this->getUniqueRandomNumbers($this->clamp($queries));
 		foreach ($numbers as $id) {
 			$row = World::find($id);
 			$row->randomNumber = \mt_rand(1, 10000);
@@ -71,10 +71,10 @@ class Controller extends BaseController {
 		}
 	}
 
-	private function getUniqueRandomNumbers($count, $min, $max) {
+	private function getUniqueRandomNumbers($count) {
 		$res = [];
 		do {
-			$res[\mt_rand($min, $max)] = 1;
+			$res[\mt_rand(1, 10000)] = 1;
 		} while (\count($res) < $count);
 		return \array_keys($res);
 	}
