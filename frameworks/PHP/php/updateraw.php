@@ -2,9 +2,10 @@
 header('Content-Type: application/json');
 // Database connection
 // http://www.php.net/manual/en/ref.pdo-mysql.php
-$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', [
-  PDO::ATTR_PERSISTENT => true
-]);
+$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', 
+    [PDO::ATTR_PERSISTENT => true,
+    PDO::ATTR_EMULATE_PREPARES => false]
+);
 
 // Read number of queries to run from URL parameter
 $query_count = 1;
@@ -14,7 +15,7 @@ if ($_GET['queries'] > 1) {
 
 // Define query
 $statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
-$update = '';
+$updateStatement = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
 
 // For each query, store the result set values in the response array
 while ($query_count--) {
@@ -24,11 +25,13 @@ while ($query_count--) {
     // Store result in array.
     $world = ['id' => $id, 'randomNumber' => $statement->fetchColumn()];
     $world['randomNumber'] = mt_rand(1, 10000);
-    $update .= "UPDATE World SET randomNumber={$world['randomNumber']} WHERE id=$id;";
+    $updateStatement->execute(
+      [$world['randomNumber'] = mt_rand(1, 10000), $id]
+    );
 
     $arr[] = $world;
 }
-$pdo->exec($update);
+
 // Use the PHP standard JSON encoder.
 // http://www.php.net/manual/en/function.json-encode.php
 echo json_encode($arr, JSON_NUMERIC_CHECK);

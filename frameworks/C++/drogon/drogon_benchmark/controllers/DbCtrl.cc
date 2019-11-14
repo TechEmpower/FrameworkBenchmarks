@@ -13,12 +13,15 @@ void DbCtrl::asyncHandleHttpRequest(
     // write your application logic here
     static std::once_flag once;
     std::call_once(once, []() { srand(time(NULL)); });
-    auto client = drogon::app().getFastDbClient();
+    if (!*_dbClient)
+    {
+        *_dbClient = drogon::app().getFastDbClient();
+    }
 
     auto callbackPtr =
         std::make_shared<std::function<void(const HttpResponsePtr &)>>(
             std::move(callback));
-    drogon::orm::Mapper<World> mapper(client);
+    drogon::orm::Mapper<World> mapper(*_dbClient);
     World::PrimaryKeyType id = rand() % 10000 + 1;
     mapper.findByPrimaryKey(
         id,

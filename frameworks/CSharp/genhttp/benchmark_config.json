@@ -1,0 +1,22 @@
+{
+  "framework": "genhttp",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "GenHTTP",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "webserver": "GenHTTP",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "GenHTTP",
+      "notes": ""
+    }
+  }]
+}

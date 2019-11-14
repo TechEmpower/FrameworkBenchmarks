@@ -27,8 +27,11 @@ void QueriesCtrl::asyncHandleHttpRequest(
         std::make_shared<std::function<void(const HttpResponsePtr &)>>(
             std::move(callback));
     auto counter = std::make_shared<int>(queries);
-    auto client = app().getFastDbClient();
-    drogon::orm::Mapper<World> mapper(client);
+    if (!*_dbClient)
+    {
+        *_dbClient = drogon::app().getFastDbClient();
+    }
+    drogon::orm::Mapper<World> mapper(*_dbClient);
 
     for (int i = 0; i < queries; i++)
     {
