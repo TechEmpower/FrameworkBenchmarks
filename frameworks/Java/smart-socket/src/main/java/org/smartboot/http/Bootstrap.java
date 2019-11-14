@@ -88,6 +88,7 @@ public class Bootstrap {
         server.setReadBufferSize(1024 * 4);
         int cpuNum = Runtime.getRuntime().availableProcessors();
         server.setThreadNum((cpuNum >> 1) + cpuNum);
+//        messageProcessor.addPlugin(new BufferPageMonitorPlugin(server, 6));
         try {
             server.start();
         } catch (IOException e) {
