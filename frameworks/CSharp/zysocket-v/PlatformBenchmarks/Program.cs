@@ -13,6 +13,7 @@ namespace PlatformBenchmarks
                 services.AddHostedService<ZYHttpServer>();
 
             }).Build().Run();
+
         }
     }
 }
