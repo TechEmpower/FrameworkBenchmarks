@@ -49,7 +49,7 @@ namespace PlatformBenchmarks
             catch (Exception e_)
             {
                 write.Write(e_.Message);
-                OnCompleted(fiberRw, write);
+                await OnCompleted(fiberRw, write);
             }
 
 

@@ -55,10 +55,14 @@ namespace PlatformBenchmarks
         {
             write.Write("<b> zysocket server</b><hr/>");         
             write.Write($"error not found!");
-            OnCompleted(fiberRw, write);
+
+            var length = write.Stream.Length - fiberRw.UserToken.HttpHandlerPostion;
+            write.Stream.Position = fiberRw.UserToken.ContentPostion.postion;
+            write.Write(length.ToString(), false);
+            write.Flush();
         }
 
-        private async void OnCompleted(IFiberRw<HttpToken> fiberRw, WriteBytes write)
+        private async Task OnCompleted(IFiberRw<HttpToken> fiberRw, WriteBytes write)
         {
             Task<int> WSend()
             {

@@ -34,7 +34,7 @@ namespace PlatformBenchmarks
              .ConfigServer(p =>
              {
                  p.Port = 8080;
-                 p.MaxBufferSize = 4096;
+                 p.MaxBufferSize = 1024;
                  p.MaxConnectCout = 20000;
              });
 
@@ -75,7 +75,7 @@ namespace PlatformBenchmarks
 
 
 
-            using var data_r = fiberRw.GetMemory(4096);
+            using var data_r = fiberRw.GetMemory(4096);           
             using var write = new WriteBytes(fiberRw);
             for (; ; )
             {
