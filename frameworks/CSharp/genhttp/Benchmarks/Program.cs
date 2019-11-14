@@ -26,7 +26,7 @@ namespace Benchmarks
                 };
 
                 var tests = Layout.Create()
-                                  .Add("plaintext", new PlaintextProvider())
+                                  .Add("plaintext", Content.From("Hello, World!"))
                                   .Add<JsonResource>("json");
 
                 var server = Server.Create()
