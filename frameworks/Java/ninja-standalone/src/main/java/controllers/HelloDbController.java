@@ -13,6 +13,7 @@ import com.google.inject.Singleton;
 import com.google.inject.persist.Transactional;
 import ninja.jpa.UnitOfWork;
 import ninja.params.Param;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Singleton
 public class HelloDbController {
@@ -25,7 +26,7 @@ public class HelloDbController {
     @UnitOfWork
     public Result singleGet() {
     	//Cache control header is set to disable the double setting of the date header.
-        return Results.json().render(getRandomWorld()).addHeader(Result.CACHE_CONTROL, "");
+        return Results.json().render(getRandomWorld(ThreadLocalRandom.current().nextInt(DB_ROWS) + 1)).addHeader(Result.CACHE_CONTROL, "");
     }
 
     @UnitOfWork
@@ -39,9 +40,12 @@ public class HelloDbController {
 
         final World[] worlds = new World[queries];
 
-        for (int i = 0; i < queries; i++) {
-            worlds[i] = getRandomWorld();
-        }
+        //Pick unique random numbers 
+        final AtomicInteger i = new AtomicInteger(0);
+        ThreadLocalRandom.current().ints(1, DB_ROWS).distinct().limit(queries).forEach(
+            (randomValue)->worlds[i.getAndAdd(1)] = getRandomWorld(randomValue)
+        );
+
         //Cache control header is set to disable the double setting of the date header.
         return Results.json().render(worlds).addHeader(Result.CACHE_CONTROL, "");
     }
@@ -57,9 +61,11 @@ public class HelloDbController {
 
         final World[] worlds = new World[queries];
 
-        for (int i = 0; i < queries; i++) {
-            worlds[i] = getRandomWorld();
-        }
+        //Pick unique random numbers 
+        final AtomicInteger i = new AtomicInteger(0);
+        ThreadLocalRandom.current().ints(1, DB_ROWS).distinct().limit(queries).forEach(
+            (randomValue)->worlds[i.getAndAdd(1)] = getRandomWorld(randomValue)
+        );
 
         // now update stuff:
         for (World world : worlds) {
@@ -75,8 +81,8 @@ public class HelloDbController {
         worldDao.put(world);
     }
 
-    private World getRandomWorld() {
-        return worldDao.get(ThreadLocalRandom.current().nextInt(DB_ROWS) + 1);
+    private World getRandomWorld(int i) {
+        return worldDao.get(i);
     }
 
 }

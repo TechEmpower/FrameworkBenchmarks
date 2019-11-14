@@ -1,18 +1,19 @@
 <?php
-function dbraw()
+function db()
 {
     global $statement;
 
-    //$statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
+    $statement->execute([mt_rand(1, 10000)]);
+    return json_encode($statement->fetch(), JSON_NUMERIC_CHECK);
+}
 
-    if ( ! isset($_GET['queries'])) {
-        $statement->execute([mt_rand(1, 10000)]);
-        return json_encode($statement->fetch(), JSON_NUMERIC_CHECK);
-    }
-
+function query()
+{
+    global $statement;
+    
     $query_count = 1;
-    if ($_GET['queries'] > 1) {
-        $query_count = min($_GET['queries'], 500);
+    if ($_GET['q'] > 1) {
+        $query_count = min($_GET['q'], 500);
     }
 
     while ($query_count--) {

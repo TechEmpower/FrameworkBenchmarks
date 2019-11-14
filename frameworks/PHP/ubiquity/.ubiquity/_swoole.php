@@ -14,5 +14,5 @@ $config ["siteUrl"] = 'http://'.$address;
 require ROOT . './../vendor/autoload.php';
 $swooleServer=new \Ubiquity\servers\swoole\SwooleServer();
 $swooleServer->init($config, __DIR__);
-require ROOT.'config/services.php';
+require ROOT.'config/swooleServices.php';
 $swooleServer->run($sConfig['host'],$sConfig['port']);

@@ -1,10 +1,4 @@
 <?php
-$dbPoolConfig = [
-    // 池子中最多资源数
-    'maxResources' => 10000,
-    // 池子中最少资源数
-    'minResources' => 0,
-];
 $dbResourceConfig = [
     'host'        => 'tfb-database',
     'username'    => 'benchmarkdbuser',
@@ -48,7 +42,12 @@ return [
             'sync' => [
                 'pool'    =>    [
                     'class'        =>    \Imi\Db\Pool\SyncDbPool::class,
-                    'config'    =>    $dbPoolConfig,
+                    'config'    =>    [
+                        // 池子中最多资源数
+                        'maxResources' => 512,
+                        // 池子中最少资源数
+                        'minResources' => 0,
+                    ],
                 ],
                 // resource也可以定义多个连接
                 'resource'    =>    $dbResourceConfig,
@@ -57,7 +56,12 @@ return [
             'async' => [
                 'pool'    =>    [
                     'class'        =>    \Imi\Db\Pool\CoroutineDbPool::class,
-                    'config'    =>    $dbPoolConfig,
+                    'config'    =>    [
+                        // 池子中最多资源数
+                        'maxResources' => 512,
+                        // 池子中最少资源数
+                        'minResources' => 16,
+                    ],
                 ],
                 // resource也可以定义多个连接
                 'resource'    =>    $dbResourceConfig,
