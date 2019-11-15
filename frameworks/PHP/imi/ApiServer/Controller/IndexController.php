@@ -32,7 +32,7 @@ class IndexController extends HttpController
      */
     public function plaintext()
     {
-        return RequestContext::get('response')->withHeader('Content-Type', 'text/plain')->write('Hello, World!');
+        return RequestContext::get('response')->withHeader('Content-Type', 'text/plain; charset=utf-8')->write('Hello, World!');
     }
 
     /**
