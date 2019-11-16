@@ -4,12 +4,12 @@ This is the Java Servlet portion of a [benchmarking test suite](../) comparing a
 
 There is a Servlet 3.1 based tests implementation in the [servlet3](./servlet3) sub-folder. It is using Tomcat 9 as Servlet containter.
 
+There are two retired implementations for the JSON test: usage of Jackson Afterburner module and usage of a custom Jackson serialization.
+
 ### Plaintext and JSON
 
 * [Plaintext test source](src/main/java/hello/PlaintextServlet.java)
 * [JSON test source](src/main/java/hello/JsonServlet.java)
-* [JSON test source with Jackson Afterburner module](src/main/java/hello/JsonAfterburnerServlet.java)
-* [JSON test source with custom Jackson serialization](src/main/java/hell/JsonCJSServlet.java)
 
 ### `MySQL` implementation
 
@@ -43,14 +43,6 @@ Please confirm the versions data with the latest install scripts of TFB project.
 ### Default Maven profile
 
  * Plaintext - `http://localhost:8080/plaintext`
- * JSON - `http://localhost:8080/json`
-
-### `afterburner` Maven profile
-
- * JSON - `http://localhost:8080/json`
-
-### `cjs` Maven profile
-
  * JSON - `http://localhost:8080/json`
 
 ### `mysql` and `postgresql` Maven profiles

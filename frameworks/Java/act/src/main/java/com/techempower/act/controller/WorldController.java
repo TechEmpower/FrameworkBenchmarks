@@ -90,6 +90,7 @@ public class WorldController {
             .ints(1, WORLD_MAX_ROW + 1)
             .distinct()
             .limit(q)
+            .sorted()
             .mapToObj(id -> findAndModifyOne(id))
             .collect(Collectors.toCollection(ArrayList::new));
         if (BATCH_SAVE) {
@@ -105,7 +106,11 @@ public class WorldController {
     private World findAndModifyOne(int id) {
         World world = dao.findById(id);
         notFoundIfNull(world);
-        world.randomNumber = randomWorldNumber();
+        int newNumber;
+        do {
+            newNumber = randomWorldNumber();
+        } while (newNumber == world.randomNumber);
+        world.randomNumber = newNumber;
         return BATCH_SAVE ? world : dao.save(world);
     }
 

@@ -4,6 +4,7 @@ $container->loadFromExtension('swoole', [
     'http_server' => [
         'port' => '8080',
         'host' => '0.0.0.0',
+        'running_mode' => 'reactor',
         'hmr' => false,
         'static' => [
             'strategy' => false,
