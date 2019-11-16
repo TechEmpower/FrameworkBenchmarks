@@ -73,12 +73,12 @@ namespace Benchmarks.Data
 
                 var result = await _dbContext.World.AsTracking().FirstAsync(w => w.Id == id);
 
-                 int oldId = (int) _dbContext.Entry(result).Property("RandomNumber").CurrentValue;
-                 int newId;
+                int oldId = (int) _dbContext.Entry(result).Property("RandomNumber").CurrentValue;
+                int newId;
                  
-                 do{
-                    newId = _random.Next(1, 10001);
-                 } while (oldId == newId);
+                do{
+                   newId = _random.Next(1, 10001);
+                } while (oldId == newId);
                 
                 _dbContext.Entry(result).Property("RandomNumber").CurrentValue = newId;
                 
