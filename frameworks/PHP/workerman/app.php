@@ -26,7 +26,7 @@ function query()
 
 function updateraw()
 {
-    global $random, $update;
+    global $pdo, $random, $update;
     $query_count = 1;
     if ($_GET['q'] > 1) {
         $query_count = min($_GET['q'], 500);
@@ -36,13 +36,16 @@ function updateraw()
         $id = mt_rand(1, 10000);
         $random->execute([$id]);
         $world = ['id' => $id, 'randomNumber' => $random->fetchColumn()];
-        
-        $update->execute(
-            [$world['randomNumber'] = mt_rand(1, 10000), $id]
-        );
+        $world['randomNumber'] = mt_rand(1, 10000);
 
         $arr[] = $world;
     }
+    
+    $pdo->beginTransaction();
+    foreach($arr as $id => $random) {
+        $update->execute($random, $id);
+    }
+    $pdo->commit();
 
     return json_encode($arr, JSON_NUMERIC_CHECK);
 }
