@@ -43,7 +43,7 @@ function updateraw()
     
     $pdo->beginTransaction();
     foreach($arr as $id => $random) {
-        $update->execute($random, $id);
+        $update->execute([$random, $id]);
     }
     $pdo->commit();
 
