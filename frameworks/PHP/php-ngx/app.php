@@ -53,7 +53,6 @@ function update()
 
         $world = ['id' => $id, 'randomNumber' => $random->fetchColumn()];
         $world['randomNumber'] = mt_rand(1, 10000);
-
         $arr[] = $world;
     }
 
