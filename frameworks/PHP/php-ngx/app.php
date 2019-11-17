@@ -57,8 +57,8 @@ function update()
     }
 
     $pdo->beginTransaction();
-    foreach($arr as $id => $random) {
-        $update->execute([$random, $id]);
+    foreach($arr as $world) {
+        $update->execute([$world['randomNumber'], $world['id']]);
     }
     $pdo->commit();
 
