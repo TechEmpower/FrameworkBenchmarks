@@ -166,6 +166,7 @@ def main(argv=None):
     parser.add_argument(
         '--concurrency-levels',
         nargs='+',
+        type=int,
         default=[16, 32, 64, 128, 256, 512],
         help='List of concurrencies to benchmark')
     parser.add_argument(
