@@ -50,6 +50,7 @@ class BenchmarkConfig:
         self.test = args.test
         self.test_dir = args.test_dir
         self.test_lang = args.test_lang
+        self.tag = args.tag
         self.network_mode = args.network_mode
         self.server_docker_host = None
         self.database_docker_host = None
