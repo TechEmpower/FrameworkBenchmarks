@@ -152,7 +152,11 @@ def main(argv=None):
         action='store_true',
         default=False,
         help='lists all the known tests that can run')
-
+    parser.add_argument(
+        '--list-tag',
+        dest='list_tag',
+        default=False,
+        help='lists all the known tests with a specific tag')
     # Benchmark options
     parser.add_argument(
         '--duration',
@@ -220,6 +224,13 @@ def main(argv=None):
 
             for test in all_tests:
                 log(test.name)
+
+        elif config.list_tag:
+            all_tests = benchmarker.metadata.gather_tests()
+
+            for test in all_tests:
+                if hasattr(test, "tags") and config.list_tag in test.tags:
+                    log(test.name)
 
         elif config.parse:
             all_tests = benchmarker.metadata.gather_tests()
