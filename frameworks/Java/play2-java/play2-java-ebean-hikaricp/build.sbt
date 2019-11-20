@@ -9,5 +9,5 @@ scalaVersion := "2.12.8"
 libraryDependencies ++= Seq(
   guice,
   javaJdbc,
-  "mysql" % "mysql-connector-java" % "5.1.47"
+  "mysql" % "mysql-connector-java" % "8.0.18"
 )
