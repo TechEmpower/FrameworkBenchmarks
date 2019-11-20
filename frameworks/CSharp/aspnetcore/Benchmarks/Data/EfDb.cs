@@ -61,28 +61,33 @@ namespace Benchmarks.Data
         public async Task<World[]> LoadMultipleUpdatesRows(int count)
         {
             var results = new World[count];
-            var random = new Random();
-            int i = 0;
-
-            var ids = Enumerable.Range(1,10000).OrderBy(x => random.Next()).Take(count);
-
-            foreach(int id in ids)
+            
+            for (var i = 0; i < count; i++)
             {
+                var id = _random.Next(1, 10001);
+            
                 // TODO: compiled queries are not supported in EF 3.0-preview7
                 // var result = await _firstWorldTrackedQuery(_dbContext, id);
 
                 var result = await _dbContext.World.AsTracking().FirstAsync(w => w.Id == id);
 
-                int oldId = (int) _dbContext.Entry(result).Property("RandomNumber").CurrentValue;
-                int newId;
-                 
-                do{
-                   newId = _random.Next(1, 10001);
-                } while (oldId == newId);
+                var oldId = (int) _dbContext.Entry(result).Property("RandomNumber").CurrentValue;
+               
+                // EF automatically detects changes, and would not create an UPDATE statement if the new value
+                // is equal to the current one. We need to keep generating random numbers until there is no collision.
                 
-                _dbContext.Entry(result).Property("RandomNumber").CurrentValue = newId;
+                while (true)
+                {
+                   var newId = _random.Next(1, 10001);
+                   
+                   if (newId != oldId)
+                   {
+                        _dbContext.Entry(result).Property("RandomNumber").CurrentValue = newId;
+                        break;
+                   }
+                };
                 
-                results[i++] = result;                
+                results[i] = result;
             }
 
             await _dbContext.SaveChangesAsync();
