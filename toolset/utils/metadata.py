@@ -105,13 +105,14 @@ class Metadata:
 
             # Filter
             for test in config_tests:
-                if self.benchmarker.config.tag and hasattr(test, "tags"):
+                if hasattr(test, "tags"):
                     if "broken" in test.tags:
                         continue
-                    for t in self.benchmarker.config.tag:
-                        if t in test.tags and test.name not in exclude:
-                            tests.append(test)
-                            break
+                    if self.benchmarker.config.tag:
+                        for t in self.benchmarker.config.tag:
+                            if t in test.tags and test.name not in exclude:
+                                tests.append(test)
+                                break
                 if len(include) > 0:
                     if test.name in include:
                         tests.append(test)
