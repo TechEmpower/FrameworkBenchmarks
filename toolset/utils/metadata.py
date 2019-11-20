@@ -127,9 +127,10 @@ class Metadata:
                 missing = list(set(include) - set(names))
                 raise Exception("Unable to locate tests %s" % missing)
 
+        tests = list(set(tests))
         tests.sort(key=lambda x: x.name)
 
-        return list(set(tests))
+        return tests
 
     def tests_to_run(self):
         '''
