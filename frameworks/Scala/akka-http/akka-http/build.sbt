@@ -14,7 +14,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % "10.1.8",
   "com.typesafe.akka" %% "akka-stream" % "2.5.23",
   "de.heikoseeberger" %% "akka-http-jsoniter-scala" % "1.27.0",
-  "mysql" % "mysql-connector-java" % "5.1.47",
+  "mysql" % "mysql-connector-java" % "8.0.18",
   "com.zaxxer" % "HikariCP" % "3.3.1",
   "org.scalatra.scalate" %% "scalate-core" % "1.9.4",
   "org.scalatest" %% "scalatest" % "3.0.8" % "test"

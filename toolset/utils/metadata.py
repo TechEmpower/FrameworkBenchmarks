@@ -130,7 +130,7 @@ class Metadata:
         tests = list(set(tests))
         tests.sort(key=lambda x: x.name)
 
-        return tests
+        return list(set(tests))
 
     def tests_to_run(self):
         '''
