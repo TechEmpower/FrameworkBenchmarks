@@ -4,7 +4,6 @@ require "./config"
 # Server defaults
 port = 3000
 host = "127.0.0.1"
-cluster = false
 process_count = 1
 
 # Command line options
@@ -15,7 +14,6 @@ OptionParser.parse(ARGV.dup) do |parser|
   parser.on("-p PORT", "--port=PORT", "Specifies the server port") { |p| port = p.to_i }
 
   parser.on("-w COUNT", "--workers=COUNT", "Specifies the number of processes to handle requests") do |w|
-    cluster = true
     process_count = w.to_i
   end
 
@@ -40,7 +38,7 @@ puts "Launching #{APP_NAME} v#{VERSION}"
 server = ActionController::Server.new(port, host)
 
 # Start clustering
-server.cluster(process_count, "-w", "--workers") if cluster
+server.cluster(process_count) if process_count != 1
 
 terminate = Proc(Signal, Nil).new do |signal|
   puts " > terminating gracefully"

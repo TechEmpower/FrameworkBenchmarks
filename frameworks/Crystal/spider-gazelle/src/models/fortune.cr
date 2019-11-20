@@ -1,9 +1,9 @@
 require "granite/adapter/pg"
 
 class Fortune < Granite::Base
-  adapter pg
+  connection pg
 
-  table_name fortune
-  primary id : Int32
-  field message : String
+  table fortune
+  column id : Int32, primary: true
+  column message : String
 end
