@@ -55,26 +55,11 @@ enum json_tokens {
 struct json_obj_descr {
     const char *field_name;
 
-    /* Alignment can be 1, 2, 4, or 8.  The macros to create
-     * a struct json_obj_descr will store the alignment's
-     * power of 2 in order to keep this value in the 0-3 range
-     * and thus use only 2 bits.
-     */
-    uint32_t align_shift : 2;
 
-    /* 127 characters is more than enough for a field name. */
-    uint32_t field_name_len : 7;
-
-    /* Valid values here (enum json_tokens): JSON_TOK_STRING,
-     * JSON_TOK_NUMBER, JSON_TOK_TRUE, JSON_TOK_FALSE,
-     * JSON_TOK_OBJECT_START, JSON_TOK_LIST_START.  (All others
-     * ignored.) Maximum value is '}' (125), so this has to be 7 bits
-     * long.
-     */
-    uint32_t type : 7;
-
-    /* 65535 bytes is more than enough for many JSON payloads. */
-    uint32_t offset : 16;
+    uint32_t align_shift;
+    uint32_t field_name_len;
+    uint32_t type;
+    uint32_t offset;
 
     union {
         struct {

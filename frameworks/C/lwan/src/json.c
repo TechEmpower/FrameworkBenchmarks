@@ -393,7 +393,12 @@ static int decode_num(const struct token *token, int32_t *num)
     *token->end = '\0';
 
     errno = 0;
-    *num = strtol(token->start, &endptr, 10);
+    long v = strtol(token->start, &endptr, 10);
+    if ((long)(int)v != v) {
+        return -ERANGE;
+    }
+
+    *num = (int)v;
 
     *token->end = prev_end;
 
@@ -482,7 +487,7 @@ static ptrdiff_t get_elem_size(const struct json_obj_descr *descr)
     case JSON_TOK_FALSE:
         return sizeof(bool);
     case JSON_TOK_LIST_START:
-        return descr->array.n_elements *
+        return (ptrdiff_t)descr->array.n_elements *
                get_elem_size(descr->array.element_descr);
     case JSON_TOK_OBJECT_START: {
         ptrdiff_t total = 0;
@@ -491,7 +496,7 @@ static ptrdiff_t get_elem_size(const struct json_obj_descr *descr)
         for (i = 0; i < descr->object.sub_descr_len; i++) {
             ptrdiff_t s = get_elem_size(&descr->object.sub_descr[i]);
 
-            total += ROUND_UP(s, 1 << descr->object.sub_descr[i].align_shift);
+            total += (ptrdiff_t)ROUND_UP(s, 1 << descr->object.sub_descr[i].align_shift);
         }
 
         return total;
@@ -508,7 +513,7 @@ static int arr_parse(struct json_obj *obj,
                      void *val)
 {
     ptrdiff_t elem_size = get_elem_size(elem_descr);
-    void *last_elem = (char *)field + elem_size * max_elements;
+    void *last_elem = (char *)field + elem_size * (ptrdiff_t)max_elements;
     size_t *elements = (size_t *)((char *)val + elem_descr->offset);
     struct token value;
 
