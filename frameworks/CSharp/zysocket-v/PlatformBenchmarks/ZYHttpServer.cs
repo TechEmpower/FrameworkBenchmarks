@@ -73,7 +73,7 @@ namespace PlatformBenchmarks
                 Db = new RawDb(new ConcurrentRandom(), Npgsql.NpgsqlFactory.Instance)
             };
 
-            using var data_r = fiberRw.GetMemory(1024);
+            using var data_r = fiberRw.GetMemory(1024);         
             using var write = new WriteBytes(fiberRw);
             for (; ; )
             {

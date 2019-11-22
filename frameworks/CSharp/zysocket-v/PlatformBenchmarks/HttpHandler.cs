@@ -111,8 +111,7 @@ namespace PlatformBenchmarks
                 {
                     if (count != 0)
                     {
-                        url = line.Slice(offset2, i - offset2);
-                        offset2 = i + 1;                      
+                        url = line.Slice(offset2, i - offset2);                                      
                         break;
                     }                  
                     offset2 = i + 1;
@@ -139,13 +138,13 @@ namespace PlatformBenchmarks
             {
                 write.Write(_headerContentTypeText.Data, 0, _headerContentTypeText.Length);
                 OnWriteContentLength(write, token);
-                Plaintext(fiberRw, ref write);
+                Plaintext(fiberRw, write);
             }
             else if (baseUrl.Length == _path_Json.Length && baseUrl.StartsWith(_path_Json))
             {
                 write.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
                 OnWriteContentLength(write, token);
-                Json(fiberRw, ref write);
+                Json(fiberRw, write);
             }
             else if (baseUrl.Length == _path_Db.Length && baseUrl.StartsWith(_path_Db))
             {
