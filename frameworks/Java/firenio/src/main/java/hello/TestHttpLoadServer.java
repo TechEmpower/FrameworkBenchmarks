@@ -1,33 +1,36 @@
 package hello;
 
-import java.io.IOException;
-import java.util.Arrays;
-
 import com.firenio.Options;
+import com.firenio.buffer.ByteBuf;
 import com.firenio.codec.http11.HttpCodec;
 import com.firenio.codec.http11.HttpConnection;
 import com.firenio.codec.http11.HttpContentType;
 import com.firenio.codec.http11.HttpDateUtil;
 import com.firenio.codec.http11.HttpFrame;
 import com.firenio.codec.http11.HttpStatus;
+import com.firenio.collection.AttributeKey;
+import com.firenio.collection.AttributeMap;
 import com.firenio.collection.ByteTree;
 import com.firenio.common.Util;
 import com.firenio.component.Channel;
 import com.firenio.component.ChannelAcceptor;
 import com.firenio.component.ChannelEventListenerAdapter;
+import com.firenio.component.FastThreadLocal;
 import com.firenio.component.Frame;
 import com.firenio.component.IoEventHandle;
 import com.firenio.component.NioEventLoopGroup;
+import com.firenio.component.ProtocolCodec;
 import com.firenio.component.SocketOptions;
 import com.firenio.log.DebugUtil;
 import com.firenio.log.LoggerFactory;
 import com.jsoniter.output.JsonStream;
 import com.jsoniter.output.JsonStreamPool;
-import com.jsoniter.spi.JsonException;
+import com.jsoniter.spi.Slice;
 
 public class TestHttpLoadServer {
 
-    static final byte[] STATIC_PLAINTEXT = "Hello, World!".getBytes();
+    static final AttributeKey<ByteBuf> JSON_BUF         = newByteBufKey();
+    static final byte[]                STATIC_PLAINTEXT = "Hello, World!".getBytes();
 
     static class Message {
 
@@ -60,7 +63,6 @@ public class TestHttpLoadServer {
         LoggerFactory.setEnableSLF4JLogger(false);
         LoggerFactory.setLogLevel(LoggerFactory.LEVEL_INFO);
         Options.setBufAutoExpansion(false);
-        Options.setDebugErrorLevel(level);
         Options.setChannelReadFirst(read);
         Options.setEnableEpoll(epoll);
         Options.setEnableUnsafeBuf(unsafeBuf);
@@ -89,12 +91,26 @@ public class TestHttpLoadServer {
                     f.setContentType(HttpContentType.text_plain);
                     f.setConnection(HttpConnection.NONE);
                 } else if ("/json".equals(action)) {
-                    f.setContent(serializeMsg(new Message("Hello, World!")));
-                    f.setContentType(HttpContentType.application_json);
-                    f.setConnection(HttpConnection.NONE);
+                    ByteBuf    temp   = FastThreadLocal.get().getAttributeUnsafe(JSON_BUF);
+                    JsonStream stream = JsonStreamPool.borrowJsonStream();
+                    try {
+                        stream.reset(null);
+                        stream.writeVal(Message.class, new Message("Hello, World!"));
+                        Slice slice = stream.buffer();
+                        temp.reset(slice.data(), slice.head(), slice.tail());
+                        f.setContent(temp);
+                        f.setContentType(HttpContentType.application_json);
+                        f.setConnection(HttpConnection.NONE);
+                        f.setDate(HttpDateUtil.getDateLine());
+                        ch.writeAndFlush(f);
+                        ch.release(f);
+                    } finally {
+                        JsonStreamPool.returnJsonStream(stream);
+                    }
+                    return;
                 } else {
                     System.err.println("404");
-                    f.setContent("404,page not found!".getBytes());
+                    f.setString("404,page not found!", ch);
                     f.setContentType(HttpContentType.text_plain);
                     f.setStatus(HttpStatus.C404);
                 }
@@ -129,13 +145,12 @@ public class TestHttpLoadServer {
                 @Override
                 public void channelOpened(Channel ch) throws Exception {
                     ch.setOption(SocketOptions.TCP_NODELAY, 1);
-                    ch.setOption(SocketOptions.TCP_QUICKACK, 1);
                     ch.setOption(SocketOptions.SO_KEEPALIVE, 0);
                 }
             });
         }
         ByteTree cachedUrls = null;
-        if (cachedurl){
+        if (cachedurl) {
             cachedUrls = new ByteTree();
             cachedUrls.add("/plaintext");
             cachedUrls.add("/json");
@@ -145,17 +160,8 @@ public class TestHttpLoadServer {
         context.bind(1024 * 8);
     }
 
-    private static byte[] serializeMsg(Message obj) {
-        JsonStream stream = JsonStreamPool.borrowJsonStream();
-        try {
-            stream.reset(null);
-            stream.writeVal(Message.class, obj);
-            return Arrays.copyOfRange(stream.buffer().data(), 0, stream.buffer().tail());
-        } catch (IOException e) {
-            throw new JsonException(e);
-        } finally {
-            JsonStreamPool.returnJsonStream(stream);
-        }
+    static AttributeKey<ByteBuf> newByteBufKey() {
+        return FastThreadLocal.valueOfKey("JSON_BUF", (AttributeMap map, int key) -> map.setAttribute(key, ByteBuf.heap(0)));
     }
 
 }
