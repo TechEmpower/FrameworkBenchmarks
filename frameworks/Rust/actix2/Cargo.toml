@@ -1,0 +1,22 @@
+[package]
+name = "actix"
+version = "2.0.0"
+edition = "2018"
+
+[dependencies]
+actix-web = { git = "https://github.com/actix/actix-web.git" }
+bytes = "0.4"
+
+[patch.crates-io]
+actix-http = { git = "https://github.com/actix/actix-web.git" }
+actix-web-codegen = { git = "https://github.com/actix/actix-web.git" }
+awc = { git = "https://github.com/actix/actix-web.git" }
+actix-codec = { git = "https://github.com/actix/actix-net.git" }
+actix-connect = { git = "https://github.com/actix/actix-net.git" }
+actix-rt = { git = "https://github.com/actix/actix-net.git" }
+actix-server = { git = "https://github.com/actix/actix-net.git" }
+actix-server-config = { git = "https://github.com/actix/actix-net.git" }
+actix-service = { git = "https://github.com/actix/actix-net.git" }
+actix-testing = { git = "https://github.com/actix/actix-net.git" }
+actix-threadpool = { git = "https://github.com/actix/actix-net.git" }
+actix-utils = {  git = "https://github.com/actix/actix-net.git" }

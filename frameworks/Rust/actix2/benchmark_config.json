@@ -1,0 +1,24 @@
+{
+    "framework": "actix2",
+    "tests": [{
+        "default": {
+            "json_url": "/json",
+            "plaintext_url": "/plaintext",
+            "port": 8080,
+            "approach": "Stripped",
+            "classification": "Micro",
+            "database": "postgres",
+            "framework": "actix2",
+            "language": "Rust",
+            "flavor": "None",
+            "orm": "Raw",
+            "platform": "None",
+            "webserver": "None",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "actix2",
+            "notes": "",
+            "versus": "None"
+        }
+    }]
+}
