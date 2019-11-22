@@ -26,6 +26,7 @@ return [
         'type'      =>  Imi\Server\Type::HTTP,
         'host'      =>  '0.0.0.0',
         'port'      =>  8080,
+        'mode'      =>  SWOOLE_BASE,
         'configs'   =>  [
             'worker_num'        => swoole_cpu_num(),
             'open_tcp_nodelay'  => true,
@@ -47,6 +48,8 @@ return [
                         'maxResources' => 512,
                         // 池子中最少资源数
                         'minResources' => 0,
+                        'gcInterval'   => null,
+                        'checkStateWhenGetResource' =>  false,
                     ],
                 ],
                 // resource也可以定义多个连接
@@ -61,6 +64,8 @@ return [
                         'maxResources' => 512,
                         // 池子中最少资源数
                         'minResources' => 16,
+                        'gcInterval'   => null,
+                        'checkStateWhenGetResource' =>  false,
                     ],
                 ],
                 // resource也可以定义多个连接

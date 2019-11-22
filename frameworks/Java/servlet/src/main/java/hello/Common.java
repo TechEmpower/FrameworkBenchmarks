@@ -12,7 +12,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
-import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 /**
  * Some common functionality and constants used by the Servlet tests.
@@ -27,32 +26,12 @@ public class Common {
 	
 	// Jackson encoder, reused for each response.
 	protected static final ObjectMapper MAPPER = new ObjectMapper();
-	// Jackson encoder with AfterBurner module
-	protected static final ObjectMapper AF_MAPPER = new ObjectMapper().registerModule(new AfterburnerModule());
 
 	private static final String DB_QUERY = "SELECT * FROM world";
 
 	// Response message class.
 	public static class HelloMessage {
 		public final String message = "Hello, World!";
-	}
-	
-	// Response message class with custom Jackson serializer
-	public static class HelloMessageCJS implements JsonSerializable {
-		public final String message = "Hello, World!";
-		
-		@Override
-		public void serialize(JsonGenerator jg, SerializerProvider sp) throws IOException {
-			jg.writeStartObject();
-			jg.writeStringField("message", this.message);
-			jg.writeEndObject();
-		}
-
-		@Override
-		public void serializeWithType(JsonGenerator jg, SerializerProvider sp,
-				TypeSerializer ts) throws IOException {
-			throw new UnsupportedOperationException("Not needed so far.");
-		}
 	}
 	
 	// Request parameter checking and normalisation
