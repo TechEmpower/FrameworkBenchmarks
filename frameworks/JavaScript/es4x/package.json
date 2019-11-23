@@ -4,16 +4,16 @@
   "private": true,
   "main": "index.js",
   "devDependencies": {
-    "es4x-pm": "0.9.3"
+    "es4x-pm": "0.10.0"
   },
   "dependencies": {
-    "@vertx/core": "3.8.2",
-    "@vertx/web": "3.8.2",
-    "@vertx/web-templ-rocker": "3.8.2",
-    "@vertx/pg-client": "3.8.2"
+    "@vertx/core": "3.8.4",
+    "@vertx/web": "3.8.4",
+    "@vertx/web-templ-rocker": "3.8.4",
+    "@vertx/pg-client": "3.8.4"
   },
   "mvnDependencies": [
-    "io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.39.Final",
+    "io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.42.Final",
     "com.fizzed:rocker-runtime:1.2.1",
     "xyz.jetdrone:vertx.command.rocker.compiler:0.1.0"
   ],
