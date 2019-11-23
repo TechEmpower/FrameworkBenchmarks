@@ -1,26 +1,28 @@
 {
-  "framework": "libreactor",
+  "framework": "lwan",
   "tests": [
     {
       "default": {
         "json_url": "/json",
+        "db_url": "/db",
+        "queries_url": "/queries",
         "plaintext_url": "/plaintext",
+        "fortune_url": "/fortunes",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
-        "database": "None",
-        "framework": "libreactor",
+        "database": "mysql",
+        "framework": "Lwan",
         "language": "C",
         "flavor": "None",
         "orm": "Raw",
-        "platform": "None",
-        "webserver": "None",
+        "platform": "Lwan",
+        "webserver": "Lwan",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "libreactor",
+        "display_name": "Lwan",
         "notes": "",
-        "versus": "None",
-        "tags": ["broken"]
+        "versus": "None"
       }
     }
   ]
