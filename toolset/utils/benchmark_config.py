@@ -12,7 +12,9 @@ class BenchmarkConfig:
         '''
 
         # Map type strings to their objects
-        types = test_types
+        types = {}
+        for type in test_types:
+            types[type] = test_types[type](self)
 
         # Turn type into a map instead of a list of strings
         if 'all' in args.type:
