@@ -1,20 +1,20 @@
-from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
-from toolset.benchmark.test_types.verifications import verify_query_cases
+from toolset.test_types.abstract_test_type import AbstractTestType
+from toolset.test_types.verifications import verify_query_cases
 
 
-class CachedQueryTestType(FrameworkTestType):
+class TestType(AbstractTestType):
     def __init__(self, config):
-        self.cached_query_url = ""
+        self.query_url = ""
         kwargs = {
-            'name': 'cached_query',
+            'name': 'query',
             'accept_header': self.accept('json'),
             'requires_db': True,
-            'args': ['cached_query_url']
+            'args': ['query_url', 'database']
         }
-        FrameworkTestType.__init__(self, config, **kwargs)
+        AbstractTestType.__init__(self, config, **kwargs)
 
     def get_url(self):
-        return self.cached_query_url
+        return self.query_url
 
     def verify(self, base_url):
         '''
@@ -25,11 +25,11 @@ class CachedQueryTestType(FrameworkTestType):
         quoting style is ignored
         '''
 
-        url = base_url + self.cached_query_url
+        url = base_url + self.query_url
         cases = [('2', 'fail'), ('0', 'fail'), ('foo', 'fail'),
                  ('501', 'warn'), ('', 'fail')]
 
-        problems = verify_query_cases(self, cases, url)
+        problems = verify_query_cases(self, cases, url, False)
 
         if len(problems) == 0:
             return [('pass', '', url + case) for case, _ in cases]
@@ -48,8 +48,7 @@ class CachedQueryTestType(FrameworkTestType):
             'duration':
             self.config.duration,
             'levels':
-            " ".join(
-                "{}".format(item) for item in self.config.cached_query_levels),
+            " ".join("{}".format(item) for item in self.config.query_levels),
             'server_host':
             self.config.server_host,
             'url':

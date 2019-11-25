@@ -1,8 +1,7 @@
-from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
-from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers, verify_helloworld_object
+from toolset.test_types.abstract_test_type import AbstractTestType
+from toolset.test_types.verifications import basic_body_verification, verify_headers, verify_helloworld_object
 
-
-class JsonTestType(FrameworkTestType):
+class TestType(AbstractTestType):
     def __init__(self, config):
         self.json_url = ""
         kwargs = {
@@ -11,15 +10,15 @@ class JsonTestType(FrameworkTestType):
             'requires_db': False,
             'args': ['json_url']
         }
-        FrameworkTestType.__init__(self, config, **kwargs)
+        AbstractTestType.__init__(self, config, **kwargs)
 
     def get_url(self):
         return self.json_url
 
     def verify(self, base_url):
         '''
-        Validates the response is a JSON object of 
-        { 'message' : 'hello, world!' }. Case insensitive and 
+        Validates the response is a JSON object of
+        { 'message' : 'hello, world!' }. Case insensitive and
         quoting style is ignored
         '''
 

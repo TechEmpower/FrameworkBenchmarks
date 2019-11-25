@@ -1,7 +1,6 @@
 from time import sleep
 
-from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
-from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers
+from toolset.test_types.verifications import basic_body_verification, verify_headers
 from toolset.test_types.abstract_test_type import AbstractTestType
 
 class TestType(AbstractTestType):

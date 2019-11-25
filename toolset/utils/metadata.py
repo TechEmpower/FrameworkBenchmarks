@@ -200,8 +200,9 @@ class Metadata:
 
                 # Map test type to a parsed FrameworkTestType object
                 runTests = dict()
-                for type_name, type_obj in self.benchmarker.config.types.iteritems(
-                ):
+
+                # TODO: remove self.benchmarker.config.types
+                for type_name, type_obj in self.benchmarker.config.types.iteritems():
                     try:
                         # Makes a FrameWorkTestType object using some of the keys in config
                         # e.g. JsonTestType uses "json_url"

@@ -1,193 +1,139 @@
 import abc
+import copy
+import requests
+
+from colorama import Fore
+from toolset.utils.output_helper import log
 
 class AbstractTestType:
     '''
-    Abstract Test Type
-    To be derived for defining a new test type
+    Interface between a test type (json, query, plaintext, etc) and
+    the rest of TFB. A test type defines a number of keys it expects
+    to find in the benchmark_config.json, and this base class handles extracting
+    those keys and injecting them into the test. For example, if
+    benchmark_config.json contains a line `"spam" : "foobar"` and a subclasses X
+    passes an argument list of ['spam'], then after parsing there will
+    exist a member `X.spam = 'foobar'`.
     '''
-    def __init__(self, name, directory, benchmarker, runTests,
-                 args):
-        '''
-        Constructor
-        '''
-        self.name = name
-        self.directory = directory
-        self.benchmarker = benchmarker
-        self.runTests = runTests
-        self.approach = ""
-        self.classification = ""
-        self.database = ""
-        self.framework = ""
-        self.language = ""
-        self.orm = ""
-        self.platform = ""
-        self.webserver = ""
-        self.os = ""
-        self.database_os = ""
-        self.display_name = ""
-        self.notes = ""
-        self.port = ""
-        self.versus = ""
+    __metaclass__ = abc.ABCMeta
 
-        self.__dict__.update(args)
+    def __init__(self,
+                 config,
+                 name,
+                 requires_db=False,
+                 accept_header=None,
+                 args=[]):
+        self.config = config
+        self.name = name
+        self.requires_db = requires_db
+        self.args = args
+        self.headers = ""
+        self.body = ""
+
+        if accept_header is None:
+            self.accept_header = self.accept('json')
+        else:
+            self.accept_header = accept_header
+
+        self.passed = None
+        self.failed = None
+        self.warned = None
 
     @classmethod
     @abc.abstractmethod
-    def get_url(cls, config):
-        '''
-        Establishes and returns a connection to the database.
-        '''
+    def url(self):
         pass
 
-    ##########################################################################################
-    # Public Methods
-    ##########################################################################################
+    @classmethod
+    @abc.abstractmethod
+    def accept(self, content_type):
+        return {
+            'json':
+            'application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7',
+            'html':
+            'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'plaintext':
+            'text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7'
+        }[content_type]
 
-    def start(self):
+    def parse(self, test_keys):
         '''
-        Start the test implementation
+        Takes the dict of key/value pairs describing a FrameworkTest
+        and collects all variables needed by this AbstractTestType
+
+        Raises AttributeError if required keys are missing
         '''
-        test_log_dir = os.path.join(self.benchmarker.results.directory, self.name.lower())
-        build_log_dir = os.path.join(test_log_dir, 'build')
-        run_log_dir = os.path.join(test_log_dir, 'run')
+        if all(arg in test_keys for arg in self.args):
+            self.__dict__.update({arg: test_keys[arg] for arg in self.args})
+            return self
+        else:  # This is quite common - most tests don't support all types
+            raise AttributeError(
+                "A %s requires the benchmark_config.json to contain %s" %
+                (self.name, self.args))
 
-        try:
-            os.makedirs(build_log_dir)
-        except OSError:
-            pass
-        try:
-            os.makedirs(run_log_dir)
-        except OSError:
-            pass
-
-        result = self.benchmarker.docker_helper.build(self, build_log_dir)
-        if result != 0:
-            return None
-
-        return self.benchmarker.docker_helper.run(self, run_log_dir)
-
-    def is_accepting_requests(self):
+    def request_headers_and_body(self, url):
         '''
-        Determines whether this test implementation is up and accepting
-        requests.
+        Downloads a URL and returns the HTTP response headers
+        and body content as a tuple
         '''
-        test_type = None
-        for any_type in self.runTests:
-            test_type = any_type
-            break
+        log("Accessing URL {!s}: ".format(url), color=Fore.CYAN)
 
-        url = "http://%s:%s%s" % (self.benchmarker.config.server_host,
-                                  self.port,
-                                  self.runTests[test_type].get_url())
+        headers = {'Accept': self.accept_header}
+        r = requests.get(url, timeout=15, headers=headers)
 
-        return self.benchmarker.docker_helper.test_client_connection(url)
+        self.headers = r.headers
+        self.body = r.content
+        return self.headers, self.body
 
-    def verify_urls(self):
+    def output_headers_and_body(self):
+        log(str(self.headers))
+        log(self.body)
+
+    def verify(self, base_url):
         '''
-        Verifys each of the URLs for this test. This will simply curl the URL and
-        check for it's return status. For each url, a flag will be set on this
-        object for whether or not it passed.
-        Returns True if all verifications succeeded
+        Accesses URL used by this test type and checks the return
+        values for correctness. Most test types run multiple checks,
+        so this returns a list of results. Each result is a 3-tuple
+        of (String result, String reason, String urlTested).
+
+        - result : 'pass','warn','fail'
+        - reason : Short human-readable reason if result was
+            warn or fail. Please do not print the response as part of this,
+            other parts of TFB will do that based upon the current logging
+            settings if this method indicates a failure happened
+        - urlTested: The exact URL that was queried
+
+        Subclasses should make a best-effort attempt to report as many
+        failures and warnings as they can to help users avoid needing
+        to run TFB repeatedly while debugging
         '''
-        log_path = os.path.join(self.benchmarker.results.directory, self.name.lower())
-        result = True
+        # TODO make String result into an enum to enforce
+        raise NotImplementedError("Subclasses must provide verify")
 
-        def verify_type(test_type):
-            verificationPath = os.path.join(log_path, test_type)
-            try:
-                os.makedirs(verificationPath)
-            except OSError:
-                pass
-            with open(os.path.join(verificationPath, 'verification.txt'),
-                      'w') as verification:
-                test = self.runTests[test_type]
-                log("VERIFYING %s" % test_type.upper(),
-                    file=verification,
-                    border='-',
-                    color=Fore.WHITE + Style.BRIGHT)
+    def get_url(self):
+        '''
+        Returns the URL for this test, like '/json'
+        '''
+        # This is a method because each test type uses a different key
+        # for their URL so the base class can't know which arg is the URL
+        raise NotImplementedError("Subclasses must provide get_url")
 
-                base_url = "http://%s:%s" % (
-                    self.benchmarker.config.server_host, self.port)
+    def get_script_name(self):
+        '''
+        Returns the remote script name for running the benchmarking process.
+        '''
+        raise NotImplementedError("Subclasses must provide get_script_name")
 
-                try:
-                    # Verifies headers from the server. This check is made from the
-                    # App Server using Pythons requests module. Will do a second check from
-                    # the client to make sure the server isn't only accepting connections
-                    # from localhost on a multi-machine setup.
-                    results = test.verify(base_url)
+    def get_script_variables(self, name, url, port):
+        '''
+        Returns the remote script variables for running the benchmarking process.
+        '''
+        raise NotImplementedError(
+            "Subclasses must provide get_script_variables")
 
-                    # Now verify that the url is reachable from the client machine, unless
-                    # we're already failing
-                    if not any(result == 'fail'
-                               for (result, reason, url) in results):
-                        self.benchmarker.docker_helper.test_client_connection(
-                            base_url + test.get_url())
-                except ConnectionError as e:
-                    results = [('fail', "Server did not respond to request",
-                                base_url)]
-                    log("Verifying test %s for %s caused an exception: %s" %
-                        (test_type, self.name, e),
-                        color=Fore.RED)
-                except Timeout as e:
-                    results = [('fail', "Connection to server timed out",
-                                base_url)]
-                    log("Verifying test %s for %s caused an exception: %s" %
-                        (test_type, self.name, e),
-                        color=Fore.RED)
-                except Exception as e:
-                    results = [('fail', """Caused Exception in TFB
-            This almost certainly means your return value is incorrect,
-            but also that you have found a bug. Please submit an issue
-            including this message: %s\n%s""" % (e, traceback.format_exc()),
-                                base_url)]
-                    log("Verifying test %s for %s caused an exception: %s" %
-                        (test_type, self.name, e),
-                        color=Fore.RED)
-                    traceback.format_exc()
-
-                test.failed = any(
-                    result == 'fail' for (result, reason, url) in results)
-                test.warned = any(
-                    result == 'warn' for (result, reason, url) in results)
-                test.passed = all(
-                    result == 'pass' for (result, reason, url) in results)
-
-                def output_result(result, reason, url):
-                    specific_rules_url = "https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#specific-test-requirements"
-                    color = Fore.GREEN
-                    if result.upper() == "WARN":
-                        color = Fore.YELLOW
-                    elif result.upper() == "FAIL":
-                        color = Fore.RED
-
-                    log("   {!s}{!s}{!s} for {!s}".format(
-                        color, result.upper(), Style.RESET_ALL, url),
-                        file=verification)
-                    if reason is not None and len(reason) != 0:
-                        for line in reason.splitlines():
-                            log("     " + line, file=verification)
-                        if not test.passed:
-                            log("     See {!s}".format(specific_rules_url),
-                                file=verification)
-
-                [output_result(r1, r2, url) for (r1, r2, url) in results]
-
-                if test.failed:
-                    test.output_headers_and_body()
-                    self.benchmarker.results.report_verify_results(self, test_type, 'fail')
-                elif test.warned:
-                    test.output_headers_and_body()
-                    self.benchmarker.results.report_verify_results(self, test_type, 'warn')
-                elif test.passed:
-                    self.benchmarker.results.report_verify_results(self, test_type, 'pass')
-                else:
-                    raise Exception(
-                        "Unknown error - test did not pass,warn,or fail")
-
-        result = True
-        for test_type in self.runTests:
-            verify_type(test_type)
-            if self.runTests[test_type].failed:
-                result = False
-
-        return result
+    def copy(self):
+        '''
+        Returns a copy that can be safely modified.
+        Use before calling parse
+        '''
+        return copy.copy(self)
