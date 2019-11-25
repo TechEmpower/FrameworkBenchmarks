@@ -1,9 +1,11 @@
 package com.techempower.servicetalk;
 
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import io.servicetalk.http.netty.HttpServers;
 import io.servicetalk.http.api.HttpSerializationProviders;
@@ -18,11 +20,11 @@ public final class Server {
     public static void main(String[] args) throws Exception {
         try{
             HttpSerializationProvider serializer = HttpSerializationProviders.jsonSerializer(new JacksonSerializationProvider());
-            Map<String, String> obj = new HashMap<String, String>();
-            obj.put("message", "Hello, World!");
             HttpServers.forPort(8080)
                     .listenAndAwait((ctx, request, responseFactory) -> {
                         if(request.path().equals("/json")) {
+                            Map<String, String> obj = new HashMap<String, String>();
+                            obj.put("message", "Hello, World!");
                             return succeeded(responseFactory.ok()
                                     .payloadBody(obj, serializer.serializerFor(Map.class))
                                     .addHeader("Date", GetCurrentTime())
@@ -35,7 +37,6 @@ public final class Server {
                                     .addHeader("Date", GetCurrentTime())
                                     .addHeader("Server", "TFB"));
                         };
-
                         return null;
                     })
                     .awaitShutdown();
@@ -48,6 +49,11 @@ public final class Server {
         SimpleDateFormat formatter = new SimpleDateFormat("EE, dd MMM yyyy kk:mm:ss z  ");
         Date date = new Date();
         return formatter.format(date);
+    }
+
+    private static int GetRandomNumber() {
+        Random random = new Random();
+        return random.nextInt(10001) + 1;
     }
 }
 
