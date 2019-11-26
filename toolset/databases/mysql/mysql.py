@@ -4,22 +4,24 @@ import traceback
 
 from colorama import Fore
 from toolset.utils.output_helper import log
+from toolset.databases.abstract_database import AbstractDatabase
 
-class Database:
 
-    @staticmethod
-    def get_current_world_table(config):
-        '''
-        Return a JSON object containing all 10,000 World items as they currently
-        exist in the database. This is used for verifying that entries in the
-        database have actually changed during an Update verification test.
-        '''
+class Database(AbstractDatabase):
+
+    margin = 1.015
+
+    @classmethod
+    def get_connection(cls, config):
+        return MySQLdb.connect(config.database_host, "benchmarkdbuser",
+                                 "benchmarkdbpass", "hello_world")
+
+    @classmethod
+    def get_current_world_table(cls, config):
         results_json = []
 
         try:
-            db = MySQLdb.connect(config.database_host,
-                                 "benchmarkdbuser", "benchmarkdbpass",
-                                 "hello_world")
+            db = cls.get_connection(config)
             cursor = db.cursor()
             cursor.execute("SELECT * FROM World")
             results = cursor.fetchall()
@@ -33,11 +35,10 @@ class Database:
 
         return results_json
 
-    @staticmethod
-    def test_connection(config):
+    @classmethod
+    def test_connection(cls, config):
         try:
-            db = MySQLdb.connect(config.database_host, "benchmarkdbuser",
-                                 "benchmarkdbpass", "hello_world")
+            db = cls.get_connection(config)
             cursor = db.cursor()
             cursor.execute("SELECT 1")
             cursor.fetchall()
@@ -45,3 +46,40 @@ class Database:
             return True
         except:
             return False
+
+    @classmethod
+    def get_queries(cls, config):
+        db = cls.get_connection(config)
+        cursor = db.cursor()
+        cursor.execute("Show global status where Variable_name in ('Com_select','Com_update')")
+        res = 0
+        records = cursor.fetchall()
+        for row in records:
+            res = res + int(row[1])
+        return res
+
+    @classmethod
+    def get_rows(cls, config):
+        db = cls.get_connection(config)
+        cursor = db.cursor()
+        cursor.execute("""SELECT r.variable_value-u.variable_value FROM 
+                        (SELECT variable_value FROM PERFORMANCE_SCHEMA.SESSION_STATUS where Variable_name like 'Innodb_rows_read') r,
+                        (SELECT variable_value FROM PERFORMANCE_SCHEMA.SESSION_STATUS where Variable_name like 'Innodb_rows_updated') u""")
+        record = cursor.fetchone()
+        return int(int(record[0]) * cls.margin) #Mysql lowers the number of rows read
+
+    @classmethod
+    def get_rows_updated(cls, config):
+        db = cls.get_connection(config)
+        cursor = db.cursor()
+        cursor.execute("show session status like 'Innodb_rows_updated'")
+        record = cursor.fetchone()
+        return int(int(record[1]) * cls.margin) #Mysql lowers the number of rows updated
+
+    @classmethod
+    def reset_cache(cls, config):
+        #No more Cache in Mysql 8.0
+        #cursor = self.db.cursor()
+        #cursor.execute("RESET QUERY CACHE")
+        #self.db.commit()
+        return

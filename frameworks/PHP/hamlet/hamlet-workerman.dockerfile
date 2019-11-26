@@ -12,11 +12,13 @@ RUN apt-get install -yqq composer > /dev/null
 RUN apt-get install -y php-pear php-dev libevent-dev > /dev/null
 RUN printf "\n\n /usr/lib/x86_64-linux-gnu/\n\n\nno\n\n\n" | pecl install event > /dev/null && echo "extension=event.so" > /etc/php/7.3/cli/conf.d/event.ini
 
-COPY php.ini /etc/php/7.3/cli/php.ini
+COPY deploy/fpm/php.ini /etc/php/7.3/fpm/php.ini
 
-ADD ./ /workerman
-WORKDIR /workerman
+ADD ./ /hamlet
+WORKDIR /hamlet
 
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+RUN composer require hamlet-framework/http-workerman:dev-master --quiet
+RUN composer require hamlet-framework/db-pdo:dev-master --quiet
+RUN composer update --no-dev --quiet
 
-CMD php /workerman/server-mysqli.php start
+CMD php /hamlet/workerman.php start

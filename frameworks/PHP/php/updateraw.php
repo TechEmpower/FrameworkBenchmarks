@@ -1,11 +1,11 @@
 <?php
 header('Content-Type: application/json');
-
 // Database connection
 // http://www.php.net/manual/en/ref.pdo-mysql.php
-$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', [
-  PDO::ATTR_PERSISTENT => true
-]);
+$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', 
+    [PDO::ATTR_PERSISTENT => true,
+    PDO::ATTR_EMULATE_PREPARES => false]
+);
 
 // Read number of queries to run from URL parameter
 $query_count = 1;
@@ -24,8 +24,9 @@ while ($query_count--) {
 
     // Store result in array.
     $world = ['id' => $id, 'randomNumber' => $statement->fetchColumn()];
+    $world['randomNumber'] = mt_rand(1, 10000);
     $updateStatement->execute(
-        [$world['randomNumber'] = mt_rand(1, 10000), $id]
+      [$world['randomNumber'] = mt_rand(1, 10000), $id]
     );
 
     $arr[] = $world;

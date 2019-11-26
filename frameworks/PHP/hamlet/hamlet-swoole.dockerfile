@@ -6,8 +6,11 @@ RUN pecl install swoole > /dev/null && \
 RUN docker-php-ext-install mysqli > /dev/null && \
     docker-php-ext-enable mysqli
 
-RUN apt-get update > /dev/null && \
-    apt-get install -y git unzip > /dev/null
+RUN docker-php-ext-install pdo_mysql > /dev/null && \
+    docker-php-ext-enable pdo_mysql
+
+RUN apt-get update -yqq && \
+    apt-get install -yqq git unzip
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 

@@ -26,7 +26,7 @@ function dbraw() {
 
   // For each query, store the result set values in the response array
   while ($query_count--) {
-    $result = mysql_query("SELECT randomNumber FROM World WHERE id = $id", $link);
+    $result = mysql_query("SELECT id, randomNumber FROM World WHERE id = $id", $link);
 
     // Store result in array.
     $arr[] = array('id' => $id, 'randomNumber' => mysql_result($result, 0));
@@ -52,4 +52,3 @@ function dbraw() {
 }
 
 dbraw();
-?>

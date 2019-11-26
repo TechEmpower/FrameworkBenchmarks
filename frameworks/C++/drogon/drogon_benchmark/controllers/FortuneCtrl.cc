@@ -7,8 +7,11 @@ void FortuneCtrl::asyncHandleHttpRequest(
     const HttpRequestPtr &req,
     std::function<void(const HttpResponsePtr &)> &&callback)
 {
-    auto client = drogon::app().getFastDbClient();
-    drogon::orm::Mapper<Fortune> mapper(client);
+    if (!*_dbClient)
+    {
+        *_dbClient = drogon::app().getFastDbClient();
+    }
+    drogon::orm::Mapper<Fortune> mapper(*_dbClient);
     auto callbackPtr =
         std::make_shared<std::function<void(const HttpResponsePtr &)>>(
             std::move(callback));

@@ -76,8 +76,8 @@ function update()
     }
 
     while ($query_count--) {
-        $id                    = mt_rand(1, 10000);
-        $world                 = (yield from $my->query("SELECT id,randomNumber FROM World WHERE id = $id"))[0];
+        $id     = mt_rand(1, 10000);
+        $world  = (yield from $my->query("SELECT id,randomNumber FROM World WHERE id = $id"))[0];
         
         $world['randomNumber'] = mt_rand(1, 10000);
         yield from $my->query("UPDATE World SET randomNumber = {$world['randomNumber']} WHERE id = $id");

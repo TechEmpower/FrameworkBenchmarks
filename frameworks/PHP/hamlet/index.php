@@ -1,12 +1,16 @@
 <?php
 
+use Benchmark\Application;
+use Hamlet\Database\MySQL\MySQLDatabase;
+use Hamlet\Http\Bootstraps\ServerBootstrap;
+
 require_once __DIR__ . '/vendor/autoload.php';
 
-$database = new \Hamlet\Database\MySQL\MySQLDatabase(
+$database = new MySQLDatabase(
     'p:tfb-database',
     'benchmarkdbuser',
     'benchmarkdbpass',
     'hello_world'
 );
-$application = new \Benchmark\Application($database);
-\Hamlet\Http\Bootstraps\ServerBootstrap::run($application);
+$application = new Application($database);
+ServerBootstrap::run($application);

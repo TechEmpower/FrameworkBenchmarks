@@ -27,7 +27,7 @@
         <version.logback>1.2.3</version.logback>
         <version.undertow>2.0.21.Final</version.undertow>
         <version.hikaricp>3.3.1</version.hikaricp>
-        <version.mysql>5.1.47</version.mysql>
+        <version.mysql>8.0.18</version.mysql>
         <version.postgres>42.2.5</version.postgres>
         <version.dsl-json>1.8.4</version.dsl-json>
         <version.mustache>0.9.6</version.mustache>

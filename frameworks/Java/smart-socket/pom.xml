@@ -9,13 +9,13 @@
     <parent>
         <groupId>org.smartboot.http</groupId>
         <artifactId>smart-http-parent</artifactId>
-        <version>1.0.10.1006-beta</version>
+        <version>1.0.11</version>
     </parent>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <commons.lang.version>2.6</commons.lang.version>
+        <log4j.version>2.11.0</log4j.version>
     </properties>
     <dependencies>
         <dependency>
@@ -25,12 +25,28 @@
         <dependency>
             <groupId>org.smartboot.socket</groupId>
             <artifactId>aio-pro</artifactId>
-            <version>1.4.4.rc-6</version>
+            <version>1.4.6.rc-3</version>
         </dependency>
         <dependency>
             <groupId>com.jsoniter</groupId>
             <artifactId>jsoniter</artifactId>
             <version>0.9.23</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
         </dependency>
     </dependencies>
     <repositories>

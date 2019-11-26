@@ -99,7 +99,6 @@ namespace PlatformBenchmarks
             var result = new List<Fortune>();
 
             using (var db = _dbProviderFactory.CreateConnection())
-
             {
                 db.ConnectionString = _connectionString;
                 await db.OpenAsync();

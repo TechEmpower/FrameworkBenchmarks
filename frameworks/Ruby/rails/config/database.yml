@@ -17,9 +17,9 @@ test:
 production_mysql:
   <<: *common
   adapter: mysql2
-  pool: 256
+  pool: 64
 
 production_postgresql:
   <<: *common
   adapter: postgresql
-  pool: 256
+  pool: 64

@@ -1,10 +1,4 @@
 <?php
-$dbPoolConfig = [
-    // 池子中最多资源数
-    'maxResources' => 10000,
-    // 池子中最少资源数
-    'minResources' => 0,
-];
 $dbResourceConfig = [
     'host'        => 'tfb-database',
     'username'    => 'benchmarkdbuser',
@@ -32,6 +26,7 @@ return [
         'type'      =>  Imi\Server\Type::HTTP,
         'host'      =>  '0.0.0.0',
         'port'      =>  8080,
+        'mode'      =>  SWOOLE_BASE,
         'configs'   =>  [
             'worker_num'        => swoole_cpu_num(),
             'open_tcp_nodelay'  => true,
@@ -48,7 +43,14 @@ return [
             'sync' => [
                 'pool'    =>    [
                     'class'        =>    \Imi\Db\Pool\SyncDbPool::class,
-                    'config'    =>    $dbPoolConfig,
+                    'config'    =>    [
+                        // 池子中最多资源数
+                        'maxResources' => 512,
+                        // 池子中最少资源数
+                        'minResources' => 0,
+                        'gcInterval'   => null,
+                        'checkStateWhenGetResource' =>  false,
+                    ],
                 ],
                 // resource也可以定义多个连接
                 'resource'    =>    $dbResourceConfig,
@@ -57,7 +59,14 @@ return [
             'async' => [
                 'pool'    =>    [
                     'class'        =>    \Imi\Db\Pool\CoroutineDbPool::class,
-                    'config'    =>    $dbPoolConfig,
+                    'config'    =>    [
+                        // 池子中最多资源数
+                        'maxResources' => 512,
+                        // 池子中最少资源数
+                        'minResources' => 16,
+                        'gcInterval'   => null,
+                        'checkStateWhenGetResource' =>  false,
+                    ],
                 ],
                 // resource也可以定义多个连接
                 'resource'    =>    $dbResourceConfig,

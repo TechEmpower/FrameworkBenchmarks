@@ -1,4 +1,4 @@
-﻿using SpanJson;
+﻿using Swifter.Json;
 using System;
 using System.Threading.Tasks;
 using ZYSocket;
@@ -11,8 +11,8 @@ namespace PlatformBenchmarks
         public void Json(IFiberRw<HttpToken> fiberRw,ref WriteBytes write)
         {
             JsonMessage jsonMessage = default(JsonMessage);
-            jsonMessage.message = "Hello, World!";
-            JsonSerializer.NonGeneric.Utf8.SerializeAsync(jsonMessage, write.Stream);
+            jsonMessage.message = "Hello, World!";          
+             JsonFormatter.SerializeObject(jsonMessage,write.Stream,System.Text.Encoding.UTF8);
             OnCompleted(fiberRw, write);
         }
     }

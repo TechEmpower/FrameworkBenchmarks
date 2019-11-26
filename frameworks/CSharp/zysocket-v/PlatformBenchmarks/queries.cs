@@ -1,4 +1,4 @@
-﻿using SpanJson;
+﻿using Swifter.Json;
 using System;
 using ZYSocket;
 using ZYSocket.FiberStream;
@@ -27,8 +27,9 @@ namespace PlatformBenchmarks
                 count = 1;
             try
             {
-                var data = await fiberRw.UserToken.Db.LoadMultipleQueriesRows(count);
-                await JsonSerializer.NonGeneric.Utf8.SerializeAsync(data, write.Stream);
+                var data = await fiberRw.UserToken.Db.LoadMultipleQueriesRows(count);               
+
+                await JsonFormatter.SerializeObjectAsync(data, write.Stream, System.Text.Encoding.UTF8);
             }
             catch (Exception e_)
             {
