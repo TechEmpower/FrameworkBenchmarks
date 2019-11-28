@@ -4,7 +4,8 @@ CFLAGS = -mtune=native -march=native -O3 -flto -ffat-lto-objects -DNDEBUG \
 	-include /lwan/build/lwan-build-config.h \
 	-I /lwan/src/lib \
 	`pkg-config mariadb --cflags` \
-	`pkg-config sqlite3 --cflags`
+	`pkg-config sqlite3 --cflags` \
+	-fauto-profile=/lwan/src/gcda/techempower.gcov
 
 LDFLAGS = -mtune=native -march=native -O3 -flto -ffat-lto-objects \
 	-Wl,-whole-archive /lwan/build/src/lib/liblwan.a -Wl,-no-whole-archive \

@@ -10,7 +10,7 @@ WORKDIR /lwan
 
 RUN wget https://github.com/lpereira/lwan/archive/b52c9f5e17542800a762f19bc9073bd8b3b95cb3.tar.gz -O - | tar xz --strip-components=1 && \
     mkdir build && cd build && \
-    cmake /lwan -DCMAKE_BUILD_TYPE=Release && \
+    cmake /lwan -DCMAKE_BUILD_TYPE=Release -DUSE_ALTERNATIVE_MALLOC=mimalloc && \
     make lwan-static
 
 RUN make clean && make
