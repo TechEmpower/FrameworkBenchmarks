@@ -1,11 +1,11 @@
 <?php
 
-namespace DreamCat\FrameDemo\Model;
+namespace DreamCat\Benchmark\Model;
 
 use DreamCat\Array2Class\Array2ClassInterface;
 use Dreamcat\Components\Db\Mysql\SqlBuilder\SqlBuilder;
 use DreamCat\FrameDbFactory\Model\AbstractModel;
-use DreamCat\FrameDemo\Entry\Mysql\UserEntry;
+use DreamCat\Benchmark\Entry\Mysql\UserEntry;
 
 /**
  * 示例model

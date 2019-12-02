@@ -20,12 +20,12 @@
     },
     "autoload": {
         "psr-4": {
-            "DreamCat\\FrameDemo\\": "src/main/"
+            "DreamCat\\Benchmark\\": "src/main/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "DreamCat\\FrameDemo\\": "src/test/"
+            "DreamCat\\Benchmark\\": "src/test/"
         }
     }
 }

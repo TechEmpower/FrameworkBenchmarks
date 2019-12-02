@@ -11,15 +11,15 @@
         "database": "mysql",
         "framework": "DreamcatFramework",
         "language": "PHP",
-        "flavor": "None",
+        "flavor": "PHP7.3",
         "orm": "Raw",
-        "platform": "None",
+        "platform": "swoole",
         "webserver": "nginx",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "DreamcatFramework",
         "notes": "",
-        "versus": "None"
+        "versus": "php"
       }
     }
   ]

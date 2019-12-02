@@ -1,6 +1,6 @@
 <?php
 
-namespace DreamCat\FrameDemo\Entry\Mysql;
+namespace DreamCat\Benchmark\Entry\Mysql;
 
 /**
  * mysql用户表的实体
