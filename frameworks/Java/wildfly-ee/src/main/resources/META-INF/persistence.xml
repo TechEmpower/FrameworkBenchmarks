@@ -5,7 +5,7 @@
 		<jta-data-source>java:jboss/datasources/helloWorld</jta-data-source>
 		<shared-cache-mode>NONE</shared-cache-mode>
 		<properties>
-			<property name="hibernate.jdbc.batch_size" value="100" />
+			<property name="hibernate.hbm2ddl.auto" value="none"/>
 			<property name="hibernate.dialect" value="MySQL57InnoDB" />
 		</properties>
 	</persistence-unit>
