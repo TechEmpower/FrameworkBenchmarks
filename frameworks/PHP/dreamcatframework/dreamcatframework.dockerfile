@@ -19,5 +19,6 @@ COPY src /dreamcat/src
 COPY configs /dreamcat/configs
 COPY composer.json composer.json
 RUN php /usr/local/composer/composer.phar install --no-dev -o
+RUN chmod -R 777 /dreamcat
 
 CMD php swoole.php
