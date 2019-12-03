@@ -67,11 +67,11 @@ class DbController
 
             // The new value have to be different from the previous. Otherwise Doctrine won't execute the update query
             // which is forbidden
-            $oldId = $world->getRandomNumber();
+            $oldId = $world->randomNumber;
             do {
                 $newId = mt_rand(1, 10000);
             } while($oldId === $newId);
-            $world->setRandomNumber($newId);
+            $world->randomNumber = $newId;
         }
         $this->entityManager->flush();
 
