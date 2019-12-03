@@ -7,6 +7,7 @@ return [
         "log_file" => null,
         "worker_num" => swoole_cpu_num(),
         "reactory_num" => null,
+        "daemonize" => 0,
     ],
 ];
 
