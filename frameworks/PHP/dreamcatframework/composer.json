@@ -11,8 +11,7 @@
     ],
     "require": {
         "php": ">=7.2",
-        "dreamcat/framework_swoole": "^0.1",
-        "dreamcat/framework_db_factory": "^1"
+        "dreamcat/framework_swoole": "^0.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^8",

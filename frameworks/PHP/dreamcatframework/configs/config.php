@@ -1,5 +1,6 @@
 <?php
 
+use DreamCat\Benchmark\Controller\DbCtl;
 use DreamCat\Benchmark\Controller\PlainTextCtl;
 use Dreamcat\Components\Db\Mysql\MysqlInterface;
 use DreamCat\FrameCore\Helper\ConfigHelper\BeansConfig;
@@ -14,6 +15,7 @@ return [
         "uris" => [
             "/json" => RouterConfig::get(JsonCtl::class),
             "/plaintext" => RouterConfig::get(PlainTextCtl::class),
+            "/db" => RouterConfig::get(DbCtl::class),
         ],
     ],
     # 容器配置

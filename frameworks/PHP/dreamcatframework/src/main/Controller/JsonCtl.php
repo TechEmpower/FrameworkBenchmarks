@@ -36,7 +36,7 @@ class JsonCtl
     }
 
     /**
-     * 不指定方法时的默认入口，查询有多少用户数
+     * -
      * @return JsonOutputVo
      * @Get(/json)
      */
