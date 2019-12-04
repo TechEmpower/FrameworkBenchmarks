@@ -1,6 +1,6 @@
 FROM adoptopenjdk/maven-openjdk13:latest as maven
 ENV wfly=18.0.1.Final
-ENV JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Xmx24g -XX:+UnlockExperimentalVMOptions -XX:+UseZGC"
+ENV JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Xmx24g -XX:+UnlockExperimentalVMOptions -XX:+UseZGC -XX:+UseStringDeduplication"
 WORKDIR /wildfly
 COPY src src
 COPY pom.xml pom.xml
