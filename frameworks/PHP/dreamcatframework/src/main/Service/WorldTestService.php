@@ -62,11 +62,12 @@ class WorldTestService
     public function updates(int $queries): array
     {
         $list = $this->worldTestMdl->multipleQueries($queries);
+        $newList = [];
         foreach ($list as $idx => $entry) {
-            $list[$idx] = $entry->setRandomNumber(mt_rand(1, 10000));
+            $newList[] = $entry->setRandomNumber(mt_rand(1, 10000));
         }
-        $this->worldTestMdl->updates($list);
-        return $list;
+        $this->worldTestMdl->updates($newList);
+        return $newList;
     }
 }
 

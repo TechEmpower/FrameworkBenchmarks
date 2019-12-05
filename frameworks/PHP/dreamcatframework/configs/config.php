@@ -25,6 +25,7 @@ return [
     # 容器配置
     "beans" => [
         MysqlInterface::class => BeansConfig::factory(DefaultDbFactory::class),
+        \Psr\Log\LoggerInterface::class => BeansConfig::byClass(\Psr\Log\NullLogger::class),
     ],
     # 数据库配置，这个配置最好放在 cache/config.php 中，否则各环境会互相修改
     "db" => [

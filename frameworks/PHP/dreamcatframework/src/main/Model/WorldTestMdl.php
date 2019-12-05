@@ -49,17 +49,12 @@ class WorldTestMdl extends AbstractModel
      */
     public function updates(array $list): void
     {
-        $sql = SqlBuilder::insert()
-            ->table("World")
-            ->addDatas(array_map(function (WorldEntry $entry) {
-                return [
-                    "id" => $entry->getId(),
-                    "randomNumber" => $entry->getRandomNumber(),
-                ];
-            }, $list))
-            ->onDuplicateSetField("randomNumber", "randomNumber")
-            ->build();
-        $this->getMysql()->queryResult($sql);
+        $prepare = $this->getMysql()->prepare("update World set randomNumber = ? where id = ?");
+        array_walk($list, function(WorldEntry $entry) use ($prepare) {
+           $prepare->bindValue([$entry->getRandomNumber(), $entry->getId()]);
+           $prepare->exec();
+        });
+        # $this->getMysql()->queryResult($sql); # 这里本来是准备用冲突更新的，但是测试不通过，可能是db未支持
     }
 }
 
