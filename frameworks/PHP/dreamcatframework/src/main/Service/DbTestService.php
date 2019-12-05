@@ -25,6 +25,15 @@ class DbTestService
     {
         return $this->mdl->singleQuery();
     }
+    /**
+     * 多次查询
+     * @param int $queries 查询的条数
+     * @return SingleQueryEntry[] 查询结果
+     */
+    public function multipleQueries(int $queries):array
+    {
+        return $this->mdl->multipleQueries($queries);
+    }
 }
 
 # end of file
