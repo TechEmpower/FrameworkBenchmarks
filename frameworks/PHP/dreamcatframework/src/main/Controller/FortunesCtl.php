@@ -6,6 +6,10 @@ use DreamCat\Benchmark\Service\FortuneTestService;
 use DreamCat\Benchmark\View\FortuneView;
 use Zend\Diactoros\Response\HtmlResponse;
 
+/**
+ * Fortunes控制器
+ * @author vijay
+ */
 class FortunesCtl
 {
     /**
