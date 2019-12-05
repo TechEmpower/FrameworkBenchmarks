@@ -1,6 +1,6 @@
 <?php
 
-use DreamCat\Benchmark\Controller\DbTestCtl;
+use DreamCat\Benchmark\Controller\WorldTestCtl;
 use DreamCat\Benchmark\Controller\PlainTextCtl;
 use Dreamcat\Components\Db\Mysql\MysqlInterface;
 use DreamCat\FrameCore\Helper\ConfigHelper\BeansConfig;
@@ -15,8 +15,8 @@ return [
         "uris" => [
             "/json" => RouterConfig::get(JsonCtl::class),
             "/plaintext" => RouterConfig::get(PlainTextCtl::class),
-            "/db" => RouterConfig::get(DbTestCtl::class),
-            "/queries" => RouterConfig::get(DbTestCtl::class, "queries"),
+            "/db" => RouterConfig::get(WorldTestCtl::class),
+            "/queries" => RouterConfig::get(WorldTestCtl::class, "queries"),
         ],
     ],
     # 容器配置

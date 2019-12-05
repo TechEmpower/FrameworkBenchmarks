@@ -3,10 +3,10 @@
 namespace DreamCat\Benchmark\Entry\World;
 
 /**
- * 单次查询用的数据库实体
+ * World 查询用的数据库实体
  * @author vijay
  */
-class SingleQueryEntry
+class WorldEntry
 {
     /** @var int */
     private $id;
@@ -23,9 +23,9 @@ class SingleQueryEntry
 
     /**
      * @param int $id
-     * @return SingleQueryEntry
+     * @return WorldEntry
      */
-    public function setId(int $id): SingleQueryEntry
+    public function setId(int $id): WorldEntry
     {
         $this->id = $id;
         return $this;
@@ -41,9 +41,9 @@ class SingleQueryEntry
 
     /**
      * @param int $randomNumber
-     * @return SingleQueryEntry
+     * @return WorldEntry
      */
-    public function setRandomNumber(int $randomNumber): SingleQueryEntry
+    public function setRandomNumber(int $randomNumber): WorldEntry
     {
         $this->randomNumber = $randomNumber;
         return $this;
