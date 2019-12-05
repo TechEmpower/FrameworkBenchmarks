@@ -1,7 +1,7 @@
 FROM buildpack-deps:bionic
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV TFVER=1.26.0
+ENV TFVER=1.27.0
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common unzip cmake
 RUN apt-get install -yqq g++ gcc libjemalloc-dev qt5-qmake qt5-default qtbase5-dev \
