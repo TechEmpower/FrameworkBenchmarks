@@ -1,5 +1,6 @@
 <?php
 
+use DreamCat\Benchmark\Controller\FortunesCtl;
 use DreamCat\Benchmark\Controller\WorldTestCtl;
 use DreamCat\Benchmark\Controller\PlainTextCtl;
 use Dreamcat\Components\Db\Mysql\MysqlInterface;
@@ -17,6 +18,7 @@ return [
             "/plaintext" => RouterConfig::get(PlainTextCtl::class),
             "/db" => RouterConfig::get(WorldTestCtl::class),
             "/queries" => RouterConfig::get(WorldTestCtl::class, "queries"),
+            "/fortunes" => RouterConfig::get(FortunesCtl::class),
         ],
     ],
     # 容器配置

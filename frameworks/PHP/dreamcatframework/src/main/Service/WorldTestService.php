@@ -6,7 +6,7 @@ use DreamCat\Benchmark\Entry\World\WorldEntry;
 use DreamCat\Benchmark\Model\WorldTestMdl;
 
 /**
- * db测试service
+ * world测试service
  * @author vijay
  */
 class WorldTestService

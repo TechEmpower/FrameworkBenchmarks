@@ -3,10 +3,9 @@
 namespace DreamCat\Benchmark\Service;
 
 use DreamCat\Benchmark\Pojo\Json\JsonOutputVo;
-use DreamCat\Benchmark\Model\DemoMdl;
 
 /**
- * 示例service
+ * json service
  * @author vijay
  */
 class JsonService

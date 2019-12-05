@@ -6,7 +6,7 @@ use DreamCat\Benchmark\Entry\World\WorldEntry;
 use DreamCat\FrameDbFactory\Model\AbstractModel;
 
 /**
- * db测试用的model
+ * world表测试用的model
  * @author vijay
  */
 class WorldTestMdl extends AbstractModel
