@@ -19,6 +19,7 @@ return [
             "/db" => RouterConfig::get(WorldTestCtl::class),
             "/queries" => RouterConfig::get(WorldTestCtl::class, "queries"),
             "/fortunes" => RouterConfig::get(FortunesCtl::class),
+            "/updates" => RouterConfig::get(WorldTestCtl::class, "updates"),
         ],
     ],
     # 容器配置

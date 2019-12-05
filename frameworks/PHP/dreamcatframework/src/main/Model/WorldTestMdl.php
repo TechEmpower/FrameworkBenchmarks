@@ -3,6 +3,7 @@
 namespace DreamCat\Benchmark\Model;
 
 use DreamCat\Benchmark\Entry\World\WorldEntry;
+use Dreamcat\Components\Db\Mysql\SqlBuilder\SqlBuilder;
 use DreamCat\FrameDbFactory\Model\AbstractModel;
 
 /**
@@ -39,6 +40,26 @@ class WorldTestMdl extends AbstractModel
             $list[] = $this->formatOutputEntry($prepare->selectrow(), WorldEntry::class);
         }
         return $list;
+    }
+
+    /**
+     * 将不超过500条数据更新回数据库
+     * @param WorldEntry[] $list
+     * @return void
+     */
+    public function updates(array $list): void
+    {
+        $sql = SqlBuilder::insert()
+            ->table("World")
+            ->addDatas(array_map(function (WorldEntry $entry) {
+                return [
+                    "id" => $entry->getId(),
+                    "randomNumber" => $entry->getRandomNumber(),
+                ];
+            }, $list))
+            ->onDuplicateSetField("randomNumber", "randomNumber")
+            ->build();
+        $this->getMysql()->queryResult($sql);
     }
 }
 

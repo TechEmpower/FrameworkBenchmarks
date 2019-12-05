@@ -53,6 +53,21 @@ class WorldTestService
     {
         return $this->worldTestMdl->multipleQueries($queries);
     }
+
+    /**
+     * 更新数据
+     * @param int $queries 条数
+     * @return WorldEntry[] 更新后结果
+     */
+    public function updates(int $queries): array
+    {
+        $list = $this->worldTestMdl->multipleQueries($queries);
+        foreach ($list as $idx => $entry) {
+            $list[$idx] = $entry->setRandomNumber(mt_rand(1, 10000));
+        }
+        $this->worldTestMdl->updates($list);
+        return $list;
+    }
 }
 
 # end of file

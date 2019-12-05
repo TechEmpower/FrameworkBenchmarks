@@ -49,7 +49,7 @@ class WorldTestCtl
      * @param int $queries @GetParam(queries)
      * @return WorldEntry[]
      */
-    public function queries(int $queries): array
+    public function queries(int $queries = 1): array
     {
         if ($queries < 1) {
             $queries = 1;
@@ -57,6 +57,21 @@ class WorldTestCtl
             $queries = 500;
         }
         return $this->worldTestService->multipleQueries($queries);
+    }
+
+    /**
+     * -
+     * @param int $queries
+     * @return WorldEntry[]
+     */
+    public function updates(int $queries = 1): array
+    {
+        if ($queries < 1) {
+            $queries = 1;
+        } elseif ($queries > 500) {
+            $queries = 500;
+        }
+        return $this->getWorldTestService()->updates($queries);
     }
 }
 
