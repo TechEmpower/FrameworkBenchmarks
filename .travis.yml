@@ -131,8 +131,8 @@ before_script:
   - if [ "$RUN_TESTS" ]; then docker build -t techempower/tfb - < ./Dockerfile; fi
 
   # Stop services that would claim ports we may need
-  - sudo service mysql stop
-  - sudo service postgresql stop
+  - sudo service mysql stop || true
+  - sudo service postgresql stop || true
 
 script:
   # run-ci.py runs the diffing to see if travis needs to test this framework. Ideally/eventually,
