@@ -115,6 +115,7 @@ class Benchmarker:
             message = "Test {name} has been added to the excludes list. Skipping.".format(
                 name=test.name)
             self.results.write_intermediate(test.name, message)
+            self.results.upload()
             return self.__exit_test(
                 success=False,
                 message=message,
@@ -130,6 +131,8 @@ class Benchmarker:
                     test.database.lower())
                 if database_container is None:
                     message = "ERROR: Problem building/running database container"
+                    self.results.write_intermediate(test.name, message)
+                    self.results.upload()
                     return self.__exit_test(
                         success=False,
                         message=message,
@@ -144,6 +147,7 @@ class Benchmarker:
                 message = "ERROR: Problem starting {name}".format(
                     name=test.name)
                 self.results.write_intermediate(test.name, message)
+                self.results.upload()
                 return self.__exit_test(
                     success=False,
                     message=message,
@@ -165,6 +169,7 @@ class Benchmarker:
             if not accepting_requests:
                 message = "ERROR: Framework is not accepting requests from client machine"
                 self.results.write_intermediate(test.name, message)
+                self.results.upload()
                 return self.__exit_test(
                     success=False,
                     message=message,
@@ -223,6 +228,7 @@ class Benchmarker:
             tb = traceback.format_exc()
             self.results.write_intermediate(test.name,
                                             "error during test: " + str(e))
+            self.results.upload()
             log(tb, prefix=log_prefix, file=benchmark_log)
             return self.__exit_test(
                 success=False,
