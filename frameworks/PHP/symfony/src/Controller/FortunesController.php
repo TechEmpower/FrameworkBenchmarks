@@ -28,11 +28,8 @@ class FortunesController
     {
         $fortunes = $this->fortuneRepository->findBy([]);
 
-        $runtimeFortune = new Fortune();
-        $runtimeFortune->setId(0);
-        $runtimeFortune->setMessage('Additional fortune added at request time.');
-
-        $fortunes[] = $runtimeFortune;
+        $fortunes[] = $runtimeFortune = new Fortune();
+        $runtimeFortune->message = 'Additional fortune added at request time.';
 
         usort(
             $fortunes,

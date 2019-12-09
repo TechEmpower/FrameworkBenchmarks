@@ -29,10 +29,7 @@ public class Bootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
-        System.setProperty("smart-socket.server.pageSize", (8 * 1024 * 1024) + "");
-//        System.setProperty("smart-socket.bufferPool.pageNum", 16 + "");
-        System.setProperty("smart-socket.session.writeChunkSize", (1024 * 4) + "");
-//        System.setProperty("sun.nio.ch.maxCompletionHandlersOnStack", "4");
+        System.setProperty("sun.nio.ch.maxCompletionHandlersOnStack", "32");
         RouteHandle routeHandle = new RouteHandle();
         routeHandle.route("/plaintext", new HttpHandle() {
 
@@ -83,11 +80,16 @@ public class Bootstrap {
         };
         messageProcessor.addPlugin(new MonitorPlugin(5));
         messageProcessor.addPlugin(new SocketOptionPlugin());
+
+        int cpuNum = Runtime.getRuntime().availableProcessors();
         // 定义服务器接受的消息类型以及各类消息对应的处理器
         AioQuickServer<Http11Request> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), messageProcessor);
-        server.setReadBufferSize(1024 * 4);
-        int cpuNum = Runtime.getRuntime().availableProcessors();
-        server.setThreadNum((cpuNum >> 1) + cpuNum);
+        server.setThreadNum(cpuNum + 2)
+                .setReadBufferSize(1024 * 4)
+                .setBufferPoolPageSize(10 * 1024 * 1024)
+                .setBufferPoolSharedPageSize(64 * 1024 * 1024)
+                .setBufferPoolChunkSize(1024 * 4);
+
 //        messageProcessor.addPlugin(new BufferPageMonitorPlugin(server, 6));
         try {
             server.start();
