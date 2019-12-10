@@ -14,8 +14,6 @@ pub struct DbExecutor {
     rng: ThreadRng,
 }
 
-unsafe impl Send for DbExecutor {}
-
 impl Actor for DbExecutor {
     type Context = SyncContext<Self>;
 }
