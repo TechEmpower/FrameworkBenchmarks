@@ -39,7 +39,8 @@
       "display_name": "servant-beam",
       "notes": "Uses libpq system dependency.",
       "dockerfile": "servant-beam.dockerfile",
-      "versus": "warp"
+      "versus": "warp",
+      "tags": ["broken"]
     },
     "psql-simple": {
       "db_url": "/db",
