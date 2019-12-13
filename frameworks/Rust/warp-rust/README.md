@@ -1,5 +1,9 @@
 # warp-rust Benchmarking Test
 
+warp is a composable web server framework based on hyper.
+
+* [API Documentation](https://docs.rs/warp/0.1)
+
 ### Test Type Implementation Source Code
 
 * [JSON](src/main.rs)
