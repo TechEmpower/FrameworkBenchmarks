@@ -74,7 +74,8 @@
       "database_os": "Linux",
       "display_name": "cpoll-pool",
       "notes": "Threadpool",
-      "versus": "cpoll_cppsp"
+      "versus": "cpoll_cppsp",
+      "tags": ["broken"]
     }
   }]
 }
