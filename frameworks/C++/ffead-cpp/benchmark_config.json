@@ -21,7 +21,8 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-mongo",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": ["broken"]
 		},
 		"mysql": {
 			"json_url": "/te-benchmark/json",
@@ -43,7 +44,8 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-mysql",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": ["broken"]
 		},
 		"postgresql": {
 			"json_url": "/te-benchmark/json",
@@ -65,7 +67,8 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-postgresql",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": ["broken"]
 		},
 		"apache-mongo": {
 			"json_url": "/te-benchmark/json",
@@ -222,7 +225,8 @@
 			"display_name": "ffead-cpp-mongo-redis",
 			"notes": "",
 			"versus": "",
-			"wait_before_sending_requests": 10
+			"wait_before_sending_requests": 10,
+			"tags": ["broken"]
 		},
 		"nginx-redis": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
@@ -281,7 +285,8 @@
 			"display_name": "ffead-cpp-mongo-memcached",
 			"notes": "",
 			"versus": "",
-			"wait_before_sending_requests": 10
+			"wait_before_sending_requests": 10,
+			"tags": ["broken"]
 		},
 		"nginx-memcached": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
