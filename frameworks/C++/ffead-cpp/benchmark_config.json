@@ -87,7 +87,8 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-apache-mongo",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": ["broken"]
 		},
 		"apache-mysql": {
 			"json_url": "/te-benchmark/json",
@@ -109,7 +110,8 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-apache-mysql",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": ["broken"]
 		},
 		"apache-postgresql": {
 			"json_url": "/te-benchmark/json",
@@ -131,7 +133,8 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-apache-postgresql",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": ["broken"]
 		},
 		"nginx-mongo": {
 			"json_url": "/te-benchmark/json",
@@ -153,7 +156,8 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-nginx-mongo",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": ["broken"]
 		},
 		"nginx-mysql": {
 			"json_url": "/te-benchmark/json",
@@ -175,7 +179,8 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-nginx-mysql",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": ["broken"]
 		},
 		"nginx-postgresql": {
 			"json_url": "/te-benchmark/json",
@@ -197,7 +202,8 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-nginx-postgresql",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": ["broken"]
 		},
 		"redis": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
@@ -235,7 +241,8 @@
 			"display_name": "ffead-cpp-nginx-mongo-redis",
 			"notes": "",
 			"versus": "",
-			"wait_before_sending_requests": 10
+			"wait_before_sending_requests": 10,
+			"tags": ["broken"]
 		},
 		"apache-redis": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
@@ -254,7 +261,8 @@
 			"display_name": "ffead-cpp-apache-mongo-redis",
 			"notes": "",
 			"versus": "",
-			"wait_before_sending_requests": 10
+			"wait_before_sending_requests": 10,
+			"tags": ["broken"]
 		},
 		"memcached": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
@@ -292,7 +300,8 @@
 			"display_name": "ffead-cpp-nginx-mongo-memcached",
 			"notes": "",
 			"versus": "",
-			"wait_before_sending_requests": 10
+			"wait_before_sending_requests": 10,
+			"tags": ["broken"]
 		},
 		"apache-memcached": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
@@ -311,7 +320,8 @@
 			"display_name": "ffead-cpp-apache-mongo-memcached",
 			"notes": "",
 			"versus": "",
-			"wait_before_sending_requests": 10
+			"wait_before_sending_requests": 10,
+			"tags": ["broken"]
 		}
 	}]
 }
