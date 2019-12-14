@@ -1,8 +1,8 @@
 
 # Hexagon Benchmarking Test
 
-This is the Hexagon portion of a [benchmarking test suite](../../..) comparing a variety of web
-development platforms. The test utilizes Hexagon routes, serialization and database access.
+This is the Hexagon portion of a [benchmarking test suite](../../../README.md) comparing a variety
+of web development platforms. The test utilizes Hexagon routes, serialization and database access.
 
 ## Tests
 
