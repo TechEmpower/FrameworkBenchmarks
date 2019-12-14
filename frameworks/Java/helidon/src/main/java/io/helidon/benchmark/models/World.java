@@ -1,9 +1,14 @@
 package io.helidon.benchmark.models;
 
 import javax.json.Json;
+import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
+import java.util.Collections;
 
 public final class World {
+
+    private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
+
     public int id;
     public int randomNumber;
 
@@ -13,6 +18,6 @@ public final class World {
     }
 
     public JsonObject toJson() {
-        return Json.createObjectBuilder().add("id", id).add("randomNumber", randomNumber).build();
+        return JSON.createObjectBuilder().add("id", id).add("randomNumber", randomNumber).build();
     }
 }

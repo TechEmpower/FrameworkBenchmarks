@@ -1,4 +1,6 @@
-FROM rust:1.32.0
+FROM rust:1.38
+
+RUN apt update -yqq && apt install -yqq cmake
 
 ADD ./ /may
 WORKDIR /may

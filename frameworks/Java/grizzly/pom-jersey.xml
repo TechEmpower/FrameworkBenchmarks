@@ -22,13 +22,13 @@
 		<grizzly.version>2.4.4</grizzly.version>
 		<hibernate.version>5.4.2.Final</hibernate.version>
 		<hibernate-jpa-api.version>1.0.0.Final</hibernate-jpa-api.version>
-		<jackson.version>2.9.8</jackson.version>
+		<jackson.version>2.9.9</jackson.version>
 		<jaxb.version>2.3.0</jaxb.version>
 		<jersey.version>2.28</jersey.version>
-		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+		<maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
 		<maven-shade-plugin.version>3.1.0</maven-shade-plugin.version>
 		<mustache.version>0.9.6</mustache.version>
-		<mysql-connector.version>5.1.47</mysql-connector.version>
+		<mysql-connector.version>8.0.18</mysql-connector.version>
 	</properties>
 
 	<dependencies>
@@ -180,7 +180,6 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven-compiler-plugin.version}</version>
 				<configuration>
-					<optimize>true</optimize>
 					<debug>false</debug>
 				</configuration>
 			</plugin>

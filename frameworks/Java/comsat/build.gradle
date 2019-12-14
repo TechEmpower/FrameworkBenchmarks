@@ -10,7 +10,7 @@ targetCompatibility = 1.8
 
 version = '0.3'
 
-ext.jacksonVer  = '2.9.7'
+ext.jacksonVer  = '2.9.9'
 ext.quasarVer   = '0.7.5'
 ext.comsatVer   = '0.7.0'
 ext.capsuleVer  = '1.0.2'

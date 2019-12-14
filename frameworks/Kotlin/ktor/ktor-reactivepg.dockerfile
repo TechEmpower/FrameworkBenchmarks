@@ -1,4 +1,4 @@
-FROM openjdk:11.0.3-jre-stretch
+FROM openjdk:11.0.3-jdk-stretch
 WORKDIR /app
 COPY ktor-asyncdb/gradle gradle
 COPY ktor-asyncdb/build.gradle build.gradle

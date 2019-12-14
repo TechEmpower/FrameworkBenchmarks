@@ -37,7 +37,7 @@ impl Service for App {
     type Request = Request;
     type Response = Response;
     type Error = Error;
-    type Future = Box<Future<Item = Response, Error = Error>>;
+    type Future = Box<dyn Future<Item = Response, Error = Error>>;
 
     #[inline]
     fn poll_ready(&mut self) -> Poll<(), Self::Error> {
@@ -122,7 +122,7 @@ impl NewService for AppFactory {
     type Error = Error;
     type Service = App;
     type InitError = ();
-    type Future = Box<Future<Item = Self::Service, Error = Self::InitError>>;
+    type Future = Box<dyn Future<Item = Self::Service, Error = Self::InitError>>;
 
     fn new_service(&self, _: &ServerConfig) -> Self::Future {
         const DB_URL: &str =

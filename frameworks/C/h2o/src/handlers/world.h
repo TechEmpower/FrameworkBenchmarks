@@ -25,9 +25,9 @@
 
 #include "global_data.h"
 
-void free_world_handler_thread_data(request_handler_thread_data_t *request_handler_thread_data);
-void initialize_world_handler_thread_data(request_handler_thread_data_t *request_handler_data);
-void initialize_world_handlers(global_data_t *global_data,
+void cleanup_world_handlers(global_data_t *global_data);
+void initialize_world_handlers(const config_t *config,
+                               global_data_t *global_data,
                                h2o_hostconf_t *hostconf,
                                h2o_access_log_filehandle_t *log_handle);
 

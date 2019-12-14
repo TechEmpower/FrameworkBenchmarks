@@ -1,19 +1,21 @@
 /// <reference types="@vertx/core/runtime" />
 // @ts-check
 
-import {Router} from '@vertx/web';
+import { Router } from '@vertx/web';
 
-import {PgClient, Tuple} from '@reactiverse/reactive-pg-client';
-import {PgPoolOptions} from '@reactiverse/reactive-pg-client/options';
-import {HandlebarsTemplateEngine} from '@vertx/web-templ-handlebars'
+import { PgPool } from '@vertx/pg-client';
+import { PoolOptions } from '@vertx/sql-client/options';
+import { RockerTemplateEngine } from '@vertx/web-templ-rocker'
+import { PgConnectOptions } from '@vertx/pg-client/options';
+import { Tuple } from '@vertx/sql-client';
 
 const util = require('./util');
 
 const SERVER = 'vertx.js';
 
 const app = Router.router(vertx);
-const template = HandlebarsTemplateEngine.create(vertx);
-let date = new Date().toString();
+const template = RockerTemplateEngine.create();
+let date = new Date().toUTCString();
 
 vertx.setPeriodic(1000, t => date = new Date().toUTCString());
 
@@ -26,22 +28,26 @@ app.get("/json").handler(ctx => {
     .putHeader("Server", SERVER)
     .putHeader("Date", date)
     .putHeader("Content-Type", "application/json")
-    .end(JSON.stringify({message: 'Hello, World!'}));
+    .end(JSON.stringify({ message: 'Hello, World!' }));
 });
 
 const UPDATE_WORLD = "UPDATE world SET randomnumber=$1 WHERE id=$2";
 const SELECT_WORLD = "SELECT id, randomnumber from WORLD where id=$1";
 const SELECT_FORTUNE = "SELECT id, message from FORTUNE";
 
-let client = PgClient.pool(
-  vertx,
-  new PgPoolOptions()
-    .setCachePreparedStatements(true)
-    .setMaxSize(1)
-    .setHost('tfb-database')
-    .setUser('benchmarkdbuser')
-    .setPassword('benchmarkdbpass')
-    .setDatabase('hello_world'));
+let connectOptions = new PgConnectOptions()
+  .setCachePreparedStatements(true)
+  .setHost('tfb-database')
+  .setUser('benchmarkdbuser')
+  .setPassword('benchmarkdbpass')
+  .setDatabase('hello_world');
+
+// Pool options
+let poolOptions = new PoolOptions()
+  .setMaxSize(1);
+
+// Create the client pool
+let client = PgPool.pool(vertx, connectOptions, poolOptions);
 
 /*
  * This test exercises the framework's object-relational mapper (ORM), random number generator, database driver,
@@ -63,7 +69,7 @@ app.get("/db").handler(ctx => {
         .putHeader("Server", SERVER)
         .putHeader("Date", date)
         .putHeader("Content-Type", "application/json")
-        .end(JSON.stringify({id: row.getInteger(0), randomNumber: row.getInteger(1)}));
+        .end(JSON.stringify({ id: row.getInteger(0), randomNumber: row.getInteger(1) }));
     } else {
       ctx.fail(res.cause());
     }
@@ -92,7 +98,7 @@ app.get("/queries").handler(ctx => {
 
         // we need a final reference
         const row = ar.result().iterator().next();
-        worlds.push({id: row.getInteger(0), randomNumber: row.getInteger(1)});
+        worlds.push({ id: row.getInteger(0), randomNumber: row.getInteger(1) });
 
         // stop condition
         if (worlds.length === queries) {
@@ -129,10 +135,10 @@ app.get("/fortunes").handler(ctx => {
 
     while (resultSet.hasNext()) {
       let row = resultSet.next();
-      fortunes.push({id: row.getInteger(0), message: row.getString(1)});
+      fortunes.push({ id: row.getInteger(0), message: row.getString(1) });
     }
 
-    fortunes.push({id: 0, message: "Additional fortune added at request time."});
+    fortunes.push({ id: 0, message: "Additional fortune added at request time." });
 
     fortunes.sort((a, b) => {
       let messageA = a.message;
@@ -147,7 +153,7 @@ app.get("/fortunes").handler(ctx => {
     });
 
     // and now delegate to the engine to render it.
-    template.render({fortunes: fortunes}, "templates/fortunes.hbs", res => {
+    template.render({ fortunes: fortunes }, "Fortunes.rocker.html", res => {
       if (res.succeeded()) {
         ctx.response()
           .putHeader("Server", SERVER)
@@ -187,7 +193,7 @@ app.route("/updates").handler(ctx => {
 
         const row = ar.result().iterator().next();
 
-        worlds[index] = {id: row.getInteger(0), randomNumber: row.getInteger(1)};
+        worlds[index] = { id: row.getInteger(0), randomNumber: row.getInteger(1) };
         worlds[index].randomNumber = util.randomWorld();
         if (++queryCount === queries) {
           worlds.sort((a, b) => {
@@ -208,7 +214,7 @@ app.route("/updates").handler(ctx => {
 
             let json = [];
             worlds.forEach(world => {
-              json.push({id: world.id, randomNumber: world.randomNumber});
+              json.push({ id: world.id, randomNumber: world.randomNumber });
             });
 
             ctx.response()

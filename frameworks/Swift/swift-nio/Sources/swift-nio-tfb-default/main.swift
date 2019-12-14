@@ -1,4 +1,3 @@
-
 import Foundation
 import NIO
 import NIOHTTP1
@@ -46,16 +45,16 @@ private final class HTTPHandler: ChannelInboundHandler {
         case .head(let request):
             switch request.uri {
             case "/plaintext":
-                processPlaintext(context: context)
+                processPlaintext(ctx: context)
             case "/json":
-                processJSON(context: context)
+                processJSON(ctx: context)
             default:
                 _ = context.close()
             }
         case .body:
             break
         case .end:
-            _ = context.write(self.wrapOutboundOut(.end(nil)))
+            _ = context.write(self.wrapOutboundOut(.end(nil)), promise: nil)
         }
     }
 
@@ -64,20 +63,20 @@ private final class HTTPHandler: ChannelInboundHandler {
         context.fireChannelReadComplete()
     }
 
-    private func processPlaintext(context: ChannelHandlerContext) {
+    private func processPlaintext(ctx: ChannelHandlerContext) {
         let responseHead = plainTextResponseHead(contentLength: Constants.plainTextResponseLengthString)
-        context.write(self.wrapOutboundOut(.head(responseHead)), promise: nil)
-        context.write(self.wrapOutboundOut(.body(.byteBuffer(plaintextBuffer))), promise: nil)
+        ctx.write(self.wrapOutboundOut(.head(responseHead)), promise: nil)
+        ctx.write(self.wrapOutboundOut(.body(.byteBuffer(plaintextBuffer))), promise: nil)
     }
 
-    private func processJSON(context: ChannelHandlerContext) {
+    private func processJSON(ctx: ChannelHandlerContext) {
         let responseHead = jsonResponseHead(contentLength: Constants.jsonResponseLengthString)
-        context.write(self.wrapOutboundOut(.head(responseHead)), promise: nil)
+        ctx.write(self.wrapOutboundOut(.head(responseHead)), promise: nil)
 
         let responseData = try! jsonEncoder.encode(JSONTestResponse())
         jsonBuffer.clear()
         jsonBuffer.writeBytes(responseData)
-        context.write(self.wrapOutboundOut(.body(.byteBuffer(jsonBuffer))), promise: nil)
+        ctx.write(self.wrapOutboundOut(.body(.byteBuffer(jsonBuffer))), promise: nil)
     }
 
     private func jsonResponseHead(contentLength: String) -> HTTPResponseHead {
@@ -105,22 +104,22 @@ let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
 let bootstrap = ServerBootstrap(group: group)
     .serverChannelOption(ChannelOptions.backlog, value: 8192)
     .serverChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
-    .serverChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_TCP), TCP_NODELAY), value: 1)
-
     .childChannelInitializer { channel in
         channel.pipeline.configureHTTPServerPipeline(withPipeliningAssistance: false).flatMap {
             channel.pipeline.addHandler(HTTPHandler())
         }
     }
-
     .childChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
     .childChannelOption(ChannelOptions.maxMessagesPerRead, value: 16)
-    .childChannelOption(ChannelOptions.recvAllocator, value: AdaptiveRecvByteBufferAllocator())
 
 defer {
     try! group.syncShutdownGracefully()
 }
 
-let channel = try! bootstrap.bind(host: "0.0.0.0", port: 8080).wait()
+let channel = try bootstrap.bind(host: "0.0.0.0", port: 8080).wait()
 
-try! channel.closeFuture.wait()
+guard let localAddress = channel.localAddress else {
+    fatalError("Address was unable to bind. Please check that the socket was not closed or that the address family was understood.")
+}
+
+try channel.closeFuture.wait()

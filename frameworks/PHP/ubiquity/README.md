@@ -5,13 +5,14 @@ Ubiquity is a full-stack php framework, These tests involve:
 - the ORM part (Full)
 - the JSON serialization (native php)
 
-Tests are available with NginX and PHP-PM servers.
+Tests are available with NginX server, Swoole and Workerman platforms.
 
 ## Test Type Implementation Source Code
-The tests are separated into 4 controllers:
+The tests are separated into 7 controllers:
+### Ubiquity + PDO pgsql
 - `Json` for JSON response
   * [JSON](app/controllers/Json.php)
-- `Db` for database access
+- `Db` for database access with ORM (PDO Mysql)
   * [DB](app/controllers/Db.php)
   * [QUERY](app/controllers/Db.php)
   * [CACHED QUERY (not implemented)]()
@@ -20,22 +21,26 @@ The tests are separated into 4 controllers:
   * [FORTUNES](app/controllers/Fortunes.php)
 - `Plaintext` for plaintext response
   * [PLAINTEXT](app/controllers/Plaintext.php)
-
+### Ubiquity Swoole + PDO Mysql
+- `SwooleDb` for database access with Swoole coroutine Mysql driver
+  * [SwooleDb](app/controllers/SwooleDb.php)
+- `SwooleFortunes` used with Swoole
+  * [SwooleFortunes](app/controllers/SwooleFortunes.php)
+### Ubiquity Workerman + PDO pgsql
+- `Workerman` with PDO pgsql driver
+  * [WorkerDb](app/controllers/WorkerDb.php)
+- `WorkerFortunes` used with Workerman
+  * [WorkerFortunes](app/controllers/WorkerFortunes.php)
 
 ## Important Libraries
 The tests were run with:
-* [Ubiquity 2.1.*](https://ubiquity.kobject.net/)
+* [Ubiquity 2.3.*](https://ubiquity.kobject.net/)
 * [PHP Version 7.3.*](http://www.php.net/) with FPM and APC
 * [nginx 1.14](http://nginx.org/)
-* [PHP-PM](https://github.com/php-pm/php-pm)
-* [Ubiquity-reactphp server](https://github.com/phpMv/ubiquity-reactphp)
-* [Ubiquity-php-pm bridge](https://github.com/phpMv/ubiquity-php-pm)
-* [MySQL 5.7](https://dev.mysql.com/)
+* [Swoole](https://www.swoole.com/), [Ubiquity-swoole](https://github.com/phpMv/ubiquity-swoole)
+* [Workerman](https://github.com/walkor/Workerman), [Ubiquity-workerman](https://github.com/phpMv/ubiquity-workerman)
+* [MySQL 8.0](https://dev.mysql.com/)
 
-## Servers
-PHP-PM server (beta version) is configured with this values:
-- workers: 32
-- max-requests: 1024
 
 ## Test URLs
 ### JSON
@@ -52,16 +57,22 @@ http://localhost:8080/Db
 
 ### QUERY
 
-http://localhost:8080/Db/query/
+- http://localhost:8080/Db/query/
+- http://localhost:8080/SwooleDb/query/
+- http://localhost:8080/WorkerDb/query/
 
 ### CACHED QUERY
 
-http://localhost:8080/Db/query/
+
 
 ### UPDATE
 
-http://localhost:8080/Db/update/
+- http://localhost:8080/Db/update/
+- http://localhost:8080/SwooleDb/update/
+- http://localhost:8080/WorkerDb/update/
 
 ### FORTUNES
 
-http://localhost:8080/Fortunes
+- http://localhost:8080/Fortunes
+- http://localhost:8080/SwooleFortunes
+- http://localhost:8080/WorkerFortunes

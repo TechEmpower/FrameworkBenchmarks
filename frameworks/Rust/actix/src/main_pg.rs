@@ -20,7 +20,7 @@ mod db_pg;
 mod models;
 mod utils;
 use crate::db_pg::{PgConnection, RandomWorld, RandomWorlds, TellFortune, UpdateWorld};
-use crate::utils::{FortunesTemplate, Writer};
+use crate::utils::{FortunesYarteTemplate, Writer};
 
 fn world_row(
     db: web::Data<Addr<PgConnection>>,
@@ -99,7 +99,7 @@ fn fortune(
             Ok(fortunes) => {
                 let mut body = BytesMut::with_capacity(2048);
                 let mut writer = Writer(&mut body);
-                let _ = write!(writer, "{}", FortunesTemplate { fortunes });
+                let _ = write!(writer, "{}", FortunesYarteTemplate { fortunes });
 
                 let mut res = HttpResponse::with_body(
                     StatusCode::OK,

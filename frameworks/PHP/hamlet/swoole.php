@@ -1,12 +1,17 @@
 <?php
 
+use Benchmark\Application;
+use Hamlet\Database\MySQLSwoole\MySQLSwooleDatabase;
+use Hamlet\Http\Swoole\Bootstraps\SwooleBootstrap;
+
 require_once __DIR__ . '/vendor/autoload.php';
 
-$database = new \Hamlet\Database\MySQLSwoole\MySQLSwooleDatabase(
+$database = new MySQLSwooleDatabase(
     'tfb-database',
     'benchmarkdbuser',
     'benchmarkdbpass',
-    'hello_world'
+    'hello_world',
+    intdiv(512, swoole_cpu_num())
 );
-$application = new \Benchmark\Application($database);
-\Hamlet\Http\Swoole\Bootstraps\SwooleBootstrap::run('0.0.0.0', 8080, $application);
+$application = new Application($database);
+SwooleBootstrap::run('0.0.0.0', 8080, $application, $database);

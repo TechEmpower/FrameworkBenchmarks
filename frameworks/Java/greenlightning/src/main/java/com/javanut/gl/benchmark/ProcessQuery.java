@@ -3,21 +3,23 @@ package com.javanut.gl.benchmark;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.javanut.gl.api.HTTPRequestReader;
 import com.javanut.gl.api.HTTPResponseService;
 import com.javanut.pronghorn.network.config.HTTPContentTypeDefaults;
 import com.javanut.pronghorn.pipe.ObjectPipe;
 
-import io.reactiverse.pgclient.PgIterator;
-import io.reactiverse.pgclient.PgPool;
-import io.reactiverse.pgclient.PgRowSet;
-import io.reactiverse.pgclient.Tuple;
+import io.vertx.pgclient.PgPool;
+import io.vertx.sqlclient.Row;
+import io.vertx.sqlclient.RowIterator;
+import io.vertx.sqlclient.Tuple;
+
 
 public class ProcessQuery {
 	
 	private final transient ObjectPipe<ResultObject> DBRestInFlight;
-	private boolean collectionPendingDBRest = false;
+	private AtomicBoolean collectionPendingDBRest = new AtomicBoolean(false);
 	private transient final List<ResultObject> collectorDBRest = new ArrayList<ResultObject>();
 	private final HTTPResponseService service;
 	private transient final PoolManager pm;
@@ -94,7 +96,7 @@ public class ProcessQuery {
 				p.preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(randomValue()), r -> {
 						if (r.succeeded()) {
 
-							PgIterator resultSet = r.result().iterator();
+							RowIterator<Row> resultSet = r.result().iterator();
 							Tuple row = resultSet.next();			        
 							
 							target.setId(row.getInteger(0));
@@ -127,11 +129,11 @@ public class ProcessQuery {
 			pm.pool().preparedQuery("SELECT * FROM world WHERE id=$1", Tuple.of(randomValue()), r -> {
 					if (r.succeeded()) {
 						
-						PgIterator resultSet = r.result().iterator();
-				        Tuple row = resultSet.next();			        
+						RowIterator<Row> resultSet = r.result().iterator();
+				        Row row = resultSet.next();			        
 				        
-				        target.setId(row.getInteger(0));
-				        target.setResult(row.getInteger(1));					
+				        target.setId((Integer)row.getInteger(0));
+				        target.setResult((Integer)row.getInteger(1));					
 						target.setStatus(200);
 						
 					} else {
@@ -150,9 +152,11 @@ public class ProcessQuery {
 
 	private boolean isReadyDBRest(ResultObject temp) {
 
-		if (collectionPendingDBRest) {
+		if (collectionPendingDBRest.get()) {
 			//now ready to send, we have all the data	
-			if (!publishMultiDBResponse(collectorDBRest.get(0).getConnectionId(), collectorDBRest.get(0).getSequenceId() )) {				
+			ResultObject resultObject = collectorDBRest.get(0);
+			if (!publishMultiDBResponse(resultObject.getConnectionId(), 
+					                    resultObject.getSequenceId() )) {				
 				return false;
 			}
 		}
@@ -225,7 +229,7 @@ public class ProcessQuery {
 					    					   collectorDBRest.clear();					    					   
 					    					   DBRestInFlight.publishTailPosition();
 					    				   });
-		collectionPendingDBRest = !result;
+		collectionPendingDBRest.set(!result);
 		return result;
 	}
 

@@ -9,7 +9,7 @@ RUN mvn -q compile
 RUN mv src/main/webapp/WEB-INF/configuration/gemini-postgres.conf src/main/webapp/WEB-INF/configuration/Base.conf
 RUN mvn -q war:war
 
-FROM openjdk:11.0.3-jre-stretch
+FROM openjdk:11.0.3-jdk-stretch
 
 WORKDIR /resin
 RUN curl -sL http://caucho.com/download/resin-4.0.61.tar.gz | tar xz --strip-components=1

@@ -5,9 +5,9 @@
 
 // Database connection
 // http://www.php.net/manual/en/ref.pdo-mysql.php
-$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', array(
+$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', [
     PDO::ATTR_PERSISTENT => true
-));
+]);
   
 // Define query and store result in array.
 $arr = $pdo->query( 'SELECT id, message FROM Fortune' )->fetchAll(PDO::FETCH_KEY_PAIR); 

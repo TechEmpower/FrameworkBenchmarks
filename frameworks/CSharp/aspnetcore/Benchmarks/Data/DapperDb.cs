@@ -77,20 +77,16 @@ namespace Benchmarks.Data
                     results[i] = await ReadSingleRow(db);
                 }
 
-                // postgres has problems with deadlocks when these aren't sorted
-                Array.Sort<World>(results, WorldSortComparison);
-
                 for (int i = 0; i < count; i++)
                 {
-                    var strings = BatchUpdateString.Strings[i];
                     var randomNumber = _random.Next(1, 10001);
-                    parameters[strings.Random] = randomNumber;
-                    parameters[strings.Id] = results[i].Id;
+                    parameters[$"@Random_{i}"] = randomNumber;
+                    parameters[$"@Id_{i}"] = results[i].Id;
 
                     results[i].RandomNumber = randomNumber;
                 }
 
-                await db.ExecuteAsync(BatchUpdateString.Strings[results.Length - 1].UpdateQuery, parameters);
+                await db.ExecuteAsync(BatchUpdateString.Query(count), parameters);
                 return results;
             }
 

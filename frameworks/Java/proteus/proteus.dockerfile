@@ -4,7 +4,7 @@ COPY pom.xml pom.xml
 COPY src src
 RUN mvn package -q --update-snapshots
 
-FROM openjdk:11.0.3-jre-slim
+FROM openjdk:11.0.3-jdk-slim
 WORKDIR /proteus
 COPY --from=maven /proteus/target/proteus-techempower-1.0.0.jar app.jar
 COPY --from=maven /proteus/target/lib lib

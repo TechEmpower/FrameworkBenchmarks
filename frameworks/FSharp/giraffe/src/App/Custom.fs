@@ -11,6 +11,7 @@ open System.IO
 
 let private DefaultCapacity = 1386
 let private MaxBuilderSize = DefaultCapacity * 3
+let private BufferSize = 27
 
 type MemoryStreamCache = 
     
@@ -108,7 +109,7 @@ let application : HttpHandler =
 
     routes' [
         "/plaintext", text' "Hello, World!"
-        "/json", json' { JsonStructMessage.message = "Hello, World!" }
+        "/json", json' struct {| message = "Hello, World!" |}
         "/fortunes", fortunes'
     ]
 

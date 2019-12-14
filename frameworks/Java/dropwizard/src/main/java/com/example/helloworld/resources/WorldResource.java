@@ -31,13 +31,13 @@ public class WorldResource {
 	@GET
 	@Path("/query")
 	@UnitOfWork(transactional = false,  readOnly = true) // Needed only for Hibernate - not for Mongo or JDBI
-	public Object dbTest(@QueryParam("queries") String queries) {
+	public Object query(@QueryParam("queries") String queries) {
 		int totalQueries = Helper.getQueries(queries); // Optional check is done inside
-		final World[] worlds = new World[totalQueries];
+		int[] ids = new int[totalQueries];
 		for (int i = 0; i < totalQueries; i++) {
-			worlds[i] = worldDAO.findById(Helper.randomWorld());
+			ids[i] = Helper.randomWorld();
 		}
-		return worlds;
+		return worldDAO.findById(ids);
 	}
 
 	@GET

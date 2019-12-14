@@ -16,7 +16,6 @@ public class Fortune implements Comparable<Fortune> {
     @Column(name = "message", nullable = false)
     private String message;
 
-    @SuppressWarnings("unused")
     public Fortune() {}
     
     public Fortune(String message) {

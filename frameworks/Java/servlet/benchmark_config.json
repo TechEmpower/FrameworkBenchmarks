@@ -20,8 +20,9 @@
       "notes": "",
       "versus": "servlet"
     },
-    "afterburner": {
+    "lib-native": {
       "json_url": "/json",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -35,25 +36,7 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "servlet",
-      "notes": "Jackson with Afterburner module",
-      "versus": "servlet"
-    },
-    "cjs": {
-      "json_url": "/json",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "None",
-      "framework": "None",
-      "language": "Java",
-      "flavor": "None",
-      "orm": "Raw",
-      "platform": "Servlet",
-      "webserver": "Resin",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "servlet",
-      "notes": "Jackson with custom serialization",
+      "notes": "Using compiled native Resin library",
       "versus": "servlet"
     },
     "mysql": {

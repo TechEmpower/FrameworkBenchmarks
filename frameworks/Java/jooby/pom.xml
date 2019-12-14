@@ -17,7 +17,7 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>1.6.0</jooby.version>
+    <jooby.version>1.6.2</jooby.version>
     <postgresql.version>42.2.5</postgresql.version>
     <rocker.touchFile>/dev/null</rocker.touchFile>
     <maven.compiler.source>11</maven.compiler.source>

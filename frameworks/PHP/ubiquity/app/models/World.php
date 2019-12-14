@@ -1,21 +1,23 @@
 <?php
-
 namespace models;
 
 class World {
-	
+
 	/**
+	 *
 	 * @id
 	 * @column("name"=>"id","nullable"=>false,"dbType"=>"int(11)")
-	 **/
-	private $id;
-	
+	 */
+	public $id;
+
 	/**
+	 *
 	 * @column("name"=>"randomNumber","nullable"=>false,"dbType"=>"int(11)")
-	 **/
-	private $randomNumber;
-	
+	 */
+	public $randomNumber;
+
 	/**
+	 *
 	 * @return mixed
 	 */
 	public function getId() {
@@ -23,6 +25,7 @@ class World {
 	}
 
 	/**
+	 *
 	 * @return mixed
 	 */
 	public function getRandomNumber() {
@@ -30,6 +33,7 @@ class World {
 	}
 
 	/**
+	 *
 	 * @param mixed $id
 	 */
 	public function setId($id) {
@@ -37,11 +41,11 @@ class World {
 	}
 
 	/**
+	 *
 	 * @param mixed $randomNumber
 	 */
 	public function setRandomNumber($randomNumber) {
 		$this->randomNumber = $randomNumber;
 	}
-
 }
 

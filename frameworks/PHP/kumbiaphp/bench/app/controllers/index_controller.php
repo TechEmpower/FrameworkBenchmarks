@@ -10,7 +10,7 @@ class IndexController extends AppController
     public function index()
     {
         View::select(null, null);
-        header('Content-type: text/plain');
+        header('Content-Type: text/plain');
         echo 'Hello, World!';
     }
 }

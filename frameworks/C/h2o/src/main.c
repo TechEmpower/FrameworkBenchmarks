@@ -46,9 +46,16 @@
 	"[-q <max enqueued database queries per thread>] [-r <root directory>] " \
 	"[-s <HTTPS port>] [-t <thread number>]\n"
 
+typedef struct {
+	list_t l;
+	void *arg;
+	void (*task)(thread_context_t *, void *);
+} task_t;
+
 static void free_global_data(global_data_t *global_data);
 static int initialize_global_data(const config_t *config, global_data_t *global_data);
 static int parse_options(int argc, char *argv[], config_t *config);
+static void run_postinitialization_tasks(list_t **tasks, thread_context_t *ctx);
 static void set_default_options(config_t *config);
 static void setup_process(void);
 
@@ -119,13 +126,13 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 		printf("Number of processors: %zu\nMaximum cache line size: %zu\n",
 		       h2o_numproc(),
 		       global_data->memory_alignment);
-		return EXIT_SUCCESS;
+		return 0;
 	}
 
 error:
 	close(global_data->signal_fd);
 	free_global_data(global_data);
-	return EXIT_FAILURE;
+	return 1;
 }
 
 static int parse_options(int argc, char *argv[], config_t *config)
@@ -151,7 +158,7 @@ static int parse_options(int argc, char *argv[], config_t *config)
 		\
 		if (errno) { \
 			print_library_error(__FILE__, __LINE__, "strtoll", errno); \
-			return EXIT_FAILURE; \
+			return 1; \
 		} \
 		\
 		(out) = n; \
@@ -201,14 +208,26 @@ static int parse_options(int argc, char *argv[], config_t *config)
 				break;
 			default:
 				fprintf(stderr, USAGE_MESSAGE, *argv);
-				return EXIT_FAILURE;
+				return 1;
 
 #undef PARSE_NUMBER
 		}
 	}
 
 	set_default_options(config);
-	return EXIT_SUCCESS;
+	return 0;
+}
+
+static void run_postinitialization_tasks(list_t **tasks, thread_context_t *ctx)
+{
+	if (*tasks)
+		do {
+			task_t * const t = H2O_STRUCT_FROM_MEMBER(task_t, l, *tasks);
+
+			*tasks = (*tasks)->next;
+			t->task(ctx, t->arg);
+			free(t);
+		} while (*tasks);
 }
 
 static void set_default_options(config_t *config)
@@ -253,20 +272,34 @@ static void setup_process(void)
 	CHECK_ERRNO(setrlimit, RLIMIT_NOFILE, &rlim);
 }
 
+void add_postinitialization_task(void (*task)(struct thread_context_t *, void *),
+                                 void *arg,
+                                 list_t **postinitialization_tasks)
+{
+	task_t * const t = h2o_mem_alloc(sizeof(*t));
+
+	memset(t, 0, sizeof(*t));
+	t->l.next = *postinitialization_tasks;
+	t->arg = arg;
+	t->task = task;
+	*postinitialization_tasks = &t->l;
+}
+
 int main(int argc, char *argv[])
 {
 	config_t config;
 	int rc = EXIT_FAILURE;
 
-	if (parse_options(argc, argv, &config) == EXIT_SUCCESS) {
+	if (!parse_options(argc, argv, &config)) {
 		global_data_t global_data;
 
-		if (initialize_global_data(&config, &global_data) == EXIT_SUCCESS) {
+		if (!initialize_global_data(&config, &global_data)) {
 			thread_context_t ctx;
 
 			setup_process();
 			start_threads(global_data.global_thread_data);
 			initialize_thread_context(global_data.global_thread_data, true, &ctx);
+			run_postinitialization_tasks(&global_data.postinitialization_tasks, &ctx);
 			event_loop(&ctx);
 			// Even though this is global data, we need to close
 			// it before the associated event loop is cleaned up.

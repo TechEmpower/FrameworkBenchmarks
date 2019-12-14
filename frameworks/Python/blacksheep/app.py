@@ -3,20 +3,10 @@ import ujson
 import asyncpg
 from random import randint
 from multiprocessing import cpu_count
-from blacksheep.server import Application, ServerOptions
-from blacksheep import Response, Headers, Header, Content
-from jinja2 import Environment, PackageLoader, select_autoescape
+from blacksheep.server import Application
+from blacksheep import Response, Header, Content
+from jinja2 import Template
 json_dumps = ujson.dumps
-
-
-_is_travis = os.environ.get('TRAVIS') == 'true'
-
-workers = cpu_count()
-if _is_travis:
-    workers = 2
-
-
-db_pool = None
 
 
 async def configure_db(app):
@@ -30,16 +20,17 @@ async def configure_db(app):
     )
 
 
-jinja_env = Environment(
-    loader=PackageLoader('app', 'templates'),
-    autoescape=select_autoescape(['html', 'xml'])
-)
-fortune_template = jinja_env.get_template('fortune.html')
+def load_fortunes_template():
+    path = os.path.join('templates', 'fortune.html')
+    with open(path, 'r') as template_file:
+        template_text = template_file.read()
+        return Template(template_text)
 
 
-app = Application(options=ServerOptions(host='', port=8080, processes_count=workers))
+db_pool = None
+fortune_template = load_fortunes_template()
 
-
+app = Application()
 app.on_start += configure_db
 
 
@@ -120,9 +111,9 @@ async def fortunes_test(request):
     fortunes.append([0, 'Additional fortune added at request time.'])
     fortunes.sort(key=lambda x: x[1])
 
-    return Response(200, Headers([
+    return Response(200, [
         Header(b'Cache-Control', b'no-cache')
-    ]), content=Content(b'text/html; charset=utf-8', fortune_template.render(fortunes=fortunes).encode('utf8')))
+    ], content=Content(b'text/html; charset=utf-8', fortune_template.render(fortunes=fortunes).encode('utf8')))
 
 
 @app.route('/updates')
@@ -152,6 +143,3 @@ async def plaintext_test(request):
     """Test type 6: Plaintext"""
 
     return Response(200, content=Content(b'text/plain', b'Hello, World!'))
-
-
-app.start()

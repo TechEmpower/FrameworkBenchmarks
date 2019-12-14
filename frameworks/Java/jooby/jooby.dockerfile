@@ -5,7 +5,7 @@ COPY src src
 COPY public public
 RUN mvn package -q
 
-FROM openjdk:11.0.3-jre-slim
+FROM openjdk:11.0.3-jdk-slim
 WORKDIR /jooby
 COPY --from=maven /jooby/target/jooby-1.0.jar app.jar
 COPY conf conf

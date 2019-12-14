@@ -8,7 +8,7 @@ RUN mvn -q clean install
 WORKDIR /officefloor/src/woof_benchmark_thread_affinity
 RUN mvn -q clean package
 
-FROM openjdk:11.0.3-jre-slim
+FROM openjdk:11.0.3-jdk-slim
 RUN apt-get update && apt-get install -y libjna-java
 WORKDIR /officefloor
 COPY --from=maven /officefloor/src/woof_benchmark_thread_affinity/target/woof_benchmark_thread_affinity-1.0.0.jar server.jar

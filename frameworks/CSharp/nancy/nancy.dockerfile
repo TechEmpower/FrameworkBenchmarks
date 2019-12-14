@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-sdk-stretch AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:2.1 AS build
 WORKDIR /app
 COPY src .
 RUN dotnet publish -c Release -f net471 -o out

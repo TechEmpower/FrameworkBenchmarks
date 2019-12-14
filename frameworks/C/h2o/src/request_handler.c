@@ -61,11 +61,12 @@ static const char *status_code_to_string(http_status_code_t status_code)
 void cleanup_request_handlers(global_data_t *global_data)
 {
 	cleanup_fortunes_handler(global_data);
+	cleanup_world_handlers(global_data);
 }
 
 void free_request_handler_thread_data(request_handler_thread_data_t *request_handler_thread_data)
 {
-	free_world_handler_thread_data(request_handler_thread_data);
+	IGNORE_FUNCTION_PARAMETER(request_handler_thread_data);
 }
 
 const char *get_query_param(const char *query,
@@ -97,7 +98,7 @@ void initialize_request_handler_thread_data(
 		const config_t *config, request_handler_thread_data_t *request_handler_thread_data)
 {
 	IGNORE_FUNCTION_PARAMETER(config);
-	initialize_world_handler_thread_data(request_handler_thread_data);
+	IGNORE_FUNCTION_PARAMETER(request_handler_thread_data);
 }
 
 void initialize_request_handlers(const config_t *config,
@@ -108,7 +109,7 @@ void initialize_request_handlers(const config_t *config,
 	initialize_fortunes_handler(config, global_data, hostconf, log_handle);
 	initialize_json_serializer_handler(hostconf, log_handle);
 	initialize_plaintext_handler(hostconf, log_handle);
-	initialize_world_handlers(global_data, hostconf, log_handle);
+	initialize_world_handlers(config, global_data, hostconf, log_handle);
 }
 
 void register_request_handler(const char *path,
@@ -134,11 +135,11 @@ int send_json_response(json_generator_t *gen, bool free_gen, h2o_req_t *req)
 {
 	const unsigned char *buf;
 	size_t len;
-	int ret = EXIT_FAILURE;
+	int ret = 1;
 
 	if (yajl_gen_get_buf(gen->gen, &buf, &len) == yajl_gen_status_ok) {
 		set_default_response_param(JSON, len, req);
-		ret = EXIT_SUCCESS;
+		ret = 0;
 
 		if (free_gen) {
 			thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,

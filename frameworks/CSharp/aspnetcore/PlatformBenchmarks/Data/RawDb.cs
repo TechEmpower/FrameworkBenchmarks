@@ -70,29 +70,23 @@ namespace PlatformBenchmarks
 
         public async Task<World[]> LoadMultipleQueriesRows(int count)
         {
+            var result = new World[count];
+
             using (var db = _dbProviderFactory.CreateConnection())
             {
                 db.ConnectionString = _connectionString;
                 await db.OpenAsync();
-                return await LoadMultipleRows(count, db);
-            }
-
-        }
-
-        private async Task<World[]> LoadMultipleRows(int count, DbConnection db)
-        {
-            using (var cmd = CreateReadCommand(db))
-            {
-                cmd.Parameters["@Id"].Value = _random.Next(1, 10001);
-
-                var result = new World[count];
-                for (int i = 0; i < result.Length; i++)
+                using (var cmd = CreateReadCommand(db))
                 {
-                    result[i] = await ReadSingleRow(db, cmd);
-                    cmd.Parameters["@Id"].Value = _random.Next(1, 10001);
+                    for (int i = 0; i < count; i++)
+                    {
+                        result[i] = await ReadSingleRow(db, cmd);
+                        cmd.Parameters["@Id"].Value = _random.Next(1, 10001);
+                    }
                 }
-                return result;
             }
+
+            return result;
         }
 
         public async Task<World[]> LoadMultipleUpdatesRows(int count)
@@ -102,23 +96,27 @@ namespace PlatformBenchmarks
                 db.ConnectionString = _connectionString;
                 await db.OpenAsync();
 
-                var results = await LoadMultipleRows(count, db);
-
-                // Postgres has problems with deadlocks when these aren't sorted
-                Array.Sort<World>(results, WorldSortComparison);
-
                 using (var updateCmd = db.CreateCommand())
+                using (var queryCmd = CreateReadCommand(db))
                 {
-                    for (int i = 0; i < results.Length; i++)
+                    var results = new World[count];
+                    for (int i = 0; i < count; i++)
                     {
-                        var strings = BatchUpdateString.Strings[i];
+                        results[i] = await ReadSingleRow(db, queryCmd);
+                        queryCmd.Parameters["@Id"].Value = _random.Next(1, 10001);
+                    }
+
+                    updateCmd.CommandText = BatchUpdateString.Query(count);
+
+                    for (int i = 0; i < count; i++)
+                    {
                         var id = updateCmd.CreateParameter();
-                        id.ParameterName = strings.Id;
+                        id.ParameterName = $"@Id_{i}";
                         id.DbType = DbType.Int32;
                         updateCmd.Parameters.Add(id);
 
                         var random = updateCmd.CreateParameter();
-                        random.ParameterName = strings.Random;
+                        random.ParameterName = $"@Random_{i}";
                         random.DbType = DbType.Int32;
                         updateCmd.Parameters.Add(random);
 
@@ -128,9 +126,7 @@ namespace PlatformBenchmarks
                         results[i].RandomNumber = randomNumber;
                     }
 
-                    updateCmd.CommandText = BatchUpdateString.Strings[results.Length - 1].UpdateQuery;
                     await updateCmd.ExecuteNonQueryAsync();
-
                     return results;
                 }
             }

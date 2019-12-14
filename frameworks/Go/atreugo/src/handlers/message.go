@@ -12,6 +12,26 @@ type Message struct {
 	Message string `json:"message"`
 }
 
+var messageJSONStr = []byte(`{"message": ""}`)
+
+// MessagePool ...
+var MessagePool = sync.Pool{
+	New: func() interface{} {
+		return new(Message)
+	},
+}
+
+// AcquireMessage returns new message from pool
+func AcquireMessage() *Message {
+	return MessagePool.Get().(*Message)
+}
+
+// ReleaseMessage resets the message and return it to the pool
+func ReleaseMessage(m *Message) {
+	m.Message = ""
+	MessagePool.Put(m)
+}
+
 // MarshalJSONObject encodes the message as JSON
 func (m *Message) MarshalJSONObject(dec *gojay.Encoder) {
 	dec.AddStringKey("message", m.Message)
@@ -24,18 +44,5 @@ func (m *Message) IsNil() bool {
 
 // MarshalSJSON marshals the object as json
 func (m Message) MarshalSJSON() ([]byte, error) {
-	return sjson.SetBytesOptions([]byte(`{"message": ""}`), "message", m.Message, &sjson.Options{Optimistic: true})
-	// &sjson.Options{Optimistic: true}
-}
-
-// MessagePool *sync.Pool
-var MessagePool *sync.Pool
-
-// InitMessagePool ()
-func InitMessagePool() {
-	MessagePool = &sync.Pool{
-		New: func() interface{} {
-			return &Message{}
-		},
-	}
+	return sjson.SetBytesOptions(messageJSONStr, "message", m.Message, &sjson.Options{Optimistic: true})
 }

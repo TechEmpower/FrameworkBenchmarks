@@ -35,7 +35,9 @@
 #include "error.h"
 #include "event_loop.h"
 #include "global_data.h"
+#include "request_handler.h"
 #include "thread.h"
+#include "tls.h"
 #include "utility.h"
 
 static void *run_thread(void *arg);
@@ -118,6 +120,8 @@ global_thread_data_t *initialize_global_thread_data(const config_t *config,
 			ret[i].global_data = global_data;
 		}
 	}
+	else
+		STANDARD_ERROR("aligned_alloc");
 
 	return ret;
 }
@@ -147,8 +151,10 @@ void start_threads(global_thread_data_t *global_thread_data)
 	const size_t cpusetsize = CPU_ALLOC_SIZE(num_cpus);
 	cpu_set_t * const cpuset = CPU_ALLOC(num_cpus);
 
-	if (!cpuset)
+	if (!cpuset) {
+		STANDARD_ERROR("CPU_ALLOC");
 		abort();
+	}
 
 	CHECK_ERROR(pthread_attr_init, &attr);
 	// The first thread context is used by the main thread.

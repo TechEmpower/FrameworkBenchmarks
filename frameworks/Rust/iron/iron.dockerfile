@@ -1,4 +1,4 @@
-FROM rust:1.29.1
+FROM rust:1.36
 
 ADD ./ /iron
 WORKDIR /iron

@@ -41,6 +41,7 @@
 
 #define ID_FIELD_NAME "id"
 #define FORTUNE_TABLE_NAME "Fortune"
+#define FORTUNE_QUERY "SELECT * FROM " FORTUNE_TABLE_NAME ";"
 #define MAX_IOVEC 64
 #define MESSAGE_FIELD_NAME "message"
 #define NEW_FORTUNE_ID "0"
@@ -193,35 +194,31 @@ static int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req)
 	thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
 	                                                      event_loop.h2o_ctx,
 	                                                      req->conn->ctx);
-	fortune_ctx_t * const fortune_ctx = calloc(1, sizeof(*fortune_ctx));
+	fortune_ctx_t * const fortune_ctx = h2o_mem_alloc(sizeof(*fortune_ctx));
+	fortune_t * const fortune = h2o_mem_alloc_pool(&req->pool, sizeof(*fortune));
+	fortune_ctx_t ** const p = h2o_mem_alloc_shared(&req->pool, sizeof(*p), cleanup_request);
 
-	if (fortune_ctx) {
-		fortune_t * const fortune = h2o_mem_alloc_pool(&req->pool, sizeof(*fortune));
-		fortune_ctx_t ** const p = h2o_mem_alloc_shared(&req->pool, sizeof(*p), cleanup_request);
+	*p = fortune_ctx;
+	memset(fortune, 0, sizeof(*fortune));
+	fortune->id.base = NEW_FORTUNE_ID;
+	fortune->id.len = sizeof(NEW_FORTUNE_ID) - 1;
+	fortune->message.base = NEW_FORTUNE_MESSAGE;
+	fortune->message.len = sizeof(NEW_FORTUNE_MESSAGE) - 1;
+	memset(fortune_ctx, 0, sizeof(*fortune_ctx));
+	fortune_ctx->generator.proceed = complete_fortunes;
+	fortune_ctx->num_result = 1;
+	fortune_ctx->param.command = FORTUNE_TABLE_NAME;
+	fortune_ctx->param.on_error = on_fortune_error;
+	fortune_ctx->param.on_result = on_fortune_result;
+	fortune_ctx->param.on_timeout = on_fortune_timeout;
+	fortune_ctx->param.flags = IS_PREPARED;
+	fortune_ctx->req = req;
+	fortune_ctx->result = &fortune->l;
 
-		*p = fortune_ctx;
-		memset(fortune, 0, sizeof(*fortune));
-		fortune->id.base = NEW_FORTUNE_ID;
-		fortune->id.len = sizeof(NEW_FORTUNE_ID) - 1;
-		fortune->message.base = NEW_FORTUNE_MESSAGE;
-		fortune->message.len = sizeof(NEW_FORTUNE_MESSAGE) - 1;
-		fortune_ctx->generator.proceed = complete_fortunes;
-		fortune_ctx->num_result = 1;
-		fortune_ctx->param.command = FORTUNE_TABLE_NAME;
-		fortune_ctx->param.on_error = on_fortune_error;
-		fortune_ctx->param.on_result = on_fortune_result;
-		fortune_ctx->param.on_timeout = on_fortune_timeout;
-		fortune_ctx->param.flags = IS_PREPARED;
-		fortune_ctx->req = req;
-		fortune_ctx->result = &fortune->l;
-
-		if (execute_query(ctx, &fortune_ctx->param)) {
-			fortune_ctx->cleanup = true;
-			send_service_unavailable_error(DB_REQ_ERROR, req);
-		}
+	if (execute_query(ctx, &fortune_ctx->param)) {
+		fortune_ctx->cleanup = true;
+		send_service_unavailable_error(DB_REQ_ERROR, req);
 	}
-	else
-		send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, req);
 
 	return 0;
 }
@@ -471,7 +468,7 @@ void initialize_fortunes_handler(const config_t *config,
 	if (template) {
 		global_data->request_handler_data.fortunes_template = template;
 		add_prepared_statement(FORTUNE_TABLE_NAME,
-		                       "SELECT * FROM " FORTUNE_TABLE_NAME ";",
+		                       FORTUNE_QUERY,
 		                       &global_data->prepared_statements);
 		register_request_handler("/fortunes", fortunes, hostconf, log_handle);
 	}

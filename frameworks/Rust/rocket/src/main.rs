@@ -1,16 +1,21 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
 extern crate rand;
-#[macro_use] extern crate rocket;
+#[macro_use]
+extern crate rocket;
 extern crate rocket_contrib;
-#[macro_use] extern crate diesel;
-#[macro_use] extern crate serde_derive;
+#[macro_use]
+extern crate diesel;
+#[macro_use]
+extern crate serde_derive;
 
 use diesel::prelude::*;
 use diesel::result::Error;
 use rand::Rng;
 use rocket_contrib::json::Json;
-use rocket_contrib::templates::Template;
+use rocket::config::{Config, LoggingLevel, Environment};
+use rocket::response::content;
+use yarte::Template;
 
 mod db;
 mod models;
@@ -28,7 +33,7 @@ fn plaintext() -> &'static str {
 #[get("/json")]
 fn json() -> Json<models::Message> {
     let message = models::Message {
-        message: "Hello, World!"
+        message: "Hello, World!",
     };
     Json(message)
 }
@@ -68,29 +73,35 @@ fn queries(conn: db::DbConn, q: u16) -> Json<Vec<models::World>> {
         let result = world
             .filter(id.eq(random_number()))
             .first::<models::World>(&*conn)
-            .expect("error loading world");       
+            .expect("error loading world");
         results.push(result);
     }
 
     Json(results)
 }
 
+#[derive(Template)]
+#[template(path = "fortunes.html.hbs")]
+pub struct FortunesTemplate<'a> {
+    pub fortunes: &'a Vec<models::Fortune>
+}
+
 #[get("/fortunes")]
-fn fortunes(conn: db::DbConn) -> Template {
+fn fortunes(conn: db::DbConn) -> content::Html<String> {
     use schema::fortune::dsl::*;
 
-    let mut context = fortune
+    let mut fortunes = fortune
         .load::<models::Fortune>(&*conn)
         .expect("error loading fortunes");
-    
-    context.push(models::Fortune { 
-        id: 0,
-        message: "Additional fortune added at request time.".to_string()
-    });
-    
-    context.sort_by(|a, b| a.message.cmp(&b.message));
 
-    Template::render("fortunes", &context)
+    fortunes.push(models::Fortune {
+        id: 0,
+        message: "Additional fortune added at request time.".to_string(),
+    });
+
+    fortunes.sort_by(|a, b| a.message.cmp(&b.message));
+
+    content::Html(FortunesTemplate{fortunes: &fortunes}.call().expect("error rendering template"))
 }
 
 #[get("/updates")]
@@ -135,18 +146,27 @@ fn updates(conn: db::DbConn, q: u16) -> Json<Vec<models::World>> {
 }
 
 fn main() {
-    rocket::ignite()
-        .mount("/", routes![
-            json,
-            plaintext,
-            db,
-            queries,
-            queries_empty,
-            fortunes,
-            updates,
-            updates_empty,
-        ])
+    let mut config = Config::build(Environment::Production)
+        .address("0.0.0.0")
+        .port(8000)
+        .log_level(LoggingLevel::Off)
+        .workers((num_cpus::get()*16) as u16)
+        .expect("failed to generate config");
+    config.set_secret_key("dY+Rj2ybjGxKetLawKGSWi6EzESKejvENbQ3stffZg0=").expect("failed to set secret");
+    rocket::custom(config)
+        .mount(
+            "/",
+            routes![
+                json,
+                plaintext,
+                db,
+                queries,
+                queries_empty,
+                fortunes,
+                updates,
+                updates_empty,
+            ],
+        )
         .manage(db::init_pool())
-        .attach(Template::fairing())
         .launch();
 }
