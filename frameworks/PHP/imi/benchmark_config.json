@@ -25,7 +25,7 @@
         "notes": "",
         "versus": "Swoole"
       },
-      "queryBuilder": {
+      "query-builder": {
         "db_url": "/dbQueryBuilder",
         "query_url": "/queryQueryBuilder?queries=",
         "update_url": "/updateQueryBuilder?queries=",
