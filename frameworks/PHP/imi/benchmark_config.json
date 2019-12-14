@@ -49,6 +49,7 @@
         "db_url": "/dbRaw",
         "query_url": "/queryRaw?queries=",
         "update_url": "/updateRaw?queries=",
+        "fortune_url": "/fortunesRaw",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
