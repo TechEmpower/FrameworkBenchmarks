@@ -7,7 +7,7 @@ USER root
 WORKDIR /hexagon
 
 COPY src src
-COPY build.gradle.kts.kts.kts.kts.kts build.gradle.kts.kts.kts.kts.kts
+COPY build.gradle build.gradle
 COPY gradle.properties gradle.properties
 RUN gradle --quiet --exclude-task test
 
