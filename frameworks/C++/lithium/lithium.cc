@@ -45,13 +45,6 @@ int main(int argc, char* argv[]) {
     s::id(s::auto_increment, s::primary_key) = int(),
     s::randomNumber = int());
 
-  // { // init.
-
-  //   auto c = random_numbers.connect();
-  //   c.drop_table_if_exists().create_table_if_not_exists();
-  //   for (int i = 0; i < 10000; i++)
-  //     c.insert(s::randomNumber = i);
-  // }
   http_api my_api;
 
   my_api.get("/plaintext") = [&](http_request& request, http_response& response) {
@@ -68,9 +61,7 @@ int main(int argc, char* argv[]) {
 
   my_api.get("/queries") = [&](http_request& request, http_response& response) {
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
-    //std::cout << N_str << std::endl;
     int N = atoi(N_str.c_str());
-    //int N = atoi(request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1").c_str());
     
     N = std::max(1, std::min(N, 500));
     
@@ -84,9 +75,7 @@ int main(int argc, char* argv[]) {
 
   my_api.get("/updates") = [&](http_request& request, http_response& response) {
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
-    //std::cout << N_str << std::endl;
     int N = atoi(N_str.c_str());
-    //int N = atoi(request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1").c_str());
     N = std::max(1, std::min(N, 500));
     
     auto c = random_numbers.connect(request.yield);
