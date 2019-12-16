@@ -10,46 +10,23 @@ mainClassName = 'app.BenchmarkMain'
 
 repositories {
     mavenCentral()
-
-    //snapshot repository - not actually needed to run this example
-    maven {
-        url 'http://oss.sonatype.org/content/repositories/snapshots'
-    }
 }
 
 dependencies {
     // Framework
-    def framework_version = '0.9.14'
-    compile "net.javapla.jawn:jawn:${framework_version}"
+    def framework_version = '1.0.0'
+    implementation "net.javapla.jawn:jawn:${framework_version}"
+    implementation "net.javapla.jawn:jawn-database-hikari:${framework_version}"
+    
 
 
     // Database
-    compile 'org.postgresql:postgresql:42.2.5'
-
-    //Logging
-    runtime group: 'ch.qos.logback', name: 'logback-classic', version: '1.3.0-alpha4' exclude group: 'org.slf4j'
+    compile 'org.postgresql:postgresql:42.2.8'
 }
 
 /* ****************** */
 /*    Application     */
 /* ****************** */
-run {
-    if(project.hasProperty('args')){
-        args project.args.split(',')
-    }
-    jvmArgs = ['-XX:+UseParallelGC','-XX:+AggressiveOpts']//['-XX:+UseNUMA','-XX:+UseParallelGC','-XX:+AggressiveOpts']
-}
-applicationDistribution.from("webapp") {
-    into "webapp"
-}
-
-/* ****************** */
-/*    Eclipse         */
-/* ****************** */
-eclipse {
-    classpath {
-        // we need the output dir to be the same as the one gradle uses when running Jetty
-        // or else the dynamic loading does not apply
-        defaultOutputDir = file('build/classes/main')
-    }
+application {
+    applicationDefaultJvmArgs = ['-server', '-XX:+UseParallelGC','-XX:+UseNUMA', '-XX:+UseStringDeduplication','-Xms4g', '-Xmx4g']
 }

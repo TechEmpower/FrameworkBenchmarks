@@ -77,7 +77,7 @@ internal class BenchmarkSqlStore(engine: String) : BenchmarkStore {
     }
 
     override fun findAllFortunes(): List<Fortune> {
-        var fortunes = listOf<Fortune>()
+        val fortunes = mutableListOf<Fortune>()
 
         dataSource.connection.use { con: Connection ->
             val rs = con.prepareStatement(SELECT_ALL_FORTUNES).executeQuery()
@@ -89,7 +89,7 @@ internal class BenchmarkSqlStore(engine: String) : BenchmarkStore {
     }
 
     override fun findWorlds(count: Int): List<World> {
-        var worlds: List<World> = listOf()
+        val worlds: MutableList<World> = mutableListOf()
 
         dataSource.connection.use { con: Connection ->
             val stmtSelect = con.prepareStatement(SELECT_WORLD)
@@ -107,7 +107,7 @@ internal class BenchmarkSqlStore(engine: String) : BenchmarkStore {
     }
 
     override fun replaceWorlds(count: Int): List<World> {
-        var worlds: List<World> = listOf()
+        val worlds: MutableList<World> = mutableListOf()
 
         dataSource.connection.use { con: Connection ->
             val stmtSelect = con.prepareStatement(SELECT_WORLD)
