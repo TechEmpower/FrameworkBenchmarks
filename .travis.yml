@@ -94,7 +94,9 @@ env:
     - "TESTDIR=Java/wicket"
     - "TESTDIR=Java/wildfly-ee"
     - "TESTDIR=Java/wizzardo-http"
-    - "TESTLANG=JavaScript"
+    - 'TESTDIR="JavaScript/0http JavaScript/express JavaScript/fastify JavaScript/hapi JavaScript/koa"'
+    - 'TESTDIR="JavaScript/nodejs JavaScript/polkadot JavaScript/restana JavaScript/restify JavaScript/sailsjs"'
+    - 'TESTDIR="JavaScript/es4x JavaScript/ringojs"'
     - "TESTLANG=Kotlin"
     - "TESTLANG=Lisp"
     - "TESTLANG=Lua"
