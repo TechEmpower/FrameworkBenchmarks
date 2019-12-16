@@ -10,7 +10,7 @@
     <version>2.3.0</version>
   </parent>
 
-  <artifactId>jooby2</artifactId>
+  <artifactId>jooby</artifactId>
   <groupId>com.techempower</groupId>
   <version>2.0</version>
 
@@ -75,7 +75,7 @@
   </dependencies>
 
   <build>
-    <finalName>jooby-2x</finalName>
+    <finalName>jooby</finalName>
     <plugins>
       <plugin>
         <groupId>com.fizzed</groupId>
