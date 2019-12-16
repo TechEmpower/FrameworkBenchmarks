@@ -31,6 +31,17 @@ cp -f ${TROOT}/server.sh script/
 cp -rf ${TROOT}/te-benchmark web/
 sed -i 's|THRD_PSIZ=6|THRD_PSIZ='${SERV_THREADS}'|g' resources/server.prop
 sed -i 's|W_THRD_PSIZ=2|W_THRD_PSIZ='${WRIT_THREADS}'|g' resources/server.prop
+sed -i 's|ENABLE_CRS=true|ENABLE_CRS=false|g' resources/server.prop
+sed -i 's|ENABLE_SEC=true|ENABLE_SEC=false|g' resources/server.prop
+sed -i 's|ENABLE_FLT=true|ENABLE_FLT=false|g' resources/server.prop
+sed -i 's|ENABLE_CNT=false|ENABLE_CNT=true|g' resources/server.prop
+sed -i 's|ENABLE_CNT_MPG=true|ENABLE_CNT_MPG=false|g' resources/server.prop
+sed -i 's|ENABLE_CNT_PTH=true|ENABLE_CNT_PTH=false|g' resources/server.prop
+sed -i 's|ENABLE_CNT_EXT=true|ENABLE_CNT_EXT=false|g' resources/server.prop
+sed -i 's|ENABLE_CNT_RST=false|ENABLE_CNT_RST=true|g' resources/server.prop
+sed -i 's|ENABLE_EXT=false|ENABLE_EXT=true|g' resources/server.prop
+sed -i 's|ENABLE_SCR=true|ENABLE_SCR=false|g' resources/server.prop
+sed -i 's|ENABLE_SWS=true|ENABLE_SWS=false|g' resources/server.prop
 sed -i 's|LOGGING_ENABLED=true|LOGGING_ENABLED=false|g' resources/server.prop
 
 rm -rf web/default web/oauthApp web/flexApp web/markers

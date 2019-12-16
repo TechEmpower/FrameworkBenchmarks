@@ -112,6 +112,7 @@ env:
     - 'TESTDIR="Rust/actix Rust/gotham Rust/hyper Rust/iron Rust/saphir"'
     - 'TESTDIR="Rust/may-minihttp Rust/nickel Rust/rocket"'
     - 'TESTDIR="Rust/rouille Rust/thruster Rust/tokio-minihttp"'
+    - 'TESTDIR="Rust/warp-rust"'
     - 'TESTDIR="Scala/akka-http Scala/blaze Scala/cask Scala/colossus Scala/finagle"'
     - 'TESTDIR="Scala/finatra Scala/finch Scala/http4s"'
     - 'TESTDIR="Scala/play2-scala Scala/youi"'
@@ -131,8 +132,8 @@ before_script:
   - if [ "$RUN_TESTS" ]; then docker build -t techempower/tfb - < ./Dockerfile; fi
 
   # Stop services that would claim ports we may need
-  - sudo service mysql stop
-  - sudo service postgresql stop
+  - sudo service mysql stop || true
+  - sudo service postgresql stop || true
 
 script:
   # run-ci.py runs the diffing to see if travis needs to test this framework. Ideally/eventually,

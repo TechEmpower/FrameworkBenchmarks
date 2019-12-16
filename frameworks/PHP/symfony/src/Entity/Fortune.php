@@ -14,30 +14,10 @@ class Fortune
      * @ORM\Id
      * @ORM\Column(type="integer")
      */
-    public $id;
+    public int $id = 0;
 
     /**
      * @ORM\Column(type="string")
      */
-    public $message;
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function setMessage(string $message): void
-    {
-        $this->message = $message;
-    }
-
-    public function getMessage(): string
-    {
-        return $this->message;
-    }
+    public string $message = '';
 }
