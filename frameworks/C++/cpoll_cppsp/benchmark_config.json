@@ -22,7 +22,6 @@
     },
     "raw": {
       "db_url": "/db",
-      "query_url": "/db?queries=",
       "fortune_url": "/fortune",
       "update_url": "/update?queries=",
       "port": 16969,
@@ -43,7 +42,6 @@
     },
     "postgres-raw": {
       "db_url": "/db_pg_async",
-      "query_url": "/db_pg_async?queries=", 
       "port": 16969,
       "approach": "Realistic",
       "classification": "Platform",
@@ -62,7 +60,6 @@
     },
     "postgres-raw-threadpool": {
       "db_url": "/db_pg_threadpool",
-      "query_url": "/db_pg_threadpool?queries=", 
       "port": 16969,
       "approach": "Realistic",
       "classification": "Platform",
@@ -77,7 +74,8 @@
       "database_os": "Linux",
       "display_name": "cpoll-pool",
       "notes": "Threadpool",
-      "versus": "cpoll_cppsp"
+      "versus": "cpoll_cppsp",
+      "tags": ["broken"]
     }
   }]
 }
