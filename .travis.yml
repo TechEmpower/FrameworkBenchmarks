@@ -19,6 +19,7 @@ env:
     - "TESTDIR=C++/cutelyst"
     - "TESTDIR=C++/libhttpserver"
     - "TESTDIR=C++/silicon"
+    - "TESTDIR=C++/lithium"
     - "TESTDIR=C++/treefrog"
     - "TESTDIR=C++/ulib"
     - "TESTDIR=C++/wt"
