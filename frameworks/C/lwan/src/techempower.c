@@ -160,6 +160,8 @@ static enum lwan_http_status json_response(struct lwan_response *response,
                                            size_t descr_len,
                                            const void *data)
 {
+    lwan_strbuf_grow_to(response->buffer, 128);
+
     if (json_obj_encode(descr, descr_len, data, append_to_strbuf,
                         response->buffer) < 0)
         return HTTP_INTERNAL_ERROR;
@@ -242,7 +244,7 @@ LWAN_HANDLER(queries)
     if (UNLIKELY(!stmt))
         return HTTP_INTERNAL_ERROR;
 
-    struct queries_json qj = {.queries_len = queries};
+    struct queries_json qj = {.queries_len = (size_t)queries};
     struct db_row rows[1] = {{.kind = 'i'}};
     struct db_row results[] = {{.kind = 'i'}, {.kind = '\0'}};
     for (long i = 0; i < queries; i++) {
@@ -281,7 +283,7 @@ static int fortune_compare(const void *a, const void *b)
     size_t min_len = a_len < b_len ? a_len : b_len;
 
     int cmp = memcmp(fortune_a->item.message, fortune_b->item.message, min_len);
-    return cmp == 0 ? -(ssize_t)min_len : cmp;
+    return cmp == 0 ? -(int)(ssize_t)min_len : cmp;
 }
 
 static bool append_fortune(struct coro *coro,
@@ -353,6 +355,8 @@ LWAN_HANDLER(fortunes)
 {
     struct Fortune fortune;
 
+    lwan_strbuf_grow_to(response->buffer, 1500);
+
     if (UNLIKELY(!lwan_tpl_apply_with_buffer(fortune_tpl, response->buffer,
                                              &fortune)))
         return HTTP_INTERNAL_ERROR;
@@ -395,9 +399,9 @@ int main(void)
         if (!db_connection_params.mysql.database)
             lwan_status_critical("No MySQL database provided");
     } else {
-        const char *pragmas[] = {"PRAGMA mmap_size=44040192",
-                                 "PRAGMA journal_mode=OFF",
-                                 "PRAGMA locking_mode=EXCLUSIVE", NULL};
+        static const char *pragmas[] = {"PRAGMA mmap_size=44040192",
+                                        "PRAGMA journal_mode=OFF",
+                                        "PRAGMA locking_mode=EXCLUSIVE", NULL};
         db_connection_params = (struct db_connection_params) {
             .type = DB_CONN_SQLITE,
             .sqlite.path = "techempower.db",
