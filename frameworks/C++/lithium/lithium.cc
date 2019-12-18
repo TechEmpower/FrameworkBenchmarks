@@ -37,6 +37,9 @@ int main(int argc, char* argv[]) {
       mysql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
                      s::password = "benchmarkdbpass", s::port = 3306, s::charset = "utf8");
 
+  int mysql_max_connection = mysql_db.connect()("SELECT @@GLOBAL.max_connections;").read<int>() * 0.75;
+  li::max_mysql_connections_per_thread = (mysql_max_connection / nprocs);
+
   auto fortunes = sql_orm_schema(mysql_db, "Fortune").fields(
     s::id(s::auto_increment, s::primary_key) = int(),
     s::message = std::string());
@@ -112,7 +115,7 @@ int main(int argc, char* argv[]) {
     response.set_header("Content-Type", "text/html; charset=utf-8");
     response.write(ss.str());
   };
-  
+
   http_serve(my_api, port, s::nthreads = nprocs);
   
   return 0;
