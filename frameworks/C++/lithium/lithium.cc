@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
   auto sql_db =
     pgsql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
                    s::password = "benchmarkdbpass", s::port = 5432, s::charset = "utf8");
-  int pgsql_max_connection = 100;//sql_db.connect()("SHOW max_connections;").read<int>() * 0.75;
+  int pgsql_max_connection = 512;
   li::max_pgsql_connections_per_thread = (pgsql_max_connection / nprocs);
 #endif
 
