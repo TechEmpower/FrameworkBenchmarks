@@ -1,5 +1,10 @@
 #include "lithium_http_backend.hh"
-#include "lithium_mysql.hh"
+
+#if TFB_MYSQL
+  #include "lithium_mysql.hh"
+#elif TFB_PGSQL
+  #include "lithium_pgsql.hh"
+#endif
 
 #include "symbols.hh"
 using namespace li;
@@ -26,25 +31,33 @@ int main(int argc, char* argv[]) {
 
   if (argc != 4)
   {
-    std::cerr << "Usage: " << argv[0] << " mysql_host port nprocs" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " sql_host port nprocs" << std::endl;
     return 1;
   }
 
   int port = atoi(argv[2]);
   int nprocs = atoi(argv[3]);
-  
-  auto mysql_db =
-      mysql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
-                     s::password = "benchmarkdbpass", s::port = 3306, s::charset = "utf8");
 
-  int mysql_max_connection = mysql_db.connect()("SELECT @@GLOBAL.max_connections;").read<int>() * 0.75;
+#if TFB_MYSQL
+  auto sql_db =
+    mysql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
+                   s::password = "benchmarkdbpass", s::port = 3306, s::charset = "utf8");
+  int mysql_max_connection = sql_db.connect()("SELECT @@GLOBAL.max_connections;").read<int>() * 0.75;
   li::max_mysql_connections_per_thread = (mysql_max_connection / nprocs);
 
-  auto fortunes = sql_orm_schema(mysql_db, "Fortune").fields(
+#elif TFB_PGSQL
+  auto sql_db =
+    pgsql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
+                   s::password = "benchmarkdbpass", s::port = 5432, s::charset = "utf8");
+  int pgsql_max_connection = 512;
+  li::max_pgsql_connections_per_thread = (pgsql_max_connection / nprocs);
+#endif
+
+  auto fortunes = sql_orm_schema(sql_db, "Fortune").fields(
     s::id(s::auto_increment, s::primary_key) = int(),
     s::message = std::string());
 
-  auto random_numbers = sql_orm_schema(mysql_db, "World").fields(
+  auto random_numbers = sql_orm_schema(sql_db, "World").fields(
     s::id(s::auto_increment, s::primary_key) = int(),
     s::randomNumber = int());
 
