@@ -2,7 +2,7 @@
   "framework": "lithium",
   "tests": [
     {
-      "default": {
+      "mysql": {
         "json_url"       : "/json",
         "db_url"         : "/db",
         "query_url"      : "/queries?N=",
@@ -21,10 +21,34 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Lithium",
+        "display_name": "Lithium-mysql",
+        "notes": "",
+        "versus": "None"
+      },
+      "postgres": {
+        "json_url"       : "/json",
+        "db_url"         : "/db",
+        "query_url"      : "/queries?N=",
+        "fortune_url"    : "/fortunes",
+        "update_url"     : "/updates?N=",
+        "plaintext_url"  : "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "Lithium",
+        "language": "C++",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Lithium-postgres",
         "notes": "",
         "versus": "None"
       }
+      
     }
   ]
 }
