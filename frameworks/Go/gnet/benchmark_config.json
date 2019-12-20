@@ -1,24 +1,23 @@
 {
-  "framework": "octane",
+  "framework": "gnet",
   "tests": [{
     "default": {
       "plaintext_url": "/plaintext",
-      "json_url": "/json",
-      "port": 8000,
-      "approach": "Stripped",
+      "port": 8080,
+      "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
       "framework": "None",
-      "language": "C",
+      "language": "Go",
       "flavor": "None",
       "orm": "Raw",
       "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
+      "display_name": "Gnet",
       "notes": "",
-      "versus": "octane",
-      "tags": ["broken"]
+      "versus": "go"
     }
   }]
 }

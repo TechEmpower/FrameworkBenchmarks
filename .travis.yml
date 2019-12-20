@@ -19,6 +19,7 @@ env:
     - "TESTDIR=C++/cutelyst"
     - "TESTDIR=C++/libhttpserver"
     - "TESTDIR=C++/silicon"
+    - "TESTDIR=C++/lithium"
     - "TESTDIR=C++/treefrog"
     - "TESTDIR=C++/ulib"
     - "TESTDIR=C++/wt"
@@ -32,7 +33,7 @@ env:
     - "TESTLANG=Elixir"
     - "TESTLANG=Erlang"
     - "TESTLANG=FSharp"
-    - 'TESTDIR="Go/chi Go/gin Go/goji Go/aah Go/beego Go/echo"'
+    - 'TESTDIR="Go/chi Go/gin Go/goji Go/aah Go/beego Go/echo Go/gnet"'
     - 'TESTDIR="Go/falcore Go/kami Go/martini Go/revel Go/webgo"'
     - 'TESTDIR="Go/evio Go/fasthttp Go/go-std Go/atreugo Go/gramework"'
     - "TESTLANG=Groovy"
@@ -49,7 +50,9 @@ env:
     - 'TESTDIR="Java/spring Java/spring-webflux Java/t-io Java/tapestry Java/undertow Java/undertow-jersey Java/vertx Java/vertx-web"'
     - 'TESTDIR="Java/javalin Java/jawn Java/ratpack Java/wizzardo-http"'
     - 'TESTDIR="Java/play1 Java/play2-java Java/wildfly-ee"'
-    - "TESTLANG=JavaScript"
+    - 'TESTDIR="JavaScript/0http JavaScript/express JavaScript/fastify JavaScript/hapi JavaScript/koa"'
+    - 'TESTDIR="JavaScript/nodejs JavaScript/polkadot JavaScript/restana JavaScript/restify JavaScript/sailsjs"'
+    - 'TESTDIR="JavaScript/es4x JavaScript/ringojs"'
     - "TESTLANG=Kotlin"
     - "TESTLANG=Lisp"
     - "TESTLANG=Lua"

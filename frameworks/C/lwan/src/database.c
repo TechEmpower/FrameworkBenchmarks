@@ -316,8 +316,8 @@ db_prepare_sqlite(const struct db *db, const char *sql, const size_t sql_len)
     if (!stmt_sqlite)
         return NULL;
 
-    int ret = sqlite3_prepare(db_sqlite->sqlite, sql, (int)sql_len,
-                              &stmt_sqlite->sqlite, NULL);
+    int ret = sqlite3_prepare_v2(db_sqlite->sqlite, sql, (int)sql_len,
+                                 &stmt_sqlite->sqlite, NULL);
     if (ret != SQLITE_OK) {
         free(stmt_sqlite);
         return NULL;
