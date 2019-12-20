@@ -112,8 +112,8 @@ int main(int argc, char* argv[]) {
     std::vector<fortune> table;
 
     auto c = fortunes.connect(request.yield);
-    c.forall([&] (auto f) { table.push_back(f); });
-    table.push_back(fortune(0, std::string("Additional fortune added at request time.")));
+    c.forall([&] (auto f) { table.emplace_back(f); });
+    table.emplace_back(0, "Additional fortune added at request time.");
 
     std::sort(table.begin(), table.end(),
               [] (const fortune& a, const fortune& b) { return a.message < b.message; });
