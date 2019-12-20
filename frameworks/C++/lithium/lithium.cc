@@ -9,22 +9,19 @@
 #include "symbols.hh"
 using namespace li;
 
-
-std::string escape_html_entities(const std::string& data)
+template <typename B>
+void escape_html_entities(B& buffer, const std::string& data)
 {
-    std::string buffer;
-    buffer.reserve(data.size());
     for(size_t pos = 0; pos != data.size(); ++pos) {
         switch(data[pos]) {
-            case '&':  buffer.append("&amp;");       break;
-            case '\"': buffer.append("&quot;");      break;
-            case '\'': buffer.append("&apos;");      break;
-            case '<':  buffer.append("&lt;");        break;
-            case '>':  buffer.append("&gt;");        break;
-            default:   buffer.append(&data[pos], 1); break;
+            case '&':  buffer << "&amp;";       break;
+            case '\"': buffer << "&quot;";      break;
+            case '\'': buffer << "&apos;";      break;
+            case '<':  buffer << "&lt;";        break;
+            case '>':  buffer << "&gt;";        break;
+            default:   buffer << data[pos]; break;
         }
     }
-    return std::move(buffer);
 }
 
 int main(int argc, char* argv[]) {
@@ -112,21 +109,26 @@ int main(int argc, char* argv[]) {
     std::vector<fortune> table;
 
     auto c = fortunes.connect(request.yield);
-    c.forall([&] (auto f) { table.emplace_back(f); });
+    c.forall([&] (auto f) { table.emplace_back(std::move(f)); });
     table.emplace_back(0, "Additional fortune added at request time.");
 
     std::sort(table.begin(), table.end(),
               [] (const fortune& a, const fortune& b) { return a.message < b.message; });
 
-    std::stringstream ss;
-
+    char b[100000];
+    li::output_buffer ss(b, sizeof(b));
+ 
     ss << "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
     for(auto& f : table)
-      ss << "<tr><td>" << f.id << "</td><td>" << escape_html_entities(f.message) << "</td></tr>";
+    {
+      ss << "<tr><td>" << f.id << "</td><td>";
+      escape_html_entities(ss, f.message); 
+      ss << "</td></tr>";
+    }
     ss << "</table></body></html>";
 
     response.set_header("Content-Type", "text/html; charset=utf-8");
-    response.write(ss.str());
+    response.write(ss.to_string_view());
   };
 
   http_serve(my_api, port, s::nthreads = nprocs);
