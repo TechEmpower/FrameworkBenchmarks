@@ -1,4 +1,4 @@
-FROM php:7.3
+FROM php:7.4
 
 RUN pecl install swoole > /dev/null && \
     docker-php-ext-enable swoole
@@ -19,7 +19,7 @@ RUN chmod -R 777 /laravel
 RUN echo "APP_SWOOLE=true" >> .env
 
 # Install composer using the installation method documented at https://getcomposer.org/doc/faqs/how-to-install-composer-programmatically.md
-# This method was chosen because composer is not part of the apt repositories that are in the default PHP 7.3 docker image
+# This method was chosen because composer is not part of the apt repositories that are in the default PHP 7.4 docker image
 # Adding alternate apt php repos can potentially cause problems with extension compatibility between the php build from the docker image and the alternate php build
 # An additional benefit of this method is that the correct version of composer will be used for the environment and version of the php system in the docker image
 RUN deploy/swoole/install-composer.sh
