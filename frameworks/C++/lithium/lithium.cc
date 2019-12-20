@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
     std::vector<fortune> table;
 
     auto c = fortunes.connect(request.yield);
-    c.forall([&] (auto f) { table.emplace_back(std::move(f)); });
+    c.forall([&] (auto f) { table.emplace_back(f); });
     table.emplace_back(0, "Additional fortune added at request time.");
 
     std::sort(table.begin(), table.end(),
