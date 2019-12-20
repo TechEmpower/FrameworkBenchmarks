@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
   auto sql_db =
     pgsql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
                    s::password = "benchmarkdbpass", s::port = 5432, s::charset = "utf8");
-  int pgsql_max_connection = 512;
+  int pgsql_max_connection = atoi(sql_db.connect()("SHOW max_connections;").read<std::string>().c_str()) * 0.75;
   li::max_pgsql_connections_per_thread = (pgsql_max_connection / nprocs);
 #endif
 
@@ -112,8 +112,8 @@ int main(int argc, char* argv[]) {
     std::vector<fortune> table;
 
     auto c = fortunes.connect(request.yield);
-    c.forall([&] (auto f) { table.push_back(f); });
-    table.push_back(fortune(0, std::string("Additional fortune added at request time.")));
+    c.forall([&] (auto f) { table.emplace_back(f); });
+    table.emplace_back(0, "Additional fortune added at request time.");
 
     std::sort(table.begin(), table.end(),
               [] (const fortune& a, const fortune& b) { return a.message < b.message; });
