@@ -6,7 +6,7 @@ RUN apt install -yqq libboost-context-dev
 
 COPY ./ ./
 
-ENV COMMIT=8c84fec46d5666cb71dad117a765a79d4162c1a6
+ENV COMMIT=627220fe0264b160957048c7175f5e578c644362
 
 RUN wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_mysql.hh
 RUN wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_http_backend.hh
