@@ -18,7 +18,7 @@
 		<mainClass>com.simplyti.cloud.server.benchmark.Main</mainClass>
 
 		<!-- Simple Server -->
-		<simple-server.version>0.0.4-SNAPSHOT</simple-server.version>
+		<simple-server.version>0.0.4-rc3</simple-server.version>
 		
 		<!-- Lombok -->
 		<lombok.version>1.18.4</lombok.version>
@@ -83,6 +83,7 @@
 			<scope>provided</scope>
 		</dependency>
 		
+		<!-- Simple Server -->
 		<dependency>
 			<groupId>com.simplyti.cloud</groupId>
 			<artifactId>simple-server-di-guice</artifactId>
@@ -101,19 +102,5 @@
 			<version>${log4j.version}</version>
 		</dependency>
 	</dependencies>
-
-	<repositories>
-		<repository>
-			<id>oss.sonatype.org-snapshot</id>
-			<name>OSS Snapshot Repository</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 
 </project>
