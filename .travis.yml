@@ -50,6 +50,7 @@ env:
     - 'TESTDIR="Java/spring Java/spring-webflux Java/t-io Java/tapestry Java/undertow Java/undertow-jersey Java/vertx Java/vertx-web"'
     - 'TESTDIR="Java/javalin Java/jawn Java/ratpack Java/wizzardo-http"'
     - 'TESTDIR="Java/play1 Java/play2-java Java/wildfly-ee"'
+    - 'TESTDIR="Java/simple-server"'
     - 'TESTDIR="JavaScript/0http JavaScript/express JavaScript/fastify JavaScript/hapi JavaScript/koa"'
     - 'TESTDIR="JavaScript/nodejs JavaScript/polkadot JavaScript/restana JavaScript/restify JavaScript/sailsjs"'
     - 'TESTDIR="JavaScript/es4x JavaScript/ringojs"'
