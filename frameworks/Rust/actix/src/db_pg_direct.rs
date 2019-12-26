@@ -24,11 +24,10 @@ impl PgConnection {
         let (cl, conn) = connect(db_url, NoTls)
             .await
             .expect("can not connect to postgresql");
-
         actix_rt::spawn(conn.map(|res| panic!("{:?}", res)));
 
-        let world = cl.prepare("SELECT id, message FROM fortune").await.unwrap();
-        let fortune = cl
+        let fortune = cl.prepare("SELECT id, message FROM fortune").await.unwrap();
+        let world = cl
             .prepare("SELECT id, randomnumber FROM world WHERE id=$1")
             .await
             .unwrap();

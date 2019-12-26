@@ -6,6 +6,7 @@ extern crate serde_derive;
 #[macro_use]
 extern crate diesel;
 
+use std::future::Future;
 use std::io::Write;
 use std::pin::Pin;
 use std::task::{Context, Poll};
@@ -18,7 +19,6 @@ use actix_server::Server;
 use actix_service::{Service, ServiceFactory};
 use bytes::BytesMut;
 use futures::future::ok;
-use futures::Future;
 use serde_json::to_writer;
 
 mod db_pg_direct;
