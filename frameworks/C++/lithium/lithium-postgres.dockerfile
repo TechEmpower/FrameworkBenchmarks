@@ -5,7 +5,7 @@ RUN apt install -yqq g++-9 libboost-dev postgresql-server-dev-all libpq-dev wget
 
 COPY ./ ./
 
-ENV COMMIT=627220fe0264b160957048c7175f5e578c644362
+ENV COMMIT=9a87e6791a855b9f21dee132eaf8605913026901
 
 RUN wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_pgsql.hh
 RUN wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_http_backend.hh
