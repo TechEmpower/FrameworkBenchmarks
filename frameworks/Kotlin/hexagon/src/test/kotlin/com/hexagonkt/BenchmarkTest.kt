@@ -3,12 +3,14 @@ package com.hexagonkt
 import com.hexagonkt.serialization.parse
 import com.hexagonkt.http.client.Client
 import com.hexagonkt.serialization.Json
-import com.hexagonkt.serialization.parseList
+import com.hexagonkt.serialization.parseObjects
 import com.hexagonkt.http.Method.GET
+import com.hexagonkt.http.server.jetty.JettyServletAdapter
 import org.asynchttpclient.Response
 import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
+import java.lang.IllegalStateException
 import java.lang.System.setProperty
 
 @Test class BenchmarkJettyMongoDbTest : BenchmarkTestBase("jetty", "mongodb")
@@ -30,6 +32,18 @@ import java.lang.System.setProperty
     @AfterClass fun shutDown() {
         benchmarkStores[databaseEngine]?.close()
         benchmarkServer.stop()
+    }
+
+    @Test fun `Empty server code creates a Jetty Servlet Adapter`() {
+        System.clearProperty("WEBENGINE")
+        createEngine()
+        assert(engine is JettyServletAdapter)
+    }
+
+    @Test(expectedExceptions = [ IllegalStateException::class ])
+    fun `Invalid server code throws an exception`() {
+        setProperty("WEBENGINE", "invalid")
+        createEngine()
     }
 
     @Test fun web() {
@@ -55,7 +69,7 @@ import java.lang.System.setProperty
         val content = response.responseBody
 
         checkResponse(response, Json.contentType)
-        assert("Hello, World!" == content.parse(Message::class).message)
+        assert("Hello, World!" == content.parse<Message>().message)
     }
 
     @Test fun plaintext() {
@@ -91,7 +105,7 @@ import java.lang.System.setProperty
         val body = response.responseBody
 
         checkResponse(response, Json.contentType)
-        val bodyMap = body.parseList(Map::class).first()
+        val bodyMap = body.parseObjects(Map::class).first()
         assert(bodyMap.containsKey(World::id.name))
         assert(bodyMap.containsKey(World::randomNumber.name))
     }

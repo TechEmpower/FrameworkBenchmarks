@@ -1,13 +1,17 @@
-# [Micronaut](http://micronaut.io) Benchmarking Test (1.0.0.RC3)
+# [Micronaut](http://micronaut.io) Benchmarking Test (1.2.7)
 
 ### Test Type Implementation Source Code
 
 * [JSON](src/main/java/benchmark/JsonSerialization.java)
 * [PLAINTEXT](src/main/java/benchmark/PlainText.java)
+* [DB](src/main/java/benchmark/Database.java)
+* [QUERY](src/main/java/benchmark/Database.java)
+* [UPDATE](src/main/java/benchmark/Database.java)
+* [FORTUNES](src/main/java/benchmark/Database.java)
 
 ## Important Libraries
 The tests were run with:
-* [OpenJDK Java 10](http://jdk.java.net/10/)
+* [OpenJDK Java 11](http://jdk.java.net/11/)
 
 ## Test URLs
 ### JSON

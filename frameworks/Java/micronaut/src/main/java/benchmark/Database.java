@@ -8,12 +8,15 @@ import com.github.mustachejava.Mustache;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.QueryValue;
+import io.micronaut.views.ModelAndView;
 import io.micronaut.views.View;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.util.Comparator.comparing;
@@ -42,12 +45,11 @@ public class Database {
     }
 
     @Get(value = "/fortunes", produces = "text/html;charset=utf-8")
-    @View("fortunes")
-    public Single<List<Fortune>> fortune() {
+    public Single<ModelAndView<Map>> fortune() {
         return dbRepository.fortunes().toList().flatMap(fortunes -> {
             fortunes.add(new Fortune(0, "Additional fortune added at request time."));
             fortunes.sort(comparing(fortune -> fortune.message));
-            return Single.just(fortunes);
+            return Single.just(new ModelAndView<>("fortunes", Collections.singletonMap("fortunes", fortunes)));
         });
     }
 

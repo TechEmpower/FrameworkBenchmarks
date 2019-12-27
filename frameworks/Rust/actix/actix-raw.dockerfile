@@ -1,4 +1,4 @@
-FROM rust:1.36
+FROM rust:1.40
 
 ADD ./ /actix
 WORKDIR /actix

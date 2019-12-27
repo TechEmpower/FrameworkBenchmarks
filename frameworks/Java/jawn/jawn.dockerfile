@@ -1,7 +1,11 @@
 FROM gradle:5.4.1-jdk11 as gradle
-USER root
 WORKDIR /jawn
 COPY build.gradle build.gradle
 COPY src src
-COPY webapp webapp
-CMD ["gradle", "--no-daemon", "--refresh-dependencies", "run", "-Pargs=8080,production"]
+RUN gradle install --refresh-dependencies --no-daemon
+
+FROM openjdk:11.0.5-jre-stretch
+WORKDIR /jawn
+COPY --from=gradle /jawn/build/install/jawn .
+ENTRYPOINT ["bin/jawn"]
+CMD ["8080","production"]
