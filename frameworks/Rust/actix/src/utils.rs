@@ -107,5 +107,5 @@ markup::define! {
 #[derive(Template)]
 #[template(path = "fortune.hbs")]
 pub struct FortunesYarteTemplate {
-    pub fortunes: Vec<Fortune>
+    pub fortunes: Vec<Fortune>,
 }
