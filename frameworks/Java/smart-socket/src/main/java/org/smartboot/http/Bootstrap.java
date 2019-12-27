@@ -29,7 +29,7 @@ public class Bootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
-        System.setProperty("sun.nio.ch.maxCompletionHandlersOnStack", "32");
+//        System.setProperty("sun.nio.ch.maxCompletionHandlersOnStack", "32");
         RouteHandle routeHandle = new RouteHandle();
         routeHandle.route("/plaintext", new HttpHandle() {
 
@@ -79,7 +79,7 @@ public class Bootstrap {
             }
         };
         messageProcessor.addPlugin(new MonitorPlugin(5));
-        messageProcessor.addPlugin(new SocketOptionPlugin());
+//        messageProcessor.addPlugin(new SocketOptionPlugin());
 
         int cpuNum = Runtime.getRuntime().availableProcessors();
         // 定义服务器接受的消息类型以及各类消息对应的处理器
