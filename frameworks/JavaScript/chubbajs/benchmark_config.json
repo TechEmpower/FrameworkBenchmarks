@@ -11,7 +11,7 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "Postgres",
-      "framework": "express",
+      "framework": "chubbajs",
       "language": "JavaScript",
       "flavor": "NodeJS",
       "orm": "Micro",

@@ -9,6 +9,12 @@ function rando() {
     return Math.floor(Math.random() * 10000) + 1;
 }
 
+function sanitizeQueries(q) {
+    if (!parseInt(q) || q < 1) return 1;
+    if (q > 500) return 500;
+    return q;
+}
+
 class HelloWorldController {
     @GET("*")
     async setServer(ctx) {
@@ -35,7 +41,7 @@ class HelloWorldController {
     @GET("/query")
     @validateParams({
         query: "queries",
-        type: ValidationTypes.enforcePositive
+        sanitize: sanitizeQueries
     })
     async query(ctx, { queries }) {
         const ret = [];
@@ -50,7 +56,7 @@ class HelloWorldController {
     @GET("/update")
     @validateParams({
         query: "queries",
-        type: ValidationTypes.enforcePositive
+        sanitize: sanitizeQueries
     })
     async update(ctx, { queries }) {
         const ret = [];

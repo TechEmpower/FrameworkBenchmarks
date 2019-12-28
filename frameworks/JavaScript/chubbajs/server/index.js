@@ -1,7 +1,6 @@
 const { configure } = require("chubbajs");
 const config = require("./config");
-require("core-js/stable");
-require("regenerator-runtime/runtime");
+require("regenerator-runtime");
 
 // const cluster = require('cluster');
 // const numCPUs = require('os').cpus().length;
