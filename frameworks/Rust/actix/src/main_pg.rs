@@ -117,16 +117,18 @@ async fn main() -> std::io::Result<()> {
     const DB_URL: &str =
         "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
+    let addr = PgConnection::connect(DB_URL).await?;
+
     // start http server
     Server::build()
         .backlog(1024)
-        .workers(1)
-        .bind("techempower", "0.0.0.0:8080", || {
+        .bind("techempower", "0.0.0.0:8080", move || {
+            let addr = addr.clone();
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
                 .h1(map_config(
                     App::new()
-                        .data_factory(|| PgConnection::connect(DB_URL))
+                        .data(addr)
                         .service(web::resource("/db").to(world_row))
                         .service(web::resource("/queries").to(queries))
                         .service(web::resource("/fortune").to(fortune))
