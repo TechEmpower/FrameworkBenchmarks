@@ -2,18 +2,18 @@ const { configure } = require("chubbajs");
 const config = require("./config");
 require("regenerator-runtime");
 
-// const cluster = require('cluster');
-// const numCPUs = require('os').cpus().length;
+const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
 
-// if (cluster.isMaster) {
-//     // Fork workers.
-//     for (let i = 0; i < 2; i++) {
-//         cluster.fork();
-//     }
-//
-//     cluster.on('exit', (worker, code, signal) =>
-//         console.log('worker ' + worker.pid + ' died'));
-// } else {
+if (cluster.isMaster) {
+    // Fork workers.
+    for (let i = 0; i < numCPUs; i++) {
+        cluster.fork();
+    }
+
+    cluster.on('exit', (worker, code, signal) =>
+        console.log('worker ' + worker.pid + ' died'));
+} else {
     let context;
     async function startServer() {
         context = await configure(config);
@@ -22,5 +22,5 @@ require("regenerator-runtime");
         });
     }
     startServer();
-// }
+}
 

@@ -65,7 +65,6 @@ class HelloWorldController {
             const world = await new World(rando());
             world.randomnumber = rando();
             await world.save();
-            // await ctx.db.query(`UPDATE world SET randomnumber = ${world.randomnumber} WHERE id = ${world.id}`);
             ret.push({ id: world.id, randomnumber: world.randomnumber });
         }
         ctx.res.json(ret);
