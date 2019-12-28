@@ -1,0 +1,25 @@
+{
+  "framework": "chubbajs",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/query?queries=",
+      "update_url": "/update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "express",
+      "language": "JavaScript",
+      "flavor": "NodeJS",
+      "orm": "Micro",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "chubbajs",
+      "notes": "",
+      "versus": "express"
+    }
+  }]
+}
