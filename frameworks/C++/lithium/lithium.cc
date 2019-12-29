@@ -106,9 +106,18 @@ int main(int argc, char* argv[]) {
 
     std::sort(numbers.begin(), numbers.end(), [] (auto a, auto b) { return a.id < b.id; });
 
+#if TFB_MYSQL
     for (int i = 0; i < N; i++)
       c.update(numbers[i]);
-
+#elif TFB_PGSQL
+    std::ostringstream ss;
+    ss << "UPDATE World SET randomNumber=tmp.randomNumber FROM (VALUES ";
+    for (int i = 0; i < N; i++)
+      ss << "(" << numbers[i].id << ", " << numbers[i].randomNumber << ") "<< (i == N-1 ? "": ",");
+    ss << ") AS tmp(id, randomNumber) WHERE tmp.id = World.id";
+    raw_c(ss.str());
+#endif
+    
     raw_c("COMMIT");
 
     response.write_json(numbers);
