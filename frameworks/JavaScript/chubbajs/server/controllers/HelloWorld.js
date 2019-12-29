@@ -1,9 +1,12 @@
 const {
     GET,
-    validateParams,
-    ValidationTypes
+    validateParams
 } = require("chubbajs").routes.annotations;
+const Entities = require("html-entities").AllHtmlEntities;
 const World = require("../models/World");
+const Fortune = require("../models/Fortune");
+
+const entities = new Entities();
 
 function rando() {
     return Math.floor(Math.random() * 10000) + 1;
@@ -45,7 +48,6 @@ class HelloWorldController {
     })
     async query(ctx, { queries }) {
         const ret = [];
-        if (queries > 500) queries = 500;
         for (let i = 0; i < queries; i++) {
             const world = await new World(rando());
             ret.push({ id: world.id, randomnumber: world.randomnumber });
@@ -60,7 +62,6 @@ class HelloWorldController {
     })
     async update(ctx, { queries }) {
         const ret = [];
-        if (queries > 500) queries = 500;
         for (let i = 0; i < queries; i++) {
             const world = await new World(rando());
             world.randomnumber = rando();
@@ -68,6 +69,37 @@ class HelloWorldController {
             ret.push({ id: world.id, randomnumber: world.randomnumber });
         }
         ctx.res.json(ret);
+    }
+
+    @GET("/fortune")
+    async fortune(ctx) {
+        let fortunes = (await ctx.db.query(`SELECT * FROM "Fortune"`)).rows;
+        const newFortune = new Fortune();
+        newFortune.message = "Additional fortune added at request time.";
+        newFortune.id = 0;
+        fortunes.push(newFortune);
+        fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
+
+        ctx.res.send(`<!DOCTYPE html>
+<html>
+<head>
+<title>Fortunes</title>
+</head>
+<body>
+<table>
+<tr>
+<th>id</th>
+<th>message</th>
+</tr>
+${fortunes.map(f => `
+<tr>
+<td>${f.id}</td>
+<td>${entities.encode(f.message)}</td>
+</tr>
+`).join('')}
+</table>
+</body>
+</html>`);
     }
 
 }
