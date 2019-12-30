@@ -19,7 +19,6 @@ import com.firenio.component.FastThreadLocal;
 import com.firenio.component.Frame;
 import com.firenio.component.IoEventHandle;
 import com.firenio.component.NioEventLoopGroup;
-import com.firenio.component.ProtocolCodec;
 import com.firenio.component.SocketOptions;
 import com.firenio.log.DebugUtil;
 import com.firenio.log.LoggerFactory;
@@ -29,7 +28,8 @@ import com.jsoniter.spi.Slice;
 
 public class TestHttpLoadServer {
 
-    static final AttributeKey<ByteBuf> JSON_BUF         = newByteBufKey();
+    static final AttributeKey<ByteBuf> JSON_BUF         = newJsonBufKey();
+    static final AttributeKey<ByteBuf> WRITE_BUF        = newWriteBufKey();
     static final byte[]                STATIC_PLAINTEXT = "Hello, World!".getBytes();
 
     static class Message {
@@ -80,6 +80,19 @@ public class TestHttpLoadServer {
         DebugUtil.info("cachedurl: {}", cachedurl);
         DebugUtil.info("unsafeBuf: {}", unsafeBuf);
 
+        int      processors = Util.availableProcessors() * core;
+        int      fcache     = 1024 * 16;
+        int      pool_unit  = 256 * 16;
+        int      pool_cap   = 1024 * 8 * pool_unit * processors;
+        String   server     = "firenio";
+        ByteTree cachedUrls = null;
+        if (cachedurl) {
+            cachedUrls = new ByteTree();
+            cachedUrls.add("/plaintext");
+            cachedUrls.add("/json");
+        }
+        HttpCodec codec = new HttpCodec(server, fcache, lite, cachedUrls);
+
         IoEventHandle eventHandle = new IoEventHandle() {
 
             @Override
@@ -87,9 +100,22 @@ public class TestHttpLoadServer {
                 HttpFrame f      = (HttpFrame) frame;
                 String    action = f.getRequestURL();
                 if ("/plaintext".equals(action)) {
+                    ByteBuf buf = ch.getAttributeUnsafe(WRITE_BUF);
+                    if (buf == null) {
+                        buf = ch.allocate();
+                        ByteBuf temp = buf;
+                        ch.setAttributeUnsafe(WRITE_BUF, buf);
+                        ch.getEventLoop().submit(() -> {
+                            ch.writeAndFlush(temp);
+                            ch.setAttributeUnsafe(WRITE_BUF, null);
+                        });
+                    }
                     f.setContent(STATIC_PLAINTEXT);
                     f.setContentType(HttpContentType.text_plain);
                     f.setConnection(HttpConnection.NONE);
+                    f.setDate(HttpDateUtil.getDateLine());
+                    codec.encode(ch, buf, f);
+                    ch.release(f);
                 } else if ("/json".equals(action)) {
                     ByteBuf    temp   = FastThreadLocal.get().getAttributeUnsafe(JSON_BUF);
                     JsonStream stream = JsonStreamPool.borrowJsonStream();
@@ -107,35 +133,26 @@ public class TestHttpLoadServer {
                     } finally {
                         JsonStreamPool.returnJsonStream(stream);
                     }
-                    return;
                 } else {
                     System.err.println("404");
                     f.setString("404,page not found!", ch);
                     f.setContentType(HttpContentType.text_plain);
                     f.setStatus(HttpStatus.C404);
+                    f.setDate(HttpDateUtil.getDateLine());
+                    ch.writeAndFlush(f);
+                    ch.release(f);
                 }
-                f.setDate(HttpDateUtil.getDateLine());
-                ch.writeAndFlush(f);
-                ch.release(f);
             }
 
         };
 
-        int fcache    = 1024 * 16;
-        int pool_cap  = 1024 * 128;
-        int pool_unit = 256;
-        if (inline) {
-            pool_cap = 1024 * 8;
-            pool_unit = 256 * 16;
-        }
         HttpDateUtil.start();
         NioEventLoopGroup group   = new NioEventLoopGroup();
         ChannelAcceptor   context = new ChannelAcceptor(group, 8080);
-        group.setMemoryPoolCapacity(pool_cap);
-        group.setEnableMemoryPoolDirect(direct);
+        group.setMemoryCapacity(pool_cap);
         group.setEnableMemoryPool(pool);
-        group.setMemoryPoolUnit(pool_unit);
-        group.setWriteBuffers(32);
+        group.setMemoryUnit(pool_unit);
+        group.setWriteBuffers(8);
         group.setChannelReadBuffer(1024 * readBuf);
         group.setEventLoopSize(Util.availableProcessors() * core);
         group.setConcurrentFrameStack(false);
@@ -149,19 +166,17 @@ public class TestHttpLoadServer {
                 }
             });
         }
-        ByteTree cachedUrls = null;
-        if (cachedurl) {
-            cachedUrls = new ByteTree();
-            cachedUrls.add("/plaintext");
-            cachedUrls.add("/json");
-        }
-        context.addProtocolCodec(new HttpCodec("firenio", fcache, lite, inline, cachedUrls));
+        context.addProtocolCodec(codec);
         context.setIoEventHandle(eventHandle);
         context.bind(1024 * 8);
     }
 
-    static AttributeKey<ByteBuf> newByteBufKey() {
+    static AttributeKey<ByteBuf> newJsonBufKey() {
         return FastThreadLocal.valueOfKey("JSON_BUF", (AttributeMap map, int key) -> map.setAttribute(key, ByteBuf.heap(0)));
+    }
+
+    static AttributeKey<ByteBuf> newWriteBufKey() {
+        return Channel.valueOfKey("WRITE_BUF");
     }
 
 }
