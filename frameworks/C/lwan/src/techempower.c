@@ -139,14 +139,14 @@ struct queries_json {
     struct db_json queries[500];
     size_t queries_len;
 };
-static const struct json_obj_descr queries_json_desc[] = {
+static const struct json_obj_descr queries_array_desc =
     JSON_OBJ_DESCR_OBJ_ARRAY(struct queries_json,
                              queries,
                              500,
                              queries_len,
                              db_json_desc,
-                             N_ELEMENTS(db_json_desc)),
-};
+                             N_ELEMENTS(db_json_desc));
+
 
 static int append_to_strbuf(const char *bytes, size_t len, void *data)
 {
@@ -155,10 +155,11 @@ static int append_to_strbuf(const char *bytes, size_t len, void *data)
     return lwan_strbuf_append_str(strbuf, bytes, len) ? 0 : -EINVAL;
 }
 
-static enum lwan_http_status json_response(struct lwan_response *response,
-                                           const struct json_obj_descr *descr,
-                                           size_t descr_len,
-                                           const void *data)
+static enum lwan_http_status
+json_response_obj(struct lwan_response *response,
+                  const struct json_obj_descr *descr,
+                  size_t descr_len,
+                  const void *data)
 {
     lwan_strbuf_grow_to(response->buffer, 128);
 
@@ -170,11 +171,25 @@ static enum lwan_http_status json_response(struct lwan_response *response,
     return HTTP_OK;
 }
 
+static enum lwan_http_status
+json_response_arr(struct lwan_response *response,
+                  const struct json_obj_descr *descr,
+                  const void *data)
+{
+    lwan_strbuf_grow_to(response->buffer, 128);
+
+    if (json_arr_encode(descr, data, append_to_strbuf, response->buffer) < 0)
+        return HTTP_INTERNAL_ERROR;
+
+    response->mime_type = "application/json";
+    return HTTP_OK;
+}
+
 LWAN_HANDLER(json)
 {
     struct hello_world_json j = {.message = hello_world};
 
-    return json_response(response, hello_world_json_desc,
+    return json_response_obj(response, hello_world_json_desc,
                          N_ELEMENTS(hello_world_json_desc), &j);
 }
 
@@ -219,7 +234,7 @@ LWAN_HANDLER(db)
     if (!queried)
         return HTTP_INTERNAL_ERROR;
 
-    return json_response(response, db_json_desc, N_ELEMENTS(db_json_desc),
+    return json_response_obj(response, db_json_desc, N_ELEMENTS(db_json_desc),
                          &db_json);
 }
 
@@ -252,8 +267,7 @@ LWAN_HANDLER(queries)
             goto out;
     }
 
-    ret = json_response(response, queries_json_desc,
-                        N_ELEMENTS(queries_json_desc), &qj);
+    ret = json_response_arr(response, &queries_array_desc, &qj);
 
 out:
     db_stmt_finalize(stmt);

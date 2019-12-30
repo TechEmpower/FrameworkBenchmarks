@@ -627,6 +627,28 @@ int json_obj_encode(const struct json_obj_descr *descr,
                     json_append_bytes_t append_bytes,
                     void *data);
 
+/**
+ * @brief Encodes an array using an arbitrary writer function
+ *
+ * @param descr Pointer to the descriptor array
+ *
+ * @param descr_len Number of elements in the descriptor array
+ *
+ * @param val Struct holding the values
+ *
+ * @param append_bytes Function to append bytes to the output
+ *
+ * @param data Data pointer to be passed to the append_bytes callback
+ * function.
+ *
+ * @return 0 if object has been successfully encoded. A negative value
+ * indicates an error.
+ */
+int json_arr_encode(const struct json_obj_descr *descr,
+                    const void *val,
+                    json_append_bytes_t append_bytes,
+                    void *data);
+
 #ifdef __cplusplus
 }
 #endif

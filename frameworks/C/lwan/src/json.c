@@ -811,6 +811,16 @@ bool_encode(const bool *value, json_append_bytes_t append_bytes, void *data)
     return append_bytes("false", 5, data);
 }
 
+int json_arr_encode(const struct json_obj_descr *descr,
+                    const void *val,
+                    json_append_bytes_t append_bytes,
+                    void *data)
+{
+    void *ptr = (char *)val + descr->offset;
+
+    return arr_encode(descr->array.element_descr, ptr, val, append_bytes, data);
+}
+
 static int encode(const struct json_obj_descr *descr,
                   const void *val,
                   json_append_bytes_t append_bytes,
@@ -825,7 +835,8 @@ static int encode(const struct json_obj_descr *descr,
     case JSON_TOK_STRING:
         return str_encode(ptr, append_bytes, data);
     case JSON_TOK_LIST_START:
-        return arr_encode(descr->array.element_descr, ptr, val, append_bytes, data);
+        return arr_encode(descr->array.element_descr, ptr, val,
+                          append_bytes, data);
     case JSON_TOK_OBJECT_START:
         return json_obj_encode(descr->object.sub_descr,
                                descr->object.sub_descr_len, ptr, append_bytes,
