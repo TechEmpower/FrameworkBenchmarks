@@ -1,14 +1,14 @@
 
-serviceName : Hexagon Benchmark
+serviceName: Hexagon Benchmark
 
-bindPort : 9090
-bindAddress : 0.0.0.0
+bindPort: 9090
+bindAddress: 0.0.0.0
 
-database : hello_world
-worldCollection : world
-fortuneCollection : fortune
+database: hello_world
+worldCollection: world
+fortuneCollection: fortune
 
-databaseUsername : benchmarkdbuser
-databasePassword : benchmarkdbpass
+databaseUsername: benchmarkdbuser
+databasePassword: benchmarkdbpass
 
-maximumPoolSize : 96
+maximumPoolSize: 96

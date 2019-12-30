@@ -9,7 +9,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <exec.mainClass>benchmark.Application</exec.mainClass>
-        <micronaut.version>1.0.1</micronaut.version>
+        <micronaut.version>1.2.7</micronaut.version>
     </properties>
     <repositories>
         <repository>

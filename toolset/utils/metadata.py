@@ -105,10 +105,18 @@ class Metadata:
 
             # Filter
             for test in config_tests:
+                if hasattr(test, "tags"):
+                    if "broken" in test.tags:
+                        continue
+                    if self.benchmarker.config.tag:
+                        for t in self.benchmarker.config.tag:
+                            if t in test.tags and test.name not in exclude:
+                                tests.append(test)
+                                break
                 if len(include) > 0:
                     if test.name in include:
                         tests.append(test)
-                elif test.name not in exclude:
+                elif test.name not in exclude and not self.benchmarker.config.tag:
                     tests.append(test)
 
         # Ensure we were able to locate everything that was
@@ -119,6 +127,7 @@ class Metadata:
                 missing = list(set(include) - set(names))
                 raise Exception("Unable to locate tests %s" % missing)
 
+        tests = list(set(tests))
         tests.sort(key=lambda x: x.name)
 
         return tests
@@ -225,12 +234,12 @@ class Metadata:
 
         return tests
 
-    def list_test_metadata(self):
+    def to_jsonable(self):
         '''
-        Prints the metadata for all the available tests
+        Returns an array suitable for jsonification
         '''
         all_tests = self.gather_tests()
-        all_tests_json = json.dumps(map(lambda test: {
+        return map(lambda test: {
             "project_name": test.project_name,
             "name": test.name,
             "approach": test.approach,
@@ -245,8 +254,15 @@ class Metadata:
             "database_os": test.database_os,
             "display_name": test.display_name,
             "notes": test.notes,
-            "versus": test.versus
-        }, all_tests))
+            "versus": test.versus,
+            "tags": hasattr(test, "tags") and test.tags or []
+        }, all_tests)
+
+    def list_test_metadata(self):
+        '''
+        Prints the metadata for all the available tests
+        '''
+        all_tests_json = json.dumps(self.to_jsonable())
 
         with open(
                 os.path.join(self.benchmarker.results.directory,

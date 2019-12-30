@@ -26,9 +26,7 @@ class DbController
      */
     public function db(): JsonResponse
     {
-        $world = $this->worldRepository->find(mt_rand(1, 10000));
-
-        return new JsonResponse($world);
+        return new JsonResponse($this->worldRepository->find(mt_rand(1, 10000)));
     }
 
     /**
@@ -41,9 +39,10 @@ class DbController
 
         // possibility for enhancement is the use of SplFixedArray -> http://php.net/manual/de/class.splfixedarray.php
         $worlds = [];
-
-        for ($i = 0; $i < $queries; ++$i) {
-            $worlds[] = $this->worldRepository->find(mt_rand(1, 10000));
+        // Numbers must be unique, otherwise there is a chance to fetch twice the same number, Doctrine will then re-use
+        // the same object and won't perform a second request which is forbidden
+        foreach ($this->getUniqueRandomNumbers($queries) as $id) {
+            $worlds[] = $this->worldRepository->find($id);
         }
 
         return new JsonResponse($worlds);
@@ -58,18 +57,37 @@ class DbController
         $queries = min(500, max(1, $queries));
 
         $worlds = [];
+        // Numbers must be unique, otherwise there is a chance to fetch twice the same number, Doctrine will then re-use
+        // the same object and won't perform a second request which is forbidden
+        $ids = $this->getUniqueRandomNumbers($queries);
+        // Numbers must be ordered to avoid deadlock when 2 process will update the same ids in a random order
+        sort($ids);
+        foreach ($ids as $id) {
+            $worlds[] = $world = $this->worldRepository->find($id);
 
-        for ($i = 0; $i < $queries; ++$i) {
-            $world = $this->worldRepository->find(mt_rand(1, 10000));
-            if ($world) {
-                $randomNumber = mt_rand(1, 10000);
-                $world->setRandomNumber($randomNumber);
-                $worlds[] = $world;
-            }
+            // The new value have to be different from the previous. Otherwise Doctrine won't execute the update query
+            // which is forbidden
+            $oldId = $world->randomNumber;
+            do {
+                $newId = mt_rand(1, 10000);
+            } while($oldId === $newId);
+            $world->randomNumber = $newId;
         }
-
         $this->entityManager->flush();
 
         return new JsonResponse($worlds);
+    }
+
+    private function getUniqueRandomNumbers($count)
+    {
+        $res = [];
+        $current = 0;
+        do {
+            for ($i=$current; $i<$count; $i++) {
+                $res[mt_rand(1, 10000)] = 1;
+            }
+        } while (($current = count($res)) < $count);
+
+        return array_keys($res);
     }
 }

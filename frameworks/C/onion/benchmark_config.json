@@ -21,7 +21,8 @@
       "database_os": "Linux",
       "display_name": "onion",
       "notes": "",
-      "versus": "onion"
+      "versus": "onion",
+      "tags": ["broken"]
     }
   }]
 }

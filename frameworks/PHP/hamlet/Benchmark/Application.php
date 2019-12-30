@@ -4,13 +4,12 @@ namespace Benchmark;
 
 use Benchmark\Resources\{DbResource, FortuneResource, HelloJsonResource, HelloTextResource, QueriesResource, UpdateResource};
 use Cache\Adapter\PHPArray\ArrayCachePool;
-use Hamlet\Database\{Database, Session};
+use Hamlet\Database\Database;
 use Hamlet\Http\Applications\AbstractApplication;
 use Hamlet\Http\Requests\Request;
 use Hamlet\Http\Resources\{HttpResource, NotFoundResource};
 use Hamlet\Http\Responses\{Response, ServerErrorResponse};
 use Psr\Cache\CacheItemPoolInterface;
-use Throwable;
 
 class Application extends AbstractApplication
 {
@@ -26,15 +25,6 @@ class Application extends AbstractApplication
         $this->database = $database;
     }
 
-    public function run(Request $request): Response
-    {
-        try {
-            return parent::run($request);
-        } catch (Throwable $e) {
-            return new ServerErrorResponse;
-        }
-    }
-
     public function findResource(Request $request): HttpResource
     {
         switch ($request->getPath()) {
@@ -43,21 +33,13 @@ class Application extends AbstractApplication
             case '/json':
                 return new HelloJsonResource;
             case '/db':
-                return $this->database->withSession(function (Session $session) {
-                    return new DbResource($session);
-                });
+                return new DbResource($this->database);
             case '/queries':
-                return $this->database->withSession(function (Session $session) {
-                    return new QueriesResource($session);
-                });
+                return new QueriesResource($this->database);
             case '/fortunes':
-                return $this->database->withSession(function (Session $session) {
-                    return new FortuneResource($session);
-                });
+                return new FortuneResource($this->database);
             case '/update':
-                return $this->database->withSession(function (Session $session) {
-                    return new UpdateResource($session);
-                });
+                return new UpdateResource($this->database);
         }
         return new NotFoundResource;
     }

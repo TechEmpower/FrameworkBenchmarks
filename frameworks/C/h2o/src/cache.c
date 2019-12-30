@@ -50,44 +50,32 @@ int cache_create(size_t concurrency,
 	cache->cache_num = CONCURRENCY_FACTOR * round_up_to_power_of_2(concurrency);
 	cache->cache_num = MAX(cache->cache_num, 1);
 	capacity = (capacity + cache->cache_num - 1) / cache->cache_num;
-
-	pthread_mutexattr_t attr;
-
-	if (pthread_mutexattr_init(&attr))
-		return 1;
-
-	if (pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ADAPTIVE_NP))
-		goto error;
-
 	cache->cache = malloc(cache->cache_num * sizeof(*cache->cache));
 
 	if (!cache->cache)
-		goto error;
+		return 1;
 
 	cache->cache_lock = malloc(cache->cache_num * sizeof(*cache->cache_lock));
 
 	if (!cache->cache_lock)
-		goto error_malloc;
+		goto error;
 
 	for (size_t i = 0; i < cache->cache_num; i++) {
 		cache->cache[i] = h2o_cache_create(0, capacity, duration, destroy_cb);
 
-		if (!cache->cache[i] || pthread_mutex_init(cache->cache_lock + i, &attr)) {
+		if (!cache->cache[i] || pthread_spin_init(cache->cache_lock + i, PTHREAD_PROCESS_PRIVATE)) {
 			if (cache->cache[i])
 				h2o_cache_destroy(cache->cache[i]);
 
 			cache->cache_num = i;
 			cache_destroy(cache);
-			goto error;
+			return 1;
 		}
 	}
 
-	pthread_mutexattr_destroy(&attr);
 	return 0;
-error_malloc:
-	free(cache->cache);
 error:
-	pthread_mutexattr_destroy(&attr);
+	free(cache->cache);
 	return 1;
 }
 
@@ -98,11 +86,11 @@ void cache_destroy(cache_t *cache)
 
 		for (size_t i = 0; i < cache->cache_num; i++) {
 			h2o_cache_destroy(cache->cache[i]);
-			pthread_mutex_destroy(cache->cache_lock + i);
+			pthread_spin_destroy(cache->cache_lock + i);
 		}
 
 		free(cache->cache);
-		free(cache->cache_lock);
+		free((void *) cache->cache_lock);
 		cache->cache = NULL;
 		cache->cache_lock = NULL;
 	}
@@ -119,13 +107,13 @@ h2o_cache_ref_t *cache_fetch(cache_t *cache,
 		keyhash = h2o_cache_calchash(key.base, key.len);
 
 	const size_t idx = get_index(cache->cache_num, keyhash);
-	pthread_mutex_t * const mutex = cache->cache_lock + idx;
+	pthread_spinlock_t * const lock = cache->cache_lock + idx;
 
-	CHECK_ERROR(pthread_mutex_lock, mutex);
+	CHECK_ERROR(pthread_spin_lock, lock);
 
 	h2o_cache_ref_t * const ret = h2o_cache_fetch(cache->cache[idx], now, key, keyhash);
 
-	CHECK_ERROR(pthread_mutex_unlock, mutex);
+	CHECK_ERROR(pthread_spin_unlock, lock);
 	return ret;
 }
 
@@ -149,12 +137,12 @@ int cache_set(uint64_t now,
 		keyhash = h2o_cache_calchash(key.base, key.len);
 
 	const size_t idx = get_index(cache->cache_num, keyhash);
-	pthread_mutex_t * const mutex = cache->cache_lock + idx;
+	pthread_spinlock_t * const lock = cache->cache_lock + idx;
 
-	CHECK_ERROR(pthread_mutex_lock, mutex);
+	CHECK_ERROR(pthread_spin_lock, lock);
 
 	const int ret = h2o_cache_set(cache->cache[idx], now, key, keyhash, value);
 
-	CHECK_ERROR(pthread_mutex_unlock, mutex);
+	CHECK_ERROR(pthread_spin_unlock, lock);
 	return ret;
 }

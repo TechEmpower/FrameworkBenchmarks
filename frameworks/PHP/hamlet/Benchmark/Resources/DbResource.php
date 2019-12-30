@@ -3,7 +3,7 @@
 namespace Benchmark\Resources;
 
 use Benchmark\Entities\RandomNumber;
-use Hamlet\Database\{Procedure, Session};
+use Hamlet\Database\{Database, Session};
 use Hamlet\Http\Entities\JsonEntity;
 use Hamlet\Http\Requests\Request;
 use Hamlet\Http\Resources\HttpResource;
@@ -11,26 +11,31 @@ use Hamlet\Http\Responses\{Response, SimpleOKResponse};
 
 class DbResource implements HttpResource
 {
-    /** @var Procedure */
-    private $procedure;
+    /** @var Database */
+    protected $database;
 
-    public function __construct(Session $session)
+    public function __construct(Database $database)
     {
-        $this->procedure = $session->prepare('
-            SELECT id,
-                   randomNumber 
-              FROM World 
-             WHERE id = ?
-        ');
+        $this->database = $database;
     }
 
     public function getResponse(Request $request): Response
     {
         $id = mt_rand(1, 10000);
-        $this->procedure->bindInteger($id);
-        $record = $this->procedure->processOne()
-            ->selectAll()->cast(RandomNumber::class)
-            ->collectHead();
+        $record = $this->database->withSession(
+            function (Session $session) use ($id) {
+                $procedure = $session->prepare('
+                    SELECT id,
+                           randomNumber 
+                      FROM World 
+                     WHERE id = ?
+                ');
+                $procedure->bindInteger($id);
+                return $procedure->processOne()
+                    ->selectAll()->cast(RandomNumber::class)
+                    ->collectHead();
+            }
+        );
         return new SimpleOKResponse(new JsonEntity($record));
     }
 }
