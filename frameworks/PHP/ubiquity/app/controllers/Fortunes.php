@@ -5,7 +5,7 @@ use Ubiquity\orm\DAO;
 use models\Fortune;
 use Ubiquity\controllers\Startup;
 
-class Fortunes extends \Ubiquity\controllers\Controller {
+class Fortunes extends \Ubiquity\controllers\SimpleViewController {
 
 	public function initialize() {
 		\Ubiquity\cache\CacheManager::startProd(Startup::$config);
