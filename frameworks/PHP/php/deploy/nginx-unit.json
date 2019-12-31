@@ -16,7 +16,7 @@
                 "file": "/php/deploy/conf/php.ini"
             },
             "limits": {
-                "requests": 100000
+                "requests": 10000000
             }
         }
     }
