@@ -1,8 +1,9 @@
 #include "FortuneCtrlRaw.h"
-#include "models/Fortune.h"
+#include <drogon/orm/Result.h>
 #include <algorithm>
 
-using namespace drogon_model::hello_world;
+using namespace drogon::orm;
+
 void FortuneCtrlRaw::asyncHandleHttpRequest(
     const HttpRequestPtr &req,
     std::function<void(const HttpResponsePtr &)> &&callback)
@@ -17,21 +18,26 @@ void FortuneCtrlRaw::asyncHandleHttpRequest(
 
     **_dbClient << "select * from fortune where 1=$1" << 1 >>
         [callbackPtr](const Result &r) {
-            std::vector<std::pair<string_view, string_view>> rows;
+            std::vector<Fortune> rows;
+            rows.reserve(r.size() + 1);
             for (auto const &row : r)
             {
                 rows.emplace_back(row[0ul].as<string_view>(),   // id
                                   row[1ul].as<string_view>());  // message
             }
-            rows.emplace_back("0", "Additional fortune added at request time.");
+            Fortune newRow;
+            newRow.id_ = "0";
+            newRow.message_ = "Additional fortune added at request time.";
+            rows.emplace_back(std::move(newRow));
             std::sort(rows.begin(),
                       rows.end(),
-                      [](const std::pair<string_view, string_view> &p1,
-                         const std::pair<string_view, string_view> &p2)
-                          -> bool {
-                          if (p1.second < p2.second)
+                      [](const Fortune &f1, const Fortune &f2) -> bool {
+                          if (f1.message_ < f2.message_)
                               return true;
-                          return false;
+                          else
+                          {
+                              return false;
+                          }
                       });
             HttpViewData data;
             data.insert("rows", std::move(rows));
