@@ -3,6 +3,16 @@
 #include <drogon/IOThreadStorage.h>
 
 using namespace drogon;
+struct Fortune
+{
+    Fortune(string_view &&id, string_view &&message)
+        : id_(std::move(id)), message_(std::move(message))
+    {
+    }
+    Fortune() = default;
+    string_view id_;
+    string_view message_;
+};
 class FortuneCtrlRaw : public drogon::HttpSimpleController<FortuneCtrlRaw>
 {
   public:
