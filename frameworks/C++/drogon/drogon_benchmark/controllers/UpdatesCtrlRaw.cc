@@ -1,7 +1,11 @@
 #include "UpdatesCtrlRaw.h"
+#include "models/World.h"
+#include <stdlib.h>
+
+using namespace drogon_model::hello_world;
 using namespace drogon::orm;
 const void update(
-    const std::shared_ptr<std::vector<Result>> &results,
+    const std::shared_ptr<std::vector<World>> &results,
     const std::shared_ptr<std::function<void(const HttpResponsePtr &)>>
         &callbackPtr,
     const DbClientPtr &client)
@@ -30,38 +34,30 @@ const void update(
     sql[sql.length() - 1] = ')';
 
     auto sqlBinder = *client << std::move(sql);
-
-    std::string jsonStr;
-    jsonStr.reserve(size * 36);
-    jsonStr.append("[", 1);
-    for (auto const &r : *results)
+    Json::Value json;
+    json.resize(0);
+    for (auto const &w : *results)
     {
         auto randId = rand() % 10000 + 1;
-        auto id = r[0]["id"].as<int>();
-        sqlBinder << id;
+        sqlBinder << w.getValueOfId();
         sqlBinder << randId;
-        char json[64];
-        auto size =
-            sprintf(json, "{\"id\":%d,\"randomnumber\":%d}", id, randId);
-        jsonStr.append(json, size);
-        jsonStr.append(",", 1);
+        Json::Value world;
+        world["id"] = w.getValueOfId();
+        world["randomnumber"] = randId;
+        json.append(std::move(world));
     }
-    jsonStr[jsonStr.length() - 1] = ']';
-    for (auto const &r : *results)
+    for (auto const &w : *results)
     {
-        sqlBinder << r[0]["id"].as<int>();
+        sqlBinder << w.getValueOfId();
     }
 
-    sqlBinder >> [jsonStr = std::move(jsonStr),
-                  callbackPtr](const Result &r) mutable {
-        auto resp = HttpResponse::newHttpResponse();
-        resp->setContentTypeCode(ContentType::CT_APPLICATION_JSON);
-        resp->setBody(std::move(jsonStr));
-        (*callbackPtr)(resp);
+    sqlBinder >> [callbackPtr, json = std::move(json)](const Result &r) mutable {
+        (*callbackPtr)(HttpResponse::newHttpJsonResponse(std::move(json)));
     } >> [callbackPtr](const DrogonDbException &e) {
-        Json::Value ret;
-        ret["result"] = "error!";
-        auto resp = HttpResponse::newHttpJsonResponse(ret);
+        Json::Value json{};
+        json["code"] = 1;
+        json["message"] = e.base().what();
+        auto resp = HttpResponse::newHttpJsonResponse(std::move(json));
         (*callbackPtr)(resp);
     };
 }
@@ -85,7 +81,7 @@ void UpdatesCtrlRaw::asyncHandleHttpRequest(
     auto callbackPtr =
         std::make_shared<std::function<void(const HttpResponsePtr &)>>(
             std::move(callback));
-    auto resultSetPtr = std::make_shared<std::vector<Result>>();
+    auto resultSetPtr = std::make_shared<std::vector<World>>();
     resultSetPtr->reserve(queries);
     if (!*_dbClient)
     {
@@ -97,16 +93,27 @@ void UpdatesCtrlRaw::asyncHandleHttpRequest(
         **_dbClient << "select * from world where id=$1" << id >>
             [callbackPtr, resultSetPtr, &client = *_dbClient, queries](
                 const Result &r) mutable {
-                resultSetPtr->push_back(r);
-                if (resultSetPtr->size() == queries)
+                if (r.size() == 1)
                 {
-                    update(resultSetPtr, callbackPtr, client);
+                    resultSetPtr->emplace_back(World(r[0]));
+                    if (resultSetPtr->size() == queries)
+                    {
+                        update(resultSetPtr, callbackPtr, client);
+                    }
+                }
+                else
+                {
+                    Json::Value json{};
+                    json["code"] = 0;
+                    json["message"] = "Internal error";
+                    (*callbackPtr)(HttpResponse::newHttpJsonResponse(std::move(json)));
                 }
             } >>
             [callbackPtr](const DrogonDbException &e) {
-                Json::Value ret;
-                ret["result"] = "error!";
-                auto resp = HttpResponse::newHttpJsonResponse(ret);
+                Json::Value json{};
+                json["code"] = 1;
+                json["message"] = e.base().what();
+                auto resp = HttpResponse::newHttpJsonResponse(std::move(json));
                 (*callbackPtr)(resp);
             };
     }

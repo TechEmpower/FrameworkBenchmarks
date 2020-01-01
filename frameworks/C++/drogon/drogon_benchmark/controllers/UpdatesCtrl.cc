@@ -53,21 +53,21 @@ void UpdatesCtrl::asyncHandleHttpRequest(
                         if ((*counter) == 0)
                         {
                             (*callbackPtr)(
-                                HttpResponse::newHttpJsonResponse(*json));
+                                HttpResponse::newHttpJsonResponse(std::move(*json)));
                         }
                     },
                     [callbackPtr](const DrogonDbException &e) {
-                        Json::Value ret;
-                        ret["result"] = "error!";
-                        auto resp = HttpResponse::newHttpJsonResponse(ret);
-                        (*callbackPtr)(resp);
+                        Json::Value json{};
+                        json["code"] = 1;
+                        json["message"] = e.base().what();
+                        (*callbackPtr)(HttpResponse::newHttpJsonResponse(std::move(json)));
                     });
             },
             [callbackPtr](const DrogonDbException &e) {
-                Json::Value ret;
-                ret["result"] = "error!";
-                auto resp = HttpResponse::newHttpJsonResponse(ret);
-                (*callbackPtr)(resp);
+                Json::Value json{};
+                json["code"] = 1;
+                json["message"] = e.base().what();
+                (*callbackPtr)(HttpResponse::newHttpJsonResponse(std::move(json)));
             });
     }
 }
