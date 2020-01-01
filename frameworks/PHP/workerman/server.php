@@ -6,7 +6,7 @@ use Workerman\Protocols\Http;
 use Workerman\Worker;
 
 $http_worker                = new Worker('http://0.0.0.0:8080');
-$http_worker->count         = (int) shell_exec('nproc') * 3;
+$http_worker->count         = (int) shell_exec('nproc') * 4;
 $http_worker->onWorkerStart = function () {
     global $pdo, $statement, $fortune, $random, $update;
     $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world',
