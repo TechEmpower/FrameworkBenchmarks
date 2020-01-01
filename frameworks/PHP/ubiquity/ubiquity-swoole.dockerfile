@@ -29,4 +29,8 @@ RUN php composer.phar install --optimize-autoloader --classmap-authoritative --n
 
 RUN chmod 777 -R /ubiquity/.ubiquity/*
 
+RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /usr/local/etc/php/php-async.ini
+
+USER www-data
+
 CMD /ubiquity/vendor/bin/Ubiquity serve -t=swoole -p=8080 -h=0.0.0.0
