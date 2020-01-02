@@ -5,7 +5,8 @@ use actix_http::Error;
 use bytes::{Bytes, BytesMut};
 use futures::stream::futures_unordered::FuturesUnordered;
 use futures::{Future, FutureExt, StreamExt, TryStreamExt};
-use rand::{thread_rng, Rng, ThreadRng};
+use rand::rngs::SmallRng;
+use rand::{Rng, SeedableRng};
 use tokio_postgres::{connect, Client, NoTls, Statement};
 
 use crate::models::World;
@@ -16,7 +17,7 @@ pub struct PgConnection {
     cl: Client,
     fortune: Statement,
     world: Statement,
-    rng: ThreadRng,
+    rng: SmallRng,
 }
 
 impl PgConnection {
@@ -24,26 +25,23 @@ impl PgConnection {
         let (cl, conn) = connect(db_url, NoTls)
             .await
             .expect("can not connect to postgresql");
-        actix_rt::spawn(conn.map(|res| panic!("{:?}", res)));
+        actix_rt::spawn(conn.map(|_| ()));
 
-        let fortune = cl.prepare("SELECT id, message FROM fortune").await.unwrap();
-        let world = cl
-            .prepare("SELECT id, randomnumber FROM world WHERE id=$1")
-            .await
-            .unwrap();
+        let fortune = cl.prepare("SELECT * FROM fortune").await.unwrap();
+        let world = cl.prepare("SELECT * FROM world WHERE id=$1").await.unwrap();
 
         PgConnection {
             cl,
             fortune,
             world,
-            rng: thread_rng(),
+            rng: SmallRng::from_entropy(),
         }
     }
 }
 
 impl PgConnection {
     pub fn get_world(&mut self) -> impl Future<Output = Result<Bytes, Error>> {
-        let random_id = self.rng.gen_range::<i32>(1, 10_001);
+        let random_id = (self.rng.gen::<u32>() % 10_000 + 1) as i32;
         let fut = self.cl.query_one(&self.world, &[&random_id]);
 
         async move {
@@ -71,7 +69,7 @@ impl PgConnection {
     ) -> impl Future<Output = Result<Vec<World>, io::Error>> {
         let worlds = FuturesUnordered::new();
         for _ in 0..num {
-            let w_id: i32 = self.rng.gen_range(1, 10_001);
+            let w_id = (self.rng.gen::<u32>() % 10_000 + 1) as i32;
             worlds.push(
                 self.cl
                     .query_one(&self.world, &[&w_id])
@@ -96,8 +94,8 @@ impl PgConnection {
     ) -> impl Future<Output = Result<Vec<World>, io::Error>> {
         let worlds = FuturesUnordered::new();
         for _ in 0..num {
-            let id: i32 = self.rng.gen_range(1, 10_001);
-            let w_id: i32 = self.rng.gen_range(1, 10_001);
+            let id = (self.rng.gen::<u32>() % 10_000 + 1) as i32;
+            let w_id = (self.rng.gen::<u32>() % 10_000 + 1) as i32;
             worlds.push(self.cl.query_one(&self.world, &[&w_id]).map(
                 move |res| match res {
                     Err(e) => {

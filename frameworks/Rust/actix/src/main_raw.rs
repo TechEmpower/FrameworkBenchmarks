@@ -39,8 +39,7 @@ struct App {
 
 impl App {
     fn handle_request(&mut self, req: Request) {
-        let path = req.path();
-        match path {
+        match req.path() {
             "/json" => {
                 let message = Message {
                     message: "Hello, World!",
@@ -69,7 +68,7 @@ impl Future for App {
         let this = self.get_mut();
 
         loop {
-            if this.read_buf.capacity() - this.read_buf.len() < 4096 {
+            if this.read_buf.capacity() - this.read_buf.len() < 512 {
                 this.read_buf.reserve(32_768);
             }
             let read = Pin::new(&mut this.io).poll_read_buf(cx, &mut this.read_buf);
@@ -84,7 +83,7 @@ impl Future for App {
             }
         }
 
-        if this.write_buf.capacity() - this.write_buf.len() < 8192 {
+        if this.write_buf.capacity() - this.write_buf.len() < 512 {
             this.write_buf.reserve(32_768);
         }
 
@@ -103,7 +102,11 @@ impl Future for App {
                 match Pin::new(&mut this.io).poll_write(cx, &this.write_buf[written..]) {
                     Poll::Pending => {
                         if written > 0 {
-                            this.write_buf.advance(written);
+                            if written == len {
+                                unsafe { this.write_buf.set_len(0) }
+                            } else {
+                                this.write_buf.advance(written);
+                            }
                         }
                         break;
                     }
@@ -115,13 +118,6 @@ impl Future for App {
                         }
                     }
                     Poll::Ready(Err(_)) => return Poll::Ready(Err(())),
-                }
-            }
-            if written > 0 {
-                if written == len {
-                    unsafe { this.write_buf.set_len(0) }
-                } else {
-                    this.write_buf.advance(written);
                 }
             }
         }
