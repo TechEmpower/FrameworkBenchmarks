@@ -4,6 +4,7 @@ using namespace drogon_model::hello_world;
 %>
 <%c++
 auto &rows=@@.get<std::vector<Fortune>>("rows");
+$$.reserve(1300);
 %>
 <!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>
 <%c++for(auto const &row:rows){%>

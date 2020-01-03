@@ -25,7 +25,8 @@ void SyncPlugin::initAndStart(const Json::Value &config)
                     {
                         Json::Value ret;
                         ret["message"] = "Hello, World!";
-                        return HttpResponse::newHttpJsonResponse(ret);
+                        return HttpResponse::newHttpJsonResponse(
+                            std::move(ret));
                     }
                     break;
                 case 10:
