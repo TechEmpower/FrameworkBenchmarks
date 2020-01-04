@@ -43,14 +43,19 @@ void QueriesCtrl::asyncHandleHttpRequest(
                 (*counter)--;
                 if ((*counter) == 0)
                 {
-                    (*callbackPtr)(HttpResponse::newHttpJsonResponse(std::move(*json)));
+                    (*callbackPtr)(
+                        HttpResponse::newHttpJsonResponse(std::move(*json)));
                 }
             },
-            [callbackPtr](const DrogonDbException &e) {
+            [callbackPtr, counter](const DrogonDbException &e) {
+                if ((*counter) <= 0)
+                    return;
+                (*counter) = -1;
                 Json::Value json{};
                 json["code"] = 1;
                 json["message"] = e.base().what();
-                (*callbackPtr)(HttpResponse::newHttpJsonResponse(std::move(json)));
+                (*callbackPtr)(
+                    HttpResponse::newHttpJsonResponse(std::move(json)));
             });
     }
 }
