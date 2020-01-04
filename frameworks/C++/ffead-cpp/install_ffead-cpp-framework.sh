@@ -22,7 +22,6 @@ cd $IROOT
 wget -q https://github.com/sumeetchhetri/ffead-cpp/archive/master.zip
 unzip master.zip
 mv ffead-cpp-master ffead-cpp-src
-mv ${TROOT}/ffead-cpp-src ffead-cpp-src
 cd ffead-cpp-src/
 
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
