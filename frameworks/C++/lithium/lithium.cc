@@ -44,7 +44,6 @@ int main(int argc, char* argv[]) {
   std::cout << "Using " << li::max_mysql_connections_per_thread << " connections per thread. " << nprocs << " threads." << std::endl; 
 
 #elif TFB_PGSQL
-  nprocs = 1; // Only one thread for postgres for now.
   auto sql_db =
     pgsql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
                    s::password = "benchmarkdbpass", s::port = 5432, s::charset = "utf8");
