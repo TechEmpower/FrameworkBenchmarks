@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fmt::Write;
 use std::io;
 
@@ -7,6 +8,7 @@ use futures::stream::futures_unordered::FuturesUnordered;
 use futures::{FutureExt, StreamExt, TryStreamExt};
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
+use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, NoTls, Statement};
 
 use crate::models::World;
@@ -18,6 +20,7 @@ pub struct PgConnection {
     fortune: Statement,
     world: Statement,
     rng: SmallRng,
+    updates: HashMap<u16, Statement>,
 }
 
 impl Actor for PgConnection {
@@ -33,11 +36,30 @@ impl PgConnection {
 
         let fortune = cl.prepare("SELECT * FROM fortune").await.unwrap();
         let world = cl.prepare("SELECT * FROM world WHERE id=$1").await.unwrap();
+        let mut updates = HashMap::new();
+        for num in 1..=500u16 {
+            let mut pl = 1;
+            let mut q = String::new();
+            q.push_str("UPDATE world SET randomnumber = CASE id ");
+            for _ in 1..=num {
+                let _ = write!(&mut q, "when ${} then ${} ", pl, pl + 1);
+                pl += 2;
+            }
+            q.push_str("ELSE randomnumber END WHERE id IN (");
+            for _ in 1..=num {
+                let _ = write!(&mut q, "${},", pl);
+                pl += 1;
+            }
+            q.pop();
+            q.push(')');
+            updates.insert(num, cl.prepare(&q).await.unwrap());
+        }
 
         Ok(PgConnection::create(move |_| PgConnection {
             cl,
             fortune,
             world,
+            updates,
             rng: SmallRng::from_entropy(),
         }))
     }
@@ -61,7 +83,7 @@ impl Handler<RandomWorld> for PgConnection {
                 .await
                 .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))?;
 
-            let mut body = BytesMut::with_capacity(33);
+            let mut body = BytesMut::with_capacity(40);
             serde_json::to_writer(
                 Writer(&mut body),
                 &World {
@@ -136,22 +158,20 @@ impl Handler<UpdateWorld> for PgConnection {
         }
 
         let cl = self.cl.clone();
+        let st = self.updates.get(&msg.0).unwrap().clone();
         Box::pin(async move {
             let worlds: Vec<World> = worlds.try_collect().await?;
 
-            let mut q = String::with_capacity(100 + 24 * msg.0 as usize);
-            q.push_str("UPDATE world SET randomnumber = CASE id ");
+            let mut params: Vec<&dyn ToSql> = Vec::with_capacity(msg.0 as usize * 3);
             for w in &worlds {
-                let _ = write!(&mut q, "when {} then {} ", w.id, w.randomnumber);
+                params.push(&w.id);
+                params.push(&w.randomnumber);
             }
-            q.push_str("ELSE randomnumber END WHERE id IN (");
             for w in &worlds {
-                let _ = write!(&mut q, "{},", w.id);
+                params.push(&w.id);
             }
-            q.pop();
-            q.push(')');
 
-            cl.simple_query(&q)
+            cl.query(&st, &params)
                 .await
                 .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))?;
 
