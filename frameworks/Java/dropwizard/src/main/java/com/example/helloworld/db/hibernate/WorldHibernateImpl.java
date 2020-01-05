@@ -1,7 +1,5 @@
 package com.example.helloworld.db.hibernate;
 
-import java.util.List;
-
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
@@ -37,6 +35,11 @@ public class WorldHibernateImpl extends AbstractDAO<World> implements WorldDAO {
 		return persist(world);
 	}
 
+	private World modify(World world, int newRandomNumber) {
+		world.setRandomNumber(newRandomNumber);
+		return persist(world);
+	}
+
 	/**
 	 * Using manual transaction handling and JDBC batch updates
 	 */
@@ -50,14 +53,15 @@ public class WorldHibernateImpl extends AbstractDAO<World> implements WorldDAO {
 
 			// using write batching. See the data source properties provided in the
 			// configuration .yml file
-			List<Integer> ids = Helper.getRandomInts(totalQueries);
+			int[] ids = Helper.getRandomInts(totalQueries);
 			int i = 0;
 			for (int id : ids) {
 				int newNumber;
+				World world = findById(id);
 				do {
 					newNumber = Helper.randomWorld();
-				} while (ids.contains(newNumber));
-				worlds[i++] = findAndModify(id, newNumber);
+				} while (world.getId() == newNumber);
+				worlds[i++] = modify(world, newNumber);
 			}
 			currentSession().flush();
 			currentSession().clear();

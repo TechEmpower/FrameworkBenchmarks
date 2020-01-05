@@ -1,9 +1,7 @@
 package com.example.helloworld.resources;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 /**
  * Provides utility methods for the benchmark tests. Taken from undertow-edge
@@ -36,8 +34,7 @@ public final class Helper {
 		return 1 + ThreadLocalRandom.current().nextInt(MAX_RANDOM_NUMBER);
 	}
 
-	public static List<Integer> getRandomInts(int count) {
-		return ThreadLocalRandom.current().ints(1, MAX_RANDOM_NUMBER + 1).distinct().limit(count).sorted().boxed()
-				.collect(Collectors.toList());
+	public static int[] getRandomInts(int count) {
+		return ThreadLocalRandom.current().ints(1, MAX_RANDOM_NUMBER + 1).distinct().limit(count).sorted().toArray();
 	}
 }
