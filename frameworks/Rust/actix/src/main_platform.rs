@@ -100,7 +100,7 @@ impl Service for App {
                 })
             }
             "/updates" => {
-                let q = utils::get_query_param(req.uri().query().unwrap_or("")) as usize;
+                let q = utils::get_query_param(req.uri().query().unwrap_or(""));
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
                 let fut = self.db.update(q);

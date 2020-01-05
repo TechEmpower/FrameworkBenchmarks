@@ -83,7 +83,7 @@ impl Future for App {
             }
         }
 
-        if this.write_buf.capacity() - this.write_buf.len() < 512 {
+        if this.write_buf.capacity() - this.write_buf.len() <= 512 {
             this.write_buf.reserve(32_768);
         }
 
@@ -101,13 +101,6 @@ impl Future for App {
             while written < len {
                 match Pin::new(&mut this.io).poll_write(cx, &this.write_buf[written..]) {
                     Poll::Pending => {
-                        if written > 0 {
-                            if written == len {
-                                unsafe { this.write_buf.set_len(0) }
-                            } else {
-                                this.write_buf.advance(written);
-                            }
-                        }
                         break;
                     }
                     Poll::Ready(Ok(n)) => {
@@ -119,6 +112,11 @@ impl Future for App {
                     }
                     Poll::Ready(Err(_)) => return Poll::Ready(Err(())),
                 }
+            }
+            if written == len {
+                unsafe { this.write_buf.set_len(0) }
+            } else if written > 0 {
+                this.write_buf.advance(written);
             }
         }
         Poll::Pending
