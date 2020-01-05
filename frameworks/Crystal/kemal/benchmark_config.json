@@ -5,7 +5,7 @@
       "default": {
         "json_url": "/json",
         "db_url": "/db",
-        "query_url": "/queries?concurrency=1queries=",
+        "query_url": "/queries?concurrency=1&queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
         "plaintext_url": "/plaintext",
