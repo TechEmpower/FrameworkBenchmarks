@@ -9,7 +9,7 @@ dependencies:
     version: 0.15.0
   kemal:
     github: kemalcr/kemal
-    version: 0.24.0
+    version: 0.26.1
   redis:
     github: stefanwille/crystal-redis
     version: 2.0.0
