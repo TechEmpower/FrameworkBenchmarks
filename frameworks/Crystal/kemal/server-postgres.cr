@@ -5,8 +5,7 @@ require "commander"
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
 
-APPDB          = DB.open(ENV["DATABASE_URL"])
-DB_CONCURRENCY = (ENV["DB_CONCURRENCY"]? || "5").to_i
+APPDB = DB.open(ENV["DATABASE_URL"])
 
 class CONTENT
   UTF8  = "; charset=UTF-8"
@@ -17,16 +16,10 @@ end
 
 ID_MAXIMUM = 10_000
 
-private def random_world_with_conn(conn)
-  id = rand(1..ID_MAXIMUM)
-  id, random_number = conn.query_one("SELECT id, randomNumber FROM world WHERE id = $1", id, as: {Int32, Int32})
-  {id: id, randomNumber: random_number}
-end
-
 private def random_world
-  APPDB.using_connection do |conn|
-    random_world_with_conn(conn)
-  end
+  id = rand(1..ID_MAXIMUM)
+  id, random_number = APPDB.query_one("SELECT id, randomNumber FROM world WHERE id = $1", id, as: {Int32, Int32})
+  {id: id, randomNumber: random_number}
 end
 
 private def set_world(world)
@@ -45,9 +38,14 @@ private def fortunes
 end
 
 private def sanitized_query_count(request)
-  queries = request.params.query["queries"].as(String)
+  queries = request.params.query["queries"]? || "1"
   queries = queries.to_i? || 1
   queries.clamp(1..500)
+end
+
+private def sanitized_concurrency(request)
+  concurrency = request.params.query["concurrency"]? || "1"
+  concurrency.to_i? || 1
 end
 
 before_all do |env|
@@ -85,24 +83,16 @@ end
 get "/queries" do |env|
   count = sanitized_query_count(env)
 
-  begin
-    cmd = Commander(NamedTuple(id: Int32, randomNumber: Int32)).new(count, DB_CONCURRENCY)
-    puts "Fetching #{count} items"
-    count.times do
-      cmd.dispatch do
-        random_world
-      end
+  cmd = Commander(NamedTuple(id: Int32, randomNumber: Int32)).new(count, sanitized_concurrency(env))
+  count.times do
+    cmd.dispatch do
+      random_world
     end
-
-    results = cmd.collect
-    env.response.content_type = CONTENT::JSON
-    results.to_json
-  rescue ex
-    puts ex.message
-    puts ex.callstack
-    puts ex.inspect_with_backtrace
-    ex.message
   end
+
+  results = cmd.collect
+  env.response.content_type = CONTENT::JSON
+  results.to_json
 end
 
 # Postgres Test 4: Fortunes
