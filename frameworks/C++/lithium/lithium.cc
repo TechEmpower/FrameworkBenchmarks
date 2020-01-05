@@ -41,6 +41,7 @@ int main(int argc, char* argv[]) {
                    s::password = "benchmarkdbpass", s::port = 3306, s::charset = "utf8");
   int mysql_max_connection = sql_db.connect()("SELECT @@GLOBAL.max_connections;").read<int>() * 0.75;
   li::max_mysql_connections_per_thread = (mysql_max_connection / nprocs);
+  std::cout << "Using " << li::max_mysql_connections_per_thread << " connections per thread. " << nprocs << " threads." << std::endl; 
 
 #elif TFB_PGSQL
   auto sql_db =
@@ -48,6 +49,7 @@ int main(int argc, char* argv[]) {
                    s::password = "benchmarkdbpass", s::port = 5432, s::charset = "utf8");
   int pgsql_max_connection = atoi(sql_db.connect()("SHOW max_connections;").read<std::string>().c_str()) * 0.75;
   li::max_pgsql_connections_per_thread = (pgsql_max_connection / nprocs);
+  std::cout << "Using " << li::max_pgsql_connections_per_thread << " connections per thread. " << nprocs << " threads." << std::endl; 
 #endif
 
   auto fortunes = sql_orm_schema(sql_db, "Fortune").fields(
