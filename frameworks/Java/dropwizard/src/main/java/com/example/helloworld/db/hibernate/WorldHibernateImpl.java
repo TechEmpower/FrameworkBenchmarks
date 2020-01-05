@@ -60,7 +60,7 @@ public class WorldHibernateImpl extends AbstractDAO<World> implements WorldDAO {
 				World world = findById(id);
 				do {
 					newNumber = Helper.randomWorld();
-				} while (world.getId() == newNumber);
+				} while (world.getRandomNumber() == newNumber);
 				worlds[i++] = modify(world, newNumber);
 			}
 			currentSession().flush();
