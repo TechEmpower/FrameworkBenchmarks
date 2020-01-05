@@ -17,7 +17,7 @@ ID_MAXIMUM = 10_000
 
 private def random_world
   id = rand(1..ID_MAXIMUM)
-  random_number = APPDB.query_one("SELECT randomNumber FROM world WHERE id = $1", id, as: Int32)
+  id, random_number = APPDB.query_one("SELECT id, randomNumber FROM world WHERE id = $1", id, as: {Int32, Int32})
   {id: id, randomNumber: random_number}
 end
 
@@ -44,7 +44,7 @@ end
 
 before_all do |env|
   env.response.headers["Server"] = "Kemal"
-  env.response.headers["Date"] = HTTP.format_time(Time.now)
+  env.response.headers["Date"] = HTTP.format_time(Time.utc)
 end
 
 #
