@@ -12,6 +12,8 @@ import javax.ws.rs.core.MediaType;
 
 import com.example.helloworld.db.WorldDAO;
 import com.example.helloworld.db.model.World;
+import com.example.helloworld.resources.Helper;
+
 
 @Path("/db")
 @Produces(MediaType.APPLICATION_JSON)
@@ -23,21 +25,17 @@ public class WorldResource {
 	}
 	
 	@GET
-	@UnitOfWork(transactional = false, readOnly = true) // Needed only for Hibernate - not for Mongo or JDBI
+	@UnitOfWork(readOnly = true) // Needed only for Hibernate - not for Mongo or JDBI
 	public Object db() {
 		return worldDAO.findById(Helper.randomWorld());
 	}
 	
 	@GET
 	@Path("/query")
-	@UnitOfWork(transactional = false,  readOnly = true) // Needed only for Hibernate - not for Mongo or JDBI
+	@UnitOfWork(readOnly = true) // Needed only for Hibernate - not for Mongo or JDBI
 	public Object query(@QueryParam("queries") String queries) {
 		int totalQueries = Helper.getQueries(queries); // Optional check is done inside
-		int[] ids = new int[totalQueries];
-		for (int i = 0; i < totalQueries; i++) {
-			ids[i] = Helper.randomWorld();
-		}
-		return worldDAO.findById(ids);
+		return worldDAO.findById(Helper.getRandomInts(totalQueries).stream().mapToInt(i -> i).toArray());
 	}
 
 	@GET
