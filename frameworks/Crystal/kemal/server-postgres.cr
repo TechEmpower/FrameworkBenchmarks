@@ -1,10 +1,12 @@
 require "kemal"
 require "pg"
+require "commander"
 
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
 
-APPDB = DB.open(ENV["DATABASE_URL"])
+APPDB          = DB.open(ENV["DATABASE_URL"])
+DB_CONCURRENCY = (ENV["DB_CONCURRENCY"]? || "5").to_i
 
 class CONTENT
   UTF8  = "; charset=UTF-8"
@@ -15,10 +17,16 @@ end
 
 ID_MAXIMUM = 10_000
 
-private def random_world
+private def random_world_with_conn(conn)
   id = rand(1..ID_MAXIMUM)
-  id, random_number = APPDB.query_one("SELECT id, randomNumber FROM world WHERE id = $1", id, as: {Int32, Int32})
+  id, random_number = conn.query_one("SELECT id, randomNumber FROM world WHERE id = $1", id, as: {Int32, Int32})
   {id: id, randomNumber: random_number}
+end
+
+private def random_world
+  APPDB.using_connection do |conn|
+    random_world_with_conn(conn)
+  end
 end
 
 private def set_world(world)
@@ -75,12 +83,26 @@ end
 
 # Postgres Test 3: Multiple database query
 get "/queries" do |env|
-  results = (1..sanitized_query_count(env)).map do
-    random_world
-  end
+  count = sanitized_query_count(env)
 
-  env.response.content_type = CONTENT::JSON
-  results.to_json
+  begin
+    cmd = Commander(NamedTuple(id: Int32, randomNumber: Int32)).new(count, DB_CONCURRENCY)
+    puts "Fetching #{count} items"
+    count.times do
+      cmd.dispatch do
+        random_world
+      end
+    end
+
+    results = cmd.collect
+    env.response.content_type = CONTENT::JSON
+    results.to_json
+  rescue ex
+    puts ex.message
+    puts ex.callstack
+    puts ex.inspect_with_backtrace
+    ex.message
+  end
 end
 
 # Postgres Test 4: Fortunes
