@@ -6,7 +6,7 @@ shards:
 
   db:
     github: crystal-lang/crystal-db
-    version: 0.5.1
+    version: 0.8.0
 
   exception_page:
     github: crystal-loot/exception_page
@@ -22,7 +22,7 @@ shards:
 
   pg:
     github: will/crystal-pg
-    version: 0.15.0
+    version: 0.20.0
 
   pool:
     github: ysbaddaden/pool
@@ -34,5 +34,5 @@ shards:
 
   redis:
     github: stefanwille/crystal-redis
-    version: 2.0.0
+    version: 2.5.3
 

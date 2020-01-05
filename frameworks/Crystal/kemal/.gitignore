@@ -1,1 +1,3 @@
 lib/
+*.dwarf
+server-postgres
