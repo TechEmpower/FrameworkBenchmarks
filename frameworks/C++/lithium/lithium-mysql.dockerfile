@@ -1,12 +1,11 @@
 FROM buildpack-deps:focal
 
 RUN apt update -yqq
-RUN apt install -yqq g++-9 libboost-dev libmariadb-dev wget
-RUN apt install -yqq libboost-context-dev
+RUN apt install -yqq libboost-dev libmariadb-dev wget  libboost-context-dev g++-9 
 
 COPY ./ ./
 
-ENV COMMIT=e8dc32136a1a5b766dc7626101cf5b64e2510af5
+ENV COMMIT=0a02d05e4c9eab883d9031aabee01017027db8de
 
 RUN wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_mysql.hh
 RUN wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_http_backend.hh
