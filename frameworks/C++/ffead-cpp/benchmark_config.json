@@ -91,7 +91,7 @@
 			"display_name": "ffead-cpp-apache-mongo",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"apache-mysql": {
 			"json_url": "/te-benchmark/json",
