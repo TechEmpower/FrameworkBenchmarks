@@ -7,7 +7,7 @@ use models\World;
 /**
  * Bench controller.
  */
-class Db extends \Ubiquity\controllers\Controller {
+class Db extends \Ubiquity\controllers\SimpleViewController {
 
 	public function initialize() {
 		\header('Content-Type: application/json');
