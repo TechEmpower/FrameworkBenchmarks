@@ -1,4 +1,4 @@
-FROM crystallang/crystal:0.26.1
+FROM crystallang/crystal:0.32.1
 
 WORKDIR /kemal
 COPY views views
