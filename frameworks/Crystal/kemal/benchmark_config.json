@@ -39,7 +39,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Kemal (PostgreSQL)",
+        "display_name": "Kemal (PostgreSQL) - Concurrent Queries",
         "notes": "",
         "versus": "crystal"
       }
