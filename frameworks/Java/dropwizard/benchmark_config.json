@@ -64,7 +64,7 @@
       "display_name": "dropwizard",
       "notes": "dropwizard PostgreSQL using hibernate",
       "versus": "servlet-postgres-raw",
-      "tags": ["broken"]
+      "tags": []
     },
     "jdbi-postgres": {
       "db_url": "/db",
