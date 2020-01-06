@@ -82,15 +82,23 @@ end
 # Postgres Test 3: Multiple database query
 get "/queries" do |env|
   count = sanitized_query_count(env)
+  concurrency = sanitized_concurrency(env)
 
-  cmd = Commander(NamedTuple(id: Int32, randomNumber: Int32)).new(count, sanitized_concurrency(env))
-  count.times do
-    cmd.dispatch do
-      random_world
+  results =
+    if concurrency > 1
+      cmd = Commander(NamedTuple(id: Int32, randomNumber: Int32)).new(count, concurrency)
+      count.times do
+        cmd.dispatch do
+          random_world
+        end
+      end
+
+      cmd.collect
+    else
+      (1..count).map do
+        random_world
+      end
     end
-  end
-
-  results = cmd.collect
   env.response.content_type = CONTENT::JSON
   results.to_json
 end
