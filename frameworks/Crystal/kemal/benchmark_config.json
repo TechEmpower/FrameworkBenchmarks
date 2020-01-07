@@ -25,7 +25,7 @@
       "versus": "crystal"
     },
     "concurrent-queries": {
-      "query_url": "/queries?concurrency=5&queries=",
+      "query_url": "/queries?concurrency=2&queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
