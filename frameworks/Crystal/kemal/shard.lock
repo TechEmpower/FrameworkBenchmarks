@@ -1,5 +1,9 @@
 version: 1.0
 shards:
+  commander:
+    github: snluu/commander
+    commit: 9396efd427f06f0f6de5206f6e81d54fcd254abe
+
   db:
     github: crystal-lang/crystal-db
     version: 0.8.0
