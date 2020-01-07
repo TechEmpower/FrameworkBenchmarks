@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
            std::ostringstream ss;
            ss << "UPDATE World SET randomNumber=tmp.randomNumber FROM (VALUES ";
            for (int i = 0; i < N; i++)
-             ss << "($" << N*2+1 << "::integer, $" << N*2+2 << "::integer) "<< (i == N-1 ? "": ",");
+             ss << "($" << i*2+1 << "::integer, $" << i*2+2 << "::integer) "<< (i == N-1 ? "": ",");
            ss << ") AS tmp(id, randomNumber) WHERE tmp.id = World.id";
            return ss.str();
          })(numbers);
