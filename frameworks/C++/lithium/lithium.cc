@@ -99,7 +99,9 @@ int main(int argc, char* argv[]) {
 
     std::vector<decltype(random_numbers.all_fields())> numbers(N);
     
+#if TFB_MYSQL
     raw_c("START TRANSACTION");
+#endif
     for (int i = 0; i < N; i++)
     {
       numbers[i] = c.find_one(s::id = 1 + rand() % 9999).value();
@@ -111,6 +113,7 @@ int main(int argc, char* argv[]) {
 #if TFB_MYSQL
     for (int i = 0; i < N; i++)
       c.update(numbers[i]);
+    raw_c("COMMIT");
 #elif TFB_PGSQL
 
     if (N == 20)
@@ -135,7 +138,6 @@ int main(int argc, char* argv[]) {
     
 #endif
     
-    raw_c("COMMIT");
 
     response.write_json(numbers);
   };
