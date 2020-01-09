@@ -1,5 +1,5 @@
 {
-  "framework": "wizzardo-http-inline-java",
+  "framework": "wizzardo-inline",
   "tests": [
     {
       "default": {
@@ -10,7 +10,7 @@
         "approach": "Realistic",
         "classification": "Micro",
         "database": "Postgres",
-        "framework": "wizzardo-http-inline-java",
+        "framework": "wizzardo-inline",
         "language": "Haskell",
         "flavor": "None",
         "orm": "Full",
@@ -18,7 +18,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "wizzardo-http-inline-java",
+        "display_name": "wizzardo-inline",
         "notes": "",
         "versus": "wizzardo-http"
       }

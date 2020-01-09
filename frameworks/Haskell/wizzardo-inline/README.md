@@ -1,4 +1,4 @@
-# wizzardo-http-inline-java Benchmarking Test
+# wizzardo-inline Benchmarking Test
 
 ### Test Type Implementation Source Code
 
