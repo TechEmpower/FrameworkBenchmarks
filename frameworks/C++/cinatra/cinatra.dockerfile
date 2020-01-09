@@ -4,6 +4,7 @@ RUN apt-get update -yqq && \
 	apt-get install -yqq cmake git uuid-dev gcc g++ autoconf
 
 ENV IASIO=/asio/asio
+ENV CINATRA_HOME=/cinatra
 ENV CINATRA=/cinatra/example
 
 RUN git clone https://github.com/chriskohlhoff/asio.git
