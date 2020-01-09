@@ -1,13 +1,12 @@
 FROM golang:1.13
 
-ADD ./ /fiber
+ENV GO111MODULE on
 WORKDIR /fiber
 
-RUN mkdir bin
-ENV GOPATH /fiber
-ENV PATH ${GOPATH}/bin:${PATH}
+COPY ./src /fiber
 
-RUN go get github.com/fenny/fiber
+RUN go mod download
 
 RUN go build -o server server.go
+
 CMD ./server
