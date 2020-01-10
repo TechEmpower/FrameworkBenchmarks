@@ -11,6 +11,8 @@ COPY stack-linear.yaml stack-linear.yaml
 COPY env-linear.sh env-linear.sh
 COPY set-java-home.sh set-java-home.sh
 
-RUN bash -c ". env-linear.sh; stack build wizzardo-http-benchmark"
+RUN stack upgrade
+
+RUN bash -c ". env-linear.sh; stack build wizzardo-http-benchmark --no-terminal"
 
 CMD bash -c ". env-linear.sh; stack exec -- wizzardo-http-benchmark env=prod +RTS -A32m -N$(nproc) -RTS"
