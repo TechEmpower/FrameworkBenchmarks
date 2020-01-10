@@ -8,6 +8,7 @@ ENV CINATRA_HOME=/cinatra
 ENV CINATRA=/cinatra/example
 
 RUN git clone https://github.com/chriskohlhoff/asio.git
+RUN git checkout 8087252a0c3c2f0baad96ddbd6554db17a846376
 
 WORKDIR $IASIO
 
@@ -17,6 +18,7 @@ RUN make -j && make install
 WORKDIR /
 
 RUN git clone https://github.com/qicosmos/cinatra.git
+RUN git checkout 3f2d75fa8d249ccecce56530a67205793caeb18a
 
 WORKDIR $CINATRA
 
