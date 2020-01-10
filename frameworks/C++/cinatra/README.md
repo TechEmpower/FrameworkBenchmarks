@@ -4,7 +4,7 @@ cinatra is a high-performance, easy-to-use http framework developed in Modern C+
 
 ## Testing Source Code
 
-* [PLAINTEXT](https://github.com/qicosmos/FrameworkBenchmarks/blob/master/frameworks/C%2B%2B/cinatra/cinatra_benchmark/main.cpp)
+* [PLAINTEXT](cinatra_benchmark/main.cpp)
 
 ## Test URLs
 
