@@ -12,6 +12,6 @@ ENV KEMAL_ENV production
 ENV DATABASE_URL postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?initial_pool_size=128&max_idle_pool_size=128
 
 RUN shards install
-RUN crystal build --release --no-debug server-postgres.cr
+RUN crystal build -Dpreview_mt --release --no-debug server-postgres.cr
 
 CMD bash run.sh
