@@ -6,31 +6,11 @@ This library is inspired by **[Express](https://expressjs.com/en/4x/api.html)**,
 * [Fiber](https://github.com/fenny/fiber)
 
 ## Version Tested
-* [Fiber v0.4.0](https://github.com/fenny/fiber/releases)
+* [Fiber v0.5.5](https://github.com/fenny/fiber/releases)
 
 ## Test URLs
 * http://localhost:8080/json
+* http://localhost:8080/db
+* http://localhost:8080/queries?queries=
+* http://localhost:8080/update?queries=
 * http://localhost:8080/plaintext
-
-## Benchmark Source
-```go
-package main
-
-import "github.com/fenny/fiber"
-
-type JSON struct {
-	Message string `json:"message"`
-}
-
-func main() {
-	app := fiber.New()
-	app.Settings.Name = "Fiber"
-	app.Get("/plaintext", func(c *fiber.Ctx) {
-		c.Send("Hello, World!")
-	})
-	app.Get("/json", func(c *fiber.Ctx) {
-		c.Json(JSON{"Hello, World!"})
-	})
-	app.Listen(8080)
-}
-```
