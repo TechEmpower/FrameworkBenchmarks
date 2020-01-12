@@ -7,12 +7,13 @@ use models\World;
 /**
  * Bench controller.
  */
-class Db extends \Ubiquity\controllers\SimpleViewController {
+class Db extends \Ubiquity\controllers\Controller {
+
+	public function __construct() {}
 
 	public function initialize() {
 		\header('Content-Type: application/json');
 		\Ubiquity\cache\CacheManager::startProd(\Ubiquity\controllers\Startup::$config);
-		DAO::setModelDatabase(World::class);
 	}
 
 	public function index() {
