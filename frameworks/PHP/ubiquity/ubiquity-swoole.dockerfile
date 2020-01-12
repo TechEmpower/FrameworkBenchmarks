@@ -23,7 +23,7 @@ RUN deploy/run/install-composer.sh
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq git unzip > /dev/null
 
-RUN php composer.phar require phpmv/ubiquity-devtools:dev-techempower-benchmarks phpmv/ubiquity-swoole:dev-techempower-benchmarks --quiet
+RUN php composer.phar require phpmv/ubiquity-devtools:dev-master phpmv/ubiquity-swoole:dev-master --quiet
 
 RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
