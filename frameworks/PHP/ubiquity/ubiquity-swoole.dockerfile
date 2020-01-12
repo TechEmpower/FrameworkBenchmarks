@@ -9,7 +9,8 @@ RUN apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo pdo_pgsql pgsql > /dev/null
 
-COPY deploy/conf/php-async.ini /usr/local/etc/php/
+COPY deploy/conf/php-async.ini /usr/local/etc/php/php.ini
+RUN echo "zend_extension=opcache.so" >> /usr/local/etc/php/php.ini
 
 ADD ./ /ubiquity
 WORKDIR /ubiquity
@@ -29,7 +30,7 @@ RUN php composer.phar install --optimize-autoloader --classmap-authoritative --n
 
 RUN chmod 777 -R /ubiquity/.ubiquity/*
 
-RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /usr/local/etc/php/php-async.ini
+RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /usr/local/etc/php/php.ini
 
 USER www-data
 
