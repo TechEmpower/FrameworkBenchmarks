@@ -1,4 +1,4 @@
-FROM rust:1.38
+FROM rust:1.40
 
 RUN apt update -yqq && apt install -yqq cmake
 
