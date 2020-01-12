@@ -26,14 +26,14 @@ void escape_html_entities(B& buffer, const std::string& data)
 
 int main(int argc, char* argv[]) {
 
-  if (argc != 4)
+  if (argc != 3)
   {
-    std::cerr << "Usage: " << argv[0] << " sql_host port nprocs" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " sql_host port" << std::endl;
     return 1;
   }
 
   int port = atoi(argv[2]);
-  int nprocs = atoi(argv[3]);
+  int nprocs = std::thread::hardware_concurrency();
 
 #if TFB_MYSQL
   auto sql_db =
