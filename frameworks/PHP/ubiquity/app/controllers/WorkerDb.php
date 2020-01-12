@@ -7,7 +7,9 @@ use models\World;
 /**
  * Bench controller.
  */
-class WorkerDb extends \Ubiquity\controllers\SimpleViewController {
+class WorkerDb extends \Ubiquity\controllers\Controller {
+
+	public function __construct() {}
 
 	public function initialize() {
 		\Ubiquity\utils\http\UResponse::setContentType('application/json');
