@@ -27,12 +27,14 @@ RUN deploy/run/install-composer.sh
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq git unzip > /dev/null
 
-RUN php composer.phar require phpmv/ubiquity-devtools:dev-techempower-benchmarks phpmv/ubiquity-workerman:dev-techempower-benchmarks --quiet
+RUN php composer.phar require phpmv/ubiquity-devtools:dev-master phpmv/ubiquity-workerman:dev-master --quiet
 
 RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 RUN chmod 777 -R /ubiquity/.ubiquity/*
 
 RUN sed -i "s|'worker'|'pgsql'|g" /ubiquity/app/config/workerServices.php
+
+RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/7.4/cli/php.ini
 
 CMD /ubiquity/vendor/bin/Ubiquity serve -t=workerman -p=8080 -h=0.0.0.0
