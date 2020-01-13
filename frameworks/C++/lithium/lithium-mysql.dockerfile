@@ -12,4 +12,4 @@ RUN wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_header
 
 RUN g++ -DTFB_MYSQL -O3 -DNDEBUG -march=native -std=c++17 ./lithium.cc -I /usr/include/mariadb -lpthread -lmariadbclient -lboost_context -o /lithium_tbf
 
-CMD /lithium_tbf tfb-database 8080 $(nproc)
+CMD /lithium_tbf tfb-database 8080
