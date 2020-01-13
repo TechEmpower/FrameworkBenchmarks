@@ -33,37 +33,21 @@ type World struct {
 type Worlds []World
 
 func main() {
-	// Connect with database
-	connect()
-	// Create new fiber instance
-	app := fiber.New()
-	// All test types require Server HTTP response headers.
-	app.Server = "Fiber"
-	// Set routes with the correct handlers
+	db, _ = sql.Open("mysql", "benchmarkdbuser:benchmarkdbpass@tcp(tfb-database:3306)/hello_world")
+	db.SetMaxIdleConns(runtime.NumCPU() * 2)
+	db.SetMaxOpenConns(runtime.NumCPU() * 2)
+	stmtWorldSelect, _ = db.Prepare("SELECT id, randomNumber FROM World WHERE id = ?")
+	stmtWorldUpdate, _ = db.Prepare("UPDATE World SET randomNumber = ? WHERE id = ?")
+	stmtFortuneSelect, _ = db.Prepare("SELECT id, message FROM Fortune")
 
+	app := fiber.New()
+	app.Server = "Fiber"
 	app.Get("/json", jsonSerialization)
 	app.Get("/db", singleDatabaseQuery)
 	app.Get("/queries", multipleDatabaseQueries)
 	app.Get("/update", databaseUpdates)
 	app.Get("/plaintext", plainText)
-	// Listen on port 8080
 	app.Listen(8080)
-}
-
-// Connect with Mysql database
-func connect() {
-	// Connect with database
-	db, _ = sql.Open("mysql", "benchmarkdbuser:benchmarkdbpass@tcp(tfb-database:3306)/hello_world")
-
-	// Set some connection settings
-	maxConn := runtime.NumCPU() * 2
-	db.SetMaxIdleConns(maxConn)
-	db.SetMaxOpenConns(maxConn)
-
-	// Prepare statement
-	stmtWorldSelect, _ = db.Prepare("SELECT id, randomNumber FROM World WHERE id = ?")
-	stmtWorldUpdate, _ = db.Prepare("UPDATE World SET randomNumber = ? WHERE id = ?")
-	stmtFortuneSelect, _ = db.Prepare("SELECT id, message FROM Fortune")
 }
 
 // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#json-serialization
@@ -108,7 +92,7 @@ func databaseUpdates(c *fiber.Ctx) {
 		stmtWorldSelect.QueryRow(rand.Intn(10000)+1).Scan(&w.Id, &w.RandomNumber)
 		w.RandomNumber = int32(rand.Intn(10000) + 1)
 	}
-
+	// sorting is required for insert deadlock prevention.
 	sort.Slice(worlds, func(i, j int) bool {
 		return worlds[i].Id < worlds[j].Id
 	})

@@ -11,7 +11,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "MySQL",
-      "framework": "None",
+      "framework": "Fiber",
       "language": "Go",
       "flavor": "None",
       "orm": "Raw",
