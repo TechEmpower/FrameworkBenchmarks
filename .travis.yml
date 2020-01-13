@@ -30,7 +30,7 @@ env:
     - "TESTLANG=D"
     - "TESTLANG=Dart"
     - "TESTLANG=Dylan"
-    - "TESTDIR=Elixir/plug"
+    - "TESTLANG=Elixir"
     - "TESTLANG=Erlang"
     - "TESTLANG=FSharp"
     - 'TESTDIR="Go/chi Go/gin Go/goji Go/aah Go/beego Go/echo Go/gnet"'
