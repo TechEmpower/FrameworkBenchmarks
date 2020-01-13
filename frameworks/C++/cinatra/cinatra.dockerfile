@@ -18,7 +18,7 @@ RUN make -j && make install
 WORKDIR /
 
 RUN git clone https://github.com/qicosmos/cinatra.git
-RUN git checkout 3f2d75fa8d249ccecce56530a67205793caeb18a
+RUN git checkout 9f12b7ddef1b919167348d49b79162f3c46d7fef
 
 WORKDIR $CINATRA
 
