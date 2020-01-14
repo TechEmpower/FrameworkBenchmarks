@@ -15,4 +15,4 @@ WORKDIR /app
 
 EXPOSE 8080
 
-CMD [ "gunicorn", "app:app" , "-k", "uvicorn.workers.UvicornWorker", "-c", "gunicorn_conf.py" ]
+CMD [ "gunicorn", "app:app" , "-k", "gunicorn_wrk.UvicornWorker", "-c", "gunicorn_conf.py" ]
