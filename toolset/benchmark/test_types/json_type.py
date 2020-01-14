@@ -32,7 +32,7 @@ class JsonTestType(FrameworkTestType):
             return problems
 
         problems += verify_helloworld_object(response, url)
-        problems += verify_headers(headers, url, should_be='json')
+        problems += verify_headers(self.request_headers_and_body, headers, url, should_be='json')
 
         if len(problems) > 0:
             return problems

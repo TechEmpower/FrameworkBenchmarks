@@ -99,6 +99,10 @@ namespace PlatformBenchmarks
             {
                 PlainText(Writer);
             }
+            else if (requestType == RequestType.Json)
+            {
+                Json(Writer);
+            }
             else
             {
                 Default(Writer);

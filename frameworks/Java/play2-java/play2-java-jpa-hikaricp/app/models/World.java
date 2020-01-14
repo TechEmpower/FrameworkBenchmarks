@@ -20,7 +20,7 @@ public class World {
     public Long randomNumber;
 
     public static World findById(final Long id, final JPAApi jpa) {
-        return jpa.withTransaction("default", true, em -> em.find(World.class, id));
+        return jpa.withTransaction("default", true, em -> { return em.find(World.class, id); });
     }
 
     public static List<World> save(final List<World> worlds, final JPAApi jpa) {

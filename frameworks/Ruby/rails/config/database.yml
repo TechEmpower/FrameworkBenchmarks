@@ -1,6 +1,5 @@
 ---
 _: &common
-  adapter: mysql2
   database: hello_world
   username: benchmarkdbuser
   password: benchmarkdbpass
@@ -15,6 +14,12 @@ test:
   <<: *common
   pool: 64
 
-production:
+production_mysql:
   <<: *common
-  pool: 256
+  adapter: mysql2
+  pool: 64
+
+production_postgresql:
+  <<: *common
+  adapter: postgresql
+  pool: 64

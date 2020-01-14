@@ -1,9 +1,13 @@
 {
+  "minimum-stability": "dev",
+  "config": {
+    "optimize-autoloader": true,
+    "classmap-authoritative": true
+  },
   "require": {
-    "hamlet/hamlet-core" : "^3.2",
-    "cache/apcu-adapter": "^1",
-    "react/http": "*",
-    "swoft/swoole-ide-helper": "*"
+    "hamlet-framework/http" : "dev-master",
+    "hamlet-framework/db-mysql": "dev-master",
+    "cache/array-adapter": "^1"
   },
   "autoload": {
     "psr-4": {

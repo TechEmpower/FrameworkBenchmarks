@@ -14,6 +14,7 @@
 #include "DataSourceManager.h"
 #include <stdlib.h>
 #include "CacheManager.h"
+#include "Thread.h"
 
 
 #pragma @RestController path="/"

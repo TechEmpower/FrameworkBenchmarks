@@ -1,4 +1,4 @@
-FROM golang:1.10.1
+FROM golang:1.12
 
 ADD ./ /beego
 WORKDIR /beego
@@ -13,4 +13,6 @@ RUN sh install_glide.sh
 RUN glide -v
 WORKDIR src/hello-orm-mysql
 RUN glide install
-CMD go run main.go
+
+RUN go build -o server main.go
+CMD ./server

@@ -1,0 +1,10 @@
+<objects>
+
+	<managed-object source="net.officefloor.jdbc.ConnectionManagedObjectSource" type="java.sql.Connection">
+		<property-file path="datasource.properties" />
+		<pool source="net.officefloor.jdbc.pool.ThreadLocalJdbcConnectionPoolSource">
+			<property name="maximum.connections" value="200" />
+		</pool>
+	</managed-object>
+
+</objects>

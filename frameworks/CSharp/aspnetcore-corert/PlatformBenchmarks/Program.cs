@@ -19,7 +19,11 @@ namespace PlatformBenchmarks
 
             Console.WriteLine(BenchmarkApplication.ApplicationName);
             Console.WriteLine(BenchmarkApplication.Paths.Plaintext);
+            Console.WriteLine(BenchmarkApplication.Paths.Json);
             DateHeader.SyncDateTimer();
+
+            Utf8Json.Resolvers.CompositeResolver.RegisterAndSetAsDefault(    
+                Utf8Json.Resolvers.GeneratedResolver.Instance);
 
             BuildWebHost(args).Run();
         }

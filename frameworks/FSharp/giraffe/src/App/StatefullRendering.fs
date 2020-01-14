@@ -61,8 +61,7 @@ module rec StetefullRendering =
 
     let rec private writeHtmlNode (target: StreamWriter) (node : XmlNode)  =
         match node with
-        | EncodedText text -> target |> add' (WebUtility.HtmlEncode text)
-        | RawText text -> target |> add' text
+        | Text text -> target |> add' text
         | ParentNode (e, nodes) -> writeParentNode target e nodes
         | VoidElement (n, attrs) -> writeStartElement target n attrs
     

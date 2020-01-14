@@ -9,13 +9,29 @@
 
 class Bench extends CI_Controller {
 
+    public function plaintext() {
+        $this->output
+            ->set_content_type('text/plain')
+            ->set_output('Hello, World!');
+    } 
+
     public function json() {
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode(array('message' => 'Hello, World!')));
     }
 
-    public function db($queries = 1) {
+    public function db() {
+        $worlds = $this->db
+            ->query('SELECT * FROM World WHERE id = ?', array(mt_rand(1, 10000)))
+            ->row();
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($worlds));
+    }
+    
+    public function dbquery($queries = 1) {
         $worlds = array();
         $queries = is_numeric($queries) ? min(max($queries, 1), 500) : 1;
 
@@ -23,10 +39,6 @@ class Bench extends CI_Controller {
             $worlds[] = $this->db
                 ->query('SELECT * FROM World WHERE id = ?', array(mt_rand(1, 10000)))
                 ->row();
-        }
-
-        if ($queries == 1) {
-            $worlds = $worlds[0];
         }
 
         $this->output

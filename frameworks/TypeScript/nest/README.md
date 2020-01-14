@@ -5,8 +5,8 @@ This is the Nest portion of a [benchmarking test suite](../).
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [NestJS v5.1.0](https://docs.nestjs.com/)
-* [pg 7.5.0](https://node-postgres.com/)
+* [NestJS v6.6.7](https://docs.nestjs.com/)
+* [pg 7.12.1](https://node-postgres.com/)
 
 ## Resources
 * http://nodejs.org/api/cluster.html

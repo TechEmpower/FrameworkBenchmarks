@@ -1,5 +1,6 @@
 from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
 from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers
+from time import sleep
 
 
 class PlaintextTestType(FrameworkTestType):
@@ -38,7 +39,7 @@ class PlaintextTestType(FrameworkTestType):
                   "This may negatively affect benchmark performance." %
                   extra_bytes), url))
 
-        problems += verify_headers(headers, url, should_be='plaintext')
+        problems += verify_headers(self.request_headers_and_body, headers, url, should_be='plaintext')
 
         if len(problems) == 0:
             return [('pass', '', url)]

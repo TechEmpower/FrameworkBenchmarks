@@ -14,7 +14,6 @@ let db = client.getDatabase(name: database)
 let World = db.getCollection(name: "world")
 let Fortune = db.getCollection(name: "fortune")
 
-
 class LinearCongruntialGenerator {
  
     var state = 0 //seed of 0 by default
@@ -92,14 +91,21 @@ func fetchFromWorld(id: String?) -> [String: Any] {
 
 func updateOneFromWorld() -> [String: Any] {
 
-    let rand = numGenerator.random() % 10000
-    let rand2 = numGenerator.random() % 10000
+    let worldToUpdate = fetchFromWorld(id: nil)
+    var id = Int()
+    if worldToUpdate["id"] != nil {
+        id = worldToUpdate["id"] as! Int
+    } else {
+        id = 1
+        print("Error trying to fetch a world to update")
+    }
+    let newRandom = numGenerator.random() % 10000
     var errorObj = [String: Any]()
 
     if let world = World {
 
-        var json = [String:Any]()
-        json["id"] = rand
+        var json = [String: Any]()
+        json["id"] = id
 
         var fields = [String: Any]()
         fields["id"] = 1
@@ -107,7 +113,7 @@ func updateOneFromWorld() -> [String: Any] {
         fields["_id"] = 0
 
         var update = [String: Any]()
-        update["randomNumber"] = rand2
+        update["randomNumber"] = newRandom
 
         var fieldString: String = ""
 
@@ -135,7 +141,7 @@ func updateOneFromWorld() -> [String: Any] {
         do {
             let results = try world.findAndModify(query: BSON( json: jsonString ), sort: nil, update: BSON( json: updateString ), fields: BSON( json: fieldString ), remove: false, upsert: false, new: true)
             let resultsStr = String(describing: results)
-            return convertUpdateStringToDictionary(str: resultsStr, id: rand)
+            return convertUpdateStringToDictionary(str: resultsStr, id: id)
         } catch {
             errorObj["id"] = "Error running query findAndModify"
             return errorObj

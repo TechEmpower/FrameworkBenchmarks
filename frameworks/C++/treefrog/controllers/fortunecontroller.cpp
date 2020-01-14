@@ -17,7 +17,7 @@ void FortuneController::index()
 {
     QList<Fortune> fortuneList = Fortune::getAll();
     Fortune fortune;
-    fortune.setMessage(QLatin1String("Additional fortune added at request time."));
+    fortune.setMessage(QStringLiteral("Additional fortune added at request time."));
     fortuneList << fortune;
     // Sort
     qSort(fortuneList.begin(), fortuneList.end(), caseSensitiveLessThan);
@@ -29,7 +29,7 @@ void FortuneController::mindex()
 {
     QList<MngFortune> fortuneList = MngFortune::getAll();
     MngFortune fortune;
-    fortune.setMessage(QLatin1String("Additional fortune added at request time."));
+    fortune.setMessage(QStringLiteral("Additional fortune added at request time."));
     fortuneList << fortune;
     // Sort
     qSort(fortuneList.begin(), fortuneList.end(), caseSensitiveMngFortuneLessThan);

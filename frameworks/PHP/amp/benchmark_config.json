@@ -15,13 +15,14 @@
       "flavor": "PHP7",
       "database": "MySQL",
       "orm": "Raw",
-      "platform": "None",
-      "webserver": "amphp/http-server",
+      "platform": "amp",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "amp",
       "notes": "",
-      "versus": "php"
+      "versus": "php",
+      "tags": ["broken"]
     }
   }]
 }

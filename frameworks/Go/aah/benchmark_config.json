@@ -21,6 +21,8 @@
       "versus": "go"
     },
     "mysql": {
+      "dockerfile": "aah.dockerfile",
+      "docker_cmd": "build/bin/benchmark run --envprofile bm_mysql",
       "db_url": "/db",
       "query_url": "/db/queries?count=",
       "fortune_url": "/db/fortunes",
@@ -42,6 +44,8 @@
       "versus": "go"
     },
     "postgresql": {
+      "dockerfile": "aah.dockerfile",
+      "docker_cmd": "build/bin/benchmark run --envprofile bm_postgresql",
       "db_url": "/pg-db",
       "query_url": "/pg-db/queries?count=",
       "fortune_url": "/pg-db/fortunes",

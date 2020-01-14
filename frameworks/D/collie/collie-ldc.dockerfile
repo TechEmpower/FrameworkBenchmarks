@@ -1,4 +1,4 @@
-FROM dlanguage/ldc:1.7.0
+FROM dlang2/ldc-ubuntu:1.15.0
 
 ADD ./ /collie
 WORKDIR /collie

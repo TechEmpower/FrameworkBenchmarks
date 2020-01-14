@@ -4,6 +4,8 @@
 using System;
 using System.Buffers.Text;
 using System.IO.Pipelines;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 
@@ -26,6 +28,8 @@ namespace PlatformBenchmarks
 
         private readonly static AsciiString _plainTextBody = "Hello, World!";
 
+        private static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions();
+        
         private readonly static AsciiString _fortunesTableStart = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
         private readonly static AsciiString _fortunesRowStart = "<tr><td>";
         private readonly static AsciiString _fortunesColumn = "</td><td>";
@@ -42,6 +46,7 @@ namespace PlatformBenchmarks
             public readonly static AsciiString Fortunes = "/fortunes";
             public readonly static AsciiString Plaintext = "/plaintext";
             public readonly static AsciiString Updates = "/updates/queries=";
+            public readonly static AsciiString MultipleQueries = "/queries/queries=";
         }
 
         private RequestType _requestType;
@@ -71,17 +76,22 @@ namespace PlatformBenchmarks
                 }
                 else if (Paths.Updates.Length <= pathLength && path.StartsWith(Paths.Updates))
                 {
-                    _queries = ParseQueries(path);
+                    _queries = ParseQueries(path, Paths.Updates.Length);
                     requestType = RequestType.Updates;
+                }
+                else if (Paths.MultipleQueries.Length <= pathLength && path.StartsWith(Paths.MultipleQueries))
+                {
+                    _queries = ParseQueries(path, Paths.MultipleQueries.Length);
+                    requestType = RequestType.MultipleQueries;
                 }
             }
 
             _requestType = requestType;
         }
 
-        private static int ParseQueries(Span<byte> path)
+        private static int ParseQueries(Span<byte> path, int pathLength)
         {
-            if (!Utf8Parser.TryParse(path.Slice(Paths.Updates.Length), out int queries, out _) || queries < 1)
+            if (!Utf8Parser.TryParse(path.Slice(pathLength), out int queries, out _) || queries < 1)
             {
                 queries = 1;
             }
@@ -116,6 +126,10 @@ namespace PlatformBenchmarks
             else if (requestType == RequestType.Updates)
             {
                 task = Updates(Writer, _queries);
+            }
+            else if (requestType == RequestType.MultipleQueries)
+            {
+                task = MultipleQueries(Writer, _queries);
             }
             else
             {
@@ -153,7 +167,8 @@ namespace PlatformBenchmarks
             Json,
             Fortunes,
             SingleQuery,
-            Updates
+            Updates,
+            MultipleQueries
         }
     }
 }

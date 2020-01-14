@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "SwiftNIOTFB",
     dependencies: [
-        .package(url: "https://github.com/apple/swift-nio.git", from: "1.3.1"),
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.7.0"),
     ],
     targets: [
         .target(name: "swift-nio-tfb-default", dependencies: ["NIO", "NIOHTTP1"]),

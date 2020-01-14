@@ -3,8 +3,8 @@ package module;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import io.reactiverse.pgclient.PgPoolOptions;
-import io.reactiverse.rxjava.pgclient.PgClient;
-import io.vertx.rxjava.core.Vertx;
+import io.reactiverse.reactivex.pgclient.PgClient;
+import io.vertx.reactivex.core.Vertx;
 import ratpack.guice.ConfigurableModule;
 
 import java.util.ArrayList;

@@ -1,0 +1,56 @@
+cabal-version:      2.4
+name:               servant-tfb
+version:            1
+homepage:
+  https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Haskell/servant/2pkg
+
+license:            BSD-3-Clause
+author:             Oleg.Grenrus
+maintainer:         oleg.grenrus@iki.fi
+category:           Web, Servant
+build-type:         Simple
+extra-source-files: README.md
+
+common deps
+  hs-source-dirs:   src
+  default-language: Haskell2010
+  ghc-options:      -Wall -threaded -rtsopts -funbox-strict-fields
+  build-depends:
+    , aeson           ^>=1.4.5.0
+    , base            ^>=4.12
+    , bytestring      ^>=0.10.8.0
+    , lucid           ^>=2.9.11
+    , servant         ^>=0.16
+    , servant-lucid   ^>=0.9
+    , servant-server  ^>=0.16
+    , splitmix        ^>=0.0.3
+    , text            ^>=1.2.3.0
+    , transformers    ^>=0.5.6.2
+    , vector          ^>=0.12.0.3
+    , warp            ^>=3.3.2
+
+common db-deps
+  import:        deps
+  build-depends:
+    , postgresql-simple  ^>=0.6.2
+    , resource-pool      ^>=0.2.3.2
+
+executable servant-tfb
+  import:        deps
+  other-modules: Lib
+  main-is:       Main.hs
+
+executable servant-tfb-beam
+  import:        db-deps
+  other-modules: Lib
+  main-is:       Main.hs
+  cpp-options:   -DDB_BEAM
+  build-depends:
+    , beam-core      ^>=0.8
+    , beam-postgres  ^>=0.4.0.0
+
+executable servant-tfb-psql-simple
+  import:        db-deps
+  other-modules: Lib
+  main-is:       Main.hs
+  cpp-options:   -DDB_PSQL_SIMPLE

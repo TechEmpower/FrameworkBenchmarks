@@ -55,9 +55,9 @@ public final class Main {
 
     private static DataSource getDataSource(Config config) {
         HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(config.get("jdbcUrl").asString());
-        hikariConfig.setUsername(config.get("username").asString());
-        hikariConfig.setPassword(config.get("password").asString());
+        hikariConfig.setJdbcUrl(config.get("jdbcUrl").asString().get());
+        hikariConfig.setUsername(config.get("username").asString().get());
+        hikariConfig.setPassword(config.get("password").asString().get());
         hikariConfig.setMaximumPoolSize(Runtime.getRuntime().availableProcessors() * 2);
 
         return new HikariDataSource(hikariConfig);
@@ -119,7 +119,7 @@ public final class Main {
 
         // Get webserver config from the "server" section of application.yaml
         ServerConfiguration serverConfig =
-                ServerConfiguration.fromConfig(config.get("server"));
+                ServerConfiguration.create(config.get("server"));
 
         WebServer server = WebServer.create(serverConfig, createRouting(config));
 

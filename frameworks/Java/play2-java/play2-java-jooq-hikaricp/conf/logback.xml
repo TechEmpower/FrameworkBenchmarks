@@ -20,6 +20,7 @@
   -->
   <logger name="play" level="INFO" />
   <logger name="application" level="INFO" />
+  <logger name="startup" level="INFO" />
 
   <root level="ERROR">
     <appender-ref ref="ASYNCSTDOUT" />

@@ -6,9 +6,9 @@
     <Configuration Condition=" '$(Configuration)'=='' ">Release</Configuration>
     <NuGetExe Condition=" '$(NuGetExe)'=='' ">packages/nuget.exe</NuGetExe>
     <NuGetExeDir>packages/</NuGetExeDir>
-    <NuGetDownloadAddress Condition=" '$(NuGetDownloadAddress)'=='' ">http://nuget.org/nuget.exe</NuGetDownloadAddress>
+    <NuGetDownloadAddress Condition=" '$(NuGetDownloadAddress)'=='' ">https://dist.nuget.org/win-x86-commandline/latest/nuget.exe</NuGetDownloadAddress>
     <NuGetCommand Condition=" '$(NuGetCommand)'=='' AND '$(OS)' == 'Windows_NT'">"$(NuGetExe)"</NuGetCommand>
-    <NuGetCommand Condition=" '$(NuGetCommand)'=='' AND '$(OS)' != 'Windows_NT' ">mono --runtime=v4.0.30319 "$(NuGetExe)"</NuGetCommand>
+    <NuGetCommand Condition=" '$(NuGetCommand)'=='' AND '$(OS)' != 'Windows_NT' ">mono "$(NuGetExe)"</NuGetCommand>
     <Properties>Configuration=$(Configuration);SolutionDir=$(SolutionDir)</Properties>
   </PropertyGroup>
 

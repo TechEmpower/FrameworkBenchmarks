@@ -1,7 +1,0 @@
-<teams>
-
-	<team size="56" source="net.officefloor.frame.impl.spi.team.ExecutorFixedTeamSource" type="java.sql.Connection">
-		<property name="team.size" value="28" />
-	</team>
-
-</teams>

@@ -1,8 +1,0 @@
-<VirtualHost *:8080>
-  <Directory /phreeze/>
-          Options Indexes FollowSymLinks MultiViews
-          #AllowOverride None
-          Order allow,deny
-          allow from all
-  </Directory>
-</VirtualHost>

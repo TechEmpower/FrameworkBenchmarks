@@ -1,0 +1,26 @@
+{
+  "framework": "youi",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "youi",
+        "language": "Scala",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "Undertow",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "youi",
+        "notes": "",
+        "versus": "Undertow"
+      }
+    }
+  ]
+}

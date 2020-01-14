@@ -1,6 +1,5 @@
 package app.db;
 
-import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,14 +9,12 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import net.javapla.jawn.core.database.DatabaseConnection;
-import net.javapla.jawn.core.exceptions.InitException;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import app.helpers.Helper;
 import app.models.Fortune;
 import app.models.World;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Singleton
 public class DbManager {
@@ -29,9 +26,7 @@ public class DbManager {
     private DataSource source;
 
     @Inject
-    public DbManager(DatabaseConnection spec) throws ClassNotFoundException, SQLException, PropertyVetoException {
-        if (spec == null) throw new InitException("DatabaseConnection is null");
-        
+    public DbManager(DataSource spec) {
         source = spec;
     }
     
@@ -112,9 +107,6 @@ public class DbManager {
         try (Connection connection = source.getConnection()) {
             PreparedStatement fetch = connection.prepareStatement(SELECT_FORTUNE, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             ResultSet set = fetch.executeQuery();
-//            ResultSet set = connection
-//                    .createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)
-//                    .executeQuery("SELECT id, message FROM Fortune");
             while (set.next()) {
                 list.add(new Fortune(set.getInt(1), escape(set.getString(2))));
             }

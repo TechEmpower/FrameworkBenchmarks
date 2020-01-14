@@ -1,157 +1,189 @@
+use std::collections::HashMap;
+use std::fmt::Write;
 use std::io;
 
-use actix::prelude::*;
-use futures::{stream, Future, Stream};
-use rand::{thread_rng, Rng};
-use tokio_postgres::{connect, Client, Statement, TlsMode};
+use actix_http::Error;
+use bytes::{Bytes, BytesMut};
+use futures::stream::futures_unordered::FuturesUnordered;
+use futures::{Future, FutureExt, StreamExt, TryStreamExt};
+use rand::rngs::SmallRng;
+use rand::{Rng, SeedableRng};
+use tokio_postgres::types::ToSql;
+use tokio_postgres::{connect, Client, NoTls, Statement};
 
-use models::{Fortune, World};
+use crate::models::World;
+use crate::utils::{Fortune, Writer};
 
 /// Postgres interface
 pub struct PgConnection {
     cl: Client,
     fortune: Statement,
     world: Statement,
-    update: Statement,
+    rng: SmallRng,
+    updates: HashMap<u16, Statement>,
 }
 
 impl PgConnection {
-    pub fn connect(db_url: &str) -> impl Future<Item = PgConnection, Error = ()> {
-        let hs = connect(db_url.parse().unwrap(), TlsMode::None);
+    pub async fn connect(db_url: &str) -> PgConnection {
+        let (cl, conn) = connect(db_url, NoTls)
+            .await
+            .expect("can not connect to postgresql");
+        actix_rt::spawn(conn.map(|_| ()));
 
-        hs.map_err(|_| panic!("can not connect to postgresql"))
-            .and_then(|(cl, conn)| {
-                Arbiter::spawn(conn.map_err(|e| panic!("{}", e)));
-                cl.prepare("SELECT id, message FROM fortune")
-                    .map_err(|_| ())
-                    .and_then(move |fortune| {
-                        cl.prepare("SELECT id, randomnumber FROM world WHERE id=$1")
-                            .map_err(|_| ())
-                            .and_then(move |world| {
-                                let st = (fortune, world);
-                                cl.prepare("SELECT id FROM world WHERE id=$1")
-                                    .map_err(|_| ())
-                                    .and_then(|update| {
-                                        Ok(PgConnection {
-                                            cl,
-                                            fortune: st.0,
-                                            world: st.1,
-                                            update,
-                                        })
-                                    })
-                            })
-                    })
-            })
+        let fortune = cl.prepare("SELECT * FROM fortune").await.unwrap();
+        let mut updates = HashMap::new();
+        for num in 1..=500u16 {
+            let mut pl = 1;
+            let mut q = String::new();
+            q.push_str("UPDATE world SET randomnumber = CASE id ");
+            for _ in 1..=num {
+                let _ = write!(&mut q, "when ${} then ${} ", pl, pl + 1);
+                pl += 2;
+            }
+            q.push_str("ELSE randomnumber END WHERE id IN (");
+            for _ in 1..=num {
+                let _ = write!(&mut q, "${},", pl);
+                pl += 1;
+            }
+            q.pop();
+            q.push(')');
+            updates.insert(num, cl.prepare(&q).await.unwrap());
+        }
+        let world = cl.prepare("SELECT * FROM world WHERE id=$1").await.unwrap();
+
+        PgConnection {
+            cl,
+            fortune,
+            world,
+            updates,
+            rng: SmallRng::from_entropy(),
+        }
     }
 }
 
 impl PgConnection {
-    pub fn get_world(&self) -> impl Future<Item = World, Error = io::Error> {
-        let random_id = thread_rng().gen_range::<i32>(1, 10_001);
+    pub fn get_world(&mut self) -> impl Future<Output = Result<Bytes, Error>> {
+        let random_id = (self.rng.gen::<u32>() % 10_000 + 1) as i32;
+        let fut = self.cl.query_one(&self.world, &[&random_id]);
 
-        self.cl
-            .query(&self.world, &[&random_id])
-            .into_future()
-            .map_err(|e| io::Error::new(io::ErrorKind::Other, e.0))
-            .and_then(|(row, _)| {
-                let row = row.unwrap();
-                Ok(World {
+        async move {
+            let row = fut.await.map_err(|e| {
+                Error::from(io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))
+            })?;
+
+            let mut body = BytesMut::with_capacity(40);
+            serde_json::to_writer(
+                Writer(&mut body),
+                &World {
                     id: row.get(0),
                     randomnumber: row.get(1),
-                })
-            })
+                },
+            )
+            .unwrap();
+
+            Ok(body.freeze())
+        }
     }
 
     pub fn get_worlds(
-        &self, num: usize,
-    ) -> impl Future<Item = Vec<World>, Error = io::Error> {
-        let mut worlds = Vec::with_capacity(num);
+        &mut self,
+        num: usize,
+    ) -> impl Future<Output = Result<Vec<World>, io::Error>> {
+        let worlds = FuturesUnordered::new();
         for _ in 0..num {
-            let w_id: i32 = thread_rng().gen_range(1, 10_001);
+            let w_id = (self.rng.gen::<u32>() % 10_000 + 1) as i32;
             worlds.push(
                 self.cl
-                    .query(&self.world, &[&w_id])
-                    .into_future()
-                    .map_err(|e| io::Error::new(io::ErrorKind::Other, e.0))
-                    .and_then(|(row, _)| {
-                        let row = row.unwrap();
-                        Ok(World {
+                    .query_one(&self.world, &[&w_id])
+                    .map(|res| match res {
+                        Err(e) => {
+                            Err(io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))
+                        }
+                        Ok(row) => Ok(World {
                             id: row.get(0),
                             randomnumber: row.get(1),
-                        })
+                        }),
                     }),
             );
         }
 
-        stream::futures_unordered(worlds).collect()
+        worlds.try_collect()
     }
 
     pub fn update(
-        &self, num: usize,
-    ) -> impl Future<Item = Vec<World>, Error = io::Error> {
-        let mut worlds = Vec::with_capacity(num);
+        &mut self,
+        num: u16,
+    ) -> impl Future<Output = Result<Vec<World>, io::Error>> {
+        let worlds = FuturesUnordered::new();
         for _ in 0..num {
-            let id: i32 = thread_rng().gen_range(1, 10_001);
-            let w_id: i32 = thread_rng().gen_range(1, 10_001);
-            worlds.push(
-                self.cl
-                    .query(&self.update, &[&w_id])
-                    .into_future()
-                    .map_err(|e| io::Error::new(io::ErrorKind::Other, e.0))
-                    .and_then(move |(row, _)| {
-                        let row = row.unwrap();
-                        Ok(World {
+            let id = (self.rng.gen::<u32>() % 10_000 + 1) as i32;
+            let w_id = (self.rng.gen::<u32>() % 10_000 + 1) as i32;
+            worlds.push(self.cl.query_one(&self.world, &[&w_id]).map(
+                move |res| match res {
+                    Err(e) => {
+                        Err(io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))
+                    }
+                    Ok(row) => {
+                        let mut world = World {
                             id: row.get(0),
-                            randomnumber: id,
-                        })
-                    }),
-            );
+                            randomnumber: row.get(1),
+                        };
+                        world.randomnumber = id;
+                        Ok(world)
+                    }
+                },
+            ));
         }
 
         let cl = self.cl.clone();
-        stream::futures_unordered(worlds)
-            .collect()
-            .and_then(move |mut worlds| {
-                let mut update = String::with_capacity(120 + 6 * num as usize);
-                update.push_str(
-                    "UPDATE world SET randomnumber = temp.randomnumber FROM (VALUES ",
-                );
+        let st = self.updates.get(&num).unwrap().clone();
+        async move {
+            let worlds: Vec<World> = worlds.try_collect().await?;
 
-                for w in &worlds {
-                    update.push_str(&format!("({}, {}),", w.id, w.randomnumber));
-                }
-                worlds.sort_by_key(|w| w.id);
+            let mut params: Vec<&dyn ToSql> = Vec::with_capacity(num as usize * 3);
+            for w in &worlds {
+                params.push(&w.id);
+                params.push(&w.randomnumber);
+            }
+            for w in &worlds {
+                params.push(&w.id);
+            }
 
-                update.pop();
-                update.push_str(
-                    " ORDER BY 1) AS temp(id, randomnumber) WHERE temp.id = world.id",
-                );
+            cl.query(&st, &params)
+                .await
+                .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))?;
 
-                cl.batch_execute(&update)
-                    .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
-                    .and_then(|_| Ok(worlds))
-            })
+            Ok(worlds)
+        }
     }
 
-    pub fn tell_fortune(&self) -> impl Future<Item = Vec<Fortune>, Error = io::Error> {
-        let mut items = Vec::new();
-        items.push(Fortune {
+    pub fn tell_fortune(
+        &mut self,
+    ) -> impl Future<Output = Result<Vec<Fortune>, io::Error>> {
+        let mut items = vec![Fortune {
             id: 0,
             message: "Additional fortune added at request time.".to_string(),
-        });
+        }];
 
-        self.cl
-            .query(&self.fortune, &[])
-            .fold(items, move |mut items, row| {
+        let fut = self.cl.query_raw(&self.fortune, &[]);
+
+        async move {
+            let mut stream = fut
+                .await
+                .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))?;
+
+            while let Some(row) = stream.next().await {
+                let row = row.map_err(|e| {
+                    io::Error::new(io::ErrorKind::Other, format!("{:?}", e))
+                })?;
                 items.push(Fortune {
                     id: row.get(0),
                     message: row.get(1),
                 });
-                Ok::<_, io::Error>(items)
-            }).map_err(|e| io::Error::new(io::ErrorKind::Other, e))
-            .and_then(|mut items| {
-                items.sort_by(|it, next| it.message.cmp(&next.message));
-                Ok(items)
-            })
+            }
+
+            items.sort_by(|it, next| it.message.cmp(&next.message));
+            Ok(items)
+        }
     }
 }

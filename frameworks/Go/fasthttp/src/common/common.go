@@ -2,15 +2,15 @@ package common
 
 import (
 	"encoding/json"
-	"flag"
 	"log"
 	"math/rand"
 	"net"
+	"runtime"
 	"sort"
-	"sync"
+
+	"fasthttp/src/templates"
 
 	"github.com/valyala/fasthttp"
-	"templates"
 )
 
 const worldRowCount = 10000
@@ -24,19 +24,19 @@ type World struct {
 	RandomNumber int32 `json:"randomNumber"`
 }
 
-var listenAddr = flag.String("listenAddr", ":8080", "Address to listen to")
+type Worlds []World
 
 func JSONHandler(ctx *fasthttp.RequestCtx) {
-	r := jsonResponsePool.Get().(*JSONResponse)
-	r.Message = "Hello, World!"
-	JSONMarshal(ctx, r)
-	jsonResponsePool.Put(r)
-}
-
-var jsonResponsePool = &sync.Pool{
-	New: func() interface{} {
-		return &JSONResponse{}
-	},
+	r := JSONResponse{
+		Message: "Hello, World!",
+	}
+	rb, err := r.MarshalJSON()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	ctx.SetContentType("application/json")
+	ctx.Write(rb)
 }
 
 func PlaintextHandler(ctx *fasthttp.RequestCtx) {
@@ -65,12 +65,20 @@ func GetQueriesCount(ctx *fasthttp.RequestCtx) int {
 	return n
 }
 
-func GetListener() net.Listener {
-	ln, err := net.Listen("tcp4", *listenAddr)
+func GetListener(listenAddr string) net.Listener {
+	ln, err := net.Listen("tcp4", listenAddr)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return ln
+}
+
+func NumCPU() int {
+	n := runtime.NumCPU()
+	if n == 0 {
+		n = 8
+	}
+	return n
 }
 
 func SortFortunesByMessage(fortunes []templates.Fortune) {
