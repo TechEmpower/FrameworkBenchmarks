@@ -150,28 +150,28 @@ public:
 			{
 			u_put_unalignedp64(ptr,	    U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
 			u_put_unalignedp64(ptr+8,   U_MULTICHAR_CONSTANT64('L','e','n','g','t','h',':',' '));
-			u_put_unalignedp64(ptr+16,  U_MULTICHAR_CONSTANT64('x','x','x','x','\r','\n','C','o'));
-			u_put_unalignedp64(ptr+24,  U_MULTICHAR_CONSTANT64('n','t','e','n','t','-','T','y'));
-			u_put_unalignedp64(ptr+32,  U_MULTICHAR_CONSTANT64('p','e',':',' ','t','e','x','t'));
-			u_put_unalignedp64(ptr+40,  U_MULTICHAR_CONSTANT64('/','h','t','m','l',';',' ','c'));
-			u_put_unalignedp64(ptr+48,  U_MULTICHAR_CONSTANT64('h','a','r','s','e','t','=','U'));
-			u_put_unalignedp64(ptr+56,  U_MULTICHAR_CONSTANT64('T','F','-','8','\r','\n','\r','\n'));
-			u_put_unalignedp64(ptr+64,  U_MULTICHAR_CONSTANT64('<','!','d','o','c','t','y','p'));
-			u_put_unalignedp64(ptr+72,  U_MULTICHAR_CONSTANT64('e',' ','h','t','m','l','>','<'));
-			u_put_unalignedp64(ptr+80,  U_MULTICHAR_CONSTANT64('h','t','m','l','>','<','h','e'));
-			u_put_unalignedp64(ptr+88,  U_MULTICHAR_CONSTANT64('a','d','>','<','t','i','t','l'));
-			u_put_unalignedp64(ptr+96,  U_MULTICHAR_CONSTANT64('e','>','F','o','r','t','u','n'));
-			u_put_unalignedp64(ptr+104, U_MULTICHAR_CONSTANT64('e','s','<','/','t','i','t','l'));
-			u_put_unalignedp64(ptr+112, U_MULTICHAR_CONSTANT64('e','>','<','/','h','e','a','d'));
-			u_put_unalignedp64(ptr+120, U_MULTICHAR_CONSTANT64('>','<','b','o','d','y','>','<'));
-			u_put_unalignedp64(ptr+128, U_MULTICHAR_CONSTANT64('t','a','b','l','e','>','<','t'));
-			u_put_unalignedp64(ptr+136, U_MULTICHAR_CONSTANT64('r','>','<','t','h','>','i','d'));
-			u_put_unalignedp64(ptr+144, U_MULTICHAR_CONSTANT64('<','/','t','h','>','<','t','h'));
-			u_put_unalignedp64(ptr+152, U_MULTICHAR_CONSTANT64('>','m','e','s','s','a','g','e'));
-			u_put_unalignedp64(ptr+160, U_MULTICHAR_CONSTANT64('<','/','t','h','>','<','/','t'));
-			u_put_unalignedp16(ptr+168, U_MULTICHAR_CONSTANT16('r','>'));
+			u_put_unalignedp64(ptr+16,  U_MULTICHAR_CONSTANT64('x','x','x','x','x','x','x','x'));
+			u_put_unalignedp64(ptr+24,  U_MULTICHAR_CONSTANT64('\r','\n','C','o','n','t','e','n'));
+			u_put_unalignedp64(ptr+32,  U_MULTICHAR_CONSTANT64('t','-','T','y','p','e',':',' '));
+			u_put_unalignedp64(ptr+40,  U_MULTICHAR_CONSTANT64('t','e','x','t','/','h','t','m'));
+			u_put_unalignedp64(ptr+48,  U_MULTICHAR_CONSTANT64('l',';',' ','c','h','a','r','s'));
+			u_put_unalignedp64(ptr+56,  U_MULTICHAR_CONSTANT64('e','t','=','U','T','F','-','8'));
+			u_put_unalignedp64(ptr+64,  U_MULTICHAR_CONSTANT64('\r','\n','\r','\n','<','!','d','o'));
+			u_put_unalignedp64(ptr+72,  U_MULTICHAR_CONSTANT64('c','t','y','p','e',' ','h','t'));
+			u_put_unalignedp64(ptr+80,  U_MULTICHAR_CONSTANT64('m','l','>','<','h','t','m','l'));
+			u_put_unalignedp64(ptr+88,  U_MULTICHAR_CONSTANT64('>','<','h','e','a','d','>','<'));
+			u_put_unalignedp64(ptr+96,  U_MULTICHAR_CONSTANT64('t','i','t','l','e','>','F','o'));
+			u_put_unalignedp64(ptr+104, U_MULTICHAR_CONSTANT64('r','t','u','n','e','s','<','/'));
+			u_put_unalignedp64(ptr+112, U_MULTICHAR_CONSTANT64('t','i','t','l','e','>','<','/'));
+			u_put_unalignedp64(ptr+120, U_MULTICHAR_CONSTANT64('h','e','a','d','>','<','b','o'));
+			u_put_unalignedp64(ptr+128, U_MULTICHAR_CONSTANT64('d','y','>','<','t','a','b','l'));
+			u_put_unalignedp64(ptr+136, U_MULTICHAR_CONSTANT64('e','>','<','t','r','>','<','t'));
+			u_put_unalignedp64(ptr+144, U_MULTICHAR_CONSTANT64('h','>','i','d','<','/','t','h'));
+			u_put_unalignedp64(ptr+152, U_MULTICHAR_CONSTANT64('>','<','t','h','>','m','e','s'));
+			u_put_unalignedp64(ptr+160, U_MULTICHAR_CONSTANT64('s','a','g','e','<','/','t','h'));
+			u_put_unalignedp64(ptr+168, U_MULTICHAR_CONSTANT64('>','<','/','t','r','>','\0','\0'));
 
-			pwbuffer	= ptr + U_CONSTANT_SIZE("Content-Length: xxxx\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n"
+			pwbuffer	= ptr + U_CONSTANT_SIZE("Content-Length: xxxxxxxx\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n"
 														"<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
 			}
 
@@ -221,14 +221,14 @@ public:
 
 		content_length += (ptr - pwbuffer) + U_CONSTANT_SIZE("</table></body></html>");
 
-		U_INTERNAL_ASSERT_EQUALS(content_length, 1227)
-
-		ptr = pwbuffer	- U_CONSTANT_SIZE("xxxx\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n"
+		ptr = pwbuffer	- U_CONSTANT_SIZE("xxxxxxxx\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n"
 													"<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
+
+		u_put_unalignedp64(ptr, U_MULTICHAR_CONSTANT64(' ',' ',' ',' ',' ',' ',' ',' '));
 
 		(void) u_num2str32(content_length, ptr);
 
-		UClientImage_Base::wbuffer->size_adjust_constant(U_CONSTANT_SIZE("Content-Length: xxxx\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n") + content_length);
+		UClientImage_Base::wbuffer->size_adjust_constant(U_CONSTANT_SIZE("Content-Length: xxxxxxxx\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n") + content_length);
 		}
 
 	static void doQuery(vPF handlerQuery)
