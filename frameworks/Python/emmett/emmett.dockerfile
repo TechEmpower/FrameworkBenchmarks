@@ -1,6 +1,6 @@
 FROM python:3.7-alpine
 
-RUN apk add --no-cache libpq
+RUN apk add --no-cache libpq libstdc++
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
