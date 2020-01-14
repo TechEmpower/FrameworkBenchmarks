@@ -16,6 +16,10 @@ struct Fortune
 class FortuneCtrlRaw : public drogon::HttpSimpleController<FortuneCtrlRaw>
 {
   public:
+    FortuneCtrlRaw()
+        : bodyTemplate_(DrTemplateBase::newTemplate("fortune_raw.csp"))
+    {
+    }
     virtual void asyncHandleHttpRequest(
         const HttpRequestPtr &req,
         std::function<void(const HttpResponsePtr &)> &&callback) override;
@@ -23,5 +27,6 @@ class FortuneCtrlRaw : public drogon::HttpSimpleController<FortuneCtrlRaw>
     // list path definitions here;
     PATH_LIST_END
   private:
-    IOThreadStorage<orm::DbClientPtr> _dbClient;
+    IOThreadStorage<orm::DbClientPtr> dbClient_;
+    std::shared_ptr<drogon::DrTemplateBase> bodyTemplate_;
 };

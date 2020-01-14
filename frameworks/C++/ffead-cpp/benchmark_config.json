@@ -22,7 +22,7 @@
 			"display_name": "ffead-cpp-mongo",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"mysql": {
 			"json_url": "/te-benchmark/json",
@@ -45,7 +45,7 @@
 			"display_name": "ffead-cpp-mysql",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"postgresql": {
 			"json_url": "/te-benchmark/json",
@@ -68,7 +68,7 @@
 			"display_name": "ffead-cpp-postgresql",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"apache-mongo": {
 			"json_url": "/te-benchmark/json",
@@ -114,7 +114,7 @@
 			"display_name": "ffead-cpp-apache-mysql",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"apache-postgresql": {
 			"json_url": "/te-benchmark/json",
@@ -137,7 +137,7 @@
 			"display_name": "ffead-cpp-apache-postgresql",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"nginx-mongo": {
 			"json_url": "/te-benchmark/json",
@@ -160,7 +160,7 @@
 			"display_name": "ffead-cpp-nginx-mongo",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"nginx-mysql": {
 			"json_url": "/te-benchmark/json",
@@ -183,7 +183,7 @@
 			"display_name": "ffead-cpp-nginx-mysql",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"nginx-postgresql": {
 			"json_url": "/te-benchmark/json",
@@ -206,7 +206,7 @@
 			"display_name": "ffead-cpp-nginx-postgresql",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"redis": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
@@ -226,7 +226,7 @@
 			"notes": "",
 			"versus": "",
 			"wait_before_sending_requests": 10,
-			"tags": ["broken"]
+			"tags": []
 		},
 		"nginx-redis": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
@@ -246,7 +246,7 @@
 			"notes": "",
 			"versus": "",
 			"wait_before_sending_requests": 10,
-			"tags": ["broken"]
+			"tags": []
 		},
 		"apache-redis": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
@@ -266,7 +266,7 @@
 			"notes": "",
 			"versus": "",
 			"wait_before_sending_requests": 10,
-			"tags": ["broken"]
+			"tags": []
 		},
 		"memcached": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
@@ -286,7 +286,7 @@
 			"notes": "",
 			"versus": "",
 			"wait_before_sending_requests": 10,
-			"tags": ["broken"]
+			"tags": []
 		},
 		"nginx-memcached": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
@@ -306,7 +306,7 @@
 			"notes": "",
 			"versus": "",
 			"wait_before_sending_requests": 10,
-			"tags": ["broken"]
+			"tags": []
 		},
 		"apache-memcached": {
 			"cached_query_url": "/te-benchmark/cached-worlds?count=",
@@ -326,7 +326,7 @@
 			"notes": "",
 			"versus": "",
 			"wait_before_sending_requests": 10,
-			"tags": ["broken"]
+			"tags": []
 		}
 	}]
 }

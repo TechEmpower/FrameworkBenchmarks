@@ -26,14 +26,14 @@ void escape_html_entities(B& buffer, const std::string& data)
 
 int main(int argc, char* argv[]) {
 
-  if (argc != 4)
+  if (argc != 3)
   {
-    std::cerr << "Usage: " << argv[0] << " sql_host port nprocs" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " sql_host port" << std::endl;
     return 1;
   }
 
   int port = atoi(argv[2]);
-  int nprocs = atoi(argv[3]);
+  int nprocs = std::thread::hardware_concurrency();
 
 #if TFB_MYSQL
   auto sql_db =
@@ -41,6 +41,7 @@ int main(int argc, char* argv[]) {
                    s::password = "benchmarkdbpass", s::port = 3306, s::charset = "utf8");
   int mysql_max_connection = sql_db.connect()("SELECT @@GLOBAL.max_connections;").read<int>() * 0.75;
   li::max_mysql_connections_per_thread = (mysql_max_connection / nprocs);
+  std::cout << "Using " << li::max_mysql_connections_per_thread << " connections per thread. " << nprocs << " threads." << std::endl; 
 
 #elif TFB_PGSQL
   auto sql_db =
@@ -48,6 +49,7 @@ int main(int argc, char* argv[]) {
                    s::password = "benchmarkdbpass", s::port = 5432, s::charset = "utf8");
   int pgsql_max_connection = atoi(sql_db.connect()("SHOW max_connections;").read<std::string>().c_str()) * 0.75;
   li::max_pgsql_connections_per_thread = (pgsql_max_connection / nprocs);
+  std::cout << "Using " << li::max_pgsql_connections_per_thread << " connections per thread. " << nprocs << " threads." << std::endl; 
 #endif
 
   auto fortunes = sql_orm_schema(sql_db, "Fortune").fields(
@@ -97,7 +99,9 @@ int main(int argc, char* argv[]) {
 
     std::vector<decltype(random_numbers.all_fields())> numbers(N);
     
+#if TFB_MYSQL
     raw_c("START TRANSACTION");
+#endif
     for (int i = 0; i < N; i++)
     {
       numbers[i] = c.find_one(s::id = 1 + rand() % 9999).value();
@@ -109,16 +113,20 @@ int main(int argc, char* argv[]) {
 #if TFB_MYSQL
     for (int i = 0; i < N; i++)
       c.update(numbers[i]);
+    raw_c("COMMIT");
 #elif TFB_PGSQL
-    std::ostringstream ss;
-    ss << "UPDATE World SET randomNumber=tmp.randomNumber FROM (VALUES ";
-    for (int i = 0; i < N; i++)
-      ss << "(" << numbers[i].id << ", " << numbers[i].randomNumber << ") "<< (i == N-1 ? "": ",");
-    ss << ") AS tmp(id, randomNumber) WHERE tmp.id = World.id";
-    raw_c(ss.str());
+    raw_c.cached_statement
+      ([N] {
+         std::ostringstream ss;
+         ss << "UPDATE World SET randomNumber=tmp.randomNumber FROM (VALUES ";
+         for (int i = 0; i < N; i++)
+           ss << "($" << i*2+1 << "::integer, $" << i*2+2 << "::integer) "<< (i == N-1 ? "": ",");
+         ss << ") AS tmp(id, randomNumber) WHERE tmp.id = World.id";
+         return ss.str();
+       }, N)(numbers);
+    
 #endif
     
-    raw_c("COMMIT");
 
     response.write_json(numbers);
   };
