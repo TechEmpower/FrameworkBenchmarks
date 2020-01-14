@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
 COPY requirements.txt /usr/src/app
 RUN apk add --no-cache --virtual build-deps \
     g++ libffi-dev libuv-dev make musl-dev openssl-dev postgresql-dev && \
-    pip install -r /usr/src/app/requirements.txt && \
+    pip install --no-cache-dir -r /usr/src/app/requirements.txt && \
     apk del build-deps
 
 COPY ./ /app
@@ -15,4 +15,4 @@ WORKDIR /app
 
 EXPOSE 8080
 
-CMD [ "gunicorn", "app:app" , "-k", "gunicorn_wrk.UvicornWorker", "-c", "gunicorn_conf.py" ]
+CMD [ "gunicorn", "app:app" , "-k", "emmett.asgi.workers.EmmettWorker", "-c", "gunicorn_conf.py" ]

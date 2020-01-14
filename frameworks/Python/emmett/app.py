@@ -2,7 +2,7 @@
 from functools import partial
 from random import randint
 
-from emmett import App, request
+from emmett import App, request, response
 from emmett.orm import Database, Model, Field, rowmethod
 from emmett.tools import service
 
