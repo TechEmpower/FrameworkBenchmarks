@@ -8,7 +8,7 @@ RUN cp mysql.list /etc/apt/sources.list.d/
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8C718D3B5072E1F5
 
 RUN apt-get update > /dev/null
-RUN apt-get install -yqq locales > /dev/null
+RUN apt-get install -yqq apt-utils locales > /dev/null
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
@@ -35,10 +35,10 @@ RUN cp -R -p /var/log/mysql /ssd/log
 # do not see running processes from prior RUN calls; therefor, each command here
 # that relies on the mysql server running will explicitly start the server and
 # perform the work required.
-RUN chown -R mysql:mysql /var/lib/mysql /var/log/mysql /var/run/mysqld /ssd && \
-    mysqld & \
-    until mysql -uroot -psecret -e "exit"; do sleep 1; done && \
-    mysqladmin -uroot -psecret flush-hosts && \
-    mysql -uroot -psecret < create.sql
+RUN chown -R mysql:mysql /var/lib/mysql /var/log/mysql /usr/sbin/mysqld /ssd && \
+  mysqld & \
+  until mysql -uroot -psecret -e "exit"; do sleep 1; done && \
+  mysqladmin -uroot -psecret flush-hosts && \
+  mysql -uroot -psecret < create.sql
 
-CMD chown -R mysql:mysql /var/lib/mysql /var/log/mysql /var/run/mysqld /ssd && mysqld
+CMD chown -R mysql:mysql /var/lib/mysql /var/log/mysql /usr/sbin/mysqld /ssd && mysqld
