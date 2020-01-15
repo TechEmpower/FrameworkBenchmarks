@@ -33,7 +33,7 @@ app.config.db.host = 'tfb-database'
 app.config.db.user = 'benchmarkdbuser'
 app.config.db.password = 'benchmarkdbpass'
 app.config.db.database = 'hello_world'
-app.config.db.pool_size = 100
+app.config.db.pool_size = 10
 
 db = Database(app)
 db.define_models(World, Fortune)
