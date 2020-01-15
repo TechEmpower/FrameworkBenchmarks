@@ -23,6 +23,9 @@ type JSON struct {
 	Message string `json:"message"`
 }
 
+var hwJSON = JSON{"Hello, World!"}
+var hwTEXT = "Hello, World"
+
 // World struct for single database query
 type World struct {
 	Id           int32 `json:"id"`
@@ -52,7 +55,7 @@ func main() {
 
 // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#json-serialization
 func jsonSerialization(c *fiber.Ctx) {
-	c.Json(JSON{"Hello, World!"})
+	c.Json(hwJSON)
 }
 
 // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#single-database-query
@@ -109,5 +112,5 @@ func databaseUpdates(c *fiber.Ctx) {
 
 // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#plaintext
 func plainText(c *fiber.Ctx) {
-	c.SendString("Hello, World!")
+	c.SendString(hwTEXT)
 }
