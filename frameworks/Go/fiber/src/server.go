@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/fenny/fiber"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gofiber/fiber"
 )
 
 const (

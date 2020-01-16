@@ -1,9 +1,9 @@
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/fenny/fiber v0.6.9 h1:U8StfYFQCQN3SwRhOAcW1QEEPSTjigltQaWXIKRN/cw=
-github.com/fenny/fiber v0.6.9/go.mod h1:x3qfs/S5J8PzYJbpWdsa8nYhUpvF9mwGQMOSCHNa/vo=
 github.com/go-sql-driver/mysql v1.5.0 h1:ozyZYNQW3x3HtqT1jira07DN2PArx2v7/mN66gGcHOs=
 github.com/go-sql-driver/mysql v1.5.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
+github.com/gofiber/fiber v0.8.1 h1:RFJyD708eCfYj/L9iJCOUj+tunTL+H7vMf+wyBoKDAM=
+github.com/gofiber/fiber v0.8.1/go.mod h1:H4p5UQjAUsewuosS8vFHQwMJMe1oUrX1QQgvDNx8s20=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
 github.com/json-iterator/go v1.1.9 h1:9yzud/Ht36ygwatGx56VwCZtlI/2AD15T1X2sjSuGns=
 github.com/json-iterator/go v1.1.9/go.mod h1:KdQUCv79m/52Kvf8AW2vK1V8akMuk1QjK/uOdHXbAo4=
