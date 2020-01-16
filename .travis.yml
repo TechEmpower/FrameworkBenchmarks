@@ -80,6 +80,7 @@ env:
     - "TESTLANG=Swift"
     - "TESTLANG=TypeScript"
     - "TESTLANG=Ur"
+    - "TESTLANG=V"
     - "TESTLANG=Vala"
     - "TESTLANG=VB"
 
