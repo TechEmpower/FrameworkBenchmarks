@@ -3,8 +3,7 @@ module fiber
 go 1.13
 
 require (
-	github.com/fatih/color v1.9.0 // indirect
-	github.com/fenny/fiber v0.4.0
-	github.com/json-iterator/go v1.1.9 // indirect
-	github.com/valyala/fasthttp v1.7.1 // indirect
+	github.com/go-sql-driver/mysql v1.5.0
+	github.com/gofiber/fiber v0.8.1
+	github.com/valyala/fasthttp v1.8.0
 )
