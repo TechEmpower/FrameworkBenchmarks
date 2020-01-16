@@ -6,4 +6,5 @@ edition = "2018"
 
 [dependencies]
 serde = { version = "1.0.103", features = ["derive"] }
-warp = "0.1.20"
+tokio = { version = "0.2.9", features = ["macros"] }
+warp = "0.2.0"
