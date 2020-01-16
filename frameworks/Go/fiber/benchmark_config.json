@@ -3,11 +3,14 @@
   "tests": [{
     "default": {
       "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/update?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
-      "database": "None",
+      "database": "MySQL",
       "framework": "Fiber",
       "language": "Go",
       "flavor": "None",
