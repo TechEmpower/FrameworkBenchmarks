@@ -6,7 +6,7 @@ import (
 	"atreugo/src/storage"
 
 	"github.com/francoispqt/gojay"
-	"github.com/savsgio/atreugo/v9"
+	"github.com/savsgio/atreugo/v10"
 )
 
 // JSONHandlerGoJay . Test 1: JSON serialization

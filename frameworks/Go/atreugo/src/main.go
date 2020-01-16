@@ -10,7 +10,7 @@ import (
 	"atreugo/src/handlers"
 	"atreugo/src/storage"
 
-	"github.com/savsgio/atreugo/v9"
+	"github.com/savsgio/atreugo/v10"
 )
 
 var bindHost, jsonEncoder, dbDriver, dbConnectionString string
