@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
   auto sql_db =
     mysql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
                    s::password = "benchmarkdbpass", s::port = 3306, s::charset = "utf8");
-  int mysql_max_connection = sql_db.connect()("SELECT @@GLOBAL.max_connections;").read<int>() * 0.75;
+  int mysql_max_connection = 512;
   li::max_mysql_connections_per_thread = (mysql_max_connection / nprocs);
   std::cout << "Using " << li::max_mysql_connections_per_thread << " connections per thread. " << nprocs << " threads." << std::endl; 
 
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
   auto sql_db =
     pgsql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
                    s::password = "benchmarkdbpass", s::port = 5432, s::charset = "utf8");
-  int pgsql_max_connection = atoi(sql_db.connect()("SHOW max_connections;").read<std::string>().c_str()) * 0.75;
+  int pgsql_max_connection = 512;
   li::max_pgsql_connections_per_thread = (pgsql_max_connection / nprocs);
   std::cout << "Using " << li::max_pgsql_connections_per_thread << " connections per thread. " << nprocs << " threads." << std::endl; 
 #endif
