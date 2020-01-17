@@ -2,7 +2,7 @@
 
 warp is a composable web server framework based on hyper.
 
-* [API Documentation](https://docs.rs/warp/0.1)
+* [API Documentation](https://docs.rs/warp/0.2)
 
 ### Test Type Implementation Source Code
 
