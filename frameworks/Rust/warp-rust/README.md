@@ -8,6 +8,7 @@ warp is a composable web server framework based on hyper.
 
 * [JSON](src/main.rs)
 * [PLAINTEXT](src/main.rs)
+* [DB](src/main.rs)
 
 ## Test URLs
 ### JSON
@@ -17,3 +18,7 @@ http://localhost:8080/json
 ### PLAINTEXT
 
 http://localhost:8080/plaintext
+
+### DB
+
+http://localhost:8080/db
