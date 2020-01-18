@@ -5,6 +5,8 @@ authors = ["Konrad Borowski <konrad@borowski.pw>"]
 edition = "2018"
 
 [dependencies]
+rand = "0.7.3"
 serde = { version = "1.0.103", features = ["derive"] }
 tokio = { version = "0.2.9", features = ["macros"] }
+tokio-postgres = "0.5.1"
 warp = "0.2.0"
