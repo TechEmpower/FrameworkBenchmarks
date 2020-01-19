@@ -10,12 +10,16 @@ defer { app.shutdown() }
 
 app.middleware.use(ServerMiddleware())
 
+app.logger.notice("💧 VAPOR")
+app.logger.notice("System.coreCount: \(System.coreCount)")
+app.logger.notice("System.maxConnectionsPerEventLoop: \(System.maxConnectionsPerEventLoop)")
+
 app.databases.use(.postgres(
     hostname: "tfb-database",
     username: "benchmarkdbuser",
     password: "benchmarkdbpass",
     database: "hello_world",
-    maxConnectionsPerEventLoop: 8
+    maxConnectionsPerEventLoop: System.maxConnectionsPerEventLoop
 ), as: .psql)
 
 app.get("plaintext") { req in
