@@ -5,7 +5,7 @@ FROM vapor/swift:5.1 as build
 WORKDIR /build
 
 # Copy entire repo into container
-COPY ./app /build
+COPY . .
 
 # Compile with optimizations
 RUN swift build \
