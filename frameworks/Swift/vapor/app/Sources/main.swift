@@ -14,7 +14,8 @@ app.databases.use(.postgres(
     hostname: "tfb-database",
     username: "benchmarkdbuser",
     password: "benchmarkdbpass",
-    database: "hello_world"
+    database: "hello_world",
+    maxConnectionsPerEventLoop: 8
 ), as: .psql)
 
 app.get("plaintext") { req in
