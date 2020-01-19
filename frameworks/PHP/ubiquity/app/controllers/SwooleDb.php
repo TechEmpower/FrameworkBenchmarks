@@ -16,9 +16,9 @@ class SwooleDb extends \Ubiquity\controllers\Controller {
 	}
 
 	public function index() {
-		$world = DAO::getById(World::class, [
+		$world = DAO::executePrepared('world', [
 			'id' => \mt_rand(1, 10000)
-		], false);
+		]);
 		echo \json_encode($world->_rest);
 	}
 
@@ -26,9 +26,9 @@ class SwooleDb extends \Ubiquity\controllers\Controller {
 		$worlds = [];
 		$queries = \min(\max($queries, 1), 500);
 		for ($i = 0; $i < $queries; ++ $i) {
-			$worlds[] = (DAO::getById(World::class, [
+			$worlds[] = (DAO::executePrepared('world', [
 				'id' => \mt_rand(1, 10000)
-			], false))->_rest;
+			]))->_rest;
 		}
 		echo \json_encode($worlds);
 	}
@@ -37,7 +37,7 @@ class SwooleDb extends \Ubiquity\controllers\Controller {
 		$worlds = [];
 		$queries = \min(\max($queries, 1), 500);
 		for ($i = 0; $i < $queries; ++ $i) {
-			$world = DAO::getById(World::class, [
+			$world = DAO::executePrepared('world', [
 				'id' => \mt_rand(1, 10000)
 			], false);
 			$world->randomNumber = \mt_rand(1, 10000);
