@@ -7,7 +7,7 @@ final class World: Model, Content {
     @ID(key: "id")
     var id: Int32?
     
-    @ID(key: "randomnumber")
+    @Field(key: "randomnumber")
     var randomnumber: Int
     
     init() { }

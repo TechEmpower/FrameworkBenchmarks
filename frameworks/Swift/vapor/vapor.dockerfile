@@ -1,12 +1,26 @@
-FROM swift:5.1 as builder
+# ================================
+# Build image
+# ================================
+FROM vapor/swift:5.1 as build
+WORKDIR /build
 
-RUN apt-get -y update
-RUN apt-get -y install libssl-dev zlib1g-dev
-COPY ./app /app
-WORKDIR /app
-RUN swift build -c release
+# Copy entire repo into container
+COPY ./app /build
 
-FROM swift:5.1-slim as runtime
-COPY --from=builder /app /app
-WORKDIR /app
-CMD .build/release/app serve -e production -b 0.0.0.0:8080
+# Compile with optimizations
+RUN swift build \
+	--enable-test-discovery \
+	-c release
+
+# ================================
+# Run image
+# ================================
+FROM vapor/ubuntu:18.04
+WORKDIR /run
+
+# Copy build artifacts
+COPY --from=build /build/.build/release /run
+# Copy Swift runtime libraries
+COPY --from=build /usr/lib/swift/ /usr/lib/swift/
+
+ENTRYPOINT ["./app", "serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "8080"]

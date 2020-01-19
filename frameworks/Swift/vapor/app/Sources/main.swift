@@ -4,27 +4,18 @@ import Vapor
 
 var env = try Environment.detect()
 try LoggingSystem.bootstrap(from: &env)
-let app = Application(environment: env)
 
-app.provider(FluentProvider())
-app.register(Migrations.self) { _ in .init() }
+let app = Application(env)
+defer { app.shutdown() }
 
-app.register(MiddlewareConfiguration.self) { app in
-    var middlewares = MiddlewareConfiguration()
-    middlewares.use(ServerMiddleware())
-    middlewares.use(ErrorMiddleware.default(environment: app.environment))
-    return middlewares
-}
+app.middleware.use(ServerMiddleware())
 
-app.databases.postgres(
-    configuration: .init(
-        hostname: "tfb-database",
-        username: "benchmarkdbuser",
-        password: "benchmarkdbpass",
-        database: "hello_world"
-    ),
-    on: app.make()
-)
+app.databases.use(.postgres(
+    hostname: "tfb-database",
+    username: "benchmarkdbuser",
+    password: "benchmarkdbpass",
+    database: "hello_world"
+), as: .psql)
 
 app.get("plaintext") { req in
     "Hello, world!"
