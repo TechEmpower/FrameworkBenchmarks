@@ -5,7 +5,7 @@
       "default": {
         "json_url": "/json",
         "db_url": "/db",
-        "queries_url": "/queries",
+        "query_url": "/queries?queries=",
         "plaintext_url": "/plaintext",
         "fortune_url": "/fortunes",
         "port": 8080,
