@@ -12,9 +12,25 @@ import (
 	"github.com/gofiber/fiber"
 )
 
+func main() {
+	initHandlers()
+
+	app := fiber.New()
+	app.Server = "Fiber"
+
+	app.Get("/json", jsonHandler)
+	app.Get("/db", dbHandler)
+	app.Get("/queries", queriesHandler)
+	app.Get("/update", updateHandler)
+	app.Get("/plaintext", plaintextHandler)
+
+	app.Listen(8080)
+}
+
 const (
-	WorldCount = 10000
-	Text       = "Hello, World!"
+	worldcount       = 10000
+	helloworld       = "Hello, World!"
+	connectionstring = "benchmarkdbuser:benchmarkdbpass@tcp(tfb-database:3306)/hello_world"
 )
 
 var (
@@ -24,49 +40,57 @@ var (
 	stmtFortuneSelect *sql.Stmt
 )
 
-// JSON struct for json serialization
-type JSON struct {
+type Message struct {
 	Message string `json:"message"`
 }
 
-// World struct for single database query
+type Worlds []World
+
 type World struct {
 	Id           int32 `json:"id"`
 	RandomNumber int32 `json:"randomNumber"`
 }
 
-// Worlds struct for multiple database queries
-type Worlds []World
-
-func main() {
-	connectDB()
-	app := fiber.New()
-	app.Server = "Fiber"
-	app.Get("/json", jsonSerialization)
-	app.Get("/db", singleDatabaseQuery)
-	app.Get("/queries", multipleDatabaseQueries)
-	app.Get("/update", databaseUpdates)
-	app.Get("/plaintext", plainText)
-	app.Listen(8080)
+type Fortune struct {
+	Id      int32  `json:"id"`
+	Message string `json:"message"`
 }
 
-// https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#json-serialization
-func jsonSerialization(c *fiber.Ctx) {
-	j := AcquireJSON()
-	j.Message = Text
-	c.Json(j)
-	ReleaseJSON(j)
+var JSONpool = sync.Pool{
+	New: func() interface{} {
+		return new(Message)
+	},
 }
 
-// https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#single-database-query
-func singleDatabaseQuery(c *fiber.Ctx) {
+func AcquireJSON() *Message {
+	return JSONpool.Get().(*Message)
+}
+func ReleaseJSON(json *Message) {
+	json.Message = ""
+	JSONpool.Put(json)
+}
+
+func initHandlers() {
+	db, _ = sql.Open("mysql", connectionstring)
+	db.SetMaxIdleConns(runtime.NumCPU() * 2)
+	db.SetMaxOpenConns(runtime.NumCPU() * 2)
+	stmtWorldSelect, _ = db.Prepare("SELECT id, randomNumber FROM World WHERE id = ?")
+	stmtWorldUpdate, _ = db.Prepare("UPDATE World SET randomNumber = ? WHERE id = ?")
+	stmtFortuneSelect, _ = db.Prepare("SELECT id, message FROM Fortune")
+}
+
+func jsonHandler(c *fiber.Ctx) {
+	json := AcquireJSON()
+	json.Message = helloworld
+	c.Json(json)
+	ReleaseJSON(json)
+}
+func dbHandler(c *fiber.Ctx) {
 	var json World
 	stmtWorldSelect.QueryRow(RandomWorld()).Scan(&json.Id, &json.RandomNumber)
 	c.Json(json)
 }
-
-// https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#multiple-database-queries
-func multipleDatabaseQueries(c *fiber.Ctx) {
+func queriesHandler(c *fiber.Ctx) {
 	n := QueriesCount(c)
 	worlds := make([]World, n)
 	for i := 0; i < n; i++ {
@@ -75,9 +99,7 @@ func multipleDatabaseQueries(c *fiber.Ctx) {
 	}
 	c.Json(Worlds(worlds))
 }
-
-// https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#database-updates
-func databaseUpdates(c *fiber.Ctx) {
+func updateHandler(c *fiber.Ctx) {
 	n := QueriesCount(c)
 	worlds := make([]World, n)
 	for i := 0; i < n; i++ {
@@ -99,46 +121,13 @@ func databaseUpdates(c *fiber.Ctx) {
 	txn.Commit()
 	c.Json(Worlds(worlds))
 }
-
-// https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#plaintext
-func plainText(c *fiber.Ctx) {
-	c.SendString(Text)
-}
-
-// ************************
-//    Helper functions
-// ************************
-
-func connectDB() {
-	db, _ = sql.Open("mysql", "benchmarkdbuser:benchmarkdbpass@tcp(tfb-database:3306)/hello_world")
-	db.SetMaxIdleConns(runtime.NumCPU() * 2)
-	db.SetMaxOpenConns(runtime.NumCPU() * 2)
-	stmtWorldSelect, _ = db.Prepare("SELECT id, randomNumber FROM World WHERE id = ?")
-	stmtWorldUpdate, _ = db.Prepare("UPDATE World SET randomNumber = ? WHERE id = ?")
-	stmtFortuneSelect, _ = db.Prepare("SELECT id, message FROM Fortune")
-}
-
-// JSONpool :
-var JSONpool = sync.Pool{
-	New: func() interface{} {
-		return new(JSON)
-	},
-}
-
-// AcquireJSON returns new message from pool
-func AcquireJSON() *JSON {
-	return JSONpool.Get().(*JSON)
-}
-
-// ReleaseJSON resets the message and return it to the pool
-func ReleaseJSON(j *JSON) {
-	j.Message = ""
-	JSONpool.Put(j)
+func plaintextHandler(c *fiber.Ctx) {
+	c.SendString(helloworld)
 }
 
 // RandomWorld :
 func RandomWorld() int {
-	return rand.Intn(WorldCount) + 1
+	return rand.Intn(worldcount) + 1
 }
 
 // QueriesCount :
