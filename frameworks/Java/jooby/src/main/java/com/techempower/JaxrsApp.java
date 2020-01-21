@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 import static io.jooby.ExecutionMode.EVENT_LOOP;
 import static io.jooby.Jooby.runApp;
 
-public class MvcApp {
+public class JaxrsApp {
   public static void main(String[] args) {
     runApp(args, EVENT_LOOP, app -> {
       /** JSON: */
@@ -22,7 +22,7 @@ public class MvcApp {
       /** Template engine: */
       app.install(new RockerModule());
 
-      app.mvc(new Controller(app.require(DataSource.class), app.require(ObjectMapper.class)));
+      app.mvc(new Resource(app.require(DataSource.class), app.require(ObjectMapper.class)));
     });
   }
 }

@@ -3,10 +3,11 @@ package com.techempower;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jooby.Context;
 import io.jooby.annotations.Dispatch;
-import io.jooby.annotations.GET;
 import views.fortunes;
 
 import javax.sql.DataSource;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
@@ -20,7 +21,7 @@ import java.util.StringJoiner;
 import static com.techempower.Util.randomWorld;
 import static io.jooby.MediaType.JSON;
 
-public class Controller {
+public class Resource {
   private static final String SELECT_WORLD = "select * from world where id=?";
 
   private static final String MESSAGE = "Hello, World!";
@@ -31,23 +32,23 @@ public class Controller {
 
   private final ObjectMapper mapper;
 
-  public Controller(DataSource dataSource, ObjectMapper mapper) {
+  public Resource(DataSource dataSource, ObjectMapper mapper) {
     this.dataSource = dataSource;
     this.mapper = mapper;
   }
 
-  @GET("/plaintext")
+  @GET @Path("/plaintext")
   public void plaintText(Context ctx) {
     ctx.send(MESSAGE_BYTES);
   }
 
-  @GET("/json")
+  @GET @Path("/json")
   public void json(Context ctx) throws IOException {
     ctx.setResponseType(JSON);
     ctx.send(mapper.writeValueAsBytes(new Message(MESSAGE)));
   }
 
-  @GET("/db")
+  @GET @Path("/db")
   @Dispatch
   public void db(Context ctx) throws Exception {
     World result;
@@ -64,7 +65,7 @@ public class Controller {
     ctx.send(mapper.writeValueAsBytes(result));
   }
 
-  @GET("/queries")
+  @GET @Path("/queries")
   @Dispatch
   public void queries(Context ctx) throws Exception {
     World[] result = new World[Util.queries(ctx)];
@@ -83,7 +84,7 @@ public class Controller {
     ctx.send(mapper.writeValueAsBytes(result));
   }
 
-  @GET("/updates")
+  @GET @Path("/updates")
   @Dispatch
   public void updates(Context ctx) throws Exception {
     World[] result = new World[Util.queries(ctx)];
@@ -118,7 +119,7 @@ public class Controller {
     ctx.send(mapper.writeValueAsBytes(result));
   }
 
-  @GET("/fortunes")
+  @GET @Path("/fortunes")
   @Dispatch
   public fortunes fortunes(Context ctx) throws Exception {
     List<Fortune> fortunes = new ArrayList<>();
