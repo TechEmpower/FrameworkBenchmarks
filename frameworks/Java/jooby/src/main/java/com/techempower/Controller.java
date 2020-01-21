@@ -119,6 +119,7 @@ public class Controller {
   }
 
   @GET("/fortunes")
+  @Dispatch
   public fortunes fortunes(Context ctx) throws Exception {
     List<Fortune> fortunes = new ArrayList<>();
     try (Connection connection = dataSource.getConnection()) {
