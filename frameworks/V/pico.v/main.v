@@ -8,29 +8,34 @@ struct Message {
 
 [inline]
 fn json_response() string {
-	msg := Message{message: "Hello, World!"}
+	msg := Message{
+		message: 'Hello, World!'
+	}
 	return json.encode(msg)
 }
 
 [inline]
 fn hello_response() string {
-	return "Hello, World!"
+	return 'Hello, World!'
 }
 
 pub fn callback(req hp.Request, res mut hp.Response) {
-	if hp.cmp(req.method, "GET") {
-		if hp.cmp(req.path, "/t") {
+	if hp.cmpn(req.method, 'GET ', 4) {
+		if hp.cmp(req.path, '/t') {
 			res.http_ok().header_server().header_date().plain().body(hello_response())
-		} else if hp.cmp(req.path, "/j") {
+		}
+		else if hp.cmp(req.path, '/j') {
 			res.http_ok().header_server().header_date().json().body(json_response())
-		} else {
+		}
+		else {
 			res.http_404()
 		}
-	} else {
+	}
+	else {
 		res.http_405()
 	}
 }
 
 pub fn main() {
-	picoev.new(8080, &callback).serve()
+	picoev.new(8088, &callback).serve()
 }
