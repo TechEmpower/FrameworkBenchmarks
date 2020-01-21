@@ -14,47 +14,45 @@ enum Constants {
     static let plainTextResponseLength = plainTextResponse.utf8CodeUnitCount
     static let plainTextResponseLengthString = String(plainTextResponseLength)
 
+    static let jsonResponse = try! JSONEncoder().encode(JSONTestResponse())
     static let jsonResponseLength = try! JSONEncoder().encode(JSONTestResponse()).count
     static let jsonResponseLengthString = String(jsonResponseLength)
 }
 
 private final class HTTPHandler: ChannelInboundHandler {
-
     public typealias InboundIn = HTTPServerRequestPart
     public typealias OutboundOut = HTTPServerResponsePart
 
-    let dateFormatter = RFC1123DateFormatter()
+    let dateCache: RFC1123DateCache
     let jsonEncoder = JSONEncoder()
 
     var plaintextBuffer: ByteBuffer!
     var jsonBuffer: ByteBuffer!
 
-    init() {
+    init(channel: Channel) {
         let allocator = ByteBufferAllocator()
-
-        plaintextBuffer = allocator.buffer(capacity: Constants.plainTextResponseLength)
-        plaintextBuffer.writeStaticString(Constants.plainTextResponse)
-
-        jsonBuffer = allocator.buffer(capacity: Constants.jsonResponseLength)
+        self.plaintextBuffer = allocator.buffer(capacity: Constants.plainTextResponseLength)
+        self.plaintextBuffer.writeStaticString(Constants.plainTextResponse)
+        self.jsonBuffer = allocator.buffer(capacity: Constants.jsonResponseLength)
+        self.jsonBuffer.writeBytes(Constants.jsonResponse)
+        self.dateCache = .on(channel.eventLoop)
     }
 
     func channelRead(context: ChannelHandlerContext, data: NIOAny) {
-        let reqPart = self.unwrapInboundIn(data)
-
-        switch reqPart {
+        switch self.unwrapInboundIn(data) {
         case .head(let request):
             switch request.uri {
-            case "/plaintext":
-                processPlaintext(ctx: context)
-            case "/json":
-                processJSON(ctx: context)
+            case "/p":
+                self.processPlaintext(context: context)
+            case "/j":
+                self.processJSON(context: context)
             default:
                 _ = context.close()
             }
         case .body:
             break
         case .end:
-            _ = context.write(self.wrapOutboundOut(.end(nil)), promise: nil)
+            context.write(self.wrapOutboundOut(.end(nil)), promise: nil)
         }
     }
 
@@ -63,28 +61,16 @@ private final class HTTPHandler: ChannelInboundHandler {
         context.fireChannelReadComplete()
     }
 
-    private func processPlaintext(ctx: ChannelHandlerContext) {
-        let responseHead = plainTextResponseHead(contentLength: Constants.plainTextResponseLengthString)
-        ctx.write(self.wrapOutboundOut(.head(responseHead)), promise: nil)
-        ctx.write(self.wrapOutboundOut(.body(.byteBuffer(plaintextBuffer))), promise: nil)
+    private func processPlaintext(context: ChannelHandlerContext) {
+        let responseHead = self.responseHead(contentType: "text/plain", contentLength: Constants.plainTextResponseLengthString)
+        context.write(self.wrapOutboundOut(.head(responseHead)), promise: nil)
+        context.write(self.wrapOutboundOut(.body(.byteBuffer(self.plaintextBuffer))), promise: nil)
     }
 
-    private func processJSON(ctx: ChannelHandlerContext) {
-        let responseHead = jsonResponseHead(contentLength: Constants.jsonResponseLengthString)
-        ctx.write(self.wrapOutboundOut(.head(responseHead)), promise: nil)
-
-        let responseData = try! jsonEncoder.encode(JSONTestResponse())
-        jsonBuffer.clear()
-        jsonBuffer.writeBytes(responseData)
-        ctx.write(self.wrapOutboundOut(.body(.byteBuffer(jsonBuffer))), promise: nil)
-    }
-
-    private func jsonResponseHead(contentLength: String) -> HTTPResponseHead {
-        return responseHead(contentType: "application/json", contentLength: contentLength)
-    }
-
-    private func plainTextResponseHead(contentLength: String) -> HTTPResponseHead {
-        return responseHead(contentType: "text/plain", contentLength: contentLength)
+    private func processJSON(context: ChannelHandlerContext) {
+        let responseHead = self.responseHead(contentType: "application/json", contentLength: Constants.jsonResponseLengthString)
+        context.write(self.wrapOutboundOut(.head(responseHead)), promise: nil)
+        context.write(self.wrapOutboundOut(.body(.byteBuffer(self.jsonBuffer))), promise: nil)
     }
 
     private func responseHead(contentType: String, contentLength: String) -> HTTPResponseHead {
@@ -92,11 +78,12 @@ private final class HTTPHandler: ChannelInboundHandler {
         headers.add(name: "content-type", value: contentType)
         headers.add(name: "content-length", value: contentLength)
         headers.add(name: "server", value: Constants.serverName)
-        headers.add(name: "date", value: dateFormatter.getDate())
-
-        return HTTPResponseHead(version: Constants.httpVersion,
-                                status: .ok,
-                                headers: headers)
+        headers.add(name: "date", value: self.dateCache.currentTimestamp())
+        return HTTPResponseHead(
+            version: Constants.httpVersion,
+            status: .ok,
+            headers: headers
+        )
     }
 }
 
@@ -106,7 +93,7 @@ let bootstrap = ServerBootstrap(group: group)
     .serverChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
     .childChannelInitializer { channel in
         channel.pipeline.configureHTTPServerPipeline(withPipeliningAssistance: false).flatMap {
-            channel.pipeline.addHandler(HTTPHandler())
+            channel.pipeline.addHandler(HTTPHandler(channel: channel))
         }
     }
     .childChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
