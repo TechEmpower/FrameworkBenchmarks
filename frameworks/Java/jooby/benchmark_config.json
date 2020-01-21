@@ -47,7 +47,7 @@
       "display_name": "jooby-netty",
       "versus": "netty"
     },
-    "mvc": {
+    "jaxrs": {
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/db",
