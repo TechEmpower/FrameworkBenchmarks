@@ -24,10 +24,8 @@ private final class HTTPHandler: ChannelInboundHandler {
     public typealias OutboundOut = HTTPServerResponsePart
 
     let dateCache: RFC1123DateCache
-    let jsonEncoder = JSONEncoder()
-
-    var plaintextBuffer: ByteBuffer!
-    var jsonBuffer: ByteBuffer!
+    var plaintextBuffer: ByteBuffer
+    var jsonBuffer: ByteBuffer
 
     init(channel: Channel) {
         let allocator = ByteBufferAllocator()
