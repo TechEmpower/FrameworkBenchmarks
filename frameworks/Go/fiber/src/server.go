@@ -1,22 +1,24 @@
 package main
 
 import (
-	"database/sql"
+	"context"
+	"fmt"
 	"math/rand"
 	"runtime"
 	"sort"
 	"strconv"
 	"sync"
 
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofiber/fiber"
+	pgx "github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 func main() {
-	initHandlers()
+	initDatabase()
 
 	app := fiber.New()
-	app.Server = "Fiber"
+	app.Server = "Go"
 
 	app.Get("/json", jsonHandler)
 	app.Get("/db", dbHandler)
@@ -28,83 +30,138 @@ func main() {
 }
 
 const (
-	worldcount       = 10000
-	helloworld       = "Hello, World!"
-	connectionstring = "benchmarkdbuser:benchmarkdbpass@tcp(tfb-database:3306)/hello_world"
+	worldcount     = 10000
+	helloworld     = "Hello, World!"
+	worldselectsql = "SELECT id, randomNumber FROM World WHERE id = $1"
+	worldupdatesql = "UPDATE World SET randomNumber = $1 WHERE id = $2"
 )
 
 var (
-	db                *sql.DB
-	stmtWorldSelect   *sql.Stmt
-	stmtWorldUpdate   *sql.Stmt
-	stmtFortuneSelect *sql.Stmt
+	db *pgxpool.Pool
 )
 
+// Message ...
 type Message struct {
 	Message string `json:"message"`
 }
 
+// Worlds ...
 type Worlds []World
 
+// World ...
 type World struct {
 	Id           int32 `json:"id"`
 	RandomNumber int32 `json:"randomNumber"`
 }
 
-type Fortune struct {
-	Id      int32  `json:"id"`
-	Message string `json:"message"`
-}
-
+// JSONpool ...
 var JSONpool = sync.Pool{
 	New: func() interface{} {
 		return new(Message)
 	},
 }
 
+// AcquireJSON ...
 func AcquireJSON() *Message {
 	return JSONpool.Get().(*Message)
 }
+
+// ReleaseJSON ...
 func ReleaseJSON(json *Message) {
 	json.Message = ""
 	JSONpool.Put(json)
 }
 
-func initHandlers() {
-	db, _ = sql.Open("mysql", connectionstring)
-	db.SetMaxIdleConns(runtime.NumCPU() * 2)
-	db.SetMaxOpenConns(runtime.NumCPU() * 2)
-	stmtWorldSelect, _ = db.Prepare("SELECT id, randomNumber FROM World WHERE id = ?")
-	stmtWorldUpdate, _ = db.Prepare("UPDATE World SET randomNumber = ? WHERE id = ?")
-	stmtFortuneSelect, _ = db.Prepare("SELECT id, message FROM Fortune")
+// WorldPool ...
+var WorldPool = sync.Pool{
+	New: func() interface{} {
+		return new(World)
+	},
 }
 
+// AcquireWorld ...
+func AcquireWorld() *World {
+	return WorldPool.Get().(*World)
+}
+
+// ReleaseWorld ...
+func ReleaseWorld(w *World) {
+	w.Id = 0
+	w.RandomNumber = 0
+	WorldPool.Put(w)
+}
+
+// WorldsPool ...
+var WorldsPool = sync.Pool{
+	New: func() interface{} {
+		return make(Worlds, 0, 512)
+	},
+}
+
+// AcquireWorlds ...
+func AcquireWorlds() Worlds {
+	return WorldsPool.Get().(Worlds)
+}
+
+// ReleaseWorlds ...ReleaseWorlds
+func ReleaseWorlds(w Worlds) {
+	w = w[:0]
+	WorldsPool.Put(w)
+}
+
+// initDatabase :
+func initDatabase() {
+	maxConn := runtime.NumCPU()
+	if maxConn == 0 {
+		maxConn = 8
+	}
+	maxConn = maxConn * 4
+	// if *child {
+	// 	maxConn = runtime.NumCPU()
+	// }
+
+	var err error
+	db, err = pgxpool.Connect(context.Background(), fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s pool_max_conns=%d", "tfb-database", 5432, "benchmarkdbuser", "benchmarkdbpass", "hello_world", maxConn))
+	if err != nil {
+		panic(err)
+	}
+}
+
+// jsonHandler :
 func jsonHandler(c *fiber.Ctx) {
 	json := AcquireJSON()
 	json.Message = helloworld
 	c.Json(json)
 	ReleaseJSON(json)
 }
+
+// dbHandler :
 func dbHandler(c *fiber.Ctx) {
-	var json World
-	stmtWorldSelect.QueryRow(RandomWorld()).Scan(&json.Id, &json.RandomNumber)
-	c.Json(json)
+	w := AcquireWorld()
+	db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.Id, &w.RandomNumber)
+	c.Json(w)
+	ReleaseWorld(w)
 }
+
+// queriesHandler :
 func queriesHandler(c *fiber.Ctx) {
 	n := QueriesCount(c)
-	worlds := make([]World, n)
+	worlds := AcquireWorlds()[:n]
 	for i := 0; i < n; i++ {
 		w := &worlds[i]
-		stmtWorldSelect.QueryRow(RandomWorld()).Scan(&w.Id, &w.RandomNumber)
+		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.Id, &w.RandomNumber)
 	}
 	c.Json(Worlds(worlds))
+	ReleaseWorlds(worlds)
 }
+
+// updateHandler :
 func updateHandler(c *fiber.Ctx) {
 	n := QueriesCount(c)
-	worlds := make([]World, n)
+	worlds := AcquireWorlds()[:n]
 	for i := 0; i < n; i++ {
 		w := &worlds[i]
-		stmtWorldSelect.QueryRow(RandomWorld()).Scan(&w.Id, &w.RandomNumber)
+		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.Id, &w.RandomNumber)
 		w.RandomNumber = int32(RandomWorld())
 	}
 	// sorting is required for insert deadlock prevention.
@@ -112,15 +169,16 @@ func updateHandler(c *fiber.Ctx) {
 		return worlds[i].Id < worlds[j].Id
 	})
 
-	txn, _ := db.Begin()
-	stmt := txn.Stmt(stmtWorldUpdate)
-	for i := 0; i < n; i++ {
-		w := &worlds[i]
-		stmt.Exec(w.RandomNumber, w.Id)
+	batch := pgx.Batch{}
+	for _, w := range worlds {
+		batch.Queue(worldupdatesql, w.RandomNumber, w.Id)
 	}
-	txn.Commit()
+	db.SendBatch(context.Background(), &batch).Close()
 	c.Json(Worlds(worlds))
+	ReleaseWorlds(worlds)
 }
+
+// plaintextHandler :
 func plaintextHandler(c *fiber.Ctx) {
 	c.SendString(helloworld)
 }
