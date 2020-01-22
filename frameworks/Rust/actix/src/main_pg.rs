@@ -120,8 +120,7 @@ async fn main() -> std::io::Result<()> {
     // start http server
     Server::build()
         .backlog(1024)
-        .workers(1)
-        .bind("techempower", "0.0.0.0:8080", || {
+        .bind("techempower", "0.0.0.0:8080", move || {
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
                 .h1(map_config(

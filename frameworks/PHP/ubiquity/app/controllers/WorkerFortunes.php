@@ -2,16 +2,15 @@
 namespace controllers;
 
 use models\Fortune;
-use Ubiquity\orm\DAO;
 
-class WorkerFortunes extends \Ubiquity\controllers\Controller {
+class WorkerFortunes extends \Ubiquity\controllers\SimpleViewAsyncController {
 
 	public function initialize() {
-		\Ubiquity\utils\http\UResponse::setContentType('text/html','utf-8');
+		\Ubiquity\utils\http\UResponse::setContentType('text/html', 'utf-8');
 	}
-	
+
 	public function index() {
-		$fortunes = DAO::getAll(Fortune::class, '', false);
+		$fortunes = \Ubiquity\orm\DAO::executePrepared('fortune');
 		$fortunes[] = (new Fortune())->setId(0)->setMessage('Additional fortune added at request time.');
 		\usort($fortunes, function ($left, $right) {
 			return $left->message <=> $right->message;

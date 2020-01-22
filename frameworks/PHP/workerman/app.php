@@ -36,16 +36,18 @@ function updateraw()
         $id = mt_rand(1, 10000);
         $random->execute([$id]);
         $world = ['id' => $id, 'randomNumber' => $random->fetchColumn()];
-        $world['randomNumber'] = mt_rand(1, 10000);
+        $update->execute(
+            [$world['randomNumber'] = mt_rand(1, 10000), $id]
+        );
 
         $arr[] = $world;
     }
     
-    $pdo->beginTransaction();
-    foreach($arr as $world) {
-        $update->execute([$world['randomNumber'], $world['id']]);
-    }
-    $pdo->commit();
+    // $pdo->beginTransaction();
+    // foreach($arr as $world) {
+    //     $update->execute([$world['randomNumber'], $world['id']]);
+    // }
+    // $pdo->commit();
 
     return json_encode($arr, JSON_NUMERIC_CHECK);
 }

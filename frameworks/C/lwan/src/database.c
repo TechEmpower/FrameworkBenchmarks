@@ -18,10 +18,12 @@
  * USA.
  */
 
+#include <string.h>
 #include <mysql.h>
 #include <sqlite3.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 #include "database.h"
 #include "lwan-status.h"
@@ -30,7 +32,7 @@ struct db_stmt {
     bool (*bind)(const struct db_stmt *stmt,
                  struct db_row *rows,
                  size_t n_rows);
-    bool (*step)(const struct db_stmt *stmt, struct db_row *row);
+    bool (*step)(const struct db_stmt *stmt, const char *signature, va_list ap);
     void (*finalize)(struct db_stmt *stmt);
 };
 
@@ -66,25 +68,28 @@ static bool db_stmt_bind_mysql(const struct db_stmt *stmt,
 
     if (!stmt_mysql->param_bind) {
         stmt_mysql->param_bind = calloc(n_rows, sizeof(MYSQL_BIND));
-        if (!stmt_mysql->param_bind) {
+        if (!stmt_mysql->param_bind)
             return false;
-        }
     } else {
         mysql_stmt_reset(stmt_mysql->stmt);
     }
 
-    for (size_t row = 0; row < n_rows; row++) {
-        if (rows[row].kind == '\0')
-            break;
-
+    for (size_t row = 0; row < n_rows && rows[row].kind; row++) {
         MYSQL_BIND *param = &stmt_mysql->param_bind[row];
-        if (rows[row].kind == 's') {
+
+        switch (rows[row].kind) {
+        case 's':
             param->buffer_type = MYSQL_TYPE_STRING;
             param->buffer = rows[row].u.s;
-        } else if (rows[row].kind == 'i') {
+            break;
+        case 'i':
             param->buffer_type = MYSQL_TYPE_LONG;
             param->buffer = &rows[row].u.i;
+            break;
+        default:
+            return false;
         }
+
         param->is_null = false;
         param->length = 0;
     }
@@ -92,7 +97,9 @@ static bool db_stmt_bind_mysql(const struct db_stmt *stmt,
     return !mysql_stmt_bind_param(stmt_mysql->stmt, stmt_mysql->param_bind);
 }
 
-static bool db_stmt_step_mysql(const struct db_stmt *stmt, struct db_row *row)
+static bool db_stmt_step_mysql(const struct db_stmt *stmt,
+                               const char *signature,
+                               va_list ap)
 {
     struct db_stmt_mysql *stmt_mysql = (struct db_stmt_mysql *)stmt;
 
@@ -103,46 +110,48 @@ static bool db_stmt_step_mysql(const struct db_stmt *stmt, struct db_row *row)
     }
 
     if (!stmt_mysql->result_bind) {
-        size_t n_rows = 0;
-        for (struct db_row *r = row; r->kind != '\0'; r++)
-            n_rows++;
-
-        if (!n_rows)
+        if (*signature == '\0')
             return false;
 
         stmt_mysql->result_bind =
-            calloc(n_rows, sizeof(*stmt_mysql->result_bind));
+            calloc(strlen(signature), sizeof(*stmt_mysql->result_bind));
         if (!stmt_mysql->result_bind)
             return false;
 
-        stmt_mysql->param_bind =
-            calloc(n_rows, sizeof(*stmt_mysql->param_bind));
-        if (!stmt_mysql->param_bind) {
-            free(stmt_mysql->result_bind);
-            return false;
-        }
+        free(stmt_mysql->param_bind);
+        stmt_mysql->param_bind = NULL;
 
         MYSQL_BIND *result = stmt_mysql->result_bind;
-        for (size_t r = 0; r < n_rows; r++) {
-            if (row[r].kind == 's') {
+        for (size_t r = 0; signature[r]; r++) {
+            switch (signature[r]) {
+            case 's':
                 result[r].buffer_type = MYSQL_TYPE_STRING;
-                result[r].buffer = row[r].u.s;
-            } else if (row[r].kind == 'i') {
+                result[r].buffer = va_arg(ap, char *);
+                result[r].buffer_length = va_arg(ap, size_t);
+                break;
+            case 'i':
                 result[r].buffer_type = MYSQL_TYPE_LONG;
-                result[r].buffer = &row[r].u.i;
-            } else {
-                return false;
+                result[r].buffer = va_arg(ap, long *);
+                result[r].buffer_length = 0;
+                break;
+            default:
+                goto out;
             }
 
             result[r].is_null = false;
-            result[r].buffer_length = row[r].buffer_length;
         }
 
         if (mysql_stmt_bind_result(stmt_mysql->stmt, result))
-            return false;
+            goto out;
     }
 
     return mysql_stmt_fetch(stmt_mysql->stmt) == 0;
+
+out:
+    free(stmt_mysql->result_bind);
+    stmt_mysql->result_bind = NULL;
+
+    return false;
 }
 
 static void db_stmt_finalize_mysql(struct db_stmt *stmt)
@@ -248,35 +257,36 @@ static bool db_stmt_bind_sqlite(const struct db_stmt *stmt,
 {
     const struct db_stmt_sqlite *stmt_sqlite =
         (const struct db_stmt_sqlite *)stmt;
-    const struct db_row *rows_1_based = rows - 1;
-    int ret;
 
     sqlite3_reset(stmt_sqlite->sqlite);
     sqlite3_clear_bindings(stmt_sqlite->sqlite);
 
     for (size_t row = 1; row <= n_rows; row++) {
-        const struct db_row *r = &rows_1_based[row];
-        if (r->kind == '\0')
-            break;
+        const struct db_row *r = &rows[row - 1];
+        int ret;
 
-        if (r->kind == 's') {
+        switch (r->kind) {
+        case 's':
             ret = sqlite3_bind_text(stmt_sqlite->sqlite, (int)row, r->u.s, -1,
                                     NULL);
-            if (ret != SQLITE_OK)
-                return false;
-        } else if (r->kind == 'i') {
+            break;
+        case 'i':
             ret = sqlite3_bind_int(stmt_sqlite->sqlite, (int)row, r->u.i);
-            if (ret != SQLITE_OK)
-                return false;
-        } else {
+            break;
+        default:
             return false;
         }
+
+        if (ret != SQLITE_OK)
+            return false;
     }
 
     return true;
 }
 
-static bool db_stmt_step_sqlite(const struct db_stmt *stmt, struct db_row *row)
+static bool db_stmt_step_sqlite(const struct db_stmt *stmt,
+                                const char *signature,
+                                va_list ap)
 {
     const struct db_stmt_sqlite *stmt_sqlite =
         (const struct db_stmt_sqlite *)stmt;
@@ -284,14 +294,18 @@ static bool db_stmt_step_sqlite(const struct db_stmt *stmt, struct db_row *row)
     if (sqlite3_step(stmt_sqlite->sqlite) != SQLITE_ROW)
         return false;
 
-    int column_id = 0;
-    for (struct db_row *r = row; r->kind != '\0'; r++, column_id++) {
-        if (r->kind == 'i') {
-            r->u.i = sqlite3_column_int(stmt_sqlite->sqlite, column_id);
-        } else if (r->kind == 's') {
-            r->u.s =
-                (char *)sqlite3_column_text(stmt_sqlite->sqlite, column_id);
-        } else {
+    for (int r = 0; signature[r]; r++) {
+        switch (signature[r]) {
+        case 'i':
+            *va_arg(ap, long *) = sqlite3_column_int(stmt_sqlite->sqlite, r);
+            break;
+        case 's': {
+            char *out = va_arg(ap, char *);
+            size_t bufsize = va_arg(ap, size_t);
+            strncpy(out, sqlite3_column_text(stmt_sqlite->sqlite, r), bufsize);
+            break;
+        }
+        default:
             return false;
         }
     }
@@ -372,9 +386,17 @@ db_stmt_bind(const struct db_stmt *stmt, struct db_row *rows, size_t n_rows)
     return stmt->bind(stmt, rows, n_rows);
 }
 
-inline bool db_stmt_step(const struct db_stmt *stmt, struct db_row *row)
+inline bool
+db_stmt_step(const struct db_stmt *stmt, const char *signature, ...)
 {
-    return stmt->step(stmt, row);
+    va_list ap;
+    bool ret;
+
+    va_start(ap, signature);
+    ret = stmt->step(stmt, signature, ap);
+    va_end(ap);
+
+    return ret;
 }
 
 inline void db_stmt_finalize(struct db_stmt *stmt) { stmt->finalize(stmt); }

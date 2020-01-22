@@ -1,0 +1,23 @@
+{
+  "framework": "cinatra",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "port": 8090,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "cinatra",
+      "language": "C++",
+      "flavor": "None",
+      "orm": "None",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "cinatra",
+      "notes": "",
+      "versus": "cinatra"
+    }
+  }]
+}

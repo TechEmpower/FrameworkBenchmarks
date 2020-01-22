@@ -15,6 +15,8 @@
 #include <string.h>
 
 #include "json.h"
+#include "lwan.h"
+#include "int-to-str.h"
 
 struct token {
     enum json_tokens type;
@@ -108,7 +110,7 @@ static void *lexer_string(struct lexer *lexer)
     while (true) {
         int chr = next(lexer);
 
-        if (chr == '\0') {
+        if (UNLIKELY(chr == '\0')) {
             emit(lexer, JSON_TOK_ERROR);
             return NULL;
         }
@@ -125,19 +127,19 @@ static void *lexer_string(struct lexer *lexer)
             case 't':
                 continue;
             case 'u':
-                if (!isxdigit(next(lexer))) {
+                if (UNLIKELY(!isxdigit(next(lexer)))) {
                     goto error;
                 }
 
-                if (!isxdigit(next(lexer))) {
+                if (UNLIKELY(!isxdigit(next(lexer)))) {
                     goto error;
                 }
 
-                if (!isxdigit(next(lexer))) {
+                if (UNLIKELY(!isxdigit(next(lexer)))) {
                     goto error;
                 }
 
-                if (!isxdigit(next(lexer))) {
+                if (UNLIKELY(!isxdigit(next(lexer)))) {
                     goto error;
                 }
 
@@ -166,7 +168,7 @@ error:
 static int accept_run(struct lexer *lexer, const char *run)
 {
     for (; *run; run++) {
-        if (next(lexer) != *run) {
+        if (UNLIKELY(next(lexer) != *run)) {
             return -EINVAL;
         }
     }
@@ -176,17 +178,17 @@ static int accept_run(struct lexer *lexer, const char *run)
 
 static void *lexer_boolean(struct lexer *lexer)
 {
-    backup(lexer);
+    /* Already matched either `t' or `f' at this point */
 
     switch (next(lexer)) {
-    case 't':
-        if (!accept_run(lexer, "rue")) {
+    case 'r':
+        if (LIKELY(!accept_run(lexer, "ue"))) {
             emit(lexer, JSON_TOK_TRUE);
             return lexer_json;
         }
         break;
-    case 'f':
-        if (!accept_run(lexer, "alse")) {
+    case 'a':
+        if (LIKELY(!accept_run(lexer, "lse"))) {
             emit(lexer, JSON_TOK_FALSE);
             return lexer_json;
         }
@@ -199,7 +201,7 @@ static void *lexer_boolean(struct lexer *lexer)
 
 static void *lexer_null(struct lexer *lexer)
 {
-    if (accept_run(lexer, "ull") < 0) {
+    if (UNLIKELY(accept_run(lexer, "ull") < 0)) {
         emit(lexer, JSON_TOK_ERROR);
         return NULL;
     }
@@ -249,7 +251,7 @@ static void *lexer_json(struct lexer *lexer)
         case 'f':
             return lexer_boolean;
         case '-':
-            if (isdigit(peek(lexer))) {
+            if (LIKELY(isdigit(peek(lexer)))) {
                 return lexer_number;
             }
 
@@ -260,7 +262,7 @@ static void *lexer_json(struct lexer *lexer)
                 continue;
             }
 
-            if (isdigit(chr)) {
+            if (LIKELY(isdigit(chr))) {
                 return lexer_number;
             }
 
@@ -285,11 +287,11 @@ static int obj_init(struct json_obj *json, char *data, size_t len)
 
     lexer_init(&json->lexer, data, len);
 
-    if (!lexer_next(&json->lexer, &token)) {
+    if (UNLIKELY(!lexer_next(&json->lexer, &token))) {
         return -EINVAL;
     }
 
-    if (token.type != JSON_TOK_OBJECT_START) {
+    if (UNLIKELY(token.type != JSON_TOK_OBJECT_START)) {
         return -EINVAL;
     }
 
@@ -315,7 +317,7 @@ static int obj_next(struct json_obj *json, struct json_obj_key_value *kv)
 {
     struct token token;
 
-    if (!lexer_next(&json->lexer, &token)) {
+    if (UNLIKELY(!lexer_next(&json->lexer, &token))) {
         return -EINVAL;
     }
 
@@ -328,11 +330,11 @@ static int obj_next(struct json_obj *json, struct json_obj_key_value *kv)
 
         return 0;
     case JSON_TOK_COMMA:
-        if (!lexer_next(&json->lexer, &token)) {
+        if (UNLIKELY(!lexer_next(&json->lexer, &token))) {
             return -EINVAL;
         }
 
-        if (token.type != JSON_TOK_STRING) {
+        if (UNLIKELY(token.type != JSON_TOK_STRING)) {
             return -EINVAL;
         }
 
@@ -346,16 +348,16 @@ static int obj_next(struct json_obj *json, struct json_obj_key_value *kv)
     }
 
     /* Match : after key */
-    if (!lexer_next(&json->lexer, &token)) {
+    if (UNLIKELY(!lexer_next(&json->lexer, &token))) {
         return -EINVAL;
     }
 
-    if (token.type != JSON_TOK_COLON) {
+    if (UNLIKELY(token.type != JSON_TOK_COLON)) {
         return -EINVAL;
     }
 
     /* Match value */
-    if (!lexer_next(&json->lexer, &kv->value)) {
+    if (UNLIKELY(!lexer_next(&json->lexer, &kv->value))) {
         return -EINVAL;
     }
 
@@ -364,7 +366,7 @@ static int obj_next(struct json_obj *json, struct json_obj_key_value *kv)
 
 static int arr_next(struct json_obj *json, struct token *value)
 {
-    if (!lexer_next(&json->lexer, value)) {
+    if (UNLIKELY(!lexer_next(&json->lexer, value))) {
         return -EINVAL;
     }
 
@@ -373,7 +375,7 @@ static int arr_next(struct json_obj *json, struct token *value)
     }
 
     if (value->type == JSON_TOK_COMMA) {
-        if (!lexer_next(&json->lexer, value)) {
+        if (UNLIKELY(!lexer_next(&json->lexer, value))) {
             return -EINVAL;
         }
     }
@@ -496,7 +498,7 @@ static ptrdiff_t get_elem_size(const struct json_obj_descr *descr)
         for (i = 0; i < descr->object.sub_descr_len; i++) {
             ptrdiff_t s = get_elem_size(&descr->object.sub_descr[i]);
 
-            total += (ptrdiff_t)ROUND_UP(s, 1 << descr->object.sub_descr[i].align_shift);
+            total += (ptrdiff_t)ROUND_UP(s, descr->object.sub_descr[i].align);
         }
 
         return total;
@@ -526,11 +528,11 @@ static int arr_parse(struct json_obj *obj,
             return 0;
         }
 
-        if (field == last_elem) {
+        if (UNLIKELY(field == last_elem)) {
             return -ENOSPC;
         }
 
-        if (decode_value(obj, elem_descr, &value, field, val) < 0) {
+        if (UNLIKELY(decode_value(obj, elem_descr, &value, field, val) < 0)) {
             return -EINVAL;
         }
 
@@ -575,7 +577,7 @@ static int obj_parse(struct json_obj *obj,
 
             /* Store the decoded value */
             ret = decode_value(obj, &descr[i], &kv.value, decode_field, val);
-            if (ret < 0) {
+            if (UNLIKELY(UNLIKELY(ret < 0))) {
                 return ret;
             }
 
@@ -599,7 +601,7 @@ int json_obj_parse(char *payload,
     assert(descr_len < (sizeof(ret) * CHAR_BIT - 1));
 
     ret = obj_init(&obj, payload, len);
-    if (ret < 0) {
+    if (UNLIKELY(ret < 0)) {
         return ret;
     }
 
@@ -677,7 +679,7 @@ ssize_t json_escape(char *str, size_t *len, size_t buf_size)
         return 0;
     }
 
-    if (escaped_len >= buf_size) {
+    if (UNLIKELY(escaped_len >= buf_size)) {
         return -ENOMEM;
     }
 
@@ -707,76 +709,89 @@ ssize_t json_escape(char *str, size_t *len, size_t buf_size)
 static int encode(const struct json_obj_descr *descr,
                   const void *val,
                   json_append_bytes_t append_bytes,
-                  void *data);
+                  void *data,
+                  bool encode_key);
 
 static int arr_encode(const struct json_obj_descr *elem_descr,
                       const void *field,
                       const void *val,
                       json_append_bytes_t append_bytes,
-                      void *data)
+                      void *data,
+                      bool encode_key)
 {
     ptrdiff_t elem_size = get_elem_size(elem_descr);
     /*
-     * NOTE: Since an element descriptor's offset isn't meaningful
-     * (array elements occur at multiple offsets in `val'), we use
-     * its space in elem_descr to store the offset to the field
-     * containing the number of elements.
+     * NOTE: Since an element descriptor's offset isn't meaningful (array
+     * elements occur at multiple offsets in `val'), we use its space in
+     * elem_descr to store the offset to the field containing the number of
+     * elements.
      */
     size_t n_elem = *(size_t *)((char *)val + elem_descr->offset);
     size_t i;
     int ret;
 
+    if (UNLIKELY(!n_elem)) {
+        return append_bytes("[]", 2, data);
+    }
+
     ret = append_bytes("[", 1, data);
-    if (ret < 0) {
+    if (UNLIKELY(ret < 0)) {
         return ret;
     }
 
+    n_elem--;
     for (i = 0; i < n_elem; i++) {
         /*
-         * Though "field" points at the next element in the
-         * array which we need to encode, the value in
-         * elem_descr->offset is actually the offset of the
-         * length field in the "parent" struct containing the
+         * Though "field" points at the next element in the array which we
+         * need to encode, the value in elem_descr->offset is actually the
+         * offset of the length field in the "parent" struct containing the
          * array.
          *
-         * To patch things up, we lie to encode() about where
-         * the field is by exactly the amount it will offset
-         * it. This is a size optimization for struct
-         * json_obj_descr: the alternative is to keep a
-         * separate field next to element_descr which is an
-         * offset to the length field in the parent struct,
-         * but that would add a size_t to every descriptor.
+         * To patch things up, we lie to encode() about where the field is
+         * by exactly the amount it will offset it.  This is a size
+         * optimization for struct json_obj_descr: the alternative is to
+         * keep a separate field next to element_descr which is an offset to
+         * the length field in the parent struct, but that would add a
+         * size_t to every descriptor.
          */
         ret = encode(elem_descr, (char *)field - elem_descr->offset,
-                     append_bytes, data);
-        if (ret < 0) {
+                     append_bytes, data, encode_key);
+        if (UNLIKELY(ret < 0)) {
             return ret;
         }
 
-        if (i < n_elem - 1) {
-            ret = append_bytes(",", 1, data);
-            if (ret < 0) {
-                return ret;
-            }
+        ret = append_bytes(",", 1, data);
+        if (UNLIKELY(ret < 0)) {
+            return ret;
         }
 
         field = (char *)field + elem_size;
+    }
+
+    ret = encode(elem_descr, (char *)field - elem_descr->offset,
+                 append_bytes, data, encode_key);
+    if (UNLIKELY(ret < 0)) {
+        return ret;
     }
 
     return append_bytes("]", 1, data);
 }
 
 static int
-str_encode(const char **str, json_append_bytes_t append_bytes, void *data)
+str_encode(const char **str, json_append_bytes_t append_bytes, void *data, bool encode)
 {
     int ret;
 
     ret = append_bytes("\"", 1, data);
-    if (ret < 0) {
+    if (UNLIKELY(ret < 0)) {
         return ret;
     }
 
-    ret = json_escape_internal(*str, append_bytes, data);
+    if (encode) {
+        ret = json_escape_internal(*str, append_bytes, data);
+    } else {
+        ret = append_bytes(*str, strlen(*str), data);
+    }
     if (!ret) {
         return append_bytes("\"", 1, data);
     }
@@ -787,18 +802,11 @@ str_encode(const char **str, json_append_bytes_t append_bytes, void *data)
 static int
 num_encode(const int32_t *num, json_append_bytes_t append_bytes, void *data)
 {
-    char buf[3 * sizeof(int32_t)];
-    int ret;
+    char buf[INT_TO_STR_BUFFER_SIZE];
+    size_t len;
+    char *as_string = int_to_string(*num, buf, &len);
 
-    ret = snprintf(buf, sizeof(buf), "%d", *num);
-    if (ret < 0) {
-        return ret;
-    }
-    if (ret >= (int)sizeof(buf)) {
-        return -ENOMEM;
-    }
-
-    return append_bytes(buf, (size_t)ret, data);
+    return append_bytes(as_string, len, data);
 }
 
 static int
@@ -811,10 +819,23 @@ bool_encode(const bool *value, json_append_bytes_t append_bytes, void *data)
     return append_bytes("false", 5, data);
 }
 
+int json_arr_encode_full(const struct json_obj_descr *descr,
+                         const void *val,
+                         json_append_bytes_t append_bytes,
+                         void *data,
+                         bool encode_key)
+{
+    void *ptr = (char *)val + descr->offset;
+
+    return arr_encode(descr->array.element_descr, ptr, val, append_bytes, data,
+                      encode_key);
+}
+
 static int encode(const struct json_obj_descr *descr,
                   const void *val,
                   json_append_bytes_t append_bytes,
-                  void *data)
+                  void *data,
+                  bool encode_key)
 {
     void *ptr = (char *)val + descr->offset;
 
@@ -823,13 +844,14 @@ static int encode(const struct json_obj_descr *descr,
     case JSON_TOK_TRUE:
         return bool_encode(ptr, append_bytes, data);
     case JSON_TOK_STRING:
-        return str_encode(ptr, append_bytes, data);
+        return str_encode(ptr, append_bytes, data, true);
     case JSON_TOK_LIST_START:
-        return arr_encode(descr->array.element_descr, ptr, val, append_bytes, data);
+        return arr_encode(descr->array.element_descr, ptr, val,
+                          append_bytes, data, encode_key);
     case JSON_TOK_OBJECT_START:
-        return json_obj_encode(descr->object.sub_descr,
-                               descr->object.sub_descr_len, ptr, append_bytes,
-                               data);
+        return json_obj_encode_full(descr->object.sub_descr,
+                                    descr->object.sub_descr_len, ptr, append_bytes,
+                                    data, encode_key);
     case JSON_TOK_NUMBER:
         return num_encode(ptr, append_bytes, data);
     default:
@@ -837,43 +859,67 @@ static int encode(const struct json_obj_descr *descr,
     }
 }
 
-int json_obj_encode(const struct json_obj_descr *descr,
-                    size_t descr_len,
-                    const void *val,
-                    json_append_bytes_t append_bytes,
-                    void *data)
+static int encode_key_value(const struct json_obj_descr *descr,
+                            const void *val,
+                            json_append_bytes_t append_bytes,
+                            void *data,
+                            bool encode_key)
+{
+    int ret;
+
+    ret = str_encode((const char **)&descr->field_name, append_bytes, data, encode_key);
+    if (UNLIKELY(ret < 0)) {
+        return ret;
+    }
+
+    ret = append_bytes(":", 1, data);
+    if (UNLIKELY(ret < 0)) {
+        return ret;
+    }
+
+    return encode(descr, val, append_bytes, data, encode_key);
+}
+
+int json_obj_encode_full(const struct json_obj_descr *descr,
+                         size_t descr_len,
+                         const void *val,
+                         json_append_bytes_t append_bytes,
+                         void *data,
+                         bool encode_key)
 {
     size_t i;
     int ret;
 
+    if (UNLIKELY(!descr_len)) {
+        /* Code below assumes at least one descr, so return early. */
+        return append_bytes("{}", 2, data);
+    }
+
     ret = append_bytes("{", 1, data);
-    if (ret < 0) {
+    if (UNLIKELY(ret < 0)) {
         return ret;
     }
 
-    for (i = 0; i < descr_len; i++) {
-        ret =
-            str_encode((const char **)&descr[i].field_name, append_bytes, data);
-        if (ret < 0) {
+    /* To avoid checking if we're encoding the last element on each iteration of
+     * this loop, start at the second descriptor, and always write the comma.
+     * Then, after the loop, encode the first descriptor.  If the descriptor
+     * array has only 1 element, this loop won't run.  This is fine since order
+     * isn't important for objects, and we save some branches.  */
+    for (i = 1; i < descr_len; i++) {
+        ret = encode_key_value(&descr[i], val, append_bytes, data, encode_key);
+        if (UNLIKELY(ret < 0)) {
             return ret;
         }
 
-        ret = append_bytes(":", 1, data);
-        if (ret < 0) {
+        ret = append_bytes(",", 1, data);
+        if (UNLIKELY(ret < 0)) {
             return ret;
         }
+    }
 
-        ret = encode(&descr[i], val, append_bytes, data);
-        if (ret < 0) {
-            return ret;
-        }
-
-        if (i < descr_len - 1) {
-            ret = append_bytes(",", 1, data);
-            if (ret < 0) {
-                return ret;
-            }
-        }
+    ret = encode_key_value(&descr[0], val, append_bytes, data, encode_key);
+    if (UNLIKELY(ret < 0)) {
+        return ret;
     }
 
     return append_bytes("}", 1, data);
@@ -889,7 +935,7 @@ static int append_bytes_to_buf(const char *bytes, size_t len, void *data)
 {
     struct appender *appender = data;
 
-    if (len > appender->size - appender->used) {
+    if (UNLIKELY(len > appender->size - appender->used)) {
         return -ENOMEM;
     }
 
@@ -930,7 +976,7 @@ ssize_t json_calc_encoded_len(const struct json_obj_descr *descr,
     int ret;
 
     ret = json_obj_encode(descr, descr_len, val, measure_bytes, &total);
-    if (ret < 0) {
+    if (UNLIKELY(ret < 0)) {
         return ret;
     }
 

@@ -1,4 +1,4 @@
-FROM lganzzzo/ubuntu-cmake
+FROM lganzzzo/ubuntu-cmake-mimalloc
 
 #---------------------------------------------------------------
 # install oatpp
@@ -9,7 +9,7 @@ RUN git clone https://github.com/oatpp/oatpp
 
 WORKDIR /test/oatpp
 
-RUN git checkout 3670e081af33ae02f8a5b11dafc6a2622f92927a
+RUN git checkout afbafe447ff447db5ab227022eb4a568da97d16b
 
 WORKDIR /test/oatpp/build
 

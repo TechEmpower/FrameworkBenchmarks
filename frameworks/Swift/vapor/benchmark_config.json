@@ -14,7 +14,7 @@
         "framework": "Vapor",
         "language": "Swift",
         "flavor": "None",
-        "orm": "Micro",
+        "orm": "Full",
         "platform": "None",
         "webserver": "None",
         "os": "Linux",

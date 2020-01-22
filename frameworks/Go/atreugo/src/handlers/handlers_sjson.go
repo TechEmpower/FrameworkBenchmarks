@@ -5,8 +5,9 @@ import (
 
 	"atreugo/src/storage"
 
-	"github.com/savsgio/atreugo/v9"
+	"github.com/savsgio/atreugo/v10"
 )
+
 
 // JSONHandlerSJson . Test 1: JSON serialization
 func JSONHandlerSJson(ctx *atreugo.RequestCtx) error {
