@@ -1,4 +1,4 @@
-FROM maven:3.5.3-jdk-8
+FROM maven:3.5.3-jdk-8 as maven
 WORKDIR /smart-socket
 COPY pom.xml pom.xml
 COPY src src
