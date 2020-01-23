@@ -24,6 +24,15 @@ void escape_html_entities(B& buffer, const std::string& data)
     }
 }
 
+void set_max_sql_connections_per_thread(int max)
+{
+#if TFB_MYSQL
+  li::max_mysql_connections_per_thread = max;
+#elif TFB_PGSQL
+  li::max_pgsql_connections_per_thread = max;
+#endif
+}
+
 int main(int argc, char* argv[]) {
 
   if (argc != 3)
@@ -71,10 +80,12 @@ int main(int argc, char* argv[]) {
     response.write_json(s::message = "Hello, World!");
   };
   my_api.get("/db") = [&](http_request& request, http_response& response) {
+    set_max_sql_connections_per_thread(1024 / nprocs);
     response.write_json(random_numbers.connect(request.yield).find_one(s::id = 1234).value());
   };
 
   my_api.get("/queries") = [&](http_request& request, http_response& response) {
+    set_max_sql_connections_per_thread(2);
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
     int N = atoi(N_str.c_str());
     
@@ -83,55 +94,57 @@ int main(int argc, char* argv[]) {
     auto c = random_numbers.connect(request.yield);
     std::vector<decltype(random_numbers.all_fields())> numbers(N);
     for (int i = 0; i < N; i++)
-      numbers[i] = c.find_one(s::id = 1 + rand() % 9999).value();
+      numbers[i] = c.find_one(s::id = 1 + rand() % 10000).value();
 
     response.write_json(numbers);
   };
 
   my_api.get("/updates") = [&](http_request& request, http_response& response) {
+    set_max_sql_connections_per_thread(2);
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
     int N = atoi(N_str.c_str());
     N = std::max(1, std::min(N, 500));
-
-     
-    auto c = random_numbers.connect(request.yield);
-    auto& raw_c = c.backend_connection();
-
     std::vector<decltype(random_numbers.all_fields())> numbers(N);
-    
+
+    {     
+      auto c = random_numbers.connect(request.yield);
+      auto& raw_c = c.backend_connection();
+
+      
 #if TFB_MYSQL
-    raw_c("START TRANSACTION");
+      raw_c("START TRANSACTION");
 #endif
-    for (int i = 0; i < N; i++)
-    {
-      numbers[i] = c.find_one(s::id = 1 + rand() % 9999).value();
-      numbers[i].randomNumber = 1 + rand() % 9999;
-    }
+      for (int i = 0; i < N; i++)
+      {
+        numbers[i] = c.find_one(s::id = 1 + rand() % 10000).value();
+        numbers[i].randomNumber = 1 + rand() % 10000;
+      }
 
-    std::sort(numbers.begin(), numbers.end(), [] (auto a, auto b) { return a.id < b.id; });
+      std::sort(numbers.begin(), numbers.end(), [] (auto a, auto b) { return a.id < b.id; });
 
 #if TFB_MYSQL
-    for (int i = 0; i < N; i++)
-      c.update(numbers[i]);
-    raw_c("COMMIT");
+      for (int i = 0; i < N; i++)
+        c.update(numbers[i]);
+      raw_c("COMMIT");
 #elif TFB_PGSQL
-    raw_c.cached_statement
-      ([N] {
-         std::ostringstream ss;
-         ss << "UPDATE World SET randomNumber=tmp.randomNumber FROM (VALUES ";
-         for (int i = 0; i < N; i++)
-           ss << "($" << i*2+1 << "::integer, $" << i*2+2 << "::integer) "<< (i == N-1 ? "": ",");
-         ss << ") AS tmp(id, randomNumber) WHERE tmp.id = World.id";
-         return ss.str();
-       }, N)(numbers);
-    
+      raw_c.cached_statement
+        ([N] {
+          std::ostringstream ss;
+          ss << "UPDATE World SET randomNumber=tmp.randomNumber FROM (VALUES ";
+          for (int i = 0; i < N; i++)
+            ss << "($" << i*2+1 << "::integer, $" << i*2+2 << "::integer) "<< (i == N-1 ? "": ",");
+          ss << ") AS tmp(id, randomNumber) WHERE tmp.id = World.id";
+          return ss.str();
+        }, N)(numbers);
+      
 #endif
-    
+    }
 
     response.write_json(numbers);
   };
 
   my_api.get("/fortunes") = [&](http_request& request, http_response& response) {
+    set_max_sql_connections_per_thread(1024 / nprocs);
 
     typedef decltype(fortunes.all_fields()) fortune;
     std::vector<fortune> table;
