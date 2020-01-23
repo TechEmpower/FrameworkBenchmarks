@@ -24,7 +24,7 @@ void escape_html_entities(B& buffer, const std::string& data)
     }
 }
 
-int set_max_sql_connections_per_thread(int max)
+void set_max_sql_connections_per_thread(int max)
 {
 #if TFB_MYSQL
   li::max_mysql_connections_per_thread = max;
