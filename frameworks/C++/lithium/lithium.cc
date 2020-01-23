@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
     auto c = random_numbers.connect(request.yield);
     std::vector<decltype(random_numbers.all_fields())> numbers(N);
     for (int i = 0; i < N; i++)
-      numbers[i] = c.find_one(s::id = 1 + rand() % 9999).value();
+      numbers[i] = c.find_one(s::id = 1 + rand() % 10000).value();
 
     response.write_json(numbers);
   };
@@ -116,8 +116,8 @@ int main(int argc, char* argv[]) {
 #endif
       for (int i = 0; i < N; i++)
       {
-        numbers[i] = c.find_one(s::id = 1 + rand() % 9999).value();
-        numbers[i].randomNumber = 1 + rand() % 9999;
+        numbers[i] = c.find_one(s::id = 1 + rand() % 10000).value();
+        numbers[i].randomNumber = 1 + rand() % 10000;
       }
 
       std::sort(numbers.begin(), numbers.end(), [] (auto a, auto b) { return a.id < b.id; });
