@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
     response.write_json(s::message = "Hello, World!");
   };
   my_api.get("/db") = [&](http_request& request, http_response& response) {
-    set_max_sql_connections_per_thread(1024 / nprocs);
+    set_max_sql_connections_per_thread(128 / nprocs);
     response.write_json(random_numbers.connect(request.yield).find_one(s::id = 1234).value());
   };
 
@@ -144,7 +144,7 @@ int main(int argc, char* argv[]) {
   };
 
   my_api.get("/fortunes") = [&](http_request& request, http_response& response) {
-    set_max_sql_connections_per_thread(1024 / nprocs);
+    set_max_sql_connections_per_thread(128 / nprocs);
 
     typedef decltype(fortunes.all_fields()) fortune;
     std::vector<fortune> table;
