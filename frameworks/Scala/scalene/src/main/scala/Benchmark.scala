@@ -72,8 +72,8 @@ object Main extends App {
   }
 
   val routes = Routes(
-    GET / "plaintext" as "Hello, World!".ok,
-    GET / "json"      as JsonRouteMessage("Hello, World!").ok,
+    GET / "plaintext" to {_ => "Hello, World!".ok},
+    GET / "json"      to {_ => JsonRouteMessage("Hello, World!").ok},
     dbRoute,
     multiRoute
   )
