@@ -56,15 +56,12 @@ defmodule Hello.PageController do
       params["queries"]
       |> query_range()
       |> parallel(fn _ ->
-        Repo.checkout(fn ->
-          world =
-            World
-            |> Repo.get(:rand.uniform(@random_max))
+          random = :rand.uniform(@random_max)
 
-          world
-          |> Ecto.Changeset.change(randomnumber: random_but(world.randomnumber))
+          World
+          |> Repo.get(random)
+          |> Ecto.Changeset.change(randomnumber: random_but(random))
           |> Repo.update!()
-        end)
       end)
       |> Jason.encode_to_iodata!()
 
