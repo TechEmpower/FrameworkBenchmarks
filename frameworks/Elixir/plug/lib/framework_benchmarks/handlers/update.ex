@@ -24,21 +24,21 @@ defmodule FrameworkBenchmarks.Handlers.Update do
 
     records =
       ids
-      |> Enum.map(fn id ->
-        FrameworkBenchmarks.Repo.get(FrameworkBenchmarks.Models.World, id)
-      end)
-      |> Enum.map(fn %{randomnumber: current_randomnumber} = world ->
-        {:ok, changed_world} =
+      |> Enum.map(
+        &Task.async(fn ->
+          %{randomnumber: current_randomnumber} =
+            world = FrameworkBenchmarks.Repo.get(FrameworkBenchmarks.Models.World, &1)
+
           Ecto.Changeset.change(
             world,
             %{
               randomnumber: random_but(current_randomnumber)
             }
           )
-          |> FrameworkBenchmarks.Repo.update()
-
-        changed_world
-      end)
+          |> FrameworkBenchmarks.Repo.update!()
+        end)
+      )
+      |> Enum.map(&Task.await(&1))
 
     {:ok, json} =
       records
