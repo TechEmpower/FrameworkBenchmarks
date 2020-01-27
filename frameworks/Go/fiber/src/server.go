@@ -19,6 +19,7 @@ func main() {
 
 	app := fiber.New()
 	app.Server = "Go"
+	app.Prefork = true
 
 	app.Get("/json", jsonHandler)
 	app.Get("/db", dbHandler)
@@ -115,11 +116,7 @@ func initDatabase() {
 	if maxConn == 0 {
 		maxConn = 8
 	}
-	maxConn = maxConn * 4
-	// if *child {
-	// 	maxConn = runtime.NumCPU()
-	// }
-
+	//maxConn = maxConn * 4
 	var err error
 	db, err = pgxpool.Connect(context.Background(), fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s pool_max_conns=%d", "tfb-database", 5432, "benchmarkdbuser", "benchmarkdbpass", "hello_world", maxConn))
 	if err != nil {
