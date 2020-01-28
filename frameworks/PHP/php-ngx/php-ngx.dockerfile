@@ -11,7 +11,7 @@ RUN apt-get update -yqq > /dev/null && \
 
 ADD ./ ./
 
-ENV NGINX_VERSION=1.17.7
+ENV NGINX_VERSION=1.17.8
 
 RUN git clone -b v0.0.22 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
 
@@ -26,6 +26,6 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --add-module=/ngx_php7 > /dev/null && \
     make > /dev/null && make install > /dev/null
 
-CMD /nginx/sbin/nginx -c /deploy/nginx.conf
-
-
+CMD export WORKERS=$(( 2 * $(nproc) )) && \
+    sed -i "s/worker_processes  auto/worker_processes $WORKERS/g" /deploy/nginx.conf && \
+    /nginx/sbin/nginx -c /deploy/nginx.conf 
