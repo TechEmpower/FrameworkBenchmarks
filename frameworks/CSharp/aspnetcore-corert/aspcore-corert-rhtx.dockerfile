@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 RUN apt-get update
-RUN apt-get -yqq install clang libicu-dev libcurl4-openssl-dev zlib1g-dev libkrb5-dev libtinfo5
+RUN apt-get -yqq install clang zlib1g-dev libkrb5-dev libtinfo5
 WORKDIR /app
 COPY PlatformBenchmarks .
 RUN dotnet publish -c Release -o out -r linux-x64
