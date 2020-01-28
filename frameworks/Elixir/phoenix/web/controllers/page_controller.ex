@@ -59,7 +59,7 @@ defmodule Hello.PageController do
         Repo.checkout(fn ->
           world =
             World
-            |> Repo.get(random)
+            |> Repo.get(:rand.uniform(@random_max))
 
           world
           |> Ecto.Changeset.change(randomnumber: random_but(world.randomnumber))
