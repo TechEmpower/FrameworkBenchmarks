@@ -31,6 +31,8 @@ func main() {
 }
 
 const (
+	jsonstruct     = `{"message":""}`
+	jsonstructkey  = "message"
 	worldcount     = 10000
 	helloworld     = "Hello, World!"
 	worldselectsql = "SELECT id, randomNumber FROM World WHERE id = $1"
@@ -126,10 +128,11 @@ func initDatabase() {
 
 // jsonHandler :
 func jsonHandler(c *fiber.Ctx) {
-	json := AcquireJSON()
-	json.Message = helloworld
-	c.Json(json)
-	ReleaseJSON(json)
+	// json := AcquireJSON()
+	// json.Message = helloworld
+	// c.Json(json)
+	// ReleaseJSON(json)
+	c.SjsonStr(jsonstruct, jsonstructkey, helloworld)
 }
 
 // dbHandler :
