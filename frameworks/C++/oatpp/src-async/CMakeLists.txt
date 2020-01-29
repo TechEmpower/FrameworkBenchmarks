@@ -19,7 +19,7 @@ add_executable(${project_name}
 
 ## link libs
 
-find_package(oatpp 0.19.12 REQUIRED)
+find_package(oatpp  1.0.0 REQUIRED)
 find_package(mimalloc 1.0 REQUIRED)
 
 target_link_libraries(${project_name}
