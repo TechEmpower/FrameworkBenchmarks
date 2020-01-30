@@ -58,7 +58,9 @@ func (psql PGX) UpdateWorlds(selectedWorlds Worlds) error {
 		batch.Queue(updateQueryStrPostgre, selectedWorld.RandomNumber, selectedWorld.ID)
 	}
 
-	psql.db.SendBatch(context.Background(), &batch).Close()
+	if err := psql.db.SendBatch(context.Background(), &batch).Close(); err != nil {
+		return fmt.Errorf("Error when closing a batch: %s", err)
+	}
 
 	return nil
 }
