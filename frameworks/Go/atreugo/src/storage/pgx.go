@@ -9,6 +9,7 @@ import (
 
 	"atreugo/src/templates"
 
+	pgx "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
@@ -50,26 +51,14 @@ func (psql PGX) UpdateWorlds(selectedWorlds Worlds) error {
 		return selectedWorlds[i].ID < selectedWorlds[j].ID
 	})
 
-	ctx := context.Background()
-
-	tx, err := psql.db.Begin(ctx)
-	if err != nil {
-		return err
-	}
+	batch := pgx.Batch{}
 
 	for _, selectedWorld := range selectedWorlds {
 		selectedWorld.RandomNumber = rand.Intn(worldsCount) + 1
-
-		if _, err := tx.Exec(ctx, updateQueryStrPostgre, selectedWorld.RandomNumber, selectedWorld.ID); err != nil {
-			log.Printf("Can't update row ID %d with number %d: %s", selectedWorld.ID, selectedWorld.RandomNumber, err)
-			tx.Rollback(ctx)
-		}
+		batch.Queue(updateQueryStrPostgre, selectedWorld.RandomNumber, selectedWorld.ID)
 	}
 
-	if err := tx.Commit(ctx); err != nil {
-		tx.Rollback(ctx)
-		return err
-	}
+	psql.db.SendBatch(context.Background(), &batch).Close()
 
 	return nil
 }
