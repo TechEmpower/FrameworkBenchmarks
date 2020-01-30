@@ -4,12 +4,12 @@ namespace controllers;
 /**
  * Json controller.
  */
-class Json extends \Ubiquity\controllers\Controller {
+class JsonAsync extends \Ubiquity\controllers\Controller {
 
 	public function __construct() {}
 
 	public function initialize() {
-		\header('Content-Type: application/json');
+		\Ubiquity\utils\http\UResponse::setContentType('application/json');
 	}
 
 	public function index() {

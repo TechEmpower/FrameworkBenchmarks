@@ -13,7 +13,7 @@ class Db extends \Ubiquity\controllers\Controller {
 
 	public function initialize() {
 		\header('Content-Type: application/json');
-		\Ubiquity\cache\CacheManager::startProd(\Ubiquity\controllers\Startup::$config);
+		\Ubiquity\cache\CacheManager::startProdFromCtrl();
 	}
 
 	public function index() {

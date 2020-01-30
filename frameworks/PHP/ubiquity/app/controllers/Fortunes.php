@@ -3,12 +3,11 @@ namespace controllers;
 
 use Ubiquity\orm\SDAO;
 use models\Fortune;
-use Ubiquity\controllers\Startup;
 
 class Fortunes extends \Ubiquity\controllers\SimpleViewController {
 
 	public function initialize() {
-		\Ubiquity\cache\CacheManager::startProd(Startup::$config);
+		\Ubiquity\cache\CacheManager::startProdFromCtrl();
 	}
 
 	public function index() {
