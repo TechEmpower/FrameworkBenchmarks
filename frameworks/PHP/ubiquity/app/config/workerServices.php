@@ -1,12 +1,12 @@
 <?php
 \Ubiquity\cache\CacheManager::startProd($config);
 \Ubiquity\orm\DAO::setModelsDatabases([
-	"models\\Fortune" => 'pgsql',
-	"models\\World" => 'pgsql'
+	'models\\Fortune' => 'pgsql',
+	'models\\World' => 'pgsql'
 ]);
 \Ubiquity\cache\CacheManager::warmUpControllers([
-	'controllers\\Plaintext',
-	'controllers\\Json',
+	'controllers\\PlaintextAsync',
+	'controllers\\JsonAsync',
 	'controllers\\WorkerDb',
 	'controllers\\WorkerFortunes'
 ]);

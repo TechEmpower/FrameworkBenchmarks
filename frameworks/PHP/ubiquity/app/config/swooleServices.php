@@ -5,8 +5,8 @@
 	'models\\World' => 'pgsql'
 ]);
 \Ubiquity\cache\CacheManager::warmUpControllers([
-	'controllers\\Plaintext',
-	'controllers\\Json',
+	'controllers\\PlaintextAsync',
+	'controllers\\JsonAsync',
 	'controllers\\SwooleDb',
 	'controllers\\SwooleFortunes'
 ]);
