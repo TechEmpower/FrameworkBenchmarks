@@ -80,12 +80,12 @@ int main(int argc, char* argv[]) {
     response.write_json(s::message = "Hello, World!");
   };
   my_api.get("/db") = [&](http_request& request, http_response& response) {
-    set_max_sql_connections_per_thread(128 / nprocs);
+    set_max_sql_connections_per_thread(64 / nprocs);
     response.write_json(random_numbers.connect(request.yield).find_one(s::id = 1234).value());
   };
 
   my_api.get("/queries") = [&](http_request& request, http_response& response) {
-    set_max_sql_connections_per_thread(2);
+    set_max_sql_connections_per_thread(1);
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
     int N = atoi(N_str.c_str());
     
@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
   };
 
   my_api.get("/updates") = [&](http_request& request, http_response& response) {
-    set_max_sql_connections_per_thread(2);
+    set_max_sql_connections_per_thread(1);
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
     int N = atoi(N_str.c_str());
     N = std::max(1, std::min(N, 500));
@@ -144,7 +144,7 @@ int main(int argc, char* argv[]) {
   };
 
   my_api.get("/fortunes") = [&](http_request& request, http_response& response) {
-    set_max_sql_connections_per_thread(128 / nprocs);
+    set_max_sql_connections_per_thread(64 / nprocs);
 
     typedef decltype(fortunes.all_fields()) fortune;
     std::vector<fortune> table;
