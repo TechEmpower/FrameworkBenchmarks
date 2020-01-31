@@ -9,10 +9,10 @@ COPY base/src base/src
 COPY hibernate/src hibernate/src
 COPY pgclient/src pgclient/src
 
-RUN mvn package -q -pl base
+RUN mvn package -q -pl hibernate -am
 
 FROM openjdk:11.0.3-jdk-slim
 WORKDIR /quarkus
-COPY --from=maven /quarkus/base/target/lib lib
-COPY --from=maven /quarkus/base/target/base-1.0-SNAPSHOT-runner.jar app.jar
+COPY --from=maven /quarkus/hibernate/target/lib lib
+COPY --from=maven /quarkus/hibernate/target/hibernate-1.0-SNAPSHOT-runner.jar app.jar
 CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-jar", "app.jar"]
