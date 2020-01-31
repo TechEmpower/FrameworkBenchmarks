@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"sort"
 
 	"atreugo/src/storage"
@@ -10,6 +9,8 @@ import (
 	"github.com/savsgio/atreugo/v10"
 )
 
+const helloWorldStr = "Hello, World!"
+
 func queriesParam(ctx *atreugo.RequestCtx) int {
 	n := ctx.QueryArgs().GetUintOrZero("queries")
 	if n < 1 {
@@ -17,13 +18,14 @@ func queriesParam(ctx *atreugo.RequestCtx) int {
 	} else if n > 500 {
 		n = 500
 	}
+
 	return n
 }
 
 // JSONHandler . Test 1: JSON serialization
 func JSONHandler(ctx *atreugo.RequestCtx) error {
 	message := AcquireMessage()
-	message.Message = "Hello, World!"
+	message.Message = helloWorldStr
 
 	err := ctx.JSONResponse(message)
 
@@ -59,7 +61,7 @@ func QueriesHandler(db storage.DB) atreugo.View {
 		var err error
 		for i := 0; i < queries; i++ {
 			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
-				log.Println(err)
+				return err
 			}
 		}
 
@@ -89,6 +91,7 @@ func FortuneHandler(db storage.DB) atreugo.View {
 		})
 
 		ctx.SetContentType("text/html; charset=utf-8")
+
 		if err = templates.FortuneTemplate.Execute(ctx, fortunes); err != nil {
 			return err
 		}
@@ -138,7 +141,7 @@ func UpdateHandler(db storage.DB) atreugo.View {
 
 		for i := 0; i < queries; i++ {
 			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
-				log.Println(err)
+				return err
 			}
 		}
 
@@ -156,5 +159,5 @@ func UpdateHandler(db storage.DB) atreugo.View {
 
 // PlaintextHandler . Test 6: Plaintext
 func PlaintextHandler(ctx *atreugo.RequestCtx) error {
-	return ctx.TextResponse("Hello, World!")
+	return ctx.TextResponse(helloWorldStr)
 }
