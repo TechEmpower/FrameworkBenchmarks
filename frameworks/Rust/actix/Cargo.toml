@@ -1,6 +1,6 @@
 [package]
 name = "actix"
-version = "1.0.0"
+version = "2.0.0"
 edition = "2018"
 
 [[bin]]
@@ -24,31 +24,31 @@ name = "actix-raw"
 path = "src/main_raw.rs"
 
 [dependencies]
-actix = { version="0.8.2", features=["http"] }
-actix-web = { version="1.0.0-rc", default-features = false }
-actix-http = { version="0.2.1", default-features = false }
-actix-rt = "0.2.2"
-actix-codec = "0.1.2"
-actix-server = "0.5.1"
-actix-service = "0.4.0"
-jemallocator = "0.3.0"
+actix = { version="0.9.0", features=["http"] }
+actix-web = { version="2.0.0", default-features = false }
+actix-http = { version="1.0.1", default-features = false }
+actix-rt = "1.0.0"
+actix-codec = "0.2.0"
+actix-server = "1.0.0"
+actix-service = "1.0.1"
+jemallocator = "0.3.2"
 askama = "0.8"
-markup = "0.3.1"
+markup = "0.4.1"
 yarte = "0.3"
 serde = "1.0"
 serde_json = "1.0"
 serde_derive = "1.0"
-env_logger = "0.6"
-rand = "0.5"
-bytes = "0.4"
+env_logger = "0.7"
+rand = { version = "0.7", features = ["small_rng"] }
+bytes = "0.5.3"
 num_cpus = "1.0"
-futures = "0.1.25"
-http = "0.1"
-diesel = { version = "1.2", features = ["postgres"] }
+futures = "0.3.1"
+http = "0.2"
+diesel = { version = "1.4.3", features = ["postgres"] }
 url = { version="1.7", features=["query_encoding"] }
-log = { version = "0.4", features = ["release_max_level_off"] }
-v_htmlescape = "0.4"
-tokio-tcp = "0.1"
+log = { version = "0.4", features = ["release_max_level_debug"] }
+v_htmlescape = "0.4.5"
+tokio = "=0.2.6"
 tokio-postgres = { git="https://github.com/fafhrd91/rust-postgres.git" }
 
 [build-dependencies]
@@ -59,6 +59,3 @@ bindgen = "0.42"
 lto = true
 opt-level = 3
 codegen-units = 1
-
-[patch.crates-io]
-tokio-reactor = { git="https://github.com/fafhrd91/tokio.git" }

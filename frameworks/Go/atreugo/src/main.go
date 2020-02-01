@@ -10,7 +10,7 @@ import (
 	"atreugo/src/handlers"
 	"atreugo/src/storage"
 
-	"github.com/savsgio/atreugo/v9"
+	"github.com/savsgio/atreugo/v10"
 )
 
 var bindHost, jsonEncoder, dbDriver, dbConnectionString string
@@ -77,15 +77,15 @@ func main() {
 	})
 
 	// init handlers
-	server.Path("GET", "/plaintext", handlers.PlaintextHandler)
-	server.Path("GET", "/json", jsonHandler)
+	server.GET("/plaintext", handlers.PlaintextHandler)
+	server.GET("/json", jsonHandler)
 	if db != nil {
 		defer db.Close()
-		server.Path("GET", "/fortune", handlers.FortuneHandler(db))
-		server.Path("GET", "/fortune-quick", handlers.FortuneQuickHandler(db))
-		server.Path("GET", "/db", dbHandler)
-		server.Path("GET", "/queries", queriesHandler)
-		server.Path("GET", "/update", updateHandler)
+		server.GET("/fortune", handlers.FortuneHandler(db))
+		server.GET("/fortune-quick", handlers.FortuneQuickHandler(db))
+		server.GET("/db", dbHandler)
+		server.GET("/queries", queriesHandler)
+		server.GET("/update", updateHandler)
 	}
 
 	if child {

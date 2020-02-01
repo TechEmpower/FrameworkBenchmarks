@@ -1,4 +1,4 @@
-FROM ubuntu:19.04
+FROM ubuntu:19.10
 
 RUN apt update -yqq
 RUN apt install -yqq \
@@ -8,9 +8,12 @@ RUN apt install -yqq \
 ADD ./ /lwan
 WORKDIR /lwan
 
-RUN wget https://github.com/lpereira/lwan/archive/d7fc0d27fbea5c68d61444033517d0e962e822e6.tar.gz -O - | tar xz --strip-components=1 && \
+RUN mkdir mimalloc && \
+    wget https://github.com/microsoft/mimalloc/archive/acb03c54971c4b0a43a6d17ea55a9d5feb88972f.tar.gz -O - | tar xz --strip-components=1 -C mimalloc && \
+    cd mimalloc && mkdir build && cd build && CFLAGS="-flto -ffat-lto-objects" cmake .. -DCMAKE_BUILD_TYPE=Release -DMI_SECURE=OFF && make -j install && cd ../.. && \
+    wget https://github.com/lpereira/lwan/archive/bc5566a07b0dba029086ae97ab1550611f529ac0.tar.gz -O - | tar xz --strip-components=1 && \
     mkdir build && cd build && \
-    cmake /lwan -DCMAKE_BUILD_TYPE=Release && \
+    cmake /lwan -DCMAKE_BUILD_TYPE=Release -DUSE_ALTERNATIVE_MALLOC=mimalloc && \
     make lwan-static
 
 RUN make clean && make

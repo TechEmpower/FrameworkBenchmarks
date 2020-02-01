@@ -1,7 +1,13 @@
-FROM elixir:1.9.1
+FROM elixir:1.9.4
 
-ADD ./ /phoenix
 WORKDIR /phoenix
+
+COPY config ./config
+COPY lib ./lib
+COPY priv ./priv
+COPY web ./web
+COPY mix.exs .
+COPY mix.lock .
 
 ENV MIX_ENV=prod
 
