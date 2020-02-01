@@ -12,7 +12,7 @@ class Fortunes extends \Ubiquity\controllers\SimpleViewController {
 
 	public function index() {
 		$fortunes = SDAO::getAll(Fortune::class);
-		$fortunes[] = (new Fortune())->setId(0)->setMessage('Additional fortune added at request time.');
+		$fortunes[] = new Fortune(0, 'Additional fortune added at request time.');
 		\usort($fortunes, function ($left, $right) {
 			return $left->message <=> $right->message;
 		});
