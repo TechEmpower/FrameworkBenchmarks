@@ -53,8 +53,9 @@ class Controller extends BaseController {
 				$newId = mt_rand(1, 10000);
 			} while ($oldId === $newId);
 			$row->randomNumber = $newId;
-			$row->save();
-
+			do {
+				$saved = $row->save();
+			} while (! $saved);
 			$rows[] = $row;
 		}
 
