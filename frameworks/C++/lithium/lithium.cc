@@ -38,7 +38,7 @@ float tune_n_sql_connections(std::string http_req, int port, int max) {
   std::cout << std::endl << "Benchmark " << http_req << std::endl;
 
   // Warmup;
-  set_max_sql_connections_per_thread(max);
+  set_max_sql_connections_per_thread(max / 2);
   http_benchmark(512, 1, 200, port, http_req);
 
   // auto my_api = make_api();
@@ -97,7 +97,7 @@ int main(int argc, char* argv[]) {
   int db_nconn = 64;
   int queries_nconn = 64;
   int fortunes_nconn = 64;
-  int update_nconn = 64;
+  int updates_nconn = 64;
 
   http_api my_api;
 
@@ -130,7 +130,7 @@ int main(int argc, char* argv[]) {
   };
 
   my_api.get("/updates") = [&](http_request& request, http_response& response) {
-    set_max_sql_connections_per_thread(update_nconn);
+    set_max_sql_connections_per_thread(updates_nconn);
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
     int N = atoi(N_str.c_str());
     N = std::max(1, std::min(N, 500));
@@ -212,7 +212,7 @@ int main(int argc, char* argv[]) {
   db_nconn = tune_n_sql_connections("GET /db HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection / nprocs);
   queries_nconn = tune_n_sql_connections("GET /queries?N=20 HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection / nprocs);
   fortunes_nconn = tune_n_sql_connections("GET /fortunes HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection / nprocs);
-  update_nconn = tune_n_sql_connections("GET /updates?N=20 HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection / nprocs);
+  updates_nconn = tune_n_sql_connections("GET /updates?N=20 HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection / nprocs);
 
   li::quit_signal_catched = true;
   server_thread.join();
