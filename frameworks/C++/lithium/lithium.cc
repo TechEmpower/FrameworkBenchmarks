@@ -33,20 +33,20 @@ void set_max_sql_connections_per_thread(int max)
 #endif
 }
 
-float tune_n_sql_connections(std::string http_req, int port, int max) {
+float tune_n_sql_connections(std::string http_req, int port, int max, int nprocs) {
 
   std::cout << std::endl << "Benchmark " << http_req << std::endl;
 
   // Warmup;
-  set_max_sql_connections_per_thread(std::max(1, max / 2));
-  http_benchmark(512, 1, 200, port, http_req);
+  // set_max_sql_connections_per_thread(1);
+  // http_benchmark(256, 1, 1000, port, http_req);
 
   // auto my_api = make_api();
   float max_req_per_s = 0;
   int best_nconn = 2;
   for (int nc : {1, 2, 3, 4, 8, 32, 64, 128, 256})
   {
-    if (nc >= max) break;
+    if (nc*nprocs >= max) break;
     set_max_sql_connections_per_thread(nc);
     float req_per_s = http_benchmark(256, 1, 400, port, http_req);
     std::cout << nc << " -> " << req_per_s << " req/s." << std::endl;
@@ -209,16 +209,16 @@ int main(int argc, char* argv[]) {
   });
   usleep(3e5);
 
-  db_nconn = tune_n_sql_connections("GET /db HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection / nprocs);
-  queries_nconn = tune_n_sql_connections("GET /queries?N=20 HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection / nprocs);
-  fortunes_nconn = tune_n_sql_connections("GET /fortunes HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection / nprocs);
-  //updates_nconn = tune_n_sql_connections("GET /updates?N=20 HTTP/1.1\r\n\r\n", tunning_port, std::min(sql_max_connection / nprocs, 3));
+  db_nconn = tune_n_sql_connections("GET /db HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection, nprocs);
+  queries_nconn = tune_n_sql_connections("GET /queries?N=20 HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection, nprocs);
+  fortunes_nconn = tune_n_sql_connections("GET /fortunes HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection, nprocs);
+  updates_nconn = tune_n_sql_connections("GET /updates?N=20 HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection, nprocs);
 
-#if TFB_MYSQL
-  updates_nconn = 1;
-#elif TFB_PGSQL
-  updates_nconn = 3;
-#endif
+// #if TFB_MYSQL
+//   updates_nconn = 1;
+// #elif TFB_PGSQL
+//   updates_nconn = 3;
+// #endif
   
   li::quit_signal_catched = true;
   server_thread.join();
