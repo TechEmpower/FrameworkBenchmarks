@@ -39,7 +39,7 @@ float tune_n_sql_connections(std::string http_req, int port, int max, int nprocs
 
   float max_req_per_s = 0;
   int best_nconn = 2;
-  for (int nc : {1, 2, 3, 4, 8, 16, 40, 60, 100})
+  for (int nc : {1, 2, 4, 8, 32, 64, 128})
   {
     if (nc*nprocs >= max) break;
     set_max_sql_connections_per_thread(nc);
