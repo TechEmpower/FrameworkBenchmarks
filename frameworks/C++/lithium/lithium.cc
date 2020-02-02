@@ -38,7 +38,7 @@ float tune_n_sql_connections(std::string http_req, int port, int max) {
   std::cout << std::endl << "Benchmark " << http_req << std::endl;
 
   // Warmup;
-  set_max_sql_connections_per_thread(std::max(1, max / 2);
+  set_max_sql_connections_per_thread(std::max(1, max / 2));
   http_benchmark(512, 1, 200, port, http_req);
 
   // auto my_api = make_api();
