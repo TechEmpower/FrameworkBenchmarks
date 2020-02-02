@@ -212,7 +212,13 @@ int main(int argc, char* argv[]) {
   db_nconn = tune_n_sql_connections("GET /db HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection / nprocs);
   queries_nconn = tune_n_sql_connections("GET /queries?N=20 HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection / nprocs);
   fortunes_nconn = tune_n_sql_connections("GET /fortunes HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection / nprocs);
-  updates_nconn = tune_n_sql_connections("GET /updates?N=20 HTTP/1.1\r\n\r\n", tunning_port, std::min(sql_max_connection / nprocs, 3));
+  //updates_nconn = tune_n_sql_connections("GET /updates?N=20 HTTP/1.1\r\n\r\n", tunning_port, std::min(sql_max_connection / nprocs, 3));
+
+#if TFB_MYSQL
+  updates_nconn = 1;
+#elif TFB_PGSQL
+  updates_nconn = 3;
+#endif
   
   li::quit_signal_catched = true;
   server_thread.join();
