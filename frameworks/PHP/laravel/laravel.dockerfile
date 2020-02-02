@@ -26,8 +26,7 @@ RUN chmod -R 777 /laravel
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
-RUN php artisan config:cache
-RUN php artisan route:cache
+RUN php artisan optimize
 
 RUN chmod -R 777 /laravel
 
