@@ -39,7 +39,7 @@ float tune_n_sql_connections(std::string http_req, int port, int max, int nprocs
 
   float max_req_per_s = 0;
   int best_nconn = 2;
-  for (int nc : {1, 2, 3, 4, 8, 16, 30, 40, 50, 60, 80, 100})
+  for (int nc : {1, 2, 3, 4, 8, 16, 40, 60, 100})
   {
     if (nc*nprocs >= max) break;
     set_max_sql_connections_per_thread(nc);
@@ -207,7 +207,7 @@ int main(int argc, char* argv[]) {
   db_nconn = tune_n_sql_connections("GET /db HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection, nprocs);
   queries_nconn = tune_n_sql_connections("GET /queries?N=20 HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection, nprocs);
   fortunes_nconn = tune_n_sql_connections("GET /fortunes HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection, nprocs);
-  updates_nconn = 1;//tune_n_sql_connections("GET /updates?N=20 HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection, nprocs);
+  updates_nconn = tune_n_sql_connections("GET /updates?N=20 HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection, nprocs);
   
   li::quit_signal_catched = true;
   server_thread.join();
