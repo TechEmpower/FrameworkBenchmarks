@@ -5,17 +5,17 @@ defmodule FrameworkBenchmarks.Handlers.Query do
   def handle(conn) do
     number_of_queries = FrameworkBenchmarks.Handlers.Helpers.parse_queries(conn, "queries")
 
-    ids =
+    records =
       1..number_of_queries
       |> Enum.map(fn _ ->
         :rand.uniform(10_000)
       end)
-
-    records =
-      ids
-      |> Enum.map(fn id ->
-        FrameworkBenchmarks.Repo.get(FrameworkBenchmarks.Models.World, id)
-      end)
+      |> Enum.map(
+        &Task.async(fn ->
+          FrameworkBenchmarks.Repo.get(FrameworkBenchmarks.Models.World, &1)
+        end)
+      )
+      |> Enum.map(&Task.await(&1))
 
     {:ok, json} =
       records

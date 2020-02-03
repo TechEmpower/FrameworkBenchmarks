@@ -26,8 +26,8 @@
         "versus": "php"
       },
       "workerman": {
-        "json_url": "/Json",
-        "plaintext_url": "/Plaintext",
+        "json_url": "/JsonAsync",
+        "plaintext_url": "/PlaintextAsync",
         "db_url": "/WorkerDb",
         "query_url": "/WorkerDb/query/",
         "fortune_url": "/WorkerFortunes",
@@ -49,8 +49,8 @@
         "versus": "workerman"
       },
       "swoole": {
-        "json_url": "/Json",
-        "plaintext_url": "/Plaintext",
+        "json_url": "/JsonAsync",
+        "plaintext_url": "/PlaintextAsync",
         "db_url": "/SwooleDb",
         "update_url": "/SwooleDb/update/",
         "query_url": "/SwooleDb/query/",

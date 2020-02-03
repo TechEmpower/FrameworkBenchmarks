@@ -2,13 +2,12 @@
 namespace controllers;
 
 use models\Fortune;
-use Ubiquity\orm\DAO;
 
 class SwooleFortunes extends \Ubiquity\controllers\SimpleViewAsyncController {
 
 	public function index() {
-		$fortunes = DAO::getAll(Fortune::class, '', false);
-		$fortunes[] = (new Fortune())->setId(0)->setMessage('Additional fortune added at request time.');
+		$fortunes = \Ubiquity\orm\DAO::executePrepared('fortune');
+		$fortunes[] = new Fortune(0, 'Additional fortune added at request time.');
 		\usort($fortunes, function ($left, $right) {
 			return $left->message <=> $right->message;
 		});

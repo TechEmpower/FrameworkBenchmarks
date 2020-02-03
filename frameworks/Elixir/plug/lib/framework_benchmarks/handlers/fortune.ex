@@ -32,7 +32,7 @@ defmodule FrameworkBenchmarks.Handlers.Fortune do
         %{id: fortune.id, message: Phoenix.HTML.safe_to_string(safe_result)}
       end)
 
-    fortunes = fortunes ++ [%{id: 0, message: @new_message}]
+    fortunes = [%{id: 0, message: @new_message}] ++ fortunes
 
     fortunes =
       fortunes
