@@ -6,6 +6,7 @@ RUN apt update > /dev/null && \
     apt install -yqq autoconf bison cmake curl file flex g++ git libnuma-dev libpq-dev libssl-dev \
                      libtool libyajl-dev libz-dev make wget software-properties-common > /dev/null
 ### Install php
+ENV DEBIAN_FRONTEND noninteractive
 
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
 RUN apt-get update -yqq > /dev/null && \
