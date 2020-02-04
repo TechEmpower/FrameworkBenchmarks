@@ -26,7 +26,7 @@ func easyjson4da0dabeDecodeAtreugoSrcStorage(in *jlexer.Lexer, out *Worlds) {
 		in.Delim('[')
 		if *out == nil {
 			if !in.IsDelim(']') {
-				*out = make(Worlds, 0, 4)
+				*out = make(Worlds, 0, 8)
 			} else {
 				*out = Worlds{}
 			}
@@ -103,9 +103,9 @@ func easyjson4da0dabeDecodeAtreugoSrcStorage1(in *jlexer.Lexer, out *World) {
 		}
 		switch key {
 		case "id":
-			out.ID = int(in.Int())
+			out.ID = int32(in.Int32())
 		case "randomnumber":
-			out.RandomNumber = int(in.Int())
+			out.RandomNumber = int32(in.Int32())
 		default:
 			in.SkipRecursive()
 		}
@@ -123,12 +123,12 @@ func easyjson4da0dabeEncodeAtreugoSrcStorage1(out *jwriter.Writer, in World) {
 	{
 		const prefix string = ",\"id\":"
 		out.RawString(prefix[1:])
-		out.Int(int(in.ID))
+		out.Int32(int32(in.ID))
 	}
 	{
 		const prefix string = ",\"randomnumber\":"
 		out.RawString(prefix)
-		out.Int(int(in.RandomNumber))
+		out.Int32(int32(in.RandomNumber))
 	}
 	out.RawByte('}')
 }

@@ -58,14 +58,13 @@ func QueriesHandler(db storage.DB) atreugo.View {
 
 		worlds := storage.AcquireWorlds()[:queries]
 
-		var err error
 		for i := 0; i < queries; i++ {
-			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
+			if err := db.GetOneRandomWorld(&worlds[i]); err != nil {
 				return err
 			}
 		}
 
-		err = ctx.JSONResponse(worlds)
+		err := ctx.JSONResponse(worlds)
 
 		storage.ReleaseWorlds(worlds)
 
@@ -134,22 +133,25 @@ func FortuneQuickHandler(db storage.DB) atreugo.View {
 func UpdateHandler(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
-
-		var err error
-
 		worlds := storage.AcquireWorlds()[:queries]
 
 		for i := 0; i < queries; i++ {
+<<<<<<< HEAD
 			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
+=======
+			w := &worlds[i]
+			if err := db.GetOneRandomWorld(w); err != nil {
+>>>>>>> master
 				return err
 			}
+			w.RandomNumber = int32(storage.RandomWorldNum())
 		}
 
-		if err = db.UpdateWorlds(worlds); err != nil {
+		if err := db.UpdateWorlds(worlds); err != nil {
 			return err
 		}
 
-		err = ctx.JSONResponse(worlds)
+		err := ctx.JSONResponse(worlds)
 
 		storage.ReleaseWorlds(worlds)
 
