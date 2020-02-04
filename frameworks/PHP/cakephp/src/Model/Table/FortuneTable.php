@@ -6,11 +6,5 @@ use Cake\ORM\Table;
 
 class FortuneTable extends Table
 {
-
-	protected $table = 'fortune';
-
-	public function initialize(array $config)
-	{
-
-	}
+	protected $_table = 'fortune';
 }

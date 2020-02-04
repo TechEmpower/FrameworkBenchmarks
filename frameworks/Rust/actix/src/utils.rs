@@ -39,49 +39,6 @@ pub fn get_query_param(query: &str) -> u16 {
     cmp::min(500, cmp::max(1, q))
 }
 
-fn escapable(b: u8) -> bool {
-    match b {
-        b'<' | b'>' | b'&' | b'"' | b'\'' | b'/' => true,
-        _ => false,
-    }
-}
-
-pub fn escape(writer: &mut Writer, s: String) {
-    let bytes = s.as_bytes();
-    let mut last_pos = 0;
-    for (idx, b) in s.as_bytes().iter().enumerate() {
-        if escapable(*b) {
-            let _ = writer.0.put_slice(&bytes[last_pos..idx]);
-
-            last_pos = idx + 1;
-            match *b {
-                b'<' => {
-                    let _ = writer.0.put_slice(b"&lt;");
-                }
-                b'>' => {
-                    let _ = writer.0.put_slice(b"&gt;");
-                }
-                b'&' => {
-                    let _ = writer.0.put_slice(b"&amp;");
-                }
-                b'"' => {
-                    let _ = writer.0.put_slice(b"&quot;");
-                }
-                b'\'' => {
-                    let _ = writer.0.put_slice(b"&#x27;");
-                }
-                b'/' => {
-                    let _ = writer.0.put_slice(b"&#x2f;");
-                }
-                _ => panic!("incorrect indexing"),
-            }
-        }
-    }
-    if last_pos < bytes.len() - 1 {
-        let _ = writer.0.put_slice(&bytes[last_pos..]);
-    }
-}
-
 markup::define! {
     FortunesTemplate(fortunes: Vec<Fortune>) {
         {markup::doctype()}
@@ -107,5 +64,5 @@ markup::define! {
 #[derive(Template)]
 #[template(path = "fortune.hbs")]
 pub struct FortunesYarteTemplate {
-    pub fortunes: Vec<Fortune>
+    pub fortunes: Vec<Fortune>,
 }
