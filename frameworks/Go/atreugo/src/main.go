@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net"
 	"os"
@@ -18,26 +19,37 @@ var prefork, child bool
 
 func init() {
 	// init flags
-	flag.StringVar(&bindHost, "bind", "0.0.0.0:8080", "set bind host")
+	flag.StringVar(&bindHost, "bind", ":8080", "set bind host")
 	flag.BoolVar(&prefork, "prefork", false, "use prefork")
 	flag.BoolVar(&child, "child", false, "is child proc")
 	flag.StringVar(&jsonEncoder, "json_encoder", "none", "json encoder: none or easyjson or gojay or sjson")
 	flag.StringVar(&dbDriver, "db", "none", "db connection driver [values: none or pgx or mongo]")
-	flag.StringVar(&dbConnectionString, "db_connection_string",
-		"host=tfb-database user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world sslmode=disable",
-		"db connection string")
+	flag.StringVar(&dbConnectionString, "db_connection_string", "", "db connection string")
 
 	flag.Parse()
 }
 
-func main() {
-	// init database with appropriate driver
-	dbMaxConnectionCount := runtime.NumCPU() * 4
-	if child {
-		dbMaxConnectionCount = runtime.NumCPU()
+func numCPU() int {
+	n := runtime.NumCPU()
+	if n == 0 {
+		n = 8
 	}
 
-	db, err := storage.InitDB(dbDriver, dbConnectionString, dbMaxConnectionCount)
+	return n
+}
+
+func main() {
+	maxConn := numCPU() * 4
+	if child {
+		maxConn = numCPU()
+	}
+
+	if dbConnectionString == "" {
+		dbConnectionString = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s pool_max_conns=%d", "tfb-database", 5432, "benchmarkdbuser", "benchmarkdbpass", "hello_world", maxConn)
+	}
+
+	// init database with appropriate driver
+	db, err := storage.InitDB(dbDriver, dbConnectionString, maxConn)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -74,6 +86,7 @@ func main() {
 	// init atreugo server
 	server := atreugo.New(&atreugo.Config{
 		Addr: bindHost,
+		Name: "Go",
 	})
 
 	// init handlers
@@ -81,6 +94,7 @@ func main() {
 	server.GET("/json", jsonHandler)
 	if db != nil {
 		defer db.Close()
+
 		server.GET("/fortune", handlers.FortuneHandler(db))
 		server.GET("/fortune-quick", handlers.FortuneQuickHandler(db))
 		server.GET("/db", dbHandler)
