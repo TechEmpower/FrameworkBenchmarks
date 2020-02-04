@@ -78,6 +78,7 @@ env:
     - "TESTDIR=Java/redkale"
     - "TESTDIR=Java/restexpress"
     - "TESTDIR=Java/revenj-jvm"
+    - "TESTDIR=Java/servicetalk"
     - "TESTDIR=Java/servlet"
     - "TESTDIR=Java/servlet3"
     - "TESTDIR=Java/smart-socket"
