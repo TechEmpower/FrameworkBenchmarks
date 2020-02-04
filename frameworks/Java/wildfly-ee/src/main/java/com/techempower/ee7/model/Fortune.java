@@ -9,52 +9,47 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 @NamedQuery(name = "allFortunes", query = "SELECT f FROM Fortune f")
-@XmlRootElement
 @Entity
 public class Fortune implements Comparable<Fortune>, Serializable {
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  private int id;
-  private String message;
+    private int id;
+    private String message;
 
-  public Fortune() {
+    public Fortune() {
 
-  }
+    }
 
-  public Fortune(int id, String message) {
-    this.id = id;
-    this.message = message;
-  }
+    public Fortune(int id, String message) {
+        this.id = id;
+        this.message = message;
+    }
 
-  @XmlElement
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  public int getId() {
-    return id;
-  }
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public int getId() {
+        return id;
+    }
 
-  public void setId(int id) {
-    this.id = id;
-  }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-  @XmlElement
-  @NotNull
-  @Size(max = 2048)
-  public String getMessage() {
-    return message;
-  }
+    @NotNull
+    @Size(max = 2048)
+    public String getMessage() {
+        return message;
+    }
 
-  public void setMessage(String message) {
-    this.message = message;
-  }
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-  @Override
-  public int compareTo(Fortune o) {
-    return message.compareTo(o.getMessage());
-  }
+    @Override
+    public int compareTo(Fortune o) {
+        return message.compareTo(o.getMessage());
+    }
 }

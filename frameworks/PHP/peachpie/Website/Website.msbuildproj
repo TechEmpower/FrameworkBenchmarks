@@ -1,4 +1,4 @@
-<Project Sdk="Peachpie.NET.Sdk/1.0.0-appv3073">
+<Project Sdk="Peachpie.NET.Sdk/1.0.0-appv3144">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>

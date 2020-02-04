@@ -48,9 +48,14 @@ class Controller extends BaseController {
 		$numbers = $this->getUniqueRandomNumbers($this->clamp($queries));
 		foreach ($numbers as $id) {
 			$row = World::find($id);
-			$row->randomNumber = \mt_rand(1, 10000);
-			$row->save();
-
+			$oldId = $row->randomNumber;
+			do {
+				$newId = mt_rand(1, 10000);
+			} while ($oldId === $newId);
+			$row->randomNumber = $newId;
+			do {
+				$saved = $row->save();
+			} while (! $saved);
 			$rows[] = $row;
 		}
 
@@ -76,6 +81,7 @@ class Controller extends BaseController {
 		do {
 			$res[\mt_rand(1, 10000)] = 1;
 		} while (\count($res) < $count);
+		\ksort($res);
 		return \array_keys($res);
 	}
 }

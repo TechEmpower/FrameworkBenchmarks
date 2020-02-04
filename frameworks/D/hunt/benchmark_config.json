@@ -46,7 +46,8 @@
         "database_os": "Linux",
         "display_name": "hunt-dmd",
         "notes": "",
-        "versus": "Hunt"
+        "versus": "Hunt",
+        "tags": ["broken"]
       },
       "http": {
         "json_url": "/json",

@@ -49,15 +49,28 @@ export ODBCINI='"$IROOT"'/odbc.ini
 export ODBCSYSINI='"$IROOT"' 
 EOL'
 
-bash -c 'cat > /etc/apache2/mods-enabled/mpm_event.conf <<EOL
-<IfModule mpm_event_module>
-    AsyncRequestWorkerFactor   2
-    ThreadsPerChild           64
-    ServerLimit              100
-    StartServers              20
-    MinSpareThreads          100
-    MaxSpareThreads          200
-    ListenBacklog 			4096
+#bash -c 'cat > /etc/apache2/mods-enabled/mpm_event.conf <<EOL
+#<IfModule mpm_event_module>
+#    AsyncRequestWorkerFactor   2
+#    ThreadsPerChild           64
+#    ServerLimit              100
+#    StartServers              20
+#    MinSpareThreads          100
+#    MaxSpareThreads          200
+#    ListenBacklog 			4096
+#</IfModule>
+#EOL'
+
+bash -c 'cat > /etc/apache2/mods-enabled/mpm_worker.conf <<EOL
+<IfModule mpm_worker_module>
+    ServerLimit              250
+    StartServers              10
+    MinSpareThreads           75
+    MaxSpareThreads          250 
+    ThreadLimit               64
+    ThreadsPerChild           32
+    MaxRequestWorkers       8000
+    MaxConnectionsPerChild 10000
 </IfModule>
 EOL'
 

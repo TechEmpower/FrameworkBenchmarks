@@ -14,7 +14,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
  */
 
 #pragma once
@@ -33,13 +34,20 @@ struct db_row {
     size_t buffer_length;
 };
 
-bool db_stmt_bind(const struct db_stmt *stmt, struct db_row *rows, size_t n_rows);
-bool db_stmt_step(const struct db_stmt *stmt, struct db_row *row);
+bool db_stmt_bind(const struct db_stmt *stmt,
+                  struct db_row *rows,
+                  size_t n_rows);
+
+bool db_stmt_step(const struct db_stmt *stmt, const char *signature, ...);
+
 void db_stmt_finalize(struct db_stmt *stmt);
 void db_disconnect(struct db *db);
-struct db_stmt *db_prepare_stmt(const struct db *db, const char *sql,
-    const size_t sql_len);
+struct db_stmt *
+db_prepare_stmt(const struct db *db, const char *sql, const size_t sql_len);
 
-struct db *db_connect_sqlite(const char *path, bool read_only, const char *pragmas[]);
-struct db *db_connect_mysql(const char *host, const char *user, const char *pass, const char *database);
-
+struct db *
+db_connect_sqlite(const char *path, bool read_only, const char *pragmas[]);
+struct db *db_connect_mysql(const char *host,
+                            const char *user,
+                            const char *pass,
+                            const char *database);
