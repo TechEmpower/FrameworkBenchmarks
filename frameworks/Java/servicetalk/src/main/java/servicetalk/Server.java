@@ -1,6 +1,7 @@
 package servicetalk;
 
 import java.text.SimpleDateFormat;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,14 +69,14 @@ public final class Server {
                   obj.put("message", "Hello, World!");
                   return succeeded(responseFactory.ok()
                     .payloadBody(obj, serializer.serializerFor(Map.class))
-                    .addHeader("Date", GetCurrentTime())
+                    .addHeader("Date", getRandomNumber())
                     .addHeader("Server", "TFB"));
               }
 
               if(request.path().equals("/plaintext")) {
                   return succeeded(responseFactory.ok()
                     .payloadBody("Hello, World!", HttpSerializationProviders.textSerializer())
-                    .addHeader("Date", GetCurrentTime())
+                    .addHeader("Date", getCurrentTime())
                     .addHeader("Server", "TFB"));
                 };
                 return null;
@@ -83,15 +84,14 @@ public final class Server {
             .awaitShutdown();
     }
 
-    public static String GetCurrentTime() {
+    public static String getCurrentTime() {
         SimpleDateFormat formatter = new SimpleDateFormat("EE, dd MMM yyyy kk:mm:ss z  ");
         Date date = new Date();
         return formatter.format(date);
     }
 
-    private static int GetRandomNumber() {
-        Random random = new Random();
-        return random.nextInt(10001) + 1;
+    private static int getRandomNumber() {
+        return 1 + ThreadLocalRandom.current().nextInt(10000);
     }
 }
 
