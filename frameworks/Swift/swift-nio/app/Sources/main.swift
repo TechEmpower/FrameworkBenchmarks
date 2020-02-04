@@ -14,7 +14,6 @@ enum Constants {
     static let plainTextResponseLength = plainTextResponse.utf8CodeUnitCount
     static let plainTextResponseLengthString = String(plainTextResponseLength)
 
-    static let jsonResponse = try! JSONEncoder().encode(JSONTestResponse())
     static let jsonResponseLength = try! JSONEncoder().encode(JSONTestResponse()).count
     static let jsonResponseLengthString = String(jsonResponseLength)
 }
@@ -23,7 +22,9 @@ private final class HTTPHandler: ChannelInboundHandler {
     public typealias InboundIn = HTTPServerRequestPart
     public typealias OutboundOut = HTTPServerResponsePart
 
+    let jsonEncoder: JSONEncoder
     let dateCache: RFC1123DateCache
+
     var plaintextBuffer: ByteBuffer
     var jsonBuffer: ByteBuffer
 
@@ -32,7 +33,7 @@ private final class HTTPHandler: ChannelInboundHandler {
         self.plaintextBuffer = allocator.buffer(capacity: Constants.plainTextResponseLength)
         self.plaintextBuffer.writeStaticString(Constants.plainTextResponse)
         self.jsonBuffer = allocator.buffer(capacity: Constants.jsonResponseLength)
-        self.jsonBuffer.writeBytes(Constants.jsonResponse)
+        self.jsonEncoder = .init()
         self.dateCache = .on(channel.eventLoop)
     }
 
@@ -43,9 +44,13 @@ private final class HTTPHandler: ChannelInboundHandler {
             case "/p":
                 self.processPlaintext(context: context)
             case "/j":
-                self.processJSON(context: context)
+                do {
+                    try self.processJSON(context: context)
+                } catch {
+                    context.close(promise: nil)
+                }
             default:
-                _ = context.close()
+                context.close(promise: nil)
             }
         case .body:
             break
@@ -65,9 +70,11 @@ private final class HTTPHandler: ChannelInboundHandler {
         context.write(self.wrapOutboundOut(.body(.byteBuffer(self.plaintextBuffer))), promise: nil)
     }
 
-    private func processJSON(context: ChannelHandlerContext) {
+    private func processJSON(context: ChannelHandlerContext) throws {
         let responseHead = self.responseHead(contentType: "application/json", contentLength: Constants.jsonResponseLengthString)
         context.write(self.wrapOutboundOut(.head(responseHead)), promise: nil)
+        self.jsonBuffer.clear()
+        try self.jsonBuffer.writeBytes(self.jsonEncoder.encode(JSONTestResponse()))
         context.write(self.wrapOutboundOut(.body(.byteBuffer(self.jsonBuffer))), promise: nil)
     }
 

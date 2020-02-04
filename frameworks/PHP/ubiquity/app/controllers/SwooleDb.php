@@ -2,7 +2,6 @@
 namespace controllers;
 
 use Ubiquity\orm\DAO;
-use models\World;
 
 /**
  * Bench controller.
