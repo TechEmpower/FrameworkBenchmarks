@@ -26,20 +26,20 @@ public final class Server {
 
     public static void main(String[] args) throws Exception {
 
-        /**
+        /*
          * Disable  AsyncContext
          */
         AsyncContext.disable();
 
-        /**
-        *   Factory to implement io pooling
-        */
+        /*
+         *   Factory to implement io pooling
+         */
         IoExecutor ioExecutor = NettyIoExecutors.createIoExecutor(
           Runtime.getRuntime().availableProcessors(),
           new IoThreadFactory("io-pool")
         );
 
-        /**
+        /*
          * Factory to disable headers validation
          */
 
