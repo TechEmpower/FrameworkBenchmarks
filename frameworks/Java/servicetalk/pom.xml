@@ -8,37 +8,41 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <properties>
+        <servicetalk.version>0.20.0</servicetalk.version>
+    </properties>
+
 
     <dependencies>
         <dependency>
             <groupId>io.servicetalk</groupId>
             <artifactId>servicetalk-serialization-api</artifactId>
-            <version>0.20.0</version>
+            <version>${servicetalk.version}</version>
         </dependency>
         <dependency>
             <groupId>io.servicetalk</groupId>
             <artifactId>servicetalk-http-api</artifactId>
-            <version>0.20.0</version>
+            <version>${servicetalk.version}</version>
         </dependency>
         <dependency>
             <groupId>io.servicetalk</groupId>
             <artifactId>servicetalk-http-netty</artifactId>
-            <version>0.20.0</version>
+            <version>${servicetalk.version}</version>
         </dependency>
         <dependency>
             <groupId>io.servicetalk</groupId>
             <artifactId>servicetalk-concurrent-api</artifactId>
-            <version>0.20.0</version>
+            <version>${servicetalk.version}</version>
         </dependency>
         <dependency>
             <groupId>io.servicetalk</groupId>
             <artifactId>servicetalk-data-jackson</artifactId>
-            <version>0.20.0</version>
+            <version>${servicetalk.version}</version>
         </dependency>
         <dependency>
             <groupId>io.servicetalk</groupId>
             <artifactId>servicetalk-transport-netty-internal</artifactId>
-            <version>0.20.0</version>
+            <version>${servicetalk.version}</version>
         </dependency>
     </dependencies>
 
