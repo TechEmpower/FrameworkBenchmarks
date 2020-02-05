@@ -1,11 +1,11 @@
 package servicetalk;
 
-import java.text.SimpleDateFormat;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
+import java.time.format.DateTimeFormatter;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 import io.servicetalk.concurrent.api.AsyncContext;
 import io.servicetalk.concurrent.api.Completable;
@@ -22,10 +22,11 @@ import static io.servicetalk.concurrent.api.Single.succeeded;
 
 
 
-public final class Server {
+public final class Server
+{
 
-
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception
+    {
 
         /*
          * Disable  AsyncContext
@@ -55,42 +56,48 @@ public final class Server {
           .ioExecutor(ioExecutor)
           .disableDrainingRequestPayloadBody()
           .protocols(HttpProtocolConfigs.h1().headersFactory(headersFactory).build())
-          .appendConnectionAcceptorFilter(delegate -> new ConnectionAcceptor() {
+          .appendConnectionAcceptorFilter(delegate -> new ConnectionAcceptor()
+          {
               @Override
-              public Completable accept(ConnectionContext context) {
+              public Completable accept(ConnectionContext context)
+              {
                   ((NettyConnectionContext)context).updateFlushStrategy((current, isOrig) -> FlushStrategies.flushOnEnd());
                   return delegate.accept(context);
               }
           })
-          .listenAndAwait((ctx, request, responseFactory) -> {
+          .listenAndAwait((ctx, request, responseFactory) ->
+            {
               ((NettyConnectionContext)ctx).updateFlushStrategy(((current, isCurrentOriginal) -> FlushStrategies.flushOnEach()));
-              if(request.path().equals("/json")) {
-                  Map<String, String> obj = new HashMap<String, String>();
-                  obj.put("message", "Hello, World!");
-                  return succeeded(responseFactory.ok()
-                    .payloadBody(obj, serializer.serializerFor(Map.class))
-                    .addHeader("Date", getRandomNumber())
-                    .addHeader("Server", "TFB"));
+              if(request.path().equals("/json"))
+              {
+                Map<String, String> obj = new HashMap<String, String>();
+                obj.put("message", "Hello, World!");
+                return succeeded(responseFactory.ok()
+                  .payloadBody(obj, serializer.serializerFor(Map.class))
+                  .addHeader("Date", getCurrentTime())
+                  .addHeader("Server", "ServiceTalk"));
               }
 
-              if(request.path().equals("/plaintext")) {
-                  return succeeded(responseFactory.ok()
-                    .payloadBody("Hello, World!", HttpSerializationProviders.textSerializer())
-                    .addHeader("Date", getCurrentTime())
-                    .addHeader("Server", "TFB"));
-                };
-                return null;
+              if(request.path().equals("/plaintext"))
+              {
+                return succeeded(responseFactory.ok()
+                  .payloadBody("Hello, World!", HttpSerializationProviders.textSerializer())
+                  .addHeader("Date", getCurrentTime())
+                  .addHeader("Server", "ServiceTalk"));
+              };
+              return null;
             })
             .awaitShutdown();
     }
 
-    public static String getCurrentTime() {
-        SimpleDateFormat formatter = new SimpleDateFormat("EE, dd MMM yyyy kk:mm:ss z  ");
-        Date date = new Date();
-        return formatter.format(date);
+    public static String getCurrentTime()
+    {
+        return DateTimeFormatter.RFC_1123_DATE_TIME.format(
+          ZonedDateTime.now(ZoneOffset.UTC));
     }
 
-    private static int getRandomNumber() {
+    private static int getRandomNumber()
+    {
         return 1 + ThreadLocalRandom.current().nextInt(10000);
     }
 }
