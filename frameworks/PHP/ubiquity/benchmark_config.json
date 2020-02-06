@@ -70,6 +70,27 @@
         "display_name": "ubiquity-swoole-pgsql",
         "notes": "",
         "versus": "swoole"
+      },
+      "swoole-mysql": {
+        "db_url": "/SwooleDb",
+        "update_url": "/SwooleDbMy/update/",
+        "query_url": "/SwooleDb/query/",
+        "fortune_url": "/SwooleFortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "MYSQL",
+        "framework": "ubiquity",
+        "language": "PHP",
+        "flavor": "PHP7",
+        "orm": "Full",
+        "platform": "swoole",
+        "webserver": "none",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ubiquity-swoole-mysql",
+        "notes": "",
+        "versus": "swoole"
       }
     }
   ]
