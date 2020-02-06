@@ -8,6 +8,7 @@
 	'controllers\\PlaintextAsync',
 	'controllers\\JsonAsync',
 	'controllers\\SwooleDb',
+	'controllers\\SwooleDbMy',
 	'controllers\\SwooleFortunes'
 ]);
 $swooleServer->on('workerStart', function ($srv) use (&$config) {
