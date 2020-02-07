@@ -26,6 +26,17 @@ return array(
 				\PDO::ATTR_PERSISTENT => true
 			],
 			"cache" => false
+		],
+		'async' => [
+			"wrapper" => "\\Ubiquity\\db\\providers\\swoole\SwooleWrapper",
+			"type" => "mysql",
+			"dbName" => "hello_world",
+			"serverName" => "tfb-database", // tfb-database
+			"port" => 3306,
+			"user" => "benchmarkdbuser", // benchmarkdbuser
+			"password" => "benchmarkdbpass", // benchmarkdbpass
+			"options" => [],
+			"cache" => false
 		]
 	],
 	"test" => false,
