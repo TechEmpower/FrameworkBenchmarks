@@ -34,4 +34,6 @@ RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /usr/loc
 
 USER www-data
 
+COPY deploy/swoole/swoolePgsqlServices.php app/config/swooleServices.php
+
 CMD /ubiquity/vendor/bin/Ubiquity serve -t=swoole -p=8080 -h=0.0.0.0
