@@ -35,7 +35,7 @@ USER www-data
 COPY deploy/swoole/swooleMysqlAsyncServices.php app/config/swooleServices.php
 
 RUN sed -i "s|'default'|'async'|g" /ubiquity/app/config/config.php
-RUN sed -i "s|'\\Ubiquity\\db\\providers\\pdo\\PDOWrapper'|'\\Ubiquity\\db\\providers\\swoole\\SwooleWrapper'|g" /ubiquity/app/config/config.php
+RUN sed -i "s|'\\\\Ubiquity\\\\db\\\\providers\\\\pdo\\\\PDOWrapper'|'\\Ubiquity\\db\\providers\\swoole\\SwooleWrapper'|g" /ubiquity/app/config/config.php
 RUN sed -i "s|'\PDO::ATTR_PERSISTENT => true'|''|g" /ubiquity/app/config/config.php
 
 CMD /ubiquity/vendor/bin/Ubiquity serve -t=swoole -p=8080 -h=0.0.0.0
