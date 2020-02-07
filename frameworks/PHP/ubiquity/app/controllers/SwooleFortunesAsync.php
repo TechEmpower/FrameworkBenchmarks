@@ -2,6 +2,7 @@
 namespace controllers;
 
 use Ubiquity\orm\DAO;
+use models\Fortune;
 
 class SwooleFortunesAsync extends \Ubiquity\controllers\SimpleViewAsyncController {
 
