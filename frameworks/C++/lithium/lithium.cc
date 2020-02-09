@@ -52,10 +52,9 @@ float tune_n_sql_connections(int& nc_to_tune, std::string http_req, int port, in
     }
   }
   std::cout << "best: " << best_nconn << " (" << max_req_per_s << " req/s)."<< std::endl;
-
+  nc_to_tune = best_nconn;
   return best_nconn;
 }
-
 
 int main(int argc, char* argv[]) {
 
