@@ -56,7 +56,6 @@ float tune_n_sql_connections(int& nc_to_tune, std::string http_req, int port, in
   return best_nconn;
 }
 
-
 int main(int argc, char* argv[]) {
 
   if (argc != 3)
