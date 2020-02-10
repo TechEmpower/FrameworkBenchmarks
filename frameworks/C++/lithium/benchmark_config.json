@@ -57,7 +57,7 @@
         "framework": "Lithium",
         "language": "C++",
         "flavor": "None",
-        "orm": "None",
+        "orm": "Full",
         "platform": "None",
         "webserver": "None",
         "os": "Linux",
