@@ -53,7 +53,7 @@
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
-        "database": "None",
+        "database": "mysql",
         "framework": "Lithium",
         "language": "C++",
         "flavor": "None",
