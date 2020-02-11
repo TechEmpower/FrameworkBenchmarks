@@ -11,8 +11,8 @@ var worldJSONStr = []byte(`{"id": 0, "randomNumber": 0}`)
 
 //easyjson:json
 type World struct {
-	ID           int `json:"id"`
-	RandomNumber int `json:"randomnumber"`
+	ID           int32 `json:"id"`
+	RandomNumber int32 `json:"randomnumber"`
 }
 
 // WorldPool ...
@@ -36,9 +36,8 @@ func ReleaseWorld(w *World) {
 
 // MarshalJSONObject encodes the world as JSON
 func (w *World) MarshalJSONObject(dec *gojay.Encoder) {
-	dec.AddIntKey("id", w.ID)
-	dec.AddIntKey("randomnumber", w.RandomNumber)
-
+	dec.AddInt32Key("id", w.ID)
+	dec.AddInt32Key("randomnumber", w.RandomNumber)
 }
 
 // IsNil returns true if the object is nil
@@ -49,7 +48,10 @@ func (w *World) IsNil() bool {
 // MarshalSJSON marshals the object as json
 func (w World) MarshalSJSON() ([]byte, error) {
 	data, _ := sjson.SetBytesOptions(worldJSONStr, "id", w.ID, &sjson.Options{Optimistic: true})
-	return sjson.SetBytesOptions(data, "randomNumber", w.RandomNumber, &sjson.Options{Optimistic: true, ReplaceInPlace: true})
+
+	return sjson.SetBytesOptions(
+		data, "randomNumber", w.RandomNumber, &sjson.Options{Optimistic: true, ReplaceInPlace: true},
+	)
 }
 
 //easyjson:json

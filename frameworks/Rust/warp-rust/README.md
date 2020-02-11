@@ -2,12 +2,14 @@
 
 warp is a composable web server framework based on hyper.
 
-* [API Documentation](https://docs.rs/warp/0.1)
+* [API Documentation](https://docs.rs/warp/0.2)
 
 ### Test Type Implementation Source Code
 
 * [JSON](src/main.rs)
 * [PLAINTEXT](src/main.rs)
+* [DB](src/main.rs)
+* [QUERIES](src/main.rs)
 
 ## Test URLs
 ### JSON
@@ -17,3 +19,11 @@ http://localhost:8080/json
 ### PLAINTEXT
 
 http://localhost:8080/plaintext
+
+### DB
+
+http://localhost:8080/db
+
+### QUERIES
+
+http://localhost:8080/queries/[1...500]

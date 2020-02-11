@@ -29,8 +29,7 @@ RUN apt-get update -yqq > /dev/null && \
 COPY deploy/swoole/composer* ./
 RUN php composer.phar install -a --no-dev --quiet
 
-RUN php artisan config:cache
-RUN php artisan route:cache
+RUN php artisan optimize
 
 RUN chmod -R 777 /laravel
 

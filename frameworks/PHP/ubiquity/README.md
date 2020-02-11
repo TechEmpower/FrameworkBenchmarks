@@ -8,8 +8,8 @@ Ubiquity is a full-stack php framework, These tests involve:
 Tests are available with NginX server, Swoole and Workerman platforms.
 
 ## Test Type Implementation Source Code
-The tests are separated into 7 controllers:
-### Ubiquity + PDO pgsql
+The tests are separated into controllers:
+### Ubiquity + PDO Mysql
 - `Json` for JSON response
   * [JSON](app/controllers/Json.php)
 - `Db` for database access with ORM (PDO Mysql)
@@ -21,10 +21,17 @@ The tests are separated into 7 controllers:
   * [FORTUNES](app/controllers/Fortunes.php)
 - `Plaintext` for plaintext response
   * [PLAINTEXT](app/controllers/Plaintext.php)
-### Ubiquity Swoole + PDO Mysql
-- `SwooleDb` for database access with Swoole coroutine Mysql driver
+### Ubiquity Swoole + Mysql
+- `SwooleDbMy` for database access with PDO Mysql driver (update test only)
+  * [SwooleDbAsync](app/controllers/SwooleDbAsync.php)
+- `SwooleDbAsync` for database access with Swoole coroutine Mysql driver
+  * [SwooleDbAsync](app/controllers/SwooleDbAsync.php)
+- `SwooleFortunesAsync` used with Swoole coroutine Mysql driver
+  * [SwooleFortunes](app/controllers/SwooleFortunes.php)
+### Ubiquity Swoole + PostgreSQL
+- `SwooleDb` for database access with PDO pgsql driver
   * [SwooleDb](app/controllers/SwooleDb.php)
-- `SwooleFortunes` used with Swoole
+- `SwooleFortunes` used with PDO pgsql driver
   * [SwooleFortunes](app/controllers/SwooleFortunes.php)
 ### Ubiquity Workerman + PDO pgsql
 - `Workerman` with PDO pgsql driver
@@ -35,7 +42,7 @@ The tests are separated into 7 controllers:
 ## Important Libraries
 The tests were run with:
 * [Ubiquity 2.3.*](https://ubiquity.kobject.net/)
-* [PHP Version 7.3.*](http://www.php.net/) with FPM and APC
+* [PHP Version 7.4.*](http://www.php.net/) with FPM and APC
 * [nginx 1.14](http://nginx.org/)
 * [Swoole](https://www.swoole.com/), [Ubiquity-swoole](https://github.com/phpMv/ubiquity-swoole)
 * [Workerman](https://github.com/walkor/Workerman), [Ubiquity-workerman](https://github.com/phpMv/ubiquity-workerman)

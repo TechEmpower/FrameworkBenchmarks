@@ -15,8 +15,8 @@ ADD ./ /codeigniter
 WORKDIR /codeigniter
 
 RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/7.4/fpm/php-fpm.conf ; fi;
-ARG BENCHMARK_ENV
-RUN if [ ${BENCHMARK_ENV} = citrine ]; then sed -i "s|$db['default']['pconnect'] = FALSE;|$db['default']['pconnect'] = TRUE;|g" application/config/database.php ; fi;
+#ARG BENCHMARK_ENV
+#RUN if [ ${BENCHMARK_ENV} = citrine ]; then sed -i "s|$db['default']['pconnect'] = FALSE;|$db['default']['pconnect'] = TRUE;|g" application/config/database.php ; fi;
 #RUN if [ $BENCHMARK_ENV = citrine ]; then sed -i "s|$db['default']['pconnect'] = FALSE;|$db['default']['pconnect'] = TRUE;|g" application/config/database.php ; fi;
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
