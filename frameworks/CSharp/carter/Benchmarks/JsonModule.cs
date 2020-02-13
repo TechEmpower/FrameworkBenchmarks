@@ -18,9 +18,7 @@
 
                 var msg = new JsonMessage { message = "Hello, World!" };
 
-                JsonSerializer.Serialize(res.Body, msg);
-
-                return Task.CompletedTask;
+                return JsonSerializer.SerializeAsync(res.Body, msg);
             });
         }
 
