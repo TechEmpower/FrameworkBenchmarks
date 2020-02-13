@@ -18,6 +18,7 @@ namespace Benchmarks
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseConfiguration(config)
                 .UseStartup<Startup>()
+                .UseKestrel()
                 .Build();
 
             await webHost.RunAsync();
