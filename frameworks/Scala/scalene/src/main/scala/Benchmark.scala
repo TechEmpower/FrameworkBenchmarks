@@ -10,6 +10,8 @@ import BasicConversions._
 
 object Main extends App {
 
+  Class.forName("org.postgresql.Driver");
+
   trait JsonMessage
   case class JsonRouteMessage(message: String) extends JsonMessage
   case class DBRouteMessage(id: Int, randomnumber: Int) extends JsonMessage
