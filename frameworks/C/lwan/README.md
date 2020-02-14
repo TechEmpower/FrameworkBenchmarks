@@ -3,20 +3,22 @@
 This test is based on of the [Lwan](https://lwan.ws) web-server project,
 an experimental high-performance web server.
 
-### Test Type Implementation Source Code
+# C version
+
+## Source code
 
 * [JSON](src/techempower.c)
-* [PLAINTEXT](src/techempower.c)
+* [Plain text](src/techempower.c)
 * [DB](src/techempower.c)
-* [QUERY](src/techempower.c)
-* [FORTUNES](src/techempower.c)
+* [Query](src/techempower.c)
+* [Fortunes](src/techempower.c)
 
 ## Test URLs
 ### JSON
 
 http://localhost:8080/json
 
-### PLAINTEXT
+### Plaintext
 
 http://localhost:8080/plaintext
 
@@ -24,10 +26,27 @@ http://localhost:8080/plaintext
 
 http://localhost:8080/db
 
-### QUERY
+### Query
 
 http://localhost:8080/query?queries=
 
-### FORTUNES
+### Fortunes
 
 http://localhost:8080/fortunes
+
+# Lua version
+
+## Source code
+
+* [JSON](src/techempower.conf)
+* [Plaintext](src/techempower.conf)
+
+## Test URLs
+### JSON
+
+http://localhost:8080/lua.json
+
+### Plaintext
+
+http://localhost:8080/lua.plaintext
+
