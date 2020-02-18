@@ -17,7 +17,7 @@ COPY php.ini /etc/php/7.4/cli/php.ini
 ADD ./ /workerman
 WORKDIR /workerman
 
-RUN sed -i "s|PDO('mysql:|PDO('pgsql:|g" server.php
+RUN sed -i "s|PDO('mysql:|PDO('pgsql:|g" app.php
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
