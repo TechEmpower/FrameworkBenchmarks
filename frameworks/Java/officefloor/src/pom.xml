@@ -22,7 +22,6 @@
 		<module>woof_benchmark_thread_affinity</module>
 		<module>woof_benchmark_raw</module>
 		<module>woof_benchmark_netty</module>
-		<module>woof_benchmark_rapidoid</module>
 		<module>woof_benchmark_spring</module>
 	</modules>
 	<repositories>
