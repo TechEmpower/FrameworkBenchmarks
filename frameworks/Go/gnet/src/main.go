@@ -12,7 +12,6 @@ import (
 )
 
 var res string
-var resBytes []byte
 
 type request struct {
 	proto, method string
@@ -34,25 +33,30 @@ type httpCodec struct {
 
 func (hc *httpCodec) Encode(c gnet.Conn, buf []byte) (out []byte, err error) {
 	if c.Context() == nil {
-		return appendHandle(out, res), nil
+		return buf, nil
 	}
 	return appendResp(out, "500 Error", "", errMsg+"\n"), nil
 }
 
-func (hc *httpCodec) Decode(c gnet.Conn) ([]byte, error) {
+func (hc *httpCodec) Decode(c gnet.Conn) (out []byte, err error) {
 	buf := c.Read()
+	c.ResetBuffer()
+
 	// process the pipeline
-	leftover, err := parseReq(buf, &hc.req)
+	var leftover []byte
+pipeline:
+	leftover, err = parseReq(buf, &hc.req)
 	// bad thing happened
 	if err != nil {
 		c.SetContext(err)
 		return nil, err
 	} else if len(leftover) == len(buf) {
 		// request not ready, yet
-		return nil, nil
+		return
 	}
-	c.ResetBuffer()
-	return buf, nil
+	out = appendHandle(out, res)
+	buf = leftover
+	goto pipeline
 }
 
 func (hs *httpServer) OnInitComplete(srv gnet.Server) (action gnet.Action) {
@@ -62,7 +66,6 @@ func (hs *httpServer) OnInitComplete(srv gnet.Server) (action gnet.Action) {
 }
 
 func (hs *httpServer) React(frame []byte, c gnet.Conn) (out []byte, action gnet.Action) {
-	// process the pipeline
 	if c.Context() != nil {
 		// bad thing happened
 		out = errMsgBytes
@@ -70,7 +73,7 @@ func (hs *httpServer) React(frame []byte, c gnet.Conn) (out []byte, action gnet.
 		return
 	}
 	// handle the request
-	out = resBytes
+	out = frame
 	return
 }
 
@@ -84,7 +87,6 @@ func main() {
 	flag.Parse()
 
 	res = "Hello, World!"
-	resBytes = []byte(res)
 
 	http := new(httpServer)
 	hc := new(httpCodec)
