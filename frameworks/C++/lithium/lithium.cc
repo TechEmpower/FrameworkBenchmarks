@@ -33,17 +33,20 @@ void set_max_sql_connections_per_thread(int max)
 #endif
 }
 
-float tune_n_sql_connections(int& nc_to_tune, std::string http_req, int port, int max, int nprocs) {
+float tune_n_sql_connections(int& nc_to_tune, std::string http_req, int port, int min, int max) {
 
   std::cout << std::endl << "Benchmark " << http_req << std::endl;
 
+  auto sockets = http_benchmark_connect(512, port);
+
   float max_req_per_s = 0;
   int best_nconn = 2;
-  for (int nc : {1, 2, 4, 8, 32, 64, 128})
+  for (int i = 0; i <= 7; i++)
   {
-    if (nc*nprocs >= max) break;
+    int nc = min + (max - min) * i / 7;
     nc_to_tune = nc;
-    float req_per_s = http_benchmark(256, 1, 300, port, http_req);
+
+    float req_per_s = http_benchmark(sockets, 1, 1000, http_req);
     std::cout << nc << " -> " << req_per_s << " req/s." << std::endl;
     if (req_per_s > max_req_per_s)
     {
@@ -51,6 +54,9 @@ float tune_n_sql_connections(int& nc_to_tune, std::string http_req, int port, in
       best_nconn = nc;
     }
   }
+
+  http_benchmark_close(sockets);
+
   std::cout << "best: " << best_nconn << " (" << max_req_per_s << " req/s)."<< std::endl;
   nc_to_tune = best_nconn;
   return best_nconn;
@@ -192,10 +198,10 @@ int main(int argc, char* argv[]) {
   });
   usleep(3e5);
 
-  tune_n_sql_connections(db_nconn, "GET /db HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection, nprocs);
-  tune_n_sql_connections(queries_nconn, "GET /queries?N=20 HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection, nprocs);
-  tune_n_sql_connections(fortunes_nconn, "GET /fortunes HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection, nprocs);
-  tune_n_sql_connections(updates_nconn, "GET /updates?N=20 HTTP/1.1\r\n\r\n", tunning_port, sql_max_connection, nprocs);
+  tune_n_sql_connections(db_nconn, "GET /db HTTP/1.1\r\n\r\n", tunning_port, 1, sql_max_connection/nprocs);
+  tune_n_sql_connections(queries_nconn, "GET /queries?N=20 HTTP/1.1\r\n\r\n", tunning_port, 1,  std::min(sql_max_connection/nprocs, 20));
+  tune_n_sql_connections(fortunes_nconn, "GET /fortunes HTTP/1.1\r\n\r\n", tunning_port, 1, sql_max_connection/nprocs);
+  tune_n_sql_connections(updates_nconn, "GET /updates?N=20 HTTP/1.1\r\n\r\n", tunning_port, 1, std::min(sql_max_connection/nprocs, 20));
   
   li::quit_signal_catched = true;
   server_thread.join();

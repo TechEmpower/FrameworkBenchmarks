@@ -61,16 +61,12 @@ func (hs *httpServer) OnInitComplete(srv gnet.Server) (action gnet.Action) {
 	return
 }
 
-func (hs *httpServer) React(c gnet.Conn) (out []byte, action gnet.Action) {
-	data := c.ReadFrame()
+func (hs *httpServer) React(frame []byte, c gnet.Conn) (out []byte, action gnet.Action) {
 	// process the pipeline
 	if c.Context() != nil {
 		// bad thing happened
 		out = errMsgBytes
 		action = gnet.Close
-		return
-	} else if data == nil {
-		// request not ready, yet
 		return
 	}
 	// handle the request
