@@ -2,19 +2,17 @@ package storage
 
 import (
 	"errors"
-	"fmt"
+	"math/rand"
 
 	"atreugo/src/templates"
 )
 
 const (
-	selectQueryStrPostgre  = "SELECT id, randomNumber FROM World WHERE id = $1"
-	updateQueryStrPostgre  = "UPDATE World SET randomNumber = $1 WHERE id = $2"
-	fortuneQueryStrPostgre = "SELECT id, message FROM Fortune"
-)
-
-const (
 	worldsCount = 10000
+
+	worldSelectSQL   = "SELECT id, randomNumber FROM World WHERE id = $1"
+	worldUpdateSQL   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
+	fortuneSelectSQL = "SELECT id, message FROM Fortune"
 )
 
 // DB is interface for
@@ -26,26 +24,20 @@ type DB interface {
 	Close()
 }
 
+func RandomWorldNum() int {
+	return rand.Intn(worldsCount) + 1
+}
+
 // InitDB with appropriate driver
 func InitDB(dbDriver, dbConnectionString string, maxConnectionCount int) (DB, error) {
-	var err error
-	var db DB
-
-	if dbDriver == "pgx" {
-		db, err = NewPgxDB(dbConnectionString, maxConnectionCount)
-		if err != nil {
-			return nil, fmt.Errorf("Error opening postgresql database with pgx driver: %s", err)
-		}
-	} else if dbDriver == "mongo" {
-		db, err = NewMongoDB(dbConnectionString, maxConnectionCount)
-		if err != nil {
-			return nil, fmt.Errorf("Error opening postgresql database with official mongo driver: %s", err)
-		}
-	} else if dbDriver == "none" {
-		db = nil
-	} else {
-		return nil, errors.New("Can't recognize DB driver type")
+	switch dbDriver {
+	case "pgx":
+		return NewPgxDB(dbConnectionString)
+	case "mongo":
+		return NewMongoDB(dbConnectionString, maxConnectionCount)
+	case "none":
+		return nil, nil
 	}
 
-	return db, nil
+	return nil, errors.New("can not recognize DB driver type")
 }
