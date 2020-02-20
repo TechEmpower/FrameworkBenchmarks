@@ -1,0 +1,27 @@
+{
+  "framework": "nestjs-fastify",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "plaintext_url": "/plaintext",
+        "cached_query_url": "/cached-worlds?count=",
+        "port": 3000,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "nestjs-fastify",
+        "language": "TypeScript",
+        "orm": "Full",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "nestjs-fastify",
+        "versus": "nodejs"
+      }
+    }
+  ]
+}
