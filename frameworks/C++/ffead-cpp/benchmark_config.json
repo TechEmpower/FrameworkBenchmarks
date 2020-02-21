@@ -114,7 +114,7 @@
 			"display_name": "ffead-cpp-apache-mysql",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"apache-postgresql": {
 			"json_url": "/te-benchmark-um/json",
@@ -137,7 +137,7 @@
 			"display_name": "ffead-cpp-apache-postgresql",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"nginx-mongo": {
 			"json_url": "/te-benchmark-um/json",
@@ -266,7 +266,7 @@
 			"notes": "",
 			"versus": "",
 			"wait_before_sending_requests": 10,
-			"tags": []
+			"tags": ["broken"]
 		},
 		"memcached": {
 			"cached_query_url": "/te-benchmark-um/cached-worlds?count=",
@@ -326,7 +326,7 @@
 			"notes": "",
 			"versus": "",
 			"wait_before_sending_requests": 10,
-			"tags": []
+			"tags": ["broken"]
 		}
 	}]
 }
