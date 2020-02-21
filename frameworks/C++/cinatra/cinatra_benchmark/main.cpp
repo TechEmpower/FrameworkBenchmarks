@@ -11,8 +11,9 @@ int main() {
 		return -1;
 	}
 
+	server.enable_timeout(false);
 	server.set_http_handler<GET>("/plaintext", [](request& req, response& res) {
-		res.set_status_and_content(status_type::ok, "Hello, World!", res_content_type::string);
+		res.set_status_and_content<status_type::ok,res_content_type::string>("Hello, World!");
 	});
 
 	server.run();
