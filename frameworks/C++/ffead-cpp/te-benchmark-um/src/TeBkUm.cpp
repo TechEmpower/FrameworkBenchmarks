@@ -44,10 +44,10 @@ void TeBkUmMessage::setMessage(const std::string& message) {
 	this->message = message;
 }
 
-const std::string TebBkUmRouter::HELLO_WORLD = "Hello, World!";
-std::string TebBkUmRouter::WORLD = "world";
+const std::string TeBkUmRouter::HELLO_WORLD = "Hello, World!";
+std::string TeBkUmRouter::WORLD = "world";
 
-void TebBkUmRouter::db(TeBkUmWorld& w) {
+void TeBkUmRouter::db(TeBkUmWorld& w) {
 	DataSourceInterface* sqli = DataSourceManager::getImpl();
 	int rid = rand() % 10000 + 1;
 	GenericObject id;
@@ -61,7 +61,7 @@ void TebBkUmRouter::db(TeBkUmWorld& w) {
 	}
 }
 
-void TebBkUmRouter::queries(const char* q, int ql, std::vector<TeBkUmWorld>& wlst) {
+void TeBkUmRouter::queries(const char* q, int ql, std::vector<TeBkUmWorld>& wlst) {
 	int queryCount = 0;
 	strToNum(q, ql, queryCount);
 	if(queryCount<1)queryCount=1;
@@ -86,7 +86,7 @@ void TebBkUmRouter::queries(const char* q, int ql, std::vector<TeBkUmWorld>& wls
 	}
 }
 
-void TebBkUmRouter::updates(const char* q, int ql, std::vector<TeBkUmWorld>& wlst) {
+void TeBkUmRouter::updates(const char* q, int ql, std::vector<TeBkUmWorld>& wlst) {
 	int queryCount = 0;
 	strToNum(q, ql, queryCount);
 	if(queryCount<1)queryCount=1;
@@ -121,7 +121,7 @@ void TebBkUmRouter::updates(const char* q, int ql, std::vector<TeBkUmWorld>& wls
 	}
 }
 
-void TebBkUmRouter::updateCache() {
+void TeBkUmRouter::updateCache() {
 	CacheInterface* cchi = CacheManager::getImpl();
 	DataSourceInterface* sqli = DataSourceManager::getImpl();
 
@@ -142,7 +142,7 @@ void TebBkUmRouter::updateCache() {
 	}
 }
 
-void TebBkUmRouter::cachedWorlds(const char* q, int ql, std::vector<TeBkUmWorld>& wlst) {
+void TeBkUmRouter::cachedWorlds(const char* q, int ql, std::vector<TeBkUmWorld>& wlst) {
 	int queryCount = 0;
 	strToNum(q, ql, queryCount);
 	if(queryCount<1)queryCount=1;
@@ -165,7 +165,7 @@ void TebBkUmRouter::cachedWorlds(const char* q, int ql, std::vector<TeBkUmWorld>
 	}
 }
 
-void TebBkUmRouter::getContext(HttpRequest* request, Context* context) {
+void TeBkUmRouter::getContext(HttpRequest* request, Context* context) {
 	DataSourceInterface* sqli = DataSourceManager::getImpl();
 
 	try {
@@ -193,7 +193,7 @@ void TebBkUmRouter::getContext(HttpRequest* request, Context* context) {
 }
 
 //https://stackoverflow.com/questions/9631225/convert-strings-specified-by-length-not-nul-terminated-to-int-float
-bool TebBkUmRouter::strToNum(const char* str, int len, int& ret) {
+bool TeBkUmRouter::strToNum(const char* str, int len, int& ret) {
     ret = 0;
     for(int i = 0; i < len; ++i)
     {
@@ -203,7 +203,7 @@ bool TebBkUmRouter::strToNum(const char* str, int len, int& ret) {
     return true;
 }
 
-void TebBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib) {
+void TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib) {
 	Timer t;
 	t.start();
 	std::string_view path = req->getPath();

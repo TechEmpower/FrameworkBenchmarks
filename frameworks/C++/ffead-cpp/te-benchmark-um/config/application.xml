@@ -1,4 +1,4 @@
-<app libname="te_benchmark_um" router="TebBkUmRouter">
+<app libname="te_benchmark_um" router="TeBkUmRouter">
 	<cors-config>
 		<allow-origins>*</allow-origins>
 		<allow-methods>GET, POST, HEAD, PUT, DELETE</allow-methods>
@@ -19,6 +19,6 @@
 		<control header="Last-Modified" remove="true" />
 	</cache-control>
 	<templates>
-		<template class="TebBkUmRouter" file="fortunes.tpe" path="fortunes"/>
+		<template class="TeBkUmRouter" file="fortunes.tpe" path="fortunes"/>
 	</templates>
 </app>

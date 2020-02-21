@@ -53,7 +53,7 @@ public:
 };
 
 #pragma @Router
-class TebBkUmRouter : public Router {
+class TeBkUmRouter : public Router {
 	static const std::string HELLO_WORLD;
 	static std::string WORLD;
 	bool strToNum(const char* str, int len, int& ret);
@@ -62,8 +62,8 @@ class TebBkUmRouter : public Router {
 	void updates(const char*, int, std::vector<TeBkUmWorld>&);
 	void cachedWorlds(const char*, int, std::vector<TeBkUmWorld>&);
 	void getContext(HttpRequest* request, Context* context);
-	void updateCache();
 public:
+	void updateCache();
 	void route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib);
 };
 
