@@ -21,7 +21,7 @@ func main() {
 	initDatabase()
 
 	app := fiber.New()
-	app.Server = "go"
+	app.Settings.ServerHeader = "go"
 
 	app.Get("/json", jsonHandler)
 	app.Get("/db", dbHandler)
@@ -141,20 +141,16 @@ func initDatabase() {
 
 // jsonHandler :
 func jsonHandler(c *fiber.Ctx) {
-	// json := AcquireJSON()
-	// json.Message = helloworld
-	// c.Json(json)
-	// ReleaseJSON(json)
-
 	raw, _ := sjson.SetRawBytesOptions(sjsonStruct, sjsonKey, sjsonValue, sjsonOpt)
-	c.JsonBytes(raw)
+	c.Set("Content-Type", fiber.MIMEApplicationJSON)
+	c.SendBytes(raw)
 }
 
 // dbHandler :
 func dbHandler(c *fiber.Ctx) {
 	w := AcquireWorld()
 	db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.Id, &w.RandomNumber)
-	c.Json(w)
+	c.JSON(w)
 	ReleaseWorld(w)
 }
 
@@ -166,7 +162,7 @@ func queriesHandler(c *fiber.Ctx) {
 		w := &worlds[i]
 		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.Id, &w.RandomNumber)
 	}
-	c.Json(Worlds(worlds))
+	c.JSON(Worlds(worlds))
 	ReleaseWorlds(worlds)
 }
 
@@ -189,7 +185,7 @@ func updateHandler(c *fiber.Ctx) {
 		batch.Queue(worldupdatesql, w.RandomNumber, w.Id)
 	}
 	db.SendBatch(context.Background(), &batch).Close()
-	c.Json(Worlds(worlds))
+	c.JSON(Worlds(worlds))
 	ReleaseWorlds(worlds)
 }
 
