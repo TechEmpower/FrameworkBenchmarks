@@ -103,7 +103,10 @@ void TeBkUmRouter::updates(const char* q, int ql, std::vector<TeBkUmWorld>& wlst
 			TeBkUmWorld w = sqli->get<TeBkUmWorld>(id);
 			int newRandomNumber = rand() % 10000 + 1;
 			if(w.getRandomNumber() == newRandomNumber) {
-				newRandomNumber -= 1;
+				newRandomNumber += 1;
+				if(newRandomNumber>=10000) {
+					newRandomNumber = 1;
+				}
 			}
 			w.setRandomNumber(newRandomNumber);
 			wlst.push_back(w);
