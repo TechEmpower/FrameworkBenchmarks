@@ -1,10 +1,13 @@
-FROM node:12.3.1-slim
+FROM node:12.16.1-slim
 
 COPY ./ ./
 
-RUN yarn install
+RUN npm install
+RUN npm run build
 
 ENV NODE_ENV production
 ENV DATABASE_CONFIGURATION_PROFILE=mysql
+ENV FRAMEWORK=express
 
-CMD ["yarn", "start:prod"]
+EXPOSE 8080
+CMD ["node", "dist/main"]
