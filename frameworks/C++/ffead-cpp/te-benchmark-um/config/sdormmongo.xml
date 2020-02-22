@@ -6,6 +6,7 @@
 					<host>localhost</host>
 					<port>27017</port>
 					<databaseName>hello_world</databaseName>
+					<connectionTimeout>10000</connectionTimeout>
 				</node>
 			</nodes>
 			<pool-size>30</pool-size>

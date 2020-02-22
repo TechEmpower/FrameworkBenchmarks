@@ -3,13 +3,13 @@
                 <nodes>
                         <node>
                                 <host>localhost</host>
-                                <port>6379</port>
+                                <port>11211</port>
                         </node>
                 </nodes>
-                <init>TeBkRestController.updateCache</init>
+                <init>TeBkUmRouter.updateCache</init>
                 <pool-size>10</pool-size>
                 <expiryTime>3600</expiryTime>
-                <name>Redis-Cached</name>
-                <type>redis</type>
+                <name>Memcached-Cached</name>
+                <type>memcached</type>
         </cache>
 </caches>
