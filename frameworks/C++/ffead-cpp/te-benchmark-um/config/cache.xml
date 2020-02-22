@@ -6,7 +6,7 @@
                                 <password>sumeet</password>
                         </node>
                 </nodes>
-                <init>TeBkRestController.updateCache</init>
+                <init>TeBkUmRouter.updateCache</init>
                 <name>Memory-Cached</name>
                 <type>memory</type>
         </cache>

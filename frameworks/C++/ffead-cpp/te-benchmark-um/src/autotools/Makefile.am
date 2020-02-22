@@ -8,14 +8,11 @@ distdir=${PACKAGE_NAME}-${PACKAGE_VERSION}-src
 fprefix=../../../../${packageIdentifier}
 prefix=${abs_builddir}
 
-lib_LTLIBRARIES = libte_benchmark.la
-libte_benchmark_la_SOURCES = ../TeBkFortune.cpp \
-				../TeBkFortuneTemplate.cpp \
-				../TeBkMessage.cpp \
-				../TeBkRestController.cpp \
-				../TeBkWorld.cpp
+lib_LTLIBRARIES = libte_benchmark_um.la
+libte_benchmark_la_SOURCES = ../TeBkUmWorld.cpp \
+				../TeBkUm.cpp
 
-libte_benchmark_la_LDFLAGS = -no-undefined 
-libte_benchmark_la_LIBADD = -L"${fprefix}/lib" -lffead-modules -lffead-framework
+libte_benchmark_um_la_LDFLAGS = -no-undefined 
+libte_benchmark_um_la_LIBADD = -L"${fprefix}/lib" -lffead-modules -lffead-framework
 
 #dist_noinst_SCRIPTS = autogen.sh

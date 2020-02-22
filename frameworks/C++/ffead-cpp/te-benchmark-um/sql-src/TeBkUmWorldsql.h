@@ -1,34 +1,29 @@
 /*
- * TeBkWorld.h
+ * TeBkUmWorld.h
  *
  *  Created on: 11-Mar-2015
  *      Author: sumeetc
  */
 
-#ifndef TEBKWORLD_H_
-#define TEBKWORLD_H_
+#ifndef TeBkUmWORLD_H_
+#define TeBkUmWORLD_H_
 #include "string"
 
 
 #pragma @Entity
 #pragma @Table name="world"
-class TeBkWorld {
-	#pragma @Id dbf="_id"
+class TeBkUmWorld {
+	#pragma @Id dbf="id"
 	int id;
 	#pragma @Column dbf="randomNumber"
 	int randomNumber;
-	#pragma @IgnoreSer
-	#pragma @Column dbf="id"
-	int anotherId;
 public:
-	TeBkWorld();
-	virtual ~TeBkWorld();
+	TeBkUmWorld();
+	virtual ~TeBkUmWorld();
 	int getId() const;
 	void setId(int id);
 	int getRandomNumber() const;
 	void setRandomNumber(int randomNumber);
-	int getAnotherId() const;
-	void setAnotherId(int anotherId);
 };
 
-#endif /* TEBKWORLD_H_ */
+#endif /* TeBkUmWORLD_H_ */
