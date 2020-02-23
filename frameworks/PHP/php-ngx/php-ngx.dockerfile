@@ -26,6 +26,6 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --add-module=/ngx_php7 > /dev/null && \
     make > /dev/null && make install > /dev/null
 
-CMD export WORKERS=$(( 2 * $(nproc) )) && \
+CMD export WORKERS=$(( 3 * $(nproc) )) && \
     sed -i "s/worker_processes  auto/worker_processes $WORKERS/g" /deploy/nginx.conf && \
     /nginx/sbin/nginx -c /deploy/nginx.conf 
