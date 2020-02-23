@@ -45,4 +45,6 @@ RUN ["chmod", "+x", "./servlet"]
 
 EXPOSE 8080
 
+ENV PLT_INCREMENTAL_GC=1
+
 CMD ["/racket/servlet"]
