@@ -11,7 +11,7 @@ RUN echo 'APT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/00-genera
 
 FROM debian AS racket
 
-ARG RACKET_VERSION=7.3
+ARG RACKET_VERSION=7.6
 
 RUN apt-get update -q \
     && apt-get install --no-install-recommends -q -y \
@@ -25,21 +25,15 @@ RUN apt-get update -q \
 ENV SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
 ENV SSL_CERT_DIR="/etc/ssl/certs"
 
-RUN raco setup
-RUN raco pkg config --set catalogs \
-    "https://download.racket-lang.org/releases/${RACKET_VERSION}/catalog/"
-
 
 FROM racket AS builder
 
 WORKDIR /racket
 ADD  . .
 
-RUN raco pkg install --auto compiler-lib
-
-RUN raco pkg install --auto db
-
-RUN raco exe servlet.rkt
+RUN raco pkg install --auto compiler-lib db-lib threading-lib web-server-lib \
+  && raco make servlet.rkt \
+  && raco exe servlet.rkt
 
 
 FROM racket
@@ -51,4 +45,6 @@ RUN ["chmod", "+x", "./servlet"]
 
 EXPOSE 8080
 
-CMD ./servlet
+ENV PLT_INCREMENTAL_GC=1
+
+CMD ["/racket/servlet"]
