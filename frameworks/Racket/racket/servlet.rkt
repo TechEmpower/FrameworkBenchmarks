@@ -1,140 +1,215 @@
 #lang racket/base
 
 (require db
-         racket/list
-         racket/string
-         net/url-structs
+         json
+         threading
          web-server/dispatch
-         web-server/http
-         web-server/servlet-env
-         "./helpers/response-json.rkt")
+         web-server/http)
 
-(define (plaintext req)
-  (response
-    200 #"OK" (current-seconds) #"text/plain" empty
-    (λ (out)
-      (write-bytes #"Hello, World!" out))))
+;; db ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define (json req)
-  (response/json (hash 'message "Hello, World!")))
+(define max-db-conns 1024)
+(define db-conn-pool
+  (connection-pool
+   #:max-connections max-db-conns
+   #:max-idle-connections max-db-conns
+   (λ ()
+     (postgresql-connect #:database "hello_world"
+                         #:user "benchmarkdbuser"
+                         #:password "benchmarkdbpass"
+                         #:server "tfb-database"))))
 
-(define (get-a-random-number)
-  (+ 1 (random 10000)))
+(define db-conn-pool-sema
+  (make-semaphore max-db-conns))
 
-(define pgc
-  (virtual-connection
-    (λ ()
-      (postgresql-connect #:database "hello_world"
-                          #:user "benchmarkdbuser"
-                          #:password "benchmarkdbpass"
-                          #:server "tfb-database"))))
+(define current-db-conn
+  (make-parameter #f))
 
-(define (get-a-random-record id)
-  (hash 'id id 'randomNumber (query-maybe-value pgc "select randomnumber from world where id = $1" id)))
+(define (call-with-db-conn f)
+  (call-with-semaphore db-conn-pool-sema
+    (lambda ()
+      (define conn #f)
+      (dynamic-wind
+        (lambda ()
+          (set! conn (connection-pool-lease db-conn-pool)))
+        (lambda ()
+          (parameterize ([current-db-conn conn])
+            (f)))
+        (lambda ()
+          (disconnect conn))))))
 
-(define (db req)
-  (response/json (get-a-random-record (get-a-random-number))))
 
-(define (ensure-integer-is-between-one-and-five-hundreds n)
-  (if (number? n)
-      (if (< n 1)
-        1
-        (if (> n 500)
-          500
-          n))
-      1))
+;; helpers ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define (extract-number-of-records-to-fetch req)
-  (let* ([uri            (request-uri req)]
-         [all-parameters (url-query uri)]
-         [queries-param  (assoc 'queries all-parameters)]
-         [queries        (cdr queries-param)])
-    (ensure-integer-is-between-one-and-five-hundreds (string->number queries))))
+(define (response/json e)
+  (response/output
+   #:mime-type #"application/json; charset=utf-8"
+   (lambda (out)
+     (write-json e out))))
 
-(define (get-some-random-integers-between-one-and-ten-thousand n)
-  (for/list ((i n))
-    (add1 (get-a-random-number))))
 
-(define (get-some-random-records n)
-  (let ([ids (get-some-random-integers-between-one-and-ten-thousand n)])
-    (map (λ (id) (get-a-random-record id)) ids)))
+;; world ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define (queries req)
-  (response/json (get-some-random-records (extract-number-of-records-to-fetch req))))
+(struct world (id n)
+  #:transparent)
 
-(define (get-all-fortunes)
-  (query-rows pgc "select id, message from fortune"))
+(define select-one-world
+  (virtual-statement
+   (lambda (_dbsystem)
+     "SELECT id, randomnumber FROM world WHERE id = $1")))
 
-(define (get-all-fortunes-plus-one)
-  (let* ([records       (get-all-fortunes)]
-         [records-p-one (append records '(#(0 "Additional fortune added at request time.")))])
-    (sort records-p-one string<? #:key (λ (e)
-                                         (vector-ref e 1)))))
+(define update-one-world
+  (virtual-statement
+   (lambda (_dbsystem)
+     "UPDATE world SET randomnumber = $2 WHERE id = $1")))
 
-(define (fortunes req)
-  (response/xexpr
-    #:preamble #"<!DOCTYPE html>"
-    `(html
-       (head
-         (title "Fortunes"))
-       (body
-         (table
-           (tr
-             (th "id")
-             (th "message"))
-           ,@(for/list ([fortune-row (get-all-fortunes-plus-one)])
-               `(tr
-                  (td ,(format "~v" (vector-ref fortune-row 0)))
-                  (td              ,(vector-ref fortune-row 1))))
-           )))))
+(define (random-world-id)
+  (random 1 10001))
 
-(define (get-and-update-some-random-records n)
-  (let* ([random-records (get-some-random-records n)]
-         [random-numbers (get-some-random-integers-between-one-and-ten-thousand n)]
-         [index -1]
-         [updated-records (map (λ (row)
-                                 (set! index (add1 index))
-                                 (hash 'id           (hash-ref row 'id)
-                                       'randomNumber (list-ref random-numbers index)))
-                               random-records)]
-         [record-list     (map (λ (row)
-                                 (list (hash-ref row 'id)
-                                       (hash-ref row 'randomNumber)))
-                               updated-records)]
-         [sql-values      (string-join
-                             (map (λ (rec)
-                                    (format "(~a, ~a)" (car rec) (car (cdr rec))))
-                                  record-list)
-                             ", ")]
-         [sql-stmt        (string-join
-                             `("UPDATE world AS ori SET randomnumber = new.randomnumber FROM (VALUES "
-                               ,sql-values
-                               ") AS new (id, randomnumber) WHERE ori.id = new.id")
-                             "")])
-    (query-exec pgc sql-stmt)
-    updated-records))
+(define (random-world-ids n)
+  (for/list ([_ (in-range n)])
+    (random-world-id)))
 
-(define (updates req)
-  (response/json (get-and-update-some-random-records (extract-number-of-records-to-fetch req))))
+(define (worlds-ref id)
+  (for/first ([(id n) (in-query (current-db-conn) select-one-world id)])
+    (world id n)))
 
-(define-values (tfb-dispatch tfb-url)
+(define (worlds-ref/random n)
+  (define conn (current-db-conn))
+  (for*/list ([id (in-list (random-world-ids n))]
+              [(id n) (in-query conn select-one-world id)])
+    (world id n)))
+
+(define (worlds-update! rs)
+  (define conn (current-db-conn))
+  (for ([r (in-list rs)])
+    (query-exec conn update-one-world (world-id r) (world-n r))))
+
+(define (world->hash r)
+  (hash 'id (world-id r)
+        'randomNumber (world-n r)))
+
+
+;; fortune ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(struct fortune (id message)
+  #:transparent)
+
+(define select-fortunes
+  (virtual-statement
+   (lambda (_dbsystem)
+     "SELECT id, message FROM fortune")))
+
+(define (all-fortunes)
+  (define fortunes
+    (cons
+     (fortune 0 "Additional fortune added at request time.")
+     (for/list ([(id message) (in-query (current-db-conn) select-fortunes)])
+       (fortune id message))))
+
+  (sort fortunes string<? #:key fortune-message))
+
+(define (fortune->table-row f)
+  `(tr
+    (td ,(number->string (fortune-id f)))
+    (td ,(fortune-message f))))
+
+
+;; web ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define (parse-queries req)
+  (or
+   (and~> (request-bindings/raw req)
+          (bindings-assq #"queries" _)
+          (binding:form-value)
+          (bytes->string/utf-8)
+          (string->number)
+          (min 500)
+          (max 1))
+   1))
+
+(define-values (dispatch _url)
   (dispatch-rules
-    [("plaintext") #:method "get" plaintext]
-    [("json")      #:method "get" json]
-    [("db")        #:method "get" db]
-    [("queries")   #:method "get" queries]
-    [("fortunes")  #:method "get" fortunes]
-    [("updates")   #:method "get" updates]
-    [else plaintext]))
+   [("plaintext")
+    (lambda (_req)
+      (response/output
+       #:mime-type #"text/plain"
+       (lambda (out)
+         (display "Hello, World!" out))))]
 
-(define (start request)
-  (tfb-dispatch request))
+   [("json")
+    (lambda (_req)
+      (response/json
+       (hasheq 'message "Hello, World!")))]
 
-(serve/servlet start
-               #:command-line? #t
-               #:launch-browser? #f
-               #:listen-ip #f
-               #:port 8080
-               #:servlet-path "/"
-               #:servlet-regexp #rx""
-               #:stateless? #t)
+   [("db")
+    (lambda (_req)
+      (define world-id (random-world-id))
+      (define world
+        (call-with-db-conn
+         (lambda ()
+           (worlds-ref world-id))))
+
+      (response/json
+       (world->hash world)))]
+
+   [("fortunes")
+    (lambda (_req)
+      (define fortunes
+        (call-with-db-conn all-fortunes))
+
+      (response/xexpr
+       #:preamble #"<!DOCTYPE html>"
+       `(html
+         (head
+          (title "Fortunes"))
+         (body
+          (table
+           (tr
+            (th "id")
+            (th "message"))
+           ,@(map fortune->table-row fortunes))))))]
+
+   [("queries")
+    (lambda (req)
+      (define n (parse-queries req))
+      (define worlds
+        (call-with-db-conn
+         (lambda ()
+           (worlds-ref/random n))))
+
+      (response/json
+       (map world->hash worlds)))]
+
+   [("updates")
+    (lambda (req)
+      (define worlds
+        (call-with-db-conn
+         (lambda ()
+           (define n (parse-queries req))
+           (define worlds (worlds-ref/random n))
+           (define worlds*
+             (for/list ([r (in-list worlds)]
+                        [n (in-list (random-world-ids n))])
+               (struct-copy world r [n n])))
+
+           (begin0 worlds*
+             (worlds-update! worlds*)))))
+
+      (response/json
+       (map world->hash worlds)))]))
+
+(module+ main
+  (require web-server/servlet-dispatch
+           web-server/web-server)
+
+  (define stop
+    (serve
+     #:dispatch (dispatch/servlet dispatch)
+     #:listen-ip "0.0.0.0"
+     #:port 8080))
+
+  (with-handlers ([exn:break?
+                   (lambda (_e)
+                     (stop))])
+    (sync/enable-break never-evt)))
