@@ -8,7 +8,7 @@
 
 ;; db ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define max-db-conns 128)
+(define max-db-conns 1024)
 (define db-conn-pool
   (connection-pool
    #:max-connections max-db-conns
