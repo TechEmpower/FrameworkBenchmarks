@@ -44,6 +44,29 @@
             "display_name": "kumbiaphp-raw",
             "notes": "",
             "versus": "php"
+          },
+          "workerman": {
+            "plaintext_url": "/",
+            "json_url": "/json",
+            "db_url": "/db",
+            "query_url": "/db/query/",
+            "fortune_url": "/fortune",
+            "update_url": "/db/update/",
+            "port": 8080,
+            "approach": "Realistic",
+            "classification": "Fullstack",
+            "database": "MySQL",
+            "framework": "KumbiaPHP",
+            "language": "PHP",
+            "flavor": "PHP7",
+            "orm": "micro",
+            "platform": "workerman",
+            "webserver": "None",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "kumbiaphp-worker",
+            "notes": "",
+            "versus": "workerman"
           }
         }]
       }
