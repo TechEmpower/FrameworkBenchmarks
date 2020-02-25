@@ -12,6 +12,8 @@ RUN apt-get install -yqq composer > /dev/null
 RUN apt-get install -y php-pear php-dev libevent-dev > /dev/null
 RUN printf "\n\n /usr/lib/x86_64-linux-gnu/\n\n\nno\n\n\n" | pecl install event > /dev/null && echo "extension=event.so" > /etc/php/7.4/cli/conf.d/event.ini
 
+COPY deploy/conf/cliphp.ini /etc/php/7.4/cli/php.ini
+
 ADD ./ /kumbiaphp
 WORKDIR /kumbiaphp
 
