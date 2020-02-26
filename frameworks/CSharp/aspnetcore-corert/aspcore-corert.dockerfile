@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.101 AS build
 RUN apt-get update
 RUN apt-get -yqq install clang zlib1g-dev libkrb5-dev libtinfo5
 WORKDIR /app
