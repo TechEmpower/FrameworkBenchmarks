@@ -15,8 +15,8 @@
 
   <ItemGroup>
     <PackageReference Include="Nancy" Version="2.0.0" />
-    <PackageReference Include="MySqlConnector" Version="0.44.1" />
-    <PackageReference Include="Dapper" Version="1.50.4" />
+    <PackageReference Include="MySqlConnector" Version="0.61.0" />
+    <PackageReference Include="Dapper" Version="2.0.30" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
