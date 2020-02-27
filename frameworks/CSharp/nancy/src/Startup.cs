@@ -23,8 +23,6 @@
             Configuration = builder.Build();
         }
 
-        public void ConfigureServices(IServiceCollection services) { }
-
         public void Configure(IApplicationBuilder app)
         {
             var appConfig = new AppConfiguration();
