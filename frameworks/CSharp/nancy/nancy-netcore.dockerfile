@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.1 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.101 AS build
 WORKDIR /app
 COPY src .
 RUN dotnet publish -c Release -f netcoreapp2.1 -o out
