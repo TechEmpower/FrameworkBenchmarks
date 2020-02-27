@@ -7,7 +7,6 @@
   
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net471' ">
     <RuntimeIdentifiers>linux-x64</RuntimeIdentifiers>
-    <!-- Add the myget feed, without altering any other configurations. -->
   </PropertyGroup>
   
   <ItemGroup>
