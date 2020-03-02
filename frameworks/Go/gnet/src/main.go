@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -75,6 +76,10 @@ func (hs *httpServer) React(frame []byte, c gnet.Conn) (out []byte, action gnet.
 	// handle the request
 	out = frame
 	return
+}
+
+func init() {
+	runtime.GOMAXPROCS(runtime.NumCPU() * 2)
 }
 
 func main() {
