@@ -1,48 +1,41 @@
 package controllers
 
 import java.util.concurrent.ThreadLocalRandom
-import scala.concurrent.{Future, ExecutionContext}
 
-import play.api.libs.json.{JsObject, Json, JsValue}
+import scala.concurrent.{ExecutionContext, Future}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc._
-import play.mvc.Http
-
-import reactivemongo.api.ReadPreference
+import reactivemongo.api.{Cursor, ReadPreference}
 import reactivemongo.play.json.collection.JSONCollection
-import play.modules.reactivemongo.{
-  ReactiveMongoApi, ReactiveMongoComponents, MongoController
-}
-import play.modules.reactivemongo.json._
+import play.modules.reactivemongo.ReactiveMongoApi
+import reactivemongo.play.json._
 
 class Application (val controllerComponents: ControllerComponents, reactiveMongoApi: ReactiveMongoApi)(implicit ec: ExecutionContext)
   extends BaseController {
 
-  private def worldCollection: JSONCollection = reactiveMongoApi.db.collection[JSONCollection]("world")
-  private def fortuneCollection: JSONCollection = reactiveMongoApi.db.collection[JSONCollection]("fortune")
+  private def worldCollection: Future[JSONCollection] = reactiveMongoApi.database.map(_.collection[JSONCollection]("world"))
+  private def fortuneCollection: Future[JSONCollection] = reactiveMongoApi.database.map(_.collection[JSONCollection]("fortune"))
   private val projection = Json.obj("_id" -> 0)
 
   def getRandomWorlds(queries: Int): Future[Seq[Option[JsObject]]] = {
     val futureWorlds: Seq[Future[Option[JsObject]]] = for {
       _ <- 1 to queries
-    } yield { worldCollection
-      .find(Json.obj("_id" -> getNextRandom), projection)
-      .one[JsObject]
+    } yield { worldCollection.map(_
+      .find(Json.obj("_id" -> getNextRandom), Option(projection))
+      .one[JsObject]).flatten
     }
     Future.sequence(futureWorlds)
   }
 
   def getRandomWorld = {
-    val futureWorld = worldCollection
-      .find(Json.obj("id" -> getNextRandom), projection)
-      .one[JsValue]
-    futureWorld
+    worldCollection.map(_
+      .find(Json.obj("id" -> getNextRandom), Option(projection))
+      .one[JsValue]).flatten
   }
 
   def getFortunes: Future[List[JsObject]] = {
-    val futureFortunes: Future[List[JsObject]] =
-      fortuneCollection.find(Json.obj())
-        .cursor[JsObject](ReadPreference.primaryPreferred, false).collect[List]()
-    futureFortunes
+      fortuneCollection.map(_.find(Json.obj(), Option.empty[JsObject])
+        .cursor[JsObject](ReadPreference.primaryPreferred, false).collect[List](Int.MaxValue, (v, t) => Cursor.Fail(t))).flatten
   }
 
   def updateWorlds(queries: Int): Future[Seq[JsObject]] = {
@@ -50,7 +43,7 @@ class Application (val controllerComponents: ControllerComponents, reactiveMongo
       .map(_.flatten)
       .map(_.map(oldWorld => {
         val newWorld = oldWorld ++ Json.obj("randomNumber" -> getNextRandom)
-        worldCollection.update(oldWorld, newWorld).map(result => newWorld)
+        worldCollection.map(_.update(oldWorld, newWorld).map(result => newWorld)).flatten
       }))
       .map(Future.sequence(_))
       .flatten

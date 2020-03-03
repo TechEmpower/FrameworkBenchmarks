@@ -8,7 +8,7 @@
                  [io.pedestal/pedestal.jetty "0.5.2"]
                  [org.clojure/java.jdbc "0.4.2"]
                  [korma "0.4.2"]
-                 [mysql/mysql-connector-java "5.1.47"]
+                 [mysql/mysql-connector-java "8.0.18"]
                  [com.zaxxer/HikariCP "2.5.1" :exclusions [[org.slf4j/slf4j-api]]]
                  [hiccup "1.0.5"]]
   :min-lein-version "2.0.0"

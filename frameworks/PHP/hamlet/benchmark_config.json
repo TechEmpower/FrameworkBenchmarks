@@ -16,7 +16,7 @@
       "language": "PHP",
       "flavor": "PHP7",
       "orm": "micro",
-      "platform": "None",
+      "platform": "FPM/FastCGI",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
@@ -39,15 +39,15 @@
       "language": "PHP",
       "flavor": "PHP7",
       "orm": "micro",
-      "platform": "None",
-      "webserver": "swoole",
+      "platform": "swoole",
+      "webserver": "none",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "hamlet-swoole",
       "notes": "",
-      "versus": "php"
+      "versus": "swoole"
     },
-    "react": {
+    "workerman": {
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
@@ -62,13 +62,13 @@
       "language": "PHP",
       "flavor": "PHP7",
       "orm": "micro",
-      "platform": "None",
-      "webserver": "react",
+      "platform": "workerman",
+      "webserver": "none",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "hamlet-react",
+      "display_name": "hamlet-workerman",
       "notes": "",
-      "versus": "php"
+      "versus": "workerman"
     }
   }]
 }

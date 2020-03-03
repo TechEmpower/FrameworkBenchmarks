@@ -2,7 +2,7 @@ package testTechempowerBaratine;
 
 import io.baratine.service.Result;
 import io.baratine.service.Service;
-import io.baratine.web.http.Get;
+import io.baratine.web.Get;
 
 @Service
 public class JsonService

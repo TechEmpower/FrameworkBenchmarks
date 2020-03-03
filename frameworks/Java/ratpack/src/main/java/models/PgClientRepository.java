@@ -1,13 +1,13 @@
 package models;
 
-import io.reactiverse.rxjava.pgclient.PgClient;
-import io.reactiverse.rxjava.pgclient.PgIterator;
-import io.reactiverse.rxjava.pgclient.Row;
-import io.reactiverse.rxjava.pgclient.Tuple;
+import io.reactiverse.reactivex.pgclient.PgClient;
+import io.reactiverse.reactivex.pgclient.PgIterator;
+import io.reactiverse.reactivex.pgclient.Row;
+import io.reactiverse.reactivex.pgclient.Tuple;
 import module.PgClients;
 import ratpack.exec.Promise;
-import ratpack.rx.RxRatpack;
-import rx.Observable;
+import ratpack.rx2.RxRatpack;
+import io.reactivex.Observable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,14 +60,12 @@ public class PgClientRepository implements DbRepository {
     }
 
     private Promise<List<World>> getPromise(Observable<World>[] observables) {
-        return RxRatpack.promiseSingle(
-                Observable.merge(observables)
-                        .collect(() -> new ArrayList<World>(), (worlds, world) -> worlds.add(world)));
+        return RxRatpack.promiseAll(Observable.mergeArray(observables));
     }
 
     @Override
     public Promise<List<Fortune>> fortunes() {
-        return RxRatpack.promise(pgClients.getOne().rxPreparedQuery("SELECT * FROM fortune").flatMapObservable(pgRowSet -> {
+        return RxRatpack.promiseAll(pgClients.getOne().rxPreparedQuery("SELECT * FROM fortune").flatMapObservable(pgRowSet -> {
             PgIterator resultSet = pgRowSet.iterator();
             List<Fortune> fortunes = new ArrayList<>(pgRowSet.size());
             while (resultSet.hasNext()) {
@@ -75,7 +73,7 @@ public class PgClientRepository implements DbRepository {
                 fortunes.add(new Fortune(row.getInteger(0), row.getString(1)));
             }
 
-            return Observable.from(fortunes);
+            return Observable.fromIterable(fortunes);
         }));
     }
 }

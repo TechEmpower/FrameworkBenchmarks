@@ -1,0 +1,30 @@
+---
+spring:
+  profiles: jdbc
+  datasource:
+    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
+    username: ${database.username}
+    password: ${database.password}
+
+database:
+  name: hello_world
+  host: tfb-database
+  port: 5432
+  username: benchmarkdbuser
+  password: benchmarkdbpass
+
+---
+spring:
+  profiles: mongo
+
+spring.data.mongodb:
+  host: tfb-database
+  port: 27017
+  database: hello_world
+
+---
+spring:
+  profiles:
+    active: jdbc
+
+server.server-header: Spring

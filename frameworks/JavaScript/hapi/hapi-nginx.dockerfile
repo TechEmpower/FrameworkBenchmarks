@@ -1,4 +1,4 @@
-FROM node:10.12.0
+FROM node:12.3.1-slim
 
 RUN apt update
 RUN apt install nginx -y

@@ -1,4 +1,4 @@
-FROM golang:1.10.1
+FROM golang:1.12
 
 ADD ./ /goji
 WORKDIR /goji
@@ -11,4 +11,5 @@ RUN go get github.com/go-sql-driver/mysql
 RUN go get github.com/zenazn/goji
 RUN go get github.com/zenazn/goji/web
 
-CMD go run src/goji/server.go
+RUN go build -o server src/goji/server.go
+CMD ./server

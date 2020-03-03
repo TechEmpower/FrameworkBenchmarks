@@ -1,4 +1,4 @@
-FROM golang:1.10.1
+FROM golang:1.12
 
 ADD ./ /chi
 WORKDIR /chi
@@ -11,4 +11,5 @@ RUN go get github.com/tidwall/sjson
 RUN go get github.com/jackc/pgx
 RUN go get github.com/go-chi/chi
 
-CMD go run src/chi-sjson/*.go -prefork
+RUN go build -o server src/chi-sjson/*.go
+CMD ./server -prefork

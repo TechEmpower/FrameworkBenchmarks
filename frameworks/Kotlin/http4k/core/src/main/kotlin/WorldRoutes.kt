@@ -1,7 +1,7 @@
+
 import org.http4k.core.Body
 import org.http4k.core.Method.GET
 import org.http4k.core.Response
-import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
 import org.http4k.format.Jackson.array
@@ -23,7 +23,7 @@ object WorldRoutes {
     }.defaulted("queries", 1)
 
     fun queryRoute(db: Database) = "/db" bind GET to {
-        db.findWorld()?.let { Response(OK).with(jsonBody of it) } ?: Response(NOT_FOUND)
+        let { Response(OK).with(jsonBody of db.findWorld()) }
     }
 
     fun multipleRoute(db: Database) = "/queries" bind GET to {

@@ -1,53 +1,65 @@
-extern crate actix;
-extern crate actix_web;
-extern crate bytes;
-extern crate futures;
-extern crate serde;
-extern crate serde_json;
-extern crate url;
+#[global_allocator]
+static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+
 #[macro_use]
 extern crate serde_derive;
 
-use actix::prelude::*;
-use actix_web::{http, server, App, HttpRequest, HttpResponse};
-use bytes::BytesMut;
+use actix_http::{HttpService, KeepAlive};
+use actix_service::map_config;
+use actix_web::dev::{AppConfig, Body, Server};
+use actix_web::http::header::{CONTENT_TYPE, SERVER};
+use actix_web::http::{HeaderValue, StatusCode};
+use actix_web::{web, App, HttpResponse};
+use bytes::{Bytes, BytesMut};
 
 mod utils;
 use utils::{Message, Writer, SIZE};
 
-fn json(req: &HttpRequest) -> HttpResponse {
+async fn json() -> HttpResponse {
     let message = Message {
         message: "Hello, World!",
     };
     let mut body = BytesMut::with_capacity(SIZE);
     serde_json::to_writer(Writer(&mut body), &message).unwrap();
 
-    HttpResponse::build_from(req)
-        .header(http::header::SERVER, "Actix")
-        .header(http::header::CONTENT_TYPE, "application/json")
-        .body(body)
+    let mut res = HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Actix"));
+    res.headers_mut()
+        .insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+    res
 }
 
-fn plaintext(req: &HttpRequest) -> HttpResponse {
-    HttpResponse::build_from(req)
-        .header(http::header::SERVER, "Actix")
-        .header(http::header::CONTENT_TYPE, "text/plain")
-        .body("Hello, World!")
+async fn plaintext() -> HttpResponse {
+    let mut res = HttpResponse::with_body(
+        StatusCode::OK,
+        Body::Bytes(Bytes::from_static(b"Hello, World!")),
+    );
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Actix"));
+    res.headers_mut()
+        .insert(CONTENT_TYPE, HeaderValue::from_static("text/plain"));
+    res
 }
 
-fn main() {
-    let sys = System::new("techempower");
+#[actix_rt::main]
+async fn main() -> std::io::Result<()> {
+    println!("Started http server: 127.0.0.1:8080");
 
     // start http server
-    server::new(move || {
-        App::new()
-            .resource("/json", |r| r.f(json))
-            .resource("/plaintext", |r| r.f(plaintext))
-    }).backlog(8192)
-    .bind("0.0.0.0:8080")
-    .unwrap()
-    .start();
-
-    println!("Started http server: 127.0.0.1:8080");
-    let _ = sys.run();
+    Server::build()
+        .backlog(1024)
+        .bind("techempower", "0.0.0.0:8080", || {
+            HttpService::build()
+                .keep_alive(KeepAlive::Os)
+                .h1(map_config(
+                    App::new()
+                        .service(web::resource("/json").to(json))
+                        .service(web::resource("/plaintext").to(plaintext)),
+                    |_| AppConfig::default(),
+                ))
+                .tcp()
+        })?
+        .start()
+        .await
 }

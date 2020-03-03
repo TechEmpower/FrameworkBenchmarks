@@ -37,8 +37,8 @@ There are two repository implementations.
 ## Versions
 
 * [Java OpenJDK 1.8](http://openjdk.java.net/)
-* [Ratpack 1.5.4](http://ratpack.io/)
-* [reactive-pg-client 0.10.5](https://github.com/reactiverse/reactive-pg-client)
+* [Ratpack 1.6.0](http://ratpack.io/)
+* [reactive-pg-client 0.10.9](https://github.com/reactiverse/reactive-pg-client)
 
 ## Test URLs
 

@@ -18,7 +18,10 @@
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseConfiguration(config)
                 .UseStartup<Startup>()
-                .UseKestrel()
+                .UseKestrel(o =>
+                {
+                    o.AllowSynchronousIO = true;
+                })
                 .Build();
 
             webHost.Run();

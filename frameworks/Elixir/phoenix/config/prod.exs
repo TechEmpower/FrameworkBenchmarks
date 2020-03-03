@@ -10,18 +10,21 @@ config :hello, Hello.Endpoint,
   server: true
 
 config :hello, Hello.Repo,
-  adapter: Ecto.Adapters.Postgres,
   username: "benchmarkdbuser",
   password: "benchmarkdbpass",
   database: "hello_world",
   hostname: "tfb-database",
-  pool_size: 256,
-  loggers: []
+  pool_size: 14,
+  queue_target: 5000,
+  queue_interval: 5000,
+  log: false
 
-  config :logger,
-    compile_time_purge_level: :error,
-    level: :error,
-    backends: []
+config :logger,
+  compile_time_purge_matching: [
+    [level_lower_than: :error]
+  ],
+  level: :error,
+  backends: []
 
 # ## SSL Support
 #

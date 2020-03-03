@@ -10,7 +10,7 @@
 
         public JsonModule() : base("json")
         {
-            Get("/", (req, res, routeData) =>
+            Get("/", (req, res) =>
             {
                 res.StatusCode = 200;
                 res.ContentType = "application/json";
@@ -18,9 +18,7 @@
 
                 var msg = new JsonMessage { message = "Hello, World!" };
 
-                JsonSerializer.Serialize(res.Body, msg);
-
-                return Task.CompletedTask;
+                return JsonSerializer.SerializeAsync(res.Body, msg);
             });
         }
 

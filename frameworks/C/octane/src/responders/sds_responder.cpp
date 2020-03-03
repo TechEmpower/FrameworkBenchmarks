@@ -25,11 +25,18 @@ void create_plaintext_response_sds(write_batch* batch) {
 }
 
 void create_json_response_sds(write_batch* batch) {
+    // Taken from H20 implementation.
+    // volatile is used to ensure that the object is instantiated every time
+    // the function is called.
+    const volatile struct {
+        const char *message;
+    } object = {PLAINTEXT_CONTENT};
+
     StringBuffer s;
     Writer<StringBuffer> writer(s);
     writer.StartObject();
     writer.Key("message");
-    writer.String("Hello, World!");
+    writer.String((const char *)object.message, strlen(object.message));
     writer.EndObject();
 
     sds response_buffer = sdsnew("HTTP/1.1 200 OK\r\n");

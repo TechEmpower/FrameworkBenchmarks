@@ -1,11 +1,7 @@
-FROM php:7.2
+FROM php:7.4
 
-ENV SWOOLE_VERSION=4.2.1
-
-RUN cd /tmp && curl -sSL "https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz" | tar xzf - \
-        && cd swoole-src-${SWOOLE_VERSION} \
-        && phpize && ./configure > /dev/null && make > /dev/null && make install > /dev/null \
-        && docker-php-ext-enable swoole
+RUN pecl install swoole > /dev/null && \
+    docker-php-ext-enable swoole
 
 RUN docker-php-ext-install pdo_mysql > /dev/null
 
@@ -25,8 +21,8 @@ RUN chmod -R 777 /lumen
 # An additional benefit of this method is that the correct version of composer will be used for the environment and version of the php system in the docker image
 RUN deploy/swoole/install-composer.sh
 
-RUN apt-get update -yqq  > /dev/null
-RUN apt-get install -yqq git unzip > /dev/null
+RUN apt-get update -yqq > /dev/null && \
+    apt-get install -yqq git unzip > /dev/null
 COPY deploy/swoole/composer* ./
 RUN php composer.phar install -a --no-dev --quiet
 

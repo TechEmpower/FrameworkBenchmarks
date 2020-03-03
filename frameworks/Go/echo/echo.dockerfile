@@ -1,4 +1,4 @@
-FROM golang:1.10.1
+FROM golang:1.12
 
 ADD ./ /echo
 WORKDIR /echo
@@ -13,6 +13,6 @@ RUN sh install_glide.sh
 WORKDIR src
 RUN glide install
 WORKDIR ..
-RUN go install app
 
+RUN go install app
 CMD app

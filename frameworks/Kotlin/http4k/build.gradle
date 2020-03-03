@@ -1,6 +1,6 @@
 buildscript {
-    ext.kotlin_version = "1.3.11"
-    ext.http4k_version = "3.106.0"
+    ext.kotlin_version = "1.3.61"
+    ext.http4k_version = "3.235.0"
 
     repositories {
         mavenCentral()
@@ -40,7 +40,6 @@ allprojects {
 dependencies {
     compile project(":core")
     compile project(":apache")
-    compile project(":apache-asyncdb")
     compile project(":jetty")
     compile project(":ktorcio")
     compile project(":netty")

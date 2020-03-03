@@ -18,8 +18,9 @@ class HelloWorldController < ApplicationController
     queries = 1 if queries < 1
     queries = 500 if queries > 500
 
-    results = (1..queries).map do
-      World.find(Random.rand(1..10000))
+    numbers = (1..10000).to_a.sample(queries)
+    results = numbers.map do |id|
+      World.find(id)
     end
 
     render json: results
@@ -36,10 +37,11 @@ class HelloWorldController < ApplicationController
     queries = 1 if queries < 1
     queries = 500 if queries > 500
 
-    worlds = (1..queries).map do
+    numbers = (1..10000).to_a.sample(queries)
+    worlds = numbers.map do |id|
       # get a random row from the database, which we know has 10000
       # rows with ids 1 - 10000
-      world = World.select(:id, :randomNumber).find(Random.rand(1..10000))
+      world = World.select(:id, :randomNumber).find(id)
       world.update_attribute(:randomNumber, Random.rand(1..10000))
       world
     end

@@ -6,7 +6,8 @@ class Fortunes extends \Phalcon\Mvc\Model
 
     public $message;
 
-    public function getSource() {
-        return "Fortune";
+    public function initialize()
+    {
+        $this->setSource('Fortune');
     }
 }

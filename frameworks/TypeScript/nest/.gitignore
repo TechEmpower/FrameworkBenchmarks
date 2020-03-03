@@ -1,5 +1,3 @@
-
-
 ### Node ###
 # Logs
 logs
@@ -17,6 +15,7 @@ typings/
 
 # Optional npm cache directory
 .npm
+.npmrc
 
 # Output of 'npm pack'
 *.tgz
@@ -24,9 +23,14 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
+# Obsolete package-lock.json
+package-lock.json
+
 # dotenv environment variables file
 .env
 
 tslint.json
 
 *.spec.ts
+
+dist/

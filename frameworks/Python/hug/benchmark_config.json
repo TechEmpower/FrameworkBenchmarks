@@ -2,7 +2,7 @@
   "framework": "hug",
   "tests": [
     {
-      "uwsgi": {
+      "default": {
         "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
