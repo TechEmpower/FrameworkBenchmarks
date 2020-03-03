@@ -39,7 +39,7 @@ function query()
 
 function update()
 {
-    global $pdo, $random, $update;
+    global $random, $update;
     ngx_header_set('Content-Type', 'application/json');
 
     $query_count = 1;
@@ -57,12 +57,6 @@ function update()
         );
         $arr[] = $world;
     }
-
-    // $pdo->beginTransaction();
-    // foreach($arr as $world) {
-    //     $update->execute([$world['randomNumber'], $world['id']]);
-    // }
-    // $pdo->commit();
 
     echo json_encode($arr, JSON_NUMERIC_CHECK);
 }
