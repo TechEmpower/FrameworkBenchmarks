@@ -75,7 +75,7 @@ public class WebfluxHandler {
     }
 
     public Mono<ServerResponse> updates(ServerRequest request) {
-        int count = getQueries(request);
+        int queries = getQueries(request);
         
         Mono<List<World>> worlds = Flux.range(0, queries)
                 .flatMap(i -> dbRepository.findAndUpdateWorld(randomWorldNumber(), randomWorldNumber()))
