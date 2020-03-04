@@ -1,0 +1,25 @@
+[package]
+name = "roa"
+version = "0.1.0"
+edition = "2018"
+publish = false
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "roa"
+path = "src/main.rs"
+
+[[bin]]
+name = "roa-platform"
+path = "src/main-platform.rs"
+
+[[bin]]
+name = "roa-diesel"
+path = "src/main-diesel.rs"
+
+[[bin]]
+name = "roa-pg"
+path = "src/main-pg.rs"
+
+[dependencies]
