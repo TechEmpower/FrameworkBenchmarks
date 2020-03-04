@@ -22,6 +22,11 @@ async def connect_to_db():
     )
 
 
+@app.after_serving
+async def disconnect_from_db():
+    await app.db.close()
+
+
 @app.route("/json")
 async def json():
     return {"message": "Hello, World!"}
