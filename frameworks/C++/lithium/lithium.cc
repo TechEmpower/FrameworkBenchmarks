@@ -191,6 +191,7 @@ int main(int argc, char* argv[]) {
     response.write(ss.to_string_view());
   };
 
+#ifndef PLAINTEXT_ONLY
   // Tune the number of sql connections.
   int tunning_port = port+1;
   std::thread server_thread([&] {
@@ -206,6 +207,7 @@ int main(int argc, char* argv[]) {
   li::quit_signal_catched = true;
   server_thread.join();
   li::quit_signal_catched = false;
+#endif
 
   // Start the server for the Techempower benchmark.
   http_serve(my_api, port, s::nthreads = nprocs);
