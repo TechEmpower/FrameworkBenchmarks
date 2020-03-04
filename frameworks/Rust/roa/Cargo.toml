@@ -23,3 +23,20 @@ name = "roa-pg"
 path = "src/main-pg.rs"
 
 [dependencies]
+roa = { version = "0.5.0-beta", features = ["body", "router"] }
+roa-diesel = "0.5.0-beta"
+async-std = { version = "1.5", features = ["attributes"] }
+askama = "0.8"
+markup = "0.4.1"
+yarte = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+env_logger = "0.7"
+rand = { version = "0.7", features = ["small_rng"] }
+bytes = "0.5.3"
+futures = "0.3.1"
+http = "0.2"
+diesel = { version = "1.4.3", features = ["postgres"] }
+url = { version="1.7", features=["query_encoding"] }
+log = { version = "0.4", features = ["release_max_level_debug"] }
+v_htmlescape = "0.4.5"
