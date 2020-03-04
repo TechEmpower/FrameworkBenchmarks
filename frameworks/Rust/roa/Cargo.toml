@@ -1,5 +1,5 @@
 [package]
-name = "roa"
+name = "roa-techempower"
 version = "0.1.0"
 edition = "2018"
 publish = false
@@ -11,10 +11,6 @@ name = "roa"
 path = "src/main.rs"
 
 [[bin]]
-name = "roa-platform"
-path = "src/main-platform.rs"
-
-[[bin]]
 name = "roa-diesel"
 path = "src/main-diesel.rs"
 
@@ -23,12 +19,10 @@ name = "roa-pg"
 path = "src/main-pg.rs"
 
 [dependencies]
-roa = { version = "0.5.0-beta", features = ["body", "router"] }
+roa = { git = "https://github.com/Hexilee/roa.git", version = "0.5.0-beta", features = ["body", "router"] }
 roa-diesel = "0.5.0-beta"
 async-std = { version = "1.5", features = ["attributes"] }
-askama = "0.8"
-markup = "0.4.1"
-yarte = "0.3"
+askama = "0.9"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 env_logger = "0.7"
@@ -39,4 +33,4 @@ http = "0.2"
 diesel = { version = "1.4.3", features = ["postgres"] }
 url = { version="1.7", features=["query_encoding"] }
 log = { version = "0.4", features = ["release_max_level_debug"] }
-v_htmlescape = "0.4.5"
+tokio-postgres = { version = "0.5.2", default-features = false }
