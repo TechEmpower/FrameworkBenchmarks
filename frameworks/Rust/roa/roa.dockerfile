@@ -6,6 +6,6 @@ ADD ./ /roa
 WORKDIR /roa
 
 RUN cargo clean
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
+RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --bin roa
 
 CMD ./target/release/roa
