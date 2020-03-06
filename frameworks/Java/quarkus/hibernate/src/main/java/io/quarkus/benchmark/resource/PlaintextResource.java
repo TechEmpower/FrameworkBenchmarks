@@ -1,8 +1,5 @@
 package io.quarkus.benchmark.resource;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -14,7 +11,7 @@ public class PlaintextResource {
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public CompletionStage<String> plaintext() {
-        return CompletableFuture.supplyAsync(() -> HELLO);
+    public String plaintext() {
+        return HELLO;
     }
 }

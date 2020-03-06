@@ -1,46 +1,38 @@
 package io.quarkus.benchmark.repository.pgclient;
 
-import java.util.concurrent.Executors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.quarkus.benchmark.model.World;
-import io.reactivex.Maybe;
-import io.reactivex.Scheduler;
-import io.reactivex.Single;
-import io.reactivex.schedulers.Schedulers;
-import io.vertx.reactivex.pgclient.PgPool;
-import io.vertx.reactivex.sqlclient.RowIterator;
-import io.vertx.reactivex.sqlclient.RowSet;
-import io.vertx.reactivex.sqlclient.Tuple;
+import io.smallrye.mutiny.Uni;
+import io.vertx.mutiny.sqlclient.Row;
+import io.vertx.mutiny.sqlclient.Tuple;
 
 @ApplicationScoped
 public class WorldRepository {
 
-    private static Logger LOG = LoggerFactory.getLogger(WorldRepository.class);
-
     @Inject
-    PgPool client;
+    PgClients clients;
 
-    private final Scheduler scheduler = Schedulers.from(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2));
-
-    public Maybe<World> find(int id) {
-        return client.rxPreparedQuery("SELECT id, randomnumber FROM world WHERE id = $1", Tuple.of(id))
-                .map(RowSet::iterator)
-                .filter(RowIterator::hasNext)
-                .map(RowIterator::next)
-                .map(row -> new World(row.getInteger(0), row.getInteger(1)))
-                .subscribeOn(scheduler);
+    public Uni<World> find(int id) {
+        return clients.getClient().preparedQuery("SELECT id, randomNumber FROM World WHERE id = $1", Tuple.of(id))
+                .map(rowset -> {
+                    Row row = rowset.iterator().next();
+                    return new World(row.getInteger(0), row.getInteger(1));
+                });
     }
 
-    public Single<World> update(World world) {
-        return client.rxPreparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2",
-                Tuple.of(world.getRandomNumber(), world.getId()))
-                .map(rows -> world)
-                .subscribeOn(scheduler);
+    public Uni<Void> update(World[] worlds) {
+        Arrays.sort(worlds);
+        List<Tuple> args = new ArrayList<>(worlds.length);
+        for(World world : worlds) {
+            args.add(Tuple.of(world.getId(), world.getRandomNumber()));
+        }
+        return clients.getPool().preparedBatch("UPDATE World SET randomNumber = $2 WHERE id = $1", args)
+                .map(v -> null);
     }
 }
