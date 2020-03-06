@@ -1,7 +1,4 @@
-Click==7.0
-gunicorn==19.9.0
-h11==0.8.1
-httptools==0.0.13
-uvicorn==0.4.6
-uvloop==0.12.1
-websockets==7.0
+gunicorn==20.0.4
+httptools==0.1.1
+uvicorn==0.11.3
+websockets==8.1
