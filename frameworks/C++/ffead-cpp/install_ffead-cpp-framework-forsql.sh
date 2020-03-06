@@ -49,8 +49,8 @@ sed -i 's|localhost|tfb-database|g' web/te-benchmark-um/config/sdorm.xml
 sed -i 's|localhost|tfb-database|g' web/te-benchmark-um/config/sdormmongo.xml
 sed -i 's|localhost|tfb-database|g' web/te-benchmark-um/config/sdormmysql.xml
 sed -i 's|localhost|tfb-database|g' web/te-benchmark-um/config/sdormpostgresql.xml
-sed -i 's|<pool-size>30</pool-size>|<pool-size>${MAX_THREADS}</pool-size>|g' web/te-benchmark-um/config/sdorm.xml
-sed -i 's|<pool-size>30</pool-size>|<pool-size>${MAX_THREADS}</pool-size>|g' web/te-benchmark-um/config/sdormmongo.xml
+#sed -i 's|<pool-size>30</pool-size>|<pool-size>${MAX_THREADS}</pool-size>|g' web/te-benchmark-um/config/sdorm.xml
+#sed -i 's|<pool-size>30</pool-size>|<pool-size>${MAX_THREADS}</pool-size>|g' web/te-benchmark-um/config/sdormmongo.xml
 sed -i 's|<pool-size>30</pool-size>|<pool-size>${MAX_THREADS}</pool-size>|g' web/te-benchmark-um/config/sdormmysql.xml
 sed -i 's|<pool-size>30</pool-size>|<pool-size>${MAX_THREADS}</pool-size>|g' web/te-benchmark-um/config/sdormpostgresql.xml
 sed -i 's|127.0.0.1|tfb-database|g' resources/sample-odbcinst.ini
