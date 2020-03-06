@@ -1,6 +1,6 @@
 //use diesel::prelude::*;
-use roa::App;
 use roa::preload::*;
+use roa::App;
 use std::error::Error as StdError;
 use std::result::Result as StdResult;
 
@@ -8,8 +8,8 @@ use std::result::Result as StdResult;
 async fn main() -> StdResult<(), Box<dyn StdError>> {
     let app = App::new(());
     app.listen("0.0.0.0:8080", |addr| {
-            println!("Server listen on {}...", addr);
-        })?
-        .await?;
+        println!("Server listen on {}...", addr);
+    })?
+    .await?;
     Ok(())
 }

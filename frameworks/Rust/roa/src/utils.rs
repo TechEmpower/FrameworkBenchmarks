@@ -1,5 +1,5 @@
 use askama::Template;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Debug)]
 pub struct Fortune {
