@@ -4,7 +4,7 @@ namespace controllers;
 /**
  * Json controller.
  */
-class JsonAsync extends \Ubiquity\controllers\Controller {
+class Json_ extends \Ubiquity\controllers\Controller {
 
 	public function __construct() {}
 

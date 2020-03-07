@@ -7,12 +7,10 @@
 \Ubiquity\cache\CacheManager::warmUpControllers([
 	'controllers\\Plaintext_',
 	'controllers\\Json_',
-	'controllers\\DbPg',
+	'controllers\\Db_',
 	'controllers\\Fortunes_'
 ]);
-$workerServer->onWorkerStart = function () use ($config) {
-	\Ubiquity\orm\DAO::startDatabase($config, 'pgsql');
-	\Ubiquity\orm\DAO::prepareGetById('world', 'models\\World');
-	\Ubiquity\orm\DAO::prepareGetAll('fortune', 'models\\Fortune');
-};
 
+\Ubiquity\orm\DAO::startDatabase($config, 'pgsql');
+\Ubiquity\orm\DAO::prepareGetById('world', 'models\\World');
+\Ubiquity\orm\DAO::prepareGetAll('fortune', 'models\\Fortune');
