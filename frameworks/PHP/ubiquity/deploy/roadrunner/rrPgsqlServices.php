@@ -7,7 +7,7 @@
 \Ubiquity\cache\CacheManager::warmUpControllers([
 	'controllers\\Plaintext_',
 	'controllers\\Json_',
-	'controllers\\Db_',
+	'controllers\\DbPg',
 	'controllers\\Fortunes_'
 ]);
 
