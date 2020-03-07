@@ -27,7 +27,7 @@ RUN deploy/run/install-composer.sh
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq git unzip > /dev/null
 
-RUN php composer.phar require lapinskas/roadrunner-ubiquity:dev-master
+RUN php composer.phar require lapinskas/roadrunner-ubiquity:dev-master --quiet
 
 RUN vendor/bin/rr get
 
