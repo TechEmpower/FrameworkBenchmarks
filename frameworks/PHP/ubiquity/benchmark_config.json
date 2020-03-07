@@ -28,10 +28,10 @@
       "workerman": {
         "json_url": "/JsonAsync",
         "plaintext_url": "/PlaintextAsync",
-        "db_url": "/WorkerDb",
-        "query_url": "/WorkerDb/query/",
-        "fortune_url": "/WorkerFortunes",
-        "update_url": "/WorkerDb/update/",
+        "db_url": "/DbPg",
+        "query_url": "/DbPg/query/",
+        "fortune_url": "/FortunesPg",
+        "update_url": "/DbPg/update/",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
@@ -51,10 +51,10 @@
       "swoole": {
         "json_url": "/JsonAsync",
         "plaintext_url": "/PlaintextAsync",
-        "db_url": "/SwooleDb",
-        "update_url": "/SwooleDb/update/",
-        "query_url": "/SwooleDb/query/",
-        "fortune_url": "/SwooleFortunes",
+        "db_url": "/DbPg",
+        "update_url": "/DbPg/update/",
+        "query_url": "/DbPg/query/",
+        "fortune_url": "/FortunesPg",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
@@ -72,7 +72,7 @@
         "versus": "swoole"
       },
       "swoole-mysql": {
-        "update_url": "/SwooleDbMy/update/",
+        "update_url": "/DbMy/update/",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",

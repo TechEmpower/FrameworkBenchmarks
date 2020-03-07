@@ -7,8 +7,8 @@
 \Ubiquity\cache\CacheManager::warmUpControllers([
 	'controllers\\PlaintextAsync',
 	'controllers\\JsonAsync',
-	'controllers\\SwooleDb',
-	'controllers\\SwooleFortunes'
+	'controllers\\DbPg',
+	'controllers\\FortunesPg'
 ]);
 $swooleServer->on('workerStart', function ($srv) use (&$config) {
 	\Ubiquity\orm\DAO::startDatabase($config, 'pgsql');
