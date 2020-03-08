@@ -26,11 +26,11 @@ $http_worker->onWorkerStart = static function() {
     $mysql->connect(function ($e) {});
 };
 
-$http_worker->onMessage = static function ($connection) {
+$http_worker->onMessage = static function ($connection, $request) {
 
     global $mysql;
 
-    switch (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) {
+    switch ($request->path()) {
         case '/db':
             $mysql->query('SELECT id,randomNumber FROM World WHERE id='.mt_rand(1, 10000),
                 static function ($command) use ($connection) {
