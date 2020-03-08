@@ -30,8 +30,6 @@ $http_worker->onMessage = static function ($connection) {
 
     global $mysql;
 
-    Http::header('Date: '.gmdate('D, d M Y H:i:s').' GMT');
-
     switch (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) {
         case '/db':
             $mysql->query('SELECT id,randomNumber FROM World WHERE id='.mt_rand(1, 10000),
@@ -74,7 +72,6 @@ $http_worker->onMessage = static function ($connection) {
         //   return $connection->send(ob_get_clean());
 
         default:
-            Http::responseCode(404);
             $connection->send(new Response(200, [], 'Error 404'));
 
     }
