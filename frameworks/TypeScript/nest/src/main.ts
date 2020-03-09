@@ -5,18 +5,25 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import 'dotenv/config';
+import { MongoModule } from './mongo/mongo.module';
 import { join } from 'path';
-import { AppModule } from './app.module';
+import { SqlModule } from './sql/sql.module';
 import cluster = require('cluster');
 import os = require('os');
 
 const port = process.env.PORT || 8080;
 
 async function bootstrapExpress() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: false,
-  });
+  let app;
+  if (process.env.DATABASE_CONFIGURATION_PROFILE === 'mongodb') {
+    app = await NestFactory.create<NestExpressApplication>(MongoModule, {
+      logger: false,
+    });
+  } else {
+    app = await NestFactory.create<NestExpressApplication>(SqlModule, {
+      logger: false,
+    });
+  }
 
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
@@ -26,11 +33,21 @@ async function bootstrapExpress() {
 }
 
 async function bootstrapFastify() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter(),
-    { logger: false },
-  );
+  let app;
+  if (process.env.DATABASE_CONFIGURATION_PROFILE === 'mongodb') {
+    app = await NestFactory.create<NestFastifyApplication>(
+      MongoModule,
+      new FastifyAdapter(),
+      { logger: false },
+    );
+  } else {
+    app = await NestFactory.create<NestFastifyApplication>(
+      SqlModule,
+      new FastifyAdapter(),
+      { logger: false },
+    );
+  }
+
   app.setViewEngine({
     engine: {
       handlebars: require('handlebars'),
@@ -46,7 +63,7 @@ if (cluster.isMaster) {
     cluster.fork();
   }
 
-  Logger.log('NestJS master starting ' + new Date().toISOString());
+  Logger.log(`NestJS master ${process.pid} started`);
   cluster.on('exit', () => {
     process.exit(1);
   });
