@@ -4,7 +4,7 @@ namespace controllers;
 /**
  * Plaintext controller.
  */
-class PlaintextAsync extends \Ubiquity\controllers\Controller {
+class Plaintext_ extends \Ubiquity\controllers\Controller {
 
 	public function __construct() {}
 

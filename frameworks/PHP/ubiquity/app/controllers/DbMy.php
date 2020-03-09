@@ -6,7 +6,7 @@ use Ubiquity\orm\DAO;
 /**
  * Bench controller.
  */
-class SwooleDbMy extends SwooleDb {
+class DbMy extends DbPg {
 
 	public function update($queries = 1) {
 		$worlds = [];
