@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"math/rand"
+	"os"
 	"runtime"
 	"sort"
 	"strconv"
@@ -13,7 +13,6 @@ import (
 	"github.com/gofiber/fiber"
 	pgx "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
-	"github.com/tidwall/sjson"
 )
 
 func main() {
@@ -23,11 +22,11 @@ func main() {
 	app := fiber.New()
 	app.Settings.ServerHeader = "go"
 
+	app.Get("/plaintext", plaintextHandler)
 	app.Get("/json", jsonHandler)
 	app.Get("/db", dbHandler)
 	app.Get("/queries", queriesHandler)
 	app.Get("/update", updateHandler)
-	app.Get("/plaintext", plaintextHandler)
 
 	app.Listen(8080)
 }
@@ -40,13 +39,7 @@ const (
 )
 
 var (
-	db          *pgxpool.Pool
-	sjsonStruct = []byte(`{"message":""}`)
-	sjsonKey    = "message"
-	sjsonValue  = []byte(`"Hello, World!"`)
-	sjsonOpt    = &sjson.Options{
-		Optimistic: true,
-	}
+	db *pgxpool.Pool
 )
 
 // Message ...
@@ -120,15 +113,18 @@ func ReleaseWorlds(w Worlds) {
 
 // initDatabase :
 func initDatabase() {
-	child := flag.Bool("child", false, "is child proc")
-	flag.Parse()
-
+	var child bool
+	for _, arg := range os.Args[1:] {
+		if arg == "-child" {
+			child = true
+		}
+	}
 	maxConn := runtime.NumCPU()
 	if maxConn == 0 {
 		maxConn = 8
 	}
 	maxConn = maxConn * 4
-	if *child {
+	if child {
 		maxConn = runtime.NumCPU()
 	}
 
@@ -141,9 +137,10 @@ func initDatabase() {
 
 // jsonHandler :
 func jsonHandler(c *fiber.Ctx) {
-	raw, _ := sjson.SetRawBytesOptions(sjsonStruct, sjsonKey, sjsonValue, sjsonOpt)
-	c.Set("Content-Type", fiber.MIMEApplicationJSON)
-	c.SendBytes(raw)
+	m := AcquireJSON()
+	m.Message = "Hello, World!"
+	c.JSON(m)
+	ReleaseJSON(m)
 }
 
 // dbHandler :
