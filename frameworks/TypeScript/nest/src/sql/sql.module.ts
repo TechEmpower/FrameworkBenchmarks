@@ -1,8 +1,8 @@
 import { CacheModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { Fortune } from './fortune.entity';
+import { SqlController } from './sql.controller';
+import { SqlService } from './sql.service';
 import { World } from './world.entity';
 
 @Module({
@@ -11,7 +11,7 @@ import { World } from './world.entity';
     TypeOrmModule.forFeature([World, Fortune]),
     CacheModule.register(),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [SqlController],
+  providers: [SqlService],
 })
-export class AppModule {}
+export class SqlModule {}

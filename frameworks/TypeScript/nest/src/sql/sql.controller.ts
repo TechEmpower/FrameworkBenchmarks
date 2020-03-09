@@ -7,11 +7,11 @@ import {
   Render,
   UseInterceptors,
 } from '@nestjs/common';
-import { AppService } from './app.service';
+import { SqlService } from './sql.service';
 
 @Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
+export class SqlController {
+  constructor(private readonly sqlService: SqlService) {}
 
   @Get('/json')
   @Header('Server', 'NestJS')
@@ -23,26 +23,26 @@ export class AppController {
   @Get('db')
   @Header('Server', 'NestJS')
   getSingleQuery() {
-    return this.appService.singleQuery();
+    return this.sqlService.singleQuery();
   }
 
   @Get('queries')
   @Header('Server', 'NestJS')
   getMultiQueries(@Query('queries') queries) {
-    return this.appService.multiQueries(queries);
+    return this.sqlService.multiQueries(queries);
   }
 
   @Get('fortunes')
   @Header('Server', 'NestJS')
   @Render('fortunes.hbs')
   getFortunes() {
-    return this.appService.fortunes();
+    return this.sqlService.fortunes();
   }
 
   @Get('updates')
   @Header('Server', 'NestJS')
   getUpdates(@Query('queries') queries) {
-    return this.appService.updates(queries);
+    return this.sqlService.updates(queries);
   }
 
   @Get('plaintext')
@@ -56,6 +56,6 @@ export class AppController {
   @Header('Server', 'NestJS')
   @UseInterceptors(CacheInterceptor)
   getCachedWorlds(@Query('count') count) {
-    return this.appService.cachedWorlds(count);
+    return this.sqlService.cachedWorlds(count);
   }
 }
