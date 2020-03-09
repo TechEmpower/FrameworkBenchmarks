@@ -6,7 +6,7 @@ use Ubiquity\orm\DAO;
 /**
  * Bench controller.
  */
-class SwooleDb extends \Ubiquity\controllers\Controller {
+class DbPg extends \Ubiquity\controllers\Controller {
 
 	public function __construct() {}
 
