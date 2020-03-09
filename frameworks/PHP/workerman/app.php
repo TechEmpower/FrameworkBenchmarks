@@ -1,5 +1,6 @@
 <?php
-use Workerman\Protocols\Http;
+use Workerman\Protocols\Http\Response;
+use Workerman\Protocols\Http\Request;
 
 function init()
 {
@@ -15,18 +16,20 @@ function init()
     $update    = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
 }
 
-function router()
+function router(Request $request)
 {
-    switch (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) {
+    switch ($request->path()) {
         case '/plaintext':
-            Http::header('Content-Type: text/plain');
-
-            return 'Hello, World!';
+            return new Response(200, [
+                'Content-Type' => 'text/plain',
+                'Date'         => Header::$date
+            ], 'Hello, World!');
 
         case '/json':
-            Http::header('Content-Type: application/json');
-
-            return json_encode(['message' => 'Hello, World!']);
+            return new Response(200, [
+                'Content-Type' => 'application/json',
+                'Date'         => Header::$date
+            ], json_encode(['message' => 'Hello, World!']));
 
         case '/db':
             return db();
@@ -36,41 +39,41 @@ function router()
             return fortune();
 
         case '/query':
-            return query();
+            return query($request);
 
         case '/update':
-            return updateraw();
-
-/*       case '/info':
-            Http::header('Content-Type: text/plain');
+            return updateraw($request);
+/*
+       case '/info':
             ob_start();
             phpinfo();
-            return ob_get_clean();
- */ 
+            return new Response(200, ['Content-Type' => 'text/plain'], ob_get_clean());
+*/
         default:
-            Http::responseCode(404);
-            return 'Error 404';
+            return new Response(404, [], 'Error 404');
     }
 }
 
 function db()
 {
     global $statement;
-    Http::header('Content-Type: application/json');
 
     $statement->execute([mt_rand(1, 10000)]);
 
-    return json_encode($statement->fetch());
+    return new Response(200, [
+        'Content-Type' => 'application/json',
+        'Date'         => Header::$date
+    ], json_encode($statement->fetch()));
 }
 
-function query()
+function query($request)
 {
     global $statement;
-    Http::header('Content-Type: application/json');
 
     $query_count = 1;
-    if ($_GET['q'] > 1) {
-        $query_count = min($_GET['q'], 500);
+    $q = $request->get('q');
+    if ($q > 1) {
+        $query_count = min($q, 500);
     }
 
     while ($query_count--) {
@@ -78,17 +81,20 @@ function query()
         $arr[] = $statement->fetch();
     }
 
-    return json_encode($arr);
+    return new Response(200, [
+        'Content-Type' => 'application/json',
+        'Date'         => Header::$date
+    ], json_encode($arr));
 }
 
-function updateraw()
+function updateraw($request)
 {
     global $random, $update;
-    Http::header('Content-Type: application/json');
 
     $query_count = 1;
-    if ($_GET['q'] > 1) {
-        $query_count = min($_GET['q'], 500);
+    $q = $request->get('q');
+    if ($q > 1) {
+        $query_count = min($q, 500);
     }
 
     while ($query_count--) {
@@ -107,8 +113,10 @@ function updateraw()
     //     $update->execute([$world['randomNumber'], $world['id']]);
     // }
     // $pdo->commit();
-
-    return json_encode($arr);
+    return new Response(200, [
+        'Content-Type' => 'application/json',
+        'Date'         => Header::$date
+    ], json_encode($arr));
 }
 
 function fortune()
@@ -127,7 +135,9 @@ function fortune()
         $html .= "<tr><td>$id</td><td>$message</td></tr>";
     }
 
-    return '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
-            .$html.
-            '</table></body></html>';
+    return new Response(200, [
+        'Date'         => Header::$date
+    ], '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
+        .$html.
+        '</table></body></html>');
 }
