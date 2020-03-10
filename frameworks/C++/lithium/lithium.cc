@@ -95,10 +95,10 @@ int main(int argc, char* argv[]) {
     s::randomNumber = int());
 
 
-  int db_nconn = 64;
-  int queries_nconn = 64;
-  int fortunes_nconn = 64;
-  int updates_nconn = 64;
+  int db_nconn = 128/nprocs;
+  int queries_nconn = 2;
+  int fortunes_nconn = 128/nprocs;
+  int updates_nconn = 2;
 
   http_api my_api;
 
@@ -192,23 +192,21 @@ int main(int argc, char* argv[]) {
     response.write(ss.to_string_view());
   };
 
-#ifndef PLAINTEXT_ONLY
-  // Tune the number of sql connections.
-  int tunning_port = port+1;
-  std::thread server_thread([&] {
-    http_serve(my_api, tunning_port, s::nthreads = nprocs);
-  });
-  usleep(3e5);
+  // // Tune the number of sql connections.
+  // int tunning_port = port+1;
+  // std::thread server_thread([&] {
+  //   http_serve(my_api, tunning_port, s::nthreads = nprocs);
+  // });
+  // usleep(3e5);
 
-  tune_n_sql_connections(db_nconn, "GET /db HTTP/1.1\r\n\r\n", tunning_port, 1, sql_max_connection/nprocs);
-  tune_n_sql_connections(queries_nconn, "GET /queries?N=20 HTTP/1.1\r\n\r\n", tunning_port, 1,  std::min(sql_max_connection/nprocs, 14));
-  tune_n_sql_connections(fortunes_nconn, "GET /fortunes HTTP/1.1\r\n\r\n", tunning_port, 1, sql_max_connection/nprocs);
-  tune_n_sql_connections(updates_nconn, "GET /updates?N=20 HTTP/1.1\r\n\r\n", tunning_port, 1, std::min(sql_max_connection/nprocs, 7));
+  // tune_n_sql_connections(db_nconn, "GET /db HTTP/1.1\r\n\r\n", tunning_port, 1, sql_max_connection/nprocs);
+  // tune_n_sql_connections(queries_nconn, "GET /queries?N=20 HTTP/1.1\r\n\r\n", tunning_port, 1,  std::min(sql_max_connection/nprocs, 14));
+  // tune_n_sql_connections(fortunes_nconn, "GET /fortunes HTTP/1.1\r\n\r\n", tunning_port, 1, sql_max_connection/nprocs);
+  // tune_n_sql_connections(updates_nconn, "GET /updates?N=20 HTTP/1.1\r\n\r\n", tunning_port, 1, std::min(sql_max_connection/nprocs, 7));
   
-  li::quit_signal_catched = true;
-  server_thread.join();
-  li::quit_signal_catched = false;
-#endif
+  // li::quit_signal_catched = true;
+  // server_thread.join();
+  // li::quit_signal_catched = false;
 
   // Start the server for the Techempower benchmark.
   http_serve(my_api, port, s::nthreads = nprocs);
