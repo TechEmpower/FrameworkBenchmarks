@@ -47,8 +47,8 @@ void tune_n_sql_connections(int& nc_to_tune, std::string http_req, int port, int
     nc_to_tune = nc;
 
     // Warmup.
-    http_benchmark(sockets, 4, 500, http_req);
-    float req_per_s = http_benchmark(sockets, 4, 2000, http_req);
+    http_benchmark(sockets, 4, 200, http_req);
+    float req_per_s = http_benchmark(sockets, 4, 1000, http_req);
     std::cout << nc << " -> " << req_per_s << " req/s." << std::endl;
     if (req_per_s > max_req_per_s)
     {
