@@ -5,7 +5,7 @@ RUN apt install -yqq libboost-dev libmariadb-dev wget  libboost-context-dev g++-
 
 COPY ./ ./
 
-ENV COMMIT=d66c2fcf52606587601032124cf8a08d47aebaed
+ENV COMMIT=90fff260a346dba49dad09a33d9a958e4bc3a619
 
 RUN wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_mysql.hh
 RUN wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_http_backend.hh
