@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Newtonsoft.Json;
-
-using GenHTTP.Modules.Webservices;
+﻿using GenHTTP.Modules.Webservices;
 
 namespace Benchmarks.Tests
 {
@@ -12,7 +6,6 @@ namespace Benchmarks.Tests
     public class JsonResult
     {
 
-        [JsonProperty("message")]
         public string? Message { get; set; }
 
     }
