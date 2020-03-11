@@ -128,27 +128,6 @@
 				"notes": "",
 				"versus": "netty"
 			},
-			"rapidoid": {
-				"json_url": "/json",
-				"plaintext_url": "/plaintext",
-				"db_url": "/db",
-				"fortune_url": "/fortunes",
-				"port": 8080,
-				"approach": "Realistic",
-				"classification": "Fullstack",
-				"database": "Postgres",
-				"framework": "OfficeFloor",
-				"language": "Java",
-				"flavor": "None",
-				"orm": "Full",
-				"platform": "OfficeFloor",
-				"webserver": "WoOF",
-				"os": "Linux",
-				"database_os": "Linux",
-				"display_name": "OfficeFloor-rapidoid",
-				"notes": "",
-				"versus": "rapidoid"
-			},
 			"spring_data": {
 				"json_url": "/json",
 				"plaintext_url": "/plaintext",

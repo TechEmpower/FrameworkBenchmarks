@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ThreadFactory;
+import java.util.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
@@ -32,7 +33,7 @@ import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import lombok.Data;
 import net.officefloor.frame.api.manage.OfficeFloor;
 import net.officefloor.frame.api.manage.ProcessManager;
-import net.officefloor.frame.api.managedobject.ProcessAwareContext;
+import net.officefloor.frame.api.managedobject.ManagedObjectContext;
 import net.officefloor.frame.api.managedobject.ProcessSafeOperation;
 import net.officefloor.server.SocketManager;
 import net.officefloor.server.http.AbstractHttpServicerFactory;
@@ -63,6 +64,11 @@ public class RawOfficeFloorMain {
 	 * {@link SocketManager}.
 	 */
 	public static SocketManager socketManager = null;
+
+	/**
+	 * {@link Logger}.
+	 */
+	private static Logger logger = Logger.getLogger(RawOfficeFloorMain.class.getName());
 
 	/**
 	 * Run application.
@@ -145,9 +151,20 @@ public class RawOfficeFloorMain {
 		private final ObjectMapper objectMapper = new ObjectMapper();
 
 		/**
-		 * {@link ProcessAwareContext}.
+		 * {@link ManagedObjectContext}.
 		 */
-		private static ProcessAwareContext processAwareContext = new ProcessAwareContext() {
+		private static ManagedObjectContext managedObjectContext = new ManagedObjectContext() {
+
+			@Override
+			public String getBoundName() {
+				return RawOfficeFloorMain.class.getSimpleName();
+			}
+
+			@Override
+			public Logger getLogger() {
+				return logger;
+			}
+
 			@Override
 			public <R, T extends Throwable> R run(ProcessSafeOperation<R, T> operation) throws T {
 				return operation.run();
@@ -189,8 +206,8 @@ public class RawOfficeFloorMain {
 		protected ProcessManager service(ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection)
 				throws IOException {
 
-			// Configure process awareness
-			connection.setProcessAwareContext(processAwareContext);
+			// Configure context
+			connection.setManagedObjectContext(managedObjectContext);
 
 			// Service the connection
 			HttpRequest request = connection.getRequest();

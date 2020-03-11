@@ -302,7 +302,11 @@ static bool db_stmt_step_sqlite(const struct db_stmt *stmt,
         case 's': {
             char *out = va_arg(ap, char *);
             size_t bufsize = va_arg(ap, size_t);
-            strncpy(out, sqlite3_column_text(stmt_sqlite->sqlite, r), bufsize);
+
+            strncpy(out,
+                    (const char *)sqlite3_column_text(stmt_sqlite->sqlite, r),
+                    bufsize);
+
             break;
         }
         default:
@@ -360,7 +364,7 @@ db_connect_sqlite(const char *path, bool read_only, const char *pragmas[])
     if (!db_sqlite)
         return NULL;
 
-    int flags = read_only ? SQLITE_OPEN_READONLY : 0;
+    int flags = read_only ? SQLITE_OPEN_READONLY : SQLITE_OPEN_READWRITE;
     int ret = sqlite3_open_v2(path, &db_sqlite->sqlite, flags, NULL);
     if (ret != SQLITE_OK) {
         free(db_sqlite);

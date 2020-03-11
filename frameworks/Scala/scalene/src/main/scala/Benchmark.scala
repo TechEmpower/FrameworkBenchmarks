@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import scalene.actor.Pool
 import scalene.routing._
-import scalene.http.{BodyData, BodyFormatter, ContentType}
+import scalene.http.{Body, BodyFormatter, ContentType}
 import scalene.sql._
 import BasicConversions._
 
 object Main extends App {
+
+  Class.forName("org.postgresql.Driver");
 
   trait JsonMessage
   case class JsonRouteMessage(message: String) extends JsonMessage
@@ -17,14 +19,13 @@ object Main extends App {
 
   implicit val messageFormatter = new BodyFormatter[JsonMessage] {
     val mapper: ObjectMapper = new ObjectMapper().registerModule(DefaultScalaModule)
-    def format(msg: JsonMessage) = {
+    def apply(msg: JsonMessage) = {
       val obj = msg match {
         case MultiDBRouteMessage(items) => items
         case other => other
       }
-      BodyData.Static(mapper.writeValueAsBytes(obj))
+      Body(mapper.writeValueAsBytes(obj), Some(ContentType.`application/json`))
     }
-    val contentType = Some(ContentType.`application/json`)
   }
 
   val settings = Settings.basic(
@@ -71,8 +72,10 @@ object Main extends App {
     }
   }
 
+  val plainBody = Body.plain("Hello, World!")
+
   val routes = Routes(
-    GET / "plaintext" to {_ => "Hello, World!".ok},
+    GET / "plaintext" to {_ => plainBody.ok},
     GET / "json"      to {_ => JsonRouteMessage("Hello, World!").ok},
     dbRoute,
     multiRoute

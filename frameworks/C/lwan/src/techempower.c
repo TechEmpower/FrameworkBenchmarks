@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lwan.h"
+#include "lwan-private.h"
 #include "lwan-config.h"
 #include "lwan-template.h"
 
@@ -149,7 +149,7 @@ static int append_to_strbuf(const char *bytes, size_t len, void *data)
 {
     struct lwan_strbuf *strbuf = data;
 
-    return lwan_strbuf_append_str(strbuf, bytes, len) ? 0 : -EINVAL;
+    return !lwan_strbuf_append_str(strbuf, bytes, len);
 }
 
 static enum lwan_http_status
@@ -158,10 +158,8 @@ json_response_obj(struct lwan_response *response,
                   size_t descr_len,
                   const void *data)
 {
-    lwan_strbuf_grow_to(response->buffer, 128);
-
     if (json_obj_encode_full(descr, descr_len, data, append_to_strbuf,
-                             response->buffer, false) < 0)
+                             response->buffer, false) != 0)
         return HTTP_INTERNAL_ERROR;
 
     response->mime_type = "application/json";
@@ -173,10 +171,8 @@ json_response_arr(struct lwan_response *response,
                   const struct json_obj_descr *descr,
                   const void *data)
 {
-    lwan_strbuf_grow_to(response->buffer, 128);
-
     if (json_arr_encode_full(descr, data, append_to_strbuf, response->buffer,
-                             false) < 0)
+                             false) != 0)
         return HTTP_INTERNAL_ERROR;
 
     response->mime_type = "application/json";
@@ -188,28 +184,20 @@ LWAN_HANDLER(json)
     struct hello_world_json j = {.message = hello_world};
 
     return json_response_obj(response, hello_world_json_desc,
-                         N_ELEMENTS(hello_world_json_desc), &j);
+                             N_ELEMENTS(hello_world_json_desc), &j);
 }
 
-static bool db_query(struct db_stmt *stmt,
-                     struct db_row rows[],
-                     size_t n_rows,
-                     struct db_json *out)
+static bool db_query(struct db_stmt *stmt, struct db_json *out)
 {
-    const int id = (rand() % 10000) + 1;
-
-    assert(n_rows >= 1);
-
-    rows[0].u.i = id;
-
-    if (UNLIKELY(!db_stmt_bind(stmt, rows, n_rows)))
+    struct db_row row = {.kind = 'i', .u.i = (rand() % 10000) + 1};
+    if (UNLIKELY(!db_stmt_bind(stmt, &row, 1)))
         return false;
 
     long random_number;
     if (UNLIKELY(!db_stmt_step(stmt, "i", &random_number)))
         return false;
 
-    out->id = id;
+    out->id = row.u.i;
     out->randomNumber = (int)random_number;
 
     return true;
@@ -217,7 +205,6 @@ static bool db_query(struct db_stmt *stmt,
 
 LWAN_HANDLER(db)
 {
-    struct db_row rows[] = {{.kind = 'i'}};
     struct db_stmt *stmt = db_prepare_stmt(get_db(), random_number_query,
                                            sizeof(random_number_query) - 1);
     struct db_json db_json;
@@ -227,7 +214,7 @@ LWAN_HANDLER(db)
         return HTTP_INTERNAL_ERROR;
     }
 
-    bool queried = db_query(stmt, rows, N_ELEMENTS(rows), &db_json);
+    bool queried = db_query(stmt, &db_json);
 
     db_stmt_finalize(stmt);
 
@@ -244,15 +231,9 @@ LWAN_HANDLER(queries)
     const char *queries_str = lwan_request_get_query_param(request, "queries");
     long queries;
 
-    if (LIKELY(queries_str)) {
-        queries = parse_long(queries_str, -1);
-        if (UNLIKELY(queries <= 0))
-            queries = 1;
-        else if (UNLIKELY(queries > 500))
-            queries = 500;
-    } else {
-        queries = 1;
-    }
+    queries = LIKELY(queries_str)
+                  ? LWAN_MIN(500, LWAN_MAX(1, parse_long(queries_str, -1)))
+                  : 1;
 
     struct db_stmt *stmt = db_prepare_stmt(get_db(), random_number_query,
                                            sizeof(random_number_query) - 1);
@@ -260,11 +241,15 @@ LWAN_HANDLER(queries)
         return HTTP_INTERNAL_ERROR;
 
     struct queries_json qj = {.queries_len = (size_t)queries};
-    struct db_row results[] = {{.kind = 'i'}};
     for (long i = 0; i < queries; i++) {
-        if (!db_query(stmt, results, N_ELEMENTS(results), &qj.queries[i]))
+        if (!db_query(stmt, &qj.queries[i]))
             goto out;
     }
+
+    /* Avoid reallocations/copies while building response.  Each response
+     * has ~32bytes.  500 queries (max) should be less than 16384 bytes,
+     * so this is a good approximation.  */
+    lwan_strbuf_grow_to(response->buffer, (size_t)(32l * queries));
 
     ret = json_response_arr(response, &queries_array_desc, &qj);
 
@@ -287,16 +272,8 @@ static int fortune_compare(const void *a, const void *b)
 {
     const struct Fortune *fortune_a = (const struct Fortune *)a;
     const struct Fortune *fortune_b = (const struct Fortune *)b;
-    size_t a_len = strlen(fortune_a->item.message);
-    size_t b_len = strlen(fortune_b->item.message);
 
-    if (!a_len || !b_len)
-        return a_len > b_len;
-
-    size_t min_len = a_len < b_len ? a_len : b_len;
-
-    int cmp = memcmp(fortune_a->item.message, fortune_b->item.message, min_len);
-    return cmp == 0 ? -(int)(ssize_t)min_len : cmp;
+    return strcmp(fortune_a->item.message, fortune_b->item.message);
 }
 
 static bool append_fortune(struct coro *coro,
@@ -374,14 +351,24 @@ LWAN_HANDLER(fortunes)
     return HTTP_OK;
 }
 
+LWAN_HANDLER(quit_lwan)
+{
+    exit(0);
+    return HTTP_OK;
+}
+
 int main(void)
 {
     static const struct lwan_url_map url_map[] = {
+        /* Routes for the TWFB benchmark: */
         {.prefix = "/json", .handler = LWAN_HANDLER_REF(json)},
         {.prefix = "/db", .handler = LWAN_HANDLER_REF(db)},
         {.prefix = "/queries", .handler = LWAN_HANDLER_REF(queries)},
         {.prefix = "/plaintext", .handler = LWAN_HANDLER_REF(plaintext)},
         {.prefix = "/fortunes", .handler = LWAN_HANDLER_REF(fortunes)},
+        /* Routes for the test harness: */
+        {.prefix = "/quit-lwan", .handler = LWAN_HANDLER_REF(quit_lwan)},
+        {.prefix = "/hello", .handler = LWAN_HANDLER_REF(plaintext)},
         {.prefix = NULL},
     };
     struct lwan l;

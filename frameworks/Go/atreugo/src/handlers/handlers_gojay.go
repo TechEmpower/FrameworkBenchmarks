@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"log"
-
 	"atreugo/src/storage"
 
 	"github.com/francoispqt/gojay"
@@ -12,7 +10,7 @@ import (
 // JSONHandlerGoJay . Test 1: JSON serialization
 func JSONHandlerGoJay(ctx *atreugo.RequestCtx) error {
 	message := AcquireMessage()
-	message.Message = "Hello, World!"
+	message.Message = helloWorldStr
 
 	ctx.SetContentType("application/json")
 	err := gojay.NewEncoder(ctx).Encode(message)
@@ -23,7 +21,7 @@ func JSONHandlerGoJay(ctx *atreugo.RequestCtx) error {
 }
 
 // DBHandlerGoJay . Test 2: Single database query
-func DBHandlerGoJay(db storage.DB) func(ctx *atreugo.RequestCtx) error {
+func DBHandlerGoJay(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		world := storage.AcquireWorld()
 
@@ -41,20 +39,19 @@ func DBHandlerGoJay(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 }
 
 // QueriesHandlerGoJay . Test 3: Multiple database queries
-func QueriesHandlerGoJay(db storage.DB) func(ctx *atreugo.RequestCtx) error {
+func QueriesHandlerGoJay(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
 		worlds := storage.AcquireWorlds()[:queries]
 
-		var err error
 		for i := 0; i < queries; i++ {
-			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
-				log.Println(err)
+			if err := db.GetOneRandomWorld(&worlds[i]); err != nil {
+				return err
 			}
 		}
 
 		ctx.SetContentType("application/json")
-		err = gojay.NewEncoder(ctx).EncodeArray(worlds)
+		err := gojay.NewEncoder(ctx).EncodeArray(worlds)
 
 		storage.ReleaseWorlds(worlds)
 
@@ -63,24 +60,25 @@ func QueriesHandlerGoJay(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 }
 
 // UpdateHandlerGoJay . Test 5: Database updates
-func UpdateHandlerGoJay(db storage.DB) func(ctx *atreugo.RequestCtx) error {
+func UpdateHandlerGoJay(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
 		worlds := storage.AcquireWorlds()[:queries]
 
-		var err error
 		for i := 0; i < queries; i++ {
-			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
-				log.Println(err)
+			w := &worlds[i]
+			if err := db.GetOneRandomWorld(w); err != nil {
+				return err
 			}
+			w.RandomNumber = int32(storage.RandomWorldNum())
 		}
 
-		if err = db.UpdateWorlds(worlds); err != nil {
+		if err := db.UpdateWorlds(worlds); err != nil {
 			return err
 		}
 
 		ctx.SetContentType("application/json")
-		err = gojay.NewEncoder(ctx).EncodeArray(worlds)
+		err := gojay.NewEncoder(ctx).EncodeArray(worlds)
 
 		storage.ReleaseWorlds(worlds)
 

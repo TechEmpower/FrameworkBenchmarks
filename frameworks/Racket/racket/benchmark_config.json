@@ -10,7 +10,7 @@
                 "query_url": "/queries?queries=",
                 "update_url": "/updates?queries=",
                 "port": 8080,
-                "approach": "Stripped",
+                "approach": "Realistic",
                 "classification": "Micro",
                 "database": "Postgres",
                 "framework": "Racket",

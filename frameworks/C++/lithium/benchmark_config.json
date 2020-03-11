@@ -47,7 +47,26 @@
         "display_name": "Lithium-postgres",
         "notes": "",
         "versus": "None"
+      },
+      "plaintext-g": {
+        "plaintext_url"  : "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "mysql",
+        "framework": "Lithium",
+        "language": "C++",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Lithium-plaintext-g",
+        "notes": "",
+        "versus": "None"
       }
+
       
     }
   ]

@@ -5,10 +5,10 @@
 	'models\\World' => 'pgsql'
 ]);
 \Ubiquity\cache\CacheManager::warmUpControllers([
-	'controllers\\PlaintextAsync',
-	'controllers\\JsonAsync',
-	'controllers\\WorkerDb',
-	'controllers\\WorkerFortunes'
+	'controllers\\Plaintext_',
+	'controllers\\Json_',
+	'controllers\\DbPg',
+	'controllers\\Fortunes_'
 ]);
 $workerServer->onWorkerStart = function () use ($config) {
 	\Ubiquity\orm\DAO::startDatabase($config, 'pgsql');

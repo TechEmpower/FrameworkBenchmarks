@@ -6,7 +6,8 @@ class Worlds extends \Phalcon\Mvc\Model
 
     public $randomNumber;
 
-    public function getSource() {
-        return "World";
+    public function initialize()
+    {
+        $this->setSource('World');
     }
 }

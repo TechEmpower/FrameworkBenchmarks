@@ -2,7 +2,7 @@
   
   <PropertyGroup>
     
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
@@ -13,11 +13,13 @@
     <StartupObject>Benchmarks.Program</StartupObject>    
     <OutputType>Exe</OutputType>
     
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    
   </PropertyGroup>
     
   <ItemGroup>
-    <PackageReference Include="GenHTTP.Core" Version="2.6.0" />
-    <PackageReference Include="GenHTTP.Modules.Webservices" Version="2.6.0" />
+    <PackageReference Include="GenHTTP.Core" Version="2.8.3" />
+    <PackageReference Include="GenHTTP.Modules.Webservices" Version="2.8.3" />
   </ItemGroup>
   
 </Project>

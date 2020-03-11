@@ -1,7 +1,6 @@
 package hello.services;
 
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.CompletableFuture;
 
 import com.linecorp.armeria.common.HttpResponse;
 import com.linecorp.armeria.common.HttpStatus;
@@ -22,8 +21,7 @@ public class HelloService {
 
   @Get("/json")
   @ProducesJson
-  // TODO(anuraaga): Change return type to Message after https://github.com/line/armeria/issues/2078
-  public CompletableFuture<Message> json() {
-    return CompletableFuture.completedFuture(new Message("Hello, World!"));
+  public Message json() {
+    return new Message("Hello, World!");
   }
 }

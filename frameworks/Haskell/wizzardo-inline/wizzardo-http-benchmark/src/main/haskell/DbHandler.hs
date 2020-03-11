@@ -9,7 +9,8 @@
 {-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 -- The code in Java here has been copied from the benchmark wizzardo-http
--- in https://github.com/TechEmpower/FrameworkBenchmarks
+-- in
+-- https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/frameworks/wizzardo-http
 module DbHandler (createDbHandler) where
 
 import Control.Monad.IO.Class.Linear (MonadIO)

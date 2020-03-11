@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
+	"os"
 	"runtime"
 	"sort"
 	"strconv"
@@ -15,24 +16,22 @@ import (
 )
 
 func main() {
+
 	initDatabase()
 
 	app := fiber.New()
-	app.Server = "Go"
-	app.Prefork = true
+	app.Settings.ServerHeader = "go"
 
+	app.Get("/plaintext", plaintextHandler)
 	app.Get("/json", jsonHandler)
 	app.Get("/db", dbHandler)
 	app.Get("/queries", queriesHandler)
 	app.Get("/update", updateHandler)
-	app.Get("/plaintext", plaintextHandler)
 
 	app.Listen(8080)
 }
 
 const (
-	jsonstruct     = `{"message":""}`
-	jsonstructkey  = "message"
 	worldcount     = 10000
 	helloworld     = "Hello, World!"
 	worldselectsql = "SELECT id, randomNumber FROM World WHERE id = $1"
@@ -114,11 +113,21 @@ func ReleaseWorlds(w Worlds) {
 
 // initDatabase :
 func initDatabase() {
+	var child bool
+	for _, arg := range os.Args[1:] {
+		if arg == "-child" {
+			child = true
+		}
+	}
 	maxConn := runtime.NumCPU()
 	if maxConn == 0 {
 		maxConn = 8
 	}
-	//maxConn = maxConn * 4
+	maxConn = maxConn * 4
+	if child {
+		maxConn = runtime.NumCPU()
+	}
+
 	var err error
 	db, err = pgxpool.Connect(context.Background(), fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s pool_max_conns=%d", "tfb-database", 5432, "benchmarkdbuser", "benchmarkdbpass", "hello_world", maxConn))
 	if err != nil {
@@ -128,18 +137,17 @@ func initDatabase() {
 
 // jsonHandler :
 func jsonHandler(c *fiber.Ctx) {
-	// json := AcquireJSON()
-	// json.Message = helloworld
-	// c.Json(json)
-	// ReleaseJSON(json)
-	c.SjsonStr(jsonstruct, jsonstructkey, helloworld)
+	m := AcquireJSON()
+	m.Message = "Hello, World!"
+	c.JSON(m)
+	ReleaseJSON(m)
 }
 
 // dbHandler :
 func dbHandler(c *fiber.Ctx) {
 	w := AcquireWorld()
 	db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.Id, &w.RandomNumber)
-	c.Json(w)
+	c.JSON(w)
 	ReleaseWorld(w)
 }
 
@@ -151,7 +159,7 @@ func queriesHandler(c *fiber.Ctx) {
 		w := &worlds[i]
 		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.Id, &w.RandomNumber)
 	}
-	c.Json(Worlds(worlds))
+	c.JSON(Worlds(worlds))
 	ReleaseWorlds(worlds)
 }
 
@@ -174,7 +182,7 @@ func updateHandler(c *fiber.Ctx) {
 		batch.Queue(worldupdatesql, w.RandomNumber, w.Id)
 	}
 	db.SendBatch(context.Background(), &batch).Close()
-	c.Json(Worlds(worlds))
+	c.JSON(Worlds(worlds))
 	ReleaseWorlds(worlds)
 }
 

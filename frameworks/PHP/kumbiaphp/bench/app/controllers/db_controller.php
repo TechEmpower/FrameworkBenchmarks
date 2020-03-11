@@ -10,7 +10,7 @@ class DbController extends AppController
 
     public function index()
     {
-        echo json_encode(World::byId(mt_rand(1, 10000)), JSON_NUMERIC_CHECK);
+        echo json_encode(World::byId(mt_rand(1, 10000)));
     }
 
     public function query($count = 1)
@@ -20,7 +20,7 @@ class DbController extends AppController
         while ($count--) {
             $worlds[] = World::byId(mt_rand(1, 10000));
         }
-        echo json_encode($worlds, JSON_NUMERIC_CHECK);
+        echo json_encode($worlds);
     }
 
     public function update($count = 1)
@@ -33,6 +33,6 @@ class DbController extends AppController
             $row->update();
             $worlds[] = $row;
         }
-        echo json_encode($worlds, JSON_NUMERIC_CHECK);
+        echo json_encode($worlds);
     }
 }

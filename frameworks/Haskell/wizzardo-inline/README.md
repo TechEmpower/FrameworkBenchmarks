@@ -2,9 +2,9 @@
 
 ### Test Type Implementation Source Code
 
-* [JSON](benchmarks/wizzardo-http/src/Main.hs)
-* [PLAINTEXT](benchmarks/wizzardo-http/src/Main.hs)
-* [DB](benchmarks/wizzardo-http/src/DbHandler.hs)
+* [JSON](wizzardo-http-benchmark/src/main/haskell/Main.hs)
+* [PLAINTEXT](wizzardo-http-benchmark/src/main/haskell/Main.hs)
+* [DB](wizzardo-http-benchmark/src/main/haskell/DbHandler.hs)
 
 ## Important Libraries
 
