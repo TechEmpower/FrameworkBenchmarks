@@ -57,9 +57,7 @@ class SiteController extends Controller
 
         $fortunes[] = $runtimeFortune;
 
-        usort($fortunes, function ($left, $right) {
-            return strcmp($left->message, $right->message);
-        });
+        usort($fortunes, [Fortune::class, 'cmp']);
 
         $this->view->title = 'Fortunes';
 
