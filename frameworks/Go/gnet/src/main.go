@@ -13,8 +13,6 @@ import (
 	"github.com/panjf2000/gnet"
 )
 
-var res string
-
 type request struct {
 	proto, method string
 	path, query   string
@@ -26,8 +24,12 @@ type httpServer struct {
 	*gnet.EventServer
 }
 
-var errMsg = "Internal Server Error"
-var errMsgBytes = []byte(errMsg)
+var (
+	res         string
+	resBytes    []byte
+	errMsg      = "Internal Server Error"
+	errMsgBytes = []byte(errMsg)
+)
 
 type httpCodec struct {
 	req request
@@ -56,7 +58,7 @@ pipeline:
 		// request not ready, yet
 		return
 	}
-	out = appendHandle(out, res)
+	out = append(out, resBytes...)
 	buf = leftover
 	goto pipeline
 }
@@ -93,6 +95,7 @@ func main() {
 	flag.Parse()
 
 	res = "Hello, World!"
+	resBytes = appendHandle(resBytes, res)
 
 	http := new(httpServer)
 	hc := new(httpCodec)
