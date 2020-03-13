@@ -8,10 +8,10 @@ class RawFortuneController extends AppController
         $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', [
             PDO::ATTR_PERSISTENT => true
         ]);
-        $data = $pdo->query('SELECT id, message FROM Fortune', PDO::FETCH_KEY_PAIR)->fetchAll();
+        $data = $pdo->query('SELECT * FROM Fortune')->fetchAll();
 
         $data[0] = 'Additional fortune added at request time.';
-        asort($data);       
+        asort($data);
         
         $this->data = $data;
     }
