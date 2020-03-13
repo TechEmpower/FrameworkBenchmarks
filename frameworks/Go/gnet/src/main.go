@@ -26,7 +26,6 @@ type httpServer struct {
 
 var (
 	res         string
-	resBytes    []byte
 	errMsg      = "Internal Server Error"
 	errMsgBytes = []byte(errMsg)
 )
@@ -58,7 +57,7 @@ pipeline:
 		// request not ready, yet
 		return
 	}
-	out = append(out, resBytes...)
+	out = appendHandle(out, res)
 	buf = leftover
 	goto pipeline
 }
@@ -95,7 +94,6 @@ func main() {
 	flag.Parse()
 
 	res = "Hello, World!"
-	resBytes = appendHandle(resBytes, res)
 
 	http := new(httpServer)
 	hc := new(httpCodec)
