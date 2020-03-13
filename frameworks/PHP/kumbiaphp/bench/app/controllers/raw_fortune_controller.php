@@ -6,7 +6,8 @@ class RawFortuneController extends AppController
     {
         View::select(null,'raw');
         $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', [
-            PDO::ATTR_PERSISTENT => true
+            PDO::ATTR_PERSISTENT         => true,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_KEY_PAIR
         ]);
         $data = $pdo->query('SELECT * FROM Fortune')->fetchAll();
 
