@@ -1,12 +1,12 @@
 source 'http://rubygems.org'
 
-gem 'unicorn', '5.4.1'
-gem 'puma', '3.12.0'
+gem 'unicorn', '~> 5.5', '>= 5.5.3'
+gem 'puma', '~> 4.3', '>= 4.3.3'
 gem 'activerecord-import', '0.27.0'
-gem 'activerecord', '5.2.2', :require => 'active_record'
-gem 'rails', '5.2.2'
-gem 'tzinfo-data', '1.2018.7'
-gem 'oj', '3.7.9'
+gem 'activerecord', '~> 6.0', '>= 6.0.2.1', :require => 'active_record'
+gem 'rails', '~> 6.0', '>= 6.0.2.1'
+gem 'tzinfo-data', '~> 1.2019', '>= 1.2019.3'
+gem 'oj', '~> 3.10', '>= 3.10.5'
 
 group :mysql do
   gem 'mysql2', '0.5.2'
