@@ -1,4 +1,4 @@
-FROM ruby:2.6
+FROM ruby:2.7
 
 RUN apt update -yqq && apt install -yqq nginx
 
