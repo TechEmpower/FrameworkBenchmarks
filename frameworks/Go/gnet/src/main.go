@@ -8,11 +8,10 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unsafe"
 
 	"github.com/panjf2000/gnet"
 )
-
-var res string
 
 type request struct {
 	proto, method string
@@ -25,8 +24,11 @@ type httpServer struct {
 	*gnet.EventServer
 }
 
-var errMsg = "Internal Server Error"
-var errMsgBytes = []byte(errMsg)
+var (
+	res         string
+	errMsg      = "Internal Server Error"
+	errMsgBytes = []byte(errMsg)
+)
 
 type httpCodec struct {
 	req request
@@ -62,7 +64,7 @@ pipeline:
 
 func (hs *httpServer) OnInitComplete(srv gnet.Server) (action gnet.Action) {
 	log.Printf("HTTP server is listening on %s (multi-cores: %t, loops: %d)\n",
-		srv.Addr.String(), srv.Multicore, srv.NumLoops)
+		srv.Addr.String(), srv.Multicore, srv.NumEventLoop)
 	return
 }
 
@@ -86,7 +88,7 @@ func main() {
 	var port int
 	var multicore bool
 
-	// Example command: go run main.go --port 8080 --multicore true
+	// Example command: go run main.go --port 8080 --multicore=true
 	flag.IntVar(&port, "port", 8080, "server port")
 	flag.BoolVar(&multicore, "multicore", true, "multicore")
 	flag.Parse()
@@ -132,11 +134,15 @@ func appendResp(b []byte, status, head, body string) []byte {
 	return b
 }
 
+func b2s(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
+}
+
 // parseReq is a very simple http request parser. This operation
 // waits for the entire payload to be buffered before returning a
 // valid request.
 func parseReq(data []byte, req *request) (leftover []byte, err error) {
-	sdata := string(data)
+	sdata := b2s(data)
 	var i, s int
 	var head string
 	var clen int
