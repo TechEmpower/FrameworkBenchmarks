@@ -9,4 +9,5 @@ config :framework_benchmarks, FrameworkBenchmarks.Repo,
   hostname: "tfb-database",
   port: 5432,
   pool_size: 40,
+  queue_target: 500,
   log: false
