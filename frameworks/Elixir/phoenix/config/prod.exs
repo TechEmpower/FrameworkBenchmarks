@@ -15,7 +15,7 @@ config :hello, Hello.Repo,
   database: "hello_world",
   hostname: "tfb-database",
   pool_size: 40,
-  queue_target: 500,
+  queue_target: 5000,
   log: false
 
 config :logger,
