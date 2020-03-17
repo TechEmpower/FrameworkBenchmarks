@@ -11,4 +11,4 @@ RUN go mod download
 
 RUN go build -o server server.go
 
-CMD ./server -fiber-prefork
+CMD ./server -prefork
