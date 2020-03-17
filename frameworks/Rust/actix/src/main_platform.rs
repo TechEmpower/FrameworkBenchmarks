@@ -158,6 +158,7 @@ fn main() -> std::io::Result<()> {
         .bind("techempower", "0.0.0.0:8080", || {
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
+                .client_timeout(0)
                 .h1(AppFactory)
                 .tcp()
         })?

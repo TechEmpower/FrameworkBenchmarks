@@ -4,7 +4,7 @@
 	'models\\World' => 'default'
 ]);
 \Ubiquity\cache\CacheManager::warmUpControllers([
-	'controllers\\SwooleDbMy'
+	'controllers\\DbMy'
 ]);
 $swooleServer->on('workerStart', function ($srv) use (&$config) {
 	\Ubiquity\orm\DAO::startDatabase($config, 'default');
