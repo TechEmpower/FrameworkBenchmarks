@@ -20,9 +20,7 @@
         "display_name": "quarkus",
         "notes": "",
         "versus": "Netty"
-      }
-    },
-    {
+      },
       "hibernate": {
         "db_url": "/hibernate/db",
         "query_url": "/hibernate/queries?queries=",
@@ -42,9 +40,7 @@
         "display_name": "quarkus-hibernate",
         "notes": "",
         "versus": "Netty"
-      }
-    },
-    {
+      },
       "pgclient": {
         "db_url": "/pgclient/db",
         "query_url": "/pgclient/queries?queries=",
