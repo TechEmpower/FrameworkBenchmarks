@@ -19,8 +19,11 @@ func main() {
 
 	initDatabase()
 
-	app := fiber.New()
-	app.Settings.ServerHeader = "go"
+	app := fiber.New(&fiber.Settings{
+		CaseSensitive: true,
+		StrictRouting: true,
+		ServerHeader:  "go",
+	})
 
 	app.Get("/plaintext", plaintextHandler)
 	app.Get("/json", jsonHandler)
