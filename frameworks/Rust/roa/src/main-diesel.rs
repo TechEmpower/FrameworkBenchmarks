@@ -6,7 +6,7 @@ use std::result::Result as StdResult;
 
 #[async_std::main]
 async fn main() -> StdResult<(), Box<dyn StdError>> {
-    let app = App::new(());
+    let app = App::new(()).end(());
     app.listen("0.0.0.0:8080", |addr| {
         println!("Server listen on {}...", addr);
     })?

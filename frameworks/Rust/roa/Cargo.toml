@@ -19,7 +19,7 @@ name = "roa-pg"
 path = "src/main-pg.rs"
 
 [dependencies]
-roa = { git = "https://github.com/Hexilee/roa.git", version = "0.5.0-beta", features = ["body"] }
+roa = { git = "https://github.com/Hexilee/roa.git", branch = "rc-less", version = "0.5.0-beta", features = ["body"] }
 #roa-diesel = "0.5.0-beta"
 async-std = { version = "1.5", features = ["attributes"] }
 askama = "0.9"
@@ -30,6 +30,5 @@ bytes = "0.5.3"
 futures = "0.3.1"
 http = "0.2"
 lazy_static = "1.4.0"
-pprof = { version = "0.3.16", features = ["flamegraph"] }
 #diesel = { version = "1.4.3", features = ["postgres"] }
 #tokio-postgres = { version = "0.5.2", default-features = false }
