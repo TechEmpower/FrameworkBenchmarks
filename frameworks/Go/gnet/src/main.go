@@ -41,7 +41,7 @@ func (hc *httpCodec) Decode(c gnet.Conn) (out []byte, err error) {
 	// process the pipeline
 	var leftover []byte
 pipeline:
-	if leftover, err = parseReq(buf, &hc.req); err != nil || len(leftover) == len(buf) {
+	if leftover, _ = parseReq(buf, &hc.req); len(leftover) == len(buf) {
 		// request not ready, yet
 		return
 	}
@@ -106,11 +106,7 @@ func appendResp(b []byte, status, body string) []byte {
 	if len(body) > 0 {
 		b = append(b, "Content-Length: "...)
 		b = strconv.AppendInt(b, int64(len(body)), 10)
-		b = append(b, '\r', '\n')
-	}
-	//b = append(b, head...)
-	//b = append(b, '\r', '\n')
-	if len(body) > 0 {
+		b = append(b, '\r', '\n', '\r', '\n')
 		b = append(b, body...)
 	}
 	return b
