@@ -24,21 +24,14 @@ type httpServer struct {
 	*gnet.EventServer
 }
 
-var (
-	res         string
-	errMsg      = "Internal Server Error"
-	errMsgBytes = []byte(errMsg)
-)
+var res string
 
 type httpCodec struct {
 	req request
 }
 
 func (hc *httpCodec) Encode(c gnet.Conn, buf []byte) (out []byte, err error) {
-	if c.Context() == nil {
-		return buf, nil
-	}
-	return appendResp(out, "500 Error", "", errMsg+"\n"), nil
+	return buf, nil
 }
 
 func (hc *httpCodec) Decode(c gnet.Conn) (out []byte, err error) {
@@ -48,12 +41,7 @@ func (hc *httpCodec) Decode(c gnet.Conn) (out []byte, err error) {
 	// process the pipeline
 	var leftover []byte
 pipeline:
-	leftover, err = parseReq(buf, &hc.req)
-	// bad thing happened
-	if err != nil {
-		c.SetContext(err)
-		return nil, err
-	} else if len(leftover) == len(buf) {
+	if leftover, _ = parseReq(buf, &hc.req); len(leftover) == len(buf) {
 		// request not ready, yet
 		return
 	}
@@ -69,12 +57,6 @@ func (hs *httpServer) OnInitComplete(srv gnet.Server) (action gnet.Action) {
 }
 
 func (hs *httpServer) React(frame []byte, c gnet.Conn) (out []byte, action gnet.Action) {
-	if c.Context() != nil {
-		// bad thing happened
-		out = errMsgBytes
-		action = gnet.Close
-		return
-	}
 	// handle the request
 	out = frame
 	return
@@ -105,13 +87,13 @@ func main() {
 // appendHandle handles the incoming request and appends the response to
 // the provided bytes, which is then returned to the caller.
 func appendHandle(b []byte, res string) []byte {
-	return appendResp(b, "200 OK", "", res)
+	return appendResp(b, "200 OK", res)
 }
 
 // appendResp will append a valid http response to the provide bytes.
 // The status param should be the code plus text such as "200 OK".
 // The head parameter should be a series of lines ending with "\r\n" or empty.
-func appendResp(b []byte, status, head, body string) []byte {
+func appendResp(b []byte, status, body string) []byte {
 	b = append(b, "HTTP/1.1"...)
 	b = append(b, ' ')
 	b = append(b, status...)
@@ -126,8 +108,8 @@ func appendResp(b []byte, status, head, body string) []byte {
 		b = strconv.AppendInt(b, int64(len(body)), 10)
 		b = append(b, '\r', '\n')
 	}
-	b = append(b, head...)
-	b = append(b, '\r', '\n')
+	//b = append(b, head...)
+	//b = append(b, '\r', '\n')
 	if len(body) > 0 {
 		b = append(b, body...)
 	}
@@ -138,20 +120,28 @@ func b2s(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
+const (
+	contentLength = "Content-Length:"
+	contentLen    = len(contentLength)
+)
+
 // parseReq is a very simple http request parser. This operation
 // waits for the entire payload to be buffered before returning a
 // valid request.
 func parseReq(data []byte, req *request) (leftover []byte, err error) {
 	sdata := b2s(data)
-	var i, s int
-	var head string
-	var clen int
-	var q = -1
+	dlen := len(sdata)
+	var (
+		i, s int
+		head string
+		clen int
+		q    = -1
+	)
 	// method, path, proto line
-	for ; i < len(sdata); i++ {
+	for ; i < dlen; i++ {
 		if sdata[i] == ' ' {
 			req.method = sdata[s:i]
-			for i, s = i+1, i+1; i < len(sdata); i++ {
+			for i, s = i+1, i+1; i < dlen; i++ {
 				if sdata[i] == '?' && q == -1 {
 					q = i - s
 				} else if sdata[i] == ' ' {
@@ -161,7 +151,7 @@ func parseReq(data []byte, req *request) (leftover []byte, err error) {
 					} else {
 						req.path = sdata[s:i]
 					}
-					for i, s = i+1, i+1; i < len(sdata); i++ {
+					for i, s = i+1, i+1; i < dlen; i++ {
 						if sdata[i] == '\n' && sdata[i-1] == '\r' {
 							req.proto = sdata[s:i]
 							i, s = i+1, i+1
@@ -178,7 +168,7 @@ func parseReq(data []byte, req *request) (leftover []byte, err error) {
 		return data, fmt.Errorf("malformed request")
 	}
 	head = sdata[:s]
-	for ; i < len(sdata); i++ {
+	for ; i < dlen; i++ {
 		if i > 1 && sdata[i] == '\n' && sdata[i-1] == '\r' {
 			line := sdata[s : i-1]
 			s = i + 1
@@ -194,8 +184,8 @@ func parseReq(data []byte, req *request) (leftover []byte, err error) {
 				}
 				return data[i:], nil
 			}
-			if strings.HasPrefix(line, "Content-Length:") {
-				n, err := strconv.ParseInt(strings.TrimSpace(line[len("Content-Length:"):]), 10, 64)
+			if strings.HasPrefix(line, contentLength) {
+				n, err := strconv.ParseInt(strings.TrimSpace(line[contentLen:]), 10, 64)
 				if err == nil {
 					clen = int(n)
 				}
