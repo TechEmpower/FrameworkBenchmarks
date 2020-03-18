@@ -41,7 +41,7 @@ func (hc *httpCodec) Decode(c gnet.Conn) (out []byte, err error) {
 	// process the pipeline
 	var leftover []byte
 pipeline:
-	if leftover, _ = parseReq(buf, &hc.req); len(leftover) == len(buf) {
+	if leftover, err = parseReq(buf, &hc.req); err != nil || len(leftover) == len(buf) {
 		// request not ready, yet
 		return
 	}
