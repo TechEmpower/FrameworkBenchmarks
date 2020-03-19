@@ -17,7 +17,25 @@
       "database_os": "Linux",
       "display_name": "Roa",
       "notes": "",
-      "versus": "hyper"
+      "versus": ""
+    },
+    "core": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "roa",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "hyper",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Roa [Core]",
+      "notes": "",
+      "versus": ""
     },
     "diesel": {
       "db_url": "/db",
@@ -37,7 +55,7 @@
       "database_os": "Linux",
       "display_name": "Roa [Diesel]",
       "notes": "",
-      "versus": "hyper"
+      "versus": ""
     },
     "pg": {
       "db_url": "/db",
@@ -57,7 +75,7 @@
       "database_os": "Linux",
       "display_name": "Roa [Postgres]",
       "notes": "",
-      "versus": "hyper"
+      "versus": ""
     }
   }]
 }

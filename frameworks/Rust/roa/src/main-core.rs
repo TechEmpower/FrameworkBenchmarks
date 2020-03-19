@@ -1,7 +1,6 @@
 use roa::http::header::SERVER;
 use roa::preload::*;
-use roa::{App, Context, Result, Next};
-use roa::router::{Router, get};
+use roa::{App, Context, Result};
 use std::error::Error as StdError;
 use std::result::Result as StdResult;
 
@@ -11,18 +10,20 @@ use endpoints::{json, plaintext};
 use utils::SERVER_HEADER;
 
 #[inline]
-async fn gate(ctx: &mut Context<()>, next: Next<'_>) -> Result {
+async fn endpoint(ctx: &mut Context<()>) -> Result {
     // avoid to re-allocate a header map
     ctx.resp.headers = std::mem::take(&mut ctx.req.headers);
     ctx.resp.headers.clear();
     ctx.resp.headers.insert(SERVER, SERVER_HEADER.clone());
-    next.await
+    match ctx.uri().path() {
+        "/plaintext" => plaintext(ctx).await,
+        _ => json(ctx).await,
+    }
 }
 
 #[async_std::main]
 async fn main() -> StdResult<(), Box<dyn StdError>> {
-    let router = Router::new().gate(gate).on("/json", get(json)).on("/plaintext", get(plaintext));
-    let app = App::new(()).end(router.routes("/")?);
+    let app = App::new(()).end(endpoint);
     app.listen("0.0.0.0:8080", |addr| {
         println!("Server listen on {}...", addr);
     })?

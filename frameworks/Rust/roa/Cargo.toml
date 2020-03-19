@@ -19,8 +19,8 @@ name = "roa-pg"
 path = "src/main-pg.rs"
 
 [[bin]]
-name = "hyper"
-path = "src/hyper.rs"
+name = "roa-core"
+path = "src/main-core.rs"
 
 [dependencies]
 roa = { git = "https://github.com/Hexilee/roa.git", branch = "rc-less", version = "0.5.0-beta", features = ["body", "router"] }
