@@ -1,7 +1,8 @@
 use lazy_static::lazy_static;
 use roa::http::header::{HeaderValue, CONTENT_LENGTH, SERVER};
 use roa::preload::*;
-use roa::{App, Context, Result};
+use roa::{App, Context, Result, Next};
+use roa::router::{Router, get};
 use std::error::Error as StdError;
 use std::result::Result as StdResult;
 
@@ -34,17 +35,17 @@ async fn plaintext(ctx: &mut Context<()>) -> Result {
 }
 
 #[inline]
-async fn endpoint(ctx: &mut Context<()>) -> Result {
+async fn gate(ctx: &mut Context<()>, next: Next<'_>) -> Result {
+    ctx.resp.headers = std::mem::take(&mut ctx.req.headers);
+    ctx.resp.headers.clear();
     ctx.resp.headers.insert(SERVER, SERVER_HEADER.clone());
-    match ctx.uri().path() {
-        "/json" => json(ctx).await,
-        _ => plaintext(ctx).await,
-    }
+    next.await
 }
 
 #[async_std::main]
 async fn main() -> StdResult<(), Box<dyn StdError>> {
-    let app = App::new(()).end(endpoint);
+    let router = Router::new().gate(gate).on("/json", get(json)).on("/plaintext", get(plaintext));
+    let app = App::new(()).end(router.routes("/")?);
     app.listen("0.0.0.0:8080", |addr| {
         println!("Server listen on {}...", addr);
     })?

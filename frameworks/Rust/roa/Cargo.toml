@@ -18,8 +18,14 @@ path = "src/main-diesel.rs"
 name = "roa-pg"
 path = "src/main-pg.rs"
 
+[[bin]]
+name = "hyper"
+path = "src/hyper.rs"
+
 [dependencies]
-roa = { git = "https://github.com/Hexilee/roa.git", branch = "rc-less", version = "0.5.0-beta", features = ["body"] }
+roa = { git = "https://github.com/Hexilee/roa.git", branch = "rc-less", version = "0.5.0-beta", features = ["body", "router"] }
+tokio = { version = "0.2.13", features = ["full"] }
+hyper = "0.13"
 #roa-diesel = "0.5.0-beta"
 async-std = { version = "1.5", features = ["attributes"] }
 askama = "0.9"
