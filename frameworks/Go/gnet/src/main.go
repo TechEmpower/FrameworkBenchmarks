@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 	"runtime"
-	"strconv"
-	"strings"
 	"time"
 	"unsafe"
 
@@ -98,11 +96,6 @@ func b2s(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
-const (
-	contentLength = "Content-Length:"
-	contentLen    = len(contentLength)
-)
-
 // parseReq is a very simple http request parser. This operation
 // waits for the entire payload to be buffered before returning a
 // valid request.
@@ -112,7 +105,6 @@ func parseReq(data []byte, req *request) (leftover []byte, err error) {
 	var (
 		i, s int
 		head string
-		clen int
 		q    = -1
 	)
 	// method, path, proto line
@@ -153,20 +145,7 @@ func parseReq(data []byte, req *request) (leftover []byte, err error) {
 			if line == "" {
 				req.head = sdata[len(head)+2 : i+1]
 				i++
-				if clen > 0 {
-					if len(sdata[i:]) < clen {
-						break
-					}
-					req.body = sdata[i : i+clen]
-					i += clen
-				}
 				return data[i:], nil
-			}
-			if strings.HasPrefix(line, contentLength) {
-				n, err := strconv.ParseInt(strings.TrimSpace(line[contentLen:]), 10, 64)
-				if err == nil {
-					clen = int(n)
-				}
 			}
 		}
 	}
