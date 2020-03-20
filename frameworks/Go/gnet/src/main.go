@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 	"runtime"
-	"strconv"
-	"strings"
 	"time"
 	"unsafe"
 
@@ -23,8 +21,6 @@ type request struct {
 type httpServer struct {
 	*gnet.EventServer
 }
-
-var res string
 
 type httpCodec struct {
 	req request
@@ -45,7 +41,7 @@ pipeline:
 		// request not ready, yet
 		return
 	}
-	out = appendHandle(out, res)
+	out = appendResp(out)
 	buf = leftover
 	goto pipeline
 }
@@ -75,8 +71,6 @@ func main() {
 	flag.BoolVar(&multicore, "multicore", true, "multicore")
 	flag.Parse()
 
-	res = "Hello, World!"
-
 	http := new(httpServer)
 	hc := new(httpCodec)
 
@@ -84,42 +78,22 @@ func main() {
 	log.Fatal(gnet.Serve(http, fmt.Sprintf("tcp://:%d", port), gnet.WithMulticore(multicore), gnet.WithCodec(hc)))
 }
 
-// appendHandle handles the incoming request and appends the response to
-// the provided bytes, which is then returned to the caller.
-func appendHandle(b []byte, res string) []byte {
-	return appendResp(b, "200 OK", res)
-}
-
 // appendResp will append a valid http response to the provide bytes.
 // The status param should be the code plus text such as "200 OK".
 // The head parameter should be a series of lines ending with "\r\n" or empty.
-func appendResp(b []byte, status, body string) []byte {
-	b = append(b, "HTTP/1.1"...)
-	b = append(b, ' ')
-	b = append(b, status...)
-	b = append(b, '\r', '\n')
-	b = append(b, "Server: gnet\r\n"...)
-	b = append(b, "Content-Type: text/plain\r\n"...)
-	b = append(b, "Date: "...)
+func appendResp(b []byte) []byte {
+	b = append(b, "HTTP/1.1 200 OK\r\nServer: gnet\r\nContent-Type: text/plain\r\nDate: "...)
+
 	b = time.Now().AppendFormat(b, "Mon, 02 Jan 2006 15:04:05 GMT")
-	b = append(b, '\r', '\n')
-	if len(body) > 0 {
-		b = append(b, "Content-Length: "...)
-		b = strconv.AppendInt(b, int64(len(body)), 10)
-		b = append(b, '\r', '\n', '\r', '\n')
-		b = append(b, body...)
-	}
+
+	b = append(b, "\r\nContent-Length: 13\r\n\r\nHello, World!"...)
+
 	return b
 }
 
 func b2s(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
-
-const (
-	contentLength = "Content-Length:"
-	contentLen    = len(contentLength)
-)
 
 // parseReq is a very simple http request parser. This operation
 // waits for the entire payload to be buffered before returning a
@@ -130,7 +104,6 @@ func parseReq(data []byte, req *request) (leftover []byte, err error) {
 	var (
 		i, s int
 		head string
-		clen int
 		q    = -1
 	)
 	// method, path, proto line
@@ -171,20 +144,7 @@ func parseReq(data []byte, req *request) (leftover []byte, err error) {
 			if line == "" {
 				req.head = sdata[len(head)+2 : i+1]
 				i++
-				if clen > 0 {
-					if len(sdata[i:]) < clen {
-						break
-					}
-					req.body = sdata[i : i+clen]
-					i += clen
-				}
 				return data[i:], nil
-			}
-			if strings.HasPrefix(line, contentLength) {
-				n, err := strconv.ParseInt(strings.TrimSpace(line[contentLen:]), 10, 64)
-				if err == nil {
-					clen = int(n)
-				}
 			}
 		}
 	}
