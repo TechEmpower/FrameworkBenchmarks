@@ -86,9 +86,8 @@ func appendResp(b []byte) []byte {
 
 	b = time.Now().AppendFormat(b, "Mon, 02 Jan 2006 15:04:05 GMT")
 
-	b = append(b, "\r\nContent-Length: 13\r\n\r\n"...)
+	b = append(b, "\r\nContent-Length: 13\r\n\r\nHello, World!"...)
 
-	b = append(b, "Hello, World!"...)
 	return b
 }
 
