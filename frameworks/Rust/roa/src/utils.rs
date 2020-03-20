@@ -1,7 +1,9 @@
 use lazy_static::lazy_static;
-use askama::Template;
-use serde::{Deserialize, Serialize};
 use roa::http::header::HeaderValue;
+use serde::{Deserialize, Serialize};
+
+pub const POSTGRES_URI: &str =
+    "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
 lazy_static! {
     pub static ref SERVER_HEADER: HeaderValue = HeaderValue::from_static("roa");
@@ -18,10 +20,4 @@ pub struct Fortune {
 #[derive(Serialize, Deserialize)]
 pub struct Message {
     pub message: &'static str,
-}
-
-#[derive(Template)]
-#[template(path = "fortune.html")]
-pub struct Fortunes {
-    pub items: Vec<Fortune>,
 }

@@ -1,7 +1,7 @@
 use crate::utils::{Message, JSON_LEN, PLAINTEXT_LEN};
 use roa::http::header::CONTENT_LENGTH;
-use roa::{Context, Result};
 use roa::preload::*;
+use roa::{Context, Result};
 
 static HELLO_WORLD: &str = "Hello, World!";
 
