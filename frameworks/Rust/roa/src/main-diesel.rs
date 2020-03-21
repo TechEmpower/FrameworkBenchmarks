@@ -7,13 +7,13 @@ use diesel::prelude::*;
 use futures::future::join_all;
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
+use roa::diesel::{Pool};
 use roa::http::header::SERVER;
 use roa::http::StatusCode;
 use roa::preload::*;
 use roa::query::query_parser;
 use roa::router::{get, Router};
-use roa::{throw, App, Context, Next, Result};
-use roa::diesel::{Pool, WrapError};
+use roa::{async_trait, throw, App, Context, Next, Result};
 use std::error::Error as StdError;
 use std::result::Result as StdResult;
 mod models;
@@ -51,6 +51,58 @@ impl State {
     }
 }
 
+#[async_trait(?Send)]
+trait Service {
+    fn random_id(&mut self) -> i32;
+    fn get_queries(&self) -> i32;
+    async fn query_world(&self, wid: i32) -> Result<World>;
+    async fn update_world(&self, wid: i32) -> Result<World>;
+}
+
+#[async_trait(?Send)]
+impl Service for Context<State> {
+    #[inline]
+    fn random_id(&mut self) -> i32 {
+        self.rng.gen_range(0, 10_001)
+    }
+
+    #[inline]
+    fn get_queries(&self) -> i32 {
+        use std::cmp::{max, min};
+        let nums = self
+            .query("q")
+            .and_then(|var| var.parse().ok())
+            .unwrap_or(1);
+        min(500, max(1, nums))
+    }
+
+    #[inline]
+    async fn query_world(&self, wid: i32) -> Result<World> {
+        use crate::schema::world::dsl::*;
+        let data = self.first(world.filter(id.eq(wid))).await?;
+        match data {
+            None => throw!(StatusCode::NOT_FOUND),
+            Some(item) => Ok(item),
+        }
+    }
+
+    #[inline]
+    async fn update_world(&self, wid: i32) -> Result<World> {
+        use crate::schema::world::dsl::*;
+        let data = self
+            .get_result(
+                diesel::update(world)
+                    .filter(id.eq(wid))
+                    .set(randomnumber.eq(wid)),
+            )
+            .await?;
+        match data {
+            None => throw!(StatusCode::NOT_FOUND),
+            Some(item) => Ok(item),
+        }
+    }
+}
+
 #[inline]
 async fn gate(ctx: &mut Context<State>, next: Next<'_>) -> Result {
     // avoid to re-allocate a header map
@@ -61,48 +113,24 @@ async fn gate(ctx: &mut Context<State>, next: Next<'_>) -> Result {
 }
 
 #[inline]
-async fn query_world(ctx: &Context<State>, random: i32) -> Result<World> {
-    use crate::schema::world::dsl::*;
-    let data = ctx.first(world.filter(id.eq(random))).await?;
-    match data {
-        None => throw!(StatusCode::NOT_FOUND),
-        Some(item) => Ok(item),
-    }
-}
-
-#[inline]
-fn random_id(ctx: &mut Context<State>) -> i32 {
-    ctx.rng.gen_range(0, 10_001)
-}
-
-#[inline]
-async fn get_queries(ctx: &mut Context<State>) -> Vec<World> {
-    use std::cmp::{max, min};
-    let nums = ctx
-        .query("q")
-        .and_then(|var| var.parse().ok())
-        .unwrap_or(1);
-    let queries = min(500, max(1, nums));
-    let random_ids: Vec<_> = (0..queries).map(|_| random_id(ctx)).collect();
-    let ctx = &*ctx;
-    join_all(random_ids.iter().map(move |id| query_world(ctx, *id)))
-        .await
-        .into_iter()
-        .filter_map(|item| item.ok())
-        .collect()
-}
-
-#[inline]
 async fn db(ctx: &mut Context<State>) -> Result {
-    let id = random_id(ctx);
-    let data = query_world(ctx, id).await?;
+    let id = ctx.random_id();
+    let data = ctx.query_world(id).await?;
     ctx.write_json(&data)?;
     Ok(())
 }
 
 #[inline]
 async fn queries(ctx: &mut Context<State>) -> Result {
-    let data = get_queries(ctx).await;
+    let random_ids: Vec<_> = (0..ctx.get_queries()).map(|_| ctx.random_id()).collect();
+    let data: Vec<_> = {
+        let ctx = &*ctx;
+        join_all(random_ids.into_iter().map(move |id| ctx.query_world(id)))
+            .await
+            .into_iter()
+            .filter_map(|item| item.ok())
+            .collect()
+    };
     ctx.write_json(&data)?;
     Ok(())
 }
@@ -121,24 +149,16 @@ async fn fortune(ctx: &mut Context<State>) -> Result {
 
 #[inline]
 async fn updates(ctx: &mut Context<State>) -> Result {
-    let mut worlds = get_queries(ctx).await;
-    for world in worlds.iter_mut() {
-        world.randomnumber = random_id(ctx)
-    }
-    ctx.write_json(&worlds)?;
-    let conn = ctx.get_conn().await?;
-    ctx.exec.spawn_blocking(move || {
-        conn.transaction::<_, WrapError, _>(|| {
-            use crate::schema::world::dsl::*;
-            for data in worlds {
-                diesel::update(world)
-                    .filter(id.eq(data.id))
-                    .set(randomnumber.eq(data.randomnumber))
-                    .execute(&conn)?;
-            }
-            Ok(())
-        })
-    }).await?;
+    let random_ids: Vec<_> = (0..ctx.get_queries()).map(|_| ctx.random_id()).collect();
+    let data: Vec<_> = {
+        let ctx = &*ctx;
+        join_all(random_ids.into_iter().map(move |id| ctx.update_world(id)))
+            .await
+            .into_iter()
+            .filter_map(|item| item.ok())
+            .collect()
+    };
+    ctx.write_json(&data)?;
     Ok(())
 }
 
