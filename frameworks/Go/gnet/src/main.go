@@ -29,16 +29,16 @@ func (hc *httpCodec) Decode(c gnet.Conn) (out []byte, err error) {
 	// process the pipeline
 	var (
 		leftover []byte
-		stop     bool
+		ok       bool
 	)
 pipeline:
-	if leftover, stop = parseReq(buf); stop {
-		// request not ready, yet
-		return
+	if leftover, ok = parseReq(buf); ok {
+		out = appendResp(out)
+		buf = leftover
+		goto pipeline
 	}
-	out = appendResp(out)
-	buf = leftover
-	goto pipeline
+	// request not ready, yet
+	return
 }
 
 func (hs *httpServer) OnInitComplete(srv gnet.Server) (action gnet.Action) {
@@ -90,9 +90,9 @@ var brn = []byte("\r\n\r\n")
 // valid request.
 func parseReq(data []byte) ([]byte, bool) {
 	if i := bytes.Index(data, brn); i != -1 {
-		return data[i+4:], false
+		return data[i+4:], true
 	}
 
 	// not enough data
-	return data, true
+	return data, false
 }
