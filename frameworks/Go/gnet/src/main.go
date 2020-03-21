@@ -27,9 +27,12 @@ func (hc *httpCodec) Decode(c gnet.Conn) (out []byte, err error) {
 	c.ResetBuffer()
 
 	// process the pipeline
-	var leftover []byte
+	var (
+		leftover []byte
+		stop     bool
+	)
 pipeline:
-	if leftover = parseReq(buf); len(leftover) == len(buf) {
+	if leftover, stop = parseReq(buf); stop {
 		// request not ready, yet
 		return
 	}
@@ -85,11 +88,11 @@ var brn = []byte("\r\n\r\n")
 // parseReq is a very simple http request parser. This operation
 // waits for the entire payload to be buffered before returning a
 // valid request.
-func parseReq(data []byte) []byte {
+func parseReq(data []byte) ([]byte, bool) {
 	if i := bytes.Index(data, brn); i != -1 {
-		return data[i+4:]
+		return data[i+4:], false
 	}
 
 	// not enough data
-	return data
+	return data, true
 }
