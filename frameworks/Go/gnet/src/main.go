@@ -16,7 +16,7 @@ type httpServer struct {
 }
 
 type httpCodec struct {
-	brn []byte
+	delimiter []byte
 }
 
 func (hc *httpCodec) Encode(c gnet.Conn, buf []byte) (out []byte, err error) {
@@ -30,7 +30,7 @@ func (hc *httpCodec) Decode(c gnet.Conn) (out []byte, err error) {
 	// process the pipeline
 	var i int
 pipeline:
-	if i = bytes.Index(buf, hc.brn); i != -1 {
+	if i = bytes.Index(buf, hc.delimiter); i != -1 {
 		out = append(out, "HTTP/1.1 200 OK\r\nServer: gnet\r\nContent-Type: text/plain\r\nDate: "...)
 		out = time.Now().AppendFormat(out, "Mon, 02 Jan 2006 15:04:05 GMT")
 		out = append(out, "\r\nContent-Length: 13\r\n\r\nHello, World!"...)
@@ -67,7 +67,7 @@ func main() {
 	flag.Parse()
 
 	http := new(httpServer)
-	hc := &httpCodec{brn: []byte("\r\n\r\n")}
+	hc := &httpCodec{delimiter: []byte("\r\n\r\n")}
 
 	// Start serving!
 	log.Fatal(gnet.Serve(http, fmt.Sprintf("tcp://:%d", port), gnet.WithMulticore(multicore), gnet.WithCodec(hc)))
