@@ -16,6 +16,7 @@ type httpServer struct {
 }
 
 type httpCodec struct {
+	brn []byte
 }
 
 func (hc *httpCodec) Encode(c gnet.Conn, buf []byte) (out []byte, err error) {
@@ -27,14 +28,11 @@ func (hc *httpCodec) Decode(c gnet.Conn) (out []byte, err error) {
 	c.ResetBuffer()
 
 	// process the pipeline
-	var (
-		leftover []byte
-		ok       bool
-	)
+	var i int
 pipeline:
-	if leftover, ok = parseReq(buf); ok {
+	if i = bytes.Index(buf, hc.brn); i != -1 {
 		out = appendResp(out)
-		buf = leftover
+		buf = buf[i+4:]
 		goto pipeline
 	}
 	// request not ready, yet
@@ -67,7 +65,7 @@ func main() {
 	flag.Parse()
 
 	http := new(httpServer)
-	hc := new(httpCodec)
+	hc := &httpCodec{brn: []byte("\r\n\r\n")}
 
 	// Start serving!
 	log.Fatal(gnet.Serve(http, fmt.Sprintf("tcp://:%d", port), gnet.WithMulticore(multicore), gnet.WithCodec(hc)))
@@ -81,18 +79,4 @@ func appendResp(b []byte) []byte {
 	b = time.Now().AppendFormat(b, "Mon, 02 Jan 2006 15:04:05 GMT")
 	b = append(b, "\r\nContent-Length: 13\r\n\r\nHello, World!"...)
 	return b
-}
-
-var brn = []byte("\r\n\r\n")
-
-// parseReq is a very simple http request parser. This operation
-// waits for the entire payload to be buffered before returning a
-// valid request.
-func parseReq(data []byte) ([]byte, bool) {
-	if i := bytes.Index(data, brn); i != -1 {
-		return data[i+4:], true
-	}
-
-	// not enough data
-	return data, false
 }
