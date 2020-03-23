@@ -7,7 +7,7 @@ use diesel::prelude::*;
 use futures::future::join_all;
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
-use roa::diesel::{Pool};
+use roa::diesel::Pool;
 use roa::http::header::SERVER;
 use roa::http::StatusCode;
 use roa::preload::*;
@@ -89,17 +89,15 @@ impl Service for Context<State> {
     #[inline]
     async fn update_world(&self, wid: i32) -> Result<World> {
         use crate::schema::world::dsl::*;
-        let data = self
-            .get_result(
-                diesel::update(world)
-                    .filter(id.eq(wid))
-                    .set(randomnumber.eq(wid)),
-            )
-            .await?;
-        match data {
-            None => throw!(StatusCode::NOT_FOUND),
-            Some(item) => Ok(item),
-        }
+        let mut data = self.query_world(wid).await?;
+        self.execute(
+            diesel::update(world)
+                .filter(id.eq(wid))
+                .set(randomnumber.eq(wid)),
+        )
+        .await?;
+        data.randomnumber = wid;
+        Ok(data)
     }
 }
 
@@ -165,7 +163,7 @@ async fn updates(ctx: &mut Context<State>) -> Result {
 #[async_std::main]
 async fn main() -> StdResult<(), Box<dyn StdError>> {
     let pool = Pool::builder()
-        .max_size(500)
+        .max_size(100)
         .build(ConnectionManager::<PgConnection>::new(POSTGRES_URI))?;
     let router = Router::new()
         .gate(query_parser)
