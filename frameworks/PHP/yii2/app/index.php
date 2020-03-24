@@ -20,7 +20,16 @@ $config = [
             'charset' => 'utf8',
             'attributes' => [
                 PDO::ATTR_PERSISTENT => true,
-            ]
+            ],
+            'enableLogging' => false,
+            'enableProfiling' => false,
+            'enableSchemaCache' => true,
+            'schemaCache' => 'cache',
+            'schemaCacheDuration' => 3600,
+        ],
+        'cache' => [
+            'class' => 'yii\caching\FileCache',
+            'cachePath' => '/tmp/yii2-cache',
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,

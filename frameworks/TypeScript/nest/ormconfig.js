@@ -1,22 +1,28 @@
 let config = {
   synchronize: false,
   logging: false,
-  entities:
-    process.env.NODE_ENV === 'production'
-      ? ['./dist/**/*.entity.js']
-      : ['./dist/**/*.entity.js', './src/**/*.entity.ts'],
+  host: 'tfb-database',
+  database: 'hello_world',
 };
 
 switch (process.env.DATABASE_CONFIGURATION_PROFILE) {
+  case 'mongodb':
+    config = {
+      ...config,
+      type: 'mongodb',
+      port: 27017,
+      entities: ['./dist/mongo/*.entity.js'],
+      useUnifiedTopology: true,
+    };
+    break;
   case 'mysql':
     config = {
       ...config,
       type: 'mysql',
-      host: 'tfb-database',
       port: 3306,
       username: 'benchmarkdbuser',
       password: 'benchmarkdbpass',
-      database: 'hello_world',
+      entities: ['./dist/sql/*.entity.js'],
     };
     break;
   case 'postgres':
@@ -24,11 +30,10 @@ switch (process.env.DATABASE_CONFIGURATION_PROFILE) {
     config = {
       ...config,
       type: 'postgres',
-      host: 'tfb-database',
       port: 5432,
       username: 'benchmarkdbuser',
       password: 'benchmarkdbpass',
-      database: 'hello_world',
+      entities: ['./dist/sql/*.entity.js'],
     };
     break;
 }
