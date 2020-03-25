@@ -6,6 +6,6 @@ ADD ./ /roa
 WORKDIR /roa
 
 RUN cargo clean
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --bin roa-pg
+RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --bin roa-db --features "pg"
 
-CMD ./target/release/roa-pg
+CMD ./target/release/roa-db

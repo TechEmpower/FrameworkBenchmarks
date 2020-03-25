@@ -11,21 +11,15 @@ name = "roa"
 path = "src/main.rs"
 
 [[bin]]
-name = "roa-diesel"
-path = "src/main-diesel.rs"
-
-[[bin]]
-name = "roa-pg"
-path = "src/main-pg.rs"
+name = "roa-db"
+path = "src/main-db.rs"
 
 [[bin]]
 name = "roa-core"
 path = "src/main-core.rs"
 
 [dependencies]
-roa = { version = "0.5.0-rc", features = ["json", "template", "router", "diesel"] }
-tokio = { version = "0.2.13", features = ["full"] }
-hyper = "0.13"
+roa = { git = "https://github.com/Hexilee/roa.git", version = "0.5.0-rc", features = ["json", "template", "router"] }
 async-std = { version = "1.5", features = ["attributes"] }
 askama = "0.9"
 serde = { version = "1.0", features = ["derive"] }
@@ -35,5 +29,12 @@ bytes = "0.5.3"
 futures = "0.3.4"
 http = "0.2"
 lazy_static = "1.4.0"
-diesel = { version = "1.4.3", features = ["postgres"] }
-#tokio-postgres = { version = "0.5.2", default-features = false }
+
+tokio = { version = "0.2.13", features = ["full"], optional = true }
+diesel = { version = "1.4.3", features = ["postgres"], optional = true }
+#hyper = "0.13"
+
+[features]
+orm = ["diesel", "roa/orm"]
+pg = ["roa/pg"]
+tokio_rt = ["tokio", "roa/tokio_rt"]
