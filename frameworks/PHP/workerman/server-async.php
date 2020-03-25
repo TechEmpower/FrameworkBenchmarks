@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__.'/vendor/autoload.php';
 
-use Workerman\Protocols\Http;
+use Workerman\Protocols\Http\Response;
+use Workerman\Protocols\Http\Request;
 use Workerman\Worker;
 
 $http_worker                = new Worker('http://0.0.0.0:8080');
@@ -25,18 +26,15 @@ $http_worker->onWorkerStart = static function() {
     $mysql->connect(function ($e) {});
 };
 
-$http_worker->onMessage = static function ($connection) {
+$http_worker->onMessage = static function ($connection, $request) {
 
     global $mysql;
 
-    Http::header('Date: '.gmdate('D, d M Y H:i:s').' GMT');
-
-    switch (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) {
+    switch ($request->path()) {
         case '/db':
-            Http::header('Content-Type: application/json');
             $mysql->query('SELECT id,randomNumber FROM World WHERE id='.mt_rand(1, 10000),
                 static function ($command) use ($connection) {
-                    $connection->send(json_encode($command->resultRows, JSON_NUMERIC_CHECK));
+                    $connection->send(new Response(200, ['Content-Type' => 'application/json', 'Date' => gmdate('D, d M Y H:i:s').' GMT'], json_encode($command->resultRows, JSON_NUMERIC_CHECK)));
                 }
             );
             return;
@@ -57,7 +55,8 @@ $http_worker->onMessage = static function ($connection) {
                         $html .= "<tr><td>$id</td><td>$message</td></tr>";
                     }
 
-                    $connection->send($html.'</table></body></html>');
+                    $connection->send(new Response(200, ['Date' => gmdate('D, d M Y H:i:s').' GMT'], $html.'</table></body></html>'));
+
                 }
             );
             return;
@@ -73,8 +72,8 @@ $http_worker->onMessage = static function ($connection) {
         //   return $connection->send(ob_get_clean());
 
         default:
-            Http::responseCode(404);
-            $connection->send('Error 404');
+            $connection->send(new Response(200, [], 'Error 404'));
+
     }
 };
 

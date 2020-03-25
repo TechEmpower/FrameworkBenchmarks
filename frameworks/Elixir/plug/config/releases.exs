@@ -8,7 +8,6 @@ config :framework_benchmarks, FrameworkBenchmarks.Repo,
   database: "hello_world",
   hostname: "tfb-database",
   port: 5432,
-  pool_size: 300,
+  pool_size: 40,
   queue_target: 5000,
-  queue_interval: 5000,
   log: false

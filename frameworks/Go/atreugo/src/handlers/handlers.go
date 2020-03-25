@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"sort"
 
 	"atreugo/src/storage"
@@ -10,6 +9,8 @@ import (
 	"github.com/savsgio/atreugo/v10"
 )
 
+const helloWorldStr = "Hello, World!"
+
 func queriesParam(ctx *atreugo.RequestCtx) int {
 	n := ctx.QueryArgs().GetUintOrZero("queries")
 	if n < 1 {
@@ -17,13 +18,14 @@ func queriesParam(ctx *atreugo.RequestCtx) int {
 	} else if n > 500 {
 		n = 500
 	}
+
 	return n
 }
 
 // JSONHandler . Test 1: JSON serialization
 func JSONHandler(ctx *atreugo.RequestCtx) error {
 	message := AcquireMessage()
-	message.Message = "Hello, World!"
+	message.Message = helloWorldStr
 
 	err := ctx.JSONResponse(message)
 
@@ -56,14 +58,13 @@ func QueriesHandler(db storage.DB) atreugo.View {
 
 		worlds := storage.AcquireWorlds()[:queries]
 
-		var err error
 		for i := 0; i < queries; i++ {
-			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
-				log.Println(err)
+			if err := db.GetOneRandomWorld(&worlds[i]); err != nil {
+				return err
 			}
 		}
 
-		err = ctx.JSONResponse(worlds)
+		err := ctx.JSONResponse(worlds)
 
 		storage.ReleaseWorlds(worlds)
 
@@ -89,6 +90,7 @@ func FortuneHandler(db storage.DB) atreugo.View {
 		})
 
 		ctx.SetContentType("text/html; charset=utf-8")
+
 		if err = templates.FortuneTemplate.Execute(ctx, fortunes); err != nil {
 			return err
 		}
@@ -131,22 +133,21 @@ func FortuneQuickHandler(db storage.DB) atreugo.View {
 func UpdateHandler(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
-
-		var err error
-
 		worlds := storage.AcquireWorlds()[:queries]
 
 		for i := 0; i < queries; i++ {
-			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
-				log.Println(err)
+			w := &worlds[i]
+			if err := db.GetOneRandomWorld(w); err != nil {
+				return err
 			}
+			w.RandomNumber = int32(storage.RandomWorldNum())
 		}
 
-		if err = db.UpdateWorlds(worlds); err != nil {
+		if err := db.UpdateWorlds(worlds); err != nil {
 			return err
 		}
 
-		err = ctx.JSONResponse(worlds)
+		err := ctx.JSONResponse(worlds)
 
 		storage.ReleaseWorlds(worlds)
 
@@ -156,5 +157,5 @@ func UpdateHandler(db storage.DB) atreugo.View {
 
 // PlaintextHandler . Test 6: Plaintext
 func PlaintextHandler(ctx *atreugo.RequestCtx) error {
-	return ctx.TextResponse("Hello, World!")
+	return ctx.TextResponse(helloWorldStr)
 }

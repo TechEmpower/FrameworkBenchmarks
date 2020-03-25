@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.techempower</groupId>
+    <artifactId>servicetalk</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <servicetalk.version>0.20.0</servicetalk.version>
+    </properties>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>io.servicetalk</groupId>
+            <artifactId>servicetalk-serialization-api</artifactId>
+            <version>${servicetalk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.servicetalk</groupId>
+            <artifactId>servicetalk-http-api</artifactId>
+            <version>${servicetalk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.servicetalk</groupId>
+            <artifactId>servicetalk-http-netty</artifactId>
+            <version>${servicetalk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.servicetalk</groupId>
+            <artifactId>servicetalk-concurrent-api</artifactId>
+            <version>${servicetalk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.servicetalk</groupId>
+            <artifactId>servicetalk-data-jackson</artifactId>
+            <version>${servicetalk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.servicetalk</groupId>
+            <artifactId>servicetalk-transport-netty-internal</artifactId>
+            <version>${servicetalk.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>servicetalk</finalName>
+        <plugins>
+            <plugin>
+                <inherited>true</inherited>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>servicetalk.Server</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,5 +1,5 @@
 #[global_allocator]
-static ALLOC: jemallocator::Jemalloc = jemallocator::Jemalloc;
+static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 #[macro_use]
 extern crate serde_derive;
@@ -158,6 +158,7 @@ fn main() -> std::io::Result<()> {
         .bind("techempower", "0.0.0.0:8080", || {
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
+                .client_timeout(0)
                 .h1(AppFactory)
                 .tcp()
         })?

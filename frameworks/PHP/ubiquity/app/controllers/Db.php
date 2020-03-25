@@ -13,7 +13,7 @@ class Db extends \Ubiquity\controllers\Controller {
 
 	public function initialize() {
 		\header('Content-Type: application/json');
-		\Ubiquity\cache\CacheManager::startProd(\Ubiquity\controllers\Startup::$config);
+		\Ubiquity\cache\CacheManager::startProdFromCtrl();
 	}
 
 	public function index() {
@@ -35,15 +35,30 @@ class Db extends \Ubiquity\controllers\Controller {
 
 	public function update($queries = 1) {
 		$worlds = [];
+
 		$queries = \min(\max($queries, 1), 500);
-		for ($i = 0; $i < $queries; ++ $i) {
+		$ids = $this->getUniqueRandomNumbers($queries);
+		foreach ($ids as $id) {
 			$world = SDAO::getById(World::class, [
-				'id' => \mt_rand(1, 10000)
+				'id' => $id
 			]);
 			$world->randomNumber = \mt_rand(1, 10000);
-			SDAO::update($world);
+			SDAO::toUpdate($world);
 			$worlds[] = $world->_rest;
 		}
+		SDAO::updateGroups($queries);
+
 		echo \json_encode($worlds);
+	}
+
+	private function getUniqueRandomNumbers($count) {
+		$res = [];
+		do {
+			$res[\mt_rand(1, 10000)] = 1;
+		} while (\count($res) < $count);
+
+		\ksort($res); // prevent deadlocks (see https://github.com/TechEmpower/FrameworkBenchmarks/pull/5230#discussion_r345780701)
+
+		return \array_keys($res);
 	}
 }

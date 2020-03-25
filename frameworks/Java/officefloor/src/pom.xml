@@ -9,10 +9,9 @@
 	<packaging>pom</packaging>
 	<name>OfficeFloor Benchmarks</name>
 	<properties>
-		<officefloor.version>3.10.2</officefloor.version>
+		<officefloor.version>3.20.0</officefloor.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
-		<jaxb.version>2.3.0</jaxb.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<modules>
@@ -22,7 +21,6 @@
 		<module>woof_benchmark_thread_affinity</module>
 		<module>woof_benchmark_raw</module>
 		<module>woof_benchmark_netty</module>
-		<module>woof_benchmark_rapidoid</module>
 		<module>woof_benchmark_spring</module>
 	</modules>
 	<repositories>
@@ -51,11 +49,6 @@
 				<artifactId>woof_benchmark_micro</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>2.9.9</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>
@@ -64,7 +57,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.8.0</version>
+					<version>3.8.1</version>
 					<configuration>
 						<debug>false</debug>
 					</configuration>
@@ -72,7 +65,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.2.1</version>
+					<version>3.2.2</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

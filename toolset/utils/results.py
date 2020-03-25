@@ -336,7 +336,7 @@ class Results:
         toRet['succeeded'] = self.succeeded
         toRet['failed'] = self.failed
         toRet['verify'] = self.verify
-        toRet['test_metadata'] = self.benchmarker.metadata.to_jsonable()
+        toRet['testMetadata'] = self.benchmarker.metadata.to_jsonable()
 
         return toRet
 
