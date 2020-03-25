@@ -645,7 +645,7 @@ static int json_escape_internal(const char *str,
         if (escaped) {
             char bytes[2] = {'\\', escaped};
 
-            if (unescaped - cur) {
+            if (cur - unescaped) {
                 ret |= append_bytes(unescaped, (size_t)(cur - unescaped), data);
                 unescaped = cur + 1;
             }
@@ -654,8 +654,8 @@ static int json_escape_internal(const char *str,
         }
     }
 
-    if (unescaped - cur)
-        return ret | append_bytes(unescaped, (size_t)(cur - unescaped), data);
+    if (cur - unescaped)
+        ret |= append_bytes(unescaped, (size_t)(cur - unescaped), data);
 
     return ret;
 }
@@ -839,15 +839,18 @@ static int encode(const struct json_obj_descr *descr,
     }
 }
 
-static int encode_key_value(const struct json_obj_descr *descr,
-                            const void *val,
-                            json_append_bytes_t append_bytes,
-                            void *data,
-                            bool escape_key)
+static inline int encode_key(const struct json_obj_descr *descr,
+                             json_append_bytes_t append_bytes,
+                             void *data,
+                             bool escape_key)
 {
     int ret;
 
     if (!escape_key) {
+        /* Keys are encoded twice in the descriptor; once without quotes and
+         * the trailing comma, and one with.  Doing it like so cuts some
+         * indirect calls to append_bytes(), which in turn also potentially
+         * cuts some branches in most implementations of it.  */
         ret = append_bytes(descr->field_name + descr->field_name_len,
                            descr->field_name_len + 3 /* 3=len('"":') */, data);
     } else {
@@ -855,7 +858,7 @@ static int encode_key_value(const struct json_obj_descr *descr,
         ret |= append_bytes(":", 1, data);
     }
 
-    return ret | encode(descr, val, append_bytes, data, escape_key);
+    return ret;
 }
 
 int json_obj_encode_full(const struct json_obj_descr *descr,
@@ -876,12 +879,13 @@ int json_obj_encode_full(const struct json_obj_descr *descr,
          * branches.  */
 
         for (size_t i = 1; i < descr_len; i++) {
-            ret |= encode_key_value(&descr[i], val, append_bytes, data,
-                                    escape_key);
+            ret |= encode_key(&descr[i], append_bytes, data, escape_key);
+            ret |= encode(&descr[i], val, append_bytes, data, escape_key);
             ret |= append_bytes(",", 1, data);
         }
 
-        ret |= encode_key_value(&descr[0], val, append_bytes, data, escape_key);
+        ret |= encode_key(&descr[0], append_bytes, data, escape_key);
+        ret |= encode(&descr[0], val, append_bytes, data, escape_key);
     }
 
     return ret | append_bytes("}", 1, data);
