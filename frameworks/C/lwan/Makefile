@@ -5,6 +5,7 @@ CFLAGS = -mtune=native -march=native -O3 -fno-plt -flto -ffat-lto-objects -DNDEB
 	-I /lwan/src/lib \
 	`pkg-config mariadb --cflags` \
 	`pkg-config sqlite3 --cflags` \
+	`pkg-config luajit --cflags` \
 	-fauto-profile=/lwan/src/gcda/techempower.gcov
 
 LDFLAGS = -mtune=native -march=native -O3 -flto -ffat-lto-objects -Wl,-z,now,-z,relro \
@@ -12,6 +13,7 @@ LDFLAGS = -mtune=native -march=native -O3 -flto -ffat-lto-objects -Wl,-z,now,-z,
 	-Wl,-whole-archive /lwan/build/src/lib/liblwan.a -Wl,-no-whole-archive \
 	`pkg-config mariadb --libs` \
 	`pkg-config sqlite3 --libs` \
+	`pkg-config luajit --libs` \
 	-lpthread \
 	-lz
 
