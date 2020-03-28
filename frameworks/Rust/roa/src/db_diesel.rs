@@ -1,9 +1,9 @@
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
 use diesel::r2d2::ConnectionManager;
-use roa_diesel::Pool;
-use roa_diesel::preload::*;
 use roa::http::StatusCode;
+use roa_diesel::preload::*;
+use roa_diesel::Pool;
 
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};

@@ -17,6 +17,12 @@ mod db_pg;
 #[cfg(feature = "pg")]
 use db_pg::State;
 
+#[cfg(feature = "sqlx-pg")]
+mod db_sqlx;
+
+#[cfg(feature = "sqlx-pg")]
+use db_sqlx::State;
+
 use futures::stream::{FuturesUnordered, TryStreamExt};
 use roa::http::header::SERVER;
 use roa::preload::*;
@@ -24,8 +30,9 @@ use roa::router::{get, RouteTable, Router};
 use roa::{async_trait, throw, App, Context, Next, Result};
 mod models;
 pub mod utils;
+use dotenv_codegen::dotenv;
 use models::*;
-use utils::{POSTGRES_URI, SERVER_HEADER};
+use utils::SERVER_HEADER;
 
 type StdResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
@@ -102,7 +109,7 @@ fn routes(prefix: &'static str) -> StdResult<RouteTable<State>> {
 
 #[async_std::main]
 async fn main() -> StdResult<()> {
-    let app = App::new(State::bind(POSTGRES_URI).await?).end(routes("/")?);
+    let app = App::new(State::bind(dotenv!("DATABASE_URL")).await?).end(routes("/")?);
     app.listen("0.0.0.0:8080", |addr| {
         println!("Server listen on {}...", addr);
     })?

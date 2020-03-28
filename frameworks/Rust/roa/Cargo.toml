@@ -32,12 +32,15 @@ bytes = "0.5.3"
 futures = "0.3.4"
 http = "0.2"
 lazy_static = "1.4.0"
+dotenv_codegen = "0.15.0"
 
 tokio = { version = "0.2.13", features = ["full"], optional = true }
 diesel = { version = "1.4.3", features = ["postgres"], optional = true }
+sqlx = { version = "0.2", features = ["postgres"], optional = true }
 #hyper = "0.13"
 
 [features]
 orm = ["diesel", "roa-diesel"]
 pg = ["roa-pg"]
+sqlx-pg = ["sqlx"]
 tokio_rt = ["tokio", "roa-tokio"]

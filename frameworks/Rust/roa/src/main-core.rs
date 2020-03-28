@@ -35,7 +35,7 @@ async fn main() -> StdResult<(), Box<dyn StdError>> {
 #[cfg(feature = "tokio_rt")]
 #[tokio::main]
 async fn main() -> StdResult<(), Box<dyn StdError>> {
-    use roa_tokio::{TcpIncoming, Exec};
+    use roa_tokio::{Exec, TcpIncoming};
     let app = App::with_exec((), Exec).end(endpoint);
     let incoming = TcpIncoming::bind("0.0.0.0:8080")?;
     println!("Server listen on {}...", incoming.local_addr());

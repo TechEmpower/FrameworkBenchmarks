@@ -2,9 +2,6 @@ use lazy_static::lazy_static;
 use roa::http::header::HeaderValue;
 use serde::{Deserialize, Serialize};
 
-pub const POSTGRES_URI: &str =
-    "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
-
 lazy_static! {
     pub static ref SERVER_HEADER: HeaderValue = HeaderValue::from_static("roa");
     pub static ref JSON_LEN: HeaderValue = HeaderValue::from_static("27");
