@@ -1,6 +1,6 @@
 //! Control benchmark against roa.
 //!
-//! Should not be included in benchmark_config.json!
+//! Should not be included in benchmark_config.json
 
 use hyper::header::{HeaderValue, CONTENT_LENGTH, CONTENT_TYPE, SERVER};
 use hyper::service::{make_service_fn, service_fn};

@@ -28,7 +28,7 @@ impl AsRef<Pool<PgConnection>> for State {
 impl State {
     pub async fn bind(pg_url: &str) -> StdResult<Self> {
         let pool = Pool::builder()
-            .max_size(100)
+            .max_size(50)
             .build(ConnectionManager::<PgConnection>::new(pg_url))?;
         Ok(Self {
             pool,
