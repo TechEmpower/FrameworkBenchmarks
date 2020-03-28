@@ -1,14 +1,15 @@
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
 use diesel::r2d2::ConnectionManager;
-use roa::diesel::Pool;
+use roa_diesel::Pool;
+use roa_diesel::preload::*;
 use roa::http::StatusCode;
 
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
 
 use crate::models::Fortune;
-use crate::{async_trait, throw, Context, Result, Service, SqlQuery, StdResult, World};
+use crate::{async_trait, throw, Context, Result, Service, StdResult, World};
 use futures::stream::{FuturesUnordered, TryStreamExt};
 
 #[derive(Clone)]
@@ -27,7 +28,7 @@ impl AsRef<Pool<PgConnection>> for State {
 impl State {
     pub async fn bind(pg_url: &str) -> StdResult<Self> {
         let pool = Pool::builder()
-            .max_size(2)
+            .max_size(100)
             .build(ConnectionManager::<PgConnection>::new(pg_url))?;
         Ok(Self {
             pool,
