@@ -45,7 +45,7 @@
             "notes": "",
             "versus": "php"
           },
-          "workerman": {
+          "workerman-mysql": {
             "plaintext_url": "/",
             "json_url": "/json",
             "db_url": "/db",
