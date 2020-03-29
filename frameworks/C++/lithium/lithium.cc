@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
   int db_nconn = 128/nprocs;
   int queries_nconn = 2;
   int fortunes_nconn = 128/nprocs;
-  int updates_nconn = 2;
+  int updates_nconn = 1;
 
   http_api my_api;
 
