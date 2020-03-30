@@ -66,7 +66,7 @@ use roa::preload::*;
 use std::error::Error as StdError;
 
 async fn hello(ctx: &mut Context) -> roa::Result {
-    ctx.write_text("Hello, World");
+    ctx.write("Hello, World");
     Ok(())
 }
 

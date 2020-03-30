@@ -6,7 +6,7 @@ use roa::{Context, Result};
 static HELLO_WORLD: &str = "Hello, World!";
 
 #[inline]
-pub async fn json(ctx: &mut Context<()>) -> Result {
+pub async fn json(ctx: &mut Context) -> Result {
     ctx.resp.headers.insert(CONTENT_LENGTH, JSON_LEN.clone());
     ctx.write_json(&Message {
         message: HELLO_WORLD,
@@ -14,10 +14,10 @@ pub async fn json(ctx: &mut Context<()>) -> Result {
 }
 
 #[inline]
-pub async fn plaintext(ctx: &mut Context<()>) -> Result {
+pub async fn plaintext(ctx: &mut Context) -> Result {
     ctx.resp
         .headers
         .insert(CONTENT_LENGTH, PLAINTEXT_LEN.clone());
-    ctx.write_text(HELLO_WORLD);
+    ctx.write(HELLO_WORLD);
     Ok(())
 }
