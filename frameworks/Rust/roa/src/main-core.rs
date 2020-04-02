@@ -24,7 +24,7 @@ async fn endpoint(ctx: &mut Context<()>) -> Result {
 #[async_std::main]
 async fn main() -> StdResult<(), Box<dyn StdError>> {
     use roa::preload::*;
-    let app = App::new(()).end(endpoint);
+    let app = App::new().end(endpoint);
     app.listen("0.0.0.0:8080", |addr| {
         println!("Server listen on {}...", addr);
     })?

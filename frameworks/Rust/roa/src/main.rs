@@ -2,7 +2,7 @@ use roa::http::header::SERVER;
 use roa::preload::*;
 use roa::router::{get, Router};
 use roa::{App, Context, Next, Result};
-use std::error::Error as StdError;
+use std::error::Error;
 use std::result::Result as StdResult;
 
 pub mod endpoints;
@@ -20,12 +20,12 @@ async fn gate(ctx: &mut Context<()>, next: Next<'_>) -> Result {
 }
 
 #[async_std::main]
-async fn main() -> StdResult<(), Box<dyn StdError>> {
+async fn main() -> StdResult<(), Box<dyn Error>> {
     let router = Router::new()
         .gate(gate)
         .on("/json", get(json))
         .on("/plaintext", get(plaintext));
-    let app = App::new(()).end(router.routes("/")?);
+    let app = App::new().end(router.routes("/")?);
     app.listen("0.0.0.0:8080", |addr| {
         println!("Server listen on {}...", addr);
     })?

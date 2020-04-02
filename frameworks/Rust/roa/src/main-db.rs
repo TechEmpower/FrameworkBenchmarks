@@ -109,7 +109,7 @@ fn routes(prefix: &'static str) -> StdResult<RouteTable<State>> {
 
 #[async_std::main]
 async fn main() -> StdResult<()> {
-    let app = App::new(State::bind(dotenv!("DATABASE_URL")).await?).end(routes("/")?);
+    let app = App::state(State::bind(dotenv!("DATABASE_URL")).await?).end(routes("/")?);
     app.listen("0.0.0.0:8080", |addr| {
         println!("Server listen on {}...", addr);
     })?
