@@ -4,11 +4,13 @@
     {
       "default": {
         "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
         "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
-        "database": "None",
+        "database": "Postgres",
         "framework": "jester",
         "language": "Nim",
         "flavor": "None",
