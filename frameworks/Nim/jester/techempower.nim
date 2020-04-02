@@ -7,7 +7,7 @@ settings:
   port = Port(8080)
 
 randomize()
-let db = open(ENV["DATABASE_URL"])
+let db = open("tfb-database", "benchmarkdbuser", "benchmarkdbpass", "hello_world")
 
 type
   World = object
