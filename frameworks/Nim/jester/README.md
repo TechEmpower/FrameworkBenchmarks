@@ -16,3 +16,11 @@ http://localhost:8080/json
 ### PLAINTEXT
 
 http://localhost:8080/plaintext
+
+### SINGLE DB QUERY
+
+http://localhost:8080/db
+
+### MULTIPLE DB QUERY
+
+http://localhost:8080/queries?queries=10
