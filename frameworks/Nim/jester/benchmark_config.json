@@ -14,7 +14,7 @@
         "framework": "jester",
         "language": "Nim",
         "flavor": "None",
-        "orm": "None",
+        "orm": "Raw",
         "platform": "None",
         "webserver": "None",
         "os": "Linux",
