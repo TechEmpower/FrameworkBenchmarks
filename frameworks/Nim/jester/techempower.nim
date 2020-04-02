@@ -35,8 +35,13 @@ routes:
   get "/queries":
     var world_datas: seq[JsonNode]
     var total = parseInt($request.params["queries"])
+
+    var rand_data: seq[int]
     for idx in countup(1, total):
-      let world = db.getRow(sql"SELECT * FROM world WHERE id = ?", idx)
+      rand_data.add(rand(900))
+
+    for idx in rand_data:
+      let world = db.getRow(sql"SELECT id, randomNumber FROM world WHERE id = ?", idx)
       var row_data = %*World(id: parseInt(world[0]), randomnumber: world[1])
       world_datas.add(row_data) 
 
