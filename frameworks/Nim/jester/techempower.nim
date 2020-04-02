@@ -14,6 +14,11 @@ type
     id: int
     randomnumber: string
 
+type
+  Fortune = object
+    id: int
+    message: string
+    
 routes:
   get "/json":
     var data = $(%*{"message": "Hello, World!"})
