@@ -14,6 +14,7 @@ import doobie.hikari.HikariTransactor
 import doobie.util.ExecutionContexts
 import org.http4s._
 import org.http4s.dsl._
+import org.http4s.circe._
 import org.http4s.implicits._
 import org.http4s.server.Router
 import org.http4s.server.blaze.BlazeServerBuilder
@@ -34,8 +35,6 @@ object Queries {
 }
 
 object WebServer extends IOApp with Http4sDsl[IO] {
-  import org.http4s.circe.CirceEntityEncoder._
-
   def openDatabase(host: String,
                    poolSize: Int): Resource[IO, HikariTransactor[IO]] =
     for {
