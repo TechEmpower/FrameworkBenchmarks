@@ -24,10 +24,10 @@ mod utils;
 
 use crate::utils::{Message, Writer};
 
-const JSON: &[u8] = b"HTTP/1.1 200 OK\r\nServer: Actix\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
-const PLAIN: &[u8] = b"HTTP/1.1 200 OK\r\nServer: Actix\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
+const JSON: &[u8] = b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
+const PLAIN: &[u8] = b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
 const HTTPNFOUND: &[u8] = b"HTTP/1.1 400 OK\r\n";
-const HDR_SERVER: &[u8] = b"Server: Actix\r\n";
+const HDR_SERVER: &[u8] = b"Server: A\r\n";
 const BODY: &[u8] = b"Hello, World!";
 
 struct App {
@@ -40,7 +40,7 @@ struct App {
 impl App {
     fn handle_request(&mut self, req: Request) {
         match req.path() {
-            "/json" => {
+            "/j" => {
                 let message = Message {
                     message: "Hello, World!",
                 };
@@ -48,7 +48,7 @@ impl App {
                 self.codec.config().set_date(&mut self.write_buf);
                 to_writer(Writer(&mut self.write_buf), &message).unwrap();
             }
-            "/plaintext" => {
+            "/p" => {
                 self.write_buf.put_slice(PLAIN);
                 self.codec.config().set_date(&mut self.write_buf);
                 self.write_buf.put_slice(BODY);
