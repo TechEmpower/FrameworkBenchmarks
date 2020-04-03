@@ -3,7 +3,9 @@ package http4s.techempower.benchmark
 import java.util.concurrent.ThreadLocalRandom
 
 import cats.effect._
-import cats.implicits._
+import cats.instances.list._
+import cats.syntax.parallel._
+import cats.syntax.traverse._
 import io.circe.generic.auto._
 import io.circe.syntax._
 import doobie._
@@ -80,7 +82,7 @@ object WebServer extends IOApp with Http4sDsl[IO] {
 
   // Select a specified number of random World objects from the database
   def getWorlds(xa: Transactor[IO], numQueries: Int): IO[List[World]] =
-    (0 until numQueries).toList.traverse(_ => selectRandomWorld(xa))
+    (0 until numQueries).toList.parTraverse(_ => selectRandomWorld(xa))
 
   // Update the randomNumber field with a new random number, for a list of World objects
   def getNewWorlds(worlds: List[World]): IO[List[World]] =
