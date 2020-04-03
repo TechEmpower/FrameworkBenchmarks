@@ -2,7 +2,7 @@
 from functools import partial
 from random import randint
 
-from emmett import App, request, response
+from emmett import App, request
 from emmett.orm import Database, Model, Field, rowmethod
 from emmett.tools import service
 
@@ -72,7 +72,7 @@ async def get_random_worlds():
     return worlds
 
 
-@app.route(pipeline=[db.pipe])
+@app.route(pipeline=[db.pipe], output='template')
 async def fortunes():
     fortunes = Fortune.all().select()
     fortunes.append(
@@ -98,5 +98,4 @@ async def updates():
 
 @app.route(output='bytes')
 async def plaintext():
-    response.headers["Content-Type"] = "text/plain"
     return b'Hello, World!'

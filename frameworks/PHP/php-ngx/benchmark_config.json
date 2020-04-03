@@ -4,6 +4,23 @@
     "default": {
       "plaintext_url": "/hello",
       "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "None",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "Raw",
+      "platform": "ngx_php",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "PHP-raw-ngx",
+      "notes": "ngx_php",
+      "versus": "php"
+    },
+    "mysql": {
       "db_url": "/db",
       "query_url": "/query?queries=",
       "fortune_url": "/fortune",

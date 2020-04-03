@@ -1,6 +1,6 @@
 use std::collections::HashMap;
-use std::fmt::Write;
-use std::io;
+use std::fmt::Write as FmtWrite;
+use std::io::{self, Write};
 
 use actix_http::Error;
 use bytes::{Bytes, BytesMut};
@@ -8,11 +8,54 @@ use futures::stream::futures_unordered::FuturesUnordered;
 use futures::{Future, FutureExt, StreamExt, TryStreamExt};
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
+use tokio_postgres::row::Row;
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, NoTls, Statement};
 
 use crate::models::World;
-use crate::utils::{Fortune, Writer};
+use crate::utils::Writer;
+
+pub enum Message {
+    Row(Row),
+    Str(&'static str),
+}
+
+impl Message {
+    fn as_str(&self) -> &str {
+        match self {
+            Message::Row(ref row) => row.get(1),
+            Message::Str(s) => s,
+        }
+    }
+}
+
+#[allow(non_snake_case)]
+pub struct Fortune {
+    pub id: i32,
+    pub message: Message,
+}
+
+markup::define! {
+    FortunesTemplate(items: Vec<Fortune>) {
+        {markup::doctype()}
+        html {
+            head {
+                title { "Fortunes" }
+            }
+            body {
+                table {
+                    tr { th { "id" } th { "message" } }
+                    @for item in {items} {
+                        tr {
+                            td { {item.id} }
+                            td { {markup::raw(v_htmlescape::escape(item.message.as_str()))} }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 /// Postgres interface
 pub struct PgConnection {
@@ -157,12 +200,10 @@ impl PgConnection {
         }
     }
 
-    pub fn tell_fortune(
-        &mut self,
-    ) -> impl Future<Output = Result<Vec<Fortune>, io::Error>> {
+    pub fn tell_fortune(&mut self) -> impl Future<Output = Result<Bytes, io::Error>> {
         let mut items = vec![Fortune {
             id: 0,
-            message: "Additional fortune added at request time.".to_string(),
+            message: Message::Str("Additional fortune added at request time."),
         }];
 
         let fut = self.cl.query_raw(&self.fortune, &[]);
@@ -178,12 +219,16 @@ impl PgConnection {
                 })?;
                 items.push(Fortune {
                     id: row.get(0),
-                    message: row.get(1),
+                    message: Message::Row(row),
                 });
             }
+            items.sort_by(|it, next| it.message.as_str().cmp(next.message.as_str()));
 
-            items.sort_by(|it, next| it.message.cmp(&next.message));
-            Ok(items)
+            let mut body = BytesMut::with_capacity(2048);
+            let mut writer = Writer(&mut body);
+            let _ = write!(writer, "{}", FortunesTemplate { items });
+
+            Ok(body.freeze())
         }
     }
 }
