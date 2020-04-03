@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO.Pipelines;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 
 namespace PlatformBenchmarks
 {

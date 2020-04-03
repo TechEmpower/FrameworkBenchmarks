@@ -17,7 +17,7 @@ namespace PlatformBenchmarks
         {
             _buffered = 0;
             _output = output;
-            _span = output.GetSpan();
+            _span = output.GetSpan(sizeHint: 16 * 160);
         }
 
         public Span<byte> Span => _span;

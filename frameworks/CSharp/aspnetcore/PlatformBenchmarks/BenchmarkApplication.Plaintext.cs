@@ -1,17 +1,12 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System.IO.Pipelines;
-using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
-
 namespace PlatformBenchmarks
 {
     public partial class BenchmarkApplication
     {
-        private static void PlainText(PipeWriter pipeWriter)
+        private static void PlainText(ref BufferWriter<WriterAdapter> writer)
         {
-            var writer = GetWriter(pipeWriter);
-
             // HTTP 1.1 OK
             writer.Write(_http11OK);
 
@@ -33,7 +28,6 @@ namespace PlatformBenchmarks
 
             // Body
             writer.Write(_plainTextBody);
-            writer.Commit();
         }
     }
 }
