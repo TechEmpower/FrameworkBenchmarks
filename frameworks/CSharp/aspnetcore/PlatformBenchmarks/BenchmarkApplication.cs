@@ -21,9 +21,15 @@ namespace PlatformBenchmarks
         private readonly static AsciiString _headerServer = "Server: K";
         private readonly static AsciiString _headerContentLength = "Content-Length: ";
         private readonly static AsciiString _headerContentLengthZero = "Content-Length: 0\r\n";
-        private readonly static AsciiString _headerContentTypeText = "Content-Type: text/plain\r\n";
-        private readonly static AsciiString _headerContentTypeJson = "Content-Type: application/json\r\n";
-        private readonly static AsciiString _headerContentTypeHtml = "Content-Type: text/html; charset=UTF-8\r\n";
+        private readonly static AsciiString _headerContentTypeText = "Content-Type: text/plain";
+        private readonly static AsciiString _headerContentTypeJson = "Content-Type: application/json";
+        private readonly static AsciiString _headerContentTypeHtml = "Content-Type: text/html; charset=UTF-8";
+
+        private readonly static AsciiString _dbPreamble =
+            _http11OK +
+            _headerServer + _crlf +
+            _headerContentTypeJson + _crlf +
+            _headerContentLength;
 
         private readonly static AsciiString _plainTextBody = "Hello, World!";
 
@@ -163,22 +169,18 @@ namespace PlatformBenchmarks
             writer.Commit();
         }
 #endif
+        private readonly static AsciiString _defaultPreamble =
+            _http11OK +
+            _headerServer + _crlf +
+            _headerContentTypeText + _crlf +
+            _headerContentLengthZero;
+
         private static void Default(ref BufferWriter<WriterAdapter> writer)
         {
-            // HTTP 1.1 OK
-            writer.Write(_http11OK);
-
-            // Server headers
-            writer.Write(_headerServer);
+            writer.Write(_defaultPreamble);
 
             // Date header
             writer.Write(DateHeader.HeaderBytes);
-
-            // Content-Length 0
-            writer.Write(_headerContentLengthZero);
-
-            // End of headers
-            writer.Write(_crlf);
         }
 
         private enum RequestType

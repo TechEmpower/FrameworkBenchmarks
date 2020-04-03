@@ -18,25 +18,14 @@ namespace PlatformBenchmarks
         {
             var writer = GetWriter(pipeWriter);
 
-            // HTTP 1.1 OK
-            writer.Write(_http11OK);
+            writer.Write(_dbPreamble);
 
-            // Server headers
-            writer.Write(_headerServer);
-
-            // Date header
-            writer.Write(DateHeader.HeaderBytes);
-
-            // Content-Type header
-            writer.Write(_headerContentTypeJson);
-
-            // Content-Length header
-            writer.Write(_headerContentLength);
+            // Content-Length
             var jsonPayload = JsonSerializer.SerializeToUtf8Bytes(row, SerializerOptions);
             writer.WriteNumeric((uint)jsonPayload.Length);
 
-            // End of headers
-            writer.Write(_eoh);
+            // Date header
+            writer.Write(DateHeader.HeaderBytes);
 
             // Body
             writer.Write(jsonPayload);

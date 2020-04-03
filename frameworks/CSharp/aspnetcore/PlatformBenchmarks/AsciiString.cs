@@ -12,6 +12,8 @@ namespace PlatformBenchmarks
 
         public AsciiString(string s) => _data = Encoding.ASCII.GetBytes(s);
 
+        private AsciiString(byte[] b) => _data = b;
+
         public int Length => _data.Length;
 
         public ReadOnlySpan<byte> AsSpan() => _data;
@@ -30,6 +32,14 @@ namespace PlatformBenchmarks
         public static bool operator ==(AsciiString a, AsciiString b) => a.Equals(b);
         public static bool operator !=(AsciiString a, AsciiString b) => !a.Equals(b);
         public override bool Equals(object other) => (other is AsciiString) && Equals((AsciiString)other);
+
+        public static AsciiString operator +(AsciiString a, AsciiString b)
+        {
+            var result = new byte[a.Length + b.Length];
+            a._data.CopyTo(result, 0);
+            b._data.CopyTo(result, a.Length);
+            return new AsciiString(result);
+        }
 
         public override int GetHashCode()
         {
