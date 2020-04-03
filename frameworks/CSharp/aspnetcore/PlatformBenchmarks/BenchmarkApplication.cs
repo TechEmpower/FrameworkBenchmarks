@@ -20,7 +20,7 @@ namespace PlatformBenchmarks
         private readonly static AsciiString _http11OK = "HTTP/1.1 200 OK\r\n";
         private readonly static AsciiString _headerServer = "Server: K";
         private readonly static AsciiString _headerContentLength = "Content-Length: ";
-        private readonly static AsciiString _headerContentLengthZero = "Content-Length: 0\r\n";
+        private readonly static AsciiString _headerContentLengthZero = "Content-Length: 0";
         private readonly static AsciiString _headerContentTypeText = "Content-Type: text/plain";
         private readonly static AsciiString _headerContentTypeJson = "Content-Type: application/json";
         private readonly static AsciiString _headerContentTypeHtml = "Content-Type: text/html; charset=UTF-8";
