@@ -25,16 +25,31 @@ namespace PlatformBenchmarks
 
         private static byte[] s_headerBytesMaster = new byte[prefixLength + dateTimeRLength + suffixLength];
         private static byte[] s_headerBytesScratch = new byte[prefixLength + dateTimeRLength + suffixLength];
+        private static byte[] s_headerBytesMasterLast = new byte[prefixLength + dateTimeRLength + 2 * suffixLength];
+        private static byte[] s_headerBytesScratchLast = new byte[prefixLength + dateTimeRLength + 2 * suffixLength];
 
         static DateHeader()
         {
             var utf8 = Encoding.ASCII.GetBytes("\r\nDate: ").AsSpan();
+
             utf8.CopyTo(s_headerBytesMaster);
             utf8.CopyTo(s_headerBytesScratch);
             s_headerBytesMaster[suffixIndex] = (byte)'\r';
             s_headerBytesMaster[suffixIndex + 1] = (byte)'\n';
             s_headerBytesScratch[suffixIndex] = (byte)'\r';
             s_headerBytesScratch[suffixIndex + 1] = (byte)'\n';
+
+            utf8.CopyTo(s_headerBytesMasterLast);
+            utf8.CopyTo(s_headerBytesScratchLast);
+            s_headerBytesMasterLast[suffixIndex] = (byte)'\r';
+            s_headerBytesMasterLast[suffixIndex + 1] = (byte)'\n';
+            s_headerBytesMasterLast[suffixIndex + 2] = (byte)'\r';
+            s_headerBytesMasterLast[suffixIndex + 3] = (byte)'\n';
+            s_headerBytesScratchLast[suffixIndex] = (byte)'\r';
+            s_headerBytesScratchLast[suffixIndex + 1] = (byte)'\n';
+            s_headerBytesScratchLast[suffixIndex + 2] = (byte)'\r';
+            s_headerBytesScratchLast[suffixIndex + 3] = (byte)'\n';
+
             SetDateValues(DateTimeOffset.UtcNow);
             SyncDateTimer();
         }
@@ -42,12 +57,13 @@ namespace PlatformBenchmarks
         public static void SyncDateTimer() => s_timer.Change(1000, 1000);
 
         public static ReadOnlySpan<byte> HeaderBytes => s_headerBytesMaster;
+        public static ReadOnlySpan<byte> HeaderBytesLast => s_headerBytesMasterLast;
 
         private static void SetDateValues(DateTimeOffset value)
         {
             lock (s_headerBytesScratch)
             {
-                if (!Utf8Formatter.TryFormat(value, s_headerBytesScratch.AsSpan(prefixLength), out int written, 'R'))
+                if (!Utf8Formatter.TryFormat(value, s_headerBytesScratch.AsSpan(prefixLength), out var written, 'R'))
                 {
                     throw new Exception("date time format failed");
                 }
@@ -55,6 +71,15 @@ namespace PlatformBenchmarks
                 var temp = s_headerBytesMaster;
                 s_headerBytesMaster = s_headerBytesScratch;
                 s_headerBytesScratch = temp;
+
+                if (!Utf8Formatter.TryFormat(value, s_headerBytesScratchLast.AsSpan(prefixLength), out written, 'R'))
+                {
+                    throw new Exception("date time format failed");
+                }
+                Debug.Assert(written == dateTimeRLength);
+                temp = s_headerBytesMasterLast;
+                s_headerBytesMasterLast = s_headerBytesScratchLast;
+                s_headerBytesScratchLast = temp;
             }
         }
     }

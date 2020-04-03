@@ -28,7 +28,7 @@ namespace PlatformBenchmarks
             writer.Write(DateHeader.HeaderBytes);
 
             // Content-Type header
-            writer.Write(_headerContentTypeJson);
+            writer.Write(_headerContentTypeJsonComplete);
 
             // Content-Length header
             writer.Write(_headerContentLength);
