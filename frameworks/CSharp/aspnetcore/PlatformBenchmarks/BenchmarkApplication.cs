@@ -57,7 +57,6 @@ namespace PlatformBenchmarks
             var requestType = RequestType.NotRecognized;
             if (method == HttpMethod.Get)
             {
-                var pathLength = path.Length;
 #if !DATABASE
                 if (path.Length >= 2 && path[0] == '/')
                 {
@@ -71,6 +70,7 @@ namespace PlatformBenchmarks
                     }
                 }
 #else
+                var pathLength = path.Length;
                 if (Paths.SingleQuery.Length <= pathLength && path.StartsWith(Paths.SingleQuery))
                 {
                     requestType = RequestType.SingleQuery;
