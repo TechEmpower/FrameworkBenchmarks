@@ -1,0 +1,46 @@
+[package]
+name = "roa-techempower"
+version = "0.1.0"
+edition = "2018"
+publish = false
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "roa"
+path = "src/main.rs"
+
+[[bin]]
+name = "roa-db"
+path = "src/main-db.rs"
+
+[[bin]]
+name = "roa-core"
+path = "src/main-core.rs"
+
+[dependencies]
+roa = { version = "0.5.0", features = ["json", "template", "router"] }
+roa-diesel = { version = "0.5.0", optional = true }
+roa-pg = { version = "0.5.0", optional = true }
+roa-tokio = { version = "0.5.0", optional = true }
+async-std = { version = "1.5", features = ["attributes"] }
+askama = "0.9"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rand = { version = "0.7", features = ["small_rng"] }
+bytes = "0.5.3"
+futures = "0.3.4"
+http = "0.2"
+lazy_static = "1.4.0"
+dotenv_codegen = "0.15.0"
+
+tokio = { version = "0.2.13", features = ["full"], optional = true }
+diesel = { version = "1.4.3", features = ["postgres"], optional = true }
+sqlx = { version = "0.2", features = ["postgres"], optional = true }
+#hyper = "0.13"
+
+[features]
+orm = ["diesel", "roa-diesel"]
+pg = ["roa-pg"]
+sqlx-pg = ["sqlx"]
+tokio_rt = ["tokio", "roa-tokio"]
