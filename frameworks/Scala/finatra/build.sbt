@@ -1,4 +1,4 @@
-lazy val finatraVersion = "20.3.0"
+lazy val finatraVersion = "20.4.0"
 
 name := "techempower-benchmarks-finatra"
 organization := "com.twitter"
@@ -20,7 +20,7 @@ assemblyMergeStrategy in assembly := {
 libraryDependencies ++= Seq(
   ("com.twitter" %% "finatra-http" % finatraVersion).
     exclude("com.sun.activation", "javax.activation"),
-  "org.slf4j" % "slf4j-nop" % "1.7.25",
+  "org.slf4j" % "slf4j-nop" % "1.7.30",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.10",
 )
 
