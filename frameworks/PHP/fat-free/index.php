@@ -1,16 +1,16 @@
 <?php
 // drop startup errors
-if (function_exists('error_clear_last'))
-    error_clear_last();
+// if (function_exists('error_clear_last'))
+//     error_clear_last();
    
-error_reporting(0);
+// error_reporting(0);
 
 /** @var Base $f3 */
 $f3=require('src/base.php');
 
 error_reporting(-1);
 
-$f3->set('DEBUG',2);
+$f3->set('DEBUG',0);
 $f3->set('HIGHLIGHT',false);
 $f3->set('CACHE','folder=tmp/cache/');
 $f3->set('UI','ui/');
@@ -18,19 +18,19 @@ $f3->set('ONERROR',function($f3){
     echo $f3->get('ERROR.code').': '.$f3->get('ERROR.text')."\n".$f3->get('ERROR.trace');
 });
 
-$f3->set('DBS',array('mysql:host=tfb-database;port=3306;dbname=hello_world','benchmarkdbuser','benchmarkdbpass',[PDO::ATTR_PERSISTENT => true]));
+$f3->set('DBS',array('mysql:host=tfb-database;port=3306;dbname=hello_world','benchmarkdbuser','benchmarkdbpass'));
 // http: //www.techempower.com/benchmarks/#section=code
 
 // JSON test
 $f3->route('GET /json',function($f3) {
     /** @var Base $f3 */
-    header("Content-type: application/json");
+    header('Content-type: application/json');
     echo json_encode(array('message' => 'Hello, World!'));
 });
 
 
 // DB RAW test database-single-query
-$f3->route('GET /db', function ($f3,$params) {
+$f3->route('GET /db', function ($f3) {
         /** @var Base $f3 */
         $dbc = $f3->get('DBS');
         $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
@@ -40,7 +40,7 @@ $f3->route('GET /db', function ($f3,$params) {
             'id' => (int) $res[0]['id'],
             'randomNumber' => (int) $res[0]['randomNumber'],
         );
-        header("Content-type: application/json");
+        header('Content-type: application/json');
         echo json_encode($result);
     }
 );
@@ -60,7 +60,7 @@ $f3->route(array(
         $dbc = $f3->get('DBS');
         $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
         $result = array();
-        for ($i = 0; $i < $queries; $i++) {
+        for ($i = 0; $i < $queries; ++$i) {
             $id = mt_rand(1, 10000);
             $res = $db->exec('SELECT id, randomNumber FROM World WHERE id = ?',$id,0,false);
             $result[] = array(
@@ -68,20 +68,20 @@ $f3->route(array(
                 'randomNumber' => (int) $res[0]['randomNumber'],
             );
         }
-        header("Content-type: application/json");
+        header('Content-type: application/json');
         echo json_encode($result);
     }
 );
 
 // DB ORM test database-single-query
-$f3->route('GET /db-orm', function ($f3, $params) {
+$f3->route('GET /db-orm', function ($f3) {
         /** @var Base $f3 */
         $dbc = $f3->get('DBS');
         $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
         $mapper = new \DB\SQL\Mapper($db,'World');
         $id = mt_rand(1, 10000);
         $mapper->load(array('id = ?',$id));
-        header("Content-type: application/json");
+        header('Content-type: application/json');
         echo json_encode($mapper->cast());
     }
 );
@@ -103,20 +103,20 @@ $f3->route(
         $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
         $mapper = new \DB\SQL\Mapper($db,'World');
         $result = array();
-        for ($i = 0; $i < $queries; $i++) {
+        for ($i = 0; $i < $queries; ++$i) {
             $id = mt_rand(1, 10000);
             $mapper->load(array('id = ?',$id));
             $result[] = $mapper->cast();
         }
-        header("Content-type: application/json");
+        header('Content-type: application/json');
         echo json_encode($result);
     }
 );
 
 
-$f3->route('GET /plaintext', function ($f3) {
-    header("Content-type: text/plain");
-    echo "Hello, World!";
+$f3->route('GET /plaintext', function () {
+    header('Content-type: text/plain');
+    echo 'Hello, World!';
 });
 
 
@@ -150,7 +150,7 @@ $f3->route(array(
     $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
 
     $result = array();
-    for ($i = 0; $i < $queries; $i++) {
+    for ($i = 0; $i < $queries; ++$i) {
         $id = mt_rand(1, 10000);
         $row = array(
             'id'=>$id,
@@ -161,7 +161,7 @@ $f3->route(array(
         $db->exec('UPDATE World SET randomNumber = :ranNum WHERE id = :id', array(':ranNum'=>$rnu,':id'=>$id),0,false);
         $result[] = $row;
     }
-    header("Content-type: application/json");
+    header('Content-type: application/json');
     echo json_encode($result);
 });
 
@@ -181,14 +181,14 @@ $f3->route(array(
     $world = new \DB\SQL\Mapper($db,'World');
 
     $result = array();
-    for ($i = 0; $i < $queries; $i++) {
+    for ($i = 0; $i < $queries; ++$i) {
         $id = mt_rand(1, 10000);
         $world->load(array('id = ?', $id));
         $world->randomNumber = mt_rand(1, 10000);
         $world->save();
         $result[] = $world->cast();
     }
-    header("Content-type: application/json");
+    header('Content-type: application/json');
     echo json_encode($result);
 });
 
