@@ -11,5 +11,5 @@ COPY --from=maven /voovan/target/voovan-bench-0.1-jar-with-dependencies.jar app.
 COPY --from=maven /voovan/config/framework.properties config/framework.properties
 CMD java  -server -Xms2g -Xmx2g \
     --illegal-access=warn -XX:-RestrictContended -XX:+UseParallelGC -XX:+UseNUMA \
-    -DJsonCacheEnable=true -DThreadBufferPoolSize=256 -DAsyncSend=false \
+    -DThreadBufferPoolSize=256 -DAsyncSend=false \
     -cp ./config:voovan.jar:app.jar org.voovan.VoovanTFB
