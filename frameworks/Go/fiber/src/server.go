@@ -15,6 +15,15 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
+var db *pgxpool.Pool
+
+const (
+	worldcount     = 10000
+	helloworld     = "Hello, World!"
+	worldselectsql = "SELECT id, randomNumber FROM World WHERE id = $1"
+	worldupdatesql = "UPDATE World SET randomNumber = $1 WHERE id = $2"
+)
+
 func main() {
 
 	initDatabase()
@@ -34,17 +43,6 @@ func main() {
 	app.Listen(8080)
 }
 
-const (
-	worldcount     = 10000
-	helloworld     = "Hello, World!"
-	worldselectsql = "SELECT id, randomNumber FROM World WHERE id = $1"
-	worldupdatesql = "UPDATE World SET randomNumber = $1 WHERE id = $2"
-)
-
-var (
-	db *pgxpool.Pool
-)
-
 // Message ...
 type Message struct {
 	Message string `json:"message"`
@@ -55,7 +53,7 @@ type Worlds []World
 
 // World ...
 type World struct {
-	Id           int32 `json:"id"`
+	ID           int32 `json:"id"`
 	RandomNumber int32 `json:"randomNumber"`
 }
 
@@ -91,7 +89,7 @@ func AcquireWorld() *World {
 
 // ReleaseWorld ...
 func ReleaseWorld(w *World) {
-	w.Id = 0
+	w.ID = 0
 	w.RandomNumber = 0
 	WorldPool.Put(w)
 }
@@ -126,9 +124,8 @@ func initDatabase() {
 	if maxConn == 0 {
 		maxConn = 8
 	}
-	maxConn = maxConn * 4
-	if child {
-		maxConn = runtime.NumCPU()
+	if !child {
+		maxConn = maxConn * 4
 	}
 
 	var err error
@@ -149,7 +146,7 @@ func jsonHandler(c *fiber.Ctx) {
 // dbHandler :
 func dbHandler(c *fiber.Ctx) {
 	w := AcquireWorld()
-	db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.Id, &w.RandomNumber)
+	db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 	c.JSON(w)
 	ReleaseWorld(w)
 }
@@ -160,7 +157,7 @@ func queriesHandler(c *fiber.Ctx) {
 	worlds := AcquireWorlds()[:n]
 	for i := 0; i < n; i++ {
 		w := &worlds[i]
-		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.Id, &w.RandomNumber)
+		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 	}
 	c.JSON(Worlds(worlds))
 	ReleaseWorlds(worlds)
@@ -172,17 +169,17 @@ func updateHandler(c *fiber.Ctx) {
 	worlds := AcquireWorlds()[:n]
 	for i := 0; i < n; i++ {
 		w := &worlds[i]
-		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.Id, &w.RandomNumber)
+		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 		w.RandomNumber = int32(RandomWorld())
 	}
 	// sorting is required for insert deadlock prevention.
 	sort.Slice(worlds, func(i, j int) bool {
-		return worlds[i].Id < worlds[j].Id
+		return worlds[i].ID < worlds[j].ID
 	})
 
 	batch := pgx.Batch{}
 	for _, w := range worlds {
-		batch.Queue(worldupdatesql, w.RandomNumber, w.Id)
+		batch.Queue(worldupdatesql, w.RandomNumber, w.ID)
 	}
 	db.SendBatch(context.Background(), &batch).Close()
 	c.JSON(Worlds(worlds))

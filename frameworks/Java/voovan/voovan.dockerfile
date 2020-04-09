@@ -15,3 +15,4 @@ CMD [
   "-DJsonCacheEnable=true", "-DThreadBufferPoolSize=256", "-DAsyncSend=false", 
   "-cp", "./config:voovan.jar:app.jar", "org.voovan.VoovanTFB"
 ]
+

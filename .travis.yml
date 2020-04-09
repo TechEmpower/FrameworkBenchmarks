@@ -72,6 +72,7 @@ env:
     - 'TESTDIR="Rust/may-minihttp Rust/nickel Rust/rocket"'
     - 'TESTDIR="Rust/rouille Rust/thruster Rust/tokio-minihttp"'
     - 'TESTDIR="Rust/warp-rust"'
+    - 'TESTDIR="Rust/roa"'
     - 'TESTDIR="Scala/akka-http Scala/blaze Scala/cask Scala/colossus Scala/finagle"'
     - 'TESTDIR="Scala/finatra Scala/finch Scala/http4s"'
     - 'TESTDIR="Scala/play2-scala Scala/scalene Scala/youi"'
