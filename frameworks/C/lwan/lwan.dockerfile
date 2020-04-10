@@ -9,7 +9,7 @@ ADD ./ /lwan
 WORKDIR /lwan
 
 RUN mkdir mimalloc && \
-    wget https://github.com/microsoft/mimalloc/archive/acb03c54971c4b0a43a6d17ea55a9d5feb88972f.tar.gz -O - | tar xz --strip-components=1 -C mimalloc && \
+    wget https://github.com/microsoft/mimalloc/archive/6e1ca96a4965c776c10698c24dae576523178ef5.tar.gz -O - | tar xz --strip-components=1 -C mimalloc && \
     cd mimalloc && mkdir build && cd build && \
     CFLAGS="-flto -ffat-lto-objects" cmake .. -DCMAKE_BUILD_TYPE=Release -DMI_SECURE=OFF && make -j install
 
@@ -18,7 +18,7 @@ RUN mkdir luajit && \
     cd luajit && \
     PREFIX=/usr CFLAGS="-O3 -mtune=native -march=native -flto -ffat-lto-objects" make -j install
 
-RUN wget https://github.com/lpereira/lwan/archive/b61c4ff17a516c9045abdd614db191072f0fd19b.tar.gz -O - | tar xz --strip-components=1 && \
+RUN wget https://github.com/lpereira/lwan/archive/a75278f067189fc93ea41b25e5ec46f5eb95b217.tar.gz -O - | tar xz --strip-components=1 && \
     mkdir build && cd build && \
     cmake /lwan -DCMAKE_BUILD_TYPE=Release -DUSE_ALTERNATIVE_MALLOC=mimalloc && \
     make lwan-static
@@ -31,5 +31,6 @@ ENV MYSQL_USER=benchmarkdbuser
 ENV MYSQL_PASS=benchmarkdbpass
 ENV MYSQL_DB=hello_world
 ENV MYSQL_HOST=tfb-database
+ENV LD_PRELOAD=/usr/local/lib/mimalloc-1.6/libmimalloc.so
 
 CMD ["./techempower"]
