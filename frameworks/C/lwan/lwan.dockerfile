@@ -18,7 +18,7 @@ RUN mkdir luajit && \
     cd luajit && \
     PREFIX=/usr CFLAGS="-O3 -mtune=native -march=native -flto -ffat-lto-objects" make -j install
 
-RUN wget https://github.com/lpereira/lwan/archive/b61c4ff17a516c9045abdd614db191072f0fd19b.tar.gz -O - | tar xz --strip-components=1 && \
+RUN wget https://github.com/lpereira/lwan/archive/a75278f067189fc93ea41b25e5ec46f5eb95b217.tar.gz -O - | tar xz --strip-components=1 && \
     mkdir build && cd build && \
     cmake /lwan -DCMAKE_BUILD_TYPE=Release -DUSE_ALTERNATIVE_MALLOC=mimalloc && \
     make lwan-static
