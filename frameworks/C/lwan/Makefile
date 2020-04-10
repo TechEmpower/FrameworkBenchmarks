@@ -1,6 +1,7 @@
 .PHONY: all
 
 CFLAGS = -mtune=native -march=native -O3 -fno-plt -flto -ffat-lto-objects -DNDEBUG \
+	-falign-functions=32 -malign-data=abi \
 	-include /lwan/build/lwan-build-config.h \
 	-I /lwan/src/lib \
 	`pkg-config mariadb --cflags` \
