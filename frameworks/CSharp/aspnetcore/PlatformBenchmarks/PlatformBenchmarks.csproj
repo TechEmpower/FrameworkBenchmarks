@@ -6,6 +6,10 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   
+  <PropertyGroup>
+    <DefineConstants Condition=" '$(IsDatabase)' == 'true' ">$(DefineConstants);DATABASE</DefineConstants>
+  </PropertyGroup>
+  
   <ItemGroup>
       <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
@@ -14,10 +18,5 @@
     <PackageReference Include="Npgsql" Version="4.1.2" />
     <PackageReference Include="MySqlConnector" Version="0.62.0-beta5" />
     <PackageReference Include="RedHat.AspNetCore.Server.Kestrel.Transport.Linux" Version="3.0.0-*" />
-
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.0" />
-    
   </ItemGroup>
 </Project>

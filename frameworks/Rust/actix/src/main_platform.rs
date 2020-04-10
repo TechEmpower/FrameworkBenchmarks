@@ -49,7 +49,7 @@ impl Service for App {
     fn call(&mut self, req: Request) -> Self::Future {
         let path = req.path();
         match path {
-            "/db" => {
+            "/d" => {
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
                 let fut = self.db.get_world();
@@ -63,7 +63,7 @@ impl Service for App {
                     Ok(res)
                 })
             }
-            "/fortune" => {
+            "/f" => {
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_cthtml.clone();
                 let fut = self.db.tell_fortune();

@@ -21,7 +21,6 @@ RUN git clone -b dev --single-branch --depth 1 https://github.com/KumbiaPHP/Kumb
 RUN git clone -b master --single-branch --depth 1 https://github.com/KumbiaPHP/ActiveRecord.git vendor/Kumbia/ActiveRecord
 
 RUN sed -i "s|header(|\\\Workerman\\\Protocols\\\Http::header(|g" bench/app/controllers/*.php
-#RUN sed -i "s|mysql:host|pgsql:host|g" bench/app/config/databases.php
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
