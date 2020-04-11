@@ -31,14 +31,14 @@ app.get("json") { req in
 }
 
 app.get("db") { req in
-    World.find(.random(in: 1 ... 10_000), on: req.db)
+    World.find(.random(in: 1...10_000), on: req.db)
         .unwrap(or: Abort(.notFound))
 }
 
 app.get("queries") { req -> EventLoopFuture<[World]> in
     let queries = (req.query["queries"] ?? 1).bounded(to: 1...500)
     return (0 ..< queries).map { _ -> EventLoopFuture<World> in
-        World.find(.random(in: 1 ... 10_000), on: req.db)
+        World.find(.random(in: 1...10_000), on: req.db)
             .unwrap(or: Abort(.notFound))
     }.flatten(on: req.eventLoop)
 }

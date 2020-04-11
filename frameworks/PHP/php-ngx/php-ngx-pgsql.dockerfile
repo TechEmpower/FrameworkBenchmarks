@@ -11,9 +11,9 @@ RUN apt-get update -yqq > /dev/null && \
 
 ADD ./ ./
 
-ENV NGINX_VERSION=1.17.8
+ENV NGINX_VERSION=1.17.9
 
-RUN git clone -b v0.0.22 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
+RUN git clone -b v0.0.23 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
 
 RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
     tar -zxf nginx-${NGINX_VERSION}.tar.gz && \
@@ -28,6 +28,7 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
 
 RUN sed -i "s|mysql:|pgsql:|g" /app.php
 
-CMD export WORKERS=$(( 4 * $(nproc) )) && \
-    sed -i "s/worker_processes  auto/worker_processes $WORKERS/g" /deploy/nginx.conf && \
-    /nginx/sbin/nginx -c /deploy/nginx.conf 
+RUN export WORKERS=$(( 4 * $(nproc) )) && \
+    sed -i "s|worker_processes  auto|worker_processes $WORKERS|g" /deploy/nginx.conf
+
+CMD /nginx/sbin/nginx -c /deploy/nginx.conf

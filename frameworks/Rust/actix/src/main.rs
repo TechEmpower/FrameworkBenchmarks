@@ -24,7 +24,7 @@ async fn json() -> HttpResponse {
 
     let mut res = HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
     res.headers_mut()
-        .insert(SERVER, HeaderValue::from_static("Actix"));
+        .insert(SERVER, HeaderValue::from_static("A"));
     res.headers_mut()
         .insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
     res
@@ -36,7 +36,7 @@ async fn plaintext() -> HttpResponse {
         Body::Bytes(Bytes::from_static(b"Hello, World!")),
     );
     res.headers_mut()
-        .insert(SERVER, HeaderValue::from_static("Actix"));
+        .insert(SERVER, HeaderValue::from_static("A"));
     res.headers_mut()
         .insert(CONTENT_TYPE, HeaderValue::from_static("text/plain"));
     res
@@ -52,10 +52,11 @@ async fn main() -> std::io::Result<()> {
         .bind("techempower", "0.0.0.0:8080", || {
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
+                .client_timeout(0)
                 .h1(map_config(
                     App::new()
-                        .service(web::resource("/json").to(json))
-                        .service(web::resource("/plaintext").to(plaintext)),
+                        .service(web::resource("/j").to(json))
+                        .service(web::resource("/p").to(plaintext)),
                     |_| AppConfig::default(),
                 ))
                 .tcp()

@@ -1,10 +1,8 @@
 module fiber
 
-go 1.13
+go 1.14
 
 require (
-	github.com/gofiber/fiber v1.3.2
-	github.com/jackc/pgx/v4 v4.3.0
-	github.com/tidwall/gjson v1.4.0 // indirect
-	github.com/tidwall/sjson v1.0.4
+	github.com/gofiber/fiber v1.8.431
+	github.com/jackc/pgx/v4 v4.6.0
 )

@@ -84,7 +84,7 @@ func main() {
 	}
 
 	// init atreugo server
-	server := atreugo.New(&atreugo.Config{
+	server := atreugo.New(atreugo.Config{
 		Addr: bindHost,
 		Name: "Go",
 	})
