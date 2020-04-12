@@ -1,7 +1,7 @@
-asyncpg==0.19.0
-gunicorn==19.9.0
-Jinja2==2.10.3
-blacksheep==0.2.0
-ujson==1.35
--e git+https://github.com/MagicStack/uvloop@82104fb68e6cf2b469622e62169cdbeac93846cb#egg=uvloop
-uvicorn==0.9.0
+asyncpg==0.20.1
+gunicorn==20.0.4
+Jinja2==2.11.1
+blacksheep==0.2.2
+ujson==2.0.3
+uvloop==0.14.0
+uvicorn==0.11.3
