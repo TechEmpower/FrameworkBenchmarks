@@ -32,8 +32,7 @@ $f3->route('GET /json',function($f3) {
 // DB RAW test database-single-query
 $f3->route('GET /db', function ($f3) {
         /** @var Base $f3 */
-        $dbc = $f3->get('DBS');
-        $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
+        $db = new \DB\SQL(...$f3->get('DBS'));
         $id = mt_rand(1, 10000);
         $res = $db->exec('SELECT id, randomNumber FROM World WHERE id = ?',$id,0,false);
         $result = array(
@@ -46,23 +45,23 @@ $f3->route('GET /db', function ($f3) {
 );
 
 // DB RAW test database-multiple-query
-$f3->route(array(
+$f3->route(
+    array(
         'GET /db-multiple',
         'GET /db-multiple/@queries',
     ),
-    function ($f3,$params) {
+    function ($f3, $params) {
         /** @var Base $f3 */
         $queries = 1;
         if (isset($params['queries'])) {
             $queries = (int) $params['queries'];
             $queries = ($queries < 1) ? 1 : (($queries > 500) ? 500 : $queries);
         }
-        $dbc = $f3->get('DBS');
-        $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
+        $db = new \DB\SQL(...$f3->get('DBS'));
         $result = array();
         for ($i = 0; $i < $queries; ++$i) {
             $id = mt_rand(1, 10000);
-            $res = $db->exec('SELECT id, randomNumber FROM World WHERE id = ?',$id,0,false);
+            $res = $db->exec('SELECT id, randomNumber FROM World WHERE id = ?', $id, 0, false);
             $result[] = array(
                 'id' => (int) $res[0]['id'],
                 'randomNumber' => (int) $res[0]['randomNumber'],
@@ -76,8 +75,7 @@ $f3->route(array(
 // DB ORM test database-single-query
 $f3->route('GET /db-orm', function ($f3) {
         /** @var Base $f3 */
-        $dbc = $f3->get('DBS');
-        $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
+        $db = new \DB\SQL(...$f3->get('DBS'));
         $mapper = new \DB\SQL\Mapper($db,'World');
         $id = mt_rand(1, 10000);
         $mapper->load(array('id = ?',$id));
@@ -99,8 +97,7 @@ $f3->route(
             $queries = (int) $params['queries'];
             $queries = ($queries < 1) ? 1 : (($queries > 500) ? 500 : $queries);
         }
-        $dbc = $f3->get('DBS');
-        $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
+        $db = new \DB\SQL(...$f3->get('DBS'));
         $mapper = new \DB\SQL\Mapper($db,'World');
         $result = array();
         for ($i = 0; $i < $queries; ++$i) {
@@ -122,8 +119,7 @@ $f3->route('GET /plaintext', function () {
 
 $f3->route('GET /fortune-orm', function ($f3) {
     /** @var Base $f3 */
-	$dbc = $f3->get('DBS');
-	$db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
+	$db = new \DB\SQL(...$f3->get('DBS'));
 	$mapper = new \DB\SQL\Mapper($db,'Fortune');
     $result = $mapper->find();
     //$result = $db->exec('SELECT id, message FROM Fortune');
@@ -139,8 +135,7 @@ $f3->route('GET /fortune-orm', function ($f3) {
 
 $f3->route('GET /fortune-raw', function ($f3) {
     /** @var Base $f3 */
-    $dbc = $f3->get('DBS');
-    $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
+    $db = new \DB\SQL(...$f3->get('DBS'));
     $result = $db->exec('SELECT id, message FROM Fortune');
     $result[] = array(
         'id'=>0,
@@ -163,8 +158,7 @@ $f3->route(array(
         $queries = (int) $params['queries'];
         $queries = ( $queries < 1 ) ? 1 : ( ( $queries > 500 ) ? 500 : $queries );
     }
-    $dbc = $f3->get('DBS');
-    $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
+    $db = new \DB\SQL(...$f3->get('DBS'));
 
     $result = array();
     for ($i = 0; $i < $queries; ++$i) {
@@ -193,8 +187,7 @@ $f3->route(array(
         $queries = (int) $params['queries'];
         $queries = ($queries < 1) ? 1 : (($queries > 500) ? 500 : $queries);
     }
-    $dbc = $f3->get('DBS');
-    $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
+    $db = new \DB\SQL(...$f3->get('DBS'));
     $world = new \DB\SQL\Mapper($db,'World');
 
     $result = array();
