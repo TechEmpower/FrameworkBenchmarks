@@ -5,8 +5,8 @@ github.com/libp2p/go-reuseport v0.0.1 h1:7PhkfH73VXfPJYKQ6JwS5I/eVcoyYi9IMNGc6FW
 github.com/libp2p/go-reuseport v0.0.1/go.mod h1:jn6RmB1ufnQwl0Q1f+YxAj8isJgDCQzaaxIFYDhcYEA=
 github.com/panjf2000/ants/v2 v2.3.1 h1:9iOZHO5XlSO1Gs5K7x06uDFy8bkicWlhOKGh/TufAZg=
 github.com/panjf2000/ants/v2 v2.3.1/go.mod h1:LtwNaBX6OeF5qRtQlaeGndalVwJlS2ueur7uwoAHbPA=
-github.com/panjf2000/gnet v1.1.1 h1:wP6EyWb543EGL0V1sSAm9OSABuj4jILnsE/zsSi+Sno=
-github.com/panjf2000/gnet v1.1.1/go.mod h1:o5PiLj4HiorqL/r2shIbwWrhoKf3o4DGFmvy7EJyMH0=
+github.com/panjf2000/gnet v1.1.5 h1:AX9WCGskfYXmO6/O6zk2Y68a7wxx2OOGZy/NcOzdDcQ=
+github.com/panjf2000/gnet v1.1.5/go.mod h1:o5PiLj4HiorqL/r2shIbwWrhoKf3o4DGFmvy7EJyMH0=
 github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
