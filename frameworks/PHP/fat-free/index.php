@@ -18,7 +18,7 @@ $f3->set('ONERROR',function($f3){
     echo $f3->get('ERROR.code').': '.$f3->get('ERROR.text')."\n".$f3->get('ERROR.trace');
 });
 
-$f3->set('DBS',array('mysql:host=tfb-database;port=3306;dbname=hello_world','benchmarkdbuser','benchmarkdbpass'));
+$f3->set('DBS',array('mysql:host=tfb-database;port=3306;dbname=hello_world','benchmarkdbuser','benchmarkdbpass',[ \PDO::ATTR_PERSISTENT => TRUE ]));
 // http: //www.techempower.com/benchmarks/#section=code
 
 // JSON test
@@ -33,7 +33,7 @@ $f3->route('GET /json',function($f3) {
 $f3->route('GET /db', function ($f3) {
         /** @var Base $f3 */
         $dbc = $f3->get('DBS');
-        $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
+        $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
         $id = mt_rand(1, 10000);
         $res = $db->exec('SELECT id, randomNumber FROM World WHERE id = ?',$id,0,false);
         $result = array(
@@ -58,7 +58,7 @@ $f3->route(array(
             $queries = ($queries < 1) ? 1 : (($queries > 500) ? 500 : $queries);
         }
         $dbc = $f3->get('DBS');
-        $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
+        $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
         $result = array();
         for ($i = 0; $i < $queries; ++$i) {
             $id = mt_rand(1, 10000);
@@ -77,7 +77,7 @@ $f3->route(array(
 $f3->route('GET /db-orm', function ($f3) {
         /** @var Base $f3 */
         $dbc = $f3->get('DBS');
-        $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
+        $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
         $mapper = new \DB\SQL\Mapper($db,'World');
         $id = mt_rand(1, 10000);
         $mapper->load(array('id = ?',$id));
@@ -100,7 +100,7 @@ $f3->route(
             $queries = ($queries < 1) ? 1 : (($queries > 500) ? 500 : $queries);
         }
         $dbc = $f3->get('DBS');
-        $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
+        $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
         $mapper = new \DB\SQL\Mapper($db,'World');
         $result = array();
         for ($i = 0; $i < $queries; ++$i) {
@@ -120,10 +120,27 @@ $f3->route('GET /plaintext', function () {
 });
 
 
-$f3->route('GET /fortune', function ($f3) {
+$f3->route('GET /fortune-orm', function ($f3) {
+    /** @var Base $f3 */
+	$dbc = $f3->get('DBS');
+	$db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
+	$mapper = new \DB\SQL\Mapper($db,'Fortune');
+    $result = $mapper->find();
+    //$result = $db->exec('SELECT id, message FROM Fortune');
+    $result[] = [
+        'id' => 0,
+        'message' => 'Additional fortune added at request time.'
+	];
+    $mtx = \Matrix::instance();
+    $mtx->sort($result,'message');
+    $f3->set('result',$result);
+    echo \Template::instance()->render('fortune.html');
+});
+
+$f3->route('GET /fortune-raw', function ($f3) {
     /** @var Base $f3 */
     $dbc = $f3->get('DBS');
-    $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
+    $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
     $result = $db->exec('SELECT id, message FROM Fortune');
     $result[] = array(
         'id'=>0,
@@ -147,7 +164,7 @@ $f3->route(array(
         $queries = ( $queries < 1 ) ? 1 : ( ( $queries > 500 ) ? 500 : $queries );
     }
     $dbc = $f3->get('DBS');
-    $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
+    $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
 
     $result = array();
     for ($i = 0; $i < $queries; ++$i) {
@@ -177,7 +194,7 @@ $f3->route(array(
         $queries = ($queries < 1) ? 1 : (($queries > 500) ? 500 : $queries);
     }
     $dbc = $f3->get('DBS');
-    $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],array( \PDO::ATTR_PERSISTENT => TRUE ));
+    $db = new \DB\SQL($dbc[0],$dbc[1],$dbc[2],$dbc[3]);
     $world = new \DB\SQL\Mapper($db,'World');
 
     $result = array();
