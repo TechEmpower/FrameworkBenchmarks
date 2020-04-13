@@ -25,7 +25,7 @@ $f3->set('DBS', array('mysql:host=tfb-database;port=3306;dbname=hello_world', 'b
 $f3->route('GET /json', function ($f3) {
     /** @var Base $f3 */
     header('Content-type: application/json');
-    echo json_encode(array('message' => 'Hello, World!'));
+    echo json_encode(['message' => 'Hello, World!']);
 });
 
 
