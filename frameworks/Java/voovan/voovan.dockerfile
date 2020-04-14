@@ -9,7 +9,9 @@ FROM openjdk:11.0.3-jdk-slim
 WORKDIR /voovan
 COPY --from=maven /voovan/target/voovan-bench-0.1-jar-with-dependencies.jar app.jar
 COPY --from=maven /voovan/config/framework.properties config/framework.properties
-CMD java  -server -Xms2g -Xmx2g \
-    --illegal-access=warn -XX:-RestrictContended -XX:+UseParallelGC -XX:+UseNUMA \
-    -DThreadBufferPoolSize=256 -DAsyncSend=false \
-    -cp ./config:voovan.jar:app.jar org.voovan.VoovanTFB
+CMD java -DThreadBufferPoolSize=256 -DAsyncSend=false \
+ --illegal-access=warn -XX:-RestrictContended \
+ -server -Xms2g -Xmx2g \
+ -XX:+UseParallelGC -XX:+UseNUMA \
+ -XX:+AggressiveOpts -XX:+UseBiasedLocking \
+ -cp ./config:./target/classes:voovan-framework.jar org.voovan.VoovanTFB
