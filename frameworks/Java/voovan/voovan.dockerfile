@@ -3,7 +3,7 @@ WORKDIR /voovan
 COPY pom.xml pom.xml
 COPY src src
 COPY config/framework.properties config/framework.properties
-RUN mvn package -q
+RUN mvn package
 
 FROM openjdk:11.0.3-jdk-slim
 WORKDIR /voovan
