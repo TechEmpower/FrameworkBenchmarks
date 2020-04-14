@@ -22,7 +22,7 @@ import java.util.Objects;
 public class VoovanTFB {
 	private static final byte[] HELLO_WORLD = "Hello, World!".getBytes();
 
-	static class Message {
+	public static class Message {
 
 		private final String message;
 
