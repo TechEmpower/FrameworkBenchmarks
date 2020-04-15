@@ -80,6 +80,7 @@ func init() {
 }
 
 func main() {
+	g.View().SetAutoEncode(true)
 	s := g.Server()
 	s.Group("/", func(group *ghttp.RouterGroup) {
 		group.Middleware(func(r *ghttp.Request) {
