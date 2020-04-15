@@ -59,8 +59,8 @@ class Benchmarker:
 
         with open(os.path.join(self.results.directory, 'benchmark.log'),
                   'w') as benchmark_log:
-            for idx, test in self.tests:
-                if idx == len(self.tests):
+            for test in self.tests:
+                if self.tests.index(test) + 1 == len(self.tests):
                     self.last_test = True
                 log("Running Test: %s" % test.name, border='-')
                 with self.config.quiet_out.enable():
