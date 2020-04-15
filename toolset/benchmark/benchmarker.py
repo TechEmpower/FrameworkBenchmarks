@@ -141,6 +141,9 @@ class Benchmarker:
                 self.time_logger.mark_started_database()
 
             # Start webapp
+            # Wait 60 seconds before starting webapp to ensure all host connections are closed
+            log("Sleeping 60 seconds...", prefix=log_prefix)
+            time.sleep(60)
             container = test.start()
             self.time_logger.mark_test_starting()
             if container is None:
