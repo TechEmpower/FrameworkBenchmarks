@@ -15,7 +15,7 @@ env:
     - "TESTLANG=C"
     - "TESTLANG=CSharp"
     - 'TESTDIR="C++/cppcms C++/cpoll_cppsp C++/poco"'
-    - "TESTDIR=C++/ffead-cpp"s
+    - "TESTDIR=C++/ffead-cpp"
     - "TESTDIR=C++/cutelyst"
     - "TESTDIR=C++/libhttpserver"
     - "TESTDIR=C++/silicon"
