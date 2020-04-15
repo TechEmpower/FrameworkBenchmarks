@@ -92,6 +92,9 @@ class Benchmarker:
                 file=file,
                 color=Fore.RED if success else '')
         self.time_logger.log_test_end(log_prefix=prefix, file=file)
+        # Sleep for 60 seconds to ensure all host connects are closed
+        log("Clean up: Sleep 60 seconds...", prefix=prefix, file=file)
+        time.sleep(60)
         return success
 
     def __run_test(self, test, benchmark_log):
@@ -141,9 +144,6 @@ class Benchmarker:
                 self.time_logger.mark_started_database()
 
             # Start webapp
-            # Wait 60 seconds before starting webapp to ensure all host connections are closed
-            log("Sleeping 60 seconds...", prefix=log_prefix)
-            time.sleep(60)
             container = test.start()
             self.time_logger.mark_test_starting()
             if container is None:
