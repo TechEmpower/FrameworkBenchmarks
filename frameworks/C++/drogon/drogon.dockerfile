@@ -2,16 +2,16 @@ FROM ubuntu:18.04
 
 COPY ./ ./
 
-RUN  apt update -yqq && \
+RUN  apt-get update -yqq && \
      apt-get install -yqq software-properties-common && \
-	 apt install -yqq sudo curl wget cmake locales git \
+	 apt-get install -yqq sudo curl wget cmake locales git \
      openssl libssl-dev \
      libjsoncpp-dev \
      uuid-dev libreadline-dev libbison-dev flex \
      zlib1g-dev && \
      add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
-	 apt update -yqq && \
-	 apt install -yqq gcc-8 g++-8
+	 apt-get update -yqq && \
+	 apt-get install -yqq gcc-8 g++-8
 
 RUN locale-gen en_US.UTF-8
 

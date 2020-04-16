@@ -1,5 +1,5 @@
 FROM mono:5.12.0.226
-RUN apt update -yqq && apt install -yqq unzip
+RUN apt-get update -yqq && apt-get install -yqq unzip
 
 RUN mkdir /java
 WORKDIR /java

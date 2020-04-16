@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 
-RUN apt update -qq && \
-    apt install -yqq locales wget build-essential
+RUN apt-get update -qq && \
+    apt-get install -yqq locales wget build-essential
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8

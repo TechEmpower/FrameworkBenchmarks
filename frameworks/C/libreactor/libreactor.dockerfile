@@ -1,11 +1,11 @@
 FROM ubuntu:16.04
 
-RUN apt update -yqq
-RUN apt install -yqq software-properties-common python-software-properties wget make
+RUN apt-get update -yqq
+RUN apt-get install -yqq software-properties-common python-software-properties wget make
 
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
-    apt update -yqq && \
-    apt install -yqq gcc-6 g++-6
+    apt-get update -yqq && \
+    apt-get install -yqq gcc-6 g++-6
 
 ADD ./ /libreactor
 WORKDIR /libreactor
