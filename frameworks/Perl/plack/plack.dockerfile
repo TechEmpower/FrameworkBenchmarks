@@ -1,6 +1,6 @@
 FROM perl:latest
 
-RUN apt update -yqq && apt install -yqq nginx
+RUN apt-get update -yqq && apt-get install -yqq nginx
 RUN cpanm --notest --no-man-page Plack JSON::XS Unix::Processors DBI DBD::mysql
 RUN cpanm --notest --no-man-page Gazelle Cookie::Baker::XS
 

@@ -3,8 +3,8 @@ FROM ubuntu:19.10
 WORKDIR /h2o_app_src
 COPY ./ ./
 
-RUN apt update && \
-    apt install -yqq autoconf bison cmake curl file flex g++ git libnuma-dev libpq-dev libssl-dev \
+RUN apt-get update && \
+    apt-get install -yqq autoconf bison cmake curl file flex g++ git libnuma-dev libpq-dev libssl-dev \
                      libtool libyajl-dev libz-dev make wget
 
 ### Install mustache-c

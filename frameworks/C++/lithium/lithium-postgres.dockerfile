@@ -1,7 +1,7 @@
 FROM buildpack-deps:focal
 
-RUN apt update -yqq
-RUN apt install -yqq g++-9 libboost-dev postgresql-server-dev-all libpq-dev wget libboost-context-dev
+RUN apt-get update -yqq
+RUN apt-get install -yqq g++-9 libboost-dev postgresql-server-dev-all libpq-dev wget libboost-context-dev
 
 COPY ./ ./
 

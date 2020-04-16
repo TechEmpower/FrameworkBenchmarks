@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
-RUN apt update -yqq && \
-    apt install -yqq flex libglib2.0-dev libsoup2.4-dev libjson-glib-dev python3-pip \
+RUN apt-get update -yqq && \
+    apt-get install -yqq flex libglib2.0-dev libsoup2.4-dev libjson-glib-dev python3-pip \
       build-essential unzip wget curl bison
 
 #--------------------------------------

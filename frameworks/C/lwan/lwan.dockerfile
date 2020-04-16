@@ -1,7 +1,7 @@
 FROM ubuntu:19.10
 
-RUN apt update -yqq && \
-	apt install -yqq \
+RUN apt-get update -yqq && \
+	apt-get install -yqq \
 		git pkg-config build-essential cmake zlib1g-dev \
 		libsqlite3-dev libmariadbclient-dev wget
 

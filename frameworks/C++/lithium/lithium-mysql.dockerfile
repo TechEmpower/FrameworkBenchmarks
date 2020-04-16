@@ -1,7 +1,7 @@
 FROM buildpack-deps:focal
 
-RUN apt update -yqq
-RUN apt install -yqq libboost-dev libmariadb-dev wget  libboost-context-dev g++-9
+RUN apt-get update -yqq
+RUN apt-get install -yqq libboost-dev libmariadb-dev wget  libboost-context-dev g++-9
 
 COPY ./ ./
 
