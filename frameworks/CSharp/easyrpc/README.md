@@ -17,7 +17,7 @@ This includes tests for plaintext and json serialization.
 
 **Web Stack**
 
-* [EasyRpc]https://github.com/ipjohnson/EasyRpc)
+* [EasyRpc](https://github.com/ipjohnson/EasyRpc)
 * ASP.NET Core
 
 ## Paths & Source for Tests
