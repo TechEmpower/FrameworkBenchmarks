@@ -40,14 +40,14 @@ try {
         $view->setViewsDir($config->application->viewsDir);
 
         $view->registerEngines(array(
-            ".volt" => function($view, $di) {
+            ".volt" => function($view) {
 
-                $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
+                $volt = new \Phalcon\Mvc\View\Engine\Volt($view);
 
                 $volt->setOptions(array(
-                    "compiledPath" => APP_PATH . "/app/compiled-templates/",
-                    "compiledExtension" => ".compiled",
-                    "compiledSeparator" => '_',
+                    "path" => APP_PATH . "/app/compiled-templates/",
+                    "extension" => ".compiled",
+                    "separator" => '_',
                 ));
 
                 return $volt;
@@ -92,9 +92,10 @@ try {
     }, true);
 
     // Handle the request
+    $request = new Phalcon\Http\Request();
     $application = new \Phalcon\Mvc\Application();
     $application->setDI($di);
-    echo $application->handle()->getContent();
+    echo $application->handle($request->getURI())->getContent();
 
 } catch(\Phalcon\Exception $e) {
     echo "PhalconException: ", $e->getMessage();

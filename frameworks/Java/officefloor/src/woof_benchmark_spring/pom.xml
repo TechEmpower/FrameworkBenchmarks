@@ -39,6 +39,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>2.2.4.RELEASE</version>
 				<configuration>
 					<mainClass>net.officefloor.OfficeFloorMain</mainClass>
 					<classifier>exec</classifier>

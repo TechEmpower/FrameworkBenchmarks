@@ -1,12 +1,11 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.1 AS build
-WORKDIR /app
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.101 AS build
+WORKDIR /source
 COPY src .
-RUN dotnet publish -c Release -f netcoreapp2.1 -o out
+RUN dotnet publish -c Release -f netcoreapp3.1 -o /app
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.1 AS runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.2 AS runtime
 ENV ASPNETCORE_URLS http://+:8080
-ENV COMPlus_ReadyToRun 0
 WORKDIR /app
-COPY --from=build /app/out ./
+COPY --from=build /app .
 
 ENTRYPOINT ["dotnet", "NancyBenchmark.dll"]

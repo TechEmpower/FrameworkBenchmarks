@@ -8,21 +8,60 @@ extern crate rocket_contrib;
 extern crate diesel;
 #[macro_use]
 extern crate serde_derive;
+extern crate lazy_static;
 
 use diesel::prelude::*;
 use diesel::result::Error;
-use rand::Rng;
-use rocket_contrib::json::Json;
-use rocket::config::{Config, LoggingLevel, Environment};
+use lazy_static::lazy_static;
+use rand::seq::SliceRandom;
+use rand::thread_rng;
+use rocket::config::{Config, Environment, LoggingLevel};
 use rocket::response::content;
+use rocket_contrib::json::Json;
+use std::sync::Mutex;
 use yarte::Template;
 
 mod db;
 mod models;
 mod schema;
 
+struct RandomArray {
+    pointer: usize,
+    size: i32,
+    data: Vec<i32>,
+}
+
+impl RandomArray {
+    fn new(size: i32) -> Self {
+        let mut data: Vec<i32> = (1..=size).collect();
+        let mut rng = thread_rng();
+        data.shuffle(&mut rng);
+
+        RandomArray {
+            pointer: 0,
+            size,
+            data,
+        }
+    }
+
+    fn next(&mut self) -> i32 {
+        if self.pointer >= self.size as usize {
+            self.pointer = 1;
+        } else {
+            self.pointer += 1;
+        }
+        self.data[self.pointer - 1]
+    }
+}
+
+lazy_static! {
+    static ref RANDOM_ARRAY: Mutex<RandomArray> = Mutex::new(RandomArray::new(10000));
+}
 fn random_number() -> i32 {
-    rand::thread_rng().gen_range(1, 10_001)
+    RANDOM_ARRAY
+        .lock()
+        .expect("Failed to lock RANDOM_ARRAY")
+        .next()
 }
 
 #[get("/plaintext")]
@@ -70,10 +109,11 @@ fn queries(conn: db::DbConn, q: u16) -> Json<Vec<models::World>> {
     let mut results = Vec::with_capacity(q as usize);
 
     for _ in 0..q {
+        let query_id = random_number();
         let result = world
-            .filter(id.eq(random_number()))
+            .filter(id.eq(query_id))
             .first::<models::World>(&*conn)
-            .expect("error loading world");
+            .unwrap_or_else(|_| panic!("error loading world, id={}", query_id));
         results.push(result);
     }
 
@@ -83,7 +123,7 @@ fn queries(conn: db::DbConn, q: u16) -> Json<Vec<models::World>> {
 #[derive(Template)]
 #[template(path = "fortunes.html.hbs")]
 pub struct FortunesTemplate<'a> {
-    pub fortunes: &'a Vec<models::Fortune>
+    pub fortunes: &'a Vec<models::Fortune>,
 }
 
 #[get("/fortunes")]
@@ -101,7 +141,13 @@ fn fortunes(conn: db::DbConn) -> content::Html<String> {
 
     fortunes.sort_by(|a, b| a.message.cmp(&b.message));
 
-    content::Html(FortunesTemplate{fortunes: &fortunes}.call().expect("error rendering template"))
+    content::Html(
+        FortunesTemplate {
+            fortunes: &fortunes,
+        }
+        .call()
+        .expect("error rendering template"),
+    )
 }
 
 #[get("/updates")]
@@ -124,10 +170,11 @@ fn updates(conn: db::DbConn, q: u16) -> Json<Vec<models::World>> {
     let mut results = Vec::with_capacity(q as usize);
 
     for _ in 0..q {
+        let query_id = random_number();
         let mut result = world
-            .filter(id.eq(random_number()))
+            .filter(id.eq(query_id))
             .first::<models::World>(&*conn)
-            .expect("error loading world");
+            .unwrap_or_else(|_| panic!("error loading world, id={}", query_id));
         result.randomNumber = random_number();
         results.push(result);
     }
@@ -150,9 +197,12 @@ fn main() {
         .address("0.0.0.0")
         .port(8000)
         .log_level(LoggingLevel::Off)
-        .workers((num_cpus::get()*16) as u16)
+        .workers((num_cpus::get() * 16) as u16)
+        .keep_alive(0)
         .expect("failed to generate config");
-    config.set_secret_key("dY+Rj2ybjGxKetLawKGSWi6EzESKejvENbQ3stffZg0=").expect("failed to set secret");
+    config
+        .set_secret_key("dY+Rj2ybjGxKetLawKGSWi6EzESKejvENbQ3stffZg0=")
+        .expect("failed to set secret");
     rocket::custom(config)
         .mount(
             "/",

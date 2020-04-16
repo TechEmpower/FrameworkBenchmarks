@@ -1,7 +1,7 @@
 package kooby
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.jooby.BadRequestException
+import io.jooby.exception.BadRequestException
 import io.jooby.Context
 import io.jooby.ExecutionMode.EVENT_LOOP
 import io.jooby.MediaType.JSON

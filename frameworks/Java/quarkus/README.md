@@ -2,37 +2,50 @@
 
 This is the Quarkus portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-There is currently one repository implementation.
-* [WorldRepository](src/main/java/io/quarkus/benchmark/repository/WorldRepository.java) is using JPA.
+## Implementations
+There is currently two repository implementations.
+
+### Hibernate via JPA
+* [WorldRepository](hibernate/src/main/java/io/quarkus/benchmark/repository/hibernate/WorldRepository.java)
+* [FortuneRepository](hibernate/src/main/java/io/quarkus/benchmark/repository/hibernate/FortuneRepository.java)
+
+### Asynchronous DB accesses via pgclient
+* [WorldRepository](pgclient/src/main/java/io/quarkus/benchmark/repository/pgclient/WorldRepository.java)
+* [FortuneRepository](pgclient/src/main/java/io/quarkus/benchmark/repository/pgclient/FortuneRepository.java)
+
 
 ### Plaintext Test
 
-* [Plaintext test source](src/main/java/io/quarkus/benchmark/resource/PlainTextResource.java)
+* [Plaintext test source](base/src/main/java/io/quarkus/benchmark/resource/PlaintextResource.java)
 
 ### JSON Serialization Test
 
-* [JSON test source](src/main/java/io/quarkus/benchmark/resource/JsonResource.java)
+* [JSON test source](base/src/main/java/io/quarkus/benchmark/resource/JsonResource.java)
 
 ### Database Query Test
 
-* [Database Query test source](src/main/java/io/quarkus/benchmark/resource/DbResource.java)
+* [Hibernate Database Query test source](hibernate/src/main/java/io/quarkus/benchmark/resource/hibernate/DbResource.java)
+* [PGClient Database Query test source](pgclient/src/main/java/io/quarkus/benchmark/resource/pgclient/DbResource.java)
 
 ### Database Queries Test
 
-* [Database Queries test source](src/main/java/io/quarkus/benchmark/resource/DbResource.java)
+* [Hibernate Database Query test source](hibernate/src/main/java/io/quarkus/benchmark/resource/hibernate/DbResource.java)
+* [PGClient Database Query test source](pgclient/src/main/java/io/quarkus/benchmark/resource/pgclient/DbResource.java)
 
 ### Database Update Test
 
-* [Database Update test source](src/main/java/io/quarkus/benchmark/resource/DbResource.java)
+* [Hibernate Database Query test source](hibernate/src/main/java/io/quarkus/benchmark/resource/hibernate/DbResource.java)
+* [PGClient Database Query test source](pgclient/src/main/java/io/quarkus/benchmark/resource/pgclient/DbResource.java)
 
 ### Template rendering Test
 
-* [Template rendering test source](src/main/java/io/quarkus/benchmark/resource/FortuneResource.java)
+* [Hibernate Template rendering test source](hibernate/src/main/java/io/quarkus/benchmark/resource/hibernate/FortuneResource.java)
+* [PGClient Template rendering test source](pgclient/src/main/java/io/quarkus/benchmark/resource/pgclient/FortuneResource.java)
 
 ## Versions
 
 * [Java OpenJDK 11](http://openjdk.java.net/)
-* [Quarkus 0.16.0](https://quarkus.io)
+* [Quarkus 1.1.1](https://quarkus.io)
 
 ## Test URLs
 
@@ -46,16 +59,20 @@ There is currently one repository implementation.
 
 ### Database Query Test
 
-    http://localhost:8080/db
+    http://localhost:8080/hibernate/db
+    http://localhost:8080/pgclient/db
 
 ### Database Queries Test
 
-    http://localhost:8080/queries?queries=5
+    http://localhost:8080/hibernate/queries?queries=5
+    http://localhost:8080/pgclient/queries?queries=5
 
 ### Database Update Test
 
-    http://localhost:8080/updates?queries=5
+    http://localhost:8080/hibernate/updates?queries=5
+    http://localhost:8080/pgclient/updates?queries=5
 
 ### Template rendering Test
 
-    http://localhost:8080/fortunes
+    http://localhost:8080/hibernate/fortunes
+    http://localhost:8080/pgclient/fortunes
