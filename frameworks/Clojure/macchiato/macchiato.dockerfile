@@ -5,6 +5,6 @@ COPY src src
 COPY project.clj project.clj
 ENV NODE_ENV=production
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
-RUN apt install -yqq nodejs
+RUN apt-get install -yqq nodejs
 RUN lein package
 CMD ["node", "target/release/hello.js"]

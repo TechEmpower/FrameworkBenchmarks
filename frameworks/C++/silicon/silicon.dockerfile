@@ -1,11 +1,11 @@
 FROM buildpack-deps:xenial
 
-RUN apt update -yqq && apt install -yqq software-properties-common unzip cmake
+RUN apt-get update -yqq && apt-get install -yqq software-properties-common unzip cmake
 
 RUN add-apt-repository -s "deb http://apt.llvm.org/`lsb_release -cs`/ llvm-toolchain-`lsb_release -cs`-3.9 main"
 RUN wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key| apt-key add -
-RUN apt update -yqq
-RUN apt install -yqq clang-3.9 lldb-3.9
+RUN apt-get update -yqq
+RUN apt-get install -yqq clang-3.9 lldb-3.9
 
 ENV MICROHTTPD_VERSION=0.9.39
 ENV MICROHTTPD=/libmicrohttpd
@@ -19,7 +19,7 @@ RUN cd libmicrohttpd-$MICROHTTPD_VERSION && \
 
 ENV PATH=${MICROHTTPD_HOME}/bin:${PATH}
 
-RUN apt install -yqq libboost-dev cmake
+RUN apt-get install -yqq libboost-dev cmake
 
 ENV SILICON=/silicon
 
