@@ -5,7 +5,6 @@ module http.DemoProcessor;
 // import stdx.data.json;
 import std.json;
 
-import hunt.database;
 import hunt.io;
 import http.Common;
 import http.Processor;
@@ -20,7 +19,7 @@ import std.random;
 import std.string;
 
 version (POSTGRESQL) {
-    __gshared Database dbConnection;
+   // __gshared Database dbConnection;
 }
 
 enum HttpHeader textHeader = HttpHeader("Content-Type", "text/plain; charset=UTF-8");
@@ -63,7 +62,7 @@ class DemoProcessor : HttpProcessor {
         } else {
             respondWith404();
         }
-        }    
+        }
     }
 
 
@@ -79,7 +78,7 @@ class DemoProcessor : HttpProcessor {
     version (POSTGRESQL) {
         private void handleDbUpdate(string url) {
             uri.parse(url);
-            
+
             switch(uri.getPath()) {
             case "/queries":
                 UrlEncoded queriesMap = new UrlEncoded();
@@ -152,44 +151,44 @@ class DemoProcessor : HttpProcessor {
 
 
         private void respondSingleQuery() {
-            int id = uniform(1, 10001);
-            string query = "SELECT randomNumber FROM world WHERE id = " ~ id.to!string;
-            ResultSet rs = dbConnection.query(query);
-
-            JSONValue js = JSONValue(["id" : JSONValue(id), "randomNumber"
-                    : JSONValue(to!int(rs.front()[0]))]);
-
-            respondWith(js.toJSON(), 200, jsonHeader);
+            //int id = uniform(1, 10001);
+            //string query = "SELECT randomNumber FROM world WHERE id = " ~ id.to!string;
+            //ResultSet rs = dbConnection.query(query);
+            //
+            //JSONValue js = JSONValue(["id" : JSONValue(id), "randomNumber"
+            //        : JSONValue(to!int(rs.front()[0]))]);
+            //
+            //respondWith(js.toJSON(), 200, jsonHeader);
         }
 
         private void respondMultipleQuery(int queries) {
-            if (queries < 1)
-                queries = 1;
-            else if (queries > 500)
-                queries = 500;
-
-            JSONValue[] arr = new JSONValue[queries];
-            for (int i = 0; i < queries; i++) {
-                immutable id = uniform(1, 10001);
-                immutable query = "SELECT randomNumber FROM world WHERE id = " ~ id.to!string;
-                ResultSet rs = dbConnection.query(query);
-
-                arr[i] = JSONValue(["id" : JSONValue(id), "randomNumber"
-                        : JSONValue(to!int(rs.front()[0]))]);
-            }
-            JSONValue js = JSONValue(arr);
-            respondWith(js.toJSON(), 200, jsonHeader);
+            //if (queries < 1)
+            //    queries = 1;
+            //else if (queries > 500)
+            //    queries = 500;
+            //
+            //JSONValue[] arr = new JSONValue[queries];
+            //for (int i = 0; i < queries; i++) {
+            //    immutable id = uniform(1, 10001);
+            //    immutable query = "SELECT randomNumber FROM world WHERE id = " ~ id.to!string;
+            //    ResultSet rs = dbConnection.query(query);
+            //
+            //    arr[i] = JSONValue(["id" : JSONValue(id), "randomNumber"
+            //            : JSONValue(to!int(rs.front()[0]))]);
+            //}
+            //JSONValue js = JSONValue(arr);
+            //respondWith(js.toJSON(), 200, jsonHeader);
         }
 
         private void respondFortunes() {
-            immutable query = "SELECT id, message::text FROM Fortune";
-            ResultSet rs = dbConnection.query(query);
-            FortuneModel[] data = rs.map!(f => FortuneModel(f["id"].to!int, f["message"])).array;
-            data ~= FortuneModel(0, "Additional fortune added at request time.");
-            data.sort!((a, b) => a.message < b.message);
-            // trace(data);
-
-            respondWith(randerFortunes(data), 200, htmlHeader);
+            //immutable query = "SELECT id, message::text FROM Fortune";
+            //ResultSet rs = dbConnection.query(query);
+            //FortuneModel[] data = rs.map!(f => FortuneModel(f["id"].to!int, f["message"])).array;
+            //data ~= FortuneModel(0, "Additional fortune added at request time.");
+            //data.sort!((a, b) => a.message < b.message);
+            //// trace(data);
+            //
+            //respondWith(randerFortunes(data), 200, htmlHeader);
         }
 
         static string randerFortunes(FortuneModel[] data) {
@@ -219,31 +218,31 @@ class DemoProcessor : HttpProcessor {
         }
 
         private void respondUpdates(int queries) {
-            if (queries < 1)
-                queries = 1;
-            else if (queries > 500)
-                queries = 500;
-
-            JSONValue[] arr = new JSONValue[queries];
-            for (int i = 0; i < queries; i++) {
-                immutable id = uniform(1, 10001);
-                immutable idString = id.to!string;
-                immutable query = "SELECT randomNumber FROM world WHERE id = " ~ idString;
-                ResultSet rs = dbConnection.query(query);
-                int randomNumber = to!int(rs.front()[0]);
-                debug tracef("id=%d, randomNumber=%d", id, randomNumber);
-
-                randomNumber = uniform(1, 10001);
-                string updateSql = "UPDATE world SET randomNumber = "
-                    ~ randomNumber.to!string ~ "  WHERE id = " ~ idString;
-                int r = dbConnection.execute(updateSql);
-                // debug tracef("r=%d", r);
-
-                arr[i] = JSONValue(["id" : JSONValue(id), "randomNumber" : JSONValue(randomNumber)]);
-            }
-
-            JSONValue js = JSONValue(arr);
-            respondWith(js.toJSON(), 200, jsonHeader);
+            //if (queries < 1)
+            //    queries = 1;
+            //else if (queries > 500)
+            //    queries = 500;
+            //
+            //JSONValue[] arr = new JSONValue[queries];
+            //for (int i = 0; i < queries; i++) {
+            //    immutable id = uniform(1, 10001);
+            //    immutable idString = id.to!string;
+            //    immutable query = "SELECT randomNumber FROM world WHERE id = " ~ idString;
+            //    ResultSet rs = dbConnection.query(query);
+            //    int randomNumber = to!int(rs.front()[0]);
+            //    debug tracef("id=%d, randomNumber=%d", id, randomNumber);
+            //
+            //    randomNumber = uniform(1, 10001);
+            //    string updateSql = "UPDATE world SET randomNumber = "
+            //        ~ randomNumber.to!string ~ "  WHERE id = " ~ idString;
+            //    int r = dbConnection.execute(updateSql);
+            //    // debug tracef("r=%d", r);
+            //
+            //    arr[i] = JSONValue(["id" : JSONValue(id), "randomNumber" : JSONValue(randomNumber)]);
+            //}
+            //
+            //JSONValue js = JSONValue(arr);
+            //respondWith(js.toJSON(), 200, jsonHeader);
         }
     }
 }
