@@ -17,6 +17,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.18</version>
@@ -29,18 +34,24 @@
         <dependency>
             <groupId>com.techempower</groupId>
             <artifactId>gemini</artifactId>
-            <version>2.24.0</version>
+            <version>3.0.2</version>
         </dependency>
         <dependency>
             <groupId>com.techempower</groupId>
             <artifactId>gemini-jdbc</artifactId>
-            <version>2.24.0</version>
+            <version>3.0.2</version>
         </dependency>
         <dependency>
             <groupId>com.techempower</groupId>
             <artifactId>gemini-resin</artifactId>
-            <version>2.24.0</version>
+            <version>3.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>16.0.1</version>
+        </dependency>
+
     </dependencies>
 
 </project>
