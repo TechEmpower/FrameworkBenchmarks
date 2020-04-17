@@ -6,55 +6,55 @@
 	"homepage": "https://www.huntlabs.net",
 	"license": "Apache-2.0",
 	"dependencies": {
-		"hunt": "~>1.2.2",
-		"hunt-database": "~>1.2.0",
+		"hunt": "~>1.5.0-beta.2",
 		"std_data_json": "~>0.18.2"
 	},
 	"versions": [
-		"POSTGRESQL"
+		"POSTGRESQL1"
 	],
-	"configurations": [
-		{
-			"name": "default",
-			"sourcePaths": ["http"],
-			"libs-posix": [
-				"http_parser"
-			],
-			"lflags-posix": [
-				"-Lhttp-parser/"
-			],
-			"versions": [
-				"HTTP"
-			]
-		},
-		{
-			"name": "minihttp",
-			"sourcePaths": ["pico"],
-			"libs-posix": [
-				"picohttpparser"
-			],
-			"lflags-posix": [
-				"-Lpicohttpparser/"
-			],
-			"versions": [
-				"MINIHTTP"
-			]
-		},
-		{
-			"name": "mmap",
-			"sourcePaths": ["mmap"],
-			"libs-posix": [
-				"picohttpparser"
-			],
-			"lflags-posix": [
-				"-Lpicohttpparser/"
-			],
-			"versions": [
-				"MMAP"
-			]
-		}
-	],
-	"subConfigurations": {
-		"hunt-database": "postgresql"
-	}
+  "configurations": [
+    {
+      "name": "default",
+      "sourcePaths": ["http"],
+      "libs-posix": [
+        "http_parser"
+      ],
+      "lflags-posix": [
+        "-Lhttp-parser/"
+      ],
+      "versions": [
+        "HTTP"
+      ]
+    },
+    {
+      "name": "minihttp",
+      "sourcePaths": ["pico"],
+      "libs-posix": [
+        "picohttpparser"
+      ],
+      "lflags-posix": [
+        "-Lpicohttpparser/"
+      ],
+      "versions": [
+        "MINIHTTP"
+      ]
+    },
+    {
+      "name": "mmap",
+      "sourcePaths": ["mmap"],
+      "libs-posix": [
+        "picohttpparser"
+      ],
+      "lflags-posix": [
+        "-Lpicohttpparser/"
+      ],
+      "versions": [
+        "MMAP"
+      ]
+    }
+  ],
+  "subConfigurations": {
+    "hunt-database": "postgresql"
+  }
+
 }
