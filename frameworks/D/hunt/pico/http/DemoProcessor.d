@@ -44,10 +44,10 @@ class DemoProcessor : HttpProcessor {
 
         string path = req.uri;
         if(path.length == plaintextLength) { // plaintext
-            respondWith("Hello, World!", 200, textHeader);
+            respondWith(RET.TEXT, 200, textHeader);
         } else if(path.length == jsonLength) { // json
-            JSONValue js = JSONValue(["message" : JSONValue("Hello, World!")]);
-            respondWith(js.toJSON(), 200, jsonHeader);
+            //JSONValue js = JSONValue(["message" : JSONValue("Hello, World!")]);
+            respondWith(RET.JSON, 200, jsonHeader);
         } else {
 
         version (POSTGRESQL) {
@@ -67,12 +67,12 @@ class DemoProcessor : HttpProcessor {
 
 
     private void respondWith404() {
-        version (POSTGRESQL) {
-            respondWith("The available paths are: /plaintext, /json, /db, /fortunes," ~
-             " /queries?queries=number, /updates?queries=number", 404);
-        } else {
-            respondWith("The available paths are: /plaintext, /json", 404);
-        }
+        //version (POSTGRESQL) {
+        //    respondWith("The available paths are: /plaintext, /json, /db, /fortunes," ~
+        //     " /queries?queries=number, /updates?queries=number", 404);
+        //} else {
+        //    respondWith("The available paths are: /plaintext, /json", 404);
+        //}
     }
 
     version (POSTGRESQL) {
