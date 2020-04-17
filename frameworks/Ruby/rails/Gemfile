@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'unicorn', '5.4.1'
-gem 'puma', '3.12.0'
+gem 'puma', '3.12.4'
 gem 'activerecord-import', '0.27.0'
 gem 'activerecord', '5.2.2', :require => 'active_record'
 gem 'rails', '5.2.2'
