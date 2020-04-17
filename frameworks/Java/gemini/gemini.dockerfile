@@ -9,7 +9,7 @@ RUN mvn -q compile
 RUN mv src/main/webapp/WEB-INF/configuration/gemini.conf src/main/webapp/WEB-INF/configuration/Base.conf
 RUN mvn -q war:war
 
-FROM openjdk:11-jdk
+FROM openjdk:11.0.7-slim
 RUN apt update -qqy && apt install -yqq curl > /dev/null
 
 WORKDIR /resin
