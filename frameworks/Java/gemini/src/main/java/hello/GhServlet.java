@@ -14,6 +14,7 @@ import com.techempower.gemini.transport.*;
  *
  * Development history:
  *   2012-04-19 - mh - Created
+ *   2020-04-17 - ms - Updated to Gemini 3.0.2
  *
  * @author mhixson
  */
@@ -22,10 +23,7 @@ import com.techempower.gemini.transport.*;
 public class GhServlet
      extends InfrastructureServlet
 {
-
-  //
-  // Public member methods.
-  //
+  public static final GhApplication APP_INSTANCE = new GhApplication();
 
   /**
    * Gets a GeminiApplication object for this application.
@@ -33,8 +31,7 @@ public class GhServlet
   @Override
   public GhApplication getApplication()
   {
-    return GhApplication.getInstance();
+    return APP_INSTANCE;
   }
 
-}   // End GhServlet.
-
+}
