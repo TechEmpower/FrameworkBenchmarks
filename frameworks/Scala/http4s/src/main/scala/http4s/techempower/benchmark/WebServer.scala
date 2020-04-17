@@ -3,16 +3,18 @@ package http4s.techempower.benchmark
 import java.util.concurrent.ThreadLocalRandom
 
 import cats.effect._
-import cats.implicits._
-import com.github.plokhotnyuk.jsoniter_scala.core._
-import com.github.plokhotnyuk.jsoniter_scala.macros._
+import cats.instances.list._
+import cats.syntax.parallel._
+import cats.syntax.traverse._
+import io.circe.generic.auto._
+import io.circe.syntax._
 import doobie._
-import doobie.hikari.HikariTransactor
 import doobie.implicits._
+import doobie.hikari.HikariTransactor
 import doobie.util.ExecutionContexts
 import org.http4s._
 import org.http4s.dsl._
-import org.http4s.headers.`Content-Type`
+import org.http4s.circe._
 import org.http4s.implicits._
 import org.http4s.server.Router
 import org.http4s.server.blaze.BlazeServerBuilder
@@ -24,46 +26,36 @@ case class Fortune(id: Int, message: String)
 
 // Extract queries parameter (with default and min/maxed)
 object Queries {
-  def unapply(params: Map[String,Seq[String]]): Option[Int] =
-    Some(params.get("queries").getOrElse(Nil).headOption match {
+  def unapply(params: Map[String, Seq[String]]): Option[Int] =
+    Some(params.getOrElse("queries", Nil).headOption match {
       case None => 1
-      case Some(x) => Math.max(1, Math.min(500, scala.util.Try(x.toInt).getOrElse(1)))
+      case Some(x) =>
+        Math.max(1, Math.min(500, scala.util.Try(x.toInt).getOrElse(1)))
     })
 }
 
-object JsonSupport {
-  implicit val messageCodec: JsonValueCodec[Message] = JsonCodecMaker.make[Message](CodecMakerConfig())
-  implicit val worldCodec: JsonValueCodec[World] = JsonCodecMaker.make[World](CodecMakerConfig())
-  implicit val worldListCodec: JsonValueCodec[List[World]] = JsonCodecMaker.make[List[World]](CodecMakerConfig())
-  implicit val fortuneCodec: JsonValueCodec[Fortune] = JsonCodecMaker.make[Fortune](CodecMakerConfig())
-
-  implicit def jsonEncoder[T: JsonValueCodec]: EntityEncoder[IO, T] =
-    EntityEncoder
-      .byteArrayEncoder[IO]
-      .contramap((data: T) => writeToArray(data))
-      .withContentType(`Content-Type`(MediaType.application.json, Some(Charset.`UTF-8`)))
-}
-
 object WebServer extends IOApp with Http4sDsl[IO] {
-  import JsonSupport._
-
-  def openDatabase(host: String, poolSize: Int): Resource[IO, HikariTransactor[IO]] =
+  def openDatabase(host: String,
+                   poolSize: Int): Resource[IO, HikariTransactor[IO]] =
     for {
       ce <- ExecutionContexts.fixedThreadPool[IO](32) // our connect EC
-      te <- ExecutionContexts.cachedThreadPool[IO]    // our transaction TE
+      be <- Blocker[IO] // our blocking EC
       xa <- HikariTransactor.newHikariTransactor[IO](
         "org.postgresql.Driver",
         s"jdbc:postgresql://$host/hello_world",
         "benchmarkdbuser",
         "benchmarkdbpass",
         ce,
-        te
+        be
       )
-      _  <- Resource.liftF(
-        xa.configure(ds => IO {
-         ds.setMaximumPoolSize(poolSize)
-         ds.setMinimumIdle(poolSize)
-        })
+      _ <- Resource.liftF(
+        xa.configure(
+          ds =>
+            IO {
+              ds.setMaximumPoolSize(poolSize)
+              ds.setMinimumIdle(poolSize)
+          }
+        )
       )
     } yield xa
 
@@ -72,9 +64,7 @@ object WebServer extends IOApp with Http4sDsl[IO] {
 
   // Update the randomNumber field with a random number
   def updateRandomNumber(world: World): IO[World] =
-    randomWorldId.map(id =>
-      world.copy(randomNumber = id)
-    )
+    randomWorldId.map(id => world.copy(randomNumber = id))
 
   // Select a World object from the database by ID
   def selectWorld(xa: Transactor[IO], id: Int): IO[World] =
@@ -91,7 +81,7 @@ object WebServer extends IOApp with Http4sDsl[IO] {
 
   // Select a specified number of random World objects from the database
   def getWorlds(xa: Transactor[IO], numQueries: Int): IO[List[World]] =
-    (0 until numQueries).toList.traverse(_ => selectRandomWorld(xa))
+    (0 until numQueries).toList.parTraverse(_ => selectRandomWorld(xa))
 
   // Update the randomNumber field with a new random number, for a list of World objects
   def getNewWorlds(worlds: List[World]): IO[List[World]] =
@@ -102,7 +92,8 @@ object WebServer extends IOApp with Http4sDsl[IO] {
   def updateWorlds(xa: Transactor[IO], newWorlds: List[World]): IO[Int] = {
     val sql = "update World set randomNumber = ? where id = ?"
     // Reason for sorting: https://github.com/TechEmpower/FrameworkBenchmarks/pull/4214#issuecomment-489358881
-    val update = Update[(Int, Int)](sql).updateMany(newWorlds.sortBy(_.id).map(w => (w.randomNumber, w.id)))
+    val update = Update[(Int, Int)](sql)
+      .updateMany(newWorlds.sortBy(_.id).map(w => (w.randomNumber, w.id)))
     update.transact(xa)
   }
 
@@ -126,38 +117,32 @@ object WebServer extends IOApp with Http4sDsl[IO] {
 
   // HTTP service definition
   def service(xa: Transactor[IO]) =
-    addServerHeader(
-      HttpRoutes.of[IO] {
-        case GET -> Root / "plaintext" =>
-          Ok("Hello, World!")
+    addServerHeader(HttpRoutes.of[IO] {
+      case GET -> Root / "plaintext" =>
+        Ok("Hello, World!")
 
-        case GET -> Root / "json" =>
-          Ok(Message("Hello, World!"))
+      case GET -> Root / "json" =>
+        Ok(Message("Hello, World!").asJson)
 
-        case GET -> Root / "db" =>
-          Ok(selectRandomWorld(xa))
+      case GET -> Root / "db" =>
+        Ok(selectRandomWorld(xa).map(_.asJson))
 
-        case GET -> Root / "queries" :? Queries(numQueries) =>
-          Ok(getWorlds(xa, numQueries))
+      case GET -> Root / "queries" :? Queries(numQueries) =>
+        Ok(getWorlds(xa, numQueries).map(_.asJson))
 
-        case GET -> Root / "fortunes" =>
-          Ok(
-            for {
-              oldFortunes <- getFortunes(xa)
-              newFortunes = getSortedFortunes(oldFortunes)
-            } yield html.index(newFortunes)
-          )
+      case GET -> Root / "fortunes" =>
+        Ok(for {
+          oldFortunes <- getFortunes(xa)
+          newFortunes = getSortedFortunes(oldFortunes)
+        } yield html.index(newFortunes))
 
-        case GET -> Root / "updates" :? Queries(numQueries) =>
-          Ok(
-            for {
-              worlds <- getWorlds(xa, numQueries)
-              newWorlds <- getNewWorlds(worlds)
-              _ <- updateWorlds(xa, newWorlds)
-            } yield newWorlds
-          )
-      }
-    )
+      case GET -> Root / "updates" :? Queries(numQueries) =>
+        Ok(for {
+          worlds <- getWorlds(xa, numQueries)
+          newWorlds <- getNewWorlds(worlds)
+          _ <- updateWorlds(xa, newWorlds)
+        } yield newWorlds.asJson)
+    })
 
   // Given a fully constructed HttpService, start the server and wait for completion
   def startServer(service: HttpRoutes[IO]) =
