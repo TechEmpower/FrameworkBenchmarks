@@ -25,4 +25,4 @@ RUN mv /phalcon/public/index-micro.php /phalcon/public/index.php
 RUN chmod -R 777 app
 
 CMD service php7.4-fpm start && \
-    nginx -c /phalcon/deploy/nginx.conf -g "daemon off;"
+    nginx -c /phalcon/deploy/nginx.conf
