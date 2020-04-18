@@ -2,7 +2,7 @@
   "framework": "lithium",
   "tests": [
     {
-      "default": {
+      "mysql": {
         "json_url"       : "/json",
         "db_url"         : "/db",
         "query_url"      : "/queries?N=",
