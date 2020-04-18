@@ -79,6 +79,14 @@ int main(int argc, char* argv[]) {
   int nprocs = 1;
 #endif
 
+#if TFB_MYSQL
+  auto sql_db = mysql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
+                s::password = "benchmarkdbpass", s::port = 3306, s::charset = "utf8");
+#elif TFB_PGSQL
+  auto sql_db = pgsql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
+                               s::password = "benchmarkdbpass", s::port = 5432, s::charset = "utf8");
+#endif
+
   auto fortunes = sql_orm_schema(sql_db, "Fortune").fields(
     s::id(s::auto_increment, s::primary_key) = int(),
     s::message = std::string());
