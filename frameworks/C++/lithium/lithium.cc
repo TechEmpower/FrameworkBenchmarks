@@ -73,10 +73,12 @@ int main(int argc, char* argv[]) {
 
   int port = atoi(argv[2]);
 
-#if TFB_MYSQL
   int nprocs = std::thread::hardware_concurrency();
+
+#if TFB_MYSQL
+  int nthreads = nprocs;
 #elif TFB_PGSQL
-  int nprocs = 1;
+  int nthreads = 1;
 #endif
 
 #if TFB_MYSQL
@@ -97,15 +99,15 @@ int main(int argc, char* argv[]) {
 
 
 #if TFB_MYSQL
-  int db_nconn = 128/nprocs;
+  int db_nconn = 4;
   int queries_nconn = 2;
-  int fortunes_nconn = 128/nprocs;
+  int fortunes_nconn = 4;
   int updates_nconn = 1;
 #elif TFB_PGSQL
-  int db_nconn = 200;
-  int queries_nconn = 120;
-  int fortunes_nconn = 200;
-  int updates_nconn = 90;
+  int db_nconn = 7*nprocs;
+  int queries_nconn = 4*nprocs;
+  int fortunes_nconn = 7*nprocs;
+  int updates_nconn = 3*nprocs;
 #endif
 
   http_api my_api;
@@ -201,7 +203,7 @@ int main(int argc, char* argv[]) {
   };
 
   // Start the server for the Techempower benchmark.
-  http_serve(my_api, port, s::nthreads = nprocs);
+  http_serve(my_api, port, s::nthreads = nthreads);
 
   return 0;
 }
