@@ -72,18 +72,11 @@ int main(int argc, char* argv[]) {
   }
 
   int port = atoi(argv[2]);
-  int nprocs = std::thread::hardware_concurrency();
 
 #if TFB_MYSQL
-  auto sql_db =
-    mysql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
-                   s::password = "benchmarkdbpass", s::port = 3306, s::charset = "utf8");
-  int sql_max_connection = sql_db.connect()("SELECT @@GLOBAL.max_connections;").template read<int>() - 10;
+  int nprocs = std::thread::hardware_concurrency();
 #elif TFB_PGSQL
-  auto sql_db =
-    pgsql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
-                   s::password = "benchmarkdbpass", s::port = 5432, s::charset = "utf8");
-  int sql_max_connection = atoi(sql_db.connect()("SHOW max_connections;").template read<std::string>().c_str()) - 10;
+  int nprocs = 1;
 #endif
 
   auto fortunes = sql_orm_schema(sql_db, "Fortune").fields(
@@ -101,10 +94,10 @@ int main(int argc, char* argv[]) {
   int fortunes_nconn = 128/nprocs;
   int updates_nconn = 1;
 #elif TFB_PGSQL
-  int db_nconn = 200/nprocs;
-  int queries_nconn = 4;
-  int fortunes_nconn = 200/nprocs;
-  int updates_nconn = 3;
+  int db_nconn = 200;
+  int queries_nconn = 120;
+  int fortunes_nconn = 200;
+  int updates_nconn = 90;
 #endif
 
   http_api my_api;
