@@ -17,18 +17,23 @@ use actix_rt::net::TcpStream;
 use actix_server::Server;
 use actix_service::fn_service;
 use bytes::{Buf, BufMut, BytesMut};
-use simd_json::to_writer;
+use simd_json_derive::Serialize;
 
 mod models;
 mod utils;
 
-use crate::utils::{Message, Writer};
+use crate::utils::Writer;
 
 const JSON: &[u8] = b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
 const PLAIN: &[u8] = b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
 const HTTPNFOUND: &[u8] = b"HTTP/1.1 400 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: A\r\n";
 const BODY: &[u8] = b"Hello, World!";
+
+#[derive(Serialize)]
+pub struct Message {
+    pub message: &'static str,
+}
 
 struct App {
     io: TcpStream,
@@ -46,7 +51,9 @@ impl App {
                 };
                 self.write_buf.put_slice(JSON);
                 self.codec.config().set_date(&mut self.write_buf);
-                to_writer(Writer(&mut self.write_buf), &message).unwrap();
+                message
+                    .json_write(&mut Writer(&mut self.write_buf))
+                    .unwrap();
             }
             "/p" => {
                 self.write_buf.put_slice(PLAIN);
