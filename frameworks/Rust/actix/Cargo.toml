@@ -44,6 +44,7 @@ bytes = "0.5.3"
 num_cpus = "1.0"
 futures = "0.3.1"
 http = "0.2"
+simd-json = "0.3.8"
 diesel = { version = "1.4.3", features = ["postgres"] }
 url = { version="1.7", features=["query_encoding"] }
 log = { version = "0.4", features = ["release_max_level_debug"] }

@@ -17,7 +17,7 @@ use actix_rt::net::TcpStream;
 use actix_server::Server;
 use actix_service::fn_service;
 use bytes::{Buf, BufMut, BytesMut};
-use serde_json::to_writer;
+use simd_json::to_writer;
 
 mod models;
 mod utils;

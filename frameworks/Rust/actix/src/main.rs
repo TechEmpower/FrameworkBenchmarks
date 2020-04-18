@@ -20,7 +20,7 @@ async fn json() -> HttpResponse {
         message: "Hello, World!",
     };
     let mut body = BytesMut::with_capacity(SIZE);
-    serde_json::to_writer(Writer(&mut body), &message).unwrap();
+    simd_json::to_writer(Writer(&mut body), &message).unwrap();
 
     let mut res = HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
     res.headers_mut()
