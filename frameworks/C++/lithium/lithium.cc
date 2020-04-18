@@ -97,7 +97,6 @@ int main(int argc, char* argv[]) {
     s::id(s::auto_increment, s::primary_key) = int(),
     s::randomNumber = int());
 
-
 #if TFB_MYSQL
   int db_nconn = 4;
   int queries_nconn = 2;
