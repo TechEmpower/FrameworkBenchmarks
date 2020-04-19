@@ -17,12 +17,18 @@ namespace PlatformBenchmarks
         private readonly static AsciiString _crlf = "\r\n";
         private readonly static AsciiString _eoh = "\r\n\r\n"; // End Of Headers
         private readonly static AsciiString _http11OK = "HTTP/1.1 200 OK\r\n";
-        private readonly static AsciiString _headerServer = "Server: Custom";
+        private readonly static AsciiString _headerServer = "Server: K";
         private readonly static AsciiString _headerContentLength = "Content-Length: ";
-        private readonly static AsciiString _headerContentLengthZero = "Content-Length: 0\r\n";
-        private readonly static AsciiString _headerContentTypeText = "Content-Type: text/plain\r\n";
-        private readonly static AsciiString _headerContentTypeJson = "Content-Type: application/json\r\n";
-        private readonly static AsciiString _headerContentTypeHtml = "Content-Type: text/html; charset=UTF-8\r\n";
+        private readonly static AsciiString _headerContentLengthZero = "Content-Length: 0";
+        private readonly static AsciiString _headerContentTypeText = "Content-Type: text/plain";
+        private readonly static AsciiString _headerContentTypeJson = "Content-Type: application/json";
+        private readonly static AsciiString _headerContentTypeHtml = "Content-Type: text/html; charset=UTF-8";
+
+        private readonly static AsciiString _dbPreamble =
+            _http11OK +
+            _headerServer + _crlf +
+            _headerContentTypeJson + _crlf +
+            _headerContentLength;
 
         private readonly static AsciiString _plainTextBody = "Hello, World!";
 
@@ -33,53 +39,88 @@ namespace PlatformBenchmarks
         private readonly static AsciiString _fortunesTableEnd = "</table></body></html>";
         private readonly static AsciiString _contentLengthGap = new string(' ', 4);
 
+#if DATABASE
+        public static RawDb Db { get; set; }
+#endif
+
         public static class Paths
         {
             public readonly static AsciiString SingleQuery = "/db";
-            public readonly static AsciiString Json = "/json";
+            public readonly static AsciiString Json = "/j";
             public readonly static AsciiString Fortunes = "/fortunes";
-            public readonly static AsciiString Plaintext = "/plaintext";
+            public readonly static AsciiString Plaintext = "/p";
             public readonly static AsciiString Updates = "/updates/queries=";
+            public readonly static AsciiString MultipleQueries = "/queries/queries=";
         }
 
         private RequestType _requestType;
+#if DATABASE
         private int _queries;
-
+#endif
         public void OnStartLine(HttpMethod method, HttpVersion version, Span<byte> target, Span<byte> path, Span<byte> query, Span<byte> customMethod, bool pathEncoded)
         {
             var requestType = RequestType.NotRecognized;
             if (method == HttpMethod.Get)
             {
+#if !DATABASE
+                if (path.Length >= 2 && path[0] == '/')
+                {
+                    if (path[1] == 'j')
+                    {
+                        requestType = RequestType.Json;
+                    }
+                    else if (path[1] == 'p')
+                    {
+                        requestType = RequestType.PlainText;
+                    }
+                }
+#else
                 var pathLength = path.Length;
                 if (Paths.SingleQuery.Length <= pathLength && path.StartsWith(Paths.SingleQuery))
                 {
                     requestType = RequestType.SingleQuery;
                 }
-                else if (Paths.Json.Length <= pathLength && path.StartsWith(Paths.Json))
-                {
-                    requestType = RequestType.Json;
-                }
                 else if (Paths.Fortunes.Length <= pathLength && path.StartsWith(Paths.Fortunes))
                 {
                     requestType = RequestType.Fortunes;
                 }
-                else if (Paths.Plaintext.Length <= pathLength && path.StartsWith(Paths.Plaintext))
-                {
-                    requestType = RequestType.PlainText;
-                }
                 else if (Paths.Updates.Length <= pathLength && path.StartsWith(Paths.Updates))
                 {
-                    _queries = ParseQueries(path);
+                    _queries = ParseQueries(path, Paths.Updates.Length);
                     requestType = RequestType.Updates;
                 }
+                else if (Paths.MultipleQueries.Length <= pathLength && path.StartsWith(Paths.MultipleQueries))
+                {
+                    _queries = ParseQueries(path, Paths.MultipleQueries.Length);
+                    requestType = RequestType.MultipleQueries;
+                }
+#endif
             }
 
             _requestType = requestType;
         }
 
-        private static int ParseQueries(Span<byte> path)
+
+#if !DATABASE
+        private void ProcessRequest(ref BufferWriter<WriterAdapter> writer)
         {
-            if (!Utf8Parser.TryParse(path.Slice(Paths.Updates.Length), out int queries, out _) || queries < 1)
+            if (_requestType == RequestType.PlainText)
+            {
+                PlainText(ref writer);
+            }
+            else if (_requestType == RequestType.Json)
+            {
+                Json(ref writer);
+            }
+            else
+            {
+                Default(ref writer);
+            }
+        }
+#else
+        private static int ParseQueries(Span<byte> path, int pathLength)
+        {
+            if (!Utf8Parser.TryParse(path.Slice(pathLength), out int queries, out _) || queries < 1)
             {
                 queries = 1;
             }
@@ -91,21 +132,30 @@ namespace PlatformBenchmarks
             return queries;
         }
 
-        public Task ProcessRequestAsync()
+        private Task ProcessRequestAsync()
         {
+            Task task;
             var requestType = _requestType;
-            var task = Task.CompletedTask;
-            if (requestType == RequestType.PlainText)
+            if (requestType == RequestType.Fortunes)
             {
-                PlainText(Writer);
+                task = Fortunes(Writer);
             }
-            else if (requestType == RequestType.Json)
+            else if (requestType == RequestType.SingleQuery)
             {
-                Json(Writer);
+                task = SingleQuery(Writer);
+            }
+            else if (requestType == RequestType.Updates)
+            {
+                task = Updates(Writer, _queries);
+            }
+            else if (requestType == RequestType.MultipleQueries)
+            {
+                task = MultipleQueries(Writer, _queries);
             }
             else
             {
                 Default(Writer);
+                task = Task.CompletedTask;
             }
 
             return task;
@@ -114,22 +164,22 @@ namespace PlatformBenchmarks
         private static void Default(PipeWriter pipeWriter)
         {
             var writer = GetWriter(pipeWriter);
+            Default(ref writer);
+            writer.Commit();
+        }
+#endif
+        private readonly static AsciiString _defaultPreamble =
+            _http11OK +
+            _headerServer + _crlf +
+            _headerContentTypeText + _crlf +
+            _headerContentLengthZero;
 
-            // HTTP 1.1 OK
-            writer.Write(_http11OK);
-
-            // Server headers
-            writer.Write(_headerServer);
+        private static void Default(ref BufferWriter<WriterAdapter> writer)
+        {
+            writer.Write(_defaultPreamble);
 
             // Date header
             writer.Write(DateHeader.HeaderBytes);
-
-            // Content-Length 0
-            writer.Write(_headerContentLengthZero);
-
-            // End of headers
-            writer.Write(_crlf);
-            writer.Commit();
         }
 
         private enum RequestType
@@ -139,7 +189,8 @@ namespace PlatformBenchmarks
             Json,
             Fortunes,
             SingleQuery,
-            Updates
+            Updates,
+            MultipleQueries
         }
     }
 }
