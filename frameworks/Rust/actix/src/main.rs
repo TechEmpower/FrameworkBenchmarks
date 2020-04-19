@@ -11,16 +11,22 @@ use actix_web::http::header::{CONTENT_TYPE, SERVER};
 use actix_web::http::{HeaderValue, StatusCode};
 use actix_web::{web, App, HttpResponse};
 use bytes::{Bytes, BytesMut};
+use simd_json_derive::Serialize;
 
 mod utils;
-use utils::{Message, Writer, SIZE};
+use utils::{Writer, SIZE};
+
+#[derive(Serialize)]
+pub struct Message {
+    pub message: &'static str,
+}
 
 async fn json() -> HttpResponse {
     let message = Message {
         message: "Hello, World!",
     };
     let mut body = BytesMut::with_capacity(SIZE);
-    serde_json::to_writer(Writer(&mut body), &message).unwrap();
+    message.json_write(&mut Writer(&mut body)).unwrap();
 
     let mut res = HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
     res.headers_mut()
