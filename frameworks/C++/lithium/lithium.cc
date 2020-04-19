@@ -78,7 +78,13 @@ int main(int argc, char* argv[]) {
 #if TFB_MYSQL
   int nthreads = nprocs;
 #elif TFB_PGSQL
+
+#if MONOTHREAD
   int nthreads = 1;
+#else
+  int nthreads = nprocs;
+#endif
+
 #endif
 
 #if TFB_MYSQL
@@ -103,10 +109,19 @@ int main(int argc, char* argv[]) {
   int fortunes_nconn = 4;
   int updates_nconn = 1;
 #elif TFB_PGSQL
+
+#if MONOTHREAD
   int db_nconn = 7*nprocs;
   int queries_nconn = 4*nprocs;
   int fortunes_nconn = 7*nprocs;
   int updates_nconn = 3*nprocs;
+#else
+  int db_nconn = 7;
+  int queries_nconn = 4;
+  int fortunes_nconn = 7;
+  int updates_nconn = 3;
+#endif
+
 #endif
 
   http_api my_api;
