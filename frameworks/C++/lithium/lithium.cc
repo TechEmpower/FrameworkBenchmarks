@@ -109,19 +109,17 @@ int main(int argc, char* argv[]) {
   int fortunes_nconn = 4;
   int updates_nconn = 1;
 #elif TFB_PGSQL
-
-#if MONOTHREAD
-  int db_nconn = 7*nprocs;
-  int queries_nconn = 4*nprocs;
-  int fortunes_nconn = 7*nprocs;
-  int updates_nconn = 3*nprocs;
-#else
   int db_nconn = 7;
   int queries_nconn = 4;
   int fortunes_nconn = 7;
   int updates_nconn = 3;
 #endif
 
+#if MONOTHREAD
+  db_nconn *= nprocs;
+  queries_nconn *= nprocs;
+  fortunes_nconn *= nprocs;
+  updates_nconn *= nprocs;
 #endif
 
   http_api my_api;
