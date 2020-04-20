@@ -1,0 +1,29 @@
+{
+  "framework": "simps",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates/",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "mysql",
+        "framework": "Simps",
+        "language": "PHP",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "swoole",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Simps",
+        "notes": "",
+        "versus": "swoole"
+      }
+    }
+  ]
+}
