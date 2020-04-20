@@ -8,7 +8,7 @@ ENV GOPATH /chi
 ENV PATH ${GOPATH}/bin:${PATH}
 
 RUN go get github.com/mailru/easyjson/...
-RUN go get github.com/jackc/pgx
+RUN go get github.com/go-sql-driver/mysql
 RUN go get github.com/go-chi/chi
 
 RUN go build -o server src/chi/*.go
