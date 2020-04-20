@@ -8,7 +8,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
-      "framework": "voovan",
+      "framework": "voovan-mvc",
       "language": "Java",
       "flavor": "None",
       "orm": "None",
