@@ -44,8 +44,12 @@ http://localhost:8080/db
 
 ### UPDATE
 
-http://localhost:8080/updates/queries/
+http://localhost:8080/updates/
 
 ### FORTUNES
 
 http://localhost:8080/fortunes
+
+### QUERY
+
+http://localhost:8080/queries/

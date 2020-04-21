@@ -83,6 +83,25 @@ class IndexController
         );
     }
 
+    public function queries($server, $fd, $data)
+    {
+        $db = new DbModel();
+        if (isset($data['queries'])) {
+            $res = $db->db((int)$data['queries']);
+        } else {
+            $res = $db->db();
+        }
+
+        $server->send(
+            $fd,
+            SimpleResponse::build(
+                $res,
+                200,
+                ['Content-Type' => 'application/json', 'Date' => gmdate("D, d M Y H:i:s T")]
+            )
+        );
+    }
+
     public function updates($server, $fd, $data)
     {
         $db = new DbModel();
