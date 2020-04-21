@@ -100,6 +100,7 @@ async def database_updates(queries=None):
     worlds = [{"id": row_id, "randomNumber": number} for row_id, number in updates]
 
     async with connection_pool.acquire() as connection:
+        statement = await connection.prepare(READ_ROW_SQL)
         for row_id, number in updates:
             await statement.fetchval(row_id)
         await connection.executemany(WRITE_ROW_SQL, updates)
