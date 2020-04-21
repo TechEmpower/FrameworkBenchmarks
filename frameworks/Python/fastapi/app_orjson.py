@@ -6,9 +6,11 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, ORJSONResponse, PlainTextResponse
 from random import randint
 from operator import itemgetter
+from functools import partial
 
+_randint = partial(randint, 1, 10000)
 
-READ_ROW_SQL = 'SELECT "randomnumber" FROM "world" WHERE id = $1'
+READ_ROW_SQL = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
 
@@ -61,26 +63,21 @@ async def json_serialization():
 
 @app.get("/db")
 async def single_database_query():
-    row_id = randint(1, 10000)
-
     async with connection_pool.acquire() as connection:
-        number = await connection.fetchval(READ_ROW_SQL, row_id)
+        record = await connection.fetchrow(READ_ROW_SQL, _randint())
 
-    return ORJSONResponse({"id": row_id, "randomNumber": number})
+    return ORJSONResponse({"id": record['id'], "randomNumber": record['randomnumber']})
 
 
 @app.get("/queries")
 async def multiple_database_queries(queries=None):
-
     num_queries = get_num_queries(queries)
-    row_ids = [randint(1, 10000) for _ in range(num_queries)]
-    worlds = []
+    worlds = tuple(map(lambda _: {"id": _randint(), "randomNumber": None}, range(num_queries)))
 
     async with connection_pool.acquire() as connection:
         statement = await connection.prepare(READ_ROW_SQL)
-        for row_id in row_ids:
-            number = await statement.fetchval(row_id)
-            worlds.append({"id": row_id, "randomNumber": number})
+        for world in worlds:
+            world["randomNumber"] = await statement.fetchval(world["id"])
 
     return ORJSONResponse(worlds)
 
@@ -99,11 +96,10 @@ async def fortunes():
 @app.get("/updates")
 async def database_updates(queries=None):
     num_queries = get_num_queries(queries)
-    updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
+    updates = [(_randint(), _randint()) for _ in range(num_queries)]
     worlds = [{"id": row_id, "randomNumber": number} for row_id, number in updates]
 
     async with connection_pool.acquire() as connection:
-        statement = await connection.prepare(READ_ROW_SQL)
         for row_id, number in updates:
             await statement.fetchval(row_id)
         await connection.executemany(WRITE_ROW_SQL, updates)
