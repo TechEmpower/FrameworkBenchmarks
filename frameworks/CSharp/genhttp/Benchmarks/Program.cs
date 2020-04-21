@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-using GenHTTP.Core;
+﻿using GenHTTP.Core;
 using GenHTTP.Modules.Core;
 using GenHTTP.Modules.Webservices;
 
@@ -21,8 +17,7 @@ namespace Benchmarks
                               .Add<JsonResource>("json");
 
             return Host.Create()
-                       .Router(tests)
-                       .Compression(false)
+                       .Handler(tests)
                        .Run();
         }
 
