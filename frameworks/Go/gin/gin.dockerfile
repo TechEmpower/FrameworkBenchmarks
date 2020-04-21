@@ -1,5 +1,7 @@
 FROM golang:1.14
 
+ENV GO111MODULE=off
+
 ADD ./ /gin
 WORKDIR /gin
 
