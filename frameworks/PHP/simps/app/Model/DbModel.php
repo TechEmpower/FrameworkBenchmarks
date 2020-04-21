@@ -38,7 +38,7 @@ class DbModel extends BaseModel
 
         $arr = [];
         $this->pdo->updates_test_select = $this->pdo->updates_test_select ?? $this->pdo->prepare(
-                'SELECT randomNumber FROM World WHERE id = ?'
+                'SELECT id, randomNumber FROM World WHERE id = ?'
             );
         $this->pdo->updates_test_update = $this->pdo->updates_test_update ?? $this->pdo->prepare(
                 'UPDATE World SET randomNumber = ? WHERE id = ?'
