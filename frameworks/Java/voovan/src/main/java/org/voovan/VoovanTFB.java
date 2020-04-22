@@ -20,7 +20,8 @@ import java.util.Objects;
 
 
 public class VoovanTFB {
-	private static final byte[] HELLO_WORLD = "Hello, World!".getBytes();
+	private static final String HELLO_WORLD_STR = "Hello, World!";
+	private static final byte[] HELLO_WORLD_BYTES = "Hello, World!".getBytes();
 
 	public static class Message {
 
@@ -53,24 +54,27 @@ public class VoovanTFB {
 		webServerConfig.setCache(true);
 		webServerConfig.getModuleonfigs().clear();
 		webServerConfig.getRouterConfigs().clear();
+		webServerConfig.setEnablePathVariables(false);
+                webServerConfig.setEnableWebSocket(false);
+		
 		WebServer webServer = WebServer.newInstance(webServerConfig);
 
 		//性能测试请求;
 		webServer.get("/plaintext", new HttpRouter() {
 			public void process(HttpRequest req, HttpResponse resp) throws Exception {
 				resp.header().put(HttpStatic.CONTENT_TYPE_STRING, HttpStatic.TEXT_PLAIN_STRING);
-				resp.write(HELLO_WORLD);
+				resp.write(HELLO_WORLD_BYTES);
 			}
 		});
 		//性能测试请求
 		webServer.get("/json", new HttpRouter() {
 			public void process(HttpRequest req, HttpResponse resp) throws Exception {
 				resp.header().put(HttpStatic.CONTENT_TYPE_STRING, HttpStatic.APPLICATION_JSON_STRING);
-				resp.write(JSON.toJSON(new Message("Hello, World!"), false, false));
+				resp.write(JSON.toJSON(new Message(HELLO_WORLD_STR), false, false));
 			}
 		});
 
-		Logger.setEnable(true);
+		Logger.setEnable(false);
 
 		webServer.serve();
 	}
