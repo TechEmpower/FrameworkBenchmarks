@@ -25,6 +25,7 @@
 #include "lwan-private.h"
 #include "lwan-config.h"
 #include "lwan-template.h"
+#include "lwan-mod-lua.h"
 
 #include "database.h"
 #include "json.h"
@@ -359,18 +360,6 @@ LWAN_HANDLER(quit_lwan)
 
 int main(void)
 {
-    static const struct lwan_url_map url_map[] = {
-        /* Routes for the TWFB benchmark: */
-        {.prefix = "/json", .handler = LWAN_HANDLER_REF(json)},
-        {.prefix = "/db", .handler = LWAN_HANDLER_REF(db)},
-        {.prefix = "/queries", .handler = LWAN_HANDLER_REF(queries)},
-        {.prefix = "/plaintext", .handler = LWAN_HANDLER_REF(plaintext)},
-        {.prefix = "/fortunes", .handler = LWAN_HANDLER_REF(fortunes)},
-        /* Routes for the test harness: */
-        {.prefix = "/quit-lwan", .handler = LWAN_HANDLER_REF(quit_lwan)},
-        {.prefix = "/hello", .handler = LWAN_HANDLER_REF(plaintext)},
-        {.prefix = NULL},
-    };
     struct lwan l;
 
     lwan_init(&l);
@@ -410,7 +399,6 @@ int main(void)
     if (!fortune_tpl)
         lwan_status_critical("Could not compile fortune templates");
 
-    lwan_set_url_map(&l, url_map);
     lwan_main_loop(&l);
 
     lwan_tpl_free(fortune_tpl);

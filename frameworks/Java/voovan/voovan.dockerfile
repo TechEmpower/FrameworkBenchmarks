@@ -10,4 +10,4 @@ WORKDIR /voovan
 COPY --from=maven /voovan/target/voovan-bench-0.1-jar-with-dependencies.jar app.jar
 COPY --from=maven /voovan/config/framework.properties config/framework.properties
 #CMD ["java", "-server", "-Xms5g", "-Xmx5g", "--illegal-access=warn", "-XX:-RestrictContended", "-XX:+UseParallelGC", "-XX:+UseNUMA", "-cp", "./config:voovan.jar:app.jar", "org.voovan.VoovanTFB"]
-CMD ["java", "-server", "-Xms5g", "-Xmx5g", "-XX:-RestrictContended", "-XX:+UseParallelGC", "-XX:+UseNUMA", "-cp", "./config:voovan.jar:app.jar", "org.voovan.VoovanTFB"]
+CMD ["java", "-server", "-Xms5g", "-Xmx5g", "-XX:+AggressiveOpts", "-XX:+UseBiasedLocking", "-XX:+UseParallelGC", "-XX:+UseNUMA", "-cp", "./config:voovan.jar:app.jar", "org.voovan.VoovanTFB"]

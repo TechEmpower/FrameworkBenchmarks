@@ -7,7 +7,7 @@ RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq wget git unzip libxml2-dev cmake make systemtap-sdt-dev \
                     zlibc zlib1g zlib1g-dev libpcre3 libpcre3-dev libargon2-0-dev libsodium-dev \
-                    php7.4 php7.4-common php7.4-dev libphp7.4-embed php7.4-pgsql nginx > /dev/null
+                    php7.4 php7.4-common php7.4-dev libphp7.4-embed php7.4-mysql nginx > /dev/null
 
 ADD ./ ./
 
@@ -26,9 +26,7 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --add-module=/ngx_php7 > /dev/null && \
     make > /dev/null && make install > /dev/null
 
-RUN sed -i "s|mysql:|pgsql:|g" /app.php
-
 RUN export WORKERS=$(( 4 * $(nproc) )) && \
-    sed -i "s|worker_processes  auto|worker_processes $WORKERS|g" /deploy/nginx.conf
+    sed -i "s/worker_processes  auto/worker_processes $WORKERS/g" /deploy/nginx.conf
 
-CMD /nginx/sbin/nginx -c /deploy/nginx.conf
+CMD /nginx/sbin/nginx -c /deploy/nginx.conf 
