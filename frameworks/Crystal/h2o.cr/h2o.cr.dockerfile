@@ -1,7 +1,7 @@
 FROM debian:sid
 
-RUN apt update \
-  && apt install -yqq libh2o-evloop-dev libwslay-dev libyaml-0-2 libevent-dev libpcre3-dev \
+RUN apt-get update \
+  && apt-get install -yqq libh2o-evloop-dev libwslay-dev libyaml-0-2 libevent-dev libpcre3-dev \
     gcc wget git libssl-dev libuv1-dev ca-certificates --no-install-recommends
 
 RUN wget -q https://github.com/crystal-lang/crystal/releases/download/0.26.1/crystal-0.26.1-1-linux-x86_64.tar.gz \

@@ -1,7 +1,7 @@
 FROM elixir:1.9.4 as builder
 
-RUN apt update -y && \
-  apt install -y libicu-dev
+RUN apt-get update -y && \
+  apt-get install -y libicu-dev
 
 ENV MIX_ENV=prod \
   LANG=C.UTF-8
@@ -22,8 +22,8 @@ RUN mix release
 
 FROM debian:buster-slim AS app
 
-RUN apt update -y && \
-  apt install -y openssl libicu-dev
+RUN apt-get update -y && \
+  apt-get install -y openssl libicu-dev
 
 ENV LANG=C.UTF-8
 

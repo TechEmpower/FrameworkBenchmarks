@@ -17,7 +17,7 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "voovan-mvc",
-      "notes": "voovan",
+      "notes": "voovan webserver with mvc",
       "versus": "voovan"
     }
   }]

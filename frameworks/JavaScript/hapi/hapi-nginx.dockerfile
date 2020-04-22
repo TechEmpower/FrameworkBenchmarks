@@ -1,7 +1,7 @@
 FROM node:12.3.1-slim
 
-RUN apt update
-RUN apt install nginx -y
+RUN apt-get update
+RUN apt-get install nginx -y
 
 WORKDIR /
 

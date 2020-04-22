@@ -3,7 +3,7 @@ FROM ubuntu:16.04
 ADD ./ /onion
 WORKDIR /onion
 
-RUN apt update -yqq && apt install -yqq git cmake make libmysqlclient-dev libjson0-dev libgnutls-dev libgcrypt-dev
+RUN apt-get update -yqq && apt-get install -yqq git cmake make libmysqlclient-dev libjson0-dev libgnutls-dev libgcrypt-dev
 
 ENV ONION_LOG noinfo
 

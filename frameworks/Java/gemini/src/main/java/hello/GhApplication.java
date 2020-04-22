@@ -19,57 +19,13 @@ import hello.home.handler.*;
  *
  * Development history:
  *   2012-04-19 - mh - Created
+ *   2020-04-17 - ms - Updated to Gemini 3.0.2
  *
  * @author mhixson
  */
 public class GhApplication
      extends ResinGeminiApplication
 {
-  //
-  // Static variables.
-  //
-
-  private static final GhApplication INSTANCE = new GhApplication();
-
-  //
-  // Member methods.
-  //
-
-  /**
-   * Constructor.  This method can be extended to construct references
-   * to custom components for the application.
-   */
-  public GhApplication()
-  {
-    super();
-  }
-
-  //
-  // Protected component constructors.
-  //
-
-  /**
-   * Constructs a Version reference.  This is overloaded to return a
-   * custom GhVersion object.
-   */
-  @Override
-  protected Version constructVersion()
-  {
-    return new GhVersion();
-  }
-
-  /**
-   * Creates a JavaScriptWriter for writing JSON.
-   */
-  @Override
-  protected JavaScriptWriter constructJavaScriptWriter()
-  {
-    return LegacyJavaScriptWriter.custom()
-        .addVisitorFactory(World.class, World.VISITOR_FACTORY)
-        .addVisitorFactory(CachedWorld.class, CachedWorld.VISITOR_FACTORY)
-        .build();
-  }
-
   /**
    * Constructs a Dispatcher.
    */
@@ -90,14 +46,4 @@ public class GhApplication
     return new BasicConnectorFactory(this, null);
   }
 
-  //
-  // Static methods.
-  //
-
-  public static GhApplication getInstance()
-  {
-    return INSTANCE;
-  }
-
-}   // End GhApplication.
-
+}

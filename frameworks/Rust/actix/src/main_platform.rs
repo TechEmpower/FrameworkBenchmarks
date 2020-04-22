@@ -7,6 +7,7 @@ extern crate serde_derive;
 extern crate diesel;
 
 use std::future::Future;
+use std::io::Write;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
@@ -25,7 +26,7 @@ mod models;
 mod utils;
 
 use crate::db_pg_direct::PgConnection;
-use crate::utils::Writer;
+use crate::utils::{FortunesTemplate, Writer};
 
 struct App {
     db: PgConnection,
@@ -48,22 +49,7 @@ impl Service for App {
     fn call(&mut self, req: Request) -> Self::Future {
         let path = req.path();
         match path {
-            "/fortune" => {
-                let h_srv = self.hdr_srv.clone();
-                let h_ct = self.hdr_cthtml.clone();
-                let fut = self.db.tell_fortune();
-
-                Box::pin(async move {
-                    let fortunes = fut.await?;
-                    let mut res =
-                        Response::with_body(StatusCode::OK, Body::Bytes(fortunes));
-                    let hdrs = res.headers_mut();
-                    hdrs.insert(SERVER, h_srv);
-                    hdrs.insert(CONTENT_TYPE, h_ct);
-                    Ok(res)
-                })
-            }
-            "/db" => {
+            "/d" => {
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
                 let fut = self.db.get_world();
@@ -71,6 +57,24 @@ impl Service for App {
                 Box::pin(async move {
                     let body = fut.await?;
                     let mut res = Response::with_body(StatusCode::OK, Body::Bytes(body));
+                    let hdrs = res.headers_mut();
+                    hdrs.insert(SERVER, h_srv);
+                    hdrs.insert(CONTENT_TYPE, h_ct);
+                    Ok(res)
+                })
+            }
+            "/f" => {
+                let h_srv = self.hdr_srv.clone();
+                let h_ct = self.hdr_cthtml.clone();
+                let fut = self.db.tell_fortune();
+
+                Box::pin(async move {
+                    let fortunes = fut.await?;
+                    let mut body = BytesMut::with_capacity(2048);
+                    let mut writer = Writer(&mut body);
+                    let _ = write!(writer, "{}", FortunesTemplate { fortunes });
+                    let mut res =
+                        Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
                     hdrs.insert(CONTENT_TYPE, h_ct);

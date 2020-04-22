@@ -72,18 +72,27 @@ int main(int argc, char* argv[]) {
   }
 
   int port = atoi(argv[2]);
+
   int nprocs = std::thread::hardware_concurrency();
 
 #if TFB_MYSQL
-  auto sql_db =
-    mysql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
-                   s::password = "benchmarkdbpass", s::port = 3306, s::charset = "utf8");
-  int sql_max_connection = sql_db.connect()("SELECT @@GLOBAL.max_connections;").template read<int>() - 10;
+  int nthreads = nprocs;
 #elif TFB_PGSQL
-  auto sql_db =
-    pgsql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
-                   s::password = "benchmarkdbpass", s::port = 5432, s::charset = "utf8");
-  int sql_max_connection = atoi(sql_db.connect()("SHOW max_connections;").template read<std::string>().c_str()) - 10;
+
+#if MONOTHREAD
+  int nthreads = 1;
+#else
+  int nthreads = nprocs;
+#endif
+
+#endif
+
+#if TFB_MYSQL
+  auto sql_db = mysql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
+                s::password = "benchmarkdbpass", s::port = 3306, s::charset = "utf8");
+#elif TFB_PGSQL
+  auto sql_db = pgsql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
+                               s::password = "benchmarkdbpass", s::port = 5432, s::charset = "utf8");
 #endif
 
   auto fortunes = sql_orm_schema(sql_db, "Fortune").fields(
@@ -94,11 +103,24 @@ int main(int argc, char* argv[]) {
     s::id(s::auto_increment, s::primary_key) = int(),
     s::randomNumber = int());
 
-
-  int db_nconn = 128/nprocs;
+#if TFB_MYSQL
+  int db_nconn = 4;
   int queries_nconn = 2;
-  int fortunes_nconn = 128/nprocs;
+  int fortunes_nconn = 4;
   int updates_nconn = 1;
+#elif TFB_PGSQL
+  int db_nconn = 7;
+  int queries_nconn = 4;
+  int fortunes_nconn = 7;
+  int updates_nconn = 3;
+#endif
+
+#if MONOTHREAD
+  db_nconn *= nprocs;
+  queries_nconn *= nprocs;
+  fortunes_nconn *= nprocs;
+  updates_nconn *= nprocs;
+#endif
 
   http_api my_api;
 
@@ -192,24 +214,8 @@ int main(int argc, char* argv[]) {
     response.write(ss.to_string_view());
   };
 
-  // // Tune the number of sql connections.
-  // int tunning_port = port+1;
-  // std::thread server_thread([&] {
-  //   http_serve(my_api, tunning_port, s::nthreads = nprocs);
-  // });
-  // usleep(3e5);
-
-  // tune_n_sql_connections(db_nconn, "GET /db HTTP/1.1\r\n\r\n", tunning_port, 1, sql_max_connection/nprocs);
-  // tune_n_sql_connections(queries_nconn, "GET /queries?N=20 HTTP/1.1\r\n\r\n", tunning_port, 1,  std::min(sql_max_connection/nprocs, 14));
-  // tune_n_sql_connections(fortunes_nconn, "GET /fortunes HTTP/1.1\r\n\r\n", tunning_port, 1, sql_max_connection/nprocs);
-  // tune_n_sql_connections(updates_nconn, "GET /updates?N=20 HTTP/1.1\r\n\r\n", tunning_port, 1, std::min(sql_max_connection/nprocs, 7));
-  
-  // li::quit_signal_catched = true;
-  // server_thread.join();
-  // li::quit_signal_catched = false;
-
   // Start the server for the Techempower benchmark.
-  http_serve(my_api, port, s::nthreads = nprocs);
+  http_serve(my_api, port, s::nthreads = nthreads);
 
   return 0;
 }

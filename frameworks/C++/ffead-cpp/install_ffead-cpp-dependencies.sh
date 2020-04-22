@@ -2,8 +2,8 @@
 
 cd $IROOT
 
-apt update -yqq
-apt install -yqq autoconf-archive unzip uuid-dev odbc-postgresql unixodbc unixodbc-dev apache2 apache2-dev libapr1-dev libaprutil1-dev memcached libmemcached-dev redis-server libssl-dev zlib1g-dev cmake make
+apt-get update -yqq
+apt-get install -yqq autoconf-archive unzip uuid-dev odbc-postgresql unixodbc unixodbc-dev apache2 apache2-dev libapr1-dev libaprutil1-dev memcached libmemcached-dev redis-server libssl-dev zlib1g-dev cmake make
 
 #redis will not start correctly on bionic with this config
 sed -i "s/bind .*/bind 127.0.0.1/g" /etc/redis/redis.conf
@@ -34,4 +34,4 @@ tar xvf v0.13.3.tar.gz
 cd hiredis-0.13.3/
 make
 PREFIX=/usr make install
-	
+

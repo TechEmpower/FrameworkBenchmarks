@@ -2,8 +2,8 @@ FROM ubuntu:19.10
 
 COPY ./ ./
 
-RUN apt update > /dev/null && \
-    apt install -yqq autoconf bison cmake curl file flex g++ git libnuma-dev libpq-dev libssl-dev \
+RUN apt-get update > /dev/null && \
+    apt-get install -yqq autoconf bison cmake curl file flex g++ git libnuma-dev libpq-dev libssl-dev \
                      libtool libyajl-dev libz-dev make wget software-properties-common > /dev/null
 
 ### Install php

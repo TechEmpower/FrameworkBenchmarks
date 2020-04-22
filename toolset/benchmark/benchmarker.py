@@ -33,6 +33,8 @@ class Benchmarker:
         self.results = Results(self)
         self.docker_helper = DockerHelper(self)
 
+        self.last_test = False
+
     ##########################################################################################
     # Public methods
     ##########################################################################################
@@ -58,6 +60,8 @@ class Benchmarker:
         with open(os.path.join(self.results.directory, 'benchmark.log'),
                   'w') as benchmark_log:
             for test in self.tests:
+                if self.tests.index(test) + 1 == len(self.tests):
+                    self.last_test = True
                 log("Running Test: %s" % test.name, border='-')
                 with self.config.quiet_out.enable():
                     if not self.__run_test(test, benchmark_log):
@@ -92,6 +96,10 @@ class Benchmarker:
                 file=file,
                 color=Fore.RED if success else '')
         self.time_logger.log_test_end(log_prefix=prefix, file=file)
+        if self.config.mode == "benchmark" and not self.last_test:
+            # Sleep for 60 seconds to ensure all host connects are closed
+            log("Clean up: Sleep 60 seconds...", prefix=prefix, file=file)
+            time.sleep(60)
         return success
 
     def __run_test(self, test, benchmark_log):

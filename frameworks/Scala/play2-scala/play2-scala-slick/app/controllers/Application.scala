@@ -58,7 +58,7 @@ class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO, val c
 
   def fortunes() = Action.async {
     getFortunes.map { dbFortunes =>
-      val appendedFortunes =  Fortune(0, "Additional fortune added at request time.") :: dbFortunes.to[List]
+      val appendedFortunes = List(Fortune(0, "Additional fortune added at request time.")) ++ dbFortunes
       Ok(views.html.fortune(appendedFortunes))
     }
   }

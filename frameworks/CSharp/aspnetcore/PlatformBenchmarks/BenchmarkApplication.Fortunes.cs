@@ -5,12 +5,17 @@ using System.Collections.Generic;
 using System.IO.Pipelines;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 
 namespace PlatformBenchmarks
 {
     public partial class BenchmarkApplication
     {
+        private readonly static AsciiString _fortunesPreamble =
+            _http11OK +
+            _headerServer + _crlf +
+            _headerContentTypeHtml + _crlf +
+            _headerContentLength;
+
         private async Task Fortunes(PipeWriter pipeWriter)
         {
             OutputFortunes(pipeWriter, await Db.LoadFortunesRows());
@@ -20,26 +25,13 @@ namespace PlatformBenchmarks
         {
             var writer = GetWriter(pipeWriter);
 
-            // HTTP 1.1 OK
-            writer.Write(_http11OK);
-
-            // Server headers
-            writer.Write(_headerServer);
-
-            // Date header
-            writer.Write(DateHeader.HeaderBytes);
-
-            // Content-Type header
-            writer.Write(_headerContentTypeHtml);
-
-            // Content-Length header
-            writer.Write(_headerContentLength);
+            writer.Write(_fortunesPreamble);
 
             var lengthWriter = writer;
             writer.Write(_contentLengthGap);
 
-            // End of headers
-            writer.Write(_eoh);
+            // Date header
+            writer.Write(DateHeader.HeaderBytes);
 
             var bodyStart = writer.Buffered;
             // Body

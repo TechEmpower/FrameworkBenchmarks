@@ -11,7 +11,7 @@ import std.conv;
 import std.range.primitives;
 import core.stdc.string;
 
-
+import std.experimental.allocator;
 
 /* contains name and value of a header (name == NULL if is a continuing line
  * of a multiline header */
@@ -24,17 +24,17 @@ struct phr_header {
 
 /* returns number of bytes consumed if successful, -2 if request is partial,
  * -1 if failed */
-extern (C) pure @nogc nothrow int phr_parse_request(const char *buf, size_t len, const char **method, 
+extern (C) pure @nogc nothrow int phr_parse_request(const char *buf, size_t len, const char **method,
 	size_t *method_len, const char **path, size_t *path_len,
     int *minor_version, phr_header *headers, size_t *num_headers, size_t last_len);
 
 /* ditto */
-extern (C) pure @nogc nothrow int phr_parse_response(const char *_buf, size_t len, int *minor_version, 
+extern (C) pure @nogc nothrow int phr_parse_response(const char *_buf, size_t len, int *minor_version,
 	int *status, const char **msg, size_t *msg_len,
     phr_header *headers, size_t *num_headers, size_t last_len);
 
 /* ditto */
-extern (C) pure @nogc nothrow int phr_parse_headers(const char *buf, size_t len, 
+extern (C) pure @nogc nothrow int phr_parse_headers(const char *buf, size_t len,
 	phr_header *headers, size_t *num_headers, size_t last_len);
 
 /* should be zero-filled before start */
@@ -75,7 +75,7 @@ class HttpException : Exception {
 }
 
 struct HttpParser(Interceptor) {
-	
+
 private {
 	Interceptor interceptor;
 	Throwable failure;
@@ -114,7 +114,7 @@ private {
 
 	HttpHeader[] headers(bool canCopy=false)() {
 		HttpHeader[] hs = new HttpHeader[num_headers];
-		
+    //HttpHeader[] hs = theAllocator.make!(HttpHeader[num_headers]);
 		for(int i; i<num_headers; i++) {
 			phr_header* h = &_headers[i];
 			static if(canCopy) {
@@ -150,15 +150,15 @@ private {
 
 		failure = null;
 		num_headers = cast(int)_headers.length;
-		int pret = phr_parse_request(cast(const char*)chunk.ptr, cast(int)chunk.length, 
-					&_method, &method_len, 
+		int pret = phr_parse_request(cast(const char*)chunk.ptr, cast(int)chunk.length,
+					&_method, &method_len,
 					&path, &path_len,
-					&minor_version, 
+					&minor_version,
 					_headers.ptr, &num_headers,
 					0);
 		debug {
 			infof("buffer: %d bytes, request: %d bytes", chunk.length, pret);
-		} 
+		}
 
 		if(pret > 0) {
 			/* successfully parsed the request */
@@ -175,7 +175,7 @@ private {
 			debug warning("parsing incomplete");
 			num_headers = 0;
 			debug infof("pret=%d, chunk=%d", pret, chunk.length);
-			return 0;			
+			return 0;
 		}
 
 		warning("wrong data format");

@@ -23,18 +23,24 @@ namespace PlatformBenchmarks
             SetDateValues(DateTimeOffset.UtcNow);
         }, null, 1000, 1000);
 
-        private static byte[] s_headerBytesMaster = new byte[prefixLength + dateTimeRLength + suffixLength];
-        private static byte[] s_headerBytesScratch = new byte[prefixLength + dateTimeRLength + suffixLength];
+        private static byte[] s_headerBytesMaster = new byte[prefixLength + dateTimeRLength + 2 * suffixLength];
+        private static byte[] s_headerBytesScratch = new byte[prefixLength + dateTimeRLength + 2 * suffixLength];
 
         static DateHeader()
         {
             var utf8 = Encoding.ASCII.GetBytes("\r\nDate: ").AsSpan();
+
             utf8.CopyTo(s_headerBytesMaster);
             utf8.CopyTo(s_headerBytesScratch);
             s_headerBytesMaster[suffixIndex] = (byte)'\r';
             s_headerBytesMaster[suffixIndex + 1] = (byte)'\n';
+            s_headerBytesMaster[suffixIndex + 2] = (byte)'\r';
+            s_headerBytesMaster[suffixIndex + 3] = (byte)'\n';
             s_headerBytesScratch[suffixIndex] = (byte)'\r';
             s_headerBytesScratch[suffixIndex + 1] = (byte)'\n';
+            s_headerBytesScratch[suffixIndex + 2] = (byte)'\r';
+            s_headerBytesScratch[suffixIndex + 3] = (byte)'\n';
+
             SetDateValues(DateTimeOffset.UtcNow);
             SyncDateTimer();
         }
@@ -47,7 +53,7 @@ namespace PlatformBenchmarks
         {
             lock (s_headerBytesScratch)
             {
-                if (!Utf8Formatter.TryFormat(value, s_headerBytesScratch.AsSpan(prefixLength), out int written, 'R'))
+                if (!Utf8Formatter.TryFormat(value, s_headerBytesScratch.AsSpan(prefixLength), out var written, 'R'))
                 {
                     throw new Exception("date time format failed");
                 }
