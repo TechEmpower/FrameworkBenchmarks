@@ -1,5 +1,5 @@
 {
-  "framework": "voovan",
+  "framework": "voovan-mvc",
   "tests": [{
     "default": {
       "json_url": "/json",
@@ -8,17 +8,17 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
-      "framework": "voovan",
+      "framework": "voovan-mvc",
       "language": "Java",
       "flavor": "None",
       "orm": "None",
-      "platform": "Voovan",
+      "platform": "Voovan-mvc",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "voovan-mvc",
-      "notes": "voovan",
-      "versus": "voovan"
+      "notes": "voovan-mvc",
+      "versus": "voovan-mvc"
     }
   }]
 }
