@@ -16,4 +16,7 @@ return [
     ['GET', '/db', '\App\Controller\IndexController@db'],
     ['GET', '/queries/[{queries}]', '\App\Controller\IndexController@queries'],
     ['GET', '/updates/[{queries}]', '\App\Controller\IndexController@updates'],
+    ['GET', '/micro-db', '\App\Controller\IndexController@microDb'],
+    ['GET', '/micro-queries/[{queries}]', '\App\Controller\IndexController@microQueries'],
+    ['GET', '/micro-updates/[{queries}]', '\App\Controller\IndexController@microUpdates'],
 ];

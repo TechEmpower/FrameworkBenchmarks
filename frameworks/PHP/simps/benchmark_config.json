@@ -24,6 +24,26 @@
         "display_name": "Simps",
         "notes": "",
         "versus": "swoole"
+      },
+      "micro": {
+        "db_url": "/micro-db",
+        "query_url": "/micro-queries/",
+        "update_url": "/micro-updates/",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "MySQL",
+        "framework": "Simps",
+        "language": "PHP",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "swoole",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Simps",
+        "notes": "",
+        "versus": "swoole"
       }
     }
   ]
