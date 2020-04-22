@@ -6,11 +6,12 @@ This library is inspired by **[Express](https://expressjs.com/en/4x/api.html)**,
 * [Fiber](https://github.com/gofiber/fiber)
 
 ## Version Tested
-* [Fiber v0.8.0](https://github.com/gofiber/fiber/releases)
+* [Fiber v1.9.1](https://github.com/gofiber/fiber/releases)
 
 ## Test URLs
 * http://localhost:8080/json
 * http://localhost:8080/db
+* http://localhost:8080/fortune
 * http://localhost:8080/queries?queries=
 * http://localhost:8080/update?queries=
 * http://localhost:8080/plaintext
