@@ -10,21 +10,34 @@ import (
 	"strconv"
 	"sync"
 
+	"fiber/src/templates"
+
 	"github.com/gofiber/fiber"
 	pgx "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-var db *pgxpool.Pool
+var (
+	child bool
+	db    *pgxpool.Pool
+)
 
 const (
-	worldcount     = 10000
-	helloworld     = "Hello, World!"
-	worldselectsql = "SELECT id, randomNumber FROM World WHERE id = $1"
-	worldupdatesql = "UPDATE World SET randomNumber = $1 WHERE id = $2"
+	queryparam       = "q"
+	worldcount       = 10000
+	helloworld       = "Hello, World!"
+	htmlutf8         = "text/html; charset=utf-8"
+	worldselectsql   = "SELECT id, randomNumber FROM World WHERE id = $1"
+	worldupdatesql   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
+	fortuneselectsql = "SELECT id, message FROM Fortune"
 )
 
 func main() {
+	for _, arg := range os.Args[1:] {
+		if arg == "-child" {
+			child = true
+		}
+	}
 
 	initDatabase()
 
@@ -34,11 +47,12 @@ func main() {
 		ServerHeader:  "go",
 	})
 
-	app.Get("/plaintext", plaintextHandler)
-	app.Get("/json", jsonHandler)
-	app.Get("/db", dbHandler)
-	app.Get("/queries", queriesHandler)
-	app.Get("/update", updateHandler)
+	app.Get("/p", plaintextHandler)
+	app.Get("/j", jsonHandler)
+	app.Get("/q", queriesHandler)
+	app.Get("/f", templateHandler)
+	app.Get("/d", dbHandler)
+	app.Get("/u", updateHandler)
 
 	app.Listen(8080)
 }
@@ -114,18 +128,12 @@ func ReleaseWorlds(w Worlds) {
 
 // initDatabase :
 func initDatabase() {
-	var child bool
-	for _, arg := range os.Args[1:] {
-		if arg == "-child" {
-			child = true
-		}
-	}
 	maxConn := runtime.NumCPU()
 	if maxConn == 0 {
 		maxConn = 8
 	}
-	if !child {
-		maxConn = maxConn * 4
+	if child {
+		maxConn = maxConn
 	}
 
 	var err error
@@ -149,6 +157,30 @@ func dbHandler(c *fiber.Ctx) {
 	db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 	c.JSON(w)
 	ReleaseWorld(w)
+}
+
+// Frameworks/Go/fasthttp/src/server-postgresql/server.go#104
+func templateHandler(c *fiber.Ctx) {
+	rows, _ := db.Query(context.Background(), fortuneselectsql)
+
+	var f templates.Fortune
+	fortunes := make([]templates.Fortune, 0, 16)
+	for rows.Next() {
+		_ = rows.Scan(&f.ID, &f.Message)
+		fortunes = append(fortunes, f)
+	}
+	rows.Close()
+	fortunes = append(fortunes, templates.Fortune{
+		Message: "Additional fortune added at request time.",
+	})
+
+	sort.Slice(fortunes, func(i, j int) bool {
+		return fortunes[i].Message < fortunes[j].Message
+	})
+
+	c.Set(fiber.HeaderContentType, htmlutf8)
+
+	templates.WriteFortunePage(c.Fasthttp, fortunes)
 }
 
 // queriesHandler :
@@ -198,7 +230,7 @@ func RandomWorld() int {
 
 // QueriesCount :
 func QueriesCount(c *fiber.Ctx) int {
-	n, _ := strconv.Atoi(c.Query("queries"))
+	n, _ := strconv.Atoi(c.Query(queryparam))
 	if n < 1 {
 		n = 1
 	} else if n > 500 {
