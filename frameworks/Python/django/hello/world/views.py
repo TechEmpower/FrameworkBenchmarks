@@ -39,7 +39,7 @@ def db(request):
     r = _random_int()
     world = uj_dumps({
         'id' : r,
-        'randomNumber' : World.objects.only("randomnumber").get(id=r).randomnumber
+        'randomNumber' : World.objects.get(id=r).randomnumber
     })
     return HttpResponse(world, content_type="application/json")
 
@@ -49,7 +49,7 @@ def dbs(request):
 
     def caller(input_):
         int_ = _random_int()
-        return {'id' : int_, 'randomNumber' : World.objects.only("randomnumber").get(id=int_).randomnumber}
+        return {'id' : int_, 'randomNumber' : World.objects.get(id=int_).randomnumber}
     worlds = tuple(map(caller, range(queries)))
 
     return HttpResponse(uj_dumps(worlds), content_type="application/json")
