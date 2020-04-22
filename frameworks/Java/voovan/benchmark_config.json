@@ -1,7 +1,7 @@
 {
   "framework": "voovan",
   "tests": [{
-    "default": {
+    "mvc": {
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
