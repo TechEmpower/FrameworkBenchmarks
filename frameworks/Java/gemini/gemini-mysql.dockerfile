@@ -2,8 +2,8 @@ FROM maven:3.6.1-jdk-11-slim as maven
 
 WORKDIR /gemini
 
-COPY src src
-COPY pom.xml pom.xml
+COPY servlet/src src
+COPY servlet/pom.xml pom.xml
 
 RUN mvn -q compile
 RUN mv src/main/webapp/WEB-INF/configuration/gemini-mysql.conf src/main/webapp/WEB-INF/configuration/Base.conf
@@ -16,9 +16,8 @@ WORKDIR /resin
 RUN curl -sL http://caucho.com/download/resin-4.0.63.tar.gz | tar xz --strip-components=1
 # Taken from buildpack-deps:stretch - Resin compilation requires JAVA_HOME
 # also added several missing dependencies
-RUN set -ex; \
-  apt-get update; \
-  apt-get install -y --no-install-recommends \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -yqq &> /dev/null; \
+  DEBIAN_FRONTEND=noninteractive apt-get install -yqq --no-install-recommends \
   autoconf \
   automake \
   build-essential \
@@ -62,11 +61,11 @@ RUN set -ex; \
   patch \
   unzip \
   xz-utils \
-  zlib1g-dev
+  zlib1g-dev > /dev/null
 
-RUN ./configure --prefix=`pwd` --enable-64bit
-RUN make
-RUN make install
+RUN ./configure --prefix=`pwd` --enable-64bit -q &> /dev/null
+RUN make -s &> /dev/null
+RUN make install -s &> /dev/null
 RUN rm -rf webapps/*
 RUN mkdir logs
 COPY --from=maven /gemini/target/HelloWorld-0.0.1.war webapps/ROOT.war

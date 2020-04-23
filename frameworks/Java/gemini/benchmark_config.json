@@ -63,6 +63,24 @@
         "display_name": "Gemini",
         "notes": "",
         "versus": "servlet"
+      },
+      "firenio": {
+        "plaintext_url": "/test/plaintext",
+        "port": 8300,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "None",
+        "framework": "Gemini",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "Firenio",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Gemini",
+        "notes": "",
+        "versus": "servlet"
       }
     }
   ]
