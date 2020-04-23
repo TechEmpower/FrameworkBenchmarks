@@ -16,8 +16,7 @@ WORKDIR /resin
 RUN curl -sL http://caucho.com/download/resin-4.0.63.tar.gz | tar xz --strip-components=1
 # Taken from buildpack-deps:stretch - Resin compilation requires JAVA_HOME
 # also added several missing dependencies
-RUN set -ex; \
-  apt-get update -qqy; \
+RUN apt-get update -qqy &> /dev/null; \
   apt-get install -qqy --no-install-recommends \
   autoconf \
   automake \
@@ -62,11 +61,11 @@ RUN set -ex; \
   patch \
   unzip \
   xz-utils \
-  zlib1g-dev
+  zlib1g-dev &> /dev/null
 
-RUN ./configure --prefix=`pwd` --enable-64bit
-RUN make
-RUN make install
+RUN ./configure --prefix=`pwd` --enable-64bit -q &> /dev/null
+RUN make -s &> /dev/null
+RUN make install -s &> /dev/null
 RUN rm -rf webapps/*
 RUN mkdir logs
 COPY --from=maven /gemini/target/HelloWorld-0.0.1.war webapps/ROOT.war
