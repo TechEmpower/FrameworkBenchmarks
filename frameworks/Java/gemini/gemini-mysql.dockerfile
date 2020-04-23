@@ -2,8 +2,8 @@ FROM maven:3.6.1-jdk-11-slim as maven
 
 WORKDIR /gemini
 
-COPY src src
-COPY pom.xml pom.xml
+COPY servlet/src src
+COPY servlet/pom.xml pom.xml
 
 RUN mvn -q compile
 RUN mv src/main/webapp/WEB-INF/configuration/gemini-mysql.conf src/main/webapp/WEB-INF/configuration/Base.conf
