@@ -19,15 +19,9 @@ import (
 )
 
 const (
-	htmlTemplate = `<!DOCTYPE html>
-<html>
-<head><title>Fortunes</title></head>
-<body><table><tr><th>id</th><th>message</th></tr>%s</table></body>
-</html>`
+	htmlTemplate    = `<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>%s</table></body></html>`
 	fortuneTemplate = `<tr><td>%d</td><td>%s</td></tr>`
-)
 
-const (
 	helloWorldString    = "Hello, World!"
 	extraFortuneMessage = "Additional fortune added at request time."
 )
@@ -102,16 +96,14 @@ func singleQuery(w http.ResponseWriter, r *http.Request) {
 // Caps queries parameter between 1 and 500.
 // Non-int values like "foo" and "" become 1.
 func sanitizeQueryParam(queries string) int {
-	n, _ := strconv.Atoi(queries)
-
-	if n <= 0 {
-		return 1
+	n, err := strconv.Atoi(queries)
+	if err != nil {
+		n = 1
+	} else if n < 1 {
+		n = 1
+	} else if n > 500 {
+		n = 500
 	}
-
-	if n > 500 {
-		return 500
-	}
-
 	return n
 }
 
