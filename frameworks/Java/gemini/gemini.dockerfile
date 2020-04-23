@@ -17,8 +17,8 @@ RUN curl -sL http://caucho.com/download/resin-4.0.63.tar.gz | tar xz --strip-com
 # Taken from buildpack-deps:stretch - Resin compilation requires JAVA_HOME
 # also added several missing dependencies
 RUN set -ex; \
-  apt-get update; \
-  apt-get install -y --no-install-recommends \
+  apt-get update -qqy; \
+  apt-get install -qqy --no-install-recommends \
   autoconf \
   automake \
   build-essential \
