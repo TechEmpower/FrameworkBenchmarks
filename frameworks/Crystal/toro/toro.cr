@@ -1,7 +1,7 @@
 require "toro"
 require "pg"
 
-APPDB = DB.open(ENV["DATABASE_URL"])
+APPDB      = DB.open(ENV["DATABASE_URL"])
 ID_MAXIMUM = 10_000
 
 # Includes some monkey patches for Toro to make the benchmarks work
