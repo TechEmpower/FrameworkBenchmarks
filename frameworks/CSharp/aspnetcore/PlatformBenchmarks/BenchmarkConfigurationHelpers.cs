@@ -23,8 +23,8 @@ namespace PlatformBenchmarks
             var threadCountRaw = builder.GetSetting("threadCount");
             int? theadCount = null;
 
-            if (!string.IsNullOrEmpty(threadCountRaw) && 
-                Int32.TryParse(threadCountRaw, out var value))
+            if (!string.IsNullOrEmpty(threadCountRaw) &&
+                int.TryParse(threadCountRaw, out var value))
             {
                 theadCount = value;
             }
@@ -49,7 +49,7 @@ namespace PlatformBenchmarks
 
             return builder;
         }
-        
+
         public static IPEndPoint CreateIPEndPoint(this IConfiguration config)
         {
             var url = config["server.urls"] ?? config["urls"];

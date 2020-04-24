@@ -20,9 +20,10 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Peachpie",
+      "display_name": "peachpie",
       "notes": "",
-      "versus": "php"
+      "versus": "php",
+      "tags": ["broken"]
     }
   }]
 }

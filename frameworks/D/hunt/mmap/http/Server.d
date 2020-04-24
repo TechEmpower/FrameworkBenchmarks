@@ -17,7 +17,7 @@ import http.Parser;
 import http.Processor;
 
 shared static this() {
-	DateTimeHelper.startClock();
+	//DateTimeHelper.startClock();
 }
 
 import hunt.io.channel;

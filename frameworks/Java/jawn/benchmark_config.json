@@ -16,13 +16,13 @@
       "language": "Java",
       "flavor": "None",
       "orm": "Raw",
-      "platform": "Servlet",
-      "webserver": "Undertow",
+      "platform": "Undertow",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "jawn",
       "notes": "",
-      "versus": "servlet"
+      "versus": "undertow"
     }
   }]
 }

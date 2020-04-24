@@ -2,8 +2,8 @@
   "framework": "aspcore",
   "tests": [{
     "default": {
-      "plaintext_url": "/plaintext",
-      "json_url": "/json",
+      "plaintext_url": "/p",
+      "json_url": "/j",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -21,8 +21,8 @@
       "versus": "aspcore"
     },
     "rhtx": {
-      "plaintext_url": "/plaintext",
-      "json_url": "/json",
+      "plaintext_url": "/p",
+      "json_url": "/j",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",

@@ -8,7 +8,7 @@ RUN mkdir /installs
 
 WORKDIR /
 
-COPY te-benchmark/ te-benchmark/
+COPY te-benchmark-um/ te-benchmark-um/
 COPY *.sh ./
 RUN chmod 755 *.sh
 

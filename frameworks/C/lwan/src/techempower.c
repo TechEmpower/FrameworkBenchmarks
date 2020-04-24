@@ -22,16 +22,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lwan.h"
+#include "lwan-private.h"
 #include "lwan-config.h"
 #include "lwan-template.h"
+#include "lwan-mod-lua.h"
 
 #include "database.h"
 #include "json.h"
 
 enum db_connect_type { DB_CONN_MYSQL, DB_CONN_SQLITE };
 
-struct db_connection_params {
+static struct db_connection_params {
     enum db_connect_type type;
     union {
         struct {
@@ -45,33 +46,7 @@ struct db_connection_params {
             const char **pragmas;
         } sqlite;
     };
-};
-
-static struct db_connection_params db_connection_params;
-
-static struct db *get_db(void)
-{
-    static __thread struct db *database;
-
-    if (!database) {
-        switch (db_connection_params.type) {
-        case DB_CONN_MYSQL:
-            database = db_connect_mysql(db_connection_params.mysql.hostname,
-                                        db_connection_params.mysql.user,
-                                        db_connection_params.mysql.password,
-                                        db_connection_params.mysql.database);
-            break;
-        case DB_CONN_SQLITE:
-            database = db_connect_sqlite(db_connection_params.sqlite.path, true,
-                                         db_connection_params.sqlite.pragmas);
-            break;
-        }
-        if (!database)
-            lwan_status_critical("Could not connect to the database");
-    }
-
-    return database;
-}
+} db_connection_params;
 
 static const char hello_world[] = "Hello, World!";
 static const char random_number_query[] =
@@ -106,14 +81,14 @@ static int fortune_list_generator(struct coro *coro, void *data);
 
 #undef TPL_STRUCT
 #define TPL_STRUCT struct Fortune
-static const struct lwan_var_descriptor fortune_item_desc[] = {
-    TPL_VAR_INT(item.id),
-    TPL_VAR_STR_ESCAPE(item.message),
-    TPL_VAR_SENTINEL,
-};
-
 static const struct lwan_var_descriptor fortune_desc[] = {
-    TPL_VAR_SEQUENCE(item, fortune_list_generator, fortune_item_desc),
+    TPL_VAR_SEQUENCE(item,
+                     fortune_list_generator,
+                     ((const struct lwan_var_descriptor[]){
+                         TPL_VAR_INT(item.id),
+                         TPL_VAR_STR_ESCAPE(item.message),
+                         TPL_VAR_SENTINEL,
+                     })),
     TPL_VAR_SENTINEL,
 };
 
@@ -139,29 +114,66 @@ struct queries_json {
     struct db_json queries[500];
     size_t queries_len;
 };
-static const struct json_obj_descr queries_json_desc[] = {
+static const struct json_obj_descr queries_array_desc =
     JSON_OBJ_DESCR_OBJ_ARRAY(struct queries_json,
                              queries,
                              500,
                              queries_len,
                              db_json_desc,
-                             N_ELEMENTS(db_json_desc)),
-};
+                             N_ELEMENTS(db_json_desc));
+
+static struct db *get_db(void)
+{
+    static __thread struct db *database;
+
+    if (!database) {
+        switch (db_connection_params.type) {
+        case DB_CONN_MYSQL:
+            database = db_connect_mysql(db_connection_params.mysql.hostname,
+                                        db_connection_params.mysql.user,
+                                        db_connection_params.mysql.password,
+                                        db_connection_params.mysql.database);
+            break;
+        case DB_CONN_SQLITE:
+            database = db_connect_sqlite(db_connection_params.sqlite.path, true,
+                                         db_connection_params.sqlite.pragmas);
+            break;
+        }
+        if (!database)
+            lwan_status_critical("Could not connect to the database");
+    }
+
+    return database;
+}
 
 static int append_to_strbuf(const char *bytes, size_t len, void *data)
 {
     struct lwan_strbuf *strbuf = data;
 
-    return lwan_strbuf_append_str(strbuf, bytes, len) ? 0 : -EINVAL;
+    return !lwan_strbuf_append_str(strbuf, bytes, len);
 }
 
-static enum lwan_http_status json_response(struct lwan_response *response,
-                                           const struct json_obj_descr *descr,
-                                           size_t descr_len,
-                                           const void *data)
+static enum lwan_http_status
+json_response_obj(struct lwan_response *response,
+                  const struct json_obj_descr *descr,
+                  size_t descr_len,
+                  const void *data)
 {
-    if (json_obj_encode(descr, descr_len, data, append_to_strbuf,
-                        response->buffer) < 0)
+    if (json_obj_encode_full(descr, descr_len, data, append_to_strbuf,
+                             response->buffer, false) != 0)
+        return HTTP_INTERNAL_ERROR;
+
+    response->mime_type = "application/json";
+    return HTTP_OK;
+}
+
+static enum lwan_http_status
+json_response_arr(struct lwan_response *response,
+                  const struct json_obj_descr *descr,
+                  const void *data)
+{
+    if (json_arr_encode_full(descr, data, append_to_strbuf, response->buffer,
+                             false) != 0)
         return HTTP_INTERNAL_ERROR;
 
     response->mime_type = "application/json";
@@ -172,35 +184,28 @@ LWAN_HANDLER(json)
 {
     struct hello_world_json j = {.message = hello_world};
 
-    return json_response(response, hello_world_json_desc,
-                         N_ELEMENTS(hello_world_json_desc), &j);
+    return json_response_obj(response, hello_world_json_desc,
+                             N_ELEMENTS(hello_world_json_desc), &j);
 }
 
-static bool db_query(struct db_stmt *stmt,
-                     struct db_row rows[],
-                     struct db_row results[],
-                     struct db_json *out)
+static bool db_query(struct db_stmt *stmt, struct db_json *out)
 {
-    int id = rand() % 10000;
-
-    rows[0].u.i = id;
-
-    if (UNLIKELY(!db_stmt_bind(stmt, rows, 1)))
+    struct db_row row = {.kind = 'i', .u.i = (rand() % 10000) + 1};
+    if (UNLIKELY(!db_stmt_bind(stmt, &row, 1)))
         return false;
 
-    if (UNLIKELY(!db_stmt_step(stmt, results)))
+    long random_number;
+    if (UNLIKELY(!db_stmt_step(stmt, "i", &random_number)))
         return false;
 
-    out->id = id;
-    out->randomNumber = results[0].u.i;
+    out->id = row.u.i;
+    out->randomNumber = (int)random_number;
 
     return true;
 }
 
 LWAN_HANDLER(db)
 {
-    struct db_row rows[1] = {{.kind = 'i'}};
-    struct db_row results[] = {{.kind = 'i'}, {.kind = '\0'}};
     struct db_stmt *stmt = db_prepare_stmt(get_db(), random_number_query,
                                            sizeof(random_number_query) - 1);
     struct db_json db_json;
@@ -210,14 +215,14 @@ LWAN_HANDLER(db)
         return HTTP_INTERNAL_ERROR;
     }
 
-    bool queried = db_query(stmt, rows, results, &db_json);
+    bool queried = db_query(stmt, &db_json);
 
     db_stmt_finalize(stmt);
 
     if (!queried)
         return HTTP_INTERNAL_ERROR;
 
-    return json_response(response, db_json_desc, N_ELEMENTS(db_json_desc),
+    return json_response_obj(response, db_json_desc, N_ELEMENTS(db_json_desc),
                          &db_json);
 }
 
@@ -227,31 +232,27 @@ LWAN_HANDLER(queries)
     const char *queries_str = lwan_request_get_query_param(request, "queries");
     long queries;
 
-    if (LIKELY(queries_str)) {
-        queries = parse_long(queries_str, -1);
-        if (UNLIKELY(queries <= 0))
-            queries = 1;
-        else if (UNLIKELY(queries > 500))
-            queries = 500;
-    } else {
-        queries = 1;
-    }
+    queries = LIKELY(queries_str)
+                  ? LWAN_MIN(500, LWAN_MAX(1, parse_long(queries_str, -1)))
+                  : 1;
 
     struct db_stmt *stmt = db_prepare_stmt(get_db(), random_number_query,
                                            sizeof(random_number_query) - 1);
     if (UNLIKELY(!stmt))
         return HTTP_INTERNAL_ERROR;
 
-    struct queries_json qj = {.queries_len = queries};
-    struct db_row rows[1] = {{.kind = 'i'}};
-    struct db_row results[] = {{.kind = 'i'}, {.kind = '\0'}};
+    struct queries_json qj = {.queries_len = (size_t)queries};
     for (long i = 0; i < queries; i++) {
-        if (!db_query(stmt, rows, results, &qj.queries[i]))
+        if (!db_query(stmt, &qj.queries[i]))
             goto out;
     }
 
-    ret = json_response(response, queries_json_desc,
-                        N_ELEMENTS(queries_json_desc), &qj);
+    /* Avoid reallocations/copies while building response.  Each response
+     * has ~32bytes.  500 queries (max) should be less than 16384 bytes,
+     * so this is a good approximation.  */
+    lwan_strbuf_grow_to(response->buffer, (size_t)(32l * queries));
+
+    ret = json_response_arr(response, &queries_array_desc, &qj);
 
 out:
     db_stmt_finalize(stmt);
@@ -272,16 +273,8 @@ static int fortune_compare(const void *a, const void *b)
 {
     const struct Fortune *fortune_a = (const struct Fortune *)a;
     const struct Fortune *fortune_b = (const struct Fortune *)b;
-    size_t a_len = strlen(fortune_a->item.message);
-    size_t b_len = strlen(fortune_b->item.message);
 
-    if (!a_len || !b_len)
-        return a_len > b_len;
-
-    size_t min_len = a_len < b_len ? a_len : b_len;
-
-    int cmp = memcmp(fortune_a->item.message, fortune_b->item.message, min_len);
-    return cmp == 0 ? -(ssize_t)min_len : cmp;
+    return strcmp(fortune_a->item.message, fortune_b->item.message);
 }
 
 static bool append_fortune(struct coro *coro,
@@ -309,7 +302,6 @@ static bool append_fortune(struct coro *coro,
 static int fortune_list_generator(struct coro *coro, void *data)
 {
     static const char fortune_query[] = "SELECT * FROM Fortune";
-    char fortune_buffer[256];
     struct Fortune *fortune = data;
     struct fortune_array fortunes;
     struct db_stmt *stmt;
@@ -320,13 +312,10 @@ static int fortune_list_generator(struct coro *coro, void *data)
 
     fortune_array_init(&fortunes);
 
-    struct db_row results[] = {{.kind = 'i'},
-                               {.kind = 's',
-                                .u.s = fortune_buffer,
-                                .buffer_length = sizeof(fortune_buffer)},
-                               {.kind = '\0'}};
-    while (db_stmt_step(stmt, results)) {
-        if (!append_fortune(coro, &fortunes, results[0].u.i, results[1].u.s))
+    long id;
+    char fortune_buffer[256];
+    while (db_stmt_step(stmt, "is", &id, &fortune_buffer, sizeof(fortune_buffer))) {
+        if (!append_fortune(coro, &fortunes, (int)id, fortune_buffer))
             goto out;
     }
 
@@ -353,6 +342,8 @@ LWAN_HANDLER(fortunes)
 {
     struct Fortune fortune;
 
+    lwan_strbuf_grow_to(response->buffer, 1500);
+
     if (UNLIKELY(!lwan_tpl_apply_with_buffer(fortune_tpl, response->buffer,
                                              &fortune)))
         return HTTP_INTERNAL_ERROR;
@@ -361,16 +352,14 @@ LWAN_HANDLER(fortunes)
     return HTTP_OK;
 }
 
+LWAN_HANDLER(quit_lwan)
+{
+    exit(0);
+    return HTTP_OK;
+}
+
 int main(void)
 {
-    static const struct lwan_url_map url_map[] = {
-        {.prefix = "/json", .handler = LWAN_HANDLER_REF(json)},
-        {.prefix = "/db", .handler = LWAN_HANDLER_REF(db)},
-        {.prefix = "/queries", .handler = LWAN_HANDLER_REF(queries)},
-        {.prefix = "/plaintext", .handler = LWAN_HANDLER_REF(plaintext)},
-        {.prefix = "/fortunes", .handler = LWAN_HANDLER_REF(fortunes)},
-        {.prefix = NULL},
-    };
     struct lwan l;
 
     lwan_init(&l);
@@ -378,12 +367,12 @@ int main(void)
     srand((unsigned int)time(NULL));
 
     if (getenv("USE_MYSQL")) {
-        db_connection_params = (struct db_connection_params) {
+        db_connection_params = (struct db_connection_params){
             .type = DB_CONN_MYSQL,
             .mysql.user = getenv("MYSQL_USER"),
             .mysql.password = getenv("MYSQL_PASS"),
             .mysql.hostname = getenv("MYSQL_HOST"),
-            .mysql.database = getenv("MYSQL_DB")
+            .mysql.database = getenv("MYSQL_DB"),
         };
 
         if (!db_connection_params.mysql.user)
@@ -395,10 +384,10 @@ int main(void)
         if (!db_connection_params.mysql.database)
             lwan_status_critical("No MySQL database provided");
     } else {
-        const char *pragmas[] = {"PRAGMA mmap_size=44040192",
-                                 "PRAGMA journal_mode=OFF",
-                                 "PRAGMA locking_mode=EXCLUSIVE", NULL};
-        db_connection_params = (struct db_connection_params) {
+        static const char *pragmas[] = {"PRAGMA mmap_size=44040192",
+                                        "PRAGMA journal_mode=OFF",
+                                        "PRAGMA locking_mode=EXCLUSIVE", NULL};
+        db_connection_params = (struct db_connection_params){
             .type = DB_CONN_SQLITE,
             .sqlite.path = "techempower.db",
             .sqlite.pragmas = pragmas,
@@ -410,7 +399,6 @@ int main(void)
     if (!fortune_tpl)
         lwan_status_critical("Could not compile fortune templates");
 
-    lwan_set_url_map(&l, url_map);
     lwan_main_loop(&l);
 
     lwan_tpl_free(fortune_tpl);

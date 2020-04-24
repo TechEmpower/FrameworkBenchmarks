@@ -99,17 +99,7 @@ class BenchController extends \Phalcon\Mvc\Controller
     {
         usort($fortunes,
                 function($left, $right) {
-                    $l = $left['message'];
-                    $r = $right['message'];
-                    if ($l === $r) {
-                        return 0;
-                    } else {
-                        if ($l > $r) {
-                            return 1;
-                        } else {
-                            return -1;
-                        }
-                    }
+                    return $left['message'] <=> $right['message'];
                 });
         return $fortunes;
     }
@@ -120,5 +110,4 @@ class BenchController extends \Phalcon\Mvc\Controller
         $response->setHeader("Content-Type", "application/json");
         return $response;
     }
-
 }

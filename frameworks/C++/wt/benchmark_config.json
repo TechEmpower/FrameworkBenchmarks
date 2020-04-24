@@ -43,7 +43,8 @@
      	"database_os": "Linux",
      	"display_name": "wt-postgres",
      	"notes": "",
-        "versus": "wt"
+        "versus": "wt",
+		"tags": ["broken"]
      }
   }]
 }

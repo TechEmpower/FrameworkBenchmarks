@@ -9,7 +9,7 @@ markup = "0.4"
 mimalloc = "0.1"
 num_cpus = "1.0"
 oorandom = "11"
-smallvec = "0.6"
+smallvec = "1.1"
 v_htmlescape = "0.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
@@ -20,3 +20,4 @@ may_minihttp = { git = "https://github.com/Xudong-Huang/may_minihttp.git" }
 [profile.release]
 lto = true
 codegen-units = 1
+

@@ -2,8 +2,8 @@
 
 cd $IROOT
 
-apt update -yqq
-apt install -yqq autoconf-archive unzip uuid-dev odbc-postgresql unixodbc unixodbc-dev apache2 apache2-dev libapr1-dev libaprutil1-dev memcached libmemcached-dev redis-server libssl-dev zlib1g-dev cmake make
+apt-get update -yqq
+apt-get install -yqq autoconf-archive unzip uuid-dev odbc-postgresql unixodbc unixodbc-dev apache2 apache2-dev libapr1-dev libaprutil1-dev memcached libmemcached-dev redis-server libssl-dev zlib1g-dev cmake make
 
 #redis will not start correctly on bionic with this config
 sed -i "s/bind .*/bind 127.0.0.1/g" /etc/redis/redis.conf
@@ -14,7 +14,7 @@ service redis-server stop
 
 # libmyodbc has been removed from apt
 
-wget -q http://www.mirrorservice.org/sites/ftp.mysql.com/Downloads/Connector-ODBC/5.3/mysql-connector-odbc-5.3.11-linux-ubuntu16.04-x86-64bit.tar.gz
+wget -q https://cdn.mysql.com/archives/mysql-connector-odbc-5.3/mysql-connector-odbc-5.3.11-linux-ubuntu16.04-x86-64bit.tar.gz
 tar xf mysql-connector-odbc-5.3.11-linux-ubuntu16.04-x86-64bit.tar.gz
 mkdir -p /usr/lib/x86_64-linux-gnu/odbc
 mv mysql-connector-odbc-5.3.11-linux-ubuntu16.04-x86-64bit/lib/libmyodbc5* /usr/lib/x86_64-linux-gnu/odbc/
@@ -34,4 +34,4 @@ tar xvf v0.13.3.tar.gz
 cd hiredis-0.13.3/
 make
 PREFIX=/usr make install
-	
+

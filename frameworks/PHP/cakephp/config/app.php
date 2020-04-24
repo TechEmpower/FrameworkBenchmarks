@@ -55,8 +55,8 @@ return [
         'jsBaseUrl' => 'js/',
         'paths' => [
             'plugins' => [ROOT . DS . 'plugins' . DS],
-            'templates' => [APP . 'Template' . DS],
-            'locales' => [APP . 'Locale' . DS],
+            'templates' => [ROOT . DS . 'templates' . DS],
+            'locales' => [RESOURCES . 'locales' . DS],
         ],
     ],
 
@@ -343,7 +343,7 @@ return [
      */
     'Log' => [
         'debug' => [
-            'className' => 'Cake\Log\Engine\FileLog',
+            'className' => 'Cake\Log\Engine\NullEngine',
             'path' => LOGS,
             'file' => 'debug',
             'url' => env('LOG_DEBUG_URL', null),
@@ -351,7 +351,7 @@ return [
             'levels' => ['emergency'],
         ],
         'error' => [
-            'className' => 'Cake\Log\Engine\FileLog',
+            'className' => 'Cake\Log\Engine\NullEngine',
             'path' => LOGS,
             'file' => 'error',
             'url' => env('LOG_ERROR_URL', null),
@@ -360,7 +360,7 @@ return [
         ],
         // To enable this dedicated query log, you need set your datasource's log flag to true
         'queries' => [
-            'className' => 'Cake\Log\Engine\FileLog',
+            'className' => 'Cake\Log\Engine\NullEngine',
             'path' => LOGS,
             'file' => 'queries',
             'url' => env('LOG_QUERIES_URL', null),

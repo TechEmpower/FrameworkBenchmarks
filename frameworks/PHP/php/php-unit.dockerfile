@@ -1,14 +1,14 @@
-FROM ubuntu:19.04
+FROM ubuntu:19.10
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
-RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
+#RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq curl php7.3 php7.3-mysql > /dev/null
+    apt-get install -yqq curl php-mysql > /dev/null
 
 RUN curl https://nginx.org/keys/nginx_signing.key | apt-key add - \
-    && add-apt-repository "deb https://packages.nginx.org/unit/ubuntu/ disco unit" -s \
+    && add-apt-repository "deb https://packages.nginx.org/unit/ubuntu/ eoan unit" -s \
     && apt-get -y update \
     && apt-get -y install unit unit-php
 

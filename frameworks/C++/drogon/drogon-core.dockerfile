@@ -2,16 +2,16 @@ FROM ubuntu:18.04
 
 COPY ./ ./
 
-RUN  apt update -yqq && \
+RUN  apt-get update -yqq && \
      apt-get install -yqq software-properties-common && \
-	 apt install -yqq sudo curl wget cmake locales git \
+	 apt-get install -yqq sudo curl wget cmake locales git \
      openssl libssl-dev \
      libjsoncpp-dev \
      uuid-dev libreadline-dev libbison-dev flex \
      zlib1g-dev && \
      add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
-	 apt update -yqq && \
-	 apt install -yqq gcc-8 g++-8
+	 apt-get update -yqq && \
+	 apt-get install -yqq gcc-8 g++-8
 
 RUN locale-gen en_US.UTF-8
 
@@ -44,7 +44,7 @@ RUN git clone https://github.com/an-tao/drogon
 
 WORKDIR $DROGON_ROOT
 
-RUN git checkout 139d2db02b324be02430a18dfe93fe822b141b4d
+RUN git checkout 668533fbbd20eb9c493841b0e1067097aadf0342
 RUN git submodule update --init
 RUN mkdir build
 

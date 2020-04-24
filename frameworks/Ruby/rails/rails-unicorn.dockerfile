@@ -1,6 +1,6 @@
 FROM ruby:2.6
 
-RUN apt update -yqq && apt install -yqq nginx
+RUN apt-get update -yqq && apt-get install -yqq nginx
 
 ADD ./ /rails
 

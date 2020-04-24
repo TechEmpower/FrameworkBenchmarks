@@ -4,7 +4,6 @@
     "default": {
       "json_url": "/json",
       "db_url": "/db",
-      "query_url": "/queries/",
       "update_url": "/updates/",
       "fortune_url": "/fortunes",
       "plaintext_url": "/plaintext",
@@ -27,8 +26,6 @@
     "postgres": {
       "json_url": "/json",
       "db_url": "/db",
-      "query_url": "/queries/",
-      "update_url": "/updates/",
       "fortune_url": "/fortunes",
       "plaintext_url": "/plaintext",
       "cached_query_url": "/cached-worlds/",

@@ -31,8 +31,8 @@ There is currently one repository implementation.
 
 ## Versions
 
-* [Java OpenJDK 1.8](http://openjdk.java.net/)
-* [Helidon 1.0.0](http://helidon.io/)
+* [Java OpenJDK 11](http://openjdk.java.net/)
+* [Helidon 1.4.0](http://helidon.io/)
 
 ## Test URLs
 

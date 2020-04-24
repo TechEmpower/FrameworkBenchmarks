@@ -31,7 +31,7 @@ declare v_counter int unsigned default 0;
     SET v_counter=v_counter+1;
   end while;
   commit;
-END 
+END
 #
 
 DELIMITER ;

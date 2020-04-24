@@ -2,12 +2,12 @@
 	"framework": "ffead-cpp",
 	"tests": [{
 		"default": {
-			"json_url": "/te-benchmark/json",
-			"plaintext_url": "/te-benchmark/plaintext",
-			"db_url": "/te-benchmark/db",
-			"query_url": "/te-benchmark/queries?queries=",
-			"fortune_url": "/te-benchmark/fortunes",
-			"update_url": "/te-benchmark/updates?queries=",
+			"json_url": "/te-benchmark-um/json",
+			"plaintext_url": "/te-benchmark-um/plaintext",
+			"db_url": "/te-benchmark-um/db",
+			"query_url": "/te-benchmark-um/queries?queries=",
+			"fortune_url": "/te-benchmark-um/fortunes",
+			"update_url": "/te-benchmark-um/updates?queries=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -21,15 +21,16 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-mongo",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": []
 		},
 		"mysql": {
-			"json_url": "/te-benchmark/json",
-			"plaintext_url": "/te-benchmark/plaintext",
-			"db_url": "/te-benchmark/db",
-			"query_url": "/te-benchmark/queries?queries=",
-			"fortune_url": "/te-benchmark/fortunes",
-			"update_url": "/te-benchmark/updates?queries=",
+			"json_url": "/te-benchmark-um/json",
+			"plaintext_url": "/te-benchmark-um/plaintext",
+			"db_url": "/te-benchmark-um/db",
+			"query_url": "/te-benchmark-um/queries?queries=",
+			"fortune_url": "/te-benchmark-um/fortunes",
+			"update_url": "/te-benchmark-um/updates?queries=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -43,15 +44,16 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-mysql",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": []
 		},
 		"postgresql": {
-			"json_url": "/te-benchmark/json",
-			"plaintext_url": "/te-benchmark/plaintext",
-			"db_url": "/te-benchmark/db",
-			"query_url": "/te-benchmark/queries?queries=",
-			"fortune_url": "/te-benchmark/fortunes",
-			"update_url": "/te-benchmark/updates?queries=",
+			"json_url": "/te-benchmark-um/json",
+			"plaintext_url": "/te-benchmark-um/plaintext",
+			"db_url": "/te-benchmark-um/db",
+			"query_url": "/te-benchmark-um/queries?queries=",
+			"fortune_url": "/te-benchmark-um/fortunes",
+			"update_url": "/te-benchmark-um/updates?queries=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -65,15 +67,16 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-postgresql",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": []
 		},
 		"apache-mongo": {
-			"json_url": "/te-benchmark/json",
-			"plaintext_url": "/te-benchmark/plaintext",
-			"db_url": "/te-benchmark/db",
-			"query_url": "/te-benchmark/queries?queries=",
-			"fortune_url": "/te-benchmark/fortunes",
-			"update_url": "/te-benchmark/updates?queries=",
+			"json_url": "/te-benchmark-um/json",
+			"plaintext_url": "/te-benchmark-um/plaintext",
+			"db_url": "/te-benchmark-um/db",
+			"query_url": "/te-benchmark-um/queries?queries=",
+			"fortune_url": "/te-benchmark-um/fortunes",
+			"update_url": "/te-benchmark-um/updates?queries=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -87,15 +90,16 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-apache-mongo",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": ["broken"]
 		},
 		"apache-mysql": {
-			"json_url": "/te-benchmark/json",
-			"plaintext_url": "/te-benchmark/plaintext",
-			"db_url": "/te-benchmark/db",
-			"query_url": "/te-benchmark/queries?queries=",
-			"fortune_url": "/te-benchmark/fortunes",
-			"update_url": "/te-benchmark/updates?queries=",
+			"json_url": "/te-benchmark-um/json",
+			"plaintext_url": "/te-benchmark-um/plaintext",
+			"db_url": "/te-benchmark-um/db",
+			"query_url": "/te-benchmark-um/queries?queries=",
+			"fortune_url": "/te-benchmark-um/fortunes",
+			"update_url": "/te-benchmark-um/updates?queries=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -109,15 +113,16 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-apache-mysql",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": ["broken"]
 		},
 		"apache-postgresql": {
-			"json_url": "/te-benchmark/json",
-			"plaintext_url": "/te-benchmark/plaintext",
-			"db_url": "/te-benchmark/db",
-			"query_url": "/te-benchmark/queries?queries=",
-			"fortune_url": "/te-benchmark/fortunes",
-			"update_url": "/te-benchmark/updates?queries=",
+			"json_url": "/te-benchmark-um/json",
+			"plaintext_url": "/te-benchmark-um/plaintext",
+			"db_url": "/te-benchmark-um/db",
+			"query_url": "/te-benchmark-um/queries?queries=",
+			"fortune_url": "/te-benchmark-um/fortunes",
+			"update_url": "/te-benchmark-um/updates?queries=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -131,15 +136,16 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-apache-postgresql",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": ["broken"]
 		},
 		"nginx-mongo": {
-			"json_url": "/te-benchmark/json",
-			"plaintext_url": "/te-benchmark/plaintext",
-			"db_url": "/te-benchmark/db",
-			"query_url": "/te-benchmark/queries?queries=",
-			"fortune_url": "/te-benchmark/fortunes",
-			"update_url": "/te-benchmark/updates?queries=",
+			"json_url": "/te-benchmark-um/json",
+			"plaintext_url": "/te-benchmark-um/plaintext",
+			"db_url": "/te-benchmark-um/db",
+			"query_url": "/te-benchmark-um/queries?queries=",
+			"fortune_url": "/te-benchmark-um/fortunes",
+			"update_url": "/te-benchmark-um/updates?queries=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -153,15 +159,16 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-nginx-mongo",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": []
 		},
 		"nginx-mysql": {
-			"json_url": "/te-benchmark/json",
-			"plaintext_url": "/te-benchmark/plaintext",
-			"db_url": "/te-benchmark/db",
-			"query_url": "/te-benchmark/queries?queries=",
-			"fortune_url": "/te-benchmark/fortunes",
-			"update_url": "/te-benchmark/updates?queries=",
+			"json_url": "/te-benchmark-um/json",
+			"plaintext_url": "/te-benchmark-um/plaintext",
+			"db_url": "/te-benchmark-um/db",
+			"query_url": "/te-benchmark-um/queries?queries=",
+			"fortune_url": "/te-benchmark-um/fortunes",
+			"update_url": "/te-benchmark-um/updates?queries=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -175,15 +182,16 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-nginx-mysql",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": []
 		},
 		"nginx-postgresql": {
-			"json_url": "/te-benchmark/json",
-			"plaintext_url": "/te-benchmark/plaintext",
-			"db_url": "/te-benchmark/db",
-			"query_url": "/te-benchmark/queries?queries=",
-			"fortune_url": "/te-benchmark/fortunes",
-			"update_url": "/te-benchmark/updates?queries=",
+			"json_url": "/te-benchmark-um/json",
+			"plaintext_url": "/te-benchmark-um/plaintext",
+			"db_url": "/te-benchmark-um/db",
+			"query_url": "/te-benchmark-um/queries?queries=",
+			"fortune_url": "/te-benchmark-um/fortunes",
+			"update_url": "/te-benchmark-um/updates?queries=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -197,10 +205,11 @@
 			"database_os": "Linux",
 			"display_name": "ffead-cpp-nginx-postgresql",
 			"notes": "",
-			"versus": ""
+			"versus": "",
+			"tags": []
 		},
 		"redis": {
-			"cached_query_url": "/te-benchmark/cached-worlds?count=",
+			"cached_query_url": "/te-benchmark-um/cached-worlds?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -216,10 +225,11 @@
 			"display_name": "ffead-cpp-mongo-redis",
 			"notes": "",
 			"versus": "",
-			"wait_before_sending_requests": 10
+			"wait_before_sending_requests": 10,
+			"tags": []
 		},
 		"nginx-redis": {
-			"cached_query_url": "/te-benchmark/cached-worlds?count=",
+			"cached_query_url": "/te-benchmark-um/cached-worlds?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -235,10 +245,11 @@
 			"display_name": "ffead-cpp-nginx-mongo-redis",
 			"notes": "",
 			"versus": "",
-			"wait_before_sending_requests": 10
+			"wait_before_sending_requests": 10,
+			"tags": []
 		},
 		"apache-redis": {
-			"cached_query_url": "/te-benchmark/cached-worlds?count=",
+			"cached_query_url": "/te-benchmark-um/cached-worlds?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -254,10 +265,11 @@
 			"display_name": "ffead-cpp-apache-mongo-redis",
 			"notes": "",
 			"versus": "",
-			"wait_before_sending_requests": 10
+			"wait_before_sending_requests": 10,
+			"tags": ["broken"]
 		},
 		"memcached": {
-			"cached_query_url": "/te-benchmark/cached-worlds?count=",
+			"cached_query_url": "/te-benchmark-um/cached-worlds?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -273,10 +285,11 @@
 			"display_name": "ffead-cpp-mongo-memcached",
 			"notes": "",
 			"versus": "",
-			"wait_before_sending_requests": 10
+			"wait_before_sending_requests": 10,
+			"tags": []
 		},
 		"nginx-memcached": {
-			"cached_query_url": "/te-benchmark/cached-worlds?count=",
+			"cached_query_url": "/te-benchmark-um/cached-worlds?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -292,10 +305,11 @@
 			"display_name": "ffead-cpp-nginx-mongo-memcached",
 			"notes": "",
 			"versus": "",
-			"wait_before_sending_requests": 10
+			"wait_before_sending_requests": 10,
+			"tags": []
 		},
 		"apache-memcached": {
-			"cached_query_url": "/te-benchmark/cached-worlds?count=",
+			"cached_query_url": "/te-benchmark-um/cached-worlds?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -311,7 +325,8 @@
 			"display_name": "ffead-cpp-apache-mongo-memcached",
 			"notes": "",
 			"versus": "",
-			"wait_before_sending_requests": 10
+			"wait_before_sending_requests": 10,
+			"tags": ["broken"]
 		}
 	}]
 }
