@@ -31,6 +31,14 @@ class TestType(AbstractTestType):
 
         problems = verify_query_cases(self, cases, url, False)
 
+        # queries_url should be at least "/queries/"
+        # some frameworks use a trailing slash while others use ?q=
+        if len(self.query_url) < 9:
+            problems.append(
+                ("fail",
+                 "Route for queries must be at least 9 characters, found '{}' instead".format(self.query_url),
+                 url))
+
         if len(problems) == 0:
             return [('pass', '', url + case) for case, _ in cases]
         else:

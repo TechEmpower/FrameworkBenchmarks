@@ -30,6 +30,14 @@ class TestType(AbstractTestType):
                  ('501', 'warn'), ('', 'fail')]
         problems = verify_query_cases(self, cases, url, True)
 
+        # update_url should be at least "/update/"
+        # some frameworks use a trailing slash while others use ?q=
+        if len(self.update_url) < 8:
+            problems.append(
+                ("fail",
+                 "Route for update must be at least 8 characters, found '{}' instead".format(self.update_url),
+                 url))
+
         if len(problems) == 0:
             return [('pass', '', url + case) for (case, _) in cases]
         else:

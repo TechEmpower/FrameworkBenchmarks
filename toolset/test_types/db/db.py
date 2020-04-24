@@ -32,6 +32,13 @@ class TestType(AbstractTestType):
 
         response, problems = basic_body_verification(body, url)
 
+        # db should be at least "/db"
+        if len(self.db_url) < 3:
+            problems.append(
+                ("fail",
+                 "Route for db must be at least 3 characters, found '{}' instead".format(self.db_url),
+                 url))
+
         if len(problems) > 0:
             return problems
 

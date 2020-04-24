@@ -31,6 +31,14 @@ class TestType(AbstractTestType):
 
         problems = verify_query_cases(self, cases, url)
 
+        # cached_query_url should be at least "/cached-worlds/"
+        # some frameworks use a trailing slash while others use ?q=
+        if len(self.cached_query_url) < 15:
+            problems.append(
+                ("fail",
+                 "Route for cached queries must be at least 8 characters, found '{}' instead".format(self.cached_query_url),
+                 url))
+
         if len(problems) == 0:
             return [('pass', '', url + case) for case, _ in cases]
         else:

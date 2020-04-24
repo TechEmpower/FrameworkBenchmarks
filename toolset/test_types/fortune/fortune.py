@@ -34,6 +34,13 @@ class TestType(AbstractTestType):
 
         _, problems = basic_body_verification(body, url, is_json_check=False)
 
+        # fortune_url should be at least "/fortunes"
+        if len(self.fortune_url) < 9:
+            problems.append(
+                ("fail",
+                 "Route for fortunes must be at least 9 characters, found '{}' instead".format(self.fortune_url),
+                 url))
+
         if len(problems) > 0:
             return problems
 

@@ -27,6 +27,13 @@ class TestType(AbstractTestType):
 
         response, problems = basic_body_verification(body, url)
 
+        # json_url should be at least "/json"
+        if len(self.json_url) < 5:
+            problems.append(
+                ("fail",
+                 "Route for json must be at least 5 characters, found '{}' instead".format(self.json_url),
+                 url))
+
         if len(problems) > 0:
             return problems
 

@@ -7,7 +7,6 @@ test_types = {}
 test_type_folders = glob("/FrameworkBenchmarks/toolset/test_types/*/")
 
 # Loads all the test_types from the folders in this directory
-# and checks to see if they've implemented the required methods
 for folder in test_type_folders:
     # regex that grabs the characters between "toolset/test_types/"
     # and the final "/" in the folder string to get the name
