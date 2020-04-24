@@ -83,7 +83,7 @@ public:
 	}
 
 	void run() {
-		client.onReceived((ByteBuffer buffer) {
+		client.received((ByteBuffer buffer) {
 			version(NO_HTTPPARSER) {
 				client.write(cast(ubyte[])ResponseData);
 			} else {

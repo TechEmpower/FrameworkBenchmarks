@@ -41,7 +41,7 @@ abstract class AbstractTcpServer {
 		_tcpStreamoption = TcpStreamOptions.create();
 		_tcpStreamoption.bufferSize = 1024 * 4;
 		_tcpStreamoption.isKeepalive = false;
-		_group = new EventLoopGroup(cast(uint) thread*6);
+		_group = new EventLoopGroup(cast(uint) thread);
     //_group = theAllocator.make!EventLoopGroup(cast(uint) thread*2);
 		this._workersCount = workersCount;
     //defaultPoolThreads(thread);

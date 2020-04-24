@@ -20,7 +20,7 @@ import std.string;
 import core.stdc.string;
 import core.stdc.stdlib;
 import std.stdio;
-
+import hunt.io.IoError;
 import std.experimental.allocator;
 private	alias Parser = HttpParser!HttpProcessor;
 
@@ -125,7 +125,7 @@ public:
 	}
 
 	void run() {
-		client.onReceived((ByteBuffer buffer) {
+		client.received((ByteBuffer buffer) {
 			version(NO_HTTPPARSER) {
 				client.write(cast(ubyte[])ResponseData);
 			} else {
@@ -138,11 +138,11 @@ public:
 				}
 			}
 		})
-		.onClosed(() {
+		.closed(() {
 			// notifyClientClosed();
 		})
-		.onError((string msg) {
-			 warning("Error: ", msg);
+		.error((IoError msg) {
+			 warning("Error: ", msg.errorMsg());
 		})
 		.start();
 	}
