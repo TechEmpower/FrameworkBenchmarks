@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Simps\Server\Protocol\HTTP\SimpleResponse;
 use App\Model\DbModel;
+use Simps\Server\Protocol\HTTP\SimpleResponse;
 
 class IndexController
 {
@@ -109,6 +109,59 @@ class IndexController
             $res = $db->updates((int)$data['queries']);
         } else {
             $res = $db->updates(-1);
+        }
+
+        $server->send(
+            $fd,
+            SimpleResponse::build(
+                $res,
+                200,
+                ['Content-Type' => 'application/json', 'Date' => gmdate("D, d M Y H:i:s T")]
+            )
+        );
+    }
+
+    public function microDb($server, $fd)
+    {
+        $db = new DbModel();
+        $res = $db->microDb();
+
+        $server->send(
+            $fd,
+            SimpleResponse::build(
+                $res,
+                200,
+                ['Content-Type' => 'application/json', 'Date' => gmdate("D, d M Y H:i:s T")]
+            )
+        );
+    }
+
+    public function microQueries($server, $fd, $data)
+    {
+        $db = new DbModel();
+        if (isset($data['queries'])) {
+            $res = $db->microQueries((int)$data['queries']);
+        } else {
+            $res = $db->microQueries();
+        }
+
+        $server->send(
+            $fd,
+            SimpleResponse::build(
+                $res,
+                200,
+                ['Content-Type' => 'application/json', 'Date' => gmdate("D, d M Y H:i:s T")]
+            )
+        );
+    }
+
+    public function microUpdates($server, $fd, $data)
+    {
+        $db = new DbModel();
+        if (isset($data['queries'])) {
+            $res = $db->microUpdates((int)$data['queries']);
+        } else {
+            $res = $db->microUpdates();
         }
 
         $server->send(
