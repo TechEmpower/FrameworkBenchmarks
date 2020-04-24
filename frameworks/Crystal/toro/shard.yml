@@ -14,5 +14,3 @@ targets:
     main: toro.cr
 
 crystal: 0.34.0
-
-license: MIT
