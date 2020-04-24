@@ -14,6 +14,7 @@
     <OutputType>Exe</OutputType>
     
     <ServerGarbageCollection>true</ServerGarbageCollection>
+    <TieredCompilation>false</TieredCompilation>
     
   </PropertyGroup>
     
