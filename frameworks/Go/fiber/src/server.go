@@ -133,7 +133,7 @@ func initDatabase() {
 		maxConn = 8
 	}
 	if child {
-		maxConn = maxConn
+		maxConn = maxConn * 4
 	}
 
 	var err error
