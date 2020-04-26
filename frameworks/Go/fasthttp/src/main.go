@@ -109,10 +109,7 @@ func main() {
 	}
 
 	if prefork {
-		preforkServer := &fastprefork.Prefork{
-			RecoverThreshold: runtime.GOMAXPROCS(0) / 2,
-			ServeFunc:        server.Serve,
-		}
+		preforkServer := fastprefork.New(server)
 
 		if err := preforkServer.ListenAndServe(bindHost); err != nil {
 			panic(err)
