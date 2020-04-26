@@ -92,7 +92,7 @@ func (ws Worlds) MarshalSJSON() ([]byte, error) {
 	jsonResult := []byte(`[]`)
 
 	for _, w := range ws {
-		jsonResult, _ = sjson.SetBytesOptions(jsonResult, "-1", &w, &sjson.Options{Optimistic: true, ReplaceInPlace: true})
+		jsonResult, _ = sjson.SetBytesOptions(jsonResult, "-1", w, &sjson.Options{Optimistic: true, ReplaceInPlace: true})
 	}
 
 	return jsonResult, nil

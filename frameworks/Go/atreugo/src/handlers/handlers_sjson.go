@@ -3,7 +3,7 @@ package handlers
 import (
 	"atreugo/src/storage"
 
-	"github.com/savsgio/atreugo/v10"
+	"github.com/savsgio/atreugo/v11"
 )
 
 // JSONHandlerSJson . Test 1: JSON serialization
