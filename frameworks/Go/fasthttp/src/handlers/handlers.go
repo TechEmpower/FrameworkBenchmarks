@@ -34,7 +34,9 @@ func JSONHandler(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
+	ctx.SetContentType("application/json")
 	ctx.Write(data)
+
 	ReleaseMessage(message)
 }
 
@@ -54,7 +56,9 @@ func DBHandler(db storage.DB) fasthttp.RequestHandler {
 			return
 		}
 
+		ctx.SetContentType("application/json")
 		ctx.Write(data)
+
 		storage.ReleaseWorld(world)
 	}
 }
@@ -79,7 +83,9 @@ func QueriesHandler(db storage.DB) fasthttp.RequestHandler {
 			return
 		}
 
+		ctx.SetContentType("application/json")
 		ctx.Write(data)
+
 		storage.ReleaseWorlds(worlds)
 	}
 }
@@ -166,7 +172,9 @@ func UpdateHandler(db storage.DB) fasthttp.RequestHandler {
 			return
 		}
 
+		ctx.SetContentType("application/json")
 		ctx.Write(data)
+
 		storage.ReleaseWorlds(worlds)
 	}
 }
