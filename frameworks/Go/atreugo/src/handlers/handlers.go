@@ -6,7 +6,7 @@ import (
 	"atreugo/src/storage"
 	"atreugo/src/templates"
 
-	"github.com/savsgio/atreugo/v10"
+	"github.com/savsgio/atreugo/v11"
 )
 
 const helloWorldStr = "Hello, World!"
