@@ -4,8 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"net"
-	"os"
 	"runtime"
 
 	"atreugo/src/handlers"
@@ -16,13 +14,12 @@ import (
 )
 
 var bindHost, jsonEncoder, dbDriver, dbConnectionString string
-var prefork, child bool
+var prefork bool
 
 func init() {
 	// init flags
 	flag.StringVar(&bindHost, "bind", ":8080", "set bind host")
 	flag.BoolVar(&prefork, "prefork", false, "use prefork")
-	flag.BoolVar(&child, "child", false, "is child proc")
 	flag.StringVar(&jsonEncoder, "json_encoder", "none", "json encoder: none or easyjson or gojay or sjson")
 	flag.StringVar(&dbDriver, "db", "none", "db connection driver [values: none or pgx or mongo]")
 	flag.StringVar(&dbConnectionString, "db_connection_string", "", "db connection string")
@@ -41,7 +38,7 @@ func numCPU() int {
 
 func main() {
 	maxConn := numCPU() * 4
-	if child {
+	if fastprefork.IsChild() {
 		maxConn = numCPU()
 	}
 
@@ -103,18 +100,7 @@ func main() {
 		server.GET("/update", updateHandler)
 	}
 
-	if child {
-		runtime.GOMAXPROCS(1)
-
-		ln, err := net.FileListener(os.NewFile(3, ""))
-		if err != nil {
-			panic(err)
-		}
-		if err := server.Serve(ln); err != nil {
-			panic(err)
-		}
-
-	} else if prefork {
+	if prefork {
 		preforkServer := &fastprefork.Prefork{
 			RecoverThreshold: runtime.GOMAXPROCS(0) / 2,
 			ServeFunc:        server.Serve,
