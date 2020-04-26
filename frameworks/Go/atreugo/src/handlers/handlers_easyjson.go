@@ -21,7 +21,7 @@ func JSONHandlerEasyJSON(ctx *atreugo.RequestCtx) error {
 
 	ReleaseMessage(message)
 
-	return err
+	return nil
 }
 
 // DBHandlerEasyJSON . Test 2: Single database query
@@ -43,7 +43,7 @@ func DBHandlerEasyJSON(db storage.DB) atreugo.View {
 
 		storage.ReleaseWorld(world)
 
-		return err
+		return nil
 	}
 }
 
@@ -69,7 +69,7 @@ func QueriesHandlerEasyJSON(db storage.DB) atreugo.View {
 
 		storage.ReleaseWorlds(worlds)
 
-		return err
+		return nil
 	}
 }
 
@@ -101,6 +101,6 @@ func UpdateHandlerEasyJSON(db storage.DB) atreugo.View {
 
 		storage.ReleaseWorlds(worlds)
 
-		return err
+		return nil
 	}
 }
