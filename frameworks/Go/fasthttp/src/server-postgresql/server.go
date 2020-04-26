@@ -5,12 +5,12 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"net"
 	"unsafe"
 
 	pgx "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/valyala/fasthttp"
+	fastprefork "github.com/valyala/fasthttp/prefork"
 
 	"fasthttp/src/common"
 	"fasthttp/src/templates"
@@ -27,14 +27,14 @@ const fortuneSelectSQL = "SELECT id, message FROM Fortune"
 func main() {
 	bindHost := flag.String("bind", ":8080", "set bind host")
 	prefork := flag.Bool("prefork", false, "use prefork")
-	child := flag.Bool("child", false, "is child proc")
 	flag.Parse()
 
-	var err error
 	maxConnectionCount := common.NumCPU() * 4
-	if *child {
+	if fastprefork.IsChild() {
 		maxConnectionCount = common.NumCPU()
 	}
+
+	var err error
 	if db, err = initDatabase("tfb-database", "benchmarkdbuser", "benchmarkdbpass", "hello_world", 5432, maxConnectionCount); err != nil {
 		log.Fatalf("Error opening database: %s", err)
 	}
@@ -44,14 +44,14 @@ func main() {
 		Name:    "go",
 	}
 
-	var ln net.Listener
 	if *prefork {
-		ln = common.DoPrefork(*child, *bindHost)
+		preforkServer := fastprefork.New(s)
+		err = preforkServer.ListenAndServe(*bindHost)
 	} else {
-		ln = common.GetListener(*bindHost)
+		err = s.ListenAndServe(*bindHost)
 	}
 
-	if err = s.Serve(ln); err != nil {
+	if err != nil {
 		log.Fatalf("Error when serving incoming connections: %s", err)
 	}
 }

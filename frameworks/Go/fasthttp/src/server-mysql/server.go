@@ -4,12 +4,12 @@ import (
 	"database/sql"
 	"flag"
 	"log"
-	"net"
 	"runtime"
 	"unsafe"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/valyala/fasthttp"
+	fastprefork "github.com/valyala/fasthttp/prefork"
 
 	"fasthttp/src/common"
 	"fasthttp/src/templates"
@@ -28,13 +28,13 @@ var (
 func main() {
 	bindHost := flag.String("bind", ":8080", "set bind host")
 	prefork := flag.Bool("prefork", false, "use prefork")
-	child := flag.Bool("child", false, "is child proc")
 	flag.Parse()
 
 	var err error
 	if db, err = sql.Open("mysql", connectionString); err != nil {
 		log.Fatalf("Error opening database: %s", err)
 	}
+
 	if err = db.Ping(); err != nil {
 		log.Fatalf("Cannot connect to db: %s", err)
 	}
@@ -52,14 +52,14 @@ func main() {
 		Name:    "go",
 	}
 
-	var ln net.Listener
 	if *prefork {
-		ln = common.DoPrefork(*child, *bindHost)
+		preforkServer := fastprefork.New(s)
+		err = preforkServer.ListenAndServe(*bindHost)
 	} else {
-		ln = common.GetListener(*bindHost)
+		err = s.ListenAndServe(*bindHost)
 	}
 
-	if err = s.Serve(ln); err != nil {
+	if err != nil {
 		log.Fatalf("Error when serving incoming connections: %s", err)
 	}
 }
