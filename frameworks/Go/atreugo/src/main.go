@@ -93,10 +93,10 @@ func main() {
 	if db != nil {
 		defer db.Close()
 
-		server.GET("/fortune", handlers.FortuneHandler(db))
-		server.GET("/fortune-quick", handlers.FortuneQuickHandler(db))
 		server.GET("/db", dbHandler)
 		server.GET("/queries", queriesHandler)
+		server.GET("/fortune", handlers.FortuneHandler(db))
+		server.GET("/fortune-quick", handlers.FortuneQuickHandler(db))
 		server.GET("/update", updateHandler)
 	}
 
