@@ -11,7 +11,8 @@ import (
 	"atreugo/src/handlers"
 	"atreugo/src/storage"
 
-	"github.com/savsgio/atreugo/v10"
+	"github.com/savsgio/atreugo/v11"
+	fastprefork "github.com/valyala/fasthttp/prefork"
 )
 
 var bindHost, jsonEncoder, dbDriver, dbConnectionString string
@@ -114,7 +115,12 @@ func main() {
 		}
 
 	} else if prefork {
-		if err := doPrefork(bindHost); err != nil {
+		preforkServer := &fastprefork.Prefork{
+			RecoverThreshold: runtime.GOMAXPROCS(0) / 2,
+			ServeFunc:        server.Serve,
+		}
+
+		if err := preforkServer.ListenAndServe(bindHost); err != nil {
 			panic(err)
 		}
 
