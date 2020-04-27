@@ -3,7 +3,6 @@ module fasthttp/src
 go 1.14
 
 require (
-	github.com/francoispqt/gojay v1.2.13
 	github.com/jackc/pgx/v4 v4.6.0
 	github.com/mailru/easyjson v0.7.1
 	github.com/savsgio/gotils v0.0.0-20200413113635-8c468ce75cca

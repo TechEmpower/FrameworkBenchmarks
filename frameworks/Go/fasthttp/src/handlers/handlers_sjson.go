@@ -10,12 +10,7 @@ import (
 func JSONHandlerSJson(ctx *fasthttp.RequestCtx) {
 	message := AcquireMessage()
 	message.Message = helloWorldStr
-
-	data, err := message.MarshalSJSON()
-	if err != nil {
-		ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-		return
-	}
+	data, _ := message.MarshalSJSON()
 
 	ctx.SetContentType("application/json")
 	ctx.Write(data)
@@ -27,17 +22,8 @@ func JSONHandlerSJson(ctx *fasthttp.RequestCtx) {
 func DBHandlerSJson(db storage.DB) fasthttp.RequestHandler {
 	return func(ctx *fasthttp.RequestCtx) {
 		world := storage.AcquireWorld()
-
-		if err := db.GetOneRandomWorld(world); err != nil {
-			ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-			return
-		}
-
-		data, err := world.MarshalSJSON()
-		if err != nil {
-			ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-			return
-		}
+		db.GetOneRandomWorld(world)
+		data, _ := world.MarshalSJSON()
 
 		ctx.SetContentType("application/json")
 		ctx.Write(data)
@@ -53,17 +39,10 @@ func QueriesHandlerSJson(db storage.DB) fasthttp.RequestHandler {
 		worlds := storage.AcquireWorlds()[:queries]
 
 		for i := 0; i < queries; i++ {
-			if err := db.GetOneRandomWorld(&worlds[i]); err != nil {
-				ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-				return
-			}
+			db.GetOneRandomWorld(&worlds[i])
 		}
 
-		data, err := worlds.MarshalSJSON()
-		if err != nil {
-			ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-			return
-		}
+		data, _ := worlds.MarshalSJSON()
 
 		ctx.SetContentType("application/json")
 		ctx.Write(data)
@@ -80,23 +59,12 @@ func UpdateHandlerSJson(db storage.DB) fasthttp.RequestHandler {
 
 		for i := 0; i < queries; i++ {
 			w := &worlds[i]
-			if err := db.GetOneRandomWorld(w); err != nil {
-				ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-				return
-			}
+			db.GetOneRandomWorld(w)
 			w.RandomNumber = int32(storage.RandomWorldNum())
 		}
 
-		if err := db.UpdateWorlds(worlds); err != nil {
-			ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-			return
-		}
-
-		data, err := worlds.MarshalSJSON()
-		if err != nil {
-			ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-			return
-		}
+		db.UpdateWorlds(worlds)
+		data, _ := worlds.MarshalSJSON()
 
 		ctx.SetContentType("application/json")
 		ctx.Write(data)

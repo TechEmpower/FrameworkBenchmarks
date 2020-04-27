@@ -27,12 +27,7 @@ func queriesParam(ctx *fasthttp.RequestCtx) int {
 func JSONHandler(ctx *fasthttp.RequestCtx) {
 	message := AcquireMessage()
 	message.Message = helloWorldStr
-
-	data, err := json.Marshal(message)
-	if err != nil {
-		ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-		return
-	}
+	data, _ := json.Marshal(message)
 
 	ctx.SetContentType("application/json")
 	ctx.Write(data)
@@ -44,17 +39,8 @@ func JSONHandler(ctx *fasthttp.RequestCtx) {
 func DBHandler(db storage.DB) fasthttp.RequestHandler {
 	return func(ctx *fasthttp.RequestCtx) {
 		world := storage.AcquireWorld()
-
-		if err := db.GetOneRandomWorld(world); err != nil {
-			ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-			return
-		}
-
-		data, err := json.Marshal(world)
-		if err != nil {
-			ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-			return
-		}
+		db.GetOneRandomWorld(world)
+		data, _ := json.Marshal(world)
 
 		ctx.SetContentType("application/json")
 		ctx.Write(data)
@@ -67,21 +53,13 @@ func DBHandler(db storage.DB) fasthttp.RequestHandler {
 func QueriesHandler(db storage.DB) fasthttp.RequestHandler {
 	return func(ctx *fasthttp.RequestCtx) {
 		queries := queriesParam(ctx)
-
 		worlds := storage.AcquireWorlds()[:queries]
 
 		for i := 0; i < queries; i++ {
-			if err := db.GetOneRandomWorld(&worlds[i]); err != nil {
-				ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-				return
-			}
+			db.GetOneRandomWorld(&worlds[i])
 		}
 
-		data, err := json.Marshal(worlds)
-		if err != nil {
-			ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-			return
-		}
+		data, _ := json.Marshal(worlds)
 
 		ctx.SetContentType("application/json")
 		ctx.Write(data)
@@ -93,15 +71,9 @@ func QueriesHandler(db storage.DB) fasthttp.RequestHandler {
 // FortuneHandler . Test 4: Fortunes
 func FortuneHandler(db storage.DB) fasthttp.RequestHandler {
 	return func(ctx *fasthttp.RequestCtx) {
-		fortunes, err := db.GetFortunes()
-		if err != nil {
-			ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-			return
-		}
-
+		fortunes, _ := db.GetFortunes()
 		newFortune := templates.AcquireFortune()
 		newFortune.Message = "Additional fortune added at request time."
-
 		fortunes = append(fortunes, *newFortune)
 
 		sort.Slice(fortunes, func(i, j int) bool {
@@ -110,10 +82,7 @@ func FortuneHandler(db storage.DB) fasthttp.RequestHandler {
 
 		ctx.SetContentType("text/html; charset=utf-8")
 
-		if err = templates.FortuneTemplate.Execute(ctx, fortunes); err != nil {
-			ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-			return
-		}
+		templates.FortuneTemplate.Execute(ctx, fortunes)
 
 		templates.ReleaseFortune(newFortune)
 		templates.ReleaseFortunes(fortunes)
@@ -123,15 +92,9 @@ func FortuneHandler(db storage.DB) fasthttp.RequestHandler {
 // FortuneQuickHandler . Test 4: Fortunes
 func FortuneQuickHandler(db storage.DB) fasthttp.RequestHandler {
 	return func(ctx *fasthttp.RequestCtx) {
-		fortunes, err := db.GetFortunes()
-		if err != nil {
-			ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-			return
-		}
-
+		fortunes, _ := db.GetFortunes()
 		newFortune := templates.AcquireFortune()
 		newFortune.Message = "Additional fortune added at request time."
-
 		fortunes = append(fortunes, *newFortune)
 
 		sort.Slice(fortunes, func(i, j int) bool {
@@ -154,23 +117,12 @@ func UpdateHandler(db storage.DB) fasthttp.RequestHandler {
 
 		for i := 0; i < queries; i++ {
 			w := &worlds[i]
-			if err := db.GetOneRandomWorld(w); err != nil {
-				ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-				return
-			}
+			db.GetOneRandomWorld(w)
 			w.RandomNumber = int32(storage.RandomWorldNum())
 		}
 
-		if err := db.UpdateWorlds(worlds); err != nil {
-			ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-			return
-		}
-
-		data, err := json.Marshal(worlds)
-		if err != nil {
-			ctx.Error(err.Error(), fasthttp.StatusInternalServerError)
-			return
-		}
+		db.UpdateWorlds(worlds)
+		data, _ := json.Marshal(worlds)
 
 		ctx.SetContentType("application/json")
 		ctx.Write(data)

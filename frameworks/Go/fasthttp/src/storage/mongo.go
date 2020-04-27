@@ -2,7 +2,6 @@ package storage
 
 import (
 	"context"
-	"time"
 
 	"fasthttp/src/templates"
 
@@ -39,18 +38,12 @@ func (m *Mongo) Connect(dbConnectionString string, maxConnectionsInPool int) err
 	opts := options.Client()
 	opts.SetMaxPoolSize(uint64(maxConnectionsInPool))
 
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-	defer cancel()
-
-	m.db, err = mongo.Connect(ctx, opts.ApplyURI(dbConnectionString))
+	m.db, err = mongo.Connect(context.Background(), opts.ApplyURI(dbConnectionString))
 	if err != nil {
 		return err
 	}
 
-	ctx, cancel = context.WithTimeout(context.Background(), 2*time.Second)
-	defer cancel()
-
-	err = m.db.Ping(ctx, readpref.Primary())
+	err = m.db.Ping(context.Background(), readpref.Primary())
 	if err != nil {
 		return err
 	}
@@ -64,72 +57,48 @@ func (m *Mongo) Connect(dbConnectionString string, maxConnectionsInPool int) err
 
 // Close connect to db
 func (m *Mongo) Close() {
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-	defer cancel()
-
-	if err := m.db.Disconnect(ctx); err != nil {
+	if err := m.db.Disconnect(context.Background()); err != nil {
 		panic(err)
 	}
 }
 
 // GetOneRandomWorld return one random World struct
-func (m Mongo) GetOneRandomWorld(w *World) error {
-	var err error
-
+func (m *Mongo) GetOneRandomWorld(w *World) error {
 	id := RandomWorldNum()
 	filter := bson.M{"_id": id}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	return m.worlds.FindOne(context.Background(), filter).Decode(w)
+}
 
-	if err = m.worlds.FindOne(ctx, filter).Decode(w); err != nil {
-		return err
+// UpdateWorlds updates some number of worlds entries, passed as arg
+func (m *Mongo) UpdateWorlds(worlds Worlds) error {
+	var operations []mongo.WriteModel
+
+	for _, w := range worlds {
+		operation := mongo.NewUpdateOneModel()
+		operation.SetFilter(bson.M{"_id": w.ID})
+		operation.SetUpdate(bson.M{"$set": bson.M{"randomNumber": w.RandomNumber}})
+		operations = append(operations, operation)
 	}
+
+	_, err := m.worlds.BulkWrite(context.Background(), operations)
 
 	return err
 }
 
-// UpdateWorlds updates some number of worlds entries, passed as arg
-func (m Mongo) UpdateWorlds(worlds Worlds) error {
-	for _, w := range worlds {
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-
-		w.RandomNumber = int32(RandomWorldNum())
-
-		if _, err := m.worlds.UpdateOne(
-			ctx,
-			bson.M{"_id": w.ID},
-			bson.M{"$set": bson.M{"randomNumber": w.RandomNumber}},
-		); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 // GetFortunes selects all fortunes from table
-func (m Mongo) GetFortunes() (templates.Fortunes, error) {
-	fortunes := templates.AcquireFortunes()
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	cur, err := m.fortunes.Find(ctx, bson.M{})
+func (m *Mongo) GetFortunes() (templates.Fortunes, error) {
+	cur, err := m.fortunes.Find(context.Background(), bson.M{})
 	if err != nil {
-		return fortunes, err
+		return nil, err
 	}
-	defer cur.Close(ctx)
+	defer cur.Close(context.Background())
 
+	fortunes := templates.AcquireFortunes()
 	fortune := templates.AcquireFortune()
 
 	for cur.Next(context.Background()) {
-		err = cur.Decode(fortune)
-		if err != nil {
-			return nil, err
-		}
-
+		cur.Decode(fortune)
 		fortunes = append(fortunes, *fortune)
 	}
 
