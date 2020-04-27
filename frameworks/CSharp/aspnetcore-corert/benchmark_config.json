@@ -4,7 +4,7 @@
     "default": {
       "plaintext_url": "/p",
       "json_url": "/j",
-      "port": 8080,
+      "port": 80,
       "approach": "Stripped",
       "classification": "Platform",
       "database": "None",
@@ -23,7 +23,7 @@
     "rhtx": {
       "plaintext_url": "/p",
       "json_url": "/j",
-      "port": 8080,
+      "port": 80,
       "approach": "Stripped",
       "classification": "Platform",
       "database": "None",
