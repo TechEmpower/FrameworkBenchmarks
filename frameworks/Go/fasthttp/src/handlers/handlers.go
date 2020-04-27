@@ -1,17 +1,18 @@
 package handlers
 
 import (
+	"encoding/json"
 	"sort"
 
-	"atreugo/src/storage"
-	"atreugo/src/templates"
+	"fasthttp/src/storage"
+	"fasthttp/src/templates"
 
-	"github.com/savsgio/atreugo/v11"
+	"github.com/valyala/fasthttp"
 )
 
 const helloWorldStr = "Hello, World!"
 
-func queriesParam(ctx *atreugo.RequestCtx) int {
+func queriesParam(ctx *fasthttp.RequestCtx) int {
 	n := ctx.QueryArgs().GetUintOrZero("queries")
 	if n < 1 {
 		n = 1
@@ -23,32 +24,34 @@ func queriesParam(ctx *atreugo.RequestCtx) int {
 }
 
 // JSONHandler . Test 1: JSON serialization
-func JSONHandler(ctx *atreugo.RequestCtx) error {
+func JSONHandler(ctx *fasthttp.RequestCtx) {
 	message := AcquireMessage()
 	message.Message = helloWorldStr
-	err := ctx.JSONResponse(message)
+	data, _ := json.Marshal(message)
+
+	ctx.SetContentType("application/json")
+	ctx.Write(data)
 
 	ReleaseMessage(message)
-
-	return err
 }
 
 // DBHandler . Test 2: Single database query
-func DBHandler(db storage.DB) atreugo.View {
-	return func(ctx *atreugo.RequestCtx) error {
+func DBHandler(db storage.DB) fasthttp.RequestHandler {
+	return func(ctx *fasthttp.RequestCtx) {
 		world := storage.AcquireWorld()
 		db.GetOneRandomWorld(world)
-		err := ctx.JSONResponse(world)
+		data, _ := json.Marshal(world)
+
+		ctx.SetContentType("application/json")
+		ctx.Write(data)
 
 		storage.ReleaseWorld(world)
-
-		return err
 	}
 }
 
 // QueriesHandler . Test 3: Multiple database queries
-func QueriesHandler(db storage.DB) atreugo.View {
-	return func(ctx *atreugo.RequestCtx) error {
+func QueriesHandler(db storage.DB) fasthttp.RequestHandler {
+	return func(ctx *fasthttp.RequestCtx) {
 		queries := queriesParam(ctx)
 		worlds := storage.AcquireWorlds()[:queries]
 
@@ -56,21 +59,21 @@ func QueriesHandler(db storage.DB) atreugo.View {
 			db.GetOneRandomWorld(&worlds[i])
 		}
 
-		err := ctx.JSONResponse(worlds)
+		data, _ := json.Marshal(worlds)
+
+		ctx.SetContentType("application/json")
+		ctx.Write(data)
 
 		storage.ReleaseWorlds(worlds)
-
-		return err
 	}
 }
 
 // FortuneHandler . Test 4: Fortunes
-func FortuneHandler(db storage.DB) atreugo.View {
-	return func(ctx *atreugo.RequestCtx) error {
+func FortuneHandler(db storage.DB) fasthttp.RequestHandler {
+	return func(ctx *fasthttp.RequestCtx) {
 		fortunes, _ := db.GetFortunes()
 		newFortune := templates.AcquireFortune()
 		newFortune.Message = "Additional fortune added at request time."
-
 		fortunes = append(fortunes, *newFortune)
 
 		sort.Slice(fortunes, func(i, j int) bool {
@@ -79,22 +82,19 @@ func FortuneHandler(db storage.DB) atreugo.View {
 
 		ctx.SetContentType("text/html; charset=utf-8")
 
-		err := templates.FortuneTemplate.Execute(ctx, fortunes)
+		templates.FortuneTemplate.Execute(ctx, fortunes)
 
 		templates.ReleaseFortune(newFortune)
 		templates.ReleaseFortunes(fortunes)
-
-		return err
 	}
 }
 
 // FortuneQuickHandler . Test 4: Fortunes
-func FortuneQuickHandler(db storage.DB) atreugo.View {
-	return func(ctx *atreugo.RequestCtx) error {
+func FortuneQuickHandler(db storage.DB) fasthttp.RequestHandler {
+	return func(ctx *fasthttp.RequestCtx) {
 		fortunes, _ := db.GetFortunes()
 		newFortune := templates.AcquireFortune()
 		newFortune.Message = "Additional fortune added at request time."
-
 		fortunes = append(fortunes, *newFortune)
 
 		sort.Slice(fortunes, func(i, j int) bool {
@@ -106,14 +106,12 @@ func FortuneQuickHandler(db storage.DB) atreugo.View {
 
 		templates.ReleaseFortune(newFortune)
 		templates.ReleaseFortunes(fortunes)
-
-		return nil
 	}
 }
 
 // UpdateHandler . Test 5: Database updates
-func UpdateHandler(db storage.DB) atreugo.View {
-	return func(ctx *atreugo.RequestCtx) error {
+func UpdateHandler(db storage.DB) fasthttp.RequestHandler {
+	return func(ctx *fasthttp.RequestCtx) {
 		queries := queriesParam(ctx)
 		worlds := storage.AcquireWorlds()[:queries]
 
@@ -124,16 +122,16 @@ func UpdateHandler(db storage.DB) atreugo.View {
 		}
 
 		db.UpdateWorlds(worlds)
-		err := ctx.JSONResponse(worlds)
+		data, _ := json.Marshal(worlds)
+
+		ctx.SetContentType("application/json")
+		ctx.Write(data)
 
 		storage.ReleaseWorlds(worlds)
-
-		return err
 	}
 }
 
 // PlaintextHandler . Test 6: Plaintext
-func PlaintextHandler(ctx *atreugo.RequestCtx) error {
+func PlaintextHandler(ctx *fasthttp.RequestCtx) {
 	ctx.WriteString(helloWorldStr)
-	return nil
 }

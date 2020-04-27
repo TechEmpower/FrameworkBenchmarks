@@ -3,7 +3,7 @@ package storage
 import (
 	"context"
 
-	"atreugo/src/templates"
+	"fasthttp/src/templates"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

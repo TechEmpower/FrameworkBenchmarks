@@ -1,44 +1,40 @@
 package handlers
 
 import (
-	"atreugo/src/storage"
+	"fasthttp/src/storage"
 
-	"github.com/savsgio/atreugo/v11"
+	"github.com/valyala/fasthttp"
 )
 
 // JSONHandlerSJson . Test 1: JSON serialization
-func JSONHandlerSJson(ctx *atreugo.RequestCtx) error {
+func JSONHandlerSJson(ctx *fasthttp.RequestCtx) {
 	message := AcquireMessage()
 	message.Message = helloWorldStr
-	data, err := message.MarshalSJSON()
+	data, _ := message.MarshalSJSON()
 
 	ctx.SetContentType("application/json")
 	ctx.Write(data)
 
 	ReleaseMessage(message)
-
-	return err
 }
 
 // DBHandlerSJson . Test 2: Single database query
-func DBHandlerSJson(db storage.DB) atreugo.View {
-	return func(ctx *atreugo.RequestCtx) error {
+func DBHandlerSJson(db storage.DB) fasthttp.RequestHandler {
+	return func(ctx *fasthttp.RequestCtx) {
 		world := storage.AcquireWorld()
 		db.GetOneRandomWorld(world)
-		data, err := world.MarshalSJSON()
+		data, _ := world.MarshalSJSON()
 
 		ctx.SetContentType("application/json")
 		ctx.Write(data)
 
 		storage.ReleaseWorld(world)
-
-		return err
 	}
 }
 
 // QueriesHandlerSJson . Test 3: Multiple database queries
-func QueriesHandlerSJson(db storage.DB) atreugo.View {
-	return func(ctx *atreugo.RequestCtx) error {
+func QueriesHandlerSJson(db storage.DB) fasthttp.RequestHandler {
+	return func(ctx *fasthttp.RequestCtx) {
 		queries := queriesParam(ctx)
 		worlds := storage.AcquireWorlds()[:queries]
 
@@ -46,20 +42,18 @@ func QueriesHandlerSJson(db storage.DB) atreugo.View {
 			db.GetOneRandomWorld(&worlds[i])
 		}
 
-		data, err := worlds.MarshalSJSON()
+		data, _ := worlds.MarshalSJSON()
 
 		ctx.SetContentType("application/json")
 		ctx.Write(data)
 
 		storage.ReleaseWorlds(worlds)
-
-		return err
 	}
 }
 
 // UpdateHandlerSJson . Test 5: Database updates
-func UpdateHandlerSJson(db storage.DB) atreugo.View {
-	return func(ctx *atreugo.RequestCtx) error {
+func UpdateHandlerSJson(db storage.DB) fasthttp.RequestHandler {
+	return func(ctx *fasthttp.RequestCtx) {
 		queries := queriesParam(ctx)
 		worlds := storage.AcquireWorlds()[:queries]
 
@@ -70,13 +64,11 @@ func UpdateHandlerSJson(db storage.DB) atreugo.View {
 		}
 
 		db.UpdateWorlds(worlds)
-		data, err := worlds.MarshalSJSON()
+		data, _ := worlds.MarshalSJSON()
 
 		ctx.SetContentType("application/json")
 		ctx.Write(data)
 
 		storage.ReleaseWorlds(worlds)
-
-		return err
 	}
 }

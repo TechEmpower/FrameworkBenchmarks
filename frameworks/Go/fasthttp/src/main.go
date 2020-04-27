@@ -6,10 +6,11 @@ import (
 	"log"
 	"runtime"
 
-	"atreugo/src/handlers"
-	"atreugo/src/storage"
+	"fasthttp/src/handlers"
+	"fasthttp/src/storage"
 
-	"github.com/savsgio/atreugo/v11"
+	"github.com/savsgio/gotils"
+	"github.com/valyala/fasthttp"
 	fastprefork "github.com/valyala/fasthttp/prefork"
 )
 
@@ -20,7 +21,7 @@ func init() {
 	// init flags
 	flag.StringVar(&bindHost, "bind", ":8080", "set bind host")
 	flag.BoolVar(&prefork, "prefork", false, "use prefork")
-	flag.StringVar(&jsonEncoder, "json_encoder", "none", "json encoder: none, easyjson or sjson")
+	flag.StringVar(&jsonEncoder, "json_encoder", "none", "json encoder: none or easyjson or sjson")
 	flag.StringVar(&dbDriver, "db", "none", "db connection driver [values: none or pgx or mongo]")
 	flag.StringVar(&dbConnectionString, "db_connection_string", "", "db connection string")
 
@@ -57,10 +58,7 @@ func main() {
 	}
 
 	// init json encoders
-	var jsonHandler atreugo.View
-	var dbHandler atreugo.View
-	var queriesHandler atreugo.View
-	var updateHandler atreugo.View
+	var jsonHandler, dbHandler, queriesHandler, updateHandler fasthttp.RequestHandler
 
 	switch jsonEncoder {
 	case "easyjson":
@@ -80,33 +78,44 @@ func main() {
 		updateHandler = handlers.UpdateHandler(db)
 	}
 
-	// init atreugo server
-	server := atreugo.New(atreugo.Config{
-		Addr: bindHost,
-		Name: "Go",
-	})
+	fortunesHandler := handlers.FortuneHandler(db)
+	fortunesQuickHandler := handlers.FortuneQuickHandler(db)
 
-	// init handlers
-	server.GET("/plaintext", handlers.PlaintextHandler)
-	server.GET("/json", jsonHandler)
-	server.GET("/db", dbHandler)
-	server.GET("/queries", queriesHandler)
-	server.GET("/fortune", handlers.FortuneHandler(db))
-	server.GET("/fortune-quick", handlers.FortuneQuickHandler(db))
-	server.GET("/update", updateHandler)
+	handler := func(ctx *fasthttp.RequestCtx) {
+		switch gotils.B2S(ctx.Path()) {
+		case "/plaintext":
+			handlers.PlaintextHandler(ctx)
+		case "/json":
+			jsonHandler(ctx)
+		case "/db":
+			dbHandler(ctx)
+		case "/queries":
+			queriesHandler(ctx)
+		case "/fortune":
+			fortunesHandler(ctx)
+		case "/fortune-quick":
+			fortunesQuickHandler(ctx)
+		case "/update":
+			updateHandler(ctx)
+		default:
+			ctx.Error(fasthttp.StatusMessage(fasthttp.StatusNotFound), fasthttp.StatusNotFound)
+		}
+	}
+
+	server := &fasthttp.Server{
+		Handler: handler,
+		Name:    "go",
+	}
 
 	if prefork {
-		preforkServer := &fastprefork.Prefork{
-			RecoverThreshold: runtime.GOMAXPROCS(0) / 2,
-			ServeFunc:        server.Serve,
-		}
+		preforkServer := fastprefork.New(server)
 
 		if err := preforkServer.ListenAndServe(bindHost); err != nil {
 			panic(err)
 		}
 
 	} else {
-		if err := server.ListenAndServe(); err != nil {
+		if err := server.ListenAndServe(bindHost); err != nil {
 			panic(err)
 		}
 	}

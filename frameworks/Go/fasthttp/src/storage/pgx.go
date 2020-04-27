@@ -4,7 +4,7 @@ import (
 	"context"
 	"sort"
 
-	"atreugo/src/templates"
+	"fasthttp/src/templates"
 
 	pgx "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
