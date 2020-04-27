@@ -15,7 +15,7 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-ENV MYSQL_VERSION 8.0.19-1ubuntu18.04
+ENV MYSQL_VERSION 8.0.20-1ubuntu18.04
 
 # https://bugs.mysql.com/bug.php?id=90695
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-server mysql-server/lowercase-table-names select Enabled\""]
@@ -31,7 +31,7 @@ RUN rm -rf /ssd/mysql
 RUN rm -rf /ssd/log/mysql
 RUN cp -R -p /var/lib/mysql /ssd/
 RUN cp -R -p /var/log/mysql /ssd/log
-RUN mkdir /var/run/mysqld
+RUN mkdir -p /var/run/mysqld
 
 # It may seem weird that we call `service mysql start` several times, but the RUN
 # directive is a 1-time operation for building this image. Subsequent RUN calls
