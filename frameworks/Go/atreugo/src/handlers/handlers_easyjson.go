@@ -10,40 +10,29 @@ import (
 func JSONHandlerEasyJSON(ctx *atreugo.RequestCtx) error {
 	message := AcquireMessage()
 	message.Message = helloWorldStr
-
-	messageBytes, err := message.MarshalJSON()
-	if err != nil {
-		return err
-	}
+	data, err := message.MarshalJSON()
 
 	ctx.SetContentType("application/json")
-	ctx.Write(messageBytes)
+	ctx.Write(data)
 
 	ReleaseMessage(message)
 
-	return nil
+	return err
 }
 
 // DBHandlerEasyJSON . Test 2: Single database query
 func DBHandlerEasyJSON(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		world := storage.AcquireWorld()
-
-		if err := db.GetOneRandomWorld(world); err != nil {
-			return err
-		}
-
-		worldBytes, err := world.MarshalJSON()
-		if err != nil {
-			return err
-		}
+		db.GetOneRandomWorld(world)
+		data, err := world.MarshalJSON()
 
 		ctx.SetContentType("application/json")
-		ctx.Write(worldBytes)
+		ctx.Write(data)
 
 		storage.ReleaseWorld(world)
 
-		return nil
+		return err
 	}
 }
 
@@ -54,22 +43,17 @@ func QueriesHandlerEasyJSON(db storage.DB) atreugo.View {
 		worlds := storage.AcquireWorlds()[:queries]
 
 		for i := 0; i < queries; i++ {
-			if err := db.GetOneRandomWorld(&worlds[i]); err != nil {
-				return err
-			}
+			db.GetOneRandomWorld(&worlds[i])
 		}
 
-		worldsBytes, err := worlds.MarshalJSON()
-		if err != nil {
-			return err
-		}
+		data, err := worlds.MarshalJSON()
 
 		ctx.SetContentType("application/json")
-		ctx.Write(worldsBytes)
+		ctx.Write(data)
 
 		storage.ReleaseWorlds(worlds)
 
-		return nil
+		return err
 	}
 }
 
@@ -81,26 +65,18 @@ func UpdateHandlerEasyJSON(db storage.DB) atreugo.View {
 
 		for i := 0; i < queries; i++ {
 			w := &worlds[i]
-			if err := db.GetOneRandomWorld(w); err != nil {
-				return err
-			}
+			db.GetOneRandomWorld(w)
 			w.RandomNumber = int32(storage.RandomWorldNum())
 		}
 
-		if err := db.UpdateWorlds(worlds); err != nil {
-			return err
-		}
-
-		worldsBytes, err := worlds.MarshalJSON()
-		if err != nil {
-			return err
-		}
+		db.UpdateWorlds(worlds)
+		data, err := worlds.MarshalJSON()
 
 		ctx.SetContentType("application/json")
-		ctx.Write(worldsBytes)
+		ctx.Write(data)
 
 		storage.ReleaseWorlds(worlds)
 
-		return nil
+		return err
 	}
 }

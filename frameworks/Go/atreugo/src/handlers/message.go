@@ -3,7 +3,6 @@ package handlers
 import (
 	"sync"
 
-	"github.com/francoispqt/gojay"
 	"github.com/tidwall/sjson"
 )
 
@@ -30,11 +29,6 @@ func AcquireMessage() *Message {
 func ReleaseMessage(m *Message) {
 	m.Message = ""
 	MessagePool.Put(m)
-}
-
-// MarshalJSONObject encodes the message as JSON
-func (m *Message) MarshalJSONObject(dec *gojay.Encoder) {
-	dec.AddStringKey("message", m.Message)
 }
 
 // IsNil returns true if the object is nil
