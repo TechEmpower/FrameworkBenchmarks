@@ -26,7 +26,6 @@ func queriesParam(ctx *atreugo.RequestCtx) int {
 func JSONHandler(ctx *atreugo.RequestCtx) error {
 	message := AcquireMessage()
 	message.Message = helloWorldStr
-
 	err := ctx.JSONResponse(message)
 
 	ReleaseMessage(message)
@@ -38,11 +37,7 @@ func JSONHandler(ctx *atreugo.RequestCtx) error {
 func DBHandler(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		world := storage.AcquireWorld()
-
-		if err := db.GetOneRandomWorld(world); err != nil {
-			return err
-		}
-
+		db.GetOneRandomWorld(world)
 		err := ctx.JSONResponse(world)
 
 		storage.ReleaseWorld(world)
@@ -55,13 +50,10 @@ func DBHandler(db storage.DB) atreugo.View {
 func QueriesHandler(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
-
 		worlds := storage.AcquireWorlds()[:queries]
 
 		for i := 0; i < queries; i++ {
-			if err := db.GetOneRandomWorld(&worlds[i]); err != nil {
-				return err
-			}
+			db.GetOneRandomWorld(&worlds[i])
 		}
 
 		err := ctx.JSONResponse(worlds)
@@ -75,11 +67,7 @@ func QueriesHandler(db storage.DB) atreugo.View {
 // FortuneHandler . Test 4: Fortunes
 func FortuneHandler(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
-		fortunes, err := db.GetFortunes()
-		if err != nil {
-			return err
-		}
-
+		fortunes, _ := db.GetFortunes()
 		newFortune := templates.AcquireFortune()
 		newFortune.Message = "Additional fortune added at request time."
 
@@ -91,25 +79,19 @@ func FortuneHandler(db storage.DB) atreugo.View {
 
 		ctx.SetContentType("text/html; charset=utf-8")
 
-		if err = templates.FortuneTemplate.Execute(ctx, fortunes); err != nil {
-			return err
-		}
+		err := templates.FortuneTemplate.Execute(ctx, fortunes)
 
 		templates.ReleaseFortune(newFortune)
 		templates.ReleaseFortunes(fortunes)
 
-		return nil
+		return err
 	}
 }
 
 // FortuneQuickHandler . Test 4: Fortunes
 func FortuneQuickHandler(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
-		fortunes, err := db.GetFortunes()
-		if err != nil {
-			return err
-		}
-
+		fortunes, _ := db.GetFortunes()
 		newFortune := templates.AcquireFortune()
 		newFortune.Message = "Additional fortune added at request time."
 
@@ -137,16 +119,11 @@ func UpdateHandler(db storage.DB) atreugo.View {
 
 		for i := 0; i < queries; i++ {
 			w := &worlds[i]
-			if err := db.GetOneRandomWorld(w); err != nil {
-				return err
-			}
+			db.GetOneRandomWorld(w)
 			w.RandomNumber = int32(storage.RandomWorldNum())
 		}
 
-		if err := db.UpdateWorlds(worlds); err != nil {
-			return err
-		}
-
+		db.UpdateWorlds(worlds)
 		err := ctx.JSONResponse(worlds)
 
 		storage.ReleaseWorlds(worlds)
@@ -157,5 +134,6 @@ func UpdateHandler(db storage.DB) atreugo.View {
 
 // PlaintextHandler . Test 6: Plaintext
 func PlaintextHandler(ctx *atreugo.RequestCtx) error {
-	return ctx.TextResponse(helloWorldStr)
+	ctx.WriteString(helloWorldStr)
+	return nil
 }

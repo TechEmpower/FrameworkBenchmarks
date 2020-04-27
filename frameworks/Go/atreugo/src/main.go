@@ -20,7 +20,7 @@ func init() {
 	// init flags
 	flag.StringVar(&bindHost, "bind", ":8080", "set bind host")
 	flag.BoolVar(&prefork, "prefork", false, "use prefork")
-	flag.StringVar(&jsonEncoder, "json_encoder", "none", "json encoder: none or easyjson or gojay or sjson")
+	flag.StringVar(&jsonEncoder, "json_encoder", "none", "json encoder: none, easyjson or sjson")
 	flag.StringVar(&dbDriver, "db", "none", "db connection driver [values: none or pgx or mongo]")
 	flag.StringVar(&dbConnectionString, "db_connection_string", "", "db connection string")
 
@@ -52,6 +52,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	if db != nil {
+		defer db.Close()
+	}
+
 	// init json encoders
 	var jsonHandler atreugo.View
 	var dbHandler atreugo.View
@@ -64,11 +68,6 @@ func main() {
 		dbHandler = handlers.DBHandlerEasyJSON(db)
 		queriesHandler = handlers.QueriesHandlerEasyJSON(db)
 		updateHandler = handlers.UpdateHandlerEasyJSON(db)
-	case "gojay":
-		jsonHandler = handlers.JSONHandlerGoJay
-		dbHandler = handlers.DBHandlerGoJay(db)
-		queriesHandler = handlers.QueriesHandlerGoJay(db)
-		updateHandler = handlers.UpdateHandlerGoJay(db)
 	case "sjson":
 		jsonHandler = handlers.JSONHandlerSJson
 		dbHandler = handlers.DBHandlerSJson(db)
@@ -90,15 +89,11 @@ func main() {
 	// init handlers
 	server.GET("/plaintext", handlers.PlaintextHandler)
 	server.GET("/json", jsonHandler)
-	if db != nil {
-		defer db.Close()
-
-		server.GET("/db", dbHandler)
-		server.GET("/queries", queriesHandler)
-		server.GET("/fortune", handlers.FortuneHandler(db))
-		server.GET("/fortune-quick", handlers.FortuneQuickHandler(db))
-		server.GET("/update", updateHandler)
-	}
+	server.GET("/db", dbHandler)
+	server.GET("/queries", queriesHandler)
+	server.GET("/fortune", handlers.FortuneHandler(db))
+	server.GET("/fortune-quick", handlers.FortuneQuickHandler(db))
+	server.GET("/update", updateHandler)
 
 	if prefork {
 		preforkServer := &fastprefork.Prefork{
