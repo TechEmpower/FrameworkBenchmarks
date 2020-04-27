@@ -45,7 +45,6 @@ class RawController extends AppController
 
             $sth->execute([$id]);
             $row = ['id' => $id, 'randomNumber' => $sth->fetchColumn()];
-            $row['randomNumber'] = mt_rand(1, 10000);
             $updateStatement->execute(
                 [$row['randomNumber'] = mt_rand(1, 10000), $id]
             );
