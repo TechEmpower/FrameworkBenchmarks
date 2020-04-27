@@ -28,6 +28,7 @@ ENV IROOT=/install
 ENV DROGON_ROOT=$IROOT/drogon
 ENV PG_ROOT=$IROOT/postgres-batch_mode_ubuntu
 ENV TEST_PATH=/drogon_benchmark/build
+ENV MIMALLOC_ROOT=$IROOT/mimalloc
 
 WORKDIR $IROOT
 
@@ -36,6 +37,13 @@ RUN tar -xvzf batch_mode_ubuntu.tar.gz
 WORKDIR $PG_ROOT
 
 RUN ./configure --prefix=/usr CFLAGS='-O2 -pipe'
+RUN make && make install
+
+RUN git clone https://github.com/microsoft/mimalloc
+WORKDIR $MIMALLOC_ROOT
+RUN mkdir build
+WORKDIR $MIMALLOC_ROOT/build
+RUN cmake -DCMAKE_BUILD_TYPE=release ..
 RUN make && make install
 
 WORKDIR $IROOT
