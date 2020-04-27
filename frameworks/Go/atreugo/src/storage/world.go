@@ -3,7 +3,6 @@ package storage
 import (
 	"sync"
 
-	"github.com/francoispqt/gojay"
 	"github.com/tidwall/sjson"
 )
 
@@ -32,12 +31,6 @@ func ReleaseWorld(w *World) {
 	w.ID = 0
 	w.RandomNumber = 0
 	WorldPool.Put(w)
-}
-
-// MarshalJSONObject encodes the world as JSON
-func (w *World) MarshalJSONObject(dec *gojay.Encoder) {
-	dec.AddInt32Key("id", w.ID)
-	dec.AddInt32Key("randomnumber", w.RandomNumber)
 }
 
 // IsNil returns true if the object is nil
@@ -73,13 +66,6 @@ func AcquireWorlds() Worlds {
 func ReleaseWorlds(w Worlds) {
 	w = w[:0]
 	WorldsPool.Put(w)
-}
-
-// MarshalJSONArray marshals the list of worlds
-func (ws Worlds) MarshalJSONArray(enc *gojay.Encoder) {
-	for _, w := range ws {
-		enc.AddObject(&w)
-	}
 }
 
 // IsNil returns true if the object is nil
