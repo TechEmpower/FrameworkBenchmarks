@@ -26,6 +26,7 @@ ENV RANLIB=gcc-ranlib-8
 
 ENV IROOT=/install
 ENV DROGON_ROOT=$IROOT/drogon
+ENV MIMALLOC_ROOT=$IROOT/mimalloc
 ENV PG_ROOT=$IROOT/postgres-batch_mode_ubuntu
 ENV TEST_PATH=/drogon_benchmark/build
 
@@ -51,6 +52,17 @@ RUN mkdir build
 WORKDIR $DROGON_ROOT/build
 
 RUN cmake -DCMAKE_BUILD_TYPE=release ..
+RUN make && make install
+
+WORKDIR $IROOT
+
+RUN git clone https://github.com/microsoft/mimalloc
+
+WORKDIR $MIMALLOC_ROOT
+RUN git checkout v1.6.2 -b v1.6.2
+RUN mkdir -p out/release
+WORKDIR $MIMALLOC_ROOT/out/release
+RUN cmake ../..
 RUN make && make install
 
 WORKDIR $TEST_PATH
