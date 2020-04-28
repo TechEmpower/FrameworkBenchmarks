@@ -9,4 +9,4 @@ FROM mcr.microsoft.com/dotnet/core/runtime-deps:3.1 AS runtime
 WORKDIR /app
 COPY --from=build /app/out ./
 
-ENTRYPOINT ["./PlatformBenchmarks", "--server.urls=http://+:8080", "KestrelTransport=LinuxTransport"]
+ENTRYPOINT ["./PlatformBenchmarks", "--server.urls=http://+:80", "KestrelTransport=LinuxTransport"]

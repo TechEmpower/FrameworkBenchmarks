@@ -23,7 +23,7 @@
     "rhtx": {
       "plaintext_url": "/p",
       "json_url": "/j",
-      "port": 8080,
+      "port": 80,
       "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
