@@ -41,8 +41,8 @@ class KuRaw
         $rows = count($worlds);
 
         if (!isset(self::$update[$rows])) {
-            $sql = 'UPDATE world SET randomNumber = CASE '
-                . str_repeat(' WHEN id = ?::INTEGER THEN ?::INTEGER ', $rows) .
+            $sql = 'UPDATE world SET randomNumber = CASE id'
+                . str_repeat(' WHEN ?::INTEGER THEN ?::INTEGER ', $rows) .
                 'END WHERE id IN ('
                 . implode(', ', array_fill(0, $rows, '?::INTEGER')) . ')';
 
