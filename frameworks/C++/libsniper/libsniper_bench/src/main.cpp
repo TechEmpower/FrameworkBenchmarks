@@ -63,11 +63,18 @@ private:
 
         string date = gen_date();
         http_server.set_cb_request([&, this](const auto& conn, const auto& req, const auto& resp) {
-            resp->code = http::ResponseStatus::OK;
             resp->add_header_nocopy("Server: libsniper\r\n");
-            resp->add_header_nocopy("Content-Type: text/plain; charset=UTF-8\r\n");
             resp->add_header_copy(date);
-            resp->set_data_nocopy("Hello, World!");
+
+            if (req->path() == "/plaintext") {
+                resp->code = http::ResponseStatus::OK;
+                resp->add_header_nocopy("Content-Type: text/plain; charset=UTF-8\r\n");
+                resp->set_data_nocopy("Hello, World!");
+                conn->send(resp);
+                return;
+            }
+
+            resp->code = http::ResponseStatus::NO_CONTENT;
             conn->send(resp);
         });
 
