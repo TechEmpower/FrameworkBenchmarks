@@ -1,0 +1,26 @@
+{
+  "framework": "pine",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "mysql",
+        "framework": "Pine",
+        "language": "Go",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Pine",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
