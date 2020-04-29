@@ -131,7 +131,7 @@ int main()
   reactor_timer timer;
   reactor_tcp tcp;
 
-  setup(1, 0);  
+  setup();
   (void) reactor_core_construct();
   (void) reactor_timer_open(&timer, timer_event, &timer, 1, 1000000000);
   (void) reactor_tcp_open(&tcp, tcp_event, &tcp, "0.0.0.0", "8080", REACTOR_TCP_FLAG_SERVER);
