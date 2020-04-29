@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:18.04 as builder
 
 RUN apt-get update -yqq
 RUN apt-get install -yqq wget make automake libtool file gcc-8 g++-8
@@ -29,5 +29,11 @@ COPY src/ /libreactor/src/
 COPY Makefile /libreactor/Makefile
 
 RUN make
+
+
+FROM ubuntu:18.04
+
+WORKDIR /libreactor
+COPY --from=builder /libreactor .
 
 CMD ["./libreactor"]
