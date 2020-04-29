@@ -29,7 +29,7 @@ RUN wget -q https://github.com/fredrikwidlund/libclo/releases/download/v1.0.0/li
 RUN wget -q https://github.com/fredrikwidlund/libreactor/releases/download/v1.0.1/libreactor-1.0.1.tar.gz && \
     tar xfz libreactor-1.0.1.tar.gz && \
     cd libreactor-1.0.1 && \
-    ./configure --prefix=/usr && \
+    ./configure --prefix=/usr CFLAGS="-Wall -Wextra -Wpedantic -O3" && \
     make install
 
 COPY src/ /libreactor/src/
