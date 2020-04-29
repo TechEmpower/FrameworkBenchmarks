@@ -3,7 +3,6 @@ FROM ubuntu:18.04
 RUN apt-get update -yqq
 RUN apt-get install -yqq wget make automake libtool file gcc-8 g++-8
 
-ADD ./ /libreactor
 WORKDIR /libreactor
 
 ENV CC=gcc-8 AR=gcc-ar-8 NM=gcc-nm-8 RANLIB=gcc-ranlib-8
@@ -26,6 +25,9 @@ RUN wget -q https://github.com/fredrikwidlund/libclo/releases/download/v0.1.0/li
     ./configure  && \
     make && make install
 
-RUN make clean && make
+COPY src/ /libreactor/src/
+COPY Makefile /libreactor/Makefile
+
+RUN make
 
 CMD ["./libreactor"]
