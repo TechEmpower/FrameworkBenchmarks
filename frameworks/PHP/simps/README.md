@@ -8,7 +8,7 @@
 [![Latest Version](https://img.shields.io/packagist/v/simple-swoole/simps.svg)](https://packagist.org/packages/simple-swoole/simps)
 [![Simps Doc](https://img.shields.io/badge/docs-passing-blue.svg)](https://doc.simps.io)
 [![Contact Simps Team](https://img.shields.io/badge/contact-@SimpsTeam-blue.svg?style=flat)](mailto:team@simps.io)
-[![Php Version](https://img.shields.io/badge/php-%3E=7.2-brightgreen.svg)](https://www.php.net)
+[![Php Version](https://img.shields.io/badge/php-%3E=7.1-brightgreen.svg)](https://www.php.net)
 [![Swoole Version](https://img.shields.io/badge/swoole-%3E=4.4.0-brightgreen.svg)](https://github.com/swoole/swoole-src)
 
 # Simps Benchmarking Test
