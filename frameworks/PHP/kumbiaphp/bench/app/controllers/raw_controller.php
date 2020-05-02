@@ -16,20 +16,20 @@ class RawController extends AppController
 
     public function index()
     {
-        $statement = $this->pdo->query( 'SELECT id,randomNumber FROM World WHERE id='. mt_rand(1, 10000) );
-        echo json_encode($statement->fetch(PDO::FETCH_ASSOC), JSON_NUMERIC_CHECK);
+        $statement = $this->pdo->query( 'SELECT * FROM World WHERE id='. mt_rand(1, 10000) );
+        echo json_encode($statement->fetch(PDO::FETCH_ASSOC));
     }
 
     public function query($count = 1)
     {
         $count = min(max($count, 1), 500);
-        $res = $this->pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
+        $res = $this->pdo->prepare('SELECT * FROM World WHERE id=?');
 
         while ($count--) {
             $res->execute([mt_rand(1, 10000)]);
             $worlds[] = $res->fetch(PDO::FETCH_ASSOC);
         }
-        echo json_encode($worlds, JSON_NUMERIC_CHECK);
+        echo json_encode($worlds);
     }
 
     public function update($count = 1)
@@ -45,7 +45,6 @@ class RawController extends AppController
 
             $sth->execute([$id]);
             $row = ['id' => $id, 'randomNumber' => $sth->fetchColumn()];
-            $row['randomNumber'] = mt_rand(1, 10000);
             $updateStatement->execute(
                 [$row['randomNumber'] = mt_rand(1, 10000), $id]
             );
@@ -53,6 +52,6 @@ class RawController extends AppController
             $worlds[] = $row;
         }
 
-        echo json_encode($worlds, JSON_NUMERIC_CHECK);
+        echo json_encode($worlds);
     }
 }

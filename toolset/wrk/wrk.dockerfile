@@ -1,6 +1,6 @@
 FROM buildpack-deps:bionic
 
-RUN apt update && apt install -yqq libluajit-5.1-dev libssl-dev luajit
+RUN apt-get update && apt-get install -yqq libluajit-5.1-dev libssl-dev luajit
 
 WORKDIR /wrk
 RUN curl -sL https://github.com/wg/wrk/archive/4.1.0.tar.gz | tar xz --strip-components=1

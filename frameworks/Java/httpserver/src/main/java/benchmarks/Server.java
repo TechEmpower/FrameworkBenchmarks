@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
+import java.util.concurrent.Executors;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +52,7 @@ public class Server {
         config.setJdbcUrl("jdbc:postgresql://tfb-database:5432/hello_world");
         config.setUsername("benchmarkdbuser");
         config.setPassword("benchmarkdbpass");
-        config.setMaximumPoolSize(64);
+        config.setMaximumPoolSize(512);
         return new HikariDataSource(config);
     }
 
@@ -71,6 +72,7 @@ public class Server {
             t.getResponseHeaders().add("Server", SERVER_NAME);
             t.sendResponseHeaders(200, HELLO_LENGTH);
             t.getResponseBody().write(HELLO_BYTES);
+            t.getResponseBody().flush();
             t.getResponseBody().close();
         };
     }
@@ -90,6 +92,7 @@ public class Server {
             t.getResponseHeaders().add("Server", SERVER_NAME);
             t.sendResponseHeaders(200, bytes.length);
             t.getResponseBody().write(bytes);
+            t.getResponseBody().flush();
             t.getResponseBody().close();
         };
     }
@@ -113,6 +116,7 @@ public class Server {
                 t.getResponseHeaders().add("Server", SERVER_NAME);
                 t.sendResponseHeaders(200, bytes.length);
                 t.getResponseBody().write(bytes);
+                t.getResponseBody().flush();
                 t.getResponseBody().close();
             } catch (SQLException | ParseException e) {
                 throw new IOException(e);
@@ -127,9 +131,8 @@ public class Server {
         if (settings.contains("debug"))
             System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
         // create server
-        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
-        server.setExecutor(new ThreadPoolExecutor(
-            8, Integer.MAX_VALUE, 300, TimeUnit.SECONDS, new SynchronousQueue<>()));
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 1024 * 8);
+        server.setExecutor(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
         // add context handlers
         server.createContext("/plaintext", createPlaintextHandler());
         server.createContext("/json", createJSONHandler());

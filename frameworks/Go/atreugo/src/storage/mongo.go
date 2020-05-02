@@ -2,17 +2,13 @@ package storage
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"math/rand"
-	"time"
 
 	"atreugo/src/templates"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
-	"gopkg.in/mgo.v2/bson"
 )
 
 // Mongo struct
@@ -24,22 +20,30 @@ type Mongo struct {
 	fortunes *mongo.Collection
 }
 
+// NewMongoDB creates new connection to postgres db with official mongo driver
+func NewMongoDB(dbConnectionString string, maxConnectionsInPool int) (DB, error) {
+	m := new(Mongo)
+
+	if err := m.Connect(dbConnectionString, maxConnectionsInPool); err != nil {
+		return nil, err
+	}
+
+	return m, nil
+}
+
 // Connect create connection and ping db
 func (m *Mongo) Connect(dbConnectionString string, maxConnectionsInPool int) error {
 	var err error
 
 	opts := options.Client()
-	// opts.SetMaxPoolSize(uint16(maxConnectionsInPool))
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-	defer cancel()
-	m.db, err = mongo.Connect(ctx, opts.ApplyURI(dbConnectionString))
+	opts.SetMaxPoolSize(uint64(maxConnectionsInPool))
+
+	m.db, err = mongo.Connect(context.Background(), opts.ApplyURI(dbConnectionString))
 	if err != nil {
 		return err
 	}
 
-	ctx, cancel = context.WithTimeout(context.Background(), 2*time.Second)
-	defer cancel()
-	err = m.db.Ping(ctx, readpref.Primary())
+	err = m.db.Ping(context.Background(), readpref.Primary())
 	if err != nil {
 		return err
 	}
@@ -53,83 +57,52 @@ func (m *Mongo) Connect(dbConnectionString string, maxConnectionsInPool int) err
 
 // Close connect to db
 func (m *Mongo) Close() {
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-	defer cancel()
-	m.db.Disconnect(ctx)
+	if err := m.db.Disconnect(context.Background()); err != nil {
+		panic(err)
+	}
 }
 
 // GetOneRandomWorld return one random World struct
-func (m Mongo) GetOneRandomWorld(w *World) error {
-	var err error
-	queryID := rand.Intn(worldsCount) + 1
+func (m *Mongo) GetOneRandomWorld(w *World) error {
+	id := RandomWorldNum()
+	filter := bson.M{"_id": id}
 
-	filter := bson.M{"_id": queryID}
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	return m.worlds.FindOne(context.Background(), filter).Decode(w)
+}
 
-	if err = m.worlds.FindOne(ctx, filter).Decode(w); err != nil {
-		err = fmt.Errorf("error scanning world row with ID %d: %s", queryID, err)
+// UpdateWorlds updates some number of worlds entries, passed as arg
+func (m *Mongo) UpdateWorlds(worlds Worlds) error {
+	var operations []mongo.WriteModel
+
+	for _, w := range worlds {
+		operation := mongo.NewUpdateOneModel()
+		operation.SetFilter(bson.M{"_id": w.ID})
+		operation.SetUpdate(bson.M{"$set": bson.M{"randomNumber": w.RandomNumber}})
+		operations = append(operations, operation)
 	}
+
+	_, err := m.worlds.BulkWrite(context.Background(), operations)
 
 	return err
 }
 
-// UpdateWorlds updates some number of worlds entries, passed as arg
-func (m Mongo) UpdateWorlds(selectedWorlds Worlds) error {
-	for _, selectedWorld := range selectedWorlds {
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-
-		selectedWorld.RandomNumber = rand.Intn(worldsCount) + 1
-		if _, err := m.worlds.UpdateOne(
-			ctx,
-			bson.M{"_id": selectedWorld.ID},
-			bson.M{"$set": bson.M{"randomNumber": selectedWorld.RandomNumber}},
-		); err != nil {
-			log.Fatalf("Error updating world with id: %s", err.Error())
-		}
-	}
-
-	return nil
-}
-
 // GetFortunes selects all fortunes from table
-func (m Mongo) GetFortunes() (templates.Fortunes, error) {
-	fortunes := templates.AcquireFortunes()
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	cur, err := m.fortunes.Find(ctx, bson.M{})
+func (m *Mongo) GetFortunes() (templates.Fortunes, error) {
+	cur, err := m.fortunes.Find(context.Background(), bson.M{})
 	if err != nil {
-		return fortunes, err
+		return nil, err
 	}
-	defer cur.Close(ctx)
+	defer cur.Close(context.Background())
 
+	fortunes := templates.AcquireFortunes()
 	fortune := templates.AcquireFortune()
 
 	for cur.Next(context.Background()) {
-		err = cur.Decode(fortune)
-		if err != nil {
-			return fortunes, err
-		}
+		cur.Decode(fortune)
 		fortunes = append(fortunes, *fortune)
 	}
 
 	templates.ReleaseFortune(fortune)
 
-	if err := cur.Err(); err != nil {
-		return fortunes, err
-	}
-
-	return fortunes, nil
-}
-
-// NewMongoDB creates new connection to postgres db with official mongo driver
-func NewMongoDB(dbConnectionString string, maxConnectionsInPool int) (DB, error) {
-	var m Mongo
-	if err := m.Connect(dbConnectionString, maxConnectionsInPool); err != nil {
-		return nil, err
-	}
-	return &m, nil
+	return fortunes, cur.Err()
 }

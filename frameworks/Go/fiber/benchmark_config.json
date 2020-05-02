@@ -1,0 +1,53 @@
+{
+  "framework": "fiber",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/j",
+        "db_url": "/d",
+        "query_url": "/q?q=",
+        "fortune_url": "/f",
+        "update_url": "/u?q=",
+        "plaintext_url": "/p",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "Fiber",
+        "language": "Go",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Fiber",
+        "notes": "",
+        "versus": "go"
+      },
+      "prefork": {
+        "json_url": "/j",
+        "db_url": "/d",
+        "query_url": "/q?q=",
+        "fortune_url": "/f",
+        "update_url": "/u?q=",
+        "plaintext_url": "/p",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "Fiber",
+        "language": "Go",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Fiber-prefork",
+        "notes": "",
+        "versus": "go"
+      }
+    }
+  ]
+}

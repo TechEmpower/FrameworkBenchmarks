@@ -29,7 +29,7 @@ class WorldDAO @Inject()(protected val db: Database) {
     SQL"SELECT * FROM World WHERE id = $id".as(simpleRowParser.single)
   }
 
-  def updateRandom(world: World)(implicit connection: Connection) {
+  def updateRandom(world: World)(implicit connection: Connection): Unit = {
     SQL"UPDATE World SET randomNumber = ${world.randomNumber} WHERE id = ${world.id}".executeUpdate()
   }
 }

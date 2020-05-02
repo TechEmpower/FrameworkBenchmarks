@@ -8,22 +8,25 @@
 
     public class Startup
     {
-        private readonly IConfiguration config;
+        public IConfiguration Configuration { get; }
+
+#if NETFRAMEWORK
         public Startup(IHostingEnvironment env)
+#elif NETCOREAPP
+        public Startup(IWebHostEnvironment env)
+#endif
         {
             var builder = new ConfigurationBuilder()
                               .AddJsonFile("appsettings.json")
                               .SetBasePath(env.ContentRootPath);
 
-            config = builder.Build();
+            Configuration = builder.Build();
         }
-
-        public void ConfigureServices(IServiceCollection services) { }
 
         public void Configure(IApplicationBuilder app)
         {
             var appConfig = new AppConfiguration();
-            ConfigurationBinder.Bind(config, appConfig);
+            ConfigurationBinder.Bind(Configuration, appConfig);
 
             app.UseOwin(x => x.UseNancy(opt => opt.Bootstrapper = new Bootstrapper(appConfig)));
         }

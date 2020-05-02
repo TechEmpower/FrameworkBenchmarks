@@ -1,23 +1,19 @@
 package handlers
 
 import (
-	"log"
-
 	"atreugo/src/storage"
 
-	"github.com/savsgio/atreugo/v9"
+	"github.com/savsgio/atreugo/v11"
 )
 
 // JSONHandlerSJson . Test 1: JSON serialization
 func JSONHandlerSJson(ctx *atreugo.RequestCtx) error {
 	message := AcquireMessage()
-	message.Message = "Hello, World!"
+	message.Message = helloWorldStr
+	data, err := message.MarshalSJSON()
 
 	ctx.SetContentType("application/json")
-	data, err := message.MarshalSJSON()
-	if err == nil {
-		_, err = ctx.Write(data)
-	}
+	ctx.Write(data)
 
 	ReleaseMessage(message)
 
@@ -25,19 +21,14 @@ func JSONHandlerSJson(ctx *atreugo.RequestCtx) error {
 }
 
 // DBHandlerSJson . Test 2: Single database query
-func DBHandlerSJson(db storage.DB) func(ctx *atreugo.RequestCtx) error {
+func DBHandlerSJson(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		world := storage.AcquireWorld()
-
-		if err := db.GetOneRandomWorld(world); err != nil {
-			return err
-		}
+		db.GetOneRandomWorld(world)
+		data, err := world.MarshalSJSON()
 
 		ctx.SetContentType("application/json")
-		data, err := world.MarshalSJSON()
-		if err == nil {
-			_, err = ctx.Write(data)
-		}
+		ctx.Write(data)
 
 		storage.ReleaseWorld(world)
 
@@ -46,23 +37,19 @@ func DBHandlerSJson(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 }
 
 // QueriesHandlerSJson . Test 3: Multiple database queries
-func QueriesHandlerSJson(db storage.DB) func(ctx *atreugo.RequestCtx) error {
+func QueriesHandlerSJson(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
 		worlds := storage.AcquireWorlds()[:queries]
 
-		var err error
 		for i := 0; i < queries; i++ {
-			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
-				log.Println(err)
-			}
+			db.GetOneRandomWorld(&worlds[i])
 		}
 
-		ctx.SetContentType("application/json")
 		data, err := worlds.MarshalSJSON()
-		if err == nil {
-			_, err = ctx.Write(data)
-		}
+
+		ctx.SetContentType("application/json")
+		ctx.Write(data)
 
 		storage.ReleaseWorlds(worlds)
 
@@ -71,27 +58,22 @@ func QueriesHandlerSJson(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 }
 
 // UpdateHandlerSJson . Test 5: Database updates
-func UpdateHandlerSJson(db storage.DB) func(ctx *atreugo.RequestCtx) error {
+func UpdateHandlerSJson(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
 		worlds := storage.AcquireWorlds()[:queries]
 
-		var err error
 		for i := 0; i < queries; i++ {
-			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
-				log.Println(err)
-			}
+			w := &worlds[i]
+			db.GetOneRandomWorld(w)
+			w.RandomNumber = int32(storage.RandomWorldNum())
 		}
 
-		if err = db.UpdateWorlds(worlds); err != nil {
-			return err
-		}
+		db.UpdateWorlds(worlds)
+		data, err := worlds.MarshalSJSON()
 
 		ctx.SetContentType("application/json")
-		data, err := worlds.MarshalSJSON()
-		if err == nil {
-			_, err = ctx.Write(data)
-		}
+		ctx.Write(data)
 
 		storage.ReleaseWorlds(worlds)
 

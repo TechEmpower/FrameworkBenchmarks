@@ -1,4 +1,4 @@
-lazy val finatraVersion = "19.11.0"
+lazy val finatraVersion = "20.4.1"
 
 name := "techempower-benchmarks-finatra"
 organization := "com.twitter"
@@ -14,14 +14,14 @@ assemblyJarName in assembly := "finatra-benchmark.jar"
 assemblyMergeStrategy in assembly := {
   case "BUILD" => MergeStrategy.discard
   case PathList("META-INF", "io.netty.versions.properties") => MergeStrategy.discard
-  case other => MergeStrategy.defaultMergeStrategy(other)
-}
+  case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
+  case other => MergeStrategy.first}
 
 libraryDependencies ++= Seq(
   ("com.twitter" %% "finatra-http" % finatraVersion).
     exclude("com.sun.activation", "javax.activation"),
-  "org.slf4j" % "slf4j-nop" % "1.7.25",
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.9",
+  "org.slf4j" % "slf4j-nop" % "1.7.30",
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.10",
 )
 
 excludeDependencies ++= Seq(

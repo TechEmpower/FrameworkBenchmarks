@@ -81,7 +81,7 @@ public class PostgresDbService {
     return 1 + ThreadLocalRandom.current().nextInt(10000);
   }
 
-  private int getSanitizedCount(String count) {
+  private static int getSanitizedCount(String count) {
     try {
       int intCount = Integer.parseInt(count);
       if (intCount < 1) {
