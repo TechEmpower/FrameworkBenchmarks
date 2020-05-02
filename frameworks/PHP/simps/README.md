@@ -34,10 +34,6 @@ The tests were run with:
 
 http://localhost:8080/json
 
-### PLAINTEXT
-
-http://localhost:8080/plaintext
-
 ### DB
 
 http://localhost:8080/db
