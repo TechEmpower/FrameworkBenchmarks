@@ -19,30 +19,7 @@ struct cpu
   cpu_set_t set;
 };
 
-int realtime(void)
-{
-  struct sched_param param;
-  struct rlimit rlim;
-  int e;
-
-  e = sched_getparam(0, &param);
-  if (e == -1)
-    return -1;
-
-  param.sched_priority = sched_get_priority_max(SCHED_FIFO);
-  rlim = (struct rlimit) {.rlim_cur = param.sched_priority, .rlim_max = param.sched_priority};
-  e = prlimit(0, RLIMIT_RTPRIO, &rlim, NULL);
-  if (e == -1)
-    return -1;
-
-  e = sched_setscheduler(0, SCHED_FIFO, &param);
-  if (e == -1)
-    return -1;
-
-  return 0;
-}
-
-static void cpu_list(vector *list, int sib)
+static void cpu_list(vector *list, int use_all_cores)
 {
   struct cpu cpu;
   char path[1024], buf[1024];
@@ -64,8 +41,13 @@ static void cpu_list(vector *list, int sib)
       close(fd);
 
       id = strtoul(buf, NULL, 0);
-      if (!sib && id != i)
-        continue;
+
+      if (use_all_cores){
+        id = i; /* add every cpu (whether physical or logical) to the list */
+      }
+      else if (id != i){
+        continue; /* ignore sibling CPUs */
+      }
 
       cpu = (struct cpu) {0};
       cpu.id = id;
@@ -75,7 +57,7 @@ static void cpu_list(vector *list, int sib)
     }
 }
 
-void setup(size_t skip, int sib)
+void setup()
 {
   vector list;
   struct cpu *cpu;
@@ -84,11 +66,10 @@ void setup(size_t skip, int sib)
   pid_t cpid;
 
   signal(SIGPIPE, SIG_IGN);
-  cpu_list(&list, sib);
-  for (i = 0; i < vector_size(&list); i ++)
+  cpu_list(&list, 1);
+
+  for (i = 0; i < vector_size(&list); i++)
     {
-      if (i % skip != 0)
-        continue;
       cpu = vector_at(&list, i);
       cpid = fork();
       if (cpid == -1)
