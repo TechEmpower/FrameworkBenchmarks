@@ -32,8 +32,8 @@ RUN wget -q https://github.com/fredrikwidlund/libreactor/releases/download/v1.0.
     ./configure --prefix=/usr CFLAGS="-Wall -Wextra -Wpedantic -O3" && \
     make install
 
-COPY src/ /libreactor/src/
-COPY Makefile /libreactor/Makefile
+COPY src-server/ /libreactor/src/
+COPY Makefile-server /libreactor/Makefile
 
 RUN make
 
