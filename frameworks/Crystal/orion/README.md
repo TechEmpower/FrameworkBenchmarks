@@ -8,18 +8,14 @@ Orion is a powerful, simple, rails-esque routing library for HTTP::Server
 
 ### Test Type Implementation Source Code
 
-* [JSON](Relative/Path/To/Your/Source/File)
-* [PLAINTEXT](Relative/Path/To/Your/Source/File)
-* [DB](Relative/Path/To/Your/Source/File)
-* [QUERY](Relative/Path/To/Your/Source/File)
-* [CACHED QUERY](Relative/Path/To/Your/Source/File)
-* [UPDATE](Relative/Path/To/Your/Source/File)
-* [FORTUNES](Relative/Path/To/Your/Source/File)
+* [JSON](orion.cr)
+* [PLAINTEXT](orion.cr)
+* [DB](orion.cr)
+* [QUERY](orion.cr)
+* [CACHED QUERY](orion.cr)
+* [UPDATE](orion.cr)
+* [FORTUNES](orion.cr)
 
-## Important Libraries
-The tests were run with:
-* [Software](https://www.example1.com/)
-* [Example](http://www.example2.com/)
 
 ## Test URLs
 ### JSON
