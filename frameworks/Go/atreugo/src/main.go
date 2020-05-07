@@ -4,25 +4,23 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"net"
-	"os"
 	"runtime"
 
 	"atreugo/src/handlers"
 	"atreugo/src/storage"
 
-	"github.com/savsgio/atreugo/v10"
+	"github.com/savsgio/atreugo/v11"
+	fastprefork "github.com/valyala/fasthttp/prefork"
 )
 
 var bindHost, jsonEncoder, dbDriver, dbConnectionString string
-var prefork, child bool
+var prefork bool
 
 func init() {
 	// init flags
 	flag.StringVar(&bindHost, "bind", ":8080", "set bind host")
 	flag.BoolVar(&prefork, "prefork", false, "use prefork")
-	flag.BoolVar(&child, "child", false, "is child proc")
-	flag.StringVar(&jsonEncoder, "json_encoder", "none", "json encoder: none or easyjson or gojay or sjson")
+	flag.StringVar(&jsonEncoder, "json_encoder", "none", "json encoder: none, easyjson or sjson")
 	flag.StringVar(&dbDriver, "db", "none", "db connection driver [values: none or pgx or mongo]")
 	flag.StringVar(&dbConnectionString, "db_connection_string", "", "db connection string")
 
@@ -40,7 +38,7 @@ func numCPU() int {
 
 func main() {
 	maxConn := numCPU() * 4
-	if child {
+	if fastprefork.IsChild() {
 		maxConn = numCPU()
 	}
 
@@ -52,6 +50,10 @@ func main() {
 	db, err := storage.InitDB(dbDriver, dbConnectionString, maxConn)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	if db != nil {
+		defer db.Close()
 	}
 
 	// init json encoders
@@ -66,11 +68,6 @@ func main() {
 		dbHandler = handlers.DBHandlerEasyJSON(db)
 		queriesHandler = handlers.QueriesHandlerEasyJSON(db)
 		updateHandler = handlers.UpdateHandlerEasyJSON(db)
-	case "gojay":
-		jsonHandler = handlers.JSONHandlerGoJay
-		dbHandler = handlers.DBHandlerGoJay(db)
-		queriesHandler = handlers.QueriesHandlerGoJay(db)
-		updateHandler = handlers.UpdateHandlerGoJay(db)
 	case "sjson":
 		jsonHandler = handlers.JSONHandlerSJson
 		dbHandler = handlers.DBHandlerSJson(db)
@@ -92,29 +89,19 @@ func main() {
 	// init handlers
 	server.GET("/plaintext", handlers.PlaintextHandler)
 	server.GET("/json", jsonHandler)
-	if db != nil {
-		defer db.Close()
+	server.GET("/db", dbHandler)
+	server.GET("/queries", queriesHandler)
+	server.GET("/fortune", handlers.FortuneHandler(db))
+	server.GET("/fortune-quick", handlers.FortuneQuickHandler(db))
+	server.GET("/update", updateHandler)
 
-		server.GET("/fortune", handlers.FortuneHandler(db))
-		server.GET("/fortune-quick", handlers.FortuneQuickHandler(db))
-		server.GET("/db", dbHandler)
-		server.GET("/queries", queriesHandler)
-		server.GET("/update", updateHandler)
-	}
-
-	if child {
-		runtime.GOMAXPROCS(1)
-
-		ln, err := net.FileListener(os.NewFile(3, ""))
-		if err != nil {
-			panic(err)
-		}
-		if err := server.Serve(ln); err != nil {
-			panic(err)
+	if prefork {
+		preforkServer := &fastprefork.Prefork{
+			RecoverThreshold: runtime.GOMAXPROCS(0) / 2,
+			ServeFunc:        server.Serve,
 		}
 
-	} else if prefork {
-		if err := doPrefork(bindHost); err != nil {
+		if err := preforkServer.ListenAndServe(bindHost); err != nil {
 			panic(err)
 		}
 

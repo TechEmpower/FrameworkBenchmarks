@@ -60,22 +60,28 @@ namespace PlatformBenchmarks
 #endif
         public void OnStartLine(HttpMethod method, HttpVersion version, Span<byte> target, Span<byte> path, Span<byte> query, Span<byte> customMethod, bool pathEncoded)
         {
+#if !DATABASE
+            if (method == HttpMethod.Get)
+            {
+                if (path.Length >= 2 && path[0] == '/')
+                {
+                    if (path[1] == 'p')
+                    {
+                        _requestType = RequestType.PlainText;
+                        return;
+                    }
+                    if (path[1] == 'j')
+                    {
+                        _requestType = RequestType.Json;
+                        return;
+                    }
+                }
+            }
+            _requestType = RequestType.NotRecognized;
+#else
             var requestType = RequestType.NotRecognized;
             if (method == HttpMethod.Get)
             {
-#if !DATABASE
-                if (path.Length >= 2 && path[0] == '/')
-                {
-                    if (path[1] == 'j')
-                    {
-                        requestType = RequestType.Json;
-                    }
-                    else if (path[1] == 'p')
-                    {
-                        requestType = RequestType.PlainText;
-                    }
-                }
-#else
                 var pathLength = path.Length;
                 if (Paths.SingleQuery.Length <= pathLength && path.StartsWith(Paths.SingleQuery))
                 {
@@ -95,10 +101,9 @@ namespace PlatformBenchmarks
                     _queries = ParseQueries(path, Paths.MultipleQueries.Length);
                     requestType = RequestType.MultipleQueries;
                 }
-#endif
             }
-
             _requestType = requestType;
+#endif
         }
 
 

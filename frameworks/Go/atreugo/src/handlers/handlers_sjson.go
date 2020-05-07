@@ -3,47 +3,36 @@ package handlers
 import (
 	"atreugo/src/storage"
 
-	"github.com/savsgio/atreugo/v10"
+	"github.com/savsgio/atreugo/v11"
 )
 
 // JSONHandlerSJson . Test 1: JSON serialization
 func JSONHandlerSJson(ctx *atreugo.RequestCtx) error {
 	message := AcquireMessage()
 	message.Message = helloWorldStr
-
 	data, err := message.MarshalSJSON()
-	if err != nil {
-		return err
-	}
 
 	ctx.SetContentType("application/json")
 	ctx.Write(data)
 
 	ReleaseMessage(message)
 
-	return nil
+	return err
 }
 
 // DBHandlerSJson . Test 2: Single database query
 func DBHandlerSJson(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		world := storage.AcquireWorld()
-
-		if err := db.GetOneRandomWorld(world); err != nil {
-			return err
-		}
-
+		db.GetOneRandomWorld(world)
 		data, err := world.MarshalSJSON()
-		if err != nil {
-			return err
-		}
 
 		ctx.SetContentType("application/json")
 		ctx.Write(data)
 
 		storage.ReleaseWorld(world)
 
-		return nil
+		return err
 	}
 }
 
@@ -54,22 +43,17 @@ func QueriesHandlerSJson(db storage.DB) atreugo.View {
 		worlds := storage.AcquireWorlds()[:queries]
 
 		for i := 0; i < queries; i++ {
-			if err := db.GetOneRandomWorld(&worlds[i]); err != nil {
-				return err
-			}
+			db.GetOneRandomWorld(&worlds[i])
 		}
 
 		data, err := worlds.MarshalSJSON()
-		if err != nil {
-			return err
-		}
 
 		ctx.SetContentType("application/json")
 		ctx.Write(data)
 
 		storage.ReleaseWorlds(worlds)
 
-		return nil
+		return err
 	}
 }
 
@@ -81,20 +65,12 @@ func UpdateHandlerSJson(db storage.DB) atreugo.View {
 
 		for i := 0; i < queries; i++ {
 			w := &worlds[i]
-			if err := db.GetOneRandomWorld(w); err != nil {
-				return err
-			}
+			db.GetOneRandomWorld(w)
 			w.RandomNumber = int32(storage.RandomWorldNum())
 		}
 
-		if err := db.UpdateWorlds(worlds); err != nil {
-			return err
-		}
-
+		db.UpdateWorlds(worlds)
 		data, err := worlds.MarshalSJSON()
-		if err != nil {
-			return err
-		}
 
 		ctx.SetContentType("application/json")
 		ctx.Write(data)

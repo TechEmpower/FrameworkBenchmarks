@@ -75,16 +75,10 @@ int main(int argc, char* argv[]) {
 
   int nprocs = std::thread::hardware_concurrency();
 
-#if TFB_MYSQL
-  int nthreads = nprocs;
-#elif TFB_PGSQL
-
 #if MONOTHREAD
   int nthreads = 1;
 #else
   int nthreads = nprocs;
-#endif
-
 #endif
 
 #if TFB_MYSQL

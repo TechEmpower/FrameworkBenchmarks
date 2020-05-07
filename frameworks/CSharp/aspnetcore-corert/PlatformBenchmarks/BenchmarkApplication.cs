@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Buffers.Binary;
 using System.Buffers.Text;
 using System.IO.Pipelines;
 using System.Threading.Tasks;
@@ -51,6 +52,8 @@ namespace PlatformBenchmarks
             public readonly static AsciiString Plaintext = "/p";
             public readonly static AsciiString Updates = "/updates/queries=";
             public readonly static AsciiString MultipleQueries = "/queries/queries=";
+            public const ushort JsonPath = 0x6a2f;
+            public const ushort PlaintextPath = 0x702f;
         }
 
         private RequestType _requestType;
@@ -59,45 +62,55 @@ namespace PlatformBenchmarks
 #endif
         public void OnStartLine(HttpMethod method, HttpVersion version, Span<byte> target, Span<byte> path, Span<byte> query, Span<byte> customMethod, bool pathEncoded)
         {
-            var requestType = RequestType.NotRecognized;
+
+#if !DATABASE
+            if (method == HttpMethod.Get && BinaryPrimitives.TryReadUInt16LittleEndian(path, out var value))
+            {
+                if (value == Paths.PlaintextPath)
+                {
+                    _requestType = RequestType.PlainText;
+                    return;
+                }
+                else if (value == Paths.JsonPath)
+                {
+                    _requestType = RequestType.Json;
+                    return;
+                }
+            }
+
+            _requestType = RequestType.NotRecognized;
+#else
             if (method == HttpMethod.Get)
             {
-#if !DATABASE
-                if (path.Length >= 2 && path[0] == '/')
-                {
-                    if (path[1] == 'j')
-                    {
-                        requestType = RequestType.Json;
-                    }
-                    else if (path[1] == 'p')
-                    {
-                        requestType = RequestType.PlainText;
-                    }
-                }
-#else
                 var pathLength = path.Length;
                 if (Paths.SingleQuery.Length <= pathLength && path.StartsWith(Paths.SingleQuery))
                 {
-                    requestType = RequestType.SingleQuery;
+                    _requestType = RequestType.SingleQuery;
                 }
                 else if (Paths.Fortunes.Length <= pathLength && path.StartsWith(Paths.Fortunes))
                 {
-                    requestType = RequestType.Fortunes;
+                    _requestType = RequestType.Fortunes;
                 }
                 else if (Paths.Updates.Length <= pathLength && path.StartsWith(Paths.Updates))
                 {
                     _queries = ParseQueries(path, Paths.Updates.Length);
-                    requestType = RequestType.Updates;
+                    _requestType = RequestType.Updates;
                 }
                 else if (Paths.MultipleQueries.Length <= pathLength && path.StartsWith(Paths.MultipleQueries))
                 {
                     _queries = ParseQueries(path, Paths.MultipleQueries.Length);
-                    requestType = RequestType.MultipleQueries;
+                    _requestType = RequestType.MultipleQueries;
                 }
-#endif
+                else
+                {
+                    _requestType = RequestType.NotRecognized;
+                }
             }
-
-            _requestType = requestType;
+            else
+            {
+                _requestType = RequestType.NotRecognized;
+            }
+#endif 
         }
 
 

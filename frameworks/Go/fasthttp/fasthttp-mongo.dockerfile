@@ -1,8 +1,8 @@
 FROM golang:1.14
 
-WORKDIR /atreugo
+WORKDIR /fasthttp
 
-COPY ./src /atreugo
+COPY ./src /fasthttp
 
 RUN go get github.com/valyala/quicktemplate/qtc
 RUN go get -u github.com/mailru/easyjson/...
@@ -12,4 +12,4 @@ RUN go generate ./templates
 RUN easyjson -pkg
 RUN go build -ldflags="-s -w" -o app .
 
-CMD ./app -db pgx -json_encoder gojay
+CMD ./app -db mongo -db_connection_string "mongodb://tfb-database"

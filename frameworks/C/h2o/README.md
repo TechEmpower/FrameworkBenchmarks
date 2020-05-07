@@ -8,7 +8,7 @@ This is a framework implementation using the [H2O](https://h2o.examp1e.net) HTTP
 
 ## Performance tuning
 
-If the test environment changes, it will probably be necessary to tune some of the framework settings in order to achieve the best performance possible. The most significant parameter is the maximum number of database connections per thread, which is controlled by the `DB_CONN` variable in the `start-servers.sh` script.
+If the test environment changes, it will probably be necessary to tune some of the framework settings in order to achieve the best performance possible. The most significant parameter is the maximum number of database connections per thread, which is controlled by the `DB_CONN` variable in the `h2o.sh` script.
 
 ## Performance issues
 

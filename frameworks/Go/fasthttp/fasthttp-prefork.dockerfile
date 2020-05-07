@@ -9,8 +9,7 @@ RUN go get -u github.com/mailru/easyjson/...
 RUN go mod download
 
 RUN go generate ./templates
-# RUN easyjson -pkg
-# RUN easyjson -all src/common/common.go
-RUN go build -o app -gcflags='-l=4' -ldflags="-s -w" ./server-mysql
+RUN easyjson -pkg
+RUN go build -ldflags="-s -w" -o app .
 
-CMD ./app -prefork
+CMD ./app -prefork -db pgx

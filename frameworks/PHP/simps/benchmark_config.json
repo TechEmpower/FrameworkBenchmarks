@@ -4,7 +4,6 @@
     {
       "default": {
         "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "fortune_url": "/fortunes",
         "update_url": "/updates/",
