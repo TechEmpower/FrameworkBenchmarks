@@ -27,9 +27,11 @@ WORKDIR /libsniper_bench
 
 RUN git config --global http.sslverify false
 
-RUN git clone https://gitlab.com/rtbtech/libs/libsniper.git libs/core
+ENV LIBSNIPER_VER v1.2.0
 
-RUN cd libs/core && git checkout 75f5cee4dcdc604d74703f5255e6f4cca20f50ce
+RUN git clone https://github.com/rtbtech/libsniper.git libs/core
+
+RUN cd libs/core && git checkout v1.2.0
 
 RUN mkdir build && cd /libsniper_bench/build && cmake -DCMAKE_BUILD_TYPE=Release -S .. && make --jobs=`nproc`
 
