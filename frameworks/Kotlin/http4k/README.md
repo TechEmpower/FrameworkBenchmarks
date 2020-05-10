@@ -7,7 +7,6 @@ The tests were run with:
 * [http4k](https://http4k.org)
 
 ## Test URLs
-
 - JSON Encoding: http://localhost:9000/json
 - Single query: http://localhost:9000/db
 - Multiple queries: http://localhost:9000/queries
@@ -15,10 +14,10 @@ The tests were run with:
 - Updates: http://localhost:9000/updates
 - Plaintext: http://localhost:9000/plaintext
 
-
 ## Supported backends
 - Apache (w/ Postgres + Reactive PG clienta)
 - KtorCIO (w/ Postgres client)
+- KtorNetty (w/ Postgres client)
 - Jetty (w/ Postgres client)
 - Netty (w/ Postgres client)
 - Undertow (w/ Postgres client)
