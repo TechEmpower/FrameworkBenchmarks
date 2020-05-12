@@ -43,29 +43,22 @@ private:
         }
     }
 
-    static string gen_date()
-    {
-        return fmt::format("Date: {:%a, %d %b %Y %H:%M:%S} GMT\r\n", fmt::gmtime(time(nullptr)));
-    }
-
     void worker(unsigned thread_num)
     {
         auto loop = event::make_loop();
         check(loop, "[Server] cannot init event loop");
 
-        http::server::Config config;
-        config.max_conns = 100000;
-        config.connection.keep_alive_timeout = 10min;
-        config.connection.request_read_timeout = 10s;
+        auto config = http::server::make_config();
+        config->add_server_header = true;
+        config->add_date_header = true;
+        config->max_conns = 100000;
+        config->keep_alive_timeout = 0ms;
+        config->buffer_size = 128 * 1024;
 
         http::Server http_server(loop, config);
         check(http_server.bind("", 8090), "[Server] cannot bind to localhost:8090");
 
-        string date = gen_date();
-        http_server.set_cb_request([&, this](const auto& conn, const auto& req, const auto& resp) {
-            resp->add_header_nocopy("Server: libsniper\r\n");
-            resp->add_header_copy(date);
-
+        http_server.set_cb([&, this](const auto& conn, const auto& req, const auto& resp) {
             if (req->path() == "/plaintext") {
                 resp->code = http::ResponseStatus::OK;
                 resp->add_header_nocopy("Content-Type: text/plain; charset=UTF-8\r\n");
@@ -82,8 +75,6 @@ private:
             if (threads::Stop::get().is_stopped())
                 loop->break_loop(ev::ALL);
         });
-
-        event::TimerRepeat timer_update_time(loop, 1s, [&date] { date = gen_date(); });
 
         loop->run();
     }
