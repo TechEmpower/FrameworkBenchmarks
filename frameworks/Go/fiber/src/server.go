@@ -47,12 +47,12 @@ func main() {
 		ServerHeader:  "go",
 	})
 
-	app.Get("/p", plaintextHandler)
-	app.Get("/j", jsonHandler)
-	app.Get("/q", queriesHandler)
-	app.Get("/f", templateHandler)
-	app.Get("/d", dbHandler)
-	app.Get("/u", updateHandler)
+	app.Get("/plaintext", plaintextHandler)
+	app.Get("/json", jsonHandler)
+	app.Get("/queries", queriesHandler)
+	app.Get("/fortune", templateHandler)
+	app.Get("/db", dbHandler)
+	app.Get("/update", updateHandler)
 
 	app.Listen(8080)
 }
@@ -133,6 +133,8 @@ func initDatabase() {
 		maxConn = 8
 	}
 	if child {
+		maxConn = maxConn
+	} else {
 		maxConn = maxConn * 4
 	}
 
