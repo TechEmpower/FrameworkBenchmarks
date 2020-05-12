@@ -23,6 +23,9 @@ set(Boost_USE_MULTITHREADED ON)
 find_package(Boost REQUIRED)
 find_package(Threads REQUIRED)
 find_package(fmt REQUIRED)
+find_package(TCMalloc REQUIRED)
+find_package(Libev REQUIRED)
+find_package(Libre2 REQUIRED)
 
 include_directories(SYSTEM ${BOOST_INCLUDE_DIRS})
 
