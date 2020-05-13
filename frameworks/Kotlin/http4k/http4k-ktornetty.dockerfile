@@ -10,5 +10,5 @@ COPY ktorcio ktorcio
 COPY ktornetty ktornetty
 COPY netty netty
 COPY undertow undertow
-RUN gradle --quiet build ktorcio:shadowJar
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "ktorcio/build/libs/http4k-ktornetty-benchmark.jar"]
+RUN gradle --quiet build ktornetty:shadowJar
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "ktornetty/build/libs/http4k-ktornetty-benchmark.jar"]
