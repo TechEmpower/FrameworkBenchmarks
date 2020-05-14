@@ -3,7 +3,7 @@ import {
   Response
 } from "https://deno.land/std@v0.50.0/http/server.ts";
 
-interface IRequestHandler {
+interface Handler {
   (request: ServerRequest): Promise<void>
 }
 
@@ -13,7 +13,7 @@ const HELLO_WORLD: Uint8Array = new TextEncoder().encode("Hello, World!");
 let date: string = new Date().toUTCString();
 setInterval(() => { date = new Date().toUTCString(); }, 1000);
 
-const json: IRequestHandler = async (req: ServerRequest): Promise<void> => {
+const json: Handler = async (req: ServerRequest): Promise<void> => {
   const headers = new Headers([
     ["server", SERVER],
     ["content-type", "application/json"],
@@ -26,7 +26,7 @@ const json: IRequestHandler = async (req: ServerRequest): Promise<void> => {
   } as Response);
 };
 
-const plaintext: IRequestHandler = async (req: ServerRequest): Promise<void> => {
+const plaintext: Handler = async (req: ServerRequest): Promise<void> => {
   const headers = new Headers([
     ["server", SERVER],
     ["content-type", "text/plain; charset=UTF-8"],
@@ -36,7 +36,7 @@ const plaintext: IRequestHandler = async (req: ServerRequest): Promise<void> => 
   req.respond({ headers, body: HELLO_WORLD } as Response);
 };
 
-const handlers: { [Key: string]: IRequestHandler } = {};
+const handlers: { [Key: string]: Handler } = {};
 
 handlers["/json"] = json;
 handlers["/plaintext"] = plaintext;
