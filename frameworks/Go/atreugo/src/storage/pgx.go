@@ -76,10 +76,7 @@ func (psql *PGX) GetFortunes() (templates.Fortunes, error) {
 	fortune := templates.AcquireFortune()
 
 	for rows.Next() {
-		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {
-			return nil, err
-		}
-
+		rows.Scan(&fortune.ID, &fortune.Message)
 		fortunes = append(fortunes, *fortune)
 	}
 

@@ -1,4 +1,4 @@
-FROM golang:1.12
+FROM golang:1.14
 
 ADD ./ /goji
 WORKDIR /goji

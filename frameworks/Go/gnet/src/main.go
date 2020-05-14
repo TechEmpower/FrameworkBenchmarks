@@ -25,6 +25,9 @@ func (hc *httpCodec) Encode(c gnet.Conn, buf []byte) (out []byte, err error) {
 
 func (hc *httpCodec) Decode(c gnet.Conn) (out []byte, err error) {
 	buf := c.Read()
+	if buf == nil {
+		return
+	}
 	c.ResetBuffer()
 
 	// process the pipeline

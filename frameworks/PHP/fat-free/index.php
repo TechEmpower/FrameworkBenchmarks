@@ -50,6 +50,7 @@ $f3->route(
 $f3->route(
     array(
         'GET /db-multiple',
+        'GET /db-multiple/',
         'GET /db-multiple/@queries',
     ),
     function ($f3, $params) {
@@ -92,6 +93,7 @@ $f3->route(
 $f3->route(
     array(
         'GET /db-orm-multiple',
+        'GET /db-orm-multiple/',
         'GET /db-orm-multiple/@queries',    // database-multiple-queries
     ),
     function ($f3, $params) {
@@ -154,6 +156,7 @@ $f3->route('GET /fortune-raw', function ($f3) {
 
 $f3->route(array(
     'GET /update-raw',
+    'GET /update-raw/',
     'GET /update-raw/@queries'
 ), function ($f3, $params) {
     /** @var Base $f3 */
@@ -183,6 +186,7 @@ $f3->route(array(
 
 $f3->route(array(
     'GET /update-orm',
+    'GET /update-orm/',
     'GET /update-orm/@queries'
 ), function ($f3, $params) {
     /** @var Base $f3 */

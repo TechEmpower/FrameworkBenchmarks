@@ -1,0 +1,22 @@
+FIND_PATH(LIBRE2_INCLUDE_DIR re2/re2.h /usr/local/include /opt/local/include /usr/include)
+FIND_LIBRARY(LIBRE2_LIBRARY NAMES libre2.a PATH /usr/local/lib /opt/local/lib /usr/lib)
+
+IF (LIBRE2_INCLUDE_DIR AND LIBRE2_LIBRARY)
+    SET(LIBRE2_FOUND TRUE)
+ENDIF ()
+
+IF (LIBRE2_FOUND)
+    IF (NOT Libre2_FIND_QUIETLY)
+        MESSAGE(STATUS "Found libre2: ${LIBRE2_LIBRARY}")
+    ENDIF ()
+ELSE()
+    IF (Libre2_FIND_REQUIRED)
+        IF(NOT LIBRE2_INCLUDE_DIR)
+            MESSAGE(FATAL_ERROR "Could not find libre2 header file!")
+        ENDIF()
+
+        IF(NOT LIBRE2_LIBRARY)
+            MESSAGE(FATAL_ERROR "Could not find libre2 library file!")
+        ENDIF()
+    ENDIF ()
+ENDIF ()

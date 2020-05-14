@@ -7,7 +7,7 @@ namespace PlatformBenchmarks
 {
     public partial class BenchmarkApplication
     {
-        private static readonly uint _jsonPayloadSize = (uint)JsonSerializer.SerializeToUtf8Bytes(new JsonMessage { message = "Hello, World!" }, SerializerOptions).Length;
+        private readonly static uint _jsonPayloadSize = (uint)JsonSerializer.SerializeToUtf8Bytes(new JsonMessage { message = "Hello, World!" }, SerializerOptions).Length;
 
         private readonly static AsciiString _jsonPreamble =
             _http11OK +
@@ -24,11 +24,11 @@ namespace PlatformBenchmarks
 
             writer.Commit();
 
-            using var utf8jsonWriter = new Utf8JsonWriter(writer.Output);
-            JsonSerializer.Serialize(
-                utf8jsonWriter,
-                new JsonMessage { message = "Hello, World!" },
-                SerializerOptions);
+            // Body
+            using (Utf8JsonWriter utf8JsonWriter = new Utf8JsonWriter(writer.Output))
+            {
+                JsonSerializer.Serialize<JsonMessage>(utf8JsonWriter, new JsonMessage { message = "Hello, World!" }, SerializerOptions);
+            }
         }
     }
 }
