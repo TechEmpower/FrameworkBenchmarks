@@ -1,4 +1,4 @@
-import { ServerRequest } from "https://deno.land/std@v0.41.0/http/server.ts";
+import { ServerRequest } from "https://deno.land/std@v0.50.0/http/server.ts";
 
 interface IRequestHandler {
   (request: ServerRequest): void
