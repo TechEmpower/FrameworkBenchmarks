@@ -6,6 +6,9 @@ of web development platforms. The test utilizes Hexagon routes, serialization an
 
 ## Tests
 
+You can run tests against any running server passing the `verify.endpoint` project property. I.e.:
+`./gradlew verify -Pverify.endpoint=http://host:1234`
+
 * [Hexagon Web](src/main/kotlin/com/hexagonkt/Benchmark.kt)
 * [Hexagon Storage](src/main/kotlin/com/hexagonkt/BenchmarkStorage.kt)
 
