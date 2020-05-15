@@ -42,8 +42,8 @@ private val defaultLocale = Locale.getDefault()
 private val router: Router by lazy {
     Router {
         before {
-            response.setHeader("Server", "Servlet/3.1")
-            response.setHeader("Transfer-Encoding", "chunked")
+            response.headers["Server"] = "Servlet/3.1"
+            response.headers["Transfer-Encoding"] = "chunked"
         }
 
         get("/plaintext") { ok(TEXT_MESSAGE, "text/plain") }
@@ -74,14 +74,15 @@ internal fun createEngine(): ServerPort = when (systemSetting("WEBENGINE", "jett
 private fun returnWorlds(worldsList: List<World>): List<Map<Any?, Any?>> =
     worldsList.map { it.convertToMap() - "_id" }
 
-private fun Call.getWorldsCount() = parameters[QUERIES_PARAM]?.firstOrNull()?.toIntOrNull().let {
-    when {
-        it == null -> 1
-        it < 1 -> 1
-        it > 500 -> 500
-        else -> it
+private fun Call.getWorldsCount(): Int =
+    queryParametersValues[QUERIES_PARAM]?.firstOrNull()?.toIntOrNull().let {
+        when {
+            it == null -> 1
+            it < 1 -> 1
+            it > 500 -> 500
+            else -> it
+        }
     }
-}
 
 // HANDLERS
 private fun Call.listFortunes(

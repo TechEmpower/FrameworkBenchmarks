@@ -53,7 +53,9 @@ internal class BenchmarkMongoDbStore(engine: String) : BenchmarkStore {
             worldCopy
         }
 
-    override fun close() { /* Not needed */ }
+    override fun close() {
+        /* Not needed */
+    }
 }
 
 internal class BenchmarkSqlStore(engine: String) : BenchmarkStore {
