@@ -4,10 +4,7 @@ include_directories(${SNIPER_INCLUDE_DIRS})
 set(PROJECT_LIBS
         ${CMAKE_THREAD_LIBS_INIT}
         ${BOOST_LIBRARIES}
-        dl ${LIBRE2_LIBRARY}
-        ${LIBEV_LIBRARY}
         backtrace dl
-        fmt::fmt
         stdc++fs.a
         tcmalloc
         )
