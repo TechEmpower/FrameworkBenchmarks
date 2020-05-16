@@ -9,6 +9,34 @@ version: '3'
 
 services:
 
+  hexagon:
+    build:
+      context: .
+      dockerfile: hexagon.dockerfile
+    ports:
+      - 8010:9090
+
+  hexagon_jetty_postgresql:
+    build:
+      context: .
+      dockerfile: hexagon-jetty-postgresql.dockerfile
+    ports:
+      - 8020:9090
+
+  hexagon_resin_mongodb:
+    build:
+      context: .
+      dockerfile: hexagon-resin-mongodb.dockerfile
+    ports:
+      - 8030:8080
+
+  hexagon_resin_postgresql:
+    build:
+      context: .
+      dockerfile: hexagon-resin-postgresql.dockerfile
+    ports:
+      - 8040:8080
+
   postgresql:
     image: postgres:12.2
     environment:
