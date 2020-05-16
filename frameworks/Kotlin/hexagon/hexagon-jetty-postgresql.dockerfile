@@ -13,7 +13,7 @@ RUN gradle --quiet --exclude-task test
 #
 # RUNTIME
 #
-FROM openjdk:11.0.7-jre-slim
+FROM openjdk:11.0.7-jre-buster
 ENV DBSTORE postgresql
 ENV POSTGRESQL_DB_HOST tfb-database
 ENV WEBENGINE jetty
