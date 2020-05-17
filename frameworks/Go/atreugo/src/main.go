@@ -10,7 +10,6 @@ import (
 	"atreugo/src/storage"
 
 	"github.com/savsgio/atreugo/v11"
-	fastprefork "github.com/valyala/fasthttp/prefork"
 )
 
 var bindHost, jsonEncoder, dbDriver, dbConnectionString string
@@ -38,7 +37,7 @@ func numCPU() int {
 
 func main() {
 	maxConn := numCPU() * 4
-	if fastprefork.IsChild() {
+	if atreugo.IsPreforkChild() {
 		maxConn = numCPU()
 	}
 
@@ -82,8 +81,9 @@ func main() {
 
 	// init atreugo server
 	server := atreugo.New(atreugo.Config{
-		Addr: bindHost,
-		Name: "Go",
+		Addr:    bindHost,
+		Name:    "Go",
+		Prefork: prefork,
 	})
 
 	// init handlers
@@ -95,19 +95,7 @@ func main() {
 	server.GET("/fortune-quick", handlers.FortuneQuickHandler(db))
 	server.GET("/update", updateHandler)
 
-	if prefork {
-		preforkServer := &fastprefork.Prefork{
-			RecoverThreshold: runtime.GOMAXPROCS(0) / 2,
-			ServeFunc:        server.Serve,
-		}
-
-		if err := preforkServer.ListenAndServe(bindHost); err != nil {
-			panic(err)
-		}
-
-	} else {
-		if err := server.ListenAndServe(); err != nil {
-			panic(err)
-		}
+	if err := server.ListenAndServe(); err != nil {
+		panic(err)
 	}
 }
