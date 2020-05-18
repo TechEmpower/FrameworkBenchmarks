@@ -104,7 +104,7 @@ func main() {
 
 	server := &fasthttp.Server{
 		Handler: handler,
-		Name:    "go",
+		Name:    "Go",
 	}
 
 	if prefork {
