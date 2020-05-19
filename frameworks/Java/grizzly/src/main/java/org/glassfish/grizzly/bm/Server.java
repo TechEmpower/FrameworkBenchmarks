@@ -59,6 +59,9 @@ public class Server {
 
 		try {
 			httpServer.start();
+			// This can't be done before the call to start(). Also note the
+			// positions
+			httpServer.getListener("http-listener").getFilterChain().add(3, new HeadersFilter());
 			synchronized (Server.class) {
 				Server.class.wait();
 			}

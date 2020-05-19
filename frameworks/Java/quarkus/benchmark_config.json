@@ -1,0 +1,67 @@
+{
+  "framework": "quarkus",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "fullstack",
+        "database": "Postgres",
+        "framework": "Quarkus",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "full",
+        "platform": "JAX-RS",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "quarkus",
+        "notes": "",
+        "versus": "Netty"
+      },
+      "hibernate": {
+        "db_url": "/hibernate/db",
+        "query_url": "/hibernate/queries?queries=",
+        "fortune_url": "/hibernate/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "fullstack",
+        "database": "Postgres",
+        "framework": "Quarkus",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "full",
+        "platform": "JAX-RS",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "quarkus-hibernate",
+        "notes": "",
+        "versus": "Netty"
+      },
+      "pgclient": {
+        "db_url": "/pgclient/db",
+        "query_url": "/pgclient/queries?queries=",
+        "update_url": "/pgclient/updates?queries=",
+        "fortune_url": "/pgclient/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "fullstack",
+        "database": "Postgres",
+        "framework": "Quarkus",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "JAX-RS",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "quarkus-pgclient",
+        "notes": "",
+        "versus": "Netty"
+      }
+    }
+  ]
+}

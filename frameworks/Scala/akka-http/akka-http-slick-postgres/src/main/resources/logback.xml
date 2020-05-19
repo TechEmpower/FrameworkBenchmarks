@@ -29,6 +29,8 @@
 
   <logger name="slick" level="ERROR"/>
 
+  <logger name="net.benchmark.akka.http.Main" level="INFO"/>
+
   <logger name="net.benchmark" level="ERROR"/>
 
   <root level="ERROR">

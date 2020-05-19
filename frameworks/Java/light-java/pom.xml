@@ -23,14 +23,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <version.light-4j>2.0.0-BETA2</version.light-4j>
+        <version.light-4j>2.0.1</version.light-4j>
         <version.logback>1.2.3</version.logback>
-        <version.undertow>2.0.16.Final</version.undertow>
-        <version.hikaricp>3.2.0</version.hikaricp>
-        <version.mysql>5.1.47</version.mysql>
+        <version.undertow>2.0.21.Final</version.undertow>
+        <version.hikaricp>3.3.1</version.hikaricp>
+        <version.mysql>8.0.18</version.mysql>
         <version.postgres>42.2.5</version.postgres>
         <version.dsl-json>1.8.4</version.dsl-json>
-        <version.mustache>0.9.5</version.mustache>
+        <version.mustache>0.9.6</version.mustache>
         <version.maven-compiler-plugin>3.8.0</version.maven-compiler-plugin>
         <version.maven-jar-plugin>3.0.2</version.maven-jar-plugin>
         <version.maven-shade-plugin>3.1.0</version.maven-shade-plugin>

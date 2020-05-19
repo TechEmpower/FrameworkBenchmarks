@@ -1,31 +1,29 @@
 package handlers
 
 import (
-	"log"
-
-	"github.com/francoispqt/gojay"
-
 	"atreugo/src/storage"
 
-	"github.com/savsgio/atreugo/v7"
+	"github.com/francoispqt/gojay"
+	"github.com/savsgio/atreugo/v10"
 )
 
 // JSONHandlerGoJay . Test 1: JSON serialization
 func JSONHandlerGoJay(ctx *atreugo.RequestCtx) error {
-	message := MessagePool.Get().(*Message)
-	message.Message = "Hello, World!"
+	message := AcquireMessage()
+	message.Message = helloWorldStr
 
 	ctx.SetContentType("application/json")
 	err := gojay.NewEncoder(ctx).Encode(message)
 
-	MessagePool.Put(message)
+	ReleaseMessage(message)
+
 	return err
 }
 
 // DBHandlerGoJay . Test 2: Single database query
-func DBHandlerGoJay(db storage.DB) func(ctx *atreugo.RequestCtx) error {
+func DBHandlerGoJay(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
-		world := storage.WorldPool.Get().(*storage.World)
+		world := storage.AcquireWorld()
 
 		if err := db.GetOneRandomWorld(world); err != nil {
 			return err
@@ -34,58 +32,55 @@ func DBHandlerGoJay(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 		ctx.SetContentType("application/json")
 		err := gojay.NewEncoder(ctx).Encode(world)
 
-		storage.WorldPool.Put(world)
+		storage.ReleaseWorld(world)
+
 		return err
 	}
 }
 
 // QueriesHandlerGoJay . Test 3: Multiple database queries
-func QueriesHandlerGoJay(db storage.DB) func(ctx *atreugo.RequestCtx) error {
+func QueriesHandlerGoJay(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
+		worlds := storage.AcquireWorlds()[:queries]
 
-		worlds := storage.WorldsPool.Get().([]storage.World)[:queries]
-
-		var err error
 		for i := 0; i < queries; i++ {
-			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
-				log.Println(err)
+			if err := db.GetOneRandomWorld(&worlds[i]); err != nil {
+				return err
 			}
 		}
 
 		ctx.SetContentType("application/json")
-		err = gojay.NewEncoder(ctx).EncodeArray(storage.Worlds(worlds))
+		err := gojay.NewEncoder(ctx).EncodeArray(worlds)
 
-		worlds = worlds[:0]
-		storage.WorldsPool.Put(worlds)
+		storage.ReleaseWorlds(worlds)
 
 		return err
 	}
 }
 
 // UpdateHandlerGoJay . Test 5: Database updates
-func UpdateHandlerGoJay(db storage.DB) func(ctx *atreugo.RequestCtx) error {
+func UpdateHandlerGoJay(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
-		var err error
-
-		worlds := storage.WorldsPool.Get().([]storage.World)[:queries]
+		worlds := storage.AcquireWorlds()[:queries]
 
 		for i := 0; i < queries; i++ {
-			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
-				log.Println(err)
+			w := &worlds[i]
+			if err := db.GetOneRandomWorld(w); err != nil {
+				return err
 			}
+			w.RandomNumber = int32(storage.RandomWorldNum())
 		}
 
-		if err = db.UpdateWorlds(worlds); err != nil {
+		if err := db.UpdateWorlds(worlds); err != nil {
 			return err
 		}
 
 		ctx.SetContentType("application/json")
-		err = gojay.NewEncoder(ctx).EncodeArray(storage.Worlds(worlds))
+		err := gojay.NewEncoder(ctx).EncodeArray(worlds)
 
-		worlds = worlds[:0]
-		storage.WorldsPool.Put(worlds)
+		storage.ReleaseWorlds(worlds)
 
 		return err
 	}

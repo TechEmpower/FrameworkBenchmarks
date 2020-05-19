@@ -3,11 +3,13 @@ package benchmark.web;
 import benchmark.model.Fortune;
 import benchmark.model.World;
 import benchmark.repository.DbRepository;
+
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -49,12 +51,13 @@ public class WebfluxHandler {
     public Mono<ServerResponse> queries(ServerRequest request) {
         int queries = getQueries(request);
 
-        Mono<World>[] worlds = new Mono[queries];
-        Arrays.setAll(worlds, i -> dbRepository.getWorld(randomWorldNumber()));
+        Mono<List<World>> worlds = Flux.range(0, queries)
+                .flatMap(i -> dbRepository.getWorld(randomWorldNumber()))
+                .collectList();
 
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Flux.merge(worlds).collectList(), new ParameterizedTypeReference<List<World>>() {
+                .body(worlds, new ParameterizedTypeReference<List<World>>() {
                 });
     }
 
@@ -72,14 +75,15 @@ public class WebfluxHandler {
     }
 
     public Mono<ServerResponse> updates(ServerRequest request) {
-        int count = getQueries(request);
-        Mono<World>[] worlds = new Mono[count];
-
-        Arrays.setAll(worlds, i -> dbRepository.findAndUpdateWorld(randomWorldNumber(), randomWorldNumber()));
+        int queries = getQueries(request);
+        
+        Mono<List<World>> worlds = Flux.range(0, queries)
+                .flatMap(i -> dbRepository.findAndUpdateWorld(randomWorldNumber(), randomWorldNumber()))
+                .collectList();
 
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Flux.merge(worlds).collectList(), new ParameterizedTypeReference<List<World>>() {
+                .body(worlds, new ParameterizedTypeReference<List<World>>() {
                 });
     }
 

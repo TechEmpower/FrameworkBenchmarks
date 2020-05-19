@@ -15,8 +15,7 @@ object ApiRoutes {
 
   private val log: Logger = LoggerFactory.getLogger(getClass)
 
-  def routes(dbLoader: DatabaseRepositoryLoader,
-             sd: ExecutionContextExecutor)(implicit system: ActorSystem): Route =
+  def routes(dbLoader: DatabaseRepositoryLoader, sd: ExecutionContextExecutor)(implicit system: ActorSystem): Route =
     handleRejections(RejectionHandler.default) {
       val eh: ExceptionHandler = ExceptionHandler {
         case ex @ (_: Exception) =>
@@ -30,7 +29,7 @@ object ApiRoutes {
       handleExceptions(eh) {
         get {
           worldRoutes.routes() ~
-          fortuneRoutes.route()
+            fortuneRoutes.route()
         }
       }
     }

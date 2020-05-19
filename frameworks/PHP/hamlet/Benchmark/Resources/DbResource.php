@@ -2,16 +2,17 @@
 
 namespace Benchmark\Resources;
 
-use Hamlet\Database\Database;
-use Hamlet\Entities\JsonEntity;
-use Hamlet\Requests\Request;
-use Hamlet\Resources\WebResource;
-use Hamlet\Responses\Response;
-use Hamlet\Responses\SimpleOKResponse;
+use Benchmark\Entities\RandomNumber;
+use Hamlet\Database\{Database, Session};
+use Hamlet\Http\Entities\JsonEntity;
+use Hamlet\Http\Requests\Request;
+use Hamlet\Http\Resources\HttpResource;
+use Hamlet\Http\Responses\{Response, SimpleOKResponse};
 
-class DbResource implements WebResource
+class DbResource implements HttpResource
 {
-    private $database;
+    /** @var Database */
+    protected $database;
 
     public function __construct(Database $database)
     {
@@ -20,33 +21,21 @@ class DbResource implements WebResource
 
     public function getResponse(Request $request): Response
     {
-        $queryParams = $request->getQueryParams();
-        $count = $queryParams['queries'] ?? null;
-        if ($count !== null && $count > 0) {
-            $count = min($count, 500);
-        } else {
-            $count = 1;
-        }
-
-        $query = '
-            SELECT id,
-                   randomNumber 
-              FROM World 
-             WHERE id = ?
-        ';
-        $procedure = $this->database->prepare($query);
-
-        $payload = [];
-        while ($count-- > 0) {
-            $id = mt_rand(1, 10000);
-            $procedure->bindInteger($id);
-            $payload[] = $procedure->fetchOne();
-        }
-
-        if (!isset($queryParams['queries'])) {
-            $payload = $payload[0];
-        }
-
-        return new SimpleOKResponse(new JsonEntity($payload));
+        $id = mt_rand(1, 10000);
+        $record = $this->database->withSession(
+            function (Session $session) use ($id) {
+                $procedure = $session->prepare('
+                    SELECT id,
+                           randomNumber 
+                      FROM World 
+                     WHERE id = ?
+                ');
+                $procedure->bindInteger($id);
+                return $procedure->processOne()
+                    ->selectAll()->cast(RandomNumber::class)
+                    ->collectHead();
+            }
+        );
+        return new SimpleOKResponse(new JsonEntity($record));
     }
 }

@@ -4,8 +4,7 @@ import akka.http.scaladsl.server.Route
 
 import scala.concurrent.ExecutionContextExecutor
 
-class WorldRoutes(wr: WorldRepository,
-                  sd: ExecutionContextExecutor) {
+class WorldRoutes(wr: WorldRepository, sd: ExecutionContextExecutor) {
 
   private val qr = new QueriesRoute(wr).route()
   private val ur = new UpdateRoute(wr, sd).route()

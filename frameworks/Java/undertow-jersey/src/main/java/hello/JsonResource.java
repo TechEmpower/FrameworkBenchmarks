@@ -1,22 +1,21 @@
 package hello;
 
-import javax.inject.*;
-import javax.ws.rs.*;
-import java.util.*;
-
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
+import java.util.Collections;
+
+import javax.inject.Singleton;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 @Singleton
 @Path("/json")
-public class JsonResource
-{
+public class JsonResource {
 
-  @GET
-  @Produces(APPLICATION_JSON)
-  public Object json()
-  {
-    Map<String, String> data = new HashMap<String, String>(1);
-    data.put("message", "Hello, World!");
-    return data;
-  }
+	@GET
+	@Produces(APPLICATION_JSON)
+	public Object json() {
+		return Collections.singletonMap("message", "Hello, World!");
+	}
 }

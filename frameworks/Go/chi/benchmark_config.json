@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "Chi",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     },
     "prefork": {
       "json_url": "/json",
@@ -45,7 +46,8 @@
       "database_os": "Linux",
       "display_name": "Chi-prefork",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     },
     "gojay": {
       "json_url": "/json",
@@ -68,7 +70,8 @@
       "database_os": "Linux",
       "display_name": "Chi-gojay",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     },
     "gojay-prefork": {
       "json_url": "/json",
@@ -91,7 +94,8 @@
       "database_os": "Linux",
       "display_name": "Chi-gojay-prefork",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     },
     "sjson": {
       "json_url": "/json",
@@ -114,7 +118,8 @@
       "database_os": "Linux",
       "display_name": "Chi-sjson",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     },
     "sjson-prefork": {
       "json_url": "/json",
@@ -137,7 +142,8 @@
       "database_os": "Linux",
       "display_name": "Chi-sjson-prefork",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     }
   }]
 }

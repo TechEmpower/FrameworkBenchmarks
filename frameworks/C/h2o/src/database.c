@@ -28,7 +28,6 @@
 #include "error.h"
 #include "list.h"
 #include "thread.h"
-#include "utility.h"
 
 #define IS_RESETTING 1
 #define IS_WRITING 2
@@ -38,11 +37,17 @@ typedef struct {
 	PGconn *conn;
 	thread_context_t *ctx;
 	db_query_param_t *param;
+	list_t *prepared_statement;
 	h2o_socket_t *sock;
-	size_t prep_stmt_idx;
 	uint_fast32_t flags;
 	h2o_timeout_entry_t h2o_timeout_entry;
 } db_conn_t;
+
+typedef struct {
+	list_t l;
+	const char *name;
+	const char *query;
+} prepared_statement_t;
 
 static int do_database_write(db_conn_t *db_conn);
 static int do_execute_query(db_conn_t *db_conn, bool direct_notification);
@@ -56,14 +61,6 @@ static void on_database_write_ready(h2o_socket_t *db_sock, const char *err);
 static void poll_database_connection(h2o_socket_t *db_sock, const char *err);
 static void process_query(db_conn_t *db_conn);
 static void start_database_connect(thread_context_t *ctx, db_conn_t *db_conn);
-
-static const struct {
-	const char *name;
-	const char *query;
-} prepared_statement[] = {
-	{FORTUNE_TABLE_NAME, "SELECT * FROM " FORTUNE_TABLE_NAME ";"},
-	{WORLD_TABLE_NAME, "SELECT * FROM " WORLD_TABLE_NAME " WHERE " ID_FIELD_NAME " = $1::integer;"},
-};
 
 static int do_database_write(db_conn_t *db_conn)
 {
@@ -96,7 +93,7 @@ static int do_execute_query(db_conn_t *db_conn, bool direct_notification)
 	                                   db_conn->param->paramFormats,
 	                                   db_conn->param->resultFormat) :
 	               PQsendQuery(db_conn->conn, db_conn->param->command);
-	int ret = EXIT_FAILURE;
+	int ret = 1;
 
 	if (ec) {
 		if (db_conn->param->flags & IS_SINGLE_ROW)
@@ -118,7 +115,7 @@ static int do_execute_query(db_conn_t *db_conn, bool direct_notification)
 			on_database_error(db_conn, DB_ERROR);
 		}
 		else {
-			ret = EXIT_SUCCESS;
+			ret = 0;
 
 			if (send_status)
 				h2o_socket_notify_write(db_conn->sock, on_database_write_ready);
@@ -182,7 +179,7 @@ static void on_database_connect_timeout(h2o_timeout_entry_t *entry)
 
 static void on_database_error(db_conn_t *db_conn, const char *error_string)
 {
-	if (db_conn->prep_stmt_idx < ARRAY_SIZE(prepared_statement))
+	if (db_conn->prepared_statement)
 		on_database_connect_error(db_conn, false, error_string);
 	else {
 		if (db_conn->param) {
@@ -282,22 +279,18 @@ static void on_database_write_ready(h2o_socket_t *db_sock, const char *err)
 		on_database_error(db_conn, DB_ERROR);
 	}
 	else {
-		if (db_conn->prep_stmt_idx) {
-			const int send_status = PQflush(db_conn->conn);
+		const int send_status = PQflush(db_conn->conn);
 
-			if (!send_status) {
-				if (db_conn->flags & IS_WRITING && db_conn->param)
-					do_database_write(db_conn);
-			}
-			else if (send_status < 0) {
-				LIBRARY_ERROR("PQflush", PQerrorMessage(db_conn->conn));
-				on_database_error(db_conn, DB_ERROR);
-			}
-			else
-				h2o_socket_notify_write(db_conn->sock, on_database_write_ready);
+		if (!send_status) {
+			if (db_conn->flags & IS_WRITING && db_conn->param)
+				do_database_write(db_conn);
+		}
+		else if (send_status < 0) {
+			LIBRARY_ERROR("PQflush", PQerrorMessage(db_conn->conn));
+			on_database_error(db_conn, DB_ERROR);
 		}
 		else
-			poll_database_connection(db_conn->sock, NULL);
+			h2o_socket_notify_write(db_conn->sock, on_database_write_ready);
 	}
 }
 
@@ -315,8 +308,9 @@ static void poll_database_connection(h2o_socket_t *db_sock, const char *err)
 		switch (status) {
 			case PGRES_POLLING_WRITING:
 				if (!h2o_socket_is_writing(db_conn->sock))
-					h2o_socket_notify_write(db_conn->sock, on_database_write_ready);
+					h2o_socket_notify_write(db_conn->sock, poll_database_connection);
 
+				h2o_socket_read_stop(db_conn->sock);
 				return;
 			case PGRES_POLLING_OK:
 				if (PQsetnonblocking(db_conn->conn, 1)) {
@@ -329,6 +323,7 @@ static void poll_database_connection(h2o_socket_t *db_sock, const char *err)
 				process_query(db_conn);
 				return;
 			case PGRES_POLLING_READING:
+				h2o_socket_read_start(db_conn->sock, poll_database_connection);
 				return;
 			default:
 				ERROR(PQerrorMessage(db_conn->conn));
@@ -340,13 +335,13 @@ static void poll_database_connection(h2o_socket_t *db_sock, const char *err)
 
 static void process_query(db_conn_t *db_conn)
 {
-	if (db_conn->prep_stmt_idx < ARRAY_SIZE(prepared_statement)) {
-		if (PQsendPrepare(db_conn->conn,
-		                  prepared_statement[db_conn->prep_stmt_idx].name,
-		                  prepared_statement[db_conn->prep_stmt_idx].query,
-		                  0,
-		                  NULL)) {
-			db_conn->prep_stmt_idx++;
+	if (db_conn->prepared_statement) {
+		const prepared_statement_t * const p = H2O_STRUCT_FROM_MEMBER(prepared_statement_t,
+		                                                              l,
+		                                                              db_conn->prepared_statement);
+
+		if (PQsendPrepare(db_conn->conn, p->name, p->query, 0, NULL)) {
+			db_conn->prepared_statement = p->l.next;
 			db_conn->h2o_timeout_entry.cb = on_database_connect_timeout;
 			h2o_timeout_link(db_conn->ctx->event_loop.h2o_ctx.loop,
 			                 &db_conn->ctx->db_state.h2o_timeout,
@@ -383,7 +378,6 @@ static void process_query(db_conn_t *db_conn)
 static void start_database_connect(thread_context_t *ctx, db_conn_t *db_conn)
 {
 	if (db_conn) {
-		db_conn->prep_stmt_idx = 0;
 		db_conn->flags = IS_RESETTING;
 		h2o_timeout_unlink(&db_conn->h2o_timeout_entry);
 		h2o_socket_read_stop(db_conn->sock);
@@ -396,12 +390,8 @@ static void start_database_connect(thread_context_t *ctx, db_conn_t *db_conn)
 	}
 	else {
 		ctx->db_state.db_conn_num++;
-		db_conn = calloc(1, sizeof(*db_conn));
-
-		if (!db_conn) {
-			STANDARD_ERROR("calloc");
-			goto error;
-		}
+		db_conn = h2o_mem_alloc(sizeof(*db_conn));
+		memset(db_conn, 0, sizeof(*db_conn));
 
 		const char * const conninfo = ctx->config->db_host ? ctx->config->db_host : "";
 
@@ -441,11 +431,11 @@ static void start_database_connect(thread_context_t *ctx, db_conn_t *db_conn)
 		db_conn->sock->data = db_conn;
 		db_conn->ctx = ctx;
 		db_conn->h2o_timeout_entry.cb = on_database_connect_timeout;
+		db_conn->prepared_statement = ctx->global_data->prepared_statements;
 		h2o_timeout_link(ctx->event_loop.h2o_ctx.loop,
 		                 &ctx->db_state.h2o_timeout,
 		                 &db_conn->h2o_timeout_entry);
-		h2o_socket_read_start(db_conn->sock, poll_database_connection);
-		h2o_socket_notify_write(db_conn->sock, on_database_write_ready);
+		h2o_socket_notify_write(db_conn->sock, poll_database_connection);
 		return;
 	}
 
@@ -457,13 +447,23 @@ error_dup:
 	PQfinish(db_conn->conn);
 error_connect:
 	free(db_conn);
-error:
 	error_notification(ctx, false, DB_ERROR);
+}
+
+void add_prepared_statement(const char *name, const char *query, list_t **prepared_statements)
+{
+	prepared_statement_t * const p = h2o_mem_alloc(sizeof(*p));
+
+	memset(p, 0, sizeof(*p));
+	p->l.next = *prepared_statements;
+	p->name = name;
+	p->query = query;
+	*prepared_statements = &p->l;
 }
 
 int execute_query(thread_context_t *ctx, db_query_param_t *param)
 {
-	int ret = EXIT_FAILURE;
+	int ret = 1;
 
 	if (ctx->db_state.free_db_conn_num) {
 		db_conn_t * const db_conn = H2O_STRUCT_FROM_MEMBER(db_conn_t, l, ctx->db_state.db_conn);
@@ -482,7 +482,7 @@ int execute_query(thread_context_t *ctx, db_query_param_t *param)
 			*ctx->db_state.queries.tail = &param->l;
 			ctx->db_state.queries.tail = &param->l.next;
 			ctx->db_state.query_num++;
-			ret = EXIT_SUCCESS;
+			ret = 0;
 		}
 	}
 
@@ -514,4 +514,17 @@ void initialize_database_state(h2o_loop_t *loop, db_state_t *db_state)
 	memset(db_state, 0, sizeof(*db_state));
 	db_state->queries.tail = &db_state->queries.head;
 	h2o_timeout_init(loop, &db_state->h2o_timeout, H2O_DEFAULT_HTTP1_REQ_TIMEOUT);
+}
+
+void remove_prepared_statements(list_t *prepared_statements)
+{
+	if (prepared_statements)
+		do {
+			prepared_statement_t * const p = H2O_STRUCT_FROM_MEMBER(prepared_statement_t,
+			                                                        l,
+			                                                        prepared_statements);
+
+			prepared_statements = prepared_statements->next;
+			free(p);
+		} while (prepared_statements);
 }

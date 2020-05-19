@@ -19,7 +19,6 @@
 
 #include <errno.h>
 #include <h2o.h>
-#include <mustache.h>
 #include <pthread.h>
 #include <signal.h>
 #include <stdio.h>
@@ -31,31 +30,32 @@
 #include <sys/signalfd.h>
 #include <sys/time.h>
 
-#include "cache.h"
 #include "error.h"
 #include "event_loop.h"
+#include "global_data.h"
 #include "request_handler.h"
-#include "template.h"
 #include "thread.h"
 #include "tls.h"
 #include "utility.h"
 
-#define DEFAULT_CACHE_LINE_SIZE 128
-#define MS_IN_S 1000
 #define USAGE_MESSAGE \
 	"Usage:\n%s [-a <max connections accepted simultaneously>] [-b <bind address>] " \
-	"[-c <certificate file>] [-d <database connection string>] " \
-	"[-e <World cache duration in seconds>] [-f fortunes template file path] " \
+	"[-c <certificate file>] [-d <database connection string>] [-f template file path] " \
 	"[-j <max reused JSON generators>] [-k <private key file>] [-l <log path>] " \
 	"[-m <max database connections per thread>] [-p <port>] " \
 	"[-q <max enqueued database queries per thread>] [-r <root directory>] " \
-	"[-s <HTTPS port>] [-t <thread number>] [-w <World cache capacity in bytes>]\n"
+	"[-s <HTTPS port>] [-t <thread number>]\n"
+
+typedef struct {
+	list_t l;
+	void *arg;
+	void (*task)(thread_context_t *, void *);
+} task_t;
 
 static void free_global_data(global_data_t *global_data);
-static void free_world_cache_entry(h2o_iovec_t value);
-static size_t get_maximum_cache_line_size(void);
 static int initialize_global_data(const config_t *config, global_data_t *global_data);
 static int parse_options(int argc, char *argv[], config_t *config);
+static void run_postinitialization_tasks(list_t **tasks, thread_context_t *ctx);
 static void set_default_options(config_t *config);
 static void setup_process(void);
 
@@ -71,49 +71,12 @@ static void free_global_data(global_data_t *global_data)
 	if (global_data->file_logger)
 		global_data->file_logger->dispose(global_data->file_logger);
 
-	if (global_data->fortunes_template) {
-		mustache_api_t api = {.freedata = NULL};
-
-		mustache_free(&api, global_data->fortunes_template);
-	}
-
-	cache_destroy(&global_data->world_cache);
+	cleanup_request_handlers(global_data);
+	remove_prepared_statements(global_data->prepared_statements);
 	h2o_config_dispose(&global_data->h2o_config);
 
 	if (global_data->ssl_ctx)
 		cleanup_openssl(global_data);
-}
-
-static void free_world_cache_entry(h2o_iovec_t value)
-{
-	free(value.base);
-}
-
-static size_t get_maximum_cache_line_size(void)
-{
-	const int name[] = {_SC_LEVEL1_DCACHE_LINESIZE,
-	                    _SC_LEVEL2_CACHE_LINESIZE,
-	                    _SC_LEVEL3_CACHE_LINESIZE,
-	                    _SC_LEVEL4_CACHE_LINESIZE};
-	size_t ret = 0;
-
-	for (size_t i = 0; i < ARRAY_SIZE(name); i++) {
-		errno = 0;
-
-		const long rc = sysconf(name[i]);
-
-		if (rc < 0) {
-			if (errno)
-				STANDARD_ERROR("sysconf");
-		}
-		else if ((size_t) rc > ret)
-			ret = rc;
-	}
-
-	if (!ret)
-		ret = DEFAULT_CACHE_LINE_SIZE;
-
-	return ret;
 }
 
 static int initialize_global_data(const config_t *config, global_data_t *global_data)
@@ -128,15 +91,7 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 #endif // NDEBUG
 	CHECK_ERRNO(sigaddset, &signals, SIGTERM);
 	CHECK_ERRNO_RETURN(global_data->signal_fd, signalfd, -1, &signals, SFD_NONBLOCK | SFD_CLOEXEC);
-	global_data->fortunes_template = get_fortunes_template(config->template_path);
 	h2o_config_init(&global_data->h2o_config);
-
-	if (cache_create(config->thread_num,
-	                 config->world_cache_capacity,
-	                 config->world_cache_duration,
-	                 free_world_cache_entry,
-	                 &global_data->world_cache))
-		goto error;
 
 	if (config->cert && config->key)
 		initialize_openssl(config, global_data);
@@ -154,7 +109,7 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 			goto error;
 	}
 
-	register_request_handlers(hostconf, log_handle);
+	initialize_request_handlers(config, global_data, hostconf, log_handle);
 
 	// Must be registered after the rest of the request handlers.
 	if (config->root) {
@@ -171,13 +126,13 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 		printf("Number of processors: %zu\nMaximum cache line size: %zu\n",
 		       h2o_numproc(),
 		       global_data->memory_alignment);
-		return EXIT_SUCCESS;
+		return 0;
 	}
 
 error:
 	close(global_data->signal_fd);
 	free_global_data(global_data);
-	return EXIT_FAILURE;
+	return 1;
 }
 
 static int parse_options(int argc, char *argv[], config_t *config)
@@ -188,7 +143,7 @@ static int parse_options(int argc, char *argv[], config_t *config)
 	opterr = 0;
 
 	while (1) {
-		const int opt = getopt(argc, argv, "?a:b:c:d:e:f:j:k:l:m:p:q:r:s:t:w:");
+		const int opt = getopt(argc, argv, "?a:b:c:d:f:j:k:l:m:p:q:r:s:t:");
 
 		if (opt == -1)
 			break;
@@ -203,7 +158,7 @@ static int parse_options(int argc, char *argv[], config_t *config)
 		\
 		if (errno) { \
 			print_library_error(__FILE__, __LINE__, "strtoll", errno); \
-			return EXIT_FAILURE; \
+			return 1; \
 		} \
 		\
 		(out) = n; \
@@ -220,10 +175,6 @@ static int parse_options(int argc, char *argv[], config_t *config)
 				break;
 			case 'd':
 				config->db_host = optarg;
-				break;
-			case 'e':
-				PARSE_NUMBER(config->world_cache_duration);
-				config->world_cache_duration *= MS_IN_S;
 				break;
 			case 'f':
 				config->template_path = optarg;
@@ -255,26 +206,32 @@ static int parse_options(int argc, char *argv[], config_t *config)
 			case 't':
 				PARSE_NUMBER(config->thread_num);
 				break;
-			case 'w':
-				PARSE_NUMBER(config->world_cache_capacity);
-				break;
 			default:
 				fprintf(stderr, USAGE_MESSAGE, *argv);
-				return EXIT_FAILURE;
+				return 1;
 
 #undef PARSE_NUMBER
 		}
 	}
 
 	set_default_options(config);
-	return EXIT_SUCCESS;
+	return 0;
+}
+
+static void run_postinitialization_tasks(list_t **tasks, thread_context_t *ctx)
+{
+	if (*tasks)
+		do {
+			task_t * const t = H2O_STRUCT_FROM_MEMBER(task_t, l, *tasks);
+
+			*tasks = (*tasks)->next;
+			t->task(ctx, t->arg);
+			free(t);
+		} while (*tasks);
 }
 
 static void set_default_options(config_t *config)
 {
-	if (!config->world_cache_duration)
-		config->world_cache_duration = 3600000;
-
 	if (!config->max_accept)
 		config->max_accept = 10;
 
@@ -289,9 +246,6 @@ static void set_default_options(config_t *config)
 
 	if (!config->thread_num)
 		config->thread_num = h2o_numproc();
-
-	if (!config->world_cache_capacity)
-		config->world_cache_capacity = 131072;
 
 	if (!config->https_port)
 		config->https_port = 4443;
@@ -318,20 +272,34 @@ static void setup_process(void)
 	CHECK_ERRNO(setrlimit, RLIMIT_NOFILE, &rlim);
 }
 
+void add_postinitialization_task(void (*task)(struct thread_context_t *, void *),
+                                 void *arg,
+                                 list_t **postinitialization_tasks)
+{
+	task_t * const t = h2o_mem_alloc(sizeof(*t));
+
+	memset(t, 0, sizeof(*t));
+	t->l.next = *postinitialization_tasks;
+	t->arg = arg;
+	t->task = task;
+	*postinitialization_tasks = &t->l;
+}
+
 int main(int argc, char *argv[])
 {
 	config_t config;
 	int rc = EXIT_FAILURE;
 
-	if (parse_options(argc, argv, &config) == EXIT_SUCCESS) {
+	if (!parse_options(argc, argv, &config)) {
 		global_data_t global_data;
 
-		if (initialize_global_data(&config, &global_data) == EXIT_SUCCESS) {
+		if (!initialize_global_data(&config, &global_data)) {
 			thread_context_t ctx;
 
 			setup_process();
 			start_threads(global_data.global_thread_data);
 			initialize_thread_context(global_data.global_thread_data, true, &ctx);
+			run_postinitialization_tasks(&global_data.postinitialization_tasks, &ctx);
 			event_loop(&ctx);
 			// Even though this is global data, we need to close
 			// it before the associated event loop is cleaned up.

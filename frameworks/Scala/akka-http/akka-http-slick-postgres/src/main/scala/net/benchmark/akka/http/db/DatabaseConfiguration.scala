@@ -2,6 +2,7 @@ package net.benchmark.akka.http.db
 
 import com.typesafe.config.Config
 import slick.basic.DatabaseConfig
+import slick.jdbc.PostgresProfile
 
 object DatabaseConfiguration {
 
@@ -13,12 +14,12 @@ object DatabaseConfiguration {
     * @param config A configuration.
     * @return A slick database configuration.
     */
-  def getDatabaseConfiguration(path: String)(config: Config): DatabaseConfig[CustomPostgresProfile] = {
-    DatabaseConfig.forConfig[CustomPostgresProfile](path, config)
+  def getDatabaseConfiguration(path: String)(config: Config): DatabaseConfig[PostgresProfile] = {
+    DatabaseConfig.forConfig[PostgresProfile](path, config)
   }
 
   // Load the database configuration from the default path.
-  val getDefaultDatabaseConfiguration: Config => DatabaseConfig[CustomPostgresProfile] = getDatabaseConfiguration(
+  val getDefaultDatabaseConfiguration: Config => DatabaseConfig[PostgresProfile] = getDatabaseConfiguration(
     "akka-http-slick-postgres.database")
 
 }

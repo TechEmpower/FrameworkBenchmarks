@@ -1,0 +1,10 @@
+AddDefaultCharset UTF-8
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /ubiquity/
+	
+	RewriteCond %{REQUEST_FILENAME} !-f  
+	RewriteCond %{HTTP_ACCEPT} !(.*images.*)
+	RewriteRule ^(.*)$ index.php?c=$1 [L,QSA]
+</IfModule>

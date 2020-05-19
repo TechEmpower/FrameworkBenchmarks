@@ -57,26 +57,32 @@ namespace Benchmarks.Data
         public async Task<World[]> LoadMultipleUpdatesRows(int count)
         {
             var results = new World[count];
+            var random = new Random();
+            int i = 0;
 
-            for (var i = 0; i < count; i++)
+            var ids = Enumerable.Range(1, 10000).OrderBy(x => random.Next()).Take(count);
+
+            foreach (int id in ids)
             {
-                var id = _random.Next(1, 10001);
-                var result = await _firstWorldTrackedQuery(_dbContext, id);
+                // TODO: compiled queries are not supported in EF 3.0-preview7
+                // var result = await _firstWorldTrackedQuery(_dbContext, id);
 
-                _dbContext.Entry(result).Property("RandomNumber").CurrentValue = _random.Next(1, 10001);
+                var result = await _dbContext.World.AsTracking().FirstAsync(w => w.Id == id);
 
-                results[i] = result;
+                int oldId = (int)_dbContext.Entry(result).Property("RandomNumber").CurrentValue;
+                int newId;
 
-                if (!_useBatchUpdate)
+                do
                 {
-                    await _dbContext.SaveChangesAsync();
-                }
+                    newId = _random.Next(1, 10001);
+                } while (oldId == newId);
+
+                _dbContext.Entry(result).Property("RandomNumber").CurrentValue = newId;
+
+                results[i++] = result;
             }
 
-            if (_useBatchUpdate)
-            {
-                await _dbContext.SaveChangesAsync();
-            }
+            await _dbContext.SaveChangesAsync();
 
             return results;
         }

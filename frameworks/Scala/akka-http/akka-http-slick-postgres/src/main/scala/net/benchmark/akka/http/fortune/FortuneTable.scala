@@ -1,6 +1,6 @@
 package net.benchmark.akka.http.fortune
 
-import net.benchmark.akka.http.db.CustomPostgresProfile.api._
+import slick.jdbc.PostgresProfile.api._
 
 object FortuneTable {
 

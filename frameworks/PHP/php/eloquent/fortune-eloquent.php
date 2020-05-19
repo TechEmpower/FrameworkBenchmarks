@@ -12,13 +12,17 @@ class Fortune extends \Illuminate\Database\Eloquent\Model {
 }
 
 // Define query and store result in array.
-$arr = Fortune::all()->pluck('message', 'id')->all();
+$rows = Fortune::all();
 
-$arr[0] = 'Additional fortune added at request time.';
+$insert = new Fortune();
+$insert->id = 0;
+$insert->message = "Additional fortune added at request time.";
 
-asort($arr);
+$rows->add($insert);
+$rows = $rows->sortBy("message");
+
 ?>
 <!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>
-<?php foreach ( $arr as $id => $fortune ) : ?>
-<tr><td><?= $id ?></td><td><?= htmlspecialchars($fortune, ENT_QUOTES, 'UTF-8') ?></td></tr>
+<?php foreach ( $rows as $fortune ) : ?>
+<tr><td><?= $fortune->id ?></td><td><?= htmlspecialchars($fortune->message, ENT_QUOTES, 'UTF-8') ?></td></tr>
 <?php endforeach ?></table></body></html>

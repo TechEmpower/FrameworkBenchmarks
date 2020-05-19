@@ -9,7 +9,7 @@ from threading import Thread
 from colorama import Fore, Style
 
 from toolset.utils.output_helper import log
-from toolset.utils.database_helper import test_database
+from toolset.databases import databases
 
 from psutil import virtual_memory
 
@@ -202,12 +202,18 @@ class DockerHelper:
             if hasattr(test, 'docker_cmd'):
                 docker_cmd = test.docker_cmd
 
+            # Expose ports in debugging mode
+            ports = {}
+            if self.benchmarker.config.mode == "debug":
+                ports = {test.port: test.port}
+
             container = self.server.containers.run(
                 "techempower/tfb.test.%s" % test.name,
                 name=name,
                 command=docker_cmd,
                 network=self.benchmarker.config.network,
                 network_mode=self.benchmarker.config.network_mode,
+                ports=ports,
                 stderr=True,
                 detach=True,
                 init=True,
@@ -244,7 +250,7 @@ class DockerHelper:
     @staticmethod
     def __stop_container(container):
         try:
-            container.kill()
+            container.stop(timeout=2)
             time.sleep(2)
         except:
             # container has already been killed
@@ -340,7 +346,7 @@ class DockerHelper:
         while not database_ready and slept < max_sleep:
             time.sleep(1)
             slept += 1
-            database_ready = test_database(self.benchmarker.config, database)
+            database_ready = databases[database].test_connection(self.benchmarker.config)
 
         if not database_ready:
             log("Database was not ready after startup", prefix=log_prefix)

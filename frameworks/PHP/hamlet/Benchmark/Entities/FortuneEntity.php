@@ -2,9 +2,9 @@
 
 namespace Benchmark\Entities;
 
-use Hamlet\Entities\AbstractTwigEntity;
+use Hamlet\Http\Entities\AbstractMustacheEntity;
 
-class FortuneEntity extends AbstractTwigEntity
+class FortuneEntity extends AbstractMustacheEntity
 {
     private $messages;
 
@@ -22,12 +22,9 @@ class FortuneEntity extends AbstractTwigEntity
 
     protected function getTemplatePath(): string
     {
-        return __DIR__ . '/fortune.twig';
+        return __DIR__ . '/fortune.mustache';
     }
 
-    /**
-     * Get cache key of the entity
-     */
     public function getKey(): string
     {
         return md5(var_export($this->messages, true));

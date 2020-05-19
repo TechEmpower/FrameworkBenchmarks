@@ -22,13 +22,14 @@
 #include <string.h>
 #include <yajl/yajl_gen.h>
 
-#include "fortune.h"
-#include "json_serializer.h"
-#include "plaintext.h"
+#include "global_data.h"
 #include "request_handler.h"
 #include "thread.h"
 #include "utility.h"
-#include "world.h"
+#include "handlers/fortune.h"
+#include "handlers/json_serializer.h"
+#include "handlers/plaintext.h"
+#include "handlers/world.h"
 
 static const char *status_code_to_string(http_status_code_t status_code)
 {
@@ -57,6 +58,17 @@ static const char *status_code_to_string(http_status_code_t status_code)
 	return ret;
 }
 
+void cleanup_request_handlers(global_data_t *global_data)
+{
+	cleanup_fortunes_handler(global_data);
+	cleanup_world_handlers(global_data);
+}
+
+void free_request_handler_thread_data(request_handler_thread_data_t *request_handler_thread_data)
+{
+	IGNORE_FUNCTION_PARAMETER(request_handler_thread_data);
+}
+
 const char *get_query_param(const char *query,
                             size_t query_len,
                             const char *param,
@@ -82,56 +94,36 @@ const char *get_query_param(const char *query,
 	return ret;
 }
 
-void register_request_handlers(h2o_hostconf_t *hostconf, h2o_access_log_filehandle_t *log_handle)
+void initialize_request_handler_thread_data(
+		const config_t *config, request_handler_thread_data_t *request_handler_thread_data)
 {
-	h2o_pathconf_t *pathconf = h2o_config_register_path(hostconf, "/json", 0);
-	h2o_handler_t *handler = h2o_create_handler(pathconf, sizeof(*handler));
+	IGNORE_FUNCTION_PARAMETER(config);
+	IGNORE_FUNCTION_PARAMETER(request_handler_thread_data);
+}
+
+void initialize_request_handlers(const config_t *config,
+                                 global_data_t *global_data,
+                                 h2o_hostconf_t *hostconf,
+                                 h2o_access_log_filehandle_t *log_handle)
+{
+	initialize_fortunes_handler(config, global_data, hostconf, log_handle);
+	initialize_json_serializer_handler(hostconf, log_handle);
+	initialize_plaintext_handler(hostconf, log_handle);
+	initialize_world_handlers(config, global_data, hostconf, log_handle);
+}
+
+void register_request_handler(const char *path,
+                              int (*handler)(struct st_h2o_handler_t *, h2o_req_t *),
+                              h2o_hostconf_t *hostconf,
+                              h2o_access_log_filehandle_t *log_handle)
+{
+	h2o_pathconf_t * const pathconf = h2o_config_register_path(hostconf, path, 0);
+	h2o_handler_t * const h = h2o_create_handler(pathconf, sizeof(*h));
 
 	if (log_handle)
 		h2o_access_log_register(pathconf, log_handle);
 
-	handler->on_req = json_serializer;
-	pathconf = h2o_config_register_path(hostconf, "/db", 0);
-	handler = h2o_create_handler(pathconf, sizeof(*handler));
-	handler->on_req = single_query;
-
-	if (log_handle)
-		h2o_access_log_register(pathconf, log_handle);
-
-	pathconf = h2o_config_register_path(hostconf, "/queries", 0);
-	handler = h2o_create_handler(pathconf, sizeof(*handler));
-	handler->on_req = multiple_queries;
-
-	if (log_handle)
-		h2o_access_log_register(pathconf, log_handle);
-
-	pathconf = h2o_config_register_path(hostconf, "/fortunes", 0);
-	handler = h2o_create_handler(pathconf, sizeof(*handler));
-	handler->on_req = fortunes;
-
-	if (log_handle)
-		h2o_access_log_register(pathconf, log_handle);
-
-	pathconf = h2o_config_register_path(hostconf, "/updates", 0);
-	handler = h2o_create_handler(pathconf, sizeof(*handler));
-	handler->on_req = updates;
-
-	if (log_handle)
-		h2o_access_log_register(pathconf, log_handle);
-
-	pathconf = h2o_config_register_path(hostconf, "/plaintext", 0);
-	handler = h2o_create_handler(pathconf, sizeof(*handler));
-	handler->on_req = plaintext;
-
-	if (log_handle)
-		h2o_access_log_register(pathconf, log_handle);
-
-	pathconf = h2o_config_register_path(hostconf, "/cached-worlds", 0);
-	handler = h2o_create_handler(pathconf, sizeof(*handler));
-	handler->on_req = cached_queries;
-
-	if (log_handle)
-		h2o_access_log_register(pathconf, log_handle);
+	h->on_req = handler;
 }
 
 void send_error(http_status_code_t status_code, const char *body, h2o_req_t *req)
@@ -143,11 +135,11 @@ int send_json_response(json_generator_t *gen, bool free_gen, h2o_req_t *req)
 {
 	const unsigned char *buf;
 	size_t len;
-	int ret = EXIT_FAILURE;
+	int ret = 1;
 
 	if (yajl_gen_get_buf(gen->gen, &buf, &len) == yajl_gen_status_ok) {
 		set_default_response_param(JSON, len, req);
-		ret = EXIT_SUCCESS;
+		ret = 0;
 
 		if (free_gen) {
 			thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,

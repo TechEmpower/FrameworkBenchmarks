@@ -16,13 +16,11 @@ namespace Benchmarks.Data
     {
         private readonly IRandom _random;
         private readonly ApplicationDbContext _dbContext;
-        private readonly bool _useBatchUpdate;
 
         public EfDb(IRandom random, ApplicationDbContext dbContext, IOptions<AppSettings> appSettings)
         {
             _random = random;
             _dbContext = dbContext;
-            _useBatchUpdate = appSettings.Value.Database != DatabaseServer.PostgreSql;
         }
 
         private static readonly Func<ApplicationDbContext, int, Task<World>> _firstWorldQuery
@@ -33,7 +31,10 @@ namespace Benchmarks.Data
         {
             var id = _random.Next(1, 10001);
 
-            return _firstWorldQuery(_dbContext, id);
+            // TODO: compiled queries are not supported in EF 3.0-preview7
+            // return _firstWorldQuery(_dbContext, id);
+            
+            return _dbContext.World.FirstAsync(w => w.Id == id);
         }
 
         public async Task<World[]> LoadMultipleQueriesRows(int count)
@@ -44,7 +45,10 @@ namespace Benchmarks.Data
             {
                 var id = _random.Next(1, 10001);
 
-                result[i] = await _firstWorldQuery(_dbContext, id);
+                // TODO: compiled queries are not supported in EF 3.0-preview7
+                // result[i] = await _firstWorldQuery(_dbContext, id);
+
+                result[i] = await _dbContext.World.FirstAsync(w => w.Id == id);
             }
 
             return result;
@@ -57,36 +61,44 @@ namespace Benchmarks.Data
         public async Task<World[]> LoadMultipleUpdatesRows(int count)
         {
             var results = new World[count];
+            var random = new Random();
+            int i = 0;
 
-            for (var i = 0; i < count; i++)
+            var ids = Enumerable.Range(1,10000).OrderBy(x => random.Next()).Take(count);
+
+            foreach(int id in ids)
             {
-                var id = _random.Next(1, 10001);
-                var result = await _firstWorldTrackedQuery(_dbContext, id);
+                // TODO: compiled queries are not supported in EF 3.0-preview7
+                // var result = await _firstWorldTrackedQuery(_dbContext, id);
 
-                _dbContext.Entry(result).Property("RandomNumber").CurrentValue = _random.Next(1, 10001);
+                var result = await _dbContext.World.AsTracking().FirstAsync(w => w.Id == id);
 
-                results[i] = result;
-
-                if (!_useBatchUpdate)
-                {
-                    await _dbContext.SaveChangesAsync();
-                }
+                int oldId = (int) _dbContext.Entry(result).Property("RandomNumber").CurrentValue;
+                int newId;
+                 
+                do{
+                   newId = _random.Next(1, 10001);
+                } while (oldId == newId);
+                
+                _dbContext.Entry(result).Property("RandomNumber").CurrentValue = newId;
+                
+                results[i++] = result;                
             }
 
-            if (_useBatchUpdate)
-            {
-                await _dbContext.SaveChangesAsync();
-            }
+            await _dbContext.SaveChangesAsync();
 
             return results;
         }
 
-        private static readonly Func<ApplicationDbContext, AsyncEnumerable<Fortune>> _fortunesQuery
+        private static readonly Func<ApplicationDbContext, IAsyncEnumerable<Fortune>> _fortunesQuery
             = EF.CompileAsyncQuery((ApplicationDbContext context) => context.Fortune);
 
         public async Task<List<Fortune>> LoadFortunesRows()
         {
-            var result = await _fortunesQuery(_dbContext).ToListAsync();
+            var result = await _dbContext.Fortune.ToListAsync();
+
+            // TODO: compiled queries are not supported in EF 3.0-preview7
+            // await foreach (var element in _fortunesQuery(_dbContext))
 
             result.Add(new Fortune { Message = "Additional fortune added at request time." });
             result.Sort();

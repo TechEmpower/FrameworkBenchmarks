@@ -1,8 +1,9 @@
 #include "JsonCtrl.h"
-void JsonCtrl::asyncHandleHttpRequest(const HttpRequestPtr& req,const std::function<void (const HttpResponsePtr &)> & callback)
+void JsonCtrl::asyncHandleHttpRequest(
+    const HttpRequestPtr &req,
+    std::function<void(const HttpResponsePtr &)> &&callback)
 {
     Json::Value ret;
-    ret["message"]="Hello, World!";
-    auto resp=HttpResponse::newHttpJsonResponse(ret);
-    callback(resp);
+    ret["message"] = "Hello, World!";
+    callback(HttpResponse::newHttpJsonResponse(std::move(ret)));
 }

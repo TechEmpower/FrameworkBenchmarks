@@ -2,7 +2,9 @@ package hello;
 
 import hello.domain.World;
 
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -10,6 +12,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -17,7 +21,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 @Singleton
@@ -25,12 +28,13 @@ import org.hibernate.Transaction;
 @Path("/db")
 public class WorldResource {
 	@Inject
-	private SessionFactory sessionFactory;
+	private EntityManagerFactory emf;
 
 	@GET
 	public Object db() throws InterruptedException, ExecutionException {
 		Callable<World> callable = () -> {
-			Session session = sessionFactory.openSession();
+			EntityManager em = emf.createEntityManager();
+			Session session = em.unwrap(Session.class);
 			session.setDefaultReadOnly(true);
 			try {
 				return (World) session.byId(World.class).load(randomWorld());
@@ -50,12 +54,14 @@ public class WorldResource {
 		final World[] worlds = new World[queries];
 
 		Callable<World[]> callable = () -> {
-			Session session = sessionFactory.openSession();
+			Session session = emf.createEntityManager().unwrap(Session.class);
 			session.setDefaultReadOnly(true);
 			try {
-				for (int i = 0; i < queries; i++) {
-					worlds[i] = (World) session.byId(World.class).load(randomWorld());
-				}
+		        //Pick unique random numbers 
+		        final AtomicInteger i = new AtomicInteger(0);
+		        ThreadLocalRandom.current().ints(1, 10001).distinct().limit(queries).forEach(
+		            (randomValue)->worlds[i.getAndAdd(1)] = (World) session.byId(World.class).load(randomValue)
+		        );
 				return worlds;
 			} finally {
 				session.close();
@@ -73,19 +79,32 @@ public class WorldResource {
 		final World[] worlds = new World[queries];
 
 		Callable<World[]> callable = () -> {
-			Session session = sessionFactory.openSession();
+			Session session = emf.createEntityManager().unwrap(Session.class);
 			session.setDefaultReadOnly(false);
 			Transaction txn = session.beginTransaction();
 
 			try {
 				// using write batching. See the data source properties provided
 				// in the configuration file
-				for (int i = 0; i < queries; i++) {
-					final World world = (World) session.byId(World.class).load(randomWorld());
-					world.randomNumber = randomWorld();
-					session.persist(world);
-					worlds[i] = world;
+
+				// 1. Read and update the entities from the DB
+		        final AtomicInteger ii = new AtomicInteger(0);
+		        ThreadLocalRandom.current().ints(1, 10001).distinct().limit(queries).forEach(
+		            (randomValue)->{
+		            		final World world = (World) session.byId(World.class).load(randomValue);
+		            		world.setRandomNumber(randomWorld());
+		            		worlds[ii.getAndAdd(1)]=world;
+		            	}
+		        );
+
+		        // 2. Sort the array to prevent transaction deadlock in the DB
+				Arrays.sort(worlds, Comparator.comparingInt(World::getId));
+
+				// 3. Actually save the entities
+				for (int i = 0; i < worlds.length; i++) {
+					session.persist(worlds[i]);
 				}
+
 				session.flush();
 				session.clear();
 				txn.commit();

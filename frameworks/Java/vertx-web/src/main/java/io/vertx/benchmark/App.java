@@ -499,7 +499,9 @@ public class App extends AbstractVerticle {
   @Override
   public void start() {
     final Router app = Router.router(vertx);
-
+    // initialize the date header
+    date = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now());
+    // refresh the value as a periodic task
     vertx.setPeriodic(1000, handler -> date = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now()));
 
     final MongoDBBenchmark mongoDBBenchmark = new MongoDBBenchmark(vertx, config());

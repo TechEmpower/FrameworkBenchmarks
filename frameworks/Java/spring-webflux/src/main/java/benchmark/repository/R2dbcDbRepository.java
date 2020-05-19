@@ -3,7 +3,7 @@ package benchmark.repository;
 import benchmark.model.Fortune;
 import benchmark.model.World;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.r2dbc.function.DatabaseClient;
+import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

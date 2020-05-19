@@ -2,8 +2,9 @@ package hello;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import javax.inject.Singleton;
 import java.util.Collections;
+
+import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;

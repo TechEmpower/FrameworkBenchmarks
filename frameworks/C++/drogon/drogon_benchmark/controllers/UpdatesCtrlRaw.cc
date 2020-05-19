@@ -1,69 +1,85 @@
 #include "UpdatesCtrlRaw.h"
-using namespace drogon::orm;
-const void update(const std::shared_ptr<std::vector<Result>> &results,
-                  const std::shared_ptr<std::function<void(const HttpResponsePtr &)>> &callbackPtr,
-                  const DbClientPtr &client)
-{
+#include <stdlib.h>
 
-    auto size = results->size();
+using namespace drogon::orm;
+
+const std::string &UpdatesCtrlRaw::getSQL(size_t count)
+{
+    auto &sqlMap = *updateSQLs_;
+    auto iter = sqlMap.find(count);
+    if (iter != sqlMap.end())
+    {
+        return *(iter->second);
+    }
     std::string sql;
-    sql.reserve(256);
+    sql.reserve(80 + count * 25);
     sql.append("update world set randomnumber=case id ");
     int placeholdersCounter = 1;
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < count; i++)
     {
-        auto tmpStr = drogon::utils::formattedString("when $%d then $%d ", placeholdersCounter, placeholdersCounter + 1);
+        auto tmpStr = drogon::utils::formattedString("when $%d then $%d ",
+                                                     placeholdersCounter,
+                                                     placeholdersCounter + 1);
         placeholdersCounter += 2;
         sql.append(tmpStr);
     }
     sql.append("else randomnumber end where id in (");
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < count; i++)
     {
-        auto tmpStr = drogon::utils::formattedString("$%d,", placeholdersCounter);
+        auto tmpStr =
+            drogon::utils::formattedString("$%d,", placeholdersCounter);
         ++placeholdersCounter;
         sql.append(tmpStr);
     }
     sql[sql.length() - 1] = ')';
-
-    auto sqlBinder = *client << std::move(sql);
-
-    auto jsonPtr = std::make_shared<Json::Value>();
-    jsonPtr->resize(0);
-    for (auto &r : *results)
+    auto ret =
+        sqlMap.insert({count, std::make_unique<std::string>(std::move(sql))});
+    return *(ret.first->second);
+}
+void UpdatesCtrlRaw::update(
+    const std::shared_ptr<std::vector<World>> &results,
+    const std::shared_ptr<std::function<void(const HttpResponsePtr &)>>
+        &callbackPtr,
+    const DbClientPtr &client)
+{
+    auto const &sql = getSQL(results->size());
+    auto sqlBinder = *client << string_view(sql.data(), sql.length());
+    Json::Value json;
+    json.resize(0);
+    for (auto const &w : *results)
     {
         auto randId = rand() % 10000 + 1;
-        auto id = r[0]["id"].as<int>();
-        sqlBinder << id;
+        sqlBinder << w.getValueOfId();
         sqlBinder << randId;
-        Json::Value j;
-        j["id"] = id;
-        j["randomnumber"] = randId;
-        jsonPtr->append(std::move(j));
+        Json::Value world;
+        world["id"] = w.getValueOfId();
+        world["randomnumber"] = randId;
+        json.append(std::move(world));
     }
-    for (auto &r : *results)
+    for (auto const &w : *results)
     {
-        sqlBinder << r[0]["id"].as<int>();
+        sqlBinder << w.getValueOfId();
     }
 
-    sqlBinder >>
-        [jsonPtr = std::move(jsonPtr), callbackPtr](const Result &r) mutable {
-            (*callbackPtr)(HttpResponse::newHttpJsonResponse(*jsonPtr));
-        } >>
-        [callbackPtr](const DrogonDbException &e) {
-            Json::Value ret;
-            ret["result"] = "error!";
-            auto resp = HttpResponse::newHttpJsonResponse(ret);
-            (*callbackPtr)(resp);
-        };
+    sqlBinder >> [callbackPtr,
+                  json = std::move(json)](const Result &r) mutable {
+        (*callbackPtr)(HttpResponse::newHttpJsonResponse(std::move(json)));
+    } >> [callbackPtr](const DrogonDbException &e) {
+        Json::Value json{};
+        json["code"] = 1;
+        json["message"] = e.base().what();
+        auto resp = HttpResponse::newHttpJsonResponse(std::move(json));
+        (*callbackPtr)(resp);
+    };
 }
-void UpdatesCtrlRaw::asyncHandleHttpRequest(const HttpRequestPtr &req, const std::function<void(const HttpResponsePtr &)> &callback)
+void UpdatesCtrlRaw::asyncHandleHttpRequest(
+    const HttpRequestPtr &req,
+    std::function<void(const HttpResponsePtr &)> &&callback)
 {
-    //write your application logic here
+    // write your application logic here
     static std::once_flag once;
-    std::call_once(once, []() {
-        srand(time(NULL));
-    });
-    size_t queries = 1;
+    std::call_once(once, []() { srand(time(NULL)); });
+    int queries = 1;
     auto &parameter = req->getParameter("queries");
     if (!parameter.empty())
     {
@@ -73,28 +89,56 @@ void UpdatesCtrlRaw::asyncHandleHttpRequest(const HttpRequestPtr &req, const std
         else if (queries < 1)
             queries = 1;
     }
-    auto json = std::make_shared<Json::Value>();
-    json->resize(0);
-    auto callbackPtr = std::shared_ptr<std::function<void(const HttpResponsePtr &)>>(new std::function<void(const HttpResponsePtr &)>(callback));
-    auto resultSetPtr = std::make_shared<std::vector<Result>>();
+    auto callbackPtr =
+        std::make_shared<std::function<void(const HttpResponsePtr &)>>(
+            std::move(callback));
+    auto resultSetPtr = std::make_shared<std::vector<World>>();
     resultSetPtr->reserve(queries);
-    auto client = app().getFastDbClient();
-    for (size_t i = 0; i < queries; i++)
+    if (!*dbClient_)
+    {
+        *dbClient_ = drogon::app().getFastDbClient();
+    }
+    auto errFlag = std::make_shared<bool>(false);
+    for (int i = 0; i < queries; i++)
     {
         int id = rand() % 10000 + 1;
-        *client << "select * from world where id=$1"
-                << id >>
-            [callbackPtr, resultSetPtr, client, queries](const Result &r) mutable {
-                resultSetPtr->push_back(r);
-                if (resultSetPtr->size() == queries)
+        **dbClient_ << "select * from world where id=$1" << id >>
+            [callbackPtr,
+             resultSetPtr,
+             &client = *dbClient_,
+             queries,
+             this,
+             errFlag](const Result &r) mutable {
+                if (*errFlag)
+                    return;
+                if (r.size() == 1)
                 {
-                    update(resultSetPtr, callbackPtr, client);
+                    resultSetPtr->emplace_back(World(r[0]));
+                    if (resultSetPtr->size() == queries)
+                    {
+                        update(resultSetPtr, callbackPtr, client);
+                    }
+                }
+                else
+                {
+                    if (*errFlag)
+                        return;
+                    *errFlag = true;
+                    Json::Value json{};
+                    json["code"] = 0;
+                    json["message"] = "Internal error";
+                    (*callbackPtr)(
+                        HttpResponse::newHttpJsonResponse(std::move(json)));
                 }
             } >>
-            [callbackPtr](const DrogonDbException &e) {
-                Json::Value ret;
-                ret["result"] = "error!";
-                auto resp = HttpResponse::newHttpJsonResponse(ret);
+            [callbackPtr, errFlag](const DrogonDbException &e) {
+                if (*errFlag)
+                    return;
+                *errFlag = true;
+                Json::Value json{};
+                json["code"] = 1;
+                json["message"] = e.base().what();
+                auto resp = HttpResponse::newHttpJsonResponse(std::move(json));
                 (*callbackPtr)(resp);
             };
     }

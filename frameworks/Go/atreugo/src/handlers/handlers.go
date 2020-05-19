@@ -1,15 +1,15 @@
 package handlers
 
 import (
-	"encoding/json"
-	"log"
 	"sort"
 
 	"atreugo/src/storage"
 	"atreugo/src/templates"
 
-	"github.com/savsgio/atreugo/v7"
+	"github.com/savsgio/atreugo/v10"
 )
+
+const helloWorldStr = "Hello, World!"
 
 func queriesParam(ctx *atreugo.RequestCtx) int {
 	n := ctx.QueryArgs().GetUintOrZero("queries")
@@ -18,127 +18,102 @@ func queriesParam(ctx *atreugo.RequestCtx) int {
 	} else if n > 500 {
 		n = 500
 	}
+
 	return n
 }
 
 // JSONHandler . Test 1: JSON serialization
 func JSONHandler(ctx *atreugo.RequestCtx) error {
-	message := MessagePool.Get().(*Message)
-	message.Message = "Hello, World!"
+	message := AcquireMessage()
+	message.Message = helloWorldStr
 
-	ctx.SetContentType("application/json")
+	err := ctx.JSONResponse(message)
 
-	messageBytes, err := json.Marshal(message)
-	if err != nil {
-		return err
-	}
-	_, err = ctx.Write(messageBytes)
+	ReleaseMessage(message)
 
-	MessagePool.Put(message)
 	return err
 }
 
 // DBHandler . Test 2: Single database query
-func DBHandler(db storage.DB) func(ctx *atreugo.RequestCtx) error {
+func DBHandler(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
-		world := storage.WorldPool.Get().(*storage.World)
+		world := storage.AcquireWorld()
 
 		if err := db.GetOneRandomWorld(world); err != nil {
 			return err
 		}
 
-		ctx.SetContentType("application/json")
+		err := ctx.JSONResponse(world)
 
-		worldBytes, err := json.Marshal(world)
-		if err != nil {
-			return err
-		}
-		_, err = ctx.Write(worldBytes)
+		storage.ReleaseWorld(world)
 
-		storage.WorldPool.Put(world)
 		return err
 	}
 }
 
 // QueriesHandler . Test 3: Multiple database queries
-func QueriesHandler(db storage.DB) func(ctx *atreugo.RequestCtx) error {
+func QueriesHandler(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
 
-		worlds := storage.WorldsPool.Get().([]storage.World)[:queries]
+		worlds := storage.AcquireWorlds()[:queries]
 
-		var err error
 		for i := 0; i < queries; i++ {
-			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
-				log.Println(err)
+			if err := db.GetOneRandomWorld(&worlds[i]); err != nil {
+				return err
 			}
 		}
 
-		ctx.SetContentType("application/json")
-		worldsBytes, err := json.Marshal(worlds)
-		if err != nil {
-			return err
-		}
-		_, err = ctx.Write(worldsBytes)
+		err := ctx.JSONResponse(worlds)
 
-		worlds = worlds[:0]
-		storage.WorldsPool.Put(worlds)
+		storage.ReleaseWorlds(worlds)
 
 		return err
 	}
 }
 
 // FortuneHandler . Test 4: Fortunes
-func FortuneHandler(db storage.DB) func(ctx *atreugo.RequestCtx) error {
+func FortuneHandler(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		fortunes, err := db.GetFortunes()
 		if err != nil {
 			return err
 		}
-		fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
+
+		newFortune := templates.AcquireFortune()
+		newFortune.Message = "Additional fortune added at request time."
+
+		fortunes = append(fortunes, *newFortune)
 
 		sort.Slice(fortunes, func(i, j int) bool {
 			return fortunes[i].Message < fortunes[j].Message
 		})
 
 		ctx.SetContentType("text/html; charset=utf-8")
-		return templates.FortuneTemplate.Execute(ctx, fortunes)
-	}
-}
 
-// FortuneHandlerPool . Test 4: Fortunes
-func FortuneHandlerPool(db storage.DB) func(ctx *atreugo.RequestCtx) error {
-	return func(ctx *atreugo.RequestCtx) error {
-		fortunes, err := db.GetFortunesPool()
-		if err != nil {
-			return err
-		}
-		fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
-
-		sort.Slice(fortunes, func(i, j int) bool {
-			return fortunes[i].Message < fortunes[j].Message
-		})
-
-		ctx.SetContentType("text/html; charset=utf-8")
 		if err = templates.FortuneTemplate.Execute(ctx, fortunes); err != nil {
 			return err
 		}
 
-		fortunes = fortunes[:0]
-		templates.FortunesPool.Put(fortunes)
+		templates.ReleaseFortune(newFortune)
+		templates.ReleaseFortunes(fortunes)
 
 		return nil
 	}
 }
 
 // FortuneQuickHandler . Test 4: Fortunes
-func FortuneQuickHandler(db storage.DB) func(ctx *atreugo.RequestCtx) error {
+func FortuneQuickHandler(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		fortunes, err := db.GetFortunes()
 		if err != nil {
 			return err
 		}
-		fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
+
+		newFortune := templates.AcquireFortune()
+		newFortune.Message = "Additional fortune added at request time."
+
+		fortunes = append(fortunes, *newFortune)
 
 		sort.Slice(fortunes, func(i, j int) bool {
 			return fortunes[i].Message < fortunes[j].Message
@@ -147,60 +122,34 @@ func FortuneQuickHandler(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 		ctx.SetContentType("text/html; charset=utf-8")
 		templates.WriteFortunePage(ctx, fortunes)
 
-		return nil
-	}
-}
-
-// FortuneQuickHandlerPool . Test 4: Fortunes
-func FortuneQuickHandlerPool(db storage.DB) func(ctx *atreugo.RequestCtx) error {
-	return func(ctx *atreugo.RequestCtx) error {
-		fortunes, err := db.GetFortunesPool()
-		if err != nil {
-			return err
-		}
-		fortunes = append(fortunes, templates.Fortune{Message: "Additional fortune added at request time."})
-
-		sort.Slice(fortunes, func(i, j int) bool {
-			return fortunes[i].Message < fortunes[j].Message
-		})
-
-		ctx.SetContentType("text/html; charset=utf-8")
-		templates.WriteFortunePage(ctx, fortunes)
-
-		fortunes = fortunes[:0]
-		templates.FortunesPool.Put(fortunes)
+		templates.ReleaseFortune(newFortune)
+		templates.ReleaseFortunes(fortunes)
 
 		return nil
 	}
 }
 
 // UpdateHandler . Test 5: Database updates
-func UpdateHandler(db storage.DB) func(ctx *atreugo.RequestCtx) error {
+func UpdateHandler(db storage.DB) atreugo.View {
 	return func(ctx *atreugo.RequestCtx) error {
 		queries := queriesParam(ctx)
-		var err error
-
-		worlds := storage.WorldsPool.Get().([]storage.World)[:queries]
+		worlds := storage.AcquireWorlds()[:queries]
 
 		for i := 0; i < queries; i++ {
-			if err = db.GetOneRandomWorld(&worlds[i]); err != nil {
-				log.Println(err)
+			w := &worlds[i]
+			if err := db.GetOneRandomWorld(w); err != nil {
+				return err
 			}
+			w.RandomNumber = int32(storage.RandomWorldNum())
 		}
 
-		if err = db.UpdateWorlds(worlds); err != nil {
+		if err := db.UpdateWorlds(worlds); err != nil {
 			return err
 		}
 
-		ctx.SetContentType("application/json")
-		worldsBytes, err := json.Marshal(worlds)
-		if err != nil {
-			return err
-		}
-		_, err = ctx.Write(worldsBytes)
+		err := ctx.JSONResponse(worlds)
 
-		worlds = worlds[:0]
-		storage.WorldsPool.Put(worlds)
+		storage.ReleaseWorlds(worlds)
 
 		return err
 	}
@@ -208,7 +157,5 @@ func UpdateHandler(db storage.DB) func(ctx *atreugo.RequestCtx) error {
 
 // PlaintextHandler . Test 6: Plaintext
 func PlaintextHandler(ctx *atreugo.RequestCtx) error {
-	ctx.SetContentType("text/plain")
-	_, err := ctx.WriteString("Hello, World!")
-	return err
+	return ctx.TextResponse(helloWorldStr)
 }

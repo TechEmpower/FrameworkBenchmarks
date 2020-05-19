@@ -13,7 +13,12 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.network "private_network", ip: "172.16.0.16"
-  config.vm.network :forwarded_port, guest: 8080, host: 28080
+
+  TCP_PORTS = [2001, 3000, 8000, 8080, 8081, 8082, 8085, 9000]
+
+  TCP_PORTS.each do |port|
+      config.vm.network :forwarded_port, guest: port, host: 20000 + port
+  end
 
   provision_bootstrap(config)
   provider_virtualbox(config)
@@ -24,5 +29,5 @@ Vagrant.configure("2") do |config|
   config.vm.provider "virtualbox" do |vb|
     vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
   end
-  
+
 end

@@ -23,7 +23,8 @@
         "database_os": "Linux",
         "display_name": "Angel (MongoDB)",
         "notes": "",
-        "versus": "dart"
+        "versus": "dart",
+        "tags": ["broken"]
       },
       "postgres": {
         "json_url": "/json",
@@ -46,7 +47,8 @@
         "database_os": "Linux",
         "display_name": "Angel (MongoDB)",
         "notes": "",
-        "versus": "dart"
+        "versus": "dart",
+        "tags": ["broken"]
       }
     }
   ]

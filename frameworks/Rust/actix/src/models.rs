@@ -1,10 +1,12 @@
+#![allow(dead_code)]
+
 #[derive(Serialize, Deserialize)]
 pub struct Message {
     pub message: &'static str,
 }
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Queryable)]
+#[derive(Serialize, Queryable, Debug)]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,

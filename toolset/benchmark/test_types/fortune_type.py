@@ -1,6 +1,6 @@
 from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
 from toolset.benchmark.fortune_html_parser import FortuneHTMLParser
-from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers
+from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers, verify_queries_count
 
 
 class FortuneTestType(FrameworkTestType):
@@ -10,7 +10,7 @@ class FortuneTestType(FrameworkTestType):
             'name': 'fortune',
             'accept_header': self.accept('html'),
             'requires_db': True,
-            'args': ['fortune_url']
+            'args': ['fortune_url','database']
         }
         FrameworkTestType.__init__(self, config, **kwargs)
 
@@ -23,6 +23,11 @@ class FortuneTestType(FrameworkTestType):
         FortuneHTMLParser whether the parsed string is a
         valid fortune response
         '''
+        # Initialization for query counting
+        repetitions = 1
+        concurrency = max(self.config.concurrency_levels)
+        expected_queries = repetitions * concurrency
+        expected_rows = 12 * expected_queries
 
         url = base_url + self.fortune_url
         headers, body = self.request_headers_and_body(url)
@@ -38,7 +43,8 @@ class FortuneTestType(FrameworkTestType):
 
         if valid:
             problems += verify_headers(self.request_headers_and_body, headers, url, should_be='html')
-
+            if len(problems) == 0:
+                problems += verify_queries_count(self, "fortune", url, concurrency, repetitions, expected_queries, expected_rows)
             if len(problems) == 0:
                 return [('pass', '', url)]
             else:
