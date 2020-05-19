@@ -5,6 +5,11 @@
     <OutputType>Exe</OutputType>
     <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <!-- Opt out of the "easy mode" of the CoreRT compiler (http://aka.ms/OptimizeCoreRT) -->
+    <RootAllApplicationAssemblies>false</RootAllApplicationAssemblies>
+    <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+    <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
   </PropertyGroup>
   
   <ItemGroup>
