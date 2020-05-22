@@ -133,7 +133,7 @@
         "versus": "go"
       },
       "quicktemplate": {
-        "fortune_url": "/fortune-quick",
+        "fortune_url": "/fortune",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",
@@ -151,7 +151,7 @@
         "versus": "go"
       },
       "prefork-quicktemplate": {
-        "fortune_url": "/fortune-quick",
+        "fortune_url": "/fortune",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",
