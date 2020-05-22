@@ -12,4 +12,4 @@ RUN go generate ./templates
 RUN easyjson -pkg
 RUN go build -ldflags="-s -w" -o app .
 
-CMD ./app -db pgx
+CMD ./app -db pgx -quicktemplate
