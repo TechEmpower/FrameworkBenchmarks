@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -qq -y update
 
-RUN apt-get -qq -y install --no-install-recommends git cmake libev-dev libgoogle-perftools-dev libfmt-dev make gcc-9 g++-9 libre2-dev libboost-stacktrace-dev
+RUN apt-get -qq -y install --no-install-recommends git cmake libev-dev libgoogle-perftools-dev libfmt-dev make gcc-9 g++-9 libre2-dev libboost-stacktrace-dev libhttp-parser-dev libxxhash-dev
 
 RUN   update-alternatives --quiet --remove-all gcc \
     ; update-alternatives --quiet --remove-all g++ \
@@ -27,9 +27,11 @@ WORKDIR /libsniper_bench
 
 RUN git config --global http.sslverify false
 
-RUN git clone https://gitlab.com/rtbtech/libs/libsniper.git libs/core
+ENV LIBSNIPER_VER v1.3.1
 
-RUN cd libs/core && git checkout 75f5cee4dcdc604d74703f5255e6f4cca20f50ce
+RUN git clone https://github.com/rtbtech/libsniper.git libs/core
+
+RUN cd libs/core && git checkout v1.3.1
 
 RUN mkdir build && cd /libsniper_bench/build && cmake -DCMAKE_BUILD_TYPE=Release -S .. && make --jobs=`nproc`
 

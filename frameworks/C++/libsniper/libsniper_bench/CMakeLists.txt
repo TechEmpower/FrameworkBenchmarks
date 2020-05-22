@@ -22,11 +22,11 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 find_package(Boost REQUIRED)
 find_package(Threads REQUIRED)
-find_package(fmt REQUIRED)
+find_package(TCMalloc REQUIRED)
 
 include_directories(SYSTEM ${BOOST_INCLUDE_DIRS})
 
-set(libsniper "std" "log" "cache" "xxhash" "net" "strings" "pico" "http" "event")
+set(RTBTECH_DEPS "http")
 
 add_subdirectory(libs)
 add_subdirectory(src)
