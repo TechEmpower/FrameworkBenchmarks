@@ -7,6 +7,7 @@ COPY apache apache
 COPY core core
 COPY jetty jetty
 COPY ktorcio ktorcio
+COPY ktornetty ktornetty
 COPY netty netty
 COPY undertow undertow
 RUN gradle --quiet build undertow:shadowJar

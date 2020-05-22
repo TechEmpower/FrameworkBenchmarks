@@ -15,7 +15,7 @@ import (
 )
 
 var bindHost, jsonEncoder, dbDriver, dbConnectionString string
-var prefork bool
+var prefork, useQuickTemplate bool
 
 func init() {
 	// init flags
@@ -24,6 +24,7 @@ func init() {
 	flag.StringVar(&jsonEncoder, "json_encoder", "none", "json encoder: none or easyjson or sjson")
 	flag.StringVar(&dbDriver, "db", "none", "db connection driver [values: none or pgx or mongo]")
 	flag.StringVar(&dbConnectionString, "db_connection_string", "", "db connection string")
+	flag.BoolVar(&useQuickTemplate, "quicktemplate", false, "use quicktemplate")
 
 	flag.Parse()
 }
@@ -58,7 +59,13 @@ func main() {
 	}
 
 	// init json encoders
-	var jsonHandler, dbHandler, queriesHandler, updateHandler fasthttp.RequestHandler
+	var jsonHandler, dbHandler, queriesHandler, updateHandler, fortuneHandler fasthttp.RequestHandler
+
+	if useQuickTemplate {
+		fortuneHandler = handlers.FortuneQuickHandler(db)
+	} else {
+		fortuneHandler = handlers.FortuneHandler(db)
+	}
 
 	switch jsonEncoder {
 	case "easyjson":
@@ -78,9 +85,6 @@ func main() {
 		updateHandler = handlers.UpdateHandler(db)
 	}
 
-	fortunesHandler := handlers.FortuneHandler(db)
-	fortunesQuickHandler := handlers.FortuneQuickHandler(db)
-
 	handler := func(ctx *fasthttp.RequestCtx) {
 		switch gotils.B2S(ctx.Path()) {
 		case "/plaintext":
@@ -92,9 +96,7 @@ func main() {
 		case "/queries":
 			queriesHandler(ctx)
 		case "/fortune":
-			fortunesHandler(ctx)
-		case "/fortune-quick":
-			fortunesQuickHandler(ctx)
+			fortuneHandler(ctx)
 		case "/update":
 			updateHandler(ctx)
 		default:
@@ -104,7 +106,7 @@ func main() {
 
 	server := &fasthttp.Server{
 		Handler: handler,
-		Name:    "go",
+		Name:    "Go",
 	}
 
 	if prefork {
