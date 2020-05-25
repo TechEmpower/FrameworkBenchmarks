@@ -11,7 +11,7 @@
   </tr>
   @for ((ForIterator i, Map fortune) : fortunes) {
     <tr>
-      <td>@fortune.get("id")</td>
+      <td>@raw(fortune.get("id"))</td>
       <td>@fortune.get("message")</td>
     </tr>
   }
