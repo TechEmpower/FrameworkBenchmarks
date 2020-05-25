@@ -13,6 +13,7 @@
     "@vertx/pg-client": "3.9.1"
   },
   "mvnDependencies": [
+    "com.ongres.scram:client:1.0.0-beta.2",
     "io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.49.Final",
     "com.fizzed:rocker-runtime:1.2.3",
     "com.google.guava:guava:19.0",

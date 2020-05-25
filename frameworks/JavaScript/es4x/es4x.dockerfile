@@ -3,10 +3,11 @@ FROM oracle/graalvm-ce:20.1.0
 RUN mkdir /app
 WORKDIR /app
 
-COPY ./ /app
-
+COPY ./package.json /app
 # Get dependencies
 RUN npm --unsafe-perm install
+# Copy the app
+COPY ./ /app
 # Compile the template
 RUN npm run template
 
