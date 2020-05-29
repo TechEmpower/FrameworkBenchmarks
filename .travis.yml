@@ -61,7 +61,7 @@ env:
     - "TESTLANG=Lua"
     - "TESTLANG=Nim"
     - "TESTLANG=Perl"
-    - 'TESTDIR="PHP/php"'
+    - 'TESTDIR="PHP/php PHP/comet"'
     - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/fat-free PHP/fuel PHP/kumbiaphp PHP/phpixie PHP/slim PHP/symfony PHP/yii2 PHP/zend PHP/spiral"'
     - 'TESTDIR="PHP/amp PHP/hhvm PHP/peachpie PHP/php-ngx PHP/workerman PHP/phalcon"'
     - 'TESTDIR="PHP/hamlet PHP/laravel PHP/lumen PHP/swoole PHP/ubiquity PHP/hyperf PHP/sw-fw-less PHP/imi PHP/simps"'
