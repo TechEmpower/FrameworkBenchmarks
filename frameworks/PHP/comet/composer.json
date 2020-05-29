@@ -1,0 +1,10 @@
+{
+	"require": {
+		"gotzmann/comet": "^0.6.2"
+	},
+    "autoload": {
+        "psr-4": {         
+            "App\\": "src/"
+        }
+    }
+}
