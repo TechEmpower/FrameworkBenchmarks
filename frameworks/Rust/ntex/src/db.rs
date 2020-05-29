@@ -5,7 +5,6 @@ use std::io;
 use bytes::{Bytes, BytesMut};
 use futures::stream::futures_unordered::FuturesUnordered;
 use futures::{Future, FutureExt, StreamExt, TryStreamExt};
-use fxhash::FxHashMap;
 use ntex::web::Error;
 use random_fast_rng::{FastRng, Random};
 use simd_json_derive::Serialize;
@@ -26,7 +25,7 @@ pub struct PgConnection {
     fortune: Statement,
     world: Statement,
     rng: RefCell<FastRng>,
-    updates: FxHashMap<u16, Statement>,
+    updates: Vec<Statement>,
 }
 
 impl PgConnection {
@@ -37,7 +36,7 @@ impl PgConnection {
         ntex::rt::spawn(conn.map(|_| ()));
 
         let fortune = cl.prepare("SELECT * FROM fortune").await.unwrap();
-        let mut updates = FxHashMap::default();
+        let mut updates = Vec::new();
         for num in 1..=500u16 {
             let mut pl: u16 = 1;
             let mut q = String::new();
@@ -53,7 +52,7 @@ impl PgConnection {
             }
             q.pop();
             q.push(')');
-            updates.insert(num, cl.prepare(&q).await.unwrap());
+            updates.push(cl.prepare(&q).await.unwrap());
         }
         let world = cl.prepare("SELECT * FROM world WHERE id=$1").await.unwrap();
 
@@ -141,7 +140,7 @@ impl PgConnection {
         }
 
         let cl = self.cl.clone();
-        let st = self.updates.get(&num).unwrap().clone();
+        let st = self.updates[(num as usize) - 1].clone();
         async move {
             let worlds: Vec<World> = worlds.try_collect().await?;
 
