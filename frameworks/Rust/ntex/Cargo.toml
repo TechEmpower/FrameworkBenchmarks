@@ -1,0 +1,43 @@
+[package]
+name = "ntex"
+version = "0.1.0"
+edition = "2018"
+
+[[bin]]
+name = "ntex"
+path = "src/main.rs"
+
+[[bin]]
+name = "ntex-db"
+path = "src/main_db.rs"
+
+[[bin]]
+name = "ntex-raw"
+path = "src/main_raw.rs"
+
+[dependencies]
+ntex = "0.1.18"
+snmalloc-rs = "0.2.6"
+markup = "0.4.1"
+yarte = "0.9.1"
+serde = "1.0"
+serde_derive = "1.0"
+env_logger = "0.7"
+random-fast-rng = "0.1.1"
+bytes = "0.5.3"
+atoi = "0.3.2"
+fxhash = "0.2.1"
+num_cpus = "1.0"
+futures = "0.3.1"
+http = "0.2"
+simd-json = "0.3.9"
+simd-json-derive = { git = "https://github.com/simd-lite/simd-json-derive.git" }
+log = { version = "0.4", features = ["release_max_level_off"] }
+v_htmlescape = "0.4.5"
+tokio = "=0.2.6"
+tokio-postgres = { git="https://github.com/fafhrd91/postgres.git" }
+
+[profile.release]
+lto = true
+opt-level = 3
+codegen-units = 1
