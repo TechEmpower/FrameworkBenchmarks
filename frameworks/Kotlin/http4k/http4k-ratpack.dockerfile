@@ -11,5 +11,5 @@ COPY ktornetty ktornetty
 COPY netty netty
 COPY ratpack ratpack
 COPY undertow undertow
-RUN gradle --quiet build ktorcio:shadowJar
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "ktorcio/build/libs/http4k-ktorcio-benchmark.jar"]
+RUN gradle --quiet build ratpack:shadowJar
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "ratpack/build/libs/http4k-ratpack-benchmark.jar"]
