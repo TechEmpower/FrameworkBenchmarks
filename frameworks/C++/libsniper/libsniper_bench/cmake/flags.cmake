@@ -1,5 +1,5 @@
 set(COMMON_FLAGS "\
-    -march=corei7-avx \
+    -march=native \
     -pipe \
     -m64 \
     -msse \

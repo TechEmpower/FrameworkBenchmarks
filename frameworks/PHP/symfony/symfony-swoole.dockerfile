@@ -19,7 +19,7 @@ ADD ./composer.json ./composer.lock /symfony/
 RUN mkdir -m 777 -p /symfony/var/cache/swoole /symfony/var/log
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts
 ADD . /symfony
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer require k911/swoole-bundle --no-scripts
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer require "k911/swoole-bundle:^0.7.8" --no-scripts
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --no-dev --classmap-authoritative
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env swoole
 
@@ -27,8 +27,8 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env swoole
 # see https://github.com/doctrine/dbal/issues/2315
 RUN sed -i '/PDO::ATTR_STATEMENT_CLASS/d' ./vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php
 
-ENV APP_DEBUG=0 \
-    APP_ENV=swoole
+# Force debug=0 because env is not "prod"
+ENV APP_DEBUG=0
 
 RUN php bin/console cache:clear
 RUN echo "opcache.preload=/symfony/var/cache/swoole/App_KernelSwooleContainer.preload.php" >> /usr/local/etc/php/php.ini

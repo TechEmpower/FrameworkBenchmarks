@@ -1,11 +1,10 @@
-CC     = gcc-6
-PROG   = libreactor
-OBJS   = src/setup.o src/main.o
-CFLAGS = -std=gnu11 -Wall -O3 -march=native -mtune=native -flto -fuse-linker-plugin -Isrc
-LDADD  = -lreactor -ldynamic -lclo
+PROG    = libreactor
+OBJS    = src/setup.o src/helpers.o src/main.o
+CFLAGS  = -std=gnu11 -Wall -Wextra -Wpedantic -O3 -g
+LDADD   = -lreactor -ldynamic -lclo -flto
 
 $(PROG): $(OBJS)
-	$(CC) -o $@ $^ $(CFLAGS) $(LDADD)
+	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS) $(LDADD)
 
 clean:
 	rm -f $(PROG) $(OBJS)

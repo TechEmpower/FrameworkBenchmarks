@@ -10,11 +10,10 @@ import (
 	"atreugo/src/storage"
 
 	"github.com/savsgio/atreugo/v11"
-	fastprefork "github.com/valyala/fasthttp/prefork"
 )
 
 var bindHost, jsonEncoder, dbDriver, dbConnectionString string
-var prefork bool
+var prefork, useQuickTemplate bool
 
 func init() {
 	// init flags
@@ -23,6 +22,7 @@ func init() {
 	flag.StringVar(&jsonEncoder, "json_encoder", "none", "json encoder: none, easyjson or sjson")
 	flag.StringVar(&dbDriver, "db", "none", "db connection driver [values: none or pgx or mongo]")
 	flag.StringVar(&dbConnectionString, "db_connection_string", "", "db connection string")
+	flag.BoolVar(&useQuickTemplate, "quicktemplate", false, "use quicktemplate")
 
 	flag.Parse()
 }
@@ -38,7 +38,7 @@ func numCPU() int {
 
 func main() {
 	maxConn := numCPU() * 4
-	if fastprefork.IsChild() {
+	if atreugo.IsPreforkChild() {
 		maxConn = numCPU()
 	}
 
@@ -61,6 +61,13 @@ func main() {
 	var dbHandler atreugo.View
 	var queriesHandler atreugo.View
 	var updateHandler atreugo.View
+	var fortuneHandler atreugo.View
+
+	if useQuickTemplate {
+		fortuneHandler = handlers.FortuneQuickHandler(db)
+	} else {
+		fortuneHandler = handlers.FortuneHandler(db)
+	}
 
 	switch jsonEncoder {
 	case "easyjson":
@@ -82,8 +89,9 @@ func main() {
 
 	// init atreugo server
 	server := atreugo.New(atreugo.Config{
-		Addr: bindHost,
-		Name: "Go",
+		Addr:    bindHost,
+		Name:    "Go",
+		Prefork: prefork,
 	})
 
 	// init handlers
@@ -91,23 +99,10 @@ func main() {
 	server.GET("/json", jsonHandler)
 	server.GET("/db", dbHandler)
 	server.GET("/queries", queriesHandler)
-	server.GET("/fortune", handlers.FortuneHandler(db))
-	server.GET("/fortune-quick", handlers.FortuneQuickHandler(db))
+	server.GET("/fortune", fortuneHandler)
 	server.GET("/update", updateHandler)
 
-	if prefork {
-		preforkServer := &fastprefork.Prefork{
-			RecoverThreshold: runtime.GOMAXPROCS(0) / 2,
-			ServeFunc:        server.Serve,
-		}
-
-		if err := preforkServer.ListenAndServe(bindHost); err != nil {
-			panic(err)
-		}
-
-	} else {
-		if err := server.ListenAndServe(); err != nil {
-			panic(err)
-		}
+	if err := server.ListenAndServe(); err != nil {
+		panic(err)
 	}
 }

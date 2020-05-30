@@ -5,7 +5,6 @@ set(PROJECT_LIBS
         ${CMAKE_THREAD_LIBS_INIT}
         ${BOOST_LIBRARIES}
         backtrace dl
-        fmt::fmt
         stdc++fs.a
         tcmalloc
         )

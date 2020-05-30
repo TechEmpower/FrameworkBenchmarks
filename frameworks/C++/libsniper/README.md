@@ -1,4 +1,4 @@
-# [libsniper](https://gitlab.com/rtbtech/libs/libsniper) (C++) Benchmarking Test
+# [libsniper](https://github.com/rtbtech/libsniper) (C++) Benchmarking Test
 
 ## Description
 
