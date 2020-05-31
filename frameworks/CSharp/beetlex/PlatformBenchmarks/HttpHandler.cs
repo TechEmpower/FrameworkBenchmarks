@@ -37,6 +37,8 @@ namespace PlatformBenchmarks
 
         private static readonly AsciiString _path_Plaintext = "/plaintext";
 
+        private static readonly AsciiString _path_Updates = "/updates";
+
         private static readonly AsciiString _path_Fortunes = "/fortunes";
 
         private static readonly AsciiString _result_plaintext = "Hello, World!";
@@ -203,6 +205,12 @@ namespace PlatformBenchmarks
                 stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
                 OnWriteContentLength(stream, token);
                 queries(Encoding.ASCII.GetString(queryString), stream, token, session);
+            }
+            else if (baseUrl.Length == _path_Updates.Length && baseUrl.StartsWith(_path_Updates))
+            {
+                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
+                OnWriteContentLength(stream, token);
+                updates(Encoding.ASCII.GetString(queryString), stream, token, session);
             }
             else if (baseUrl.Length == _path_Fortunes.Length && baseUrl.StartsWith(_path_Fortunes))
             {
