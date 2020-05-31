@@ -1,11 +1,13 @@
 module fasthttp/src
 
-go 1.13
+go 1.14
 
 require (
-	github.com/go-sql-driver/mysql v1.5.0
-	github.com/jackc/pgx/v4 v4.3.0
-	github.com/mailru/easyjson v0.7.0
-	github.com/valyala/fasthttp v1.8.0
-	github.com/valyala/quicktemplate v1.4.1
+	github.com/jackc/pgx/v4 v4.6.0
+	github.com/mailru/easyjson v0.7.1
+	github.com/savsgio/gotils v0.0.0-20200413113635-8c468ce75cca
+	github.com/tidwall/sjson v1.1.1
+	github.com/valyala/fasthttp v1.13.1
+	github.com/valyala/quicktemplate v1.5.0
+	go.mongodb.org/mongo-driver v1.3.3
 )

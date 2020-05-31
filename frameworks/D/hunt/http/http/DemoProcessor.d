@@ -5,7 +5,7 @@ module http.DemoProcessor;
 // import stdx.data.json;
 import std.json;
 
-import hunt.database;
+//import hunt.database;
 import hunt.io;
 import http.Processor;
 import http.HttpURI;
@@ -61,7 +61,7 @@ class DemoProcessor : HttpProcessor {
         } else {
             respondWith404();
         }
-        }    
+        }
     }
 
 
@@ -77,7 +77,7 @@ class DemoProcessor : HttpProcessor {
     version (POSTGRESQL) {
         private void handleDbUpdate(string url) {
             uri.parse(url);
-            
+
             switch(uri.getPath()) {
             case "/queries":
                 UrlEncoded queriesMap = new UrlEncoded();

@@ -1,4 +1,4 @@
-/// <reference types="@vertx/core/runtime" />
+/// <reference types="es4x" />
 // @ts-check
 
 import { Router } from '@vertx/web';
@@ -44,7 +44,7 @@ let connectOptions = new PgConnectOptions()
 
 // Pool options
 let poolOptions = new PoolOptions()
-  .setMaxSize(1);
+  .setMaxSize(4);
 
 // Create the client pool
 let client = PgPool.pool(vertx, connectOptions, poolOptions);
@@ -54,7 +54,7 @@ let client = PgPool.pool(vertx, connectOptions, poolOptions);
  * and database connection pool.
  */
 app.get("/db").handler(ctx => {
-  client.preparedQuery(SELECT_WORLD, Tuple.of(util.randomWorld()), res => {
+  client.preparedQuery(SELECT_WORLD).execute(Tuple.of(util.randomWorld()), res => {
     if (res.succeeded()) {
       let resultSet = res.result().iterator();
 
@@ -88,7 +88,7 @@ app.get("/queries").handler(ctx => {
   const queries = util.getQueries(ctx.request());
 
   for (let i = 0; i < queries; i++) {
-    client.preparedQuery(SELECT_WORLD, Tuple.of(util.randomWorld()), ar => {
+    client.preparedQuery(SELECT_WORLD).execute(Tuple.of(util.randomWorld()), ar => {
       if (!failed) {
         if (ar.failed()) {
           failed = true;
@@ -118,7 +118,7 @@ app.get("/queries").handler(ctx => {
  * XSS countermeasures, and character encoding.
  */
 app.get("/fortunes").handler(ctx => {
-  client.preparedQuery(SELECT_FORTUNE, ar => {
+  client.preparedQuery(SELECT_FORTUNE).execute(ar => {
 
     if (ar.failed()) {
       ctx.fail(ar.cause());
@@ -183,7 +183,7 @@ app.route("/updates").handler(ctx => {
     const id = util.randomWorld();
     const index = i;
 
-    client.preparedQuery(SELECT_WORLD, Tuple.of(id), ar => {
+    client.preparedQuery(SELECT_WORLD).execute(Tuple.of(id), ar => {
       if (!failed) {
         if (ar.failed()) {
           failed = true;
@@ -206,7 +206,7 @@ app.route("/updates").handler(ctx => {
             batch.push(Tuple.of(world.randomNumber, world.id));
           });
 
-          client.preparedBatch(UPDATE_WORLD, batch, ar => {
+          client.preparedQuery(UPDATE_WORLD).executeBatch(batch, ar => {
             if (ar.failed()) {
               ctx.fail(ar.cause());
               return;
@@ -246,6 +246,12 @@ app.get("/plaintext").handler(ctx => {
 vertx
   .createHttpServer()
   .requestHandler(app)
-  .listen(8080);
+  .listen(8080, listen => {
+    if (listen.failed()) {
+      console.trace(listen.cause());
+      System.exit(1);
+    } else {
+      console.log('Server listening at: http://0.0.0.0:8080/');
+    }
+  });
 
-console.log('Server listening at: http://localhost:8080/');

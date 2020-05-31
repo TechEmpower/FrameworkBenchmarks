@@ -14,4 +14,9 @@ class Fortune extends ActiveRecord
     {
         return 'fortune';
     }
+
+    public static function cmp(Fortune $left, Fortune $right): int
+    {
+        return \strcmp($left->message, $right->message);
+    }
 }

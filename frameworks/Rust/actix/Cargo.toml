@@ -31,8 +31,7 @@ actix-rt = "1.0.0"
 actix-codec = "0.2.0"
 actix-server = "1.0.0"
 actix-service = "1.0.1"
-jemallocator = "0.3.2"
-snmalloc-rs = "0.2.3"
+snmalloc-rs = "0.2.6"
 askama = "0.8"
 markup = "0.4.1"
 yarte = "0.3"
@@ -45,6 +44,8 @@ bytes = "0.5.3"
 num_cpus = "1.0"
 futures = "0.3.1"
 http = "0.2"
+simd-json = "0.3"
+simd-json-derive = { git = "https://github.com/simd-lite/simd-json-derive.git" }
 diesel = { version = "1.4.3", features = ["postgres"] }
 url = { version="1.7", features=["query_encoding"] }
 log = { version = "0.4", features = ["release_max_level_debug"] }

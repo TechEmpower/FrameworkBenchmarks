@@ -1,6 +1,6 @@
 FROM perl:5.26
 
-RUN apt update -yqq && apt install -yqq nginx
+RUN apt-get update -yqq && apt-get install -yqq nginx
 
 WORKDIR /kelp
 

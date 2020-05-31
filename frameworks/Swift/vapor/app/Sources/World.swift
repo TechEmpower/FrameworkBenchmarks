@@ -4,7 +4,7 @@ import Vapor
 final class World: Model, Content {
     static let schema = "World"
     
-    @ID(key: "id")
+    @ID(custom: "id")
     var id: Int32?
     
     @Field(key: "randomnumber")

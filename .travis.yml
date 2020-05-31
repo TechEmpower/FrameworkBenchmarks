@@ -25,6 +25,7 @@ env:
     - "TESTDIR=C++/wt"
     - "TESTDIR=C++/drogon"
     - "TESTDIR=C++/oatpp"
+    - "TESTDIR=C++/libsniper"
     - "TESTLANG=Clojure"
     - "TESTLANG=Crystal"
     - "TESTLANG=D"
@@ -36,6 +37,7 @@ env:
     - 'TESTDIR="Go/chi Go/gin Go/goji Go/aah Go/beego Go/echo Go/gnet"'
     - 'TESTDIR="Go/falcore Go/fiber Go/kami Go/martini Go/revel Go/webgo"'
     - 'TESTDIR="Go/evio Go/fasthttp Go/go-std Go/atreugo Go/gramework"'
+    - 'TESTDIR="Go/goframe"'
     - "TESTLANG=Groovy"
     - "TESTDIR=Haskell/snap"
     - "TESTDIR=Haskell/yesod"
@@ -49,7 +51,7 @@ env:
     - 'TESTDIR="Java/light-java Java/minijax Java/nanohttpd Java/netty Java/ninja-standalone Java/officefloor Java/proteus Java/quarkus"'
     - 'TESTDIR="Java/rapidoid Java/redkale Java/restexpress Java/revenj-jvm Java/servlet Java/servlet3 Java/smart-socket Java/spark"'
     - 'TESTDIR="Java/spring Java/spring-webflux Java/t-io Java/tapestry Java/undertow Java/undertow-jersey Java/vertx Java/vertx-web Java/simple-server"'
-    - 'TESTDIR="Java/javalin Java/jawn Java/ratpack Java/wizzardo-http"'
+    - 'TESTDIR="Java/javalin Java/jawn Java/ratpack Java/wizzardo-http Java/jersey"'
     - 'TESTDIR="Java/play1 Java/play2-java Java/wildfly-ee"'
     - 'TESTDIR="JavaScript/0http JavaScript/express JavaScript/fastify JavaScript/hapi JavaScript/koa"'
     - 'TESTDIR="JavaScript/nodejs JavaScript/polkadot JavaScript/restana JavaScript/restify JavaScript/sailsjs"'
@@ -62,7 +64,7 @@ env:
     - 'TESTDIR="PHP/php"'
     - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/fat-free PHP/fuel PHP/kumbiaphp PHP/phpixie PHP/slim PHP/symfony PHP/yii2 PHP/zend PHP/spiral"'
     - 'TESTDIR="PHP/amp PHP/hhvm PHP/peachpie PHP/php-ngx PHP/workerman PHP/phalcon"'
-    - 'TESTDIR="PHP/hamlet PHP/laravel PHP/lumen PHP/swoole PHP/ubiquity PHP/hyperf PHP/sw-fw-less PHP/imi"'
+    - 'TESTDIR="PHP/hamlet PHP/laravel PHP/lumen PHP/swoole PHP/ubiquity PHP/hyperf PHP/sw-fw-less PHP/imi PHP/simps"'
     - 'TESTDIR="Python/aiohttp Python/api_hour Python/apidaora Python/blacksheep Python/bottle Python/cherrypy Python/django Python/emmett Python/eve Python/falcon Python/fastapi Python/flask"'
     - 'TESTDIR="Python/hug Python/japronto Python/klein Python/morepath Python/pyramid Python/quart Python/responder Python/sanic Python/spyne Python/starlette"'
     - 'TESTDIR="Python/tornado Python/turbogears Python/uvicorn Python/uwsgi Python/vibora Python/web2py Python/webware Python/weppy Python/wsgi"'
@@ -72,6 +74,7 @@ env:
     - 'TESTDIR="Rust/may-minihttp Rust/nickel Rust/rocket"'
     - 'TESTDIR="Rust/rouille Rust/thruster Rust/tokio-minihttp"'
     - 'TESTDIR="Rust/warp-rust"'
+    - 'TESTDIR="Rust/roa"'
     - 'TESTDIR="Scala/akka-http Scala/blaze Scala/cask Scala/colossus Scala/finagle"'
     - 'TESTDIR="Scala/finatra Scala/finch Scala/http4s"'
     - 'TESTDIR="Scala/play2-scala Scala/scalene Scala/youi"'

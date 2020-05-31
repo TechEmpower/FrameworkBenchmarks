@@ -1,14 +1,15 @@
-FROM golang:1.13
+FROM golang:1.14
 
-ENV GO111MODULE on
 WORKDIR /fiber
 
 COPY ./src /fiber
 
-RUN go clean --modcache
+RUN go get github.com/valyala/quicktemplate/qtc
 
 RUN go mod download
 
-RUN go build -o server server.go
+RUN go generate ./templates
 
-CMD ./server -fiber-prefork
+RUN go build -ldflags="-s -w" -o server .
+
+CMD ./server -prefork

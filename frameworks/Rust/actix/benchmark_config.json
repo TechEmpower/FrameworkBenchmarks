@@ -2,8 +2,8 @@
   "framework": "actix",
   "tests": [{
     "default": {
-      "json_url": "/json",
-      "plaintext_url": "/plaintext",
+      "json_url": "/j",
+      "plaintext_url": "/p",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
@@ -20,8 +20,8 @@
       "versus": ""
     },
     "core": {
-      "fortune_url": "/fortune",
-      "db_url": "/db",
+      "fortune_url": "/f",
+      "db_url": "/d",
       "query_url": "/queries?q=",
       "update_url": "/updates?q=",
       "port": 8080,
@@ -40,8 +40,8 @@
       "versus": ""
     },
     "raw": {
-      "json_url": "/json",
-      "plaintext_url": "/plaintext",
+      "json_url": "/j",
+      "plaintext_url": "/p",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",

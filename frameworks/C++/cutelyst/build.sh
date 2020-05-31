@@ -2,8 +2,8 @@
 
 export CUTELYST_VER=2.4.1
 
-apt update -qq && \
-    apt install -yqq --no-install-recommends \
+apt-get update -qq && \
+    apt-get install -yqq --no-install-recommends \
     cmake \
     pkg-config \
     clearsilver-dev \

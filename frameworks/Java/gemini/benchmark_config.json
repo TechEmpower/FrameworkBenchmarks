@@ -3,7 +3,6 @@
   "tests": [
     {
       "default": {
-        "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
@@ -59,6 +58,24 @@
         "orm": "Micro",
         "platform": "Servlet",
         "webserver": "Resin",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Gemini",
+        "notes": "",
+        "versus": "servlet"
+      },
+      "firenio": {
+        "plaintext_url": "/test/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "None",
+        "framework": "Gemini",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "Firenio",
+        "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "Gemini",

@@ -1,17 +1,19 @@
 .PHONY: all
 
 CFLAGS = -mtune=native -march=native -O3 -fno-plt -flto -ffat-lto-objects -DNDEBUG \
+	-falign-functions=32 -malign-data=abi \
 	-include /lwan/build/lwan-build-config.h \
 	-I /lwan/src/lib \
 	`pkg-config mariadb --cflags` \
 	`pkg-config sqlite3 --cflags` \
+	`pkg-config luajit --cflags` \
 	-fauto-profile=/lwan/src/gcda/techempower.gcov
 
 LDFLAGS = -mtune=native -march=native -O3 -flto -ffat-lto-objects -Wl,-z,now,-z,relro \
-	/usr/local/lib/mimalloc-1.2/libmimalloc.a \
 	-Wl,-whole-archive /lwan/build/src/lib/liblwan.a -Wl,-no-whole-archive \
 	`pkg-config mariadb --libs` \
 	`pkg-config sqlite3 --libs` \
+	`pkg-config luajit --libs` \
 	-lpthread \
 	-lz
 

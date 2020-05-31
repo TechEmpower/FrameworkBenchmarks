@@ -10,37 +10,52 @@ import (
 	"strconv"
 	"sync"
 
+	"fiber/src/templates"
+
 	"github.com/gofiber/fiber"
 	pgx "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
+var (
+	child bool
+	db    *pgxpool.Pool
+)
+
+const (
+	queryparam       = "q"
+	worldcount       = 10000
+	helloworld       = "Hello, World!"
+	htmlutf8         = "text/html; charset=utf-8"
+	worldselectsql   = "SELECT id, randomNumber FROM World WHERE id = $1"
+	worldupdatesql   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
+	fortuneselectsql = "SELECT id, message FROM Fortune"
+)
+
 func main() {
+	for _, arg := range os.Args[1:] {
+		if arg == "-child" {
+			child = true
+		}
+	}
 
 	initDatabase()
 
-	app := fiber.New()
-	app.Settings.ServerHeader = "go"
+	app := fiber.New(&fiber.Settings{
+		CaseSensitive: true,
+		StrictRouting: true,
+		ServerHeader:  "go",
+	})
 
 	app.Get("/plaintext", plaintextHandler)
 	app.Get("/json", jsonHandler)
-	app.Get("/db", dbHandler)
 	app.Get("/queries", queriesHandler)
+	app.Get("/fortune", templateHandler)
+	app.Get("/db", dbHandler)
 	app.Get("/update", updateHandler)
 
 	app.Listen(8080)
 }
-
-const (
-	worldcount     = 10000
-	helloworld     = "Hello, World!"
-	worldselectsql = "SELECT id, randomNumber FROM World WHERE id = $1"
-	worldupdatesql = "UPDATE World SET randomNumber = $1 WHERE id = $2"
-)
-
-var (
-	db *pgxpool.Pool
-)
 
 // Message ...
 type Message struct {
@@ -52,7 +67,7 @@ type Worlds []World
 
 // World ...
 type World struct {
-	Id           int32 `json:"id"`
+	ID           int32 `json:"id"`
 	RandomNumber int32 `json:"randomNumber"`
 }
 
@@ -88,7 +103,7 @@ func AcquireWorld() *World {
 
 // ReleaseWorld ...
 func ReleaseWorld(w *World) {
-	w.Id = 0
+	w.ID = 0
 	w.RandomNumber = 0
 	WorldPool.Put(w)
 }
@@ -113,19 +128,14 @@ func ReleaseWorlds(w Worlds) {
 
 // initDatabase :
 func initDatabase() {
-	var child bool
-	for _, arg := range os.Args[1:] {
-		if arg == "-child" {
-			child = true
-		}
-	}
 	maxConn := runtime.NumCPU()
 	if maxConn == 0 {
 		maxConn = 8
 	}
-	maxConn = maxConn * 4
 	if child {
-		maxConn = runtime.NumCPU()
+		maxConn = maxConn
+	} else {
+		maxConn = maxConn * 4
 	}
 
 	var err error
@@ -146,9 +156,33 @@ func jsonHandler(c *fiber.Ctx) {
 // dbHandler :
 func dbHandler(c *fiber.Ctx) {
 	w := AcquireWorld()
-	db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.Id, &w.RandomNumber)
+	db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 	c.JSON(w)
 	ReleaseWorld(w)
+}
+
+// Frameworks/Go/fasthttp/src/server-postgresql/server.go#104
+func templateHandler(c *fiber.Ctx) {
+	rows, _ := db.Query(context.Background(), fortuneselectsql)
+
+	var f templates.Fortune
+	fortunes := make([]templates.Fortune, 0, 16)
+	for rows.Next() {
+		_ = rows.Scan(&f.ID, &f.Message)
+		fortunes = append(fortunes, f)
+	}
+	rows.Close()
+	fortunes = append(fortunes, templates.Fortune{
+		Message: "Additional fortune added at request time.",
+	})
+
+	sort.Slice(fortunes, func(i, j int) bool {
+		return fortunes[i].Message < fortunes[j].Message
+	})
+
+	c.Set(fiber.HeaderContentType, htmlutf8)
+
+	templates.WriteFortunePage(c.Fasthttp, fortunes)
 }
 
 // queriesHandler :
@@ -157,7 +191,7 @@ func queriesHandler(c *fiber.Ctx) {
 	worlds := AcquireWorlds()[:n]
 	for i := 0; i < n; i++ {
 		w := &worlds[i]
-		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.Id, &w.RandomNumber)
+		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 	}
 	c.JSON(Worlds(worlds))
 	ReleaseWorlds(worlds)
@@ -169,17 +203,17 @@ func updateHandler(c *fiber.Ctx) {
 	worlds := AcquireWorlds()[:n]
 	for i := 0; i < n; i++ {
 		w := &worlds[i]
-		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.Id, &w.RandomNumber)
+		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 		w.RandomNumber = int32(RandomWorld())
 	}
 	// sorting is required for insert deadlock prevention.
 	sort.Slice(worlds, func(i, j int) bool {
-		return worlds[i].Id < worlds[j].Id
+		return worlds[i].ID < worlds[j].ID
 	})
 
 	batch := pgx.Batch{}
 	for _, w := range worlds {
-		batch.Queue(worldupdatesql, w.RandomNumber, w.Id)
+		batch.Queue(worldupdatesql, w.RandomNumber, w.ID)
 	}
 	db.SendBatch(context.Background(), &batch).Close()
 	c.JSON(Worlds(worlds))
@@ -198,7 +232,7 @@ func RandomWorld() int {
 
 // QueriesCount :
 func QueriesCount(c *fiber.Ctx) int {
-	n, _ := strconv.Atoi(c.Query("queries"))
+	n, _ := strconv.Atoi(c.Query(queryparam))
 	if n < 1 {
 		n = 1
 	} else if n > 500 {

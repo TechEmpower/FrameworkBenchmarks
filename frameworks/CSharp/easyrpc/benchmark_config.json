@@ -1,0 +1,26 @@
+{
+  "framework": "easyrpc",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "postgres",
+        "framework": "EasyRpc",
+        "language": "C#",
+        "flavor": "CoreCLR",
+        "orm": "Raw",
+        "platform": ".Net",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "EasyRpc",
+        "notes": "",
+        "versus": "aspcore"
+      }
+    }
+  ]
+}

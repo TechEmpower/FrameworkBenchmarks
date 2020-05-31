@@ -2,7 +2,7 @@ FROM ruby:2.6
 
 ADD ./h2o.conf ./
 
-RUN apt update && apt install -yqq bison cmake libssl-dev make
+RUN apt-get update && apt-get install -yqq bison cmake libssl-dev make
 
 ENV H2O_VERSION=2.3.0-beta2
 ENV H2O_ARCHIVE="v${H2O_VERSION}.tar.gz"

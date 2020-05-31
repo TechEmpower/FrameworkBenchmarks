@@ -9,7 +9,6 @@
 	<packaging>pom</packaging>
 	<name>OfficeFloor Benchmarks</name>
 	<properties>
-		<officefloor.version>3.20.0</officefloor.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,7 +34,7 @@
 			<dependency>
 				<groupId>net.officefloor</groupId>
 				<artifactId>bom</artifactId>
-				<version>${officefloor.version}</version>
+				<version>3.22.0</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

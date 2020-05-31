@@ -1,8 +1,7 @@
-
 #
 # BUILD
 #
-FROM gradle:5.5.1-jdk11 AS gradle_build
+FROM gradle:6.4-jdk11 AS gradle_build
 USER root
 WORKDIR /hexagon
 
@@ -14,10 +13,10 @@ RUN gradle --quiet --exclude-task test
 #
 # RUNTIME
 #
-FROM openjdk:11.0.3-jre-stretch
+FROM openjdk:11.0.7-jre-buster
 ENV DBSTORE postgresql
 ENV POSTGRESQL_DB_HOST tfb-database
-ENV RESIN http://caucho.com/download/resin-4.0.61.tar.gz
+ENV RESIN http://caucho.com/download/resin-4.0.64.tar.gz
 
 WORKDIR /resin
 RUN curl -sL $RESIN | tar xz --strip-components=1
