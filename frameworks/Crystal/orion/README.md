@@ -16,7 +16,6 @@ Orion is a powerful, simple, rails-esque routing library for HTTP::Server
 * [UPDATE](orion.cr)
 * [FORTUNES](orion.cr)
 
-
 ## Test URLs
 ### JSON
 
