@@ -21,10 +21,10 @@ function query() {
   // For each query, store the result set values in the response array
   while ($query_count--) {
     $id = mt_rand(1, 10000);
-    $result = mysql_query("SELECT randomNumber FROM World WHERE id=$id", $link);
+    $result = mysql_query("SELECT id,randomNumber FROM World WHERE id=$id", $link);
 
     // Store result in array.
-    $arr[] = ['id' => $id, 'randomNumber' => mysql_result($result, 0, 0)];
+    $arr[] = ['id' => $id, 'randomNumber' => mysql_result($result, 0, 1)];
   }
 
   mysql_close($link);

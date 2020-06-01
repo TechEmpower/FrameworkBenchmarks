@@ -13,10 +13,10 @@ function db() {
   mysql_select_db('hello_world', $link);
 
   $id = mt_rand(1, 10000);
-  $result = mysql_query("SELECT randomNumber FROM World WHERE id=$id", $link);
+  $result = mysql_query("SELECT id,randomNumber FROM World WHERE id=$id", $link);
 
   // Store result in array.
-  echo json_encode( ['id' => $id, 'randomNumber' => mysql_result($result, 0, 0)] );
+  echo json_encode( ['id' => $id, 'randomNumber' => mysql_result($result, 0, 1)] );
 
   mysql_close($link);
 }
