@@ -16,7 +16,7 @@ function db() {
   $result = mysql_query("SELECT id,randomNumber FROM World WHERE id=$id", $link);
 
   // Store result in array.
-  echo json_encode( ['id' => $id, 'randomNumber' => mysql_result($result, 0, 1)] );
+  echo json_encode( mysql_fetch_assoc($result) );
 
   mysql_close($link);
 }

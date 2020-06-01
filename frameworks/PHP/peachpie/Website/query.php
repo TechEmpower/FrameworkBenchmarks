@@ -24,7 +24,7 @@ function query() {
     $result = mysql_query("SELECT id,randomNumber FROM World WHERE id=$id", $link);
 
     // Store result in array.
-    $arr[] = ['id' => $id, 'randomNumber' => mysql_result($result, 0, 1)];
+    $arr[] = mysql_fetch_assoc($result);
   }
 
   mysql_close($link);
