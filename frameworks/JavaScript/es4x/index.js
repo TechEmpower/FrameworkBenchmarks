@@ -44,7 +44,7 @@ let connectOptions = new PgConnectOptions()
 
 // Pool options
 let poolOptions = new PoolOptions()
-  .setMaxSize(4);
+  .setMaxSize(1);
 
 // Create the client pool
 let client = PgPool.pool(vertx, connectOptions, poolOptions);
