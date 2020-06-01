@@ -2,7 +2,7 @@
   "framework": "php-ngx",
   "tests": [{
     "default": {
-      "plaintext_url": "/hello",
+      "plaintext_url": "/plaintext",
       "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
