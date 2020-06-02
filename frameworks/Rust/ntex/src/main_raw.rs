@@ -15,10 +15,10 @@ use simd_json_derive::Serialize;
 
 mod utils;
 
-const JSON: &[u8] = b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
-const PLAIN: &[u8] = b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
+const JSON: &[u8] = b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
+const PLAIN: &[u8] = b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
 const HTTPNFOUND: &[u8] = b"HTTP/1.1 400 OK\r\n";
-const HDR_SERVER: &[u8] = b"Server: A\r\n";
+const HDR_SERVER: &[u8] = b"Server: N\r\n";
 const BODY: &[u8] = b"Hello, World!";
 
 #[derive(Serialize)]
@@ -36,7 +36,7 @@ struct App {
 impl App {
     fn handle_request(&mut self, req: Request) {
         match req.path() {
-            "/j" => {
+            "/json" => {
                 let message = Message {
                     message: "Hello, World!",
                 };

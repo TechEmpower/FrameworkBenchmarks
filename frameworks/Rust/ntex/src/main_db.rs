@@ -42,7 +42,7 @@ impl Service for App {
     fn call(&self, req: Request) -> Self::Future {
         let path = req.path();
         match path {
-            "/d" => {
+            "/db" => {
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
                 let fut = self.db.get_world();
@@ -56,7 +56,7 @@ impl Service for App {
                     Ok(res)
                 })
             }
-            "/f" => {
+            "/fortune" => {
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_cthtml.clone();
                 let fut = self.db.tell_fortune();
@@ -74,7 +74,7 @@ impl Service for App {
                     Ok(res)
                 })
             }
-            "/q" => {
+            "/query" => {
                 let q = utils::get_query_param(req.uri().query().unwrap_or("")) as usize;
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
@@ -92,7 +92,7 @@ impl Service for App {
                     Ok(res)
                 })
             }
-            "/u" => {
+            "/update" => {
                 let q = utils::get_query_param(req.uri().query().unwrap_or(""));
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
@@ -135,7 +135,7 @@ impl ServiceFactory for AppFactory {
             let db = PgConnection::connect(DB_URL).await;
             Ok(App {
                 db,
-                hdr_srv: HeaderValue::from_static("Actix"),
+                hdr_srv: HeaderValue::from_static("N"),
                 hdr_ctjson: HeaderValue::from_static("application/json"),
                 hdr_cthtml: HeaderValue::from_static("text/html; charset=utf-8"),
             })

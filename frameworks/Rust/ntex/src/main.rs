@@ -26,7 +26,7 @@ async fn json() -> web::HttpResponse {
     );
     res.headers_mut().insert(
         http::header::SERVER,
-        http::header::HeaderValue::from_static("A"),
+        http::header::HeaderValue::from_static("N"),
     );
     res.headers_mut().insert(
         http::header::CONTENT_TYPE,
@@ -42,7 +42,7 @@ async fn plaintext() -> web::HttpResponse {
     );
     res.headers_mut().insert(
         http::header::SERVER,
-        http::header::HeaderValue::from_static("A"),
+        http::header::HeaderValue::from_static("N"),
     );
     res.headers_mut().insert(
         http::header::CONTENT_TYPE,
@@ -64,7 +64,7 @@ async fn main() -> std::io::Result<()> {
                 .client_timeout(0)
                 .h1(ntex::map_config(
                     web::App::new()
-                        .service(web::resource("/j").to(json))
+                        .service(web::resource("/json").to(json))
                         .service(web::resource("/plaintext").to(plaintext)),
                     |_| web::dev::AppConfig::default(),
                 ))

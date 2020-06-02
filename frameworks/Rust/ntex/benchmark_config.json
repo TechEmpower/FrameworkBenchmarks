@@ -2,7 +2,7 @@
   "framework": "ntex",
   "tests": [{
     "default": {
-      "json_url": "/j",
+      "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
@@ -20,10 +20,10 @@
       "versus": ""
     },
     "db": {
-      "fortune_url": "/f",
-      "db_url": "/d",
-      "query_url": "/q?q=",
-      "update_url": "/u?q=",
+      "fortune_url": "/fortune",
+      "db_url": "/db",
+      "query_url": "/query?q=",
+      "update_url": "/update?q=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -40,7 +40,7 @@
       "versus": ""
     },
     "raw": {
-      "json_url": "/j",
+      "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
