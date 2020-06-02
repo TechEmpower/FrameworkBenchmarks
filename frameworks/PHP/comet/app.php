@@ -12,14 +12,17 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 // TODO Use Timer to setup Date header once per second!
 
-ORM::init();
-
 $app = new Comet([
     'host' => '0.0.0.0',
     'port' => 8080,
     'debug' => false,
     'logger' => null,
 ]);
+
+$app->init(
+    function() {
+        ORM::init();	
+});
 
 // #1 Plaintext
 $app->get('/plaintext',

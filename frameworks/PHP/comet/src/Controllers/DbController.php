@@ -11,7 +11,6 @@ class DbController
 {
     public function __invoke(Request $request, Response $response, $args)    
     {
-
     	ORM::$statement->execute([mt_rand(1, 10000)]);
 
     	return $response
