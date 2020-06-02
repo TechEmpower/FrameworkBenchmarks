@@ -1,6 +1,6 @@
 {
 	"require": {
-		"gotzmann/comet": "^0.6.4"
+		"gotzmann/comet": "^0.6.5"
 	},
     "autoload": {
         "psr-4": {         

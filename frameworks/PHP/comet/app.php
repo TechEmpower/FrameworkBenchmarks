@@ -28,7 +28,7 @@ $app->init(
 $app->get('/plaintext',
     function ($request, $response) {        
         return $response
-            ->with('Hello, World!')
+            ->withText('Hello, World!')
             ->withHeader('Date', gmdate('D, d M Y H:i:s') . ' GMT');
 });
 
