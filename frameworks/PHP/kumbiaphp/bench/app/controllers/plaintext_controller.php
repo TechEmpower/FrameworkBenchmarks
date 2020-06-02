@@ -4,7 +4,7 @@
  * Controller por defecto si no se usa el routes
  *
  */
-class IndexController extends AppController
+class PlaintextController extends AppController
 {
 
     public function index()
