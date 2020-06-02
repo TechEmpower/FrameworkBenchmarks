@@ -17,7 +17,7 @@ COPY php.ini /etc/php/7.4/cli/php.ini
 ADD ./ /comet
 WORKDIR /comet
 
-RUN sed -i "s|PDO('pgsql:|PDO('mysql:|g" src/ORM.php
+RUN sed -i "s|pgsql|mysql|g" src/ORM.php
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
