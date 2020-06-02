@@ -11,7 +11,7 @@ RUN echo 'APT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/00-genera
 
 FROM debian AS racket
 
-ARG RACKET_VERSION=7.6
+ARG RACKET_VERSION=7.7
 
 RUN apt-get update -q \
     && apt-get install --no-install-recommends -q -y \
@@ -28,11 +28,12 @@ ENV SSL_CERT_DIR="/etc/ssl/certs"
 
 FROM racket AS builder
 
+RUN raco pkg install --auto compiler-lib db-lib threading-lib web-server-lib
+
 WORKDIR /racket
 ADD  . .
 
-RUN raco pkg install --auto compiler-lib db-lib threading-lib web-server-lib \
-  && raco make servlet.rkt \
+RUN raco make servlet.rkt \
   && raco exe servlet.rkt
 
 
