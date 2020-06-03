@@ -25,6 +25,9 @@ RUN apt-get update -q \
 ENV SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
 ENV SSL_CERT_DIR="/etc/ssl/certs"
 
+RUN apt-get update -q \
+  && apt-get install --no-install-recommends -q -y nginx
+
 
 FROM racket AS builder
 
@@ -41,11 +44,9 @@ FROM racket
 
 WORKDIR /racket
 COPY --from=builder /racket/servlet .
-
-RUN ["chmod", "+x", "./servlet"]
+ADD config config
+ADD scripts scripts
 
 EXPOSE 8080
 
-ENV PLT_INCREMENTAL_GC=1
-
-CMD ["/racket/servlet"]
+CMD ["/racket/scripts/run"]

@@ -11,7 +11,7 @@
 
 ;; db ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define max-db-conns 1024)
+(define max-db-conns 128)
 (define db-conn-pool
   (connection-pool
    #:max-connections max-db-conns
@@ -218,21 +218,40 @@
 
 (module+ main
   (require racket/async-channel
+           racket/cmdline
+           racket/format
            web-server/http/response
+           web-server/safety-limits
            web-server/web-server)
+
+  (define port
+    (command-line
+     #:args (port)
+     (string->number port)))
+
+  (define (app c req)
+    (output-response c (dispatch req)))
 
   (define ch (make-async-channel))
   (define stop
     (serve
+     #:dispatch app
+     #:listen-ip "127.0.0.1"
+     #:port port
      #:confirmation-channel ch
-     #:dispatch (lambda (conn req)
-                  (output-response conn (dispatch req)))
-     #:listen-ip "0.0.0.0"
-     #:port 8080))
+     #:safety-limits (make-safety-limits
+                      #:max-waiting 4096
+                      #:request-read-timeout 16
+                      #:response-timeout 16
+                      #:response-send-timeout 16)))
 
   (define ready-or-exn (sync ch))
   (when (exn:fail? ready-or-exn)
     (raise ready-or-exn))
+
+  (call-with-output-file (build-path (~a port ".ready"))
+    (lambda (out)
+      (displayln "ready" out)))
 
   (with-handlers ([exn:break?
                    (lambda (_e)
