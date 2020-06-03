@@ -18,7 +18,7 @@ RUN apt-get update -q \
          ca-certificates curl libcurl3-gnutls \
     && rm -rf /var/lib/apt/lists/* \
     && curl -L -o racket-install.sh \
-         -O http://mirror.racket-lang.org/installers/${RACKET_VERSION}/racket-minimal-${RACKET_VERSION}-x86_64-linux-natipkg.sh \
+         -O http://mirror.racket-lang.org/installers/${RACKET_VERSION}/racket-minimal-${RACKET_VERSION}-x86_64-linux-cs.sh \
     && echo "yes\n1\n" | sh racket-install.sh --create-dir --unix-style --dest /usr/ \
     && rm racket-install.sh
 
