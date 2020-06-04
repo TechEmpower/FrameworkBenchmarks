@@ -4,7 +4,7 @@ use std::{cmp, io};
 use atoi::FromRadix10;
 use bytes::BytesMut;
 use serde_derive::Serialize;
-use yarte::Template;
+use yarte::TemplateFixed;
 
 #[allow(non_snake_case)]
 #[derive(Serialize, Debug)]
@@ -58,7 +58,7 @@ markup::define! {
     }
 }
 
-#[derive(Template)]
+#[derive(TemplateFixed)]
 #[template(path = "fortune.hbs")]
 pub struct FortunesYarteTemplate {
     pub fortunes: Vec<Fortune>,

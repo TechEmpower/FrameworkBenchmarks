@@ -2,7 +2,6 @@
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 use std::future::Future;
-use std::io::Write;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
@@ -14,12 +13,13 @@ use ntex::http::{HttpService, KeepAlive, Request, Response, StatusCode};
 use ntex::service::{Service, ServiceFactory};
 use ntex::web::Error;
 use simd_json_derive::Serialize;
+use yarte::TemplateFixed;
 
 mod db;
 mod utils;
 
 use crate::db::PgConnection;
-use crate::utils::{FortunesTemplate, Writer};
+use crate::utils::{FortunesYarteTemplate, Writer};
 
 struct App {
     db: PgConnection,
@@ -64,8 +64,15 @@ impl Service for App {
                 Box::pin(async move {
                     let fortunes = fut.await?;
                     let mut body = BytesMut::with_capacity(2048);
-                    let mut writer = Writer(&mut body);
-                    let _ = write!(writer, "{}", FortunesTemplate { fortunes });
+                    unsafe {
+                        // Maybe uninit
+                        body.set_len(2048);
+                        // Before buffer overruns return `None`
+                        let size = FortunesYarteTemplate { fortunes }.call(body.as_mut()).unwrap();
+                        // Bound to init data
+                        body.set_len(size)
+                    };
+
                     let mut res =
                         Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
                     let hdrs = res.headers_mut();
