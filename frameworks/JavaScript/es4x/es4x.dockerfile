@@ -24,6 +24,7 @@ CMD java \
     -Dvertx.threadChecks=false                          \
     -Dvertx.disableContextTimings=true                  \
     -Dvertx.disableTCCL=true                            \
+    -Dvertx.disableHttpHeadersValidation=true           \
     -jar node_modules/.bin/es4x-launcher.jar            \
     --instances `grep --count ^processor /proc/cpuinfo` \
     --options vertx.json
