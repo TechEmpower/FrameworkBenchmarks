@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace PeachpieBenchmarks.Server
@@ -16,8 +17,15 @@ namespace PeachpieBenchmarks.Server
             ThreadPool.GetMinThreads(out int workerThread, out int completionThread);
             ThreadPool.SetMinThreads(workerThread * 2, completionThread);
 
+            // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview
+
             new WebHostBuilder()
-                .UseKestrel()
+                .UseKestrel(options =>
+                {
+                    options.AddServerHeader = true; // tfb requires "Server" header
+                    //options.Limits.KeepAliveTimeout = Timeout.InfiniteTimeSpan; // default 2:00
+                    //options.Limits.MaxConcurrentConnections = 1000;
+                })
                 .UseUrls("http://*:8080/")
                 .UseStartup<Startup>()
                 .Build()
@@ -27,6 +35,15 @@ namespace PeachpieBenchmarks.Server
 	
 	class Startup
     {
+        public void ConfigureServices(IServiceCollection services)
+        {
+            // disable timeout
+            services.AddPhp(options =>
+            {
+                options.Core.ExecutionTimeout = -1;
+            });
+        }
+
         public void Configure(IApplicationBuilder app)
         {
             //// disable response buffering and chunked transfer
