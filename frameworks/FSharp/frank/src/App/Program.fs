@@ -5,6 +5,7 @@ open System.IO
 open System.Threading.Tasks
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Http
+open Microsoft.Extensions.Logging
 open Dapper
 open Frank.Builder
 open FSharp.Control.Tasks
@@ -12,9 +13,8 @@ open Npgsql
 open App
 open Models
 
-let private DefaultCapacity = 1386
+let [<Literal>] private DefaultCapacity = 1386
 let private MaxBuilderSize = DefaultCapacity * 3
-let private BufferSize = 27
 
 type MemoryStreamCache = 
     
@@ -45,8 +45,8 @@ type MemoryStreamCache =
 let inline contentLength x = new Nullable<int64> ( int64 x )
 
 let json' data : HttpContext -> Task<unit> =
-    let bytes = Utf8Json.JsonSerializer.Serialize(data)
-    fun ctx -> 
+    fun ctx ->
+        let bytes = Utf8Json.JsonSerializer.Serialize(data)
         ctx.Response.ContentLength <- contentLength bytes.Length
         ctx.Response.ContentType <- "application/json"
         ctx.Response.StatusCode <- 200
@@ -115,12 +115,13 @@ let fortunes =
 
 [<EntryPoint>]
 let main args = 
-    let builder =
-        webHost (Microsoft.AspNetCore.Hosting.WebHostBuilder().UseKestrel()) {
-            resource plaintext
-            resource json
-            resource fortunes
-        }
-    let host = builder.Build()
-    host.Run()
+    webHost args {
+        useDefaults
+        configure (fun bldr ->
+            bldr.ConfigureLogging(fun c -> c.ClearProviders() |> ignore)
+                .UseKestrel(fun c -> c.AddServerHeader <- false))
+        resource plaintext
+        resource json
+        resource fortunes
+    }
     0
