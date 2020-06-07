@@ -236,7 +236,7 @@
   (define stop
     (serve
      #:dispatch app
-     #:listen-ip "127.0.0.1"
+     #:listen-ip "0.0.0.0"
      #:port port
      #:confirmation-channel ch
      #:safety-limits (make-safety-limits
