@@ -14,7 +14,7 @@ RUN ./install_ffead-cpp-dependencies.sh
 
 WORKDIR /
 
-RUN ./install_ffead-cpp-framework.sh
+RUN ./install_ffead-cpp-framework.sh cinatra
 
 WORKDIR /
 
@@ -26,4 +26,4 @@ RUN ./install_ffead-cpp-nginx.sh
 
 WORKDIR /
 
-CMD ./run_ffead.sh ffead-cpp-4.0-sql nginx postgresql
+CMD ./run_ffead.sh ffead-cpp-4.0 cinatra

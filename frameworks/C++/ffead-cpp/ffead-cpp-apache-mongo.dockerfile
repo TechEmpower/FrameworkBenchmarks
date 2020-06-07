@@ -1,8 +1,6 @@
 FROM buildpack-deps:bionic
 
 ENV IROOT=/installs
-ENV FFEAD_CPP_PATH=${IROOT}/ffead-cpp-3.0
-ENV PATH=${FFEAD_CPP_PATH}:${PATH}
 
 RUN mkdir /installs
 
@@ -28,4 +26,4 @@ RUN ./install_ffead-cpp-nginx.sh
 
 WORKDIR /
 
-CMD ./run_ffead.sh apache mongo
+CMD ./run_ffead.sh ffead-cpp-4.0 apache mongo
