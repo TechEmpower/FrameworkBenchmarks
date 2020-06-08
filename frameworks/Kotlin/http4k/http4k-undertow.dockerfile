@@ -9,6 +9,7 @@ COPY jetty jetty
 COPY ktorcio ktorcio
 COPY ktornetty ktornetty
 COPY netty netty
+COPY ratpack ratpack
 COPY undertow undertow
 RUN gradle --quiet build undertow:shadowJar
 CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "undertow/build/libs/http4k-undertow-benchmark.jar"]
