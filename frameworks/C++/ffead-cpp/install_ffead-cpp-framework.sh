@@ -38,13 +38,11 @@ then
 	apt install -y libjsoncpp-dev uuid-dev
 	apt remove -y libsqlite3-dev
 	SRV_TYPE=SRV_DROGON
-	git clone --recurse-submodules https://github.com/an-tao/drogon
+	git clone --recurse-submodules https://github.com/sumeetchhetri/drogon
 	cd  drogon
-	git checkout v1.0.0-beta17
-	git checkout -b v1.0.0-beta17
 	mkdir build
 	cd build
-	cmake ..
+	cmake -DCMAKE_BUILD_TYPE=Release ..
 	make && make install
 fi
 

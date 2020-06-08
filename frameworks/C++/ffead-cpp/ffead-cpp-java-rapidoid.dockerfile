@@ -34,7 +34,7 @@ RUN ldconfig
 
 RUN apt install -y default-jre maven
 WORKDIR ${IROOT}/lang-server-backends/java/rapidoid
-RUN mvn package -q && cp target/rapidoid-ffead-cpp-0.1-jar-with-dependencies.jar $IROOT/
+RUN mvn package -q && cp target/rapidoid-ffead-cpp-1.0-jar-with-dependencies.jar $IROOT/
 
 WORKDIR /
 
