@@ -102,6 +102,11 @@ fi
 
 if [ "$2" = "apache" ]
 then
+	if [ "$3" = "mysql" ] || [ "$3" = "postgresql" ]
+	then
+		sed -i 's|/installs/ffead-cpp-4.0|'/installs/ffead-cpp-4.0-sql'|g' /etc/apache2/apache2.conf
+		sed -i 's|/installs/ffead-cpp-4.0|'/installs/ffead-cpp-4.0-sql'|g' /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/ffead-site.conf
+	fi
 	sed -i 's|<pool-size>30</pool-size>|<pool-size>3</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um/config/sdorm.xml
 	sed -i 's|<pool-size>10</pool-size>|<pool-size>2</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um/config/cache.xml
 	apachectl -D FOREGROUND
@@ -109,6 +114,10 @@ fi
 
 if [ "$2" = "nginx" ]
 then
+	if [ "$3" = "mysql" ] || [ "$3" = "postgresql" ]
+	then
+		sed -i 's|/installs/ffead-cpp-4.0/|'/installs/ffead-cpp-4.0-sql/'|g' ${IROOT}/nginxfc/conf/nginx.conf
+	fi
 	sed -i 's|<pool-size>30</pool-size>|<pool-size>3</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um/config/sdorm.xml
 	sed -i 's|<pool-size>10</pool-size>|<pool-size>2</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um/config/cache.xml
 	nginx -g 'daemon off;'
@@ -199,3 +208,4 @@ then
 fi
 
 wait
+
