@@ -219,7 +219,7 @@
 			"wait_before_sending_requests": 10,
 			"tags": []
 		},
-		"apache": {
+		"apache-mongo": {
 			"json_url": "/te-benchmark-um/json",
 			"plaintext_url": "/te-benchmark-um/plaintext",
 			"port": 8080,

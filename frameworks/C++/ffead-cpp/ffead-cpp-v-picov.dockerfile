@@ -37,7 +37,7 @@ RUN apt update -y && apt install -y git
 RUN git clone https://github.com/vlang/v
 WORKDIR ${IROOT}/v
 RUN make && ./v symlink
-WORKDIR ${IROOT}/lang-server-backends/v/vweb
+WORKDIR ${IROOT}/lang-server-backends/v/pico.v
 RUN chmod +x *.sh && ./build.sh && cp main $IROOT/
 
 WORKDIR /
