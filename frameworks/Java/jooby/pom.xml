@@ -11,10 +11,10 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>2.8.4</jooby.version>
+    <jooby.version>2.8.5</jooby.version>
     <!-- downgrade netty and make pg-client happy -->
     <netty.version>4.1.34.Final</netty.version>
-    <postgresql.version>42.2.5</postgresql.version>
+    <postgresql.version>42.2.13</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
@@ -79,7 +79,7 @@
       <plugin>
         <groupId>com.fizzed</groupId>
         <artifactId>rocker-maven-plugin</artifactId>
-        <version>1.2.3</version>
+        <version>1.3.0</version>
         <executions>
           <execution>
             <id>generate-rocker-templates</id>
@@ -113,7 +113,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.2</version>
+        <version>3.2.4</version>
         <executions>
           <execution>
             <id>uber-jar</id>
