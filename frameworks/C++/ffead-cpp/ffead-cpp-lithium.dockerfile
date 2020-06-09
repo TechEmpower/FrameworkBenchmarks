@@ -14,7 +14,7 @@ RUN ./install_ffead-cpp-dependencies.sh
 
 WORKDIR /
 
-RUN ./install_ffead-cpp-framework.sh lithium
+RUN ./install_ffead-cpp-framework.sh
 
 WORKDIR /
 

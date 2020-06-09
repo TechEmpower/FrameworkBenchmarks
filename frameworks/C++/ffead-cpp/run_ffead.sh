@@ -87,17 +87,17 @@ fi
 
 if [ "$2" = "lithium" ]
 then
-	./ffead-cpp $FFEAD_CPP_PATH &
+	./ffead-cpp-lithium $FFEAD_CPP_PATH &
 fi
 
 if [ "$2" = "cinatra" ]
 then
-	./ffead-cpp $FFEAD_CPP_PATH &
+	./ffead-cpp-cinatra $FFEAD_CPP_PATH &
 fi
 
 if [ "$2" = "drogon" ]
 then
-	./ffead-cpp $FFEAD_CPP_PATH &
+	./ffead-cpp-drogon $FFEAD_CPP_PATH &
 fi
 
 if [ "$2" = "apache" ]
@@ -208,4 +208,3 @@ then
 fi
 
 wait
-

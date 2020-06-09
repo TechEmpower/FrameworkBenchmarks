@@ -14,16 +14,15 @@ mv ffead-cpp-4.0 ffead-cpp-src
 mv ffead-cpp-src/lang-server-backends ${IROOT}/
 cd $IROOT
 
-SRV_TYPE=SRV_EMB
-CINATRA_INC=
-
-if [ "$1" = "lithium" ]
+CURR_TYPE="lithium"
+if [ "$CURR_TYPE" = "lithium" ]
 then
-	apt install -y libboost-all-dev
 	SRV_TYPE=SRV_LITHIUM
+	apt install -y libboost-all-dev
 fi
 
-if [ "$1" = "cinatra" ]
+CURR_TYPE="cinatra"
+if [ "$CURR_TYPE" = "cinatra" ]
 then
 	apt install -y libboost-all-dev
 	SRV_TYPE=SRV_CINATRA
@@ -33,7 +32,8 @@ then
 	git checkout sum_master
 fi
 
-if [ "$1" = "drogon" ]
+CURR_TYPE="drogon"
+if [ "$CURR_TYPE" = "drogon" ]
 then
 	apt install -y libjsoncpp-dev uuid-dev
 	apt remove -y libsqlite3-dev
@@ -99,7 +99,7 @@ sed -i 's|web/peer-server/src/autotools/Makefile||g' configure.ac
 
 #./autogen.sh
 #./configure --enable-debug=no --enable-apachemod=yes --enable-nginxmod=yes --enable-mod_sdormmongo=yes --enable-mod_sdormsql=yes --enable-mod_rediscache=yes --enable-mod_memcached=yes CPPFLAGS="$CPPFLAGS -I${IROOT}/include/libmongoc-1.0 -I${IROOT}/include/libbson-1.0 -I${IROOT}/include/" LDFLAGS="$LDFLAGS -L${IROOT} -L${IROOT}/lib"
-cmake -D$SRV_TYPE=on ${CINATRA_INC} -DMOD_APACHE=on -DMOD_NGINX=on -DMOD_MEMCACHED=on -DMOD_REDIS=on -DMOD_SDORM_MONGO=on .
+cmake -DSRV_ALL=on -DCINATRA_INCLUDES=${IROOT}/cinatra/include -DMOD_APACHE=on -DMOD_NGINX=on -DMOD_MEMCACHED=on -DMOD_REDIS=on -DMOD_SDORM_MONGO=on .
 
 cp resources/sample-odbcinst.ini ${IROOT}/odbcinst.ini
 cp resources/sample-odbc.ini ${IROOT}/odbc.ini
