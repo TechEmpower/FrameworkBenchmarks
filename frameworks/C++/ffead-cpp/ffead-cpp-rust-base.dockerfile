@@ -1,4 +1,7 @@
 FROM buildpack-deps:bionic
+LABEL maintainer="Sumeet Chhetri"
+LABEL version="1.0"
+LABEL description="Base rust docker image with ffead-cpp v4.0"
 
 ENV IROOT=/installs
 
@@ -16,11 +19,10 @@ RUN rm -f /usr/local/lib/libffead-* /usr/local/lib/libte_benc* /usr/local/lib/li
 	ln -s ${IROOT}/ffead-cpp-4.0/lib/libdinter.so /usr/local/lib/libdinter.so && \
 	ldconfig
 
-RUN wget -q https://dl.google.com/go/go1.14.4.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.14.4.linux-amd64.tar.gz
-ENV PATH=$PATH:/usr/local/go/bin
-WORKDIR ${IROOT}/lang-server-backends/go/fasthttp
-RUN make && cp fasthttp-ffead-cpp $IROOT/ && rm -rf ${IROOT}/lang-server-backends
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
 
-WORKDIR /
-
-CMD ./run_ffead.sh ffead-cpp-4.0 go-fasthttp
+RUN cd ${IROOT}/lang-server-backends/rust/actix-ffead-cpp && RUSTFLAGS="-C target-cpu=native" cargo build --release && cp target/release/actix-ffead-cpp $IROOT/ && rm -rf target && \
+	cd ${IROOT}/lang-server-backends/rust/hyper-ffead-cpp && RUSTFLAGS="-C target-cpu=native" cargo build --release && cp target/release/hyper-ffead-cpp $IROOT/ && rm -rf target && \
+	cd ${IROOT}/lang-server-backends/rust/thruster-ffead-cpp && RUSTFLAGS="-C target-cpu=native" cargo build --release && cp target/release/thruster-ffead-cpp $IROOT/ && rm -rf target && \
+	rm -rf ${IROOT}/lang-server-backends && rm -rf /root/.rustup /root/.cargo

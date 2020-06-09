@@ -7,7 +7,6 @@ rm -f /usr/local/lib/libdinter.so
 
 export FFEAD_CPP_PATH=${IROOT}/$1
 
-#Set the libraries based on the ENV variable FFEAD_CPP_PATH
 ln -s ${FFEAD_CPP_PATH}/lib/libte_benchmark_um.so /usr/local/lib/libte_benchmark_um.so
 ln -s ${FFEAD_CPP_PATH}/lib/libffead-modules.so /usr/local/lib/libffead-modules.so
 ln -s ${FFEAD_CPP_PATH}/lib/libffead-framework.so /usr/local/lib/libffead-framework.so
@@ -66,6 +65,18 @@ then
 	cp -f web/te-benchmark-um/config/sdormpostgresql.xml web/te-benchmark-um/config/sdorm.xml
 fi
 
+if [ "$4" = "redis" ]
+then
+	service redis-server start
+	cp -f web/te-benchmark-um/config/cacheredis.xml web/te-benchmark-um/config/cache.xml
+fi
+
+if [ "$4" = "memcached" ]
+then
+	service memcached start
+	cp -f web/te-benchmark-um/config/cachememcached.xml web/te-benchmark-um/config/cache.xml
+fi
+
 rm -f rtdcf/*.d rtdcf/*.o 
 rm -f *.cntrl
 rm -f tmp/*.sess
@@ -114,6 +125,7 @@ fi
 
 if [ "$2" = "nginx" ]
 then
+	mkdir ${IROOT}/ffead-cpp-src
 	if [ "$3" = "mysql" ] || [ "$3" = "postgresql" ]
 	then
 		sed -i 's|/installs/ffead-cpp-4.0/|'/installs/ffead-cpp-4.0-sql/'|g' ${IROOT}/nginxfc/conf/nginx.conf
@@ -192,19 +204,40 @@ fi
 if [ "$2" = "java-firenio" ]
 then
 	cd ${IROOT}
-	java -classpath firenio-ffead-cpp-0.1-jar-with-dependencies.jar com.firenio.ffeadcpp.FirenioFfeadCppServer $FFEAD_CPP_PATH 8080
+	java                       	   \
+	    -server                    \
+	    -XX:+UseNUMA               \
+	    -XX:+UseParallelGC         \
+	    -XX:+AggressiveOpts        \
+	    -Dlite=false               \
+	    -Dcore=1                   \
+	    -Dframe=16                 \
+	    -DreadBuf=512              \
+	    -Dpool=true                \
+	    -Ddirect=true              \
+	    -Dinline=true              \
+	    -Dlevel=1                  \
+	    -Dread=false               \
+	    -Depoll=true               \
+	    -Dnodelay=true             \
+	    -Dcachedurl=false          \
+	    -DunsafeBuf=true           \
+	    -classpath firenio-ffead-cpp-0.1-jar-with-dependencies.jar com.firenio.ffeadcpp.FirenioFfeadCppServer $FFEAD_CPP_PATH 8080
 fi
 
 if [ "$2" = "java-rapidoid" ]
 then
 	cd ${IROOT}
-	java -classpath rapidoid-ffead-cpp-1.0-jar-with-dependencies.jar com.rapidoid.ffeadcpp.Main $FFEAD_CPP_PATH 8080
+	java -server -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts \
+		-classpath rapidoid-ffead-cpp-1.0-jar-with-dependencies.jar \
+		com.rapidoid.ffeadcpp.Main $FFEAD_CPP_PATH 8080 profiles=production
 fi
 
 if [ "$2" = "java-wizzardo-http" ]
 then
 	cd ${IROOT}
-	java -jar wizzardo-ffead-cpp-all-1.0.jar $FFEAD_CPP_PATH 8080
+	java -Xmx2G -Xms2G -server -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts \
+		-jar wizzardo-ffead-cpp-all-1.0.jar $FFEAD_CPP_PATH 8080 env=prod
 fi
 
 wait
