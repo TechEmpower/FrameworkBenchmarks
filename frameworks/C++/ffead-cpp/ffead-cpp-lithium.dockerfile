@@ -10,4 +10,4 @@ RUN mkdir /installs && chmod 755 *.sh && /install_ffead-cpp-dependencies.sh && /
 
 WORKDIR /
 
-CMD ./run_ffead.sh ffead-cpp-4.0-sql nginx postgresql
+CMD ./run_ffead.sh ffead-cpp-4.0 lithium

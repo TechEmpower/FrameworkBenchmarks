@@ -1,4 +1,19 @@
 /*
+	Copyright 2009-2020, Sumeet Chhetri
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+/*
  * TeBkUmUm.cpp
  *
  *  Created on: 03-Feb-2020
@@ -207,10 +222,60 @@ bool TeBkUmRouter::strToNum(const char* str, int len, int& ret) {
 }
 
 void TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib) {
-	Timer t;
-	t.start();
+	//Timer t;
+	//t.start();
 	std::string_view path = req->getPath();
-	if(StringUtil::endsWith(path, "/fortunes")) {
+	if(StringUtil::endsWith(path, "/plaintext")) {
+		//t.end();
+		//CommonUtils::tsContRstLkp += t.timerNanoSeconds();
+		//t.start();
+		res->setContent(HELLO_WORLD);
+		res->setContentType(ContentTypes::CONTENT_TYPE_TEXT_PLAIN);
+		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		//t.end();
+		//CommonUtils::tsContRstSer += t.timerNanoSeconds();
+	} else if(StringUtil::endsWith(path, "/json")) {
+		//t.end();
+		//CommonUtils::tsContRstLkp += t.timerNanoSeconds();
+		//t.start();
+		TeBkUmMessage msg;
+		msg.setMessage(HELLO_WORLD);
+		res->setContent(JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmMessage"));
+		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
+		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		//t.end();
+		//CommonUtils::tsContRstSer += t.timerNanoSeconds();
+	} else if(StringUtil::endsWith(path, "/db")) {
+		//t.end();
+		//CommonUtils::tsContRstLkp += t.timerNanoSeconds();
+		//t.start();
+		TeBkUmWorld msg;
+		db(msg);
+		//t.end();
+		//CommonUtils::tsContExec += t.timerNanoSeconds();
+		//t.start();
+		res->setContent(JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmWorld"));
+		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
+		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		//t.end();
+		//CommonUtils::tsContRstSer += t.timerNanoSeconds();
+	} else if(StringUtil::endsWith(path, "/queries")) {
+		//t.end();
+		//CommonUtils::tsContRstLkp += t.timerNanoSeconds();
+		//t.start();
+		struct yuarel_param params[1];
+		yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
+		std::vector<TeBkUmWorld> msg;
+		queries(params[0].val, params[0].val_len, msg);
+		//t.end();
+		//CommonUtils::tsContExec += t.timerNanoSeconds();
+		//t.start();
+		res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
+		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
+		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		//t.end();
+		//CommonUtils::tsContRstSer += t.timerNanoSeconds();
+	} else if(StringUtil::endsWith(path, "/fortunes")) {
 		Context ctx;
 		getContext(req, &ctx);
 
@@ -224,92 +289,40 @@ void TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* 
 			res->setContentType(ContentTypes::CONTENT_TYPE_TEXT_SHTML);
 			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
 		}
+	} else if(StringUtil::endsWith(path, "/updates")) {
+		//t.end();
+		//CommonUtils::tsContRstLkp += t.timerNanoSeconds();
+		//t.start();
+		struct yuarel_param params[1];
+		yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
+		std::vector<TeBkUmWorld> msg;
+		updates(params[0].val, params[0].val_len, msg);
+		//t.end();
+		//CommonUtils::tsContExec += t.timerNanoSeconds();
+		//t.start();
+		res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
+		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
+		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		//t.end();
+		//CommonUtils::tsContRstSer += t.timerNanoSeconds();
+	} else if(StringUtil::endsWith(path, "/cached-worlds")) {
+		//t.end();
+		//CommonUtils::tsContRstLkp += t.timerNanoSeconds();
+		//t.start();
+		struct yuarel_param params[1];
+		yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
+		std::vector<TeBkUmWorld> msg;
+		cachedWorlds(params[0].val, params[0].val_len, msg);
+		//t.end();
+		//CommonUtils::tsContExec += t.timerNanoSeconds();
+		//t.start();
+		res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
+		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
+		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		//t.end();
+		//CommonUtils::tsContRstSer += t.timerNanoSeconds();
 	} else {
-		if(StringUtil::endsWith(path, "/json")) {
-			t.end();
-			CommonUtils::tsContRstLkp += t.timerNanoSeconds();
-			t.start();
-			TeBkUmMessage msg;
-			msg.setMessage(HELLO_WORLD);
-			res->setContent(JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmMessage"));
-			res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
-			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
-			t.end();
-			CommonUtils::tsContRstSer += t.timerNanoSeconds();
-		} else if(StringUtil::endsWith(path, "/plaintext")) {
-			t.end();
-			CommonUtils::tsContRstLkp += t.timerNanoSeconds();
-			t.start();
-			res->setContent(HELLO_WORLD);
-			res->setContentType(ContentTypes::CONTENT_TYPE_TEXT_PLAIN);
-			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
-			t.end();
-			CommonUtils::tsContRstSer += t.timerNanoSeconds();
-		} else if(StringUtil::endsWith(path, "/db")) {
-			t.end();
-			CommonUtils::tsContRstLkp += t.timerNanoSeconds();
-			t.start();
-			TeBkUmWorld msg;
-			db(msg);
-			t.end();
-			CommonUtils::tsContExec += t.timerNanoSeconds();
-			t.start();
-			res->setContent(JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmWorld"));
-			res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
-			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
-			t.end();
-			CommonUtils::tsContRstSer += t.timerNanoSeconds();
-		} else if(StringUtil::endsWith(path, "/queries")) {
-			t.end();
-			CommonUtils::tsContRstLkp += t.timerNanoSeconds();
-			t.start();
-			struct yuarel_param params[1];
-			yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
-			std::vector<TeBkUmWorld> msg;
-			queries(params[0].val, params[0].val_len, msg);
-			t.end();
-			CommonUtils::tsContExec += t.timerNanoSeconds();
-			t.start();
-			res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
-			res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
-			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
-			t.end();
-			CommonUtils::tsContRstSer += t.timerNanoSeconds();
-		} else if(StringUtil::endsWith(path, "/updates")) {
-			t.end();
-			CommonUtils::tsContRstLkp += t.timerNanoSeconds();
-			t.start();
-			struct yuarel_param params[1];
-			yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
-			std::vector<TeBkUmWorld> msg;
-			updates(params[0].val, params[0].val_len, msg);
-			t.end();
-			CommonUtils::tsContExec += t.timerNanoSeconds();
-			t.start();
-			res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
-			res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
-			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
-			t.end();
-			CommonUtils::tsContRstSer += t.timerNanoSeconds();
-		} else if(StringUtil::endsWith(path, "/cached-worlds")) {
-			t.end();
-			CommonUtils::tsContRstLkp += t.timerNanoSeconds();
-			t.start();
-			struct yuarel_param params[1];
-			yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
-			std::vector<TeBkUmWorld> msg;
-			cachedWorlds(params[0].val, params[0].val_len, msg);
-			t.end();
-			CommonUtils::tsContExec += t.timerNanoSeconds();
-			t.start();
-			res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
-			res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
-			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
-			t.end();
-			CommonUtils::tsContRstSer += t.timerNanoSeconds();
-		} else {
-			res->setHTTPResponseStatus(HTTPResponseStatus::NotFound);
-		}
+		res->setHTTPResponseStatus(HTTPResponseStatus::NotFound);
 	}
 	res->setDone(true);
 }
