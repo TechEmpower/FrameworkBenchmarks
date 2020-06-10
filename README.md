@@ -19,7 +19,11 @@ To get started developing you'll need to install [docker](https://docs.docker.co
 
         $ git clone https://github.com/TechEmpower/FrameworkBenchmarks.git
 
-2. Run a test.
+2. Change directories
+
+        $ cd FrameworkBenchmarks
+
+3. Run a test.
 
         $ ./tfb --mode verify --test gemini
 
