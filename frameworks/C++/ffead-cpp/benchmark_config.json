@@ -47,7 +47,7 @@
 			"display_name": "ffead-cpp-nginx-mysql",
 			"notes": "mysql memcached",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"lithium": {
 			"json_url": "/te-benchmark-um/json",
