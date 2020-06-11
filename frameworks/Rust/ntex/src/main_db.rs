@@ -13,13 +13,12 @@ use ntex::http::{HttpService, KeepAlive, Request, Response, StatusCode};
 use ntex::service::{Service, ServiceFactory};
 use ntex::web::Error;
 use simd_json_derive::Serialize;
-use yarte::TemplateFixed;
 
 mod db;
 mod utils;
 
 use crate::db::PgConnection;
-use crate::utils::{FortunesYarteTemplate, Writer};
+use crate::utils::Writer;
 
 struct App {
     db: PgConnection,
@@ -62,19 +61,8 @@ impl Service for App {
                 let fut = self.db.tell_fortune();
 
                 Box::pin(async move {
-                    let fortunes = fut.await?;
-                    let mut body = BytesMut::with_capacity(2048);
-                    unsafe {
-                        // Maybe uninit
-                        body.set_len(2048);
-                        // Before buffer overruns return `None`
-                        let size = FortunesYarteTemplate { fortunes }.call(body.as_mut()).unwrap();
-                        // Bound to init data
-                        body.set_len(size)
-                    };
-
-                    let mut res =
-                        Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+                    let body = fut.await?;
+                    let mut res = Response::with_body(StatusCode::OK, Body::Bytes(body));
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
                     hdrs.insert(CONTENT_TYPE, h_ct);
