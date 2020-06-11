@@ -1,6 +1,6 @@
 use std::cell::RefCell;
-use std::fmt::Write;
-use std::io;
+use std::fmt::Write as FmtWrite;
+use std::io::{self, Write};
 
 use bytes::{Bytes, BytesMut};
 use futures::stream::futures_unordered::FuturesUnordered;
@@ -11,7 +11,6 @@ use simd_json_derive::Serialize;
 use smallvec::{smallvec, SmallVec};
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, NoTls, Statement};
-use yarte::TemplateFixed;
 
 use crate::utils::Writer;
 
@@ -27,7 +26,7 @@ pub struct Fortune<'a> {
     pub message: &'a str,
 }
 
-#[derive(yarte::TemplateFixed)]
+#[derive(yarte::Template)]
 #[template(path = "fortune.hbs")]
 pub struct FortunesTemplate<'a> {
     pub fortunes: &'a [Fortune<'a>],
@@ -204,18 +203,7 @@ impl PgConnection {
             items.sort_by(|it, next| it.message.cmp(&next.message));
 
             let mut body = BytesMut::with_capacity(2048);
-            unsafe {
-                // Maybe uninit
-                body.set_len(2048);
-                // Before buffer overruns return `None`
-                let size = FortunesTemplate {
-                    fortunes: items.as_ref(),
-                }
-                .call(body.as_mut())
-                .unwrap();
-                // Bound to init data
-                body.set_len(size)
-            };
+            let _ = write!(Writer(&mut body), "{}", FortunesTemplate { fortunes: items.as_ref() });
 
             Ok(body.freeze())
         }
