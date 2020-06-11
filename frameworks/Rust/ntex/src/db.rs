@@ -8,15 +8,29 @@ use futures::{Future, FutureExt, StreamExt, TryStreamExt};
 use ntex::web::Error;
 use random_fast_rng::{FastRng, Random};
 use simd_json_derive::Serialize;
+use smallvec::{smallvec, SmallVec};
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, NoTls, Statement};
+use yarte::TemplateFixed;
 
-use crate::utils::{Fortune, Writer};
+use crate::utils::Writer;
 
 #[derive(Serialize, Debug)]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,
+}
+
+#[derive(serde::Serialize, Debug)]
+pub struct Fortune<'a> {
+    pub id: i32,
+    pub message: &'a str,
+}
+
+#[derive(yarte::TemplateFixed)]
+#[template(path = "fortune.hbs")]
+pub struct FortunesTemplate<'a> {
+    pub fortunes: &'a [Fortune<'a>],
 }
 
 /// Postgres interface
@@ -161,12 +175,7 @@ impl PgConnection {
         }
     }
 
-    pub fn tell_fortune(&self) -> impl Future<Output = Result<Vec<Fortune>, io::Error>> {
-        let mut items = vec![Fortune {
-            id: 0,
-            message: "Additional fortune added at request time.".to_string(),
-        }];
-
+    pub fn tell_fortune(&self) -> impl Future<Output = Result<Bytes, io::Error>> {
         let fut = self.cl.query_raw(&self.fortune, &[]);
 
         async move {
@@ -174,18 +183,41 @@ impl PgConnection {
                 .await
                 .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))?;
 
+            let mut rows = SmallVec::<[_; 32]>::new();
             while let Some(row) = stream.next().await {
                 let row = row.map_err(|e| {
                     io::Error::new(io::ErrorKind::Other, format!("{:?}", e))
                 })?;
+                rows.push(row);
+            }
+
+            let mut items: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
+                id: 0,
+                message: "Additional fortune added at request time.",
+            }];
+            for row in &rows {
                 items.push(Fortune {
                     id: row.get(0),
                     message: row.get(1),
                 });
             }
-
             items.sort_by(|it, next| it.message.cmp(&next.message));
-            Ok(items)
+
+            let mut body = BytesMut::with_capacity(2048);
+            unsafe {
+                // Maybe uninit
+                body.set_len(2048);
+                // Before buffer overruns return `None`
+                let size = FortunesTemplate {
+                    fortunes: items.as_ref(),
+                }
+                .call(body.as_mut())
+                .unwrap();
+                // Bound to init data
+                body.set_len(size)
+            };
+
+            Ok(body.freeze())
         }
     }
 }
