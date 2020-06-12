@@ -18,7 +18,7 @@ open Models
 
 let inline contentLength x = new Nullable<int64> ( int64 x )
 
-let json' () : HttpContext -> Task =
+let json' : HttpContext -> Task =
     let options = JsonSerializerOptions()
     options.Converters.Add(JsonFSharpConverter())
     fun ctx ->
@@ -64,7 +64,7 @@ let plaintext =
 let json =
     resource "/json" {
         name "JSON"
-        get (json' ())
+        get json'
     }
 
 let fortunes =
