@@ -119,7 +119,7 @@ let main args =
         useDefaults
         configure (fun bldr ->
             bldr.ConfigureLogging(fun c -> c.ClearProviders() |> ignore)
-                .UseKestrel(fun c -> c.AddServerHeader <- false))
+                .UseKestrel())
         resource plaintext
         resource json
         resource fortunes
