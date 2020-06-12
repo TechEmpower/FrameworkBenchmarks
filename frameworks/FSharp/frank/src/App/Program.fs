@@ -18,12 +18,13 @@ open Models
 
 let inline contentLength x = new Nullable<int64> ( int64 x )
 
-let json' data : HttpContext -> Task =
+let json' () : HttpContext -> Task =
     let options = JsonSerializerOptions()
     options.Converters.Add(JsonFSharpConverter())
     fun ctx ->
         ctx.Response.ContentType <- "application/json"
         ctx.Response.StatusCode <- 200
+        let data = struct {|message="Hello, World!"|}
         JsonSerializer.SerializeAsync(ctx.Response.Body, data)
 
 let text' (msg:string): HttpContext -> Task =
@@ -63,7 +64,7 @@ let plaintext =
 let json =
     resource "/json" {
         name "JSON"
-        get (json' struct {|message="Hello, World!"|})
+        get (json' ())
     }
 
 let fortunes =
