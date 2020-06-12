@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\ORM;
+use App\Storage;
 use Comet\Request;
 use Comet\Response;
 
@@ -22,7 +23,7 @@ class QueryController
 
     	return $response
     		->with($arr)
-	    	->withHeader('Date', gmdate('D, d M Y H:i:s') . ' GMT');		
+	    	->withHeader('Date', Storage::$date);		
 	}
 }
 
