@@ -2,7 +2,6 @@
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 use std::future::Future;
-use std::io::Write;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
@@ -19,7 +18,7 @@ mod db;
 mod utils;
 
 use crate::db::PgConnection;
-use crate::utils::{FortunesTemplate, Writer};
+use crate::utils::Writer;
 
 struct App {
     db: PgConnection,
@@ -62,12 +61,8 @@ impl Service for App {
                 let fut = self.db.tell_fortune();
 
                 Box::pin(async move {
-                    let fortunes = fut.await?;
-                    let mut body = BytesMut::with_capacity(2048);
-                    let mut writer = Writer(&mut body);
-                    let _ = write!(writer, "{}", FortunesTemplate { fortunes });
-                    let mut res =
-                        Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+                    let body = fut.await?;
+                    let mut res = Response::with_body(StatusCode::OK, Body::Bytes(body));
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
                     hdrs.insert(CONTENT_TYPE, h_ct);

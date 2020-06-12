@@ -28,7 +28,7 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
 
 RUN sed -i "s|mysql:|pgsql:|g" /app.php
 
-RUN export WORKERS=$(( 4 * $(nproc) )) && \
+RUN export WORKERS=$(( 5 * $(nproc) )) && \
     sed -i "s|worker_processes  auto|worker_processes $WORKERS|g" /deploy/nginx.conf
 
 CMD /nginx/sbin/nginx -c /deploy/nginx.conf

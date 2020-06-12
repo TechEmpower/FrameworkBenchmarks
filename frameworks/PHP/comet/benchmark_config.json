@@ -16,7 +16,7 @@
       "language": "PHP",
       "flavor": "PHP7",
       "orm": "Raw",
-      "platform": "comet",
+      "platform": "workerman",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
@@ -25,8 +25,6 @@
       "versus": "php"
     },
     "mysql": {
-      "json_url": "/json",
-      "plaintext_url": "/plaintext",
       "db_url": "/db",
       "query_url": "/query?q=",
       "update_url": "/update?q=",
@@ -39,7 +37,7 @@
       "language": "PHP",
       "flavor": "PHP7",
       "orm": "Raw",
-      "platform": "comet",
+      "platform": "workerman",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",

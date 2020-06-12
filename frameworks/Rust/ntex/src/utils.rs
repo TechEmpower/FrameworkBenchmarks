@@ -3,15 +3,6 @@ use std::{cmp, io};
 
 use atoi::FromRadix10;
 use bytes::BytesMut;
-use serde_derive::Serialize;
-use yarte::Template;
-
-#[allow(non_snake_case)]
-#[derive(Serialize, Debug)]
-pub struct Fortune {
-    pub id: i32,
-    pub message: String,
-}
 
 pub const SIZE: usize = 27;
 
@@ -34,32 +25,4 @@ pub fn get_query_param(query: &str) -> u16 {
         1
     };
     cmp::min(500, cmp::max(1, q))
-}
-
-markup::define! {
-    FortunesTemplate(fortunes: Vec<Fortune>) {
-        {markup::doctype()}
-        html {
-            head {
-                title { "Fortunes" }
-            }
-            body {
-                table {
-                    tr { th { "id" } th { "message" } }
-                    @for item in {fortunes} {
-                        tr {
-                            td { {item.id} }
-                            td { {markup::raw(v_htmlescape::escape(&item.message))} }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-#[derive(Template)]
-#[template(path = "fortune.hbs")]
-pub struct FortunesYarteTemplate {
-    pub fortunes: Vec<Fortune>,
 }
