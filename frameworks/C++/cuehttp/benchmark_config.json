@@ -4,7 +4,7 @@
     {
       "default": {
         "plaintext_url": "/plaintext",
-        "port": 10001,
+        "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
         "database": "None",

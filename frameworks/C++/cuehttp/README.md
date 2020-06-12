@@ -10,4 +10,4 @@ https://github.com/xcyl/cuehttp
 
 ### PLAINTEXT
 
-http://localhost:10001/plaintext
+http://localhost:8080/plaintext
