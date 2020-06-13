@@ -9,6 +9,7 @@ COPY jetty jetty
 COPY ktorcio ktorcio
 COPY ktornetty ktornetty
 COPY netty netty
+COPY ratpack ratpack
 COPY undertow undertow
 RUN gradle --quiet build ktornetty:shadowJar
 CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "ktornetty/build/libs/http4k-ktornetty-benchmark.jar"]
