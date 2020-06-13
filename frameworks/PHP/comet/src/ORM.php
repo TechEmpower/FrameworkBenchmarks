@@ -14,8 +14,8 @@ class ORM
     public static function init()
     {
         self::$pdo = new \PDO(
-//            'pgsql:host=tfb-database;dbname=hello_world',
-	    	'pgsql:host=192.168.99.1;dbname=hello_world',
+            'pgsql:host=tfb-database;dbname=hello_world',
+//	    	'pgsql:host=192.168.99.1;dbname=hello_world',
             'benchmarkdbuser', 
             'benchmarkdbpass',
             [
