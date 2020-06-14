@@ -14,14 +14,14 @@ class BenchController extends \Phalcon\Mvc\Controller
 
     public function jsonAction()
     {
-        return $this->sendContentAsJson(array(
+        return $this->response->setJsonContent(array(
             'message' => 'Hello, World!'
         ));
     }
 
     public function dbAction()
     {
-        return $this->sendContentAsJson($this->getRandomWorld());
+        return $this->response->setJsonContent($this->getRandomWorld());
     }
 
     public function queriesAction()
@@ -35,7 +35,7 @@ class BenchController extends \Phalcon\Mvc\Controller
             $worlds[] = $this->getRandomWorld();
         }
 
-        return $this->sendContentAsJson($worlds);
+        return $this->response->setJsonContent($worlds);
     }
 
     public function fortunesAction()
@@ -64,7 +64,7 @@ class BenchController extends \Phalcon\Mvc\Controller
             $worlds[] = $world;
         }
 
-        return $this->sendContentAsJson($worlds);
+        return $this->response->setJsonContent($worlds);
     }
 
     public function plaintextAction()
@@ -72,7 +72,7 @@ class BenchController extends \Phalcon\Mvc\Controller
         $this->view->disable();
         $this->response->setContentType('text/plain');
         $this->response->setContent("Hello, World!");
-        $this->response->send();
+        return $this->response;
     }
 
     protected function getRandomWorld()
@@ -102,12 +102,5 @@ class BenchController extends \Phalcon\Mvc\Controller
                     return $left['message'] <=> $right['message'];
                 });
         return $fortunes;
-    }
-
-    private function sendContentAsJson($content)
-    {
-        $response = new Phalcon\Http\Response(json_encode($content));
-        $response->setHeader("Content-Type", "application/json");
-        return $response;
     }
 }
