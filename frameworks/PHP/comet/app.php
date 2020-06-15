@@ -2,7 +2,9 @@
 declare(strict_types=1);
 
 use App\ORM;
+use App\Storage;
 use Comet\Comet;
+use Comet\Timer;
 use App\Controllers\DbController;
 use App\Controllers\QueryController;
 use App\Controllers\UpdateController;
@@ -22,14 +24,18 @@ $app = new Comet([
 $app->init(
     function() {
         ORM::init();	
+	    Storage::$date = gmdate('D, d M Y H:i:s').' GMT';
+    	Timer::add(1, function() {
+        	Storage::$date = gmdate('D, d M Y H:i:s').' GMT';
+	    });
 });
 
 // #1 Plaintext
 $app->get('/plaintext',
     function ($request, $response) {        
         return $response
-            ->withText('Hello, World!')
-            ->withHeader('Date', gmdate('D, d M Y H:i:s') . ' GMT');
+            ->with('Hello, World!')
+            ->withHeader('Date', Storage::$date);
 });
 
 // #2 JSON Serialization
@@ -37,7 +43,7 @@ $app->get('/json',
     function ($request, $response) {        
         return $response            
             ->with([ 'message' => 'Hello, World!' ])
-            ->withHeader('Date', gmdate('D, d M Y H:i:s') . ' GMT');
+            ->withHeader('Date', Storage::$date);
 });
 
 // #3 Single Database Query
