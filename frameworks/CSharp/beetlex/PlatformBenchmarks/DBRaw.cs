@@ -99,7 +99,7 @@ namespace PlatformBenchmarks
             using (var db = await DBConnectionGroupPool.Pop())
             {
                 FortuneCommand.Connection = db.Connection;
-                using (var rdr = await FortuneCommand.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                using (var rdr = await FortuneCommand.ExecuteReaderAsync(CommandBehavior.Default))
                 {
                     while (await rdr.ReadAsync())
                     {
