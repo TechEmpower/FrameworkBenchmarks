@@ -205,7 +205,7 @@ namespace PlatformBenchmarks
         }
 
 
-        public static void Init()
+        public static Task Init()
         {
             for (int i = 1; i <= 500; i++)
             {
@@ -215,6 +215,7 @@ namespace PlatformBenchmarks
                     mCacheTable[i].Push(cmd);
                 }
             }
+            return Task.CompletedTask;
         }
     }
 
@@ -298,7 +299,7 @@ namespace PlatformBenchmarks
 
         private static List<DBconnectionPool> mPools = new List<DBconnectionPool>();
 
-        public static void Init(int max, string connectionstring)
+        public static Task Init(int max, string connectionstring)
         {
             int group = 2;
             if (!Program.UpDB)
@@ -313,6 +314,7 @@ namespace PlatformBenchmarks
                 pool.Init(itemcount, connectionstring);
                 mPools.Add(pool);
             }
+            return Task.CompletedTask;
         }
 
         public static Task<DBConnectionItem> Pop()
