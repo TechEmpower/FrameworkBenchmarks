@@ -1,6 +1,6 @@
 FROM buildpack-deps:xenial
 
-RUN apt-get update -yqq && apt-get install -yqq software-properties-common unzip cmake
+RUN apt-get update -yqq && apt-get install -yqq software-properties-common cmake apt-transport-https
 
 RUN add-apt-repository -s "deb http://apt.llvm.org/`lsb_release -cs`/ llvm-toolchain-`lsb_release -cs`-3.9 main"
 RUN wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key| apt-key add -

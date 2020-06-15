@@ -20,9 +20,7 @@
         "display_name": "libreactor",
         "notes": "",
         "versus": "None"
-      }
-    },
-    {
+      },
       "server": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",

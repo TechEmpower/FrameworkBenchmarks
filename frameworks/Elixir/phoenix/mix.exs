@@ -5,7 +5,7 @@ defmodule Hello.Mixfile do
     [
       app: :hello,
       version: "0.1.0",
-      elixir: "~> 1.9",
+      elixir: "~> 1.10",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,

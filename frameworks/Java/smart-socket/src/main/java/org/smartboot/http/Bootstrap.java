@@ -11,6 +11,7 @@ package org.smartboot.http;
 import com.jsoniter.output.JsonStream;
 import com.jsoniter.output.JsonStreamPool;
 import com.jsoniter.spi.JsonException;
+import com.jsoniter.spi.Slice;
 import org.smartboot.http.server.HttpMessageProcessor;
 import org.smartboot.http.server.HttpRequestProtocol;
 import org.smartboot.http.server.Request;
@@ -50,9 +51,9 @@ public class Bootstrap {
                 try {
                     stream.reset(null);
                     stream.writeVal(Message.class, new Message("Hello, World!"));
-                    response.setContentLength(stream.buffer().tail());
-                    response.getOutputStream().write(stream.buffer().data(), 0, stream.buffer().tail());
-                    response.getOutputStream().flush();
+                    Slice slice = stream.buffer();
+                    response.setContentLength(slice.tail());
+                    response.getOutputStream().write(slice.data(), 0, slice.tail());
                 } catch (IOException e) {
                     throw new JsonException(e);
                 } finally {

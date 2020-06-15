@@ -1,4 +1,4 @@
-FROM oracle/graalvm-ce:20.1.0
+FROM oracle/graalvm-ce:20.1.0-java11
 # Set working dir
 RUN mkdir /app
 WORKDIR /app
@@ -24,6 +24,7 @@ CMD java \
     -Dvertx.threadChecks=false                          \
     -Dvertx.disableContextTimings=true                  \
     -Dvertx.disableTCCL=true                            \
+    -Dvertx.disableHttpHeadersValidation=true           \
     -jar node_modules/.bin/es4x-launcher.jar            \
     --instances `grep --count ^processor /proc/cpuinfo` \
     --options vertx.json

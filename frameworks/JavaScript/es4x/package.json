@@ -1,6 +1,6 @@
 {
   "name": "benchmark",
-  "version": "0.0.1",
+  "version": "0.12.0",
   "private": true,
   "main": "index.js",
   "devDependencies": {
@@ -10,13 +10,11 @@
     "@vertx/core": "3.9.1",
     "@vertx/web": "3.9.1",
     "@vertx/web-templ-rocker": "3.9.1",
-    "@vertx/pg-client": "3.9.1"
+    "@vertx/pg-client": "3.9.0"
   },
   "mvnDependencies": [
-    "com.ongres.scram:client:1.0.0-beta.2",
     "io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.49.Final",
     "com.fizzed:rocker-runtime:1.2.3",
-    "com.google.guava:guava:19.0",
     "xyz.jetdrone:vertx.command.rocker.compiler:0.1.1"
   ],
   "files": [
@@ -28,7 +26,6 @@
     "postinstall": "es4x install -v node_modules/.lib/vendor-templates.jar",
     "pretemplate": "es4x rocker -d node_modules/.rocker templates",
     "template": "javac -cp node_modules/.bin/es4x-launcher.jar @node_modules/.rocker/templates.lst -d node_modules/.rocker/classes",
-    "posttemplate": "jar cvf node_modules/.lib/vendor-templates.jar -C node_modules/.rocker/classes .",
-    "start:dev": "java -server -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts -Dvertx.disableMetrics=true -Dvertx.disableH2c=true -Dvertx.disableWebsockets=true -Dvertx.flashPolicyHandler=false -Dvertx.threadChecks=false -Dvertx.disableContextTimings=true -Dvertx.disableTCCL=true -jar node_modules/.bin/es4x-launcher.jar --instances 8 --options vertx.json"
+    "posttemplate": "jar cvf node_modules/.lib/vendor-templates.jar -C node_modules/.rocker/classes ."
   }
 }

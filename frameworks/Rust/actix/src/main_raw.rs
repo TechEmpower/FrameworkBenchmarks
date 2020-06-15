@@ -45,7 +45,7 @@ struct App {
 impl App {
     fn handle_request(&mut self, req: Request) {
         match req.path() {
-            "/j" => {
+            "/json" => {
                 let message = Message {
                     message: "Hello, World!",
                 };
@@ -55,7 +55,7 @@ impl App {
                     .json_write(&mut Writer(&mut self.write_buf))
                     .unwrap();
             }
-            "/p" => {
+            "/plaintext" => {
                 self.write_buf.put_slice(PLAIN);
                 self.codec.config().set_date(&mut self.write_buf);
                 self.write_buf.put_slice(BODY);

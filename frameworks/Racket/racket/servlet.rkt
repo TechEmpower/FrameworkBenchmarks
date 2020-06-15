@@ -2,13 +2,16 @@
 
 (require db
          json
+         racket/port
          threading
          web-server/dispatch
-         web-server/http)
+         web-server/http
+         web-server/http/response
+         xml)
 
 ;; db ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define max-db-conns 1024)
+(define max-db-conns 128)
 (define db-conn-pool
   (connection-pool
    #:max-connections max-db-conns
@@ -41,12 +44,30 @@
 
 ;; helpers ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define (response/json e)
+(define (response/bytes bs
+                        #:code [code 200]
+                        #:headers [headers null]
+                        #:mime-type [mime-type #"text/plain"])
+  (define len:bs (string->bytes/utf-8 (number->string (bytes-length bs))))
   (response/output
-   #:mime-type #"application/json; charset=utf-8"
+   #:code code
+   #:mime-type mime-type
+   #:headers (cons (make-header #"Content-Length" len:bs) headers)
    (lambda (out)
-     (write-json e out))))
+     (write-bytes bs out))))
 
+(define (response/json e)
+  (response/bytes
+   #:mime-type #"application/json; charset=utf-8"
+   (jsexpr->bytes e)))
+
+(define (response/xexpr xe)
+  (response/bytes
+   #:mime-type #"text/html; charset=utf-8"
+   (call-with-output-bytes
+    (lambda (out)
+      (write-bytes #"<!DOCTYPE html>" out)
+      (write-xexpr xe out)))))
 
 ;; world ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -132,10 +153,7 @@
   (dispatch-rules
    [("plaintext")
     (lambda (_req)
-      (response/output
-       #:mime-type #"text/plain"
-       (lambda (out)
-         (display "Hello, World!" out))))]
+      (response/bytes #"Hello, World!"))]
 
    [("json")
     (lambda (_req)
@@ -159,7 +177,6 @@
         (call-with-db-conn all-fortunes))
 
       (response/xexpr
-       #:preamble #"<!DOCTYPE html>"
        `(html
          (head
           (title "Fortunes"))
@@ -200,14 +217,41 @@
        (map world->hash worlds)))]))
 
 (module+ main
-  (require web-server/servlet-dispatch
+  (require racket/async-channel
+           racket/cmdline
+           racket/format
+           web-server/http/response
+           web-server/safety-limits
            web-server/web-server)
 
+  (define port
+    (command-line
+     #:args (port)
+     (string->number port)))
+
+  (define (app c req)
+    (output-response c (dispatch req)))
+
+  (define ch (make-async-channel))
   (define stop
     (serve
-     #:dispatch (dispatch/servlet dispatch)
+     #:dispatch app
      #:listen-ip "0.0.0.0"
-     #:port 8080))
+     #:port port
+     #:confirmation-channel ch
+     #:safety-limits (make-safety-limits
+                      #:max-waiting 4096
+                      #:request-read-timeout 16
+                      #:response-timeout 16
+                      #:response-send-timeout 16)))
+
+  (define ready-or-exn (sync ch))
+  (when (exn:fail? ready-or-exn)
+    (raise ready-or-exn))
+
+  (call-with-output-file (build-path (~a port ".ready"))
+    (lambda (out)
+      (displayln "ready" out)))
 
   (with-handlers ([exn:break?
                    (lambda (_e)

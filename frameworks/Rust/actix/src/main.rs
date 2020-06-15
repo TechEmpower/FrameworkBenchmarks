@@ -61,8 +61,8 @@ async fn main() -> std::io::Result<()> {
                 .client_timeout(0)
                 .h1(map_config(
                     App::new()
-                        .service(web::resource("/j").to(json))
-                        .service(web::resource("/p").to(plaintext)),
+                        .service(web::resource("/json").to(json))
+                        .service(web::resource("/plaintext").to(plaintext)),
                     |_| AppConfig::default(),
                 ))
                 .tcp()
