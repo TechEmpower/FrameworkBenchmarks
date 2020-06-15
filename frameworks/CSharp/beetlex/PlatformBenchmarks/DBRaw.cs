@@ -7,6 +7,8 @@ using System.Linq;
 using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices.ComTypes;
+using BeetleX.EventArgs;
 
 namespace PlatformBenchmarks
 {
@@ -204,18 +206,28 @@ namespace PlatformBenchmarks
             return CreatCommand(count);
         }
 
+        private static bool mInited = false;
 
-        public static Task Init()
+        public static void Init()
         {
-            for (int i = 1; i <= 500; i++)
+            if (mInited)
+                return;
+            lock (typeof(UpdateCommandsCached))
             {
-                for (int k = 0; k < 10; k++)
+                if (mInited)
+                    return;
+                for (int i = 1; i <= 500; i++)
                 {
-                    var cmd = CreatCommand(i);
-                    mCacheTable[i].Push(cmd);
+                    for (int k = 0; k < 10; k++)
+                    {
+                        var cmd = CreatCommand(i);
+                        mCacheTable[i].Push(cmd);
+                    }
                 }
+                mInited = true;
+                HttpServer.ApiServer.Log(LogType.Info, null, $"Init update commands cached");
+                return;
             }
-            return Task.CompletedTask;
         }
     }
 
@@ -299,22 +311,33 @@ namespace PlatformBenchmarks
 
         private static List<DBconnectionPool> mPools = new List<DBconnectionPool>();
 
-        public static Task Init(int max, string connectionstring)
+        private static bool mInited = false;
+
+        public static void Init(int max, string connectionstring)
         {
-            int group = 2;
-            if (!Program.UpDB)
-                group = 16;
-            else
-                group = 4;
-            HttpServer.ApiServer.Log(BeetleX.EventArgs.LogType.Info, null, $"connection pool init group {group}");
-            int itemcount = (max / group);
-            for (int i = 0; i < group; i++)
+            if (mInited)
+                return;
+            lock (typeof(DBconnectionPool))
             {
-                DBconnectionPool pool = new DBconnectionPool();
-                pool.Init(itemcount, connectionstring);
-                mPools.Add(pool);
+                if (mInited)
+                    return;
+                int group = 2;
+                if (!Program.UpDB)
+                    group = 16;
+                else
+                    group = 4;
+                HttpServer.ApiServer.Log(BeetleX.EventArgs.LogType.Info, null, $"connection pool init group {group}");
+                int itemcount = (max / group);
+                for (int i = 0; i < group; i++)
+                {
+                    DBconnectionPool pool = new DBconnectionPool();
+                    pool.Init(itemcount, connectionstring);
+                    mPools.Add(pool);
+                }
+                HttpServer.ApiServer.Log(LogType.Info, null, $"Init connection pool size:{max} {connectionstring}");
+                mInited = true;
+                return;
             }
-            return Task.CompletedTask;
         }
 
         public static Task<DBConnectionItem> Pop()
