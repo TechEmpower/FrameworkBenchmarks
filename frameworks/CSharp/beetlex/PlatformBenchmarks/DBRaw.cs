@@ -326,7 +326,7 @@ namespace PlatformBenchmarks
                     group = 16;
                 else
                     group = 4;
-                HttpServer.ApiServer.Log(BeetleX.EventArgs.LogType.Info, null, $"connection pool init group {group}");
+                HttpServer.ApiServer.Log(BeetleX.EventArgs.LogType.Info, null, $"connection pool init {max} group {group}");
                 int itemcount = (max / group);
                 for (int i = 0; i < group; i++)
                 {
@@ -334,7 +334,7 @@ namespace PlatformBenchmarks
                     pool.Init(itemcount, connectionstring);
                     mPools.Add(pool);
                 }
-                HttpServer.ApiServer.Log(LogType.Info, null, $"Init connection pool size:{max} {connectionstring}");
+                HttpServer.ApiServer.Log(LogType.Info, null, $"Init connection pool completed");
                 mInited = true;
                 return;
             }
