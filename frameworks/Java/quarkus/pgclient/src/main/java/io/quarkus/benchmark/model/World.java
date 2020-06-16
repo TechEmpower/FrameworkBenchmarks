@@ -1,8 +1,6 @@
 package io.quarkus.benchmark.model;
 
-import java.util.Objects;
-
-public class World {
+public class World implements Comparable<World>{
 
     private int id;
     private int randomNumber;
@@ -31,18 +29,7 @@ public class World {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        World world = (World) o;
-        return id == world.id &&
-                randomNumber == world.randomNumber;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, randomNumber);
+    public int compareTo(World o) {
+        return Integer.compare(id, o.id);
     }
 }
