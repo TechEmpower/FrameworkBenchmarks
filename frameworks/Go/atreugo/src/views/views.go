@@ -9,7 +9,11 @@ import (
 	"github.com/savsgio/atreugo/v11"
 )
 
-const helloWorldStr = "Hello, World!"
+const (
+	helloWorldStr = "Hello, World!"
+
+	contentTypeHTML = "text/html; charset=utf-8"
+)
 
 // JSON . Test 1: JSON serialization.
 func JSON(ctx *atreugo.RequestCtx) error {
@@ -74,7 +78,7 @@ func FortuneQuick(ctx *atreugo.RequestCtx) error {
 		return fortunes.F[i].Message < fortunes.F[j].Message
 	})
 
-	ctx.Response.Header.SetContentType("text/html; charset=utf-8")
+	ctx.Response.Header.SetContentType(contentTypeHTML)
 	templates.WriteFortunePage(ctx, fortunes.F)
 
 	templates.ReleaseFortune(fortune)
