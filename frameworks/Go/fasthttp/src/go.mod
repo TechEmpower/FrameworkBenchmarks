@@ -4,10 +4,7 @@ go 1.14
 
 require (
 	github.com/jackc/pgx/v4 v4.6.0
-	github.com/mailru/easyjson v0.7.1
-	github.com/savsgio/gotils v0.0.0-20200413113635-8c468ce75cca
-	github.com/tidwall/sjson v1.1.1
-	github.com/valyala/fasthttp v1.13.1
+	github.com/savsgio/gotils v0.0.0-20200616100644-13ff1fd2c28c
+	github.com/valyala/fasthttp v1.14.0
 	github.com/valyala/quicktemplate v1.5.0
-	go.mongodb.org/mongo-driver v1.3.3
 )
