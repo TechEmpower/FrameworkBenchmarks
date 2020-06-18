@@ -18,7 +18,7 @@ var (
 )
 
 //line fortunes.qtpl:1
-func StreamFortunePage(qw422016 *qt422016.Writer, rows Fortunes) {
+func StreamFortunePage(qw422016 *qt422016.Writer, rows []Fortune) {
 //line fortunes.qtpl:1
 	qw422016.N().S(`<!DOCTYPE html>
 <html>
@@ -55,7 +55,7 @@ func StreamFortunePage(qw422016 *qt422016.Writer, rows Fortunes) {
 }
 
 //line fortunes.qtpl:15
-func WriteFortunePage(qq422016 qtio422016.Writer, rows Fortunes) {
+func WriteFortunePage(qq422016 qtio422016.Writer, rows []Fortune) {
 //line fortunes.qtpl:15
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line fortunes.qtpl:15
@@ -66,7 +66,7 @@ func WriteFortunePage(qq422016 qtio422016.Writer, rows Fortunes) {
 }
 
 //line fortunes.qtpl:15
-func FortunePage(rows Fortunes) string {
+func FortunePage(rows []Fortune) string {
 //line fortunes.qtpl:15
 	qb422016 := qt422016.AcquireByteBuffer()
 //line fortunes.qtpl:15

@@ -2,27 +2,19 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"log"
 	"runtime"
 
-	"atreugo/src/handlers"
-	"atreugo/src/storage"
+	"atreugo/src/views"
 
 	"github.com/savsgio/atreugo/v11"
 )
 
-var bindHost, jsonEncoder, dbDriver, dbConnectionString string
-var prefork, useQuickTemplate bool
+var bindHost string
+var prefork bool
 
 func init() {
-	// init flags
 	flag.StringVar(&bindHost, "bind", ":8080", "set bind host")
 	flag.BoolVar(&prefork, "prefork", false, "use prefork")
-	flag.StringVar(&jsonEncoder, "json_encoder", "none", "json encoder: none, easyjson or sjson")
-	flag.StringVar(&dbDriver, "db", "none", "db connection driver [values: none or pgx or mongo]")
-	flag.StringVar(&dbConnectionString, "db_connection_string", "", "db connection string")
-	flag.BoolVar(&useQuickTemplate, "quicktemplate", false, "use quicktemplate")
 
 	flag.Parse()
 }
@@ -42,50 +34,11 @@ func main() {
 		maxConn = numCPU()
 	}
 
-	if dbConnectionString == "" {
-		dbConnectionString = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s pool_max_conns=%d", "tfb-database", 5432, "benchmarkdbuser", "benchmarkdbpass", "hello_world", maxConn)
+	// init database
+	if err := views.InitDB(maxConn); err != nil {
+		panic(err)
 	}
-
-	// init database with appropriate driver
-	db, err := storage.InitDB(dbDriver, dbConnectionString, maxConn)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if db != nil {
-		defer db.Close()
-	}
-
-	// init json encoders
-	var jsonHandler atreugo.View
-	var dbHandler atreugo.View
-	var queriesHandler atreugo.View
-	var updateHandler atreugo.View
-	var fortuneHandler atreugo.View
-
-	if useQuickTemplate {
-		fortuneHandler = handlers.FortuneQuickHandler(db)
-	} else {
-		fortuneHandler = handlers.FortuneHandler(db)
-	}
-
-	switch jsonEncoder {
-	case "easyjson":
-		jsonHandler = handlers.JSONHandlerEasyJSON
-		dbHandler = handlers.DBHandlerEasyJSON(db)
-		queriesHandler = handlers.QueriesHandlerEasyJSON(db)
-		updateHandler = handlers.UpdateHandlerEasyJSON(db)
-	case "sjson":
-		jsonHandler = handlers.JSONHandlerSJson
-		dbHandler = handlers.DBHandlerSJson(db)
-		queriesHandler = handlers.QueriesHandlerSJson(db)
-		updateHandler = handlers.UpdateHandlerSJson(db)
-	default:
-		jsonHandler = handlers.JSONHandler
-		dbHandler = handlers.DBHandler(db)
-		queriesHandler = handlers.QueriesHandler(db)
-		updateHandler = handlers.UpdateHandler(db)
-	}
+	defer views.CloseDB()
 
 	// init atreugo server
 	server := atreugo.New(atreugo.Config{
@@ -95,12 +48,12 @@ func main() {
 	})
 
 	// init handlers
-	server.GET("/plaintext", handlers.PlaintextHandler)
-	server.GET("/json", jsonHandler)
-	server.GET("/db", dbHandler)
-	server.GET("/queries", queriesHandler)
-	server.GET("/fortune", fortuneHandler)
-	server.GET("/update", updateHandler)
+	server.GET("/plaintext", views.Plaintext)
+	server.GET("/json", views.JSON)
+	server.GET("/db", views.DB)
+	server.GET("/queries", views.Queries)
+	server.GET("/fortune", views.FortuneQuick)
+	server.GET("/update", views.Update)
 
 	if err := server.ListenAndServe(); err != nil {
 		panic(err)
