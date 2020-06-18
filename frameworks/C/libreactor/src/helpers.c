@@ -84,10 +84,10 @@ reactor_status custom_reactor_net_bind(reactor_net *net, char *node, char *servi
   net->options |= REACTOR_NET_OPTION_PASSIVE;
 
   hints = (struct addrinfo) {.ai_family = 0, .ai_socktype = SOCK_STREAM, .ai_flags = AI_PASSIVE};
-  (void) getaddrinfo(node, service, &hints, &ai);
+  e = getaddrinfo(node, service, &hints, &ai);
 
-  if (!ai)
-    err(1, "error resolving address");
+  if (e)
+    err(1, "unable to resolve %s:%s %s\n", node, service, gai_strerror(e));
 
   fileno = socket(ai->ai_family, SOCK_STREAM | SOCK_NONBLOCK, 0);
   reactor_assert_int_not_equal(fileno, -1);
