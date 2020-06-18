@@ -47,7 +47,7 @@ func main() {
 		Prefork: prefork,
 	})
 
-	// init handlers
+	// init views
 	server.GET("/plaintext", views.Plaintext)
 	server.GET("/json", views.JSON)
 	server.GET("/db", views.DB)
