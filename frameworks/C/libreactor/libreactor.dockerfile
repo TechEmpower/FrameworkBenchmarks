@@ -1,11 +1,11 @@
-FROM ubuntu:18.04 as builder
+FROM ubuntu:20.04 as builder
 
 RUN apt-get update -yqq
-RUN apt-get install -yqq wget make automake libtool file gcc-8 g++-8
+RUN apt-get install -yqq wget make automake libtool file gcc-9 g++-9
 
 WORKDIR /libreactor
 
-ENV CC=gcc-8 AR=gcc-ar-8 NM=gcc-nm-8 RANLIB=gcc-ranlib-8
+ENV CC=gcc-9 AR=gcc-ar-9 NM=gcc-nm-9 RANLIB=gcc-ranlib-9
 
 RUN wget -q https://github.com/akheron/jansson/archive/v2.12.tar.gz -O jansson-2.12.tar.gz && \
     tar xfz jansson-2.12.tar.gz && \
@@ -38,7 +38,7 @@ COPY Makefile /libreactor/Makefile
 RUN make
 
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 WORKDIR /libreactor
 COPY --from=builder /libreactor .
