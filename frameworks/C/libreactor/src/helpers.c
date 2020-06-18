@@ -16,31 +16,57 @@
 #include <reactor.h>
 #include <clo.h>
 
-static char date_header[] = "Date: Thu, 01 Jan 1970 00:00:00 GMT\r\n";
-static size_t date_header_size = sizeof(date_header) - 1;
-
-
-// Updates the date string
-void update_date()
+// Returns the full header and trailing \r\n
+reactor_vector http_date_header(int update)
 {
-  static const char *days[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-  static const char *months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-
   time_t t;
   struct tm tm;
+  static const char *days[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+  static const char *months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+  static __thread char date_header[38] = "Date: Thu, 01 Jan 1970 00:00:00 GMT\r\n";
 
-  (void) time(&t);
-  (void) gmtime_r(&t, &tm);
-  (void) strftime(date_header, date_header_size, "Date: ---, %d --- %Y %H:%M:%S GMT\r\n", &tm);
-  memcpy(date_header + 6, days[tm.tm_wday], 3);
-  memcpy(date_header + 14, months[tm.tm_mon], 3);
+  if (update)
+    {
+      (void) time(&t);
+      (void) gmtime_r(&t, &tm);
+      (void) strftime(date_header, 38, "Date: ---, %d --- %Y %H:%M:%S GMT\r\n", &tm);
+      memcpy(date_header + 6, days[tm.tm_wday], 3);
+      memcpy(date_header + 14, months[tm.tm_mon], 3);
+    }
+
+  return (reactor_vector) {date_header, 37};
 }
 
-// Copies the date string to the preamble
-void copy_date(char *target, size_t position)
+// Returns the full header and trailing \r\n
+// Also includes the final \r\n separating the headers from response body
+reactor_vector http_content_length_header(uint32_t n)
 {
-  memcpy(target + position, date_header, date_header_size);
+  static __thread char header[32] = "Content-Length: "; // full 32 elements still allocated
+  size_t length = reactor_utility_u32len(n);
+
+  reactor_utility_u32sprint(n, header + length + 16);
+  memcpy(header + length + 16, "\r\n\r\n", 4);
+
+  return (reactor_vector){header, length + 16 + 4};
 }
+
+// memcpy the response directly to the output buffer and adjust the buffer size accordingly
+void write_response(reactor_stream *stream, reactor_vector preamble, reactor_vector body)
+{
+  char *output_stream_ptr;
+  reactor_vector date_header = http_date_header(0); // includes header name and \r\n
+  reactor_vector content_length_header = http_content_length_header(body.size); // includes header name and \r\n\r\n
+  size_t response_size = preamble.size + date_header.size + content_length_header.size + body.size;
+
+  buffer_reserve(&stream->output, response_size);
+  output_stream_ptr = (char *) buffer_data(&stream->output);
+  memcpy(output_stream_ptr, preamble.base, preamble.size);
+  memcpy(output_stream_ptr + preamble.size, date_header.base, date_header.size);
+  memcpy(output_stream_ptr + preamble.size + date_header.size, content_length_header.base, content_length_header.size);
+  memcpy(output_stream_ptr + preamble.size + date_header.size + content_length_header.size, body.base, body.size);
+  stream->output.size += response_size;
+}
+
 
 // Custom version of reactor_net_bind that doesn't use reactor_resolver/reactor_pool to resolve the address
 // We just call getaddrinfo here directly instead. It is called at start we don't need to worry about it blocking
