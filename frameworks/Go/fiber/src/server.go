@@ -48,8 +48,8 @@ func main() {
 	})
 
 	app.Get("/plaintext", plaintextHandler)
-	app.Get("/db", dbHandler)
 	app.Get("/json", jsonHandler)
+	app.Get("/db", dbHandler)
 	app.Get("/update", updateHandler)
 	app.Get("/queries", queriesHandler)
 	app.Get("/fortune", templateHandler)
@@ -148,7 +148,7 @@ func initDatabase() {
 // jsonHandler :
 func jsonHandler(c *fiber.Ctx) {
 	m := AcquireJSON()
-	m.Message = "Hello, World!"
+	m.Message = helloworld
 	c.JSON(m)
 	ReleaseJSON(m)
 }
