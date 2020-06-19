@@ -48,11 +48,11 @@ func main() {
 	})
 
 	app.Get("/plaintext", plaintextHandler)
+	app.Get("/db", dbHandler)
 	app.Get("/json", jsonHandler)
+	app.Get("/update", updateHandler)
 	app.Get("/queries", queriesHandler)
 	app.Get("/fortune", templateHandler)
-	app.Get("/db", dbHandler)
-	app.Get("/update", updateHandler)
 
 	app.Listen(8080)
 }
