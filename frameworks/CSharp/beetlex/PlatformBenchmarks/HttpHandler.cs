@@ -17,7 +17,7 @@ namespace PlatformBenchmarks
 
         private static AsciiString _httpsuccess = new AsciiString("HTTP/1.1 200 OK\r\n");
 
-        private static readonly AsciiString _headerServer = "Server: Beetlex\r\n";
+        private static readonly AsciiString _headerServer = "Server: TFB\r\n";
 
         private static readonly AsciiString _headerContentLength = "Content-Length: ";
 
@@ -53,7 +53,7 @@ namespace PlatformBenchmarks
         {
             int threads = System.Math.Min(Environment.ProcessorCount, 16);
             NextQueueGroup = new NextQueueGroup(threads);
-          
+
         }
 
         public void Default(ReadOnlySpan<byte> url, PipeStream stream, HttpToken token, ISession session)
@@ -88,7 +88,7 @@ namespace PlatformBenchmarks
         {
             public void Dispose()
             {
-               
+
             }
 
             public PipeStream Stream { get; set; }
@@ -106,19 +106,19 @@ namespace PlatformBenchmarks
             }
         }
 
-        private void OnProcess(PipeStream pipeStream,HttpToken token,ISession sessino)
+        private void OnProcess(PipeStream pipeStream, HttpToken token, ISession sessino)
         {
             var line = _line.AsSpan();
             int len = (int)pipeStream.FirstBuffer.Length;
-            var receiveData = pipeStream.FirstBuffer.Memory.Span;      
-            ReadOnlySpan<byte> http= line;
-            ReadOnlySpan<byte> method= line;
-            ReadOnlySpan<byte> url= line;
+            var receiveData = pipeStream.FirstBuffer.Memory.Span;
+            ReadOnlySpan<byte> http = line;
+            ReadOnlySpan<byte> method = line;
+            ReadOnlySpan<byte> url = line;
             int offset2 = 0;
             int count = 0;
-            for(int i=0;i<len;i++)
+            for (int i = 0; i < len; i++)
             {
-                if(receiveData[i]==line[0])
+                if (receiveData[i] == line[0])
                 {
                     http = receiveData.Slice(offset2, i - offset2);
                     break;
@@ -169,6 +169,14 @@ namespace PlatformBenchmarks
 
         public virtual void OnStartLine(ReadOnlySpan<byte> http, ReadOnlySpan<byte> method, ReadOnlySpan<byte> url, ISession session, HttpToken token, PipeStream stream)
         {
+            if (!Program.Debug)
+            {
+                UpdateCommandsCached.Init();
+                if (Program.UpDB)
+                    DBConnectionGroupPool.Init(32, RawDb._connectionString);
+                else
+                    DBConnectionGroupPool.Init(256, RawDb._connectionString);
+            }
             int queryIndex = AnalysisUrl(url);
             ReadOnlySpan<byte> baseUrl = default;
             ReadOnlySpan<byte> queryString = default;

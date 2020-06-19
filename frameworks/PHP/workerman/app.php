@@ -137,7 +137,6 @@ function fortune()
 
     return new Response(200, [
         'Date'         => Header::$date
-    ], '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
-        .$html.
-        '</table></body></html>');
+    ], "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>$html</table></body></html>"
+    );
 }
