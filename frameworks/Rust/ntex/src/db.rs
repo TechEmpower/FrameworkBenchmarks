@@ -1,6 +1,7 @@
 use std::cell::RefCell;
 use std::fmt::Write as FmtWrite;
-use std::io::{self, Write};
+use std::io;
+use std::borrow::Cow;
 
 use bytes::{Bytes, BytesMut};
 use futures::stream::futures_unordered::FuturesUnordered;
@@ -11,6 +12,7 @@ use simd_json_derive::Serialize;
 use smallvec::{smallvec, SmallVec};
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, NoTls, Statement};
+use yarte::TemplateBytes;
 
 use crate::utils::Writer;
 
@@ -21,15 +23,15 @@ pub struct World {
 }
 
 #[derive(serde::Serialize, Debug)]
-pub struct Fortune<'a> {
+pub struct Fortune {
     pub id: i32,
-    pub message: &'a str,
+    pub message: Cow<'static, str>,
 }
 
-#[derive(yarte::Template)]
-#[template(path = "fortune.hbs")]
-pub struct FortunesTemplate<'a> {
-    pub fortunes: &'a [Fortune<'a>],
+#[derive(TemplateBytes)]
+#[template(path = "fortune")]
+pub struct FortunesTemplate {
+    pub fortunes: SmallVec<[Fortune; 32]>,
 }
 
 /// Postgres interface
@@ -182,30 +184,27 @@ impl PgConnection {
                 .await
                 .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))?;
 
-            let mut rows = SmallVec::<[_; 32]>::new();
+            let mut fortunes: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
+                id: 0,
+                message: Cow::Borrowed("Additional fortune added at request time."),
+            }];
+
             while let Some(row) = stream.next().await {
                 let row = row.map_err(|e| {
                     io::Error::new(io::ErrorKind::Other, format!("{:?}", e))
                 })?;
-                rows.push(row);
-            }
-
-            let mut items: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
-                id: 0,
-                message: "Additional fortune added at request time.",
-            }];
-            for row in &rows {
-                items.push(Fortune {
+                fortunes.push(Fortune {
                     id: row.get(0),
-                    message: row.get(1),
+                    message: Cow::Owned(row.get(1)),
                 });
             }
-            items.sort_by(|it, next| it.message.cmp(&next.message));
 
-            let mut body = BytesMut::with_capacity(2048);
-            let _ = write!(Writer(&mut body), "{}", FortunesTemplate { fortunes: items.as_ref() });
+            fortunes.sort_by(|it, next| it.message.cmp(&next.message));
 
-            Ok(body.freeze())
+            // TODO: avoid option
+            FortunesTemplate { fortunes }
+                .ccall(2048)
+                .ok_or(io::Error::new(io::ErrorKind::Other, "Buffer overflow"))
         }
     }
 }
