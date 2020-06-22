@@ -1,7 +1,7 @@
+use std::borrow::Cow;
 use std::cell::RefCell;
 use std::fmt::Write as FmtWrite;
 use std::io;
-use std::borrow::Cow;
 
 use bytes::{Bytes, BytesMut};
 use futures::stream::futures_unordered::FuturesUnordered;
@@ -201,10 +201,7 @@ impl PgConnection {
 
             fortunes.sort_by(|it, next| it.message.cmp(&next.message));
 
-            // TODO: avoid option
-            FortunesTemplate { fortunes }
-                .ccall(2048)
-                .ok_or(io::Error::new(io::ErrorKind::Other, "Buffer overflow"))
+            Ok(FortunesTemplate { fortunes }.ccall(2048))
         }
     }
 }
