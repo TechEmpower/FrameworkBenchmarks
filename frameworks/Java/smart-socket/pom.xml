@@ -16,7 +16,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <log4j.version>2.11.0</log4j.version>
-        <aio-enhance.version>1.0.0</aio-enhance.version>
+        <aio-enhance.version>1.0.1-SNAPSHOT</aio-enhance.version>
     </properties>
     <dependencies>
         <dependency>
