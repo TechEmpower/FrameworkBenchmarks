@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <quarkus.version>1.4.2.Final</quarkus.version>
+        <quarkus.version>1.5.2.Final</quarkus.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
@@ -53,11 +53,6 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-postgresql</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.spullara.mustache.java</groupId>
-            <artifactId>compiler</artifactId>
-            <version>0.9.6</version>
         </dependency>
     </dependencies>
 
