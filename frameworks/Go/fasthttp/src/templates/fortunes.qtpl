@@ -1,4 +1,4 @@
-{% func FortunePage(rows Fortunes) %}<!DOCTYPE html>
+{% func FortunePage(rows []Fortune) %}<!DOCTYPE html>
 <html>
 <head>
 <title>Fortunes</title>

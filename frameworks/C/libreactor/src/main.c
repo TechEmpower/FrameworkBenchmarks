@@ -13,12 +13,13 @@
 #include "setup.h"
 #include "helpers.h"
 
-enum response_type
-{
- JSON = 0,
- PLAINTEXT = 1
-};
-typedef enum response_type response_type;
+#define JSON_PREAMBLE "HTTP/1.1 200 OK\r\n"\
+                      "Server: libreactor\r\n"\
+                      "Content-Type: application/json\r\n"
+
+#define TEXT_PREAMBLE "HTTP/1.1 200 OK\r\n"\
+                      "Server: libreactor\r\n"\
+                      "Content-Type: text/plain\r\n"
 
 struct http_server
 {
@@ -26,59 +27,44 @@ struct http_server
   list           connections;
 };
 
-static char json_preamble[] = "HTTP/1.1 200 OK\r\n"
-                              "Server: libreactor\r\n"
-                              "Content-Type: application/json\r\n"
-                              "Date: Thu, 01 Jan 1970 00:00:00 GMT\r\n"
-                              "Content-Length: ";
-
-static char plaintext_preamble[] = "HTTP/1.1 200 OK\r\n"
-                                   "Server: libreactor\r\n"
-                                   "Content-Type: text/plain\r\n"
-                                   "Date: Thu, 01 Jan 1970 00:00:00 GMT\r\n"
-                                   "Content-Length: ";
-
-static size_t json_preamble_size = sizeof(json_preamble) - 1;
-static size_t plaintext_preamble_size = sizeof(plaintext_preamble) - 1;
-
-
-static int send_response(reactor_http *http_connection, char *response, response_type type)
+static void plaintext(reactor_stream *stream, char *response)
 {
-  reactor_vector body = reactor_vector_string(response);
-  reactor_vector content_length = reactor_utility_u32tov(body.size);
+  static const reactor_vector text_preamble = { .base = TEXT_PREAMBLE, .size = sizeof(TEXT_PREAMBLE) - 1 };
+  write_response(stream, text_preamble, reactor_vector_string(response));
+}
 
-  if (type == JSON){
-    reactor_stream_write(&http_connection->stream, json_preamble, json_preamble_size);
-  }
-  else {
-    reactor_stream_write(&http_connection->stream, plaintext_preamble, plaintext_preamble_size);
-  }
+static void json(reactor_stream *stream, clo *json_object)
+{
+  static const reactor_vector json_preamble = { .base = JSON_PREAMBLE, .size = sizeof(JSON_PREAMBLE) - 1 };
+  static char json_string[4096];
 
-  reactor_stream_write(&http_connection->stream, content_length.base, content_length.size);
-  reactor_stream_write(&http_connection->stream, "\r\n\r\n", 4);
-  reactor_stream_write(&http_connection->stream, body.base, body.size);
-  return REACTOR_OK;
+  (void) clo_encode(json_object, json_string, sizeof(json_string));
+  write_response(stream, json_preamble, reactor_vector_string(json_string));
 }
 
 static reactor_status http_handler(reactor_event *event)
 {
+  static char hello_string[] = "Hello, World!";
+  static char default_string[] = "Hello from libreactor!\n";
+  static clo_pair json_pair[] = {{ .string = "message", .value = { .type = CLO_STRING, .string = "Hello, World!" }}};
+  static clo json_object[] = {{ .type = CLO_OBJECT, .object = json_pair }};
+
   reactor_http *http_connection = event->state;
   reactor_http_request *request;
-  char json_msg[4096];
 
   if (event->type == REACTOR_HTTP_EVENT_REQUEST){
     request = (reactor_http_request *) event->data;
 
     if (reactor_vector_equal(request->target, reactor_vector_string("/json"))){
-      (void) clo_encode((clo[]) {clo_object({"message", clo_string("Hello, World!")})}, json_msg, sizeof(json_msg));
-      return send_response(http_connection, json_msg, JSON);
+      json(&http_connection->stream, json_object);
     }
     else if (reactor_vector_equal(request->target, reactor_vector_string("/plaintext"))){
-      return send_response(http_connection, "Hello, World!", PLAINTEXT);
+      plaintext(&http_connection->stream, hello_string);
     }
     else{
-      return send_response(http_connection, "Hello from libreactor!\n", PLAINTEXT);
+      plaintext(&http_connection->stream, default_string);
     }
+    return REACTOR_OK;
   }
   else {
     reactor_http_destruct(http_connection);
@@ -107,20 +93,12 @@ static reactor_status net_handler(reactor_event *event)
     }
 }
 
-static void set_date()
-{
-  update_date();
-  copy_date(json_preamble, 69);
-  copy_date(plaintext_preamble, 63);
-}
-
 static reactor_status http_date_timer_handler(reactor_event *event)
 {
   (void) event;
-  set_date();
+  http_date_header(1); // update the date header
   return REACTOR_OK;
 }
-
 
 int main()
 {
@@ -131,8 +109,8 @@ int main()
   list_construct(&server.connections);
   reactor_core_construct();
 
-  // set the correct date in the preambles before the server starts. Timer then updates them every second
-  set_date();
+  // Set the correct date before the server starts. Timer then updates it every second
+  http_date_header(1);
   reactor_timer_construct(&timer, http_date_timer_handler, &timer);
   reactor_timer_set(&timer, 1, 1000000000);
 

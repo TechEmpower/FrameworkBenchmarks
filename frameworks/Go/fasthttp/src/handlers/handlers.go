@@ -4,134 +4,129 @@ import (
 	"encoding/json"
 	"sort"
 
-	"fasthttp/src/storage"
 	"fasthttp/src/templates"
 
+	pgx "github.com/jackc/pgx/v4"
 	"github.com/valyala/fasthttp"
 )
 
-const helloWorldStr = "Hello, World!"
+const (
+	helloWorldStr = "Hello, World!"
 
-func queriesParam(ctx *fasthttp.RequestCtx) int {
-	n := ctx.QueryArgs().GetUintOrZero("queries")
-	if n < 1 {
-		n = 1
-	} else if n > 500 {
-		n = 500
-	}
+	contentTypeJSON = "application/json"
+	contentTypeHTML = "text/html; charset=utf-8"
+)
 
-	return n
-}
-
-// JSONHandler . Test 1: JSON serialization
-func JSONHandler(ctx *fasthttp.RequestCtx) {
-	message := AcquireMessage()
+// JSON . Test 1: JSON serialization.
+func JSON(ctx *fasthttp.RequestCtx) {
+	message := acquireMessage()
 	message.Message = helloWorldStr
 	data, _ := json.Marshal(message)
 
-	ctx.SetContentType("application/json")
-	ctx.Write(data)
+	ctx.Response.Header.SetContentType(contentTypeJSON)
+	ctx.Response.SetBody(data)
 
-	ReleaseMessage(message)
+	releaseMessage(message)
 }
 
-// DBHandler . Test 2: Single database query
-func DBHandler(db storage.DB) fasthttp.RequestHandler {
-	return func(ctx *fasthttp.RequestCtx) {
-		world := storage.AcquireWorld()
-		db.GetOneRandomWorld(world)
-		data, _ := json.Marshal(world)
+// DB . Test 2: Single database query.
+func DB(ctx *fasthttp.RequestCtx) {
+	w := acquireWorld()
+	id := randomWorldNum()
 
-		ctx.SetContentType("application/json")
-		ctx.Write(data)
+	db.QueryRow(ctx, worldSelectSQL, id).Scan(&w.ID, &w.RandomNumber) // nolint:errcheck
+	data, _ := json.Marshal(w)
 
-		storage.ReleaseWorld(world)
+	ctx.Response.Header.SetContentType(contentTypeJSON)
+	ctx.Response.SetBody(data)
+
+	releaseWorld(w)
+}
+
+// Queries . Test 3: Multiple database queries.
+func Queries(ctx *fasthttp.RequestCtx) {
+	queries := queriesParam(ctx)
+	worlds := acquireWorlds()
+	worlds.W = worlds.W[:queries]
+
+	for i := range worlds.W {
+		w := &worlds.W[i]
+		id := randomWorldNum()
+
+		db.QueryRow(ctx, worldSelectSQL, id).Scan(&w.ID, &w.RandomNumber) // nolint:errcheck
 	}
+
+	data, _ := json.Marshal(worlds.W)
+
+	ctx.Response.Header.SetContentType(contentTypeJSON)
+	ctx.Response.SetBody(data)
+
+	releaseWorlds(worlds)
 }
 
-// QueriesHandler . Test 3: Multiple database queries
-func QueriesHandler(db storage.DB) fasthttp.RequestHandler {
-	return func(ctx *fasthttp.RequestCtx) {
-		queries := queriesParam(ctx)
-		worlds := storage.AcquireWorlds()[:queries]
+// FortuneQuick . Test 4: Fortunes.
+func FortuneQuick(ctx *fasthttp.RequestCtx) {
+	fortune := templates.AcquireFortune()
+	fortunes := templates.AcquireFortunes()
 
-		for i := 0; i < queries; i++ {
-			db.GetOneRandomWorld(&worlds[i])
-		}
-
-		data, _ := json.Marshal(worlds)
-
-		ctx.SetContentType("application/json")
-		ctx.Write(data)
-
-		storage.ReleaseWorlds(worlds)
+	rows, _ := db.Query(ctx, fortuneSelectSQL)
+	for rows.Next() {
+		rows.Scan(&fortune.ID, &fortune.Message) // nolint:errcheck
+		fortunes.F = append(fortunes.F, *fortune)
 	}
+
+	fortune.ID = 0
+	fortune.Message = "Additional fortune added at request time."
+	fortunes.F = append(fortunes.F, *fortune)
+
+	sort.Slice(fortunes.F, func(i, j int) bool {
+		return fortunes.F[i].Message < fortunes.F[j].Message
+	})
+
+	ctx.Response.Header.SetContentType(contentTypeHTML)
+	templates.WriteFortunePage(ctx, fortunes.F)
+
+	templates.ReleaseFortune(fortune)
+	templates.ReleaseFortunes(fortunes)
 }
 
-// FortuneHandler . Test 4: Fortunes
-func FortuneHandler(db storage.DB) fasthttp.RequestHandler {
-	return func(ctx *fasthttp.RequestCtx) {
-		fortunes, _ := db.GetFortunes()
-		newFortune := templates.AcquireFortune()
-		newFortune.Message = "Additional fortune added at request time."
-		fortunes = append(fortunes, *newFortune)
+// Update . Test 5: Database updates.
+func Update(ctx *fasthttp.RequestCtx) {
+	queries := queriesParam(ctx)
+	worlds := acquireWorlds()
+	worlds.W = worlds.W[:queries]
 
-		sort.Slice(fortunes, func(i, j int) bool {
-			return fortunes[i].Message < fortunes[j].Message
-		})
+	for i := range worlds.W {
+		w := &worlds.W[i]
+		id := randomWorldNum()
 
-		ctx.SetContentType("text/html; charset=utf-8")
-
-		templates.FortuneTemplate.Execute(ctx, fortunes)
-
-		templates.ReleaseFortune(newFortune)
-		templates.ReleaseFortunes(fortunes)
+		db.QueryRow(ctx, worldSelectSQL, id).Scan(&w.ID, &w.RandomNumber) // nolint:errcheck
+		w.RandomNumber = int32(randomWorldNum())
 	}
-}
 
-// FortuneQuickHandler . Test 4: Fortunes
-func FortuneQuickHandler(db storage.DB) fasthttp.RequestHandler {
-	return func(ctx *fasthttp.RequestCtx) {
-		fortunes, _ := db.GetFortunes()
-		newFortune := templates.AcquireFortune()
-		newFortune.Message = "Additional fortune added at request time."
-		fortunes = append(fortunes, *newFortune)
+	// against deadlocks
+	sort.Slice(worlds.W, func(i, j int) bool {
+		return worlds.W[i].ID < worlds.W[j].ID
+	})
 
-		sort.Slice(fortunes, func(i, j int) bool {
-			return fortunes[i].Message < fortunes[j].Message
-		})
+	batch := &pgx.Batch{}
 
-		ctx.SetContentType("text/html; charset=utf-8")
-		templates.WriteFortunePage(ctx, fortunes)
-
-		templates.ReleaseFortune(newFortune)
-		templates.ReleaseFortunes(fortunes)
+	for i := range worlds.W {
+		w := &worlds.W[i]
+		batch.Queue(worldUpdateSQL, w.RandomNumber, w.ID)
 	}
+
+	db.SendBatch(ctx, batch).Close()
+
+	data, _ := json.Marshal(worlds.W)
+
+	ctx.Response.Header.SetContentType(contentTypeJSON)
+	ctx.Response.SetBody(data)
+
+	releaseWorlds(worlds)
 }
 
-// UpdateHandler . Test 5: Database updates
-func UpdateHandler(db storage.DB) fasthttp.RequestHandler {
-	return func(ctx *fasthttp.RequestCtx) {
-		queries := queriesParam(ctx)
-		worlds := storage.AcquireWorlds()[:queries]
-
-		for i := 0; i < queries; i++ {
-			w := &worlds[i]
-			db.GetOneRandomWorld(w)
-			w.RandomNumber = int32(storage.RandomWorldNum())
-		}
-
-		db.UpdateWorlds(worlds)
-		data, _ := json.Marshal(worlds)
-
-		ctx.SetContentType("application/json")
-		ctx.Write(data)
-
-		storage.ReleaseWorlds(worlds)
-	}
-}
-
-// PlaintextHandler . Test 6: Plaintext
-func PlaintextHandler(ctx *fasthttp.RequestCtx) {
-	ctx.WriteString(helloWorldStr)
+// Plaintext . Test 6: Plaintext.
+func Plaintext(ctx *fasthttp.RequestCtx) {
+	ctx.Response.SetBodyString(helloWorldStr)
 }

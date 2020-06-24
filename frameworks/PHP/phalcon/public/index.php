@@ -95,7 +95,7 @@ try {
     $request = new Phalcon\Http\Request();
     $application = new \Phalcon\Mvc\Application();
     $application->setDI($di);
-    echo $application->handle($request->getURI())->getContent();
+    $application->handle($request->getURI())->send();
 
 } catch(\Phalcon\Exception $e) {
     echo "PhalconException: ", $e->getMessage();
