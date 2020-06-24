@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Model\DbModel;
+use App\Model\MicroModel;
 use Simps\Server\Protocol\HTTP\SimpleResponse;
 
 class IndexController
@@ -123,7 +124,7 @@ class IndexController
 
     public function microDb($server, $fd)
     {
-        $db = new DbModel();
+        $db = new MicroModel();
         $res = $db->microDb();
 
         $server->send(
@@ -138,7 +139,7 @@ class IndexController
 
     public function microQueries($server, $fd, $data)
     {
-        $db = new DbModel();
+        $db = new MicroModel();
         if (isset($data['queries'])) {
             $res = $db->microQueries((int)$data['queries']);
         } else {
@@ -157,7 +158,7 @@ class IndexController
 
     public function microUpdates($server, $fd, $data)
     {
-        $db = new DbModel();
+        $db = new MicroModel();
         if (isset($data['queries'])) {
             $res = $db->microUpdates((int)$data['queries']);
         } else {
