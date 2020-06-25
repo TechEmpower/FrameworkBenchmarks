@@ -1,6 +1,6 @@
-import asyncio
+import uvloop
 
 from .main import create_app
 
-loop = asyncio.get_event_loop()
+loop = uvloop.new_event_loop()
 app = create_app(loop)
