@@ -11,4 +11,4 @@ keepalive = 120
 errorlog = '-'
 pidfile = 'gunicorn.pid'
 
-worker_class = 'aiohttp.worker.GunicornUVLoopWebWorker'
+worker_class = 'uvicorn.workers.UvicornWorker'
