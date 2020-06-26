@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.StringJoiner;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -24,35 +25,42 @@ public class UpdateHandler extends HttpHandle {
 
     @Override
     public void doHandle(HttpRequest httpRequest, HttpResponse response) throws IOException {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement queryPreparedStatement = connection.prepareStatement("SELECT * FROM World WHERE id=?");
-             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE world SET randomnumber=? WHERE id=?");) {
-            int queries = Math.min(Math.max(NumberUtils.toInt(httpRequest.getParameter("queries"), 1), 1), 500);
-            World[] worlds = new World[queries];
+        int queries = Math.min(Math.max(NumberUtils.toInt(httpRequest.getParameter("queries"), 1), 1), 500);
+        World[] worlds = new World[queries];
+        StringJoiner updateSql = new StringJoiner(
+                ", ",
+                "UPDATE world SET randomnumber = temp.randomnumber FROM (VALUES ",
+                " ORDER BY 1) AS temp(id, randomnumber) WHERE temp.id = world.id");
+        try (Connection connection = dataSource.getConnection()) {
 
-            for (int i = 0; i < queries; i++) {
-                queryPreparedStatement.setInt(1, getRandomNumber());
-                ResultSet resultSet = queryPreparedStatement.executeQuery();
-                resultSet.next();
-                World world = new World();
-                world.setId(resultSet.getInt(1));
-                world.setRandomNumber(resultSet.getInt(2));
-                worlds[i] = world;
-                worlds[i].setRandomNumber(getRandomNumber());
-                queryPreparedStatement.clearParameters();
+            try (PreparedStatement queryPreparedStatement = connection.prepareStatement("SELECT * FROM World WHERE id=?");) {
+                for (int i = 0; i < queries; i++) {
+                    queryPreparedStatement.setInt(1, getRandomNumber());
+                    ResultSet resultSet = queryPreparedStatement.executeQuery();
+                    resultSet.next();
+                    World world = new World();
+                    world.setId(resultSet.getInt(1));
+                    world.setRandomNumber(getRandomNumber());
+                    worlds[i] = world;
+                    queryPreparedStatement.clearParameters();
+                    updateSql.add("(?, ?)");
+                }
             }
 
-            for (int i = 0; i < queries; i++) {
-                preparedStatement.setInt(1, worlds[i].getRandomNumber());
-                preparedStatement.setInt(2, worlds[i].getId());
-                preparedStatement.addBatch();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(updateSql.toString());) {
+                int i = 0;
+                for (World world : worlds) {
+                    preparedStatement.setInt(++i, world.getId());
+                    preparedStatement.setInt(++i, world.getRandomNumber());
+                }
+                preparedStatement.executeUpdate();
             }
-            preparedStatement.executeBatch();
-            response.setContentType("application/json");
-            JsonUtil.writeJsonBytes(response, worlds);
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        response.setContentType("application/json");
+        JsonUtil.writeJsonBytes(response, worlds);
     }
 
     protected int getRandomNumber() {

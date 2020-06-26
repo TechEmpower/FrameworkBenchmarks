@@ -24,10 +24,10 @@ public class MultipleQueriesHandler extends HttpHandle {
 
     @Override
     public void doHandle(HttpRequest httpRequest, HttpResponse response) throws IOException {
+        int queries = Math.min(Math.max(NumberUtils.toInt(httpRequest.getParameter("queries"), 1), 1), 500);
+        World[] worlds = new World[queries];
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM World WHERE id=?");) {
-            int queries = Math.min(Math.max(NumberUtils.toInt(httpRequest.getParameter("queries"), 1), 1), 500);
-            World[] worlds = new World[queries];
 
             for (int i = 0; i < queries; i++) {
                 preparedStatement.setInt(1, getRandomNumber());
@@ -39,11 +39,12 @@ public class MultipleQueriesHandler extends HttpHandle {
                 worlds[i] = world;
                 preparedStatement.clearParameters();
             }
-            response.setContentType("application/json");
-            JsonUtil.writeJsonBytes(response, worlds);
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        response.setContentType("application/json");
+        JsonUtil.writeJsonBytes(response, worlds);
     }
 
     protected int getRandomNumber() {
