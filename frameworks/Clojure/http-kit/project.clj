@@ -14,7 +14,7 @@
                  ; [org.slf4j/jcl-over-slf4j "1.7.7"]
                  ; [org.slf4j/log4j-over-slf4j "1.7.7"]
                  [ring/ring-jetty-adapter "1.4.0"]
-                 [mysql/mysql-connector-java "5.1.38"]
+                 [mysql/mysql-connector-java "5.1.47"]
                  [org.clojure/java.jdbc "0.3.7"]
                  [hikari-cp "1.5.0"]
                  [hiccup "1.0.5"]]

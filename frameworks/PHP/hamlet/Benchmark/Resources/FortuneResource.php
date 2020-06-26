@@ -3,34 +3,32 @@
 namespace Benchmark\Resources;
 
 use Benchmark\Entities\FortuneEntity;
-use Hamlet\Database\Database;
-use Hamlet\Requests\Request;
-use Hamlet\Resources\WebResource;
-use Hamlet\Responses\OKResponse;
-use Hamlet\Responses\Response;
+use Benchmark\Entities\Message;
+use Hamlet\Database\Session;
+use Hamlet\Http\Requests\Request;
+use Hamlet\Http\Resources\HttpResource;
+use Hamlet\Http\Responses\{Response, SimpleOKResponse};
 
-class FortuneResource implements WebResource
+class FortuneResource extends DbResource
 {
-    private $database;
-
-    public function __construct(Database $database)
-    {
-        $this->database = $database;
-    }
-
     public function getResponse(Request $request): Response
     {
-        $query = '
-            SELECT id,
-                   message
-              FROM Fortune
-        ';
-        $procedure = $this->database->prepare($query);
-        $messages = $procedure->processAll()
-            ->map('id', 'message')->flatten()
-            ->collectAll();
-        $messages[0] = 'Additional fortune added at request time.';
-        asort($messages);
-        return new OKResponse(new FortuneEntity($messages));
+        $messages = $this->database->withSession(
+            function (Session $session) {
+                $procedure = $session->prepare('
+                    SELECT id,
+                           message
+                      FROM Fortune
+                ');
+                return $procedure->processAll()
+                    ->selectAll()->cast(Message::class)
+                    ->collectAll();
+            }
+        );
+        $messages[] = new Message(0, 'Additional fortune added at request time.');
+        usort($messages, function (Message $a, Message $b): int {
+            return $a->message() <=> $b->message();
+        });
+        return new SimpleOKResponse(new FortuneEntity($messages));
     }
 }

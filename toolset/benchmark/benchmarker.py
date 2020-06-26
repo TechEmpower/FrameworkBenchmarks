@@ -14,6 +14,7 @@ import shlex
 from pprint import pprint
 
 from colorama import Fore
+import numbers
 
 
 class Benchmarker:
@@ -31,6 +32,8 @@ class Benchmarker:
 
         self.results = Results(self)
         self.docker_helper = DockerHelper(self)
+
+        self.last_test = False
 
     ##########################################################################################
     # Public methods
@@ -57,6 +60,8 @@ class Benchmarker:
         with open(os.path.join(self.results.directory, 'benchmark.log'),
                   'w') as benchmark_log:
             for test in self.tests:
+                if self.tests.index(test) + 1 == len(self.tests):
+                    self.last_test = True
                 log("Running Test: %s" % test.name, border='-')
                 with self.config.quiet_out.enable():
                     if not self.__run_test(test, benchmark_log):
@@ -91,6 +96,10 @@ class Benchmarker:
                 file=file,
                 color=Fore.RED if success else '')
         self.time_logger.log_test_end(log_prefix=prefix, file=file)
+        if self.config.mode == "benchmark" and not self.last_test:
+            # Sleep for 60 seconds to ensure all host connects are closed
+            log("Clean up: Sleep 60 seconds...", prefix=prefix, file=file)
+            time.sleep(60)
         return success
 
     def __run_test(self, test, benchmark_log):
@@ -104,11 +113,17 @@ class Benchmarker:
         # Start timing the total test duration
         self.time_logger.mark_test_start()
 
+        if self.config.mode == "benchmark":
+            log("Benchmarking %s" % test.name,
+                file=benchmark_log,
+                border='-')
+
         # If the test is in the excludes list, we skip it
         if self.config.exclude and test.name in self.config.exclude:
             message = "Test {name} has been added to the excludes list. Skipping.".format(
                 name=test.name)
             self.results.write_intermediate(test.name, message)
+            self.results.upload()
             return self.__exit_test(
                 success=False,
                 message=message,
@@ -124,6 +139,8 @@ class Benchmarker:
                     test.database.lower())
                 if database_container is None:
                     message = "ERROR: Problem building/running database container"
+                    self.results.write_intermediate(test.name, message)
+                    self.results.upload()
                     return self.__exit_test(
                         success=False,
                         message=message,
@@ -135,10 +152,10 @@ class Benchmarker:
             container = test.start()
             self.time_logger.mark_test_starting()
             if container is None:
-                self.docker_helper.stop([container, database_container])
                 message = "ERROR: Problem starting {name}".format(
                     name=test.name)
                 self.results.write_intermediate(test.name, message)
+                self.results.upload()
                 return self.__exit_test(
                     success=False,
                     message=message,
@@ -154,10 +171,13 @@ class Benchmarker:
                     break
                 time.sleep(1)
 
+            if hasattr(test, 'wait_before_sending_requests') and isinstance(test.wait_before_sending_requests, numbers.Integral) and test.wait_before_sending_requests > 0:
+                time.sleep(test.wait_before_sending_requests)
+
             if not accepting_requests:
-                self.docker_helper.stop([container, database_container])
                 message = "ERROR: Framework is not accepting requests from client machine"
                 self.results.write_intermediate(test.name, message)
+                self.results.upload()
                 return self.__exit_test(
                     success=False,
                     message=message,
@@ -168,7 +188,9 @@ class Benchmarker:
 
             # Debug mode blocks execution here until ctrl+c
             if self.config.mode == "debug":
-                log("Entering debug mode. Server has started. CTRL-c to stop.",
+                msg = "Entering debug mode. Server http://localhost:%s has started. CTRL-c to stop.\r\n" % test.port
+                msg = msg + "From outside vagrant: http://localhost:%s" % (int(test.port) + 20000)
+                log(msg,
                     prefix=log_prefix,
                     file=benchmark_log,
                     color=Fore.YELLOW)
@@ -183,9 +205,6 @@ class Benchmarker:
 
             # Benchmark this test
             if self.config.mode == "benchmark":
-                log("Benchmarking %s" % test.name,
-                    file=benchmark_log,
-                    border='-')
                 self.time_logger.mark_benchmarking_start()
                 self.__benchmark(test, benchmark_log)
                 self.time_logger.log_benchmarking_end(
@@ -197,9 +216,6 @@ class Benchmarker:
             self.time_logger.log_test_accepting_requests(
                 log_prefix, benchmark_log)
             self.time_logger.log_verify_end(log_prefix, benchmark_log)
-
-            # Stop this test
-            self.docker_helper.stop([container, database_container])
 
             # Save results thus far into the latest results directory
             self.results.write_intermediate(test.name,
@@ -220,12 +236,15 @@ class Benchmarker:
             tb = traceback.format_exc()
             self.results.write_intermediate(test.name,
                                             "error during test: " + str(e))
+            self.results.upload()
             log(tb, prefix=log_prefix, file=benchmark_log)
             return self.__exit_test(
                 success=False,
                 message="Error during test: %s" % test.name,
                 prefix=log_prefix,
                 file=benchmark_log)
+        finally:
+            self.docker_helper.stop()
 
         return self.__exit_test(
             success=True, prefix=log_prefix, file=benchmark_log)
@@ -284,8 +303,8 @@ class Benchmarker:
         output_file = "{file_name}".format(
             file_name=self.results.get_stats_file(framework_test.name,
                                                   test_type))
-        dstat_string = "dstat -Tafilmprs --aio --fs --ipc --lock --raw --socket --tcp \
-                                      --raw --socket --tcp --udp --unix --vm --disk-util \
+        dstat_string = "dstat -Tafilmprs --aio --fs --ipc --lock --socket --tcp \
+                                      --raw --udp --unix --vm --disk-util \
                                       --rpc --rpcd --output {output_file}".format(
             output_file=output_file)
         cmd = shlex.split(dstat_string)
@@ -298,3 +317,4 @@ class Benchmarker:
         '''
         self.subprocess_handle.terminate()
         self.subprocess_handle.communicate()
+

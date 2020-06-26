@@ -1,13 +1,12 @@
-FROM microsoft/dotnet:2.1-sdk-stretch AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.101 AS build
 WORKDIR /app
 COPY PlatformBenchmarks .
-RUN dotnet publish -c Release -o out
-COPY Benchmarks/appsettings.mysql.json ./out/appsettings.json
+RUN dotnet publish -c Release -o out /p:IsDatabase=true
 
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.2 AS runtime
 ENV ASPNETCORE_URLS http://+:8080
-ENV COMPlus_ReadyToRun 0
 WORKDIR /app
 COPY --from=build /app/out ./
+COPY Benchmarks/appsettings.mysql.json ./appsettings.json
 
 ENTRYPOINT ["dotnet", "PlatformBenchmarks.dll"]

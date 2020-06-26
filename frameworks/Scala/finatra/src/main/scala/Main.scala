@@ -1,5 +1,5 @@
 import com.twitter.finagle.Http.Server
-import com.twitter.finagle.http.Request
+import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finagle.stack.nilStack
 import com.twitter.finagle.stats.NullStatsReceiver
 import com.twitter.finatra.http.filters.HttpResponseFilter
@@ -13,7 +13,7 @@ class FinatraBenchmarkServer extends HttpServer {
     server
       .withCompressionLevel(0)
       .withStatsReceiver(NullStatsReceiver)
-      .withStack(nilStack)
+      .withStack(nilStack[Request, Response])
   }
 
   override def configureHttp(router: HttpRouter): Unit = {

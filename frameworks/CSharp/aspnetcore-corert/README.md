@@ -2,7 +2,7 @@
 
 See [.NET CoreRT](https://github.com/dotnet/corert) and [ASP.NET Core](https://github.com/aspnet) for more information.
 
-This includes tests for plaintext
+This includes tests for plaintext and json serialization.
 
 ## Infrastructure Software Versions
 
@@ -24,4 +24,5 @@ This includes tests for plaintext
 
 ## Paths & Source for Tests
 
-* [Plaintext](Benchmarks/Middleware/PlaintextMiddleware.cs): "/plaintext"
+* [Plaintext](PlatformBenchmarks/BenchmarkApplication.Plaintext.cs): "/plaintext"
+* [JSON Serialization](PlatformBenchmarks/BenchmarkApplication.Json.cs): "/json"

@@ -12,7 +12,7 @@ public class JsonHandler implements Handler {
     private static final String HELLO = "Hello, World!";
 
     @Override
-    public void handle(Context ctx) throws Exception {
+    public void handle(Context ctx) {
         ctx.render(json(Collections.singletonMap(MESSAGE, HELLO)));
     }
 }

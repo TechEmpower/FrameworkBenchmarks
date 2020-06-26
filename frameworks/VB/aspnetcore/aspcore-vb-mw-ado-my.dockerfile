@@ -1,10 +1,10 @@
-FROM microsoft/dotnet:2.1-sdk-stretch AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:2.1 AS build
 WORKDIR /app
 COPY Benchmarks .
 RUN dotnet publish -c Release -o out
 COPY Benchmarks/appsettings.mysql.json ./out/appsettings.json
 
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.1 AS runtime
 ENV ASPNETCORE_URLS http://+:8080
 ENV COMPlus_ReadyToRun 0
 WORKDIR /app

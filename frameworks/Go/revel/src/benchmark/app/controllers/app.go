@@ -84,43 +84,34 @@ func (c App) Plaintext() revel.Result {
 }
 
 func (c App) Db(queries int) revel.Result {
-	if queries <= 1 {
-		var w World
-		err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).
-			Scan(&w.Id, &w.RandomNumber)
-		if err != nil {
-			revel.ERROR.Fatalf("Error scanning world row: %v", err)
-		}
-		return c.RenderJSON(w)
-	}
-
+        _, foundQuery := c.Params.Values["queries"]
+        if queries>500 {
+             queries = 500
+        }
+        if queries == 0 {
+          queries = 1
+        }
 	ww := make([]World, queries)
 	for i := 0; i < queries; i++ {
 		err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).
 			Scan(&ww[i].Id, &ww[i].RandomNumber)
 		if err != nil {
-			revel.ERROR.Fatalf("Error scanning world row: %v", err)
+			c.Log.Fatalf("Error scanning world row: %v", err)
 		}
 	}
+        if !foundQuery {
+            return c.RenderJSON(ww[0])
+        }
 	return c.RenderJSON(ww)
 }
 
 func (c App) Update(queries int) revel.Result {
-	if queries <= 1 {
-		var w World
-		err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).
-			Scan(&w.Id, &w.RandomNumber)
-		if err != nil {
-			revel.ERROR.Fatalf("Error scanning world row: %v", err)
-		}
-		w.RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
-		_, err = updateStatement.Exec(w.RandomNumber, w.Id)
-		if err != nil {
-			revel.ERROR.Fatalf("Error updating row: %v", err)
-		}
-		return c.RenderJSON(&w)
-	}
-
+        _, foundQuery := c.Params.Values["queries"]
+        if queries>500 {
+             queries = 500
+        } else if queries == 0 {
+             queries = 1
+        }
 	ww := make([]World, queries)
 	for i := 0; i < queries; i++ {
 		err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).
@@ -131,7 +122,10 @@ func (c App) Update(queries int) revel.Result {
 		ww[i].RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
 		updateStatement.Exec(ww[i].RandomNumber, ww[i].Id)
 	}
-	return c.RenderJSON(ww)
+        if !foundQuery {
+            return c.RenderJSON(ww[0])
+        }
+        return c.RenderJSON(ww)
 }
 
 func (c App) Fortune() revel.Result {

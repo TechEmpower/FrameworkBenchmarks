@@ -1,5 +1,9 @@
 TechEmpower Framework Benchmark - ActFramework Change log
 
+**1.8.8h**
+
+* fix broken testcases on JPA orm based tests
+
 **1.8.8f**
 
 * experiment: take HikariCP from eclipse-mysql permutations

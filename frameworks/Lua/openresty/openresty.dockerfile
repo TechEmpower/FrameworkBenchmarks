@@ -3,7 +3,7 @@ FROM buildpack-deps:xenial
 ENV LUA_VERSION="5.1"
 ENV LUA_MICRO="5"
 
-RUN apt update -yqq && apt install -yqq unzip
+RUN apt-get update -yqq && apt-get install -yqq unzip
 
 RUN wget https://github.com/LuaDist/lua/archive/$LUA_VERSION.$LUA_MICRO.tar.gz
 RUN tar xf $LUA_VERSION.$LUA_MICRO.tar.gz
@@ -23,7 +23,7 @@ ENV LUA=/lua${LUA_VERSION}.${LUA_MICRO}
 ENV PATH=${LUA_HOME}/bin:${PATH}
 ENV LUA_PATH="./?.lua;./?.lc;$LUA_HOME/share/lua/5.1/?/init.lua;$LUA_HOME/share/lua/5.1/?.lua;$LUA_HOME/lib/lua/5.1/?/init.lua;$LUA_HOME/lib/lua/5.1/?.lua"
 ENV LUA_CPATH="./?.lua;./?.lc;$LUA_HOME/share/lua/5.1/?/init.so;$LUA_HOME/share/lua/5.1/?.so;$LUA_HOME/lib/lua/5.1/?/init.so;$LUA_HOME/lib/lua/5.1/?.so"
-ENV LUAROCKS_VERSION="2.2.1"
+ENV LUAROCKS_VERSION="3.2.1"
 ENV LUAROCKS=/luarocks-$LUAROCKS_VERSION
 
 RUN wget -q http://luarocks.org/releases/luarocks-$LUAROCKS_VERSION.tar.gz
@@ -33,7 +33,7 @@ RUN cd $LUAROCKS && \
     ./configure --prefix=$LUA_HOME --with-lua=$LUA_HOME && \
     make --quiet bootstrap
 
-ENV OPENRESTY_VERSION="1.11.2.1"
+ENV OPENRESTY_VERSION="1.15.8.2"
 ENV OPENRESTY=/openresty
 ENV OPENRESTY_HOME=$OPENRESTY-$OPENRESTY_VERSION
 

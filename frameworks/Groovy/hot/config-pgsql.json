@@ -1,0 +1,16 @@
+{
+  "name": "techempower",
+  "version": "0.1",
+  "devMode": false,
+  "dataSources": [
+    {
+      "name": "pgsql",
+      "engine": "PGSQL",
+      "hostname": "tfb-database",
+      "port": 5432,
+      "database": "hello_world",
+      "username": "benchmarkdbuser",
+      "password": "benchmarkdbpass"
+    }
+  ]
+}

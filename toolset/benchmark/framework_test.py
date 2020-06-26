@@ -1,6 +1,6 @@
 import os
 import traceback
-from requests import ConnectionError
+from requests import ConnectionError, Timeout
 
 from toolset.utils.output_helper import log
 
@@ -124,6 +124,12 @@ class FrameworkTest:
                     log("Verifying test %s for %s caused an exception: %s" %
                         (test_type, self.name, e),
                         color=Fore.RED)
+                except Timeout as e:
+                    results = [('fail', "Connection to server timed out",
+                                base_url)]
+                    log("Verifying test %s for %s caused an exception: %s" %
+                        (test_type, self.name, e),
+                        color=Fore.RED)
                 except Exception as e:
                     results = [('fail', """Caused Exception in TFB
             This almost certainly means your return value is incorrect,
@@ -143,7 +149,7 @@ class FrameworkTest:
                     result == 'pass' for (result, reason, url) in results)
 
                 def output_result(result, reason, url):
-                    specific_rules_url = "http://frameworkbenchmarks.readthedocs.org/en/latest/Project-Information/Framework-Tests/#specific-test-requirements"
+                    specific_rules_url = "https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#specific-test-requirements"
                     color = Fore.GREEN
                     if result.upper() == "WARN":
                         color = Fore.YELLOW

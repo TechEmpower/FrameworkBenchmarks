@@ -1,5 +1,7 @@
 package handlers;
 
+import models.DbRepository;
+import models.JdbcRepository;
 import ratpack.exec.Blocking;
 import ratpack.handling.Context;
 
@@ -9,11 +11,7 @@ import java.sql.Connection;
 import static ratpack.jackson.Jackson.json;
 
 public class DbHandler extends BaseWorldHandler {
-    public void handle(Context ctx, DataSource datasource) {
-        Blocking.get(() -> {
-            try (Connection connection = datasource.getConnection()) {
-                return getWorld(connection);
-            }
-        }).then(result -> ctx.render(json(result)));
+    public void handle(Context ctx, DbRepository repository) {
+        repository.getWorld(randomWorldNumber()).then(result -> ctx.render(json(result)));
     }
 }

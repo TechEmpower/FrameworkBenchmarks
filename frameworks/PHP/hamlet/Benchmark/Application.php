@@ -2,62 +2,50 @@
 
 namespace Benchmark;
 
-use Benchmark\Entities\PlainTextEntity;
-use Benchmark\Resources\DbResource;
-use Benchmark\Resources\FortuneResource;
-use Benchmark\Resources\UpdateResource;
-use Cache\Adapter\Void\VoidCachePool;
-use Hamlet\Applications\AbstractApplication;
+use Benchmark\Resources\{DbResource, FortuneResource, HelloJsonResource, HelloTextResource, QueriesResource, UpdateResource};
+use Cache\Adapter\PHPArray\ArrayCachePool;
 use Hamlet\Database\Database;
-use Hamlet\Entities\JsonEntity;
-use Hamlet\Requests\Request;
-use Hamlet\Resources\EntityResource;
-use Hamlet\Resources\WebResource;
+use Hamlet\Http\Applications\AbstractApplication;
+use Hamlet\Http\Requests\Request;
+use Hamlet\Http\Resources\{HttpResource, NotFoundResource};
+use Hamlet\Http\Responses\{Response, ServerErrorResponse};
 use Psr\Cache\CacheItemPoolInterface;
 
 class Application extends AbstractApplication
 {
-    /** @var CacheItemPoolInterface|null */
+    /** @var CacheItemPoolInterface */
     private $cache;
 
-    /** @var Database|null */
+    /** @var Database */
     private $database;
 
-    protected function findResource(Request $request): WebResource
+    public function __construct(Database $database)
     {
-        if ($request->pathMatches('/plaintext')) {
-            return new EntityResource(new PlainTextEntity('Hello, World!'), 'GET');
-        } elseif ($request->pathMatches('/json')) {
-            return new EntityResource(new JsonEntity([
-                'message' => 'Hello, World!'
-            ]), 'GET');
-        } elseif ($request->pathMatches('/db') || $request->pathMatches('/queries')) {
-            return new DbResource($this->database());
-        } elseif ($request->pathMatches('/fortunes')) {
-            return new FortuneResource($this->database());
-        } elseif ($request->pathMatches('/update')) {
-            return new UpdateResource($this->database());
-        }
+        $this->cache = new ArrayCachePool;
+        $this->database = $database;
     }
 
-    private function database(): Database
+    public function findResource(Request $request): HttpResource
     {
-        if (!$this->database) {
-            $this->database = Database::mysql(
-                'p:tfb-database',
-                'benchmarkdbuser',
-                'benchmarkdbpass',
-                'hello_world'
-            );
+        switch ($request->getPath()) {
+            case '/plaintext':
+                return new HelloTextResource;
+            case '/json':
+                return new HelloJsonResource;
+            case '/db':
+                return new DbResource($this->database);
+            case '/queries':
+                return new QueriesResource($this->database);
+            case '/fortunes':
+                return new FortuneResource($this->database);
+            case '/update':
+                return new UpdateResource($this->database);
         }
-        return $this->database;
+        return new NotFoundResource;
     }
 
     protected function getCache(Request $request): CacheItemPoolInterface
     {
-        if (!$this->cache) {
-            $this->cache = new VoidCachePool();
-        }
         return $this->cache;
     }
 }

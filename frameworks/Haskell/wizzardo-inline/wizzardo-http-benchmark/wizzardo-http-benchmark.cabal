@@ -1,0 +1,32 @@
+name:                wizzardo-http-benchmark
+version:             0.1
+synopsis:            An example application showing how to set the classpath for inline-java.
+author:              EURL Tweag
+maintainer:          facundo.dominguez@tweag.io
+copyright:           2017 EURL Tweag.
+build-type:          Custom
+cabal-version:       >=1.18
+
+custom-setup
+  setup-depends: Cabal>=1.18, base<5, directory, filepath, inline-java
+
+executable wizzardo-http-benchmark
+  main-is:             Main.hs
+  ghc-options: -threaded -rtsopts
+  other-modules:
+    DbHandler
+    Language.Java.Function
+    Paths_wizzardo_http_benchmark
+    Wizzardo.Http.Handler
+  hs-source-dirs:      src/main/haskell
+  build-depends:
+    aeson,
+    base<5,
+    bytestring,
+    inline-java,
+    jni,
+    jvm,
+    linear-base,
+    template-haskell,
+    text
+  default-language:    Haskell2010

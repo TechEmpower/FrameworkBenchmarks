@@ -4,7 +4,7 @@ require_relative 'auto_tune'
 num_workers, = auto_tune
 worker_processes num_workers
 
-listen "/tmp/.sock", :backlog => 256
+listen "/tmp/.sock", :backlog => 512
 
 preload_app true
 

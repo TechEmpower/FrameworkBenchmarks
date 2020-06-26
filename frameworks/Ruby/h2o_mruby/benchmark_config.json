@@ -12,7 +12,7 @@
       "language": "Ruby",
       "orm": "Raw",
       "platform": "None",
-      "webserver": "H2O",
+      "webserver": "h2o",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "h2o_mruby",

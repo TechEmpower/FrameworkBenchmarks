@@ -2,15 +2,15 @@ name := "play2-java-jooq-hikaricp"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava, PlayNettyServer)
+lazy val root = (project in file(".")).enablePlugins(PlayMinimalJava, PlayNettyServer).disablePlugins(PlayFilters)
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.13.1"
 
 val jOOQVersion = "3.10.3"
 
 libraryDependencies ++= Seq(
   guice,
   javaJdbc,
-  "mysql" % "mysql-connector-java" % "5.1.45",
+  "mysql" % "mysql-connector-java" % "8.0.19",
   "org.jooq" % "jooq" % jOOQVersion,
 )

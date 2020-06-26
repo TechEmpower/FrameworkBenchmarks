@@ -1,31 +1,13 @@
-FROM buildpack-deps:xenial
+FROM buildpack-deps:bionic
 
 ENV IROOT=/installs
-ENV FFEAD_CPP_PATH=${IROOT}/ffead-cpp-2.0
-ENV PATH=${FFEAD_CPP_PATH}:${PATH}
 
-RUN mkdir /installs
-
-WORKDIR /
-
-COPY te-benchmark/ te-benchmark/
+COPY te-benchmark-um/ te-benchmark-um/
 COPY *.sh ./
-RUN chmod 755 *.sh
 
-RUN ./install_ffead-cpp-dependencies.sh
-
-WORKDIR /
-
-RUN ./install_ffead-cpp-framework.sh
+RUN mkdir /installs && chmod 755 *.sh && /install_ffead-cpp-dependencies.sh && /install_ffead-cpp-framework.sh && \
+	/install_ffead-cpp-httpd.sh && /install_ffead-cpp-nginx.sh && rm -rf ${IROOT}/ffead-cpp-src
 
 WORKDIR /
 
-RUN ./install_ffead-cpp-httpd.sh
-
-WORKDIR /
-
-RUN ./install_ffead-cpp-nginx.sh
-
-WORKDIR /
-
-CMD ./run_ffead.sh nginx mongo
+CMD ./run_ffead.sh ffead-cpp-4.0 nginx mongo

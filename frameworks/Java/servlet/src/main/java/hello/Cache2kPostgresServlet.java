@@ -15,6 +15,7 @@ import javax.sql.DataSource;
 
 import org.cache2k.Cache;
 import org.cache2k.Cache2kBuilder;
+import org.cache2k.IntCache;
 
 /**
  * Cache
@@ -27,7 +28,7 @@ public class Cache2kPostgresServlet extends HttpServlet {
 	// Database connection pool.
 	@Resource(name = "jdbc/hello_world")
 	private DataSource dataSource;
-	private Cache<Integer, CachedWorld> cache;
+	private IntCache<CachedWorld> cache;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -42,7 +43,7 @@ public class Cache2kPostgresServlet extends HttpServlet {
 
 		// Build the cache
 		cache = new Cache2kBuilder<Integer, CachedWorld>() {
-		}.name("cachedWorld").eternal(true).entryCapacity(DB_ROWS).build();
+		}.name("cachedWorld").eternal(true).entryCapacity(DB_ROWS).buildForIntKey();
 		cache.putAll(worlds);
 	}
 
@@ -53,7 +54,7 @@ public class Cache2kPostgresServlet extends HttpServlet {
 		final CachedWorld[] worlds = new CachedWorld[count];
 
 		for (int i = 0; i < count; i++) {
-			worlds[i] = cache.get(ThreadLocalRandom.current().nextInt(DB_ROWS) + 1);
+			worlds[i] = cache.peek(ThreadLocalRandom.current().nextInt(DB_ROWS) + 1);
 		}
 
 		// Set content type to JSON

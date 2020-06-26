@@ -13,4 +13,12 @@ public final class Fortune {
         this.id = id;
         this.message = message;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

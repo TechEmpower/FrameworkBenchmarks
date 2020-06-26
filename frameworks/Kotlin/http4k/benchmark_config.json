@@ -44,6 +44,27 @@
         "notes": "",
         "versus": "undertow"
       },
+      "ratpack": {
+        "orm": "Raw",
+        "database_os": "Linux",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "database": "Postgres",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 9000,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "framework": "http4k",
+        "language": "Kotlin",
+        "platform": "ratpack",
+        "webserver": "None",
+        "os": "Linux",
+        "notes": "",
+        "versus": "ratpack"
+      },
       "netty": {
         "orm": "Raw",
         "database_os": "Linux",
@@ -86,7 +107,7 @@
         "notes": "",
         "versus": "servlet"
       },
-      "sunhttp": {
+      "ktorcio": {
         "orm": "Raw",
         "database_os": "Linux",
         "db_url": "/db",
@@ -101,11 +122,32 @@
         "classification": "Micro",
         "framework": "http4k",
         "language": "Kotlin",
-        "platform": "sun-http",
+        "platform": "ktorcio",
         "webserver": "None",
         "os": "Linux",
         "notes": "",
-        "versus": "servlet"
+        "versus": "ktor-cio"
+      },
+      "ktornetty": {
+        "orm": "Raw",
+        "database_os": "Linux",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "database": "Postgres",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 9000,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "framework": "http4k",
+        "language": "Kotlin",
+        "platform": "ktornetty",
+        "webserver": "None",
+        "os": "Linux",
+        "notes": "",
+        "versus": "ktor-netty"
       }
     }
   ]

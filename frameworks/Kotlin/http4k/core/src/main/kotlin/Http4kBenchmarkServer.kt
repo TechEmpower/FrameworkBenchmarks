@@ -22,7 +22,7 @@ object Http4kBenchmarkServer {
         }
     }
 
-    operator fun invoke(addDateHeader: Boolean = true, database: Database = Database("tfb-database")) =
+    operator fun invoke(database: Database, addDateHeader: Boolean = true) =
             headers(addDateHeader).then(
                     routes(
                             JsonRoute(),

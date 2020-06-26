@@ -54,6 +54,11 @@
     -->
     <!-- Connector with NIO2 without too much tweaks -->
     <Connector port="8080" protocol="org.apache.coyote.http11.Http11Nio2Protocol"
+               acceptCount="1024"
+               acceptorThreadCount="2"
+               maxConnections="-1"
+               maxKeepAliveRequests="-1"
+               processorCache="-1"
                connectionTimeout="30000"
                keepAliveTimeout="30000"
                URIEncoding="UTF-8"

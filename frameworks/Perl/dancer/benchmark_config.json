@@ -4,7 +4,7 @@
     "default": {
       "json_url": "/json",
       "db_url": "/db",
-      "query_url": "/db?queries=",
+      "query_url": "/dbquery?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -18,7 +18,8 @@
       "database_os": "Linux",
       "display_name": "dancer",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     }
   }]
 }

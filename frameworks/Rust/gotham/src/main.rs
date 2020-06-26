@@ -6,39 +6,41 @@ extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
 
-use gotham::http::response::create_response;
+use gotham::helpers::http::response;
 use gotham::router::builder::*;
 use gotham::state::State;
-use hyper::{header, Response, StatusCode};
+use hyper::{
+    header::{HeaderValue, SERVER},
+    Body, Response, StatusCode,
+};
 
 static HELLO_WORLD: &'static [u8] = b"Hello, world!";
+static GOTHAM: &'static str = "Gotham";
 
 #[derive(Serialize)]
 struct Message<'a> {
     message: &'a str,
 }
 
-fn json(state: State) -> (State, Response) {
+fn json(state: State) -> (State, Response<Body>) {
     let message = Message {
         message: "Hello, World!",
     };
 
     let body = serde_json::to_vec(&message).unwrap();
-    let mut res = create_response(&state, StatusCode::Ok, Some((body, mime::APPLICATION_JSON)));
+    let mut res = response::create_response(&state, StatusCode::OK, mime::APPLICATION_JSON, body);
 
-    res.headers_mut().set(header::Server::new("Gotham"));
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static(GOTHAM));
 
     (state, res)
 }
 
-fn plaintext(state: State) -> (State, Response) {
-    let mut res = create_response(
-        &state,
-        StatusCode::Ok,
-        Some((HELLO_WORLD.to_vec(), mime::TEXT_PLAIN)),
-    );
+fn plaintext(state: State) -> (State, Response<Body>) {
+    let mut res = response::create_response(&state, StatusCode::OK, mime::TEXT_PLAIN, HELLO_WORLD);
 
-    res.headers_mut().set(header::Server::new("Gotham"));
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static(GOTHAM));
 
     (state, res)
 }

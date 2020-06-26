@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Benchmarks.Configuration
@@ -22,12 +23,6 @@ namespace Benchmarks.Configuration
 
         [ScenarioPath("/json")]
         public bool Json { get; set; }
-
-        [ScenarioPath("/utf8json")]
-        public bool Utf8Json { get; set; }
-
-        [ScenarioPath("/spanjson")]
-        public bool SpanJson { get; set; }
 
         [ScenarioPath("/128B.txt", "/512B.txt", "/1KB.txt", "/4KB.txt", "/16KB.txt", "/512KB.txt", "/1MB.txt", "/5MB.txt")]
         public bool StaticFiles { get; set; }

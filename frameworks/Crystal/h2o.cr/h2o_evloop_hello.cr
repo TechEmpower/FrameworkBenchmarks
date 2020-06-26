@@ -1,5 +1,6 @@
 require "reset/prelude"
 require "reset/patches"
+require "reset/json"
 require "h2o/h2o_evloop"
 
 class H2oHello < H2o
@@ -18,6 +19,26 @@ class H2oHello < H2o
 
       # require h2o.c extension
       h2o_add_header(req, H2O_TOKEN_CONTENT_TYPE, "text/plain")
+      h2o_start_response(req, generator)
+      h2o_send(req, pointerof(body), 1, LibH2o::H2oSendState::H2OSendStateFinal)
+      0
+    end
+  end
+
+  macro json
+    Handler.new do |handler, req|
+      generator = uninitialized LibH2o::H2oGeneratorT[2]
+      alloc = uninitialized UInt8[32]
+      buf = StackBuffer.new(alloc.to_unsafe)
+
+      len = {message: "Hello, World!"}.to_json(buf)
+      body = LibH2o::H2oIovecT.new(base: buf, len: len)
+
+      req.value.res.status = 200
+      req.value.res.reason = "OK"
+      req.value.res.content_length = body.len
+
+      h2o_add_header(req, H2O_TOKEN_CONTENT_TYPE, "application/json")
       h2o_start_response(req, generator)
       h2o_send(req, pointerof(body), 1, LibH2o::H2oSendState::H2OSendStateFinal)
       0
@@ -71,8 +92,11 @@ class H2oHello < H2o
 
   def run : Void
     h2o_config_init(pointerof(@config))
+    @config.server_name = h2o_iovec_init("h2o")
+
     hostconf = h2o_config_register_host(pointerof(@config), h2o_iovec_init("default"), 65535)
     register_handler(hostconf, "/hello", hello)
+    register_handler(hostconf, "/json", json)
 
     h2o_context_init(pointerof(@ctx), @loop, pointerof(@config))
 
@@ -88,5 +112,3 @@ class H2oHello < H2o
 end
 
 H2oHello.run
-
-

@@ -2,9 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.IO.Pipelines;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
-using Utf8Json;
 
 namespace PlatformBenchmarks
 {
@@ -19,25 +18,14 @@ namespace PlatformBenchmarks
         {
             var writer = GetWriter(pipeWriter);
 
-            // HTTP 1.1 OK
-            writer.Write(_http11OK);
+            writer.Write(_dbPreamble);
 
-            // Server headers
-            writer.Write(_headerServer);
+            // Content-Length
+            var jsonPayload = JsonSerializer.SerializeToUtf8Bytes(rows, SerializerOptions);
+            writer.WriteNumeric((uint)jsonPayload.Length);
 
             // Date header
             writer.Write(DateHeader.HeaderBytes);
-
-            // Content-Type header
-            writer.Write(_headerContentTypeJson);
-
-            // Content-Length header
-            writer.Write(_headerContentLength);
-            var jsonPayload = JsonSerializer.SerializeUnsafe(rows);
-            writer.WriteNumeric((uint)jsonPayload.Count);
-
-            // End of headers
-            writer.Write(_eoh);
 
             // Body
             writer.Write(jsonPayload);

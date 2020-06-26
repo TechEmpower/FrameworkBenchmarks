@@ -12,6 +12,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -20,23 +22,23 @@
         <dependency>
             <groupId>curacao</groupId>
             <artifactId>curacao</artifactId>
-            <version>4.2.0</version>
+            <version>6.0.0</version>
         </dependency>
         <dependency>
             <groupId>curacao</groupId>
             <artifactId>curacao-gson</artifactId>
-            <version>4.2.0</version>
+            <version>6.0.0</version>
         </dependency>
 
-        <!-- Servlet -->
+        <!-- Servlet
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- Logback -->
+        -->
+        <!-- Logback 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
@@ -47,6 +49,7 @@
             <artifactId>logback-classic</artifactId>
             <version>1.1.7</version>
         </dependency>
+        -->
 
     </dependencies>
 
@@ -56,11 +59,8 @@
                 <inherited>true</inherited>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.8.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <optimize>true</optimize>
                     <debug>false</debug>
                 </configuration>
             </plugin>

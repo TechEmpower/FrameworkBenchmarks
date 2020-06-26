@@ -1,10 +1,15 @@
 import json
 import re
 import traceback
+import multiprocessing
 
 from datetime import datetime
 from toolset.utils.output_helper import log
+from toolset.databases import databases
+from time import sleep
 
+# Cross-platform colored text
+from colorama import Fore, Style
 
 def basic_body_verification(body, url, is_json_check=True):
     '''
@@ -36,7 +41,7 @@ def basic_body_verification(body, url, is_json_check=True):
     return None, []
 
 
-def verify_headers(headers, url, should_be='json'):
+def verify_headers(request_headers_and_body, headers, url, should_be='json'):
     '''
     Verifies the headers of a framework response
     param `should_be` is a switch for the three acceptable content types
@@ -66,6 +71,19 @@ def verify_headers(headers, url, should_be='json'):
                 'warn',
                 'Invalid Date header, found \"%s\", did not match \"%s\".'
                 % (date, expected_date_format), url))
+
+    # Verify response content
+    # Make sure that the date object isn't cached
+    sleep(3)
+    second_headers, body2 = request_headers_and_body(url)
+    second_date = second_headers.get('Date')
+
+    date2 = second_headers.get('Date')
+    if date == date2:
+        problems.append((
+        'fail',
+        'Invalid Cached Date. Found \"%s\" and \"%s\" on separate requests.'
+        % (date, date2), url))
 
     content_type = headers.get('Content-Type')
     if content_type is not None:
@@ -209,10 +227,10 @@ def verify_randomnumber_list(expected_len,
         return problems
 
     # This path will be hit when the framework returns a single JSON object
-    # rather than a list containing one element. We allow this with a warn,
-    # then verify the supplied object
+    # rather than a list containing one element.
     if type(response) is not list:
-        problems.append(('warn', 'Top-level JSON is an object, not an array',
+        problems.append((max_infraction,
+                         'Top-level JSON is an object, not an array',
                          url))
         problems += verify_randomnumber_object(response, url, max_infraction)
         return problems
@@ -316,11 +334,17 @@ def verify_query_cases(self, cases, url, check_updates=False):
     problems = []
     MAX = 500
     MIN = 1
+    # Initialization for query counting
+    repetitions = 1
+    concurrency = max(self.config.concurrency_levels)
+    expected_queries = 20 * repetitions * concurrency
+    expected_rows = expected_queries
 
     # Only load in the World table if we are doing an Update verification
     world_db_before = {}
     if check_updates:
-        world_db_before = self.get_current_world_table()
+        world_db_before = databases[self.database.lower()].get_current_world_table(self.config)
+        expected_queries = expected_queries + concurrency * repetitions #eventually bulk updates!
 
     for q, max_infraction in cases:
         case_url = url + q
@@ -338,14 +362,14 @@ def verify_query_cases(self, cases, url, check_updates=False):
 
             problems += verify_randomnumber_list(expected_len, headers, body,
                                                  case_url, max_infraction)
-            problems += verify_headers(headers, case_url)
+            problems += verify_headers(self.request_headers_and_body, headers, case_url)
 
             # Only check update changes if we are doing an Update verification and if we're testing
             # the highest number of queries, to ensure that we don't accidentally FAIL for a query
             # that only updates 1 item and happens to set its randomNumber to the same value it
             # previously held
             if check_updates and queries >= MAX:
-                world_db_after = self.get_current_world_table()
+                world_db_after = databases[self.database.lower()].get_current_world_table(self.config)
                 problems += verify_updates(world_db_before, world_db_after,
                                            MAX, case_url)
 
@@ -368,6 +392,71 @@ def verify_query_cases(self, cases, url, check_updates=False):
                 # parameter input
                 problems += verify_randomnumber_list(
                     expected_len, headers, body, case_url, max_infraction)
-                problems += verify_headers(headers, case_url)
+                problems += verify_headers(self.request_headers_and_body, headers, case_url)
+
+    if hasattr(self, 'database'):
+        # verify the number of queries and rows read for 20 queries, with a concurrency level of 512, with 2 repetitions
+        problems += verify_queries_count(self, "world", url+"20", concurrency, repetitions, expected_queries, expected_rows, check_updates)
+    return problems
+
+
+def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected_queries=1024, expected_rows = 1024, check_updates = False):
+    '''
+    Checks that the number of executed queries, at the given concurrency level, 
+    corresponds to: the total number of http requests made * the number of queries per request.
+    No margin is accepted on the number of queries, which seems reliable.
+    On the number of rows read or updated, the margin related to the database applies (1% by default see cls.margin)
+    On updates, if the use of bulk updates is detected (number of requests close to that expected), a margin (5% see bulk_margin) is allowed on the number of updated rows. 
+    '''
+    log("VERIFYING QUERY COUNT FOR %s" % url, border='-', color=Fore.WHITE + Style.BRIGHT)
+
+    problems = []
+
+    queries, rows, rows_updated, margin, trans_failures = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count, check_updates)
+
+    isBulk = check_updates and (queries < 1.001 * expected_queries) and (queries > 0.999 * expected_queries)
+    
+    if check_updates and not isBulk:#Restore the normal queries number if bulk queries are not used
+        expected_queries = (expected_queries - count * concurrency) * 2
+
+    #Add a margin based on the number of cpu cores
+    queries_margin = 1.015 #For a run on Travis
+    if multiprocessing.cpu_count()>2:
+        queries_margin = 1 # real run (Citrine or Azure) -> no margin on queries
+        #Check for transactions failures (socket errors...)
+        if trans_failures > 0:
+            problems.append((
+            "fail",
+            "%s failed transactions."
+            % trans_failures, url))
+
+    problems.append(display_queries_count_result(queries * queries_margin, expected_queries, queries, "executed queries", url))
+
+    problems.append(display_queries_count_result(rows, expected_rows, int(rows / margin), "rows read", url))
+
+    if check_updates:
+        bulk_margin = 1
+        if isBulk:#Special marge for bulk queries
+            bulk_margin = 1.05
+        problems.append(display_queries_count_result(rows_updated * bulk_margin, expected_rows, int(rows_updated / margin), "rows updated", url))
 
     return problems
+
+def display_queries_count_result(result, expected_result, displayed_result, caption, url):
+    '''
+    Returns a single result in counting queries, rows read or updated.
+    result corresponds to the effective result adjusted by the margin.
+    displayed_result is the effective result (without correction).
+    '''
+    if result > expected_result * 1.05:
+        return (
+        "warn",
+        "%s %s in the database instead of %s expected. This number is excessively high."
+        % (displayed_result, caption, expected_result), url)
+    elif result < expected_result :
+        return (
+        "fail",
+        "Only %s %s in the database out of roughly %s expected."
+        % (displayed_result, caption, expected_result), url)
+    else:
+        return ("pass","%s: %s/%s" % (caption.capitalize(), displayed_result,expected_result), url)

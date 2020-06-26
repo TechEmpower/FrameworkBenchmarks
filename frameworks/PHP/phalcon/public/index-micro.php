@@ -23,14 +23,14 @@ try {
         $view->setViewsDir(__DIR__ . '/../app/views/');
 
         $view->registerEngines(array(
-            ".volt" => function($view, $di) {
+            ".volt" => function($view) {
 
-                $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
+                $volt = new \Phalcon\Mvc\View\Engine\Volt($view);
 
                 $volt->setOptions(array(
-                    "compiledPath" => __DIR__ . "/../app/compiled-templates/",
-                    "compiledExtension" => ".c",
-                    "compiledSeparator" => '_',
+                    "path" => __DIR__ . "/../app/compiled-templates/",
+                    "extension" => ".c",
+                    "separator" => '_',
                 ));
 
                 return $volt;
@@ -51,7 +51,7 @@ try {
 
         $db = $app['db'];
         
-        $world = $db->fetchOne('SELECT * FROM world WHERE id = ' . mt_rand(1, 10000), Phalcon\Db::FETCH_ASSOC);
+        $world = $db->fetchOne('SELECT * FROM world WHERE id = ' . mt_rand(1, 10000), Phalcon\Db\Enum::FETCH_ASSOC);
 
         echo json_encode($world);
     });
@@ -69,7 +69,7 @@ try {
         $worlds = array();
 
         for ($i = 0; $i < $queries; ++$i) {
-            $worlds[] = $db->fetchOne('SELECT * FROM world WHERE id = ' . mt_rand(1, 10000), Phalcon\Db::FETCH_ASSOC);
+            $worlds[] = $db->fetchOne('SELECT * FROM world WHERE id = ' . mt_rand(1, 10000), Phalcon\Db\Enum::FETCH_ASSOC);
         }
 
         echo json_encode($worlds);
@@ -86,17 +86,7 @@ try {
         );
 
         usort($fortunes, function($left, $right) {
-            $l = $left['message'];
-            $r = $right['message'];
-            if ($l === $r) {
-                return 0;
-            } else {
-                if ($l > $r) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            }
+            return $left['message'] <=> $right['message'];
         });
 
         header("Content-Type: text/html; charset=utf-8");
@@ -106,8 +96,8 @@ try {
         ));
 
     });
-
-    $app->handle();
+    $request = new Phalcon\Http\Request();
+    $app->handle($request->getURI());
 
 } catch(\Phalcon\Exception $e) {
     echo "PhalconException: ", $e->getMessage();

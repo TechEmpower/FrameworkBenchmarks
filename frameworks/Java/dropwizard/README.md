@@ -55,10 +55,10 @@ The tests were run with:
  * [Postgres 9.3](http://www.postgresql.org/)
  * [MySQL 5.7](http://www.mysql.com/)
  * [MongoDB 3.2](http://www.mongodb.com/)
- * [Dropwizard 1.2.2](http://dropwizard.io/)
- * [MongoJack 2.7.0](http://mongojack.org/)
+ * [Dropwizard](http://dropwizard.io/)
+ * [MongoJack](http://mongojack.org/)
 
-Please confirm the versions data with the latest install scripts of TFB project.
+Please check the versions in the install scripts of TFB project.
 
 ## Test URLs
 

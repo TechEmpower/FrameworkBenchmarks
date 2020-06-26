@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+    
+    <AssemblyTitle>GenHTTP Benchmarks</AssemblyTitle>
+    <Description>Test suite to be executed with TechEmpower FrameworkBenchmarks.</Description>
+    
+    <StartupObject>Benchmarks.Program</StartupObject>    
+    <OutputType>Exe</OutputType>
+    
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <TieredCompilation>false</TieredCompilation>
+    
+  </PropertyGroup>
+    
+  <ItemGroup>
+    <PackageReference Include="GenHTTP.Core" Version="3.0.3" />
+    <PackageReference Include="GenHTTP.Modules.Webservices" Version="3.0.3" />
+  </ItemGroup>
+  
+</Project>

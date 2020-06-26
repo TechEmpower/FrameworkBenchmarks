@@ -2,15 +2,15 @@ name := "play2-java-jpa-hikaricp"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava, PlayNettyServer)
+lazy val root = (project in file(".")).enablePlugins(PlayMinimalJava, PlayNettyServer).disablePlugins(PlayFilters)
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.13.1"
 
 libraryDependencies ++= Seq(
   guice,
   javaJpa,
-  "mysql" % "mysql-connector-java" % "5.1.45",
-  "org.hibernate" % "hibernate-core" % "5.2.12.Final"
+  "mysql" % "mysql-connector-java" % "8.0.19",
+  "org.hibernate" % "hibernate-core" % "5.4.12.Final"
 )
 
-PlayKeys.externalizeResources := false
+PlayKeys.externalizeResourcesExcludes += baseDirectory.value / "conf" / "META-INF" / "persistence.xml"

@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "vibe.d",
       "notes": "",
-      "versus": "vibed"
+      "versus": "vibed",
+      "tags": ["broken"]
     },
     "dmd-pgsql": {
       "json_url": "/json",
@@ -45,7 +46,8 @@
       "database_os": "Linux",
       "display_name": "vibe.d-pgsql",
       "notes": "",
-      "versus": "vibed"
+      "versus": "vibed",
+      "tags": ["broken"]
     },
     "ldc": {
       "json_url": "/json",
@@ -68,7 +70,8 @@
       "database_os": "Linux",
       "display_name": "vibe.d-ldc",
       "notes": "",
-      "versus": "vibed"
+      "versus": "vibed",
+      "tags": ["broken"]
     },
     "ldc-pgsql": {
       "json_url": "/json",
@@ -91,7 +94,8 @@
       "database_os": "Linux",
       "display_name": "vibe.d-ldc-pgsql",
       "notes": "",
-      "versus": "vibed"
+      "versus": "vibed",
+      "tags": ["broken"]
     }
   }]
 }

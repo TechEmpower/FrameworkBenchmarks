@@ -1,21 +1,25 @@
-FROM php:7.2
+FROM php:7.4
 
-ENV SWOOLE_VERSION=4.0.4
+RUN pecl install swoole > /dev/null && \
+    docker-php-ext-enable swoole
 
-RUN cd /tmp && curl -sSL "https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz" | tar xzf - \
-        && cd swoole-src-${SWOOLE_VERSION} \
-        && phpize && ./configure > /dev/null && make > /dev/null && make install > /dev/null \
-        && docker-php-ext-enable swoole
+RUN docker-php-ext-install mysqli > /dev/null && \
+    docker-php-ext-enable mysqli
 
-RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
+RUN docker-php-ext-install pdo_mysql > /dev/null && \
+    docker-php-ext-enable pdo_mysql
 
-RUN apt-get update && apt-get install -y git unzip
+RUN apt-get update -yqq && \
+    apt-get install -yqq git unzip
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-ADD ./ /hamlet
-WORKDIR /hamlet
+ADD ./ /php
+WORKDIR /php
+RUN chmod -R 777 /php
 
-RUN chmod -R 777 /hamlet
-RUN composer update
+RUN composer require hamlet-framework/http-swoole:dev-master --quiet
+RUN composer require hamlet-framework/db-mysql-swoole:dev-master --quiet
+RUN composer update --no-dev --quiet
 
-CMD php /hamlet/swoole.php
+CMD php /php/swoole.php

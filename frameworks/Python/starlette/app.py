@@ -3,7 +3,8 @@ import asyncpg
 import os
 import jinja2
 from starlette.applications import Starlette
-from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
+from starlette.responses import HTMLResponse, UJSONResponse, PlainTextResponse
+from starlette.routing import Route
 from random import randint
 from operator import itemgetter
 from urllib.parse import parse_qs
@@ -54,25 +55,15 @@ loop = asyncio.get_event_loop()
 loop.run_until_complete(setup_database())
 
 
-app = Starlette()
-
-
-@app.route('/json')
-def json_serialization(request):
-    return JSONResponse({'message': 'Hello, world!'})
-
-
-@app.route('/db')
 async def single_database_query(request):
     row_id = randint(1, 10000)
 
     async with connection_pool.acquire() as connection:
         number = await connection.fetchval(READ_ROW_SQL, row_id)
 
-    return JSONResponse({'id': row_id, 'randomNumber': number})
+    return UJSONResponse({'id': row_id, 'randomNumber': number})
 
 
-@app.route('/queries')
 async def multiple_database_queries(request):
     num_queries = get_num_queries(request)
     row_ids = [randint(1, 10000) for _ in range(num_queries)]
@@ -84,10 +75,9 @@ async def multiple_database_queries(request):
             number = await statement.fetchval(row_id)
             worlds.append({'id': row_id, 'randomNumber': number})
 
-    return JSONResponse(worlds)
+    return UJSONResponse(worlds)
 
 
-@app.route('/fortunes')
 async def fortunes(request):
     async with connection_pool.acquire() as connection:
         fortunes = await connection.fetch('SELECT * FROM Fortune')
@@ -98,7 +88,6 @@ async def fortunes(request):
     return HTMLResponse(content)
 
 
-@app.route('/updates')
 async def database_updates(request):
     num_queries = get_num_queries(request)
     updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
@@ -110,9 +99,16 @@ async def database_updates(request):
             await statement.fetchval(row_id)
         await connection.executemany(WRITE_ROW_SQL, updates)
 
-    return JSONResponse(worlds)
+    return UJSONResponse(worlds)
 
 
-@app.route('/plaintext')
-def plaintext(request):
-    return PlainTextResponse(b'Hello, world!')
+routes = [
+    Route('/json', UJSONResponse({'message': 'Hello, world!'})),
+    Route('/db', single_database_query),
+    Route('/queries', multiple_database_queries),
+    Route('/fortunes', fortunes),
+    Route('/updates', database_updates),
+    Route('/plaintext', PlainTextResponse(b'Hello, world!')),
+]
+
+app = Starlette(routes=routes)

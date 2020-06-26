@@ -7,7 +7,6 @@
       "db_url": "/db",
       "query_url": "/db/query?queries=",
       "fortune_url": "/fortunes",
-      "update_url": "/db/update?queries=",
       "port": 9090,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -64,7 +63,8 @@
       "database_os": "Linux",
       "display_name": "dropwizard",
       "notes": "dropwizard PostgreSQL using hibernate",
-      "versus": "servlet-postgres-raw"
+      "versus": "servlet-postgres-raw",
+      "tags": []
     },
     "jdbi-postgres": {
       "db_url": "/db",
@@ -84,7 +84,8 @@
       "database_os": "Linux",
       "display_name": "dropwizard",
       "notes": "dropwizard PostgreSQL using jdbi",
-      "versus": "servlet-postgres-raw"
+      "versus": "servlet-postgres-raw",
+      "tags": ["broken"]
     }
   }]
 }

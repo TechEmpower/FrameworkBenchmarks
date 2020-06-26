@@ -18,7 +18,7 @@ public:
         RandomNumber,
     };
 
-    virtual QString collectionName() const { return "world"; }
+    virtual QString collectionName() const { return QStringLiteral("world"); }
     virtual QString objectId() const { return _id; }
     virtual QString &objectId() { return _id; }
 

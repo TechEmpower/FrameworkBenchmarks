@@ -3,18 +3,18 @@
   :description "TechEmpower Luminus benchmark"
   :url "https://github.com/TechEmpower/FrameworkBenchmarks"
 
-  :dependencies [[org.clojure/clojure "1.9.0-alpha15"]
+  :dependencies [[org.clojure/clojure "1.10.0"]
                  [cheshire "5.7.0"]
                  [selmer "1.10.7"]
                  [markdown-clj "0.9.98"]
                  [metosin/muuntaja "0.2.1"]
                  [metosin/ring-http-response "0.8.2"]
                  [bouncer "1.0.1"]
-                 [org.webjars/bootstrap "4.0.0-alpha.2"]
-                 [org.webjars/font-awesome "4.7.0"]
-                 [org.webjars.bower/tether "1.4.0"]
-                 [org.webjars/jquery "3.2.0"]
-                 [org.clojure/tools.logging "0.3.1"]
+                 [org.webjars/bootstrap "4.2.1"]
+                 [org.webjars/font-awesome "5.6.1"]
+                 [org.webjars.bower/tether "1.4.4"]
+                 [org.webjars/jquery "3.3.1"]
+                 [org.clojure/tools.logging "0.4.1"]
                  [com.taoensso/tower "3.0.2"]
                  [compojure "1.5.2"]
                  [ring-webjars "0.1.1"]
@@ -27,7 +27,7 @@
                  [luminus-immutant "0.2.3"]
                  [luminus-migrations "0.3.0"]
                  [conman "0.6.3"]
-                 [org.postgresql/postgresql "9.4.1212"]
+                 [org.postgresql/postgresql "42.2.5"]
                  [luminus-log4j "0.1.5"]]
 
   :min-lein-version "2.0.0"
