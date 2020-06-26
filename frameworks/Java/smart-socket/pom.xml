@@ -66,15 +66,10 @@
         </dependency>
     </dependencies>
     <repositories>
-<!--        <repository>-->
-<!--            <id>central</id>-->
-<!--            <name>Central Repository</name>-->
-<!--            <url>https://repo.maven.apache.org/maven2</url>-->
-<!--        </repository>-->
         <repository>
-            <id>alimaven</id>
-            <name>aliyun maven</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
         </repository>
         <repository>
             <id>sonatype-nexus-snapshots</id>
@@ -84,9 +79,9 @@
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>alimaven</id>
-            <name>aliyun maven</name>
-            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
         </pluginRepository>
         <pluginRepository>
             <id>sonatype-nexus-snapshots</id>
