@@ -1,9 +1,11 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using Npgsql;
 
 namespace PlatformBenchmarks
@@ -12,6 +14,11 @@ namespace PlatformBenchmarks
     {
         private readonly ConcurrentRandom _random;
         private readonly string _connectionString;
+        private readonly MemoryCache _cache = new MemoryCache(
+            new MemoryCacheOptions()
+            {
+                ExpirationScanFrequency = TimeSpan.FromMinutes(15)
+            });
 
         public RawDb(ConcurrentRandom random, AppSettings appSettings)
         {
@@ -53,6 +60,75 @@ namespace PlatformBenchmarks
             }
 
             return result;
+        }
+
+        public Task<World[]> LoadCachedQueries(int count)
+        {
+            var result = new World[count];
+            for (var i = 0; i < result.Length; i++)
+            {
+                var id = _random.Next(1, 10001);
+                var data = _cache.Get<CachedWorld>(id);
+
+                if (data != null)
+                {
+                    result[i] = data;
+                }
+                else
+                {
+                    return LoadUncachedQueries(id, i, count, this, result);
+                }
+            }
+
+            return Task.FromResult(result);
+
+            static async Task<World[]> LoadUncachedQueries(int id, int i, int count, RawDb rawdb, World[] result)
+            {
+                using (var db = new NpgsqlConnection(rawdb._connectionString))
+                {
+                    await db.OpenAsync();
+
+                    var (cmd, idParameter) = rawdb.CreateReadCommand(db);
+                    using (cmd)
+                    {
+                        Func<ICacheEntry, Task<CachedWorld>> create = async (entry) => 
+                        { 
+                            return await rawdb.ReadSingleRow(cmd);
+                        };
+
+                        idParameter.TypedValue = id;
+
+                        for (; i < result.Length; i++)
+                        {
+                            var data = await rawdb._cache.GetOrCreateAsync<CachedWorld>(id, create);
+                            result[i] = data;
+
+                            id = rawdb._random.Next(1, 10001);
+                            idParameter.TypedValue = id;
+                        }
+                    }
+                }
+
+                return result;
+            }
+        }
+
+        public async Task PopulateCache()
+        {
+            using (var db = new NpgsqlConnection(_connectionString))
+            {
+                await db.OpenAsync();
+
+                var (cmd, idParameter) = CreateReadCommand(db);
+                using (cmd)
+                {
+                    for (var i = 1; i < 10001; i++)
+                    {
+                        idParameter.TypedValue = i;
+                        _cache.Set<CachedWorld>(i, await ReadSingleRow(cmd));
+                    }
+                }
+            }
         }
 
         public async Task<World[]> LoadMultipleUpdatesRows(int count)

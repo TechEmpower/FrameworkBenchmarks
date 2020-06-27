@@ -55,6 +55,7 @@ namespace PlatformBenchmarks
             public readonly static AsciiString Fortunes = "/fortunes";
             public readonly static AsciiString Updates = "/updates/";
             public readonly static AsciiString MultipleQueries = "/queries/";
+            public readonly static AsciiString Caching = "/cached-worlds/";
         }
 
         private RequestType _requestType;
@@ -83,15 +84,17 @@ namespace PlatformBenchmarks
                 if (Paths.SingleQuery.Length == pathLength && startLine.SequenceEqual(Paths.SingleQuery))
                 {
                     requestType = RequestType.SingleQuery;
-                    return;
                 }
                 else if (Paths.Fortunes.Length == pathLength && startLine.SequenceEqual(Paths.Fortunes))
                 {
                     requestType = RequestType.Fortunes;
-                    return;
                 }
-
-                if (Paths.Updates.Length <= pathLength && startLine.StartsWith(Paths.Updates))
+                else if (Paths.Caching.Length <= pathLength && startLine.StartsWith(Paths.Caching))
+                {
+                    _queries = ParseQueries(startLine, Paths.Caching.Length);
+                    requestType = RequestType.Caching;
+                }
+                else if (Paths.Updates.Length <= pathLength && startLine.StartsWith(Paths.Updates))
                 {
                     _queries = ParseQueries(startLine, Paths.Updates.Length);
                     requestType = RequestType.Updates;
@@ -130,6 +133,11 @@ namespace PlatformBenchmarks
                 else if (Paths.SingleQuery.Length == pathLength && path.SequenceEqual(Paths.SingleQuery))
                 {
                     requestType = RequestType.SingleQuery;
+                }
+                else if (Paths.Caching.Length <= pathLength && path.StartsWith(Paths.Caching))
+                {
+                    _queries = ParseQueries(path, Paths.Caching.Length);
+                    requestType = RequestType.Caching;
                 }
                 else if (Paths.MultipleQueries.Length <= pathLength && path.StartsWith(Paths.MultipleQueries))
                 {
@@ -180,40 +188,22 @@ namespace PlatformBenchmarks
             return queries;
         }
 
-        private Task ProcessRequestAsync()
+        private Task ProcessRequestAsync() => _requestType switch
         {
-            Task task;
-            var requestType = _requestType;
-            if (requestType == RequestType.Fortunes)
-            {
-                task = Fortunes(Writer);
-            }
-            else if (requestType == RequestType.SingleQuery)
-            {
-                task = SingleQuery(Writer);
-            }
-            else if (requestType == RequestType.Updates)
-            {
-                task = Updates(Writer, _queries);
-            }
-            else if (requestType == RequestType.MultipleQueries)
-            {
-                task = MultipleQueries(Writer, _queries);
-            }
-            else
-            {
-                Default(Writer);
-                task = Task.CompletedTask;
-            }
+            RequestType.Fortunes => Fortunes(Writer),
+            RequestType.SingleQuery => SingleQuery(Writer),
+            RequestType.Caching => Caching(Writer, _queries),
+            RequestType.Updates => Updates(Writer, _queries),
+            RequestType.MultipleQueries => MultipleQueries(Writer, _queries),
+            _ => Default(Writer)
+        };
 
-            return task;
-        }
-
-        private static void Default(PipeWriter pipeWriter)
+        private static Task Default(PipeWriter pipeWriter)
         {
             var writer = GetWriter(pipeWriter, sizeHint: _defaultPreamble.Length + DateHeader.HeaderBytes.Length);
             Default(ref writer);
             writer.Commit();
+            return Task.CompletedTask;
         }
 #endif
         private readonly static AsciiString _defaultPreamble =
@@ -237,6 +227,7 @@ namespace PlatformBenchmarks
             Json,
             Fortunes,
             SingleQuery,
+            Caching,
             Updates,
             MultipleQueries
         }
