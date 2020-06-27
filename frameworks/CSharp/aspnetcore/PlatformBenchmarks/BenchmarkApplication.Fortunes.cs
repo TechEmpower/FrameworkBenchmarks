@@ -23,7 +23,7 @@ namespace PlatformBenchmarks
 
         private void OutputFortunes(PipeWriter pipeWriter, List<Fortune> model)
         {
-            var writer = GetWriter(pipeWriter);
+            var writer = GetWriter(pipeWriter, sizeHint: 1600); // in reality it's 1361
 
             writer.Write(_fortunesPreamble);
 
