@@ -53,17 +53,17 @@ reactor_vector http_content_length_header(uint32_t n)
 // memcpy the response directly to the output buffer and adjust the buffer size accordingly
 void write_response(reactor_stream *stream, reactor_vector preamble, reactor_vector body)
 {
-  char *output_stream_ptr;
+  char *output_buffer_ptr;
   reactor_vector date_header = http_date_header(0); // includes header name and \r\n
   reactor_vector content_length_header = http_content_length_header(body.size); // includes header name and \r\n\r\n
   size_t response_size = preamble.size + date_header.size + content_length_header.size + body.size;
 
   buffer_reserve(&stream->output, response_size);
-  output_stream_ptr = (char *) buffer_data(&stream->output);
-  memcpy(output_stream_ptr, preamble.base, preamble.size);
-  memcpy(output_stream_ptr + preamble.size, date_header.base, date_header.size);
-  memcpy(output_stream_ptr + preamble.size + date_header.size, content_length_header.base, content_length_header.size);
-  memcpy(output_stream_ptr + preamble.size + date_header.size + content_length_header.size, body.base, body.size);
+  output_buffer_ptr = (char *) buffer_data(&stream->output);
+  memcpy(output_buffer_ptr, preamble.base, preamble.size);
+  memcpy(output_buffer_ptr + preamble.size, date_header.base, date_header.size);
+  memcpy(output_buffer_ptr + preamble.size + date_header.size, content_length_header.base, content_length_header.size);
+  memcpy(output_buffer_ptr + preamble.size + date_header.size + content_length_header.size, body.base, body.size);
   stream->output.size += response_size;
 }
 
