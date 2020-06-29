@@ -150,7 +150,7 @@ func initDatabase() {
 
 // this will populate the cached worlds for the cache test
 func populateCache() {
-	worlds := make(Worlds, 0, worldcount)
+	worlds := make(Worlds, worldcount)
 	rows, err := db.Query(context.Background(), worldcachesql, worldcount)
 	if err != nil {
 		panic(err)
@@ -252,7 +252,7 @@ func cachedHandler(c *fiber.Ctx) {
 	n := QueriesCount(c)
 	worlds := AcquireWorlds()[:n]
 	for i := 0; i < n; i++ {
-		worlds[i] = cachedWorlds[rand.Intn(worldcount-0)+0]
+		worlds[i] = cachedWorlds[RandomWorld()]
 	}
 	c.JSON(worlds)
 	ReleaseWorlds(worlds)
