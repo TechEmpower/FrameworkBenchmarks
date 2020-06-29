@@ -1,28 +1,29 @@
 {
-  "framework": "smart-socket",
+  "framework": "clevergo",
   "tests": [
     {
       "default": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "update_url": "/updates?queries=",
+        "query_url": "/queries?n=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?n=",
         "port": 8080,
         "approach": "Realistic",
-        "classification": "Platform",
-        "database": "Postgres",
-        "framework": "None",
-        "language": "Java",
+        "classification": "Micro",
+        "database": "mysql",
+        "framework": "CleverGo",
+        "language": "Go",
         "flavor": "None",
         "orm": "Raw",
-        "platform": "smartboot",
+        "platform": "None",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "smart-socket",
+        "display_name": "CleverGo",
         "notes": "",
-        "versus": "smart-socket"
+        "versus": "go"
       }
     }
   ]
