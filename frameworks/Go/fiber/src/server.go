@@ -18,8 +18,9 @@ import (
 )
 
 var (
-	child bool
-	db    *pgxpool.Pool
+	child        bool
+	db           *pgxpool.Pool
+	cachedWorlds Worlds
 )
 
 const (
@@ -28,7 +29,7 @@ const (
 	helloworld       = "Hello, World!"
 	worldselectsql   = "SELECT id, randomNumber FROM World WHERE id = $1"
 	worldupdatesql   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
-	worldcachesql    = "SELECT * FROM World"
+	worldcachesql    = "SELECT * FROM CachedWorld"
 	fortuneselectsql = "SELECT id, message FROM Fortune"
 )
 
@@ -144,6 +145,17 @@ func initDatabase() {
 	if err != nil {
 		panic(err)
 	}
+	populateCache()
+}
+
+// this will populate the cached worlds for the cache test
+func populateCache() {
+	worlds := AcquireWorlds()[:500]
+	for i := 0; i < 500; i++ {
+		w := &worlds[i]
+		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
+	}
+	cachedWorlds = worlds
 }
 
 // jsonHandler :
@@ -226,26 +238,10 @@ func plaintextHandler(c *fiber.Ctx) {
 	c.SendString(helloworld)
 }
 
-var cachePopulated = false
-var catchedWorlds []World
-
-func populateCache() {
-	worlds := AcquireWorlds()[:500]
-	for i := 0; i < 500; i++ {
-		w := &worlds[i]
-		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
-	}
-	catchedWorlds = worlds
-	cachePopulated = true
-}
-
 // cachedHandler :
 func cachedHandler(c *fiber.Ctx) {
-	if !cachePopulated {
-		populateCache()
-	}
 	n := QueriesCount(c)
-	c.JSON(catchedWorlds[:n])
+	c.JSON(cachedWorlds[:n])
 }
 
 // RandomWorld :
