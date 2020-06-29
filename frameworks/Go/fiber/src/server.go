@@ -157,10 +157,11 @@ func populateCache() {
 	}
 	for i := 0; i < worldcount; i++ {
 		w := &worlds[i]
-		for rows.Next() {
-			if err := rows.Scan(&w.ID, &w.RandomNumber); err != nil {
-				panic(err)
-			}
+		if !rows.Next() {
+			break
+		}
+		if err := rows.Scan(&w.ID, &w.RandomNumber); err != nil {
+			panic(err)
 		}
 		//db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 	}
