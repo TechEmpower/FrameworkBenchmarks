@@ -29,7 +29,6 @@ const (
 	helloworld       = "Hello, World!"
 	worldselectsql   = "SELECT id, randomNumber FROM World WHERE id = $1"
 	worldupdatesql   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
-	worldcachesql    = "SELECT * FROM CachedWorld"
 	fortuneselectsql = "SELECT id, message FROM Fortune"
 )
 
