@@ -29,6 +29,7 @@ const (
 	helloworld       = "Hello, World!"
 	worldselectsql   = "SELECT id, randomNumber FROM World WHERE id = $1"
 	worldupdatesql   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
+	worldcachesql    = "SELECT * FROM World LIMIT $1"
 	fortuneselectsql = "SELECT id, message FROM Fortune"
 )
 
@@ -150,9 +151,18 @@ func initDatabase() {
 // this will populate the cached worlds for the cache test
 func populateCache() {
 	worlds := AcquireWorlds()[:500]
+	rows, err := db.Query(context.Background(), worldcachesql, 500)
+	if err != nil {
+		panic(err)
+	}
 	for i := 0; i < 500; i++ {
 		w := &worlds[i]
-		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
+		for rows.Next() {
+			if err := rows.Scan(&w.ID, &w.RandomNumber); err != nil {
+				panic(err)
+			}
+		}
+		//db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 	}
 	cachedWorlds = worlds
 }
