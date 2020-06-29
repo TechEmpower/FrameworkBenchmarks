@@ -252,7 +252,7 @@ func cachedHandler(c *fiber.Ctx) {
 	n := QueriesCount(c)
 	worlds := AcquireWorlds()[:n]
 	for i := 0; i < n; i++ {
-		worlds[i] = cachedWorlds[0+rand.Intn(worldcount-0)]
+		worlds[i] = cachedWorlds[rand.Intn(worldcount-0)+0]
 	}
 	c.JSON(worlds)
 	ReleaseWorlds(worlds)
