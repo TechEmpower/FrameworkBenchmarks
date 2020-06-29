@@ -26,9 +26,9 @@ const (
 	queryparam       = "q"
 	worldcount       = 10000
 	helloworld       = "Hello, World!"
-	htmlutf8         = "text/html; charset=utf-8"
 	worldselectsql   = "SELECT id, randomNumber FROM World WHERE id = $1"
 	worldupdatesql   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
+	worldcachesql    = "SELECT * FROM World"
 	fortuneselectsql = "SELECT id, message FROM Fortune"
 )
 
@@ -54,7 +54,7 @@ func main() {
 	app.Get("/update", updateHandler)
 	app.Get("/queries", queriesHandler)
 	app.Get("/fortune", templateHandler)
-
+	app.Get("/cached-worlds", cachedHandler)
 	app.Listen(8080)
 }
 
@@ -181,7 +181,7 @@ func templateHandler(c *fiber.Ctx) {
 		return fortunes[i].Message < fortunes[j].Message
 	})
 
-	c.Set(fiber.HeaderContentType, htmlutf8)
+	c.Set(fiber.HeaderContentType, fiber.MIMETextHTMLCharsetUTF8)
 
 	templates.WriteFortunePage(c.Fasthttp, fortunes)
 }
@@ -224,6 +224,32 @@ func updateHandler(c *fiber.Ctx) {
 // plaintextHandler :
 func plaintextHandler(c *fiber.Ctx) {
 	c.SendString(helloworld)
+}
+
+var cachePopulated = false
+var catchedWorlds []World
+
+func populateCache() {
+	worlds := AcquireWorlds()[:500]
+	for i := 0; i < 500; i++ {
+		w := &worlds[i]
+		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
+	}
+	catchedWorlds = worlds
+}
+
+// cachedHandler :
+func cachedHandler(c *fiber.Ctx) {
+	if !cachePopulated {
+		populateCache()
+	}
+	n := QueriesCount(c)
+	worlds := AcquireWorlds()[:n]
+	for i := 0; i < n; i++ {
+		worlds[i] = catchedWorlds[i]
+	}
+	c.JSON(Worlds(worlds))
+	ReleaseWorlds(worlds)
 }
 
 // RandomWorld :
