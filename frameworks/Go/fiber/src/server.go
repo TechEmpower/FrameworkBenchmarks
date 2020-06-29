@@ -29,11 +29,7 @@ const (
 	helloworld       = "Hello, World!"
 	worldselectsql   = "SELECT id, randomNumber FROM World WHERE id = $1"
 	worldupdatesql   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
-<<<<<<< HEAD
 	worldcachesql    = "SELECT * FROM CachedWorld"
-=======
-	worldcachesql    = "SELECT * FROM World"
->>>>>>> master
 	fortuneselectsql = "SELECT id, message FROM Fortune"
 )
 
@@ -242,33 +238,10 @@ func plaintextHandler(c *fiber.Ctx) {
 	c.SendString(helloworld)
 }
 
-<<<<<<< HEAD
 // cachedHandler :
 func cachedHandler(c *fiber.Ctx) {
 	n := QueriesCount(c)
 	c.JSON(cachedWorlds[:n])
-=======
-var cachePopulated = false
-var catchedWorlds []World
-
-func populateCache() {
-	worlds := AcquireWorlds()[:500]
-	for i := 0; i < 500; i++ {
-		w := &worlds[i]
-		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
-	}
-	catchedWorlds = worlds
-	cachePopulated = true
-}
-
-// cachedHandler :
-func cachedHandler(c *fiber.Ctx) {
-	if !cachePopulated {
-		populateCache()
-	}
-	n := QueriesCount(c)
-	c.JSON(catchedWorlds[:n])
->>>>>>> master
 }
 
 // RandomWorld :
