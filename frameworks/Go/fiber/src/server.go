@@ -42,9 +42,10 @@ func main() {
 	initDatabase()
 
 	app := fiber.New(&fiber.Settings{
-		CaseSensitive: true,
-		StrictRouting: true,
-		ServerHeader:  "go",
+		CaseSensitive:            true,
+		StrictRouting:            true,
+		DisableHeaderNormalizing: true,
+		ServerHeader:             "go",
 	})
 
 	app.Get("/plaintext", plaintextHandler)
