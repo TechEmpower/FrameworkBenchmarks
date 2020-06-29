@@ -113,7 +113,7 @@ func ReleaseWorld(w *World) {
 // WorldsPool ...
 var WorldsPool = sync.Pool{
 	New: func() interface{} {
-		return make(Worlds, 0, 512)
+		return make(Worlds, 0, 500)
 	},
 }
 
