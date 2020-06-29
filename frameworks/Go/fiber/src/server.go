@@ -113,7 +113,7 @@ func ReleaseWorld(w *World) {
 // WorldsPool ...
 var WorldsPool = sync.Pool{
 	New: func() interface{} {
-		return make(Worlds, 0, 512)
+		return make(Worlds, 0, 500)
 	},
 }
 
@@ -150,7 +150,7 @@ func initDatabase() {
 
 // this will populate the cached worlds for the cache test
 func populateCache() {
-	worlds := make(Worlds, 0, 1000)
+	worlds := make(Worlds, 0, worldcount)
 	rows, err := db.Query(context.Background(), worldcachesql, worldcount)
 	if err != nil {
 		panic(err)
