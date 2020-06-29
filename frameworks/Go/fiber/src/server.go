@@ -194,7 +194,7 @@ func queriesHandler(c *fiber.Ctx) {
 		w := &worlds[i]
 		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 	}
-	c.JSON(Worlds(worlds))
+	c.JSON(worlds)
 	ReleaseWorlds(worlds)
 }
 
@@ -217,7 +217,7 @@ func updateHandler(c *fiber.Ctx) {
 		batch.Queue(worldupdatesql, w.RandomNumber, w.ID)
 	}
 	db.SendBatch(context.Background(), &batch).Close()
-	c.JSON(Worlds(worlds))
+	c.JSON(worlds)
 	ReleaseWorlds(worlds)
 }
 
@@ -236,6 +236,7 @@ func populateCache() {
 		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 	}
 	catchedWorlds = worlds
+	cachePopulated = true
 }
 
 // cachedHandler :
@@ -244,12 +245,7 @@ func cachedHandler(c *fiber.Ctx) {
 		populateCache()
 	}
 	n := QueriesCount(c)
-	worlds := AcquireWorlds()[:n]
-	for i := 0; i < n; i++ {
-		worlds[i] = catchedWorlds[i]
-	}
-	c.JSON(Worlds(worlds))
-	ReleaseWorlds(worlds)
+	c.JSON(catchedWorlds[:n])
 }
 
 // RandomWorld :
