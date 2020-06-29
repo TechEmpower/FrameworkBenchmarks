@@ -113,7 +113,7 @@ func ReleaseWorld(w *World) {
 // WorldsPool ...
 var WorldsPool = sync.Pool{
 	New: func() interface{} {
-		return make(Worlds, 0, 512)
+		return make(Worlds, 0, 500)
 	},
 }
 
@@ -150,12 +150,12 @@ func initDatabase() {
 
 // this will populate the cached worlds for the cache test
 func populateCache() {
-	worlds := AcquireWorlds()[:500]
-	rows, err := db.Query(context.Background(), worldcachesql, 500)
+	worlds := make(Worlds, 0, 1000)
+	rows, err := db.Query(context.Background(), worldcachesql, worldcount)
 	if err != nil {
 		panic(err)
 	}
-	for i := 0; i < 500; i++ {
+	for i := 0; i < worldcount; i++ {
 		w := &worlds[i]
 		for rows.Next() {
 			if err := rows.Scan(&w.ID, &w.RandomNumber); err != nil {
@@ -250,7 +250,12 @@ func plaintextHandler(c *fiber.Ctx) {
 // cachedHandler :
 func cachedHandler(c *fiber.Ctx) {
 	n := QueriesCount(c)
-	c.JSON(cachedWorlds[:n])
+	worlds := AcquireWorlds()[:n]
+	for i := 0; i < n; i++ {
+		worlds[i] = cachedWorlds[1+rand.Intn(worldcount-1)]
+	}
+	c.JSON(worlds)
+	ReleaseWorlds(worlds)
 }
 
 // RandomWorld :
