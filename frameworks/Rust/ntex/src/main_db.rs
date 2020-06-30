@@ -75,9 +75,10 @@ impl Service for App {
 
                 Box::pin(async move {
                     let worlds = fut.await?;
+                    let size = 35 * worlds.len();
                     let mut res = Response::with_body(
                         StatusCode::OK,
-                        Body::Bytes(worlds.to_bytes(35 * worlds.len())),
+                        Body::Bytes(worlds.to_bytes(size)),
                     );
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
@@ -93,9 +94,10 @@ impl Service for App {
 
                 Box::pin(async move {
                     let worlds = fut.await?;
+                    let size = 35 * worlds.len();
                     let mut res = Response::with_body(
                         StatusCode::OK,
-                        Body::Bytes(worlds.to_bytes(35 * worlds.len())),
+                        Body::Bytes(worlds.to_bytes(size)),
                     );
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
