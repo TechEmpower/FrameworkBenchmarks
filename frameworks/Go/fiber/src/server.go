@@ -26,9 +26,9 @@ const (
 	queryparam       = "q"
 	worldcount       = 10000
 	helloworld       = "Hello, World!"
-	htmlutf8         = "text/html; charset=utf-8"
 	worldselectsql   = "SELECT id, randomNumber FROM World WHERE id = $1"
 	worldupdatesql   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
+	worldcachesql    = "SELECT * FROM World"
 	fortuneselectsql = "SELECT id, message FROM Fortune"
 )
 
@@ -42,9 +42,10 @@ func main() {
 	initDatabase()
 
 	app := fiber.New(&fiber.Settings{
-		CaseSensitive: true,
-		StrictRouting: true,
-		ServerHeader:  "go",
+		CaseSensitive:            true,
+		StrictRouting:            true,
+		DisableHeaderNormalizing: true,
+		ServerHeader:             "go",
 	})
 
 	app.Get("/plaintext", plaintextHandler)
@@ -53,7 +54,7 @@ func main() {
 	app.Get("/update", updateHandler)
 	app.Get("/queries", queriesHandler)
 	app.Get("/fortune", templateHandler)
-
+	app.Get("/cached-worlds", cachedHandler)
 	app.Listen(8080)
 }
 
@@ -180,7 +181,7 @@ func templateHandler(c *fiber.Ctx) {
 		return fortunes[i].Message < fortunes[j].Message
 	})
 
-	c.Set(fiber.HeaderContentType, htmlutf8)
+	c.Set(fiber.HeaderContentType, fiber.MIMETextHTMLCharsetUTF8)
 
 	templates.WriteFortunePage(c.Fasthttp, fortunes)
 }
@@ -193,7 +194,7 @@ func queriesHandler(c *fiber.Ctx) {
 		w := &worlds[i]
 		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 	}
-	c.JSON(Worlds(worlds))
+	c.JSON(worlds)
 	ReleaseWorlds(worlds)
 }
 
@@ -216,13 +217,35 @@ func updateHandler(c *fiber.Ctx) {
 		batch.Queue(worldupdatesql, w.RandomNumber, w.ID)
 	}
 	db.SendBatch(context.Background(), &batch).Close()
-	c.JSON(Worlds(worlds))
+	c.JSON(worlds)
 	ReleaseWorlds(worlds)
 }
 
 // plaintextHandler :
 func plaintextHandler(c *fiber.Ctx) {
 	c.SendString(helloworld)
+}
+
+var cachePopulated = false
+var catchedWorlds []World
+
+func populateCache() {
+	worlds := AcquireWorlds()[:500]
+	for i := 0; i < 500; i++ {
+		w := &worlds[i]
+		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
+	}
+	catchedWorlds = worlds
+	cachePopulated = true
+}
+
+// cachedHandler :
+func cachedHandler(c *fiber.Ctx) {
+	if !cachePopulated {
+		populateCache()
+	}
+	n := QueriesCount(c)
+	c.JSON(catchedWorlds[:n])
 }
 
 // RandomWorld :

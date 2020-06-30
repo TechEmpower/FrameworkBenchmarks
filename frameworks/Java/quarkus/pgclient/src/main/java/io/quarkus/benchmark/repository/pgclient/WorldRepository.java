@@ -19,7 +19,8 @@ public class WorldRepository {
     PgClients clients;
 
     public Uni<World> find(int id) {
-        return clients.getClient().preparedQuery("SELECT id, randomNumber FROM World WHERE id = $1", Tuple.of(id))
+        return clients.getClient().preparedQuery("SELECT id, randomNumber FROM World WHERE id = $1")
+                .execute(Tuple.of(id))
                 .map(rowset -> {
                     Row row = rowset.iterator().next();
                     return new World(row.getInteger(0), row.getInteger(1));
@@ -29,10 +30,11 @@ public class WorldRepository {
     public Uni<Void> update(World[] worlds) {
         Arrays.sort(worlds);
         List<Tuple> args = new ArrayList<>(worlds.length);
-        for(World world : worlds) {
+        for (World world : worlds) {
             args.add(Tuple.of(world.getId(), world.getRandomNumber()));
         }
-        return clients.getPool().preparedBatch("UPDATE World SET randomNumber = $2 WHERE id = $1", args)
+        return clients.getPool().preparedQuery("UPDATE World SET randomNumber = $2 WHERE id = $1")
+                .executeBatch(args)
                 .map(v -> null);
     }
 }
