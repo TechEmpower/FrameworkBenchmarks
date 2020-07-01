@@ -1,12 +1,12 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-use bytes::{Bytes, BytesMut};
+use bytes::Bytes;
 use ntex::{http, web};
-use simd_json_derive::Serialize;
+use yarte::Serialize;
 
 mod utils;
-use utils::{Writer, SIZE};
+use utils::SIZE;
 
 #[derive(Serialize)]
 pub struct Message {
@@ -14,15 +14,14 @@ pub struct Message {
 }
 
 async fn json() -> web::HttpResponse {
-    let message = Message {
-        message: "Hello, World!",
-    };
-    let mut body = BytesMut::with_capacity(SIZE);
-    message.json_write(&mut Writer(&mut body)).unwrap();
-
     let mut res = web::HttpResponse::with_body(
         http::StatusCode::OK,
-        http::body::Body::Bytes(body.freeze()),
+        http::body::Body::Bytes(
+            Message {
+                message: "Hello, World!",
+            }
+            .to_bytes(SIZE),
+        ),
     );
     res.headers_mut().insert(
         http::header::SERVER,
