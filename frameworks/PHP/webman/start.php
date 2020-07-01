@@ -8,13 +8,10 @@ use Webman\App;
 use Webman\Config;
 use Webman\Route;
 use Webman\Middleware;
-use Dotenv\Dotenv;
 use support\Request;
 use support\bootstrap\Log;
 use support\bootstrap\Container;
 
-
-Dotenv::createMutable(base_path())->load();
 Config::load(config_path(), ['route', 'container']);
 $config = config('server');
 
@@ -50,7 +47,6 @@ foreach ($property_map as $property) {
 }
 
 $worker->onWorkerStart = function ($worker) {
-    Dotenv::createMutable(base_path())->load();
     Config::reload(config_path(), ['route', 'container']);
     foreach (config('bootstrap', []) as $class_name) {
         /** @var \Webman\Bootstrap $class_name */
@@ -85,7 +81,6 @@ foreach (config('process', []) as $process_name => $config) {
     }
 
     $worker->onWorkerStart = function ($worker) use ($config) {
-        Dotenv::createMutable(base_path())->load();
         Config::reload(config_path(), ['route']);
 
         $bootstrap = $config['bootstrap'] ?? config('bootstrap', []);

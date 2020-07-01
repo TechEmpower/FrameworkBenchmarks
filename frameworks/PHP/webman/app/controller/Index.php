@@ -96,24 +96,23 @@ class Index
             $id = \mt_rand(1, 10000);
             $random->execute([$id]);
 
-            $random->fetchColumn(); //
-            $world = ['id' => $id, 'randomNumber' => \mt_rand(1, 10000)]; //
+            //$random->fetchColumn(); //
+            //$world = ['id' => $id, 'randomNumber' => \mt_rand(1, 10000)]; //
 
-            /*$world = ['id' => $id, 'randomNumber' => $random->fetchColumn()];
+            $world = ['id' => $id, 'randomNumber' => $random->fetchColumn()];
             $update->execute(
                 [$world['randomNumber'] = mt_rand(1, 10000), $id]
-            );*/
-
+            );
 
             $arr[] = $world;
         }
 
-        $pdo = Db::$pdo;
+        /*$pdo = Db::$pdo;
         $pdo->beginTransaction();
         foreach($arr as $world) {
              $update->execute([$world['randomNumber'], $world['id']]);
         }
-        $pdo->commit();
+        $pdo->commit();*/
 
         return new Response(200, [
             'Content-Type' => 'application/json',
