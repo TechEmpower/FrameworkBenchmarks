@@ -18,6 +18,7 @@ public class FortuneRepository {
 
     public Uni<List<Fortune>> findAll() {
         return clients.getClient().preparedQuery("SELECT * FROM Fortune" )
+                .execute()
                 .map(rowset -> {
                     List<Fortune> ret = new ArrayList<>(rowset.size()+1);
                     for(Row r : rowset) {

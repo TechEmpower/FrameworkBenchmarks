@@ -18,17 +18,18 @@ import (
 )
 
 var (
-	child bool
-	db    *pgxpool.Pool
+	child        bool
+	db           *pgxpool.Pool
+	cachedWorlds Worlds
 )
 
 const (
 	queryparam       = "q"
 	worldcount       = 10000
 	helloworld       = "Hello, World!"
-	htmlutf8         = "text/html; charset=utf-8"
 	worldselectsql   = "SELECT id, randomNumber FROM World WHERE id = $1"
 	worldupdatesql   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
+	worldcachesql    = "SELECT * FROM World LIMIT $1"
 	fortuneselectsql = "SELECT id, message FROM Fortune"
 )
 
@@ -42,9 +43,10 @@ func main() {
 	initDatabase()
 
 	app := fiber.New(&fiber.Settings{
-		CaseSensitive: true,
-		StrictRouting: true,
-		ServerHeader:  "go",
+		CaseSensitive:            true,
+		StrictRouting:            true,
+		DisableHeaderNormalizing: true,
+		ServerHeader:             "go",
 	})
 
 	app.Get("/plaintext", plaintextHandler)
@@ -53,7 +55,7 @@ func main() {
 	app.Get("/update", updateHandler)
 	app.Get("/queries", queriesHandler)
 	app.Get("/fortune", templateHandler)
-
+	app.Get("/cached-worlds", cachedHandler)
 	app.Listen(8080)
 }
 
@@ -111,7 +113,7 @@ func ReleaseWorld(w *World) {
 // WorldsPool ...
 var WorldsPool = sync.Pool{
 	New: func() interface{} {
-		return make(Worlds, 0, 512)
+		return make(Worlds, 0, 500)
 	},
 }
 
@@ -143,6 +145,27 @@ func initDatabase() {
 	if err != nil {
 		panic(err)
 	}
+	populateCache()
+}
+
+// this will populate the cached worlds for the cache test
+func populateCache() {
+	worlds := make(Worlds, worldcount)
+	rows, err := db.Query(context.Background(), worldcachesql, worldcount)
+	if err != nil {
+		panic(err)
+	}
+	for i := 0; i < worldcount; i++ {
+		w := &worlds[i]
+		if !rows.Next() {
+			break
+		}
+		if err := rows.Scan(&w.ID, &w.RandomNumber); err != nil {
+			panic(err)
+		}
+		//db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
+	}
+	cachedWorlds = worlds
 }
 
 // jsonHandler :
@@ -180,7 +203,7 @@ func templateHandler(c *fiber.Ctx) {
 		return fortunes[i].Message < fortunes[j].Message
 	})
 
-	c.Set(fiber.HeaderContentType, htmlutf8)
+	c.Set(fiber.HeaderContentType, fiber.MIMETextHTMLCharsetUTF8)
 
 	templates.WriteFortunePage(c.Fasthttp, fortunes)
 }
@@ -193,7 +216,7 @@ func queriesHandler(c *fiber.Ctx) {
 		w := &worlds[i]
 		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 	}
-	c.JSON(Worlds(worlds))
+	c.JSON(worlds)
 	ReleaseWorlds(worlds)
 }
 
@@ -216,13 +239,24 @@ func updateHandler(c *fiber.Ctx) {
 		batch.Queue(worldupdatesql, w.RandomNumber, w.ID)
 	}
 	db.SendBatch(context.Background(), &batch).Close()
-	c.JSON(Worlds(worlds))
+	c.JSON(worlds)
 	ReleaseWorlds(worlds)
 }
 
 // plaintextHandler :
 func plaintextHandler(c *fiber.Ctx) {
 	c.SendString(helloworld)
+}
+
+// cachedHandler :
+func cachedHandler(c *fiber.Ctx) {
+	n := QueriesCount(c)
+	worlds := AcquireWorlds()[:n]
+	for i := 0; i < n; i++ {
+		worlds[i] = cachedWorlds[RandomWorld()-1]
+	}
+	c.JSON(worlds)
+	ReleaseWorlds(worlds)
 }
 
 // RandomWorld :

@@ -6,10 +6,7 @@ COPY ./src /fiber
 
 RUN go get github.com/valyala/quicktemplate/qtc
 
-RUN go mod download
-
 RUN go generate ./templates
+RUN go build -ldflags="-s -w" -o app .
 
-RUN go build -ldflags="-s -w" -o server .
-
-CMD ./server -prefork
+CMD ./app -prefork
