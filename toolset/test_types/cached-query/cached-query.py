@@ -6,7 +6,7 @@ class TestType(AbstractTestType):
     def __init__(self, config):
         self.cached_query_url = ""
         kwargs = {
-            'name': 'cached_query',
+            'name': 'cached-query',
             'accept_header': self.accept('json'),
             'requires_db': True,
             'args': ['cached_query_url']
