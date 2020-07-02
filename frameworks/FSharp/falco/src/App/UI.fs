@@ -4,8 +4,7 @@ open Falco.ViewEngine
     
 let layout pageTitle content = 
     html [] [
-        head [] [
-                meta  [ _charset "UTF-8" ]                        
+        head [] [                
                 title [] [ raw pageTitle ]                                                                
             ]
         body [] content

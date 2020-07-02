@@ -17,10 +17,6 @@ let routes =
     ]
     
 module Config =
-    let configureKestrel (k : KestrelServerOptions) =
-        k.AddServerHeader <- false
-        ()
-
     let configureLogging (log : ILoggingBuilder) =
         log.ClearProviders()
         |> ignore
@@ -44,7 +40,7 @@ let builderServer
     (connectionFactory : DbConnectionFactory) 
     (webHost : IWebHostBuilder) =
     webHost
-        .UseKestrel(Config.configureKestrel)
+        .UseKestrel()
         .ConfigureLogging(Config.configureLogging)
         .ConfigureServices(Config.configureServices connectionFactory)
         .Configure(Config.configure routes)                   
