@@ -1,8 +1,8 @@
-from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
-from toolset.benchmark.test_types.verifications import verify_query_cases
+from toolset.test_types.abstract_test_type import AbstractTestType
+from toolset.test_types.verifications import verify_query_cases
 
 
-class QueryTestType(FrameworkTestType):
+class TestType(AbstractTestType):
     def __init__(self, config):
         self.query_url = ""
         kwargs = {
@@ -11,17 +11,17 @@ class QueryTestType(FrameworkTestType):
             'requires_db': True,
             'args': ['query_url', 'database']
         }
-        FrameworkTestType.__init__(self, config, **kwargs)
+        AbstractTestType.__init__(self, config, **kwargs)
 
     def get_url(self):
         return self.query_url
 
     def verify(self, base_url):
         '''
-        Validates the response is a JSON array of 
-        the proper length, each JSON Object in the array 
-        has keys 'id' and 'randomNumber', and these keys 
-        map to integers. Case insensitive and 
+        Validates the response is a JSON array of
+        the proper length, each JSON Object in the array
+        has keys 'id' and 'randomNumber', and these keys
+        map to integers. Case insensitive and
         quoting style is ignored
         '''
 
@@ -30,6 +30,14 @@ class QueryTestType(FrameworkTestType):
                  ('501', 'warn'), ('', 'fail')]
 
         problems = verify_query_cases(self, cases, url, False)
+
+        # queries_url should be at least "/queries/"
+        # some frameworks use a trailing slash while others use ?q=
+        if len(self.query_url) < 9:
+            problems.append(
+                ("fail",
+                 "Route for queries must be at least 9 characters, found '{}' instead".format(self.query_url),
+                 url))
 
         if len(problems) == 0:
             return [('pass', '', url + case) for case, _ in cases]

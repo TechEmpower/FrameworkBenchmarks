@@ -1,17 +1,17 @@
-from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
-from toolset.benchmark.test_types.verifications import verify_query_cases
+from toolset.test_types.abstract_test_type import AbstractTestType
+from toolset.test_types.verifications import verify_query_cases
 
 
-class CachedQueryTestType(FrameworkTestType):
+class TestType(AbstractTestType):
     def __init__(self, config):
         self.cached_query_url = ""
         kwargs = {
-            'name': 'cached_query',
+            'name': 'cached-query',
             'accept_header': self.accept('json'),
             'requires_db': True,
             'args': ['cached_query_url']
         }
-        FrameworkTestType.__init__(self, config, **kwargs)
+        AbstractTestType.__init__(self, config, **kwargs)
 
     def get_url(self):
         return self.cached_query_url
@@ -30,6 +30,14 @@ class CachedQueryTestType(FrameworkTestType):
                  ('501', 'warn'), ('', 'fail')]
 
         problems = verify_query_cases(self, cases, url)
+
+        # cached_query_url should be at least "/cached-worlds/"
+        # some frameworks use a trailing slash while others use ?q=
+        if len(self.cached_query_url) < 15:
+            problems.append(
+                ("fail",
+                 "Route for cached queries must be at least 8 characters, found '{}' instead".format(self.cached_query_url),
+                 url))
 
         if len(problems) == 0:
             return [('pass', '', url + case) for case, _ in cases]
