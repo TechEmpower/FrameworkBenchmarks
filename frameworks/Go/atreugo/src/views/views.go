@@ -1,6 +1,7 @@
 package views
 
 import (
+	"context"
 	"sort"
 
 	"atreugo/src/templates"
@@ -29,9 +30,8 @@ func JSON(ctx *atreugo.RequestCtx) error {
 // DB . Test 2: Single database query.
 func DB(ctx *atreugo.RequestCtx) error {
 	w := acquireWorld()
-	id := randomWorldNum()
 
-	db.QueryRow(ctx, worldSelectSQL, id).Scan(&w.ID, &w.RandomNumber) // nolint:errcheck
+	db.QueryRow(context.Background(), worldSelectSQL, randomWorldNum()).Scan(&w.ID, &w.RandomNumber) // nolint:errcheck
 	err := ctx.JSONResponse(w)
 
 	releaseWorld(w)
@@ -45,11 +45,9 @@ func Queries(ctx *atreugo.RequestCtx) error {
 	worlds := acquireWorlds()
 	worlds.W = worlds.W[:queries]
 
-	for i := range worlds.W {
+	for i := 0; i < queries; i++ {
 		w := &worlds.W[i]
-		id := randomWorldNum()
-
-		db.QueryRow(ctx, worldSelectSQL, id).Scan(&w.ID, &w.RandomNumber) // nolint:errcheck
+		db.QueryRow(context.Background(), worldSelectSQL, randomWorldNum()).Scan(&w.ID, &w.RandomNumber) // nolint:errcheck
 	}
 
 	err := ctx.JSONResponse(worlds.W)
@@ -64,7 +62,7 @@ func FortuneQuick(ctx *atreugo.RequestCtx) error {
 	fortune := templates.AcquireFortune()
 	fortunes := templates.AcquireFortunes()
 
-	rows, _ := db.Query(ctx, fortuneSelectSQL)
+	rows, _ := db.Query(context.Background(), fortuneSelectSQL)
 	for rows.Next() {
 		rows.Scan(&fortune.ID, &fortune.Message) // nolint:errcheck
 		fortunes.F = append(fortunes.F, *fortune)
@@ -93,11 +91,9 @@ func Update(ctx *atreugo.RequestCtx) error {
 	worlds := acquireWorlds()
 	worlds.W = worlds.W[:queries]
 
-	for i := range worlds.W {
+	for i := 0; i < queries; i++ {
 		w := &worlds.W[i]
-		id := randomWorldNum()
-
-		db.QueryRow(ctx, worldSelectSQL, id).Scan(&w.ID, &w.RandomNumber) // nolint:errcheck
+		db.QueryRow(context.Background(), worldSelectSQL, randomWorldNum()).Scan(&w.ID, &w.RandomNumber) // nolint:errcheck
 		w.RandomNumber = int32(randomWorldNum())
 	}
 
@@ -108,12 +104,12 @@ func Update(ctx *atreugo.RequestCtx) error {
 
 	batch := &pgx.Batch{}
 
-	for i := range worlds.W {
+	for i := 0; i < queries; i++ {
 		w := &worlds.W[i]
 		batch.Queue(worldUpdateSQL, w.RandomNumber, w.ID)
 	}
 
-	db.SendBatch(ctx, batch).Close()
+	db.SendBatch(context.Background(), batch).Close()
 	err := ctx.JSONResponse(worlds.W)
 
 	releaseWorlds(worlds)

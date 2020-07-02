@@ -42,18 +42,19 @@ func main() {
 
 	// init atreugo server
 	server := atreugo.New(atreugo.Config{
-		Addr:    bindHost,
-		Name:    "Go",
-		Prefork: prefork,
+		Addr:                          bindHost,
+		Name:                          "Go",
+		Prefork:                       prefork,
+		DisableHeaderNamesNormalizing: true,
 	})
 
 	// init views
 	server.GET("/plaintext", views.Plaintext)
 	server.GET("/json", views.JSON)
 	server.GET("/db", views.DB)
+	server.GET("/update", views.Update)
 	server.GET("/queries", views.Queries)
 	server.GET("/fortune", views.FortuneQuick)
-	server.GET("/update", views.Update)
 
 	if err := server.ListenAndServe(); err != nil {
 		panic(err)
