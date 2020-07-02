@@ -42,6 +42,10 @@ func main() {
 	}
 	defer handlers.CloseDB()
 
+	// init and populate worlds cache
+	handlers.PopulateWorldsCache()
+
+	// init handler
 	handler := func(ctx *fasthttp.RequestCtx) {
 		switch gotils.B2S(ctx.Path()) {
 		case "/plaintext":
@@ -50,12 +54,14 @@ func main() {
 			handlers.JSON(ctx)
 		case "/db":
 			handlers.DB(ctx)
+		case "/update":
+			handlers.Update(ctx)
 		case "/queries":
 			handlers.Queries(ctx)
 		case "/fortune":
 			handlers.FortuneQuick(ctx)
-		case "/update":
-			handlers.Update(ctx)
+		case "/cache":
+			handlers.CachedQueries(ctx)
 		default:
 			ctx.Error(fasthttp.StatusMessage(fasthttp.StatusNotFound), fasthttp.StatusNotFound)
 		}
@@ -63,8 +69,9 @@ func main() {
 
 	// init fasthttp server
 	server := &fasthttp.Server{
-		Name:    "Go",
-		Handler: handler,
+		Name:                          "Go",
+		Handler:                       handler,
+		DisableHeaderNamesNormalizing: true,
 	}
 
 	listenAndServe := server.ListenAndServe
