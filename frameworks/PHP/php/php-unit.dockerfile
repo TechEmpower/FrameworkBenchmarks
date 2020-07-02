@@ -1,4 +1,4 @@
-FROM ubuntu:19.10
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -8,7 +8,7 @@ RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq curl php-mysql > /dev/null
 
 RUN curl https://nginx.org/keys/nginx_signing.key | apt-key add - \
-    && add-apt-repository "deb https://packages.nginx.org/unit/ubuntu/ eoan unit" -s \
+    && add-apt-repository "deb https://packages.nginx.org/unit/ubuntu/ focal unit" -s \
     && apt-get -y update \
     && apt-get -y install unit unit-php
 

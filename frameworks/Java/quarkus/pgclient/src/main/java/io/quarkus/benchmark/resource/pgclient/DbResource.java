@@ -1,84 +1,68 @@
 package io.quarkus.benchmark.resource.pgclient;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.quarkus.benchmark.model.World;
 import io.quarkus.benchmark.repository.pgclient.WorldRepository;
-import io.reactivex.Maybe;
-import io.reactivex.Single;
+import io.quarkus.vertx.web.Route;
+import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.groups.UniAndGroupIterable;
+import io.vertx.ext.web.RoutingContext;
+
 
 @ApplicationScoped
-@Path("/pgclient")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-public class DbResource {
-
-    private static Logger LOG = LoggerFactory.getLogger(WorldRepository.class);
+public class DbResource extends BaseResource {
 
     @Inject
     WorldRepository worldRepository;
 
-    @GET
-    @Path("/db")
-    public CompletionStage<World> db() {
-        return randomWorld()
-                .to(m -> {
-                    CompletableFuture<World> cf = new CompletableFuture<>();
-                    m.subscribe(cf::complete, cf::completeExceptionally, () -> cf.complete(null));
-                    return cf;
-                });
+    @Route(path = "db")
+    public void db(RoutingContext rc) {
+        randomWorld().subscribe().with(world -> sendJson(rc, world),
+                                       t -> handleFail(rc, t));
     }
 
-    @GET
-    @Path("/queries")
-    public CompletionStage<List<World>> queries(@QueryParam("queries") String queries) {
-        Maybe<World>[] worlds = new Maybe[parseQueryCount(queries)];
-        Arrays.setAll(worlds, i -> randomWorld());
+    @Route(path = "queries")
+    public void queries(RoutingContext rc) {
+        var queries = rc.request().getParam("queries");
+        var worlds = new Uni[parseQueryCount(queries)];
+        var ret = new World[worlds.length];
+        Arrays.setAll(worlds, i -> {
+            return randomWorld().map(w -> ret[i] = w);
+        });
 
-        return Maybe.concatArray(worlds)
-                .toList()
-                .to(m -> {
-                    CompletableFuture<List<World>> cf = new CompletableFuture<>();
-                    m.subscribe(cf::complete, cf::completeExceptionally);
-                    return cf;
-                });
+        ((UniAndGroupIterable<Void>)Uni.combine().all().unis(worlds))
+        .combinedWith(v -> Arrays.asList(ret))
+        .subscribe().with(list -> sendJson(rc, list),
+                          t -> handleFail(rc, t));
     }
 
-    @GET
-    @Path("/updates")
-    public CompletionStage<List<World>> updates(@QueryParam("queries") String queries) {
-        Single<World>[] worlds = new Single[parseQueryCount(queries)];
-        Arrays.setAll(worlds, i -> randomWorld().flatMapSingle(world -> {
-            world.setId(randomWorldNumber());
-            return worldRepository.update(world);
-        }));
+    @Route(path = "updates")
+    public void updates(RoutingContext rc) {
+        var queries = rc.request().getParam("queries");
+        var worlds = new Uni[parseQueryCount(queries)];
+        var ret = new World[worlds.length];
+        Arrays.setAll(worlds, i -> {
+            return randomWorld().map(w -> {
+                w.setRandomNumber(randomWorldNumber());
+                ret[i] = w;
+                return w;
+            });
+        });
 
-        return Single.concatArray(worlds)
-                .toList()
-                .to(m -> {
-                    CompletableFuture<List<World>> cf = new CompletableFuture<>();
-                    m.subscribe(cf::complete, cf::completeExceptionally);
-                    return cf;
-                });
+        ((UniAndGroupIterable<Void>)Uni.combine().all().unis(worlds))
+        .combinedWith(v -> null)
+        .flatMap(v -> worldRepository.update(ret))
+        .map(v -> Arrays.asList(ret))
+        .subscribe().with(list -> sendJson(rc, list),
+                          t -> handleFail(rc, t));
     }
 
-    private Maybe<World> randomWorld() {
+    private Uni<World> randomWorld() {
         return worldRepository.find(randomWorldNumber());
     }
 

@@ -1,58 +1,45 @@
 package io.quarkus.benchmark.resource.pgclient;
 
-import java.io.StringWriter;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
+import io.quarkus.benchmark.model.Fortune;
+import io.quarkus.benchmark.repository.pgclient.FortuneRepository;
+import io.quarkus.vertx.web.Route;
+import io.vertx.core.http.HttpHeaders;
+import io.vertx.ext.web.RoutingContext;
+import io.vertx.reactivex.ext.web.templ.rocker.RockerTemplateEngine;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
-
-import io.quarkus.benchmark.model.Fortune;
-import io.quarkus.benchmark.repository.pgclient.FortuneRepository;
+import java.util.Comparator;
 
 @ApplicationScoped
-@Path("/pgclient")
-@Produces(MediaType.TEXT_HTML)
-@Consumes(MediaType.APPLICATION_JSON)
-public class FortuneResource {
+public class FortuneResource extends BaseResource {
 
     @Inject
     FortuneRepository repository;
 
-    private final Mustache template;
+    private final RockerTemplateEngine templeEngine;
 
     public FortuneResource() {
-        MustacheFactory mf = new DefaultMustacheFactory();
-        template = mf.compile("fortunes.mustache");
+        templeEngine = RockerTemplateEngine.create();
     }
 
-    @GET
-    @Path("/fortunes")
-    public CompletionStage<String> fortunes() {
-        return repository.findAll()
-                .map(fortunes -> {
+    @Route(path = "fortunes")
+    public void fortunes(RoutingContext rc) {
+        repository.findAll()
+                .subscribe().with(fortunes -> {
                     fortunes.add(new Fortune(0, "Additional fortune added at request time."));
                     fortunes.sort(Comparator.comparing(fortune -> fortune.getMessage()));
-
-                    StringWriter writer = new StringWriter();
-                    template.execute(writer, Collections.singletonMap("fortunes", fortunes));
-
-                    return writer.toString();
-                }).to(m -> {
-                    CompletableFuture<String> cf = new CompletableFuture<>();
-                    m.subscribe(cf::complete, cf::completeExceptionally);
-                    return cf;
-                });
+                    rc.put("fortunes", fortunes);
+                    templeEngine.render(rc.data(), "templates/Fortunes.rocker.html", res -> {
+                        if (res.succeeded()) {
+                            rc.response()
+                                    .putHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=UTF-8")
+                                    .end(res.result().toString());
+                        } else {
+                            rc.fail(res.cause());
+                        }
+                    });
+                },
+                t -> handleFail(rc, t));
     }
 }

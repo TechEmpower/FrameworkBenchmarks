@@ -21,8 +21,7 @@
       "database_os": "Linux",
       "display_name": "amp",
       "notes": "",
-      "versus": "php",
-      "tags": ["broken"]
+      "versus": "php"
     }
   }]
 }

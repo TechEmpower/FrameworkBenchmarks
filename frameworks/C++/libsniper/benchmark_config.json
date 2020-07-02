@@ -1,0 +1,25 @@
+{
+  "framework": "libsniper",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "port": 8090,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "None",
+        "language": "C++",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "libsniper",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

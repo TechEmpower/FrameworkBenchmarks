@@ -186,7 +186,7 @@ class Scaffolding:
   fundamentals.
 
   Not all frameworks have a platform and if your programming language provides
-  much of that by which we define a platform, leave black.
+  much of that by which we define a platform, leave blank.
 
   Example: Servlet, Wai, .NET
     """)

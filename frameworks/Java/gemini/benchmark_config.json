@@ -4,6 +4,7 @@
     {
       "default": {
         "plaintext_url": "/plaintext",
+        "json_url": "/json",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
@@ -66,7 +67,7 @@
       },
       "firenio": {
         "plaintext_url": "/test/plaintext",
-        "port": 8300,
+        "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
         "database": "None",

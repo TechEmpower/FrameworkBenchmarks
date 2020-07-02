@@ -75,16 +75,10 @@ int main(int argc, char* argv[]) {
 
   int nprocs = std::thread::hardware_concurrency();
 
-#if TFB_MYSQL
-  int nthreads = nprocs;
-#elif TFB_PGSQL
-
 #if MONOTHREAD
   int nthreads = 1;
 #else
   int nthreads = nprocs;
-#endif
-
 #endif
 
 #if TFB_MYSQL
@@ -134,7 +128,7 @@ int main(int argc, char* argv[]) {
   };
   my_api.get("/db") = [&](http_request& request, http_response& response) {
     set_max_sql_connections_per_thread(db_nconn);
-    response.write_json(random_numbers.connect(request.fiber).find_one(s::id = 1234).value());
+    response.write_json(random_numbers.connect(request.fiber).find_one(s::id = 1 + rand() % 10000).value());
   };
 
   my_api.get("/queries") = [&](http_request& request, http_response& response) {
