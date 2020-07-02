@@ -99,7 +99,7 @@ func CachedQueries(ctx *atreugo.RequestCtx) error {
 	return err
 }
 
-// FortuneQuick . Test 4: Fortunes.
+// FortuneQuick . Test 5: Fortunes.
 func FortuneQuick(ctx *atreugo.RequestCtx) error {
 	fortune := templates.AcquireFortune()
 	fortunes := templates.AcquireFortunes()
@@ -127,7 +127,7 @@ func FortuneQuick(ctx *atreugo.RequestCtx) error {
 	return nil
 }
 
-// Update . Test 5: Database updates.
+// Update . Test 6: Database updates.
 func Update(ctx *atreugo.RequestCtx) error {
 	queries := queriesParam(ctx)
 	worlds := acquireWorlds()
@@ -159,7 +159,7 @@ func Update(ctx *atreugo.RequestCtx) error {
 	return err
 }
 
-// Plaintext . Test 6: Plaintext.
+// Plaintext . Test 7: Plaintext.
 func Plaintext(ctx *atreugo.RequestCtx) error {
 	return ctx.TextResponse(helloWorldStr)
 }
