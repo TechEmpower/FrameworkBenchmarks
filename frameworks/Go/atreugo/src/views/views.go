@@ -20,10 +20,9 @@ const (
 
 // PopulateWorldsCache populates the worlds cache for the cache test
 func PopulateWorldsCache() {
-	worlds := acquireWorlds()
-	worlds.W = worlds.W[:maxWorlds]
+	worlds := &Worlds{W: make([]World, worldsCount)}
 
-	rows, err := db.Query(context.Background(), worldSelectCacheSQL, maxWorlds)
+	rows, err := db.Query(context.Background(), worldSelectCacheSQL, worldsCount)
 	if err != nil {
 		panic(err)
 	}
