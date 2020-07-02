@@ -40,6 +40,9 @@ func main() {
 	}
 	defer views.CloseDB()
 
+	// init and populate worlds cache
+	views.PopulateWorldsCache()
+
 	// init atreugo server
 	server := atreugo.New(atreugo.Config{
 		Addr:                          bindHost,
@@ -55,6 +58,7 @@ func main() {
 	server.GET("/update", views.Update)
 	server.GET("/queries", views.Queries)
 	server.GET("/fortune", views.FortuneQuick)
+	server.GET("/cache", views.CachedQueries)
 
 	if err := server.ListenAndServe(); err != nil {
 		panic(err)

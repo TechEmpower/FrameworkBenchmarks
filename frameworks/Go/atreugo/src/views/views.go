@@ -10,11 +10,37 @@ import (
 	"github.com/savsgio/atreugo/v11"
 )
 
+var worldsCache *Worlds
+
 const (
 	helloWorldStr = "Hello, World!"
 
 	contentTypeHTML = "text/html; charset=utf-8"
 )
+
+// PopulateWorldsCache populates the worlds cache for the cache test
+func PopulateWorldsCache() {
+	worlds := acquireWorlds()
+	worlds.W = worlds.W[:maxWorlds]
+
+	rows, err := db.Query(context.Background(), worldSelectCacheSQL, maxWorlds)
+	if err != nil {
+		panic(err)
+	}
+
+	i := 0
+	for rows.Next() {
+		w := &worlds.W[i]
+
+		if err := rows.Scan(&w.ID, &w.RandomNumber); err != nil {
+			panic(err)
+		}
+
+		i++
+	}
+
+	worldsCache = worlds
+}
 
 // JSON . Test 1: JSON serialization.
 func JSON(ctx *atreugo.RequestCtx) error {
@@ -52,6 +78,22 @@ func Queries(ctx *atreugo.RequestCtx) error {
 
 	err := ctx.JSONResponse(worlds.W)
 
+	releaseWorlds(worlds)
+
+	return err
+}
+
+// CachedQueries . Test 4: Multiple cache queries:
+func CachedQueries(ctx *atreugo.RequestCtx) error {
+	queries := queriesParam(ctx)
+	worlds := acquireWorlds()
+	worlds.W = worlds.W[:queries]
+
+	for i := 0; i < queries; i++ {
+		worlds.W[i] = worldsCache.W[randomWorldNum()-1]
+	}
+
+	err := ctx.JSONResponse(worlds.W)
 	releaseWorlds(worlds)
 
 	return err
