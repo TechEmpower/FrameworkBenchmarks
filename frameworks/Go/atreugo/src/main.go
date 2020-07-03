@@ -52,13 +52,13 @@ func main() {
 	})
 
 	// init views
-	server.GET("/plaintext", views.Plaintext)
 	server.GET("/json", views.JSON)
 	server.GET("/db", views.DB)
-	server.GET("/update", views.Update)
 	server.GET("/queries", views.Queries)
-	server.GET("/fortune", views.FortuneQuick)
-	server.GET("/cache", views.CachedQueries)
+	server.GET("/cached-worlds", views.CachedWorlds)
+	server.GET("/fortunes", views.FortunesQuick)
+	server.GET("/updates", views.Updates)
+	server.GET("/plaintext", views.Plaintext)
 
 	if err := server.ListenAndServe(); err != nil {
 		panic(err)

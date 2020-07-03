@@ -82,8 +82,8 @@ func Queries(ctx *atreugo.RequestCtx) error {
 	return err
 }
 
-// CachedQueries . Test 4: Multiple cache queries:
-func CachedQueries(ctx *atreugo.RequestCtx) error {
+// CachedWorlds . Test 4: Multiple cache queries:
+func CachedWorlds(ctx *atreugo.RequestCtx) error {
 	queries := queriesParam(ctx)
 	worlds := acquireWorlds()
 	worlds.W = worlds.W[:queries]
@@ -98,8 +98,8 @@ func CachedQueries(ctx *atreugo.RequestCtx) error {
 	return err
 }
 
-// FortuneQuick . Test 5: Fortunes.
-func FortuneQuick(ctx *atreugo.RequestCtx) error {
+// FortunesQuick . Test 5: Fortunes.
+func FortunesQuick(ctx *atreugo.RequestCtx) error {
 	fortune := templates.AcquireFortune()
 	fortunes := templates.AcquireFortunes()
 
@@ -126,8 +126,8 @@ func FortuneQuick(ctx *atreugo.RequestCtx) error {
 	return nil
 }
 
-// Update . Test 6: Database updates.
-func Update(ctx *atreugo.RequestCtx) error {
+// Updates . Test 6: Database updates.
+func Updates(ctx *atreugo.RequestCtx) error {
 	queries := queriesParam(ctx)
 	worlds := acquireWorlds()
 	worlds.W = worlds.W[:queries]
