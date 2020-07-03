@@ -48,20 +48,20 @@ func main() {
 	// init handler
 	handler := func(ctx *fasthttp.RequestCtx) {
 		switch gotils.B2S(ctx.Path()) {
-		case "/plaintext":
-			handlers.Plaintext(ctx)
 		case "/json":
 			handlers.JSON(ctx)
 		case "/db":
 			handlers.DB(ctx)
-		case "/update":
-			handlers.Update(ctx)
 		case "/queries":
 			handlers.Queries(ctx)
-		case "/fortune":
-			handlers.FortuneQuick(ctx)
-		case "/cache":
-			handlers.CachedQueries(ctx)
+		case "/cached-worlds":
+			handlers.CachedWorlds(ctx)
+		case "/fortunes":
+			handlers.FortunesQuick(ctx)
+		case "/updates":
+			handlers.Updates(ctx)
+		case "/plaintext":
+			handlers.Plaintext(ctx)
 		default:
 			ctx.Error(fasthttp.StatusMessage(fasthttp.StatusNotFound), fasthttp.StatusNotFound)
 		}

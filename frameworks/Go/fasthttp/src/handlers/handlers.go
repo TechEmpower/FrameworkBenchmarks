@@ -90,8 +90,8 @@ func Queries(ctx *fasthttp.RequestCtx) {
 	releaseWorlds(worlds)
 }
 
-// CachedQueries . Test 4: Multiple cache queries:
-func CachedQueries(ctx *fasthttp.RequestCtx) {
+// CachedWorlds . Test 4: Multiple cache queries:
+func CachedWorlds(ctx *fasthttp.RequestCtx) {
 	queries := queriesParam(ctx)
 	worlds := acquireWorlds()
 	worlds.W = worlds.W[:queries]
@@ -108,8 +108,8 @@ func CachedQueries(ctx *fasthttp.RequestCtx) {
 	releaseWorlds(worlds)
 }
 
-// FortuneQuick . Test 5: Fortunes.
-func FortuneQuick(ctx *fasthttp.RequestCtx) {
+// FortunesQuick . Test 5: Fortunes.
+func FortunesQuick(ctx *fasthttp.RequestCtx) {
 	fortune := templates.AcquireFortune()
 	fortunes := templates.AcquireFortunes()
 
@@ -134,8 +134,8 @@ func FortuneQuick(ctx *fasthttp.RequestCtx) {
 	templates.ReleaseFortunes(fortunes)
 }
 
-// Update . Test 6: Database updates.
-func Update(ctx *fasthttp.RequestCtx) {
+// Updates . Test 6: Database updates.
+func Updates(ctx *fasthttp.RequestCtx) {
 	queries := queriesParam(ctx)
 	worlds := acquireWorlds()
 	worlds.W = worlds.W[:queries]
