@@ -19,25 +19,29 @@ namespace PlatformBenchmarks
             // Handle the transport type
             var webHost = builder.GetSetting("KestrelTransport");
 
-            if (string.Equals(webHost, "Sockets", StringComparison.OrdinalIgnoreCase))
+            Console.WriteLine($"Transport: {webHost}");
+
+            if (string.Equals(webHost, "LinuxTransport", StringComparison.OrdinalIgnoreCase))
+            {
+                builder.UseLinuxTransport(options =>
+                {
+                    options.ApplicationSchedulingMode = PipeScheduler.Inline;
+                });
+            }
+            else
             {
                 builder.UseSockets(options =>
                 {
                     if (int.TryParse(builder.GetSetting("threadCount"), out int threadCount))
                     {
-                       options.IOQueueCount = threadCount;
+                        options.IOQueueCount = threadCount;
                     }
 
 #if NETCOREAPP5_0 || NET5_0
                     options.WaitForDataBeforeAllocatingBuffer = false;
+
+                    Console.WriteLine($"Options: WaitForData={options.WaitForDataBeforeAllocatingBuffer}, IOQueue={options.IOQueueCount}");
 #endif
-                });
-            }
-            else if (string.Equals(webHost, "LinuxTransport", StringComparison.OrdinalIgnoreCase))
-            {
-                builder.UseLinuxTransport(options =>
-                {
-                    options.ApplicationSchedulingMode = PipeScheduler.Inline;
                 });
             }
 
