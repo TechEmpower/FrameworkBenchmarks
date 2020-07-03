@@ -19,24 +19,18 @@ namespace PlatformBenchmarks
             // Handle the transport type
             var webHost = builder.GetSetting("KestrelTransport");
 
-            // Handle the thread count
-            var threadCountRaw = builder.GetSetting("threadCount");
-            int? theadCount = null;
-
-            if (!string.IsNullOrEmpty(threadCountRaw) &&
-                int.TryParse(threadCountRaw, out var value))
-            {
-                theadCount = value;
-            }
-
             if (string.Equals(webHost, "Sockets", StringComparison.OrdinalIgnoreCase))
             {
                 builder.UseSockets(options =>
                 {
-                    if (theadCount.HasValue)
+                    if (int.TryParse(builder.GetSetting("threadCount"), out int threadCount))
                     {
-                        options.IOQueueCount = theadCount.Value;
+                       options.IOQueueCount = threadCount;
                     }
+
+#if NETCOREAPP5_0 || NET5_0
+                    options.WaitForDataBeforeAllocatingBuffer = false;
+#endif
                 });
             }
             else if (string.Equals(webHost, "LinuxTransport", StringComparison.OrdinalIgnoreCase))
