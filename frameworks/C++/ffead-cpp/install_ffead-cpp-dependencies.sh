@@ -2,7 +2,7 @@
 
 apt update -yqq && apt install --no-install-recommends -yqq autoconf-archive unzip uuid-dev odbc-postgresql unixodbc unixodbc-dev \
 	apache2 apache2-dev libapr1-dev libaprutil1-dev memcached libmemcached-dev redis-server libssl-dev \
-	zlib1g-dev cmake make clang-format-9 ninja-build libhiredis-dev
+	zlib1g-dev cmake make clang-format-9 ninja-build libhiredis-dev libcurl4-openssl-dev
 
 #redis will not start correctly on bionic with this config
 sed -i "s/bind .*/bind 127.0.0.1/g" /etc/redis/redis.conf
@@ -12,14 +12,13 @@ service memcached stop
 service redis-server stop
 
 cd $IROOT
-wget -q https://github.com/efficient/libcuckoo/archive/master.zip
-unzip master.zip
-rm -f master.zip
-cd libcuckoo-master
+git clone https://github.com/efficient/libcuckoo.git
+cd libcuckoo
+git checkout 8785773896d74f72b6224e59d37f5f8c3c1e022a -b works
 cmake -DCMAKE_INSTALL_PREFIX=/usr .
 make install
 cd $IROOT
-rm -rf libcuckoo-master
+rm -rf libcuckoo
 
 mkdir -p /usr/lib/x86_64-linux-gnu/odbc
 wget -q https://downloads.mysql.com/archives/get/p/10/file/mysql-connector-odbc-8.0.19-linux-ubuntu18.04-x86-64bit.tar.gz
