@@ -69,9 +69,9 @@ void TeBkUmRouter::db(TeBkUmWorld& w) {
 	id << rid;
 	try {
 		w = sqli->get<TeBkUmWorld>(id);
-		delete sqli;
+		DataSourceManager::cleanImpl(sqli);
 	} catch(const std::exception& e) {
-		delete sqli;
+		DataSourceManager::cleanImpl(sqli);
 		throw e;
 	}
 }
@@ -94,9 +94,9 @@ void TeBkUmRouter::queries(const char* q, int ql, std::vector<TeBkUmWorld>& wlst
 			wlst.push_back(w);
 		}
 		sqli->endSession();
-		delete sqli;
+		DataSourceManager::cleanImpl(sqli);
 	} catch(const std::exception& e) {
-		delete sqli;
+		DataSourceManager::cleanImpl(sqli);
 		throw e;
 	}
 }
@@ -132,9 +132,9 @@ void TeBkUmRouter::updates(const char* q, int ql, std::vector<TeBkUmWorld>& wlst
 		sqli->commit();
 
 		sqli->endSession();
-		delete sqli;
+		DataSourceManager::cleanImpl(sqli);
 	} catch(const std::exception& e) {
-		delete sqli;
+		DataSourceManager::cleanImpl(sqli);
 		throw e;
 	}
 }
@@ -151,11 +151,11 @@ void TeBkUmRouter::updateCache() {
 			TeBkUmWorld& w = wlist.at(c);
 			cchi->setO(CastUtil::fromNumber(w.getId()), w);
 		}
-		delete sqli;
-		delete cchi;
+		DataSourceManager::cleanImpl(sqli);
+		CacheManager::cleanImpl(cchi);
 	} catch(const std::exception& e) {
-		delete sqli;
-		delete cchi;
+		DataSourceManager::cleanImpl(sqli);
+		CacheManager::cleanImpl(cchi);
 		throw e;
 	}
 }
@@ -176,9 +176,9 @@ void TeBkUmRouter::cachedWorlds(const char* q, int ql, std::vector<TeBkUmWorld>&
 		}
 
 		wlst = cchi->mgetO<TeBkUmWorld>(keys);
-		delete cchi;
+		CacheManager::cleanImpl(cchi);
 	} catch(const std::exception& e) {
-		delete cchi;
+		CacheManager::cleanImpl(cchi);
 		throw e;
 	}
 }
@@ -200,12 +200,12 @@ void TeBkUmRouter::getContext(HttpRequest* request, Context* context) {
 		nf.setMessage("Additional fortune added at request time.");
 		flst.push_back(nf);
 		std::sort (flst.begin(), flst.end());
-		delete sqli;
+		DataSourceManager::cleanImpl(sqli);
 
 		context->insert(std::pair<std::string, GenericObject>("fortunes", GenericObject()));
 		context->find("fortunes")->second << flst;
 	} catch(...) {
-		delete sqli;
+		DataSourceManager::cleanImpl(sqli);
 		throw;
 	}
 }

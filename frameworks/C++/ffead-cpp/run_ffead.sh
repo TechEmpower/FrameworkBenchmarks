@@ -18,10 +18,21 @@ echo never > /sys/kernel/mm/transparent_hugepage/enabled
 echo 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' >> /etc/rc.local
 sysctl vm.overcommit_memory=1
 
-export PATH=${IROOT}/nginxfc/sbin:${PATH}
+if [ "$2" = "nginx" ]
+then
+	if [ "$3" = "mysql" ] || [ "$3" = "postgresql" ]
+	then
+		export PATH=${IROOT}/nginx-ffead-sql/sbin:${PATH}
+	else
+		export PATH=${IROOT}/nginx-ffead-mongo/sbin:${PATH}
+	fi
+fi
+
 export LD_LIBRARY_PATH=${IROOT}/:${IROOT}/lib:${FFEAD_CPP_PATH}/lib:/usr/local/lib:$LD_LIBRARY_PATH
 export ODBCINI=${IROOT}/odbc.ini
 export ODBCSYSINI=${IROOT}
+export LD_PRELOAD=/usr/local/lib/libmimalloc.so
+#export LD_PRELOAD=$IROOT/snmalloc-0.4.2/build/libsnmallocshim.so
 
 cd $FFEAD_CPP_PATH
 
@@ -92,7 +103,7 @@ if [ "$2" = "emb" ]
 then
 	sed -i 's|EVH_SINGLE=false|EVH_SINGLE=true|g' $FFEAD_CPP_PATH/resources/server.prop
 	for i in $(seq 0 $(($(nproc --all)-1))); do
-	  taskset -c $i ./ffead-cpp $FFEAD_CPP_PATH &
+		taskset -c $i ./ffead-cpp $FFEAD_CPP_PATH &
 	done
 fi
 
@@ -125,14 +136,15 @@ fi
 
 if [ "$2" = "nginx" ]
 then
-	mkdir ${IROOT}/ffead-cpp-src
-	if [ "$3" = "mysql" ] || [ "$3" = "postgresql" ]
-	then
-		sed -i 's|/installs/ffead-cpp-4.0/|'/installs/ffead-cpp-4.0-sql/'|g' ${IROOT}/nginxfc/conf/nginx.conf
-	fi
+	mkdir -p ${IROOT}/nginxfc/logs
 	sed -i 's|<pool-size>30</pool-size>|<pool-size>3</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um/config/sdorm.xml
 	sed -i 's|<pool-size>10</pool-size>|<pool-size>2</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um/config/cache.xml
-	nginx -g 'daemon off;'
+	if [ "$3" = "mysql" ] || [ "$3" = "postgresql" ]
+	then
+		nginx -g 'daemon off;' -c ${IROOT}/nginx-ffead-sql/conf/nginx.conf
+	else
+		nginx -g 'daemon off;' -c ${IROOT}/nginx-ffead-mongo/conf/nginx.conf
+	fi
 fi
 
 if [ "$2" = "libreactor" ]
@@ -144,13 +156,17 @@ fi
 if [ "$2" = "crystal-http" ]
 then
 	cd ${IROOT}
-	./crystal-ffead-cpp.out --ffead-cpp-dir=$FFEAD_CPP_PATH --to=8080
+	for i in $(seq 0 $(($(nproc --all)-1))); do
+		taskset -c $i ./crystal-ffead-cpp.out --ffead-cpp-dir=$FFEAD_CPP_PATH --to=8080 &
+	done
 fi
 
 if [ "$2" = "crystal-h2o" ]
 then
 	cd ${IROOT}
-	./h2o-evloop-ffead-cpp.out --ffead-cpp-dir=$FFEAD_CPP_PATH --to=8080
+	for i in $(seq 0 $(($(nproc --all)-1))); do
+	  taskset -c $i ./h2o-evloop-ffead-cpp.out --ffead-cpp-dir=$FFEAD_CPP_PATH --to=8080 &
+	done
 fi
 
 if [ "$2" = "rust-actix" ]
@@ -192,24 +208,28 @@ fi
 if [ "$2" = "v-vweb" ]
 then
 	cd ${IROOT}
-	./vweb --server_dir=$FFEAD_CPP_PATH --server_port=8080
+	for i in $(seq 0 $(($(nproc --all)-1))); do
+		taskset -c $i ./vweb --server_dir=$FFEAD_CPP_PATH --server_port=8080 &
+	done
 fi
 
 if [ "$2" = "v-picov" ]
 then
 	cd ${IROOT}
-	./main --server_dir=$FFEAD_CPP_PATH --server_port=8080
+	for i in $(seq 0 $(($(nproc --all)-1))); do
+		taskset -c $i ./main --server_dir=$FFEAD_CPP_PATH --server_port=8080 &
+	done
 fi
 
 if [ "$2" = "java-firenio" ]
 then
 	cd ${IROOT}
-	java                       	   \
+	java                       \
 	    -server                    \
 	    -XX:+UseNUMA               \
 	    -XX:+UseParallelGC         \
 	    -XX:+AggressiveOpts        \
-	    -Dlite=false               \
+	    -Dlite=true               \
 	    -Dcore=1                   \
 	    -Dframe=16                 \
 	    -DreadBuf=512              \

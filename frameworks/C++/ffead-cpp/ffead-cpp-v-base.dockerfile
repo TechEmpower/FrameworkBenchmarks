@@ -1,7 +1,7 @@
 FROM sumeetchhetri/ffead-cpp-4.0-base:1.0
 LABEL maintainer="Sumeet Chhetri"
 LABEL version="1.0"
-LABEL description="Base rust docker image with ffead-cpp v4.0 - commit id - 83dd80bcf3c12403e4ba9819496ffcf85acfc43b"
+LABEL description="Base v docker image with ffead-cpp v4.0 - commit id - 83dd80bcf3c12403e4ba9819496ffcf85acfc43b"
 
 ENV IROOT=/installs
 
@@ -12,25 +12,25 @@ RUN rm -f /usr/local/lib/libffead-* /usr/local/lib/libte_benc* /usr/local/lib/li
 	ln -s ${IROOT}/ffead-cpp-4.0/lib/libinter.so /usr/local/lib/libinter.so && \
 	ln -s ${IROOT}/ffead-cpp-4.0/lib/libdinter.so /usr/local/lib/libdinter.so && \
 	ldconfig
+	
+RUN apt update -yqq && apt install -y git make && rm -rf /var/lib/apt/lists/*
+RUN git clone https://github.com/vlang/v && cd v && make && ./v symlink
 
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-ENV PATH="/root/.cargo/bin:${PATH}"
+WORKDIR ${IROOT}/lang-server-backends/v/vweb
+RUN chmod +x *.sh && ./build.sh && cp vweb $IROOT/
 
-RUN cd ${IROOT}/lang-server-backends/rust/actix-ffead-cpp && RUSTFLAGS="-C target-cpu=native" cargo build --release && cp target/release/actix-ffead-cpp $IROOT/ && rm -rf target && \
-	cd ${IROOT}/lang-server-backends/rust/hyper-ffead-cpp && RUSTFLAGS="-C target-cpu=native" cargo build --release && cp target/release/hyper-ffead-cpp $IROOT/ && rm -rf target && \
-	cd ${IROOT}/lang-server-backends/rust/thruster-ffead-cpp && RUSTFLAGS="-C target-cpu=native" cargo build --release && cp target/release/thruster-ffead-cpp $IROOT/ && rm -rf target && \
-	rm -rf ${IROOT}/lang-server-backends && rm -rf /root/.rustup /root/.cargo
+WORKDIR ${IROOT}/lang-server-backends/v/pico.v
+RUN chmod +x *.sh && ./build.sh && cp main $IROOT/ && rm -rf ${IROOT}/lang-server-backends
 
 FROM buildpack-deps:bionic
 RUN apt update -yqq && apt install --no-install-recommends -yqq uuid-dev odbc-postgresql unixodbc unixodbc-dev memcached \
 	libmemcached-dev libssl-dev libhiredis-dev zlib1g-dev libcurl4-openssl-dev redis-server && rm -rf /var/lib/apt/lists/*
 COPY --from=0 /installs/ffead-cpp-4.0 /installs/ffead-cpp-4.0
 COPY --from=0 /installs/ffead-cpp-4.0-sql /installs/ffead-cpp-4.0-sql
-COPY --from=0 /installs/actix-ffead-cpp /installs/
-COPY --from=0 /installs/hyper-ffead-cpp /installs/
-COPY --from=0 /installs/thruster-ffead-cpp /installs/
+COPY --from=0 /installs/main /installs/
+COPY --from=0 /installs/vweb /installs/
 RUN mkdir -p /installs/snmalloc-0.4.2/build
-COPY --from=0 /installs/snmalloc-0.4.2/build/libsnmallocshim-1mib.so /installs/snmalloc-0.4.2/build
+COPY --from=0 /installs/snmalloc-0.4.2/build/libsnmallocshim-1mib.so /installs/snmalloc-0.4.2/build/
 COPY --from=0 /usr/lib/x86_64-linux-gnu/odbc /usr/lib/x86_64-linux-gnu/odbc
 COPY --from=0 /usr/local/lib /usr/local/lib
 COPY --from=0 /run_ffead.sh /
