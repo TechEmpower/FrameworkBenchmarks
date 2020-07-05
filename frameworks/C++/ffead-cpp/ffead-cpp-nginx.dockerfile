@@ -4,4 +4,4 @@ ENV IROOT=/installs
 
 WORKDIR /
 
-CMD ./run_ffead.sh ffead-cpp-4.0 emb mongo redis
+CMD ./run_ffead.sh ffead-cpp-4.0 nginx mongo
