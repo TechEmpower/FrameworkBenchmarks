@@ -1,6 +1,6 @@
 <?php
 
-class RawFortuneController extends AppController
+class RfortuneController extends AppController
 {
     public function index()
     {

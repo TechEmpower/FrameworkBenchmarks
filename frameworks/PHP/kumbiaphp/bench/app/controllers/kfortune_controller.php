@@ -1,6 +1,6 @@
 <?php
 
-class KuFortuneController extends AppController
+class KfortuneController extends AppController
 {
 
     protected function before_filter()
