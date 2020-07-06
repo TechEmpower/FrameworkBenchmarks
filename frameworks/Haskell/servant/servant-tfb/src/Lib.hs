@@ -305,7 +305,7 @@ tfbDb = defaultDbSettings `withDbModification` modification where
             { worldId           = "id"
             , worldRandomNumber = "randomnumber"
             }
-        , tfbFortune = modifyEntityName (\_ -> "Fortunes") <> modifyTableFields tableModification
+        , tfbFortune = modifyEntityName (\_ -> "Fortune") <> modifyTableFields tableModification
             { fortuneId      = "id"
             , fortuneMessage = "message"
             }
