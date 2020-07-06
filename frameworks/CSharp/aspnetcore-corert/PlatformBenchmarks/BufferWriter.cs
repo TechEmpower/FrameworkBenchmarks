@@ -13,18 +13,18 @@ namespace PlatformBenchmarks
         private Span<byte> _span;
         private int _buffered;
 
-        public BufferWriter(T output)
+        public BufferWriter(T output, int sizeHint)
         {
             _buffered = 0;
             _output = output;
-            _span = output.GetSpan(sizeHint: 16 * 160);
+            _span = output.GetSpan(sizeHint);
         }
 
         public Span<byte> Span => _span;
 
-        public int Buffered => _buffered;
-
         public T Output => _output;
+
+        public int Buffered => _buffered;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Commit()
@@ -91,6 +91,52 @@ namespace PlatformBenchmarks
                 source.Slice(0, writable).CopyTo(_span);
                 source = source.Slice(writable);
                 Advance(writable);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void WriteNumeric(uint number)
+        {
+            const byte AsciiDigitStart = (byte)'0';
+
+            var span = this.Span;
+
+            // Fast path, try copying to the available memory directly
+            var advanceBy = 0;
+            if (span.Length >= 3)
+            {
+                if (number < 10)
+                {
+                    span[0] = (byte)(number + AsciiDigitStart);
+                    advanceBy = 1;
+                }
+                else if (number < 100)
+                {
+                    var tens = (byte)((number * 205u) >> 11); // div10, valid to 1028
+
+                    span[0] = (byte)(tens + AsciiDigitStart);
+                    span[1] = (byte)(number - (tens * 10) + AsciiDigitStart);
+                    advanceBy = 2;
+                }
+                else if (number < 1000)
+                {
+                    var digit0 = (byte)((number * 41u) >> 12); // div100, valid to 1098
+                    var digits01 = (byte)((number * 205u) >> 11); // div10, valid to 1028
+
+                    span[0] = (byte)(digit0 + AsciiDigitStart);
+                    span[1] = (byte)(digits01 - (digit0 * 10) + AsciiDigitStart);
+                    span[2] = (byte)(number - (digits01 * 10) + AsciiDigitStart);
+                    advanceBy = 3;
+                }
+            }
+
+            if (advanceBy > 0)
+            {
+                Advance(advanceBy);
+            }
+            else
+            {
+                BufferExtensions.WriteNumericMultiWrite(ref this, number);
             }
         }
     }

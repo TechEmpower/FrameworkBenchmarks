@@ -23,9 +23,11 @@
 #include <string.h>
 
 #include "lwan-private.h"
+#include "lwan-cache.h"
 #include "lwan-config.h"
 #include "lwan-template.h"
 #include "lwan-mod-lua.h"
+#include "int-to-str.h"
 
 #include "database.h"
 #include "json.h"
@@ -188,9 +190,9 @@ LWAN_HANDLER(json)
                              N_ELEMENTS(hello_world_json_desc), &j);
 }
 
-static bool db_query(struct db_stmt *stmt, struct db_json *out)
+static bool db_query_key(struct db_stmt *stmt, struct db_json *out, int key)
 {
-    struct db_row row = {.kind = 'i', .u.i = (rand() % 10000) + 1};
+    struct db_row row = {.kind = 'i', .u.i = key + 1};
     if (UNLIKELY(!db_stmt_bind(stmt, &row, 1)))
         return false;
 
@@ -202,6 +204,11 @@ static bool db_query(struct db_stmt *stmt, struct db_json *out)
     out->randomNumber = (int)random_number;
 
     return true;
+}
+
+static inline bool db_query(struct db_stmt *stmt, struct db_json *out)
+{
+    return db_query_key(stmt, out, rand() % 10000);
 }
 
 LWAN_HANDLER(db)
@@ -258,6 +265,75 @@ out:
     db_stmt_finalize(stmt);
 
     return ret;
+}
+
+static struct cache *cached_queries_cache;
+struct db_json_cached {
+    struct cache_entry base;
+    struct db_json db_json;
+};
+
+static struct cache_entry *cached_queries_new(const char *key, void *context)
+{
+    struct db_json_cached *entry;
+    struct db_stmt *stmt;
+
+    entry = malloc(sizeof(*entry));
+    if (UNLIKELY(!entry))
+        return NULL;
+
+    stmt = db_prepare_stmt(get_db(), random_number_query,
+                           sizeof(random_number_query) - 1);
+    if (UNLIKELY(!stmt)) {
+        free(entry);
+        return NULL;
+    }
+
+    if (!db_query_key(stmt, &entry->db_json, atoi(key))) {
+        free(entry);
+        entry = NULL;
+    }
+
+    db_stmt_finalize(stmt);
+
+    return (struct cache_entry *)entry;
+}
+
+static void cached_queries_free(struct cache_entry *entry, void *context)
+{
+    free(entry);
+}
+
+LWAN_HANDLER(cached_worlds)
+{
+    const char *queries_str = lwan_request_get_query_param(request, "count");
+    long queries;
+
+    queries = LIKELY(queries_str)
+                  ? LWAN_MIN(500, LWAN_MAX(1, parse_long(queries_str, -1)))
+                  : 1;
+
+    struct queries_json qj = {.queries_len = (size_t)queries};
+    for (long i = 0; i < queries; i++) {
+        char key_buf[INT_TO_STR_BUFFER_SIZE];
+        struct db_json_cached *jc;
+        size_t discard;
+
+        jc = (struct db_json_cached *)cache_coro_get_and_ref_entry(
+            cached_queries_cache, request->conn->coro,
+            int_to_string(rand() % 10000, key_buf, &discard));
+        if (UNLIKELY(!jc))
+            return HTTP_INTERNAL_ERROR;
+
+        qj.queries[i] = jc->db_json;
+    }
+
+    /* Avoid reallocations/copies while building response.  Each response
+     * has ~32bytes.  500 queries (max) should be less than 16384 bytes,
+     * so this is a good approximation.  */
+    lwan_strbuf_grow_to(response->buffer, (size_t)(32l * queries));
+
+    return json_response_arr(response, &queries_array_desc, &qj);
 }
 
 LWAN_HANDLER(plaintext)
@@ -399,8 +475,16 @@ int main(void)
     if (!fortune_tpl)
         lwan_status_critical("Could not compile fortune templates");
 
+    cached_queries_cache = cache_create(cached_queries_new,
+                                        cached_queries_free,
+                                        NULL,
+                                        3600 /* 1 hour */);
+    if (!cached_queries_cache)
+        lwan_status_critical("Could not create cached queries cache");
+
     lwan_main_loop(&l);
 
+    cache_destroy(cached_queries_cache);
     lwan_tpl_free(fortune_tpl);
     lwan_shutdown(&l);
 
