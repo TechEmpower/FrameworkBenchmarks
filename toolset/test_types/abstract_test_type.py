@@ -1,11 +1,11 @@
+import abc
 import copy
 import requests
 
 from colorama import Fore
 from toolset.utils.output_helper import log
 
-
-class FrameworkTestType:
+class AbstractTestType:
     '''
     Interface between a test type (json, query, plaintext, etc) and
     the rest of TFB. A test type defines a number of keys it expects
@@ -15,6 +15,7 @@ class FrameworkTestType:
     passes an argument list of ['spam'], then after parsing there will
     exist a member `X.spam = 'foobar'`.
     '''
+    __metaclass__ = abc.ABCMeta
 
     def __init__(self,
                  config,
@@ -38,6 +39,13 @@ class FrameworkTestType:
         self.failed = None
         self.warned = None
 
+    @classmethod
+    @abc.abstractmethod
+    def url(self):
+        pass
+
+    @classmethod
+    @abc.abstractmethod
     def accept(self, content_type):
         return {
             'json':
@@ -51,7 +59,7 @@ class FrameworkTestType:
     def parse(self, test_keys):
         '''
         Takes the dict of key/value pairs describing a FrameworkTest
-        and collects all variables needed by this FrameworkTestType
+        and collects all variables needed by this AbstractTestType
 
         Raises AttributeError if required keys are missing
         '''

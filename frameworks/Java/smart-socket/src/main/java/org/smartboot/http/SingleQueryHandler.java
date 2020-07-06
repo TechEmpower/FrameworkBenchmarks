@@ -23,19 +23,19 @@ public class SingleQueryHandler extends HttpHandle {
 
     @Override
     public void doHandle(HttpRequest httpRequest, HttpResponse response) throws IOException {
+        World world = new World();
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM World WHERE id=?");) {
             preparedStatement.setInt(1, getRandomNumber());
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
-            World world = new World();
             world.setId(resultSet.getInt(1));
             world.setRandomNumber(resultSet.getInt(2));
-            response.setContentType("application/json");
-            JsonUtil.writeJsonBytes(response, world);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        response.setContentType("application/json");
+        JsonUtil.writeJsonBytes(response, world);
     }
 
     protected int getRandomNumber() {

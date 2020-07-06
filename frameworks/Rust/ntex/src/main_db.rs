@@ -5,20 +5,18 @@ use std::future::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use bytes::BytesMut;
 use futures::future::ok;
 use ntex::http::body::Body;
 use ntex::http::header::{HeaderValue, CONTENT_TYPE, SERVER};
 use ntex::http::{HttpService, KeepAlive, Request, Response, StatusCode};
 use ntex::service::{Service, ServiceFactory};
 use ntex::web::Error;
-use simd_json_derive::Serialize;
+use yarte::Serialize;
 
 mod db;
 mod utils;
 
 use crate::db::PgConnection;
-use crate::utils::Writer;
 
 struct App {
     db: PgConnection,
@@ -77,10 +75,11 @@ impl Service for App {
 
                 Box::pin(async move {
                     let worlds = fut.await?;
-                    let mut body = BytesMut::with_capacity(35 * worlds.len());
-                    worlds.json_write(&mut Writer(&mut body)).unwrap();
-                    let mut res =
-                        Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+                    let size = 35 * worlds.len();
+                    let mut res = Response::with_body(
+                        StatusCode::OK,
+                        Body::Bytes(worlds.to_bytes(size)),
+                    );
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
                     hdrs.insert(CONTENT_TYPE, h_ct);
@@ -95,10 +94,11 @@ impl Service for App {
 
                 Box::pin(async move {
                     let worlds = fut.await?;
-                    let mut body = BytesMut::with_capacity(35 * worlds.len());
-                    worlds.json_write(&mut Writer(&mut body)).unwrap();
-                    let mut res =
-                        Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+                    let size = 35 * worlds.len();
+                    let mut res = Response::with_body(
+                        StatusCode::OK,
+                        Body::Bytes(worlds.to_bytes(size)),
+                    );
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
                     hdrs.insert(CONTENT_TYPE, h_ct);

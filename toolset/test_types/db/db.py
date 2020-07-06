@@ -1,8 +1,8 @@
-from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
-from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers, verify_randomnumber_object, verify_queries_count
+from toolset.test_types.abstract_test_type import AbstractTestType
+from toolset.test_types.verifications import basic_body_verification, verify_headers, verify_randomnumber_object, verify_queries_count
 
 
-class DBTestType(FrameworkTestType):
+class TestType(AbstractTestType):
     def __init__(self, config):
         self.db_url = ""
         kwargs = {
@@ -11,14 +11,14 @@ class DBTestType(FrameworkTestType):
             'requires_db': True,
             'args': ['db_url', 'database']
         }
-        FrameworkTestType.__init__(self, config, **kwargs)
+        AbstractTestType.__init__(self, config, **kwargs)
 
     def get_url(self):
         return self.db_url
 
     def verify(self, base_url):
         '''
-        Ensures body is valid JSON with a key 'id' and a key 
+        Ensures body is valid JSON with a key 'id' and a key
         'randomNumber', both of which must map to integers
         '''
 
@@ -31,6 +31,13 @@ class DBTestType(FrameworkTestType):
         headers, body = self.request_headers_and_body(url)
 
         response, problems = basic_body_verification(body, url)
+
+        # db should be at least "/db"
+        if len(self.db_url) < 3:
+            problems.append(
+                ("fail",
+                 "Route for db must be at least 3 characters, found '{}' instead".format(self.db_url),
+                 url))
 
         if len(problems) > 0:
             return problems

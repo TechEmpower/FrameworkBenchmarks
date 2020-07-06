@@ -11,6 +11,7 @@ from time import sleep
 # Cross-platform colored text
 from colorama import Fore, Style
 
+
 def basic_body_verification(body, url, is_json_check=True):
     '''
     Takes in a raw (stringy) response body, checks that it is non-empty,
@@ -81,15 +82,15 @@ def verify_headers(request_headers_and_body, headers, url, should_be='json'):
     date2 = second_headers.get('Date')
     if date == date2:
         problems.append((
-        'fail',
-        'Invalid Cached Date. Found \"%s\" and \"%s\" on separate requests.'
-        % (date, date2), url))
+            'fail',
+            'Invalid Cached Date. Found \"%s\" and \"%s\" on separate requests.'
+            % (date, date2), url))
 
     content_type = headers.get('Content-Type')
     if content_type is not None:
         types = {
-            'json':      '^application/json(; ?charset=(UTF|utf)-8)?$',
-            'html':      '^text/html; ?charset=(UTF|utf)-8$',
+            'json': '^application/json(; ?charset=(UTF|utf)-8)?$',
+            'html': '^text/html; ?charset=(UTF|utf)-8$',
             'plaintext': '^text/plain(; ?charset=(UTF|utf)-8)?$'
         }
         expected_type = types[should_be]
@@ -344,7 +345,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
     world_db_before = {}
     if check_updates:
         world_db_before = databases[self.database.lower()].get_current_world_table(self.config)
-        expected_queries = expected_queries + concurrency * repetitions #eventually bulk updates!
+        expected_queries = expected_queries + concurrency * repetitions  # eventually bulk updates!
 
     for q, max_infraction in cases:
         case_url = url + q
@@ -396,51 +397,62 @@ def verify_query_cases(self, cases, url, check_updates=False):
 
     if hasattr(self, 'database'):
         # verify the number of queries and rows read for 20 queries, with a concurrency level of 512, with 2 repetitions
-        problems += verify_queries_count(self, "world", url+"20", concurrency, repetitions, expected_queries, expected_rows, check_updates)
+        problems += verify_queries_count(self, "world", url + "20", concurrency, repetitions, expected_queries,
+                                         expected_rows, check_updates)
     return problems
 
 
-def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected_queries=1024, expected_rows = 1024, check_updates = False):
+def verify_queries_count(self, tbl_name, url, concurrency=512, count=2, expected_queries=1024, expected_rows=1024,
+                         check_updates=False):
     '''
-    Checks that the number of executed queries, at the given concurrency level, 
+    Checks that the number of executed queries, at the given concurrency level,
     corresponds to: the total number of http requests made * the number of queries per request.
     No margin is accepted on the number of queries, which seems reliable.
     On the number of rows read or updated, the margin related to the database applies (1% by default see cls.margin)
-    On updates, if the use of bulk updates is detected (number of requests close to that expected), a margin (5% see bulk_margin) is allowed on the number of updated rows. 
+    On updates, if the use of bulk updates is detected (number of requests close to that expected), a margin
+    (5% see bulk_margin) is allowed on the number of updated rows.
     '''
     log("VERIFYING QUERY COUNT FOR %s" % url, border='-', color=Fore.WHITE + Style.BRIGHT)
 
     problems = []
 
-    queries, rows, rows_updated, margin, trans_failures = databases[self.database.lower()].verify_queries(self.config, tbl_name, url, concurrency, count, check_updates)
+    queries, rows, rows_updated, margin, trans_failures = databases[self.database.lower()].verify_queries(self.config,
+                                                                                                          tbl_name, url,
+                                                                                                          concurrency,
+                                                                                                          count,
+                                                                                                          check_updates)
 
     isBulk = check_updates and (queries < 1.001 * expected_queries) and (queries > 0.999 * expected_queries)
-    
-    if check_updates and not isBulk:#Restore the normal queries number if bulk queries are not used
+
+    if check_updates and not isBulk:  # Restore the normal queries number if bulk queries are not used
         expected_queries = (expected_queries - count * concurrency) * 2
 
-    #Add a margin based on the number of cpu cores
-    queries_margin = 1.015 #For a run on Travis
-    if multiprocessing.cpu_count()>2:
-        queries_margin = 1 # real run (Citrine or Azure) -> no margin on queries
-        #Check for transactions failures (socket errors...)
+    # Add a margin based on the number of cpu cores
+    queries_margin = 1.015  # For a run on Travis
+    if multiprocessing.cpu_count() > 2:
+        queries_margin = 1  # real run (Citrine or Azure) -> no margin on queries
+        # Check for transactions failures (socket errors...)
         if trans_failures > 0:
             problems.append((
-            "fail",
-            "%s failed transactions."
-            % trans_failures, url))
+                "fail",
+                "%s failed transactions."
+                % trans_failures, url))
 
-    problems.append(display_queries_count_result(queries * queries_margin, expected_queries, queries, "executed queries", url))
+    problems.append(
+        display_queries_count_result(queries * queries_margin, expected_queries, queries, "executed queries", url))
 
     problems.append(display_queries_count_result(rows, expected_rows, int(rows / margin), "rows read", url))
 
     if check_updates:
         bulk_margin = 1
-        if isBulk:#Special marge for bulk queries
+        if isBulk:  # Special marge for bulk queries
             bulk_margin = 1.05
-        problems.append(display_queries_count_result(rows_updated * bulk_margin, expected_rows, int(rows_updated / margin), "rows updated", url))
+        problems.append(
+            display_queries_count_result(rows_updated * bulk_margin, expected_rows, int(rows_updated / margin),
+                                         "rows updated", url))
 
     return problems
+
 
 def display_queries_count_result(result, expected_result, displayed_result, caption, url):
     '''
@@ -450,13 +462,13 @@ def display_queries_count_result(result, expected_result, displayed_result, capt
     '''
     if result > expected_result * 1.05:
         return (
-        "warn",
-        "%s %s in the database instead of %s expected. This number is excessively high."
-        % (displayed_result, caption, expected_result), url)
-    elif result < expected_result :
+            "warn",
+            "%s %s in the database instead of %s expected. This number is excessively high."
+            % (displayed_result, caption, expected_result), url)
+    elif result < expected_result:
         return (
-        "fail",
-        "Only %s %s in the database out of roughly %s expected."
-        % (displayed_result, caption, expected_result), url)
+            "fail",
+            "Only %s %s in the database out of roughly %s expected."
+            % (displayed_result, caption, expected_result), url)
     else:
-        return ("pass","%s: %s/%s" % (caption.capitalize(), displayed_result,expected_result), url)
+        return ("pass", "%s: %s/%s" % (caption.capitalize(), displayed_result, expected_result), url)

@@ -14,9 +14,10 @@ const (
 	dbPaswd = "benchmarkdbpass"
 	dbName  = "hello_world"
 
-	worldSelectSQL   = "SELECT id, randomNumber FROM World WHERE id = $1"
-	worldUpdateSQL   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
-	fortuneSelectSQL = "SELECT id, message FROM Fortune"
+	worldSelectSQL      = "SELECT id, randomNumber FROM World WHERE id = $1"
+	worldSelectCacheSQL = "SELECT id, randomNumber FROM World LIMIT $1"
+	worldUpdateSQL      = "UPDATE World SET randomNumber = $1 WHERE id = $2"
+	fortuneSelectSQL    = "SELECT id, message FROM Fortune"
 )
 
 var db *pgxpool.Pool

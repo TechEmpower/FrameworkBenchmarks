@@ -1,9 +1,9 @@
-from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
-from toolset.benchmark.fortune_html_parser import FortuneHTMLParser
-from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers, verify_queries_count
+from toolset.test_types.abstract_test_type import AbstractTestType
+from toolset.test_types.fortune.fortune_html_parser import FortuneHTMLParser
+from toolset.test_types.verifications import basic_body_verification, verify_headers, verify_queries_count
 
 
-class FortuneTestType(FrameworkTestType):
+class TestType(AbstractTestType):
     def __init__(self, config):
         self.fortune_url = ""
         kwargs = {
@@ -12,7 +12,7 @@ class FortuneTestType(FrameworkTestType):
             'requires_db': True,
             'args': ['fortune_url','database']
         }
-        FrameworkTestType.__init__(self, config, **kwargs)
+        AbstractTestType.__init__(self, config, **kwargs)
 
     def get_url(self):
         return self.fortune_url
@@ -33,6 +33,13 @@ class FortuneTestType(FrameworkTestType):
         headers, body = self.request_headers_and_body(url)
 
         _, problems = basic_body_verification(body, url, is_json_check=False)
+
+        # fortune_url should be at least "/fortunes"
+        if len(self.fortune_url) < 9:
+            problems.append(
+                ("fail",
+                 "Route for fortunes must be at least 9 characters, found '{}' instead".format(self.fortune_url),
+                 url))
 
         if len(problems) > 0:
             return problems

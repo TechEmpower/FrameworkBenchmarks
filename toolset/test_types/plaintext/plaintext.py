@@ -1,9 +1,8 @@
-from toolset.benchmark.test_types.framework_test_type import FrameworkTestType
-from toolset.benchmark.test_types.verifications import basic_body_verification, verify_headers
-from time import sleep
+from toolset.test_types.verifications import basic_body_verification, verify_headers
+from toolset.test_types.abstract_test_type import AbstractTestType
 
 
-class PlaintextTestType(FrameworkTestType):
+class TestType(AbstractTestType):
     def __init__(self, config):
         self.plaintext_url = ""
         kwargs = {
@@ -12,13 +11,20 @@ class PlaintextTestType(FrameworkTestType):
             'accept_header': self.accept('plaintext'),
             'args': ['plaintext_url']
         }
-        FrameworkTestType.__init__(self, config, **kwargs)
+        AbstractTestType.__init__(self, config, **kwargs)
 
     def verify(self, base_url):
         url = base_url + self.plaintext_url
         headers, body = self.request_headers_and_body(url)
 
         _, problems = basic_body_verification(body, url, is_json_check=False)
+
+        # plaintext_url should be at least "/plaintext"
+        if len(self.plaintext_url) < 10:
+            problems.append(
+                ("fail",
+                 "Route for plaintext must be at least 10 characters, found '{}' instead".format(self.plaintext_url),
+                 url))
 
         if len(problems) > 0:
             return problems
@@ -55,20 +61,20 @@ class PlaintextTestType(FrameworkTestType):
     def get_script_variables(self, name, url):
         return {
             'max_concurrency':
-            max(self.config.concurrency_levels),
+                max(self.config.concurrency_levels),
             'name':
-            name,
+                name,
             'duration':
-            self.config.duration,
+                self.config.duration,
             'levels':
-            " ".join("{}".format(item)
-                     for item in self.config.pipeline_concurrency_levels),
+                " ".join("{}".format(item)
+                         for item in self.config.pipeline_concurrency_levels),
             'server_host':
-            self.config.server_host,
+                self.config.server_host,
             'url':
-            url,
+                url,
             'pipeline':
-            16,
+                16,
             'accept':
-            "text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7"
+                "text/plain,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7"
         }

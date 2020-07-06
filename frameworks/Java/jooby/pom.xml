@@ -11,7 +11,7 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>2.8.6</jooby.version>
+    <jooby.version>2.8.8</jooby.version>
     <!-- downgrade netty and make pg-client happy -->
     <netty.version>4.1.34.Final</netty.version>
     <postgresql.version>42.2.13</postgresql.version>
