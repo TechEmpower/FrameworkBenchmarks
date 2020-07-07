@@ -333,7 +333,7 @@ static struct cache_entry *my_cache_coro_get_and_ref_entry(struct cache *cache,
     return NULL;
 }
 
-LWAN_HANDLER(cached_world)
+LWAN_HANDLER(cached_queries)
 {
     const char *queries_str = lwan_request_get_query_param(request, "count");
     long queries;
