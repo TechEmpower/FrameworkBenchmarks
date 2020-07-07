@@ -1,5 +1,5 @@
 #[global_allocator]
-static ALLOC: jemallocator::Jemalloc = jemallocator::Jemalloc;
+static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 #[macro_use]
 extern crate serde_derive;
@@ -11,20 +11,26 @@ use actix_web::http::header::{CONTENT_TYPE, SERVER};
 use actix_web::http::{HeaderValue, StatusCode};
 use actix_web::{web, App, HttpResponse};
 use bytes::{Bytes, BytesMut};
+use simd_json_derive::Serialize;
 
 mod utils;
-use utils::{Message, Writer, SIZE};
+use utils::{Writer, SIZE};
+
+#[derive(Serialize)]
+pub struct Message {
+    pub message: &'static str,
+}
 
 async fn json() -> HttpResponse {
     let message = Message {
         message: "Hello, World!",
     };
     let mut body = BytesMut::with_capacity(SIZE);
-    serde_json::to_writer(Writer(&mut body), &message).unwrap();
+    message.json_write(&mut Writer(&mut body)).unwrap();
 
     let mut res = HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
     res.headers_mut()
-        .insert(SERVER, HeaderValue::from_static("Actix"));
+        .insert(SERVER, HeaderValue::from_static("A"));
     res.headers_mut()
         .insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
     res
@@ -36,7 +42,7 @@ async fn plaintext() -> HttpResponse {
         Body::Bytes(Bytes::from_static(b"Hello, World!")),
     );
     res.headers_mut()
-        .insert(SERVER, HeaderValue::from_static("Actix"));
+        .insert(SERVER, HeaderValue::from_static("A"));
     res.headers_mut()
         .insert(CONTENT_TYPE, HeaderValue::from_static("text/plain"));
     res
@@ -52,6 +58,7 @@ async fn main() -> std::io::Result<()> {
         .bind("techempower", "0.0.0.0:8080", || {
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
+                .client_timeout(0)
                 .h1(map_config(
                     App::new()
                         .service(web::resource("/json").to(json))

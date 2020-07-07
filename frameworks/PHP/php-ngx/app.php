@@ -25,7 +25,7 @@ function query()
     ngx_header_set('Content-Type', 'application/json');
 
     $query_count = 1;
-    $params      = ngx::query_args()['queries'];
+    $params      = ngx::query_args()['q'];
     if ($params > 1) {
         $query_count = min($params, 500);
     }
@@ -39,11 +39,11 @@ function query()
 
 function update()
 {
-    global $pdo, $random, $update;
+    global $random, $update;
     ngx_header_set('Content-Type', 'application/json');
 
     $query_count = 1;
-    $params      = ngx::query_args()['queries'];
+    $params      = ngx::query_args()['q'];
     if ($params > 1) {
         $query_count = min($params, 500);
     }
@@ -52,15 +52,11 @@ function update()
         $random->execute([$id]);
 
         $world = ['id' => $id, 'randomNumber' => $random->fetchColumn()];
-        $world['randomNumber'] = mt_rand(1, 10000);
+        $update->execute(
+            [$world['randomNumber'] = mt_rand(1, 10000), $id]
+        );
         $arr[] = $world;
     }
-
-    $pdo->beginTransaction();
-    foreach($arr as $world) {
-        $update->execute([$world['randomNumber'], $world['id']]);
-    }
-    $pdo->commit();
 
     echo json_encode($arr, JSON_NUMERIC_CHECK);
 }
@@ -82,7 +78,5 @@ function fortune()
         $html .= "<tr><td>$id</td><td>$message</td></tr>";
     }
 
-    echo '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>',
-        $html,
-        '</table></body></html>';
+    echo "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>$html</table></body></html>";
 }

@@ -2,37 +2,26 @@
 
 This is the Quarkus portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-There is currently one repository implementation.
-* [WorldRepository](src/main/java/io/quarkus/benchmark/repository/WorldRepository.java) is using JPA.
+## Implementations
 
-### Plaintext Test
+There are currently two repository implementations.
 
-* [Plaintext test source](src/main/java/io/quarkus/benchmark/resource/PlainTextResource.java)
+### JAX-RS and Hibernate via JPA
+* [Plaintext test source](hibernate/src/main/java/io/quarkus/benchmark/resource/PlaintextResource.java)
+* [JSON test source](hibernate/src/main/java/io/quarkus/benchmark/resource/JsonResource.java)
+* [Query, Queries, Update test source](hibernate/src/main/java/io/quarkus/benchmark/repository/hibernate/WorldRepository.java)
+* [Fortunes test source](hibernate/src/main/java/io/quarkus/benchmark/repository/hibernate/FortuneRepository.java)
 
-### JSON Serialization Test
-
-* [JSON test source](src/main/java/io/quarkus/benchmark/resource/JsonResource.java)
-
-### Database Query Test
-
-* [Database Query test source](src/main/java/io/quarkus/benchmark/resource/DbResource.java)
-
-### Database Queries Test
-
-* [Database Queries test source](src/main/java/io/quarkus/benchmark/resource/DbResource.java)
-
-### Database Update Test
-
-* [Database Update test source](src/main/java/io/quarkus/benchmark/resource/DbResource.java)
-
-### Template rendering Test
-
-* [Template rendering test source](src/main/java/io/quarkus/benchmark/resource/FortuneResource.java)
+### Reactive Routes and Asynchronous DB accesses via pgclient
+* [Plaintext test source](pgclient/src/main/java/io/quarkus/benchmark/resource/pgclient/PlaintextResource.java)
+* [JSON test source](pgclient/src/main/java/io/quarkus/benchmark/resource/pgclient/JsonResource.java)
+* [Query, Queries, Update test source](pgclient/src/main/java/io/quarkus/benchmark/repository/pgclient/WorldRepository.java)
+* [Fortunes test source](pgclient/src/main/java/io/quarkus/benchmark/repository/pgclient/FortuneRepository.java)
 
 ## Versions
 
 * [Java OpenJDK 11](http://openjdk.java.net/)
-* [Quarkus 0.16.0](https://quarkus.io)
+* [Quarkus 1.1.1](https://quarkus.io)
 
 ## Test URLs
 

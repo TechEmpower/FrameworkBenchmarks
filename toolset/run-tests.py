@@ -133,7 +133,7 @@ def main(argv=None):
     parser.add_argument(
         '--type',
         choices=[
-            'all', 'json', 'db', 'query', 'cached_query', 'fortune', 'update',
+            'all', 'json', 'db', 'query', 'cached-query', 'fortune', 'update',
             'plaintext'
         ],
         nargs='+',

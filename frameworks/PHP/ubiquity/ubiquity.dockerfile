@@ -20,5 +20,7 @@ RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --q
 
 RUN chmod 777 -R /ubiquity/app/cache/*
 
+RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/7.4/fpm/php.ini
+
 CMD service php7.4-fpm start && \
     nginx -c /ubiquity/deploy/nginx.conf -g "daemon off;"

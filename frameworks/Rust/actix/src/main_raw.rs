@@ -1,5 +1,5 @@
 #[global_allocator]
-static ALLOC: jemallocator::Jemalloc = jemallocator::Jemalloc;
+static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 #[macro_use]
 extern crate serde_derive;
@@ -17,18 +17,23 @@ use actix_rt::net::TcpStream;
 use actix_server::Server;
 use actix_service::fn_service;
 use bytes::{Buf, BufMut, BytesMut};
-use serde_json::to_writer;
+use simd_json_derive::Serialize;
 
 mod models;
 mod utils;
 
-use crate::utils::{Message, Writer};
+use crate::utils::Writer;
 
-const JSON: &[u8] = b"HTTP/1.1 200 OK\r\nServer: Actix\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
-const PLAIN: &[u8] = b"HTTP/1.1 200 OK\r\nServer: Actix\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
+const JSON: &[u8] = b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
+const PLAIN: &[u8] = b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
 const HTTPNFOUND: &[u8] = b"HTTP/1.1 400 OK\r\n";
-const HDR_SERVER: &[u8] = b"Server: Actix\r\n";
+const HDR_SERVER: &[u8] = b"Server: A\r\n";
 const BODY: &[u8] = b"Hello, World!";
+
+#[derive(Serialize)]
+pub struct Message {
+    pub message: &'static str,
+}
 
 struct App {
     io: TcpStream,
@@ -39,15 +44,16 @@ struct App {
 
 impl App {
     fn handle_request(&mut self, req: Request) {
-        let path = req.path();
-        match path {
+        match req.path() {
             "/json" => {
                 let message = Message {
                     message: "Hello, World!",
                 };
                 self.write_buf.put_slice(JSON);
                 self.codec.config().set_date(&mut self.write_buf);
-                to_writer(Writer(&mut self.write_buf), &message).unwrap();
+                message
+                    .json_write(&mut Writer(&mut self.write_buf))
+                    .unwrap();
             }
             "/plaintext" => {
                 self.write_buf.put_slice(PLAIN);
@@ -69,7 +75,7 @@ impl Future for App {
         let this = self.get_mut();
 
         loop {
-            if this.read_buf.capacity() - this.read_buf.len() < 4096 {
+            if this.read_buf.capacity() - this.read_buf.len() < 512 {
                 this.read_buf.reserve(32_768);
             }
             let read = Pin::new(&mut this.io).poll_read_buf(cx, &mut this.read_buf);
@@ -84,7 +90,7 @@ impl Future for App {
             }
         }
 
-        if this.write_buf.capacity() - this.write_buf.len() < 8192 {
+        if this.write_buf.capacity() - this.write_buf.len() <= 512 {
             this.write_buf.reserve(32_768);
         }
 
@@ -102,9 +108,6 @@ impl Future for App {
             while written < len {
                 match Pin::new(&mut this.io).poll_write(cx, &this.write_buf[written..]) {
                     Poll::Pending => {
-                        if written > 0 {
-                            this.write_buf.advance(written);
-                        }
                         break;
                     }
                     Poll::Ready(Ok(n)) => {
@@ -117,12 +120,10 @@ impl Future for App {
                     Poll::Ready(Err(_)) => return Poll::Ready(Err(())),
                 }
             }
-            if written > 0 {
-                if written == len {
-                    unsafe { this.write_buf.set_len(0) }
-                } else {
-                    this.write_buf.advance(written);
-                }
+            if written == len {
+                unsafe { this.write_buf.set_len(0) }
+            } else if written > 0 {
+                this.write_buf.advance(written);
             }
         }
         Poll::Pending

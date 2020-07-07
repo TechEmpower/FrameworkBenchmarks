@@ -1,27 +1,36 @@
 FROM ubuntu:19.10
 
-RUN apt update -yqq
-RUN apt install -yqq \
-	git pkg-config build-essential cmake zlib1g-dev \
-	libsqlite3-dev libmariadbclient-dev wget
+RUN apt-get update -yqq && \
+	apt-get install -yqq \
+		git pkg-config build-essential cmake zlib1g-dev \
+		libsqlite3-dev libmariadbclient-dev wget
 
 ADD ./ /lwan
 WORKDIR /lwan
 
 RUN mkdir mimalloc && \
-    wget https://github.com/microsoft/mimalloc/archive/acb03c54971c4b0a43a6d17ea55a9d5feb88972f.tar.gz -O - | tar xz --strip-components=1 -C mimalloc && \
-    cd mimalloc && mkdir build && cd build && CFLAGS="-flto -ffat-lto-objects" cmake .. -DCMAKE_BUILD_TYPE=Release -DMI_SECURE=OFF && make -j install && cd ../.. && \
-    wget https://github.com/lpereira/lwan/archive/b52c9f5e17542800a762f19bc9073bd8b3b95cb3.tar.gz -O - | tar xz --strip-components=1 && \
+    wget https://github.com/microsoft/mimalloc/archive/6e1ca96a4965c776c10698c24dae576523178ef5.tar.gz -O - | tar xz --strip-components=1 -C mimalloc && \
+    cd mimalloc && mkdir build && cd build && \
+    CFLAGS="-flto -ffat-lto-objects" cmake .. -DCMAKE_BUILD_TYPE=Release -DMI_SECURE=OFF && make -j install
+
+RUN mkdir luajit && \
+    wget http://luajit.org/download/LuaJIT-2.0.5.tar.gz -O - | tar xz --strip-components=1 -C luajit && \
+    cd luajit && \
+    PREFIX=/usr CFLAGS="-O3 -mtune=native -march=native -flto -ffat-lto-objects" make -j install
+
+RUN wget https://github.com/lpereira/lwan/archive/b8bf6b0b048d171a1af7b03b0d763c0f8ffd0122.tar.gz -O - | tar xz --strip-components=1 && \
     mkdir build && cd build && \
     cmake /lwan -DCMAKE_BUILD_TYPE=Release -DUSE_ALTERNATIVE_MALLOC=mimalloc && \
     make lwan-static
 
 RUN make clean && make
 
+ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/lib
 ENV USE_MYSQL=1
 ENV MYSQL_USER=benchmarkdbuser
 ENV MYSQL_PASS=benchmarkdbpass
 ENV MYSQL_DB=hello_world
 ENV MYSQL_HOST=tfb-database
+ENV LD_PRELOAD=/usr/local/lib/mimalloc-1.6/libmimalloc.so
 
 CMD ["./techempower"]

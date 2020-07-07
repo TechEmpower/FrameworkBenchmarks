@@ -23,21 +23,24 @@ void DbCtrlRaw::asyncHandleHttpRequest(
             std::move(callback));
 
     **_dbClient << "select * from world where id=$1" << id >>
-        [callbackPtr, id](const Result &rows) {
-            auto resp = HttpResponse::newHttpResponse();
-            char json[64];
-            auto size = sprintf(json,
-                                "{\"id\":%d,\"randomnumber\":%s}",
-                                id,
-                                rows[0][1ul].c_str());
-            resp->setBody(std::string(json, size));
-            resp->setContentTypeCode(CT_APPLICATION_JSON);
-            (*callbackPtr)(resp);
+        [callbackPtr](const Result &rows) {
+            if (rows.size() == 1)
+            {
+                auto obj = World(rows[0]);
+                (*callbackPtr)(HttpResponse::newHttpJsonResponse(obj.toJson()));
+            }
+            else
+            {
+                Json::Value json{};
+                json["code"] = 0;
+                json["message"] = "Internal error";
+                (*callbackPtr)(HttpResponse::newHttpJsonResponse(std::move(json)));
+            }
         } >>
         [callbackPtr](const DrogonDbException &err) {
             Json::Value json{};
-            json["code"] = 0;
+            json["code"] = 1;
             json["message"] = err.base().what();
-            (*callbackPtr)(HttpResponse::newHttpJsonResponse(json));
+            (*callbackPtr)(HttpResponse::newHttpJsonResponse(std::move(json)));
         };
 }

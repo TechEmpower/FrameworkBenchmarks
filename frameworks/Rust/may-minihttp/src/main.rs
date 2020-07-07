@@ -13,7 +13,7 @@ use serde::Serialize;
 use smallvec::SmallVec;
 
 mod utils {
-    use may_postgres::ToSql;
+    use may_postgres::types::ToSql;
     use std::cmp;
 
     pub fn get_query_param(query: &str) -> u16 {
@@ -120,11 +120,16 @@ impl PgConnection {
     }
 
     fn get_world(&self, random_id: i32) -> Result<WorldRow, may_postgres::Error> {
-        let row = self.client.query_one(&self.world, &[&random_id])?;
-        Ok(WorldRow {
-            id: row.get(0),
-            randomnumber: row.get(1),
-        })
+        let mut q = self
+            .client
+            .query_raw(&self.world, utils::slice_iter(&[&random_id]))?;
+        match q.next().transpose()? {
+            Some(row) => Ok(WorldRow {
+                id: row.get(0),
+                randomnumber: row.get(1),
+            }),
+            None => unreachable!(),
+        }
     }
 
     fn get_worlds(
@@ -240,7 +245,7 @@ impl HttpService for Techempower {
                 rsp.header("Content-Type: application/json");
                 serde_json::to_writer(BodyWriter(rsp.body_mut()), &world)?;
             }
-            "/fortune" => {
+            "/fortunes" => {
                 let fortunes = self.db.tell_fortune().unwrap();
                 rsp.header("Content-Type: text/html; charset=utf-8");
                 write!(rsp.body_mut(), "{}", FortunesTemplate { fortunes }).unwrap();
@@ -281,7 +286,9 @@ impl HttpServiceFactory for HttpServer {
 }
 
 fn main() {
-    may::config().set_pool_capacity(10000);
+    may::config()
+        .set_pool_capacity(10000)
+        .set_stack_size(0x1000);
     let server = HttpServer {
         db_pool: PgConnectionPool::new(
             "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world",

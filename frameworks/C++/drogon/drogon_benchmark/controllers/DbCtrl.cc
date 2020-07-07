@@ -26,14 +26,13 @@ void DbCtrl::asyncHandleHttpRequest(
     mapper.findByPrimaryKey(
         id,
         [callbackPtr](World w) {
-            auto j = w.toJson();
-            auto resp = HttpResponse::newHttpJsonResponse(j);
+            auto resp = HttpResponse::newHttpJsonResponse(w.toJson());
             (*callbackPtr)(resp);
         },
         [callbackPtr](const DrogonDbException &e) {
-            Json::Value ret;
-            ret["result"] = "error!";
-            auto resp = HttpResponse::newHttpJsonResponse(ret);
-            (*callbackPtr)(resp);
+            Json::Value json{};
+            json["code"] = 1;
+            json["message"] = e.base().what();
+            (*callbackPtr)(HttpResponse::newHttpJsonResponse(std::move(json)));
         });
 }

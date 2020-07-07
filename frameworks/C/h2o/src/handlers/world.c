@@ -51,6 +51,8 @@
 #define QUERIES_PARAMETER "queries="
 #define RANDOM_NUM_KEY "randomNumber"
 
+// MAX_UPDATE_QUERY_LEN must be updated whenever UPDATE_QUERY_BEGIN, UPDATE_QUERY_ELEM,
+// and UPDATE_QUERY_END are changed.
 #define UPDATE_QUERY_BEGIN \
 	"UPDATE " WORLD_TABLE_NAME " SET randomNumber = v.randomNumber " \
 	"FROM (VALUES(%" PRIu32 ", %" PRIu32 ")"

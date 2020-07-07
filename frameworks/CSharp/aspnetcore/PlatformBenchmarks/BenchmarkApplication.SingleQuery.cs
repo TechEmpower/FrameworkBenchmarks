@@ -3,9 +3,7 @@
 
 using System.IO.Pipelines;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 
 namespace PlatformBenchmarks
 {
@@ -18,31 +16,26 @@ namespace PlatformBenchmarks
 
         private static void OutputSingleQuery(PipeWriter pipeWriter, World row)
         {
-            var writer = GetWriter(pipeWriter);
+            var writer = GetWriter(pipeWriter, sizeHint: 180); // in reality it's 150
 
-            // HTTP 1.1 OK
-            writer.Write(_http11OK);
+            writer.Write(_dbPreamble);
 
-            // Server headers
-            writer.Write(_headerServer);
+            var lengthWriter = writer;
+            writer.Write(_contentLengthGap);
 
             // Date header
             writer.Write(DateHeader.HeaderBytes);
 
-            // Content-Type header
-            writer.Write(_headerContentTypeJson);
+            writer.Commit();
 
-            // Content-Length header
-            writer.Write(_headerContentLength);
-            var jsonPayload = JsonSerializer.SerializeToUtf8Bytes(row, SerializerOptions);
-            writer.WriteNumeric((uint)jsonPayload.Length);
-
-            // End of headers
-            writer.Write(_eoh);
+            Utf8JsonWriter utf8JsonWriter = t_writer ??= new Utf8JsonWriter(pipeWriter, new JsonWriterOptions { SkipValidation = true });
+            utf8JsonWriter.Reset(pipeWriter);
 
             // Body
-            writer.Write(jsonPayload);
-            writer.Commit();
+            JsonSerializer.Serialize<World>(utf8JsonWriter, row, SerializerOptions);
+
+            // Content-Length
+            lengthWriter.WriteNumeric((uint)utf8JsonWriter.BytesCommitted);
         }
     }
 }

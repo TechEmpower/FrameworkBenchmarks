@@ -1,5 +1,5 @@
 #[global_allocator]
-static ALLOC: jemallocator::Jemalloc = jemallocator::Jemalloc;
+static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 #[macro_use]
 extern crate serde_derive;
@@ -63,7 +63,7 @@ impl Service for App {
                     Ok(res)
                 })
             }
-            "/fortune" => {
+            "/fortunes" => {
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_cthtml.clone();
                 let fut = self.db.tell_fortune();
@@ -100,7 +100,7 @@ impl Service for App {
                 })
             }
             "/updates" => {
-                let q = utils::get_query_param(req.uri().query().unwrap_or("")) as usize;
+                let q = utils::get_query_param(req.uri().query().unwrap_or(""));
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
                 let fut = self.db.update(q);
@@ -158,6 +158,7 @@ fn main() -> std::io::Result<()> {
         .bind("techempower", "0.0.0.0:8080", || {
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
+                .client_timeout(0)
                 .h1(AppFactory)
                 .tcp()
         })?

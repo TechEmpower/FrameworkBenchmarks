@@ -1,7 +1,7 @@
 FROM haskell:8.6.3
 
-RUN apt update -yqq && apt install -yqq xz-utils make
-RUN apt install -yqq libpq-dev
+RUN apt-get update -yqq && apt-get install -yqq xz-utils make
+RUN apt-get install -yqq libpq-dev
 
 WORKDIR /app
 

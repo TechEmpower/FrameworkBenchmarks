@@ -1,16 +1,12 @@
-FROM golang:1.13
+FROM golang:1.14
 
 WORKDIR /fasthttp
 
 COPY ./src /fasthttp
 
 RUN go get github.com/valyala/quicktemplate/qtc
-RUN go get -u github.com/mailru/easyjson/...
-RUN go mod download
 
 RUN go generate ./templates
-# RUN easyjson -pkg
-# RUN easyjson -all src/common/common.go
-RUN go build -o app -gcflags='-l=4' -ldflags="-s -w" ./server-mysql
+RUN go build -ldflags="-s -w" -o app .
 
 CMD ./app
