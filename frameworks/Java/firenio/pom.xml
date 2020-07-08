@@ -29,7 +29,7 @@
         <dependency>
             <groupId>com.firenio</groupId>
             <artifactId>firenio-all</artifactId>
-            <version>1.3.5-SNAPSHOT</version>
+            <version>1.3.4</version>
         </dependency>
 
         <dependency>
