@@ -1,6 +1,6 @@
 <?php
 
-class FortuneController extends AppController
+class FortunesController extends AppController
 {
     public function index()
     {

@@ -1,6 +1,6 @@
 <?php
 
-class RawController extends AppController
+class RaController extends AppController
 {
     protected $pdo;
 

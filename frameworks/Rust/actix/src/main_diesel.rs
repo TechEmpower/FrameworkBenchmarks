@@ -113,7 +113,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .data(addr.clone())
             .service(web::resource("/db").to(world_row))
-            .service(web::resource("/fortune").to(fortune))
+            .service(web::resource("/fortunes").to(fortune))
             .service(web::resource("/queries").to(queries))
             .service(web::resource("/updates").to(updates))
     })
