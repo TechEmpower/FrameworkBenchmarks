@@ -11,9 +11,8 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>2.8.8</jooby.version>
-    <!-- downgrade netty and make pg-client happy -->
-    <netty.version>4.1.34.Final</netty.version>
+    <jooby.version>2.8.9</jooby.version>
+    <netty.version>4.1.49.Final</netty.version>
     <postgresql.version>42.2.13</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -67,9 +66,9 @@
     </dependency>
 
     <dependency>
-      <groupId>io.reactiverse</groupId>
-      <artifactId>reactive-pg-client</artifactId>
-      <version>0.11.4</version>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-pg-client</artifactId>
+      <version>3.9.1</version>
     </dependency>
   </dependencies>
 
