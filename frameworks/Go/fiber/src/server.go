@@ -54,7 +54,7 @@ func main() {
 	app.Get("/db", dbHandler)
 	app.Get("/update", updateHandler)
 	app.Get("/queries", queriesHandler)
-	app.Get("/fortune", templateHandler)
+	app.Get("/fortunes", templateHandler)
 	app.Get("/cached-worlds", cachedHandler)
 	app.Listen(8080)
 }
