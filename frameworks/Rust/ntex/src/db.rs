@@ -3,18 +3,15 @@ use std::cell::RefCell;
 use std::fmt::Write as FmtWrite;
 use std::io;
 
-use bytes::{Bytes, BytesMut};
+use bytes::Bytes;
 use futures::stream::futures_unordered::FuturesUnordered;
 use futures::{Future, FutureExt, StreamExt, TryStreamExt};
 use ntex::web::Error;
 use random_fast_rng::{FastRng, Random};
-use simd_json_derive::Serialize;
 use smallvec::{smallvec, SmallVec};
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, NoTls, Statement};
-use yarte::TemplateBytes;
-
-use crate::utils::Writer;
+use yarte::{Serialize, TemplateBytes};
 
 #[derive(Serialize, Debug)]
 pub struct World {
@@ -91,15 +88,11 @@ impl PgConnection {
                 Error::from(io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))
             })?;
 
-            let mut body = BytesMut::with_capacity(40);
-            World {
+            Ok(World {
                 id: row.get(0),
                 randomnumber: row.get(1),
             }
-            .json_write(&mut Writer(&mut body))
-            .unwrap();
-
-            Ok(body.freeze())
+            .to_bytes(40))
         }
     }
 

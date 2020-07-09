@@ -15,8 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Npgsql" Version="4.1.2" />
-    <PackageReference Include="MySqlConnector" Version="0.62.0-beta5" />
+    <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
     <PackageReference Include="RedHat.AspNetCore.Server.Kestrel.Transport.Linux" Version="3.0.0-*" />
   </ItemGroup>
 </Project>

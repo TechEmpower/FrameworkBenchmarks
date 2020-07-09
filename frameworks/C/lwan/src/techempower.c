@@ -304,7 +304,36 @@ static void cached_queries_free(struct cache_entry *entry, void *context)
     free(entry);
 }
 
-LWAN_HANDLER(cached_worlds)
+static struct cache_entry *my_cache_coro_get_and_ref_entry(struct cache *cache,
+                                                           struct coro *coro,
+                                                           const char *key)
+{
+    /* Using this function instead of cache_coro_get_and_ref_entry() will avoid
+     * calling coro_defer(), which, in cases where the number of cached queries is
+     * too high, will trigger reallocations of the coro_defer array (and the "demotion"
+     * from the storage inlined in the coro struct to somewhere in the heap).
+     *
+     * For large number of cached elements, too, this will reduce the number of
+     * indirect calls that are performed every time a request is serviced.
+     */
+
+    for (int tries = 16; tries; tries--) {
+        int error;
+        struct cache_entry *ce = cache_get_and_ref_entry(cache, key, &error);
+
+        if (LIKELY(ce))
+            return ce;
+
+        if (error != EWOULDBLOCK)
+            break;
+
+        coro_yield(coro, CONN_CORO_YIELD);
+    }
+
+    return NULL;
+}
+
+LWAN_HANDLER(cached_queries)
 {
     const char *queries_str = lwan_request_get_query_param(request, "count");
     long queries;
@@ -319,13 +348,15 @@ LWAN_HANDLER(cached_worlds)
         struct db_json_cached *jc;
         size_t discard;
 
-        jc = (struct db_json_cached *)cache_coro_get_and_ref_entry(
+        jc = (struct db_json_cached *)my_cache_coro_get_and_ref_entry(
             cached_queries_cache, request->conn->coro,
             int_to_string(rand() % 10000, key_buf, &discard));
         if (UNLIKELY(!jc))
             return HTTP_INTERNAL_ERROR;
 
         qj.queries[i] = jc->db_json;
+
+        cache_entry_unref(cached_queries_cache, (struct cache_entry *)jc);
     }
 
     /* Avoid reallocations/copies while building response.  Each response

@@ -6,9 +6,10 @@ This is the go portion of a [benchmarking test suite](https://www.techempower.co
 
 ## Test URLs
 
-    http://localhost:8080/plaintext
     http://localhost:8080/json
     http://localhost:8080/db
     http://localhost:8080/queries?queries=[1-500]
-    http://localhost:8080/fortune
-    http://localhost:8080/update?queries=[1-500]
+    http://localhost:8080/cached-worlds?queries=[1-500]
+    http://localhost:8080/fortunes
+    http://localhost:8080/updates?queries=[1-500]
+    http://localhost:8080/plaintext

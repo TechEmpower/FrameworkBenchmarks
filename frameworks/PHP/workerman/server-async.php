@@ -39,7 +39,7 @@ $http_worker->onMessage = static function ($connection, $request) {
             );
             return;
 
-        case '/fortune':
+        case '/fortunes':
             // By default use 'Content-Type: text/html; charset=utf-8';
             $mysql->query('SELECT id,message FROM Fortune', 
                 static function ($command) use ($connection) {
