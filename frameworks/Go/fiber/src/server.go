@@ -23,10 +23,13 @@ var (
 	cachedWorlds Worlds
 )
 
+var (
+	helloworld = []byte("Hello, World!")
+)
+
 const (
 	queryparam       = "q"
 	worldcount       = 10000
-	helloworld       = "Hello, World!"
 	worldselectsql   = "SELECT id, randomNumber FROM World WHERE id = $1"
 	worldupdatesql   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
 	worldcachesql    = "SELECT * FROM World LIMIT $1"
@@ -61,7 +64,7 @@ func main() {
 
 // Message ...
 type Message struct {
-	Message string `json:"message"`
+	Message []byte `json:"message"`
 }
 
 // Worlds ...
@@ -245,7 +248,7 @@ func updateHandler(c *fiber.Ctx) {
 
 // plaintextHandler :
 func plaintextHandler(c *fiber.Ctx) {
-	c.SendString(helloworld)
+	c.SendBytes(helloworld)
 }
 
 // cachedHandler :
