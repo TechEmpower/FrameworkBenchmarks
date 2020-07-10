@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
-	"os"
 	"runtime"
+	"runtime/debug"
 	"sort"
 	"strconv"
 	"sync"
@@ -13,6 +13,7 @@ import (
 	"fiber/src/templates"
 
 	"github.com/gofiber/fiber"
+	"github.com/gofiber/utils"
 	pgx "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
@@ -37,12 +38,6 @@ const (
 )
 
 func main() {
-	for _, arg := range os.Args[1:] {
-		if arg == "-child" {
-			child = true
-		}
-	}
-
 	initDatabase()
 
 	app := fiber.New(&fiber.Settings{
@@ -51,6 +46,13 @@ func main() {
 		DisableHeaderNormalizing: true,
 		ServerHeader:             "go",
 	})
+
+	if utils.GetArgument("-prefork-child") {
+		child = true
+	}
+	if utils.GetArgument("-nogc") {
+		debug.SetGCPercent(-1)
+	}
 
 	app.Get("/plaintext", plaintextHandler)
 	app.Get("/json", jsonHandler)
