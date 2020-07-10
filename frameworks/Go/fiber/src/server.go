@@ -90,7 +90,7 @@ func AcquireJSON() *Message {
 
 // ReleaseJSON ...
 func ReleaseJSON(json *Message) {
-	json.Message = ""
+	json.Message = nil
 	JSONpool.Put(json)
 }
 
