@@ -8,7 +8,8 @@ RUN docker-php-ext-install pdo_mysql > /dev/null
 RUN apt -yqq update > /dev/null && \
     apt -yqq install git unzip > /dev/null
 
-RUN apt -yqq install redis-server > /dev/null
+RUN apt -yqq install redis-server > /dev/null && \
+	service redis-server start
 
 RUN echo "zend_extension=opcache.so" >> /usr/local/etc/php/php.ini
 
