@@ -20,9 +20,16 @@ class AppInit implements IEventListener
     public function handle(EventParam $e)
     {
         $redis = RedisManager::getInstance();
-        foreach(Db::query()->from('world')->select()->getArray() as $row)
+        $page = 1;
+        while($list = Db::query()->from('world')->page($page, 1000)->select()->getArray())
         {
-            $redis->set('world:' . $row['id'], $row);
+            $redisList = [];
+            foreach($list as $row)
+            {
+                $redisList['world:' . $row['id']] = $row;
+            }
+            $redis->mset($list);
+            ++$page;
         }
     }
 
