@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "app",
+    name: "vapor-sql-kit",
     platforms: [
         .macOS(.v10_15)
     ],
@@ -10,14 +10,12 @@ let package = Package(
         .executable(name: "app", targets: ["App"])
     ],
     dependencies: [
-        .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0-rc"),
-        .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0-rc"),
-        .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.0.0-rc"),
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0"),
+        .package(url: "https://github.com/vapor/postgres-kit.git", from: "2.0.0"),
     ],
     targets: [
         .target(name: "App", dependencies: [
-            "Fluent",
-            "FluentPostgresDriver",
+            "PostgresKit",
             "Vapor"
         ], path: "Sources")
     ]
