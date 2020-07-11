@@ -5,6 +5,9 @@ RUN pecl install swoole > /dev/null && \
 
 RUN docker-php-ext-install pdo_mysql > /dev/null
 
+RUN pecl install redis > /dev/null && \
+    docker-php-ext-enable redis
+
 RUN apt -yqq update > /dev/null && \
     apt -yqq install git unzip > /dev/null
 

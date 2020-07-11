@@ -19,7 +19,6 @@ class AppInit implements IEventListener
      */
     public function handle(EventParam $e)
     {
-        var_dump('init');
         $redis = RedisManager::getInstance();
         $page = 1;
         while($list = Db::query()->from('world')->page($page, 1000)->select()->getArray())
