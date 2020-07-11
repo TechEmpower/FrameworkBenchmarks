@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices.ComTypes;
 using BeetleX.EventArgs;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace PlatformBenchmarks
 {
@@ -18,6 +19,14 @@ namespace PlatformBenchmarks
         private readonly ConcurrentRandom _random;
 
         private readonly DbProviderFactory _dbProviderFactory;
+
+        private readonly static MemoryCache _cache = new MemoryCache(
+          new MemoryCacheOptions()
+          {
+              ExpirationScanFrequency = TimeSpan.FromMinutes(60)
+          });
+
+        private static readonly object[] _cacheKeys = Enumerable.Range(0, 10001).Select((i) => new CacheKey(i)).ToArray();
 
         public static string _connectionString = null;
 
@@ -77,6 +86,61 @@ namespace PlatformBenchmarks
             }
 
         }
+
+
+        public Task<World[]> LoadCachedQueries(int count)
+        {
+            var result = new World[count];
+            var cacheKeys = _cacheKeys;
+            var cache = _cache;
+            var random = _random;
+            for (var i = 0; i < result.Length; i++)
+            {
+                var id = random.Next(1, 10001);
+                var key = cacheKeys[id];
+                var data = cache.Get<CachedWorld>(key);
+
+                if (data != null)
+                {
+                    result[i] = data;
+                }
+                else
+                {
+                    return LoadUncachedQueries(id, i, count, this, result);
+                }
+            }
+
+            return Task.FromResult(result);
+
+            static async Task<World[]> LoadUncachedQueries(int id, int i, int count, RawDb rawdb, World[] result)
+            {
+                using (var db = await DBConnectionGroupPool.Pop())
+                {
+                    Func<ICacheEntry, Task<CachedWorld>> create = async (entry) =>
+                    {
+                        return await rawdb.ReadSingleRow(db.Connection, rawdb.SingleCommand);
+                    };
+
+                    var cacheKeys = _cacheKeys;
+                    var key = cacheKeys[id];
+
+                    rawdb.SingleCommand.Connection = db.Connection;
+                    rawdb.SingleCommand.Parameters[0].Value = id;
+
+                    for (; i < result.Length; i++)
+                    {
+                        var data = await _cache.GetOrCreateAsync<CachedWorld>(key, create);
+                        result[i] = data;
+                        id = rawdb._random.Next(1, 10001);
+                        rawdb.SingleCommand.Connection = db.Connection;
+                        rawdb.SingleCommand.Parameters[0].Value = id;
+                        key = cacheKeys[id];
+                    }
+                }
+                return result;
+            }
+        }
+
 
         private async Task<World[]> LoadMultipleRows(int count, DbConnection db)
         {
@@ -153,6 +217,27 @@ namespace PlatformBenchmarks
                 }
             }
         }
+    }
+
+
+    public sealed class CacheKey : IEquatable<CacheKey>
+    {
+        private readonly int _value;
+
+        public CacheKey(int value)
+            => _value = value;
+
+        public bool Equals(CacheKey key)
+            => key._value == _value;
+
+        public override bool Equals(object obj)
+            => ReferenceEquals(obj, this);
+
+        public override int GetHashCode()
+            => _value;
+
+        public override string ToString()
+            => _value.ToString();
     }
 
     internal class UpdateCommandsCached

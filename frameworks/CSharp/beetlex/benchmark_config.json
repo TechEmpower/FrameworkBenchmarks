@@ -32,6 +32,7 @@
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
+        "cached_query_url": "/cached-worlds?queries=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",
