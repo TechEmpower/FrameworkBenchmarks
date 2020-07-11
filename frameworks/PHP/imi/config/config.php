@@ -31,6 +31,8 @@ return [
             'worker_num'        => swoole_cpu_num(),
             'open_tcp_nodelay'  => true,
             'tcp_fastopen'      => true,
+            'http_parse_post'   => false,
+            'http_parse_cookie' => false,
         ],
     ],
 
