@@ -43,6 +43,8 @@ namespace PlatformBenchmarks
 
         private static readonly AsciiString _result_plaintext = "Hello, World!";
 
+        private static readonly AsciiString _cached_worlds = "/cached-worlds";
+
         private static byte _Space = 32;
 
         private static byte _question = 63;
@@ -150,7 +152,7 @@ namespace PlatformBenchmarks
             base.SessionReceive(server, e);
             PipeStream pipeStream = e.Session.Stream.ToPipeStream();
             HttpToken token = (HttpToken)e.Session.Tag;
-            if (Program.Debug)
+            if (Program.Debug || Program.UpDB)
             {
                 RequestWork work = new RequestWork();
                 work.Handler = this;
@@ -173,7 +175,7 @@ namespace PlatformBenchmarks
             {
                 UpdateCommandsCached.Init();
                 if (Program.UpDB)
-                    DBConnectionGroupPool.Init(32, RawDb._connectionString);
+                    DBConnectionGroupPool.Init(64, RawDb._connectionString);
                 else
                     DBConnectionGroupPool.Init(256, RawDb._connectionString);
             }
@@ -214,6 +216,14 @@ namespace PlatformBenchmarks
                 OnWriteContentLength(stream, token);
                 queries(Encoding.ASCII.GetString(queryString), stream, token, session);
             }
+
+            else if (baseUrl.Length == _cached_worlds.Length && baseUrl.StartsWith(_cached_worlds))
+            {
+                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
+                OnWriteContentLength(stream, token);
+                caching(Encoding.ASCII.GetString(queryString), stream, token, session);
+            }
+
             else if (baseUrl.Length == _path_Updates.Length && baseUrl.StartsWith(_path_Updates))
             {
                 stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
