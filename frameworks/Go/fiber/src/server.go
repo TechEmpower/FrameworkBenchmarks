@@ -24,12 +24,9 @@ var (
 	cachedWorlds Worlds
 )
 
-var (
-	helloworld = []byte("Hello, World!")
-)
-
 const (
 	queryparam       = "q"
+	helloworld       = "Hello, World!"
 	worldcount       = 10000
 	worldselectsql   = "SELECT id, randomNumber FROM World WHERE id = $1"
 	worldupdatesql   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
@@ -66,7 +63,7 @@ func main() {
 
 // Message ...
 type Message struct {
-	Message []byte `json:"message"`
+	Message string `json:"message"`
 }
 
 // Worlds ...
@@ -92,7 +89,7 @@ func AcquireJSON() *Message {
 
 // ReleaseJSON ...
 func ReleaseJSON(json *Message) {
-	json.Message = nil
+	json.Message = ""
 	JSONpool.Put(json)
 }
 
@@ -177,7 +174,7 @@ func populateCache() {
 func jsonHandler(c *fiber.Ctx) {
 	m := AcquireJSON()
 	m.Message = helloworld
-	c.JSON(m)
+	c.JSON(&m)
 	ReleaseJSON(m)
 }
 
