@@ -12,7 +12,7 @@ end
 def provider_libvirt(config)
   config.vm.provider :libvirt do |virt, override|
     override.vm.hostname = "TFB-all"
-    override.vm.box = "generic/ubuntu1604"
+    override.vm.box = "generic/ubuntu1804"
 
     unless ENV.fetch('TFB_SHOW_VM', false)
       virt.graphics_type = "none"
@@ -28,7 +28,7 @@ end
 def provider_virtualbox(config)
   config.vm.provider :virtualbox do |vb, override|
     override.vm.hostname = "TFB-all"
-    override.vm.box = "ubuntu/xenial64"
+    override.vm.box = "ubuntu/bionic64"
 
     # Allow increase in size for /dev/sda1
     # Would need plugin:

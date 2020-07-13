@@ -59,7 +59,7 @@ $app->get('/update',
     UpdateController::class);
 
 // #6 Return Fortunes
-$app->get('/fortune',    
+$app->get('/fortunes',    
     FortuneController::class);
 
 $app->run();

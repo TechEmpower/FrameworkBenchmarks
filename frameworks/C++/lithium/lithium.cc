@@ -24,15 +24,6 @@ void escape_html_entities(B& buffer, const std::string& data)
     }
 }
 
-void set_max_sql_connections_per_thread(int max)
-{
-#if TFB_MYSQL
-  li::max_mysql_connections_per_thread = max;
-#elif TFB_PGSQL
-  li::max_pgsql_connections_per_thread = max;
-#endif
-}
-
 void tune_n_sql_connections(int& nc_to_tune, std::string http_req, int port, int min, int max) {
 
   std::cout << std::endl << "Benchmark " << http_req << std::endl;
@@ -109,13 +100,6 @@ int main(int argc, char* argv[]) {
   int updates_nconn = 3;
 #endif
 
-#if MONOTHREAD
-  db_nconn *= nprocs;
-  queries_nconn *= nprocs;
-  fortunes_nconn *= nprocs;
-  updates_nconn *= nprocs;
-#endif
-
   http_api my_api;
 
   my_api.get("/plaintext") = [&](http_request& request, http_response& response) {
@@ -127,12 +111,12 @@ int main(int argc, char* argv[]) {
     response.write_json(s::message = "Hello, World!");
   };
   my_api.get("/db") = [&](http_request& request, http_response& response) {
-    set_max_sql_connections_per_thread(db_nconn);
+    sql_db.max_async_connections_per_thread_ = db_nconn;
     response.write_json(random_numbers.connect(request.fiber).find_one(s::id = 1 + rand() % 10000).value());
   };
 
   my_api.get("/queries") = [&](http_request& request, http_response& response) {
-    set_max_sql_connections_per_thread(queries_nconn);
+    sql_db.max_async_connections_per_thread_ = queries_nconn;
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
     int N = atoi(N_str.c_str());
     
@@ -147,7 +131,7 @@ int main(int argc, char* argv[]) {
   };
 
   my_api.get("/updates") = [&](http_request& request, http_response& response) {
-    set_max_sql_connections_per_thread(updates_nconn);
+    sql_db.max_async_connections_per_thread_ = updates_nconn;
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
     int N = atoi(N_str.c_str());
     N = std::max(1, std::min(N, 500));
@@ -180,7 +164,7 @@ int main(int argc, char* argv[]) {
   };
 
   my_api.get("/fortunes") = [&](http_request& request, http_response& response) {
-    set_max_sql_connections_per_thread(fortunes_nconn);
+    sql_db.max_async_connections_per_thread_ = fortunes_nconn;
 
     typedef decltype(fortunes.all_fields()) fortune;
     std::vector<fortune> table;

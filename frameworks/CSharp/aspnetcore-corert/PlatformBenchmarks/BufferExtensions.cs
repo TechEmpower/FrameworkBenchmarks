@@ -28,59 +28,9 @@ namespace PlatformBenchmarks
             byteCount = Encoding.UTF8.GetBytes(text.AsSpan(), buffer.Span);
             buffer.Advance(byteCount);
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static unsafe void WriteNumeric<T>(ref this BufferWriter<T> buffer, uint number)
-             where T : struct, IBufferWriter<byte>
-        {
-            const byte AsciiDigitStart = (byte)'0';
-
-            var span = buffer.Span;
-            var bytesLeftInBlock = span.Length;
-
-            // Fast path, try copying to the available memory directly
-            var advanceBy = 0;
-            fixed (byte* output = span)
-            {
-                var start = output;
-                if (number < 10 && bytesLeftInBlock >= 1)
-                {
-                    start[0] = (byte)(number + AsciiDigitStart);
-                    advanceBy = 1;
-                }
-                else if (number < 100 && bytesLeftInBlock >= 2)
-                {
-                    var tens = (byte)((number * 205u) >> 11); // div10, valid to 1028
-
-                    start[0] = (byte)(tens + AsciiDigitStart);
-                    start[1] = (byte)(number - (tens * 10) + AsciiDigitStart);
-                    advanceBy = 2;
-                }
-                else if (number < 1000 && bytesLeftInBlock >= 3)
-                {
-                    var digit0 = (byte)((number * 41u) >> 12); // div100, valid to 1098
-                    var digits01 = (byte)((number * 205u) >> 11); // div10, valid to 1028
-
-                    start[0] = (byte)(digit0 + AsciiDigitStart);
-                    start[1] = (byte)(digits01 - (digit0 * 10) + AsciiDigitStart);
-                    start[2] = (byte)(number - (digits01 * 10) + AsciiDigitStart);
-                    advanceBy = 3;
-                }
-            }
-
-            if (advanceBy > 0)
-            {
-                buffer.Advance(advanceBy);
-            }
-            else
-            {
-                WriteNumericMultiWrite(ref buffer, number);
-            }
-        }
-
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private static void WriteNumericMultiWrite<T>(ref this BufferWriter<T> buffer, uint number)
-             where T : struct, IBufferWriter<byte>
+        internal static void WriteNumericMultiWrite<T>(ref this BufferWriter<T> buffer, uint number)
+             where T : IBufferWriter<byte>
         {
             const byte AsciiDigitStart = (byte)'0';
 

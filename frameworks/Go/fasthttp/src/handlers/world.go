@@ -4,6 +4,11 @@ import (
 	"sync"
 )
 
+const (
+	maxWorlds   = 500
+	worldsCount = 10000
+)
+
 var worldPool = &sync.Pool{
 	New: func() interface{} {
 		return new(World)
@@ -13,7 +18,7 @@ var worldPool = &sync.Pool{
 var worldsPool = &sync.Pool{
 	New: func() interface{} {
 		return &Worlds{
-			W: make([]World, 0, 512),
+			W: make([]World, 0, maxWorlds),
 		}
 	},
 }

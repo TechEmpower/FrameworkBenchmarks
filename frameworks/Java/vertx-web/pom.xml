@@ -106,7 +106,7 @@
       <plugin>
         <groupId>com.fizzed</groupId>
         <artifactId>rocker-maven-plugin</artifactId>
-        <version>1.3.0</version>
+        <version>0.24.0</version>
         <executions>
           <execution>
             <id>generate-rocker-templates</id>
@@ -117,6 +117,7 @@
             <configuration>
               <templateDirectory>${project.basedir}/src/main/resources</templateDirectory>
               <optimize>true</optimize>
+              <javaVersion>1.8</javaVersion>
             </configuration>
           </execution>
         </executions>
