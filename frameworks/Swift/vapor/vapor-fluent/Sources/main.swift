@@ -8,7 +8,7 @@ try LoggingSystem.bootstrap(from: &env)
 let app = Application(env)
 defer { app.shutdown() }
 
-app.middleware.use(ServerMiddleware())
+app.http.server.configuration.serverName = "Vapor"
 
 app.logger.notice("💧 VAPOR")
 app.logger.notice("System.coreCount: \(System.coreCount)")
