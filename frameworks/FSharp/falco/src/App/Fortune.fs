@@ -1,100 +1,83 @@
 ﻿module App.Fortune    
+
+open Donald
+open Falco
+open FSharp.Control.Tasks
+ 
+type FortuneModel = 
+   {
+       id      : int
+       message : string
+   }
+
+module Db =
+    open System.Data
+    open System.Threading.Tasks    
     
-module Model = 
-    open System.Threading.Tasks 
-    open FSharp.Control.Tasks
+    let selectAsync (connection : IDbConnection) : Task<FortuneModel list> =        
+        queryAsync 
+            "SELECT id, message FROM fortune"
+            []
+            (fun rd ->
+                {
+                    id = rd.GetInt32("id")
+                    message = rd.GetString("message")
+                })
+            connection
 
-    type FortuneModel = 
-        {
-            id      : int
-            message : string
-        }
+module View =
+    open Falco.Markup
+    
+    let index (fortunes : FortuneModel list) =            
+        UI.layout "Fortunes" [
+                Elem.table [] [
+                        yield Elem.tr [] [
+                                Elem.th [] [ Text.raw "id" ]
+                                Elem.th [] [ Text.raw "message" ]
+                            ]
+                        for fortune in fortunes ->
+                            Elem.tr [] [
+                                    Elem.td [] [ Text.raw (string fortune.id) ]
+                                    Elem.td [] [ Text.enc fortune.message]
+                                ]
+                    ]
+            ]
 
-    module FortuneModel =
-        open System.Data
-        open Donald 
+module Service = 
+    open System.Threading.Tasks     
+        
+    module ListQuery =              
+        type LoadFortunes = unit -> Task<FortuneModel list>
 
-        let extra = 
+        let extraFortune = 
             {
                 id = 0
                 message = "Additional fortune added at request time."
             }
 
-        let fromDataReader (rd : IDataReader) =
-            {
-                id = rd.GetInt32("id")
-                message = rd.GetString("message")
-            }
-
-    module Index =        
-        type Query =
-            unit -> Task<FortuneModel list>
-
-        type LoadFortunes =
-            unit -> Task<FortuneModel list>
-
-        let query 
-            (loadFortunes : LoadFortunes) : Query =
+        let handle
+            (loadFortunes : LoadFortunes) =
             fun () -> 
                 task {
                     let! fortunes = loadFortunes ()
-                    let fortunesWithExtra = FortuneModel.extra :: fortunes
-                    let fortunesSorted = 
-                        fortunesWithExtra 
+                    
+                    return 
+                        extraFortune 
+                        :: fortunes
                         |> List.sortBy (fun f -> f.message)
-
-                    return fortunesSorted 
                 }
 
-module Db =
-    open System.Data
-    open Donald
-    open Model
+let handleIndex : HttpHandler =        
+    fun ctx ->
+        task {
+            let connFactory = ctx.GetService<DbConnectionFactory>()
+            use conn = createConn connFactory
+            let selectFortunes = fun () -> Db.selectAsync conn
+            let! fortunes = () |> Service.ListQuery.handle selectFortunes
 
-    let selectAsync (connection : IDbConnection) =
-        queryAsync 
-            "SELECT id, message FROM fortune"
-            []
-            FortuneModel.fromDataReader
-            connection
-
-module View =
-    open Falco.ViewEngine
-    open Model 
-
-    let index (fortunes : FortuneModel list) =            
-        UI.layout "Fortunes" [
-                table [] [
-                        yield tr [] [
-                                th [] [ raw "id" ]
-                                th [] [ raw "message" ]
-                            ]
-                        for fortune in fortunes ->
-                            tr [] [
-                                    td [] [ raw (string fortune.id) ]
-                                    td [] [ enc fortune.message]
-                                ]
-                    ]
-            ]
-
-module Controller =
-    open Donald
-    open Falco
-    open FSharp.Control.Tasks
-    open Model
-
-    let handleIndex : HttpHandler =        
-        fun next ctx ->
-            task {
-                let connFactory = ctx.GetService<DbConnectionFactory>()
-                use conn = createConn connFactory
-                let selectFortunes = fun () -> Db.selectAsync conn
-                let! fortunes = () |> Index.query selectFortunes
-
-                let handlerResult = 
-                    fortunes
-                    |> View.index
-                    |> htmlOut
-
-                return! handlerResult next ctx
-            }
+            return!
+                ctx
+                |> (fortunes 
+                    |> View.index 
+                    |> Response.ofHtml)                    
+        }
