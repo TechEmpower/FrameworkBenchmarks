@@ -1,5 +1,6 @@
 ﻿module App.Fortune    
 
+open System.Data
 open Donald
 open Falco
 open FSharp.Control.Tasks
@@ -10,19 +11,20 @@ type FortuneModel =
        message : string
    }
 
-module Db =
-    open System.Data
+   static member fromDataReader (rd : IDataReader) =
+       {
+           id = rd.GetInt32("id")
+           message = rd.GetString("message")
+       }
+
+module Db =    
     open System.Threading.Tasks    
     
     let selectAsync (connection : IDbConnection) : Task<FortuneModel list> =        
         queryAsync 
             "SELECT id, message FROM fortune"
             []
-            (fun rd ->
-                {
-                    id = rd.GetInt32("id")
-                    message = rd.GetString("message")
-                })
+            FortuneModel.fromDataReader
             connection
 
 module View =
