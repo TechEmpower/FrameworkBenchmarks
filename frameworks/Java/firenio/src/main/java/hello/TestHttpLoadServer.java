@@ -3,7 +3,7 @@ package hello;
 import com.firenio.Options;
 import com.firenio.buffer.ByteBuf;
 import com.firenio.codec.http11.HttpAttachment;
-import com.firenio.codec.http11.HttpCodec;
+import com.firenio.codec.http11.MyHttpCodec;
 import com.firenio.codec.http11.HttpConnection;
 import com.firenio.codec.http11.HttpContentType;
 import com.firenio.codec.http11.HttpDateUtil;
@@ -92,7 +92,7 @@ public class TestHttpLoadServer {
             cachedUrls.add("/plaintext");
             cachedUrls.add("/json");
         }
-        HttpCodec codec = new HttpCodec(server, fcache, lite, cachedUrls) {
+        MyHttpCodec codec = new MyHttpCodec(server, fcache, lite, cachedUrls) {
 
             @Override
             protected Object newAttachment() {
