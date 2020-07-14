@@ -52,9 +52,9 @@ static struct db_connection_params {
 
 static const char hello_world[] = "Hello, World!";
 static const char random_number_query[] =
-    "SELECT randomNumber FROM world WHERE id=?";
+    "SELECT randomNumber, id FROM world WHERE id=?";
 static const char cached_random_number_query[] =
-    "SELECT randomNumber FROM world WHERE id=?";
+    "SELECT randomNumber, id FROM world WHERE id=?";
 
 struct Fortune {
     struct {
@@ -199,10 +199,11 @@ static bool db_query_key(struct db_stmt *stmt, struct db_json *out, int key)
         return false;
 
     long random_number;
-    if (UNLIKELY(!db_stmt_step(stmt, "i", &random_number)))
+    long id;
+    if (UNLIKELY(!db_stmt_step(stmt, "ii", &random_number, &id)))
         return false;
 
-    out->id = row.u.i;
+    out->id = (int)id;
     out->randomNumber = (int)random_number;
 
     return true;
