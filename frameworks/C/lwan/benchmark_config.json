@@ -1,0 +1,49 @@
+{
+  "framework": "lwan",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "cached_query_url": "/cached-queries?count=",
+        "plaintext_url": "/plaintext",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "mysql",
+        "framework": "Lwan",
+        "language": "C",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Lwan",
+        "webserver": "Lwan",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Lwan",
+        "notes": "",
+        "versus": "None"
+      },
+      "lua": {
+        "json_url": "/lua.json",
+        "plaintext_url": "/lua.plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "mysql",
+        "framework": "Lwan",
+        "language": "Lua",
+        "flavor": "Lua",
+        "orm": "Raw",
+        "platform": "Lwan",
+        "webserver": "Lwan",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Lwan",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

@@ -1,16 +1,16 @@
 package models;
 
-import io.reactiverse.rxjava.pgclient.PgClient;
-import io.reactiverse.rxjava.pgclient.PgIterator;
-import io.reactiverse.rxjava.pgclient.Row;
-import io.reactiverse.rxjava.pgclient.Tuple;
-import module.PgClients;
-import ratpack.exec.Promise;
-import ratpack.rx.RxRatpack;
-import rx.Observable;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactiverse.reactivex.pgclient.PgClient;
+import io.reactiverse.reactivex.pgclient.PgIterator;
+import io.reactiverse.reactivex.pgclient.Row;
+import io.reactiverse.reactivex.pgclient.Tuple;
+import io.reactivex.Observable;
+import module.PgClients;
+import ratpack.exec.Promise;
+import ratpack.rx2.RxRatpack;
 
 public class PgClientRepository implements DbRepository {
     private final PgClients pgClients;
@@ -21,53 +21,48 @@ public class PgClientRepository implements DbRepository {
 
     @Override
     public Promise<World> getWorld(int id) {
-        return getWorlds(new int[]{id}).map(worlds -> worlds.get(0));
+        return getWorlds(new int[] { id }).map(worlds -> worlds.get(0));
     }
 
     @Override
     public Promise<List<World>> getWorlds(int[] ids) {
 
-        Observable<World>[] observables = new Observable[ids.length];
-
         PgClient pgClient = pgClients.getOne();
 
-        for (int i = 0; i < ids.length; i++) {
-            observables[i] = pgClient.rxPreparedQuery("SELECT * FROM world WHERE id = $1", Tuple.of(ids[i])).map(rowset -> {
-                final Row row = rowset.iterator().next();
+        Observable<World> observable = Observable.range(0, ids.length)
+                .flatMap(i -> pgClient.rxPreparedQuery("SELECT * FROM world WHERE id = $1", Tuple.of(ids[i]))
+                        .map(rowset -> {
+                            final Row row = rowset.iterator().next();
 
-                return new World(row.getInteger(0), row.getInteger(1));
-            }).toObservable();
-        }
+                            return new World(row.getInteger(0), row.getInteger(1));
+                        })
+                        .toObservable());
 
-        return getPromise(observables);
+        return RxRatpack.promiseAll(observable);
     }
 
     @Override
     public Promise<List<World>> findAndUpdateWorlds(int[] ids, int[] randomNumbers) {
         return getWorlds(ids).flatMap(worlds -> {
-            Observable<World>[] observables = new Observable[worlds.size()];
-
             PgClient pgClient = pgClients.getOne();
 
-            for (int i = 0; i < worlds.size(); i++) {
-                World world = worlds.get(i);
-                world.randomNumber = randomNumbers[i];
-                observables[i] = pgClient.rxPreparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2", Tuple.of(world.randomNumber, world.id)).map(rowset -> world).toObservable();
-            }
+            Observable<World> observable = Observable.range(0, worlds.size())
+                    .flatMap(i -> {
+                        World world = worlds.get(i);
+                        world.randomNumber = randomNumbers[i];
+                        return pgClient
+                                .rxPreparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2", Tuple.of(world.randomNumber, world.id))
+                                .map(rowset -> world)
+                                .toObservable();
+                    });
 
-            return getPromise(observables);
+            return RxRatpack.promiseAll(observable);
         });
-    }
-
-    private Promise<List<World>> getPromise(Observable<World>[] observables) {
-        return RxRatpack.promiseSingle(
-                Observable.merge(observables)
-                        .collect(() -> new ArrayList<World>(), (worlds, world) -> worlds.add(world)));
     }
 
     @Override
     public Promise<List<Fortune>> fortunes() {
-        return RxRatpack.promise(pgClients.getOne().rxPreparedQuery("SELECT * FROM fortune").flatMapObservable(pgRowSet -> {
+        return RxRatpack.promiseAll(pgClients.getOne().rxPreparedQuery("SELECT * FROM fortune").flatMapObservable(pgRowSet -> {
             PgIterator resultSet = pgRowSet.iterator();
             List<Fortune> fortunes = new ArrayList<>(pgRowSet.size());
             while (resultSet.hasNext()) {
@@ -75,7 +70,7 @@ public class PgClientRepository implements DbRepository {
                 fortunes.add(new Fortune(row.getInteger(0), row.getString(1)));
             }
 
-            return Observable.from(fortunes);
+            return Observable.fromIterable(fortunes);
         }));
     }
 }

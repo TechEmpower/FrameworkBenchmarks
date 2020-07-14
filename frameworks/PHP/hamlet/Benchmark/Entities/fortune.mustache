@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>Fortunes</title></head>
+<body>
+<table>
+    <tr>
+        <th>id</th>
+        <th>message</th>
+    </tr>
+    {{# messages }}
+        <tr>
+            <td>{{ id }}</td>
+            <td>{{ message }}</td>
+        </tr>
+    {{/ messages }}
+</table>
+</body>
+</html>

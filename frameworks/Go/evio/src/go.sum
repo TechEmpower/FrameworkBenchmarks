@@ -1,0 +1,4 @@
+github.com/kavu/go_reuseport v1.4.0 h1:YIp/96RZ3sJfn0LN+FFkkXIq3H3dfVOdRUtNejhDcxc=
+github.com/kavu/go_reuseport v1.4.0/go.mod h1:CG8Ee7ceMFSMnx/xr25Vm0qXaj2Z4i5PWoUx+JZ5/CU=
+github.com/tidwall/evio v1.0.2 h1:vhPp5nVS5PZfR0CfV5ixqDEf+BKQFcaR1W1XeLLkvRE=
+github.com/tidwall/evio v1.0.2/go.mod h1:cYtY49LddNrlpsOmW7qJnqM8B2gOjrFrzT8+Fnb/GKs=

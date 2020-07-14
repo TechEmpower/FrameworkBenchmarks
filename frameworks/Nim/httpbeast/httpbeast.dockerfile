@@ -1,4 +1,4 @@
-FROM nimlang/nim:0.19.0
+FROM nimlang/nim:1.0.4
 
 ADD ./ /httpbeast
 WORKDIR /httpbeast

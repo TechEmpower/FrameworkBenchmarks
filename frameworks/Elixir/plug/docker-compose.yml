@@ -1,0 +1,19 @@
+version: '2.3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: elixir-plug-ecto.dockerfile
+      target: app
+    ports:
+      - "8080:8080"
+  nginx:
+    image: jwilder/nginx-proxy:alpine
+    environment:
+      VIRTUAL_HOST: 0.0.0.0
+      VIRTUAL_PORT: 5000
+    volumes:
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+    ports:
+      - "4000:80"

@@ -7,10 +7,10 @@
             <th>id</th>
             <th>message</th>
         </tr>
-        <?php foreach($data['fortunes'] as $fortune){ ?>
+        <?php foreach($data['fortunes'] as $id =>$fortune){ ?>
             <tr>
-                <td><?php echo $fortune['id']; ?></td>
-                <td><?php echo htmlspecialchars($fortune['message']); ?></td>
+                <td><?php echo $id; ?></td>
+                <td><?php echo htmlspecialchars($fortune); ?></td>
             </tr>
         <?php } ?>
     </table>

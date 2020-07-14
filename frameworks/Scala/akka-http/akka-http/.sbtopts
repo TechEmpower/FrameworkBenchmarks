@@ -1,0 +1,5 @@
+-J-Xms256M
+-J-Xmx768M
+-J-XX:MaxMetaspaceSize=256M
+-Djava.awt.headless=true
+-Djava.net.preferIPv4Stack=true

@@ -6,9 +6,7 @@
 				"json_url": "/json",
 				"plaintext_url": "/plaintext",
 				"db_url": "/db",
-				"query_url": "/queries?queries=",
 				"fortune_url": "/fortunes",
-				"update_url": "/update?queries=",
 				"port": 8080,
 				"approach": "Realistic",
 				"classification": "Fullstack",
@@ -105,7 +103,7 @@
 				"webserver": "WoOF",
 				"os": "Linux",
 				"database_os": "Linux",
-				"display_name": "OfficeFloor-micro",
+				"display_name": "OfficeFloor-thread_affinity",
 				"notes": "",
 				"versus": "OfficeFloor-raw"
 			},
@@ -113,9 +111,7 @@
 				"json_url": "/json",
 				"plaintext_url": "/plaintext",
 				"db_url": "/db",
-				"query_url": "/queries?queries=",
 				"fortune_url": "/fortunes",
-				"update_url": "/update?queries=",
 				"port": 8080,
 				"approach": "Realistic",
 				"classification": "Fullstack",
@@ -132,7 +128,7 @@
 				"notes": "",
 				"versus": "netty"
 			},
-			"rapidoid": {
+			"spring_data": {
 				"json_url": "/json",
 				"plaintext_url": "/plaintext",
 				"db_url": "/db",
@@ -151,9 +147,9 @@
 				"webserver": "WoOF",
 				"os": "Linux",
 				"database_os": "Linux",
-				"display_name": "OfficeFloor-rapidoid",
+				"display_name": "OfficeFloor-spring_data",
 				"notes": "",
-				"versus": "rapidoid"
+				"versus": "officefloor"
 			}
 		}
 	]

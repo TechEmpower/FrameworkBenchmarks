@@ -11,7 +11,7 @@ import module.PgClientRepositoryModule;
 import ratpack.guice.Guice;
 import ratpack.handlebars.HandlebarsModule;
 import ratpack.hikari.HikariModule;
-import ratpack.rx.RxRatpack;
+import ratpack.rx2.RxRatpack;
 import ratpack.server.RatpackServer;
 
 public class Main {

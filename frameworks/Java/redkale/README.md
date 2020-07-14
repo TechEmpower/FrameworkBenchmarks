@@ -56,3 +56,4 @@ This is the Redkale portion of a [benchmarking test suite](../) comparing a vari
 ### Template rendering Test
 
     http://localhost:8080/fortunes
+

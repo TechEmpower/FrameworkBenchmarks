@@ -1,28 +1,30 @@
-FROM oracle/graalvm-ce:1.0.0-rc9
+FROM oracle/graalvm-ce:20.1.0-java11
 # Set working dir
 RUN mkdir /app
 WORKDIR /app
 
-COPY ./ /app
-
+COPY ./package.json /app
 # Get dependencies
 RUN npm --unsafe-perm install
-# Generate a runtime blog
-RUN npm run package
+# Copy the app
+COPY ./ /app
+# Compile the template
+RUN npm run template
 
+# Run the code
 CMD java \
-    -server                                           \
-    -XX:+UseNUMA                                      \
-    -XX:+UseParallelGC                                \
-    -XX:+AggressiveOpts                               \
-    -Dvertx.disableMetrics=true                       \
-    -Dvertx.disableH2c=true                           \
-    -Dvertx.disableWebsockets=true                    \
-    -Dvertx.flashPolicyHandler=false                  \
-    -Dvertx.threadChecks=false                        \
-    -Dvertx.disableContextTimings=true                \
-    -Dvertx.disableTCCL=true                          \
-    -jar                                              \
-    target/es4x-0.0.1-bin.jar                         \
-    --instances                                       \
-    `grep --count ^processor /proc/cpuinfo`
+    -server                                             \
+    -XX:+UseNUMA                                        \
+    -XX:+UseParallelGC                                  \
+    -XX:+AggressiveOpts                                 \
+    -Dvertx.disableMetrics=true                         \
+    -Dvertx.disableH2c=true                             \
+    -Dvertx.disableWebsockets=true                      \
+    -Dvertx.flashPolicyHandler=false                    \
+    -Dvertx.threadChecks=false                          \
+    -Dvertx.disableContextTimings=true                  \
+    -Dvertx.disableTCCL=true                            \
+    -Dvertx.disableHttpHeadersValidation=true           \
+    -jar node_modules/.bin/es4x-launcher.jar            \
+    --instances `grep --count ^processor /proc/cpuinfo` \
+    --options vertx.json

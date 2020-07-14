@@ -22,7 +22,7 @@ public class Application extends Controller {
 	}
 
 	public static void hello() {
-		renderText("hello world");
+		renderText("Hello, world!");
 	}
 
 	public static void json() {
@@ -36,9 +36,18 @@ public class Application extends Controller {
 	 * 
 	 * @param queries
 	 */
-	public static void dbSync(int queries) {
-		if (queries == 0)
+	public static void dbSync() {
+		Long id = Long.valueOf(ThreadLocalRandom.current().nextInt(TEST_DATABASE_ROWS) + 1);
+		World result = World.findById(id);
+		renderJSON(result);
+	}
+
+    public static void dbQueries(int queries) {
+		if (queries == 0) {
 			queries = 1;
+		} else if (queries > 500) {
+			queries = 500;
+        }
 		final List<World> worlds = new ArrayList<World>();
 		for (int i = 0; i < queries; ++i) {
 			Long id = Long.valueOf(ThreadLocalRandom.current().nextInt(TEST_DATABASE_ROWS) + 1);
@@ -46,7 +55,7 @@ public class Application extends Controller {
 			worlds.add(result);
 		}
 		renderJSON(worlds);
-	}
+    }
 
 	@play.db.jpa.NoTransaction
 	public static void setup() {

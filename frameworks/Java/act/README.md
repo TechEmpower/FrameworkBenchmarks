@@ -36,4 +36,3 @@ public class AppEntry {
 
 ### Fortunes Test
 * [Fortunes test source](src/main/java/com/techempower/act/controller/FortuneController.java)
-

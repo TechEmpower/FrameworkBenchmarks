@@ -115,14 +115,10 @@ $app->get('/updates', function ($request, $response) {
 
 // Test 6: Fortunes
 $app->get('/fortunes', function ($request, $response) {
-    $sth = $this->db->prepare('SELECT * FROM Fortune');
-    $sth->execute();
-    $fortunes = $sth->fetchAll();
+    $fortunes = $this->db->query('SELECT * FROM Fortune')->fetchAll(PDO::FETCH_KEY_PAIR);
 
-    array_push($fortunes, array('id'=> 0, 'message' => 'Additional fortune added at request time.'));
-    usort($fortunes, function($left, $right) {
-        return strcmp($left['message'], $right['message']);
-    });
+    $fortunes[0] = 'Additional fortune added at request time.';
+    asort($fortunes);
 
     return $this->view->render($response, "fortunes.php", ["fortunes" => $fortunes]);
 });

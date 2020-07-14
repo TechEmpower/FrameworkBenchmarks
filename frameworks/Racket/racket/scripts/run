@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+export PLT_INCREMENTAL_GC=1
+
+CORES=$(("$(nproc --all)" * 2))
+CONF="/racket/config/upstream.conf"
+
+cat >"$CONF" <<EOF
+upstream app {
+  least_conn;
+EOF
+
+for i in $(seq 0 $CORES); do
+    port=$((8081 + i))
+    /racket/servlet "$port" &
+    echo "  server 127.0.0.1:$port;" >> "$CONF"
+done
+
+cat >>"$CONF" <<EOF
+  keepalive 512;
+}
+EOF
+
+for i in $(seq 0 $CORES); do
+    port=$((8081 + i))
+    filename="/racket/$port.ready"
+    while [ ! -f "$filename" ]; do
+        echo "Waiting for $filename..."
+        sleep 0.25;
+    done
+done
+
+cat /racket/config/upstream.conf
+nginx -c /racket/config/nginx.conf

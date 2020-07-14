@@ -5,6 +5,7 @@ namespace FrameworkBenchmarks\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Stdlib\ArrayUtils;
 use Zend\View\Model\JsonModel;
+use Zend\View\Model\ViewModel;
 use Zend\Http\Headers;
 use Zend\Db\TableGateway\TableGateway;
 
@@ -51,7 +52,7 @@ class BenchController extends AbstractActionController
     /**
      * @return \Zend\View\Model\JsonModel
      */
-    public function dbMultiAction()
+    public function queriesAction()
     {
         /* @var $request \Zend\Http\Request */
         $request = $this->getRequest();
@@ -70,7 +71,7 @@ class BenchController extends AbstractActionController
         return new JsonModel($worlds);
     }
 
-    public function updateAction()
+    public function updatesAction()
     {
       $request = $this->getRequest();
       $queries = (int) $request->getQuery('queries', 1);

@@ -1,8 +1,7 @@
-
 #
 # BUILD
 #
-FROM gradle:5.0.0-jdk11 AS gradle_build
+FROM gradle:6.4-jdk11 AS gradle_build
 USER root
 WORKDIR /hexagon
 
@@ -14,7 +13,7 @@ RUN gradle --quiet --exclude-task test
 #
 # RUNTIME
 #
-FROM openjdk:11
+FROM openjdk:11.0.7-jre-buster
 ENV DBSTORE mongodb
 ENV MONGODB_DB_HOST tfb-database
 ENV WEBENGINE jetty

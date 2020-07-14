@@ -8,7 +8,7 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "None",
-      "framework": "None",
+      "framework": "tio-mvc",
       "language": "Java",
       "flavor": "None",
       "orm": "Raw",

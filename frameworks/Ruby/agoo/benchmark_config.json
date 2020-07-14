@@ -1,0 +1,25 @@
+{
+  "framework": "agoo",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "rack",
+      "language": "Ruby",
+      "orm": "Raw",
+      "platform": "Rack",
+      "webserver": "Agoo",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rack-agoo-mri",
+      "notes": ""
+    }
+  }]
+}

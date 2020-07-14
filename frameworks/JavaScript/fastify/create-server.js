@@ -1,48 +1,105 @@
-const fastify = require('fastify')();
-const handler = require('./handlers/handler');
+const fastify = require("fastify")();
+const handlers = require("./handlers");
 
-fastify.register(require('point-of-view'), {
+fastify.register(require("point-of-view"), {
   engine: {
-    ejs: require('handlebars')
+    ejs: require("handlebars")
   },
-  templates: __dirname + '/views'
-})
-
-fastify.use((req, reply, next) => {
-  reply.setHeader('Server', 'Fastify')
-
-  next()
-})
-
-fastify.get('/json', (req, reply) => {
-  reply.header('Content-Type', 'application/json')
-    .code(200)
-    .send({ message: 'Hello, World!' });
-})
-
-fastify.get('/plaintext', (req, reply) => {
-  reply.header('Content-Type', 'text/plain')
-    .code(200)
-    .send('Hello, World!');
+  templates: __dirname + "/views"
 });
 
-const handlerName = process.env.NODE_HANDLER;
+fastify.addHook('onRequest', (request, reply, done) => {
+  reply.setHeader("Server", "Fastify");
+  done()
+})
 
-if (handlerName) {
-  const dbLayer = require(`./handlers/${handlerName}`);
+fastify.get("/json", {
+  schema: {
+    response: {
+      200: {
+        type: 'object',
+        properties: {
+          message: { type: 'string' }
+        }
+      }
+    }
+  }
+}, (req, reply) => {
+  reply
+    .header("Content-Type", "application/json")
+    .code(200)
+    .send({ message: "Hello, World!" });
+});
 
-  const routerHandler = handler(dbLayer);
+fastify.get("/plaintext", (req, reply) => {
+  reply
+    .header("Content-Type", "text/plain")
+    .code(200)
+    .send("Hello, World!");
+});
 
-  fastify.get('/db', routerHandler.SingleQuery);
-  fastify.get('/queries', routerHandler.MultipleQueries);
-  fastify.get('/fortunes', routerHandler.Fortunes);
-  fastify.get('/updates', routerHandler.Updates);
+const database = process.env.DATABASE;
+
+if (database) {
+  const dbLayer = require(`./db/${database}`);
+  const routerHandler = handlers(dbLayer);
+
+  const itemSchema = {
+    type: 'object',
+    properties: {
+      id: { type: 'integer' },
+      message: { type: 'string' },
+      randomNumber: { type: 'integer' }
+    }
+  }
+
+  if (database === 'postgres') {
+    // postgres return lowercase columns
+    itemSchema.properties.randomnumber = { type: 'integer' };
+  }
+
+  const singleQuerySchema = {
+    schema: {
+      response:{
+        200: itemSchema
+      }
+    }
+  }
+
+  const multipleQueriesSchema = {
+    schema: {
+      response:{
+        200: {
+          type: 'array',
+          items: itemSchema
+        }
+      }
+    }
+  }
+
+  const updateSchema = {
+    schema: {
+      response:{
+        200: {
+          type: 'array',
+          items: itemSchema
+        }
+      }
+    }
+  }
+
+  fastify.get("/db", singleQuerySchema, routerHandler.singleQuery);
+  fastify.get("/queries", multipleQueriesSchema, routerHandler.multipleQueries);
+  fastify.get("/fortunes", routerHandler.fortunes);
+  fastify.get("/updates", updateSchema, routerHandler.updates);
 }
 
-fastify.listen(8080, '0.0.0.0', err => {
+fastify.listen(8080, "0.0.0.0", err => {
   if (err) {
     throw err;
   }
 
-  console.log(`Worker started and listening on http://0.0.0.0:8080 ${new Date().toISOString()}`);
-})
+  console.log(
+    `Worker started and listening on http://0.0.0.0:8080 ${new Date().toISOString()}`
+  );
+});

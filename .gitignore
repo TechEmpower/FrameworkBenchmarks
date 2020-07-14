@@ -95,3 +95,31 @@ dependency-reduced-pom.xml
 .dart_tool/
 *.packages
 pubspec.lock
+
+# Gradle
+.gradle/
+build/
+
+# haskell
+.stack-work
+
+# Elixir
+_build/
+deps/
+frameworks/PHP/ubiquity/.buildpath
+
+# swift
+Package.resolved
+.swiftpm
+DerivedData
+.build
+
+#fsharp
+launchSettings.json
+.vs
+obj
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+*.fsproj.user

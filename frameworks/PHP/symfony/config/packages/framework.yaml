@@ -1,15 +1,15 @@
 framework:
-    secret: '%env(APP_SECRET)%'
-    #default_locale: en
-    #csrf_protection: ~
+    #csrf_protection: true
     #http_method_override: true
 
-    # uncomment this entire section to enable sessions
+    # Enables session support. Note that the session will ONLY be started if you read or write from it.
+    # Remove or comment this section to explicitly disable session support.
     #session:
-    #    # With this config, PHP's native session handling is used
-    #    handler_id: ~
+    #    handler_id: null
+    #    cookie_secure: auto
+    #    cookie_samesite: lax
 
-    #esi: ~
-    #fragments: ~
-    php_errors:
-        log: true
+    #esi: true
+    #fragments: true
+    #php_errors:
+    #    log: true

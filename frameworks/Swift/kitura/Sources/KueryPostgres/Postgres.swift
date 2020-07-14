@@ -36,7 +36,7 @@ let dbName = manager["db:name"] as? String ?? "hello_world"
 let dbUser = manager["db:user"] as? String ?? "benchmarkdbuser"
 let dbPass = manager["db:password"] as? String ?? "benchmarkdbpass"
 
-let dbConnPoolOpts = ConnectionPoolOptions(initialCapacity: 20, maxCapacity: 50, timeout:10000)
+let dbConnPoolOpts = ConnectionPoolOptions(initialCapacity: 20, maxCapacity: 50)
 
 public let dbConnPool = PostgreSQLConnection.createPool(host: dbHost, port: dbPort, options: [.databaseName(dbName), .userName(dbUser), .password(dbPass)], poolOptions: dbConnPoolOpts)
 

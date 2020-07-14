@@ -6,9 +6,10 @@
 # Home page
 GET     /json                           Application.json
 GET     /db                             Application.dbSync
+GET     /query                          Application.dbQueries
+GET     /plaintext                      Application.hello
 GET     /db2                            Application.dbAsyncAllQueries
 GET     /db3                            Application.dbAsyncEachQuery
 GET     /setup                          Application.setup
 GET     /                               Application.index
-GET     /hello                          Application.hello
 

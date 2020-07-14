@@ -1,17 +1,9 @@
 package com.networknt.techempower;
 
-import com.google.common.net.MediaType;
-import com.networknt.techempower.model.World;
 import io.undertow.server.HttpServerExchange;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Deque;
-import java.util.List;
-import java.util.concurrent.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Provides utility methods for the benchmark tests.

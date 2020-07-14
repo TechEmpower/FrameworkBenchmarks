@@ -6,44 +6,23 @@ package main
 import (
 	"benchmark/app/db"
 
-	"aahframework.org/aah.v0"
+	"aahframe.work"
 )
 
 func init() {
+	app := aah.App()
 
-	//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-	// Server Extensions
-	// Doc: https://docs.aahframework.org/server-extension.html
-	//
-	// Best Practice: Define a function with meaningful name in a package and
-	// register it here. Extensions function name gets logged in the log,
-	// its very helpful to have meaningful log information.
-	//
-	// Such as:
-	//    - Dedicated package for config loading
-	//    - Dedicated package for datasource connections
-	//    - etc
-	//__________________________________________________________________________
-
-	aah.OnStart(db.InitMySQLDatabase)
-	aah.OnStart(db.InitPostgreSQLDatabase)
-	aah.OnStart(func(_ *aah.Event) {
-		aah.AppSecurityManager().AntiCSRF.Enabled = false
+	app.OnStart(db.InitMySQLDatabase)
+	app.OnStart(db.InitPostgreSQLDatabase)
+	app.OnStart(func(_ *aah.Event) {
+		app.SecurityManager().AntiCSRF.Enabled = false
 	})
 
-	aah.OnPostShutdown(db.CloseMySQLDatabase)
-	aah.OnPostShutdown(db.ClosePostgreSQLDatabase)
+	app.OnPostShutdown(db.CloseMySQLDatabase)
+	app.OnPostShutdown(db.ClosePostgreSQLDatabase)
 
-	//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-	// Middleware's
-	// Doc: https://docs.aahframework.org/middleware.html
-	//
-	// Executed in the order they are defined. It is recommended; NOT to change
-	// the order of pre-defined aah framework middleware's.
-	//__________________________________________________________________________
-	aah.AppHTTPEngine().Middlewares(
+	app.HTTPEngine().Middlewares(
 		aah.RouteMiddleware,
 		aah.ActionMiddleware,
 	)
-
 }

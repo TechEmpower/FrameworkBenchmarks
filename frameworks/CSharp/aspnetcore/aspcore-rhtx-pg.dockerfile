@@ -1,13 +1,12 @@
-FROM microsoft/dotnet:2.1-sdk AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.101 AS build
 WORKDIR /app
 COPY PlatformBenchmarks .
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Release -o out /p:IsDatabase=true
 
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.2 AS runtime
 ENV ASPNETCORE_URLS http://+:8080
-ENV COMPlus_ReadyToRun 0
 WORKDIR /app
 COPY --from=build /app/out ./
-COPY Benchmarks/appsettings.postgresql.json ./appsettings.json
+COPY PlatformBenchmarks/appsettings.postgresql.json ./appsettings.json
 
 ENTRYPOINT ["dotnet", "PlatformBenchmarks.dll", "KestrelTransport=LinuxTransport"]

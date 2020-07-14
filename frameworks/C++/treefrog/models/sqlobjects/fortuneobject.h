@@ -8,7 +8,7 @@
 class T_MODEL_EXPORT FortuneObject : public TSqlObject, public QSharedData
 {
 public:
-    uint id;
+    uint id {0};
     QString message;
 
     enum PropertyIndex {
@@ -16,9 +16,9 @@ public:
         Message,
     };
 
-    int primaryKeyIndex() const { return Id; }
-    int autoValueIndex() const { return Id; }
-    QString tableName() const { return QLatin1String("Fortune"); }
+    int primaryKeyIndex() const override { return Id; }
+    int autoValueIndex() const override { return Id; }
+    QString tableName() const override { return QStringLiteral("fortune"); }
 
 private:    /*** Don't modify below this line ***/
     Q_OBJECT

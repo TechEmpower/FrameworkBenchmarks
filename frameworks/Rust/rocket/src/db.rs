@@ -1,9 +1,9 @@
-use std::ops::Deref;
-use rocket::http::Status;
-use rocket::request::{self, FromRequest};
-use rocket::{Request, State, Outcome};
 use diesel::pg::PgConnection;
 use diesel::r2d2::{ConnectionManager, Pool, PooledConnection};
+use rocket::http::Status;
+use rocket::request::{self, FromRequest};
+use rocket::{Outcome, Request, State};
+use std::ops::Deref;
 
 type PgPool = Pool<ConnectionManager<PgConnection>>;
 
@@ -16,7 +16,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for DbConn {
         let pool = request.guard::<State<PgPool>>()?;
         match pool.get() {
             Ok(conn) => Outcome::Success(DbConn(conn)),
-            Err(_) => Outcome::Failure((Status::ServiceUnavailable, ()))
+            Err(_) => Outcome::Failure((Status::ServiceUnavailable, ())),
         }
     }
 }
@@ -31,5 +31,5 @@ impl Deref for DbConn {
 
 pub fn init_pool() -> PgPool {
     let manager = ConnectionManager::<PgConnection>::new(env!("DATABASE_URL"));
-    Pool::new(manager).expect("db pool")
+    Pool::builder().max_size((num_cpus::get()*16) as u32).build(manager).expect("db pool")
 }

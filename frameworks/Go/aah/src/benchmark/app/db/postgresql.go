@@ -3,8 +3,8 @@ package db
 import (
 	"runtime"
 
-	"aahframework.org/aah.v0"
-	"aahframework.org/log.v0"
+	"aahframe.work"
+
 	"github.com/jackc/pgx"
 )
 
@@ -20,11 +20,12 @@ var (
 
 // InitPostgreSQLDatabase initializes the Database.
 func InitPostgreSQLDatabase(_ *aah.Event) {
-	cfg := aah.AppConfig()
-	if aah.AppProfile() != "bm_postgresql" {
+	app := aah.App()
+	if !app.IsEnvProfile("bm_postgresql") {
 		return
 	}
 
+	cfg := app.Config()
 	config := pgx.ConnPoolConfig{
 		ConnConfig: pgx.ConnConfig{
 			Host:     cfg.StringDefault("datasource.benchmark.postgresql.host", ""),
@@ -39,13 +40,13 @@ func InitPostgreSQLDatabase(_ *aah.Event) {
 	config.AfterConnect = func(conn *pgx.Conn) error {
 		var err error
 		if PGWorldSelectStmt, err = conn.Prepare("worldSelectStmt", "SELECT id, randomNumber FROM World WHERE id = $1"); err != nil {
-			log.Fatal(err)
+			app.Log().Fatal(err)
 		}
 		if PGWorldUpdateStmt, err = conn.Prepare("worldUpdateStmt", "UPDATE World SET randomNumber = $1 WHERE id = $2"); err != nil {
-			log.Fatal(err)
+			app.Log().Fatal(err)
 		}
 		if PGFortuneSelectStmt, err = conn.Prepare("fortuneSelectStmt", "SELECT id, message FROM Fortune"); err != nil {
-			log.Fatal(err)
+			app.Log().Fatal(err)
 		}
 		return nil
 	}
@@ -53,7 +54,7 @@ func InitPostgreSQLDatabase(_ *aah.Event) {
 	var err error
 	PostgreSQL, err = pgx.NewConnPool(config)
 	if err != nil {
-		log.Fatal(err)
+		app.Log().Fatal(err)
 	}
 }
 

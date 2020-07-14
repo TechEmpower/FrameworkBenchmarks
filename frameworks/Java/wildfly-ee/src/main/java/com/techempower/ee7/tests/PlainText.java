@@ -7,25 +7,24 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/plaintext")
 public class PlainText {
-  private static final String MESSAGE = "Hello, World!";
+    private static final String MESSAGE = "Hello, World!";
 
-  @GET
-  @Produces(MediaType.TEXT_PLAIN)
-  public String get() {
-    return MESSAGE;
-  }
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String get() {
+        return MESSAGE;
+    }
 
-  @GET
-  @Path("hi")
-  public String get2() {
-    return "Hello WildFly!";
-  }
+    @GET
+    @Path("hi")
+    public String get2() {
+        return "Hello WildFly!";
+    }
 
+    @GET
+    @Path("/bye")
+    public String get3() {
+        return "Bye WildFly!";
+    }
 
-  @GET
-  @Path("/bye")
-  public String get3() {
-    return "Bye WildFly!";
-  }
-  
 }

@@ -1,0 +1,51 @@
+{
+  "framework": "drogon",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "drogon",
+        "language": "C++",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "drogon",
+        "notes": "",
+        "versus": "None"
+      },
+      "core": {
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "drogon",
+        "language": "C++",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "drogon",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

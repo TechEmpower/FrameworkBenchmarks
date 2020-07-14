@@ -116,21 +116,26 @@ CLI
 
 /* initialize CLI helper and manage it's default options */
 static void cli_init(int argc, char const *argv[]) {
-  fio_cli_start(
-      argc, argv, 0, 0,
-      "This is a facil.io framework benchmark application.\n"
-      "\nFor details about the benchmarks visit:\n"
-      "http://frameworkbenchmarks.readthedocs.io/en/latest/\n"
-      "\nThe following arguments are supported:",
-      "-threads -t The number of threads to use. System dependent default.",
-      FIO_CLI_TYPE_INT,
-      "-workers -w The number of processes to use. System dependent default.",
-      FIO_CLI_TYPE_INT,
-      "-port -p The port number to listen to (set to 0 for Unix Sockets.",
-      FIO_CLI_TYPE_INT, "-address -b The address to bind to.",
-      "-public -www A public folder for serve an HTTP static file service.",
-      "-log -v Turns logging on (logs to terminal).", FIO_CLI_TYPE_BOOL,
-      "-database -db The database adrress (URL).");
+  fio_cli_start(argc, argv, 0, 0,
+                "This is a facil.io framework benchmark application.\n"
+                "\nFor details about the benchmarks visit:\n"
+                "http://frameworkbenchmarks.readthedocs.io/en/latest/\n"
+                "\nThe following arguments are supported:",
+                FIO_CLI_PRINT_HEADER("Concurrency:"),
+                FIO_CLI_INT("-threads -t The number of threads to use. "
+                            "System dependent default."),
+                FIO_CLI_INT("-workers -w The number of processes to use. "
+                            "System dependent default."),
+                FIO_CLI_PRINT_HEADER("Address Binding:"),
+                FIO_CLI_INT("-port -p The port number to listen to "
+                            "(set to 0 for Unix Sockets."),
+                FIO_CLI_STRING("-address -b The address to bind to."),
+                FIO_CLI_PRINT_HEADER("HTTP Settings:"),
+                FIO_CLI_STRING("-public -www A public folder for serve an HTTP "
+                               "static file service."),
+                FIO_CLI_BOOL("-log -v Turns logging on (logs to terminal)."),
+                FIO_CLI_PRINT_HEADER("Misc:"),
+                FIO_CLI_STRING("-database -db The database adrress (URL)."));
 
   /* setup default port */
   if (!fio_cli_get("-p")) {
@@ -169,7 +174,8 @@ static fio_router_s routes;
 static void route_add(char *path, void (*handler)(http_s *)) {
   /* add handler to the hash map */
   fio_str_s tmp = FIO_STR_INIT_STATIC(path);
-  fio_router_insert(&routes, fio_str_hash(&tmp), tmp, handler, NULL);
+  /* fio hash maps support up to 96 full collisions, we can use len as hash */
+  fio_router_insert(&routes, fio_str_len(&tmp), tmp, handler, NULL);
 }
 
 /* routes a request to the correct handler */
@@ -179,8 +185,7 @@ static void route_perform(http_s *h) {
   /* collect path from hash map */
   fio_str_info_s tmp_i = fiobj_obj2cstr(h->path);
   fio_str_s tmp = FIO_STR_INIT_EXISTING(tmp_i.data, tmp_i.len, 0);
-  fio_router_handler_fn handler =
-      fio_router_find(&routes, fio_str_hash(&tmp), tmp);
+  fio_router_handler_fn handler = fio_router_find(&routes, tmp_i.len, tmp);
   /* forward request or send error */
   if (handler) {
     handler(h);

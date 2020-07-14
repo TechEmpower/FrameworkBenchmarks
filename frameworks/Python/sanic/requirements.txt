@@ -1,1 +1,4 @@
-sanic==0.7.0
+asyncpg==0.20.1
+Jinja2==2.11.1
+uvloop==0.14.0
+sanic==19.12.2

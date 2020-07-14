@@ -5,9 +5,16 @@ import ApplicationLoader.Context
 
 import com.softwaremill.macwire._
 import play.modules.reactivemongo.ReactiveMongoApiFromContext
+import startup.Startup
 
 class AppLoader extends ApplicationLoader {
-  def load(context: Context) = new AppComponents(context).application
+  def load(context: Context) = {
+    LoggerConfigurator(context.environment.classLoader).foreach {
+      _.configure(context.environment, context.initialConfiguration, Map.empty)
+    }
+    new Startup(context.initialConfiguration.underlying)
+    new AppComponents(context).application
+  }
 }
 
 class AppComponents(context: Context)

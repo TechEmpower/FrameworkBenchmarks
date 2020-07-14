@@ -31,7 +31,7 @@ object Main extends App with Endpoint.Module[IO] {
   Await.ready(
     Http.server
       .withCompressionLevel(0)
-      .withStack(nilStack)
+      .withStack(nilStack[Request, Response])
       .serve(":9000", service)
   )
 }

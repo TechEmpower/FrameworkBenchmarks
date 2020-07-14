@@ -23,8 +23,6 @@ import javax.sql.DataSource;
 public class DbSQLServlet extends HttpServlet {
 	// Database details.
 	private static final String DB_QUERY = "SELECT * FROM World WHERE id = ?";
-	private static final int DB_ROWS = 10000;
-
 	// Database connection pool.
 	@Resource(name = "jdbc/hello_world")
 	private DataSource dataSource;
@@ -32,15 +30,14 @@ public class DbSQLServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,
 			IOException {
-		// Reference the data source.
-		final Random random = ThreadLocalRandom.current();
 		World world = null;
 
 		// Fetch some rows from the database.
 		try (Connection conn = dataSource.getConnection()) {
+			Common.modifySQLConnectionSettings(conn);
 			try (PreparedStatement statement = conn.prepareStatement(DB_QUERY,
 					ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
-				statement.setInt(1, random.nextInt(DB_ROWS) + 1);
+				statement.setInt(1, Common.getRandom());
 				try (ResultSet results = statement.executeQuery()) {
 					results.next(); // Here the expectation is ONLY only one
 									// result row
