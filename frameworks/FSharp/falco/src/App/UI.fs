@@ -1,11 +1,11 @@
 ﻿module App.UI
 
-open Falco.ViewEngine
+open Falco.Markup
     
 let layout pageTitle content = 
-    html [] [
-        head [] [                
-                title [] [ raw pageTitle ]                                                                
+    Elem.html [] [
+        Elem.head [] [                
+                Elem.title [] [ Text.raw pageTitle ]                                                                
             ]
-        body [] content
+        Elem.body [] content
     ] 
