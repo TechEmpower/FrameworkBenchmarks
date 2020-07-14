@@ -17,6 +17,31 @@ type FortuneModel =
            message = rd.GetString("message")
        }
 
+module Service = 
+    open System.Threading.Tasks     
+        
+    module ListQuery =              
+        type LoadFortunes = unit -> Task<FortuneModel list>
+
+        let extraFortune = 
+            {
+                id = 0
+                message = "Additional fortune added at request time."
+            }
+
+        let handle
+            (loadFortunes : LoadFortunes) =
+            fun () -> 
+                task {
+                    let! fortunes = loadFortunes ()
+                    
+                    return 
+                        extraFortune 
+                        :: fortunes
+                        |> List.sortBy (fun f -> f.message)
+                }
+
+
 module Db =    
     open System.Threading.Tasks    
     
@@ -44,30 +69,6 @@ module View =
                                 ]
                     ]
             ]
-
-module Service = 
-    open System.Threading.Tasks     
-        
-    module ListQuery =              
-        type LoadFortunes = unit -> Task<FortuneModel list>
-
-        let extraFortune = 
-            {
-                id = 0
-                message = "Additional fortune added at request time."
-            }
-
-        let handle
-            (loadFortunes : LoadFortunes) =
-            fun () -> 
-                task {
-                    let! fortunes = loadFortunes ()
-                    
-                    return 
-                        extraFortune 
-                        :: fortunes
-                        |> List.sortBy (fun f -> f.message)
-                }
 
 let handleIndex : HttpHandler =        
     fun ctx ->
