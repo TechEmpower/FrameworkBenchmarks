@@ -7,8 +7,9 @@ type JsonOutputModel = { message : string }
 let defaultMsg = "Hello, World!"
 
 let handleJson : HttpHandler =
-    { message = defaultMsg }
-    |> Response.ofJson
+    fun ctx ->
+        let output = { message = defaultMsg }        
+        Response.ofJson output ctx
         
 let handlePlainText : HttpHandler =        
     Response.ofPlainText defaultMsg
