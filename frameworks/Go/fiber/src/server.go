@@ -174,7 +174,7 @@ func populateCache() {
 func jsonHandler(c *fiber.Ctx) {
 	m := AcquireJSON()
 	m.Message = helloworld
-	c.JSON(&m)
+	c.JSON(m)
 	ReleaseJSON(m)
 }
 
