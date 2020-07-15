@@ -18,6 +18,7 @@ CMD java -DCheckTimeout=false \
     -DByteBufferAnalysis=-1\
     -server -Xms2g -Xmx2g \
     -XX:+AlwaysPreTouch \
+    -XX:+DoEscapeAnalysis \
     -XX:-RestrictContended \
     -XX:+UseParallelGC -XX:+UseNUMA \
     -XX:+AggressiveOpts -XX:+UseBiasedLocking \
