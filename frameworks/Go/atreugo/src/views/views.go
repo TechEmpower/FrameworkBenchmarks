@@ -1,6 +1,7 @@
 package views
 
 import (
+	"context"
 	"sort"
 
 	"atreugo/src/templates"
@@ -9,11 +10,36 @@ import (
 	"github.com/savsgio/atreugo/v11"
 )
 
+var worldsCache *Worlds
+
 const (
 	helloWorldStr = "Hello, World!"
 
 	contentTypeHTML = "text/html; charset=utf-8"
 )
+
+// PopulateWorldsCache populates the worlds cache for the cache test
+func PopulateWorldsCache() {
+	worlds := &Worlds{W: make([]World, worldsCount)}
+
+	rows, err := db.Query(context.Background(), worldSelectCacheSQL, worldsCount)
+	if err != nil {
+		panic(err)
+	}
+
+	i := 0
+	for rows.Next() {
+		w := &worlds.W[i]
+
+		if err := rows.Scan(&w.ID, &w.RandomNumber); err != nil {
+			panic(err)
+		}
+
+		i++
+	}
+
+	worldsCache = worlds
+}
 
 // JSON . Test 1: JSON serialization.
 func JSON(ctx *atreugo.RequestCtx) error {
@@ -29,9 +55,8 @@ func JSON(ctx *atreugo.RequestCtx) error {
 // DB . Test 2: Single database query.
 func DB(ctx *atreugo.RequestCtx) error {
 	w := acquireWorld()
-	id := randomWorldNum()
 
-	db.QueryRow(ctx, worldSelectSQL, id).Scan(&w.ID, &w.RandomNumber) // nolint:errcheck
+	db.QueryRow(context.Background(), worldSelectSQL, randomWorldNum()).Scan(&w.ID, &w.RandomNumber) // nolint:errcheck
 	err := ctx.JSONResponse(w)
 
 	releaseWorld(w)
@@ -45,11 +70,9 @@ func Queries(ctx *atreugo.RequestCtx) error {
 	worlds := acquireWorlds()
 	worlds.W = worlds.W[:queries]
 
-	for i := range worlds.W {
+	for i := 0; i < queries; i++ {
 		w := &worlds.W[i]
-		id := randomWorldNum()
-
-		db.QueryRow(ctx, worldSelectSQL, id).Scan(&w.ID, &w.RandomNumber) // nolint:errcheck
+		db.QueryRow(context.Background(), worldSelectSQL, randomWorldNum()).Scan(&w.ID, &w.RandomNumber) // nolint:errcheck
 	}
 
 	err := ctx.JSONResponse(worlds.W)
@@ -59,12 +82,28 @@ func Queries(ctx *atreugo.RequestCtx) error {
 	return err
 }
 
-// FortuneQuick . Test 4: Fortunes.
-func FortuneQuick(ctx *atreugo.RequestCtx) error {
+// CachedWorlds . Test 4: Multiple cache queries:
+func CachedWorlds(ctx *atreugo.RequestCtx) error {
+	queries := queriesParam(ctx)
+	worlds := acquireWorlds()
+	worlds.W = worlds.W[:queries]
+
+	for i := 0; i < queries; i++ {
+		worlds.W[i] = worldsCache.W[randomWorldNum()-1]
+	}
+
+	err := ctx.JSONResponse(worlds.W)
+	releaseWorlds(worlds)
+
+	return err
+}
+
+// FortunesQuick . Test 5: Fortunes.
+func FortunesQuick(ctx *atreugo.RequestCtx) error {
 	fortune := templates.AcquireFortune()
 	fortunes := templates.AcquireFortunes()
 
-	rows, _ := db.Query(ctx, fortuneSelectSQL)
+	rows, _ := db.Query(context.Background(), fortuneSelectSQL)
 	for rows.Next() {
 		rows.Scan(&fortune.ID, &fortune.Message) // nolint:errcheck
 		fortunes.F = append(fortunes.F, *fortune)
@@ -87,17 +126,15 @@ func FortuneQuick(ctx *atreugo.RequestCtx) error {
 	return nil
 }
 
-// Update . Test 5: Database updates.
-func Update(ctx *atreugo.RequestCtx) error {
+// Updates . Test 6: Database updates.
+func Updates(ctx *atreugo.RequestCtx) error {
 	queries := queriesParam(ctx)
 	worlds := acquireWorlds()
 	worlds.W = worlds.W[:queries]
 
-	for i := range worlds.W {
+	for i := 0; i < queries; i++ {
 		w := &worlds.W[i]
-		id := randomWorldNum()
-
-		db.QueryRow(ctx, worldSelectSQL, id).Scan(&w.ID, &w.RandomNumber) // nolint:errcheck
+		db.QueryRow(context.Background(), worldSelectSQL, randomWorldNum()).Scan(&w.ID, &w.RandomNumber) // nolint:errcheck
 		w.RandomNumber = int32(randomWorldNum())
 	}
 
@@ -108,12 +145,12 @@ func Update(ctx *atreugo.RequestCtx) error {
 
 	batch := &pgx.Batch{}
 
-	for i := range worlds.W {
+	for i := 0; i < queries; i++ {
 		w := &worlds.W[i]
 		batch.Queue(worldUpdateSQL, w.RandomNumber, w.ID)
 	}
 
-	db.SendBatch(ctx, batch).Close()
+	db.SendBatch(context.Background(), batch).Close()
 	err := ctx.JSONResponse(worlds.W)
 
 	releaseWorlds(worlds)
@@ -121,7 +158,7 @@ func Update(ctx *atreugo.RequestCtx) error {
 	return err
 }
 
-// Plaintext . Test 6: Plaintext.
+// Plaintext . Test 7: Plaintext.
 func Plaintext(ctx *atreugo.RequestCtx) error {
 	return ctx.TextResponse(helloWorldStr)
 }

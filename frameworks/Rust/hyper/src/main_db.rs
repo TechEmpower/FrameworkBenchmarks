@@ -56,7 +56,7 @@ fn main() {
                     headers.insert(SERVER, server_header.clone());
 
                     match req.uri.path() {
-                        "/fortune" => {
+                        "/fortunes" => {
                             future::Either::A(db_conn.tell_fortune().map(move |fortunes| {
                                 let mut buf = String::with_capacity(2048);
                                 let _ = write!(&mut buf, "{}", FortunesTemplate { fortunes });

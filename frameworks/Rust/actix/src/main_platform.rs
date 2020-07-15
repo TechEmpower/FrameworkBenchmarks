@@ -63,7 +63,7 @@ impl Service for App {
                     Ok(res)
                 })
             }
-            "/fortune" => {
+            "/fortunes" => {
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_cthtml.clone();
                 let fut = self.db.tell_fortune();

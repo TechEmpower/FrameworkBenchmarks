@@ -5,11 +5,11 @@ RUN apt-get install -yqq libboost-dev libmariadb-dev wget  libboost-context-dev 
 
 COPY ./ ./
 
-ENV COMMIT=062c167b61ba14292d54bade9534adca33a8d19e
+ENV COMMIT=c9de812a119f1c585a613953d956ab61b9ffa197
 
 RUN wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_mysql.hh
 RUN wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_http_backend.hh
 
-RUN g++ -DNDEBUG -DTFB_MYSQL -O3 -march=native -std=c++17 ./lithium.cc -I /usr/include/mariadb -lpthread -lmariadbclient -lboost_context -o /lithium_tbf
+RUN g++ -DNDEBUG -DTFB_MYSQL -O3 -march=native -std=c++17 ./lithium.cc -I /usr/include/mariadb -lpthread -lmariadbclient -lboost_context -lssl -lcrypto -o /lithium_tbf
 
 CMD /lithium_tbf tfb-database 8080

@@ -2,8 +2,8 @@
   "framework": "aspcore-corert",
   "tests": [{
     "default": {
-      "plaintext_url": "/p",
-      "json_url": "/j",
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
       "port": 8080,
       "approach": "Stripped",
       "classification": "Platform",
@@ -21,8 +21,8 @@
       "versus": "aspcore"
     },
     "rhtx": {
-      "plaintext_url": "/p",
-      "json_url": "/j",
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
       "port": 8080,
       "approach": "Stripped",
       "classification": "Platform",

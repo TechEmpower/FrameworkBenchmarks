@@ -7,6 +7,6 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.2 AS runtime
 ENV ASPNETCORE_URLS http://+:8080
 WORKDIR /app
 COPY --from=build /app/out ./
-COPY Benchmarks/appsettings.postgresql.updates.json ./appsettings.json
+COPY PlatformBenchmarks/appsettings.postgresql.updates.json ./appsettings.json
 
 ENTRYPOINT ["dotnet", "PlatformBenchmarks.dll"]

@@ -44,67 +44,117 @@ namespace PlatformBenchmarks
 
         public static RawDb Db { get; set; }
 
+        [ThreadStatic]
+        private static Utf8JsonWriter t_writer;
+
         public static class Paths
         {
+            public readonly static AsciiString Json = "/json";
+            public readonly static AsciiString Plaintext = "/plaintext";
             public readonly static AsciiString SingleQuery = "/db";
-            public readonly static AsciiString Json = "/j";
             public readonly static AsciiString Fortunes = "/fortunes";
-            public readonly static AsciiString Plaintext = "/p";
-            public readonly static AsciiString Updates = "/updates/queries=";
-            public readonly static AsciiString MultipleQueries = "/queries/queries=";
+            public readonly static AsciiString Updates = "/updates/";
+            public readonly static AsciiString MultipleQueries = "/queries/";
+            public readonly static AsciiString Caching = "/cached-worlds/";
         }
 
         private RequestType _requestType;
 #if DATABASE
         private int _queries;
 #endif
-        public void OnStartLine(HttpMethod method, HttpVersion version, Span<byte> target, Span<byte> path, Span<byte> query, Span<byte> customMethod, bool pathEncoded)
+
+#if NETCOREAPP5_0 || NET5_0
+        public void OnStartLine(HttpVersionAndMethod versionAndMethod, TargetOffsetPathLength targetPath, Span<byte> startLine)
         {
-#if !DATABASE
-            if (method == HttpMethod.Get)
-            {
-                if (path.Length >= 2 && path[0] == '/')
-                {
-                    if (path[1] == 'p')
-                    {
-                        _requestType = RequestType.PlainText;
-                        return;
-                    }
-                    if (path[1] == 'j')
-                    {
-                        _requestType = RequestType.Json;
-                        return;
-                    }
-                }
-            }
-            _requestType = RequestType.NotRecognized;
-#else
             var requestType = RequestType.NotRecognized;
-            if (method == HttpMethod.Get)
+            if (versionAndMethod.Method == HttpMethod.Get)
             {
-                var pathLength = path.Length;
-                if (Paths.SingleQuery.Length <= pathLength && path.StartsWith(Paths.SingleQuery))
+#if !DATABASE
+                var pathLength = targetPath.Offset;
+                if (pathLength == 10 && startLine.SequenceEqual(Paths.Plaintext))
+                {
+                    requestType = RequestType.PlainText;
+                }
+                else if (pathLength == 5 && startLine.SequenceEqual(Paths.Json))
+                {
+                    requestType = RequestType.Json;
+                }
+#else
+                var pathLength = targetPath.Offset;
+                if (Paths.SingleQuery.Length == pathLength && startLine.SequenceEqual(Paths.SingleQuery))
                 {
                     requestType = RequestType.SingleQuery;
                 }
-                else if (Paths.Fortunes.Length <= pathLength && path.StartsWith(Paths.Fortunes))
+                else if (Paths.Fortunes.Length == pathLength && startLine.SequenceEqual(Paths.Fortunes))
                 {
                     requestType = RequestType.Fortunes;
                 }
-                else if (Paths.Updates.Length <= pathLength && path.StartsWith(Paths.Updates))
+                else if (Paths.Caching.Length <= pathLength && startLine.StartsWith(Paths.Caching))
                 {
-                    _queries = ParseQueries(path, Paths.Updates.Length);
+                    _queries = ParseQueries(startLine, Paths.Caching.Length);
+                    requestType = RequestType.Caching;
+                }
+                else if (Paths.Updates.Length <= pathLength && startLine.StartsWith(Paths.Updates))
+                {
+                    _queries = ParseQueries(startLine, Paths.Updates.Length);
                     requestType = RequestType.Updates;
+                }
+                else if (Paths.MultipleQueries.Length <= pathLength && startLine.StartsWith(Paths.MultipleQueries))
+                {
+                    _queries = ParseQueries(startLine, Paths.MultipleQueries.Length);
+                    requestType = RequestType.MultipleQueries;
+                }
+#endif
+            }
+
+            _requestType = requestType;
+        }
+#else
+        public void OnStartLine(HttpMethod method, HttpVersion version, Span<byte> target, Span<byte> path, Span<byte> query, Span<byte> customMethod, bool pathEncoded)
+        {
+            var requestType = RequestType.NotRecognized;
+            if (method == HttpMethod.Get)
+            {
+#if !DATABASE
+                if (path.Length == 10 && path.SequenceEqual(Paths.Plaintext))
+                {
+                    requestType = RequestType.PlainText;
+                }
+                else if (path.Length == 5 && path.SequenceEqual(Paths.Json))
+                {
+                    requestType = RequestType.Json;
+                }
+#else
+                var pathLength = path.Length; 
+                if (Paths.Fortunes.Length == pathLength && path.SequenceEqual(Paths.Fortunes))
+                {
+                    requestType = RequestType.Fortunes;
+                }
+                else if (Paths.SingleQuery.Length == pathLength && path.SequenceEqual(Paths.SingleQuery))
+                {
+                    requestType = RequestType.SingleQuery;
+                }
+                else if (Paths.Caching.Length <= pathLength && path.StartsWith(Paths.Caching))
+                {
+                    _queries = ParseQueries(path, Paths.Caching.Length);
+                    requestType = RequestType.Caching;
                 }
                 else if (Paths.MultipleQueries.Length <= pathLength && path.StartsWith(Paths.MultipleQueries))
                 {
                     _queries = ParseQueries(path, Paths.MultipleQueries.Length);
                     requestType = RequestType.MultipleQueries;
                 }
-            }
-            _requestType = requestType;
+                else if (Paths.Updates.Length <= pathLength && path.StartsWith(Paths.Updates))
+                {
+                    _queries = ParseQueries(path, Paths.Updates.Length);
+                    requestType = RequestType.Updates;
+                }
 #endif
+            }
+
+            _requestType = requestType;
         }
+#endif
 
 
 #if !DATABASE
@@ -116,7 +166,7 @@ namespace PlatformBenchmarks
             }
             else if (_requestType == RequestType.Json)
             {
-                Json(ref writer);
+                Json(ref writer, Writer);
             }
             else
             {
@@ -138,40 +188,22 @@ namespace PlatformBenchmarks
             return queries;
         }
 
-        private Task ProcessRequestAsync()
+        private Task ProcessRequestAsync() => _requestType switch
         {
-            Task task;
-            var requestType = _requestType;
-            if (requestType == RequestType.Fortunes)
-            {
-                task = Fortunes(Writer);
-            }
-            else if (requestType == RequestType.SingleQuery)
-            {
-                task = SingleQuery(Writer);
-            }
-            else if (requestType == RequestType.Updates)
-            {
-                task = Updates(Writer, _queries);
-            }
-            else if (requestType == RequestType.MultipleQueries)
-            {
-                task = MultipleQueries(Writer, _queries);
-            }
-            else
-            {
-                Default(Writer);
-                task = Task.CompletedTask;
-            }
+            RequestType.Fortunes => Fortunes(Writer),
+            RequestType.SingleQuery => SingleQuery(Writer),
+            RequestType.Caching => Caching(Writer, _queries),
+            RequestType.Updates => Updates(Writer, _queries),
+            RequestType.MultipleQueries => MultipleQueries(Writer, _queries),
+            _ => Default(Writer)
+        };
 
-            return task;
-        }
-
-        private static void Default(PipeWriter pipeWriter)
+        private static Task Default(PipeWriter pipeWriter)
         {
-            var writer = GetWriter(pipeWriter);
+            var writer = GetWriter(pipeWriter, sizeHint: _defaultPreamble.Length + DateHeader.HeaderBytes.Length);
             Default(ref writer);
             writer.Commit();
+            return Task.CompletedTask;
         }
 #endif
         private readonly static AsciiString _defaultPreamble =
@@ -195,6 +227,7 @@ namespace PlatformBenchmarks
             Json,
             Fortunes,
             SingleQuery,
+            Caching,
             Updates,
             MultipleQueries
         }

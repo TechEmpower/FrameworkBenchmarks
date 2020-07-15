@@ -34,7 +34,7 @@ function router(Request $request)
         case '/db':
             return db();
 
-        case '/fortune':
+        case '/fortunes':
             // By default use 'Content-Type: text/html; charset=utf-8';
             return fortune();
 
