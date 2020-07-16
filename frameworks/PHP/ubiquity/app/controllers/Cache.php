@@ -5,13 +5,12 @@ namespace controllers;
 /**
  * Bench controller.
  */
-class Cached extends \Ubiquity\controllers\Controller {
+class Cache extends \Ubiquity\controllers\Controller {
 
 	protected $cache;
 
 	public function __construct() {
-		global $cache;
-		$this->cache=$cache;
+		$this->cache=\Ubiquity\orm\DAO::getCache();
 	}
 
 	public function initialize() {
@@ -20,7 +19,7 @@ class Cached extends \Ubiquity\controllers\Controller {
 
 	public function index(){}
 
-	public function query($queries = 1) {
+	public function cachedquery($queries = 1) {
 		$worlds = [];
 		$queries = \min(\max($queries, 1), 500);
 		for ($i = 0; $i < $queries; ++ $i) {
