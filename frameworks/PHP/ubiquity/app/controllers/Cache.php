@@ -23,7 +23,7 @@ class Cache extends \Ubiquity\controllers\Controller {
 		$worlds = [];
 		$queries = \min(\max($queries, 1), 500);
 		for ($i = 0; $i < $queries; ++ $i) {
-			$worlds[] = ($this->cache->fetch('models\\CachedWorld', [\mt_rand(1, 10000)]))->_rest;
+			$worlds[] = ($this->cache->fetch('models\\CachedWorld', \mt_rand(1, 10000)))->_rest;
 		}
 		echo \json_encode($worlds);
 	}
