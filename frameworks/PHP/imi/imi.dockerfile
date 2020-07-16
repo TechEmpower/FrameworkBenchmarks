@@ -17,9 +17,9 @@ RUN echo "zend_extension=opcache.so" >> /usr/local/etc/php/php.ini
 
 COPY . /imi
 COPY php.ini /usr/local/etc/php/
-COPY .env-with-redis .env
 
 WORKDIR /imi
+COPY .env-with-redis .env
 
 RUN chmod -R ug+rwx /imi/.runtime
 
