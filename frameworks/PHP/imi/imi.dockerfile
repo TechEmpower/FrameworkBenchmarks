@@ -17,6 +17,7 @@ RUN echo "zend_extension=opcache.so" >> /usr/local/etc/php/php.ini
 
 COPY . /imi
 COPY php.ini /usr/local/etc/php/
+COPY .env-with-redis .env
 
 WORKDIR /imi
 
@@ -26,4 +27,4 @@ RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/loca
 RUN composer install --no-dev --classmap-authoritative --quiet > /dev/null
 RUN composer dumpautoload -o
 
-CMD ./run.sh
+CMD ./run-with-redis.sh

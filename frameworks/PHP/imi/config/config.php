@@ -73,7 +73,7 @@ return [
                     // 池子中最多资源数
                     'maxResources' => 512,
                     // 池子中最少资源数
-                    'minResources' => 16,
+                    'minResources' => 0,
                     'gcInterval'   => null,
                     'checkStateWhenGetResource' =>  false,
                 ],
