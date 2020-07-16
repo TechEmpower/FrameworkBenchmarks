@@ -15,7 +15,7 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-ENV MYSQL_VERSION 8.0.20-1ubuntu18.04
+ENV MYSQL_VERSION 8.0.21-1ubuntu18.04
 
 # https://bugs.mysql.com/bug.php?id=90695
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-server mysql-server/lowercase-table-names select Enabled\""]
