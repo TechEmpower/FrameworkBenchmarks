@@ -16,7 +16,8 @@ echo "End Loading worlds\n";
 	'controllers\\Plaintext_',
 	'controllers\\Json_',
 	'controllers\\DbPg',
-	'controllers\\Fortunes_'
+	'controllers\\Fortunes_',
+	'controllers\\Cache'
 ]);
 $workerServer->onWorkerStart = function () use ($config) {
 	\Ubiquity\orm\DAO::startDatabase($config, 'pgsql');
