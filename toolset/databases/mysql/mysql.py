@@ -51,7 +51,7 @@ class Database(AbstractDatabase):
     def get_queries(cls, config):
         db = cls.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("Show global status where Variable_name in ('Com_select','Com_update')")
+        cursor.execute("SELECT variable_name, variable_value from PERFORMANCE_SCHEMA.SESSION_STATUS where Variable_name = 'Innodb_rows_read'")
         res = 0
         records = cursor.fetchall()
         for row in records:
