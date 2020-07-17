@@ -2,7 +2,7 @@ FROM php:7.4
 
 RUN apt-get update > /dev/null
 
-RUN pecl install swoole-4.4.14 > /dev/null && \
+RUN pecl install swoole > /dev/null && \
     docker-php-ext-enable swoole
 
 RUN docker-php-ext-install pdo_mysql > /dev/null
