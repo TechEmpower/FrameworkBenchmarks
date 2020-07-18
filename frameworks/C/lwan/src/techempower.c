@@ -52,7 +52,9 @@ static struct db_connection_params {
 
 static const char hello_world[] = "Hello, World!";
 static const char random_number_query[] =
-    "SELECT randomNumber FROM world WHERE id=?";
+    "SELECT randomNumber, id FROM world WHERE id=?";
+static const char cached_random_number_query[] =
+    "SELECT randomNumber, id FROM world WHERE id=?";
 
 struct Fortune {
     struct {
@@ -197,10 +199,11 @@ static bool db_query_key(struct db_stmt *stmt, struct db_json *out, int key)
         return false;
 
     long random_number;
-    if (UNLIKELY(!db_stmt_step(stmt, "i", &random_number)))
+    long id;
+    if (UNLIKELY(!db_stmt_step(stmt, "ii", &random_number, &id)))
         return false;
 
-    out->id = row.u.i;
+    out->id = (int)id;
     out->randomNumber = (int)random_number;
 
     return true;
@@ -282,8 +285,8 @@ static struct cache_entry *cached_queries_new(const char *key, void *context)
     if (UNLIKELY(!entry))
         return NULL;
 
-    stmt = db_prepare_stmt(get_db(), random_number_query,
-                           sizeof(random_number_query) - 1);
+    stmt = db_prepare_stmt(get_db(), cached_random_number_query,
+                           sizeof(cached_random_number_query) - 1);
     if (UNLIKELY(!stmt)) {
         free(entry);
         return NULL;
@@ -305,7 +308,7 @@ static void cached_queries_free(struct cache_entry *entry, void *context)
 }
 
 static struct cache_entry *my_cache_coro_get_and_ref_entry(struct cache *cache,
-                                                           struct coro *coro,
+                                                           struct lwan_request *request,
                                                            const char *key)
 {
     /* Using this function instead of cache_coro_get_and_ref_entry() will avoid
@@ -317,7 +320,7 @@ static struct cache_entry *my_cache_coro_get_and_ref_entry(struct cache *cache,
      * indirect calls that are performed every time a request is serviced.
      */
 
-    for (int tries = 16; tries; tries--) {
+    for (int tries = 64; tries; tries--) {
         int error;
         struct cache_entry *ce = cache_get_and_ref_entry(cache, key, &error);
 
@@ -327,7 +330,10 @@ static struct cache_entry *my_cache_coro_get_and_ref_entry(struct cache *cache,
         if (error != EWOULDBLOCK)
             break;
 
-        coro_yield(coro, CONN_CORO_YIELD);
+        coro_yield(request->conn->coro, CONN_CORO_WANT_WRITE);
+
+        if (tries > 16)
+            lwan_request_sleep(request, (unsigned int)(tries / 8));
     }
 
     return NULL;
@@ -349,7 +355,7 @@ LWAN_HANDLER(cached_queries)
         size_t discard;
 
         jc = (struct db_json_cached *)my_cache_coro_get_and_ref_entry(
-            cached_queries_cache, request->conn->coro,
+            cached_queries_cache, request,
             int_to_string(rand() % 10000, key_buf, &discard));
         if (UNLIKELY(!jc))
             return HTTP_INTERNAL_ERROR;

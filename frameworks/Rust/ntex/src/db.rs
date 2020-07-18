@@ -8,7 +8,7 @@ use futures::stream::futures_unordered::FuturesUnordered;
 use futures::{Future, FutureExt, StreamExt, TryStreamExt};
 use ntex::web::Error;
 use random_fast_rng::{FastRng, Random};
-use smallvec::{smallvec, SmallVec};
+use smallvec::SmallVec;
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, NoTls, Statement};
 use yarte::{Serialize, TemplateBytes};

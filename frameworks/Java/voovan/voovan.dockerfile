@@ -9,8 +9,16 @@ FROM openjdk:11.0.3-jdk-slim
 WORKDIR /voovan
 COPY --from=maven /voovan/target/voovan-bench-0.1-jar-with-dependencies.jar app.jar
 COPY --from=maven /voovan/config/framework.properties config/framework.properties
-CMD java -DCheckReadTimeout=false -DThreadBufferPoolSize=1024 -DAsyncSend=false -DByteBufferAnalysis=-1\
+
+CMD java -DCheckTimeout=false \
+    -DThreadBufferPoolSize=1024 \
+    -DByteBufferSize=4096 \
+    -DAsyncSend=false \
+    -DAsyncRecive=false \
+    -DByteBufferAnalysis=-1\
     -server -Xms2g -Xmx2g \
+    -XX:+DoEscapeAnalysis \
+    -XX:+AlwaysPreTouch \
     -XX:-RestrictContended \
     -XX:+UseParallelGC -XX:+UseNUMA \
     -XX:+AggressiveOpts -XX:+UseBiasedLocking \

@@ -2,11 +2,11 @@
   "framework": "rails",
   "tests": [{
     "default": {
-      "json_url": "/hello_world/json",
-      "db_url": "/hello_world/db",
-      "query_url": "/hello_world/query?queries=",
-      "fortune_url": "/fortune",
-      "update_url": "/update?queries=",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
@@ -24,10 +24,10 @@
       "versus": "rack-puma-mri"
     },
     "postgresql": {
-      "db_url": "/hello_world/db",
-      "query_url": "/hello_world/query?queries=",
-      "fortune_url": "/fortune",
-      "update_url": "/update?queries=",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -44,11 +44,11 @@
       "versus": ""
     },
     "unicorn": {
-      "json_url": "/hello_world/json",
-      "db_url": "/hello_world/db",
-      "query_url": "/hello_world/query?queries=",
-      "fortune_url": "/fortune",
-      "update_url": "/update?queries=",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
