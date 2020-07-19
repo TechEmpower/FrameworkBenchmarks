@@ -30,9 +30,11 @@ class Benchmark < Application
 
   # Postgres Test 3: Multiple database query
   get "/queries", :queries do
-    results = World.where(:id, :in, (1..get_query_count).map {
-      Random.rand(ID_MAXIMUM).succ
-    }).map { |world| {id: world.id, randomNumber: world.randomnumber} }
+    results = (1..get_query_count).map do
+      if world = World.find(Random.rand(ID_MAXIMUM).succ)
+        {id: world.id, randomNumber: world.randomnumber}
+      end
+    end
     render json: results
   end
 
