@@ -1,5 +1,6 @@
 # Application dependencies
 require "action-controller"
+require "action-controller/logger"
 
 require "granite/adapter/pg"
 Granite::Connections << Granite::Adapter::Pg.new(name: "pg", url: ENV["DATABASE_URL"])
@@ -11,6 +12,9 @@ require "./models/*"
 
 # Server required after application controllers
 require "action-controller/server"
+
+# Configure logging
+Log.builder.bind "*", :warning, ActionController.default_backend
 
 # Configure session cookies
 # NOTE:: Change these from defaults
