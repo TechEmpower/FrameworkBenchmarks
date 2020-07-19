@@ -170,7 +170,7 @@ int main(int argc, char* argv[]) {
     std::vector<fortune> table;
 
     auto c = fortunes.connect(request.fiber);
-    c.forall([&] (auto f) { table.emplace_back(f); });
+    c.forall([&] (const auto& f) { table.emplace_back(metamap_clone(f)); });
     table.emplace_back(0, "Additional fortune added at request time.");
 
     std::sort(table.begin(), table.end(),
