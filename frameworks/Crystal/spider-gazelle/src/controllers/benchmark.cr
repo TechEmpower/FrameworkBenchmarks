@@ -21,19 +21,15 @@ class Benchmark < Application
 
   # Postgres Test 2: Single database query
   get "/db" do
-    if world = World.find(Random.rand(ID_MAXIMUM).succ)
-      render json: {id: world.id, randomNumber: world.randomnumber}
-    end
-
-    render(json: {} of String => String)
+    world = World.find!(Random.rand(ID_MAXIMUM).succ)
+    render json: {id: world.id, randomNumber: world.randomnumber}
   end
 
   # Postgres Test 3: Multiple database query
   get "/queries", :queries do
     results = (1..get_query_count).map do
-      if world = World.find(Random.rand(ID_MAXIMUM).succ)
-        {id: world.id, randomNumber: world.randomnumber}
-      end
+      world = World.find!(Random.rand(ID_MAXIMUM).succ)
+      {id: world.id, randomNumber: world.randomnumber}
     end
     render json: results
   end
@@ -41,11 +37,10 @@ class Benchmark < Application
   # Postgres Test 5: Database Updates
   get "/updates", :updates do
     results = (1..get_query_count).map do
-      if world = World.find(Random.rand(ID_MAXIMUM).succ)
-        world.randomnumber = Random.rand(ID_MAXIMUM).succ
-        world.save
-        {id: world.id, randomNumber: world.randomnumber}
-      end
+      world = World.find!(Random.rand(ID_MAXIMUM).succ)
+      world.randomnumber = Random.rand(ID_MAXIMUM).succ
+      world.save
+      {id: world.id, randomNumber: world.randomnumber}
     end
 
     render json: results
