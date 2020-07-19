@@ -2,8 +2,7 @@
 require "action-controller"
 
 require "granite/adapter/pg"
-Granite.settings.logger = Logger.new(nil)
-Granite::Adapters << Granite::Adapter::Pg.new({name: "pg", url: ENV["DATABASE_URL"]})
+Granite::Connections << Granite::Adapter::Pg.new(name: "pg", url: ENV["DATABASE_URL"])
 
 # Application code
 require "./controllers/application"
@@ -21,4 +20,4 @@ ActionController::Session.configure do |settings|
 end
 
 APP_NAME = "TechEmpower on SG"
-VERSION  = "1.0.0"
+VERSION  = "1.1.0"
