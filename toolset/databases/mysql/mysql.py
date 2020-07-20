@@ -51,11 +51,11 @@ class Database(AbstractDatabase):
     def get_queries(cls, config):
         db = cls.get_connection(config)
         cursor = db.cursor()
-        cursor.execute("SELECT variable_name, variable_value from PERFORMANCE_SCHEMA.SESSION_STATUS where Variable_name = 'Innodb_rows_read'")
+        cursor.execute("Show global status where Variable_name in ('Com_select','Com_update')")
         res = 0
         records = cursor.fetchall()
         for row in records:
-            res = res + int(row[1])
+            res = res + int(int(row[1]) * cls.margin)
         return res
 
     @classmethod
