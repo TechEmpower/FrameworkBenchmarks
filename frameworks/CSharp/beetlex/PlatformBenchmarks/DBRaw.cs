@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices.ComTypes;
 using BeetleX.EventArgs;
 using Microsoft.Extensions.Caching.Memory;
+using Npgsql;
 
 namespace PlatformBenchmarks
 {
@@ -40,11 +41,8 @@ namespace PlatformBenchmarks
         {
             SingleCommand = new Npgsql.NpgsqlCommand();
             SingleCommand.CommandText = "SELECT id, randomnumber FROM world WHERE id = @Id";
-            var id = SingleCommand.CreateParameter();
-            id.ParameterName = "@Id";
-            id.DbType = DbType.Int32;
-            id.Value = _random.Next(1, 10001);
-            SingleCommand.Parameters.Add(id);
+            mID = new Npgsql.NpgsqlParameter<int>("@Id", _random.Next(1, 10001));
+            SingleCommand.Parameters.Add(mID);
             FortuneCommand = new Npgsql.NpgsqlCommand();
             FortuneCommand.CommandText = "SELECT id, message FROM fortune";
         }
@@ -53,12 +51,15 @@ namespace PlatformBenchmarks
 
         private DbCommand FortuneCommand;
 
+        private Npgsql.NpgsqlParameter<int> mID;
+
+
         public async Task<World> LoadSingleQueryRow()
         {
             using (var db = await DBConnectionGroupPool.Pop())
             {
                 SingleCommand.Connection = db.Connection;
-                SingleCommand.Parameters[0].Value = _random.Next(1, 10001);
+                mID.TypedValue = _random.Next(1, 10001);
                 return await ReadSingleRow(db.Connection, SingleCommand);
 
             }
@@ -125,15 +126,14 @@ namespace PlatformBenchmarks
                     var key = cacheKeys[id];
 
                     rawdb.SingleCommand.Connection = db.Connection;
-                    rawdb.SingleCommand.Parameters[0].Value = id;
-
+                    rawdb.mID.TypedValue = id;
                     for (; i < result.Length; i++)
                     {
                         var data = await _cache.GetOrCreateAsync<CachedWorld>(key, create);
                         result[i] = data;
                         id = rawdb._random.Next(1, 10001);
                         rawdb.SingleCommand.Connection = db.Connection;
-                        rawdb.SingleCommand.Parameters[0].Value = id;
+                        rawdb.mID.TypedValue = id;
                         key = cacheKeys[id];
                     }
                 }
@@ -186,25 +186,28 @@ namespace PlatformBenchmarks
                 var updateCmd = UpdateCommandsCached.PopCommand(count);
                 try
                 {
-                    updateCmd.Connection = db.Connection;
+                    var command = updateCmd.Command;
+                    command.Connection = (NpgsqlConnection)db.Connection;
                     SingleCommand.Connection = db.Connection;
-                    SingleCommand.Parameters[0].Value = _random.Next(1, int.MaxValue) % 10000 + 1;
+                    mID.TypedValue = _random.Next(1, int.MaxValue) % 10000 + 1;
                     var results = new World[count];
                     for (int i = 0; i < count; i++)
                     {
                         results[i] = await ReadSingleRow(db.Connection, SingleCommand);
-                        SingleCommand.Parameters[0].Value = _random.Next(1, int.MaxValue) % 10000 + 1;
+                        mID.TypedValue = _random.Next(1, int.MaxValue) % 10000 + 1;
                     }
 
                     for (int i = 0; i < count; i++)
                     {
                         var randomNumber = _random.Next(1, int.MaxValue) % 10000 + 1;
-                        updateCmd.Parameters[i * 2].Value = results[i].Id;
-                        updateCmd.Parameters[i * 2 + 1].Value = randomNumber;
+                        updateCmd.Parameters[i * 2].TypedValue = results[i].Id;
+                        updateCmd.Parameters[i * 2 + 1].TypedValue = randomNumber;
+                        //updateCmd.Parameters[i * 2].Value = results[i].Id;
+                        //updateCmd.Parameters[i * 2 + 1].Value = randomNumber;
                         results[i].RandomNumber = randomNumber;
                     }
 
-                    await updateCmd.ExecuteNonQueryAsync();
+                    await command.ExecuteNonQueryAsync();
                     return results;
                 }
                 catch (Exception e_)
@@ -242,8 +245,8 @@ namespace PlatformBenchmarks
 
     internal class UpdateCommandsCached
     {
-        private static System.Collections.Concurrent.ConcurrentStack<DbCommand>[] mCacheTable
-            = new System.Collections.Concurrent.ConcurrentStack<DbCommand>[1024];
+        private static System.Collections.Concurrent.ConcurrentStack<CommandCacheItem>[] mCacheTable
+            = new System.Collections.Concurrent.ConcurrentStack<CommandCacheItem>[1024];
 
         public static string[] IDParamereNames = new string[1024];
 
@@ -255,38 +258,40 @@ namespace PlatformBenchmarks
             {
                 IDParamereNames[i] = $"@Id_{i}";
                 RandomParamereNames[i] = $"@Random_{i}";
-                mCacheTable[i] = new System.Collections.Concurrent.ConcurrentStack<DbCommand>();
+                mCacheTable[i] = new System.Collections.Concurrent.ConcurrentStack<CommandCacheItem>();
             }
         }
 
-        private static DbCommand CreatCommand(int count)
+        private static CommandCacheItem CreatCommand(int count)
         {
-            DbCommand cmd = new Npgsql.NpgsqlCommand();
+            CommandCacheItem item = new CommandCacheItem();
+            NpgsqlCommand cmd = new Npgsql.NpgsqlCommand();
             cmd.CommandText = BatchUpdateString.Query(count);
             for (int i = 0; i < count; i++)
             {
-                var id = cmd.CreateParameter();
+                var id = new NpgsqlParameter<int>();
                 id.ParameterName = IDParamereNames[i];
-                id.DbType = DbType.Int32;
                 cmd.Parameters.Add(id);
+                item.Parameters.Add(id);
 
-                var random = cmd.CreateParameter();
+                var random = new NpgsqlParameter<int>();
                 random.ParameterName = RandomParamereNames[i];
-                random.DbType = DbType.Int32;
                 cmd.Parameters.Add(random);
+                item.Parameters.Add(random);
             }
-            return cmd;
+            item.Command = cmd;
+            return item;
 
         }
 
-        public static void PushCommand(int count, DbCommand cmd)
+        public static void PushCommand(int count, CommandCacheItem cmd)
         {
             mCacheTable[count].Push(cmd);
         }
 
-        public static DbCommand PopCommand(int count)
+        public static CommandCacheItem PopCommand(int count)
         {
-            if (mCacheTable[count].TryPop(out DbCommand cmd))
+            if (mCacheTable[count].TryPop(out CommandCacheItem cmd))
                 return cmd;
             return CreatCommand(count);
         }
@@ -314,6 +319,13 @@ namespace PlatformBenchmarks
                 return;
             }
         }
+    }
+
+    class CommandCacheItem
+    {
+        public Npgsql.NpgsqlCommand Command { get; set; }
+
+        public List<Npgsql.NpgsqlParameter<int>> Parameters { get; private set; } = new List<Npgsql.NpgsqlParameter<int>>(1024);
     }
 
 
