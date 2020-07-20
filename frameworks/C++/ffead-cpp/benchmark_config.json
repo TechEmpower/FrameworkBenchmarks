@@ -23,7 +23,7 @@
 			"display_name": "ffead-cpp-mongo-redis",
 			"notes": "mongodb redis",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"lithium": {
 			"json_url": "/te-benchmark-um/json",
@@ -42,7 +42,7 @@
 			"display_name": "ffead-cpp-lithium",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"cinatra": {
 			"json_url": "/te-benchmark-um/json",
@@ -61,7 +61,7 @@
 			"display_name": "ffead-cpp-cinatra",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"drogon": {
 			"json_url": "/te-benchmark-um/json",
@@ -80,7 +80,7 @@
 			"display_name": "ffead-cpp-drogon",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"libreactor": {
 			"json_url": "/te-benchmark-um/json",
@@ -99,7 +99,7 @@
 			"display_name": "ffead-cpp-libreactor",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"crystal-h2o": {
 			"json_url": "/te-benchmark-um/json",
@@ -118,7 +118,7 @@
 			"display_name": "ffead-cpp-crystal-h2o",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"crystal-http": {
 			"json_url": "/te-benchmark-um/json",
@@ -137,7 +137,7 @@
 			"display_name": "ffead-cpp-crystal-http",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"rust-actix": {
 			"json_url": "/te-benchmark-um/json",
@@ -156,7 +156,7 @@
 			"display_name": "ffead-cpp-rust-actix",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"rust-hyper": {
 			"json_url": "/te-benchmark-um/json",
@@ -175,7 +175,7 @@
 			"display_name": "ffead-cpp-rust-hyper",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"rust-thruster": {
 			"json_url": "/te-benchmark-um/json",
@@ -194,7 +194,7 @@
 			"display_name": "ffead-cpp-rust-thruster",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"rust-rocket": {
 			"json_url": "/te-benchmark-um/json",
@@ -213,7 +213,7 @@
 			"display_name": "ffead-cpp-rust-rocket",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"go-gnet": {
 			"json_url": "/te-benchmark-um/json",
@@ -232,7 +232,7 @@
 			"display_name": "ffead-cpp-go-gnet",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"go-fasthttp": {
 			"json_url": "/te-benchmark-um/json",
@@ -251,7 +251,7 @@
 			"display_name": "ffead-cpp-go-fasthttp",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"v-vweb": {
 			"json_url": "/te-benchmark-um/json",
@@ -270,7 +270,7 @@
 			"display_name": "ffead-cpp-v-vweb",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"v-picov": {
 			"json_url": "/te-benchmark-um/json",
@@ -289,7 +289,7 @@
 			"display_name": "ffead-cpp-v-vweb",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"java-firenio": {
 			"json_url": "/te-benchmark-um/json",
@@ -308,7 +308,7 @@
 			"display_name": "ffead-cpp-java-firenio",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"java-rapidoid": {
 			"json_url": "/te-benchmark-um/json",
@@ -327,7 +327,7 @@
 			"display_name": "ffead-cpp-java-rapidoid",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"java-wizzardo-http": {
 			"json_url": "/te-benchmark-um/json",
@@ -346,7 +346,7 @@
 			"display_name": "ffead-cpp-java-wizzardo-http",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"mysql": {
 			"json_url": "/te-benchmark-um/json",
@@ -369,7 +369,7 @@
 			"display_name": "ffead-cpp-mysql",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"postgresql": {
 			"json_url": "/te-benchmark-um/json",
@@ -392,7 +392,7 @@
 			"display_name": "ffead-cpp-postgresql",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"nginx": {
 			"json_url": "/te-benchmark-um/json",
@@ -411,7 +411,7 @@
 			"display_name": "ffead-cpp-nginx",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"apache": {
 			"json_url": "/te-benchmark-um/json",
