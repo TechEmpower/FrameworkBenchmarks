@@ -11,6 +11,7 @@ import org.voovan.tools.TEnv;
 import org.voovan.tools.TObject;
 import org.voovan.tools.json.JSON;
 import org.voovan.tools.log.Logger;
+import org.voovan.tools.TString;
 import org.voovan.tools.reflect.TReflect;
 
 import java.io.IOException;
@@ -65,7 +66,7 @@ public class VoovanTFB {
                 webServer.get("/json", new HttpRouter() {
                         public void process(HttpRequest req, HttpResponse resp) throws Exception {
                                 resp.header().put(HttpStatic.CONTENT_TYPE_STRING, HttpStatic.APPLICATION_JSON_STRING);
-                                resp.write(JSON.toJSON(msg, false, false));
+                                resp.write(TString.toAsciiBytes(JSON.toJSON(msg, false, false)));
                         }
                 });
 
