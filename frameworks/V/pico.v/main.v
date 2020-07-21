@@ -21,10 +21,10 @@ fn hello_response() string {
 
 pub fn callback(req hp.Request, res mut hp.Response) {
 	if hp.cmpn(req.method, 'GET ', 4) {
-		if hp.cmp(req.path, '/t') {
+		if hp.cmpn(req.path, '/plaintext', 10) {
 			res.http_ok().header_server().header_date().plain().body(hello_response())
 		}
-		else if hp.cmp(req.path, '/j') {
+		else if hp.cmpn(req.path, '/json', 5) {
 			res.http_ok().header_server().header_date().json().body(json_response())
 		}
 		else {
