@@ -55,7 +55,7 @@ class Database(AbstractDatabase):
         res = 0
         records = cursor.fetchall()
         for row in records:
-            res = res + int(row[1])
+            res = res + int(int(row[1]) * cls.margin)
         return res
 
     @classmethod
