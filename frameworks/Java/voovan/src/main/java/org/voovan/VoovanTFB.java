@@ -35,9 +35,7 @@ public class VoovanTFB {
                         return message;
                 }
         }
-
-        private static final Message msg = new Message(HELLO_WORLD_STR);
-
+        
         public static void main(String[] args) {
                 TReflect.register(Message.class);
 
@@ -66,7 +64,7 @@ public class VoovanTFB {
                 webServer.get("/json", new HttpRouter() {
                         public void process(HttpRequest req, HttpResponse resp) throws Exception {
                                 resp.header().put(HttpStatic.CONTENT_TYPE_STRING, HttpStatic.APPLICATION_JSON_STRING);
-                                resp.write(TString.toAsciiBytes(JSON.toJSON(msg, false, false)));
+                                resp.write(TString.toAsciiBytes(JSON.toJSON(new Message(HELLO_WORLD_STR), false, false)));
                         }
                 });
 
