@@ -112,7 +112,7 @@ int main(int argc, char* argv[]) {
   };
   my_api.get("/db") = [&](http_request& request, http_response& response) {
     sql_db.max_async_connections_per_thread_ = db_nconn;
-    response.write_json(random_numbers.connect(request.fiber).find_one(s::id = 1 + rand() % 10000).value());
+    response.write_json(*random_numbers.connect(request.fiber).find_one(s::id = 1 + rand() % 10000));
   };
 
   my_api.get("/queries") = [&](http_request& request, http_response& response) {
@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
     auto c = random_numbers.connect(request.fiber);
     std::vector<decltype(random_numbers.all_fields())> numbers(N);
     for (int i = 0; i < N; i++)
-      numbers[i] = c.find_one(s::id = 1 + rand() % 10000).value();
+      numbers[i] = *c.find_one(s::id = 1 + rand() % 10000);
 
     response.write_json(numbers);
   };
@@ -147,7 +147,7 @@ int main(int argc, char* argv[]) {
 #endif
       for (int i = 0; i < N; i++)
       {
-        numbers[i] = c.find_one(s::id = 1 + rand() % 10000).value();
+        numbers[i] = *c.find_one(s::id = 1 + rand() % 10000);
         numbers[i].randomNumber = 1 + rand() % 10000;
       }
 
