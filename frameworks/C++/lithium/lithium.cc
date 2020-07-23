@@ -29,10 +29,10 @@ void siege(int port) {
   auto sockets = http_benchmark_connect(512, port);
   http_benchmark(sockets, 2, 1000, "GET /json HTTP/1.1\r\n\r\n");
   http_benchmark(sockets, 2, 1000, "GET /plaintext HTTP/1.1\r\n\r\n");
-  // http_benchmark(sockets, 1, 200, "GET /db HTTP/1.1\r\n\r\n");
-  // http_benchmark(sockets, 1, 200, "GET /queries?N=20 HTTP/1.1\r\n\r\n");
-  // http_benchmark(sockets, 1, 200, "GET /fortunes HTTP/1.1\r\n\r\n");
-  // http_benchmark(sockets, 1, 200, "GET /updates?N=20 HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /db HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /queries?N=20 HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /fortunes HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /updates?N=20 HTTP/1.1\r\n\r\n");
   http_benchmark_close(sockets);
 }
 #endif
