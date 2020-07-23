@@ -1,7 +1,7 @@
 FROM buildpack-deps:focal
 
 RUN apt-get update -yqq
-RUN apt-get install -yqq clang libboost-dev postgresql-server-dev-all libpq-dev wget libboost-context-dev
+RUN apt-get install -yqq clang-10 libboost-dev postgresql-server-dev-all libpq-dev wget libboost-context-dev
 
 COPY ./ ./
 
@@ -12,7 +12,7 @@ RUN wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_header
 
 RUN clang++ -fprofile-instr-generate=/tmp/profile.prof -DPROFILE_MODE -DNDEBUG -DTFB_PGSQL -O3 -march=native -std=c++17 ./lithium.cc -I/usr/include/postgresql -I /usr/include/postgresql/12/server -lpthread -lpq -lboost_context -lssl -lcrypto -o /lithium_tbf
 CMD /lithium_tbf tfb-database 8080
-RUN llvm-profdata merge -output=/tmp/profile.pgo  /tmp/profile.prof
+RUN llvm-profdata-10 merge -output=/tmp/profile.pgo  /tmp/profile.prof
 RUN clang++ -fprofile-instr-use=/tmp/profile.pgo -DNDEBUG -DTFB_PGSQL -O3 -march=native -std=c++17 ./lithium.cc -I/usr/include/postgresql -I /usr/include/postgresql/12/server -lpthread -lpq -lboost_context -lssl -lcrypto -o /lithium_tbf
 
 CMD /lithium_tbf tfb-database 8080
