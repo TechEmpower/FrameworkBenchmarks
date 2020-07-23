@@ -24,35 +24,18 @@ void escape_html_entities(B& buffer, const std::string& data)
     }
 }
 
-void tune_n_sql_connections(int& nc_to_tune, std::string http_req, int port, int min, int max) {
-
-  std::cout << std::endl << "Benchmark " << http_req << std::endl;
-
+#ifdef PROFILE_MODE
+void siege(int port) {
   auto sockets = http_benchmark_connect(512, port);
-
-  float max_req_per_s = 0;
-  int best_nconn = 2;
-  for (int i = 0; i <= 7; i++)
-  {
-    int nc = min + (max - min) * i / 7;
-    nc_to_tune = nc;
-
-    // Warmup.
-    http_benchmark(sockets, 4, 200, http_req);
-    float req_per_s = http_benchmark(sockets, 4, 1000, http_req);
-    std::cout << nc << " -> " << req_per_s << " req/s." << std::endl;
-    if (req_per_s > max_req_per_s)
-    {
-      max_req_per_s = req_per_s;
-      best_nconn = nc;
-    }
-  }
-
+  http_benchmark(sockets, 1, 200, "GET /db HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 1, 200, "GET /queries?N=20 HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 1, 200, "GET /fortunes HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 1, 200, "GET /json HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 1, 200, "GET /plaintext HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 1, 200, "GET /updates?N=20 HTTP/1.1\r\n\r\n");
   http_benchmark_close(sockets);
-
-  std::cout << "best: " << best_nconn << " (" << max_req_per_s << " req/s)."<< std::endl;
-  nc_to_tune = best_nconn;
 }
+#endif
 
 int main(int argc, char* argv[]) {
 
@@ -192,8 +175,18 @@ int main(int argc, char* argv[]) {
     response.write(ss.to_string_view());
   };
 
+#ifndef PROFILE_MODE
   // Start the server for the Techempower benchmark.
   http_serve(my_api, port, s::nthreads = nthreads);
+#else
+  std::thread server_thread([&] {
+    http_serve(my_api, port, s::nthreads = nprocs);
+  });
+  usleep(3e5);
+  siege(port);
+  li::quit_signal_catched = true;
+  server_thread.join();
 
+#endif
   return 0;
 }
