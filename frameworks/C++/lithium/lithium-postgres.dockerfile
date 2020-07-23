@@ -1,7 +1,7 @@
 FROM buildpack-deps:focal
 
 RUN apt-get update -yqq
-RUN apt-get install -yqq clang-10 libboost-dev postgresql-server-dev-all libpq-dev wget libboost-context-dev
+RUN apt-get install -yqq clang libboost-dev postgresql-server-dev-all libpq-dev wget libboost-context-dev
 
 COPY ./ ./
 
