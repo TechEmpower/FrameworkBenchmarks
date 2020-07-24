@@ -18,7 +18,7 @@ const (
 	contentTypeHTML = "text/html; charset=utf-8"
 )
 
-// PopulateWorldsCache populates the worlds cache for the cache test
+// PopulateWorldsCache populates the worlds cache for the cache test.
 func PopulateWorldsCache() {
 	worlds := &Worlds{W: make([]World, worldsCount)}
 
@@ -28,6 +28,7 @@ func PopulateWorldsCache() {
 	}
 
 	i := 0
+
 	for rows.Next() {
 		w := &worlds.W[i]
 
@@ -82,7 +83,7 @@ func Queries(ctx *atreugo.RequestCtx) error {
 	return err
 }
 
-// CachedWorlds . Test 4: Multiple cache queries:
+// CachedWorlds . Test 4: Multiple cache queries.
 func CachedWorlds(ctx *atreugo.RequestCtx) error {
 	queries := queriesParam(ctx)
 	worlds := acquireWorlds()
@@ -151,6 +152,7 @@ func Updates(ctx *atreugo.RequestCtx) error {
 	}
 
 	db.SendBatch(context.Background(), batch).Close()
+
 	err := ctx.JSONResponse(worlds.W)
 
 	releaseWorlds(worlds)
