@@ -23,7 +23,7 @@
 			"display_name": "ffead-cpp-mongo-redis",
 			"notes": "mongodb redis",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"lithium": {
 			"json_url": "/te-benchmark-um/json",
@@ -42,7 +42,7 @@
 			"display_name": "ffead-cpp-lithium",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"cinatra": {
 			"json_url": "/te-benchmark-um/json",
@@ -61,7 +61,7 @@
 			"display_name": "ffead-cpp-cinatra",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"drogon": {
 			"json_url": "/te-benchmark-um/json",
@@ -80,7 +80,7 @@
 			"display_name": "ffead-cpp-drogon",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"libreactor": {
 			"json_url": "/te-benchmark-um/json",
@@ -99,7 +99,7 @@
 			"display_name": "ffead-cpp-libreactor",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"crystal-h2o": {
 			"json_url": "/te-benchmark-um/json",
@@ -118,7 +118,7 @@
 			"display_name": "ffead-cpp-crystal-h2o",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"crystal-http": {
 			"json_url": "/te-benchmark-um/json",
@@ -137,7 +137,7 @@
 			"display_name": "ffead-cpp-crystal-http",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"rust-actix": {
 			"json_url": "/te-benchmark-um/json",
@@ -156,7 +156,7 @@
 			"display_name": "ffead-cpp-rust-actix",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"rust-hyper": {
 			"json_url": "/te-benchmark-um/json",
@@ -175,7 +175,7 @@
 			"display_name": "ffead-cpp-rust-hyper",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"rust-thruster": {
 			"json_url": "/te-benchmark-um/json",
@@ -232,7 +232,7 @@
 			"display_name": "ffead-cpp-go-gnet",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"go-fasthttp": {
 			"json_url": "/te-benchmark-um/json",
@@ -251,7 +251,7 @@
 			"display_name": "ffead-cpp-go-fasthttp",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"v-vweb": {
 			"json_url": "/te-benchmark-um/json",
@@ -286,10 +286,10 @@
 			"webserver": "vweb",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "ffead-cpp-v-vweb",
+			"display_name": "ffead-cpp-v-picov",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"java-firenio": {
 			"json_url": "/te-benchmark-um/json",
@@ -308,7 +308,7 @@
 			"display_name": "ffead-cpp-java-firenio",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"java-rapidoid": {
 			"json_url": "/te-benchmark-um/json",
@@ -327,7 +327,7 @@
 			"display_name": "ffead-cpp-java-rapidoid",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"java-wizzardo-http": {
 			"json_url": "/te-benchmark-um/json",
@@ -346,7 +346,7 @@
 			"display_name": "ffead-cpp-java-wizzardo-http",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"mysql": {
 			"json_url": "/te-benchmark-um/json",
@@ -369,7 +369,7 @@
 			"display_name": "ffead-cpp-mysql",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"postgresql": {
 			"json_url": "/te-benchmark-um/json",
@@ -392,7 +392,7 @@
 			"display_name": "ffead-cpp-postgresql",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"nginx": {
 			"json_url": "/te-benchmark-um/json",
@@ -411,7 +411,7 @@
 			"display_name": "ffead-cpp-nginx",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"apache": {
 			"json_url": "/te-benchmark-um/json",
