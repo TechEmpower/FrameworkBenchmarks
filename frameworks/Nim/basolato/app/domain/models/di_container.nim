@@ -1,0 +1,2 @@
+
+type DiContainer* = tuple
