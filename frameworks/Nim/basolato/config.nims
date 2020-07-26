@@ -8,8 +8,8 @@ putEnv("DB_PASSWORD", "benchmarkdbpass")
 putEnv("DB_DATABASE", "hello_world")
 
 # Logging
-putEnv("LOG_IS_DISPLAY", "true")
-putEnv("LOG_IS_FILE", "true")
+putEnv("LOG_IS_DISPLAY", "false")
+putEnv("LOG_IS_FILE", "false")
 putEnv("LOG_DIR", "/basolato/logs")
 
 # Security

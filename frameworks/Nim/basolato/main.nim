@@ -18,4 +18,5 @@ routes:
   get "/json": route(newBenchmarkController(request).json())
   get "/plaintext": route(newBenchmarkController(request).plainText())
   get "/db": route(newBenchmarkController(request).db())
-  get "/queries": route(newBenchmarkController(request).queries())
+  get "/queries": route(newBenchmarkController(request).query())
+  get "/fortunes": route(newBenchmarkController(request).fortune())

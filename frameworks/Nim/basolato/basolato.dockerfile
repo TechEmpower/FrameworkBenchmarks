@@ -21,5 +21,5 @@ WORKDIR /basolato
 
 RUN nimble install -y
 RUN ducere build
-
 CMD ./main
+# CMD ducere serve
