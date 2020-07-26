@@ -61,6 +61,7 @@ env:
     - "TESTLANG=Lisp"
     - "TESTLANG=Lua"
     - "TESTLANG=Nim"
+    - 'TESTDIR="Nim/httpbeast Nim/jester Nim/basolato"'
     - "TESTLANG=Perl"
     - 'TESTDIR="PHP/php"'
     - 'TESTDIR="PHP/comet PHP/kumbiaphp PHP/workerman PHP/webman"'

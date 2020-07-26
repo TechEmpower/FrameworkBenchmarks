@@ -1,6 +1,5 @@
 import json
 import basolato/view
-import ../layouts/application
 
 proc impl(title:string, data:seq[JsonNode]):string = tmpli html"""
 <!DOCTYPE html>
