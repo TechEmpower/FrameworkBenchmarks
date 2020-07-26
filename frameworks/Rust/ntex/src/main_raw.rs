@@ -11,7 +11,7 @@ use ntex::codec::{AsyncRead, AsyncWrite, Decoder};
 use ntex::fn_service;
 use ntex::http::{h1, Request};
 use ntex::rt::net::TcpStream;
-use simd_json_derive::Serialize;
+use yarte::Serialize;
 
 mod utils;
 
@@ -37,14 +37,12 @@ impl App {
     fn handle_request(&mut self, req: Request) {
         match req.path() {
             "/json" => {
-                let message = Message {
-                    message: "Hello, World!",
-                };
                 self.write_buf.extend_from_slice(JSON);
                 self.codec.set_date_header(&mut self.write_buf);
-                message
-                    .json_write(&mut utils::Writer(&mut self.write_buf))
-                    .unwrap();
+                Message {
+                    message: "Hello, World!",
+                }
+                .to_bytes_mut(&mut self.write_buf);
             }
             "/plaintext" => {
                 self.write_buf.extend_from_slice(PLAIN);

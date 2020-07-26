@@ -4,14 +4,15 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <ServerGarbageCollection>true</ServerGarbageCollection>
-    <LangVersion>7.2</LangVersion>
+   
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="BeetleX" Version="1.4.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.5" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.2.0" />
-    <PackageReference Include="Npgsql" Version="4.0.7" />
-    <PackageReference Include="SpanJson" Version="2.0.14" />
+    <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
+    <PackageReference Include="SpanJson" Version="3.0.1" />
   </ItemGroup>
 
 </Project>

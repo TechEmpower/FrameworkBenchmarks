@@ -3,7 +3,7 @@
 #
 
 sudo: required
-dist: xenial
+dist: bionic
 language: generic
 python:
   - "2.7"
@@ -48,7 +48,7 @@ env:
     - "TESTDIR=Haskell/wizzardo-inline"
     - 'TESTDIR="Java/act Java/comsat"'
     - 'TESTDIR="Java/activeweb Java/armeria Java/baratine Java/bayou Java/blade Java/curacao Java/dropwizard Java/firenio Java/servicetalk Java/voovan"'
-    - 'TESTDIR="Java/gemini Java/greenlightning Java/grizzly Java/helidon Java/httpserver Java/jetty Java/jlhttp Java/jooby2 Java/wicket"'
+    - 'TESTDIR="Java/gemini Java/greenlightning Java/grizzly Java/helidon Java/httpserver Java/jetty Java/jlhttp Java/jooby Java/wicket"'
     - 'TESTDIR="Java/light-java Java/minijax Java/nanohttpd Java/netty Java/ninja-standalone Java/officefloor Java/proteus Java/quarkus"'
     - 'TESTDIR="Java/rapidoid Java/redkale Java/restexpress Java/revenj-jvm Java/servlet Java/servlet3 Java/smart-socket Java/spark"'
     - 'TESTDIR="Java/spring Java/spring-webflux Java/t-io Java/tapestry Java/undertow Java/undertow-jersey Java/vertx Java/vertx-web Java/simple-server"'
@@ -63,7 +63,7 @@ env:
     - "TESTLANG=Nim"
     - "TESTLANG=Perl"
     - 'TESTDIR="PHP/php"'
-    - 'TESTDIR="PHP/comet PHP/kumbiaphp PHP/workerman"'
+    - 'TESTDIR="PHP/comet PHP/kumbiaphp PHP/workerman PHP/webman"'
     - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/fat-free PHP/fuel PHP/phpixie PHP/slim PHP/symfony PHP/yii2 PHP/zend PHP/spiral"'
     - 'TESTDIR="PHP/amp PHP/hhvm PHP/peachpie PHP/php-ngx PHP/phalcon"'
     - 'TESTDIR="PHP/hamlet PHP/laravel PHP/lumen PHP/swoole PHP/ubiquity PHP/hyperf PHP/sw-fw-less PHP/imi PHP/simps"'

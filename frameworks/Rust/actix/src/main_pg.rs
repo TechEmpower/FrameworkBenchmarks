@@ -129,7 +129,7 @@ async fn main() -> std::io::Result<()> {
                         .data_factory(|| PgConnection::connect(DB_URL))
                         .service(web::resource("/db").to(world_row))
                         .service(web::resource("/queries").to(queries))
-                        .service(web::resource("/fortune").to(fortune))
+                        .service(web::resource("/fortunes").to(fortune))
                         .service(web::resource("/updates").to(updates)),
                     |_| AppConfig::default(),
                 ))

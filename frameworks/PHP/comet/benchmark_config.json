@@ -7,7 +7,7 @@
       "db_url": "/db",
       "query_url": "/query?q=",
       "update_url": "/update?q=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
@@ -22,13 +22,13 @@
       "database_os": "Linux",
       "display_name": "comet",
       "notes": "",
-      "versus": "php"
+      "versus": "workerman"
     },
     "mysql": {
       "db_url": "/db",
       "query_url": "/query?q=",
       "update_url": "/update?q=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
@@ -43,7 +43,7 @@
       "database_os": "Linux",
       "display_name": "comet-mysql",
       "notes": "",
-      "versus": "php"
+      "versus": "workerman"
     }
   }]
 }

@@ -6,57 +6,12 @@ MAX_THREADS=$(( 3 * `nproc` / 2 ))
 WRIT_THREADS=$(( $MAX_THREADS / 3 ))
 SERV_THREADS=$(( $MAX_THREADS - $WRIT_THREADS ))
 
-cd $IROOT
-
-wget -q https://github.com/sumeetchhetri/ffead-cpp/archive/v4.0.zip
-unzip v4.0.zip
-rm -f v4.0.zip
-mv ffead-cpp-4.0 ffead-cpp-src
-mv ffead-cpp-src/lang-server-backends ${IROOT}/
-cd $IROOT
-
-CURR_TYPE="lithium"
-if [ "$CURR_TYPE" = "lithium" ]
-then
-	SRV_TYPE=SRV_LITHIUM
-	apt install --no-install-recommends -y libboost-all-dev
-fi
-
-CURR_TYPE="cinatra"
-if [ "$CURR_TYPE" = "cinatra" ]
-then
-	apt install --no-install-recommends -y libboost-all-dev
-	SRV_TYPE=SRV_CINATRA
-	CINATRA_INC="-DCINATRA_INCLUDES=${IROOT}/cinatra/include"
-	git clone https://github.com/sumeetchhetri/cinatra.git
-	cd cinatra
-	git checkout sum_master
-fi
-
-CURR_TYPE="drogon"
-if [ "$CURR_TYPE" = "drogon" ]
-then
-	apt install --no-install-recommends -y libjsoncpp-dev uuid-dev
-	apt remove -y libsqlite3-dev
-	SRV_TYPE=SRV_DROGON
-	git clone --recurse-submodules https://github.com/sumeetchhetri/drogon
-	cd  drogon
-	mkdir build
-	cd build
-	cmake -DCMAKE_BUILD_TYPE=Release ..
-	make && make install
-	cd $IROOT
-	rm -rf drogon
-fi
-
-rm -rf /var/lib/apt/lists/*
-
 cd $IROOT/ffead-cpp-src/
 
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 rm -rf web/te-benchmark-um
-cp -f ${TROOT}/server.sh script/
-mv ${TROOT}/te-benchmark-um web/
+mv ${IROOT}/server.sh script/
+mv ${IROOT}/te-benchmark-um web/
 sed -i 's|THRD_PSIZ=6|THRD_PSIZ='${SERV_THREADS}'|g' resources/server.prop
 sed -i 's|W_THRD_PSIZ=2|W_THRD_PSIZ='${WRIT_THREADS}'|g' resources/server.prop
 sed -i 's|ENABLE_CRS=true|ENABLE_CRS=false|g' resources/server.prop
@@ -73,6 +28,7 @@ sed -i 's|ENABLE_SCR=true|ENABLE_SCR=false|g' resources/server.prop
 sed -i 's|ENABLE_SWS=true|ENABLE_SWS=false|g' resources/server.prop
 sed -i 's|ENABLE_JOBS=true|ENABLE_JOBS=false|g' resources/server.prop
 sed -i 's|LOGGING_ENABLED=true|LOGGING_ENABLED=false|g' resources/server.prop
+sed -i 's|EVH_SINGLE=true|EVH_SINGLE=false|g' resources/server.prop
 
 rm -rf web/default web/oauthApp web/flexApp web/markers web/te-benchmark web/peer-server
 
@@ -135,9 +91,9 @@ pkill ffead-cpp
 cd ${IROOT}/ffead-cpp-src/
 cp -rf ffead-cpp-4.0-bin ${IROOT}/ffead-cpp-4.0
 rm -rf ffead-cpp-4.0-bin
+mv ${IROOT}/nginxfc ${IROOT}/nginx-ffead-mongo
 
 cd ${IROOT}/ffead-cpp-4.0
-cp -f ${TROOT}/run_ffead.sh ./
 
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 chmod 755 *.sh
@@ -170,9 +126,9 @@ pkill ffead-cpp
 cd ${IROOT}/ffead-cpp-src/
 cp -rf ffead-cpp-4.0-bin ${IROOT}/ffead-cpp-4.0-sql
 rm -rf ffead-cpp-4.0-bin
+mv ${IROOT}/nginxfc ${IROOT}/nginx-ffead-sql
 
 cd ${IROOT}/ffead-cpp-4.0-sql
-cp -f ${TROOT}/run_ffead.sh ./
 
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 chmod 755 *.sh

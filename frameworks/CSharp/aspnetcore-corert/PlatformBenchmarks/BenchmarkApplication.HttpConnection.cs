@@ -75,7 +75,7 @@ namespace PlatformBenchmarks
         private bool HandleRequests(in ReadOnlySequence<byte> buffer, bool isCompleted)
         {
             var reader = new SequenceReader<byte>(buffer);
-            var writer = GetWriter(Writer);
+            var writer = GetWriter(Writer, sizeHint: 160 * 16); // 160*16 is for Plaintext, for Json 160 would be enough
 
             while (true)
             {
@@ -112,11 +112,13 @@ namespace PlatformBenchmarks
 
             if (state == State.StartLine)
             {
-#if NETCOREAPP5_0
-                var unconsumedSequence = reader.UnreadSequence;
+#if NETCOREAPP5_0 || NET5_0
+                if (Parser.ParseRequestLine(new ParsingAdapter(this), ref reader))
+                {
+                    state = State.Headers;
+                }
 #else
                 var unconsumedSequence = reader.Sequence.Slice(reader.Position);
-#endif
                 if (Parser.ParseRequestLine(new ParsingAdapter(this), unconsumedSequence, out var consumed, out _))
                 {
                     state = State.Headers;
@@ -124,6 +126,7 @@ namespace PlatformBenchmarks
                     var parsedLength = unconsumedSequence.Slice(reader.Position, consumed).Length;
                     reader.Advance(parsedLength);
                 }
+#endif
             }
 
             if (state == State.Headers)
@@ -150,11 +153,17 @@ namespace PlatformBenchmarks
             while (true)
             {
                 var readResult = await Reader.ReadAsync();
-
                 var buffer = readResult.Buffer;
+                var isCompleted = readResult.IsCompleted;
+
+                if (buffer.IsEmpty && isCompleted)
+                {
+                    return;
+                }
+
                 while (true)
                 {
-                    if (!ParseHttpRequest(ref buffer, readResult.IsCompleted, out var examined))
+                    if (!ParseHttpRequest(ref buffer, isCompleted))
                     {
                         return;
                     }
@@ -173,7 +182,7 @@ namespace PlatformBenchmarks
                     }
 
                     // No more input or incomplete data, Advance the Reader
-                    Reader.AdvanceTo(buffer.Start, examined);
+                    Reader.AdvanceTo(buffer.Start, buffer.End);
                     break;
                 }
 
@@ -181,59 +190,63 @@ namespace PlatformBenchmarks
             }
         }
 
-        private bool ParseHttpRequest(ref ReadOnlySequence<byte> buffer, bool isCompleted, out SequencePosition examined)
+        private bool ParseHttpRequest(ref ReadOnlySequence<byte> buffer, bool isCompleted)
         {
-            examined = buffer.End;
+            var reader = new SequenceReader<byte>(buffer);
             var state = _state;
 
-            if (!buffer.IsEmpty)
+            if (state == State.StartLine)
             {
-                SequencePosition consumed;
-                if (state == State.StartLine)
+#if NETCOREAPP5_0 || NET5_0
+                if (Parser.ParseRequestLine(new ParsingAdapter(this), ref reader))
                 {
-                    if (Parser.ParseRequestLine(new ParsingAdapter(this), buffer, out consumed, out examined))
-                    {
-                        state = State.Headers;
-                    }
-
-                    buffer = buffer.Slice(consumed);
+                    state = State.Headers;
                 }
-
-                if (state == State.Headers)
+#else
+                var unconsumedSequence = reader.Sequence.Slice(reader.Position);
+                if (Parser.ParseRequestLine(new ParsingAdapter(this), unconsumedSequence, out var consumed, out _))
                 {
-                    var reader = new SequenceReader<byte>(buffer);
-                    var success = Parser.ParseHeaders(new ParsingAdapter(this), ref reader);
+                    state = State.Headers;
 
-                    consumed = reader.Position;
-                    if (success)
-                    {
-                        examined = consumed;
-                        state = State.Body;
-                    }
-                    else
-                    {
-                        examined = buffer.End;
-                    }
-
-                    buffer = buffer.Slice(consumed);
+                    var parsedLength = unconsumedSequence.Slice(reader.Position, consumed).Length;
+                    reader.Advance(parsedLength);
                 }
+#endif
+            }
 
-                if (state != State.Body && isCompleted)
+            if (state == State.Headers)
+            {
+                var success = Parser.ParseHeaders(new ParsingAdapter(this), ref reader);
+
+                if (success)
                 {
-                    ThrowUnexpectedEndOfData();
+                    state = State.Body;
                 }
             }
-            else if (isCompleted)
+
+            if (state != State.Body && isCompleted)
             {
-                return false;
+                ThrowUnexpectedEndOfData();
             }
 
             _state = state;
+
+            if (state == State.Body)
+            {
+                // Complete request read, consumed and examined are the same (length 0)
+                buffer = buffer.Slice(reader.Position, 0);
+            }
+            else
+            {
+                // In-complete request read, consumed is current position and examined is the remaining.
+                buffer = buffer.Slice(reader.Position);
+            }
+
             return true;
         }
 #endif
 
-#if NETCOREAPP5_0
+#if NETCOREAPP5_0 || NET5_0
 
         public void OnStaticIndexedHeader(int index)
         {
@@ -271,8 +284,8 @@ namespace PlatformBenchmarks
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static BufferWriter<WriterAdapter> GetWriter(PipeWriter pipeWriter)
-            => new BufferWriter<WriterAdapter>(new WriterAdapter(pipeWriter));
+        private static BufferWriter<WriterAdapter> GetWriter(PipeWriter pipeWriter, int sizeHint)
+            => new BufferWriter<WriterAdapter>(new WriterAdapter(pipeWriter), sizeHint);
 
         private struct WriterAdapter : IBufferWriter<byte>
         {
@@ -298,7 +311,7 @@ namespace PlatformBenchmarks
             public ParsingAdapter(BenchmarkApplication requestHandler)
                 => RequestHandler = requestHandler;
 
-#if NETCOREAPP5_0
+#if NETCOREAPP5_0 || NET5_0
             public void OnStaticIndexedHeader(int index) 
                 => RequestHandler.OnStaticIndexedHeader(index);
 
@@ -310,15 +323,17 @@ namespace PlatformBenchmarks
 
             public void OnHeadersComplete(bool endStream)
                 => RequestHandler.OnHeadersComplete(endStream);
+
+            public void OnStartLine(HttpVersionAndMethod versionAndMethod, TargetOffsetPathLength targetPath, Span<byte> startLine)
+                => RequestHandler.OnStartLine(versionAndMethod, targetPath, startLine);
 #else
             public void OnHeader(Span<byte> name, Span<byte> value)
                 => RequestHandler.OnHeader(name, value);
             public void OnHeadersComplete()
                 => RequestHandler.OnHeadersComplete();
-#endif
-
             public void OnStartLine(HttpMethod method, HttpVersion version, Span<byte> target, Span<byte> path, Span<byte> query, Span<byte> customMethod, bool pathEncoded)
                 => RequestHandler.OnStartLine(method, version, target, path, query, customMethod, pathEncoded);
+#endif
         }
     }
 }

@@ -20,7 +20,7 @@
       "versus": ""
     },
     "db": {
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "db_url": "/db",
       "query_url": "/query?q=",
       "update_url": "/update?q=",
