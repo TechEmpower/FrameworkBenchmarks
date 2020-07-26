@@ -20,3 +20,4 @@ routes:
   get "/db": route(newBenchmarkController(request).db())
   get "/queries": route(newBenchmarkController(request).query())
   get "/fortunes": route(newBenchmarkController(request).fortune())
+  get "/updates": route(newBenchmarkController(request).update())

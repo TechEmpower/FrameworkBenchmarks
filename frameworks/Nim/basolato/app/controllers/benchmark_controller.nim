@@ -62,28 +62,24 @@ proc fortune*(this:BenchmarkController):Response =
     data.add(%*{"id": row.id, "message": row.message})
   return render(this.view.fortuneView(data))
 
+proc update*(this:BenchmarkController):Response =
+  var countNum:int
+  try:
+    countNum = this.request.params["queries"].parseInt()
+  except:
+    countNum = 1
 
-proc index*(this:BenchmarkController):Response =
-  return render("index")
+  if countNum < 1:
+    countNum = 1
+  elif countNum > 500:
+    countNum = 500
 
-proc show*(this:BenchmarkController, id:string):Response =
-  let id = id.parseInt
-  return render("show")
-
-proc create*(this:BenchmarkController):Response =
-  return render("create")
-
-proc store*(this:BenchmarkController):Response =
-  return render("store")
-
-proc edit*(this:BenchmarkController, id:string):Response =
-  let id = id.parseInt
-  return render("edit")
-
-proc update*(this:BenchmarkController, id:string):Response =
-  let id = id.parseInt
-  return render("update")
-
-proc destroy*(this:BenchmarkController, id:string):Response =
-  let id = id.parseInt
-  return render("destroy")
+  var response = newJArray()
+  transaction:
+    for _ in 1..countNum:
+        let i = rand(1..10000)
+        let newRandomNumber = rand(1..10000)
+        discard RDB().table("world").find(i)
+        RDB().table("world").where("id", "=", i).update(%*{"randomNumber": newRandomNumber})
+        response.add(%*{"id":i, "randomNumber": newRandomNumber})
+  return render(response)
