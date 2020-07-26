@@ -19,6 +19,7 @@ RUN apk update && \
 ADD ./ /basolato
 WORKDIR /basolato
 
+RUN nimble install -y
 RUN ducere build
 
 CMD ./main

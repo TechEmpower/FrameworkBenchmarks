@@ -22,8 +22,8 @@ proc plainText*(this:BenchmarkController):Response =
 
 proc db*(this:BenchmarkController):Response =
   let i = rand(1..10000)
-  let number = RDB().table("world").find(i)["randomnumber"].getInt
-  return render(%*{"id": i, "randomNumber": number})
+  let response = RDB().table("world").find(i)
+  return render(%*response)
 
 proc queries*(this:BenchmarkController):Response =
   try:
@@ -36,8 +36,8 @@ proc queries*(this:BenchmarkController):Response =
     var response = newJArray()
     for _ in 1..countNum:
       let i = rand(1..10000)
-      let number = RDB().table("world").find(i)["randomnumber"].getInt
-      response.add(%*{"id": i, "randomNumber": number})
+      let data = RDB().table("world").find(i)
+      response.add(data)
     return render(%*response)
   except:
     raise newException(Error500, "")

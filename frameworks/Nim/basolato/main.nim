@@ -7,7 +7,7 @@ import app/middlewares/framework_middleware
 import app/controllers/benchmark_controller
 
 settings:
-  port = Port(5000)
+  port = Port(8080)
 
 routes:
   # Framework
