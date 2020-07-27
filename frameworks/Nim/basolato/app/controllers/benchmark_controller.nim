@@ -1,4 +1,4 @@
-import json, random, algorithm, cgi
+import json, random, algorithm, cgi, sugar, sequtils
 from strutils import parseInt
 # framework
 import basolato/controller
@@ -46,21 +46,17 @@ proc query*(this:BenchmarkController):Response =
   return render(%*response)
 
 proc fortune*(this:BenchmarkController):Response =
-  type Data = ref object
-    id:int
-    message:string
-  var tmp = newSeq[Data]()
-  for row in RDB().table("Fortune").orderBy("message", Asc).get():
-    tmp.add(Data(
-      id: row["id"].getInt,
-      message: xmlEncode(row["message"].getStr)
-    ))
-  tmp.add(Data(id: 0, message: "Additional fortune added at request time."))
-  tmp = tmp.sortedByIt(it.message)
-  var data = newSeq[JsonNode]()
-  for row in tmp:
-    data.add(%*{"id": row.id, "message": row.message})
-  return render(this.view.fortuneView(data))
+  var rows = RDB().table("Fortune").orderBy("message", Asc).get()
+  rows = rows.mapIt(%*{
+    "id": it["id"],
+    "message": xmlEncode(it["message"].getStr)
+  })
+  rows.add(%*{
+    "id": 0,
+    "message": "Additional fortune added at request time."}
+  )
+  rows = rows.sortedByIt(it["message"].getStr)
+  return render(this.view.fortuneView(rows))
 
 proc update*(this:BenchmarkController):Response =
   var countNum:int
