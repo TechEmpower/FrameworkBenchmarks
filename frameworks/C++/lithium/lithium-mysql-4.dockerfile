@@ -5,4 +5,4 @@ RUN apt-get install -yqq libboost-dev libmariadb-dev wget  libboost-context-dev 
 
 COPY ./ ./
 
-CMD ./compile_and_start_gcc.sh TFB_MYSQL 20
+CMD ./compile_and_start_gcc.sh TFB_MYSQL 4
