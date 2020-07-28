@@ -5,4 +5,4 @@ RUN apt-get install -yqq g++-9 libboost-dev postgresql-server-dev-all libpq-dev 
 
 COPY ./ ./
 
-CMD ./compile_and_start_gcc.sh TFB_PGSQL NCONN
+CMD ./compile_and_start_gcc.sh TFB_PGSQL 7

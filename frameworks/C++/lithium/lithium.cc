@@ -71,17 +71,22 @@ int main(int argc, char* argv[]) {
     s::id(s::auto_increment, s::primary_key) = int(),
     s::randomNumber = int());
 
-#if TFB_MYSQL
-  int db_nconn = 4;
-  int queries_nconn = 2;
-  int fortunes_nconn = 4;
-  int updates_nconn = 1;
-#elif TFB_PGSQL
-  int db_nconn = 7;
-  int queries_nconn = 4;
-  int fortunes_nconn = 7;
-  int updates_nconn = 3;
-#endif
+// #if TFB_MYSQL
+//   int db_nconn = 4;
+//   int queries_nconn = 2;
+//   int fortunes_nconn = 4;
+//   int updates_nconn = 1;
+// #elif TFB_PGSQL
+//   int db_nconn = 7;
+//   int queries_nconn = 4;
+//   int fortunes_nconn = 7;
+//   int updates_nconn = 3;
+// #endif
+
+  int db_nconn = N_SQL_CONNECTIONS;
+  int queries_nconn = N_SQL_CONNECTIONS;
+  int fortunes_nconn = N_SQL_CONNECTIONS;
+  int updates_nconn = N_SQL_CONNECTIONS;
 
   http_api my_api;
 
