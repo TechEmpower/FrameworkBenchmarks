@@ -16,12 +16,12 @@ name = "ntex-raw"
 path = "src/main_raw.rs"
 
 [dependencies]
-ntex = "0.1.18"
+ntex = "0.1.21"
 snmalloc-rs = { version = "0.2.17", features = ["native-cpu"] }
 yarte = { version = "0.11", features = ["bytes-buf", "json"] }
 env_logger = "0.7"
 random-fast-rng = "0.1.1"
-bytes = "0.5.3"
+bytes = "0.5.6"
 atoi = "0.3.2"
 num_cpus = "1.0"
 futures = "0.3.4"
