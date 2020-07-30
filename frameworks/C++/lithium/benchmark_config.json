@@ -394,6 +394,7 @@
         "notes": "clang with pgo",
         "versus": "None"
       },
+      
       "postgres-6": {
         "json_url"       : "/json",
         "db_url"         : "/db",
