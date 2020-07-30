@@ -3,14 +3,13 @@
 open Falco 
 
 type JsonOutputModel = { message : string }
-    
-module Controller =
-    let defaultMsg = "Hello, World!"
 
-    let handleJson : HttpHandler =
-        fun next ctx ->
-            let json = { message = defaultMsg }
-            (jsonOut json) next ctx
+let defaultMsg = "Hello, World!"
+
+let handleJson : HttpHandler =
+    fun ctx ->
+        let output = { message = defaultMsg }        
+        Response.ofJson output ctx
         
-    let handlePlainText : HttpHandler =        
-        textOut defaultMsg
+let handlePlainText : HttpHandler =        
+    Response.ofPlainText defaultMsg

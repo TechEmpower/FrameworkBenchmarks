@@ -27,6 +27,19 @@ return array(
 			],
 			"cache" => false
 		],
+		'pgsql-cache' => [
+			"wrapper" => "\\Ubiquity\\db\\providers\\pdo\\PDOWrapper",
+			"type" => "pgsql",
+			"dbName" => "hello_world",
+			"serverName" => "tfb-database", // tfb-database
+			"port" => 5432,
+			"user" => "benchmarkdbuser", // benchmarkdbuser
+			"password" => "benchmarkdbpass", // benchmarkdbpass
+			"options" => [
+				\PDO::ATTR_PERSISTENT => false
+			],
+			"cache" => false
+		],
 		'async' => [
 			"wrapper" => "\\Ubiquity\\db\\providers\\swoole\SwooleWrapper",
 			"type" => "mysql",

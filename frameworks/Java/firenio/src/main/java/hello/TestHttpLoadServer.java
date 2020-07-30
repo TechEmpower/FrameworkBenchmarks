@@ -85,7 +85,7 @@ public class TestHttpLoadServer {
         int      fcache     = 1024 * 16;
         int      pool_unit  = 256 * 16;
         int      pool_cap   = 1024 * 8 * pool_unit * processors;
-        String   server     = "firenio";
+        String   server     = "tfb";
         ByteTree cachedUrls = null;
         if (cachedurl) {
             cachedUrls = new ByteTree();
