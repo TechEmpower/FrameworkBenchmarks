@@ -34,6 +34,10 @@ public class VoovanTFB {
                 public String getMessage() {
                         return message;
                 }
+                
+                public int hashCode(){
+                    return message.hashCode();
+                }
         }
         
         public static void main(String[] args) {
