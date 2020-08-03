@@ -73,8 +73,8 @@
         "versus": "swoole"
       },
       "swoole-mysql": {
-        "db_url": "/Db_",
-        "query_url": "/Db_/query/",
+        "db_url": "/DbMy",
+        "query_url": "/DbMy/query/",
         "fortune_url": "/Fortunes_",
         "update_url": "/DbMy/update/",
         "port": 8080,
@@ -117,8 +117,8 @@
         "versus": "php"
       },
       "roadrunner-mysql": {
-        "db_url": "/Db_",
-        "query_url": "/Db_/query/",
+        "db_url": "/DbMy",
+        "query_url": "/DbMy/query/",
         "fortune_url": "/Fortunes_",
         "update_url": "/DbMy/update/",
         "port": 8080,
