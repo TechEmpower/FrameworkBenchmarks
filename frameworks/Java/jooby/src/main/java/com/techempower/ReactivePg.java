@@ -2,6 +2,7 @@ package com.techempower;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jooby.Jooby;
+import io.jooby.ServerOptions;
 import io.jooby.json.JacksonModule;
 import io.jooby.rocker.RockerModule;
 import io.vertx.pgclient.PgPool;
@@ -27,6 +28,13 @@ public class ReactivePg extends Jooby {
   private static final String SELECT_FORTUNE = "SELECT id, message from FORTUNE";
 
   {
+    /** Reduce the number of resources due we do reactive processing. */
+    setServerOptions(
+        new ServerOptions()
+            .setIoThreads(Runtime.getRuntime().availableProcessors() + 1)
+            .setWorkerThreads(Runtime.getRuntime().availableProcessors() + 1)
+    );
+
     /** PG client: */
     PgClients clients = new PgClients(getConfig().getConfig("db"));
 
