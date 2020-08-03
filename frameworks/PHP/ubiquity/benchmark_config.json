@@ -90,26 +90,6 @@
         "notes": "",
         "versus": "swoole"
       },
-      "swoole-mysql-async": {
-        "db_url": "/SwooleDbAsync",
-        "query_url": "/SwooleDbAsync/query/",
-        "fortune_url": "/SwooleFortunesAsync",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Fullstack",
-        "database": "MYSQL",
-        "framework": "ubiquity",
-        "language": "PHP",
-        "flavor": "PHP7",
-        "orm": "Full",
-        "platform": "swoole",
-        "webserver": "none",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "ubiquity-swoole-mysql",
-        "notes": "",
-        "versus": "swoole"
-      },
       "roadrunner": {
         "json_url": "/Json_",
         "plaintext_url": "/Plaintext_",
