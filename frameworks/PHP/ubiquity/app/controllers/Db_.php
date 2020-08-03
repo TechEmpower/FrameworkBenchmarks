@@ -2,30 +2,27 @@
 namespace controllers;
 
 use Ubiquity\orm\DAO;
+use controllers\utils\DbTrait;
+use controllers\utils\DbAsyncTrait;
 
 /**
  * Bench controller.
  */
-class DbPg extends \Ubiquity\controllers\Controller {
-
-	public function __construct() {}
-
-	public function initialize() {
-		\Ubiquity\utils\http\UResponse::setContentType('application/json');
-	}
+class Db_ extends \Ubiquity\controllers\Controller {
+	use DbTrait,DbAsyncTrait;
 
 	public function index() {
-		$world = DAO::executePrepared('world', [
+		echo \json_encode(self::$pDao->execute([
 			'id' => \mt_rand(1, 10000)
-		]);
-		echo \json_encode($world->_rest);
+		])->_rest);
 	}
 
 	public function query($queries = 1) {
 		$worlds = [];
-		$queries = \min(\max($queries, 1), 500);
-		for ($i = 0; $i < $queries; ++ $i) {
-			$worlds[] = (DAO::executePrepared('world', [
+		$count = $this->getCount($queries);
+
+		while ($count --) {
+			$worlds[] = (self::$pDao->execute([
 				'id' => \mt_rand(1, 10000)
 			]))->_rest;
 		}
@@ -34,9 +31,10 @@ class DbPg extends \Ubiquity\controllers\Controller {
 
 	public function update($queries = 1) {
 		$worlds = [];
-		$queries = \min(\max($queries, 1), 500);
-		for ($i = 0; $i < $queries; ++ $i) {
-			$world = DAO::executePrepared('world', [
+		$count = $this->getCount($queries);
+
+		while ($count --) {
+			$world = self::$pDao->execute([
 				'id' => \mt_rand(1, 10000)
 			]);
 			$world->randomNumber = \mt_rand(1, 10000);
