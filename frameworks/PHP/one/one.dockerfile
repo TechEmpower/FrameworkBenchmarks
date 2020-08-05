@@ -8,10 +8,10 @@ RUN docker-php-ext-install pdo_mysql > /dev/null
 RUN apt -yqq update > /dev/null && \
     apt -yqq install git unzip > /dev/null
 
-WORKDIR /one
-
 COPY . /one
 COPY php.ini /usr/local/etc/php/
+
+WORKDIR /one
 
 RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-dev --classmap-authoritative --quiet > /dev/null
