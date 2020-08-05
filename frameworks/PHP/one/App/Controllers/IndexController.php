@@ -33,7 +33,7 @@ class IndexController extends Controller
 
     public function fortunes()
     {
-        $arr   = Fortune::findAll()->toArray();
+        $arr   = Fortune::findAll();
         $rs    = [];
         $rs[0] = 'Additional fortune added at request time.';
         foreach ($arr as $item) {
