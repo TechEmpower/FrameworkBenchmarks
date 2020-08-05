@@ -6,7 +6,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq php7.4 php7.4-common php7.4-cli php7.4-pgsql > /dev/null
+    apt-get install -yqq php7.4 php7.4-common php7.4-cli php7.4-mysql > /dev/null
 
 RUN apt-get install -yqq composer > /dev/null
 
@@ -33,7 +33,7 @@ RUN php composer.phar install --optimize-autoloader --classmap-authoritative --n
 
 RUN chmod 777 -R /ubiquity/.ubiquity/*
 
-COPY deploy/conf/workerman/pgsql/workerServices.php app/config/workerServices.php
+COPY deploy/conf/workerman/mysql/workerServices.php app/config/workerServices.php
 
 RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/7.4/cli/php.ini
 
