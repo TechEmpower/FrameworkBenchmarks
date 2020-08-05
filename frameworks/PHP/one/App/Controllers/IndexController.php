@@ -47,6 +47,7 @@ class IndexController extends Controller
             $html    .= "<tr><td>{$id}</td><td>{$message}</td></tr>";
         }
 
+        $this->response->header('Content-type', 'text/html; charset=UTF-8');
         return "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>{$html}</table></body></html>";
     }
 
