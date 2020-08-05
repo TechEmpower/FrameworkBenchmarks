@@ -1,0 +1,28 @@
+{
+  "name": "lizhichao/one-app",
+  "type": "library",
+  "description": "一个极简的php框架，可运行在fpm或者swoole协程模式下",
+  "keywords": [
+    "swoole",
+    "framework",
+    "async",
+    "one"
+  ],
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "tanszhe",
+      "email": "1018595261@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.0",
+    "lizhichao/one": ">=2.0.1",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "App/"
+    }
+  }
+}
