@@ -33,11 +33,11 @@ class IndexController extends Controller
 
     public function fortunes()
     {
-        $arr   = Fortune::findAll();
+        $fortune   = Fortune::findAll();
         $rs    = [];
         $rs[0] = 'Additional fortune added at request time.';
-        foreach ($arr as $item) {
-            $rs[$item['id']] = $item['message'];
+        foreach ($fortune as $item) {
+            $rs[$item->id] = $item->message;
         }
         asort($rs);
 
