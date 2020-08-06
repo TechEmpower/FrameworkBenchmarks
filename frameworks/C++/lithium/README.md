@@ -11,7 +11,7 @@ Author: Matthieu Garrigues <matthieu.garrigues@gmail.com>
 * [PLAINTEXT] lithium.cc
 * [DB] lithium.cc
 * [QUERY] lithium.cc
-* [CACHED QUERY] Not implemented
+* [CACHED QUERY] lithium.cc
 * [UPDATE] lithium.cc
 * [FORTUNES] lithium.cc
 
