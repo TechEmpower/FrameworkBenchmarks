@@ -9,7 +9,7 @@ rm /usr/lib/libpq.*
 
 # Compile libpq with pipelining support.
 wget https://github.com/2ndQuadrant/postgres/archive/dev/libpq-async-batch.zip 
-unzip libpq-async-batch.zip
+unzip -qq libpq-async-batch.zip
 cd postgres-dev-libpq-async-batch
 ./configure --prefix=/usr CFLAGS='-O3 -march=native -flto'
 cd src/interfaces/libpq
@@ -27,11 +27,17 @@ fi
 
 wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_http_backend.hh
 
-# clang++ -fprofile-instr-generate=./profile.prof -flto -DPROFILE_MODE -DNDEBUG -D$DB_FLAG -DN_SQL_CONNECTIONS=1 -DMONOTHREAD=$MONOTHREAD -O3 -march=native -std=c++17 ./lithium_pipeline.cc $CXX_FLAGS -lpthread -lboost_context -lssl -lcrypto -o /lithium_tbf
+#echo "Compile profiling"
+#clang++ -fprofile-instr-generate=./profile.prof -flto -DPROFILE_MODE -DNDEBUG -D$DB_FLAG -DN_SQL_CONNECTIONS=1 -DMONOTHREAD=$MONOTHREAD -O3 -march=native -std=c++17 ./lithium_pipeline.cc $CXX_FLAGS -lpthread -lboost_context -lssl -lcrypto -o /lithium_tbf
+#echo "Run profiling"
 # LD_LIBRARY_PATH=/usr/lib /lithium_tbf tfb-database 8081
 # llvm-profdata-10 merge -output=./profile.pgo  ./profile.prof
+
+# echo "Compile optimized binary"
 # clang++ -fprofile-instr-use=./profile.pgo -flto -DNDEBUG -D$DB_FLAG -DMONOTHREAD=$MONOTHREAD -DN_SQL_CONNECTIONS=1 -O3 -march=native -std=c++17 ./lithium_pipeline.cc $CXX_FLAGS -lpthread -lboost_context -lssl -lcrypto -o /lithium_tbf
 
+echo "Compile server"
 clang++ -flto -DNDEBUG -D$DB_FLAG -DMONOTHREAD=$MONOTHREAD -DN_SQL_CONNECTIONS=1 -O3 -march=native -std=c++17 ./lithium_pipeline.cc $CXX_FLAGS -lpthread -lboost_context -lssl -lcrypto -o /lithium_tbf
 
+echo "Start server"
 LD_LIBRARY_PATH=/usr/lib /lithium_tbf tfb-database 8080
