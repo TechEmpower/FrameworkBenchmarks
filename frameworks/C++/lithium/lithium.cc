@@ -130,6 +130,12 @@ int main(int argc, char* argv[]) {
     N = std::max(1, std::min(N, 500));
     
     auto c = random_numbers.connect(request.fiber);
+
+    if (world_cache.size() == 0)
+      c.forall([&] (const auto& number) {
+        world_cache(number.id, [&] { return metamap_clone(number); });
+      });
+
     std::vector<decltype(random_numbers.all_fields())> numbers(N);
     for (int i = 0; i < N; i++)
     {
