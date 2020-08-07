@@ -9,6 +9,7 @@
         "fortune_url"    : "/fortunes",
         "update_url"     : "/updates?N=",
         "plaintext_url"  : "/plaintext",
+        "cached_query_url"    : "/cached-worlds?N=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -32,6 +33,7 @@
         "fortune_url"    : "/fortunes",
         "update_url"     : "/updates?N=",
         "plaintext_url"  : "/plaintext",
+        "cached_query_url": "/cached-worlds?N=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -47,7 +49,49 @@
         "display_name": "Lithium-postgres",
         "notes": "",
         "versus": "None"
+      },
+      "postgres-pipeline": {
+        "db_url"         : "/db",
+        "query_url"      : "/queries?N=",
+        "fortune_url"    : "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "Lithium",
+        "language": "C++",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Lithium-postgres-pipeline",
+        "notes": "",
+        "versus": "None"
+      },
+      "postgres-pipeline-monothread": {
+        "db_url"         : "/db",
+        "query_url"      : "/queries?N=",
+        "fortune_url"    : "/fortunes",
+        "update_url"     : "/updates?N=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "Lithium",
+        "language": "C++",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Lithium-postgres-pipeline-1t",
+        "notes": "",
+        "versus": "None"
       }
+
 
     }
   ]
