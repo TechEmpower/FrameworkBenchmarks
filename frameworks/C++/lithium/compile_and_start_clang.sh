@@ -1,13 +1,13 @@
 #! /bin/sh
 
 DB_FLAG=$1
-COMMIT=343cb6880927eb57b6ae87b0c6b8dde29a3515b7
+COMMIT=36e7b46fc3d191ba9d56ef9adf00b59c058fe4d8
 
 if [ $DB_FLAG = "TFB_MYSQL" ]; then
   CXX_FLAGS="-I /usr/include/mariadb  -lmariadbclient "
   wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_mysql.hh
 elif [ $DB_FLAG = "TFB_PGSQL" ]; then
-  CXX_FLAGS="-I/usr/include/postgresql -I /usr/include/postgresql/12/server -lpthread -lpq"
+  CXX_FLAGS="-lpthread  -L/usr/lib -lpq -I/postgres-bab150045bd9766869f471ede88734ea0989261c/src/include"
   wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_pgsql.hh
 fi
 
