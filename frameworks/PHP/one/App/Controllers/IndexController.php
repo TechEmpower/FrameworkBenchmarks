@@ -33,18 +33,16 @@ class IndexController extends Controller
 
     public function fortunes()
     {
-        $fortune   = Fortune::findAll();
-        $rs    = [];
-        $rs[0] = 'Additional fortune added at request time.';
-        foreach ($fortune as $item) {
-            $rs[$item->id] = $item->message;
-        }
-        asort($rs);
+        $data   = Fortune::findAll()->jsonSerialize();
+        $data[] = (object) ['id' => 0,'message' => 'Additional fortune added at request time.'];
+        usort($data, function ($a,$b){
+            return $a->message <=> $b->message;
+        });
 
         $html = '';
-        foreach ($rs as $id => $message) {
-            $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
-            $html    .= "<tr><td>{$id}</td><td>{$message}</td></tr>";
+        foreach ($data as $f) {
+            $f->message = htmlspecialchars($f->message, ENT_QUOTES, 'UTF-8');
+            $html    .= "<tr><td>{$f->id}</td><td>{$f->message}</td></tr>";
         }
 
         $this->response->header('Content-type', 'text/html; charset=UTF-8');
