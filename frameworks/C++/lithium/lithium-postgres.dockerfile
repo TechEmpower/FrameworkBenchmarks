@@ -1,7 +1,8 @@
 FROM buildpack-deps:focal
 
 RUN apt-get update -yqq
-RUN apt-get install -yqq clang bison flex libboost-dev postgresql-server-dev-all libpq-dev wget libboost-context-dev
+RUN apt-get install -yqq clang libboost-context-dev libboost-dev wget
+RUN apt-get install -yqq bison flex
 
 COPY ./ ./
 
