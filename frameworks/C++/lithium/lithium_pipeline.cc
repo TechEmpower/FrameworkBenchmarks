@@ -32,7 +32,7 @@ void siege(int port) {
   http_benchmark(sockets, 1, 100, "GET /db HTTP/1.1\r\n\r\n");
   http_benchmark(sockets, 1, 100, "GET /queries?N=20 HTTP/1.1\r\n\r\n");
   http_benchmark(sockets, 1, 100, "GET /fortunes HTTP/1.1\r\n\r\n");
-  http_benchmark(sockets, 1, 100, "GET /updates?N=20 HTTP/1.1\r\n\r\n");
+  // http_benchmark(sockets, 1, 100, "GET /updates?N=20 HTTP/1.1\r\n\r\n");
   http_benchmark_close(sockets);
 }
 #endif

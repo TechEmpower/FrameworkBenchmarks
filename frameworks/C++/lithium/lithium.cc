@@ -114,10 +114,12 @@ int main(int argc, char* argv[]) {
     
     N = std::max(1, std::min(N, 500));
     
-    auto c = random_numbers.connect(request.fiber);
     std::vector<decltype(random_numbers.all_fields())> numbers(N);
-    for (int i = 0; i < N; i++)
-      numbers[i] = *c.find_one(s::id = 1 + rand() % 10000);
+    {
+      auto c = random_numbers.connect(request.fiber);
+      for (int i = 0; i < N; i++)
+        numbers[i] = *c.find_one(s::id = 1 + rand() % 10000);
+    }
 
     response.write_json(numbers);
   };
@@ -129,18 +131,20 @@ int main(int argc, char* argv[]) {
     
     N = std::max(1, std::min(N, 500));
     
-    auto c = random_numbers.connect(request.fiber);
-
-    if (world_cache.size() == 0)
-      c.forall([&] (const auto& number) {
-        world_cache(number.id, [&] { return metamap_clone(number); });
-      });
-
     std::vector<decltype(random_numbers.all_fields())> numbers(N);
-    for (int i = 0; i < N; i++)
     {
-      int id = 1 + rand() % 10000;
-      numbers[i] = world_cache(id, [&] { return *c.find_one(s::id = id); });
+      auto c = random_numbers.connect(request.fiber);
+
+      if (world_cache.size() == 0)
+        c.forall([&] (const auto& number) {
+          world_cache(number.id, [&] { return metamap_clone(number); });
+        });
+
+      for (int i = 0; i < N; i++)
+      {
+        int id = 1 + rand() % 10000;
+        numbers[i] = world_cache(id, [&] { return *c.find_one(s::id = id); });
+      }
     }
 
     response.write_json(numbers);
@@ -185,8 +189,10 @@ int main(int argc, char* argv[]) {
     typedef decltype(fortunes.all_fields()) fortune;
     std::vector<fortune> table;
 
-    auto c = fortunes.connect(request.fiber);
-    c.forall([&] (const auto& f) { table.emplace_back(metamap_clone(f)); });
+    {
+      auto c = fortunes.connect(request.fiber);
+      c.forall([&] (const auto& f) { table.emplace_back(metamap_clone(f)); });
+    }
     table.emplace_back(0, "Additional fortune added at request time.");
 
     std::sort(table.begin(), table.end(),
