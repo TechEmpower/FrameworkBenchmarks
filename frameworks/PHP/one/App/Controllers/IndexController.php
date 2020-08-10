@@ -28,7 +28,7 @@ class IndexController extends Controller
 
     public function db()
     {
-        return $this->json(World::find(mt_rand(1, 10000)));
+        return $this->json(World::repeatStatement()->find(mt_rand(1, 10000)));
     }
 
     public function fortunes()
@@ -54,9 +54,9 @@ class IndexController extends Controller
         $count = max(min(intval($count), 500), 1);
         $list  = [];
         while ($count--) {
-            $row    = World::find(mt_rand(1, 10000));
+            $row    = World::repeatStatement()->find(mt_rand(1, 10000));
             $list[] = $row;
-            $row->update(['randomNumber' => mt_rand(1, 10000)]);
+            $row->repeatStatement()->update(['randomNumber' => mt_rand(1, 10000)]);
         }
         return $this->json($list);
     }
@@ -66,7 +66,7 @@ class IndexController extends Controller
         $count = max(min(intval($count), 500), 1);
         $list  = [];
         while ($count--) {
-            $list[] = World::find(mt_rand(1, 10000));
+            $list[] = World::repeatStatement()->find(mt_rand(1, 10000));
         }
         return $this->json($list);
 
