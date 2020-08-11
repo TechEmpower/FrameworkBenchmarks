@@ -1,6 +1,6 @@
 package com.hexagonkt
 
-import com.hexagonkt.helpers.error
+import com.hexagonkt.helpers.fail
 import com.hexagonkt.helpers.Jvm.systemSetting
 import com.hexagonkt.settings.SettingsManager.defaultSetting
 import com.hexagonkt.store.mongodb.MongoDbStore
@@ -47,7 +47,7 @@ internal class BenchmarkMongoDbStore(engine: String) : BenchmarkStore {
 
     override fun replaceWorlds(count: Int): List<World> = (1..count)
         .map {
-            val world = worldRepository.findOne(randomWorld()) ?: error
+            val world = worldRepository.findOne(randomWorld()) ?: fail
             val worldCopy = world.copy(randomNumber = randomWorld())
             worldRepository.replaceOne(worldCopy)
             worldCopy

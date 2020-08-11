@@ -86,7 +86,7 @@ abstract class BenchmarkTestBase(
         val web = Web()
 
         val webRoutes = web.serverRouter.requestHandlers
-            .map { it.route.methods.first() to it.route.path.path }
+            .map { it.route.methods.first() to it.route.path.pattern }
 
         val benchmarkRoutes = listOf(
             GET to "/plaintext",
