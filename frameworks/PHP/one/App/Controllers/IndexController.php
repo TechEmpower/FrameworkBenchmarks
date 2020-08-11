@@ -53,11 +53,13 @@ class IndexController extends Controller
     {
         $count = max(min(intval($count), 500), 1);
         $list  = [];
+        $update = [];
         while ($count--) {
             $row    = World::repeatStatement()->find(mt_rand(1, 10000));
             $list[] = $row;
-            $row->repeatStatement()->update(['randomNumber' => mt_rand(1, 10000)]);
+            $update[] = "({$row->id},".mt_rand(1, 10000).")";
         }
+        World::exec('replace into '.World::TABLE.' (id,randomNumber) values '.implode(',',$update));
         return $this->json($list);
     }
 
