@@ -51,15 +51,16 @@ class IndexController extends Controller
 
     public function updates($count = 1)
     {
-        $count = max(min(intval($count), 500), 1);
-        $list  = [];
+        $count  = max(min(intval($count), 500), 1);
+        $list   = [];
         $update = [];
         while ($count--) {
-            $row    = World::repeatStatement()->find(mt_rand(1, 10000));
-            $list[] = $row;
-            $update[] = "({$row->id},".mt_rand(1, 10000).")";
+            $row      = World::repeatStatement()->find(mt_rand(1, 10000));
+            $list[]   = $row;
+            $update[] = "select {$row->id} as id," . mt_rand(1, 10000) . " as ff";
         }
-        World::exec('insert into '.World::TABLE.' (id,randomNumber) values '.implode(',',$update) .' ON DUPLICATE KEY UPDATE randomNumber=VALUES(randomNumber)');
+        $q = implode(' UNION all ', $update);
+        World::exec('update world right join ( ' . $q . ' ) as b on world.id = b.id set world.randomNumber = b.ff ');
         return $this->json($list);
     }
 
