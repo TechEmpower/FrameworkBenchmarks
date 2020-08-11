@@ -59,7 +59,7 @@ class IndexController extends Controller
             $list[]   = $row;
             $update[] = "select {$row->id} as id," . mt_rand(1, 10000) . " as ff";
         }
-        $q = implode(' UNION all ', $update);
+        $q = implode(' UNION all ', $update); // reci
         World::exec('update world right join ( ' . $q . ' ) as b on world.id = b.id set world.randomNumber = b.ff ');
         return $this->json($list);
     }
