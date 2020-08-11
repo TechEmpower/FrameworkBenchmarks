@@ -59,7 +59,7 @@ class IndexController extends Controller
             $list[] = $row;
             $update[] = "({$row->id},".mt_rand(1, 10000).")";
         }
-        World::exec('replace into '.World::TABLE.' (id,randomNumber) values '.implode(',',$update));
+        World::exec('insert into '.World::TABLE.' (id,randomNumber) values '.implode(',',$update) .' ON DUPLICATE KEY UPDATE randomNumber=VALUES(randomNumber)');
         return $this->json($list);
     }
 
