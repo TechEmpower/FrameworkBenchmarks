@@ -1,11 +1,14 @@
 package io.quarkus.benchmark.model.hibernate;
 
+import org.hibernate.annotations.Immutable;
+
 import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
+@Immutable
 public class Fortune {
 
     @Id

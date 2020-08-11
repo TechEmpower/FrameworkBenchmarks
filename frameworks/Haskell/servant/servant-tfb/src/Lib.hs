@@ -60,7 +60,7 @@ data Routes route = Routes
     , routeJson      :: route :- "json"      :> Get '[JSON]      JsonData
 #ifdef HAS_DB
     , routeDb        :: route :- "db"        :> Get '[JSON]      World
-    , routeFortune   :: route :- "fortune"   :> Get '[HTML]      FortunePage
+    , routeFortune   :: route :- "fortunes"   :> Get '[HTML]      FortunePage
 #endif
     }
   deriving (Generic)

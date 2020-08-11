@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -19,12 +17,11 @@ import javax.ws.rs.core.MediaType;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-
 import io.quarkus.benchmark.model.hibernate.Fortune;
 import io.quarkus.benchmark.repository.hibernate.FortuneRepository;
 
 @ApplicationScoped
-@Path("/hibernate")
+@Path("/")
 @Produces(MediaType.TEXT_HTML)
 @Consumes(MediaType.APPLICATION_JSON)
 public class FortuneResource {
@@ -33,24 +30,24 @@ public class FortuneResource {
     FortuneRepository repository;
 
     private final Mustache template;
+    private final Comparator<Fortune> fortuneComparator;
 
     public FortuneResource() {
         MustacheFactory mf = new DefaultMustacheFactory();
         template = mf.compile("fortunes.mustache");
+        fortuneComparator = Comparator.comparing(fortune -> fortune.getMessage());
     }
 
     @GET
     @Path("/fortunes")
-    public CompletionStage<String> fortunes() {
-        return CompletableFuture.supplyAsync(() -> {
-            List<Fortune> fortunes = new ArrayList<>(repository.findAll());
-            fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-            fortunes.sort(Comparator.comparing(fortune -> fortune.getMessage()));
+    public String fortunes() {
+        List<Fortune> fortunes = new ArrayList<>(repository.findAllStateless());
+        fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+        fortunes.sort(fortuneComparator);
 
-            StringWriter writer = new StringWriter();
-            template.execute(writer, Collections.singletonMap("fortunes", fortunes));
+        StringWriter writer = new StringWriter();
+        template.execute(writer, Collections.singletonMap("fortunes", fortunes));
 
-            return writer.toString();
-        });
+        return writer.toString();
     }
 }

@@ -2,8 +2,8 @@
   "framework": "aspcore",
   "tests": [{
     "default": {
-      "plaintext_url": "/p",
-      "json_url": "/j",
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -21,8 +21,8 @@
       "versus": "aspcore"
     },
     "rhtx": {
-      "plaintext_url": "/p",
-      "json_url": "/j",
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -42,7 +42,8 @@
     "ado-pg": {
       "fortune_url": "/fortunes",
       "db_url": "/db",
-      "query_url": "/queries/queries=",
+      "query_url": "/queries/",
+      "cached_query_url": "/cached-worlds/",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -60,7 +61,7 @@
       "versus": "aspcore-ado-pg"
     },
     "ado-pg-up": {
-      "update_url": "/updates/queries=",
+      "update_url": "/updates/",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -80,7 +81,8 @@
     "rhtx-pg": {
       "fortune_url": "/fortunes",
       "db_url": "/db",
-      "query_url": "/queries/queries=",
+      "query_url": "/queries/",
+      "cached_query_url": "/cached-worlds/",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -98,7 +100,7 @@
       "versus": "aspcore-ado-pg"
     },
     "rhtx-pg-up": {
-      "update_url": "/updates/queries=",
+      "update_url": "/updates/",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -114,27 +116,6 @@
       "display_name": "ASP.NET Core, Red Hat Linux Transport, ADO.NET",
       "notes": "",
       "versus": "aspcore-ado-pg-up"
-    },
-    "ado-my": {
-      "fortune_url": "/fortunes",
-      "db_url": "/db",
-      "update_url": "/updates/queries=",
-      "query_url": "/queries/queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "MySQL",
-      "framework": "ASP.NET Core",
-      "language": "C#",
-      "orm": "Raw",
-      "platform": ".NET",
-      "flavor": "CoreCLR",
-      "webserver": "Kestrel",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "ASP.NET Core, ADO.NET",
-      "notes": "",
-      "versus": "aspcore-ado-my"
     },
     "mw": {
       "plaintext_url": "/plaintext",

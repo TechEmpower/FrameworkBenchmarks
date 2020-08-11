@@ -2,10 +2,10 @@ package hello.controller;
 
 import static java.util.Comparator.comparing;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 
 import hello.model.Fortune;
 import hello.model.World;
@@ -37,28 +37,37 @@ public final class HelloController {
 
   @RequestMapping("/db")
   @ResponseBody
-
   World db() {
-    return randomWorld();
+    return dbRepository.getWorld(randomWorldNumber());
   }
 
   @RequestMapping("/queries")
   @ResponseBody
   World[] queries(@RequestParam String queries) {
-    var worlds = new World[parseQueryCount(queries)];
-    Arrays.setAll(worlds, i -> randomWorld());
-    return worlds;
+    return randomWorldNumbers()
+        .mapToObj(dbRepository::getWorld)
+        .limit(parseQueryCount(queries))
+        .toArray(World[]::new);
   }
 
   @RequestMapping("/updates")
   @ResponseBody
   World[] updates(@RequestParam String queries) {
-    var worlds = new World[parseQueryCount(queries)];
-    Arrays.setAll(worlds, i -> randomWorld());
-    for (var world : worlds) {
-      dbRepository.updateWorld(world, randomWorldNumber());
-    }
-    return worlds;
+    return randomWorldNumbers()
+        .mapToObj(dbRepository::getWorld)
+        .map(world -> {
+          // Ensure that the new random number is not equal to the old one.
+          // That would cause the JPA-based implementation to avoid sending the
+          // UPDATE query to the database, which would violate the test
+          // requirements.
+          int newRandomNumber;
+          do {
+            newRandomNumber = randomWorldNumber();
+          } while (newRandomNumber == world.randomnumber);
+          return dbRepository.updateWorld(world, newRandomNumber);
+        })
+        .limit(parseQueryCount(queries))
+        .toArray(World[]::new);
   }
 
   @RequestMapping("/fortunes")
@@ -71,12 +80,23 @@ public final class HelloController {
     return fortunes;
   }
 
-  private World randomWorld() {
-    return dbRepository.getWorld(randomWorldNumber());
-  }
+  private static final int MIN_WORLD_NUMBER = 1;
+  private static final int MAX_WORLD_NUMBER_PLUS_ONE = 10_001;
 
   private static int randomWorldNumber() {
-    return 1 + ThreadLocalRandom.current().nextInt(10000);
+    return ThreadLocalRandom
+        .current()
+        .nextInt(MIN_WORLD_NUMBER, MAX_WORLD_NUMBER_PLUS_ONE);
+  }
+
+  private static IntStream randomWorldNumbers() {
+    return ThreadLocalRandom
+        .current()
+        .ints(MIN_WORLD_NUMBER, MAX_WORLD_NUMBER_PLUS_ONE)
+        // distinct() allows us to avoid using Hibernate's first-level cache in
+        // the JPA-based implementation.  Using a cache like that would bypass
+        // querying the database, which would violate the test requirements.
+        .distinct();
   }
 
   private static int parseQueryCount(String textValue) {

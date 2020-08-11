@@ -17,7 +17,7 @@ namespace PlatformBenchmarks
 
         private static AsciiString _httpsuccess = new AsciiString("HTTP/1.1 200 OK\r\n");
 
-        private static readonly AsciiString _headerServer = "Server: Beetlex\r\n";
+        private static readonly AsciiString _headerServer = "Server: TFB\r\n";
 
         private static readonly AsciiString _headerContentLength = "Content-Length: ";
 
@@ -37,9 +37,13 @@ namespace PlatformBenchmarks
 
         private static readonly AsciiString _path_Plaintext = "/plaintext";
 
+        private static readonly AsciiString _path_Updates = "/updates";
+
         private static readonly AsciiString _path_Fortunes = "/fortunes";
 
         private static readonly AsciiString _result_plaintext = "Hello, World!";
+
+        private static readonly AsciiString _cached_worlds = "/cached-worlds";
 
         private static byte _Space = 32;
 
@@ -51,7 +55,7 @@ namespace PlatformBenchmarks
         {
             int threads = System.Math.Min(Environment.ProcessorCount, 16);
             NextQueueGroup = new NextQueueGroup(threads);
-          
+
         }
 
         public void Default(ReadOnlySpan<byte> url, PipeStream stream, HttpToken token, ISession session)
@@ -86,7 +90,7 @@ namespace PlatformBenchmarks
         {
             public void Dispose()
             {
-               
+
             }
 
             public PipeStream Stream { get; set; }
@@ -104,19 +108,19 @@ namespace PlatformBenchmarks
             }
         }
 
-        private void OnProcess(PipeStream pipeStream,HttpToken token,ISession sessino)
+        private void OnProcess(PipeStream pipeStream, HttpToken token, ISession sessino)
         {
             var line = _line.AsSpan();
             int len = (int)pipeStream.FirstBuffer.Length;
-            var receiveData = pipeStream.FirstBuffer.Memory.Span;      
-            ReadOnlySpan<byte> http= line;
-            ReadOnlySpan<byte> method= line;
-            ReadOnlySpan<byte> url= line;
+            var receiveData = pipeStream.FirstBuffer.Memory.Span;
+            ReadOnlySpan<byte> http = line;
+            ReadOnlySpan<byte> method = line;
+            ReadOnlySpan<byte> url = line;
             int offset2 = 0;
             int count = 0;
-            for(int i=0;i<len;i++)
+            for (int i = 0; i < len; i++)
             {
-                if(receiveData[i]==line[0])
+                if (receiveData[i] == line[0])
                 {
                     http = receiveData.Slice(offset2, i - offset2);
                     break;
@@ -148,7 +152,7 @@ namespace PlatformBenchmarks
             base.SessionReceive(server, e);
             PipeStream pipeStream = e.Session.Stream.ToPipeStream();
             HttpToken token = (HttpToken)e.Session.Tag;
-            if (Program.Debug)
+            if (Program.Debug || Program.UpDB)
             {
                 RequestWork work = new RequestWork();
                 work.Handler = this;
@@ -167,6 +171,14 @@ namespace PlatformBenchmarks
 
         public virtual void OnStartLine(ReadOnlySpan<byte> http, ReadOnlySpan<byte> method, ReadOnlySpan<byte> url, ISession session, HttpToken token, PipeStream stream)
         {
+            if (!Program.Debug)
+            {
+                UpdateCommandsCached.Init();
+                if (Program.UpDB)
+                    DBConnectionGroupPool.Init(64, RawDb._connectionString);
+                else
+                    DBConnectionGroupPool.Init(256, RawDb._connectionString);
+            }
             int queryIndex = AnalysisUrl(url);
             ReadOnlySpan<byte> baseUrl = default;
             ReadOnlySpan<byte> queryString = default;
@@ -203,6 +215,20 @@ namespace PlatformBenchmarks
                 stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
                 OnWriteContentLength(stream, token);
                 queries(Encoding.ASCII.GetString(queryString), stream, token, session);
+            }
+
+            else if (baseUrl.Length == _cached_worlds.Length && baseUrl.StartsWith(_cached_worlds))
+            {
+                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
+                OnWriteContentLength(stream, token);
+                caching(Encoding.ASCII.GetString(queryString), stream, token, session);
+            }
+
+            else if (baseUrl.Length == _path_Updates.Length && baseUrl.StartsWith(_path_Updates))
+            {
+                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
+                OnWriteContentLength(stream, token);
+                updates(Encoding.ASCII.GetString(queryString), stream, token, session);
             }
             else if (baseUrl.Length == _path_Fortunes.Length && baseUrl.StartsWith(_path_Fortunes))
             {

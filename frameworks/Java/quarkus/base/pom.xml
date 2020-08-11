@@ -12,6 +12,13 @@
     <groupId>io.quarkus.benchmark</groupId>
     <artifactId>base</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-scheduler</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

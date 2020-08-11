@@ -2,29 +2,21 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"log"
 	"runtime"
 
 	"fasthttp/src/handlers"
-	"fasthttp/src/storage"
 
 	"github.com/savsgio/gotils"
 	"github.com/valyala/fasthttp"
 	fastprefork "github.com/valyala/fasthttp/prefork"
 )
 
-var bindHost, jsonEncoder, dbDriver, dbConnectionString string
-var prefork, useQuickTemplate bool
+var bindHost string
+var prefork bool
 
 func init() {
-	// init flags
 	flag.StringVar(&bindHost, "bind", ":8080", "set bind host")
 	flag.BoolVar(&prefork, "prefork", false, "use prefork")
-	flag.StringVar(&jsonEncoder, "json_encoder", "none", "json encoder: none or easyjson or sjson")
-	flag.StringVar(&dbDriver, "db", "none", "db connection driver [values: none or pgx or mongo]")
-	flag.StringVar(&dbConnectionString, "db_connection_string", "", "db connection string")
-	flag.BoolVar(&useQuickTemplate, "quicktemplate", false, "use quicktemplate")
 
 	flag.Parse()
 }
@@ -44,81 +36,50 @@ func main() {
 		maxConn = numCPU()
 	}
 
-	if dbConnectionString == "" {
-		dbConnectionString = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s pool_max_conns=%d", "tfb-database", 5432, "benchmarkdbuser", "benchmarkdbpass", "hello_world", maxConn)
+	// init database
+	if err := handlers.InitDB(maxConn); err != nil {
+		panic(err)
 	}
+	defer handlers.CloseDB()
 
-	// init database with appropriate driver
-	db, err := storage.InitDB(dbDriver, dbConnectionString, maxConn)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// init and populate worlds cache
+	handlers.PopulateWorldsCache()
 
-	if db != nil {
-		defer db.Close()
-	}
-
-	// init json encoders
-	var jsonHandler, dbHandler, queriesHandler, updateHandler, fortuneHandler fasthttp.RequestHandler
-
-	if useQuickTemplate {
-		fortuneHandler = handlers.FortuneQuickHandler(db)
-	} else {
-		fortuneHandler = handlers.FortuneHandler(db)
-	}
-
-	switch jsonEncoder {
-	case "easyjson":
-		jsonHandler = handlers.JSONHandlerEasyJSON
-		dbHandler = handlers.DBHandlerEasyJSON(db)
-		queriesHandler = handlers.QueriesHandlerEasyJSON(db)
-		updateHandler = handlers.UpdateHandlerEasyJSON(db)
-	case "sjson":
-		jsonHandler = handlers.JSONHandlerSJson
-		dbHandler = handlers.DBHandlerSJson(db)
-		queriesHandler = handlers.QueriesHandlerSJson(db)
-		updateHandler = handlers.UpdateHandlerSJson(db)
-	default:
-		jsonHandler = handlers.JSONHandler
-		dbHandler = handlers.DBHandler(db)
-		queriesHandler = handlers.QueriesHandler(db)
-		updateHandler = handlers.UpdateHandler(db)
-	}
-
+	// init handler
 	handler := func(ctx *fasthttp.RequestCtx) {
 		switch gotils.B2S(ctx.Path()) {
-		case "/plaintext":
-			handlers.PlaintextHandler(ctx)
 		case "/json":
-			jsonHandler(ctx)
+			handlers.JSON(ctx)
 		case "/db":
-			dbHandler(ctx)
+			handlers.DB(ctx)
 		case "/queries":
-			queriesHandler(ctx)
-		case "/fortune":
-			fortuneHandler(ctx)
-		case "/update":
-			updateHandler(ctx)
+			handlers.Queries(ctx)
+		case "/cached-worlds":
+			handlers.CachedWorlds(ctx)
+		case "/fortunes":
+			handlers.FortunesQuick(ctx)
+		case "/updates":
+			handlers.Updates(ctx)
+		case "/plaintext":
+			handlers.Plaintext(ctx)
 		default:
 			ctx.Error(fasthttp.StatusMessage(fasthttp.StatusNotFound), fasthttp.StatusNotFound)
 		}
 	}
 
+	// init fasthttp server
 	server := &fasthttp.Server{
-		Handler: handler,
-		Name:    "Go",
+		Name:                          "Go",
+		Handler:                       handler,
+		DisableHeaderNamesNormalizing: true,
 	}
 
+	listenAndServe := server.ListenAndServe
 	if prefork {
-		preforkServer := fastprefork.New(server)
+		listenAndServe = fastprefork.New(server).ListenAndServe
+	}
 
-		if err := preforkServer.ListenAndServe(bindHost); err != nil {
-			panic(err)
-		}
-
-	} else {
-		if err := server.ListenAndServe(bindHost); err != nil {
-			panic(err)
-		}
+	if err := listenAndServe(bindHost); err != nil {
+		panic(err)
 	}
 }

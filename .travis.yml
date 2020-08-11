@@ -3,7 +3,7 @@
 #
 
 sudo: required
-dist: xenial
+dist: bionic
 language: generic
 python:
   - "2.7"
@@ -16,6 +16,7 @@ env:
     - "TESTLANG=CSharp"
     - 'TESTDIR="C++/cppcms C++/cpoll_cppsp C++/poco"'
     - "TESTDIR=C++/ffead-cpp"
+    - "TESTDIR=C++/cuehttp"
     - "TESTDIR=C++/cutelyst"
     - "TESTDIR=C++/libhttpserver"
     - "TESTDIR=C++/silicon"
@@ -37,7 +38,7 @@ env:
     - 'TESTDIR="Go/chi Go/gin Go/goji Go/aah Go/beego Go/echo Go/gnet"'
     - 'TESTDIR="Go/falcore Go/fiber Go/kami Go/martini Go/revel Go/webgo"'
     - 'TESTDIR="Go/evio Go/fasthttp Go/go-std Go/atreugo Go/gramework"'
-    - 'TESTDIR="Go/goframe"'
+    - 'TESTDIR="Go/gearbox Go/goframe Go/clevergo"'
     - "TESTLANG=Groovy"
     - "TESTDIR=Haskell/snap"
     - "TESTDIR=Haskell/yesod"
@@ -47,7 +48,7 @@ env:
     - "TESTDIR=Haskell/wizzardo-inline"
     - 'TESTDIR="Java/act Java/comsat"'
     - 'TESTDIR="Java/activeweb Java/armeria Java/baratine Java/bayou Java/blade Java/curacao Java/dropwizard Java/firenio Java/servicetalk Java/voovan"'
-    - 'TESTDIR="Java/gemini Java/greenlightning Java/grizzly Java/helidon Java/httpserver Java/jetty Java/jhttp Java/jooby2 Java/wicket"'
+    - 'TESTDIR="Java/gemini Java/greenlightning Java/grizzly Java/helidon Java/httpserver Java/jetty Java/jlhttp Java/jooby Java/wicket"'
     - 'TESTDIR="Java/light-java Java/minijax Java/nanohttpd Java/netty Java/ninja-standalone Java/officefloor Java/proteus Java/quarkus"'
     - 'TESTDIR="Java/rapidoid Java/redkale Java/restexpress Java/revenj-jvm Java/servlet Java/servlet3 Java/smart-socket Java/spark"'
     - 'TESTDIR="Java/spring Java/spring-webflux Java/t-io Java/tapestry Java/undertow Java/undertow-jersey Java/vertx Java/vertx-web Java/simple-server"'
@@ -60,21 +61,24 @@ env:
     - "TESTLANG=Lisp"
     - "TESTLANG=Lua"
     - "TESTLANG=Nim"
+    - 'TESTDIR="Nim/httpbeast Nim/jester Nim/basolato"'
     - "TESTLANG=Perl"
     - 'TESTDIR="PHP/php"'
-    - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/fat-free PHP/fuel PHP/kumbiaphp PHP/phpixie PHP/slim PHP/symfony PHP/yii2 PHP/zend PHP/spiral"'
-    - 'TESTDIR="PHP/amp PHP/hhvm PHP/peachpie PHP/php-ngx PHP/workerman PHP/phalcon"'
-    - 'TESTDIR="PHP/hamlet PHP/laravel PHP/lumen PHP/swoole PHP/ubiquity PHP/hyperf PHP/sw-fw-less PHP/imi PHP/simps"'
+    - 'TESTDIR="PHP/comet PHP/kumbiaphp PHP/workerman PHP/webman"'
+    - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/fat-free PHP/fuel PHP/phpixie PHP/slim PHP/symfony PHP/yii2 PHP/zend PHP/spiral"'
+    - 'TESTDIR="PHP/amp PHP/hhvm PHP/peachpie PHP/php-ngx PHP/phalcon"'
+    - 'TESTDIR="PHP/hamlet PHP/laravel PHP/lumen PHP/swoole PHP/ubiquity PHP/hyperf PHP/sw-fw-less PHP/imi PHP/simps PHP/one"'
     - 'TESTDIR="Python/aiohttp Python/api_hour Python/apidaora Python/blacksheep Python/bottle Python/cherrypy Python/django Python/emmett Python/eve Python/falcon Python/fastapi Python/flask"'
     - 'TESTDIR="Python/hug Python/japronto Python/klein Python/morepath Python/pyramid Python/quart Python/responder Python/sanic Python/spyne Python/starlette"'
     - 'TESTDIR="Python/tornado Python/turbogears Python/uvicorn Python/uwsgi Python/vibora Python/web2py Python/webware Python/weppy Python/wsgi"'
-    - 'TESTDIR="Ruby/agoo Ruby/grape Ruby/h2o_mruby Ruby/hanami Ruby/padrino Ruby/rack Ruby/rack-sequel"'
+    - 'TESTDIR="Ruby/agoo Ruby/grape Ruby/h2o_mruby Ruby/padrino Ruby/rack Ruby/rack-sequel"'
     - 'TESTDIR="Ruby/rails Ruby/roda-sequel Ruby/sinatra Ruby/sinatra-sequel"'
     - 'TESTDIR="Rust/actix Rust/gotham Rust/hyper Rust/iron Rust/saphir"'
     - 'TESTDIR="Rust/may-minihttp Rust/nickel Rust/rocket"'
     - 'TESTDIR="Rust/rouille Rust/thruster Rust/tokio-minihttp"'
     - 'TESTDIR="Rust/warp-rust"'
     - 'TESTDIR="Rust/roa"'
+    - 'TESTDIR="Rust/ntex"'
     - 'TESTDIR="Scala/akka-http Scala/blaze Scala/cask Scala/colossus Scala/finagle"'
     - 'TESTDIR="Scala/finatra Scala/finch Scala/http4s"'
     - 'TESTDIR="Scala/play2-scala Scala/scalene Scala/youi"'

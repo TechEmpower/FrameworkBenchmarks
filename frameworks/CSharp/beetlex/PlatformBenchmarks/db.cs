@@ -19,6 +19,7 @@ namespace PlatformBenchmarks
             }
             catch(Exception e_)
             {
+                HttpServer.ApiServer.Log(BeetleX.EventArgs.LogType.Error, null, $"db error {e_.Message}@{e_.StackTrace}");
                 stream.Write(e_.Message);
             }
             OnCompleted(stream, session, token);

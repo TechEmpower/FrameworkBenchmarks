@@ -15,14 +15,13 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-ENV MYSQL_VERSION 8.0.20-1ubuntu18.04
-
 # https://bugs.mysql.com/bug.php?id=90695
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-server mysql-server/lowercase-table-names select Enabled\""]
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-community-server mysql-community-server/data-dir select 'Y'\""]
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-community-server mysql-community-server/root-pass password secret\""]
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< \"mysql-community-server mysql-community-server/re-root-pass password secret\""]
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-server="${MYSQL_VERSION}" > /dev/null
+RUN echo "Installing mysql-server version: $(apt-cache policy mysql-server | grep -oP "(?<=Candidate: )(.*)$")"
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-server > /dev/null
 
 RUN mv /etc/mysql/my.cnf /etc/mysql/my.cnf.orig
 RUN cp my.cnf /etc/mysql/my.cnf
