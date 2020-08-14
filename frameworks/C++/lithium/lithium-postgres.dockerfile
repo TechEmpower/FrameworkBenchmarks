@@ -1,15 +1,12 @@
 FROM buildpack-deps:focal
 
 RUN apt-get update -yqq
-RUN apt-get install -yqq g++-9 libboost-dev postgresql-server-dev-all libpq-dev wget libboost-context-dev
+RUN apt-get install -yqq clang libboost-context-dev libboost-dev wget
+RUN apt-get install -yqq bison flex
 
 COPY ./ ./
 
-ENV COMMIT=062c167b61ba14292d54bade9534adca33a8d19e
+RUN ./compile_libpq.sh
+ENV LD_LIBRARY_PATH=/usr/lib
 
-RUN wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_pgsql.hh
-RUN wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_http_backend.hh
-
-RUN g++ -DTFB_PGSQL -O3 -DNDEBUG -march=native -std=c++17 ./lithium.cc -I/usr/include/postgresql -lpthread -lpq -lboost_context -o /lithium_tbf
-
-CMD /lithium_tbf tfb-database 8080
+CMD ./compile_and_start_clang.sh TFB_PGSQL

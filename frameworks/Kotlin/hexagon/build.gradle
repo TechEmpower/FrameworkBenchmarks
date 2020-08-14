@@ -5,11 +5,14 @@ plugins {
 
 apply(from: "$gradleScripts/kotlin.gradle")
 apply(from: "$gradleScripts/application.gradle")
-apply(from: "$gradleScripts/junit.gradle")
 
 apply(plugin: "war")
 
 defaultTasks("installDist")
+
+application {
+    mainClassName = "com.hexagonkt.BenchmarkKt"
+}
 
 war {
     archiveFileName = "ROOT.war"
@@ -24,6 +27,10 @@ dependencies {
 
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.postgresql:postgresql:$postgresqlVersion")
+
+    implementation("org.slf4j:slf4j-jdk14:1.7.30")
+    runtimeOnly("org.slf4j:jcl-over-slf4j:1.7.30")
+    runtimeOnly("org.slf4j:log4j-over-slf4j:1.7.30")
 
     // providedCompile excludes the dependency only in the WAR, not in the distribution
     providedCompile("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }

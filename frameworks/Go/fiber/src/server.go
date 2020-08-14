@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
-	"os"
 	"runtime"
+	"runtime/debug"
 	"sort"
 	"strconv"
 	"sync"
@@ -13,6 +13,7 @@ import (
 	"fiber/src/templates"
 
 	"github.com/gofiber/fiber"
+	"github.com/gofiber/utils"
 	pgx "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
@@ -25,8 +26,8 @@ var (
 
 const (
 	queryparam       = "q"
-	worldcount       = 10000
 	helloworld       = "Hello, World!"
+	worldcount       = 10000
 	worldselectsql   = "SELECT id, randomNumber FROM World WHERE id = $1"
 	worldupdatesql   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
 	worldcachesql    = "SELECT * FROM World LIMIT $1"
@@ -34,12 +35,6 @@ const (
 )
 
 func main() {
-	for _, arg := range os.Args[1:] {
-		if arg == "-child" {
-			child = true
-		}
-	}
-
 	initDatabase()
 
 	app := fiber.New(&fiber.Settings{
@@ -48,13 +43,29 @@ func main() {
 		DisableHeaderNormalizing: true,
 		ServerHeader:             "go",
 	})
+	if utils.GetArgument("-prefork") {
+		app.Settings.Prefork = true
+	}
+	if utils.GetArgument("-prefork-child") {
+		child = true
+	}
+	if utils.GetArgument("-nogc") {
+		debug.SetGCPercent(-1)
+	}
+
+	if utils.GetArgument("-prefork-child") {
+		child = true
+	}
+	if utils.GetArgument("-nogc") {
+		debug.SetGCPercent(-1)
+	}
 
 	app.Get("/plaintext", plaintextHandler)
 	app.Get("/json", jsonHandler)
 	app.Get("/db", dbHandler)
 	app.Get("/update", updateHandler)
 	app.Get("/queries", queriesHandler)
-	app.Get("/fortune", templateHandler)
+	app.Get("/fortunes", templateHandler)
 	app.Get("/cached-worlds", cachedHandler)
 	app.Listen(8080)
 }
@@ -172,7 +183,7 @@ func populateCache() {
 func jsonHandler(c *fiber.Ctx) {
 	m := AcquireJSON()
 	m.Message = helloworld
-	c.JSON(m)
+	c.JSON(&m)
 	ReleaseJSON(m)
 }
 
@@ -180,7 +191,7 @@ func jsonHandler(c *fiber.Ctx) {
 func dbHandler(c *fiber.Ctx) {
 	w := AcquireWorld()
 	db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
-	c.JSON(w)
+	c.JSON(&w)
 	ReleaseWorld(w)
 }
 
@@ -216,7 +227,7 @@ func queriesHandler(c *fiber.Ctx) {
 		w := &worlds[i]
 		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 	}
-	c.JSON(worlds)
+	c.JSON(&worlds)
 	ReleaseWorlds(worlds)
 }
 
@@ -239,13 +250,15 @@ func updateHandler(c *fiber.Ctx) {
 		batch.Queue(worldupdatesql, w.RandomNumber, w.ID)
 	}
 	db.SendBatch(context.Background(), &batch).Close()
-	c.JSON(worlds)
+	c.JSON(&worlds)
 	ReleaseWorlds(worlds)
 }
 
+var helloworldRaw = []byte("Hello, World!")
+
 // plaintextHandler :
 func plaintextHandler(c *fiber.Ctx) {
-	c.SendString(helloworld)
+	c.SendBytes(helloworldRaw)
 }
 
 // cachedHandler :
@@ -255,7 +268,7 @@ func cachedHandler(c *fiber.Ctx) {
 	for i := 0; i < n; i++ {
 		worlds[i] = cachedWorlds[RandomWorld()-1]
 	}
-	c.JSON(worlds)
+	c.JSON(&worlds)
 	ReleaseWorlds(worlds)
 }
 

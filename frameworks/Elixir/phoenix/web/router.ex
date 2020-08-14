@@ -5,8 +5,8 @@ defmodule Hello.Router do
     get("/json", PageController, :_json)
     get("/db", PageController, :db)
     get("/queries", PageController, :queries)
-    get("/fortune", PageController, :fortunes)
-    get("/update", PageController, :updates)
+    get("/fortunes", PageController, :fortunes)
+    get("/updates", PageController, :updates)
     get("/plaintext", PageController, :plaintext)
     get("/", PageController, :index)
   end

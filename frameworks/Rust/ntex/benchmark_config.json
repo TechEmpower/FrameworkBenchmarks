@@ -26,7 +26,7 @@
       "update_url": "/update?q=",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Platform",
+      "classification": "Micro",
       "database": "Postgres",
       "framework": "ntex",
       "language": "Rust",

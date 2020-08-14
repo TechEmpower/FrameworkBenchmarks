@@ -5,6 +5,7 @@ use std::future::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
+use bytes::BytesMut;
 use futures::future::ok;
 use ntex::http::body::Body;
 use ntex::http::header::{HeaderValue, CONTENT_TYPE, SERVER};
@@ -78,7 +79,7 @@ impl Service for App {
                     let size = 35 * worlds.len();
                     let mut res = Response::with_body(
                         StatusCode::OK,
-                        Body::Bytes(worlds.to_bytes(size)),
+                        Body::Bytes(worlds.to_bytes::<BytesMut>(size)),
                     );
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
@@ -97,7 +98,7 @@ impl Service for App {
                     let size = 35 * worlds.len();
                     let mut res = Response::with_body(
                         StatusCode::OK,
-                        Body::Bytes(worlds.to_bytes(size)),
+                        Body::Bytes(worlds.to_bytes::<BytesMut>(size)),
                     );
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
