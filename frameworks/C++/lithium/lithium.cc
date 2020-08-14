@@ -131,21 +131,14 @@ int main(int argc, char* argv[]) {
     
     N = std::max(1, std::min(N, 500));
     
+    if (world_cache.size() == 0)
+      random_numbers.connect(request.fiber).forall([&] (const auto& number) {
+        world_cache(number.id, [&] { return metamap_clone(number); });
+      });
+
     std::vector<decltype(random_numbers.all_fields())> numbers(N);
-    {
-      auto c = random_numbers.connect(request.fiber);
-
-      if (world_cache.size() == 0)
-        c.forall([&] (const auto& number) {
-          world_cache(number.id, [&] { return metamap_clone(number); });
-        });
-
-      for (int i = 0; i < N; i++)
-      {
-        int id = 1 + rand() % 10000;
-        numbers[i] = world_cache(id, [&] { return *c.find_one(s::id = id); });
-      }
-    }
+    for (int i = 0; i < N; i++)
+      numbers[i] = world_cache(1 + rand() % 10000);
 
     response.write_json(numbers);
   };
