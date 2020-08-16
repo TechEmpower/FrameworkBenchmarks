@@ -1,3 +1,3 @@
-require "../config/*"
+require "../config/application"
 
 Amber::Server.start

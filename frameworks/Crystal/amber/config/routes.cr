@@ -1,4 +1,4 @@
-Amber::Server.configure do |app|
+Amber::Server.configure do
   pipeline :web do
   end
 
