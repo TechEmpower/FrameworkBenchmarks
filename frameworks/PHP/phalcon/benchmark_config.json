@@ -50,6 +50,7 @@
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
