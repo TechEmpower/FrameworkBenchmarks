@@ -39,6 +39,11 @@ try {
 
         return $view;
     };
+    
+    $app->map('/', function() {
+        header("Content-Type: application/json");
+        echo json_encode(array('message' => 'You are phlying with Phalcon!'));        
+    });
 
     $app->map('/json', function() {
         header("Content-Type: application/json");
@@ -96,8 +101,9 @@ try {
         ));
 
     });
-    $request = new Phalcon\Http\Request();
-    $app->handle($request->getURI());
+    
+    $url = $_REQUEST['_url'] ?? '/';
+    $app->handle($url);
 
 } catch(\Phalcon\Exception $e) {
     echo "PhalconException: ", $e->getMessage();
