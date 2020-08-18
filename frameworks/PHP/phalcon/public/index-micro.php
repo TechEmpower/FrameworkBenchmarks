@@ -9,11 +9,13 @@ try {
 
         return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
             'host'       => 'tfb-database',
-            'dbname'       =>  'hello_world',
-            'charset'    =>  'utf8',
+            'dbname'     =>  'hello_world',
             'username'   => 'benchmarkdbuser',
             'password'   => 'benchmarkdbpass',
-            'persistent' => true
+            'options'    => [
+                              PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'",
+                              PDO::ATTR_PERSISTENT => TRUE,
+                            ]
         ));
     };
 
