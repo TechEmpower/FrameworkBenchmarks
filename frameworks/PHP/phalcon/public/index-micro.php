@@ -40,7 +40,7 @@ try {
         return $view;
     };
     
-    $app->map('/', function() {
+    $app->map('/plaintext', function() {
         header("Content-Type: text/plain; charset=UTF-8");
         echo "Hello, World!";       
     });
