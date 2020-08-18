@@ -41,8 +41,8 @@ try {
     };
     
     $app->map('/', function() {
-        header("Content-Type: application/json");
-        echo json_encode(array('message' => 'You are phlying with Phalcon!'));        
+        header("Content-Type: text/plain; charset=UTF-8");
+        echo "Hello, World!";       
     });
 
     $app->map('/json', function() {
