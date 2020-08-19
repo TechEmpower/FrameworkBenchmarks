@@ -1,9 +1,7 @@
 package com.techempower;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jooby.Jooby;
 import io.jooby.ServerOptions;
-import io.jooby.json.JacksonModule;
 import io.jooby.rocker.RockerModule;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Row;
@@ -41,10 +39,6 @@ public class ReactivePg extends Jooby {
     /** Template engine: */
     install(new RockerModule());
 
-    /** JSON: */
-    install(new JacksonModule());
-    ObjectMapper mapper = require(ObjectMapper.class);
-
     /** Single query: */
     get("/db", ctx -> {
       clients.next().preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld()), rsp -> {
@@ -53,8 +47,7 @@ public class ReactivePg extends Jooby {
             RowIterator<Row> rs = rsp.result().iterator();
             Row row = rs.next();
             ctx.setResponseType(JSON)
-                .send(
-                    mapper.writeValueAsBytes(new World(row.getInteger(0), row.getInteger(1))));
+                .send(Json.encode(new World(row.getInteger(0), row.getInteger(1))));
           } else {
             ctx.sendError(rsp.cause());
           }
@@ -87,7 +80,7 @@ public class ReactivePg extends Jooby {
           if (counter.incrementAndGet() == queries && !failed.get()) {
             try {
               ctx.setResponseType(JSON)
-                  .send(mapper.writeValueAsBytes(result));
+                  .send(Json.encode(result));
             } catch (IOException x) {
               ctx.sendError(x);
             }
@@ -131,7 +124,7 @@ public class ReactivePg extends Jooby {
                   } else {
                     try {
                       ctx.setResponseType(JSON)
-                          .send(mapper.writeValueAsBytes(result));
+                          .send(Json.encode(result));
                     } catch (IOException x) {
                       ctx.sendError(x);
                     }

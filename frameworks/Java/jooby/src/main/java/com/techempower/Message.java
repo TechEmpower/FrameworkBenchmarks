@@ -1,5 +1,8 @@
 package com.techempower;
 
+import com.dslplatform.json.CompiledJson;
+
+@CompiledJson
 public class Message {
   private String message;
 

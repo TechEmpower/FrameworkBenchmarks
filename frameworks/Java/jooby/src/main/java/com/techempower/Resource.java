@@ -1,6 +1,5 @@
 package com.techempower;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jooby.Context;
 import io.jooby.annotations.Dispatch;
 import views.fortunes;
@@ -30,11 +29,8 @@ public class Resource {
 
   private final DataSource dataSource;
 
-  private final ObjectMapper mapper;
-
-  public Resource(DataSource dataSource, ObjectMapper mapper) {
+  public Resource(DataSource dataSource) {
     this.dataSource = dataSource;
-    this.mapper = mapper;
   }
 
   @GET @Path("/plaintext")
@@ -45,7 +41,7 @@ public class Resource {
   @GET @Path("/json")
   public void json(Context ctx) throws IOException {
     ctx.setResponseType(JSON);
-    ctx.send(mapper.writeValueAsBytes(new Message(MESSAGE)));
+    ctx.send(Json.encode(new Message(MESSAGE)));
   }
 
   @GET @Path("/db")
@@ -62,7 +58,7 @@ public class Resource {
       }
     }
     ctx.setResponseType(JSON);
-    ctx.send(mapper.writeValueAsBytes(result));
+    ctx.send(Json.encode(result));
   }
 
   @GET @Path("/queries")
@@ -81,7 +77,7 @@ public class Resource {
       }
     }
     ctx.setResponseType(JSON);
-    ctx.send(mapper.writeValueAsBytes(result));
+    ctx.send(Json.encode(result));
   }
 
   @GET @Path("/updates")
@@ -116,7 +112,7 @@ public class Resource {
       }
     }
     ctx.setResponseType(JSON);
-    ctx.send(mapper.writeValueAsBytes(result));
+    ctx.send(Json.encode(result));
   }
 
   @GET @Path("/fortunes")
