@@ -44,7 +44,7 @@ class HelloWorldController < ApplicationController
       begin
         rn = Random.rand(1..10000)
       end while rn == world.randomNumber
-      world.update_attribute(:randomNumber, rn)
+      world.update_column(:randomNumber, rn)
       world
     end
 
