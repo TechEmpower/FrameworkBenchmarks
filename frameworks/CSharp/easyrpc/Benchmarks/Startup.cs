@@ -29,7 +29,10 @@ namespace Benchmarks
 
             _configuration.Bind(appSettings);
 
-            services.AddSingleton(appSettings);            
+            services.AddSingleton(appSettings);   
+
+            // for views
+            services.AddControllersWithViews();         
         }
 
         public void Configure(IApplicationBuilder app)
@@ -41,6 +44,7 @@ namespace Benchmarks
                 api.GetMethod("/json", () => new { message = "Hello, World!" });
 
                 api.Expose<QueryService>();
+                api.Expose<FortuneService>();
             });
         }
     }

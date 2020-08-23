@@ -1,4 +1,3 @@
-
 using System.Threading.Tasks;
 using Benchmarks.Data;
 using EasyRpc.Abstractions.Path;
