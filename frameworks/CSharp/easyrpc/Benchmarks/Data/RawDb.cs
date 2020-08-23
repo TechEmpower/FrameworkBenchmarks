@@ -53,8 +53,8 @@ namespace Benchmarks.Data
 
                 return new World
                 {
-                    Id = rdr.GetInt32(0),
-                    RandomNumber = rdr.GetInt32(1)
+                    id = rdr.GetInt32(0),
+                    randomNumber = rdr.GetInt32(1)
                 };
             }
         }

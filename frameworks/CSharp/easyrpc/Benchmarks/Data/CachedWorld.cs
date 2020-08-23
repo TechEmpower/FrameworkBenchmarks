@@ -7,11 +7,11 @@ namespace Benchmarks.Data
 {
     public class CachedWorld
     {
-        public int Id { get; set; }
+        public int id { get; set; }
 
-        public int RandomNumber { get; set; }
+        public int randomNumber { get; set; }
 
-        public static implicit operator World(CachedWorld world) => new World { Id = world.Id, RandomNumber = world.RandomNumber };
-        public static implicit operator CachedWorld(World world) => new CachedWorld { Id = world.Id, RandomNumber = world.RandomNumber };
+        public static implicit operator World(CachedWorld world) => new World { id = world.id, randomNumber = world.randomNumber };
+        public static implicit operator CachedWorld(World world) => new CachedWorld { id = world.id, randomNumber = world.randomNumber };
     }
 }
