@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyRpc.AspNetCore.Utf8Json" Version="5.0.0-Beta1119" />
+    <PackageReference Include="EasyRpc.AspNetCore.Utf8Json" Version="5.0.0-Beta1167" />
+    <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
   </ItemGroup>
 </Project>
