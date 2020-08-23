@@ -8,8 +8,8 @@ namespace Benchmarks.Data
     [StructLayout(LayoutKind.Sequential, Size = 8)]
     public struct World
     {
-        public int Id { get; set; }
+        public int id { get; set; }
 
-        public int RandomNumber { get; set; }
+        public int randomNumber { get; set; }
     }
 }
