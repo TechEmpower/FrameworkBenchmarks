@@ -122,7 +122,9 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < N; i++)
       numbers[i].randomNumber = 1 + rand() % 10000;
 
-    c.bulk_update(numbers).flush_results();
+    auto req = c.bulk_update(numbers);
+    if (N_SQL_CONNECTIONS * nthreads > 1) c.backend_connection().end_of_batch();
+    req.flush_results();
     response.write_json(numbers);
   };
 
