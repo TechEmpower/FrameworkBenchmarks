@@ -10,6 +10,7 @@ namespace Benchmarks.Data
         Task<World> LoadSingleQueryRow();
     }
 
+
     public class RawDb : IRawDb
     {
         private readonly string _connectionString;
@@ -37,6 +38,7 @@ namespace Benchmarks.Data
         private (NpgsqlCommand readCmd, NpgsqlParameter<int> idParameter) CreateReadCommand(NpgsqlConnection connection, ConcurrentRandom random)
         {
             var cmd = new NpgsqlCommand("SELECT id, randomnumber FROM world WHERE id = @Id", connection);
+
             var parameter = new NpgsqlParameter<int>(parameterName: "@Id", value: random.Next(1, 10001));
 
             cmd.Parameters.Add(parameter);
