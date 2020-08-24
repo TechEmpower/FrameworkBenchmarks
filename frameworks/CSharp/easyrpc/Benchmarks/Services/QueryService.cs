@@ -5,6 +5,7 @@ using EasyRpc.Abstractions.Services;
 
 namespace Benchmarks.Services
 {
+    [SharedService]
     public class QueryService
     {
         private IRawDb _rawDb;
@@ -32,7 +33,7 @@ namespace Benchmarks.Services
             {
                 count = 500;
             }
-            
+
             return _rawDb.LoadMultipleQueriesRows(count);
         }
 
@@ -52,8 +53,8 @@ namespace Benchmarks.Services
             return _rawDb.LoadMultipleUpdatesRows(count);
         }
 
-        [GetMethod("/cached-world/{count}")]
-        public Task<World[]> CachedWorld(int count = 1)
+        [GetMethod("/cached-worlds/{count}")]
+        public Task<World[]> CachedWorlds(int count = 1)
         {
             if(count < 1 )
             {
