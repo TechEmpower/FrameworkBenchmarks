@@ -1,5 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Runtime.CompilerServices;
+// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
 using System.Threading.Tasks;
 using Npgsql;
 
@@ -8,6 +13,8 @@ namespace Benchmarks.Data
     public interface IRawDb    
     {
         Task<World> LoadSingleQueryRow();
+
+        Task<List<Fortune>> LoadFortunesRows();
     }
 
 
@@ -34,6 +41,34 @@ namespace Benchmarks.Data
                 }
             }
         }
+
+        public async Task<List<Fortune>> LoadFortunesRows()
+        {
+            var result = new List<Fortune>();
+
+            using (var db = new NpgsqlConnection(_connectionString))
+            using (var cmd = db.CreateCommand())
+            {
+                cmd.CommandText = "SELECT id, message FROM fortune";
+
+                db.ConnectionString = _connectionString;
+                await db.OpenAsync();
+
+                using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.CloseConnection))
+                {
+                    while (await rdr.ReadAsync())
+                    {
+                        result.Add(new Fortune(rdr.GetInt32(0), rdr.GetString(1)));
+                    }
+                }
+            }
+
+            result.Add(new Fortune (0, "Additional fortune added at request time." ));
+            result.Sort();
+
+            return result;
+        }
+
 
         private (NpgsqlCommand readCmd, NpgsqlParameter<int> idParameter) CreateReadCommand(NpgsqlConnection connection, ConcurrentRandom random)
         {

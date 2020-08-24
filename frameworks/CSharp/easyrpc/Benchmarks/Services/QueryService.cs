@@ -5,7 +5,6 @@ using EasyRpc.Abstractions.Services;
 
 namespace Benchmarks.Services
 {
-    [SharedService]
     public class QueryService
     {
         private IRawDb _rawDb;

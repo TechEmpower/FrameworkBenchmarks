@@ -6,6 +6,7 @@
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "db_url": "/db",
+        "fortune_url": "/fortunes/fortunes",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
