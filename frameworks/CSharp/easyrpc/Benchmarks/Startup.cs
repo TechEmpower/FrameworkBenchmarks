@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 
 namespace Benchmarks
 {
+    using System.Text.Encodings.Web;
+    using System.Text.Unicode;
     using Benchmarks.Data;
     using Benchmarks.Services;
     using EasyRpc.AspNetCore;
@@ -32,7 +34,13 @@ namespace Benchmarks
             services.AddSingleton(appSettings);   
 
             // for views
-            services.AddControllersWithViews();         
+            services.AddControllersWithViews();                
+            var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, 
+                            UnicodeRanges.Katakana,
+                            UnicodeRanges.Hiragana);
+
+            settings.AllowCharacter('\u2014');  // allow EM DASH through
+            services.AddWebEncoders((options) =>  options.TextEncoderSettings = settings);     
         }
 
         public void Configure(IApplicationBuilder app)

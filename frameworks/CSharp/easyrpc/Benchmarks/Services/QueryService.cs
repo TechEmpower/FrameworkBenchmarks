@@ -19,5 +19,53 @@ namespace Benchmarks.Services
         {
             return _rawDb.LoadSingleQueryRow();
         }
+
+        [GetMethod("/queries/{count}")]
+        public Task<World[]> Multiple(int count = 1)
+        {
+            if(count < 1 )
+            {
+                count = 1;
+            }
+
+            if(count > 500)
+            {
+                count = 500;
+            }
+            
+            return _rawDb.LoadMultipleQueriesRows(count);
+        }
+
+        [GetMethod("/updates/{count}")]
+        public Task<World[]> Updates(int count = 1)
+        {
+            if(count < 1 )
+            {
+                count = 1;
+            }
+
+            if(count > 500)
+            {
+                count = 500;
+            }
+            
+            return _rawDb.LoadMultipleUpdatesRows(count);
+        }
+
+        [GetMethod("/cached-world/{count}")]
+        public Task<World[]> CachedWorld(int count = 1)
+        {
+            if(count < 1 )
+            {
+                count = 1;
+            }
+
+            if(count > 500)
+            {
+                count = 500;
+            }
+            
+            return _rawDb.LoadCachedQueries(count);
+        }
     }
 }
