@@ -29,7 +29,7 @@ RUN apt-get update -yqq > /dev/null && \
 
 RUN php composer.phar require phpmv/ubiquity-devtools:dev-master phpmv/ubiquity-workerman:dev-master
 
-RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev
 
 RUN chmod 777 -R /ubiquity/.ubiquity/*
 
