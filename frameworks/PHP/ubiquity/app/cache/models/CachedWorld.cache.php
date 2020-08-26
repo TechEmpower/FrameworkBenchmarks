@@ -1,6 +1,6 @@
 <?php
 return array(
-	"#tableName" => "world",
+	"#tableName" => "World",
 	"#primaryKeys" => array(
 		"id" => "id"
 	),
