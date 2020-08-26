@@ -40,6 +40,17 @@ return array(
 				'quote' => ''
 			],
 			"cache" => false
+		],
+		'mongo' => [
+			"wrapper" => "\\Ubiquity\\db\\providers\\MongoDbWrapper",
+			"type" => "mongo",
+			"dbName" => "hello_world",
+			"serverName" => "tfb-database", // tfb-database
+			"port" => 27017,
+			"user" => "", // benchmarkdbuser
+			"password" => "", // benchmarkdbpass
+			"options" => [],
+			"cache" => false
 		]
 	],
 	"test" => false,
