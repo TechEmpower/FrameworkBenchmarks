@@ -10,7 +10,7 @@ the [Python README](../).
 
 ## Description
 
-[Crax](https://github.com/encode/starlette) is a framework or a pack of tools for web development.
+[Crax](https://github.com/crax-framework/crax) is a framework or a pack of tools for web development.
 
 ## Test Paths & Sources
 
