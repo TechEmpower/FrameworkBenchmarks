@@ -23,7 +23,8 @@ return array(
 			"user" => "benchmarkdbuser", // benchmarkdbuser
 			"password" => "benchmarkdbpass", // benchmarkdbpass
 			"options" => [
-				\PDO::ATTR_EMULATE_PREPARES => false
+				\PDO::ATTR_EMULATE_PREPARES => false,
+				'quote' => ''
 			],
 			"cache" => false
 		],
@@ -35,7 +36,9 @@ return array(
 			"port" => 5432,
 			"user" => "benchmarkdbuser", // benchmarkdbuser
 			"password" => "benchmarkdbpass", // benchmarkdbpass
-			"options" => [],
+			"options" => [
+				'quote' => ''
+			],
 			"cache" => false
 		]
 	],
