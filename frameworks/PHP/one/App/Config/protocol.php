@@ -12,7 +12,7 @@ return [
         'server_type' => \One\Swoole\OneServer::SWOOLE_HTTP_SERVER,
         'port'        => 8080,
         'action'      => \App\Server\AppHttpServer::class,
-        'mode'        => SWOOLE_PROCESS,
+        'mode'        => SWOOLE_BASE,
         'sock_type'   => SWOOLE_SOCK_TCP,
         'ip'          => '0.0.0.0',
         'set'         => [
