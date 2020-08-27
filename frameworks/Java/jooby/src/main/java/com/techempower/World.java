@@ -3,7 +3,7 @@ package com.techempower;
 import com.dslplatform.json.CompiledJson;
 
 @CompiledJson
-public class World {
+public class World implements Comparable<World> {
 
   private int id;
 
@@ -20,5 +20,9 @@ public class World {
 
   public int getRandomNumber() {
     return randomNumber;
+  }
+
+  @Override public int compareTo(World o) {
+    return id - o.id;
   }
 }
