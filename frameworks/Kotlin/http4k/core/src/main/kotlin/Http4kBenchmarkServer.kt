@@ -30,7 +30,8 @@ object Http4kBenchmarkServer {
                             FortunesRoute(database),
                             WorldRoutes.queryRoute(database),
                             WorldRoutes.updateRoute(database),
-                            WorldRoutes.multipleRoute(database)
+                            WorldRoutes.multipleRoute(database),
+                            WorldRoutes.cachedRoute(database)
                     )
             )
 }

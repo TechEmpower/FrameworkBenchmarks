@@ -229,7 +229,7 @@ then
 	    -XX:+UseNUMA               \
 	    -XX:+UseParallelGC         \
 	    -XX:+AggressiveOpts        \
-	    -Dlite=true               \
+	    -Dlite=false               \
 	    -Dcore=1                   \
 	    -Dframe=16                 \
 	    -DreadBuf=512              \
