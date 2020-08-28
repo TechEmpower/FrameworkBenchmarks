@@ -1,7 +1,7 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-use bytes::Bytes;
+use bytes::{Bytes, BytesMut};
 use ntex::{http, web};
 use yarte::Serialize;
 
@@ -20,7 +20,7 @@ async fn json() -> web::HttpResponse {
             Message {
                 message: "Hello, World!",
             }
-            .to_bytes(SIZE),
+            .to_bytes::<BytesMut>(SIZE),
         ),
     );
     res.headers_mut().insert(

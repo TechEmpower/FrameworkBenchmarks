@@ -194,7 +194,7 @@
 			"display_name": "ffead-cpp-rust-thruster",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"rust-rocket": {
 			"json_url": "/te-benchmark-um/json",
@@ -213,7 +213,7 @@
 			"display_name": "ffead-cpp-rust-rocket",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"go-gnet": {
 			"json_url": "/te-benchmark-um/json",
@@ -270,7 +270,7 @@
 			"display_name": "ffead-cpp-v-vweb",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"v-picov": {
 			"json_url": "/te-benchmark-um/json",
@@ -286,7 +286,7 @@
 			"webserver": "vweb",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "ffead-cpp-v-vweb",
+			"display_name": "ffead-cpp-v-picov",
 			"notes": "",
 			"versus": "",
 			"tags": []

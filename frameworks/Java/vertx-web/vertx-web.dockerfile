@@ -18,7 +18,7 @@ CMD java \
     -Dvertx.disableTCCL=true                          \
     -Dvertx.disableHttpHeadersValidation=true         \
     -jar                                              \
-    target/vertx-web-benchmark-3.9.0-fat.jar          \
+    target/vertx-web-benchmark-3.9.2-fat.jar          \
     --instances                                       \
     `grep --count ^processor /proc/cpuinfo`           \
     --conf                                            \

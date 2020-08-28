@@ -43,6 +43,15 @@ func main() {
 		DisableHeaderNormalizing: true,
 		ServerHeader:             "go",
 	})
+	if utils.GetArgument("-prefork") {
+		app.Settings.Prefork = true
+	}
+	if utils.GetArgument("-prefork-child") {
+		child = true
+	}
+	if utils.GetArgument("-nogc") {
+		debug.SetGCPercent(-1)
+	}
 
 	if utils.GetArgument("-prefork-child") {
 		child = true
