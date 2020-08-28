@@ -37,7 +37,7 @@ void siege(int port) {
 }
 #endif
 
-thread_local lru_cache<int, decltype(mmm(s::id = int(), s::randomNumber = int()))> world_cache(10000);
+lru_cache<int, decltype(mmm(s::id = int(), s::randomNumber = int()))> world_cache(10000);
 
 int main(int argc, char* argv[]) {
 
@@ -124,17 +124,16 @@ int main(int argc, char* argv[]) {
     response.write_json(numbers);
   };
 
+  random_numbers.connect().forall([&] (const auto& number) {
+    world_cache(number.id, [&] { return metamap_clone(number); });
+  });
+
   my_api.get("/cached-worlds") = [&](http_request& request, http_response& response) {
     sql_db.max_async_connections_per_thread_ = queries_nconn;
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
     int N = atoi(N_str.c_str());
     
     N = std::max(1, std::min(N, 500));
-    
-    if (world_cache.size() == 0)
-      random_numbers.connect(request.fiber).forall([&] (const auto& number) {
-        world_cache(number.id, [&] { return metamap_clone(number); });
-      });
 
     std::vector<decltype(random_numbers.all_fields())> numbers(N);
     for (int i = 0; i < N; i++)
@@ -191,7 +190,7 @@ int main(int argc, char* argv[]) {
     std::sort(table.begin(), table.end(),
               [] (const fortune& a, const fortune& b) { return a.message < b.message; });
 
-    char b[100000];
+    char b[2000];
     li::output_buffer ss(b, sizeof(b));
  
     ss << "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
