@@ -16,6 +16,7 @@ CMD java -DCheckTimeout=false \
     -DAsyncSend=false \
     -DAsyncRecive=false \
     -DByteBufferAnalysis=-1\
+    -DServer=v \
     -server -Xms2g -Xmx2g \
     -XX:+DoEscapeAnalysis \
     -XX:+AlwaysPreTouch \
