@@ -51,7 +51,7 @@ public class VoovanTFB {
                 webServerConfig.setPort(8080);
                 webServerConfig.setHotSwapInterval(0);
                 webServerConfig.setCache(true);
-                webServerConfig.getModuleonfigs().clear();
+                webServerConfig.getModuleConfigs().clear();
                 webServerConfig.getRouterConfigs().clear();
                 webServerConfig.setEnablePathVariables(false);
                 webServerConfig.setEnableWebSocket(false);
