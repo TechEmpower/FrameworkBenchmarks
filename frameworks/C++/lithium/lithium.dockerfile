@@ -1,8 +1,9 @@
 FROM buildpack-deps:focal
 
 RUN apt-get update -yqq
-RUN apt-get install -yqq libboost-dev libmariadb-dev wget  libboost-context-dev g++-9
+RUN apt-get install -yqq clang libboost-context-dev libboost-dev wget
+RUN apt-get install -yqq libmariadb-dev
 
 COPY ./ ./
 
-CMD ./compile_and_start_gcc.sh TFB_MYSQL 20
+CMD ./compile_and_start_clang.sh TFB_MYSQL

@@ -10,6 +10,7 @@ namespace Benchmarks
         public static async Task Main(string[] args)
         {
             var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .AddCommandLine(args)
                 .Build();
