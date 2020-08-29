@@ -36,7 +36,7 @@ public class VoovanTFB {
                 }
                 
                 public int hashCode(){
-                    return message.hashCode();
+                     return 98821452;
                 }
         }
         
@@ -72,7 +72,7 @@ public class VoovanTFB {
                         }
                 });
 
-                Logger.setEnable(false);
+                //Logger.setEnable(false);
 
                 webServer.serve();
         }
