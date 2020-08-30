@@ -35,5 +35,7 @@ for i in $(seq 0 $CORES); do
     done
 done
 
+export NGINX_WORKER_PROCESES=$(("$CORES" / 4))
+envsubst '$NGINX_WORKER_PROCESES' < /racket/config/nginx.conf.tpl > /racket/config/nginx.conf
 cat /racket/config/upstream.conf
 nginx -c /racket/config/nginx.conf

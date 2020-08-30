@@ -42,6 +42,9 @@ RUN raco make servlet.rkt \
 
 FROM racket
 
+RUN apt-get update -q \
+  && apt-get install --no-install-recommends -q -y gettext-base
+
 WORKDIR /racket
 COPY --from=builder /racket/servlet .
 ADD config config

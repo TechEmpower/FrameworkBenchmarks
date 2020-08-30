@@ -1,5 +1,5 @@
 daemon off;
-worker_processes 2;
+worker_processes $NGINX_WORKER_PROCESES;
 worker_cpu_affinity auto;
 timer_resolution 1s;
 error_log stderr error;
