@@ -8,7 +8,7 @@ import com.github.plokhotnyuk.jsoniter_scala.macros._
 case class JsonResponse(message: String)
 
 object JsonResponse {
-  implicit val codec: JsonValueCodec[JsonResponse] = JsonCodecMaker.make[JsonResponse](CodecMakerConfig())
+  implicit val codec: JsonValueCodec[JsonResponse] = JsonCodecMaker.make[JsonResponse](CodecMakerConfig)
 }
 
 trait JsonHandler {
