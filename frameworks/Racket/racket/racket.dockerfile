@@ -31,7 +31,7 @@ RUN apt-get update -q \
 
 FROM racket AS builder
 
-RUN raco pkg install -D --auto compiler-lib db-lib redis-lib threading-lib web-server-lib
+RUN raco pkg install -D --auto compiler-lib db-lib redis-lib threading-lib unix-socket-lib web-server-lib
 
 WORKDIR /racket
 ADD  . .

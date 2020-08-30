@@ -263,7 +263,8 @@
            racket/format
            web-server/http/response
            web-server/safety-limits
-           web-server/web-server)
+           web-server/web-server
+           "unix-socket-unit.rkt")
 
   (define port
     (command-line
@@ -277,8 +278,9 @@
   (define stop
     (serve
      #:dispatch app
-     #:listen-ip "0.0.0.0"
+     #:listen-ip "127.0.0.1"
      #:port port
+     #:tcp@ (make-unix-socket-tcp@ port (format "~a.sock" port))
      #:confirmation-channel ch
      #:safety-limits (make-safety-limits
                       #:max-waiting 4096
