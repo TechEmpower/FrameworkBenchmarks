@@ -2,7 +2,10 @@
 
 (require db
          json
+         racket/fasl
          racket/port
+         racket/serialize
+         redis
          threading
          web-server/dispatch
          web-server/http
@@ -42,6 +45,19 @@
           (disconnect conn))))))
 
 
+;; cache ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define cache-pool
+  (make-redis-pool
+   #:pool-size 32))
+
+(define (deserialize* bs)
+  (deserialize (fasl->s-exp bs)))
+
+(define (serialize* v)
+  (s-exp->fasl (serialize v)))
+
+
 ;; helpers ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (response/bytes bs
@@ -71,7 +87,7 @@
 
 ;; world ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(struct world (id n)
+(serializable-struct world (id n)
   #:transparent)
 
 (define select-one-world
@@ -197,6 +213,31 @@
 
       (response/json
        (map world->hash worlds)))]
+
+   [("cached")
+    (let ([cache (make-hasheqv)])
+      (lambda (req)
+        (define n (parse-queries req))
+        (define worlds
+          (hash-ref! cache n (lambda ()
+                               (call-with-redis-client cache-pool
+                                 (lambda (rc)
+                                   (define k (format "worlds:~a" n))
+                                   (cond
+                                     [(redis-bytes-get rc k)
+                                      => (lambda (serialized-worlds)
+                                           (deserialize* serialized-worlds))]
+
+                                     [else
+                                      (define worlds
+                                        (call-with-db-conn
+                                         (lambda ()
+                                           (worlds-ref/random n))))
+                                      (begin0 worlds
+                                        (redis-bytes-set! rc k (serialize* worlds)))]))))))
+
+        (response/json
+         (map world->hash worlds))))]
 
    [("updates")
     (lambda (req)

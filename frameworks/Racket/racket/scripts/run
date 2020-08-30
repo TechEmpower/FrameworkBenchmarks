@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+redis-server &
+
 export PLT_INCREMENTAL_GC=1
 
 CORES=$(("$(nproc --all)" * 1))

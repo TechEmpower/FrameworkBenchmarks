@@ -8,6 +8,7 @@
                 "fortune_url": "/fortunes",
                 "db_url": "/db",
                 "query_url": "/queries?queries=",
+                "cached_query_url": "/cached?queries=",
                 "update_url": "/updates?queries=",
                 "port": 8080,
                 "approach": "Realistic",
