@@ -4,7 +4,7 @@ set -euo pipefail
 
 export PLT_INCREMENTAL_GC=1
 
-CORES=$(("$(nproc --all)" * 2))
+CORES=$(("$(nproc --all)" * 1))
 CONF="/racket/config/upstream.conf"
 
 cat >"$CONF" <<EOF
