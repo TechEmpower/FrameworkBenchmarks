@@ -91,14 +91,10 @@
   #:transparent)
 
 (define select-one-world
-  (virtual-statement
-   (lambda (_dbsystem)
-     "SELECT id, randomnumber FROM world WHERE id = $1")))
+  (virtual-statement "SELECT id, randomnumber FROM world WHERE id = $1"))
 
 (define update-one-world
-  (virtual-statement
-   (lambda (_dbsystem)
-     "UPDATE world SET randomnumber = $2 WHERE id = $1")))
+  (virtual-statement "UPDATE world SET randomnumber = $2 WHERE id = $1"))
 
 (define (random-world-id)
   (random 1 10001))
@@ -133,9 +129,7 @@
   #:transparent)
 
 (define select-fortunes
-  (virtual-statement
-   (lambda (_dbsystem)
-     "SELECT id, message FROM fortune")))
+  (virtual-statement "SELECT id, message FROM fortune"))
 
 (define (all-fortunes)
   (define fortunes
@@ -215,26 +209,25 @@
        (map world->hash worlds)))]
 
    [("cached")
-    (let ([cache (make-hasheqv)])
+    (let ([local-cache (make-hasheqv)])
       (lambda (req)
         (define n (parse-queries req))
         (define worlds
-          (hash-ref! cache n (lambda ()
-                               (call-with-redis-client cache-pool
-                                 (lambda (rc)
-                                   (define k (format "worlds:~a" n))
-                                   (cond
-                                     [(redis-bytes-get rc k)
-                                      => (lambda (serialized-worlds)
-                                           (deserialize* serialized-worlds))]
+          (hash-ref! local-cache n (lambda ()
+                                     (call-with-redis-client cache-pool
+                                       (lambda (rc)
+                                         (define k (format "worlds:~a" n))
+                                         (cond
+                                           [(redis-bytes-get rc k)
+                                            => deserialize*]
 
-                                     [else
-                                      (define worlds
-                                        (call-with-db-conn
-                                         (lambda ()
-                                           (worlds-ref/random n))))
-                                      (begin0 worlds
-                                        (redis-bytes-set! rc k (serialize* worlds)))]))))))
+                                           [else
+                                            (define worlds
+                                              (call-with-db-conn
+                                               (lambda ()
+                                                 (worlds-ref/random n))))
+                                            (begin0 worlds
+                                              (redis-bytes-set! rc k (serialize* worlds)))]))))))
 
         (response/json
          (map world->hash worlds))))]
