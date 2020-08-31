@@ -18,10 +18,9 @@
     (define (tcp-accept l)
       (unix-socket-accept l))
 
-    (define tcp-accept/enable-break
-      (lambda args
-        (parameterize-break #t
-          (apply tcp-accept args))))
+    (define (tcp-accept/enable-break l)
+      (parameterize-break #t
+        (unix-socket-accept l)))
 
     (define (tcp-accept-ready? _l)
       #t)
@@ -40,10 +39,11 @@
                          [_local-port-no #f])
       (error 'tcp-connect "not supported"))
 
-    (define tcp-connect/enable-break
-      (lambda args
-        (parameterize-break #t
-          (apply tcp-connect args))))
+    (define (tcp-connect/enable-break _hostname
+                                      _port-no
+                                      [_local-hostname #f]
+                                      [_local-port-no #f])
+      (error 'tcp-connect/enable-break "not supported"))
 
     (define (tcp-listen _port-no
                         [backlog 4]

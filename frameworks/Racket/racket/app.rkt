@@ -264,7 +264,7 @@
            web-server/http/response
            web-server/safety-limits
            web-server/web-server
-           "unix-socket-unit.rkt")
+           "unix-socket-tcp-unit.rkt")
 
   (define port
     (command-line
