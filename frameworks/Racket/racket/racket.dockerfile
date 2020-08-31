@@ -36,8 +36,8 @@ RUN raco pkg install -D --auto compiler-lib db-lib redis-lib threading-lib unix-
 WORKDIR /racket
 ADD  . .
 
-RUN raco make servlet.rkt \
-  && raco exe servlet.rkt
+RUN raco make app.rkt \
+  && raco exe app.rkt
 
 
 FROM racket
@@ -46,7 +46,7 @@ RUN apt-get update -q \
   && apt-get install --no-install-recommends -q -y gettext-base
 
 WORKDIR /racket
-COPY --from=builder /racket/servlet .
+COPY --from=builder /racket/app .
 ADD config config
 ADD scripts scripts
 

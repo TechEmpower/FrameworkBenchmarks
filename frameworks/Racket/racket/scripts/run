@@ -17,7 +17,7 @@ EOF
 
 for i in $(seq 0 $CORES); do
     port=$((8081 + i))
-    /racket/servlet "$port" &
+    /racket/app "$port" &
     echo "  server unix:///racket/$port.sock;" >> "$CONF"
 done
 
