@@ -140,8 +140,7 @@ int main(int argc, char* argv[]) {
     std::sort(table.begin(), table.end(),
               [] (const fortune& a, const fortune& b) { return a.message < b.message; });
 
-    char b[2000];
-    li::output_buffer ss(b, sizeof(b));
+    li::growing_output_buffer ss;
  
     ss << "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
     for(auto& f : table)
