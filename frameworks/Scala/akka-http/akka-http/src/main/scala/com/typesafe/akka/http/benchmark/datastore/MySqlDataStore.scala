@@ -11,7 +11,6 @@ import com.typesafe.akka.http.benchmark.entity.{ Fortune, World }
 import com.typesafe.config.Config
 import com.zaxxer.hikari._
 
-import scala.collection.immutable
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
