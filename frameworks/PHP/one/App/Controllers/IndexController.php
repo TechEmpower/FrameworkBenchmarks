@@ -57,15 +57,9 @@ class IndexController extends Controller
         while ($count--) {
             $row    = World::repeatStatement()->find(mt_rand(1, 10000));
             $list[] = $row;
-            $oldN = intval($row->randomNumber);
-            do {
-                $newN = mt_rand(1, 10000);
-            } while($oldN === $newN);
-            $updates[] = 'update world set randomNumber='.$newN.' where id='.$row->id;
-//            $updates[] = "({$row->id}," . mt_rand(1, 10000) . ")";
+            $updates[] = 'update world set randomNumber='.mt_rand(1, 10000).' where id='.$row->id;
         }
         World::beginTransaction();
-//        World::exec('replace into ' . World::TABLE . ' (id,randomNumber) values ' . implode(',', $updates));
         $row->exec(implode(';',$updates));
         World::commit();
         return $this->json($list);
