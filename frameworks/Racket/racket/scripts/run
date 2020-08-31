@@ -2,9 +2,12 @@
 
 set -euo pipefail
 
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+redis-server /racket/config/redis.conf &
+
 export PLT_INCREMENTAL_GC=1
 
-CORES=$(("$(nproc --all)" * 2))
+CORES=$(("$(nproc --all)" * 1))
 CONF="/racket/config/upstream.conf"
 
 cat >"$CONF" <<EOF
@@ -14,8 +17,8 @@ EOF
 
 for i in $(seq 0 $CORES); do
     port=$((8081 + i))
-    /racket/servlet "$port" &
-    echo "  server 127.0.0.1:$port;" >> "$CONF"
+    /racket/app "$port" &
+    echo "  server unix:///racket/$port.sock;" >> "$CONF"
 done
 
 cat >>"$CONF" <<EOF
@@ -30,7 +33,10 @@ for i in $(seq 0 $CORES); do
         echo "Waiting for $filename..."
         sleep 0.25;
     done
+    chmod 0777 "/racket/$port.sock"
 done
 
+export NGINX_WORKER_PROCESES=$(("$CORES" / 4))
+envsubst '$NGINX_WORKER_PROCESES' < /racket/config/nginx.conf.tpl > /racket/config/nginx.conf
 cat /racket/config/upstream.conf
 nginx -c /racket/config/nginx.conf
