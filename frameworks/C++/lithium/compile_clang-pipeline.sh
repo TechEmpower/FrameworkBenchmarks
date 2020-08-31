@@ -1,7 +1,7 @@
 #! /bin/sh
 
 DB_FLAG=$1
-COMMIT=c01c26a4b7f3aa2bb21c3f5c7cb65e1b37f8c429
+COMMIT=bc145d604f14a11082cc5e00ba854d0786d69e3d
 MONOTHREAD=$2
 
 if [ $DB_FLAG = "TFB_MYSQL" ]; then
@@ -17,9 +17,9 @@ fi
 
 wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_http_backend.hh
 
-clang++ -fprofile-instr-generate=./profile.prof -flto -DPROFILE_MODE -DN_SQL_CONNECTIONS=1  -DMONOTHREAD=$MONOTHREAD -DNDEBUG -D$DB_FLAG -O3 -march=native -std=c++17 ./lithium_pipeline.cc $CXX_FLAGS -lpthread -lboost_context -lssl -lcrypto -o /lithium_tbf
+clang++ -fprofile-instr-generate=./profile.prof -flto -DPROFILE_MODE -DN_SQL_CONNECTIONS=2  -DMONOTHREAD=$MONOTHREAD -DNDEBUG -D$DB_FLAG -O3 -march=native -std=c++17 ./lithium_pipeline.cc $CXX_FLAGS -lpthread -lboost_context -lssl -lcrypto -o /lithium_tbf
 /lithium_tbf tfb-database 8081
 llvm-profdata-10 merge -output=./profile.pgo  ./profile.prof
-clang++ -fprofile-instr-use=./profile.pgo -flto -DNDEBUG -D$DB_FLAG -DN_SQL_CONNECTIONS=1  -DMONOTHREAD=$MONOTHREAD -O3 -march=native -std=c++17 ./lithium_pipeline.cc $CXX_FLAGS -lpthread -lboost_context -lssl -lcrypto -o /lithium_tbf
+clang++ -fprofile-instr-use=./profile.pgo -flto -DNDEBUG -D$DB_FLAG -DN_SQL_CONNECTIONS=2  -DMONOTHREAD=$MONOTHREAD -O3 -march=native -std=c++17 ./lithium_pipeline.cc $CXX_FLAGS -lpthread -lboost_context -lssl -lcrypto -o /lithium_tbf
 
 /lithium_tbf tfb-database 8080
