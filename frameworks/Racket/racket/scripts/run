@@ -3,7 +3,7 @@
 set -euo pipefail
 
 echo never > /sys/kernel/mm/transparent_hugepage/enabled
-redis-server &
+redis-server /racket/config/redis.conf &
 
 export PLT_INCREMENTAL_GC=1
 
