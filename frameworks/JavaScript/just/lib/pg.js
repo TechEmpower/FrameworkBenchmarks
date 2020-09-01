@@ -1,5 +1,4 @@
-const { crypto } = just.library('openssl.so', 'crypto')
-const { encode } = just
+const md5 = require('md5.js')
 
 function syncMessage () {
   const len = 5
@@ -48,21 +47,15 @@ function startupMessage ({ user, database, parameters = [] }) {
 }
 
 function md5AuthMessage ({ user, pass, salt }) {
-  const md5 = new ArrayBuffer(16)
-  const plain = ArrayBuffer.fromString(`${pass}${user}`)
-  let len = crypto.hash(crypto.MD5, plain, md5, plain.byteLength)
-  const passwordHash = new ArrayBuffer(36)
-  passwordHash.writeString('md5', 0)
-  len = encode.hexEncode(md5, passwordHash, len, 3)
+  const token = `${pass}${user}`
+  let hash = md5(token)
+  const plain = new ArrayBuffer(36)
+  plain.writeString(`md5${hash}`, 0)
   const plain2 = new ArrayBuffer(36)
-  plain2.copyFrom(passwordHash, 0, 32, 3)
+  plain2.copyFrom(plain, 0, 32, 3)
   plain2.copyFrom(salt, 32, 4)
-  len = crypto.hash(crypto.MD5, plain2, md5, plain2.byteLength)
-  const hash2 = new ArrayBuffer(36)
-  hash2.writeString('md5', 0)
-  len = encode.hexEncode(md5, hash2, len, 3)
-  const hash = hash2.readString(len + 3)
-  len = hash.length + 5
+  hash = `md5${md5(plain2)}`
+  const len = hash.length + 5
   let off = 0
   const buf = new ArrayBuffer(len + 1)
   const dv = new DataView(buf)

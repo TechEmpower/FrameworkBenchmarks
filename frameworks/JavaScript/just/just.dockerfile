@@ -9,16 +9,14 @@ RUN curl -L -o modules.tar.gz https://github.com/just-js/modules/archive/0.0.1.t
 RUN tar -zxvf modules.tar.gz
 RUN mv modules-0.0.1 modules
 RUN JUST_HOME=$(pwd) make -C modules/picohttp/ deps http.so
-RUN JUST_HOME=$(pwd) make -C modules/openssl/ deps openssl.so
 RUN JUST_HOME=$(pwd) make -C modules/html/ html.so
 
 FROM debian:stretch-slim
 WORKDIR /app
 RUN mkdir -p /app/lib
-COPY lib/stringify.js lib/connection.js lib/dns.js lib/http.js lib/lookup.js lib/pg.js lib/stats.js lib/tcp.js ./lib/
+COPY lib/stringify.js lib/connection.js lib/dns.js lib/http.js lib/lookup.js lib/pg.js lib/stats.js lib/tcp.js lib/md5.js ./lib/
 COPY techempower.js spawn.js ./
 COPY --from=builder /just-0.0.1/just ./
-COPY --from=builder /just-0.0.1/modules/openssl/openssl.so ./
 COPY --from=builder /just-0.0.1/modules/picohttp/http.so ./
 COPY --from=builder /just-0.0.1/modules/html/html.so ./
 ENV LD_LIBRARY_PATH=/app
