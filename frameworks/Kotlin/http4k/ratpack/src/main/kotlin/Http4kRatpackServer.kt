@@ -1,4 +1,3 @@
-
 import org.http4k.server.Ratpack
 
 fun main() {
