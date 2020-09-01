@@ -10,7 +10,7 @@ $server->set([
     'log_level' => 5,
 ]);
 
-$pool = new \DatabasePool('mysql');
+$pool = new \DatabasePool('postgres');
 
 /**
  * On start of the PHP worker. One worker per server process is started.
@@ -29,7 +29,6 @@ $server->on('workerStart', function ($srv) use ($pool) {
  */
 $db = function (int $queries = 0) use ($pool): string {
     $db = $pool->get();
-
     // Read number of queries to run from URL parameter
     $query_count = 1;
     if ($queries > 1) {
@@ -39,15 +38,15 @@ $db = function (int $queries = 0) use ($pool): string {
     // Create an array with the response string.
     $arr = [];
     // Define query
-    $db->db_test = $db->db_test ?? $db->prepare('SELECT id, randomNumber FROM World WHERE id = ?');
+    $db->prepare('select_query', 'SELECT id, randomnumber FROM World WHERE id = $1');
 
     // For each query, store the result set values in the response array
     while ($query_count--) {
         $id = mt_rand(1, 10000);
-        $ret = $db->db_test->execute([$id]);
-
+        $res = $db->execute('select_query', [$id]);
+        $ret = $db->fetchAll($res);
         // Store result in array.
-        $arr[] = ['id' => $id, 'randomNumber' => $ret[0]['randomNumber']];
+        $arr[] = ['id' => $id, 'randomnumber' => $ret[0]['randomnumber']];
     }
 
     // Use the PHP standard JSON encoder.
@@ -72,8 +71,10 @@ $fortunes = function () use ($pool): string {
     $db = $pool->get();
 
     $fortune = [];
-    $db->fortune_test = $db->fortune_test ?? $db->prepare('SELECT id, message FROM Fortune');
-    $arr = $db->fortune_test->execute();
+    $db->prepare('fortunes', 'SELECT id, message FROM Fortune');
+    $res = $db->execute('fortunes', []);
+    $arr = $db->fetchAll($res);
+
     foreach ($arr as $row) {
         $fortune[$row['id']] = $row['message'];
     }
@@ -110,19 +111,18 @@ $updates = function (int $queries = 0) use ($pool): string {
     }
 
     $arr = [];
-    $db->updates_test_select = $db->updates_test_select ?? $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
-    $db->updates_test_update = $db->updates_test_update ?? $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
+    $db->prepare('updates_test_select', 'SELECT randomnumber FROM World WHERE id = $1');
+    $db->prepare('updates_test_update', 'UPDATE World SET randomnumber = $1 WHERE id = $2');
 
     while ($query_count--) {
         $id = mt_rand(1, 10000);
         $randomNumber = mt_rand(1, 10000);
-        $ret = $db->updates_test_select->execute([$id]);
-
+        $res = $db->execute('updates_test_select', [$id]);
+        $ret = $db->fetchAll($res);
         // Store result in array.
-        $world = ['id' => $id, 'randomNumber' => $ret[0]['randomNumber']];
-        $world['randomNumber'] = $randomNumber;
-        $db->updates_test_update->execute([$randomNumber, $id]);
-
+        $world = ['id' => $id, 'randomnumber' => $ret[0]['randomnumber']];
+        $world['randomnumber'] = $randomNumber;
+        $res = $db->execute('updates_test_update', [$randomNumber, $id]);
         $arr[] = $world;
     }
 
@@ -225,9 +225,9 @@ class DatabasePool
 
     private function createDbInstance()
     {
-        if ($this->type === 'mysql') {
-            $db = new Swoole\Coroutine\Mysql;
-            if ($db->connect($this->server)){
+        if ($this->type === 'postgres') {
+            $db = new Swoole\Coroutine\PostgreSql;
+            if ($db->connect("host={$this->server['host']} port=5432 dbname={$this->server['database']} user={$this->server['user']} password={$this->server['password']}")){
                 return $db;
             }
         }
