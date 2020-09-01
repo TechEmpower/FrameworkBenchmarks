@@ -290,8 +290,9 @@ function onHTTPConnect (sock) {
     stats.qps++
     const row = getCachedWorldById.getRows()[0]
     const [id, randomNumber] = row
-    cache[id] = row
-    results.push({ id, randomNumber })
+    const world = { id, randomNumber }
+    cache[id] = world
+    results.push(world)
     if (results.length === queries) {
       const json = JSON.stringify(results)
       sock.writeString(`${rJSON}${json.length}${END}${json}`)
