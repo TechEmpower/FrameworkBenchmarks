@@ -60,6 +60,7 @@ env:
     - "TESTLANG=Kotlin"
     - "TESTLANG=Lisp"
     - "TESTLANG=Lua"
+    - "TESTLANG=Mumps"
     - "TESTLANG=Nim"
     - 'TESTDIR="Nim/httpbeast Nim/jester Nim/basolato"'
     - "TESTLANG=Perl"
