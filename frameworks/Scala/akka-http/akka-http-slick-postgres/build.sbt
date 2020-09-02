@@ -88,9 +88,6 @@ lazy val commonSettings =
       "-target",
       "1.8"
     ),
-    javaOptions ++= Seq(
-      "-jvm-debug 5555"
-    ),
     transitiveClassifiers := Seq("sources"),
     publishArtifact in (Compile, packageDoc) := false,
     unmanagedSourceDirectories.in(Compile) := Seq(scalaSource.in(Compile).value),
