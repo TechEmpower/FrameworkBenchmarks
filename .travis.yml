@@ -60,6 +60,7 @@ env:
     - "TESTLANG=Kotlin"
     - "TESTLANG=Lisp"
     - "TESTLANG=Lua"
+    - "TESTLANG=Mumps"
     - "TESTLANG=Nim"
     - 'TESTDIR="Nim/httpbeast Nim/jester Nim/basolato"'
     - "TESTLANG=Perl"
@@ -90,7 +91,6 @@ env:
     - "TESTLANG=V"
     - "TESTLANG=Vala"
     - "TESTLANG=VB"
-    - "TESTLANG=Mumps"
 
 before_script:
   # Runs travis_diff, printing the output to the terminal, and searches for travis-diff-continue
