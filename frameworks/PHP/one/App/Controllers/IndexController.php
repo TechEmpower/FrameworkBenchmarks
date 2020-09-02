@@ -59,7 +59,9 @@ class IndexController extends Controller
             $list[] = $row;
             $updates[] = 'update world set randomNumber='.mt_rand(1, 10000).' where id='.$row->id;
         }
+        World::beginTransaction();
         $row->exec(implode(';',$updates));
+        World::commit();
         return $this->json($list);
     }
 
