@@ -24,7 +24,7 @@ class DbMongo extends Db_ {
 			]);
 			do {
 				$nRn = \mt_rand(1, 10000);
-			} while ($world->randomNumber === $nRn);
+			} while ($world->randomNumber == $nRn);
 			$world->randomNumber = $nRn;
 			DAONosql::toUpdate($world);
 			$worlds[] = $world->_rest;
