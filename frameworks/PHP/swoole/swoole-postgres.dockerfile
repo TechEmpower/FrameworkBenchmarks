@@ -14,7 +14,10 @@ RUN     cd /tmp && curl -sSL "https://github.com/swoole/ext-postgresql/archive/v
         && docker-php-ext-enable swoole_postgresql
  
 WORKDIR /swoole
-COPY swoole-server-postgres.php swoole-server.php
+
+COPY swoole-server.php swoole-server.php
+RUN sed -i "s|_postgres||g" swoole-server.php
+
 COPY php.ini /usr/local/etc/php/
 
 CMD php swoole-server.php
