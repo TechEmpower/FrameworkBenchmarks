@@ -53,15 +53,18 @@ class IndexController extends Controller
     {
         $count = max(min(intval($count), 500), 1);
         $list  = [];
-        $updates = [];
+        $updates = ['begin'];
         while ($count--) {
             $row    = World::repeatStatement()->find(mt_rand(1, 10000));
             $list[] = $row;
-            $updates[] = 'update world set randomNumber='.mt_rand(1, 10000).' where id='.$row->id;
+            $old = intval($row->randomNumber);
+            do {
+                $new = mt_rand(1, 10000);
+            } while($old === $new);
+            $updates[] = 'update world set randomNumber='.$new.' where id='.$row->id;
         }
-        World::beginTransaction();
+        $updates[] = 'commit';
         $row->exec(implode(';',$updates));
-        World::commit();
         return $this->json($list);
     }
 
