@@ -63,7 +63,7 @@ class IndexController extends Controller
             } while($old === $new);
             $updates[] = 'update world set randomNumber='.$new.' where id='.$row->id;
         }
-        $updates[] = 'commit';
+        $updates[] = 'commit;';
         $row->exec(implode(';',$updates));
         return $this->json($list);
     }
