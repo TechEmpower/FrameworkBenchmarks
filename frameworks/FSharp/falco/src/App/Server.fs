@@ -1,22 +1,14 @@
 ﻿module App.Server
 
+open System.Threading.Tasks
 open Donald
 open Falco
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
-open Microsoft.AspNetCore.Server.Kestrel.Core
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Logging
-open Microsoft.Extensions.Hosting
 
-let routes = 
-    [
-        get "/plaintext"  Value.Controller.handlePlainText
-        get "/json"       Value.Controller.handleJson
-        get "/fortunes"   Fortune.Controller.handleIndex
-    ]
-    
-module Config =
+let buildServer (connectionFactory : DbConnectionFactory) : Host.ConfigureWebHost =
     let configureLogging (log : ILoggingBuilder) =
         log.ClearProviders()
         |> ignore
@@ -30,26 +22,22 @@ module Config =
 
     let configure 
         (routes : HttpEndpoint list) 
-        (app : IApplicationBuilder) = 
+        (app : IApplicationBuilder) =      
+        let handleNotFound : HttpHandler =
+            fun ctx ->
+                Response.withStatusCode 404 ctx |> ignore
+                Task.CompletedTask
+            
         app.UseRouting()
-            .UseHttpEndPoints(routes)       
-            .UseNotFoundHandler(setStatusCode 404)
+           .UseHttpEndPoints(routes)       
+           .UseNotFoundHandler(handleNotFound)
             |> ignore 
 
-let builderServer 
-    (connectionFactory : DbConnectionFactory) 
-    (webHost : IWebHostBuilder) =
-    webHost
-        .UseKestrel()
-        .ConfigureLogging(Config.configureLogging)
-        .ConfigureServices(Config.configureServices connectionFactory)
-        .Configure(Config.configure routes)                   
-        |> ignore
-
-let startServer 
-    (args : string[])    
-    (connectionFactory : DbConnectionFactory) =
-    Host.CreateDefaultBuilder(args)
-        .ConfigureWebHost(fun webHost -> builderServer connectionFactory webHost)
-        .Build()
-        .Run()  
+    fun (routes : HttpEndpoint list)
+        (webHost : IWebHostBuilder) ->
+        webHost
+            .UseKestrel()
+            .ConfigureLogging(configureLogging)
+            .ConfigureServices(configureServices connectionFactory)
+            .Configure(configure routes)                   
+            |> ignore

@@ -1,6 +1,7 @@
 module App.Program
 
 open System.Data
+open Falco
 open Npgsql
 
 [<Literal>]
@@ -11,5 +12,12 @@ let connectionFactory =
 
 [<EntryPoint>]
 let main args =    
-    Server.startServer args connectionFactory
+    Host.startWebHost 
+        args        
+        (Server.buildServer connectionFactory)
+        [
+            get "/plaintext"  Value.handlePlainText
+            get "/json"       Value.handleJson
+            get "/fortunes"   Fortune.handleIndex
+        ]    
     0

@@ -46,46 +46,56 @@ service memcached stop
 
 rm -f /tmp/cache.lock
 rm -f web/te-benchmark-um/config/cache.xml
-
-if [ "$3" = "redis" ]
-then
-	service redis-server start
-	cp -f web/te-benchmark-um/config/cacheredis.xml web/te-benchmark-um/config/cache.xml
-	cp -f web/te-benchmark-um/config/sdormmongo.xml web/te-benchmark-um/config/sdorm.xml
-fi
-
-if [ "$3" = "memcached" ]
-then
-	service memcached start
-	cp -f web/te-benchmark-um/config/cachememcached.xml web/te-benchmark-um/config/cache.xml
-	cp -f web/te-benchmark-um/config/sdormmongo.xml web/te-benchmark-um/config/sdorm.xml
-fi
-
-if [ "$3" = "mongo" ]
-then
-	cp -f web/te-benchmark-um/config/sdormmongo.xml web/te-benchmark-um/config/sdorm.xml
-fi
-
-if [ "$3" = "mysql" ]
-then
-	cp -f web/te-benchmark-um/config/sdormmysql.xml web/te-benchmark-um/config/sdorm.xml
-fi
-
-if [ "$3" = "postgresql" ]
-then
-	cp -f web/te-benchmark-um/config/sdormpostgresql.xml web/te-benchmark-um/config/sdorm.xml
-fi
+rm -f web/te-benchmark-um-pq/config/cache.xml
+rm -f web/te-benchmark-um-mgr/config/cache.xml
 
 if [ "$4" = "redis" ]
 then
 	service redis-server start
 	cp -f web/te-benchmark-um/config/cacheredis.xml web/te-benchmark-um/config/cache.xml
+	cp -f web/te-benchmark-um-pq/config/cacheredis.xml web/te-benchmark-um-pq/config/cache.xml
+	cp -f web/te-benchmark-um-mgr/config/cacheredis.xml web/te-benchmark-um-mgr/config/cache.xml
 fi
 
 if [ "$4" = "memcached" ]
 then
 	service memcached start
 	cp -f web/te-benchmark-um/config/cachememcached.xml web/te-benchmark-um/config/cache.xml
+	cp -f web/te-benchmark-um-pq/config/cachememcached.xml web/te-benchmark-um-pq/config/cache.xml
+	cp -f web/te-benchmark-um-mgr/config/cachememcached.xml web/te-benchmark-um-mgr/config/cache.xml
+fi
+
+if [ "$3" = "mongo" ]
+then
+	rm -f web/te-benchmark-um-pq/config/cache.xml
+	rm -f web/te-benchmark-um-mgr/config/cache.xml
+	cp -f web/te-benchmark-um/config/sdormmongo.xml web/te-benchmark-um/config/sdorm.xml
+fi
+
+if [ "$3" = "mongo-raw" ]
+then
+	rm -f web/te-benchmark-um-pq/config/cache.xml
+	rm -f web/te-benchmark-um/config/cache.xml
+fi
+
+if [ "$3" = "mysql" ]
+then
+	rm -f web/te-benchmark-um-pq/config/cache.xml
+	rm -f web/te-benchmark-um-mgr/config/cache.xml
+	cp -f web/te-benchmark-um/config/sdormmysql.xml web/te-benchmark-um/config/sdorm.xml
+fi
+
+if [ "$3" = "postgresql" ]
+then
+	rm -f web/te-benchmark-um-pq/config/cache.xml
+	rm -f web/te-benchmark-um-mgr/config/cache.xml
+	cp -f web/te-benchmark-um/config/sdormpostgresql.xml web/te-benchmark-um/config/sdorm.xml
+fi
+
+if [ "$3" = "postgresql-raw" ]
+then
+	rm -f web/te-benchmark-um/config/cache.xml
+	rm -f web/te-benchmark-um-mgr/config/cache.xml
 fi
 
 rm -f rtdcf/*.d rtdcf/*.o 
@@ -126,11 +136,15 @@ if [ "$2" = "apache" ]
 then
 	if [ "$3" = "mysql" ] || [ "$3" = "postgresql" ]
 	then
-		sed -i 's|/installs/ffead-cpp-4.0|'/installs/ffead-cpp-4.0-sql'|g' /etc/apache2/apache2.conf
-		sed -i 's|/installs/ffead-cpp-4.0|'/installs/ffead-cpp-4.0-sql'|g' /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/ffead-site.conf
+		sed -i 's|/installs/ffead-cpp-5.0|'/installs/ffead-cpp-5.0-sql'|g' /etc/apache2/apache2.conf
+		sed -i 's|/installs/ffead-cpp-5.0|'/installs/ffead-cpp-5.0-sql'|g' /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/ffead-site.conf
 	fi
 	sed -i 's|<pool-size>30</pool-size>|<pool-size>3</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um/config/sdorm.xml
 	sed -i 's|<pool-size>10</pool-size>|<pool-size>2</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um/config/cache.xml
+	sed -i 's|<pool-size>30</pool-size>|<pool-size>3</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um-pq/config/sdorm.xml
+	sed -i 's|<pool-size>10</pool-size>|<pool-size>2</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um-pq/config/cache.xml
+	sed -i 's|<pool-size>30</pool-size>|<pool-size>3</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um-mgr/config/sdorm.xml
+	sed -i 's|<pool-size>10</pool-size>|<pool-size>2</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um-mgr/config/cache.xml
 	apachectl -D FOREGROUND
 fi
 
@@ -139,6 +153,10 @@ then
 	mkdir -p ${IROOT}/nginxfc/logs
 	sed -i 's|<pool-size>30</pool-size>|<pool-size>3</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um/config/sdorm.xml
 	sed -i 's|<pool-size>10</pool-size>|<pool-size>2</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um/config/cache.xml
+	sed -i 's|<pool-size>30</pool-size>|<pool-size>3</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um-pq/config/sdorm.xml
+	sed -i 's|<pool-size>10</pool-size>|<pool-size>2</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um-pq/config/cache.xml
+	sed -i 's|<pool-size>30</pool-size>|<pool-size>3</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um-mgr/config/sdorm.xml
+	sed -i 's|<pool-size>10</pool-size>|<pool-size>2</pool-size>|g' $FFEAD_CPP_PATH/web/te-benchmark-um-mgr/config/cache.xml
 	if [ "$3" = "mysql" ] || [ "$3" = "postgresql" ]
 	then
 		nginx -g 'daemon off;' -c ${IROOT}/nginx-ffead-sql/conf/nginx.conf
@@ -229,7 +247,7 @@ then
 	    -XX:+UseNUMA               \
 	    -XX:+UseParallelGC         \
 	    -XX:+AggressiveOpts        \
-	    -Dlite=true               \
+	    -Dlite=false               \
 	    -Dcore=1                   \
 	    -Dframe=16                 \
 	    -DreadBuf=512              \

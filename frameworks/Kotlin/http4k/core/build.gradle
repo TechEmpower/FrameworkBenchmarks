@@ -4,8 +4,9 @@ dependencies {
     compile "org.http4k:http4k-core:$http4k_version"
     compile "org.http4k:http4k-format-jackson:$http4k_version"
     compile "org.http4k:http4k-template-pebble:$http4k_version"
-    compile "org.apache.commons:commons-lang3:3.7"
-    compile "com.zaxxer:HikariCP:3.3.1"
-    compile "org.postgresql:postgresql:42.2.5"
-    compile "io.reactiverse:reactive-pg-client:0.11.3"
+    compile "org.apache.commons:commons-lang3:3.11"
+    compile "com.zaxxer:HikariCP:3.4.5"
+    compile "org.postgresql:postgresql:42.2.16"
+    compile "org.cache2k:cache2k-base-bom:1.2.4.Final"
+
 }

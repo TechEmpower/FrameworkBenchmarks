@@ -1,15 +1,17 @@
 <?php
 namespace ImiApp\ApiServer\Controller;
 
-use ImiApp\Model\World;
-use ImiApp\Model\Fortune;
-use Imi\Controller\HttpController;
 use Imi\Db\Db;
 use Imi\RequestContext;
+use ImiApp\Model\World;
+use ImiApp\Model\Fortune;
+use Imi\Redis\RedisManager;
+use Imi\Util\Stream\MemoryStream;
+use Imi\Controller\HttpController;
 use Imi\Server\View\Annotation\View;
+use Imi\Server\Route\Annotation\Route;
 use Imi\Server\Route\Annotation\Action;
 use Imi\Server\Route\Annotation\Controller;
-use Imi\Util\Stream\MemoryStream;
 
 /**
  * @Controller("/")
@@ -279,6 +281,30 @@ class IndexController extends HttpController
             $list[] = $row;
         }
         return $list;
+    }
+
+    /**
+     * @Action
+     * @Route("cached-worlds")
+     *
+     * @return void
+     */
+    public function cachedWorlds($count)
+    {
+        if($count > 1)
+        {
+            $queryCount = min($count, 500);
+        }
+        else
+        {
+            $queryCount = 1;
+        }
+        $ids = [];
+        while ($queryCount--)
+        {
+            $ids[] = 'world:' . mt_rand(1, 10000);
+        }
+        return RedisManager::getInstance()->mget($ids);
     }
 
 }

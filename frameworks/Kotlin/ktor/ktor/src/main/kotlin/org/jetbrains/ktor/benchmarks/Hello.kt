@@ -12,6 +12,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.scheduling.*
 import kotlinx.html.*
 import kotlinx.serialization.*
+import kotlinx.serialization.builtins.*
 import kotlinx.serialization.json.*
 import java.util.*
 import java.util.concurrent.*
@@ -25,10 +26,10 @@ data class World(val id: Int, var randomNumber: Int)
 @Serializable
 data class Fortune(val id: Int, var message: String)
 
-@UseExperimental(ImplicitReflectionSerializer::class, InternalCoroutinesApi::class)
+@OptIn(InternalCoroutinesApi::class)
 fun Application.main() {
     val worldSerializer = World.serializer()
-    val worldListSerializer = World.serializer().list
+    val worldListSerializer = ListSerializer(World.serializer())
 
     val dbRows = 10000
     val poolSize = 48
@@ -45,7 +46,7 @@ fun Application.main() {
         }
 
         get("/json") {
-            call.respondText(JSON.stringify(Message()), ContentType.Application.Json, HttpStatusCode.OK)
+            call.respondText(Json.encodeToString(Message()), ContentType.Application.Json, HttpStatusCode.OK)
         }
 
         get("/db") {
@@ -68,10 +69,12 @@ fun Application.main() {
                 }
             }
 
-            call.respondText(when (queries) {
-                null -> JSON.stringify(worldSerializer, result.single())
-                else -> JSON.stringify(worldListSerializer, result)
-            }, ContentType.Application.Json, HttpStatusCode.OK)
+            call.respondText(
+                when (queries) {
+                    null -> Json.encodeToString(worldSerializer, result.single())
+                    else -> Json.encodeToString(worldListSerializer, result)
+                }, ContentType.Application.Json, HttpStatusCode.OK
+            )
         }
 
         get("/fortunes") {
@@ -131,22 +134,25 @@ fun Application.main() {
 
                     result.forEach { it.randomNumber = random.nextInt(dbRows) + 1 }
 
-                    connection.prepareStatement("UPDATE World SET randomNumber = ? WHERE id = ?").use { updateStatement ->
-                        for ((id, randomNumber) in result) {
-                            updateStatement.setInt(1, randomNumber)
-                            updateStatement.setInt(2, id)
+                    connection.prepareStatement("UPDATE World SET randomNumber = ? WHERE id = ?")
+                        .use { updateStatement ->
+                            for ((id, randomNumber) in result) {
+                                updateStatement.setInt(1, randomNumber)
+                                updateStatement.setInt(2, id)
 
-                            updateStatement.executeUpdate()
+                                updateStatement.executeUpdate()
+                            }
                         }
-                    }
 
                 }
             }
 
-            call.respondText(when (queries) {
-                null -> JSON.stringify(worldSerializer, result.single())
-                else -> JSON.stringify(worldListSerializer, result)
-            }, ContentType.Application.Json, HttpStatusCode.OK)
+            call.respondText(
+                when (queries) {
+                    null -> Json.encodeToString(worldSerializer, result.single())
+                    else -> Json.encodeToString(worldListSerializer, result)
+                }, ContentType.Application.Json, HttpStatusCode.OK
+            )
         }
     }
 }

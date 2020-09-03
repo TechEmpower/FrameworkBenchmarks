@@ -3,15 +3,15 @@ use std::cell::RefCell;
 use std::fmt::Write as FmtWrite;
 use std::io;
 
-use bytes::Bytes;
+use bytes::{Bytes, BytesMut};
 use futures::stream::futures_unordered::FuturesUnordered;
 use futures::{Future, FutureExt, StreamExt, TryStreamExt};
 use ntex::web::Error;
 use random_fast_rng::{FastRng, Random};
-use smallvec::{smallvec, SmallVec};
+use smallvec::SmallVec;
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, NoTls, Statement};
-use yarte::{Serialize, TemplateBytes};
+use yarte::{ywrite_html, Serialize};
 
 #[derive(Serialize, Debug)]
 pub struct World {
@@ -23,12 +23,6 @@ pub struct World {
 pub struct Fortune {
     pub id: i32,
     pub message: Cow<'static, str>,
-}
-
-#[derive(TemplateBytes)]
-#[template(path = "fortune")]
-pub struct FortunesTemplate {
-    pub fortunes: SmallVec<[Fortune; 32]>,
 }
 
 /// Postgres interface
@@ -92,7 +86,7 @@ impl PgConnection {
                 id: row.get(0),
                 randomnumber: row.get(1),
             }
-            .to_bytes(40))
+            .to_bytes::<BytesMut>(40))
         }
     }
 
@@ -194,7 +188,10 @@ impl PgConnection {
 
             fortunes.sort_by(|it, next| it.message.cmp(&next.message));
 
-            Ok(FortunesTemplate { fortunes }.ccall(2048))
+            let mut buf = BytesMut::with_capacity(2048);
+            ywrite_html!(buf, "{{> fortune }}");
+
+            Ok(buf.freeze())
         }
     }
 }

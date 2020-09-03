@@ -14,8 +14,6 @@ CMD java                       \
     -Dframe=16                 \
     -DreadBuf=512              \
     -Dpool=true                \
-    -Ddirect=true              \
-    -Dinline=true              \
     -Dlevel=1                  \
     -Dread=false               \
     -Depoll=true               \

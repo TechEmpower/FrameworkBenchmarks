@@ -9,7 +9,7 @@ fastify.register(require("point-of-view"), {
 });
 
 fastify.addHook('onRequest', (request, reply, done) => {
-  reply.setHeader("Server", "Fastify");
+  reply.header("Server", "Fastify");
   done()
 })
 
