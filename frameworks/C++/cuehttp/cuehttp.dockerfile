@@ -9,7 +9,8 @@ WORKDIR /
 RUN git clone https://github.com/xcyl/cuehttp.git
 
 WORKDIR /cuehttp
-RUN git checkout b504d22388f9566712cc366a81da5be040645ef2
+
+RUN git checkout a7f5a4c935e22d110b70c5928c8ea2ce4dcbeeb5
 
 WORKDIR /cuehttp/examples/plaintext
 RUN mkdir build && cd build && cmake .. && make -j8
