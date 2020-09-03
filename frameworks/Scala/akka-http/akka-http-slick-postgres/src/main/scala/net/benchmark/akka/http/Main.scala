@@ -18,7 +18,7 @@ object Main {
     implicit val system: ActorSystem = ActorSystem("AkkaSlickBenchmarkApp")
 
     val pus = Runtime.getRuntime.availableProcessors()
-    val pusMessage = s"Runtime.getRuntime.availableProcessors says $pus"
+    val pusMessage = s"Runtime.getRuntime.availableProcessors says ${pus.toString}"
     log.info(pusMessage)
     println(pusMessage)
 
