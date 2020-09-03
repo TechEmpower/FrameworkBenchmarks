@@ -56,7 +56,7 @@ env:
     - 'TESTDIR="Java/play1 Java/play2-java Java/wildfly-ee"'
     - 'TESTDIR="JavaScript/0http JavaScript/express JavaScript/fastify JavaScript/hapi JavaScript/koa"'
     - 'TESTDIR="JavaScript/nodejs JavaScript/polkadot JavaScript/restana JavaScript/restify JavaScript/sailsjs"'
-    - 'TESTDIR="JavaScript/es4x JavaScript/ringojs"'
+    - 'TESTDIR="JavaScript/es4x JavaScript/ringojs JavaScript/just"'
     - "TESTLANG=Kotlin"
     - "TESTLANG=Lisp"
     - "TESTLANG=Lua"
