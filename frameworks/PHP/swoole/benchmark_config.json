@@ -25,8 +25,6 @@
       "versus": "php"
     },
     "postgres": {
-      "json_url": "/json",
-      "plaintext_url": "/plaintext",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "fortune_url": "/fortunes",
