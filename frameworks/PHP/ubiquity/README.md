@@ -28,17 +28,28 @@ The tests are separated into controllers:
   * [DB](app/controllers/Db_.php)
   * [QUERY](app/controllers/Db_.php)
   * [CACHED QUERY (only with Workerman)](app/controllers/Cache.php)
-  * [UPDATE](app/controllers/Db.php)
+  * [UPDATE](app/controllers/Db_.php)
 - `Fortunes_` for using the internal template engine
   * [FORTUNES](app/controllers/Fortunes_.php)
 
-### Ubiquity with async platforms (Swoole, Workerman or Roadrunner) + Mysql
-- `DbMy` for database access with ORM (PDO Mysql)
-  * [DB](app/controllers/DbMy.php)
-  * [QUERY](app/controllers/DbMy.php)
-  * [UPDATE](app/controllers/DbMy.php)
-- `Fortunes_` for using the internal template engine
-  * [FORTUNES](app/controllers/Fortunes_.php)
+### Ubiquity with async platforms (Swoole, Workerman or Roadrunner)
+- `Json_` for JSON response
+  * [JSON](app/controllers/Json_.php)
+- `Plaintext_` for plaintext response
+  * [PLAINTEXT](app/controllers/Plaintext_.php)
+
+### Ubiquity + PDO Mysql
+- `Json` for JSON response
+  * [JSON](app/controllers/Json.php)
+- `Db` for database access with ORM (PDO Mysql)
+  * [DB](app/controllers/Db.php)
+  * [QUERY](app/controllers/Db.php)
+  * [CACHED QUERY (not implemented)]()
+  * [UPDATE](app/controllers/Db.php) Utilizes transactions
+- `Fortunes` for using the internal template engine
+  * [FORTUNES](app/controllers/Fortunes.php)
+- `Plaintext` for plaintext response
+  * [PLAINTEXT](app/controllers/Plaintext.php)
 
 ### Ubiquity Workerman + MongoDb
 - `DbMongo` for database access
@@ -64,11 +75,13 @@ The tests were run with:
 ## Test URLs
 ### JSON
 
-http://localhost:8080/Json
+- http://localhost:8080/Json
+- http://localhost:8080/Json_
 
 ### PLAINTEXT
 
-http://localhost:8080/Plaintext
+- http://localhost:8080/Plaintext
+- http://localhost:8080/Plaintext_
 
 ### DB
 
