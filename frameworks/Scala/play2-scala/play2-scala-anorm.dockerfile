@@ -1,4 +1,4 @@
-FROM hseeberger/scala-sbt:8u242_1.3.8_2.13.1
+FROM hseeberger/scala-sbt:8u265_1.3.13_2.13.3
 WORKDIR /play2
 COPY play2-scala-anorm .
 
