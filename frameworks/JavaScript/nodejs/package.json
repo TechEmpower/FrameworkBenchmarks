@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "async": "2.5.0",
-    "handlebars": "4.3.0",
+    "handlebars": "4.7.6",
   "mongodb": "2.2.33",
     "mongoose": "5.7.5",
     "mysql": "2.16.0",
