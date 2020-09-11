@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {
     "bluebird": "3.5.1",
-    "handlebars": "4.3.0",
+    "handlebars": "4.7.6",
     "koa": "2.5.0",
     "koa-bodyparser": "4.2.0",
     "koa-hbs": "1.0.0",
