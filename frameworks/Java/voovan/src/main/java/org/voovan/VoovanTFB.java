@@ -34,6 +34,10 @@ public class VoovanTFB {
                 public String getMessage() {
                         return message;
                 }
+                
+                public int hashCode(){
+                     return 98821452;
+                }
         }
         
         public static void main(String[] args) {
@@ -47,7 +51,7 @@ public class VoovanTFB {
                 webServerConfig.setPort(8080);
                 webServerConfig.setHotSwapInterval(0);
                 webServerConfig.setCache(true);
-                webServerConfig.getModuleonfigs().clear();
+                webServerConfig.getModuleConfigs().clear();
                 webServerConfig.getRouterConfigs().clear();
                 webServerConfig.setEnablePathVariables(false);
                 webServerConfig.setEnableWebSocket(false);
@@ -68,7 +72,7 @@ public class VoovanTFB {
                         }
                 });
 
-                Logger.setEnable(false);
+                //Logger.setEnable(false);
 
                 webServer.serve();
         }

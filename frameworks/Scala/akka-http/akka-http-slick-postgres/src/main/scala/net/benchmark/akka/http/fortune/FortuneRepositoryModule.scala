@@ -11,11 +11,12 @@ class FortuneRepositoryModule(val dbConfig: DatabaseConfig[PostgresProfile]) ext
 
   private val fortunes = FortuneTable.fortuneTableQuery
 
+  @SuppressWarnings(Array("org.wartremover.warts.Any"))
   override def all(): DatabasePublisher[Fortune] = {
     db.stream(
       fortunes.result.withStatementParameters(rsType = ResultSetType.ForwardOnly,
-        rsConcurrency = ResultSetConcurrency.ReadOnly,
-        fetchSize = 100))
+                                              rsConcurrency = ResultSetConcurrency.ReadOnly,
+                                              fetchSize = 100))
   }
 
 }

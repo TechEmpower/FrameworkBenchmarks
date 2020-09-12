@@ -1,7 +1,7 @@
 <?php
 return array(
 	"database" => [
-		'default' => [
+		'mysql' => [
 			"wrapper" => "\\Ubiquity\\db\\providers\\pdo\\PDOWrapper",
 			"type" => "mysql",
 			"dbName" => "hello_world",
@@ -10,7 +10,7 @@ return array(
 			"user" => "benchmarkdbuser", // benchmarkdbuser
 			"password" => "benchmarkdbpass", // benchmarkdbpass
 			"options" => [
-				\PDO::ATTR_PERSISTENT => true
+				\PDO::ATTR_EMULATE_PREPARES => false
 			],
 			"cache" => false
 		],
@@ -23,7 +23,8 @@ return array(
 			"user" => "benchmarkdbuser", // benchmarkdbuser
 			"password" => "benchmarkdbpass", // benchmarkdbpass
 			"options" => [
-				\PDO::ATTR_PERSISTENT => true
+				\PDO::ATTR_EMULATE_PREPARES => false,
+				'quote' => ''
 			],
 			"cache" => false
 		],
@@ -36,18 +37,18 @@ return array(
 			"user" => "benchmarkdbuser", // benchmarkdbuser
 			"password" => "benchmarkdbpass", // benchmarkdbpass
 			"options" => [
-				\PDO::ATTR_PERSISTENT => false
+				'quote' => ''
 			],
 			"cache" => false
 		],
-		'async' => [
-			"wrapper" => "\\Ubiquity\\db\\providers\\swoole\SwooleWrapper",
-			"type" => "mysql",
+		'mongo' => [
+			"wrapper" => "\\Ubiquity\\db\\providers\\MongoDbWrapper",
+			"type" => "mongo",
 			"dbName" => "hello_world",
 			"serverName" => "tfb-database", // tfb-database
-			"port" => 3306,
-			"user" => "benchmarkdbuser", // benchmarkdbuser
-			"password" => "benchmarkdbpass", // benchmarkdbpass
+			"port" => 27017,
+			"user" => "", // benchmarkdbuser
+			"password" => "", // benchmarkdbpass
 			"options" => [],
 			"cache" => false
 		]

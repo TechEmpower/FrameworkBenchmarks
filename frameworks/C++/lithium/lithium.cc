@@ -10,9 +10,26 @@
 using namespace li;
 
 template <typename B>
-void escape_html_entities(B& buffer, const std::string& data)
+void escape_html_entities(B& buffer, const std::string_view& data)
 {
-    for(size_t pos = 0; pos != data.size(); ++pos) {
+  size_t pos = 0;
+  auto search_for_special = [&] () {
+    size_t start = pos;
+    size_t end = pos;
+    for(;pos != data.size(); ++pos) {
+      char c = data[pos];
+      if (c > '>' || (c != '&' && c != '\"' && c != '\'' && c != '<' && c == '>'))
+        end = pos + 1;
+      else break;
+    }
+
+    if (start != end)
+      buffer << std::string_view(data.data() + start, end - start);
+  };
+  
+    for(; pos != data.size(); ++pos) {
+      search_for_special();
+      if (pos >= data.size()) return;
         switch(data[pos]) {
             case '&':  buffer << "&amp;";       break;
             case '\"': buffer << "&quot;";      break;
@@ -36,6 +53,8 @@ void siege(int port) {
   http_benchmark_close(sockets);
 }
 #endif
+
+lru_cache<int, decltype(mmm(s::id = int(), s::randomNumber = int()))> world_cache(10000);
 
 int main(int argc, char* argv[]) {
 
@@ -71,16 +90,23 @@ int main(int argc, char* argv[]) {
     s::id(s::auto_increment, s::primary_key) = int(),
     s::randomNumber = int());
 
-#if TFB_MYSQL
-  int db_nconn = 4;
-  int queries_nconn = 2;
-  int fortunes_nconn = 4;
-  int updates_nconn = 1;
-#elif TFB_PGSQL
-  int db_nconn = 7;
-  int queries_nconn = 4;
-  int fortunes_nconn = 7;
-  int updates_nconn = 3;
+#ifndef N_SQL_CONNECTIONS
+  #if TFB_MYSQL
+    int db_nconn = 5;
+    int queries_nconn = 4;
+    int fortunes_nconn = 5;
+    int updates_nconn = 2;
+  #elif TFB_PGSQL
+    int db_nconn = 5;
+    int queries_nconn = 3;
+    int fortunes_nconn = 7;
+    int updates_nconn = 3;
+  #endif
+#else
+  int db_nconn = N_SQL_CONNECTIONS;
+  int queries_nconn = N_SQL_CONNECTIONS;
+  int fortunes_nconn = N_SQL_CONNECTIONS;
+  int updates_nconn = N_SQL_CONNECTIONS;
 #endif
 
   http_api my_api;
@@ -105,10 +131,30 @@ int main(int argc, char* argv[]) {
     
     N = std::max(1, std::min(N, 500));
     
-    auto c = random_numbers.connect(request.fiber);
+    std::vector<decltype(random_numbers.all_fields())> numbers(N);
+    {
+      auto c = random_numbers.connect(request.fiber);
+      for (int i = 0; i < N; i++)
+        numbers[i] = *c.find_one(s::id = 1 + rand() % 10000);
+    }
+
+    response.write_json(numbers);
+  };
+
+  random_numbers.connect().forall([&] (const auto& number) {
+    world_cache(number.id, [&] { return metamap_clone(number); });
+  });
+
+  my_api.get("/cached-worlds") = [&](http_request& request, http_response& response) {
+    sql_db.max_async_connections_per_thread_ = queries_nconn;
+    std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
+    int N = atoi(N_str.c_str());
+    
+    N = std::max(1, std::min(N, 500));
+
     std::vector<decltype(random_numbers.all_fields())> numbers(N);
     for (int i = 0; i < N; i++)
-      numbers[i] = *c.find_one(s::id = 1 + rand() % 10000);
+      numbers[i] = world_cache(1 + rand() % 10000);
 
     response.write_json(numbers);
   };
@@ -152,15 +198,16 @@ int main(int argc, char* argv[]) {
     typedef decltype(fortunes.all_fields()) fortune;
     std::vector<fortune> table;
 
-    auto c = fortunes.connect(request.fiber);
-    c.forall([&] (const auto& f) { table.emplace_back(metamap_clone(f)); });
+    {
+      auto c = fortunes.connect(request.fiber);
+      c.forall([&] (const auto& f) { table.emplace_back(metamap_clone(f)); });
+    }
     table.emplace_back(0, "Additional fortune added at request time.");
 
     std::sort(table.begin(), table.end(),
               [] (const fortune& a, const fortune& b) { return a.message < b.message; });
 
-    char b[100000];
-    li::output_buffer ss(b, sizeof(b));
+    li::growing_output_buffer ss;
  
     ss << "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
     for(auto& f : table)
