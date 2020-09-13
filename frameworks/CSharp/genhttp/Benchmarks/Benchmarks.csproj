@@ -19,8 +19,8 @@
   </PropertyGroup>
     
   <ItemGroup>
-    <PackageReference Include="GenHTTP.Core" Version="3.0.3" />
-    <PackageReference Include="GenHTTP.Modules.Webservices" Version="3.0.3" />
+    <PackageReference Include="GenHTTP.Core" Version="3.2.0" />
+    <PackageReference Include="GenHTTP.Modules.Webservices" Version="3.2.0" />
   </ItemGroup>
   
 </Project>

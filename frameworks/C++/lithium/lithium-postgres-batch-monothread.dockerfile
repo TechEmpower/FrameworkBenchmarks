@@ -9,4 +9,8 @@ COPY ./ ./
 RUN ./compile_libpq.sh batchmode
 ENV LD_LIBRARY_PATH=/usr/lib
 
-CMD ./compile_clang-pipeline.sh TFB_PGSQL 0
+CMD ./compile_clang-batch.sh TFB_PGSQL 1
+
+
+#ENV LD_LIBRARY_PATH=/usr/lib
+#CMD /lithium_tbf tfb-database 8080

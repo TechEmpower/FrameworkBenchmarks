@@ -10,9 +10,26 @@
 using namespace li;
 
 template <typename B>
-void escape_html_entities(B& buffer, const std::string& data)
+void escape_html_entities(B& buffer, const std::string_view& data)
 {
-    for(size_t pos = 0; pos != data.size(); ++pos) {
+  size_t pos = 0;
+  auto search_for_special = [&] () {
+    size_t start = pos;
+    size_t end = pos;
+    for(;pos != data.size(); ++pos) {
+      char c = data[pos];
+      if (c > '>' || (c != '&' && c != '\"' && c != '\'' && c != '<' && c == '>'))
+        end = pos + 1;
+      else break;
+    }
+
+    if (start != end)
+      buffer << std::string_view(data.data() + start, end - start);
+  };
+  
+    for(; pos != data.size(); ++pos) {
+      search_for_special();
+      if (pos >= data.size()) return;
         switch(data[pos]) {
             case '&':  buffer << "&amp;";       break;
             case '\"': buffer << "&quot;";      break;

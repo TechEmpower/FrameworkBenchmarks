@@ -50,7 +50,7 @@
         "notes": "",
         "versus": "None"
       },
-      "postgres-pipeline": {
+      "postgres-batch": {
         "db_url"         : "/db",
         "query_url"      : "/queries?N=",
         "fortune_url"    : "/fortunes",
@@ -67,32 +67,10 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Lithium-postgres-pipeline",
-        "notes": "",
-        "versus": "None"
-      },
-      "postgres-pipeline-monothread": {
-        "db_url"         : "/db",
-        "query_url"      : "/queries?N=",
-        "fortune_url"    : "/fortunes",
-        "update_url"     : "/updates?N=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "Lithium",
-        "language": "C++",
-        "flavor": "None",
-        "orm": "Full",
-        "platform": "None",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "Lithium-postgres-pipeline-1t",
+        "display_name": "Lithium-postgres-batch",
         "notes": "",
         "versus": "None"
       }
-
 
     }
   ]
