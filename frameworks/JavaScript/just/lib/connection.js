@@ -339,10 +339,12 @@ function setupSocket (sock, config) {
 }
 
 function connect (config, onPGConnect) {
-  lookup(config.hostname, record => {
-    const { message } = record
-    const { ip } = message.answer[0]
-    config.address = `${ip[0]}.${ip[1]}.${ip[2]}.${ip[3]}`
+  lookup(config.hostname, (err, ip) => {
+    if (err) {
+      onPGConnect(err)
+      return
+    }
+    config.address = ip
     const sock = createClient(config.address, config.port)
     sock.onClose = () => {}
     sock.onConnect = err => {
