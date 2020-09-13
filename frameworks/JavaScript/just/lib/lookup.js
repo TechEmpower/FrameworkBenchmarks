@@ -1,7 +1,7 @@
 const { create, parse } = require('dns.js')
 const { udp, net } = just
 const { loop } = just.factory
-const { readFile } = require('fs')
+const { readFile, isFile } = require('fs')
 
 const dnsServer = just.env().DNS_SERVER || '127.0.0.11'
 
@@ -16,11 +16,16 @@ const rxComment = /(\s+)?#.+/
 const rxName = /nameserver\s+(.+)/
 
 function readHosts () {
-  const hosts = readFile('/etc/hosts')
-  just.print(`/etc/hosts:\n${hosts}`)
-  const lines = hosts.split('\n').filter(line => line.trim())
   const ipv4 = {}
   const ipv6 = {}
+  const fileName = '/etc/hosts'
+  if (!isFile(fileName)) {
+    just.error(`${fileName} not found`)
+    return { ipv4, ipv6 }
+  }
+  const hosts = readFile(fileName)
+  just.error(`${fileName}:\n${hosts}`)
+  const lines = hosts.split('\n').filter(line => line.trim())
   for (const line of lines) {
     if (line.match(rxComment)) continue
     const { address, hosts } = parseLine(line)
@@ -43,10 +48,15 @@ function lookupHosts (hostname) {
 }
 
 function readResolv () {
-  const resolv = readFile('/etc/resolv.conf')
-  just.print(`/etc/resolv.conf:\n${resolv}`)
-  const lines = resolv.split('\n').filter(line => line.trim())
+  const fileName = '/etc/resolv.conf'
   const results = []
+  if (!isFile(fileName)) {
+    just.error(`${fileName} not found`)
+    return results
+  }
+  const resolv = readFile(fileName)
+  just.error(`${fileName}:\n${resolv}`)
+  const lines = resolv.split('\n').filter(line => line.trim())
   for (const line of lines) {
     const match = line.match(rxName)
     if (match && match.length > 1) {
@@ -62,14 +72,14 @@ function readResolv () {
 function lookup (query = 'www.google.com', onRecord = () => {}, address = dnsServer, port = 53, buf = new ArrayBuffer(65536)) {
   const ip = lookupHosts(query)
   if (ip) {
-    just.print(`found ${ip} for ${query} in /etc/hosts`)
+    just.error(`found ${ip} for ${query} in /etc/hosts`)
     onRecord(null, ip)
     return
   }
   const ips = readResolv()
   if (ips.length) {
     address = ips[0]
-    just.print(`dns server ${address} found in /etc/resolv.conf`)
+    just.error(`dns server ${address} found in /etc/resolv.conf`)
   }
   const fd = net.socket(net.AF_INET, net.SOCK_DGRAM | net.SOCK_NONBLOCK, 0)
   net.bind(fd, address, port)
@@ -88,18 +98,25 @@ function lookup (query = 'www.google.com', onRecord = () => {}, address = dnsSer
     }
     const { ip } = message.answer[0]
     const result = `${ip[0]}.${ip[1]}.${ip[2]}.${ip[3]}`
-    just.print(`got ${result} for ${query} from ${address}`)
+    just.error(`got ${result} for ${query} from ${address}`)
     loop.remove(fd)
     net.close(fd)
     onRecord(null, result)
   })
+  const len = create(query, buf, 1)
+  const rc = udp.sendmsg(fd, buf, address, port, len)
+  if (rc === -1) {
+    const errno = just.sys.errno()
+    onRecord(new Error(`Error sending ${query} to ${address}: ${just.sys.strerror(errno)} (${errno})`))
+    loop.remove(fd)
+    net.close(fd)
+    return
+  }
   const timer = just.setTimeout(() => {
     onRecord(new Error(`Request timed out for ${query} at ${address}`))
     loop.remove(fd)
     net.close(fd)
   }, 1000)
-  const len = create(query, buf, 1)
-  const rc = udp.sendmsg(fd, buf, address, port, len)
 }
 
 module.exports = { lookup }

@@ -161,7 +161,10 @@ function onPGConnect (err, sock) {
     just.setTimeout(() => connect(tfb, onPGConnect), 1000)
     return
   }
-  sock.onClose = () => just.print('pg.close')
+  sock.onClose = () => {
+    // todo: remove from pool and reconnect?
+    just.error('pg.close')
+  }
   sock.start(err => {
     if (err) return just.error(err.stack)
     sock.authenticate(err => {
