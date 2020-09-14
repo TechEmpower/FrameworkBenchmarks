@@ -329,7 +329,7 @@ function setupSocket (sock, config) {
   sock.compile = compile
   sock.onData = bytes => parser.parse(bytes)
   sock.onClose = () => {
-    just.print('pg socket closed')
+    just.error('pg socket closed')
   }
   sock.getParams = () => parser.parameters
   sock.size = () => callbacks.length
@@ -339,12 +339,16 @@ function setupSocket (sock, config) {
 }
 
 function connect (config, onPGConnect) {
-  lookup(config.hostname, record => {
-    const { message } = record
-    const { ip } = message.answer[0]
-    config.address = `${ip[0]}.${ip[1]}.${ip[2]}.${ip[3]}`
+  lookup(config.hostname, (err, ip) => {
+    if (err) {
+      onPGConnect(err)
+      return
+    }
+    config.address = ip
     const sock = createClient(config.address, config.port)
-    sock.onClose = () => {}
+    sock.onClose = () => {
+      just.error('pg socket closed')
+    }
     sock.onConnect = err => {
       onPGConnect(err, setupSocket(sock, config))
       return sock.buffer
