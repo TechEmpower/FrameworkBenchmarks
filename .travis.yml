@@ -38,7 +38,7 @@ env:
     - 'TESTDIR="Go/chi Go/gin Go/goji Go/aah Go/beego Go/echo Go/gnet"'
     - 'TESTDIR="Go/falcore Go/fiber Go/kami Go/martini Go/revel Go/webgo"'
     - 'TESTDIR="Go/evio Go/fasthttp Go/go-std Go/atreugo Go/gramework"'
-    - 'TESTDIR="Go/goframe Go/clevergo"'
+    - 'TESTDIR="Go/gearbox Go/goframe Go/clevergo"'
     - "TESTLANG=Groovy"
     - "TESTDIR=Haskell/snap"
     - "TESTDIR=Haskell/yesod"
@@ -56,10 +56,11 @@ env:
     - 'TESTDIR="Java/play1 Java/play2-java Java/wildfly-ee"'
     - 'TESTDIR="JavaScript/0http JavaScript/express JavaScript/fastify JavaScript/hapi JavaScript/koa"'
     - 'TESTDIR="JavaScript/nodejs JavaScript/polkadot JavaScript/restana JavaScript/restify JavaScript/sailsjs"'
-    - 'TESTDIR="JavaScript/es4x JavaScript/ringojs"'
+    - 'TESTDIR="JavaScript/es4x JavaScript/ringojs JavaScript/just"'
     - "TESTLANG=Kotlin"
     - "TESTLANG=Lisp"
     - "TESTLANG=Lua"
+    - "TESTLANG=Mumps"
     - "TESTLANG=Nim"
     - 'TESTDIR="Nim/httpbeast Nim/jester Nim/basolato"'
     - "TESTLANG=Perl"
@@ -67,8 +68,8 @@ env:
     - 'TESTDIR="PHP/comet PHP/kumbiaphp PHP/workerman PHP/webman"'
     - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/fat-free PHP/fuel PHP/phpixie PHP/slim PHP/symfony PHP/yii2 PHP/zend PHP/spiral"'
     - 'TESTDIR="PHP/amp PHP/hhvm PHP/peachpie PHP/php-ngx PHP/phalcon"'
-    - 'TESTDIR="PHP/hamlet PHP/laravel PHP/lumen PHP/swoole PHP/ubiquity PHP/hyperf PHP/sw-fw-less PHP/imi PHP/simps"'
-    - 'TESTDIR="Python/aiohttp Python/api_hour Python/apidaora Python/blacksheep Python/bottle Python/cherrypy Python/django Python/emmett Python/eve Python/falcon Python/fastapi Python/flask"'
+    - 'TESTDIR="PHP/hamlet PHP/laravel PHP/lumen PHP/swoole PHP/ubiquity PHP/hyperf PHP/sw-fw-less PHP/imi PHP/simps PHP/one"'
+    - 'TESTDIR="Python/aiohttp Python/api_hour Python/apidaora Python/blacksheep Python/bottle Python/cherrypy Python/crax Python/django Python/emmett Python/eve Python/falcon Python/fastapi Python/flask"'
     - 'TESTDIR="Python/hug Python/japronto Python/klein Python/morepath Python/pyramid Python/quart Python/responder Python/sanic Python/spyne Python/starlette"'
     - 'TESTDIR="Python/tornado Python/turbogears Python/uvicorn Python/uwsgi Python/vibora Python/web2py Python/webware Python/weppy Python/wsgi"'
     - 'TESTDIR="Ruby/agoo Ruby/grape Ruby/h2o_mruby Ruby/padrino Ruby/rack Ruby/rack-sequel"'

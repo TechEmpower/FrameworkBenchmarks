@@ -1,14 +1,15 @@
-FROM ubuntu:19.10
+FROM ubuntu:20.04
 
 COPY ./ ./
+
+ENV tz=America/Los_Angeles
+ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update > /dev/null && \
     apt-get install -yqq autoconf bison cmake curl file flex g++ git libnuma-dev libpq-dev libssl-dev \
                      libtool libyajl-dev libz-dev make wget software-properties-common > /dev/null
 
 ### Install php
-ENV DEBIAN_FRONTEND noninteractive
-
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq php7.4 php7.4-common php7.4-cli php7.4-fpm php7.4-mysql  > /dev/null

@@ -13,6 +13,7 @@
   <properties>
     <jooby.version>2.8.10</jooby.version>
     <netty.version>4.1.49.Final</netty.version>
+    <dsl-json.version>1.9.5</dsl-json.version>
     <postgresql.version>42.2.13</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -26,12 +27,6 @@
     <dependency>
       <groupId>jakarta.ws.rs</groupId>
       <artifactId>jakarta.ws.rs-api</artifactId>
-    </dependency>
-
-    <!-- jackson -->
-    <dependency>
-      <groupId>io.jooby</groupId>
-      <artifactId>jooby-jackson</artifactId>
     </dependency>
 
     <!-- jdbc -->
@@ -68,7 +63,14 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-pg-client</artifactId>
-      <version>3.9.1</version>
+      <version>3.9.2</version>
+    </dependency>
+
+    <!-- json -->
+    <dependency>
+      <groupId>com.dslplatform</groupId>
+      <artifactId>dsl-json-java8</artifactId>
+      <version>${dsl-json.version}</version>
     </dependency>
   </dependencies>
 
@@ -104,6 +106,11 @@
               <groupId>io.jooby</groupId>
               <artifactId>jooby-apt</artifactId>
               <version>${jooby.version}</version>
+            </path>
+            <path>
+              <groupId>com.dslplatform</groupId>
+              <artifactId>dsl-json-java8</artifactId>
+              <version>${dsl-json.version}</version>
             </path>
           </annotationProcessorPaths>
         </configuration>
@@ -165,6 +172,12 @@
       <dependencies>
         <dependency>
           <groupId>io.netty</groupId>
+          <artifactId>netty-common</artifactId>
+          <version>${netty.version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>io.netty</groupId>
           <artifactId>netty-buffer</artifactId>
           <version>${netty.version}</version>
         </dependency>
@@ -178,6 +191,12 @@
         <dependency>
           <groupId>io.netty</groupId>
           <artifactId>netty-codec-http</artifactId>
+          <version>${netty.version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>io.netty</groupId>
+          <artifactId>netty-transport</artifactId>
           <version>${netty.version}</version>
         </dependency>
 

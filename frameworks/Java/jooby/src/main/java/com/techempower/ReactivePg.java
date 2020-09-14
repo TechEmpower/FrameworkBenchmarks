@@ -1,20 +1,20 @@
 package com.techempower;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jooby.Context;
 import io.jooby.Jooby;
 import io.jooby.ServerOptions;
-import io.jooby.json.JacksonModule;
 import io.jooby.rocker.RockerModule;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowIterator;
+import io.vertx.sqlclient.SqlConnection;
 import io.vertx.sqlclient.Tuple;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.techempower.Util.randomWorld;
@@ -41,10 +41,6 @@ public class ReactivePg extends Jooby {
     /** Template engine: */
     install(new RockerModule());
 
-    /** JSON: */
-    install(new JacksonModule());
-    ObjectMapper mapper = require(ObjectMapper.class);
-
     /** Single query: */
     get("/db", ctx -> {
       clients.next().preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld()), rsp -> {
@@ -53,13 +49,12 @@ public class ReactivePg extends Jooby {
             RowIterator<Row> rs = rsp.result().iterator();
             Row row = rs.next();
             ctx.setResponseType(JSON)
-                .send(
-                    mapper.writeValueAsBytes(new World(row.getInteger(0), row.getInteger(1))));
+                .send(Json.encode(new World(row.getInteger(0), row.getInteger(1))));
           } else {
             ctx.sendError(rsp.cause());
           }
         } catch (IOException x) {
-          ctx.sendError(x);
+          sendError(ctx, x);
         }
       });
       return ctx;
@@ -69,7 +64,6 @@ public class ReactivePg extends Jooby {
     get("/queries", ctx -> {
       int queries = Util.queries(ctx);
       AtomicInteger counter = new AtomicInteger();
-      AtomicBoolean failed = new AtomicBoolean(false);
       World[] result = new World[queries];
       PgPool client = clients.next();
       for (int i = 0; i < result.length; i++) {
@@ -79,17 +73,15 @@ public class ReactivePg extends Jooby {
             Row row = rs.next();
             result[counter.get()] = new World(row.getInteger(0), row.getInteger(1));
           } else {
-            if (failed.compareAndSet(false, true)) {
-              ctx.sendError(rsp.cause());
-            }
+            sendError(ctx, rsp.cause());
           }
           // ready?
-          if (counter.incrementAndGet() == queries && !failed.get()) {
+          if (counter.incrementAndGet() == queries) {
             try {
               ctx.setResponseType(JSON)
-                  .send(mapper.writeValueAsBytes(result));
+                  .send(Json.encode(result));
             } catch (IOException x) {
-              ctx.sendError(x);
+              sendError(ctx, x);
             }
           }
         });
@@ -102,44 +94,49 @@ public class ReactivePg extends Jooby {
       int queries = Util.queries(ctx);
       World[] result = new World[queries];
       AtomicInteger counter = new AtomicInteger(0);
-      AtomicBoolean failed = new AtomicBoolean(false);
       PgPool pool = clients.next();
-      for (int i = 0; i < queries; i++) {
-        pool.preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld()), query -> {
-          if (query.succeeded()) {
-            RowIterator<Row> rs = query.result().iterator();
-            Tuple row = rs.next();
-            World world = new World(row.getInteger(0), randomWorld());
-            result[counter.get()] = world;
-          } else {
-            if (failed.compareAndSet(false, true)) {
-              ctx.sendError(query.cause());
+      pool.getConnection(connectCallback -> {
+        if (connectCallback.failed()) {
+          sendError(ctx, connectCallback.cause());
+          return;
+        }
+        SqlConnection conn = connectCallback.result();
+        for (int i = 0; i < queries; i++) {
+          int id = randomWorld();
+          conn.preparedQuery(SELECT_WORLD).execute(Tuple.of(id), selectCallback -> {
+            if (selectCallback.failed()) {
+              conn.close();
+              sendError(ctx, selectCallback.cause());
               return;
             }
-          }
+            result[counter.get()] = new World(
+                selectCallback.result().iterator().next().getInteger(0),
+                randomWorld());
+            if (counter.incrementAndGet() == queries) {
+              // Sort results... avoid dead locks
+              Arrays.sort(result);
+              List<Tuple> batch = new ArrayList<>(queries);
+              for (World world : result) {
+                batch.add(Tuple.of(world.getRandomNumber(), world.getId()));
+              }
 
-          if (counter.incrementAndGet() == queries && !failed.get()) {
-            List<Tuple> batch = new ArrayList<>(queries);
-            for (World world : result) {
-              batch.add(Tuple.of(world.getRandomNumber(), world.getId()));
-            }
-
-            pool.preparedQuery(UPDATE_WORLD)
-                .executeBatch(batch, update -> {
-                  if (update.failed()) {
-                    ctx.sendError(update.cause());
-                  } else {
-                    try {
-                      ctx.setResponseType(JSON)
-                          .send(mapper.writeValueAsBytes(result));
-                    } catch (IOException x) {
-                      ctx.sendError(x);
-                    }
+              conn.preparedQuery(UPDATE_WORLD).executeBatch(batch, updateCallback -> {
+                conn.close();
+                if (updateCallback.failed()) {
+                  sendError(ctx, updateCallback.cause());
+                } else {
+                  try {
+                    ctx.setResponseType(JSON)
+                        .send(Json.encode(result));
+                  } catch (IOException x) {
+                    sendError(ctx, x);
                   }
-                });
-          }
-        });
-      }
+                }
+              });
+            }
+          });
+        }
+      });
       return ctx;
     });
 
@@ -167,6 +164,12 @@ public class ReactivePg extends Jooby {
       });
       return ctx;
     });
+  }
+
+  private void sendError(Context ctx, Throwable cause) {
+    if (!ctx.isResponseStarted()) {
+      ctx.sendError(cause);
+    }
   }
 
   public static void main(String[] args) {
