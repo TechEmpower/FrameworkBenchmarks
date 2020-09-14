@@ -1,6 +1,5 @@
 package io.vertx.benchmark;
 
-import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.github.susom.database.Config;
 import com.github.susom.database.ConfigFrom;
 import com.github.susom.database.DatabaseProviderVertx;
@@ -28,11 +27,6 @@ import java.util.*;
 import static io.vertx.benchmark.Helper.randomWorld;
 
 public class App extends AbstractVerticle {
-
-  static {
-    Json.mapper.registerModule(new AfterburnerModule());
-    Json.prettyMapper.registerModule(new AfterburnerModule());
-  }
 
   /**
    * MongoDB implementation

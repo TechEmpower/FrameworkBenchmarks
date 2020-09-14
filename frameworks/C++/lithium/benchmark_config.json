@@ -25,7 +25,6 @@
         "notes": "",
         "versus": "None"
       },
-      
       "postgres": {
         "json_url"       : "/json",
         "db_url"         : "/db",
@@ -49,6 +48,7 @@
         "notes": "",
         "versus": "None"
       }
+
     }
   ]
 }

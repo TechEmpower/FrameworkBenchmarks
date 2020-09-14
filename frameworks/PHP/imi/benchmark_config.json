@@ -9,6 +9,7 @@
         "query_url": "/queryModel?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updateModel?queries=",
+        "cached_query_url": "/cached-worlds?count=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",

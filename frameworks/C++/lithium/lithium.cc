@@ -24,35 +24,18 @@ void escape_html_entities(B& buffer, const std::string& data)
     }
 }
 
-void tune_n_sql_connections(int& nc_to_tune, std::string http_req, int port, int min, int max) {
-
-  std::cout << std::endl << "Benchmark " << http_req << std::endl;
-
+#ifdef PROFILE_MODE
+void siege(int port) {
   auto sockets = http_benchmark_connect(512, port);
-
-  float max_req_per_s = 0;
-  int best_nconn = 2;
-  for (int i = 0; i <= 7; i++)
-  {
-    int nc = min + (max - min) * i / 7;
-    nc_to_tune = nc;
-
-    // Warmup.
-    http_benchmark(sockets, 4, 200, http_req);
-    float req_per_s = http_benchmark(sockets, 4, 1000, http_req);
-    std::cout << nc << " -> " << req_per_s << " req/s." << std::endl;
-    if (req_per_s > max_req_per_s)
-    {
-      max_req_per_s = req_per_s;
-      best_nconn = nc;
-    }
-  }
-
+  http_benchmark(sockets, 2, 1000, "GET /json HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /plaintext HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /db HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /queries?N=20 HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /fortunes HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /updates?N=20 HTTP/1.1\r\n\r\n");
   http_benchmark_close(sockets);
-
-  std::cout << "best: " << best_nconn << " (" << max_req_per_s << " req/s)."<< std::endl;
-  nc_to_tune = best_nconn;
 }
+#endif
 
 int main(int argc, char* argv[]) {
 
@@ -88,16 +71,23 @@ int main(int argc, char* argv[]) {
     s::id(s::auto_increment, s::primary_key) = int(),
     s::randomNumber = int());
 
-#if TFB_MYSQL
-  int db_nconn = 4;
-  int queries_nconn = 2;
-  int fortunes_nconn = 4;
-  int updates_nconn = 1;
-#elif TFB_PGSQL
-  int db_nconn = 7;
-  int queries_nconn = 4;
-  int fortunes_nconn = 7;
-  int updates_nconn = 3;
+#ifndef N_SQL_CONNECTIONS
+  #if TFB_MYSQL
+    int db_nconn = 5;
+    int queries_nconn = 4;
+    int fortunes_nconn = 5;
+    int updates_nconn = 2;
+  #elif TFB_PGSQL
+    int db_nconn = 5;
+    int queries_nconn = 3;
+    int fortunes_nconn = 7;
+    int updates_nconn = 3;
+  #endif
+#else
+  int db_nconn = N_SQL_CONNECTIONS;
+  int queries_nconn = N_SQL_CONNECTIONS;
+  int fortunes_nconn = N_SQL_CONNECTIONS;
+  int updates_nconn = N_SQL_CONNECTIONS;
 #endif
 
   http_api my_api;
@@ -112,7 +102,7 @@ int main(int argc, char* argv[]) {
   };
   my_api.get("/db") = [&](http_request& request, http_response& response) {
     sql_db.max_async_connections_per_thread_ = db_nconn;
-    response.write_json(random_numbers.connect(request.fiber).find_one(s::id = 1 + rand() % 10000).value());
+    response.write_json(*random_numbers.connect(request.fiber).find_one(s::id = 1 + rand() % 10000));
   };
 
   my_api.get("/queries") = [&](http_request& request, http_response& response) {
@@ -125,7 +115,7 @@ int main(int argc, char* argv[]) {
     auto c = random_numbers.connect(request.fiber);
     std::vector<decltype(random_numbers.all_fields())> numbers(N);
     for (int i = 0; i < N; i++)
-      numbers[i] = c.find_one(s::id = 1 + rand() % 10000).value();
+      numbers[i] = *c.find_one(s::id = 1 + rand() % 10000);
 
     response.write_json(numbers);
   };
@@ -147,7 +137,7 @@ int main(int argc, char* argv[]) {
 #endif
       for (int i = 0; i < N; i++)
       {
-        numbers[i] = c.find_one(s::id = 1 + rand() % 10000).value();
+        numbers[i] = *c.find_one(s::id = 1 + rand() % 10000);
         numbers[i].randomNumber = 1 + rand() % 10000;
       }
 
@@ -170,7 +160,7 @@ int main(int argc, char* argv[]) {
     std::vector<fortune> table;
 
     auto c = fortunes.connect(request.fiber);
-    c.forall([&] (auto f) { table.emplace_back(f); });
+    c.forall([&] (const auto& f) { table.emplace_back(metamap_clone(f)); });
     table.emplace_back(0, "Additional fortune added at request time.");
 
     std::sort(table.begin(), table.end(),
@@ -192,8 +182,18 @@ int main(int argc, char* argv[]) {
     response.write(ss.to_string_view());
   };
 
+#ifndef PROFILE_MODE
   // Start the server for the Techempower benchmark.
   http_serve(my_api, port, s::nthreads = nthreads);
+#else
+  std::thread server_thread([&] {
+    http_serve(my_api, port, s::nthreads = nprocs);
+  });
+  usleep(2e6);
+  siege(port);
+  li::quit_signal_catched = true;
+  server_thread.join();
 
+#endif
   return 0;
 }
