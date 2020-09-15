@@ -16,7 +16,7 @@ function onTimer () {
   for (const thread of threads) {
     total += Atomics.load(thread.u32, 0)
   }
-  just.print(`threads ${threads.length} total ${total} mem ${rss} cpu (${user.toFixed(2)}/${system.toFixed(2)}) ${(user + system).toFixed(2)} qps/core ${(total / (user + system)).toFixed(2)}`)
+  just.error(`threads ${threads.length} total ${total} mem ${rss} cpu (${user.toFixed(2)}/${system.toFixed(2)}) ${(user + system).toFixed(2)} qps/core ${(total / (user + system)).toFixed(2)}`)
 }
 
 const source = readFile(just.args[2] || 'test.js')

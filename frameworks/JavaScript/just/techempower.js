@@ -161,7 +161,10 @@ function onPGConnect (err, sock) {
     just.setTimeout(() => connect(tfb, onPGConnect), 1000)
     return
   }
-  sock.onClose = () => just.print('pg.close')
+  sock.onClose = () => {
+    // todo: remove from pool and reconnect?
+    just.error('pg.close')
+  }
   sock.start(err => {
     if (err) return just.error(err.stack)
     sock.authenticate(err => {
@@ -425,7 +428,6 @@ const stats = start()
 let i = poolSize
 const sJSON = sjs({ message: attr('string') })
 const sDB = sjs({ id: attr('number'), randomNumber: attr('number') })
-const sQUERY = sjs(attr('array', sjs({ id: attr('number'), randomNumber: attr('number') })))
 while (i--) connect(tfb, onPGConnect)
 const { loop } = just.factory
 let microtasks = true
@@ -440,6 +442,6 @@ just.setInterval(() => {
   r404 = `HTTP/1.1 404 Not Found\r\nServer: j\r\nDate: ${stats.time}\r\nContent-Type: text/plain\r\nContent-Length: 0\r\n\r\n`
 }, 100)
 while (1) {
-  loop.poll(10)
+  loop.poll(-1)
   if (microtasks) just.sys.runMicroTasks()
 }
