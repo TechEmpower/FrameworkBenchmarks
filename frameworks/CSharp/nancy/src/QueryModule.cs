@@ -16,7 +16,7 @@ namespace Nancy.Benchmark
          * Return a list of World objects as JSON, selected randomly from the World
          * table.  Assume the table has 10,000 rows.
          */
-        public QueryModule(IAppConfiguration appConfig) : base("/query")
+        public QueryModule(IAppConfiguration appConfig) : base("/queries")
         {
             ConnectionString = appConfig.ConnectionString;
 
