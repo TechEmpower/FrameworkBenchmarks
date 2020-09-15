@@ -81,7 +81,7 @@ let application : HttpHandler =
 
                 let html = MemoryStreamCache.Get()
                 let view = fortunes |> HtmlViews.fortunes 
-                StetefullRendering.renderHtmlToStream html view
+                StatefullRendering.renderHtmlToStream html view
 
                 ctx.Response.ContentType <- "text/html;charset=utf-8"
                 ctx.Response.ContentLength <- contentLength html.Length
