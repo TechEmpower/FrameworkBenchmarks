@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:5.0 AS build
 WORKDIR /source
 COPY src .
-RUN dotnet publish -c Release -f netcoreapp3.1 -o /app
+RUN dotnet publish -c Release -f net5.0 -o /app
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:5.0 AS runtime
 ENV ASPNETCORE_URLS http://+:8080
