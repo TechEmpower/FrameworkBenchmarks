@@ -1,6 +1,6 @@
 ﻿namespace App
 open System.Text
-open Giraffe.GiraffeViewEngine
+open Giraffe.ViewEngine
 open System.Net
 open System.IO
 
