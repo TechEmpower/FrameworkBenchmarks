@@ -16,7 +16,7 @@ namespace PlatformBenchmarks
             var length = write.Stream.Length - fiberRw.UserToken.HttpHandlerPostion;
             write.Stream.Position = fiberRw.UserToken.ContentPostion.postion;
             write.Write(length.ToString(), false);
-            await write.FlushAsync();
+            await write.Flush();
         }
     }
 }
