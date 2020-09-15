@@ -9,9 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0-rc.1.20451.14" />
-    <PackageReference Include="Npgsql" Version="4.1.1" />
-    <PackageReference Include="Swifter.Json" Version="1.2.9.6" />
-    <PackageReference Include="ZYSocketServerV" Version="1.6.2" />
+    <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
+    <PackageReference Include="Swifter.Json" Version="1.5.0.3" />
+    <PackageReference Include="ZYSocketServerV" Version="1.7.8" />
   </ItemGroup>
 
 </Project>

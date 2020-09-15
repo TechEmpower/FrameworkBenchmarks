@@ -92,10 +92,8 @@ namespace Benchmarks
             mApiServer.Options.BufferPoolMaxMemory = 500;
             mApiServer.Options.MaxConnections = 100000;
             mApiServer.Options.Statistical = false;
-            mApiServer.Options.UrlIgnoreCase = false;
             mApiServer.Options.LogLevel = BeetleX.EventArgs.LogType.Error;
             mApiServer.Options.LogToConsole = true;
-            mApiServer.Options.PrivateBufferPool = true;
             mApiServer.Register(typeof(Program).Assembly);
             HeaderTypeFactory.SERVAR_HEADER_BYTES = Encoding.ASCII.GetBytes("Server: TFB\r\n");
             mApiServer.HttpConnected += (o, e) =>
