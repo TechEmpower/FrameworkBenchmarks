@@ -20,7 +20,7 @@ namespace PlatformBenchmarks
             writer.Write(_jsonPreamble);
 
             // Date header
-            writer.Write(DateHeader.HeaderBytes);            
+            writer.Write(DateHeader.HeaderBytes);
 
             writer.Commit();
 

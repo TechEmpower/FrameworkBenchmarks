@@ -1,10 +1,10 @@
 ﻿namespace App
 open System.Text
-open Giraffe.GiraffeViewEngine
+open Giraffe.ViewEngine
 open System.Net
 open System.IO
 
-module rec StetefullRendering =
+module rec StatefullRendering =
 
     let private UTF8WithoutBOM = new UTF8Encoding(false)
 
@@ -76,3 +76,8 @@ module rec StetefullRendering =
         let ms = new MemoryStream()
         renderHtmlToStream ms node
         ms
+
+    let renderHtmlToBytes node =
+        let ms = new MemoryStream()
+        renderHtmlToStream ms node
+        ms.ToArray()
