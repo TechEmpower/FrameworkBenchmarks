@@ -1,15 +1,13 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
-using System.Buffers;
-using System.Text.Json;
+using Utf8Json;
 
 namespace PlatformBenchmarks
 {
     public partial class BenchmarkApplication
     {
-        private readonly static uint _jsonPayloadSize = (uint)JsonSerializer.SerializeToUtf8Bytes(new JsonMessage { message = "Hello, World!" }, SerializerOptions).Length;
+        private static readonly uint _jsonPayloadSize = (uint)JsonSerializer.SerializeUnsafe(new JsonMessage { message = "Hello, World!" }).Count;
 
         private readonly static AsciiString _jsonPreamble =
             _http11OK +
@@ -17,7 +15,7 @@ namespace PlatformBenchmarks
             _headerContentTypeJson + _crlf +
             _headerContentLength + _jsonPayloadSize.ToString();
 
-        private static void Json(ref BufferWriter<WriterAdapter> writer, IBufferWriter<byte> bodyWriter)
+        private static void Json(ref BufferWriter<WriterAdapter> writer)
         {
             writer.Write(_jsonPreamble);
 
@@ -26,11 +24,8 @@ namespace PlatformBenchmarks
 
             writer.Commit();
 
-            Utf8JsonWriter utf8JsonWriter = t_writer ??= new Utf8JsonWriter(bodyWriter, new JsonWriterOptions { SkipValidation = true });
-            utf8JsonWriter.Reset(bodyWriter);
-
-            // Body
-            JsonSerializer.Serialize<JsonMessage>(utf8JsonWriter, new JsonMessage { message = "Hello, World!" }, SerializerOptions);
+            var jsonPayload = JsonSerializer.SerializeUnsafe(new JsonMessage { message = "Hello, World!" });
+            writer.Write(jsonPayload);
         }
     }
 }

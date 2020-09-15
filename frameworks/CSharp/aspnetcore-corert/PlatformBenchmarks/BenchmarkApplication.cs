@@ -126,7 +126,7 @@ namespace PlatformBenchmarks
             }
             else if (_requestType == RequestType.Json)
             {
-                Json(ref writer, Writer);
+                Json(ref writer);
             }
             else
             {
