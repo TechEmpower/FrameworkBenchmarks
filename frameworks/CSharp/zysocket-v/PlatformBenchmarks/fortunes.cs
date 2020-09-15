@@ -24,7 +24,7 @@ namespace PlatformBenchmarks
             {
                 var data = await fiberRw.UserToken.Db.LoadFortunesRows();
 
-                Task<int> WSend()
+                Task WSend()
                 {
                     write.Write(_fortunesTableStart.Data, 0, _fortunesTableStart.Length);
                     foreach (var item in data)
@@ -41,7 +41,7 @@ namespace PlatformBenchmarks
                     write.Stream.Position = fiberRw.UserToken.ContentPostion.postion;
                     write.Write(length.ToString(), false);
                     write.Flush(false);
-                    return fiberRw.Flush();
+                    return fiberRw.FlushAsync();
                 }
                 if (fiberRw.UserToken != null)
                     await await fiberRw.Sync.Ask(WSend);

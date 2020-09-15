@@ -64,13 +64,13 @@ namespace PlatformBenchmarks
 
         private async Task OnCompleted(IFiberRw<HttpToken> fiberRw, WriteBytes write)
         {
-            Task<int> WSend()
+            Task WSend()
             {
                 var length = write.Stream.Length - fiberRw.UserToken.HttpHandlerPostion;
                 write.Stream.Position = fiberRw.UserToken.ContentPostion.postion;
                 write.Write(length.ToString(), false);
                 write.Flush(false);
-                return fiberRw.Flush();
+                return fiberRw.FlushAsync();
             }
 
             if (fiberRw.UserToken != null)
