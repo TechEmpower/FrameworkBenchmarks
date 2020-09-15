@@ -5,7 +5,7 @@ open Dapper
 open Npgsql
 open Models
 open FSharp.Control.Tasks
-open Giraffe.ViewEngine
+open App
 
 let application : HttpHandler = 
     
@@ -25,7 +25,7 @@ let application : HttpHandler =
 
                 let bytes = 
                     view 
-                    |> RenderView.AsBytes.xmlNode
+                    |> StatefullRendering.renderHtmlToBytes
 
                 ctx.SetContentType "text/html;charset=utf-8"
                 return! ctx.WriteBytesAsync bytes
