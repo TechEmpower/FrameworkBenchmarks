@@ -53,7 +53,7 @@ class IndexController extends Controller
     {
         $count = max(min(intval($count), 500), 1);
         $list  = [];
-        $updates = ['begin'];
+        $updates = [];
         while ($count--) {
             $row    = World::repeatStatement()->find(mt_rand(1, 10000));
             $list[] = $row;
@@ -63,8 +63,9 @@ class IndexController extends Controller
             } while($old === $new);
             $updates[] = 'update world set randomNumber='.$new.' where id='.$row->id;
         }
-        $updates[] = 'commit;';
-        $row->exec(implode(';',$updates));
+        World::beginTransaction();
+        World::exec(implode(';',$updates));
+        World::commit();
         return $this->json($list);
     }
 
