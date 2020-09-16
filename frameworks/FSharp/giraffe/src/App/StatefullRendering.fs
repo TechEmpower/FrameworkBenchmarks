@@ -76,8 +76,3 @@ module rec StatefullRendering =
         let ms = new MemoryStream()
         renderHtmlToStream ms node
         ms
-
-    let renderHtmlToBytes node =
-        let ms = new MemoryStream()
-        renderHtmlToStream ms node
-        ms.ToArray()
