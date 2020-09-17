@@ -5,7 +5,7 @@ use Swoole\Http\Response;
 
 $server = new swoole_http_server('0.0.0.0', 8080, SWOOLE_BASE);
 $server->set([
-    'worker_num' => swoole_cpu_num() * 2,
+    'worker_num' => swoole_cpu_num(),
     'log_file' => '/dev/null',
     'log_level' => 5,
 ]);
