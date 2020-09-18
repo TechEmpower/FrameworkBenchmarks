@@ -24,7 +24,7 @@ $server->on('workerStart', function () {
 /**
  * On every request to the (web)server, execute the following code
  */
-$server->on('request', function (Request $req, Response $res) use ($db, $fortunes, $updates) {
+$server->on('request', static function (Request $req, Response $res) {
     try {
         switch ($req->server['request_uri']) {
             case '/json':
@@ -54,8 +54,12 @@ $server->on('request', function (Request $req, Response $res) use ($db, $fortune
 
             case '/updates':
                 $res->header('Content-Type', 'application/json');
-                $res->end(updates((int) $req->get['queries'] ?? 1));
+                $res->end(updates((int) $req->get['q'] ?? 1));
                 break;
+
+            default:
+                $res->status(404);
+                $res->end('Not Found.');
         }
 
     } catch (\Throwable $e) {
