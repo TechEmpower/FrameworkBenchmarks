@@ -47,9 +47,9 @@
     },
     "no-async": {
       "db_url": "/db",
-      "query_url": "/db?queries=",
+      "query_url": "/query?q=",
       "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
+      "update_url": "/updates?q=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
