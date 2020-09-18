@@ -1,20 +1,29 @@
 <?php
 
+
 /**
  * The DB test
+ *
+ * @return string
+ */
+function db(): string
+{
+    global $pdo;
+    $statement = $pdo->prepare("SELECT id,randomNumber FROM World WHERE id=?");
+    $statement->execute([mt_rand(1, 10000)]);
+    return json_encode($statement->fetch(PDO::FETCH_ASSOC), JSON_NUMERIC_CHECK);
+}
+
+/**
+ * The Queries test
  *
  * @param int $queries
  *
  * @return string
  */
-function db(int $queries = 1) : string {
+function query(int $queries = 1): string
+{
     global $pdo;
-    if ( $queries === -1) {
-        $statement = $pdo->prepare("SELECT id,randomNumber FROM World WHERE id=?");
-        $statement->execute([mt_rand(1, 10000)]);
-        return json_encode($statement->fetch(PDO::FETCH_ASSOC), JSON_NUMERIC_CHECK);
-    }
-    
     // Read number of queries to run from URL parameter
     $query_count = 1;
     if ($queries > 1) {
@@ -32,9 +41,6 @@ function db(int $queries = 1) : string {
         $arr[] = $db->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Use the PHP standard JSON encoder.
-    // http://www.php.net/manual/en/function.json-encode.php
-
     return json_encode($arr, JSON_NUMERIC_CHECK);
 }
 
@@ -43,7 +49,8 @@ function db(int $queries = 1) : string {
  *
  * @return string
  */
-function fortunes() : string {
+function fortunes(): string
+{
     global $pdo;
     $fortune = [];
     $db = $pdo->prepare('SELECT id, message FROM Fortune');
@@ -59,9 +66,7 @@ function fortunes() : string {
         $html .= "<tr><td>$id</td><td>$message</td></tr>";
     }
 
-    return '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
-            .$html.
-            '</table></body></html>';
+    return "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>$html</table></body></html>";
 }
 
 /**
@@ -71,7 +76,8 @@ function fortunes() : string {
  *
  * @return string
  */
-function updates(int $queries) : string {
+function updates(int $queries): string
+{
     global $pdo;
     $query_count = 1;
     if ($queries > 1) {
@@ -87,7 +93,7 @@ function updates(int $queries) : string {
 
         $world = ["id" => $id, "randomNumber" => $statement->fetchColumn()];
         $world['randomNumber'] = mt_rand(1, 10000);
-        $update .="UPDATE World SET randomNumber = {$world['randomNumber']} WHERE id = $id;";
+        $update .= "UPDATE World SET randomNumber = {$world['randomNumber']} WHERE id = $id;";
 
         $arr[] = $world;
     }

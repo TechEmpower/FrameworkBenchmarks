@@ -39,13 +39,13 @@ $server->on('request', static function (Request $req, Response $res) {
 
             case '/db':
                 $res->header('Content-Type', 'application/json');
-
-                if (isset($req->get['queries'])) {
-                    $res->end(db((int) $req->get['queries']));
-                } else {
-                    $res->end(db(-1));
-                }
-                break; 
+                $res->end(db());
+                break;
+            
+            case '/query':
+                $res->header('Content-Type', 'application/json');
+                $res->end(query((int) $req->get['q'] ?? 1));
+                break;
 
             case '/fortunes':
                 $res->header('Content-Type', 'text/html; charset=utf-8');
