@@ -1,12 +1,13 @@
 mod db;
 
-use crate::db::Database;
+use crate::db::{Database, Fortune};
 use futures::stream::futures_unordered::FuturesUnordered;
 use futures::{FutureExt, StreamExt};
 use rand::distributions::{Distribution, Uniform};
 use serde::Serialize;
 use warp::http::header;
 use warp::{Filter, Rejection, Reply};
+use yarte::Template;
 
 #[derive(Serialize)]
 struct Message {
@@ -27,12 +28,10 @@ fn plaintext() -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
 
 fn db(database: &'static Database) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     let between = Uniform::from(1..=10_000);
-    warp::path!("db").and_then(move || {
-        async move {
-            let id = between.sample(&mut rand::thread_rng());
-            let world = database.get_world_by_id(id).await;
-            Ok::<_, Rejection>(warp::reply::json(&world))
-        }
+    warp::path!("db").and_then(move || async move {
+        let id = between.sample(&mut rand::thread_rng());
+        let world = database.get_world_by_id(id).await;
+        Ok::<_, Rejection>(warp::reply::json(&world))
     })
 }
 
@@ -53,6 +52,28 @@ fn queries(
         })
 }
 
+#[derive(Template)]
+#[template(path = "fortune")]
+struct FortunesYarteTemplate {
+    fortunes: Vec<Fortune>,
+}
+
+fn fortune(
+    database: &'static Database,
+) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+    warp::path!("fortunes").and_then(move || async move {
+        let mut fortunes = database.query_fortunes().await;
+        fortunes.push(Fortune {
+            id: 0,
+            message: "Additional fortune added at request time.".into(),
+        });
+        fortunes.sort_by(|a, b| a.message.cmp(&b.message));
+        Ok::<_, Rejection>(warp::reply::html(
+            FortunesYarteTemplate { fortunes }.call().unwrap(),
+        ))
+    })
+}
+
 fn routes(
     database: &'static Database,
 ) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
@@ -60,6 +81,7 @@ fn routes(
         .or(plaintext())
         .or(db(database))
         .or(queries(database))
+        .or(fortune(database))
         .map(|reply| warp::reply::with_header(reply, header::SERVER, "warp"))
 }
 
