@@ -15,10 +15,7 @@ $server->set([
  * On start of the PHP worker. One worker per server process is started.
  */
 $server->on('workerStart', function () {
-    global $pdo;
-    $pdo = new PDO("mysql:host=tfb-database;dbname=hello_world", "benchmarkdbuser", "benchmarkdbpass", [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
+    Db::init();
 });
 
 /**
