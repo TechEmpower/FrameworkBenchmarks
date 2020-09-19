@@ -35,7 +35,7 @@ const (
 	pathQueries      = "/queries"
 	pathCache        = "/cached-worlds"
 	pathFortunes     = "/fortunes"
-	pathUpdate      = "/update"
+	pathUpdate       = "/update"
 	pathText         = "/plaintext"
 )
 
@@ -301,7 +301,7 @@ func RandomWorld() int {
 func QueriesCount(c *fiber.Ctx) int {
 	n := c.Request().URI().QueryArgs().GetUintOrZero(queryparam)
 	if n < 1 {
-		n = 1Is 
+		n = 1
 	} else if n > 500 {
 		n = 500
 	}
