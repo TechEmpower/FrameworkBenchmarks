@@ -34,15 +34,15 @@ class IndexController extends Controller
     public function fortunes()
     {
         $data   = Fortune::findAll()->jsonSerialize();
-        $data[] = (object) ['id' => 0,'message' => 'Additional fortune added at request time.'];
-        usort($data, function ($a,$b){
+        $data[] = (object)['id' => 0, 'message' => 'Additional fortune added at request time.'];
+        usort($data, function ($a, $b) {
             return $a->message <=> $b->message;
         });
 
         $html = '';
         foreach ($data as $f) {
             $f->message = htmlspecialchars($f->message, ENT_QUOTES, 'UTF-8');
-            $html    .= "<tr><td>{$f->id}</td><td>{$f->message}</td></tr>";
+            $html       .= "<tr><td>{$f->id}</td><td>{$f->message}</td></tr>";
         }
 
         $this->response->header('Content-type', 'text/html; charset=UTF-8');
@@ -51,20 +51,21 @@ class IndexController extends Controller
 
     public function updates($count = 1)
     {
-        $count = max(min(intval($count), 500), 1);
-        $list  = [];
-        $updates = ['begin'];
+        $count   = max(min(intval($count), 500), 1);
+        $list    = [];
+        $updates = [];
         while ($count--) {
-            $row    = World::repeatStatement()->find(mt_rand(1, 10000));
-            $list[] = $row;
-            $old = intval($row->randomNumber);
-            do {
-                $new = mt_rand(1, 10000);
-            } while($old === $new);
-            $updates[] = 'update world set randomNumber='.$new.' where id='.$row->id;
+            $row       = World::repeatStatement()->find(mt_rand(1, 10000));
+            $list[]    = $row;
+//            $old       = intval($row->randomNumber);
+            $new       = mt_rand(1, 10000);
+            $updates[] = 'update world set randomNumber=' . $new . ' where id=' . $row->id;
         }
-        $updates[] = 'commit;';
-        $row->exec(implode(';',$updates));
+        World::beginTransaction();
+        foreach ($updates as $sql) {
+            $row->exec($sql);
+        }
+        World::commit();
         return $this->json($list);
     }
 
