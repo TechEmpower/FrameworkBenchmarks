@@ -8,7 +8,6 @@ import (
 	"os"
 	"runtime"
 	"sort"
-	"strconv"
 	"sync"
 
 	"fiber/src/templates"
@@ -50,14 +49,25 @@ func main() {
 	}
 
 	app := fiber.New(config)
-
-	app.Get("/plaintext", plaintextHandler)
-	app.Get("/json", jsonHandler)
-	app.Get("/db", dbHandler)
-	app.Get("/update", updateHandler)
-	app.Get("/queries", queriesHandler)
-	app.Get("/fortunes", templateHandler)
-	app.Get("/cached-worlds", cachedHandler)
+	app.Use(func(c *fiber.Ctx) error {
+		switch c.Path() {
+		case "/json":
+			jsonHandler(c)
+		case "/db":
+			dbHandler(c)
+		case "/queries":
+			queriesHandler(c)
+		case "/cached-worlds":
+			cachedHandler(c)
+		case "/fortunes":
+			templateHandler(c)
+		case "/updates":
+			updateHandler(c)
+		case "/plaintext":
+			plaintextHandler(c)
+		}
+		return nil
+	})
 
 	log.Fatal(app.Listen(":8080"))
 }
@@ -278,7 +288,7 @@ func RandomWorld() int {
 
 // QueriesCount :
 func QueriesCount(c *fiber.Ctx) int {
-	n, _ := strconv.Atoi(c.Query(queryparam))
+	n := c.Request().URI().QueryArgs().GetUintOrZero(queryparam)
 	if n < 1 {
 		n = 1
 	} else if n > 500 {
