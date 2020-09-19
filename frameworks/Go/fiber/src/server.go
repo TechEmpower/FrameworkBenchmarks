@@ -143,18 +143,21 @@ func ReleaseWorlds(w Worlds) {
 
 // initDatabase :
 func initDatabase() {
-	maxConn := runtime.NumCPU()
-	if maxConn == 0 {
-		maxConn = 8
-	}
+	maxConn := runtime.NumCPU() * 4
 	if fiber.IsChild() {
-		maxConn = maxConn
-	} else {
-		maxConn = maxConn * 4
+		maxConn = runtime.NumCPU()
 	}
 
 	var err error
-	db, err = pgxpool.Connect(context.Background(), fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s pool_max_conns=%d", "tfb-database", 5432, "benchmarkdbuser", "benchmarkdbpass", "hello_world", maxConn))
+	db, err = pgxpool.Connect(context.Background(),
+		fmt.Sprintf(
+			"host=%s port=%d user=%s password=%s dbname=%s pool_max_conns=%d",
+			"tfb-database", 5432,
+			"benchmarkdbuser",
+			"benchmarkdbpass",
+			"hello_world",
+			maxConn,
+		))
 	if err != nil {
 		panic(err)
 	}
