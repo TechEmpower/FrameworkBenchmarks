@@ -30,7 +30,7 @@ RUN qmake -r CONFIG+=release -spec linux-clang
 
 # 2. Compile applicaton
 RUN make -j4
-RUN sed -i 's|DriverType=|DriverType=QPSQL|g' config/database.ini
+RUN sed -i 's|DriverType=.*|DriverType=QPSQL|g' config/database.ini
 RUN sed -i 's|MultiProcessingModule=.*|MultiProcessingModule=thread|g' config/application.ini
 
 # 3. Start TreeFrog
