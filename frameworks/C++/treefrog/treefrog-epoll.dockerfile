@@ -29,7 +29,7 @@ COPY ./ ./
 RUN qmake -r CONFIG+=release -spec linux-clang
 
 # 2. Compile applicaton
-RUN make -j4
+RUN make
 RUN sed -i 's|DriverType=.*|DriverType=QMYSQL|g' config/database.ini
 RUN sed -i 's|MultiProcessingModule=.*|MultiProcessingModule=epoll|g' config/application.ini
 
