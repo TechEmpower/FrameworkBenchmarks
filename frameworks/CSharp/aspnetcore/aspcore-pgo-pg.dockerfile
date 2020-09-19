@@ -9,4 +9,11 @@ WORKDIR /app
 COPY --from=build /app/out ./
 COPY PlatformBenchmarks/appsettings.postgresql.json ./appsettings.json
 
+# Switch off AoT code in libs to allow for greater instrumentation
+ENV COMPlus_ReadyToRun 0
+# Move methods with loops to Tier0 rather than Tier1 by default for greater instrumentation
+ENV COMPlus_TC_QuickJitForLoops 1
+# Switch on Profile Guided Optimization instrumentation at Tier0 
+ENV COMPlus_TieredPGO 1
+
 ENTRYPOINT ["dotnet", "PlatformBenchmarks.dll"]

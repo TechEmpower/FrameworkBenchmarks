@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <DebugType>portable</DebugType>
     <AssemblyName>App</AssemblyName>
     <OutputType>Exe</OutputType>
@@ -12,9 +12,10 @@
     <PackageReference Include="Dapper" Version="2.0.35" />
     <PackageReference Include="Frank" Version="6.1.0" />
     <PackageReference Include="FSharp.Data.JsonSchema" Version="0.1.0" />
-    <PackageReference Include="Giraffe" Version="4.1.0" />
-    <PackageReference Include="Npgsql" Version="4.1.3.1" />
-    <PackageReference Update="FSharp.Core" Version="4.7.2" />
+    <PackageReference Include="Giraffe" Version="5.0.0-alpha-003" />
+    <PackageReference Include="Giraffe.ViewEngine" Version="1.2.0" />
+    <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
+    <PackageReference Update="FSharp.Core" Version="5.0.0-beta.20417.1" />
   </ItemGroup>
 
   <ItemGroup>
