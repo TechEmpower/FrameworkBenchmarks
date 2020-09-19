@@ -30,6 +30,13 @@ const (
 	worldupdatesql   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
 	worldcachesql    = "SELECT * FROM World LIMIT $1"
 	fortuneselectsql = "SELECT id, message FROM Fortune"
+	pathJSON         = "/json"
+	pathDB           = "/db"
+	pathQueries      = "/queries"
+	pathCache        = "/cached-worlds"
+	pathFortunes     = "/fortunes"
+	pathUpdates      = "/updates"
+	pathText         = "/plaintext"
 )
 
 func main() {
@@ -51,19 +58,19 @@ func main() {
 	app := fiber.New(config)
 	app.Use(func(c *fiber.Ctx) error {
 		switch c.Path() {
-		case "/json":
+		case pathJSON:
 			jsonHandler(c)
-		case "/db":
+		case pathDB:
 			dbHandler(c)
-		case "/queries":
+		case pathQueries:
 			queriesHandler(c)
-		case "/cached-worlds":
+		case pathCache:
 			cachedHandler(c)
-		case "/fortunes":
+		case pathFortunes:
 			templateHandler(c)
-		case "/updates":
+		case pathUpdates:
 			updateHandler(c)
-		case "/plaintext":
+		case pathText:
 			plaintextHandler(c)
 		}
 		return nil
