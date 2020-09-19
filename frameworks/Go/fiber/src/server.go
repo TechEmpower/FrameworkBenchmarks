@@ -218,7 +218,7 @@ func templateHandler(c *fiber.Ctx) error {
 		return fortunes[i].Message < fortunes[j].Message
 	})
 
-	c.Set(fiber.HeaderContentType, fiber.MIMETextHTMLCharsetUTF8)
+	c.Response().Header.SetContentType(fiber.MIMETextHTMLCharsetUTF8)
 
 	templates.WriteFortunePage(c.Context(), fortunes)
 	return nil
