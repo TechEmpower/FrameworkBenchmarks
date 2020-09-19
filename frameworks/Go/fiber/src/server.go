@@ -152,7 +152,7 @@ func ReleaseWorlds(w Worlds) {
 func initDatabase() {
 	maxConn := runtime.NumCPU() * 4
 	if fiber.IsChild() {
-		maxConn = runtime.NumCPU()
+		maxConn = 5
 	}
 
 	var err error
