@@ -35,7 +35,7 @@ const (
 	pathQueries      = "/queries"
 	pathCache        = "/cached-worlds"
 	pathFortunes     = "/fortunes"
-	pathUpdates      = "/updates"
+	pathUpdate      = "/update"
 	pathText         = "/plaintext"
 )
 
@@ -69,7 +69,7 @@ func main() {
 			cachedHandler(c)
 		case pathFortunes:
 			templateHandler(c)
-		case pathUpdates:
+		case pathUpdate:
 			updateHandler(c)
 		case pathText:
 			plaintextHandler(c)
@@ -301,7 +301,7 @@ func RandomWorld() int {
 func QueriesCount(c *fiber.Ctx) int {
 	n := c.Request().URI().QueryArgs().GetUintOrZero(queryparam)
 	if n < 1 {
-		n = 1
+		n = 1Is 
 	} else if n > 500 {
 		n = 500
 	}
