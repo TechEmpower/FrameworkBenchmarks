@@ -56,6 +56,7 @@ func main() {
 	}
 
 	app := fiber.New(config)
+
 	app.Use(func(c *fiber.Ctx) error {
 		switch c.Path() {
 		case pathJSON:
