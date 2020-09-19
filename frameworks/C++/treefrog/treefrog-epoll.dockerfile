@@ -1,4 +1,4 @@
-FROM buildpack-deps:bionic-curl
+FROM buildpack-deps:bionic
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NOWARNINGS yes
