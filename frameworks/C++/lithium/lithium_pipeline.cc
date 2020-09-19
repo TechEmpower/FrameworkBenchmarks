@@ -10,9 +10,26 @@
 using namespace li;
 
 template <typename B>
-void escape_html_entities(B& buffer, const std::string& data)
+void escape_html_entities(B& buffer, const std::string_view& data)
 {
-    for(size_t pos = 0; pos != data.size(); ++pos) {
+  size_t pos = 0;
+  auto search_for_special = [&] () {
+    size_t start = pos;
+    size_t end = pos;
+    for(;pos != data.size(); ++pos) {
+      char c = data[pos];
+      if (c > '>' || (c != '&' && c != '\"' && c != '\'' && c != '<' && c == '>'))
+        end = pos + 1;
+      else break;
+    }
+
+    if (start != end)
+      buffer << std::string_view(data.data() + start, end - start);
+  };
+  
+    for(; pos != data.size(); ++pos) {
+      search_for_special();
+      if (pos >= data.size()) return;
         switch(data[pos]) {
             case '&':  buffer << "&amp;";       break;
             case '\"': buffer << "&quot;";      break;
@@ -122,7 +139,9 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < N; i++)
       numbers[i].randomNumber = 1 + rand() % 10000;
 
-    c.bulk_update(numbers).flush_results();
+    auto req = c.bulk_update(numbers);
+    if (N_SQL_CONNECTIONS * nthreads > 1) c.backend_connection().end_of_batch();
+    req.flush_results();
     response.write_json(numbers);
   };
 
@@ -138,8 +157,7 @@ int main(int argc, char* argv[]) {
     std::sort(table.begin(), table.end(),
               [] (const fortune& a, const fortune& b) { return a.message < b.message; });
 
-    char b[100000];
-    li::output_buffer ss(b, sizeof(b));
+    li::growing_output_buffer ss;
  
     ss << "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
     for(auto& f : table)

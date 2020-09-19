@@ -2,7 +2,10 @@
 
 (require db
          json
+         racket/fasl
          racket/port
+         racket/serialize
+         redis
          threading
          web-server/dispatch
          web-server/http
@@ -11,35 +14,27 @@
 
 ;; db ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define max-db-conns 128)
-(define db-conn-pool
-  (connection-pool
-   #:max-connections max-db-conns
-   #:max-idle-connections max-db-conns
-   (λ ()
-     (postgresql-connect #:database "hello_world"
-                         #:user "benchmarkdbuser"
-                         #:password "benchmarkdbpass"
-                         #:server "tfb-database"))))
-
-(define db-conn-pool-sema
-  (make-semaphore max-db-conns))
-
-(define current-db-conn
-  (make-parameter #f))
-
-(define (call-with-db-conn f)
-  (call-with-semaphore db-conn-pool-sema
+(define *db*
+  (virtual-connection
+   (connection-pool
     (lambda ()
-      (define conn #f)
-      (dynamic-wind
-        (lambda ()
-          (set! conn (connection-pool-lease db-conn-pool)))
-        (lambda ()
-          (parameterize ([current-db-conn conn])
-            (f)))
-        (lambda ()
-          (disconnect conn))))))
+      (postgresql-connect #:database "hello_world"
+                          #:user "benchmarkdbuser"
+                          #:password "benchmarkdbpass"
+                          #:server "tfb-database")))))
+
+
+;; cache ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define *redis*
+  (make-redis-pool
+   #:pool-size 32))
+
+(define (deserialize* bs)
+  (deserialize (fasl->s-exp bs)))
+
+(define (serialize* v)
+  (s-exp->fasl (serialize v)))
 
 
 ;; helpers ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -71,18 +66,14 @@
 
 ;; world ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(struct world (id n)
+(serializable-struct world (id n)
   #:transparent)
 
 (define select-one-world
-  (virtual-statement
-   (lambda (_dbsystem)
-     "SELECT id, randomnumber FROM world WHERE id = $1")))
+  (virtual-statement "SELECT id, randomnumber FROM world WHERE id = $1"))
 
 (define update-one-world
-  (virtual-statement
-   (lambda (_dbsystem)
-     "UPDATE world SET randomnumber = $2 WHERE id = $1")))
+  (virtual-statement "UPDATE world SET randomnumber = $2 WHERE id = $1"))
 
 (define (random-world-id)
   (random 1 10001))
@@ -92,19 +83,17 @@
     (random-world-id)))
 
 (define (worlds-ref id)
-  (for/first ([(id n) (in-query (current-db-conn) select-one-world id)])
+  (for/first ([(id n) (in-query *db* select-one-world id)])
     (world id n)))
 
 (define (worlds-ref/random n)
-  (define conn (current-db-conn))
   (for*/list ([id (in-list (random-world-ids n))]
-              [(id n) (in-query conn select-one-world id)])
+              [(id n) (in-query *db* select-one-world id)])
     (world id n)))
 
 (define (worlds-update! rs)
-  (define conn (current-db-conn))
   (for ([r (in-list rs)])
-    (query-exec conn update-one-world (world-id r) (world-n r))))
+    (query-exec *db* update-one-world (world-id r) (world-n r))))
 
 (define (world->hash r)
   (hash 'id (world-id r)
@@ -117,15 +106,13 @@
   #:transparent)
 
 (define select-fortunes
-  (virtual-statement
-   (lambda (_dbsystem)
-     "SELECT id, message FROM fortune")))
+  (virtual-statement "SELECT id, message FROM fortune"))
 
 (define (all-fortunes)
   (define fortunes
     (cons
      (fortune 0 "Additional fortune added at request time.")
-     (for/list ([(id message) (in-query (current-db-conn) select-fortunes)])
+     (for/list ([(id message) (in-query *db* select-fortunes)])
        (fortune id message))))
 
   (sort fortunes string<? #:key fortune-message))
@@ -163,19 +150,12 @@
    [("db")
     (lambda (_req)
       (define world-id (random-world-id))
-      (define world
-        (call-with-db-conn
-         (lambda ()
-           (worlds-ref world-id))))
-
+      (define world (worlds-ref world-id))
       (response/json
        (world->hash world)))]
 
    [("fortunes")
     (lambda (_req)
-      (define fortunes
-        (call-with-db-conn all-fortunes))
-
       (response/xexpr
        `(html
          (head
@@ -185,34 +165,45 @@
            (tr
             (th "id")
             (th "message"))
-           ,@(map fortune->table-row fortunes))))))]
+           ,@(map fortune->table-row (all-fortunes)))))))]
 
    [("queries")
     (lambda (req)
       (define n (parse-queries req))
-      (define worlds
-        (call-with-db-conn
-         (lambda ()
-           (worlds-ref/random n))))
-
+      (define worlds (worlds-ref/random n))
       (response/json
        (map world->hash worlds)))]
 
+   [("cached")
+    (let ([local-cache (make-hasheqv)])
+      (lambda (req)
+        (define n (parse-queries req))
+        (define worlds
+          (hash-ref! local-cache n (lambda ()
+                                     (call-with-redis-client *redis*
+                                       (lambda (rc)
+                                         (define k (format "worlds:~a" n))
+                                         (cond
+                                           [(redis-bytes-get rc k)
+                                            => deserialize*]
+
+                                           [else
+                                            (define worlds (worlds-ref/random n))
+                                            (begin0 worlds
+                                              (redis-bytes-set! rc k (serialize* worlds)))]))))))
+
+        (response/json
+         (map world->hash worlds))))]
+
    [("updates")
     (lambda (req)
+      (define n (parse-queries req))
       (define worlds
-        (call-with-db-conn
-         (lambda ()
-           (define n (parse-queries req))
-           (define worlds (worlds-ref/random n))
-           (define worlds*
-             (for/list ([r (in-list worlds)]
-                        [n (in-list (random-world-ids n))])
-               (struct-copy world r [n n])))
+        (for/list ([r (in-list (worlds-ref/random n))]
+                   [n (in-list (random-world-ids n))])
+          (struct-copy world r [n n])))
 
-           (begin0 worlds*
-             (worlds-update! worlds*)))))
-
+      (worlds-update! worlds)
       (response/json
        (map world->hash worlds)))]))
 
@@ -222,7 +213,8 @@
            racket/format
            web-server/http/response
            web-server/safety-limits
-           web-server/web-server)
+           web-server/web-server
+           "unix-socket-tcp-unit.rkt")
 
   (define port
     (command-line
@@ -236,8 +228,9 @@
   (define stop
     (serve
      #:dispatch app
-     #:listen-ip "0.0.0.0"
+     #:listen-ip "127.0.0.1"
      #:port port
+     #:tcp@ (make-unix-socket-tcp@ port (format "~a.sock" port))
      #:confirmation-channel ch
      #:safety-limits (make-safety-limits
                       #:max-waiting 4096

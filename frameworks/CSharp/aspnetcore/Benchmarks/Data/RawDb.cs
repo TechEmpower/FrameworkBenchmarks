@@ -64,7 +64,7 @@ namespace Benchmarks.Data
             id.Value = _random.Next(1, 10001);
             cmd.Parameters.Add(id);
 
-            (cmd as MySql.Data.MySqlClient.MySqlCommand)?.Prepare();
+            (cmd as MySqlConnector.MySqlCommand)?.Prepare();
 
             return cmd;
         }
@@ -145,7 +145,7 @@ namespace Benchmarks.Data
                 db.ConnectionString = _connectionString;
                 await db.OpenAsync();
 
-                (cmd as MySql.Data.MySqlClient.MySqlCommand)?.Prepare();
+                (cmd as MySqlConnector.MySqlCommand)?.Prepare();
 
                 using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.CloseConnection))
                 {

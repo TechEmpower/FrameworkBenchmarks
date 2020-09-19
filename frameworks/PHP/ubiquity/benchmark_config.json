@@ -157,6 +157,27 @@
         "display_name": "ubiquity-workerman-mysql",
         "notes": "",
         "versus": "php"
+      },
+      "workerman-mongo": {
+        "db_url": "/DbMongo",
+        "query_url": "/DbMongo/query/",
+        "fortune_url": "/FortunesMongo",
+        "update_url": "/DbMongo/update/",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "MongoDB",
+        "framework": "Ubiquity",
+        "language": "PHP",
+        "flavor": "PHP7",
+        "orm": "Full",
+        "platform": "workerman",
+        "webserver": "none",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ubiquity-workerman-mongo",
+        "notes": "",
+        "versus": "php"
       }
     }
   ]

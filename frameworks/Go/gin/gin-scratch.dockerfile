@@ -11,8 +11,8 @@ RUN apk update \
     go mod download
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-    go build -ldflags="-s -w" -o server /gin/*.go
-
+    go build -tags=jsoniter -ldflags="-s -w" -o server /gin/*.go
+    
 RUN apk --no-cache add --update ca-certificates
 
 # release layer

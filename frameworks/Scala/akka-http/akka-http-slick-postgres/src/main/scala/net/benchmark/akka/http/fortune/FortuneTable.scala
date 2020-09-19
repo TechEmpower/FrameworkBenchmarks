@@ -14,6 +14,6 @@ class FortuneTable(tag: Tag) extends Table[Fortune](tag, "Fortune") {
 
   def message = column[String]("message")
 
-  def * = (id, message) <> (Fortune.tupled, Fortune.unapply)
+  def * = (id, message).<>(Fortune.tupled, Fortune.unapply)
 
 }

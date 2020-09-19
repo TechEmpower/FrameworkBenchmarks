@@ -1,8 +1,8 @@
+use std::borrow::Cow;
 use std::cell::RefCell;
 use std::fmt::Write as FmtWrite;
 use std::io;
 
-use beef::lean::Cow;
 use bytes::{Bytes, BytesMut};
 use futures::stream::futures_unordered::FuturesUnordered;
 use futures::{Future, FutureExt, StreamExt, TryStreamExt};
@@ -173,7 +173,7 @@ impl PgConnection {
 
             let mut fortunes: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
                 id: 0,
-                message: Cow::borrowed("Additional fortune added at request time."),
+                message: Cow::Borrowed("Additional fortune added at request time."),
             }];
 
             while let Some(row) = stream.next().await {
@@ -182,7 +182,7 @@ impl PgConnection {
                 })?;
                 fortunes.push(Fortune {
                     id: row.get(0),
-                    message: Cow::owned(row.get(1)),
+                    message: Cow::Owned(row.get(1)),
                 });
             }
 
