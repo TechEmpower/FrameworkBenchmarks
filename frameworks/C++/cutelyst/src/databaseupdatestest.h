@@ -13,6 +13,9 @@ class DatabaseUpdatesTest : public Controller
 public:
     explicit DatabaseUpdatesTest(QObject *parent = 0);
 
+    C_ATTR(updatep, :Local :AutoArgs)
+    void updatep(Context *c);
+
     C_ATTR(updates_postgres, :Local :AutoArgs)
     void updates_postgres(Context *c);
 

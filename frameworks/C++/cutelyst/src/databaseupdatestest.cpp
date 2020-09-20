@@ -2,6 +2,10 @@
 
 #include <Cutelyst/Plugins/Utils/Sql>
 
+#include <apool.h>
+#include <aresult.h>
+#include <apreparedquery.h>
+
 #include <QSqlQuery>
 
 #include <QJsonDocument>
@@ -11,6 +15,47 @@
 DatabaseUpdatesTest::DatabaseUpdatesTest(QObject *parent) : Controller(parent)
 {
 
+}
+
+void DatabaseUpdatesTest::updatep(Context *c)
+{
+    int queries = c->request()->queryParam(QStringLiteral("queries"), QStringLiteral("1")).toInt();
+    if (queries < 1) {
+        queries = 1;
+    } else if (queries > 500) {
+        queries = 500;
+    }
+
+    QJsonArray array;
+    ASync async(c);
+    static thread_local auto db = APool::database();
+    for (int i = 0; i < queries; ++i) {
+        int id = (qrand() % 10000) + 1;
+
+        int randomNumber = (qrand() % 10000) + 1;
+
+        array.append(QJsonObject{
+                         {QStringLiteral("id"), id},
+                         {QStringLiteral("randomNumber"), randomNumber}
+                     });
+
+        db.execPrepared(APreparedQueryLiteral("SELECT randomNumber FROM world WHERE id=$1"),
+                               {id}, [c, async] (AResult &result) {
+            if (Q_UNLIKELY(result.error() && !result.size())) {
+                c->res()->setStatus(Response::InternalServerError);
+                return;
+            }
+        }, c);
+        db.execPrepared(APreparedQueryLiteral("UPDATE world SET randomNumber=$1 WHERE id=$2"),
+                               {randomNumber, id}, [c, async] (AResult &result) {
+            if (Q_UNLIKELY(result.error() && !result.size())) {
+                c->res()->setStatus(Response::InternalServerError);
+                return;
+            }
+        }, c);
+    }
+
+    c->response()->setJsonArrayBody(array);
 }
 
 void DatabaseUpdatesTest::updates_postgres(Context *c)

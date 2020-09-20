@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 RUN apt-get update -qq && \
     apt-get install -yqq locales wget build-essential
@@ -26,7 +26,7 @@ RUN sed -i "s|DatabaseHostName=.*|DatabaseHostName=tfb-database|g" /cutelyst_soc
 
 ENV C_PROCESSES 1
 ENV CPU_AFFINITY 1
-ENV DRIVER QPSQL
+ENV DRIVER postgres
 
 RUN sed -i "s|Driver=.*|Driver=${DRIVER}|g" /cutelyst.ini
 
