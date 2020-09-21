@@ -10,7 +10,7 @@ COPY Benchmarks/ .
 RUN dotnet publish -c release -o /app -r linux-musl-x64 --self-contained true --no-restore /p:PublishTrimmed=true /p:PublishReadyToRun=true
 
 # final stage/image
-FROM mcr.microsoft.com/dotnet/core/runtime-deps:5.0-alpine
+FROM mcr.microsoft.com/dotnet/runtime-deps:5.0-alpine
 WORKDIR /app
 COPY --from=build /app .
 
