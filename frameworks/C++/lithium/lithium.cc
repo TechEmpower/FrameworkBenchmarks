@@ -63,7 +63,7 @@ struct cache {
 
   std::vector<const T*> get_array(const std::vector<int>& ids) const {
     std::vector<const T*> res;
-    for (int i = 0; i < ids.size(); i++) res.push_back(&buffer[i]);
+    for (int i = 0; i < ids.size(); i++) res.push_back(&buffer[ids[i]]);
     return res;
   }
 
