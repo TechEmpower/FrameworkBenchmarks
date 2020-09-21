@@ -54,31 +54,23 @@ void siege(int port) {
 }
 #endif
 
-struct json_cache {
+template <typename T>
+struct cache {
 
-  template <typename T>
   void insert(T o) { 
-    if (0 == buffer.size())
-      positions.push_back(buffer.size());
-    buffer.append(json_encode(o)); 
-    positions.push_back(buffer.size());
-  }
-  std::string get_json_array(const std::vector<int>& ids) {
-    std::string json = "[";
-    json.append(buffer, positions[ids[0]], positions[ids[0]+1] - positions[ids[0]]);
-    for (int i = 1; i < ids.size(); i++) {
-      json.append(1, ',');
-      json.append(buffer, positions[ids[i]], positions[ids[i]+1] - positions[ids[i]]);
-    }
-    json.append(1, ']');
-    return json;
+    buffer.push_back(o);
   }
 
-  std::string buffer;
-  std::vector<int> positions;
+  std::vector<const T*> get_array(const std::vector<int>& ids) const {
+    std::vector<const T*> res;
+    for (int i = 0; i < ids.size(); i++) res.push_back(&buffer[i]);
+    return res;
+  }
+
+  std::vector<T> buffer;
 };
 
-json_cache world_cache;
+cache<decltype(mmm(s::id = int(), s::randomNumber = int()))> world_cache;
 
 int main(int argc, char* argv[]) {
 
@@ -177,9 +169,9 @@ int main(int argc, char* argv[]) {
     N = std::max(1, std::min(N, 500));
 
     std::vector<int> ids(N);
-    for (int i = 0; i < N; i++) ids[i] = 1 + rand() % 10000;
-    response.set_header("Content-Type", "application/json");
-    response.write(world_cache.get_json_array(ids));
+    for (int i = 0; i < N; i++)
+      ids[i] = 1 + rand() % 10000;
+    response.write_json(world_cache.get_array(ids));
   };
 
   my_api.get("/updates") = [&](http_request& request, http_response& response) {
