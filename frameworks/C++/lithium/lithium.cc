@@ -67,10 +67,10 @@ struct json_cache {
     std::string json = "[";
     json.append(buffer, positions[ids[0]], positions[ids[0]+1] - positions[ids[0]]);
     for (int i = 1; i < ids.size(); i++) {
-      json.append(',', 1);
+      json.append(1, ',');
       json.append(buffer, positions[ids[i]], positions[ids[i]+1] - positions[ids[i]]);
     }
-    json.append(']', 1);
+    json.append(1, ']');
     return json;
   }
 
@@ -178,6 +178,7 @@ int main(int argc, char* argv[]) {
 
     std::vector<int> ids(N);
     for (int i = 0; i < N; i++) ids[i] = 1 + rand() % 10000;
+    response.set_header("Content-Type", "application/json");
     response.write(world_cache.get_json_array(ids));
   };
 
