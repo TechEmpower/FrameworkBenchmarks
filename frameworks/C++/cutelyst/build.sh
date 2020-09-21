@@ -8,13 +8,11 @@ apt update -qq && \
     apt install -yqq --no-install-recommends \
     cmake \
     pkg-config \
-    libjemalloc-dev \
     qtbase5-dev \
     libqt5sql5-mysql \
     libqt5sql5-psql \
     qtdeclarative5-dev \
-    postgresql-server-dev-all \
-    nginx
+    postgresql-server-dev-all
 
 wget -q https://github.com/cutelyst/cutelee/releases/download/v${CUTELEE_VER}/cutelee5_${CUTELEE_VER}_amd64.deb && \
     apt install -yqq ./cutelee5_${CUTELEE_VER}_amd64.deb
