@@ -6,7 +6,7 @@ namespace Benchmarks.Tests
     public class JsonResult
     {
 
-        public string? Message { get; set; }
+        public string Message { get; set; }
 
     }
 
