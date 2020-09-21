@@ -54,7 +54,31 @@ void siege(int port) {
 }
 #endif
 
-lru_cache<int, decltype(mmm(s::id = int(), s::randomNumber = int()))> world_cache(10000);
+struct json_cache {
+
+  template <typename T>
+  void insert(T o) { 
+    if (0 == buffer.size())
+      positions.push_back(buffer.size());
+    buffer.append(json_encode(o)); 
+    positions.push_back(buffer.size());
+  }
+  std::string get_json_array(const std::vector<int>& ids) {
+    std::string json = "[";
+    json.append(buffer, positions[ids[0]], positions[ids[0]+1]);
+    for (int i = 1; i < ids.size(); i++) {
+      json.append(',', 1);
+      json.append(buffer, positions[ids[i]], positions[ids[i]+1]);
+    }
+    json.append(']', 1);
+    return json;
+  }
+
+  std::string buffer;
+  std::vector<int> positions;
+};
+
+json_cache world_cache;
 
 int main(int argc, char* argv[]) {
 
@@ -142,7 +166,7 @@ int main(int argc, char* argv[]) {
   };
 
   random_numbers.connect().forall([&] (const auto& number) {
-    world_cache(number.id, [&] { return metamap_clone(number); });
+    world_cache.insert(metamap_clone(number));
   });
 
   my_api.get("/cached-worlds") = [&](http_request& request, http_response& response) {
@@ -152,11 +176,9 @@ int main(int argc, char* argv[]) {
     
     N = std::max(1, std::min(N, 500));
 
-    std::vector<decltype(random_numbers.all_fields())> numbers(N);
-    for (int i = 0; i < N; i++)
-      numbers[i] = world_cache(1 + rand() % 10000);
-
-    response.write_json(numbers);
+    std::vector<int> ids(N);
+    for (int i = 0; i < N; i++) ids[i] = 1 + rand() % 10000;
+    response.write(world_cache.get_json_array(ids));
   };
 
   my_api.get("/updates") = [&](http_request& request, http_response& response) {
