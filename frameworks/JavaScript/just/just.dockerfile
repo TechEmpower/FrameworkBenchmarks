@@ -5,9 +5,9 @@ RUN curl -L -o 0.0.2.tar.gz -L https://github.com/just-js/just/archive/0.0.2.tar
 RUN tar -zxvf 0.0.2.tar.gz
 WORKDIR /just-0.0.2
 RUN make runtime
-RUN curl -L -o modules.tar.gz https://github.com/just-js/modules/archive/0.0.2.tar.gz
+RUN curl -L -o modules.tar.gz https://github.com/just-js/modules/archive/0.0.3.tar.gz
 RUN tar -zxvf modules.tar.gz
-RUN mv modules-0.0.2 modules
+RUN mv modules-0.0.3 modules
 RUN JUST_HOME=$(pwd) make -C modules/picohttp/ deps http.so
 RUN JUST_HOME=$(pwd) make -C modules/html/ html.so
 
