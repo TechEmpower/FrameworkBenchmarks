@@ -65,10 +65,10 @@ struct json_cache {
   }
   std::string get_json_array(const std::vector<int>& ids) {
     std::string json = "[";
-    json.append(buffer, positions[ids[0]], positions[ids[0]+1]);
+    json.append(buffer, positions[ids[0]], positions[ids[0]+1] - positions[ids[0]]);
     for (int i = 1; i < ids.size(); i++) {
       json.append(',', 1);
-      json.append(buffer, positions[ids[i]], positions[ids[i]+1]);
+      json.append(buffer, positions[ids[i]], positions[ids[i]+1] - positions[ids[i]]);
     }
     json.append(']', 1);
     return json;
