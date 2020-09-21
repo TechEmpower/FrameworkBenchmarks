@@ -8,7 +8,6 @@ import (
 	"os"
 	"runtime"
 	"sort"
-	"strconv"
 	"sync"
 
 	"fiber/src/templates"
@@ -31,6 +30,13 @@ const (
 	worldupdatesql   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
 	worldcachesql    = "SELECT * FROM World LIMIT $1"
 	fortuneselectsql = "SELECT id, message FROM Fortune"
+	pathJSON         = "/json"
+	pathDB           = "/db"
+	pathQueries      = "/queries"
+	pathCache        = "/cached-worlds"
+	pathFortunes     = "/fortunes"
+	pathUpdate       = "/update"
+	pathText         = "/plaintext"
 )
 
 func main() {
@@ -51,13 +57,25 @@ func main() {
 
 	app := fiber.New(config)
 
-	app.Get("/plaintext", plaintextHandler)
-	app.Get("/json", jsonHandler)
-	app.Get("/db", dbHandler)
-	app.Get("/update", updateHandler)
-	app.Get("/queries", queriesHandler)
-	app.Get("/fortunes", templateHandler)
-	app.Get("/cached-worlds", cachedHandler)
+	app.Use(func(c *fiber.Ctx) error {
+		switch c.Path() {
+		case pathJSON:
+			jsonHandler(c)
+		case pathDB:
+			dbHandler(c)
+		case pathQueries:
+			queriesHandler(c)
+		case pathCache:
+			cachedHandler(c)
+		case pathFortunes:
+			templateHandler(c)
+		case pathUpdate:
+			updateHandler(c)
+		case pathText:
+			plaintextHandler(c)
+		}
+		return nil
+	})
 
 	log.Fatal(app.Listen(":8080"))
 }
@@ -133,18 +151,21 @@ func ReleaseWorlds(w Worlds) {
 
 // initDatabase :
 func initDatabase() {
-	maxConn := runtime.NumCPU()
-	if maxConn == 0 {
-		maxConn = 8
-	}
+	maxConn := runtime.NumCPU() * 4
 	if fiber.IsChild() {
-		maxConn = maxConn
-	} else {
-		maxConn = maxConn * 4
+		maxConn = 5
 	}
 
 	var err error
-	db, err = pgxpool.Connect(context.Background(), fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s pool_max_conns=%d", "tfb-database", 5432, "benchmarkdbuser", "benchmarkdbpass", "hello_world", maxConn))
+	db, err = pgxpool.Connect(context.Background(),
+		fmt.Sprintf(
+			"host=%s port=%d user=%s password=%s dbname=%s pool_max_conns=%d",
+			"tfb-database", 5432,
+			"benchmarkdbuser",
+			"benchmarkdbpass",
+			"hello_world",
+			maxConn,
+		))
 	if err != nil {
 		panic(err)
 	}
@@ -208,7 +229,7 @@ func templateHandler(c *fiber.Ctx) error {
 		return fortunes[i].Message < fortunes[j].Message
 	})
 
-	c.Set(fiber.HeaderContentType, fiber.MIMETextHTMLCharsetUTF8)
+	c.Response().Header.SetContentType(fiber.MIMETextHTMLCharsetUTF8)
 
 	templates.WriteFortunePage(c.Context(), fortunes)
 	return nil
@@ -278,7 +299,7 @@ func RandomWorld() int {
 
 // QueriesCount :
 func QueriesCount(c *fiber.Ctx) int {
-	n, _ := strconv.Atoi(c.Query(queryparam))
+	n := c.Request().URI().QueryArgs().GetUintOrZero(queryparam)
 	if n < 1 {
 		n = 1
 	} else if n > 500 {
