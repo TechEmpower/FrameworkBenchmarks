@@ -52,7 +52,7 @@ namespace PlatformBenchmarks
 
             do
             {
-                _random.NextBytes(MemoryMarshal.AsBytes(resultSpan));
+                Random.NextBytes(MemoryMarshal.AsBytes(resultSpan));
                 result = mask & resultSpan[0];
             }
             while (result > range);
