@@ -13,6 +13,7 @@ Router::get('/db', IndexController::class.'@db');
 Router::get('/fortunes', IndexController::class.'@fortunes');
 Router::get('/queries', IndexController::class.'@queries');
 Router::get('/updates', IndexController::class.'@updates');
+Router::get('/cached-worlds', IndexController::class.'@cachedWorlds');
 
 
 

@@ -74,6 +74,17 @@ class IndexController extends Controller
         return $this->json($list);
 
     }
+
+    public function cachedWorlds($count = 1)
+    {
+        $count = max(min(intval($count), 500), 1);
+        $list  = [];
+        while ($count--) {
+            $list[] = $this->server->caches[mt_rand(1,10000)];
+        }
+        return $this->json($list);
+    }
+
 }
 
 
