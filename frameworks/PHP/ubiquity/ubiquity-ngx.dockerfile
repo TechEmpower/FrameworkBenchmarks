@@ -31,9 +31,9 @@ RUN apt-get install -yqq composer > /dev/null
 ADD ./ /ubiquity
 WORKDIR /ubiquity
 
-RUN php composer.phar require phpmv/ubiquity-ngx:dev-master --quiet
+RUN composer require phpmv/ubiquity-ngx:dev-master --quiet
 
-RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 RUN chmod 777 -R /ubiquity/app/cache/*
 
