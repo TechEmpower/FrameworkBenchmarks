@@ -38,6 +38,8 @@ RUN chmod 777 -R app/cache/*
 
 COPY /deploy/conf/ngx/pgsql/ngxServices.php /app/config/ngxServices.php
 
+RUN echo "opcache.preload=/app/config/preloader.script.php" >> /deploy/conf/php.ini
+
 RUN export WORKERS=$(( 4 * $(nproc) )) && \
     sed -i "s|worker_processes  auto|worker_processes $WORKERS|g" /deploy/conf/ngx/nginx.conf
 
