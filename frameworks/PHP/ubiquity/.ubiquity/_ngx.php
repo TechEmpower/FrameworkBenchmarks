@@ -7,11 +7,11 @@ if (! defined('DS')) {
 }
 $config = include ROOT . 'config/config.php';
 $config["siteUrl"] = 'http://0.0.0.0:8080';
-require ROOT . './../vendor/autoload.php';
+require './vendor/autoload.php';
 NgxServer::init($config);
 require ROOT . 'config/ngxServices.php';
 
 function handle() {
-	require './vendor/autoload.php';
+	// require './vendor/autoload.php';
 	NgxServer::handleRequest();
 }
