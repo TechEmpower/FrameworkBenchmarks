@@ -2,18 +2,16 @@
 \Ubiquity\cache\CacheManager::startProd($config);
 \Ubiquity\orm\DAO::setModelsDatabases([
 	'models\\Fortune' => 'pgsql',
-	'models\\World' => 'pgsql',
-	'models\\CachedWorld' => 'pgsql-cache'
+	'models\\World' => 'pgsql'
 ]);
 
 \Ubiquity\cache\CacheManager::warmUpControllers([
 	\controllers\Plaintext_::class,
-	\controllers\Json_::class
-	// \controllers\Db_::class,
-	// \controllers\Fortunes_::class,
-	// \controllers\Cache::class
+	\controllers\Json_::class,
+	\controllers\Db_::class
+	// \controllers\Fortunes_::class
 ]);
 
-//\Ubiquity\orm\DAO::startDatabase($config, 'pgsql');
-//\controllers\Db_::warmup();
+\Ubiquity\orm\DAO::startDatabase($config, 'pgsql');
+\controllers\Db_::warmup();
 //\controllers\Fortunes_::warmup();

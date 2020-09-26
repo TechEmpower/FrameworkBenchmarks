@@ -182,10 +182,11 @@
       "ngx": {
         "json_url": "/Json_",
         "plaintext_url": "/Plaintext_",
+        "db_url": "/Db_",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
-        "database": "None",
+        "database": "Postgres",
         "framework": "Ubiquity",
         "language": "PHP",
         "flavor": "PHP7",
