@@ -12,5 +12,6 @@ NgxServer::init($config);
 require ROOT . 'config/ngxServices.php';
 
 function handle() {
+	require ROOT . './../vendor/autoload.php';
 	NgxServer::handleRequest();
 }
