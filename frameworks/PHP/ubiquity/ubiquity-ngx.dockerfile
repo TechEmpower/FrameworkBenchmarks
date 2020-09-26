@@ -28,16 +28,13 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
 
 RUN apt-get install -yqq composer > /dev/null
 
-ADD ./ /ubiquity
-WORKDIR /ubiquity
-
 RUN composer require phpmv/ubiquity-ngx:dev-master --quiet
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
-RUN chmod 777 -R /ubiquity/app/cache/*
+RUN chmod 777 -R app/cache/*
 
-COPY deploy/conf/ngx/pgsql/ngxServices.php app/config/ngxServices.php
+COPY /deploy/conf/ngx/pgsql/ngxServices.php /app/config/ngxServices.php
 
 RUN export WORKERS=$(( 4 * $(nproc) )) && \
     sed -i "s|worker_processes  auto|worker_processes $WORKERS|g" /deploy/conf/ngx/nginx.conf
