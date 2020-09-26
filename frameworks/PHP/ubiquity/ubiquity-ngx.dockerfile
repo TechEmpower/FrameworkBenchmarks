@@ -26,6 +26,7 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --add-module=/ngx_php7 > /dev/null && \
     make > /dev/null && make install > /dev/null
 
+RUN apt-get install -yqq composer > /dev/null
 
 ADD ./ /ubiquity
 WORKDIR /ubiquity
