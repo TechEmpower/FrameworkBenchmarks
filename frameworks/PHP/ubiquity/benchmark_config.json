@@ -178,6 +178,25 @@
         "display_name": "ubiquity-workerman-mongo",
         "notes": "",
         "versus": "php"
+      },
+      "ngx": {
+        "json_url": "/Json_",
+        "plaintext_url": "/Plaintext_",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "None",
+        "framework": "Ubiquity",
+        "language": "PHP",
+        "flavor": "PHP7",
+        "orm": "Full",
+        "platform": "ngx_php",
+        "webserver": "nginx",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ubiquity-ngx",
+        "notes": "",
+        "versus": "php"
       }
     }
   ]
