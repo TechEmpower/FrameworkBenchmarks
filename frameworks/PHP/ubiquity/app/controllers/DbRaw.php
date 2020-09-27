@@ -39,7 +39,7 @@ class DbRaw extends \Ubiquity\controllers\Controller {
 		self::$statement->execute([
 			\mt_rand(1, 10000)
 		]);
-		echo \json_encode(self::$statement->fetch());
+		echo \json_encode(self::$statement->fetchAssoc());
 	}
 
 	public function query($queries = 1) {
@@ -49,7 +49,7 @@ class DbRaw extends \Ubiquity\controllers\Controller {
 			self::$statement->execute([
 				\mt_rand(1, 10000)
 			]);
-			$worlds[] = self::$statement->fetch();
+			$worlds[] = self::$statement->fetchAssoc();
 		}
 		echo \json_encode($worlds);
 	}
@@ -63,7 +63,7 @@ class DbRaw extends \Ubiquity\controllers\Controller {
 			self::$statement->execute([
 				$id
 			]);
-			$row = self::$statement->fetch();
+			$row = self::$statement->fetchAssoc();
 
 			$values[] = $row['randomNumber'] = \mt_rand(1, 10000);
 			$worlds[] = $row;

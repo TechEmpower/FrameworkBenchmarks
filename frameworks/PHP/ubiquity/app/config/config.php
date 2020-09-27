@@ -24,8 +24,7 @@ return array(
 			"password" => "benchmarkdbpass", // benchmarkdbpass
 			"options" => [
 				\PDO::ATTR_EMULATE_PREPARES => false,
-				'quote' => '',
-				\PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+				'quote' => ''
 			],
 			"cache" => false
 		],

@@ -9,12 +9,18 @@ class FortunesRaw extends \Ubiquity\controllers\SimpleViewAsyncController {
 		self::$statement = $db->prepareStatement('SELECT id,message FROM Fortune');
 	}
 
+	public function initialize() {
+		\Ubiquity\utils\http\UResponse::setContentType('text/html', 'utf-8');
+	}
+
 	public function index() {
 		self::$statement->execute();
 		$fortunes = self::$statement->fetchAll(\PDO::FETCH_KEY_PAIR);
 		$fortunes[0] = 'Additional fortune added at request time.';
 		\asort($fortunes);
-		$this->loadView('Fortunes/raw.php', ['fortunes' => $fortunes]);
+		$this->loadView('Fortunes/raw.php', [
+			'fortunes' => $fortunes
+		]);
 	}
 }
 
