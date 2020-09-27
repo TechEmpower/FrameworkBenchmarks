@@ -5,7 +5,7 @@
 * [JSON](src/tfb.ml#L49-L69)
 * [PLAINTEXT](src/tfb.ml#L49-L69)
 * [DB](src/tfb.ml#L71-L100)
-* [QUERY](src/tfb.ml#102-L151)
+* [QUERY](src/tfb.ml#L102-L151)
 
 ## Important Libraries
 * [Webmachine](https://github.com/inhabitedtype/ocaml-webmachine)
