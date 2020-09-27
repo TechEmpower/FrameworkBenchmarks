@@ -2,8 +2,6 @@
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 #[macro_use]
-extern crate serde_derive;
-#[macro_use]
 extern crate diesel;
 
 use actix::prelude::*;
@@ -16,6 +14,7 @@ mod db;
 mod models;
 mod schema;
 mod utils;
+
 use utils::Writer;
 
 async fn world_row(db: web::Data<Addr<db::DbExecutor>>) -> Result<HttpResponse, Error> {
@@ -111,7 +110,7 @@ async fn fortune(db: web::Data<Addr<db::DbExecutor>>) -> Result<HttpResponse, Er
     }
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("Starting http server: 127.0.0.1:8080");
 

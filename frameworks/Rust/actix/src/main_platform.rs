@@ -1,11 +1,6 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-#[macro_use]
-extern crate serde_derive;
-#[macro_use]
-extern crate diesel;
-
 use std::future::Future;
 use std::io::Write;
 use std::pin::Pin;

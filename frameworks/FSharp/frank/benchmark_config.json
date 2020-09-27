@@ -21,26 +21,6 @@
         "display_name": "Frank, Dapper",
         "notes": "",
         "versus": "aspcore"
-      },
-      "rhtx": {
-        "plaintext_url": "/plaintext",
-        "json_url": "/json",
-        "fortune_url": "/fortunes",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "Frank",
-        "language": "F#",
-        "orm": "micro",
-        "platform": ".NET",
-        "flavor": "CoreCLR",
-        "webserver": "Kestrel",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "Frank, Dapper, Red Hat Linux Transport",
-        "notes": "",
-        "versus": "aspcore"
       }
     }
   ]
