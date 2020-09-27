@@ -19,7 +19,7 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
     tar -zxf nginx-${NGINX_VERSION}.tar.gz && \
     cd nginx-${NGINX_VERSION} && \
     export PHP_LIB=/usr/lib && \ 
-    ./configure --user=www --group=www \
+    ./configure --user=www-data --group=www-data \
             --prefix=/nginx \
             --with-ld-opt="-Wl,-rpath,$PHP_LIB" \
             --add-module=/ngx_php7/third_party/ngx_devel_kit \
