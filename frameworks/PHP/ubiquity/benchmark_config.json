@@ -203,6 +203,8 @@
         "versus": "ngx_php"
       },
       "ngx-raw": {
+        "json_url": "/Json_",
+        "plaintext_url": "/Plaintext_",      
         "db_url": "/DbRaw",
         "query_url": "/DbRaw/query/",
         "fortune_url": "/FortunesRaw",

@@ -2,6 +2,8 @@
 \Ubiquity\cache\CacheManager::startProd($config);
 
 \Ubiquity\cache\CacheManager::warmUpControllers([
+	\controllers\Plaintext_::class,
+	\controllers\Json_::class,
 	\controllers\DbRaw::class,
 	\controllers\FortunesRaw::class
 ]);
