@@ -38,7 +38,7 @@ $db_postgres = function (int $queries = 0) use ($pool): string {
     // Create an array with the response string.
     $arr = [];
 
-    $db->s = $db->s ?? $db->prepare('s', 'SELECT id, randomnumber FROM World WHERE id = $1');
+    $db->s ??= $db->prepare('s', 'SELECT id, randomnumber FROM World WHERE id = $1');
 
     // For each query, store the result set values in the response array
     while ($query_count--) {
@@ -72,7 +72,7 @@ $fortunes_postgres = function () use ($pool): string {
 
     $fortune = [];
 
-    $db->f = $db->f ?? $db->prepare('f', 'SELECT id, message FROM Fortune');
+    $db->f ??= $db->prepare('f', 'SELECT id, message FROM Fortune');
     $res = $db->execute('f', []);
     $arr = $db->fetchAll($res);
 
@@ -113,8 +113,8 @@ $updates_postgres = function (int $queries = 0) use ($pool): string {
 
     $arr = [];
 
-    $db->us = $db->us ?? $db->prepare('us', 'SELECT randomnumber FROM World WHERE id = $1');
-    $db->uu = $db->uu ?? $db->prepare('uu', 'UPDATE World SET randomnumber = $1 WHERE id = $2');
+    $db->us ??= $db->prepare('us', 'SELECT randomnumber FROM World WHERE id = $1');
+    $db->uu ??= $db->prepare('uu', 'UPDATE World SET randomnumber = $1 WHERE id = $2');
 
     while ($query_count--) {
         $id = \mt_rand(1, 10000);
@@ -153,7 +153,7 @@ $db_mysql = function (int $queries = 0) use ($pool): string {
     // Create an array with the response string.
     $arr = [];
     // Define query
-    $db->db_test = $db->db_test ?? $db->prepare('SELECT id, randomNumber FROM World WHERE id = ?');
+    $db->db_test ??= $db->prepare('SELECT id, randomNumber FROM World WHERE id = ?');
 
     // For each query, store the result set values in the response array
     while ($query_count--) {
@@ -187,7 +187,7 @@ $fortunes_mysql = function () use ($pool): string {
 
     $fortune = [];
     
-    $db->fortune_test = $db->fortune_test ?? $db->prepare('SELECT id, message FROM Fortune');
+    $db->fortune_test ??= $db->prepare('SELECT id, message FROM Fortune');
     $arr = $db->fortune_test->execute();
 
     foreach ($arr as $row) {
@@ -226,8 +226,8 @@ $updates_mysql = function (int $queries = 0) use ($pool): string {
     }
 
     $arr = [];
-    $db->updates_test_select = $db->updates_test_select ?? $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
-    $db->updates_test_update = $db->updates_test_update ?? $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
+    $db->updates_test_select ??= $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
+    $db->updates_test_update ??= $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
 
     while ($query_count--) {
         $id = \mt_rand(1, 10000);
