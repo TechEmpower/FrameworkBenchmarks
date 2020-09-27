@@ -19,7 +19,7 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
     tar -zxf nginx-${NGINX_VERSION}.tar.gz && \
     cd nginx-${NGINX_VERSION} && \
     export PHP_LIB=/usr/lib && \ 
-    ./configure --user=www-data --group=www-data \
+    ./configure --user=www --group=www \
             --prefix=/nginx \
             --with-ld-opt="-Wl,-rpath,$PHP_LIB" \
             --add-module=/ngx_php7/third_party/ngx_devel_kit \
@@ -36,7 +36,7 @@ RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --q
 
 RUN chmod 777 -R app/cache/*
 
-COPY /deploy/conf/ngx/pgsql/ngxServices.php /app/config/ngxServices.php
+COPY /deploy/conf/ngx/pgsql/raw/ngxServices.php /app/config/ngxServices.php
 
 RUN echo "opcache.preload=/app/config/preloader.script.php" >> /deploy/conf/php.ini
 
