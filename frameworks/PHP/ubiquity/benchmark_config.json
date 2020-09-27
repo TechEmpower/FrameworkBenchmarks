@@ -200,7 +200,7 @@
         "database_os": "Linux",
         "display_name": "ubiquity-ngx",
         "notes": "",
-        "versus": "php"
+        "versus": "ngx_php"
       }
     }
   ]
