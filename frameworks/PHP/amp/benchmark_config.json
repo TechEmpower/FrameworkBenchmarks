@@ -10,7 +10,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
-      "framework": "None",
+      "framework": "amp",
       "language": "PHP",
       "flavor": "PHP7",
       "database": "MySQL",
