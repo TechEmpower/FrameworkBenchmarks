@@ -3,14 +3,14 @@
 
 using System.IO.Pipelines;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 
 namespace PlatformBenchmarks
 {
-    public interface IHttpConnection : IHttpHeadersHandler, IHttpRequestLineHandler
+    public partial class BenchmarkApplication
     {
-        PipeReader Reader { get; set; }
-        PipeWriter Writer { get; set; }
-        Task ExecuteAsync();
+        private async Task Caching(PipeWriter pipeWriter, int count)
+        {
+            OutputMultipleQueries(pipeWriter, await Db.LoadCachedQueries(count));
+        }
     }
 }
