@@ -11,8 +11,8 @@ namespace PlatformBenchmarks
 
         public static DatabaseServer DatabaseServer;
 
-        internal static readonly string[] Ids = Enumerable.Range(0, MaxBatch).Select(i => $"@Id_{i}").ToArray();
-        internal static readonly string[] Randoms = Enumerable.Range(0, MaxBatch).Select(i => $"@Random_{i}").ToArray();
+        internal static readonly string[] Ids = Enumerable.Range(0, MaxBatch).Select(i => $"@I{i}").ToArray();
+        internal static readonly string[] Randoms = Enumerable.Range(0, MaxBatch).Select(i => $"@R{i}").ToArray();
 
         private static string[] _queries = new string[MaxBatch + 1];
 
@@ -23,20 +23,22 @@ namespace PlatformBenchmarks
                 return _queries[batchSize];
             }
 
+            return CreateBatch(batchSize);
+        }
+
+        private static string CreateBatch(int batchSize)
+        {
             var lastIndex = batchSize - 1;
 
             var sb = StringBuilderCache.Acquire();
 
-            if (DatabaseServer == DatabaseServer.PostgreSql)
-            {
-                sb.Append("UPDATE world SET randomNumber = temp.randomNumber FROM (VALUES ");
-                Enumerable.Range(0, lastIndex).ToList().ForEach(i => sb.Append($"(@Id_{i}, @Random_{i}), "));
-                sb.Append($"(@Id_{lastIndex}, @Random_{lastIndex}) ORDER BY 1) AS temp(id, randomNumber) WHERE temp.id = world.id");
-            }
-            else
-            {
-                Enumerable.Range(0, batchSize).ToList().ForEach(i => sb.Append($"UPDATE world SET randomnumber = @Random_{i} WHERE id = @Id_{i};"));
-            }
+            sb.AppendLine("UPDATE world SET randomNumber = CASE id");
+            Enumerable.Range(0, batchSize).ToList().ForEach(i => sb.AppendLine($"when @I{i} then @R{i}"));
+            sb.AppendLine("else randomnumber");
+            sb.AppendLine("end");
+            sb.Append("where id in (");
+            Enumerable.Range(0, batchSize).ToList().ForEach(i => sb.AppendLine($"@I{i}{(lastIndex == i ? "" : ",")} "));
+            sb.Append(")");
 
             return _queries[batchSize] = StringBuilderCache.GetStringAndRelease(sb);
         }
