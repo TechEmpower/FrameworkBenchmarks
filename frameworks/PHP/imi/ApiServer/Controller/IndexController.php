@@ -267,7 +267,7 @@ class IndexController extends HttpController
         $list = [];
         $db = Db::getInstance();
         $stmtSelect = $db->prepare('SELECT id, randomNumber FROM World WHERE id = ?');
-        $stmtUpdate = $db->prepare('UPDATE World SET randomNumber = :randomNumber WHERE id = :id');
+        $stmtUpdate = $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
         while ($queryCount--)
         {
             $id = \mt_rand(1, 10000);
@@ -275,8 +275,8 @@ class IndexController extends HttpController
             $row = $stmtSelect->fetch();
             $row['randomNumber'] = \mt_rand(1, 10000);
             $stmtUpdate->execute([
-                'id'            =>  $row['id'],
-                'randomNumber'  =>  $row['randomNumber'],
+                $row['randomNumber'],
+                $row['id'],
             ]);
             $list[] = $row;
         }
