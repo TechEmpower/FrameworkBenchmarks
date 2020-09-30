@@ -16,7 +16,7 @@ return [
         'sock_type'   => SWOOLE_SOCK_TCP,
         'ip'          => '0.0.0.0',
         'set'         => [
-            'worker_num' => swoole_cpu_num() * 3,
+            'worker_num' => swoole_cpu_num() * 2,
             'pid_file'   => _APP_PATH_ . '/RunCache/swoole.pid'
         ],
     ]
