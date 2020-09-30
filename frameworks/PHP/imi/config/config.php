@@ -4,6 +4,7 @@ $dbResourceConfig = [
     'username'    => 'benchmarkdbuser',
     'password'    => 'benchmarkdbpass',
     'database'    => 'hello_world',
+    'dbClass'     => \Imi\Db\Drivers\Swoole\Driver::class,
 ];
 return [
     // 项目根命名空间
