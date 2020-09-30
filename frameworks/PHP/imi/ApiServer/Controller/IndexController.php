@@ -274,10 +274,7 @@ class IndexController extends HttpController
             $stmtSelect->execute([$id]);
             $row = $stmtSelect->fetch();
             $row['randomNumber'] = \mt_rand(1, 10000);
-            $stmtUpdate->execute([
-                $row['randomNumber'],
-                $row['id'],
-            ]);
+            $stmtUpdate->execute([$row['randomNumber'], $row['id']]);
             $list[] = $row;
         }
         return $list;
