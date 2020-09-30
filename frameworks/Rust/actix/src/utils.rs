@@ -1,7 +1,9 @@
-#![allow(dead_code)]
+#![allow(dead_code, unused_braces)]
+
 use std::{cmp, io};
 
 use bytes::{BufMut, BytesMut};
+use serde::{Deserialize, Serialize};
 use yarte::Template;
 
 #[allow(non_snake_case)]

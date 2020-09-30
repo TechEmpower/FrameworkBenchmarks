@@ -38,15 +38,15 @@ $db_postgres = function (int $queries = 0) use ($pool): string {
     // Create an array with the response string.
     $arr = [];
 
-    $db->prepare('s', 'SELECT id, randomnumber FROM World WHERE id = $1');
+    $db->s ??= $db->prepare('s', 'SELECT id, randomnumber FROM World WHERE id = $1');
 
     // For each query, store the result set values in the response array
     while ($query_count--) {
         $id = mt_rand(1, 10000);
         $res = $db->execute('s', [$id]);
-        $ret = $db->fetchAll($res);
+        $ret = $db->fetchAssoc($res);
         // Store result in array.
-        $arr[] = ['id' => $id, 'randomnumber' => $ret[0]['randomnumber']];
+        $arr[] = ['id' => $id, 'randomnumber' => $ret['randomnumber']];
     }
 
     // Use the PHP standard JSON encoder.
@@ -72,7 +72,7 @@ $fortunes_postgres = function () use ($pool): string {
 
     $fortune = [];
 
-    $db->prepare('f', 'SELECT id, message FROM Fortune');
+    $db->f ??= $db->prepare('f', 'SELECT id, message FROM Fortune');
     $res = $db->execute('f', []);
     $arr = $db->fetchAll($res);
 
@@ -113,16 +113,16 @@ $updates_postgres = function (int $queries = 0) use ($pool): string {
 
     $arr = [];
 
-    $db->prepare('us', 'SELECT randomnumber FROM World WHERE id = $1');
-    $db->prepare('uu', 'UPDATE World SET randomnumber = $1 WHERE id = $2');
+    $db->us ??= $db->prepare('us', 'SELECT randomnumber FROM World WHERE id = $1');
+    $db->uu ??= $db->prepare('uu', 'UPDATE World SET randomnumber = $1 WHERE id = $2');
 
     while ($query_count--) {
-        $id = mt_rand(1, 10000);
-        $randomNumber = mt_rand(1, 10000);
+        $id = \mt_rand(1, 10000);
+        $randomNumber = \mt_rand(1, 10000);
         $res = $db->execute('us', [$id]);
-        $ret = $db->fetchAll($res);
+        $ret = $db->fetchAssoc($res);
         // Store result in array.
-        $world = ['id' => $id, 'randomnumber' => $ret[0]['randomnumber']];
+        $world = ['id' => $id, 'randomnumber' => $ret['randomnumber']];
         $world['randomnumber'] = $randomNumber;
         $res = $db->execute('uu', [$randomNumber, $id]);
         $arr[] = $world;
@@ -153,11 +153,11 @@ $db_mysql = function (int $queries = 0) use ($pool): string {
     // Create an array with the response string.
     $arr = [];
     // Define query
-    $db->db_test = $db->db_test ?? $db->prepare('SELECT id, randomNumber FROM World WHERE id = ?');
+    $db->db_test ??= $db->prepare('SELECT id, randomNumber FROM World WHERE id = ?');
 
     // For each query, store the result set values in the response array
     while ($query_count--) {
-        $id = mt_rand(1, 10000);
+        $id = \mt_rand(1, 10000);
         $ret = $db->db_test->execute([$id]);
 
         // Store result in array.
@@ -187,7 +187,7 @@ $fortunes_mysql = function () use ($pool): string {
 
     $fortune = [];
     
-    $db->fortune_test = $db->fortune_test ?? $db->prepare('SELECT id, message FROM Fortune');
+    $db->fortune_test ??= $db->prepare('SELECT id, message FROM Fortune');
     $arr = $db->fortune_test->execute();
 
     foreach ($arr as $row) {
@@ -226,12 +226,12 @@ $updates_mysql = function (int $queries = 0) use ($pool): string {
     }
 
     $arr = [];
-    $db->updates_test_select = $db->updates_test_select ?? $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
-    $db->updates_test_update = $db->updates_test_update ?? $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
+    $db->updates_test_select ??= $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
+    $db->updates_test_update ??= $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
 
     while ($query_count--) {
-        $id = mt_rand(1, 10000);
-        $randomNumber = mt_rand(1, 10000);
+        $id = \mt_rand(1, 10000);
+        $randomNumber = \mt_rand(1, 10000);
         $ret = $db->updates_test_select->execute([$id]);
 
         // Store result in array.
