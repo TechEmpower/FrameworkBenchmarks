@@ -185,10 +185,18 @@ function getHTML (rows) {
   return html + FOOTER
 }
 
-function sortByMessage (a, b) {
-  if (a[1] > b[1]) return 1
-  if (a[1] < b[1]) return -1
-  return 0
+function insertionSort (arr) {
+  const n = arr.length
+  for (let i = 1; i < n; i++) {
+    const c = arr[i]
+    let j = i - 1
+    while ((j > -1) && (c[1] < arr[j][1])) {
+      arr[j + 1] = arr[j]
+      j--
+    }
+    arr[j + 1] = c
+  }
+  return arr
 }
 
 const cache = {}
@@ -323,7 +331,7 @@ function onHTTPConnect (sock) {
     getCachedWorldById.send()
   }
   function onFortunes () {
-    const html = getHTML([extra, ...allFortunes.getRows()].sort(sortByMessage))
+    const html = getHTML(insertionSort([extra, ...allFortunes.getRows()]))
     sock.writeString(`${rHTML}${utf8Length(html)}${END}${html}`)
   }
   function onSingle () {
@@ -382,7 +390,7 @@ function onHTTPConnect (sock) {
 
 function onPGReady () {
   microtasks = false
-  server.listen()
+  just.print(`listen: ${server.listen()}`)
 }
 
 const { utf8Length } = just.sys
@@ -404,6 +412,7 @@ const sDB = sjs({ id: attr('number'), randomNumber: attr('number') })
 while (i--) connect(tfb, onPGConnect)
 const { loop } = just.factory
 let microtasks = true
+
 let time = (new Date()).toUTCString()
 let rHTML = `HTTP/1.1 200 OK\r\nServer: j\r\nDate: ${time}\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length: `
 let rTEXT = `HTTP/1.1 200 OK\r\nServer: j\r\nDate: ${time}\r\nContent-Type: text/plain\r\nContent-Length: `
