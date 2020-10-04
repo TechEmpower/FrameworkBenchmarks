@@ -37,51 +37,58 @@ const randomWorld = async () =>
 
 module.exports = {
 
-  SingleQuery: (req, reply) => {
-    reply(randomWorld())
+  SingleQuery: async (_req, reply) => {
+    const world = await randomWorld();
+    return reply
+      .response(world)
       .header('Content-Type', 'application/json')
       .header('Server', 'hapi');
   },
 
   MultipleQueries: async (req, reply) => {
     const queries = h.getQueries(req);
-    const results = [];
+    const promises = [];
 
     for (let i = 0; i < queries; i++) {
-      results.push(await randomWorld());
+      promises.push(randomWorld());
     }
+    const results = await Promise.all(promises);
 
-    reply(results)
+    return reply
+      .response(results)
       .header('Content-Type', 'application/json')
       .header('Server', 'hapi');
   },
 
-  Fortunes: (req, reply) => {
-    Fortunes.findAll().then((fortunes) => {
-      fortunes.push(h.additionalFortune());
-      fortunes.sort((a, b) => a.message.localeCompare(b.message));
+  Fortunes: async (_req, reply) => {
+    const fortunes = await Fortunes.findAll();
+    fortunes.push(h.additionalFortune());
+    fortunes.sort((a, b) => a.message.localeCompare(b.message));
 
-      reply.view('fortunes', { fortunes })
-        .header('Content-Type', 'text/html')
-        .header('Server', 'hapi');
-    }).catch((err) => process.exit(1));
+    return reply.view('fortunes', { fortunes })
+      .header('Content-Type', 'text/html')
+      .header('Server', 'hapi');
   },
 
   Updates: async (req, reply) => {
     const queries = h.getQueries(req);
-    const results = [];
+    const promises = [];
 
     for (let i = 0; i < queries; i++) {
-      const world = await randomWorld();
-      world.randomNumber = h.randomTfbNumber();
-      await Worlds.update(
-        { randomNumber: world.randomNumber },
-        { where: { id: world.id } }
-      );
-      results.push(world);
+      const promise = randomWorld()
+        .then(world => {
+          world.randomNumber = h.randomTfbNumber();
+          return Worlds.update(
+            { randomNumber: world.randomNumber },
+            { where: { id: world.id } }
+          ).then(() => world);
+        })
+      promises.push(promise);
     }
+    const results = await Promise.all(promises);
 
-    reply(results)
+    return reply
+      .response(results)
       .header('Content-Type', 'application/json')
       .header('Server', 'hapi');
   }
