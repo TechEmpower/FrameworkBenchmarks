@@ -34,14 +34,15 @@ const updateWorld = async (world) =>
 module.exports = {
 
   SingleQuery: async (req, reply) => {
-    reply(await randomWorld()).header('Server', 'hapi');
+    const res = await randomWorld();
+    return reply.response(res).header('Server', 'hapi');
   },
 
   MultipleQueries: async (req, reply) => {
     const queries = h.getQueries(req);
     const results = h.fillArray(await randomWorld(), queries);
 
-    reply(results).header('Server', 'hapi');
+    return reply.response(results).header('Server', 'hapi');
   },
 
   Fortunes: async (req, reply) => {
@@ -49,7 +50,7 @@ module.exports = {
     fortunes.push(h.additionalFortune());
     fortunes.sort((a, b) => a.message.localeCompare(b.message));
 
-    reply.view('fortunes', {
+    return reply.view('fortunes', {
       fortunes: fortunes
     })
       .header('Content-Type', 'text/html')
@@ -67,9 +68,9 @@ module.exports = {
       results.push(world);
     }
 
-    reply(results)
+    return reply
+      .response(results)
       .header('Content-Type', 'application/json')
       .header('Server', 'hapi');
   }
-
 };
