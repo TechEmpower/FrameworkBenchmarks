@@ -1,18 +1,16 @@
 {
   "name": "hapi",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "dependencies": {
-    "async": "2.1.5",
-    "bluebird": "3.4.7",
-  "handlebars": "4.3.0",
-    "hapi": "16.1.1",
-    "vision": "4.1.0",
-    "mongoose": "5.7.5",
-    "mysql": "2.16.0",
-    "mysql2": "1.6.5",
-    "pg": "6.1.6",
-    "pg-hstore": "2.3.2",
-    "sequelize": "5.15.1"
+    "@hapi/hapi": "^20.0.1",
+    "@hapi/vision": "^6.0.1",
+    "handlebars": "^4.7.6",
+    "mongoose": "^5.10.7",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.2.5",
+    "pg": "^8.3.3",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.5"
   }
 }
