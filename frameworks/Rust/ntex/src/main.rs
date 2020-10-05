@@ -1,5 +1,5 @@
 #[global_allocator]
-static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use bytes::{Bytes, BytesMut};
 use ntex::{http, web};

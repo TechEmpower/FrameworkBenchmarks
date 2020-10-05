@@ -1,5 +1,4 @@
 <?php
-// ngx.php
 use Ubiquity\servers\ngx\NgxServer;
 if (! defined('DS')) {
 	define('DS', DIRECTORY_SEPARATOR);
