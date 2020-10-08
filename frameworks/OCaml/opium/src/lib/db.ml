@@ -14,7 +14,7 @@ module Query = struct
     let open Models.Fortune in
     [%rapper get_many {sql|
         SELECT @int{id}, @string{message} FROM Fortunes
-    |sql} record_out ]
+    |sql} record_out]
 
 end
 

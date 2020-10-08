@@ -1,15 +1,3 @@
-let url = "localhost"
-let port = 5432
-let database = "opi"
-let connection_uri = Printf.sprintf "postgresql://%s:%i/%s" url port database
-
-let connect () =
-  connection_uri
-  |> Uri.of_string
-  |> Caqti_lwt.connect_pool ~max_size:10
-  |> function | Ok pool   -> pool
-              | Error err -> failwith (Caqti_error.show err)
-
 let pool =
   let connection_url =
     "postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?connect_timeout=15"
