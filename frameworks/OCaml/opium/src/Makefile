@@ -24,7 +24,7 @@ gen-opam:
 	dune build @install
 
 build:
-	opam exec -- dune build --profile release @install
+	opam exec -- dune build --profile release bin/main.exe
 
 run:
 	./_build/default/bin/main.exe

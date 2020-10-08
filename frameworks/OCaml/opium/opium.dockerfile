@@ -14,8 +14,8 @@ COPY src/opi.opam src/Makefile /web/
 
 RUN make install-ci
 
-COPY src /web
+COPY ./src /web/
 
 RUN make build
 
-CMD ./_build/default/bin/main.exe
+CMD /web/_build/default/bin/main.exe

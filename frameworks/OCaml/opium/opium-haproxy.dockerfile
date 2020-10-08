@@ -14,7 +14,7 @@ COPY src/opi.opam src/Makefile /web/
 
 RUN make install-ci
 
-COPY src /web
+COPY ./src /web/
 
 RUN make build
 
@@ -23,6 +23,5 @@ RUN apk add haproxy
 COPY haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY start-servers.sh ./start-servers.sh
 RUN chmod +x /web/start-servers.sh
-CMD ./_build/default/bin/opi.exe
 
 CMD /web/start-servers.sh ; /usr/sbin/haproxy -Ws -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -q
