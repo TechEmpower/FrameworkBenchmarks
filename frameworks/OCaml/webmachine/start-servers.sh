@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 CPU_COUNT=$(nproc)
 P=9000
