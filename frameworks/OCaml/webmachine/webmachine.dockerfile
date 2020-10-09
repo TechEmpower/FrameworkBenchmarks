@@ -1,21 +1,22 @@
-FROM fedora:32
+FROM ocurrent/opam:fedora-32-ocaml-4.11
 
-#ARG BENCHMARK_ENV=local
+ENV DIR webmachine
 
-ENV VERSION 4.11.1
-#ENV BENCHMARK_ENV $BENCHMARK_ENV
+# https://caml.inria.fr/pub/docs/manual-ocaml/libref/Gc.html
+# https://linux.die.net/man/1/ocamlrun
+# https://blog.janestreet.com/memory-allocator-showdown/
+ENV OCAMLRUNPARAM a=2,o=240
 
-WORKDIR /webmachine
+RUN sudo dnf install --assumeyes diffutils postgresql-devel libev-devel
 
-RUN dnf install --assumeyes opam diffutils postgresql-devel
-RUN opam init --disable-sandboxing --auto-setup --compiler ${VERSION}
-# uncomment this line to take better advantage of docker build cache when developing
-#RUN opam install --yes dune webmachine caqti caqti-lwt caqti-driver-postgresql cohttp-lwt-unix ptime ezjsonm lwt_ppx
+WORKDIR /${DIR}
 
-COPY ./src /webmachine
-# comment the below line while developing to make better use of the docker build cache
-RUN opam install --yes --deps-only ./webmachine-tfb.opam
+COPY src/webmachine-tfb.opam src/Makefile /${DIR}/
 
-RUN eval $(opam env) ; dune build --profile release tfb.exe
+RUN make install
 
-CMD /webmachine/_build/default/tfb.exe
+COPY ./src /${DIR}
+
+RUN sudo chown -R opam: /${DIR} && make build
+
+CMD /${DIR}/_build/default/tfb.exe
