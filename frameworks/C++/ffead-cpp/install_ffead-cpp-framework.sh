@@ -12,10 +12,12 @@ chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 rm -rf web/te-benchmark-um
 rm -rf web/te-benchmark-um-pq
 rm -rf web/te-benchmark-um-mgr
+rm -rf web/te-benchmark-um-pq-async
 mv ${IROOT}/server.sh script/
 mv ${IROOT}/te-benchmark-um web/
 mv ${IROOT}/te-benchmark-um-pq web/
 mv ${IROOT}/te-benchmark-um-mgr web/
+mv ${IROOT}/te-benchmark-um-pq-async web/
 sed -i 's|THRD_PSIZ=6|THRD_PSIZ='${SERV_THREADS}'|g' resources/server.prop
 sed -i 's|W_THRD_PSIZ=2|W_THRD_PSIZ='${WRIT_THREADS}'|g' resources/server.prop
 sed -i 's|ENABLE_CRS=true|ENABLE_CRS=false|g' resources/server.prop
@@ -42,6 +44,7 @@ sed -i 's|localhost|tfb-database|g' web/te-benchmark-um/config/sdormmysql.xml
 sed -i 's|localhost|tfb-database|g' web/te-benchmark-um/config/sdormpostgresql.xml
 sed -i 's|localhost|tfb-database|g' web/te-benchmark-um-pq/config/sdorm.xml
 sed -i 's|localhost|tfb-database|g' web/te-benchmark-um-mgr/config/sdorm.xml
+sed -i 's|localhost|tfb-database|g' web/te-benchmark-um-pq-async/config/sdorm.xml
 sed -i 's|127.0.0.1|tfb-database|g' resources/sample-odbcinst.ini
 sed -i 's|127.0.0.1|tfb-database|g' resources/sample-odbc.ini
 sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/default)||g' CMakeLists.txt
@@ -63,7 +66,9 @@ sed -i 's|web/markers/src/autotools/Makefile||g' configure.ac
 sed -i 's|web/te-benchmark/src/autotools/Makefile||g' configure.ac
 sed -i 's|web/peer-server/src/autotools/Makefile||g' configure.ac
 
-cmake -DSRV_ALL=on -DCINATRA_INCLUDES=${IROOT}/cinatra/include -DMOD_APACHE=on -DMOD_NGINX=on -DMOD_MEMCACHED=on -DMOD_REDIS=on -DMOD_SDORM_MONGO=on .
+#./autogen.sh
+#./configure --enable-debug=no --enable-apachemod=yes --enable-nginxmod=yes --enable-mod_sdormmongo=yes --enable-mod_sdormsql=yes --enable-mod_rediscache=yes --enable-mod_memcached=yes CPPFLAGS="$CPPFLAGS -I${IROOT}/include/libmongoc-1.0 -I${IROOT}/include/libbson-1.0 -I${IROOT}/include/" LDFLAGS="$LDFLAGS -L${IROOT} -L${IROOT}/lib"
+cmake -DSRV_ALL=on -DCINATRA_INCLUDES=${IROOT}/cinatra/include -DMOD_APACHE=on -DMOD_NGINX=on -DMOD_MEMCACHED=on -DMOD_REDIS=on -DMOD_SDORM_MONGO=on  -DDEBUG=${DEBUG} .
 
 cp resources/sample-odbcinst.ini ${IROOT}/odbcinst.ini
 cp resources/sample-odbc.ini ${IROOT}/odbc.ini
@@ -81,9 +86,6 @@ rm -f /usr/local/lib/libdinter.so
 
 cd ffead-cpp-5.0-bin
 #cache related dockerfiles will add the cache.xml accordingly whenever needed
-rm -f web/te-benchmark-um/config/cache.xml
-rm -f web/te-benchmark-um-pq/config/cache.xml
-rm -f web/te-benchmark-um-mgr/config/cache.xml
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 ./server.sh &
 while [ ! -f lib/libinter.so ]
@@ -118,9 +120,6 @@ make install -j${MAX_THREADS}
 
 cd ffead-cpp-5.0-bin
 #cache related dockerfiles will add the cache.xml accordingly whenever needed
-rm -f web/te-benchmark-um/config/cache.xml
-rm -f web/te-benchmark-um-pq/config/cache.xml
-rm -f web/te-benchmark-um-mgr/config/cache.xml
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 ./server.sh &
 while [ ! -f lib/libinter.so ]
