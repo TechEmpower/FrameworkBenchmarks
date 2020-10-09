@@ -10,7 +10,7 @@ RUN	opam init --disable-sandboxing --auto-setup\
       && opam install dune\
       && opam clean -a -c -s --logs
 
-COPY src/opi.opam src/Makefile /web/
+COPY ./src/opi.opam ./src/Makefile /web/
 
 RUN make install-ci
 
