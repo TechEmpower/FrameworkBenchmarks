@@ -3,11 +3,41 @@
 #include <Cutelyst/Plugins/Utils/Sql>
 #include <Cutelyst/View>
 
+#include <apool.h>
+#include <aresult.h>
+#include <apreparedquery.h>
+
 #include <QSqlQuery>
 
 FortuneTest::FortuneTest(QObject *parent) : Controller(parent)
 {
 
+}
+
+void FortuneTest::fortunes_raw_p(Context *c)
+{
+    ASync async(c);
+    static thread_local auto db = APool::database();
+    db.execPrepared(APreparedQueryLiteral("SELECT id, message FROM fortune"), [c, async, this] (AResult &result) {
+        if (Q_UNLIKELY(result.error() && !result.size())) {
+            c->res()->setStatus(Response::InternalServerError);
+            return;
+        }
+
+        FortuneList fortunes;
+        auto it = result.begin();
+        while (it != result.end()) {
+            fortunes.push_back({it[0].toInt(), it[1].toString()});
+            ++it;
+        }
+        fortunes.push_back({0, QStringLiteral("Additional fortune added at request time.")});
+
+        std::sort(fortunes.begin(), fortunes.end(), [] (const Fortune &a1, const Fortune &a2) {
+            return a1.message < a2.message;
+        });
+
+        renderRaw(c, fortunes);
+    }, c);
 }
 
 void FortuneTest::fortunes_raw_postgres(Context *c)
@@ -28,7 +58,41 @@ void FortuneTest::fortunes_raw_mysql(Context *c)
     renderRaw(c, fortunes);
 }
 
-void FortuneTest::fortunes_grantlee_postgres(Context *c)
+void FortuneTest::fortunes_c_p(Context *c)
+{
+    ASync async(c);
+    static thread_local auto db = APool::database();
+    db.execPrepared(APreparedQueryLiteral("SELECT id, message FROM fortune"), [c, async] (AResult &result) {
+        if (Q_UNLIKELY(result.error() && !result.size())) {
+            c->res()->setStatus(Response::InternalServerError);
+            return;
+        }
+
+        QVariantList fortunes;
+        auto it = result.begin();
+        while (it != result.end()) {
+            fortunes.append(QVariant::fromValue(QVariantList{
+                                                    {it[0].toInt(), it[1].toString()},
+                                                }));
+            ++it;
+        }
+
+        fortunes.append(QVariant::fromValue(QVariantList{
+                            {0, QStringLiteral("Additional fortune added at request time.")},
+                        }));
+        std::sort(fortunes.begin(), fortunes.end(), [] (const QVariant &a1, const QVariant &a2) {
+            return a1.toList()[1].toString() < a2.toList()[1].toString();
+        });
+
+        c->setStash(QStringLiteral("template"), QStringLiteral("fortunes.html"));
+        c->setStash(QStringLiteral("fortunes"), fortunes);
+        static thread_local View *view = c->view();
+        view->execute(c);
+        c->response()->setContentType(QStringLiteral("text/html; charset=UTF-8"));
+    }, c);
+}
+
+void FortuneTest::fortunes_cutelee_postgres(Context *c)
 {
     QSqlQuery query = CPreparedSqlQueryThreadForDB(
                 QLatin1String("SELECT id, message FROM fortune"),
@@ -49,7 +113,7 @@ void FortuneTest::fortunes_grantlee_postgres(Context *c)
     }
 }
 
-void FortuneTest::fortunes_grantlee_mysql(Context *c)
+void FortuneTest::fortunes_cutelee_mysql(Context *c)
 {
     QSqlQuery query = CPreparedSqlQueryThreadForDB(
                 QLatin1String("SELECT id, message FROM fortune"),
@@ -85,13 +149,13 @@ FortuneList FortuneTest::processQuery(Context *c, QSqlQuery &query)
     fortunes.push_back({0, QStringLiteral("Additional fortune added at request time.")});
 
     std::sort(fortunes.begin(), fortunes.end(), [] (const Fortune &a1, const Fortune &a2) {
-        return a1.second < a2.second;
+        return a1.message < a2.message;
     });
 
     return fortunes;
 }
 
-void FortuneTest::renderRaw(Context *c, const FortuneList &fortunes)
+void FortuneTest::renderRaw(Context *c, const FortuneList &fortunes) const
 {
     QString out;
     out.append(QStringLiteral("<!DOCTYPE html>"
@@ -104,9 +168,9 @@ void FortuneTest::renderRaw(Context *c, const FortuneList &fortunes)
 
     for (const Fortune &fortune : fortunes) {
         out.append(QStringLiteral("<tr><td>"))
-                .append(QString::number(fortune.first))
+                .append(QString::number(fortune.id))
                 .append(QStringLiteral("</td><td>"))
-                .append(fortune.second.toHtmlEscaped())
+                .append(fortune.message.toHtmlEscaped())
                 .append(QStringLiteral("</td></tr>"));
     }
 
