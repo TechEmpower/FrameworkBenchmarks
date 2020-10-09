@@ -17,6 +17,6 @@ RUN make install
 
 COPY ./src /${DIR}
 
-RUN sudo chown -R opam: /${DIR} && make build
+RUN sudo chown -R opam: . && make build
 
-CMD /${DIR}/_build/default/tfb.exe
+CMD _build/default/tfb.exe
