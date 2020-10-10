@@ -2,10 +2,12 @@
 
 ### Test Type Implementation Source Code
 
-* [JSON](src/lib/routes.ml#L7-10)
 * [PLAINTEXT](src/lib/routes.ml#L3-5)
-* [DB](src/lib/routes.ml#L12-L21)
-* [QUERY](src/lib/routes.ml#L23-L40)
+* [JSON](src/lib/routes.ml#L7-10)
+* [DB](src/lib/routes.ml#L12-L20)
+* [QUERY](src/lib/routes.ml#L37-L41)
+* [UPDATES](src/lib/routes.ml#L43-L56)
+* [FORTUNES](src/lib/routes.ml#L58-L67)
 
 ## Important Libraries
 * [Opium](https://github.com/rgrinberg/opium)
@@ -16,13 +18,14 @@
 * [Ppx_rapper](https://github.com/roddyyaga/ppx_rapper)
 
 ## Test URLs
-### JSON
-
-http://localhost:8080/json
 
 ### PLAINTEXT
 
 http://localhost:8080/plaintext
+
+### JSON
+
+http://localhost:8080/json
 
 ### DB
 
@@ -31,3 +34,11 @@ http://localhost:8080/db
 ### QUERY
 
 http://localhost:8080/queries/
+
+### UPDATES
+
+http://localhost:8080/updates/
+
+### FORTUNES
+
+http://localhost:8080/fortunes/

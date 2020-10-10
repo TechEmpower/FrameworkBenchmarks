@@ -1,5 +1,9 @@
 open Opium.Std
 
+let get_count_param req = match (int_of_string (Router.param req "count")) with
+  | x -> x
+  | exception _e -> 1
+
 let main () =
   let port =
     match Sys.getenv_opt "PORT" with
@@ -13,12 +17,9 @@ let main () =
       "/db", (fun _req -> Opi.Routes.db ());
       "/fortunes", (fun _req -> Opi.Routes.fortunes ());
       "/queries/", (fun _req -> Opi.Routes.queries 1);
-      "/queries/:id", (fun req ->
-          let id = match (int_of_string (Router.param req "id")) with
-            | x -> x
-            | exception _e -> 1
-          in
-          Opi.Routes.queries id)
+      "/queries/:count", (fun req -> Opi.Routes.queries (get_count_param req));
+      "/updates/", (fun req -> Opi.Routes.updates 1);
+      "/updates/:count", (fun req -> Opi.Routes.updates (get_count_param req))
     ]
   in
   let add_routes app = List.fold_left (fun app (route,handler) -> (get route handler) app) app routes in
@@ -31,7 +32,7 @@ let main () =
     |> add_routes in
 
   match App.run_command' app with
-  | `Ok (app : unit Lwt.t ) -> 
+  | `Ok (app : unit Lwt.t ) ->
     let _ = Lwt_io.printf "Running on port 0.0.0.0:%d\n" port in
     Lwt_main.run app
   | `Error                  -> exit 1

@@ -23,3 +23,6 @@ build:
 
 run:
 	./_build/default/exe/$(BINARY).exe
+
+run-debug:
+	dune exec $(project_name) -- --debug
