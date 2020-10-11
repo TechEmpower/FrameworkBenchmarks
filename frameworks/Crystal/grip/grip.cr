@@ -131,6 +131,9 @@ class Application < Grip::Application
 end
 
 app = Application.new
+
+Grip.config.logging = false
+
 app.run(8080) do |config|
   server = config.server.not_nil!
   server.bind_tcp "0.0.0.0", 8080, reuse_port: true
