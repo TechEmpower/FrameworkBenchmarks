@@ -61,7 +61,7 @@ void DatabaseUpdatesTest::updatep(Context *c)
 void DatabaseUpdatesTest::updates_postgres(Context *c)
 {
     QSqlQuery query = CPreparedSqlQueryThreadForDB(
-                QLatin1String("SELECT randomNumber FROM world WHERE id = :id"),
+                QLatin1String("SELECT id, randomNumber FROM world WHERE id = :id"),
                 QStringLiteral("postgres"));
     QSqlQuery updateQuery = CPreparedSqlQueryThreadForDB(
                 QLatin1String("UPDATE world SET randomNumber = :randomNumber WHERE id = :id"),

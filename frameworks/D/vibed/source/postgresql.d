@@ -168,7 +168,7 @@ class WebInterface {
 		foreach (ref w; data) {
 			int id = _uniformVariable(_gen);
 			qp.argsVariadic(id);
-			immutable query = "SELECT randomNumber FROM world WHERE id = " ~  id.to!string;
+			immutable query = "SELECT id, randomNumber FROM world WHERE id = " ~  id.to!string;
 			immutable result = conn.execPrepared(qp).rangify.front;
 			w = WorldResponse(id, result[0].as!PGinteger);
 

@@ -35,11 +35,11 @@ class RaController extends AppController
     public function update($count = 1)
     {
         $count = min(max($count, 1), 500);
-        
+
         $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-        $sth = $this->pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
+        $sth = $this->pdo->prepare('SELECT id, randomNumber FROM World WHERE id=?');
         $updateStatement = $this->pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
-        
+
         while ($count--) {
             $id = mt_rand(1, 10000);
 

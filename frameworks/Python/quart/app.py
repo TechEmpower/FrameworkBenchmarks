@@ -7,7 +7,7 @@ from quart import Quart, jsonify, make_response, request, render_template
 
 app = Quart(__name__)
 
-GET_WORLD = "select randomnumber from world where id = $1"
+GET_WORLD = "select id,randomnumber from world where id = $1"
 UPDATE_WORLD = "update world set randomNumber = $2 where id = $1"
 
 
