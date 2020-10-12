@@ -3,7 +3,7 @@ module Time = struct
     | 0 -> "Sun"
     | 1 -> "Mon"
     | 2 -> "Tue"
-    | 3 -> "Wen"
+    | 3 -> "Wed"
     | 4 -> "Thu"
     | 5 -> "Fri"
     | 6 -> "Sat"
@@ -42,5 +42,4 @@ module Middleware = struct
     in
     Rock.Middleware.create ~name:"Content length" ~filter
 end
-
 
