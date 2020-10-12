@@ -1,0 +1,4 @@
+**/_opam
+**/_build
+.merlin
+.ocamlformat
