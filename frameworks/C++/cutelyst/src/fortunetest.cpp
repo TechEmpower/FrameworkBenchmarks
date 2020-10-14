@@ -25,6 +25,7 @@ void FortuneTest::fortunes_raw_p(Context *c)
         }
 
         FortuneList fortunes;
+        fortunes.reserve(result.size());
         auto it = result.begin();
         while (it != result.end()) {
             fortunes.push_back({it[0].toInt(), it[1].toString()});
@@ -69,6 +70,7 @@ void FortuneTest::fortunes_c_p(Context *c)
         }
 
         QVariantList fortunes;
+        fortunes.reserve(result.size());
         auto it = result.begin();
         while (it != result.end()) {
             fortunes.append(QVariant::fromValue(QVariantList{
@@ -143,6 +145,7 @@ FortuneList FortuneTest::processQuery(Context *c, QSqlQuery &query)
         return fortunes;
     }
 
+    fortunes.reserve(query.size());
     while (query.next()) {
         fortunes.push_back({query.value(0).toInt(), query.value(1).toString()});
     }

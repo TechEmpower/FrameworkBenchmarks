@@ -24,16 +24,16 @@ void SingleDatabaseQueryTest::dbp(Context *c)
     static thread_local auto db = APool::database();
     db.execPrepared(APreparedQueryLiteral("SELECT id, randomNumber FROM world WHERE id=$1"),
                            {id}, [c, async] (AResult &result) {
-        if (Q_UNLIKELY(result.error() && !result.size())) {
-            c->res()->setStatus(Response::InternalServerError);
+        if (Q_LIKELY(!result.error() && result.size())) {
+            auto it = result.begin();
+            c->response()->setJsonObjectBody({
+                                                 {QStringLiteral("id"), it[0].toInt()},
+                                                 {QStringLiteral("randomNumber"), it[1].toInt()}
+                                             });
             return;
         }
 
-        auto it = result.begin();
-        c->response()->setJsonObjectBody({
-                                             {QStringLiteral("id"), it[0].toInt()},
-                                             {QStringLiteral("randomNumber"), it[1].toInt()}
-                                         });
+        c->res()->setStatus(Response::InternalServerError);
     }, c);
 }
 

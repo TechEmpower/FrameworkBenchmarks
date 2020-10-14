@@ -34,21 +34,20 @@ void MultipleDatabaseQueriesTest::queriesp(Context *c)
 
         db.execPrepared(APreparedQueryLiteral("SELECT id, randomNumber FROM world WHERE id=$1"),
                                {id}, [c, async, i, queries, array] (AResult &result) {
-            if (Q_UNLIKELY(result.error() && !result.size())) {
-                c->res()->setStatus(Response::InternalServerError);
+            if (Q_LIKELY(!result.error() && result.size())) {
+                auto it = result.begin();
+                array->append(QJsonObject{
+                                  {QStringLiteral("id"), it[0].toInt()},
+                                  {QStringLiteral("randomNumber"), it[1].toInt()}
+                              });
+
+                if (i + 1 == queries) {
+                    c->response()->setJsonArrayBody(*array);
+                }
                 return;
             }
 
-
-            auto it = result.begin();
-            array->append(QJsonObject{
-                              {QStringLiteral("id"), it[0].toInt()},
-                              {QStringLiteral("randomNumber"), it[1].toInt()}
-                          });
-
-            if (i + 1 == queries) {
-                c->response()->setJsonArrayBody(*array);
-            }
+            c->res()->setStatus(Response::InternalServerError);
         }, c);
     }
 }
