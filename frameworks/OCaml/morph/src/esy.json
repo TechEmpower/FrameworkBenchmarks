@@ -1,5 +1,5 @@
 {
-  "name": "morph-ftb",
+  "name": "morph-tfb",
   "version": "0.0.0",
   "description": "Benchmarks for morph",
   "esy": {
@@ -21,7 +21,6 @@
     "@opam/caqti": "^1.2.0",
     "@opam/caqti-lwt": "^1.2.0",
     "@opam/caqti-driver-postgresql": "^1.2.0",
-    "@opam/containers": "*",
     "@opam/dune": "^2.5.0",
     "@opam/fmt": "*",
     "@opam/logs": "*",
@@ -35,16 +34,14 @@
     "ocaml": "~4.10.0"
   },
   "devDependencies": {
-    "@opam/junit": "*",
-    "@opam/junit_alcotest": "*",
     "@opam/merlin": "*",
     "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam",
-    "@opam/ocamlformat": "*",
-    "@opam/odoc": "*",
-    "@opam/bisect_ppx": "^2.3.0"
+    "@opam/ocamlformat": "*"
   },
   "resolutions": {
-    "@opam/conf-libev": "esy-packages/libev:package.json#0b5eb6685b688649045aceac55dc559f6f21b829",
+    "@reason-native-web/morph": "reason-native-web/morph:morph.json#c7bdd60dbfb99eccd4ce27559117919455061e0e",
+    "@opam/caqti": "ulrikstrid/ocaml-caqti:caqti.opam#c0ead31422c3670f8250a50043a1038cab4f011f",
+    "@opam/conf-postgresql": "ulrikstrid/postgresql:package.json#193d72af7f2132e30ad429401232da6359b248a2",
     "@opam/conf-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79",
     "@opam/session": "inhabitedtype/ocaml-session:session.opam#6180413"
   }
