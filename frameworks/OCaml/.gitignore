@@ -2,3 +2,5 @@
 **/_build
 .merlin
 .ocamlformat
+_esy
+*.install

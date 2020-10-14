@@ -65,8 +65,6 @@ env:
     - "TESTLANG=Nim"
     - 'TESTDIR="Nim/httpbeast Nim/jester Nim/basolato"'
     - "TESTLANG=OCaml"
-    - "TESTDIR=OCaml/morph"
-    - "TESTDIR=OCaml/webmachine"
     - "TESTLANG=Perl"
     - 'TESTDIR="PHP/php"'
     - 'TESTDIR="PHP/comet PHP/kumbiaphp PHP/workerman PHP/webman"'
