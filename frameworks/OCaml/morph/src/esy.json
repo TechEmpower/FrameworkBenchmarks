@@ -31,6 +31,7 @@
     "@reason-native-web/morph": "^0.6.1",
     "@reason-native-web/piaf": "^1.4.0",
     "@reason-native-web/esy-openssl": "^1.1.1006",
+    "@opam/conf-libev": "esy-packages/libev:package.json#0b5eb6685b688649045aceac55dc559f6f21b829",
     "ocaml": "~4.10.0"
   },
   "devDependencies": {

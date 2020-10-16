@@ -89,4 +89,6 @@ let main = () => {
   );
 };
 
+Lwt_engine.set((new Lwt_engine.libev)());
+
 let () = Lwt_main.run(main());
