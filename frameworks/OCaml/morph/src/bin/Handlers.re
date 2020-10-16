@@ -5,12 +5,6 @@ let select_random =
     "SELECT id, randomNumber FROM World WHERE id = $1",
   );
 
-type db_error = [ | `Database_error(string)];
-
-let or_error = (m): Lwt_result.t('a, db_error) => {
-  Lwt_result.map_err(err => {`Database_error(Caqti_error.show(err))}, m);
-};
-
 let text = _req => {
   Morph.Response.text("Hello, World!") |> Lwt.return;
 };
@@ -21,22 +15,19 @@ let json = _req => {
 };
 
 let db = req => {
-  open Lwt.Syntax;
-  open Lwt.Infix;
+  open Lwt_result.Infix;
   let read_db' = (module C: Caqti_lwt.CONNECTION) =>
     C.find(select_random, Random.int(10000 + 1));
-  let+ (id, randomNumber) =
-    Db_middleware.use(req, read_db')
-    |> or_error
-    >|= (
-      fun
-      | Ok((x, y)) => (x, y)
-      | Error(`Database_error(str)) => failwith(str)
-    );
-
-  let json =
-    `Assoc([("id", `Int(id)), ("randomNumber", `Int(randomNumber))]);
-  Yojson.Safe.to_string(json) |> Morph.Response.json;
+  Db_middleware.use(req, read_db')
+  |> Lwt_result.map_err(e => `Server(Caqti_error.show(e)))
+  >>= (
+    ((id, randomNumber)) => {
+      `Assoc([("id", `Int(id)), ("randomNumber", `Int(randomNumber))])
+      |> Yojson.Safe.to_string
+      |> Morph.Response.json
+      |> Lwt.return;
+    }
+  );
 };
 
 let queries = (queries, req: Morph.Request.t) => {

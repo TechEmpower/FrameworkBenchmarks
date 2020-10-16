@@ -60,9 +60,8 @@ let system =
     ("web_server", WebServer.component),
   ]);
 
-open Lwt.Infix;
-
 let main = () => {
+  open Lwt.Infix;
   Logger.setup_log(Some(Logs.Info));
 
   Archi_lwt.System.start((), system)
