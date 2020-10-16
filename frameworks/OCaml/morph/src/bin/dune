@@ -1,8 +1,8 @@
 (executable
  (name tfb)
  (public_name tfb)
- (link_flags -ccopt -lpq -ccopt %{env:LDFLAGS=-lpq} -ccopt
-   -L%{env:LIBRARY_PATH=/lib})
+ (link_flags -ccopt -lpq -cclib -lpgport -cclib -lpgcommon -ccopt
+   %{env:LDFLAGS=-lpq} -ccopt -L%{env:LIBRARY_PATH=/lib})
  (libraries caqti caqti-lwt caqti-driver-postgresql lwt logs logs.fmt fmt.tty
    morph archi archi-lwt routes yojson ptime ptime.clock ptime.clock.os))
 

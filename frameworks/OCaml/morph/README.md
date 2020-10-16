@@ -1,12 +1,3 @@
-<!--
-1. Test your application
-
-        $ tfb --mode verify --test morph
-
-This will run the suite in `verify` mode for your test. This means that no benchmarks will be captured and we will test that we can hit your implementation end-points specified by `benchmark_config.json` and that the response is correct.
-
-Once you are able to successfully run your test through our suite in this way **and** your test passes our validation, you may move on to the next step.
--->
 # Morph Benchmarking Test
 
 ### Test Type Implementation Source Code
