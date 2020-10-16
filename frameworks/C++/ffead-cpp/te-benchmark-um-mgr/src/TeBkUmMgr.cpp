@@ -89,7 +89,7 @@ std::string TeBkUmMgrRouter::FORTUNE = "fortune";
 
 void TeBkUmMgrRouter::db(TeBkUmMgrWorld& w) {
 #ifdef INC_SDORM_MONGO
-	MongoDBRawDataSourceImpl* sqli = static_cast<MongoDBRawDataSourceImpl*>(DataSourceManager::getRawImpl());
+	MongoDBRawDataSourceImpl* sqli = getDb();
 	int rid = rand() % 10000 + 1;
 	try {
 		bson_t q = BSON_INITIALIZER;
@@ -98,9 +98,7 @@ void TeBkUmMgrRouter::db(TeBkUmMgrWorld& w) {
 		sqli->executeQuery(&q, &w, &TeBkUmMgrRouter::dbUtil);
 		sqli->end();
 		bson_destroy(&q);
-		DataSourceManager::cleanRawImpl(sqli);
 	} catch(const std::exception& e) {
-		DataSourceManager::cleanRawImpl(sqli);
 		throw e;
 	}
 #endif
@@ -131,7 +129,7 @@ void TeBkUmMgrRouter::queries(const char* q, int ql, std::vector<TeBkUmMgrWorld>
 	if(queryCount<1)queryCount=1;
 	else if(queryCount>500)queryCount=500;
 #ifdef INC_SDORM_MONGO
-	MongoDBRawDataSourceImpl* sqli = static_cast<MongoDBRawDataSourceImpl*>(DataSourceManager::getRawImpl());
+	MongoDBRawDataSourceImpl* sqli = getDb();
 
 	try {
 		TeBkUmMgrWorld w;
@@ -145,9 +143,7 @@ void TeBkUmMgrRouter::queries(const char* q, int ql, std::vector<TeBkUmMgrWorld>
 			wlst.push_back(w);
 		}
 		sqli->end();
-		DataSourceManager::cleanRawImpl(sqli);
 	} catch(const std::exception& e) {
-		DataSourceManager::cleanRawImpl(sqli);
 		throw e;
 	}
 #endif
@@ -159,7 +155,7 @@ void TeBkUmMgrRouter::updates(const char* q, int ql, std::vector<TeBkUmMgrWorld>
 	if(queryCount<1)queryCount=1;
 	else if(queryCount>500)queryCount=500;
 #ifdef INC_SDORM_MONGO
-	MongoDBRawDataSourceImpl* sqli = static_cast<MongoDBRawDataSourceImpl*>(DataSourceManager::getRawImpl());
+	MongoDBRawDataSourceImpl* sqli = getDb();
 
 	try {
 		sqli->startBulk(WORLD);
@@ -194,18 +190,16 @@ void TeBkUmMgrRouter::updates(const char* q, int ql, std::vector<TeBkUmMgrWorld>
 			wlst.push_back(w);
 		}
 		sqli->endBulk();
-		DataSourceManager::cleanRawImpl(sqli);
 	} catch(const std::exception& e) {
-		DataSourceManager::cleanRawImpl(sqli);
 		throw e;
 	}
 #endif
 }
 
 void TeBkUmMgrRouter::updateCache() {
-	CacheInterface* cchi = CacheManager::getImpl();
 #ifdef INC_SDORM_MONGO
-	MongoDBRawDataSourceImpl* sqli = static_cast<MongoDBRawDataSourceImpl*>(DataSourceManager::getRawImpl());
+	CacheInterface* cchi = CacheManager::getImpl();
+	MongoDBRawDataSourceImpl* sqli = getDb();
 
 	try {
 		std::vector<TeBkUmMgrWorld> wlist;
@@ -219,10 +213,8 @@ void TeBkUmMgrRouter::updateCache() {
 			sprintf(str, "%d;%d", w.getId(), w.getRandomNumber());
 			cchi->setRaw(CastUtil::fromNumber(w.getId()), str);
 		}
-		DataSourceManager::cleanRawImpl(sqli);
 		CacheManager::cleanImpl(cchi);
 	} catch(const std::exception& e) {
-		DataSourceManager::cleanRawImpl(sqli);
 		CacheManager::cleanImpl(cchi);
 		throw e;
 	}
@@ -288,7 +280,7 @@ void TeBkUmMgrRouter::cachedWorlds(const char* q, int ql, std::vector<TeBkUmMgrW
 
 void TeBkUmMgrRouter::getContext(HttpRequest* request, Context* context) {
 #ifdef INC_SDORM_MONGO
-	MongoDBRawDataSourceImpl* sqli = static_cast<MongoDBRawDataSourceImpl*>(DataSourceManager::getRawImpl());
+	MongoDBRawDataSourceImpl* sqli = getDb();
 
 	try {
 		std::vector<TeBkUmMgrFortune>* flst = new std::vector<TeBkUmMgrFortune>;
@@ -303,9 +295,7 @@ void TeBkUmMgrRouter::getContext(HttpRequest* request, Context* context) {
 		std::sort (flst->begin(), flst->end());
 
 		context->insert(std::pair<std::string, void*>("fortunes", flst));
-		DataSourceManager::cleanRawImpl(sqli);
 	} catch(...) {
-		DataSourceManager::cleanRawImpl(sqli);
 		throw;
 	}
 #endif
@@ -342,7 +332,7 @@ bool TeBkUmMgrRouter::strToNum(const char* str, int len, int& ret) {
     return true;
 }
 
-void TeBkUmMgrRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib) {
+bool TeBkUmMgrRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib, SocketInterface* sif) {
 	//Timer t;
 	//t.start();
 	std::string_view path = req->getPath();
@@ -400,8 +390,7 @@ void TeBkUmMgrRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, voi
 		Context ctx;
 		getContext(req, &ctx);
 
-		std::string fname = "_tebenchmarkummgrtpefortunestpeemittTemplateHTML";
-		void* mkr = dlsym(ddlib, fname.c_str());
+		void* mkr = dlsym(ddlib, TPE_FN_NAME.c_str());
 		if(mkr!=NULL)
 		{
 			TeBkUmMgrTemplatePtr f =  (TeBkUmMgrTemplatePtr)mkr;
@@ -447,4 +436,30 @@ void TeBkUmMgrRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, voi
 		res->setHTTPResponseStatus(HTTPResponseStatus::NotFound);
 	}
 	res->setDone(true);
+	return true;
 }
+
+std::string TeBkUmMgrRouter::APP_NAME = "";
+std::string TeBkUmMgrRouter::TPE_FN_NAME = "";
+
+TeBkUmMgrRouter::TeBkUmMgrRouter() {
+#ifdef INC_SDORM_MONGO
+	sqli = NULL;
+#endif
+	if(APP_NAME=="") {
+		APP_NAME = CommonUtils::normalizeAppName("te-benchmark-um-mgr");
+		TPE_FN_NAME = CommonUtils::getTpeFnName("tpe/fortunes.tpe", "te-benchmark-um-mgr");
+	}
+}
+
+TeBkUmMgrRouter::~TeBkUmMgrRouter() {
+}
+
+#ifdef INC_SDORM_MONGO
+MongoDBRawDataSourceImpl* TeBkUmMgrRouter::getDb() {
+	if(sqli==NULL) {
+		sqli = static_cast<MongoDBRawDataSourceImpl*>(DataSourceManager::getRawImpl("MongoDB-DSN", "te-benchmark-um-mgr"));
+	}
+	return sqli;
+}
+#endif

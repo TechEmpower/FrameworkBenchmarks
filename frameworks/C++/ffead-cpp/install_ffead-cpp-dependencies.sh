@@ -7,6 +7,10 @@ apt update -yqq && apt install --no-install-recommends -yqq autoconf-archive unz
 #redis will not start correctly on bionic with this config
 sed -i "s/bind .*/bind 127.0.0.1/g" /etc/redis/redis.conf
 
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+echo 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' >> /etc/rc.local
+sysctl vm.overcommit_memory=1
+
 service apache2 stop
 service memcached stop
 service redis-server stop

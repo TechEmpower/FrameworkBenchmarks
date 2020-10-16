@@ -93,6 +93,7 @@ env:
     - "TESTLANG=V"
     - "TESTLANG=Vala"
     - "TESTLANG=VB"
+    - "TESTLANG=Mumps"
 
 before_script:
   # Runs travis_diff, printing the output to the terminal, and searches for travis-diff-continue
