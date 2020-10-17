@@ -12,7 +12,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "MySQL",
-      "framework": "None",
+      "framework": "swoole",
       "language": "PHP",
       "flavor": "PHP7",
       "orm": "Raw",
