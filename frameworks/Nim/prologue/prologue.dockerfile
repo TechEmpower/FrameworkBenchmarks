@@ -1,4 +1,4 @@
-FROM nimlang/nim:1.14.0
+FROM nimlang/nim:latest
 
 ADD ./ /prologue
 WORKDIR /prologue
