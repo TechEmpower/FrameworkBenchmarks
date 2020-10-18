@@ -3,15 +3,11 @@
   "tests": [{
     "default": {
       "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/queries?queries=",
-      "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "Postgres",
+      "database": "None",
       "framework": "prologue",
       "language": "Nim",
       "flavor": "None",
