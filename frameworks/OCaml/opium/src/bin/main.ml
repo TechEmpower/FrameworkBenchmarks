@@ -1,8 +1,15 @@
 open Opium.Std
 
-let get_count_param req = match (int_of_string (Router.param req "count")) with
-  | x -> x
-  | exception _e -> 1
+module Tfb_headers = struct
+  let middleware =
+    let open Lwt.Syntax in
+    let filter handler req =
+      let+ res = handler req in
+      let headers = ["Server", "opium"; "Date", Opi.Time.now ()] in
+      Response.add_headers_or_replace headers res
+    in
+    Rock.Middleware.create ~name:"TFB Headers" ~filter
+end
 
 let main () =
   let port =
@@ -12,14 +19,14 @@ let main () =
   in
   let routes =
     [
-      "/plaintext", (fun _req -> Opi.Routes.plaintext ());
-      "/json", (fun _req -> Opi.Routes.json ());
-      "/db", (fun _req -> Opi.Routes.db ());
-      "/fortunes", (fun _req -> Opi.Routes.fortunes ());
-      "/queries/", (fun _req -> Opi.Routes.queries 1);
-      "/queries/:count", (fun req -> Opi.Routes.queries (get_count_param req));
-      "/updates/", (fun req -> Opi.Routes.updates 1);
-      "/updates/:count", (fun req -> Opi.Routes.updates (get_count_param req))
+      "/plaintext", Routes.plaintext;
+      "/json", Routes.json;
+      "/db", Routes.single_query;
+      "/fortunes", Routes.fortunes;
+      "/queries/", Routes.multiple_queries;
+      "/queries/:count", Routes.multiple_queries;
+      "/updates/", Routes.updates;
+      "/updates/:count", Routes.updates
     ]
   in
   let add_routes app = List.fold_left (fun app (route,handler) -> (get route handler) app) app routes in
@@ -28,7 +35,7 @@ let main () =
     |> App.cmd_name "Opium"
     |> App.port port
     |> middleware Middleware.content_length
-    |> middleware Tfb_headers.Middleware.m
+    |> middleware Tfb_headers.middleware
     |> add_routes in
 
   match App.run_command' app with

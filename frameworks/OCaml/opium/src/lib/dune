@@ -1,6 +1,6 @@
 (library
  (name opi)
- (libraries opium caqti caqti-driver-postgresql caqti-lwt tyxml lwt.unix
+ (libraries caqti caqti-driver-postgresql caqti-lwt tyxml lwt.unix
    ppx_rapper.runtime)
  (preprocess
   (pps ppx_rapper ppx_deriving_yojson)))
