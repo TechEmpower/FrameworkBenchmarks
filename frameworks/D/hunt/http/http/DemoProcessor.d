@@ -151,7 +151,7 @@ class DemoProcessor : HttpProcessor {
 
         private void respondSingleQuery() {
             int id = uniform(1, 10001);
-            string query = "SELECT randomNumber FROM world WHERE id = " ~ id.to!string;
+            string query = "SELECT id, randomNumber FROM world WHERE id = " ~ id.to!string;
             ResultSet rs = dbConnection.query(query);
 
             JSONValue js = JSONValue(["id" : JSONValue(id), "randomNumber"
@@ -169,7 +169,7 @@ class DemoProcessor : HttpProcessor {
             JSONValue[] arr = new JSONValue[queries];
             for (int i = 0; i < queries; i++) {
                 immutable id = uniform(1, 10001);
-                immutable query = "SELECT randomNumber FROM world WHERE id = " ~ id.to!string;
+                immutable query = "SELECT id, randomNumber FROM world WHERE id = " ~ id.to!string;
                 ResultSet rs = dbConnection.query(query);
 
                 arr[i] = JSONValue(["id" : JSONValue(id), "randomNumber"
@@ -226,7 +226,7 @@ class DemoProcessor : HttpProcessor {
             for (int i = 0; i < queries; i++) {
                 immutable id = uniform(1, 10001);
                 immutable idString = id.to!string;
-                immutable query = "SELECT randomNumber FROM world WHERE id = " ~ idString;
+                immutable query = "SELECT id, randomNumber FROM world WHERE id = " ~ idString;
                 ResultSet rs = dbConnection.query(query);
                 int randomNumber = to!int(rs.front()[0]);
                 debug tracef("id=%d, randomNumber=%d", id, randomNumber);

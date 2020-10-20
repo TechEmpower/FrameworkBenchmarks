@@ -113,7 +113,7 @@ $updates_postgres = function (int $queries = 0) use ($pool): string {
 
     $arr = [];
 
-    $db->us ??= $db->prepare('us', 'SELECT randomnumber FROM World WHERE id = $1');
+    $db->us ??= $db->prepare('us', 'SELECT id,randomnumber FROM World WHERE id = $1');
     $db->uu ??= $db->prepare('uu', 'UPDATE World SET randomnumber = $1 WHERE id = $2');
 
     while ($query_count--) {
@@ -186,7 +186,7 @@ $fortunes_mysql = function () use ($pool): string {
     $db = $pool->get();
 
     $fortune = [];
-    
+
     $db->fortune_test ??= $db->prepare('SELECT id, message FROM Fortune');
     $arr = $db->fortune_test->execute();
 
@@ -226,7 +226,7 @@ $updates_mysql = function (int $queries = 0) use ($pool): string {
     }
 
     $arr = [];
-    $db->updates_test_select ??= $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
+    $db->updates_test_select ??= $db->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
     $db->updates_test_update ??= $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
 
     while ($query_count--) {
@@ -318,7 +318,7 @@ class DatabasePool
     ];
 
     private $pool;
-    
+
     private $type;
 
     public function __construct($type)
@@ -326,7 +326,7 @@ class DatabasePool
         $this->server['host'] = \gethostbyname('tfb-database');
         $this->type = $type;
     }
-    
+
     public function init($capacity)
     {
         $this->pool=new \Swoole\Coroutine\Channel($capacity);
@@ -352,7 +352,7 @@ class DatabasePool
                 return $db;
             }
         }
-        
+
         return false;
     }
 
