@@ -3,7 +3,6 @@ using GenHTTP.Modules.Core;
 using GenHTTP.Modules.Webservices;
 
 using Benchmarks.Tests;
-using GenHTTP.Modules.Scriban;
 
 namespace Benchmarks
 {
@@ -19,7 +18,8 @@ namespace Benchmarks
                               .Add<JsonResource>("json")
                               .Add<DbResource>("db")
                               .Add<QueryResource>("queries")
-                              .Add<UpdateResource>("updates");
+                              .Add<UpdateResource>("updates")
+                              .Add<CacheResource>("cached-worlds");
 
             return Host.Create()
                        .Handler(tests)
