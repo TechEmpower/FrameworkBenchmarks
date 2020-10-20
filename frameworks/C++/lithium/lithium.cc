@@ -50,6 +50,7 @@ void siege(int port) {
   http_benchmark(sockets, 2, 1000, "GET /queries?N=20 HTTP/1.1\r\n\r\n");
   http_benchmark(sockets, 2, 1000, "GET /fortunes HTTP/1.1\r\n\r\n");
   http_benchmark(sockets, 2, 1000, "GET /updates?N=20 HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /cached-world?N=100 HTTP/1.1\r\n\r\n");
   http_benchmark_close(sockets);
 }
 #endif
@@ -162,7 +163,6 @@ int main(int argc, char* argv[]) {
   });
 
   my_api.get("/cached-worlds") = [&](http_request& request, http_response& response) {
-    sql_db.max_async_connections_per_thread_ = queries_nconn;
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
     int N = atoi(N_str.c_str());
     
