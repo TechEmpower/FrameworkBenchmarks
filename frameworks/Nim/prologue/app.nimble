@@ -5,6 +5,7 @@ author        = "Rishav Sharan"
 description   = "Techempower Nim-Prologue benchmark"
 license       = "MIT"
 bin           = @["app"]
+skipExt       = @["nim"]
 
 # Dependencies
 
