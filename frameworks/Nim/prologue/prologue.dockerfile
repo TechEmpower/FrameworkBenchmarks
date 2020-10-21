@@ -1,4 +1,4 @@
-FROM nimlang/nim:1.0.10
+FROM nimlang/nim:1.4.0
 
 ADD ./ /prologue
 
