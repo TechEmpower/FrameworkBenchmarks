@@ -8,5 +8,5 @@ bin           = @["app"]
 
 # Dependencies
 
-requires "nim >= 1.4.0"
+requires "nim >= 1.0.10"
 requires "prologue >= 0.4.0"
