@@ -1,23 +1,16 @@
 let random_int () = Random.int 10000 + 1
 
-let plaintext () =
-  let response = Opium.Std.Response.of_plain_text "Hello, World!" in
-  Lwt.return response
+let plaintext () = "Hello, World!" 
 
-let json () =
-  let json = Models.World.message_response_to_yojson { message="Hello, World!" } in
-  let response = Opium.Std.Response.of_json json in
-  Lwt.return response
+let json () = Models.World.message_response_to_yojson { message="Hello, World!" }
 
-let db () =
+let single_query () =
   let open Lwt.Syntax in
   let id = random_int () in
   let+ result = Db.Get.get_world id in
   match result with
   | Error _e -> failwith "failed db"
-  | Ok world -> 
-    let json = Models.World.to_yojson world in
-    Opium.Std.Response.of_json json
+  | Ok world -> Models.World.to_yojson world
 
 let get_worlds count =
   let count = match count with
@@ -27,18 +20,17 @@ let get_worlds count =
   in
   let query_ids = List.init count (fun _ -> random_int ()) in
   let open Lwt.Syntax in
-  List.map (fun id ->
+  query_ids |> List.map (fun id ->
       let+ result = Db.Get.get_world id in
       match result with
       | Error _ -> failwith "failed queries"
       | Ok w -> w
-    ) query_ids
+    )
 
-let queries count =
+let multiple_queries count =
   let open Lwt.Syntax in
   let+ worlds = Lwt.all (get_worlds count) in
-  let json = Models.World.list_response_to_yojson worlds in
-  Opium.Std.Response.of_json json
+  Models.World.list_response_to_yojson worlds
 
 let updates count =
   let open Lwt.Syntax in
@@ -52,8 +44,7 @@ let updates count =
       | Ok w -> {world with randomNumber=updated_random_number}
     ) in
   let+ updated_worlds = Lwt.all results in
-  let json = Models.World.list_response_to_yojson updated_worlds in
-  Opium.Std.Response.of_json json
+  Models.World.list_response_to_yojson updated_worlds
 
 let fortunes () =
   let open Lwt.Syntax in
@@ -64,5 +55,5 @@ let fortunes () =
       let x = Models.Fortune.{id=0;message= "Additional fortune added at request time."} in
       x::xs |> List.sort Models.Fortune.compare
   in
-  Opium.Std.Response.of_html ~indent:false (Views.fortunes_page fortunes)
+  Views.fortunes_page fortunes
 

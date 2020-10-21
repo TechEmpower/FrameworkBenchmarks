@@ -10,12 +10,19 @@
 * [FORTUNES](src/lib/routes.ml#L58-L67)
 
 ## Important Libraries
+* [Lwt](https://github.com/ocsigen/lwt)
 * [Opium](https://github.com/rgrinberg/opium)
 * [Httpaf](https://github.com/inhabitedtype/httpaf)
 * [Caqti](https://github.com/paurkedal/ocaml-caqti)
-* [Lwt](https://github.com/ocsigen/lwt)
-* [Yojson](https://github.com/ocaml-community/yojson)
 * [Ppx_rapper](https://github.com/roddyyaga/ppx_rapper)
+* [Yojson](https://github.com/ocaml-community/yojson)
+* [Ppx_deriving_yojson](https://github.com/ocaml-ppx/ppx_deriving_yojson)
+* [Tyxml](https://github.com/ocsigen/tyxml)
+
+## Structure
+`lib/` contains most of the logc.
+It doesn't have a dependency on any web server to make it more portable and allow easier addition to new webservers.
+Feel free to copy paste when adding additional servers.
 
 ## Test URLs
 
