@@ -35,10 +35,10 @@ namespace Benchmarks.Tests
 
         }
 
-        [Method(":queries")]
+        [ResourceMethod(":queries")]
         public List<World> GetWorldsFromPath(string queries) => GetWorlds(queries);
 
-        [Method]
+        [ResourceMethod]
         public List<World> GetWorlds(string queries)
         {
             var count = 1;

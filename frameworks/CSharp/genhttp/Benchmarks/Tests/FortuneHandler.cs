@@ -1,13 +1,14 @@
-﻿using Benchmarks.Model;
+﻿using System.Collections.Generic;
+using System.Linq;
+
 using GenHTTP.Api.Content;
 using GenHTTP.Api.Content.Templating;
 using GenHTTP.Api.Protocol;
-using GenHTTP.Modules.Core;
+
+using GenHTTP.Modules.IO;
 using GenHTTP.Modules.Scriban;
-using Npgsql;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
+using Benchmarks.Model;
 
 namespace Benchmarks.Tests
 {
