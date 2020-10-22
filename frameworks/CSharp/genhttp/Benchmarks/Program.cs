@@ -1,5 +1,7 @@
-﻿using GenHTTP.Core;
-using GenHTTP.Modules.Core;
+﻿using GenHTTP.Engine;
+
+using GenHTTP.Modules.IO;
+using GenHTTP.Modules.Layouting;
 using GenHTTP.Modules.Webservices;
 
 using Benchmarks.Tests;
@@ -15,11 +17,11 @@ namespace Benchmarks
             var tests = Layout.Create()
                               .Add("plaintext", Content.From("Hello, World!"))
                               .Add("fortunes", new FortuneHandlerBuilder())
-                              .Add<JsonResource>("json")
-                              .Add<DbResource>("db")
-                              .Add<QueryResource>("queries")
-                              .Add<UpdateResource>("updates")
-                              .Add<CacheResource>("cached-worlds");
+                              .AddService<JsonResource>("json")
+                              .AddService<DbResource>("db")
+                              .AddService<QueryResource>("queries")
+                              .AddService<UpdateResource>("updates")
+                              .AddService<CacheResource>("cached-worlds");
 
             return Host.Create()
                        .Handler(tests)
