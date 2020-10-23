@@ -13,7 +13,7 @@ class Main
 {
     public function index()
     {
-        echo 'good job ,index';
+        echo 'hello! duckphp: '. DATE(DATE_ATOM);
     }
     // change if  you can
     public function plaintext()

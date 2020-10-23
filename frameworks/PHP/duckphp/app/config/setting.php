@@ -5,7 +5,7 @@
  */
 
 return [
-    'duckphp_is_debug' => true,
+    'duckphp_is_debug' => false, //er ,don't turn on the debug again
     'duckphp_platform' => 'default',
     'database' => [
         //'dsn' => 'mysql:host=172.19.0.3;dbname=hello_world;',

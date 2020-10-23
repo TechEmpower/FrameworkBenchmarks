@@ -31,6 +31,7 @@ class WorldModel extends BaseModel
     }
     public function multiUpdate($query_count)
     {
+        // port from php
         // For each query, store the result set values in the response array
         $arr=[];
         while ($query_count--) {
