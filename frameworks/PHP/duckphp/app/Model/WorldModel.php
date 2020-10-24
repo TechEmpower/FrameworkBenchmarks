@@ -36,8 +36,14 @@ class WorldModel extends BaseModel
         $arr=[];
         while ($query_count--) {
             $id = mt_rand(1, 10000);
-            $sql='SELECT randomNumber FROM world WHERE id=?';
-            $randomNumber = M::DB()->fetchColumn($sql,$id);
+            
+            
+            $sql = 'SELECT id, randomNumber FROM world WHERE id=?';
+            $row = M::DB()->fetch($sql,$id);
+            if (empty($row)) {
+                continue;
+            }
+            $randomNumber = $row['randomNumber'];
 
             // Store result in array.
             $world = ['id' => $id, 'randomNumber' => $randomNumber];
