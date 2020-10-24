@@ -38,7 +38,7 @@ class WorldModel extends BaseModel
             $id = mt_rand(1, 10000);
             
             
-            $sql = 'SELECT id, randomNumber FROM world WHERE id=?';
+            $sql = 'SELECT randomNumber, id FROM world WHERE id=?';
             $row = M::DB()->fetch($sql,$id);
             if (empty($row)) {
                 continue;
