@@ -5,12 +5,12 @@ RUN apt-get -yqq install libgc-dev libunwind-dev
 
 WORKDIR /opt
 
-RUN wget -q https://opendylan.org/downloads/opendylan/2019.1/opendylan-2019.1-x86_64-linux.tar.bz2
-RUN tar xjf opendylan-2019.1-x86_64-linux.tar.bz2
+RUN wget -q https://github.com/dylan-lang/opendylan/releases/download/v2020.1.0/opendylan-2020.1-x86_64-linux.tar.bz2
+RUN tar xjf opendylan-2020.1-x86_64-linux.tar.bz2
 
 RUN git clone --recursive https://github.com/dylan-lang/http
 
-ENV PATH /opt/opendylan-2019.1/bin:$PATH
+ENV PATH /opt/opendylan-2020.1/bin:$PATH
 
 WORKDIR /
 
