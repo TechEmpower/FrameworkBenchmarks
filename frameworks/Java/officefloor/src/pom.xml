@@ -34,7 +34,7 @@
 			<dependency>
 				<groupId>net.officefloor</groupId>
 				<artifactId>bom</artifactId>
-				<version>3.22.0</version>
+				<version>3.27.0</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -64,7 +64,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.2.2</version>
+					<version>3.2.4</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
