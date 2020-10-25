@@ -12,3 +12,7 @@ The tests were run with:
 ### Plaintext Test
 
 http://localhost:8080/plaintext
+
+### JSON Test
+
+http://localhost:8080/json
