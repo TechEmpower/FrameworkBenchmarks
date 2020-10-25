@@ -82,6 +82,10 @@ class TeBkUmMgrRouter : public Router {
 	static const std::string HELLO_WORLD;
 	static std::string WORLD;
 	static std::string FORTUNE;
+
+	static std::string APP_NAME;
+	static std::string TPE_FN_NAME;
+
 	bool strToNum(const char* str, int len, int& ret);
 
 	void db(TeBkUmMgrWorld&);
@@ -100,10 +104,14 @@ class TeBkUmMgrRouter : public Router {
 	void getContext(HttpRequest* request, Context* context);
 #ifdef INC_SDORM_MONGO
 	static void getContextUtil(void* ctx, int rn, std::vector<MgRawRes>& data);
+	MongoDBRawDataSourceImpl* sqli;
+	MongoDBRawDataSourceImpl* getDb();
 #endif
 public:
+	TeBkUmMgrRouter();
+	virtual ~TeBkUmMgrRouter();
 	void updateCache();
-	void route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib);
+	bool route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib, SocketInterface* sif);
 };
 
 #endif /* WEB_TE_BENCHMARK_UM_INCLUDE_TeBkUmMgr_H_ */

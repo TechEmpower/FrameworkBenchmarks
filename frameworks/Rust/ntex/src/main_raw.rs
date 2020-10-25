@@ -1,5 +1,5 @@
 #[global_allocator]
-static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::future::Future;
 use std::io;
@@ -87,7 +87,7 @@ impl Future for App {
                 unsafe { this.write_buf.set_len(0) }
             } else if written > 0 {
                 this.write_pos = written;
-                return Poll::Pending
+                return Poll::Pending;
             }
         }
 

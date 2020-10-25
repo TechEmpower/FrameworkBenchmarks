@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 // Database connection
 // http://www.php.net/manual/en/ref.pdo-mysql.php
-$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', 
+$pdo = new PDO('mysql:host=tfb-database;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass',
     [PDO::ATTR_PERSISTENT => true,
     PDO::ATTR_EMULATE_PREPARES => false]
 );
@@ -14,7 +14,7 @@ if ($_GET['queries'] > 1) {
 }
 
 // Define query
-$statement = $pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
+$statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
 $updateStatement = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
 
 // For each query, store the result set values in the response array

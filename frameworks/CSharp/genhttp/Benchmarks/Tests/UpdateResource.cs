@@ -1,8 +1,10 @@
-﻿using Benchmarks.Model;
-using GenHTTP.Modules.Webservices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Benchmarks.Model;
+
+using GenHTTP.Modules.Webservices;
 
 namespace Benchmarks.Tests
 {
@@ -11,10 +13,10 @@ namespace Benchmarks.Tests
     {
         private static Random _Random = new Random();
 
-        [Method(":queries")]
+        [ResourceMethod(":queries")]
         public List<World> UpdateWorldsFromPath(string queries) => UpdateWorlds(queries);
 
-        [Method]
+        [ResourceMethod]
         public List<World> UpdateWorlds(string queries)
         {
             var count = 1;

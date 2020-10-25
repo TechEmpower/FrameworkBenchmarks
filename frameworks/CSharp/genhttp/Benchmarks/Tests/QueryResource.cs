@@ -13,10 +13,10 @@ namespace Benchmarks.Tests
     {
         private static Random _Random = new Random();
 
-        [Method(":queries")]
+        [ResourceMethod(":queries")]
         public List<World> GetWorldsFromPath(string queries) => GetWorlds(queries);
 
-        [Method]
+        [ResourceMethod]
         public List<World> GetWorlds(string queries)
         {
             var count = 1;

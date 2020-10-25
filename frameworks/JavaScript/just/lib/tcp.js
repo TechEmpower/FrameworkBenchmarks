@@ -119,6 +119,9 @@ function createClient (address = '127.0.0.1', port = 3000) {
     if (!sock.connected) {
       net.setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, 0)
       net.setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, 0)
+      let flags = sys.fcntl(fd, sys.F_GETFL, 0)
+      flags |= O_NONBLOCK
+      sys.fcntl(fd, sys.F_SETFL, flags)
       loop.update(fd, readableMask)
       buffer = sock.onConnect(null, sock)
       buffer.offset = 0

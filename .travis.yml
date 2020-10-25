@@ -40,6 +40,7 @@ env:
     - 'TESTDIR="Go/evio Go/fasthttp Go/go-std Go/atreugo Go/gramework"'
     - 'TESTDIR="Go/gearbox Go/goframe Go/clevergo"'
     - "TESTLANG=Groovy"
+    - "TESTDIR=Haskell/ihp"
     - "TESTDIR=Haskell/snap"
     - "TESTDIR=Haskell/yesod"
     - "TESTDIR=Haskell/servant"
@@ -62,7 +63,7 @@ env:
     - "TESTLANG=Lua"
     - "TESTLANG=Mumps"
     - "TESTLANG=Nim"
-    - 'TESTDIR="Nim/httpbeast Nim/jester Nim/basolato"'
+    - "TESTLANG=OCaml"
     - "TESTLANG=Perl"
     - 'TESTDIR="PHP/php"'
     - 'TESTDIR="PHP/comet PHP/kumbiaphp PHP/workerman PHP/webman"'
@@ -91,6 +92,7 @@ env:
     - "TESTLANG=V"
     - "TESTLANG=Vala"
     - "TESTLANG=VB"
+    - "TESTLANG=Mumps"
 
 before_script:
   # Runs travis_diff, printing the output to the terminal, and searches for travis-diff-continue

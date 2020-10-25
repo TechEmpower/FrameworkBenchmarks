@@ -1,0 +1,29 @@
+(lang dune 2.5)
+
+(name morph-tfb)
+
+(generate_opam_files true)
+
+(authors "Ulrik Strid")
+
+(maintainers "ulrik.strid@outlook.com")
+
+(package
+ (name morph-tfb)
+ (synopsis "Framework Benchmark for Morph")
+ (depends
+  (ocaml
+   (>= 4.11.0))
+  archi
+  archi-lwt
+  pgx
+  pgx_lwt_unix
+  dune
+  fmt
+  logs
+  lwt
+  routes
+  uri
+  yojson
+  morph
+  piaf))

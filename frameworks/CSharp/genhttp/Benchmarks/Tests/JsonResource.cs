@@ -13,7 +13,7 @@ namespace Benchmarks.Tests
     public class JsonResource
     {
 
-        [Method]
+        [ResourceMethod]
         public JsonResult GetMessage() => new JsonResult() { Message = "Hello, World!" };
 
     }
