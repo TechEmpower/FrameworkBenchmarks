@@ -18,7 +18,7 @@ if (env('APP_SWOOLE', false)) {
 				'daemonize' => env('SWOOLE_HTTP_DAEMONIZE', 0),
 				// 'handle_static_files' => env('SWOOLE_HTTP_STATIC', 0),
 				// 'public_path' => storage_path('app/public'),
-				'ob_output' => env('SWOOLE_HTTP_OB_OUTPUT', 0),
+				// 'ob_output' => env('SWOOLE_HTTP_OB_OUTPUT', 0),
 				// Normally this value should be 1~4 times lager according to your cpu cores
 				'reactor_num' => env('SWOOLE_HTTP_REACTOR_NUM', swoole_cpu_num() * 2),
 				'worker_num' => env('SWOOLE_HTTP_WORKER_NUM', swoole_cpu_num() * 2),
