@@ -4,12 +4,12 @@ This is the [Gemini](https://github.com/TechEmpower/gemini) portion of a [benchm
 
 ### JSON Encoding Test
 
-* [JSON test source](src/main/java/hello/home/handler/HelloHandler.java)
+* [JSON test source](frameworks/Java/gemini/servlet/src/main/java/hello/home/handler/HelloHandler.java)
 
 ### Data-Store/Database Mapping Test
 
-* [DB test controller](src/main/java/hello/home/handler/HelloHandler.java)
-* [DB test model](src/main/java/hello/home/entity/World.java)
+* [DB test controller](frameworks/Java/gemini/servlet/src/main/java/hello/home/handler/HelloHandler.java)
+* [DB test model](frameworks/Java/gemini/servlet/src/main/java/hello/home/entity/World.java)
 
 
 ## Infrastructure Software Versions

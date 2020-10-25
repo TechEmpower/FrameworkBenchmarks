@@ -21,7 +21,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Webware",
-      "notes": "CPython 2.7"
+      "notes": "CPython 2.7",
+      "tags": ["broken"]
     }
   }]
 }

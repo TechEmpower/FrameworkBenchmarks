@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.IO.Pipelines;
+using System.Runtime.InteropServices;
 
 namespace PlatformBenchmarks
 {
@@ -16,36 +17,23 @@ namespace PlatformBenchmarks
         {
             builder.UseConfiguration(configuration);
 
-            // Handle the transport type
-            var webHost = builder.GetSetting("KestrelTransport");
-
-            // Handle the thread count
-            var threadCountRaw = builder.GetSetting("threadCount");
-            int? theadCount = null;
-
-            if (!string.IsNullOrEmpty(threadCountRaw) &&
-                int.TryParse(threadCountRaw, out var value))
+            builder.UseSockets(options =>
             {
-                theadCount = value;
-            }
-
-            if (string.Equals(webHost, "Sockets", StringComparison.OrdinalIgnoreCase))
-            {
-                builder.UseSockets(options =>
+                if (int.TryParse(builder.GetSetting("threadCount"), out int threadCount))
                 {
-                    if (theadCount.HasValue)
-                    {
-                        options.IOQueueCount = theadCount.Value;
-                    }
-                });
-            }
-            else if (string.Equals(webHost, "LinuxTransport", StringComparison.OrdinalIgnoreCase))
-            {
-                builder.UseLinuxTransport(options =>
+                    options.IOQueueCount = threadCount;
+                }
+
+#if NET5_0
+                options.WaitForDataBeforeAllocatingBuffer = false;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
-                    options.ApplicationSchedulingMode = PipeScheduler.Inline;
-                });
-            }
+                    options.UnsafePreferInlineScheduling = Environment.GetEnvironmentVariable("DOTNET_SYSTEM_NET_SOCKETS_INLINE_COMPLETIONS") == "1";
+                }
+
+                Console.WriteLine($"Options: WaitForData={options.WaitForDataBeforeAllocatingBuffer}, PreferInlineScheduling={options.UnsafePreferInlineScheduling}, IOQueue={options.IOQueueCount}");
+#endif
+            });
 
             return builder;
         }

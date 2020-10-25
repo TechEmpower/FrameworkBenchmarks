@@ -11,6 +11,7 @@ an experimental high-performance web server.
 * [Plain text](src/techempower.c)
 * [DB](src/techempower.c)
 * [Query](src/techempower.c)
+* [Cached Queries](src/techempower.c)
 * [Fortunes](src/techempower.c)
 
 ## Test URLs
@@ -29,6 +30,10 @@ http://localhost:8080/db
 ### Query
 
 http://localhost:8080/query?queries=
+
+### Cached Queries
+
+http://localhost:8080/cached-queries?count=
 
 ### Fortunes
 

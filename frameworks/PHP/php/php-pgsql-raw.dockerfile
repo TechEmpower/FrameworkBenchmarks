@@ -1,11 +1,11 @@
-FROM ubuntu:19.10
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt update -yqq && apt-get install -yqq software-properties-common > /dev/null
+RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
-    apt install -yqq nginx git unzip php7.4 php7.4-common php7.4-cli php7.4-fpm php7.4-pgsql  > /dev/null
+    apt-get install -yqq nginx git unzip php7.4 php7.4-common php7.4-cli php7.4-fpm php7.4-pgsql  > /dev/null
 
 COPY deploy/conf/* /etc/php/7.4/fpm/
 

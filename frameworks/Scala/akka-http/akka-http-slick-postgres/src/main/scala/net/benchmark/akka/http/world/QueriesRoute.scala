@@ -33,7 +33,7 @@ class QueriesRoute(wr: WorldRepository) {
   @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
   def route(): Route = {
     path("queries") {
-      parameter('queries.?) { pn: Option[String] =>
+      parameter("queries".?) { pn: Option[String] =>
         complete {
           source(parse(pn))
         }

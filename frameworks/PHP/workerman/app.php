@@ -12,7 +12,7 @@ function init()
     );
     $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
     $fortune   = $pdo->prepare('SELECT id,message FROM Fortune');
-    $random    = $pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
+    $random    = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
     $update    = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
 }
 
@@ -34,7 +34,7 @@ function router(Request $request)
         case '/db':
             return db();
 
-        case '/fortune':
+        case '/fortunes':
             // By default use 'Content-Type: text/html; charset=utf-8';
             return fortune();
 
@@ -137,7 +137,6 @@ function fortune()
 
     return new Response(200, [
         'Date'         => Header::$date
-    ], '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
-        .$html.
-        '</table></body></html>');
+    ], "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>$html</table></body></html>"
+    );
 }

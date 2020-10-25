@@ -1,0 +1,13 @@
+(executable
+ (name tfb)
+ (public_name tfb)
+ (link_flags -ccopt -lpq -cclib -lpgport -cclib -lpgcommon -ccopt
+   %{env:LDFLAGS=-lpq} -cclib %{env:LIBEV_LIBS=-lev})
+ (libraries caqti caqti-lwt caqti-driver-postgresql lwt logs logs.fmt fmt.tty
+   morph archi archi-lwt routes yojson ptime ptime.clock ptime.clock.os))
+
+(env
+ (docker
+  (flags
+   (:standard -ccopt -static -ccopt %{env:CFLAGS=/lib} -cclib
+     %{env:LDFLAGS=-lpq} -cclib -L%{env:LD_LIBRARY_PATH=/lib}))))

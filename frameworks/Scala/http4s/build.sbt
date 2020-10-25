@@ -2,35 +2,42 @@ name := "http4s"
 
 version := "1.0"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.13.3"
 
 scalacOptions ++= Seq(
   "-deprecation",
-  "-encoding", "UTF-8",
+  "-encoding",
+  "UTF-8",
   "-feature",
   "-unchecked",
   "-language:reflectiveCalls",
-  "-Yno-adapted-args",
-  "-Ypartial-unification",
   "-Ywarn-numeric-widen",
-  "-Xfuture",
+  "-target:11",
   "-Xlint"
 )
 
 enablePlugins(SbtTwirl)
 
-TwirlKeys.templateImports += "http4s.techempower.benchmark._"
+val http4sVersion = "0.21.7"
 
-val http4sVersion = "0.20.3"
-val doobieVersion = "0.7.0"
+assemblyMergeStrategy in assembly := {
+  case PathList(xs @ _*) if xs.last == "io.netty.versions.properties" => MergeStrategy.rename
+  case other => (assemblyMergeStrategy in assembly).value(other)
+}
 
 libraryDependencies ++= Seq(
   "org.http4s" %% "http4s-blaze-server" % http4sVersion,
   "org.http4s" %% "http4s-dsl" % http4sVersion,
   "org.http4s" %% "http4s-twirl" % http4sVersion,
-  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "0.51.3",
-  "org.tpolecat" %% "doobie-core" % doobieVersion,
-  "org.tpolecat" %% "doobie-hikari" % doobieVersion,
-  "org.postgresql" % "postgresql" % "42.2.6",
+  "org.http4s" %% "http4s-circe" % http4sVersion,
+  // Optional for auto-derivation of JSON codecs
+  "io.circe" %% "circe-generic" % "0.13.0",
+  "org.typelevel" %% "cats-effect" % "2.2.0",
+  "co.fs2" %% "fs2-core" % "2.4.4",
+  "co.fs2" %% "fs2-io" % "2.4.4",
+  "io.getquill" %% "quill-jasync-postgres" % "3.5.2",
+  "io.getquill" %% "quill-jasync" % "3.5.2",
   "ch.qos.logback" % "logback-classic" % "1.2.3"
 )
+
+addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1")

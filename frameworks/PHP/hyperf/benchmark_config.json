@@ -23,7 +23,8 @@
                 "database_os": "Linux",
                 "display_name": "Hyperf",
                 "notes": "",
-                "versus": "swoole"
+                "versus": "swoole",
+                "tags": ["broken"]
             },
             "raw": {
                 "db_url": "/raw-db",
@@ -43,7 +44,8 @@
                 "database_os": "Linux",
                 "display_name": "Hyperf",
                 "notes": "",
-                "versus": "swoole"
+                "versus": "swoole",
+                "tags": ["broken"]
             },
             "micro": {
                 "fortune_url": "/micro-fortunes",
@@ -61,7 +63,8 @@
                 "database_os": "Linux",
                 "display_name": "Hyperf",
                 "notes": "",
-                "versus": "swoole"
+                "versus": "swoole",
+                "tags": ["broken"]
             }
         }
     ]

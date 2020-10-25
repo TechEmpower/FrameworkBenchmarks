@@ -8,13 +8,13 @@
   <groupId>com.techempower</groupId>
   <version>2.0</version>
 
-  <name>jooby 2.x</name>
+  <name>jooby</name>
 
   <properties>
-    <jooby.version>2.6.0</jooby.version>
-    <!-- downgrade netty and make pg-client happy -->
-    <netty.version>4.1.34.Final</netty.version>
-    <postgresql.version>42.2.5</postgresql.version>
+    <jooby.version>2.8.10</jooby.version>
+    <netty.version>4.1.49.Final</netty.version>
+    <dsl-json.version>1.9.5</dsl-json.version>
+    <postgresql.version>42.2.13</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
@@ -27,12 +27,6 @@
     <dependency>
       <groupId>jakarta.ws.rs</groupId>
       <artifactId>jakarta.ws.rs-api</artifactId>
-    </dependency>
-
-    <!-- jackson -->
-    <dependency>
-      <groupId>io.jooby</groupId>
-      <artifactId>jooby-jackson</artifactId>
     </dependency>
 
     <!-- jdbc -->
@@ -67,9 +61,16 @@
     </dependency>
 
     <dependency>
-      <groupId>io.reactiverse</groupId>
-      <artifactId>reactive-pg-client</artifactId>
-      <version>0.11.4</version>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-pg-client</artifactId>
+      <version>3.9.2</version>
+    </dependency>
+
+    <!-- json -->
+    <dependency>
+      <groupId>com.dslplatform</groupId>
+      <artifactId>dsl-json-java8</artifactId>
+      <version>${dsl-json.version}</version>
     </dependency>
   </dependencies>
 
@@ -79,7 +80,7 @@
       <plugin>
         <groupId>com.fizzed</groupId>
         <artifactId>rocker-maven-plugin</artifactId>
-        <version>1.2.3</version>
+        <version>1.3.0</version>
         <executions>
           <execution>
             <id>generate-rocker-templates</id>
@@ -106,6 +107,11 @@
               <artifactId>jooby-apt</artifactId>
               <version>${jooby.version}</version>
             </path>
+            <path>
+              <groupId>com.dslplatform</groupId>
+              <artifactId>dsl-json-java8</artifactId>
+              <version>${dsl-json.version}</version>
+            </path>
           </annotationProcessorPaths>
         </configuration>
       </plugin>
@@ -113,6 +119,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.4</version>
         <executions>
           <execution>
             <id>uber-jar</id>
@@ -165,6 +172,12 @@
       <dependencies>
         <dependency>
           <groupId>io.netty</groupId>
+          <artifactId>netty-common</artifactId>
+          <version>${netty.version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>io.netty</groupId>
           <artifactId>netty-buffer</artifactId>
           <version>${netty.version}</version>
         </dependency>
@@ -178,6 +191,12 @@
         <dependency>
           <groupId>io.netty</groupId>
           <artifactId>netty-codec-http</artifactId>
+          <version>${netty.version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>io.netty</groupId>
+          <artifactId>netty-transport</artifactId>
           <version>${netty.version}</version>
         </dependency>
 

@@ -6,6 +6,7 @@
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
+        "cached_query_url": "/cached-queries?count=",
         "plaintext_url": "/plaintext",
         "fortune_url": "/fortunes",
         "port": 8080,

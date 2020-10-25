@@ -245,7 +245,7 @@ impl HttpService for Techempower {
                 rsp.header("Content-Type: application/json");
                 serde_json::to_writer(BodyWriter(rsp.body_mut()), &world)?;
             }
-            "/fortune" => {
+            "/fortunes" => {
                 let fortunes = self.db.tell_fortune().unwrap();
                 rsp.header("Content-Type: text/html; charset=utf-8");
                 write!(rsp.body_mut(), "{}", FortunesTemplate { fortunes }).unwrap();

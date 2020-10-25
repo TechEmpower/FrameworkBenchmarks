@@ -17,7 +17,7 @@ from apidaora.method import MethodType
 logger = getLogger(__name__)
 
 
-READ_ROW_SQL = 'SELECT "randomnumber" FROM "world" WHERE id = $1'
+READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 READ_ROW_SQL_TO_UPDATE = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
@@ -61,11 +61,11 @@ loop = asyncio.get_event_loop()
 loop.run_until_complete(setup_database())
 
 
-def json_serialization(path_args, query_dict, headers, body):
+def json_serialization(request):
     return JSON_RESPONSE, orjson.dumps({'message': 'Hello, world!'})
 
 
-async def single_database_query(path_args, query_dict, headers, body):
+async def single_database_query(request):
     row_id = randint(1, 10000)
 
     async with connection_pool.acquire() as connection:
@@ -76,8 +76,8 @@ async def single_database_query(path_args, query_dict, headers, body):
     )
 
 
-async def multiple_database_queries(path_args, query_dict, headers, body):
-    num_queries = get_num_queries(query_dict.get('queries', 1))
+async def multiple_database_queries(request):
+    num_queries = get_num_queries(request.query_dict.get('queries', 1))
     row_ids = [randint(1, 10000) for _ in range(num_queries)]
     worlds = []
 
@@ -95,7 +95,7 @@ async def multiple_database_queries(path_args, query_dict, headers, body):
     return JSON_RESPONSE, orjson.dumps(worlds)
 
 
-async def fortunes(path_args, query_dict, headers, body):
+async def fortunes(request):
     async with connection_pool.acquire() as connection:
         fortunes = await connection.fetch('SELECT * FROM Fortune')
 
@@ -105,10 +105,10 @@ async def fortunes(path_args, query_dict, headers, body):
     return HTML_RESPONSE, content
 
 
-async def database_updates(path_args, query_dict, headers, body):
+async def database_updates(request):
     worlds = []
     updates = set()
-    queries = query_dict.get('queries', 1)
+    queries = request.query_dict.get('queries', 1)
 
     async with connection_pool.acquire() as connection:
         statement = await connection.prepare(READ_ROW_SQL_TO_UPDATE)
@@ -127,7 +127,7 @@ async def database_updates(path_args, query_dict, headers, body):
     return JSON_RESPONSE, orjson.dumps(worlds)
 
 
-def plaintext(path_args, query_dict, headers, body):
+def plaintext(request):
     return PLAINTEXT_RESPONSE, b'Hello, world!'
 
 

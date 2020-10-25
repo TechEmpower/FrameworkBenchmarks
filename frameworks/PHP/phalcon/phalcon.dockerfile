@@ -1,4 +1,4 @@
-FROM ubuntu:19.10
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -23,4 +23,4 @@ RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --i
 RUN chmod -R 777 app
 
 CMD service php7.4-fpm start && \
-    nginx -c /phalcon/deploy/nginx.conf -g "daemon off;"
+    nginx -c /phalcon/deploy/nginx.conf

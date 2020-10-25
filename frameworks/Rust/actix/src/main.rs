@@ -1,9 +1,6 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-#[macro_use]
-extern crate serde_derive;
-
 use actix_http::{HttpService, KeepAlive};
 use actix_service::map_config;
 use actix_web::dev::{AppConfig, Body, Server};
@@ -11,16 +8,22 @@ use actix_web::http::header::{CONTENT_TYPE, SERVER};
 use actix_web::http::{HeaderValue, StatusCode};
 use actix_web::{web, App, HttpResponse};
 use bytes::{Bytes, BytesMut};
+use simd_json_derive::Serialize;
 
 mod utils;
-use utils::{Message, Writer, SIZE};
+use utils::{Writer, SIZE};
+
+#[derive(Serialize)]
+pub struct Message {
+    pub message: &'static str,
+}
 
 async fn json() -> HttpResponse {
     let message = Message {
         message: "Hello, World!",
     };
     let mut body = BytesMut::with_capacity(SIZE);
-    serde_json::to_writer(Writer(&mut body), &message).unwrap();
+    message.json_write(&mut Writer(&mut body)).unwrap();
 
     let mut res = HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
     res.headers_mut()
@@ -42,7 +45,7 @@ async fn plaintext() -> HttpResponse {
     res
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("Started http server: 127.0.0.1:8080");
 
@@ -55,8 +58,8 @@ async fn main() -> std::io::Result<()> {
                 .client_timeout(0)
                 .h1(map_config(
                     App::new()
-                        .service(web::resource("/j").to(json))
-                        .service(web::resource("/p").to(plaintext)),
+                        .service(web::resource("/json").to(json))
+                        .service(web::resource("/plaintext").to(plaintext)),
                     |_| AppConfig::default(),
                 ))
                 .tcp()

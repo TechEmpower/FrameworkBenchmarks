@@ -42,7 +42,8 @@
       "database_os": "Linux",
       "display_name": "phalcon",
       "notes": "",
-      "versus": "php"
+      "versus": "php",
+      "tags": ["broken"]
     },
     "micro": {
       "json_url": "/json",

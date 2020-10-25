@@ -1,0 +1,61 @@
+{
+  "framework": "ntex",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "ntex",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "ntex",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ntex",
+      "notes": "",
+      "versus": ""
+    },
+    "db": {
+      "fortune_url": "/fortunes",
+      "db_url": "/db",
+      "query_url": "/query?q=",
+      "update_url": "/update?q=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "ntex",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "ntex",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ntex [db]",
+      "notes": "",
+      "versus": ""
+    },
+    "raw": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "ntex",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "ntex",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ntex [raw]",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}

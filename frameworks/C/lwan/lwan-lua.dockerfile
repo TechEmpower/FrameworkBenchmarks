@@ -1,7 +1,7 @@
 FROM ubuntu:19.10
 
-RUN apt update -yqq && \
-	apt install -yqq \
+RUN apt-get update -yqq && \
+	apt-get install -yqq \
 		git pkg-config build-essential cmake zlib1g-dev \
 		libsqlite3-dev libmariadbclient-dev wget
 
@@ -18,7 +18,7 @@ RUN mkdir luajit && \
     cd luajit && \
     PREFIX=/usr CFLAGS="-O3 -mtune=native -march=native -flto -ffat-lto-objects" make -j install
 
-RUN wget https://github.com/lpereira/lwan/archive/a75278f067189fc93ea41b25e5ec46f5eb95b217.tar.gz -O - | tar xz --strip-components=1 && \
+RUN wget https://github.com/lpereira/lwan/archive/4068da5ce808c279fe1921daa52bfd728229a434.tar.gz -O - | tar xz --strip-components=1 && \
     mkdir build && cd build && \
     cmake /lwan -DCMAKE_BUILD_TYPE=Release -DUSE_ALTERNATIVE_MALLOC=mimalloc && \
     make lwan-static

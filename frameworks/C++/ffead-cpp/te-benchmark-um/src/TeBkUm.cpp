@@ -1,4 +1,19 @@
 /*
+	Copyright 2009-2020, Sumeet Chhetri
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+/*
  * TeBkUmUm.cpp
  *
  *  Created on: 03-Feb-2020
@@ -54,9 +69,9 @@ void TeBkUmRouter::db(TeBkUmWorld& w) {
 	id << rid;
 	try {
 		w = sqli->get<TeBkUmWorld>(id);
-		delete sqli;
+		DataSourceManager::cleanImpl(sqli);
 	} catch(const std::exception& e) {
-		delete sqli;
+		DataSourceManager::cleanImpl(sqli);
 		throw e;
 	}
 }
@@ -79,9 +94,9 @@ void TeBkUmRouter::queries(const char* q, int ql, std::vector<TeBkUmWorld>& wlst
 			wlst.push_back(w);
 		}
 		sqli->endSession();
-		delete sqli;
+		DataSourceManager::cleanImpl(sqli);
 	} catch(const std::exception& e) {
-		delete sqli;
+		DataSourceManager::cleanImpl(sqli);
 		throw e;
 	}
 }
@@ -117,9 +132,9 @@ void TeBkUmRouter::updates(const char* q, int ql, std::vector<TeBkUmWorld>& wlst
 		sqli->commit();
 
 		sqli->endSession();
-		delete sqli;
+		DataSourceManager::cleanImpl(sqli);
 	} catch(const std::exception& e) {
-		delete sqli;
+		DataSourceManager::cleanImpl(sqli);
 		throw e;
 	}
 }
@@ -136,11 +151,11 @@ void TeBkUmRouter::updateCache() {
 			TeBkUmWorld& w = wlist.at(c);
 			cchi->setO(CastUtil::fromNumber(w.getId()), w);
 		}
-		delete sqli;
-		delete cchi;
+		DataSourceManager::cleanImpl(sqli);
+		CacheManager::cleanImpl(cchi);
 	} catch(const std::exception& e) {
-		delete sqli;
-		delete cchi;
+		DataSourceManager::cleanImpl(sqli);
+		CacheManager::cleanImpl(cchi);
 		throw e;
 	}
 }
@@ -161,9 +176,9 @@ void TeBkUmRouter::cachedWorlds(const char* q, int ql, std::vector<TeBkUmWorld>&
 		}
 
 		wlst = cchi->mgetO<TeBkUmWorld>(keys);
-		delete cchi;
+		CacheManager::cleanImpl(cchi);
 	} catch(const std::exception& e) {
-		delete cchi;
+		CacheManager::cleanImpl(cchi);
 		throw e;
 	}
 }
@@ -172,25 +187,28 @@ void TeBkUmRouter::getContext(HttpRequest* request, Context* context) {
 	DataSourceInterface* sqli = DataSourceManager::getImpl();
 
 	try {
-		std::vector<TeBkUmFortune> flst = sqli->getAll<TeBkUmFortune>();
-		for(int i=0;i<(int)flst.size();i++)
+		std::vector<TeBkUmFortune> flstT = sqli->getAll<TeBkUmFortune>();
+		std::vector<TeBkUmFortune>* flst = new std::vector<TeBkUmFortune>;
+		flst->swap(flstT);
+
+		for(int i=0;i<(int)flst->size();i++)
 		{
-			std::string nm = flst.at(i).getMessage();
+			std::string nm = flst->at(i).getMessage();
 			CryptoHandler::sanitizeHtml(nm);
-			flst.at(i).setMessage(nm);
+			flst->at(i).setMessage(nm);
 		}
 
 		TeBkUmFortune nf;
 		nf.setId(0);
 		nf.setMessage("Additional fortune added at request time.");
-		flst.push_back(nf);
-		std::sort (flst.begin(), flst.end());
-		delete sqli;
+		flst->push_back(nf);
+		std::sort (flst->begin(), flst->end());
 
-		context->insert(std::pair<std::string, GenericObject>("fortunes", GenericObject()));
-		context->find("fortunes")->second << flst;
+		context->insert(std::pair<std::string, void*>("fortunes", flst));
+
+		DataSourceManager::cleanImpl(sqli);
 	} catch(...) {
-		delete sqli;
+		DataSourceManager::cleanImpl(sqli);
 		throw;
 	}
 }
@@ -206,110 +224,122 @@ bool TeBkUmRouter::strToNum(const char* str, int len, int& ret) {
     return true;
 }
 
-void TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib) {
-	Timer t;
-	t.start();
+bool TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib, SocketInterface* sif) {
+	//Timer t;
+	//t.start();
 	std::string_view path = req->getPath();
-	if(StringUtil::endsWith(path, "/fortunes")) {
+	if(StringUtil::endsWith(path, "/plaintext")) {
+		//t.end();
+		//CommonUtils::tsContRstLkp += t.timerNanoSeconds();
+		//t.start();
+		res->setContent(HELLO_WORLD);
+		res->setContentType(ContentTypes::CONTENT_TYPE_TEXT_PLAIN);
+		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		//t.end();
+		//CommonUtils::tsContRstSer += t.timerNanoSeconds();
+	} else if(StringUtil::endsWith(path, "/json")) {
+		//t.end();
+		//CommonUtils::tsContRstLkp += t.timerNanoSeconds();
+		//t.start();
+		TeBkUmMessage msg;
+		msg.setMessage(HELLO_WORLD);
+		res->setContent(JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmMessage"));
+		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
+		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		//t.end();
+		//CommonUtils::tsContRstSer += t.timerNanoSeconds();
+	} else if(StringUtil::endsWith(path, "/db")) {
+		//t.end();
+		//CommonUtils::tsContRstLkp += t.timerNanoSeconds();
+		//t.start();
+		TeBkUmWorld msg;
+		db(msg);
+		//t.end();
+		//CommonUtils::tsContExec += t.timerNanoSeconds();
+		//t.start();
+		res->setContent(JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmWorld"));
+		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
+		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		//t.end();
+		//CommonUtils::tsContRstSer += t.timerNanoSeconds();
+	} else if(StringUtil::endsWith(path, "/queries")) {
+		//t.end();
+		//CommonUtils::tsContRstLkp += t.timerNanoSeconds();
+		//t.start();
+		struct yuarel_param params[1];
+		yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
+		std::vector<TeBkUmWorld> msg;
+		queries(params[0].val, params[0].val_len, msg);
+		//t.end();
+		//CommonUtils::tsContExec += t.timerNanoSeconds();
+		//t.start();
+		res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
+		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
+		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		//t.end();
+		//CommonUtils::tsContRstSer += t.timerNanoSeconds();
+	} else if(StringUtil::endsWith(path, "/fortunes")) {
 		Context ctx;
 		getContext(req, &ctx);
 
-		std::string fname = "_tebenchmarkumtpefortunestpeemittTemplateHTML";
-		void* mkr = dlsym(ddlib, fname.c_str());
+		void* mkr = dlsym(ddlib, TPE_FN_NAME.c_str());
 		if(mkr!=NULL)
 		{
 			TeBkUmTemplatePtr f =  (TeBkUmTemplatePtr)mkr;
-			std::string msg = f(&ctx);
+			std::string msg;
+			f(&ctx, msg);
 			res->setContent(msg);
 			res->setContentType(ContentTypes::CONTENT_TYPE_TEXT_SHTML);
 			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
 		}
+	} else if(StringUtil::endsWith(path, "/updates")) {
+		//t.end();
+		//CommonUtils::tsContRstLkp += t.timerNanoSeconds();
+		//t.start();
+		struct yuarel_param params[1];
+		yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
+		std::vector<TeBkUmWorld> msg;
+		updates(params[0].val, params[0].val_len, msg);
+		//t.end();
+		//CommonUtils::tsContExec += t.timerNanoSeconds();
+		//t.start();
+		res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
+		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
+		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		//t.end();
+		//CommonUtils::tsContRstSer += t.timerNanoSeconds();
+	} else if(StringUtil::endsWith(path, "/cached-worlds")) {
+		//t.end();
+		//CommonUtils::tsContRstLkp += t.timerNanoSeconds();
+		//t.start();
+		struct yuarel_param params[1];
+		yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
+		std::vector<TeBkUmWorld> msg;
+		cachedWorlds(params[0].val, params[0].val_len, msg);
+		//t.end();
+		//CommonUtils::tsContExec += t.timerNanoSeconds();
+		//t.start();
+		res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
+		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
+		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		//t.end();
+		//CommonUtils::tsContRstSer += t.timerNanoSeconds();
 	} else {
-		if(StringUtil::endsWith(path, "/json")) {
-			t.end();
-			CommonUtils::tsContRstLkp += t.timerNanoSeconds();
-			t.start();
-			TeBkUmMessage msg;
-			msg.setMessage(HELLO_WORLD);
-			res->setContent(JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmMessage"));
-			res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
-			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
-			t.end();
-			CommonUtils::tsContRstSer += t.timerNanoSeconds();
-		} else if(StringUtil::endsWith(path, "/plaintext")) {
-			t.end();
-			CommonUtils::tsContRstLkp += t.timerNanoSeconds();
-			t.start();
-			res->setContent(HELLO_WORLD);
-			res->setContentType(ContentTypes::CONTENT_TYPE_TEXT_PLAIN);
-			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
-			t.end();
-			CommonUtils::tsContRstSer += t.timerNanoSeconds();
-		} else if(StringUtil::endsWith(path, "/db")) {
-			t.end();
-			CommonUtils::tsContRstLkp += t.timerNanoSeconds();
-			t.start();
-			TeBkUmWorld msg;
-			db(msg);
-			t.end();
-			CommonUtils::tsContExec += t.timerNanoSeconds();
-			t.start();
-			res->setContent(JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmWorld"));
-			res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
-			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
-			t.end();
-			CommonUtils::tsContRstSer += t.timerNanoSeconds();
-		} else if(StringUtil::endsWith(path, "/queries")) {
-			t.end();
-			CommonUtils::tsContRstLkp += t.timerNanoSeconds();
-			t.start();
-			struct yuarel_param params[1];
-			yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
-			std::vector<TeBkUmWorld> msg;
-			queries(params[0].val, params[0].val_len, msg);
-			t.end();
-			CommonUtils::tsContExec += t.timerNanoSeconds();
-			t.start();
-			res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
-			res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
-			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
-			t.end();
-			CommonUtils::tsContRstSer += t.timerNanoSeconds();
-		} else if(StringUtil::endsWith(path, "/updates")) {
-			t.end();
-			CommonUtils::tsContRstLkp += t.timerNanoSeconds();
-			t.start();
-			struct yuarel_param params[1];
-			yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
-			std::vector<TeBkUmWorld> msg;
-			updates(params[0].val, params[0].val_len, msg);
-			t.end();
-			CommonUtils::tsContExec += t.timerNanoSeconds();
-			t.start();
-			res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
-			res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
-			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
-			t.end();
-			CommonUtils::tsContRstSer += t.timerNanoSeconds();
-		} else if(StringUtil::endsWith(path, "/cached-worlds")) {
-			t.end();
-			CommonUtils::tsContRstLkp += t.timerNanoSeconds();
-			t.start();
-			struct yuarel_param params[1];
-			yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
-			std::vector<TeBkUmWorld> msg;
-			cachedWorlds(params[0].val, params[0].val_len, msg);
-			t.end();
-			CommonUtils::tsContExec += t.timerNanoSeconds();
-			t.start();
-			res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
-			res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
-			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
-			t.end();
-			CommonUtils::tsContRstSer += t.timerNanoSeconds();
-		} else {
-			res->setHTTPResponseStatus(HTTPResponseStatus::NotFound);
-		}
+		res->setHTTPResponseStatus(HTTPResponseStatus::NotFound);
 	}
 	res->setDone(true);
+	return true;
+}
+
+std::string TeBkUmRouter::APP_NAME = "";
+std::string TeBkUmRouter::TPE_FN_NAME = "";
+
+TeBkUmRouter::TeBkUmRouter() {
+	if(APP_NAME=="") {
+		APP_NAME = CommonUtils::normalizeAppName("te-benchmark-um");
+		TPE_FN_NAME = CommonUtils::getTpeFnName("tpe/fortunes.tpe", "te-benchmark-um");
+	}
+}
+
+TeBkUmRouter::~TeBkUmRouter() {
 }

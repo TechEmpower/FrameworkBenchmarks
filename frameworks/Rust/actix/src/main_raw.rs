@@ -1,11 +1,6 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-#[macro_use]
-extern crate serde_derive;
-#[macro_use]
-extern crate diesel;
-
 use std::future::Future;
 use std::io;
 use std::pin::Pin;
@@ -17,18 +12,23 @@ use actix_rt::net::TcpStream;
 use actix_server::Server;
 use actix_service::fn_service;
 use bytes::{Buf, BufMut, BytesMut};
-use serde_json::to_writer;
+use simd_json_derive::Serialize;
 
 mod models;
 mod utils;
 
-use crate::utils::{Message, Writer};
+use crate::utils::Writer;
 
 const JSON: &[u8] = b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
 const PLAIN: &[u8] = b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
 const HTTPNFOUND: &[u8] = b"HTTP/1.1 400 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: A\r\n";
 const BODY: &[u8] = b"Hello, World!";
+
+#[derive(Serialize)]
+pub struct Message {
+    pub message: &'static str,
+}
 
 struct App {
     io: TcpStream,
@@ -40,15 +40,17 @@ struct App {
 impl App {
     fn handle_request(&mut self, req: Request) {
         match req.path() {
-            "/j" => {
+            "/json" => {
                 let message = Message {
                     message: "Hello, World!",
                 };
                 self.write_buf.put_slice(JSON);
                 self.codec.config().set_date(&mut self.write_buf);
-                to_writer(Writer(&mut self.write_buf), &message).unwrap();
+                message
+                    .json_write(&mut Writer(&mut self.write_buf))
+                    .unwrap();
             }
-            "/p" => {
+            "/plaintext" => {
                 self.write_buf.put_slice(PLAIN);
                 self.codec.config().set_date(&mut self.write_buf);
                 self.write_buf.put_slice(BODY);
@@ -88,7 +90,7 @@ impl Future for App {
         }
 
         loop {
-            match this.codec.decode(&mut this.read_buf) {
+            match this.codec.decode(&mut Pin::new(&mut this.read_buf)) {
                 Ok(Some(h1::Message::Item(req))) => this.handle_request(req),
                 Ok(None) => break,
                 _ => return Poll::Ready(Err(())),
@@ -123,7 +125,7 @@ impl Future for App {
     }
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> io::Result<()> {
     println!("Started http server: 127.0.0.1:8080");
 

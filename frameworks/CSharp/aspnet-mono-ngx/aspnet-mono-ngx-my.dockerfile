@@ -1,5 +1,5 @@
 FROM mono:latest
-RUN apt update -yqq && apt install -yqq nginx wget mono-fastcgi-server
+RUN apt-get update -yqq && apt-get install -yqq nginx wget mono-fastcgi-server
 
 WORKDIR /aspnet
 COPY src src

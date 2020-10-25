@@ -1,8 +1,9 @@
-module fiber
+module fiber/src
 
-go 1.14
+go 1.15
 
 require (
-	github.com/gofiber/fiber v1.8.431
-	github.com/jackc/pgx/v4 v4.6.0
+	github.com/gofiber/fiber/v2 v2.0.2
+	github.com/jackc/pgx/v4 v4.8.1
+	github.com/valyala/quicktemplate v1.6.3
 )

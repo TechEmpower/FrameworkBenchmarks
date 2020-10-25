@@ -1,7 +1,6 @@
 package com.typesafe.akka.http.benchmark
 
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.server.Route
 
 trait Bootstrap {
   def run(): Unit
@@ -9,9 +8,9 @@ trait Bootstrap {
 
 trait BenchmarkBootstrap extends Bootstrap { _: Infrastructure with RequestMapping =>
   override def run(): Unit =
-    Http().bindAndHandleAsync(
-      Route.asyncHandler(asRoute),
+    Http().newServerAt(
       appConfig.getString("akka.http.benchmark.host"),
-      appConfig.getInt("akka.http.benchmark.port"),
-      parallelism = 16)
+      appConfig.getInt("akka.http.benchmark.port"))
+      .adaptSettings(settings => settings.mapHttp2Settings(_.withMaxConcurrentStreams(16)))
+      .bind(asRoute)
 }

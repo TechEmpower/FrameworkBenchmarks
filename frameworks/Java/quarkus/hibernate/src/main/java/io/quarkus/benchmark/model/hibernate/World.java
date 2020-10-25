@@ -1,7 +1,5 @@
 package io.quarkus.benchmark.model.hibernate;
 
-import java.util.Objects;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -11,13 +9,6 @@ public class World {
     @Id
     private int id;
     private int randomNumber;
-
-    public World() {}
-
-    public World(int id, int randomNumber) {
-        this.id = id;
-        this.randomNumber = randomNumber;
-    }
 
     public int getId() {
         return id;
@@ -35,19 +26,4 @@ public class World {
         this.randomNumber = randomNumber;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        World world = (World) o;
-        return id == world.id &&
-                randomNumber == world.randomNumber;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, randomNumber);
-    }
 }

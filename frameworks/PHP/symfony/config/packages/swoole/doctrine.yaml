@@ -2,18 +2,11 @@ doctrine:
     orm:
         auto_generate_proxy_classes: false
         metadata_cache_driver:
-            type: service
-            id: doctrine.system_cache_provider
+            type: pool
+            pool: doctrine.system_cache_pool
         query_cache_driver:
-            type: service
-            id: doctrine.system_cache_provider
-
-services:
-    doctrine.system_cache_provider:
-        class: Symfony\Component\Cache\DoctrineProvider
-        public: false
-        arguments:
-        - '@doctrine.system_cache_pool'
+            type: pool
+            pool: doctrine.system_cache_pool
 
 framework:
     cache:

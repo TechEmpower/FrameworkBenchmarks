@@ -1,6 +1,6 @@
-FROM rust:1.42
+FROM rust:1.44
 
-RUN apt update -yqq && apt install -yqq cmake g++
+RUN apt-get update -yqq && apt-get install -yqq cmake g++
 
 ADD ./ /roa
 WORKDIR /roa
