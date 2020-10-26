@@ -8,7 +8,7 @@
         "php": ">=7.1.3",
         "laravel/lumen-framework": "5.8.*",
         "vlucas/phpdotenv": "^3.0",
-        "swooletw/laravel-swoole": "v2.6.5.3"
+        "swooletw/laravel-swoole": "^v2.6"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
