@@ -14,14 +14,14 @@ class Controller extends BaseController {
 	}
 
 	public function db() {
-		return World::where('id', \mt_rand(1, 10000))->first();
+		return World::where('id', \mt_rand(1, 10000))->first(); // to compare with find()
 	}
 
 	public function queries($queries = 1) {
 		$rows = [];
 		$numbers = $this->getUniqueRandomNumbers($this->clamp($queries));
 		foreach ($numbers as $id) {
-			$rows[] = World::where('id', $id)->first();
+			$rows[] = World::find($id);
 		}
 
 		return $rows;
@@ -47,7 +47,7 @@ class Controller extends BaseController {
 
 		$numbers = $this->getUniqueRandomNumbers($this->clamp($queries));
 		foreach ($numbers as $id) {
-			$row = World::where('id', $id)->first();
+			$row = World::find($id);
 			$oldId = $row->randomNumber;
 			do {
 				$newId = mt_rand(1, 10000);
