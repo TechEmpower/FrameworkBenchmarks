@@ -54,7 +54,11 @@ class Controller extends BaseController {
 			} while ($oldId === $newId);
 			$row->randomNumber = $newId;
 			do {
-				$saved = $row->save();
+				try {
+					$saved = $row->save();
+				} catch (\Exception $e) {
+					$saved = false;
+				}
 			} while (! $saved);
 			$rows[] = $row;
 		}
