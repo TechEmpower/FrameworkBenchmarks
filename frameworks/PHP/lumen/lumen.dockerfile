@@ -26,7 +26,5 @@ RUN mkdir -p /lumen/storage/framework/cache
 
 RUN chmod -R 777 /lumen
 
-RUN php artisan optimize
-
 CMD service php7.4-fpm start && \
     nginx -c /lumen/deploy/nginx.conf -g "daemon off;"
