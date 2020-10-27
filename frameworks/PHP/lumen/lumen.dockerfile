@@ -26,5 +26,9 @@ RUN mkdir -p /lumen/storage/framework/cache
 
 RUN chmod -R 777 /lumen
 
+RUN php artisan preload
+
+RUN echo "opcache.preload=/lumen/config/preloader.php" >> /etc/php/7.4/fpm/php.ini
+
 CMD service php7.4-fpm start && \
     nginx -c /lumen/deploy/nginx.conf -g "daemon off;"

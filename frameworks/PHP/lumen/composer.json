@@ -6,7 +6,8 @@
     "type": "project",
     "require": {
         "php": "^7.3",
-        "laravel/lumen-framework": "^8.1"
+        "laravel/lumen-framework": "^8.1",
+		"darkghosthunter/preloader": "^2.1"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.9.1",
