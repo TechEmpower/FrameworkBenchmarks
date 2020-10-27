@@ -20,7 +20,7 @@ $app = new Laravel\Lumen\Application(dirname(__DIR__));
 
 // $app->withFacades();
 
-// $app->withEloquent();
+$app->withEloquent();
 
 /*
  * |--------------------------------------------------------------------------
