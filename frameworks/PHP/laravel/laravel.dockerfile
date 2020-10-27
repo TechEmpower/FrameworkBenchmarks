@@ -24,8 +24,6 @@ RUN mkdir -p /laravel/storage/framework/cache
 
 RUN chmod -R 777 /laravel
 
-RUN rm -rf composer.lock
-
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 RUN php artisan optimize
