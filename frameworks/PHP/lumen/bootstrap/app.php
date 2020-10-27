@@ -49,7 +49,7 @@ $app->singleton(Illuminate\Contracts\Console\Kernel::class, App\Console\Kernel::
  */
 
 if (env('APP_SWOOLE', false)) {
-	$app->register(SwooleTW\Http\LumenServiceProvider::class);
+	$app->register(\SwooleTW\Http\LumenServiceProvider::class);
 	$app->configure('swoole_http');
 }
 $app->configure('database');
