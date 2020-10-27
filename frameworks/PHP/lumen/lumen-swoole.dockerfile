@@ -24,8 +24,6 @@ RUN deploy/swoole/install-composer.sh
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq git unzip > /dev/null
 
-RUN rm -rf composer.lock
-
 COPY deploy/swoole/composer* ./
 RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
