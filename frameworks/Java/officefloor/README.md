@@ -43,7 +43,7 @@ Further to this, graphical configuration is used.  The configuration for the *of
 OfficeFloor can use different HTTP server components:
 
 * **officefloor-netty** : incorporating Netty to service requests passing to OfficeFloor inversion of control.  Benchmark test with mature HTTP solution.
-* **officefloor-rapidoid** : similar to Netty but using Rapidoid.  Benchmark test with highly optimised HTTP solution.
+* **officefloor-undertow** : incorporating Undertow to service requests passing to OfficeFloor inversion of control.  Benchmark test with mature HTTP solution.
 * **officefloor-raw** : default HTTP server component provided by OfficeFloor.  This allows comparing OfficeFloor's default HTTP implementation with other solutions focused on HTTP optimisation.  It is also able to process requests concurrently on the same connection for improved responsiveness.
 
 Having these comparisons allows developers to see the trade-offs in using different HTTP components to handle HTTP request servicing.
@@ -52,8 +52,7 @@ Note: OfficeFloor's web plugins are called WoOF (Web on OfficeFloor).
 
 As mentioned, OfficeFloor uses different threading models.  It does not inherit the threading model imposed by the HTTP component.  Hence, there are various threading models tested to see trade-offs:
 
-* **officefloor-tpr** : typical synchronous multi-threaded model with connections retrieved from connection pool
-* **officefloor-micro** : synchronous multi-threaded model with connections bound to threads (avoids connection pool bottleneck)
+* **officefloor-micro** : typical synchronous multi-threaded model with connections retrieved from connection pool
 * **officefloor-thread_affinity** : similar to micro, except thread pools are localised onto a particular CPU.  Hence all processing for a request is done on the same CPU (allowing much better instruction cache hits).  This effectively allows running without any synchronising of threads for potentially increased throughput.
 
 Note: the OfficeFloor team are working with [PostgreSql ADBA](https://github.com/pgjdbc/pgadba) for asynchronous database interaction via asynchronous threading model.
