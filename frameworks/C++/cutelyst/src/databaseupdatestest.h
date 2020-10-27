@@ -2,6 +2,7 @@
 #define DATABASEUPDATESTEST_H
 
 #include <Cutelyst/Controller>
+#include <apreparedquery.h>
 
 using namespace Cutelyst;
 
@@ -16,6 +17,9 @@ public:
     C_ATTR(updatep, :Local :AutoArgs)
     void updatep(Context *c);
 
+    C_ATTR(updateb, :Local :AutoArgs)
+    void updateb(Context *c);
+
     C_ATTR(updates_postgres, :Local :AutoArgs)
     void updates_postgres(Context *c);
 
@@ -24,6 +28,9 @@ public:
 
 private:
     inline void processQuery(Context *c, QSqlQuery &query, QSqlQuery &updateQuery);
+    inline APreparedQuery getSql(int count);
+
+    QMap<int, APreparedQuery> m_sqlMap;
 };
 
 #endif // DATABASEUPDATESTEST_H
