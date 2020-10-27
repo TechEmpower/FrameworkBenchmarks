@@ -11,7 +11,7 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>2.8.10</jooby.version>
+    <jooby.version>2.9.2</jooby.version>
     <netty.version>4.1.49.Final</netty.version>
     <dsl-json.version>1.9.5</dsl-json.version>
     <postgresql.version>42.2.13</postgresql.version>
