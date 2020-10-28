@@ -1,4 +1,4 @@
-#include "lithium_http_backend.hh"
+#include "lithium_http_server.hh"
 
 #if TFB_MYSQL
   #include "lithium_mysql.hh"
