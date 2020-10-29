@@ -63,7 +63,7 @@ class RawController extends Controller
     {
         $queries = Query::clamp($queries);
 
-        $selectCommand = Yii::$app->db->createCommand('SELECT randomNumber FROM World WHERE id = :id');
+        $selectCommand = Yii::$app->db->createCommand('SELECT id,randomNumber FROM World WHERE id = :id');
         $updateCommand = Yii::$app->db->createCommand('UPDATE World SET randomNumber = :num WHERE id = :id');
 
         $worlds = [];

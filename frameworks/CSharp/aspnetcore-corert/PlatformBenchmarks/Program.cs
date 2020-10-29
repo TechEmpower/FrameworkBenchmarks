@@ -3,11 +3,11 @@
 
 using System;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 #if DATABASE
 using Npgsql;
-using MySql.Data.MySqlClient;
 #endif
 
 namespace PlatformBenchmarks
@@ -16,7 +16,7 @@ namespace PlatformBenchmarks
     {
         public static string[] Args;
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             Utf8Json.Resolvers.CompositeResolver.RegisterAndSetAsDefault(    
                 Utf8Json.Resolvers.GeneratedResolver.Instance);
@@ -39,14 +39,16 @@ namespace PlatformBenchmarks
 #if DATABASE
             var config = (IConfiguration)host.Services.GetService(typeof(IConfiguration));
             BatchUpdateString.DatabaseServer = config.Get<AppSettings>().Database;
+            await BenchmarkApplication.Db.PopulateCache();
 #endif
-            host.Run();
+            await host.RunAsync();
         }
 
         public static IWebHost BuildWebHost(string[] args)
         {
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables()
                 .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .AddCommandLine(args)
                 .Build();
@@ -54,14 +56,15 @@ namespace PlatformBenchmarks
 #if DATABASE
             var appSettings = config.Get<AppSettings>();
             Console.WriteLine($"Database: {appSettings.Database}");
+            Console.WriteLine($"ConnectionString: {appSettings.ConnectionString}");
 
             if (appSettings.Database == DatabaseServer.PostgreSql)
             {
-                BenchmarkApplication.Db = new RawDb(new ConcurrentRandom(), NpgsqlFactory.Instance, appSettings);
+                BenchmarkApplication.Db = new RawDb(new ConcurrentRandom(), appSettings);
             }
-            else if (appSettings.Database == DatabaseServer.MySql)
+            else
             {
-                BenchmarkApplication.Db = new RawDb(new ConcurrentRandom(), MySqlClientFactory.Instance, appSettings);
+                throw new NotSupportedException($"{appSettings.Database} is not supported");
             }
 #endif
 

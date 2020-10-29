@@ -50,11 +50,28 @@ void siege(int port) {
   http_benchmark(sockets, 2, 1000, "GET /queries?N=20 HTTP/1.1\r\n\r\n");
   http_benchmark(sockets, 2, 1000, "GET /fortunes HTTP/1.1\r\n\r\n");
   http_benchmark(sockets, 2, 1000, "GET /updates?N=20 HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /cached-world?N=100 HTTP/1.1\r\n\r\n");
   http_benchmark_close(sockets);
 }
 #endif
 
-lru_cache<int, decltype(mmm(s::id = int(), s::randomNumber = int()))> world_cache(10000);
+template <typename T>
+struct cache {
+
+  void insert(T o) { 
+    buffer.push_back(o);
+  }
+
+  std::vector<const T*> get_array(const std::vector<int>& ids) const {
+    std::vector<const T*> res;
+    for (int i = 0; i < ids.size(); i++) res.push_back(&buffer[ids[i]]);
+    return res;
+  }
+
+  std::vector<T> buffer;
+};
+
+cache<decltype(mmm(s::id = int(), s::randomNumber = int()))> world_cache;
 
 int main(int argc, char* argv[]) {
 
@@ -142,21 +159,19 @@ int main(int argc, char* argv[]) {
   };
 
   random_numbers.connect().forall([&] (const auto& number) {
-    world_cache(number.id, [&] { return metamap_clone(number); });
+    world_cache.insert(metamap_clone(number));
   });
 
   my_api.get("/cached-worlds") = [&](http_request& request, http_response& response) {
-    sql_db.max_async_connections_per_thread_ = queries_nconn;
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
     int N = atoi(N_str.c_str());
     
     N = std::max(1, std::min(N, 500));
 
-    std::vector<decltype(random_numbers.all_fields())> numbers(N);
+    std::vector<int> ids(N);
     for (int i = 0; i < N; i++)
-      numbers[i] = world_cache(1 + rand() % 10000);
-
-    response.write_json(numbers);
+      ids[i] = 1 + rand() % 10000;
+    response.write_json(world_cache.get_array(ids));
   };
 
   my_api.get("/updates") = [&](http_request& request, http_response& response) {

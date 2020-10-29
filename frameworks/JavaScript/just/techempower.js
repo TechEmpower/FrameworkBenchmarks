@@ -1,7 +1,6 @@
 const { connect, constants } = require('lib/connection.js')
 const { createServer } = require('lib/tcp.js')
 const { createParser } = require('lib/http.js')
-const { start } = require('lib/stats.js')
 const { sjs, attr } = require('lib/stringify.js')
 
 function compile (sock, query) {
@@ -151,7 +150,6 @@ end where id in ($1,$3,$5,$7,$9)
     params: [1]
   })
   clients.push(sock)
-  stats.clients = clients.length
   if (clients.length === poolSize) onPGReady()
 }
 
@@ -187,16 +185,23 @@ function getHTML (rows) {
   return html + FOOTER
 }
 
-function sortByMessage (a, b) {
-  if (a[1] > b[1]) return 1
-  if (a[1] < b[1]) return -1
-  return 0
+function insertionSort (arr) {
+  const n = arr.length
+  for (let i = 1; i < n; i++) {
+    const c = arr[i]
+    let j = i - 1
+    while ((j > -1) && (c[1] < arr[j][1])) {
+      arr[j + 1] = arr[j]
+      j--
+    }
+    arr[j + 1] = c
+  }
+  return arr
 }
 
 const cache = {}
 
 function onHTTPConnect (sock) {
-  stats.conn++
   const client = clients[sock.fd % clients.length]
   const rbuf = new ArrayBuffer(4096)
   const parser = createParser(rbuf)
@@ -214,22 +219,17 @@ function onHTTPConnect (sock) {
   let queries = 0
   let updates = 0
   function onUpdateMulti () {
-    stats.qps++
     const json = JSON.stringify(results)
     sock.writeString(`${rJSON}${json.length}${END}${json}`)
-    stats.rps++
   }
   function onUpdateSingle () {
-    stats.qps++
     updates++
     if (results.length === updates) {
       const json = JSON.stringify(results)
       sock.writeString(`${rJSON}${json.length}${END}${json}`)
-      stats.rps++
     }
   }
   function onUpdates () {
-    stats.qps++
     const [id, randomNumber] = getWorldById.getRows()[0]
     results.push({ id, randomNumber })
     if (results.length === queries) {
@@ -267,13 +267,11 @@ function onHTTPConnect (sock) {
     getWorldById.send()
   }
   function onMulti () {
-    stats.qps++
     const [id, randomNumber] = getWorldById.getRows()[0]
     results.push({ id, randomNumber })
     if (results.length === queries) {
       const json = JSON.stringify(results)
       sock.writeString(`${rJSON}${json.length}${END}${json}`)
-      stats.rps++
       queries = 0
     }
   }
@@ -290,7 +288,6 @@ function onHTTPConnect (sock) {
     getWorldById.send()
   }
   function onCached () {
-    stats.qps++
     const row = getCachedWorldById.getRows()[0]
     const [id, randomNumber] = row
     const world = { id, randomNumber }
@@ -299,7 +296,6 @@ function onHTTPConnect (sock) {
     if (results.length === queries) {
       const json = JSON.stringify(results)
       sock.writeString(`${rJSON}${json.length}${END}${json}`)
-      stats.rps++
       queries = 0
       results.length = 0
     }
@@ -328,7 +324,6 @@ function onHTTPConnect (sock) {
     if (results.length === queries) {
       const json = JSON.stringify(results)
       sock.writeString(`${rJSON}${json.length}${END}${json}`)
-      stats.rps++
       queries = 0
       results.length = 0
       return
@@ -336,17 +331,13 @@ function onHTTPConnect (sock) {
     getCachedWorldById.send()
   }
   function onFortunes () {
-    stats.qps++
-    const html = getHTML([extra, ...allFortunes.getRows()].sort(sortByMessage))
+    const html = getHTML(insertionSort([extra, ...allFortunes.getRows()]))
     sock.writeString(`${rHTML}${utf8Length(html)}${END}${html}`)
-    stats.rps++
   }
   function onSingle () {
-    stats.qps++
     const [id, randomNumber] = getWorldById.getRows()[0]
     const json = sDB({ id, randomNumber })
     sock.writeString(`${rJSON}${json.length}${END}${json}`)
-    stats.rps++
   }
   const queryPath = '/query'
   const updatePath = '/update'
@@ -357,19 +348,13 @@ function onHTTPConnect (sock) {
     '/json': () => {
       const json = sJSON(message)
       sock.writeString(`${rJSON}${json.length}${END}${json}`)
-      stats.rps++
     },
-    '/fortunes': () => {
-      allFortunes.call(onFortunes)
-    },
+    '/fortunes': () => allFortunes.call(onFortunes),
     '/db': () => {
       getWorldById.params[0] = Math.ceil(Math.random() * 10000)
       getWorldById.call(onSingle)
     },
-    '/plaintext': () => {
-      sock.writeString(`${rTEXT}${text.length}${END}${text}`)
-      stats.rps++
-    },
+    '/plaintext': () => sock.writeString(`${rTEXT}${text.length}${END}${text}`),
     default: url => {
       const [path, qs] = url.split(pathSep)
       if (path === queryPath) {
@@ -385,13 +370,11 @@ function onHTTPConnect (sock) {
         return
       }
       sock.writeString(r404)
-      stats.rps++
     }
   }
   parser.onRequests = count => {
     if (count > 1) {
       sock.writeString(`${rTEXT}${text.length}${END}${text}`.repeat(count))
-      stats.rps += count
       return
     }
     const url = parser.url(0)
@@ -400,7 +383,6 @@ function onHTTPConnect (sock) {
   }
   sock.onData = bytes => parser.parse(bytes)
   sock.onClose = () => {
-    stats.conn--
     parser.free()
   }
   return parser.buffer
@@ -408,7 +390,7 @@ function onHTTPConnect (sock) {
 
 function onPGReady () {
   microtasks = false
-  server.listen()
+  just.print(`listen: ${server.listen()}`)
 }
 
 const { utf8Length } = just.sys
@@ -424,24 +406,26 @@ const tfb = {
   pass: 'benchmarkdbpass',
   database: 'hello_world'
 }
-const stats = start()
 let i = poolSize
 const sJSON = sjs({ message: attr('string') })
 const sDB = sjs({ id: attr('number'), randomNumber: attr('number') })
 while (i--) connect(tfb, onPGConnect)
 const { loop } = just.factory
 let microtasks = true
-let rHTML = `HTTP/1.1 200 OK\r\nServer: j\r\nDate: ${stats.time}\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length: `
-let rTEXT = `HTTP/1.1 200 OK\r\nServer: j\r\nDate: ${stats.time}\r\nContent-Type: text/plain\r\nContent-Length: `
-let rJSON = `HTTP/1.1 200 OK\r\nServer: j\r\nDate: ${stats.time}\r\nContent-Type: application/json\r\nContent-Length: `
-let r404 = `HTTP/1.1 404 Not Found\r\nServer: j\r\nDate: ${stats.time}\r\nContent-Type: text/plain\r\nContent-Length: 0\r\n\r\n`
+
+let time = (new Date()).toUTCString()
+let rHTML = `HTTP/1.1 200 OK\r\nServer: j\r\nDate: ${time}\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length: `
+let rTEXT = `HTTP/1.1 200 OK\r\nServer: j\r\nDate: ${time}\r\nContent-Type: text/plain\r\nContent-Length: `
+let rJSON = `HTTP/1.1 200 OK\r\nServer: j\r\nDate: ${time}\r\nContent-Type: application/json\r\nContent-Length: `
+let r404 = `HTTP/1.1 404 Not Found\r\nServer: j\r\nDate: ${time}\r\nContent-Type: text/plain\r\nContent-Length: 0\r\n\r\n`
 just.setInterval(() => {
-  rHTML = `HTTP/1.1 200 OK\r\nServer: j\r\nDate: ${stats.time}\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length: `
-  rTEXT = `HTTP/1.1 200 OK\r\nServer: j\r\nDate: ${stats.time}\r\nContent-Type: text/plain\r\nContent-Length: `
-  rJSON = `HTTP/1.1 200 OK\r\nServer: j\r\nDate: ${stats.time}\r\nContent-Type: application/json\r\nContent-Length: `
-  r404 = `HTTP/1.1 404 Not Found\r\nServer: j\r\nDate: ${stats.time}\r\nContent-Type: text/plain\r\nContent-Length: 0\r\n\r\n`
+  time = (new Date()).toUTCString()
+  rHTML = `HTTP/1.1 200 OK\r\nServer: j\r\nDate: ${time}\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Length: `
+  rTEXT = `HTTP/1.1 200 OK\r\nServer: j\r\nDate: ${time}\r\nContent-Type: text/plain\r\nContent-Length: `
+  rJSON = `HTTP/1.1 200 OK\r\nServer: j\r\nDate: ${time}\r\nContent-Type: application/json\r\nContent-Length: `
+  r404 = `HTTP/1.1 404 Not Found\r\nServer: j\r\nDate: ${time}\r\nContent-Type: text/plain\r\nContent-Length: 0\r\n\r\n`
 }, 100)
 while (1) {
-  loop.poll(-1)
+  if (loop.poll(0) === 0) loop.poll(-1)
   if (microtasks) just.sys.runMicroTasks()
 }

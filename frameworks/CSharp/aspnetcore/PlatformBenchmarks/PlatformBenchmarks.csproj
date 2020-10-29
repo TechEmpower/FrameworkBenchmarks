@@ -16,6 +16,5 @@
 
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
-    <PackageReference Include="RedHat.AspNetCore.Server.Kestrel.Transport.Linux" Version="3.0.0-*" />
   </ItemGroup>
 </Project>

@@ -40,7 +40,7 @@
 #include "yuarel.h"
 #include "Router.h"
 
-typedef std::string (*TeBkUmTemplatePtr) (Context*);
+typedef void (*TeBkUmTemplatePtr) (Context*, std::string&);
 
 #pragma @Entity
 #pragma @Table name="fortune"
@@ -70,6 +70,10 @@ public:
 class TeBkUmRouter : public Router {
 	static const std::string HELLO_WORLD;
 	static std::string WORLD;
+
+	static std::string APP_NAME;
+	static std::string TPE_FN_NAME;
+
 	bool strToNum(const char* str, int len, int& ret);
 	void db(TeBkUmWorld&);
 	void queries(const char*, int, std::vector<TeBkUmWorld>&);
@@ -77,8 +81,10 @@ class TeBkUmRouter : public Router {
 	void cachedWorlds(const char*, int, std::vector<TeBkUmWorld>&);
 	void getContext(HttpRequest* request, Context* context);
 public:
+	TeBkUmRouter();
+	virtual ~TeBkUmRouter();
 	void updateCache();
-	void route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib);
+	bool route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib, SocketInterface* sif);
 };
 
 #endif /* WEB_TE_BENCHMARK_UM_INCLUDE_TeBkUm_H_ */

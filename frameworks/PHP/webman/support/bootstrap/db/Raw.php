@@ -63,7 +63,7 @@ class Raw implements Bootstrap
         );
         self::$statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
         self::$fortune   = $pdo->prepare('SELECT id,message FROM Fortune');
-        self::$random    = $pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
+        self::$random    = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
         self::$update    = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
         self::$pdo = $pdo;
     }

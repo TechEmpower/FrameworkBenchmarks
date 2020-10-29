@@ -66,7 +66,7 @@ async def single_db_query_test(request):
     row_id = randint(1, 10000)
     connection = await db_pool.acquire()
     try:
-        number = await connection.fetchval('SELECT "randomnumber" FROM "world" WHERE id = $1', row_id)
+        number = await connection.fetchval('SELECT "randomnumber", "id" FROM "world" WHERE id = $1', row_id)
         world = {'id': row_id, 'randomNumber': number}
     finally:
         await db_pool.release(connection)
@@ -86,13 +86,13 @@ async def multiple_db_queries_test(request):
 
     connection = await db_pool.acquire()
     try:
-        statement = await connection.prepare('SELECT "randomnumber" FROM "world" WHERE id = $1')
+        statement = await connection.prepare('SELECT "randomnumber", "id" FROM "world" WHERE id = $1')
         for row_id in row_ids:
             number = await statement.fetchval(row_id)
             worlds.append({'id': row_id, 'randomNumber': number})
     finally:
         await db_pool.release(connection)
-    
+
     return Response(200, content=Content(b'application/json; charset=utf-8',
                                          json_dumps(worlds).encode('utf-8')))
 
@@ -127,7 +127,7 @@ async def db_updates_test(request):
 
     connection = await db_pool.acquire()
     try:
-        statement = await connection.prepare('SELECT "randomnumber" FROM "world" WHERE id = $1')
+        statement = await connection.prepare('SELECT "randomnumber", "id" FROM "world" WHERE id = $1')
         for row_id, _ in updates:
             await statement.fetchval(row_id)
         await connection.executemany('UPDATE "world" SET "randomnumber"=$1 WHERE id=$2', updates)

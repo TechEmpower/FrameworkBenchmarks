@@ -109,7 +109,7 @@ end
 
 private def random_world
   id = rand(1..ID_MAXIMUM)
-  random_number = APPDB.query_one("SELECT randomNumber FROM world WHERE id = $1", id, as: Int32)
+  random_number = APPDB.query_one("SELECT id, randomNumber FROM world WHERE id = $1", id, as: Int32)
   {id: id, randomNumber: random_number}
 end
 

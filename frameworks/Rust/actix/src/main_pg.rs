@@ -1,11 +1,6 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-#[macro_use]
-extern crate serde_derive;
-#[macro_use]
-extern crate diesel;
-
 use std::io::Write;
 
 use actix::prelude::*;
@@ -123,7 +118,7 @@ async fn fortune(db: web::Data<Addr<PgConnection>>) -> Result<HttpResponse, Erro
     }
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("Started http server: 127.0.0.1:8080");
 
