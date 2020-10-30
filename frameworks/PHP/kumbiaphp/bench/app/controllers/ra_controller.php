@@ -44,7 +44,7 @@ class RaController extends AppController
             $id = mt_rand(1, 10000);
 
             $sth->execute([$id]);
-            $row = ['id' => $id, 'randomNumber' => $sth->fetchColumn()];
+            $row = $sth->fetch(PDO::FETCH_ASSOC);
             $updateStatement->execute(
                 [$row['randomNumber'] = mt_rand(1, 10000), $id]
             );
