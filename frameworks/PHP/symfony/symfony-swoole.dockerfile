@@ -15,7 +15,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY deploy/swoole/php.ini /usr/local/etc/php/
 WORKDIR /symfony
-ADD ./composer.json ./composer.lock /symfony/
+ADD ./composer.json /symfony/
 RUN mkdir -m 777 -p /symfony/var/cache/swoole /symfony/var/log
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts
 ADD . /symfony
