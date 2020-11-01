@@ -1,7 +1,7 @@
 FROM alpine:latest as certs
 RUN apk --update add ca-certificates
 
-FROM reasonnative/web:4.10.0 as builder
+FROM reasonnative/web:4.10.1-nightly as builder
 
 RUN mkdir /app
 WORKDIR /app
