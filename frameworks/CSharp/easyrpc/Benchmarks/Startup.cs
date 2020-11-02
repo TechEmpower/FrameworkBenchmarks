@@ -23,7 +23,7 @@ namespace Benchmarks
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRpcServices(registerJsonSerializer: false);
+            services.AddRpcServices(c => c.RegisterJsonSerializer = false);
             services.AddSingleton<IContentSerializer, Utf8JsonContentSerializer>();
             services.AddSingleton<IRawDb, RawDb>();
 
@@ -45,11 +45,11 @@ namespace Benchmarks
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseRpcServices(api =>
+            app.UseRpcRouting(api =>
             {
-                api.GetMethod("/plaintext", () => "Hello, World!").Raw("text/plain");
+                api.Method.Get("/plaintext", () => "Hello, World!").Raw("text/plain");
 
-                api.GetMethod("/json", () => new { message = "Hello, World!" });
+                api.Method.Get("/json", () => new { message = "Hello, World!" });
 
                 api.Expose<QueryService>();
                 api.Expose<FortuneService>();
