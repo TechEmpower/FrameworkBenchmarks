@@ -1,6 +1,7 @@
 package net.officefloor.benchmark;
 
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.persistence.EntityManager;
@@ -13,6 +14,13 @@ import net.officefloor.web.ObjectResponse;
  * Logic.
  */
 public class Logic {
+
+	private static ThreadLocal<Set<Integer>> uniqueIdentifiers = new ThreadLocal<>() {
+		@Override
+		protected Set<Integer> initialValue() {
+			return new HashSet<>(100);
+		}
+	};
 
 	// =========== JSON ===================
 
@@ -35,11 +43,26 @@ public class Logic {
 
 	public void queries(@HttpQueryParameter("queries") String queries, EntityManager entityManager,
 			ObjectResponse<World[]> response) {
-		ThreadLocalRandom random = ThreadLocalRandom.current();
 		int count = getQueryCount(queries);
+
+		// Set up for unique numbers
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+		Set<Integer> uniqueSet = uniqueIdentifiers.get();
+		uniqueSet.clear();
+
+		// Obtain the list of worlds
 		World[] worlds = new World[count];
 		for (int i = 0; i < worlds.length; i++) {
-			worlds[i] = entityManager.find(World.class, random.nextInt(1, 10001));
+
+			// Obtain unique identifier
+			int randomNumber;
+			do {
+				randomNumber = random.nextInt(1, 10001);
+			} while (uniqueSet.contains(randomNumber));
+			uniqueSet.add(randomNumber);
+
+			// Obtain the world (unique id so always queries)
+			worlds[i] = entityManager.find(World.class, randomNumber);
 		}
 		response.send(worlds);
 	}
@@ -48,17 +71,36 @@ public class Logic {
 
 	public void update(@HttpQueryParameter("queries") String queries, EntityManager entityManager,
 			ObjectResponse<World[]> response) {
-		ThreadLocalRandom random = ThreadLocalRandom.current();
 		int count = getQueryCount(queries);
-		int[] ids = new int[count];
-		for (int i = 0; i < ids.length; i++) {
-			ids[i] = random.nextInt(1, 10001);
-		}
-		Arrays.sort(ids);
+
+		// Set up for unique numbers
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+		Set<Integer> uniqueSet = uniqueIdentifiers.get();
+		uniqueSet.clear();
+
+		// Create list of worlds
 		World[] worlds = new World[count];
-		for (int i = 0; i < worlds.length; i++) {
-			worlds[i] = entityManager.find(World.class, ids[i]);
-			worlds[i].setRandomNumber(random.nextInt(1, 10001));
+		for (int i = 0; i < count; i++) {
+
+			// Obtain unique identifier
+			int randomNumber;
+			do {
+				randomNumber = random.nextInt(1, 10001);
+			} while (uniqueSet.contains(randomNumber));
+			uniqueSet.add(randomNumber);
+
+			// Obtain the world
+			World world = entityManager.find(World.class, randomNumber);
+			worlds[i] = world;
+
+			// Ensure change to different random number
+			int existing = world.getRandomNumber();
+			do {
+				randomNumber = random.nextInt(1, 10001);
+			} while (randomNumber == existing);
+
+			// Update to different number to cause update
+			world.setRandomNumber(randomNumber);
 		}
 		response.send(worlds);
 	}
