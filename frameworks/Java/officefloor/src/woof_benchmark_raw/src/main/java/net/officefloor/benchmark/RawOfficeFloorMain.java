@@ -89,9 +89,12 @@ public class RawOfficeFloorMain {
 			socketManager.shutdown();
 		}
 
-		// Build the connection pool
+		// Indicate details
 		String server = System.getProperty("OFFICE.net_officefloor_jdbc_DataSourceManagedObjectSource.server",
 				"tfb-database");
+		System.out.println("Starting server on port " + port + " talking to database " + server);
+
+		// Build the connection pool
 		ConnectionFactoryOptions factoryOptions = ConnectionFactoryOptions.builder()
 				.option(ConnectionFactoryOptions.DRIVER, "pool").option(ConnectionFactoryOptions.PROTOCOL, "postgresql")
 				.option(ConnectionFactoryOptions.HOST, server).option(ConnectionFactoryOptions.PORT, 5432)
@@ -108,6 +111,7 @@ public class RawOfficeFloorMain {
 		for (int i = 0; i < executionStrategy.length; i++) {
 			executionStrategy[i] = (runnable) -> new Thread(runnable);
 		}
+		System.out.println("Using " + executionStrategy.length + " executors");
 
 		// Create the socket manager
 		socketManager = HttpServerSocketManagedObjectSource.createSocketManager(executionStrategy);
@@ -118,6 +122,7 @@ public class RawOfficeFloorMain {
 		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, serviceBufferPool,
 				connectionFactory);
 		socketManager.bindServerSocket(serverLocation.getClusterHttpPort(), null, null, serviceFactory, serviceFactory);
+		System.out.println("Bound to socket " + serverLocation.getClusterHttpPort());
 
 		// Setup Date
 		Timer dateTimer = new Timer(true);
@@ -128,6 +133,7 @@ public class RawOfficeFloorMain {
 		for (int i = 0; i < runnables.length; i++) {
 			executionStrategy[i].newThread(runnables[i]).start();
 		}
+		Thread.sleep(10); // Allow threads to start servicing
 
 		// Indicate running
 		System.out.println("OfficeFloor raw running");
