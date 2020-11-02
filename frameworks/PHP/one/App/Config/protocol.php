@@ -17,8 +17,7 @@ return [
         'ip'          => '0.0.0.0',
         'set'         => [
             'worker_num' => swoole_cpu_num() * 4,
-            'pid_file'   => _APP_PATH_ . '/RunCache/swoole.pid',
-            'enable_coroutine' => false
+            'pid_file'   => _APP_PATH_ . '/RunCache/swoole.pid'
         ],
     ]
 ];
