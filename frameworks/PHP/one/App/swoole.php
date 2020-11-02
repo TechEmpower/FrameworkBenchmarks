@@ -16,7 +16,7 @@ require __DIR__ . '/config.php';
 
 \One\Swoole\OneServer::parseArgv();
 
-\Swoole\Runtime::enableCoroutine();
+//\Swoole\Runtime::enableCoroutine();
 
 \One\Swoole\OneServer::runAll();
 
