@@ -18,18 +18,26 @@
 package net.officefloor.benchmark;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactories;
@@ -155,11 +163,15 @@ public class RawOfficeFloorMain {
 
 		private static byte[] HELLO_WORLD = "Hello, World!".getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
 
-		private static HttpHeaderValue APPLICATION_JSON = new HttpHeaderValue("application/json");
+		private static final HttpHeaderValue APPLICATION_JSON = new HttpHeaderValue("application/json");
 
 		private static final HttpHeaderValue TEXT_PLAIN = new HttpHeaderValue("text/plain");
 
+		private static final HttpHeaderValue TEXT_HTML = new HttpHeaderValue("text/html;charset=utf-8");
+
 		private static final String QUERIES_PATH_PREFIX = "/queries?queries=";
+
+		private static final String UPDATE_PATH_PREFIX = "/update?queries=";
 
 		/**
 		 * <code>Date</code> {@link HttpHeaderValue}.
@@ -216,9 +228,14 @@ public class RawOfficeFloorMain {
 		private final Mono<World> db;
 
 		/**
-		 * {@link Mono} to service /fotunes.
+		 * {@link Mustache} for /fortunes.
 		 */
-		private final Mono<Object> fortunes;
+		private final Mustache fortuneMustache;
+
+		/**
+		 * {@link Mono} to service /fortunes.
+		 */
+		private final Mono<List<Fortune>> fortunes;
 
 		/**
 		 * Instantiate.
@@ -253,10 +270,27 @@ public class RawOfficeFloorMain {
 						return new World(id, number);
 					})));
 
+			// Load the mustache fortunes template
+			MustacheFactory mustacheFactory = new DefaultMustacheFactory() {
+				@Override
+				public void encode(String value, Writer writer) {
+					try {
+						StringEscapeUtils.ESCAPE_HTML4.translate(value, writer);
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+				}
+			};
+			this.fortuneMustache = mustacheFactory.compile("fortunes.mustache");
+
 			// Create the fortunes logic
-			this.fortunes = Mono.from(
-					this.threadLocalConnection.get().createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
-							.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute());
+			this.fortunes = Flux
+					.from(this.threadLocalConnection.get().createStatement("SELECT ID, MESSAGE FROM FORTUNE").execute())
+					.flatMap(result -> Flux.from(result.map((row, metadata) -> {
+						Integer id = row.get(0, Integer.class);
+						String message = row.get(1, String.class);
+						return new Fortune(id, message);
+					}))).collectList();
 		}
 
 		/**
@@ -318,6 +352,9 @@ public class RawOfficeFloorMain {
 				if (requestUri.startsWith(QUERIES_PATH_PREFIX)) {
 					this.queries(requestUri, response, connection);
 
+				} else if (requestUri.startsWith(UPDATE_PATH_PREFIX)) {
+					this.update(requestUri, response, connection);
+
 				} else {
 					// Unknown request
 					response.setStatus(HttpStatus.NOT_FOUND);
@@ -358,10 +395,42 @@ public class RawOfficeFloorMain {
 			});
 		}
 
+		private void queries(String requestUri, HttpResponse response,
+				ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) {
+			String queriesCountText = requestUri.substring(QUERIES_PATH_PREFIX.length());
+			int queryCount = getQueryCount(queriesCountText);
+			Flux.range(1, queryCount)
+					.flatMap(index -> this.threadLocalConnection.get()
+							.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
+							.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute())
+					.flatMap(result -> Flux.from(result.map((row, metadata) -> {
+						Integer id = row.get(0, Integer.class);
+						Integer number = row.get(1, Integer.class);
+						return new World(id, number);
+					}))).collectList().subscribe(worlds -> {
+						try {
+							response.setContentType(APPLICATION_JSON, null);
+							this.objectMapper.writeValue(response.getEntityWriter(), worlds);
+							this.send(connection);
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
+					}, error -> {
+						this.sendError(connection, error);
+					});
+		}
+
 		private void fortunes(HttpResponse response,
 				ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) {
-			this.fortunes.subscribe(send -> {
+			this.fortunes.subscribe(fortunes -> {
 				try {
+					// Additional fortunes
+					fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+					Collections.sort(fortunes, (a, b) -> a.message.compareTo(b.message));
+
+					// Send response
+					response.setContentType(TEXT_HTML, null);
+					this.fortuneMustache.execute(response.getEntityWriter(), fortunes);
 					this.send(connection);
 				} catch (IOException ex) {
 					ex.printStackTrace();
@@ -371,19 +440,24 @@ public class RawOfficeFloorMain {
 			});
 		}
 
-		private void queries(String requestUri, HttpResponse response,
+		private void update(String requestUri, HttpResponse response,
 				ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) {
-			String queriesCountText = requestUri.substring(QUERIES_PATH_PREFIX.length());
+			String queriesCountText = requestUri.substring(UPDATE_PATH_PREFIX.length());
 			int queryCount = getQueryCount(queriesCountText);
+			Connection db = this.threadLocalConnection.get();
 			Flux.range(1, queryCount)
-					.flatMap(index -> this.threadLocalConnection.get()
-							.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
+					.flatMap(index -> db.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
 							.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute())
-					.flatMap(result -> Mono.from(result.map((row, metadata) -> {
+					.flatMap(result -> Flux.from(result.map((row, metadata) -> {
 						Integer id = row.get(0, Integer.class);
 						Integer number = row.get(1, Integer.class);
 						return new World(id, number);
-					}))).buffer(queryCount).subscribe(worlds -> {
+					})))
+					.flatMap(world -> Flux
+							.from(db.createStatement("UPDATE WORLD SET RANDOMNUMBER = $1 WHERE ID = $2")
+									.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).bind(1, world.id).execute())
+							.map(result -> world))
+					.collectList().subscribe(worlds -> {
 						try {
 							response.setContentType(APPLICATION_JSON, null);
 							this.objectMapper.writeValue(response.getEntityWriter(), worlds);
@@ -431,5 +505,13 @@ public class RawOfficeFloorMain {
 		private final int id;
 
 		private final int randomNumber;
+	}
+
+	@Data
+	public static class Fortune {
+
+		private final int id;
+
+		private final String message;
 	}
 }
