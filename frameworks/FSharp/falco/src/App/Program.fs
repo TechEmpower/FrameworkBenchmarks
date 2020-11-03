@@ -1,20 +1,16 @@
-module App.Program
+module Program
 
-open System.Data
 open Falco
-open Npgsql
+open App
 
 [<Literal>]
-let ConnectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=1024;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3"
-
-let connectionFactory =     
-    fun () -> new NpgsqlConnection(ConnectionString) :> IDbConnection
+let connectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=1024;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3"
 
 [<EntryPoint>]
-let main args =    
+let main args =        
     Host.startWebHost 
         args        
-        (Server.buildServer connectionFactory)
+        (Host.configure connectionString)
         [
             get "/plaintext"  Value.handlePlainText
             get "/json"       Value.handleJson
