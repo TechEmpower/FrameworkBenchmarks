@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,17 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
     <PackageReference Update="FSharp.Core" Version="5.0.0" />
-    <PackageReference Include="Donald" Version="3.0.4" />
-    <PackageReference Include="Falco" Version="2.0.3" />    
-    <PackageReference Include="Npgsql" Version="4.1.5" />
-=======
-    <PackageReference Update="FSharp.Core" Version="5.0.0-beta.20417.1" />
     <PackageReference Include="Donald" Version="3.0.*" />
     <PackageReference Include="Falco" Version="2.0.*" />    
-    <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
->>>>>>> d50247cb4a3b810d95f133b1f4034560a136dc86
+    <PackageReference Include="Npgsql" Version="4.1.5" />
   </ItemGroup>
 
 </Project>
