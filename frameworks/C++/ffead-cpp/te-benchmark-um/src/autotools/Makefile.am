@@ -9,7 +9,7 @@ fprefix=../../../../${packageIdentifier}
 prefix=${abs_builddir}
 
 lib_LTLIBRARIES = libte_benchmark_um.la
-libte_benchmark_la_SOURCES = ../TeBkUmWorld.cpp \
+libte_benchmark_um_la_SOURCES = ../TeBkUmWorld.cpp \
 				../TeBkUm.cpp
 
 libte_benchmark_um_la_LDFLAGS = -no-undefined 

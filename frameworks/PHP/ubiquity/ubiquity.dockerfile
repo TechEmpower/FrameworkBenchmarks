@@ -20,6 +20,8 @@ RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --q
 
 RUN chmod 777 -R /ubiquity/app/cache/*
 
+COPY deploy/conf/ubiquity-config.php app/config/config.php
+
 RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/7.4/fpm/php.ini
 
 CMD service php7.4-fpm start && \

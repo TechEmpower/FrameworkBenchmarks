@@ -1,10 +1,9 @@
 #include "DbCtrlRaw.h"
-#include "models/World.h"
+#include "World_raw.h"
 #include <drogon/utils/Utilities.h>
 #include <stdlib.h>
 #include <thread>
 #include <time.h>
-using namespace drogon_model::hello_world;
 
 void DbCtrlRaw::asyncHandleHttpRequest(
     const HttpRequestPtr &req,
@@ -34,7 +33,8 @@ void DbCtrlRaw::asyncHandleHttpRequest(
                 Json::Value json{};
                 json["code"] = 0;
                 json["message"] = "Internal error";
-                (*callbackPtr)(HttpResponse::newHttpJsonResponse(std::move(json)));
+                (*callbackPtr)(
+                    HttpResponse::newHttpJsonResponse(std::move(json)));
             }
         } >>
         [callbackPtr](const DrogonDbException &err) {

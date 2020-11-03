@@ -12,15 +12,19 @@ The tests were run with:
 - Multiple queries: http://localhost:9000/queries
 - Fortunes: http://localhost:9000/fortunes
 - Updates: http://localhost:9000/updates
+- Cached: http://localhost:9000/cached
 - Plaintext: http://localhost:9000/plaintext
 
-## Supported backends
-- Apache (w/ Postgres + Reactive PG clienta)
-- KtorCIO (w/ Postgres client)
-- KtorNetty (w/ Postgres client)
-- Jetty (w/ Postgres client)
-- Netty (w/ Postgres client)
-- Undertow (w/ Postgres client)
+## Supported backends (w/ Postgres client)
+- SunHttp (default - bundled with core module - zero dependencies)
+- Apache (5)
+- Apache4
+- KtorCIO
+- KtorNetty
+- Jetty
+- Netty
+- Ratpack
+- Undertow
 
 ## How to run example
 ```bash

@@ -1,12 +1,16 @@
 FROM buildpack-deps:bionic
 LABEL maintainer="Sumeet Chhetri"
-LABEL version="1.0"
-LABEL description="Base ffead-cpp docker image with commit id - 83dd80bcf3c12403e4ba9819496ffcf85acfc43b"
+LABEL version="5.1"
+LABEL description="Base ffead-cpp docker image with commit id - master"
 
 ENV IROOT=/installs
+ENV DEBUG=off
 
 RUN mkdir /installs
 COPY te-benchmark-um/ /installs/te-benchmark-um/
+COPY te-benchmark-um-pq/ /installs/te-benchmark-um-pq/
+COPY te-benchmark-um-pq-async/ /installs/te-benchmark-um-pq-async/
+COPY te-benchmark-um-mgr/ /installs/te-benchmark-um-mgr/
 
 WORKDIR ${IROOT}
 

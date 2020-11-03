@@ -1,7 +1,7 @@
-FROM sumeetchhetri/ffead-cpp-4.0-rust-base:1.0
+FROM sumeetchhetri/ffead-cpp-5.0-rust-base:5.1
 
 ENV IROOT=/installs
 
 WORKDIR /
 
-CMD ./run_ffead.sh ffead-cpp-4.0 rust-hyper
+CMD ./run_ffead.sh ffead-cpp-5.0 rust-hyper

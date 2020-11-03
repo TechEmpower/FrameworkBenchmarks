@@ -1,15 +1,17 @@
 <?php
 namespace ImiApp\ApiServer\Controller;
 
-use ImiApp\Model\World;
-use ImiApp\Model\Fortune;
-use Imi\Controller\HttpController;
 use Imi\Db\Db;
 use Imi\RequestContext;
+use ImiApp\Model\World;
+use ImiApp\Model\Fortune;
+use Imi\Redis\RedisManager;
+use Imi\Util\Stream\MemoryStream;
+use Imi\Controller\HttpController;
 use Imi\Server\View\Annotation\View;
+use Imi\Server\Route\Annotation\Route;
 use Imi\Server\Route\Annotation\Action;
 use Imi\Server\Route\Annotation\Controller;
-use Imi\Util\Stream\MemoryStream;
 
 /**
  * @Controller("/")
@@ -44,7 +46,7 @@ class IndexController extends HttpController
      */
     public function dbModel()
     {
-        return World::find(mt_rand(1, 10000));
+        return World::find(\mt_rand(1, 10000));
     }
 
     /**
@@ -54,7 +56,7 @@ class IndexController extends HttpController
      */
     public function dbQueryBuilder()
     {
-        return Db::query()->from('World')->field('id', 'randomNumber')->where('id', '=', mt_rand(1, 10000))->select()->get();
+        return Db::query()->from('World')->field('id', 'randomNumber')->where('id', '=', \mt_rand(1, 10000))->select()->get();
     }
 
     /**
@@ -66,7 +68,7 @@ class IndexController extends HttpController
     {
         $db = Db::getInstance();
         $stmt = $db->prepare('SELECT id, randomNumber FROM World WHERE id = ?');
-        $stmt->execute([mt_rand(1, 10000)]);
+        $stmt->execute([\mt_rand(1, 10000)]);
         return $stmt->fetch();
     }
 
@@ -79,7 +81,7 @@ class IndexController extends HttpController
     {
         if($queries > 1)
         {
-            $queryCount = min($queries, 500);
+            $queryCount = \min($queries, 500);
         }
         else
         {
@@ -88,7 +90,7 @@ class IndexController extends HttpController
         $list = [];
         while ($queryCount--)
         {
-            $list[] = World::find(mt_rand(1, 10000));
+            $list[] = World::find(\mt_rand(1, 10000));
         }
         return $list;
     }
@@ -102,7 +104,7 @@ class IndexController extends HttpController
     {
         if($queries > 1)
         {
-            $queryCount = min($queries, 500);
+            $queryCount = \min($queries, 500);
         }
         else
         {
@@ -111,7 +113,7 @@ class IndexController extends HttpController
         $list = [];
         while ($queryCount--)
         {
-            $list[] = Db::query()->from('World')->field('id', 'randomNumber')->where('id', '=', mt_rand(1, 10000))->select()->get();
+            $list[] = Db::query()->from('World')->field('id', 'randomNumber')->where('id', '=', \mt_rand(1, 10000))->select()->get();
         }
         return $list;
     }
@@ -125,7 +127,7 @@ class IndexController extends HttpController
     {
         if($queries > 1)
         {
-            $queryCount = min($queries, 500);
+            $queryCount = \min($queries, 500);
         }
         else
         {
@@ -136,7 +138,7 @@ class IndexController extends HttpController
         $stmt = $db->prepare('SELECT id, randomNumber FROM World WHERE id = ?');
         while ($queryCount--)
         {
-            $stmt->execute([mt_rand(1, 10000)]);
+            $stmt->execute([\mt_rand(1, 10000)]);
             $list[] = $stmt->fetch();
         }
         return $list;
@@ -160,7 +162,7 @@ class IndexController extends HttpController
             $rows[$item->id] = $item->message;
         }
         $rows[0] = 'Additional fortune added at request time.';
-        asort($rows);
+        \asort($rows);
         return [
             'rows'  =>  $rows,
         ];
@@ -180,7 +182,7 @@ class IndexController extends HttpController
             $rows[$item['id']] = $item['message'];
         }
         $rows[0] = 'Additional fortune added at request time.';
-        asort($rows);
+        \asort($rows);
 
         $html = '';
         foreach ($rows as $id => $message)
@@ -202,7 +204,7 @@ class IndexController extends HttpController
     {
         if($queries > 1)
         {
-            $queryCount = min($queries, 500);
+            $queryCount = \min($queries, 500);
         }
         else
         {
@@ -211,8 +213,8 @@ class IndexController extends HttpController
         $list = [];
         while ($queryCount--)
         {
-            $list[] = $row = World::find(mt_rand(1, 10000));
-            $row->randomNumber = mt_rand(1, 10000);
+            $list[] = $row = World::find(\mt_rand(1, 10000));
+            $row->randomNumber = \mt_rand(1, 10000);
             $row->update();
         }
         return $list;
@@ -227,7 +229,7 @@ class IndexController extends HttpController
     {
         if($queries > 1)
         {
-            $queryCount = min($queries, 500);
+            $queryCount = \min($queries, 500);
         }
         else
         {
@@ -236,9 +238,9 @@ class IndexController extends HttpController
         $list = [];
         while ($queryCount--)
         {
-            $id = mt_rand(1, 10000);
+            $id = \mt_rand(1, 10000);
             $row = Db::query()->from('World')->field('id', 'randomNumber')->where('id', '=', $id)->select()->get();
-            $row['randomNumber'] = mt_rand(1, 10000);
+            $row['randomNumber'] = \mt_rand(1, 10000);
             Db::query()->from('World')->where('id', '=', $row['id'])->update([
                 'randomNumber'  =>  $row['randomNumber'],
             ]);
@@ -256,7 +258,7 @@ class IndexController extends HttpController
     {
         if($queries > 1)
         {
-            $queryCount = min($queries, 500);
+            $queryCount = \min($queries, 500);
         }
         else
         {
@@ -265,20 +267,41 @@ class IndexController extends HttpController
         $list = [];
         $db = Db::getInstance();
         $stmtSelect = $db->prepare('SELECT id, randomNumber FROM World WHERE id = ?');
-        $stmtUpdate = $db->prepare('UPDATE World SET randomNumber = :randomNumber WHERE id = :id');
+        $stmtUpdate = $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
         while ($queryCount--)
         {
-            $id = mt_rand(1, 10000);
+            $id = \mt_rand(1, 10000);
             $stmtSelect->execute([$id]);
             $row = $stmtSelect->fetch();
-            $row['randomNumber'] = mt_rand(1, 10000);
-            $stmtUpdate->execute([
-                'id'            =>  $row['id'],
-                'randomNumber'  =>  $row['randomNumber'],
-            ]);
+            $row['randomNumber'] = \mt_rand(1, 10000);
+            $stmtUpdate->execute([$row['randomNumber'], $row['id']]);
             $list[] = $row;
         }
         return $list;
+    }
+
+    /**
+     * @Action
+     * @Route("cached-worlds")
+     *
+     * @return void
+     */
+    public function cachedWorlds($count)
+    {
+        if($count > 1)
+        {
+            $queryCount = \min($count, 500);
+        }
+        else
+        {
+            $queryCount = 1;
+        }
+        $ids = [];
+        while ($queryCount--)
+        {
+            $ids[] = 'world:' . \mt_rand(1, 10000);
+        }
+        return RedisManager::getInstance()->mget($ids);
     }
 
 }

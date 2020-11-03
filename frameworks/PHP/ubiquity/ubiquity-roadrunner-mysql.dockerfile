@@ -5,7 +5,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq php7.4 php7.4-common php7.4-cgi php7.4-pgsql php-curl php7.4-mysql > /dev/null
+    apt-get install -yqq php7.4 php7.4-common php7.4-cgi php-curl php7.4-mysql > /dev/null
 
 RUN apt-get install -yqq composer > /dev/null
 
@@ -39,6 +39,6 @@ RUN chmod 777 -R /ubiquity/.ubiquity/*
 
 #RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/7.4/cgi/php.ini
 
-COPY deploy/roadrunner/rrMysqlServices.php app/config/rrServices.php
+COPY deploy/conf/roadrunner/mysql/rrServices.php app/config/rrServices.php
 
 CMD envwrapper.sh /ubiquity/rr serve

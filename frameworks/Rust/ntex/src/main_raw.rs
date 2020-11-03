@@ -1,12 +1,12 @@
 #[global_allocator]
-static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::future::Future;
 use std::io;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use bytes::{Buf, BytesMut};
+use bytes::BytesMut;
 use ntex::codec::{AsyncRead, AsyncWrite, Decoder};
 use ntex::fn_service;
 use ntex::http::{h1, Request};
@@ -30,6 +30,7 @@ struct App {
     io: TcpStream,
     read_buf: BytesMut,
     write_buf: BytesMut,
+    write_pos: usize,
     codec: h1::Codec,
 }
 
@@ -60,40 +61,12 @@ impl App {
 impl Future for App {
     type Output = Result<(), ()>;
 
-    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-        let this = self.get_mut();
-
-        loop {
-            if this.read_buf.capacity() - this.read_buf.len() < 512 {
-                this.read_buf.reserve(32_768);
-            }
-            let read = Pin::new(&mut this.io).poll_read_buf(cx, &mut this.read_buf);
-            match read {
-                Poll::Pending => break,
-                Poll::Ready(Ok(n)) => {
-                    if n == 0 {
-                        return Poll::Ready(Ok(()));
-                    }
-                }
-                Poll::Ready(Err(_)) => return Poll::Ready(Err(())),
-            }
-        }
-
-        if this.write_buf.capacity() - this.write_buf.len() <= 512 {
-            this.write_buf.reserve(32_768);
-        }
-
-        loop {
-            match this.codec.decode(&mut this.read_buf) {
-                Ok(Some(h1::Message::Item(req))) => this.handle_request(req),
-                Ok(None) => break,
-                _ => return Poll::Ready(Err(())),
-            }
-        }
+    fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        let this = self.as_mut().get_mut();
 
         if !this.write_buf.is_empty() {
             let len = this.write_buf.len();
-            let mut written = 0;
+            let mut written = this.write_pos;
             while written < len {
                 match Pin::new(&mut this.io).poll_write(cx, &this.write_buf[written..]) {
                     Poll::Pending => {
@@ -110,12 +83,44 @@ impl Future for App {
                 }
             }
             if written == len {
+                this.write_pos = 0;
                 unsafe { this.write_buf.set_len(0) }
             } else if written > 0 {
-                this.write_buf.advance(written);
+                this.write_pos = written;
+                return Poll::Pending;
             }
         }
-        Poll::Pending
+
+        if this.read_buf.capacity() - this.read_buf.len() < 4096 {
+            this.read_buf.reserve(32_768);
+        }
+
+        loop {
+            let read = Pin::new(&mut this.io).poll_read_buf(cx, &mut this.read_buf);
+            match read {
+                Poll::Pending => break,
+                Poll::Ready(Ok(n)) => {
+                    if n == 0 {
+                        return Poll::Ready(Ok(()));
+                    }
+                }
+                Poll::Ready(Err(_)) => return Poll::Ready(Err(())),
+            }
+        }
+
+        loop {
+            match this.codec.decode(&mut this.read_buf) {
+                Ok(Some(h1::Message::Item(req))) => this.handle_request(req),
+                Ok(None) => break,
+                _ => return Poll::Ready(Err(())),
+            }
+        }
+
+        if !this.write_buf.is_empty() {
+            self.poll(cx)
+        } else {
+            Poll::Pending
+        }
     }
 }
 
@@ -131,6 +136,7 @@ async fn main() -> io::Result<()> {
                 io,
                 read_buf: BytesMut::with_capacity(32_768),
                 write_buf: BytesMut::with_capacity(32_768),
+                write_pos: 0,
                 codec: h1::Codec::default(),
             })
         })?

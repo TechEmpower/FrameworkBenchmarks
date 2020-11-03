@@ -1,5 +1,3 @@
-#![allow(non_snake_case)]
-
 table! {
     world (id) {
         id -> Integer,
