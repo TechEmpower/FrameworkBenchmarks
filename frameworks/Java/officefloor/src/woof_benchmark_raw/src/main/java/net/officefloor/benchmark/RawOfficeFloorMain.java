@@ -31,10 +31,10 @@ import java.util.logging.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
+import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactories;
 import io.r2dbc.spi.ConnectionFactory;
 import io.r2dbc.spi.ConnectionFactoryOptions;
-import io.r2dbc.spi.Result;
 import lombok.Data;
 import net.officefloor.frame.api.manage.OfficeFloor;
 import net.officefloor.frame.api.manage.ProcessManager;
@@ -56,6 +56,7 @@ import net.officefloor.server.http.impl.ProcessAwareServerHttpConnectionManagedO
 import net.officefloor.server.http.parse.HttpRequestParser.HttpRequestParserMetaData;
 import net.officefloor.server.stream.StreamBufferPool;
 import net.officefloor.server.stream.impl.ThreadLocalStreamBufferPool;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -94,6 +95,9 @@ public class RawOfficeFloorMain {
 				"tfb-database");
 		System.out.println("Starting server on port " + port + " talking to database " + server);
 
+		// Increase the buffer size
+		System.setProperty("reactor.bufferSize.small", String.valueOf(10000));
+
 		// Build the connection pool
 		ConnectionFactoryOptions factoryOptions = ConnectionFactoryOptions.builder()
 				.option(ConnectionFactoryOptions.DRIVER, "pool").option(ConnectionFactoryOptions.PROTOCOL, "postgresql")
@@ -122,7 +126,6 @@ public class RawOfficeFloorMain {
 		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, serviceBufferPool,
 				connectionFactory);
 		socketManager.bindServerSocket(serverLocation.getClusterHttpPort(), null, null, serviceFactory, serviceFactory);
-		System.out.println("Bound to socket " + serverLocation.getClusterHttpPort());
 
 		// Setup Date
 		Timer dateTimer = new Timer(true);
@@ -133,10 +136,10 @@ public class RawOfficeFloorMain {
 		for (int i = 0; i < runnables.length; i++) {
 			executionStrategy[i].newThread(runnables[i]).start();
 		}
-		Thread.sleep(10); // Allow threads to start servicing
+		Thread.sleep(1000); // allow threads to start up
 
 		// Indicate running
-		System.out.println("OfficeFloor raw running");
+		System.out.println("OfficeFloor raw running on port " + serverLocation.getClusterHttpPort());
 	}
 
 	/**
@@ -155,6 +158,8 @@ public class RawOfficeFloorMain {
 		private static HttpHeaderValue APPLICATION_JSON = new HttpHeaderValue("application/json");
 
 		private static final HttpHeaderValue TEXT_PLAIN = new HttpHeaderValue("text/plain");
+
+		private static final String QUERIES_PATH_PREFIX = "/queries?queries=";
 
 		/**
 		 * <code>Date</code> {@link HttpHeaderValue}.
@@ -201,6 +206,11 @@ public class RawOfficeFloorMain {
 		private final ConnectionFactory connectionFactory;
 
 		/**
+		 * {@link ThreadLocal} {@link Connection}.
+		 */
+		private final ThreadLocal<Connection> threadLocalConnection;
+
+		/**
 		 * {@link Mono} to service /db.
 		 */
 		private final Mono<World> db;
@@ -219,18 +229,25 @@ public class RawOfficeFloorMain {
 			this.objectMapper.registerModule(new AfterburnerModule());
 			this.connectionFactory = connectionFactory;
 
+			// Create thread local connection
+			this.threadLocalConnection = new ThreadLocal<Connection>() {
+				@Override
+				protected Connection initialValue() {
+					return Mono.from(RawHttpServicerFactory.this.connectionFactory.create()).block();
+				}
+			};
+
 			// Create the db logic
-			this.db = Mono.usingWhen(Mono.from(this.connectionFactory.create()), conn -> {
-				int randomNumber = ThreadLocalRandom.current().nextInt(1, 10001);
-				Mono<Result> monoResult = Mono
-						.from(conn.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
-								.bind(0, randomNumber).execute());
-				return monoResult.flatMap(result -> Mono.from(result.map((row, metadata) -> {
-					Integer id = row.get(0, Integer.class);
-					Integer number = row.get(1, Integer.class);
-					return new World(id, number);
-				})));
-			}, conn -> conn.close());
+			this.db = Mono
+					.from(this.threadLocalConnection.get()
+							.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
+							.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute())
+					.flatMap(result -> Mono.from(result.map((row, metadata) -> {
+						Integer id = row.get(0, Integer.class);
+						Integer number = row.get(1, Integer.class);
+						return new World(id, number);
+					})));
+
 		}
 
 		/**
@@ -284,9 +301,15 @@ public class RawOfficeFloorMain {
 				break;
 
 			default:
-				// Unknown request
-				response.setStatus(HttpStatus.NOT_FOUND);
-				this.send(connection);
+				// Provide redirect
+				if (requestUri.startsWith(QUERIES_PATH_PREFIX)) {
+					this.queries(requestUri, response, connection);
+
+				} else {
+					// Unknown request
+					response.setStatus(HttpStatus.NOT_FOUND);
+					this.send(connection);
+				}
 				break;
 			}
 
@@ -322,15 +345,51 @@ public class RawOfficeFloorMain {
 			});
 		}
 
+		private void queries(String requestUri, HttpResponse response,
+				ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) {
+			String queriesCountText = requestUri.substring(QUERIES_PATH_PREFIX.length());
+			int queryCount = getQueryCount(queriesCountText);
+			Flux.range(1, queryCount)
+					.flatMap(index -> this.threadLocalConnection.get()
+							.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
+							.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute())
+					.flatMap(result -> Mono.from(result.map((row, metadata) -> {
+						Integer id = row.get(0, Integer.class);
+						Integer number = row.get(1, Integer.class);
+						return new World(id, number);
+					}))).buffer(queryCount).subscribe(worlds -> {
+						try {
+							response.setContentType(APPLICATION_JSON, null);
+							this.objectMapper.writeValue(response.getEntityWriter(), worlds);
+							this.send(connection);
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
+					}, error -> {
+						this.sendError(connection, error);
+					});
+		}
+
 		private void sendError(ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection,
 				Throwable failure) {
 			try {
+				failure.printStackTrace();
+
 				HttpResponse response = connection.getResponse();
 				response.reset();
 				response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 				this.send(connection);
 			} catch (IOException ex) {
 				ex.printStackTrace();
+			}
+		}
+
+		private static int getQueryCount(String queries) {
+			try {
+				int count = Integer.parseInt(queries);
+				return (count < 1) ? 1 : (count > 500) ? 500 : count;
+			} catch (NumberFormatException ex) {
+				return 1;
 			}
 		}
 	}
