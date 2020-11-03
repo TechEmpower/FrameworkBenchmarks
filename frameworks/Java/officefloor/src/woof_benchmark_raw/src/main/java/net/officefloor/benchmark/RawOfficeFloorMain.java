@@ -216,6 +216,11 @@ public class RawOfficeFloorMain {
 		private final Mono<World> db;
 
 		/**
+		 * {@link Mono} to service /fotunes.
+		 */
+		private final Mono<Object> fortunes;
+
+		/**
 		 * Instantiate.
 		 *
 		 * @param serverLocation    {@link HttpServerLocation}.
@@ -248,6 +253,10 @@ public class RawOfficeFloorMain {
 						return new World(id, number);
 					})));
 
+			// Create the fortunes logic
+			this.fortunes = Mono.from(
+					this.threadLocalConnection.get().createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
+							.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute());
 		}
 
 		/**
@@ -300,6 +309,10 @@ public class RawOfficeFloorMain {
 				this.db(response, connection);
 				break;
 
+			case "/fortunes":
+				this.fortunes(response, connection);
+				break;
+
 			default:
 				// Provide redirect
 				if (requestUri.startsWith(QUERIES_PATH_PREFIX)) {
@@ -336,6 +349,19 @@ public class RawOfficeFloorMain {
 				try {
 					response.setContentType(APPLICATION_JSON, null);
 					this.objectMapper.writeValue(response.getEntityWriter(), world);
+					this.send(connection);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}, error -> {
+				this.sendError(connection, error);
+			});
+		}
+
+		private void fortunes(HttpResponse response,
+				ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) {
+			this.fortunes.subscribe(send -> {
+				try {
 					this.send(connection);
 				} catch (IOException ex) {
 					ex.printStackTrace();
