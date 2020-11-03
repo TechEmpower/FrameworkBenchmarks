@@ -17,7 +17,7 @@ path = "src/main_raw.rs"
 
 [dependencies]
 ntex = "0.1.21"
-snmalloc-rs = { version = "0.2.17", features = ["native-cpu"] }
+mimalloc = { version = "0.1.21", default-features = false }
 yarte = { version = "0.12", features = ["bytes-buf", "json"] }
 env_logger = "0.7"
 random-fast-rng = "0.1.1"

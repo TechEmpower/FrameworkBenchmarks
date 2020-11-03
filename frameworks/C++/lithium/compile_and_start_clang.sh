@@ -1,7 +1,7 @@
 #! /bin/sh
 
 DB_FLAG=$1
-COMMIT=941b701ac884b1d7f050b721fe444b6831563239
+COMMIT=17737fb9473e0111d5ab235a13b6a143b5ca1673
 
 if [ $DB_FLAG = "TFB_MYSQL" ]; then
   CXX_FLAGS="-I /usr/include/mariadb  -lmariadbclient "
@@ -12,7 +12,7 @@ elif [ $DB_FLAG = "TFB_PGSQL" ]; then
 fi
 
 
-wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_http_backend.hh
+wget https://raw.githubusercontent.com/matt-42/lithium/$COMMIT/single_headers/lithium_http_server.hh
 
 clang++ -fprofile-instr-generate=./profile.prof -flto -DPROFILE_MODE -DNDEBUG -D$DB_FLAG -O3 -march=native -std=c++17 ./lithium.cc $CXX_FLAGS -lpthread -lboost_context -lssl -lcrypto -o /lithium_tbf
 /lithium_tbf tfb-database 8081

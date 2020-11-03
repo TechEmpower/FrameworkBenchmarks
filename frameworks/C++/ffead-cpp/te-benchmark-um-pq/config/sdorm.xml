@@ -9,6 +9,7 @@
 			<pool-size>30</pool-size>
 			<name>PostgreSQL-DSN</name>
 			<type>sql-raw-pq</type>
+			<async>false</async>
 		</config>
 	</data-source>
 </sdorm>

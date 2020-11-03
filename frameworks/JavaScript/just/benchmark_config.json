@@ -15,7 +15,7 @@
         "approach": "Realistic",
         "classification": "Platform",
         "database": "Postgres",
-        "framework": "None",
+        "framework": "just",
         "language": "JavaScript",
         "flavor": "just",
         "orm": "Raw",

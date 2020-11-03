@@ -45,7 +45,7 @@ RUN git clone https://github.com/an-tao/drogon
 
 WORKDIR $DROGON_ROOT
 
-RUN git checkout 668533fbbd20eb9c493841b0e1067097aadf0342
+RUN git checkout fb17efe765d162be01680b05a3a387c7a182a4c5 
 RUN git submodule update --init
 RUN mkdir build
 
@@ -59,7 +59,7 @@ WORKDIR $IROOT
 RUN git clone https://github.com/microsoft/mimalloc
 
 WORKDIR $MIMALLOC_ROOT
-RUN git checkout v1.6.2 -b v1.6.2
+RUN git checkout v1.6.7 -b v1.6.7
 RUN mkdir -p out/release
 WORKDIR $MIMALLOC_ROOT/out/release
 RUN cmake ../..

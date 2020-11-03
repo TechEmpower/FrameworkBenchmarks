@@ -14,7 +14,7 @@ class Controller extends BaseController {
 	}
 
 	public function db() {
-		return World::find(\mt_rand(1, 10000));
+		return World::where('id', \mt_rand(1, 10000))->first(); // to compare with find()
 	}
 
 	public function queries($queries = 1) {
@@ -54,7 +54,11 @@ class Controller extends BaseController {
 			} while ($oldId === $newId);
 			$row->randomNumber = $newId;
 			do {
-				$saved = $row->save();
+				try {
+					$saved = $row->save();
+				} catch (\Exception $e) {
+					$saved = false;
+				}
 			} while (! $saved);
 			$rows[] = $row;
 		}

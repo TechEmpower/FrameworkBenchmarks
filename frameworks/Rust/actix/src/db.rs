@@ -1,8 +1,8 @@
 //! Db executor actor
+
 use std::io;
 
 use actix::prelude::*;
-use diesel;
 use diesel::prelude::*;
 use diesel::result::Error;
 use rand::rngs::SmallRng;

@@ -1,0 +1,5 @@
+profile = default
+parse-docstrings = true
+wrap-comments = true
+break-cases = fit-or-vertical
+break-infix = fit-or-vertical

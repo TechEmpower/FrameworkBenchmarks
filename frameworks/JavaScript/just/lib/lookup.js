@@ -24,7 +24,6 @@ function readHosts () {
     return { ipv4, ipv6 }
   }
   const hosts = readFile(fileName)
-  just.error(`${fileName}:\n${hosts}`)
   const lines = hosts.split('\n').filter(line => line.trim())
   for (const line of lines) {
     if (line.match(rxComment)) continue
@@ -55,7 +54,6 @@ function readResolv () {
     return results
   }
   const resolv = readFile(fileName)
-  just.error(`${fileName}:\n${resolv}`)
   const lines = resolv.split('\n').filter(line => line.trim())
   for (const line of lines) {
     const match = line.match(rxName)
@@ -72,14 +70,12 @@ function readResolv () {
 function lookup (query = 'www.google.com', onRecord = () => {}, address = dnsServer, port = 53, buf = new ArrayBuffer(65536)) {
   const ip = lookupHosts(query)
   if (ip) {
-    just.error(`found ${ip} for ${query} in /etc/hosts`)
     onRecord(null, ip)
     return
   }
   const ips = readResolv()
   if (ips.length) {
     address = ips[0]
-    just.error(`dns server ${address} found in /etc/resolv.conf`)
   }
   const fd = net.socket(net.AF_INET, net.SOCK_DGRAM | net.SOCK_NONBLOCK, 0)
   net.bind(fd, address, port)
@@ -98,7 +94,6 @@ function lookup (query = 'www.google.com', onRecord = () => {}, address = dnsSer
     }
     const { ip } = message.answer[0]
     const result = `${ip[0]}.${ip[1]}.${ip[2]}.${ip[3]}`
-    just.error(`got ${result} for ${query} from ${address}`)
     loop.remove(fd)
     net.close(fd)
     onRecord(null, result)

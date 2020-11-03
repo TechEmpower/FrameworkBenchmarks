@@ -2,6 +2,10 @@
 
 #include <Cutelyst/Plugins/Utils/Sql>
 
+#include <apool.h>
+#include <aresult.h>
+#include <apreparedquery.h>
+
 #include <QSqlQuery>
 
 #include <QJsonDocument>
@@ -10,6 +14,27 @@
 SingleDatabaseQueryTest::SingleDatabaseQueryTest(QObject *parent) : Controller(parent)
 {
 
+}
+
+void SingleDatabaseQueryTest::dbp(Context *c)
+{
+    const int id = (qrand() % 10000) + 1;
+
+    ASync async(c);
+    static thread_local auto db = APool::database();
+    db.execPrepared(APreparedQueryLiteral("SELECT id, randomNumber FROM world WHERE id=$1"),
+                           {id}, [c, async] (AResult &result) {
+        if (Q_LIKELY(!result.error() && result.size())) {
+            auto it = result.begin();
+            c->response()->setJsonObjectBody({
+                                                 {QStringLiteral("id"), it[0].toInt()},
+                                                 {QStringLiteral("randomNumber"), it[1].toInt()}
+                                             });
+            return;
+        }
+
+        c->res()->setStatus(Response::InternalServerError);
+    }, c);
 }
 
 void SingleDatabaseQueryTest::db_postgres(Context *c)

@@ -31,7 +31,7 @@ class Benchmark {
         $id = mt_rand(1, 10000);
 
         // Define query
-        $statement = $this->pdo->prepare('SELECT randomNumber FROM World WHERE id = :id');
+        $statement = $this->pdo->prepare('SELECT id, randomNumber FROM World WHERE id = :id');
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
         $statement->execute();
 
@@ -52,7 +52,7 @@ class Benchmark {
         $id = mt_rand(1, 10000);
 
         // Define query
-        $statement = $this->pdo->prepare('SELECT randomNumber FROM World WHERE id = :id');
+        $statement = $this->pdo->prepare('SELECT id, randomNumber FROM World WHERE id = :id');
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
 
         // For each query, store the result set values in the response array
@@ -79,7 +79,7 @@ class Benchmark {
         $randomNumber = mt_rand(1, 1000);
 
         // Define query
-        $statement = $this->pdo->prepare('SELECT randomNumber FROM World WHERE id = :id');
+        $statement = $this->pdo->prepare('SELECT id, randomNumber FROM World WHERE id = :id');
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
 
         $updateStatement = $this->pdo->prepare('UPDATE World SET randomNumber = :randomNumber WHERE id = :id');
