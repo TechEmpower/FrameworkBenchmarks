@@ -1,7 +1,7 @@
 #include "cutelyst-benchmarks.h"
 
 #include <Cutelyst/Plugins/Utils/Sql>
-#include <Cutelyst/Plugins/View/Grantlee/grantleeview.h>
+#include <Cutelyst/Plugins/View/Cutelee/cuteleeview.h>
 
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
@@ -10,6 +10,8 @@
 #include <QDebug>
 #include <QMutexLocker>
 #include <QDir>
+
+#include <apool.h>
 
 #include "root.h"
 #include "jsontest.h"
@@ -39,7 +41,7 @@ bool cutelyst_benchmarks::init()
         new Root(this);
     }
 
-    auto view = new GrantleeView(this);
+    auto view = new CuteleeView(this);
     view->setIncludePaths({ QString::fromLatin1(qgetenv("TROOT")), QDir::currentPath() });
     view->preloadTemplates();
 
@@ -84,6 +86,13 @@ bool cutelyst_benchmarks::postFork()
             qDebug() << "Error opening MySQL db:" << db << db.connectionName() << db.lastError().databaseText();
             return false;
         }
+    } else if (driver == QLatin1String("postgres")) {
+        QUrl uri(QStringLiteral("postgresql://benchmarkdbuser:benchmarkdbpass@server/hello_world"));
+        uri.setHost(config(QStringLiteral("DatabaseHostName")).toString());
+        qDebug() << "ASql URI:" << uri.toString();
+
+        APool::addDatabase(uri.toString());
+        APool::setDatabaseMaxIdleConnections(15);
     }
 
     qDebug() << "Connections" << QCoreApplication::applicationPid() << QThread::currentThread() << QSqlDatabase::connectionNames();
@@ -96,3 +105,4 @@ bool cutelyst_benchmarks::postFork()
     return true;
 }
 
+#include "moc_cutelyst-benchmarks.cpp"

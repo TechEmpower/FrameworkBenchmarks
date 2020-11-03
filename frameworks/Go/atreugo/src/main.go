@@ -12,7 +12,7 @@ import (
 var bindHost string
 var prefork bool
 
-func init() {
+func init() { // nolint:gochecknoinits
 	flag.StringVar(&bindHost, "bind", ":8080", "set bind host")
 	flag.BoolVar(&prefork, "prefork", false, "use prefork")
 

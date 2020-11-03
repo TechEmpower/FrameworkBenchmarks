@@ -2,17 +2,12 @@
 ' Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
 
 Imports System.Runtime.CompilerServices
+Imports System.Text.Json
 Imports Microsoft.AspNetCore.Builder
 Imports Microsoft.AspNetCore.Http
 Imports Microsoft.Extensions.DependencyInjection
-Imports Newtonsoft.Json
-Imports Newtonsoft.Json.Serialization
 
 Public Class MultipleQueriesRawMiddleware
-
-    Private Shared ReadOnly JsonSettings As JsonSerializerSettings = New JsonSerializerSettings With {
-        .ContractResolver = New CamelCasePropertyNamesContractResolver()
-    }
 
     Private ReadOnly NextStage As RequestDelegate
 
@@ -26,7 +21,7 @@ Public Class MultipleQueriesRawMiddleware
             Dim count = MiddlewareHelpers.GetMultipleQueriesQueryCount(httpContext)
             Dim db = httpContext.RequestServices.GetService(Of RawDb)()
             Dim rows = Await db.LoadMultipleQueriesRows(count)
-            Dim result = JsonConvert.SerializeObject(rows, JsonSettings)
+            Dim result = JsonSerializer.Serialize(rows)
             httpContext.Response.StatusCode = StatusCodes.Status200OK
             httpContext.Response.ContentType = "application/json"
             httpContext.Response.ContentLength = result.Length

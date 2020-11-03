@@ -3,60 +3,81 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"math/rand"
 	"os"
 	"runtime"
 	"sort"
-	"strconv"
 	"sync"
 
 	"fiber/src/templates"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 	pgx "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 var (
-	child        bool
 	db           *pgxpool.Pool
 	cachedWorlds Worlds
 )
 
 const (
 	queryparam       = "q"
-	worldcount       = 10000
 	helloworld       = "Hello, World!"
+	worldcount       = 10000
 	worldselectsql   = "SELECT id, randomNumber FROM World WHERE id = $1"
 	worldupdatesql   = "UPDATE World SET randomNumber = $1 WHERE id = $2"
 	worldcachesql    = "SELECT * FROM World LIMIT $1"
 	fortuneselectsql = "SELECT id, message FROM Fortune"
+	pathJSON         = "/json"
+	pathDB           = "/db"
+	pathQueries      = "/queries"
+	pathCache        = "/cached-worlds"
+	pathFortunes     = "/fortunes"
+	pathUpdate       = "/update"
+	pathText         = "/plaintext"
 )
 
 func main() {
-	for _, arg := range os.Args[1:] {
-		if arg == "-child" {
-			child = true
-		}
-	}
-
 	initDatabase()
 
-	app := fiber.New(&fiber.Settings{
+	config := fiber.Config{
 		CaseSensitive:            true,
 		StrictRouting:            true,
 		DisableHeaderNormalizing: true,
 		ServerHeader:             "go",
+	}
+
+	for i := range os.Args[1:] {
+		if os.Args[1:][i] == "-prefork" {
+			config.Prefork = true
+		}
+	}
+
+	app := fiber.New(config)
+
+	app.Use(func(c *fiber.Ctx) error {
+		switch c.Path() {
+		case pathJSON:
+			jsonHandler(c)
+		case pathDB:
+			dbHandler(c)
+		case pathQueries:
+			queriesHandler(c)
+		case pathCache:
+			cachedHandler(c)
+		case pathFortunes:
+			templateHandler(c)
+		case pathUpdate:
+			updateHandler(c)
+		case pathText:
+			plaintextHandler(c)
+		}
+		return nil
 	})
 
-	app.Get("/plaintext", plaintextHandler)
-	app.Get("/json", jsonHandler)
-	app.Get("/db", dbHandler)
-	app.Get("/update", updateHandler)
-	app.Get("/queries", queriesHandler)
-	app.Get("/fortunes", templateHandler)
-	app.Get("/cached-worlds", cachedHandler)
-	app.Listen(8080)
+	log.Fatal(app.Listen(":8080"))
 }
 
 // Message ...
@@ -130,18 +151,21 @@ func ReleaseWorlds(w Worlds) {
 
 // initDatabase :
 func initDatabase() {
-	maxConn := runtime.NumCPU()
-	if maxConn == 0 {
-		maxConn = 8
-	}
-	if child {
-		maxConn = maxConn
-	} else {
-		maxConn = maxConn * 4
+	maxConn := runtime.NumCPU() * 4
+	if fiber.IsChild() {
+		maxConn = 5
 	}
 
 	var err error
-	db, err = pgxpool.Connect(context.Background(), fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s pool_max_conns=%d", "tfb-database", 5432, "benchmarkdbuser", "benchmarkdbpass", "hello_world", maxConn))
+	db, err = pgxpool.Connect(context.Background(),
+		fmt.Sprintf(
+			"host=%s port=%d user=%s password=%s dbname=%s pool_max_conns=%d",
+			"tfb-database", 5432,
+			"benchmarkdbuser",
+			"benchmarkdbpass",
+			"hello_world",
+			maxConn,
+		))
 	if err != nil {
 		panic(err)
 	}
@@ -169,23 +193,25 @@ func populateCache() {
 }
 
 // jsonHandler :
-func jsonHandler(c *fiber.Ctx) {
+func jsonHandler(c *fiber.Ctx) error {
 	m := AcquireJSON()
 	m.Message = helloworld
-	c.JSON(m)
+	c.JSON(&m)
 	ReleaseJSON(m)
+	return nil
 }
 
 // dbHandler :
-func dbHandler(c *fiber.Ctx) {
+func dbHandler(c *fiber.Ctx) error {
 	w := AcquireWorld()
 	db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
-	c.JSON(w)
+	c.JSON(&w)
 	ReleaseWorld(w)
+	return nil
 }
 
 // Frameworks/Go/fasthttp/src/server-postgresql/server.go#104
-func templateHandler(c *fiber.Ctx) {
+func templateHandler(c *fiber.Ctx) error {
 	rows, _ := db.Query(context.Background(), fortuneselectsql)
 
 	var f templates.Fortune
@@ -203,25 +229,27 @@ func templateHandler(c *fiber.Ctx) {
 		return fortunes[i].Message < fortunes[j].Message
 	})
 
-	c.Set(fiber.HeaderContentType, fiber.MIMETextHTMLCharsetUTF8)
+	c.Response().Header.SetContentType(fiber.MIMETextHTMLCharsetUTF8)
 
-	templates.WriteFortunePage(c.Fasthttp, fortunes)
+	templates.WriteFortunePage(c.Context(), fortunes)
+	return nil
 }
 
 // queriesHandler :
-func queriesHandler(c *fiber.Ctx) {
+func queriesHandler(c *fiber.Ctx) error {
 	n := QueriesCount(c)
 	worlds := AcquireWorlds()[:n]
 	for i := 0; i < n; i++ {
 		w := &worlds[i]
 		db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 	}
-	c.JSON(worlds)
+	c.JSON(&worlds)
 	ReleaseWorlds(worlds)
+	return nil
 }
 
 // updateHandler :
-func updateHandler(c *fiber.Ctx) {
+func updateHandler(c *fiber.Ctx) error {
 	n := QueriesCount(c)
 	worlds := AcquireWorlds()[:n]
 	for i := 0; i < n; i++ {
@@ -239,24 +267,29 @@ func updateHandler(c *fiber.Ctx) {
 		batch.Queue(worldupdatesql, w.RandomNumber, w.ID)
 	}
 	db.SendBatch(context.Background(), &batch).Close()
-	c.JSON(worlds)
+	c.JSON(&worlds)
 	ReleaseWorlds(worlds)
+
+	return nil
 }
 
+var helloworldRaw = []byte("Hello, World!")
+
 // plaintextHandler :
-func plaintextHandler(c *fiber.Ctx) {
-	c.SendString(helloworld)
+func plaintextHandler(c *fiber.Ctx) error {
+	return c.Send(helloworldRaw)
 }
 
 // cachedHandler :
-func cachedHandler(c *fiber.Ctx) {
+func cachedHandler(c *fiber.Ctx) error {
 	n := QueriesCount(c)
 	worlds := AcquireWorlds()[:n]
 	for i := 0; i < n; i++ {
 		worlds[i] = cachedWorlds[RandomWorld()-1]
 	}
-	c.JSON(worlds)
+	c.JSON(&worlds)
 	ReleaseWorlds(worlds)
+	return nil
 }
 
 // RandomWorld :
@@ -266,7 +299,7 @@ func RandomWorld() int {
 
 // QueriesCount :
 func QueriesCount(c *fiber.Ctx) int {
-	n, _ := strconv.Atoi(c.Query(queryparam))
+	n := c.Request().URI().QueryArgs().GetUintOrZero(queryparam)
 	if n < 1 {
 		n = 1
 	} else if n > 500 {

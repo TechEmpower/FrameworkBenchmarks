@@ -15,11 +15,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY deploy/swoole/php.ini /usr/local/etc/php/
 WORKDIR /symfony
-ADD ./composer.json ./composer.lock /symfony/
+ADD ./composer.json /symfony/
 RUN mkdir -m 777 -p /symfony/var/cache/swoole /symfony/var/log
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts --quiet
 ADD . /symfony
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer require "k911/swoole-bundle:^0.7.8" --no-scripts
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer require "k911/swoole-bundle:^0.7.8" --no-scripts --quiet
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --no-dev --classmap-authoritative
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env swoole
 

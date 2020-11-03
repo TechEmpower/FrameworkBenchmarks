@@ -14,25 +14,26 @@ object Http4kBenchmarkServer {
         {
             next(it).let {
                 it.headers(listOf(
-                        "Server" to "http4k",
-                        "Content-Length" to it.body.length.toString(),
-                        "Date" to if (addDate) dateFormat.format(System.currentTimeMillis()) else null
+                    "Server" to "http4k",
+                    "Content-Length" to it.body.length.toString(),
+                    "Date" to if (addDate) dateFormat.format(System.currentTimeMillis()) else null
                 ))
             }
         }
     }
 
     operator fun invoke(database: Database, addDateHeader: Boolean = true) =
-            headers(addDateHeader).then(
-                    routes(
-                            JsonRoute(),
-                            PlainTextRoute(),
-                            FortunesRoute(database),
-                            WorldRoutes.queryRoute(database),
-                            WorldRoutes.updateRoute(database),
-                            WorldRoutes.multipleRoute(database)
-                    )
+        headers(addDateHeader).then(
+            routes(
+                JsonRoute(),
+                PlainTextRoute(),
+                FortunesRoute(database),
+                WorldRoutes.queryRoute(database),
+                WorldRoutes.updateRoute(database),
+                WorldRoutes.multipleRoute(database),
+                WorldRoutes.cachedRoute(database)
             )
+        )
 }
 
 fun HttpHandler.start(config: ServerConfig) = asServer(config).start().block()

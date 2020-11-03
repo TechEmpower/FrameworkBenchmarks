@@ -8,12 +8,10 @@ import akka.http.scaladsl.model.HttpEntity
 import akka.http.scaladsl.model.MediaTypes.`text/html`
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Sink, Source}
 import net.benchmark.akka.http.util.Deciders
 import org.fusesource.scalate.TemplateEngine
 import slick.basic.DatabasePublisher
-
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
 object FortuneRoute {
@@ -37,8 +35,6 @@ object FortuneRoute {
 
 class FortuneRoute(fr: FortuneRepository, sd: ExecutionContextExecutor)(implicit val system: ActorSystem) {
 
-  private val fmat: ActorMaterializer = ActorMaterializer(Deciders.resumingMat("fmat"))
-
   private implicit val fmar = FortuneRoute.fm
 
   private def source(p: DatabasePublisher[Fortune]): Source[Fortune, NotUsed] = {
@@ -52,7 +48,8 @@ class FortuneRoute(fr: FortuneRepository, sd: ExecutionContextExecutor)(implicit
     path("fortunes") {
       complete(
         source(fr.all())
-          .runWith(Sink.seq[Fortune])(fmat)
+          .withAttributes(Deciders.resuming("fortunes"))
+          .runWith(Sink.seq[Fortune])
           .flatMap(s => Future.successful(s.sortBy(_.message)))(FortuneRoute.ec1))
     }
   }

@@ -2,11 +2,10 @@
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 #[macro_use]
-extern crate serde_derive;
-#[macro_use]
 extern crate diesel;
 
 use actix::prelude::*;
+use actix_http::error::ErrorInternalServerError;
 use actix_web::{http, web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use askama::Template;
 use bytes::BytesMut;
@@ -15,10 +14,14 @@ mod db;
 mod models;
 mod schema;
 mod utils;
+
 use utils::Writer;
 
 async fn world_row(db: web::Data<Addr<db::DbExecutor>>) -> Result<HttpResponse, Error> {
-    let res = db.send(db::RandomWorld).await?;
+    let res = db
+        .send(db::RandomWorld)
+        .await
+        .map_err(|e| ErrorInternalServerError(e))?;
 
     match res {
         Ok(row) => {
@@ -41,7 +44,10 @@ async fn queries(
     let q = utils::get_query_param(req.query_string());
 
     // run sql queries
-    let res = db.send(db::RandomWorlds(q)).await?;
+    let res = db
+        .send(db::RandomWorlds(q))
+        .await
+        .map_err(|e| ErrorInternalServerError(e))?;
     if let Ok(worlds) = res {
         let mut body = BytesMut::with_capacity(35 * worlds.len());
         serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
@@ -62,7 +68,10 @@ async fn updates(
     let q = utils::get_query_param(req.query_string());
 
     // update worlds
-    let res = db.send(db::UpdateWorld(q)).await?;
+    let res = db
+        .send(db::UpdateWorld(q))
+        .await
+        .map_err(|e| ErrorInternalServerError(e))?;
 
     if let Ok(worlds) = res {
         let mut body = BytesMut::with_capacity(35 * worlds.len());
@@ -83,7 +92,10 @@ struct FortuneTemplate<'a> {
 }
 
 async fn fortune(db: web::Data<Addr<db::DbExecutor>>) -> Result<HttpResponse, Error> {
-    let res = db.send(db::TellFortune).await?;
+    let res = db
+        .send(db::TellFortune)
+        .await
+        .map_err(|e| ErrorInternalServerError(e))?;
     match res {
         Ok(rows) => {
             let tmpl = FortuneTemplate { items: &rows };
@@ -98,7 +110,7 @@ async fn fortune(db: web::Data<Addr<db::DbExecutor>>) -> Result<HttpResponse, Er
     }
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("Starting http server: 127.0.0.1:8080");
 
