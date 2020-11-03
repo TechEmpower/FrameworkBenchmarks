@@ -23,7 +23,7 @@ class DbRawController
      */
     public function db(): JsonResponse
     {
-        $statement = $this->connection->prepare('SELECT * FROM World WHERE id = ?');
+        $statement = $this->connection->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
         $statement->execute([mt_rand(1, 10000)]);
         $world = $statement->fetch(FetchMode::ASSOCIATIVE);
 
@@ -41,7 +41,7 @@ class DbRawController
         // possibility for enhancement is the use of SplFixedArray -> http://php.net/manual/de/class.splfixedarray.php
         $worlds = [];
 
-        $statement = $this->connection->prepare('SELECT * FROM World WHERE id = ?');
+        $statement = $this->connection->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
         for ($i = 0; $i < $queries; ++$i) {
             $statement->execute([mt_rand(1, 10000)]);
             $worlds[] = $statement->fetch(FetchMode::ASSOCIATIVE);

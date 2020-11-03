@@ -1,14 +1,10 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-#[macro_use]
-extern crate serde_derive;
-#[macro_use]
-extern crate diesel;
-
 use std::io::Write;
 
 use actix::prelude::*;
+use actix_http::error::ErrorInternalServerError;
 use actix_http::{HttpService, KeepAlive};
 use actix_service::map_config;
 use actix_web::dev::{AppConfig, Body, Server};
@@ -23,7 +19,10 @@ use crate::db_pg::{PgConnection, RandomWorld, RandomWorlds, TellFortune, UpdateW
 use crate::utils::{FortunesYarteTemplate, Writer};
 
 async fn world_row(db: web::Data<Addr<PgConnection>>) -> Result<HttpResponse, Error> {
-    let res = db.send(RandomWorld).await?;
+    let res = db
+        .send(RandomWorld)
+        .await
+        .map_err(|e| ErrorInternalServerError(e))?;
     match res {
         Ok(body) => {
             let mut res = HttpResponse::with_body(StatusCode::OK, Body::Bytes(body));
@@ -45,7 +44,10 @@ async fn queries(
     let q = utils::get_query_param(req.query_string());
 
     // run sql queries
-    let res = db.send(RandomWorlds(q)).await?;
+    let res = db
+        .send(RandomWorlds(q))
+        .await
+        .map_err(|e| ErrorInternalServerError(e))?;
     if let Ok(worlds) = res {
         let mut body = BytesMut::with_capacity(35 * worlds.len());
         serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
@@ -69,7 +71,10 @@ async fn updates(
     let q = utils::get_query_param(req.query_string());
 
     // update db
-    let res = db.send(UpdateWorld(q)).await?;
+    let res = db
+        .send(UpdateWorld(q))
+        .await
+        .map_err(|e| ErrorInternalServerError(e))?;
     if let Ok(worlds) = res {
         let mut body = BytesMut::with_capacity(35 * worlds.len());
         serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
@@ -86,7 +91,10 @@ async fn updates(
 }
 
 async fn fortune(db: web::Data<Addr<PgConnection>>) -> Result<HttpResponse, Error> {
-    let res = db.send(TellFortune).await?;
+    let res = db
+        .send(TellFortune)
+        .await
+        .map_err(|e| ErrorInternalServerError(e))?;
 
     match res {
         Ok(fortunes) => {
@@ -110,7 +118,7 @@ async fn fortune(db: web::Data<Addr<PgConnection>>) -> Result<HttpResponse, Erro
     }
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("Started http server: 127.0.0.1:8080");
 

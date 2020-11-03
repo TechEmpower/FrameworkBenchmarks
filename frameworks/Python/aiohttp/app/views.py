@@ -52,7 +52,7 @@ async def single_database_query_raw(request):
     id_ = randint(1, 10000)
 
     async with request.app['pg'].acquire() as conn:
-        r = await conn.fetchval('SELECT randomnumber FROM world WHERE id = $1', id_)
+        r = await conn.fetchval('SELECT id,randomnumber FROM world WHERE id = $1', id_)
     return json_response({'id': id_, 'randomNumber': r})
 
 
@@ -85,7 +85,7 @@ async def multiple_database_queries_raw(request):
 
     result = []
     async with request.app['pg'].acquire() as conn:
-        stmt = await conn.prepare('SELECT randomnumber FROM world WHERE id = $1')
+        stmt = await conn.prepare('SELECT id,randomnumber FROM world WHERE id = $1')
         for id_ in ids:
             result.append({
                 'id': id_,
@@ -158,7 +158,7 @@ async def updates_raw(request):
     result = []
     updates = []
     async with request.app['pg'].acquire() as conn:
-        stmt = await conn.prepare('SELECT randomnumber FROM world WHERE id = $1')
+        stmt = await conn.prepare('SELECT id,randomnumber FROM world WHERE id = $1')
         for id_ in ids:
             # the result of this is the int previous random number which we don't actually use
             await stmt.fetchval(id_)

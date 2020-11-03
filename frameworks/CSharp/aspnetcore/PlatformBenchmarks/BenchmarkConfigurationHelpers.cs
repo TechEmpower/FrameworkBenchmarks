@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.IO.Pipelines;
+using System.Runtime.InteropServices;
 
 namespace PlatformBenchmarks
 {
@@ -16,34 +17,23 @@ namespace PlatformBenchmarks
         {
             builder.UseConfiguration(configuration);
 
-            // Handle the transport type
-            var webHost = builder.GetSetting("KestrelTransport");
-
-            Console.WriteLine($"Transport: {webHost}");
-
-            if (string.Equals(webHost, "LinuxTransport", StringComparison.OrdinalIgnoreCase))
+            builder.UseSockets(options =>
             {
-                builder.UseLinuxTransport(options =>
+                if (int.TryParse(builder.GetSetting("threadCount"), out int threadCount))
                 {
-                    options.ApplicationSchedulingMode = PipeScheduler.Inline;
-                });
-            }
-            else
-            {
-                builder.UseSockets(options =>
+                    options.IOQueueCount = threadCount;
+                }
+
+#if NET5_0
+                options.WaitForDataBeforeAllocatingBuffer = false;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
-                    if (int.TryParse(builder.GetSetting("threadCount"), out int threadCount))
-                    {
-                        options.IOQueueCount = threadCount;
-                    }
+                    options.UnsafePreferInlineScheduling = Environment.GetEnvironmentVariable("DOTNET_SYSTEM_NET_SOCKETS_INLINE_COMPLETIONS") == "1";
+                }
 
-#if NETCOREAPP5_0 || NET5_0
-                    options.WaitForDataBeforeAllocatingBuffer = false;
-
-                    Console.WriteLine($"Options: WaitForData={options.WaitForDataBeforeAllocatingBuffer}, IOQueue={options.IOQueueCount}");
+                Console.WriteLine($"Options: WaitForData={options.WaitForDataBeforeAllocatingBuffer}, PreferInlineScheduling={options.UnsafePreferInlineScheduling}, IOQueue={options.IOQueueCount}");
 #endif
-                });
-            }
+            });
 
             return builder;
         }

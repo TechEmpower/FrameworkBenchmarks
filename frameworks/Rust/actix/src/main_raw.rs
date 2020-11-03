@@ -1,11 +1,6 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-#[macro_use]
-extern crate serde_derive;
-#[macro_use]
-extern crate diesel;
-
 use std::future::Future;
 use std::io;
 use std::pin::Pin;
@@ -95,7 +90,7 @@ impl Future for App {
         }
 
         loop {
-            match this.codec.decode(&mut this.read_buf) {
+            match this.codec.decode(&mut Pin::new(&mut this.read_buf)) {
                 Ok(Some(h1::Message::Item(req))) => this.handle_request(req),
                 Ok(None) => break,
                 _ => return Poll::Ready(Err(())),
@@ -130,7 +125,7 @@ impl Future for App {
     }
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> io::Result<()> {
     println!("Started http server: 127.0.0.1:8080");
 

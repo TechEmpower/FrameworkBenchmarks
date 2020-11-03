@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using Npgsql;
 
 namespace Benchmarks
@@ -75,7 +75,7 @@ namespace Benchmarks
             {
                 if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
                 {
-                    services.AddSingleton<DbProviderFactory>(MySqlClientFactory.Instance);
+                    services.AddSingleton<DbProviderFactory>(MySqlConnectorFactory.Instance);
                 }
             }
 

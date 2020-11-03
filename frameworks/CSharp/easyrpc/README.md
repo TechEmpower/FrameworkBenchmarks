@@ -5,7 +5,7 @@ This includes tests for plaintext and json serialization.
 
 **Language**
 
-* C# 7.0
+* C# 7.0 
 
 **Platforms**
 
@@ -24,3 +24,8 @@ This includes tests for plaintext and json serialization.
 
 * [Plaintext](Benchmarks/Startup.cs): "/plaintext"
 * [JSON Serialization](Benchmarks/Startup.cs): "/json"
+* [Single query](Benchmarks/Services/QueryService.cs): "/db"
+* [Multiple query](Benchmarks/Services/QueryService.cs): "/queries"
+* [Update query](Benchmarks/Services/QueryService.cs): "/updates"
+* [Caching query](Benchmarks/Services/QueryService.cs): "/cached-worlds"
+* [Fortune](Benchmarks/Services/FortuneService.cs): "/fortunes/fortunes"

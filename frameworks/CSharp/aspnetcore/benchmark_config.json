@@ -20,11 +20,11 @@
       "notes": "",
       "versus": "aspcore"
     },
-    "rhtx": {
+    "pgo": {
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "port": 8080,
-      "approach": "Realistic",
+      "approach": "Stripped",
       "classification": "Platform",
       "database": "None",
       "framework": "ASP.NET Core",
@@ -35,7 +35,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, Red Hat Linux Transport",
+      "display_name": "ASP.NET Core, Profile Guided Optimization",
       "notes": "",
       "versus": "aspcore"
     },
@@ -78,13 +78,13 @@
       "notes": "",
       "versus": "aspcore-ado-pg-up"
     },
-    "rhtx-pg": {
+    "pgo-pg": {
       "fortune_url": "/fortunes",
       "db_url": "/db",
       "query_url": "/queries/",
       "cached_query_url": "/cached-worlds/",
       "port": 8080,
-      "approach": "Realistic",
+      "approach": "Stripped",
       "classification": "Platform",
       "database": "Postgres",
       "framework": "ASP.NET Core",
@@ -95,14 +95,14 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, Red Hat Linux Transport, ADO.NET",
+      "display_name": "ASP.NET Core, Profile Guided Optimization",
       "notes": "",
       "versus": "aspcore-ado-pg"
     },
-    "rhtx-pg-up": {
+    "pgo-pg-up": {
       "update_url": "/updates/",
       "port": 8080,
-      "approach": "Realistic",
+      "approach": "Stripped",
       "classification": "Platform",
       "database": "Postgres",
       "framework": "ASP.NET Core",
@@ -113,7 +113,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, Red Hat Linux Transport, ADO.NET",
+      "display_name": "ASP.NET Core, Profile Guided Optimization",
       "notes": "",
       "versus": "aspcore-ado-pg-up"
     },

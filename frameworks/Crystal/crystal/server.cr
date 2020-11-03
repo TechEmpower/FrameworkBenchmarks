@@ -12,7 +12,7 @@ server = HTTP::Server.new do |context|
 
   response.headers["Server"] = "Crystal"
   response.headers["Date"] = HTTP.format_time(Time.now)
-  
+
   case request.path
   when "/json"
     response.status_code = 200
@@ -58,7 +58,7 @@ server = HTTP::Server.new do |context|
     JSON.build(response) do |json|
       json.array do
         sanitized_query_count(request).times do
-          world = set_world({id: random_world[:id], randomNumber: rand(1..ID_MAXIMUM)})          
+          world = set_world({id: random_world[:id], randomNumber: rand(1..ID_MAXIMUM)})
           world.to_json(json)
         end
       end
@@ -70,7 +70,7 @@ end
 
 private def random_world
   id = rand(1..ID_MAXIMUM)
-  random_number = APPDB.query_one("SELECT randomNumber FROM world WHERE id = $1", id, as: Int32)
+  random_number = APPDB.query_one("SELECT id, randomNumber FROM world WHERE id = $1", id, as: Int32)
   {id: id, randomNumber: random_number}
 end
 

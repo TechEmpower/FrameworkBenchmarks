@@ -2,10 +2,14 @@
 
 apt update -yqq && apt install --no-install-recommends -yqq autoconf-archive unzip uuid-dev odbc-postgresql unixodbc unixodbc-dev \
 	apache2 apache2-dev libapr1-dev libaprutil1-dev memcached libmemcached-dev redis-server libssl-dev \
-	zlib1g-dev cmake make clang-format-9 ninja-build libhiredis-dev libcurl4-openssl-dev
+	zlib1g-dev cmake make clang-format-9 ninja-build libhiredis-dev libcurl4-openssl-dev libpq-dev
 
 #redis will not start correctly on bionic with this config
 sed -i "s/bind .*/bind 127.0.0.1/g" /etc/redis/redis.conf
+
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+echo 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' >> /etc/rc.local
+sysctl vm.overcommit_memory=1
 
 service apache2 stop
 service memcached stop
@@ -45,7 +49,7 @@ cd $IROOT
 rm -rf mongo-c-driver-1.4.2 
 
 #wget -q https://github.com/redis/hiredis/archive/v0.13.3.tar.gz
-#tar xvf v0.13.3.tar.gz
+#tar xf v0.13.3.tar.gz
 #rm -f v0.13.3.tar.gz
 #cd hiredis-0.13.3/
 #make
@@ -55,7 +59,7 @@ rm -rf mongo-c-driver-1.4.2
 
 cd $IROOT
 wget -q https://github.com/microsoft/mimalloc/archive/v1.6.3.tar.gz
-tar xvf v1.6.3.tar.gz
+tar xf v1.6.3.tar.gz
 rm -f v1.6.3.tar.gz
 cd mimalloc-1.6.3
 mkdir -p out/release
@@ -66,7 +70,7 @@ cd $IROOT
 rm -rf mimalloc-1.6.3
 
 wget -q https://github.com/microsoft/snmalloc/archive/0.4.2.tar.gz
-tar xvf 0.4.2.tar.gz
+tar xf 0.4.2.tar.gz
 rm -f 0.4.2.tar.gz
 cd snmalloc-0.4.2
 mkdir build
