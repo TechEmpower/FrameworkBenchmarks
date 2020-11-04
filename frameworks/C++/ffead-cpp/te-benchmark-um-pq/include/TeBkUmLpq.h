@@ -100,20 +100,20 @@ class TeBkUmLpqRouter : public Router {
 	void db(TeBkUmLpqWorld&);
 	void queries(const char*, int, std::vector<TeBkUmLpqWorld>&);
 	void queriesMulti(const char*, int, std::vector<TeBkUmLpqWorld>&);
-	static void dbUtil(void* ctx, int rn, std::vector<LibpqRes>& data);
-	static void queriesMultiUtil(void* ctx, int rn, std::vector<LibpqRes>& data);
+	static void dbUtil(void* ctx, int, int, char *);
+	static void queriesMultiUtil(void* ctx, int, int, char *, int);
 
 	void updates(const char*, int, std::vector<TeBkUmLpqWorld>&);
-	static void updatesUtil(void* ctx, int rn, std::vector<LibpqRes>& data);
+	static void updatesUtil(void* ctx, int, int, char *);
 	void updatesMulti(const char*, int, std::vector<TeBkUmLpqWorld>&);
-	static void updatesMultiUtil(void* ctx, int rn, std::vector<LibpqRes>& data);
-	static void updatesMultiUtilCh(void* ctx, bool status, std::string query, int counter);
+	static void updatesMultiUtil(void* ctx, int, int, char *, int);
+	static void updatesMultiUtilCh(void* ctx, bool status, const std::string& query, int counter);
 	
 	void cachedWorlds(const char*, int, std::vector<TeBkUmLpqWorld>&);
 	static void updateCacheUtil(void* ctx, int rn, std::vector<LibpqRes>& data);
 
 	void getContext(HttpRequest* request, Context* context);
-	static void getContextUtil(void* ctx, int rn, std::vector<LibpqRes>& data);
+	static void getContextUtil(void* ctx, int, int, char *, int);
 
 	LibpqDataSourceImpl* sqli;
 	LibpqDataSourceImpl* getDb();

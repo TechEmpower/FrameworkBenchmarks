@@ -29,12 +29,6 @@ sed -i 's|#define PACKAGE_STRING "ffead-cpp 5.0"| |g' ${IROOT}/ffead-cpp-5.0/inc
 sed -i 's|#define PACKAGE_TARNAME "ffead-cpp"| |g' ${IROOT}/ffead-cpp-5.0/include/AppDefines.h
 sed -i 's|#define PACKAGE_VERSION "5.0"| |g' ${IROOT}/ffead-cpp-5.0/include/AppDefines.h
 
-#cd ${IROOT}/ffead-cpp-src/modules/apache_mod_ffeadcpp/
-#g++ -fpic -DSHARED_MODULE -fpermissive -std=gnu++11 -I"/usr/include/apache2" -I"/usr/include/apr-1.0" -I"${IROOT}/ffead-cpp-5.0/include/" -I"${IROOT}/include" -I"${IROOT}/include/libbson-1.0/" -I"${IROOT}/include/libmongoc-1.0" mod_ffeadcpp.cpp -L"${IROOT}/ffead-cpp-5.0/lib" -L"${IROOT}" -L"${IROOT}/lib" -lffead_common -lffead_framework -ldl -lcrypto -lssl -lhiredis -lmemcachedutil -c mod_ffeadcpp.cpp
-#g++ -shared -o mod_ffeadcpplib.so mod_ffeadcpp.o -L"${IROOT}/ffead-cpp-5.0/lib" -L"${IROOT}" -L"${IROOT}/lib" -lffead_common -lffead_framework -ldl -lcrypto -lssl -lapr-1 -laprutil-1 -lstdc++ -lhiredis -lmemcachedutil
-#apxs -i -n 'ffead_cpp_module' mod_ffeadcpplib.so
-#cd -
-
 FFEADROOT=${IROOT}/ffead-cpp-5.0
 ETROOT=${FFEADROOT//\//\\/}
 EIROOT=${IROOT//\//\\/}
