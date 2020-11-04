@@ -43,6 +43,7 @@ import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactories;
 import io.r2dbc.spi.ConnectionFactory;
 import io.r2dbc.spi.ConnectionFactoryOptions;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.officefloor.frame.api.manage.OfficeFloor;
 import net.officefloor.frame.api.manage.ProcessManager;
@@ -452,12 +453,13 @@ public class RawOfficeFloorMain {
 						Integer id = row.get(0, Integer.class);
 						Integer number = row.get(1, Integer.class);
 						return new World(id, number);
-					})))
-					.flatMap(world -> Flux
-							.from(db.createStatement("UPDATE WORLD SET RANDOMNUMBER = $1 WHERE ID = $2")
-									.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).bind(1, world.id).execute())
-							.map(result -> world))
-					.collectList().subscribe(worlds -> {
+					}))).flatMap(world -> {
+						world.randomNumber = ThreadLocalRandom.current().nextInt(1, 10001);
+						return Flux
+								.from(db.createStatement("UPDATE WORLD SET RANDOMNUMBER = $1 WHERE ID = $2")
+										.bind(0, world.randomNumber).bind(1, world.id).execute())
+								.flatMap(result -> Flux.from(result.getRowsUpdated()).map(updated -> world));
+					}).collectList().subscribe(worlds -> {
 						try {
 							response.setContentType(APPLICATION_JSON, null);
 							this.objectMapper.writeValue(response.getEntityWriter(), worlds);
@@ -500,11 +502,12 @@ public class RawOfficeFloorMain {
 	}
 
 	@Data
+	@AllArgsConstructor
 	public static class World {
 
 		private final int id;
 
-		private final int randomNumber;
+		private int randomNumber;
 	}
 
 	@Data
