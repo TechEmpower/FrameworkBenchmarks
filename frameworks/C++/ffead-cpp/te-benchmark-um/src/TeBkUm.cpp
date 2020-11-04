@@ -175,7 +175,7 @@ void TeBkUmRouter::cachedWorlds(const char* q, int ql, std::vector<TeBkUmWorld>&
 			keys.push_back(CastUtil::fromNumber(rid));
 		}
 
-		wlst = cchi->mgetO<TeBkUmWorld>(keys);
+		cchi->mgetO<TeBkUmWorld>(keys, wlst);
 		CacheManager::cleanImpl(cchi);
 	} catch(const std::exception& e) {
 		CacheManager::cleanImpl(cchi);

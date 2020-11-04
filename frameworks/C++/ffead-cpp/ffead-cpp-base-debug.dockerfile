@@ -1,10 +1,10 @@
 FROM ubuntu:20.04
 LABEL maintainer="Sumeet Chhetri"
-LABEL version="5.2"
+LABEL version="5.2-debug"
 LABEL description="Base ffead-cpp docker image with commit id - master"
 
 ENV IROOT=/installs
-ENV DEBUG=off
+ENV DEBUG=on
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
@@ -30,3 +30,5 @@ RUN ./install_ffead-cpp-framework.sh && ./install_ffead-cpp-httpd.sh && ./instal
 
 COPY run_ffead.sh /
 RUN chmod 755 /run_ffead.sh
+
+RUN apt update -yqq && apt install -yqq gdb net-tools vim
