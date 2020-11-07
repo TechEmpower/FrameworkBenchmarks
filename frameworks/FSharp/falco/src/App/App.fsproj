@@ -6,9 +6,8 @@
 
   <ItemGroup>
     <Compile Include="UI.fs" />
-    <Compile Include="Value.fs" />
     <Compile Include="Fortune.fs" />
-    <Compile Include="Host.fs" />
+    <Compile Include="Server.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
