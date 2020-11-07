@@ -30,4 +30,4 @@ EXPOSE 9501
 
 ENTRYPOINT ["php", "/var/www/sw-fw-less/start.php"]
 
-MAINTAINER luoxiaojun1992 <luoxiaojun1992@sina.cn>
+LABEL luoxiaojun1992 <luoxiaojun1992@sina.cn>
