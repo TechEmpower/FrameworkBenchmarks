@@ -171,14 +171,6 @@ namespace PlatformBenchmarks
 
         public virtual void OnStartLine(ReadOnlySpan<byte> http, ReadOnlySpan<byte> method, ReadOnlySpan<byte> url, ISession session, HttpToken token, PipeStream stream)
         {
-            if (!Program.Debug)
-            {
-                UpdateCommandsCached.Init();
-                if (Program.UpDB)
-                    DBConnectionGroupPool.Init(64, RawDb._connectionString);
-                else
-                    DBConnectionGroupPool.Init(256, RawDb._connectionString);
-            }
             int queryIndex = AnalysisUrl(url);
             ReadOnlySpan<byte> baseUrl = default;
             ReadOnlySpan<byte> queryString = default;
