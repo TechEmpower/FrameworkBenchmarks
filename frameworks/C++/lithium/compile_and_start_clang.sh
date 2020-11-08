@@ -1,7 +1,7 @@
 #! /bin/sh
 
 DB_FLAG=$1
-COMMIT=17737fb9473e0111d5ab235a13b6a143b5ca1673
+COMMIT=6d2b6d06fc47d45a0451e99d470ce2bc6b26f0d7
 
 if [ $DB_FLAG = "TFB_MYSQL" ]; then
   CXX_FLAGS="-I /usr/include/mariadb  -lmariadbclient "

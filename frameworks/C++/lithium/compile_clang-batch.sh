@@ -1,7 +1,7 @@
 #! /bin/sh
 
 DB_FLAG=$1
-COMMIT=fac5aec6f7b3c8021186a15b0a5ee27081807cd2
+COMMIT=b3e48251b9c5f5baf0727347a80fbc7f8e67ef0f
 MONOTHREAD=$2
 
 if [ $DB_FLAG = "TFB_MYSQL" ]; then
