@@ -1,4 +1,4 @@
-FROM elixir:1.10
+FROM elixir:1.11.2
 
 WORKDIR /phoenix
 
