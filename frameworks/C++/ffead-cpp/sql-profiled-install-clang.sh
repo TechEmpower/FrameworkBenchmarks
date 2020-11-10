@@ -15,6 +15,8 @@ then
 	make && make install
 fi
 
+apt update -yqq && apt install -yqq clang
+
 cd $IROOT/ffead-cpp-src/
 rm -rf CMakeCache.txt CMakeFiles
 rm -rf web/te-benchmark-um web/te-benchmark-um-mgr web/te-benchmark-um-pq-async
@@ -31,7 +33,7 @@ sed -i 's|tfb-database|localhost|g' $IROOT/ffead-cpp-src/web/te-benchmark-um-pq/
 rm -rf build
 mkdir build
 cd build
-CXXFLAGS="-march=native -flto -fprofile-dir=/tmp/profile-data -fprofile-generate" cmake -DSRV_EMB=on -DMOD_REDIS=on ..
+CC=/usr/bin/clang CXX=/usr/bin/clang++ CXXFLAGS="-march=native -flto -fprofile-instr-generate=/tmp/cprof.prof" cmake -DSRV_EMB=on -DMOD_REDIS=on ..
 make install && mv $IROOT/ffead-cpp-src/ffead-cpp-5.0-bin $IROOT/ffead-cpp-sql-raw
 
 #Start postgresql
@@ -39,7 +41,8 @@ service postgresql stop
 #For profiling/benchmarking
 
 cd $IROOT/
-#sed -i 's|cmake .|cmake -DCMAKE_EXE_LINKER_FLAGS="-fprofile-dir=/tmp/profile-data -fprofile-generate" -DCMAKE_CXX_FLAGS="-march=native -fprofile-dir=/tmp/profile-data  -fprofile-generate" .|g' $IROOT/ffead-cpp-sql-raw/resources/rundyn-automake.sh
+sed -i 's|cmake .|CC=/usr/bin/clang CXX=/usr/bin/clang++ cmake .|g' $IROOT/ffead-cpp-sql-raw/resources/rundyn-automake.sh
+#sed -i 's|-fprofile-instr-generate=/tmp/cprof.prof|-fprofile-instr-generate=/tmp/cprofdi.prof|g' $IROOT/ffead-cpp-sql-raw/rtdcf/CMakeLists.txt.template
 ./install_ffead-cpp-sql-raw-profiled.sh
 rm -rf $IROOT/ffead-cpp-sql-raw
 
@@ -47,7 +50,10 @@ cd $IROOT/ffead-cpp-src
 rm -rf build
 mkdir build
 cd build
-CXXFLAGS="-march=native -flto -fprofile-dir=/tmp/profile-data -fprofile-use=/tmp/profile-data -fprofile-correction" cmake -DSRV_EMB=on -DMOD_MEMCACHED=on -DMOD_REDIS=on -DMOD_SDORM_MONGO=on ..
+llvm-profdata-10 merge -output=/tmp/cprof.pgo  /tmp/cprof.prof
+#llvm-profdata-10 merge -output=/tmp/cprofdi.pgo  /tmp/cprofdi.prof
+ls -ltr /tmp/cprof*
+CC=/usr/bin/clang CXX=/usr/bin/clang++ CXXFLAGS="-march=native -flto -fprofile-instr-use=/tmp/cprof.pgo" cmake -DSRV_EMB=on -DMOD_MEMCACHED=on -DMOD_REDIS=on -DMOD_SDORM_MONGO=on ..
 make install && mv $IROOT/ffead-cpp-src/ffead-cpp-5.0-bin $IROOT/ffead-cpp-sql-raw
 
 #Start postgresql
@@ -55,7 +61,8 @@ service postgresql stop
 #For profiling/benchmarking
 
 cd $IROOT/
-#sed -i 's|cmake .|CXXFLAGS="-march=native -fprofile-dir=/tmp/profile-data -fprofile-use -fprofile-correction" cmake .|g' $IROOT/ffead-cpp-sql-raw/resources/rundyn-automake.sh
+sed -i 's|cmake .|CC=/usr/bin/clang CXX=/usr/bin/clang++ cmake .|g' $IROOT/ffead-cpp-sql-raw/resources/rundyn-automake.sh
+#sed -i 's|-fprofile-instr-use=/tmp/cprof.pgo|-fprofile-instr-use=/tmp/cprofdi.pgo|g' $IROOT/ffead-cpp-sql-raw/rtdcf/CMakeLists.txt.template
 ./install_ffead-cpp-sql-raw-profiled.sh
 mv $IROOT/ffead-cpp-sql-raw $IROOT/ffead-cpp-5.0-sql
 

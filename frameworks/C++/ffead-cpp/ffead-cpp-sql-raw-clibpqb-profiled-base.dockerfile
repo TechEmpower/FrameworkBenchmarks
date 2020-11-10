@@ -79,7 +79,7 @@ ENV accept accept
 
 WORKDIR ${IROOT}
 
-COPY sql-profiled-install.sh install_ffead-cpp-sql-raw-profiled.sh ${IROOT}/
-RUN chmod 755 ${IROOT}/sql-profiled-install.sh ${IROOT}/install_ffead-cpp-sql-raw-profiled.sh
+COPY sql-profiled-install-clang.sh install_ffead-cpp-sql-raw-profiled.sh ${IROOT}/
+RUN chmod 755 ${IROOT}/sql-profiled-install-clang.sh ${IROOT}/install_ffead-cpp-sql-raw-profiled.sh
 
-RUN ./sql-profiled-install.sh batch
+RUN ./sql-profiled-install-clang.sh batch
