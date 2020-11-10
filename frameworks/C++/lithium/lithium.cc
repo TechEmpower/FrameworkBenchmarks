@@ -58,18 +58,13 @@ void siege(int port) {
 template <typename T>
 struct cache {
 
-  void insert(T o) { 
-    buffer.push_back(o);
+  void insert(T o) {
+    if (buffer.size() <= o.id) buffer.resize(o.id+1);
+    buffer[o.id] = o;
   }
 
   const T& get(int id) const {
     return buffer[id];
-  }
-
-  std::vector<const T*> get_array(const std::vector<int>& ids) const {
-    std::vector<const T*> res;
-    for (int i = 0; i < ids.size(); i++) res.push_back(&buffer[ids[i]]);
-    return res;
   }
 
   std::vector<T> buffer;
