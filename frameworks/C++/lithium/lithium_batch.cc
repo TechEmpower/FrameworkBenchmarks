@@ -1,4 +1,4 @@
-#include "lithium_http_server.hh"
+#include "lithium_http_backend.hh"
 
 #if TFB_MYSQL
   #include "lithium_mysql.hh"
@@ -43,34 +43,16 @@ void escape_html_entities(B& buffer, const std::string_view& data)
 
 #ifdef PROFILE_MODE
 void siege(int port) {
-  auto sockets = http_benchmark_connect(512, port);
-  http_benchmark(sockets, 2, 1000, "GET /json HTTP/1.1\r\n\r\n");
-  http_benchmark(sockets, 2, 1000, "GET /plaintext HTTP/1.1\r\n\r\n");
-  http_benchmark(sockets, 2, 1000, "GET /db HTTP/1.1\r\n\r\n");
-  http_benchmark(sockets, 2, 1000, "GET /queries?N=20 HTTP/1.1\r\n\r\n");
-  http_benchmark(sockets, 2, 1000, "GET /fortunes HTTP/1.1\r\n\r\n");
-  http_benchmark(sockets, 2, 1000, "GET /updates?N=20 HTTP/1.1\r\n\r\n");
-  http_benchmark(sockets, 2, 1000, "GET /cached-world?N=100 HTTP/1.1\r\n\r\n");
+  auto sockets = http_benchmark_connect(256, port);
+  http_benchmark(sockets, 1, 100, "GET /json HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 1, 100, "GET /plaintext HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 1, 100, "GET /db HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 1, 100, "GET /queries?N=20 HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 1, 100, "GET /fortunes HTTP/1.1\r\n\r\n");
+  // http_benchmark(sockets, 1, 100, "GET /updates?N=20 HTTP/1.1\r\n\r\n");
   http_benchmark_close(sockets);
 }
 #endif
-
-template <typename T>
-struct cache {
-
-  void insert(T o) {
-    if (buffer.size() <= o.id) buffer.resize(o.id+1);
-    buffer[o.id] = o;
-  }
-
-  const T& get(int id) const {
-    return buffer[id];
-  }
-
-  std::vector<T> buffer;
-};
-
-cache<decltype(mmm(s::id = int(), s::randomNumber = int()))> world_cache;
 
 int main(int argc, char* argv[]) {
 
@@ -95,9 +77,10 @@ int main(int argc, char* argv[]) {
                 s::password = "benchmarkdbpass", s::port = 3306, s::charset = "utf8");
 #elif TFB_PGSQL
   auto sql_db = pgsql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
-                               s::password = "benchmarkdbpass", s::port = 5432, s::charset = "utf8");
+                               s::password = "benchmarkdbpass", s::port = 5432, s::charset = "utf8", s::max_async_connections_per_thread = N_SQL_CONNECTIONS);
 #endif
 
+  std::cout << "Using " << sql_db.max_async_connections_per_thread_ << " sql connections x " << nthreads << " threads." << std::endl;
   auto fortunes = sql_orm_schema(sql_db, "Fortune").fields(
     s::id(s::auto_increment, s::primary_key) = int(),
     s::message = std::string());
@@ -106,26 +89,22 @@ int main(int argc, char* argv[]) {
     s::id(s::auto_increment, s::primary_key) = int(),
     s::randomNumber = int());
 
-#ifndef N_SQL_CONNECTIONS
-  #if TFB_MYSQL
-    int db_nconn = 5;
-    int queries_nconn = 4;
-    int fortunes_nconn = 5;
-    int updates_nconn = 2;
-  #elif TFB_PGSQL
-    int db_nconn = 5;
-    int queries_nconn = 3;
-    int fortunes_nconn = 7;
-    int updates_nconn = 3;
-  #endif
-#else
-  int db_nconn = N_SQL_CONNECTIONS;
-  int queries_nconn = N_SQL_CONNECTIONS;
-  int fortunes_nconn = N_SQL_CONNECTIONS;
-  int updates_nconn = N_SQL_CONNECTIONS;
-#endif
+
 
   http_api my_api;
+
+  auto select_N_random_numbers = [] (auto& orm, int N) {
+    std::vector<decltype(random_numbers.all_fields())> numbers(N);
+    std::vector<decltype(orm.find_one(s::id = 1))> results;
+    
+    for (int i = 0; i < N; i++)
+      results.push_back(orm.find_one(s::id = 1 + (i*10000/N) + rand() % (10000/N)));
+    for (int i = 0; i < N; i++){
+      // println(" read result " , i);
+      numbers[i] = results[i]().value();
+    }
+    return numbers;
+  };
 
   my_api.get("/plaintext") = [&](http_request& request, http_response& response) {
     response.set_header("Content-Type", "text/plain");
@@ -136,76 +115,48 @@ int main(int argc, char* argv[]) {
     response.write_json(s::message = "Hello, World!");
   };
   my_api.get("/db") = [&](http_request& request, http_response& response) {
-    sql_db.max_async_connections_per_thread_ = db_nconn;
-    response.write_json(*random_numbers.connect(request.fiber).find_one(s::id = 1 + rand() % 10000));
+    response.write_json(random_numbers.connect(request.fiber).find_one(s::id = 1 + rand() % 10000)());
   };
 
   my_api.get("/queries") = [&](http_request& request, http_response& response) {
-    sql_db.max_async_connections_per_thread_ = queries_nconn;
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
     int N = atoi(N_str.c_str());
     
     N = std::max(1, std::min(N, 500));
     
-    auto c = random_numbers.connect(request.fiber);
-    response.write_json_generator(N, [&] { return *c.find_one(s::id = 1 + rand() % 10000); });
-  };
-
-  random_numbers.connect().forall([&] (const auto& number) {
-    world_cache.insert(metamap_clone(number));
-  });
-
-  my_api.get("/cached-worlds") = [&](http_request& request, http_response& response) {
-    std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
-    int N = atoi(N_str.c_str());
-
-    response.write_json_generator(std::max(1, std::min(N, 500)), 
-      [&] { return world_cache.get(1 + rand() % 10000); });
+    auto orm = random_numbers.connect(request.fiber);
+    std::vector<decltype(orm.find_one(s::id = 1))> results;
+    for (int i = 0; i < N; i++)
+      results.push_back(orm.find_one(s::id = 1 + (i*10000/N) + rand() % (10000/N)));
+    
+    int i = 0;
+    response.write_json_generator(N, [&] { return results[i++]().value(); });
   };
 
   my_api.get("/updates") = [&](http_request& request, http_response& response) {
-    sql_db.max_async_connections_per_thread_ = updates_nconn;
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
     int N = atoi(N_str.c_str());
     N = std::max(1, std::min(N, 500));
-    std::vector<decltype(random_numbers.all_fields())> numbers(N);
 
-    {     
-      auto c = random_numbers.connect(request.fiber);
-      auto& raw_c = c.backend_connection();
+    auto c = random_numbers.connect(request.fiber);
+    auto numbers = select_N_random_numbers(c, N);
+ 
+    for (int i = 0; i < N; i++)
+      numbers[i].randomNumber = 1 + rand() % 10000;
 
-      
-#if TFB_MYSQL
-      raw_c("START TRANSACTION");
-#endif
-      for (int i = 0; i < N; i++)
-      {
-        numbers[i] = *c.find_one(s::id = 1 + rand() % 10000);
-        numbers[i].randomNumber = 1 + rand() % 10000;
-      }
-
-      std::sort(numbers.begin(), numbers.end(), [] (auto a, auto b) { return a.id < b.id; });
-
-      c.bulk_update(numbers);
-
-#if TFB_MYSQL
-      raw_c("COMMIT");
-#endif
-    }
-
+    auto req = c.bulk_update(numbers);
+    if (N_SQL_CONNECTIONS * nthreads > 1) c.backend_connection().end_of_batch();
+    req.flush_results();
     response.write_json(numbers);
   };
 
   my_api.get("/fortunes") = [&](http_request& request, http_response& response) {
-    sql_db.max_async_connections_per_thread_ = fortunes_nconn;
 
     typedef decltype(fortunes.all_fields()) fortune;
     std::vector<fortune> table;
 
-    {
-      auto c = fortunes.connect(request.fiber);
-      c.forall([&] (const auto& f) { table.emplace_back(metamap_clone(f)); });
-    }
+    auto c = fortunes.connect(request.fiber);
+    c.forall([&] (const auto& f) { table.emplace_back(metamap_clone(f)); });
     table.emplace_back(0, "Additional fortune added at request time.");
 
     std::sort(table.begin(), table.end(),

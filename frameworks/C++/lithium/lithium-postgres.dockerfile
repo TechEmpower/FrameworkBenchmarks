@@ -9,4 +9,4 @@ COPY ./ ./
 RUN ./compile_libpq.sh
 ENV LD_LIBRARY_PATH=/usr/lib
 
-CMD ./compile_and_start_clang.sh TFB_PGSQL
+CMD ./compile.sh TFB_PGSQL
