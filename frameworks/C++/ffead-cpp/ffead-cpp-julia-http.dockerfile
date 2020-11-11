@@ -13,14 +13,17 @@ RUN rm -f /usr/local/lib/libffead-* /usr/local/lib/libte_benc* /usr/local/lib/li
 
 WORKDIR ${IROOT}
 #RUN apt-get update -y && apt-get install -y --no-install-recommends julia
-RUN wget -q https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.2-linux-x86_64.tar.gz
+RUN wget --no-check-certificate -q https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.2-linux-x86_64.tar.gz
 RUN tar -xzf julia-1.5.2-linux-x86_64.tar.gz
 RUN mv julia-1.5.2 /opt/
 RUN rm -f julia-1.5.2-linux-x86_64.tar.gz
-ENV PATH="/opt/julia-1.5.2/bin/bin:${PATH}"
+ENV PATH="/opt/julia-1.5.2/bin:${PATH}"
 
-RUN julia -e 'import Pkg; Pkg.add("HTTP")'
+RUN julia -e 'import Pkg; Pkg.update()' && \
+    julia -e 'import Pkg; Pkg.add("HTTP")' && \
+    julia -e 'import Pkg; Pkg.precompile()'
 
 WORKDIR /
 
 CMD ./run_ffead.sh ffead-cpp-5.0 julia-http
+
