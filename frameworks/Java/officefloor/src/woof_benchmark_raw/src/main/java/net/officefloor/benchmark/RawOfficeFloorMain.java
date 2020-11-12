@@ -82,7 +82,7 @@ public class RawOfficeFloorMain {
 	/**
 	 * Buffer size of queries.
 	 */
-	private static final int QUERY_BUFFER_SIZE = 4096;
+	private static final int QUERY_BUFFER_SIZE = 5120;
 
 	/**
 	 * {@link SocketManager}.
