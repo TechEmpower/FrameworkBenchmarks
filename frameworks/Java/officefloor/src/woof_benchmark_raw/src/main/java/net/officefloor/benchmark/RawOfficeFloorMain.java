@@ -18,6 +18,7 @@
 package net.officefloor.benchmark;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.time.ZoneOffset;
@@ -43,6 +44,7 @@ import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactories;
 import io.r2dbc.spi.ConnectionFactory;
 import io.r2dbc.spi.ConnectionFactoryOptions;
+import io.r2dbc.spi.R2dbcTransientResourceException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.officefloor.frame.api.manage.OfficeFloor;
@@ -104,8 +106,8 @@ public class RawOfficeFloorMain {
 				"tfb-database");
 		System.out.println("Starting server on port " + port + " talking to database " + server);
 
-		// Increase the buffer size
-		System.setProperty("reactor.bufferSize.small", String.valueOf(10000));
+		// Increase the buffer size (note: too high and cause OOM issues)
+		System.setProperty("reactor.bufferSize.small", String.valueOf(4096));
 
 		// Build the connection pool
 		ConnectionFactoryOptions factoryOptions = ConnectionFactoryOptions.builder()
@@ -475,12 +477,27 @@ public class RawOfficeFloorMain {
 		private void sendError(ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection,
 				Throwable failure) {
 			try {
-				failure.printStackTrace();
 
+				// Setup to send response
 				HttpResponse response = connection.getResponse();
 				response.reset();
-				response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+
+				// Determine type of error
+				if (failure instanceof R2dbcTransientResourceException) {
+
+					// Indicate overloaded
+					response.setStatus(HttpStatus.SERVICE_UNAVAILABLE);
+
+				} else {
+					// Provide details of failure
+					response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+					response.setContentType(TEXT_PLAIN, null);
+					failure.printStackTrace(new PrintWriter(response.getEntityWriter()));
+				}
+
+				// Send error response
 				this.send(connection);
+
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
