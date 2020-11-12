@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Consumer;
 
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -13,12 +14,16 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
+import io.r2dbc.spi.R2dbcTransientResourceException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.officefloor.frame.api.escalate.AsynchronousFlowTimedOutEscalation;
 import net.officefloor.frame.api.function.AsynchronousFlow;
 import net.officefloor.r2dbc.R2dbcSource;
+import net.officefloor.server.http.HttpException;
 import net.officefloor.server.http.HttpHeaderValue;
 import net.officefloor.server.http.HttpResponse;
+import net.officefloor.server.http.HttpStatus;
 import net.officefloor.server.http.ServerHttpConnection;
 import net.officefloor.web.HttpQueryParameter;
 import net.officefloor.web.ObjectResponse;
@@ -32,7 +37,7 @@ public class Logic {
 
 	static {
 		// Increase the buffer size
-		System.setProperty("reactor.bufferSize.small", String.valueOf(10000));
+		System.setProperty("reactor.bufferSize.small", String.valueOf(1000));
 	}
 
 	/**
@@ -94,9 +99,7 @@ public class Logic {
 					return new World(id, number);
 				}))).subscribe(world -> async.complete(() -> {
 					response.send(world);
-				}), error -> async.complete(() -> {
-					throw error;
-				}));
+				}), handleError(async));
 	}
 
 	// ========== QUERIES ==================
@@ -115,9 +118,7 @@ public class Logic {
 					}))).collectList();
 		}).subscribe(worlds -> async.complete(() -> {
 			response.send(worlds);
-		}), error -> async.complete(() -> {
-			throw error;
-		}));
+		}), handleError(async));
 	}
 
 	// =========== UPDATES ===================
@@ -142,9 +143,7 @@ public class Logic {
 					}).collectList();
 		}).subscribe(worlds -> async.complete(() -> {
 			response.send(worlds);
-		}), error -> async.complete(() -> {
-			throw error;
-		}));
+		}), handleError(async));
 	}
 
 	// =========== FORTUNES ==================
@@ -170,21 +169,17 @@ public class Logic {
 						return new Fortune(id, message);
 					}))).collectList();
 		}).subscribe(fortunes -> async.complete(() -> {
-			try {
-				// Additional fortunes
-				fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-				Collections.sort(fortunes, (a, b) -> a.message.compareTo(b.message));
 
-				// Send response
-				HttpResponse response = httpConnection.getResponse();
-				response.setContentType(TEXT_HTML, null);
-				this.fortuneMustache.execute(response.getEntityWriter(), fortunes);
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}), error -> async.complete(() -> {
-			throw error;
-		}));
+			// Additional fortunes
+			fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+			Collections.sort(fortunes, (a, b) -> a.message.compareTo(b.message));
+
+			// Send response
+			HttpResponse response = httpConnection.getResponse();
+			response.setContentType(TEXT_HTML, null);
+			this.fortuneMustache.execute(response.getEntityWriter(), fortunes);
+
+		}), handleError(async));
 	}
 
 	// =========== helper ===================
@@ -196,6 +191,16 @@ public class Logic {
 		} catch (NumberFormatException ex) {
 			return 1;
 		}
+	}
+
+	private static Consumer<Throwable> handleError(AsynchronousFlow async) {
+		return (error) -> async.complete(() -> {
+			try {
+				throw error;
+			} catch (R2dbcTransientResourceException | AsynchronousFlowTimedOutEscalation overloadEx) {
+				throw new HttpException(HttpStatus.SERVICE_UNAVAILABLE);
+			}
+		});
 	}
 
 }
