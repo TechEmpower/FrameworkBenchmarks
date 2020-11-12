@@ -1,4 +1,4 @@
-FROM sumeetchhetri/ffead-cpp-5.0-base:5.1
+FROM sumeetchhetri/ffead-cpp-5.0-base:5.2
 
 ENV IROOT=/installs
 
@@ -10,7 +10,7 @@ RUN rm -f /usr/local/lib/libffead-* /usr/local/lib/libte_benc* /usr/local/lib/li
 	ln -s ${IROOT}/ffead-cpp-5.0/lib/libdinter.so /usr/local/lib/libdinter.so && \
 	ldconfig
 
-RUN curl -sL "https://keybase.io/crystal/pgp_keys.asc" | apt-key add - \
+RUN apt-get update -y && apt install -y --no-install-recommends gnupg && curl -sL "https://keybase.io/crystal/pgp_keys.asc" | apt-key add - \
 	&& echo "deb https://dist.crystal-lang.org/apt crystal main" | tee /etc/apt/sources.list.d/crystal.list \
 	&& apt-get update -y && apt install -y --no-install-recommends crystal && rm -rf /var/lib/apt/lists/*
 WORKDIR ${IROOT}/lang-server-backends/crystal/crystal

@@ -72,7 +72,6 @@ then
 else
 	WEB_DIR=$FFEAD_CPP_PATH/web/te-benchmark-um
 	rm -rf web/te-benchmark-um-mgr web/te-benchmark-um-pq web/te-benchmark-um-pq-async
-	sed -i'' -e "s|<init>TeBkUmRouter.updateCache</init>||g" ${WEB_DIR}/config/cache.xml
 fi
 
 if [ "$4" = "memory" ]
@@ -141,8 +140,8 @@ then
 	./libreactor-ffead-cpp $FFEAD_CPP_PATH 8080
 elif [ "$2" = "h2o" ]
 then
-	cd ${IROOT}
-	./h2o_app $FFEAD_CPP_PATH 0.0.0.0 8080
+	cd ${IROOT}/lang-server-backends/c/h2o
+	./h2o.sh ${FFEAD_CPP_PATH} ${LD_LIBRARY_PATH} 8080
 elif [ "$2" = "crystal-http" ]
 then
 	cd ${IROOT}
@@ -155,6 +154,17 @@ then
 	for i in $(seq 0 $(($(nproc --all)-1))); do
 	  taskset -c $i ./h2o-evloop-ffead-cpp.out --ffead-cpp-dir=$FFEAD_CPP_PATH --to=8080 &
 	done
+elif [ "$2" = "julia-http" ]
+then
+	julia ${IROOT}/lang-server-backends/julia/http.jl/server.jl $FFEAD_CPP_PATH
+elif [ "$2" = "swift-nio" ]
+then
+	cd ${IROOT}
+	./app $FFEAD_CPP_PATH
+elif [ "$2" = "d-hunt" ]
+then
+	cd ${IROOT}
+	./hunt-minihttp -s $FFEAD_CPP_PATH
 elif [ "$2" = "rust-actix" ]
 then
 	cd ${IROOT}
@@ -188,6 +198,7 @@ then
 elif [ "$2" = "v-picov" ]
 then
 	cd ${IROOT}
+	sed -i 's|EVH_SINGLE=false|EVH_SINGLE=true|g' $FFEAD_CPP_PATH/resources/server.prop
 	for i in $(seq 0 $(($(nproc --all)-1))); do
 		taskset -c $i ./main --server_dir=$FFEAD_CPP_PATH --server_port=8080 &
 	done
