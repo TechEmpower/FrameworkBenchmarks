@@ -30,6 +30,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -79,6 +80,11 @@ import reactor.core.publisher.Mono;
 public class RawOfficeFloorMain {
 
 	/**
+	 * Buffer size of queries.
+	 */
+	private static final int QUERY_BUFFER_SIZE = 4096;
+
+	/**
 	 * {@link SocketManager}.
 	 */
 	public static SocketManager socketManager = null;
@@ -107,7 +113,7 @@ public class RawOfficeFloorMain {
 		System.out.println("Starting server on port " + port + " talking to database " + server);
 
 		// Increase the buffer size (note: too high and cause OOM issues)
-		System.setProperty("reactor.bufferSize.small", String.valueOf(4096));
+		System.setProperty("reactor.bufferSize.small", String.valueOf(QUERY_BUFFER_SIZE));
 
 		// Build the connection pool
 		ConnectionFactoryOptions factoryOptions = ConnectionFactoryOptions.builder()
@@ -176,6 +182,8 @@ public class RawOfficeFloorMain {
 
 		private static final String UPDATE_PATH_PREFIX = "/update?queries=";
 
+		private static final R2dbcTransientResourceException THROTTLED = new R2dbcTransientResourceException();
+
 		/**
 		 * <code>Date</code> {@link HttpHeaderValue}.
 		 */
@@ -224,6 +232,16 @@ public class RawOfficeFloorMain {
 		 * {@link ThreadLocal} {@link Connection}.
 		 */
 		private final ThreadLocal<Connection> threadLocalConnection;
+
+		/**
+		 * {@link ThreadLocal} {@link RateLimit}.
+		 */
+		private final ThreadLocal<RateLimit> threadLocalRateLimit = new ThreadLocal<>() {
+			@Override
+			protected RateLimit initialValue() {
+				return new RateLimit();
+			}
+		};
 
 		/**
 		 * {@link Mono} to service /db.
@@ -400,11 +418,22 @@ public class RawOfficeFloorMain {
 
 		private void queries(String requestUri, HttpResponse response,
 				ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) {
+
+			// Obtain the number of queries
 			String queriesCountText = requestUri.substring(QUERIES_PATH_PREFIX.length());
 			int queryCount = getQueryCount(queriesCountText);
+
+			// Determine if will overload queries
+			RateLimit rateLimit = this.threadLocalRateLimit.get();
+			if (rateLimit.isLimit(queryCount)) {
+				this.sendError(connection, THROTTLED);
+				return; // rate limited
+			}
+
+			// Service
+			Connection dbConn = this.threadLocalConnection.get();
 			Flux.range(1, queryCount)
-					.flatMap(index -> this.threadLocalConnection.get()
-							.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
+					.flatMap(index -> dbConn.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
 							.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute())
 					.flatMap(result -> Flux.from(result.map((row, metadata) -> {
 						Integer id = row.get(0, Integer.class);
@@ -420,6 +449,8 @@ public class RawOfficeFloorMain {
 						}
 					}, error -> {
 						this.sendError(connection, error);
+					}, () -> {
+						rateLimit.processed(queryCount);
 					});
 		}
 
@@ -445,8 +476,20 @@ public class RawOfficeFloorMain {
 
 		private void update(String requestUri, HttpResponse response,
 				ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) {
+
+			// Obtain the number of queries
 			String queriesCountText = requestUri.substring(UPDATE_PATH_PREFIX.length());
 			int queryCount = getQueryCount(queriesCountText);
+
+			// Determine if will overload queries
+			int executedQueryCount = queryCount * 2; // select and update
+			RateLimit rateLimit = this.threadLocalRateLimit.get();
+			if (rateLimit.isLimit(executedQueryCount)) {
+				this.sendError(connection, THROTTLED);
+				return; // rate limited
+			}
+
+			// Service
 			Connection db = this.threadLocalConnection.get();
 			Flux.range(1, queryCount)
 					.flatMap(index -> db.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
@@ -471,6 +514,8 @@ public class RawOfficeFloorMain {
 						}
 					}, error -> {
 						this.sendError(connection, error);
+					}, () -> {
+						rateLimit.processed(executedQueryCount);
 					});
 		}
 
@@ -510,6 +555,33 @@ public class RawOfficeFloorMain {
 			} catch (NumberFormatException ex) {
 				return 1;
 			}
+		}
+	}
+
+	private static class RateLimit {
+
+		private final AtomicInteger activeQueries = new AtomicInteger(0);
+
+		private boolean isLimit = false;
+
+		public boolean isLimit(int queryCount) {
+			activeQueries.updateAndGet((count) -> {
+				int newCount = count + queryCount;
+				if (newCount > QUERY_BUFFER_SIZE) {
+					// Max limit reached
+					this.isLimit = true;
+					return count;
+				} else {
+					// Allow input
+					this.isLimit = false;
+					return newCount;
+				}
+			});
+			return this.isLimit;
+		}
+
+		public void processed(int queryCount) {
+			this.activeQueries.updateAndGet((count) -> count - queryCount);
 		}
 	}
 
