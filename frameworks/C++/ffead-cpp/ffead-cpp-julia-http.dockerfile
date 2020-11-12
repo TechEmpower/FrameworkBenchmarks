@@ -2,6 +2,7 @@ FROM sumeetchhetri/ffead-cpp-5.0-base:5.2
 
 ENV IROOT=/installs
 
+ENV DEBIAN_FRONTEND noninteractive
 RUN rm -f /usr/local/lib/libffead-* /usr/local/lib/libte_benc* /usr/local/lib/libinter.so /usr/local/lib/libdinter.so && \
 	ln -s ${IROOT}/ffead-cpp-5.0/lib/libte_benchmark_um.so /usr/local/lib/libte_benchmark_um.so && \
 	ln -s ${IROOT}/ffead-cpp-5.0/lib/libffead-modules.so /usr/local/lib/libffead-modules.so && \
@@ -10,11 +11,19 @@ RUN rm -f /usr/local/lib/libffead-* /usr/local/lib/libte_benc* /usr/local/lib/li
 	ln -s ${IROOT}/ffead-cpp-5.0/lib/libdinter.so /usr/local/lib/libdinter.so && \
 	ldconfig
 
-RUN wget -q https://dl.google.com/go/go1.14.4.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.14.4.linux-amd64.tar.gz
-ENV PATH=$PATH:/usr/local/go/bin
-WORKDIR ${IROOT}/lang-server-backends/go/gnet
-RUN make && cp gnet-ffead-cpp $IROOT/ && rm -rf ${IROOT}/lang-server-backends
+WORKDIR ${IROOT}
+#RUN apt-get update -y && apt-get install -y --no-install-recommends julia
+RUN wget --no-check-certificate -q https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.2-linux-x86_64.tar.gz
+RUN tar -xzf julia-1.5.2-linux-x86_64.tar.gz
+RUN mv julia-1.5.2 /opt/
+RUN rm -f julia-1.5.2-linux-x86_64.tar.gz
+ENV PATH="/opt/julia-1.5.2/bin:${PATH}"
+
+RUN julia -e 'import Pkg; Pkg.update()' && \
+    julia -e 'import Pkg; Pkg.add("HTTP")' && \
+    julia -e 'import Pkg; Pkg.precompile()'
 
 WORKDIR /
 
-CMD ./run_ffead.sh ffead-cpp-5.0 go-gnet
+CMD ./run_ffead.sh ffead-cpp-5.0 julia-http
+

@@ -1,4 +1,4 @@
-FROM sumeetchhetri/ffead-cpp-5.0-base:5.2
+FROM sumeetchhetri/ffead-cpp-5.0-sql-raw-profiled-base:5.2
 
 ENV IROOT=/installs
 
