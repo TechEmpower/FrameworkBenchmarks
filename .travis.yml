@@ -58,6 +58,7 @@ env:
     - 'TESTDIR="JavaScript/0http JavaScript/express JavaScript/fastify JavaScript/hapi JavaScript/koa"'
     - 'TESTDIR="JavaScript/nodejs JavaScript/polkadot JavaScript/restana JavaScript/restify JavaScript/sailsjs"'
     - 'TESTDIR="JavaScript/es4x JavaScript/ringojs JavaScript/just"'
+    - "TESTLANG=Julia"
     - "TESTLANG=Kotlin"
     - "TESTLANG=Lisp"
     - "TESTLANG=Lua"
