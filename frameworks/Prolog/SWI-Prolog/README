@@ -4,5 +4,5 @@ SWI-Prolog is a free implementation of the programming language Prolog, commonly
 
 This implementation uses the [HTTP Server libraries](https://www.swi-prolog.org/pldoc/man?section=httpserver) available with SWI-Prolog
 
-Currently on the /json and /plaintext endpoints have been implemented
+Currently only the /json and /plaintext endpoints have been implemented
 
