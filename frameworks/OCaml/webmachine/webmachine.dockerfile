@@ -19,4 +19,4 @@ COPY ./src /${DIR}
 
 RUN sudo chown -R opam: . && make build
 
-CMD _build/default/tfb.exe
+ENTRYPOINT _build/default/tfb.exe

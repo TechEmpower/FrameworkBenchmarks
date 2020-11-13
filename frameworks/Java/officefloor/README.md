@@ -1,12 +1,60 @@
-[![Download OfficeFloor](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/officefloor/files/latest/download)
+# OfficeFloor
 
-# OfficeFloor Benchmarking Test
-
-OfficeFloor provides true inversion of control.
+OfficeFloor provides true inversion of (coupling) control.
 
 > Inversion of Control = Dependency Injection + Continuation Injection + Thread Injection
 
+OfficeFloor completes inversion of control by adding two new paradigms:
+
+* **Continuation Injection**: to inject functions to orchestrate application behaviour
+* **Thread Injection**: to inject/select thread (pools) to execute particular functions
+* *Dependency (State) Injection*: to inject objects for state into functions (currently only paradigm implemented by "inversion of control" frameworks)
+ 
+In doing this, OfficeFloor is capable of running different threading models (e.g. both asynchronous single threaded and synchronous multi-threaded).  In actual fact, OfficeFloor opens up mixing the threading models within the application and even introduces ability for taking advantage of thread affinity to CPUs.
+
+This follows OfficeFloor modeling people in an office environment:
+
+* Office being an application that makes decisions on information
+* Tasks within the Office as functions/methods (weaved together with *Continuation Injection*)
+* Office employees/workers as threads that undertake the functions/methods (assigned via *Thread Injection*)
+* Forms being the objects (manage state via *Dependency Injection*)
+
+This allows OfficeFloor to better align to how business processes actually work:
+
+* Workers synchronously working through tasks/functions of the processes
+* Workers working asynchronously with each other
+
+In other words, people think/behave synchronously but organise asynchronously.  Hence, both thread models are in play in modeling business processes.  Furthermore, OfficeFloor makes development of asynchronous applications easier.  This is achieved by allowing the developer to avoid asynchronous coding by having synchronous functions co-ordinated asynchronously (just like workers above).
+
+Further to this, graphical configuration is used.  The configuration for the *officefloor* benchmark test is the following:
+
+![Graphical Configuration](configuration.png "OfficeFloor graphical configuration")
+
 More information can be found at [http://officefloor.net](http://officefloor.net)
+
+
+# OfficeFloor Benchmark Tests
+
+OfficeFloor can use different HTTP server components:
+
+* **officefloor-netty** : incorporating Netty to service requests passing to OfficeFloor inversion of control.
+* **officefloor-undertow** : incorporating Undertow to service requests passing to OfficeFloor inversion of control.
+* **officefloor-raw** : default HTTP server component provided by OfficeFloor.  This allows comparing OfficeFloor's raw HTTP implementation with other solutions focused on HTTP optimisation.
+
+Having these comparisons allows developers to see the trade-offs in using different HTTP components to handle HTTP request servicing.
+
+Note: OfficeFloor's web plugins are called WoOF (Web on OfficeFloor).
+
+As mentioned, OfficeFloor uses different threading models.  It does not inherit the threading model imposed by the HTTP component.  Hence, there are various threading models tested to see trade-offs:
+
+* **officefloor-async** : asynchronous single-threaded
+* **officefloor-micro** : synchronous multi-threaded model
+* **officefloor-thread_affinity** : thread affinity of servicing each request only on one CPU
+
+While much focus is on HTTP handling, performance also is impacted by database interaction.  The above tests use raw SQL queries to provide optimised through put.  However, in "real world" applications ORMs are typically used:
+
+* **officefloor** : uses JPA
+* **officefloor-spring_data** : uses Spring Data repositories
 
 
 # 503 Responses
@@ -24,60 +72,6 @@ More information can be found at [http://officefloor.net](http://officefloor.net
  **This improves responsiveness of single page applications**.  The problem with TCP throttling is that requests start to slow down before you get rejections.  This means your single page application ends up waiting for responses.  The wait time is noticeable by the user, as can be upwards of 10's of seconds to minutes.  This then results in the user's perception of the single page application being slow.  OfficeFloor by parallel processing everything and responding immediately with 503 responses when overloaded, reduces these long wait times.  Rather than than hanging, the single page application can deal with the 503 by calling another server or providing user friendly messages back to the user that system is under load and try back in a few moments.  This provides an overall more responsive and what we find is a better experience for the user.
  
  However, this does mean in some of the heavier load tests, you will see errors for OfficeFloor.  But we here at OfficeFloor are proud of these errors, as they avoid hanging applications and provide better user experience under extreme loads.
-
- 
-# OfficeFloor Background
-
-OfficeFloor completes inversion of control by adding two new paradigms:
-
-* **Continuation Injection**: to inject functions to orchestrate application behaviour
-* **Thread Injection**: to inject/select thread (pools) to execute particular functions
-* *Dependency (State) Injection*: to inject objects for state into functions (currently only paradigm implemented by "inversion of control" frameworks)
- 
-In doing this, OfficeFloor is capable of running different threading models (e.g. both asynchronous single threaded and synchronous multi-threaded).  In actual fact, OfficeFloor opens up mixing the threading models within the application and even introduces ability for taking advantage of thread affinity to CPUs.
-
-This follows OfficeFloor modeling people in an office environment.  As per the paper [OfficeFloor: using office patterns to improve software design](http://doi.acm.org/10.1145/2739011.2739013) ( [free download here](http://www.officefloor.net/about.html) ), OfficeFloor follows:
-
-* Office being an application that makes decisions on information
-* Tasks within the Office as functions/methods (weaved together with *Continuation Injection*)
-* Office employees/workers as threads that undertake the functions/methods (assigned via *Thread Injection*)
-* Forms being the objects (manage state via *Dependency Injection*)
-
-This allows OfficeFloor to better align to how business processes actually work:
-
-* Workers synchronously working through tasks/functions of the processes
-* Workers working asynchronously with each other
-
-In other words, people think/behave synchronously but organise asynchronously.  Hence, both thread models are in play in modelling business processes.  Furthermore, OfficeFloor makes development of asynchronous applications easier.  This is achieved by allowing the developer to avoid asynchronous coding by having synchronous functions co-ordinated asynchronously (just like workers above).
-
-Further to this, graphical configuration is used.  The configuration for the *officefloor* benchmark test is the following:
-
-![Graphical Configuration](configuration.png "OfficeFloor graphical configuration")
-
-
-# OfficeFloor Benchmark Tests
-
-OfficeFloor can use different HTTP server components:
-
-* **officefloor-netty** : incorporating Netty to service requests passing to OfficeFloor inversion of control.  Benchmark test with mature HTTP solution.
-* **officefloor-undertow** : incorporating Undertow to service requests passing to OfficeFloor inversion of control.  Benchmark test with mature HTTP solution.
-* **officefloor-raw** : default HTTP server component provided by OfficeFloor.  This allows comparing OfficeFloor's default HTTP implementation with other solutions focused on HTTP optimisation.  It is also able to process requests concurrently on the same connection for improved responsiveness.
-
-Having these comparisons allows developers to see the trade-offs in using different HTTP components to handle HTTP request servicing.
-
-Note: OfficeFloor's web plugins are called WoOF (Web on OfficeFloor).
-
-As mentioned, OfficeFloor uses different threading models.  It does not inherit the threading model imposed by the HTTP component.  Hence, there are various threading models tested to see trade-offs:
-
-* **officefloor-micro** : typical synchronous multi-threaded model with connections retrieved from connection pool
-* **officefloor-thread_affinity** : similar to micro, except thread pools are localised onto a particular CPU.  Hence all processing for a request is done on the same CPU (allowing much better instruction cache hits).  This effectively allows running without any synchronising of threads for potentially increased throughput.
-
-While much focus is on HTTP handling, performance also is impacted by database interaction.  The above tests use raw SQL queries to provide optimised through put.  However, in "real world" applications ORMs are typically used:
-
-* **officefloor** : WoOF implementation using EntityManager
-* **officefloor-spring_data** : WoOF implementation taking advantage of Spring Data repositories.  This also demonstrates integrating Spring as a library of objects for dependency injection via OfficeFloor into functions/methods.
-
-**officefloor-spring_data** (with possibly **officefloor-netty** incorporated) is likely representative of application development, as provides the mature easier abstractions for the developer to work with (and less code to managed).  However, the above tests show the trade-off costs in performance for the easier development.
 
 
 # OfficeFloor real benefit

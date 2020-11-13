@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.officefloor.benchmarks</groupId>
@@ -17,6 +16,7 @@
 		<module>woof_benchmark</module>
 		<module>woof_benchmark_micro</module>
 		<module>woof_benchmark_thread_affinity</module>
+		<module>woof_benchmark_async</module>
 		<module>woof_benchmark_raw</module>
 		<module>woof_benchmark_netty</module>
 		<module>woof_benchmark_undertow</module>
@@ -39,7 +39,7 @@
 			<dependency>
 				<groupId>net.officefloor</groupId>
 				<artifactId>bom</artifactId>
-				<version>3.28.0</version>
+				<version>3.28.1</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -52,6 +52,11 @@
 				<groupId>net.officefloor.benchmarks</groupId>
 				<artifactId>woof_benchmark_micro</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.spullara.mustache.java</groupId>
+				<artifactId>compiler</artifactId>
+				<version>0.9.7</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

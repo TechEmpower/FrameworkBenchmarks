@@ -25,4 +25,4 @@ COPY haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY start-servers.sh ./start-servers.sh
 RUN sudo chown -R opam: . && chmod +x ./start-servers.sh
 
-CMD ./start-servers.sh && sudo /usr/sbin/haproxy -W -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -q
+ENTRYPOINT ./start-servers.sh && sudo /usr/sbin/haproxy -W -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid
