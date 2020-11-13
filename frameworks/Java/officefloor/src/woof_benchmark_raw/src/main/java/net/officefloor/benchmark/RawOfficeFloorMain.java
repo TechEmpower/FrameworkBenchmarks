@@ -41,6 +41,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
+import io.r2dbc.spi.Batch;
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactories;
 import io.r2dbc.spi.ConnectionFactory;
@@ -82,7 +83,7 @@ public class RawOfficeFloorMain {
 	/**
 	 * Buffer size of queries.
 	 */
-	private static final int QUERY_BUFFER_SIZE = 5120;
+	private static final int QUERY_BUFFER_SIZE = 512;
 
 	/**
 	 * {@link SocketManager}.
@@ -184,6 +185,8 @@ public class RawOfficeFloorMain {
 
 		private static final R2dbcTransientResourceException THROTTLED = new R2dbcTransientResourceException();
 
+		private static final int LARGE_QUERY = 100;
+
 		/**
 		 * <code>Date</code> {@link HttpHeaderValue}.
 		 */
@@ -234,14 +237,24 @@ public class RawOfficeFloorMain {
 		private final ThreadLocal<Connection> threadLocalConnection;
 
 		/**
-		 * {@link ThreadLocal} {@link RateLimit}.
+		 * db {@link ThreadLocalRateLimit}.
 		 */
-		private final ThreadLocal<RateLimit> threadLocalRateLimit = new ThreadLocal<>() {
-			@Override
-			protected RateLimit initialValue() {
-				return new RateLimit();
-			}
-		};
+		private final ThreadLocalRateLimit dbRateLimit = new ThreadLocalRateLimit();
+
+		/**
+		 * queries {@link ThreadLocalRateLimit}.
+		 */
+		private final ThreadLocalRateLimit queriesRateLimit = new ThreadLocalRateLimit();
+
+		/**
+		 * fortunes {@link ThreadLocalRateLimit}.
+		 */
+		private final ThreadLocalRateLimit fortunesRateLimit = new ThreadLocalRateLimit();
+
+		/**
+		 * updates {@link ThreadLocalRateLimit}.
+		 */
+		private final ThreadLocalRateLimit updatesRateLimit = new ThreadLocalRateLimit();
 
 		/**
 		 * {@link Mono} to service /db.
@@ -403,6 +416,15 @@ public class RawOfficeFloorMain {
 		}
 
 		private void db(HttpResponse response, ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) {
+
+			// Determine if will overload queries
+			RateLimit rateLimit = this.dbRateLimit.get();
+			if (rateLimit.isLimit(1)) {
+				this.sendError(connection, THROTTLED);
+				return; // rate limited
+			}
+
+			// Service
 			this.db.subscribe(world -> {
 				try {
 					response.setContentType(APPLICATION_JSON, null);
@@ -413,6 +435,8 @@ public class RawOfficeFloorMain {
 				}
 			}, error -> {
 				this.sendError(connection, error);
+			}, () -> {
+				rateLimit.processed(1);
 			});
 		}
 
@@ -424,10 +448,12 @@ public class RawOfficeFloorMain {
 			int queryCount = getQueryCount(queriesCountText);
 
 			// Determine if will overload queries
-			RateLimit rateLimit = this.threadLocalRateLimit.get();
-			if (rateLimit.isLimit(queryCount)) {
-				this.sendError(connection, THROTTLED);
-				return; // rate limited
+			RateLimit rateLimit = this.queriesRateLimit.get();
+			if (queryCount < LARGE_QUERY) {
+				if (rateLimit.isLimit(queryCount)) {
+					this.sendError(connection, THROTTLED);
+					return; // rate limited
+				}
 			}
 
 			// Service
@@ -450,12 +476,23 @@ public class RawOfficeFloorMain {
 					}, error -> {
 						this.sendError(connection, error);
 					}, () -> {
-						rateLimit.processed(queryCount);
+						if (queryCount < LARGE_QUERY) {
+							rateLimit.processed(queryCount);
+						}
 					});
 		}
 
 		private void fortunes(HttpResponse response,
 				ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) {
+
+			// Determine if will overload queries
+			RateLimit rateLimit = this.fortunesRateLimit.get();
+			if (rateLimit.isLimit(1)) {
+				this.sendError(connection, THROTTLED);
+				return; // rate limited
+			}
+
+			// Service
 			this.fortunes.subscribe(fortunes -> {
 				try {
 					// Additional fortunes
@@ -471,6 +508,8 @@ public class RawOfficeFloorMain {
 				}
 			}, error -> {
 				this.sendError(connection, error);
+			}, () -> {
+				rateLimit.processed(1);
 			});
 		}
 
@@ -483,10 +522,12 @@ public class RawOfficeFloorMain {
 
 			// Determine if will overload queries
 			int executedQueryCount = queryCount * 2; // select and update
-			RateLimit rateLimit = this.threadLocalRateLimit.get();
-			if (rateLimit.isLimit(executedQueryCount)) {
-				this.sendError(connection, THROTTLED);
-				return; // rate limited
+			RateLimit rateLimit = this.updatesRateLimit.get();
+			if (queryCount < LARGE_QUERY) {
+				if (rateLimit.isLimit(executedQueryCount)) {
+					this.sendError(connection, THROTTLED);
+					return; // rate limited
+				}
 			}
 
 			// Service
@@ -498,13 +539,16 @@ public class RawOfficeFloorMain {
 						Integer id = row.get(0, Integer.class);
 						Integer number = row.get(1, Integer.class);
 						return new World(id, number);
-					}))).flatMap(world -> {
-						world.randomNumber = ThreadLocalRandom.current().nextInt(1, 10001);
-						return Flux
-								.from(db.createStatement("UPDATE WORLD SET RANDOMNUMBER = $1 WHERE ID = $2")
-										.bind(0, world.randomNumber).bind(1, world.id).execute())
-								.flatMap(result -> Flux.from(result.getRowsUpdated()).map(updated -> world));
-					}).collectList().subscribe(worlds -> {
+					}))).collectList().flatMap(worlds -> {
+						Collections.sort(worlds, (a, b) -> a.id - b.id);
+						Batch batch = db.createBatch();
+						for (World world : worlds) {
+							world.randomNumber = ThreadLocalRandom.current().nextInt(1, 10001);
+							batch.add("UPDATE WORLD SET RANDOMNUMBER = " + world.randomNumber + " WHERE ID = "
+									+ world.id);
+						}
+						return Mono.from(batch.execute()).map((result) -> worlds);
+					}).subscribe(worlds -> {
 						try {
 							response.setContentType(APPLICATION_JSON, null);
 							this.objectMapper.writeValue(response.getEntityWriter(), worlds);
@@ -515,7 +559,9 @@ public class RawOfficeFloorMain {
 					}, error -> {
 						this.sendError(connection, error);
 					}, () -> {
-						rateLimit.processed(executedQueryCount);
+						if (queryCount < LARGE_QUERY) {
+							rateLimit.processed(executedQueryCount);
+						}
 					});
 		}
 
@@ -558,26 +604,60 @@ public class RawOfficeFloorMain {
 		}
 	}
 
+	private static class ThreadLocalRateLimit extends ThreadLocal<RateLimit> {
+		@Override
+		protected RateLimit initialValue() {
+			return new RateLimit();
+		}
+	}
+
 	private static class RateLimit {
+
+		private final int INITIAL_REQUEST_COUNT = 738 / Runtime.getRuntime().availableProcessors();
+
+		private int requestCount = 0;
 
 		private final AtomicInteger activeQueries = new AtomicInteger(0);
 
-		private boolean isLimit = false;
+		private boolean isActiveLimit = false;
 
 		public boolean isLimit(int queryCount) {
-			activeQueries.updateAndGet((count) -> {
-				int newCount = count + queryCount;
-				if (newCount > QUERY_BUFFER_SIZE) {
-					// Max limit reached
-					this.isLimit = true;
-					return count;
-				} else {
-					// Allow input
-					this.isLimit = false;
-					return newCount;
+
+			// Increment the request count
+			this.requestCount = this.requestCount + ((this.requestCount > INITIAL_REQUEST_COUNT) ? 0 : 1);
+
+			// Ensure initial requests are processed
+			do {
+
+				// Determine if query count reached
+				this.activeQueries.updateAndGet((count) -> {
+					int newCount = count + queryCount;
+					if (newCount > QUERY_BUFFER_SIZE) {
+						// Max limit reached
+						this.isActiveLimit = true;
+						return count;
+					} else {
+						// Allow input
+						this.isActiveLimit = false;
+						return newCount;
+					}
+				});
+				if (this.requestCount > INITIAL_REQUEST_COUNT) {
+					// Initial requests processed, so start possible throttling
+					return this.isActiveLimit;
 				}
-			});
-			return this.isLimit;
+
+				// Allow some processing time if limit hit
+				if (this.isActiveLimit) {
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException ex) {
+						// continue processing
+					}
+				}
+
+			} while (this.isActiveLimit);
+			return false; // below limit
 		}
 
 		public void processed(int queryCount) {
