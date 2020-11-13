@@ -14,11 +14,14 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
+import io.r2dbc.spi.Batch;
 import io.r2dbc.spi.R2dbcTransientResourceException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.officefloor.frame.api.escalate.AsynchronousFlowTimedOutEscalation;
 import net.officefloor.frame.api.function.AsynchronousFlow;
+import net.officefloor.frame.api.function.FlowCallback;
+import net.officefloor.plugin.clazz.FlowInterface;
 import net.officefloor.r2dbc.R2dbcSource;
 import net.officefloor.server.http.HttpException;
 import net.officefloor.server.http.HttpHeaderValue;
@@ -37,8 +40,19 @@ public class Logic {
 
 	static {
 		// Increase the buffer size
-		System.setProperty("reactor.bufferSize.small", String.valueOf(1000));
+		System.setProperty("reactor.bufferSize.small", String.valueOf(512));
 	}
+
+	private static final FlowCallback callback = (error) -> {
+		if (error == null) {
+			return;
+		} else if (error instanceof AsynchronousFlowTimedOutEscalation) {
+			throw new HttpException(HttpStatus.SERVICE_UNAVAILABLE);
+		} else {
+			System.out.println("ERROR: " + error.getClass().getName());
+			throw error;
+		}
+	};
 
 	/**
 	 * {@link Mustache} for /fortunes.
@@ -89,7 +103,17 @@ public class Logic {
 		private int randomNumber;
 	}
 
-	public void db(AsynchronousFlow async, R2dbcSource source, ObjectResponse<World> response) throws SQLException {
+	@FlowInterface
+	public static interface DbFlows {
+		void dbService(FlowCallback callback);
+	}
+
+	public void db(DbFlows flows) {
+		flows.dbService(callback);
+	}
+
+	public void dbService(AsynchronousFlow async, R2dbcSource source, ObjectResponse<World> response)
+			throws SQLException {
 		source.getConnection().flatMap(
 				connection -> Mono.from(connection.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
 						.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute()))
@@ -104,8 +128,17 @@ public class Logic {
 
 	// ========== QUERIES ==================
 
-	public void queries(@HttpQueryParameter("queries") String queries, AsynchronousFlow async, R2dbcSource source,
-			ObjectResponse<List<World>> response) {
+	@FlowInterface
+	public static interface QueriesFlows {
+		void queriesService(FlowCallback callback);
+	}
+
+	public void queries(QueriesFlows flows) {
+		flows.queriesService(callback);
+	}
+
+	public void queriesService(@HttpQueryParameter("queries") String queries, AsynchronousFlow async,
+			R2dbcSource source, ObjectResponse<List<World>> response) {
 		int queryCount = getQueryCount(queries);
 		source.getConnection().flatMap(connection -> {
 			return Flux.range(1, queryCount)
@@ -123,7 +156,16 @@ public class Logic {
 
 	// =========== UPDATES ===================
 
-	public void update(@HttpQueryParameter("queries") String queries, AsynchronousFlow async, R2dbcSource source,
+	@FlowInterface
+	public static interface UpdateFlows {
+		void updateService(FlowCallback callback);
+	}
+
+	public void update(UpdateFlows flows) {
+		flows.updateService(callback);
+	}
+
+	public void updateService(@HttpQueryParameter("queries") String queries, AsynchronousFlow async, R2dbcSource source,
 			ObjectResponse<List<World>> response) {
 		int queryCount = getQueryCount(queries);
 		source.getConnection().flatMap(connection -> {
@@ -134,13 +176,16 @@ public class Logic {
 						Integer id = row.get(0, Integer.class);
 						Integer number = row.get(1, Integer.class);
 						return new World(id, number);
-					}))).flatMap(world -> {
-						world.randomNumber = ThreadLocalRandom.current().nextInt(1, 10001);
-						return Flux
-								.from(connection.createStatement("UPDATE WORLD SET RANDOMNUMBER = $1 WHERE ID = $2")
-										.bind(0, world.randomNumber).bind(1, world.id).execute())
-								.flatMap(result -> Flux.from(result.getRowsUpdated()).map(updated -> world));
-					}).collectList();
+					}))).collectList().flatMap(worlds -> {
+						Collections.sort(worlds, (a, b) -> a.id - b.id);
+						Batch batch = connection.createBatch();
+						for (World world : worlds) {
+							world.randomNumber = ThreadLocalRandom.current().nextInt(1, 10001);
+							batch.add("UPDATE WORLD SET RANDOMNUMBER = " + world.randomNumber + " WHERE ID = "
+									+ world.id);
+						}
+						return Mono.from(batch.execute()).map((result) -> worlds);
+					});
 		}).subscribe(worlds -> async.complete(() -> {
 			response.send(worlds);
 		}), handleError(async));
@@ -159,7 +204,16 @@ public class Logic {
 		private String message;
 	}
 
-	public void fortunes(AsynchronousFlow async, R2dbcSource source, ServerHttpConnection httpConnection)
+	@FlowInterface
+	public static interface FortunesFlows {
+		void fortunesService(FlowCallback callback);
+	}
+
+	public void fortunes(FortunesFlows flows) {
+		flows.fortunesService(callback);
+	}
+
+	public void fortunesService(AsynchronousFlow async, R2dbcSource source, ServerHttpConnection httpConnection)
 			throws IOException, SQLException {
 		source.getConnection().flatMap(connection -> {
 			return Flux.from(connection.createStatement("SELECT ID, MESSAGE FROM FORTUNE").execute())
