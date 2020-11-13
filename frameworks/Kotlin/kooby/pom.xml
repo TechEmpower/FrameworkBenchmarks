@@ -12,7 +12,7 @@
   <name>kooby: jooby+kotlin</name>
 
   <properties>
-    <jooby.version>2.9.2</jooby.version>
+    <jooby.version>2.9.3</jooby.version>
     <postgresql.version>42.2.13</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
