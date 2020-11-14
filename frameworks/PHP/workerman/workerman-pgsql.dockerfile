@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:20.10
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -9,7 +9,7 @@ RUN apt-get update -yqq > /dev/null && \
 
 RUN apt-get install -yqq composer > /dev/null
 
-RUN apt-get install -y php-pear php-dev libevent-dev > /dev/null
+RUN apt-get install -y php-pear php7.4-dev libevent-dev > /dev/null
 RUN printf "\n\n /usr/lib/x86_64-linux-gnu/\n\n\nno\n\n\n" | pecl install event > /dev/null && echo "extension=event.so" > /etc/php/7.4/cli/conf.d/event.ini
 
 COPY php.ini /etc/php/7.4/cli/php.ini
@@ -17,7 +17,7 @@ COPY php.ini /etc/php/7.4/cli/php.ini
 ADD ./ /workerman
 WORKDIR /workerman
 
-RUN sed -i "s|PDO('mysql:|PDO('pgsql:|g" app.php
+RUN sed -i "s|'mysql:host|'pgsql:host|g" app.php
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
