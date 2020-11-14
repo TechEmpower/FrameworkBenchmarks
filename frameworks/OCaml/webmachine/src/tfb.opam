@@ -14,8 +14,6 @@ depends: [
   "caqti-lwt" {>= "1.2.0"}
   "caqti-driver-postgresql" {>= "1.2.4"}
   "cohttp-lwt-unix" {>= "2.5.4"}
-  "ptime" {>= "0.8.5"}
-  "ezjsonm" {>= "1.2.0"}
   "lwt_ppx" {>= "2.0.1"}
   "odoc" {with-doc}
 ]

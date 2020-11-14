@@ -1,4 +1,4 @@
-FROM ocurrent/opam:fedora-32-ocaml-4.11
+FROM ocurrent/opam:debian-10-ocaml-4.11-flambda
 
 ENV DIR webmachine
 # https://blog.packagecloud.io/eng/2017/02/21/set-environment-variable-save-thousands-of-system-calls/
@@ -9,7 +9,7 @@ ENV TZ  :/etc/localtime
 # https://blog.janestreet.com/memory-allocator-showdown/
 ENV OCAMLRUNPARAM a=2,o=240
 
-RUN sudo dnf install --assumeyes diffutils postgresql-devel libev-devel
+RUN sudo apt-get install -y libpq-dev libev-dev pkg-config m4
 
 WORKDIR /${DIR}
 
