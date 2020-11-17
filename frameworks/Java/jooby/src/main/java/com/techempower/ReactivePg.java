@@ -1,25 +1,28 @@
 package com.techempower;
 
-import io.jooby.Context;
-import io.jooby.Jooby;
-import io.jooby.ServerOptions;
-import io.jooby.rocker.RockerModule;
-import io.vertx.pgclient.PgPool;
-import io.vertx.sqlclient.Row;
-import io.vertx.sqlclient.RowIterator;
-import io.vertx.sqlclient.SqlConnection;
-import io.vertx.sqlclient.Tuple;
+import static com.techempower.Util.randomWorld;
+import static io.jooby.ExecutionMode.EVENT_LOOP;
+import static io.jooby.MediaType.JSON;
 
-import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.techempower.Util.randomWorld;
-import static io.jooby.ExecutionMode.EVENT_LOOP;
-import static io.jooby.MediaType.JSON;
+import com.fizzed.rocker.RockerOutputFactory;
+import io.jooby.Context;
+import io.jooby.Jooby;
+import io.jooby.MediaType;
+import io.jooby.ServerOptions;
+import io.jooby.rocker.ByteBufferOutput;
+import io.jooby.rocker.RockerModule;
+import io.vertx.pgclient.PgPool;
+import io.vertx.sqlclient.Row;
+import io.vertx.sqlclient.RowIterator;
+import io.vertx.sqlclient.SqlConnection;
+import io.vertx.sqlclient.Tuple;
 
 public class ReactivePg extends Jooby {
 
@@ -39,22 +42,18 @@ public class ReactivePg extends Jooby {
     PgClients clients = new PgClients(getConfig().getConfig("db"));
 
     /** Template engine: */
-    install(new RockerModule());
+    install(new RockerModule().reuseBuffer(true));
 
     /** Single query: */
     get("/db", ctx -> {
       clients.next().preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld()), rsp -> {
-        try {
-          if (rsp.succeeded()) {
-            RowIterator<Row> rs = rsp.result().iterator();
-            Row row = rs.next();
-            ctx.setResponseType(JSON)
-                .send(Json.encode(new World(row.getInteger(0), row.getInteger(1))));
-          } else {
-            ctx.sendError(rsp.cause());
-          }
-        } catch (IOException x) {
-          sendError(ctx, x);
+        if (rsp.succeeded()) {
+          RowIterator<Row> rs = rsp.result().iterator();
+          Row row = rs.next();
+          ctx.setResponseType(JSON)
+              .send(Json.encode(new World(row.getInteger(0), row.getInteger(1))));
+        } else {
+          ctx.sendError(rsp.cause());
         }
       });
       return ctx;
@@ -77,12 +76,8 @@ public class ReactivePg extends Jooby {
           }
           // ready?
           if (counter.incrementAndGet() == queries) {
-            try {
-              ctx.setResponseType(JSON)
-                  .send(Json.encode(result));
-            } catch (IOException x) {
-              sendError(ctx, x);
-            }
+            ctx.setResponseType(JSON)
+                .send(Json.encode(result));
           }
         });
       }
@@ -121,17 +116,13 @@ public class ReactivePg extends Jooby {
               }
 
               conn.preparedQuery(UPDATE_WORLD).executeBatch(batch, updateCallback -> {
-                conn.close();
                 if (updateCallback.failed()) {
                   sendError(ctx, updateCallback.cause());
                 } else {
-                  try {
-                    ctx.setResponseType(JSON)
-                        .send(Json.encode(result));
-                  } catch (IOException x) {
-                    sendError(ctx, x);
-                  }
+                  ctx.setResponseType(JSON)
+                      .send(Json.encode(result));
                 }
+                conn.close();
               });
             }
           });
@@ -141,6 +132,7 @@ public class ReactivePg extends Jooby {
     });
 
     /** Fortunes: */
+    RockerOutputFactory<ByteBufferOutput> factory = require(RockerOutputFactory.class);
     get("/fortunes", ctx -> {
       clients.next().preparedQuery(SELECT_FORTUNE).execute(rsp -> {
         if (rsp.succeeded()) {
@@ -157,7 +149,8 @@ public class ReactivePg extends Jooby {
 
           /** render view: */
           views.fortunes template = views.fortunes.template(fortunes);
-          ctx.render(template);
+          ctx.setResponseType(MediaType.html)
+              .send(template.render(factory).toBuffer());
         } else {
           ctx.sendError(rsp.cause());
         }
