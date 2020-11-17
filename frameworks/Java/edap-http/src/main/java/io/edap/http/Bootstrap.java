@@ -18,7 +18,7 @@ public class Bootstrap {
         msg.setMessage("Hello, World!");
 
         HttpServer httpServer = new HttpServerBuilder()
-                .listen(8081)
+                .listen(8080)
                 .req("/plaintext", (req, resp) -> resp.contentType(PLAIN).write("Hello, World!"))
                 .get("/json", (req, resp) -> resp.contentType(JSON).write(msg))
                 .build();
