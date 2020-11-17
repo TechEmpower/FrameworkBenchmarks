@@ -3,15 +3,14 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"sort"
-
 	"fasthttp/src/templates"
+	"sort"
 
 	pgx "github.com/jackc/pgx/v4"
 	"github.com/valyala/fasthttp"
 )
 
-var worldsCache *Worlds
+var worldsCache = &Worlds{W: make([]World, worldsCount)}
 
 const (
 	helloWorldStr = "Hello, World!"
@@ -22,9 +21,7 @@ const (
 
 // PopulateWorldsCache populates the worlds cache for the cache test.
 func PopulateWorldsCache() {
-	worlds := &Worlds{W: make([]World, worldsCount)}
-
-	rows, err := db.Query(context.Background(), worldSelectCacheSQL, worldsCount)
+	rows, err := db.Query(context.Background(), worldSelectCacheSQL, len(worldsCache.W))
 	if err != nil {
 		panic(err)
 	}
@@ -32,7 +29,7 @@ func PopulateWorldsCache() {
 	i := 0
 
 	for rows.Next() {
-		w := &worlds.W[i]
+		w := &worldsCache.W[i]
 
 		if err := rows.Scan(&w.ID, &w.RandomNumber); err != nil {
 			panic(err)
@@ -40,8 +37,6 @@ func PopulateWorldsCache() {
 
 		i++
 	}
-
-	worldsCache = worlds
 }
 
 // JSON . Test 1: JSON serialization.
