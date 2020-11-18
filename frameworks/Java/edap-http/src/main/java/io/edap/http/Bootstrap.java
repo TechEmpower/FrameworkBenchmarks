@@ -17,7 +17,7 @@ public class Bootstrap {
         HttpServer httpServer = new HttpServerBuilder()
                 .listen(8080)
                 .req("/plaintext", (req, resp) -> resp.contentType(PLAIN).write("Hello, World!"))
-                .get("/json", (req, resp) -> resp.contentType(JSON).write(new Message("Hello, World!s")))
+                .get("/json", (req, resp) -> resp.contentType(JSON).write(new Message("Hello, World!")))
                 .build();
         Edap edap = new Edap();
         edap.addServer(httpServer);
