@@ -14,13 +14,10 @@ public class Bootstrap {
 
     public static void main(String[] args) throws IOException {
 
-        Message msg = new Message();
-        msg.setMessage("Hello, World!");
-
         HttpServer httpServer = new HttpServerBuilder()
                 .listen(8080)
                 .req("/plaintext", (req, resp) -> resp.contentType(PLAIN).write("Hello, World!"))
-                .get("/json", (req, resp) -> resp.contentType(JSON).write(msg))
+                .get("/json", (req, resp) -> resp.contentType(JSON).write(new Message("Hello, World!s")))
                 .build();
         Edap edap = new Edap();
         edap.addServer(httpServer);
