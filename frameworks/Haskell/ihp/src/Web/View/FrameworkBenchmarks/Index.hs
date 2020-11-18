@@ -3,7 +3,7 @@ import Web.View.Prelude
 
 data FortuneView = FortuneView { fortunes :: [Fortune] }
 
-instance View FortuneView ViewContext where
+instance View FortuneView where
     html FortuneView { .. } = [hsx|
         <nav>
             <ol class="breadcrumb">

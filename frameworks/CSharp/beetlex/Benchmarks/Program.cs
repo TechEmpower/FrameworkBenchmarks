@@ -103,7 +103,7 @@ namespace Benchmarks
                 e.Session["DB"] = new RawDb(new ConcurrentRandom(), Npgsql.NpgsqlFactory.Instance);
             };
             mApiServer.Open();
-            RawDb._connectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3";
+            RawDb._connectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Delay Us=500;Write Coalescing Buffer Threshold Bytes=1000";
             //RawDb._connectionString = "Server=192.168.2.19;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3";
             System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
             var response = await client.GetAsync("http://localhost:8080/json");

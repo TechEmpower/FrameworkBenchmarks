@@ -14,4 +14,4 @@ instance FrontController RootApplication where
         ]
 
 main :: IO ()
-main = IHP.Server.run
+main = IHP.Server.run config

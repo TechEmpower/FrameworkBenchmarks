@@ -1,6 +1,8 @@
 FROM ocurrent/opam:fedora-32-ocaml-4.11
 
 ENV DIR webmachine
+# https://blog.packagecloud.io/eng/2017/02/21/set-environment-variable-save-thousands-of-system-calls/
+ENV TZ  :/etc/localtime
 
 # https://caml.inria.fr/pub/docs/manual-ocaml/libref/Gc.html
 # https://linux.die.net/man/1/ocamlrun
@@ -11,7 +13,8 @@ RUN sudo dnf install --assumeyes diffutils postgresql-devel libev-devel
 
 WORKDIR /${DIR}
 
-COPY src/webmachine-tfb.opam src/Makefile /${DIR}/
+COPY src/tfb.opam src/Makefile /${DIR}/
+COPY src/lib.opam src/Makefile /${DIR}/
 
 RUN make install
 
@@ -25,4 +28,4 @@ COPY haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY start-servers.sh ./start-servers.sh
 RUN sudo chown -R opam: . && chmod +x ./start-servers.sh
 
-CMD ./start-servers.sh && sudo /usr/sbin/haproxy -W -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -q
+ENTRYPOINT ./start-servers.sh && sudo /usr/sbin/haproxy -W -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid

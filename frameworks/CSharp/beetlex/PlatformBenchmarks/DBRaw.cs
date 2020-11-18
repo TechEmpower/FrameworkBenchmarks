@@ -56,11 +56,12 @@ namespace PlatformBenchmarks
 
         public async Task<World> LoadSingleQueryRow()
         {
-            using (var db = await DBConnectionGroupPool.Pop())
+            using (var db = new NpgsqlConnection(_connectionString))
             {
-                SingleCommand.Connection = db.Connection;
+                await db.OpenAsync();
+                SingleCommand.Connection = db;
                 mID.TypedValue = _random.Next(1, 10001);
-                return await ReadSingleRow(db.Connection, SingleCommand);
+                return await ReadSingleRow(db, SingleCommand);
 
             }
         }
@@ -81,9 +82,10 @@ namespace PlatformBenchmarks
 
         public async Task<World[]> LoadMultipleQueriesRows(int count)
         {
-            using (var db = await DBConnectionGroupPool.Pop())
+            using (var db = new NpgsqlConnection(_connectionString))
             {
-                return await LoadMultipleRows(count, db.Connection);
+                await db.OpenAsync();
+                return await LoadMultipleRows(count, db);
             }
 
         }
@@ -115,24 +117,25 @@ namespace PlatformBenchmarks
 
             static async Task<World[]> LoadUncachedQueries(int id, int i, int count, RawDb rawdb, World[] result)
             {
-                using (var db = await DBConnectionGroupPool.Pop())
+                using (var db = new NpgsqlConnection(_connectionString))
                 {
+                    await db.OpenAsync();
                     Func<ICacheEntry, Task<CachedWorld>> create = async (entry) =>
                     {
-                        return await rawdb.ReadSingleRow(db.Connection, rawdb.SingleCommand);
+                        return await rawdb.ReadSingleRow(db, rawdb.SingleCommand);
                     };
 
                     var cacheKeys = _cacheKeys;
                     var key = cacheKeys[id];
 
-                    rawdb.SingleCommand.Connection = db.Connection;
+                    rawdb.SingleCommand.Connection = db;
                     rawdb.mID.TypedValue = id;
                     for (; i < result.Length; i++)
                     {
                         var data = await _cache.GetOrCreateAsync<CachedWorld>(key, create);
                         result[i] = data;
                         id = rawdb._random.Next(1, 10001);
-                        rawdb.SingleCommand.Connection = db.Connection;
+                        rawdb.SingleCommand.Connection = db;
                         rawdb.mID.TypedValue = id;
                         key = cacheKeys[id];
                     }
@@ -160,9 +163,10 @@ namespace PlatformBenchmarks
         {
             var result = new List<Fortune>();
 
-            using (var db = await DBConnectionGroupPool.Pop())
+            using (var db = new NpgsqlConnection(_connectionString))
             {
-                FortuneCommand.Connection = db.Connection;
+                await db.OpenAsync();
+                FortuneCommand.Connection = db;
                 using (var rdr = await FortuneCommand.ExecuteReaderAsync(CommandBehavior.Default))
                 {
                     while (await rdr.ReadAsync())
@@ -181,19 +185,20 @@ namespace PlatformBenchmarks
         }
         public async Task<World[]> LoadMultipleUpdatesRows(int count)
         {
-            using (var db = await DBConnectionGroupPool.Pop())
+            using (var db = new NpgsqlConnection(_connectionString))
             {
+                await db.OpenAsync();
                 var updateCmd = UpdateCommandsCached.PopCommand(count);
                 try
                 {
                     var command = updateCmd.Command;
-                    command.Connection = (NpgsqlConnection)db.Connection;
-                    SingleCommand.Connection = db.Connection;
+                    command.Connection = db;
+                    SingleCommand.Connection = db;
                     mID.TypedValue = _random.Next(1, int.MaxValue) % 10000 + 1;
                     var results = new World[count];
                     for (int i = 0; i < count; i++)
                     {
-                        results[i] = await ReadSingleRow(db.Connection, SingleCommand);
+                        results[i] = await ReadSingleRow(db, SingleCommand);
                         mID.TypedValue = _random.Next(1, int.MaxValue) % 10000 + 1;
                     }
 
@@ -400,113 +405,6 @@ namespace PlatformBenchmarks
             Release(sb);
             return result;
         }
-    }
-
-    internal class DBConnectionGroupPool
-    {
-        private static long mIndex;
-
-        private static List<DBconnectionPool> mPools = new List<DBconnectionPool>();
-
-        private static bool mInited = false;
-
-        public static void Init(int max, string connectionstring)
-        {
-            if (mInited)
-                return;
-            lock (typeof(DBconnectionPool))
-            {
-                if (mInited)
-                    return;
-                int group = 2;
-                if (!Program.UpDB)
-                    group = 16;
-                else
-                    group = 4;
-                HttpServer.ApiServer.Log(BeetleX.EventArgs.LogType.Info, null, $"connection pool init {max} group {group}");
-                int itemcount = (max / group);
-                for (int i = 0; i < group; i++)
-                {
-                    DBconnectionPool pool = new DBconnectionPool();
-                    pool.Init(itemcount, connectionstring);
-                    mPools.Add(pool);
-                }
-                HttpServer.ApiServer.Log(LogType.Info, null, $"Init connection pool completed");
-                mInited = true;
-                return;
-            }
-        }
-
-        public static Task<DBConnectionItem> Pop()
-        {
-            long id = System.Threading.Interlocked.Increment(ref mIndex);
-            return mPools[(int)(id % mPools.Count)].Pop();
-        }
-
-        public class DBconnectionPool
-        {
-
-            private Stack<DBConnectionItem> mConnectionPool = new Stack<DBConnectionItem>();
-
-            private Queue<TaskCompletionSource<DBConnectionItem>> mWaitQueue = new Queue<TaskCompletionSource<DBConnectionItem>>();
-
-            public void Init(int count, string connectionString)
-            {
-                for (int i = 0; i < count; i++)
-                {
-                    DbConnection connection = Npgsql.NpgsqlFactory.Instance.CreateConnection();
-                    connection.ConnectionString = connectionString;
-                    connection.Open();
-                    DBConnectionItem item = new DBConnectionItem();
-                    item.Pool = this;
-                    item.Connection = connection;
-                    mConnectionPool.Push(item);
-                }
-            }
-
-
-            public Task<DBConnectionItem> Pop()
-            {
-                lock (this)
-                {
-                    if (mConnectionPool.Count > 0)
-                        return Task.FromResult(mConnectionPool.Pop());
-                    TaskCompletionSource<DBConnectionItem> result = new TaskCompletionSource<DBConnectionItem>();
-                    mWaitQueue.Enqueue(result);
-                    return result.Task;
-                }
-            }
-            public void Push(DBConnectionItem item)
-            {
-                TaskCompletionSource<DBConnectionItem> work = null;
-                lock (this)
-                {
-                    if (mWaitQueue.Count > 0)
-                        work = mWaitQueue.Dequeue();
-                    else
-                        mConnectionPool.Push(item);
-                }
-                if (work != null)
-                {
-                    Task.Run(() => work.SetResult(item));
-                }
-            }
-
-        }
-
-        public class DBConnectionItem : IDisposable
-        {
-            public DBconnectionPool Pool { get; set; }
-
-            public DbConnection Connection { get; set; }
-
-            public void Dispose()
-            {
-                Pool.Push(this);
-            }
-        }
-
-
     }
 
 }

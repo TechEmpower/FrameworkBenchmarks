@@ -1,0 +1,29 @@
+(library
+ (name lib)
+ (public_name lib)
+ (libraries yojson atdgen-runtime)
+ (preprocess (pps lwt_ppx)))
+
+(rule
+ (targets message_t.ml
+          message_t.mli)
+ (deps    message.atd)
+ (action  (run atdgen -t %{deps})))
+
+(rule
+ (targets message_j.ml
+          message_j.mli)
+ (deps    message.atd)
+ (action  (run atdgen -j %{deps})))
+
+(rule
+ (targets db_t.ml
+          db_t.mli)
+ (deps    db.atd)
+ (action  (run atdgen -t %{deps})))
+
+(rule
+ (targets db_j.ml
+          db_j.mli)
+ (deps    db.atd)
+ (action  (run atdgen -j %{deps})))

@@ -1,11 +1,12 @@
-name := """youi-server"""
-
+name := "youi-server"
 version := "1.0"
-
-scalaVersion := "2.12.8"
+scalaVersion := "2.13.3"
 
 libraryDependencies ++= Seq(
-  "io.youi" %% "youi-server-undertow" % "0.10.3",
-  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % "0.39.0",
-  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "0.39.0" % Provided
+  "io.youi" %% "youi-server" % "0.13.17",
+  "io.youi" %% "youi-server-undertow" % "0.13.17",
+  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % "2.6.2",
+  "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.6.2" % "compile-internal"
 )
+
+enablePlugins(PackPlugin)
