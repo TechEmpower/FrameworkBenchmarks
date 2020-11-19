@@ -1,4 +1,4 @@
-FROM ocurrent/opam:alpine-3.12-ocaml-4.11
+FROM ocurrent/opam:alpine-3.12-ocaml-4.11-flambda
 
 # https://caml.inria.fr/pub/docs/manual-ocaml/libref/Gc.html
 # https://linux.die.net/man/1/ocamlrun

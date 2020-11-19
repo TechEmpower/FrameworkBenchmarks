@@ -1,6 +1,7 @@
 {
   "framework": "opium",
-  "tests": [{
+  "tests": [
+    {
       "default": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
@@ -47,5 +48,6 @@
         "notes": "",
         "versus": "httpaf"
       }
-  }]
+    }
+  ]
 }

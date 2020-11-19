@@ -7,9 +7,11 @@ depends: [
   "ocaml" {>= "4.11.0"}
   "archi"
   "archi-lwt"
-  "pgx"
-  "pgx_lwt_unix"
-  "dune"
+  "caqti-driver-postgresql"
+  "caqti"
+  "caqti-lwt"
+  "conf-libev"
+  "dune" {>= "2.6"}
   "fmt"
   "logs"
   "lwt"
@@ -18,6 +20,10 @@ depends: [
   "yojson"
   "morph"
   "piaf"
+  "reason"
+  "tyxml"
+  "tyxml-jsx"
+  "ppx_rapper"
 ]
 build: [
   ["dune" "subst"] {pinned}
