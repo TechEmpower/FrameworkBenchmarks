@@ -16,8 +16,8 @@ CMD java                       \
     -Dpool=true                \
     -Dlevel=1                  \
     -Dread=false               \
-    -Depoll=false               \
+    -Depoll=true               \
     -Dnodelay=true             \
     -Dcachedurl=true           \
-    -DunsafeBuf=false           \
+    -DunsafeBuf=true           \
     -jar /firenio/target/firenio-example-0.1-jar-with-dependencies.jar
