@@ -2,7 +2,13 @@ server:
   port: 8080
   host: 0.0.0.0
 
-dataSource:
-  jdbcUrl: "jdbc:postgresql://tfb-database:5432/hello_world"
-  username: benchmarkdbuser
-  password: benchmarkdbpass
+db:
+  source: "jdbc"
+  connection:
+    url: "jdbc:postgresql://localhost:5432/hello_world"
+    username: "benchmarkdbuser"
+    password: "benchmarkdbpass"
+  statements:
+    select-world-by-id: "SELECT id, randomnumber FROM world WHERE id = ?"
+    update-world-by-id: "UPDATE world SET randomnumber = ? WHERE id = ?"
+    select-all-fortune: "SELECT id, message FROM fortune"

@@ -3,6 +3,7 @@ package io.helidon.benchmark.services;
 import static java.util.Comparator.comparing;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -34,18 +35,23 @@ public class FortuneService implements Service {
 
     private void fortunes(ServerRequest request, ServerResponse response) {
         repository.getFortunes()
+                .collectList()
                 .subscribe(fortunes -> {
-                    fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-                    fortunes.sort(comparing(fortune -> fortune.message));
+                    try {
+                        fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+                        fortunes.sort(comparing(fortune -> fortune.message));
 
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    OutputStreamWriter writer = new OutputStreamWriter(baos, StandardCharsets.UTF_8.name());
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        OutputStreamWriter writer = new OutputStreamWriter(baos, StandardCharsets.UTF_8.name());
 
-                    template.execute(writer, Collections.singletonMap("fortunes", fortunes));
-                    writer.flush();
+                        template.execute(writer, Collections.singletonMap("fortunes", fortunes));
+                        writer.flush();
 
-                    response.headers().contentType(MediaType.TEXT_HTML.withCharset(StandardCharsets.UTF_8.name()));
-                    response.send(baos.toByteArray());
+                        response.headers().contentType(MediaType.TEXT_HTML.withCharset(StandardCharsets.UTF_8.name()));
+                        response.send(baos.toByteArray());
+                    } catch (IOException e) {
+                        throw new IllegalStateException(e);
+                    }
                 });
     }
 }

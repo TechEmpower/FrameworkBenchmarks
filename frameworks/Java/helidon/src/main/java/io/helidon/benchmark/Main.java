@@ -16,11 +16,13 @@
 
 package io.helidon.benchmark;
 
+import java.io.IOException;
+import java.util.logging.LogManager;
+
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+
 import io.helidon.benchmark.models.DbRepository;
 import io.helidon.benchmark.models.JdbcRepository;
 import io.helidon.benchmark.services.DbService;
@@ -28,16 +30,12 @@ import io.helidon.benchmark.services.FortuneService;
 import io.helidon.benchmark.services.JsonService;
 import io.helidon.benchmark.services.PlainTextService;
 import io.helidon.config.Config;
+import io.helidon.dbclient.DbClient;
+import io.helidon.dbclient.jdbc.HikariCpExtension;
+import io.helidon.dbclient.jdbc.spi.HikariCpExtensionProvider;
+import io.helidon.media.jsonp.JsonpSupport;
 import io.helidon.webserver.Routing;
-import io.helidon.webserver.ServerConfiguration;
 import io.helidon.webserver.WebServer;
-import io.reactivex.Scheduler;
-import io.reactivex.schedulers.Schedulers;
-
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.logging.LogManager;
 
 /**
  * Simple Hello World rest application.
@@ -49,24 +47,8 @@ public final class Main {
      */
     private Main() { }
 
-    private static Scheduler getScheduler() {
-        return Schedulers.from(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2));
-    }
-
-    private static DataSource getDataSource(Config config) {
-        HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(config.get("jdbcUrl").asString().get());
-        hikariConfig.setUsername(config.get("username").asString().get());
-        hikariConfig.setPassword(config.get("password").asString().get());
-        hikariConfig.setMaximumPoolSize(Runtime.getRuntime().availableProcessors() * 2);
-
-        return new HikariDataSource(hikariConfig);
-    }
-
     private static DbRepository getRepository(Config config) {
-        DataSource dataSource = getDataSource(config.get("dataSource"));
-        Scheduler scheduler = getScheduler();
-        return new JdbcRepository(dataSource, scheduler);
+        return new JdbcRepository(DbClient.builder(config.get("db")).build());
     }
 
     private static Mustache getTemplate() {
@@ -118,10 +100,11 @@ public final class Main {
         Config config = Config.create();
 
         // Get webserver config from the "server" section of application.yaml
-        ServerConfiguration serverConfig =
-                ServerConfiguration.create(config.get("server"));
-
-        WebServer server = WebServer.create(serverConfig, createRouting(config));
+        WebServer server = WebServer
+                .builder(createRouting(config))
+                .addMediaSupport(JsonpSupport.create())
+                .config(config.get("server"))
+                .build();
 
         // Start the server and print some info.
         server.start().thenAccept(ws -> {
@@ -133,5 +116,22 @@ public final class Main {
                 -> System.out.println("WEB server is DOWN. Good bye!"));
 
         return server;
+    }
+
+    /**
+     * Customise the Hikari configuration.
+     */
+    public static class HikariCustomiser implements HikariCpExtensionProvider {
+        @Override
+        public HikariCpExtension extension(Config config) {
+            return c -> {
+                c.setMaximumPoolSize(Runtime.getRuntime().availableProcessors() * 2);
+            };
+        }
+
+        @Override
+        public String configKey() {
+            return "noop";
+        }
     }
 }

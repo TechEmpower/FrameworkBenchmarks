@@ -11,37 +11,30 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
-import javax.json.JsonWriterFactory;
 
 import io.helidon.benchmark.models.DbRepository;
 import io.helidon.benchmark.models.World;
 import io.helidon.common.http.Parameters;
-import io.helidon.media.jsonp.server.JsonSupport;
+import io.helidon.common.reactive.Multi;
+import io.helidon.common.reactive.Single;
 import io.helidon.webserver.Routing;
 import io.helidon.webserver.ServerRequest;
 import io.helidon.webserver.ServerResponse;
 import io.helidon.webserver.Service;
-import io.reactivex.Flowable;
-import io.reactivex.Single;
 
 public class DbService implements Service {
 
     private final DbRepository repository;
-    private JsonWriterFactory jsonWriterFactory;
     private JsonBuilderFactory jsonBuilderFactory;
 
     public DbService(DbRepository repository) {
         this.repository = repository;
 
-        this.jsonWriterFactory = Json.createWriterFactory(null);
         this.jsonBuilderFactory = Json.createBuilderFactory(Collections.emptyMap());
     }
 
     @Override
     public void update(Routing.Rules rules) {
-        rules.register("/db", JsonSupport.create());
-        rules.register("/queries", JsonSupport.create());
-        rules.register("/updates", JsonSupport.create());
         rules.get("/db", this::db);
         rules.get("/queries", this::queries);
         rules.get("/updates", this::updates);
@@ -51,34 +44,44 @@ public class DbService implements Service {
                           final ServerResponse response) {
         repository.getWorld(randomWorldNumber())
                 .map(World::toJson)
-                .subscribe(jsonObject -> response.send(jsonObject));
+                .thenAccept(response::send)
+                .exceptionally(response::send);
     }
 
     private void queries(final ServerRequest request,
                            final ServerResponse response) {
-        Flowable<JsonObject>[] worlds = new Flowable[parseQueryCount(request.queryParams())];
-        Arrays.setAll(worlds, i -> repository.getWorld(randomWorldNumber()).map(World::toJson).toFlowable());
+        @SuppressWarnings("unchecked")
+        Single<JsonObject>[] worlds = new Single[parseQueryCount(request.queryParams())];
+        Arrays.setAll(worlds, i -> repository.getWorld(randomWorldNumber()).map(World::toJson));
 
-        marshall(worlds).subscribe(jsonObject -> response.send(jsonObject));
+        marshall(worlds)
+                .thenAccept(response::send)
+                .exceptionally(response::send);
     }
 
     private void updates(final ServerRequest request,
                          final ServerResponse response) {
-        Flowable<JsonObject>[] worlds = new Flowable[parseQueryCount(request.queryParams())];
+        @SuppressWarnings("unchecked")
+        Single<JsonObject>[] worlds = new Single[parseQueryCount(request.queryParams())];
 
-        Arrays.setAll(worlds, i -> repository.getWorld(randomWorldNumber()).flatMapPublisher(world -> {
-            world.randomNumber = randomWorldNumber();
-            return repository.updateWorld(world).map(World::toJson).toFlowable();
-        }));
+        Arrays.setAll(worlds, i -> {
+            return repository.getWorld(randomWorldNumber()).flatMapSingle(world -> {
+                world.randomNumber = randomWorldNumber();
+                return repository.updateWorld(world).map(World::toJson);
+            });
+        });
 
-        marshall(worlds).subscribe(jsonObject -> response.send(jsonObject));
+        marshall(worlds)
+                .thenAccept(response::send)
+                .exceptionally(response::send);
     }
 
-    private Single<JsonArray> marshall(Flowable<JsonObject>[] worlds) {
-        return Flowable.mergeArray(worlds)
-                .toList()
+    private Single<JsonArray> marshall(Single<JsonObject>[] worlds) {
+        Multi.concatArray(worlds).onComplete(() -> System.out.println("Whoo hoo!"));
+        return Multi.concatArray(worlds)
+                .collectList()
                 .map(this::buildArray)
-                .doOnError(Throwable::printStackTrace);
+                .onError(Throwable::printStackTrace);
     }
 
     private JsonArray buildArray(List<JsonObject> jsonObjects) {
