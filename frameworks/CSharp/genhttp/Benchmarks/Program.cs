@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System;
-
-using GenHTTP.Engine;
+﻿using GenHTTP.Engine;
 
 using GenHTTP.Modules.IO;
 using GenHTTP.Modules.Layouting;
@@ -16,9 +13,7 @@ namespace Benchmarks
     {
 
         public static int Main(string[] args)
-        {
-            ThreadPool.SetMaxThreads(Environment.ProcessorCount, Environment.ProcessorCount);
-
+        { 
             var tests = Layout.Create()
                               .Add("plaintext", Content.From(Resource.FromString("Hello, World!")))
                               .Add("fortunes", new FortuneHandlerBuilder())
