@@ -51,6 +51,7 @@
       },
       "core-updb": {
         "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",

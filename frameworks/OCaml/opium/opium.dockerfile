@@ -18,4 +18,4 @@ COPY ./src ./
 
 RUN sudo chown -R opam: . && make build
 
-CMD _build/default/bin/main.exe
+ENTRYPOINT _build/default/bin/main.exe

@@ -106,24 +106,24 @@ class TeBkUmLpqAsyncRouter : public Router {
 	bool strToNum(const char* str, int len, int& ret);
 
 	void dbAsync(AsyncReq* req);
-	static void dbAsyncUtil(void* ctx, int rn, std::vector<LibpqRes>& data);
-	static void dbAsyncCh(void* ctx, bool status, std::string q, int counter);
+	static void dbAsyncUtil(void* ctx, int rn, int cn, char * d);
+	static void dbAsyncCh(void* ctx, bool status, const std::string& q, int counter);
 
 	void queriesAsync(const char* q, int ql, AsyncReq* req);
-	static void queriesAsyncUtil(void* ctx, int rn, std::vector<LibpqRes>& data);
-	static void queriesAsyncCh(void* ctx, bool status, std::string q, int counter);
+	static void queriesAsyncUtil(void* ctx, int rn, int cn, char * d);
+	static void queriesAsyncCh(void* ctx, bool status, const std::string& q, int counter);
 
 	void updatesAsync(const char* q, int ql, AsyncReq* req);
-	static void updatesAsyncChQ(void* ctx, bool status, std::string q, int counter);
-	static void updatesAsyncChU(void* ctx, bool status, std::string q, int counter);
+	static void updatesAsyncChQ(void* ctx, bool status, const std::string& q, int counter);
+	static void updatesAsyncChU(void* ctx, bool status, const std::string& q, int counter);
 	
 	void cachedWorlds(const char*, int, std::vector<TeBkUmLpqAsyncWorld>&);
 	static void updateCacheAsyncUtil(void* ctx, int rn, std::vector<LibpqRes>& data);
-	static void updateCacheAsyncCh(void* ctx, bool status, std::string q, int counter);
+	static void updateCacheAsyncCh(void* ctx, bool status, const std::string& q, int counter);
 
 	void getContextAsync(AsyncReq* req);
-	static void getContextAsyncUtil(void* ctx, int rn, std::vector<LibpqRes>& data);
-	static void getContextAsyncCh(void* ctx, bool status, std::string q, int counter);
+	static void getContextAsyncUtil(void* ctx, int rn, int cn, char * d, int l);
+	static void getContextAsyncCh(void* ctx, bool status, const std::string& q, int counter);
 
 	LibpqDataSourceImpl* sqli;
 	LibpqDataSourceImpl* getDb();

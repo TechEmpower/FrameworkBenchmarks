@@ -1,0 +1,25 @@
+{
+	"framework": "swi-prolog",
+	"tests": [{
+		"default": {
+			"json_url": "/json",
+			"plaintext_url": "/plaintext",
+			"port": 8080,
+			"approach": "Realistic",
+			"classification": "None",
+			"database": "None",
+			"framework": "SWI-Prolog",
+			"language": "Prolog",
+			"orm": "None",
+			"platform": "None",
+			"webserver": "SWI-Prolog",
+			"os": "Linux",
+			"database_os": "Linux",
+			"display_name": "SWI-Prolog",
+			"notes": "",
+			"versus": "",
+			"tags": []
+		}
+	}]
+}
+
