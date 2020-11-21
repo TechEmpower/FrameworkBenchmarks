@@ -10,7 +10,7 @@ namespace Benchmarks.Model
     {
 
         [Column("id")]
-        public int Id { get; set; }
+        public int ID { get; set; }
 
         [Column("message")]
         [StringLength(2048)]
