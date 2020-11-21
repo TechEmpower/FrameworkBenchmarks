@@ -16,10 +16,6 @@ module Wm = struct
   include Webmachine.Make (Cohttp_lwt_unix__Io) (UnixClock)
 end
 
-module World = struct
-  type t = { id : int; randomNumber : int }
-end
-
 let pool =
   let connection_url =
     "postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?connect_timeout=15"
@@ -64,8 +60,8 @@ class hello =
       Wm.continue (`String text) rd
 
     method private to_json rd =
-      let json = Ezjsonm.value (`O [ ("message", `String "Hello, World!") ]) in
-      Wm.continue (`String (Ezjsonm.value_to_string ~minify:true json)) rd
+      let json = Lib.Message_t.{ message = "Hello, World!" } in
+      Wm.continue (`String (Lib.Message_j.string_of_message json)) rd
   end
 
 class db =
@@ -89,14 +85,10 @@ class db =
         | Error _ -> failwith "whoops"
       in
       let json =
-        Ezjsonm.value
-          (`O
-            [
-              ("id", `Float (float_of_int id));
-              ("randomNumber", `Float (float_of_int randomNumber));
-            ])
+        Lib.Db_t.
+          { id = float_of_int id; randomNumber = float_of_int randomNumber }
       in
-      Wm.continue (`String (Ezjsonm.value_to_string ~minify:true json)) rd
+      Wm.continue (`String (Lib.Db_j.string_of_query json)) rd
   end
 
 class queries =
@@ -136,18 +128,14 @@ class queries =
       in
       let%lwt resolved_response = Lwt.all response in
       let json =
-        Ezjsonm.list
+        List.map
           (fun tup ->
             let id, randomNumber = tup in
-            Ezjsonm.value
-              (`O
-                [
-                  ("id", `Float (float_of_int id));
-                  ("randomNumber", `Float (float_of_int randomNumber));
-                ]))
+            Lib.Db_t.
+              { id = float_of_int id; randomNumber = float_of_int randomNumber })
           resolved_response
       in
-      Wm.continue (`String (Ezjsonm.value_to_string ~minify:true json)) rd
+      Wm.continue (`String (Lib.Db_j.string_of_queries json)) rd
   end
 
 let main () =
@@ -172,9 +160,7 @@ let main () =
      | Some result -> result)
     >>= fun (status, headers, body, _) ->
     let headers = Header.add headers "Server" "webmachine" in
-    let headers =
-      Header.add headers "Date" (Ptime.to_rfc3339 (Ptime_clock.now ()))
-    in
+    let headers = Header.add headers "Date" (Lib.Time.now ()) in
     Server.respond ~headers ~body ~status ()
   in
 
@@ -183,6 +169,26 @@ let main () =
   Printf.eprintf "hello_lwt: listening on 0.0.0.0:%d%!" port
 
 let () =
+  let options =
+    [
+      ("fd_passing", `fd_passing);
+      ("fdatasync", `fdatasync);
+      ("get_affinity", `get_affinity);
+      ("get_cpu", `get_cpu);
+      ("get_credentials", `get_credentials);
+      ("libev", `libev);
+      ("madvise", `madvise);
+      ("mincore", `mincore);
+      ("recv_msg", `recv_msg);
+      ("send_msg", `send_msg);
+      ("set_affinity", `set_affinity);
+      ("wait4", `wait4);
+    ]
+  in
+  List.iter
+    (fun (str, opt) ->
+      print_endline ("option " ^ str ^ ": " ^ string_of_bool (Lwt_sys.have opt)))
+    options;
   (* https://github.com/mirage/ocaml-cohttp/issues/328#issuecomment-222583580 *)
   Lwt_io.set_default_buffer_size 0x10000;
   Lwt_main.run (main ())

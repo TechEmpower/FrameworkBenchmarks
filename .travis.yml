@@ -58,6 +58,7 @@ env:
     - 'TESTDIR="JavaScript/0http JavaScript/express JavaScript/fastify JavaScript/hapi JavaScript/koa"'
     - 'TESTDIR="JavaScript/nodejs JavaScript/polkadot JavaScript/restana JavaScript/restify JavaScript/sailsjs"'
     - 'TESTDIR="JavaScript/es4x JavaScript/ringojs JavaScript/just"'
+    - "TESTLANG=Julia"
     - "TESTLANG=Kotlin"
     - "TESTLANG=Lisp"
     - "TESTLANG=Lua"
@@ -70,6 +71,7 @@ env:
     - 'TESTDIR="PHP/cakephp PHP/codeigniter PHP/fat-free PHP/fuel PHP/phpixie PHP/slim PHP/symfony PHP/yii2 PHP/zend PHP/spiral PHP/duckphp"'
     - 'TESTDIR="PHP/amp PHP/hhvm PHP/peachpie PHP/php-ngx PHP/phalcon"'
     - 'TESTDIR="PHP/hamlet PHP/laravel PHP/lumen PHP/swoole PHP/ubiquity PHP/hyperf PHP/sw-fw-less PHP/imi PHP/simps PHP/one"'
+    - "TESTLANG=Prolog"
     - 'TESTDIR="Python/aiohttp Python/api_hour Python/apidaora Python/blacksheep Python/bottle Python/cherrypy Python/crax Python/django Python/emmett Python/eve Python/falcon Python/fastapi Python/flask"'
     - 'TESTDIR="Python/hug Python/japronto Python/klein Python/morepath Python/pyramid Python/quart Python/responder Python/sanic Python/spyne Python/starlette"'
     - 'TESTDIR="Python/tornado Python/turbogears Python/uvicorn Python/uwsgi Python/vibora Python/web2py Python/webware Python/weppy Python/wsgi"'

@@ -22,7 +22,7 @@
         "database_os": "Linux",
         "display_name": "opium",
         "notes": "",
-        "versus": "None"
+        "versus": "httpaf"
       },
       "haproxy": {
         "json_url": "/json",
@@ -45,7 +45,7 @@
         "database_os": "Linux",
         "display_name": "opium-haproxy",
         "notes": "",
-        "versus": "None"
+        "versus": "httpaf"
       }
   }]
 }

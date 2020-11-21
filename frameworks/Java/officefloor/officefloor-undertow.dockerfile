@@ -2,11 +2,11 @@ FROM maven:slim as maven
 WORKDIR /officefloor
 COPY src src
 WORKDIR /officefloor/src
-RUN mvn -q -N clean install
+RUN mvn -B -N clean install
 WORKDIR /officefloor/src/woof_benchmark
-RUN mvn -q clean install
+RUN mvn -B clean install
 WORKDIR /officefloor/src/woof_benchmark_undertow
-RUN mvn -q clean package
+RUN mvn -B clean package
 
 FROM openjdk:slim
 WORKDIR /officefloor
