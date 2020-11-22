@@ -23,9 +23,12 @@ namespace PlatformBenchmarks
             serverOptions.BufferSize = 1024 * 8;
             serverOptions.BufferPoolMaxMemory = 1000;
             serverOptions.BufferPoolSize = 1024 * 10;
-            serverOptions.IOQueueEnabled = true;
-            serverOptions.IOQueues = System.Math.Min(Environment.ProcessorCount, 16);
-            serverOptions.SyncAccept = false;
+            if (Program.Debug)
+            {
+                serverOptions.IOQueueEnabled = true;
+                serverOptions.IOQueues = System.Math.Min(Environment.ProcessorCount, 16);
+                serverOptions.SyncAccept = false;
+            }
             ApiServer = SocketFactory.CreateTcpServer<HttpHandler>(serverOptions);
             ApiServer.Open();
             if (!Program.UpDB)
