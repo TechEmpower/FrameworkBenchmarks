@@ -1,14 +1,15 @@
-let weekday Unix.{tm_wday;_} = match tm_wday with
+let get_date () = Unix.(gettimeofday () |> gmtime)
+
+let dow = function
   | 0 -> "Sun"
   | 1 -> "Mon"
   | 2 -> "Tue"
   | 3 -> "Wed"
   | 4 -> "Thu"
   | 5 -> "Fri"
-  | 6 -> "Sat"
-  | _ -> failwith "weekday"
+  | _ -> "Sat"
 
-let month Unix.{tm_mon;_} = match tm_mon with
+let month = function
   | 0 -> "Jan"
   | 1 -> "Feb"
   | 2 -> "Mar"
@@ -20,10 +21,20 @@ let month Unix.{tm_mon;_} = match tm_mon with
   | 8 -> "Sep"
   | 9 -> "Oct"
   | 10 -> "Nov"
-  | 11 -> "Dec"
-  | _ -> failwith "month"
+  | _ -> "Dec"
 
-let gmt tm =
-  Printf.sprintf "%s, %02u %s %04u %02u:%02u:%02u GMT" (weekday tm) tm.tm_mday (month tm) (tm.tm_year + 1900)  tm.tm_hour tm.tm_min tm.tm_sec
+let date () =
+  let d = get_date () in
+  (* Wed, 17 Apr 2013 12:00:00 GMT *)
+  Format.sprintf "%s, %02d %s %4d %02d:%02d:%02d GMT" (dow d.tm_wday) d.tm_mday
+    (month d.tm_mon) (1900 + d.tm_year) d.tm_hour d.tm_min d.tm_sec
 
-let now () = (gmt (Unix.gmtime (Unix.gettimeofday ())))
+let memo_date = ref @@ date ()
+
+let refresh_date () =
+  let f _ =
+    memo_date := date ();
+    ignore @@ Unix.alarm 1
+  in
+  (ignore @@ Sys.(signal sigalrm (Signal_handle f)));
+  f ()
