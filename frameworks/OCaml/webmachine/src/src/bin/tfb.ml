@@ -156,10 +156,10 @@ let dump_lwt () =
       ("wait4", `wait4);
     ]
   in
-  ignore @@ Lwt_io.eprintf "Lwt:\n";
+  Lwt.async (fun () -> Lwt_io.eprintf "Lwt:\n");
   List.iter
     (fun (str, opt) ->
-      ignore @@ Lwt_io.eprintf "  %s = %b\n" str (Lwt_sys.have opt))
+      Lwt.async (fun () -> Lwt_io.eprintf "  %s = %b\n" str (Lwt_sys.have opt)))
     options
 
 let main () =
@@ -173,11 +173,11 @@ let main () =
         |> input_line
         |> int_of_string
   in
-  ignore @@ Lwt_io.eprintf "Detected %d cores\n" nproc;
+  Lwt.async (fun () -> Lwt_io.eprintf "Detected %d cores\n" nproc);
   let ulimit_n =
     Unix.open_process_in "ulimit -n" |> input_line |> int_of_string
   in
-  ignore @@ Lwt_io.eprintf "Detected %d max open files\n" ulimit_n;
+  Lwt.async (fun () -> Lwt_io.eprintf "Detected %d max open files\n" ulimit_n);
   dump_lwt ();
   let port =
     match Sys.getenv "PORT" with
@@ -216,20 +216,22 @@ let main () =
        Lwt_unix.listen socket (Lwt_unix.somaxconn () [@ocaml.warning "-3"]) );
 
   for i = 1 to nproc do
-    ignore @@ Lwt_io.flush_all ();
+    Lwt.async (fun () -> Lwt_io.flush_all ());
     if Lwt_unix.fork () = 0 then (
       (* child *)
       Lib.Time.refresh_date ();
-      ignore
-      @@ Lwt_io.eprintf "Listening on %s:%d (child %d)\n"
-           (Unix.string_of_inet_addr ipaddr)
-           port i;
+      Lwt.async (fun () ->
+          Lwt_io.eprintf "Listening on %s:%d (child %d)\n"
+            (Unix.string_of_inet_addr ipaddr)
+            port i);
       let config = Server.make ~callback () in
-      ignore @@ Server.create ~mode:(`TCP (`Socket socket)) config;
+      Lwt.async (fun () -> Server.create ~mode:(`TCP (`Socket socket)) config);
       let forever, _ = Lwt.wait () in
       Lwt_main.run forever;
       exit 0 )
   done;
-  Unix.pause ()
+  while true do
+    Unix.pause ()
+  done
 
 let () = Unix.handle_unix_error main ()
