@@ -1,16 +1,17 @@
 (* https://github.com/ocsigen/lwt/blob/d7fabaa077389a0035254e66459a6a366c57576e/src/core/lwt_result.ml#L88-L91 *)
 (* >>= is Lwt.Infix equivalent to Lwt.bind:
-   https://ocsigen.org/lwt/5.2.0/api/Lwt#3_Callbacks *)
+   https://ocsigen.org/lwt/5.3.0/api/Lwt#3_Callbacks *)
 (* >|= is Lwt.Infix equivalent to Lwt.map:
-   https://ocsigen.org/lwt/5.2.0/api/Lwt#2_Convenience *)
+   https://ocsigen.org/lwt/5.3.0/api/Lwt#2_Convenience *)
 open Lwt.Infix
+open Lwt.Syntax [@@ocaml.warning "-33"]
 open Cohttp_lwt_unix
 
 module Wm = struct
   module Rd = Webmachine.Rd
 
   module UnixClock = struct
-    let now () = int_of_float (Unix.gettimeofday ())
+    let now () = 0
   end
 
   include Webmachine.Make (Cohttp_lwt_unix__Io) (UnixClock)
@@ -138,7 +139,46 @@ class queries =
       Wm.continue (`String (Lib.Db_j.string_of_queries json)) rd
   end
 
+let dump_lwt () =
+  let options =
+    [
+      ("fd_passing", `fd_passing);
+      ("fdatasync", `fdatasync);
+      ("get_affinity", `get_affinity);
+      ("get_cpu", `get_cpu);
+      ("get_credentials", `get_credentials);
+      ("libev", `libev);
+      ("madvise", `madvise);
+      ("mincore", `mincore);
+      ("recv_msg", `recv_msg);
+      ("send_msg", `send_msg);
+      ("set_affinity", `set_affinity);
+      ("wait4", `wait4);
+    ]
+  in
+  Lwt.async (fun () -> Lwt_io.eprintf "Lwt:\n");
+  List.iter
+    (fun (str, opt) ->
+      Lwt.async (fun () -> Lwt_io.eprintf "  %s = %b\n" str (Lwt_sys.have opt)))
+    options
+
 let main () =
+  (* https://github.com/mirage/ocaml-cohttp/issues/328#issuecomment-222583580 *)
+  Lwt_io.set_default_buffer_size 0x10000;
+  let nproc =
+    match Sys.getenv "CORE_COUNT" with
+    | x -> int_of_string x
+    | exception Not_found ->
+        Unix.open_process_in "getconf _NPROCESSORS_ONLN"
+        |> input_line
+        |> int_of_string
+  in
+  Lwt.async (fun () -> Lwt_io.eprintf "Detected %d cores\n" nproc);
+  let ulimit_n =
+    Unix.open_process_in "ulimit -n" |> input_line |> int_of_string
+  in
+  Lwt.async (fun () -> Lwt_io.eprintf "Detected %d max open files\n" ulimit_n);
+  dump_lwt ();
   let port =
     match Sys.getenv "PORT" with
     | x -> int_of_string x
@@ -160,35 +200,38 @@ let main () =
      | Some result -> result)
     >>= fun (status, headers, body, _) ->
     let headers = Header.add headers "Server" "webmachine" in
-    let headers = Header.add headers "Date" (Lib.Time.now ()) in
+    let headers = Header.add headers "Date" Lib.Time.(!memo_date) in
     Server.respond ~headers ~body ~status ()
   in
 
-  let config = Server.make ~callback () in
-  Server.create ~mode:(`TCP (`Port port)) config >|= fun () ->
-  Printf.eprintf "hello_lwt: listening on 0.0.0.0:%d%!" port
-
-let () =
-  let options =
-    [
-      ("fd_passing", `fd_passing);
-      ("fdatasync", `fdatasync);
-      ("get_affinity", `get_affinity);
-      ("get_cpu", `get_cpu);
-      ("get_credentials", `get_credentials);
-      ("libev", `libev);
-      ("madvise", `madvise);
-      ("mincore", `mincore);
-      ("recv_msg", `recv_msg);
-      ("send_msg", `send_msg);
-      ("set_affinity", `set_affinity);
-      ("wait4", `wait4);
-    ]
+  let ipaddr = Unix.inet_addr_any in
+  let sockaddr = Unix.ADDR_INET (ipaddr, port) in
+  let socket =
+    Lwt_unix.socket (Unix.domain_of_sockaddr sockaddr) Unix.SOCK_STREAM 0
   in
-  List.iter
-    (fun (str, opt) ->
-      print_endline ("option " ^ str ^ ": " ^ string_of_bool (Lwt_sys.have opt)))
-    options;
-  (* https://github.com/mirage/ocaml-cohttp/issues/328#issuecomment-222583580 *)
-  Lwt_io.set_default_buffer_size 0x10000;
-  Lwt_main.run (main ())
+  Lwt_unix.setsockopt socket Unix.SO_REUSEADDR true;
+
+  Lwt_main.run
+  @@ ( Lwt_unix.bind socket sockaddr >|= fun () ->
+       Lwt_unix.listen socket (Lwt_unix.somaxconn () [@ocaml.warning "-3"]) );
+
+  for i = 1 to nproc do
+    Lwt.async (fun () -> Lwt_io.flush_all ());
+    if Lwt_unix.fork () = 0 then (
+      (* child *)
+      Lib.Time.refresh_date ();
+      Lwt.async (fun () ->
+          Lwt_io.eprintf "Listening on %s:%d (child %d)\n"
+            (Unix.string_of_inet_addr ipaddr)
+            port i);
+      let config = Server.make ~callback () in
+      Lwt.async (fun () -> Server.create ~mode:(`TCP (`Socket socket)) config);
+      let forever, _ = Lwt.wait () in
+      Lwt_main.run forever;
+      exit 0 )
+  done;
+  while true do
+    Unix.pause ()
+  done
+
+let () = Unix.handle_unix_error main ()
