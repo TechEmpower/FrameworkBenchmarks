@@ -71,7 +71,6 @@ namespace PlatformBenchmarks
             e.Session.Socket.NoDelay = true;
             var token = new HttpToken();
             token.Db = new RawDb(new ConcurrentRandom(), Npgsql.NpgsqlFactory.Instance);
-            token.NextQueue = NextQueueGroup.Next();
             e.Session.Tag = token;
         }
 
@@ -85,29 +84,6 @@ namespace PlatformBenchmarks
             return -1;
 
         }
-
-        class RequestWork : IEventWork
-        {
-            public void Dispose()
-            {
-
-            }
-
-            public PipeStream Stream { get; set; }
-
-            public ISession Session { get; set; }
-
-            public HttpToken Token { get; set; }
-
-            public HttpHandler Handler { get; set; }
-
-            public Task Execute()
-            {
-                Handler.OnProcess(Stream, Token, Session);
-                return Task.CompletedTask;
-            }
-        }
-
         private void OnProcess(PipeStream pipeStream, HttpToken token, ISession sessino)
         {
             var line = _line.AsSpan();
@@ -148,23 +124,10 @@ namespace PlatformBenchmarks
 
         public override void SessionReceive(IServer server, SessionReceiveEventArgs e)
         {
-
             base.SessionReceive(server, e);
             PipeStream pipeStream = e.Session.Stream.ToPipeStream();
             HttpToken token = (HttpToken)e.Session.Tag;
-            if (Program.Debug || Program.UpDB)
-            {
-                RequestWork work = new RequestWork();
-                work.Handler = this;
-                work.Session = e.Session;
-                work.Stream = pipeStream;
-                work.Token = token;
-                token.NextQueue.Enqueue(work);
-            }
-            else
-            {
-                OnProcess(pipeStream, token, e.Session);
-            }
+            OnProcess(pipeStream, token, e.Session);
         }
 
 
