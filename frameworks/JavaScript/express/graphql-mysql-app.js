@@ -1,17 +1,28 @@
+const cluster = require('cluster')
+const numCPUs = require('os').cpus().length
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const port = 8080;
 
-app.use(bodyParser.urlencoded({ extended:false }));
-app.use(bodyParser.json());
+if (cluster.isMaster) {
+  // Fork workers.
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
 
-// Routes
+  cluster.on('exit', (worker, code, signal) =>
+    console.log('worker ' + worker.pid + ' died'));
+} else {
+  app.use(bodyParser.urlencoded({ extended:false }));
+  app.use(bodyParser.json());
 
-const resolvers = require('./resolver');
+  const resolvers = require('./resolver');
 
-require('./routes')(app, resolvers);
+  // Routes
+  require('./routes')(app, resolvers);
 
-app.listen(port, () => {
+  app.listen(port, () => {
     console.log(`Listening on localhost:${port}`);
-});
+  });
+}
