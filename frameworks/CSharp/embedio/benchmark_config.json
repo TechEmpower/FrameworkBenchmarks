@@ -7,7 +7,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "Postgres",
+      "database": "None",
       "framework": "EmbedIO",
       "language": "C#",
       "orm": "Raw",
