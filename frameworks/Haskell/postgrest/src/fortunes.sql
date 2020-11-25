@@ -6,7 +6,8 @@ $$ language sql volatile;
 
 create or replace function fortunes_template(fortunes fortune_t[]) returns text as $$
 WITH header AS (
-   SELECT 0 as id,'!<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>' as html
+   SELECT 0 as id,'<!DOCTYPE html>
+<html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>' as html
 ), footer AS (
    SELECT 2,'</table></body></html>' as html
 ), fortunes AS (
@@ -23,12 +24,12 @@ WITH header AS (
 SELECT string_agg(html,'') from html;
 $$ language sql volatile;
 
-create or replace function fortunes() returns text as $$
+create or replace function "fortunes.html"() returns bytea as $$
 DECLARE
    fortunes fortune_t[];
 BEGIN
    SET LOCAL "response.headers" = '[{"Content-Type": "text/html"}]';
    SELECT array_agg(CAST((id,message) AS fortune_t)) FROM "Fortunes" INTO fortunes;
-   RETURN fortunes_template(fortunes);
+   RETURN convert_to(fortunes_template(fortunes), 'UTF8');
 END
 $$ language plpgsql volatile;

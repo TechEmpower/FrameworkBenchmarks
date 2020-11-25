@@ -11,6 +11,7 @@ BEGIN
   END IF;
 END
 $$ language plpgsql volatile;
+
 SELECT postgrest_init();
 
 

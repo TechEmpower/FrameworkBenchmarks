@@ -5,14 +5,12 @@ services:
       dockerfile: postgresql.dockerfile
       context: .
     environment: 
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=tfb
+      - POSTGRES_PASSWORD=benchmarkdbpass
+      - POSTGRES_USER=benchmarkdbuser
+      - POSTGRES_DB=hello_world
   web:
     build: 
       dockerfile: postgrest.dockerfile
       context: .
-    environment:
-      - PGRST_DB_URI=postgres://tfb:password@tfb-database/tfb
-      - PGRST_
     ports:
       - 3030:3000
