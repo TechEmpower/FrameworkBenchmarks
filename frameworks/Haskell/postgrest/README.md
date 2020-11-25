@@ -6,8 +6,8 @@
 * [PLAINTEXT](src/plaintext.sql)
 * [DB](src/db.sql)
 * [QUERY](src/query.sql)
-* [CACHED QUERY](Relative/Path/To/Your/Source/File)
-* [UPDATE](Relative/Path/To/Your/Source/File)
+* [CACHED QUERY] Not Implemented
+* [UPDATE] Not Implemented
 * [FORTUNES](src/fortunes.sql)
 
 ## Important Libraries
@@ -31,11 +31,11 @@ http://localhost:3000/rpc/db
 
 http://localhost:3000/rpc/query?queries=
 
-### CACHED QUERY
+### CACHED QUERY Not Implemented
 
 http://localhost:8080/cached_query?queries=
 
-### UPDATE
+### UPDATE Not Implemented
 
 http://localhost:3000/rpc/update?queries=
 
