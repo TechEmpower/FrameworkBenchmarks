@@ -1,0 +1,18 @@
+version: '3'
+services:
+  tfb-database:
+    build: 
+      dockerfile: postgresql.dockerfile
+      context: .
+    environment: 
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=tfb
+  web:
+    build: 
+      dockerfile: postgrest.dockerfile
+      context: .
+    environment:
+      - PGRST_DB_URI=postgres://tfb:password@tfb-database/tfb
+      - PGRST_
+    ports:
+      - 3030:3000
