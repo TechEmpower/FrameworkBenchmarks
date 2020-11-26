@@ -1,6 +1,9 @@
-FROM golang:1.10.1
+FROM golang:1.14
+
+ENV GO111MODULE=off
 
 ADD ./ /gin
+COPY ./templates /templates
 WORKDIR /gin
 
 RUN mkdir bin
@@ -10,4 +13,5 @@ ENV PATH ${GOPATH}/bin:${PATH}
 RUN go get github.com/gin-gonic/gin
 RUN go get github.com/go-sql-driver/mysql
 
-CMD go run hello.go
+RUN go build -o hello hello.go
+CMD ./hello

@@ -3,13 +3,13 @@ import asyncpg
 import os
 import jinja2
 from fastapi import FastAPI
-from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
+from starlette.responses import HTMLResponse, UJSONResponse, PlainTextResponse
 from random import randint
 from operator import itemgetter
 from urllib.parse import parse_qs
 
 
-READ_ROW_SQL = 'SELECT "randomnumber" FROM "world" WHERE id = $1'
+READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
 
@@ -58,7 +58,7 @@ app = FastAPI()
 
 @app.get('/json')
 async def json_serialization():
-    return {'message': 'Hello, world!'}
+    return UJSONResponse({'message': 'Hello, world!'})
 
 
 @app.get('/db')
@@ -68,7 +68,7 @@ async def single_database_query():
     async with connection_pool.acquire() as connection:
         number = await connection.fetchval(READ_ROW_SQL, row_id)
 
-    return {'id': row_id, 'randomNumber': number}
+    return UJSONResponse({'id': row_id, 'randomNumber': number})
 
 
 @app.get('/queries')
@@ -84,7 +84,7 @@ async def multiple_database_queries(queries = None):
             number = await statement.fetchval(row_id)
             worlds.append({'id': row_id, 'randomNumber': number})
 
-    return worlds
+    return UJSONResponse(worlds)
 
 
 @app.get('/fortunes')
@@ -110,7 +110,7 @@ async def database_updates(queries = None):
             await statement.fetchval(row_id)
         await connection.executemany(WRITE_ROW_SQL, updates)
 
-    return worlds
+    return UJSONResponse(worlds)
 
 
 @app.get('/plaintext')

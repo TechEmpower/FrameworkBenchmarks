@@ -13,6 +13,9 @@ class SingleDatabaseQueryTest : public Controller
 public:
     explicit SingleDatabaseQueryTest(QObject *parent = 0);
 
+    C_ATTR(dbp, :Local :AutoArgs)
+    void dbp(Context *c);
+
     C_ATTR(db_postgres, :Local :AutoArgs)
     void db_postgres(Context *c);
 

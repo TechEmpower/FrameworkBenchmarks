@@ -64,7 +64,7 @@ namespace Benchmarks.Data
             id.Value = _random.Next(1, 10001);
             cmd.Parameters.Add(id);
 
-            (cmd as MySql.Data.MySqlClient.MySqlCommand)?.Prepare();
+            (cmd as MySqlConnector.MySqlCommand)?.Prepare();
 
             return cmd;
         }
@@ -107,19 +107,17 @@ namespace Benchmarks.Data
                         queryCmd.Parameters["@Id"].Value = _random.Next(1, 10001);
                     }
 
-                    // Postgres has problems with deadlocks when these aren't sorted
-                    Array.Sort<World>(results, WorldSortComparison);
+                    updateCmd.CommandText = BatchUpdateString.Query(count);
 
-                    for(int i = 0; i < count; i++)
+                    for (int i = 0; i < count; i++)
                     {
-                        var strings = BatchUpdateString.Strings[i];
                         var id = updateCmd.CreateParameter();
-                        id.ParameterName = strings.Id;
+                        id.ParameterName = $"@Id_{i}";
                         id.DbType = DbType.Int32;
                         updateCmd.Parameters.Add(id);
 
                         var random = updateCmd.CreateParameter();
-                        random.ParameterName = strings.Random;
+                        random.ParameterName = $"@Random_{i}";
                         random.DbType = DbType.Int32;
                         updateCmd.Parameters.Add(random);
 
@@ -128,8 +126,6 @@ namespace Benchmarks.Data
                         random.Value = randomNumber;
                         results[i].RandomNumber = randomNumber;
                     }
-
-                    updateCmd.CommandText = BatchUpdateString.Strings[results.Length - 1].UpdateQuery;
 
                     await updateCmd.ExecuteNonQueryAsync();
                     return results;
@@ -149,7 +145,7 @@ namespace Benchmarks.Data
                 db.ConnectionString = _connectionString;
                 await db.OpenAsync();
 
-                (cmd as MySql.Data.MySqlClient.MySqlCommand)?.Prepare();
+                (cmd as MySqlConnector.MySqlCommand)?.Prepare();
 
                 using (var rdr = await cmd.ExecuteReaderAsync(CommandBehavior.CloseConnection))
                 {

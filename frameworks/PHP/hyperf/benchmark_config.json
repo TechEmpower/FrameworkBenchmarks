@@ -1,0 +1,71 @@
+{
+    "framework": "hyperf",
+    "tests": [
+        {
+            "default": {
+                "json_url": "/json",
+                "db_url": "/db",
+                "query_url": "/queries/",
+                "fortune_url": "/fortunes",
+                "update_url": "/updates/",
+                "plaintext_url": "/plaintext",
+                "port": 9501,
+                "approach": "Realistic",
+                "classification": "Fullstack",
+                "database": "MySQL",
+                "framework": "Hyperf",
+                "language": "PHP",
+                "flavor": "None",
+                "orm": "Full",
+                "platform": "swoole",
+                "webserver": "None",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "Hyperf",
+                "notes": "",
+                "versus": "swoole",
+                "tags": ["broken"]
+            },
+            "raw": {
+                "db_url": "/raw-db",
+                "query_url": "/raw-queries/",
+                "update_url": "/raw-updates/",
+                "port": 9501,
+                "approach": "Realistic",
+                "classification": "Fullstack",
+                "database": "MySQL",
+                "framework": "Hyperf",
+                "language": "PHP",
+                "flavor": "None",
+                "orm": "Raw",
+                "platform": "swoole",
+                "webserver": "None",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "Hyperf",
+                "notes": "",
+                "versus": "swoole",
+                "tags": ["broken"]
+            },
+            "micro": {
+                "fortune_url": "/micro-fortunes",
+                "port": 9501,
+                "approach": "Realistic",
+                "classification": "Micro",
+                "database": "MySQL",
+                "framework": "Hyperf",
+                "language": "PHP",
+                "flavor": "None",
+                "orm": "Raw",
+                "platform": "swoole",
+                "webserver": "None",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "Hyperf",
+                "notes": "",
+                "versus": "swoole",
+                "tags": ["broken"]
+            }
+        }
+    ]
+}

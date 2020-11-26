@@ -1,0 +1,55 @@
+{
+  "framework": "atreugo",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "cached_query_url": "/cached-worlds?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "atreugo",
+        "language": "Go",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Atreugo",
+        "notes": "",
+        "versus": "go"
+      },
+      "prefork": {
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "cached_query_url": "/cached-worlds?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "atreugo",
+        "language": "Go",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Atreugo",
+        "notes": "",
+        "versus": "go"
+      }
+    }
+  ]
+}

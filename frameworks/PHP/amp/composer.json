@@ -1,8 +1,8 @@
 {
     "require": {
-        "amphp/cluster": "dev-master#8ba0a45aea1ac86b368254f0868ca3568744b679",
-        "amphp/http-server": "^0.8.2",
+        "amphp/cluster": "^1",
+        "amphp/http-server": "^2",
         "amphp/http-server-router": "^1",
-        "amphp/mysql": "^0.3"
+        "amphp/mysql": "^2"
     }
 }

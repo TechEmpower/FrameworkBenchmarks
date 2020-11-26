@@ -1,0 +1,53 @@
+{
+  "framework": "fiber",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?q=",
+      "fortune_url": "/fortunes",
+      "cached_query_url": "/cached-worlds?q=",
+      "update_url": "/update?q=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "fiber",
+      "language": "Go",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Fiber",
+      "notes": "",
+      "versus": "go"
+    },
+    "prefork": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?q=",
+      "fortune_url": "/fortunes",
+      "cached_query_url": "/cached-worlds?q=",
+      "update_url": "/update?q=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "fiber",
+      "language": "Go",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Fiber",
+      "notes": "",
+      "versus": "go"
+    }
+  }]
+}

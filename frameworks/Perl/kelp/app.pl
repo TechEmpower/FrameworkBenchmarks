@@ -40,7 +40,16 @@ get '/json' => sub {
 
 get '/db/?db' => sub {
     my ( $self, $db ) = @_;
-    query( $db // 'mongo', 1 );
+    my $id = int rand 10000 + 1;
+    my $row;
+    if ( $db eq 'mongo' ) {
+        $row = $world->find_one( { _id => $id } );
+    }
+    else {
+        $sth[0]->execute($id);
+        $row = $sth[0]->fetchrow_hashref;
+    }
+    return { id => $id, randomNumber => $row->{randomNumber} };
 };
 
 get '/queries/?db' => sub {
@@ -108,13 +117,8 @@ sub query {
             $row = $sth[0]->fetchrow_hashref;
         }
         if ($row) {
-            if ( $count == 1 ) {
-                return { id => $id, randomNumber => $row->{randomNumber} };
-            }
-            else {
-                push @response,
+            push @response,
                   { id => $id, randomNumber => $row->{randomNumber} };
-            }
         }
     }
     return \@response;

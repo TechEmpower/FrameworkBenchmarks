@@ -1,32 +1,13 @@
 # NestJS Benchmarking Test
 
-This is the Nest portion of a [benchmarking test suite](../).
+This is the NestJS portion of a [benchmarking test suite](../).
 
 
-## Infrastructure Software Versions
+## Infrastructure Software
 The tests were run with:
-* [NestJS v5.1.0](https://docs.nestjs.com/)
-* [pg 7.5.0](https://node-postgres.com/)
+* [NestJS](https://docs.nestjs.com/)
 
 ## Resources
-* http://nodejs.org/api/cluster.html
-
-## Test URLs
-### JSON Encoding Test
-
-http://localhost:8080/bench/json
-
-### Data-Store/Database Mapping Test
-
-PostgreSQL:
-http://localhost:8080/bencg/db
-
-### Variable Query Test
-
-PostgreSQL:
-http://localhost:8080/bench/queries?queries=2
-
-### Update Query Test
-
-PostgreSQL:
-http://localhost:8080/bench/updates?queries=2
+* [Cluster](http://nodejs.org/api/cluster.html)
+* [TypeORM](https://docs.nestjs.com/techniques/database#typeorm-integration)
+* [Fastify](https://docs.nestjs.com/techniques/performance)

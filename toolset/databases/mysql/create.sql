@@ -12,8 +12,10 @@ CREATE TABLE  world (
   PRIMARY KEY  (id)
 )
 ENGINE=INNODB;
-GRANT SELECT, UPDATE ON hello_world.world TO 'benchmarkdbuser'@'%' IDENTIFIED BY 'benchmarkdbpass';
-GRANT SELECT, UPDATE ON hello_world.world TO 'benchmarkdbuser'@'localhost' IDENTIFIED BY 'benchmarkdbpass';
+CREATE USER 'benchmarkdbuser'@'%' IDENTIFIED WITH mysql_native_password BY 'benchmarkdbpass';
+CREATE USER 'benchmarkdbuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'benchmarkdbpass';
+GRANT ALL PRIVILEGES ON hello_world.world TO 'benchmarkdbuser'@'%';
+GRANT ALL PRIVILEGES ON hello_world.world TO 'benchmarkdbuser'@'localhost';
 
 DELIMITER #
 CREATE PROCEDURE load_data()
@@ -25,11 +27,12 @@ declare v_counter int unsigned default 0;
   TRUNCATE TABLE world;
   START TRANSACTION;
   while v_counter < v_max do
-    INSERT INTO world (randomNumber) VALUES ( floor(0 + (rand() * 10000)) );
+    INSERT INTO world (randomNumber) VALUES ( least(floor(1 + (rand() * 10000)), 10000) );
     SET v_counter=v_counter+1;
   end while;
   commit;
-END #
+END
+#
 
 DELIMITER ;
 
@@ -41,8 +44,8 @@ CREATE TABLE  fortune (
   PRIMARY KEY  (id)
 )
 ENGINE=INNODB;
-GRANT SELECT ON hello_world.fortune TO 'benchmarkdbuser'@'%' IDENTIFIED BY 'benchmarkdbpass';
-GRANT SELECT ON hello_world.fortune TO 'benchmarkdbuser'@'localhost' IDENTIFIED BY 'benchmarkdbpass';
+GRANT ALL PRIVILEGES ON hello_world.fortune TO 'benchmarkdbuser'@'%';
+GRANT ALL PRIVILEGES ON hello_world.fortune TO 'benchmarkdbuser'@'localhost';
 
 INSERT INTO fortune (message) VALUES ('fortune: No such file or directory');
 INSERT INTO fortune (message) VALUES ('A computer scientist is someone who fixes things that aren''t broken.');

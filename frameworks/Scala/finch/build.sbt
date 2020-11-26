@@ -1,4 +1,4 @@
-lazy val finchVersion = "0.26.0"
+lazy val finchVersion = "0.27.0"
 
 name := """techempower-benchmarks-finch"""
 version := finchVersion

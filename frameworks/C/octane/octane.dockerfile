@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
-RUN apt update -yqq && \
-    apt install -yqq software-properties-common build-essential git cmake automake libtool wget
+RUN apt-get update -yqq && \
+    apt-get install -yqq software-properties-common build-essential git cmake automake libtool wget
 
 WORKDIR /octane
 RUN git clone https://github.com/simongui/octane.git .

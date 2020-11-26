@@ -1,9 +1,0 @@
-<VirtualHost *:8080>
-  Alias /cygnite/ "/home/ubuntu/FrameworkBenchmarks/cygnite/"
-  <Directory /home/ubuntu/FrameworkBenchmarks/cygnite>
-          Options Indexes FollowSymLinks MultiViews
-          #AllowOverride None
-          Order allow,deny
-          allow from all
-  </Directory>
-</VirtualHost>

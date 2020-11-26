@@ -1,4 +1,4 @@
-FROM maven:3.5.3-jdk-10-slim
+FROM maven:3.6.1-jdk-11-slim as maven
 WORKDIR /vertx
 COPY src src
 COPY pom.xml pom.xml

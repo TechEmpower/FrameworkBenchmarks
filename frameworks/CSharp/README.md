@@ -2,7 +2,7 @@
 
 The information below contains information specific to C#. 
 For further guidance, review the 
-[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/).
+[documentation](https://github.com/TechEmpower/FrameworkBenchmarks/wiki).
 
 ## Infrastructure Software Versions
 
@@ -59,9 +59,7 @@ in your pull request.
 _There aren't any C# experts listed, yet. If you're an expert, add yourself!_
 
 ### C# Community
-
-_We don't have any community links added. Add some to help further guide 
-future contirbutors._
+Discord: http://aka.ms/csharp-discord
 
 ### Resources
 

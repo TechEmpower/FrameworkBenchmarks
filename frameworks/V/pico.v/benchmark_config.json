@@ -1,0 +1,26 @@
+{
+  "framework": "pico.v",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8088,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "pico.v",
+        "language": "V",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "pico.v",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

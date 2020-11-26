@@ -10,6 +10,8 @@ using Benchmarks.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Benchmarks
 {
@@ -24,6 +26,11 @@ namespace Benchmarks
             Console.WriteLine();
             Console.WriteLine("ASP.NET Core Benchmarks");
             Console.WriteLine("-----------------------");
+            bool isMono = typeof(object).Assembly.GetType("Mono.RuntimeStructs") != null;
+            Console.WriteLine("Runtime " + (isMono ? "Mono" : "CoreCLR"));
+            Console.WriteLine(typeof(object).Assembly.FullName);
+            Console.WriteLine(System.Reflection.Assembly.GetEntryAssembly());
+            Console.WriteLine(System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
 
             Console.WriteLine($"Current directory: {Directory.GetCurrentDirectory()}");
             Console.WriteLine($"WebHostBuilder loading from: {typeof(WebHostBuilder).GetTypeInfo().Assembly.Location}");

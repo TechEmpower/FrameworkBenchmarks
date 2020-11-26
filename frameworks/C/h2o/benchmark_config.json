@@ -18,7 +18,7 @@
       "flavor": "None",
       "orm": "Raw",
       "platform": "None",
-      "webserver": "None",
+      "webserver": "h2o",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "H2O",

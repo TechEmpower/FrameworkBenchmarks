@@ -11,6 +11,7 @@ open System.IO
 
 let private DefaultCapacity = 1386
 let private MaxBuilderSize = DefaultCapacity * 3
+let private BufferSize = 27
 
 type MemoryStreamCache = 
     
@@ -80,7 +81,7 @@ let application : HttpHandler =
 
                 let html = MemoryStreamCache.Get()
                 let view = fortunes |> HtmlViews.fortunes 
-                StetefullRendering.renderHtmlToStream html view
+                StatefullRendering.renderHtmlToStream html view
 
                 ctx.Response.ContentType <- "text/html;charset=utf-8"
                 ctx.Response.ContentLength <- contentLength html.Length
@@ -108,7 +109,7 @@ let application : HttpHandler =
 
     routes' [
         "/plaintext", text' "Hello, World!"
-        "/json", json' { JsonStructMessage.message = "Hello, World!" }
+        "/json", json' struct {| message = "Hello, World!" |}
         "/fortunes", fortunes'
     ]
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status='fatal' packages="org.smartboot.socket">
+
+    <Properties>
+        <!-- 设置为生产环境的日志存放目录 -->
+        <Property name="logPath">/opt/logs/smart-http</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] %-5level %M(%F:%L) - %msg%xEx%n"/>
+        </Console>
+
+        <RollingFile name="DefaultRollingFile" fileName="${logPath}/dbapi-default.log"
+                     filePattern="${logPath}/dbapi-default-%d{MM-dd-yyyy}-%i.log">
+            <PatternLayout
+                    pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] %-5level %M(%F:%L) - %msg%xEx%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="20 MB"/>
+            </Policies>
+        </RollingFile>
+
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <!-- 生产环境停用Console -->
+            <appender-ref ref="Console"/>
+            <!-- <appender-ref ref="DefaultRollingFile" /> -->
+        </Root>
+
+    </Loggers>
+
+</Configuration>

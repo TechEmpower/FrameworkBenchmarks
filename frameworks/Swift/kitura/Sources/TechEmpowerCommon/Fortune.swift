@@ -30,7 +30,7 @@ public struct Fortune: Codable {
     }
 
     /// Create a Fortune instance from a [String: Any?] dictionary,
-    /// such as that retrieved by Kuery.
+    /// such as that retrieved by Kuery using `QueryResult.asRows()`.
     ///
     /// - Parameter row: A dictionary representing the fields of a
     ///                  Fortune database row.
@@ -50,6 +50,29 @@ public struct Fortune: Codable {
             throw AppError.DataFormatError("'id' field not an Int32")
         }
         self.init(id: Int(id), message: message)
+    }
+
+    /// Create a Fortune instance from an [Any?] array, such as that retrieved
+    /// by Kuery using `ResultSet.forEach()`.
+    ///
+    /// - Parameter row: An array representing the fields of a Fortune
+    ///                  database row.
+    /// - throws: if the fields and types contained in the array do not match
+    ///           those expected.
+    public init(values: [Any?]) throws {
+        // There should be two columns
+        guard values.count == 2 else {
+            throw AppError.DBKueryError("Expected 2 values but found \(values.count)")
+        }
+        // First should be an Int32
+        guard let id = values[0] as? Int32 else {
+            throw AppError.DataFormatError("Fortune id '\(String(describing: values[0]))' is not an Int")
+        }
+        // Second should be a String
+        guard let msg = values[1] as? String else {
+            throw AppError.DataFormatError("Fortune message '\(String(describing: values[1]))' is not a String")
+        }
+        self.init(id: Int(id), message: msg)
     }
 
 }

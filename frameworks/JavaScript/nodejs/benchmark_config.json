@@ -13,7 +13,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "MySQL",
-      "framework": "None",
+      "framework": "nodejs",
       "language": "JavaScript",
       "flavor": "NodeJS",
       "orm": "Raw",
@@ -26,6 +26,7 @@
       "versus": "nodejs"
     },
     "chakra": {
+      "dockerfile": "nodejs.dockerfile",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/db",
@@ -50,6 +51,7 @@
       "versus": "nodejs"
     },
     "mongodb": {
+      "dockerfile": "nodejs.dockerfile",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "update_url": "/updates?queries=",
@@ -57,7 +59,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "MongoDB",
-      "framework": "None",
+      "framework": "nodejs",
       "language": "JavaScript",
       "flavor": "NodeJS",
       "orm": "Full",
@@ -70,6 +72,7 @@
       "versus": "nodejs"
     },
     "mongodb-raw": {
+      "dockerfile": "nodejs.dockerfile",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "update_url": "/updates?queries=",
@@ -78,7 +81,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "MongoDB",
-      "framework": "None",
+      "framework": "nodejs",
       "language": "JavaScript",
       "flavor": "NodeJS",
       "orm": "Raw",
@@ -91,6 +94,7 @@
       "versus": "nodejs"
     },
     "mysql": {
+      "dockerfile": "nodejs.dockerfile",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "update_url": "/updates?queries=",
@@ -99,7 +103,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "MySQL",
-      "framework": "None",
+      "framework": "nodejs",
       "language": "JavaScript",
       "flavor": "NodeJS",
       "orm": "Full",
@@ -112,6 +116,7 @@
       "versus": "nodejs"
     },
     "postgres": {
+      "dockerfile": "nodejs.dockerfile",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "update_url": "/updates?queries=",
@@ -120,7 +125,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "Postgres",
-      "framework": "None",
+      "framework": "nodejs",
       "language": "JavaScript",
       "flavor": "NodeJS",
       "orm": "Full",

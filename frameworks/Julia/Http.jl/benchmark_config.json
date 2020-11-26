@@ -1,0 +1,25 @@
+{
+	"framework": "http-jl",
+	"tests": [{
+		"default": {
+			"json_url": "/json",
+			"plaintext_url": "/plaintext",
+			"port": 8080,
+			"approach": "Realistic",
+			"classification": "None",
+			"database": "None",
+			"framework": "Http.jl",
+			"language": "Julia",
+			"orm": "None",
+			"platform": "None",
+			"webserver": "HTTP.jl",
+			"os": "Linux",
+			"database_os": "Linux",
+			"display_name": "Http.jl",
+			"notes": "",
+			"versus": "",
+			"tags": []
+		}
+	}]
+}
+

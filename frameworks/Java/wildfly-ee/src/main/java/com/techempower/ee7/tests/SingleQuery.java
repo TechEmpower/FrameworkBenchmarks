@@ -13,13 +13,12 @@ import com.techempower.ee7.util.Helpers;
 @Path("/db")
 public class SingleQuery {
 
-  @Inject
-  private EntityManager em;
+    @Inject
+    private EntityManager em;
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public World get() {
-    int id = Helpers.randomWorldId();
-    return em.find(World.class, id);
-  }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public World get() {
+        return em.find(World.class, Helpers.randomWorldId());
+    }
 }

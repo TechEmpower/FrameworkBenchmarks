@@ -1,11 +1,11 @@
-FROM microsoft/dotnet:2.1-sdk-stretch AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /app
 COPY . .
-RUN dotnet publish -c Release -o ../out Server
+RUN dotnet publish -c Release -o out Server
 
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
 ENV COMPlus_ReadyToRun 0
 WORKDIR /app
 COPY --from=build /app/out ./
 
-ENTRYPOINT ["dotnet", "Server.dll"]
+ENTRYPOINT ["dotnet", "Server.dll", "--urls=http://*:8080"]

@@ -1,10 +1,10 @@
-FROM node:10.12.0
+FROM node:14.6.0-slim
 
 COPY ./ ./
 
 RUN npm install
 
 ENV NODE_ENV production
-ENV NODE_HANDLER sequelize-postgres
+ENV DATABASE postgres
 
 CMD ["node", "app.js"]

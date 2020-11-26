@@ -28,28 +28,13 @@
 			"raw": {
 				"json_url": "/json",
 				"plaintext_url": "/plaintext",
-				"port": 8080,
-				"approach": "Realistic",
-				"classification": "Platform",
-				"framework": "OfficeFloor",
-				"language": "Java",
-				"flavor": "None",
-				"platform": "OfficeFloor",
-				"webserver": "WoOF",
-				"os": "Linux",
-				"display_name": "OfficeFloor-raw",
-				"notes": ""
-			},
-			"tpr": {
-				"json_url": "/json",
-				"plaintext_url": "/plaintext",
 				"db_url": "/db",
 				"query_url": "/queries?queries=",
 				"fortune_url": "/fortunes",
 				"update_url": "/update?queries=",
 				"port": 8080,
 				"approach": "Realistic",
-				"classification": "Fullstack",
+				"classification": "Platform",
 				"database": "Postgres",
 				"framework": "OfficeFloor",
 				"language": "Java",
@@ -59,7 +44,29 @@
 				"webserver": "WoOF",
 				"os": "Linux",
 				"database_os": "Linux",
-				"display_name": "OfficeFloor-tpr",
+				"display_name": "OfficeFloor-raw",
+				"notes": ""
+			},
+			"async": {
+				"json_url": "/json",
+				"plaintext_url": "/plaintext",
+				"db_url": "/db",
+				"query_url": "/queries?queries=",
+				"fortune_url": "/fortunes",
+				"update_url": "/update?queries=",
+				"port": 8080,
+				"approach": "Realistic",
+				"classification": "Platform",
+				"database": "Postgres",
+				"framework": "OfficeFloor",
+				"language": "Java",
+				"flavor": "None",
+				"orm": "raw",
+				"platform": "OfficeFloor",
+				"webserver": "WoOF",
+				"os": "Linux",
+				"database_os": "Linux",
+				"display_name": "OfficeFloor-async",
 				"notes": "",
 				"versus": "OfficeFloor-raw"
 			},
@@ -132,7 +139,7 @@
 				"notes": "",
 				"versus": "netty"
 			},
-			"rapidoid": {
+			"undertow": {
 				"json_url": "/json",
 				"plaintext_url": "/plaintext",
 				"db_url": "/db",
@@ -151,9 +158,8 @@
 				"webserver": "WoOF",
 				"os": "Linux",
 				"database_os": "Linux",
-				"display_name": "OfficeFloor-rapidoid",
-				"notes": "",
-				"versus": "rapidoid"
+				"display_name": "OfficeFloor-undertow",
+				"notes": ""
 			},
 			"spring_data": {
 				"json_url": "/json",

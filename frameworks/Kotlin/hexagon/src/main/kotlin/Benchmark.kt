@@ -35,26 +35,21 @@ internal val benchmarkTemplateEngines: Map<String, TemplatePort> by lazy {
     mapOf("pebble" to PebbleAdapter)
 }
 
-private val defaultLocale = Locale.getDefault()
+internal val engine by lazy { createEngine() }
 
-private val engine by lazy {
-    when (systemSetting("WEBENGINE", "jetty")) {
-        "jetty" -> JettyServletAdapter()
-        else -> error("Unsupported server engine")
-    }
-}
+private val defaultLocale = Locale.getDefault()
 
 private val router: Router by lazy {
     Router {
         before {
-            response.addHeader("Server", "Servlet/3.1")
-            response.addHeader("Transfer-Encoding", "chunked")
+            response.headers["Server"] = "Servlet/3.1"
+            response.headers["Transfer-Encoding"] = "chunked"
         }
 
         get("/plaintext") { ok(TEXT_MESSAGE, "text/plain") }
         get("/json") { ok(Message(TEXT_MESSAGE), Json) }
 
-        benchmarkStores.forEach { storeEngine, store ->
+        benchmarkStores.forEach { (storeEngine, store) ->
             benchmarkTemplateEngines.forEach { templateKind ->
                 val path = "/$storeEngine/${templateKind.key}/fortunes"
 
@@ -71,17 +66,23 @@ private val router: Router by lazy {
 internal val benchmarkServer: Server by lazy { Server(engine, router, SettingsManager.settings) }
 
 // UTILITIES
+internal fun createEngine(): ServerPort = when (systemSetting("WEBENGINE", "jetty")) {
+    "jetty" -> JettyServletAdapter()
+    else -> error("Unsupported server engine")
+}
+
 private fun returnWorlds(worldsList: List<World>): List<Map<Any?, Any?>> =
     worldsList.map { it.convertToMap() - "_id" }
 
-private fun Call.getWorldsCount() = request[QUERIES_PARAM]?.toIntOrNull().let {
-    when {
-        it == null -> 1
-        it < 1 -> 1
-        it > 500 -> 500
-        else -> it
+private fun Call.getWorldsCount(): Int =
+    queryParametersValues[QUERIES_PARAM]?.firstOrNull()?.toIntOrNull().let {
+        when {
+            it == null -> 1
+            it < 1 -> 1
+            it > 500 -> 500
+            else -> it
+        }
     }
-}
 
 // HANDLERS
 private fun Call.listFortunes(
@@ -111,5 +112,5 @@ private fun Call.updateWorlds(store: BenchmarkStore) {
 @WebListener class Web : ServletServer(router)
 
 fun main() {
-    benchmarkServer.run()
+    benchmarkServer.start()
 }

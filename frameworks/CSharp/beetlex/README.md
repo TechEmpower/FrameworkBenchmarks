@@ -1,5 +1,7 @@
-# FastHttpApi Tests on Linux and windows
-This includes tests for plaintext and json serialization.
+# [BeetleX.FastHttpApi](https://github.com/IKende/)(.Net) Benchmarking Test
+This includes tests for plaintext, json, db, queries and fortune.
+
+[`BeetleX`](https://github.com/IKende/) is a fast tcp components for .net
 
 ## Infrastructure Software Versions
 
@@ -13,13 +15,16 @@ This includes tests for plaintext and json serialization.
 
 **Web Servers**
 
-* [FastHttpApi](https://github.com/IKende/FastHttpApi)
+* [BeetleX.FastHttpApi](https://github.com/IKende/FastHttpApi)
 
 **Web Stack**
 
-* [FastHttpApi](https://github.com/IKende/FastHttpApi)
+* [BeetleX](https://github.com/IKende/Beetlex)
 
 ## Paths & Source for Tests
 
 * [Plaintext](Benchmarks/Program.cs): "/plaintext"
 * [JSON Serialization](Benchmarks/Program.cs): "/json"
+* [Single query](Benchmarks/Program.cs): "/db"
+* [Multiple query](Benchmarks/Program.cs): "/queries"
+* [Fortune](Benchmarks/Program.cs): "/fortune"

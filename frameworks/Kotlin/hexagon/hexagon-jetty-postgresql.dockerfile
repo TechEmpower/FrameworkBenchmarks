@@ -1,8 +1,7 @@
-
 #
 # BUILD
 #
-FROM gradle:5.0.0-jdk11 AS gradle_build
+FROM gradle:6.6-jdk11 AS gradle_build
 USER root
 WORKDIR /hexagon
 
@@ -14,7 +13,7 @@ RUN gradle --quiet --exclude-task test
 #
 # RUNTIME
 #
-FROM openjdk:11
+FROM adoptopenjdk:11-jre-hotspot-bionic
 ENV DBSTORE postgresql
 ENV POSTGRESQL_DB_HOST tfb-database
 ENV WEBENGINE jetty

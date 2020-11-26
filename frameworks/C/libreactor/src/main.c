@@ -1,20 +1,9 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdint.h>
-#include <stdarg.h>
-#include <signal.h>
+#include <stdlib.h>
 #include <unistd.h>
-#include <setjmp.h>
-#include <errno.h>
 #include <string.h>
-#include <pthread.h>
-#include <sys/socket.h>
-#include <sys/resource.h>
-#include <sys/param.h>
-#include <sys/wait.h>
-#include <sys/queue.h>
-#include <linux/sched.h>
-#include <netdb.h>
+#include <time.h>
 #include <err.h>
 
 #include <dynamic.h>
@@ -22,119 +11,112 @@
 #include <clo.h>
 
 #include "setup.h"
+#include "helpers.h"
 
-static char date[] = "Thu, 01 Jan 1970 00:00:00 GMT";
+#define JSON_PREAMBLE "HTTP/1.1 200 OK\r\n"\
+                      "Server: libreactor\r\n"\
+                      "Content-Type: application/json\r\n"
 
-static int timer_event(void *state, int type, void *data)
+#define TEXT_PREAMBLE "HTTP/1.1 200 OK\r\n"\
+                      "Server: libreactor\r\n"\
+                      "Content-Type: text/plain\r\n"
+
+struct http_server
 {
-  (void) state;
-  (void) data;
-  if (type != REACTOR_TIMER_EVENT_CALL)
-    err(1, "timer");
+  reactor_net    net;
+  list           connections;
+};
 
-  reactor_http_date(date);
-  return REACTOR_OK;
+static void plaintext(reactor_stream *stream, char *response)
+{
+  static const reactor_vector text_preamble = { .base = TEXT_PREAMBLE, .size = sizeof(TEXT_PREAMBLE) - 1 };
+  write_response(stream, text_preamble, reactor_vector_string(response));
 }
 
-static int plaintext(reactor_http *http)
+static void json(reactor_stream *stream, clo *json_object)
 {
-  char content_length[11], *body = "Hello, World!";
-  size_t size;
+  static const reactor_vector json_preamble = { .base = JSON_PREAMBLE, .size = sizeof(JSON_PREAMBLE) - 1 };
+  static char json_string[4096];
 
-  size = strlen(body);
-  reactor_util_u32toa(size, content_length);
-  reactor_http_send_response(http, (reactor_http_response[]){{
-        .version = 1,
-	.status = 200,
-	.reason = {"OK", 2},
-	.headers = 4,
-        .header[0] = {{"Server", 6}, {"libreactor", 10}},
-        .header[1] = {{"Date", 4}, {date, strlen(date)}},
-	.header[2] = {{"Content-Type", 12}, {"text/plain", 10}},
-	.header[3] = {{"Content-Length", 14}, {content_length, strlen(content_length)}},
-	.body = {body, size}
-      }});
-  return REACTOR_OK;
+  (void) clo_encode(json_object, json_string, sizeof(json_string));
+  write_response(stream, json_preamble, reactor_vector_string(json_string));
 }
 
-static int json(reactor_http *http)
+static reactor_status http_handler(reactor_event *event)
 {
-  char body[4096], content_length[11];
-  size_t size;
-  
-  (void) clo_encode((clo[]) {clo_object({"message", clo_string("Hello, World!")})}, body, sizeof(body));
-  size = strlen(body);
-  reactor_util_u32toa(size, content_length);
-  reactor_http_send_response(http, (reactor_http_response[]){{
-        .version = 1,
-	.status = 200,
-	.reason = {"OK", 2},
-	.headers = 4,
-        .header[0] = {{"Server", 6}, {"libreactor", 10}},
-        .header[1] = {{"Date", 4}, {date, strlen(date)}},
-	.header[2] = {{"Content-Type", 12}, {"application/json", 16}},
-	.header[3] = {{"Content-Length", 14}, {content_length, strlen(content_length)}},
-	.body = {body, size}
-      }});
-  return REACTOR_OK;
-}
+  static char hello_string[] = "Hello, World!";
+  static char default_string[] = "Hello from libreactor!\n";
+  static clo_pair json_pair[] = {{ .string = "message", .value = { .type = CLO_STRING, .string = "Hello, World!" }}};
+  static clo json_object[] = {{ .type = CLO_OBJECT, .object = json_pair }};
 
-int http_event(void *state, int type, void *data)
-{
-  reactor_http *http = state;
+  reactor_http *http_connection = event->state;
   reactor_http_request *request;
 
-  if (reactor_unlikely(type != REACTOR_HTTP_EVENT_REQUEST))
-    {
-      reactor_http_close(http);
-      free(http);
-      return REACTOR_ABORT;
+  if (event->type == REACTOR_HTTP_EVENT_REQUEST){
+    request = (reactor_http_request *) event->data;
+
+    if (reactor_vector_equal(request->target, reactor_vector_string("/json"))){
+      json(&http_connection->stream, json_object);
     }
-  request = data;
-  
-  if (reactor_http_header_value(&request->path, "/plaintext"))
-    return plaintext(http);
-  else if (reactor_http_header_value(&request->path, "/json"))
-    return json(http);
-  else
+    else if (reactor_vector_equal(request->target, reactor_vector_string("/plaintext"))){
+      plaintext(&http_connection->stream, hello_string);
+    }
+    else{
+      plaintext(&http_connection->stream, default_string);
+    }
+    return REACTOR_OK;
+  }
+  else {
+    reactor_http_destruct(http_connection);
+    list_erase(http_connection, NULL);
+    return REACTOR_ABORT;
+  }
+}
+
+static reactor_status net_handler(reactor_event *event)
+{
+  struct http_server *server = event->state;
+  reactor_http connection_initializer = (reactor_http) {0};
+  reactor_http *http_connection;
+
+  switch (event->type)
     {
-      reactor_http_send_response(http, (reactor_http_response[]){{
-	    .version = 1,
-	    .status = 404,
-	    .reason = {"Not Found", 9},
-	    .headers = 3,
-            .header[0] = {{"Server", 6}, {"libreactor", 10}},
-            .header[1] = {{"Date", 4}, {date, strlen(date)}},
-	    .header[2] = {{"Content-Length", 14}, {"0", 1}},
-	    .body = {NULL, 0}
-	  }});
+    case REACTOR_NET_EVENT_ACCEPT:
+      http_connection = list_push_back(&server->connections, &connection_initializer, sizeof (reactor_http));
+      reactor_http_construct(http_connection, http_handler, http_connection);
+      reactor_http_set_mode(http_connection, REACTOR_HTTP_MODE_REQUEST);
+      reactor_http_open(http_connection, event->data);
       return REACTOR_OK;
+    default:
+      reactor_net_destruct(&server->net);
+      return REACTOR_ABORT;
     }
 }
 
-static int tcp_event(void *state, int type, void *data)
+static reactor_status http_date_timer_handler(reactor_event *event)
 {
-  reactor_http *http;
-
-  if (type != REACTOR_TCP_EVENT_ACCEPT)
-    err(1, "tcp");
-
-  http = malloc(sizeof *http);
-  if (!http)
-    abort();
-  (void) reactor_http_open(http, http_event, http, *(int *) data, REACTOR_HTTP_FLAG_SERVER);
+  (void) event;
+  http_date_header(1); // update the date header
   return REACTOR_OK;
 }
 
 int main()
 {
+  struct http_server server = {0};
   reactor_timer timer;
-  reactor_tcp tcp;
 
-  setup(1, 0);  
-  (void) reactor_core_construct();
-  (void) reactor_timer_open(&timer, timer_event, &timer, 1, 1000000000);
-  (void) reactor_tcp_open(&tcp, tcp_event, &tcp, "0.0.0.0", "8080", REACTOR_TCP_FLAG_SERVER);
-  (void) reactor_core_run();
+  setup();
+  list_construct(&server.connections);
+  reactor_core_construct();
+
+  // Set the correct date before the server starts. Timer then updates it every second
+  http_date_header(1);
+  reactor_timer_construct(&timer, http_date_timer_handler, &timer);
+  reactor_timer_set(&timer, 1, 1000000000);
+
+  reactor_net_construct(&server.net, net_handler, &server);
+  (void) custom_reactor_net_bind(&server.net, "0.0.0.0", "8080");
+
+  reactor_core_run();
   reactor_core_destruct();
 }

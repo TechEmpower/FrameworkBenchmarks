@@ -1,0 +1,72 @@
+{
+  "framework": "imi",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/dbModel",
+        "query_url": "/queryModel?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updateModel?queries=",
+        "cached_query_url": "/cached-worlds?count=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "MySQL",
+        "framework": "imi",
+        "language": "PHP",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "Swoole",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "imi",
+        "notes": "",
+        "versus": "Swoole"
+      },
+      "query-builder": {
+        "db_url": "/dbQueryBuilder",
+        "query_url": "/queryQueryBuilder?queries=",
+        "update_url": "/updateQueryBuilder?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "MySQL",
+        "framework": "imi",
+        "language": "PHP",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "Swoole",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "imi-query-builder",
+        "notes": "",
+        "versus": "Swoole"
+      },
+      "raw": {
+        "db_url": "/dbRaw",
+        "query_url": "/queryRaw?queries=",
+        "update_url": "/updateRaw?queries=",
+        "fortune_url": "/fortunesRaw",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "MySQL",
+        "framework": "imi",
+        "language": "PHP",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Swoole",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "imi-raw",
+        "notes": "",
+        "versus": "Swoole"
+      }
+    }
+  ]
+}

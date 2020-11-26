@@ -1,6 +1,6 @@
 package com.hexagonkt
 
-import com.hexagonkt.helpers.error
+import com.hexagonkt.helpers.fail
 import com.hexagonkt.helpers.Jvm.systemSetting
 import com.hexagonkt.settings.SettingsManager.defaultSetting
 import com.hexagonkt.store.mongodb.MongoDbStore
@@ -9,11 +9,9 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 
 import java.sql.Connection
-import java.sql.ResultSet.CONCUR_READ_ONLY
-import java.sql.ResultSet.TYPE_FORWARD_ONLY
 import java.util.concurrent.ThreadLocalRandom
 
-internal const val WORLD_ROWS: Int = 10000
+internal const val WORLD_ROWS: Int = 10_000
 
 private val worldName: String = defaultSetting("worldCollection", "world")
 private val fortuneName: String = defaultSetting("fortuneCollection", "fortune")
@@ -49,13 +47,15 @@ internal class BenchmarkMongoDbStore(engine: String) : BenchmarkStore {
 
     override fun replaceWorlds(count: Int): List<World> = (1..count)
         .map {
-            val world = worldRepository.findOne(randomWorld()) ?: error
+            val world = worldRepository.findOne(randomWorld()) ?: fail
             val worldCopy = world.copy(randomNumber = randomWorld())
             worldRepository.replaceOne(worldCopy)
             worldCopy
         }
 
-    override fun close() { /* Not needed */ }
+    override fun close() {
+        /* Not needed */
+    }
 }
 
 internal class BenchmarkSqlStore(engine: String) : BenchmarkStore {
@@ -79,7 +79,7 @@ internal class BenchmarkSqlStore(engine: String) : BenchmarkStore {
     }
 
     override fun findAllFortunes(): List<Fortune> {
-        var fortunes = listOf<Fortune>()
+        val fortunes = mutableListOf<Fortune>()
 
         dataSource.connection.use { con: Connection ->
             val rs = con.prepareStatement(SELECT_ALL_FORTUNES).executeQuery()
@@ -91,7 +91,7 @@ internal class BenchmarkSqlStore(engine: String) : BenchmarkStore {
     }
 
     override fun findWorlds(count: Int): List<World> {
-        var worlds: List<World> = listOf()
+        val worlds: MutableList<World> = mutableListOf()
 
         dataSource.connection.use { con: Connection ->
             val stmtSelect = con.prepareStatement(SELECT_WORLD)
@@ -109,30 +109,27 @@ internal class BenchmarkSqlStore(engine: String) : BenchmarkStore {
     }
 
     override fun replaceWorlds(count: Int): List<World> {
-        var worlds: List<World> = listOf()
+        val worlds: MutableList<World> = mutableListOf()
 
         dataSource.connection.use { con: Connection ->
-            val stmtSelect = con.prepareStatement(SELECT_WORLD, TYPE_FORWARD_ONLY, CONCUR_READ_ONLY)
+            val stmtSelect = con.prepareStatement(SELECT_WORLD)
             val stmtUpdate = con.prepareStatement(UPDATE_WORLD)
 
             for (ii in 0 until count) {
-                stmtSelect.setInt(1, randomWorld())
+                val worldId = randomWorld()
+                val newRandomNumber = randomWorld()
+
+                stmtSelect.setInt(1, worldId)
                 val rs = stmtSelect.executeQuery()
                 rs.next()
+                rs.getInt(2) // Read 'randomNumber' to comply with Test type 5, point 6
 
-                val id = rs.getInt(1)
-                val world = World(id, id, rs.getInt(2)).copy(randomNumber = randomWorld())
-                worlds += world
+                worlds += World(worldId, worldId, newRandomNumber)
 
-                stmtUpdate.setInt(1, world.randomNumber)
-                stmtUpdate.setInt(2, world.id)
-                stmtUpdate.addBatch()
-
-                if (ii % 25 == 0)
-                    stmtUpdate.executeBatch()
+                stmtUpdate.setInt(1, newRandomNumber)
+                stmtUpdate.setInt(2, worldId)
+                stmtUpdate.executeUpdate()
             }
-
-            stmtUpdate.executeBatch()
         }
 
         return worlds

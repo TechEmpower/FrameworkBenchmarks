@@ -1,0 +1,27 @@
+{
+  "framework": "genhttp",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries/",
+      "update_url": "/updates/",
+      "fortune_url": "/fortunes",
+      "cached_query_url": "/cached-worlds/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "GenHTTP",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "webserver": "GenHTTP",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "GenHTTP",
+      "notes": ""
+    }
+  }]
+}

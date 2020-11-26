@@ -24,7 +24,7 @@ type ZebraMiddleware<'T>(
     
     member __.Invoke (ctx : HttpContext) = 
         
-        let tcs = TaskCompletionSource()
+        let tcs = TaskCompletionSource<unit>()
                 
         let mutable state = State<'T>(ctx,Dependencies,tcs)
         appNode.Apply state
@@ -42,7 +42,7 @@ type ZebraSimpleMiddleware<'T>(
     
     member __.Invoke (ctx : HttpContext) = 
         
-        let tcs  = TaskCompletionSource()
+        let tcs  = TaskCompletionSource<unit>()
                 
         let mutable state = State<'T>(ctx,Dependencies,tcs)
         App state

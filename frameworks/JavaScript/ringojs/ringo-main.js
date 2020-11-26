@@ -16,31 +16,46 @@ exports.app = function (req) {
   }
 
   if (path === '/db') {
+    try {
+      connection = datasource.getConnection();
+      let randId, world;
+      randId = ((Math.random() * 10000) | 0) + 1;
+      world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
+      return {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+        body: [JSON.stringify(world)]
+      }
+    } catch (e) {
+      connection.close();
+      connection = null;
+    } finally {
+      if (connection !== null) {
+        connection.close();
+      }
+    }
+  }
+
+  if (path === '/dbquery') {
     let queryCount = req.env.servletRequest.getParameter('queries');
     try {
       connection = datasource.getConnection();
       let randId, world;
       if (!queryCount || isNaN(queryCount) || queryCount < 1) {
+        queryCount = 1;
+      } else {
+        queryCount = Math.min(Math.max(parseInt(queryCount, 10) || 1, 1), 500);
+      }
+      body = [];
+      for (let i = 0; i < queryCount; i++) {
         randId = ((Math.random() * 10000) | 0) + 1;
         world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
-        return {
-          status: 200,
-          headers: { "Content-Type": "application/json" },
-          body: [JSON.stringify(world)]
-        }
-      } else {
-        queryCount = parseInt(queryCount, 10);
-        body = [];
-        for (let i = 0; i < queryCount; i++) {
-          randId = ((Math.random() * 10000) | 0) + 1;
-          world = sql.query(connection, 'select * from World where World.id = ' + randId)[0];
-          body.push(world);
-        }
-        return {
-          status: 200,
-          headers: { "Content-Type": "application/json" },
-          body: [JSON.stringify(body)]
-        }
+        body.push(world);
+      }
+      return {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+        body: [JSON.stringify(body)]
       }
     } catch (e) {
       connection.close();
@@ -95,7 +110,7 @@ exports.app = function (req) {
 
 
 const datasource = module.singleton('pooling-datasource', function () {
-  const mysqlConnectionProperties = "?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useServerPrepStmts&enableQueryTimeouts=false&useUnbufferedIO=false&useReadAheadInput=false&maintainTimeStats=false&cacheRSMetadata=true&useSSL=false";
+  const mysqlConnectionProperties = "?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useServerPrepStmts=true&enableQueryTimeouts=false&useUnbufferedIO=false&useReadAheadInput=false&maintainTimeStats=false&cacheRSMetadata=true&useSSL=false";
   return sql.connect("jdbc:mysql://tfb-database/hello_world" + mysqlConnectionProperties, 'benchmarkdbuser', 'benchmarkdbpass');
 });
 

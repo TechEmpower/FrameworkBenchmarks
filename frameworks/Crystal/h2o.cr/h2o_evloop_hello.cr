@@ -95,7 +95,7 @@ class H2oHello < H2o
     @config.server_name = h2o_iovec_init("h2o")
 
     hostconf = h2o_config_register_host(pointerof(@config), h2o_iovec_init("default"), 65535)
-    register_handler(hostconf, "/hello", hello)
+    register_handler(hostconf, "/plaintext", hello)
     register_handler(hostconf, "/json", json)
 
     h2o_context_init(pointerof(@ctx), @loop, pointerof(@config))

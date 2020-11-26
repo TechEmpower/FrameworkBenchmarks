@@ -1,0 +1,3 @@
+(executable
+ (name httpaf_unix)
+ (libraries httpaf httpaf-lwt-unix lwt lwt.unix yojson))

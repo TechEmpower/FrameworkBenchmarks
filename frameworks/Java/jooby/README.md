@@ -1,18 +1,18 @@
 # Jooby Benchmarking Test
 
-[Jooby](http://jooby.org) Scalable, fast and modular micro web framework for Java and Kotlin.
+[Jooby](https://jooby.io) the modular micro web framework for Java and Kotlin.
 
 ```java
 public class App extends Jooby {
 
   {
-    get("/", () -> "Hello, World!");
+    get("/", ctx -> "Hello, World!");
   }
 
 }
 ```
 
-This is the [Jooby](http://jooby.org) portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the [Jooby](https://jooby.io) portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 ### Plain Text Test
 * [Plain test source](src/main/java/com/techempower/App.java)
@@ -57,3 +57,21 @@ This is the [Jooby](http://jooby.org) portion of a [benchmarking test suite](../
 ### Fortunes Test
 
     http://localhost:8080/fortunes
+
+## build
+
+### netty
+
+    mvn clean package -P netty
+
+### undertow
+
+    mvn clean package -P undertow
+
+### jetty
+
+    mvn clean package -P jetty
+    
+## run
+
+    java -jar target/jooby-2x.jar

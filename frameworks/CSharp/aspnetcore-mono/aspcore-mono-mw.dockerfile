@@ -1,11 +1,11 @@
-FROM microsoft/dotnet:2.1-sdk-stretch AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /app
 COPY Benchmarks .
 RUN dotnet publish -c Release -o out
 
-FROM mono:5.12.0.226 AS runtime
+FROM mcr.microsoft.com/dotnet/runtime-deps:5.0 AS runtime
 ENV ASPNETCORE_URLS http://+:8080
 WORKDIR /app
 COPY --from=build /app/out ./
 
-ENTRYPOINT ["mono", "--server", "--gc=sgen", "--gc-params=mode=throughput", "Benchmarks.exe", "scenarios=plaintext,json"]
+ENTRYPOINT ["./Benchmarks", "scenarios=plaintext,json"]

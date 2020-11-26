@@ -9,9 +9,9 @@ package com.techempower.act.controller;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,6 +35,7 @@ import org.osgl.mvc.annotation.SessionFree;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.inject.Inject;
 
@@ -66,10 +67,13 @@ public class WorldController {
     public final World[] multipleQueries(String queries) {
         int q = regulateQueries(queries);
 
-        World[] worlds = new World[q];
-        for (int i = 0; i < q; ++i) {
-            worlds[i] = findOne();
-        }
+        World[] worlds = ThreadLocalRandom
+            .current()
+            .ints(1, WORLD_MAX_ROW + 1)
+            .distinct()
+            .limit(q)
+            .mapToObj(id -> dao.findById(id))
+            .toArray(World[]::new);
         return worlds;
     }
 
@@ -81,10 +85,14 @@ public class WorldController {
 
     @Transactional
     private List<World> doUpdate(int q) {
-        List<World> retVal = new ArrayList<>(q);
-        for (int i = 0; i < q; ++i) {
-            retVal.add(findAndModifyOne());
-        }
+        List<World> retVal = ThreadLocalRandom
+            .current()
+            .ints(1, WORLD_MAX_ROW + 1)
+            .distinct()
+            .limit(q)
+            .sorted()
+            .mapToObj(id -> findAndModifyOne(id))
+            .collect(Collectors.toCollection(ArrayList::new));
         if (BATCH_SAVE) {
             batchUpdate(retVal);
         }
@@ -95,10 +103,14 @@ public class WorldController {
         dao.save(worlds);
     }
 
-    private World findAndModifyOne() {
-        World world = findOne();
+    private World findAndModifyOne(int id) {
+        World world = dao.findById(id);
         notFoundIfNull(world);
-        world.randomNumber = randomWorldNumber();
+        int newNumber;
+        do {
+            newNumber = randomWorldNumber();
+        } while (newNumber == world.randomNumber);
+        world.randomNumber = newNumber;
         return BATCH_SAVE ? world : dao.save(world);
     }
 

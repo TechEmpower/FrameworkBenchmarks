@@ -1,4 +1,4 @@
-FROM google/dart:2.0
+FROM google/dart:2.2
 
 COPY ./ ./
 

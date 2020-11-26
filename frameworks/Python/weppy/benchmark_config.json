@@ -21,7 +21,8 @@
       "database_os": "Linux",
       "display_name": "weppy-Py2",
       "notes": "CPython 2.7",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     },
     "py3": {
       "json_url": "/json",

@@ -1,13 +1,20 @@
-FROM elixir:1.6.5
+FROM elixir:1.11.2
 
-ADD ./ /phoenix
 WORKDIR /phoenix
+
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
+COPY config ./config
+COPY lib ./lib
+COPY priv ./priv
+COPY web ./web
+COPY mix.exs .
+COPY mix.lock .
 
 ENV MIX_ENV=prod
 
-RUN mix local.hex --force
-RUN mix local.rebar --force
-RUN mix deps.get --force --only prod
-RUN mix compile --force
+RUN mix do deps.get --force --only prod
+RUN mix release --force
 
-CMD ["elixir", "--erl", "+K true +sbwt very_long +swt very_low", "-S", "mix", "phoenix.server"]
+CMD ["_build/prod/rel/hello/bin/hello", "start"]
