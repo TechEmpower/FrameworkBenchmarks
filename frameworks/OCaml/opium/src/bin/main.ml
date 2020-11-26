@@ -11,6 +11,8 @@ let main () =
 
   let app = Server.create_app ~port in
 
+  Server.start_refreshing_date ();
+
   match App.run_command' app with
   | `Ok (app : unit Lwt.t ) ->
     let _ = Lwt_io.printf "Running on port 0.0.0.0:%d\n" port in

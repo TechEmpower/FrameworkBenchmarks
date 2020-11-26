@@ -22,8 +22,6 @@ module Tfb_headers = struct
     Rock.Middleware.create ~name:"TFB Headers" ~filter
 end
 
-let start_refreshing_date = Tfb_headers.start_refreshing_date
-
 (* lwt debugging information *)
 let dump_lwt () =
   let options =
