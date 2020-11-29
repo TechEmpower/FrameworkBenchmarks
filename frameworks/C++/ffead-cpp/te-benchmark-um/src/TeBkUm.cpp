@@ -243,7 +243,7 @@ bool TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* 
 		//t.start();
 		TeBkUmMessage msg;
 		msg.setMessage(HELLO_WORLD);
-		res->setContent(JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmMessage"));
+		JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmMessage", res->getContentP());
 		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
 		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
 		//t.end();
@@ -257,7 +257,7 @@ bool TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* 
 		//t.end();
 		//CommonUtils::tsContExec += t.timerNanoSeconds();
 		//t.start();
-		res->setContent(JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmWorld"));
+		JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmWorld", res->getContentP());
 		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
 		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
 		//t.end();
@@ -273,7 +273,7 @@ bool TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* 
 		//t.end();
 		//CommonUtils::tsContExec += t.timerNanoSeconds();
 		//t.start();
-		res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
+		JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>", res->getContentP());
 		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
 		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
 		//t.end();
@@ -303,7 +303,7 @@ bool TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* 
 		//t.end();
 		//CommonUtils::tsContExec += t.timerNanoSeconds();
 		//t.start();
-		res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
+		JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>", res->getContentP());
 		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
 		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
 		//t.end();
@@ -319,7 +319,7 @@ bool TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* 
 		//t.end();
 		//CommonUtils::tsContExec += t.timerNanoSeconds();
 		//t.start();
-		res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
+		JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>", res->getContentP());
 		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
 		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
 		//t.end();

@@ -13,6 +13,7 @@ RUN mkdir /installs
 COPY te-benchmark-um/ /installs/te-benchmark-um/
 COPY te-benchmark-um-pq/ /installs/te-benchmark-um-pq/
 COPY te-benchmark-um-mgr/ /installs/te-benchmark-um-mgr/
+COPY te-benchmark-um-pq-async /installs/te-benchmark-um-pq-async/
 
 WORKDIR ${IROOT}
 

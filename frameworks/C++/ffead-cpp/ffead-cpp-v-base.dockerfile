@@ -18,7 +18,7 @@ RUN git clone https://github.com/vlang/v && cd v && make && ./v symlink
 
 WORKDIR ${IROOT}/lang-server-backends/v/vweb
 #COPY vweb.v ${IROOT}/lang-server-backends/v/vweb/
-RUN chmod +x *.sh && ./build.sh && cp vweb $IROOT/
+#RUN chmod +x *.sh && ./build.sh && cp vweb $IROOT/
 
 WORKDIR ${IROOT}/lang-server-backends/v/pico.v
 #COPY main.v ${IROOT}/lang-server-backends/v/pico.v/
