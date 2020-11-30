@@ -5,7 +5,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq nginx git unzip php7.4 php7.4-common php7.4-cli php7.4-fpm php7.4-mysql  > /dev/null
+    apt-get install -yqq nginx git unzip php7.4 php7.4-common php7.4-cli php7.4-fpm php7.4-mysql php7.4-xml php7.4-mbstring php7.4-intl > /dev/null
 
 RUN apt-get install -yqq composer > /dev/null
 
@@ -19,7 +19,7 @@ RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children =
 #RUN if [ ${BENCHMARK_ENV} = citrine ]; then sed -i "s|$db['default']['pconnect'] = FALSE;|$db['default']['pconnect'] = TRUE;|g" application/config/database.php ; fi;
 #RUN if [ $BENCHMARK_ENV = citrine ]; then sed -i "s|$db['default']['pconnect'] = FALSE;|$db['default']['pconnect'] = TRUE;|g" application/config/database.php ; fi;
 
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev 
 
 CMD service php7.4-fpm start && \
-    nginx -c /codeigniter/deploy/nginx-fpm.conf -g "daemon off;"
+    nginx -c /codeigniter/deploy/nginx.conf
