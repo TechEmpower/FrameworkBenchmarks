@@ -17,7 +17,7 @@ ENV F3DIR="/fat-free/src"
 #RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer 
 RUN apt-get install -yqq composer > /dev/null
 
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 #RUN git clone -b 3.7.2 --single-branch --depth 1 "https://github.com/bcosca/fatfree-core.git" src
 
 RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.0/fpm/php-fpm.conf ; fi;
