@@ -17,7 +17,7 @@ COPY ./src/server_io ./server_io
 COPY ./src/server_io_single ./server_io_single
 COPY ./src/server_io_nproc ./server_io_nproc
 
-ENV SERVER_IO=NPROC
+ENV SERVER_IO=SINGLE
 
 RUN sudo chown -R opam ./bin && sudo chown -R opam ./server_*
 RUN opam exec -- dune build --profile release bin/tfb.exe
