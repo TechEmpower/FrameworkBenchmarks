@@ -8,7 +8,7 @@ using Benchmarks.Model;
 namespace Benchmarks.Tests
 {
 
-    public class DbResource
+    public sealed class DbResource
     {
         private static Random _Random = new Random();
 
@@ -17,7 +17,7 @@ namespace Benchmarks.Tests
         {
             var id = _Random.Next(1, 10001);
 
-            using var context = DatabaseContext.Create();
+            using var context = DatabaseContext.CreateNoTracking();
 
             return context.World.First(w => w.Id == id);
         }

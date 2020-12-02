@@ -8,6 +8,8 @@ ENV TZ  :/etc/localtime
 # https://linux.die.net/man/1/ocamlrun
 # https://blog.janestreet.com/memory-allocator-showdown/
 ENV OCAMLRUNPARAM a=2,o=240
+# This makes the program only spawn one child process to serve requests
+ENV CORE_COUNT 1
 
 RUN sudo dnf install --assumeyes diffutils postgresql-devel libev-devel
 

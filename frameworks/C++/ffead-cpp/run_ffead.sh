@@ -156,7 +156,9 @@ then
 	done
 elif [ "$2" = "julia-http" ]
 then
-	julia ${IROOT}/lang-server-backends/julia/http.jl/server.jl $FFEAD_CPP_PATH
+	for i in $(seq 0 $(($(nproc --all)-1))); do
+		julia ${IROOT}/lang-server-backends/julia/http.jl/server.jl $FFEAD_CPP_PATH
+	done
 elif [ "$2" = "swift-nio" ]
 then
 	cd ${IROOT}

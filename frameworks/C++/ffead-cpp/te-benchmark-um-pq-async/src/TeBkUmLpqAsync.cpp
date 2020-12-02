@@ -88,6 +88,7 @@ std::string TeBkUmLpqAsyncRouter::WORLD = "world";
 std::string TeBkUmLpqAsyncRouter::WORLD_ONE_QUERY = "select id, randomnumber from world where id = $1";
 std::string TeBkUmLpqAsyncRouter::WORLD_ALL_QUERY = "select id, randomnumber from world";
 std::string TeBkUmLpqAsyncRouter::FORTUNE_ALL_QUERY = "select id, message from fortune";
+std::map<int, std::string> TeBkUmLpqAsyncRouter::_qC;
 
 void TeBkUmLpqAsyncRouter::dbAsync(AsyncReq* req) {
 	req->d = new TeBkUmLpqAsyncWorld;
@@ -111,13 +112,13 @@ void TeBkUmLpqAsyncRouter::dbAsyncUtil(void* ctx, int rn, int cn, char * d) {
 void TeBkUmLpqAsyncRouter::dbAsyncCh(void* ctx, bool status, const std::string& q, int counter) {
 	AsyncReq* req = (AsyncReq*)ctx;
 	TeBkUmLpqAsyncWorld* w = (TeBkUmLpqAsyncWorld*)req->d;
-	req->r.setContent(JSONSerialize::serializeUnknown(w, 0, "TeBkUmLpqAsyncWorld", APP_NAME));
-	req->r.setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
 	req->r.setHTTPResponseStatus(HTTPResponseStatus::Ok);
-	ResponseData d;
-	req->r.generateHeadResponse(d._b);
-	d._b += req->r.getContent();
-	req->sif->writeTo(&d);
+	std::string c;
+	JSONSerialize::serializeUnknown(w, 0, "TeBkUmLpqAsyncWorld", &c, APP_NAME);
+	std::string d;
+	req->r.generateHeadResponse(d, ContentTypes::CONTENT_TYPE_APPLICATION_JSON, (int)c.length());
+	req->sif->writeDirect(d);
+	req->sif->writeDirect(c);
 	req->sif->unUse();
 	delete w;
 	delete req;
@@ -160,18 +161,127 @@ void TeBkUmLpqAsyncRouter::queriesAsyncUtil(void* ctx, int rn, int cn, char * d)
 void TeBkUmLpqAsyncRouter::queriesAsyncCh(void* ctx, bool status, const std::string& q, int counter) {
 	AsyncReq* req = (AsyncReq*)ctx;
 	std::vector<TeBkUmLpqAsyncWorld>* vec = (std::vector<TeBkUmLpqAsyncWorld>*)req->d;
-	req->r.setContent(JSONSerialize::serializeUnknown(vec, 100, "std::vector<TeBkUmLpqAsyncWorld>", APP_NAME));
-	req->r.setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
 	req->r.setHTTPResponseStatus(HTTPResponseStatus::Ok);
-	ResponseData d;
-	req->r.generateHeadResponse(d._b);
-	d._b += req->r.getContent();
-	req->sif->writeTo(&d);
+	std::string c;
+	JSONSerialize::serializeUnknown(vec, 100, "std::vector<TeBkUmLpqAsyncWorld>", &c, APP_NAME);
+	std::string d;
+	req->r.generateHeadResponse(d, ContentTypes::CONTENT_TYPE_APPLICATION_JSON, (int)c.length());
+	req->sif->writeDirect(d);
+	req->sif->writeDirect(c);
 	req->sif->unUse();
 	delete vec;
 	delete req;
 }
 
+
+std::string& TeBkUmLpqAsyncRouter::getUpdQuery(int count) {
+	std::map<int, std::string>::iterator it = _qC.find(count);
+	if(it!=_qC.end()) {
+		return it->second;
+	}
+
+	std::stringstream ss;
+	ss << "update world as t set randomnumber = case id ";
+
+	int pc = 1;
+	for (int c = 0; c < count; ++c) {
+		ss << "when $";
+		ss << pc++;
+		ss << " then $";
+		ss << pc++;
+	}
+	ss << "else randomnumber end where id in (";
+	for (int c = 0; c < count; ++c) {
+		ss << "$" << pc++ << ",";
+	}
+	std::string q = ss.str();
+	q = q.substr(0, q.length()-1);
+	q += ")";
+	_qC[count] = std::move(q);
+	return _qC[count];
+}
+
+void TeBkUmLpqAsyncRouter::updatesAsyncb(const char* q, int ql, AsyncReq* req) {
+	req->d = new std::vector<TeBkUmLpqAsyncWorld>;
+
+	int queryCount = 0;
+	strToNum(q, ql, queryCount);
+	if(queryCount<1)queryCount=1;
+	else if(queryCount>500)queryCount=500;
+
+	LibpqDataSourceImpl* sqli = getDb();
+	req->sqli = sqli;
+
+	try {
+		void* areq = NULL;
+		for (int c = 0; c < queryCount; ++c) {
+			int rid = rand() % 10000 + 1;
+			std::vector<LibpqParam> pars;
+			LibpqDataSourceImpl::ADD_INT4(pars, rid);
+			areq = sqli->executeQueryAsync(WORLD_ONE_QUERY, std::move(pars), req, &TeBkUmLpqAsyncRouter::queriesAsyncUtil, &TeBkUmLpqAsyncRouter::updatesAsyncbChQ, areq);
+		}
+		sqli->completeAsync(areq);
+	} catch(const std::exception& e) {
+		throw e;
+	}
+}
+void TeBkUmLpqAsyncRouter::updatesAsyncbChQ(void* ctx, bool status, const std::string& q, int counter) {
+	AsyncReq* req = (AsyncReq*)ctx;
+	std::vector<TeBkUmLpqAsyncWorld>* vec = (std::vector<TeBkUmLpqAsyncWorld>*)req->d;
+
+	LibpqDataSourceImpl* sqli = req->sqli;
+
+	int queryCount = (int)vec->size();
+	std::vector<LibpqParam> pars;
+
+	for (int c = 0; c < queryCount; ++c) {
+		LibpqDataSourceImpl::ADD_INT4(pars, vec->at(c).getId());
+
+		int newRandomNumber = rand() % 10000 + 1;
+		if(vec->at(c).getRandomNumber() == newRandomNumber) {
+			newRandomNumber += 1;
+			if(newRandomNumber>=10000) {
+				newRandomNumber = 1;
+			}
+		}
+		LibpqDataSourceImpl::ADD_INT4(pars, newRandomNumber);
+		vec->at(c).setRandomNumber(newRandomNumber);
+	}
+	for (int c = 0; c < queryCount; ++c) {
+		LibpqDataSourceImpl::ADD_INT4(pars, vec->at(c).getId());
+	}
+
+	void* areq = sqli->beginAsync(NULL);
+	sqli->executeUpdateQueryAsync(getUpdQuery(queryCount), std::move(pars), NULL, NULL, areq, true);
+	sqli->commitAsync(areq);
+
+	AsyncReq* ar = new AsyncReq;
+	ar->sif = req->sif;
+	ar->r = std::move(req->r);
+	ar->d = req->d;
+	req->d = NULL;
+	req->sif = NULL;
+
+	try {
+		sqli->completeAsync(areq, ar, &TeBkUmLpqAsyncRouter::updatesAsyncbChU);
+	} catch(const std::exception& e) {
+		throw e;
+	}
+}
+void TeBkUmLpqAsyncRouter::updatesAsyncbChU(void* ctx, bool status, const std::string& q, int counter) {
+	AsyncReq* req = (AsyncReq*)ctx;
+	std::vector<TeBkUmLpqAsyncWorld>* vec = (std::vector<TeBkUmLpqAsyncWorld>*)req->d;
+	req->r.setHTTPResponseStatus(HTTPResponseStatus::Ok);
+	std::string c;
+	JSONSerialize::serializeUnknown(vec, 100, "std::vector<TeBkUmLpqAsyncWorld>", &c, APP_NAME);
+	std::string d;
+	req->r.generateHeadResponse(d, ContentTypes::CONTENT_TYPE_APPLICATION_JSON, (int)c.length());
+	req->sif->writeDirect(d);
+	req->sif->writeDirect(c);
+	req->sif->unUse();
+	delete vec;
+	delete req;
+}
 
 void TeBkUmLpqAsyncRouter::updatesAsync(const char* q, int ql, AsyncReq* req) {
 	req->d = new std::vector<TeBkUmLpqAsyncWorld>;
@@ -249,13 +359,13 @@ void TeBkUmLpqAsyncRouter::updatesAsyncChQ(void* ctx, bool status, const std::st
 void TeBkUmLpqAsyncRouter::updatesAsyncChU(void* ctx, bool status, const std::string& q, int counter) {
 	AsyncReq* req = (AsyncReq*)ctx;
 	std::vector<TeBkUmLpqAsyncWorld>* vec = (std::vector<TeBkUmLpqAsyncWorld>*)req->d;
-	req->r.setContent(JSONSerialize::serializeUnknown(vec, 100, "std::vector<TeBkUmLpqAsyncWorld>", APP_NAME));
-	req->r.setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
 	req->r.setHTTPResponseStatus(HTTPResponseStatus::Ok);
-	ResponseData d;
-	req->r.generateHeadResponse(d._b);
-	d._b += req->r.getContent();
-	req->sif->writeTo(&d);
+	std::string c;
+	JSONSerialize::serializeUnknown(vec, 100, "std::vector<TeBkUmLpqAsyncWorld>", &c, APP_NAME);
+	std::string d;
+	req->r.generateHeadResponse(d, ContentTypes::CONTENT_TYPE_APPLICATION_JSON, (int)c.length());
+	req->sif->writeDirect(d);
+	req->sif->writeDirect(c);
 	req->sif->unUse();
 	delete vec;
 	delete req;
@@ -386,15 +496,20 @@ void TeBkUmLpqAsyncRouter::getContextAsyncCh(void* ctx, bool status, const std::
 		std::string msg;
 		f(&context, msg);
 		req->r.setContent(msg);
-		req->r.setContentType(ContentTypes::CONTENT_TYPE_TEXT_SHTML);
 		req->r.setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		std::string d;
+		req->r.generateHeadResponse(d, ContentTypes::CONTENT_TYPE_TEXT_SHTML, (int)msg.length());
+		req->sif->writeDirect(d);
+		req->sif->writeDirect(msg);
+		req->sif->unUse();
 	}
-
-	ResponseData d;
-	req->r.generateHeadResponse(d._b);
-	d._b += req->r.getContent();
-	req->sif->writeTo(&d);
-	req->sif->unUse();
+	else
+	{
+		ResponseData d;
+		req->r.generateHeadResponse(d._b);
+		req->sif->writeTo(&d);
+		req->sif->unUse();
+	}
 }
 
 //https://stackoverflow.com/questions/9631225/convert-strings-specified-by-length-not-nul-terminated-to-int-float
@@ -410,86 +525,78 @@ bool TeBkUmLpqAsyncRouter::strToNum(const char* str, int len, int& ret) {
 
 bool TeBkUmLpqAsyncRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib, SocketInterface* sif) {
 	std::string_view path = req->getPath();
+	sif->use();
 	if(StringUtil::endsWith(path, "/plaintext")) {
-		res->setContent(HELLO_WORLD);
-		res->setContentType(ContentTypes::CONTENT_TYPE_TEXT_PLAIN);
 		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		std::string d;
+		res->generateHeadResponse(d, ContentTypes::CONTENT_TYPE_TEXT_PLAIN, (int)HELLO_WORLD.length());
+		sif->writeDirect(d);
+		sif->writeDirect(HELLO_WORLD);
+		sif->unUse();
 	} else if(StringUtil::endsWith(path, "/json")) {
 		TeBkUmLpqAsyncMessage msg;
 		msg.setMessage(HELLO_WORLD);
-		res->setContent(JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmLpqAsyncMessage"));
-		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
 		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		std::string c;
+		JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmLpqAsyncMessage", &c, APP_NAME);
+		std::string d;
+		res->generateHeadResponse(d, ContentTypes::CONTENT_TYPE_APPLICATION_JSON, (int)c.length());
+		sif->writeDirect(d);
+		sif->writeDirect(c);
+		sif->unUse();
 	} else if(StringUtil::endsWith(path, "/db")) {
 		AsyncReq* ar = new AsyncReq;
 		ar->sif = sif;
-		sif->use();
-		ar->r.addHeader(HttpResponse::DateHeader, res->getHeader(HttpResponse::DateHeader));
 		ar->r.update(req);
-		if(req->isClose()) {
-			ar->r.addHeader(HttpResponse::Connection, "close");
-		} else if(req->getHttpVers()>=1.1) {
-			ar->r.addHeader(HttpResponse::Connection, "keep-alive");
-		}
 		dbAsync(ar);
-		return false;
 	} else if(StringUtil::endsWith(path, "/queries")) {
 		struct yuarel_param params[1];
 		yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
 		AsyncReq* ar = new AsyncReq;
 		ar->sif = sif;
-		sif->use();
-		ar->r.addHeader(HttpResponse::DateHeader, res->getHeader(HttpResponse::DateHeader));
 		ar->r.update(req);
-		if(req->isClose()) {
-			ar->r.addHeader(HttpResponse::Connection, "close");
-		} else if(req->getHttpVers()>=1.1) {
-			ar->r.addHeader(HttpResponse::Connection, "keep-alive");
-		}
 		queriesAsync(params[0].val, params[0].val_len, ar);
-		return false;
 	} else if(StringUtil::endsWith(path, "/fortunes")) {
 		AsyncReq* ar = new AsyncReq;
 		ar->sif = sif;
-		sif->use();
 		ar->ddlib = ddlib;
-		ar->r.addHeader(HttpResponse::DateHeader, res->getHeader(HttpResponse::DateHeader));
 		ar->r.update(req);
-		if(req->isClose()) {
-			ar->r.addHeader(HttpResponse::Connection, "close");
-		} else if(req->getHttpVers()>=1.1) {
-			ar->r.addHeader(HttpResponse::Connection, "keep-alive");
-		}
 		getContextAsync(ar);
-		return false;
+	} else if(StringUtil::endsWith(path, "/bupdates")) {
+		struct yuarel_param params[1];
+		yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
+		AsyncReq* ar = new AsyncReq;
+		ar->sif = sif;
+		ar->r.update(req);
+		updatesAsyncb(params[0].val, params[0].val_len, ar);
 	} else if(StringUtil::endsWith(path, "/updates")) {
 		struct yuarel_param params[1];
 		yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
 		AsyncReq* ar = new AsyncReq;
 		ar->sif = sif;
-		sif->use();
-		ar->r.addHeader(HttpResponse::DateHeader, res->getHeader(HttpResponse::DateHeader));
 		ar->r.update(req);
-		if(req->isClose()) {
-			ar->r.addHeader(HttpResponse::Connection, "close");
-		} else if(req->getHttpVers()>=1.1) {
-			ar->r.addHeader(HttpResponse::Connection, "keep-alive");
-		}
 		updatesAsync(params[0].val, params[0].val_len, ar);
-		return false;
 	} else if(StringUtil::endsWith(path, "/cached-worlds")) {
 		struct yuarel_param params[1];
 		yuarel_parse_query((char*)req->getQueryStr().data(), req->getQueryStr().size(), params, 1);
 		std::vector<TeBkUmLpqAsyncWorld> msg;
 		cachedWorlds(params[0].val, params[0].val_len, msg);
-		res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmLpqAsyncWorld>"));
-		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
 		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
+		std::string c;
+		JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmLpqAsyncWorld>", &c, APP_NAME);
+		std::string d;
+		res->generateHeadResponse(d, ContentTypes::CONTENT_TYPE_APPLICATION_JSON, (int)c.length());
+		sif->writeDirect(d);
+		sif->writeDirect(c);
+		sif->unUse();
 	} else {
 		res->setHTTPResponseStatus(HTTPResponseStatus::NotFound);
+		std::string d;
+		res->generateHeadResponse(d, ContentTypes::CONTENT_TYPE_TEXT_PLAIN);
+		sif->writeDirect(d);
+		sif->unUse();
 	}
-	res->setDone(true);
-	return true;
+	return false;
 }
 
 std::string TeBkUmLpqAsyncRouter::APP_NAME = "";
