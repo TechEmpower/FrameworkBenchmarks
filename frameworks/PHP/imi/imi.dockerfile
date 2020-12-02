@@ -14,7 +14,7 @@ RUN apt -yqq update > /dev/null && \
 RUN apt -yqq install redis-server > /dev/null
 
 RUN echo "opcache.enable_cli=On" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
-RUN echo "opcache.jit=1205" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+RUN echo "opcache.jit=Off" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 RUN echo "opcache.jit_buffer_size=128M" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 
 COPY . /imi
