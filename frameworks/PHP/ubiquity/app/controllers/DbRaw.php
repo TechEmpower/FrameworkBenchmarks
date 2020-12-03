@@ -7,7 +7,6 @@ use controllers\utils\DbTrait;
  * Bench controller.
  */
 class DbRaw extends \Ubiquity\controllers\Controller {
-	use DbTrait;
 
 	protected static $statement;
 
@@ -44,7 +43,7 @@ class DbRaw extends \Ubiquity\controllers\Controller {
 
 	public function query($queries = 1) {
 		$worlds = [];
-		$count = $this->getCount($queries);
+		$count = \min(\max((int) $queries, 1), 500);
 		while ($count --) {
 			self::$statement->execute([
 				\mt_rand(1, 10000)
@@ -57,7 +56,7 @@ class DbRaw extends \Ubiquity\controllers\Controller {
 	public function update($queries = 1) {
 		$worlds = [];
 		$keys = $values = [];
-		$count = $this->getCount($queries);
+		$count = \min(\max((int) $queries, 1), 500);
 		for ($i = 0; $i < $count; ++ $i) {
 			$values[] = $keys[] = $id = \mt_rand(1, 10000);
 			self::$statement->execute([
