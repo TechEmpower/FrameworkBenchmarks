@@ -14,16 +14,8 @@ COPY src/opi.opam src/Makefile ./
 
 RUN make install-ci
 
-ENV APP_INSTANCES 1
-
 COPY ./src ./
 
 RUN sudo chown -R opam: . && make build
 
-# try to keep everything above here in sync with other dockerfiles in project for more efficent use of docker build cache
-RUN sudo dnf install --assumeyes haproxy
-COPY haproxy.cfg /etc/haproxy/haproxy.cfg
-COPY start-servers.sh ./start-servers.sh
-RUN sudo chown -R opam: /${DIR} && chmod +x ./start-servers.sh
-
-ENTRYPOINT ./start-servers.sh && sudo /usr/sbin/haproxy -W -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid
+ENTRYPOINT _build/default/bin/main_forks.exe
