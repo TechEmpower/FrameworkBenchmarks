@@ -10,7 +10,7 @@ class DbMy extends Db_ {
 
 	public function update($queries = 1) {
 		$worlds = [];
-		$count = $this->getCount($queries);
+		$count = \min(\max((int) $queries, 1), 500);
 		$ids = $this->getUniqueRandomNumbers($count);
 		foreach ($ids as $id) {
 			$world = self::$pDao->execute([

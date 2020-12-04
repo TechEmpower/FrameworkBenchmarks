@@ -1,68 +1,60 @@
-module Database = {
-  let start =
-      ()
-      : Lwt.t(
-          result(
-            Caqti_lwt.Pool.t(module Caqti_lwt.CONNECTION, Caqti_error.t),
-            string,
-          ),
-        ) => {
-    let connection_url = "postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?connect_timeout=15";
+let error_handler = (_client_addr, ~request as _=?, ~respond, err) => {
+  let error_to_string =
+    fun
+    | `Bad_gateway => "Bad gateway"
+    | `Bad_request => "Bad request"
+    | `Exn(_exn) => "Unhandled server error"
+    | `Internal_server_error => "Internal server error";
 
-    Caqti_lwt.connect_pool(~max_size=10, Uri.of_string(connection_url))
-    |> (
-      fun
-      | Ok(pool) => Ok(pool)
-      | Error(error) => Error(Caqti_error.show(error))
-    )
-    |> Lwt.return;
-  };
+  let error_handler =
+    respond(
+      ~headers=Piaf.Headers.of_list([("connection", "close")]),
+      Piaf.Body.of_string(error_to_string(err)),
+    );
 
-  let stop = _pool => {
-    Logs.info(m => m("Disconnected from database")) |> Lwt.return;
-  };
-
-  let component = Archi_lwt.Component.make(~start, ~stop);
+  Lwt.return(error_handler);
 };
 
 module WebServer = {
-  let port =
-    try(Sys.getenv("PORT") |> int_of_string) {
-    | _ => 8080
-    };
-
-  let server = Morph.Server.make(~port, ~address=Unix.inet_addr_any, ());
-
   let start = ((), db) => {
+    let port =
+      switch (Sys.getenv_opt("PORT")) {
+      | Some(p) => int_of_string(p)
+      | None => 8080
+      };
+
     Logs.app(m => m("Starting server on %n", port));
 
-    let handler =
-      Headers_middleware.make(Db_middleware.middleware(~db, Router.handler));
-
-    server.start(handler) |> Lwt_result.ok;
+    let request_handler =
+      Headers_middleware.make(
+        Caqti.Middleware.middleware(~db, Router.handler),
+      )
+      |> Morph_wrapper.wrap_context;
+    Server_io.listen(~request_handler, ~error_handler, port)
+    |> Lwt_result.return;
   };
 
   let stop = _server => {
     Logs.info(m => m("Stopped Server")) |> Lwt.return;
   };
 
-  let component =
+  let component: Archi_lwt.Component.t(unit, unit) =
     Archi_lwt.Component.using(
       ~start,
       ~stop,
-      ~dependencies=[Database.component],
+      ~dependencies=[Caqti.Archi.component],
     );
 };
 
 let system =
   Archi_lwt.System.make([
-    ("database", Database.component),
+    ("database", Caqti.Archi.component),
     ("web_server", WebServer.component),
   ]);
 
 let main = () => {
   open Lwt.Infix;
-  Logger.setup_log(Some(Logs.Info));
+  Logger.setup_log(Some(Logs.Warning));
 
   Archi_lwt.System.start((), system)
   >|= (
