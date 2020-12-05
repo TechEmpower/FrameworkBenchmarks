@@ -605,9 +605,12 @@ public class RawOfficeFloorMain {
 	}
 
 	private static class ThreadLocalRateLimit extends ThreadLocal<RateLimit> {
+
+		private AtomicInteger activeQueries = new AtomicInteger(0);
+
 		@Override
 		protected RateLimit initialValue() {
-			return new RateLimit();
+			return new RateLimit(this.activeQueries);
 		}
 	}
 
@@ -617,9 +620,13 @@ public class RawOfficeFloorMain {
 
 		private int requestCount = 0;
 
-		private final AtomicInteger activeQueries = new AtomicInteger(0);
+		private final AtomicInteger activeQueries;
 
 		private boolean isActiveLimit = false;
+
+		public RateLimit(AtomicInteger activeQueries) {
+			this.activeQueries = activeQueries;
+		}
 
 		public boolean isLimit(int queryCount) {
 
