@@ -41,7 +41,7 @@
   },
   "resolutions": {
     "@reason-native-web/morph": "reason-native-web/morph:morph.json#c7bdd60dbfb99eccd4ce27559117919455061e0e",
-    "@opam/caqti": "ulrikstrid/ocaml-caqti:caqti.opam#c0ead31422c3670f8250a50043a1038cab4f011f",
+    "@opam/caqti": "paurkedal/ocaml-caqti:caqti.opam#4a09a3f5fab4f15c90f1cf1790688f6e6bb94185",
     "@opam/conf-postgresql": "ulrikstrid/postgresql:package.json#193d72af7f2132e30ad429401232da6359b248a2",
     "@opam/conf-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79",
     "@opam/session": "inhabitedtype/ocaml-session:session.opam#6180413"

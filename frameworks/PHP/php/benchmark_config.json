@@ -24,25 +24,6 @@
       "notes": "",
       "versus": "php"
     },
-    "activerecord": {
-      "db_url": "/dborm.php",
-      "query_url": "/dborm.php?queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "MySQL",
-      "framework": "None",
-      "language": "PHP",
-      "flavor": "PHP7",
-      "orm": "Full",
-      "platform": "FPM/FastCGI",
-      "webserver": "nginx",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "PHP-activerecord",
-      "notes": "",
-      "versus": "php"
-    },
     "raw7-tcp": {
       "json_url": "/json.php",
       "plaintext_url": "/plaintext.php",

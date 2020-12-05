@@ -13,9 +13,9 @@ namespace Benchmarks
     {
 
         public static int Main(string[] args)
-        {
+        { 
             var tests = Layout.Create()
-                              .Add("plaintext", Content.From("Hello, World!"))
+                              .Add("plaintext", Content.From(Resource.FromString("Hello, World!")))
                               .Add("fortunes", new FortuneHandlerBuilder())
                               .AddService<JsonResource>("json")
                               .AddService<DbResource>("db")

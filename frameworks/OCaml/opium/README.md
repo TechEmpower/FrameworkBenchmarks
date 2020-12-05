@@ -24,6 +24,17 @@
 It doesn't have a dependency on any web server to make it more portable and allow easier addition to new webservers.
 Feel free to copy paste when adding additional servers.
 
+## Local development
+
+Either use the docker images or `make pin && make install` and then `make run` or `make run-forks` 
+
+## Variants
+
+- opium - base implementation, uses a single process
+- opium-haproxy - starts multiple processes on different ports and uses haproxy to distribute the load
+- opium-fedora-forks - starts multiple processes listening on the same socket
+- opium-alpine-forks - same as the above, but uses `alpine` instead of `fedora`
+
 ## Test URLs
 
 ### PLAINTEXT

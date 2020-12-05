@@ -11,7 +11,7 @@ using Microsoft.Extensions.Caching.Memory;
 namespace Benchmarks.Tests
 {
 
-    public class CacheResource
+    public sealed class CacheResource
     {
         private static readonly Random _Random = new Random();
 
@@ -50,7 +50,7 @@ namespace Benchmarks.Tests
 
             var result = new List<World>(count);
 
-            using var context = DatabaseContext.Create();
+            using var context = DatabaseContext.CreateNoTracking();
 
             for (var i = 0; i < count; i++)
             {
