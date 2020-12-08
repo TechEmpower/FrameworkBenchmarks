@@ -2,11 +2,11 @@ FROM maven:slim as maven
 WORKDIR /officefloor
 COPY src src
 WORKDIR /officefloor/src
-RUN mvn -q -N clean install
+RUN mvn -B -N clean install
 WORKDIR /officefloor/src/woof_benchmark_micro
-RUN mvn -q clean install
+RUN mvn -B clean install
 WORKDIR /officefloor/src/woof_benchmark_thread_affinity
-RUN mvn -q clean package
+RUN mvn -B clean package
 
 FROM openjdk:slim
 RUN apt-get update && apt-get install -y libjna-java

@@ -14,6 +14,8 @@ COPY src/opi.opam src/Makefile ./
 
 RUN make install-ci
 
+ENV APP_INSTANCES 1
+
 COPY ./src ./
 
 RUN sudo chown -R opam: . && make build

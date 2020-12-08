@@ -1,10 +1,10 @@
 package com.techempower;
 
-import io.jooby.Jooby;
-import io.jooby.hikari.HikariModule;
-import io.jooby.rocker.RockerModule;
+import static com.techempower.Util.randomWorld;
+import static io.jooby.ExecutionMode.EVENT_LOOP;
+import static io.jooby.MediaType.JSON;
 
-import javax.sql.DataSource;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,9 +14,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringJoiner;
 
-import static com.techempower.Util.randomWorld;
-import static io.jooby.ExecutionMode.EVENT_LOOP;
-import static io.jooby.MediaType.JSON;
+import javax.sql.DataSource;
+
+import io.jooby.Jooby;
+import io.jooby.hikari.HikariModule;
+import io.jooby.rocker.RockerModule;
 
 public class App extends Jooby {
 
@@ -24,18 +26,24 @@ public class App extends Jooby {
 
   private static final String MESSAGE = "Hello, World!";
 
-  private static final byte[] MESSAGE_BYTES = MESSAGE.getBytes(StandardCharsets.UTF_8);
+  private static final byte[] MESSAGE_BYTES = MESSAGE.getBytes(StandardCharsets.US_ASCII);
+
+  private static final ByteBuffer MESSAGE_BUFFER = (ByteBuffer) ByteBuffer
+      .allocateDirect(MESSAGE_BYTES.length)
+      .put(MESSAGE_BYTES)
+      .flip();
 
   {
+
     /** Database: */
     install(new HikariModule());
     DataSource ds = require(DataSource.class);
 
     /** Template engine: */
-    install(new RockerModule());
+    install(new RockerModule().reuseBuffer(true));
 
     get("/plaintext", ctx ->
-        ctx.send(MESSAGE_BYTES)
+        ctx.send(MESSAGE_BUFFER.duplicate())
     );
 
     get("/json", ctx -> ctx

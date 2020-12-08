@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::HashMap;
 use std::fmt::Write;
 use std::io;
@@ -192,7 +193,7 @@ impl Handler<TellFortune> for PgConnection {
     fn handle(&mut self, _: TellFortune, _: &mut Self::Context) -> Self::Result {
         let mut items = vec![Fortune {
             id: 0,
-            message: "Additional fortune added at request time.".to_string(),
+            message: Cow::Borrowed("Additional fortune added at request time."),
         }];
         let fut = self.cl.query_raw(&self.fortune, &[]);
 
@@ -207,7 +208,7 @@ impl Handler<TellFortune> for PgConnection {
                 })?;
                 items.push(Fortune {
                     id: row.get(0),
-                    message: row.get(1),
+                    message: Cow::Owned(row.get(1)),
                 });
             }
 

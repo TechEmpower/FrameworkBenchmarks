@@ -26,11 +26,15 @@
   <sections>
     <section name="Logic" source="net.officefloor.plugin.section.clazz.ClassSectionSource" location="net.officefloor.benchmark.Logic" x="281" y="140">
       <input name="db" parameter-type=""/>
+      <input name="dbService" parameter-type=""/>
       <input name="fortunes" parameter-type=""/>
+      <input name="fortunesService" parameter-type=""/>
       <input name="json" parameter-type=""/>
       <input name="plaintext" parameter-type=""/>
       <input name="queries" parameter-type=""/>
+      <input name="queriesService" parameter-type=""/>
       <input name="update" parameter-type=""/>
+      <input name="updateService" parameter-type=""/>
     </section>
   </sections>
   <procedures>

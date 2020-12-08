@@ -8,8 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3",
-        "laravel/framework": "^8.0"
+        "laravel/framework": "^8.16"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

@@ -10,17 +10,20 @@ import io.youi.server.dsl._
 case class Message(message: String)
 
 object Message {
-  implicit val codec: JsonValueCodec[Message] = JsonCodecMaker.make[Message](CodecMakerConfig())
+  implicit val codec: JsonValueCodec[Message] = JsonCodecMaker.make
 }
 
-object Main extends App {
-  new UndertowServerImplementation(new Server {
-    handler(
-      filters(
-        path"/plaintext" / StringContent("Hello, World!", ContentType.`text/plain`),
-        path"/json" / BytesContent(writeToArray(Message("Hello, World!")), ContentType.`application/json`)
+object Main {
+  def main(args: Array[String]): Unit = {
+    val server = new UndertowServerImplementation(new Server {
+      handler(
+        filters(
+          path"/plaintext" / StringContent("Hello, World!", ContentType.`text/plain`),
+          path"/json" / BytesContent(writeToArray(Message("Hello, World!")), ContentType.`application/json`)
+        )
       )
-    )
-    config.clearListeners().addHttpListener("0.0.0.0")
-  }).start()
+      config.clearListeners().addHttpListener("0.0.0.0")
+    })
+    server.start()
+  }
 }

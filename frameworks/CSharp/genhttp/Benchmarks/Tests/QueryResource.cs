@@ -9,7 +9,7 @@ using GenHTTP.Modules.Webservices;
 namespace Benchmarks.Tests
 {
 
-    public class QueryResource
+    public sealed class QueryResource
     {
         private static Random _Random = new Random();
 
@@ -28,7 +28,7 @@ namespace Benchmarks.Tests
 
             var result = new List<World>(count);
 
-            using var context = DatabaseContext.Create();
+            using var context = DatabaseContext.CreateNoTracking();
 
             for (int _ = 0; _ < count; _++)
             {
