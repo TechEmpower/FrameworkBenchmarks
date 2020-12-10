@@ -18,7 +18,7 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Giraffe, Dapper",
+        "display_name": "Giraffe, Default with Dapper",
         "notes": "",
         "versus": "aspcore"
       },
@@ -36,17 +36,17 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Giraffe, utf8json",
+        "display_name": "Giraffe, Utf8Json",
         "notes": "",
         "versus": "aspcore"
       },
-      "utf8direct": {
-        "plaintext_url": "/plaintext",
+      "newtonsoft": {
+        "json_url": "/json",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
         "database": "None",
-        "framework": "giraffe",
+        "framework": "Giraffe",
         "language": "F#",
         "orm": "Raw",
         "platform": ".NET",
@@ -54,25 +54,7 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Giraffe, Direct utf8",
-        "notes": "",
-        "versus": "aspcore"
-      },
-      "stripped": {
-        "fortune_url": "/fortunes",
-        "port": 8080,
-        "approach": "Stripped",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "giraffe",
-        "language": "F#",
-        "orm": "micro",
-        "platform": ".NET",
-        "flavor": "CoreCLR",
-        "webserver": "Kestrel",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "Giraffe, Custom Rendering, Dapper",
+        "display_name": "Giraffe, NewtonsoftJson",
         "notes": "",
         "versus": "aspcore"
       }
