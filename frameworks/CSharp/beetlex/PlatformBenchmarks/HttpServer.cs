@@ -27,7 +27,6 @@ namespace PlatformBenchmarks
             {
                 serverOptions.IOQueueEnabled = true;
                 serverOptions.IOQueues = System.Math.Min(Environment.ProcessorCount, 16);
-                serverOptions.UseAccessQueue = true;
                 serverOptions.SyncAccept = false;
             }
             ApiServer = SocketFactory.CreateTcpServer<HttpHandler>(serverOptions);
