@@ -1,11 +1,11 @@
 FROM ubuntu:20.04 as builder
 
 RUN apt-get update -yqq
-RUN apt-get install -yqq wget make automake libtool file gcc-9 g++-9
+RUN apt-get install -yqq wget make automake libtool file gcc-10 g++-10
 
 WORKDIR /libreactor
 
-ENV CC=gcc-9 AR=gcc-ar-9 NM=gcc-nm-9 RANLIB=gcc-ranlib-9
+ENV CC=gcc-10 AR=gcc-ar-10 NM=gcc-nm-10 RANLIB=gcc-ranlib-10
 
 RUN wget -q https://github.com/akheron/jansson/archive/v2.12.tar.gz -O jansson-2.12.tar.gz && \
     tar xfz jansson-2.12.tar.gz && \
@@ -29,7 +29,7 @@ RUN wget -q https://github.com/fredrikwidlund/libclo/releases/download/v1.0.0/li
 RUN wget -q https://github.com/fredrikwidlund/libreactor/releases/download/v1.0.1/libreactor-1.0.1.tar.gz && \
     tar xfz libreactor-1.0.1.tar.gz && \
     cd libreactor-1.0.1 && \
-    ./configure --prefix=/usr CFLAGS="-Wall -Wextra -Wpedantic -O3 -g" && \
+    ./configure --prefix=/usr CFLAGS="-Wall -Wextra -Wpedantic -O3 -g -fcommon" && \
     make install
 
 COPY src/ /libreactor/src/
