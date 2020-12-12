@@ -11,37 +11,42 @@
 
 #include "setup.h"
 
-static reactor_status tfb(reactor_event *event)
+static core_status server_handler(core_event *event)
 {
-  reactor_server_session *session = (reactor_server_session *) event->data;
+  static char json_msg[4096];
 
-  if (reactor_vector_equal(session->request->target, reactor_vector_string("/json"))) {
-    char json_msg[32];
-    (void) clo_encode((clo[]) {clo_object({"message", clo_string("Hello, World!")})}, json_msg, sizeof(json_msg));
-    reactor_server_ok(session, reactor_vector_string("application/json"), reactor_vector_string(json_msg));
-    return REACTOR_OK;
-  }
-  else if (reactor_vector_equal(session->request->target, reactor_vector_string("/plaintext"))) {
-    reactor_server_ok(session, reactor_vector_string("text/plain"), reactor_vector_string("Hello, World!"));
-    return REACTOR_OK;
+  server *server = event->state;
+  server_context *context = (server_context *) event->data;
+
+  if (event->type == SERVER_REQUEST){
+    if (segment_equal(context->request.target, segment_string("/json"))){
+      (void) clo_encode((clo[]) {clo_object({"message", clo_string("Hello, World!")})}, json_msg, sizeof(json_msg));
+      server_ok(context, segment_string("application/json"), segment_string(json_msg));
+    }
+    else if (segment_equal(context->request.target, segment_string("/plaintext"))){
+      server_ok(context, segment_string("text/plain"), segment_string("Hello, World!"));
+    }
+    else{
+      server_ok(context, segment_string("text/plain"), segment_string("Hello from libreactor!\n"));
+    }
+    return CORE_OK;
   }
   else {
-    reactor_server_ok(session, reactor_vector_string("text/plain"), reactor_vector_string("Hello from libreactor!\n"));
-    return REACTOR_OK;
+    warn("error");
+    server_destruct(server);
+    return CORE_ABORT;
   }
 }
 
-
 int main()
 {
-  reactor_server server;
+  server s;
 
   setup();
-  reactor_construct();
-  reactor_server_construct(&server, NULL, NULL);
-  reactor_server_route(&server, tfb, NULL);
-  (void) reactor_server_open(&server, "0.0.0.0", "8080");
+  core_construct(NULL);
+  server_construct(&s, server_handler, &s);
+  server_open(&s, 0, 8080);
 
-  reactor_run();
-  reactor_destruct();
+  core_loop(NULL);
+  core_destruct(NULL);
 }
