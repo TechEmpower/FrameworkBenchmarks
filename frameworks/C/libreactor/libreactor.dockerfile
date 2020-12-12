@@ -38,4 +38,7 @@ FROM ubuntu:20.04
 WORKDIR /app
 COPY --from=builder /build/libreactor .
 
+RUN groupadd -r libreactor && useradd --no-log-init -r -g libreactor libreactor
+USER libreactor
+
 CMD ["./libreactor"]
