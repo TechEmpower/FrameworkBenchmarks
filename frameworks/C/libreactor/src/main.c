@@ -13,28 +13,6 @@
 #include "setup.h"
 #include "helpers.h"
 
-#define JSON_PREAMBLE "HTTP/1.1 200 OK\r\n"\
-                      "Server: libreactor\r\n"\
-                      "Content-Type: application/json\r\n"
-
-#define TEXT_PREAMBLE "HTTP/1.1 200 OK\r\n"\
-                      "Server: libreactor\r\n"\
-                      "Content-Type: text/plain\r\n"
-
-void plaintext(server_context *context, char *response)
-{
-  static const segment text_preamble = { .base = TEXT_PREAMBLE, .size = sizeof(TEXT_PREAMBLE) - 1 };
-  write_response(&context->session->stream, text_preamble, segment_string(response));
-}
-
-void json(server_context *context, clo *json_object)
-{
-  static const segment json_preamble = { .base = JSON_PREAMBLE, .size = sizeof(JSON_PREAMBLE) - 1 };
-  static char json_string[4096];
-
-  (void) clo_encode(json_object, json_string, sizeof(json_string));
-  write_response(&context->session->stream, json_preamble, segment_string(json_string));
-}
 
 static core_status server_handler(core_event *event)
 {
