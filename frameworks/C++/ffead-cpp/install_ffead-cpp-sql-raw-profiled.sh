@@ -2,6 +2,12 @@
 
 chmod +x $IROOT/ffead-cpp-sql-raw/*.sh
 
+SUFFIX=""
+if [ "$1" = "async" ]
+then
+	SUFFIX="-async"
+fi
+
 cp $IROOT/ffead-cpp-sql-raw/server.sh /server_orig.sh
 
 cd $IROOT/ffead-cpp-sql-raw
@@ -42,16 +48,18 @@ service postgresql start
 
 sed -i 's|EVH_SINGLE=false|EVH_SINGLE=true|g' resources/server.prop
 nohup bash -c "./server.sh > ffead.log &"
-sleep 5
+sleep 10
 echo "ffead-cpp with sql-raw support launched"
 wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' \
-	-H 'Connection: keep-alive' --latency -d 15 -c 256 --timeout 8 -t 2 "http://localhost:8080/te-benchmark-um-pq/fortunes"
+	-H 'Connection: keep-alive' --latency -d 5 -c 256 --timeout 8 -t 2 "http://localhost:8080/te-benchmark-um-pq${SUFFIX}/fortunes"
 wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' \
-	-H 'Connection: keep-alive' --latency -d 15 -c 512 --timeout 8 -t 2 "http://localhost:8080/te-benchmark-um-pq/db"
+	-H 'Connection: keep-alive' --latency -d 5 -c 512 --timeout 8 -t 2 "http://localhost:8080/te-benchmark-um-pq${SUFFIX}/db"
 wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' \
-	-H 'Connection: keep-alive' --latency -d 15 -c 512 --timeout 8 -t 2 "http://localhost:8080/te-benchmark-um-pq/queries?queries=20"
+	-H 'Connection: keep-alive' --latency -d 5 -c 512 --timeout 8 -t 2 "http://localhost:8080/te-benchmark-um-pq${SUFFIX}/queries?queries=20"
 wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' \
-	-H 'Connection: keep-alive' --latency -d 15 -c 512 --timeout 8 -t 2 "http://localhost:8080/te-benchmark-um-pq/updates?queries=20"
+	-H 'Connection: keep-alive' --latency -d 5 -c 512 --timeout 8 -t 2 "http://localhost:8080/te-benchmark-um-pq${SUFFIX}/updates?queries=20"
+wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' \
+	-H 'Connection: keep-alive' --latency -d 5 -c 512 --timeout 8 -t 2 "http://localhost:8080/te-benchmark-um-pq${SUFFIX}/bupdates?queries=20"
 echo "normal shutdown"
 rm -f serv.ctrl
 pkill ffead-cpp

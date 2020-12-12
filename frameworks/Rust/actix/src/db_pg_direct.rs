@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::HashMap;
 use std::fmt::Write;
 use std::io;
@@ -162,7 +163,7 @@ impl PgConnection {
     ) -> impl Future<Output = Result<Vec<Fortune>, io::Error>> {
         let mut items = vec![Fortune {
             id: 0,
-            message: "Additional fortune added at request time.".to_string(),
+            message: Cow::Borrowed("Additional fortune added at request time."),
         }];
 
         let fut = self.cl.query_raw(&self.fortune, &[]);
@@ -178,7 +179,7 @@ impl PgConnection {
                 })?;
                 items.push(Fortune {
                     id: row.get(0),
-                    message: row.get(1),
+                    message: Cow::Owned(row.get(1)),
                 });
             }
 

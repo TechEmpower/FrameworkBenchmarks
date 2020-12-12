@@ -21,13 +21,16 @@ instance Controller FrameworkBenchmarksController where
         renderJson (toJSON randomWorld)
 
     action QueryAction = do
-        let queries = paramOrDefault @Int 1 "queries" |> toBoundaries
+        let queries = defaultParam (paramOrError @Int "queries") |> toBoundaries
         let fetchRandomWorld i = do
                 randomWorldId :: Id World <- Id <$> randomRIO (1, 10000)
                 fetch randomWorldId
         [1..queries]
             |> Async.mapConcurrently fetchRandomWorld
             >>= renderJson
+        where
+            defaultParam (Right a) = a
+            defaultParam _ = 1
     
     action FortuneAction = do
         allFortunes :: [Fortune] <- query @Fortune |> fetch
@@ -37,7 +40,7 @@ instance Controller FrameworkBenchmarksController where
         renderHtml FortuneView { .. } >>= respondHtml
 
     action UpdatesAction = do
-        let queries = paramOrDefault @Int 1 "queries" |> toBoundaries
+        let queries :: Int = (defaultParam $ paramOrError @Int "queries" ) |> toBoundaries
         let updateRandomWorld i = do
                 randomWorldId :: Id World <- Id <$> randomRIO (1, 10000)
                 newRandom :: Int <- randomRIO (1, 10000)
@@ -48,6 +51,9 @@ instance Controller FrameworkBenchmarksController where
         [1..queries]
             |> Async.mapConcurrently updateRandomWorld
             >>= renderJson
+        where
+            defaultParam (Right a) = a
+            defaultParam _ = 1
     
     action PlaintextAction = do
         renderPlain "Hello, World!"

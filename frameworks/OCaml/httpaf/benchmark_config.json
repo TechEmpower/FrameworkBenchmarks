@@ -13,7 +13,7 @@
         "language": "OCaml",
         "flavor": "None",
         "orm": "None",
-        "platform": "None",
+        "platform": "httpaf",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",

@@ -116,6 +116,11 @@ class TeBkUmLpqAsyncRouter : public Router {
 	void updatesAsync(const char* q, int ql, AsyncReq* req);
 	static void updatesAsyncChQ(void* ctx, bool status, const std::string& q, int counter);
 	static void updatesAsyncChU(void* ctx, bool status, const std::string& q, int counter);
+
+	static std::string& getUpdQuery(int count);
+	void updatesAsyncb(const char* q, int ql, AsyncReq* req);
+	static void updatesAsyncbChQ(void* ctx, bool status, const std::string& q, int counter);
+	static void updatesAsyncbChU(void* ctx, bool status, const std::string& q, int counter);
 	
 	void cachedWorlds(const char*, int, std::vector<TeBkUmLpqAsyncWorld>&);
 	static void updateCacheAsyncUtil(void* ctx, int rn, std::vector<LibpqRes>& data);
@@ -125,6 +130,7 @@ class TeBkUmLpqAsyncRouter : public Router {
 	static void getContextAsyncUtil(void* ctx, int rn, int cn, char * d, int l);
 	static void getContextAsyncCh(void* ctx, bool status, const std::string& q, int counter);
 
+	static std::map<int, std::string> _qC;
 	LibpqDataSourceImpl* sqli;
 	LibpqDataSourceImpl* getDb();
 public:

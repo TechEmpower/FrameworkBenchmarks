@@ -1,13 +1,15 @@
-﻿using Benchmarks.Model;
-using GenHTTP.Modules.Webservices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Benchmarks.Model;
+
+using GenHTTP.Modules.Webservices;
 
 namespace Benchmarks.Tests
 {
 
-    public class UpdateResource
+    public sealed class UpdateResource
     {
         private static Random _Random = new Random();
 

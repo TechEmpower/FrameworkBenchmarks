@@ -5,10 +5,14 @@ use Workerman\Protocols\Http\Request;
 function init()
 {
     global $world, $fortune, $update;
-    $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world',
-        'benchmarkdbuser', 'benchmarkdbpass',
-        [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES    => false]
+    $pdo = new PDO(
+        'mysql:host=tfb-database;dbname=hello_world',
+        'benchmarkdbuser',
+        'benchmarkdbpass',
+        [
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES    => false
+        ]
     );
     $world   = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
     $fortune = $pdo->prepare('SELECT id,message FROM Fortune');
@@ -42,12 +46,12 @@ function router(Request $request)
 
         case '/update':
             return updateraw($request);
-/*
-       case '/info':
+
+/*        case '/info':
             ob_start();
             phpinfo();
             return new Response(200, ['Content-Type' => 'text/plain'], ob_get_clean());
-*/
+ */
         default:
             return new Response(404, [], 'Error 404');
     }
@@ -70,7 +74,7 @@ function query($request)
     global $world;
 
     $query_count = 1;
-    $q = $request->get('q');
+    $q = (int) $request->get('q');
     if ($q > 1) {
         $query_count = min($q, 500);
     }
@@ -91,7 +95,7 @@ function updateraw($request)
     global $world, $update;
 
     $query_count = 1;
-    $q = $request->get('q');
+    $q = (int) $request->get('q');
     if ($q > 1) {
         $query_count = min($q, 500);
     }

@@ -1,4 +1,5 @@
 BINARY = tfb
+PROFILE ?= release
 
 .PHONY: install build run gen-opam
 
@@ -9,7 +10,7 @@ gen-opam:
 	dune build @install
 
 build:
-	opam exec -- dune build --profile release $(BINARY).exe
+	opam exec -- dune build --profile $(PROFILE)
 
 run:
-	./_build/default/bin/$(BINARY).exe
+	./_build/default/src/bin/$(BINARY).exe

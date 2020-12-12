@@ -22,7 +22,7 @@ class RaController extends AppController
 
     public function query($count = 1)
     {
-        $count = min(max($count, 1), 500);
+        $count = min(max((int) $count, 1), 500);
         $res = $this->pdo->prepare('SELECT * FROM World WHERE id=?');
 
         while ($count--) {
@@ -34,7 +34,7 @@ class RaController extends AppController
 
     public function update($count = 1)
     {
-        $count = min(max($count, 1), 500);
+        $count = min(max((int) $count, 1), 500);
 
         $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         $sth = $this->pdo->prepare('SELECT id, randomNumber FROM World WHERE id=?');

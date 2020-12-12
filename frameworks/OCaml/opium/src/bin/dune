@@ -1,4 +1,11 @@
 (executable
  (public_name opi)
  (name main)
- (libraries opi opium caqti caqti-driver-postgresql caqti-lwt tyxml lwt.unix))
+ (modules main)
+ (libraries server lwt.unix))
+
+(executable
+ (public_name opi_forks)
+ (name main_forks)
+ (modules main_forks)
+ (libraries server lwt.unix))
