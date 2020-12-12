@@ -67,8 +67,6 @@ import net.officefloor.server.http.ServerHttpConnection;
 import net.officefloor.server.http.impl.HttpServerLocationImpl;
 import net.officefloor.server.http.impl.ProcessAwareServerHttpConnectionManagedObject;
 import net.officefloor.server.http.parse.HttpRequestParser.HttpRequestParserMetaData;
-import net.officefloor.server.stream.StreamBufferPool;
-import net.officefloor.server.stream.impl.ThreadLocalStreamBufferPool;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -139,10 +137,7 @@ public class RawOfficeFloorMain {
 		socketManager = HttpServerSocketManagedObjectSource.createSocketManager(executionStrategy);
 
 		// Create raw HTTP servicing
-		StreamBufferPool<ByteBuffer> serviceBufferPool = new ThreadLocalStreamBufferPool(
-				() -> ByteBuffer.allocateDirect(8046), Integer.MAX_VALUE, Integer.MAX_VALUE);
-		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, serviceBufferPool,
-				connectionFactory);
+		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, connectionFactory);
 		socketManager.bindServerSocket(serverLocation.getClusterHttpPort(), null, null, serviceFactory, serviceFactory);
 
 		// Setup Date
@@ -275,13 +270,10 @@ public class RawOfficeFloorMain {
 		 * Instantiate.
 		 *
 		 * @param serverLocation    {@link HttpServerLocation}.
-		 * @param serviceBufferPool {@link StreamBufferPool}.
 		 * @param connectionFactory {@link ConnectionFactory}.
 		 */
-		public RawHttpServicerFactory(HttpServerLocation serverLocation, StreamBufferPool<ByteBuffer> serviceBufferPool,
-				ConnectionFactory connectionFactory) {
-			super(serverLocation, false, new HttpRequestParserMetaData(100, 1000, 1000000), serviceBufferPool, null,
-					null, true);
+		public RawHttpServicerFactory(HttpServerLocation serverLocation, ConnectionFactory connectionFactory) {
+			super(serverLocation, false, new HttpRequestParserMetaData(100, 1000, 1000000), null, null, true);
 			this.objectMapper.registerModule(new AfterburnerModule());
 			this.connectionFactory = connectionFactory;
 
