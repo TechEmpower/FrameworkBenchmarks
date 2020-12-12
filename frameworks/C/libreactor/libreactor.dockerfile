@@ -7,13 +7,6 @@ WORKDIR /build
 
 ENV CC=gcc-10 AR=gcc-ar-10 NM=gcc-nm-10 RANLIB=gcc-ranlib-10
 
-RUN wget -q https://github.com/akheron/jansson/archive/v2.12.tar.gz -O jansson-2.12.tar.gz && \
-    tar xfz jansson-2.12.tar.gz && \
-    cd jansson-2.12 && \
-    autoreconf -fi && \
-    ./configure && \
-    make install
-
 RUN git clone https://github.com/fredrikwidlund/libdynamic && \
     cd libdynamic && \
     ./autogen.sh && \
