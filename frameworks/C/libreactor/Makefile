@@ -1,5 +1,5 @@
 PROG    = libreactor
-OBJS    = src/setup.o src/helpers.o src/main.o
+OBJS    = src/helpers.o src/main.o
 CFLAGS  = -std=gnu11 -Wall -Wextra -Wpedantic -O3 -g -flto -fcommon
 LDADD   = -lreactor -ldynamic -lclo
 

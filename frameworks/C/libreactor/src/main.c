@@ -2,15 +2,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
-#include <time.h>
 #include <err.h>
 
 #include <dynamic.h>
 #include <reactor.h>
 #include <clo.h>
 
-#include "setup.h"
 #include "helpers.h"
 
 
