@@ -28,7 +28,7 @@ RUN git clone https://github.com/fredrikwidlund/libreactor --single-branch --bra
     make install
 
 COPY src-server/ /build/src/
-COPY Makefile-server /build/Makefile
+COPY Makefile /build/Makefile
 
 RUN make
 
