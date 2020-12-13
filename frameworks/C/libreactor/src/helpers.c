@@ -7,6 +7,7 @@
 #include <string.h>
 #include <sched.h>
 #include <sys/wait.h>
+#include <sys/eventfd.h>
 #include <netinet/in.h>
 #include <linux/filter.h>
 #include <err.h>
@@ -93,35 +94,78 @@ void enable_reuseport_cbpf(server *s)
     err(1, "SO_ATTACH_REUSEPORT_CBPF");
 }
 
-void setup()
+int fork_workers()
 {
-  int e;
+  int e, efd, worker_count = 0;
   pid_t pid;
-  cpu_set_t available_cpus, cpu;
+  eventfd_t eventfd_value;
+  cpu_set_t online_cpus, cpu;
 
   signal(SIGPIPE, SIG_IGN);
-  CPU_ZERO(&available_cpus);
-  sched_getaffinity(0, sizeof(available_cpus), &available_cpus); // Get set of all available CPUs
 
-  for (int i = 0; i < CPU_SETSIZE; i++)
-  {
-    if (CPU_ISSET(i, &available_cpus))
-    {
-      pid = fork();
-      if (pid == -1)
-        err(1, "fork");
+  // Get set/count of all online CPUs
+  CPU_ZERO(&online_cpus);
+  sched_getaffinity(0, sizeof(online_cpus), &online_cpus);
+  int num_online_cpus = CPU_COUNT(&online_cpus);
 
-      if (pid == 0)
-      {
-       CPU_ZERO(&cpu);
-       CPU_SET(i, &cpu);
-        e = sched_setaffinity(0, sizeof cpu, &cpu);
-        if (e == -1)
-          err(1, "sched_setaffinity");
+  // Create a mapping between the relative cpu id and absolute cpu id for cases where the cpu ids are not contiguous
+  // E.g if only cpus 0, 1, 8, and 9 are visible to the app because taskset was used or because some cpus are offline
+  // then the mapping is 0 -> 0, 1 -> 1, 2 -> 8, 3 -> 9
+  int rel_to_abs_cpu[num_online_cpus];
+  int rel_cpu_index = 0;
 
-        return;
-      }
+  for (int abs_cpu_index = 0; abs_cpu_index < CPU_SETSIZE; abs_cpu_index++) {
+    if (CPU_ISSET(abs_cpu_index, &online_cpus)){
+      rel_to_abs_cpu[rel_cpu_index] = abs_cpu_index;
+      rel_cpu_index++;
+
+      if (rel_cpu_index == num_online_cpus)
+        break;
     }
   }
-  wait(NULL);
+
+  // fork a new child/worker process for each available cpu
+  for (int i = 0; i < num_online_cpus; i++)
+  {
+    // Create an eventfd to communicate with the forked child process on each iteration
+    // This ensures that the order of forking is deterministic which is important when using SO_ATTACH_REUSEPORT_CBPF
+    efd = eventfd(0, EFD_SEMAPHORE);
+    if (efd == -1)
+      err(1, "eventfd");
+
+    pid = fork();
+    if (pid == -1)
+      err(1, "fork");
+
+    // Parent process. Block the for loop until the child has set cpu affinity AND started listening on its socket
+    if (pid > 0)
+    {
+      // Block waiting for the child process to update the eventfd semaphore as a signal to proceed
+      eventfd_read(efd, &eventfd_value);
+      close(efd);
+
+      worker_count++;
+      (void) fprintf(stderr, "Worker running on CPU %d\n", i);
+      continue;
+    }
+
+    // Child process. Set cpu affinity and return eventfd
+    if (pid == 0)
+    {
+      CPU_ZERO(&cpu);
+      CPU_SET(rel_to_abs_cpu[i], &cpu);
+      e = sched_setaffinity(0, sizeof cpu, &cpu);
+      if (e == -1)
+        err(1, "sched_setaffinity");
+
+      // Break out of the for loop and continue running main. The child will signal the parent once the socket is open
+      return efd;
+    }
+  }
+
+  (void) fprintf(stderr, "libreactor running with %d worker processes\n", worker_count);
+
+  wait(NULL); // wait for children to exit
+  (void) fprintf(stderr, "A worker process has exited unexpectedly. Shutting down.\n");
+  exit(EXIT_FAILURE);
 }

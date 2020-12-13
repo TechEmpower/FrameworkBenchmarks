@@ -7,6 +7,6 @@ void json(server_context *context, clo *json_object);
 
 void enable_reuseport_cbpf(server *s);
 
-void setup();
+int fork_workers();
 
 #endif /* HELPERS_H_INCLUDED */
