@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Web;
 
+using Microsoft.EntityFrameworkCore;
+
 using GenHTTP.Api.Content;
 using GenHTTP.Api.Content.Templating;
 using GenHTTP.Api.Protocol;
@@ -88,17 +90,23 @@ namespace Benchmarks.Tests
                                 .Header("Content-Type", "text/html; charset=utf-8");
         }
 
-        private FortuneModel GetFortunes(IRequest request, IHandler handler)
+        private async ValueTask<FortuneModel> GetFortunes(IRequest request, IHandler handler)
         {
             using var context = DatabaseContext.CreateNoTracking();
 
-            var fortunes = context.Fortune.ToList();
+            var fortunes = await context.Fortune.ToListAsync();
 
             fortunes.Add(new Fortune() { Message = "Additional fortune added at request time." });
 
             fortunes.Sort();
 
             return new FortuneModel(request, handler, fortunes);
+        }
+
+        public async ValueTask PrepareAsync()
+        {
+            await Page.PrepareAsync();
+            await Template.PrepareAsync();
         }
 
         #endregion
