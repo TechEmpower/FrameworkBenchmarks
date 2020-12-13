@@ -3,8 +3,8 @@
 DB_FLAG=$1
 COMMIT="$2"
 
-if [ $COMMIT = "" ]; then
-  COMMIT = e199537f15abce7cf25c0b4de0f14461a1f426ec
+if [ "$COMMIT" = "" ]; then
+  COMMIT="e199537f15abce7cf25c0b4de0f14461a1f426ec"
 fi
 
 if [ $DB_FLAG = "TFB_MYSQL" ]; then
