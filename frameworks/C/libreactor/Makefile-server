@@ -1,8 +1,8 @@
 PROG    = libreactor
 OBJS    = src/setup.o src/main.o
-CFLAGS  = -std=gnu11 -Wall -Wextra -Wpedantic -O3 -g
+CFLAGS  = -std=gnu11 -Wall -Wextra -Wpedantic -O3 -g -flto -fcommon
 LDFLAGS = -pthread
-LDADD   = -lreactor -ldynamic -lclo -flto
+LDADD   = -lreactor -ldynamic -lclo
 
 $(PROG): $(OBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS) $(LDADD)
