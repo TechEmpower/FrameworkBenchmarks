@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.smartboot.http</groupId>
         <artifactId>smart-http-parent</artifactId>
-        <version>1.0.18</version>
+        <version>1.0.19</version>
     </parent>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>org.smartboot.socket</groupId>
             <artifactId>aio-pro</artifactId>
-            <version>1.5.0-SNAPSHOT</version>
+            <version>1.5.1</version>
         </dependency>
         <dependency>
             <groupId>com.jsoniter</groupId>
