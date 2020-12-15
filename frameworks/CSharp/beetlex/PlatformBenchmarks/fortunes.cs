@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PlatformBenchmarks
 {
@@ -16,7 +17,7 @@ namespace PlatformBenchmarks
         private readonly static AsciiString _fortunesRowEnd = "</td></tr>";
         private readonly static AsciiString _fortunesTableEnd = "</table></body></html>";
 
-        public async void fortunes(PipeStream stream, HttpToken token, ISession session)
+        public async Task fortunes(PipeStream stream, HttpToken token, ISession session)
         {
             try
             {

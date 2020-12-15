@@ -8,4 +8,4 @@ ENV ASPNETCORE_URLS http://+:8080
 WORKDIR /app
 COPY --from=build /app/out ./
 
-ENTRYPOINT ["dotnet", "App.dll", "stock"]
+ENTRYPOINT ["dotnet", "App.dll", "system"]
