@@ -19,10 +19,10 @@ gen-opam:
 	dune build @install
 
 build:
-	opam exec -- dune build --profile release bin/$(BINARY).exe
+	opam exec -- dune build --profile release
 
 run:
-	./_build/default/bin/$(BINARY).exe
-
-run-debug:
 	dune exec $(project_name) -- --debug
+
+run-forks:
+	dune exec $(project_name)_forks -- --debug

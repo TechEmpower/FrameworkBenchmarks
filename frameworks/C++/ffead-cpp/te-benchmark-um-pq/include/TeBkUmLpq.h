@@ -115,8 +115,11 @@ class TeBkUmLpqRouter : public Router {
 	void getContext(HttpRequest* request, Context* context);
 	static void getContextUtil(void* ctx, int, int, char *, int);
 
+	std::map<int, std::string> _qC;
 	LibpqDataSourceImpl* sqli;
 	LibpqDataSourceImpl* getDb();
+
+	std::string& getUpdQuery(int count);
 public:
 	TeBkUmLpqRouter();
 	virtual ~TeBkUmLpqRouter();
