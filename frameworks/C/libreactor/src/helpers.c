@@ -15,11 +15,11 @@
 
 
 #define JSON_PREAMBLE "HTTP/1.1 200 OK\r\n"\
-                      "Server: libreactor\r\n"\
+                      "Server: L\r\n"\
                       "Content-Type: application/json\r\n"
 
 #define TEXT_PREAMBLE "HTTP/1.1 200 OK\r\n"\
-                      "Server: libreactor\r\n"\
+                      "Server: L\r\n"\
                       "Content-Type: text/plain\r\n"
 
 
