@@ -5,13 +5,10 @@
   (:gen-class)
   (:import (io.vertx.core.impl.cpu CpuCoreSensor)))
 
-(def ^:private ^:const json-response
-  {:status  200
-   :headers {"content-type" "application/json"}
-   :body    {"message" "Hello, World!"}})
-
 (defn- json-handler [_ res _]
-  (res json-response))
+  (res {:status  200
+        :headers {"content-type" "application/json"}
+        :body    {"message" "Hello, World!"}}))
 
 (def ^:private json-route {:methods    [:get]
                            :middleware [(json/make-serialize-middleware)]
