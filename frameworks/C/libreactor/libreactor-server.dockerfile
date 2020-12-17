@@ -9,6 +9,7 @@ ENV CC=gcc-10 AR=gcc-ar-10 NM=gcc-nm-10 RANLIB=gcc-ranlib-10
 
 RUN git clone https://github.com/fredrikwidlund/libdynamic && \
     cd libdynamic && \
+    git checkout aee8f053c113 && \
     ./autogen.sh && \
     ./configure && \
     make install
@@ -25,6 +26,7 @@ RUN wget -q https://github.com/fredrikwidlund/libclo/releases/download/v1.0.0/li
 
 RUN git clone https://github.com/fredrikwidlund/libreactor --single-branch --branch release-2.0 libreactor-2 && \
     cd libreactor-2 && \
+    git checkout 63fa717a8047 && \
     ./autogen.sh && \
     ./configure && \
     make install
