@@ -15,11 +15,11 @@ RUN update-ca-certificates
 
 WORKDIR ${IROOT}
 
-RUN wget -q https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.2-linux-x86_64.tar.gz
-RUN tar -xzf julia-1.5.2-linux-x86_64.tar.gz
-RUN mv julia-1.5.2 /opt/
-RUN rm -f julia-1.5.2-linux-x86_64.tar.gz
-ENV PATH="/opt/julia-1.5.2/bin:${PATH}"
+RUN wget -q https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.3-linux-x86_64.tar.gz
+RUN tar -xzf julia-1.5.3-linux-x86_64.tar.gz
+RUN mv julia-1.5.3 /opt/
+RUN rm -f julia-1.5.3-linux-x86_64.tar.gz
+ENV PATH="/opt/julia-1.5.3/bin:${PATH}"
 
 COPY *.toml ${IROOT}/
 
