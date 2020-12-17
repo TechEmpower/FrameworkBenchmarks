@@ -7,6 +7,8 @@
 #include <string.h>
 #include <sched.h>
 #include <sys/wait.h>
+#include <netinet/in.h>
+#include <linux/filter.h>
 #include <err.h>
 
 #include <dynamic.h>
@@ -78,6 +80,17 @@ void json(server_context *context, clo *json_object)
 
   (void) clo_encode(json_object, json_string, sizeof(json_string));
   write_response(&context->session->stream, json_preamble, segment_string(json_string));
+}
+
+void enable_reuseport_cbpf(server *s)
+{
+  struct sock_filter code[] = {{BPF_LD | BPF_W | BPF_ABS, 0, 0, SKF_AD_OFF + SKF_AD_CPU}, {BPF_RET | BPF_A, 0, 0, 0}};
+  struct sock_fprog prog = { .len = sizeof(code)/sizeof(code[0]), .filter = code };
+  int e;
+
+  e = setsockopt(s->fd, SOL_SOCKET, SO_ATTACH_REUSEPORT_CBPF, &prog, sizeof(prog));
+  if (e == -1)
+    err(1, "SO_ATTACH_REUSEPORT_CBPF");
 }
 
 void setup()

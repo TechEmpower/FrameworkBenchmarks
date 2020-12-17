@@ -48,6 +48,7 @@ int main()
   core_construct(NULL);
   server_construct(&s, server_handler, &s);
   server_open(&s, 0, 8080);
+  enable_reuseport_cbpf(&s);
 
   core_loop(NULL);
   core_destruct(NULL);
