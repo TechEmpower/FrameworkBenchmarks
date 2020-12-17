@@ -608,7 +608,7 @@ public class RawOfficeFloorMain {
 
 	private static class RateLimit {
 
-		private final int INITIAL_REQUEST_COUNT = 738 / Runtime.getRuntime().availableProcessors();
+		private final int INITIAL_REQUEST_COUNT = 512;
 
 		private int requestCount = 0;
 
