@@ -4,6 +4,6 @@ COPY src src
 COPY project.clj project.clj
 RUN lein uberjar
 
-FROM openjdk:11.0.3-jdk-slim
-COPY --from=lein /donkey/target/hello-donkey-SNAPSHOT-standalone.jar  app.jar
-CMD ["java", "-server", "-Xms2G", "-Xmx2G", "-XX:+UseStringDeduplication", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-Dvertx.disableMetrics=true", "-Dvertx.threadChecks=false", "-Dvertx.disableContextTimings=true", "-Dvertx.disableTCCL=true", "-Dvertx.disableH2c=true", "-Dvertx.disableWebsockets=true", "-Dvertx.disableHttpHeadersValidation=true", "-Dvertx.flashPolicyHandler=false", "-Djava.net.preferIPv4Stack=true", "-jar", "app.jar"]
+FROM openjdk:11.0.9.1-jdk-slim
+COPY --from=lein /donkey/target/hello-donkey-standalone.jar  app.jar
+CMD ["java", "-server", "-Xms2G", "-Xmx2G", "-XX:+UseStringDeduplication", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dvertx.disableMetrics=true", "-Dvertx.threadChecks=false", "-Dvertx.disableContextTimings=true", "-Dvertx.disableTCCL=true", "-Dvertx.disableH2c=true", "-Dvertx.disableWebsockets=true", "-Dvertx.disableHttpHeadersValidation=true", "-Dvertx.flashPolicyHandler=false", "-Djava.net.preferIPv4Stack=true", "-jar", "app.jar"]
