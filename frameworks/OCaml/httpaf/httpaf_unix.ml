@@ -11,7 +11,7 @@ let dow = function
   | 1 -> "Mon"
   | 2 -> "Tue"
   | 3 -> "Wed"
-  | 4 -> "Tue"
+  | 4 -> "Thu"
   | 5 -> "Fri"
   | _ -> "Sat"
 
