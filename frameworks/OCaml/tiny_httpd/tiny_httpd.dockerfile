@@ -17,4 +17,4 @@ COPY ./src /${DIR}
 
 RUN sudo chown -R opam: . && eval $(opam env) && dune build --profile release
 
-ENTRYPOINT _build/default/src/bin/tiny.exe
+ENTRYPOINT ["_build/default/src/bin/tiny.exe"]
