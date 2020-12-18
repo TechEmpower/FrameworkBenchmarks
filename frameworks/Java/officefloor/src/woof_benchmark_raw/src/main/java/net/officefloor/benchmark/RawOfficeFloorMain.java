@@ -120,7 +120,8 @@ public class RawOfficeFloorMain {
 		System.out.println("Starting server on port " + port + " talking to database " + server);
 
 		// Increase the buffer size (note: too high and cause OOM issues)
-		System.setProperty("reactor.bufferSize.small", String.valueOf(QUERY_BUFFER_SIZE));
+		// 20 + 1 to cover initial update query load
+		System.setProperty("reactor.bufferSize.small", String.valueOf(QUERY_BUFFER_SIZE * (20 + 1)));
 
 		// Build the connection pool
 		ConnectionFactoryOptions factoryOptions = ConnectionFactoryOptions.builder()
