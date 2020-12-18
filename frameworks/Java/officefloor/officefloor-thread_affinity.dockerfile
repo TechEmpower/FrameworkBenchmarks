@@ -9,7 +9,7 @@ WORKDIR /officefloor/src/woof_benchmark_thread_affinity
 RUN mvn -B clean package
 
 FROM openjdk:slim
-RUN apt-get update && apt-get install -y libjna-java
+RUN apt-get update && apt-get install -y libjna-java procps
 WORKDIR /officefloor
 COPY --from=maven /officefloor/src/woof_benchmark_thread_affinity/target/woof_benchmark_thread_affinity-1.0.0.jar server.jar
 COPY start_server.sh start_server.sh

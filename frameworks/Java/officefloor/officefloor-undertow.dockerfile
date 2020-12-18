@@ -9,6 +9,7 @@ WORKDIR /officefloor/src/woof_benchmark_undertow
 RUN mvn -B clean package
 
 FROM openjdk:slim
+RUN apt-get update && apt-get install -y libjna-java procps
 WORKDIR /officefloor
 COPY --from=maven /officefloor/src/woof_benchmark_undertow/target/woof_benchmark_undertow-1.0.0.jar server.jar
 COPY start_server.sh start_server.sh
