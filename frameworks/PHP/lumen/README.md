@@ -79,5 +79,5 @@ http://localhost:8080/updates/[count]
 http://localhost:8080/fortunes
 
 
-# Add lumen-s Benchmarking Test
+# Add laravel-s Benchmarking Test
 [laravel-s](https://github.com/hhxsv5/laravel-s) is an out-of-the-box adapter between Swoole and Laravel/Lumen, similar to laravel-swoole.
