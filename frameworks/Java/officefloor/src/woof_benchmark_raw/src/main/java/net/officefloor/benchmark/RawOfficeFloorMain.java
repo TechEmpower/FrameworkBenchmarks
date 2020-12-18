@@ -742,9 +742,6 @@ public class RawOfficeFloorMain {
 			// Determine if read limit hit
 			if (this.isActiveLimit) {
 				this.rateLimits.disableReading();
-
-				// TODO REMOVE
-				System.out.println("DISABLE - " + this.activeQueries.get());
 			}
 
 			// Return whether limit
@@ -758,9 +755,6 @@ public class RawOfficeFloorMain {
 
 			// Some processed, so allow further reading
 			this.rateLimits.enableReading(false);
-
-			// TODO REMOVE
-			System.out.println("ENABLE - " + this.activeQueries.get());
 		}
 	}
 
