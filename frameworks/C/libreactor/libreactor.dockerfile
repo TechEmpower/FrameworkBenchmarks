@@ -1,11 +1,11 @@
 FROM ubuntu:20.04 as builder
 
 RUN apt-get update -yqq
-RUN apt-get install -yqq wget make automake libtool file gcc-9 g++-9
+RUN apt-get install -yqq wget git make automake libtool file gcc-10 g++-10
 
-WORKDIR /libreactor
+WORKDIR /build
 
-ENV CC=gcc-9 AR=gcc-ar-9 NM=gcc-nm-9 RANLIB=gcc-ranlib-9
+ENV CC=gcc-10 AR=gcc-ar-10 NM=gcc-nm-10 RANLIB=gcc-ranlib-10
 
 RUN wget -q https://github.com/akheron/jansson/archive/v2.12.tar.gz -O jansson-2.12.tar.gz && \
     tar xfz jansson-2.12.tar.gz && \
@@ -14,33 +14,35 @@ RUN wget -q https://github.com/akheron/jansson/archive/v2.12.tar.gz -O jansson-2
     ./configure && \
     make install
 
-RUN wget -q https://github.com/fredrikwidlund/libdynamic/releases/download/v1.3.0/libdynamic-1.3.0.tar.gz && \
-    tar xfz libdynamic-1.3.0.tar.gz && \
-    cd libdynamic-1.3.0 && \
-    ./configure --prefix=/usr && \
+RUN git clone https://github.com/fredrikwidlund/libdynamic && \
+    cd libdynamic && \
+    ./autogen.sh && \
+    ./configure --prefix=/usr CFLAGS="-Wall -Wextra -Wpedantic -O3 -g"&& \
     make install
 
+# Using sed to remove the unused "#include <dynamic.h>" directive since it causes a build error: "unknown type name 'pthread_t'"
 RUN wget -q https://github.com/fredrikwidlund/libclo/releases/download/v1.0.0/libclo-1.0.0.tar.gz && \
     tar xfz libclo-1.0.0.tar.gz && \
     cd libclo-1.0.0 && \
-    ./configure && \
-    make install
-
-RUN wget -q https://github.com/fredrikwidlund/libreactor/releases/download/v1.0.1/libreactor-1.0.1.tar.gz && \
-    tar xfz libreactor-1.0.1.tar.gz && \
-    cd libreactor-1.0.1 && \
+    sed -i '/#include <dynamic.h>/d' ./src/clo.c && \
     ./configure --prefix=/usr CFLAGS="-Wall -Wextra -Wpedantic -O3 -g" && \
     make install
 
-COPY src/ /libreactor/src/
-COPY Makefile /libreactor/Makefile
+RUN git clone https://github.com/fredrikwidlund/libreactor --single-branch --branch release-2.0 libreactor-2 && \
+    cd libreactor-2 && \
+    ./autogen.sh && \
+    ./configure --prefix=/usr CFLAGS="-Wall -Wextra -Wpedantic -O3 -g -fcommon" && \
+    make install
+
+COPY src/ /build/src/
+COPY Makefile /build/Makefile
 
 RUN make
 
 
 FROM ubuntu:20.04
 
-WORKDIR /libreactor
-COPY --from=builder /libreactor .
+WORKDIR /app
+COPY --from=builder /build/libreactor .
 
 CMD ["./libreactor"]
