@@ -26,7 +26,7 @@ object Main {
         else
           req.send(
             statusCode = 404,
-            content = s"Not found",
+            content = "Not found",
             headers = Seq("Content-Type" -> "text/plain")
           )
       )
