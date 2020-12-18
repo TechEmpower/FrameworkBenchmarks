@@ -20,6 +20,7 @@ package net.officefloor.benchmark;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -28,6 +29,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -67,8 +70,11 @@ import net.officefloor.server.http.ServerHttpConnection;
 import net.officefloor.server.http.impl.HttpServerLocationImpl;
 import net.officefloor.server.http.impl.ProcessAwareServerHttpConnectionManagedObject;
 import net.officefloor.server.http.parse.HttpRequestParser.HttpRequestParserMetaData;
+import net.officefloor.server.stream.impl.ThreadLocalStreamBufferPool;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 /**
  * <p>
@@ -136,8 +142,32 @@ public class RawOfficeFloorMain {
 		// Create the socket manager
 		socketManager = HttpServerSocketManagedObjectSource.createSocketManager(executionStrategy);
 
+		// Obtain the thread local stream buffer
+		Runnable socketListener = socketManager.getRunnables()[0];
+		Field bufferPoolField = socketListener.getClass().getDeclaredField("bufferPool");
+		bufferPoolField.setAccessible(true);
+		Object pool = bufferPoolField.get(socketListener);
+		bufferPoolField = pool.getClass().getDeclaredField("bufferPool");
+		bufferPoolField.setAccessible(true);
+		ThreadLocalStreamBufferPool bufferPool = (ThreadLocalStreamBufferPool) bufferPoolField.get(pool);
+
+		// Create write executor
+		Executor writeExecutor = Executors.newFixedThreadPool(executionStrategy.length, (runnable) -> {
+			return new Thread(() -> {
+				try {
+					runnable.run();
+				} catch (Throwable ex) {
+					// Clear buffers for thread
+					bufferPool.threadComplete();
+					System.err.println("Failure in write thread");
+					ex.printStackTrace();
+				}
+			});
+		});
+
 		// Create raw HTTP servicing
-		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, connectionFactory);
+		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, connectionFactory,
+				writeExecutor);
 		socketManager.bindServerSocket(serverLocation.getClusterHttpPort(), null, null, serviceFactory, serviceFactory);
 
 		// Setup Date
@@ -267,15 +297,25 @@ public class RawOfficeFloorMain {
 		private final Mono<List<Fortune>> fortunes;
 
 		/**
+		 * {@link Scheduler} to publish writing responses on.
+		 */
+		private final Scheduler writeScheduler;
+
+		/**
 		 * Instantiate.
 		 *
 		 * @param serverLocation    {@link HttpServerLocation}.
 		 * @param connectionFactory {@link ConnectionFactory}.
+		 * @param writeExecutor     Write {@link Executor}.
 		 */
-		public RawHttpServicerFactory(HttpServerLocation serverLocation, ConnectionFactory connectionFactory) {
+		public RawHttpServicerFactory(HttpServerLocation serverLocation, ConnectionFactory connectionFactory,
+				Executor writeExecutor) {
 			super(serverLocation, false, new HttpRequestParserMetaData(100, 1000, 1000000), null, null, true);
 			this.objectMapper.registerModule(new AfterburnerModule());
 			this.connectionFactory = connectionFactory;
+
+			// Create the write scheduler
+			this.writeScheduler = Schedulers.fromExecutor(writeExecutor);
 
 			// Create thread local connection
 			this.threadLocalConnection = new ThreadLocal<Connection>() {
@@ -417,7 +457,7 @@ public class RawOfficeFloorMain {
 			}
 
 			// Service
-			this.db.subscribe(world -> {
+			this.db.publishOn(this.writeScheduler).subscribe(world -> {
 				try {
 					response.setContentType(APPLICATION_JSON, null);
 					this.objectMapper.writeValue(response.getEntityWriter(), world);
@@ -457,7 +497,7 @@ public class RawOfficeFloorMain {
 						Integer id = row.get(0, Integer.class);
 						Integer number = row.get(1, Integer.class);
 						return new World(id, number);
-					}))).collectList().subscribe(worlds -> {
+					}))).collectList().publishOn(this.writeScheduler).subscribe(worlds -> {
 						try {
 							response.setContentType(APPLICATION_JSON, null);
 							this.objectMapper.writeValue(response.getEntityWriter(), worlds);
@@ -485,7 +525,7 @@ public class RawOfficeFloorMain {
 			}
 
 			// Service
-			this.fortunes.subscribe(fortunes -> {
+			this.fortunes.publishOn(this.writeScheduler).subscribe(fortunes -> {
 				try {
 					// Additional fortunes
 					fortunes.add(new Fortune(0, "Additional fortune added at request time."));
@@ -540,7 +580,7 @@ public class RawOfficeFloorMain {
 									+ world.id);
 						}
 						return Mono.from(batch.execute()).map((result) -> worlds);
-					}).subscribe(worlds -> {
+					}).publishOn(this.writeScheduler).subscribe(worlds -> {
 						try {
 							response.setContentType(APPLICATION_JSON, null);
 							this.objectMapper.writeValue(response.getEntityWriter(), worlds);

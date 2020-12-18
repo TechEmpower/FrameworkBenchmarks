@@ -31,3 +31,4 @@ echo "Using direct memory option $MAX_DIRECT"
 
 # Start server
 java -server -Xms2g -Xmx2g -XX:+UseNUMA $MAX_DIRECT -jar server.jar
+
