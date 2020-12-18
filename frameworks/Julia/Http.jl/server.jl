@@ -5,7 +5,6 @@ Pkg.activate(@__DIR__)
 using HTTP
 import JSON3
 using Dates
-using Sockets
 
 @info "starting listener"
 HTTP.listen("0.0.0.0", 8080, reuseaddr=true) do http
