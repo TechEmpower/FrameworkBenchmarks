@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -30,7 +31,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -56,7 +56,9 @@ import net.officefloor.frame.api.manage.OfficeFloor;
 import net.officefloor.frame.api.manage.ProcessManager;
 import net.officefloor.frame.api.managedobject.ManagedObjectContext;
 import net.officefloor.frame.api.managedobject.ProcessSafeOperation;
+import net.officefloor.server.RequestHandler;
 import net.officefloor.server.SocketManager;
+import net.officefloor.server.SocketServicer;
 import net.officefloor.server.http.AbstractHttpServicerFactory;
 import net.officefloor.server.http.HttpHeaderName;
 import net.officefloor.server.http.HttpHeaderValue;
@@ -69,8 +71,8 @@ import net.officefloor.server.http.HttpStatus;
 import net.officefloor.server.http.ServerHttpConnection;
 import net.officefloor.server.http.impl.HttpServerLocationImpl;
 import net.officefloor.server.http.impl.ProcessAwareServerHttpConnectionManagedObject;
+import net.officefloor.server.http.parse.HttpRequestParser;
 import net.officefloor.server.http.parse.HttpRequestParser.HttpRequestParserMetaData;
-import net.officefloor.server.stream.impl.ThreadLocalStreamBufferPool;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
@@ -142,32 +144,8 @@ public class RawOfficeFloorMain {
 		// Create the socket manager
 		socketManager = HttpServerSocketManagedObjectSource.createSocketManager(executionStrategy);
 
-		// Obtain the thread local stream buffer
-		Runnable socketListener = socketManager.getRunnables()[0];
-		Field bufferPoolField = socketListener.getClass().getDeclaredField("bufferPool");
-		bufferPoolField.setAccessible(true);
-		Object pool = bufferPoolField.get(socketListener);
-		bufferPoolField = pool.getClass().getDeclaredField("bufferPool");
-		bufferPoolField.setAccessible(true);
-		ThreadLocalStreamBufferPool bufferPool = (ThreadLocalStreamBufferPool) bufferPoolField.get(pool);
-
-		// Create write executor
-		Executor writeExecutor = Executors.newFixedThreadPool(executionStrategy.length, (runnable) -> {
-			return new Thread(() -> {
-				try {
-					runnable.run();
-				} catch (Throwable ex) {
-					// Clear buffers for thread
-					bufferPool.threadComplete();
-					System.err.println("Failure in write thread");
-					ex.printStackTrace();
-				}
-			});
-		});
-
 		// Create raw HTTP servicing
-		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, connectionFactory,
-				writeExecutor);
+		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, connectionFactory);
 		socketManager.bindServerSocket(serverLocation.getClusterHttpPort(), null, null, serviceFactory, serviceFactory);
 
 		// Setup Date
@@ -262,24 +240,29 @@ public class RawOfficeFloorMain {
 		private final ThreadLocal<Connection> threadLocalConnection;
 
 		/**
-		 * db {@link ThreadLocalRateLimit}.
+		 * {@link ThreadLocal} {@link RequestHandler}.
 		 */
-		private final ThreadLocalRateLimit dbRateLimit = new ThreadLocalRateLimit();
+		private final ThreadLocal<RateLimits> threadLocalRateLimits = new ThreadLocal<RateLimits>();
 
 		/**
-		 * queries {@link ThreadLocalRateLimit}.
+		 * db active queries.
 		 */
-		private final ThreadLocalRateLimit queriesRateLimit = new ThreadLocalRateLimit();
+		private AtomicInteger dbActiveQueries = new AtomicInteger(0);
 
 		/**
-		 * fortunes {@link ThreadLocalRateLimit}.
+		 * queries active queries.
 		 */
-		private final ThreadLocalRateLimit fortunesRateLimit = new ThreadLocalRateLimit();
+		private AtomicInteger queriesActiveQueries = new AtomicInteger(0);
 
 		/**
-		 * updates {@link ThreadLocalRateLimit}.
+		 * fortunes active queries.
 		 */
-		private final ThreadLocalRateLimit updatesRateLimit = new ThreadLocalRateLimit();
+		private AtomicInteger fortunesActiveQueries = new AtomicInteger(0);
+
+		/**
+		 * updates active queries.
+		 */
+		private AtomicInteger updatesActiveQueries = new AtomicInteger(0);
 
 		/**
 		 * {@link Mono} to service /db.
@@ -297,25 +280,15 @@ public class RawOfficeFloorMain {
 		private final Mono<List<Fortune>> fortunes;
 
 		/**
-		 * {@link Scheduler} to publish writing responses on.
-		 */
-		private final Scheduler writeScheduler;
-
-		/**
 		 * Instantiate.
 		 *
 		 * @param serverLocation    {@link HttpServerLocation}.
 		 * @param connectionFactory {@link ConnectionFactory}.
-		 * @param writeExecutor     Write {@link Executor}.
 		 */
-		public RawHttpServicerFactory(HttpServerLocation serverLocation, ConnectionFactory connectionFactory,
-				Executor writeExecutor) {
+		public RawHttpServicerFactory(HttpServerLocation serverLocation, ConnectionFactory connectionFactory) {
 			super(serverLocation, false, new HttpRequestParserMetaData(100, 1000, 1000000), null, null, true);
 			this.objectMapper.registerModule(new AfterburnerModule());
 			this.connectionFactory = connectionFactory;
-
-			// Create the write scheduler
-			this.writeScheduler = Schedulers.fromExecutor(writeExecutor);
 
 			// Create thread local connection
 			this.threadLocalConnection = new ThreadLocal<Connection>() {
@@ -371,6 +344,23 @@ public class RawOfficeFloorMain {
 			} catch (Throwable ex) {
 				throw new IOException(ex);
 			}
+		}
+
+		/*
+		 * =============== SocketServicerFactory =================
+		 */
+
+		@Override
+		public SocketServicer<HttpRequestParser> createSocketServicer(
+				RequestHandler<HttpRequestParser> requestHandler) {
+
+			// Create and register the rate limits
+			RateLimits rateLimits = new RateLimits(requestHandler, this.dbActiveQueries, this.queriesActiveQueries,
+					this.fortunesActiveQueries, this.updatesActiveQueries);
+			this.threadLocalRateLimits.set(rateLimits);
+
+			// Continue on to create socket servicer
+			return super.createSocketServicer(requestHandler);
 		}
 
 		/*
@@ -450,14 +440,14 @@ public class RawOfficeFloorMain {
 		private void db(HttpResponse response, ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) {
 
 			// Determine if will overload queries
-			RateLimit rateLimit = this.dbRateLimit.get();
-			if (rateLimit.isLimit(1)) {
+			RateLimits rateLimits = this.threadLocalRateLimits.get();
+			if (rateLimits.db.isLimit(1)) {
 				this.sendError(connection, THROTTLED);
 				return; // rate limited
 			}
 
 			// Service
-			this.db.publishOn(this.writeScheduler).subscribe(world -> {
+			this.db.publishOn(rateLimits.writeScheduler).subscribe(world -> {
 				try {
 					response.setContentType(APPLICATION_JSON, null);
 					this.objectMapper.writeValue(response.getEntityWriter(), world);
@@ -468,7 +458,7 @@ public class RawOfficeFloorMain {
 			}, error -> {
 				this.sendError(connection, error);
 			}, () -> {
-				rateLimit.processed(1);
+				rateLimits.db.processed(1);
 			});
 		}
 
@@ -480,9 +470,9 @@ public class RawOfficeFloorMain {
 			int queryCount = getQueryCount(queriesCountText);
 
 			// Determine if will overload queries
-			RateLimit rateLimit = this.queriesRateLimit.get();
+			RateLimits rateLimits = this.threadLocalRateLimits.get();
 			if (queryCount < LARGE_QUERY) {
-				if (rateLimit.isLimit(queryCount)) {
+				if (rateLimits.queries.isLimit(queryCount)) {
 					this.sendError(connection, THROTTLED);
 					return; // rate limited
 				}
@@ -497,7 +487,7 @@ public class RawOfficeFloorMain {
 						Integer id = row.get(0, Integer.class);
 						Integer number = row.get(1, Integer.class);
 						return new World(id, number);
-					}))).collectList().publishOn(this.writeScheduler).subscribe(worlds -> {
+					}))).collectList().publishOn(rateLimits.writeScheduler).subscribe(worlds -> {
 						try {
 							response.setContentType(APPLICATION_JSON, null);
 							this.objectMapper.writeValue(response.getEntityWriter(), worlds);
@@ -509,7 +499,7 @@ public class RawOfficeFloorMain {
 						this.sendError(connection, error);
 					}, () -> {
 						if (queryCount < LARGE_QUERY) {
-							rateLimit.processed(queryCount);
+							rateLimits.queries.processed(queryCount);
 						}
 					});
 		}
@@ -518,14 +508,14 @@ public class RawOfficeFloorMain {
 				ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) {
 
 			// Determine if will overload queries
-			RateLimit rateLimit = this.fortunesRateLimit.get();
-			if (rateLimit.isLimit(1)) {
+			RateLimits rateLimits = this.threadLocalRateLimits.get();
+			if (rateLimits.fortunes.isLimit(1)) {
 				this.sendError(connection, THROTTLED);
 				return; // rate limited
 			}
 
 			// Service
-			this.fortunes.publishOn(this.writeScheduler).subscribe(fortunes -> {
+			this.fortunes.publishOn(rateLimits.writeScheduler).subscribe(fortunes -> {
 				try {
 					// Additional fortunes
 					fortunes.add(new Fortune(0, "Additional fortune added at request time."));
@@ -541,7 +531,7 @@ public class RawOfficeFloorMain {
 			}, error -> {
 				this.sendError(connection, error);
 			}, () -> {
-				rateLimit.processed(1);
+				rateLimits.fortunes.processed(1);
 			});
 		}
 
@@ -554,9 +544,9 @@ public class RawOfficeFloorMain {
 
 			// Determine if will overload queries
 			int executedQueryCount = queryCount * 2; // select and update
-			RateLimit rateLimit = this.updatesRateLimit.get();
+			RateLimits rateLimits = this.threadLocalRateLimits.get();
 			if (queryCount < LARGE_QUERY) {
-				if (rateLimit.isLimit(executedQueryCount)) {
+				if (rateLimits.updates.isLimit(executedQueryCount)) {
 					this.sendError(connection, THROTTLED);
 					return; // rate limited
 				}
@@ -580,7 +570,7 @@ public class RawOfficeFloorMain {
 									+ world.id);
 						}
 						return Mono.from(batch.execute()).map((result) -> worlds);
-					}).publishOn(this.writeScheduler).subscribe(worlds -> {
+					}).publishOn(rateLimits.writeScheduler).subscribe(worlds -> {
 						try {
 							response.setContentType(APPLICATION_JSON, null);
 							this.objectMapper.writeValue(response.getEntityWriter(), worlds);
@@ -592,7 +582,7 @@ public class RawOfficeFloorMain {
 						this.sendError(connection, error);
 					}, () -> {
 						if (queryCount < LARGE_QUERY) {
-							rateLimit.processed(executedQueryCount);
+							rateLimits.updates.processed(executedQueryCount);
 						}
 					});
 		}
@@ -636,71 +626,131 @@ public class RawOfficeFloorMain {
 		}
 	}
 
-	private static class ThreadLocalRateLimit extends ThreadLocal<RateLimit> {
+	private static class RateLimits {
 
-		private AtomicInteger activeQueries = new AtomicInteger(0);
+		private final RateLimit db;
 
-		@Override
-		protected RateLimit initialValue() {
-			return new RateLimit(this.activeQueries);
+		private final RateLimit queries;
+
+		private final RateLimit fortunes;
+
+		private final RateLimit updates;
+
+		private final Scheduler writeScheduler;
+
+		private final Object socketListener;
+
+		private final Method disableRead;
+
+		private final Method enableRead;
+
+		private boolean isReadEnabled = true;
+
+		private RateLimits(RequestHandler<HttpRequestParser> requestHandler, AtomicInteger db, AtomicInteger queries,
+				AtomicInteger fortunes, AtomicInteger updates) {
+			this.db = new RateLimit(db, this);
+			this.queries = new RateLimit(queries, this);
+			this.fortunes = new RateLimit(fortunes, this);
+			this.updates = new RateLimit(updates, this);
+
+			// Create the write scheduler
+			Executor executor = (runnable) -> requestHandler.execute(() -> {
+				runnable.run();
+			});
+			this.writeScheduler = Schedulers.fromExecutor(executor);
+
+			// Obtain the socket listener
+			try {
+				Field socketListenerField = requestHandler.getClass().getDeclaredField("socketListener");
+				socketListenerField.setAccessible(true);
+				this.socketListener = socketListenerField.get(requestHandler);
+				this.disableRead = this.socketListener.getClass().getDeclaredMethod("disableReading");
+				this.disableRead.setAccessible(true);
+				this.enableRead = this.socketListener.getClass().getDeclaredMethod("enableReading");
+				this.enableRead.setAccessible(true);
+			} catch (Exception ex) {
+				throw new IllegalStateException("Unable to obtain enable/disable read methods", ex);
+			}
+		}
+
+		private void disableReading() {
+			if (this.isReadEnabled) {
+				try {
+					this.disableRead.invoke(this.socketListener);
+					this.isReadEnabled = false;
+				} catch (Exception ex) {
+					System.err.println("Failed to disable read");
+				}
+			}
+		}
+
+		private void enableReading() {
+			if (!this.isReadEnabled) {
+				try {
+					this.enableRead.invoke(this.socketListener);
+					this.isReadEnabled = true;
+				} catch (Exception ex) {
+					System.err.println("Failed to enable read");
+				}
+			}
 		}
 	}
 
 	private static class RateLimit {
 
-		private final int INITIAL_REQUEST_COUNT = 512;
-
-		private int requestCount = 0;
+		private final int INITIAL_REQUEST_COUNT = 768 / Runtime.getRuntime().availableProcessors();
 
 		private final AtomicInteger activeQueries;
 
+		private final RateLimits rateLimits;
+
+		private int requestCount = 0;
+
 		private boolean isActiveLimit = false;
 
-		public RateLimit(AtomicInteger activeQueries) {
+		public RateLimit(AtomicInteger activeQueries, RateLimits rateLimits) {
 			this.activeQueries = activeQueries;
+			this.rateLimits = rateLimits;
 		}
 
-		public boolean isLimit(int queryCount) {
+		private boolean isLimit(int queryCount) {
 
-			// Increment the request count
-			this.requestCount = this.requestCount + ((this.requestCount > INITIAL_REQUEST_COUNT) ? 0 : 1);
-
-			// Ensure initial requests are processed
-			do {
-
-				// Determine if query count reached
-				this.activeQueries.updateAndGet((count) -> {
-					int newCount = count + queryCount;
-					if (newCount > QUERY_BUFFER_SIZE) {
-						// Max limit reached
-						this.isActiveLimit = true;
-						return count;
-					} else {
-						// Allow input
-						this.isActiveLimit = false;
-						return newCount;
-					}
-				});
-				if (this.requestCount > INITIAL_REQUEST_COUNT) {
-					// Initial requests processed, so start possible throttling
-					return this.isActiveLimit;
+			// Determine if query count reached
+			this.activeQueries.updateAndGet((count) -> {
+				int newCount = count + queryCount;
+				if (newCount > QUERY_BUFFER_SIZE) {
+					// Max limit reached
+					this.isActiveLimit = true;
+					return count;
+				} else {
+					// Allow input
+					this.isActiveLimit = false;
+					return newCount;
 				}
+			});
 
-				// Allow some processing time if limit hit
-				if (this.isActiveLimit) {
-					try {
-						Thread.sleep(1);
-					} catch (InterruptedException ex) {
-						// continue processing
-					}
-				}
+			// Increment the request count (initial requests must be serviced)
+			if (this.requestCount < INITIAL_REQUEST_COUNT) {
+				this.requestCount++;
+				return false; // within limit
+			}
 
-			} while (this.isActiveLimit);
-			return false; // below limit
+			// Determine if read limit hit
+			if (this.isActiveLimit) {
+				this.rateLimits.disableReading();
+			}
+
+			// Return whether limit
+			return !this.isActiveLimit;
 		}
 
-		public void processed(int queryCount) {
+		private void processed(int queryCount) {
+
+			// Update the active queries
 			this.activeQueries.updateAndGet((count) -> count - queryCount);
+
+			// Some processed, so allow further reading
+			this.rateLimits.enableReading();
 		}
 	}
 
