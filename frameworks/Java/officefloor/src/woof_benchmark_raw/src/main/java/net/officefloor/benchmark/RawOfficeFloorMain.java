@@ -341,6 +341,8 @@ public class RawOfficeFloorMain {
 		protected void send(ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) throws IOException {
 			try {
 				connection.getServiceFlowCallback().run(null);
+			} catch (IOException ex) {
+				throw ex;
 			} catch (Throwable ex) {
 				throw new IOException(ex);
 			}
@@ -636,6 +638,8 @@ public class RawOfficeFloorMain {
 
 		private final RateLimit updates;
 
+		private final Executor socketExecutor;
+
 		private final Scheduler writeScheduler;
 
 		private final Object socketListener;
@@ -654,10 +658,10 @@ public class RawOfficeFloorMain {
 			this.updates = new RateLimit(updates, this);
 
 			// Create the write scheduler
-			Executor executor = (runnable) -> requestHandler.execute(() -> {
+			this.socketExecutor = (runnable) -> requestHandler.execute(() -> {
 				runnable.run();
 			});
-			this.writeScheduler = Schedulers.fromExecutor(executor);
+			this.writeScheduler = Schedulers.fromExecutor(this.socketExecutor);
 
 			// Obtain the socket listener
 			try {
@@ -684,8 +688,8 @@ public class RawOfficeFloorMain {
 			}
 		}
 
-		private void enableReading() {
-			if (!this.isReadEnabled) {
+		private void enableReading(boolean isForce) {
+			if (isForce || !this.isReadEnabled) {
 				try {
 					this.enableRead.invoke(this.socketListener);
 					this.isReadEnabled = true;
@@ -738,10 +742,13 @@ public class RawOfficeFloorMain {
 			// Determine if read limit hit
 			if (this.isActiveLimit) {
 				this.rateLimits.disableReading();
+
+				// TODO REMOVE
+				System.out.println("DISABLE - " + this.activeQueries.get());
 			}
 
 			// Return whether limit
-			return !this.isActiveLimit;
+			return this.isActiveLimit;
 		}
 
 		private void processed(int queryCount) {
@@ -750,7 +757,10 @@ public class RawOfficeFloorMain {
 			this.activeQueries.updateAndGet((count) -> count - queryCount);
 
 			// Some processed, so allow further reading
-			this.rateLimits.enableReading();
+			this.rateLimits.enableReading(false);
+
+			// TODO REMOVE
+			System.out.println("ENABLE - " + this.activeQueries.get());
 		}
 	}
 
