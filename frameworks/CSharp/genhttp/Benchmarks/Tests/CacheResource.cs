@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Benchmarks.Model;
 
@@ -36,10 +37,10 @@ namespace Benchmarks.Tests
         }
 
         [ResourceMethod(":queries")]
-        public List<World> GetWorldsFromPath(string queries) => GetWorlds(queries);
+        public ValueTask<List<World>> GetWorldsFromPath(string queries) => GetWorlds(queries);
 
         [ResourceMethod]
-        public List<World> GetWorlds(string queries)
+        public async ValueTask<List<World>> GetWorlds(string queries)
         {
             var count = 1;
 
@@ -66,7 +67,7 @@ namespace Benchmarks.Tests
                 }
                 else
                 {
-                    var resolved = context.World.First(w => w.Id == id);
+                    var resolved = await context.World.FindAsync(id);
 
                     _Cache.Set(key, resolved);
 

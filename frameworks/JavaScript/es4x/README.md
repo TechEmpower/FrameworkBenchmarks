@@ -12,7 +12,7 @@
 ## Important Libraries
 The tests were run with:
 * [Eclipse Vert.x](https://vertx.io/)
-* [GraalVM 1.0.0 rc6](https://graalvm.org/)
+* [GraalVM](https://www.graalvm.org/)
 * [ES4X](https://reactiverse.io/es4x/)
 
 ## Test URLs

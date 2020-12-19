@@ -1,7 +1,7 @@
 module S = Tiny_httpd
 
 let () =
-  let server = S.create ~addr:"0.0.0.0" () in
+  let server = S.create ~addr:"0.0.0.0" ~max_connections:256 () in
   let headers = [ ("Server", "tiny_httpd") ] in
   (* say hello *)
   S.add_route_handler ~meth:`GET server
