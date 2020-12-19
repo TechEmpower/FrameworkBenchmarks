@@ -149,15 +149,15 @@
         <dependency>
             <groupId>io.helidon.media</groupId>
             <artifactId>helidon-media-jsonp</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.helidon.dbclient</groupId> 
-			<artifactId>helidon-dbclient</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.helidon.dbclient</groupId> 
-			<artifactId>helidon-dbclient-jdbc</artifactId>
-		</dependency>
+        </dependency>
+        <dependency>
+            <groupId>io.helidon.dbclient</groupId> 
+            <artifactId>helidon-dbclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.helidon.dbclient</groupId> 
+            <artifactId>helidon-dbclient-jdbc</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.github.spullara.mustache.java</groupId>
             <artifactId>compiler</artifactId>
@@ -165,11 +165,11 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-		</dependency>
-		<dependency> 
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-jdk14</artifactId>
-			<version>1.7.25</version>
-		</dependency>
+        </dependency>
+        <dependency> 
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.7.25</version>
+        </dependency>
     </dependencies>
 </project>
