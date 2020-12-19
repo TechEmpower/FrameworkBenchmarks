@@ -114,19 +114,9 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>io.reactivex.rxjava2</groupId>
-                <artifactId>rxjava</artifactId>
-                <version>2.2.8</version>
-            </dependency>
-            <dependency>
-                <groupId>com.zaxxer</groupId>
-                <artifactId>HikariCP</artifactId>
-                <version>3.3.1</version>
-            </dependency>
-            <dependency>
                 <groupId>com.github.spullara.mustache.java</groupId>
                 <artifactId>compiler</artifactId>
-                <version>0.9.6</version>
+                <version>0.9.7</version>
             </dependency>
             <dependency>
                 <groupId>org.postgresql</groupId>
