@@ -1,7 +1,7 @@
-FROM maven:3.6.3-adoptopenjdk-14
-ENV wfly=19.1.0.Final
-ENV connectorj=8.0.20
-ENV JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Xmx24g -XX:+UnlockExperimentalVMOptions -XX:+UseZGC"
+FROM maven:3.6.3-adoptopenjdk-15
+ENV wfly=21.0.1.Final
+ENV connectorj=8.0.22
+ENV JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Xmx24g -XX:+UseZGC"
 WORKDIR /wildfly
 COPY src src
 COPY pom.xml pom.xml

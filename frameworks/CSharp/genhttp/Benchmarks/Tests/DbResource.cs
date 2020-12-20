@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Threading.Tasks;
 
 using GenHTTP.Modules.Webservices;
 
@@ -13,13 +13,13 @@ namespace Benchmarks.Tests
         private static Random _Random = new Random();
 
         [ResourceMethod]
-        public World GetRandomWorld()
+        public async ValueTask<World> GetRandomWorld()
         {
             var id = _Random.Next(1, 10001);
 
             using var context = DatabaseContext.CreateNoTracking();
 
-            return context.World.First(w => w.Id == id);
+            return await context.World.FindAsync(id);
         }
 
     }

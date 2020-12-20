@@ -48,7 +48,7 @@ env:
     - "TESTDIR=Haskell/warp"
     - "TESTDIR=Haskell/wizzardo-inline"
     - "TESTDIR=Haskell/postgrest"
-    - 'TESTDIR="Java/act Java/comsat"'
+    - 'TESTDIR="Java/act Java/comsat Java/edap-http"'
     - 'TESTDIR="Java/activeweb Java/armeria Java/baratine Java/bayou Java/blade Java/curacao Java/dropwizard Java/firenio Java/servicetalk Java/voovan"'
     - 'TESTDIR="Java/gemini Java/greenlightning Java/grizzly Java/helidon Java/httpserver Java/jetty Java/jlhttp Java/jooby Java/wicket"'
     - 'TESTDIR="Java/light-java Java/minijax Java/nanohttpd Java/netty Java/ninja-standalone Java/officefloor Java/proteus Java/quarkus"'

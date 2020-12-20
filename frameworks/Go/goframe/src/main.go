@@ -81,6 +81,7 @@ func init() {
 
 func main() {
 	g.View().SetAutoEncode(true)
+	g.View().Parse("fortune.html", g.Map{"list":nil})
 	s := g.Server()
 	s.Group("/", func(group *ghttp.RouterGroup) {
 		group.Middleware(func(r *ghttp.Request) {
