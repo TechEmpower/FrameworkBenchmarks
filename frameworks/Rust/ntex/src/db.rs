@@ -8,15 +8,22 @@ use futures::stream::futures_unordered::FuturesUnordered;
 use futures::{Future, FutureExt, StreamExt, TryStreamExt};
 use ntex::web::Error;
 use random_fast_rng::{FastRng, Random};
+use sailfish::TemplateOnce;
 use smallvec::SmallVec;
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, NoTls, Statement};
-use yarte::{ywrite_html, Serialize};
+use yarte::Serialize;
 
 #[derive(Serialize, Debug)]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,
+}
+
+#[derive(TemplateOnce)]
+#[template(path = "fortune.stpl", rm_whitespace = true)]
+pub struct Fortunes {
+    items: SmallVec<[Fortune; 32]>,
 }
 
 #[derive(serde::Serialize, Debug)]
@@ -171,7 +178,7 @@ impl PgConnection {
                 .await
                 .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))?;
 
-            let mut fortunes: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
+            let mut items: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
                 id: 0,
                 message: Cow::Borrowed("Additional fortune added at request time."),
             }];
@@ -180,18 +187,18 @@ impl PgConnection {
                 let row = row.map_err(|e| {
                     io::Error::new(io::ErrorKind::Other, format!("{:?}", e))
                 })?;
-                fortunes.push(Fortune {
+                items.push(Fortune {
                     id: row.get(0),
                     message: Cow::Owned(row.get(1)),
                 });
             }
 
-            fortunes.sort_by(|it, next| it.message.cmp(&next.message));
+            items.sort_by(|it, next| it.message.cmp(&next.message));
 
-            let mut buf = BytesMut::with_capacity(2048);
-            ywrite_html!(buf, "{{> fortune }}");
-
-            Ok(buf.freeze())
+            match (Fortunes { items }).render_once() {
+                Ok(res) => Ok(Bytes::from(res)),
+                Err(e) => Err(io::Error::new(io::ErrorKind::Other, e.to_string()))
+            }
         }
     }
 }
