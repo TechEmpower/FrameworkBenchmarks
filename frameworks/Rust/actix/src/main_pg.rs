@@ -6,16 +6,17 @@ use actix_http::error::ErrorInternalServerError;
 use actix_http::{HttpService, KeepAlive};
 use actix_service::map_config;
 use actix_web::dev::{AppConfig, Body, Server};
+use actix_web::error::InternalError;
 use actix_web::http::{header::CONTENT_TYPE, header::SERVER, HeaderValue, StatusCode};
 use actix_web::{web, App, Error, HttpRequest, HttpResponse};
 use bytes::BytesMut;
-use yarte::ywrite_html;
+use sailfish::TemplateOnce;
 
 mod db_pg;
 mod models;
 mod utils;
 use crate::db_pg::{PgConnection, RandomWorld, RandomWorlds, TellFortune, UpdateWorld};
-use crate::utils::Writer;
+use crate::utils::{Fortunes, Writer};
 
 async fn world_row(db: web::Data<Addr<PgConnection>>) -> Result<HttpResponse, Error> {
     let res = db
@@ -96,12 +97,12 @@ async fn fortune(db: web::Data<Addr<PgConnection>>) -> Result<HttpResponse, Erro
         .map_err(|e| ErrorInternalServerError(e))?;
 
     match res {
-        Ok(fortunes) => {
-            let mut body = BytesMut::with_capacity(2048);
-            ywrite_html!(body, "{{> fortune }}");
+        Ok(items) => {
+            let body = Fortunes { items }
+                .render_once()
+                .map_err(|e| InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR))?;
 
-            let mut res =
-                HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+            let mut res = HttpResponse::with_body(StatusCode::OK, Body::from(body));
             res.headers_mut()
                 .insert(SERVER, HeaderValue::from_static("Actix"));
             res.headers_mut().insert(

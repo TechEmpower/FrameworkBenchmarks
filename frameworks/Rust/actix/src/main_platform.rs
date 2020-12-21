@@ -11,17 +11,18 @@ use actix_http::http::{HeaderValue, StatusCode};
 use actix_http::{Error, HttpService, KeepAlive, Request, Response};
 use actix_server::Server;
 use actix_service::{Service, ServiceFactory};
+use actix_web::error::InternalError;
 use bytes::BytesMut;
 use futures::future::ok;
+use sailfish::TemplateOnce;
 use serde_json::to_writer;
-use yarte::ywrite_html;
 
 mod db_pg_direct;
 mod models;
 mod utils;
 
 use crate::db_pg_direct::PgConnection;
-use crate::utils::Writer;
+use crate::utils::{Fortunes, Writer};
 
 struct App {
     db: PgConnection,
@@ -64,13 +65,13 @@ impl Service for App {
                 let fut = self.db.tell_fortune();
 
                 Box::pin(async move {
-                    let fortunes = fut.await?;
+                    let items = fut.await?;
 
-                    let mut body = BytesMut::with_capacity(2048);
-                    ywrite_html!(body, "{{> fortune }}");
+                    let body = Fortunes { items }.render_once().map_err(|e| {
+                        InternalError::new(e, StatusCode::INTERNAL_SERVER_ERROR)
+                    })?;
 
-                    let mut res =
-                        Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+                    let mut res = Response::with_body(StatusCode::OK, Body::from(body));
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
                     hdrs.insert(CONTENT_TYPE, h_ct);

@@ -4,12 +4,19 @@ use std::borrow::Cow;
 use std::{cmp, io};
 
 use bytes::{BufMut, BytesMut};
+use sailfish::TemplateOnce;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Debug)]
 pub struct Fortune {
     pub id: i32,
     pub message: Cow<'static, str>,
+}
+
+#[derive(TemplateOnce)]
+#[template(path = "fortune.stpl", rm_whitespace = true)]
+pub struct Fortunes {
+    pub items: Vec<Fortune>,
 }
 
 pub const SIZE: usize = 27;
