@@ -39,7 +39,7 @@
 			<dependency>
 				<groupId>net.officefloor</groupId>
 				<artifactId>bom</artifactId>
-				<version>3.30.0</version>
+				<version>3.30.1</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
