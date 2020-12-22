@@ -4,7 +4,7 @@ DB_FLAG=$1
 COMMIT="$2"
 
 if [ "$COMMIT" = "" ]; then
-  COMMIT="e199537f15abce7cf25c0b4de0f14461a1f426ec"
+  COMMIT="667f439040821d981923492e59749b87005268e4"
 fi
 
 if [ $DB_FLAG = "TFB_MYSQL" ]; then
