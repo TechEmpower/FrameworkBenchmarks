@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.ByteBuffer;
+import java.nio.channels.CancelledKeyException;
+import java.nio.channels.ClosedChannelException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -452,6 +454,8 @@ public class RawOfficeFloorMain {
 					response.setContentType(APPLICATION_JSON, null);
 					this.objectMapper.writeValue(response.getEntityWriter(), world);
 					this.send(connection);
+				} catch (CancelledKeyException | ClosedChannelException ex) {
+					// Ignore as disconnecting client
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
@@ -492,6 +496,8 @@ public class RawOfficeFloorMain {
 							response.setContentType(APPLICATION_JSON, null);
 							this.objectMapper.writeValue(response.getEntityWriter(), worlds);
 							this.send(connection);
+						} catch (CancelledKeyException | ClosedChannelException ex) {
+							// Ignore as disconnecting client
 						} catch (IOException ex) {
 							ex.printStackTrace();
 						}
@@ -525,6 +531,8 @@ public class RawOfficeFloorMain {
 					response.setContentType(TEXT_HTML, null);
 					this.fortuneMustache.execute(response.getEntityWriter(), fortunes);
 					this.send(connection);
+				} catch (CancelledKeyException | ClosedChannelException ex) {
+					// Ignore as disconnecting client
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
@@ -575,6 +583,8 @@ public class RawOfficeFloorMain {
 							response.setContentType(APPLICATION_JSON, null);
 							this.objectMapper.writeValue(response.getEntityWriter(), worlds);
 							this.send(connection);
+						} catch (CancelledKeyException | ClosedChannelException ex) {
+							// Ignore as disconnecting client
 						} catch (IOException ex) {
 							ex.printStackTrace();
 						}
@@ -611,6 +621,8 @@ public class RawOfficeFloorMain {
 				// Send error response
 				this.send(connection);
 
+			} catch (CancelledKeyException | ClosedChannelException ex) {
+				// Ignore as disconnecting client
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
