@@ -30,5 +30,5 @@ fi
 echo "Using direct memory option $MAX_DIRECT"
 
 # Start server
-java -server -Xms2g -Xmx2g -XX:+UseNUMA $MAX_DIRECT -Dofficefloor.socket.memory.threshold.percentage=0.1 -Dofficefloor.socket.max.reads.on.select=1 -jar server.jar
+java -server -Xms2g -Xmx2g -XX:+UseNUMA $MAX_DIRECT -jar server.jar
 
