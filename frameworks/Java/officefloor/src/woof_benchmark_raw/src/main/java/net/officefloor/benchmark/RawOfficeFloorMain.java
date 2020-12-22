@@ -20,9 +20,9 @@ package net.officefloor.benchmark;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
+import java.nio.channels.CancelledKeyException;
+import java.nio.channels.ClosedChannelException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -120,8 +120,7 @@ public class RawOfficeFloorMain {
 		System.out.println("Starting server on port " + port + " talking to database " + server);
 
 		// Increase the buffer size (note: too high and cause OOM issues)
-		// 20 + 1 to cover initial update query load
-		System.setProperty("reactor.bufferSize.small", String.valueOf(QUERY_BUFFER_SIZE * (20 + 1)));
+		System.setProperty("reactor.bufferSize.small", String.valueOf(QUERY_BUFFER_SIZE));
 
 		// Build the connection pool
 		ConnectionFactoryOptions factoryOptions = ConnectionFactoryOptions.builder()
@@ -455,6 +454,8 @@ public class RawOfficeFloorMain {
 					response.setContentType(APPLICATION_JSON, null);
 					this.objectMapper.writeValue(response.getEntityWriter(), world);
 					this.send(connection);
+				} catch (CancelledKeyException | ClosedChannelException ex) {
+					// Ignore as disconnecting client
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
@@ -495,6 +496,8 @@ public class RawOfficeFloorMain {
 							response.setContentType(APPLICATION_JSON, null);
 							this.objectMapper.writeValue(response.getEntityWriter(), worlds);
 							this.send(connection);
+						} catch (CancelledKeyException | ClosedChannelException ex) {
+							// Ignore as disconnecting client
 						} catch (IOException ex) {
 							ex.printStackTrace();
 						}
@@ -528,6 +531,8 @@ public class RawOfficeFloorMain {
 					response.setContentType(TEXT_HTML, null);
 					this.fortuneMustache.execute(response.getEntityWriter(), fortunes);
 					this.send(connection);
+				} catch (CancelledKeyException | ClosedChannelException ex) {
+					// Ignore as disconnecting client
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
@@ -578,6 +583,8 @@ public class RawOfficeFloorMain {
 							response.setContentType(APPLICATION_JSON, null);
 							this.objectMapper.writeValue(response.getEntityWriter(), worlds);
 							this.send(connection);
+						} catch (CancelledKeyException | ClosedChannelException ex) {
+							// Ignore as disconnecting client
 						} catch (IOException ex) {
 							ex.printStackTrace();
 						}
@@ -614,6 +621,8 @@ public class RawOfficeFloorMain {
 				// Send error response
 				this.send(connection);
 
+			} catch (CancelledKeyException | ClosedChannelException ex) {
+				// Ignore as disconnecting client
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
@@ -643,79 +652,33 @@ public class RawOfficeFloorMain {
 
 		private final Scheduler writeScheduler;
 
-		private final Object socketListener;
-
-		private final Method disableRead;
-
-		private final Method enableRead;
-
-		private boolean isReadEnabled = true;
-
 		private RateLimits(RequestHandler<HttpRequestParser> requestHandler, AtomicInteger db, AtomicInteger queries,
 				AtomicInteger fortunes, AtomicInteger updates) {
-			this.db = new RateLimit(db, this);
-			this.queries = new RateLimit(queries, this);
-			this.fortunes = new RateLimit(fortunes, this);
-			this.updates = new RateLimit(updates, this);
+			this.db = new RateLimit(db);
+			this.queries = new RateLimit(queries);
+			this.fortunes = new RateLimit(fortunes);
+			this.updates = new RateLimit(updates);
 
 			// Create the write scheduler
 			this.socketExecutor = (runnable) -> requestHandler.execute(() -> {
 				runnable.run();
 			});
 			this.writeScheduler = Schedulers.fromExecutor(this.socketExecutor);
-
-			// Obtain the socket listener
-			try {
-				Field socketListenerField = requestHandler.getClass().getDeclaredField("socketListener");
-				socketListenerField.setAccessible(true);
-				this.socketListener = socketListenerField.get(requestHandler);
-				this.disableRead = this.socketListener.getClass().getDeclaredMethod("disableReading");
-				this.disableRead.setAccessible(true);
-				this.enableRead = this.socketListener.getClass().getDeclaredMethod("enableReading");
-				this.enableRead.setAccessible(true);
-			} catch (Exception ex) {
-				throw new IllegalStateException("Unable to obtain enable/disable read methods", ex);
-			}
-		}
-
-		private void disableReading() {
-			if (this.isReadEnabled) {
-				try {
-					this.disableRead.invoke(this.socketListener);
-					this.isReadEnabled = false;
-				} catch (Exception ex) {
-					System.err.println("Failed to disable read");
-				}
-			}
-		}
-
-		private void enableReading(boolean isForce) {
-			if (isForce || !this.isReadEnabled) {
-				try {
-					this.enableRead.invoke(this.socketListener);
-					this.isReadEnabled = true;
-				} catch (Exception ex) {
-					System.err.println("Failed to enable read");
-				}
-			}
 		}
 	}
 
 	private static class RateLimit {
 
-		private final int INITIAL_REQUEST_COUNT = 768 / Runtime.getRuntime().availableProcessors();
+		private final int INITIAL_REQUEST_COUNT = (512 / Runtime.getRuntime().availableProcessors()) + 2;
 
 		private final AtomicInteger activeQueries;
-
-		private final RateLimits rateLimits;
 
 		private int requestCount = 0;
 
 		private boolean isActiveLimit = false;
 
-		public RateLimit(AtomicInteger activeQueries, RateLimits rateLimits) {
+		private RateLimit(AtomicInteger activeQueries) {
 			this.activeQueries = activeQueries;
-			this.rateLimits = rateLimits;
 		}
 
 		private boolean isLimit(int queryCount) {
@@ -737,12 +700,15 @@ public class RawOfficeFloorMain {
 			// Increment the request count (initial requests must be serviced)
 			if (this.requestCount < INITIAL_REQUEST_COUNT) {
 				this.requestCount++;
+				if (queryCount > 1) {
+					// Must slow initial queries to avoid overload
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException ex) {
+						// Ignore and carry on
+					}
+				}
 				return false; // within limit
-			}
-
-			// Determine if read limit hit
-			if (this.isActiveLimit) {
-				this.rateLimits.disableReading();
 			}
 
 			// Return whether limit
@@ -753,9 +719,6 @@ public class RawOfficeFloorMain {
 
 			// Update the active queries
 			this.activeQueries.updateAndGet((count) -> count - queryCount);
-
-			// Some processed, so allow further reading
-			this.rateLimits.enableReading(false);
 		}
 	}
 
