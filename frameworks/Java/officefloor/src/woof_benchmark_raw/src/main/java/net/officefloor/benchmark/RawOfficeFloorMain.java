@@ -657,7 +657,7 @@ public class RawOfficeFloorMain {
 
 	private static class RateLimit {
 
-		private final int INITIAL_REQUEST_COUNT = 768 / Runtime.getRuntime().availableProcessors();
+		private final int INITIAL_REQUEST_COUNT = (512 / Runtime.getRuntime().availableProcessors()) + 2;
 
 		private final AtomicInteger activeQueries;
 
@@ -688,6 +688,14 @@ public class RawOfficeFloorMain {
 			// Increment the request count (initial requests must be serviced)
 			if (this.requestCount < INITIAL_REQUEST_COUNT) {
 				this.requestCount++;
+				if (queryCount > 1) {
+					// Must slow initial queries to avoid overload
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException ex) {
+						// Ignore and carry on
+					}
+				}
 				return false; // within limit
 			}
 
