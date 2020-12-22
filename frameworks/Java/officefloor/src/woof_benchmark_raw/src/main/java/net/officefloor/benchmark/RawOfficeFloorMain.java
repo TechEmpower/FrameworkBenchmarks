@@ -27,6 +27,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -56,6 +57,7 @@ import net.officefloor.frame.api.manage.OfficeFloor;
 import net.officefloor.frame.api.manage.ProcessManager;
 import net.officefloor.frame.api.managedobject.ManagedObjectContext;
 import net.officefloor.frame.api.managedobject.ProcessSafeOperation;
+import net.officefloor.frame.api.managedobject.pool.ThreadCompletionListener;
 import net.officefloor.server.RequestHandler;
 import net.officefloor.server.SocketManager;
 import net.officefloor.server.SocketServicer;
@@ -73,6 +75,9 @@ import net.officefloor.server.http.impl.HttpServerLocationImpl;
 import net.officefloor.server.http.impl.ProcessAwareServerHttpConnectionManagedObject;
 import net.officefloor.server.http.parse.HttpRequestParser;
 import net.officefloor.server.http.parse.HttpRequestParser.HttpRequestParserMetaData;
+import net.officefloor.web.executive.CpuCore;
+import net.officefloor.web.executive.CpuCore.LogicalCpu;
+import net.openhft.affinity.Affinity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
@@ -134,15 +139,35 @@ public class RawOfficeFloorMain {
 		// Create the server location
 		HttpServerLocation serverLocation = new HttpServerLocationImpl("localhost", port, -1);
 
-		// Create the execution strategy
-		ThreadFactory[] executionStrategy = new ThreadFactory[Runtime.getRuntime().availableProcessors()];
-		for (int i = 0; i < executionStrategy.length; i++) {
-			executionStrategy[i] = (runnable) -> new Thread(runnable);
+		// Create a thread factory per logical CPU
+		ThreadCompletionListener[] threadCompletionListenerCapture = new ThreadCompletionListener[] { null };
+		List<ThreadFactory> threadFactories = new LinkedList<>();
+		for (CpuCore cpuCore : CpuCore.getCores()) {
+			for (LogicalCpu logicalCpu : cpuCore.getCpus()) {
+
+				// Create thread factory for logical CPU
+				ThreadFactory boundThreadFactory = (runnable) -> new Thread(() -> {
+					try {
+						// Bind thread to logical CPU
+						Affinity.setAffinity(logicalCpu.getCpuAffinity());
+
+						// Run logic for thread
+						runnable.run();
+					} finally {
+						threadCompletionListenerCapture[0].threadComplete();
+					}
+				});
+
+				// Add the thread factory
+				threadFactories.add(boundThreadFactory);
+			}
 		}
+		ThreadFactory[] executionStrategy = threadFactories.toArray(new ThreadFactory[0]);
 		System.out.println("Using " + executionStrategy.length + " executors");
 
 		// Create the socket manager
-		socketManager = HttpServerSocketManagedObjectSource.createSocketManager(executionStrategy);
+		socketManager = HttpServerSocketManagedObjectSource.createSocketManager(executionStrategy,
+				(threadCompletionListener) -> threadCompletionListenerCapture[0] = threadCompletionListener);
 
 		// Create raw HTTP servicing
 		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, connectionFactory);
