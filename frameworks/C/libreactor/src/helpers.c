@@ -1,17 +1,30 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <limits.h>
 #include <string.h>
+#include <sched.h>
+#include <sys/wait.h>
 #include <err.h>
 
 #include <dynamic.h>
 #include <reactor.h>
 #include <clo.h>
 
+
+#define JSON_PREAMBLE "HTTP/1.1 200 OK\r\n"\
+                      "Server: L\r\n"\
+                      "Content-Type: application/json\r\n"
+
+#define TEXT_PREAMBLE "HTTP/1.1 200 OK\r\n"\
+                      "Server: L\r\n"\
+                      "Content-Type: text/plain\r\n"
+
+
 // Returns the full header and trailing \r\n
-segment http_date_header()
+static segment http_date_header()
 {
   static __thread char date_header[38] = "Date: Thu, 01 Jan 1970 00:00:00 GMT\r\n";
   segment date = http_date(0);
@@ -22,7 +35,7 @@ segment http_date_header()
 
 // Returns the full header and trailing \r\n
 // Also includes the final \r\n separating the headers from response body
-segment http_content_length_header(uint32_t n)
+static segment http_content_length_header(uint32_t n)
 {
   // Max content length limited by uint32_t which is 4294967296 (4GB) or 10 chars when written out.
   // 16 (header name) + 10 (header value) + 4 (newlines) + 1 (null terminator) = 31
@@ -35,7 +48,7 @@ segment http_content_length_header(uint32_t n)
   return (segment) {header, length + 16 + 4};
 }
 
-void write_response(stream *stream, segment preamble, segment body)
+static void write_response(stream *stream, segment preamble, segment body)
 {
   segment date_header = http_date_header(0); // includes header name, value, and \r\n
   segment content_length_header = http_content_length_header(body.size); // includes header name, value, and \r\n\r\n
@@ -50,4 +63,52 @@ void write_response(stream *stream, segment preamble, segment body)
   memcpy(output_buffer_ptr + preamble.size, date_header.base, date_header.size);
   memcpy(output_buffer_ptr + preamble.size + date_header.size, content_length_header.base, content_length_header.size);
   memcpy(output_buffer_ptr + preamble.size + date_header.size + content_length_header.size, body.base, body.size);
+}
+
+void plaintext(server_context *context, char *response)
+{
+  static const segment text_preamble = { .base = TEXT_PREAMBLE, .size = sizeof(TEXT_PREAMBLE) - 1 };
+  write_response(&context->session->stream, text_preamble, segment_string(response));
+}
+
+void json(server_context *context, clo *json_object)
+{
+  static const segment json_preamble = { .base = JSON_PREAMBLE, .size = sizeof(JSON_PREAMBLE) - 1 };
+  static char json_string[4096];
+
+  (void) clo_encode(json_object, json_string, sizeof(json_string));
+  write_response(&context->session->stream, json_preamble, segment_string(json_string));
+}
+
+void setup()
+{
+  int e;
+  pid_t pid;
+  cpu_set_t available_cpus, cpu;
+
+  signal(SIGPIPE, SIG_IGN);
+  CPU_ZERO(&available_cpus);
+  sched_getaffinity(0, sizeof(available_cpus), &available_cpus); // Get set of all available CPUs
+
+  for (int i = 0; i < CPU_SETSIZE; i++)
+  {
+    if (CPU_ISSET(i, &available_cpus))
+    {
+      pid = fork();
+      if (pid == -1)
+        err(1, "fork");
+
+      if (pid == 0)
+      {
+       CPU_ZERO(&cpu);
+       CPU_SET(i, &cpu);
+        e = sched_setaffinity(0, sizeof cpu, &cpu);
+        if (e == -1)
+          err(1, "sched_setaffinity");
+
+        return;
+      }
+    }
+  }
+  wait(NULL);
 }

@@ -2,39 +2,14 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
-#include <time.h>
 #include <err.h>
 
 #include <dynamic.h>
 #include <reactor.h>
 #include <clo.h>
 
-#include "setup.h"
 #include "helpers.h"
 
-#define JSON_PREAMBLE "HTTP/1.1 200 OK\r\n"\
-                      "Server: libreactor\r\n"\
-                      "Content-Type: application/json\r\n"
-
-#define TEXT_PREAMBLE "HTTP/1.1 200 OK\r\n"\
-                      "Server: libreactor\r\n"\
-                      "Content-Type: text/plain\r\n"
-
-void plaintext(server_context *context, char *response)
-{
-  static const segment text_preamble = { .base = TEXT_PREAMBLE, .size = sizeof(TEXT_PREAMBLE) - 1 };
-  write_response(&context->session->stream, text_preamble, segment_string(response));
-}
-
-void json(server_context *context, clo *json_object)
-{
-  static const segment json_preamble = { .base = JSON_PREAMBLE, .size = sizeof(JSON_PREAMBLE) - 1 };
-  static char json_string[4096];
-
-  (void) clo_encode(json_object, json_string, sizeof(json_string));
-  write_response(&context->session->stream, json_preamble, segment_string(json_string));
-}
 
 static core_status server_handler(core_event *event)
 {
@@ -42,19 +17,21 @@ static core_status server_handler(core_event *event)
   static char default_string[] = "Hello from libreactor!\n";
   static clo_pair json_pair[] = {{ .string = "message", .value = { .type = CLO_STRING, .string = "Hello, World!" }}};
   static clo json_object[] = {{ .type = CLO_OBJECT, .object = json_pair }};
+  static char json_string[4096];
 
   server *server = event->state;
   server_context *context = (server_context *) event->data;
 
   if (event->type == SERVER_REQUEST){
     if (segment_equal(context->request.target, segment_string("/json"))){
-      json(context, json_object);
+      (void) clo_encode(json_object, json_string, sizeof(json_string));
+      server_ok(context, segment_string("application/json"), segment_string(json_string));
     }
     else if (segment_equal(context->request.target, segment_string("/plaintext"))){
-      plaintext(context, hello_string);
+      server_ok(context, segment_string("text/plain"), segment_string(hello_string));
     }
     else{
-      plaintext(context, default_string);
+      server_ok(context, segment_string("text/plain"), segment_string(default_string));
     }
     return CORE_OK;
   }
