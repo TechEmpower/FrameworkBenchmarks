@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using Microsoft.EntityFrameworkCore;
+
 using GenHTTP.Modules.Webservices;
 
 using Benchmarks.Model;
@@ -19,7 +21,7 @@ namespace Benchmarks.Tests
 
             using var context = DatabaseContext.CreateNoTracking();
 
-            return await context.World.FindAsync(id);
+            return await context.World.FirstOrDefaultAsync(w => w.Id == id);
         }
 
     }
