@@ -170,7 +170,8 @@ public class RawOfficeFloorMain {
 				(threadCompletionListener) -> threadCompletionListenerCapture[0] = threadCompletionListener);
 
 		// Create raw HTTP servicing
-		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, connectionFactory);
+		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, connectionFactory,
+				executionStrategy.length);
 		socketManager.bindServerSocket(serverLocation.getClusterHttpPort(), null, null, serviceFactory, serviceFactory);
 
 		// Setup Date
@@ -260,6 +261,11 @@ public class RawOfficeFloorMain {
 		private final ConnectionFactory connectionFactory;
 
 		/**
+		 * Count of socket listeners.
+		 */
+		private final int socketListenerCount;
+
+		/**
 		 * {@link ThreadLocal} {@link Connection}.
 		 */
 		private final ThreadLocal<Connection> threadLocalConnection;
@@ -307,13 +313,16 @@ public class RawOfficeFloorMain {
 		/**
 		 * Instantiate.
 		 *
-		 * @param serverLocation    {@link HttpServerLocation}.
-		 * @param connectionFactory {@link ConnectionFactory}.
+		 * @param serverLocation      {@link HttpServerLocation}.
+		 * @param connectionFactory   {@link ConnectionFactory}.
+		 * @param socketListenerCount Number of socket listeners.
 		 */
-		public RawHttpServicerFactory(HttpServerLocation serverLocation, ConnectionFactory connectionFactory) {
+		public RawHttpServicerFactory(HttpServerLocation serverLocation, ConnectionFactory connectionFactory,
+				int socketListenerCount) {
 			super(serverLocation, false, new HttpRequestParserMetaData(100, 1000, 1000000), null, null, true);
 			this.objectMapper.registerModule(new AfterburnerModule());
 			this.connectionFactory = connectionFactory;
+			this.socketListenerCount = socketListenerCount;
 
 			// Create thread local connection
 			this.threadLocalConnection = new ThreadLocal<Connection>() {
@@ -381,10 +390,12 @@ public class RawOfficeFloorMain {
 		public SocketServicer<HttpRequestParser> createSocketServicer(
 				RequestHandler<HttpRequestParser> requestHandler) {
 
-			// Create and register the rate limits
-			RateLimits rateLimits = new RateLimits(requestHandler, this.dbActiveQueries, this.queriesActiveQueries,
-					this.fortunesActiveQueries, this.updatesActiveQueries);
-			this.threadLocalRateLimits.set(rateLimits);
+			// Ensure rate limits for socket servicing thread
+			if (this.threadLocalRateLimits.get() == null) {
+				RateLimits rateLimits = new RateLimits(requestHandler, this.socketListenerCount, this.dbActiveQueries,
+						this.queriesActiveQueries, this.fortunesActiveQueries, this.updatesActiveQueries);
+				this.threadLocalRateLimits.set(rateLimits);
+			}
 
 			// Continue on to create socket servicer
 			return super.createSocketServicer(requestHandler);
@@ -677,12 +688,12 @@ public class RawOfficeFloorMain {
 
 		private final Scheduler writeScheduler;
 
-		private RateLimits(RequestHandler<HttpRequestParser> requestHandler, AtomicInteger db, AtomicInteger queries,
-				AtomicInteger fortunes, AtomicInteger updates) {
-			this.db = new RateLimit(db);
-			this.queries = new RateLimit(queries);
-			this.fortunes = new RateLimit(fortunes);
-			this.updates = new RateLimit(updates);
+		private RateLimits(RequestHandler<HttpRequestParser> requestHandler, int socketListenerCount, AtomicInteger db,
+				AtomicInteger queries, AtomicInteger fortunes, AtomicInteger updates) {
+			this.db = new RateLimit(db, socketListenerCount);
+			this.queries = new RateLimit(queries, socketListenerCount);
+			this.fortunes = new RateLimit(fortunes, socketListenerCount);
+			this.updates = new RateLimit(updates, socketListenerCount);
 
 			// Create the write scheduler
 			this.socketExecutor = (runnable) -> requestHandler.execute(() -> {
@@ -694,7 +705,7 @@ public class RawOfficeFloorMain {
 
 	private static class RateLimit {
 
-		private final int INITIAL_REQUEST_COUNT = (512 / Runtime.getRuntime().availableProcessors()) + 2;
+		private final int initialRequestCount;
 
 		private final AtomicInteger activeQueries;
 
@@ -702,8 +713,9 @@ public class RawOfficeFloorMain {
 
 		private boolean isActiveLimit = false;
 
-		private RateLimit(AtomicInteger activeQueries) {
+		private RateLimit(AtomicInteger activeQueries, int socketListenerCount) {
 			this.activeQueries = activeQueries;
+			this.initialRequestCount = (512 / socketListenerCount) + 2;
 		}
 
 		private boolean isLimit(int queryCount) {
@@ -723,7 +735,7 @@ public class RawOfficeFloorMain {
 			});
 
 			// Increment the request count (initial requests must be serviced)
-			if (this.requestCount < INITIAL_REQUEST_COUNT) {
+			if (this.requestCount < this.initialRequestCount) {
 				this.requestCount++;
 				if (queryCount > 1) {
 					// Must slow initial queries to avoid overload
