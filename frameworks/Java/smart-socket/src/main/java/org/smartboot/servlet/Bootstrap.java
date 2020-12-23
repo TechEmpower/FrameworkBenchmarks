@@ -26,8 +26,6 @@ public class Bootstrap {
 
         ServletHttpHandle httpHandle = new ServletHttpHandle();
         ContainerRuntime containerRuntime = new ContainerRuntime("/");
-        containerRuntime.getDeploymentInfo().setClassLoader(Thread.currentThread().getContextClassLoader());
-        containerRuntime.getDeploymentInfo().setDefaultServlet(new DefaultServlet());
         // plaintext
         ServletInfo plainTextServletInfo = new ServletInfo();
         plainTextServletInfo.setServletName("plaintext");
