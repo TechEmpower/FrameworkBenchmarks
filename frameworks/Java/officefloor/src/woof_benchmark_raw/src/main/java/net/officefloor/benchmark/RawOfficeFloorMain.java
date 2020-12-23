@@ -29,12 +29,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -45,6 +45,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
+import io.r2dbc.pool.PoolingConnectionFactoryProvider;
 import io.r2dbc.spi.Batch;
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactories;
@@ -53,6 +54,9 @@ import io.r2dbc.spi.ConnectionFactoryOptions;
 import io.r2dbc.spi.R2dbcTransientResourceException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.officefloor.benchmark.RawOfficeFloorMain.Fortune;
+import net.officefloor.benchmark.RawOfficeFloorMain.Message;
+import net.officefloor.benchmark.RawOfficeFloorMain.World;
 import net.officefloor.frame.api.manage.OfficeFloor;
 import net.officefloor.frame.api.manage.ProcessManager;
 import net.officefloor.frame.api.managedobject.ManagedObjectContext;
@@ -83,6 +87,9 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
+import net.officefloor.web.executive.CpuCore;
+import net.openhft.affinity.Affinity;
+
 /**
  * <p>
  * {@link SocketManager} raw performance.
@@ -90,6 +97,11 @@ import reactor.core.scheduler.Schedulers;
  * Allows determining the overhead of the {@link OfficeFloor} framework.
  */
 public class RawOfficeFloorMain {
+
+	/**
+	 * Database query load capacity to handle validation load.
+	 */
+	private static final int QUERY_LOAD_CAPACITY = 512 * (20 + 1); // update 20 selects then batch
 
 	/**
 	 * Buffer size of queries.
@@ -127,15 +139,6 @@ public class RawOfficeFloorMain {
 		// Increase the buffer size (note: too high and cause OOM issues)
 		System.setProperty("reactor.bufferSize.small", String.valueOf(QUERY_BUFFER_SIZE));
 
-		// Build the connection pool
-		ConnectionFactoryOptions factoryOptions = ConnectionFactoryOptions.builder()
-				.option(ConnectionFactoryOptions.DRIVER, "pool").option(ConnectionFactoryOptions.PROTOCOL, "postgresql")
-				.option(ConnectionFactoryOptions.HOST, server).option(ConnectionFactoryOptions.PORT, 5432)
-				.option(ConnectionFactoryOptions.DATABASE, "hello_world")
-				.option(ConnectionFactoryOptions.USER, "benchmarkdbuser")
-				.option(ConnectionFactoryOptions.PASSWORD, "benchmarkdbpass").build();
-		ConnectionFactory connectionFactory = ConnectionFactories.get(factoryOptions);
-
 		// Create the server location
 		HttpServerLocation serverLocation = new HttpServerLocationImpl("localhost", port, -1);
 
@@ -143,7 +146,7 @@ public class RawOfficeFloorMain {
 		ThreadCompletionListener[] threadCompletionListenerCapture = new ThreadCompletionListener[] { null };
 		List<ThreadFactory> threadFactories = new LinkedList<>();
 		for (CpuCore cpuCore : CpuCore.getCores()) {
-			for (LogicalCpu logicalCpu : cpuCore.getCpus()) {
+			for (CpuCore.LogicalCpu logicalCpu : cpuCore.getCpus()) {
 
 				// Create thread factory for logical CPU
 				ThreadFactory boundThreadFactory = (runnable) -> new Thread(() -> {
@@ -169,13 +172,32 @@ public class RawOfficeFloorMain {
 		socketManager = HttpServerSocketManagedObjectSource.createSocketManager(executionStrategy,
 				(threadCompletionListener) -> threadCompletionListenerCapture[0] = threadCompletionListener);
 
+		// Must have enough connection capacity for initial load (+1 for rounding)
+		int requiredConnectionsPerSocket = (QUERY_LOAD_CAPACITY / (executionStrategy.length * QUERY_BUFFER_SIZE)) + 1;
+		int connectionsPerSocket = Math.max(4, requiredConnectionsPerSocket);
+		System.out.println("Using " + connectionsPerSocket + " connections per socket");
+
+		// Determine the pool size for connections
+		int connectionPoolSize = executionStrategy.length * connectionsPerSocket;
+
+		// Build the connection pool
+		ConnectionFactoryOptions factoryOptions = ConnectionFactoryOptions.builder()
+				.option(ConnectionFactoryOptions.DRIVER, "pool").option(ConnectionFactoryOptions.PROTOCOL, "postgresql")
+				.option(ConnectionFactoryOptions.HOST, server).option(ConnectionFactoryOptions.PORT, 5432)
+				.option(ConnectionFactoryOptions.DATABASE, "hello_world")
+				.option(ConnectionFactoryOptions.USER, "benchmarkdbuser")
+				.option(ConnectionFactoryOptions.PASSWORD, "benchmarkdbpass")
+				.option(PoolingConnectionFactoryProvider.MAX_SIZE, connectionPoolSize).build();
+		ConnectionFactory connectionFactory = ConnectionFactories.get(factoryOptions);
+
 		// Create raw HTTP servicing
-		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, connectionFactory);
+		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, connectionFactory,
+				connectionsPerSocket);
 		socketManager.bindServerSocket(serverLocation.getClusterHttpPort(), null, null, serviceFactory, serviceFactory);
 
 		// Setup Date
-		Timer dateTimer = new Timer(true);
-		dateTimer.schedule(serviceFactory.updateDate, 0, 1000);
+		ScheduledExecutorService dateTimer = Executors.newScheduledThreadPool(1);
+		dateTimer.scheduleAtFixedRate(serviceFactory.updateDate, 0, 1, TimeUnit.SECONDS);
 
 		// Start servicing
 		Runnable[] runnables = socketManager.getRunnables();
@@ -213,19 +235,14 @@ public class RawOfficeFloorMain {
 
 		private static final R2dbcTransientResourceException THROTTLED = new R2dbcTransientResourceException();
 
-		private static final int LARGE_QUERY = 100;
-
 		/**
 		 * <code>Date</code> {@link HttpHeaderValue}.
 		 */
 		private volatile HttpHeaderValue dateHttpHeader;
 
-		private final TimerTask updateDate = new TimerTask() {
-			@Override
-			public void run() {
-				String now = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneOffset.UTC));
-				RawHttpServicerFactory.this.dateHttpHeader = new HttpHeaderValue(now);
-			}
+		private final Runnable updateDate = () -> {
+			String now = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneOffset.UTC));
+			RawHttpServicerFactory.this.dateHttpHeader = new HttpHeaderValue(now);
 		};
 
 		/**
@@ -260,39 +277,14 @@ public class RawOfficeFloorMain {
 		private final ConnectionFactory connectionFactory;
 
 		/**
-		 * {@link ThreadLocal} {@link Connection}.
+		 * {@link ThreadLocal} {@link Connection} instances.
 		 */
-		private final ThreadLocal<Connection> threadLocalConnection;
+		private final ThreadLocal<Connection[]> threadLocalConnections;
 
 		/**
-		 * {@link ThreadLocal} {@link RequestHandler}.
+		 * {@link ThreadLocal} {@link RateLimit}.
 		 */
-		private final ThreadLocal<RateLimits> threadLocalRateLimits = new ThreadLocal<RateLimits>();
-
-		/**
-		 * db active queries.
-		 */
-		private AtomicInteger dbActiveQueries = new AtomicInteger(0);
-
-		/**
-		 * queries active queries.
-		 */
-		private AtomicInteger queriesActiveQueries = new AtomicInteger(0);
-
-		/**
-		 * fortunes active queries.
-		 */
-		private AtomicInteger fortunesActiveQueries = new AtomicInteger(0);
-
-		/**
-		 * updates active queries.
-		 */
-		private AtomicInteger updatesActiveQueries = new AtomicInteger(0);
-
-		/**
-		 * {@link Mono} to service /db.
-		 */
-		private final Mono<World> db;
+		private final ThreadLocal<RateLimit> threadLocalRateLimit = new ThreadLocal<RateLimit>();
 
 		/**
 		 * {@link Mustache} for /fortunes.
@@ -300,39 +292,29 @@ public class RawOfficeFloorMain {
 		private final Mustache fortuneMustache;
 
 		/**
-		 * {@link Mono} to service /fortunes.
-		 */
-		private final Mono<List<Fortune>> fortunes;
-
-		/**
 		 * Instantiate.
 		 *
-		 * @param serverLocation    {@link HttpServerLocation}.
-		 * @param connectionFactory {@link ConnectionFactory}.
+		 * @param serverLocation       {@link HttpServerLocation}.
+		 * @param connectionFactory    {@link ConnectionFactory}.
+		 * @param connectionsPerSocket Number of DB connections per socket.
 		 */
-		public RawHttpServicerFactory(HttpServerLocation serverLocation, ConnectionFactory connectionFactory) {
+		public RawHttpServicerFactory(HttpServerLocation serverLocation, ConnectionFactory connectionFactory,
+				int connectionsPerSocket) {
 			super(serverLocation, false, new HttpRequestParserMetaData(100, 1000, 1000000), null, null, true);
 			this.objectMapper.registerModule(new AfterburnerModule());
 			this.connectionFactory = connectionFactory;
 
 			// Create thread local connection
-			this.threadLocalConnection = new ThreadLocal<Connection>() {
+			this.threadLocalConnections = new ThreadLocal<Connection[]>() {
 				@Override
-				protected Connection initialValue() {
-					return Mono.from(RawHttpServicerFactory.this.connectionFactory.create()).block();
+				protected Connection[] initialValue() {
+					Connection[] connections = new Connection[connectionsPerSocket];
+					for (int i = 0; i < connections.length; i++) {
+						connections[i] = Mono.from(RawHttpServicerFactory.this.connectionFactory.create()).block();
+					}
+					return connections;
 				}
 			};
-
-			// Create the db logic
-			this.db = Mono
-					.from(this.threadLocalConnection.get()
-							.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
-							.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute())
-					.flatMap(result -> Mono.from(result.map((row, metadata) -> {
-						Integer id = row.get(0, Integer.class);
-						Integer number = row.get(1, Integer.class);
-						return new World(id, number);
-					})));
 
 			// Load the mustache fortunes template
 			MustacheFactory mustacheFactory = new DefaultMustacheFactory() {
@@ -346,15 +328,6 @@ public class RawOfficeFloorMain {
 				}
 			};
 			this.fortuneMustache = mustacheFactory.compile("fortunes.mustache");
-
-			// Create the fortunes logic
-			this.fortunes = Flux
-					.from(this.threadLocalConnection.get().createStatement("SELECT ID, MESSAGE FROM FORTUNE").execute())
-					.flatMap(result -> Flux.from(result.map((row, metadata) -> {
-						Integer id = row.get(0, Integer.class);
-						String message = row.get(1, String.class);
-						return new Fortune(id, message);
-					}))).collectList();
 		}
 
 		/**
@@ -381,10 +354,13 @@ public class RawOfficeFloorMain {
 		public SocketServicer<HttpRequestParser> createSocketServicer(
 				RequestHandler<HttpRequestParser> requestHandler) {
 
-			// Create and register the rate limits
-			RateLimits rateLimits = new RateLimits(requestHandler, this.dbActiveQueries, this.queriesActiveQueries,
-					this.fortunesActiveQueries, this.updatesActiveQueries);
-			this.threadLocalRateLimits.set(rateLimits);
+			// Ensure rate limits for socket servicing thread
+			// Note: will always create before servicing any requests
+			if (this.threadLocalRateLimit.get() == null) {
+				Connection[] connections = this.threadLocalConnections.get();
+				RateLimit rateLimit = new RateLimit(requestHandler, connections);
+				this.threadLocalRateLimit.set(rateLimit);
+			}
 
 			// Continue on to create socket servicer
 			return super.createSocketServicer(requestHandler);
@@ -467,28 +443,34 @@ public class RawOfficeFloorMain {
 		private void db(HttpResponse response, ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) {
 
 			// Determine if will overload queries
-			RateLimits rateLimits = this.threadLocalRateLimits.get();
-			if (rateLimits.db.isLimit(1)) {
+			RateLimitedConnection conn = this.threadLocalRateLimit.get().getAvailableConnection(1);
+			if (conn == null) {
 				this.sendError(connection, THROTTLED);
 				return; // rate limited
 			}
 
 			// Service
-			this.db.publishOn(rateLimits.writeScheduler).subscribe(world -> {
-				try {
-					response.setContentType(APPLICATION_JSON, null);
-					this.objectMapper.writeValue(response.getEntityWriter(), world);
-					this.send(connection);
-				} catch (CancelledKeyException | ClosedChannelException ex) {
-					// Ignore as disconnecting client
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-			}, error -> {
-				this.sendError(connection, error);
-			}, () -> {
-				rateLimits.db.processed(1);
-			});
+			Mono.from(conn.connection.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
+					.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute())
+					.flatMap(result -> Mono.from(result.map((row, metadata) -> {
+						Integer id = row.get(0, Integer.class);
+						Integer number = row.get(1, Integer.class);
+						return new World(id, number);
+					}))).publishOn(conn.writeScheduler).subscribe(world -> {
+						try {
+							response.setContentType(APPLICATION_JSON, null);
+							this.objectMapper.writeValue(response.getEntityWriter(), world);
+							this.send(connection);
+						} catch (CancelledKeyException | ClosedChannelException ex) {
+							// Ignore as disconnecting client
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
+					}, error -> {
+						this.sendError(connection, error);
+					}, () -> {
+						conn.processed(1);
+					});
 		}
 
 		private void queries(String requestUri, HttpResponse response,
@@ -499,24 +481,22 @@ public class RawOfficeFloorMain {
 			int queryCount = getQueryCount(queriesCountText);
 
 			// Determine if will overload queries
-			RateLimits rateLimits = this.threadLocalRateLimits.get();
-			if (queryCount < LARGE_QUERY) {
-				if (rateLimits.queries.isLimit(queryCount)) {
-					this.sendError(connection, THROTTLED);
-					return; // rate limited
-				}
+			RateLimitedConnection conn = this.threadLocalRateLimit.get().getAvailableConnection(queryCount);
+			if (conn == null) {
+				this.sendError(connection, THROTTLED);
+				return; // rate limited
 			}
 
 			// Service
-			Connection dbConn = this.threadLocalConnection.get();
 			Flux.range(1, queryCount)
-					.flatMap(index -> dbConn.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
-							.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute())
+					.flatMap(
+							index -> conn.connection.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
+									.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute())
 					.flatMap(result -> Flux.from(result.map((row, metadata) -> {
 						Integer id = row.get(0, Integer.class);
 						Integer number = row.get(1, Integer.class);
 						return new World(id, number);
-					}))).collectList().publishOn(rateLimits.writeScheduler).subscribe(worlds -> {
+					}))).collectList().publishOn(conn.writeScheduler).subscribe(worlds -> {
 						try {
 							response.setContentType(APPLICATION_JSON, null);
 							this.objectMapper.writeValue(response.getEntityWriter(), worlds);
@@ -529,9 +509,7 @@ public class RawOfficeFloorMain {
 					}, error -> {
 						this.sendError(connection, error);
 					}, () -> {
-						if (queryCount < LARGE_QUERY) {
-							rateLimits.queries.processed(queryCount);
-						}
+						conn.processed(queryCount);
 					});
 		}
 
@@ -539,33 +517,38 @@ public class RawOfficeFloorMain {
 				ProcessAwareServerHttpConnectionManagedObject<ByteBuffer> connection) {
 
 			// Determine if will overload queries
-			RateLimits rateLimits = this.threadLocalRateLimits.get();
-			if (rateLimits.fortunes.isLimit(1)) {
+			RateLimitedConnection conn = this.threadLocalRateLimit.get().getAvailableConnection(1);
+			if (conn == null) {
 				this.sendError(connection, THROTTLED);
 				return; // rate limited
 			}
 
 			// Service
-			this.fortunes.publishOn(rateLimits.writeScheduler).subscribe(fortunes -> {
-				try {
-					// Additional fortunes
-					fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-					Collections.sort(fortunes, (a, b) -> a.message.compareTo(b.message));
+			Flux.from(conn.connection.createStatement("SELECT ID, MESSAGE FROM FORTUNE").execute())
+					.flatMap(result -> Flux.from(result.map((row, metadata) -> {
+						Integer id = row.get(0, Integer.class);
+						String message = row.get(1, String.class);
+						return new Fortune(id, message);
+					}))).collectList().publishOn(conn.writeScheduler).subscribe(fortunes -> {
+						try {
+							// Additional fortunes
+							fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+							Collections.sort(fortunes, (a, b) -> a.message.compareTo(b.message));
 
-					// Send response
-					response.setContentType(TEXT_HTML, null);
-					this.fortuneMustache.execute(response.getEntityWriter(), fortunes);
-					this.send(connection);
-				} catch (CancelledKeyException | ClosedChannelException ex) {
-					// Ignore as disconnecting client
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-			}, error -> {
-				this.sendError(connection, error);
-			}, () -> {
-				rateLimits.fortunes.processed(1);
-			});
+							// Send response
+							response.setContentType(TEXT_HTML, null);
+							this.fortuneMustache.execute(response.getEntityWriter(), fortunes);
+							this.send(connection);
+						} catch (CancelledKeyException | ClosedChannelException ex) {
+							// Ignore as disconnecting client
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
+					}, error -> {
+						this.sendError(connection, error);
+					}, () -> {
+						conn.processed(1);
+					});
 		}
 
 		private void update(String requestUri, HttpResponse response,
@@ -574,36 +557,34 @@ public class RawOfficeFloorMain {
 			// Obtain the number of queries
 			String queriesCountText = requestUri.substring(UPDATE_PATH_PREFIX.length());
 			int queryCount = getQueryCount(queriesCountText);
+			int executeQueryCount = queryCount + 1; // select all and update
 
 			// Determine if will overload queries
-			int executedQueryCount = queryCount * 2; // select and update
-			RateLimits rateLimits = this.threadLocalRateLimits.get();
-			if (queryCount < LARGE_QUERY) {
-				if (rateLimits.updates.isLimit(executedQueryCount)) {
-					this.sendError(connection, THROTTLED);
-					return; // rate limited
-				}
+			RateLimitedConnection conn = this.threadLocalRateLimit.get().getAvailableConnection(executeQueryCount);
+			if (conn == null) {
+				this.sendError(connection, THROTTLED);
+				return; // rate limited
 			}
 
 			// Service
-			Connection db = this.threadLocalConnection.get();
 			Flux.range(1, queryCount)
-					.flatMap(index -> db.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
-							.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute())
+					.flatMap(
+							index -> conn.connection.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
+									.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute())
 					.flatMap(result -> Flux.from(result.map((row, metadata) -> {
 						Integer id = row.get(0, Integer.class);
 						Integer number = row.get(1, Integer.class);
 						return new World(id, number);
 					}))).collectList().flatMap(worlds -> {
 						Collections.sort(worlds, (a, b) -> a.id - b.id);
-						Batch batch = db.createBatch();
+						Batch batch = conn.connection.createBatch();
 						for (World world : worlds) {
 							world.randomNumber = ThreadLocalRandom.current().nextInt(1, 10001);
 							batch.add("UPDATE WORLD SET RANDOMNUMBER = " + world.randomNumber + " WHERE ID = "
 									+ world.id);
 						}
 						return Mono.from(batch.execute()).map((result) -> worlds);
-					}).publishOn(rateLimits.writeScheduler).subscribe(worlds -> {
+					}).publishOn(conn.writeScheduler).subscribe(worlds -> {
 						try {
 							response.setContentType(APPLICATION_JSON, null);
 							this.objectMapper.writeValue(response.getEntityWriter(), worlds);
@@ -616,9 +597,7 @@ public class RawOfficeFloorMain {
 					}, error -> {
 						this.sendError(connection, error);
 					}, () -> {
-						if (queryCount < LARGE_QUERY) {
-							rateLimits.updates.processed(executedQueryCount);
-						}
+						conn.processed(executeQueryCount);
 					});
 		}
 
@@ -663,87 +642,64 @@ public class RawOfficeFloorMain {
 		}
 	}
 
-	private static class RateLimits {
+	private static class RateLimit {
 
-		private final RateLimit db;
-
-		private final RateLimit queries;
-
-		private final RateLimit fortunes;
-
-		private final RateLimit updates;
+		private final RateLimitedConnection[] rateLimitedConnections;
 
 		private final Executor socketExecutor;
 
-		private final Scheduler writeScheduler;
-
-		private RateLimits(RequestHandler<HttpRequestParser> requestHandler, AtomicInteger db, AtomicInteger queries,
-				AtomicInteger fortunes, AtomicInteger updates) {
-			this.db = new RateLimit(db);
-			this.queries = new RateLimit(queries);
-			this.fortunes = new RateLimit(fortunes);
-			this.updates = new RateLimit(updates);
+		private RateLimit(RequestHandler<HttpRequestParser> requestHandler, Connection[] connections) {
 
 			// Create the write scheduler
 			this.socketExecutor = (runnable) -> requestHandler.execute(() -> {
 				runnable.run();
 			});
-			this.writeScheduler = Schedulers.fromExecutor(this.socketExecutor);
+			Scheduler writeScheduler = Schedulers.fromExecutor(this.socketExecutor);
+
+			// Create the rate limited connections
+			this.rateLimitedConnections = new RateLimitedConnection[connections.length];
+			for (int i = 0; i < this.rateLimitedConnections.length; i++) {
+				this.rateLimitedConnections[i] = new RateLimitedConnection(connections[i], writeScheduler);
+			}
+		}
+
+		private RateLimitedConnection getAvailableConnection(int queryCount) {
+
+			// Determine available connection for limit
+			for (int i = 0; i < this.rateLimitedConnections.length; i++) {
+				RateLimitedConnection connection = this.rateLimitedConnections[i];
+
+				// Determine if query count reached
+				int newCount = connection.activeQueries + queryCount;
+				if (newCount <= QUERY_BUFFER_SIZE) {
+					// Connection available for load
+					connection.activeQueries = newCount;
+					return connection;
+				}
+			}
+
+			// As here, no available connection
+			return null;
 		}
 	}
 
-	private static class RateLimit {
+	private static class RateLimitedConnection {
 
-		private final int INITIAL_REQUEST_COUNT = (512 / Runtime.getRuntime().availableProcessors()) + 2;
+		private final Scheduler writeScheduler;
 
-		private final AtomicInteger activeQueries;
+		private final Connection connection;
 
-		private int requestCount = 0;
+		private int activeQueries;
 
-		private boolean isActiveLimit = false;
-
-		private RateLimit(AtomicInteger activeQueries) {
-			this.activeQueries = activeQueries;
-		}
-
-		private boolean isLimit(int queryCount) {
-
-			// Determine if query count reached
-			this.activeQueries.updateAndGet((count) -> {
-				int newCount = count + queryCount;
-				if (newCount > QUERY_BUFFER_SIZE) {
-					// Max limit reached
-					this.isActiveLimit = true;
-					return count;
-				} else {
-					// Allow input
-					this.isActiveLimit = false;
-					return newCount;
-				}
-			});
-
-			// Increment the request count (initial requests must be serviced)
-			if (this.requestCount < INITIAL_REQUEST_COUNT) {
-				this.requestCount++;
-				if (queryCount > 1) {
-					// Must slow initial queries to avoid overload
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException ex) {
-						// Ignore and carry on
-					}
-				}
-				return false; // within limit
-			}
-
-			// Return whether limit
-			return this.isActiveLimit;
+		private RateLimitedConnection(Connection connection, Scheduler writeScheduler) {
+			this.connection = connection;
+			this.writeScheduler = writeScheduler;
 		}
 
 		private void processed(int queryCount) {
 
 			// Update the active queries
-			this.activeQueries.updateAndGet((count) -> count - queryCount);
+			this.activeQueries -= queryCount;
 		}
 	}
 
