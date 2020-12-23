@@ -106,7 +106,7 @@ public class RawOfficeFloorMain {
 	/**
 	 * Buffer size of queries.
 	 */
-	private static final int QUERY_BUFFER_SIZE = 256;
+	private static final int QUERY_BUFFER_SIZE = 512;
 
 	/**
 	 * {@link SocketManager}.
@@ -234,8 +234,6 @@ public class RawOfficeFloorMain {
 		private static final String UPDATE_PATH_PREFIX = "/update?queries=";
 
 		private static final R2dbcTransientResourceException THROTTLED = new R2dbcTransientResourceException();
-
-		private static final int LARGE_QUERY = 100;
 
 		/**
 		 * <code>Date</code> {@link HttpHeaderValue}.
@@ -511,9 +509,7 @@ public class RawOfficeFloorMain {
 					}, error -> {
 						this.sendError(connection, error);
 					}, () -> {
-						if (queryCount < LARGE_QUERY) {
-							conn.processed(queryCount);
-						}
+						conn.processed(queryCount);
 					});
 		}
 
@@ -685,7 +681,6 @@ public class RawOfficeFloorMain {
 			// As here, no available connection
 			return null;
 		}
-
 	}
 
 	private static class RateLimitedConnection {
