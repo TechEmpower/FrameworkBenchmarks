@@ -1,4 +1,4 @@
-package org.smartboot.http;
+package org.smartboot;
 
 /**
  * @author 三刀
