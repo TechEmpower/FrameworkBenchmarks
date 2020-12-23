@@ -17,6 +17,7 @@ public class JsonServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
+        resp.setBufferSize(0);
         JsonUtil.writeJsonBytes(resp, new Message("Hello, World!"));
     }
 }
