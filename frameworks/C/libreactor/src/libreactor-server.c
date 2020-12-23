@@ -13,21 +13,25 @@
 
 static core_status server_handler(core_event *event)
 {
-  static char json_msg[4096];
+  static char hello_string[] = "Hello, World!";
+  static char default_string[] = "Hello from libreactor!\n";
+  static clo_pair json_pair[] = {{ .string = "message", .value = { .type = CLO_STRING, .string = "Hello, World!" }}};
+  static clo json_object[] = {{ .type = CLO_OBJECT, .object = json_pair }};
+  static char json_string[4096];
 
   server *server = event->state;
   server_context *context = (server_context *) event->data;
 
   if (event->type == SERVER_REQUEST){
     if (segment_equal(context->request.target, segment_string("/json"))){
-      (void) clo_encode((clo[]) {clo_object({"message", clo_string("Hello, World!")})}, json_msg, sizeof(json_msg));
-      server_ok(context, segment_string("application/json"), segment_string(json_msg));
+      (void) clo_encode(json_object, json_string, sizeof(json_string));
+      server_ok(context, segment_string("application/json"), segment_string(json_string));
     }
     else if (segment_equal(context->request.target, segment_string("/plaintext"))){
-      server_ok(context, segment_string("text/plain"), segment_string("Hello, World!"));
+      server_ok(context, segment_string("text/plain"), segment_string(hello_string));
     }
     else{
-      server_ok(context, segment_string("text/plain"), segment_string("Hello from libreactor!\n"));
+      server_ok(context, segment_string("text/plain"), segment_string(default_string));
     }
     return CORE_OK;
   }

@@ -34,7 +34,7 @@ RUN git clone https://github.com/fredrikwidlund/libreactor --single-branch --bra
 COPY src/ /build/src/
 COPY Makefile /build/Makefile
 
-RUN make
+RUN make libreactor
 
 
 FROM ubuntu:20.04

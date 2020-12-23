@@ -31,18 +31,18 @@ RUN git clone https://github.com/fredrikwidlund/libreactor --single-branch --bra
     ./configure && \
     make install
 
-COPY src-server/ /build/src/
+COPY src/ /build/src/
 COPY Makefile /build/Makefile
 
-RUN make
+RUN make libreactor-server
 
 
 FROM ubuntu:20.04
 
 WORKDIR /app
-COPY --from=builder /build/libreactor .
+COPY --from=builder /build/libreactor-server .
 
 RUN groupadd -r libreactor && useradd --no-log-init -r -g libreactor libreactor
 USER libreactor
 
-CMD ["./libreactor"]
+CMD ["./libreactor-server"]
