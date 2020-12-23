@@ -11,7 +11,7 @@ use actix_http::http::{HeaderValue, StatusCode};
 use actix_http::{Error, HttpService, KeepAlive, Request, Response};
 use actix_server::Server;
 use actix_service::{Service, ServiceFactory};
-use bytes::BytesMut;
+use bytes::{Bytes, BytesMut};
 use futures::future::ok;
 use serde_json::to_writer;
 use yarte::ywrite_html;
@@ -66,11 +66,13 @@ impl Service for App {
                 Box::pin(async move {
                     let fortunes = fut.await?;
 
-                    let mut body = BytesMut::with_capacity(2048);
+                    let mut body = Vec::with_capacity(2048);
                     ywrite_html!(body, "{{> fortune }}");
 
-                    let mut res =
-                        Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+                    let mut res = Response::with_body(
+                        StatusCode::OK,
+                        Body::Bytes(Bytes::from(body)),
+                    );
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
                     hdrs.insert(CONTENT_TYPE, h_ct);

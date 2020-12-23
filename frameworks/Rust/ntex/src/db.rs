@@ -188,10 +188,10 @@ impl PgConnection {
 
             fortunes.sort_by(|it, next| it.message.cmp(&next.message));
 
-            let mut buf = BytesMut::with_capacity(2048);
+            let mut buf = Vec::with_capacity(2048);
             ywrite_html!(buf, "{{> fortune }}");
 
-            Ok(buf.freeze())
+            Ok(Bytes::from(buf))
         }
     }
 }
