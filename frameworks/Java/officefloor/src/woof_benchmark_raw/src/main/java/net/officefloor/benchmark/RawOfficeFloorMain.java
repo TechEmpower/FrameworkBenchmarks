@@ -26,6 +26,7 @@ import java.nio.channels.ClosedChannelException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +46,8 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
-import io.r2dbc.pool.PoolingConnectionFactoryProvider;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.r2dbc.postgresql.PostgresqlConnectionFactoryProvider;
 import io.r2dbc.spi.Batch;
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactories;
@@ -54,9 +56,6 @@ import io.r2dbc.spi.ConnectionFactoryOptions;
 import io.r2dbc.spi.R2dbcTransientResourceException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.officefloor.benchmark.RawOfficeFloorMain.Fortune;
-import net.officefloor.benchmark.RawOfficeFloorMain.Message;
-import net.officefloor.benchmark.RawOfficeFloorMain.World;
 import net.officefloor.frame.api.manage.OfficeFloor;
 import net.officefloor.frame.api.manage.ProcessManager;
 import net.officefloor.frame.api.managedobject.ManagedObjectContext;
@@ -79,15 +78,14 @@ import net.officefloor.server.http.impl.HttpServerLocationImpl;
 import net.officefloor.server.http.impl.ProcessAwareServerHttpConnectionManagedObject;
 import net.officefloor.server.http.parse.HttpRequestParser;
 import net.officefloor.server.http.parse.HttpRequestParser.HttpRequestParserMetaData;
-import net.officefloor.web.executive.CpuCore;
-import net.officefloor.web.executive.CpuCore.LogicalCpu;
-import net.openhft.affinity.Affinity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
+import reactor.netty.resources.LoopResources;
 
 import net.officefloor.web.executive.CpuCore;
+import net.officefloor.web.executive.CpuCore.LogicalCpu;
 import net.openhft.affinity.Affinity;
 
 /**
@@ -146,7 +144,7 @@ public class RawOfficeFloorMain {
 		ThreadCompletionListener[] threadCompletionListenerCapture = new ThreadCompletionListener[] { null };
 		List<ThreadFactory> threadFactories = new LinkedList<>();
 		for (CpuCore cpuCore : CpuCore.getCores()) {
-			for (CpuCore.LogicalCpu logicalCpu : cpuCore.getCpus()) {
+			for (LogicalCpu logicalCpu : cpuCore.getCpus()) {
 
 				// Create thread factory for logical CPU
 				ThreadFactory boundThreadFactory = (runnable) -> new Thread(() -> {
@@ -177,22 +175,9 @@ public class RawOfficeFloorMain {
 		int connectionsPerSocket = Math.max(4, requiredConnectionsPerSocket);
 		System.out.println("Using " + connectionsPerSocket + " connections per socket");
 
-		// Determine the pool size for connections
-		int connectionPoolSize = executionStrategy.length * connectionsPerSocket;
-
-		// Build the connection pool
-		ConnectionFactoryOptions factoryOptions = ConnectionFactoryOptions.builder()
-				.option(ConnectionFactoryOptions.DRIVER, "pool").option(ConnectionFactoryOptions.PROTOCOL, "postgresql")
-				.option(ConnectionFactoryOptions.HOST, server).option(ConnectionFactoryOptions.PORT, 5432)
-				.option(ConnectionFactoryOptions.DATABASE, "hello_world")
-				.option(ConnectionFactoryOptions.USER, "benchmarkdbuser")
-				.option(ConnectionFactoryOptions.PASSWORD, "benchmarkdbpass")
-				.option(PoolingConnectionFactoryProvider.MAX_SIZE, connectionPoolSize).build();
-		ConnectionFactory connectionFactory = ConnectionFactories.get(factoryOptions);
-
 		// Create raw HTTP servicing
-		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, connectionFactory,
-				connectionsPerSocket);
+		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, server, connectionsPerSocket,
+				threadCompletionListenerCapture[0]);
 		socketManager.bindServerSocket(serverLocation.getClusterHttpPort(), null, null, serviceFactory, serviceFactory);
 
 		// Setup Date
@@ -272,11 +257,6 @@ public class RawOfficeFloorMain {
 		};
 
 		/**
-		 * {@link ConnectionFactory}.
-		 */
-		private final ConnectionFactory connectionFactory;
-
-		/**
 		 * {@link ThreadLocal} {@link Connection} instances.
 		 */
 		private final ThreadLocal<Connection[]> threadLocalConnections;
@@ -294,23 +274,56 @@ public class RawOfficeFloorMain {
 		/**
 		 * Instantiate.
 		 *
-		 * @param serverLocation       {@link HttpServerLocation}.
-		 * @param connectionFactory    {@link ConnectionFactory}.
-		 * @param connectionsPerSocket Number of DB connections per socket.
+		 * @param serverLocation           {@link HttpServerLocation}.
+		 * @param connectionFactory        {@link ConnectionFactory}.
+		 * @param connectionsPerSocket     Number of DB connections per socket.
+		 * @param threadCompletionListener {@link ThreadCompletionListener}.
 		 */
-		public RawHttpServicerFactory(HttpServerLocation serverLocation, ConnectionFactory connectionFactory,
-				int connectionsPerSocket) {
+		public RawHttpServicerFactory(HttpServerLocation serverLocation, String databaseHostName,
+				int connectionsPerSocket, ThreadCompletionListener threadCompletionListener) {
 			super(serverLocation, false, new HttpRequestParserMetaData(100, 1000, 1000000), null, null, true);
 			this.objectMapper.registerModule(new AfterburnerModule());
-			this.connectionFactory = connectionFactory;
 
 			// Create thread local connection
 			this.threadLocalConnections = new ThreadLocal<Connection[]>() {
 				@Override
 				protected Connection[] initialValue() {
+
+					// Obtain listener thread affinity
+					BitSet affinity = Affinity.getAffinity();
+
+					// Create thread local loop resource
+					LoopResources loopResources = (useNative) -> new NioEventLoopGroup(1, (runnable) -> {
+						return new Thread(() -> {
+							try {
+								// Bind to listener thread affinity
+								if (affinity != null) {
+									Affinity.setAffinity(affinity);
+								}
+
+								// Undertake logic
+								runnable.run();
+							} finally {
+								threadCompletionListener.threadComplete();
+							}
+						});
+					});
+
+					// Build the connection factory
+					ConnectionFactoryOptions factoryOptions = ConnectionFactoryOptions.builder()
+							.option(ConnectionFactoryOptions.DRIVER, "postgresql")
+							.option(ConnectionFactoryOptions.HOST, databaseHostName)
+							.option(ConnectionFactoryOptions.PORT, 5432)
+							.option(ConnectionFactoryOptions.DATABASE, "hello_world")
+							.option(ConnectionFactoryOptions.USER, "benchmarkdbuser")
+							.option(ConnectionFactoryOptions.PASSWORD, "benchmarkdbpass")
+							.option(PostgresqlConnectionFactoryProvider.LOOP_RESOURCES, loopResources).build();
+					ConnectionFactory connectionFactory = ConnectionFactories.get(factoryOptions);
+
+					// Create the connections
 					Connection[] connections = new Connection[connectionsPerSocket];
 					for (int i = 0; i < connections.length; i++) {
-						connections[i] = Mono.from(RawHttpServicerFactory.this.connectionFactory.create()).block();
+						connections[i] = Mono.from(connectionFactory.create()).block();
 					}
 					return connections;
 				}
