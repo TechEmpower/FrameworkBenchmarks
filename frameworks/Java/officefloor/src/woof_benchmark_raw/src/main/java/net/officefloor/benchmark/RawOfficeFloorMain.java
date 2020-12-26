@@ -169,8 +169,46 @@ public class RawOfficeFloorMain {
                 int.class, ThreadFactory.class);
         newEventLoopGroupMethod.setAccessible(true);
 
-        // Create a thread factory per logical CPU
+        // Create thread local loop resource (lock to one thread)
+        LogicalCpu firstLogicalCpu = cpuCores[0].getCpus()[0];
         ThreadCompletionListener[] threadCompletionListenerCapture = new ThreadCompletionListener[]{null};
+        ThreadFactory connectionThreadFactory = (connectionRunnable) -> new EventLoopThread(() -> {
+            try {
+                // Bind thread to logical CPU
+                Affinity.setAffinity(firstLogicalCpu.getCpuAffinity());
+
+                // Undertake logic
+                connectionRunnable.run();
+            } finally {
+                threadCompletionListenerCapture[0].threadComplete();
+            }
+        });
+        LoopResources loopResources = (useNative) -> {
+            try {
+                return (EventLoopGroup) newEventLoopGroupMethod
+                        .invoke(defaultLoopNativeDetectorInstance, 1, connectionThreadFactory);
+            } catch (Exception ex) {
+                System.err.println("Failed to detect event loop group");
+                ex.printStackTrace();
+                return new NioEventLoopGroup(1, connectionThreadFactory);
+            }
+        };
+
+        // Build the connection factory
+        int poolSize = cpuCount * connectionsPerSocket;
+        ConnectionFactoryOptions factoryOptions = ConnectionFactoryOptions.builder()
+                .option(ConnectionFactoryOptions.DRIVER, "pool")
+                .option(PoolingConnectionFactoryProvider.MAX_SIZE, poolSize)
+                .option(ConnectionFactoryOptions.PROTOCOL, "postgresql")
+                .option(ConnectionFactoryOptions.HOST, server)
+                .option(ConnectionFactoryOptions.PORT, 5432)
+                .option(ConnectionFactoryOptions.DATABASE, "hello_world")
+                .option(ConnectionFactoryOptions.USER, "benchmarkdbuser")
+                .option(ConnectionFactoryOptions.PASSWORD, "benchmarkdbpass")
+                .option(PostgresqlConnectionFactoryProvider.LOOP_RESOURCES, loopResources).build();
+        ConnectionFactory connectionFactory = ConnectionFactories.get(factoryOptions);
+
+        // Create a thread factory per logical CPU
         List<ThreadFactory> threadFactories = new LinkedList<>();
         for (CpuCore cpuCore : cpuCores) {
             for (LogicalCpu logicalCpu : cpuCore.getCpus()) {
@@ -181,49 +219,11 @@ public class RawOfficeFloorMain {
                         // Bind thread to logical CPU
                         Affinity.setAffinity(logicalCpu.getCpuAffinity());
 
-                        // Create thread local loop resource
-                        ThreadFactory connectionThreadFactory = (connectionRunnable) -> new EventLoopThread(() -> {
-                            try {
-                                // Bind thread to logical CPU
-                                Affinity.setAffinity(logicalCpu.getCpuAffinity());
-
-                                // Undertake logic
-                                connectionRunnable.run();
-                            } finally {
-                                threadCompletionListenerCapture[0].threadComplete();
-                            }
-                        });
-                        LoopResources loopResources = (useNative) -> {
-                            try {
-                                return (EventLoopGroup) newEventLoopGroupMethod
-                                        .invoke(defaultLoopNativeDetectorInstance, 1, connectionThreadFactory);
-                            } catch (Exception ex) {
-                                System.err.println("Failed to detect event loop group");
-                                ex.printStackTrace();
-                                return new NioEventLoopGroup(1, connectionThreadFactory);
-                            }
-                        };
-
-                        // Build the connection factory
-                        ConnectionFactoryOptions factoryOptions = ConnectionFactoryOptions.builder()
-                                .option(ConnectionFactoryOptions.DRIVER, "pool")
-                                .option(PoolingConnectionFactoryProvider.MAX_SIZE, connectionsPerSocket)
-                                .option(ConnectionFactoryOptions.PROTOCOL, "postgresql")
-                                .option(ConnectionFactoryOptions.HOST, server)
-                                .option(ConnectionFactoryOptions.PORT, 5432)
-                                .option(ConnectionFactoryOptions.DATABASE, "hello_world")
-                                .option(ConnectionFactoryOptions.USER, "benchmarkdbuser")
-                                .option(ConnectionFactoryOptions.PASSWORD, "benchmarkdbpass")
-                                .option(PostgresqlConnectionFactoryProvider.LOOP_RESOURCES, loopResources).build();
-                        ConnectionFactory connectionFactory = ConnectionFactories.get(factoryOptions);
-
-                        // Create the connections
+                        // Provide connections for thread
                         Connection[] connections = new Connection[connectionsPerSocket];
                         for (int i = 0; i < connections.length; i++) {
                             connections[i] = Mono.from(connectionFactory.create()).block();
                         }
-
-                        // Provide connections for thread
                         threadLocalConnections.set(connections);
 
                         // Run logic for thread
