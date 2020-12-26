@@ -205,7 +205,8 @@ public class RawOfficeFloorMain {
                 .option(ConnectionFactoryOptions.DATABASE, "hello_world")
                 .option(ConnectionFactoryOptions.USER, "benchmarkdbuser")
                 .option(ConnectionFactoryOptions.PASSWORD, "benchmarkdbpass")
-                .option(PostgresqlConnectionFactoryProvider.LOOP_RESOURCES, loopResources).build();
+//                .option(PostgresqlConnectionFactoryProvider.LOOP_RESOURCES, loopResources)
+                .build();
         ConnectionFactory connectionFactory = ConnectionFactories.get(factoryOptions);
 
         // Create a thread factory per logical CPU
