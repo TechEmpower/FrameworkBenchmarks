@@ -160,40 +160,6 @@ public class RawOfficeFloorMain {
         int connectionsPerSocket = Math.max(4, requiredConnectionsPerSocket);
         System.out.println("Using " + connectionsPerSocket + " connections per socket");
 
-        // Obtain the event loop group factory
-        Field defaultLoopNativeDetectorInstanceField = Class
-                .forName("reactor.netty.resources.DefaultLoopNativeDetector").getDeclaredField("INSTANCE");
-        defaultLoopNativeDetectorInstanceField.setAccessible(true);
-        Object defaultLoopNativeDetectorInstance = defaultLoopNativeDetectorInstanceField.get(null);
-        Method newEventLoopGroupMethod = defaultLoopNativeDetectorInstance.getClass().getMethod("newEventLoopGroup",
-                int.class, ThreadFactory.class);
-        newEventLoopGroupMethod.setAccessible(true);
-
-        // Create thread local loop resource (lock to one thread)
-        LogicalCpu firstLogicalCpu = cpuCores[0].getCpus()[0];
-        ThreadCompletionListener[] threadCompletionListenerCapture = new ThreadCompletionListener[]{null};
-        ThreadFactory connectionThreadFactory = (connectionRunnable) -> new EventLoopThread(() -> {
-            try {
-                // Bind thread to logical CPU
-                Affinity.setAffinity(firstLogicalCpu.getCpuAffinity());
-
-                // Undertake logic
-                connectionRunnable.run();
-            } finally {
-                threadCompletionListenerCapture[0].threadComplete();
-            }
-        });
-        LoopResources loopResources = (useNative) -> {
-            try {
-                return (EventLoopGroup) newEventLoopGroupMethod
-                        .invoke(defaultLoopNativeDetectorInstance, 1, connectionThreadFactory);
-            } catch (Exception ex) {
-                System.err.println("Failed to detect event loop group");
-                ex.printStackTrace();
-                return new NioEventLoopGroup(1, connectionThreadFactory);
-            }
-        };
-
         // Build the connection factory
         int poolSize = cpuCount * connectionsPerSocket;
         ConnectionFactoryOptions factoryOptions = ConnectionFactoryOptions.builder()
@@ -205,7 +171,6 @@ public class RawOfficeFloorMain {
                 .option(ConnectionFactoryOptions.DATABASE, "hello_world")
                 .option(ConnectionFactoryOptions.USER, "benchmarkdbuser")
                 .option(ConnectionFactoryOptions.PASSWORD, "benchmarkdbpass")
-//                .option(PostgresqlConnectionFactoryProvider.LOOP_RESOURCES, loopResources)
                 .build();
         ConnectionFactory connectionFactory = ConnectionFactories.get(factoryOptions);
 
