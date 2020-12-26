@@ -145,9 +145,6 @@ public class RawOfficeFloorMain {
         // Create the server location
         HttpServerLocation serverLocation = new HttpServerLocationImpl("localhost", port, -1);
 
-        // Create connections
-        ThreadLocal<Connection[]> threadLocalConnections = new ThreadLocal<>();
-
         // Obtain the CPU core information
         CpuCore[] cpuCores = CpuCore.getCores();
         int cpuCount = 0;
@@ -173,6 +170,9 @@ public class RawOfficeFloorMain {
                 .option(ConnectionFactoryOptions.PASSWORD, "benchmarkdbpass")
                 .build();
         ConnectionFactory connectionFactory = ConnectionFactories.get(factoryOptions);
+
+        // Create connections
+        ThreadLocal<Connection[]> threadLocalConnections = new ThreadLocal<>();
 
         // Create a thread factory per logical CPU
         List<ThreadFactory> threadFactories = new LinkedList<>();
