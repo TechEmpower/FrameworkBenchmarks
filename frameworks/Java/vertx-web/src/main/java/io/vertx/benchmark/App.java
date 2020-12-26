@@ -162,7 +162,7 @@ public class App extends AbstractVerticle {
 
               final int newRandomNumber = randomWorld();
 
-              database.update("world", query, new JsonObject().put("$set", new JsonObject().put("randomNumber", newRandomNumber)), update -> {
+              database.updateCollection("world", query, new JsonObject().put("$set", new JsonObject().put("randomNumber", newRandomNumber)), update -> {
                 if (update.failed()) {
                   ctx.fail(update.cause());
                   return;
