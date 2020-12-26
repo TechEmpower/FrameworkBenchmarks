@@ -11,8 +11,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>8</maven.compiler.source>
-    <maven.compiler.target>8</maven.compiler.target>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
     <!-- the main class -->
     <main.verticle>io.vertx.benchmark.App</main.verticle>
   </properties>
@@ -98,7 +98,7 @@
             <configuration>
               <templateDirectory>${project.basedir}/src/main/resources</templateDirectory>
               <optimize>true</optimize>
-              <javaVersion>1.8</javaVersion>
+              <javaVersion>11</javaVersion>
             </configuration>
           </execution>
         </executions>
