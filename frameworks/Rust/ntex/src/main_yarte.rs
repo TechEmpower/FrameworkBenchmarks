@@ -26,7 +26,6 @@ mod utils;
 // https://tools.ietf.org/html/rfc7230#section-3.2
 const HEAD: &[u8] = b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length:     0\r\n";
 const HTTPNFOUND: &[u8] = b"HTTP/1.1 400 OK\r\n";
-const HTTPSERR: &[u8] = b"HTTP/1.1 500 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: N\r\n";
 
 #[derive(serde::Serialize, Debug)]
@@ -107,10 +106,7 @@ impl Future for App {
                                 write_u16_reverse(size, zero_ptr);
                             }
                         }
-                        Err(_) => {
-                            this.write_buf.extend_from_slice(HTTPSERR);
-                            this.write_buf.extend_from_slice(HDR_SERVER);
-                        }
+                        Err(_) => return Poll::Ready(Err(())),
                     }
                     return self.poll(cx);
                 }
