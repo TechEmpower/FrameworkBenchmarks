@@ -42,7 +42,7 @@ struct App {
     write_pos: usize,
     codec: h1::Codec,
     db: PgConnection,
-    // TODO: should be abstract with FnOnce |Output, &mut BytesMut|
+    // TODO: should be abstract with FnOnce |Output, &mut Writer|
     call: Option<
         Pin<Box<dyn Future<Output = Result<SmallVec<[Fortune; 32]>, io::Error>>>>,
     >,
@@ -101,7 +101,7 @@ impl Future for App {
                             // Write Content-Length
                             let size = u16::try_from(this.write_buf.len() - init)
                                 .expect("Overflow u16");
-                            // SAFETY: previous reverse SIZE as space in this pointer
+                            // SAFETY: previous reverse SIZE as OWS in this pointer
                             unsafe {
                                 let zero_ptr = this.write_buf.as_mut_ptr().add(n);
                                 write_u16_reverse(size, zero_ptr);
