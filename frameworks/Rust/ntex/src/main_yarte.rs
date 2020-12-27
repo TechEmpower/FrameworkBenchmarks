@@ -105,10 +105,10 @@ impl Future for App {
                                 let zero_ptr = this.write_buf.as_mut_ptr().add(n);
                                 write_u16_reverse(size, zero_ptr);
                             }
+                            return self.poll(cx);
                         }
                         Err(_) => return Poll::Ready(Err(())),
                     }
-                    return self.poll(cx);
                 }
             }
         }
