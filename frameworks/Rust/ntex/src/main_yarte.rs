@@ -22,7 +22,8 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 mod utils;
 
-// u16 Content-length position https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html
+// u16 Content-length
+// https://tools.ietf.org/html/rfc7230#section-3.2
 const HEAD: &[u8] = b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length:     0\r\n";
 const HTTPNFOUND: &[u8] = b"HTTP/1.1 400 OK\r\n";
 const HTTPSERR: &[u8] = b"HTTP/1.1 500 OK\r\n";
