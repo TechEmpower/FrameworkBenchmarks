@@ -44,9 +44,7 @@ struct App {
     db: PgConnection,
     // TODO: should be abstract with FnOnce |Output, &mut BytesMut|
     call: Option<
-        Pin<
-            Box<dyn Future<Output = Result<SmallVec<[Fortune; 32]>, io::Error>>>,
-        >,
+        Pin<Box<dyn Future<Output = Result<SmallVec<[Fortune; 32]>, io::Error>>>>,
     >,
 }
 
@@ -83,30 +81,37 @@ impl Future for App {
             }
         }
 
-        if let Some(mut call) = this.call.take() {
+        if let Some(call) = this.call.as_mut() {
             match call.as_mut().poll(cx) {
                 Poll::Pending => {
-                    this.call.replace(call);
                     return Poll::Pending;
                 }
-                Poll::Ready(Ok(fortunes)) => {
-                    this.write_buf.extend_from_slice(HEAD);
-                    // 0 position in buffer
-                    let n = this.write_buf.len() - 3;
-                    this.codec.set_date_header(&mut this.write_buf);
-                    let init = this.write_buf.len();
-                    ywrite_html!(this.write_buf, "{{> fortune }}");
-                    let size = u16::try_from(this.write_buf.len() - init)
-                        .expect("Overflow u16");
-                    // SAFETY: previous reverse SIZE as space in this pointer
-                    unsafe {
-                        write_u16_reverse(size, this.write_buf.as_mut_ptr().add(n));
+                Poll::Ready(res) => {
+                    this.call = None;
+                    match res {
+                        Ok(fortunes) => {
+                            this.write_buf.extend_from_slice(HEAD);
+                            // 0 position in buffer
+                            let n = this.write_buf.len() - 3;
+                            this.codec.set_date_header(&mut this.write_buf);
+                            // Body init
+                            let init = this.write_buf.len();
+                            ywrite_html!(this.write_buf, "{{> fortune }}");
+
+                            // Write Content-Length
+                            let size = u16::try_from(this.write_buf.len() - init)
+                                .expect("Overflow u16");
+                            // SAFETY: previous reverse SIZE as space in this pointer
+                            unsafe {
+                                let zero_ptr = this.write_buf.as_mut_ptr().add(n);
+                                write_u16_reverse(size, zero_ptr);
+                            }
+                        }
+                        Err(_) => {
+                            this.write_buf.extend_from_slice(HTTPSERR);
+                            this.write_buf.extend_from_slice(HDR_SERVER);
+                        }
                     }
-                    return self.poll(cx);
-                }
-                Poll::Ready(Err(_)) => {
-                    this.write_buf.extend_from_slice(HTTPSERR);
-                    this.write_buf.extend_from_slice(HDR_SERVER);
                     return self.poll(cx);
                 }
             }
@@ -133,8 +138,7 @@ impl Future for App {
             match this.codec.decode(&mut this.read_buf) {
                 Ok(Some(h1::Message::Item(req))) => match req.path() {
                     "/fortunes" => {
-                        let fut = this.db.tell_fortune().boxed_local();
-                        this.call.replace(Box::pin(fut));
+                        this.call = Some(Box::pin(this.db.tell_fortune()));
                     }
                     _ => {
                         this.write_buf.extend_from_slice(HTTPNFOUND);
