@@ -15,6 +15,10 @@ path = "src/main_db.rs"
 name = "ntex-raw"
 path = "src/main_raw.rs"
 
+[[bin]]
+name = "ntex-yarte"
+path = "src/main_yarte.rs"
+
 [dependencies]
 ntex = "0.1.21"
 mimalloc = { version = "0.1.21", default-features = false }
