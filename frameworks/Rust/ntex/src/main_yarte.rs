@@ -15,7 +15,7 @@ use std::convert::TryFrom;
 use tokio_postgres::{connect, Client, NoTls, Statement};
 use yarte::ywrite_html;
 
-use crate::utils::write_u16_reverse;
+use crate::utils::{put, write_u16_reverse};
 
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
@@ -90,11 +90,11 @@ impl Future for App {
                     this.call = None;
                     match res {
                         Ok(fortunes) => {
-                            this.write_buf.extend_from_slice(HEAD);
-                            // 0 position in buffer
+                            put(&mut this.write_buf, HEAD);
+                            // The 0 position in HEAD
                             let n = this.write_buf.len() - 3;
                             this.codec.set_date_header(&mut this.write_buf);
-                            // Body init
+                            // The body init
                             let init = this.write_buf.len();
                             ywrite_html!(this.write_buf, "{{> fortune }}");
 

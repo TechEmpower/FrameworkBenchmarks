@@ -2,6 +2,7 @@
 use std::cmp;
 
 use atoi::FromRadix10;
+use yarte::Buffer;
 
 pub const SIZE: usize = 27;
 
@@ -113,4 +114,9 @@ pub unsafe fn write_u16_reverse(value: u16, buf: *mut u8) -> usize {
         *buf = dig(d2.sum(1));
         5
     }
+}
+
+#[inline]
+pub fn put<B: Buffer>(b: &mut B, s: &[u8]) {
+    b.extend_from_slice(s)
 }
