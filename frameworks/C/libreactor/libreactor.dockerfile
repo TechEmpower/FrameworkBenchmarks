@@ -7,10 +7,9 @@ WORKDIR /build
 
 ENV CC=gcc-10 AR=gcc-ar-10 NM=gcc-nm-10 RANLIB=gcc-ranlib-10
 
-RUN git clone https://github.com/fredrikwidlund/libdynamic && \
-    cd libdynamic && \
-    git checkout aee8f053c113 && \
-    ./autogen.sh && \
+RUN wget -q https://github.com/fredrikwidlund/libdynamic/releases/download/v2.2.0/libdynamic-2.2.0.tar.gz && \
+    tar xfz libdynamic-2.2.0.tar.gz && \
+    cd libdynamic-2.2.0 && \
     ./configure && \
     make install
 
