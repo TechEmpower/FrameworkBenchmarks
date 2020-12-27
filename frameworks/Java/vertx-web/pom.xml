@@ -98,7 +98,7 @@
             <configuration>
               <templateDirectory>${project.basedir}/src/main/resources</templateDirectory>
               <optimize>true</optimize>
-              <javaVersion>11</javaVersion>
+              <javaVersion>1.8</javaVersion>
             </configuration>
           </execution>
         </executions>
