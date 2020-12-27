@@ -16,7 +16,7 @@ public final class Helper {
    * @param request the current HTTP request
    * @return the value of the "queries" parameter
    */
-  static int getQueries(HttpServerRequest request) {
+  public static int getQueries(HttpServerRequest request) {
     String param = request.getParam("queries");
 
     if (param == null) {
@@ -36,7 +36,7 @@ public final class Helper {
    *
    * @return a random world number
    */
-  static int randomWorld() {
+  public static int randomWorld() {
     return 1 + ThreadLocalRandom.current().nextInt(10000);
   }
 }
