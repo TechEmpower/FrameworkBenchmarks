@@ -1,13 +1,7 @@
-extern crate futures;
-extern crate hyper;
-extern crate net2;
-extern crate tokio_core;
-extern crate tokio_postgres;
-
 use std::fmt::Write;
 use std::net::ToSocketAddrs;
 
-use futures::{future, Future};
+use futures::{future, FutureExt};
 use hyper::header::{HeaderValue, CONTENT_TYPE, SERVER};
 use hyper::service::service_fn;
 use hyper::{Body, Response};
@@ -57,9 +51,15 @@ fn main() {
 
                     match req.uri.path() {
                         "/fortunes" => {
-                            future::Either::A(db_conn.tell_fortune().map(move |fortunes| {
+                            future::Either::Left(db_conn.tell_fortune().map(move |fortunes| {
                                 let mut buf = String::with_capacity(2048);
-                                let _ = write!(&mut buf, "{}", FortunesTemplate { fortunes });
+                                let _ = write!(
+                                    &mut buf,
+                                    "{}",
+                                    FortunesTemplate {
+                                        fortunes: fortunes.unwrap()
+                                    }
+                                );
                                 let mut res = Response::new(Body::from(buf));
                                 *res.headers_mut() = headers;
                                 res
@@ -69,16 +69,13 @@ fn main() {
                             let mut res = Response::new(Body::empty());
                             *res.status_mut() = hyper::StatusCode::NOT_FOUND;
                             *res.headers_mut() = headers;
-                            future::Either::B(future::ok(res))
+                            future::Either::Right(future::ok(res))
                         }
                     }
                 });
 
                 // Spawn the `serve_connection` future into the runtime.
-                handle2.spawn(
-                    http.serve_connection(socket, svc)
-                        .map_err(|e| eprintln!("connection error: {}", e)),
-                );
+                handle2.spawn(http.serve_connection(socket, svc));
             });
         handle.spawn(db_fut);
     });
@@ -94,10 +91,10 @@ markup::define! {
             body {
                 table {
                     tr { th { "id" } th { "message" } }
-                    @for item in {fortunes} {
+                    @for item in fortunes {
                         tr {
                             td { {item.id} }
-                            td { {markup::raw(v_htmlescape::escape(&item.message))} }
+                            td { {markup::raw(&v_htmlescape::escape(&item.message).to_string())} }
                         }
                     }
                 }

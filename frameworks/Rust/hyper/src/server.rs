@@ -1,11 +1,9 @@
+use hyper::server::conn::Http;
 use std::io;
 use std::net::SocketAddr;
 use std::thread;
-
-use futures::{Future, Stream};
-use hyper::server::conn::Http;
-use tokio_core::net::{TcpListener, TcpStream};
-use tokio_core::reactor::{Core, Handle};
+use tokio::net::{TcpListener, TcpStream};
+use tokio::runtime::{Builder, Handle};
 
 pub(crate) fn run<F>(per_connection: F)
 where
@@ -30,27 +28,28 @@ where
     http.http1_only(true);
 
     // Our event loop...
-    let mut core = Core::new().expect("core");
-    let handle = core.handle();
+    let rt = Builder::new_current_thread().build().expect("runtime");
+    let handle = rt.handle();
 
     // Bind to 0.0.0.0:8080
     let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
-    let tcp = reuse_listener(&addr, &handle).expect("couldn't bind to addr");
+    let tcp = reuse_listener(&addr).expect("couldn't bind to addr");
 
-    // For every accepted connection, spawn an HTTP task
-    let server = tcp
-        .incoming()
-        .for_each(move |(sock, _addr)| {
-            let _ = sock.set_nodelay(true);
-            per_connection(sock, &mut http, &handle);
-            Ok(())
-        })
-        .map_err(|e| eprintln!("accept error: {}", e));
-
-    core.run(server).expect("server");
+    rt.block_on(async move {
+        // For every accepted connection, spawn an HTTP task
+        loop {
+            match tcp.accept().await {
+                Ok((sock, _addr)) => {
+                    let _ = sock.set_nodelay(true);
+                    per_connection(sock, &mut http, &handle);
+                }
+                Err(e) => eprintln!("accept error: {}", e),
+            }
+        }
+    });
 }
 
-fn reuse_listener(addr: &SocketAddr, handle: &Handle) -> io::Result<TcpListener> {
+fn reuse_listener(addr: &SocketAddr) -> io::Result<TcpListener> {
     let builder = match *addr {
         SocketAddr::V4(_) => net2::TcpBuilder::new_v4()?,
         SocketAddr::V6(_) => net2::TcpBuilder::new_v6()?,
@@ -66,7 +65,5 @@ fn reuse_listener(addr: &SocketAddr, handle: &Handle) -> io::Result<TcpListener>
 
     builder.reuse_address(true)?;
     builder.bind(addr)?;
-    builder
-        .listen(1024)
-        .and_then(|l| TcpListener::from_listener(l, addr, handle))
+    builder.listen(1024).and_then(|l| TcpListener::from_std(l))
 }

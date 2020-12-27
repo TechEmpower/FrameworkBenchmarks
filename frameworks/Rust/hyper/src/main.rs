@@ -1,17 +1,8 @@
-extern crate futures;
-extern crate hyper;
-extern crate net2;
-extern crate num_cpus;
-#[macro_use]
-extern crate serde_derive;
-extern crate serde_json;
-extern crate tokio_core;
-
-use futures::Future;
-
 use hyper::header::{HeaderValue, CONTENT_LENGTH, CONTENT_TYPE, SERVER};
-use hyper::service::service_fn_ok;
+use hyper::service::service_fn;
 use hyper::{Body, Response, StatusCode};
+use serde_derive::Serialize;
+use futures::future::ok;
 
 mod server;
 
@@ -43,18 +34,15 @@ fn main() {
         let json_len = json_len.clone();
         let json_ct = json_ct.clone();
         let server_header = server_header.clone();
-
-        // This is the `Service` that will handle the connection.
-        // `service_fn_ok` is a helper to convert a function that
-        // returns a Response into a `Service`.
-        let svc = service_fn_ok(move |req| {
+        // // returns a Response into a `Service`.
+        let svc = service_fn(move |req| {
             let (req, _body) = req.into_parts();
             // For speed, reuse the allocated header map from the request,
             // instead of allocating a new one. Because.
             let mut headers = req.headers;
             headers.clear();
 
-            let body = match req.uri.path() {
+            let body: Body = match req.uri.path() {
                 // Apparently, other benchmarks don't check the method, so we
                 // don't either. Yay?
                 "/plaintext" => {
@@ -75,7 +63,7 @@ fn main() {
                     let mut res = Response::new(Body::empty());
                     *res.status_mut() = StatusCode::NOT_FOUND;
                     *res.headers_mut() = headers;
-                    return res;
+                    return ok::<_, hyper::Error>(res);
                 }
             };
 
@@ -83,13 +71,10 @@ fn main() {
 
             let mut res = Response::new(body);
             *res.headers_mut() = headers;
-            res
+            ok::<_, hyper::Error>(res)
         });
 
         // Spawn the `serve_connection` future into the runtime.
-        handle.spawn(
-            http.serve_connection(socket, svc)
-                .map_err(|e| eprintln!("connection error: {}", e)),
-        );
+        handle.spawn(http.serve_connection(socket, svc));
     })
 }
