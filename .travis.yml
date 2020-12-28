@@ -87,6 +87,7 @@ env:
     - 'TESTDIR="Scala/akka-http Scala/blaze Scala/cask Scala/colossus Scala/finagle"'
     - 'TESTDIR="Scala/finatra Scala/finch Scala/http4s"'
     - 'TESTDIR="Scala/play2-scala Scala/scalene Scala/youi"'
+    - 'TESTDIR="Scala/snunit"'
     - 'TESTDIR="Scala/vertx-web-scala"'
     - "TESTLANG=Scheme"
     - "TESTLANG=Swift"
