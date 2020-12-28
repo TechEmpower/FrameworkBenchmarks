@@ -1,7 +1,7 @@
 use std::fmt::Write;
 use std::net::ToSocketAddrs;
 
-use futures::{future, FutureExt};
+use futures::{future, FutureExt, TryFutureExt};
 use hyper::header::{HeaderValue, CONTENT_TYPE, SERVER};
 use hyper::service::service_fn;
 use hyper::{Body, Response};
@@ -51,15 +51,9 @@ fn main() {
 
                     match req.uri.path() {
                         "/fortunes" => {
-                            future::Either::Left(db_conn.tell_fortune().map(move |fortunes| {
+                            future::Either::Left(db_conn.tell_fortune().map_ok(move |fortunes| {
                                 let mut buf = String::with_capacity(2048);
-                                let _ = write!(
-                                    &mut buf,
-                                    "{}",
-                                    FortunesTemplate {
-                                        fortunes: fortunes.unwrap()
-                                    }
-                                );
+                                let _ = write!(&mut buf, "{}", FortunesTemplate { fortunes });
                                 let mut res = Response::new(Body::from(buf));
                                 *res.headers_mut() = headers;
                                 res
