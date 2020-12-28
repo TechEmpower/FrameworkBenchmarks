@@ -1,62 +1,49 @@
-/*
- * Copyright (c) 2018, org.smartboot. All rights reserved.
- * project name: smart-socket
- * file name: HttpBootstrap.java
- * Date: 2018-01-28
- * Author: sandao
- */
+package org.smartboot.servlet;
 
-package org.smartboot.http;
-
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import org.smartboot.Message;
 import org.smartboot.aio.EnhanceAsynchronousChannelProvider;
 import org.smartboot.http.server.HttpMessageProcessor;
 import org.smartboot.http.server.HttpRequestProtocol;
 import org.smartboot.http.server.Request;
-import org.smartboot.http.server.handle.HttpHandle;
-import org.smartboot.http.server.handle.HttpRouteHandle;
+import org.smartboot.servlet.conf.ServletInfo;
 import org.smartboot.socket.StateMachineEnum;
 import org.smartboot.socket.buffer.BufferFactory;
 import org.smartboot.socket.buffer.BufferPagePool;
+import org.smartboot.socket.extension.plugins.MonitorPlugin;
 import org.smartboot.socket.extension.processor.AbstractMessageProcessor;
 import org.smartboot.socket.transport.AioQuickServer;
 import org.smartboot.socket.transport.AioSession;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 
+/**
+ * @author 三刀（zhengjunweimail@163.com）
+ * @version V1.0 , 2020/12/22
+ */
 public class Bootstrap {
-    static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
         System.setProperty("java.nio.channels.spi.AsynchronousChannelProvider", EnhanceAsynchronousChannelProvider.class.getName());
 
-        HttpRouteHandle routeHandle = new HttpRouteHandle();
-        routeHandle
-                .route("/plaintext", new HttpHandle() {
+        ServletHttpHandle httpHandle = new ServletHttpHandle();
+        ContainerRuntime containerRuntime = new ContainerRuntime("/");
+        // plaintext
+        ServletInfo plainTextServletInfo = new ServletInfo();
+        plainTextServletInfo.setServletName("plaintext");
+        plainTextServletInfo.setServletClass(HelloWorldServlet.class.getName());
+        plainTextServletInfo.addMapping("/plaintext");
+        containerRuntime.getDeploymentInfo().addServlet(plainTextServletInfo);
 
+        // json
+        ServletInfo jsonServletInfo = new ServletInfo();
+        jsonServletInfo.setServletName("json");
+        jsonServletInfo.setServletClass(HelloWorldServlet.class.getName());
+        jsonServletInfo.addMapping("/json");
+        containerRuntime.getDeploymentInfo().addServlet(jsonServletInfo);
+        httpHandle.addRuntime(containerRuntime);
 
-                    @Override
-                    public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
-                        response.setContentLength(body.length);
-                        response.setContentType("text/plain; charset=UTF-8");
-                        response.write(body);
-                    }
-                })
-                .route("/json", new HttpHandle() {
-
-                    @Override
-                    public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
-
-                        response.setContentType("application/json");
-                        JsonUtil.writeJsonBytes(response, new Message("Hello, World!"));
-                    }
-                });
-        initDB(routeHandle);
+        httpHandle.start();
         HttpMessageProcessor processor = new HttpMessageProcessor();
-        processor.pipeline(routeHandle);
+        processor.pipeline(httpHandle);
         http(processor);
     }
 
@@ -72,7 +59,7 @@ public class Bootstrap {
                 processor.stateEvent(session, stateMachineEnum, throwable);
             }
         };
-//        messageProcessor.addPlugin(new MonitorPlugin(5));
+        messageProcessor.addPlugin(new MonitorPlugin(5));
 //        messageProcessor.addPlugin(new SocketOptionPlugin());
 
         int cpuNum = Runtime.getRuntime().availableProcessors();
@@ -86,6 +73,7 @@ public class Bootstrap {
                         return new BufferPagePool(10 * 1024 * 1024, cpuNum + 2, 64 * 1024 * 1024, true);
                     }
                 })
+                .setBannerEnabled(false)
                 .setWriteBuffer(1024 * 4, 8);
 
 //        messageProcessor.addPlugin(new BufferPageMonitorPlugin(server, 6));
@@ -94,22 +82,5 @@ public class Bootstrap {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private static void initDB(HttpRouteHandle routeHandle) {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://tfb-database:5432/hello_world");
-        config.setUsername("benchmarkdbuser");
-        config.setPassword("benchmarkdbpass");
-        config.setMaximumPoolSize(64);
-        DataSource dataSource = new HikariDataSource(config);
-        routeHandle.route("/db", new SingleQueryHandler(dataSource))
-                .route("/queries", new MultipleQueriesHandler(dataSource))
-                .route("/updates", new UpdateHandler(dataSource));
     }
 }
