@@ -83,7 +83,7 @@ def create_app():
     app = web.Application()
 
     jinja2_loader = jinja2.FileSystemLoader(str(THIS_DIR / 'templates'))
-    aiohttp_jinja2.setup(app, loader=jinja2_loader, enable_async=True)
+    aiohttp_jinja2.setup(app, loader=jinja2_loader)
 
     app.cleanup_ctx.append(db_ctx)
 
