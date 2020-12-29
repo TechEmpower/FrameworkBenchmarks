@@ -1,4 +1,6 @@
-﻿using BeetleX.Buffers;
+﻿using BeetleX;
+using BeetleX.Buffers;
+using BeetleX.Dispatchs;
 using System;
 using System.Collections.Concurrent;
 using System.Text;
@@ -16,7 +18,11 @@ namespace PlatformBenchmarks
 
         }
 
+        public SingleThreadDispatcher<HttpToken> ThreadDispatcher { get; set; }
+
         public ConcurrentQueue<RequestData> Requests { get; set; } = new ConcurrentQueue<RequestData>();
+
+        public ISession Session { get; set; }
 
         public RequestData CurrentRequest { get; set; }
 
