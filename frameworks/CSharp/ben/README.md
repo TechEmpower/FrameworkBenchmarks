@@ -1,9 +1,6 @@
-# ASP.NET Core Source Generator Test
+# Ben.Http Test
 
-See [.NET Core](http://dot.net) and [ASP.NET Core](https://github.com/aspnet) for more information.
-
-Using C# source generators to transform `Route` [annotated methods](PlatformBenchmarks/BenchmarkApplication.cs)
-into a Platform level test.
+See [Ben.Http](https://github.com/benaadams/Ben.Http) for more information.
 
 ## Infrastructure Software Versions
 
@@ -21,15 +18,13 @@ into a Platform level test.
 
 **Web Stack**
 
-* ASP.NET Core
-* [Ben.AspNetCore.PlatformExtensions](https://github.com/benaadams/Ben.AspNetCore.PlatformExtensions)
+* [Ben.Http](https://github.com/benaadams/Ben.Http)
 
 ## Paths & Source for Tests
 
 All tests are in a single file
 
-* [Plaintext](PlatformBenchmarks/BenchmarkApplication.cs): "/plaintext"
-* [JSON Serialization](PlatformBenchmarks/BenchmarkApplication.cs): "/json"
-* [Single Query Raw](PlatformBenchmarks/BenchmarkApplication.cs): "/db"
-* [Multiple Queries Raw](PlatformBenchmarks/BenchmarkApplication.cs): "/queries/"
-* [Data Updates Raw](PlatformBenchmarks/BenchmarkApplication.cs): "/updates/"
+* [Plaintext](Benchmarks/Program.cs): "/plaintext"
+* [JSON Serialization](Benchmarks/Program.cs): "/json"
+* [Single Query](Benchmarks/Program.cs): "/db"
+* [Fortunes](Benchmarks/Program.cs): "/fortunes"
