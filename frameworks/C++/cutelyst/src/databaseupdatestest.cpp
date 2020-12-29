@@ -189,7 +189,7 @@ APreparedQuery DatabaseUpdatesTest::getSql(int count)
     sql.append(QStringLiteral("ELSE randomnumber END WHERE id IN ("));
 
     for (int i = 0; i < count; i++) {
-        sql.append(QLatin1Char('$') + QString::number(placeholdersCounter));
+        sql.append(QLatin1Char('$') + QString::number(placeholdersCounter) + QLatin1Char(','));
         ++placeholdersCounter;
     }
     sql.append(QLatin1Char(')'));
