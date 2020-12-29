@@ -5,6 +5,8 @@ void plaintext(server_context *context, char *response);
 
 void json(server_context *context, clo *json_object);
 
-void setup();
+void enable_reuseport_cbpf(server *s);
+
+int fork_workers();
 
 #endif /* HELPERS_H_INCLUDED */
