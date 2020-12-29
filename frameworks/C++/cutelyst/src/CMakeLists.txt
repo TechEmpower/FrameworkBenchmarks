@@ -8,6 +8,7 @@ find_package(Qt5 5.6.0 REQUIRED COMPONENTS Core Network Sql)
 find_package(ASqlQt5 0.15.0 REQUIRED)
 find_package(Cutelyst2Qt5 2.12 REQUIRED)
 find_package(Cutelee5 REQUIRED)
+find_package(PostgreSQL REQUIRED)
 
 # Auto generate moc files
 set(CMAKE_AUTOMOC ON)
