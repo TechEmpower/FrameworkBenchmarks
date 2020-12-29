@@ -79,6 +79,7 @@ import net.officefloor.server.http.impl.HttpServerLocationImpl;
 import net.officefloor.server.http.impl.ProcessAwareServerHttpConnectionManagedObject;
 import net.officefloor.server.http.parse.HttpRequestParser;
 import net.officefloor.server.http.parse.HttpRequestParser.HttpRequestParserMetaData;
+import net.officefloor.server.stream.impl.ThreadLocalStreamBufferPool;
 import net.officefloor.web.executive.CpuCore;
 import net.officefloor.web.executive.CpuCore.LogicalCpu;
 import net.openhft.affinity.Affinity;
@@ -150,14 +151,18 @@ public class RawOfficeFloorMain {
 
 				// Create thread factory for logical CPU
 				ThreadFactory boundThreadFactory = (runnable) -> new Thread(() -> {
+					ThreadLocalStreamBufferPool bufferPool = (ThreadLocalStreamBufferPool) threadCompletionListenerCapture[0];
 					try {
 						// Bind thread to logical CPU
 						Affinity.setAffinity(logicalCpu.getCpuAffinity());
 
+						// Set up for thread local buffer pooling
+						bufferPool.activeThreadLocalPooling();
+
 						// Run logic for thread
 						runnable.run();
 					} finally {
-						threadCompletionListenerCapture[0].threadComplete();
+						bufferPool.threadComplete();
 					}
 				});
 
