@@ -2,9 +2,12 @@ cmake_minimum_required(VERSION 3.6.0 FATAL_ERROR)
 
 project(cutelyst_benchmarks LANGUAGES CXX)
 
+cmake_policy(SET CMP0069 NEW)
+
 find_package(Qt5 5.6.0 REQUIRED COMPONENTS Core Network Sql)
 find_package(ASqlQt5 0.15.0 REQUIRED)
 find_package(Cutelyst2Qt5 2.12 REQUIRED)
+find_package(Cutelee5 REQUIRED)
 
 # Auto generate moc files
 set(CMAKE_AUTOMOC ON)
@@ -53,10 +56,13 @@ target_link_libraries(cutelyst_benchmarks
     ASqlQt5::Core
 )
 
-add_executable(cutelyst-benchmarks main.cpp)
+add_executable(cutelyst-benchmarks ${cutelyst_benchmarks_SRCS} main.cpp)
 target_link_libraries(cutelyst-benchmarks
     Cutelyst::Core
-    Cutelyst::WSGI
+    Cutelyst::Utils::Sql
+    Cutelyst::View::Cutelee
+    Qt5::Core
     Qt5::Network
-    cutelyst_benchmarks
+    Qt5::Sql
+    ASqlQt5::Core
 )
