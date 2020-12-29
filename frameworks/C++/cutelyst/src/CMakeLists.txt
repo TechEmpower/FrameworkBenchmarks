@@ -60,6 +60,7 @@ target_link_libraries(cutelyst_benchmarks
 add_executable(cutelyst-benchmarks ${cutelyst_benchmarks_SRCS} main.cpp)
 target_link_libraries(cutelyst-benchmarks
     Cutelyst::Core
+    Cutelyst::WSGI
     Cutelyst::Utils::Sql
     Cutelyst::View::Cutelee
     Qt5::Core
