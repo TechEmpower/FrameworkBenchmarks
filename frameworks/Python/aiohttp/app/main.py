@@ -42,7 +42,7 @@ def pg_dsn() -> str:
     ))
 
 
-async def startup(app: web.Application):
+async def db_ctx(app: web.Application):
     dsn = pg_dsn()
     # number of gunicorn workers = multiprocessing.cpu_count() as per gunicorn_conf.py
     # max_connections = 2000 as per toolset/setup/linux/databases/postgresql/postgresql.conf:64
@@ -56,8 +56,8 @@ async def startup(app: web.Application):
     else:
         app['pg'] = await asyncpg.create_pool(dsn=dsn, min_size=min_size, max_size=max_size, loop=app.loop)
 
+    yield
 
-async def cleanup(app: web.Application):
     if CONNECTION_ORM:
         app['pg'].close()
         await app['pg'].wait_closed()
@@ -80,14 +80,13 @@ def setup_routes(app):
         app.router.add_get('/updates/{queries:.*}', updates_raw)
 
 
-def create_app(loop):
-    app = web.Application(loop=loop)
+def create_app():
+    app = web.Application()
 
     jinja2_loader = jinja2.FileSystemLoader(str(THIS_DIR / 'templates'))
-    aiohttp_jinja2.setup(app, loader=jinja2_loader)
+    aiohttp_jinja2.setup(app, loader=jinja2_loader, enable_async=True)
 
-    app.on_startup.append(startup)
-    app.on_cleanup.append(cleanup)
+    app.cleanup_ctx.append(db_ctx)
 
     setup_routes(app)
     return app
