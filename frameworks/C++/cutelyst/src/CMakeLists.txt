@@ -9,6 +9,7 @@ find_package(ASqlQt5 0.15.0 REQUIRED)
 find_package(Cutelyst2Qt5 2.12 REQUIRED)
 find_package(Cutelee5 REQUIRED)
 find_package(PostgreSQL REQUIRED)
+find_package(mimalloc 1.0)
 
 # Auto generate moc files
 set(CMAKE_AUTOMOC ON)
@@ -59,6 +60,7 @@ target_link_libraries(cutelyst_benchmarks
 
 add_executable(cutelyst-benchmarks ${cutelyst_benchmarks_SRCS} main.cpp)
 target_link_libraries(cutelyst-benchmarks
+    PUBLIC
     Cutelyst::Core
     Cutelyst::WSGI
     Cutelyst::Utils::Sql
@@ -68,3 +70,6 @@ target_link_libraries(cutelyst-benchmarks
     Qt5::Sql
     ASqlQt5::Core
 )
+if (mimalloc_FOUND)
+    target_link_libraries(cutelyst-benchmarks PUBLIC mimalloc)
+endif ()
