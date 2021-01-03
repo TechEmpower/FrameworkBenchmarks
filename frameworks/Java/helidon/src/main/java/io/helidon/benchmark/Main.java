@@ -126,6 +126,7 @@ public final class Main {
         public HikariCpExtension extension(Config config) {
             return c -> {
                 c.setMaximumPoolSize(Runtime.getRuntime().availableProcessors() * 2);
+                c.setLeakDetectionThreshold(25_000);
             };
         }
 

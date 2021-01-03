@@ -37,11 +37,10 @@ public class FortuneService implements Service {
         repository.getFortunes()
                 .collectList()
                 .subscribe(fortunes -> {
-                    try {
+                    try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
                         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
                         fortunes.sort(comparing(fortune -> fortune.message));
 
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         OutputStreamWriter writer = new OutputStreamWriter(baos, StandardCharsets.UTF_8.name());
 
                         template.execute(writer, Collections.singletonMap("fortunes", fortunes));
