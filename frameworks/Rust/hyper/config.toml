@@ -12,6 +12,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Rust"
 webserver = "hyper"
+versus = "None"
 
 [db]
 urls.fortune = "/fortunes"
@@ -23,3 +24,4 @@ os = "Linux"
 orm = "Raw"
 platform = "Rust"
 webserver = "hyper"
+versus = "None"
