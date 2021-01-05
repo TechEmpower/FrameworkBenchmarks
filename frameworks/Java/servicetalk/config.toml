@@ -1,0 +1,15 @@
+[framework]
+name = "servicetalk"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "none"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "servicetalk"
+webserver = "None"
+versus = ""
