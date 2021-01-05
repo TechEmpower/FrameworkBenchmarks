@@ -132,8 +132,6 @@ jobs:
           - TESTDIR: "Scala/play2-scala Scala/scalene Scala/youi"
           - TESTDIR: "Scala/snunit"
           - TESTDIR: "Scala/vertx-web-scala"
-# Scheme is not currently present in the repository
-#          - TESTLANG: "Scheme"
           - TESTLANG: "Swift"
           - TESTLANG: "TypeScript"
           - TESTLANG: "Ur"
