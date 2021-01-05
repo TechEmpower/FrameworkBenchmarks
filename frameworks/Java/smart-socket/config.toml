@@ -1,0 +1,31 @@
+[framework]
+name = "smart-socket"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.update = "/updates?queries="
+approach = "Realistic"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "smartboot"
+webserver = "None"
+versus = "smart-socket"
+
+[smart-servlet]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "smartboot"
+webserver = "None"
+versus = "smart-servlet"
