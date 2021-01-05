@@ -26,5 +26,7 @@ RUN mkdir -p /lumen/storage/framework/cache
 
 RUN chmod -R 777 /lumen
 
+EXPOSE 8080
+
 CMD service php8.0-fpm start && \
     nginx -c /lumen/deploy/nginx.conf

@@ -22,5 +22,7 @@ RUN chmod 777 data/cache
 
 RUN composer install --optimize-autoloader --classmap-authoritative --quiet --no-dev
 
+EXPOSE 8080
+
 CMD service php7.4-fpm start && \
     nginx -c /zend/deploy/nginx.conf -g "daemon off;"

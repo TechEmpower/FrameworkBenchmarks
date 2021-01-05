@@ -1,0 +1,148 @@
+name: build
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  setup:
+    runs-on: ubuntu-18.04
+    steps:
+      # Commit branch/name extraction from:
+      # https://github.community/t/accessing-commit-message-in-pull-request-event/17158/8
+      #
+      # We need to fetch more than one commit to be able to access HEAD^2 in case
+      # of a pull request
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 10
+      # In case of a push event, the commit we care about is simply HEAD.
+      # The current branch name can be found by parsing GITHUB_REF, for example,
+      # if we are on the master branch, then GITHUB_REF = refs/heads/master.
+      - name: Get commit branch and commit message from push
+        if: github.event_name == 'push'
+        run: |
+          echo "BRANCH_NAME=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE<<EOF" >> $GITHUB_ENV
+          echo "$(git log --format=%B -n 1 HEAD)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      # In case of a pull_request event, the commit we care about is HEAD^2, that
+      # is, the second parent of the pull request merge commit.
+      # The current branch name is directly given by GITHUB_HEAD_REF
+      - name: Get commit branch and commit message from PR
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "BRANCH_NAME=$GITHUB_HEAD_REF" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE<<EOF" >> $GITHUB_ENV
+          echo "$(git log --format=%B -n 1 HEAD^2)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      - id: out
+        name: Write event outputs
+        run: |
+          # Escape the multiline string for Github Actions, see https://github.community/t/set-output-truncates-multiline-strings/16852/3
+          COMMIT_MESSAGE="${COMMIT_MESSAGE//'%'/'%25'}"
+          COMMIT_MESSAGE="${COMMIT_MESSAGE//$'\n'/'%0A'}"
+          COMMIT_MESSAGE="${COMMIT_MESSAGE//$'\r'/'%0D'}"
+          echo "::set-output name=commit_message::$COMMIT_MESSAGE"
+          echo "::set-output name=branch_name::$BRANCH_NAME"
+    outputs:
+      commit_message: ${{ steps.out.outputs.commit_message }}
+      branch_name: ${{ steps.out.outputs.branch_name }}
+  verify:
+    needs: setup
+    if: ${{ !contains(needs.setup.outputs.commit_message, '[ci skip]') }}
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        include:
+          - TESTLANG: "C"
+          - TESTLANG: "C++"
+          - TESTLANG: "CSharp"
+          - TESTLANG: "Clojure"
+          - TESTLANG: "Crystal"
+          - TESTLANG: "D"
+          - TESTLANG: "Dart"
+          - TESTLANG: "Dylan"
+          - TESTLANG: "Elixir"
+          - TESTLANG: "Erlang"
+          - TESTLANG: "FSharp"
+          - TESTLANG: "Go"
+          - TESTLANG: "Groovy"
+          - TESTLANG: "Haskell"
+          - TESTLANG: "Java"
+          - TESTLANG: "JavaScript"
+          - TESTLANG: "Julia"
+          - TESTLANG: "Kotlin"
+          - TESTLANG: "Lisp"
+          - TESTLANG: "Lua"
+          - TESTLANG: "Mumps"
+          - TESTLANG: "Nim"
+          - TESTLANG: "OCaml"
+          - TESTLANG: "PHP"
+          - TESTLANG: "Perl"
+          - TESTLANG: "Prolog"
+          - TESTLANG: "Python"
+          - TESTLANG: "Racket"
+          - TESTLANG: "Ruby"
+          - TESTLANG: "Rust"
+          - TESTLANG: "Scala"
+          - TESTLANG: "Swift"
+          - TESTLANG: "TypeScript"
+          - TESTLANG: "Ur"
+          - TESTLANG: "V"
+          - TESTLANG: "VB"
+          - TESTLANG: "Vala"
+      # Disable fail-fast to allow all failing frameworks/etc to fail in a
+      # single build, rather than stopping when the first one fails.
+      fail-fast: false
+    env:
+      TESTLANG: ${{ matrix.TESTLANG }}
+      TESTDIR: ${{ matrix.TESTDIR }}
+      COMMIT_MESSAGE: ${{ needs.setup.outputs.commit_message }}
+      BRANCH_NAME: ${{ needs.setup.outputs.branch_name }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 10
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '2.7'
+          architecture: 'x64'
+      - id: get_diff
+        name: Get all changes vs master
+        # Runs github_actions_diff, with the the output accessible in later steps
+        run: |
+          # Write the result to env.DIFF for later steps
+          echo "DIFF<<EOF" >> $GITHUB_ENV
+          echo "$(./toolset/github_actions/github_actions_diff.py)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      - id: should_run_tests
+        name: Determine which (if any) tests need to be run
+        # Searches for github-actions-diff-continue to determine if the suite should be installed and the current $TESTDIR test should run.
+        run: |
+          # grep returns status code 1 if no matches are found. This fails the
+          # build as it is a non-zero status. But this is an expected
+          # possibility, so `|| true` is used to address/silence that.
+          # Write the result to env.RUN_TESTS for later steps
+          echo "RUN_TESTS<<EOF" >> $GITHUB_ENV
+          echo "$(grep -oP "github-actions-run-tests \K(.*)" <<< $DIFF || true)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      - name: Log status
+        run: |
+          if [ "$RUN_TESTS" ]; then echo "Proceeding to run tests."; else echo 'Skipping test verification.'; fi
+      - name: Build tfb dockerfile
+        if: ${{ env.RUN_TESTS }}
+        run: docker build -t techempower/tfb - < ./Dockerfile;
+      - name: Stop services
+        # Stop services that would claim ports we may need
+        run: |
+          sudo service mysql stop || true
+          sudo service postgresql stop || true
+      - name: Run tests if needed
+        if: ${{ env.RUN_TESTS }}
+        run: |
+          # run-ci.py runs the diffing to see if github actions needs to test this framework. Ideally/eventually,
+          # we'd like to try and do the diffing before github_actions_clean & setup.
+          # This will run the tests exactly as you would in your own vm:
+          docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test-dir $RUN_TESTS --results-environment Github-Actions;

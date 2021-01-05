@@ -29,4 +29,6 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
 RUN export WORKERS=$(( 4 * $(nproc) )) && \
     sed -i "s/worker_processes  auto/worker_processes $WORKERS/g" /deploy/nginx.conf
 
+EXPOSE 8080
+
 CMD /nginx/sbin/nginx -c /deploy/nginx.conf 
