@@ -49,6 +49,7 @@ jobs:
       commit_message: ${{ steps.out.outputs.commit_message }}
       branch_name: ${{ steps.out.outputs.branch_name }}
   test:
+    name: ""
     needs: setup
     if: ${{ !contains(needs.setup.outputs.commit_message, '[ci skip]') }}
     runs-on: ubuntu-18.04
