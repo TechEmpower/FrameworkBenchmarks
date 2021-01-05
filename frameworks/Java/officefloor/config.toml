@@ -84,7 +84,7 @@ os = "Linux"
 orm = "raw"
 platform = "OfficeFloor"
 webserver = "WoOF"
-versus = ""
+versus = "None"
 
 [undertow]
 urls.plaintext = "/plaintext"
@@ -101,7 +101,7 @@ os = "Linux"
 orm = "Full"
 platform = "OfficeFloor"
 webserver = "WoOF"
-versus = ""
+versus = "None"
 
 [spring_data]
 urls.plaintext = "/plaintext"

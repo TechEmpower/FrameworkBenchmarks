@@ -16,7 +16,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Akka"
 webserver = "None"
-versus = "akka-http"
+versus = "None"
 
 [slick-postgres]
 urls.plaintext = "/plaintext"

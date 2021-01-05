@@ -16,7 +16,7 @@ os = "Linux"
 orm = "Full"
 platform = "asyncio"
 webserver = "gunicorn"
-versus = ""
+versus = "None"
 
 [pg-raw]
 urls.db = "/db"

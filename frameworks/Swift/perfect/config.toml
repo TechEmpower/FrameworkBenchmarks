@@ -12,7 +12,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Perfect"
 webserver = "Perfect"
-versus = ""
+versus = "None"
 
 [mongodb]
 urls.db = "/db"
@@ -26,7 +26,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Perfect"
 webserver = "Perfect"
-versus = ""
+versus = "None"
 
 [postgresql]
 urls.db = "/db"
@@ -40,7 +40,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Perfect"
 webserver = "Perfect"
-versus = ""
+versus = "None"
 
 [mysql]
 urls.db = "/db"
@@ -54,4 +54,4 @@ os = "Linux"
 orm = "Raw"
 platform = "Perfect"
 webserver = "Perfect"
-versus = ""
+versus = "None"
