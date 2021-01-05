@@ -16,6 +16,7 @@ os = "Linux"
 orm = "Raw"
 platform = "None"
 webserver = "None"
+versus = ""
 
 [postgres]
 urls.plaintext = "/plaintext"
@@ -31,3 +32,4 @@ os = "Linux"
 orm = "Raw"
 platform = "None"
 webserver = "None"
+versus = ""

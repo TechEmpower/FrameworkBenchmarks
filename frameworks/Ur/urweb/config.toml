@@ -16,6 +16,7 @@ os = "Linux"
 orm = "Micro"
 platform = "Ur/Web"
 webserver = "None"
+versus = ""
 
 [mysql-cache]
 urls.cached_query = "/queries/"
@@ -27,6 +28,7 @@ os = "Linux"
 orm = "Micro"
 platform = "Ur/Web"
 webserver = "None"
+versus = ""
 
 [cache]
 urls.cached_query = "/queries/"
@@ -38,6 +40,7 @@ os = "Linux"
 orm = "Micro"
 platform = "Ur/Web"
 webserver = "None"
+versus = ""
 
 [mysql]
 urls.db = "/db"
@@ -52,3 +55,4 @@ os = "Linux"
 orm = "Micro"
 platform = "Ur/Web"
 webserver = "None"
+versus = ""

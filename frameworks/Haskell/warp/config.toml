@@ -17,6 +17,7 @@ orm = "Raw"
 platform = "Wai"
 webserver = "Wai"
 dockerfile = "warp-shared.dockerfile"
+versus = ""
 
 [hasql]
 urls.plaintext = "/plaintext"
@@ -34,6 +35,7 @@ orm = "Raw"
 platform = "Wai"
 webserver = "Wai"
 dockerfile = "warp-shared.dockerfile"
+versus = ""
 
 [mysql-haskell]
 urls.plaintext = "/plaintext"
@@ -51,3 +53,4 @@ orm = "Raw"
 platform = "Wai"
 webserver = "Wai"
 dockerfile = "warp-shared.dockerfile"
+versus = ""

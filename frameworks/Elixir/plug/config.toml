@@ -1,5 +1,5 @@
 [framework]
-name = "elixir-plug-ecto"
+name = "plug"
 
 [main]
 urls.plaintext = "/plaintext"

@@ -15,6 +15,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Rack"
 webserver = "Puma"
+versus = ""
 
 [falcon]
 urls.plaintext = "/plaintext"
@@ -30,6 +31,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Rack"
 webserver = "Falcon"
+versus = ""
 
 [unicorn]
 urls.plaintext = "/plaintext"
@@ -45,3 +47,4 @@ os = "Linux"
 orm = "Raw"
 platform = "Rack"
 webserver = "Unicorn"
+versus = ""

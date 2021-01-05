@@ -1,5 +1,5 @@
 [framework]
-name = "tio-mvc"
+name = "t-io"
 
 [main]
 urls.plaintext = "/plaintext"
