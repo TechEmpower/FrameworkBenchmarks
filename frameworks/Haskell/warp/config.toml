@@ -16,6 +16,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Wai"
 webserver = "Wai"
+versus = "None"
 dockerfile = "warp-shared.dockerfile"
 
 [hasql]
@@ -33,6 +34,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Wai"
 webserver = "Wai"
+versus = "None"
 dockerfile = "warp-shared.dockerfile"
 
 [mysql-haskell]
@@ -50,4 +52,5 @@ os = "Linux"
 orm = "Raw"
 platform = "Wai"
 webserver = "Wai"
+versus = "None"
 dockerfile = "warp-shared.dockerfile"

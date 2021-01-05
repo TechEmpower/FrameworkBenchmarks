@@ -16,6 +16,7 @@ os = "Linux"
 orm = "Raw"
 platform = "asyncio"
 webserver = "Gunicorn"
+versus = "None"
 
 [plaintext]
 urls.plaintext = "/plaintext"
@@ -27,6 +28,7 @@ os = "Linux"
 orm = "Raw"
 platform = "asyncio"
 webserver = "Gunicorn"
+versus = "None"
 
 [json]
 urls.json = "/json"
@@ -38,6 +40,7 @@ os = "Linux"
 orm = "Raw"
 platform = "asyncio"
 webserver = "Gunicorn"
+versus = "None"
 
 [dbs]
 urls.db = "/db"
@@ -51,6 +54,7 @@ os = "Linux"
 orm = "Raw"
 platform = "asyncio"
 webserver = "Gunicorn"
+versus = "None"
 
 [mysql]
 urls.db = "/db_mysql"
@@ -65,3 +69,4 @@ os = "Linux"
 orm = "Raw"
 platform = "asyncio"
 webserver = "Gunicorn"
+versus = "None"

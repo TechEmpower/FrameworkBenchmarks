@@ -12,6 +12,7 @@ os = "Linux"
 orm = "Full"
 platform = "KituraNet"
 webserver = "Kitura"
+versus = "None"
 
 [gcd-postgres-orm-codable]
 urls.db = "/db"
@@ -23,6 +24,7 @@ os = "Linux"
 orm = "Full"
 platform = "KituraNet"
 webserver = "Kitura"
+versus = "None"
 
 [gcd]
 urls.plaintext = "/plaintext"
@@ -35,6 +37,7 @@ os = "Linux"
 orm = "none"
 platform = "KituraNet"
 webserver = "Kitura"
+versus = "None"
 
 [main]
 urls.plaintext = "/plaintext"
@@ -47,6 +50,7 @@ os = "Linux"
 orm = "none"
 platform = "KituraNet"
 webserver = "Kitura"
+versus = "None"
 
 [mongodb]
 urls.db = "/db"
@@ -61,6 +65,7 @@ os = "Linux"
 orm = "Raw"
 platform = "KituraNet"
 webserver = "Kitura"
+versus = "None"
 
 [nio]
 urls.plaintext = "/plaintext"
@@ -73,6 +78,7 @@ os = "Linux"
 orm = "none"
 platform = "KituraNIO"
 webserver = "Kitura"
+versus = "None"
 
 [gcd-postgres-orm]
 urls.db = "/db"
@@ -85,6 +91,7 @@ os = "Linux"
 orm = "Full"
 platform = "KituraNet"
 webserver = "Kitura"
+versus = "None"
 
 [nio-postgres-orm]
 urls.db = "/db"
@@ -97,6 +104,7 @@ os = "Linux"
 orm = "Full"
 platform = "KituraNIO"
 webserver = "Kitura"
+versus = "None"
 
 [nio-postgres]
 urls.db = "/db"
@@ -111,6 +119,7 @@ os = "Linux"
 orm = "Raw"
 platform = "KituraNIO"
 webserver = "Kitura"
+versus = "None"
 
 [postgres-orm-codable]
 urls.db = "/db"
@@ -124,6 +133,7 @@ os = "Linux"
 orm = "Full"
 platform = "KituraNet"
 webserver = "Kitura"
+versus = "None"
 
 [nio-postgres-orm-codable]
 urls.db = "/db"
@@ -137,6 +147,7 @@ os = "Linux"
 orm = "Full"
 platform = "KituraNIO"
 webserver = "Kitura"
+versus = "None"
 
 [gcd-postgres]
 urls.db = "/db"
@@ -149,6 +160,7 @@ os = "Linux"
 orm = "Raw"
 platform = "KituraNet"
 webserver = "Kitura"
+versus = "None"
 
 [postgres]
 urls.db = "/db"
@@ -163,3 +175,4 @@ os = "Linux"
 orm = "Raw"
 platform = "KituraNet"
 webserver = "Kitura"
+versus = "None"

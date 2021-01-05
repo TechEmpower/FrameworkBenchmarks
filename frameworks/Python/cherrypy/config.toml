@@ -16,6 +16,7 @@ os = "Linux"
 orm = "Full"
 platform = "None"
 webserver = "None"
+versus = "None"
 
 [py3]
 urls.plaintext = "/plaintext"
@@ -32,3 +33,4 @@ os = "Linux"
 orm = "Full"
 platform = "None"
 webserver = "None"
+versus = "None"
