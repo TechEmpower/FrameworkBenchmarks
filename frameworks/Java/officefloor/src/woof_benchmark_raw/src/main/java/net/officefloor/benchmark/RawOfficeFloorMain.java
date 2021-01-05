@@ -41,9 +41,6 @@ import org.apache.commons.text.StringEscapeUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
 
 import io.r2dbc.pool.PoolingConnectionFactoryProvider;
 import io.r2dbc.spi.Batch;
@@ -79,6 +76,7 @@ import net.officefloor.server.http.impl.HttpServerLocationImpl;
 import net.officefloor.server.http.impl.ProcessAwareServerHttpConnectionManagedObject;
 import net.officefloor.server.http.parse.HttpRequestParser;
 import net.officefloor.server.http.parse.HttpRequestParser.HttpRequestParserMetaData;
+import net.officefloor.server.stream.ServerWriter;
 import net.officefloor.server.stream.impl.ThreadLocalStreamBufferPool;
 import net.officefloor.web.executive.CpuCore;
 import net.officefloor.web.executive.CpuCore.LogicalCpu;
@@ -238,6 +236,18 @@ public class RawOfficeFloorMain {
 
 		private static final String UPDATE_PATH_PREFIX = "/update?queries=";
 
+		private static final byte[] TEMPLATE_START = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"
+				.getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
+
+		private static final byte[] FORTUNE_START = "<tr><td>".getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
+
+		private static final byte[] FORTUNE_MIDDLE = "</td><td>".getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
+
+		private static final byte[] FORTUNE_END = "</td></tr>".getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
+
+		private static final byte[] TEMPLATE_END = "</table></body></html>"
+				.getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
+
 		private static final R2dbcTransientResourceException THROTTLED = new R2dbcTransientResourceException();
 
 		/**
@@ -292,11 +302,6 @@ public class RawOfficeFloorMain {
 		private final ThreadLocal<RateLimit> threadLocalRateLimit = new ThreadLocal<RateLimit>();
 
 		/**
-		 * {@link Mustache} for /fortunes.
-		 */
-		private final Mustache fortuneMustache;
-
-		/**
 		 * Instantiate.
 		 *
 		 * @param serverLocation       {@link HttpServerLocation}.
@@ -320,19 +325,6 @@ public class RawOfficeFloorMain {
 					return connections;
 				}
 			};
-
-			// Load the mustache fortunes template
-			MustacheFactory mustacheFactory = new DefaultMustacheFactory() {
-				@Override
-				public void encode(String value, Writer writer) {
-					try {
-						StringEscapeUtils.ESCAPE_HTML4.translate(value, writer);
-					} catch (IOException ex) {
-						ex.printStackTrace();
-					}
-				}
-			};
-			this.fortuneMustache = mustacheFactory.compile("fortunes.mustache");
 		}
 
 		/**
@@ -542,7 +534,18 @@ public class RawOfficeFloorMain {
 
 							// Send response
 							response.setContentType(TEXT_HTML, null);
-							this.fortuneMustache.execute(response.getEntityWriter(), fortunes);
+							ServerWriter writer = response.getEntityWriter();
+							writer.write(TEMPLATE_START);
+							for (int i = 0; i < fortunes.size(); i++) {
+								Fortune fortune = fortunes.get(i);
+								writer.write(FORTUNE_START);
+								int id = fortune.getId();
+								writer.write(Integer.valueOf(id).toString());
+								writer.write(FORTUNE_MIDDLE);
+								StringEscapeUtils.ESCAPE_HTML4.translate(fortune.getMessage(), writer);
+								writer.write(FORTUNE_END);
+							}
+							writer.write(TEMPLATE_END);
 							this.send(connection);
 						} catch (CancelledKeyException | ClosedChannelException ex) {
 							// Ignore as disconnecting client

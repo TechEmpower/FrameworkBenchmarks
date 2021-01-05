@@ -30,10 +30,6 @@
 			<artifactId>r2dbc-pool</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.github.spullara.mustache.java</groupId>
-			<artifactId>compiler</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>net.officefloor.web</groupId>
 			<artifactId>officeweb_executive</artifactId>
 			<exclusions>
