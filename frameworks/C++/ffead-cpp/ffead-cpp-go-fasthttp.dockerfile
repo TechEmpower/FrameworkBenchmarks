@@ -17,4 +17,6 @@ RUN make && cp fasthttp-ffead-cpp $IROOT/ && rm -rf ${IROOT}/lang-server-backend
 
 WORKDIR /
 
+EXPOSE 8080
+
 CMD ./run_ffead.sh ffead-cpp-5.0 go-fasthttp

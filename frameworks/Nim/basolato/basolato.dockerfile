@@ -21,4 +21,7 @@ WORKDIR /basolato
 
 RUN nimble install -y
 RUN ducere build
+
+EXPOSE 8080
+
 CMD ./main

@@ -11,6 +11,8 @@ COPY ./ /app
 # Compile the template
 RUN npm run template
 
+EXPOSE 8080
+
 # Run the code
 CMD java \
     -server                                             \

@@ -7,4 +7,7 @@ RUN mvn package -q
 FROM openjdk:11.0.3-jdk-slim
 WORKDIR /undertow-jersey
 COPY --from=maven /undertow-jersey/target/undertow-jersey.jar app.jar
+
+EXPOSE 8080
+
 CMD ["java", "-jar", "app.jar"]

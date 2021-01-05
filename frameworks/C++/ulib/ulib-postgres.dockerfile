@@ -81,5 +81,7 @@ ENV ORM_DRIVER="pgsql"
 ENV UMEMPOOL="96,0,0,97,16417,-14,-20,-18,26"
 ENV ORM_OPTION="host=tfb-database user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world client_encoding=UTF8"
 
+EXPOSE 8080
+
 CMD setcap cap_sys_nice,cap_sys_resource,cap_net_bind_service,cap_net_raw+eip $IROOT/ULib/bin/userver_tcp && \
     $IROOT/ULib/bin/userver_tcp -c $IROOT/ULib/benchmark.cfg

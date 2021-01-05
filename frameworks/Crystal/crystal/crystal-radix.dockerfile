@@ -13,4 +13,6 @@ ENV DATABASE_URL postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/he
 RUN shards install
 RUN crystal build --release --no-debug server_radix.cr -o server_radix.out
 
+EXPOSE 8080
+
 CMD bash run-radix.sh

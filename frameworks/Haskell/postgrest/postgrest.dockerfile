@@ -32,6 +32,9 @@ ENV PGRST_RAW_MEDIA_TYPES="text/html, text/plain"
 ENV PGRST_DB_POOL=64
 RUN mkdir /app
 COPY src /app
-RUN chmod +x /app/entrypoint.sh 
+RUN chmod +x /app/entrypoint.sh
 WORKDIR /app
+
+EXPOSE 3000
+
 ENTRYPOINT [ "/app/entrypoint.sh" ]

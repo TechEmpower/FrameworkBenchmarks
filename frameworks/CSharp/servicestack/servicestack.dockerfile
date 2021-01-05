@@ -12,4 +12,6 @@ RUN mono nuget.exe install src/packages.config -OutputDirectory lib/
 RUN xbuild src/ServiceStackBenchmark.csproj /t:Clean
 RUN xbuild src/ServiceStackBenchmark.csproj /t:Build
 
+EXPOSE 8080
+
 CMD bash run.sh

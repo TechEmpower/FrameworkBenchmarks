@@ -26,4 +26,6 @@ COPY haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY start-servers.sh ./start-servers.sh
 RUN sudo chown -R opam: /${DIR} && chmod +x ./start-servers.sh
 
+EXPOSE 8080
+
 ENTRYPOINT ./start-servers.sh && sudo /usr/sbin/haproxy -W -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid

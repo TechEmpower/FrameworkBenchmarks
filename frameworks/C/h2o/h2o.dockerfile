@@ -42,4 +42,6 @@ RUN mkdir -p "${H2O_BUILD_DIR}/build" && \
     cd ../.. && \
     rm -rf "$H2O_BUILD_DIR"
 
+EXPOSE 8080
+
 CMD ["./h2o.sh"]

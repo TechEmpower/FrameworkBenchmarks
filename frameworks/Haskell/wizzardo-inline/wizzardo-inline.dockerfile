@@ -15,4 +15,6 @@ RUN stack upgrade
 
 RUN bash -c ". env-linear.sh; stack build wizzardo-http-benchmark --no-terminal"
 
+EXPOSE 8080
+
 CMD bash -c ". env-linear.sh; stack exec -- wizzardo-http-benchmark env=prod +RTS -A32m -N$(nproc) -RTS"
