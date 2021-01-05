@@ -536,8 +536,7 @@ public class RawOfficeFloorMain {
 							response.setContentType(TEXT_HTML, null);
 							ServerWriter writer = response.getEntityWriter();
 							writer.write(TEMPLATE_START);
-							for (int i = 0; i < fortunes.size(); i++) {
-								Fortune fortune = fortunes.get(i);
+							for (Fortune fortune : fortunes) {
 								writer.write(FORTUNE_START);
 								int id = fortune.getId();
 								writer.write(Integer.valueOf(id).toString());
