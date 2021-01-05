@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       # Commit branch/name extraction from:
-      # https://github.community/t/accessing-commit-message-in-pull-request-event/17158/2
+      # https://github.community/t/accessing-commit-message-in-pull-request-event/17158/8
       #
       # We need to fetch more than one commit to be able to access HEAD^2 in case
       # of a pull request
