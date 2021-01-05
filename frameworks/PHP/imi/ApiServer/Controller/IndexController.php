@@ -245,9 +245,9 @@ class IndexController extends HttpController
         {
             $id = \mt_rand(1, 10000);
             $row = Db::query()->from('World')->field('id', 'randomNumber')->where('id', '=', $id)->limit(1)->select()->get();
-            $row['randomNumber'] = \mt_rand(1, 10000);
-            Db::query()->from('World')->where('id', '=', $row['id'])->limit(1)->update([
-                'randomNumber'  =>  $row['randomNumber'],
+            $row['randomNumber'] = $randomNumber = \mt_rand(1, 10000);
+            Db::query()->from('World')->where('id', '=', $id)->limit(1)->update([
+                'randomNumber'  =>  $randomNumber,
             ]);
             $list[] = $row;
         }
@@ -279,8 +279,8 @@ class IndexController extends HttpController
             $id = \mt_rand(1, 10000);
             $stmtSelect->execute([$id]);
             $row = $stmtSelect->fetch();
-            $row['randomNumber'] = \mt_rand(1, 10000);
-            $stmtUpdate->execute([$row['randomNumber'], $row['id']]);
+            $row['randomNumber'] = $randomNumber = \mt_rand(1, 10000);
+            $stmtUpdate->execute([$randomNumber, $id]);
             $list[] = $row;
         }
         return $list;

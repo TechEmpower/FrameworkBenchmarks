@@ -1,18 +1,16 @@
+from functools import partial
 from operator import attrgetter, itemgetter
 from random import randint
 
 from aiohttp_jinja2 import template
-from aiohttp.web import Response
+from aiohttp.web import Response, json_response
 import ujson
 
 from sqlalchemy import select
 
 from .models import sa_fortunes, sa_worlds, Fortune
 
-
-def json_response(data):
-    body = ujson.dumps(data)
-    return Response(body=body.encode(), content_type='application/json')
+json_response = partial(json_response, dumps=ujson.dumps)
 
 
 def get_num_queries(request):

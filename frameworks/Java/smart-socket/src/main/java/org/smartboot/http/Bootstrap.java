@@ -10,6 +10,7 @@ package org.smartboot.http;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.smartboot.Message;
 import org.smartboot.aio.EnhanceAsynchronousChannelProvider;
 import org.smartboot.http.server.HttpMessageProcessor;
 import org.smartboot.http.server.HttpRequestProtocol;
