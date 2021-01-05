@@ -22,4 +22,6 @@ RUN sed -i "s|_postgres||g" swoole-server.php
 
 COPY php.ini /usr/local/etc/php/
 
+EXPOSE 8080
+
 CMD php swoole-server.php

@@ -9,4 +9,6 @@ WORKDIR /app
 COPY --from=build /app/out ./
 ENV DB_CONNECTION Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Delay Us=500;Write Coalescing Buffer Threshold Bytes=5500
 
+EXPOSE 8080
+
 ENTRYPOINT ["dotnet", "Benchmarks.dll"]

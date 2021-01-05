@@ -80,4 +80,6 @@ RUN g++-6 \
 
 ENV DBHOST tfb-database
 
+EXPOSE 8080
+
 CMD ./te-benchmark.wt -c wt_config.xml -t $(nproc) --docroot . --approot . --http-listen 0.0.0.0:8080 --accesslog=- --no-compression

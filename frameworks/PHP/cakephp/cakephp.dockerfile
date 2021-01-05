@@ -21,6 +21,8 @@ RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --q
 
 RUN chmod -R 777 /cakephp
 
+EXPOSE 8080
+
 CMD service php7.4-fpm start && \
     nginx -c /cakephp/deploy/nginx.conf
 

@@ -19,4 +19,6 @@ WORKDIR /webman
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
+EXPOSE 8080
+
 CMD php /webman/start.php start

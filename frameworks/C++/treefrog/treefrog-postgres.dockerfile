@@ -33,5 +33,7 @@ RUN make
 RUN sed -i 's|DriverType=.*|DriverType=QPSQL|g' config/database.ini
 RUN sed -i 's|MultiProcessingModule=.*|MultiProcessingModule=thread|g' config/application.ini
 
+EXPOSE 8080
+
 # 3. Start TreeFrog
 CMD treefrog /workspace

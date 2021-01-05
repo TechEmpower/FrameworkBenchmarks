@@ -19,7 +19,7 @@ FROM ubuntu:18.04
 WORKDIR /run
 
 # Install Swift dependencies
-RUN apt-get -qq update && DEBIAN_FRONTEND=noninteractive apt-get install -y \ 
+RUN apt-get -qq update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   libatomic1 \
   && rm -r /var/lib/apt/lists/*
 
@@ -28,5 +28,7 @@ COPY --from=build /build/.build/release /run
 
 # Copy Swift runtime libraries
 COPY --from=build /usr/lib/swift/ /usr/lib/swift/
+
+EXPOSE 8080
 
 ENTRYPOINT ["./app"]

@@ -11,4 +11,6 @@ ADD ./ /jester
 WORKDIR /jester
 RUN nimble c -d:danger --threads:on -y techempower.nim
 
+EXPOSE 8080
+
 CMD ./techempower

@@ -1,0 +1,14 @@
+[framework]
+name = "gnet"
+
+[main]
+urls.plaintext = "/plaintext"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "go"

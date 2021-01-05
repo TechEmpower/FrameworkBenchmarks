@@ -25,5 +25,7 @@ RUN julia -e 'import Pkg; Pkg.update()' && \
 
 WORKDIR /
 
+EXPOSE 8080
+
 CMD ./run_ffead.sh ffead-cpp-5.0 julia-http
 

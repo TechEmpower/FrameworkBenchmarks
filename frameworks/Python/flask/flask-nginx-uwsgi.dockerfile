@@ -14,4 +14,6 @@ RUN pip3 install -r /flask/requirements.txt
 
 RUN sed -i 's|include .*/conf/uwsgi_params;|include /etc/nginx/uwsgi_params;|g' /flask/nginx.conf
 
+EXPOSE 8080
+
 CMD nginx -c /flask/nginx.conf && uwsgi --ini /flask/uwsgi.ini --processes $(($(nproc)*3)) --wsgi app:app

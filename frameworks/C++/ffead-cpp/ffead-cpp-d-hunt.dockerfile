@@ -36,4 +36,6 @@ RUN dub upgrade --verbose && dub build --build=release --arch=x86_64 --compiler=
 
 WORKDIR /
 
+EXPOSE 8080
+
 CMD ./run_ffead.sh ffead-cpp-5.0 d-hunt

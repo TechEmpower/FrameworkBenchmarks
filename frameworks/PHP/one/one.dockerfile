@@ -20,4 +20,6 @@ RUN composer dumpautoload -o
 RUN mkdir -p /one/App/RunCache
 RUN chmod -R 777 /one/App/RunCache
 
+EXPOSE 8080
+
 CMD php App/swoole.php

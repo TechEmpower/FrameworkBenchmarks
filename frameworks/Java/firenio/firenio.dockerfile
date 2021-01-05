@@ -4,6 +4,8 @@ COPY pom.xml pom.xml
 COPY src src
 RUN mvn compile assembly:single -q
 
+EXPOSE 8080
+
 CMD java                       \
     -server                    \
     -XX:+UseNUMA               \
