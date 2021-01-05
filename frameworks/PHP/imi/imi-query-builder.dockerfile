@@ -23,4 +23,6 @@ RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/loca
 RUN composer install --no-dev --classmap-authoritative --quiet > /dev/null
 RUN composer dumpautoload -o
 
+EXPOSE 8080
+
 CMD php vendor/bin/imi server/start

@@ -39,4 +39,6 @@ COPY deploy/conf/workerman/mongo/workerServices.php app/config/workerServices.ph
 
 RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/7.4/cli/php.ini
 
+EXPOSE 8080
+
 CMD /ubiquity/vendor/bin/Ubiquity serve -t=workerman -p=8080 -h=0.0.0.0

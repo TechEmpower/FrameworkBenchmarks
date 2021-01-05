@@ -36,4 +36,6 @@ USER www-data
 
 COPY deploy/conf/swoole/pgsql/swooleServices.php app/config/swooleServices.php
 
+EXPOSE 8080
+
 CMD /ubiquity/vendor/bin/Ubiquity serve -t=swoole -p=8080 -h=0.0.0.0

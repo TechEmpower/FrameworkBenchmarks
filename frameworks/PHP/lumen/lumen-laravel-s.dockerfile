@@ -25,4 +25,6 @@ RUN echo "LARAVELS_LISTEN_PORT=5200" >> .env
 RUN php composer.phar install -a --no-dev --quiet
 RUN php artisan laravels publish
 
+EXPOSE 5200
+
 CMD bin/laravels start

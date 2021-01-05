@@ -43,4 +43,6 @@ RUN chmod 777 -R /ubiquity/.ubiquity/*
 
 COPY deploy/conf/roadrunner/pgsql/rrServices.php app/config/rrServices.php
 
+EXPOSE 8080
+
 CMD envwrapper.sh /ubiquity/rr serve

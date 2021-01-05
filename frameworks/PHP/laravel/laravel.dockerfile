@@ -30,5 +30,7 @@ RUN php artisan optimize
 
 RUN chmod -R 777 /laravel
 
+EXPOSE 8080
+
 CMD service php8.0-fpm start && \
     nginx -c /laravel/deploy/nginx.conf
