@@ -1,5 +1,5 @@
 [framework]
-name = "http-jl"
+name = "http.jl"
 
 [main]
 urls.plaintext = "/plaintext"

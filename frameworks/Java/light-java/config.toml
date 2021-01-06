@@ -1,5 +1,5 @@
 [framework]
-name = "light-4j"
+name = "light-java"
 
 [main]
 urls.plaintext = "/plaintext"
