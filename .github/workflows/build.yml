@@ -49,6 +49,10 @@ jobs:
         name: Write verify job matrix
         run: |
           # Use of jq for JSON array creation from https://stackoverflow.com/a/26809318
+          # The following creates a JSON object as follows:
+          # include:
+          #   - TESTLANG: {lang}
+          # with a TESTLANG object in the include array for each language under frameworks
           VERIFY_MATRIX=$(ls -1 frameworks | jq -R | jq -sc "{include: map({TESTLANG: .})}")
           echo "::set-output name=verify_matrix::$VERIFY_MATRIX"
     outputs:
