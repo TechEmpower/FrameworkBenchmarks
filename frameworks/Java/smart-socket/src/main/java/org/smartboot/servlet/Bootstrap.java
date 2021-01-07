@@ -1,9 +1,12 @@
 package org.smartboot.servlet;
 
 import org.smartboot.aio.EnhanceAsynchronousChannelProvider;
+import org.smartboot.http.HttpRequest;
+import org.smartboot.http.HttpResponse;
 import org.smartboot.http.server.HttpMessageProcessor;
 import org.smartboot.http.server.HttpRequestProtocol;
 import org.smartboot.http.server.Request;
+import org.smartboot.http.server.handle.HttpHandle;
 import org.smartboot.servlet.conf.ServletInfo;
 import org.smartboot.socket.StateMachineEnum;
 import org.smartboot.socket.buffer.BufferFactory;
@@ -24,26 +27,30 @@ public class Bootstrap {
     public static void main(String[] args) {
         System.setProperty("java.nio.channels.spi.AsynchronousChannelProvider", EnhanceAsynchronousChannelProvider.class.getName());
 
-        ServletHttpHandle httpHandle = new ServletHttpHandle();
-        ContainerRuntime containerRuntime = new ContainerRuntime("/");
+        ContainerRuntime containerRuntime = new ContainerRuntime();
         // plaintext
+        ApplicationRuntime applicationRuntime = new ApplicationRuntime("/");
         ServletInfo plainTextServletInfo = new ServletInfo();
         plainTextServletInfo.setServletName("plaintext");
         plainTextServletInfo.setServletClass(HelloWorldServlet.class.getName());
         plainTextServletInfo.addMapping("/plaintext");
-        containerRuntime.getDeploymentInfo().addServlet(plainTextServletInfo);
+        applicationRuntime.getDeploymentInfo().addServlet(plainTextServletInfo);
 
         // json
         ServletInfo jsonServletInfo = new ServletInfo();
         jsonServletInfo.setServletName("json");
         jsonServletInfo.setServletClass(HelloWorldServlet.class.getName());
         jsonServletInfo.addMapping("/json");
-        containerRuntime.getDeploymentInfo().addServlet(jsonServletInfo);
-        httpHandle.addRuntime(containerRuntime);
-
-        httpHandle.start();
+        applicationRuntime.getDeploymentInfo().addServlet(jsonServletInfo);
+        containerRuntime.addRuntime(applicationRuntime);
+        containerRuntime.start();
         HttpMessageProcessor processor = new HttpMessageProcessor();
-        processor.pipeline(httpHandle);
+        processor.pipeline(new HttpHandle() {
+            @Override
+            public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
+                containerRuntime.doHandle(request, response);
+            }
+        });
         http(processor);
     }
 
