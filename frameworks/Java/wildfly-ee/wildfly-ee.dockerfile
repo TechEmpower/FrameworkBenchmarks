@@ -12,4 +12,7 @@ RUN wget -q -O- https://download.jboss.org/wildfly/$wfly/wildfly-$wfly.tar.gz | 
 RUN wget -q https://repo1.maven.org/maven2/mysql/mysql-connector-java/$connectorj/mysql-connector-java-$connectorj.jar -O mysql-connector-java.jar
 RUN mvn clean package -q
 RUN ./wildfly-$wfly/bin/jboss-cli.sh --file=wildfly-config.txt
+
+EXPOSE 8080
+
 CMD ./wildfly-$wfly/bin/standalone.sh -b 0.0.0.0

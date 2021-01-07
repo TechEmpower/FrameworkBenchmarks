@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Microsoft.EntityFrameworkCore;
+
 using Benchmarks.Model;
 
 using GenHTTP.Modules.Webservices;
@@ -35,7 +37,7 @@ namespace Benchmarks.Tests
             {
                 foreach (var id in ids)
                 {
-                    var record = await context.World.FindAsync(id);
+                    var record = await context.World.FirstOrDefaultAsync(w => w.Id == id);
 
                     var old = record.RandomNumber;
 

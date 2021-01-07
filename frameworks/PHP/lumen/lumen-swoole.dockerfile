@@ -31,4 +31,6 @@ RUN echo "APP_SWOOLE=true" >> .env
 
 RUN chmod -R 777 /lumen
 
+EXPOSE 8080
+
 CMD php artisan swoole:http start

@@ -33,4 +33,6 @@ RUN php artisan optimize
 
 RUN chmod -R 777 /laravel
 
+EXPOSE 8080
+
 CMD php artisan swoole:http start

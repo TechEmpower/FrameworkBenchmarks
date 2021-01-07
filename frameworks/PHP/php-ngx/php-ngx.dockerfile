@@ -26,4 +26,6 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --add-module=/ngx_php7 > /dev/null && \
     make > /dev/null && make install > /dev/null
 
+EXPOSE 8080
+
 CMD /nginx/sbin/nginx -c /deploy/nginx_default.conf 

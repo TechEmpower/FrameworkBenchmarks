@@ -28,4 +28,6 @@ RUN make clean && make
 ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/lib
 ENV LD_PRELOAD=/usr/local/lib/mimalloc-1.6/libmimalloc.so
 
+EXPOSE 8080
+
 CMD ["./techempower"]

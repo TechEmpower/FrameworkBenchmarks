@@ -12,5 +12,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends swi-prolog
 COPY server.pl ${IROOT}/
 WORKDIR ${IROOT}
 
+EXPOSE 8080
+
 CMD swipl server.pl --user=daemon --fork=false --port=8080
 

@@ -14,6 +14,9 @@ RUN ./sbt assembly -batch && \
 FROM openjdk:15
 WORKDIR /http4s
 COPY --from=builder /http4s/http4s-assembly-1.0.jar /http4s/http4s-assembly-1.0.jar
+
+EXPOSE 8080
+
 CMD java \
       -server \
       -Xms2g \

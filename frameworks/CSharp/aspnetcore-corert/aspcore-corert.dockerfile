@@ -11,4 +11,6 @@ ENV DOTNET_SYSTEM_NET_SOCKETS_INLINE_COMPLETIONS 1
 WORKDIR /app
 COPY --from=build /app/out ./
 
+EXPOSE 8080
+
 ENTRYPOINT ["./PlatformBenchmarks"]

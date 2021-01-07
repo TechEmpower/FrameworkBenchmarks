@@ -9,4 +9,7 @@ FROM openjdk:12
 WORKDIR /redkale
 COPY conf conf
 COPY --from=maven /redkale/target/redkale-benchmark-0.0.1.jar redkale-benchmark.jar
+
+EXPOSE 8080
+
 CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-DAPP_HOME=./", "-jar", "redkale-benchmark.jar"]

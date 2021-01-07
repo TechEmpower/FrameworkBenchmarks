@@ -22,4 +22,6 @@ ENV SERVER_IO=NPROC
 RUN sudo chown -R opam ./bin && sudo chown -R opam ./server_*
 RUN opam exec -- dune build --profile release bin/tfb.exe
 
+EXPOSE 8080
+
 ENTRYPOINT _build/default/bin/tfb.exe

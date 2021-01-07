@@ -12,4 +12,6 @@ ENV GRIP_ENV production
 RUN shards install
 RUN crystal build  --release --no-debug grip.cr
 
+EXPOSE 8080
+
 CMD bash run.sh

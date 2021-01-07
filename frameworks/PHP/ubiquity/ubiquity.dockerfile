@@ -24,5 +24,7 @@ COPY deploy/conf/ubiquity-config.php app/config/config.php
 
 RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/8.0/fpm/php.ini
 
+EXPOSE 8080
+
 CMD service php8.0-fpm start && \
     nginx -c /ubiquity/deploy/nginx.conf -g "daemon off;"

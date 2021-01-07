@@ -13,22 +13,23 @@ RUN wget -P /usr/local/share/ca-certificates/cacert.org http://www.cacert.org/ce
 RUN update-ca-certificates
 #RUN git config --global http.sslCAinfo /etc/ssl/certs/ca-certificates.crt
 
-COPY server.jl ${IROOT}/
 WORKDIR ${IROOT}
 
-RUN wget -q https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.2-linux-x86_64.tar.gz
-RUN tar -xzf julia-1.5.2-linux-x86_64.tar.gz
-RUN mv julia-1.5.2 /opt/
-RUN rm -f julia-1.5.2-linux-x86_64.tar.gz
-ENV PATH="/opt/julia-1.5.2/bin:${PATH}"
+RUN wget -q https://julialang-s3.julialang.org/bin/linux/x64/1.5/julia-1.5.3-linux-x86_64.tar.gz
+RUN tar -xzf julia-1.5.3-linux-x86_64.tar.gz
+RUN mv julia-1.5.3 /opt/
+RUN rm -f julia-1.5.3-linux-x86_64.tar.gz
+ENV PATH="/opt/julia-1.5.3/bin:${PATH}"
 
-RUN julia -e 'import Pkg; Pkg.update()' && \
-    julia -e 'import Pkg; Pkg.add("HTTP")' && \
-    julia -e 'import Pkg; Pkg.add("JSON")' && \
-    julia -e 'import Pkg; Pkg.precompile()'
+COPY *.toml ${IROOT}/
 
+RUN julia -e 'import Pkg; Pkg.activate(@__DIR__); Pkg.instantiate()' && \
+    julia -e 'import Pkg; Pkg.activate(@__DIR__); Pkg.precompile()'
+
+COPY server.jl ${IROOT}/
 COPY run.sh ${IROOT}/
 RUN chmod +x run.sh
 
-CMD ./run.sh
+EXPOSE 8080
 
+CMD ./run.sh

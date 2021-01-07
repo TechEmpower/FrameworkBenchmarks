@@ -1,7 +1,12 @@
+using Pkg
+
+Pkg.activate(@__DIR__)
+
 using HTTP
-using JSON
+import JSON3
 using Dates
 
+@info "starting listener"
 HTTP.listen("0.0.0.0", 8080, reuseaddr=true) do http
    HTTP.setheader(http, "Server" => "Julia-HTTP")
    HTTP.setheader(http, "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT")
@@ -14,7 +19,7 @@ HTTP.listen("0.0.0.0", 8080, reuseaddr=true) do http
       HTTP.setheader(http, "Content-Type" => "application/json")
       HTTP.setstatus(http, 200)
       startwrite(http)
-      write(http, JSON.json(Dict(:message => "Hello, World!")))
+      JSON3.write(http, (;message = "Hello, World!"))
    else
        HTTP.setstatus(http, 404)
        startwrite(http)
