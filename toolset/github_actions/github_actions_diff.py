@@ -96,6 +96,16 @@ if os.getenv("TESTLANG"):
                     filter(lambda x: os.path.isdir(dir + x), os.listdir(dir)))
 elif os.getenv("TESTDIR"):
     test_dirs = os.getenv("TESTDIR").split(' ')
+else:
+    def get_frameworks(test_lang):
+        dir = "frameworks/" + test_lang + "/"
+        return map(lambda x: test_lang + "/" + x,
+                   filter(lambda x: os.path.isdir(dir + x),
+                          os.listdir(dir)))
+    test_dirs = []
+    for frameworks in map(get_frameworks, os.listdir("frameworks")):
+        for framework in frameworks:
+            test_dirs.append(framework)
 
 # Forced full run
 if (not is_PR and is_master) or re.search(r'\[ci run-all\]', last_commit_msg, re.M):
