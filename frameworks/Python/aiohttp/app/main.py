@@ -39,7 +39,7 @@ def pg_dsn() -> str:
         host='tfb-database',
         port='5432',
         username=os.getenv('PGUSER', 'benchmarkdbuser'),
-        drivername='postgres',
+        drivername='postgresql',
     ))
 
 
