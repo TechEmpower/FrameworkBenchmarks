@@ -134,9 +134,11 @@ async def updates(request):
         async with sess.begin():
             for id_ in ids:
                 rand_new = randint(1, 10000)
-                await sess.execute(
-                    update(World).filter_by(id=id_).values(randomnumber=rand_new)
-                )
+                # TODO(SA1.4.0b2): world = await sess.get(World, id_)
+                ret = await sess.execute(select(World).filter_by(id=id_))
+                world = ret.scalar()
+                world.randomnumber = rand_new
+
                 result.append({'id': id_, 'randomNumber': rand_new})
     return json_response(result)
 
