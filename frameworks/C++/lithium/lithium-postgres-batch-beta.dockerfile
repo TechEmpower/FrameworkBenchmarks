@@ -1,3 +1,4 @@
+
 FROM buildpack-deps:focal
 
 RUN apt-get update -yqq
@@ -9,6 +10,4 @@ COPY ./ ./
 RUN ./compile_libpq.sh batchmode
 ENV LD_LIBRARY_PATH=/usr/lib
 
-EXPOSE 8080
-
-CMD ./compile-batch.sh TFB_PGSQL 
+CMD ./compile-batch.sh TFB_PGSQL 6cb70b6e7c2748b6b0db5d203856860f5e7025f7
