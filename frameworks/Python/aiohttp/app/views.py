@@ -6,7 +6,7 @@ from aiohttp_jinja2 import template
 from aiohttp.web import Response, json_response
 import ujson
 
-from sqlalchemy import select, update
+from sqlalchemy import select
 
 from .models import sa_fortunes, sa_worlds, Fortune, World
 
