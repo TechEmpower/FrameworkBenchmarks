@@ -36,6 +36,18 @@ jobs:
           echo "COMMIT_MESSAGE<<EOF" >> $GITHUB_ENV
           echo "$(git log --format=%B -n 1 HEAD^2)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '2.7'
+          architecture: 'x64'
+      - name: Get all changes vs master
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          DIFF=$(./toolset/github_actions/github_actions_diff.py)
+          echo "RUN_TESTS<<EOF" >> $GITHUB_ENV
+          echo "$(grep -oP "github-actions-run-tests \K(.*)" <<< $DIFF || true)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
       - id: event_out
         name: Write event outputs
         run: |
@@ -53,7 +65,7 @@ jobs:
           # include:
           #   - TESTLANG: {lang}
           # with a TESTLANG object in the include array for each language under frameworks
-          VERIFY_MATRIX=$(ls -1 frameworks | jq -R | jq -sc "{include: map({TESTLANG: .})}")
+          VERIFY_MATRIX=$(ls -1 frameworks | jq -Rc '.+"/" | select(inside(env.RUN_TESTS))  | rtrimstr("/")' | jq -sc '{include: map({TESTLANG: .})}')
           echo "::set-output name=verify_matrix::$VERIFY_MATRIX"
     outputs:
       commit_message: ${{ steps.event_out.outputs.commit_message }}
@@ -61,7 +73,8 @@ jobs:
       verify_matrix: ${{ steps.verify_out.outputs.verify_matrix }}
   verify:
     needs: setup
-    if: ${{ !contains(needs.setup.outputs.commit_message, '[ci skip]') }}
+    # The matrix check is necessary because an empty job matrix is otherwise considered a workflow failure
+    if: ${{ !contains(needs.setup.outputs.commit_message, '[ci skip]') && contains(needs.setup.outputs.verify_matrix, 'TESTLANG') }}
     runs-on: ubuntu-18.04
     strategy:
       matrix: ${{ fromJSON(needs.setup.outputs.verify_matrix) }}
