@@ -1,4 +1,6 @@
-FROM ubuntu:19.10
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update -yqq && \
 	apt-get install -yqq \
