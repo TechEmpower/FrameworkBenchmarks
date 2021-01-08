@@ -44,4 +44,6 @@ COPY --from=builder /build/libreactor .
 RUN groupadd -r libreactor && useradd --no-log-init -r -g libreactor libreactor
 USER libreactor
 
+EXPOSE 8080
+
 CMD ["./libreactor"]

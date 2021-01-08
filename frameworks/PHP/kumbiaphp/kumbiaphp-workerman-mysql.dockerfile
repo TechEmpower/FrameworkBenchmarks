@@ -24,4 +24,6 @@ RUN sed -i "s|header(|\\\Workerman\\\Protocols\\\Http::header(|g" bench/app/cont
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
+EXPOSE 8080
+
 CMD php server.php start

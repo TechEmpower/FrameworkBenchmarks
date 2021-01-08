@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
-# @file:        toolset/travis/travis_diff.py
+# @file:        toolset/github_actions/github_actions_diff.py
 # @author:      Nate Brady
 #
-# @description: This script is only for use within Travis-CI. It is meant to
-# look through the commit history and determine whether or not the current
+# @description: This script is only for use within Github Actions. It is meant
+# to look through the commit history and determine whether or not the current
 # framework test directory needs to be run. It compares the state of the PR
 # branch against the target branch.
 #
-# Any changes found in the toolset/* directory other than continuous/*, travis/*
-# and scaffolding/* will cause all tests to be run.
+# Any changes found in the toolset/* directory other than continuous/*,
+# github_actions/* and scaffolding/* will cause all tests to be run.
 #
 # The following commands can be put in commit messages to affect which tests
 # will run:
@@ -50,22 +50,23 @@ def clean_output(output):
 
 def quit_diffing():
     if len(run_tests):
-        print("travis-run-tests {!s}".format(" ".join(set(run_tests))))
+        print("github-actions-run-tests {!s}".format(" ".join(set(run_tests))))
     else:
         print("No tests to run.")
     exit(0)
 
 
 curr_branch = ""
-is_PR = (os.getenv("TRAVIS_PULL_REQUEST") != "false")
-# TRAVIS_BRANCH is the target branch when it's a pull request or the name
-# of the branch when it isn't
-is_master = not is_PR and os.getenv("TRAVIS_BRANCH") == "master"
+is_PR = (os.getenv("PR_NUMBER") != "")
+# BRANCH_NAME is the the name of the branch
+is_master = os.getenv("BRANCH_NAME") == "master"
 
 if is_PR:
-    curr_branch = "FETCH_HEAD"
+    curr_branch = "HEAD"
 elif not is_master:
-    curr_branch = os.getenv("TRAVIS_COMMIT")
+    curr_branch = os.getenv("GITHUB_SHA")
+
+if not is_master:
     # Also fetch master to compare against
     subprocess.check_output(['bash', '-c', 'git fetch origin master:master'])
 
@@ -85,7 +86,7 @@ if len(changes.split('\n')) > 10:
 # COMMIT MESSAGES:
 # Before any complicated diffing, check for forced runs from the commit message
 # Use -2 because travis now inserts a merge commit as the last commit
-last_commit_msg = os.getenv("TRAVIS_COMMIT_MESSAGE")
+last_commit_msg = os.getenv("COMMIT_MESSAGE")
 
 test_dirs = []
 run_tests = []
@@ -99,7 +100,7 @@ elif os.getenv("TESTDIR"):
     test_dirs = os.getenv("TESTDIR").split(' ')
 
 # Forced full run
-if is_master or re.search(r'\[ci run-all\]', last_commit_msg, re.M):
+if (not is_PR and is_master) or re.search(r'\[ci run-all\]', last_commit_msg, re.M):
     print("All tests have been forced to run from the commit message.")
     run_tests = test_dirs
     quit_diffing()
@@ -145,8 +146,8 @@ if re.search(r'\[ci lang .+\]', last_commit_msg, re.M):
                 run_tests.append(test)
 
 
-# Ignore travis, continuous and scaffolding changes
-if re.search(r'^toolset\/(?!(travis\/|continuous\/|scaffolding\/))', changes, re.M) is not None:
+# Ignore travis, github_actions, continuous and scaffolding changes
+if re.search(r'^toolset\/(?!(travis\/|github_actions\/|continuous\/|scaffolding\/))', changes, re.M) is not None:
     print("Found changes to core toolset. Running all tests.")
     run_tests = test_dirs
     quit_diffing()

@@ -1,0 +1,19 @@
+[framework]
+name = "peachpie"
+
+[main]
+urls.plaintext = "/plaintext.php"
+urls.json = "/json.php"
+urls.db = "/db.php"
+urls.query = "/query.php?queries="
+urls.update = "/updateraw.php?queries="
+urls.fortune = "/fortune.php"
+approach = "Realistic"
+classification = "Platform"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = ".NET"
+webserver = "Kestrel"
+versus = "php"

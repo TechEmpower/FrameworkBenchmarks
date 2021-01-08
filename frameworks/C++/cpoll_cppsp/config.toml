@@ -1,0 +1,53 @@
+[framework]
+name = "cpoll_cppsp"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "cpoll_cppsp"
+
+[raw]
+urls.db = "/db"
+urls.update = "/update?queries="
+urls.fortune = "/fortune"
+approach = "Realistic"
+classification = "Platform"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "cpoll_cppsp"
+
+[postgres-raw-threadpool]
+urls.db = "/db_pg_threadpool"
+approach = "Realistic"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "cpoll_cppsp"
+
+[postgres-raw]
+urls.db = "/db_pg_async"
+approach = "Realistic"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "cpoll_cppsp"

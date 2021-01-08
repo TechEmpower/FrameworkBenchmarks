@@ -17,5 +17,7 @@ RUN git clone -b dev --single-branch --depth 1 https://github.com/KumbiaPHP/Acti
 
 RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.0/fpm/php-fpm.conf ; fi;
 
+EXPOSE 8080
+
 CMD service php8.0-fpm start && \
     nginx -c /kumbiaphp/deploy/nginx.conf

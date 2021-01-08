@@ -1,0 +1,13 @@
+[framework]
+name = "deno"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database_os = "Linux"
+os = "Linux"
+platform = "deno"
+webserver = "None"
+versus = "nodejs"

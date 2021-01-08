@@ -15,4 +15,6 @@ ENV NODE_HANDLER sequelize-postgres
 
 RUN npm install
 
+EXPOSE 8080
+
 CMD ./start-servers.sh && nginx -c /nginx.conf -g "daemon off;"

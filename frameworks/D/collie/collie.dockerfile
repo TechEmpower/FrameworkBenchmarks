@@ -6,4 +6,6 @@ WORKDIR /collie
 RUN dub upgrade --verbose
 RUN dub build -f -b release
 
+EXPOSE 8085
+
 CMD ["./http"]

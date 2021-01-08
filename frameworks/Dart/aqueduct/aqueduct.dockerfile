@@ -4,4 +4,6 @@ COPY ./ ./
 
 RUN pub upgrade
 
+EXPOSE 8080
+
 CMD dart server.dart

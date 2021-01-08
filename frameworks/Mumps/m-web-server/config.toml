@@ -1,0 +1,15 @@
+[framework]
+name = "m-web-server"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Fullstack"
+database = "None"
+database_os = "None"
+os = "Linux"
+orm = "None"
+platform = "None"
+webserver = "m-web-server"
+versus = ""

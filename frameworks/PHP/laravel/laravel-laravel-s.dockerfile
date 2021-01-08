@@ -26,4 +26,6 @@ RUN php composer.phar install -a --no-dev --quiet
 RUN php artisan optimize
 RUN php artisan laravels publish
 
+EXPOSE 5200
+
 CMD bin/laravels start

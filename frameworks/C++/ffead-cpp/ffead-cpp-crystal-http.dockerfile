@@ -18,4 +18,6 @@ RUN crystal build --release --no-debug crystal-ffead-cpp.cr -o crystal-ffead-cpp
 
 WORKDIR /
 
+EXPOSE 8080
+
 CMD ./run_ffead.sh ffead-cpp-5.0 crystal-http

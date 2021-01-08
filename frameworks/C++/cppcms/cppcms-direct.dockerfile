@@ -48,4 +48,6 @@ COPY Makefile Makefile
 
 RUN make
 
+EXPOSE 8080
+
 CMD ./mycppcms -c config-direct-mysql.json

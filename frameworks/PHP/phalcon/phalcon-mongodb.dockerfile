@@ -22,5 +22,7 @@ RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --q
 
 RUN chmod -R 777 app
 
+EXPOSE 8080
+
 CMD service php7.4-fpm start && \
     nginx -c /phalcon/deploy/nginx.conf

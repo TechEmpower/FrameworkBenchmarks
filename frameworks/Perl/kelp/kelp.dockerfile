@@ -19,5 +19,7 @@ ADD ./app.ini /kelp/
 ADD ./app.pl /kelp/
 ADD ./nginx.conf /kelp/
 
+EXPOSE 8080
+
 CMD nginx -c /kelp/nginx.conf && \
     plackup -E production -s Starman --workers=$(nproc) -l /tmp/perl-kelp.sock -a ./app.pl

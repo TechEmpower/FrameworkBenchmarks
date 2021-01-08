@@ -24,4 +24,6 @@ RUN unitd && \
     curl -X PUT --data-binary @/php/deploy/nginx-unit.json --unix-socket \
         /var/run/control.unit.sock http://localhost/config
 
+EXPOSE 8080
+
 CMD unitd --no-daemon

@@ -31,4 +31,6 @@ RUN sed -i "s|mysql:|pgsql:|g" /app.php
 RUN export WORKERS=$(( 4 * $(nproc) )) && \
     sed -i "s|worker_processes  auto|worker_processes $WORKERS|g" /deploy/nginx.conf
 
+EXPOSE 8080
+
 CMD /nginx/sbin/nginx -c /deploy/nginx.conf
