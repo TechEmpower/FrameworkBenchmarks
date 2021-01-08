@@ -66,6 +66,7 @@ if is_PR:
 elif not is_master:
     curr_branch = os.getenv("GITHUB_SHA")
 
+
 if not is_master:
     # Also fetch master to compare against
     subprocess.check_output(['bash', '-c', 'git fetch origin master:master'])
