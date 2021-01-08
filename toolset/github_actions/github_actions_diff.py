@@ -63,12 +63,10 @@ is_master = os.getenv("BRANCH_NAME") == "master"
 
 if is_PR:
     curr_branch = "HEAD"
-elif not is_master:
-    curr_branch = os.getenv("GITHUB_SHA")
-
-if not is_master:
     # Also fetch master to compare against
     subprocess.check_output(['bash', '-c', 'git fetch origin master:master'])
+elif not is_master:
+    curr_branch = os.getenv("GITHUB_SHA")
 
 # https://stackoverflow.com/questions/25071579/list-all-files-changed-in-a-pull-request-in-git-github
 changes = clean_output(
@@ -98,6 +96,16 @@ if os.getenv("TESTLANG"):
                     filter(lambda x: os.path.isdir(dir + x), os.listdir(dir)))
 elif os.getenv("TESTDIR"):
     test_dirs = os.getenv("TESTDIR").split(' ')
+else:
+    def get_frameworks(test_lang):
+        dir = "frameworks/" + test_lang + "/"
+        return map(lambda x: test_lang + "/" + x,
+                   filter(lambda x: os.path.isdir(dir + x),
+                          os.listdir(dir)))
+    test_dirs = []
+    for frameworks in map(get_frameworks, os.listdir("frameworks")):
+        for framework in frameworks:
+            test_dirs.append(framework)
 
 # Forced full run
 if (not is_PR and is_master) or re.search(r'\[ci run-all\]', last_commit_msg, re.M):
