@@ -220,7 +220,7 @@ public class RawOfficeFloorMain {
 
 		private static HttpHeaderName NAME_SERVER = new HttpHeaderName("Server");
 
-		private static HttpHeaderValue VALUE_SERVER = new HttpHeaderValue("OF");
+		private static HttpHeaderValue VALUE_SERVER = new HttpHeaderValue("O");
 
 		private static HttpHeaderName NAME_DATE = new HttpHeaderName("Date");
 
