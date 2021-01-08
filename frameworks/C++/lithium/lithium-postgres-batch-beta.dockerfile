@@ -10,4 +10,4 @@ COPY ./ ./
 RUN ./compile_libpq.sh batchmode
 ENV LD_LIBRARY_PATH=/usr/lib
 
-CMD ./compile-batch.sh TFB_PGSQL 6cb70b6e7c2748b6b0db5d203856860f5e7025f7
+CMD ./compile-batch.sh TFB_PGSQL  16b3f43a2b292e5349b7b528fa9410b3239c15cb

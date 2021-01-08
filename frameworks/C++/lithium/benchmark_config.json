@@ -113,7 +113,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Lithium-postgres-batch",
+        "display_name": "Lithium-postgres-batch-beta",
         "notes": "",
         "versus": "None"
       }
