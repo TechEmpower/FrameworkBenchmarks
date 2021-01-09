@@ -53,7 +53,7 @@ async def db_ctx(app: web.Application):
     min_size = max(int(max_size / 2), 1)
     print(f'connection pool: min size: {min_size}, max size: {max_size}, orm: {CONNECTION_ORM}')
     if CONNECTION_ORM:
-        engine = create_async_engine(dsn, future=True)
+        engine = create_async_engine(dsn, future=True, pool_size=max_size)
         app['db_session'] = sessionmaker(engine, class_=AsyncSession)
     else:
         app['pg'] = await asyncpg.create_pool(dsn=dsn, min_size=min_size, max_size=max_size, loop=app.loop)
