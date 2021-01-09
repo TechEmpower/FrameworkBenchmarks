@@ -1,5 +1,5 @@
 <teams>
 
-	<team size="256" source="net.officefloor.frame.impl.spi.team.ExecutorCachedTeamSource" type="javax.sql.DataSource" />
+	<team size="512" source="net.officefloor.frame.impl.spi.team.ExecutorCachedTeamSource" type="javax.sql.DataSource" />
 
 </teams>

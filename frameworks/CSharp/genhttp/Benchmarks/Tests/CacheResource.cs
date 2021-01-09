@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+
 using Benchmarks.Model;
 
 using GenHTTP.Modules.Webservices;
-
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Benchmarks.Tests
 {
@@ -67,7 +68,7 @@ namespace Benchmarks.Tests
                 }
                 else
                 {
-                    var resolved = await context.World.FindAsync(id);
+                    var resolved = await context.World.FirstOrDefaultAsync(w => w.Id == id);
 
                     _Cache.Set(key, resolved);
 

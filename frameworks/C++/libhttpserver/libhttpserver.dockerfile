@@ -21,4 +21,7 @@ COPY benchmark.cpp benchmark.cpp
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 RUN g++ -O3 -std=c++11 -o benchmark benchmark.cpp -lhttpserver -L/usr/local/lib
+
+EXPOSE 8080
+
 CMD ./benchmark 8080 $(nproc)

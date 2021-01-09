@@ -13,4 +13,6 @@ WORKDIR /rocket
 
 RUN RUSTFLAGS="-C target-cpu=native" cargo +nightly-2020-08-29 build --release
 
+EXPOSE 8000
+
 CMD ./target/release/rocket

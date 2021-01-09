@@ -3,11 +3,12 @@ import multiprocessing
 from pathlib import Path
 
 import aiohttp_jinja2
-import aiopg.sa
 import asyncpg
 import jinja2
 from aiohttp import web
 from sqlalchemy.engine.url import URL
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import sessionmaker
 
 from .views import (
     json,
@@ -32,17 +33,17 @@ def pg_dsn() -> str:
     """
     :return: DSN url suitable for sqlalchemy and aiopg.
     """
-    return str(URL(
+    return str(URL.create(
         database='hello_world',
         password=os.getenv('PGPASS', 'benchmarkdbpass'),
         host='tfb-database',
         port='5432',
         username=os.getenv('PGUSER', 'benchmarkdbuser'),
-        drivername='postgres',
+        drivername='postgresql',
     ))
 
 
-async def startup(app: web.Application):
+async def db_ctx(app: web.Application):
     dsn = pg_dsn()
     # number of gunicorn workers = multiprocessing.cpu_count() as per gunicorn_conf.py
     # max_connections = 2000 as per toolset/setup/linux/databases/postgresql/postgresql.conf:64
@@ -52,16 +53,14 @@ async def startup(app: web.Application):
     min_size = max(int(max_size / 2), 1)
     print(f'connection pool: min size: {min_size}, max size: {max_size}, orm: {CONNECTION_ORM}')
     if CONNECTION_ORM:
-        app['pg'] = await aiopg.sa.create_engine(dsn=dsn, minsize=min_size, maxsize=max_size, loop=app.loop)
+        engine = create_async_engine(dsn, future=True)
+        app['db_session'] = sessionmaker(engine, class_=AsyncSession)
     else:
         app['pg'] = await asyncpg.create_pool(dsn=dsn, min_size=min_size, max_size=max_size, loop=app.loop)
 
+    yield
 
-async def cleanup(app: web.Application):
-    if CONNECTION_ORM:
-        app['pg'].close()
-        await app['pg'].wait_closed()
-    else:
+    if not CONNECTION_ORM:
         await app['pg'].close()
 
 
@@ -80,14 +79,13 @@ def setup_routes(app):
         app.router.add_get('/updates/{queries:.*}', updates_raw)
 
 
-def create_app(loop):
-    app = web.Application(loop=loop)
+def create_app():
+    app = web.Application()
 
     jinja2_loader = jinja2.FileSystemLoader(str(THIS_DIR / 'templates'))
     aiohttp_jinja2.setup(app, loader=jinja2_loader)
 
-    app.on_startup.append(startup)
-    app.on_cleanup.append(cleanup)
+    app.cleanup_ctx.append(db_ctx)
 
     setup_routes(app)
     return app

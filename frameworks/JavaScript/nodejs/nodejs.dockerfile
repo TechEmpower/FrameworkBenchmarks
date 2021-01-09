@@ -8,4 +8,6 @@ RUN npm install
 
 ENV TFB_TEST_NAME=$TFB_TEST_NAME
 
+EXPOSE 8080
+
 CMD ["node", "app.js"]

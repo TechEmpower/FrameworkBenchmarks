@@ -8,4 +8,6 @@ COPY Procfile Procfile
 COPY project.clj project.clj
 RUN lein uberjar
 
+EXPOSE 3000
+
 CMD ["java", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-server", "-jar", "target/hello-duct-standalone.jar"]

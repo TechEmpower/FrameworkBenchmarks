@@ -2,8 +2,8 @@
 
 ### Test Type Implementation Source Code
 
-* [JSON](src/main.c)
-* [PLAINTEXT](src/main.c)
+* [JSON](src/libreactor.c)
+* [PLAINTEXT](src/libreactor.c)
 
 
 ## Important Libraries

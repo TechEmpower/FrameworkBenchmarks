@@ -32,6 +32,8 @@ ENV DRIVER QPSQL
 
 RUN sed -i "s|Driver=.*|Driver=${DRIVER}|g" /cutelyst_socket.ini
 
+EXPOSE 8080
+
 CMD nginx -c /nginx.conf && uwsgi \
     --ini /cutelyst_socket.ini \
     --plugin /usr/lib/uwsgi/plugins/cutelyst2_plugin.so \

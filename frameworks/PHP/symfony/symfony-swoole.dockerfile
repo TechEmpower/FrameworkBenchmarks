@@ -33,5 +33,7 @@ ENV APP_DEBUG=0
 RUN php bin/console cache:clear
 RUN echo "opcache.preload=/symfony/var/cache/swoole/App_KernelSwooleContainer.preload.php" >> /usr/local/etc/php/php.ini
 
+EXPOSE 8080
+
 USER www-data
 CMD php bin/console swoole:server:run

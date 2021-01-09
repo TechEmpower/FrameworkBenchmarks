@@ -21,4 +21,6 @@ RUN sed -i "s|pgsql|mysql|g" src/ORM.php
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
+EXPOSE 8080
+
 CMD php /comet/app.php start

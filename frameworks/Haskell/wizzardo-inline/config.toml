@@ -1,0 +1,16 @@
+[framework]
+name = "wizzardo-inline"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Full"
+platform = "None"
+webserver = "None"
+versus = "warp"

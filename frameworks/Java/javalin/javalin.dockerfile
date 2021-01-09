@@ -5,6 +5,8 @@ COPY build.gradle build.gradle
 COPY src src
 RUN gradle --refresh-dependencies clean fatJar
 
+EXPOSE 8080
+
 CMD java \
     -Xmx2G \
     -Xms2G \

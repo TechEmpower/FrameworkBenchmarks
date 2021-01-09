@@ -1,10 +1,12 @@
 #ifndef HELPERS_H_INCLUDED
 #define HELPERS_H_INCLUDED
 
-segment http_date_header(int update);
+void plaintext(server_context *context, char *response);
 
-segment http_content_length_header(uint32_t n);
+void json(server_context *context, clo *json_object);
 
-void write_response(stream *stream, segment preamble, segment body);
+void enable_reuseport_cbpf(server *s);
+
+int fork_workers();
 
 #endif /* HELPERS_H_INCLUDED */

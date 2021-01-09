@@ -22,4 +22,6 @@ RUN cabal v2-build all
 
 RUN cp $(find dist-newstyle -name servant-tfb -type f) /app/dist-newstyle/servant-tfb-exe
 
+EXPOSE 7041
+
 CMD /app/dist-newstyle/servant-tfb-exe +RTS -A32m -N$(nproc) -qn2 -M2G -RTS

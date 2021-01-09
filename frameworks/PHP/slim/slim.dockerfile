@@ -20,5 +20,7 @@ RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --q
 
 RUN chmod -R 777 /slim
 
+EXPOSE 8080
+
 CMD service php8.0-fpm start && \
     nginx -c /slim/deploy/nginx.conf

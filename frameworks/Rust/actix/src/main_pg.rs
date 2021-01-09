@@ -8,7 +8,7 @@ use actix_service::map_config;
 use actix_web::dev::{AppConfig, Body, Server};
 use actix_web::http::{header::CONTENT_TYPE, header::SERVER, HeaderValue, StatusCode};
 use actix_web::{web, App, Error, HttpRequest, HttpResponse};
-use bytes::BytesMut;
+use bytes::{Bytes, BytesMut};
 use yarte::ywrite_html;
 
 mod db_pg;
@@ -97,11 +97,11 @@ async fn fortune(db: web::Data<Addr<PgConnection>>) -> Result<HttpResponse, Erro
 
     match res {
         Ok(fortunes) => {
-            let mut body = BytesMut::with_capacity(2048);
+            let mut body = Vec::with_capacity(2048);
             ywrite_html!(body, "{{> fortune }}");
 
             let mut res =
-                HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+                HttpResponse::with_body(StatusCode::OK, Body::Bytes(Bytes::from(body)));
             res.headers_mut()
                 .insert(SERVER, HeaderValue::from_static("Actix"));
             res.headers_mut().insert(
