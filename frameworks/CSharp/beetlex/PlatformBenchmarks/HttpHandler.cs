@@ -312,7 +312,7 @@ namespace PlatformBenchmarks
         {
 
             token.FullLength((stream.CacheLength - token.ContentPostion).ToString());
-            if (token.Requests.IsEmpty)
+            if (token.Requests.IsEmpty && stream.Length == 0)
                 session.Stream.Flush();
         }
 
