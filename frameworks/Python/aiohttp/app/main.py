@@ -83,7 +83,10 @@ def create_app():
     app = web.Application()
 
     jinja2_loader = jinja2.FileSystemLoader(str(THIS_DIR / 'templates'))
-    aiohttp_jinja2.setup(app, loader=jinja2_loader)
+    # Negative cache size eliminates overhead of LRUCache. Overhead is unnessary for
+    # most applications (as the default of 400 will never be reached).
+    # Disabling auto_reload reduces some overhead that is probably only useful in local development.
+    aiohttp_jinja2.setup(app, loader=jinja2_loader, cache_size=-1, auto_reload=False)
 
     app.cleanup_ctx.append(db_ctx)
 
