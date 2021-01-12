@@ -34,6 +34,7 @@ public class GhApplication
   {
     final PathDispatcher.Configuration<Context> config = new PathDispatcher.Configuration<>();
 
+
     config.setDefault(new HelloHandler(this))
           .add(new BasicExceptionHandler(this));
 
