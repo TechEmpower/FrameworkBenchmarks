@@ -32,7 +32,7 @@ public class GhApplication
   @Override
   protected Dispatcher constructDispatcher()
   {
-    final PathDispatcher.Configuration<Context> config = new PathDispatcher.Configuration<>();
+    final athDispatcher.Configuration<Context> config = new PathDispatcher.Configuration<>();
 
     config.setDefault(new HelloHandler(this))
           .add(new BasicExceptionHandler(this));
