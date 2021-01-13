@@ -30,6 +30,7 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           echo "BRANCH_NAME=$GITHUB_HEAD_REF" >> $GITHUB_ENV
+          echo "TARGET_BRANCH_NAME=$(echo ${GITHUB_BASE_REF##*/})" >> $GITHUB_ENV
           echo "COMMIT_MESSAGE<<EOF" >> $GITHUB_ENV
           echo "$(git log --format=%B -n 1 HEAD^2)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
@@ -59,7 +60,7 @@ jobs:
           COMMIT_MESSAGE="${COMMIT_MESSAGE//$'\r'/'%0D'}"
           echo "::set-output name=commit_message::$COMMIT_MESSAGE"
           echo "::set-output name=branch_name::$BRANCH_NAME"
-          echo "::set-output name=branch_name::$BRANCH_NAME"
+          echo "::set-output name=target_branch_name::$TARGET_BRANCH_NAME"
           echo "::set-output name=previous_commit::$PREVIOUS_COMMIT"
       - id: verify_out
         name: Write verify job matrix
@@ -74,6 +75,7 @@ jobs:
     outputs:
       commit_message: ${{ steps.event_out.outputs.commit_message }}
       branch_name: ${{ steps.event_out.outputs.branch_name }}
+      target_branch_name: ${{ steps.event_out.outputs.target_branch_name }}
       previous_commit: ${{ steps.event_out.outputs.previous_commit }}
       verify_matrix: ${{ steps.verify_out.outputs.verify_matrix }}
   verify:
@@ -91,6 +93,7 @@ jobs:
       TESTDIR: ${{ matrix.TESTDIR }}
       COMMIT_MESSAGE: ${{ needs.setup.outputs.commit_message }}
       BRANCH_NAME: ${{ needs.setup.outputs.branch_name }}
+      TARGET_BRANCH_NAME: ${{ needs.setup.outputs.target_branch_name }}
       PREVIOUS_COMMIT: ${{ needs.setup.outputs.previous_commit }}
       PR_NUMBER: ${{ github.event.pull_request.number }}
     steps:
