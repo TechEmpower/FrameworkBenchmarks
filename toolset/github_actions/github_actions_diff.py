@@ -60,14 +60,15 @@ curr_branch = ""
 is_PR = (os.getenv("PR_NUMBER") != "")
 previous_commit = os.getenv("PREVIOUS_COMMIT")
 
+diff_target = os.getenv("TARGET_BRANCH_NAME") if is_PR else previous_commit
+
 if is_PR:
     curr_branch = "HEAD"
     # Also fetch master to compare against
-    subprocess.check_output(['bash', '-c', 'git fetch origin master:master'])
+    subprocess.check_output(['bash', '-c', 'git fetch origin {0}:{0}'
+                            .format(diff_target)])
 else:
     curr_branch = os.getenv("GITHUB_SHA")
-
-diff_target = "master" if is_PR else previous_commit
 
 # https://stackoverflow.com/questions/25071579/list-all-files-changed-in-a-pull-request-in-git-github
 changes = clean_output(
