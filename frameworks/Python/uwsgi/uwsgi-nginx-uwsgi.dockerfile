@@ -14,4 +14,6 @@ RUN pip install -r /uw/requirements.txt
 
 RUN sed -i 's|include .*/conf/uwsgi_params;|include /etc/nginx/uwsgi_params;|g' /uw/nginx.conf
 
+EXPOSE 8080
+
 CMD nginx -c /uw/nginx.conf && uwsgi --ini uwsgi.ini --processes $(nproc) --gevent 1000 --wsgi hello

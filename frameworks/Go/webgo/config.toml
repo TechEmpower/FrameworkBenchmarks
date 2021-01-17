@@ -1,0 +1,14 @@
+[framework]
+name = "webgo"
+
+[main]
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "go"

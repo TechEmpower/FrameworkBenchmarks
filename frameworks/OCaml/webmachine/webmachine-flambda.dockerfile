@@ -22,4 +22,6 @@ COPY ./src /${DIR}
 
 RUN sudo chown -R opam: . && make build
 
+EXPOSE 8080
+
 ENTRYPOINT _build/default/src/bin/tfb.exe

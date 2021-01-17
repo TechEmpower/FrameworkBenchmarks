@@ -28,4 +28,6 @@ RUN make clean && make
 
 WORKDIR $CPPSP_HOME
 
+EXPOSE 16969
+
 CMD ./run_application /cpoll_cppsp/www -g g++-4.8 -m /forcedynamic.cppsm

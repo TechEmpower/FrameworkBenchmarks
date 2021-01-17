@@ -26,6 +26,6 @@ WORKDIR /test/src-async/build
 RUN cmake -DCMAKE_BUILD_TYPE=Release ..
 RUN make
 
-EXPOSE 8000 8000
+EXPOSE 8000
 
 CMD ./oatpp-async-test

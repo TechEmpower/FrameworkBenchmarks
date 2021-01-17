@@ -28,5 +28,7 @@ RUN sed -i '/PDO::ATTR_STATEMENT_CLASS/d' ./vendor/doctrine/dbal/lib/Doctrine/DB
 RUN php bin/console cache:clear
 RUN echo "opcache.preload=/symfony/var/cache/prod/App_KernelProdContainer.preload.php" >> /etc/php/7.4/fpm/php.ini
 
+EXPOSE 8080
+
 CMD service php7.4-fpm start && \
     nginx -c /symfony/deploy/nginx.conf -g "daemon off;"

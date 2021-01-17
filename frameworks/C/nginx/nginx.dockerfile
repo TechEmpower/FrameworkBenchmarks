@@ -7,4 +7,6 @@ RUN apt-get install -y nginx-light
 
 ADD ./ ./
 
+EXPOSE 8080
+
 CMD nginx -c /nginx.conf

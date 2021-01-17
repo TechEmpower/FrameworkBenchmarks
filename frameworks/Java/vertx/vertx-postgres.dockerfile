@@ -3,6 +3,9 @@ WORKDIR /vertx
 COPY src src
 COPY pom.xml pom.xml
 RUN mvn package -q
+
+EXPOSE 8080
+
 CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'` && \
     sed -i "s|tfb-database|$DBIP|g" /vertx/src/main/conf/config.json && \
     java \

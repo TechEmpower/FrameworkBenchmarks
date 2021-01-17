@@ -12,5 +12,7 @@ RUN apt-get update -yqq > /dev/null && \
 ADD ./ /hhvm_app
 WORKDIR /hhvm_app
 
+EXPOSE 8080
+
 CMD hhvm -m daemon --config /hhvm_app/deploy/config.hdf && \
     nginx -c /hhvm_app/deploy/nginx.conf -g "daemon off;"

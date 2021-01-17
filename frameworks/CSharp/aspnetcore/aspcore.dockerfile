@@ -10,4 +10,6 @@ WORKDIR /app
 COPY --from=build /app/out ./
 COPY Benchmarks/appsettings.json ./appsettings.json
 
+EXPOSE 8080
+
 ENTRYPOINT ["dotnet", "PlatformBenchmarks.dll"]

@@ -8,4 +8,7 @@ FROM openjdk:11.0.5-jre-stretch
 WORKDIR /jawn
 COPY --from=gradle /jawn/build/install/jawn .
 ENTRYPOINT ["bin/jawn"]
+
+EXPOSE 8080
+
 CMD ["8080","production"]

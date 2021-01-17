@@ -9,4 +9,6 @@ COPY ./ ./
 RUN ./compile_libpq.sh batchmode
 ENV LD_LIBRARY_PATH=/usr/lib
 
-CMD ./compile-batch.sh TFB_PGSQL 0
+EXPOSE 8080
+
+CMD ./compile-batch.sh TFB_PGSQL 
