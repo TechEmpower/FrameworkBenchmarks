@@ -34,15 +34,15 @@ class IndexController extends Controller
     public function fortunes()
     {
         $data   = Fortune::findAll()->jsonSerialize();
-        $data[] = (object) ['id' => 0,'message' => 'Additional fortune added at request time.'];
-        usort($data, function ($a,$b){
+        $data[] = (object)['id' => 0, 'message' => 'Additional fortune added at request time.'];
+        usort($data, function ($a, $b) {
             return $a->message <=> $b->message;
         });
 
         $html = '';
         foreach ($data as $f) {
             $f->message = htmlspecialchars($f->message, ENT_QUOTES, 'UTF-8');
-            $html    .= "<tr><td>{$f->id}</td><td>{$f->message}</td></tr>";
+            $html       .= "<tr><td>{$f->id}</td><td>{$f->message}</td></tr>";
         }
 
         $this->response->header('Content-type', 'text/html; charset=UTF-8');
@@ -51,12 +51,12 @@ class IndexController extends Controller
 
     public function updates($count = 1)
     {
-        $count = max(min(intval($count), 500), 1);
-        $list  = [];
+        $count   = max(min(intval($count), 500), 1);
+        $list    = [];
         while ($count--) {
-            $row    = World::repeatStatement()->find(mt_rand(1, 10000));
+            $row       = World::repeatStatement()->find(mt_rand(1, 10000));
             $row->randomNumber = mt_rand(1, 10000);
-            $list[] = $row;
+            $list[]    = $row;
         }
         foreach($list as $r){
             $r->repeatStatement()->update(['randomNumber' => $r->randomNumber]);

@@ -33,4 +33,6 @@ ENV MYSQL_DB=hello_world
 ENV MYSQL_HOST=tfb-database
 ENV LD_PRELOAD=/usr/local/lib/mimalloc-1.6/libmimalloc.so
 
+EXPOSE 8080
+
 CMD ["./techempower"]

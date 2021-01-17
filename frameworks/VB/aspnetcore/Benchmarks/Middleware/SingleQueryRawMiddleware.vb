@@ -3,18 +3,12 @@
 
 
 Imports System.Runtime.CompilerServices
+Imports System.Text.Json
 Imports Microsoft.AspNetCore.Builder
 Imports Microsoft.AspNetCore.Http
 Imports Microsoft.Extensions.DependencyInjection
-Imports Newtonsoft.Json
-Imports Newtonsoft.Json.Serialization
 
 Public Class SingleQueryRawMiddleware
-
-    Private Shared ReadOnly JsonSettings As JsonSerializerSettings = New JsonSerializerSettings With {
-        .ContractResolver = New CamelCasePropertyNamesContractResolver()
-    }
-
     Private ReadOnly NextStage As RequestDelegate
 
     Public Sub New(ByVal NextStage As RequestDelegate)
@@ -26,7 +20,7 @@ Public Class SingleQueryRawMiddleware
         If httpContext.Request.Path.StartsWithSegments("/db", StringComparison.Ordinal) Then
             Dim db = httpContext.RequestServices.GetService(Of RawDb)()
             Dim row = Await db.LoadSingleQueryRow()
-            Dim result = JsonConvert.SerializeObject(row, JsonSettings)
+            Dim result = JsonSerializer.Serialize(row)
             httpContext.Response.StatusCode = StatusCodes.Status200OK
             httpContext.Response.ContentType = "application/json"
             httpContext.Response.ContentLength = result.Length

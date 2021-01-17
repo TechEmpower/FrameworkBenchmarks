@@ -11,6 +11,9 @@ ENV _PASSENGER_FORCE_HTTP_SESSION=true
 ENV DBTYPE=postgresql
 
 RUN ruby -r /rack-sequel/config/auto_tune -e 'puts auto_tune.first' > instances
+
+EXPOSE 8080
+
 CMD bundle exec passenger start --log-level 1 \
        --engine builtin --disable-turbocaching --disable-security-update-check \
        --spawn-method direct --max-pool-size $(cat instances) --min-instances $(cat instances) --max-request-queue-size 1024 \

@@ -15,6 +15,7 @@ lazy val akkaHttpSlickPostgres =
       libraryDependencies ++= Seq(
         library.akkaHttp,
         library.akkaHttpCirce,
+        library.circeGeneric,
         library.akkaSlf4j,
         library.akkaStream,
         library.logbackClassic,
@@ -29,17 +30,19 @@ lazy val akkaHttpSlickPostgres =
 lazy val library =
   new {
     object Version {
-      val akka              = "2.5.22"
-      val akkaHttp          = "10.1.8"
-      val akkaHttpCirce     = "1.23.0"
+      val akka              = "2.6.8"
+      val akkaHttp          = "10.2.0"
+      val akkaHttpCirce     = "1.34.0"
+      val circe             = "0.13.0"
       val logback           = "1.2.3"
-      val postgresql        = "42.2.5"
-      val scalate           = "1.9.1"
-      val slick             = "3.3.0"
+      val postgresql        = "42.2.16"
+      val scalate           = "1.9.6"
+      val slick             = "3.3.2"
     }
 
     val akkaHttp            = "com.typesafe.akka"            %% "akka-http"                   % Version.akkaHttp
     val akkaHttpCirce       = "de.heikoseeberger"            %% "akka-http-circe"             % Version.akkaHttpCirce
+    val circeGeneric        = "io.circe"                     %% "circe-generic"               % Version.circe
     val akkaSlf4j           = "com.typesafe.akka"            %% "akka-slf4j"                  % Version.akka
     val akkaStream          = "com.typesafe.akka"            %% "akka-stream"                 % Version.akka
     val logbackClassic      = "ch.qos.logback"               %  "logback-classic"             % Version.logback
@@ -59,7 +62,7 @@ lazy val commonSettings =
   Seq(
     organization := "net.benchmark.akka.http",
     organizationName := "Akka",
-    scalaVersion := "2.12.8",
+    scalaVersion := "2.13.3",
     scalacOptions ++= Seq(
       "-deprecation",
       "-encoding",
@@ -69,13 +72,9 @@ lazy val commonSettings =
       "-target:jvm-1.8",
       "-unchecked",
       "-Xfatal-warnings",
-      "-Xfuture",
-      "-Xlint",
+      "-Xlint:unused",
       "-Ydelambdafy:method",
-      "-Yno-adapted-args",
-      "-Ypartial-unification",
       "-Ywarn-numeric-widen",
-      "-Ywarn-unused-import",
       "-Ywarn-value-discard"
     ),
     scalacOptions in (Compile, console) --= Seq("-Xfatal-warnings"), // Relax settings for console
@@ -87,9 +86,6 @@ lazy val commonSettings =
       "1.8",
       "-target",
       "1.8"
-    ),
-    javaOptions ++= Seq(
-      "-jvm-debug 5555"
     ),
     transitiveClassifiers := Seq("sources"),
     publishArtifact in (Compile, packageDoc) := false,

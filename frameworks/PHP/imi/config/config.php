@@ -4,6 +4,7 @@ $dbResourceConfig = [
     'username'    => 'benchmarkdbuser',
     'password'    => 'benchmarkdbpass',
     'database'    => 'hello_world',
+    'dbClass'     => \Imi\Db\Drivers\Swoole\Driver::class,
 ];
 return [
     // 项目根命名空间
@@ -35,6 +36,8 @@ return [
             'tcp_fastopen'      => true,
             'http_parse_post'   => false,
             'http_parse_cookie' => false,
+            'http_parse_files'  => false,
+            'http_compression'  => false,
         ],
     ],
 
@@ -59,6 +62,7 @@ return [
                         'minResources' => 16,
                         'gcInterval'   => null,
                         'checkStateWhenGetResource' =>  false,
+                        'requestResourceCheckInterval' => 30,
                     ],
                 ],
                 // resource也可以定义多个连接
@@ -76,6 +80,7 @@ return [
                     'minResources' => 0,
                     'gcInterval'   => null,
                     'checkStateWhenGetResource' =>  false,
+                    'requestResourceCheckInterval' => 30,
                 ],
             ],
             // 数组资源配置

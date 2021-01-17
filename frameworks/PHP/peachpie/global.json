@@ -1,5 +1,5 @@
 {
     "msbuild-sdks": {
-        "Peachpie.NET.Sdk": "1.0.0-appv3917"
+        "Peachpie.NET.Sdk": "1.0.0-preview5"
     }
 }

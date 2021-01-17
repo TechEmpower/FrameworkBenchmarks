@@ -8,4 +8,6 @@ WORKDIR spock
 
 RUN stack --allow-different-user build --install-ghc
 
+EXPOSE 3000
+
 CMD stack --allow-different-user exec spock-exe -- +RTS -A32m -N$(nproc)

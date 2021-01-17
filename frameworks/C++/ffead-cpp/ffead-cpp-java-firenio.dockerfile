@@ -1,7 +1,9 @@
-FROM sumeetchhetri/ffead-cpp-4.0-java-base:1.0
+FROM sumeetchhetri/ffead-cpp-5.0-java-base:5.2
 
 ENV IROOT=/installs
 
 WORKDIR /
 
-CMD ./run_ffead.sh ffead-cpp-4.0 java-firenio
+EXPOSE 8080
+
+CMD ./run_ffead.sh ffead-cpp-5.0 java-firenio

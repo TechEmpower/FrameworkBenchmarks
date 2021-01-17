@@ -10,12 +10,15 @@ WORKDIR /voovan
 COPY --from=maven /voovan/target/voovan-bench-0.1-jar-with-dependencies.jar app.jar
 COPY --from=maven /voovan/config/framework.properties config/framework.properties
 
+EXPOSE 8080
+
 CMD java -DCheckTimeout=false \
     -DThreadBufferPoolSize=1024 \
     -DByteBufferSize=4096 \
     -DAsyncSend=false \
     -DAsyncRecive=false \
     -DByteBufferAnalysis=-1\
+    -DServer=v \
     -server -Xms2g -Xmx2g \
     -XX:+DoEscapeAnalysis \
     -XX:+AlwaysPreTouch \

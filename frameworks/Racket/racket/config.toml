@@ -1,0 +1,20 @@
+[framework]
+name = "racket"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.update = "/updates?queries="
+urls.fortune = "/fortunes"
+urls.cached_query = "/cached?queries="
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Racket"
+webserver = "Racket"
+versus = ""

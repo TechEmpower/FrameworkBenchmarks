@@ -41,7 +41,7 @@ fun main(args: Array<String>) {
     val ds = require(DataSource::class)
 
     /** Template engine: */
-    install(RockerModule())
+    install(RockerModule().reuseBuffer(true))
 
     get("/plaintext") {
       ctx.send(MESSAGE_BYTES)

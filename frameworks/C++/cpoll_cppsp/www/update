@@ -26,10 +26,10 @@ public:
 	MYSQL_BIND param_update[2];
 	myStatement() {
 		db=doConnect(NULL);
-		
+
 		//select statement
 		stmt=mysql_stmt_init(db);
-		const char* sql="SELECT randomNumber FROM World WHERE id = ?";
+		const char* sql="SELECT randomNumber, id FROM World WHERE id = ?";
 		if(mysql_stmt_prepare(stmt,sql,strlen(sql)))
 			throw runtime_error(mysql_stmt_error(stmt));
 		memset(param, 0, sizeof(param));
@@ -46,7 +46,7 @@ public:
 		results[0].length = &len1;
 		if(mysql_stmt_bind_param(stmt,param)) throw runtime_error(mysql_stmt_error(stmt));
 		if(mysql_stmt_bind_result(stmt, results)) throw runtime_error(mysql_stmt_error(stmt));
-		
+
 		//update statement
 		stmt_update=mysql_stmt_init(db);
 		sql="update World set randomNumber=? WHERE id = ?";
@@ -146,7 +146,7 @@ void doInit() override {
 	if(queries<1)queries=1;
 	if(queries>500)queries=500;
 	int i;
-	
+
 	items=(world*)sp->alloc(sizeof(world)*queries);
 	stmt=stmtPool.get();
 	poll->add(efd);

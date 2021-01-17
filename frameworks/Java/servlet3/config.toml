@@ -1,0 +1,28 @@
+[framework]
+name = "servlet3"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Servlet"
+webserver = "Tomcat"
+versus = "servlet"
+
+[sync]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Servlet"
+webserver = "Tomcat"
+versus = "servlet"

@@ -12,4 +12,6 @@ RUN pip3 install -r /apidaora/requirements.txt
 
 ADD apidaora_core_conf.py coreapp.py /apidaora/
 
+EXPOSE 8080
+
 CMD gunicorn coreapp:app -k uvicorn.workers.UvicornWorker -c apidaora_core_conf.py

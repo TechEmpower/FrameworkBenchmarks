@@ -1,7 +1,9 @@
-FROM sumeetchhetri/ffead-cpp-4.0-rust-base:1.0
+FROM sumeetchhetri/ffead-cpp-5.0-rust-base:latest
 
 ENV IROOT=/installs
 
 WORKDIR /
 
-CMD ./run_ffead.sh ffead-cpp-4.0 rust-thruster
+EXPOSE 8080
+
+CMD ./run_ffead.sh ffead-cpp-5.0 rust-thruster

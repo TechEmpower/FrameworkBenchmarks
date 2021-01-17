@@ -17,4 +17,6 @@ RUN pip3 install -r requirements.txt
 
 RUN sed -i 's|include .*/conf/uwsgi_params;|include /etc/nginx/uwsgi_params;|g' /bottle/nginx.conf
 
+EXPOSE 8080
+
 CMD nginx -c /bottle/nginx.conf && uwsgi --ini /bottle/uwsgi.ini --processes $(($(nproc)*3)) --wsgi app:app

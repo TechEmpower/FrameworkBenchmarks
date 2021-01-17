@@ -1,15 +1,11 @@
 package net.benchmark.akka.http.world
 
-import io.circe.{Decoder, Encoder}
+import io.circe.Codec, io.circe.generic.semiauto.deriveCodec
+
+case class Hello(message: String)
 
 object Hello {
 
-  implicit val decodeWorld: Decoder[Hello] =
-    Decoder.forProduct1("message")(Hello.apply)
-
-  implicit val encodeWorld: Encoder[Hello] =
-    Encoder.forProduct1("message")(v => v.message)
+  implicit val helloCodec: Codec[Hello] = deriveCodec
 
 }
-
-case class Hello(message: String)

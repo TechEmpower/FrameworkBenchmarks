@@ -1,4 +1,4 @@
-FROM ubuntu:19.10
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -21,6 +21,8 @@ RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children =
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --ignore-platform-reqs
 
 RUN chmod -R 777 app
+
+EXPOSE 8080
 
 CMD service php7.4-fpm start && \
     nginx -c /phalcon/deploy/nginx.conf

@@ -4,12 +4,13 @@ using SpanJson;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PlatformBenchmarks
 {
     public partial class  HttpHandler
     {
-        public async void queries(string queryString, PipeStream stream, HttpToken token, ISession session)
+        public async Task queries(string queryString, PipeStream stream, HttpToken token, ISession session)
         {
             int count = 1;
             if(!string.IsNullOrEmpty(queryString))

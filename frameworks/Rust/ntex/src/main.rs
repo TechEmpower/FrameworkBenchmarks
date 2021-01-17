@@ -1,7 +1,7 @@
 #[global_allocator]
-static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-use bytes::{Bytes, BytesMut};
+use bytes::Bytes;
 use ntex::{http, web};
 use yarte::Serialize;
 
@@ -14,14 +14,15 @@ pub struct Message {
 }
 
 async fn json() -> web::HttpResponse {
+    let mut body = Vec::with_capacity(SIZE);
+    Message {
+        message: "Hello, World!",
+    }
+    .to_bytes_mut(&mut body);
+
     let mut res = web::HttpResponse::with_body(
         http::StatusCode::OK,
-        http::body::Body::Bytes(
-            Message {
-                message: "Hello, World!",
-            }
-            .to_bytes::<BytesMut>(SIZE),
-        ),
+        http::body::Body::Bytes(Bytes::from(body)),
     );
     res.headers_mut().insert(
         http::header::SERVER,

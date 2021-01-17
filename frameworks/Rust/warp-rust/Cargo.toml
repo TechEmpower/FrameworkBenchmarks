@@ -6,8 +6,9 @@ edition = "2018"
 
 [dependencies]
 futures = "0.3.1"
-rand = "0.7.3"
+rand = { version = "0.7.3", features = ["small_rng"] }
 serde = { version = "1.0.103", features = ["derive"] }
 tokio = { version = "0.2.21", features = ["macros", "rt-threaded"] }
 tokio-postgres = "0.5.1"
 warp = "0.2.3"
+yarte = "0.12.2"

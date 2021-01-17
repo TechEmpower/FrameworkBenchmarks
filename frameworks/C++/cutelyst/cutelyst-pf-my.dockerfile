@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 RUN apt-get update -qq && \
     apt-get install -yqq locales wget build-essential
@@ -29,6 +29,8 @@ ENV CPU_AFFINITY 1
 ENV DRIVER QMYSQL
 
 RUN sed -i "s|Driver=.*|Driver=${DRIVER}|g" /cutelyst.ini
+
+EXPOSE 8080
 
 CMD cutelyst-wsgi2 \
     --ini /cutelyst.ini:uwsgi \

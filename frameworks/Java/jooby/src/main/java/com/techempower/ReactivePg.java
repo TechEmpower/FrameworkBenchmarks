@@ -1,23 +1,28 @@
 package com.techempower;
 
+import static com.techempower.Util.randomWorld;
+import static io.jooby.ExecutionMode.EVENT_LOOP;
+import static io.jooby.MediaType.JSON;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import com.fizzed.rocker.RockerOutputFactory;
+import io.jooby.Context;
 import io.jooby.Jooby;
+import io.jooby.MediaType;
 import io.jooby.ServerOptions;
+import io.jooby.rocker.ByteBufferOutput;
 import io.jooby.rocker.RockerModule;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowIterator;
+import io.vertx.sqlclient.SqlConnection;
 import io.vertx.sqlclient.Tuple;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static com.techempower.Util.randomWorld;
-import static io.jooby.ExecutionMode.EVENT_LOOP;
-import static io.jooby.MediaType.JSON;
 
 public class ReactivePg extends Jooby {
 
@@ -37,22 +42,18 @@ public class ReactivePg extends Jooby {
     PgClients clients = new PgClients(getConfig().getConfig("db"));
 
     /** Template engine: */
-    install(new RockerModule());
+    install(new RockerModule().reuseBuffer(true));
 
     /** Single query: */
     get("/db", ctx -> {
       clients.next().preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld()), rsp -> {
-        try {
-          if (rsp.succeeded()) {
-            RowIterator<Row> rs = rsp.result().iterator();
-            Row row = rs.next();
-            ctx.setResponseType(JSON)
-                .send(Json.encode(new World(row.getInteger(0), row.getInteger(1))));
-          } else {
-            ctx.sendError(rsp.cause());
-          }
-        } catch (IOException x) {
-          ctx.sendError(x);
+        if (rsp.succeeded()) {
+          RowIterator<Row> rs = rsp.result().iterator();
+          Row row = rs.next();
+          ctx.setResponseType(JSON)
+              .send(Json.encode(new World(row.getInteger(0), row.getInteger(1))));
+        } else {
+          ctx.sendError(rsp.cause());
         }
       });
       return ctx;
@@ -62,7 +63,6 @@ public class ReactivePg extends Jooby {
     get("/queries", ctx -> {
       int queries = Util.queries(ctx);
       AtomicInteger counter = new AtomicInteger();
-      AtomicBoolean failed = new AtomicBoolean(false);
       World[] result = new World[queries];
       PgPool client = clients.next();
       for (int i = 0; i < result.length; i++) {
@@ -72,18 +72,12 @@ public class ReactivePg extends Jooby {
             Row row = rs.next();
             result[counter.get()] = new World(row.getInteger(0), row.getInteger(1));
           } else {
-            if (failed.compareAndSet(false, true)) {
-              ctx.sendError(rsp.cause());
-            }
+            sendError(ctx, rsp.cause());
           }
           // ready?
-          if (counter.incrementAndGet() == queries && !failed.get()) {
-            try {
-              ctx.setResponseType(JSON)
-                  .send(Json.encode(result));
-            } catch (IOException x) {
-              ctx.sendError(x);
-            }
+          if (counter.incrementAndGet() == queries) {
+            ctx.setResponseType(JSON)
+                .send(Json.encode(result));
           }
         });
       }
@@ -95,48 +89,50 @@ public class ReactivePg extends Jooby {
       int queries = Util.queries(ctx);
       World[] result = new World[queries];
       AtomicInteger counter = new AtomicInteger(0);
-      AtomicBoolean failed = new AtomicBoolean(false);
       PgPool pool = clients.next();
-      for (int i = 0; i < queries; i++) {
-        pool.preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld()), query -> {
-          if (query.succeeded()) {
-            RowIterator<Row> rs = query.result().iterator();
-            Tuple row = rs.next();
-            World world = new World(row.getInteger(0), randomWorld());
-            result[counter.get()] = world;
-          } else {
-            if (failed.compareAndSet(false, true)) {
-              ctx.sendError(query.cause());
+      pool.getConnection(connectCallback -> {
+        if (connectCallback.failed()) {
+          sendError(ctx, connectCallback.cause());
+          return;
+        }
+        SqlConnection conn = connectCallback.result();
+        for (int i = 0; i < queries; i++) {
+          int id = randomWorld();
+          conn.preparedQuery(SELECT_WORLD).execute(Tuple.of(id), selectCallback -> {
+            if (selectCallback.failed()) {
+              conn.close();
+              sendError(ctx, selectCallback.cause());
               return;
             }
-          }
+            result[counter.get()] = new World(
+                selectCallback.result().iterator().next().getInteger(0),
+                randomWorld());
+            if (counter.incrementAndGet() == queries) {
+              // Sort results... avoid dead locks
+              Arrays.sort(result);
+              List<Tuple> batch = new ArrayList<>(queries);
+              for (World world : result) {
+                batch.add(Tuple.of(world.getRandomNumber(), world.getId()));
+              }
 
-          if (counter.incrementAndGet() == queries && !failed.get()) {
-            List<Tuple> batch = new ArrayList<>(queries);
-            for (World world : result) {
-              batch.add(Tuple.of(world.getRandomNumber(), world.getId()));
+              conn.preparedQuery(UPDATE_WORLD).executeBatch(batch, updateCallback -> {
+                if (updateCallback.failed()) {
+                  sendError(ctx, updateCallback.cause());
+                } else {
+                  ctx.setResponseType(JSON)
+                      .send(Json.encode(result));
+                }
+                conn.close();
+              });
             }
-
-            pool.preparedQuery(UPDATE_WORLD)
-                .executeBatch(batch, update -> {
-                  if (update.failed()) {
-                    ctx.sendError(update.cause());
-                  } else {
-                    try {
-                      ctx.setResponseType(JSON)
-                          .send(Json.encode(result));
-                    } catch (IOException x) {
-                      ctx.sendError(x);
-                    }
-                  }
-                });
-          }
-        });
-      }
+          });
+        }
+      });
       return ctx;
     });
 
     /** Fortunes: */
+    RockerOutputFactory<ByteBufferOutput> factory = require(RockerOutputFactory.class);
     get("/fortunes", ctx -> {
       clients.next().preparedQuery(SELECT_FORTUNE).execute(rsp -> {
         if (rsp.succeeded()) {
@@ -153,13 +149,20 @@ public class ReactivePg extends Jooby {
 
           /** render view: */
           views.fortunes template = views.fortunes.template(fortunes);
-          ctx.render(template);
+          ctx.setResponseType(MediaType.html)
+              .send(template.render(factory).toBuffer());
         } else {
           ctx.sendError(rsp.cause());
         }
       });
       return ctx;
     });
+  }
+
+  private void sendError(Context ctx, Throwable cause) {
+    if (!ctx.isResponseStarted()) {
+      ctx.sendError(cause);
+    }
   }
 
   public static void main(String[] args) {

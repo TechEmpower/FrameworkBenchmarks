@@ -1,0 +1,19 @@
+[framework]
+name = "grails"
+
+[main]
+urls.plaintext = "/hello/plaintext"
+urls.json = "/hello/json"
+urls.db = "/hello/db"
+urls.query = "/hello/queries?queries="
+urls.update = "/hello/updates?queries="
+urls.fortune = "/hello/fortunes"
+approach = "Realistic"
+classification = "Fullstack"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Full"
+platform = "Servlet"
+webserver = "None"
+versus = "servlet"

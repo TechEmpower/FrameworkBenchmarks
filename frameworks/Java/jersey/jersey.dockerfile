@@ -15,4 +15,7 @@ RUN curl -sL http://caucho.com/download/resin-4.0.61.tar.gz | tar xz --strip-com
 RUN rm -rf webapps/*
 COPY --from=maven /jersey/target/hello.war webapps/ROOT.war
 COPY resin.xml conf/resin.xml
+
+EXPOSE 8080
+
 CMD ["java", "-jar", "lib/resin.jar", "console"]

@@ -1,9 +1,9 @@
-FROM php:7.4
+FROM php:8.0-cli
 
 RUN pecl install swoole > /dev/null && \
     docker-php-ext-enable swoole
 
-RUN docker-php-ext-install pdo_mysql > /dev/null
+RUN docker-php-ext-install opcache pdo_mysql > /dev/null
 
 RUN apt -yqq update > /dev/null && \
     apt -yqq install git unzip > /dev/null
@@ -19,5 +19,7 @@ RUN composer dumpautoload -o
 
 RUN mkdir -p /one/App/RunCache
 RUN chmod -R 777 /one/App/RunCache
+
+EXPOSE 8080
 
 CMD php App/swoole.php

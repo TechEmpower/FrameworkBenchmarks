@@ -1,9 +1,6 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-#[macro_use]
-extern crate serde_derive;
-
 use actix_http::{HttpService, KeepAlive};
 use actix_service::map_config;
 use actix_web::dev::{AppConfig, Body, Server};
@@ -48,7 +45,7 @@ async fn plaintext() -> HttpResponse {
     res
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("Started http server: 127.0.0.1:8080");
 

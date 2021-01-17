@@ -11,4 +11,6 @@ COPY Rakefile Rakefile
 
 RUN bundle install --jobs=4 --gemfile=/padrino/Gemfile --path=/padrino/padrino/bundle
 
+EXPOSE 8080
+
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb", "-w", "8", "--preload"]

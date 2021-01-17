@@ -1,12 +1,12 @@
 #ifndef HELPERS_H_INCLUDED
 #define HELPERS_H_INCLUDED
 
-reactor_vector http_date_header(int update);
+void plaintext(server_context *context, char *response);
 
-reactor_vector http_content_length_header(uint32_t n);
+void json(server_context *context, clo *json_object);
 
-void write_response(reactor_stream *stream, reactor_vector preamble, reactor_vector body);
+void enable_reuseport_cbpf(server *s);
 
-reactor_status custom_reactor_net_bind(reactor_net *net, char *node, char *service);
+int fork_workers();
 
 #endif /* HELPERS_H_INCLUDED */

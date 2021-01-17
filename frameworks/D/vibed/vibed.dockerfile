@@ -7,4 +7,6 @@ RUN apt-get update -yqq && apt-get install -yqq libpq-dev zlib1g-dev
 
 RUN dub build -b release --verbose
 
+EXPOSE 8080
+
 CMD ["/dlang/app/fwb"]
