@@ -1,5 +1,4 @@
 aiohttp==3.7.3
-aiohttp-jinja2==1.4.2
 asyncpg==0.21.0
 cchardet==2.1.7
 gunicorn==20.0.4
