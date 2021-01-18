@@ -2,15 +2,16 @@ from functools import partial
 from operator import attrgetter, itemgetter
 from random import randint
 
-from aiohttp_jinja2 import template
-from aiohttp.web import Response, json_response
+import jinja2
 import ujson
-
+from aiohttp.web import Response, json_response
 from sqlalchemy import select
 
 from .models import sa_fortunes, sa_worlds, Fortune, World
 
 json_response = partial(json_response, dumps=ujson.dumps)
+template_path = Path(__file__).parent / 'templates' / 'fortune.jinja'
+template = jinja2.Template(template_path.read_text())
 
 
 def get_num_queries(request):
@@ -94,7 +95,6 @@ async def multiple_database_queries_raw(request):
     return json_response(result)
 
 
-@template('fortune.jinja')
 async def fortunes(request):
     """
     Test 4 ORM
@@ -104,10 +104,10 @@ async def fortunes(request):
         fortunes = ret.all()
     fortunes.append(Fortune(id=0, message='Additional fortune added at request time.'))
     fortunes.sort(key=attrgetter('message'))
-    return {'fortunes': fortunes}
+    content = template.render(fortunes=fortunes)
+    return web.Response(text=content, content_type='text/html')
 
 
-@template('fortune.jinja')
 async def fortunes_raw(request):
     """
     Test 4 RAW
@@ -116,7 +116,8 @@ async def fortunes_raw(request):
         fortunes = await conn.fetch('SELECT * FROM Fortune')
     fortunes.append(dict(id=0, message='Additional fortune added at request time.'))
     fortunes.sort(key=itemgetter('message'))
-    return {'fortunes': fortunes}
+    content = template.render(fortunes=fortunes)
+    return web.Response(text=content, content_type='text/html')
 
 
 async def updates(request):
