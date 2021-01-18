@@ -105,7 +105,7 @@ async def fortunes(request):
     fortunes.append(Fortune(id=0, message='Additional fortune added at request time.'))
     fortunes.sort(key=attrgetter('message'))
     content = template.render(fortunes=fortunes)
-    return web.Response(text=content, content_type='text/html')
+    return Response(text=content, content_type='text/html')
 
 
 async def fortunes_raw(request):
@@ -117,7 +117,7 @@ async def fortunes_raw(request):
     fortunes.append(dict(id=0, message='Additional fortune added at request time.'))
     fortunes.sort(key=itemgetter('message'))
     content = template.render(fortunes=fortunes)
-    return web.Response(text=content, content_type='text/html')
+    return Response(text=content, content_type='text/html')
 
 
 async def updates(request):
