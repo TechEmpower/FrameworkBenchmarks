@@ -1,6 +1,5 @@
 import os
 import multiprocessing
-from pathlib import Path
 
 import asyncpg
 from aiohttp import web
@@ -23,8 +22,6 @@ from .views import (
 )
 
 CONNECTION_ORM = os.getenv('CONNECTION', 'ORM').upper() == 'ORM'
-
-THIS_DIR = Path(__file__).parent
 
 
 def pg_dsn() -> str:
