@@ -1,12 +1,15 @@
 import os
 import ujson
 import asyncpg
-from random import randint
+from random import randint, shuffle
 from multiprocessing import cpu_count
 from blacksheep.server import Application
 from blacksheep import Response, Header, Content
 from jinja2 import Template
+
 json_dumps = ujson.dumps
+world_ids = list(range(1, 10000))
+shuffle(world_ids)
 
 
 async def configure_db(app):
@@ -81,7 +84,7 @@ async def multiple_db_queries_test(request):
 
     num_queries = get_num_queries(request)
 
-    row_ids = [randint(1, 10000) for _ in range(num_queries)]
+    row_ids = world_ids[:num_queries]
     worlds = []
 
     connection = await db_pool.acquire()
@@ -122,7 +125,7 @@ async def db_updates_test(request):
 
     num_queries = get_num_queries(request)
 
-    updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
+    updates = [(i, randint(1, 10000)) for i in world_ids[:num_queries]]
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     connection = await db_pool.acquire()
