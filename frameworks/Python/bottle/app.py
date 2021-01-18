@@ -1,6 +1,6 @@
 from functools import partial
 from operator import attrgetter, itemgetter
-from random import randint
+from random import randint, shuffle
 from email.utils import formatdate
 import os
 import sys
@@ -29,6 +29,8 @@ Base = declarative_base()
 db_engine = create_engine(DATABASE_URI)
 plugin = sqlalchemy.Plugin(db_engine, keyword='db')
 app.install(plugin)
+world_ids = list(range(1, 10000))
+shuffle(world_ids)
 
 # Engine for raw operation. Use autocommit.
 raw_engine = create_engine(DATABASE_URI,
@@ -96,9 +98,8 @@ def get_random_world(db):
         num_queries = 1
     if num_queries > 500:
         num_queries = 500
-    rp = partial(randint, 1, 10000)
     get = db.query(World).get
-    worlds = [get(rp()).serialize() for _ in xrange(num_queries)]
+    worlds = [get(i).serialize() for i in world_ids[:num_queries]]
     response.content_type = 'application/json'
     return json.dumps(worlds)
 
@@ -112,11 +113,10 @@ def get_random_world_raw():
     if num_queries > 500:
         num_queries = 500
     worlds = []
-    rp = partial(randint, 1, 10000)
     connection = raw_engine.connect()
     try:
-        for i in xrange(num_queries):
-            result = connection.execute("SELECT id, randomNumber FROM world WHERE id = " + str(rp())).fetchone()
+        for i in world_ids[:num_queries]:
+            result = connection.execute("SELECT id, randomNumber FROM world WHERE id = " + str(i)).fetchone()
             worlds.append({'id': result[0], 'randomNumber': result[1]})
     finally:
         connection.close()
@@ -158,7 +158,7 @@ def updates(db):
 
     worlds = []
     rp = partial(randint, 1, 10000)
-    ids = [rp() for _ in xrange(num_queries)]
+    ids = world_ids[:num_queries]
     ids.sort()  # To avoid deadlock
     for id in ids:
         world = db.query(World).get(id)
@@ -183,12 +183,12 @@ def raw_updates():
 
     worlds = []
     rp = partial(randint, 1, 10000)
-    for i in xrange(num_queries):
-        world = conn.execute("SELECT * FROM World WHERE id=%s", (rp(),)).fetchone()
+    for i in world_ids[:num_queries]:
+        world = conn.execute("SELECT * FROM World WHERE id=%s", (i,)).fetchone()
         randomNumber = rp()
-        worlds.append({'id': world['id'], 'randomNumber': randomNumber})
+        worlds.append({'id': i, 'randomNumber': randomNumber})
         conn.execute("UPDATE World SET randomNumber=%s WHERE id=%s",
-                     (randomNumber, world['id']))
+                     (randomNumber, i))
     conn.close()
     response.content_type = 'application/json'
     return json.dumps(worlds)
