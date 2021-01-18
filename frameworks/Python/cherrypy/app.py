@@ -3,7 +3,7 @@ import os
 import sys
 from functools import partial
 from operator import attrgetter
-from random import randint
+from random import randint, shuffle
 import json
 
 import cherrypy
@@ -12,6 +12,8 @@ from sqlalchemy import Column
 from sqlalchemy.types import String, Integer
 
 Base = declarative_base()
+world_ids = list(range(1, 10000))
+shuffle(world_ids)
 
 if sys.version_info[0] == 3:
     xrange = range
@@ -75,9 +77,8 @@ class CherryPyBenchmark(object):
         if num_queries > 500:
             num_queries = 500
 
-        rp = partial(randint, 1, 10000)
         get = cherrypy.request.db.query(World).get
-        worlds = [get(rp()).serialize() for _ in xrange(num_queries)]
+        worlds = [get(i).serialize() for i in world_ids[:num_queries]]
         return worlds
 
     @cherrypy.expose
@@ -92,7 +93,7 @@ class CherryPyBenchmark(object):
 
         worlds = []
         rp = partial(randint, 1, 10000)
-        ids = [rp() for _ in xrange(num_queries)]
+        ids = world_ids[:num_queries]
         ids.sort()  # To avoid deadlock
         for id in ids:
             world = cherrypy.request.db.query(World).get(id)
