@@ -1,6 +1,9 @@
 import asyncio
-from random import randint
+from random import randint, shuffle
 from operator import itemgetter
+
+world_ids = list(range(1, 10000))
+shuffle(world_ids)
 
 
 @asyncio.coroutine
@@ -18,9 +21,9 @@ def get_random_records(container, limit):
     results = []
     with (yield from container.engines['mysql'].result()) as mysql_conn:
         cur = yield from mysql_conn.cursor()
-        for i in range(limit):
+        for i in world_ids[:limit]:
             yield from cur.execute('SELECT id AS "Id", randomnumber AS "RandomNumber" FROM world WHERE id=%(idx)s LIMIT 1',
-                                   {'idx': randint(1, 10000)})
+                                   {'idx': i})
             results.append((yield from cur.fetchone()))
 
     return results
@@ -32,13 +35,13 @@ def update_random_records(container, limit):
 
     with (yield from container.engines['mysql'].result()) as mysql_conn:
         cur = yield from mysql_conn.cursor()
-        for i in range(limit):
+        for i in world_ids[:limit]:
             yield from cur.execute('SELECT id AS "Id", randomnumber AS "RandomNumber" FROM world WHERE id=%(idx)s LIMIT 1',
-                                   {'idx': randint(1, 10000)})
+                                   {'idx': i})
             world = yield from cur.fetchone()
             world['RandomNumber'] = randint(1, 10000)
             yield from cur.execute('UPDATE world SET randomnumber=%(random_number)s WHERE id=%(idx)s',
-                                   {'random_number': world['RandomNumber'], 'idx': world['Id']})
+                                   {'random_number': world['RandomNumber'], 'idx': i})
             yield from mysql_conn.commit()
             results.append(world)
     return results
