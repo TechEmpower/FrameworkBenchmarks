@@ -1,6 +1,6 @@
 from functools import partial
 from operator import attrgetter, itemgetter
-from random import randint
+from random import randint, shuffle
 
 from aiohttp_jinja2 import template
 from aiohttp.web import Response, json_response
@@ -11,6 +11,8 @@ from sqlalchemy import select
 from .models import sa_fortunes, sa_worlds, Fortune, World
 
 json_response = partial(json_response, dumps=ujson.dumps)
+world_ids = list(range(1, 10000))
+shuffle(world_ids)
 
 
 def get_num_queries(request):
@@ -61,7 +63,7 @@ async def multiple_database_queries_orm(request):
     """
     num_queries = get_num_queries(request)
 
-    ids = [randint(1, 10000) for _ in range(num_queries)]
+    ids = world_ids[:num_queries]
     ids.sort()
 
     result = []
@@ -80,7 +82,7 @@ async def multiple_database_queries_raw(request):
     """
     num_queries = get_num_queries(request)
 
-    ids = [randint(1, 10000) for _ in range(num_queries)]
+    ids = world_ids[:num_queries]
     ids.sort()
 
     result = []
@@ -126,7 +128,7 @@ async def updates(request):
     num_queries = get_num_queries(request)
     result = []
 
-    ids = [randint(1, 10000) for _ in range(num_queries)]
+    ids = world_ids[:num_queries]
     ids.sort()
 
     # TODO(SA1.4.0b2): async with request.app['db_session'].begin() as sess:
@@ -148,7 +150,7 @@ async def updates_raw(request):
     """
     num_queries = get_num_queries(request)
 
-    ids = [randint(1, 10000) for _ in range(num_queries)]
+    ids = world_ids[:num_queries]
     ids.sort()
 
     result = []
