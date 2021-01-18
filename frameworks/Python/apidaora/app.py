@@ -4,12 +4,14 @@ import os
 import jinja2
 from logging import getLogger
 from apidaora import appdaora, html, route, text
-from random import randint
+from random import randint, shuffle
 from operator import itemgetter
 from typing import TypedDict, Optional
 
 
 logger = getLogger(__name__)
+world_ids = list(range(1, 10000))
+shuffle(world_ids)
 
 
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
@@ -79,7 +81,7 @@ async def single_database_query():
 @route.get('/queries')
 async def multiple_database_queries(queries: Optional[str] = None):
     num_queries = get_num_queries(queries)
-    row_ids = [randint(1, 10000) for _ in range(num_queries)]
+    row_ids = world_ids[:num_queries]
     worlds = []
 
     async with connection_pool.acquire() as connection:
@@ -111,14 +113,15 @@ async def fortunes():
 async def database_updates(queries: Optional[str] = None):
     worlds = []
     updates = set()
+    num_queries = get_num_queries(queries)
 
     async with connection_pool.acquire() as connection:
         statement = await connection.prepare(READ_ROW_SQL_TO_UPDATE)
 
-        for _ in range(get_num_queries(queries)):
-            record = await statement.fetchrow(randint(1, 10000))
+        for i in world_ids[:num_queries]:
+            record = await statement.fetchrow(i)
             world = DatabaseObject(
-                id=record['id'], randomNumber=record['randomnumber']
+                id=i, randomNumber=record['randomnumber']
             )
             world['randomNumber'] = randint(1, 10000)
             worlds.append(world)
