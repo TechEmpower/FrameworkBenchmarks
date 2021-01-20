@@ -18,7 +18,6 @@ WORKDIR /duckphp
 RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.0/fpm/php-fpm.conf ; fi;
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
-#RUN sed -i "s|'controller_base_class' => null|'controller_base_class' => ''|g" vendor/dvaknheo/duckphp/src/Core/Route.php
 
 CMD service php8.0-fpm start && \
     nginx -c /duckphp/deploy/nginx.conf
