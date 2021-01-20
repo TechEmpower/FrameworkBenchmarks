@@ -11,4 +11,4 @@ serde = { version = "1.0.103", features = ["derive"] }
 tokio = { version = "0.2.21", features = ["macros", "rt-threaded"] }
 tokio-postgres = "0.5.1"
 warp = "0.2.3"
-yarte = "0.12.2"
+yarte = "0.14.1"
