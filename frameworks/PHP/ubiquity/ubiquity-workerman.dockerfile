@@ -35,7 +35,8 @@ RUN chmod 777 -R /ubiquity/.ubiquity/*
 
 COPY deploy/conf/workerman/pgsql/workerServices.php app/config/workerServices.php
 
-RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/8.0/cli/php.ini
+RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php\n" >> /etc/php/8.0/cli/php.ini
+RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=tracing\n" >> /etc/php/8.0/cli/php.ini
 
 EXPOSE 8080
 
