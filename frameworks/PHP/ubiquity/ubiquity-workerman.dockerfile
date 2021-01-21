@@ -13,7 +13,7 @@ RUN apt-get install -yqq composer > /dev/null
 RUN apt-get install -y php-pear php8.0-dev libevent-dev > /dev/null
 RUN pecl install event-3.0.2 > /dev/null && echo "extension=event.so" > /etc/php/8.0/cli/conf.d/event.ini
 
-COPY deploy/conf/php-async.ini /etc/php/7.4/cli/php.ini
+COPY deploy/conf/php-async.ini /etc/php/8.0/cli/php.ini
 
 ADD ./ /ubiquity
 WORKDIR /ubiquity
@@ -36,7 +36,7 @@ RUN chmod 777 -R /ubiquity/.ubiquity/*
 COPY deploy/conf/workerman/pgsql/workerServices.php app/config/workerServices.php
 
 RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php\n" >> /etc/php/8.0/cli/php.ini
-#RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=tracing\n" >> /etc/php/8.0/cli/php.ini
+RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=tracing\n" >> /etc/php/8.0/cli/php.ini
 
 EXPOSE 8080
 
