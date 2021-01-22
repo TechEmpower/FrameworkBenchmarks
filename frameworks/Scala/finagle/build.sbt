@@ -1,4 +1,4 @@
-lazy val finagleVersion = "20.12.0"
+lazy val finagleVersion = "21.1.0"
 
 name := "finagle-benchmark"
 scalaVersion := "2.12.8"

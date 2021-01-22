@@ -6,10 +6,10 @@
 
 namespace DuckPhpBenchmark\System;
 
-use DuckPhp\SingletonEx\SingletonEx;
+use DuckPhp\SingletonEx\SingletonExTrait;
 
 class BaseModel
 {
-    use SingletonEx;
+    use SingletonExTrait;
     // override or add your code here
 }
