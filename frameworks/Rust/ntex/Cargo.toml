@@ -20,7 +20,7 @@ name = "ntex-sailfish"
 path = "src/main_sailfish.rs"
 
 [dependencies]
-ntex = "0.2.0-b.4"
+ntex = "0.2.0-b.5"
 mimalloc = { version = "0.1.21", default-features = false }
 yarte = { version = "0.14", features = ["bytes-buf", "json"] }
 env_logger = "0.8"
