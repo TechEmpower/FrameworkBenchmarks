@@ -12,3 +12,8 @@ tokio = { version = "1.0.2", features = ["macros", "rt-multi-thread"] }
 tokio-postgres = "0.7.0"
 warp = "0.3.0"
 yarte = "0.14.1"
+
+[profile.release]
+codegen-units = 1
+opt-level = 3
+lto = true
