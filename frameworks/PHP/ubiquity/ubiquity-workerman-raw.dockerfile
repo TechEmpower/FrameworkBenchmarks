@@ -1,3 +1,4 @@
+  
 FROM ubuntu:20.10
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -5,7 +6,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq git php8.0-cli php8.0-mysql php8.0-xml > /dev/null
+    apt-get install -yqq git php8.0-cli php8.0-pgsql php8.0-xml > /dev/null
 
 RUN apt-get install -yqq composer > /dev/null
 
@@ -32,9 +33,9 @@ RUN php composer.phar install --optimize-autoloader --classmap-authoritative --n
 
 RUN chmod 777 -R /ubiquity/.ubiquity/*
 
-COPY deploy/conf/workerman/mysql/workerServices.php app/config/workerServices.php
+COPY deploy/conf/workerman/pgsql/raw/workerServices.php app/config/workerServices.php
 
-RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/8.0/cli/php.ini
+RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php\n" >> /etc/php/8.0/cli/php.ini
 RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=tracing\n" >> /etc/php/8.0/cli/php.ini
 
 EXPOSE 8080
