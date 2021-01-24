@@ -20,9 +20,16 @@ namespace PlatformBenchmarks
             serverOptions.LogLevel = LogType.Error;
             serverOptions.DefaultListen.Port = 8080;
             serverOptions.Statistical = false;
-            serverOptions.BufferSize = 1024 * 8;
             serverOptions.BufferPoolMaxMemory = 1000;
             serverOptions.BufferPoolSize = 1024 * 10;
+            if (Program.Debug)
+            {
+                serverOptions.BufferSize = 1024 * 16;
+            }
+            else
+            {
+                serverOptions.BufferSize = 1024 * 8;
+            }
             ApiServer = SocketFactory.CreateTcpServer<HttpHandler>(serverOptions);
             ApiServer.Open();
             if (!Program.UpDB)

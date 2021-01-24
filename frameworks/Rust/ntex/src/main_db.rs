@@ -38,8 +38,7 @@ impl Service for App {
     }
 
     fn call(&self, req: Request) -> Self::Future {
-        let path = req.path();
-        match path {
+        match req.path() {
             "/db" => {
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();

@@ -15,7 +15,7 @@
         "database": "MySQL",
         "framework": "ubiquity",
         "language": "PHP",
-        "flavor": "PHP7",
+        "flavor": "PHP8",
         "orm": "Full",
         "platform": "FPM/FastCGI",
         "webserver": "nginx",
@@ -26,8 +26,6 @@
         "versus": "php"
       },
       "workerman": {
-        "json_url": "/Json_",
-        "plaintext_url": "/Plaintext_",
         "db_url": "/Db_",
         "query_url": "/Db_/query/",
         "fortune_url": "/Fortunes_",
@@ -39,7 +37,7 @@
         "database": "Postgres",
         "framework": "Ubiquity",
         "language": "PHP",
-        "flavor": "PHP7",
+        "flavor": "PHP8",
         "orm": "Full",
         "platform": "workerman",
         "webserver": "none",
@@ -114,7 +112,8 @@
         "database_os": "Linux",
         "display_name": "ubiquity-roadrunner",
         "notes": "",
-        "versus": "php"
+        "versus": "php",
+        "tags": ["broken"]
       },
       "roadrunner-mysql": {
         "db_url": "/DbMy",
@@ -135,7 +134,8 @@
         "database_os": "Linux",
         "display_name": "ubiquity-roadrunner-mysql",
         "notes": "",
-        "versus": "php"
+        "versus": "php",
+        "tags": ["broken"]
       },
       "workerman-mysql": {
         "db_url": "/DbMy",
@@ -148,7 +148,7 @@
         "database": "Mysql",
         "framework": "Ubiquity",
         "language": "PHP",
-        "flavor": "PHP7",
+        "flavor": "PHP8",
         "orm": "Full",
         "platform": "workerman",
         "webserver": "none",
@@ -169,7 +169,7 @@
         "database": "MongoDB",
         "framework": "Ubiquity",
         "language": "PHP",
-        "flavor": "PHP7",
+        "flavor": "PHP8",
         "orm": "Full",
         "platform": "workerman",
         "webserver": "none",
@@ -178,6 +178,29 @@
         "display_name": "ubiquity-workerman-mongo",
         "notes": "",
         "versus": "php"
+      },
+      "workerman-raw": {
+        "json_url": "/Json_",
+        "plaintext_url": "/Plaintext_",
+        "db_url": "/DbRaw",
+        "query_url": "/DbRaw/query/",
+        "fortune_url": "/FortunesRaw",
+        "update_url": "/DbRaw/update/",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "Ubiquity",
+        "language": "PHP",
+        "flavor": "PHP8",
+        "orm": "raw",
+        "platform": "workerman",
+        "webserver": "none",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ubiquity-workerman-raw",
+        "notes": "",
+        "versus": "workerman"
       },
       "ngx": {
         "json_url": "/Json_",

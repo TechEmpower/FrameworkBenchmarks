@@ -12,6 +12,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#include <QLoggingCategory>
+
 DatabaseUpdatesTest::DatabaseUpdatesTest(QObject *parent) : Controller(parent)
 {
 
@@ -41,14 +43,14 @@ void DatabaseUpdatesTest::updatep(Context *c)
 
         db.execPrepared(APreparedQueryLiteral("SELECT randomNumber, id FROM world WHERE id=$1"),
                                {id}, [c, async] (AResult &result) {
-            if (Q_UNLIKELY(result.error() && !result.size())) {
+            if (Q_UNLIKELY(result.error() || !result.size())) {
                 c->res()->setStatus(Response::InternalServerError);
                 return;
             }
         }, c);
         db.execPrepared(APreparedQueryLiteral("UPDATE world SET randomNumber=$1 WHERE id=$2"),
                                {randomNumber, id}, [c, async] (AResult &result) {
-            if (Q_UNLIKELY(result.error() && !result.size())) {
+            if (Q_UNLIKELY(result.error())) {
                 c->res()->setStatus(Response::InternalServerError);
                 return;
             }
@@ -89,7 +91,7 @@ void DatabaseUpdatesTest::updateb(Context *c)
 
         db.execPrepared(APreparedQueryLiteral("SELECT randomNumber, id FROM world WHERE id=$1"),
                                {id}, [c, async] (AResult &result) {
-            if (Q_UNLIKELY(result.error() && !result.size())) {
+            if (Q_UNLIKELY(result.error() || !result.size())) {
                 c->res()->setStatus(Response::InternalServerError);
                 return;
             }
@@ -99,7 +101,7 @@ void DatabaseUpdatesTest::updateb(Context *c)
 
     const APreparedQuery pq = getSql(queries);
     db.execPrepared(pq, args, [c, async] (AResult &result) {
-        if (Q_UNLIKELY(result.error() && !result.size())) {
+        if (Q_UNLIKELY(result.error())) {
             c->res()->setStatus(Response::InternalServerError);
             return;
         }
@@ -189,8 +191,12 @@ APreparedQuery DatabaseUpdatesTest::getSql(int count)
     sql.append(QStringLiteral("ELSE randomnumber END WHERE id IN ("));
 
     for (int i = 0; i < count; i++) {
-        sql.append(QLatin1Char('$') + QString::number(placeholdersCounter));
+        sql.append(QLatin1Char('$') + QString::number(placeholdersCounter) + QLatin1Char(','));
         ++placeholdersCounter;
+    }
+
+    if (count) {
+        sql.remove(sql.size() - 1, 1);
     }
     sql.append(QLatin1Char(')'));
     m_sqlMap.insert(count, sql);
