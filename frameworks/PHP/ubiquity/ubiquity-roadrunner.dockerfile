@@ -40,7 +40,7 @@ RUN chmod 755 /bin/envwrapper.sh
 RUN chmod 777 -R /ubiquity/.ubiquity/*
 
 #RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/8.0/cgi/php.ini
-RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=function\n" >> /etc/php/8.0/cli/php.ini
+RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=tracing\n" >> /etc/php/8.0/cli/php.ini
 
 COPY deploy/conf/roadrunner/pgsql/rrServices.php app/config/rrServices.php
 
