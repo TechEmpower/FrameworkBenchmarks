@@ -72,7 +72,7 @@ impl Future for App {
             }
         }
         if updated {
-            this.state.dsp_flush_write_data(cx.waker());
+            this.state.dsp_restart_write_task();
         }
         if !this.state.is_read_ready() {
             this.state.dsp_read_more_data(cx.waker());

@@ -14,18 +14,6 @@ platform = "None"
 webserver = "ntex"
 versus = ""
 
-[sailfish]
-urls.fortune = "/fortunes"
-approach = "Realistic"
-classification = "Micro"
-database = "Postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "None"
-webserver = "ntex"
-versus = ""
-
 [db]
 urls.db = "/db"
 urls.query = "/query?q="
