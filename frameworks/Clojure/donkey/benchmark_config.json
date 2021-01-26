@@ -9,17 +9,17 @@
         "approach": "Realistic",
         "classification": "Micro",
         "database": "None",
-        "framework": "Donkey",
+        "framework": "donkey",
         "language": "Clojure",
         "flavor": "None",
         "orm": "None",
-        "platform": "Netty",
+        "platform": "Vert.x",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "Donkey",
         "notes": "",
-        "versus": "Vertx"
+        "versus": "vertx-web"
       }
     }
   ]
