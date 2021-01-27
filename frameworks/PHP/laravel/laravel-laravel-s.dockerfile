@@ -20,12 +20,12 @@ RUN apt-get update > /dev/null && \
 COPY deploy/laravel-s/composer* ./
 
 RUN echo "LARAVELS_LISTEN_IP=0.0.0.0" >> .env
-RUN echo "LARAVELS_LISTEN_PORT=5200" >> .env
+RUN echo "LARAVELS_LISTEN_PORT=8080" >> .env
 
 RUN php composer.phar install -a --no-dev --quiet
 RUN php artisan optimize
 RUN php artisan laravels publish
 
-EXPOSE 5200
+EXPOSE 8080
 
-CMD bin/laravels start
+CMD php bin/laravels start
