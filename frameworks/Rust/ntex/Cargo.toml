@@ -15,13 +15,10 @@ path = "src/main_db.rs"
 name = "ntex-raw"
 path = "src/main_raw.rs"
 
-[[bin]]
-name = "ntex-sailfish"
-path = "src/main_sailfish.rs"
-
 [dependencies]
-ntex = "0.2.0-b.5"
-mimalloc = { version = "0.1.21", default-features = false }
+ntex = "0.2.0-b.9"
+mimalloc = { version = "0.1.22", default-features = false }
+snmalloc-rs = { version = "0.2.23", features = ["1mib", "native-cpu"] }
 yarte = { version = "0.14", features = ["bytes-buf", "json"] }
 env_logger = "0.8"
 random-fast-rng = "0.1.1"
@@ -37,7 +34,6 @@ serde = { version = "1.0", features = ["derive"] }
 log = { version = "0.4", features = ["release_max_level_off"] }
 tokio = "=0.2.6"
 tokio-postgres = { git="https://github.com/fafhrd91/postgres.git" }
-sailfish = "0.3.0"
 
 [profile.release]
 lto = true
