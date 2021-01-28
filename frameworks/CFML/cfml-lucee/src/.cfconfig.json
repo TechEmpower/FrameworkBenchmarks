@@ -1,0 +1,4 @@
+{
+    "inspectTemplate":"never",
+    "maxCFThreads":"512"
+}

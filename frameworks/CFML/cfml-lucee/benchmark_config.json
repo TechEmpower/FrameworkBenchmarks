@@ -1,0 +1,26 @@
+{
+  "framework": "cfml-lucee",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json.cfm",
+        "plaintext_url": "/plaintext.cfm",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "None",
+        "language": "CFML",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "cfml-lucee",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
