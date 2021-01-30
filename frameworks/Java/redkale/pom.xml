@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.redkalex</groupId>
     <artifactId>redkale-benchmark</artifactId>
-    <version>0.3.0</version>
+    <version>1.0.0</version>
 
     <properties>
         <!-- the main class -->
         <main.class>org.redkale.boot.Application</main.class>
-        <stack.version>0.3.0</stack.version>
+        <stack.version>1.0.0</stack.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
