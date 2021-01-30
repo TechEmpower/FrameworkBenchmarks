@@ -53,12 +53,12 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "db")
-    public CompletableFuture<World> findWorld() {
-        return source.findAsync(World.class, randomId());
+    public World findWorld() {
+        return source.find(World.class, randomId());
     }
 
     @RestMapping(name = "queries")
-    public CompletableFuture<World[]> queryWorld(@RestParam(name = "queries") int count) {
+    public World[] queryWorld(@RestParam(name = "queries") int count) {
         final int size = Math.min(500, Math.max(1, count));
         final CompletableFuture[] futures = new CompletableFuture[size];
         final World[] worlds = new World[size];
@@ -66,7 +66,7 @@ public class Service extends AbstractService {
             final int index = i;
             futures[index] = source.findAsync(World.class, randomId()).thenApply(r -> worlds[index] = r);
         }
-        return CompletableFuture.allOf(futures).thenApplyAsync(v -> worlds);
+        return CompletableFuture.allOf(futures).thenApply(v -> worlds).join();
     }
 
     @RestMapping(name = "cached-worlds")
@@ -80,7 +80,7 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "updates")
-    public CompletableFuture<World[]> updateWorld(@RestParam(name = "queries") int count) {
+    public World[] updateWorld(@RestParam(name = "queries") int count) {
         final int size = Math.min(500, Math.max(1, count));
         final CompletableFuture[] futures = new CompletableFuture[size];
         final World[] worlds = new World[size];
@@ -92,17 +92,17 @@ public class Service extends AbstractService {
                 return r;
             });
         }
-        return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(worlds)).thenApply(v -> worlds);
+        return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(worlds)).thenApply(v -> worlds).join();
     }
 
     @RestMapping(name = "fortunes")
-    public CompletableFuture<HttpResult<String>> queryFortunes() {
+    public HttpResult<String> queryFortunes() {
         return source.queryListAsync(Fortune.class).thenApply((fortunes) -> {
             fortunes.add(new Fortune(0, "Additional fortune added at request time."));
             Collections.sort(fortunes);
             String html = FortunesTemplate.template(fortunes).render().toString();
             return new HttpResult("text/html; charset=UTF-8", html);
-        });
+        }).join();
     }
 
     private int randomId() {
