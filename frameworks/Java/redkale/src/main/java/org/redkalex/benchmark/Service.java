@@ -6,7 +6,6 @@
 package org.redkalex.benchmark;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
@@ -60,13 +59,11 @@ public class Service extends AbstractService {
     @RestMapping(name = "queries")
     public World[] queryWorld(@RestParam(name = "queries") int count) {
         final int size = Math.min(500, Math.max(1, count));
-        final CompletableFuture[] futures = new CompletableFuture[size];
         final World[] worlds = new World[size];
         for (int i = 0; i < size; i++) {
-            final int index = i;
-            futures[index] = source.findAsync(World.class, randomId()).thenApply(r -> worlds[index] = r);
+            worlds[i] = source.find(World.class, randomId());
         }
-        return CompletableFuture.allOf(futures).thenApply(v -> worlds).join();
+        return worlds;
     }
 
     @RestMapping(name = "cached-worlds")
@@ -82,17 +79,13 @@ public class Service extends AbstractService {
     @RestMapping(name = "updates")
     public World[] updateWorld(@RestParam(name = "queries") int count) {
         final int size = Math.min(500, Math.max(1, count));
-        final CompletableFuture[] futures = new CompletableFuture[size];
         final World[] worlds = new World[size];
         for (int i = 0; i < size; i++) {
-            final int index = i;
-            futures[index] = source.findAsync(World.class, randomId()).thenApply((World r) -> {
-                r.setRandomNumber(randomId());
-                worlds[index] = r;
-                return r;
-            });
+             worlds[i] = source.find(World.class, randomId());
+             worlds[i].setRandomNumber(randomId());
         }
-        return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(worlds)).thenApply(v -> worlds).join();
+        source.update(worlds);
+        return worlds;
     }
 
     @RestMapping(name = "fortunes")
