@@ -1,4 +1,4 @@
-FROM python:3.7-stretch
+FROM python:3.9.1-buster
 
 ADD ./ /django
 

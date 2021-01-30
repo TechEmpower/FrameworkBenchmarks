@@ -1,10 +1,7 @@
 import os
 import multiprocessing
-from pathlib import Path
 
-import aiohttp_jinja2
 import asyncpg
-import jinja2
 from aiohttp import web
 from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
@@ -25,8 +22,6 @@ from .views import (
 )
 
 CONNECTION_ORM = os.getenv('CONNECTION', 'ORM').upper() == 'ORM'
-
-THIS_DIR = Path(__file__).parent
 
 
 def pg_dsn() -> str:
@@ -81,11 +76,6 @@ def setup_routes(app):
 
 def create_app():
     app = web.Application()
-
-    jinja2_loader = jinja2.FileSystemLoader(str(THIS_DIR / 'templates'))
-    aiohttp_jinja2.setup(app, loader=jinja2_loader)
-
     app.cleanup_ctx.append(db_ctx)
-
     setup_routes(app)
     return app

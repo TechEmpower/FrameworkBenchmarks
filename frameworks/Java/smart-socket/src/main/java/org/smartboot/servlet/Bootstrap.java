@@ -39,7 +39,7 @@ public class Bootstrap {
         // json
         ServletInfo jsonServletInfo = new ServletInfo();
         jsonServletInfo.setServletName("json");
-        jsonServletInfo.setServletClass(HelloWorldServlet.class.getName());
+        jsonServletInfo.setServletClass(JsonServlet.class.getName());
         jsonServletInfo.addMapping("/json");
         applicationRuntime.getDeploymentInfo().addServlet(jsonServletInfo);
         containerRuntime.addRuntime(applicationRuntime);
