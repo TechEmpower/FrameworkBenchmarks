@@ -6,7 +6,6 @@
 package org.redkalex.benchmark;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
@@ -53,8 +52,8 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "db")
-    public CompletableFuture<World> findWorld() {
-        return source.findAsync(World.class, randomId());
+    public World findWorld() {
+        return source.find(World.class, randomId());
     }
 
     @RestMapping(name = "queries")
