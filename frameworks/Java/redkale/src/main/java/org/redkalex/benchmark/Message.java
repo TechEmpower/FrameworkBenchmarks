@@ -5,14 +5,16 @@
  */
 package org.redkalex.benchmark;
 
+import org.redkale.convert.ConvertSmallString;
 import org.redkale.convert.json.JsonConvert;
 
 /**
  *
  * @author zhangjx
  */
-public class Message { 
+public class Message {
 
+    @ConvertSmallString
     private String message;
 
     public Message() {
