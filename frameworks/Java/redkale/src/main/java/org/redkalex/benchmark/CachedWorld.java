@@ -5,12 +5,13 @@
  */
 package org.redkalex.benchmark;
 
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  *
  * @author zhangjx
  */
+@Cacheable
 @Table(name = "World")
 public class CachedWorld extends World {
 
