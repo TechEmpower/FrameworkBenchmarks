@@ -1,11 +1,10 @@
 package benchmark.repository;
 
-import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
-import io.reactiverse.pgclient.PgClient;
-import io.reactiverse.pgclient.PgPool;
-import io.reactiverse.pgclient.PgPoolOptions;
-import io.vertx.core.Vertx;
+import io.vertx.pgclient.PgConnectOptions;
+import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.pgclient.PgPool;
+import io.vertx.sqlclient.PoolOptions;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
@@ -20,16 +19,14 @@ public class PgClientFactory {
         this.config = config;
     }
 
-    @Bean
     @Singleton
     public Vertx vertx() {
         return Vertx.vertx();
     }
 
-    @Bean
     @Singleton
     public PgClients pgClients(Vertx vertx) {
-        List<PgClient> clients = new ArrayList<>();
+        List<PgPool> clients = new ArrayList<>();
 
         for (int i = 0; i < Runtime.getRuntime().availableProcessors(); i++) {
             clients.add(pgClient(vertx));
@@ -40,14 +37,15 @@ public class PgClientFactory {
 
 
     private PgPool pgClient(Vertx vertx) {
-        PgPoolOptions options = new PgPoolOptions();
-        options.setDatabase(config.getName());
-        options.setHost(config.getHost());
-        options.setPort(config.getPort());
-        options.setUser(config.getUsername());
-        options.setPassword(config.getPassword());
-        options.setCachePreparedStatements(true);
-        options.setMaxSize(1);
-        return PgClient.pool(vertx, options);
+        PgConnectOptions connectOptions = new PgConnectOptions();
+        connectOptions.setDatabase(config.getName());
+        connectOptions.setHost(config.getHost());
+        connectOptions.setPort(config.getPort());
+        connectOptions.setUser(config.getUsername());
+        connectOptions.setPassword(config.getPassword());
+        connectOptions.setCachePreparedStatements(true);
+        PoolOptions poolOptions = new PoolOptions();
+        poolOptions.setMaxSize(1);
+        return PgPool.pool(vertx, connectOptions, poolOptions);
     }
 }
