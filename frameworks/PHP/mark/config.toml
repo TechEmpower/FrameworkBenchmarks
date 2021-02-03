@@ -1,15 +1,15 @@
 [framework]
-name = "donkey"
+name = "mark"
 
 [main]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 approach = "Realistic"
 classification = "Micro"
-database = "None"
+database = "Postgres"
 database_os = "Linux"
 os = "Linux"
-orm = "None"
-platform = "Vert.x"
+orm = "Raw"
+platform = "workerman"
 webserver = "None"
-versus = "vertx-web"
+versus = "workerman"
