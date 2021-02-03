@@ -16,7 +16,11 @@ namespace PlatformBenchmarks
         private static Utf8JsonWriter GetUtf8JsonWriter(PipeStream stream, HttpToken token)
         {
             var buffer = stream.CreateBufferWriter();
-            var writer = token.Utf8JsonWriter ??= new Utf8JsonWriter(buffer, new JsonWriterOptions { SkipValidation = true });
+            if (token.Utf8JsonWriter == null)
+            {
+                token.Utf8JsonWriter = new Utf8JsonWriter(buffer, new JsonWriterOptions { SkipValidation = true });
+            }
+            var writer = token.Utf8JsonWriter;
             writer.Reset(buffer);
             return writer;
         }
