@@ -44,7 +44,6 @@ void escape_html_entities(B& buffer, const std::string_view& data)
 
 int g_seed = 0;
 inline int random_int() { 
-  // return 0;
   g_seed = (214013*g_seed+2531011); 
   return (g_seed>>16)&0x7FFF; 
 } 
