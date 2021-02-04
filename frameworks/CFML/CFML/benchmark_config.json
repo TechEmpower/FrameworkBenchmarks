@@ -28,10 +28,10 @@
       "adobe": {
         "json_url": "/json.cfm",
         "db_url": "/db.cfm",
-        "query_url2":"/queries.cfm?queries=",
-        "fortune_url2": "/fortunes.cfm",
+        "query_url":"/queries.cfm?queries=",
+        "fortune_url": "/fortunes.cfm",
         "plaintext_url": "/plaintext.cfm",
-        "update_url2": "/updates.cfm?queries=",
+        "update_url": "/updates.cfm?queries=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",
