@@ -17,6 +17,17 @@ class view extends Views {
     $this->response_json(['message' => 'Hello, World!']);
   }
 
+  function db(Request $req) {
+   $sth = $this->db->prepare('SELECT * FROM World WHERE id = ?');
+    $sth->execute(array(mt_rand(1, 10000)));
+    $world = $sth->fetch();
+    # Cast fields to int so they don't get wrapped with quotes
+    $world['id'] = (int) $world['id'];
+    $world['randomNumber'] = (int) $world['randomNumber'];
+
+    return $this->response_json($world);
+  }
+
   function queries(Request $req) {
     $queries = $req->params->queries;
     if (is_numeric($queries)) {
