@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BeetleX" Version="1.6.3" />
+    <PackageReference Include="BeetleX" Version="1.6.5.3-beta" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Npgsql" Version="5.0.0" />

@@ -5,6 +5,7 @@ using GenHTTP.Modules.Layouting;
 using GenHTTP.Modules.Webservices;
 
 using Benchmarks.Tests;
+using Benchmarks.Utilities;
 
 namespace Benchmarks
 {
@@ -21,7 +22,8 @@ namespace Benchmarks
                               .AddService<DbResource>("db")
                               .AddService<QueryResource>("queries")
                               .AddService<UpdateResource>("updates")
-                              .AddService<CacheResource>("cached-worlds");
+                              .AddService<CacheResource>("cached-worlds")
+                              .Add(ServerHeader.Create());
 
             return Host.Create()
                        .Handler(tests)

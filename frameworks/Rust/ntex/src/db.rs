@@ -1,7 +1,4 @@
-use std::borrow::Cow;
-use std::cell::RefCell;
-use std::fmt::Write as FmtWrite;
-use std::io;
+use std::{borrow::Cow, cell::RefCell, fmt::Write as FmtWrite, io};
 
 use bytes::{Bytes, BytesMut};
 use futures::stream::futures_unordered::FuturesUnordered;
@@ -13,7 +10,7 @@ use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, NoTls, Statement};
 use yarte::{ywrite_html, Serialize};
 
-#[derive(Serialize, Debug)]
+#[derive(Copy, Clone, Serialize, Debug)]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,
@@ -154,10 +151,10 @@ impl PgConnection {
             for w in &worlds {
                 params.push(&w.id);
             }
-
-            cl.query(&st, &params)
+            let _ = cl
+                .query(&st, &params)
                 .await
-                .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))?;
+                .map_err(|e| log::error!("{:?}", e));
 
             Ok(worlds)
         }

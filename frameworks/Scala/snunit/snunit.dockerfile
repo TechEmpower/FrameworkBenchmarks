@@ -20,6 +20,6 @@ FROM nginx/unit:1.21.0-minimal
 RUN apt-get update && apt-get install -y libuv1
 
 COPY /config.json /docker-entrypoint.d/
-COPY --from=builder /workdir/target/scala-2.11/workdir-out /app/example
+COPY --from=builder /workdir/target/scala-2.13/workdir-out /app/example
 
 EXPOSE 8080

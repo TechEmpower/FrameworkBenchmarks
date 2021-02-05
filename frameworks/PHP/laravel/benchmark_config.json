@@ -54,7 +54,7 @@
 			"fortune_url": "/fortunes",
 			"update_url": "/updates/",
 			"plaintext_url": "/plaintext",
-			"port": 5200,
+			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
 			"database": "MySQL",
