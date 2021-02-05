@@ -9,7 +9,7 @@ class view extends Views {
   }
 
   function plaintext(Request $req) {
-    $this->header('Content-Type: text/plain');
+    $this->header('Content-type: text/plain');
     $this->response('Hello, World!');
   } 
 
@@ -20,7 +20,7 @@ class view extends Views {
   function db(Request $req) {
    $sth = $this->db->prepare('SELECT * FROM World WHERE id = ?');
     $sth->execute(array(mt_rand(1, 10000)));
-    $world = $sth->fetch();
+    $world = $sth->fetch(PDO::FETCH_ASSOC);
     # Cast fields to int so they don't get wrapped with quotes
     $world['id'] = (int) $world['id'];
     $world['randomNumber'] = (int) $world['randomNumber'];
@@ -29,7 +29,7 @@ class view extends Views {
   }
 
   function queries(Request $req) {
-    $queries = $req->params->queries;
+    $queries = $req->get->queries;
     if (is_numeric($queries)) {
         $queries = max(1, min($queries, 500));
     } else {
@@ -49,7 +49,7 @@ class view extends Views {
   }
 
   function updates(Request $req) {
-    $queries = $req->params->queries;
+    $queries = $req->get->queries;
     if (is_numeric($queries)) {
         $queries = max(1, min($queries, 500));
     } else {
@@ -80,7 +80,7 @@ class view extends Views {
     $fortunes = $this->db->query('SELECT * FROM Fortune')->fetchAll(PDO::FETCH_KEY_PAIR);
     $fortunes[0] = 'Additional fortune added at request time.';
     asort($fortunes);
-    return $this->render("fortunes", ["fortunes" => $fortunes]);
+    return $this->render('fortunes', ["fortunes" => $fortunes]);
   }
 
   function page_not_found(Request $req) {

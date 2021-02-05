@@ -7,7 +7,7 @@ $urlpatterns = [
   '/plaintext' => 'view.plaintext',
   '/json' => 'view.json',
   '/db' => 'view.db',
-  '/queries/{queries}' => 'view.queries',
-  '/updates/{queries}' => 'view.updates',
+  '/queries' => 'view.queries',
+  '/updates' => 'view.updates',
   '/fortunes' => 'view.fortunes',
 ];

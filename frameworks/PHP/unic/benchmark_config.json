@@ -1,28 +1,28 @@
 {
-	"framework": "unic",
-	"tests": [{
-		"default": {
-			"json_url": "/json",
-			"db_url": "/db",
-			"query_url": "/queries/",
-			"fortune_url": "/fortunes",
-			"update_url": "/updates/",
-			"plaintext_url": "/plaintext",
-			"port": 8080,
-			"approach": "Realistic",
-			"classification": "Fullstack",
-			"database": "MySQL",
-			"framework": "unic",
-			"language": "PHP",
-			"flavor": "PHP8",
-			"orm": "Full",
-			"platform": "FPM/FastCGI",
-			"webserver": "nginx",
-			"os": "Linux",
-			"database_os": "Linux",
-			"display_name": "Laravel 5.6",
-			"notes": "",
-			"versus": "php"
-		}
-	}]
+  "framework": "unic",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
+      "fortune_url": "/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "unic",
+      "language": "PHP",
+      "flavor": "PHP8",
+      "orm": "Raw",
+      "platform": "FPM/FastCGI",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "unic",
+      "notes": "",
+      "versus": "php"
+    }
+  }]
 }
