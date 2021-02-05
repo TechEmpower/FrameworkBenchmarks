@@ -1,0 +1,26 @@
+{
+    "name": "unicframework/unic",
+    "type": "project",
+    "description": "Unic is a high performance, open source web framework.",
+    "keywords": [
+        "unic",
+        "unic framework",
+        "php framework",
+        "web framework",
+        "mvt framework"
+    ],
+    "homepage": "https://unicframework.github.io/docs",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rajkumar Dusad",
+            "homepage": "https://github.com/rajkumardusad",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.6"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
