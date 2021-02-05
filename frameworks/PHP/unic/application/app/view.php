@@ -9,7 +9,7 @@ class view extends Views {
   }
 
   function plaintext(Request $req) {
-    $this->header('Content-Type', 'text/plain');
+    $this->header('Content-Type: text/plain');
     $this->response('Hello, World!');
   } 
 
