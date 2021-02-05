@@ -77,11 +77,8 @@ class view extends Views {
   }
 
   function fortunes(Request $req) {
-    $fortunes = $this->db->query('SELECT * FROM Fortune')->fetchAll(PDO::FETCH_ASSOC);
-    $fortunes[] = [
-      'id' => 0,
-      'message' => 'Additional fortune added at request time.'
-    ];
+    $fortunes = $this->db->query('SELECT * FROM Fortune')->fetchAll(PDO::FETCH_KEY_PAIR);
+    $fortunes[0] = Additional fortune added at request time.'];
     asort($fortunes);
     return $this->render('fortunes', ["fortunes" => $fortunes]);
   }
