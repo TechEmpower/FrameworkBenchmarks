@@ -6,8 +6,8 @@ RUN mvn package -q
 
 FROM openjdk:11.0.3-jdk-slim
 WORKDIR /martian
-ADD --from=maven /martian/target/martian.jar martian.jar
-ADD --from=maven /martian/target/lib lib
+COPY --from=maven /martian/target/martian.jar martian.jar
+COPY --from=maven /martian/target/lib lib
 
 EXPOSE 8080
 
