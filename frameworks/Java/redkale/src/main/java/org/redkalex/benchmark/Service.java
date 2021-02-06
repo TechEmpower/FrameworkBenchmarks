@@ -81,7 +81,10 @@ public class Service extends AbstractService {
                 worlds[index] = r;
             });
         }
-        return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(worlds)).thenApply(v -> worlds);
+        return CompletableFuture.allOf(futures).thenApply(v -> {
+            Arrays.sort(worlds);
+            return source.update(worlds);
+        }).thenApply(v -> worlds);
     }
 
     @RestMapping(name = "fortunes")
