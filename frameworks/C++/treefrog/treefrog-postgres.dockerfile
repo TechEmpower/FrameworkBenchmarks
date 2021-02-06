@@ -10,7 +10,6 @@ RUN apt-get update -yqq && apt-get upgrade -yq && apt-get install -yqq --no-inst
     qtdeclarative5-dev libqt5quick5 libqt5quickparticles5 libqt5gui5 libqt5printsupport5 \
     libqt5widgets5 libqt5opengl5-dev libqt5quicktest5 libqt5sql5-sqlite libsqlite3-dev libmongoc-dev libbson-dev \
     redis-server
-RUN service redis-server start
 
 WORKDIR /usr/src
 RUN wget -q https://github.com/treefrogframework/treefrog-framework/archive/v${TFVER}.tar.gz
@@ -38,4 +37,5 @@ RUN sed -i 's|MultiProcessingModule=.*|MultiProcessingModule=thread|g' config/ap
 EXPOSE 8080
 
 # 3. Start TreeFrog
-CMD treefrog /workspace
+CMD service redis-server start && \
+    treefrog /workspace
