@@ -10,6 +10,6 @@
             <property name="javax.persistence.jdbc.user" value="benchmarkdbuser"/>
             <property name="javax.persistence.jdbc.password" value="benchmarkdbpass"/>
         </properties>
-    </persistence-unit>
+    </persistence-unit> 
             
 </persistence>
