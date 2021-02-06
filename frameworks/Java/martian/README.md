@@ -5,7 +5,7 @@ This is Martian's official website address[http://mars-framework.com/](http://ma
 ## Versions
 
 - Java OpenJDK 1.8
-- Martian 3.2.7
+- Martian 3.2.13
 
 ##Test URLs
 ### JSON Encoding Test
