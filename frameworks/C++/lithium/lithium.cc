@@ -9,6 +9,7 @@
 #include "symbols.hh"
 using namespace li;
 
+
 template <typename B>
 void escape_html_entities(B& buffer, const std::string_view& data)
 {
@@ -40,6 +41,12 @@ void escape_html_entities(B& buffer, const std::string_view& data)
         }
     }
 }
+
+int g_seed = 0;
+inline int random_int() { 
+  g_seed = (214013*g_seed+2531011); 
+  return (g_seed>>16)&0x7FFF; 
+} 
 
 #ifdef PROFILE_MODE
 void siege(int port) {
@@ -137,7 +144,7 @@ int main(int argc, char* argv[]) {
   };
   my_api.get("/db") = [&](http_request& request, http_response& response) {
     sql_db.max_async_connections_per_thread_ = db_nconn;
-    response.write_json(*random_numbers.connect(request.fiber).find_one(s::id = 1 + rand() % 10000));
+    response.write_json(*random_numbers.connect(request.fiber).find_one(s::id = 1 + random_int() % 10000));
   };
 
   my_api.get("/queries") = [&](http_request& request, http_response& response) {
@@ -148,7 +155,7 @@ int main(int argc, char* argv[]) {
     N = std::max(1, std::min(N, 500));
     
     auto c = random_numbers.connect(request.fiber);
-    response.write_json_generator(N, [&] { return *c.find_one(s::id = 1 + rand() % 10000); });
+    response.write_json_generator(N, [&] { return *c.find_one(s::id = 1 + random_int() % 10000); });
   };
 
   random_numbers.connect().forall([&] (const auto& number) {
@@ -160,7 +167,7 @@ int main(int argc, char* argv[]) {
     int N = atoi(N_str.c_str());
 
     response.write_json_generator(std::max(1, std::min(N, 500)), 
-      [&] { return world_cache.get(1 + rand() % 10000); });
+      [&] { return world_cache.get(1 + random_int() % 10000); });
   };
 
   my_api.get("/updates") = [&](http_request& request, http_response& response) {
@@ -180,8 +187,8 @@ int main(int argc, char* argv[]) {
 #endif
       for (int i = 0; i < N; i++)
       {
-        numbers[i] = *c.find_one(s::id = 1 + rand() % 10000);
-        numbers[i].randomNumber = 1 + rand() % 10000;
+        numbers[i] = *c.find_one(s::id = 1 + random_int() % 10000);
+        numbers[i].randomNumber = 1 + random_int() % 10000;
       }
 
       std::sort(numbers.begin(), numbers.end(), [] (auto a, auto b) { return a.id < b.id; });
