@@ -8,7 +8,7 @@
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://tfb-database:5432/hello_world"/>
             <property name="javax.persistence.jdbc.user" value="benchmarkdbuser"/>
             <property name="javax.persistence.jdbc.password" value="benchmarkdbpass"/>
-        </properties>
+        </properties> 
     </persistence-unit>
             
 </persistence>
