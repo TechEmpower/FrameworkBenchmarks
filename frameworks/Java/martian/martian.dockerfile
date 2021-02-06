@@ -11,4 +11,4 @@ COPY --from=maven /martian/target/lib lib
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-Xms1G", "-Xmx1G", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-jar", "martian.jar", "--server.performance=true"]
+CMD ["java", "-jar", "martian.jar"]
