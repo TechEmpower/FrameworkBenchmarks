@@ -18,6 +18,7 @@ public slots:
     void show(const QString &pk);
     void queries();
     void queries(const QString &num);
+    void cached_queries(const QString &num);
     void random();
     void entry();
     void create();
@@ -30,6 +31,7 @@ public slots:
     // MongoDB
     void mqueries();
     void mqueries(const QString &num);
+    void cached_mqueries(const QString &num);
     void mrandom();
     void mupdates(const QString &num);
     void mupdates();
