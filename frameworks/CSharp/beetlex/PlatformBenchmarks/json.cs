@@ -27,6 +27,7 @@ namespace PlatformBenchmarks
 
         public ValueTask Json(PipeStream stream, HttpToken token, ISession session)
         {
+            
 
             System.Text.Json.JsonSerializer.Serialize<JsonMessage>(GetUtf8JsonWriter(stream, token), new JsonMessage { message = "Hello, World!" }, SerializerOptions);
             OnCompleted(stream, session, token);

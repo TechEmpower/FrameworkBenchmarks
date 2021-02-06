@@ -99,7 +99,7 @@ namespace PlatformBenchmarks
             base.SessionReceive(server, e);
             PipeStream pipeStream = e.Session.Stream.ToPipeStream();
             HttpToken token = (HttpToken)e.Session.Tag;
-            var result = pipeStream.IndexOf(_line.Data);
+            var result = pipeStream.IndexOfLine();
             while (result.End != null)
             {
                 if (result.Length == 2)
@@ -117,7 +117,6 @@ namespace PlatformBenchmarks
                     if (token.CurrentRequest == null)
                     {
                         var request = new RequestData();
-
                         byte[] buffer = null;
                         if (Program.Debug)
                             buffer = new byte[result.Length];
@@ -143,7 +142,7 @@ namespace PlatformBenchmarks
                     }
                 }
                 if (pipeStream.Length > 0)
-                    result = pipeStream.IndexOf(_line.Data);
+                    result = pipeStream.IndexOfLine();
                 else
                     break;
             }
