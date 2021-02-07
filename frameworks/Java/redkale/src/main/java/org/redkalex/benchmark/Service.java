@@ -9,7 +9,6 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
@@ -23,8 +22,6 @@ import org.redkale.util.AnyValue;
 @RestService(name = " ", repair = false)
 public class Service extends AbstractService {
 
-    private final Logger logger = Logger.getLogger(getClass().getSimpleName());
-
     private static final byte[] helloBytes = "Hello, world!".getBytes();
 
     private final Random random = new Random();
@@ -34,11 +31,9 @@ public class Service extends AbstractService {
 
     @Override
     public void init(AnyValue conf) {
-        logger.info("Service.init start");
         if ("db".equalsIgnoreCase(System.getProperty("mode"))) {
-            source.queryListAsync(CachedWorld.class);
+            source.findAsync(CachedWorld.class, 1);
         }
-        logger.info("Service.init end");
     }
 
     @RestMapping(name = "json")
