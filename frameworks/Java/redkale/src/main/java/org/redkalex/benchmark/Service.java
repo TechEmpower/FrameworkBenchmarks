@@ -29,7 +29,7 @@ public class Service extends AbstractService {
 
     @Override
     public void init(AnyValue conf) {
-        source.queryList(CachedWorld.class);
+        source.queryListAsync(CachedWorld.class);
     }
 
     @RestMapping(name = "json")
@@ -43,13 +43,28 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "db")
-    public CompletableFuture<World> findWorld() {
+    public CompletableFuture<World> findWorldAsync() {
         return source.findAsync(World.class, randomId());
     }
 
+    @RestMapping(name = "db2")  //同步模式
+    public World findWorld() {
+        return source.find(World.class, randomId());
+    }
+
     @RestMapping(name = "queries")
-    public CompletableFuture<World[]> queryWorld(@RestParam(name = "queries") int count) {
-        final int size = Math.min(500, Math.max(1, count));
+    public World[] queryWorld(int queries) {
+        final int size = Math.min(500, Math.max(1, queries));
+        final World[] worlds = new World[size];
+        for (int i = 0; i < size; i++) {
+            worlds[i] = source.find(World.class, randomId());
+        }
+        return worlds;
+    }
+
+    @RestMapping(name = "queries2")  //异步模式
+    public CompletableFuture<World[]> queryWorldAsync(int queries) {
+        final int size = Math.min(500, Math.max(1, queries));
         final World[] worlds = new World[size];
         final CompletableFuture[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
@@ -60,7 +75,7 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "cached-worlds")
-    public CachedWorld[] cachedWorlds(@RestParam(name = "count") int count) {
+    public CachedWorld[] cachedWorlds(int count) {
         final int size = Math.min(500, Math.max(1, count));
         final CachedWorld[] worlds = new CachedWorld[size];
         for (int i = 0; i < size; i++) {
@@ -70,8 +85,21 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "updates")
-    public CompletableFuture<World[]> updateWorld(@RestParam(name = "queries") int count) {
-        final int size = Math.min(500, Math.max(1, count));
+    public World[] updateWorld(int queries) {
+        final int size = Math.min(500, Math.max(1, queries));
+        final World[] worlds = new World[size];
+        for (int i = 0; i < size; i++) {
+            worlds[i] = source.find(World.class, randomId());
+            worlds[i].setRandomNumber(randomId());
+        }
+        Arrays.sort(worlds);
+        source.update(worlds);
+        return worlds;
+    }
+
+    @RestMapping(name = "updates2") //异步模式
+    public CompletableFuture<World[]> updateWorldAsync(int queries) {
+        final int size = Math.min(500, Math.max(1, queries));
         final World[] worlds = new World[size];
         final CompletableFuture[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
@@ -81,7 +109,10 @@ public class Service extends AbstractService {
                 worlds[index] = r;
             });
         }
-        return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(worlds)).thenApply(v -> worlds);
+        return CompletableFuture.allOf(futures).thenApply(v -> {
+            Arrays.sort(worlds);
+            return source.update(worlds);
+        }).thenApply(v -> worlds);
     }
 
     @RestMapping(name = "fortunes")
