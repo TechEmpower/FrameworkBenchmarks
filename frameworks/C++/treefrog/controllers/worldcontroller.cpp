@@ -65,7 +65,8 @@ void WorldController::cached_queries(const QString &num)
             // Cache the value
             Tf::cache()->set(key, QByteArray::number(w.randomNumber()), SECONDS);
         } else {
-            world.insert(key, randomNumber.toInt());
+            world.insert("id", id);
+            world.insert("randomNumber", randomNumber.toInt());
             worlds << world;
         }
     }
@@ -235,7 +236,8 @@ void WorldController::cached_pqueries(const QString &num)
             // Cache the value
             Tf::cache()->set(key, QByteArray::number(w.randomNumber()), SECONDS);
         } else {
-            world.insert(key, randomNumber.toInt());
+            world.insert("id", id);
+            world.insert("randomnumber", randomNumber.toInt());
             worlds << world;
         }
     }
@@ -296,16 +298,18 @@ void WorldController::cached_mqueries(const QString &num)
     int d = std::min(std::max(num.toInt(), 1), 500);
 
     for (int i = 0; i < d; ++i) {
-        QByteArray id = QByteArray::number((int)Tf::random(1, 10000));
-        auto randomNumber = Tf::cache()->get(id);  // Gets from cache
+        int id = Tf::random(1, 10000);
+        QByteArray key = QByteArray::number(id);
+        auto randomNumber = Tf::cache()->get(key);  // Gets from cache
 
         if (randomNumber.isEmpty()) {
-            auto w = MngWorld::get(id);
+            auto w = MngWorld::get(key);
             worlds << w.toVariantMap();
             // Cache the value
-            Tf::cache()->set(id, QByteArray::number(w.randomNumber()), SECONDS);
+            Tf::cache()->set(key, QByteArray::number(w.randomNumber()), SECONDS);
         } else {
-            world.insert(id, randomNumber.toInt());
+            world.insert("id", id);
+            world.insert("randomNumber", randomNumber.toInt());
             worlds << world;
         }
     }
