@@ -2,7 +2,7 @@ FROM buildpack-deps:focal
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NOWARNINGS yes
-ENV TFVER=1.31.0
+ENV TFVER=1.31.1
 
 RUN apt-get update -yqq && apt-get upgrade -yq && apt-get install -yqq --no-install-recommends \
     software-properties-common unzip wget make cmake gcc clang libjemalloc-dev qt5-qmake qt5-default qtbase5-dev \

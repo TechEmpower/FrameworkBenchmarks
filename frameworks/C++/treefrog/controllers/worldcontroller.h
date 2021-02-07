@@ -28,6 +28,13 @@ public slots:
     void updates();
     void remove(const QString &pk);
 
+    // PostgreSQL
+    void prandom();
+    void pqueries();
+    void pqueries(const QString &num);
+    void cached_pqueries(const QString &num);
+    void pupdates(const QString &num);
+
     // MongoDB
     void mqueries();
     void mqueries(const QString &num);
