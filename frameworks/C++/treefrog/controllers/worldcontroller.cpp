@@ -42,6 +42,11 @@ void WorldController::queries(const QString &num)
     renderJson(worlds);
 }
 
+void WorldController::cached_queries()
+{
+    cached_queries("1");
+}
+
 void WorldController::cached_queries(const QString &num)
 {
     constexpr int SECONDS = 60 * 10;  // cache time
@@ -207,6 +212,11 @@ void WorldController::pqueries(const QString &num)
     renderJson(worlds);
 }
 
+void WorldController::cached_pqueries()
+{
+    cached_pqueries("1");
+}
+
 void WorldController::cached_pqueries(const QString &num)
 {
     constexpr int SECONDS = 60 * 10;  // cache time
@@ -248,6 +258,11 @@ void WorldController::pupdates(const QString &num)
     renderJson(worlds);
 }
 
+void WorldController::pupdates()
+{
+    pupdates("1");
+}
+
 /*
  * MongoDB
  */
@@ -266,6 +281,11 @@ void WorldController::mqueries(const QString &num)
         worlds << MngWorld::get(id).toVariantMap();
     }
     renderJson(worlds);
+}
+
+void WorldController::cached_mqueries()
+{
+    cached_mqueries("1");
 }
 
 void WorldController::cached_mqueries(const QString &num)
