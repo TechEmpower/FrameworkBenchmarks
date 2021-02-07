@@ -43,13 +43,13 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "db")
-    public CompletableFuture<World> findWorldAsync() {
-        return source.findAsync(World.class, randomId());
-    }
-
-    @RestMapping(name = "db2")  //同步模式
     public World findWorld() {
         return source.find(World.class, randomId());
+    }
+
+    @RestMapping(name = "db2")  //异步模式
+    public CompletableFuture<World> findWorldAsync() {
+        return source.findAsync(World.class, randomId());
     }
 
     @RestMapping(name = "queries")
