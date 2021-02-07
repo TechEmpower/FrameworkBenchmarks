@@ -31,7 +31,9 @@ public class Service extends AbstractService {
 
     @Override
     public void init(AnyValue conf) {
-        //source.queryListAsync(CachedWorld.class);
+        if ("db".equalsIgnoreCase(System.getProperty("mode"))) {
+            source.queryListAsync(CachedWorld.class);
+        }
     }
 
     @RestMapping(name = "json")
