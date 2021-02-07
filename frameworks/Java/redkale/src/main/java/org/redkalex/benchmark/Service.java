@@ -43,26 +43,11 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "db")
-    public World findWorld() {
-        return source.find(World.class, randomId());
-    }
-
-    @RestMapping(name = "db2")  //异步模式
     public CompletableFuture<World> findWorldAsync() {
         return source.findAsync(World.class, randomId());
     }
 
     @RestMapping(name = "queries")
-    public World[] queryWorld(int queries) {
-        final int size = Math.min(500, Math.max(1, queries));
-        final World[] worlds = new World[size];
-        for (int i = 0; i < size; i++) {
-            worlds[i] = source.find(World.class, randomId());
-        }
-        return worlds;
-    }
-
-    @RestMapping(name = "queries2")  //异步模式
     public CompletableFuture<World[]> queryWorldAsync(int queries) {
         final int size = Math.min(500, Math.max(1, queries));
         final World[] worlds = new World[size];
@@ -85,19 +70,6 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "updates")
-    public World[] updateWorld(int queries) {
-        final int size = Math.min(500, Math.max(1, queries));
-        final World[] worlds = new World[size];
-        for (int i = 0; i < size; i++) {
-            worlds[i] = source.find(World.class, randomId());
-            worlds[i].setRandomNumber(randomId());
-        }
-        Arrays.sort(worlds);
-        source.update(worlds);
-        return worlds;
-    }
-
-    @RestMapping(name = "updates2") //异步模式
     public CompletableFuture<World[]> updateWorldAsync(int queries) {
         final int size = Math.min(500, Math.max(1, queries));
         final World[] worlds = new World[size];
@@ -127,5 +99,34 @@ public class Service extends AbstractService {
 
     private int randomId() {
         return 1 + random.nextInt(10000);
+    }
+
+    //----------------------- 测试代码 ------------------------------
+    @RestMapping(name = "db2")
+    public World findWorld() {  //同步模式
+        return source.find(World.class, randomId());
+    }
+
+    @RestMapping(name = "queries2")
+    public World[] queryWorld(int queries) {  //同步模式
+        final int size = Math.min(500, Math.max(1, queries));
+        final World[] worlds = new World[size];
+        for (int i = 0; i < size; i++) {
+            worlds[i] = source.find(World.class, randomId());
+        }
+        return worlds;
+    }
+
+    @RestMapping(name = "updates2")
+    public World[] updateWorld(int queries) { //同步模式
+        final int size = Math.min(500, Math.max(1, queries));
+        final World[] worlds = new World[size];
+        for (int i = 0; i < size; i++) {
+            worlds[i] = source.find(World.class, randomId());
+            worlds[i].setRandomNumber(randomId());
+        }
+        Arrays.sort(worlds);
+        source.update(worlds);
+        return worlds;
     }
 }
