@@ -66,10 +66,8 @@ public class Service extends AbstractService {
         final int size = Math.min(500, Math.max(1, queries));
         final World[] worlds = new World[size];
         final AtomicInteger index = new AtomicInteger();
-        final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId()).thenApply((World v) -> {
-            worlds[index.getAndIncrement()] = v;
-            return v;
-        });
+        final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId())
+            .thenAccept((World v) -> worlds[index.getAndIncrement()] = v);
         CompletableFuture future = func.apply(null);
         for (int i = 1; i < size; i++) {
             future = future.thenCompose(func);
@@ -82,11 +80,12 @@ public class Service extends AbstractService {
         final int size = Math.min(500, Math.max(1, queries));
         final World[] worlds = new World[size];
         final AtomicInteger index = new AtomicInteger();
-        final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId()).thenApply((World v) -> {
-            worlds[index.getAndIncrement()] = v;
-            v.setRandomNumber(randomId());
-            return v;
-        });
+        final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId())
+            .thenApply((World v) -> {
+                worlds[index.getAndIncrement()] = v;
+                v.setRandomNumber(randomId());
+                return v;
+            });
         CompletableFuture future = func.apply(null);
         for (int i = 1; i < size; i++) {
             future = future.thenCompose(func);
