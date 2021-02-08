@@ -78,7 +78,7 @@ int Fortune::count()
 QList<Fortune> Fortune::getAll()
 {
     TSqlQueryORMapper<FortuneObject> mapper;
-    mapper.prepare(QStringLiteral("SELECT * from Fortune"));
+    mapper.prepare(QStringLiteral("SELECT * from fortune"));
 
     QList<Fortune> fortunes;
     if (mapper.exec()) {
