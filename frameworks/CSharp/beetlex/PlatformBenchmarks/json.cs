@@ -29,11 +29,11 @@ namespace PlatformBenchmarks
         {
             if (Program.Debug)
             {
-                SpanJson.JsonSerializer.NonGeneric.Utf8.SerializeAsync(new JsonMessage { message = "Hello, World!" }, stream);
+                System.Text.Json.JsonSerializer.Serialize<JsonMessage>(GetUtf8JsonWriter(stream, token), new JsonMessage { message = "Hello, World!" }, SerializerOptions);   
             }
             else
             {
-                System.Text.Json.JsonSerializer.Serialize<JsonMessage>(GetUtf8JsonWriter(stream, token), new JsonMessage { message = "Hello, World!" }, SerializerOptions);
+                SpanJson.JsonSerializer.NonGeneric.Utf8.SerializeAsync(new JsonMessage { message = "Hello, World!" }, stream);
             }
             OnCompleted(stream, session, token);
             return ValueTask.CompletedTask;
