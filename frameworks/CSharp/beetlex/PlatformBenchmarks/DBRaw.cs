@@ -167,7 +167,7 @@ namespace PlatformBenchmarks
             {
                 await db.OpenAsync();
                 FortuneCommand.Connection = db;
-                using (var rdr = await FortuneCommand.ExecuteReaderAsync(CommandBehavior.Default))
+                using (var rdr = await FortuneCommand.ExecuteReaderAsync())
                 {
                     while (await rdr.ReadAsync())
                     {

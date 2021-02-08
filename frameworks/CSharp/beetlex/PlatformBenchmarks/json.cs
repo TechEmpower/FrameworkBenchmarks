@@ -27,9 +27,14 @@ namespace PlatformBenchmarks
 
         public ValueTask Json(PipeStream stream, HttpToken token, ISession session)
         {
-            
-
-            System.Text.Json.JsonSerializer.Serialize<JsonMessage>(GetUtf8JsonWriter(stream, token), new JsonMessage { message = "Hello, World!" }, SerializerOptions);
+            if (Program.Debug)
+            {
+                SpanJson.JsonSerializer.NonGeneric.Utf8.SerializeAsync(new JsonMessage { message = "Hello, World!" }, stream);
+            }
+            else
+            {
+                System.Text.Json.JsonSerializer.Serialize<JsonMessage>(GetUtf8JsonWriter(stream, token), new JsonMessage { message = "Hello, World!" }, SerializerOptions);
+            }
             OnCompleted(stream, session, token);
             return ValueTask.CompletedTask;
         }

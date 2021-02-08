@@ -104,13 +104,21 @@ namespace PlatformBenchmarks
             {
                 if (result.Length == 2)
                 {
-                    if (token.CurrentRequest != null)
-                    {
-                        token.Requests.Enqueue(token.CurrentRequest);
-                        token.CurrentRequest = null;
-                        token.ThreadDispatcher.Enqueue(token);
-                    }
                     pipeStream.ReadFree(result.Length);
+                    if (Program.Debug)
+                    {
+                        if (token.CurrentRequest != null)
+                        {
+                            token.Requests.Enqueue(token.CurrentRequest);
+                            token.CurrentRequest = null;
+                            token.ThreadDispatcher.Enqueue(token);
+                        }
+                    }
+                    else
+                    {
+                        OnStartRequest(token.CurrentRequest, e.Session, token, pipeStream);
+                    }
+
                 }
                 else
                 {
@@ -118,10 +126,7 @@ namespace PlatformBenchmarks
                     {
                         var request = new RequestData();
                         byte[] buffer = null;
-                        if (Program.Debug)
-                            buffer = new byte[result.Length];
-                        else
-                            buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(result.Length);
+                        buffer = new byte[result.Length];
                         pipeStream.Read(buffer, 0, result.Length);
                         request.Data = new ArraySegment<byte>(buffer, 0, result.Length);
                         AnalysisAction(request);
@@ -286,8 +291,6 @@ namespace PlatformBenchmarks
                 OnWriteContentLength(stream, token);
                 await Default(stream, token, session);
             }
-            if (!Program.Debug)
-                data.Dispose();
 
         }
 
