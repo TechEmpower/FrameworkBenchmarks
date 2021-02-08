@@ -16,7 +16,14 @@ namespace PlatformBenchmarks
             try
             {
                 var data = await token.Db.LoadSingleQueryRow();
-                System.Text.Json.JsonSerializer.Serialize<World>(GetUtf8JsonWriter(stream, token), data, SerializerOptions);
+                if (Program.Debug)
+                {
+                    await JsonSerializer.NonGeneric.Utf8.SerializeAsync(data, stream);
+                }
+                else
+                {
+                    System.Text.Json.JsonSerializer.Serialize<World>(GetUtf8JsonWriter(stream, token), data, SerializerOptions);
+                }
             }
             catch (Exception e_)
             {
