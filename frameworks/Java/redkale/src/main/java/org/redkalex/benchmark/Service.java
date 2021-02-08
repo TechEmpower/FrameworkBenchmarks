@@ -29,7 +29,7 @@ public class Service extends AbstractService {
 
     @Override
     public void init(AnyValue conf) {
-        source.queryList(CachedWorld.class);
+        //source.queryList(CachedWorld.class);
     }
 
     @RestMapping(name = "json")
