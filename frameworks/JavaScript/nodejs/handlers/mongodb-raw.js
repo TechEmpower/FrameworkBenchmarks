@@ -5,11 +5,15 @@ const collections = {
   World: null,
   Fortune: null
 };
-MongoClient.connect('mongodb://tfb-database/hello_world?maxPoolSize=5', (err, db) => {
+
+const mongoUrl = 'mongodb://tfb-database:27017';
+const dbName = 'hello_world';
+
+MongoClient.connect(mongoUrl, (err, database) => {
   // do nothing if there is err connecting to db
 
-  collections.World = db.collection('world');
-  collections.Fortune = db.collection('fortune');
+  collections.World = database.db(dbName).collection('world');
+  collections.Fortune = database.db(dbName).collection('fortune');
 });
 
 
