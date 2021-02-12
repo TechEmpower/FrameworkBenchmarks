@@ -121,6 +121,13 @@ fn routes(pool: &'static PgPool) -> impl Filter<Extract = impl Reply, Error = Re
 #[tokio::main]
 async fn main() -> Result<(), sqlx::Error> {
     let pool = Box::leak(Box::new(PgPool::connect(DATABASE_URL).await?));
-    warp::serve(routes(pool)).run(([0, 0, 0, 0], 8080)).await;
+    warp::serve(routes(pool))
+        // .unstable_pipeline() enables HTTP/1.1 pipelining. Regular applications
+        // probably shouldn't use this method as it's undocumented and not very
+        // useful as most HTTP clients don't support HTTP/1.1 pipelining anymore
+        // and it "can slow down non-pipelined responses" according to warp's code.
+        .unstable_pipeline()
+        .run(([0, 0, 0, 0], 8080))
+        .await;
     Ok(())
 }
