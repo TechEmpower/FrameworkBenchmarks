@@ -3,7 +3,7 @@ const async = require('async');
 const Mongoose = require('mongoose');
 const connection = Mongoose.connect(
   'mongodb://tfb-database/hello_world',
-  { useMongoClient: true }
+  { useNewUrlParser: true }
 );
 
 // Mongoose Setup
