@@ -1,16 +1,16 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org' do
+  gem 'unicorn', '5.8.0'
+  gem 'puma', '5.2.1'
+  gem 'activerecord', '6.1.1'
+  gem 'rails', '6.1.1'
+  gem 'tzinfo-data', '1.2021.1'
+  gem 'oj', '3.11.2'
 
-gem 'unicorn', '5.4.1'
-gem 'puma', '3.12.6'
-gem 'activerecord', '5.2.2', :require => 'active_record'
-gem 'rails', '5.2.2'
-gem 'tzinfo-data', '1.2018.7'
-gem 'oj', '3.7.9'
+  # group :mysql do
+  #   gem 'mysql2', '0.5.3'
+  # end
 
-group :mysql do
-  gem 'mysql2', '0.5.2'
-end
-
-group :postgresql do
-  gem 'pg', '1.1.4'
+  group :postgresql do
+    gem 'pg', '1.2.3'
+  end
 end

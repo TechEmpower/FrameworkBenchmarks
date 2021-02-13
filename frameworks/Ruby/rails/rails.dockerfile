@@ -1,4 +1,4 @@
-FROM ruby:2.6
+FROM ruby:3.0
 
 ADD ./ /rails
 
