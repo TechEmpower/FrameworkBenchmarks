@@ -12,9 +12,12 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.smartboot.Message;
 import org.smartboot.aio.EnhanceAsynchronousChannelProvider;
-import org.smartboot.http.server.Request;
-import org.smartboot.http.server.handle.HttpHandle;
+import org.smartboot.http.server.HttpBootstrap;
+import org.smartboot.http.server.HttpRequest;
+import org.smartboot.http.server.HttpResponse;
+import org.smartboot.http.server.HttpServerHandle;
 import org.smartboot.http.server.handle.HttpRouteHandle;
+import org.smartboot.http.server.impl.Request;
 import org.smartboot.socket.StateMachineEnum;
 import org.smartboot.socket.extension.processor.AbstractMessageProcessor;
 import org.smartboot.socket.transport.AioSession;
@@ -30,7 +33,7 @@ public class Bootstrap {
 
         HttpRouteHandle routeHandle = new HttpRouteHandle();
         routeHandle
-                .route("/plaintext", new HttpHandle() {
+                .route("/plaintext", new HttpServerHandle() {
 
 
                     @Override
@@ -40,7 +43,7 @@ public class Bootstrap {
                         response.write(body);
                     }
                 })
-                .route("/json", new HttpHandle() {
+                .route("/json", new HttpServerHandle() {
 
                     @Override
                     public void doHandle(HttpRequest request, HttpResponse response) throws IOException {

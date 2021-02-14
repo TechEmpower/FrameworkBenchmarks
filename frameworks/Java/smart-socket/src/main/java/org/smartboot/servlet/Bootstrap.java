@@ -1,11 +1,11 @@
 package org.smartboot.servlet;
 
 import org.smartboot.aio.EnhanceAsynchronousChannelProvider;
-import org.smartboot.http.HttpBootstrap;
-import org.smartboot.http.HttpRequest;
-import org.smartboot.http.HttpResponse;
-import org.smartboot.http.server.Request;
-import org.smartboot.http.server.handle.HttpHandle;
+import org.smartboot.http.server.HttpBootstrap;
+import org.smartboot.http.server.HttpRequest;
+import org.smartboot.http.server.HttpResponse;
+import org.smartboot.http.server.HttpServerHandle;
+import org.smartboot.http.server.impl.Request;
 import org.smartboot.servlet.conf.ServletInfo;
 import org.smartboot.socket.StateMachineEnum;
 import org.smartboot.socket.extension.processor.AbstractMessageProcessor;
@@ -47,7 +47,7 @@ public class Bootstrap {
                 .setReadPageSize(16384 * 1024 * 4)
                 .setBannerEnabled(false)
                 .setBufferPool(10 * 1024 * 1024, cpuNum + 2, 1024 * 4)
-                .pipeline(new HttpHandle() {
+                .pipeline(new HttpServerHandle() {
                     @Override
                     public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
                         containerRuntime.doHandle(request, response);
