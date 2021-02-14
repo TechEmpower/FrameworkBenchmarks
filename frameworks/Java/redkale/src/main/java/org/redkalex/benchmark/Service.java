@@ -5,13 +5,15 @@
  */
 package org.redkalex.benchmark;
 
-import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
-import org.redkale.source.DataSource;
+import org.redkale.source.*;
+import org.redkale.util.AnyValue;
 
 /**
  *
@@ -27,6 +29,7 @@ public class Service extends AbstractService {
     @Resource
     private DataSource source;
 
+
     @RestMapping(name = "json")
     public Message getHelloMessage() {
         return new Message("Hello, World!");
@@ -37,31 +40,54 @@ public class Service extends AbstractService {
         return helloBytes;
     }
 
+    @RestMapping(name = "cached-worlds")
+    public CachedWorld[] cachedWorlds(int count) {
+        final int size = Math.min(500, Math.max(1, count));
+        final CachedWorld[] worlds = new CachedWorld[size];
+        for (int i = 0; i < size; i++) {
+            worlds[i] = source.find(CachedWorld.class, randomId());
+        }
+        return worlds;
+    }
+
     @RestMapping(name = "db")
-    public CompletableFuture<World> findWorld() {
+    public CompletableFuture<World> findWorldAsync() {
         return source.findAsync(World.class, randomId());
     }
 
     @RestMapping(name = "queries")
-    public World[] queryWorld(@RestParam(name = "queries") int count) {
-        count = Math.min(500, Math.max(1, count));
-        final World[] rs = new World[count];
-        for (int i = 0; i < count; i++) {
-            rs[i] = source.find(World.class, randomId());
+    public CompletableFuture<World[]> queryWorldAsync(int queries) {
+        final int size = Math.min(500, Math.max(1, queries));
+        final World[] worlds = new World[size];
+        final AtomicInteger index = new AtomicInteger();
+        final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId())
+            .thenAccept((World v) -> worlds[index.getAndIncrement()] = v);
+        CompletableFuture future = func.apply(null);
+        for (int i = 1; i < size; i++) {
+            future = future.thenCompose(func);
         }
-        return rs;
+        return future.thenApply(v -> worlds);
     }
 
     @RestMapping(name = "updates")
-    public World[] updateWorld(@RestParam(name = "queries") int count) {
-        count = Math.min(500, Math.max(1, count));
-        final World[] rs = new World[count];
-        for (int i = 0; i < count; i++) {
-            rs[i] = source.find(World.class, randomId());
-            rs[i].setRandomNumber(randomId());
+    public CompletableFuture<World[]> updateWorldAsync(int queries) {
+        final int size = Math.min(500, Math.max(1, queries));
+        final World[] worlds = new World[size];
+        final AtomicInteger index = new AtomicInteger();
+        final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId())
+            .thenApply((World v) -> {
+                worlds[index.getAndIncrement()] = v;
+                v.setRandomNumber(randomId());
+                return v;
+            });
+        CompletableFuture future = func.apply(null);
+        for (int i = 1; i < size; i++) {
+            future = future.thenCompose(func);
         }
-		source.update(rs);
-        return rs;
+        return future.thenCompose(v -> {
+            Arrays.sort(worlds);
+            return source.updateAsync(worlds);
+        }).thenApply(v -> worlds);
     }
 
     @RestMapping(name = "fortunes")

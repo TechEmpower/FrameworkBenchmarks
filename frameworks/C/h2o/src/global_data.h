@@ -22,6 +22,7 @@
 #define GLOBAL_DATA_H_
 
 #include <h2o.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <openssl/ssl.h>
 

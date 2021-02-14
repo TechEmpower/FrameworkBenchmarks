@@ -1,16 +1,17 @@
-mod db;
-
-use crate::db::{Database, Fortune};
 use futures::stream::futures_unordered::FuturesUnordered;
 use futures::{FutureExt, StreamExt};
 use rand::distributions::{Distribution, Uniform};
 use rand::rngs::SmallRng;
 use rand::SeedableRng;
 use serde::Serialize;
+use sqlx::postgres::PgPool;
+use sqlx::FromRow;
 use std::cell::RefCell;
 use warp::http::header;
 use warp::{Filter, Rejection, Reply};
 use yarte::Template;
+
+const DATABASE_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
 // SmallRng is not a CSPRNG. It's used specifically to match performance of
 // benchmarks in other programming languages where the default RNG algorithm
@@ -39,18 +40,31 @@ fn plaintext() -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     warp::path!("plaintext").map(|| "Hello, World!")
 }
 
-fn db(database: &'static Database) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+#[derive(Serialize, FromRow)]
+pub struct World {
+    pub id: i32,
+    pub randomnumber: i32,
+}
+
+impl World {
+    async fn get_by_id(pool: &PgPool, id: i32) -> Self {
+        sqlx::query_as("SELECT id, randomnumber FROM world WHERE id=$1")
+            .bind(id)
+            .fetch_one(pool)
+            .await
+            .unwrap()
+    }
+}
+
+fn db(pool: &'static PgPool) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     let between = Uniform::from(1..=10_000);
     warp::path!("db").and_then(move || async move {
         let id = with_rng(|rng| between.sample(rng));
-        let world = database.get_world_by_id(id).await;
-        Ok::<_, Rejection>(warp::reply::json(&world))
+        Ok::<_, Rejection>(warp::reply::json(&World::get_by_id(pool, id).await))
     })
 }
 
-fn queries(
-    database: &'static Database,
-) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+fn queries(pool: &'static PgPool) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     let between = Uniform::from(1..=10_000);
     let clamped = warp::path!(u32).map(|queries: u32| queries.max(1).min(500));
     warp::path!("queries" / ..)
@@ -58,7 +72,7 @@ fn queries(
         .and_then(move |queries| {
             with_rng(|rng| {
                 (0..queries)
-                    .map(|_| database.get_world_by_id(between.sample(rng)))
+                    .map(|_| World::get_by_id(pool, between.sample(rng)))
                     .collect::<FuturesUnordered<_>>()
                     .collect::<Vec<_>>()
                     .map(|worlds| Ok::<_, Rejection>(warp::reply::json(&worlds)))
@@ -72,11 +86,18 @@ struct FortunesYarteTemplate {
     fortunes: Vec<Fortune>,
 }
 
-fn fortune(
-    database: &'static Database,
-) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+#[derive(FromRow)]
+pub struct Fortune {
+    pub id: i32,
+    pub message: String,
+}
+
+fn fortune(pool: &'static PgPool) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     warp::path!("fortunes").and_then(move || async move {
-        let mut fortunes = database.query_fortunes().await;
+        let mut fortunes = sqlx::query_as("SELECT id, message FROM fortune")
+            .fetch_all(pool)
+            .await
+            .unwrap();
         fortunes.push(Fortune {
             id: 0,
             message: "Additional fortune added at request time.".into(),
@@ -88,22 +109,18 @@ fn fortune(
     })
 }
 
-fn routes(
-    database: &'static Database,
-) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+fn routes(pool: &'static PgPool) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     json()
         .or(plaintext())
-        .or(db(database))
-        .or(queries(database))
-        .or(fortune(database))
+        .or(db(pool))
+        .or(queries(pool))
+        .or(fortune(pool))
         .map(|reply| warp::reply::with_header(reply, header::SERVER, "warp"))
 }
 
 #[tokio::main]
-async fn main() -> Result<(), tokio_postgres::Error> {
-    let database = Box::leak(Box::new(Database::connect().await?));
-    warp::serve(routes(database))
-        .run(([0, 0, 0, 0], 8080))
-        .await;
+async fn main() -> Result<(), sqlx::Error> {
+    let pool = Box::leak(Box::new(PgPool::connect(DATABASE_URL).await?));
+    warp::serve(routes(pool)).run(([0, 0, 0, 0], 8080)).await;
     Ok(())
 }
