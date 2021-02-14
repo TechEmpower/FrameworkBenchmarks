@@ -22,4 +22,4 @@ production_mysql:
 production_postgresql:
   <<: *common
   adapter: postgresql
-  pool: 64
+  pool: <%= ENV['MAX_CONCURRENCY'] || 256 %>
