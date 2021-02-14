@@ -161,7 +161,7 @@ namespace PlatformBenchmarks
 
         public async Task<List<Fortune>> LoadFortunesRows()
         {
-            var result = new List<Fortune>();
+            var result = new List<Fortune>(20);
 
             using (var db = new NpgsqlConnection(_connectionString))
             {
