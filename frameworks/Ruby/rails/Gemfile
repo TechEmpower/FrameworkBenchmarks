@@ -1,8 +1,7 @@
 source 'https://rubygems.org' do
   gem 'unicorn', '5.8.0'
   gem 'puma', '5.2.1'
-  gem 'activerecord', '6.1.1'
-  gem 'rails', '6.1.1'
+  gem 'rails', '6.1.2.1'
   gem 'tzinfo-data', '1.2021.1'
   gem 'oj', '3.11.2'
 
