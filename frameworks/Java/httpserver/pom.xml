@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-afterburner</artifactId>
-            <version>2.9.9</version>
+            <version>2.10.0</version>
         </dependency>
 
         <dependency>
