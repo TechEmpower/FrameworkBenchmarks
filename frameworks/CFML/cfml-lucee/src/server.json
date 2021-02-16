@@ -1,6 +1,0 @@
-{
-    "profile" : "none",
-    "web" : {
-        "maxRequests" : 512
-    }
-}
