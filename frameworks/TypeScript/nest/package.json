@@ -23,7 +23,7 @@
     "cache-manager": "3.1.0",
     "fastify": "2.12.1",
     "fastify-formbody": "3.1.0",
-    "handlebars": "4.7.3",
+    "handlebars": "4.7.7",
     "hbs": "4.1.0",
     "mongodb": "3.5.4",
     "mysql2": "2.1.0",
