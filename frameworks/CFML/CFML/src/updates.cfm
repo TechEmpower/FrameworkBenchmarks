@@ -17,15 +17,12 @@
     </cfquery>
     <cfset results.append( { 'id' : qry.id, 'randomNumber' : randRange( 1, 1000 ) } )>
 </cfloop>
-<cfquery datasource="world">
-    update World as w set
-        randomNumber = w2.randomNumber
-    from (values
-        #results.reduce( (acc,r)=>{
-            acc = acc.listAppend( "(#val( r.id )#, #val( r.randomNumber )#)" );
-            return acc;
-         }, '')#
-        ) as w2(id,randomNumber)
-    where w2.id = w.id;
-</cfquery>
+
+<cfloop array="#results#" index="i">
+    <cfquery datasource="world">
+        update World 
+        SET randomNumber = #val( i.randomNumber )#
+        where id = #val( i.id )#;
+    </cfquery>
+</cfloop>
 <cfoutput>#serializeJSON( results )#</cfoutput>
