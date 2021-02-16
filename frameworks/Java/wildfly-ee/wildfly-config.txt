@@ -1,7 +1,0 @@
-embed-server
-/subsystem=undertow/configuration=filter/response-header=server-header:add(header-name="Server", header-value="wfly")
-/subsystem=undertow/server=default-server/host=default-host/filter-ref=server-header:add()
-deploy mysql-connector-java.jar
-/subsystem=datasources/data-source=TechempowerBenchmark:add(connection-url="jdbc:mysql://tfb-database:3306/hello_world?useSSL=false&allowPublicKeyRetrieval=true",driver-name="mysql-connector-java.jar",jndi-name="java:jboss/datasources/helloWorld",jta=true,max-pool-size=1024,min-pool-size=256,user-name="benchmarkdbuser",password="benchmarkdbpass")
-deploy target/wildfly-ee.war
-stop-embedded-server
