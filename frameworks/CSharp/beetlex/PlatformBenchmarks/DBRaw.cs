@@ -53,6 +53,7 @@ namespace PlatformBenchmarks
 
         private Npgsql.NpgsqlParameter<int> mID;
 
+        private static int ListDefaultSize = 8;
 
         public async Task<World> LoadSingleQueryRow()
         {
@@ -161,7 +162,7 @@ namespace PlatformBenchmarks
 
         public async Task<List<Fortune>> LoadFortunesRows()
         {
-            var result = new List<Fortune>(20);
+            var result = new List<Fortune>(ListDefaultSize);
 
             using (var db = new NpgsqlConnection(_connectionString))
             {
@@ -179,8 +180,11 @@ namespace PlatformBenchmarks
                     }
                 }
             }
+            if (result.Count > ListDefaultSize)
+                ListDefaultSize = result.Count;
             result.Add(new Fortune { Message = "Additional fortune added at request time." });
             result.Sort();
+
             return result;
         }
         public async Task<World[]> LoadMultipleUpdatesRows(int count)
