@@ -123,3 +123,6 @@ obj
 [Dd]ebug/
 [Rr]elease/
 *.fsproj.user
+
+# CFML
+frameworks/CFML/coldbox/src/coldbox/
