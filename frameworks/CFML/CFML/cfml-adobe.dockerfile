@@ -9,6 +9,8 @@ RUN ${BUILD_DIR}/util/warmup-server.sh
 
 RUN export FINALIZE_STARTUP=true;$BUILD_DIR/run.sh;unset FINALIZE_STARTUP
 
+HEALTHCHECK NONE
+
 EXPOSE 8080
 
 COPY ./src /app/
