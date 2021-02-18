@@ -13,8 +13,6 @@ echo "Loading worlds\n";
 echo "End Loading\n";
 
 \Ubiquity\cache\CacheManager::warmUpControllers([
-	\controllers\Plaintext_::class,
-	\controllers\Json_::class,
 	\controllers\Db_::class,
 	\controllers\Fortunes_::class,
 	\controllers\Cache::class
@@ -25,4 +23,3 @@ $workerServer->onWorkerStart = function () use ($config) {
 	\controllers\Db_::warmup();
 	\controllers\Fortunes_::warmup();
 };
-

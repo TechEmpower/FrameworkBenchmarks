@@ -14,4 +14,6 @@ ENV DATABASE_URL postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/he
 RUN apt-get install -yqq libyaml-dev
 RUN shards build amber --release --no-debug
 
+EXPOSE 8080
+
 CMD bash run.sh

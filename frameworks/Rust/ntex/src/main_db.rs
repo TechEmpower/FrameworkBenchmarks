@@ -1,9 +1,7 @@
 #[global_allocator]
-static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-use std::future::Future;
-use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::{future::Future, pin::Pin, task::Context, task::Poll};
 
 use bytes::BytesMut;
 use futures::future::ok;
@@ -38,8 +36,7 @@ impl Service for App {
     }
 
     fn call(&self, req: Request) -> Self::Future {
-        let path = req.path();
-        match path {
+        match req.path() {
             "/db" => {
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
@@ -149,6 +146,7 @@ async fn main() -> std::io::Result<()> {
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
                 .client_timeout(0)
+                .disconnect_timeout(0)
                 .h1(AppFactory)
                 .tcp()
         })?

@@ -1,0 +1,16 @@
+{
+    "datasources":{
+        "world":{
+            "database":"hello_world",
+            "dbdriver":"PostgreSQL",
+            "host":"tfb-database",
+            "password":"benchmarkdbpass",
+            "port":"5432",
+            "username":"benchmarkdbuser",
+            "requestExclusive":true
+        }
+    },
+    "inspectTemplate":"never",
+    "maxCFThreads":"512",
+    "adminPassword":"password"
+}

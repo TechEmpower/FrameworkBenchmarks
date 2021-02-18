@@ -23,6 +23,25 @@
         "display_name": "smart-socket",
         "notes": "",
         "versus": "smart-socket"
+      },
+      "smart-servlet": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "None",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "smartboot",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "smart-servlet",
+        "notes": "",
+        "versus": "smart-servlet"
       }
     }
   ]

@@ -10,7 +10,7 @@ The tests were run with:
 * [Spiral/Stempler](https://github.com/spiral/stempler) as template engine
 * [Cycle ORM 1.1.*](https://github.com/cycle/orm)
 * [RoadRunner 1.4.*](https://roadrunner.dev/)
-* [PHP Version 7.3.*](http://www.php.net/) in CLI mode with OPCache
+* [PHP Version 7.4.*](http://www.php.net/) in CLI mode with OPCache
 
 ## Test URLs
 Test                | URL 

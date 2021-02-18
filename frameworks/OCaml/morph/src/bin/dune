@@ -1,0 +1,28 @@
+(* -*- tuareg -*- *)
+
+let server_io =
+  match Sys.getenv_opt "SERVER_IO" with
+  | Some "NPROC" -> "server_io_nproc"
+  | Some "SINGLE" -> "server_io_single"
+  | _ -> "server_io_single"
+
+let () = Jbuild_plugin.V1.send @@ {|
+(executable
+ (name tfb)
+ (public_name tfb)
+ (ocamlopt_flags
+  (:standard -O3 -unbox-closures))
+ (libraries caqti caqti-lwt caqti-driver-postgresql lwt logs logs.fmt fmt.tty
+   morph archi archi-lwt routes yojson ptime ptime.clock ptime.clock.os
+   ppx_rapper.runtime tyxml
+   |} ^ server_io ^ {|)
+  (preprocess
+    (pps ppx_rapper tyxml-jsx)))
+
+(env
+ (docker
+  (flags
+   (:standard -ccopt -static -I /usr/include -I /usr/lib -cclib -lldap -cclib
+     -lcrypto -cclib -lssl -cclib -lpq -cclib -lpgport -cclib -lpgcommon
+     -cclib -lev))))
+|}

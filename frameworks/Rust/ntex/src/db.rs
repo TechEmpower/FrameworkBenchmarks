@@ -1,8 +1,5 @@
-use std::cell::RefCell;
-use std::fmt::Write as FmtWrite;
-use std::io;
+use std::{borrow::Cow, cell::RefCell, fmt::Write as FmtWrite, io};
 
-use beef::lean::Cow;
 use bytes::{Bytes, BytesMut};
 use futures::stream::futures_unordered::FuturesUnordered;
 use futures::{Future, FutureExt, StreamExt, TryStreamExt};
@@ -13,7 +10,7 @@ use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, NoTls, Statement};
 use yarte::{ywrite_html, Serialize};
 
-#[derive(Serialize, Debug)]
+#[derive(Copy, Clone, Serialize, Debug)]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,
@@ -154,10 +151,10 @@ impl PgConnection {
             for w in &worlds {
                 params.push(&w.id);
             }
-
-            cl.query(&st, &params)
+            let _ = cl
+                .query(&st, &params)
                 .await
-                .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))?;
+                .map_err(|e| log::error!("{:?}", e));
 
             Ok(worlds)
         }
@@ -173,7 +170,7 @@ impl PgConnection {
 
             let mut fortunes: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
                 id: 0,
-                message: Cow::borrowed("Additional fortune added at request time."),
+                message: Cow::Borrowed("Additional fortune added at request time."),
             }];
 
             while let Some(row) = stream.next().await {
@@ -182,16 +179,16 @@ impl PgConnection {
                 })?;
                 fortunes.push(Fortune {
                     id: row.get(0),
-                    message: Cow::owned(row.get(1)),
+                    message: Cow::Owned(row.get(1)),
                 });
             }
 
             fortunes.sort_by(|it, next| it.message.cmp(&next.message));
 
-            let mut buf = BytesMut::with_capacity(2048);
+            let mut buf = Vec::with_capacity(2048);
             ywrite_html!(buf, "{{> fortune }}");
 
-            Ok(buf.freeze())
+            Ok(Bytes::from(buf))
         }
     }
 }

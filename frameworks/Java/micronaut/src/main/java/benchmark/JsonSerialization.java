@@ -11,9 +11,9 @@ import java.util.Map;
 public class JsonSerialization {
 
     @Get("/")
-    Single<Map> getJson() {
+    Map<String, String> getJson() {
         Map<String, String> map = new HashMap<>();
         map.put("message", "Hello, World!");
-        return Single.just(map);
+        return map;
     }
 }

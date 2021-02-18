@@ -4,12 +4,13 @@ using SpanJson;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PlatformBenchmarks
 {
     public partial class HttpHandler
     {
-        public async void updates(string queryString, PipeStream stream, HttpToken token, ISession session)
+        public async ValueTask updates(string queryString, PipeStream stream, HttpToken token, ISession session)
         {
             int count = 1;
             if (!string.IsNullOrEmpty(queryString))
@@ -30,7 +31,7 @@ namespace PlatformBenchmarks
             try
             {
                 var data = await token.Db.LoadMultipleUpdatesRows(count);
-                await JsonSerializer.NonGeneric.Utf8.SerializeAsync(data, stream);
+                System.Text.Json.JsonSerializer.Serialize<World[]>(GetUtf8JsonWriter(stream, token), data, SerializerOptions);
             }
             catch (Exception e_)
             {

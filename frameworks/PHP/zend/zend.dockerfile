@@ -1,4 +1,4 @@
-FROM ubuntu:19.10
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -21,6 +21,8 @@ RUN mkdir -p data/cache
 RUN chmod 777 data/cache
 
 RUN composer install --optimize-autoloader --classmap-authoritative --quiet --no-dev
+
+EXPOSE 8080
 
 CMD service php7.4-fpm start && \
     nginx -c /zend/deploy/nginx.conf -g "daemon off;"

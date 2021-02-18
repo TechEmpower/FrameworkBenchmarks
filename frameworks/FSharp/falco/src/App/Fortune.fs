@@ -11,7 +11,8 @@ type FortuneModel =
        message : string
    }
 
-   static member fromDataReader (rd : IDataReader) =
+module FortuneModel =
+   let fromDataReader (rd : IDataReader) =
        {
            id = rd.GetInt32("id")
            message = rd.GetString("message")

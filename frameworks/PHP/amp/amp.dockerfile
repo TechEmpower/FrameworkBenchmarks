@@ -20,4 +20,6 @@ COPY deploy/conf/* /etc/php/7.4/cli/conf.d/
 
 RUN composer install --prefer-dist --optimize-autoloader --no-dev
 
+EXPOSE 8080
+
 CMD php /amp/vendor/bin/cluster /amp/server.php

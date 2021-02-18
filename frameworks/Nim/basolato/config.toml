@@ -1,0 +1,19 @@
+[framework]
+name = "basolato"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.update = "/updates?queries="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Fullstack"
+database = "postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Full"
+platform = "httpbeast"
+webserver = "None"
+versus = "jester"

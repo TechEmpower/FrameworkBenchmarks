@@ -49,20 +49,19 @@ namespace PlatformBenchmarks
 
         private static byte _question = 63;
 
-        private NextQueueGroup NextQueueGroup;
-
         public HttpHandler()
         {
-            int threads = System.Math.Min(Environment.ProcessorCount, 16);
-            NextQueueGroup = new NextQueueGroup(threads);
-
+            RequestDispatchs = new BeetleX.Dispatchs.DispatchCenter<HttpToken>(OnRequest, Math.Min(Environment.ProcessorCount, 16));
         }
 
-        public void Default(ReadOnlySpan<byte> url, PipeStream stream, HttpToken token, ISession session)
+        private BeetleX.Dispatchs.DispatchCenter<HttpToken> RequestDispatchs;
+
+        public Task Default(PipeStream stream, HttpToken token, ISession session)
         {
             stream.Write("<b> beetlex server</b><hr/>");
-            stream.Write($"{Encoding.ASCII.GetString(url)} not found!");
+            stream.Write("path not found!");
             OnCompleted(stream, session, token);
+            return Task.CompletedTask;
         }
 
         public override void Connected(IServer server, ConnectedEventArgs e)
@@ -70,8 +69,9 @@ namespace PlatformBenchmarks
             base.Connected(server, e);
             e.Session.Socket.NoDelay = true;
             var token = new HttpToken();
+            token.ThreadDispatcher = RequestDispatchs.Next();
+            token.Session = e.Session;
             token.Db = new RawDb(new ConcurrentRandom(), Npgsql.NpgsqlFactory.Instance);
-            token.NextQueue = NextQueueGroup.Next();
             e.Session.Tag = token;
         }
 
@@ -86,33 +86,78 @@ namespace PlatformBenchmarks
 
         }
 
-        class RequestWork : IEventWork
+        private void OnRequest(HttpToken token)
         {
-            public void Dispose()
+            if (token.Requests.TryDequeue(out RequestData result))
             {
-
-            }
-
-            public PipeStream Stream { get; set; }
-
-            public ISession Session { get; set; }
-
-            public HttpToken Token { get; set; }
-
-            public HttpHandler Handler { get; set; }
-
-            public Task Execute()
-            {
-                Handler.OnProcess(Stream, Token, Session);
-                return Task.CompletedTask;
+                OnStartRequest(result, token.Session, token, token.Session.Stream.ToPipeStream());
             }
         }
 
-        private void OnProcess(PipeStream pipeStream, HttpToken token, ISession sessino)
+        public override void SessionReceive(IServer server, SessionReceiveEventArgs e)
+        {
+            base.SessionReceive(server, e);
+            PipeStream pipeStream = e.Session.Stream.ToPipeStream();
+            HttpToken token = (HttpToken)e.Session.Tag;
+            var result = pipeStream.IndexOfLine();
+            while (result.End != null)
+            {
+                if (result.Length == 2)
+                {
+                    pipeStream.ReadFree(result.Length);
+                    if (Program.Debug)
+                    {
+                        if (token.CurrentRequest != null)
+                        {
+                            token.Requests.Enqueue(token.CurrentRequest);
+                            token.CurrentRequest = null;
+                            token.ThreadDispatcher.Enqueue(token);
+                        }
+                    }
+                    else
+                    {
+                        OnStartRequest(token.CurrentRequest, e.Session, token, pipeStream);
+                    }
+
+                }
+                else
+                {
+                    if (token.CurrentRequest == null)
+                    {
+                        var request = new RequestData();
+                        byte[] buffer = null;
+                        buffer = new byte[result.Length];
+                        pipeStream.Read(buffer, 0, result.Length);
+                        request.Data = new ArraySegment<byte>(buffer, 0, result.Length);
+                        AnalysisAction(request);
+                        if (request.Action == ActionType.Plaintext)
+                        {
+                            token.CurrentRequest = request;
+                        }
+                        else
+                        {
+                            pipeStream.ReadFree((int)pipeStream.Length);
+                            OnStartRequest(request, e.Session, token, pipeStream);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        pipeStream.ReadFree(result.Length);
+                    }
+                }
+                if (pipeStream.Length > 0)
+                    result = pipeStream.IndexOfLine();
+                else
+                    break;
+            }
+        }
+
+        private void AnalysisAction(RequestData requestData)
         {
             var line = _line.AsSpan();
-            int len = (int)pipeStream.FirstBuffer.Length;
-            var receiveData = pipeStream.FirstBuffer.Memory.Span;
+            int len = requestData.Data.Count;
+            var receiveData = requestData.GetSpan();
             ReadOnlySpan<byte> http = line;
             ReadOnlySpan<byte> method = line;
             ReadOnlySpan<byte> url = line;
@@ -143,42 +188,6 @@ namespace PlatformBenchmarks
                     }
                 }
             }
-            OnStartLine(http, method, url, sessino, token, pipeStream);
-        }
-
-        public override void SessionReceive(IServer server, SessionReceiveEventArgs e)
-        {
-
-            base.SessionReceive(server, e);
-            PipeStream pipeStream = e.Session.Stream.ToPipeStream();
-            HttpToken token = (HttpToken)e.Session.Tag;
-            if (Program.Debug || Program.UpDB)
-            {
-                RequestWork work = new RequestWork();
-                work.Handler = this;
-                work.Session = e.Session;
-                work.Stream = pipeStream;
-                work.Token = token;
-                token.NextQueue.Enqueue(work);
-            }
-            else
-            {
-                OnProcess(pipeStream, token, e.Session);
-            }
-        }
-
-
-
-        public virtual void OnStartLine(ReadOnlySpan<byte> http, ReadOnlySpan<byte> method, ReadOnlySpan<byte> url, ISession session, HttpToken token, PipeStream stream)
-        {
-            if (!Program.Debug)
-            {
-                UpdateCommandsCached.Init();
-                if (Program.UpDB)
-                    DBConnectionGroupPool.Init(64, RawDb._connectionString);
-                else
-                    DBConnectionGroupPool.Init(256, RawDb._connectionString);
-            }
             int queryIndex = AnalysisUrl(url);
             ReadOnlySpan<byte> baseUrl = default;
             ReadOnlySpan<byte> queryString = default;
@@ -186,62 +195,103 @@ namespace PlatformBenchmarks
             {
                 baseUrl = url.Slice(0, queryIndex);
                 queryString = url.Slice(queryIndex + 1, url.Length - queryIndex - 1);
+                requestData.QueryString = Encoding.ASCII.GetString(queryString);
             }
             else
             {
                 baseUrl = url;
             }
-            OnWriteHeader(stream, token);
             if (baseUrl.Length == _path_Plaintext.Length && baseUrl.StartsWith(_path_Plaintext))
             {
-                stream.Write(_headerContentTypeText.Data, 0, _headerContentTypeText.Length);
-                OnWriteContentLength(stream, token);
-                Plaintext(url, stream, token, session);
+                requestData.Action = ActionType.Plaintext;
             }
             else if (baseUrl.Length == _path_Json.Length && baseUrl.StartsWith(_path_Json))
             {
-                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
-                OnWriteContentLength(stream, token);
-                Json(url, stream, token, session);
+                requestData.Action = ActionType.Json;
             }
             else if (baseUrl.Length == _path_Db.Length && baseUrl.StartsWith(_path_Db))
             {
-                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
-                OnWriteContentLength(stream, token);
-                db(stream, token, session);
+                requestData.Action = ActionType.Db;
             }
             else if (baseUrl.Length == _path_Queries.Length && baseUrl.StartsWith(_path_Queries))
             {
-                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
-                OnWriteContentLength(stream, token);
-                queries(Encoding.ASCII.GetString(queryString), stream, token, session);
+                requestData.Action = ActionType.Queries;
             }
 
             else if (baseUrl.Length == _cached_worlds.Length && baseUrl.StartsWith(_cached_worlds))
             {
-                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
-                OnWriteContentLength(stream, token);
-                caching(Encoding.ASCII.GetString(queryString), stream, token, session);
+                requestData.Action = ActionType.Caching;
             }
 
             else if (baseUrl.Length == _path_Updates.Length && baseUrl.StartsWith(_path_Updates))
             {
-                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
-                OnWriteContentLength(stream, token);
-                updates(Encoding.ASCII.GetString(queryString), stream, token, session);
+                requestData.Action = ActionType.Updates;
             }
             else if (baseUrl.Length == _path_Fortunes.Length && baseUrl.StartsWith(_path_Fortunes))
             {
+                requestData.Action = ActionType.Fortunes;
+            }
+            else
+            {
+                requestData.Action = ActionType.Other;
+            }
+        }
+
+        public virtual async Task OnStartRequest(RequestData data, ISession session, HttpToken token, PipeStream stream)
+        {
+            OnWriteHeader(stream, token);
+            ActionType type = data.Action;
+            if (type == ActionType.Plaintext)
+            {
+                stream.Write(_headerContentTypeText.Data, 0, _headerContentTypeText.Length);
+                OnWriteContentLength(stream, token);
+                await Plaintext(stream, token, session);
+            }
+            else if (type == ActionType.Json)
+            {
+                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
+                OnWriteContentLength(stream, token);
+                await Json(stream, token, session);
+            }
+            else if (type == ActionType.Db)
+            {
+                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
+                OnWriteContentLength(stream, token);
+                await db(stream, token, session);
+            }
+            else if (type == ActionType.Queries)
+            {
+                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
+                OnWriteContentLength(stream, token);
+                await queries(data.QueryString, stream, token, session);
+            }
+
+            else if (type == ActionType.Caching)
+            {
+                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
+                OnWriteContentLength(stream, token);
+                await caching(data.QueryString, stream, token, session);
+            }
+
+            else if (type == ActionType.Updates)
+            {
+                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
+                OnWriteContentLength(stream, token);
+                await updates(data.QueryString, stream, token, session);
+            }
+            else if (type == ActionType.Fortunes)
+            {
                 stream.Write(_headerContentTypeHtml.Data, 0, _headerContentTypeHtml.Length);
                 OnWriteContentLength(stream, token);
-                fortunes(stream, token, session);
+                await fortunes(stream, token, session);
             }
             else
             {
                 stream.Write(_headerContentTypeHtml.Data, 0, _headerContentTypeHtml.Length);
                 OnWriteContentLength(stream, token);
-                Default(url, stream, token, session);
+                await Default(stream, token, session);
             }
+
         }
 
         private void OnWriteHeader(PipeStream stream, HttpToken token)
@@ -262,13 +312,11 @@ namespace PlatformBenchmarks
 
         private void OnCompleted(PipeStream stream, ISession session, HttpToken token)
         {
-            stream.ReadFree((int)stream.Length);
+
             token.FullLength((stream.CacheLength - token.ContentPostion).ToString());
-            session.Stream.Flush();
+            if (token.Requests.IsEmpty && stream.Length == 0)
+                session.Stream.Flush();
         }
-
-
-
 
     }
 }

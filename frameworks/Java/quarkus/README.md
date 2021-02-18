@@ -4,24 +4,19 @@ This is the Quarkus portion of a [benchmarking test suite](../) comparing a vari
 
 ## Implementations
 
-There are currently two repository implementations.
+There are currently 6 repository implementations:
 
-### JAX-RS and Hibernate via JPA
-* [Plaintext test source](hibernate/src/main/java/io/quarkus/benchmark/resource/PlaintextResource.java)
-* [JSON test source](hibernate/src/main/java/io/quarkus/benchmark/resource/JsonResource.java)
-* [Query, Queries, Update test source](hibernate/src/main/java/io/quarkus/benchmark/repository/hibernate/WorldRepository.java)
-* [Fortunes test source](hibernate/src/main/java/io/quarkus/benchmark/repository/hibernate/FortuneRepository.java)
-
-### Reactive Routes and Asynchronous DB accesses via pgclient
-* [Plaintext test source](pgclient/src/main/java/io/quarkus/benchmark/resource/pgclient/PlaintextResource.java)
-* [JSON test source](pgclient/src/main/java/io/quarkus/benchmark/resource/pgclient/JsonResource.java)
-* [Query, Queries, Update test source](pgclient/src/main/java/io/quarkus/benchmark/repository/pgclient/WorldRepository.java)
-* [Fortunes test source](pgclient/src/main/java/io/quarkus/benchmark/repository/pgclient/FortuneRepository.java)
+- RESTEasy and Hibernate ORM
+- RESTEasy Reactive and Hibernate ORM
+- RESTEasy Reactive and Hibernate Reactive
+- RESTEasy Reactive and Vert.x PG Client
+- Reactive Routes and Hibernate Reactive
+- Reactive Routes and Vert.x PG Client
 
 ## Versions
 
 * [Java OpenJDK 11](http://openjdk.java.net/)
-* [Quarkus 1.1.1](https://quarkus.io)
+* [Quarkus 1.11.0.Beta1](https://quarkus.io)
 
 ## Test URLs
 

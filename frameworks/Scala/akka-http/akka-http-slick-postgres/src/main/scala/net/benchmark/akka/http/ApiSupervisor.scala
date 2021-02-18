@@ -3,7 +3,6 @@ package net.benchmark.akka.http
 import akka.actor._
 import akka.http.scaladsl.Http
 import akka.pattern.pipe
-import akka.stream.ActorMaterializer
 import com.typesafe.config.Config
 import net.benchmark.akka.http.ApiSupervisor.ApiMessages
 import net.benchmark.akka.http.db.DatabaseRepositoryLoader
@@ -11,15 +10,12 @@ import net.benchmark.akka.http.util.SameThreadDirectExecutor
 
 import scala.util.Failure
 
-class ApiSupervisor(dbLoader: DatabaseRepositoryLoader, materializer: ActorMaterializer)
-    extends Actor
-    with ActorLogging {
+class ApiSupervisor(dbLoader: DatabaseRepositoryLoader) extends Actor with ActorLogging {
 
   private val config: Config = context.system.settings.config
   private val port: Int = config.getInt("akka-http-slick-postgres.api.port")
   private val address: String = config.getString("akka-http-slick-postgres.api.address")
 
-  implicit val mat: ActorMaterializer = materializer
   implicit val system: ActorSystem = context.system
 
   private val sd = SameThreadDirectExecutor.executionContext()
@@ -36,7 +32,10 @@ class ApiSupervisor(dbLoader: DatabaseRepositoryLoader, materializer: ActorMater
 
       import context.dispatcher
 
-      val _ = Http(system).bindAndHandle(ApiRoutes.routes(dbLoader, sd), address, port).pipeTo(self)
+      val _ = Http(system)
+        .newServerAt(address, port)
+        .bind(ApiRoutes.routes(dbLoader, sd))
+        .pipeTo(self)
 
       context.become(running(sender()))
 
@@ -65,8 +64,8 @@ object ApiSupervisor {
 
   final val Name: String = "ApiSupervisorActor"
 
-  def props(dbLoader: DatabaseRepositoryLoader, materializer: ActorMaterializer): Props =
-    Props(new ApiSupervisor(dbLoader, materializer))
+  def props(dbLoader: DatabaseRepositoryLoader): Props =
+    Props(new ApiSupervisor(dbLoader))
 
   /**
     * A sealed trait for the messages of the actor.

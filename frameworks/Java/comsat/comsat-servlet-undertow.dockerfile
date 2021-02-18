@@ -8,4 +8,7 @@ RUN gradle capsule -q
 FROM openjdk:8-jre-slim
 WORKDIR /comsat
 COPY --from=gradle /comsat/build/libs/comsat-0.3-capsule.jar app.jar
+
+EXPOSE 8080
+
 CMD ["java", "-Dcapsule.mode=servlet-undertow", "-jar", "app.jar"]

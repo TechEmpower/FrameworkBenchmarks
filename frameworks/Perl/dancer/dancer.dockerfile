@@ -15,5 +15,7 @@ RUN cpanm --notest --no-man-page \
       Plack@1.0034 \
       Starman@0.4011
 
+EXPOSE 8080
+
 CMD nginx -c /dancer/nginx.conf && \
     plackup -E production -s Starman --workers=$(nproc) -l /tmp/perl-dancer.sock -a ./app.pl

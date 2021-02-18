@@ -1,0 +1,20 @@
+[framework]
+name = "plug"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.update = "/updates?queries="
+urls.fortune = "/fortunes"
+urls.cached_query = "/cached-worlds?count="
+approach = "Realistic"
+classification = "Micro"
+database = "postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Full"
+platform = "BEAM"
+webserver = "cowboy"
+versus = "None"

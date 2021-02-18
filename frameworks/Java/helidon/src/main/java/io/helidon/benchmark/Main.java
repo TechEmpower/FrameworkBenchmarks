@@ -28,8 +28,8 @@ import io.helidon.benchmark.services.FortuneService;
 import io.helidon.benchmark.services.JsonService;
 import io.helidon.benchmark.services.PlainTextService;
 import io.helidon.config.Config;
+import io.helidon.media.jsonp.JsonpSupport;
 import io.helidon.webserver.Routing;
-import io.helidon.webserver.ServerConfiguration;
 import io.helidon.webserver.WebServer;
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
@@ -117,11 +117,11 @@ public final class Main {
         // By default this will pick up application.yaml from the classpath
         Config config = Config.create();
 
-        // Get webserver config from the "server" section of application.yaml
-        ServerConfiguration serverConfig =
-                ServerConfiguration.create(config.get("server"));
-
-        WebServer server = WebServer.create(serverConfig, createRouting(config));
+        // Build server with JSONP support
+        WebServer server = WebServer.builder(createRouting(config))
+                .config(config.get("server"))
+                .addMediaSupport(JsonpSupport.create())
+                .build();
 
         // Start the server and print some info.
         server.start().thenAccept(ws -> {

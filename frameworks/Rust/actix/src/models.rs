@@ -1,4 +1,5 @@
-#![allow(dead_code)]
+use diesel::Queryable;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct Message {

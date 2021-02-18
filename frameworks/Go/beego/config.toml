@@ -1,0 +1,29 @@
+[framework]
+name = "beego"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Fullstack"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "raw"
+platform = "None"
+webserver = "None"
+versus = "go"
+
+[orm-mysql]
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.update = "/update?queries="
+approach = "Realistic"
+classification = "Fullstack"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Micro"
+platform = "None"
+webserver = "None"
+versus = "go"

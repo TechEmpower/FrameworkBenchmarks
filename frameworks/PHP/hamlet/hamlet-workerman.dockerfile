@@ -1,4 +1,4 @@
-FROM ubuntu:19.10
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -20,5 +20,7 @@ WORKDIR /hamlet
 RUN composer require hamlet-framework/http-workerman:dev-master --quiet
 RUN composer require hamlet-framework/db-pdo:dev-master --quiet
 RUN composer update --no-dev --quiet
+
+EXPOSE 8080
 
 CMD php /hamlet/workerman.php start

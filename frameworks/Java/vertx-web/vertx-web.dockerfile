@@ -4,6 +4,9 @@ COPY scripts scripts
 COPY src src
 COPY pom.xml pom.xml
 RUN mvn package -q
+
+EXPOSE 8080
+
 CMD java \
     -server                                           \
     -XX:+UseNUMA                                      \

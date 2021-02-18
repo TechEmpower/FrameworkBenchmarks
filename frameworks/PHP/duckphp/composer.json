@@ -1,0 +1,12 @@
+{
+  "name": "dvaknheo/duckphp-benchmark",
+  "type": "project",
+	"require" : {
+		"dvaknheo/duckphp" : "1.2.10"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"DuckPhpBenchmark\\" : "app/"
+		}
+	}
+}

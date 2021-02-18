@@ -1,0 +1,52 @@
+[framework]
+name = "rapidoid"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "raw"
+platform = "Rapidoid"
+webserver = "None"
+versus = ""
+
+[http-fast]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Rapidoid"
+webserver = "None"
+versus = ""
+
+[postgres]
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "micro"
+platform = "Rapidoid"
+webserver = "None"
+versus = ""
+
+[mysql]
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Platform"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "micro"
+platform = "Rapidoid"
+webserver = "None"
+versus = ""
