@@ -1,5 +1,5 @@
 #[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 use std::{
     cell::RefCell, future::Future, io, pin::Pin, rc::Rc, task::Context, task::Poll,
@@ -76,7 +76,7 @@ impl Future for App {
         }
         if !this.state.is_read_ready() {
             this.state.dsp_read_more_data(cx.waker());
-        } else if !updated {
+        } else {
             this.state.dsp_register_task(cx.waker());
         }
         Poll::Pending
@@ -92,7 +92,7 @@ async fn main() -> io::Result<()> {
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", || {
             fn_service(|io: TcpStream| {
-                let state = State::new();
+                let state = State::new().disconnect_timeout(0);
                 let io = Rc::new(RefCell::new(io));
                 ntex::rt::spawn(ReadTask::new(io.clone(), state.clone()));
                 ntex::rt::spawn(WriteTask::new(io, state.clone()));
