@@ -1,5 +1,5 @@
 #[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 use bytes::Bytes;
 use ntex::{http, web};
@@ -62,6 +62,7 @@ async fn main() -> std::io::Result<()> {
             http::HttpService::build()
                 .keep_alive(http::KeepAlive::Os)
                 .client_timeout(0)
+                .disconnect_timeout(0)
                 .h1(ntex::map_config(
                     web::App::new()
                         .service(web::resource("/json").to(json))

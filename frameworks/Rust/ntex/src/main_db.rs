@@ -1,9 +1,7 @@
 #[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-use std::future::Future;
-use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::{future::Future, pin::Pin, task::Context, task::Poll};
 
 use bytes::BytesMut;
 use futures::future::ok;
@@ -148,6 +146,7 @@ async fn main() -> std::io::Result<()> {
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
                 .client_timeout(0)
+                .disconnect_timeout(0)
                 .h1(AppFactory)
                 .tcp()
         })?
