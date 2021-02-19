@@ -2,7 +2,7 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": "^7.4",
+        "php": "^8",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-mbstring": "*",
@@ -18,7 +18,7 @@
     "prefer-stable": true,
     "config": {
         "platform": {
-            "php": "7.4"
+            "php": "8.0"
         },
         "preferred-install": {
             "*": "dist"
