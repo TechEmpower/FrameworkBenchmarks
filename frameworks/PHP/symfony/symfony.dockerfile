@@ -6,17 +6,13 @@ RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /de
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq nginx git unzip curl \
-    php8.0-cli php8.0-fpm php8.0-mysql  > /dev/null
-RUN apt-get install -yqq php8.0-mbstring php8.0-xml php8.0-curl > /dev/null
+    php8.0-cli php8.0-fpm php8.0-mysql  \
+    php8.0-mbstring php8.0-xml php8.0-curl > /dev/null
 
-#RUN apt-get install -yqq composer > /dev/null
 RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-#RUN curl -sS https://getcomposer.org/installer | php -- --checkcurl -sS https://getcomposer.org/installer | php -- --check
 
 COPY deploy/conf/* /etc/php/8.0/fpm/
 RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.0/fpm/php-fpm.conf ; fi;
-
-#RUN sed -i "s|memory_limit = 128M|memory_limit = 256M|g" /etc/php/8.0/
 
 WORKDIR /symfony
 ADD ./composer.json /symfony/
