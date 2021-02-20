@@ -126,3 +126,4 @@ obj
 
 # CFML
 frameworks/CFML/coldbox/src/coldbox/
+frameworks/CFML/CFML/src/cachebox/

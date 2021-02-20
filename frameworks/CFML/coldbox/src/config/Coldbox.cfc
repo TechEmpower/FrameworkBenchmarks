@@ -15,5 +15,19 @@ component {
 		};
 
 	}
+	
+	function afterConfigurationLoad() {
+		var cache = controller.getCacheBox().getCache( 'default' );
+		cfloop( from="1", to="10000", index="local.i" ) {
+			cache.getOrSet(
+				'cached-world-#i#',
+				()=>queryExecute( '
+					SELECT id, randomNumber
+					FROM World
+					WHERE id = #i#
+				').getRow( 1 )
+			);
+		}
+	}
 
 }

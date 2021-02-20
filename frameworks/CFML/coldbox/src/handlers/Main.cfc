@@ -1,4 +1,5 @@
 component extends="coldbox.system.EventHandler" {
+	property name='cache' inject='cachebox:default';
 
 	function prehandler( event ) {
 		event.setHTTPHeader( name="Server", value="cfml-coldbox" )
@@ -82,6 +83,31 @@ component extends="coldbox.system.EventHandler" {
 		}
 
 		event.renderData( data=results, type="json" );
+	}
+
+	function cached( event, rc, prc ) {
+				
+		event.paramValue( 'count', 1 );
+		rc.count = val( rc.count );
+		if( rc.count > 500 ) {
+			rc.count = 500;
+		} else if( rc.count < 1 ) {
+			rc.count = 1;
+		}
+		var results = [];
+		cfloop( from="1", to="#rc.count#", index="local.i" ) {
+			var id = randRange( 1, 10000 );
+			var qry = cache.getOrSet(
+				'cached-world-#local.id#',
+				()=>queryExecute( '
+					SELECT id, randomNumber
+					FROM World
+					WHERE id = #id#
+				').getRow( 1 ) );			
+			results.append( qry );
+		}
+
+		event.renderData( data=results, type="json" );		
 	}
 
 }
