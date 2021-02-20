@@ -5,6 +5,8 @@ RUN docker-php-ext-install opcache pdo_mysql > /dev/null
 ADD ./ /php
 WORKDIR /php
 
+COPY deploy/conf/php.ini /usr/local/etc/php/
+
 COPY deploy/nginx-unit.json /docker-entrypoint.d/
 # forward log to docker log collector
 #RUN ln -sf /dev/stdout /var/log/unit.log
