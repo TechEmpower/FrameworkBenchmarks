@@ -72,7 +72,6 @@ benchmark.cfg
 # java / ruby stuff
 *.lock
 *.war
-!Gemfile.lock
 
 # go
 go/pkg/*
@@ -124,3 +123,7 @@ obj
 [Dd]ebug/
 [Rr]elease/
 *.fsproj.user
+
+# don't ignore certain rails files
+!Gemfile.lock
+!frameworks/Ruby/rails/bin
