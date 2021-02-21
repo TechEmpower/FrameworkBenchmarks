@@ -55,6 +55,16 @@ public class Service extends AbstractService {
         return source.findAsync(World.class, randomId());
     }
 
+    @RestMapping(name = "fortunes")
+    public CompletableFuture<HttpResult<String>> queryFortunes() {
+        return source.queryListAsync(Fortune.class).thenApply((fortunes) -> {
+            fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+            Collections.sort(fortunes);
+            String html = FortunesTemplate.template(fortunes).render().toString();
+            return new HttpResult("text/html; charset=UTF-8", html);
+        });
+    }
+
     @RestMapping(name = "queries")
     public CompletableFuture<World[]> queryWorldAsync(int queries) {
         final int size = Math.min(500, Math.max(1, queries));
@@ -88,16 +98,6 @@ public class Service extends AbstractService {
             Arrays.sort(worlds);
             return source.updateAsync(worlds);
         }).thenApply(v -> worlds);
-    }
-
-    @RestMapping(name = "fortunes")
-    public CompletableFuture<HttpResult<String>> queryFortunes() {
-        return source.queryListAsync(Fortune.class).thenApply((fortunes) -> {
-            fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-            Collections.sort(fortunes);
-            String html = FortunesTemplate.template(fortunes).render().toString();
-            return new HttpResult("text/html; charset=UTF-8", html);
-        });
     }
 
     private int randomId() {
