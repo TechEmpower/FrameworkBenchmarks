@@ -6,9 +6,11 @@
             "host":"tfb-database",
             "password":"benchmarkdbpass",
             "port":"5432",
-            "username":"benchmarkdbuser"
+            "username":"benchmarkdbuser",
+            "requestExclusive":true
         }
     },
     "inspectTemplate":"never",
-    "maxCFThreads":"512"
+    "maxCFThreads":"512",
+    "adminPassword":"password"
 }

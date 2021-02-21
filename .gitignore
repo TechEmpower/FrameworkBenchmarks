@@ -124,6 +124,9 @@ obj
 [Rr]elease/
 *.fsproj.user
 
+# CFML
+frameworks/CFML/coldbox/src/coldbox/
+
 # don't ignore certain rails files
 !Gemfile.lock
 !frameworks/Ruby/rails/bin

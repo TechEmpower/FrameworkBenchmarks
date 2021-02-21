@@ -66,7 +66,7 @@ fn db(pool: &'static PgPool) -> impl Filter<Extract = impl Reply, Error = Reject
 
 fn queries(pool: &'static PgPool) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     let between = Uniform::from(1..=10_000);
-    let clamped = warp::path!(u32).map(|queries: u32| queries.max(1).min(500));
+    let clamped = warp::path!(u32).map(|queries: u32| queries.clamp(1, 500));
     warp::path!("queries" / ..)
         .and(clamped.or(warp::any().map(|| 1)).unify())
         .and_then(move |queries| {
@@ -109,12 +109,45 @@ fn fortune(pool: &'static PgPool) -> impl Filter<Extract = impl Reply, Error = R
     })
 }
 
+fn update(pool: &'static PgPool) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+    let between = Uniform::from(1..=10_000);
+    let clamped = warp::path!(u32).map(|queries: u32| queries.clamp(1, 500));
+    warp::path!("updates" / ..)
+        .and(clamped.or(warp::any().map(|| 1)).unify())
+        .and_then(move |queries| async move {
+            let mut worlds = with_rng(|rng| {
+                (0..queries)
+                    .map(|_| World::get_by_id(pool, between.sample(rng)))
+                    .collect::<FuturesUnordered<_>>()
+                    .collect::<Vec<_>>()
+            })
+            .await;
+            with_rng(|rng| {
+                for world in &mut worlds {
+                    world.randomnumber = between.sample(rng);
+                }
+            });
+            let mut transaction = pool.begin().await.unwrap();
+            for world in &worlds {
+                sqlx::query("UPDATE world SET randomnumber = $1 WHERE id = $2")
+                    .bind(world.randomnumber)
+                    .bind(world.id)
+                    .execute(&mut transaction)
+                    .await
+                    .unwrap();
+            }
+            transaction.commit().await.unwrap();
+            Ok::<_, Rejection>(warp::reply::json(&worlds))
+        })
+}
+
 fn routes(pool: &'static PgPool) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
     json()
         .or(plaintext())
         .or(db(pool))
         .or(queries(pool))
         .or(fortune(pool))
+        .or(update(pool))
         .map(|reply| warp::reply::with_header(reply, header::SERVER, "warp"))
 }
 

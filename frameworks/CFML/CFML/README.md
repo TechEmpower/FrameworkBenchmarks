@@ -1,4 +1,7 @@
-# CFML Lucee Benchmarking Test
+# CFML Lucee/Adobe Benchmarking Test
+
+The default test runs on Lucee Server.  The Adobe version runs on Adobe ColdFusion. 
+The code is the same between both CF engines.
 
 ### Test Type Implementation Source Code
 
@@ -15,6 +18,7 @@ The tests were run with:
 * [CommandBox](https://commandbox.ortusbooks.com/)
 * [ortussolutions/commandbox Docker image](https://hub.docker.com/r/ortussolutions/commandbox/)
 * [Lucee Server](https://www.lucee.org/)
+* [Adobe ColdFusion](https://coldfusion.adobe.com/)
 
 ## Test URLs
 ### JSON
