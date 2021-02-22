@@ -51,15 +51,15 @@ This is the Redkale portion of a [benchmarking test suite](../) comparing a vari
 
 ### Database Queries Test
 
-    http://localhost:8080/queries?queries=5
+    http://localhost:8080/queries?q=5
 
 ### Database Caching Test
 
-    http://localhost:8080/cached-worlds?count=5
+    http://localhost:8080/cached-worlds?q=5
 
 ### Database Update Test
 
-    http://localhost:8080/updates?queries=5
+    http://localhost:8080/updates?q=5
 
 ### Template rendering Test
 

@@ -11,7 +11,7 @@ import javax.persistence.*;
  *
  * @author zhangjx
  */
-@Cacheable
+@Cacheable(direct=true)
 @Table(name = "World")
 public class CachedWorld extends World {
 
