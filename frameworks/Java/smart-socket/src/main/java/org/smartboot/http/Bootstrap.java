@@ -56,12 +56,13 @@ public class Bootstrap {
         int cpuNum = Runtime.getRuntime().availableProcessors();
         // 定义服务器接受的消息类型以及各类消息对应的处理器
         HttpBootstrap bootstrap = new HttpBootstrap();
-        bootstrap.setPort(8080).setThreadNum(cpuNum + 2)
-                .setReadBufferSize(1024 * 4)
-                .setReadPageSize(16384 * 1024 * 4)
-                .setBufferPool(10 * 1024 * 1024, cpuNum + 2, 1024 * 4)
-                .pipeline(routeHandle)
-                .wrapProcessor(processor -> new AbstractMessageProcessor<>() {
+        bootstrap.configuration()
+                .threadNum(cpuNum + 2)
+                .readBufferSize(1024 * 4)
+                .writeBufferSize(1024 * 4)
+                .readMemoryPool(16384 * 1024 * 4)
+                .writeMemoryPool(10 * 1024 * 1024 * (cpuNum + 2), cpuNum + 2)
+                .messageProcessor(processor -> new AbstractMessageProcessor<>() {
                     @Override
                     public void process0(AioSession session, Request msg) {
                         processor.process(session, msg);
@@ -71,7 +72,8 @@ public class Bootstrap {
                     public void stateEvent0(AioSession session, StateMachineEnum stateMachineEnum, Throwable throwable) {
                         processor.stateEvent(session, stateMachineEnum, throwable);
                     }
-                }).start();
+                });
+        bootstrap.setPort(8080).start();
     }
 
     private static void initDB(HttpRouteHandle routeHandle) {
