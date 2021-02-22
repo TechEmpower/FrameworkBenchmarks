@@ -1,7 +1,7 @@
 FROM ruby:3.0
 
-ENV BUNDLE_WITHOUT=mysql
-ENV RAILS_ENV=production_postgresql
+ENV BUNDLE_WITHOUT=postgresql
+ENV RAILS_ENV=production_mysql
 ENV PORT=8080
 
 EXPOSE 8080
