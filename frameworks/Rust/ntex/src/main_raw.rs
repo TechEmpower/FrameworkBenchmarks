@@ -1,9 +1,7 @@
 #[global_allocator]
 static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-use std::{
-    cell::RefCell, future::Future, io, pin::Pin, rc::Rc, task::Context, task::Poll,
-};
+use std::{cell::RefCell, future::Future, io, pin::Pin, rc::Rc, task::Context, task::Poll};
 
 use ntex::fn_service;
 use ntex::framed::{ReadTask, State, WriteTask};
@@ -13,8 +11,10 @@ use yarte::Serialize;
 
 mod utils;
 
-const JSON: &[u8] = b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
-const PLAIN: &[u8] = b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
+const JSON: &[u8] =
+    b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
+const PLAIN: &[u8] =
+    b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
 const HTTPNFOUND: &[u8] = b"HTTP/1.1 400 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: N\r\n";
 const BODY: &[u8] = b"Hello, World!";
