@@ -41,8 +41,8 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "cached-worlds")
-    public CachedWorld[] cachedWorlds(int count) {
-        final int size = Math.min(500, Math.max(1, count));
+    public CachedWorld[] cachedWorlds(int q) {
+        final int size = Math.min(500, Math.max(1, q));
         final CachedWorld[] worlds = new CachedWorld[size];
         for (int i = 0; i < size; i++) {
             worlds[i] = source.find(CachedWorld.class, randomId());
@@ -66,8 +66,8 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "queries")
-    public CompletableFuture<World[]> queryWorldAsync(int queries) {
-        final int size = Math.min(500, Math.max(1, queries));
+    public CompletableFuture<World[]> queryWorldAsync(int q) {
+        final int size = Math.min(500, Math.max(1, q));
         final World[] worlds = new World[size];
         final AtomicInteger index = new AtomicInteger();
         final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId())
@@ -80,8 +80,8 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "updates")
-    public CompletableFuture<World[]> updateWorldAsync(int queries) {
-        final int size = Math.min(500, Math.max(1, queries));
+    public CompletableFuture<World[]> updateWorldAsync(int q) {
+        final int size = Math.min(500, Math.max(1, q));
         final World[] worlds = new World[size];
         final AtomicInteger index = new AtomicInteger();
         final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId())
