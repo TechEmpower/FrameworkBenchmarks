@@ -1,19 +1,14 @@
 package benchmark.repository;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 public enum DbFactory {
 
     INSTANCE;
-
-    static final String PHYSICAL_TAG = "Citrine";
-    static final String CLOUD_TAG = "Azure";
-
-    private static final int POSTGRES_PHYSICAL_POOL_SIZE = 112;
-    private static final int POSTGRES_CLOUD_POOL_SIZE = 16;
-    private static final int POSTGRES_DEFAULT_POOL_SIZE = 10;
-
-    private static final int MONGODB_PHYSICAL_POOL_SIZE = 200;
-    private static final int MONGODB_CLOUD_POOL_SIZE = 100;
-    private static final int MONGODB_DEFAULT_POOL_SIZE = 50;
 
     public enum DbType {POSTGRES, MONGODB}
 
@@ -39,28 +34,39 @@ public enum DbFactory {
 
         int maxPoolSize;
         String env = System.getenv("BENCHMARK_ENV");
+        String propertiesFileName = "/environment.properties";
+        File propFile = new File(propertiesFileName);
 
-        switch (dbType) {
-            case POSTGRES:
-                if (PHYSICAL_TAG.equals(env)) {
-                    maxPoolSize = POSTGRES_PHYSICAL_POOL_SIZE;
-                } else if (CLOUD_TAG.equals(env)) {
-                    maxPoolSize = POSTGRES_CLOUD_POOL_SIZE;
-                } else {
-                    maxPoolSize = POSTGRES_DEFAULT_POOL_SIZE;
-                }
-                break;
-            case MONGODB:
-                if (PHYSICAL_TAG.equals(env)) {
-                    maxPoolSize = MONGODB_PHYSICAL_POOL_SIZE;
-                } else if (CLOUD_TAG.equals(env)) {
-                    maxPoolSize = MONGODB_CLOUD_POOL_SIZE;
-                } else {
-                    maxPoolSize = MONGODB_DEFAULT_POOL_SIZE;
-                }
-                break;
-            default:
-                maxPoolSize = 100;
+        try (InputStream is = propFile.isFile() ?
+                new FileInputStream(propFile) :
+                this.getClass().getResourceAsStream(propertiesFileName)) {
+            Properties prop = new Properties();
+            prop.load(is);
+
+            switch (dbType) {
+                case POSTGRES:
+                    if (prop.getProperty("physicalTag").equals(env)) {
+                        maxPoolSize = Integer.parseInt(prop.getProperty("postgresPhysicalPoolSize"));
+                    } else if (prop.getProperty("cloudTag").equals(env)) {
+                        maxPoolSize = Integer.parseInt(prop.getProperty("postgresCloudPoolSize"));
+                    } else {
+                        maxPoolSize = Integer.parseInt(prop.getProperty("postgresDefaultPoolSize"));
+                    }
+                    break;
+                case MONGODB:
+                    if (prop.getProperty("physicalTag").equals(env)) {
+                        maxPoolSize = Integer.parseInt(prop.getProperty("mongodbPhysicalPoolSize"));
+                    } else if (prop.getProperty("cloudTag").equals(env)) {
+                        maxPoolSize = Integer.parseInt(prop.getProperty("mongodbCloudPoolSize"));
+                    } else {
+                        maxPoolSize = Integer.parseInt(prop.getProperty("mongodbDefaultPoolSize"));
+                    }
+                    break;
+                default:
+                    maxPoolSize = 100;
+            }
+        } catch (IOException | NumberFormatException e) {
+            throw new RuntimeException("Failed to read property file " + propertiesFileName);
         }
 
         return maxPoolSize;
