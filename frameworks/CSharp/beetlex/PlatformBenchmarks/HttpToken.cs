@@ -29,6 +29,15 @@ namespace PlatformBenchmarks
 
         public RequestData CurrentRequest { get; set; }
 
+        private HtmlBufferWriter mHtmlBufferWriter = null;
+
+        public HtmlBufferWriter GetHtmlBufferWriter()
+        {
+            if (mHtmlBufferWriter == null)
+                mHtmlBufferWriter = new HtmlBufferWriter(2048);
+            return mHtmlBufferWriter;
+        }
+
         public byte[] GetLengthBuffer(string length)
         {
             Encoding.ASCII.GetBytes(length, 0, length.Length, mLengthBuffer, 0);

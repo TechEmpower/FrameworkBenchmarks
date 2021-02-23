@@ -105,20 +105,7 @@ namespace PlatformBenchmarks
                 if (result.Length == 2)
                 {
                     pipeStream.ReadFree(result.Length);
-                    if (Program.Debug)
-                    {
-                        if (token.CurrentRequest != null)
-                        {
-                            token.Requests.Enqueue(token.CurrentRequest);
-                            token.CurrentRequest = null;
-                            token.ThreadDispatcher.Enqueue(token);
-                        }
-                    }
-                    else
-                    {
-                        OnStartRequest(token.CurrentRequest, e.Session, token, pipeStream);
-                    }
-
+                    OnStartRequest(token.CurrentRequest, e.Session, token, pipeStream);
                 }
                 else
                 {
@@ -136,6 +123,7 @@ namespace PlatformBenchmarks
                         }
                         else
                         {
+                            token.CurrentRequest = request;
                             pipeStream.ReadFree((int)pipeStream.Length);
                             OnStartRequest(request, e.Session, token, pipeStream);
                             return;
@@ -304,18 +292,36 @@ namespace PlatformBenchmarks
 
         private void OnWriteContentLength(PipeStream stream, HttpToken token)
         {
-            stream.Write(_headerContentLength.Data, 0, _headerContentLength.Length);
-            token.ContentLength = stream.Allocate(10);
-            stream.Write(_2line, 0, 4);
-            token.ContentPostion = stream.CacheLength;
+            var action = token.CurrentRequest.Action;
+            if (action == ActionType.Json)
+            {
+                stream.Write(_jsonPreamble.Data, 0, _jsonPreamble.Length);
+                stream.Write(_2line, 0, 4);
+            }
+            else if (action == ActionType.Plaintext)
+            {
+                stream.Write(_plaintextPreamble.Data, 0, _plaintextPreamble.Length);
+                stream.Write(_2line, 0, 4);
+            }
+            else
+            {
+                stream.Write(_headerContentLength.Data, 0, _headerContentLength.Length);
+                token.ContentLength = stream.Allocate(10);
+                stream.Write(_2line, 0, 4);
+                token.ContentPostion = stream.CacheLength;
+            }
         }
 
         private void OnCompleted(PipeStream stream, ISession session, HttpToken token)
         {
-
-            token.FullLength((stream.CacheLength - token.ContentPostion).ToString());
+            var type = token.CurrentRequest.Action;
+            if (type != ActionType.Plaintext && type != ActionType.Json)
+            {
+                token.FullLength((stream.CacheLength - token.ContentPostion).ToString());
+            }
             if (token.Requests.IsEmpty && stream.Length == 0)
                 session.Stream.Flush();
+            token.CurrentRequest = null;
         }
 
     }
