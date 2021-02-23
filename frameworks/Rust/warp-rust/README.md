@@ -11,6 +11,7 @@ warp is a composable web server framework based on hyper.
 * [DB](src/main.rs)
 * [QUERIES](src/main.rs)
 * [FORTUNES](src/main.rs)
+* [UPDATE](src/main.rs)
 
 ## Test URLs
 ### JSON

@@ -1,0 +1,55 @@
+{
+  "framework": "coldbox",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/index.cfm?event=main.json",
+        "db_url": "/index.cfm?event=main.db",
+        "query_url":"/index.cfm?event=main.queries&queries=",
+        "fortune_url": "/index.cfm?event=main.fortunes",
+        "plaintext_url": "/index.cfm?event=main.plaintext",
+        "update_url": "/index.cfm?event=main.updates&queries=",
+        "cached_query_url": "/index.cfm?event=main.cached&count=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "ColdBox",
+        "language": "CFML",
+        "flavor": "None",
+        "orm": "raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "coldbox-lucee",
+        "notes": "Coldbox MVC on Lucee Server",
+        "versus": "cfml"
+      },
+      "adobe": {
+        "json_url": "/index.cfm?event=main.json",
+        "db_url": "/index.cfm?event=main.db",
+        "query_url":"/index.cfm?event=main.queries&queries=",
+        "fortune_url": "/index.cfm?event=main.fortunes",
+        "plaintext_url": "/index.cfm?event=main.plaintext",
+        "update_url": "/index.cfm?event=main.updates&queries=",
+        "cached_query_url": "/index.cfm?event=main.cached&count=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "ColdBox",
+        "language": "CFML",
+        "flavor": "None",
+        "orm": "raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "coldbox-adobe",
+        "notes": "Coldbox MVC on Adobe ColdFusion",
+        "versus": "cfml-adobe"
+      }
+    }
+  ]
+}

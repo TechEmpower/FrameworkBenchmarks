@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class HelloWorldController < ApplicationController
+  QUERY_RANGE = (1..10_000).to_a
+
   def plaintext
     render plain: 'Hello, World!'
   end
@@ -10,7 +12,7 @@ class HelloWorldController < ApplicationController
   end
 
   def db
-    render json: World.find(Random.rand(1..10000))
+    render json: World.find(Random.rand(1..10_000))
   end
 
   def query
@@ -18,8 +20,7 @@ class HelloWorldController < ApplicationController
     queries = 1 if queries < 1
     queries = 500 if queries > 500
 
-    numbers = (1..10000).to_a.sample(queries)
-    results = numbers.map do |id|
+    results = QUERY_RANGE.sample(queries).map do |id|
       World.find(id)
     end
 
@@ -29,7 +30,7 @@ class HelloWorldController < ApplicationController
   def fortune
     @fortunes = Fortune.all.to_a
     @fortunes << Fortune.new(id: 0, message: 'Additional fortune added at request time.')
-    @fortunes = @fortunes.sort_by(&:message)
+    @fortunes = @fortunes.sort_by!(&:message)
   end
 
   def update
@@ -42,12 +43,26 @@ class HelloWorldController < ApplicationController
       # rows with ids 1 - 10000
       world = World.select(:id, :randomNumber).find(id)
       begin
-        rn = Random.rand(1..10000)
+        rn = Random.rand(1..10_000)
       end while rn == world.randomNumber
       world.update_column(:randomNumber, rn)
       world
     end
 
     render json: worlds
+  end
+
+  def cached_query
+    queries = params[:queries].to_i
+    queries = 1 if queries < 1
+    queries = 500 if queries > 500
+
+    results = QUERY_RANGE.sample(queries).map do |id|
+      Rails.cache.fetch("world-#{id}") do
+        World.find(id)
+      end
+    end
+
+    render json: results
   end
 end
