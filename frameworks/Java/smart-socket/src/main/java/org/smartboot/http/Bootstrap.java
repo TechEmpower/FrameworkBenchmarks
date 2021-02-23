@@ -73,7 +73,7 @@ public class Bootstrap {
                         processor.stateEvent(session, stateMachineEnum, throwable);
                     }
                 });
-        bootstrap.setPort(8080).start();
+        bootstrap.pipeline(routeHandle).setPort(8080).start();
     }
 
     private static void initDB(HttpRouteHandle routeHandle) {
