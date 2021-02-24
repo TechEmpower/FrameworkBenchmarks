@@ -29,6 +29,12 @@ namespace PlatformBenchmarks
 
         private static readonly AsciiString _headerContentTypeJson = "Content-Type: application/json\r\n";
 
+        private static readonly AsciiString _textResultHeader = _httpsuccess + _headerServer.ToString() + _headerContentTypeText.ToString();
+
+        private static readonly AsciiString _jsonResultHeader = _httpsuccess + _headerServer.ToString() + _headerContentTypeJson.ToString();
+
+        private static readonly AsciiString _htmlResultHeader = _httpsuccess + _headerServer.ToString() + _headerContentTypeHtml.ToString();
+
         private static readonly AsciiString _path_Json = "/json";
 
         private static readonly AsciiString _path_Db = "/db";
@@ -46,6 +52,8 @@ namespace PlatformBenchmarks
         private static readonly AsciiString _cached_worlds = "/cached-worlds";
 
         private static byte _Space = 32;
+
+        public const int _LengthSize = 6;
 
         private static byte _question = 63;
 
@@ -227,67 +235,65 @@ namespace PlatformBenchmarks
 
         public virtual async Task OnStartRequest(RequestData data, ISession session, HttpToken token, PipeStream stream)
         {
-            OnWriteHeader(stream, token);
+            OnWriteHeader(stream, token, data.Action);
             ActionType type = data.Action;
             if (type == ActionType.Plaintext)
             {
-                stream.Write(_headerContentTypeText.Data, 0, _headerContentTypeText.Length);
-                OnWriteContentLength(stream, token);
                 await Plaintext(stream, token, session);
             }
             else if (type == ActionType.Json)
             {
-                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
-                OnWriteContentLength(stream, token);
                 await Json(stream, token, session);
             }
             else if (type == ActionType.Db)
             {
-                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
-                OnWriteContentLength(stream, token);
                 await db(stream, token, session);
             }
             else if (type == ActionType.Queries)
             {
-                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
-                OnWriteContentLength(stream, token);
                 await queries(data.QueryString, stream, token, session);
             }
-
             else if (type == ActionType.Caching)
             {
-                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
-                OnWriteContentLength(stream, token);
                 await caching(data.QueryString, stream, token, session);
             }
-
             else if (type == ActionType.Updates)
             {
-                stream.Write(_headerContentTypeJson.Data, 0, _headerContentTypeJson.Length);
-                OnWriteContentLength(stream, token);
                 await updates(data.QueryString, stream, token, session);
             }
             else if (type == ActionType.Fortunes)
             {
-                stream.Write(_headerContentTypeHtml.Data, 0, _headerContentTypeHtml.Length);
-                OnWriteContentLength(stream, token);
                 await fortunes(stream, token, session);
             }
             else
             {
-                stream.Write(_headerContentTypeHtml.Data, 0, _headerContentTypeHtml.Length);
-                OnWriteContentLength(stream, token);
                 await Default(stream, token, session);
             }
 
         }
 
-        private void OnWriteHeader(PipeStream stream, HttpToken token)
+        private void OnWriteHeader(PipeStream stream, HttpToken token, ActionType type)
         {
-            stream.Write(_httpsuccess.Data, 0, _httpsuccess.Length);
-            stream.Write(_headerServer.Data, 0, _headerServer.Length);
+            switch (type)
+            {
+                case ActionType.Caching:
+                case ActionType.Json:
+                case ActionType.Queries:
+                case ActionType.Db:
+                case ActionType.Updates:
+                    stream.Write(_jsonResultHeader.Data, 0, _jsonResultHeader.Length);
+                    break;
+                case ActionType.Plaintext:
+                    stream.Write(_textResultHeader.Data, 0, _textResultHeader.Length);
+                    break;
+                default:
+                    stream.Write(_htmlResultHeader.Data, 0, _htmlResultHeader.Length);
+                    break;
+            }
+
             ArraySegment<byte> date = GMTDate.Default.DATE;
             stream.Write(date.Array, date.Offset, date.Count);
+            OnWriteContentLength(stream, token);
         }
 
         private void OnWriteContentLength(PipeStream stream, HttpToken token)
@@ -306,7 +312,7 @@ namespace PlatformBenchmarks
             else
             {
                 stream.Write(_headerContentLength.Data, 0, _headerContentLength.Length);
-                token.ContentLength = stream.Allocate(10);
+                token.ContentLength = stream.Allocate(HttpHandler._LengthSize);
                 stream.Write(_2line, 0, 4);
                 token.ContentPostion = stream.CacheLength;
             }
