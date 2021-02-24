@@ -20,7 +20,7 @@ This is the Redkale portion of a [benchmarking test suite](../) comparing a vari
 
 ### Database Caching Test
 
-* [Database Queries test source](src/main/java/org/redkalex/benchmark/Service.java)
+* [Database Caching test source](src/main/java/org/redkalex/benchmark/Service.java)
 
 ### Database Update Test
 
