@@ -23,6 +23,8 @@ namespace Benchmarks
     {
         private static readonly ManualResetEvent _WaitEvent = new ManualResetEvent(false);
 
+        private static readonly Encoding _Utf8NoBom = new UTF8Encoding(false);
+
         public static async Task<int> Main(string[] args)
         {
             Logger.UnregisterLogger<ConsoleLogger>();
@@ -31,29 +33,13 @@ namespace Benchmarks
                   .WithUrlPrefix("http://+:8080/")
                   .WithMode(HttpListenerMode.EmbedIO))
                 .PreferNoCompressionFor("text/*")
-                .WithAction("/plaintext", HttpVerbs.Get, async (ctx) =>
-                {
-                    var bytes = Encoding.UTF8.GetBytes("Hello, World!");
-
-                    ctx.Response.ContentType = "text/plain";
-                    ctx.Response.ContentEncoding = Encoding.UTF8;
-                    ctx.Response.ContentLength64 = bytes.Length;
-
-                    await ctx.Response.OutputStream.WriteAsync(bytes, 0, bytes.Length);
-                })
-                .WithAction("/json", HttpVerbs.Get, async (ctx) =>
+                .WithAction("/plaintext", HttpVerbs.Get, ctx =>
+                    ctx.SendStringAsync("Hello, World!", "text/plain", _Utf8NoBom))
+                .WithAction("/json", HttpVerbs.Get, ctx =>
                 {
                     var data = new JsonResult() { Message = "Hello, World!" };
 
-                    var serialized = Swan.Formatters.Json.Serialize(data);
-
-                    var bytes = Encoding.UTF8.GetBytes(serialized);
-
-                    ctx.Response.ContentType = "application/json";
-                    ctx.Response.ContentEncoding = Encoding.UTF8;
-                    ctx.Response.ContentLength64 = bytes.Length;
-
-                    await ctx.Response.OutputStream.WriteAsync(bytes, 0, bytes.Length);
+                    return ctx.SendDataAsync(ResponseSerializer.Json, data);
                 });
 
             try
