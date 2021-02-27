@@ -1,6 +1,6 @@
 # -*- mode: dockerfile -*-
 
-FROM ocurrent/opam:alpine-3.12-ocaml-4.11
+FROM ocaml/opam:alpine-3.12-ocaml-4.12
 
 RUN \
   opam depext dune conf-libev httpaf httpaf-lwt-unix lwt yojson && \
