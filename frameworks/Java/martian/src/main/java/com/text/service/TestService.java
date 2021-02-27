@@ -6,7 +6,10 @@ import com.mars.iserver.server.impl.MarsHttpExchange;
 import com.mars.server.server.request.HttpMarsResponse;
 import com.text.api.vo.MessageVO;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 @MarsBean
 public class TestService {
@@ -20,9 +23,11 @@ public class TestService {
         response.geNativeResponse(MarsHttpExchange.class).getResponseHeaders().clear();
 
         // Add the header required by tfb
+        String str = new SimpleDateFormat("E, dd MMM yyyy H:m:s z", Locale.US).format(new Date());
+
         response.setHeader("Content-Type", HttpConstant.RESPONSE_CONTENT_TYPE);
         response.setHeader("Server","Martian");
-        response.setHeader("Date", new Date().toGMTString());
+        response.setHeader("Date", str);
 
 
         MessageVO messageVO = new MessageVO();
