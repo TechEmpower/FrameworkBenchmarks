@@ -107,6 +107,33 @@ let rec accept_loop socket handler =
           Lwt.return_unit));
   accept_loop socket handler
 
+
+let server i ()  : unit Lwt.t =
+  (* Open socket *)
+  let ipaddr = Unix.inet_addr_any in
+  let port = 8080 in
+  let sockaddr = Unix.ADDR_INET (ipaddr, port) in
+  let socket =
+     Lwt_unix.socket (Unix.domain_of_sockaddr sockaddr) Unix.SOCK_STREAM 0
+  in
+  Lwt_unix.setsockopt socket Unix.SO_REUSEADDR true;
+  Lwt_unix.setsockopt socket Unix.SO_REUSEPORT true;
+
+  (* Listen *)
+  Lwt_unix.bind socket sockaddr >>= fun () ->
+
+  Lwt_unix.listen socket (Lwt_unix.somaxconn () [@ocaml.warning "-3"]);
+
+  Lwt_io.eprintf "Listening on %s:%s (child %d)\n"
+      (Unix.string_of_inet_addr ipaddr)
+      (string_of_int port) i
+    >>= fun () ->
+    let handler =
+      Server.create_connection_handler ~request_handler ~error_handler
+    in
+    accept_loop socket handler
+
+
 let dump_lwt () =
   let options =
     [
@@ -141,33 +168,15 @@ let main () =
   Printf.eprintf "Detected %d max open files\n" ulimit_n;
   dump_lwt ();
 
-  let ipaddr = Unix.inet_addr_any in
-  let port = 8080 in
-  let sockaddr = Unix.ADDR_INET (ipaddr, port) in
-  let socket =
-    Lwt_unix.socket (Unix.domain_of_sockaddr sockaddr) Unix.SOCK_STREAM 0
-  in
-  Lwt_unix.setsockopt socket Unix.SO_REUSEADDR true;
 
-  Lwt_main.run
-  @@ ( Lwt_unix.bind socket sockaddr >|= fun () ->
-       Lwt_unix.listen socket (Lwt_unix.somaxconn () [@ocaml.warning "-3"]) );
 
   for i = 1 to nproc do
     flush_all ();
     if Lwt_unix.fork () = 0 then (
       (* child *)
       refresh_date ();
-      (Lwt.async_exception_hook := fun exn -> raise exn);
-      Lwt.async (fun () ->
-          Lwt_io.eprintf "Listening on %s:%s (child %d)\n"
-            (Unix.string_of_inet_addr ipaddr)
-            (string_of_int port) i
-          >>= fun () ->
-          let handler =
-            Server.create_connection_handler ~request_handler ~error_handler
-          in
-          accept_loop socket handler);
+      Lwt.async_exception_hook := (fun exn -> raise exn);
+      Lwt.async (fun () -> server i ());
       let forever, _ = Lwt.wait () in
       Lwt_main.run forever;
       exit 0 )
