@@ -1,0 +1,30 @@
+{
+  "framework": "tide",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries/",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates/",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "tide",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "Rust",
+        "webserver": "tide",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "tide",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
