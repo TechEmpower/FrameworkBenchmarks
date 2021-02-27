@@ -1,10 +1,7 @@
 package com.text.config;
 
 import com.mars.common.base.config.MarsConfig;
-<<<<<<< HEAD
 import com.mars.common.base.config.model.ThreadPoolConfig;
-=======
->>>>>>> a5bad622429f14f13d872589d7054aefaa75002d
 
 public class TestConfig extends MarsConfig {
 
@@ -13,7 +10,6 @@ public class TestConfig extends MarsConfig {
         return 8080;
     }
 
-<<<<<<< HEAD
     @Override
     public ThreadPoolConfig threadPoolConfig() {
         ThreadPoolConfig threadPoolConfig = new ThreadPoolConfig();
@@ -23,6 +19,4 @@ public class TestConfig extends MarsConfig {
         threadPoolConfig.setBackLog(2000);
         return threadPoolConfig;
     }
-=======
->>>>>>> a5bad622429f14f13d872589d7054aefaa75002d
 }
