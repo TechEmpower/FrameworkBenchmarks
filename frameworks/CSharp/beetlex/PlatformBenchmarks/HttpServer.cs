@@ -20,14 +20,15 @@ namespace PlatformBenchmarks
             serverOptions.LogLevel = LogType.Error;
             serverOptions.DefaultListen.Port = 8080;
             serverOptions.Statistical = false;
-            serverOptions.BufferSize = 1024 * 8;
             serverOptions.BufferPoolMaxMemory = 1000;
             serverOptions.BufferPoolSize = 1024 * 10;
             if (Program.Debug)
             {
-                serverOptions.IOQueueEnabled = true;
-                serverOptions.IOQueues = System.Math.Min(Environment.ProcessorCount, 16);
-                serverOptions.SyncAccept = false;
+                serverOptions.BufferSize = 1024 * 16;
+            }
+            else
+            {
+                serverOptions.BufferSize = 1024 * 8;
             }
             ApiServer = SocketFactory.CreateTcpServer<HttpHandler>(serverOptions);
             ApiServer.Open();
@@ -38,8 +39,9 @@ namespace PlatformBenchmarks
             }
             else
             {
-                // RawDb._connectionString = "Server=192.168.2.19;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=64;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3";
+
                 RawDb._connectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=64;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3;Multiplexing=true;Write Coalescing Delay Us=500;Write Coalescing Buffer Threshold Bytes=1000";
+                //RawDb._connectionString = "Server=192.168.2.19;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=64;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3";
             }
             ApiServer.Log(LogType.Info, null, $"Debug mode [{Program.Debug}]");
             return Task.CompletedTask;

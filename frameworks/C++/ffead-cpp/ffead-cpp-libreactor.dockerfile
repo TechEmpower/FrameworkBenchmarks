@@ -24,4 +24,6 @@ RUN make && cp libreactor-ffead-cpp $IROOT/ && rm -rf ${IROOT}/lang-server-backe
 
 WORKDIR /
 
+EXPOSE 8080
+
 CMD ./run_ffead.sh ffead-cpp-5.0 libreactor

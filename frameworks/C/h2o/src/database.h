@@ -22,7 +22,6 @@
 #define DATABASE_H_
 
 #include <h2o.h>
-#include <inttypes.h>
 #include <stdint.h>
 #include <postgresql/libpq-fe.h>
 

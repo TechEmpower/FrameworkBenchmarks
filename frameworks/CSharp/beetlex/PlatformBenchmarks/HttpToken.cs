@@ -1,7 +1,10 @@
-﻿using BeetleX.Buffers;
+﻿using BeetleX;
+using BeetleX.Buffers;
+using BeetleX.Dispatchs;
 using System;
 using System.Collections.Concurrent;
 using System.Text;
+using System.Text.Json;
 
 namespace PlatformBenchmarks
 {
@@ -16,7 +19,13 @@ namespace PlatformBenchmarks
 
         }
 
+        public SingleThreadDispatcher<HttpToken> ThreadDispatcher { get; set; }
+
         public ConcurrentQueue<RequestData> Requests { get; set; } = new ConcurrentQueue<RequestData>();
+
+        public Utf8JsonWriter Utf8JsonWriter { get; set; }
+
+        public ISession Session { get; set; }
 
         public RequestData CurrentRequest { get; set; }
 

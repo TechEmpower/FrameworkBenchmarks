@@ -11,4 +11,6 @@ ADD ./ /httpbeast
 WORKDIR /httpbeast
 RUN nimble c -d:danger --threads:on -y techempower.nim
 
+EXPOSE 8080
+
 CMD ./techempower

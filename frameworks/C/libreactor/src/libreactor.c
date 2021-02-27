@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <err.h>
+#include <sys/eventfd.h>
 
 #include <dynamic.h>
 #include <reactor.h>
@@ -42,12 +43,21 @@ static core_status server_handler(core_event *event)
 
 int main()
 {
+  int parent_eventfd;
   server s;
 
-  setup();
+  // fork_workers() forks a separate child/worker process for each available cpu and returns an eventfd from the parent
+  // The eventfd is used to signal the parent. This guarantees the forking order needed for REUSEPORT_CBPF to work well
+  parent_eventfd = fork_workers();
+
   core_construct(NULL);
   server_construct(&s, server_handler, &s);
   server_open(&s, 0, 8080);
+  enable_reuseport_cbpf(&s);
+
+  // Signal the parent process so that it can proceed with the next fork
+  eventfd_write(parent_eventfd, (eventfd_t) 1);
+  close(parent_eventfd);
 
   core_loop(NULL);
   core_destruct(NULL);

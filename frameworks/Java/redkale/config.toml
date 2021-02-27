@@ -1,0 +1,31 @@
+[framework]
+name = "redkale"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Fullstack"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Redkale"
+webserver = "Redkale"
+versus = "Redkale"
+
+[postgres]
+urls.db = "/db"
+urls.fortune = "/fortunes"
+urls.query = "/queries?q="
+urls.update = "/updates?q="
+urls.cached_query = "/cached-worlds?q="
+approach = "Realistic"
+classification = "Fullstack"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Redkale"
+webserver = "Redkale"
+versus = "Redkale"

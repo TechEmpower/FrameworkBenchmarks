@@ -1,0 +1,153 @@
+name: build
+on: [ push, pull_request ]
+jobs:
+  setup:
+    runs-on: ubuntu-20.04
+    steps:
+      # Required for workflow triggers like the auto-label for failing PRs
+      - name: Save PR number
+        if: github.event_name == 'pull_request'
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr/NR
+      - uses: actions/upload-artifact@v2
+        if: github.event_name == 'pull_request'
+        with:
+          name: pr
+          path: pr/
+      # Commit branch/name extraction from:
+      # https://github.community/t/accessing-commit-message-in-pull-request-event/17158/8
+      #
+      # We need to fetch more than one commit to be able to access HEAD^2 in case
+      # of a pull request
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 10
+      # In case of a push event, the commit we care about is simply HEAD.
+      # The current branch name can be found by parsing GITHUB_REF, for example,
+      # if we are on the master branch, then GITHUB_REF = refs/heads/master.
+      - name: Get commit branch and commit message from push
+        if: github.event_name == 'push'
+        run: |
+          echo "BRANCH_NAME=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE<<EOF" >> $GITHUB_ENV
+          echo "$(git log --format=%B -n 1 HEAD)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "PREVIOUS_COMMIT=$(git log --format=%H -n 1 HEAD~1)" >> $GITHUB_ENV
+      # In case of a pull_request event, the commit we care about is HEAD^2, that
+      # is, the second parent of the pull request merge commit.
+      # The current branch name is directly given by GITHUB_HEAD_REF
+      - name: Get commit branch and commit message from PR
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "BRANCH_NAME=$GITHUB_HEAD_REF" >> $GITHUB_ENV
+          echo "TARGET_BRANCH_NAME=$(echo ${GITHUB_BASE_REF##*/})" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE<<EOF" >> $GITHUB_ENV
+          echo "$(git log --format=%B -n 1 HEAD^2)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "PREVIOUS_COMMIT=$(git log --format=%H -n 1 HEAD^2~1)" >> $GITHUB_ENV
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '2.7'
+          architecture: 'x64'
+      - name: Get all changes vs master
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          echo "DIFF<<EOF" >> $GITHUB_ENV
+          echo "$(./toolset/github_actions/github_actions_diff.py)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      - name: Determine which (if any) tests need to be run
+        run: |
+          echo "RUN_TESTS<<EOF" >> $GITHUB_ENV
+          echo "$(grep -oP "github-actions-run-tests \K(.*)" <<< $DIFF || true)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      - id: event_out
+        name: Write event outputs
+        run: |
+          # Escape the multiline string for Github Actions, see https://github.community/t/set-output-truncates-multiline-strings/16852/3
+          COMMIT_MESSAGE="${COMMIT_MESSAGE//'%'/'%25'}"
+          COMMIT_MESSAGE="${COMMIT_MESSAGE//$'\n'/'%0A'}"
+          COMMIT_MESSAGE="${COMMIT_MESSAGE//$'\r'/'%0D'}"
+          echo "::set-output name=commit_message::$COMMIT_MESSAGE"
+          echo "::set-output name=branch_name::$BRANCH_NAME"
+          echo "::set-output name=target_branch_name::$TARGET_BRANCH_NAME"
+          echo "::set-output name=previous_commit::$PREVIOUS_COMMIT"
+      - id: verify_out
+        name: Write verify job matrix
+        run: |
+          # Use of jq for JSON array creation from https://stackoverflow.com/a/26809318
+          # The following creates a JSON object as follows:
+          # include:
+          #   - TESTLANG: {lang}
+          # with a TESTLANG object in the include array for each language under frameworks
+          VERIFY_MATRIX=$(ls -1 frameworks | jq -Rc '.+"/" | select(inside(env.RUN_TESTS))  | rtrimstr("/")' | jq -sc '{include: map({TESTLANG: .})}')
+          echo "::set-output name=verify_matrix::$VERIFY_MATRIX"
+    outputs:
+      commit_message: ${{ steps.event_out.outputs.commit_message }}
+      branch_name: ${{ steps.event_out.outputs.branch_name }}
+      target_branch_name: ${{ steps.event_out.outputs.target_branch_name }}
+      previous_commit: ${{ steps.event_out.outputs.previous_commit }}
+      verify_matrix: ${{ steps.verify_out.outputs.verify_matrix }}
+  verify:
+    needs: setup
+    # The matrix check is necessary because an empty job matrix is otherwise considered a workflow failure
+    if: ${{ !contains(needs.setup.outputs.commit_message, '[ci skip]') && contains(needs.setup.outputs.verify_matrix, 'TESTLANG') }}
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix: ${{ fromJSON(needs.setup.outputs.verify_matrix) }}
+      # Disable fail-fast to allow all failing frameworks/etc to fail in a
+      # single build, rather than stopping when the first one fails.
+      fail-fast: false
+    env:
+      TESTLANG: ${{ matrix.TESTLANG }}
+      TESTDIR: ${{ matrix.TESTDIR }}
+      COMMIT_MESSAGE: ${{ needs.setup.outputs.commit_message }}
+      BRANCH_NAME: ${{ needs.setup.outputs.branch_name }}
+      TARGET_BRANCH_NAME: ${{ needs.setup.outputs.target_branch_name }}
+      PREVIOUS_COMMIT: ${{ needs.setup.outputs.previous_commit }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 10
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '2.7'
+          architecture: 'x64'
+      - name: Get all changes vs master
+        # Runs github_actions_diff, with the the output accessible in later steps
+        run: |
+          # Write the result to env.DIFF for later steps
+          echo "DIFF<<EOF" >> $GITHUB_ENV
+          echo "$(./toolset/github_actions/github_actions_diff.py)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      - id: should_run_tests
+        name: Determine which (if any) tests need to be run
+        # Searches for github-actions-diff-continue to determine if the suite should be installed and the current $TESTDIR test should run.
+        run: |
+          # grep returns status code 1 if no matches are found. This fails the
+          # build as it is a non-zero status. But this is an expected
+          # possibility, so `|| true` is used to address/silence that.
+          # Write the result to env.RUN_TESTS for later steps
+          echo "RUN_TESTS<<EOF" >> $GITHUB_ENV
+          echo "$(grep -oP "github-actions-run-tests \K(.*)" <<< $DIFF || true)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      - name: Log status
+        run: |
+          if [ "$RUN_TESTS" ]; then echo "Proceeding to run tests."; else echo 'Skipping test verification.'; fi
+      - name: Build tfb dockerfile
+        if: ${{ env.RUN_TESTS }}
+        run: docker build -t techempower/tfb - < ./Dockerfile;
+      - name: Stop services
+        # Stop services that would claim ports we may need
+        run: |
+          sudo service mysql stop || true
+          sudo service postgresql stop || true
+      - name: Run tests if needed
+        if: ${{ env.RUN_TESTS }}
+        run: |
+          # run-ci.py runs the diffing to see if github actions needs to test this framework. Ideally/eventually,
+          # we'd like to try and do the diffing before github_actions_clean & setup.
+          # This will run the tests exactly as you would in your own vm:
+          docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test-dir $RUN_TESTS --results-environment Github-Actions;

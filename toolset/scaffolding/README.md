@@ -28,9 +28,9 @@ This will run the suite in `verify` mode for your test. This means that no bench
 
 Once you are able to successfully run your test through our suite in this way **and** your test passes our validation, you may move on to the next step.
 
-5. Add your test to `.travis.yml`
+5. Add your test to `.github/workflows/build.yml`
 
-Edit `.travis.yml` to ensure that Travis-CI will automatically run our verification tests against your new test. This file is kept in alphabetical order, so find where `TESTDIR=$LANGUAGE/$NAME` should be inserted under `env > matrix` and put it there.
+Edit `.github/workflows/build.yml` to ensure that Github Actions will automatically run our verification tests against your new test. This file is kept in alphabetical order, so find where `TESTDIR=$LANGUAGE/$NAME` should be inserted under `env > matrix` and put it there.
 
 6. Fix this `README.md` and open a pull request
 

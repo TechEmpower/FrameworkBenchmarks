@@ -37,4 +37,6 @@ RUN chmod +x h2o.sh
 
 WORKDIR /
 
+EXPOSE 8080
+
 CMD ./run_ffead.sh ffead-cpp-5.0 h2o

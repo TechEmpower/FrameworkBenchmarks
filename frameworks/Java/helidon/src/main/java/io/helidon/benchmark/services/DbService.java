@@ -16,7 +16,6 @@ import javax.json.JsonWriterFactory;
 import io.helidon.benchmark.models.DbRepository;
 import io.helidon.benchmark.models.World;
 import io.helidon.common.http.Parameters;
-import io.helidon.media.jsonp.server.JsonSupport;
 import io.helidon.webserver.Routing;
 import io.helidon.webserver.ServerRequest;
 import io.helidon.webserver.ServerResponse;
@@ -39,9 +38,6 @@ public class DbService implements Service {
 
     @Override
     public void update(Routing.Rules rules) {
-        rules.register("/db", JsonSupport.create());
-        rules.register("/queries", JsonSupport.create());
-        rules.register("/updates", JsonSupport.create());
         rules.get("/db", this::db);
         rules.get("/queries", this::queries);
         rules.get("/updates", this::updates);

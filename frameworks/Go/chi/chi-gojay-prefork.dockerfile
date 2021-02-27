@@ -12,4 +12,7 @@ RUN go get github.com/go-sql-driver/mysql
 RUN go get github.com/go-chi/chi
 
 RUN go build -o server src/chi-gojay/*.go
+
+EXPOSE 8080
+
 CMD ./server -prefork

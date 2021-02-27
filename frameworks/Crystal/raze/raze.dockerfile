@@ -12,4 +12,6 @@ ENV DATABASE_URL postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/he
 RUN shards install
 RUN crystal build --release --no-debug raze.cr
 
+EXPOSE 8080
+
 CMD bash run.sh

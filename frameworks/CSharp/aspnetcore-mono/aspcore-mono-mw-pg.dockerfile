@@ -9,4 +9,6 @@ WORKDIR /app
 COPY --from=build /app/out ./
 COPY Benchmarks/appsettings.postgresql.json ./appsettings.json
 
+EXPOSE 8080
+
 ENTRYPOINT ["./Benchmarks", "scenarios=DbSingleQueryRaw,DbMultiQueryRaw,DbFortunesRaw,DbMultiUpdateRaw"]
