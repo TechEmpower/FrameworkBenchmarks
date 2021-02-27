@@ -14,6 +14,8 @@ import java.util.TimeZone;
 @MarsBean
 public class TestService {
 
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("E, dd MMM yyyy H:m:s z", Locale.US);
+
     public MessageVO json(HttpMarsResponse response){
         /*
             Because this is a purely front-end and back-end separation framework,
@@ -23,7 +25,7 @@ public class TestService {
         response.geNativeResponse(MarsHttpExchange.class).getResponseHeaders().clear();
 
         // Add the header required by tfb
-        String str = new SimpleDateFormat("E, dd MMM yyyy H:m:s z", Locale.US).format(new Date());
+        String str = simpleDateFormat.format(new Date());
 
         response.setHeader("Content-Type", HttpConstant.RESPONSE_CONTENT_TYPE);
         response.setHeader("Server","Martian");
