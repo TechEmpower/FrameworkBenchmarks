@@ -1,0 +1,27 @@
+[package]
+name = "salvo"
+version = "0.2.0"
+edition = "2018"
+
+[[bin]]
+name = "salvo"
+path = "src/main.rs"
+
+[dependencies]
+salvo = "0.5.5"
+tokio = { version = "1.2", features = ["full"] }
+snmalloc-rs = { version = "0.2.24", features = ["1mib", "native-cpu"] }
+random-fast-rng = "0.1.1"
+num_cpus = "1.13"
+futures = "0.3.12"
+smallvec = "1.6.1"
+simd-json = "0.3.24"
+http = "0.2"
+
+serde = { version = "1.0", features = ["derive"] }
+tokio-postgres = { git="https://github.com/fafhrd91/postgres.git" }
+
+[profile.release]
+lto = true
+opt-level = 3
+codegen-units = 1
