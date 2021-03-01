@@ -32,7 +32,7 @@ There is currently one repository implementation.
 ## Versions
 
 * [Java OpenJDK 11](http://openjdk.java.net/)
-* [Helidon 1.4.0](http://helidon.io/)
+* [Helidon 2.2.1](http://helidon.io/)
 
 ## Test URLs
 

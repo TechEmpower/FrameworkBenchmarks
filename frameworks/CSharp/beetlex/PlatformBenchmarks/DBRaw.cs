@@ -53,6 +53,25 @@ namespace PlatformBenchmarks
 
         private Npgsql.NpgsqlParameter<int> mID;
 
+        private static int ListDefaultSize = 8;
+
+        private World[] mWorldBuffer = null;
+
+        private World[] GetWorldBuffer()
+        {
+            if (mWorldBuffer == null)
+                mWorldBuffer = new World[512];
+            return mWorldBuffer;
+        }
+
+        private Fortune[] mFortunesBuffer = null;
+
+        private Fortune[] GetFortuneBuffer()
+        {
+            if (mFortunesBuffer == null)
+                mFortunesBuffer = new Fortune[512];
+            return mFortunesBuffer;
+        }
 
         public async Task<World> LoadSingleQueryRow()
         {
@@ -80,7 +99,7 @@ namespace PlatformBenchmarks
             }
         }
 
-        public async Task<World[]> LoadMultipleQueriesRows(int count)
+        public async Task<ArraySegment<World>> LoadMultipleQueriesRows(int count)
         {
             using (var db = new NpgsqlConnection(_connectionString))
             {
@@ -145,43 +164,45 @@ namespace PlatformBenchmarks
         }
 
 
-        private async Task<World[]> LoadMultipleRows(int count, DbConnection db)
+        private async Task<ArraySegment<World>> LoadMultipleRows(int count, DbConnection db)
         {
             SingleCommand.Connection = db;
             SingleCommand.Parameters[0].Value = _random.Next(1, 10001);
-            var result = new World[count];
+            var result = GetWorldBuffer();
             for (int i = 0; i < result.Length; i++)
             {
                 result[i] = await ReadSingleRow(db, SingleCommand);
                 SingleCommand.Parameters[0].Value = _random.Next(1, 10001);
             }
-            return result;
+            return new ArraySegment<World>(result, 0, count);
 
         }
 
-        public async Task<List<Fortune>> LoadFortunesRows()
+        public async Task<ArraySegment<Fortune>> LoadFortunesRows()
         {
-            var result = new List<Fortune>();
-
+            int count = 0;
+            var result = GetFortuneBuffer();
             using (var db = new NpgsqlConnection(_connectionString))
             {
                 await db.OpenAsync();
                 FortuneCommand.Connection = db;
-                using (var rdr = await FortuneCommand.ExecuteReaderAsync(CommandBehavior.Default))
+                using (var rdr = await FortuneCommand.ExecuteReaderAsync())
                 {
                     while (await rdr.ReadAsync())
                     {
-                        result.Add(new Fortune
+                        result[count] = (new Fortune
                         {
                             Id = rdr.GetInt32(0),
                             Message = rdr.GetString(1)
                         });
+                        count++;
                     }
                 }
             }
-            result.Add(new Fortune { Message = "Additional fortune added at request time." });
-            result.Sort();
-            return result;
+            result[count] = (new Fortune { Message = "Additional fortune added at request time." });
+            count++;
+            Array.Sort<Fortune>(result, 0, count);
+            return new ArraySegment<Fortune>(result, 0, count);
         }
         public async Task<World[]> LoadMultipleUpdatesRows(int count)
         {

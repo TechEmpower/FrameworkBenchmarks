@@ -1,9 +1,7 @@
 #[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-use std::{
-    cell::RefCell, future::Future, io, pin::Pin, rc::Rc, task::Context, task::Poll,
-};
+use std::{cell::RefCell, future::Future, io, pin::Pin, rc::Rc, task::Context, task::Poll};
 
 use ntex::fn_service;
 use ntex::framed::{ReadTask, State, WriteTask};
@@ -13,8 +11,10 @@ use yarte::Serialize;
 
 mod utils;
 
-const JSON: &[u8] = b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
-const PLAIN: &[u8] = b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
+const JSON: &[u8] =
+    b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
+const PLAIN: &[u8] =
+    b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
 const HTTPNFOUND: &[u8] = b"HTTP/1.1 400 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: N\r\n";
 const BODY: &[u8] = b"Hello, World!";
@@ -72,11 +72,11 @@ impl Future for App {
             }
         }
         if updated {
-            this.state.dsp_flush_write_data(cx.waker());
+            this.state.dsp_restart_write_task();
         }
         if !this.state.is_read_ready() {
             this.state.dsp_read_more_data(cx.waker());
-        } else if !updated {
+        } else {
             this.state.dsp_register_task(cx.waker());
         }
         Poll::Pending
@@ -92,7 +92,7 @@ async fn main() -> io::Result<()> {
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", || {
             fn_service(|io: TcpStream| {
-                let state = State::new();
+                let state = State::new().disconnect_timeout(0);
                 let io = Rc::new(RefCell::new(io));
                 ntex::rt::spawn(ReadTask::new(io.clone(), state.clone()));
                 ntex::rt::spawn(WriteTask::new(io, state.clone()));

@@ -1,0 +1,9 @@
+{
+    "profile" : "none",
+    "web" : {
+        "maxRequests" : 512
+    },
+    "app" : {
+        "cfengine" : "lucee@5.3.8-rc"
+    }
+}
