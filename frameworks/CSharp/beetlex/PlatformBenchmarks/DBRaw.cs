@@ -169,7 +169,7 @@ namespace PlatformBenchmarks
             SingleCommand.Connection = db;
             SingleCommand.Parameters[0].Value = _random.Next(1, 10001);
             var result = GetWorldBuffer();
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < count; i++)
             {
                 result[i] = await ReadSingleRow(db, SingleCommand);
                 SingleCommand.Parameters[0].Value = _random.Next(1, 10001);
