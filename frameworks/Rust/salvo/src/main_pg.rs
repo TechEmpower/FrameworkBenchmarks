@@ -11,7 +11,7 @@ use serde::Serialize;
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::fmt::Write;
-use std::io;
+use std::{cmp, io};
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{self, Client, NoTls, Statement};
 use yarte::ywrite_html;
@@ -95,7 +95,9 @@ async fn world_row(_req: &mut Request, res: &mut Response) -> Result<(), Error> 
 
 #[fn_handler]
 async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let count = req.get_query::<usize>("q").unwrap_or_default();
+    let count = req.get_query::<usize>("q").unwrap_or(1);
+    let count = cmp::min(500, cmp::max(1, count));
+
     let mut worlds = Vec::with_capacity(count);
     let mut rng = SmallRng::from_entropy();
     let conn = connect();
@@ -114,7 +116,9 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
 
 #[fn_handler]
 async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let count = req.get_query::<usize>("q").unwrap_or_default();
+    let count = req.get_query::<usize>("q").unwrap_or(1);
+    let count = cmp::min(500, cmp::max(1, count));
+
     let mut worlds = Vec::with_capacity(count);
     let mut rng = SmallRng::from_entropy();
     let conn = connect();

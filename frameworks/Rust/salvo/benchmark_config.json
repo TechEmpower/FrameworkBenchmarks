@@ -21,26 +21,6 @@
         "notes": "",
         "versus": "None"
       },
-      "diesel": {
-        "db_url": "/db",
-        "fortune_url": "/fortunes",
-        "query_url": "/queries?q=",
-        "update_url": "/updates?q=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "salvo",
-        "language": "Rust",
-        "orm": "Full",
-        "platform": "None",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "Salvo [Diesel]",
-        "notes": "",
-        "versus": ""
-      },
       "db": {
         "db_url": "/db",
         "fortune_url": "/fortunes",
