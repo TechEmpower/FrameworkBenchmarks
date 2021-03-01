@@ -4,6 +4,7 @@ static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 #[macro_use]
 extern crate diesel;
 
+use http::header::{self, HeaderValue};
 use askama::Template;
 use salvo::prelude::*;
 use anyhow::Error;
@@ -39,7 +40,7 @@ async fn world_row(_req: &mut Request, res: &mut Response) -> Result<(), Error> 
     let random_id = rng.gen_range(1..10_001);
     let conn = connect()?;
     let row = world::table.find(random_id).first::<World>(&conn)?;
-    res.headers_mut().insert(http::header::SERVER, "Salvo".parse().unwrap());
+    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
     res.render_json(&row); 
     Ok(())
 }
@@ -57,11 +58,10 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         let w = world::table.find(id).get_result::<World>(&conn)?;
         worlds.push(w);
     }
-    res.headers_mut().insert(http::header::SERVER, "Salvo".parse().unwrap());
+    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
     res.render_json(&worlds);
     Ok(())
 }
-
 #[fn_handler]
 async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let count = req.get_query::<usize>("q").unwrap_or(1);
@@ -86,7 +86,7 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         Ok(())
     })?;
 
-    res.headers_mut().insert(http::header::SERVER, "Salvo".parse().unwrap());
+    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
     res.render_json(&worlds);
     Ok(())
 }
@@ -112,7 +112,7 @@ async fn fortunes(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
         Err(e) => Err(io::Error::new(io::ErrorKind::Other, e)),
     }?;
     let tmpl = FortuneTemplate { items: &rows };
-    res.headers_mut().insert(http::header::SERVER, "Salvo".parse().unwrap());
+    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
     res.render_html_text(&tmpl.render().unwrap());
     Ok(())
 }

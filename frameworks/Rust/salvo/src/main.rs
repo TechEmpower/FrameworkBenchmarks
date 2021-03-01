@@ -1,9 +1,9 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-use http::header;
+use http::header::{self, HeaderValue};
 use salvo::prelude::*;
-use serde::Serialize;
+use simd_json_derive::Serialize;
 
 #[derive(Serialize)]
 pub struct Message {
@@ -13,17 +13,17 @@ pub struct Message {
 #[fn_handler]
 async fn json(res: &mut Response) {
     res.headers_mut()
-        .insert(header::SERVER, header::HeaderValue::from_static("Salvo"));
+        .insert(header::SERVER, HeaderValue::from_static("S"));
     let msg = Message {
         message: "Hello, World!",
     };
-    res.render_json(&msg);
+    res.render_binary(HeaderValue::from_static("application/json"), &msg.json_vec().unwrap());
 }
 
 #[fn_handler]
 async fn plaintext(res: &mut Response) {
     res.headers_mut()
-        .insert(header::SERVER, header::HeaderValue::from_static("Salvo"));
+        .insert(header::SERVER, HeaderValue::from_static("S"));
     res.render_plain_text("Hello, World!");
 }
 

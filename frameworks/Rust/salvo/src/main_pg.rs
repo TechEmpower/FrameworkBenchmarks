@@ -1,6 +1,7 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
+use http::header::{self, HeaderValue};
 use anyhow::Error;
 use futures::{pin_mut, TryStreamExt};
 use once_cell::sync::OnceCell;
@@ -84,7 +85,7 @@ async fn world_row(_req: &mut Request, res: &mut Response) -> Result<(), Error> 
     let mut rng = SmallRng::from_entropy();
     let random_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
     let row = conn.client.query_one(&conn.world, &[&random_id]).await?;
-    res.headers_mut().insert(http::header::SERVER, "Salvo".parse().unwrap());
+    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
     let world = &World {
         id: row.get(0),
         randomnumber: row.get(1),
@@ -109,7 +110,7 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
             randomnumber: row.get(1),
         });
     }
-    res.headers_mut().insert(http::header::SERVER, "Salvo".parse().unwrap());
+    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
     res.render_json(&worlds);
     Ok(())
 }
@@ -144,7 +145,7 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     }
 
     conn.client.query(&st, &params).await?;
-    res.headers_mut().insert(http::header::SERVER, "Salvo".parse().unwrap());
+    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
     res.render_json(&worlds);
     Ok(())
 }
@@ -172,7 +173,7 @@ async fn fortunes(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let mut body = Vec::with_capacity(2048);
     ywrite_html!(body, "{{> fortune }}");
 
-    res.headers_mut().insert(http::header::SERVER, "Salvo".parse().unwrap());
+    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
     res.render_binary("text/html; charset=utf-8".parse().unwrap(), &body);
     Ok(())
 }

@@ -37,7 +37,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Salvo [Postgres]",
+        "display_name": "Salvo [Diesel]",
         "notes": "",
         "versus": ""
       },
@@ -57,7 +57,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Salvo [Direct]",
+        "display_name": "Salvo [PG]",
         "notes": "",
         "versus": ""
       }
