@@ -1,150 +1,193 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-use actix::prelude::*;
-use actix_http::error::ErrorInternalServerError;
-use actix_http::{HttpService, KeepAlive};
-use actix_service::map_config;
-use actix_web::dev::{AppConfig, Body, Server};
-use actix_web::http::{header::CONTENT_TYPE, header::SERVER, HeaderValue, StatusCode};
-use actix_web::{web, App, Error, HttpRequest, HttpResponse};
-use bytes::{Bytes, BytesMut};
+use anyhow::Error;
+use futures::{pin_mut, TryStreamExt};
+use once_cell::sync::OnceCell;
+use rand::rngs::SmallRng;
+use rand::{Rng, SeedableRng};
+use salvo::prelude::*;
+use serde::Serialize;
+use std::borrow::Cow;
+use std::collections::HashMap;
+use std::fmt::Write;
+use std::io;
+use tokio_postgres::types::ToSql;
+use tokio_postgres::{self, Client, NoTls, Statement};
 use yarte::ywrite_html;
 
-mod db_pg;
 mod models;
-mod utils;
-use crate::db_pg::{PgConnection, RandomWorld, RandomWorlds, TellFortune, UpdateWorld};
-use crate::utils::Writer;
+use models::*;
 
-const DB_URL: &str =
-"postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
-async fn world_row(db: web::Data<Addr<PgConnection>>) -> Result<HttpResponse, Error> {
-    let res = db
-        .send(RandomWorld)
-        .await
-        .map_err(|e| ErrorInternalServerError(e))?;
-    match res {
-        Ok(body) => {
-            let mut res = HttpResponse::with_body(StatusCode::OK, Body::Bytes(body));
-            res.headers_mut()
-                .insert(SERVER, HeaderValue::from_static("Actix"));
-            res.headers_mut()
-                .insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
-            Ok(res)
+const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
+pub static DB_CONN: OnceCell<PgConnection> = OnceCell::new();
+pub fn connect() -> &'static PgConnection {
+    DB_CONN.get().unwrap()
+}
+pub struct PgConnection {
+    client: Client,
+    fortune: Statement,
+    world: Statement,
+    updates: HashMap<u16, Statement>,
+}
+
+#[derive(Serialize, Debug)]
+pub struct CowFortune {
+    pub id: i32,
+    pub message: Cow<'static, str>,
+}
+
+impl PgConnection {
+    pub async fn connect(db_url: &str) -> Result<PgConnection, io::Error> {
+        let (client, conn) = tokio_postgres::connect(db_url, NoTls)
+            .await
+            .expect("can not connect to postgresql");
+        tokio::spawn(async move {
+            if let Err(e) = conn.await {
+                eprintln!("connection error: {}", e);
+            }
+        });
+
+        let fortune = client.prepare("SELECT * FROM fortune").await.unwrap();
+        let world = client.prepare("SELECT * FROM world WHERE id=$1").await.unwrap();
+        let mut updates_statements = HashMap::new();
+        for num in 1..=500u16 {
+            let mut pl: u16 = 1;
+            let mut q = String::new();
+            q.push_str("UPDATE world SET randomnumber = CASE id ");
+            for _ in 1..=num {
+                let _ = write!(&mut q, "when ${} then ${} ", pl, pl + 1);
+                pl += 2;
+            }
+            q.push_str("ELSE randomnumber END WHERE id IN (");
+            for _ in 1..=num {
+                let _ = write!(&mut q, "${},", pl);
+                pl += 1;
+            }
+            q.pop();
+            q.push(')');
+            updates_statements.insert(num, client.prepare(&q).await.unwrap());
         }
-        Err(_) => Ok(HttpResponse::InternalServerError().into()),
+
+        Ok(PgConnection {
+            client,
+            fortune,
+            world,
+            updates: updates_statements,
+        })
     }
 }
 
-async fn queries(
-    req: HttpRequest,
-    db: web::Data<Addr<PgConnection>>,
-) -> Result<HttpResponse, Error> {
-    // get queries parameter
-    let q = utils::get_query_param(req.query_string());
-
-    // run sql queries
-    let res = db
-        .send(RandomWorlds(q))
-        .await
-        .map_err(|e| ErrorInternalServerError(e))?;
-    if let Ok(worlds) = res {
-        let mut body = BytesMut::with_capacity(35 * worlds.len());
-        serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
-        let mut res =
-            HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
-        res.headers_mut()
-            .insert(SERVER, HeaderValue::from_static("Actix"));
-        res.headers_mut()
-            .insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
-        Ok(res)
-    } else {
-        Ok(HttpResponse::InternalServerError().into())
-    }
+#[fn_handler]
+async fn world_row(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
+    let conn = connect();
+    let mut rng = SmallRng::from_entropy();
+    let random_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+    let row = conn.client.query_one(&conn.world, &[&random_id]).await?;
+    res.headers_mut().insert(http::header::SERVER, "Salvo".parse().unwrap());
+    let world = &World {
+        id: row.get(0),
+        randomnumber: row.get(1),
+    };
+    res.render_json(&world);
+    Ok(())
 }
 
-async fn updates(
-    req: HttpRequest,
-    db: web::Data<Addr<PgConnection>>,
-) -> Result<HttpResponse, Error> {
-    // get queries parameter
-    let q = utils::get_query_param(req.query_string());
-
-    // update db
-    let res = db
-        .send(UpdateWorld(q))
-        .await
-        .map_err(|e| ErrorInternalServerError(e))?;
-    if let Ok(worlds) = res {
-        let mut body = BytesMut::with_capacity(35 * worlds.len());
-        serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
-        let mut res =
-            HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
-        res.headers_mut()
-            .insert(SERVER, HeaderValue::from_static("Actix"));
-        res.headers_mut()
-            .insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
-        Ok(res)
-    } else {
-        Ok(HttpResponse::InternalServerError().into())
+#[fn_handler]
+async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
+    let count = req.get_query::<usize>("q").unwrap_or_default();
+    let mut worlds = Vec::with_capacity(count);
+    let mut rng = SmallRng::from_entropy();
+    let conn = connect();
+    for _ in 0..count {
+        let w_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+        let row = conn.client.query_one(&conn.world, &[&w_id]).await?;
+        worlds.push(World {
+            id: row.get(0),
+            randomnumber: row.get(1),
+        });
     }
+    res.headers_mut().insert(http::header::SERVER, "Salvo".parse().unwrap());
+    res.render_json(&worlds);
+    Ok(())
 }
 
-async fn fortune(db: web::Data<Addr<PgConnection>>) -> Result<HttpResponse, Error> {
-    let res = db
-        .send(TellFortune)
-        .await
-        .map_err(|e| ErrorInternalServerError(e))?;
-
-    match res {
-        Ok(fortunes) => {
-            let mut body = Vec::with_capacity(2048);
-            ywrite_html!(body, "{{> fortune }}");
-
-            let mut res =
-                HttpResponse::with_body(StatusCode::OK, Body::Bytes(Bytes::from(body)));
-            res.headers_mut()
-                .insert(SERVER, HeaderValue::from_static("Actix"));
-            res.headers_mut().insert(
-                CONTENT_TYPE,
-                HeaderValue::from_static("text/html; charset=utf-8"),
-            );
-            Ok(res)
-        }
-        Err(_) => Ok(HttpResponse::InternalServerError().into()),
+#[fn_handler]
+async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
+    let count = req.get_query::<usize>("q").unwrap_or_default();
+    let mut worlds = Vec::with_capacity(count);
+    let mut rng = SmallRng::from_entropy();
+    let conn = connect();
+    for _ in 0..count {
+        let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+        let w_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+        let row = conn.client.query_one(&conn.world, &[&w_id]).await?;
+        worlds.push(World {
+            id: row.get(0),
+            randomnumber: id,
+        });
     }
+
+    let st = conn.updates.get(&(count as u16)).unwrap().clone();
+
+    let mut params: Vec<&(dyn ToSql + std::marker::Sync)> = Vec::with_capacity(count * 3);
+    for w in &worlds {
+        params.push(&w.id);
+        params.push(&w.randomnumber);
+    }
+    for w in &worlds {
+        params.push(&w.id);
+    }
+
+    conn.client.query(&st, &params).await?;
+    res.headers_mut().insert(http::header::SERVER, "Salvo".parse().unwrap());
+    res.render_json(&worlds);
+    Ok(())
 }
 
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
+#[fn_handler]
+async fn fortunes(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
+    let mut items = vec![CowFortune {
+        id: 0,
+        message: Cow::Borrowed("Additional fortune added at request time."),
+    }];
+    let conn = connect();
+    let params: [&str; 0] = [];
+    let stream = conn.client.query_raw(&conn.fortune, &params).await?;
+    pin_mut!(stream);
+
+    while let Some(row) = stream.try_next().await? {
+        items.push(CowFortune {
+            id: row.get(0),
+            message: Cow::Owned(row.get(1)),
+        });
+    }
+
+    items.sort_by(|it, next| it.message.cmp(&next.message));
+
+    let mut body = Vec::with_capacity(2048);
+    ywrite_html!(body, "{{> fortune }}");
+
+    res.headers_mut().insert(http::header::SERVER, "Salvo".parse().unwrap());
+    res.render_binary("text/html; charset=utf-8".parse().unwrap(), &body);
+    Ok(())
+}
+
+#[tokio::main]
+async fn main() {
     println!("Started http server: 127.0.0.1:8080");
 
+    DB_CONN
+        .set(
+            PgConnection::connect(DB_URL)
+                .await
+                .expect(&format!("Error connecting to {}", &DB_URL)),
+        )
+        .ok();
     let router = Router::new()
         .push(Router::new().path("db").get(world_row))
+        .push(Router::new().path("fortunes").get(fortunes))
         .push(Router::new().path("queries").get(queries))
-        .push(Router::new().path("fortune").get(fortune))
         .push(Router::new().path("updates").get(updates));
     Server::new(router).bind(([0, 0, 0, 0], 8080)).await;
-
-    // start http server
-    Server::build()
-        .backlog(1024)
-        .bind("techempower", "0.0.0.0:8080", move || {
-            HttpService::build()
-                .keep_alive(KeepAlive::Os)
-                .client_timeout(0)
-                .h1(map_config(
-                    App::new()
-                        .data_factory(|| PgConnection::connect(DB_URL))
-                        .service(web::resource("/db").to(world_row))
-                        .service(web::resource("/queries").to(queries))
-                        .service(web::resource("/fortunes").to(fortune))
-                        .service(web::resource("/updates").to(updates)),
-                    |_| AppConfig::default(),
-                ))
-                .tcp()
-        })?
-        .start()
-        .await
 }
