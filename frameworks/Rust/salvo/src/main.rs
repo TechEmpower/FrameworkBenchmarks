@@ -1,7 +1,7 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-use http::header::{self, HeaderValue};
+use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
 use simd_json_derive::Serialize;
 
@@ -12,8 +12,7 @@ pub struct Message {
 
 #[fn_handler]
 async fn json(res: &mut Response) {
-    res.headers_mut()
-        .insert(header::SERVER, HeaderValue::from_static("S"));
+    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
     let msg = Message {
         message: "Hello, World!",
     };
@@ -22,9 +21,8 @@ async fn json(res: &mut Response) {
 
 #[fn_handler]
 async fn plaintext(res: &mut Response) {
-    res.headers_mut()
-        .insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_plain_text("Hello, World!");
+    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
+    res.render_binary(HeaderValue::from_static("text/plain"), b"Hello, World!");
 }
 
 #[tokio::main]

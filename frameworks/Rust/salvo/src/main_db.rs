@@ -4,7 +4,7 @@ static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 #[macro_use]
 extern crate diesel;
 
-use http::header::{self, HeaderValue};
+use salvo::http::header::{self, HeaderValue};
 use askama::Template;
 use salvo::prelude::*;
 use anyhow::Error;
@@ -31,7 +31,7 @@ pub fn connect() -> Result<PooledConnection<ConnectionManager<PgConnection>>, Po
 }
 pub fn build_pool(database_url: &str) -> Result<PgPool, PoolError> {
     let manager = ConnectionManager::<PgConnection>::new(database_url);
-    diesel::r2d2::Pool::builder().max_size(20).build(manager)
+    diesel::r2d2::Pool::builder().max_size(50).build(manager)
 }
 
 #[fn_handler]

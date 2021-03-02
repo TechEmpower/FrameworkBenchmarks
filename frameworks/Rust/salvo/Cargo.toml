@@ -16,6 +16,7 @@ name = "main-pg"
 path = "src/main_pg.rs"
 
 [dependencies]
+anyhow = "1.0.38"
 askama = "0.8"
 diesel = { version = "1.4.3", features = ["postgres", "r2d2"] }
 salvo = { version = "0.6.3", features = ["anyhow"] }
@@ -26,13 +27,11 @@ futures = "0.3.12"
 smallvec = "1.6.1"
 simd-json = "0.3"
 simd-json-derive = "0.1.15"
-http = "0.2"
 serde = { version = "1.0", features = ["derive"] }
 tokio-postgres = "0.7"
 yarte = { version = "0.15", features = ["bytes-buf"] }
 once_cell = "1.5.2"
 rand = { version = "0.8.3", features = ["small_rng"] }
-anyhow = "1.0.38"
 
 [profile.release]
 lto = true

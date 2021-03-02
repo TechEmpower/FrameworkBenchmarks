@@ -1,7 +1,7 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-use http::header::{self, HeaderValue};
+use salvo::http::header::{self, HeaderValue};
 use anyhow::Error;
 use futures::{pin_mut, TryStreamExt};
 use once_cell::sync::OnceCell;
