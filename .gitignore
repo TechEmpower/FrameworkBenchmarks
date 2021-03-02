@@ -61,3 +61,10 @@ benchmark.cfg
 
 # merge tooling
 *.orig
+
+# compiled files
+*.pyc
+
+# Contrast agents and config files
+contrast_security.yaml
+contrast.jar
