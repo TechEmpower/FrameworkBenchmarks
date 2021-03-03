@@ -43,12 +43,12 @@ public class Bootstrap {
         // 定义服务器接受的消息类型以及各类消息对应的处理器
         HttpBootstrap bootstrap = new HttpBootstrap();
         bootstrap.configuration()
-                .threadNum(cpuNum + 2)
+                .threadNum(cpuNum)
                 .bannerEnabled(false)
                 .readBufferSize(1024 * 4)
                 .writeBufferSize(1024 * 4)
                 .readMemoryPool(16384 * 1024 * 4)
-                .writeMemoryPool(10 * 1024 * 1024 * (cpuNum + 2), cpuNum + 2)
+                .writeMemoryPool(10 * 1024 * 1024 * cpuNum, cpuNum)
                 .messageProcessor(processor -> new AbstractMessageProcessor<>() {
                     @Override
                     public void process0(AioSession session, Request msg) {
