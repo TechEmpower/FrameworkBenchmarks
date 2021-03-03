@@ -11,6 +11,11 @@ namespace PlatformBenchmarks
 {
     public partial class HttpHandler
     {
+        private readonly static uint _jsonPayloadSize = (uint)System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(new JsonMessage { message = "Hello, World!" }, SerializerOptions).Length;
+
+        private readonly static AsciiString _jsonPreamble =
+            _headerContentLength + _jsonPayloadSize.ToString();
+
         private static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions();
 
         private static Utf8JsonWriter GetUtf8JsonWriter(PipeStream stream, HttpToken token)
