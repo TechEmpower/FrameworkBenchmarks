@@ -1,7 +1,9 @@
 package org.smartboot.http;
 
-import org.smartboot.http.server.handle.HttpHandle;
-import org.smartboot.http.utils.NumberUtils;
+import org.smartboot.http.common.utils.NumberUtils;
+import org.smartboot.http.server.HttpRequest;
+import org.smartboot.http.server.HttpResponse;
+import org.smartboot.http.server.HttpServerHandle;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -15,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author 三刀
  * @version V1.0 , 2020/6/16
  */
-public class MultipleQueriesHandler extends HttpHandle {
+public class MultipleQueriesHandler extends HttpServerHandle {
     private DataSource dataSource;
 
     public MultipleQueriesHandler(DataSource dataSource) {
