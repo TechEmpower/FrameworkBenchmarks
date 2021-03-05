@@ -8,7 +8,6 @@ use anyhow::Error;
 use askama::Template;
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool, PoolError, PooledConnection};
-use hyper::server::conn::AddrIncoming;
 use once_cell::sync::OnceCell;
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
