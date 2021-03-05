@@ -3,8 +3,8 @@
 <application port="8585">     
     
     <resources>
-		<executor threads="0"/>
-		<properties>		
+	<executor threads="0"/>
+	<properties>		
             <property name="system.property.http.response.header.connection" value="none"/>
         </properties>
     </resources> 
@@ -12,9 +12,9 @@
     <server protocol="HTTP" lazy="true" port="8080">      
                 
         <response>
-			<contenttype plain="text/plain" json="application/json"/>  
-			<date period="1000"/>
-		</response>
+		<contenttype plain="text/plain" json="application/json"/>  
+		<date period="1000"/>
+	</response>
 
         <services autoload="true"/>        
         <rest autoload="true"/>
