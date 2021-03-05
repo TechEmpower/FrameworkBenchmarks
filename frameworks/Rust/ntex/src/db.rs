@@ -85,17 +85,13 @@ impl PgConnection {
         let mut rng = self.rng.borrow_mut();
         for _ in 0..num {
             let w_id = (rng.get_u32() % 10_000 + 1) as i32;
-            worlds.push(
-                self.cl
-                    .query_one(&self.world, &[&w_id])
-                    .map(|res| match res {
-                        Err(_) => panic!(),
-                        Ok(row) => World {
-                            id: row.get(0),
-                            randomnumber: row.get(1),
-                        },
-                    }),
-            );
+            worlds.push(self.cl.query_one(&self.world, &[&w_id]).map(|res| {
+                let row = res.unwrap();
+                World {
+                    id: row.get(0),
+                    randomnumber: row.get(1),
+                }
+            }));
         }
 
         worlds.collect()
@@ -107,17 +103,13 @@ impl PgConnection {
         for _ in 0..num {
             let id = (rng.get_u32() % 10_000 + 1) as i32;
             let w_id = (rng.get_u32() % 10_000 + 1) as i32;
-            worlds.push(
-                self.cl
-                    .query_one(&self.world, &[&w_id])
-                    .map(move |res| match res {
-                        Err(_) => panic!(),
-                        Ok(row) => World {
-                            id: row.get(0),
-                            randomnumber: id,
-                        },
-                    }),
-            );
+            worlds.push(self.cl.query_one(&self.world, &[&w_id]).map(move |res| {
+                let row = res.unwrap();
+                World {
+                    id: row.get(0),
+                    randomnumber: id,
+                }
+            }));
         }
 
         let cl = self.cl.clone();
