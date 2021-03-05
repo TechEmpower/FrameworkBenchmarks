@@ -9,4 +9,7 @@ FROM openjdk:11.0.3-jdk-slim
 WORKDIR /redkale
 COPY conf conf
 COPY --from=maven /redkale/target/redkale-benchmark-1.0.0.jar redkale-benchmark.jar
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-DAPP_HOME=./", "-jar", "redkale-benchmark.jar"]
+
+EXPOSE 8080
+
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:AutoBoxCacheMax=80000", "-XX:BiasedLockingStartupDelay=500", "-DAPP_HOME=./", "-jar", "redkale-benchmark.jar"]
