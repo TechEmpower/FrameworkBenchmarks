@@ -1,11 +1,12 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
+use hyper::server::conn::AddrIncoming;
 use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
 use simd_json_derive::Serialize;
 
-static HELLO_WORLD: &'static [u8] = b"Hello, world!";
+static HELLO_WORLD: &'static [u8] = b"{ message: 'Hello, world!' }";
 #[derive(Serialize)]
 pub struct Message {
     pub message: &'static str,

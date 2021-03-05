@@ -4,22 +4,22 @@ static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 #[macro_use]
 extern crate diesel;
 
-use salvo::http::header::{self, HeaderValue};
-use askama::Template;
-use salvo::prelude::*;
 use anyhow::Error;
-use std::{cmp, io};
+use askama::Template;
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool, PoolError, PooledConnection};
+use hyper::server::conn::AddrIncoming;
 use once_cell::sync::OnceCell;
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
-
+use salvo::http::header::{self, HeaderValue};
+use salvo::prelude::*;
+use std::{cmp, io};
 
 mod models;
 mod schema;
-use schema::*;
 use models::*;
+use schema::*;
 
 const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 pub type PgPool = Pool<ConnectionManager<PgConnection>>;
@@ -41,7 +41,7 @@ async fn world_row(_req: &mut Request, res: &mut Response) -> Result<(), Error> 
     let conn = connect()?;
     let row = world::table.find(random_id).first::<World>(&conn)?;
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_json(&row); 
+    res.render_json(&row);
     Ok(())
 }
 
@@ -79,7 +79,8 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     worlds.sort_by_key(|w| w.id);
     conn.transaction::<(), Error, _>(|| {
         for w in &worlds {
-            diesel::update(world::table).filter(world::id.eq(w.id))
+            diesel::update(world::table)
+                .filter(world::id.eq(w.id))
                 .set(world::randomnumber.eq(w.randomnumber))
                 .execute(&conn)?;
         }
@@ -121,7 +122,9 @@ async fn fortunes(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
 async fn main() {
     println!("Starting http server: 127.0.0.1:8080");
 
-    DB_POOL.set(build_pool(&DB_URL).expect(&format!("Error connecting to {}", &DB_URL))).ok();
+    DB_POOL
+        .set(build_pool(&DB_URL).expect(&format!("Error connecting to {}", &DB_URL)))
+        .ok();
 
     let router = Router::new()
         .push(Router::new().path("db").get(world_row))
