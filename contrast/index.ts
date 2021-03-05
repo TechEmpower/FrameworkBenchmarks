@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 
 import type { ProcessedStats } from './types';
-import {processStatsFile} from './utilities'
+import {processStatsFile} from './utilities';
 
 const argv = process.argv;
 
@@ -21,7 +21,7 @@ const statsFiles: Array<string> = [];
 
 Object.keys(results.succeeded).forEach((testType: string) => {
     results.succeeded[testType].forEach((framework: string) => {
-        statsFiles.push(`${framework}/${testType}/stats.txt.json`)
+        statsFiles.push(`${framework}/${testType}/stats.txt.json`);
     });
 });
 
@@ -29,10 +29,10 @@ Object.keys(results.succeeded).forEach((testType: string) => {
 const output = statsFiles.map((filePath: string) => {
     const rawStats = JSON.parse(readFileSync(`${techEmpowerResultsDirectory}/${filePath}`, 'utf8'));
     
-    return { key: filePath, value: processStatsFile(rawStats, concurrencyLevels) }
+    return { key: filePath, value: processStatsFile(rawStats, concurrencyLevels) };
 }).reduce((accumulator: any, currentValue: { key: string, value: Array<ProcessedStats> }) => {
     accumulator[currentValue.key] = currentValue.value;
     return accumulator;
 }, {});
 
-writeFileSync(`${techEmpowerResultsDirectory}/processed-stats.json`, JSON.stringify(output))
+writeFileSync(`${techEmpowerResultsDirectory}/processed-stats.json`, JSON.stringify(output));

@@ -19,7 +19,7 @@ export function calculateStats(arr: Array<number>, filterOutliers: boolean = tru
         max: undefined,
         avg: undefined,
         stddev: undefined
-    }
+    };
 }
 
 export function processStatsFile(rawStats: Array<any>, concurrencyLevels: Array<number>): Array<ProcessedStats> {
@@ -31,19 +31,19 @@ export function processStatsFile(rawStats: Array<any>, concurrencyLevels: Array<
         };
     
         Object.values(concurrencyLevel).forEach(timepoint => {
-            processedStats.rawCpuUsageStats.push(timepoint['total cpu usage'])
-            processedStats.rawMemoryUsageStats.push(timepoint['memory usage'])
-        })
+            processedStats.rawCpuUsageStats.push(timepoint['total cpu usage']);
+            processedStats.rawMemoryUsageStats.push(timepoint['memory usage']);
+        });
     
         processedStats.processedCpuUsageStats  = {
             sys: calculateStats(processedStats.rawCpuUsageStats.map(stats => stats.sys)),
             usr: calculateStats(processedStats.rawCpuUsageStats.map(stats => stats.usr))
-        }
+        };
     
         processedStats.processedMemoryUsageStats = {
             used: calculateStats(processedStats.rawMemoryUsageStats.map(stats => stats.used)),
             free: calculateStats(processedStats.rawMemoryUsageStats.map(stats => stats.free))
-        }
+        };
     
         return processedStats;
     });
