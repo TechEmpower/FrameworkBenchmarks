@@ -1,7 +1,7 @@
 import {
   ServerRequest,
   Response
-} from "https://deno.land/std@v0.50.0/http/server.ts";
+} from "https://deno.land/std@0.87.0/http/server.ts";
 
 interface Handler {
   (request: ServerRequest): Promise<void>

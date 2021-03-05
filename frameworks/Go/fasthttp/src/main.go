@@ -5,7 +5,7 @@ import (
 	"flag"
 	"runtime"
 
-	"github.com/savsgio/gotils"
+	"github.com/savsgio/gotils/strconv"
 	"github.com/valyala/fasthttp"
 	fastprefork "github.com/valyala/fasthttp/prefork"
 )
@@ -42,7 +42,7 @@ func main() {
 
 		// init handler
 		handler = func(ctx *fasthttp.RequestCtx) {
-			switch gotils.B2S(ctx.Path()) {
+			switch strconv.B2S(ctx.Path()) {
 			case "/json":
 				handlers.JSON(ctx)
 			case "/db":

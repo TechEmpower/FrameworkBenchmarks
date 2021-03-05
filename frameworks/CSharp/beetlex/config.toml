@@ -39,6 +39,7 @@ versus = "aspcore"
 [debug]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
+urls.query = "/queries?queries="
 approach = "Realistic"
 classification = "Platform"
 database = "Postgres"

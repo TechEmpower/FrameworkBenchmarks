@@ -1,7 +1,7 @@
 <cfsetting enablecfoutputonly=true>
 <cfheader name="Server" value="cfml-lucee">
 <cfheader name="Content-Type" value="text/html; charset=utf-8">
-<cfquery name="qry" datasource="world">
+<cfquery name="qry">
     SELECT id, message
     FROM Fortune
 </cfquery>
