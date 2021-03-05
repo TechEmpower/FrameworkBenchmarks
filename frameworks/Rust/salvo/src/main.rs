@@ -4,6 +4,7 @@ static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
 use simd_json_derive::Serialize;
+use hyper::server::conn::AddrIncoming;
 
 static HELLO_WORLD: &'static [u8] = b"Hello, world!";
 #[derive(Serialize)]
@@ -32,5 +33,9 @@ async fn main() {
     let router = Router::new()
         .push(Router::new().path("plaintext").get(plaintext))
         .push(Router::new().path("json").get(json));
-    Server::new(router).bind(([0, 0, 0, 0], 8080)).await;
+    // Server::new(router).bind(([0, 0, 0, 0], 8080)).await;
+
+    let mut incoming = AddrIncoming::bind(&(([0, 0, 0, 0], 8080)).into()).unwrap();
+    incoming.set_nodelay(true);
+    Server::builder(incoming).http1_pipeline_flush(true).serve(Service::new(router)).await.unwrap();
 }
