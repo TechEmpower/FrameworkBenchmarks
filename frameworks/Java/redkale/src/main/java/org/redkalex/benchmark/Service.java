@@ -46,6 +46,7 @@ public class Service extends AbstractService {
         final int size = Math.min(500, Math.max(1, q));
         final Random random = localRandom.get();
         final World[] worlds = new World[size];
+        
         final CompletableFuture[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
             final int index = i;
@@ -55,7 +56,7 @@ public class Service extends AbstractService {
 
 //        final AtomicInteger index = new AtomicInteger();
 //        final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId(random))
-//            .thenAccept((World v) -> worlds[index.getAndIncrement()] = v);
+//            .thenAccept(v -> worlds[index.getAndIncrement()] = v);
 //        CompletableFuture future = func.apply(null);
 //        for (int i = 1; i < size; i++) {
 //            future = future.thenCompose(func);
@@ -68,30 +69,22 @@ public class Service extends AbstractService {
         final int size = Math.min(500, Math.max(1, q));
         final Random random = localRandom.get();
         final World[] worlds = new World[size];
+        
         final CompletableFuture[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
             final int index = i;
-            futures[i] = source.findAsync(World.class, randomId(random)).thenAccept(v -> {
-                worlds[index] = v;
-                v.randomNumber(randomId(random));
-            });
+            futures[i] = source.findAsync(World.class, randomId(random)).thenAccept(v -> worlds[index] = v.randomNumber(randomId(random)));
         }
         return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(sort(worlds))).thenApply(v -> worlds);
 
 //        final AtomicInteger index = new AtomicInteger();
 //        final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId(random))
-//            .thenApply((World v) -> {
-//                worlds[index.getAndIncrement()] = v;
-//                return v.randomNumber(randomId(random));
-//            });
+//            .thenAccept(v -> worlds[index.getAndIncrement()] = v.randomNumber(randomId(random)));
 //        CompletableFuture future = func.apply(null);
 //        for (int i = 1; i < size; i++) {
 //            future = future.thenCompose(func);
 //        }
-//        return future.thenCompose(v -> {
-//            Arrays.sort(worlds);
-//            return source.updateAsync(worlds);
-//        }).thenApply(v -> worlds);
+//        return future.thenCompose(v -> source.updateAsync(sort(worlds))).thenApply(v -> worlds);
     }
 
     @RestMapping(name = "cached-worlds")
@@ -109,8 +102,7 @@ public class Service extends AbstractService {
     public CompletableFuture<HttpResult<String>> queryFortunes() {
         return source.queryListAsync(Fortune.class).thenApply((fortunes) -> {
             fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-            Collections.sort(fortunes);
-            String html = FortunesTemplate.template(fortunes).render().toString();
+            String html = FortunesTemplate.template(sort(fortunes)).render().toString();
             return new HttpResult("text/html; charset=utf-8", html);
         });
     }
@@ -118,6 +110,11 @@ public class Service extends AbstractService {
     private World[] sort(World[] words) {
         Arrays.sort(words);
         return words;
+    }
+
+    private List<Fortune> sort(List<Fortune> fortunes) {
+        Collections.sort(fortunes);
+        return fortunes;
     }
 
     private int randomId() {
