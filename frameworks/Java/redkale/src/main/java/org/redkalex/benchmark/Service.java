@@ -21,7 +21,7 @@ public class Service extends AbstractService {
 
     private static final byte[] helloBytes = "Hello, world!".getBytes();
 
-    private final ThreadLocal<Random> localRandom = ThreadLocal.withInitial(Random::new);
+    private final Random random = new Random();
 
     @Resource
     private DataSource source;
@@ -44,13 +44,12 @@ public class Service extends AbstractService {
     @RestMapping(name = "queries")
     public CompletableFuture<World[]> queryWorldAsync(int q) {
         final int size = Math.min(500, Math.max(1, q));
-        final Random random = localRandom.get();
         final World[] worlds = new World[size];
-        
+
         final CompletableFuture[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
             final int index = i;
-            futures[i] = source.findAsync(World.class, randomId(random)).thenAccept(v -> worlds[index] = v);
+            futures[i] = source.findAsync(World.class, randomId()).thenAccept(v -> worlds[index] = v);
         }
         return CompletableFuture.allOf(futures).thenApply(v -> worlds);
 
@@ -67,19 +66,18 @@ public class Service extends AbstractService {
     @RestMapping(name = "updates")
     public CompletableFuture<World[]> updateWorldAsync(int q) {
         final int size = Math.min(500, Math.max(1, q));
-        final Random random = localRandom.get();
         final World[] worlds = new World[size];
-        
+
         final CompletableFuture[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
             final int index = i;
-            futures[i] = source.findAsync(World.class, randomId(random)).thenAccept(v -> worlds[index] = v.randomNumber(randomId(random)));
+            futures[i] = source.findAsync(World.class, randomId()).thenAccept(v -> worlds[index] = v.randomNumber(randomId()));
         }
         return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(sort(worlds))).thenApply(v -> worlds);
 
 //        final AtomicInteger index = new AtomicInteger();
-//        final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId(random))
-//            .thenAccept(v -> worlds[index.getAndIncrement()] = v.randomNumber(randomId(random)));
+//        final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId())
+//            .thenAccept(v -> worlds[index.getAndIncrement()] = v.randomNumber(randomId()));
 //        CompletableFuture future = func.apply(null);
 //        for (int i = 1; i < size; i++) {
 //            future = future.thenCompose(func);
@@ -90,10 +88,9 @@ public class Service extends AbstractService {
     @RestMapping(name = "cached-worlds")
     public CachedWorld[] cachedWorlds(int q) {
         final int size = Math.min(500, Math.max(1, q));
-        final Random random = localRandom.get();
         final CachedWorld[] worlds = new CachedWorld[size];
         for (int i = 0; i < size; i++) {
-            worlds[i] = source.find(CachedWorld.class, randomId(random));
+            worlds[i] = source.find(CachedWorld.class, randomId());
         }
         return worlds;
     }
@@ -118,10 +115,6 @@ public class Service extends AbstractService {
     }
 
     private int randomId() {
-        return 1 + localRandom.get().nextInt(10000);
-    }
-
-    private int randomId(Random random) {
         return 1 + random.nextInt(10000);
     }
 }
