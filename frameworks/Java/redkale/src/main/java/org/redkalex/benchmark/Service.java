@@ -55,7 +55,7 @@ public class Service extends AbstractService {
 //            futures[i] = source.findAsync(World.class, randomId(random)).thenAccept(v -> worlds[index] = v);
 //        }
 //        return CompletableFuture.allOf(futures).thenApply(v -> worlds);
-
+ 
         final AtomicInteger index = new AtomicInteger();
         final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId(random))
             .thenAccept(v -> worlds[index.getAndIncrement()] = v);
