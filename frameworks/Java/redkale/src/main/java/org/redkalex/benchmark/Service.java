@@ -48,7 +48,8 @@ public class Service extends AbstractService {
         final World[] worlds = new World[size];
         final CompletableFuture[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
-            futures[i] = source.findAsync(World.class, randomId(random));
+            final int index = i;
+            futures[i] = source.findAsync(World.class, randomId(random)).thenAccept(v -> worlds[index] = v);
         }
         return CompletableFuture.allOf(futures).thenApply(v -> worlds);
 
@@ -70,9 +71,9 @@ public class Service extends AbstractService {
         final CompletableFuture[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
             final int index = i;
-            futures[i] = source.findAsync(World.class, randomId(random)).thenApply(v -> {
+            futures[i] = source.findAsync(World.class, randomId(random)).thenAccept(v -> {
                 worlds[index] = v;
-                return v.randomNumber(randomId(random));
+                v.randomNumber(randomId(random));
             });
         }
         return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(sort(worlds))).thenApply(v -> worlds);
