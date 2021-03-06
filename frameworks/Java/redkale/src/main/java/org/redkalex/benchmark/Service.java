@@ -75,10 +75,7 @@ public class Service extends AbstractService {
                 return v.randomNumber(randomId(random));
             });
         }
-        return CompletableFuture.allOf(futures).thenCompose(v -> {
-            Arrays.sort(worlds);
-            return source.updateAsync(worlds);
-        }).thenApply(v -> worlds);
+        return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(sort(worlds))).thenApply(v -> worlds);
 
 //        final AtomicInteger index = new AtomicInteger();
 //        final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId(random))
@@ -115,6 +112,11 @@ public class Service extends AbstractService {
             String html = FortunesTemplate.template(fortunes).render().toString();
             return new HttpResult("text/html; charset=utf-8", html);
         });
+    }
+
+    private World[] sort(World[] words) {
+        Arrays.sort(words);
+        return words;
     }
 
     private int randomId() {
