@@ -1,9 +1,9 @@
 {
   "framework": "redkale",
   "tests": [{
-    "default": {
-      "json_url": "/json",
-      "plaintext_url": "/plaintext",      
+	"default": {
+      "plaintext_url": "/plaintext",   
+      "json_url": "/json",   
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -18,14 +18,14 @@
       "database_os": "Linux",
       "display_name": "redkale",
       "notes": "",
-      "versus": ""
+      "versus": "Redkale"
     },
 	"postgres": {
       "db_url": "/db",
-      "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
-      "cached_query_url": "/cached-worlds?count=",
+      "query_url": "/queries?q=",
+      "update_url": "/updates?q=",
+      "cached_query_url": "/cached-worlds?q=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -40,7 +40,7 @@
       "database_os": "Linux",
       "display_name": "redkale",
       "notes": "",
-      "versus": ""
+      "versus": "Redkale"
     }
   }]
 }

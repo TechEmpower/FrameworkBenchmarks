@@ -31,7 +31,7 @@ namespace PlatformBenchmarks
             try
             {
                 var data = await token.Db.LoadMultipleQueriesRows(count);
-                System.Text.Json.JsonSerializer.Serialize<World[]>(GetUtf8JsonWriter(stream, token), data, SerializerOptions);
+                System.Text.Json.JsonSerializer.Serialize(GetUtf8JsonWriter(stream, token), data, SerializerOptions);
             }
             catch (Exception e_)
             {

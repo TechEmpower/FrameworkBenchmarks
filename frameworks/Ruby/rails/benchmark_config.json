@@ -2,32 +2,13 @@
   "framework": "rails",
   "tests": [{
     "default": {
-      "json_url": "/json",
       "db_url": "/db",
+      "json_url": "/json",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "MySQL",
-      "framework": "rails",
-      "language": "Ruby",
-      "orm": "Full",
-      "platform": "Rack",
-      "webserver": "Puma",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "rails-puma-mri",
-      "notes": "",
-      "versus": "rack-puma-mri"
-    },
-    "postgresql": {
-      "db_url": "/db",
-      "query_url": "/queries?queries=",
-      "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
+      "cached_query_url": "/cached?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -43,13 +24,14 @@
       "notes": "",
       "versus": ""
     },
-    "unicorn": {
+    "mysql": {
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
+      "cached_query_url": "/cached?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -58,12 +40,12 @@
       "language": "Ruby",
       "orm": "Full",
       "platform": "Rack",
-      "webserver": "Unicorn",
+      "webserver": "Puma",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rails-unicorn-mri",
+      "display_name": "rails-mysql",
       "notes": "",
-      "versus": "rack-unicorn-mri"
+      "versus": "rack-puma-mri"
     }
   }]
 }

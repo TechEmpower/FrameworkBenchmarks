@@ -12,9 +12,12 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.smartboot.Message;
 import org.smartboot.aio.EnhanceAsynchronousChannelProvider;
-import org.smartboot.http.server.Request;
-import org.smartboot.http.server.handle.HttpHandle;
+import org.smartboot.http.server.HttpBootstrap;
+import org.smartboot.http.server.HttpRequest;
+import org.smartboot.http.server.HttpResponse;
+import org.smartboot.http.server.HttpServerHandle;
 import org.smartboot.http.server.handle.HttpRouteHandle;
+import org.smartboot.http.server.impl.Request;
 import org.smartboot.socket.StateMachineEnum;
 import org.smartboot.socket.extension.processor.AbstractMessageProcessor;
 import org.smartboot.socket.transport.AioSession;
@@ -30,7 +33,7 @@ public class Bootstrap {
 
         HttpRouteHandle routeHandle = new HttpRouteHandle();
         routeHandle
-                .route("/plaintext", new HttpHandle() {
+                .route("/plaintext", new HttpServerHandle() {
 
 
                     @Override
@@ -40,7 +43,7 @@ public class Bootstrap {
                         response.write(body);
                     }
                 })
-                .route("/json", new HttpHandle() {
+                .route("/json", new HttpServerHandle() {
 
                     @Override
                     public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
@@ -53,12 +56,13 @@ public class Bootstrap {
         int cpuNum = Runtime.getRuntime().availableProcessors();
         // 定义服务器接受的消息类型以及各类消息对应的处理器
         HttpBootstrap bootstrap = new HttpBootstrap();
-        bootstrap.setPort(8080).setThreadNum(cpuNum + 2)
-                .setReadBufferSize(1024 * 4)
-                .setReadPageSize(16384 * 1024 * 4)
-                .setBufferPool(10 * 1024 * 1024, cpuNum + 2, 1024 * 4)
-                .pipeline(routeHandle)
-                .wrapProcessor(processor -> new AbstractMessageProcessor<>() {
+        bootstrap.configuration()
+                .threadNum(cpuNum)
+                .readBufferSize(1024 * 4)
+                .writeBufferSize(1024 * 4)
+                .readMemoryPool(16384 * 1024 * 4)
+                .writeMemoryPool(10 * 1024 * 1024 * cpuNum, cpuNum)
+                .messageProcessor(processor -> new AbstractMessageProcessor<>() {
                     @Override
                     public void process0(AioSession session, Request msg) {
                         processor.process(session, msg);
@@ -68,7 +72,8 @@ public class Bootstrap {
                     public void stateEvent0(AioSession session, StateMachineEnum stateMachineEnum, Throwable throwable) {
                         processor.stateEvent(session, stateMachineEnum, throwable);
                     }
-                }).start();
+                });
+        bootstrap.pipeline(routeHandle).setPort(8080).start();
     }
 
     private static void initDB(HttpRouteHandle routeHandle) {
