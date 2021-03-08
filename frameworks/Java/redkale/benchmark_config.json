@@ -1,7 +1,7 @@
 {
   "framework": "redkale",
   "tests": [{
-	"default": {
+    "default": {
       "plaintext_url": "/plaintext",   
       "json_url": "/json",   
       "port": 8080,
@@ -16,11 +16,11 @@
       "webserver": "Redkale",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "redkale",
+      "display_name": "redkale-zoxun",
       "notes": "",
       "versus": "Redkale"
     },
-	"postgres": {
+   "postgres": {
       "db_url": "/db",
       "fortune_url": "/fortunes",
       "query_url": "/queries?q=",
@@ -38,7 +38,7 @@
       "webserver": "Redkale",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "redkale",
+      "display_name": "reddb",
       "notes": "",
       "versus": "Redkale"
     }
