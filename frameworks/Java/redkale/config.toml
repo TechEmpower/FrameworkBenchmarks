@@ -1,5 +1,5 @@
 [framework]
-name = "redkale-zoxun"
+name = "redkale"
 
 [main]
 urls.plaintext = "/plaintext"
