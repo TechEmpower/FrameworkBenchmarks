@@ -70,11 +70,11 @@ impl PgConnection {
 impl PgConnection {
     pub fn get_world(&self) -> impl Future<Output = Bytes> {
         let random_id = (self.rng.borrow_mut().get_u32() % 10_000 + 1) as i32;
-        self.cl.query_one(&self.world, &[&random_id]).map(|row| {
-            let row = row.unwrap();
+        self.cl.query(&self.world, &[&random_id]).map(|rows| {
+            let rows = rows.unwrap();
             World {
-                id: row.get(0),
-                randomnumber: row.get(1),
+                id: rows[0].get(0),
+                randomnumber: rows[0].get(1),
             }
             .to_bytes::<BytesMut>(40)
         })
@@ -85,17 +85,13 @@ impl PgConnection {
         let mut rng = self.rng.borrow_mut();
         for _ in 0..num {
             let w_id = (rng.get_u32() % 10_000 + 1) as i32;
-            worlds.push(
-                self.cl
-                    .query_one(&self.world, &[&w_id])
-                    .map(|res| match res {
-                        Err(_) => panic!(),
-                        Ok(row) => World {
-                            id: row.get(0),
-                            randomnumber: row.get(1),
-                        },
-                    }),
-            );
+            worlds.push(self.cl.query(&self.world, &[&w_id]).map(|res| {
+                let rows = res.unwrap();
+                World {
+                    id: rows[0].get(0),
+                    randomnumber: rows[0].get(1),
+                }
+            }));
         }
 
         worlds.collect()
@@ -107,17 +103,13 @@ impl PgConnection {
         for _ in 0..num {
             let id = (rng.get_u32() % 10_000 + 1) as i32;
             let w_id = (rng.get_u32() % 10_000 + 1) as i32;
-            worlds.push(
-                self.cl
-                    .query_one(&self.world, &[&w_id])
-                    .map(move |res| match res {
-                        Err(_) => panic!(),
-                        Ok(row) => World {
-                            id: row.get(0),
-                            randomnumber: id,
-                        },
-                    }),
-            );
+            worlds.push(self.cl.query(&self.world, &[&w_id]).map(move |res| {
+                let rows = res.unwrap();
+                World {
+                    id: rows[0].get(0),
+                    randomnumber: id,
+                }
+            }));
         }
 
         let cl = self.cl.clone();
@@ -146,14 +138,13 @@ impl PgConnection {
         let fut = self.cl.query_raw(&self.fortune, &[]);
 
         async move {
-            let mut stream = fut.await.unwrap();
+            let rows = fut.await.unwrap();
             let mut fortunes: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
                 id: 0,
                 message: Cow::Borrowed("Additional fortune added at request time."),
             }];
 
-            while let Some(row) = stream.next().await {
-                let row = row.unwrap();
+            for row in rows {
                 fortunes.push(Fortune {
                     id: row.get(0),
                     message: Cow::Owned(row.get(1)),
