@@ -13,6 +13,7 @@ bind = "0.0.0.0:8080"
 keepalive = 120
 errorlog = '-'
 pidfile = '/tmp/gunicorn.pid'
+timeout = 60
 
 if _is_pypy:
     worker_class = "tornado"
