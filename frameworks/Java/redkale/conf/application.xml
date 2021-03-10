@@ -11,12 +11,10 @@
     </resources> 
         
     <server protocol="HTTP" lazy="true" port="8080">      
-                
         <response>
             <contenttype plain="text/plain" json="application/json"/>  
             <date period="1000"/>
         </response>
-
         <services autoload="true"/>        
         <rest autoload="true"/>
         <servlets autoload="true"/>
