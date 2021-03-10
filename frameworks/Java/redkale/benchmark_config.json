@@ -41,6 +41,43 @@
       "display_name": "redkale",
       "notes": "",
       "versus": "Redkale"
+    },
+	"io": {
+      "plaintext_url": "/plaintext",   
+      "json_url": "/json",   
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "Redkale",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Redkale",
+      "webserver": "Redkale",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "redkale",
+      "notes": "",
+      "versus": "Redkale"
+    },
+	"json": { 
+      "json_url": "/json",   
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "Redkale",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Redkale",
+      "webserver": "Redkale",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "redkale",
+      "notes": "",
+      "versus": "Redkale"
     }
   }]
 }

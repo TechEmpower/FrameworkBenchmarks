@@ -21,6 +21,10 @@ import org.redkale.source.*;
 @RestService(name = " ", repair = false)
 public class Service extends AbstractService {
 
+    private static final boolean JSON_TEST = Boolean.getBoolean("json.direct.test");
+
+    private static final String msgjson = new Message("Hello, World!").toString();
+
     private static final byte[] helloBytes = "Hello, world!".getBytes();
 
     private final ThreadLocal<Random> localRandom = ThreadLocal.withInitial(Random::new);
@@ -34,8 +38,8 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "json")
-    public Message getHelloMessage() {
-        return new Message("Hello, World!");
+    public Object getHelloMessage() {
+        return JSON_TEST ? msgjson : new Message("Hello, World!");
     }
 
     @RestMapping(name = "db")
@@ -49,12 +53,6 @@ public class Service extends AbstractService {
         final Random random = localRandom.get();
         final World[] worlds = new World[size];
 
-//        final CompletableFuture[] futures = new CompletableFuture[size];
-//        for (int i = 0; i < size; i++) {
-//            final int index = i;
-//            futures[i] = source.findAsync(World.class, randomId(random)).thenAccept(v -> worlds[index] = v);
-//        }
-//        return CompletableFuture.allOf(futures).thenApply(v -> worlds);
         final AtomicInteger index = new AtomicInteger();
         final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId(random))
             .thenAccept(v -> worlds[index.getAndIncrement()] = v);
@@ -71,12 +69,6 @@ public class Service extends AbstractService {
         final Random random = localRandom.get();
         final World[] worlds = new World[size];
 
-//        final CompletableFuture[] futures = new CompletableFuture[size];
-//        for (int i = 0; i < size; i++) {
-//            final int index = i;
-//            futures[i] = source.findAsync(World.class, randomId(random)).thenAccept(v -> worlds[index] = v.randomNumber(randomId(random)));
-//        }
-//        return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(sort(worlds))).thenApply(v -> worlds);
         final AtomicInteger index = new AtomicInteger();
         final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId(random))
             .thenAccept(v -> worlds[index.getAndIncrement()] = v.randomNumber(randomId(random)));
