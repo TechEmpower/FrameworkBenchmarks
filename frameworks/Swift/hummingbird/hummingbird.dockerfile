@@ -5,7 +5,7 @@ FROM swift:5.3 as build
 WORKDIR /build
 
 # Copy entire repo into container
-COPY ./app .
+COPY ./src .
 
 # Compile with optimizations
 RUN swift build \
@@ -18,17 +18,12 @@ RUN swift build \
 FROM swift:5.3-slim
 WORKDIR /run
 
-# Install Swift dependencies
-RUN apt-get -qq update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-  libatomic1 \
-  && rm -r /var/lib/apt/lists/*
-
 # Copy build artifacts
 COPY --from=build /build/.build/release /run
 
-# Copy Swift runtime libraries
-COPY --from=build /usr/lib/swift/ /usr/lib/swift/
+ENV SERVER_PORT=8080
+ENV SERVER_HOSTNAME=0.0.0.0
 
 EXPOSE 8080
 
-ENTRYPOINT ["./app"]
+CMD ["./server"]
