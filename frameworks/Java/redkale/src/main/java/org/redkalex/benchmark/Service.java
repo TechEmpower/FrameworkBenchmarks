@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.*;
+import org.redkale.util.StringWrapper;
 
 /**
  *
@@ -23,7 +24,7 @@ public class Service extends AbstractService {
 
     private static final boolean JSON_TEST = Boolean.getBoolean("json.direct.test");
 
-    private static final String msgjson = new Message("Hello, World!").toString();
+    private static final StringWrapper msgjson = new StringWrapper(new Message("Hello, World!").toString());
 
     private static final byte[] helloBytes = "Hello, world!".getBytes();
 
