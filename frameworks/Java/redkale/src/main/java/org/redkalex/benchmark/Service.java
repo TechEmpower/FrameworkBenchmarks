@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.*;
+import org.redkale.util.StringWrapper;
 
 /**
  *
@@ -49,12 +50,6 @@ public class Service extends AbstractService {
         final Random random = localRandom.get();
         final World[] worlds = new World[size];
 
-//        final CompletableFuture[] futures = new CompletableFuture[size];
-//        for (int i = 0; i < size; i++) {
-//            final int index = i;
-//            futures[i] = source.findAsync(World.class, randomId(random)).thenAccept(v -> worlds[index] = v);
-//        }
-//        return CompletableFuture.allOf(futures).thenApply(v -> worlds);
         final AtomicInteger index = new AtomicInteger();
         final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId(random))
             .thenAccept(v -> worlds[index.getAndIncrement()] = v);
@@ -71,12 +66,6 @@ public class Service extends AbstractService {
         final Random random = localRandom.get();
         final World[] worlds = new World[size];
 
-//        final CompletableFuture[] futures = new CompletableFuture[size];
-//        for (int i = 0; i < size; i++) {
-//            final int index = i;
-//            futures[i] = source.findAsync(World.class, randomId(random)).thenAccept(v -> worlds[index] = v.randomNumber(randomId(random)));
-//        }
-//        return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(sort(worlds))).thenApply(v -> worlds);
         final AtomicInteger index = new AtomicInteger();
         final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId(random))
             .thenAccept(v -> worlds[index.getAndIncrement()] = v.randomNumber(randomId(random)));
