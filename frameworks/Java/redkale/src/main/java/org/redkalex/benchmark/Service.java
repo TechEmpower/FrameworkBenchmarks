@@ -22,10 +22,6 @@ import org.redkale.util.StringWrapper;
 @RestService(name = " ", repair = false)
 public class Service extends AbstractService {
 
-    private static final boolean JSON_TEST = Boolean.getBoolean("json.direct.test");
-
-    private static final StringWrapper msgjson = new StringWrapper(new Message("Hello, World!").toString());
-
     private static final byte[] helloBytes = "Hello, world!".getBytes();
 
     private final ThreadLocal<Random> localRandom = ThreadLocal.withInitial(Random::new);
@@ -39,8 +35,8 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "json")
-    public Object getHelloMessage() {
-        return JSON_TEST ? msgjson : new Message("Hello, World!");
+    public Message getHelloMessage() {
+        return new Message("Hello, World!");
     }
 
     @RestMapping(name = "db")
