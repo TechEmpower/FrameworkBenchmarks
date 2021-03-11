@@ -1,6 +1,6 @@
 # Hummingbird Benchmarking Test
 
-Hummingbird is a lightweight, flexible HTTP server framework written in Swift. It is a micro framework so there are no benchmarks for database access
+Hummingbird is a lightweight, flexible HTTP server framework written in Swift.
 
 ### Test Type Implementation Source Code
 
