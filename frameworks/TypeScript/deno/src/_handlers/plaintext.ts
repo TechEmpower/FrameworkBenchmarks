@@ -9,7 +9,7 @@ import {
 const headers = new Headers([
   ["server", SERVER],
   ["content-type", MIME_TEXT],
-  ["date", dyn_date],
+  ["date", dyn_date()],
 ]);
 
 export default async (req: ServerRequest): Promise<void> => {

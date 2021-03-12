@@ -3,7 +3,7 @@ import { ServerRequest, SERVER, dyn_date, MIME_JSON } from "../depends.ts";
 export const headers = new Headers([
   ["server", SERVER],
   ["content-type", MIME_JSON],
-  ["date", dyn_date],
+  ["date", dyn_date()],
 ]);
 
 export default async (req: ServerRequest): Promise<void> => {

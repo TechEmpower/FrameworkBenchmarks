@@ -4,7 +4,7 @@ import { updateQuery, fillArray } from "./_db_helpers.ts";
 export const headers = new Headers([
   ["server", SERVER],
   ["content-type", MIME_JSON],
-  ["date", dyn_date],
+  ["date", dyn_date()],
 ]);
 
 export default async (req: ServerRequest): Promise<void> => {
