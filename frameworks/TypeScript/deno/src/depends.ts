@@ -10,7 +10,7 @@ export { MongoClient, Bson } from "https://deno.land/x/mongo@v0.22.0/mod.ts";
 export const SERVER: string = "Deno";
 
 let date = new Date().toUTCString();
-setInterval(() => (date = new Date().toUTCString()), 200);
+setInterval(() => (date = new Date().toUTCString()), 850);
 export const dyn_date = () => date;
 
 export const MIME_JSON = "application/json";

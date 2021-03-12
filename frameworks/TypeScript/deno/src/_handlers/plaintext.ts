@@ -9,9 +9,9 @@ import {
 const headers = new Headers([
   ["server", SERVER],
   ["content-type", MIME_TEXT],
-  ["date", dyn_date()],
 ]);
 
 export default async (req: ServerRequest): Promise<void> => {
+  headers.set("date", dyn_date());
   req.respond({ headers, body: HELLO_WORLD });
 };
