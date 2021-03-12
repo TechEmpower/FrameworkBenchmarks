@@ -9,7 +9,7 @@ ENV DATABASE mongodb
 
 COPY ./src .
 
-RUN deno cache main.ts
+RUN deno cache --no-check main.ts
 
 EXPOSE 8080
 
