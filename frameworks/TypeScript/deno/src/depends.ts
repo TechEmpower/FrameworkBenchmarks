@@ -11,7 +11,7 @@ export const SERVER: string = "Deno";
 
 let date = new Date().toUTCString();
 setInterval(() => (date = new Date().toUTCString()), 200);
-const dyn_date = () => date;
+export const dyn_date = () => date;
 
 export const MIME_JSON = "application/json";
 export const MIME_HTML = "text/html; charset=utf-8";
