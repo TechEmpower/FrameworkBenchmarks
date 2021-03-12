@@ -1,16 +1,16 @@
-import type {
-  ServerRequest,
-} from "./depends.ts";
+import type { ServerRequest } from "./depends.ts";
+import JSONHandler from "./_handlers/json.ts";
+import PlaintextHandler from "./_handlers/plaintext.ts";
 
 interface Handler {
   (request: ServerRequest): Promise<void>;
 }
 
 interface Handlers {
-  [index: string]: Handler
+  [index: string]: Handler;
 }
 
 export const handlers: Handlers = {
-  "/json": (await import("./_handlers/json.ts")).default as Handler,
-  "/plaintext": (await import("./_handlers/plaintext.ts")).default as Handler
-} ;
+  "/json": JSONHandler,
+  "/plaintext": PlaintextHandler,
+};

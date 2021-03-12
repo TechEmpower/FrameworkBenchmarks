@@ -1,4 +1,5 @@
-import { ServerRequest, SERVER, dyn_date, MIME_JSON } from "../depends.ts";
+import { ServerRequest, SERVER, dyn_date, MIME_JSON } from "../../depends.ts";
+import { randomWorld } from "./_db_helpers.ts";
 
 export const headers = new Headers([
   ["server", SERVER],
@@ -7,10 +8,9 @@ export const headers = new Headers([
 ]);
 
 export default async (req: ServerRequest): Promise<void> => {
-  const HELLO_OBJ = { message: "Hello, World!" };
+  const rnd = await randomWorld();
   req.respond({
     headers,
-    body: JSON.stringify(HELLO_OBJ),
+    body: JSON.stringify(rnd),
   });
-  return;
 };
