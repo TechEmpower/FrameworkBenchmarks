@@ -1,4 +1,4 @@
-FROM hayd/alpine-deno:1.0.0
+FROM hayd/alpine-deno:1.8.1
 
 EXPOSE 8080
 
@@ -9,7 +9,7 @@ ENV DATABASE mongodb
 
 COPY ./src .
 
-RUN deno cache --no-check main.ts
+RUN deno cache main.ts
 
 EXPOSE 8080
 
