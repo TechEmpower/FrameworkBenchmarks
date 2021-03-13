@@ -6,6 +6,8 @@
 package org.redkalex.benchmark;
 
 import javax.persistence.*;
+import org.redkale.convert.json.JsonConvert;
+
 
 /**
  *
@@ -13,6 +15,42 @@ import javax.persistence.*;
  */
 @Cacheable(direct=true)
 @Table(name = "World")
-public class CachedWorld extends World {
+public final class CachedWorld implements Comparable<CachedWorld> {
+
+    @Id
+    private int id;
+
+    private int randomNumber;
+
+    public CachedWorld randomNumber(int randomNumber) {
+        this.randomNumber = randomNumber;
+        return this;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getRandomNumber() {
+        return randomNumber;
+    }
+
+    public void setRandomNumber(int randomNumber) {
+        this.randomNumber = randomNumber;
+    }
+
+    @Override
+    public int compareTo(CachedWorld o) {
+        return Integer.compare(id, o.id);
+    }
+
+    @Override
+    public String toString() {
+        return JsonConvert.root().convertTo(this);
+    }
 
 }
