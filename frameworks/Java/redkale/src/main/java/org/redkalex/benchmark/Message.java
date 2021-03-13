@@ -12,7 +12,7 @@ import org.redkale.convert.json.JsonConvert;
  *
  * @author zhangjx
  */
-public class Message {
+public final class Message {
 
     @ConvertSmallString
     private String message;
