@@ -4,11 +4,11 @@ COPY pom.xml pom.xml
 COPY src src
 RUN mvn package -q
 
-FROM openjdk:11.0.3-jdk-slim
+FROM jdk:8-alpine
 WORKDIR /martian
 COPY --from=maven /martian/target/martian.jar martian.jar
 COPY --from=maven /martian/target/lib lib
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "martian.jar", "--illegal-access=deny", "--add-opens java.base/java.lang=ALL-UNNAMED", "--add-opens java.base/java.util=ALL-UNNAMED", "--add-opens java.base/java.lang.reflect=ALL-UNNAMED", "--add-opens java.base/java.text=ALL-UNNAMED", "--add-opens java.desktop/java.awt.font=ALL-UNNAMED"]
+CMD ["java", "-jar", "martian.jar"]
