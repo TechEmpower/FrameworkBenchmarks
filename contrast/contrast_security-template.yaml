@@ -1,0 +1,17 @@
+api:
+  url: $URL
+  api_key: $API_KEY
+  service_key: $SERVICE_KEY
+  user_name: $USER_NAME
+application:
+  name: "Agent Performance - $LANG - $FRAMEWORK"
+  metadata: appID="Agent Performance - $LANG - $FRAMEWORK"
+agent: 
+  service: 
+    logger: 
+      path: contrast_service.log
+      level: INFO
+    host: contrast-service
+    port: 30555
+server:
+  name: "Agent Performance Test Server"

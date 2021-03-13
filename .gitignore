@@ -68,3 +68,4 @@ benchmark.cfg
 # Contrast agents and config files
 contrast_security.yaml
 contrast.jar
+contrast-agent.tar.gz
