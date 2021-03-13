@@ -13,7 +13,6 @@ import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.*;
-import org.redkale.util.StringWrapper;
 
 /**
  *
