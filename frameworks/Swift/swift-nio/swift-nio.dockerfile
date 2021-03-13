@@ -1,7 +1,7 @@
 # ================================
 # Build image
 # ================================
-FROM swift:5.1 as build
+FROM swift:5.3 as build
 WORKDIR /build
 
 # Copy entire repo into container
@@ -15,7 +15,7 @@ RUN swift build \
 # ================================
 # Run image
 # ================================
-FROM ubuntu:18.04
+FROM swift:5.3-slim
 WORKDIR /run
 
 # Install Swift dependencies

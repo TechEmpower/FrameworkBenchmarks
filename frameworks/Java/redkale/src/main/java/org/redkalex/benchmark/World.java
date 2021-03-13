@@ -19,6 +19,11 @@ public class World implements Comparable<World> {
 
     private int randomNumber;
 
+    public World randomNumber(int randomNumber) {
+        this.randomNumber = randomNumber;
+        return this;
+    }
+
     public int getId() {
         return id;
     }
