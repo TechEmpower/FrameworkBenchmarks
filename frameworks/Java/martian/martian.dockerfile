@@ -4,7 +4,7 @@ COPY pom.xml pom.xml
 COPY src src
 RUN mvn package -q
 
-FROM jdk:8-alpine
+FROM openjdk:8-jdk-alpine
 WORKDIR /martian
 COPY --from=maven /martian/target/martian.jar martian.jar
 COPY --from=maven /martian/target/lib lib
