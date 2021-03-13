@@ -11,7 +11,7 @@ serde = { version = "1.0.120", features = ["derive"] }
 sqlx = { version = "0.5.1", features = ["runtime-tokio-rustls", "postgres"] }
 tokio = { version = "1.0.2", features = ["macros", "rt-multi-thread"] }
 warp = "0.3.0"
-yarte = "0.14.1"
+yarte = "0.15.3"
 
 [profile.release]
 codegen-units = 1
