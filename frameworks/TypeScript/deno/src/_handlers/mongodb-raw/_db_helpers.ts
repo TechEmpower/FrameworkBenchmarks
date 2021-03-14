@@ -45,18 +45,19 @@ export const _fortunes_head = [
 ].join("");
 export const _fortunes_end = ["</table>", "</body>", "</html>"].join("");
 export const _fortunes_com = ["<tr>", "</tr>", "<td>", "</td>"];
-export const generateFortunes = (input: FortuneData[]): string => {
+export const generateFortunes = (input: FortuneData[]) => {
   let f = input
-    .map(
-      (v) =>
-        _fortunes_com[0] +
-        +_fortunes_com[2] +
-        v.id.toString() +
-        _fortunes_com[3] +
-        _fortunes_com[2] +
-        htmlEncodeByRegExp(v.message) +
-        _fortunes_com[3] +
-        _fortunes_com[1]
+    .map((v) =>
+      [
+        _fortunes_com[0],
+        _fortunes_com[2],
+        v.id.toString(),
+        _fortunes_com[3],
+        _fortunes_com[2],
+        htmlEncodeByRegExp(v.message),
+        _fortunes_com[3],
+        _fortunes_com[1],
+      ].join("")
     )
     .join("");
 
@@ -99,7 +100,7 @@ export const additionalFortune = {
 
 export const resolveQueryNumber = (s: string) => {
   let r: number;
-  if (/$\d+^/.test(s)) {
+  if (/^\d+$/.test(s)) {
     r = Number(s);
     if (r > 500) r = 500;
     if (r < 1) r = 1;
