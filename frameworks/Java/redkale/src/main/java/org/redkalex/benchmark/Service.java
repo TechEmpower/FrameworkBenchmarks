@@ -22,7 +22,7 @@ import org.redkale.util.AnyValue;
 @RestService(name = " ", repair = false)
 public class Service extends AbstractService {
 
-    private static final byte[] helloBytes = "Hello, world!".getBytes();
+    private static final byte[] helloBytes = "Hello, world!".intern().getBytes();
 
     private final ThreadLocal<Random> localRandom = ThreadLocal.withInitial(Random::new);
 
