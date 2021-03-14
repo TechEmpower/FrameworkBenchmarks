@@ -10,7 +10,7 @@ export let Fortune = client.database(dbName).collection("fortune");
 
 export const randomNumber = (): number => Math.floor(Math.random() * 10000) + 1;
 
-export const fillArray = async <T = any>(v: T, l: number) => {
+export const fillArray = <T = any>(v: T, l: number) => {
   let o = [];
   for (let i = 0; i < l; i += 1) o.push(v);
   return o;
@@ -27,7 +27,7 @@ export const htmlEncodeByRegExp = (str: string) => {
   s = str.replaceAll(/&/g, "&amp;");
   s = s.replaceAll(/</g, "&lt;");
   s = s.replaceAll(/>/g, "&gt;");
-  s = s.replaceAll(/ /g, "&nbsp;");
+  // s = s.replaceAll(/ /g, "&nbsp;");
   s = s.replaceAll(/\'/g, "'");
   s = s.replaceAll(/\"/g, '"');
   return s;

@@ -9,7 +9,7 @@ export const headers = new Headers([
 export default async (req: ServerRequest): Promise<void> => {
   const u = new URL(req.url, "http://deno");
   const l = resolveQueryNumber(u.searchParams.get("queries") ?? "1");
-  const rnd = await Promise.all(await fillArray(randomWorld(), l));
+  const rnd = await Promise.all(fillArray(randomWorld(), l));
   headers.set("date", dyn_date());
   req.respond({
     headers,
