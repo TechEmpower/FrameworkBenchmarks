@@ -130,7 +130,7 @@ async def updates(request):
     async with request.app['db_session'].begin() as sess:
         for id_ in ids:
             rand_new = randint(1, 10000)
-            world = await sess.get(World, id_)
+            world = await sess.get(World, id_, populate_existing=True)
             world.randomnumber = rand_new
 
             result.append({'id': id_, 'randomNumber': rand_new})
