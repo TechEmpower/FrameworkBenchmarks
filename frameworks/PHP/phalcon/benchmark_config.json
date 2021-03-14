@@ -40,7 +40,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "phalcon",
+      "display_name": "phalcon-mogodb",
       "notes": "",
       "versus": "php",
       "tags": ["broken"]
@@ -62,7 +62,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "phalcon",
+      "display_name": "phalcon-micro",
       "notes": "",
       "versus": "php"
     }

@@ -14,3 +14,4 @@ export default {
   "/json": JSONHandler,
   "/plaintext": PlaintextHandler,
 } as Handlers;
+

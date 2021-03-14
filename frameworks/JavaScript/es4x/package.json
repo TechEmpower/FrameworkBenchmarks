@@ -4,28 +4,27 @@
   "private": true,
   "main": "index.js",
   "devDependencies": {
-    "es4x-pm": "0.13.0"
+    "@es4x/create": "0.14.2"
   },
   "dependencies": {
-    "@vertx/core": "3.9.2",
-    "@vertx/web": "3.9.2",
-    "@vertx/web-templ-rocker": "3.9.2",
-    "@vertx/pg-client": "3.9.2"
+    "@vertx/core": "4.0.3",
+    "@vertx/web": "4.0.3",
+    "@vertx/web-templ-jte": "4.0.3",
+    "@vertx/pg-client": "4.0.3"
   },
   "mvnDependencies": [
-    "io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.49.Final",
-    "com.fizzed:rocker-runtime:1.2.3",
-    "xyz.jetdrone:vertx.command.rocker.compiler:0.1.1"
+    "io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.60.Final",
+    "xyz.jetdrone:vertx.command.template.compiler:0.3.0"
   ],
   "files": [
     "util.js",
-    "templates/Fortunes.rocker.html"
+    "templates/fortunes.jte"
   ],
   "scripts": {
     "start": "es4x",
     "postinstall": "es4x install -v node_modules/.lib/vendor-templates.jar",
-    "pretemplate": "es4x rocker -d node_modules/.rocker templates",
-    "template": "javac -cp node_modules/.bin/es4x-launcher.jar @node_modules/.rocker/templates.lst -d node_modules/.rocker/classes",
-    "posttemplate": "jar cvf node_modules/.lib/vendor-templates.jar -C node_modules/.rocker/classes ."
+    "pretemplate": "es4x jte -d node_modules/.jte templates",
+    "template": "javac -cp node_modules/.bin/es4x-launcher.jar @node_modules/.jte/templates.lst -d node_modules/.jte/classes",
+    "posttemplate": "jar cvf node_modules/.lib/vendor-templates.jar -C node_modules/.jte/classes ."
   }
 }
