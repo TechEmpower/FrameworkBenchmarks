@@ -111,5 +111,5 @@ public class Service extends AbstractService {
 
     private int randomId(Random random) {
         return 1 + random.nextInt(10000);
-    }
+    } 
 }
