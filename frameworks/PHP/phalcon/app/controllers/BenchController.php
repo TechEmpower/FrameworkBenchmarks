@@ -27,7 +27,7 @@ class BenchController extends Controller
 
     public function queriesAction(): ResponseInterface
     {
-        $queries = min(500, max(1, $this->filter->sanitize($this->request->getQuery('queries', null, 1), "int")));
+        $queries = min(500, max(1, $this->request->getQuery('queries', "int", 1)));
         $worlds = [];
 
         for ($i = 0; $i < $queries; ++$i) {
@@ -49,7 +49,7 @@ class BenchController extends Controller
 
     public function updateAction(): ResponseInterface
     {
-        $queries = $this->request->getQuery('queries', null, 1);
+        $queries = $this->request->getQuery('queries', "int", 1);
         $queries = max(1, min(500, $queries));
 
         $worlds = [];
@@ -85,7 +85,7 @@ class BenchController extends Controller
         return Fortunes::find()->toArray();
     }
 
-    protected function buildFortune(): array
+    protected function buildFortune()
     {
         return [
             'id' => 0,
@@ -95,10 +95,10 @@ class BenchController extends Controller
 
     protected function sortFortunes(array $fortunes): array
     {
-        usort($fortunes,
-                function($left, $right) {
-                    return $left['message'] <=> $right['message'];
-                });
+        usort($fortunes, function ($left, $right) {
+            return $left['message'] <=> $right['message'];
+        });
+
         return $fortunes;
     }
 }

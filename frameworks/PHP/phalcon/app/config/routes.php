@@ -35,17 +35,17 @@ $router->addGet('/plaintext', [
 ]);
 
 $router->addGet('/mongodb/db', [
-    'controller' => 'mongobench',
+    'controller' => 'mongo',
     'action' => 'db',
 ]);
 
 $router->addGet('/mongodb/queries', [
-    'controller' => 'mongobench',
+    'controller' => 'mongo',
     'action' => 'queries',
 ]);
 
 $router->addGet('/mongodb/fortunes', [
-    'controller' => 'mongobench',
+    'controller' => 'mongo',
     'action' => 'fortunes',
 ]);
 

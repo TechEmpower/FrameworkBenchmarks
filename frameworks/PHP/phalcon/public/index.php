@@ -1,10 +1,11 @@
 <?php
 
-use Phalcon\Db\Adapter\MongoDB\Client;
+use MongoDB\Client;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\DI\FactoryDefault;
 use Phalcon\Exception as PhalconException;
 use Phalcon\Http\Request;
+use Phalcon\Incubator\MongoDB\Mvc\Collection\Manager as MongoDBCollectionManager;
 use Phalcon\Loader;
 use Phalcon\Mvc\Application;
 use Phalcon\Mvc\Model\MetaData\Apc;
@@ -23,17 +24,18 @@ try {
     $loader = new Loader();
     $loader->registerDirs([
         $config->application->controllersDir,
-        $config->application->modelsDirб
+        $config->application->modelsDir,
+        $config->application->collectionsDir,
     ])->register();
 
     // Create a DI
     $di = new FactoryDefault();
 
     // Setting up the router
-    $di->set('router', require APP_PATH . '/app/config/routes.php');
+    $di->setShared('router', require APP_PATH . '/app/config/routes.php');
 
     //MetaData
-    $di->set('modelsMetadata', function () {
+    $di->setShared('modelsMetadata', function () {
         if (function_exists('apc_store')) {
             return new Apc();
         }
@@ -44,7 +46,7 @@ try {
     });
 
     // Setting up the view component (seems to be required even when not used)
-    $di->set('view', function () use ($config) {
+    $di->setShared('view', function () use ($config) {
         $view = new View();
         $view->setViewsDir($config->application->viewsDir);
         $view->registerEngines([
@@ -64,7 +66,7 @@ try {
     });
 
     // Setting up the database connection
-    $di->set('db', function () use ($config) {
+    $di->setShared('db', function () use ($config) {
         $database = $config->database;
 
         return new Mysql([
@@ -80,21 +82,17 @@ try {
     });
 
     // Setting up the mongodb connection
-    $di->set('mongo', function () use ($config) {
+    $di->setShared('mongo', function () use ($config) {
         $mongodbConfig = $config->mongodb;
-
         $mongo = new Client($mongodbConfig->url);
+
         return $mongo->selectDatabase($mongodbConfig->db);
     });
 
-    //Registering the collectionManager service
-    $di->set('collectionManager', function () {
-        // Setting a default EventsManager
-        $modelsManager = new Phalcon\Mvc\Collection\Manager();
-        $modelsManager->setEventsManager(new Phalcon\Events\Manager());
-
-        return $modelsManager;
-    }, true);
+    // Registering the mongoDB CollectionManager service
+    $di->setShared('collectionsManager', function () {
+        return new MongoDBCollectionManager();
+    });
 
     // Handle the request
     $request = new Request();

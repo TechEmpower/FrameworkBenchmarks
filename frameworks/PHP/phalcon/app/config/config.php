@@ -18,6 +18,7 @@ return new Config([
     'application' => [
         'controllersDir' => APP_PATH . '/app/controllers/',
         'modelsDir'      => APP_PATH . '/app/models/',
+        'collectionsDir' => APP_PATH . '/app/collections/',
         'viewsDir'       => APP_PATH . '/app/views/',
         'baseUri'        => '/',
     ]
