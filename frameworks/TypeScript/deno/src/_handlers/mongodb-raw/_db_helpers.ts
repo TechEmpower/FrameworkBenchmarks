@@ -21,6 +21,17 @@ export interface FortuneData {
   message: string;
   _id?: unknown;
 }
+export const htmlEncodeByRegExp = (str: string) => {
+  let s = "";
+  if (str.length == 0) return "";
+  s = str.replaceAll(/&/g, "&amp;");
+  s = s.replaceAll(/</g, "&lt;");
+  s = s.replaceAll(/>/g, "&gt;");
+  s = s.replaceAll(/ /g, "&nbsp;");
+  s = s.replaceAll(/\'/g, "'");
+  s = s.replaceAll(/\"/g, '"');
+  return s;
+};
 export const _fortunes_head = [
   "<!DOCTYPE html>",
   "<html>",
@@ -40,10 +51,10 @@ export const generateFortunes = (input: FortuneData[]): string => {
       (v) =>
         _fortunes_com[0] +
         +_fortunes_com[2] +
-        v.id +
+        v.id.toString() +
         _fortunes_com[3] +
         _fortunes_com[2] +
-        v.message +
+        htmlEncodeByRegExp(v.message) +
         _fortunes_com[3] +
         _fortunes_com[1]
     )
@@ -84,4 +95,16 @@ export const updateQuery = async () => {
 export const additionalFortune = {
   id: 0,
   message: "Additional fortune added at request time.",
+};
+
+export const resolveQueryNumber = (s: string) => {
+  let r: number;
+  if (/$\d+^/.test(s)) {
+    r = Number(s);
+    if (r > 500) r = 500;
+    if (r < 1) r = 1;
+  } else {
+    r = 1;
+  }
+  return r;
 };
