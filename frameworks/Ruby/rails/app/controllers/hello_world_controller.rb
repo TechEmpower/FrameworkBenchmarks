@@ -16,11 +16,7 @@ class HelloWorldController < ApplicationController
   end
 
   def query
-    queries = params[:queries].to_i
-    queries = 1 if queries < 1
-    queries = 500 if queries > 500
-
-    results = QUERY_RANGE.sample(queries).map do |id|
+    results = QUERY_RANGE.sample(query_count).map do |id|
       World.find(id)
     end
 
@@ -30,21 +26,18 @@ class HelloWorldController < ApplicationController
   def fortune
     @fortunes = Fortune.all.to_a
     @fortunes << Fortune.new(id: 0, message: 'Additional fortune added at request time.')
-    @fortunes = @fortunes.sort_by!(&:message)
+    @fortunes.sort_by!(&:message)
   end
 
   def update
-    queries = (params[:queries] || 1).to_i
-    queries = 1 if queries < 1
-    queries = 500 if queries > 500
-
-    worlds = queries.times.map{Random.rand(1..10_000)}.map do |id|
+    worlds = query_count.times.map{Random.rand(1..10_000)}.map do |id|
       # get a random row from the database, which we know has 10000
       # rows with ids 1 - 10000
       world = World.select(:id, :randomNumber).find(id)
-      begin
+      loop do
         rn = Random.rand(1..10_000)
-      end while rn == world.randomNumber
+        break if rn != world.randomNumber
+      end
       world.update_column(:randomNumber, rn)
       world
     end
@@ -53,16 +46,20 @@ class HelloWorldController < ApplicationController
   end
 
   def cached_query
-    queries = params[:queries].to_i
-    queries = 1 if queries < 1
-    queries = 500 if queries > 500
-
-    results = QUERY_RANGE.sample(queries).map do |id|
+    results = QUERY_RANGE.sample(query_count).map do |id|
       Rails.cache.fetch("world-#{id}") do
         World.find(id)
       end
     end
 
     render json: results
+  end
+
+  def query_count
+    queries = params[:queries].to_i
+    return 1 if queries < 1
+    return 500 if queries > 500
+
+    queries
   end
 end
