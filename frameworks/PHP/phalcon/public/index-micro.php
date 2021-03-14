@@ -7,9 +7,6 @@ use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt;
 use Phalcon\Exception as PhalconException;
 
-use function header;
-use function json_encode;
-
 try {
     $app = new Micro();
 
