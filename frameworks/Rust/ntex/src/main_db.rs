@@ -99,6 +99,8 @@ async fn main() -> std::io::Result<()> {
                 .keep_alive(KeepAlive::Os)
                 .client_timeout(0)
                 .disconnect_timeout(0)
+                .read_high_watermark(65535)
+                .write_high_watermark(65535)
                 .h1(AppFactory)
                 .tcp()
         })?
