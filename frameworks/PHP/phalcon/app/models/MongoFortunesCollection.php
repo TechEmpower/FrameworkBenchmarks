@@ -1,8 +1,9 @@
 <?php
 
-class MongoFortunesCollection extends \Phalcon\Mvc\MongoCollection
-{
+use Phalcon\Mvc\MongoCollection;
 
+class MongoFortunesCollection extends MongoCollection
+{
     public $_id;
     public $message;
 
@@ -10,5 +11,4 @@ class MongoFortunesCollection extends \Phalcon\Mvc\MongoCollection
     {
         return "fortune";
     }
-
 }

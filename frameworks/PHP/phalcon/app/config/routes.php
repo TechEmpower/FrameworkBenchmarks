@@ -1,50 +1,52 @@
 <?php
 
-$router = new Phalcon\Mvc\Router(false);
+use Phalcon\Mvc\Router;
 
-$router->add('/json', array(
+$router = new Router(false);
+
+$router->addGet('/json', [
     'controller' => 'bench',
     'action' => 'json',
-));
+]);
 
-$router->add('/db', array(
+$router->addGet('/db', [
     'controller' => 'bench',
     'action' => 'db',
-));
+]);
 
-$router->add('/queries', array(
+$router->addGet('/queries', [
     'controller' => 'bench',
     'action' => 'queries',
-));
+]);
 
-$router->add('/fortunes', array(
+$router->addGet('/fortunes', [
     'controller' => 'bench',
     'action' => 'fortunes',
-));
+]);
 
-$router->add('/update', array(
+$router->addGet('/update', [
     'controller' => 'bench',
     'action' => 'update',
-));
+]);
 
-$router->add('/plaintext', array(
+$router->addGet('/plaintext', [
     'controller' => 'bench',
     'action' => 'plaintext',
-));
+]);
 
-$router->add('/mongodb/db', array(
+$router->addGet('/mongodb/db', [
     'controller' => 'mongobench',
     'action' => 'db',
-));
+]);
 
-$router->add('/mongodb/queries', array(
+$router->addGet('/mongodb/queries', [
     'controller' => 'mongobench',
     'action' => 'queries',
-));
+]);
 
-$router->add('/mongodb/fortunes', array(
+$router->addGet('/mongodb/fortunes', [
     'controller' => 'mongobench',
     'action' => 'fortunes',
-));
+]);
 
 return $router;

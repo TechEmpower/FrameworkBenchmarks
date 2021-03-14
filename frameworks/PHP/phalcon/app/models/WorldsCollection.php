@@ -1,8 +1,9 @@
 <?php
 
-class WorldsCollection extends \Phalcon\Mvc\Collection
-{
+use Phalcon\Mvc\Collection;
 
+class WorldsCollection extends Collection
+{
     public $_id;
     public $randomNumber;
 
@@ -10,5 +11,4 @@ class WorldsCollection extends \Phalcon\Mvc\Collection
     {
         return "world";
     }
-
 }

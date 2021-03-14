@@ -1,8 +1,9 @@
 <?php
 
-class FortunesCollection extends \Phalcon\Mvc\Collection
-{
+use Phalcon\Mvc\Collection;
 
+class FortunesCollection extends Collection
+{
     public $_id;
     public $message;
 
@@ -10,5 +11,4 @@ class FortunesCollection extends \Phalcon\Mvc\Collection
     {
         return "fortune";
     }
-
 }
