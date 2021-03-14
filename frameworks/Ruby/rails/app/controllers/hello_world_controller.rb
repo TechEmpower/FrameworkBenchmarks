@@ -38,7 +38,7 @@ class HelloWorldController < ApplicationController
         rn = Random.rand(1..10_000)
         break if rn != world.randomNumber
       end
-      world.update_column(:randomNumber, rn)
+      world.update_columns(randomNumber: rn)
       world
     end
 
