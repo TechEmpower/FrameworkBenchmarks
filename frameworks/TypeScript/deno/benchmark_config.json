@@ -1,21 +1,42 @@
 {
-  "framework": "deno",
-  "tests": [{
-    "default": {
-      "json_url": "/json",
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "framework": "None",
-      "language": "TypeScript",
-      "flavor": "deno",
-      "platform": "deno",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "deno",
-      "versus": "nodejs"
-    }
-  }]
+    "framework": "deno",
+    "tests": [{
+        "default": {
+            "json_url": "/json",
+            "plaintext_url": "/plaintext",
+            "port": 8080,
+            "approach": "Realistic",
+            "classification": "Platform",
+            "language": "TypeScript",
+            "flavor": "deno",
+            "platform": "deno",
+            "webserver": "None",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "deno",
+            "versus": "nodejs"
+        },
+        "mongodb-raw": {
+            "dockerfile": "deno.mongoraw.dockerfile",
+            "json_url": "/json",
+            "plaintext_url": "/plaintext",
+            "db_url": "/db",
+            "query_url": "/queries?queries=",
+            "update_url": "/updates?queries=",
+            "fortune_url": "/fortunes",
+            "port": 8080,
+            "approach": "Realistic",
+            "classification": "Platform",
+            "database": "MongoDB",
+            "orm": "Raw",
+            "language": "TypeScript",
+            "flavor": "deno",
+            "platform": "deno",
+            "webserver": "None",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "deno",
+            "versus": "nodejs"
+        }
+    }]
 }
