@@ -9,7 +9,7 @@ RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq wget git unzip libxml2-dev cmake make systemtap-sdt-dev \
                     zlib1g-dev libpcre3-dev libargon2-0-dev libsodium-dev \
-                    php8.0-cli php8.0-dev libphp8.0-embed php8.0-mysql nginx > /dev/null
+                    php8.0-cli php8.0-dev libphp8.0-embed php8.0-pgsql nginx > /dev/null
 
 ADD ./ ./
 
