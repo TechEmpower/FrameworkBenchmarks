@@ -15,7 +15,7 @@ if [[ ! -f $AGENT_FILE ]];
 fi;
 
 # Copy files into correct place
-./copy-files.sh Python contrast-agent.tar.gz
+./copy-files.sh Python $AGENT_FILE
 
 # Create tfb network if it's not already up
 if ! docker network inspect tfb >/dev/null 2>&1; then
