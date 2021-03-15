@@ -19,7 +19,6 @@ func runApp() {
     )
     let app = HBApplication(configuration: configuration)
     app.encoder = JSONEncoder()
-    app.middleware.add(HBDateResponseMiddleware(application: app))
     app.initConnectionPool()
     
     WorldController().add(to: app.router)

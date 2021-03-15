@@ -1,5 +1,5 @@
 import Hummingbird
-import Mustache
+import HummingbirdMustache
 import PostgresKit
 
 struct HTML: HBResponseGenerator {
@@ -11,18 +11,18 @@ struct HTML: HBResponseGenerator {
 }
 
 class FortunesController {
-    let template: Template
+    let template: HBMustacheTemplate
 
     init() {
-        self.template = try! Template(string: """
-        !<!DOCTYPE html>
+        self.template = try! HBMustacheTemplate(string: """
+        <!DOCTYPE html>
         <html>
         <head><title>Fortunes</title></head>
         <body>
         <table>
         <tr><th>id</th><th>message</th></tr>
         {{#.}}
-        <tr><td>{{id}}</td><td>{{.}}</td></tr>
+        <tr><td>{{id}}</td><td>{{message}}</td></tr>
         {{/.}}
         </table>
         </body>
@@ -35,18 +35,16 @@ class FortunesController {
     }
 
     func fortunes(request: HBRequest) -> EventLoopFuture<HTML> {
-        return request.db.query("SELECT id, message FROM Fortunes").map { results in
+        return request.db.query("SELECT id, message FROM Fortune").map { results in
             var fortunes = results.map {
-                return $0.column("message")?.string ?? ""
+                return Fortune(
+                    id: $0.column("id")?.int32 ?? 0,
+                    message: $0.column("message")?.string ?? ""
+                )
             }
-            fortunes.append("Additional fortune added at request time.")
-            let sortedFortunes = fortunes.sorted { $0 < $1 }
-            return try! HTML(html: self.template.render(sortedFortunes) )
+            fortunes.append(.init(id: 0, message: "Additional fortune added at request time."))
+            let sortedFortunes = fortunes.sorted { $0.message < $1.message }
+            return HTML(html: self.template.render(sortedFortunes) )
         }
-/*        var fortunes = ["Hello", "Goodbye"]
-        fortunes.append("Additional fortune added at request time.")
-        let sortedFortunes = fortunes.sorted { $0 < $1 }
-        return try! HTML(html: self.template.render(sortedFortunes) )     //request.response.headers.replaceOrAdd(name: "content-type", value: "text/html; charset=UTF-8")
-        //return try! template.render([["message": "<tesét>"], ["message": "goodbye"]])
-*/    }
+    }
 }
