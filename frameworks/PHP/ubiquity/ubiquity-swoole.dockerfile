@@ -30,7 +30,7 @@ RUN php composer.phar install --optimize-autoloader --classmap-authoritative --n
 RUN chmod 777 -R /ubiquity/.ubiquity/*
 
 RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /usr/local/etc/php/php.ini
-RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=tracing\n" >> /usr/local/etc/php/php.ini
+RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=function\n" >> /usr/local/etc/php/php.ini
 
 USER www-data
 
