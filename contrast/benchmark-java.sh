@@ -15,6 +15,6 @@ if [[ ! -f $AGENT_FILE ]];
 fi;
 
 # Copy files into correct place
-./copy-files.sh Java contrast-agent.tar.gz
+./copy-files.sh Java $AGENT_FILE
 
 ../tfb --tag contrast --test-lang Java --type fortune --duration 60
