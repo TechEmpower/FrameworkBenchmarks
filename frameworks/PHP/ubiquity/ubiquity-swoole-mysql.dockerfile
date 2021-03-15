@@ -1,14 +1,13 @@
-FROM php:7.4
+FROM php:8.0
 
 RUN apt-get update > /dev/null
 
 RUN pecl install swoole > /dev/null && \
     docker-php-ext-enable swoole
 
-RUN docker-php-ext-install pdo_mysql > /dev/null
+RUN docker-php-ext-install pdo_mysql opcache pcntl > /dev/null
 
 COPY deploy/conf/php-async.ini /usr/local/etc/php/php.ini
-RUN echo "zend_extension=opcache.so" >> /usr/local/etc/php/php.ini
 
 ADD ./ /ubiquity
 WORKDIR /ubiquity
