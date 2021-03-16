@@ -73,7 +73,7 @@ public class Service extends AbstractService {
             futures[index] = source.findAsync(World.class, randomId()).thenAccept(v -> worlds[index] = v.randomNumber(randomId()));
         }
         return CompletableFuture.allOf(futures).thenCompose(v -> {
-            Arrays.sort(worlds);
+            Arrays.sort(worlds); 
             return source.updateAsync(worlds);
         }).thenApply(v -> worlds);
     }
