@@ -1,8 +1,11 @@
 import Hummingbird
 import HummingbirdFoundation
+import PostgresKit
 
-struct Object: HBResponseEncodable {
-    let message: String
+extension Int {
+    func bound(_ minValue: Int, _ maxValue: Int) -> Int {
+        return Swift.min(maxValue, Swift.max(minValue, self))
+    }
 }
 
 func runApp() {
@@ -12,19 +15,14 @@ func runApp() {
 
     let configuration = HBApplication.Configuration(
         address: .hostname(serverHostName, port: serverPort),
-        serverName: "Hummingbird",
-        enableHttpPipelining: false
+        serverName: "Hummingbird"
     )
     let app = HBApplication(configuration: configuration)
     app.encoder = JSONEncoder()
+    app.initConnectionPool()
     
-    app.router.get("plaintext") { req in
-        "Hello, world!"
-    }
-
-    app.router.get("json") { req in
-        Object(message: "Hello, world!")
-    }
+    WorldController().add(to: app.router)
+    FortunesController().add(to: app.router)
 
     app.start()
     app.wait()

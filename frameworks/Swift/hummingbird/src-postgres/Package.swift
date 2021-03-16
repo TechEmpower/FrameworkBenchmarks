@@ -5,17 +5,22 @@ import PackageDescription
 
 let package = Package(
     name: "server",
+    platforms: [.macOS(.v10_15)],
     products: [
         .executable(name: "server", targets: ["server"])
     ],
     dependencies: [
         .package(url: "https://github.com/hummingbird-project/hummingbird.git", .upToNextMinor(from: "0.7.0")),
+        .package(url: "https://github.com/hummingbird-project/hummingbird-mustache.git", .upToNextMinor(from: "0.1.0")),
+        .package(url: "https://github.com/vapor/postgres-kit.git", from: "2.0.0"),
     ],
     targets: [
         .target(name: "server",
             dependencies: [
                 .product(name: "Hummingbird", package: "hummingbird"),
                 .product(name: "HummingbirdFoundation", package: "hummingbird"),
+                .product(name: "HummingbirdMustache", package: "hummingbird-mustache"),
+                .product(name: "PostgresKit", package: "postgres-kit"),
             ],
             swiftSettings: [
                 // Enable better optimizations when building in Release configuration. Despite the use of
