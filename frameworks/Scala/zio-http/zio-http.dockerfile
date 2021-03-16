@@ -33,7 +33,4 @@ ENTRYPOINT ["java",\
 "-Xms2G",\
 "-Xmx2G",\
 "-Xss2m",\
-"-Dapp.environment=docker",\
-"-XX:+UseContainerSupport",\
-"-XX:+UseG1GC",\
 "/app/zio-http-assembly-1.0.0.jar"]
