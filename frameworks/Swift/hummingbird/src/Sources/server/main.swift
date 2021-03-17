@@ -12,11 +12,11 @@ func runApp() {
 
     let configuration = HBApplication.Configuration(
         address: .hostname(serverHostName, port: serverPort),
-        serverName: "Hummingbird"
+        serverName: "Hummingbird",
+        enableHttpPipelining: false
     )
     let app = HBApplication(configuration: configuration)
     app.encoder = JSONEncoder()
-    app.middleware.add(HBDateResponseMiddleware(application: app))
     
     app.router.get("plaintext") { req in
         "Hello, world!"

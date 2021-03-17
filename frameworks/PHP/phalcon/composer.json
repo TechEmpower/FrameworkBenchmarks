@@ -1,6 +1,6 @@
 {
-   "require": {
-   	"mongodb/mongodb" : "1.0.2",
-   	"phalcon/incubator": "^3.4"
-   }
+    "require": {
+        "mongodb/mongodb": "^1.6",
+        "phalcon/incubator-mongodb": "^1.0"
+    }
 }
