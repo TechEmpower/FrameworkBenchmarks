@@ -6,7 +6,9 @@ api:
 application:
   name: "Agent Performance - $LANG - $FRAMEWORK"
   metadata: appID="Agent Performance - $LANG - $FRAMEWORK"
-agent: 
+agent:
+  java:
+    standalone_app_name: "Agent Performance - $LANG - $FRAMEWORK"
   service: 
     logger: 
       path: contrast_service.log
