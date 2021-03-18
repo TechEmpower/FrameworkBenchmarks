@@ -69,7 +69,7 @@
       "display_name": "rails-postgresql",
       "notes": "",
       "versus": "",
-      "tags": ["contrast"]
+      "tags": ["contrast", "contrast-off"]
     },
     "contrast-assess": {
       "db_url": "/db",
@@ -93,7 +93,7 @@
       "display_name": "rails-postgresql",
       "notes": "",
       "versus": "",
-      "tags": ["contrast"]
+      "tags": ["contrast", "contrast-assess"]
     },
     "contrast-protect": {
       "db_url": "/db",
@@ -117,7 +117,7 @@
       "display_name": "rails-postgresql",
       "notes": "",
       "versus": "",
-      "tags": ["contrast"]
+      "tags": ["contrast", "contrast-protect"]
     },
     "contrast-both": {
       "db_url": "/db",

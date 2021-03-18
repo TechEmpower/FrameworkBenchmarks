@@ -67,7 +67,7 @@
       "display_name": "Django",
       "notes": "CPython 3.6",
       "versus": "wsgi",
-      "tags": ["contrast"]
+      "tags": ["contrast", "contrast-off"]
     },
     "contrast-assess": {
       "plaintext_url" : "/plaintext",
@@ -91,7 +91,7 @@
       "display_name": "Django",
       "notes": "CPython 3.6",
       "versus": "wsgi",
-      "tags": ["contrast"]
+      "tags": ["contrast", "contrast-assess"]
     },
     "contrast-protect": {
       "plaintext_url" : "/plaintext",
@@ -115,7 +115,7 @@
       "display_name": "Django",
       "notes": "CPython 3.6",
       "versus": "wsgi",
-      "tags": ["contrast"]
+      "tags": ["contrast", "contrast-protect"]
     },
     "contrast-both": {
       "plaintext_url" : "/plaintext",
