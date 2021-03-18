@@ -88,7 +88,7 @@
       "display_name": "spring-jdbc",
       "notes": "",
       "versus": "",
-      "tags": ["contrast"]
+      "tags": ["contrast", "contrast-off"]
     },
     "contrast-assess": {
       "json_url": "/json",
@@ -112,7 +112,7 @@
       "display_name": "spring-jdbc",
       "notes": "",
       "versus": "",
-      "tags": ["contrast"]
+      "tags": ["contrast", "contrast-assess"]
     },
     "contrast-protect": {
       "json_url": "/json",
@@ -136,7 +136,7 @@
       "display_name": "spring-jdbc",
       "notes": "",
       "versus": "",
-      "tags": ["contrast"]
+      "tags": ["contrast", "contrast-protect"]
     },
     "contrast-both": {
       "json_url": "/json",
