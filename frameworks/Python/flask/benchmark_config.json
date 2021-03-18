@@ -134,7 +134,8 @@
       "database_os": "Linux",
       "display_name": "Flask",
       "notes": "",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["contrast"]
     },
     "contrast-assess": {
       "json_url": "/json",
@@ -157,7 +158,8 @@
       "database_os": "Linux",
       "display_name": "Flask",
       "notes": "",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["contrast"]
     },
     "contrast-protect": {
       "json_url": "/json",
@@ -180,7 +182,8 @@
       "database_os": "Linux",
       "display_name": "Flask",
       "notes": "",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["contrast"]
     },
     "contrast-both": {
       "json_url": "/json",
@@ -203,7 +206,8 @@
       "database_os": "Linux",
       "display_name": "Flask",
       "notes": "",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["contrast"]
     }
   }]
 }
