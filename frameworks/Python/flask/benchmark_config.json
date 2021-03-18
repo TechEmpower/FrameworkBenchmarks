@@ -184,30 +184,6 @@
       "notes": "",
       "versus": "wsgi",
       "tags": ["contrast", "contrast-protect"]
-    },
-    "contrast-both": {
-      "json_url": "/json",
-      "db_url": "/dbs",
-      "query_url": "/db?queries=",
-      "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "MySQL",
-      "framework": "flask",
-      "language": "Python",
-      "flavor": "Python3",
-      "orm": "Full",
-      "platform": "Meinheld",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "Flask",
-      "notes": "",
-      "versus": "wsgi",
-      "tags": ["contrast"]
     }
   }]
 }
