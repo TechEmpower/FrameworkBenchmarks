@@ -25,8 +25,8 @@ class HelloWorldController < ApplicationController
 
   def cached_query
     results = QUERY_RANGE.sample(query_count).map do |id|
-      Rails.cache.fetch("world-#{id}") do
-        World.find(id)
+      Rails.cache.fetch(id) do
+        World.find(id).as_json
       end
     end
 
@@ -40,23 +40,20 @@ class HelloWorldController < ApplicationController
   end
 
   def update
-    worlds = query_count.times.map{Random.rand(1..10_000)}.map do |id|
+    worlds = query_count.times.map { Random.rand(1..10_000) }.map do |id|
       # get a random row from the database, which we know has 10000
       # rows with ids 1 - 10000
-      world = World.select(:id, :randomNumber).find(id)
-      rn = world.randomNumber
-
-      loop do
-        rn = Random.rand(1..10_000)
-        break if rn != world.randomNumber
-      end
-      
-      world.update_columns(randomNumber: rn)
+      world = World.find(id)
+      random = Random.rand(1..10_000)
+      random = Random.rand(1..10_000) until random != world.randomNumber
+      world.update_columns(randomNumber: random)
       world
     end
 
     render json: worlds
   end
+
+  private
 
   def query_count
     queries = params[:queries].to_i
