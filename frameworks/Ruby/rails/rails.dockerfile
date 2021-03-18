@@ -1,4 +1,5 @@
 FROM ruby:3.0
+
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends redis-server
 
 EXPOSE 8080
@@ -14,5 +15,4 @@ COPY . /rails/
 ENV RAILS_ENV=production_postgresql
 ENV PORT=8080
 ENV REDIS_URL=redis://localhost:6379/0/cache
-
 CMD ./run-with-redis.sh
