@@ -12,7 +12,7 @@ import org.redkale.convert.json.JsonConvert;
  *
  * @author zhangjx
  */
-public class World implements Comparable<World> {
+public final class World implements Comparable<World> {
 
     @Id
     private int id;
