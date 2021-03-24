@@ -1,5 +1,5 @@
 #[global_allocator]
-static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::{pin::Pin, task::Context, task::Poll};
 
@@ -99,11 +99,11 @@ async fn main() -> std::io::Result<()> {
                 .keep_alive(KeepAlive::Os)
                 .client_timeout(0)
                 .disconnect_timeout(0)
-                .read_high_watermark(65535)
-                .write_high_watermark(65535)
+                .buffer_params(65535, 65535, 1024)
                 .h1(AppFactory)
                 .tcp()
         })?
+        .workers((num_cpus::get() as f32 * 1.2) as usize)
         .start()
         .await
 }
