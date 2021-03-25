@@ -8,7 +8,10 @@
     <!-- Opt out of the "easy mode" of the CoreRT compiler (http://aka.ms/OptimizeCoreRT) -->
     <TrimMode>link</TrimMode>
     <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+    
+    <!-- Enable performance optimizations -->
     <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+    <IlcPgoOptimize>true</IlcPgoOptimize>
   </PropertyGroup>
   
   <ItemGroup>
