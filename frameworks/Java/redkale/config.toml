@@ -41,19 +41,6 @@ platform = "Redkale"
 webserver = "Redkale"
 versus = "Redkale"
 
-[io]
-urls.plaintext = "/plaintext"
-urls.json = "/json"
-approach = "Realistic"
-classification = "Fullstack"
-database = "None"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "Redkale"
-webserver = "Redkale"
-versus = "Redkale"
-
 [jdk16]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
@@ -79,3 +66,17 @@ orm = "Raw"
 platform = "Redkale"
 webserver = "Redkale"
 versus = "Redkale"
+
+[io]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Fullstack"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Redkale"
+webserver = "Redkale"
+versus = "Redkale"
+
