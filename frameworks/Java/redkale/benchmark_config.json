@@ -75,7 +75,7 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-io",
+                "display_name": "redkale-jdk16",
                 "notes": "",
                 "versus": "Redkale"
             },
@@ -94,7 +94,7 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-io",
+                "display_name": "redkale-zgc",
                 "notes": "",
                 "versus": "Redkale"
             },
