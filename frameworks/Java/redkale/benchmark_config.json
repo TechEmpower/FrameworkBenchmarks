@@ -63,6 +63,7 @@
             "jdk16": {
                 "plaintext_url": "/plaintext",
                 "json_url": "/json",
+                "cached_query_url": "/cached-worlds?q=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -82,6 +83,7 @@
             "zgc": {
                 "plaintext_url": "/plaintext",
                 "json_url": "/json",
+                "cached_query_url": "/cached-worlds?q=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -101,6 +103,7 @@
             "io": {
                 "plaintext_url": "/plaintext",
                 "json_url": "/json",
+                "cached_query_url": "/cached-worlds?q=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
