@@ -60,7 +60,7 @@
                 "notes": "",
                 "versus": "Redkale"
             },
-            "jdk16": {
+            "pgc": {
                 "plaintext_url": "/plaintext",
                 "json_url": "/json",
                 "cached_query_url": "/cached-worlds?q=",
@@ -76,7 +76,7 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-jdk16",
+                "display_name": "redkale-pgc",
                 "notes": "",
                 "versus": "Redkale"
             },
