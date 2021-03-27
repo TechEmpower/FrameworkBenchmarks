@@ -11,4 +11,4 @@ COPY --from=maven /martian/target/lib lib
 
 EXPOSE 8080
 
-CMD ["java", "--illegal-access=deny --add-opens java.base/java.lang=ALL-UNNAMED", "-jar", "martian.jar"]
+CMD ["java", "-jar", "--illegal-access=deny", "--add-opens java.base/java.lang=ALL-UNNAMED", "martian.jar"]
