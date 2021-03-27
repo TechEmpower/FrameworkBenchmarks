@@ -40,7 +40,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "yii2",
+      "display_name": "yii2-raw",
       "notes": "",
       "versus": "php"
     }

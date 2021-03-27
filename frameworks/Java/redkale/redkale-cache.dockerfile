@@ -12,4 +12,4 @@ COPY --from=maven /redkale/target/redkale-benchmark-1.0.0.jar redkale-benchmark.
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:AutoBoxCacheMax=80000", "-XX:BiasedLockingStartupDelay=500", "-Djson.direct.test=true", "-DAPP_HOME=./", "-jar", "redkale-benchmark.jar"]
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-Dbenchmarks.cache=true", "-DAPP_HOME=./", "-jar", "redkale-benchmark.jar"]

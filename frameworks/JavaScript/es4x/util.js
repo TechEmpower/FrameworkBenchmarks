@@ -1,8 +1,9 @@
-const ThreadLocalRandom = Java.type('java.util.concurrent.ThreadLocalRandom');
+const SplittableRandom = Java.type('java.util.SplittableRandom');
+const random = new SplittableRandom();
 
 module.exports = {
   randomWorld: () => {
-    return 1 + ThreadLocalRandom.current().nextInt(10000)
+    return 1 + random.nextInt(10000)
   },
 
   /**
