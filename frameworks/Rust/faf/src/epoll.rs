@@ -1,10 +1,25 @@
 use crate::epoll_callback;
-use crate::epoll_config::*;
-use crate::epoll_const::*;
-use crate::epoll_ds::*;
+use crate::const_config::*;
 use crate::listener;
-use crate::sys_const::*;
+use crate::const_sys::*;
 use sys_call::sys_call;
+
+#[repr(C)]
+pub union epoll_data {
+   pub ptr: isize,
+   pub fd: i32,
+   pub uint32_t: u32,
+   pub uint64_t: u64,
+}
+#[repr(C, packed)]
+pub struct epoll_event {
+   pub events: u32,
+   pub data: epoll_data,
+}
+
+pub const EPOLL_CTL_ADD: i32 = 1;
+pub const EPOLL_CTL_DEL: i32 = 2;
+pub const EPOLLIN: u32 = 0x1;
 
 #[inline]
 pub fn go(port: u16) {
@@ -213,9 +228,4 @@ unsafe fn close_connection(epfd: isize, fd: isize) {
    listener::prepare_abort_connection(fd);
    sys_call!(SYS_EPOLL_CTL as isize, epfd, EPOLL_CTL_DEL as isize, fd, 0);
    sys_call!(SYS_CLOSE as isize, fd);
-}
-
-#[inline]
-unsafe fn deregister_fd(epfd: isize, fd: isize) -> isize {
-   sys_call!(SYS_EPOLL_CTL as isize, epfd, EPOLL_CTL_DEL as isize, fd, 0)
 }

@@ -1,27 +1,18 @@
-#![allow(unused_must_use)]
-#![allow(deprecated)]
-#![allow(dead_code)]
-#![allow(clippy::comparison_chain, clippy::missing_safety_doc)]
+#![allow(clippy::missing_safety_doc)]
 #![feature(const_fn, const_fn_union, const_raw_ptr_deref, const_size_of_val)]
 
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-// #[global_allocator]
-// static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
-
-// #[global_allocator]
-// static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
-
-pub mod epoll;
+mod epoll;
 mod epoll_callback;
-pub mod epoll_config;
-mod epoll_const;
-pub mod epoll_ds;
-pub mod extern_httpdate;
+mod const_config;
+mod extern_http_date;
+mod const_http;
+mod http_content_length;
 mod listener;
-mod sys_const;
-pub mod util;
+mod const_sys;
+mod util;
 
 #[macro_export]
 macro_rules! const_concat_bytes {
@@ -53,10 +44,5 @@ macro_rules! const_concat_bytes {
 
 #[inline]
 fn main() {
-   //    let mut buf = extern_httpdate::get_buff_with_date();
-   //    extern_httpdate::get_http_date(&mut buf);
-   //    let date = unsafe { std::str::from_utf8_unchecked(&buf[..]) };
-   //    println!("{}", date);
-
    epoll::go(8089);
 }

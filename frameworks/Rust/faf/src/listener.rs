@@ -1,5 +1,4 @@
-use crate::epoll_ds::{in_addr, linger, sockaddr_in};
-use crate::sys_const::*;
+use crate::const_sys::*;
 use sys_call::sys_call;
 
 extern "C" {
@@ -7,16 +6,33 @@ extern "C" {
    fn htonl(hostlong: u32) -> u32;
 }
 
+#[repr(C)]
+pub struct in_addr {
+   pub s_addr: u32,
+}
+
+#[repr(C)]
+pub struct sockaddr_in {
+   pub sin_family: u16,
+   pub sin_port: u16,
+   pub sin_addr: in_addr,
+   pub sin_zero: [u8; 8],
+}
+
+#[repr(C)]
+pub struct linger {
+   pub l_onoff: i32,
+   pub l_linger: i32,
+}
+
 const OPTVAL: isize = 1;
-const OPTVAL_SOINCOMINGCPU: isize = 0;
-const OPTVAL_BUSYPOLL: isize = 50;
-const OPTVAL_TCPFASTOPEN_QUEUE_LEN: isize = 4096;
-const OPTVAL_TCPDEFERACCEPT_TIMEOUT: isize = 3;
-const OPTVAL_SOLINGER_TIMEOUT: linger = linger { l_onoff: 1, l_linger: 0 };
 
 #[inline]
 pub fn get_listener_fd(port: u16) -> (isize, sockaddr_in, u32) {
-   pub const AF_INET: i32 = 2;
+   const _OPTVAL_TCPDEFERACCEPT_TIMEOUT: isize = 3;
+   const OPTVAL_TCPFASTOPEN_QUEUE_LEN: isize = 4096;
+   const AF_INET: i32 = 2;
+
    unsafe {
       let fd_listener = sys_call!(SYS_SOCKET as isize, AF_INET as isize, SOCK_STREAM as isize, 0);
       let size_of_optval = std::mem::size_of_val(&OPTVAL) as u32;
@@ -39,6 +55,7 @@ pub fn get_listener_fd(port: u16) -> (isize, sockaddr_in, u32) {
          size_of_optval as isize
       );
 
+      // Doesn't appear to provide any meaningful speed improvement on the listener
       // sys_call!(SYS_SETSOCKOPT as isize,
       //    fd_listener,
       //    SOL_SOCKET,
@@ -66,12 +83,13 @@ pub fn get_listener_fd(port: u16) -> (isize, sockaddr_in, u32) {
          std::mem::size_of_val(&OPTVAL) as isize
       );
 
+      // Does not add much throughput, if any. Also, can hide dead connections. Not useful.
       // sys_call!(SYS_SETSOCKOPT as isize,
       //    fd_listener,
       //    IPPROTO_TCP as isize,
       //    TCP_DEFER_ACCEPT as isize,
-      //    &OPTVAL_TCPDEFERACCEPT_TIMEOUT as *const _ as _,
-      //    std::mem::size_of_val(&OPTVAL_TCPDEFERACCEPT_TIMEOUT) as u32
+      //    &_OPTVAL_TCPDEFERACCEPT_TIMEOUT as *const _ as _,
+      //    std::mem::size_of_val(&_OPTVAL_TCPDEFERACCEPT_TIMEOUT) as u32
       // ));
 
       sys_call!(
@@ -102,8 +120,8 @@ pub fn get_listener_fd(port: u16) -> (isize, sockaddr_in, u32) {
 #[inline]
 pub fn setup_client_connection(fd: isize, core: i32) {
    pub const O_NONBLOCK: isize = 2048;
-   pub const F_GETFL: isize = 3;
    pub const F_SETFL: isize = 4;
+   const OPTVAL_BUSYPOLL: isize = 50;
 
    unsafe {
       sys_call!(SYS_FCNTL as isize, fd as isize, F_SETFL, O_NONBLOCK);
@@ -118,6 +136,7 @@ pub fn setup_client_connection(fd: isize, core: i32) {
       //    std::mem::size_of_val(&OPTVAL) as isize
       // );
 
+      //https://stackoverflow.com/a/49900878
       // sys_call!(
       //    SYS_SETSOCKOPT as isize,
       //    fd as isize,
@@ -161,6 +180,7 @@ pub fn setup_client_connection(fd: isize, core: i32) {
 
 #[inline]
 pub fn prepare_abort_connection(fd: isize) {
+   const OPTVAL_SOLINGER_TIMEOUT: linger = linger { l_onoff: 1, l_linger: 0 };
    unsafe {
       sys_call!(
          SYS_SETSOCKOPT as isize,
@@ -171,9 +191,4 @@ pub fn prepare_abort_connection(fd: isize) {
          std::mem::size_of_val(&OPTVAL_SOLINGER_TIMEOUT) as isize
       );
    }
-}
-
-#[inline]
-pub fn get_new_addr() -> sockaddr_in {
-   unsafe { std::mem::zeroed() }
 }
