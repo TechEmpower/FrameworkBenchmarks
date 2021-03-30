@@ -10,7 +10,7 @@
 <cfheader name="Content-Type" value="application/json">
 <cfset results = []>
 <cfloop from="1" to="#url.queries#" index="i">
-    <cfquery name="qry" datasource="world">
+    <cfquery name="qry">
         SELECT id, randomNumber
         FROM World
         WHERE id = <cfqueryparam value="#randRange( 1, 10000 )#" cfsqltype="integer">
@@ -19,7 +19,7 @@
 </cfloop>
 
 <cfloop array="#results#" index="i">
-    <cfquery datasource="world">
+    <cfquery>
         update World 
         SET randomNumber = #val( i.randomNumber )#
         where id = #val( i.id )#;

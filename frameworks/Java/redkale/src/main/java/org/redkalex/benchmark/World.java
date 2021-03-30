@@ -12,12 +12,17 @@ import org.redkale.convert.json.JsonConvert;
  *
  * @author zhangjx
  */
-public class World implements Comparable<World> {
+public final class World implements Comparable<World> {
 
     @Id
     private int id;
 
     private int randomNumber;
+
+    public World randomNumber(int randomNumber) {
+        this.randomNumber = randomNumber;
+        return this;
+    }
 
     public int getId() {
         return id;

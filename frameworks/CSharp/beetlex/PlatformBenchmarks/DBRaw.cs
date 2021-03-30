@@ -75,8 +75,9 @@ namespace PlatformBenchmarks
 
         public async Task<World> LoadSingleQueryRow()
         {
-            using (var db = new NpgsqlConnection(_connectionString))
+            using (var db = _dbProviderFactory.CreateConnection())
             {
+                db.ConnectionString = _connectionString;
                 await db.OpenAsync();
                 SingleCommand.Connection = db;
                 mID.TypedValue = _random.Next(1, 10001);
@@ -101,12 +102,12 @@ namespace PlatformBenchmarks
 
         public async Task<ArraySegment<World>> LoadMultipleQueriesRows(int count)
         {
-            using (var db = new NpgsqlConnection(_connectionString))
+            using (var db = _dbProviderFactory.CreateConnection())
             {
+                db.ConnectionString = _connectionString;
                 await db.OpenAsync();
                 return await LoadMultipleRows(count, db);
             }
-
         }
 
 
@@ -169,7 +170,7 @@ namespace PlatformBenchmarks
             SingleCommand.Connection = db;
             SingleCommand.Parameters[0].Value = _random.Next(1, 10001);
             var result = GetWorldBuffer();
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < count; i++)
             {
                 result[i] = await ReadSingleRow(db, SingleCommand);
                 SingleCommand.Parameters[0].Value = _random.Next(1, 10001);

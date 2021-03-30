@@ -5,6 +5,7 @@
          racket/fasl
          racket/port
          racket/serialize
+         racket/unix-socket-tcp-unit
          redis
          threading
          web-server/dispatch
@@ -213,8 +214,7 @@
            racket/format
            web-server/http/response
            web-server/safety-limits
-           web-server/web-server
-           "unix-socket-tcp-unit.rkt")
+           web-server/web-server)
 
   (define port
     (command-line
@@ -230,7 +230,7 @@
      #:dispatch app
      #:listen-ip "127.0.0.1"
      #:port port
-     #:tcp@ (make-unix-socket-tcp@ port (format "~a.sock" port))
+     #:tcp@ (make-unix-socket-tcp@ (format "~a.sock" port))
      #:confirmation-channel ch
      #:safety-limits (make-safety-limits
                       #:max-waiting 4096

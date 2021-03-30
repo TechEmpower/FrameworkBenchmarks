@@ -15,7 +15,7 @@ COPY . .
 
 RUN sbt nativeLink
 
-FROM nginx/unit:1.21.0-minimal
+FROM nginx/unit:1.22.0-minimal
 
 RUN apt-get update && apt-get install -y libuv1
 

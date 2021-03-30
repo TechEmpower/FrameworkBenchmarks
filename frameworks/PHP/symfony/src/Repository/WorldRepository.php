@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\World;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 class WorldRepository extends ServiceEntityRepository
 {

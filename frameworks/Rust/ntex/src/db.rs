@@ -1,9 +1,7 @@
-use std::{borrow::Cow, cell::RefCell, fmt::Write as FmtWrite, io};
+use std::{borrow::Cow, cell::RefCell, fmt::Write as FmtWrite};
 
 use bytes::{Bytes, BytesMut};
-use futures::stream::futures_unordered::FuturesUnordered;
-use futures::{Future, FutureExt, StreamExt, TryStreamExt};
-use ntex::web::Error;
+use futures::{stream::futures_unordered::FuturesUnordered, Future, FutureExt, StreamExt};
 use random_fast_rng::{FastRng, Random};
 use smallvec::SmallVec;
 use tokio_postgres::types::ToSql;
@@ -70,78 +68,54 @@ impl PgConnection {
 }
 
 impl PgConnection {
-    pub fn get_world(&self) -> impl Future<Output = Result<Bytes, Error>> {
+    pub fn get_world(&self) -> impl Future<Output = Bytes> {
         let random_id = (self.rng.borrow_mut().get_u32() % 10_000 + 1) as i32;
-        let fut = self.cl.query_one(&self.world, &[&random_id]);
-
-        async move {
-            let row = fut.await.map_err(|e| {
-                Error::from(io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))
-            })?;
-
-            Ok(World {
-                id: row.get(0),
-                randomnumber: row.get(1),
+        self.cl.query(&self.world, &[&random_id]).map(|rows| {
+            let rows = rows.unwrap();
+            World {
+                id: rows[0].get(0),
+                randomnumber: rows[0].get(1),
             }
-            .to_bytes::<BytesMut>(40))
-        }
+            .to_bytes::<BytesMut>(40)
+        })
     }
 
-    pub fn get_worlds(
-        &self,
-        num: usize,
-    ) -> impl Future<Output = Result<Vec<World>, io::Error>> {
+    pub fn get_worlds(&self, num: u16) -> impl Future<Output = Vec<World>> {
         let worlds = FuturesUnordered::new();
         let mut rng = self.rng.borrow_mut();
         for _ in 0..num {
             let w_id = (rng.get_u32() % 10_000 + 1) as i32;
-            worlds.push(
-                self.cl
-                    .query_one(&self.world, &[&w_id])
-                    .map(|res| match res {
-                        Err(e) => {
-                            Err(io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))
-                        }
-                        Ok(row) => Ok(World {
-                            id: row.get(0),
-                            randomnumber: row.get(1),
-                        }),
-                    }),
-            );
+            worlds.push(self.cl.query(&self.world, &[&w_id]).map(|res| {
+                let rows = res.unwrap();
+                World {
+                    id: rows[0].get(0),
+                    randomnumber: rows[0].get(1),
+                }
+            }));
         }
 
-        worlds.try_collect()
+        worlds.collect()
     }
 
-    pub fn update(
-        &self,
-        num: u16,
-    ) -> impl Future<Output = Result<Vec<World>, io::Error>> {
+    pub fn update(&self, num: u16) -> impl Future<Output = Vec<World>> {
         let worlds = FuturesUnordered::new();
         let mut rng = self.rng.borrow_mut();
         for _ in 0..num {
             let id = (rng.get_u32() % 10_000 + 1) as i32;
             let w_id = (rng.get_u32() % 10_000 + 1) as i32;
-            worlds.push(self.cl.query_one(&self.world, &[&w_id]).map(
-                move |res| match res {
-                    Err(e) => {
-                        Err(io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))
-                    }
-                    Ok(row) => {
-                        let world = World {
-                            id: row.get(0),
-                            randomnumber: id,
-                        };
-                        Ok(world)
-                    }
-                },
-            ));
+            worlds.push(self.cl.query(&self.world, &[&w_id]).map(move |res| {
+                let rows = res.unwrap();
+                World {
+                    id: rows[0].get(0),
+                    randomnumber: id,
+                }
+            }));
         }
 
         let cl = self.cl.clone();
         let st = self.updates[(num as usize) - 1].clone();
         async move {
-            let worlds: Vec<World> = worlds.try_collect().await?;
+            let worlds: Vec<World> = worlds.collect().await;
 
             let mut params: Vec<&dyn ToSql> = Vec::with_capacity(num as usize * 3);
             for w in &worlds {
@@ -156,27 +130,21 @@ impl PgConnection {
                 .await
                 .map_err(|e| log::error!("{:?}", e));
 
-            Ok(worlds)
+            worlds
         }
     }
 
-    pub fn tell_fortune(&self) -> impl Future<Output = Result<Bytes, io::Error>> {
+    pub fn tell_fortune(&self) -> impl Future<Output = Bytes> {
         let fut = self.cl.query_raw(&self.fortune, &[]);
 
         async move {
-            let mut stream = fut
-                .await
-                .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("{:?}", e)))?;
-
+            let rows = fut.await.unwrap();
             let mut fortunes: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
                 id: 0,
                 message: Cow::Borrowed("Additional fortune added at request time."),
             }];
 
-            while let Some(row) = stream.next().await {
-                let row = row.map_err(|e| {
-                    io::Error::new(io::ErrorKind::Other, format!("{:?}", e))
-                })?;
+            for row in rows {
                 fortunes.push(Fortune {
                     id: row.get(0),
                     message: Cow::Owned(row.get(1)),
@@ -188,7 +156,7 @@ impl PgConnection {
             let mut buf = Vec::with_capacity(2048);
             ywrite_html!(buf, "{{> fortune }}");
 
-            Ok(Bytes::from(buf))
+            Bytes::from(buf)
         }
     }
 }
