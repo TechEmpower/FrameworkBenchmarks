@@ -1,13 +1,8 @@
 [package]
-name = "faf"
+name = "faf-ex"
 version = "0.1.0"
 authors = ["James Bates <errantmind@protonmail.com>"]
 edition = "2018"
-
-[features]
-#default = ['faf_debug']
-default = []
-faf_debug = []
 
 [profile.release]
 opt-level = 3
@@ -17,33 +12,7 @@ lto = "thin"
 debug = false
 overflow-checks = false
 
-[profile.bench]
-opt-level = 3
-codegen-units = 1
-lto = true
-debug = true
-overflow-checks = false
-
 [dependencies]
 mimalloc = { version = "*", default-features = false }
-#jemallocator = "*"
-#snmalloc-rs = { version = "0.2.26", features = ["1mib", "native-cpu", "cache-friendly"] }
-
-
-#faf-pico-sys = { path = "/home/errant/dev/experiments/faf-pico-sys" }
-faf-pico-sys = { git = "https://github.com/errantmind/faf-pico-sys" }
-sys-call = { git = "https://github.com/errantmind/sys-call-rs" }
-# libc = { version = "*", default-features = false }
-#core_affinity = { version = "*", default-features = false }
-# thread-priority = "*"
-num_cpus = "*"
-
-
-[dev-dependencies]
-# criterion = { version = "*", default-features = false }
-# pprof = { version = "*", features = ["flamegraph"] }
-# rand = { version = "*", default-features = true }
-
-# [[bench]]
-# name = "benches"
-# harness = false
+faf = { git = "https://github.com/errantmind/faf" }
+#faf = { path = "/home/errant/dev/projects/faf-epoll" }
