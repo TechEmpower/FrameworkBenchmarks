@@ -60,9 +60,10 @@
                 "notes": "",
                 "versus": "Redkale"
             },
-            "jdk16": {
+            "pgc": {
                 "plaintext_url": "/plaintext",
                 "json_url": "/json",
+                "cached_query_url": "/cached-worlds?q=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -75,13 +76,14 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-io",
+                "display_name": "redkale-pgc",
                 "notes": "",
                 "versus": "Redkale"
             },
             "zgc": {
                 "plaintext_url": "/plaintext",
                 "json_url": "/json",
+                "cached_query_url": "/cached-worlds?q=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -94,13 +96,14 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-io",
+                "display_name": "redkale-zgc",
                 "notes": "",
                 "versus": "Redkale"
             },
             "io": {
                 "plaintext_url": "/plaintext",
                 "json_url": "/json",
+                "cached_query_url": "/cached-worlds?q=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
