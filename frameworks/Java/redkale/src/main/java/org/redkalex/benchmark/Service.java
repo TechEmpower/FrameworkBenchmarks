@@ -27,12 +27,21 @@ public class Service extends AbstractService {
     @Resource
     private DataSource source;
 
+    private EntityCache<CachedWorld> cache;
+
+    @Override
+    public void init(AnyValue conf) {
+        if (Boolean.getBoolean("benchmarks.cache")) {
+            this.cache = ((DataSqlSource) source).loadCache(CachedWorld.class).array();
+        }
+    }
+
     @RestMapping(name = "plaintext")
     public byte[] getHelloBytes() {
         return helloBytes;
     }
 
-    @RestMapping(name = "json")
+    @RestMapping(name = "json", length = 27)
     public Message getHelloMessage() {
         return new Message("Hello, World!");
     }
@@ -84,7 +93,7 @@ public class Service extends AbstractService {
         final int size = Math.min(500, Math.max(1, q));
         final CachedWorld[] worlds = new CachedWorld[size];
         for (int i = 0; i < size; i++) {
-            worlds[i] = source.find(CachedWorld.class, randomId());
+            worlds[i] = cache.findAt(randomId());
         }
         return worlds;
     }
