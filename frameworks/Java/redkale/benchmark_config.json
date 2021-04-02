@@ -41,9 +41,9 @@
             },
             "postgres": {
                 "db_url": "/db",
-                "fortune_url": "/fortunes",
-                "query_url": "/queries?q=",
-                "update_url": "/updates?q=",
+                "fortune_url2": "/fortunes",
+                "query_url2": "/queries?q=",
+                "update_url2": "/updates?q=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
