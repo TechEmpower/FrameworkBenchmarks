@@ -27,15 +27,6 @@ public class Service extends AbstractService {
     @Resource
     private DataSource source;
 
-    private EntityCache<CachedWorld> cache;
-
-    @Override
-    public void init(AnyValue conf) {
-        if (source instanceof DataSqlSource) {
-            this.cache = ((DataSqlSource) source).loadCache(CachedWorld.class);
-        }
-    }
-
     @RestMapping(name = "plaintext")
     public byte[] getHelloBytes() {
         return helloBytes;
@@ -93,7 +84,7 @@ public class Service extends AbstractService {
         final int size = Math.min(500, Math.max(1, q));
         final CachedWorld[] worlds = new CachedWorld[size];
         for (int i = 0; i < size; i++) {
-            worlds[i] = cache.find(randomId());
+            worlds[i] = source.find(CachedWorld.class, randomId());
         }
         return worlds;
     }
