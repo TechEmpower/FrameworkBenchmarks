@@ -12,7 +12,7 @@
         </properties>
     </resources> 
         
-    <server protocol="HTTP" iogroup="client" lazy="true" port="8080">      
+    <server protocol="HTTP" lazy="true" port="8080">      
         <response>
             <contenttype plain="text/plain" json="application/json"/>  
             <date period="1000"/>
