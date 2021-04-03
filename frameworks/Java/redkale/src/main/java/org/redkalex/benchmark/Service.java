@@ -43,7 +43,7 @@ public class Service extends AbstractService {
 
     @RestMapping(name = "json", length = 27)
     public Message getHelloMessage() {
-        return new Message("Hello, World!");
+        return Message.create("Hello, World!");
     }
 
     @RestMapping(name = "db")
