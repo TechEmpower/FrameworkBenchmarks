@@ -39,11 +39,8 @@
                 "notes": "",
                 "versus": "Redkale"
             },
-            "postgres": {
+            "db": {
                 "db_url": "/db",
-                "fortune_url": "/fortunes",
-                "query_url": "/queries?q=",
-                "update_url": "/updates?q=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -60,10 +57,8 @@
                 "notes": "",
                 "versus": "Redkale"
             },
-            "pgc": {
-                "plaintext_url": "/plaintext",
-                "json_url": "/json",
-                "cached_query_url": "/cached-worlds?q=",
+            "query": {
+                "query_url": "/queries?q=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -76,14 +71,12 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-pgc",
+                "display_name": "redkale",
                 "notes": "",
                 "versus": "Redkale"
             },
-            "zgc": {
-                "plaintext_url": "/plaintext",
-                "json_url": "/json",
-                "cached_query_url": "/cached-worlds?q=",
+            "fortune": {
+                "fortune_url": "/fortunes",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -96,14 +89,12 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-zgc",
+                "display_name": "redkale",
                 "notes": "",
                 "versus": "Redkale"
             },
-            "io": {
-                "plaintext_url": "/plaintext",
-                "json_url": "/json",
-                "cached_query_url": "/cached-worlds?q=",
+            "update": {
+                "update_url": "/updates?q=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -116,7 +107,7 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-io",
+                "display_name": "redkale",
                 "notes": "",
                 "versus": "Redkale"
             }
