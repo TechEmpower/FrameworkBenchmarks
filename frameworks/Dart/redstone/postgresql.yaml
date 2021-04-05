@@ -1,5 +1,0 @@
-host: tfb-database
-port: 5432
-user: benchmarkdbuser
-password: benchmarkdbpass
-database: hello_world
