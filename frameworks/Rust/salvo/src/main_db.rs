@@ -76,7 +76,8 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         worlds.push(w);
     }
     worlds.sort_by_key(|w| w.id);
-    conn.transaction::<(), Error, _>(|| {
+    conn.transaction::<(),
+     Error, _>(|| {
         for w in &worlds {
             diesel::update(world::table)
                 .filter(world::id.eq(w.id))
