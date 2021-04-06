@@ -37,5 +37,5 @@ async fn main() {
 
     let mut incoming = AddrIncoming::bind(&(([0, 0, 0, 0], 8080)).into()).unwrap();
     incoming.set_nodelay(true);
-    Server::builder(incoming).http1_pipeline_flush(true).serve(Service::new(router)).await.unwrap();
+    salvo::server::builder(incoming).http1_pipeline_flush(true).serve(Service::new(router)).await.unwrap();
 }
