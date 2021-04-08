@@ -39,11 +39,8 @@
                 "notes": "",
                 "versus": "Redkale"
             },
-            "postgres": {
+            "db": {
                 "db_url": "/db",
-                "fortune_url": "/fortunes",
-                "query_url": "/queries?q=",
-                "update_url": "/updates?q=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -60,9 +57,8 @@
                 "notes": "",
                 "versus": "Redkale"
             },
-            "jdk16": {
-                "plaintext_url": "/plaintext",
-                "json_url": "/json",
+            "query": {
+                "query_url": "/queries?q=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -75,13 +71,12 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-io",
+                "display_name": "redkale",
                 "notes": "",
                 "versus": "Redkale"
             },
-            "zgc": {
-                "plaintext_url": "/plaintext",
-                "json_url": "/json",
+            "fortune": {
+                "fortune_url": "/fortunes",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -94,13 +89,12 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-io",
+                "display_name": "redkale",
                 "notes": "",
                 "versus": "Redkale"
             },
-            "io": {
-                "plaintext_url": "/plaintext",
-                "json_url": "/json",
+            "update": {
+                "update_url": "/updates?q=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -113,7 +107,7 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-io",
+                "display_name": "redkale",
                 "notes": "",
                 "versus": "Redkale"
             }
