@@ -11,7 +11,6 @@ import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.*;
-import org.redkale.util.AnyValue;
 
 /**
  *
@@ -27,21 +26,12 @@ public class Service extends AbstractService {
     @Resource
     private DataSource source;
 
-    private EntityCache<CachedWorld> cache;
-
-    @Override
-    public void init(AnyValue conf) {
-        if (Boolean.getBoolean("benchmarks.cache")) {
-            this.cache = ((DataSqlSource) source).loadCache(CachedWorld.class).array();
-        }
-    }
-
     @RestMapping(name = "plaintext")
     public byte[] getHelloBytes() {
         return helloBytes;
     }
 
-    @RestMapping(name = "json", length = 27)
+    @RestMapping(name = "json")
     public Message getHelloMessage() {
         return Message.create("Hello, World!");
     }
@@ -93,7 +83,7 @@ public class Service extends AbstractService {
         final int size = Math.min(500, Math.max(1, q));
         final CachedWorld[] worlds = new CachedWorld[size];
         for (int i = 0; i < size; i++) {
-            worlds[i] = cache.findAt(randomId());
+            worlds[i] = source.find(CachedWorld.class, randomId());
         }
         return worlds;
     }
