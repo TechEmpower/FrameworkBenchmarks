@@ -4,81 +4,78 @@ require "pg"
 require "ecr"
 require "radix"
 
+APPDB = DB.open(ENV["DATABASE_URL"])
+ID_MAXIMUM = 10_000
+CONTENT_HTML = "text/html; charset=UTF-8"
+CONTENT_JSON = "application/json"
+CONTENT_TEXT = "text/plain"
+
 plaintext_handler = ->(context : HTTP::Server::Context) do
-  response = context.response
-  response.status_code = 200
-  response.headers["Content-Type"] = "text/plain"
-  response.print "Hello, World!"
-  return response
+  context.response.tap do |response|
+    response.status_code = 200
+    response.headers["Content-Type"] = CONTENT_TEXT
+    response.print "Hello, World!"
+  end
 end
 
 json_handler = ->(context : HTTP::Server::Context) do
-  response = context.response
-  response.status_code = 200
-  response.headers["Content-Type"] = "application/json"
-  {message: "Hello, World!"}.to_json(response)
-  return response
+  context.response.tap do |response|
+    response.status_code = 200
+    response.headers["Content-Type"] = CONTENT_JSON
+    {message: "Hello, World!"}.to_json(response)
+  end
 end
 
 db_handler = ->(context : HTTP::Server::Context) do
-  request = context.request
-  response = context.response
-  response.status_code = 200
-  response.headers["Content-Type"] = "application/json"
-  random_world.to_json(response)
-  return response
+  context.response.tap do |response|
+    response.status_code = 200
+    response.headers["Content-Type"] = CONTENT_JSON
+    random_world.to_json(response)
+  end
 end
 
 queries_handler = ->(context : HTTP::Server::Context) do
   request = context.request
-  response = context.response
-  response.status_code = 200
-  response.headers["Content-Type"] = "application/json"
-
-  JSON.build(response) do |json|
-    json.array do
-      sanitized_query_count(request).times do
-        random_world.to_json(json)
-      end
+  context.response.tap do |response|
+    response.status_code = 200
+    response.headers["Content-Type"] = CONTENT_JSON
+    worlds = [] of {id: Int32, randomNumber: Int32}
+    sanitized_query_count(request).times do
+      worlds << random_world
     end
+    worlds.to_json(response)
   end
-  return response
 end
 
 fortunes_handler = ->(context : HTTP::Server::Context) do
-  request = context.request
-  response = context.response
-  response.status_code = 200
-  response.headers["Content-Type"] = "text/html; charset=UTF-8"
+  context.response.tap do |response|
+    response.status_code = 200
+    response.headers["Content-Type"] = CONTENT_HTML
 
-  data = fortunes
-  additional_fortune = {
-    id:      0,
-    message: "Additional fortune added at request time.",
-  }
+    data = APPDB.query_all("SELECT id, message FROM Fortune", as: {id: Int32, message: String})
+    additional_fortune = {
+      id:      0,
+      message: "Additional fortune added at request time.",
+    }
 
-  data.push(additional_fortune)
-  data.sort! { |f1, f2| f1[:message] <=> f2[:message] }
+    data.push(additional_fortune)
+    data.sort_by! { |fortune| fortune[:message] }
 
-  ECR.embed "views/fortunes.ecr", response
-  return response
+    ECR.embed "views/fortunes.ecr", response
+  end
 end
 
 updates_handler = ->(context : HTTP::Server::Context) do
   request = context.request
-  response = context.response
-  response.status_code = 200
-  response.headers["Content-Type"] = "application/json"
-
-  JSON.build(response) do |json|
-    json.array do
-      sanitized_query_count(request).times do
-        world = set_world({id: random_world[:id], randomNumber: rand(1..ID_MAXIMUM)})
-        world.to_json(json)
-      end
+  context.response.tap do |response|
+    response.status_code = 200
+    response.headers["Content-Type"] = "application/json"
+    worlds = [] of {id: Int32, randomNumber: Int32}
+    sanitized_query_count(request).times do
+      worlds << set_world({id: random_world[:id], randomNumber: rand(1..ID_MAXIMUM)})
     end
+    worlds.to_json(response)
   end
-  return response
 end
 
 tree = Radix::Tree(Proc(HTTP::Server::Context, HTTP::Server::Response)).new
@@ -89,14 +86,11 @@ tree.add "/queries", queries_handler
 tree.add "/fortunes", fortunes_handler
 tree.add "/updates", updates_handler
 
-APPDB = DB.open(ENV["DATABASE_URL"])
-ID_MAXIMUM = 10_000
-
 server = HTTP::Server.new do |context|
   request = context.request
   response = context.response
   response.headers["Server"] = "Crystal"
-  response.headers["Date"] = HTTP.format_time(Time.now)
+  response.headers["Date"] = HTTP.format_time(Time.local)
 
   result = tree.find(request.path)
 
@@ -116,16 +110,6 @@ end
 private def set_world(world)
   APPDB.exec("UPDATE world SET randomNumber = $1 WHERE id = $2", world[:randomNumber], world[:id])
   world
-end
-
-private def fortunes
-  data = Array(NamedTuple(id: Int32, message: String)).new
-
-  APPDB.query_each("SELECT id, message FROM Fortune") do |rs|
-    data.push({id: rs.read(Int32), message: rs.read(String)})
-  end
-
-  data
 end
 
 private def sanitized_query_count(request)
