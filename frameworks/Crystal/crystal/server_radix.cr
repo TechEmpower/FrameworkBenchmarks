@@ -75,6 +75,16 @@ updates_handler = ->(context : HTTP::Server::Context) do
       worlds << set_world({id: random_world[:id], randomNumber: rand(1..ID_MAXIMUM)})
     end
     worlds.to_json(response)
+
+    worlds = (1..sanitized_query_count(request)).map do
+      world = random_world
+      random_number = rand(1..ID_MAXIMUM)
+      while random_number == world[:randomNumber]
+        random_number = rand(1..ID_MAXIMUM)
+      end
+      set_world({id: world[:id], randomNumber: random_number})
+    end
+    worlds.to_json(response)
   end
 end
 

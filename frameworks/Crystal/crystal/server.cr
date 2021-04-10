@@ -33,11 +33,7 @@ server = HTTP::Server.new do |context|
     response.status_code = 200
     response.headers["Content-Type"] = CONTENT_JSON
 
-    worlds = [] of {id: Int32, randomNumber: Int32}
-    sanitized_query_count(request).times do
-      worlds << random_world
-    end
-
+    worlds = (1..sanitized_query_count(request)).map { random_world }
     worlds.to_json(response)
   when "/fortunes"
     response.status_code = 200
@@ -57,9 +53,13 @@ server = HTTP::Server.new do |context|
   when "/updates"
     response.status_code = 200
     response.headers["Content-Type"] = CONTENT_JSON
-    worlds = [] of {id: Int32, randomNumber: Int32}
-    sanitized_query_count(request).times do
-      worlds << set_world({id: random_world[:id], randomNumber: rand(1..ID_MAXIMUM)})
+    worlds = (1..sanitized_query_count(request)).map do
+      world = random_world
+      random_number = rand(1..ID_MAXIMUM)
+      while random_number == world[:randomNumber]
+        random_number = rand(1..ID_MAXIMUM)
+      end
+      set_world({id: world[:id], randomNumber: random_number})
     end
     worlds.to_json(response)
   else
