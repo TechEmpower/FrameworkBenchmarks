@@ -19,7 +19,7 @@ import org.redkale.source.*;
 @RestService(name = " ", repair = false)
 public class Service extends AbstractService {
 
-    private static final byte[] helloBytes = "Hello, world!".intern().getBytes();
+    private static final byte[] helloBytes = "Hello, world!".getBytes();
 
     private final Random random = new Random();
 
@@ -62,18 +62,14 @@ public class Service extends AbstractService {
             final int index = i;
             futures[index] = source.findAsync(World.class, randomId()).thenAccept(v -> worlds[index] = v.randomNumber(randomId()));
         }
-        return CompletableFuture.allOf(futures).thenCompose(v -> {
-            Arrays.sort(worlds);
-            return source.updateAsync(worlds);
-        }).thenApply(v -> worlds);
+        return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(World.sort(worlds))).thenApply(v -> worlds);
     }
 
     @RestMapping(name = "fortunes")
     public CompletableFuture<HttpResult<String>> queryFortunes() {
         return source.queryListAsync(Fortune.class).thenApply((fortunes) -> {
             fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-            Collections.sort(fortunes);
-            String html = FortunesTemplate.template(fortunes).render().toString();
+            String html = FortunesTemplate.template(Fortune.sort(fortunes)).render().toString();
             return new HttpResult("text/html; charset=utf-8", html);
         });
     }
