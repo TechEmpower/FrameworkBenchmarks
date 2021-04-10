@@ -14,6 +14,4 @@ overflow-checks = false
 
 [dependencies]
 mimalloc = { version = "*", default-features = false }
-#mimalloc = { path = "/home/errant/dev/forks/mimalloc_rust", default-features = false }
 faf = { git = "https://github.com/errantmind/faf" }
-#faf = { path = "/home/errant/dev/projects/faf-epoll" } #, features = ["faf_debug"] }
