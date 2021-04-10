@@ -30,7 +30,7 @@ db_handler = ->(context : HTTP::Server::Context) do
   context.response.tap do |response|
     response.status_code = 200
     response.headers["Content-Type"] = CONTENT_JSON
-    random_world.to_json(response)
+    find_world(rand(1..ID_MAXIMUM)).to_json(response)
   end
 end
 
@@ -39,10 +39,8 @@ queries_handler = ->(context : HTTP::Server::Context) do
   context.response.tap do |response|
     response.status_code = 200
     response.headers["Content-Type"] = CONTENT_JSON
-    worlds = [] of {id: Int32, randomNumber: Int32}
-    sanitized_query_count(request).times do
-      worlds << random_world
-    end
+
+    worlds = (1..sanitized_query_count(request)).map { find_world(rand(1..ID_MAXIMUM)) }
     worlds.to_json(response)
   end
 end
@@ -70,19 +68,15 @@ updates_handler = ->(context : HTTP::Server::Context) do
   context.response.tap do |response|
     response.status_code = 200
     response.headers["Content-Type"] = "application/json"
-    worlds = [] of {id: Int32, randomNumber: Int32}
-    sanitized_query_count(request).times do
-      worlds << set_world({id: random_world[:id], randomNumber: rand(1..ID_MAXIMUM)})
-    end
-    worlds.to_json(response)
 
     worlds = (1..sanitized_query_count(request)).map do
-      world = random_world
+      world = find_world(rand(1..ID_MAXIMUM))
       random_number = rand(1..ID_MAXIMUM)
       while random_number == world[:randomNumber]
         random_number = rand(1..ID_MAXIMUM)
       end
-      set_world({id: world[:id], randomNumber: random_number})
+      APPDB.exec("UPDATE world SET randomNumber = $1 WHERE id = $2", random_number, world[:id])
+      {id: world[:id], randomNumber: random_number}
     end
     worlds.to_json(response)
   end
@@ -111,15 +105,8 @@ server = HTTP::Server.new do |context|
   end
 end
 
-private def random_world
-  id = rand(1..ID_MAXIMUM)
-  random_number = APPDB.query_one("SELECT id, randomNumber FROM world WHERE id = $1", id, as: Int32)
-  {id: id, randomNumber: random_number}
-end
-
-private def set_world(world)
-  APPDB.exec("UPDATE world SET randomNumber = $1 WHERE id = $2", world[:randomNumber], world[:id])
-  world
+private def find_world(id : Int32)
+  APPDB.query_one("SELECT id, randomNumber FROM world WHERE id = $1", id, as: {id: Int32, randomNumber: Int32})
 end
 
 private def sanitized_query_count(request)

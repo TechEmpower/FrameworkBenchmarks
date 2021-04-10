@@ -28,12 +28,12 @@ server = HTTP::Server.new do |context|
   when "/db"
     response.status_code = 200
     response.headers["Content-Type"] = CONTENT_JSON
-    random_world.to_json(response)
+    find_world(rand(1..ID_MAXIMUM)).to_json(response)
   when "/queries"
     response.status_code = 200
     response.headers["Content-Type"] = CONTENT_JSON
 
-    worlds = (1..sanitized_query_count(request)).map { random_world }
+    worlds = (1..sanitized_query_count(request)).map { find_world(rand(1..ID_MAXIMUM)) }
     worlds.to_json(response)
   when "/fortunes"
     response.status_code = 200
@@ -54,12 +54,13 @@ server = HTTP::Server.new do |context|
     response.status_code = 200
     response.headers["Content-Type"] = CONTENT_JSON
     worlds = (1..sanitized_query_count(request)).map do
-      world = random_world
+      world = find_world(rand(1..ID_MAXIMUM))
       random_number = rand(1..ID_MAXIMUM)
       while random_number == world[:randomNumber]
         random_number = rand(1..ID_MAXIMUM)
       end
-      set_world({id: world[:id], randomNumber: random_number})
+      APPDB.exec("UPDATE world SET randomNumber = $1 WHERE id = $2", random_number, world[:id])
+      {id: world[:id], randomNumber: random_number}
     end
     worlds.to_json(response)
   else
@@ -67,15 +68,8 @@ server = HTTP::Server.new do |context|
   end
 end
 
-private def random_world
-  id = rand(1..ID_MAXIMUM)
-  random_number = APPDB.query_one("SELECT id, randomNumber FROM world WHERE id = $1", id, as: Int32)
-  {id: id, randomNumber: random_number}
-end
-
-private def set_world(world)
-  APPDB.exec("UPDATE world SET randomNumber = $1 WHERE id = $2", world[:randomNumber], world[:id])
-  world
+private def find_world(id : Int32)
+  APPDB.query_one("SELECT id, randomNumber FROM world WHERE id = $1", id, as: {id: Int32, randomNumber: Int32})
 end
 
 private def sanitized_query_count(request)
