@@ -66,6 +66,14 @@ func main() {
 		panic("failed to connect database")
 	}
 
+	sqlDB, err := db.DB()
+	if err != nil {
+		panic("failed to get underlying db conn pooling struct")
+	}
+
+	// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
+	sqlDB.SetMaxIdleConns(500)
+
 	r := gin.Default() // use default middleware
 
 	/* START TESTS */
@@ -110,15 +118,19 @@ func main() {
 
 		worlds := make([]World, numOf.Queries, numOf.Queries) //prealloc
 
-		// channel := make(chan int8)
-		// go func() {
+		// channel := make(chan World, numOf.Queries)
+
+		// for i := 0; i < numOf.Queries; i++ {
+		// 	go func() { channel <- getWorld(db) }()
+		// }
+
+		// for i := 0; i < numOf.Queries; i++ {
+		// 	worlds[i] = <-channel
+		// }
+
 		for i := 0; i < numOf.Queries; i++ {
 			worlds[i] = getWorld(db)
 		}
-
-		// 	channel <- 1
-		// }()
-		// <-channel
 
 		c.Header("Server", "example")
 		c.JSON(200, worlds)
