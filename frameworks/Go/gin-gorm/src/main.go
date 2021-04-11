@@ -118,18 +118,14 @@ func main() {
 
 		worlds := make([]World, numOf.Queries, numOf.Queries) //prealloc
 
-		// channel := make(chan World, numOf.Queries)
-
-		// for i := 0; i < numOf.Queries; i++ {
-		// 	go func() { channel <- getWorld(db) }()
-		// }
-
-		// for i := 0; i < numOf.Queries; i++ {
-		// 	worlds[i] = <-channel
-		// }
+		channel := make(chan World, numOf.Queries)
 
 		for i := 0; i < numOf.Queries; i++ {
-			worlds[i] = getWorld(db)
+			go func() { channel <- getWorld(db) }()
+		}
+
+		for i := 0; i < numOf.Queries; i++ {
+			worlds[i] = <-channel
 		}
 
 		c.Header("Server", "example")
