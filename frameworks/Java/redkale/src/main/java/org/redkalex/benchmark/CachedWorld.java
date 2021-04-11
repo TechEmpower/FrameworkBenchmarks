@@ -13,7 +13,7 @@ import org.redkale.source.*;
  *
  * @author zhangjx
  */
-@Cacheable(direct = true)
+//@Cacheable(direct = true)
 @Table(name = "World")
 public final class CachedWorld implements Comparable<CachedWorld> {
 
@@ -58,8 +58,7 @@ public final class CachedWorld implements Comparable<CachedWorld> {
         private Object[] array;
 
         public WorldEntityCache(DataSource source) {
-            EntityCache<CachedWorld> cache = ((DataSqlSource) source).loadCache(CachedWorld.class);
-            this.array = cache.fullLoadAsync().join().toArray();
+            this.array = source.queryList(CachedWorld.class).toArray();
         }
 
         public CachedWorld findAt(int index) {
