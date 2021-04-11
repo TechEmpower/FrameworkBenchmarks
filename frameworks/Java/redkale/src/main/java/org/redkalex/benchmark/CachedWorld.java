@@ -7,13 +7,13 @@ package org.redkalex.benchmark;
 
 import javax.persistence.*;
 import org.redkale.convert.json.JsonConvert;
-
+import org.redkale.source.*;
 
 /**
  *
  * @author zhangjx
  */
-@Cacheable(direct=true)
+@Cacheable(direct = true)
 @Table(name = "World")
 public final class CachedWorld implements Comparable<CachedWorld> {
 
@@ -53,4 +53,17 @@ public final class CachedWorld implements Comparable<CachedWorld> {
         return JsonConvert.root().convertTo(this);
     }
 
+    public static class WorldEntityCache {
+
+        private Object[] array;
+
+        public WorldEntityCache(DataSource source) {
+            EntityCache<CachedWorld> cache = ((DataSqlSource) source).loadCache(CachedWorld.class);
+            this.array = cache.fullLoadAsync().join().toArray();
+        }
+
+        public CachedWorld findAt(int index) {
+            return (CachedWorld) array[index];
+        }
+    }
 }

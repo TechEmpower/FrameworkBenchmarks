@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.*;
+import org.redkalex.benchmark.CachedWorld.WorldEntityCache;
 
 /**
  *
@@ -25,6 +26,8 @@ public class Service extends AbstractService {
 
     @Resource
     private DataSource source;
+
+    private WorldEntityCache cache;
 
     @RestMapping(name = "plaintext")
     public byte[] getHelloBytes() {
@@ -76,10 +79,15 @@ public class Service extends AbstractService {
 
     @RestMapping(name = "cached-worlds")
     public CachedWorld[] cachedWorlds(int q) {
+        if (cache == null) {
+            synchronized (this) {
+                if (cache == null) cache = new WorldEntityCache(source);
+            }
+        }
         final int size = Math.min(500, Math.max(1, q));
         final CachedWorld[] worlds = new CachedWorld[size];
         for (int i = 0; i < size; i++) {
-            worlds[i] = source.find(CachedWorld.class, randomId());
+            worlds[i] = cache.findAt(random.nextInt(10000));
         }
         return worlds;
     }
