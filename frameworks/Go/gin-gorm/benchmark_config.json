@@ -4,6 +4,7 @@
     {
       "default": {
         "db_url": "/db",
+        "json_url": "/json",
         "query_url": "/query?queries=",
         "update_url": "/update?queries=",
         "plaintext_url": "/plaintext",
