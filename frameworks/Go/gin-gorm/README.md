@@ -14,15 +14,15 @@ You will need to ensure that your source code is beneath this directory. The mos
 
 You will need alter `benchmark_config.json` to have the appropriate end-points and port specified.
 
-3. Create `gin-gorm.dockerfile`
+3. Create `$NAME.dockerfile`
 
 This is the dockerfile that is built into a docker image and run when a benchmark test is run. Specifically, this file tells the suite how to build and start your test application.
 
-You can create multiple implementations and they will all conform to `[name in benchmark_config.json].dockerfile`. For example, the `default` implementation in `benchmark_config.json` will be `gin-gorm.dockerfile`, but if you wanted to make another implementation that did only the database tests for MySQL, you could make `gin-gorm-mysql.dockerfile` and have an entry in your `benchmark_config.json` for `gin-gorm-mysql`.
+You can create multiple implementations and they will all conform to `[name in benchmark_config.json].dockerfile`. For example, the `default` implementation in `benchmark_config.json` will be `$NAME.dockerfile`, but if you wanted to make another implementation that did only the database tests for MySQL, you could make `$NAME-mysql.dockerfile` and have an entry in your `benchmark_config.json` for `$NAME-mysql`.
 
 4. Test your application
 
-        $ tfb --mode verify --test gin-gorm
+        $ tfb --mode verify --test $NAME
 
 This will run the suite in `verify` mode for your test. This means that no benchmarks will be captured and we will test that we can hit your implementation end-points specified by `benchmark_config.json` and that the response is correct.
 
@@ -30,7 +30,7 @@ Once you are able to successfully run your test through our suite in this way **
 
 5. Add your test to `.github/workflows/build.yml`
 
-Edit `.github/workflows/build.yml` to ensure that Github Actions will automatically run our verification tests against your new test. This file is kept in alphabetical order, so find where `TESTDIR=Go/gin-gorm` should be inserted under `env > matrix` and put it there.
+Edit `.github/workflows/build.yml` to ensure that Github Actions will automatically run our verification tests against your new test. This file is kept in alphabetical order, so find where `TESTDIR=$LANGUAGE/$NAME` should be inserted under `env > matrix` and put it there.
 
 6. Fix this `README.md` and open a pull request
 
@@ -46,22 +46,20 @@ Thanks and Cheers!
 
 
 
-# gin-gorm Benchmarking Test
+# Gin-Gorm Benchmarking Test
 
 ### Test Type Implementation Source Code
 
-* [JSON](Relative/Path/To/Your/Source/File)
-* [PLAINTEXT](Relative/Path/To/Your/Source/File)
-* [DB](Relative/Path/To/Your/Source/File)
-* [QUERY](Relative/Path/To/Your/Source/File)
-* [CACHED QUERY](Relative/Path/To/Your/Source/File)
-* [UPDATE](Relative/Path/To/Your/Source/File)
-* [FORTUNES](Relative/Path/To/Your/Source/File)
+* [JSON](main.go)
+* [PLAINTEXT](main.go)
+* [DB](main.go)
+* [QUERY](main.go)
+* [CACHED QUERY](not implemented)
+* [UPDATE](main.go)
+* [FORTUNES](not implemented)
 
 ## Important Libraries
-The tests were run with:
-* [Software](https://www.example1.com/)
-* [Example](http://www.example2.com/)
+The tests were run with techempower suite
 
 ## Test URLs
 ### JSON
@@ -82,7 +80,7 @@ http://localhost:8080/query?queries=
 
 ### CACHED QUERY
 
-http://localhost:8080/cached_query?queries=
+NA
 
 ### UPDATE
 
@@ -90,4 +88,4 @@ http://localhost:8080/update?queries=
 
 ### FORTUNES
 
-http://localhost:8080/fortunes
+NA

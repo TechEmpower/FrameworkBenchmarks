@@ -3,7 +3,10 @@
   "tests": [
     {
       "default": {
-        "query_url": "/queries?queries=",
+        "db_url": "/db",
+        "query_url": "/query?queries=",
+        "update_url": "/update?queries=",
+        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
