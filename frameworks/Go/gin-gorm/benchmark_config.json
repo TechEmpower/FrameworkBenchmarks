@@ -1,0 +1,25 @@
+{
+  "framework": "gin-gorm",
+  "tests": [
+    {
+      "default": {
+        "query_url": "/queries?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "postgres",
+        "framework": "gin-gorm",
+        "language": "Go",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "gin-gorm",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
