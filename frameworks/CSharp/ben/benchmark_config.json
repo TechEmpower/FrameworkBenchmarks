@@ -10,7 +10,7 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "Postgres",
-      "framework": "ASP.NET Core",
+      "framework": "Ben",
       "language": "C#",
       "orm": "micro",
       "platform": ".NET",
@@ -18,7 +18,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core",
+      "display_name": "Ben [Kestrel]",
       "notes": "",
       "versus": "aspcore"
     }

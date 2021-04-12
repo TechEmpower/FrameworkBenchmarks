@@ -10,10 +10,12 @@ public class TestConfig extends MarsConfig {
         return 8080;
     }
 
+
+
     @Override
     public ThreadPoolConfig threadPoolConfig() {
         ThreadPoolConfig threadPoolConfig = new ThreadPoolConfig();
-        threadPoolConfig.setCorePoolSize(2);
+        threadPoolConfig.setCorePoolSize(200);
         threadPoolConfig.setMaxPoolSize(10000000);
         threadPoolConfig.setKeepAliveTime(20);
         threadPoolConfig.setBackLog(2000);

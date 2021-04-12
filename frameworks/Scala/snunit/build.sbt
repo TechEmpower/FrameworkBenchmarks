@@ -2,7 +2,7 @@ import scala.scalanative.build._
 
 scalaVersion := "2.13.4"
 
-val snunitVersion = "0.0.6"
+val snunitVersion = "0.0.9"
 libraryDependencies ++= Seq(
   "com.github.lolgab" %%% "snunit" % snunitVersion,
   "com.github.lolgab" %%% "snunit-async" % snunitVersion,

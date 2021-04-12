@@ -40,12 +40,12 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "phalcon",
+      "display_name": "phalcon-mongodb",
       "notes": "",
-      "versus": "php",
-      "tags": ["broken"]
+      "versus": "php"
     },
     "micro": {
+      "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -62,7 +62,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "phalcon",
+      "display_name": "phalcon-micro",
       "notes": "",
       "versus": "php"
     }
