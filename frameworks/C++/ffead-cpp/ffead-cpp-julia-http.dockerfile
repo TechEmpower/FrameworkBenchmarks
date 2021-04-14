@@ -1,4 +1,4 @@
-FROM sumeetchhetri/ffead-cpp-5.0-base:5.2
+FROM sumeetchhetri/ffead-cpp-5.0-base:5.3
 
 ENV IROOT=/installs
 
@@ -25,7 +25,4 @@ RUN julia -e 'import Pkg; Pkg.update()' && \
 
 WORKDIR /
 
-EXPOSE 8080
-
 CMD ./run_ffead.sh ffead-cpp-5.0 julia-http
-

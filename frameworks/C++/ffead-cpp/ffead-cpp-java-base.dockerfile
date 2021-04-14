@@ -1,6 +1,6 @@
-FROM sumeetchhetri/ffead-cpp-5.0-base:5.2
+FROM sumeetchhetri/ffead-cpp-5.0-base:5.3
 LABEL maintainer="Sumeet Chhetri"
-LABEL version="5.2"
+LABEL version="5.3"
 LABEL description="Base java docker image with master code"
 
 ENV IROOT=/installs
