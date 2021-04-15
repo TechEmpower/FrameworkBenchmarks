@@ -184,7 +184,11 @@ class DockerHelper:
                 }
                 name = None
 
-            sysctl = {'net.core.somaxconn': 65535}
+            if self.benchmarker.config.network_mode is None:
+                sysctl = {'net.core.somaxconn': 65535}
+            else:
+                # Do not pass `net.*` kernel params when using host network mode
+                sysctl = None
 
             ulimit = [{
                 'name': 'nofile',
@@ -319,10 +323,16 @@ class DockerHelper:
         image_name = "techempower/%s:latest" % database
         log_prefix = image_name + ": "
 
-        sysctl = {
-            'net.core.somaxconn': 65535,
-            'kernel.sem': "250 32000 256 512"
-        }
+        if self.benchmarker.config.network_mode is None:
+            sysctl = {
+                'net.core.somaxconn': 65535,
+                'kernel.sem': "250 32000 256 512"
+            }
+        else:
+            # Do not pass `net.*` kernel params when using host network mode
+            sysctl = {
+                'kernel.sem': "250 32000 256 512"
+            }
 
         ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
 
@@ -401,7 +411,11 @@ class DockerHelper:
                 for line in container.logs(stream=True):
                     log(line, file=benchmark_file)
 
-        sysctl = {'net.core.somaxconn': 65535}
+        if self.benchmarker.config.network_mode is None:
+            sysctl = {'net.core.somaxconn': 65535}
+        else:
+            # Do not pass `net.*` kernel params when using host network mode
+            sysctl = None
 
         ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
 
