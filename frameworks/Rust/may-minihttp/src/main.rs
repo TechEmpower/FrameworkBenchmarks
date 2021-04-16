@@ -1,6 +1,7 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
+use std::borrow::Cow;
 use std::fmt::Write;
 use std::io;
 use std::sync::atomic::{AtomicUsize, Ordering};
@@ -46,7 +47,7 @@ struct WorldRow {
 #[derive(Serialize)]
 pub struct Fortune {
     id: i32,
-    message: String,
+    message: Cow<'static, str>,
 }
 
 struct PgConnectionPool {
@@ -200,7 +201,7 @@ impl PgConnection {
     fn tell_fortune(&self) -> Result<SmallVec<[Fortune; 32]>, may_postgres::Error> {
         let mut items: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
             id: 0,
-            message: "Additional fortune added at request time.".to_string(),
+            message: Cow::Borrowed("Additional fortune added at request time."),
         }];
 
         let rows = self
@@ -211,7 +212,7 @@ impl PgConnection {
             let r = row?;
             items.push(Fortune {
                 id: r.get(0),
-                message: r.get(1),
+                message: Cow::Owned(r.get(1)),
             });
         }
 
@@ -250,7 +251,7 @@ impl HttpService for Techempower {
                 let fortunes = self.db.tell_fortune().unwrap();
                 let mut body = Vec::with_capacity(2048);
                 ywrite_html!(body, "{{> fortune }}");
-                rsp.body_mut().extend_from_slice(&body);
+                rsp.body_vec(body);
             }
             p if p.starts_with("/queries") => {
                 rsp.header("Content-Type: application/json");
