@@ -37,7 +37,7 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale",
+                "display_name": "redkale-j8",
                 "notes": "",
                 "versus": "Redkale"
             },
@@ -61,7 +61,7 @@
             },
             "postgres": {
                 "db_url": "/db",
-                "query_url2": "/queries?q=", 
+                "query_url": "/queries?q=", 
                 "fortune_url2": "/fortunes",
                 "update_url2": "/updates?q=",
                 "port": 8080,
