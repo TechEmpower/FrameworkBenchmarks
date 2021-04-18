@@ -1,7 +1,7 @@
 FROM golang as build-env
 
 WORKDIR /src/
-ADD ./src /src/
+ADD ./gin-gorm /src/
 
 RUN go build -o app
 
