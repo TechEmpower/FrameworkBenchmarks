@@ -5,7 +5,7 @@ This includes tests for plaintext and json serialization.
 
 **Language**
 
-* C# 7.0 
+* C# 7.0
 
 **Platforms**
 

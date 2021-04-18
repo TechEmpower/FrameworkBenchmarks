@@ -1,4 +1,4 @@
-FROM sumeetchhetri/ffead-cpp-5.0-base:5.2
+FROM sumeetchhetri/ffead-cpp-5.0-base:5.3
 
 ENV IROOT=/installs
 
@@ -20,7 +20,5 @@ RUN shards install && gcc -shared -O3 lib/h2o/src/ext/h2o.c -I/usr/include -fPIC
 	&& cp h2o-evloop-ffead-cpp.out $IROOT/ && rm -rf ${IROOT}/lang-server-backends
 
 WORKDIR /
-
-EXPOSE 8080
 
 CMD ./run_ffead.sh ffead-cpp-5.0 crystal-h2o

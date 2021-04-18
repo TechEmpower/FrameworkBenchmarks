@@ -1,3 +1,5 @@
+ruby '~> 3.0.0'
+
 source 'https://rubygems.org' do
   gem 'listen', '~> 3.3', group: :development
   gem 'mysql2', '0.5.3', group: :mysql
