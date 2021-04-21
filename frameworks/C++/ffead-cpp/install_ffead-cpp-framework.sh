@@ -92,14 +92,34 @@ cd ffead-cpp-5.0-bin
 #cache related dockerfiles will add the cache.xml accordingly whenever needed
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 ./server.sh &
+COUNTER=0
 while [ ! -f lib/libinter.so ]
 do
-	sleep 1
+    sleep 1
+    COUNTER=$((COUNTER+1))
+    if [ "$COUNTER" = 120 ]
+    then
+    	cat logs/jobs.log
+    	echo "ffead-cpp exiting exiting due to failure...."
+    	exit 1
+    fi
 done
+COUNTER=0
 while [ ! -f lib/libdinter.so ]
 do
-	sleep 1
+    sleep 1
+    COUNTER=$((COUNTER+1))
+    if [ "$COUNTER" = 120 ]
+    then
+    	cat logs/jobs.log
+    	echo "ffead-cpp exiting exiting due to failure....ddlib"
+    	exit 1
+    fi
 done
+echo "ffead-cpp start successful"
+sleep 5
+cd tests && rm -f test.csv && cp ${IROOT}/ffead-cpp-src/tests/test-te.csv test.csv && chmod +x *.sh && ./runTests.sh
+echo "ffead-cpp normal shutdown"
 pkill ffead-cpp
 
 cd ${IROOT}/ffead-cpp-src/
@@ -131,14 +151,34 @@ cd ffead-cpp-5.0-bin
 #cache related dockerfiles will add the cache.xml accordingly whenever needed
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 ./server.sh &
+COUNTER=0
 while [ ! -f lib/libinter.so ]
 do
-	sleep 1
+    sleep 1
+    COUNTER=$((COUNTER+1))
+    if [ "$COUNTER" = 120 ]
+    then
+    	cat logs/jobs.log
+    	echo "ffead-cpp exiting exiting due to failure...."
+    	exit 1
+    fi
 done
+COUNTER=0
 while [ ! -f lib/libdinter.so ]
 do
-	sleep 1
+    sleep 1
+    COUNTER=$((COUNTER+1))
+    if [ "$COUNTER" = 120 ]
+    then
+    	cat logs/jobs.log
+    	echo "ffead-cpp exiting exiting due to failure....ddlib"
+    	exit 1
+    fi
 done
+echo "ffead-cpp start successful"
+sleep 5
+cd tests && rm -f test.csv && cp ${IROOT}/ffead-cpp-src/tests/test-te.csv test.csv && chmod +x *.sh && ./runTests.sh
+echo "ffead-cpp normal shutdown"
 pkill ffead-cpp
 
 cd ${IROOT}/ffead-cpp-src/

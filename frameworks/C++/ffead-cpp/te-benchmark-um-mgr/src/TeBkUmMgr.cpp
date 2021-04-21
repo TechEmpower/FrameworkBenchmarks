@@ -214,6 +214,7 @@ void TeBkUmMgrRouter::updateCache() {
 			cchi->setRaw(CastUtil::fromNumber(w.getId()), str);
 		}
 		CacheManager::cleanImpl(cchi);
+		CacheManager::triggerAppInitCompletion();
 	} catch(const std::exception& e) {
 		CacheManager::cleanImpl(cchi);
 		throw e;

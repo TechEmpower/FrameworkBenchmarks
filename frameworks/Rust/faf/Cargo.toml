@@ -15,4 +15,3 @@ overflow-checks = false
 [dependencies]
 mimalloc = { version = "*", default-features = false }
 faf = { git = "https://github.com/errantmind/faf" }
-#faf = { path = "/home/errant/dev/projects/faf-epoll" }

@@ -1,4 +1,4 @@
-FROM sumeetchhetri/ffead-cpp-5.0-base:5.2
+FROM sumeetchhetri/ffead-cpp-5.0-base:5.3
 
 ENV IROOT=/installs
 
@@ -16,7 +16,5 @@ WORKDIR ${IROOT}/lang-server-backends/go/gnet
 RUN make && cp gnet-ffead-cpp $IROOT/ && rm -rf ${IROOT}/lang-server-backends
 
 WORKDIR /
-
-EXPOSE 8080
 
 CMD ./run_ffead.sh ffead-cpp-5.0 go-gnet
