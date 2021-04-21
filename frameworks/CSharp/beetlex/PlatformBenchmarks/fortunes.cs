@@ -37,35 +37,21 @@ namespace PlatformBenchmarks
             {
 
                 var data = await token.Db.LoadFortunesRows();
-                if (Program.Debug)
+
+                var html = token.GetHtmlBufferWriter();
+                html.Reset();
+                html.Write(_fortunesTableStart.Data, 0, _fortunesTableStart.Length);
+                foreach (var item in data)
                 {
-                    var html = token.GetHtmlBufferWriter();
-                    html.Reset();
-                    html.Write(_fortunesTableStart.Data, 0, _fortunesTableStart.Length);
-                    foreach (var item in data)
-                    {
-                        html.Write(_fortunesRowStart.Data, 0, _fortunesRowStart.Length);
-                        WriteNumeric(html, (uint)item.Id);
-                        html.Write(_fortunesColumn.Data, 0, _fortunesColumn.Length);
-                        html.Write(HtmlEncoder.Encode(item.Message));
-                        html.Write(_fortunesRowEnd.Data, 0, _fortunesRowEnd.Length);
-                    }
-                    html.Write(_fortunesTableEnd.Data, 0, _fortunesTableEnd.Length);
-                    stream.Write(html.Data, 0, html.Length);
+                    html.Write(_fortunesRowStart.Data, 0, _fortunesRowStart.Length);
+                    WriteNumeric(html, (uint)item.Id);
+                    html.Write(_fortunesColumn.Data, 0, _fortunesColumn.Length);
+                    html.Write(HtmlEncoder.Encode(item.Message));
+                    html.Write(_fortunesRowEnd.Data, 0, _fortunesRowEnd.Length);
                 }
-                else
-                {
-                    stream.Write(_fortunesTableStart.Data, 0, _fortunesTableStart.Length);
-                    foreach (var item in data)
-                    {
-                        stream.Write(_fortunesRowStart.Data, 0, _fortunesRowStart.Length);
-                        WriteNumeric(stream, (uint)item.Id);
-                        stream.Write(_fortunesColumn.Data, 0, _fortunesColumn.Length);
-                        stream.Write(HtmlEncoder.Encode(item.Message));
-                        stream.Write(_fortunesRowEnd.Data, 0, _fortunesRowEnd.Length);
-                    }
-                    stream.Write(_fortunesTableEnd.Data, 0, _fortunesTableEnd.Length);
-                }
+                html.Write(_fortunesTableEnd.Data, 0, _fortunesTableEnd.Length);
+                stream.Write(html.Data, 0, html.Length);
+
             }
             catch (Exception e_)
             {
