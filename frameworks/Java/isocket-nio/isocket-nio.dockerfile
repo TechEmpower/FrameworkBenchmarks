@@ -4,7 +4,7 @@ COPY pom.xml pom.xml
 COPY src src
 RUN mvn compile assembly:single -q
 
-FROM openjdk:openjdk:8-alpine
+FROM longzhili/openjdk:8-alpine
 WORKDIR /isocket
 COPY --from=maven /isocket/target/isocket-nio-benchmark-1.0-jar-with-dependencies.jar app.jar
 
