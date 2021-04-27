@@ -10,4 +10,4 @@ COPY --from=maven /isocket/target/isocket-nio-benchmark-1.0-jar-with-dependencie
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-cp", "app.jar", "org.smartboot.http.Bootstrap"]
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-cp", "app.jar", "cn.ibaijia.tfb.HttpBootstrap"]
