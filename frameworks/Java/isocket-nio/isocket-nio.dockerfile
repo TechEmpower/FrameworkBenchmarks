@@ -1,11 +1,10 @@
-FROM longzhili/openjdk:8-alpine
 FROM maven:3.6.1-jdk-11-slim as maven
 WORKDIR /isocket
 COPY pom.xml pom.xml
 COPY src src
 RUN mvn compile assembly:single -q
 
-
+FROM openjdk:11.0.3-jdk-slim
 WORKDIR /isocket
 COPY --from=maven /isocket/target/isocket-nio-benchmark-1.0-jar-with-dependencies.jar app.jar
 
