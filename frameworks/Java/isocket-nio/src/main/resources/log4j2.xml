@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+    <Properties>
+        <Property name="logName">isocket-nio-tfb</Property>
+    </Properties>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%d{MM-dd HH:mm:ss}] %p [%t] %c - %m%n"/>
+        </Console>
+        <RollingFile name="file" fileName="logs/${logName}.log"  filePattern="logs/${logName}.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>[%d{MM-dd HH:mm:ss}] %p [%c][%t] - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- 每天滚存日志 -->
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="logs" maxDepth="1">
+                    <IfFileName glob="*.log.*"/>
+                    <!-- 日志保存时间 -->
+                    <IfLastModified age="10d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <logger name="cn.ibaijia.tfb" level="info"/>
+        <logger name="cn.ibaijia.isocket" level="info"/>
+        <Root level="info">
+            <AppenderRef ref="console"/>
+            <AppenderRef ref="file"/>
+        </Root>
+    </Loggers>
+</Configuration>
