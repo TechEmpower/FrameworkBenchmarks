@@ -61,7 +61,7 @@
             },
             "postgres": {
                 "db_url": "/db",
-                "query_url": "/queries?q=", 
+                "query_url2": "/queries?q=", 
                 "fortune_url2": "/fortunes",
                 "update_url2": "/updates?q=",
                 "port": 8080,
