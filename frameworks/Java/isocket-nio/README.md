@@ -14,6 +14,10 @@ This is the isocket-nio portion of a [benchmarking test suite](../) comparing a 
 
 ## Test URLs
     
+### JSON Encoding Test
+
+    http://localhost:8080/json
+    
 ### Plaintext Encoding Test
 
     http://localhost:8080/plaintext
