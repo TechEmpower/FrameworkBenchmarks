@@ -44,6 +44,7 @@ public class PlanTextProcessor implements Processor<HttpEntity> {
             httpResponseEntity.setHeader("Server", SERVER_NAME);
             httpResponseEntity.setHeader("Date", dateFormat.format(new Date()));
             httpResponseEntity.body = "hi";
+            session.write(httpResponseEntity);
         }
 //        String connection = httpRequestEntity.getHeader("Connection");
 //        logger.trace("Connection:{}", connection);
