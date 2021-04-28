@@ -21,7 +21,7 @@ public class HttpBootstrap {
                 logger.error("session on process error.", throwable);
             }
         });
-        server.setThreadNumber(4);
+        server.setThreadNumber(16);
         server.start();
     }
 
