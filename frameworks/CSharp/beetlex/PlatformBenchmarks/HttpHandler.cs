@@ -17,7 +17,7 @@ namespace PlatformBenchmarks
 
         private static AsciiString _httpsuccess = new AsciiString("HTTP/1.1 200 OK\r\n");
 
-        private static readonly AsciiString _headerServer = "Server: TFB\r\n";
+        private static readonly AsciiString _headerServer = "Server: B\r\n";
 
         private static readonly AsciiString _headerContentLength = "Content-Length: ";
 

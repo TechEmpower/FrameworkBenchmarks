@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyRpc.AspNetCore" Version="5.0.0-Preview1" />
-    <PackageReference Include="EasyRpc.AspNetCore.Utf8Json" Version="5.0.0-Preview1" />
-    <PackageReference Include="EasyRpc.AspNetCore.Views" Version="5.0.0-Preview1" />
-    <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
+    <PackageReference Include="EasyRpc.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="EasyRpc.AspNetCore.Utf8Json" Version="5.0.0" />
+    <PackageReference Include="EasyRpc.AspNetCore.Views" Version="5.0.0" />
+    <PackageReference Include="Npgsql" Version="5.0.4" />
   </ItemGroup>
 </Project>

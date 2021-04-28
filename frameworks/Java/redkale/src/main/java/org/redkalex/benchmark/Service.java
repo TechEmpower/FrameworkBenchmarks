@@ -7,12 +7,12 @@ package org.redkalex.benchmark;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 import javax.annotation.Resource;
+import org.redkale.net.ChannelContext;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.*;
+import org.redkalex.benchmark.CachedWorld.WorldEntityCache;
 
 /**
  *
@@ -28,6 +28,8 @@ public class Service extends AbstractService {
     @Resource
     private DataSource source;
 
+    private WorldEntityCache cache;
+
     @RestMapping(name = "plaintext")
     public byte[] getHelloBytes() {
         return helloBytes;
@@ -35,93 +37,63 @@ public class Service extends AbstractService {
 
     @RestMapping(name = "json")
     public Message getHelloMessage() {
-        return new Message("Hello, World!");
+        return Message.create("Hello, World!");
     }
 
     @RestMapping(name = "db")
-    public CompletableFuture<World> findWorldAsync() {
-        return source.findAsync(World.class, randomId());
+    public CompletableFuture<World> findWorldAsync(ChannelContext context) {
+        return source.findAsync(World.class, context, 1 + localRandom.get().nextInt(10000));
     }
 
     @RestMapping(name = "queries")
-    public CompletableFuture<World[]> queryWorldAsync(int q) {
+    public CompletableFuture<World[]> queryWorldAsync(ChannelContext context, int q) {
         final int size = Math.min(500, Math.max(1, q));
-        final Random random = localRandom.get();
         final World[] worlds = new World[size];
-
-//        final CompletableFuture[] futures = new CompletableFuture[size];
-//        for (int i = 0; i < size; i++) {
-//            final int index = i;
-//            futures[i] = source.findAsync(World.class, randomId(random)).thenAccept(v -> worlds[index] = v);
-//        }
-//        return CompletableFuture.allOf(futures).thenApply(v -> worlds);
-        final AtomicInteger index = new AtomicInteger();
-        final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId(random))
-            .thenAccept(v -> worlds[index.getAndIncrement()] = v);
-        CompletableFuture future = func.apply(null);
-        for (int i = 1; i < size; i++) {
-            future = future.thenCompose(func);
+        final Random random = localRandom.get();
+        final CompletableFuture[] futures = new CompletableFuture[size];
+        for (int i = 0; i < size; i++) {
+            final int index = i;
+            futures[index] = source.findAsync(World.class, context, 1 + random.nextInt(10000)).thenAccept(v -> worlds[index] = v);
         }
-        return future.thenApply(v -> worlds);
+        return CompletableFuture.allOf(futures).thenApply(v -> worlds);
     }
 
     @RestMapping(name = "updates")
-    public CompletableFuture<World[]> updateWorldAsync(int q) {
+    public CompletableFuture<World[]> updateWorldAsync(ChannelContext context, int q) {
         final int size = Math.min(500, Math.max(1, q));
-        final Random random = localRandom.get();
         final World[] worlds = new World[size];
-
-//        final CompletableFuture[] futures = new CompletableFuture[size];
-//        for (int i = 0; i < size; i++) {
-//            final int index = i;
-//            futures[i] = source.findAsync(World.class, randomId(random)).thenAccept(v -> worlds[index] = v.randomNumber(randomId(random)));
-//        }
-//        return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(sort(worlds))).thenApply(v -> worlds);
-        final AtomicInteger index = new AtomicInteger();
-        final Function<?, CompletableFuture> func = f -> source.findAsync(World.class, randomId(random))
-            .thenAccept(v -> worlds[index.getAndIncrement()] = v.randomNumber(randomId(random)));
-        CompletableFuture future = func.apply(null);
-        for (int i = 1; i < size; i++) {
-            future = future.thenCompose(func);
+        final Random random = localRandom.get();
+        final CompletableFuture[] futures = new CompletableFuture[size];
+        for (int i = 0; i < size; i++) {
+            final int index = i;
+            futures[index] = source.findAsync(World.class, context, 1 + random.nextInt(10000)).thenAccept(v -> worlds[index] = v.randomNumber(1 + random.nextInt(10000)));
         }
-        return future.thenCompose(v -> source.updateAsync(sort(worlds))).thenApply(v -> worlds);
+        return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(context, World.sort(worlds))).thenApply(v -> worlds);
     }
 
     @RestMapping(name = "fortunes")
     public CompletableFuture<HttpResult<String>> queryFortunes() {
         return source.queryListAsync(Fortune.class).thenApply((fortunes) -> {
             fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-            String html = FortunesTemplate.template(sort(fortunes)).render().toString();
+            String html = FortunesTemplate.template(Fortune.sort(fortunes)).render().toString();
             return new HttpResult("text/html; charset=utf-8", html);
         });
     }
 
     @RestMapping(name = "cached-worlds")
     public CachedWorld[] cachedWorlds(int q) {
+        if (cache == null) {
+            synchronized (this) {
+                if (cache == null) cache = new WorldEntityCache(source);
+            }
+        }
         final int size = Math.min(500, Math.max(1, q));
-        final Random random = localRandom.get();
         final CachedWorld[] worlds = new CachedWorld[size];
+        final Random random = localRandom.get();
         for (int i = 0; i < size; i++) {
-            worlds[i] = source.find(CachedWorld.class, randomId(random));
+            worlds[i] = cache.findAt(random.nextInt(10000));
         }
         return worlds;
     }
 
-    private World[] sort(World[] words) {
-        Arrays.sort(words);
-        return words;
-    }
-
-    private List<Fortune> sort(List<Fortune> fortunes) {
-        Collections.sort(fortunes);
-        return fortunes;
-    }
-
-    private int randomId() {
-        return 1 + localRandom.get().nextInt(10000);
-    }
-
-    private int randomId(Random random) {
-        return 1 + random.nextInt(10000);
-    }
 }

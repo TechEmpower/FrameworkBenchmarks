@@ -39,11 +39,12 @@ impl Future for App {
             return Poll::Ready(Ok(()));
         }
 
-        let mut updated = false;
+        let read = this.state.read();
+        let write = this.state.write();
         loop {
-            match this.state.decode_item(&this.codec) {
+            match read.decode(&this.codec) {
                 Ok(Some((req, _))) => {
-                    this.state.with_write_buf(|buf| {
+                    write.with_buf(|buf| {
                         // make sure we've got room
                         let remaining = buf.capacity() - buf.len();
                         if remaining < 1024 {
@@ -70,7 +71,6 @@ impl Future for App {
                             }
                         }
                     });
-                    updated = true;
                 }
                 Ok(None) => break,
                 _ => {
@@ -79,13 +79,10 @@ impl Future for App {
                 }
             }
         }
-        if updated {
-            this.state.dsp_restart_write_task();
-        }
-        if this.state.is_read_ready() {
-            this.state.dsp_register_task(cx.waker());
+        if read.is_ready() {
+            this.state.register_dispatcher(cx.waker());
         } else {
-            this.state.dsp_read_more_data(cx.waker());
+            read.wake(cx.waker())
         }
         Poll::Pending
     }
