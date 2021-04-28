@@ -45,11 +45,11 @@ public class PlanTextProcessor implements Processor<HttpEntity> {
             httpResponseEntity.setHeader("Date", dateFormat.format(new Date()));
             httpResponseEntity.body = "hi";
         }
-        String connection = httpRequestEntity.getHeader("Connection");
-        logger.trace("Connection:{}", connection);
-        if (connection == null || "close".equals(connection)) {
-            session.close(false); //TODO
-        }
+//        String connection = httpRequestEntity.getHeader("Connection");
+//        logger.trace("Connection:{}", connection);
+//        if (connection == null || "close".equals(connection)) {
+//            session.close(false); //TODO
+//        }
         return true;
     }
 }
