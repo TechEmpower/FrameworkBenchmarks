@@ -1,4 +1,4 @@
-FROM jruby:9.1
+FROM jruby:9.2
 
 ADD ./ /roda-sequel
 WORKDIR /roda-sequel
