@@ -16,7 +16,7 @@ class HelloWorld < Roda
 
   # Return a random number between 1 and MAX_PK
   def rand1
-    rand(MAX_PK).succ
+    rand(MAX_PK) + 1
   end
 
   after do
@@ -41,14 +41,13 @@ class HelloWorld < Roda
   # Test type 3: Multiple database queries
   static_get '/queries' do |_|
     response['Content-Type'] = 'application/json'
-    worlds =
-      DB.synchronize do
-        Array.new(bounded_queries) do
-          World.with_pk(rand1)
-        end
+    worlds = DB.synchronize do
+      Array.new(bounded_queries) do
+        World.with_pk(rand1).values
       end
+    end
 
-    worlds.map!(&:values).to_json
+    worlds.to_json
   end
 
   # Test type 4: Fortunes
@@ -67,16 +66,17 @@ class HelloWorld < Roda
   # Test type 5: Database updates
   static_get '/updates' do |_|
     response['Content-Type'] = 'application/json'
-    worlds =
-      DB.synchronize do
-        Array.new(bounded_queries) do
-          world = World.with_pk(rand1)
-          world.update(randomnumber: rand1)
-          world
-        end
+    worlds = DB.synchronize do
+      Array.new(bounded_queries) do
+        world = World.with_pk(rand1)
+        new_value = rand1
+        new_value = rand1 while new_value == world.randomnumber
+        world.update(randomnumber: new_value)
+        world.values
       end
+    end
 
-    worlds.map!(&:values).to_json
+    worlds.to_json
   end
 
   # Test type 6: Plaintext

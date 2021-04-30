@@ -17,7 +17,7 @@ GEM
     rake (13.0.3)
     roda (3.43.1)
       rack
-    sequel (5.43.0)
+    sequel (5.44.0)
     sequel_pg (1.14.0)
       pg (>= 0.18.0, != 1.2.0)
       sequel (>= 4.38.0)
@@ -31,18 +31,15 @@ PLATFORMS
 
 DEPENDENCIES
   erubi (~> 1.10)
-  jdbc-mysql (~> 8.0)
-  jdbc-postgres (~> 42.2)
   json (~> 2.5)
   mysql2 (~> 0.5)
   passenger (~> 6.0)
   pg (~> 1.2)
   puma (~> 5.2)
   roda (~> 3.43)
-  sequel (~> 5.43)
+  sequel (~> 5.44)
   sequel_pg (~> 1.14)
   tilt (~> 2.0)
-  torquebox-web (>= 4.0.0.beta3, < 5)
   unicorn (~> 6.0)
 
 BUNDLED WITH
