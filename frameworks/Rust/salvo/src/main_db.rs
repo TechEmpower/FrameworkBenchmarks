@@ -76,8 +76,7 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         worlds.push(w);
     }
     worlds.sort_by_key(|w| w.id);
-    conn.transaction::<(),
-     Error, _>(|| {
+    conn.transaction::<(), Error, _>(|| {
         for w in &worlds {
             diesel::update(world::table)
                 .filter(world::id.eq(w.id))
@@ -94,13 +93,17 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
 
 #[fn_handler]
 async fn fortunes(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let conn = connect()?;
-    let mut items = fortune::table.get_results::<Fortune>(&conn)?;
-    items.push(Fortune {
+    let mut items = vec![Fortune {
         id: 0,
         message: "Additional fortune added at request time.".to_string(),
-    });
+    }];
+
+    let conn = connect()?;
+    for item in fortune::table.get_results::<Fortune>(&conn)? {
+        items.push(item);
+    }
     items.sort_by(|it, next| it.message.cmp(&next.message));
+    
     let mut body = String::with_capacity(2048);
     write!(&mut body, "{}", FortunesTemplate { items }).unwrap();
 
