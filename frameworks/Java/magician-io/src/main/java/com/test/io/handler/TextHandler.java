@@ -18,6 +18,6 @@ public class TextHandler implements MagicianHandler<MagicianRequest> {
         magicianRequest.getResponse()
                 .setResponseHeader("Server","magician")
                 .setResponseHeader("Date", str)
-                .sendJson(200, "Hello, World!");
+                .sendText(200, "Hello, World!");
     }
 }
