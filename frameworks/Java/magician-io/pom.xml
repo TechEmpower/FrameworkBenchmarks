@@ -39,7 +39,7 @@
                     <finalName>magician-io</finalName>
                     <archive>
                         <manifest>
-                            <mainClass>com.text.Start</mainClass>
+                            <mainClass>com.test.io.Start</mainClass>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>./lib/</classpathPrefix>
                             <useUniqueVersions>false</useUniqueVersions>
