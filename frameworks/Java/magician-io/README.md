@@ -1,6 +1,6 @@
 ## Magician Benchmarking Test
 
-This is Magician's official website address[http://magician-io.com](http://mars-framework.com/)
+This is Magician's official website address[http://magician-io.com](http://magician-io.com)
 
 ## Versions
 
