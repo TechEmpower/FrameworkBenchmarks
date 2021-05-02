@@ -1,4 +1,4 @@
-FROM sumeetchhetri/ffead-cpp-5.0-base:5.2
+FROM sumeetchhetri/ffead-cpp-5.0-base:5.3
 
 ENV IROOT=/installs
 
@@ -17,7 +17,5 @@ WORKDIR ${IROOT}/lang-server-backends/crystal/crystal
 RUN crystal build --release --no-debug crystal-ffead-cpp.cr -o crystal-ffead-cpp.out && cp crystal-ffead-cpp.out $IROOT/ && rm -rf ${IROOT}/lang-server-backends
 
 WORKDIR /
-
-EXPOSE 8080
 
 CMD ./run_ffead.sh ffead-cpp-5.0 crystal-http

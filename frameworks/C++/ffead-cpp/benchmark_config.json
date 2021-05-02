@@ -323,7 +323,7 @@
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
-			"database": "mongodb",
+			"database": "None",
 			"framework": "ffead-cpp",
 			"language": "C++",
 			"orm": "Full",
@@ -334,7 +334,26 @@
 			"display_name": "ffead-cpp-nginx",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
+		},
+		"seastar": {
+			"json_url": "/te-benchmark-um/json",
+			"plaintext_url": "/plaintext",
+			"port": 8080,
+			"approach": "Realistic",
+			"classification": "Fullstack",
+			"database": "None",
+			"framework": "ffead-cpp",
+			"language": "C++",
+			"orm": "None",
+			"platform": "None",
+			"webserver": "seastar-http",
+			"os": "Linux",
+			"database_os": "Linux",
+			"display_name": "ffead-cpp-seastar",
+			"notes": "",
+			"versus": "",
+			"tags": ["broken"]
 		},
 		"apache": {
 			"json_url": "/te-benchmark-um/json",
@@ -670,4 +689,3 @@
 		}
 	}]
 }
-
