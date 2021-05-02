@@ -104,7 +104,7 @@ async fn fortunes(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
     }
     items.sort_by(|it, next| it.message.cmp(&next.message));
     
-    let mut body = String::with_capacity(2048);
+    let mut body = String::new();
     write!(&mut body, "{}", FortunesTemplate { items }).unwrap();
 
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
