@@ -3,8 +3,11 @@ package com.test.io;
 import com.test.io.handler.JsonHandler;
 import com.test.io.handler.TextHandler;
 import io.magician.Magician;
+import io.magician.common.event.EventGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.Executors;
 
 public class Start {
 
@@ -13,7 +16,10 @@ public class Start {
     public static void main(String[] args) {
         try {
 
-            Magician.createTCPServer()
+            EventGroup ioEventGroup = new EventGroup(1, Executors.newCachedThreadPool());
+            EventGroup workerEventGroup = new EventGroup(10, Executors.newCachedThreadPool());
+
+            Magician.createTCPServer(ioEventGroup, workerEventGroup)
                     .handler("/json", new JsonHandler())
                     .handler("/plaintext", new TextHandler())
                     .bind(8080, 10000);
