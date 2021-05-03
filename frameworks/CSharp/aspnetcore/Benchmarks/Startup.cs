@@ -73,6 +73,11 @@ namespace Benchmarks
             }
             else if (appSettings.Database == DatabaseServer.MySql)
             {
+                if (Scenarios.Any("Ef"))
+                {
+                    services.AddDbContextPool<ApplicationDbContext>(options => options.UseMySql(appSettings.ConnectionString, ServerVersion.AutoDetect(appSettings.ConnectionString)));
+                }
+                
                 if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
                 {
                     services.AddSingleton<DbProviderFactory>(MySqlConnectorFactory.Instance);
