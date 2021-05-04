@@ -5,7 +5,6 @@ static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 extern crate diesel;
 
 use anyhow::Error;
-use askama::Template;
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool, PoolError, PooledConnection};
 use once_cell::sync::OnceCell;
@@ -13,7 +12,8 @@ use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
 use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
-use std::{cmp, io};
+use std::cmp;
+use std::fmt::Write;
 
 mod models;
 mod schema;
@@ -91,30 +91,46 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     Ok(())
 }
 
-#[derive(Template)]
-#[template(path = "fortune.html")]
-struct FortuneTemplate<'a> {
-    items: &'a Vec<Fortune>,
-}
-
 #[fn_handler]
 async fn fortunes(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
+    let mut items = vec![Fortune {
+        id: 0,
+        message: "Additional fortune added at request time.".to_string(),
+    }];
+
     let conn = connect()?;
-    let rows = match fortune::table.get_results::<Fortune>(&conn) {
-        Ok(mut items) => {
-            items.push(Fortune {
-                id: 0,
-                message: "Additional fortune added at request time.".to_string(),
-            });
-            items.sort_by(|it, next| it.message.cmp(&next.message));
-            Ok(items)
-        }
-        Err(e) => Err(io::Error::new(io::ErrorKind::Other, e)),
-    }?;
-    let tmpl = FortuneTemplate { items: &rows };
+    for item in fortune::table.get_results::<Fortune>(&conn)? {
+        items.push(item);
+    }
+    items.sort_by(|it, next| it.message.cmp(&next.message));
+    
+    let mut body = String::new();
+    write!(&mut body, "{}", FortunesTemplate { items }).unwrap();
+
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_html_text(&tmpl.render().unwrap());
+    res.render_html_text(&body);
     Ok(())
+}
+markup::define! {
+    FortunesTemplate(items: Vec<Fortune>) {
+        {markup::doctype()}
+        html {
+            head {
+                title { "Fortunes" }
+            }
+            body {
+                table {
+                    tr { th { "id" } th { "message" } }
+                    @for item in items {
+                        tr {
+                            td { {item.id} }
+                            td { {markup::raw(v_htmlescape::escape(&item.message).to_string())} }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 #[tokio::main]
