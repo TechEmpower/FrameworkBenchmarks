@@ -11,7 +11,7 @@ using Npgsql;
 
 namespace PlatformBenchmarks
 {
-    public class RawDb
+    public class RawDbNpgsql : IDb
     {
         private readonly ConcurrentRandom _random;
         private readonly string _connectionString;
@@ -21,7 +21,7 @@ namespace PlatformBenchmarks
                 ExpirationScanFrequency = TimeSpan.FromMinutes(60)
             });
 
-        public RawDb(ConcurrentRandom random, AppSettings appSettings)
+        public RawDbNpgsql(ConcurrentRandom random, AppSettings appSettings)
         {
             _random = random;
             _connectionString = appSettings.ConnectionString;
@@ -87,7 +87,7 @@ namespace PlatformBenchmarks
 
             return Task.FromResult(result);
 
-            static async Task<World[]> LoadUncachedQueries(int id, int i, int count, RawDb rawdb, World[] result)
+            static async Task<World[]> LoadUncachedQueries(int id, int i, int count, RawDbNpgsql rawdb, World[] result)
             {
                 using (var db = new NpgsqlConnection(rawdb._connectionString))
                 {
