@@ -1,7 +1,7 @@
 {
   "require": {
-    "illuminate/database": "5.8.*",
-    "illuminate/events": "5.8.*",
-    "illuminate/container": "5.8.*"
+    "illuminate/database": "8.16.*",
+    "illuminate/events": "8.16.*",
+    "illuminate/container": "8.16.*"
   }
 }

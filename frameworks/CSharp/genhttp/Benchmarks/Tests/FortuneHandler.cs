@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Linq;
+using System.Web;
+
+using Microsoft.EntityFrameworkCore;
 
 using GenHTTP.Api.Content;
 using GenHTTP.Api.Content.Templating;
 using GenHTTP.Api.Protocol;
 
 using GenHTTP.Modules.IO;
-using GenHTTP.Modules.Scriban;
+using GenHTTP.Modules.Razor;
 
 using Benchmarks.Model;
 
@@ -27,8 +31,25 @@ namespace Benchmarks.Tests
 
     #endregion
 
+    #region Supporting data structures
+
+    public sealed class FortuneModel : PageModel
+    {
+
+        public List<Fortune> Cookies { get; }
+
+        public FortuneModel(IRequest request, IHandler handler, List<Fortune> cookies) : base(request, handler)
+        {
+            Cookies = cookies;
+        }
+
+    }
+
+    #endregion
+
     public class FortuneHandler : IHandler, IPageRenderer
     {
+        private static readonly FlexibleContentType CONTENT_TYPE = new FlexibleContentType("text/html; charset=utf-8");
 
         #region Get-/Setters
 
@@ -40,61 +61,53 @@ namespace Benchmarks.Tests
 
         #endregion
 
-        #region Supporting data structures
-
-        public class FortuneModel : PageModel
-        {
-
-            public List<Fortune> Cookies { get; }
-
-            public FortuneModel(IRequest request, IHandler handler, List<Fortune> cookies) : base(request, handler)
-            {
-                Cookies = cookies;
-            }
-
-        }
-
-        #endregion
-
         #region Initialization
 
         public FortuneHandler(IHandler parent)
         {
             Parent = parent;
 
-            Page = ModScriban.Page(Data.FromResource("Fortunes.html"), (r, h) => GetFortunes(r, h))
-                             .Title("Fortunes")
-                             .Build(this);
+            Page = ModRazor.Page(Resource.FromAssembly("Fortunes.html"), (r, h) => GetFortunes(r, h))
+                           .Title("Fortunes")
+                           .AddAssemblyReference<HttpUtility>()
+                           .AddUsing("System.Web")
+                           .Build(this);
 
-            Template = ModScriban.Template<TemplateModel>(Data.FromResource("Template.html")).Build();
+            Template = ModRazor.Template<TemplateModel>(Resource.FromAssembly("Template.html")).Build();
         }
 
         #endregion
 
         #region Functionality
 
-        public IResponse Handle(IRequest request) => Page.Handle(request);
+        public ValueTask<IResponse> HandleAsync(IRequest request) => Page.HandleAsync(request);
 
         public IEnumerable<ContentElement> GetContent(IRequest request) => Enumerable.Empty<ContentElement>();
 
-        public IResponseBuilder Render(TemplateModel model)
+        public async ValueTask<IResponseBuilder> RenderAsync(TemplateModel model)
         {
             return model.Request.Respond()
-                                .Content(Template.Render(model))
-                                .Header("Content-Type", "text/html; charset=utf-8");
+                                .Content(await Template.RenderAsync(model))
+                                .Type(CONTENT_TYPE);
         }
 
-        private FortuneModel GetFortunes(IRequest request, IHandler handler)
+        private async ValueTask<FortuneModel> GetFortunes(IRequest request, IHandler handler)
         {
-            using var context = DatabaseContext.Create();
+            using var context = DatabaseContext.CreateNoTracking();
 
-            var fortunes = context.Fortune.ToList();
+            var fortunes = await context.Fortune.ToListAsync();
 
             fortunes.Add(new Fortune() { Message = "Additional fortune added at request time." });
 
             fortunes.Sort();
 
             return new FortuneModel(request, handler, fortunes);
+        }
+
+        public async ValueTask PrepareAsync()
+        {
+            await Page.PrepareAsync();
+            await Template.PrepareAsync();
         }
 
         #endregion

@@ -1,14 +1,9 @@
-FROM python:3.7-alpine
-
-RUN apk add --no-cache libpq libstdc++
+FROM python:3.8
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY requirements.txt /usr/src/app
-RUN apk add --no-cache --virtual build-deps \
-    g++ libffi-dev libuv-dev make musl-dev openssl-dev postgresql-dev && \
-    pip install --no-cache-dir -r /usr/src/app/requirements.txt && \
-    apk del build-deps
+RUN pip install --no-cache-dir -r /usr/src/app/requirements.txt
 
 COPY ./ /app
 WORKDIR /app

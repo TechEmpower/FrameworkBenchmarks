@@ -30,6 +30,8 @@ ENV DRIVER QPSQL
 
 RUN sed -i "s|Driver=.*|Driver=${DRIVER}|g" /cutelyst.ini
 
+EXPOSE 8080
+
 CMD cutelyst-wsgi2 \
     --ini /cutelyst.ini:uwsgi \
     --application ${CUTELYST_APP} \

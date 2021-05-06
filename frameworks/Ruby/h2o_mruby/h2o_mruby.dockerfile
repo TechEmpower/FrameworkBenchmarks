@@ -15,4 +15,6 @@ RUN wget -q "https://github.com/h2o/h2o/archive/$H2O_ARCHIVE" && \
           -DCMAKE_AR=/usr/bin/gcc-ar -DCMAKE_RANLIB=/usr/bin/gcc-ranlib -DWITH_MRUBY=on . && \
     make -j "$(nproc)" install
 
+EXPOSE 8080
+
 CMD "${H2O_HOME}/bin/h2o" -c h2o.conf

@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Linq;
+using System.Threading.Tasks;
+
+using Microsoft.EntityFrameworkCore;
 
 using GenHTTP.Modules.Webservices;
 
@@ -8,18 +10,18 @@ using Benchmarks.Model;
 namespace Benchmarks.Tests
 {
 
-    public class DbResource
+    public sealed class DbResource
     {
         private static Random _Random = new Random();
 
         [ResourceMethod]
-        public World GetRandomWorld()
+        public async ValueTask<World> GetRandomWorld()
         {
             var id = _Random.Next(1, 10001);
 
-            using var context = DatabaseContext.Create();
+            using var context = DatabaseContext.CreateNoTracking();
 
-            return context.World.First(w => w.Id == id);
+            return await context.World.FirstOrDefaultAsync(w => w.Id == id);
         }
 
     }

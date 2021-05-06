@@ -1,16 +1,15 @@
 #![allow(dead_code, unused_braces)]
 
+use std::borrow::Cow;
 use std::{cmp, io};
 
 use bytes::{BufMut, BytesMut};
 use serde::{Deserialize, Serialize};
-use yarte::Template;
 
-#[allow(non_snake_case)]
 #[derive(Serialize, Debug)]
 pub struct Fortune {
     pub id: i32,
-    pub message: String,
+    pub message: Cow<'static, str>,
 }
 
 pub const SIZE: usize = 27;
@@ -33,38 +32,10 @@ impl<'a> io::Write for Writer<'a> {
 }
 
 pub fn get_query_param(query: &str) -> u16 {
-    let q = if let Some(pos) = query.find("q") {
+    let q = if let Some(pos) = query.find('q') {
         query.split_at(pos + 2).1.parse::<u16>().ok().unwrap_or(1)
     } else {
         1
     };
     cmp::min(500, cmp::max(1, q))
-}
-
-markup::define! {
-    FortunesTemplate(fortunes: Vec<Fortune>) {
-        {markup::doctype()}
-        html {
-            head {
-                title { "Fortunes" }
-            }
-            body {
-                table {
-                    tr { th { "id" } th { "message" } }
-                    @for item in {fortunes} {
-                        tr {
-                            td { {item.id} }
-                            td { {markup::raw(v_htmlescape::escape(&item.message))} }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-#[derive(Template)]
-#[template(path = "fortune")]
-pub struct FortunesYarteTemplate {
-    pub fortunes: Vec<Fortune>,
 }

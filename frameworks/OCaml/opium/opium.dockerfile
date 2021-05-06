@@ -18,4 +18,6 @@ COPY ./src ./
 
 RUN sudo chown -R opam: . && make build
 
-CMD _build/default/bin/main.exe
+EXPOSE 8080
+
+ENTRYPOINT _build/default/bin/main.exe

@@ -7,17 +7,30 @@ namespace Benchmarks.Model
     {
         private static DbContextOptions<DatabaseContext> _Options;
 
+        private static DbContextOptions<DatabaseContext> _NoTrackingOptions;
+
         #region Factory
 
         public static DatabaseContext Create()
         {
-            return new DatabaseContext(_Options ??= GetOptions());
+            return new DatabaseContext(_Options ??= GetOptions(true));
         }
 
-        private static DbContextOptions<DatabaseContext> GetOptions()
+        public static DatabaseContext CreateNoTracking()
+        {
+            return new DatabaseContext(_NoTrackingOptions ??= GetOptions(false));
+        }
+
+        private static DbContextOptions<DatabaseContext> GetOptions(bool tracking)
         {
             var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
+
             optionsBuilder.UseNpgsql("Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=64;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3");
+
+            if (!tracking)
+            {
+                optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            }
 
             return optionsBuilder.Options;
         }

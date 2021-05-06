@@ -66,4 +66,6 @@ WORKDIR /valum_app
 RUN meson --buildtype=release build
 RUN ninja -C build
 
+EXPOSE 8080
+
 CMD bash run.sh

@@ -153,6 +153,7 @@ void TeBkUmRouter::updateCache() {
 		}
 		DataSourceManager::cleanImpl(sqli);
 		CacheManager::cleanImpl(cchi);
+		CacheManager::triggerAppInitCompletion();
 	} catch(const std::exception& e) {
 		DataSourceManager::cleanImpl(sqli);
 		CacheManager::cleanImpl(cchi);
@@ -175,7 +176,7 @@ void TeBkUmRouter::cachedWorlds(const char* q, int ql, std::vector<TeBkUmWorld>&
 			keys.push_back(CastUtil::fromNumber(rid));
 		}
 
-		wlst = cchi->mgetO<TeBkUmWorld>(keys);
+		cchi->mgetO<TeBkUmWorld>(keys, wlst);
 		CacheManager::cleanImpl(cchi);
 	} catch(const std::exception& e) {
 		CacheManager::cleanImpl(cchi);
@@ -243,7 +244,7 @@ bool TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* 
 		//t.start();
 		TeBkUmMessage msg;
 		msg.setMessage(HELLO_WORLD);
-		res->setContent(JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmMessage"));
+		JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmMessage", res->getContentP());
 		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
 		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
 		//t.end();
@@ -257,7 +258,7 @@ bool TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* 
 		//t.end();
 		//CommonUtils::tsContExec += t.timerNanoSeconds();
 		//t.start();
-		res->setContent(JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmWorld"));
+		JSONSerialize::serializeUnknown(&msg, 0, "TeBkUmWorld", res->getContentP());
 		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
 		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
 		//t.end();
@@ -273,7 +274,7 @@ bool TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* 
 		//t.end();
 		//CommonUtils::tsContExec += t.timerNanoSeconds();
 		//t.start();
-		res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
+		JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>", res->getContentP());
 		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
 		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
 		//t.end();
@@ -303,7 +304,7 @@ bool TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* 
 		//t.end();
 		//CommonUtils::tsContExec += t.timerNanoSeconds();
 		//t.start();
-		res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
+		JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>", res->getContentP());
 		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
 		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
 		//t.end();
@@ -319,7 +320,7 @@ bool TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, void* dlib, void* 
 		//t.end();
 		//CommonUtils::tsContExec += t.timerNanoSeconds();
 		//t.start();
-		res->setContent(JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>"));
+		JSONSerialize::serializeUnknown(&msg, 100, "std::vector<TeBkUmWorld>", res->getContentP());
 		res->setContentType(ContentTypes::CONTENT_TYPE_APPLICATION_JSON);
 		res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
 		//t.end();

@@ -14,6 +14,8 @@ COPY src/opi.opam src/Makefile ./
 
 RUN make install-ci
 
+ENV APP_INSTANCES 1
+
 COPY ./src ./
 
 RUN sudo chown -R opam: . && make build
@@ -24,4 +26,6 @@ COPY haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY start-servers.sh ./start-servers.sh
 RUN sudo chown -R opam: /${DIR} && chmod +x ./start-servers.sh
 
-CMD ./start-servers.sh && sudo /usr/sbin/haproxy -W -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -q
+EXPOSE 8080
+
+ENTRYPOINT ./start-servers.sh && sudo /usr/sbin/haproxy -W -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid

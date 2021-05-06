@@ -1,8 +1,6 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-use std::io::Write;
-
 use actix::prelude::*;
 use actix_http::error::ErrorInternalServerError;
 use actix_http::{HttpService, KeepAlive};
@@ -10,13 +8,14 @@ use actix_service::map_config;
 use actix_web::dev::{AppConfig, Body, Server};
 use actix_web::http::{header::CONTENT_TYPE, header::SERVER, HeaderValue, StatusCode};
 use actix_web::{web, App, Error, HttpRequest, HttpResponse};
-use bytes::BytesMut;
+use bytes::{Bytes, BytesMut};
+use yarte::ywrite_html;
 
 mod db_pg;
 mod models;
 mod utils;
 use crate::db_pg::{PgConnection, RandomWorld, RandomWorlds, TellFortune, UpdateWorld};
-use crate::utils::{FortunesYarteTemplate, Writer};
+use crate::utils::Writer;
 
 async fn world_row(db: web::Data<Addr<PgConnection>>) -> Result<HttpResponse, Error> {
     let res = db
@@ -98,14 +97,11 @@ async fn fortune(db: web::Data<Addr<PgConnection>>) -> Result<HttpResponse, Erro
 
     match res {
         Ok(fortunes) => {
-            let mut body = BytesMut::with_capacity(2048);
-            let mut writer = Writer(&mut body);
-            let _ = write!(writer, "{}", FortunesYarteTemplate { fortunes });
+            let mut body = Vec::with_capacity(2048);
+            ywrite_html!(body, "{{> fortune }}");
 
-            let mut res = HttpResponse::with_body(
-                StatusCode::OK,
-                Body::Bytes(body.freeze().into()),
-            );
+            let mut res =
+                HttpResponse::with_body(StatusCode::OK, Body::Bytes(Bytes::from(body)));
             res.headers_mut()
                 .insert(SERVER, HeaderValue::from_static("Actix"));
             res.headers_mut().insert(

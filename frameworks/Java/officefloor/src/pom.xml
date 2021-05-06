@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.officefloor.benchmarks</groupId>
@@ -15,18 +14,24 @@
 	</properties>
 	<modules>
 		<module>woof_benchmark</module>
-		<module>woof_benchmark_tpr</module>
 		<module>woof_benchmark_micro</module>
 		<module>woof_benchmark_thread_affinity</module>
+		<module>woof_benchmark_async</module>
 		<module>woof_benchmark_raw</module>
 		<module>woof_benchmark_netty</module>
+		<module>woof_benchmark_undertow</module>
 		<module>woof_benchmark_spring</module>
 	</modules>
 	<repositories>
 		<repository>
+			<id>Central first</id>
+			<name>List central first so is used first</name>
+			<url>https://repo.maven.apache.org/maven2/</url>
+		</repository>
+		<repository>
 			<id>maven2-repository.officefloor.net</id>
 			<name>OfficeFloor staging repository for Maven</name>
-			<url>http://www.officefloor.net/maven2/</url>
+			<url>https://github.com/officefloor/maven/raw/repository/</url>
 		</repository>
 	</repositories>
 	<dependencyManagement>
@@ -34,7 +39,7 @@
 			<dependency>
 				<groupId>net.officefloor</groupId>
 				<artifactId>bom</artifactId>
-				<version>3.22.0</version>
+				<version>3.31.0</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -47,6 +52,11 @@
 				<groupId>net.officefloor.benchmarks</groupId>
 				<artifactId>woof_benchmark_micro</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.spullara.mustache.java</groupId>
+				<artifactId>compiler</artifactId>
+				<version>0.9.7</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -64,7 +74,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.2.2</version>
+					<version>3.2.4</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

@@ -33,8 +33,7 @@ actix-server = "1.0.4"
 actix-service = "1.0.6"
 snmalloc-rs = "0.2.6"
 askama = "0.8"
-markup = "0.4.1"
-yarte = "0.12"
+yarte = { version = "0.14", features = ["bytes-buf"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 env_logger = "0.7"

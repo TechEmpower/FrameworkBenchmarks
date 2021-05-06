@@ -8,6 +8,9 @@ rm -f /usr/local/lib/libdinter.so
 export FFEAD_CPP_PATH=${IROOT}/$1
 
 ln -s ${FFEAD_CPP_PATH}/lib/libte_benchmark_um.so /usr/local/lib/libte_benchmark_um.so
+ln -s ${FFEAD_CPP_PATH}/lib/libte_benchmark_um_pq.so /usr/local/lib/libte_benchmark_um_pq.so
+ln -s ${FFEAD_CPP_PATH}/lib/libte_benchmark_um_mgr.so /usr/local/lib/libte_benchmark_um_mgr.so
+ln -s ${FFEAD_CPP_PATH}/lib/libte_benchmark_um_pq_async.so /usr/local/lib/libte_benchmark_um_pq_async.so
 ln -s ${FFEAD_CPP_PATH}/lib/libffead-modules.so /usr/local/lib/libffead-modules.so
 ln -s ${FFEAD_CPP_PATH}/lib/libffead-framework.so /usr/local/lib/libffead-framework.so
 ln -s ${FFEAD_CPP_PATH}/lib/libinter.so /usr/local/lib/libinter.so
@@ -72,7 +75,6 @@ then
 else
 	WEB_DIR=$FFEAD_CPP_PATH/web/te-benchmark-um
 	rm -rf web/te-benchmark-um-mgr web/te-benchmark-um-pq web/te-benchmark-um-pq-async
-	sed -i'' -e "s|<init>TeBkUmRouter.updateCache</init>||g" ${WEB_DIR}/config/cache.xml
 fi
 
 if [ "$4" = "memory" ]
@@ -141,8 +143,8 @@ then
 	./libreactor-ffead-cpp $FFEAD_CPP_PATH 8080
 elif [ "$2" = "h2o" ]
 then
-	cd ${IROOT}
-	./h2o_app $FFEAD_CPP_PATH 0.0.0.0 8080
+	cd ${IROOT}/lang-server-backends/c/h2o
+	./h2o.sh ${FFEAD_CPP_PATH} ${LD_LIBRARY_PATH} 8080
 elif [ "$2" = "crystal-http" ]
 then
 	cd ${IROOT}
@@ -155,6 +157,19 @@ then
 	for i in $(seq 0 $(($(nproc --all)-1))); do
 	  taskset -c $i ./h2o-evloop-ffead-cpp.out --ffead-cpp-dir=$FFEAD_CPP_PATH --to=8080 &
 	done
+elif [ "$2" = "julia-http" ]
+then
+	for i in $(seq 0 $(($(nproc --all)-1))); do
+		julia ${IROOT}/lang-server-backends/julia/http.jl/server.jl $FFEAD_CPP_PATH
+	done
+elif [ "$2" = "swift-nio" ]
+then
+	cd ${IROOT}
+	./app $FFEAD_CPP_PATH
+elif [ "$2" = "d-hunt" ]
+then
+	cd ${IROOT}
+	./hunt-minihttp -s $FFEAD_CPP_PATH
 elif [ "$2" = "rust-actix" ]
 then
 	cd ${IROOT}
@@ -188,6 +203,7 @@ then
 elif [ "$2" = "v-picov" ]
 then
 	cd ${IROOT}
+	sed -i 's|EVH_SINGLE=false|EVH_SINGLE=true|g' $FFEAD_CPP_PATH/resources/server.prop
 	for i in $(seq 0 $(($(nproc --all)-1))); do
 		taskset -c $i ./main --server_dir=$FFEAD_CPP_PATH --server_port=8080 &
 	done
@@ -224,6 +240,10 @@ then
 	cd ${IROOT}
 	java -Xmx2G -Xms2G -server -XX:+UseNUMA -XX:+UseParallelGC -XX:+AggressiveOpts \
 		-jar wizzardo-ffead-cpp-all-1.0.jar $FFEAD_CPP_PATH 8080 env=prod
+elif [ "$2" = "seastar" ]
+then
+	cd ${IROOT}/lang-server-backends/c++/seastar
+	./ffead-cpp-seastar --port=8080 --address=0.0.0.0 --fcpdir=${FFEAD_CPP_PATH} -c$(nproc)
 fi
 
 wait

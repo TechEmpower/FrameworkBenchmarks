@@ -41,7 +41,7 @@ let updates count =
       let+ result = Db.Update.update_world updated_world_req in
       match result with
       | Error _ -> failwith "failed queries"
-      | Ok w -> {world with randomNumber=updated_random_number}
+      | Ok () -> {world with randomNumber=updated_random_number}
     ) in
   let+ updated_worlds = Lwt.all results in
   Models.World.list_response_to_yojson updated_worlds

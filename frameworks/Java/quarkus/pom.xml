@@ -8,16 +8,19 @@
     <packaging>pom</packaging>
 
     <properties>
-        <quarkus.version>1.5.2.Final</quarkus.version>
+        <quarkus.version>1.11.0.Beta1</quarkus.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <modules>
-        <module>base</module>
-        <module>hibernate</module>
-        <module>pgclient</module>
+        <module>resteasy-hibernate</module>
+        <module>reactive-routes-hibernate-reactive</module>
+        <module>reactive-routes-pgclient</module>
+        <module>resteasy-reactive-pgclient</module>
+        <module>resteasy-reactive-hibernate</module>
+        <module>resteasy-reactive-hibernate-reactive</module>
     </modules>
 
     <dependencyManagement>
@@ -34,27 +37,23 @@
                 <artifactId>base</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-pg-client</artifactId>
+                <version>3.9.0</version>
+            </dependency>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-sql-client</artifactId>
+                <version>3.9.0</version>
+            </dependency>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-web</artifactId>
+                <version>3.9.3</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy-jackson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-arc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-jdbc-postgresql</artifactId>
-        </dependency>
-    </dependencies>
 
     <build>
         <plugins>
@@ -89,6 +88,11 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-bootstrap-maven-plugin</artifactId>
+                <version>${quarkus.version}</version>
             </plugin>
         </plugins>
     </build>

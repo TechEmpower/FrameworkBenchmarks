@@ -1,0 +1,19 @@
+[framework]
+name = "deno"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/query?queries="
+urls.update = "/update?queries="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Platform"
+database_os = "Linux"
+database = "MongoDB"
+os = "Linux"
+orm = "Raw"
+platform = "deno"
+webserver = "None"
+versus = "nodejs"

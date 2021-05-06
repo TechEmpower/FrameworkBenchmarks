@@ -38,7 +38,6 @@ sed -i 's|EVH_SINGLE=true|EVH_SINGLE=false|g' resources/server.prop
 
 rm -rf web/default web/oauthApp web/flexApp web/markers web/te-benchmark web/peer-server
 
-sed -i 's|localhost|tfb-database|g' web/te-benchmark-um/config/sdorm.xml
 sed -i 's|localhost|tfb-database|g' web/te-benchmark-um/config/sdormmongo.xml
 sed -i 's|localhost|tfb-database|g' web/te-benchmark-um/config/sdormmysql.xml
 sed -i 's|localhost|tfb-database|g' web/te-benchmark-um/config/sdormpostgresql.xml
@@ -53,12 +52,12 @@ sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/oauthApp)||g' CMakeLists.tx
 sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/markers)||g' CMakeLists.txt
 sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/te-benchmark)||g' CMakeLists.txt
 sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/peer-server)||g' CMakeLists.txt
-sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/default/libdefault${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
-sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/flexApp/libflexApp${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
-sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/oauthApp/liboauthApp${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
-sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/markers/libmarkers${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
-sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/te-benchmark/libte_benchmark${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
-sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/peer-server/libpeer_server${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/default/libdefault${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/flexApp/libflexApp${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/oauthApp/liboauthApp${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/markers/libmarkers${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/te-benchmark/libte_benchmark${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/peer-server/libpeer_server${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
 sed -i 's|web/default/src/autotools/Makefile||g' configure.ac
 sed -i 's|web/flexApp/src/autotools/Makefile||g' configure.ac
 sed -i 's|web/oauthApp/src/autotools/Makefile||g' configure.ac
@@ -84,18 +83,43 @@ rm -f /usr/local/lib/libte_benc*
 rm -f /usr/local/lib/libinter.so
 rm -f /usr/local/lib/libdinter.so
 
+if [ ! -d "ffead-cpp-5.0-bin" ]
+then
+	exit 1
+fi
+
 cd ffead-cpp-5.0-bin
 #cache related dockerfiles will add the cache.xml accordingly whenever needed
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 ./server.sh &
+COUNTER=0
 while [ ! -f lib/libinter.so ]
 do
-	sleep 1
+    sleep 1
+    COUNTER=$((COUNTER+1))
+    if [ "$COUNTER" = 120 ]
+    then
+    	cat logs/jobs.log
+    	echo "ffead-cpp exiting exiting due to failure...."
+    	exit 1
+    fi
 done
+COUNTER=0
 while [ ! -f lib/libdinter.so ]
 do
-	sleep 1
+    sleep 1
+    COUNTER=$((COUNTER+1))
+    if [ "$COUNTER" = 120 ]
+    then
+    	cat logs/jobs.log
+    	echo "ffead-cpp exiting exiting due to failure....ddlib"
+    	exit 1
+    fi
 done
+echo "ffead-cpp start successful"
+sleep 5
+cd tests && rm -f test.csv && cp ${IROOT}/ffead-cpp-src/tests/test-te.csv test.csv && chmod +x *.sh && ./runTests.sh
+echo "ffead-cpp normal shutdown"
 pkill ffead-cpp
 
 cd ${IROOT}/ffead-cpp-src/
@@ -118,18 +142,43 @@ cp -f web/te-benchmark-um/sql-src/TeBkUmWorldsql.h web/te-benchmark-um/include/T
 cp -f web/te-benchmark-um/sql-src/TeBkUmWorldsql.cpp web/te-benchmark-um/src/TeBkUmWorld.cpp
 make install -j${MAX_THREADS}
 
+if [ ! -d "ffead-cpp-5.0-bin" ]
+then
+	exit 1
+fi
+
 cd ffead-cpp-5.0-bin
 #cache related dockerfiles will add the cache.xml accordingly whenever needed
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 ./server.sh &
+COUNTER=0
 while [ ! -f lib/libinter.so ]
 do
-	sleep 1
+    sleep 1
+    COUNTER=$((COUNTER+1))
+    if [ "$COUNTER" = 120 ]
+    then
+    	cat logs/jobs.log
+    	echo "ffead-cpp exiting exiting due to failure...."
+    	exit 1
+    fi
 done
+COUNTER=0
 while [ ! -f lib/libdinter.so ]
 do
-	sleep 1
+    sleep 1
+    COUNTER=$((COUNTER+1))
+    if [ "$COUNTER" = 120 ]
+    then
+    	cat logs/jobs.log
+    	echo "ffead-cpp exiting exiting due to failure....ddlib"
+    	exit 1
+    fi
 done
+echo "ffead-cpp start successful"
+sleep 5
+cd tests && rm -f test.csv && cp ${IROOT}/ffead-cpp-src/tests/test-te.csv test.csv && chmod +x *.sh && ./runTests.sh
+echo "ffead-cpp normal shutdown"
 pkill ffead-cpp
 
 cd ${IROOT}/ffead-cpp-src/

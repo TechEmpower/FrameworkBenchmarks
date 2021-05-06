@@ -10,28 +10,11 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>11</java.version>
-		<version.compiler.plugin>3.8.0</version.compiler.plugin>
-		<version.war.plugin>3.2.2</version.war.plugin>
+		<java.version>16</java.version>
+		<version.compiler.plugin>3.8.1</version.compiler.plugin>
+		<version.war.plugin>3.3.1</version.war.plugin>
 		<version.javaee.api>8.0</version.javaee.api>
 	</properties>
-
-	<repositories>
-		<repository>
-			<id>jboss-public-repository-group</id>
-			<name>JBoss Public Maven Repository Group</name>
-			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</snapshots>
-		</repository>
-	</repositories>
 
 	<dependencies>
 
@@ -71,4 +54,56 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>bootable-jar</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.wildfly.plugins</groupId>
+						<artifactId>wildfly-jar-maven-plugin</artifactId>
+						<version>4.0.0.Final</version>
+						<configuration>
+							<feature-packs>
+								<feature-pack>
+									<location>wildfly@maven(org.jboss.universe:community-universe)#23.0.0.Final</location>
+								</feature-pack>
+								<feature-pack>
+									<groupId>org.wildfly</groupId>
+									<artifactId>wildfly-datasources-galleon-pack</artifactId>
+									<version>1.2.3.Final</version>
+								</feature-pack>
+							</feature-packs>
+							<layers>
+								<layer>jaxrs-server</layer>
+								<layer>jsf</layer>
+								<layer>mysql-driver</layer>
+							</layers>
+							<excluded-layers>
+								<layer>deployment-scanner</layer>
+							</excluded-layers>
+							<cli-sessions>
+								<cli-session>
+									<script-files>
+										<script>scripts/bootable-jar.cli</script>
+									</script-files>
+								</cli-session>
+							</cli-sessions>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>package</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

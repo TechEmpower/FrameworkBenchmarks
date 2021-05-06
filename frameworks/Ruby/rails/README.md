@@ -12,18 +12,18 @@ comparing a variety of web platforms.
 
 The tests were run with:
 
-- [Ruby 2.6.0](http://www.ruby-lang.org/)
-- [Rails 5.2.2](http://rubyonrails.org/)
-- [Unicorn 5.4.1](http://unicorn.bogomips.org/)
-- [Puma 3.12](http://puma.io/)
+- [Ruby 3.0.0](http://www.ruby-lang.org/)
+- [Rails 6.1.3](http://rubyonrails.org/)
+- [Puma 5.2.1](http://puma.io/)
 - [MySQL 5.5](https://dev.mysql.com/)
 - [PostgreSQL 11](https://www.postgresql.org/)
-
+- [Redis 5.0](https://redis.io)
 ## Paths & Source for Tests
 
 - [JSON Serialization](app/controllers/hello_world_controller.rb): "/json"
 - [Single Database Query](app/controllers/hello_world_controller.rb): "/db", [World Model](app/models/world.rb)
-- [Multiple Database Queries](app/controllers/hello_world_controller.rb): "/db?queries={#}", [World Model](app/models/world.rb)
+- [Multiple Database Queries](app/controllers/hello_world_controller.rb): "/queries?queries={#}", [World Model](app/models/world.rb)
+- [Cached Database Queries](app/controllers/hello_world_controller.rb): "/cached?queries={#}", [World Model]
 - [Fortunes](app/controllers/hello_world_controller.rb): "/fortune" , [Fortunes Model](app/models/fortune.rb)
 - [Database Updates](app/controllers/hello_world_controller.rb): "/update?queries={#}", [World Model](app/models/world.rb)
 - [Plaintext](app/controllers/hello_world_controller.rb): "/plaintext"
@@ -32,7 +32,7 @@ The tests were run with:
 
 ### Experts
 
-_No experts listed, yet. If you're an expert, add yourself!_
+@spizm
 
 ### Community
 
@@ -43,4 +43,3 @@ _No experts listed, yet. If you're an expert, add yourself!_
 ### Resources
 
 - [Ruby on Rails Source Code](https://github.com/rails/rails)
-- [PR: passenger-install-apache2-module doesn't work on ruby 2.0](https://github.com/FooBarWidget/passenger/pull/71)

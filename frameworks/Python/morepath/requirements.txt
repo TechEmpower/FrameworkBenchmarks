@@ -2,7 +2,7 @@ dectate==0.13
 greenlet==0.4.14
 gunicorn==19.9.0
 importscan==0.1
-Jinja2==2.10.1
+Jinja2==2.11.3
 MarkupSafe==1.0
 meinheld==0.6.1
 more.jinja2==0.2

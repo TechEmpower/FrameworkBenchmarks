@@ -2,27 +2,24 @@
 
 <application port="8585">     
     
-    <!--  see： http://redkale.org/redkale.html#redkale_confxml  -->
-    
     <resources>
-	<properties>		
-            <property name="system.property.sun.nio.ch.disableSynchronousRead" value="true"/>
-            <property name="system.property.sun.nio.ch.maxCompletionHandlersOnStack" value="56"/>
+        <executor threads="0"/>
+        <properties>    
+            <property name="system.property.convert.tiny" value="false"/>      
+            <property name="system.property.net.invoker.max.onstack" value="24"/>
+            <property name="system.property.http.request.pipeline.sameheaders" value="true"/>  
             <property name="system.property.http.response.header.server" value="redkale"/>
+            <property name="system.property.http.response.header.connection" value="none"/>
         </properties>
     </resources> 
         
-    <server protocol="HTTP" host="0.0.0.0" port="8080" threads="28" aliveTimeoutSeconds="300">      
-                
+    <server protocol="HTTP" lazy="true" port="8080">      
         <response>
-	    <contenttype plain="text/plain" json="application/json"/>  
-	    <date period="1000"/>
-	</response>
-
-        <services autoload="true"/>
-        
+            <contenttype plain="text/plain" json="application/json"/>  
+            <date period="1000"/>
+        </response>
+        <services autoload="true"/>        
         <rest autoload="true"/>
-
         <servlets autoload="true"/>
         
     </server>

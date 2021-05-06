@@ -1,9 +1,18 @@
-FROM ruby:2.6
+FROM ruby:3.0
 
-ADD ./ /rails
+RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends redis-server
 
+EXPOSE 8080
 WORKDIR /rails
 
-RUN bundle install --jobs=4 --gemfile=/rails/Gemfile --path=/rails/rails/bundle --without postgresql
+COPY ./Gemfile* /rails/
 
-CMD DB_HOST=tfb-database bundle exec puma -C config/mri_puma.rb -b tcp://0.0.0.0:8080 -e production_mysql
+ENV BUNDLE_WITHOUT=mysql
+RUN bundle install --jobs=8
+
+COPY . /rails/
+
+ENV RAILS_ENV=production_postgresql
+ENV PORT=8080
+ENV REDIS_URL=redis://localhost:6379/0/cache
+CMD ./run-with-redis.sh

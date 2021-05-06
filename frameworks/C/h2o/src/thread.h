@@ -21,15 +21,14 @@
 
 #define THREAD_H_
 
-#include <assert.h>
 #include <h2o.h>
 #include <pthread.h>
 #include <stdbool.h>
-#include <sys/types.h>
 
 #include "database.h"
 #include "event_loop.h"
 #include "global_data.h"
+#include "list.h"
 #include "handlers/request_handler_data.h"
 
 typedef struct thread_context_t thread_context_t;

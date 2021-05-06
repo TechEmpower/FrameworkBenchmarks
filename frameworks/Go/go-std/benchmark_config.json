@@ -23,7 +23,7 @@
     "pgx": {
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
@@ -85,7 +85,7 @@
       "plaintext_url": "/plaintext",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
@@ -145,7 +145,7 @@
     "my": {
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
@@ -166,7 +166,7 @@
     "my-prefork": {
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
@@ -187,7 +187,7 @@
     "mgo": {
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
@@ -208,7 +208,7 @@
     "mgo-prefork": {
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",

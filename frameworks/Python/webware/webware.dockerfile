@@ -16,4 +16,6 @@ RUN python install.py --no-password-prompt
 
 WORKDIR /webware/Webware-1.1.1/app
 
+EXPOSE 8080
+
 CMD python Launch.py

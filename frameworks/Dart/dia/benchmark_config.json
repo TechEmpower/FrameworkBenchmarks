@@ -1,0 +1,26 @@
+{
+  "framework": "dia",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "Dia",
+        "language": "Dart",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Dia",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

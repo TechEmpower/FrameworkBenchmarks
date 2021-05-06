@@ -12,4 +12,7 @@ COPY src src/techempower_benchmarks
 RUN make
 
 ENV LD_PRELOAD /octane/lib/lockless_allocator/libllalloc.so.1.3
+
+EXPOSE 8000
+
 CMD ["./build/techempower_benchmarks"]

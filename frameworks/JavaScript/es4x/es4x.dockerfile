@@ -1,4 +1,4 @@
-FROM oracle/graalvm-ce:20.2.0-java11
+FROM ghcr.io/graalvm/graalvm-ce:20.3.1.2
 # Set working dir
 RUN mkdir /app
 WORKDIR /app
@@ -10,6 +10,8 @@ RUN npm --unsafe-perm install
 COPY ./ /app
 # Compile the template
 RUN npm run template
+
+EXPOSE 8080
 
 # Run the code
 CMD java \

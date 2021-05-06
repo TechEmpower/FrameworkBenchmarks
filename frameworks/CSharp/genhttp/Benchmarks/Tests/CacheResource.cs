@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 using Benchmarks.Model;
 
 using GenHTTP.Modules.Webservices;
 
-using Microsoft.Extensions.Caching.Memory;
-
 namespace Benchmarks.Tests
 {
 
-    public class CacheResource
+    public sealed class CacheResource
     {
         private static readonly Random _Random = new Random();
 
@@ -36,10 +38,10 @@ namespace Benchmarks.Tests
         }
 
         [ResourceMethod(":queries")]
-        public List<World> GetWorldsFromPath(string queries) => GetWorlds(queries);
+        public ValueTask<List<World>> GetWorldsFromPath(string queries) => GetWorlds(queries);
 
         [ResourceMethod]
-        public List<World> GetWorlds(string queries)
+        public async ValueTask<List<World>> GetWorlds(string queries)
         {
             var count = 1;
 
@@ -50,7 +52,7 @@ namespace Benchmarks.Tests
 
             var result = new List<World>(count);
 
-            using var context = DatabaseContext.Create();
+            using var context = DatabaseContext.CreateNoTracking();
 
             for (var i = 0; i < count; i++)
             {
@@ -66,7 +68,7 @@ namespace Benchmarks.Tests
                 }
                 else
                 {
-                    var resolved = context.World.First(w => w.Id == id);
+                    var resolved = await context.World.FirstOrDefaultAsync(w => w.Id == id);
 
                     _Cache.Set(key, resolved);
 

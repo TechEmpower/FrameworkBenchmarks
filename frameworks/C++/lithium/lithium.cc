@@ -1,4 +1,4 @@
-#include "lithium_http_backend.hh"
+#include "lithium_http_server.hh"
 
 #if TFB_MYSQL
   #include "lithium_mysql.hh"
@@ -8,6 +8,7 @@
 
 #include "symbols.hh"
 using namespace li;
+
 
 template <typename B>
 void escape_html_entities(B& buffer, const std::string_view& data)
@@ -41,6 +42,12 @@ void escape_html_entities(B& buffer, const std::string_view& data)
     }
 }
 
+int g_seed = 0;
+inline int random_int() { 
+  g_seed = (214013*g_seed+2531011); 
+  return (g_seed>>16)&0x7FFF; 
+} 
+
 #ifdef PROFILE_MODE
 void siege(int port) {
   auto sockets = http_benchmark_connect(512, port);
@@ -58,14 +65,13 @@ void siege(int port) {
 template <typename T>
 struct cache {
 
-  void insert(T o) { 
-    buffer.push_back(o);
+  void insert(T o) {
+    if (buffer.size() <= o.id) buffer.resize(o.id+1);
+    buffer[o.id] = o;
   }
 
-  std::vector<const T*> get_array(const std::vector<int>& ids) const {
-    std::vector<const T*> res;
-    for (int i = 0; i < ids.size(); i++) res.push_back(&buffer[ids[i]]);
-    return res;
+  const T& get(int id) const {
+    return buffer[id];
   }
 
   std::vector<T> buffer;
@@ -138,7 +144,7 @@ int main(int argc, char* argv[]) {
   };
   my_api.get("/db") = [&](http_request& request, http_response& response) {
     sql_db.max_async_connections_per_thread_ = db_nconn;
-    response.write_json(*random_numbers.connect(request.fiber).find_one(s::id = 1 + rand() % 10000));
+    response.write_json(*random_numbers.connect(request.fiber).find_one(s::id = 1 + random_int() % 10000));
   };
 
   my_api.get("/queries") = [&](http_request& request, http_response& response) {
@@ -148,14 +154,8 @@ int main(int argc, char* argv[]) {
     
     N = std::max(1, std::min(N, 500));
     
-    std::vector<decltype(random_numbers.all_fields())> numbers(N);
-    {
-      auto c = random_numbers.connect(request.fiber);
-      for (int i = 0; i < N; i++)
-        numbers[i] = *c.find_one(s::id = 1 + rand() % 10000);
-    }
-
-    response.write_json(numbers);
+    auto c = random_numbers.connect(request.fiber);
+    response.write_json_generator(N, [&] { return *c.find_one(s::id = 1 + random_int() % 10000); });
   };
 
   random_numbers.connect().forall([&] (const auto& number) {
@@ -165,13 +165,9 @@ int main(int argc, char* argv[]) {
   my_api.get("/cached-worlds") = [&](http_request& request, http_response& response) {
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
     int N = atoi(N_str.c_str());
-    
-    N = std::max(1, std::min(N, 500));
 
-    std::vector<int> ids(N);
-    for (int i = 0; i < N; i++)
-      ids[i] = 1 + rand() % 10000;
-    response.write_json(world_cache.get_array(ids));
+    response.write_json_generator(std::max(1, std::min(N, 500)), 
+      [&] { return world_cache.get(1 + random_int() % 10000); });
   };
 
   my_api.get("/updates") = [&](http_request& request, http_response& response) {
@@ -191,8 +187,8 @@ int main(int argc, char* argv[]) {
 #endif
       for (int i = 0; i < N; i++)
       {
-        numbers[i] = *c.find_one(s::id = 1 + rand() % 10000);
-        numbers[i].randomNumber = 1 + rand() % 10000;
+        numbers[i] = *c.find_one(s::id = 1 + random_int() % 10000);
+        numbers[i].randomNumber = 1 + random_int() % 10000;
       }
 
       std::sort(numbers.begin(), numbers.end(), [] (auto a, auto b) { return a.id < b.id; });

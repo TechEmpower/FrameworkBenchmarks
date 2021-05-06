@@ -4,6 +4,8 @@ COPY pom.xml pom.xml
 COPY src src
 RUN mvn compile assembly:single -q
 
+EXPOSE 8080
+
 CMD java                       \
     -server                    \
     -XX:+UseNUMA               \
@@ -16,8 +18,8 @@ CMD java                       \
     -Dpool=true                \
     -Dlevel=1                  \
     -Dread=false               \
-    -Depoll=false               \
+    -Depoll=true               \
     -Dnodelay=true             \
     -Dcachedurl=false          \
-    -DunsafeBuf=false           \
+    -DunsafeBuf=true           \
     -jar /firenio/target/firenio-example-0.1-jar-with-dependencies.jar

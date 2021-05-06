@@ -1,0 +1,19 @@
+[framework]
+name = "luminus"
+
+[main]
+urls.plaintext = "/io/plaintext"
+urls.json = "/io/json"
+urls.db = "/db"
+urls.query = "/queries/"
+urls.update = "/updates/"
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Ring"
+webserver = "None"
+versus = "undertow"
