@@ -55,6 +55,10 @@ namespace PlatformBenchmarks
             {
                 BenchmarkApplication.Db = new RawDbNpgsql(new ConcurrentRandom(), appSettings);
             }
+            else if (appSettings.Database == DatabaseServer.MySql)
+            {
+                BenchmarkApplication.Db = new RawDbMySqlConnector(new ConcurrentRandom(), appSettings);
+            }
             else
             {
                 throw new NotSupportedException($"{appSettings.Database} is not supported");

@@ -16,5 +16,6 @@
 
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="5.0.4" />
+    <PackageReference Include="MySqlConnector" Version="1.3.8" />
   </ItemGroup>
 </Project>
