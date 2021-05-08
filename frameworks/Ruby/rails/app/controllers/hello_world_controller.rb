@@ -24,13 +24,11 @@ class HelloWorldController < ApplicationController
   end
 
   def cached_query
-    results = QUERY_RANGE.sample(query_count).map do |id|
-      Rails.cache.fetch(id) do
-        World.find(id).as_json
-      end
+    items = Rails.cache.fetch_multi(*QUERY_RANGE.sample(query_count)) do |id|
+      World.find(id).as_json
     end
 
-    render json: results
+    render json: items.values
   end
 
   def fortune
