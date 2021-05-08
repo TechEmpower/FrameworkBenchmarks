@@ -32,7 +32,7 @@ namespace PlatformBenchmarks
             {
                 await db.OpenAsync();
 
-                var (cmd, _) = CreateReadCommand(db);
+                var (cmd, _) = await CreateReadCommandAsync(db);
                 using (cmd)
                 {
                     return await ReadSingleRow(cmd);
@@ -48,7 +48,7 @@ namespace PlatformBenchmarks
             {
                 await db.OpenAsync();
 
-                var (cmd, idParameter) = CreateReadCommand(db);
+                var (cmd, idParameter) = await CreateReadCommandAsync(db);
                 using (cmd)
                 {
                     for (int i = 0; i < result.Length; i++)
@@ -92,7 +92,7 @@ namespace PlatformBenchmarks
                 {
                     await db.OpenAsync();
 
-                    var (cmd, idParameter) = rawdb.CreateReadCommand(db);
+                    var (cmd, idParameter) = await rawdb.CreateReadCommandAsync(db);
                     using (cmd)
                     {
                         Func<ICacheEntry, Task<CachedWorld>> create = async (entry) =>
@@ -127,7 +127,7 @@ namespace PlatformBenchmarks
             {
                 await db.OpenAsync();
 
-                var (cmd, idParameter) = CreateReadCommand(db);
+                var (cmd, idParameter) = await CreateReadCommandAsync(db);
                 using (cmd)
                 {
                     var cacheKeys = _cacheKeys;
@@ -151,7 +151,7 @@ namespace PlatformBenchmarks
             {
                 await db.OpenAsync();
 
-                var (queryCmd, queryParameter) = CreateReadCommand(db);
+                var (queryCmd, queryParameter) = await CreateReadCommandAsync(db);
                 using (queryCmd)
                 {
                     for (int i = 0; i < results.Length; i++)
@@ -192,15 +192,20 @@ namespace PlatformBenchmarks
                 await db.OpenAsync();
 
                 using (var cmd = new MySqlCommand("SELECT id, message FROM fortune", db))
-                using (var rdr = await cmd.ExecuteReaderAsync())
                 {
-                    while (await rdr.ReadAsync())
+                    await cmd.PrepareAsync();
+                    
+                    using (var rdr = await cmd.ExecuteReaderAsync())
                     {
-                        result.Add(new Fortune
-                        (
-                            id:rdr.GetInt32(0),
-                            message: rdr.GetString(1)
-                        ));
+                        while (await rdr.ReadAsync())
+                        {
+                            result.Add(
+                                new Fortune
+                                (
+                                    id: rdr.GetInt32(0),
+                                    message: rdr.GetString(1)
+                                ));
+                        }
                     }
                 }
             }
@@ -211,16 +216,18 @@ namespace PlatformBenchmarks
             return result;
         }
 
-        private (MySqlCommand readCmd, MySqlParameter idParameter) CreateReadCommand(MySqlConnection connection)
+        private async Task<(MySqlCommand readCmd, MySqlParameter idParameter)> CreateReadCommandAsync(MySqlConnection connection)
         {
             var cmd = new MySqlCommand("SELECT id, randomnumber FROM world WHERE id = @Id", connection);
             var parameter = new MySqlParameter("@Id", _random.Next(1, 10001));
 
             cmd.Parameters.Add(parameter);
 
+            await cmd.PrepareAsync();
+            
             return (cmd, parameter);
         }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private async Task<World> ReadSingleRow(MySqlCommand cmd)
         {
@@ -235,7 +242,7 @@ namespace PlatformBenchmarks
                 };
             }
         }
-
+        
         private static readonly object[] _cacheKeys = Enumerable.Range(0, 10001).Select((i) => new CacheKey(i)).ToArray();
 
         public sealed class CacheKey : IEquatable<CacheKey>
