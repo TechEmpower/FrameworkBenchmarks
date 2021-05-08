@@ -1,4 +1,4 @@
-FROM sumeetchhetri/ffead-cpp-5.0-base:5.2
+FROM sumeetchhetri/ffead-cpp-5.0-base:5.3
 
 ENV IROOT=/installs
 
@@ -36,7 +36,5 @@ RUN chmod +x h2o.sh
 #RUN ./h2o.sh && rm -rf ${IROOT}/lang-server-backends
 
 WORKDIR /
-
-EXPOSE 8080
 
 CMD ./run_ffead.sh ffead-cpp-5.0 h2o

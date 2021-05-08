@@ -1,5 +1,7 @@
 FROM ortussolutions/commandbox:3.2.1
 
+ENV cfconfig_adminPassword=password
+
 COPY ./src/server-adobe.json /app/server.json
 COPY ./src/.cfconfig.json /app/.cfconfig.json
 COPY ./src/box.json /app/box.json

@@ -7,7 +7,7 @@ Flask-SQLAlchemy==2.3.2
 greenlet==0.4.14
 gunicorn==19.9.0
 itsdangerous==0.24
-Jinja2==2.10.1
+Jinja2==2.11.3
 MarkupSafe==1.0
 PyMySQL==0.8.0
 readline==6.2.4.1

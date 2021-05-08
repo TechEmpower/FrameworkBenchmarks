@@ -1,6 +1,6 @@
-FROM rust:1.44
+FROM rust:1.51
 
-RUN apt-get update -yqq && apt-get install -yqq cmake
+RUN apt-get update -yqq && apt-get install -yqq cmake g++
 
 ADD ./ /may
 WORKDIR /may

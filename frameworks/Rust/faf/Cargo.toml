@@ -1,0 +1,17 @@
+[package]
+name = "faf-ex"
+version = "0.1.0"
+authors = ["James Bates <errantmind@protonmail.com>"]
+edition = "2018"
+
+[profile.release]
+opt-level = 3
+panic = 'unwind'
+codegen-units = 1
+lto = "thin"
+debug = false
+overflow-checks = false
+
+[dependencies]
+mimalloc = { version = "*", default-features = false }
+faf = { git = "https://github.com/errantmind/faf" }
