@@ -42,8 +42,6 @@ class HelloWorldController < ApplicationController
 
   def update
     worlds = query_count.times.map { random_id }.map do |id|
-      # get a random row from the database, which we know has 10000
-      # rows with ids 1 - 10000
       world = World.find(id)
       new_value = random_id
       new_value = random_id until new_value != world.randomNumber
