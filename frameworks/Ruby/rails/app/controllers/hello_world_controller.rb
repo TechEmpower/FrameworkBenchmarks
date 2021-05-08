@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class HelloWorldController < ApplicationController
-  QUERY_RANGE = (1..10_000).to_a
+  QUERY_RANGE = 1..10_000    # range of IDs in the Fortune DB
+  ALL_IDS = QUERY_RANGE.to_a # enumeration of all the IDs in fortune DB
+  MIN_QUERIES = 1            # min number of records that can be retrieved
+  MAX_QUERIES = 500          # max number of records that can be retrieved
 
   def plaintext
     render plain: 'Hello, World!'
@@ -12,11 +15,11 @@ class HelloWorldController < ApplicationController
   end
 
   def db
-    render json: World.find(Random.rand(1..10_000))
+    render json: World.find(random_id)
   end
 
   def query
-    results = QUERY_RANGE.sample(query_count).map do |id|
+    results = ALL_IDS.sample(query_count).map do |id|
       World.find(id)
     end
 
@@ -24,7 +27,7 @@ class HelloWorldController < ApplicationController
   end
 
   def cached_query
-    items = Rails.cache.fetch_multi(*QUERY_RANGE.sample(query_count)) do |id|
+    items = Rails.cache.fetch_multi(*ALL_IDS.sample(query_count)) do |id|
       World.find(id).as_json
     end
 
@@ -38,13 +41,13 @@ class HelloWorldController < ApplicationController
   end
 
   def update
-    worlds = query_count.times.map { Random.rand(1..10_000) }.map do |id|
+    worlds = query_count.times.map { random_id }.map do |id|
       # get a random row from the database, which we know has 10000
       # rows with ids 1 - 10000
       world = World.find(id)
-      random = Random.rand(1..10_000)
-      random = Random.rand(1..10_000) until random != world.randomNumber
-      world.update_columns(randomNumber: random)
+      new_value = random_id
+      new_value = random_id until new_value != world.randomNumber
+      world.update_columns(randomNumber: new_value)
       world
     end
 
@@ -55,9 +58,13 @@ class HelloWorldController < ApplicationController
 
   def query_count
     queries = params[:queries].to_i
-    return 1 if queries < 1
-    return 500 if queries > 500
+    return MIN_QUERIES if queries < MIN_QUERIES
+    return MAX_QUERIES if queries > MAX_QUERIES
 
     queries
+  end
+
+  def random_id
+    Random.rand(QUERY_RANGE)
   end
 end
