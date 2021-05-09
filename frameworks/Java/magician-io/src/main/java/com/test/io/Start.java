@@ -17,7 +17,7 @@ public class Start {
         try {
 
             EventGroup ioEventGroup = new EventGroup(1, Executors.newCachedThreadPool());
-            EventGroup workerEventGroup = new EventGroup(10, Executors.newCachedThreadPool());
+            EventGroup workerEventGroup = new EventGroup(20, Executors.newCachedThreadPool());
 
             Magician.createTCPServer(ioEventGroup, workerEventGroup)
                     .handler("/json", new JsonHandler())
