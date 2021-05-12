@@ -22,7 +22,8 @@ json_handler = ->(context : HTTP::Server::Context) do
   context.response.tap do |response|
     response.status_code = 200
     response.headers["Content-Type"] = CONTENT_JSON
-    {message: "Hello, World!"}.to_json(response)
+    json = {message: "Hello, World!"}.to_json
+    response.print(json)
   end
 end
 
@@ -30,7 +31,8 @@ db_handler = ->(context : HTTP::Server::Context) do
   context.response.tap do |response|
     response.status_code = 200
     response.headers["Content-Type"] = CONTENT_JSON
-    find_world(rand(1..ID_MAXIMUM)).to_json(response)
+    json = find_world(rand(1..ID_MAXIMUM)).to_json
+    response.print(json)
   end
 end
 
@@ -41,7 +43,7 @@ queries_handler = ->(context : HTTP::Server::Context) do
     response.headers["Content-Type"] = CONTENT_JSON
 
     worlds = (1..sanitized_query_count(request)).map { find_world(rand(1..ID_MAXIMUM)) }
-    worlds.to_json(response)
+    response.print(worlds.to_json)
   end
 end
 
@@ -78,7 +80,7 @@ updates_handler = ->(context : HTTP::Server::Context) do
       APPDB.exec("UPDATE world SET randomNumber = $1 WHERE id = $2", random_number, world[:id])
       {id: world[:id], randomNumber: random_number}
     end
-    worlds.to_json(response)
+    response.print(worlds.to_json)
   end
 end
 
