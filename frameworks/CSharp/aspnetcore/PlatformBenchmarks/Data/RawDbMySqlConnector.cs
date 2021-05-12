@@ -10,7 +10,7 @@ namespace PlatformBenchmarks
 {
     // Is semantically identical to RawDbNpgsql.
     // If you are changing RawDbMySqlConnector, also consider changing RawDbNpgsql.
-    public class RawDbMySqlConnector : IDb
+    public sealed class RawDbMySqlConnector : IDb
     {
         private readonly ConcurrentRandom _random;
         private readonly string _connectionString;
