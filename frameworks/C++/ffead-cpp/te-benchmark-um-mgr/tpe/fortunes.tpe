@@ -6,7 +6,7 @@
 <table>
 <tr><th>id</th><th>message</th></tr>
 #for(int i=0;i<(int)fortunes.size();i++)#
-<tr><td>$_S{fortunes.at(i).getId()}</td><td>${fortunes.at(i).getMessage()}</td></tr>
+<tr><td>${fortunes.at(i).getId()}</td><td>${fortunes.at(i).getMessage()}</td></tr>
 #rof#
 </table>
 </body>
