@@ -37,8 +37,7 @@ function router(Request $request)
 function text()
 {
     return new Response(200, [
-        'Content-Type' => 'text/plain',
-        //'Date'         => Header::$date
+        'Content-Type' => 'text/plain'
     ], 'Hello, World!');
 }
 
