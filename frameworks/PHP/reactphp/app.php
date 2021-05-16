@@ -45,8 +45,7 @@ function text()
 function json()
 {
     return new Response(200, [
-        'Content-Type' => 'application/json',
-        //'Date'         => Header::$date
+        'Content-Type' => 'application/json'
     ], json_encode(['message' => 'Hello, World!']));
 }
 
