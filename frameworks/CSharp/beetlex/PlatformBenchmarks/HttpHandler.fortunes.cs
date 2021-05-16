@@ -19,9 +19,6 @@ namespace PlatformBenchmarks
         private readonly static AsciiString _fortunesRowEnd = "</td></tr>";
         private readonly static AsciiString _fortunesTableEnd = "</table></body></html>";
 
-        [ThreadStatic]
-        private static char[] mHtmlEncodeBuffer;
-
         protected HtmlEncoder HtmlEncoder { get; } = CreateHtmlEncoder();
 
         private static HtmlEncoder CreateHtmlEncoder()
@@ -37,6 +34,11 @@ namespace PlatformBenchmarks
             {
 
                 var data = await token.Db.LoadFortunesRows();
+
+                stream.Write(_HtmlResultPreamble.Data, 0, _HtmlResultPreamble.Length);
+                token.ContentLength = stream.Allocate(HttpHandler._LengthSize);
+                GMTDate.Default.Write(stream);
+                token.ContentPostion = stream.CacheLength;
 
                 var html = token.GetHtmlBufferWriter();
                 html.Reset();

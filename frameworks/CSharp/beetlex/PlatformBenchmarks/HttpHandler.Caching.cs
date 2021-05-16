@@ -8,17 +8,19 @@ using System.Threading.Tasks;
 
 namespace PlatformBenchmarks
 {
-    public partial class  HttpHandler
+    public partial class HttpHandler
     {
-        public async ValueTask queries(string queryString, PipeStream stream, HttpToken token, ISession session)
+       
+
+        public async Task caching(string queryString, PipeStream stream, HttpToken token, ISession session)
         {
             int count = 1;
-            if(!string.IsNullOrEmpty(queryString))
+            if (!string.IsNullOrEmpty(queryString))
             {
                 var values = queryString.Split('=');
-                if(values.Length>1)
+                if (values.Length > 1)
                 {
-                    if(int.TryParse(values[1],out int size))
+                    if (int.TryParse(values[1], out int size))
                     {
                         count = size;
                     }
@@ -30,8 +32,12 @@ namespace PlatformBenchmarks
                 count = 1;
             try
             {
-                var data = await token.Db.LoadMultipleQueriesRows(count);
-                System.Text.Json.JsonSerializer.Serialize(GetUtf8JsonWriter(stream, token), data, SerializerOptions);
+                var data = await token.Db.LoadCachedQueries(count);
+                stream.Write(_jsonResultPreamble.Data, 0, _jsonResultPreamble.Length);
+                token.ContentLength = stream.Allocate(HttpHandler._LengthSize);
+                GMTDate.Default.Write(stream);
+                token.ContentPostion = stream.CacheLength;
+                await JsonSerializer.NonGeneric.Utf8.SerializeAsync(data, stream);
             }
             catch (Exception e_)
             {

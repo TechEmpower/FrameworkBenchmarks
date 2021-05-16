@@ -31,6 +31,11 @@ namespace PlatformBenchmarks
             try
             {
                 var data = await token.Db.LoadMultipleUpdatesRows(count);
+
+                stream.Write(_jsonResultPreamble.Data, 0, _jsonResultPreamble.Length);
+                token.ContentLength = stream.Allocate(HttpHandler._LengthSize);
+                GMTDate.Default.Write(stream);
+                token.ContentPostion = stream.CacheLength;
                 System.Text.Json.JsonSerializer.Serialize<World[]>(GetUtf8JsonWriter(stream, token), data, SerializerOptions);
             }
             catch (Exception e_)

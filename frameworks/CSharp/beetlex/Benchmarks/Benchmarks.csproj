@@ -6,7 +6,7 @@
     <ServerGarbageCollection>true</ServerGarbageCollection>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BeetleX.FastHttpApi" Version="1.5.2.6" />
+    <PackageReference Include="BeetleX.FastHttpApi" Version="1.9.6" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
     <PackageReference Include="SpanJson" Version="3.0.1" />

@@ -11,12 +11,16 @@ namespace PlatformBenchmarks
     public partial class HttpHandler
     {
 
+
         public async ValueTask db(PipeStream stream, HttpToken token, ISession session)
         {
             try
             {
                 var data = await token.Db.LoadSingleQueryRow();
-
+                stream.Write(_jsonResultPreamble.Data, 0, _jsonResultPreamble.Length);
+                token.ContentLength = stream.Allocate(HttpHandler._LengthSize);
+                GMTDate.Default.Write(stream);
+                token.ContentPostion = stream.CacheLength;
                 System.Text.Json.JsonSerializer.Serialize<World>(GetUtf8JsonWriter(stream, token), data, SerializerOptions);
             }
             catch (Exception e_)

@@ -11,10 +11,7 @@ namespace PlatformBenchmarks
 {
     public partial class HttpHandler
     {
-        private readonly static uint _jsonPayloadSize = (uint)System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(new JsonMessage { message = "Hello, World!" }, SerializerOptions).Length;
-
-        private readonly static AsciiString _jsonPreamble =
-            _headerContentLength + _jsonPayloadSize.ToString();
+        
 
         private static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions();
 
@@ -32,7 +29,9 @@ namespace PlatformBenchmarks
 
         public ValueTask Json(PipeStream stream, HttpToken token, ISession session)
         {
-            System.Text.Json.JsonSerializer.Serialize<JsonMessage>(GetUtf8JsonWriter(stream, token), new JsonMessage { message = "Hello, World!" }, SerializerOptions);   
+            stream.Write(_jsonPreamble.Data, 0, _jsonPreamble.Length);
+            GMTDate.Default.Write(stream);
+            System.Text.Json.JsonSerializer.Serialize<JsonMessage>(GetUtf8JsonWriter(stream, token), new JsonMessage { message = "Hello, World!" }, SerializerOptions);
             OnCompleted(stream, session, token);
             return ValueTask.CompletedTask;
         }
