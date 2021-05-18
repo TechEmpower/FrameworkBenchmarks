@@ -7,11 +7,4 @@ updates:
     time: "04:00"
     timezone: Australia/Perth
   open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: net.officefloor:bom
-    versions:
-    - 3.33.0
-  - dependency-name: org.springframework.boot:spring-boot-maven-plugin
-    versions:
-    - 2.4.4
   rebase-strategy: disabled
