@@ -1,19 +1,19 @@
   
-FROM ubuntu:20.04
+FROM ubuntu:20.10
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq php7.4 php7.4-common php7.4-cgi php7.4-pgsql php-curl > /dev/null
+    apt-get install -yqq php8.0 php8.0-common php8.0-cgi php8.0-pgsql php-curl > /dev/null
 
 RUN apt-get install -yqq composer > /dev/null
 
 RUN apt-get install -y php-pear php-dev > /dev/null
 
 
-COPY deploy/conf/php-async.ini /etc/php/7.4/cgi/php.ini
+COPY deploy/conf/php-async.ini /etc/php/8.0/cgi/php.ini
 
 ADD ./ /ubiquity
 WORKDIR /ubiquity
@@ -39,7 +39,8 @@ RUN chmod 755 /bin/envwrapper.sh
 
 RUN chmod 777 -R /ubiquity/.ubiquity/*
 
-#RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/7.4/cgi/php.ini
+#RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/8.0/cgi/php.ini
+RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=function\n" >> /etc/php/8.0/cgi/php.ini
 
 COPY deploy/conf/roadrunner/pgsql/rrServices.php app/config/rrServices.php
 

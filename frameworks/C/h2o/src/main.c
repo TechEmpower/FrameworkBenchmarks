@@ -30,9 +30,11 @@
 #include <sys/signalfd.h>
 #include <sys/time.h>
 
+#include "database.h"
 #include "error.h"
 #include "event_loop.h"
 #include "global_data.h"
+#include "list.h"
 #include "request_handler.h"
 #include "thread.h"
 #include "tls.h"

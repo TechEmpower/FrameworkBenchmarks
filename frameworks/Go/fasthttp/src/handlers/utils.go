@@ -7,7 +7,7 @@ import (
 )
 
 func queriesParam(ctx *fasthttp.RequestCtx) int {
-	n := ctx.QueryArgs().GetUintOrZero("queries")
+	n := ctx.Request.URI().QueryArgs().GetUintOrZero("queries")
 	if n < 1 {
 		n = 1
 	} else if n > maxWorlds {

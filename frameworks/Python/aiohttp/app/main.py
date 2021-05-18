@@ -24,7 +24,7 @@ from .views import (
 CONNECTION_ORM = os.getenv('CONNECTION', 'ORM').upper() == 'ORM'
 
 
-def pg_dsn() -> str:
+def pg_dsn(dialect=None) -> str:
     """
     :return: DSN url suitable for sqlalchemy and aiopg.
     """
@@ -34,12 +34,11 @@ def pg_dsn() -> str:
         host='tfb-database',
         port='5432',
         username=os.getenv('PGUSER', 'benchmarkdbuser'),
-        drivername='postgresql',
+        drivername='postgresql+{}'.format(dialect) if dialect else 'postgresql',
     ))
 
 
 async def db_ctx(app: web.Application):
-    dsn = pg_dsn()
     # number of gunicorn workers = multiprocessing.cpu_count() as per gunicorn_conf.py
     # max_connections = 2000 as per toolset/setup/linux/databases/postgresql/postgresql.conf:64
     # give 10% leeway
@@ -48,9 +47,11 @@ async def db_ctx(app: web.Application):
     min_size = max(int(max_size / 2), 1)
     print(f'connection pool: min size: {min_size}, max size: {max_size}, orm: {CONNECTION_ORM}')
     if CONNECTION_ORM:
+        dsn = pg_dsn('asyncpg')
         engine = create_async_engine(dsn, future=True, pool_size=max_size)
         app['db_session'] = sessionmaker(engine, class_=AsyncSession)
     else:
+        dsn = pg_dsn()
         app['pg'] = await asyncpg.create_pool(dsn=dsn, min_size=min_size, max_size=max_size, loop=app.loop)
 
     yield

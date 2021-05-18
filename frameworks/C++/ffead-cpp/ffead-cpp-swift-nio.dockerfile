@@ -1,4 +1,4 @@
-FROM sumeetchhetri/ffead-cpp-5.0-base:5.2
+FROM sumeetchhetri/ffead-cpp-5.0-base:5.3
 
 ENV IROOT=/installs
 
@@ -14,7 +14,7 @@ RUN rm -f /usr/local/lib/libffead-* /usr/local/lib/libte_benc* /usr/local/lib/li
 WORKDIR ${IROOT}
 RUN apt-get update -y && apt-get install -y --no-install-recommends clang libicu-dev libpython2.7-dev libtinfo5 libncurses5 libz3-dev \
 	 && rm -rf /var/lib/apt/lists/*
-
+	 
 RUN wget -q https://swift.org/builds/swift-5.3-release/ubuntu2004/swift-5.3-RELEASE/swift-5.3-RELEASE-ubuntu20.04.tar.gz
 RUN tar -xzf swift-5.3-RELEASE-ubuntu20.04.tar.gz
 RUN mv swift-5.3-RELEASE-ubuntu20.04 /opt/ && rm -f swift-5.3-RELEASE-ubuntu20.04.tar.gz
@@ -27,7 +27,5 @@ RUN swift build --enable-test-discovery -c release -Xlinker "-L/usr/local/lib" -
 	&& mv .build/release/app ${IROOT}/ && chmod +x ${IROOT}/app && rm -rf ${IROOT}/lang-server-backends
 
 WORKDIR /
-
-EXPOSE 8080
 
 CMD ./run_ffead.sh ffead-cpp-5.0 swift-nio

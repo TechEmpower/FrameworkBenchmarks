@@ -6,7 +6,7 @@ COPY ./ ./
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
     apt-get install -yqq autoconf bison cmake curl file flex g++ git libnuma-dev libpq-dev \
-                         libssl-dev libtool libyajl-dev libz-dev make wget
+                         libssl-dev libtool libyajl-dev libz-dev make ninja-build wget
 
 ### Install mustache-c
 
@@ -37,8 +37,9 @@ RUN mkdir -p "${H2O_BUILD_DIR}/build" && \
     tar xz --strip-components=1 && \
     cd build && \
     cmake -DCMAKE_INSTALL_PREFIX="$H2O_PREFIX" -DCMAKE_C_FLAGS="-flto -march=native" \
-          -DCMAKE_AR=/usr/bin/gcc-ar -DCMAKE_RANLIB=/usr/bin/gcc-ranlib .. && \
-    make -j "$(nproc)" install && \
+          -DCMAKE_AR=/usr/bin/gcc-ar -DCMAKE_RANLIB=/usr/bin/gcc-ranlib -G Ninja .. && \
+    cmake --build . -j && \
+    cmake --install . && \
     cd ../.. && \
     rm -rf "$H2O_BUILD_DIR"
 

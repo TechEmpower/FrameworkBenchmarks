@@ -96,7 +96,7 @@ namespace PlatformBenchmarks
                     var (cmd, idParameter) = rawdb.CreateReadCommand(db);
                     using (cmd)
                     {
-                        Func<ICacheEntry, Task<CachedWorld>> create = async (entry) => 
+                        Func<ICacheEntry, Task<CachedWorld>> create = async (entry) =>
                         {
                             return await rawdb.ReadSingleRow(cmd);
                         };
@@ -186,7 +186,7 @@ namespace PlatformBenchmarks
 
         public async Task<List<Fortune>> LoadFortunesRows()
         {
-            var result = new List<Fortune>(20);
+            var result = new List<Fortune>();
 
             using (var db = new NpgsqlConnection(_connectionString))
             {
@@ -249,7 +249,7 @@ namespace PlatformBenchmarks
             public bool Equals(CacheKey key)
                 => key._value == _value;
 
-            public override bool Equals(object obj) 
+            public override bool Equals(object obj)
                 => ReferenceEquals(obj, this);
 
             public override int GetHashCode()

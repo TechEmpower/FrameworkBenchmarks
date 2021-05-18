@@ -29,10 +29,10 @@ Uses Twig 2.11.
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Symfony 4.3](https://symfony.com/)
-* [PHP Version 7.3](https://www.php.net/) with FPM and OPcache
-* [nginx 1.15](https://nginx.org/)
-* [MySQL 5.7](https://dev.mysql.com/)
+* [Symfony](https://symfony.com/)
+* [PHP](https://www.php.net/) with FPM and OPcache
+* [nginx ](https://nginx.org/)
+* [MySQL](https://dev.mysql.com/)
 
 
 ## Test URLs

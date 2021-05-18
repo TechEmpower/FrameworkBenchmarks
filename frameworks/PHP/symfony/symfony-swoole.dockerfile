@@ -1,4 +1,4 @@
-FROM php:7.4
+FROM php:8.0
 
 RUN pecl install swoole > /dev/null && \
     docker-php-ext-enable swoole
@@ -6,10 +6,9 @@ RUN pecl install swoole > /dev/null && \
 RUN pecl install apcu > /dev/null && \
     docker-php-ext-enable apcu
 
-RUN docker-php-ext-install pdo pdo_mysql opcache  > /dev/null
-
 RUN apt-get update -yqq && \
-    apt-get install -yqq git unzip
+    apt-get install -yqq libicu-dev git unzip > /dev/null && \ 
+    docker-php-ext-install pdo_mysql opcache intl > /dev/null
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -19,7 +18,7 @@ ADD ./composer.json /symfony/
 RUN mkdir -m 777 -p /symfony/var/cache/swoole /symfony/var/log
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts --quiet
 ADD . /symfony
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer require "k911/swoole-bundle:^0.7.8" --no-scripts --quiet
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer require "k911/swoole-bundle:^0.9" --no-scripts --ignore-platform-reqs --quiet
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --no-dev --classmap-authoritative
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env swoole
 

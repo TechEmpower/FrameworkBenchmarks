@@ -1,0 +1,9 @@
+{
+    "profile":"none",
+    "web":{
+        "maxRequests":512
+    },
+    "app":{
+        "cfengine":"adobe@2018"
+    }
+}

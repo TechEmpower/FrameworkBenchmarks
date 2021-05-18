@@ -8,7 +8,12 @@ edition = "2018"
 futures = "0.3.12"
 rand = { version = "0.8.2", features = ["small_rng"] }
 serde = { version = "1.0.120", features = ["derive"] }
+sqlx = { version = "0.5.1", features = ["runtime-tokio-rustls", "postgres"] }
 tokio = { version = "1.0.2", features = ["macros", "rt-multi-thread"] }
-tokio-postgres = "0.7.0"
 warp = "0.3.0"
-yarte = "0.14.1"
+yarte = "0.15.3"
+
+[profile.release]
+codegen-units = 1
+opt-level = 3
+lto = true

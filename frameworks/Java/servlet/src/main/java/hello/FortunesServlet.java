@@ -40,7 +40,7 @@ public class FortunesServlet extends HttpServlet {
 		res.setCharacterEncoding(UTF8);
 		res.setContentType(CONTENT_TYPE_HTML_UTF8);
 
-		final List<Fortune> fortunes = new ArrayList<>(32);
+		final List<Fortune> fortunes = new ArrayList<>();
 
 		try (Connection conn = dataSource.getConnection()) {
 			Common.modifySQLConnectionSettings(conn);

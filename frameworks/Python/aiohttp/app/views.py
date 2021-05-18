@@ -40,9 +40,7 @@ async def single_database_query_orm(request):
     """
     id_ = randint(1, 10000)
     async with request.app['db_session']() as sess:
-        # TODO(SA1.4.0b2): sess.scalar()
-        ret = await sess.execute(select(World.randomnumber).filter_by(id=id_))
-        num = ret.scalar()
+        num = await sess.scalar(select(World.randomnumber).filter_by(id=id_))
     return json_response({'id': id_, 'randomNumber': num})
 
 
@@ -69,9 +67,7 @@ async def multiple_database_queries_orm(request):
     result = []
     async with request.app['db_session']() as sess:
         for id_ in ids:
-            # TODO(SA1.4.0b2): sess.scalar()
-            ret = await sess.execute(select(World.randomnumber).filter_by(id=id_))
-            num = ret.scalar()
+            num = await sess.scalar(select(World.randomnumber).filter_by(id=id_))
             result.append({'id': id_, 'randomNumber': num})
     return json_response(result)
 
@@ -131,17 +127,13 @@ async def updates(request):
     ids = [randint(1, 10000) for _ in range(num_queries)]
     ids.sort()
 
-    # TODO(SA1.4.0b2): async with request.app['db_session'].begin() as sess:
-    async with request.app['db_session']() as sess:
-        async with sess.begin():
-            for id_ in ids:
-                rand_new = randint(1, 10000)
-                # TODO(SA1.4.0b2): world = await sess.get(World, id_)
-                ret = await sess.execute(select(World).filter_by(id=id_))
-                world = ret.scalar()
-                world.randomnumber = rand_new
+    async with request.app['db_session'].begin() as sess:
+        for id_ in ids:
+            rand_new = randint(1, 10000)
+            world = await sess.get(World, id_, populate_existing=True)
+            world.randomnumber = rand_new
 
-                result.append({'id': id_, 'randomNumber': rand_new})
+            result.append({'id': id_, 'randomNumber': rand_new})
     return json_response(result)
 
 async def updates_raw(request):
