@@ -7,12 +7,17 @@
 
     <!-- Opt out of the "easy mode" of the CoreRT compiler (http://aka.ms/OptimizeCoreRT) -->
     <TrimMode>link</TrimMode>
-    <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
     <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+
+    <!-- This benchmark is marked Stripped, so we might as well do this: -->
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+    <EventSourceSupport>false</EventSourceSupport>
+    <DebuggerSupport>false</DebuggerSupport>
+    <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
   </PropertyGroup>
   
   <ItemGroup>
-    <RdXmlFile Include="rd.xml" />
+    <IlcArg Include="--reflectedonly" />
   </ItemGroup>
   
   <ItemGroup>
