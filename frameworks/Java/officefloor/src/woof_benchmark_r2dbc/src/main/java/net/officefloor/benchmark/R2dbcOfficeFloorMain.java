@@ -51,9 +51,9 @@ import io.r2dbc.spi.ConnectionFactoryOptions;
 import io.r2dbc.spi.R2dbcTransientResourceException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.officefloor.benchmark.RawOfficeFloorMain.Fortune;
-import net.officefloor.benchmark.RawOfficeFloorMain.Message;
-import net.officefloor.benchmark.RawOfficeFloorMain.World;
+import net.officefloor.benchmark.R2dbcOfficeFloorMain.Fortune;
+import net.officefloor.benchmark.R2dbcOfficeFloorMain.Message;
+import net.officefloor.benchmark.R2dbcOfficeFloorMain.World;
 import net.officefloor.frame.api.manage.OfficeFloor;
 import net.officefloor.frame.api.manage.ProcessManager;
 import net.officefloor.frame.api.managedobject.ManagedObjectContext;
@@ -95,7 +95,7 @@ import net.openhft.affinity.Affinity;
  * <p>
  * Allows determining the overhead of the {@link OfficeFloor} framework.
  */
-public class RawOfficeFloorMain {
+public class R2dbcOfficeFloorMain {
 
 	/**
 	 * Database query load capacity to handle validation load.
@@ -115,7 +115,7 @@ public class RawOfficeFloorMain {
 	/**
 	 * {@link Logger}.
 	 */
-	private static Logger logger = Logger.getLogger(RawOfficeFloorMain.class.getName());
+	private static Logger logger = Logger.getLogger(R2dbcOfficeFloorMain.class.getName());
 
 	/**
 	 * Run application.
@@ -272,7 +272,7 @@ public class RawOfficeFloorMain {
 
 			@Override
 			public String getBoundName() {
-				return RawOfficeFloorMain.class.getSimpleName();
+				return R2dbcOfficeFloorMain.class.getSimpleName();
 			}
 
 			@Override
