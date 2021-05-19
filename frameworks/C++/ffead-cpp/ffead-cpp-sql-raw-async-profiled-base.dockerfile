@@ -1,6 +1,6 @@
-FROM sumeetchhetri/ffead-cpp-5.0-base:5.3
+FROM sumeetchhetri/ffead-cpp-base:6.0
 LABEL maintainer="Sumeet Chhetri"
-LABEL version="5.3"
+LABEL version="6.0"
 LABEL description="SQL Raw Base ffead-cpp docker image with commit id - master"
 
 WORKDIR /tmp

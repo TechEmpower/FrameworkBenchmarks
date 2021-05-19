@@ -4,7 +4,7 @@ rm -rf build
 mkdir build
 cd build
 CC=/usr/bin/clang CXX=/usr/bin/clang++ cmake -DSRV_EMB=on -DMOD_REDIS=on -DDEBUG=on ..
-make install && mv $IROOT/ffead-cpp-src/ffead-cpp-5.0-bin $IROOT/ffead-cpp-sql-raw
+make install && mv $IROOT/ffead-cpp-src/ffead-cpp-6.0-bin $IROOT/ffead-cpp-sql-raw
 
 #Start postgresql
 service postgresql stop
@@ -16,6 +16,6 @@ sed -i 's|cmake |CC=/usr/bin/clang CXX=/usr/bin/clang++ cmake |g' $IROOT/ffead-c
 apt update -yqq && apt install -yqq vim gdb net-tools telnet iputils-ping
 ./install_ffead-cpp-sql-raw-profiled.sh async
 
-#mv $IROOT/ffead-cpp-sql-raw $IROOT/ffead-cpp-5.0-sql
-#sed -i 's|localhost|tfb-database|g' $IROOT/ffead-cpp-5.0-sql/web/te-benchmark-um-pq-async/config/sdorm.xml
+#mv $IROOT/ffead-cpp-sql-raw $IROOT/ffead-cpp-6.0-sql
+#sed -i 's|localhost|tfb-database|g' $IROOT/ffead-cpp-6.0-sql/web/te-benchmark-um-pq-async/config/sdorm.xml
 
