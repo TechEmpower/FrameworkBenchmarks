@@ -7,7 +7,7 @@
 		<artifactId>benchmarks</artifactId>
 		<version>1.0.0</version>
 	</parent>
-	<artifactId>woof_benchmark_raw</artifactId>
+	<artifactId>woof_benchmark_r2dbc</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>net.officefloor.web</groupId>
@@ -59,7 +59,7 @@
 						<configuration>
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>net.officefloor.benchmark.RawOfficeFloorMain</mainClass>
+									<mainClass>net.officefloor.benchmark.R2dbcOfficeFloorMain</mainClass>
 								</transformer>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
 							</transformers>
