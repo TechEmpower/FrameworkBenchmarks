@@ -117,7 +117,7 @@ public abstract class RawWoof {
 
 		// Create the database operations
 		DatabaseOperations operations = operationsFactory.createDatabaseOperations(executionStrategy.length, server,
-				port, "hello_world", "benchmarkdbuser", "benchmarkdbpass");
+				5432, "hello_world", "benchmarkdbuser", "benchmarkdbpass");
 
 		// Create raw HTTP servicing
 		RawHttpServicerFactory serviceFactory = new RawHttpServicerFactory(serverLocation, operations);
