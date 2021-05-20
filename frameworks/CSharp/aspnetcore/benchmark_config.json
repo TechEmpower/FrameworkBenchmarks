@@ -16,7 +16,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core",
+      "display_name": "ASP.NET Core [Platform]",
       "notes": "",
       "versus": "aspcore"
     },
@@ -37,7 +37,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, ADO.NET",
+      "display_name": "ASP.NET Core [Platform, Pg]",
       "notes": "",
       "versus": "aspcore-ado-pg"
     },
@@ -55,7 +55,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, ADO.NET",
+      "display_name": "ASP.NET Core [Platform, Pg]",
       "notes": "",
       "versus": "aspcore-ado-pg-up"
     },
@@ -73,7 +73,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, Middleware",
+      "display_name": "ASP.NET Core [Middleware]",
       "notes": "",
       "versus": "aspcore"
     },
@@ -91,7 +91,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, Middleware, Json",
+      "display_name": "ASP.NET Core [Middleware]",
       "notes": "",
       "versus": "aspcore"
     },
@@ -111,7 +111,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, Middleware, ADO.NET",
+      "display_name": "ASP.NET Core [Middleware, Pg]",
       "notes": "",
       "versus": "aspcore-ado-pg"
     },
@@ -129,7 +129,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, Middleware, ADO.NET",
+      "display_name": "ASP.NET Core [Middleware, Pg]",
       "notes": "",
       "versus": "aspcore-ado-pg"
     },
@@ -149,25 +149,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, Middleware, Entity Framework Core",
-      "notes": "",
-      "versus": "aspcore-ado-pg"
-    },
-    "mw-ef-pg-up": {
-      "update_url": "/updates/ef?queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "Postgres",
-      "framework": "ASP.NET Core",
-      "language": "C#",
-      "orm": "Full",
-      "platform": ".NET",
-      "flavor": "CoreCLR",
-      "webserver": "Kestrel",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "ASP.NET Core, Middleware, Entity Framework Core",
+      "display_name": "ASP.NET Core [Middleware, Pg, EF]",
       "notes": "",
       "versus": "aspcore-ado-pg"
     },
@@ -187,7 +169,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, Middleware, Dapper",
+      "display_name": "ASP.NET Core {Middleware, Pg, Dapper]",
       "notes": "",
       "versus": "aspcore-ado-pg"
     },
@@ -205,7 +187,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, Middleware, Dapper",
+      "display_name": "ASP.NET Core [Middleware, Pg, Dapper]",
       "notes": "",
       "versus": "aspcore-ado-pg"
     },
@@ -226,7 +208,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, Middleware, ADO.NET",
+      "display_name": "ASP.NET Core [Middleware, My]",
       "notes": "",
       "versus": "aspcore-ado-my"
     },
@@ -247,7 +229,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, Middleware, Dapper",
+      "display_name": "ASP.NET Core [Middleware, My, Dapper]",
       "notes": "",
       "versus": "aspcore-ado-my"
     },    
@@ -286,7 +268,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, MVC, ADO.NET",
+      "display_name": "ASP.NET Core [MVC, Pg]",
       "notes": "",
       "versus": "aspcore-ado-pg"
     },
@@ -304,7 +286,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, MVC, ADO.NET",
+      "display_name": "ASP.NET Core [MVC, Pg]",
       "notes": "",
       "versus": "aspcore-ado-pg"
     },
@@ -324,25 +306,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, MVC, Entity Framework Core",
-      "notes": "",
-      "versus": "aspcore-ado-pg"
-    },
-    "mvc-ef-pg-up": {
-      "update_url": "/mvc/updates/ef?queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "Postgres",
-      "framework": "ASP.NET Core",
-      "language": "C#",
-      "orm": "Full",
-      "platform": ".NET",
-      "flavor": "CoreCLR",
-      "webserver": "Kestrel",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "ASP.NET Core, MVC, Entity Framework Core",
+      "display_name": "ASP.NET Core [MVC, Pg, EF]",
       "notes": "",
       "versus": "aspcore-ado-pg"
     },
@@ -362,7 +326,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, MVC, Dapper",
+      "display_name": "ASP.NET Core [MVC, Pg, Dapper]",
       "notes": "",
       "versus": "aspcore-ado-pg"
     },
@@ -380,7 +344,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, MVC, Dapper",
+      "display_name": "ASP.NET Core [MVC, Pg, Dapper]",
       "notes": "",
       "versus": "aspcore-ado-pg"
     },
@@ -401,7 +365,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, MVC, Raw",
+      "display_name": "ASP.NET Core [MVC, My]",
       "notes": "",
       "versus": "aspcore-ado-my"
     },
@@ -422,7 +386,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, MVC, Dapper",
+      "display_name": "ASP.NET Core [MVC, My, Dapper]",
       "notes": "",
       "versus": "aspcore-ado-my"
     }

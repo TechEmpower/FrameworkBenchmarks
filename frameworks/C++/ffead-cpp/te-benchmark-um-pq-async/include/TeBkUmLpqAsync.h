@@ -101,9 +101,7 @@ class TeBkUmLpqAsyncRouter : public Router {
 	static std::string APP_NAME;
 	static std::string TPE_FN_NAME;
 
-	std::atomic<bool> which = { false };
-
-	bool strToNum(const char* str, int len, int& ret);
+	static bool strToNum(const char* str, int len, int& ret);
 
 	void dbAsync(AsyncReq* req);
 	static void dbAsyncUtil(void* ctx, int rn, int cn, char * d);
@@ -112,6 +110,12 @@ class TeBkUmLpqAsyncRouter : public Router {
 	void queriesAsync(const char* q, int ql, AsyncReq* req);
 	static void queriesAsyncUtil(void* ctx, int rn, int cn, char * d);
 	static void queriesAsyncCh(void* ctx, bool status, const std::string& q, int counter);
+
+#ifndef HAVE_LIBPQ_BATCH
+	void queriesMultiAsync(const char*, int, AsyncReq*);
+	static void queriesMultiAsyncUtil(void* ctx, int, int, char *, int);
+	static void queriesMultiAsyncCh(void* ctx, bool status, const std::string& q, int counter);
+#endif
 
 	void updatesAsync(const char* q, int ql, AsyncReq* req);
 	static void updatesAsyncChQ(void* ctx, bool status, const std::string& q, int counter);
@@ -133,13 +137,12 @@ class TeBkUmLpqAsyncRouter : public Router {
 	static std::map<int, std::string> _qC;
 	LibpqDataSourceImpl* sqli;
 	LibpqDataSourceImpl* getDb();
+	//static Logger logger;
 public:
 	TeBkUmLpqAsyncRouter& operator=(const TeBkUmLpqAsyncRouter& a) {
-		which = false;
 		return *this;
 	}
 	TeBkUmLpqAsyncRouter(const TeBkUmLpqAsyncRouter& a) {
-		which = false;
 		sqli = NULL;
 	}
 	TeBkUmLpqAsyncRouter();

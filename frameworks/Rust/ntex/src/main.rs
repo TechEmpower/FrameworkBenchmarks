@@ -1,5 +1,5 @@
 #[global_allocator]
-static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use bytes::Bytes;
 use ntex::http::header::{HeaderValue, CONTENT_TYPE, SERVER};

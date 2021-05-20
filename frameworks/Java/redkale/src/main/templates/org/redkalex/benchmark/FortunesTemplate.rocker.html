@@ -1,18 +1,9 @@
 @import org.redkalex.benchmark.Fortune
 @import java.util.List
 @args(List<Fortune> fortunes)
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html>
 <head><title>Fortunes</title></head>
-<body>
-<table>
-  <tr>
-    <th>id</th>
-    <th>message</th>
-  </tr> @for (fortune : fortunes) {
-  <tr>
-    <td>@fortune.getId()</td>
-    <td>@fortune.getMessage()</td>
-  </tr> } </table>
-</body>
-</html>
+<body><table>
+<tr><th>id</th><th>message</th></tr>@for (fortune : fortunes) {
+<tr><td>@fortune.getId()</td><td>@fortune.getMessage()</td></tr>} 
+</table></body></html>
