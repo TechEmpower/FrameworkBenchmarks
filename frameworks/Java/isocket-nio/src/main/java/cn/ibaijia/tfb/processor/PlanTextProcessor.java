@@ -53,4 +53,17 @@ public class PlanTextProcessor implements Processor<HttpEntity> {
 //        }
         return true;
     }
+
+    @Override
+    public void processError(Session session, HttpEntity httpEntity, Throwable throwable) {
+        logger.error("processError:", throwable);
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        httpResponseEntity.setHeader("Content-Type", "text/plain");
+        httpResponseEntity.setHeader("Server", SERVER_NAME);
+        httpResponseEntity.setHeader("Date", dateFormat.format(new Date()));
+        httpResponseEntity.body = "hi";
+        httpResponseEntity.statusCode = 500;
+        httpResponseEntity.status = "Internal Server Error";
+        session.write(httpResponseEntity);
+    }
 }
