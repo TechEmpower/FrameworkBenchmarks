@@ -20,7 +20,8 @@ server = HTTP::Server.new do |context|
   when "/json"
     response.status_code = 200
     response.headers["Content-Type"] = CONTENT_JSON
-    {message: "Hello, World!"}.to_json(response)
+    json = {message: "Hello, World!"}.to_json
+    response.print(json)
   when "/plaintext"
     response.status_code = 200
     response.headers["Content-Type"] = CONTENT_TEXT
@@ -28,13 +29,14 @@ server = HTTP::Server.new do |context|
   when "/db"
     response.status_code = 200
     response.headers["Content-Type"] = CONTENT_JSON
-    find_world(rand(1..ID_MAXIMUM)).to_json(response)
+    json = find_world(rand(1..ID_MAXIMUM)).to_json
+    response.print(json)
   when "/queries"
     response.status_code = 200
     response.headers["Content-Type"] = CONTENT_JSON
 
     worlds = (1..sanitized_query_count(request)).map { find_world(rand(1..ID_MAXIMUM)) }
-    worlds.to_json(response)
+    response.print(worlds.to_json)
   when "/fortunes"
     response.status_code = 200
     response.headers["Content-Type"] = CONTENT_HTML
@@ -62,7 +64,7 @@ server = HTTP::Server.new do |context|
       APPDB.exec("UPDATE world SET randomNumber = $1 WHERE id = $2", random_number, world[:id])
       {id: world[:id], randomNumber: random_number}
     end
-    worlds.to_json(response)
+    response.print(worlds.to_json)
   else
     response.status_code = 404
   end
