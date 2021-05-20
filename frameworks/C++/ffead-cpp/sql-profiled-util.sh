@@ -1,6 +1,6 @@
 mkdir /tmp/profile-data
 
-rm -rf $IROOT/ffead-cpp-5.0-sql
+rm -rf $IROOT/ffead-cpp-6.0-sql
 
 if [ "$1" = "batch" ]
 then
@@ -37,18 +37,18 @@ rm -rf web/te-benchmark-um web/te-benchmark-um-mgr
 
 sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/te-benchmark-um)||g' CMakeLists.txt
 sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/te-benchmark-um-mgr)||g' CMakeLists.txt
-sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/te-benchmark-um/libte_benchmark_um${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
-sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/te-benchmark-um-mgr/libte_benchmark_um_mgr${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/te-benchmark-um/libte-benchmark-um${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/te-benchmark-um-mgr/libte-benchmark-um-mgr${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
 
 if [ "$3" = "async" ]
 then
 	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/te-benchmark-um-pq)||g' CMakeLists.txt
-	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/te-benchmark-um-pq/libte_benchmark_um_pq${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/te-benchmark-um-pq/libte-benchmark-um-pq${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
 	sed -i 's|tfb-database|localhost|g' $IROOT/ffead-cpp-src/web/te-benchmark-um-pq-async/config/sdorm.xml
 	rm -rf web/te-benchmark-um-pq
 else
 	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/te-benchmark-um-pq-async)||g' CMakeLists.txt
-	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/te-benchmark-um-pq-async/libte_benchmark_um_pq_async${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/te-benchmark-um-pq-async/libte-benchmark-um-pq-async${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
 	sed -i 's|tfb-database|localhost|g' $IROOT/ffead-cpp-src/web/te-benchmark-um-pq/config/sdorm.xml
 	rm -rf web/te-benchmark-um-pq-async
 fi
