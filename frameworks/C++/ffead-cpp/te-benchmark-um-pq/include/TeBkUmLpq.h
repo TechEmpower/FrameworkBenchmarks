@@ -24,6 +24,7 @@
 #define WEB_TE_BENCHMARK_UM_INCLUDE_TeBkUmLpq_H_
 #include "TemplateHandler.h"
 #include "vector"
+#include "list"
 #ifndef OS_MINGW
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -32,7 +33,6 @@
 #include <stdlib.h>
 #include <algorithm>
 #include "CryptoHandler.h"
-#include "vector"
 #include "CastUtil.h"
 #include <stdlib.h>
 #include "CacheManager.h"
@@ -42,13 +42,14 @@
 #include "string"
 #include "yuarel.h"
 #include "Router.h"
-
-typedef void (*TeBkUmLpqTemplatePtr) (Context*, std::string&);
+#include "Reflector.h"
 
 class TeBkUmLpqWorld {
 	int id;
 	int randomNumber;
 public:
+	TeBkUmLpqWorld(int id);
+	TeBkUmLpqWorld(int id, int randomNumber);
 	TeBkUmLpqWorld();
 	virtual ~TeBkUmLpqWorld();
 	int getId() const;
@@ -66,20 +67,24 @@ struct UpdQrData {
 
 class TeBkUmLpqFortune {
 	int id;
-	std::string message;
 public:
+	std::string message_i;
+	std::string_view message;
+	bool allocd;
+	TeBkUmLpqFortune(int id);
+	TeBkUmLpqFortune(int id, std::string message);
 	TeBkUmLpqFortune();
 	virtual ~TeBkUmLpqFortune();
 	int getId() const;
 	void setId(int id);
-	const std::string& getMessage() const;
-	void setMessage(const std::string& message);
 	bool operator < (const TeBkUmLpqFortune& other) const;
 };
 
 class TeBkUmLpqMessage {
 	std::string message;
 public:
+	TeBkUmLpqMessage();
+	TeBkUmLpqMessage(std::string message);
 	virtual ~TeBkUmLpqMessage();
 	const std::string& getMessage() const;
 	void setMessage(const std::string& message);
@@ -92,8 +97,11 @@ class TeBkUmLpqRouter : public Router {
 	static std::string WORLD_ALL_QUERY;
 	static std::string FORTUNE_ALL_QUERY;
 
-	static std::string APP_NAME;
-	static std::string TPE_FN_NAME;
+	static TemplatePtr tmplFunc;
+
+	static Ser m_ser;
+	static Ser w_ser;
+	static SerCont wcont_ser;
 
 	static bool strToNum(const char* str, int len, int& ret);
 
@@ -112,7 +120,7 @@ class TeBkUmLpqRouter : public Router {
 	void cachedWorlds(const char*, int, std::vector<TeBkUmLpqWorld>&);
 	static void updateCacheUtil(void* ctx, int rn, std::vector<LibpqRes>& data);
 
-	void getContext(HttpRequest* request, Context* context);
+	void handleTemplate(HttpResponse* res);
 	static void getContextUtil(void* ctx, int, int, char *, int);
 
 	std::map<int, std::string> _qC;
@@ -124,7 +132,7 @@ public:
 	TeBkUmLpqRouter();
 	virtual ~TeBkUmLpqRouter();
 	void updateCache();
-	bool route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib, SocketInterface* sif);
+	bool route(HttpRequest* req, HttpResponse* res, SocketInterface* sif);
 };
 
 #endif /* WEB_TE_BENCHMARK_UM_INCLUDE_TeBkUmLpq_H_ */

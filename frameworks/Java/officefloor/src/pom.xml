@@ -17,9 +17,10 @@
 		<module>woof_benchmark_micro</module>
 		<module>woof_benchmark_thread_affinity</module>
 		<module>woof_benchmark_async</module>
-		<module>woof_benchmark_raw</module>
+		<module>woof_benchmark_r2dbc</module>
 		<module>woof_benchmark_netty</module>
 		<module>woof_benchmark_undertow</module>
+		<module>woof_benchmark_vertx</module>
 		<module>woof_benchmark_spring</module>
 	</modules>
 	<repositories>
@@ -39,7 +40,7 @@
 			<dependency>
 				<groupId>net.officefloor</groupId>
 				<artifactId>bom</artifactId>
-				<version>3.31.0</version>
+				<version>3.36.0</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
