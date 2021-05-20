@@ -14,6 +14,7 @@
 	</properties>
 	<modules>
 		<module>woof_benchmark</module>
+		<module>woof_benchmark_woof</module>
 		<module>woof_benchmark_micro</module>
 		<module>woof_benchmark_thread_affinity</module>
 		<module>woof_benchmark_async</module>
@@ -52,6 +53,11 @@
 			<dependency>
 				<groupId>net.officefloor.benchmarks</groupId>
 				<artifactId>woof_benchmark_micro</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.officefloor.benchmarks</groupId>
+				<artifactId>woof_benchmark_woof</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
