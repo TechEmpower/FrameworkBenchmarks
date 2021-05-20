@@ -139,7 +139,7 @@ class Application < Grip::Application
     HTTP::Server.new(@router)
   end
 
-  def resue_port
+  def reuse_port
     true
   end
 
