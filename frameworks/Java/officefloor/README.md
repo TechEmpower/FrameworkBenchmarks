@@ -1,6 +1,6 @@
 # OfficeFloor
 
-OfficeFloor provides true inversion of (coupling) control.
+OfficeFloor provides [inversion of coupling control](https://dzone.com/articles/inversion-of-coupling-control).
 
 > Inversion of Control = Dependency Injection + Continuation Injection + Thread Injection
 
