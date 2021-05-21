@@ -35,11 +35,11 @@ More information can be found at [http://officefloor.net](http://officefloor.net
 
 # OfficeFloor Benchmark Tests
 
-OfficeFloor can use different HTTP server components:
+OfficeFloor can use different HTTP server implementations that pass to OfficeFloor inversion of coupling control for request servicing:
 
-* **officefloor-netty** : incorporating Netty to service requests passing to OfficeFloor inversion of coupling control.
-* **officefloor-undertow** : incorporating Undertow to service requests passing to OfficeFloor inversion of coupling control.
-* **officefloor-vertx** : incorporating Vertx to service requests passing to OfficeFloor inversion of coupling control.
+* **officefloor-netty** : using Netty
+* **officefloor-undertow** : using Undertow
+* **officefloor-vertx** : using Vertx
 
 OfficeFloor can also use various database clients.  These use the default HTTP server component provided by OfficeFloor:
 
