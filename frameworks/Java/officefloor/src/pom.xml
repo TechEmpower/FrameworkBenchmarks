@@ -19,6 +19,7 @@
 		<module>woof_benchmark_thread_affinity</module>
 		<module>woof_benchmark_async</module>
 		<module>woof_benchmark_r2dbc</module>
+		<module>woof_benchmark_sqlclient</module>
 		<module>woof_benchmark_netty</module>
 		<module>woof_benchmark_undertow</module>
 		<module>woof_benchmark_vertx</module>
