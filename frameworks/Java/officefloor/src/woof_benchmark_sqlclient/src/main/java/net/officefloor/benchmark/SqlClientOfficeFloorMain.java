@@ -28,11 +28,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class SqlClientOfficeFloorMain implements DatabaseOperations {
 
     /**
-     * {@link Vertx}.
-     */
-    private static final Vertx vertx = Vertx.vertx();
-
-    /**
      * Run application.
      */
     public static void main(String[] args) throws Exception {
@@ -57,6 +52,9 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
      */
     public SqlClientOfficeFloorMain(int socketCount, String server, int port, String database, String username,
                                     String password) {
+    	
+    	// Obtain the vertx
+    	Vertx vertx = OfficeFloorVertx.getVertx();
 
         // Create connection
         PgConnectOptions connectOptions = new PgConnectOptions().setHost(server).setPort(port).setDatabase(database)
