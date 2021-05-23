@@ -51,17 +51,20 @@ namespace PlatformBenchmarks
             Console.WriteLine($"Database: {appSettings.Database}");
             Console.WriteLine($"ConnectionString: {appSettings.ConnectionString}");
 
+    #if NPGSQL
             if (appSettings.Database == DatabaseServer.PostgreSql)
+    #elif MYSQLCONNECTOR
+            if (appSettings.Database == DatabaseServer.MySql)
+    #else
+            if (false)
+    #endif
             {
-                BenchmarkApplication.Db = new RawDbNpgsql(new ConcurrentRandom(), appSettings);
+                BenchmarkApplication.Db = new RawDb(new ConcurrentRandom(), appSettings);
             }
-            else if (appSettings.Database == DatabaseServer.MySql)
+
+            if (BenchmarkApplication.Db is null)
             {
-                BenchmarkApplication.Db = new RawDbMySqlConnector(new ConcurrentRandom(), appSettings);
-            }
-            else
-            {
-                throw new NotSupportedException($"{appSettings.Database} is not supported");
+                throw new NotSupportedException($"{appSettings.Database} is not supported by the used preprocessor directive.");
             }
 #endif
 
