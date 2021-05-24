@@ -1,7 +1,7 @@
-FROM rust:1.50
+FROM rust:1.52.1
 
 # Disable simd at jsonescape
-ENV CARGO_CFG_JSONESCAPE_DISABLE_AUTO_SIMD=
+# ENV CARGO_CFG_JSONESCAPE_DISABLE_AUTO_SIMD=
 
 RUN apt-get update -yqq && apt-get install -yqq cmake g++
 
