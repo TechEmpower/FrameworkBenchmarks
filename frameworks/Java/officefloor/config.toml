@@ -86,6 +86,23 @@ platform = "OfficeFloor"
 webserver = "WoOF"
 versus = "None"
 
+[sqlclient]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.update = "/update?queries="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "raw"
+platform = "OfficeFloor"
+webserver = "WoOF"
+versus = "None"
+
 [undertow]
 urls.plaintext = "/plaintext"
 urls.json = "/json"

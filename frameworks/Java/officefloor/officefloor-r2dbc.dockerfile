@@ -1,6 +1,10 @@
 FROM maven:3.6.3 as maven
 WORKDIR /officefloor
 COPY src src
+WORKDIR /officefloor/src
+RUN mvn -B -N clean install
+WORKDIR /officefloor/src/woof_benchmark_woof
+RUN mvn -B clean install
 WORKDIR /officefloor/src/woof_benchmark_r2dbc
 RUN mvn -B clean package
 
