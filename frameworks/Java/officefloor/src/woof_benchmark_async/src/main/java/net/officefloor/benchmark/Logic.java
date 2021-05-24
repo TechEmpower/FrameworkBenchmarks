@@ -150,6 +150,9 @@ public class Logic {
 			return CompositeFuture.all(futures).flatMap((compositeFuture) -> {
 				List<World> worlds = compositeFuture.list();
 
+				// Sort worlds to avoid deadlocks on updates
+				Collections.sort(worlds, (a, b) -> a.id - b.id);
+
 				// All worlds obtained, so run update
 				List<Tuple> batch = new ArrayList<>(queryCount);
 				for (World update : worlds) {
