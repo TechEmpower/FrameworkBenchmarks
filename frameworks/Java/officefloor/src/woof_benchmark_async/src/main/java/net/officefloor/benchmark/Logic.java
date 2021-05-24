@@ -35,11 +35,6 @@ import net.officefloor.web.ObjectResponse;
  */
 public class Logic {
 
-	static {
-		// Increase the buffer size
-		System.setProperty("reactor.bufferSize.small", String.valueOf(512));
-	}
-
 	/**
 	 * {@link Mustache} for /fortunes.
 	 */
@@ -223,11 +218,7 @@ public class Logic {
 		future.onComplete(result -> {
 			if (result.failed()) {
 				async.complete(() -> {
-
-					// Indicate failure
-					System.out.println("TODO REMOVE failure: " + result.cause());
 					result.cause().printStackTrace();
-
 					throw result.cause();
 				});
 			} else {
