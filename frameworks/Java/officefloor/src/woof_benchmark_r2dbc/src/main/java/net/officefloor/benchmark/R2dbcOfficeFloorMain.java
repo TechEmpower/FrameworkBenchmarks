@@ -223,7 +223,14 @@ public class R2dbcOfficeFloorMain implements DatabaseOperations {
 					Collections.sort(worlds, (a, b) -> a.id - b.id);
 					Batch batch = conn.connection.createBatch();
 					for (World world : worlds) {
-						world.randomNumber = ThreadLocalRandom.current().nextInt(1, 10001);
+
+						// Ensure change to random number to trigger update
+						int newRandomNumber;
+						do {
+							newRandomNumber = ThreadLocalRandom.current().nextInt(1, 10001);
+						} while (world.randomNumber == newRandomNumber);
+						world.randomNumber = newRandomNumber;
+
 						batch.add("UPDATE WORLD SET RANDOMNUMBER = " + world.randomNumber + " WHERE ID = " + world.id);
 					}
 					return Mono.from(batch.execute()).map((result) -> worlds);
