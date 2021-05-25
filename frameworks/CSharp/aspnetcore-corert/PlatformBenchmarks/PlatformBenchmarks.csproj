@@ -8,6 +8,7 @@
     <!-- Opt out of the "easy mode" of the CoreRT compiler (http://aka.ms/OptimizeCoreRT) -->
     <TrimMode>link</TrimMode>
     <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+    <IlcPgoOptimize>true</IlcPgoOptimize>
 
     <!-- This benchmark is marked Stripped, so we might as well do this: -->
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
