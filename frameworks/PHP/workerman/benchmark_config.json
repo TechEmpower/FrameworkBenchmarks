@@ -62,7 +62,10 @@
       "database_os": "Linux",
       "display_name": "workerman-async-db",
       "notes": "",
-      "versus": "php"
+      "versus": "php",
+      "tags": [
+        "broken"
+      ]
     },
     "php8-jit": {
       "json_url": "/json",

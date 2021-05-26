@@ -103,7 +103,6 @@ async fn main() -> std::io::Result<()> {
                 .h1(AppFactory)
                 .tcp()
         })?
-        .workers((num_cpus::get() as f32 * 1.2) as usize)
         .start()
         .await
 }

@@ -14,6 +14,20 @@ platform = "Redkale"
 webserver = "Redkale"
 versus = "Redkale"
 
+[j17]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.cached_query = "/cached-worlds?q="
+approach = "Realistic"
+classification = "Fullstack"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Redkale"
+webserver = "Redkale"
+versus = "Redkale"
+
 [cache]
 urls.cached_query = "/cached-worlds?q="
 approach = "Realistic"
@@ -26,43 +40,10 @@ platform = "Redkale"
 webserver = "Redkale"
 versus = "Redkale"
 
-[db]
+[postgres]
 urls.db = "/db"
-approach = "Realistic"
-classification = "Fullstack"
-database = "Postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "Redkale"
-webserver = "Redkale"
-versus = "Redkale"
-
-[fortune]
 urls.fortune = "/fortunes"
-approach = "Realistic"
-classification = "Fullstack"
-database = "Postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "Redkale"
-webserver = "Redkale"
-versus = "Redkale"
-
-[query]
 urls.query = "/queries?q="
-approach = "Realistic"
-classification = "Fullstack"
-database = "Postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "Redkale"
-webserver = "Redkale"
-versus = "Redkale"
-
-[update]
 urls.update = "/updates?q="
 approach = "Realistic"
 classification = "Fullstack"
@@ -73,4 +54,3 @@ orm = "Raw"
 platform = "Redkale"
 webserver = "Redkale"
 versus = "Redkale"
-

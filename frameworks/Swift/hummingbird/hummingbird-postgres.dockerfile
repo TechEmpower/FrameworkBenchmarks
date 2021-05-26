@@ -10,7 +10,8 @@ COPY ./src-postgres .
 # Compile with optimizations
 RUN swift build \
 	--enable-test-discovery \
-	-c release
+	-c release \
+	-Xswiftc -enforce-exclusivity=unchecked
 
 # ================================
 # Run image

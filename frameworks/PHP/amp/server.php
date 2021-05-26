@@ -90,7 +90,7 @@ Amp\Loop::run(function () {
             $query = $request->getUri()->getQuery();
             \parse_str($query, $queryParams);
 
-            $queries = (int) ($queryParams['queries'] ?? 1);
+            $queries = (int) ($queryParams['q'] ?? 1);
             if ($queries < 1) {
                 $queries = 1;
             } elseif ($queries > 500) {
@@ -157,12 +157,6 @@ Amp\Loop::run(function () {
             ], \ob_get_clean());
         }
 
-        private function execute($statement) {
-            $result = yield $statement->execute([mt_rand(1, 10000)]);
-            yield $result->advance();
-
-            return $result->getCurrent();
-        }
     });
 
     // Case 6 - Plaintext

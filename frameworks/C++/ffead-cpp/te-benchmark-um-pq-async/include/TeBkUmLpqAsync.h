@@ -43,13 +43,13 @@
 #include "yuarel.h"
 #include "Router.h"
 
-typedef void (*TeBkUmLpqAsyncTemplatePtr) (Context*, std::string&);
-
 class TeBkUmLpqAsyncWorld {
 	int id;
 	int randomNumber;
 public:
 	TeBkUmLpqAsyncWorld();
+	TeBkUmLpqAsyncWorld(int id);
+	TeBkUmLpqAsyncWorld(int id, int randomNumber);
 	virtual ~TeBkUmLpqAsyncWorld();
 	int getId() const;
 	void setId(int id);
@@ -59,36 +59,44 @@ public:
 
 class TeBkUmLpqAsyncFortune {
 	int id;
-	std::string message;
 public:
+	std::string message_i;
+	std::string_view message;
+	bool allocd;
+	TeBkUmLpqAsyncFortune(int id);
+	TeBkUmLpqAsyncFortune(int id, std::string message);
 	TeBkUmLpqAsyncFortune();
 	virtual ~TeBkUmLpqAsyncFortune();
 	int getId() const;
 	void setId(int id);
-	const std::string& getMessage() const;
-	void setMessage(const std::string& message);
 	bool operator < (const TeBkUmLpqAsyncFortune& other) const;
 };
 
 class TeBkUmLpqAsyncMessage {
 	std::string message;
 public:
+	TeBkUmLpqAsyncMessage();
+	TeBkUmLpqAsyncMessage(std::string message);
 	virtual ~TeBkUmLpqAsyncMessage();
 	const std::string& getMessage() const;
 	void setMessage(const std::string& message);
 };
 
 struct AsyncReq {
-	HttpResponse r;
+	float httpVers;
+	bool conn_clos;
 	SocketInterface* sif;
-	void* d;
-	void* ddlib;
 	LibpqDataSourceImpl* sqli;
+
+	TeBkUmLpqAsyncWorld w;
+	std::vector<TeBkUmLpqAsyncWorld> vec;
+	std::list<TeBkUmLpqAsyncFortune> flst;
 };
 
 struct CacheReq {
-	void* d;
 	CacheInterface* cchi;
+
+	std::vector<TeBkUmLpqAsyncWorld> vec;
 };
 
 class TeBkUmLpqAsyncRouter : public Router {
@@ -98,12 +106,13 @@ class TeBkUmLpqAsyncRouter : public Router {
 	static std::string WORLD_ALL_QUERY;
 	static std::string FORTUNE_ALL_QUERY;
 
-	static std::string APP_NAME;
-	static std::string TPE_FN_NAME;
+	static TemplatePtr tmplFunc;
 
-	std::atomic<bool> which = { false };
+	static Ser m_ser;
+	static Ser w_ser;
+	static SerCont wcont_ser;
 
-	bool strToNum(const char* str, int len, int& ret);
+	static bool strToNum(const char* str, int len, int& ret);
 
 	void dbAsync(AsyncReq* req);
 	static void dbAsyncUtil(void* ctx, int rn, int cn, char * d);
@@ -112,6 +121,12 @@ class TeBkUmLpqAsyncRouter : public Router {
 	void queriesAsync(const char* q, int ql, AsyncReq* req);
 	static void queriesAsyncUtil(void* ctx, int rn, int cn, char * d);
 	static void queriesAsyncCh(void* ctx, bool status, const std::string& q, int counter);
+
+#ifndef HAVE_LIBPQ_BATCH
+	void queriesMultiAsync(const char*, int, AsyncReq*);
+	static void queriesMultiAsyncUtil(void* ctx, int, int, char *, int);
+	static void queriesMultiAsyncCh(void* ctx, bool status, const std::string& q, int counter);
+#endif
 
 	void updatesAsync(const char* q, int ql, AsyncReq* req);
 	static void updatesAsyncChQ(void* ctx, bool status, const std::string& q, int counter);
@@ -133,19 +148,18 @@ class TeBkUmLpqAsyncRouter : public Router {
 	static std::map<int, std::string> _qC;
 	LibpqDataSourceImpl* sqli;
 	LibpqDataSourceImpl* getDb();
+	//static Logger logger;
 public:
 	TeBkUmLpqAsyncRouter& operator=(const TeBkUmLpqAsyncRouter& a) {
-		which = false;
 		return *this;
 	}
 	TeBkUmLpqAsyncRouter(const TeBkUmLpqAsyncRouter& a) {
-		which = false;
 		sqli = NULL;
 	}
 	TeBkUmLpqAsyncRouter();
 	virtual ~TeBkUmLpqAsyncRouter();
 	void updateCache();
-	bool route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib, SocketInterface* sif);
+	bool route(HttpRequest* req, HttpResponse* res, SocketInterface* sif);
 };
 
 #endif /* WEB_TE_BENCHMARK_UM_INCLUDE_TeBkUmLpqAsync_H_ */
