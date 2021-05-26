@@ -19,7 +19,6 @@ public class JsonUtil {
         try {
             stream.reset(null);
             stream.writeVal(obj.getClass(), obj);
-            stream.buffer();
             Slice slice = stream.buffer();
             httpResponse.setContentLength(slice.tail());
             httpResponse.getOutputStream().write(slice.data(), 0, slice.tail());
