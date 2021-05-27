@@ -1,0 +1,46 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    erubi (1.10.0)
+    json (2.5.1)
+    kgio (2.11.3)
+    mysql2 (0.5.3)
+    nio4r (2.5.7)
+    passenger (6.0.8)
+      rack
+      rake (>= 0.8.1)
+    pg (1.2.3)
+    puma (5.2.2)
+      nio4r (~> 2.0)
+    rack (2.2.3)
+    raindrops (0.19.1)
+    rake (13.0.3)
+    roda (3.43.1)
+      rack
+    sequel (5.44.0)
+    sequel_pg (1.14.0)
+      pg (>= 0.18.0, != 1.2.0)
+      sequel (>= 4.38.0)
+    tilt (2.0.10)
+    unicorn (6.0.0)
+      kgio (~> 2.6)
+      raindrops (~> 0.7)
+
+PLATFORMS
+  x86_64-linux
+
+DEPENDENCIES
+  erubi (~> 1.10)
+  json (~> 2.5)
+  mysql2 (~> 0.5)
+  passenger (~> 6.0)
+  pg (~> 1.2)
+  puma (~> 5.2)
+  roda (~> 3.43)
+  sequel (~> 5.44)
+  sequel_pg (~> 1.14)
+  tilt (~> 2.0)
+  unicorn (~> 6.0)
+
+BUNDLED WITH
+   2.2.16

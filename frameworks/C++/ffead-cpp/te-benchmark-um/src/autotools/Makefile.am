@@ -8,7 +8,7 @@ distdir=${PACKAGE_NAME}-${PACKAGE_VERSION}-src
 fprefix=../../../../${packageIdentifier}
 prefix=${abs_builddir}
 
-lib_LTLIBRARIES = libte_benchmark_um.la
+lib_LTLIBRARIES = libte-benchmark-um.la
 libte_benchmark_um_la_SOURCES = ../TeBkUmWorld.cpp \
 				../TeBkUm.cpp
 

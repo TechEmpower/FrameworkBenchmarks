@@ -69,6 +69,29 @@
 			"display_name": "laravel-laravel-s",
 			"notes": "",
 			"versus": "swoole"
+		},
+		"roadrunner": {
+			"json_url": "/json",
+			"db_url": "/db",
+			"query_url": "/queries/",
+			"fortune_url": "/fortunes",
+			"update_url": "/updates/",
+			"plaintext_url": "/plaintext",
+			"port": 8080,
+			"approach": "Realistic",
+			"classification": "Fullstack",
+			"database": "MySQL",
+			"framework": "laravel",
+			"language": "PHP",
+			"flavor": "None",
+			"orm": "Full",
+			"platform": "roadrunner",
+			"webserver": "none",
+			"os": "Linux",
+			"database_os": "Linux",
+			"display_name": "laravel-roadrunner",
+			"notes": "",
+			"versus": "swoole"
 		}
 	}]
 }

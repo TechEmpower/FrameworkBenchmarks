@@ -1,7 +1,7 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-use std::{cell::Cell, pin::Pin, task::Context, task::Poll};
+use std::{pin::Pin, task::Context, task::Poll};
 
 use bytes::BytesMut;
 use futures::future::{ok, Future, FutureExt};
@@ -14,23 +14,7 @@ use yarte::Serialize;
 mod db;
 mod utils;
 
-struct App {
-    c1: db::PgConnection,
-    c2: db::PgConnection,
-    next: Cell<bool>,
-}
-
-impl App {
-    fn get_db(&self) -> &db::PgConnection {
-        if self.next.get() {
-            self.next.set(!self.next.get());
-            &self.c1
-        } else {
-            self.next.set(!self.next.get());
-            &self.c2
-        }
-    }
-}
+struct App(db::PgConnection);
 
 impl Service for App {
     type Request = Request;
@@ -45,13 +29,13 @@ impl Service for App {
 
     fn call(&self, req: Request) -> Self::Future {
         match req.path() {
-            "/db" => Box::pin(self.get_db().get_world().map(|body| {
+            "/db" => Box::pin(self.0.get_world().map(|body| {
                 Ok(HttpResponse::Ok()
                     .header(SERVER, HeaderValue::from_static("N"))
                     .header(CONTENT_TYPE, HeaderValue::from_static("application/json"))
                     .body(body))
             })),
-            "/fortunes" => Box::pin(self.get_db().tell_fortune().map(|body| {
+            "/fortunes" => Box::pin(self.0.tell_fortune().map(|body| {
                 Ok(HttpResponse::Ok()
                     .header(SERVER, HeaderValue::from_static("N"))
                     .header(
@@ -61,7 +45,7 @@ impl Service for App {
                     .body(body))
             })),
             "/query" => Box::pin(
-                self.get_db()
+                self.0
                     .get_worlds(utils::get_query_param(req.uri().query()))
                     .map(|worlds| {
                         Ok(HttpResponse::Ok()
@@ -71,7 +55,7 @@ impl Service for App {
                     }),
             ),
             "/update" => Box::pin(
-                self.get_db()
+                self.0
                     .update(utils::get_query_param(req.uri().query()))
                     .map(|worlds| {
                         Ok(HttpResponse::Ok()
@@ -100,13 +84,7 @@ impl ServiceFactory for AppFactory {
         const DB_URL: &str =
             "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
-        Box::pin(async move {
-            Ok(App {
-                next: Cell::new(true),
-                c1: db::PgConnection::connect(DB_URL).await,
-                c2: db::PgConnection::connect(DB_URL).await,
-            })
-        })
+        Box::pin(async move { Ok(App(db::PgConnection::connect(DB_URL).await)) })
     }
 }
 

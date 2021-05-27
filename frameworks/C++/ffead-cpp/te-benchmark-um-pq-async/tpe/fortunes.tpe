@@ -1,12 +1,12 @@
-#declare std::vector<TeBkUmLpqAsyncFortune> fortunes#
+#declareref std::list<TeBkUmLpqAsyncFortune>* fortunes#
 <!DOCTYPE html>
 <html>
 <head><title>Fortunes</title></head>
 <body>
 <table>
 <tr><th>id</th><th>message</th></tr>
-#for(int i=0;i<(int)fortunes.size();i++)#
-<tr><td>$_S{fortunes.at(i).getId()}</td><td>${fortunes.at(i).getMessage()}</td></tr>
+#for(std::list<TeBkUmLpqAsyncFortune>::iterator it=fortunes->begin(); it != fortunes->end(); ++it)#
+<tr><td>${(*it).getId()}</td><td>${(*it).message}</td></tr>
 #rof#
 </table>
 </body>

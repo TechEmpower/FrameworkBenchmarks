@@ -15,15 +15,11 @@
 		</dependency>
 		<dependency>
 			<groupId>net.officefloor.persistence</groupId>
-			<artifactId>officer2dbc</artifactId>
+			<artifactId>officevertx_sqlclient</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.r2dbc</groupId>
-			<artifactId>r2dbc-postgresql</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.r2dbc</groupId>
-			<artifactId>r2dbc-pool</artifactId>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-pg-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.github.spullara.mustache.java</groupId>

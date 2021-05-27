@@ -43,13 +43,13 @@
 #include "yuarel.h"
 #include "Router.h"
 
-typedef void (*TeBkUmLpqAsyncTemplatePtr) (Context*, std::string&);
-
 class TeBkUmLpqAsyncWorld {
 	int id;
 	int randomNumber;
 public:
 	TeBkUmLpqAsyncWorld();
+	TeBkUmLpqAsyncWorld(int id);
+	TeBkUmLpqAsyncWorld(int id, int randomNumber);
 	virtual ~TeBkUmLpqAsyncWorld();
 	int getId() const;
 	void setId(int id);
@@ -59,36 +59,44 @@ public:
 
 class TeBkUmLpqAsyncFortune {
 	int id;
-	std::string message;
 public:
+	std::string message_i;
+	std::string_view message;
+	bool allocd;
+	TeBkUmLpqAsyncFortune(int id);
+	TeBkUmLpqAsyncFortune(int id, std::string message);
 	TeBkUmLpqAsyncFortune();
 	virtual ~TeBkUmLpqAsyncFortune();
 	int getId() const;
 	void setId(int id);
-	const std::string& getMessage() const;
-	void setMessage(const std::string& message);
 	bool operator < (const TeBkUmLpqAsyncFortune& other) const;
 };
 
 class TeBkUmLpqAsyncMessage {
 	std::string message;
 public:
+	TeBkUmLpqAsyncMessage();
+	TeBkUmLpqAsyncMessage(std::string message);
 	virtual ~TeBkUmLpqAsyncMessage();
 	const std::string& getMessage() const;
 	void setMessage(const std::string& message);
 };
 
 struct AsyncReq {
-	HttpResponse r;
+	float httpVers;
+	bool conn_clos;
 	SocketInterface* sif;
-	void* d;
-	void* ddlib;
 	LibpqDataSourceImpl* sqli;
+
+	TeBkUmLpqAsyncWorld w;
+	std::vector<TeBkUmLpqAsyncWorld> vec;
+	std::list<TeBkUmLpqAsyncFortune> flst;
 };
 
 struct CacheReq {
-	void* d;
 	CacheInterface* cchi;
+
+	std::vector<TeBkUmLpqAsyncWorld> vec;
 };
 
 class TeBkUmLpqAsyncRouter : public Router {
@@ -98,8 +106,11 @@ class TeBkUmLpqAsyncRouter : public Router {
 	static std::string WORLD_ALL_QUERY;
 	static std::string FORTUNE_ALL_QUERY;
 
-	static std::string APP_NAME;
-	static std::string TPE_FN_NAME;
+	static TemplatePtr tmplFunc;
+
+	static Ser m_ser;
+	static Ser w_ser;
+	static SerCont wcont_ser;
 
 	static bool strToNum(const char* str, int len, int& ret);
 
@@ -148,7 +159,7 @@ public:
 	TeBkUmLpqAsyncRouter();
 	virtual ~TeBkUmLpqAsyncRouter();
 	void updateCache();
-	bool route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib, SocketInterface* sif);
+	bool route(HttpRequest* req, HttpResponse* res, SocketInterface* sif);
 };
 
 #endif /* WEB_TE_BENCHMARK_UM_INCLUDE_TeBkUmLpqAsync_H_ */

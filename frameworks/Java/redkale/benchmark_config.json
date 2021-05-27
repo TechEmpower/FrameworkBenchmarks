@@ -21,7 +21,7 @@
                 "notes": "",
                 "versus": "Redkale"
             },
-            "j8": {
+            "j17": {
                 "plaintext_url": "/plaintext",
                 "json_url": "/json",
                 "cached_query_url": "/cached-worlds?q=",
@@ -37,7 +37,7 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-j8",
+                "display_name": "redkale-j17",
                 "notes": "",
                 "versus": "Redkale"
             },
@@ -61,7 +61,7 @@
             },
             "postgres": {
                 "db_url": "/db",
-                "query_url": "/queries?q=", 
+                "query_url2": "/queries?q=", 
                 "fortune_url2": "/fortunes",
                 "update_url2": "/updates?q=",
                 "port": 8080,
@@ -76,7 +76,7 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale",
+                "display_name": "redkale-postgres",
                 "notes": "",
                 "versus": "Redkale"
             }
