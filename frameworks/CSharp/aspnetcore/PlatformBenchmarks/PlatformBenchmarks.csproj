@@ -6,13 +6,13 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   
-  <PropertyGroup Condition=" '$(DatabaseProvider)' != '' ">
-    <DefineConstants>$(DefineConstants);DATABASE</DefineConstants>
-    <DefineConstants Condition=" '$(DatabaseProvider)' == 'Npgsql'">$(DefineConstants);NPGSQL</DefineConstants>
+  <PropertyGroup>
+    <DefineConstants Condition=" '$(DatabaseProvider)' != '' ">$(DefineConstants);DATABASE</DefineConstants>
+    <DefineConstants Condition=" '$(DatabaseProvider)' == 'Npgsql' ">$(DefineConstants);NPGSQL</DefineConstants>
     <DefineConstants Condition=" '$(DatabaseProvider)' == 'MySqlConnector' ">$(DefineConstants);MYSQLCONNECTOR</DefineConstants>
   </PropertyGroup>
   
-  <ItemGroup Condition=" '$(DatabaseProvider)' != '' ">
+  <ItemGroup>
     <PackageReference Condition=" '$(DatabaseProvider)' == 'Npgsql' " Include="Npgsql" Version="5.0.4" />
     <PackageReference Condition=" '$(DatabaseProvider)' == 'MySqlConnector' " Include="MySqlConnector" Version="1.3.8" />
   </ItemGroup>
