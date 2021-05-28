@@ -64,7 +64,7 @@ namespace PlatformBenchmarks
 
             if (BenchmarkApplication.Db is null)
             {
-                throw new NotSupportedException($"{appSettings.Database} is not supported by the used preprocessor directive.");
+                throw new NotSupportedException($"{appSettings.Database} is not supported by the defined preprocessor symbol.");
             }
 #endif
 
