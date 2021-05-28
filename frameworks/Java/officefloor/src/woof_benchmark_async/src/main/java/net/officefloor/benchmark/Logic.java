@@ -139,7 +139,15 @@ public class Logic {
 								return null;
 							}
 							Row row = rows.next();
-							return new World(row.getInteger(0), ThreadLocalRandom.current().nextInt(1, 10001));
+
+							// Ensure change to random number to trigger update
+							int previousRandomNumber = row.getInteger(1);
+							int newRandomNumber;
+							do {
+								newRandomNumber = ThreadLocalRandom.current().nextInt(1, 10001);
+							} while (previousRandomNumber == newRandomNumber);
+
+							return new World(row.getInteger(0), newRandomNumber);
 						}));
 			}
 			return CompositeFuture.all(futures).flatMap((compositeFuture) -> {
