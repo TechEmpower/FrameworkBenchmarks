@@ -1,5 +1,13 @@
 package net.officefloor.benchmark;
 
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ThreadLocalRandom;
+
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.pgclient.PgConnectOptions;
@@ -9,18 +17,8 @@ import io.vertx.sqlclient.RowIterator;
 import io.vertx.sqlclient.SqlConnection;
 import io.vertx.sqlclient.Tuple;
 import net.officefloor.server.RequestHandler;
-import net.officefloor.server.http.HttpResponse;
-import net.officefloor.server.http.ServerHttpConnection;
 import net.officefloor.server.http.parse.HttpRequestParser;
 import net.officefloor.vertx.OfficeFloorVertx;
-
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * R2DBC server.
@@ -56,7 +54,8 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 			String password) {
 
 		// Obtain the vertx
-		Vertx vertx = Vertx.vertx(new VertxOptions().setPreferNativeTransport(true));
+		Vertx vertx = Vertx.vertx(new VertxOptions().setPreferNativeTransport(true)
+				.setWorkerPoolSize(Runtime.getRuntime().availableProcessors()));
 
 		// Create connection
 		PgConnectOptions connectOptions = new PgConnectOptions().setHost(server).setPort(port).setDatabase(database)
@@ -85,45 +84,44 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 	}
 
 	@Override
-	public void db(HttpResponse response, ServerHttpConnection connection, DatabaseOperationsContext context) {
+	public void db(DbSendResponse sender) {
 		this.threadLocalConnection.get().preparedQuery("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID=$1")
 				.execute(Tuple.of(ThreadLocalRandom.current().nextInt(1, 10001)), result -> {
 					if (result.failed()) {
-						context.sendError(connection, result.cause());
+						sender.sendError(result.cause());
 					} else {
 						RowIterator<Row> rows = result.result().iterator();
 						if (!rows.hasNext()) {
-							context.sendError(connection, 404);
+							sender.sendError(404);
 						} else {
 							Row row = rows.next();
 							World world = new World(row.getInteger(0), row.getInteger(1));
-							context.dbSend(response, connection, world);
+							sender.sendDb(world);
 						}
 					}
 				});
 	}
 
 	@Override
-	public void queries(int queryCount, HttpResponse response, ServerHttpConnection connection,
-			DatabaseOperationsContext context) {
+	public void queries(int queryCount, QueriesSendResponse sender) {
 		Queue<World> worlds = new ConcurrentLinkedDeque<>();
 		SqlConnection sqlConnection = this.threadLocalConnection.get();
 		for (int i = 0; i < queryCount; i++) {
 			sqlConnection.preparedQuery("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID=$1")
 					.execute(Tuple.of(ThreadLocalRandom.current().nextInt(1, 10001)), result -> {
 						if (result.failed()) {
-							context.sendError(connection, result.cause());
+							sender.sendError(result.cause());
 						} else {
 							RowIterator<Row> rows = result.result().iterator();
 							if (!rows.hasNext()) {
-								context.sendError(connection, 404);
+								sender.sendError(404);
 							} else {
 								Row row = rows.next();
 								World world = new World(row.getInteger(0), row.getInteger(1));
 								worlds.add(world);
 
 								if (worlds.size() == queryCount) {
-									context.queriesSend(response, connection, new ArrayList<>(worlds));
+									sender.sendQueries(new ArrayList<>(worlds));
 								}
 							}
 						}
@@ -132,10 +130,10 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 	}
 
 	@Override
-	public void fortunes(HttpResponse response, ServerHttpConnection connection, DatabaseOperationsContext context) {
+	public void fortunes(FortunesSendResponse sender) {
 		this.threadLocalConnection.get().preparedQuery("SELECT ID, MESSAGE FROM FORTUNE").execute(result -> {
 			if (result.failed()) {
-				context.sendError(connection, result.cause());
+				sender.sendError(result.cause());
 			} else {
 				List<Fortune> fortunes = new ArrayList<>(16);
 				RowIterator<Row> rows = result.result().iterator();
@@ -143,25 +141,24 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 					Row row = rows.next();
 					fortunes.add(new Fortune(row.getInteger(0), row.getString(1)));
 				}
-				context.fortunesSend(response, connection, fortunes);
+				sender.sendFortunes(fortunes);
 			}
 		});
 	}
 
 	@Override
-	public void update(int queryCount, HttpResponse response, ServerHttpConnection connection,
-			DatabaseOperationsContext context) {
+	public void update(int queryCount, UpdateSendResponse sender) {
 		Queue<World> worlds = new ConcurrentLinkedDeque<>();
 		SqlConnection sqlConnection = this.threadLocalConnection.get();
 		for (int i = 0; i < queryCount; i++) {
 			sqlConnection.preparedQuery("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID=$1")
 					.execute(Tuple.of(ThreadLocalRandom.current().nextInt(1, 10001)), result -> {
 						if (result.failed()) {
-							context.sendError(connection, result.cause());
+							sender.sendError(result.cause());
 						} else {
 							RowIterator<Row> rows = result.result().iterator();
 							if (!rows.hasNext()) {
-								context.sendError(connection, 404);
+								sender.sendError(404);
 							} else {
 								Row row = rows.next();
 
@@ -188,11 +185,11 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 									sqlConnection.preparedQuery("UPDATE world SET randomnumber=$1 WHERE id=$2")
 											.executeBatch(batch, ar -> {
 												if (result.failed()) {
-													context.sendError(connection, result.cause());
+													sender.sendError(result.cause());
 												} else {
 
 													// Updated, so send response
-													context.queriesSend(response, connection, new ArrayList<>(worlds));
+													sender.sendUpdate(new ArrayList<>(worlds));
 												}
 											});
 								}

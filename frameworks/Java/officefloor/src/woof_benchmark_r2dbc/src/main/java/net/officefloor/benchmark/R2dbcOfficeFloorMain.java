@@ -12,8 +12,6 @@ import io.r2dbc.spi.ConnectionFactories;
 import io.r2dbc.spi.ConnectionFactory;
 import io.r2dbc.spi.ConnectionFactoryOptions;
 import net.officefloor.server.RequestHandler;
-import net.officefloor.server.http.HttpResponse;
-import net.officefloor.server.http.ServerHttpConnection;
 import net.officefloor.server.http.parse.HttpRequestParser;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -120,12 +118,12 @@ public class R2dbcOfficeFloorMain implements DatabaseOperations {
 	}
 
 	@Override
-	public void db(HttpResponse response, ServerHttpConnection connection, DatabaseOperationsContext context) {
+	public void db(DbSendResponse sender) {
 
 		// Determine if will overload queries
 		RateLimitedConnection conn = this.threadLocalRateLimit.get().getAvailableConnection(1);
 		if (conn == null) {
-			context.sendError(connection, context.getTransientResourceException());
+			sender.sendOverloaded();
 			return; // rate limited
 		}
 
@@ -137,22 +135,21 @@ public class R2dbcOfficeFloorMain implements DatabaseOperations {
 					Integer number = row.get(1, Integer.class);
 					return new World(id, number);
 				}))).publishOn(conn.writeScheduler).subscribe(world -> {
-					context.dbSend(response, connection, world);
+					sender.sendDb(world);
 				}, error -> {
-					context.sendError(connection, error);
+					sender.sendError(error);
 				}, () -> {
 					conn.processed(1);
 				});
 	}
 
 	@Override
-	public void queries(int queryCount, HttpResponse response, ServerHttpConnection connection,
-			DatabaseOperationsContext context) {
+	public void queries(int queryCount, QueriesSendResponse sender) {
 
 		// Determine if will overload queries
 		RateLimitedConnection conn = this.threadLocalRateLimit.get().getAvailableConnection(queryCount);
 		if (conn == null) {
-			context.sendError(connection, context.getTransientResourceException());
+			sender.sendOverloaded();
 			return; // rate limited
 		}
 
@@ -165,21 +162,21 @@ public class R2dbcOfficeFloorMain implements DatabaseOperations {
 					Integer number = row.get(1, Integer.class);
 					return new World(id, number);
 				}))).collectList().publishOn(conn.writeScheduler).subscribe(worlds -> {
-					context.queriesSend(response, connection, worlds);
+					sender.sendQueries(worlds);
 				}, error -> {
-					context.sendError(connection, error);
+					sender.sendError(error);
 				}, () -> {
 					conn.processed(queryCount);
 				});
 	}
 
 	@Override
-	public void fortunes(HttpResponse response, ServerHttpConnection connection, DatabaseOperationsContext context) {
+	public void fortunes(FortunesSendResponse sender) {
 
 		// Determine if will overload queries
 		RateLimitedConnection conn = this.threadLocalRateLimit.get().getAvailableConnection(1);
 		if (conn == null) {
-			context.sendError(connection, context.getTransientResourceException());
+			sender.sendOverloaded();
 			return; // rate limited
 		}
 
@@ -190,24 +187,23 @@ public class R2dbcOfficeFloorMain implements DatabaseOperations {
 					String message = row.get(1, String.class);
 					return new Fortune(id, message);
 				}))).collectList().publishOn(conn.writeScheduler).subscribe(fortunes -> {
-					context.fortunesSend(response, connection, fortunes);
+					sender.sendFortunes(fortunes);
 				}, error -> {
-					context.sendError(connection, error);
+					sender.sendError(error);
 				}, () -> {
 					conn.processed(1);
 				});
 	}
 
 	@Override
-	public void update(int queryCount, HttpResponse response, ServerHttpConnection connection,
-			DatabaseOperationsContext context) {
+	public void update(int queryCount, UpdateSendResponse sender) {
 
 		int executeQueryCount = queryCount + 1; // select all and update
 
 		// Determine if will overload queries
 		RateLimitedConnection conn = this.threadLocalRateLimit.get().getAvailableConnection(executeQueryCount);
 		if (conn == null) {
-			context.sendError(connection, context.getTransientResourceException());
+			sender.sendOverloaded();
 			return; // rate limited
 		}
 
@@ -235,9 +231,9 @@ public class R2dbcOfficeFloorMain implements DatabaseOperations {
 					}
 					return Mono.from(batch.execute()).map((result) -> worlds);
 				}).publishOn(conn.writeScheduler).subscribe(worlds -> {
-					context.updateSend(response, connection, worlds);
+					sender.sendUpdate(worlds);
 				}, error -> {
-					context.sendError(connection, error);
+					sender.sendError(error);
 				}, () -> {
 					conn.processed(executeQueryCount);
 				});
