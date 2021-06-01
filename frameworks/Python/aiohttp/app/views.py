@@ -134,7 +134,7 @@ async def updates(request):
     async with request.app['db_session'].begin() as sess:
         for id_, number in updates:
             world = await sess.get(World, id_, populate_existing=True)
-            world.randomnumber = rand_new
+            world.randomnumber = number
     return json_response(worlds)
 
 async def updates_raw(request):
