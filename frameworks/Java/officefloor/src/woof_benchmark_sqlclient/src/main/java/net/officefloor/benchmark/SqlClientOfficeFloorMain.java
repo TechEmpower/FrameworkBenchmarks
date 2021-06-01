@@ -4,9 +4,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
@@ -105,7 +104,8 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 
 	@Override
 	public void queries(int queryCount, QueriesSendResponse sender) {
-		Queue<World> worlds = new ConcurrentLinkedDeque<>();
+		World[] worlds = new World[queryCount];
+		AtomicInteger count = new AtomicInteger(0);
 		SqlConnection sqlConnection = this.threadLocalConnection.get();
 		for (int i = 0; i < queryCount; i++) {
 			sqlConnection.preparedQuery("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID=$1")
@@ -118,11 +118,11 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 								sender.sendError(404);
 							} else {
 								Row row = rows.next();
-								World world = new World(row.getInteger(0), row.getInteger(1));
-								worlds.add(world);
+								int index = count.getAndIncrement();
+								worlds[index] = new World(row.getInteger(0), row.getInteger(1));
 
-								if (worlds.size() == queryCount) {
-									sender.sendQueries(new ArrayList<>(worlds));
+								if ((index + 1) == queryCount) {
+									sender.sendQueries(worlds);
 								}
 							}
 						}
@@ -149,7 +149,8 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 
 	@Override
 	public void update(int queryCount, UpdateSendResponse sender) {
-		Queue<World> worlds = new ConcurrentLinkedDeque<>();
+		World[] worlds = new World[queryCount];
+		AtomicInteger count = new AtomicInteger(0);
 		SqlConnection sqlConnection = this.threadLocalConnection.get();
 		for (int i = 0; i < queryCount; i++) {
 			sqlConnection.preparedQuery("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID=$1")
@@ -169,10 +170,10 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 								do {
 									newRandomNumber = ThreadLocalRandom.current().nextInt(1, 10001);
 								} while (previousRandomNumber == newRandomNumber);
-								World world = new World(row.getInteger(0), newRandomNumber);
-								worlds.add(world);
+								int index = count.getAndIncrement();
+								worlds[index] = new World(row.getInteger(0), newRandomNumber);
 
-								if (worlds.size() == queryCount) {
+								if ((index + 1) == queryCount) {
 
 									// All worlds obtained, so run update
 									List<Tuple> batch = new ArrayList<>(queryCount);
@@ -190,7 +191,7 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 												} else {
 
 													// Updated, so send response
-													sender.sendUpdate(new ArrayList<>(worlds));
+													sender.sendUpdate(worlds);
 												}
 											});
 								}

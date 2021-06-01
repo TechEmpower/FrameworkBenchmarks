@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.CancelledKeyException;
 import java.nio.channels.ClosedChannelException;
-import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,7 +24,7 @@ public class UpdateSendResponse extends AbstractSendResponse {
 		super(requestHandler, connection, objectMapper);
 	}
 
-	public void sendUpdate(List<World> worlds) {
+	public void sendUpdate(World[] worlds) {
 		this.requestHandler.execute(() -> {
 			try {
 				HttpResponse response = this.connection.getResponse();

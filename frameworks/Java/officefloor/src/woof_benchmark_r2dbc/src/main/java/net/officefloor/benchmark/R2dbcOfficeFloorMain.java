@@ -162,7 +162,7 @@ public class R2dbcOfficeFloorMain implements DatabaseOperations {
 					Integer number = row.get(1, Integer.class);
 					return new World(id, number);
 				}))).collectList().publishOn(conn.writeScheduler).subscribe(worlds -> {
-					sender.sendQueries(worlds);
+					sender.sendQueries(worlds.toArray(World[]::new));
 				}, error -> {
 					sender.sendError(error);
 				}, () -> {
@@ -231,7 +231,7 @@ public class R2dbcOfficeFloorMain implements DatabaseOperations {
 					}
 					return Mono.from(batch.execute()).map((result) -> worlds);
 				}).publishOn(conn.writeScheduler).subscribe(worlds -> {
-					sender.sendUpdate(worlds);
+					sender.sendUpdate(worlds.toArray(World[]::new));
 				}, error -> {
 					sender.sendError(error);
 				}, () -> {
