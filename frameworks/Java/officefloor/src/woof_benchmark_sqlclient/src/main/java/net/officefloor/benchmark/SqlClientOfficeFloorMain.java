@@ -54,8 +54,9 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 			String password) {
 
 		// Obtain the vertx
-		Vertx vertx = Vertx.vertx(new VertxOptions().setPreferNativeTransport(true)
-				.setWorkerPoolSize(Runtime.getRuntime().availableProcessors()));
+		int workerThreadCount = Math.max(1, socketCount / 4);
+		Vertx vertx = Vertx
+				.vertx(new VertxOptions().setPreferNativeTransport(true).setWorkerPoolSize(workerThreadCount));
 
 		// Create connection
 		PgConnectOptions connectOptions = new PgConnectOptions().setHost(server).setPort(port).setDatabase(database)
