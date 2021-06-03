@@ -7,7 +7,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
 ENV ASPNETCORE_URLS http://+:8080
 WORKDIR /app
 COPY --from=build /app/out ./
-COPY Benchmarks/appsettings.mysql.json ./appsettings.json
+COPY PlatformBenchmarks/appsettings.mysql.json ./appsettings.json
 
 EXPOSE 8080
 

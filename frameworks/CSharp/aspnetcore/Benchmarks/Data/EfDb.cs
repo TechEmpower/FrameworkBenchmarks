@@ -51,6 +51,11 @@ namespace Benchmarks.Data
             = EF.CompileAsyncQuery((ApplicationDbContext context, int id)
                 => context.World.AsTracking().First(w => w.Id == id));
 
+        /// <remarks>
+        /// For EF Core providers, that return the number of rows just updated through a correlated SELECT query (like
+        /// Pomelo, but unlike Npgsql, that is able to do it as part of the UPDATE statement via their protocol), the
+        /// expected query count increases by the number of UPDATE statements. 
+        /// </remarks>
         public async Task<World[]> LoadMultipleUpdatesRows(int count)
         {
             var results = new World[count];
