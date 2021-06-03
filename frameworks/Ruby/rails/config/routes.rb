@@ -7,4 +7,5 @@ Rails.application.routes.draw do
   get "fortunes", to: "hello_world#fortune"
   get "updates", to: "hello_world#update"
   get "plaintext", to: "hello_world#plaintext"
+  get "cached", to: "hello_world#cached_query"
 end

@@ -1,0 +1,33 @@
+[framework]
+name = "yii2"
+
+[main]
+urls.plaintext = "/site/plaintext"
+urls.json = "/site/json"
+urls.db = "/site/db"
+urls.query = "/site/queries?queries="
+urls.update = "/site/updates?queries="
+urls.fortune = "/site/fortunes"
+approach = "Realistic"
+classification = "Fullstack"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Full"
+platform = "FPM/FastCGI"
+webserver = "nginx"
+versus = "php"
+
+[raw]
+urls.query = "/raw/queries?queries="
+urls.update = "/raw/updates?queries="
+urls.fortune = "/raw/fortunes"
+approach = "Realistic"
+classification = "Fullstack"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "FPM/FastCGI"
+webserver = "nginx"
+versus = "php"

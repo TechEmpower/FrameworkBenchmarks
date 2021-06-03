@@ -27,6 +27,8 @@ RUN sed -i "s|DatabaseHostName=.*|DatabaseHostName=tfb-database|g" /cutelyst_soc
 ENV C_PROCESSES 1
 ENV CPU_AFFINITY 1
 
+EXPOSE 8080
+
 CMD cutelyst-wsgi2 \
     --ini /cutelyst.ini:uwsgi \
     --application ${CUTELYST_APP} \

@@ -15,4 +15,6 @@ RUN \
   eval $(opam env) && \
   dune build --release httpaf_unix.exe
 
+EXPOSE 8080
+
 CMD _build/default/httpaf_unix.exe

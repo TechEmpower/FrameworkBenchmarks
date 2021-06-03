@@ -10,4 +10,6 @@ RUN git clone https://github.com/S-YOU/pico.v src && cd src && git checkout v0.0
     && ln -s /app/src /root/.vmodules/syou \
     && cd /app && v -prod -cflags '-std=gnu11 -Wall -O3 -march=native -mtune=native -flto' main.v
 
+EXPOSE 8088
+
 CMD sh run.sh

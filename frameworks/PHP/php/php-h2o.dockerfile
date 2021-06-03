@@ -31,6 +31,8 @@ RUN wget -qO "$H2O_ARCHIVE" "https://github.com/h2o/h2o/archive/$H2O_ARCHIVE" &&
           -DCMAKE_AR=/usr/bin/gcc-ar -DCMAKE_RANLIB=/usr/bin/gcc-ranlib -DWITH_MRUBY=off . && \
     make -j "$(nproc)" install  > /dev/null
 
+EXPOSE 8080
+
 CMD export WORKERS=$(( 2 * $(nproc) )) && \
     sed -i "s/num-threads: x/num-threads: $WORKERS/g" /deploy/h2o.conf && \
     service php8.0-fpm start && \

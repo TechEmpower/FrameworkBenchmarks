@@ -27,7 +27,7 @@ namespace PlatformBenchmarks
             return str._data;
         }
 
-        public static implicit operator byte[] (AsciiString str)
+        public static implicit operator byte[](AsciiString str)
         {
             return str._data;
         }
@@ -40,6 +40,13 @@ namespace PlatformBenchmarks
         public override string ToString()
         {
             return Encoding.ASCII.GetString(_data);
+        }
+
+        public int CopyTo(byte[] source,int offset)
+        {
+            var len = Length;
+            Buffer.BlockCopy(_data, 0, source, offset, len);
+            return len;
         }
 
         public static explicit operator string(AsciiString str)

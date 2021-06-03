@@ -11,4 +11,5 @@ RUN mvn -B clean package
 FROM openjdk:15
 WORKDIR /officefloor
 COPY --from=maven /officefloor/src/woof_benchmark_netty/target/woof_benchmark_netty-1.0.0.jar server.jar
-CMD ["java", "-server", "-Xms2g", "-Xmx2g", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dhttp.port=8080", "-Dhttp.server.name=OF", "-Dhttp.date.header=true", "-jar", "server.jar"]
+EXPOSE 8080
+CMD ["java", "-server", "-Xms2g", "-Xmx2g", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dhttp.port=8080", "-Dhttp.server.name=O", "-Dhttp.date.header=true", "-jar", "server.jar"]

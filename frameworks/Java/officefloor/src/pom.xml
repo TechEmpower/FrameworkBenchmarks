@@ -14,12 +14,15 @@
 	</properties>
 	<modules>
 		<module>woof_benchmark</module>
+		<module>woof_benchmark_woof</module>
 		<module>woof_benchmark_micro</module>
 		<module>woof_benchmark_thread_affinity</module>
 		<module>woof_benchmark_async</module>
-		<module>woof_benchmark_raw</module>
+		<module>woof_benchmark_r2dbc</module>
+		<module>woof_benchmark_sqlclient</module>
 		<module>woof_benchmark_netty</module>
 		<module>woof_benchmark_undertow</module>
+		<module>woof_benchmark_vertx</module>
 		<module>woof_benchmark_spring</module>
 	</modules>
 	<repositories>
@@ -39,7 +42,7 @@
 			<dependency>
 				<groupId>net.officefloor</groupId>
 				<artifactId>bom</artifactId>
-				<version>3.30.2</version>
+				<version>3.36.0</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -51,6 +54,11 @@
 			<dependency>
 				<groupId>net.officefloor.benchmarks</groupId>
 				<artifactId>woof_benchmark_micro</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.officefloor.benchmarks</groupId>
+				<artifactId>woof_benchmark_woof</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

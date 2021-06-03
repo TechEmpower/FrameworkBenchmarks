@@ -1,0 +1,18 @@
+[framework]
+name = "codeigniter"
+
+[main]
+urls.plaintext = "/index.php/bench/plaintext"
+urls.json = "/index.php/bench/json"
+urls.db = "/index.php/bench/db"
+urls.query = "/index.php/bench/dbquery/"
+urls.fortune = "/index.php/bench/fortunes"
+approach = "Realistic"
+classification = "Fullstack"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "FPM/FastCGI"
+webserver = "nginx"
+versus = "php"

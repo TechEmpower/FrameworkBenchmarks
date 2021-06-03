@@ -1,4 +1,4 @@
-FROM elixir:1.11.2
+FROM elixir:1.11.4
 
 WORKDIR /phoenix
 
@@ -16,5 +16,7 @@ ENV MIX_ENV=prod
 
 RUN mix do deps.get --force --only prod
 RUN mix release --force
+
+EXPOSE 8080
 
 CMD ["_build/prod/rel/hello/bin/hello", "start"]

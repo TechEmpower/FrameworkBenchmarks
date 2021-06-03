@@ -8,4 +8,7 @@ FROM openjdk:11.0.3-jdk-slim
 WORKDIR /helidon
 COPY --from=maven /helidon/target/libs libs
 COPY --from=maven /helidon/target/benchmark.jar app.jar
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dlogging.level.root=DEBUG", "-jar", "app.jar"]
+
+EXPOSE 8080
+
+CMD ["java", "-server", "-XX:-UseBiasedLocking", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-jar", "app.jar"]

@@ -35,4 +35,6 @@ RUN g++-4.8 \
     -lPocoXML \
     -lPocoJSON
 
+EXPOSE 8080
+
 CMD ./poco 8080 $(nproc)

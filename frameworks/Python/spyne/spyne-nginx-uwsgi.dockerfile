@@ -14,4 +14,6 @@ RUN pip3 install -r /spyne/requirements.txt
 
 RUN sed -i 's|include .*/conf/uwsgi_params;|include /etc/nginx/uwsgi_params;|g' /spyne/nginx.conf
 
+EXPOSE 8080
+
 CMD nginx -c /spyne/nginx.conf && uwsgi --ini /spyne/uwsgi.ini --processes $(($(nproc)*3)) --wsgi app:application

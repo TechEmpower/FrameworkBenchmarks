@@ -30,4 +30,6 @@ COPY server.jl ${IROOT}/
 COPY run.sh ${IROOT}/
 RUN chmod +x run.sh
 
+EXPOSE 8080
+
 CMD ./run.sh

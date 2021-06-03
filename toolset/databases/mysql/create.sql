@@ -2,6 +2,15 @@
 # http://stackoverflow.com/questions/37719818/the-server-time-zone-value-aest-is-unrecognized-or-represents-more-than-one-ti
 SET GLOBAL time_zone = '+00:00';
 
+CREATE USER 'benchmarkdbuser'@'%' IDENTIFIED WITH mysql_native_password BY 'benchmarkdbpass';
+CREATE USER 'benchmarkdbuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'benchmarkdbpass';
+
+-- GitHub Actions/CI run the database server on the same system as the benchmarks.
+-- Because we setup MySQL with the skip-name-resolve option, the IP address 127.0.0.1 might not be resolved to localhost
+-- anymore. This does not seem to matter, as long as Unix sockets are being used (e.g. when setting up the docker image),
+-- because the host is set to be localhost implicitly, but it matters for local TCP connections.
+CREATE USER 'benchmarkdbuser'@'127.0.0.1' IDENTIFIED WITH mysql_native_password BY 'benchmarkdbpass';
+
 # modified from SO answer http://stackoverflow.com/questions/5125096/for-loop-in-mysql
 CREATE DATABASE hello_world;
 USE hello_world;
@@ -12,10 +21,9 @@ CREATE TABLE  world (
   PRIMARY KEY  (id)
 )
 ENGINE=INNODB;
-CREATE USER 'benchmarkdbuser'@'%' IDENTIFIED WITH mysql_native_password BY 'benchmarkdbpass';
-CREATE USER 'benchmarkdbuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'benchmarkdbpass';
 GRANT ALL PRIVILEGES ON hello_world.world TO 'benchmarkdbuser'@'%';
 GRANT ALL PRIVILEGES ON hello_world.world TO 'benchmarkdbuser'@'localhost';
+GRANT ALL PRIVILEGES ON hello_world.world TO 'benchmarkdbuser'@'127.0.0.1';
 
 DELIMITER #
 CREATE PROCEDURE load_data()
@@ -46,6 +54,7 @@ CREATE TABLE  fortune (
 ENGINE=INNODB;
 GRANT ALL PRIVILEGES ON hello_world.fortune TO 'benchmarkdbuser'@'%';
 GRANT ALL PRIVILEGES ON hello_world.fortune TO 'benchmarkdbuser'@'localhost';
+GRANT ALL PRIVILEGES ON hello_world.fortune TO 'benchmarkdbuser'@'127.0.0.1';
 
 INSERT INTO fortune (message) VALUES ('fortune: No such file or directory');
 INSERT INTO fortune (message) VALUES ('A computer scientist is someone who fixes things that aren''t broken.');

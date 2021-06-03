@@ -20,11 +20,13 @@
 #include <assert.h>
 #include <ctype.h>
 #include <h2o.h>
+#include <inttypes.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <arpa/inet.h>
 #include <h2o/cache.h>
 #include <postgresql/libpq-fe.h>
@@ -48,6 +50,8 @@
 #define IS_COMPLETED 8
 #define MAX_ID 10000
 #define MAX_QUERIES 500
+#define WORLD_TABLE_NAME "World"
+#define POPULATE_CACHE_QUERY "SELECT * FROM " WORLD_TABLE_NAME ";"
 #define QUERIES_PARAMETER "queries="
 #define RANDOM_NUM_KEY "randomNumber"
 
@@ -66,17 +70,10 @@
 	        2 * (sizeof(MKSTR(MAX_ID)) - 1) - 2 * (sizeof(PRIu32) - 1) - 2))
 
 #define USE_CACHE 2
-#define WORLD_TABLE_NAME "World"
-#define POPULATE_CACHE_QUERY "SELECT * FROM " WORLD_TABLE_NAME ";"
 #define WORLD_QUERY "SELECT * FROM " WORLD_TABLE_NAME " WHERE id = $1::integer;"
 
 typedef struct multiple_query_ctx_t multiple_query_ctx_t;
 typedef struct update_ctx_t update_ctx_t;
-
-typedef struct {
-	uint32_t id;
-	uint32_t random_number;
-} query_result_t;
 
 typedef struct {
 	thread_context_t *ctx;
@@ -91,6 +88,11 @@ typedef struct {
 	int id_len;
 	db_query_param_t param;
 } query_param_t;
+
+typedef struct {
+	uint32_t id;
+	uint32_t random_number;
+} query_result_t;
 
 typedef struct {
 	const char *id_pointer;

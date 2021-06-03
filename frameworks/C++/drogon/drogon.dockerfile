@@ -45,7 +45,7 @@ RUN git clone https://github.com/an-tao/drogon
 
 WORKDIR $DROGON_ROOT
 
-RUN git checkout fb17efe765d162be01680b05a3a387c7a182a4c5 
+RUN git checkout fb17efe765d162be01680b05a3a387c7a182a4c5
 RUN git submodule update --init
 RUN mkdir build
 
@@ -69,4 +69,7 @@ WORKDIR $TEST_PATH
 
 RUN cmake -DCMAKE_BUILD_TYPE=release ..
 RUN make
+
+EXPOSE 8080
+
 CMD ./drogon_benchmark config.json

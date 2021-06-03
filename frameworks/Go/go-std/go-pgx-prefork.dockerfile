@@ -13,4 +13,6 @@ RUN go generate ./templates
 RUN easyjson -pkg
 RUN go build -ldflags="-s -w" -o app .
 
+EXPOSE 8080
+
 CMD ./app -db pgx -prefork

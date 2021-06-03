@@ -1,0 +1,40 @@
+[framework]
+name = "giraffe"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "fullstack"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "micro"
+platform = ".NET"
+webserver = "Kestrel"
+versus = "aspcore"
+
+[newtonsoft]
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = ".NET"
+webserver = "Kestrel"
+versus = "aspcore"
+
+[utf8json]
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = ".NET"
+webserver = "Kestrel"
+versus = "aspcore"

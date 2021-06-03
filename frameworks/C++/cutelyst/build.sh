@@ -1,8 +1,8 @@
 #!/bin/bash
 
-export ASQL_VER=0.19.0
+export ASQL_VER=0.26.0
 export CUTELEE_VER=5.3.0
-export CUTELYST_VER=2.13.0
+export CUTELYST_VER=2.14.0
 
 apt update -qq && \
     apt install -yqq --no-install-recommends \

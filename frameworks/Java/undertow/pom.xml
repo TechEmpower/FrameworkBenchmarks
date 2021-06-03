@@ -15,7 +15,7 @@
     <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <hikaricp.version>3.4.1</hikaricp.version>
-    <jackson.version>2.10.0</jackson.version>
+    <jackson.version>2.10.5.1</jackson.version>
     <maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
     <mustache.version>0.9.6</mustache.version>
     <postgresql.version>42.2.8</postgresql.version>

@@ -20,4 +20,7 @@ ENV WEBENGINE jetty
 ENV PROJECT hexagon
 
 COPY --from=gradle_build /hexagon/build/install/$PROJECT /opt/$PROJECT
+
+EXPOSE 9090
+
 ENTRYPOINT /opt/$PROJECT/bin/$PROJECT

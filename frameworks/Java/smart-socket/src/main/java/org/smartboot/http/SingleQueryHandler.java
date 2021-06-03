@@ -1,6 +1,8 @@
 package org.smartboot.http;
 
-import org.smartboot.http.server.handle.HttpHandle;
+import org.smartboot.http.server.HttpRequest;
+import org.smartboot.http.server.HttpResponse;
+import org.smartboot.http.server.HttpServerHandle;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -14,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author 三刀
  * @version V1.0 , 2020/6/16
  */
-public class SingleQueryHandler extends HttpHandle {
+public class SingleQueryHandler extends HttpServerHandle {
     private DataSource dataSource;
 
     public SingleQueryHandler(DataSource dataSource) {

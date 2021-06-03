@@ -1,12 +1,17 @@
-scalaVersion := "2.11.12"
+import scala.scalanative.build._
 
+scalaVersion := "2.13.4"
+
+val snunitVersion = "0.0.9"
 libraryDependencies ++= Seq(
-  "com.github.lolgab" %%% "snunit" % "0.0.2",
-  "com.github.lolgab" %%% "snunit-async" % "0.0.2",
-  "com.lihaoyi" %%% "upickle" % "1.2.2"
+  "com.github.lolgab" %%% "snunit" % snunitVersion,
+  "com.github.lolgab" %%% "snunit-async" % snunitVersion,
+  "com.lihaoyi" %%% "upickle" % "1.2.3"
 )
 
-nativeMode := "release-full"
-nativeLTO := "thin"
+nativeConfig ~= {
+  _.withMode(Mode.releaseFull)
+   .withLTO(LTO.thin)
+}
 
 enablePlugins(ScalaNativePlugin)

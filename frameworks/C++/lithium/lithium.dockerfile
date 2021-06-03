@@ -6,4 +6,6 @@ RUN apt-get install -yqq libmariadb-dev
 
 COPY ./ ./
 
+EXPOSE 8080
+
 CMD ./compile.sh TFB_MYSQL

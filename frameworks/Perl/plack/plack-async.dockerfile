@@ -8,4 +8,6 @@ ADD nginx.conf ./
 ADD app.pl ./
 ADD app-async.psgi ./
 
+EXPOSE 8080
+
 CMD perl app.pl -a

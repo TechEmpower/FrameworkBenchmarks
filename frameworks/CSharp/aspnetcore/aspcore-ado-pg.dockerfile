@@ -9,4 +9,6 @@ WORKDIR /app
 COPY --from=build /app/out ./
 COPY PlatformBenchmarks/appsettings.postgresql.json ./appsettings.json
 
+EXPOSE 8080
+
 ENTRYPOINT ["dotnet", "PlatformBenchmarks.dll"]

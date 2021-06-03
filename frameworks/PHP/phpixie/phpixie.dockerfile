@@ -18,5 +18,7 @@ RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children =
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
+EXPOSE 8080
+
 CMD service php8.0-fpm start && \
     nginx -c /phpixie/deploy/nginx.conf

@@ -1,16 +1,18 @@
 from functools import partial
 from operator import attrgetter, itemgetter
+from pathlib import Path
 from random import randint
 
-from aiohttp_jinja2 import template
-from aiohttp.web import Response, json_response
+import jinja2
 import ujson
-
+from aiohttp.web import Response, json_response
 from sqlalchemy import select
 
-from .models import sa_fortunes, sa_worlds, Fortune
+from .models import sa_fortunes, sa_worlds, Fortune, World
 
 json_response = partial(json_response, dumps=ujson.dumps)
+template_path = Path(__file__).parent / 'templates' / 'fortune.jinja'
+template = jinja2.Template(template_path.read_text())
 
 
 def get_num_queries(request):
@@ -37,10 +39,9 @@ async def single_database_query_orm(request):
     Test 2 ORM
     """
     id_ = randint(1, 10000)
-    async with request.app['pg'].acquire() as conn:
-        cur = await conn.execute(select([sa_worlds.c.randomnumber]).where(sa_worlds.c.id == id_))
-        r = await cur.first()
-    return json_response({'id': id_, 'randomNumber': r[0]})
+    async with request.app['db_session']() as sess:
+        num = await sess.scalar(select(World.randomnumber).filter_by(id=id_))
+    return json_response({'id': id_, 'randomNumber': num})
 
 
 async def single_database_query_raw(request):
@@ -64,11 +65,10 @@ async def multiple_database_queries_orm(request):
     ids.sort()
 
     result = []
-    async with request.app['pg'].acquire() as conn:
+    async with request.app['db_session']() as sess:
         for id_ in ids:
-            cur = await conn.execute(select([sa_worlds.c.randomnumber]).where(sa_worlds.c.id == id_))
-            r = await cur.first()
-            result.append({'id': id_, 'randomNumber': r[0]})
+            num = await sess.scalar(select(World.randomnumber).filter_by(id=id_))
+            result.append({'id': id_, 'randomNumber': num})
     return json_response(result)
 
 
@@ -92,20 +92,19 @@ async def multiple_database_queries_raw(request):
     return json_response(result)
 
 
-@template('fortune.jinja')
 async def fortunes(request):
     """
     Test 4 ORM
     """
-    async with request.app['pg'].acquire() as conn:
-        cur = await conn.execute(select([sa_fortunes.c.id, sa_fortunes.c.message]))
-        fortunes = list(await cur.fetchall())
+    async with request.app['db_session']() as sess:
+        ret = await sess.execute(select(Fortune.id, Fortune.message))
+        fortunes = ret.all()
     fortunes.append(Fortune(id=0, message='Additional fortune added at request time.'))
     fortunes.sort(key=attrgetter('message'))
-    return {'fortunes': fortunes}
+    content = template.render(fortunes=fortunes)
+    return Response(text=content, content_type='text/html')
 
 
-@template('fortune.jinja')
 async def fortunes_raw(request):
     """
     Test 4 RAW
@@ -114,7 +113,8 @@ async def fortunes_raw(request):
         fortunes = await conn.fetch('SELECT * FROM Fortune')
     fortunes.append(dict(id=0, message='Additional fortune added at request time.'))
     fortunes.sort(key=itemgetter('message'))
-    return {'fortunes': fortunes}
+    content = template.render(fortunes=fortunes)
+    return Response(text=content, content_type='text/html')
 
 
 async def updates(request):
@@ -127,20 +127,12 @@ async def updates(request):
     ids = [randint(1, 10000) for _ in range(num_queries)]
     ids.sort()
 
-    async with request.app['pg'].acquire() as conn:
+    async with request.app['db_session'].begin() as sess:
         for id_ in ids:
-            cur = await conn.execute(
-                select([sa_worlds.c.randomnumber])
-                .where(sa_worlds.c.id == id_)
-            )
-            # the result of this is a dict with the previous random number `randomnumber` which we don't actually use
-            await cur.first()
             rand_new = randint(1, 10000)
-            await conn.execute(
-                sa_worlds.update()
-                .where(sa_worlds.c.id == id_)
-                .values(randomnumber=rand_new)
-            )
+            world = await sess.get(World, id_, populate_existing=True)
+            world.randomnumber = rand_new
+
             result.append({'id': id_, 'randomNumber': rand_new})
     return json_response(result)
 

@@ -1,0 +1,19 @@
+[framework]
+name = "revenj"
+
+[main]
+urls.plaintext = "/bench/plaintext"
+urls.json = "/bench/json"
+urls.db = "/bench/db"
+urls.query = "/bench/queries/"
+urls.update = "/bench/updates/"
+urls.fortune = "/bench/fortunes"
+approach = "Realistic"
+classification = "Fullstack"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Full"
+platform = "None"
+webserver = "None"
+versus = "Revenj"

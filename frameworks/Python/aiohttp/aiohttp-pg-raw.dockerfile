@@ -9,4 +9,6 @@ RUN pip3 install cython==0.29.13 && \
 
 ENV CONNECTION=RAW
 
+EXPOSE 8080
+
 CMD gunicorn app.gunicorn:app -c gunicorn_conf.py

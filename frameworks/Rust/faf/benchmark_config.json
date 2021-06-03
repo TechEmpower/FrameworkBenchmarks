@@ -1,0 +1,25 @@
+{
+   "framework": "faf",
+   "tests": [
+      {
+         "default": {
+            "plaintext_url": "/plaintext",
+            "port": 8089,
+            "approach": "Realistic",
+            "classification": "Platform",
+            "database": "None",
+            "framework": "faf",
+            "language": "Rust",
+            "flavor": "None",
+            "orm": "None",
+            "platform": "None",
+            "webserver": "None",
+            "os": "Linux",
+            "database_os": "None",
+            "display_name": "faf",
+            "notes": "",
+            "versus": "None"
+         }
+      }
+   ]
+}

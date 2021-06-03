@@ -18,4 +18,6 @@ COPY ./src ./
 
 RUN sudo chown -R opam: . && make build
 
+EXPOSE 8080
+
 ENTRYPOINT _build/default/bin/main_forks.exe

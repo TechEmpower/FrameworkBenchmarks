@@ -22,4 +22,6 @@ RUN composer require hamlet-framework/http-swoole:dev-master --quiet
 RUN composer require hamlet-framework/db-mysql-swoole:dev-master --quiet
 RUN composer update --no-dev --quiet
 
+EXPOSE 8080
+
 CMD php /php/swoole.php

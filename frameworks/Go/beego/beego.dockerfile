@@ -15,5 +15,8 @@ WORKDIR src/hello
 RUN glide install
 
 RUN go build -o server main.go
+
+EXPOSE 8080
+
 CMD ./server
 

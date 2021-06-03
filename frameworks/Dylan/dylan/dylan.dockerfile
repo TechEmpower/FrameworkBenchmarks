@@ -25,4 +25,6 @@ WORKDIR /dylan-server
 
 RUN dylan-compiler -build dylan-server.lid
 
+EXPOSE 8080
+
 CMD ./_build/bin/dylan-server

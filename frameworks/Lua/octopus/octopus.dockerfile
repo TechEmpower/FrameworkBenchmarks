@@ -49,6 +49,8 @@ RUN sed -i 's|-c nginx.conf|-c nginx.conf -g "daemon off;"|g' server.sh
 RUN ./server.sh install
 RUN ./server.sh build
 
+EXPOSE 8080
+
 CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'` && \
     sed -i "s|DBHOSTNAME|$DBIP|g" /octo/octopus/extensions/build/src/types.lua && \
     ./server.sh start

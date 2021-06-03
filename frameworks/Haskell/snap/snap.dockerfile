@@ -9,4 +9,6 @@ WORKDIR /snap
 RUN stack upgrade
 RUN stack --allow-different-user build --install-ghc
 
+EXPOSE 8000
+
 CMD stack --allow-different-user exec snap-bench -- +RTS -A4M -N -qg2 -I0 -G2

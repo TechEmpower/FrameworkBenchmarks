@@ -43,8 +43,6 @@
 #include "yuarel.h"
 #include "Router.h"
 
-typedef void (*TeBkUmMgrTemplatePtr) (Context*, std::string&);
-
 class TeBkUmMgrWorld {
 	int id;
 	int randomNumber;
@@ -83,8 +81,11 @@ class TeBkUmMgrRouter : public Router {
 	static std::string WORLD;
 	static std::string FORTUNE;
 
-	static std::string APP_NAME;
-	static std::string TPE_FN_NAME;
+	static TemplatePtr tmplFunc;
+
+	static Ser m_ser;
+	static Ser w_ser;
+	static SerCont wcont_ser;
 
 	bool strToNum(const char* str, int len, int& ret);
 
@@ -111,7 +112,7 @@ public:
 	TeBkUmMgrRouter();
 	virtual ~TeBkUmMgrRouter();
 	void updateCache();
-	bool route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib, SocketInterface* sif);
+	bool route(HttpRequest* req, HttpResponse* res, SocketInterface* sif);
 };
 
 #endif /* WEB_TE_BENCHMARK_UM_INCLUDE_TeBkUmMgr_H_ */

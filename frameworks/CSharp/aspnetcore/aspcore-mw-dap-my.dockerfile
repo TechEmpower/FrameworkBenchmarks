@@ -9,4 +9,6 @@ WORKDIR /app
 COPY --from=build /app/out ./
 COPY Benchmarks/appsettings.mysql.json ./appsettings.json
 
+EXPOSE 8080
+
 ENTRYPOINT ["dotnet", "Benchmarks.dll", "scenarios=DbSingleQueryDapper,DbMultiQueryDapper,DbMultiUpdateDapper,DbFortunesDapper"]

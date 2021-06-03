@@ -10,4 +10,6 @@ WORKDIR /swoole
 
 COPY php.ini /usr/local/etc/php/
 
+EXPOSE 8080
+
 CMD php swoole-server-noasync.php

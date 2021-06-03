@@ -41,7 +41,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "fat-free",
+      "display_name": "fat-free-raw",
       "notes": "",
       "versus": "php"
     }    

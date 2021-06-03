@@ -17,6 +17,8 @@ ADD ./conf /simple/
 ADD ./app.pl /simple/
 ADD ./nginx.conf /simple/
 
+EXPOSE 8080
+
 CMD nginx -c /simple/nginx.conf && \
     plackup -E production -s Starman --workers=$(nproc) \
     -l /tmp/perl-simple.sock -a /simple/app.pl

@@ -1,0 +1,66 @@
+{
+  "framework": "salvo",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "salvo",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "Rust",
+        "webserver": "Hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Salvo",
+        "notes": "",
+        "versus": "None"
+      },
+      "db": {
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?q=",
+        "update_url": "/updates?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "salvo",
+        "language": "Rust",
+        "orm": "Raw",
+        "platform": "Rust",
+        "webserver": "Hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Salvo [Diesel]",
+        "notes": "",
+        "versus": ""
+      },
+      "pg": {
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?q=",
+        "update_url": "/updates?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "salvo",
+        "language": "Rust",
+        "orm": "Raw",
+        "platform": "Rust",
+        "webserver": "Hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Salvo [PG]",
+        "notes": "",
+        "versus": ""
+      }
+    }
+  ]
+}

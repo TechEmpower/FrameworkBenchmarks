@@ -41,6 +41,12 @@ void escape_html_entities(B& buffer, const std::string_view& data)
     }
 }
 
+int g_seed = 0;
+inline int random_int() { 
+  g_seed = (214013*g_seed+2531011); 
+  return (g_seed>>16)&0x7FFF; 
+} 
+
 #ifdef PROFILE_MODE
 void siege(int port) {
   auto sockets = http_benchmark_connect(256, port);
@@ -98,7 +104,7 @@ int main(int argc, char* argv[]) {
     std::vector<decltype(orm.find_one(s::id = 1))> results;
     
     for (int i = 0; i < N; i++)
-      results.push_back(orm.find_one(s::id = 1 + (i*10000/N) + rand() % (10000/N)));
+      results.push_back(orm.find_one(s::id = 1 + (i*10000/N) + random_int() % (10000/N)));
     for (int i = 0; i < N; i++){
       // println(" read result " , i);
       numbers[i] = results[i]().value();
@@ -115,7 +121,7 @@ int main(int argc, char* argv[]) {
     response.write_json(s::message = "Hello, World!");
   };
   my_api.get("/db") = [&](http_request& request, http_response& response) {
-    response.write_json(random_numbers.connect(request.fiber).find_one(s::id = 1 + rand() % 10000)());
+    response.write_json(random_numbers.connect(request.fiber).find_one(s::id = 1 + random_int() % 10000)());
   };
 
   my_api.get("/queries") = [&](http_request& request, http_response& response) {
@@ -127,7 +133,7 @@ int main(int argc, char* argv[]) {
     auto orm = random_numbers.connect(request.fiber);
     std::vector<decltype(orm.find_one(s::id = 1))> results;
     for (int i = 0; i < N; i++)
-      results.push_back(orm.find_one(s::id = 1 + (i*10000/N) + rand() % (10000/N)));
+      results.push_back(orm.find_one(s::id = 1 + (i*10000/N) + random_int() % (10000/N)));
     
     int i = 0;
     response.write_json_generator(N, [&] { return results[i++]().value(); });
@@ -142,7 +148,7 @@ int main(int argc, char* argv[]) {
     auto numbers = select_N_random_numbers(c, N);
  
     for (int i = 0; i < N; i++)
-      numbers[i].randomNumber = 1 + rand() % 10000;
+      numbers[i].randomNumber = 1 + random_int() % 10000;
 
     auto req = c.bulk_update(numbers);
     if (N_SQL_CONNECTIONS * nthreads > 1) c.backend_connection().end_of_batch();

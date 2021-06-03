@@ -1,0 +1,15 @@
+[framework]
+name = "swi-prolog"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "None"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "None"
+platform = "None"
+webserver = "SWI-Prolog"
+versus = ""

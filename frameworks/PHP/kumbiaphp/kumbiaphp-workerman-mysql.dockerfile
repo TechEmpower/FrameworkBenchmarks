@@ -10,7 +10,7 @@ RUN apt-get update -yqq > /dev/null && \
 RUN apt-get install -yqq composer > /dev/null
 
 RUN apt-get install -y php-pear php8.0-dev libevent-dev > /dev/null
-RUN pecl install event-3.0.2 > /dev/null && echo "extension=event.so" > /etc/php/8.0/cli/conf.d/event.ini
+RUN pecl install event-3.0.4 > /dev/null && echo "extension=event.so" > /etc/php/8.0/cli/conf.d/event.ini
 
 COPY deploy/conf/cliphp.ini /etc/php/8.0/cli/php.ini
 
@@ -23,5 +23,7 @@ RUN git clone -b master --single-branch --depth 1 https://github.com/KumbiaPHP/A
 RUN sed -i "s|header(|\\\Workerman\\\Protocols\\\Http::header(|g" bench/app/controllers/*.php
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+
+EXPOSE 8080
 
 CMD php server.php start
