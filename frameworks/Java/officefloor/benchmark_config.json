@@ -203,7 +203,7 @@
 				"webserver": "vertx",
 				"os": "Linux",
 				"database_os": "Linux",
-				"display_name": "OfficeFloor-undertow",
+				"display_name": "OfficeFloor-vertx",
 				"notes": "",
 				"versus": "vertx-postgres"
 			},

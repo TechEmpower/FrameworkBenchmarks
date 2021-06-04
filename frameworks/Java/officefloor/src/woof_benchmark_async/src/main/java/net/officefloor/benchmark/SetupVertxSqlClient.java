@@ -28,9 +28,14 @@ public class SetupVertxSqlClient implements VertxSqlPoolConfigurer, VertxSqlPool
 
 	@Override
 	public void configure(VertxSqlPoolConfigurerContext context) throws Exception {
+
+		// Ensure adequate number of connections
 		final int MAX_POOL_SIZE = 512;
 		System.out.println("Setting max pool size to " + MAX_POOL_SIZE);
 		context.getPoolOptions().setMaxSize(MAX_POOL_SIZE);
+
+		// Configure options
+		context.getSqlConnectOptions().setCachePreparedStatements(true);
 	}
 
 }
