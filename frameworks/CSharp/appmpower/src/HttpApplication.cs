@@ -11,6 +11,8 @@ namespace appMpower
    public class HttpApplication : IHttpApplication<IFeatureCollection>
    {
       private readonly static AsciiString _plainText = "Hello, World!";
+      private readonly static JsonMessageSerializer _jsonMessageSerializer = new JsonMessageSerializer();
+      private readonly static WorldSerializer _worldSerializer = new WorldSerializer();
 
       public IFeatureCollection CreateContext(IFeatureCollection featureCollection)
       {
@@ -37,12 +39,12 @@ namespace appMpower
             }
             else if (pathStringLength == 5 && pathStringStart == "j")
             {
-               Json.RenderOne(httpResponse.Headers, httpResponseBody.Writer, new JsonMessage { message = "Hello, World!" }, new JsonMessageSerializer());
+               Json.RenderOne(httpResponse.Headers, httpResponseBody.Writer, new JsonMessage { message = "Hello, World!" }, _jsonMessageSerializer);
                return;
             }
             else if (pathStringLength == 3 && pathStringStart == "d")
             {
-               Json.RenderOne(httpResponse.Headers, httpResponseBody.Writer, await RawDb.LoadSingleQueryRow(), new WorldSerializer());
+               Json.RenderOne(httpResponse.Headers, httpResponseBody.Writer, await RawDb.LoadSingleQueryRow(), _worldSerializer);
                return;
             }
             else if (pathStringLength == 8 && pathStringStart == "q")
@@ -58,8 +60,8 @@ namespace appMpower
                   count = 500;
                }
 
-               //Json.RenderMany(httpResponse.Headers, httpResponseBody.Writer, await RawDb.LoadMultipleQueriesRows(count), new WorldSerializer());
-               Json.RenderMany(httpResponse.Headers, httpResponseBody.Writer, await RawDb.ReadMultipleRows(count), new WorldSerializer());
+               //Json.RenderMany(httpResponse.Headers, httpResponseBody.Writer, await RawDb.LoadMultipleQueriesRows(count), _worldSerializer);
+               Json.RenderMany(httpResponse.Headers, httpResponseBody.Writer, await RawDb.ReadMultipleRows(count), _worldSerializer);
                return;
             }
             else if (pathStringLength == 9 && pathStringStart == "f")
@@ -80,7 +82,7 @@ namespace appMpower
                   count = 500;
                }
 
-               Json.RenderMany(httpResponse.Headers, httpResponseBody.Writer, await RawDb.LoadMultipleUpdatesRows(count), new WorldSerializer());
+               Json.RenderMany(httpResponse.Headers, httpResponseBody.Writer, await RawDb.LoadMultipleUpdatesRows(count), _worldSerializer);
                return;
             }
          }
