@@ -24,7 +24,7 @@ when isMainModule:
   r.addRoute(jsonHandler)
   r.addRoute(plaintextHandler)
   var server = newScorper(address, r, flags)
-  exitprocs.addExitProc proc() = waitFor server.closeWait()
+  exitprocs.addExitProc proc() = server.stop();waitFor server.closeWait()
   server.start()
 
   waitFor server.join()
