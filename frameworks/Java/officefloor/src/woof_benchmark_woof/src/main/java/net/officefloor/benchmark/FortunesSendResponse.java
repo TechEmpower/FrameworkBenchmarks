@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.CancelledKeyException;
 import java.nio.channels.ClosedChannelException;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -18,6 +19,7 @@ import net.officefloor.server.http.HttpResponse;
 import net.officefloor.server.http.ServerHttpConnection;
 import net.officefloor.server.http.impl.ProcessAwareServerHttpConnectionManagedObject;
 import net.officefloor.server.http.parse.HttpRequestParser;
+import net.officefloor.server.stream.ServerOutputStream;
 import net.officefloor.server.stream.ServerWriter;
 
 /**
@@ -41,6 +43,8 @@ public class FortunesSendResponse extends AbstractSendResponse {
 	private static final byte[] TEMPLATE_END = "</table></body></html>"
 			.getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
 
+	private static final Charset UTF8 = Charset.forName("UTF-8");
+
 	private static Comparator<Fortune> SORT_FORTUNE = (a, b) -> a.message.compareTo(b.message);
 
 	public FortunesSendResponse(RequestHandler<HttpRequestParser> requestHandler,
@@ -58,14 +62,14 @@ public class FortunesSendResponse extends AbstractSendResponse {
 				// Send response
 				HttpResponse response = this.connection.getResponse();
 				response.setContentType(TEXT_HTML, null);
-				ServerWriter writer = response.getEntityWriter();
+				ServerOutputStream writer = response.getEntity();
 				writer.write(TEMPLATE_START);
 				for (Fortune fortune : fortunes) {
 					writer.write(FORTUNE_START);
 					int id = fortune.id;
-					writer.write(Integer.valueOf(id).toString());
+					writer.write(Integer.valueOf(id).toString().getBytes(UTF8));
 					writer.write(FORTUNE_MIDDLE);
-					StringEscapeUtils.ESCAPE_HTML4.translate(fortune.message, writer);
+					writer.write(StringEscapeUtils.ESCAPE_HTML4.translate(fortune.message).getBytes(UTF8));
 					writer.write(FORTUNE_END);
 				}
 				writer.write(TEMPLATE_END);
