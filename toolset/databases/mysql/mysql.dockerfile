@@ -32,15 +32,12 @@ RUN cp -R -p /var/lib/mysql /ssd/
 RUN cp -R -p /var/log/mysql /ssd/log
 RUN mkdir -p /var/run/mysqld
 
-# It may seem weird that we call `service mysql start` several times, but the RUN
-# directive is a 1-time operation for building this image. Subsequent RUN calls
-# do not see running processes from prior RUN calls; therefor, each command here
-# that relies on the mysql server running will explicitly start the server and
-# perform the work required.
 RUN chown -R mysql:mysql /var/lib/mysql /var/log/mysql /var/run/mysqld /ssd && \
-    mysqld & \
-    until mysql -uroot -psecret -e "exit"; do sleep 1; done && \
+    (mysqld &) && \
+    until mysqladmin -uroot -psecret ping; do sleep 1; done && \
     mysqladmin -uroot -psecret flush-hosts && \
-    mysql -uroot -psecret < create.sql
+    mysql -uroot -psecret < create.sql && \
+    mysqladmin -uroot -psecret shutdown && \
+    chown -R mysql:mysql /var/lib/mysql /var/log/mysql /var/run/mysqld /ssd
 
-CMD chown -R mysql:mysql /var/lib/mysql /var/log/mysql /var/run/mysqld /ssd && mysqld
+CMD ["mysqld"]
