@@ -12,6 +12,8 @@ import java.util.List;
 import org.apache.commons.text.StringEscapeUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.escape.Escaper;
+import com.google.common.html.HtmlEscapers;
 
 import net.officefloor.server.RequestHandler;
 import net.officefloor.server.http.HttpHeaderValue;
@@ -44,6 +46,8 @@ public class FortunesSendResponse extends AbstractSendResponse {
 			.getBytes(ServerHttpConnection.DEFAULT_HTTP_ENTITY_CHARSET);
 
 	private static final Charset UTF8 = Charset.forName("UTF-8");
+	
+	private static final Escaper HTML_ESCAPER = HtmlEscapers.htmlEscaper();
 
 	private static Comparator<Fortune> SORT_FORTUNE = (a, b) -> a.message.compareTo(b.message);
 
@@ -61,6 +65,8 @@ public class FortunesSendResponse extends AbstractSendResponse {
 
 				// Send response
 				HttpResponse response = this.connection.getResponse();
+
+				// Raw template
 				response.setContentType(TEXT_HTML, null);
 				ServerOutputStream writer = response.getEntity();
 				writer.write(TEMPLATE_START);
@@ -69,7 +75,8 @@ public class FortunesSendResponse extends AbstractSendResponse {
 					int id = fortune.id;
 					writer.write(Integer.valueOf(id).toString().getBytes(UTF8));
 					writer.write(FORTUNE_MIDDLE);
-					writer.write(StringEscapeUtils.ESCAPE_HTML4.translate(fortune.message).getBytes(UTF8));
+					writer.write(HTML_ESCAPER.escape(fortune.message).getBytes(UTF8));					
+//					writer.write(StringEscapeUtils.ESCAPE_HTML4.translate(fortune.message).getBytes(UTF8));
 					writer.write(FORTUNE_END);
 				}
 				writer.write(TEMPLATE_END);
