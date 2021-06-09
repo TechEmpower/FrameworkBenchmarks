@@ -75,8 +75,7 @@ public class FortunesSendResponse extends AbstractSendResponse {
 					int id = fortune.id;
 					writer.write(Integer.valueOf(id).toString().getBytes(UTF8));
 					writer.write(FORTUNE_MIDDLE);
-					writer.write(HTML_ESCAPER.escape(fortune.message).getBytes(UTF8));					
-//					writer.write(StringEscapeUtils.ESCAPE_HTML4.translate(fortune.message).getBytes(UTF8));
+					writer.write(HTML_ESCAPER.escape(fortune.message).getBytes(UTF8));
 					writer.write(FORTUNE_END);
 				}
 				writer.write(TEMPLATE_END);
