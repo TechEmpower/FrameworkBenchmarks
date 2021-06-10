@@ -9,7 +9,7 @@ const handlers = {
 for await (const req of serve("0.0.0.0:8080")) {
   const url = new URL(req.url, "http://deno");
   if (handlers[url.pathname] != undefined) {
-    handlers[url.pathname](req).catch((e) => {
+    handlers[url.pathname](req as any).catch((e) => {
       console.error(e);
       Deno.exit(9);
     });

@@ -10,7 +10,6 @@ export default async (req: ServerRequest): Promise<void> => {
   const u = new URL(req.url, "http://deno");
   const l = resolveQueryNumber(u.searchParams.get("queries") ?? "1");
   const rnd = await Promise.all(await fillArrayWithFn(() => updateQuery(), l));
-  console.log(rnd);
   headers.set("date", dyn_date());
   req.respond({
     headers,
