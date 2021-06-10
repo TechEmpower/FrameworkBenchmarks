@@ -1,5 +1,5 @@
 [framework]
-name = "Llama"
+name = "llama"
 
 [main]
 urls.plaintext = "/plaintext"

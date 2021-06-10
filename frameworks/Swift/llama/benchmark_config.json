@@ -1,5 +1,5 @@
 {
-  "framework": "Llama",
+  "framework": "llama",
   "tests": [{
     "default": {
       "plaintext_url": "/plaintext",
