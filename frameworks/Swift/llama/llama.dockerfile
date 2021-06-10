@@ -21,7 +21,7 @@ RUN apt-get install -yqq apt-get install \
 RUN wget -q -O - https://swift.org/keys/all-keys.asc | gpg --import -
 RUN wget -q https://swift.org/builds/swift-5.4.1-release/ubuntu2004/swift-5.4.1-RELEASE/swift-5.4.1-RELEASE-ubuntu20.04.tar.gz
 RUN wget tar xzf swift-5.4.1-RELEASE-ubuntu20.04.tar.gz
-export PATH=./usr/bin:"${PATH}"
+ENV PATH=./usr/bin:"${PATH}"
 		  
 WORKDIR /app
 COPY Benchmarks .
