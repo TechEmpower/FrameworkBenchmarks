@@ -80,7 +80,6 @@ export const updateQuery = async () => {
   const one = (await World.findOne({
     id: randomNumber(),
   })) as any;
-  console.log(one);
   one.randomNumber = randomNumber();
   await World.updateOne(
     {

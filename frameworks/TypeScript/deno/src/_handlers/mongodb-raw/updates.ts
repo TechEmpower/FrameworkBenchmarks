@@ -1,5 +1,5 @@
 import { ServerRequest, SERVER, dyn_date, MIME_JSON } from "../../depends.ts";
-import { updateQuery, fillArrayWithFn, resolveQueryNumber } from "./_db_helpers.ts";
+import { updateQuery, fillArrayWithFn, resolveQueryNumber } from "./database.ts";
 
 export const headers = new Headers([
   ["server", SERVER],
