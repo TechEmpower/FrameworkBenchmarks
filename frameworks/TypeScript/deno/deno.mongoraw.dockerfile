@@ -14,4 +14,5 @@ RUN deno cache main.mongoraw.ts
 
 EXPOSE 8080
 
-CMD ["run", "--allow-net", "main.mongoraw.ts"]
+RUN deno run -A main.mongoraw.ts
+
