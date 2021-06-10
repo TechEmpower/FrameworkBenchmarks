@@ -1,30 +1,28 @@
-# Ben.Http Test
+# Llama Test
 
-See [Ben.Http](https://github.com/benaadams/Ben.Http) for more information.
+See [Swift with ASP.NET Core](https://ericsink.com/entries/swift_aspnetcore_llama_demo.html) for more information.
 
 ## Infrastructure Software Versions
 
 **Language**
 
-* C# 9.0
+* Swift
 
 **Platforms**
 
-* .NET 5.0 (Windows and Linux)
+* .NET 6.0
 
 **Web Servers**
 
-* [Kestrel](https://github.com/dotnet/aspnetcore/tree/master/src/Servers/Kestrel)
+* [Kestrel](https://github.com/dotnet/aspnetcore/tree/main/src/Servers/Kestrel)
 
 **Web Stack**
 
-* [Ben.Http](https://github.com/benaadams/Ben.Http)
+* [Llama](https://ericsink.com/entries/swift_aspnetcore_llama_demo.html)
 
 ## Paths & Source for Tests
 
 All tests are in a single file
 
-* [Plaintext](Benchmarks/Program.cs): "/plaintext"
-* [JSON Serialization](Benchmarks/Program.cs): "/json"
-* [Single Query](Benchmarks/Program.cs): "/db"
-* [Fortunes](Benchmarks/Program.cs): "/fortunes"
+* [Plaintext](Benchmarks/main.swift): "/plaintext"
+* [JSON Serialization](Benchmarks/main.swift): "/json"
