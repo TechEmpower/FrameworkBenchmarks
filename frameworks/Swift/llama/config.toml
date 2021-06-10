@@ -1,0 +1,14 @@
+[framework]
+name = "Llama"
+
+[main]
+urls.plaintext = "/plaintext"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "micro"
+platform = ".NET"
+webserver = "Kestrel"
+versus = "aspcore"

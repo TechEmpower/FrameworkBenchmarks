@@ -1,0 +1,30 @@
+<Project Sdk="SourceGear.Llama.Swift.Sdk/0.1.9">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- 
+        These nuget packages are a bit special, as they 
+        contain Swift-specific things that are needed 
+        by the Llama Swift SDK for building.
+
+        The stdlib package is the Swift runtime and core library.
+
+        The other two are automatically-generic bindings for the
+        targeting packs for .NET Core and ASP.NET Core.
+    -->
+
+    <PackageReference Include="SourceGear.Llama.Swift.stdlib" Version="0.1.9" />
+    <PackageReference Include="SourceGear.Llama.Swift.NETCore" Version="0.1.9" />
+    <PackageReference Include="SourceGear.Llama.Swift.AspNetCore" Version="0.1.9" />
+  </ItemGroup>
+
+</Project>
+
