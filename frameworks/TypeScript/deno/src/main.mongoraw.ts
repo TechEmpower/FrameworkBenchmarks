@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std/http/server.ts";
+import { serve } from "https://deno.land/std@0.98.0/http/server.ts";
 import DefaultHandlers from "./handlers.ts";
 import { MongoRawHandlers } from "./_handlers/mongodb-raw/handlers.ts";
 const handlers = {

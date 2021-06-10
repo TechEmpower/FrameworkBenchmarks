@@ -1,9 +1,9 @@
-export type { Response } from "https://deno.land/std/http/server.ts";
+export type { Response } from "https://deno.land/std@0.98.0/http/server.ts";
 
 export {
   ServerRequest,
   serve,
-} from "https://deno.land/std/http/server.ts";
+} from "https://deno.land/std@0.98.0/http/server.ts";
 
 export { MongoClient, Bson } from "https://deno.land/x/mongo@v0.22.0/mod.ts";
 
