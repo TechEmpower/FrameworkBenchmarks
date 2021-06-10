@@ -13,4 +13,4 @@ RUN deno cache main.ts
 
 EXPOSE 8080
 
-RUN deno run -A main.ts
+CMD ["run", "--allow-net", "main.ts"]
