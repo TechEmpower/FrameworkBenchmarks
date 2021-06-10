@@ -6,12 +6,12 @@ jobs:
     steps:
       # Required for workflow triggers like the auto-label for failing PRs
       - name: Save PR number
-        if: github.event_name == 'pull_request'
+        if: true
         run: |
           mkdir -p ./pr
           echo ${{ github.event.number }} > ./pr/NR
       - uses: actions/upload-artifact@v2
-        if: github.event_name == 'pull_request'
+        if: true
         with:
           name: pr
           path: pr/
