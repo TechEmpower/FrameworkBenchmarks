@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
 
 RUN apt-get update -yqq
-RUN apt-get install -yqq apt-get install \
+RUN apt-get install -yqq \
           binutils \
           git \
           gnupg2 \
