@@ -5,7 +5,7 @@ export {
   serve,
 } from "https://deno.land/std/http/server.ts";
 
-export { MongoClient, Bson } from "https://deno.land/x/mongo/mod.ts";
+export { MongoClient, Bson } from "https://deno.land/x/mongo@v0.22.0/mod.ts";
 
 export const SERVER: string = "Deno";
 
