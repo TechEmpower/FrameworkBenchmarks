@@ -1,0 +1,317 @@
+Fri Jun 11 21:02:43 CDT 2021 DATA OneDSUtils OneDS mitigation checks passed 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Application is not started (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Starting application (:0) 
+Fri Jun 11 21:02:45 CDT 2021 W com.microsoft.onedrivecore.LogWriterInterface WARNING: QApplication was not created in the main() thread. (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Opening database  "/data/user/0/com.microsoft.skydrive/files/QTMetadata.db" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Current DB version is  123 (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Log the database file info (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface File: "/data/user/0/com.microsoft.skydrive/files/QTMetadata.db" size: 35262464 bytes permission: QFlags(0x200|0x400|0x2000|0x4000) (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface File: "/data/user/0/com.microsoft.skydrive/files/QTMetadata.db-shm" size: 32768 bytes permission: QFlags(0x200|0x400|0x2000|0x4000) (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface File: "/data/user/0/com.microsoft.skydrive/files/QTMetadata.db-wal" size: 4152 bytes permission: QFlags(0x200|0x400|0x2000|0x4000) (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "JSONApiBaseUrl"  with value  "{SkyApiURLValue}/API/2/" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "AllowExpandedEditCommands"  with value  "True" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "RegisterNotificationSubscriptionUrl"  with value  "{NotificationSubscriptionBaseUrl}/RegisterNotificationSubscription" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "DeleteNotificationSubscriptionUrl"  with value  "{NotificationSubscriptionBaseUrl}/DeleteNotificationSubscription" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "NotificationSubscriptionSecondsToExpiry"  with value  "604800" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "NotificationSubscriptionSecondsToPreRenewal"  with value  "302400" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "FollowAFileScenarioName"  with value  "FollowAFile" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "FollowAFileUrl"  with value  "activity" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "FollowAFileSecondsToExpiry"  with value  "7776000" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "UnfollowAFileSecondsToExpiry"  with value  "34128000" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "CreatePersonalVault"  with value  "false" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "RevisedVaultQuota"  with value  "true" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "UserResolutionRamp"  with value  "1" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "UserFirstRunRamp"  with value  "1" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "FullSyncMaxItemCount"  with value  "1000" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "IncrementalSyncMaxItemCount"  with value  "50" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "PerFileSizeLimitBytes"  with value  "2147483647" (:0) 
+Fri Jun 11 21:02:45 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "FileNameLimit"  with value  "255" (:0) 
+Fri Jun 11 21:02:46 CDT 2021 V WifiAvailableJob Scheduling a WifiAvailableJob job. 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Polling interval set to  "86400" (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Next refresh at  QDateTime(2021-06-12 11:40:05.621 CDT Qt::LocalTime) (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface The CreateVaultFolder rule in policy doc is  "false" (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface onAppLaunch: updates records:  0 (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Deleted  0  comments (cLocalStatus = cAddingToServer) on launch. (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Updated  0  comments (cLocalStatus = cDeletingFromServer or cFailedToDeleteFromServer) on launch. (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface cleanOrphanedCacheAsyncIfNecessary has the settings to run cleanup false (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Cache MISS for Drive by Resource Id (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Creating refresh factory (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Page size : "1000" (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface The request sync root points to  6 "root" (:0) 
+Fri Jun 11 21:02:46 CDT 2021 V [Auth]OneDriveAuthenticator getAuthToken - Cached valid token available for: service::onedrivemobile.live.com::MBI_SSL 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface start to clean offline root id from moved files (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Items moved out of an offline root:  0 (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface No new state for item: 4171  streamType:  1 (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface No new state for item: 13536  streamType:  1 (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface No new state for item: 12013  streamType:  1 (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface No new state for item: 10825  streamType:  1 (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Cache MISS for Drive by Drive Id (:0) 
+Fri Jun 11 21:02:46 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface No new state for item: 29162  streamType:  1 (:0) 
+Fri Jun 11 21:02:47 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface removeAllDeletedItems removed 0 items (:0) 
+Fri Jun 11 21:02:47 CDT 2021 I com.microsoft.authorization.adal.ADALSecretKeyHelper Build.VERSION.SDK_INT 29 
+Fri Jun 11 21:02:48 CDT 2021 DATA InAppPurchaseUtils isValueNotEmpty = true and hasHighestPlan is false 
+Fri Jun 11 21:02:48 CDT 2021 DATA DailyJob Received request for com.microsoft.skydrive.photos.onthisday.OnThisDayBackgroundProcessor to run between 0:00:00.000 and 23:59:59.999 (absolute time of day) 
+Fri Jun 11 21:02:48 CDT 2021 DATA DailyJob Scheduled time for com.microsoft.skydrive.photos.onthisday.OnThisDayBackgroundProcessor is to run between 0:00:00.001 and 3:18:13.574 from now 
+Fri Jun 11 21:02:48 CDT 2021 DATA DailyJob Received request for com.microsoft.skydrive.photos.onthisday.OnThisDayNotifier to run between 7:00:00.000 and 23:59:59.999 (absolute time of day) 
+Fri Jun 11 21:02:48 CDT 2021 DATA DailyJob Scheduled time for com.microsoft.skydrive.photos.onthisday.OnThisDayNotifier is to run between 0:00:00.001 and 3:36:55.566 from now 
+Fri Jun 11 21:02:48 CDT 2021 DATA SamsungMigrationUpsellJob isEnabled = false, timesShown = 0 
+Fri Jun 11 21:02:48 CDT 2021 DATA OneDrivePrivacyDelegate (Q) QoS RequiredServiceData null null true 
+Fri Jun 11 21:02:48 CDT 2021 DATA OneDrivePrivacyDelegate (Q) QoS RequiredServiceData null null true 
+Fri Jun 11 21:02:48 CDT 2021 DATA com.microsoft.skydrive.SkyDriveApplication Cancelling Samsung migration upsell job 
+Fri Jun 11 21:02:48 CDT 2021 DATA AADPrivacyUtils Sync AAD RoamingSetting was invoked for account 1003200049100D48 but not executed because last call was 33745 seconds ago 
+Fri Jun 11 21:02:48 CDT 2021 DATA com.microsoft.odsp.oem.SamsungUtils Build model matches: false 
+Fri Jun 11 21:02:48 CDT 2021 E SamsungAuthUtils MigrationState not set in account - Unknown state  
+Fri Jun 11 21:02:48 CDT 2021 DATA SamsungAuthUtils retrieved SA-MSA migration status =ODUninitialized 
+Fri Jun 11 21:02:48 CDT 2021 DATA com.microsoft.authorization.cloudaccounts.CloudAccountsManager Read ServiceConnections list from preferences: 0 
+Fri Jun 11 21:02:48 CDT 2021 DATA com.microsoft.authorization.cloudaccounts.CloudAccountsManager Read hidden cloud account IDs list from preferences: 0 
+Fri Jun 11 21:02:49 CDT 2021 DATA OneDrivePrivacyDelegate (Q) QoS RequiredServiceData null null true 
+Fri Jun 11 21:02:49 CDT 2021 DATA VaultManager fixVaultTokenExpirationTime: start checking and fixing vault expiration time. 
+Fri Jun 11 21:02:50 CDT 2021 DATA DeviceAndApplicationInfo Pre: false 
+Fri Jun 11 21:02:50 CDT 2021 DATA com.microsoft.odsp.oem.SamsungUtils Galaxy Store: false 
+Fri Jun 11 21:02:50 CDT 2021 DATA DeviceAndApplicationInfo Pre: false 
+Fri Jun 11 21:02:50 CDT 2021 DATA DeviceAndApplicationInfo Pre: false 
+Fri Jun 11 21:02:50 CDT 2021 I [Auth]ADALNetworkTasks acquireTokenSilentSync. claims: null resource: https://msmamservice.api.application 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]PRNGFixes:applyOpenSSLFix  [2021-06-12 02:02:50] No need to apply the OpenSSL fix. ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]PRNGFixes:installLinuxPRNGSecureRandom  [2021-06-12 02:02:50] No need to apply the fix. ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]SharedPreferencesFileManager  [2021-06-12 02:02:50 - {"thread_id":"4171","correlation_id":"UNSET"}] Init: SharedPreferencesFileManager Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]CacheKeyValueDelegate  [2021-06-12 02:02:50 - {"thread_id":"4171","correlation_id":"UNSET"}] Init: CacheKeyValueDelegate Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]SharedPreferencesFileManager  [2021-06-12 02:02:50 - {"thread_id":"4171","correlation_id":"UNSET"}] Init with storage helper:  SharedPreferencesFileManager Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]SharedPreferencesAccountCredentialCache  [2021-06-12 02:02:50 - {"thread_id":"4171","correlation_id":"UNSET"}] Init: SharedPreferencesAccountCredentialCache Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]MsalOAuth2TokenCache  [2021-06-12 02:02:50 - {"thread_id":"4171","correlation_id":"UNSET"}] Init: MsalOAuth2TokenCache Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]ADALOAuth2TokenCache  [2021-06-12 02:02:50 - {"thread_id":"4171","correlation_id":"UNSET"}] Init: ADALOAuth2TokenCache Android 29 
+Fri Jun 11 21:02:50 CDT 2021 DATA OneDrivePrivacyDelegate (I) ADALEvent RequiredServiceData null null true 
+Fri Jun 11 21:02:50 CDT 2021 E MAMComponentsBehavior Failed to acquire refresh token for MAM enrollment com.microsoft.aad.adal.AuthenticationException: Request authority:https://login.windows.net/common clientid:b26aadf8-566f-4478-926f-589f601d9c74 No result returned from acquireTokenSilent
+	at com.microsoft.aad.adal.AcquireTokenRequest.tryAcquireTokenSilent(SourceFile:12)
+	at com.microsoft.aad.adal.AcquireTokenRequest.performAcquireTokenRequest(SourceFile:1)
+	at com.microsoft.aad.adal.AcquireTokenRequest.access$200(SourceFile:1)
+	at com.microsoft.aad.adal.AcquireTokenRequest$1.run(SourceFile:4)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+	at java.lang.Thread.run(Thread.java:919)
+
+Fri Jun 11 21:02:50 CDT 2021 I [ADAL]ADALOAuth2TokenCache  [2021-06-12 02:02:50 - {"thread_id":"4171","correlation_id":"UNSET"}] Context is an Application? [true] Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]ADALOAuth2TokenCache  [2021-06-12 02:02:50 - {"thread_id":"4171","correlation_id":"UNSET"}] Validating secret key settings. Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]ADALOAuth2TokenCache  [2021-06-12 02:02:50 - {"thread_id":"4171","correlation_id":"UNSET"}] Initializing SharedPreferencesFileManager Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]ADALOAuth2TokenCache  [2021-06-12 02:02:50 - {"thread_id":"4171","correlation_id":"UNSET"}] Initializing with name: com.microsoft.aad.adal.cache Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]SharedPreferencesFileManager  [2021-06-12 02:02:50 - {"thread_id":"4171","correlation_id":"UNSET"}] Init with storage helper:  SharedPreferencesFileManager Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]AcquireTokenRequest:acquireToken  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] Sending async task from thread:9478 ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]AcquireTokenRequest:acquireToken  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] Running task in thread:9495 ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 W [ADAL]Telemetry  [2021-06-12 02:02:50 - {"thread_id":"4180","correlation_id":"fd81cb0a-d5be-4bb1-a555-965278b9efff"}] Telemetry is disabled because the Telemetry context or configuration is null Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]AcquireTokenRequest:performAuthorityValidation  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] Fail to get authority validation metadata back. Ignore the failure since authority validation is turned off. ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]BrokerProxy:canSwitchToBroker  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] Broker auth is turned off or no valid broker is available on the device, cannot switch to broker. ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]AcquireTokenRequest:tryAcquireTokenSilent  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] Try to acquire token silently, return valid AT or use RT in the cache. ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]BrokerProxy:canSwitchToBroker  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] Broker auth is turned off or no valid broker is available on the device, cannot switch to broker. ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]AcquireTokenRequest:tryAcquireTokenSilentLocally  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] Try to silently get token from local cache. ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]TokenCacheAccessor:getATFromCache  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] No access token exists. ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]AcquireTokenSilentHandler:getAccessToken  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] No valid access token exists, try with refresh token. ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]AcquireTokenSilentHandler:tryRT  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] Regular token cache entry does not exist, try with MRRT. ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]AcquireTokenSilentHandler:tryMRRT  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] MRRT token does not exist, try with FRT ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]AcquireTokenSilentHandler:tryFRT  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] FRT cache item does not exist, fall back to try MRRT. ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]AcquireTokenSilentHandler:useMRRT  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] Send request to use MRRT for new AT. ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 V [ADAL]AcquireTokenSilentHandler:useMRRT  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] MRRT does not exist, cannot proceed with MRRT for new AT. ver:3.1.2 Android 29 
+Fri Jun 11 21:02:50 CDT 2021 E [ADAL]AcquireTokenRequest:tryAcquireTokenSilent  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] AUTH_REFRESH_FAILED_PROMPT_NOT_ALLOWED:Prompt is not allowed and failed to get token. No result returned from acquireTokenSilent ver:3.1.2 Android 29 com.microsoft.aad.adal.AuthenticationException: Refresh token is failed and prompt is not allowed
+	at com.microsoft.authorization.adal.ADALNetworkTasks$b.Log(SourceFile:3)
+	at com.microsoft.aad.adal.Logger$1.log(SourceFile:9)
+	at com.microsoft.identity.common.internal.logging.Logger$1.run(SourceFile:7)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+	at java.lang.Thread.run(Thread.java:919)
+
+Fri Jun 11 21:02:50 CDT 2021 E [ADAL]AcquireTokenRequest:tryAcquireTokenSilent  [2021-06-12 02:02:50 - fd81cb0a-d5be-4bb1-a555-965278b9efff] AUTH_REFRESH_FAILED_PROMPT_NOT_ALLOWED:Request authority:https://login.windows.net/common clientid:b26aadf8-566f-4478-926f-589f601d9c74 ver:3.1.2 Android 29 com.microsoft.aad.adal.AuthenticationException: Refresh token is failed and prompt is not allowed
+	at com.microsoft.authorization.adal.ADALNetworkTasks$b.Log(SourceFile:3)
+	at com.microsoft.aad.adal.Logger$1.log(SourceFile:9)
+	at com.microsoft.identity.common.internal.logging.Logger$1.run(SourceFile:7)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+	at java.lang.Thread.run(Thread.java:919)
+
+Fri Jun 11 21:03:00 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Merge wal to database. before merge: 12392 after merge: 0 first db action on: 1623463365 now: 1623463380 time to merge: 161 (:0) 
+Fri Jun 11 21:03:05 CDT 2021 E ScenarioNotificationChannels Error while getting notification scenarios  java.net.SocketTimeoutException: failed to connect to skyapi.live.net/40.90.130.194 (port 443) from /10.170.15.142 (port 40294) after 15000ms
+	at libcore.io.IoBridge.connectErrno(IoBridge.java:191)
+	at libcore.io.IoBridge.connect(IoBridge.java:135)
+	at java.net.PlainSocketImpl.socketConnect(PlainSocketImpl.java:142)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:390)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:230)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:212)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:436)
+	at java.net.Socket.connect(Socket.java:621)
+	at okhttp3.internal.platform.Platform.connectSocket(SourceFile:1)
+	at okhttp3.internal.connection.RealConnection.connectSocket(SourceFile:9)
+	at okhttp3.internal.connection.RealConnection.connect(SourceFile:16)
+	at okhttp3.internal.connection.ExchangeFinder.findConnection(SourceFile:39)
+	at okhttp3.internal.connection.ExchangeFinder.findHealthyConnection(SourceFile:1)
+	at okhttp3.internal.connection.ExchangeFinder.find(SourceFile:7)
+	at okhttp3.internal.connection.RealCall.initExchange$okhttp(SourceFile:8)
+	at okhttp3.internal.connection.ConnectInterceptor.intercept(SourceFile:2)
+	at okhttp3.internal.http.RealInterceptorChain.proceed(SourceFile:12)
+	at okhttp3.internal.cache.CacheInterceptor.intercept(SourceFile:27)
+	at okhttp3.internal.http.RealInterceptorChain.proceed(SourceFile:12)
+	at okhttp3.internal.http.BridgeInterceptor.intercept(SourceFile:22)
+	at okhttp3.internal.http.RealInterceptorChain.proceed(SourceFile:12)
+	at okhttp3.internal.http.RetryAndFollowUpInterceptor.intercept(SourceFile:7)
+	at okhttp3.internal.http.RealInterceptorChain.proceed(SourceFile:12)
+	at com.microsoft.skydrive.vault.VaultTokenRequestInterceptorFactory$VaultTokenRequstInterceptor.intercept(SourceFile:15)
+	at okhttp3.internal.http.RealInterceptorChain.proceed(SourceFile:12)
+	at okhttp3.logging.HttpLoggingInterceptor.intercept(SourceFile:4)
+	at okhttp3.internal.http.RealInterceptorChain.proceed(SourceFile:12)
+	at okhttp3.internal.connection.RealCall.getResponseWithInterceptorChain$okhttp(SourceFile:16)
+	at okhttp3.internal.connection.RealCall.execute(SourceFile:5)
+	at retrofit2.g.execute(SourceFile:8)
+	at retrofit2.e$b.execute(SourceFile:1)
+	at com.microsoft.skydrive.pushnotification.GetNotificationScenariosTask.onExecute(SourceFile:3)
+	at com.microsoft.odsp.task.TaskBase.run(SourceFile:3)
+	at com.microsoft.skydrive.notifications.ScenarioNotificationChannels$a.run(SourceFile:1)
+	at java.lang.Thread.run(Thread.java:919)
+
+Fri Jun 11 21:03:48 CDT 2021 W com.microsoft.onedrivecore.LogWriterInterface QIODevice::read (QNetworkReplyHttpImpl): device not open (:0) 
+Fri Jun 11 21:03:48 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Got error during getting info for "root" , error: "{httpStatusCode: 0, networkErrorCode: 5, type: NetworkException}" (:0) 
+Fri Jun 11 21:03:48 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Got error during getting info for  "root" , error: "{httpStatusCode: 0, networkErrorCode: 5, type: NetworkException}" (:0) 
+Fri Jun 11 21:03:48 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Exception thrown during GetChanges() run (:0) 
+Fri Jun 11 21:03:48 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Total time to sync (ms):  62535 (:0) 
+Fri Jun 11 21:03:48 CDT 2021 DATA OneDrivePrivacyDelegate (I) Performance/GetChanges RequiredServiceData OneDriveAccount 324acbe54d3984f4 true 
+Fri Jun 11 21:03:48 CDT 2021 DATA OneDrivePrivacyDelegate (Q) XPlat RequiredServiceData OneDriveAccount 324acbe54d3984f4 true 
+Fri Jun 11 21:03:49 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Attributing api call for " "Metadata/GetChanges" " (:0) 
+Fri Jun 11 21:03:49 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface start to clean offline root id from moved files (:0) 
+Fri Jun 11 21:03:49 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Items moved out of an offline root:  0 (:0) 
+Fri Jun 11 21:05:00 CDT 2021 V com.microsoft.tokenshare.d_v1.5.10 Can't get configuration from networkjava.net.ConnectException: Failed to connect to oneclient.sfx.ms/23.201.213.85:443 
+Fri Jun 11 21:12:35 CDT 2021 DATA OneDSUtils OneDS mitigation checks passed 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Application is not started (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Starting application (:0) 
+Fri Jun 11 21:12:36 CDT 2021 W com.microsoft.onedrivecore.LogWriterInterface WARNING: QApplication was not created in the main() thread. (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Opening database  "/data/user/0/com.microsoft.skydrive/files/QTMetadata.db" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Current DB version is  123 (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Log the database file info (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface File: "/data/user/0/com.microsoft.skydrive/files/QTMetadata.db" size: 35262464 bytes permission: QFlags(0x200|0x400|0x2000|0x4000) (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface File: "/data/user/0/com.microsoft.skydrive/files/QTMetadata.db-shm" size: 32768 bytes permission: QFlags(0x200|0x400|0x2000|0x4000) (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface File: "/data/user/0/com.microsoft.skydrive/files/QTMetadata.db-wal" size: 4152 bytes permission: QFlags(0x200|0x400|0x2000|0x4000) (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "JSONApiBaseUrl"  with value  "{SkyApiURLValue}/API/2/" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "AllowExpandedEditCommands"  with value  "True" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "RegisterNotificationSubscriptionUrl"  with value  "{NotificationSubscriptionBaseUrl}/RegisterNotificationSubscription" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "DeleteNotificationSubscriptionUrl"  with value  "{NotificationSubscriptionBaseUrl}/DeleteNotificationSubscription" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "NotificationSubscriptionSecondsToExpiry"  with value  "604800" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "NotificationSubscriptionSecondsToPreRenewal"  with value  "302400" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "FollowAFileScenarioName"  with value  "FollowAFile" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "FollowAFileUrl"  with value  "activity" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "FollowAFileSecondsToExpiry"  with value  "7776000" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "UnfollowAFileSecondsToExpiry"  with value  "34128000" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "CreatePersonalVault"  with value  "false" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "RevisedVaultQuota"  with value  "true" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "UserResolutionRamp"  with value  "1" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "UserFirstRunRamp"  with value  "1" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "FullSyncMaxItemCount"  with value  "1000" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "IncrementalSyncMaxItemCount"  with value  "50" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "PerFileSizeLimitBytes"  with value  "2147483647" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Inserting rule  "FileNameLimit"  with value  "255" (:0) 
+Fri Jun 11 21:12:36 CDT 2021 V WifiAvailableJob Scheduling a WifiAvailableJob job. 
+Fri Jun 11 21:12:37 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Cache MISS for Drive by Resource Id (:0) 
+Fri Jun 11 21:12:37 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Polling interval set to  "86400" (:0) 
+Fri Jun 11 21:12:37 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Next refresh at  QDateTime(2021-06-12 11:40:05.621 CDT Qt::LocalTime) (:0) 
+Fri Jun 11 21:12:37 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface The CreateVaultFolder rule in policy doc is  "false" (:0) 
+Fri Jun 11 21:12:37 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface onAppLaunch: updates records:  0 (:0) 
+Fri Jun 11 21:12:37 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Deleted  0  comments (cLocalStatus = cAddingToServer) on launch. (:0) 
+Fri Jun 11 21:12:37 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Updated  0  comments (cLocalStatus = cDeletingFromServer or cFailedToDeleteFromServer) on launch. (:0) 
+Fri Jun 11 21:12:37 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface cleanOrphanedCacheAsyncIfNecessary has the settings to run cleanup false (:0) 
+Fri Jun 11 21:12:37 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Creating refresh factory (:0) 
+Fri Jun 11 21:12:37 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Page size : "1000" (:0) 
+Fri Jun 11 21:12:37 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface The request sync root points to  6 "root" (:0) 
+Fri Jun 11 21:12:37 CDT 2021 V [Auth]OneDriveAuthenticator getAuthToken - Cached valid token available for: service::onedrivemobile.live.com::MBI_SSL 
+Fri Jun 11 21:12:37 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface start to clean offline root id from moved files (:0) 
+Fri Jun 11 21:12:37 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Items moved out of an offline root:  0 (:0) 
+Fri Jun 11 21:12:37 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface removeAllDeletedItems removed 0 items (:0) 
+Fri Jun 11 21:12:37 CDT 2021 I com.microsoft.authorization.adal.ADALSecretKeyHelper Build.VERSION.SDK_INT 29 
+Fri Jun 11 21:12:38 CDT 2021 DATA InAppPurchaseUtils isValueNotEmpty = true and hasHighestPlan is false 
+Fri Jun 11 21:12:38 CDT 2021 DATA OnThisDayBackgroundProcessor Canceling "(job:1073741838/com.microsoft.skydrive/.photos.onthisday.OnThisDayBackgroundProcessor)" before scheduling a new one 
+Fri Jun 11 21:12:38 CDT 2021 DATA DailyJob Received request for com.microsoft.skydrive.photos.onthisday.OnThisDayBackgroundProcessor to run between 0:00:00.000 and 23:59:59.999 (absolute time of day) 
+Fri Jun 11 21:12:38 CDT 2021 DATA DailyJob Scheduled time for com.microsoft.skydrive.photos.onthisday.OnThisDayBackgroundProcessor is to run between 0:00:00.001 and 3:17:00.567 from now 
+Fri Jun 11 21:12:38 CDT 2021 DATA OneDrivePrivacyDelegate (Q) QoS RequiredServiceData null null true 
+Fri Jun 11 21:12:38 CDT 2021 DATA OnThisDayNotifier Canceling "(job:1073741839/com.microsoft.skydrive/.photos.onthisday.OnThisDayNotifier)" before scheduling a new one 
+Fri Jun 11 21:12:38 CDT 2021 DATA DailyJob Received request for com.microsoft.skydrive.photos.onthisday.OnThisDayNotifier to run between 7:00:00.000 and 23:59:59.999 (absolute time of day) 
+Fri Jun 11 21:12:38 CDT 2021 DATA DailyJob Scheduled time for com.microsoft.skydrive.photos.onthisday.OnThisDayNotifier is to run between 0:00:00.001 and 2:54:41.491 from now 
+Fri Jun 11 21:12:38 CDT 2021 DATA VaultManager fixVaultTokenExpirationTime: start checking and fixing vault expiration time. 
+Fri Jun 11 21:12:38 CDT 2021 DATA AADPrivacyUtils Sync AAD RoamingSetting was invoked for account 1003200049100D48 but not executed because last call was 34335 seconds ago 
+Fri Jun 11 21:12:38 CDT 2021 DATA com.microsoft.odsp.oem.SamsungUtils Build model matches: false 
+Fri Jun 11 21:12:38 CDT 2021 DATA SamsungMigrationUpsellJob isEnabled = false, timesShown = 0 
+Fri Jun 11 21:12:38 CDT 2021 DATA OneDrivePrivacyDelegate (Q) QoS RequiredServiceData null null true 
+Fri Jun 11 21:12:38 CDT 2021 DATA com.microsoft.skydrive.SkyDriveApplication Cancelling Samsung migration upsell job 
+Fri Jun 11 21:12:38 CDT 2021 E SamsungAuthUtils MigrationState not set in account - Unknown state  
+Fri Jun 11 21:12:38 CDT 2021 DATA SamsungAuthUtils retrieved SA-MSA migration status =ODUninitialized 
+Fri Jun 11 21:12:38 CDT 2021 DATA com.microsoft.authorization.cloudaccounts.CloudAccountsManager Read ServiceConnections list from preferences: 0 
+Fri Jun 11 21:12:38 CDT 2021 DATA com.microsoft.authorization.cloudaccounts.CloudAccountsManager Read hidden cloud account IDs list from preferences: 0 
+Fri Jun 11 21:12:38 CDT 2021 DATA OneDrivePrivacyDelegate (Q) QoS RequiredServiceData null null true 
+Fri Jun 11 21:12:39 CDT 2021 DATA DeviceAndApplicationInfo Pre: false 
+Fri Jun 11 21:12:39 CDT 2021 DATA com.microsoft.odsp.oem.SamsungUtils Galaxy Store: false 
+Fri Jun 11 21:12:39 CDT 2021 DATA DeviceAndApplicationInfo Pre: false 
+Fri Jun 11 21:12:39 CDT 2021 DATA DeviceAndApplicationInfo Pre: false 
+Fri Jun 11 21:12:39 CDT 2021 V [Auth]OneDriveAuthenticator getAuthToken - Cached valid token available for: service::onedrivemobile.live.com::MBI_SSL 
+Fri Jun 11 21:12:39 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Got valid response for item  "root"  with  0 Duration:  1987 (:0) 
+Fri Jun 11 21:12:39 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface tagsItems found :  0 (:0) 
+Fri Jun 11 21:12:39 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface locations found :  0 (:0) 
+Fri Jun 11 21:12:39 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Writing Metadata for syncRoot ResourceId "root" (:0) 
+Fri Jun 11 21:12:39 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Metadata for syncRoot ResourceId "root" is written into db in 116 ms with 0 ms yield time. The network request takes 1987 ms. There are 0 items in total and 0 items are skipped. There are  0  locations data in total.  The sync is against the parentSyncRoot: true (:0) 
+Fri Jun 11 21:12:39 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface The app status. PowerSaveMode: false ForegroundMode: false (:0) 
+Fri Jun 11 21:12:39 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Schedule propagation of special folder classification. (:0) 
+Fri Jun 11 21:12:39 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Executing propagate classification (:0) 
+Fri Jun 11 21:12:39 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Queue is empty, there are no folders to propagate (:0) 
+Fri Jun 11 21:12:39 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Skip unreferenced locations deletion due to less than a week (:0) 
+Fri Jun 11 21:12:39 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Total time to sync (ms):  2595 (:0) 
+Fri Jun 11 21:12:39 CDT 2021 V [Auth]OneDriveAuthenticator getAuthToken - Cached valid token available for: service::onedrivemobile.live.com::MBI_SSL 
+Fri Jun 11 21:12:39 CDT 2021 DATA OneDrivePrivacyDelegate (Q) XPlat RequiredServiceData OneDriveAccount 324acbe54d3984f4 true 
+Fri Jun 11 21:12:40 CDT 2021 I com.microsoft.onedrivecore.LogWriterInterface Attributing api call for " "Metadata/GetChanges" " (:0) 
+Fri Jun 11 21:12:40 CDT 2021 DATA DeviceAndApplicationInfo Pre: false 
+Fri Jun 11 21:12:40 CDT 2021 DATA com.microsoft.odsp.oem.SamsungUtils Galaxy Store: false 
+Fri Jun 11 21:12:40 CDT 2021 DATA DeviceAndApplicationInfo Pre: false 
+Fri Jun 11 21:12:40 CDT 2021 DATA DeviceAndApplicationInfo Pre: false 
+Fri Jun 11 21:12:40 CDT 2021 V [Auth]OneDriveAuthenticator hasFeatures() FEATURE_QUOTA 
+Fri Jun 11 21:12:40 CDT 2021 V FirebaseCloudMessagingManager Google Api Availability return code: 0 
+Fri Jun 11 21:12:40 CDT 2021 V [Auth]OneDriveAuthenticator getAuthToken - Cached valid token available for: service::onedrivemobile.live.com::MBI_SSL 
+Fri Jun 11 21:12:40 CDT 2021 DATA OnThisDayNotifier onStartJob() called with userDisabledNotifications: false, rampValue: true, isRunning: false, shouldTryToNotify: false, experimentTreatment: A, shouldStart: false 
+Fri Jun 11 21:12:40 CDT 2021 DATA DetectConnectivityJob onStartJob-resume upload services 
+Fri Jun 11 21:12:40 CDT 2021 I ServiceUtils/SyncServiceManager session Id: 0 | startForegroundService: com.microsoft.skydrive.fileloader.RESUME 
+Fri Jun 11 21:12:40 CDT 2021 I ServiceUtils/SyncServiceManager session Id: 0 | startForegroundService: com.microsoft.skydrive.fileloader.RESUME 
+Fri Jun 11 21:12:40 CDT 2021 I ServiceUtils/SyncServiceManager session Id: 0 | startForegroundService: com.microsoft.skydrive.fileloader.RESUME 
+Fri Jun 11 21:12:40 CDT 2021 DATA ManualUploadService Starting service in the foreground onCreate 
+Fri Jun 11 21:12:40 CDT 2021 V [Auth]OneDriveAuthenticator getAuthToken - Cached valid token available for: service::onedrivemobile.live.com::MBI_SSL 
+Fri Jun 11 21:12:40 CDT 2021 DATA DeviceAndApplicationInfo Pre: false 
+Fri Jun 11 21:12:40 CDT 2021 DATA ManualUploadService Successfully started service in the foreground onCreate 
+Fri Jun 11 21:12:40 CDT 2021 DATA com.microsoft.odsp.oem.SamsungUtils Galaxy Store: false 
+Fri Jun 11 21:12:40 CDT 2021 DATA DeviceAndApplicationInfo Pre: false 
+Fri Jun 11 21:12:40 CDT 2021 DATA DeviceAndApplicationInfo Pre: false 
+Fri Jun 11 21:12:40 CDT 2021 V [Auth]OneDriveAuthenticator hasFeatures() FEATURE_QUOTA 
+Fri Jun 11 21:12:40 CDT 2021 V [Auth]OneDriveAuthenticator getAuthToken - Cached valid token available for: service::onedrivemobile.live.com::MBI_SSL 
+Fri Jun 11 21:12:41 CDT 2021 DATA FileUploaderNotificationManager FileUploaderNotificationManager-resetToDefaultNotificationPreferences 
+Fri Jun 11 21:12:41 CDT 2021 DATA FileUploaderNotificationManager uploadingStatus: Done 
+Fri Jun 11 21:12:41 CDT 2021 DATA FileUploaderNotificationManager upload isOngoing: false 
+Fri Jun 11 21:12:41 CDT 2021 DATA FileUploaderNotificationManager upload notification is up to date 
+Fri Jun 11 21:12:41 CDT 2021 V ManualUploadService Upload Service Created. 
+Fri Jun 11 21:12:41 CDT 2021 DATA ManualUploadService Starting service in the foreground onStartCommand 
+Fri Jun 11 21:12:41 CDT 2021 DATA ManualUploadService Successfully started service in the foreground onStartCommand 
+Fri Jun 11 21:12:41 CDT 2021 DATA FileUploaderNotificationManager FileUploaderNotificationManager-resetToDefaultNotificationPreferences 
+Fri Jun 11 21:12:41 CDT 2021 DATA FileUploaderNotificationManager uploadingStatus: Done 
+Fri Jun 11 21:12:41 CDT 2021 DATA FileUploaderNotificationManager upload isOngoing: false 
+Fri Jun 11 21:12:41 CDT 2021 DATA FileUploaderNotificationManager upload notification is up to date 
+Fri Jun 11 21:12:41 CDT 2021 V ManualUploadService Upload Service onStartCommand, intent = Intent { act=com.microsoft.skydrive.fileloader.RESUME cmp=com.microsoft.skydrive/.upload.ManualUploadService (has extras) } 
+Fri Jun 11 21:12:41 CDT 2021 DATA ModalUploadService Starting service in the foreground onCreate 
+Fri Jun 11 21:12:41 CDT 2021 DATA ModalUploadService Successfully started service in the foreground onCreate 
+Fri Jun 11 21:12:41 CDT 2021 DATA ModalUploadNotificationManager ModalUploadNotificationManager-resetToDefaultNotificationPreferences 
+Fri Jun 11 21:12:41 CDT 2021 V ModalUploadService Upload Service Created. 
+Fri Jun 11 21:12:41 CDT 2021 DATA ModalUploadService Starting service in the foreground onStartCommand 
+Fri Jun 11 21:12:41 CDT 2021 DATA ModalUploadService Successfully started service in the foreground onStartCommand 
+Fri Jun 11 21:12:41 CDT 2021 DATA ModalUploadNotificationManager ModalUploadNotificationManager-resetToDefaultNotificationPreferences 
+Fri Jun 11 21:12:41 CDT 2021 V ModalUploadService Upload Service onStartCommand, intent = Intent { act=com.microsoft.skydrive.fileloader.RESUME cmp=com.microsoft.skydrive/.upload.ModalUploadService (has extras) } 
+Fri Jun 11 21:12:41 CDT 2021 DATA AsyncMoveService Starting service in the foreground onCreate() 
+Fri Jun 11 21:12:41 CDT 2021 DATA AsyncMoveService Successfully started service in the foreground onCreate() 
+Fri Jun 11 21:12:41 CDT 2021 DATA FileUploaderNotificationManager AsyncMoveNotificationManager-resetToDefaultNotificationPreferences 
+Fri Jun 11 21:12:41 CDT 2021 DATA FileUploaderNotificationManager uploadingStatus: Done 
+Fri Jun 11 21:12:41 CDT 2021 V AsyncMoveService Upload Service Created. 
+Fri Jun 11 21:12:41 CDT 2021 DATA AsyncMoveService Starting service in the foreground onStartCommand 
+Fri Jun 11 21:12:41 CDT 2021 DATA AsyncMoveService Successfully started service in the foreground onStartCommand 
+Fri Jun 11 21:12:41 CDT 2021 DATA FileUploaderNotificationManager AsyncMoveNotificationManager-resetToDefaultNotificationPreferences 
+Fri Jun 11 21:12:41 CDT 2021 DATA FileUploaderNotificationManager uploadingStatus: Done 
+Fri Jun 11 21:12:41 CDT 2021 V AsyncMoveService Upload Service onStartCommand, intent = Intent { act=com.microsoft.skydrive.fileloader.RESUME cmp=com.microsoft.skydrive/.upload.AsyncMoveService (has extras) } 
+Fri Jun 11 21:12:42 CDT 2021 DATA FileUploaderNotificationManager SyncService-cancelAllTasks 
+Fri Jun 11 21:12:42 CDT 2021 DATA FileUploaderNotificationManager uploadingStatus: Done 
+Fri Jun 11 21:12:42 CDT 2021 DATA FileUploaderNotificationManager upload isOngoing: false 
+Fri Jun 11 21:12:42 CDT 2021 DATA FileUploaderNotificationManager upload notification is up to date 
+Fri Jun 11 21:12:42 CDT 2021 DATA ModalUploadNotificationManager SyncService-cancelAllTasks 
+Fri Jun 11 21:12:42 CDT 2021 DATA FileUploaderNotificationManager SyncService-cancelAllTasks 
+Fri Jun 11 21:12:42 CDT 2021 DATA FileUploaderNotificationManager uploadingStatus: Done 

@@ -89,7 +89,7 @@ Results of continuous benchmarking runs are available in real time [here](https:
 
 ### Data Visualization
 
-If you have a `results.json` file that you would like to visualize, you can [do that here](https://tfb-status.techempower.com/share). You can also attach a `runid` parameter to that url where `runid` is a run listed on [tfb-status](https://tfb-status.techempower.com) like so: https://www.techempower.com/benchmarks/#section=test&runid=fd07b64e-47ce-411e-8b9b-b13368e988c6
+If you have a `results.json` file that you would like to visualize, you can [do that here](https://tfb-status.techempower.com/share). You can also attach a `runid` parameter to that url where `runid` is a run listed on [tfb-status](https://tfb-status.techempower.com) like so: https://www.techempower.com/benchmarks/#section=test&runid=af9fd90f647365002a896e783c795e0e9476678a
 
 ## Contributing
 
