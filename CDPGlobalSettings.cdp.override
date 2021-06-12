@@ -1,0 +1,11 @@
+{"TraceLog.EnabledHandlerTypes":7,
+"BluetoothTransportEnabled"
+:TRUE,
+"Authentication.Environment":0,
+"CcsPollingMode":3,
+"CcsExtendedPollingMode":1,
+"FastPathSequencingEnabled"
+:TRUE,
+"CcsPollingBackoffEnabled"
+:true,
+"CcsPollingInterval":0,"CcsPollingMaxIntervalCount":0}
