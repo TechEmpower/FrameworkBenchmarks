@@ -1,0 +1,19 @@
+[framework]
+name = "appmpower"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?c="
+urls.update = "/updates?c="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = ".NET"
+webserver = "kestrel"
+versus = "aspcore"
