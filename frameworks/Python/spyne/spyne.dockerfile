@@ -1,4 +1,4 @@
-FROM python:3.6.6-stretch
+FROM python:3.10-rc-slim-buster
 
 ADD ./ /spyne
 

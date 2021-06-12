@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <servicetalk.version>0.20.0</servicetalk.version>
+        <servicetalk.version>0.38.0</servicetalk.version>
     </properties>
 
 
