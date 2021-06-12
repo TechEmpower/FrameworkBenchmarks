@@ -5,14 +5,27 @@
 
 namespace 
   node 
-{af9fd90f647365002a896e783c795e0e9476678a
+{
+	af9fd90f647365002a896e783c795e0e9476678a
 
 Michael Glenn
-<50783497+MoneyMan573@users.noreply.github.com>
-1589317606 -0500
- clone:   
+<
+50783497
+	+
+	MoneyMan573@users.noreply.github.com>
+1589317606
+-0500
+ clone
+
+:   
 from
-	https://github.com/MoneyMan573/bucksbitties.git
+	https:'/:''/''github.com/MoneyMan573/bucksbitties.git`
+
+
+
+
+	
+
 
 
 using v8::Context;
