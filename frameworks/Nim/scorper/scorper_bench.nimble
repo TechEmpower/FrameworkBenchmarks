@@ -12,4 +12,4 @@ backend       = "c"
 # Dependencies
 
 requires "nim >= 1.2.0"
-requires "scorper >= 1.0.6"
+requires "scorper >= 1.0.12"

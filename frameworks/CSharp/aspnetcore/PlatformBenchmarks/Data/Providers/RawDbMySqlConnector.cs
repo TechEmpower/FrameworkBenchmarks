@@ -1,16 +1,20 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+#if MYSQLCONNECTOR
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using Npgsql;
+using MySqlConnector;
 
 namespace PlatformBenchmarks
 {
+    // Is semantically identical to RawDbNpgsql.cs.
+    // If you are changing RawDbMySqlConnector.cs, also consider changing RawDbNpgsql.cs.
     public class RawDb
     {
         private readonly ConcurrentRandom _random;
@@ -29,11 +33,11 @@ namespace PlatformBenchmarks
 
         public async Task<World> LoadSingleQueryRow()
         {
-            using (var db = new NpgsqlConnection(_connectionString))
+            using (var db = new MySqlConnection(_connectionString))
             {
                 await db.OpenAsync();
 
-                var (cmd, _) = CreateReadCommand(db);
+                var (cmd, _) = await CreateReadCommandAsync(db);
                 using (cmd)
                 {
                     return await ReadSingleRow(cmd);
@@ -45,17 +49,17 @@ namespace PlatformBenchmarks
         {
             var result = new World[count];
 
-            using (var db = new NpgsqlConnection(_connectionString))
+            using (var db = new MySqlConnection(_connectionString))
             {
                 await db.OpenAsync();
 
-                var (cmd, idParameter) = CreateReadCommand(db);
+                var (cmd, idParameter) = await CreateReadCommandAsync(db);
                 using (cmd)
                 {
                     for (int i = 0; i < result.Length; i++)
                     {
                         result[i] = await ReadSingleRow(cmd);
-                        idParameter.TypedValue = _random.Next(1, 10001);
+                        idParameter.Value = _random.Next(1, 10001);
                     }
                 }
             }
@@ -89,11 +93,11 @@ namespace PlatformBenchmarks
 
             static async Task<World[]> LoadUncachedQueries(int id, int i, int count, RawDb rawdb, World[] result)
             {
-                using (var db = new NpgsqlConnection(rawdb._connectionString))
+                using (var db = new MySqlConnection(rawdb._connectionString))
                 {
                     await db.OpenAsync();
 
-                    var (cmd, idParameter) = rawdb.CreateReadCommand(db);
+                    var (cmd, idParameter) = await rawdb.CreateReadCommandAsync(db);
                     using (cmd)
                     {
                         Func<ICacheEntry, Task<CachedWorld>> create = async (entry) =>
@@ -104,7 +108,7 @@ namespace PlatformBenchmarks
                         var cacheKeys = _cacheKeys;
                         var key = cacheKeys[id];
 
-                        idParameter.TypedValue = id;
+                        idParameter.Value = id;
 
                         for (; i < result.Length; i++)
                         {
@@ -112,7 +116,7 @@ namespace PlatformBenchmarks
                             result[i] = data;
 
                             id = rawdb._random.Next(1, 10001);
-                            idParameter.TypedValue = id;
+                            idParameter.Value = id;
                             key = cacheKeys[id];
                         }
                     }
@@ -124,18 +128,18 @@ namespace PlatformBenchmarks
 
         public async Task PopulateCache()
         {
-            using (var db = new NpgsqlConnection(_connectionString))
+            using (var db = new MySqlConnection(_connectionString))
             {
                 await db.OpenAsync();
 
-                var (cmd, idParameter) = CreateReadCommand(db);
+                var (cmd, idParameter) = await CreateReadCommandAsync(db);
                 using (cmd)
                 {
                     var cacheKeys = _cacheKeys;
                     var cache = _cache;
                     for (var i = 1; i < 10001; i++)
                     {
-                        idParameter.TypedValue = i;
+                        idParameter.Value = i;
                         cache.Set<CachedWorld>(cacheKeys[i], await ReadSingleRow(cmd));
                     }
                 }
@@ -148,21 +152,21 @@ namespace PlatformBenchmarks
         {
             var results = new World[count];
 
-            using (var db = new NpgsqlConnection(_connectionString))
+            using (var db = new MySqlConnection(_connectionString))
             {
                 await db.OpenAsync();
 
-                var (queryCmd, queryParameter) = CreateReadCommand(db);
+                var (queryCmd, queryParameter) = await CreateReadCommandAsync(db);
                 using (queryCmd)
                 {
                     for (int i = 0; i < results.Length; i++)
                     {
                         results[i] = await ReadSingleRow(queryCmd);
-                        queryParameter.TypedValue = _random.Next(1, 10001);
+                        queryParameter.Value = _random.Next(1, 10001);
                     }
                 }
 
-                using (var updateCmd = new NpgsqlCommand(BatchUpdateString.Query(count), db))
+                using (var updateCmd = new MySqlCommand(BatchUpdateString.Query(count), db))
                 {
                     var ids = BatchUpdateString.Ids;
                     var randoms = BatchUpdateString.Randoms;
@@ -171,8 +175,8 @@ namespace PlatformBenchmarks
                     {
                         var randomNumber = _random.Next(1, 10001);
 
-                        updateCmd.Parameters.Add(new NpgsqlParameter<int>(parameterName: ids[i], value: results[i].Id));
-                        updateCmd.Parameters.Add(new NpgsqlParameter<int>(parameterName: randoms[i], value: randomNumber));
+                        updateCmd.Parameters.Add(new MySqlParameter(ids[i], results[i].Id));
+                        updateCmd.Parameters.Add(new MySqlParameter(randoms[i], randomNumber));
 
                         results[i].RandomNumber = randomNumber;
                     }
@@ -188,20 +192,25 @@ namespace PlatformBenchmarks
         {
             var result = new List<Fortune>();
 
-            using (var db = new NpgsqlConnection(_connectionString))
+            using (var db = new MySqlConnection(_connectionString))
             {
                 await db.OpenAsync();
 
-                using (var cmd = new NpgsqlCommand("SELECT id, message FROM fortune", db))
-                using (var rdr = await cmd.ExecuteReaderAsync())
+                using (var cmd = new MySqlCommand("SELECT id, message FROM fortune", db))
                 {
-                    while (await rdr.ReadAsync())
+                    await cmd.PrepareAsync();
+                    
+                    using (var rdr = await cmd.ExecuteReaderAsync())
                     {
-                        result.Add(new Fortune
-                        (
-                            id:rdr.GetInt32(0),
-                            message: rdr.GetString(1)
-                        ));
+                        while (await rdr.ReadAsync())
+                        {
+                            result.Add(
+                                new Fortune
+                                (
+                                    id: rdr.GetInt32(0),
+                                    message: rdr.GetString(1)
+                                ));
+                        }
                     }
                 }
             }
@@ -212,18 +221,20 @@ namespace PlatformBenchmarks
             return result;
         }
 
-        private (NpgsqlCommand readCmd, NpgsqlParameter<int> idParameter) CreateReadCommand(NpgsqlConnection connection)
+        private async Task<(MySqlCommand readCmd, MySqlParameter idParameter)> CreateReadCommandAsync(MySqlConnection connection)
         {
-            var cmd = new NpgsqlCommand("SELECT id, randomnumber FROM world WHERE id = @Id", connection);
-            var parameter = new NpgsqlParameter<int>(parameterName: "@Id", value: _random.Next(1, 10001));
+            var cmd = new MySqlCommand("SELECT id, randomnumber FROM world WHERE id = @Id", connection);
+            var parameter = new MySqlParameter("@Id", _random.Next(1, 10001));
 
             cmd.Parameters.Add(parameter);
 
+            await cmd.PrepareAsync();
+            
             return (cmd, parameter);
         }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private async Task<World> ReadSingleRow(NpgsqlCommand cmd)
+        private async Task<World> ReadSingleRow(MySqlCommand cmd)
         {
             using (var rdr = await cmd.ExecuteReaderAsync(System.Data.CommandBehavior.SingleRow))
             {
@@ -236,7 +247,7 @@ namespace PlatformBenchmarks
                 };
             }
         }
-
+        
         private static readonly object[] _cacheKeys = Enumerable.Range(0, 10001).Select((i) => new CacheKey(i)).ToArray();
 
         public sealed class CacheKey : IEquatable<CacheKey>
@@ -260,3 +271,5 @@ namespace PlatformBenchmarks
         }
     }
 }
+
+#endif
