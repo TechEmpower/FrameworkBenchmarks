@@ -8,6 +8,9 @@
 		<version>1.0.0</version>
 	</parent>
 	<artifactId>woof_benchmark_woof</artifactId>
+	<properties>
+		<guava-version>29.0-jre</guava-version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>net.officefloor.web</groupId>
@@ -30,6 +33,11 @@
 					<artifactId>officeweb</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava-version}</version>
 		</dependency>
 	</dependencies>
 </project>

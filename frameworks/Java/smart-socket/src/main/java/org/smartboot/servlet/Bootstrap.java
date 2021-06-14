@@ -4,7 +4,7 @@ import org.smartboot.aio.EnhanceAsynchronousChannelProvider;
 import org.smartboot.http.server.HttpBootstrap;
 import org.smartboot.http.server.HttpRequest;
 import org.smartboot.http.server.HttpResponse;
-import org.smartboot.http.server.HttpServerHandle;
+import org.smartboot.http.server.HttpServerHandler;
 import org.smartboot.http.server.impl.Request;
 import org.smartboot.servlet.conf.ServletInfo;
 import org.smartboot.socket.StateMachineEnum;
@@ -61,9 +61,9 @@ public class Bootstrap {
                     }
                 });
         bootstrap.setPort(8080)
-                .pipeline(new HttpServerHandle() {
+                .pipeline(new HttpServerHandler() {
                     @Override
-                    public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
+                    public void handle(HttpRequest request, HttpResponse response) throws IOException {
                         containerRuntime.doHandle(request, response);
                     }
                 })
