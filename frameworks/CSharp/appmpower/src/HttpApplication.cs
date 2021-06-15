@@ -1,16 +1,16 @@
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using appMpower.Kestrel;
-using PlatformBenchmarks;
 
 namespace appMpower
 {
    public class HttpApplication : IHttpApplication<IFeatureCollection>
    {
-      private readonly static AsciiString _plainText = "Hello, World!";
+      public static readonly byte[] _plainText = Encoding.UTF8.GetBytes("Hello, World!");
       private readonly static JsonMessageSerializer _jsonMessageSerializer = new JsonMessageSerializer();
       private readonly static WorldSerializer _worldSerializer = new WorldSerializer();
 
@@ -34,7 +34,7 @@ namespace appMpower
 
             if (pathStringLength == 10 && pathStringStart == "p")
             {
-               PlainText.Render(httpResponse.Headers, httpResponseBody.Writer, _plainText);
+               await PlainText.RenderAsync(httpResponse.Headers, httpResponseBody.Writer, _plainText);
                return;
             }
             else if (pathStringLength == 5 && pathStringStart == "j")
