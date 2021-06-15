@@ -1,6 +1,6 @@
 <objects>
 
-	<managed-object source="net.officefloor.r2dbc.R2dbcManagedObjectSource">
+	<managed-object source="net.officefloor.vertx.sqlclient.VertxSqlPoolManagedObjectSource">
 		<property-file path="datasource.properties" />
 	</managed-object>
 
