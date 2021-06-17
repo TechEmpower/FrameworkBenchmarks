@@ -1,5 +1,5 @@
 
-FROM oracle/graalvm-ce:20.1.0-java11 as build
+FROM ghcr.io/graalvm/graalvm-ce:java11-21.1.0 as build
 USER root
 WORKDIR /build
 

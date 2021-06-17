@@ -2,7 +2,6 @@ package com.hexagonkt
 
 import com.hexagonkt.helpers.fail
 import com.hexagonkt.helpers.Jvm.systemSetting
-import com.hexagonkt.settings.SettingsManager.defaultSetting
 import com.hexagonkt.store.mongodb.MongoDbStore
 
 import com.zaxxer.hikari.HikariConfig
@@ -13,9 +12,9 @@ import java.util.concurrent.ThreadLocalRandom
 
 internal const val WORLD_ROWS: Int = 10_000
 
-private val worldName: String = defaultSetting("worldCollection", "world")
-private val fortuneName: String = defaultSetting("fortuneCollection", "fortune")
-private val databaseName: String = defaultSetting("database", "hello_world")
+private val worldName: String = systemSetting("worldCollection") ?: "world"
+private val fortuneName: String = systemSetting("fortuneCollection") ?: "fortune"
+private val databaseName: String = systemSetting("database") ?: "hello_world"
 
 internal fun randomWorld(): Int = ThreadLocalRandom.current().nextInt(WORLD_ROWS) + 1
 
@@ -28,9 +27,9 @@ internal interface BenchmarkStore {
 
 internal class BenchmarkMongoDbStore(engine: String) : BenchmarkStore {
 
-    private val dbHost: String = systemSetting("${engine.toUpperCase()}_DB_HOST", "localhost")
+    private val dbHost: String by lazy { systemSetting("${engine.uppercase()}_DB_HOST") ?: "localhost" }
 
-    private val dbUrl: String = "mongodb://$dbHost/$databaseName"
+    private val dbUrl: String by lazy { "mongodb://$dbHost/$databaseName" }
 
     private val worldRepository by lazy {
         MongoDbStore(World::class, World::_id, dbUrl, worldName)
@@ -65,16 +64,16 @@ internal class BenchmarkSqlStore(engine: String) : BenchmarkStore {
         private const val SELECT_ALL_FORTUNES = "select * from fortune"
     }
 
-    private val dbHost: String = systemSetting("${engine.toUpperCase()}_DB_HOST", "localhost")
+    private val dbHost: String by lazy { systemSetting("${engine.uppercase()}_DB_HOST") ?: "localhost" }
 
-    private val jdbcUrl: String = "jdbc:postgresql://$dbHost/$databaseName"
+    private val jdbcUrl: String by lazy { "jdbc:postgresql://$dbHost/$databaseName" }
 
     private val dataSource: HikariDataSource by lazy {
         val config = HikariConfig()
         config.jdbcUrl = jdbcUrl
-        config.maximumPoolSize = defaultSetting("maximumPoolSize", 64)
-        config.username = defaultSetting("databaseUsername", "benchmarkdbuser")
-        config.password = defaultSetting("databasePassword", "benchmarkdbpass")
+        config.maximumPoolSize = systemSetting(Int::class, "maximumPoolSize") ?: 64
+        config.username = systemSetting("databaseUsername") ?: "benchmarkdbuser"
+        config.password = systemSetting("databasePassword") ?: "benchmarkdbpass"
         HikariDataSource(config)
     }
 

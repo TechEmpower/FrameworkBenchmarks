@@ -1,18 +1,18 @@
 package com.hexagonkt
 
 import com.hexagonkt.helpers.Jvm.systemSetting
-import com.hexagonkt.serialization.Json
-import com.hexagonkt.serialization.convertToMap
-import com.hexagonkt.http.server.*
+import com.hexagonkt.http.server.Call
+import com.hexagonkt.http.server.Router
+import com.hexagonkt.http.server.Server
+import com.hexagonkt.http.server.ServerPort
 import com.hexagonkt.http.server.jetty.JettyServletAdapter
 import com.hexagonkt.http.server.servlet.ServletServer
-import com.hexagonkt.settings.SettingsManager
+import com.hexagonkt.serialization.*
+import com.hexagonkt.settings.SettingsManager.settings
 import com.hexagonkt.templates.TemplateManager.render
 import com.hexagonkt.templates.TemplatePort
 import com.hexagonkt.templates.pebble.PebbleAdapter
-
-import java.util.Locale
-
+import java.util.*
 import javax.servlet.annotation.WebListener
 
 // DATA CLASSES
@@ -63,16 +63,18 @@ private val router: Router by lazy {
     }
 }
 
-internal val benchmarkServer: Server by lazy { Server(engine, router, SettingsManager.settings) }
+internal val benchmarkServer: Server by lazy {
+    Server(engine, router, settings.parameters.toObject())
+}
 
 // UTILITIES
-internal fun createEngine(): ServerPort = when (systemSetting("WEBENGINE", "jetty")) {
+internal fun createEngine(): ServerPort = when (systemSetting("WEBENGINE") ?: "jetty") {
     "jetty" -> JettyServletAdapter()
     else -> error("Unsupported server engine")
 }
 
 private fun returnWorlds(worldsList: List<World>): List<Map<Any?, Any?>> =
-    worldsList.map { it.convertToMap() - "_id" }
+    worldsList.map { it.toFieldsMap() - "_id" }
 
 private fun Call.getWorldsCount(): Int =
     queryParametersValues[QUERIES_PARAM]?.firstOrNull()?.toIntOrNull().let {
@@ -109,8 +111,12 @@ private fun Call.updateWorlds(store: BenchmarkStore) {
 }
 
 // SERVERS
-@WebListener class Web : ServletServer(router)
+@WebListener class Web : ServletServer(router) {
+    val webRouter = super.router
+}
 
 fun main() {
+    SerializationManager.mapper = JacksonMapper
+    SerializationManager.formats = linkedSetOf(Json, Yaml)
     benchmarkServer.start()
 }
