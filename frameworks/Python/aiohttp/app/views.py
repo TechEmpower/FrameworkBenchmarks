@@ -143,23 +143,17 @@ async def updates_raw(request):
     Test 5 RAW
     """
     num_queries = get_num_queries(request)
+    updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
+    worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
-    ids = [randint(1, 10000) for _ in range(num_queries)]
-    ids.sort()
-
-    result = []
-    updates = []
     async with request.app['pg'].acquire() as conn:
-        stmt = await conn.prepare('SELECT id,randomnumber FROM world WHERE id = $1')
-        for id_ in ids:
+        stmt = await conn.prepare(READ_ROW_SQL)
+        for id_, _ in updates:
             # the result of this is the int previous random number which we don't actually use
             await stmt.fetchval(id_)
-            rand_new = randint(1, 10000)
-            result.append({'id': id_, 'randomNumber': rand_new})
-            updates.append((rand_new, id_))
-        await conn.executemany('UPDATE world SET randomnumber=$1 WHERE id=$2', updates)
+        await conn.executemany(WRITE_ROW_SQL, updates)
 
-    return json_response(result)
+    return json_response(worlds)
 
 
 async def plaintext(request):
