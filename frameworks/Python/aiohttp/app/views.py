@@ -14,7 +14,7 @@ ADDITIONAL_FORTUNE_ORM = Fortune(id=0, message='Additional fortune added at requ
 ADDITIONAL_FORTUNE_ROW = {'id': 0, 'message': 'Additional fortune added at request time.'}
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 READ_SELECT_ORM = select(World.randomnumber)
-WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
+WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$2 WHERE id=$1'
 
 json_response = partial(json_response, dumps=ujson.dumps)
 template_path = Path(__file__).parent / 'templates' / 'fortune.jinja'
@@ -129,6 +129,7 @@ async def updates(request):
     """
     num_queries = get_num_queries(request)
     updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
+    updates.sort()
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with request.app['db_session'].begin() as sess:
@@ -143,6 +144,7 @@ async def updates_raw(request):
     """
     num_queries = get_num_queries(request)
     updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
+    updates.sort()
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with request.app['pg'].acquire() as conn:
