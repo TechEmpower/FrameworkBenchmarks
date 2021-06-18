@@ -129,7 +129,6 @@ async def updates(request):
     """
     num_queries = get_num_queries(request)
     ids = [randint(1, 10000) for _ in range(num_queries)]
-    ids.sort()
     updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
