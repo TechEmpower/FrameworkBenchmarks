@@ -117,8 +117,8 @@ async def fortunes_raw(request):
     """
     async with request.app['pg'].acquire() as conn:
         fortunes = await conn.fetch('SELECT * FROM Fortune')
-    fortunes.append(dict(id=0, message='Additional fortune added at request time.'))
-    fortunes.sort(key=itemgetter('message'))
+    fortunes.append(ADDITIONAL_FORTUNE_ROW)
+    fortunes.sort(key=sort_fortunes_raw)
     content = template.render(fortunes=fortunes)
     return Response(text=content, content_type='text/html')
 
