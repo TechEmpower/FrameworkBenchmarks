@@ -129,7 +129,6 @@ async def updates(request):
     """
     num_queries = get_num_queries(request)
     updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
-    updates.sort()
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with request.app['db_session'].begin() as sess:
@@ -144,7 +143,6 @@ async def updates_raw(request):
     """
     num_queries = get_num_queries(request)
     updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
-    updates.sort()
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with request.app['pg'].acquire() as conn:
