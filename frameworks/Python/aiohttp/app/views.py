@@ -74,7 +74,7 @@ async def multiple_database_queries_orm(request):
     result = []
     async with request.app['db_session']() as sess:
         for id_ in ids:
-            num = await sess.scalar(select(World.randomnumber).filter_by(id=id_))
+            num = await sess.scalar(READ_SELECT_ORM.filter_by(id=id_))
             result.append({'id': id_, 'randomNumber': num})
     return json_response(result)
 
