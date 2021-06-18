@@ -10,9 +10,17 @@ from sqlalchemy import select
 
 from .models import sa_fortunes, sa_worlds, Fortune, World
 
+ADDITIONAL_FORTUNE_ORM = Fortune(id=0, message='Additional fortune added at request time.')
+ADDITIONAL_FORTUNE_ROW = {'id': 0, 'message': 'Additional fortune added at request time.'}
+READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
+READ_SELECT_ORM = select(World.randomnumber)
+WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
+
 json_response = partial(json_response, dumps=ujson.dumps)
 template_path = Path(__file__).parent / 'templates' / 'fortune.jinja'
 template = jinja2.Template(template_path.read_text())
+sort_fortunes_orm = attrgetter('message')
+sort_fortunes_raw = itemgetter('message')
 
 
 def get_num_queries(request):
