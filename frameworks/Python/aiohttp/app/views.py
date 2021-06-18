@@ -86,11 +86,10 @@ async def multiple_database_queries_raw(request):
     num_queries = get_num_queries(request)
 
     ids = [randint(1, 10000) for _ in range(num_queries)]
-    ids.sort()
 
     result = []
     async with request.app['pg'].acquire() as conn:
-        stmt = await conn.prepare('SELECT id,randomnumber FROM world WHERE id = $1')
+        stmt = await conn.prepare(READ_ROW_SQL)
         for id_ in ids:
             result.append({
                 'id': id_,
