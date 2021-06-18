@@ -128,19 +128,14 @@ async def updates(request):
     Test 5 ORM
     """
     num_queries = get_num_queries(request)
-    result = []
-
-    ids = [randint(1, 10000) for _ in range(num_queries)]
-    ids.sort()
+    updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
+    worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with request.app['db_session'].begin() as sess:
-        for id_ in ids:
-            rand_new = randint(1, 10000)
+        for id_, number in updates:
             world = await sess.get(World, id_, populate_existing=True)
-            world.randomnumber = rand_new
-
-            result.append({'id': id_, 'randomNumber': rand_new})
-    return json_response(result)
+            world.randomnumber = number
+    return json_response(worlds)
 
 async def updates_raw(request):
     """
