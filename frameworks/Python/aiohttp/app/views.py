@@ -70,7 +70,6 @@ async def multiple_database_queries_orm(request):
     num_queries = get_num_queries(request)
 
     ids = [randint(1, 10000) for _ in range(num_queries)]
-    ids.sort()
 
     result = []
     async with request.app['db_session']() as sess:
