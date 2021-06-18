@@ -106,7 +106,7 @@ async def fortunes(request):
         ret = await sess.execute(select(Fortune.id, Fortune.message))
         fortunes = ret.all()
     fortunes.append(ADDITIONAL_FORTUNE_ORM)
-    fortunes.sort(key=attrgetter('message'))
+    fortunes.sort(key=sort_fortunes_orm)
     content = template.render(fortunes=fortunes)
     return Response(text=content, content_type='text/html')
 
