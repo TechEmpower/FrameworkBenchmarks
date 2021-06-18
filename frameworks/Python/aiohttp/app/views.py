@@ -105,7 +105,7 @@ async def fortunes(request):
     async with request.app['db_session']() as sess:
         ret = await sess.execute(select(Fortune.id, Fortune.message))
         fortunes = ret.all()
-    fortunes.append(Fortune(id=0, message='Additional fortune added at request time.'))
+    fortunes.append(ADDITIONAL_FORTUNE_ORM)
     fortunes.sort(key=attrgetter('message'))
     content = template.render(fortunes=fortunes)
     return Response(text=content, content_type='text/html')
