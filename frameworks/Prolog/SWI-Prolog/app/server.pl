@@ -18,7 +18,7 @@ server(Port) :-
     server(Port, [workers(Workers)]).
 
 server(Port, Options) :-
-    http_server(http_dispatch, [port(Port),timeout(20)|Options]).
+    http_server(http_dispatch, [port(Port),timeout(120)|Options]).
 
 
 :- http_handler('/plaintext',     plaintext_handler,     [chunked]).
