@@ -8,6 +8,7 @@ import com.hexagonkt.store.BenchmarkStore
 import com.hexagonkt.templates.TemplateManager
 import com.hexagonkt.templates.TemplatePort
 import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 
 class Controller(private val settings: Settings) {
 
@@ -32,29 +33,16 @@ class Controller(private val settings: Settings) {
 
                 get("/$storeEngine/db") { dbQuery(store) }
                 get("/$storeEngine/query") { getWorlds(store) }
+                get("/$storeEngine/cached") { getCachedWorlds(store) }
                 get("/$storeEngine/update") { updateWorlds(store) }
             }
         }
     }
 
-    private fun returnWorlds(worldsList: List<World>): List<Map<Any?, Any?>> =
-        worldsList.map { it.toFieldsMap() - "_id" }
-
-    private fun Call.getWorldsCount(): Int =
-        queryParametersValues[settings.queriesParam]?.firstOrNull()?.toIntOrNull().let {
-            when {
-                it == null -> 1
-                it < 1 -> 1
-                it > 500 -> 500
-                else -> it
-            }
-        }
-
-    // HANDLERS
     private fun Call.listFortunes(
         store: BenchmarkStore, templateKind: String, templateAdapter: TemplatePort) {
 
-        val fortunes = store.findAllFortunes() + Fortune(0, "Additional fortune added at request time.")
+        val fortunes = store.findAllFortunes() + Fortune("Additional fortune added at request time.")
         val sortedFortunes = fortunes.sortedBy { it.message }
         val context = mapOf("fortunes" to sortedFortunes)
 
@@ -63,14 +51,35 @@ class Controller(private val settings: Settings) {
     }
 
     private fun Call.dbQuery(store: BenchmarkStore) {
-        ok(returnWorlds(store.findWorlds(1)).first(), Json)
+        ok(store.findWorlds(listOf(randomWorld())).first(), Json)
     }
 
     private fun Call.getWorlds(store: BenchmarkStore) {
-        ok(returnWorlds(store.findWorlds(getWorldsCount())), Json)
+        val ids = (1..getWorldsCount(settings.queriesParam)).map { randomWorld() }
+        ok(store.findWorlds(ids), Json)
+    }
+
+    private fun Call.getCachedWorlds(store: BenchmarkStore) {
+        val ids = (1..getWorldsCount(settings.cachedQueriesParam)).map { randomWorld() }
+        ok(store.findCachedWorlds(ids).map { it.toFieldsMap() }, Json)
     }
 
     private fun Call.updateWorlds(store: BenchmarkStore) {
-        ok(returnWorlds(store.replaceWorlds(getWorldsCount())), Json)
+        val worlds = (1..getWorldsCount(settings.queriesParam)).map { World(randomWorld(), randomWorld()) }
+        store.replaceWorlds(worlds)
+        ok(worlds, Json)
     }
+
+    private fun Call.getWorldsCount(parameter: String): Int =
+        queryParametersValues[parameter]?.firstOrNull()?.toIntOrNull().let {
+            when {
+                it == null -> 1
+                it < 1 -> 1
+                it > 500 -> 500
+                else -> it
+            }
+        }
+
+    private fun randomWorld(): Int =
+        ThreadLocalRandom.current().nextInt(settings.worldRows) + 1
 }

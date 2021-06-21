@@ -24,4 +24,5 @@ data class Settings(
     val worldRows: Int = 10_000,
     val textMessage: String = "Hello, World!",
     val queriesParam: String = "queries",
+    val cachedQueriesParam: String = "count",
 )
