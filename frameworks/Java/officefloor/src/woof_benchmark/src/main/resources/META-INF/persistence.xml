@@ -5,6 +5,7 @@
 	version="2.0">
 
 	<persistence-unit name="benchmarks">
+		<class>net.officefloor.benchmark.CachedWorld</class>
 		<class>net.officefloor.benchmark.World</class>
 		<class>net.officefloor.benchmark.Fortune</class>
 		<exclude-unlisted-classes />
