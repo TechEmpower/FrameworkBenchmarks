@@ -15,13 +15,13 @@ import net.officefloor.plugin.clazz.Dependency;
  */
 public class CachedWorldDataRetriever implements ConstantCacheDataRetriever<Integer, CachedWorld> {
 
-	private @Dependency CachedWorldRepository repository;
+	private @Dependency WorldRepository repository;
 
 	@Override
 	public Map<Integer, CachedWorld> getData() throws Exception {
 		Map<Integer, CachedWorld> data = new HashMap<>();
-		for (CachedWorld cachedWorld : this.repository.findAll()) {
-			data.put(cachedWorld.getId(), cachedWorld);
+		for (World world : this.repository.findAll()) {
+			data.put(world.getId(), new CachedWorld(world.getId(), world.getRandomNumber()));
 		}
 		return data;
 	}

@@ -124,7 +124,7 @@ public class R2dbcOfficeFloorMain implements DatabaseOperations {
 			Map<Integer, CachedWorld> data = new HashMap<>();
 			try {
 				Flux.from(connectionFactory.create()).flatMap((connection) -> {
-					return Flux.from(connection.createStatement("SELECT ID, RANDOMNUMBER FROM CACHEDWORLD").execute())
+					return Flux.from(connection.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD").execute())
 							.flatMap(result -> Flux.from(result.map((row, metadata) -> {
 								Integer id = row.get(0, Integer.class);
 								Integer randomNumber = row.get(1, Integer.class);

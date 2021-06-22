@@ -25,7 +25,7 @@ public class CachedWorldDataRetriever implements ConstantCacheDataRetriever<Inte
 	public Map<Integer, CachedWorld> getData() throws Exception {
 		try (Connection connection = this.dataSource.getConnection()) {
 			Map<Integer, CachedWorld> data = new HashMap<>();
-			ResultSet resultSet = connection.prepareStatement("SELECT id, randomNumber FROM CachedWorld")
+			ResultSet resultSet = connection.prepareStatement("SELECT id, randomNumber FROM World")
 					.executeQuery();
 			while (resultSet.next()) {
 				int id = resultSet.getInt("id");

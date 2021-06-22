@@ -9,7 +9,7 @@ public class CachedWorld {
 
 	public final int id;
 
-	public int randomNumber;
+	public final int randomNumber;
 
 	public CachedWorld(int id, int randomNumber) {
 		this.id = id;
