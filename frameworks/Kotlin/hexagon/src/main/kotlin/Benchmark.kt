@@ -40,7 +40,7 @@ internal val benchmarkServer: Server by lazy {
 }
 
 fun main() {
-    ClasspathHandler.registerHandler()
+//    ClasspathHandler.registerHandler()
     Json.mapper.registerModule(BlackbirdModule())
     SerializationManager.mapper = JacksonMapper
     SerializationManager.formats = linkedSetOf(Json)
