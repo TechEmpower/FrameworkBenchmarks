@@ -1,0 +1,20 @@
+[framework]
+name = "jampy"
+
+[main]
+urls.plaintext = "/standard/plaintext"
+urls.json = "/standard/json"
+urls.db = "/standard/db"
+urls.query = "/standard/queries?queries="
+urls.update = "/standard/updates?queries="
+urls.fortune = "/standard/fortune"
+approach = "Realistic"
+classification = "Fullstack"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Full"
+platform = "Meinheld"
+webserver = "None"
+versus = "wsgi"
+

@@ -1,0 +1,28 @@
+{
+  "framework": "jampy",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/",
+      "json_url": "/standard/json",
+      "db_url": "/",
+      "query_url": "/",
+      "fortune_url": "/",
+      "update_url": "/standard/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "SQLite",
+      "framework": "jampy",
+      "language": "Python",
+      "flavor": "Python3",
+      "orm": "Full",
+      "platform": "Meinheld",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "jampy",
+      "notes": "CPython 3.6",
+      "versus": "wsgi"
+    }
+  }]
+}
