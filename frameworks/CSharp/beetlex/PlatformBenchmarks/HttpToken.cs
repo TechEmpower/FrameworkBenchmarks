@@ -41,10 +41,12 @@ namespace PlatformBenchmarks
         public byte[] GetLengthBuffer(string length)
         {
             Encoding.ASCII.GetBytes(length, 0, length.Length, mLengthBuffer, 0);
-            for (int i = length.Length; i < HttpHandler._LengthSize; i++)
+            for (int i = length.Length; i < mLengthBuffer.Length; i++)
             {
                 mLengthBuffer[i] = 32;
             }
+            mLengthBuffer[6] = (byte)'\r';
+            mLengthBuffer[7] = (byte)'\n';
             return mLengthBuffer;
         }
 
