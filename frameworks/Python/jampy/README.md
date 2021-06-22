@@ -1,9 +1,9 @@
-# [jam.py](http://jam-py.com/) Benchmarking Test
+# [Jam.py](http://jam-py.com/) Benchmarking Test
 
-This is the jampy portion of a [benchmarking tests suite](../../)
+This is the Jam.py portion of a [benchmarking tests suite](../../)
 comparing a variety of web development platforms.
 
-The information below is specific to jam.py. For further guidance,
+The information below is specific to Jam.py. For further guidance,
 review the [documentation](https://github.com/TechEmpower/FrameworkBenchmarks/wiki).
 Also note that there is additional information provided in
 the [Python README](../).
@@ -17,7 +17,7 @@ the [Python README](../).
 
 ## Test Paths
 
-"jampy" test is accessed via the "/".
+"Jam.py" test is accessed via the "/".
 
 * JSON Serialization: "/standard/json"
 * Single Database Query: "/standard/db"
@@ -32,8 +32,8 @@ the [Python README](../).
 
 ## Get Help
 
-* [jam.py-users Google Group](https://groups.google.com/g/jam-py)
+* [Jam.py-users Google Group](https://groups.google.com/g/jam-py)
 
 ### [Resources](https://jam-py.com/docs/)
 
-* [*jam.py: Complete Reference Manual*](http://jam-py.com/docs/contents.html)
+* [*Jam.py: Complete Reference Manual*](http://jam-py.com/docs/contents.html)

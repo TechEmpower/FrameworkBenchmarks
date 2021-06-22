@@ -20,7 +20,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "jampy",
+      "display_name": "Jam.py",
       "notes": "CPython 3.6",
       "versus": "wsgi"
     }
