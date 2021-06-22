@@ -21,7 +21,6 @@
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-afterburner</artifactId>
 		</dependency>
-		<!-- 
 		<dependency>
 			<groupId>net.officefloor.web</groupId>
 			<artifactId>officeweb_executive</artifactId>
@@ -32,7 +31,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		 -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
