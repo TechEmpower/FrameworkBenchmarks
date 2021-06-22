@@ -22,6 +22,10 @@ apply(plugin: "war")
 
 defaultTasks("installDist")
 
+application {
+    mainClass.set("com.hexagonkt.BenchmarkKt")
+}
+
 war {
     archiveFileName = "ROOT.war"
 }
