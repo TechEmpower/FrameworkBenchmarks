@@ -85,6 +85,7 @@ abstract class BenchmarkTestBase(
         assert(content.contains("<td>&lt;script&gt;alert(&quot;This should not be"))
         assert(content.contains(" displayed in a browser alert box.&quot;);&lt;/script&gt;</td>"))
         assert(content.contains("<td>フレームワークのベンチマーク</td>"))
+        assert(content.contains("<td>12</td>"))
     }
 
     @Test fun `No query parameter requests`() {

@@ -27,7 +27,7 @@ internal class BenchmarkMongoDbStore(engine: String, private val settings: Setti
         MongoDbStore(MongoDbFortune::class, MongoDbFortune::_id, dbUrl, settings.fortuneName)
     }
 
-    override fun findAllFortunes(): List<Fortune> = fortuneRepository.findAll().map { Fortune(it.message) }
+    override fun findAllFortunes(): List<Fortune> = fortuneRepository.findAll().map { Fortune(it._id, it.message) }
 
     override fun findWorlds(ids: List<Int>): List<World> =
         ids.mapNotNull { worldRepository.findOne(it) }.map { World(it.id, it.randomNumber) }

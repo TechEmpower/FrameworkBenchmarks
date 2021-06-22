@@ -42,7 +42,7 @@ class Controller(private val settings: Settings) {
     private fun Call.listFortunes(
         store: BenchmarkStore, templateKind: String, templateAdapter: TemplatePort) {
 
-        val fortunes = store.findAllFortunes() + Fortune("Additional fortune added at request time.")
+        val fortunes = store.findAllFortunes() + Fortune(0, "Additional fortune added at request time.")
         val sortedFortunes = fortunes.sortedBy { it.message }
         val context = mapOf("fortunes" to sortedFortunes)
 

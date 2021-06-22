@@ -37,7 +37,7 @@ internal class BenchmarkSqlStore(engine: String, private val settings: Settings 
         dataSource.connection.use { con: Connection ->
             val rs = con.prepareStatement(SELECT_ALL_FORTUNES).executeQuery()
             while (rs.next())
-                fortunes += Fortune(rs.getString(2))
+                fortunes += Fortune(rs.getInt(1), rs.getString(2))
         }
 
         return fortunes
