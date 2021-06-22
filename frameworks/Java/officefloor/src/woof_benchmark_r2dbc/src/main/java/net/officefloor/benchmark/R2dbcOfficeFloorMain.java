@@ -8,6 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import io.netty.channel.unix.Socket;
 import io.r2dbc.pool.PoolingConnectionFactoryProvider;
+import io.r2dbc.postgresql.api.PostgresqlException;
 import io.r2dbc.spi.Batch;
 import io.r2dbc.spi.Connection;
 import io.r2dbc.spi.ConnectionFactories;
@@ -141,6 +142,22 @@ public class R2dbcOfficeFloorMain implements DatabaseOperations {
 		this.cache = (Cache<Integer, CachedWorld>) cacheMo.getObject();
 	}
 
+	public void sendDatabaseError(Throwable failure, AbstractSendResponse response) {
+
+		// Handle issue of prepared statement not found
+		// (seems unsafe memory issue in R2DBC that occurs during start then stops)
+		if (failure instanceof PostgresqlException) {
+			PostgresqlException postgresqlException = (PostgresqlException) failure;
+			if ("26000".equals(postgresqlException.getErrorDetails().getCode())) {
+				// Prepared statement not existing
+				response.sendError(503); // consider overloaded in connection setup during warm up
+			}
+		}
+
+		// Just send the failure
+		response.sendError(failure);
+	}
+
 	/*
 	 * ===================== DatabaseOperations ======================
 	 */
@@ -177,7 +194,7 @@ public class R2dbcOfficeFloorMain implements DatabaseOperations {
 				}))).publishOn(conn.writeScheduler).subscribe(world -> {
 					sender.sendDb(world);
 				}, error -> {
-					sender.sendError(error);
+					this.sendDatabaseError(error, sender);
 				}, () -> {
 					conn.processed(1);
 				});
@@ -204,7 +221,7 @@ public class R2dbcOfficeFloorMain implements DatabaseOperations {
 				}))).collectList().publishOn(conn.writeScheduler).subscribe(worlds -> {
 					sender.sendQueries(worlds.toArray(World[]::new));
 				}, error -> {
-					sender.sendError(error);
+					this.sendDatabaseError(error, sender);
 				}, () -> {
 					conn.processed(queryCount);
 				});
@@ -229,7 +246,7 @@ public class R2dbcOfficeFloorMain implements DatabaseOperations {
 				}))).collectList().publishOn(conn.writeScheduler).subscribe(fortunes -> {
 					sender.sendFortunes(fortunes);
 				}, error -> {
-					sender.sendError(error);
+					this.sendDatabaseError(error, sender);
 				}, () -> {
 					conn.processed(1);
 				});
@@ -273,7 +290,7 @@ public class R2dbcOfficeFloorMain implements DatabaseOperations {
 				}).publishOn(conn.writeScheduler).subscribe(worlds -> {
 					sender.sendUpdate(worlds.toArray(World[]::new));
 				}, error -> {
-					sender.sendError(error);
+					this.sendDatabaseError(error, sender);
 				}, () -> {
 					conn.processed(executeQueryCount);
 				});
