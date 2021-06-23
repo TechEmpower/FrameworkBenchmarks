@@ -2,16 +2,11 @@
   "framework": "jampy",
   "tests": [{
     "default": {
-      "plaintext_url": "/",
-      "json_url": "/standard/json",
-      "db_url": "/",
-      "query_url": "/",
       "fortune_url": "/",
-      "update_url": "/standard/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "SQLite",
+      "database": "MySQL",
       "framework": "jampy",
       "language": "Python",
       "flavor": "Python3",

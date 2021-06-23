@@ -8,7 +8,9 @@ RUN pip3 install -r /jampy/requirements.txt
 
 RUN git clone https://github.com/jam-py/jam-py.git
 
-WORKDIR /jam-py/demo
+RUN cp gunicorn_conf.py /jampy/jam-py/demo/
+
+WORKDIR /jampy/jam-py/demo
 
 EXPOSE 8080
 
