@@ -6,7 +6,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "SQLite",
+      "database": "MySQL",
       "framework": "jampy",
       "language": "Python",
       "flavor": "Python3",
