@@ -14,19 +14,15 @@ the [Python README](../).
 * [Meinheld](http://meinheld.org/) 0.5.9
 * [Gunicorn](http://gunicorn.org/) 19.4.5
 * [greenlet](http://greenlet.readthedocs.io/en/latest/) 0.4.9
+* [MySQLdb](https://mysqlclient.readthedocs.io/en/latest/) 1.3.7
 
 ## Test Paths
 
 "Jam.py" test is accessed via the "/".
 
-* JSON Serialization: "/standard/json"
-* Single Database Query: "/standard/db"
-* Multiple Database Queries: "/standard/dbs?queries=#"
 * Fortunes: "/"
-* Database Updates: "/standard/update?queries=#"
 * Plaintext: "/"
 
-*Replace # with an actual number.
 
 ## Source Code
 
