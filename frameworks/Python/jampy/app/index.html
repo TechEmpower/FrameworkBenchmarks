@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="/jam/img/j.png" type="image/png">
+
+        <link href="jam/css/bootstrap.css" rel="stylesheet">            <!--do not modify-->
+        <link href="jam/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="jam/css/bootstrap-modal.css" rel="stylesheet">
+        <link href="jam/css/datepicker.css" rel="stylesheet">
+        <link href="jam/css/jam.css" rel="stylesheet">                  <!--do not modify-->
+        <link href="css/project.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="container" class="container" style="display: none">
+            <div class="row-fluid">
+                <div class="span6">
+                    <p id="project-title" class="muted"></p>
+                </div>
+                <div id="logging-info" class="span6">
+                    <span id="user-info"></span>
+                    <a id="log-out" href="#" style="display: none">Log out</a>
+                </div>
+            </div>
+            <div id="taskmenu" class="navbar">
+                <div class="navbar-inner">
+                    <ul id="menu" class="nav">
+                    </ul>
+                </div>
+            </div>
+            <div id="content">
+            </div>
+        </div>
+
+        <div class="templates" style="display: none">
+
+            <div class="default-top-view">
+                <div class="form-header">
+                    <button id="new-btn" class="btn expanded-btn" type="button">
+                        <i class="icon-plus"></i> New<small class="muted">&nbsp;[Ctrl+Ins]</small>
+                    </button>
+                    <button id="edit-btn" class="btn expanded-btn" type="button">
+                        <i class="icon-edit"></i> Edit
+                    </button>
+                    <div id="report-btn" class="btn-group dropup">
+                        <a class="btn expanded-btn dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="icon-print"></i> Reports
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu bottom-up">
+                        </ul>
+                    </div>
+                    <button id="delete-btn" class="btn expanded-btn pull-right" type="button">
+                        <i class="icon-trash"></i> Delete<small class="muted">&nbsp;[Ctrl+Del]</small>
+                    </button>
+                </div>
+                <div class="form-body">
+                    <div class="view-table"></div>
+                    <div class="view-detail"></div>
+                </div>
+            </div>
+
+            <div class="default-view">
+                <div class="form-body">
+                    <div class="view-table"></div>
+                    <div class="view-detail"></div>
+                </div>
+                <div class="form-footer">
+                    <button id="delete-btn" class="btn expanded-btn pull-left" type="button">
+                        <i class="icon-trash"></i> Delete<small class="muted">&nbsp;[Ctrl+Del]</small>
+                    </button>
+                    <div id="report-btn" class="btn-group dropup">
+                        <a class="btn expanded-btn dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="icon-print"></i>  Reports
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu bottom-up">
+                        </ul>
+                    </div>
+                    <button id="edit-btn" class="btn expanded-btn" type="button">
+                        <i class="icon-edit"></i> Edit
+                    </button>
+                    <button id="new-btn" class="btn expanded-btn" type="button">
+                        <i class="icon-plus"></i> New<small class="muted">&nbsp;[Ctrl+Ins]</small>
+                    </button>
+                </div>
+            </div>
+
+            <div class="default-top-edit">
+                <div class="form-header">
+                    <button type="button" id="ok-btn" class="btn btn-ary expanded-btn">
+                        <i class="icon-ok"></i> OK<small class="muted">&nbsp;[Ctrl+Enter]</small>
+                    </button>
+                    <button type="button" id="cancel-btn" class="btn expanded-btn">
+                        <i class="icon-remove"></i> Cancel
+                    </button>
+                </div>
+                <div class="form-body">
+                    <div class="edit-body"></div>
+                    <div class="edit-detail"></div>
+                </div>
+            </div>
+
+            <div class="default-edit">
+                <div class="form-body">
+                    <div class="edit-body"></div>
+                    <div class="edit-detail"></div>
+                </div>
+                <div class="form-footer">
+                    <button type="button" id="ok-btn" class="btn btn-ary expanded-btn">
+                        <i class="icon-ok"></i> OK<small class="muted">&nbsp;[Ctrl+Enter]</small>
+                    </button>
+                    <button type="button" id="cancel-btn" class="btn expanded-btn">
+                        <i class="icon-remove"></i> Cancel
+                    </button>
+                </div>
+            </div>
+
+            <div class="default-param">
+                <div class="form-body">
+                    <div class="edit-body">
+                    </div>
+                </div>
+                <div class="form-footer">
+                    <select id='extension' class="pull-left" style="width: 60px">
+                        <option>pdf</option>
+                        <option>ods</option>
+                        <option>xls</option>
+                        <option>html</option>
+                    </select>
+                    <button type="button" id="ok-btn" class="btn expanded-btn">
+                        <i class="icon-print"></i> Print
+                    </button>
+                    <button type="button" id="cancel-btn" class="btn expanded-btn">
+                        <i class="icon-remove"></i> Close
+                    </button>
+                </div>
+            </div>
+
+            <div class="default-filter">
+                <div class="form-body">
+                    <div class="edit-body">
+                    </div>
+                </div>
+                <div class="form-footer">
+                    <button type="button" id="ok-btn" class="btn expanded-btn">
+                        <i class="icon-filter"></i> Apply
+                    </button>
+                    <button type="button" id="cancel-btn" class="btn expanded-btn">
+                        <i class="icon-remove"></i> Close
+                    </button>
+                </div>
+            </div>
+
+            <form id="login-form" target="dummy" class="form-horizontal" data-caption="Log in" style="margin: 10px 0 0; padding: 0px">
+                <div class="control-group">
+                    <label class="control-label" for="input-login">Login</label>
+                    <div class="controls">
+                        <input type="text" id="input-login" name="login" tabindex="1" placeholder="login">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="input-password">Password</label>
+                    <div class="controls">
+                        <input type="password" id="input-password" name="password" tabindex="2" placeholder="password" autocomplete="on">
+                    </div>
+                </div>
+                <div class="form-footer">
+                    <input type="submit" class="btn expanded-btn pull-right" id="login-btn" value="OK" tabindex="3">
+                </div>
+            </form>
+
+        </div>
+        <iframe src="dummy.html" name="dummy" style="display: none"></iframe>
+
+        <script src="jam/js/jquery.js"></script>
+        <script src="jam/js/bootstrap.js"></script>
+        <script src="jam/js/bootstrap-modal.js"></script>
+        <script src="jam/js/bootstrap-modalmanager.js"></script>
+        <script src="jam/js/bootstrap-datepicker.js"></script>
+        <script src="jam/js/jquery.maskedinput.js"></script>
+        <script src="jam/js/jam.js"></script>
+        <!--<script src="static/js/Chart.min.js"></script>-->
+
+
+        <script>
+        $(document).ready(function(){
+            task.load();
+          });
+        </script>
+
+    </body>
+</html>
