@@ -1,6 +1,5 @@
 (executable
- (libraries webmachine lwt cohttp-lwt-unix ptime ptime.clock ptime.clock.os
-            caqti caqti-lwt caqti-driver-postgresql yojson atdgen-runtime lib)
+ (libraries webmachine lwt cohttp-lwt-unix caqti caqti-lwt caqti-driver-postgresql yojson atdgen-runtime lib)
  (preprocess (pps lwt_ppx))
  (public_name tfb)
  (package tfb)
