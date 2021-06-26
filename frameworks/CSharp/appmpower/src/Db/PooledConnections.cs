@@ -11,7 +11,7 @@ namespace appMpower.Db
       private static byte _createdConnections = 0;
       private static byte _maxConnections = Math.Min((byte)Environment.ProcessorCount, (byte)21);
       private static ConcurrentStack<PooledConnection> _stack = new ConcurrentStack<PooledConnection>();
-      private static TimeSpan _timeSpan = new TimeSpan(10); // 10 = 0.001 millisecond
+      private static ConcurrentQueue<TaskCompletionSource<PooledConnection>> _waitingQueue = new ConcurrentQueue<TaskCompletionSource<PooledConnection>>();
 
       public static async Task<PooledConnection> GetConnection(string connectionString)
       {
@@ -19,12 +19,13 @@ namespace appMpower.Db
 
          if (_connectionsCreated)
          {
-            while (!_stack.TryPop(out pooledConnection))
+            if (!_stack.TryPop(out pooledConnection))
             {
-               await Task.Delay(_timeSpan);
+               pooledConnection = await GetPooledConnectionAsync();
             }
 
             return pooledConnection;
+
          }
          else
          {
@@ -42,15 +43,31 @@ namespace appMpower.Db
          }
       }
 
+      public static Task<PooledConnection> GetPooledConnectionAsync()
+      {
+         var taskCompletionSource = new TaskCompletionSource<PooledConnection>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+         _waitingQueue.Enqueue(taskCompletionSource);
+         return taskCompletionSource.Task;
+      }
+
       public static void ReleaseConnection(PooledConnection pooledConnection)
       {
+         TaskCompletionSource<PooledConnection> taskCompletionSource;
          PooledConnection stackedConnection = new PooledConnection();
 
          stackedConnection.OdbcConnection = pooledConnection.OdbcConnection;
          stackedConnection.Number = pooledConnection.Number;
          stackedConnection.PooledCommands = pooledConnection.PooledCommands;
 
-         _stack.Push(stackedConnection);
+         if (_waitingQueue.TryDequeue(out taskCompletionSource))
+         {
+            taskCompletionSource.SetResult(stackedConnection);
+         }
+         else
+         {
+            _stack.Push(stackedConnection);
+         }
       }
    }
 }

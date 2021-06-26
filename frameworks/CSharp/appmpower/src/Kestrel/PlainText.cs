@@ -20,7 +20,10 @@ namespace appMpower.Kestrel
          headerDictionary.Add(_headerContentType);
          headerDictionary.Add(new KeyValuePair<string, StringValues>("Content-Length", utf8String.Length.ToString()));
 
-         return await pipeWriter.WriteAsync(utf8String);
+         var result = await pipeWriter.WriteAsync(utf8String);
+         await pipeWriter.FlushAsync();
+
+         return result;
       }
    }
 }
