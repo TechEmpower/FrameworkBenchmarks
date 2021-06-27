@@ -9,8 +9,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.text.StringEscapeUtils;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.escape.Escaper;
 import com.google.common.html.HtmlEscapers;
@@ -22,7 +20,6 @@ import net.officefloor.server.http.ServerHttpConnection;
 import net.officefloor.server.http.impl.ProcessAwareServerHttpConnectionManagedObject;
 import net.officefloor.server.http.parse.HttpRequestParser;
 import net.officefloor.server.stream.ServerOutputStream;
-import net.officefloor.server.stream.ServerWriter;
 
 /**
  * Sends the Fortunes response.

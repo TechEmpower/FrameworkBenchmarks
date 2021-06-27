@@ -19,8 +19,9 @@ public interface DatabaseOperationsFactory {
 	 * @param username    Username.
 	 * @param password    Password.
 	 * @return {@link DatabaseOperations}.
+	 * @throws Throwable If fails to create {@link DatabaseOperations}.
 	 */
 	DatabaseOperations createDatabaseOperations(int socketCount, String server, int port, String database,
-			String username, String password);
+			String username, String password) throws Throwable;
 
 }

@@ -29,7 +29,7 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 	/**
 	 * Run application.
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Throwable {
 		RawWoof.run(args, (socketCount, server, port, database, username,
 				password) -> new SqlClientOfficeFloorMain(socketCount, server, port, database, username, password));
 	}
@@ -199,6 +199,11 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 						}
 					});
 		}
+	}
+
+	@Override
+	public void cached(int updateCount, CachedSendResponse sender) {
+		throw new UnsupportedOperationException("/cached-worlds test not supported");
 	}
 
 }

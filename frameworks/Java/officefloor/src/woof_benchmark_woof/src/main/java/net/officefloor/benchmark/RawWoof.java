@@ -79,7 +79,7 @@ public abstract class RawWoof {
 	 * @param args              Command line arguments.
 	 * @param operationsFactory {@link DatabaseOperationsFactory}.
 	 */
-	public static void run(String[] args, DatabaseOperationsFactory operationsFactory) throws Exception {
+	public static void run(String[] args, DatabaseOperationsFactory operationsFactory) throws Throwable {
 
 		// Obtain the port from properties
 		int port = args.length > 0 ? Integer.parseInt(args[0]) : 8080;
@@ -146,6 +146,8 @@ public abstract class RawWoof {
 		private static final String QUERIES_PATH_PREFIX = "/queries?queries=";
 
 		private static final String UPDATE_PATH_PREFIX = "/update?queries=";
+
+		private static final String CACHED_PATH_PREFIX = "/cached-worlds?count=";
 
 		/**
 		 * <code>Date</code> {@link HttpHeaderValue}.
@@ -296,6 +298,15 @@ public abstract class RawWoof {
 
 					// Undertake update
 					this.databaseOperations.update(queryCount, new UpdateSendResponse(
+							this.threadLocalRequestHandler.get(), connection, this.objectMapper));
+
+				} else if (requestUri.startsWith(CACHED_PATH_PREFIX)) {
+					// Obtain the number of queries
+					String queriesCountText = requestUri.substring(CACHED_PATH_PREFIX.length());
+					int queryCount = getQueryCount(queriesCountText);
+
+					// Undertake cached
+					this.databaseOperations.cached(queryCount, new CachedSendResponse(
 							this.threadLocalRequestHandler.get(), connection, this.objectMapper));
 
 				} else {
