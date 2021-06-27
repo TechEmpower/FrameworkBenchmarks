@@ -1,9 +1,10 @@
 #include <vector>
 #include <csignal>
 
+#include "base/utils/string/str_utils.h"
 #include "fmt/chrono.h"
 #include "gflags/gflags.h"
-#include "base/utils/string/str_utils.h"
+#include "nlohmann/json.hpp"
 #include "net_io/server/http_server/http_server.h"
 
 
@@ -27,6 +28,7 @@ public:
   void Run() {
     main_loop.Start();
 
+
     int loop_count = std::max(FLAGS_loops, int(std::thread::hardware_concurrency()));
     LOG(INFO) << __func__ << " use loop count:" << loop_count;
 
@@ -38,7 +40,7 @@ public:
 
     http_server.WithIOLoops(loops)
       .WithAddress(base::StrUtil::Concat("http://", FLAGS_http))
-      .ServeAddress([](const RefHttpRequestCtx& context) {
+      .ServeAddress([this](const RefHttpRequestCtx& context) {
         VLOG(GLOG_VTRACE) << " got Http request from benchmark api";
 
         const HttpRequest* req = context->Request();
@@ -52,8 +54,10 @@ public:
         if (req->RequestUrl() == "/plaintext") {
           response->MutableBody() = "Hello, World!";
         } else if (req->RequestUrl() == "/json") {
+          nlohmann::json json_message;
+          json_message["message"] = "Hello, World!";
+          response->MutableBody() = std::move(json_message.dump());
           response->InsertHeader("Content-Type", "application/json");
-          response->MutableBody() = "{\"message\":\"Hello, World!\"}";
         }
         return context->Response(response);
       });
@@ -70,8 +74,8 @@ public:
     main_loop.QuitLoop();
   }
 
-  //HttpServer http_server;
-  HttpCoroServer http_server;
+  HttpServer http_server;
+  //HttpCoroServer http_server;
   base::MessageLoop main_loop;
   std::vector<base::MessageLoop*> loops;
 };
