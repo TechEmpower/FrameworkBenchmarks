@@ -1,4 +1,4 @@
-<app libname="te_benchmark_um_pq_async" router="TeBkUmLpqAsyncRouter">
+<app router="TeBkUmLpqAsyncRouter">
 	<cors-config>
 		<allow-origins>*</allow-origins>
 		<allow-methods>GET, POST, HEAD, PUT, DELETE</allow-methods>

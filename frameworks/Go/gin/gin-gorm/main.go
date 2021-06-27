@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	postgres "gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 // World represents an entry int the World table
@@ -60,8 +61,10 @@ func main() {
 
 	dsn := "host=tfb-database user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world port=5432 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-		PrepareStmt: true, // use prep statements
+		PrepareStmt: true,                                  // use prep statements
+		Logger:      logger.Default.LogMode(logger.Silent), // new, not inserted in original submission 2x on query
 	})
+
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -74,19 +77,27 @@ func main() {
 	// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
 	sqlDB.SetMaxIdleConns(500)
 
-	r := gin.Default() // use default middleware
+	//r := gin.Default() // use default middleware - original submission
+	r := gin.New() // use no middleware, causes 1.83x on plaintext (pure gin still at +14% on both plaintext and json)
+
+	// setup middleware to add server header
+	// this slows things a little bit but it is the best design decision
+	serverHeader := []string{"Gin-gorm"}
+	r.Use(func(c *gin.Context) {
+		c.Writer.Header()["Server"] = serverHeader
+	})
 
 	/* START TESTS */
 
 	// JSON TEST
 	r.GET("/json", func(c *gin.Context) {
-		c.Header("Server", "example")
+		//c.Header("Server", "example") - original submission now using middleware
 		c.JSON(200, gin.H{"message": "Hello, World!"})
 	})
 
 	// PLAINTEXT TEST
 	r.GET("/plaintext", func(c *gin.Context) {
-		c.Header("Server", "example")
+		//c.Header("Server", "example") - original submission now using middleware
 		c.String(200, "Hello, World!")
 	})
 
@@ -94,7 +105,7 @@ func main() {
 	r.GET("/db", func(c *gin.Context) {
 		world := getWorld(db)
 
-		c.Header("Server", "example")
+		//c.Header("Server", "example") - original submission now using middleware
 		c.JSON(200, world)
 	})
 
@@ -118,6 +129,7 @@ func main() {
 
 		worlds := make([]World, numOf.Queries, numOf.Queries) //prealloc
 
+		//original submission with go routines, seems faster then without...
 		channel := make(chan World, numOf.Queries)
 
 		for i := 0; i < numOf.Queries; i++ {
@@ -128,7 +140,7 @@ func main() {
 			worlds[i] = <-channel
 		}
 
-		c.Header("Server", "example")
+		//c.Header("Server", "example") - original submission now using middleware
 		c.JSON(200, worlds)
 	})
 
@@ -149,7 +161,7 @@ func main() {
 		worlds := make([]World, numOf.Queries, numOf.Queries) //prealloc
 		var err error = nil
 
-		c.Header("Server", "example")
+		//c.Header("Server", "example") - original submission now using middleware
 
 		for i := 0; i < numOf.Queries; i++ {
 			worlds[i], err = processWorld(db)

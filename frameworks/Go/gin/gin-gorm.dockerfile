@@ -3,7 +3,9 @@ FROM golang as build-env
 WORKDIR /src/
 ADD ./gin-gorm /src/
 
-RUN go build -o app
+#- original submission
+RUN go build -o app 
+#RUN go build -tags=jsoniter -o app - tryed this but slower on my pc
 
 FROM gcr.io/distroless/base:debug
 

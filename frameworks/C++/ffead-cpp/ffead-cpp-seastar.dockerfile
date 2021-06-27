@@ -1,5 +1,5 @@
-FROM sumeetchhetri/ffead-cpp-5.0-seastar:5.3
+FROM sumeetchhetri/ffead-cpp-seastar:6.0
 
 WORKDIR /
 
-CMD ./run_ffead.sh ffead-cpp-5.0 seastar
+CMD ./run_ffead.sh ffead-cpp-6.0 seastar
