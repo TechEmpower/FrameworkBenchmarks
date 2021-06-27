@@ -28,6 +28,7 @@ public:
   void Run() {
     main_loop.Start();
 
+
     int loop_count = std::max(FLAGS_loops, int(std::thread::hardware_concurrency()));
     LOG(INFO) << __func__ << " use loop count:" << loop_count;
 
