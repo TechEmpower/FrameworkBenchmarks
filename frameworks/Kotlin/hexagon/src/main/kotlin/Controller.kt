@@ -5,14 +5,10 @@ import com.hexagonkt.http.server.Router
 import com.hexagonkt.serialization.Json
 import com.hexagonkt.serialization.toFieldsMap
 import com.hexagonkt.store.BenchmarkStore
-import com.hexagonkt.templates.TemplateManager
 import com.hexagonkt.templates.TemplatePort
-import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
 class Controller(private val settings: Settings) {
-
-    private val defaultLocale = Locale.getDefault()
 
     internal val router: Router by lazy {
         Router {
@@ -39,15 +35,14 @@ class Controller(private val settings: Settings) {
         }
     }
 
-    private fun Call.listFortunes(
-        store: BenchmarkStore, templateKind: String, templateAdapter: TemplatePort) {
+    private fun Call.listFortunes(store: BenchmarkStore, templateKind: String, templateAdapter: TemplatePort) {
 
         val fortunes = store.findAllFortunes() + Fortune(0, "Additional fortune added at request time.")
         val sortedFortunes = fortunes.sortedBy { it.message }
         val context = mapOf("fortunes" to sortedFortunes)
 
         response.contentType = "text/html;charset=utf-8"
-        ok(TemplateManager.render(templateAdapter, "fortunes.$templateKind.html", defaultLocale, context))
+        ok(templateAdapter.render("fortunes.$templateKind.html", context))
     }
 
     private fun Call.dbQuery(store: BenchmarkStore) {
