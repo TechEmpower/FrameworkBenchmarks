@@ -1,6 +1,18 @@
 
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.3.72"
+    id "org.jetbrains.kotlin.jvm" version "1.5.10"
+}
+
+ext {
+    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/1.3.19/gradle"
+
+    hexagonVersion = "1.3.19"
+    hikariVersion = "4.0.3"
+    jettyVersion = "10.0.5"
+    postgresqlVersion = "42.2.21"
+    testcontainersVersion = "1.15.3"
+    cache2kVersion = "2.0.0.Final"
+    jacksonBlackbirdVersion = "2.12.3"
 }
 
 apply(from: "$gradleScripts/kotlin.gradle")
@@ -11,7 +23,7 @@ apply(plugin: "war")
 defaultTasks("installDist")
 
 application {
-    mainClassName = "com.hexagonkt.BenchmarkKt"
+    mainClass.set("com.hexagonkt.BenchmarkKt")
 }
 
 war {
@@ -24,16 +36,17 @@ dependencies {
     implementation("com.hexagonkt:store_mongodb:$hexagonVersion")
     implementation("com.hexagonkt:http_server_jetty:$hexagonVersion")
     implementation("com.hexagonkt:templates_pebble:$hexagonVersion")
+    implementation("com.hexagonkt:logging_slf4j_jul:$hexagonVersion")
+    implementation("com.hexagonkt:serialization_json:$hexagonVersion")
 
+    implementation("com.fasterxml.jackson.module:jackson-module-blackbird:$jacksonBlackbirdVersion")
+    implementation("org.cache2k:cache2k-core:$cache2kVersion")
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.postgresql:postgresql:$postgresqlVersion")
-
-    implementation("org.slf4j:slf4j-jdk14:1.7.30")
-    runtimeOnly("org.slf4j:jcl-over-slf4j:1.7.30")
-    runtimeOnly("org.slf4j:log4j-over-slf4j:1.7.30")
 
     // providedCompile excludes the dependency only in the WAR, not in the distribution
     providedCompile("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
 
     testImplementation("com.hexagonkt:http_client_ahc:$hexagonVersion")
+    testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
 }
