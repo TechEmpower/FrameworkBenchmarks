@@ -11,7 +11,6 @@ package org.smartboot.http;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.smartboot.Message;
-import org.smartboot.aio.EnhanceAsynchronousChannelProvider;
 import org.smartboot.http.server.HttpBootstrap;
 import org.smartboot.http.server.HttpRequest;
 import org.smartboot.http.server.HttpResponse;
@@ -29,8 +28,6 @@ public class Bootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
-        System.setProperty("java.nio.channels.spi.AsynchronousChannelProvider", EnhanceAsynchronousChannelProvider.class.getName());
-
         HttpRouteHandler routeHandle = new HttpRouteHandler();
         routeHandle
                 .route("/plaintext", new HttpServerHandler() {
