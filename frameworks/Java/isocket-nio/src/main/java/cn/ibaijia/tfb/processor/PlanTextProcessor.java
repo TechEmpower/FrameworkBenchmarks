@@ -18,7 +18,6 @@ public class PlanTextProcessor implements Processor<HttpEntity> {
     private static final Logger logger = LoggerFactory.getLogger(PlanTextProcessor.class);
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
     private static final String SERVER_NAME = "isocket-nio-tfb";
-    private static Message message = new Message("Hello, World!");
 
     @Override
     public boolean process(Session session, HttpEntity httpEntity) {
@@ -36,7 +35,7 @@ public class PlanTextProcessor implements Processor<HttpEntity> {
             httpResponseEntity.setHeader("Content-Type", "application/json; charset=UTF-8");
             httpResponseEntity.setHeader("Server", SERVER_NAME);
             httpResponseEntity.setHeader("Date", dateFormat.format(new Date()));
-            httpResponseEntity.body = JSON.toJSONString(message);
+            httpResponseEntity.body = JSON.toJSONString(new Message("Hello, World!"));
             session.write(httpResponseEntity);
         } else {
             HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
