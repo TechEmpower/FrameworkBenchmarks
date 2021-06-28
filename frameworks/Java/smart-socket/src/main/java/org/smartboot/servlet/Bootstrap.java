@@ -1,6 +1,5 @@
 package org.smartboot.servlet;
 
-import org.smartboot.aio.EnhanceAsynchronousChannelProvider;
 import org.smartboot.http.server.HttpBootstrap;
 import org.smartboot.http.server.HttpRequest;
 import org.smartboot.http.server.HttpResponse;
@@ -20,8 +19,6 @@ import java.io.IOException;
 public class Bootstrap {
 
     public static void main(String[] args) {
-        System.setProperty("java.nio.channels.spi.AsynchronousChannelProvider", EnhanceAsynchronousChannelProvider.class.getName());
-
         ContainerRuntime containerRuntime = new ContainerRuntime();
         // plaintext
         ServletContextRuntime applicationRuntime = new ServletContextRuntime("/");

@@ -11,7 +11,6 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <log4j.version>2.11.0</log4j.version>
-        <aio-enhance.version>1.0.4-SNAPSHOT</aio-enhance.version>
         <smartservlet.version>0.1.5-SNAPSHOT</smartservlet.version>
         <smartsocket.version>1.5.10-SNAPSHOT</smartsocket.version>
     </properties>
@@ -21,11 +20,6 @@
             <groupId>org.smartboot.servlet</groupId>
             <artifactId>servlet-core</artifactId>
             <version>${smartservlet.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.smartboot.aio</groupId>
-            <artifactId>aio-enhance</artifactId>
-            <version>${aio-enhance.version}</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
