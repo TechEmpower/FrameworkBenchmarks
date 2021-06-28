@@ -86,9 +86,9 @@ public class Service extends AbstractService {
         }
         final int size = Math.min(500, Math.max(1, q));
         final CachedWorld[] worlds = new CachedWorld[size];
-        final ThreadLocalRandom random = ThreadLocalRandom.current();
+        final int random = ThreadLocalRandom.current().nextInt(10000-size);
         for (int i = 0; i < size; i++) {
-            worlds[i] = cache.findAt(random.nextInt(10000));
+            worlds[i] = cache.findAt(i+random);
         }
         return worlds;
     }
