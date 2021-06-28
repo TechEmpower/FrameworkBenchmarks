@@ -38,4 +38,9 @@ public interface DatabaseOperations {
 	 */
 	void update(int updateCount, UpdateSendResponse sender);
 
+	/**
+	 * Undertakes the cached.
+	 */
+	void cached(int queryCount, CachedSendResponse sender);
+
 }

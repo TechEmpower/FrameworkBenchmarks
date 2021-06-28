@@ -42,7 +42,7 @@
 			<dependency>
 				<groupId>net.officefloor</groupId>
 				<artifactId>bom</artifactId>
-				<version>3.36.0</version>
+				<version>3.37.0</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -65,6 +65,11 @@
 				<groupId>com.github.spullara.mustache.java</groupId>
 				<artifactId>compiler</artifactId>
 				<version>0.9.7</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>29.0-jre</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

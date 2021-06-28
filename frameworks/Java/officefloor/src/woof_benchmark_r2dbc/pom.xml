@@ -21,6 +21,10 @@
 			<groupId>io.r2dbc</groupId>
 			<artifactId>r2dbc-pool</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>net.officefloor.cache</groupId>
+			<artifactId>officecache_constant</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

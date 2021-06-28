@@ -4,7 +4,7 @@ import {
   additionalFortune,
   generateFortunes,
   FortuneData,
-} from "./_db_helpers.ts";
+} from "./database.ts";
 
 export const headers = new Headers([
   ["server", SERVER],

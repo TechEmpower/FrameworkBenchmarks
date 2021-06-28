@@ -7,64 +7,67 @@ namespace appMpower.Db
 {
    public static class PooledConnections
    {
-      private static int _maxLoops = 999;
+      private static bool _connectionsCreated = false;
       private static byte _createdConnections = 0;
       private static byte _maxConnections = Math.Min((byte)Environment.ProcessorCount, (byte)21);
       private static ConcurrentStack<PooledConnection> _stack = new ConcurrentStack<PooledConnection>();
+      private static ConcurrentQueue<TaskCompletionSource<PooledConnection>> _waitingQueue = new ConcurrentQueue<TaskCompletionSource<PooledConnection>>();
 
       public static async Task<PooledConnection> GetConnection(string connectionString)
       {
-         int i = 0;
-         PooledConnection pooledConnection;
+         PooledConnection pooledConnection = null;
 
-         if (_createdConnections < _maxConnections)
+         if (_connectionsCreated)
+         {
+            if (!_stack.TryPop(out pooledConnection))
+            {
+               pooledConnection = await GetPooledConnectionAsync();
+            }
+
+            return pooledConnection;
+
+         }
+         else
          {
             pooledConnection = new PooledConnection();
             pooledConnection.OdbcConnection = new OdbcConnection(connectionString);
             _createdConnections++;
+
+            if (_createdConnections == _maxConnections) _connectionsCreated = true;
+
             pooledConnection.Number = _createdConnections;
             pooledConnection.PooledCommands = new ConcurrentDictionary<string, PooledCommand>();
             //Console.WriteLine("opened connection number: " + pooledConnection.Number);
 
             return pooledConnection;
          }
-         else
-         {
-            while (!_stack.TryPop(out pooledConnection) && i < _maxLoops)
-            {
-               if (i < 5) await Task.Delay(1);
-               else if (i < 10) await Task.Delay(2);
-               else if (i < 25) await Task.Delay(3);
-               else if (i < 50) await Task.Delay(4);
-               else if (i < 100) await Task.Delay(5);
-               else if (i < 500) await Task.Delay(10);
-               else await Task.Delay(20);
+      }
 
-               i++;
-               //Console.WriteLine("waiting: " + i);
-            }
+      public static Task<PooledConnection> GetPooledConnectionAsync()
+      {
+         var taskCompletionSource = new TaskCompletionSource<PooledConnection>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            if (i < _maxLoops)
-            {
-               //Console.WriteLine("opened connection number: " + pooledConnection.Number);
-               return pooledConnection;
-            }
-            else
-            {
-               throw new Exception("No connections are available");
-            }
-         }
+         _waitingQueue.Enqueue(taskCompletionSource);
+         return taskCompletionSource.Task;
       }
 
       public static void ReleaseConnection(PooledConnection pooledConnection)
       {
+         TaskCompletionSource<PooledConnection> taskCompletionSource;
          PooledConnection stackedConnection = new PooledConnection();
 
          stackedConnection.OdbcConnection = pooledConnection.OdbcConnection;
          stackedConnection.Number = pooledConnection.Number;
          stackedConnection.PooledCommands = pooledConnection.PooledCommands;
 
-         _stack.Push(stackedConnection);
+         if (_waitingQueue.TryDequeue(out taskCompletionSource))
+         {
+            taskCompletionSource.SetResult(stackedConnection);
+         }
+         else
+         {
+            _stack.Push(stackedConnection);
+         }
       }
    }
 }
