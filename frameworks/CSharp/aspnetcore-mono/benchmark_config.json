@@ -16,7 +16,7 @@
 			"webserver": "Kestrel",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "ASP.NET Core on Mono",
+			"display_name": "ASP.NET Core [Platform, Mono]",
 			"notes": "",
 			"versus": "aspcore"
 		},
@@ -38,7 +38,7 @@
 			"webserver": "Kestrel",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "ASP.NET Core on Mono",
+			"display_name": "ASP.NET Core [Platform, Mono, Pg]",
 			"notes": "",
 			"versus": "aspcore-ado-pg"
 		},
@@ -57,7 +57,7 @@
 			"webserver": "Kestrel",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "ASP.NET Core on Mono, Middleware",
+			"display_name": "ASP.NET Core [Middleware, Mono]",
 			"notes": "",
 			"versus": "aspcore-mono"
 		},
@@ -78,30 +78,9 @@
 			"webserver": "Kestrel",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "ASP.NET Core on Mono, Middleware",
+			"display_name": "ASP.NET Core [Middleware, Mono, Pg]",
 			"notes": "",
 			"versus": "aspcore-mono-pg"
-		},
-		"mw-my": {
-			"db_url": "/db/raw",
-			"query_url": "/queries/raw?queries=",
-			"update_url": "/updates/raw?queries=",
-			"fortune_url": "/fortunes/raw",
-			"port": 8080,
-			"approach": "Realistic",
-			"classification": "Micro",
-			"database": "MySQL",
-			"framework": "ASP.NET Core",
-			"language": "C#",
-			"orm": "Raw",
-			"platform": ".NET",
-			"flavor": "Mono",
-			"webserver": "Kestrel",
-			"os": "Linux",
-			"database_os": "Linux",
-			"display_name": "ASP.NET Core on Mono, Middleware",
-			"notes": "",
-			"versus": "aspcore-mono-my"
 		},
 		"mvc": {
 			"plaintext_url": "/mvc/plaintext",
@@ -118,7 +97,7 @@
 			"webserver": "Kestrel",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "ASP.NET Core on Mono, MVC",
+			"display_name": "ASP.NET Core [MVC, Mono]",
 			"notes": "",
 			"versus": "aspcore-mono"
 		},
@@ -139,30 +118,9 @@
 			"webserver": "Kestrel",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "ASP.NET Core on Mono, MVC",
+			"display_name": "ASP.NET Core [MVC, Mono, Pg]",
 			"notes": "",
 			"versus": "aspcore-mono-pg"
-		},
-		"mvc-my": {
-			"db_url": "/mvc/db/raw",
-			"query_url": "/mvc/queries/raw?queries=",
-			"update_url": "/mvc/updates/raw?queries=",
-			"fortune_url": "/mvc/fortunes/raw",
-			"port": 8080,
-			"approach": "Realistic",
-			"classification": "Fullstack",
-			"database": "MySQL",
-			"framework": "ASP.NET Core",
-			"language": "C#",
-			"orm": "Raw",
-			"platform": ".NET",
-			"flavor": "Mono",
-			"webserver": "Kestrel",
-			"os": "Linux",
-			"database_os": "Linux",
-			"display_name": "ASP.NET Core on Mono, MVC",
-			"notes": "",
-			"versus": "aspcore-mono-my"
 		}
 	}]
 }

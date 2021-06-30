@@ -1,9 +1,8 @@
 #[global_allocator]
-static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-use bytes::Bytes;
 use ntex::http::header::{HeaderValue, CONTENT_TYPE, SERVER};
-use ntex::{http, web};
+use ntex::{http, util::Bytes, web};
 use yarte::Serialize;
 
 mod utils;

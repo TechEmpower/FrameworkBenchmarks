@@ -24,6 +24,10 @@ mods/
 *.versionsBackup
 bin/
 
+# gradle
+build/
+.gradle/
+
 # common junk
 *.log
 *.swp

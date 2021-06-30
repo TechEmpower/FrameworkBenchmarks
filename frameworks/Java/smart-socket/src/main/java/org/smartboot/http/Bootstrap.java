@@ -11,12 +11,11 @@ package org.smartboot.http;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.smartboot.Message;
-import org.smartboot.aio.EnhanceAsynchronousChannelProvider;
 import org.smartboot.http.server.HttpBootstrap;
 import org.smartboot.http.server.HttpRequest;
 import org.smartboot.http.server.HttpResponse;
-import org.smartboot.http.server.HttpServerHandle;
-import org.smartboot.http.server.handle.HttpRouteHandle;
+import org.smartboot.http.server.HttpServerHandler;
+import org.smartboot.http.server.handler.HttpRouteHandler;
 import org.smartboot.http.server.impl.Request;
 import org.smartboot.socket.StateMachineEnum;
 import org.smartboot.socket.extension.processor.AbstractMessageProcessor;
@@ -29,24 +28,22 @@ public class Bootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
-        System.setProperty("java.nio.channels.spi.AsynchronousChannelProvider", EnhanceAsynchronousChannelProvider.class.getName());
-
-        HttpRouteHandle routeHandle = new HttpRouteHandle();
+        HttpRouteHandler routeHandle = new HttpRouteHandler();
         routeHandle
-                .route("/plaintext", new HttpServerHandle() {
+                .route("/plaintext", new HttpServerHandler() {
 
 
                     @Override
-                    public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
+                    public void handle(HttpRequest request, HttpResponse response) throws IOException {
                         response.setContentLength(body.length);
                         response.setContentType("text/plain; charset=UTF-8");
                         response.write(body);
                     }
                 })
-                .route("/json", new HttpServerHandle() {
+                .route("/json", new HttpServerHandler() {
 
                     @Override
-                    public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
+                    public void handle(HttpRequest request, HttpResponse response) throws IOException {
 
                         response.setContentType("application/json");
                         JsonUtil.writeJsonBytes(response, new Message("Hello, World!"));
@@ -76,7 +73,7 @@ public class Bootstrap {
         bootstrap.pipeline(routeHandle).setPort(8080).start();
     }
 
-    private static void initDB(HttpRouteHandle routeHandle) {
+    private static void initDB(HttpRouteHandler routeHandle) {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
