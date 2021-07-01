@@ -15,7 +15,7 @@ errorlog = '-'
 pidfile = 'gunicorn.pid'
 
 if _is_pypy:
-    worker_class = "tornado"
+    worker_class = "sync"
 else:
     worker_class = "meinheld.gmeinheld.MeinheldWorker"
 
