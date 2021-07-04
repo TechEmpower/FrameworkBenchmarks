@@ -1,0 +1,29 @@
+{
+  "framework": "xitca-web",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?q=",
+        "update_url": "/updates?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "xitca-web",
+        "language": "Rust",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "xitca-server",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "xitca-web",
+        "notes": "",
+        "versus": ""
+      }
+    }
+  ]
+}
