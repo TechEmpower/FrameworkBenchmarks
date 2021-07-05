@@ -32,7 +32,22 @@ Amp\Loop::run(function () {
         'host='.DB_HOST.' user=benchmarkdbuser password=benchmarkdbpass db=hello_world'
     );
 
-    $mysql = Amp\Mysql\pool($config, 512 * 50);
+    $connector = new Amp\Mysql\CancellableConnector(
+        new class implements Amp\Socket\Connector {
+            public function connect(
+                string $uri,
+                ?Amp\Socket\ConnectContext $context = null,
+                ?Amp\CancellationToken $token = null
+            ): Amp\Promise {
+                $context = $context ?? new Amp\Socket\ConnectContext;
+                $context = $context->withTcpNoDelay();
+
+                return Amp\Socket\connector()->connect($uri, $context, $token);
+            }
+        }
+    );
+
+    $mysql = new Amp\Mysql\Pool($config, 512 * 50, 300, $connector);
 
     // Case 1 - JSON
     $router->addRoute('GET', '/json', new class implements RequestHandler {
