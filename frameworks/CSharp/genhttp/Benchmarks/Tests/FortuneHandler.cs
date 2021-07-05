@@ -95,7 +95,7 @@ namespace Benchmarks.Tests
         {
             using var context = DatabaseContext.CreateNoTracking();
 
-            var fortunes = await context.Fortune.ToListAsync();
+            var fortunes = await context.Fortune.ToListAsync().ConfigureAwait(false);
 
             fortunes.Add(new Fortune() { Message = "Additional fortune added at request time." });
 
