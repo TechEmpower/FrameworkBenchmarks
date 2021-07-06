@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Suave" Version="2.6.0-beta" />
-    <PackageReference Update="FSharp.Core" Version="5.0.0-beta.20417.1" />
+    <PackageReference Include="Suave" Version="2.6.1" />
+    <PackageReference Update="FSharp.Core" Version="5.0.2" />
   </ItemGroup>
 
 </Project>

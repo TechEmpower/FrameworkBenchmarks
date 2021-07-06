@@ -14,7 +14,7 @@
     <PackageReference Include="FSharp.Data.JsonSchema" Version="0.1.0" />
     <PackageReference Include="Giraffe" Version="5.0.0" />
     <PackageReference Include="Giraffe.ViewEngine" Version="1.4.0" />
-    <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
+    <PackageReference Include="Npgsql" Version="5.0.7" />
     <PackageReference Update="FSharp.Core" Version="5.0.2" />
   </ItemGroup>
 
