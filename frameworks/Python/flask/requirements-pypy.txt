@@ -1,9 +1,7 @@
 click==8.0.1
-SQLAlchemy==1.2.2
+pony==0.7.14
 psycopg2cffi>=2.7
 Flask==1.1.2
-Flask-SQLAlchemy==2.5.1
-SQLAlchemy-serializer==1.4.1
 tornado==6.1
 gevent>=1.4
 gunicorn==20.1.0

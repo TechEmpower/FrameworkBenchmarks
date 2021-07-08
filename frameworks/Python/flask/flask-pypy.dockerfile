@@ -1,4 +1,4 @@
-FROM pypy:3.7-buster
+FROM pypy:3
 
 RUN apt-get update
 RUN apt-get install libpq-dev python3-dev -y
