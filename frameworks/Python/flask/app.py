@@ -1,11 +1,12 @@
 #!/usr/bin/env python
+from collections import namedtuple
 from operator import attrgetter
 from random import randint
 import sys
 
 from flask import Flask, request, render_template, make_response, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy_serializer import SerializerMixin
+from pony import orm
+
 if sys.version_info[0] == 3:
     xrange = range
 _is_pypy = hasattr(sys, 'pypy_version_info')
@@ -13,29 +14,24 @@ if _is_pypy:
     from psycopg2cffi import compat
     compat.register()
 
-DBDRIVER = 'postgresql'
+DBDRIVER = 'postgres'
 DBHOST = 'tfb-database'
 
 # setup
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "{DBDRIVER}://benchmarkdbuser:benchmarkdbpass@{DBHOST}:5432/hello_world".format(DBDRIVER=DBDRIVER, DBHOST=DBHOST)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO'] = False
+app.config['STORM_DATABASE_URI'] = "{DBDRIVER}://benchmarkdbuser:benchmarkdbpass@{DBHOST}:5432/hello_world".format(DBDRIVER=DBDRIVER, DBHOST=DBHOST)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
-db = SQLAlchemy(app)
+db = orm.Database()
+db.bind(DBDRIVER, host=DBHOST, port=5432, user="benchmarkdbuser", password="benchmarkdbpass", database="hello_world")
 
 
-# models
+class World(db.Entity):
+    _table_ = "world"
+    id = orm.PrimaryKey(int)
+    randomNumber = orm.Required(int, column="randomnumber")
 
-class World(db.Model, SerializerMixin):
-    __tablename__ = "world"
-    id = db.Column(db.Integer, primary_key=True)
-    randomNumber = db.Column(db.Integer, name="randomnumber")
-
-    # http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask
-    @property
-    def serialize(self):
+    def to_dict(self):
         """Return object data in easily serializeable format"""
         return {
             'id'         : self.id,
@@ -43,10 +39,13 @@ class World(db.Model, SerializerMixin):
         }
 
 
-class Fortune(db.Model, SerializerMixin):
-    __tablename__ = "fortune"
-    id = db.Column(db.Integer, primary_key=True)
-    message = db.Column(db.String)
+class Fortune(db.Entity):
+    _table_ = "fortune"
+    id = orm.PrimaryKey(int, auto=True)
+    message = orm.Required(str)
+
+
+db.generate_mapping(create_tables=False)
 
 
 def get_num_queries():
@@ -75,7 +74,8 @@ def hello():
 
 @app.route("/query")
 def get_random_world():
-    worlds = [World.query.get(ident).to_dict()
+    with orm.db_session(serializable=False):
+        worlds = [World[ident].to_dict()
               for ident in generate_ids(get_num_queries())]
     return jsonify(worlds)
 
@@ -83,14 +83,17 @@ def get_random_world():
 @app.route("/db")
 def get_random_world_single():
     wid = randint(1, 10000)
-    world = World.query.get(wid)
+    with orm.db_session(serializable=False):
+        world = World[wid]
     return jsonify(world.to_dict())
 
 
 @app.route("/fortunes")
 def get_fortunes():
-    fortunes = list(Fortune.query.all())
-    fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
+    with orm.db_session(serializable=False):
+        fortunes = list(orm.select(fortune for fortune in Fortune))
+    tmp_fortune = namedtuple("Fortune", ["id", "message"])
+    fortunes.append(tmp_fortune(id=0, message="Additional fortune added at request time."))
     fortunes.sort(key=attrgetter('message'))
     return render_template('fortunes.html', fortunes=fortunes)
 
@@ -99,13 +102,14 @@ def get_fortunes():
 def updates():
     """Test 5: Database Updates"""
     num_queries = get_num_queries()
-    ids = generate_ids(num_queries+1)
-    updates = generate_ids(num_queries+1)
-    worlds = tuple({"id": ident, "randomNumber": update} for ident, update in zip(ids[:-1], updates[:-1]))
-    for ident, update in zip(ids, updates):
-        world = World.query.get(ident)
-        world.randomNumber = update
-        db.session.commit()
+    ids = generate_ids(num_queries)
+    ids.sort()
+    worlds = []
+    with orm.db_session(serializable=False):
+        for ident in ids:
+            world = World[ident]
+            world.randomNumber = randint(1, 10000)
+            worlds.append({"id": world.id, "randomNumber": world.randomNumber})
     return jsonify(worlds)
 
 

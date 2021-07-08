@@ -1,11 +1,9 @@
 click==8.0.1
-SQLAlchemy==1.2.2
+pony==0.7.14
 psycopg2==2.9.1
 psycopg2-binary==2.9.1
 psycopg2-pool==1.1
 Flask==1.1.2
-Flask-SQLAlchemy==2.5.1
-SQLAlchemy-serializer==1.4.1
 greenlet==0.4.15
 gunicorn==20.1.0
 itsdangerous==2.0.1
