@@ -6,15 +6,15 @@ license: "MIT"
 homepage: "https://github.com/TechEmpower/FrameworkBenchmarks"
 bug-reports: "https://github.com/TechEmpower/FrameworkBenchmarks/issues"
 depends: [
-  "dune" {>= "2.7" & >= "2.7.1"}
-  "webmachine" {>= "0.6.2"}
-  "lwt" {>= "5.3.0"}
-  "conf-libev" {>= "4-11"}
-  "caqti" {>= "1.2.3"}
-  "caqti-lwt" {>= "1.2.0"}
-  "caqti-driver-postgresql" {>= "1.2.4"}
-  "cohttp-lwt-unix" {>= "2.5.4"}
-  "lwt_ppx" {>= "2.0.1"}
+  "dune" {>= "2.7" & >= "2.8.5"}
+  "webmachine" {>= "0.7.0"}
+  "lwt" {>= "5.4.1"}
+  "conf-libev" {>= "4-12"}
+  "caqti" {>= "1.6.0"}
+  "caqti-lwt" {>= "1.6.0"}
+  "caqti-driver-postgresql" {>= "1.6.0"}
+  "cohttp-lwt-unix" {>= "4.0.0"}
+  "lwt_ppx" {>= "2.0.2"}
   "odoc" {with-doc}
 ]
 build: [

@@ -37,7 +37,7 @@ namespace Benchmarks.Tests
             {
                 foreach (var id in ids)
                 {
-                    var record = await context.World.FirstOrDefaultAsync(w => w.Id == id);
+                    var record = await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false);
 
                     var old = record.RandomNumber;
 
