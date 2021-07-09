@@ -1,5 +1,6 @@
 FROM ghcr.io/graalvm/graalvm-ce:latest
 WORKDIR /redkale
+RUN yum install -y wget
 RUN wget https://downloads.apache.org/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz
 RUN tar xzvf apache-maven-3.8.1-bin.tar.gz
 RUN cp -R apache-maven-3.8.1 /usr/local/bin
