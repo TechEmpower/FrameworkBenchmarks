@@ -31,7 +31,6 @@ versus = "Redkale"
 [native]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
-urls.cached_query = "/cached-worlds?q="
 approach = "Realistic"
 classification = "Fullstack"
 database = "Postgres"
