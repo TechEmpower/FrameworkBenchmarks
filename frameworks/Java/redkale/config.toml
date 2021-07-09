@@ -28,19 +28,6 @@ platform = "Redkale"
 webserver = "Redkale"
 versus = "Redkale"
 
-[native]
-urls.plaintext = "/plaintext"
-urls.json = "/json"
-approach = "Realistic"
-classification = "Fullstack"
-database = "Postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "Redkale"
-webserver = "Redkale"
-versus = "Redkale"
-
 [cache]
 urls.cached_query = "/cached-worlds?q="
 approach = "Realistic"
