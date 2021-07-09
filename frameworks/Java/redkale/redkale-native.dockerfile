@@ -13,6 +13,8 @@ COPY --from=maven /redkale/target/redkale-benchmark-1.0.0.jar redkale-benchmark.
 
 RUN native-image -jar redkale-benchmark.jar
 
+RUN ls -lh
+
 EXPOSE 8080
 
-RUN redkale-benchmark
+RUN -d ./redkale-benchmark 
