@@ -19,6 +19,18 @@
             <groupId>com.github.yuyenews</groupId>
             <artifactId>Martian</artifactId>
             <version>4.0.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.yuyenews</groupId>
+                    <artifactId>Magician</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.yuyenews</groupId>
+            <artifactId>Magician</artifactId>
+            <version>1.1.15</version>
         </dependency>
 
         <!-- 下面的jar包为日志框架，必须引入，否则控制台看不到任何信息，此处以jdk日志为例 -->
