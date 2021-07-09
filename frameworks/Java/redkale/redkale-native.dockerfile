@@ -17,4 +17,4 @@ RUN ls -lh
 
 EXPOSE 8080
 
-CMD ./redkale-benchmark 
+CMD ./redkale-benchmark &
