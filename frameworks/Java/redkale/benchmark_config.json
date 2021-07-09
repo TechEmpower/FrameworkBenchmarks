@@ -21,7 +21,7 @@
                 "notes": "",
                 "versus": "Redkale"
             },
-            "j17": {
+            "graalvm": {
                 "plaintext_url": "/plaintext",
                 "json_url": "/json",
                 "cached_query_url": "/cached-worlds?q=",
@@ -37,7 +37,7 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-j17",
+                "display_name": "redkale-graalvm",
                 "notes": "",
                 "versus": "Redkale"
             },

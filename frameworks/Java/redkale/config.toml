@@ -14,7 +14,7 @@ platform = "Redkale"
 webserver = "Redkale"
 versus = "Redkale"
 
-[j17]
+[graalvm]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.cached_query = "/cached-worlds?q="
