@@ -19,7 +19,7 @@
         "flavor": "None",
         "orm": "Raw",
         "platform": "µws",
-        "webserver": "None",
+        "webserver": "µws",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "spliffy",
