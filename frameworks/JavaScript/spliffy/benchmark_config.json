@@ -18,13 +18,13 @@
         "language": "Javascript",
         "flavor": "None",
         "orm": "Raw",
-        "platform": "Node",
+        "platform": "Node.js",
         "webserver": "µws",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "spliffy",
-        "notes": "",
-        "versus": "None"
+        "notes": "directory based routing for node",
+        "versus": "nodejs"
       }
     }
   ]
