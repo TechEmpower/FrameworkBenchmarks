@@ -1,16 +1,16 @@
-const db = require('./db')
+const cluster = require('cluster')
+const cpus = require('os').cpus().length
 
-try {
-    db.findWorldById( db.randomId() ).then( console.log )
-} catch (e) {
-    console.log(e)
-    throw new Error(e)
-}
-
-require('@srfnstack/spliffy')(
-    {
-        routeDir: __dirname + '/www',
-        port: 1420,
-        logAccess: false
+if (cluster.isMaster) {
+    for (let i = 0; i < cpus; i++) {
+        cluster.fork();
     }
-)
+} else {
+    require('@srfnstack/spliffy')(
+        {
+            routeDir: __dirname + '/www',
+            port: 1420,
+            logAccess: false
+        }
+    )
+}

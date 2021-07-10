@@ -1,8 +1,8 @@
 const db = require( '../db' )
-const { parseIntBetween } = require( '../fn' )
+const { parseCount } = require( '../fn' )
 module.exports = {
-    GET: async ( { url: { pathParameters: { queries } } } ) => await Promise.all(
-        db.randomUniqueIds( parseIntBetween( queries, 1, 500 ) )
-            .map( id => db.findWorldById( id ) )
+    GET: async ( { url: { query: { queries } } } ) => await Promise.all(
+        db.randomUniqueIds( parseCount( queries ) )
+            .map( id => db.worldById( id ) )
     )
 }

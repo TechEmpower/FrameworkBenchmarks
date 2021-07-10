@@ -1,4 +1,6 @@
-let helloWorld = 'Hello, World!';
 module.exports = {
-    GET: () => helloWorld
+    GET: ( { res } ) => {
+        res.headers['content-type'] = 'text/plain'
+        return 'Hello, World!'
+    }
 }

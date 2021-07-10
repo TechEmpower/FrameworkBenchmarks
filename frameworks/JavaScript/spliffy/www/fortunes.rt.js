@@ -16,7 +16,7 @@ module.exports = {
         },
         body: renderFortunes(
             [
-                ...await db.getAllFortunes(),
+                ...await db.allFortunes(),
                 {
                     id: 0,
                     message: 'Additional fortune added at request time.'
