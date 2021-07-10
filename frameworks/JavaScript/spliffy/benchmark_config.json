@@ -18,7 +18,7 @@
         "language": "Javascript",
         "flavor": "None",
         "orm": "Raw",
-        "platform": "µws",
+        "platform": "Node",
         "webserver": "µws",
         "os": "Linux",
         "database_os": "Linux",
