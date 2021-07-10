@@ -9,40 +9,40 @@
 * [PLAINTEXT](www/plaintext.rt.js)
 * [DB](www/db.rt.js)
 * [QUERY](www/queries.rt.js)
-* [CACHED QUERY](www/.rt.js)
-* [UPDATE](www/.rt.js)
-* [FORTUNES](www/.rt.js)
+* [CACHED QUERY](www/cached-worlds.rt.js)
+* [UPDATE](www/updates.rt.js)
+* [FORTUNES](www/fortunes.rt.js)
 
 ## Important Libraries
 The tests were run with:
-* [Spliffy](https://srfnstack.github.io/spliffy//)
-* [Example](https://github.com/uNetworking/uWebSockets.js)
+* <a href="https://srfnstack.github.io/spliffy/" target="_blank">Spliffy</a>
+* <a href="https://github.com/uNetworking/uWebSockets.js" target="_blank">μWebSockets.js</a>
 
 ## Test URLs
 ### JSON
 
-http://localhost:8080/json
+http://localhost:1420/json
 
 ### PLAINTEXT
 
-http://localhost:8080/plaintext
+http://localhost:1420/plaintext
 
 ### DB
 
-http://localhost:8080/db
+http://localhost:1420/db
 
 ### QUERY
 
-http://localhost:8080/query?queries=
+http://localhost:1420/queries?queries=
 
 ### CACHED QUERY
 
-http://localhost:8080/cached_query?queries=
+http://localhost:1420/cached-worlds?count=
 
 ### UPDATE
 
-http://localhost:8080/update?queries=
+http://localhost:1420/updates?queries=
 
 ### FORTUNES
 
-http://localhost:8080/fortunes
+http://localhost:1420/fortunes
