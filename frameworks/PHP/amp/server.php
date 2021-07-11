@@ -15,17 +15,39 @@ use Amp\Success;
 use Monolog\Logger;
 
 define('DB_HOST', gethostbyname('tfb-database'));
+define('CONCURRENCY_LIMIT', 102400);
 
 Amp\Loop::run(function () {
     $sockets = yield [
-        Cluster::listen('0.0.0.0:8080', 
-            (new Amp\Socket\BindContext)->withBacklog(102400)
+        Cluster::listen('0.0.0.0:8080',
+            (new Amp\Socket\BindContext)->withBacklog(CONCURRENCY_LIMIT)
                                         ->withReusePort()
                                         ->withTcpNoDelay()
         )
     ];
 
     $router = new Router;
+
+    $config = Amp\Mysql\ConnectionConfig::fromString(
+        'host='.DB_HOST.' user=benchmarkdbuser password=benchmarkdbpass db=hello_world'
+    );
+
+    $connector = new Amp\Mysql\CancellableConnector(
+        new class implements Amp\Socket\Connector {
+            public function connect(
+                string $uri,
+                ?Amp\Socket\ConnectContext $context = null,
+                ?Amp\CancellationToken $token = null
+            ): Amp\Promise {
+                $context = $context ?? new Amp\Socket\ConnectContext;
+                $context = $context->withTcpNoDelay();
+
+                return Amp\Socket\connector()->connect($uri, $context, $token);
+            }
+        }
+    );
+
+    $mysql = new Amp\Mysql\Pool($config, 512 * 50, 300, $connector);
 
     // Case 1 - JSON
     $router->addRoute('GET', '/json', new class implements RequestHandler {
@@ -40,14 +62,11 @@ Amp\Loop::run(function () {
     });
 
     // Case 2 - Single Query
-    $router->addRoute('GET', '/db', new class implements RequestHandler {
+    $router->addRoute('GET', '/db', new class ($mysql) implements RequestHandler {
         private $mysql;
 
-        public function __construct() {
-            $config = Amp\Mysql\ConnectionConfig::fromString(
-                'host='.DB_HOST.' user=benchmarkdbuser password=benchmarkdbpass db=hello_world'
-            );
-            $this->mysql = Amp\Mysql\pool($config);
+        public function __construct($mysql) {
+            $this->mysql = $mysql;
         }
 
         public function handleRequest(Request $request): Promise {
@@ -72,14 +91,11 @@ Amp\Loop::run(function () {
     });
 
     // Case 3 - Multiple Queries
-    $router->addRoute('GET', '/queries', new class implements RequestHandler {
+    $router->addRoute('GET', '/queries', new class ($mysql) implements RequestHandler {
         private $mysql;
 
-        public function __construct() {
-            $config = Amp\Mysql\ConnectionConfig::fromString(
-                'host='.DB_HOST.' user=benchmarkdbuser password=benchmarkdbpass db=hello_world'
-            );
-            $this->mysql = Amp\Mysql\pool($config);
+        public function __construct($mysql) {
+            $this->mysql = $mysql;
         }
 
         public function handleRequest(Request $request): Promise {
@@ -120,14 +136,11 @@ Amp\Loop::run(function () {
     });
 
     // Case 4 - Fortunes
-    $router->addRoute('GET', '/fortunes', new class implements RequestHandler {
+    $router->addRoute('GET', '/fortunes', new class ($mysql) implements RequestHandler {
         private $mysql;
 
-        public function __construct() {
-            $config = Amp\Mysql\ConnectionConfig::fromString(
-                'host='.DB_HOST.' user=benchmarkdbuser password=benchmarkdbpass db=hello_world'
-            );
-            $this->mysql = Amp\Mysql\pool($config);
+        public function __construct($mysql) {
+            $this->mysql = $mysql;
         }
 
         public function handleRequest(Request $request): Promise {
@@ -176,8 +189,8 @@ Amp\Loop::run(function () {
 
     $options = (new Options)
         ->withoutCompression()
-        ->withConnectionLimit(102400)
-        ->withConnectionsPerIpLimit(102400);
+        ->withConnectionLimit(CONCURRENCY_LIMIT)
+        ->withConnectionsPerIpLimit(CONCURRENCY_LIMIT);
 
     $server = new Server($sockets, $router, $logger, $options);
 

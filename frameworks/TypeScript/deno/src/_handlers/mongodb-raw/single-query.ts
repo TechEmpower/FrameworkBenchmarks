@@ -1,5 +1,5 @@
 import { ServerRequest, SERVER, dyn_date, MIME_JSON } from "../../depends.ts";
-import { randomWorld } from "./_db_helpers.ts";
+import { randomWorld } from "./database.ts";
 
 export const headers = new Headers([
   ["server", SERVER],
