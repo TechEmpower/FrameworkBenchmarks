@@ -52,6 +52,9 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 	public SqlClientOfficeFloorMain(int socketCount, String server, int port, String database, String username,
 			String password) {
 
+		// Should be all I/O processing for SQL responses
+		System.setProperty("vertx.nettyIORatio", "100");
+
 		// Obtain the vertx
 		int workerThreadCount = Math.max(1, socketCount / 4);
 		Vertx vertx = Vertx
