@@ -104,10 +104,7 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 
 	@Override
 	public void threadSetup(RequestHandler<HttpRequestParser> requestHandler) {
-
-		// Create thread local connection
-		if (this.threadLocalConnection == null) {
-		}
+		// Nothing thread specific to set up
 	}
 
 	@Override
