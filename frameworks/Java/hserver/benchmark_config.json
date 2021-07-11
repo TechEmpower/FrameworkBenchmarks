@@ -1,0 +1,27 @@
+
+{
+  "framework": "HServer",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8888,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Mysql",
+        "framework": "HServer",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "HServer",
+        "notes": "",
+        "versus": "HServer"
+      }
+    }
+  ]
+}
