@@ -56,9 +56,9 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 		System.setProperty("vertx.nettyIORatio", "100");
 
 		// Obtain the vertx
-		int workerThreadCount = Math.max(1, socketCount / 4);
-		Vertx vertx = Vertx
-				.vertx(new VertxOptions().setPreferNativeTransport(true).setWorkerPoolSize(workerThreadCount));
+		int databaseListenerCount = Math.max(1, socketCount / 4);
+		Vertx vertx = Vertx.vertx(new VertxOptions().setPreferNativeTransport(true)
+				.setEventLoopPoolSize(databaseListenerCount).setWorkerPoolSize(1).setInternalBlockingPoolSize(1));
 
 		// Create connection
 		PgConnectOptions connectOptions = new PgConnectOptions().setHost(server).setPort(port).setDatabase(database)
