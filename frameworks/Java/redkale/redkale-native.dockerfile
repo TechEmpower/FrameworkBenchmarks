@@ -4,6 +4,7 @@ COPY src src
 COPY conf conf
 COPY pom.xml pom.xml
 RUN mvn package -q
+RUN tail -n10000 target/classes/META-INF/edkale/redkale.load.classes
 RUN tail -n10000 target/classes/META-INF/native-image/org.redkalex/redkale-benchmark/reflect-config.json
 
 FROM ghcr.io/graalvm/graalvm-ce:latest
