@@ -11,10 +11,10 @@ WORKDIR /redkale
 COPY conf conf
 COPY --from=maven /redkale/target/redkale-benchmark-1.0.0.jar redkale-benchmark.jar
 
-RUN native-image -jar redkale-benchmark.jar
+RUN native-image -H:+ReportExceptionStackTraces --report-unsupported-elements-at-runtime -jar redkale-benchmark.jar
 
 RUN ls -lh
 
 EXPOSE 8080
 
-CMD ./redkale-benchmark &
+CMD ./redkale-benchmark 
