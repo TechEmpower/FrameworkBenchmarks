@@ -10,11 +10,9 @@ import top.hserver.core.ioc.annotation.GET;
 @Controller
 public class TestController {
 
-    private static Message message = new Message();
-
     @GET("/json")
     public Message json() {
-        return message;
+        return new Message();
     }
 
     @GET("/plaintext")
