@@ -2,13 +2,13 @@ const cluster = require( 'cluster' )
 const cpus = require( 'os' ).cpus().length
 const db = require( './db' )
 
-db.init()
-    .then( () => {
-            if( cluster.isMaster ) {
-                for( let i = 0; i < cpus; i++ ) {
-                    cluster.fork();
-                }
-            } else {
+if( cluster.isMaster ) {
+    for( let i = 0; i < cpus; i++ ) {
+        cluster.fork();
+    }
+} else {
+    db.init()
+        .then( () => {
                 require( '@srfnstack/spliffy' )(
                     {
                         routeDir: __dirname + '/www',
@@ -17,5 +17,5 @@ db.init()
                     }
                 )
             }
-        }
-    )
+        )
+}
