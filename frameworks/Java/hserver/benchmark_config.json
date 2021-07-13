@@ -1,6 +1,6 @@
 
 {
-  "framework": "HServer",
+  "framework": "hserver",
   "tests": [
     {
       "default": {
@@ -10,7 +10,7 @@
         "approach": "Realistic",
         "classification": "Fullstack",
         "database": "Mysql",
-        "framework": "HServer",
+        "framework": "hserver",
         "language": "Java",
         "flavor": "None",
         "orm": "Full",
@@ -18,9 +18,9 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "HServer",
+        "display_name": "hserver",
         "notes": "",
-        "versus": "HServer"
+        "versus": "hserver"
       }
     }
   ]

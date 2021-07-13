@@ -1,5 +1,5 @@
 [framework]
-name = "HServer"
+name = "hserver"
 
 [main]
 urls.plaintext = "/plaintext"
@@ -10,4 +10,4 @@ os = "Linux"
 orm = "Full"
 platform = "None"
 webserver = "None"
-versus = "HServer"
+versus = "hserver"
