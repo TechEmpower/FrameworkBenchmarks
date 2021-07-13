@@ -14,6 +14,7 @@ import org.redkale.source.*;
  * @author zhangjx
  */
 //@Cacheable(direct = true)
+@Entity
 @Table(name = "World")
 public final class CachedWorld implements Comparable<CachedWorld> {
 
