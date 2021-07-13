@@ -1,21 +1,17 @@
 const { Pool, native } = require( 'pg' );
 const cpus = require( 'os' ).cpus().length
-
-const pool = new Pool( {
+let maxConnections
+let clientOpts = {
     Client: native.Client,
     host: 'tfb-database',
     // host: 'host.docker.internal',
     // host: 'localhost',
     user: 'benchmarkdbuser',
     password: 'benchmarkdbpass',
-    database: 'hello_world',
-    //postgres max_connections = 2000
-    //1 worker per cpu
-    max: Math.floor( 2000 / cpus )
-} )
-pool.on( 'error', ( err ) => {
-    console.error( 'Unexpected client error', err )
-} )
+    database: 'hello_world'
+};
+
+let pool
 
 let execute = async ( text, values ) => {
     try {
@@ -25,6 +21,18 @@ let execute = async ( text, values ) => {
     }
 }
 module.exports = {
+    async init() {
+        const client = new native.Client( clientOpts )
+        await client.connect()
+        const res = await client.query( 'SHOW max_connections' )
+        maxConnections = res.rows[0].max_connections
+        //1 worker per cpu, each worker pool gets a fraction of the max connections
+        //only use 90% to avoid too many clients errors
+        pool = new Pool( Object.assign( { ...clientOpts }, { max: Math.floor( maxConnections * 0.9 / cpus ) } ) )
+        pool.on( 'error', ( err ) => {
+            console.error( 'Unexpected client error', err )
+        } )
+    },
     execute,
     randomId: () => Math.floor( Math.random() * 10000 ) + 1,
     randomUniqueIds: ( count ) => {
