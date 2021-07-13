@@ -1,0 +1,31 @@
+[package]
+name = "xitca-web"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+xitca-http = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "065b21b" }
+xitca-web = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "065b21b" }
+
+ahash = { version = "0.7.4", features = ["compile-time-rng"] }
+atoi = "0.4.0"
+bytes = "1"
+futures-util = { version = "0.3", default-features = false, features = ["alloc"] }
+mimalloc = { version = "0.1.25", default-features = false }
+rand = { version = "0.8", default-features = false, features = ["min_const_gen", "small_rng"] }
+sailfish = "0.3.3"
+serde = "1"
+simd-json = "0.4.6"
+tokio = { version = "1.7", features = ["macros", "rt"] }
+tokio-postgres = "0.7.2"
+
+[profile.release]
+lto = true
+opt-level = 3
+codegen-units = 1
+panic = "abort"
+
+[patch.crates-io]
+xitca-http = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "065b21b" }
+xitca-server = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "065b21b" }
+xitca-service = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "065b21b" }

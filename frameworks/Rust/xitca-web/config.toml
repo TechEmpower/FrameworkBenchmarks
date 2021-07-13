@@ -1,0 +1,19 @@
+[framework]
+name = "xitca-web"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/query?q="
+urls.update = "/update?q="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "xitca-server"
+versus = ""
