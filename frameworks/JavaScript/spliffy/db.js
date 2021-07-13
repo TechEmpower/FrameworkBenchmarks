@@ -32,6 +32,7 @@ module.exports = {
         pool.on( 'error', ( err ) => {
             console.error( 'Unexpected client error', err )
         } )
+        await client.end()
     },
     execute,
     randomId: () => Math.floor( Math.random() * 10000 ) + 1,
