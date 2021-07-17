@@ -114,6 +114,23 @@
                 "notes": "",
                 "versus": ""
             },
+            "thread-pico": {
+                "json_url": "/pson",
+                "port": 8080,
+                "approach": "Realistic",
+                "classification": "Fullstack",
+                "database": "None",
+                "framework": "cutelyst",
+                "language": "C++",
+                "orm": "Raw",
+                "platform": "CutelystWSGI",
+                "webserver": "None",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "cutelyst-pico",
+                "notes": "",
+                "versus": ""
+            },
             "thread-apg": {
                 "db_url": "/dbp",
                 "query_url": "/queriesp?queries=",
