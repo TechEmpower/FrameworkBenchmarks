@@ -41,14 +41,14 @@ void DatabaseUpdatesTest::updatep(Context *c)
                          {QStringLiteral("randomNumber"), randomNumber}
                      });
 
-        db.execPrepared(APreparedQueryLiteral("SELECT randomNumber, id FROM world WHERE id=$1"),
+        db.exec(APreparedQueryLiteral(u"SELECT randomNumber, id FROM world WHERE id=$1"),
                                {id}, [c, async] (AResult &result) {
             if (Q_UNLIKELY(result.error() || !result.size())) {
                 c->res()->setStatus(Response::InternalServerError);
                 return;
             }
         }, c);
-        db.execPrepared(APreparedQueryLiteral("UPDATE world SET randomNumber=$1 WHERE id=$2"),
+        db.exec(APreparedQueryLiteral(u"UPDATE world SET randomNumber=$1 WHERE id=$2"),
                                {randomNumber, id}, [c, async] (AResult &result) {
             if (Q_UNLIKELY(result.error())) {
                 c->res()->setStatus(Response::InternalServerError);
@@ -89,7 +89,7 @@ void DatabaseUpdatesTest::updateb(Context *c)
                          {QStringLiteral("randomNumber"), randomNumber}
                      });
 
-        db.execPrepared(APreparedQueryLiteral("SELECT randomNumber, id FROM world WHERE id=$1"),
+        db.exec(APreparedQueryLiteral(u"SELECT randomNumber, id FROM world WHERE id=$1"),
                                {id}, [c, async] (AResult &result) {
             if (Q_UNLIKELY(result.error() || !result.size())) {
                 c->res()->setStatus(Response::InternalServerError);
@@ -100,7 +100,7 @@ void DatabaseUpdatesTest::updateb(Context *c)
     args.append(argsIds);
 
     const APreparedQuery pq = getSql(queries);
-    db.execPrepared(pq, args, [c, async] (AResult &result) {
+    db.exec(pq, args, [c, async] (AResult &result) {
         if (Q_UNLIKELY(result.error())) {
             c->res()->setStatus(Response::InternalServerError);
             return;

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export ASQL_VER=0.26.0
+export ASQL_VER=0.43.0
 export CUTELEE_VER=5.3.0
 export CUTELYST_VER=2.14.0
 

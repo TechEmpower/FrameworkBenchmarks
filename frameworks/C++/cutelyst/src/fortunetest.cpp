@@ -18,7 +18,7 @@ void FortuneTest::fortunes_raw_p(Context *c)
 {
     ASync async(c);
     static thread_local auto db = APool::database();
-    db.execPrepared(APreparedQueryLiteral("SELECT id, message FROM fortune"), [c, async, this] (AResult &result) {
+    db.exec(APreparedQueryLiteral(u"SELECT id, message FROM fortune"), [c, async, this] (AResult &result) {
         if (Q_UNLIKELY(result.error() && !result.size())) {
             c->res()->setStatus(Response::InternalServerError);
             return;
@@ -63,7 +63,7 @@ void FortuneTest::fortunes_c_p(Context *c)
 {
     ASync async(c);
     static thread_local auto db = APool::database();
-    db.execPrepared(APreparedQueryLiteral("SELECT id, message FROM fortune"), [c, async] (AResult &result) {
+    db.exec(APreparedQueryLiteral(u"SELECT id, message FROM fortune"), [c, async] (AResult &result) {
         if (Q_UNLIKELY(result.error() && !result.size())) {
             c->res()->setStatus(Response::InternalServerError);
             return;

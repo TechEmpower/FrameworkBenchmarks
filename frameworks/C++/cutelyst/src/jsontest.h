@@ -14,6 +14,9 @@ public:
 
     C_ATTR(json, :Local :AutoArgs)
     void json(Context *c);
+
+    C_ATTR(pson, :Local :AutoArgs)
+    void pson(Context *c);
 };
 
 #endif // JSONTEST_H
