@@ -19,6 +19,7 @@ ADD ./composer.json /symfony/
 RUN mkdir -m 777 -p /symfony/var/cache/{dev,prod} /symfony/var/log
 RUN composer install --no-dev --no-scripts
 RUN composer require doctrine/orm:2.8.5 -W
+RUN composer require doctrine/dbal:2.12.x -W
 
 ADD . /symfony
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --no-dev --classmap-authoritative
