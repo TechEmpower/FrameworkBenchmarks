@@ -10,7 +10,7 @@
         "symfony/dotenv": "5.1.*",
         "symfony/flex": "^1.6.0",
         "symfony/framework-bundle": "5.1.*",
-        "symfony/orm-pack": "2.8.5",
+        "symfony/orm-pack": "2.0",
         "symfony/twig-bundle": "5.1.*",
         "symfony/yaml": "5.1.*"
     },
