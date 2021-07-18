@@ -49,9 +49,9 @@ The tests are separated into controllers:
 
 ## Important Libraries
 The tests were run with:
-* [Ubiquity 2.3.*](https://ubiquity.kobject.net/)
-* [PHP Version 7.4.*](http://www.php.net/) with FPM
-* [nginx 1.14](http://nginx.org/)
+* [Ubiquity 2.4.*](https://ubiquity.kobject.net/)
+* [PHP Version 8.0.*](http://www.php.net/) with FPM
+* [nginx](http://nginx.org/)
 * [Swoole](https://www.swoole.com/), [Ubiquity-swoole](https://github.com/phpMv/ubiquity-swoole)
 * [Workerman](https://github.com/walkor/Workerman), [Ubiquity-workerman](https://github.com/phpMv/ubiquity-workerman)
 * [Roadrunner](https://github.com/spiral/roadrunner), [Roadrunner-ubiquity](https://github.com/Lapinskas/roadrunner-ubiquity)
