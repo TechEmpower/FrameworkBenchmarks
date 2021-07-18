@@ -9,7 +9,7 @@ namespace appMpower.Db
    public class PooledConnection : IDbConnection
    {
       private bool _isInUse = true;
-      private byte _number = 0;
+      private short _number = 0;
       private OdbcConnection _odbcConnection;
       private ConcurrentDictionary<string, PooledCommand> _pooledCommands;
 
@@ -47,7 +47,7 @@ namespace appMpower.Db
          }
       }
 
-      public byte Number
+      public short Number
       {
          get
          {
@@ -182,11 +182,10 @@ namespace appMpower.Db
          else
          {
             pooledCommand.OdbcCommand = new OdbcCommand(commandText, this.OdbcConnection);
+            pooledCommand.OdbcCommand.Prepare();
             pooledCommand.PooledConnection = this;
-            _pooledCommands.TryAdd(commandText, pooledCommand);
 
             //Console.WriteLine("prepare pool connection: " + this._number + " for command " + _pooledCommands.Count);
-            pooledCommand.OdbcCommand.Prepare();
          }
 
          return pooledCommand;
