@@ -18,6 +18,9 @@ WORKDIR /symfony
 ADD ./composer.json /symfony/
 RUN mkdir -m 777 -p /symfony/var/cache/{dev,prod} /symfony/var/log
 RUN composer install --no-dev --no-scripts
+
+# downgrade to doctrine-dbal 2.12 => due to a bug in version 2.13
+# see https://github.com/doctrine/dbal/issues/4603
 RUN composer require doctrine/orm:2.8.5 -W
 RUN composer require doctrine/dbal:2.12.x -W
 
