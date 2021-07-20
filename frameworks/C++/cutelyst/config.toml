@@ -53,6 +53,18 @@ platform = "CutelystWSGI"
 webserver = "None"
 versus = ""
 
+[thread-pico]
+urls.json = "/pson"
+approach = "Realistic"
+classification = "Fullstack"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "CutelystWSGI"
+webserver = "None"
+versus = ""
+
 [main]
 urls.plaintext = "/plaintext"
 urls.json = "/json"

@@ -22,7 +22,7 @@ void SingleDatabaseQueryTest::dbp(Context *c)
 
     ASync async(c);
     static thread_local auto db = APool::database();
-    db.execPrepared(APreparedQueryLiteral("SELECT id, randomNumber FROM world WHERE id=$1"),
+    db.exec(APreparedQueryLiteral(u"SELECT id, randomNumber FROM world WHERE id=$1"),
                            {id}, [c, async] (AResult &result) {
         if (Q_LIKELY(!result.error() && result.size())) {
             auto it = result.begin();
