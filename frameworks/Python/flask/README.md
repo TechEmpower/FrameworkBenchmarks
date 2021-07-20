@@ -17,12 +17,12 @@ Flask + Flask-SQLAlchemy
 
 ### Database
 
-MySQL (mysqlclient on CPython, PyMySQL on PyPy)
+PostgresQL (psycopg2 on CPython, psycopg2cffi on PyPy)
 
 ### Server
 
 * gunicorn+meinheld on CPython
-* Tornado on PyPy
+* gunicorn on PyPy
 
 ## Test URLs
 ### JSON Encoding 
@@ -31,16 +31,16 @@ http://localhost:8080/json
 
 ### Single Row Random Query
 
-With ORM:
-    http://localhost:8080/dbs
+With ORM (app.py):
+    http://localhost:8080/db
 
-Without ORM (raw):
-    http://localhost:8080/dbsraw
+Without ORM (app_raw.py):
+    http://localhost:8080/db
 
 ### Variable Row Query Test 
 
-With ORM:
-    http://localhost:8080/db?queries=2
+With ORM (app.py):
+    http://localhost:8080/query?queries=2
 
-Without ORM (raw):
-    http://localhost:8080/dbraw?queries=2
+Without ORM (app_raw.py):
+    http://localhost:8080/query?queries=2

@@ -1,6 +1,5 @@
 package cn.ibaijia.tfb.protocol;
 
-import cn.ibaijia.isocket.Server;
 import cn.ibaijia.isocket.protocol.Protocol;
 import cn.ibaijia.isocket.session.Session;
 import cn.ibaijia.tfb.http.HttpEntity;
@@ -15,8 +14,13 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleHttpProtocol.class);
 
-    private static final byte CRLF13 = (byte) 13; // \r
-    private static final byte CRLF10 = (byte) 10; // \n
+    private static final String CONTENT_LENGTH = "CONTENT-LENGTH";
+    private static final String TRANSFER_ENCODING = "TRANSFER-ENCODING";
+    private static final String CHUNKED = "CHUNKED";
+    private static final byte CR13 = (byte) 13; // \CR \r
+    private static final byte LF10 = (byte) 10; // \LF \n
+    private static final byte SPACE0 = (byte) 32; // \SP
+    private static final byte COLON = (byte) 58; // \:
 
     private static final String httpEntityKey = "httpEntity";
 
@@ -35,11 +39,11 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
             session.setAttribute(httpEntityKey, httpEntity);
         }
 
-        if (byteBuffer.hasRemaining() && !httpEntity.headerComplete()) { //解析header
+        if (!httpEntity.headerComplete() && byteBuffer.hasRemaining()) { //解析header
             readHeader(byteBuffer, session, httpEntity);
         }
 
-        if (httpEntity.bodyBuffer != null && byteBuffer.hasRemaining() && httpEntity.headerComplete()) {// 解析body
+        if (httpEntity.headerComplete() && httpEntity.bodyBuffer != null && byteBuffer.hasRemaining()) {// 解析body
             readBody(byteBuffer, session, httpEntity);
         }
 
@@ -53,18 +57,73 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
 
     private void readHeader(ByteBuffer byteBuffer, Session session, HttpRequestEntity httpEntity) {
         try {
+            ByteBuffer buf = byteBuffer.duplicate();
+            int startPos = 0;
+            int endPos = 0;
             while (byteBuffer.hasRemaining()) {
                 byte b = byteBuffer.get();
-                if (b == CRLF10 || b == CRLF13) {
-                    httpEntity.crlfNum++;
+                endPos++;
+                if (b == CR13) {
+                    httpEntity.crNum++;
+                } else if (b == LF10) {
+                    httpEntity.lfNum++;
                 } else {
-                    httpEntity.crlfNum = 0;
+                    httpEntity.crNum = 0;
+                    httpEntity.lfNum = 0;
                 }
-                httpEntity.headerBuffer.put(b);
-                if (httpEntity.crlfNum == 4) {
-                    //处理header
-                    httpEntity.processHeader();
-                    break;
+                if (httpEntity.isReadHeadLine()) {
+                    if (b == SPACE0) {
+                        int len = endPos - startPos - 1;
+                        byte[] bytes = new byte[len];
+                        buf.get(bytes, 0, len);
+                        startPos = endPos;
+                        buf.position(startPos);
+                        if (httpEntity.method == null) {
+                            httpEntity.method = new String(bytes);
+                            continue;
+                        }
+                        if (httpEntity.url == null) {
+                            httpEntity.url = new String(bytes);
+                            continue;
+                        }
+                    }
+                    if (httpEntity.crNum == 1 && httpEntity.lfNum == 1) {
+                        int len = endPos - startPos - 2;
+                        byte[] bytes = new byte[len];
+                        buf.get(bytes, 0, len);
+                        startPos = endPos;
+                        buf.position(startPos);
+                        httpEntity.protocol = new String(bytes);
+                        continue;
+                    }
+                } else {
+                    if (b == COLON && httpEntity.tmp == null) {
+                        int len = endPos - startPos - 1;
+                        byte[] bytes = new byte[len];
+                        buf.get(bytes, 0, len);
+                        startPos = endPos;
+                        buf.position(startPos);
+                        httpEntity.tmp = new String(bytes);
+                        continue;
+                    }
+                    if (httpEntity.crNum == 1 && httpEntity.lfNum == 1) {
+                        int len = endPos - startPos - 2;
+                        byte[] bytes = new byte[len];
+                        buf.get(bytes, 0, len);
+                        startPos = endPos;
+                        buf.position(startPos);
+                        String value = new String(bytes);
+                        httpEntity.setHeader(httpEntity.tmp, value);
+                        httpEntity.tmp = null;
+                        if (CONTENT_LENGTH.equals(httpEntity.tmp)) {
+                            httpEntity.contentLength = (value == null ? 0 : Integer.valueOf(value));
+                            httpEntity.bodyBuffer = ByteBuffer.allocate(httpEntity.contentLength);//TODO can pooling
+                        }
+                        if (CHUNKED.equals(httpEntity.tmp)) {
+                            httpEntity.chunked = true;
+//                            throw new RuntimeException("not support chunked");
+                        }
+                    }
                 }
             }
         } catch (Exception e) {

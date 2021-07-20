@@ -44,7 +44,7 @@ public class HttpResponseEntity extends HttpEntity {
     public ByteBuffer toBuffer() {
         StringBuilder sb = new StringBuilder();
         sb.append(protocol).append(" ").append(statusCode).append(" ").append(status).append("\r\n");
-        sb.append("Content-Length:" + body.length()).append("\r\n");
+        sb.append("Content-Length:").append(body.length()).append("\r\n");
         for (Map.Entry<String, String> header : headers.entrySet()) {
             sb.append(header.getKey()).append(":").append(header.getValue()).append("\r\n");
         }
