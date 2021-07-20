@@ -13,8 +13,21 @@ if sys.version_info[0] == 3:
 _is_pypy = hasattr(sys, "pypy_version_info")
 if _is_pypy:
     from psycopg2cffi.pool import ThreadedConnectionPool
+    from psycopg2cffi.extras import execute_batch
+    import ujson as orjson
 else:
     from psycopg2.pool import ThreadedConnectionPool
+    from psycopg2.extras import execute_batch
+    import orjson
+    try:
+        import meinheld
+        import meinheld.patch
+
+        meinheld.server.set_access_logger(None)
+        meinheld.set_keepalive(30)
+        meinheld.patch.patch_all()
+    except ImportError:
+        pass
 
 
 def get_num_queries():
@@ -45,8 +58,8 @@ def load_fortunes_template():
 
 def setup(threads):
     pool = ThreadedConnectionPool(
-        minconn=threads / 4,
-        maxconn=threads / 4,
+        minconn=int(threads / 4),
+        maxconn=int(threads / 4),
         database="hello_world",
         user="benchmarkdbuser",
         password="benchmarkdbpass",

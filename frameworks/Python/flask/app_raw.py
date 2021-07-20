@@ -4,21 +4,11 @@ from itertools import repeat
 from operator import itemgetter
 
 from flask import Flask, Response
-import orjson
-from psycopg2.extras import execute_batch
 
 from helpers import *
 
 # setup
-try:
-    import meinheld
-    import meinheld.patch
 
-    meinheld.server.set_access_logger(None)
-    meinheld.set_keepalive(30)
-    meinheld.patch.patch_all()
-except ImportError:
-    pass
 
 
 app = Flask(__name__)
