@@ -63,7 +63,8 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 
 		// Create connection
 		PgConnectOptions connectOptions = new PgConnectOptions().setHost(server).setPort(port).setDatabase(database)
-				.setUser(username).setPassword(password).setCachePreparedStatements(true);
+				.setUser(username).setPassword(password).setCachePreparedStatements(true).setTcpNoDelay(false)
+				.setTcpQuickAck(true);
 
 		// Provide connection
 		this.threadLocalConnection = new ThreadLocal<PgConnection>() {
