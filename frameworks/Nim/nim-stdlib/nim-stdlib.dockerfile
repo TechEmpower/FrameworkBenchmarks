@@ -1,11 +1,11 @@
 FROM nimlang/nim:latest
 
-ADD ./ /nim-stdlib
+ADD ./ /nimstdlib
 
-WORKDIR /nim-stdlib
+WORKDIR /nimstdlib
 
-RUN nimble c --d:release --threads:on -y nim-stdlib.nim
+RUN nimble c --d:release --threads:on -y src/nimstdlib.nim
 
 EXPOSE 8080
 
-CMD ./bin/nim-stdlib
+CMD ./bin/nimstdlib
