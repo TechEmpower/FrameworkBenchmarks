@@ -9,7 +9,7 @@ namespace appMpower.Db
    {
       private static bool _connectionsCreated = false;
       private static short _createdConnections = 0;
-      private static short _maxConnections = 512; //Math.Min((byte)Environment.ProcessorCount, (byte)21);
+      private static short _maxConnections = 400; //Math.Min((byte)Environment.ProcessorCount, (byte)21);
       private static ConcurrentStack<PooledConnection> _stack = new ConcurrentStack<PooledConnection>();
       private static ConcurrentQueue<TaskCompletionSource<PooledConnection>> _waitingQueue = new ConcurrentQueue<TaskCompletionSource<PooledConnection>>();
 
