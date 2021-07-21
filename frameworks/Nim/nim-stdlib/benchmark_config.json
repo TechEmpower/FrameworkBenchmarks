@@ -1,0 +1,26 @@
+{
+    "framework": "Nim-stdlib",
+    "tests": [
+      {
+        "default": {
+          "json_url": "/json",
+          "plaintext_url": "/plaintext",
+          "port": 8080,
+          "approach": "Realistic",
+          "classification": "Platform",
+          "database": "postgres",
+          "framework": "stdlib",
+          "language": "Nim",
+          "flavor": "None",
+          "orm": "Raw",
+          "platform": "asynchttprouter",
+          "webserver": "None",
+          "os": "Linux",
+          "database_os": "Linux",
+          "display_name": "Nim-stdlib",
+          "notes": "",
+          "versus": "httpbeast"
+        }
+      }
+    ]
+  }
