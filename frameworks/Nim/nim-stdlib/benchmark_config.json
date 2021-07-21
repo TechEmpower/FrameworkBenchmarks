@@ -1,5 +1,5 @@
 {
-    "framework": "Nim-stdlib",
+    "framework": "nim-stdlib",
     "tests": [
       {
         "default": {
@@ -17,7 +17,7 @@
           "webserver": "None",
           "os": "Linux",
           "database_os": "Linux",
-          "display_name": "Nim-stdlib",
+          "display_name": "nim-stdlib",
           "notes": "",
           "versus": "httpbeast"
         }
