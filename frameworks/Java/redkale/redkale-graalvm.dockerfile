@@ -5,7 +5,7 @@ COPY conf conf
 COPY pom.xml pom.xml
 RUN mvn package -q
 
-FROM ghcr.io/graalvm/graalvm-ce:21.1.0
+FROM ghcr.io/graalvm/graalvm-ce:21.2.0
 WORKDIR /redkale
 COPY conf conf
 COPY --from=maven /redkale/target/redkale-benchmark-1.0.0.jar redkale-benchmark.jar
