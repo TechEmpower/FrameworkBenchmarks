@@ -4,8 +4,8 @@ ADD ./ /nimstdlib
 
 WORKDIR /nimstdlib
 
-RUN nimble c --d:release --threads:on -y src/nimstdlib.nim
+RUN nimble c --d:release --threads:on -y src/nimstdlib.nim -o:nimstdlib
 
 EXPOSE 8080
 
-CMD ./bin/nimstdlib
+CMD ./nimstdlib
