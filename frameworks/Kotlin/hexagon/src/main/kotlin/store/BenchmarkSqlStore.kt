@@ -20,14 +20,14 @@ internal class BenchmarkSqlStore(engine: String, private val settings: Settings 
         private const val SELECT_ALL_FORTUNES = "select * from fortune"
     }
 
-    private val dbHost: String by lazy { Jvm.systemSetting("${engine.uppercase()}_DB_HOST") ?: "localhost" }
-    private val jdbcUrl: String by lazy { "jdbc:postgresql://$dbHost/${settings.databaseName}" }
     private val dataSource: HikariDataSource by lazy {
-        val config = HikariConfig()
-        config.jdbcUrl = jdbcUrl
-        config.maximumPoolSize = Jvm.systemSetting(Int::class, "maximumPoolSize") ?: 64
-        config.username = Jvm.systemSetting("databaseUsername") ?: "benchmarkdbuser"
-        config.password = Jvm.systemSetting("databasePassword") ?: "benchmarkdbpass"
+        val dbHost = Jvm.systemSetting("${engine.uppercase()}_DB_HOST") ?: "localhost"
+        val config = HikariConfig().apply {
+            jdbcUrl = "jdbc:postgresql://$dbHost/${settings.databaseName}"
+            maximumPoolSize = Jvm.systemSetting(Int::class, "maximumPoolSize") ?: 64
+            username = Jvm.systemSetting("databaseUsername") ?: "benchmarkdbuser"
+            password = Jvm.systemSetting("databasePassword") ?: "benchmarkdbpass"
+        }
         HikariDataSource(config)
     }
 
