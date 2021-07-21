@@ -6,7 +6,7 @@ license: "MIT"
 homepage: "https://github.com/TechEmpower/FrameworkBenchmarks"
 bug-reports: "https://github.com/TechEmpower/FrameworkBenchmarks/issues"
 depends: [
-  "dune" {>= "2.7" & >= "2.7.1"}
+  "dune" {>= "2.7" & >= "2.8.5"}
   "biniou" {>= "1.2.1"}
   "yojson" {>= "1.7.0"}
   "atd" {>= "2.2.1"}
