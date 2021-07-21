@@ -19,7 +19,11 @@ namespace appMpower.Db
 
          if (_connectionsCreated)
          {
-            if (!_stack.TryPop(out pooledConnection))
+            if (_stack.TryPop(out pooledConnection))
+            {
+               pooledConnection.Released = false;
+            }
+            else
             {
                pooledConnection = await GetPooledConnectionAsync();
             }
@@ -51,22 +55,29 @@ namespace appMpower.Db
          return taskCompletionSource.Task;
       }
 
-      public static void ReleaseConnection(PooledConnection pooledConnection)
+      public static void Dispose(PooledConnection pooledConnection)
+      {
+         PooledConnection newPooledConnection = new PooledConnection();
+
+         newPooledConnection.OdbcConnection = pooledConnection.OdbcConnection;
+         newPooledConnection.Number = pooledConnection.Number;
+         newPooledConnection.PooledCommands = pooledConnection.PooledCommands;
+
+         Release(newPooledConnection);
+      }
+
+      public static void Release(PooledConnection pooledConnection)
       {
          TaskCompletionSource<PooledConnection> taskCompletionSource;
-         PooledConnection stackedConnection = new PooledConnection();
-
-         stackedConnection.OdbcConnection = pooledConnection.OdbcConnection;
-         stackedConnection.Number = pooledConnection.Number;
-         stackedConnection.PooledCommands = pooledConnection.PooledCommands;
 
          if (_waitingQueue.TryDequeue(out taskCompletionSource))
          {
-            taskCompletionSource.SetResult(stackedConnection);
+            taskCompletionSource.SetResult(pooledConnection);
          }
          else
          {
-            _stack.Push(stackedConnection);
+            pooledConnection.Released = true;
+            _stack.Push(pooledConnection);
          }
       }
    }
