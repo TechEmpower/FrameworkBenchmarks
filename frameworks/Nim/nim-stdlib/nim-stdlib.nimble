@@ -6,7 +6,7 @@ description   = "A techempower project using only the nim stdlib packages"
 license       = "MIT"
 srcDir        = "src"
 binDir        = "bin"
-bin           = @["nim-stdlib"]
+bin           = @["nimstdlib"]
 
 
 # Dependencies
