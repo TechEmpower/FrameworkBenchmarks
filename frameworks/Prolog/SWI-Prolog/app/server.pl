@@ -14,7 +14,7 @@
 server(Port) :-
     odbc_set_option(connection_pooling(true)),
     current_prolog_flag(cpu_count, Cores),
-    Workers is Cores * 4,
+    Workers is 8 * Cores,
     server(Port, [workers(Workers)]).
 
 server(Port, Options) :-
