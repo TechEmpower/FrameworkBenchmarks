@@ -32,7 +32,7 @@ void MultipleDatabaseQueriesTest::queriesp(Context *c)
     for (int i = 0; i < queries; ++i) {
         const int id = (qrand() % 10000) + 1;
 
-        db.execPrepared(APreparedQueryLiteral("SELECT id, randomNumber FROM world WHERE id=$1"),
+        db.exec(APreparedQueryLiteral(u"SELECT id, randomNumber FROM world WHERE id=$1"),
                                {id}, [c, async, i, queries, array] (AResult &result) {
             if (Q_LIKELY(!result.error() && result.size())) {
                 auto it = result.begin();

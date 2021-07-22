@@ -9,21 +9,33 @@ from pony import orm
 
 if sys.version_info[0] == 3:
     xrange = range
-_is_pypy = hasattr(sys, 'pypy_version_info')
+_is_pypy = hasattr(sys, "pypy_version_info")
 if _is_pypy:
     from psycopg2cffi import compat
+
     compat.register()
 
-DBDRIVER = 'postgres'
-DBHOST = 'tfb-database'
+DBDRIVER = "postgres"
+DBHOST = "tfb-database"
 
 # setup
 
 app = Flask(__name__)
-app.config['STORM_DATABASE_URI'] = "{DBDRIVER}://benchmarkdbuser:benchmarkdbpass@{DBHOST}:5432/hello_world".format(DBDRIVER=DBDRIVER, DBHOST=DBHOST)
-app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
+app.config[
+    "STORM_DATABASE_URI"
+] = "{DBDRIVER}://benchmarkdbuser:benchmarkdbpass@{DBHOST}:5432/hello_world".format(
+    DBDRIVER=DBDRIVER, DBHOST=DBHOST
+)
+app.config["JSONIFY_PRETTYPRINT_REGULAR"] = False
 db = orm.Database()
-db.bind(DBDRIVER, host=DBHOST, port=5432, user="benchmarkdbuser", password="benchmarkdbpass", database="hello_world")
+db.bind(
+    DBDRIVER,
+    host=DBHOST,
+    port=5432,
+    user="benchmarkdbuser",
+    password="benchmarkdbpass",
+    database="hello_world",
+)
 
 
 class World(db.Entity):
@@ -33,10 +45,7 @@ class World(db.Entity):
 
     def to_dict(self):
         """Return object data in easily serializeable format"""
-        return {
-            'id'         : self.id,
-            'randomNumber': self.randomNumber
-        }
+        return {"id": self.id, "randomNumber": self.randomNumber}
 
 
 class Fortune(db.Entity):
@@ -69,14 +78,13 @@ def generate_ids(num_queries):
 
 @app.route("/json")
 def hello():
-    return jsonify(message='Hello, World!')
+    return jsonify(message="Hello, World!")
 
 
 @app.route("/query")
 def get_random_world():
     with orm.db_session(serializable=False):
-        worlds = [World[ident].to_dict()
-              for ident in generate_ids(get_num_queries())]
+        worlds = [World[ident].to_dict() for ident in generate_ids(get_num_queries())]
     return jsonify(worlds)
 
 
@@ -93,9 +101,11 @@ def get_fortunes():
     with orm.db_session(serializable=False):
         fortunes = list(orm.select(fortune for fortune in Fortune))
     tmp_fortune = namedtuple("Fortune", ["id", "message"])
-    fortunes.append(tmp_fortune(id=0, message="Additional fortune added at request time."))
-    fortunes.sort(key=attrgetter('message'))
-    return render_template('fortunes.html', fortunes=fortunes)
+    fortunes.append(
+        tmp_fortune(id=0, message="Additional fortune added at request time.")
+    )
+    fortunes.sort(key=attrgetter("message"))
+    return render_template("fortunes.html", fortunes=fortunes)
 
 
 @app.route("/updates")
@@ -113,16 +123,17 @@ def updates():
     return jsonify(worlds)
 
 
-@app.route('/plaintext')
+@app.route("/plaintext")
 def plaintext():
     """Test 6: Plaintext"""
-    response = make_response(b'Hello, World!')
-    response.content_type = 'text/plain'
+    response = make_response(b"Hello, World!")
+    response.content_type = "text/plain"
     return response
 
 
 try:
     import meinheld
+
     meinheld.server.set_access_logger(None)
     meinheld.set_keepalive(120)
 except ImportError:

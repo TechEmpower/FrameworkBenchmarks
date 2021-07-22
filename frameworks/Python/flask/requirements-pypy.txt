@@ -1,9 +1,9 @@
 click==8.0.1
 pony==0.7.14
 psycopg2cffi>=2.7
-Flask==1.1.2
+Flask==2.0.1
 tornado==6.1
-gevent>=1.4
+greenlet<0.5
 gunicorn==20.1.0
 itsdangerous==2.0.1
 Jinja2==3.0.1
@@ -11,3 +11,4 @@ MarkupSafe==2.0.1
 meinheld==1.0.2
 uWSGI==2.0.19.1
 Werkzeug==2.0.1
+ujson==4.0.2
