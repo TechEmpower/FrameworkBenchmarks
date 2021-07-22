@@ -1,4 +1,4 @@
-import asynchttpserver, asyncdispatch, times, random, db_postgres, cgi, strtabs, strutils, json
+import asynchttpserver, asyncdispatch, times, random, db_postgres, cgi, strtabs, strutils, json, algorithm
 
 import defs
 
@@ -37,3 +37,30 @@ proc handleQueries*(req: Request) {.async.} =
 
     let headers = {"Date": now().utc.format("ddd, dd MMM yyyy HH:mm:ss") & " GMT", "Content-type": "application/json; charset=utf-8", "Server": "Example"}
     await req.respond(Http200, $(%*jsonList), headers.newHttpHeaders())
+
+proc handleFortunes*(req: Request) {.async.} =
+    var queryResult = db.getAllRows(sql"""select * from "public"."fortune" """)
+    queryResult.add(@["0",  "Additional fortune added at request time."])
+    let sortedResult = queryResult.sortedByIt(it[1])
+
+    var fortunesView = """
+<!DOCTYPE html>
+<html>
+<head><title>Fortunes</title></head>
+<body>
+<table>
+<tr><th>id</th><th>message</th></tr>
+"""
+
+    for i, v in sortedResult:
+        let fragment = "<tr><td>" & $v[0] & "</td><td>" & $v[1].escape() & "</td></tr>\n"
+        fortunesView.add(fragment)
+
+    fortunesView.add """
+</table>
+</body>
+</html>
+"""
+
+    let headers = {"Date": now().utc.format("ddd, dd MMM yyyy HH:mm:ss") & " GMT", "Content-type": "text/html; charset=UTF-8", "Server": "Example"}
+    await req.respond(Http200, fortunesView, headers.newHttpHeaders())
