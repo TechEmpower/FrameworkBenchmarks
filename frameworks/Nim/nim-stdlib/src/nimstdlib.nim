@@ -14,8 +14,9 @@ proc main {.async.} =
             of "/plaintext":    await handlePlaintext(req)
             of "/json":         await handleJson(req)
             of "/db":           await handleDB(req)
-            else:               await handle404Error(req)
-        else:                   await handle405Error(req)
+            of "/queries":      await handleQueries(req)
+            else:               await handleHTTPErrors(req, Http404, "URL doesn't exists")
+        else:               await handleHTTPErrors(req, Http405, "Method not allowed")
 
     server.listen Port(port)
     echo "Starting server on port: " & $port
