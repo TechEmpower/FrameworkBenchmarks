@@ -18,7 +18,7 @@ server(Port) :-
     server(Port, [workers(Workers)]).
 
 server(Port, Options) :-
-    http_server(http_dispatch, [port(Port),timeout(120)|Options]).
+    http_server(http_dispatch, [port(Port),timeout(30)|Options]).
 
 
 :- http_handler('/plaintext',     plaintext_handler,     [chunked]).
@@ -94,10 +94,16 @@ world_json(row(Id, RandomNumber), _{ id: Id, randomNumber: RandomNumber }).
 
 fortune_json(row(Id, Message), _{ id: Id, message: Message }).
 
+:- dynamic template_cache/4.
+
 render_template(Template, Data, Result, Len) :-
-    with_output_to(codes(Codes), (
-        current_output(Out),
-        st_render_file(Template, Data, Out, _{ cache: true })
-    )),
-    length(Codes, Len),
-    string_codes(Result, Codes).
+    (   template_cache(Template, Data, Result, Len)
+    ->  true
+    ;   with_output_to(codes(Codes), (
+            current_output(Out),
+            st_render_file(Template, Data, Out, _{ cache: true })
+        )),
+        length(Codes, Len),
+        string_codes(Result, Codes),
+        assertz(template_cache(Template, Data, Result, Len))
+    ).
