@@ -23,3 +23,7 @@ http://localhost:8080/db
 ### Multiple Database Queries
 
 http://localhost:8080/queries?queries=1
+
+### Fortunes
+
+http://localhost:8080/fortunes
