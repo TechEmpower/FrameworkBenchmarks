@@ -1,14 +1,10 @@
-import asynchttpserver, asyncdispatch, times, random, db_postgres
+import asynchttpserver, asyncdispatch, times, random, db_postgres, cgi, strtabs, strutils, json
 
 import defs
 
-proc handle404Error*(req: Request) {.async.} =
+proc handleHTTPErrors*(req: Request, code: HttpCode, msg: string) {.async.} =
     let headers = {"Date": now().utc.format("ddd, dd MMM yyyy HH:mm:ss") & " GMT", "Content-type": "text/plain; charset=utf-8"}
-    await req.respond(Http404, "URL doesn't exists", headers.newHttpHeaders())
-
-proc handle405Error*(req: Request) {.async.} =
-    let headers = {"Date": now().utc.format("ddd, dd MMM yyyy HH:mm:ss") & " GMT", "Content-type": "text/plain; charset=utf-8"}
-    await req.respond(Http405, "Method not allowed", headers.newHttpHeaders())
+    await req.respond(code, msg, headers.newHttpHeaders())
 
 proc handlePlaintext*(req: Request) {.async.} =
     let headers = {"Date": now().utc.format("ddd, dd MMM yyyy HH:mm:ss") & " GMT", "Content-type": "text/plain; charset=utf-8",  "Server": "Example"}
@@ -22,3 +18,22 @@ proc handleDB*(req: Request) {.async.} =
     let headers = {"Date": now().utc.format("ddd, dd MMM yyyy HH:mm:ss") & " GMT", "Content-type": "application/json; charset=utf-8", "Server": "Example"}
     let queryResult = db.getRow(sql"""select * from "public"."World" where id = ?""", rand(1..10000))
     await req.respond(Http200, """ {"id":""" & queryResult[0] & ""","randomNumber":""" & queryResult[1] & """}""", headers.newHttpHeaders())
+
+proc handleQueries*(req: Request) {.async.} =
+    let queryObj = readData(req.url.query)
+    var count = 1
+    try:
+        count = clamp(parseInt(queryObj["queries"]), 1, 500)
+    except KeyError, ValueError:
+        count = 1
+    except:
+        await handleHTTPErrors(req, Http502, "Something is wrong")
+
+    var jsonList: DBQueryObjsList
+    for i in 1..count:
+        let queryResult = db.getRow(sql"""select * from "public"."World" where id = ?""", rand(1..10000))
+        let jsonNode = DBQueryObj(id: queryResult[0], randomNumber: queryResult[1])
+        jsonList.add(jsonNode)
+
+    let headers = {"Date": now().utc.format("ddd, dd MMM yyyy HH:mm:ss") & " GMT", "Content-type": "application/json; charset=utf-8", "Server": "Example"}
+    await req.respond(Http200, $(%*jsonList), headers.newHttpHeaders())
