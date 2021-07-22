@@ -12,6 +12,7 @@ EXPOSE 8080
 
 WORKDIR /app
 
+COPY ./config/odbcinst.ini /etc/odbcinst.ini
 COPY ./config/odbc.ini /etc/odbc.ini
 COPY app .
 
