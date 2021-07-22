@@ -1,0 +1,53 @@
+{
+  "framework": "mixphp",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "update_url": "/update?q=",
+        "query_url": "/query?q=",
+        "port": 9501,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "MySQL",
+        "framework": "MixPHP",
+        "language": "PHP",
+        "flavor": "PHP8",
+        "orm": "micro",
+        "platform": "swoole",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "mixphp-swoole",
+        "notes": "",
+        "versus": "swoole"
+      },
+      "workerman": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "update_url": "/update?q=",
+        "query_url": "/query?q=",
+        "port": 2345,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "MySQL",
+        "framework": "MixPHP",
+        "language": "PHP",
+        "flavor": "PHP8",
+        "orm": "micro",
+        "platform": "workerman",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "mixphp-workerman",
+        "notes": "",
+        "versus": "workerman"
+      }
+    }
+  ]
+}
