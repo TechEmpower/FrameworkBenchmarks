@@ -12,7 +12,13 @@ EXPOSE 8080
 
 WORKDIR /app
 
-CMD [ "swipl", "server.pl", "--user=daemon", "--fork=false", "--port=8080" ]
-
 COPY ./config/odbc.ini /etc/odbc.ini
 COPY app .
+
+RUN swipl --stand_alone=true \
+          -g 'server(8080)' \
+          -O \
+          -o server \
+          -c server.pl
+
+CMD [ "/app/server", "--user=daemon", "--fork=false" ]

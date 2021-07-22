@@ -14,7 +14,7 @@
 server(Port) :-
     odbc_set_option(connection_pooling(true)),
     current_prolog_flag(cpu_count, Cores),
-    Workers is Cores * 2,
+    Workers is Cores * 4,
     server(Port, [workers(Workers)]).
 
 server(Port, Options) :-
@@ -82,7 +82,7 @@ queries(Request, Queries) :-
         ( http_parameters(Request, [queries(Value, [integer, optional(true), default(1)])])
         , cut_off(Value, 1, 500, Queries)
         ),
-        Caught,
+        _Caught,
         Queries = 1
     ).
 
