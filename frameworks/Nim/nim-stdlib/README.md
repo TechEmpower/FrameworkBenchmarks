@@ -18,3 +18,8 @@ http://localhost:8080/plaintext
 ### Single Database Query
 
 http://localhost:8080/db
+
+
+### Multiple Database Queries
+
+http://localhost:8080/queries?queries=1
