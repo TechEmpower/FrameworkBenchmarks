@@ -93,7 +93,7 @@ public class Service extends AbstractService {
 
     protected int randomInt(Random rand, int bound) {
         long s = rand.nextLong();
-        return (int) (s < 0 ? -s : s) % bound;
+        return (int) ((s < 0 ? -s : s) % bound);
     }
 
 }
