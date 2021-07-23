@@ -14,6 +14,8 @@ class Vega
     {
         $vega = new Engine();
 
+        $vega->withHTMLRoot(__DIR__ . '/../views');
+
         // routes
         $routes = require __DIR__ . '/../routes/index.php';
         $routes($vega);

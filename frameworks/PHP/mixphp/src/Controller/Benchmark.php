@@ -63,23 +63,14 @@ class Benchmark
      */
     public function fortunes(Context $ctx)
     {
-        $fortune = [];
-        $arr = DB::instance()->raw('SELECT id,message FROM Fortune')->get();
-        foreach ($arr as $row) {
-            $fortune[$row['id']] = $row['message'];
-        }
-        $fortune[0] = 'Additional fortune added at request time.';
-        \asort($fortune);
+        $rows = DB::instance()->raw('SELECT id,message FROM Fortune')->get();
+        array_unshift($rows, [
+            'id' => 0,
+            'message' => 'Additional fortune added at request time.'
+        ]);
+        \asort($rows);
 
-        $html = '';
-        foreach ($fortune as $id => $message) {
-            $message = \htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
-            $html .= "<tr><td>{$id}</td><td>{$message}</td></tr>";
-        }
-        $ctx->setHeader('Content-Type', 'text/html; charset=utf-8');
-        $ctx->string(200, '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
-            . $html .
-            '</table></body></html>');
+        $ctx->HTML(200, 'fortunes', ['rows' => $rows]);
     }
 
     /**

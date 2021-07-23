@@ -1,32 +1,24 @@
-FROM php:8.0-cli
+FROM ubuntu:20.10
 
-RUN pecl install swoole > /dev/null && \
-    docker-php-ext-enable swoole
+ARG DEBIAN_FRONTEND=noninteractive
 
-RUN docker-php-ext-install opcache pdo_mysql bcmath > /dev/null
+RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
+RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
+RUN apt-get update -yqq > /dev/null && \
+    apt-get install -yqq php8.0-cli php8.0-pgsql php8.0-xml > /dev/null
 
-RUN apt -yqq update > /dev/null && \
-    apt -yqq install git unzip > /dev/null
+RUN apt-get install -yqq composer > /dev/null
 
-COPY . /one
-COPY php.ini /usr/local/etc/php/
-RUN echo "opcache.enable=1" >> /usr/local/etc/php/php.ini
-RUN echo "opcache.enable_cli=1" >> /usr/local/etc/php/php.ini
-RUN echo "pcre.jit=1" >> /usr/local/etc/php/php.ini
-RUN echo "opcache.jit=1205" >> /usr/local/etc/php/php.ini
-RUN echo "opcache.jit_buffer_size=256M" >> /usr/local/etc/php/php.ini
+RUN apt-get install -y php-pear php8.0-dev libevent-dev > /dev/null
+RUN pecl install event-3.0.4 > /dev/null && echo "extension=event.so" > /etc/php/8.0/cli/conf.d/event.ini
+ 
+COPY php-jit.ini /etc/php/8.0/cli/php.ini
 
-RUN php -v && php -i | grep opcache
+ADD ./ /mixphp
+WORKDIR /mixphp
 
-WORKDIR /one
-
-RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer install --no-dev --classmap-authoritative --quiet > /dev/null
-RUN composer dumpautoload -o
-
-RUN mkdir -p /mixphp/runtime/logs
-RUN chmod -R 777 /mixphp/runtime/logs
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 EXPOSE 2345
 
-CMD php bin/workerman.php start
+CMD php /mixphp/bin/workerman.php start
