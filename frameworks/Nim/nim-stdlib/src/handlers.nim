@@ -44,7 +44,7 @@ proc handleFortunes*(req: Request) {.async.} =
     let sortedResult = queryResult.sortedByIt(it[1])
 
     var fortunesView = """
-!<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head><title>Fortunes</title></head>
 <body>
