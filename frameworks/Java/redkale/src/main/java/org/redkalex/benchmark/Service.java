@@ -49,7 +49,7 @@ public class Service extends AbstractService {
     public CompletableFuture<World[]> queryWorldAsync(ChannelContext context, int q) {
         final int size = Math.min(500, Math.max(1, q));
         final World[] worlds = new World[size];
-        final ThreadLocalRandom random = rands.get();
+        final Random random = rands.get();
         final CompletableFuture[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
             final int index = i;
@@ -62,7 +62,7 @@ public class Service extends AbstractService {
     public CompletableFuture<World[]> updateWorldAsync(ChannelContext context, int q) {
         final int size = Math.min(500, Math.max(1, q));
         final World[] worlds = new World[size];
-        final ThreadLocalRandom random = ThreadLocalRandom.current();
+        final Random random = ThreadLocalRandom.current();
         final CompletableFuture[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
             final int index = i;
@@ -88,8 +88,7 @@ public class Service extends AbstractService {
             }
         }
         final int size = Math.min(500, Math.max(1, q));
-        final ThreadLocalRandom random = ThreadLocalRandom.current();
-        return cache.random(random, size);
+        return cache.random(ThreadLocalRandom.current(), size);
     }
 
     protected int randomInt(Random rand, int bound) {
