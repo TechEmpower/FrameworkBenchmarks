@@ -52,7 +52,7 @@ proc handleFortunes*(req: Request) {.async.} =
 """
 
     for i, v in sortedResult:
-        let fragment = "<tr><td>" & $v[0] & "</td><td>" & $v[1].escape() & "</td></tr>\n"
+        let fragment = "<tr><td>" & $v[0] & "</td><td>" & $v[1]..xmlEncode() & "</td></tr>\n"
         fortunesView.add(fragment)
 
     fortunesView.add """
