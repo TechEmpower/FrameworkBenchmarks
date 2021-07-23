@@ -49,6 +49,7 @@ proc handleFortunes*(req: Request) {.async.} =
 <head><title>Fortunes</title></head>
 <body>
 <table>
+<tr><th>id</th><th>message</th></tr>
 """
 
     for i, v in sortedResult:
