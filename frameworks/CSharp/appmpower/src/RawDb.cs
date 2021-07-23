@@ -98,7 +98,8 @@ namespace appMpower
 
          var ids = PlatformBenchmarks.BatchUpdateString.Ids;
          var randoms = PlatformBenchmarks.BatchUpdateString.Randoms;
-         var jds = PlatformBenchmarks.BatchUpdateString.Jds;
+         // --- only for alternative update statement - will be used for MySQL
+         //var jds = PlatformBenchmarks.BatchUpdateString.Jds;
 
          for (int i = 0; i < count; i++)
          {
@@ -110,10 +111,11 @@ namespace appMpower
             worlds[i].RandomNumber = randomNumber;
          }
 
-         for (int i = 0; i < count; i++)
-         {
-            updateCommand.CreateParameter(jds[i], DbType.Int32, worlds[i].Id);
-         }
+         // --- only for alternative update statement - will be used for MySQL
+         //for (int i = 0; i < count; i++)
+         //{
+         //   updateCommand.CreateParameter(jds[i], DbType.Int32, worlds[i].Id);
+         //}
 
          await updateCommand.ExecuteNonQueryAsync();
 
