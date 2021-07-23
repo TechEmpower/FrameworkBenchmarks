@@ -5,6 +5,7 @@
  */
 package org.redkalex.benchmark;
 
+import java.util.Random;
 import java.util.concurrent.*;
 import javax.annotation.Resource;
 import org.redkale.net.ChannelContext;
@@ -21,6 +22,8 @@ import org.redkalex.benchmark.CachedWorld.WorldEntityCache;
 public class Service extends AbstractService {
 
     private static final byte[] helloBytes = "Hello, world!".getBytes();
+
+    private final ThreadLocal<RedRandom> rands = ThreadLocal.withInitial(() -> new RedRandom());
 
     @Resource
     private DataSource source;
@@ -39,7 +42,7 @@ public class Service extends AbstractService {
 
     @RestMapping(name = "db")
     public CompletableFuture<World> findWorldAsync(ChannelContext context) {
-        return source.findAsync(World.class, context, 1 + ThreadLocalRandom.current().nextInt(10000));
+        return source.findAsync(World.class, context, 1 + randomInt(rands.get(), 10000));
     }
 
     @RestMapping(name = "queries")
@@ -50,7 +53,7 @@ public class Service extends AbstractService {
         final CompletableFuture[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
             final int index = i;
-            futures[index] = source.findAsync(World.class, context, 1 + random.nextInt(10000)).thenAccept(v -> worlds[index] = v);
+            futures[index] = source.findAsync(World.class, context, 1 + randomInt(random, 10000)).thenAccept(v -> worlds[index] = v);
         }
         return CompletableFuture.allOf(futures).thenApply(v -> worlds);
     }
@@ -63,7 +66,7 @@ public class Service extends AbstractService {
         final CompletableFuture[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
             final int index = i;
-            futures[index] = source.findAsync(World.class, context, 1 + random.nextInt(10000)).thenAccept(v -> worlds[index] = v.randomNumber(1 + random.nextInt(10000)));
+            futures[index] = source.findAsync(World.class, context, 1 + randomInt(random, 10000)).thenAccept(v -> worlds[index] = v.randomNumber(1 + randomInt(random, 10000)));
         }
         return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(context, World.sort(worlds))).thenApply(v -> worlds);
     }
@@ -85,12 +88,13 @@ public class Service extends AbstractService {
             }
         }
         final int size = Math.min(500, Math.max(1, q));
-        final CachedWorld[] worlds = new CachedWorld[size];
         final ThreadLocalRandom random = ThreadLocalRandom.current();
-        for (int i = 0; i < size; i++) {
-            worlds[i] = cache.findAt(random.nextInt(10000));
-        }
-        return worlds;
+        return cache.random(random, size);
+    }
+
+    protected int randomInt(Random rand, int bound) {
+        long s = rand.nextLong();
+        return (int) (s < 0 ? -s : s) % bound;
     }
 
 }
