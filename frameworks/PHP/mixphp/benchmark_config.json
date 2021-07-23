@@ -21,11 +21,11 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "mixphp-swoole",
+        "display_name": "mixphp-swoole-mysql",
         "notes": "",
         "versus": "swoole"
       },
-      "workerman": {
+      "workerman-mysql": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "db_url": "/db",
@@ -44,7 +44,30 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "mixphp-workerman",
+        "display_name": "mixphp-workerman-mysql",
+        "notes": "",
+        "versus": "workerman"
+      },
+      "workerman-pgsql": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "update_url": "/update?q=",
+        "query_url": "/query?q=",
+        "port": 2345,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "MixPHP",
+        "language": "PHP",
+        "flavor": "PHP8",
+        "orm": "micro",
+        "platform": "workerman",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "mixphp-workerman-pgsql",
         "notes": "",
         "versus": "workerman"
       }
