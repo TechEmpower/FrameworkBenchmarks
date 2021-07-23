@@ -6,7 +6,6 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 RUN apt update -yqq && apt-get install -y software-properties-common
 RUN apt-add-repository ppa:swi-prolog/stable -y
 RUN apt-get update -y && apt-get install -y --no-install-recommends swi-prolog swi-prolog-odbc odbc-postgresql
-RUN swipl -g 'pack_install(simple_template, [interactive(false), silent(true)]).'
 
 EXPOSE 8080
 
