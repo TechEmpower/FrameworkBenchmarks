@@ -21,7 +21,10 @@ class DB
             $dsn = 'mysql:host=tfb-database;dbname=hello_world';
             $username = 'benchmarkdbuser';
             $password = 'benchmarkdbpass';
-            $db = new Database($dsn, $username, $password, [\PDO::ATTR_EMULATE_PREPARES => false]);
+            $db = new Database($dsn, $username, $password, [
+                \PDO::ATTR_EMULATE_PREPARES => false,
+                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
+            ]);
             APP_DEBUG and $db->setLogger(new DBLogger());
             self::$instance = $db;
         }

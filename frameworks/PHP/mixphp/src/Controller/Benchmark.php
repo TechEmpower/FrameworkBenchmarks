@@ -64,13 +64,15 @@ class Benchmark
     public function fortunes(Context $ctx)
     {
         $rows = DB::instance()->raw('SELECT id,message FROM Fortune')->get();
-        array_push($rows, [
-            'id' => 0,
-            'message' => 'Additional fortune added at request time.'
-        ]);
-        asort($rows);
 
-        $ctx->HTML(200, 'fortunes', ['rows' => $rows]);
+        $fortunes = [];
+        foreach ($rows ?? [] as $row) {
+            $fortunes[$row->id] = $row->message;
+        }
+        $fortunes[0] = 'Additional fortune added at request time.';
+        asort($fortunes);
+
+        $ctx->HTML(200, 'fortunes', ['fortunes' => $fortunes]);
     }
 
     /**
@@ -88,7 +90,7 @@ class Benchmark
         while ($queryCount--) {
             $id = mt_rand(1, 10000);
             $ret = DB::instance()->raw('SELECT id,randomNumber FROM World WHERE id=?', $id)->first();
-            DB::instance()->exec('UPDATE World SET randomNumber=? WHERE id=?', $ret['randomNumber'] = mt_rand(1, 10000), $id);
+            DB::instance()->exec('UPDATE World SET randomNumber=? WHERE id=?', $ret->randomNumber = mt_rand(1, 10000), $id);
             $arr[] = $ret;
         }
 
