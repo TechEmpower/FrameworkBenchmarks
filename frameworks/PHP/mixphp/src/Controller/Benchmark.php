@@ -49,7 +49,7 @@ class Benchmark
 
         $arr = [];
         while ($queryCount--) {
-            $id = \mt_rand(1, 10000);
+            $id = mt_rand(1, 10000);
             $ret = DB::instance()->raw('SELECT id,randomNumber FROM World WHERE id=?', $id)->first();
             $arr[] = $ret;
         }
@@ -64,11 +64,11 @@ class Benchmark
     public function fortunes(Context $ctx)
     {
         $rows = DB::instance()->raw('SELECT id,message FROM Fortune')->get();
-        array_unshift($rows, [
+        array_push($rows, [
             'id' => 0,
             'message' => 'Additional fortune added at request time.'
         ]);
-        \asort($rows);
+        asort($rows);
 
         $ctx->HTML(200, 'fortunes', ['rows' => $rows]);
     }
@@ -86,7 +86,7 @@ class Benchmark
 
         $arr = [];
         while ($queryCount--) {
-            $id = \mt_rand(1, 10000);
+            $id = mt_rand(1, 10000);
             $ret = DB::instance()->raw('SELECT id,randomNumber FROM World WHERE id=?', $id)->first();
             DB::instance()->exec('UPDATE World SET randomNumber=? WHERE id=?', $ret['randomNumber'] = mt_rand(1, 10000), $id);
             $arr[] = $ret;
