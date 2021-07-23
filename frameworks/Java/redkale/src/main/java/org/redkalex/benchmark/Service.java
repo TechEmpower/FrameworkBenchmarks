@@ -42,14 +42,14 @@ public class Service extends AbstractService {
 
     @RestMapping(name = "db")
     public CompletableFuture<World> findWorldAsync(ChannelContext context) {
-        return source.findAsync(World.class, context, 1 + randomInt(rands.get(), 10000));
+        return source.findAsync(World.class, context, 1 + randomInt(ThreadLocalRandom.current(), 10000));
     }
 
     @RestMapping(name = "queries")
     public CompletableFuture<World[]> queryWorldAsync(ChannelContext context, int q) {
         final int size = Math.min(500, Math.max(1, q));
         final World[] worlds = new World[size];
-        final ThreadLocalRandom random = ThreadLocalRandom.current();
+        final ThreadLocalRandom random = rands.get();
         final CompletableFuture[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
             final int index = i;
