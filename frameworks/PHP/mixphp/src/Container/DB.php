@@ -25,7 +25,6 @@ class DB
                 \PDO::ATTR_EMULATE_PREPARES => false,
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
             ]);
-            APP_DEBUG and $db->setLogger(new DBLogger());
             self::$instance = $db;
         }
         return self::$instance;
