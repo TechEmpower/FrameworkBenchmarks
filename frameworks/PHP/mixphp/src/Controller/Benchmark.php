@@ -64,15 +64,11 @@ class Benchmark
     public function fortunes(Context $ctx)
     {
         $rows = DB::instance()->raw('SELECT id,message FROM Fortune')->get();
-
-        $fortunes = [];
-        foreach ($rows ?? [] as $row) {
-            $fortunes[$row->id] = $row->message;
-        }
-        $fortunes[0] = 'Additional fortune added at request time.';
-        asort($fortunes);
-
-        $ctx->HTML(200, 'fortunes', ['fortunes' => $fortunes]);
+        $rows[] = (object)['id' => 0, 'message' => 'Additional fortune added at request time.'];
+        usort($rows, function ($left, $right) {
+            return $left->message <=> $right->message;
+        });
+        $ctx->HTML(200, 'fortunes', ['rows' => $rows]);
     }
 
     /**
