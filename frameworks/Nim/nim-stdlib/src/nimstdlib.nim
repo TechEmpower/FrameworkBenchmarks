@@ -16,6 +16,7 @@ proc main {.async.} =
             of "/db":           await handleDB(req)
             of "/queries":      await handleQueries(req)
             of "/fortunes":     await handleFortunes(req)
+            of "/updates":      await handleUpdates(req)
             else:               await handleHTTPErrors(req, Http404, "URL doesn't exists")
         else:               await handleHTTPErrors(req, Http405, "Method not allowed")
 
