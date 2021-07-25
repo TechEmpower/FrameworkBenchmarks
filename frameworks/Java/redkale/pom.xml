@@ -73,6 +73,28 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>                         
             </plugin>
+                 
+            <plugin>
+                <groupId>org.redkale.maven.plugins</groupId>
+                <artifactId>redkale-maven-plugin</artifactId>
+                <version>1.0.0-SNAPSHOT</version>                                                
+                <configuration>		
+                    <nativeimageArgs>
+                        <arg>--allow-incomplete-classpath</arg>
+                        <arg>--no-fallback</arg>
+                    </nativeimageArgs>
+                </configuration>                                    
+                <executions>
+                    <execution>
+                        <id>redkale-compile</id> 
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>                   
+                    </execution>
+                </executions>    
+            </plugin>
+                 
             <plugin>
                 <groupId>com.fizzed</groupId>
                 <artifactId>rocker-maven-plugin</artifactId>

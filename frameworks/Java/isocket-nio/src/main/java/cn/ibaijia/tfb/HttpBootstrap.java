@@ -21,7 +21,12 @@ public class HttpBootstrap {
                 logger.error("session on process error.", throwable);
             }
         });
-//        server.setThreadNumber(16);
+        int processorNumber = Runtime.getRuntime().availableProcessors();
+        server.setThreadNumber(processorNumber);
+//        server.setUseDirectBuffer(true);
+        server.setPoolSize(16 * 1024);
+        server.setReadBuffSize(4 * 1024);
+        server.setBacklog(1024 * 8);
         server.start();
     }
 
