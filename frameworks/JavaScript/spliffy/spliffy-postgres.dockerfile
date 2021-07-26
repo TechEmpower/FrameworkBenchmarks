@@ -7,6 +7,8 @@ RUN npm install
 COPY . /app
 
 ENV USE_CLUSTER=true
+ENV DB_HOST=tfb-database
+ENV DATABASE=postgres
 
 EXPOSE 1420
 
