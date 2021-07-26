@@ -12,8 +12,8 @@ RUN apt-get update -yqq
 RUN apt-get install -yqq wget
 RUN wget https://redkale.org/graalvm-ee-java16-linux-amd64-21.1.0.tar.gz
 RUN tar -xvzf graalvm-ee-java16-linux-amd64-21.1.0.tar.gz
-RUN export JAVA_HOME=/redkale/graalvm-ee-java16-linux-amd64-21.1.0
-RUN export PATH=/redkale/graalvm-ee-java16-linux-amd64-21.1.0/bin:$PATH
+ENV JAVA_HOME /redkale/graalvm-ee-java16-linux-amd64-21.1.0
+ENV PATH /redkale/graalvm-ee-java16-linux-amd64-21.1.0/bin:$PATH
 
 COPY conf conf
 COPY --from=maven /redkale/target/redkale-benchmark-1.0.0.jar redkale-benchmark.jar
