@@ -4,7 +4,7 @@ ARG MAVEN_VERSION=3.8.1
 
 WORKDIR /redkale
 RUN apt-get update -yqq
-RUN apt-get install -yqq wget gcc make
+RUN apt-get install -yqq wget make gcc gcc-c++ zlib1g zlib1g-dev musl-dev
 
 RUN wget --no-verbose https://redkale.org/graalvm-ee-java16-linux-amd64-21.2.0.tar.gz
 RUN tar -xzf graalvm-ee-java16-linux-amd64-21.2.0.tar.gz
