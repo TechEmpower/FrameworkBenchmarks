@@ -10,7 +10,7 @@ let clientOpts = {
 
 let pool
 
-const query = async ( text, values ) => ( await pool.query( text, values || undefined ) )[0]
+const query = async ( text, values ) => ( await pool.execute( text, values || undefined ) )[0]
 
 module.exports = {
     async init() {
@@ -35,15 +35,13 @@ module.exports = {
         query( 'SELECT * FROM world' ),
 
     bulkUpdateWorld: async worlds => {
-        let args = []
-        for( let world of worlds ) {
-            args.push( world.id, world.randomnumber )
-        }
-        return query(
-            `INSERT INTO world (id, randomnumber)
-                           VALUES ${worlds.map( () => `(?,?)` ).join( ',' )}
-                  ON DUPLICATE KEY UPDATE randomnumber = VALUES(randomnumber)`,
-            args )
+
+        return Promise.all( worlds.map( world => query(
+            `UPDATE world
+             SET randomnumber = ?
+             where id = ?`,
+            [world.randomnumber, world.id] ) )
+        )
             .then( () => worlds )
     }
 }
