@@ -14,8 +14,6 @@ RUN tar -xvzf apache-maven-3.8.1-bin.tar.gz
 ENV MAVEN_HOME /redkale/apache-maven-3.8.1
 
 ENV PATH $JAVA_HOME/bin:$MAVEN_HOME/bin:$PATH
-RUN update-alternatives --install /usr/bin/java java $JAVA_HOME/bin/java
-RUN update-alternatives --install /usr/bin/mvn mvn $MAVEN_HOME/bin/mvn
 
 RUN pwd
 RUN ls -lh
