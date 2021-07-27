@@ -12,7 +12,7 @@ proc handlePlaintext*(req: Request) {.async.} =
 
 proc handleJson*(req: Request) {.async.} =
     let headers = {"Date": now().utc.format("ddd, dd MMM yyyy HH:mm:ss") & " GMT", "Content-type": "application/json; charset=utf-8", "Server": "Example"}
-    await req.respond(Http200, """{"message":"Hello, World!"}""", headers.newHttpHeaders())
+    await req.respond(Http200, %*{"message":"Hello, World!"}, headers.newHttpHeaders())
 
 proc handleDB*(req: Request) {.async.} =
     let headers = {"Date": now().utc.format("ddd, dd MMM yyyy HH:mm:ss") & " GMT", "Content-type": "application/json; charset=utf-8", "Server": "Example"}
