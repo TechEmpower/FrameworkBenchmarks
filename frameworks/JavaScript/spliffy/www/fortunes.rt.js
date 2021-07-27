@@ -8,8 +8,8 @@ const runTimeFortune = {
 
 const renderBody = fortunes => {
     let body = '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
-    for( let i = 0; i < fortunes.length; i++ ) {
-        body += `<tr><td>${fortunes[i].id}</td><td>${escape( fortunes[i].message )}</td></tr>`
+    for( let fortune of fortunes ) {
+        body += `<tr><td>${fortune.id}</td><td>${escape( fortune.message )}</td></tr>`
     }
     body += '</table></body></html>'
     return body
@@ -18,13 +18,13 @@ const renderBody = fortunes => {
 module.exports = {
     GET: async () => {
         let fortunes = await db.allFortunes()
-        fortunes.push(runTimeFortune)
-        fortunes.sort( ( a, b ) => a.message.localeCompare( b.message ))
+        fortunes.push( runTimeFortune )
+        fortunes.sort( ( a, b ) => a.message.localeCompare( b.message ) )
         return {
             headers: {
                 'Content-Type': 'text/html; charset=utf-8'
             },
-            body: renderBody(fortunes)
+            body: renderBody( fortunes )
         }
     }
 }

@@ -6,7 +6,6 @@ WORKDIR /app
 RUN npm install
 COPY . /app
 
-ENV USE_CLUSTER=true
 ENV DB_HOST=tfb-database
 ENV DATABASE=mysql
 

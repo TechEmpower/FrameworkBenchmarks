@@ -6,21 +6,19 @@ const dbHost = process.env.DB_HOST || 'localhost'
 
 const projection = { projection: { _id: 0 } }
 
-
-
 module.exports = {
     async init() {
-        let client = new MongoClient(`mongodb://${dbHost}:27017`, { minPoolSize: 2, maxPoolSize: 35 })
+        let client = new MongoClient(`mongodb://${dbHost}:27017`, { minPoolSize: 2, maxPoolSize: 75 })
         await client.connect()
         let db = await client.db( 'hello_world' );
         Fortune = await db.collection( 'fortune' );
         World = await db.collection( 'world' );
     },
-    allFortunes: async () => Fortune.find( {}, projection ).toArray(),
+    allFortunes: async () => Fortune.find( undefined, projection ).toArray(),
 
-    worldById: async ( id ) => World.findOne( { id }, projection ),
+    worldById: async ( id ) => World.findOne( { _id: id }, projection ),
 
-    allWorlds: async () => Fortune.find( {}, projection ).toArray(),
+    allWorlds: async () => World.find( undefined, projection ).toArray(),
 
     bulkUpdateWorld: async worlds =>
         World.bulkWrite(
@@ -34,5 +32,5 @@ module.exports = {
                     }
                 }
             } ) )
-        ).then((res)=>worlds)
+        ).then(()=>worlds)
 }

@@ -10,7 +10,22 @@ let clientOpts = {
 
 let pool
 
-let query = async ( text, values ) => ( await pool.query( text, values || undefined ) ).rows
+const query = async ( text, values ) => ( await pool.query( text, values || undefined ) ).rows;
+
+const inTransaction = async ( fn ) => {
+    let con
+    try {
+        con = await pool.connect()
+        await con.query( 'BEGIN' )
+        const res = await fn( con )
+        con.query( 'COMMIT' )
+        return res
+    } catch( e ) {
+        if( con ) con.query( 'ROLLBACK' )
+    } finally {
+        if( con ) con.release()
+    }
+}
 
 module.exports = {
     async init() {
@@ -43,21 +58,22 @@ module.exports = {
         for( let world of worlds ) {
             args.push( world.id, world.randomnumber )
         }
-        return query(
-            `UPDATE world as w
-             SET randomnumber = wc.randomnumber
-             FROM (
-                      SELECT win.id, win.randomnumber
-                      FROM world wb,
-                           (VALUES ${
-                                   //0 -> 1,2 ; 1 -> 3,4; 2 -> 5,6; 3 -> 7,8 ... = (i+1) * 2 - 1, (i+1) * 2
-                                   worlds.map( ( _, i ) => `(\$${( i + 1 ) * 2 - 1}::int,$${( i + 1 ) * 2}::int)` ).join( ',' )
-                           }) AS win (id, randomnumber)
-                      WHERE wb.id = win.id
-                          FOR UPDATE
-                  ) as wc
-             where w.id = wc.id`,
-            args )
-            .then( () => worlds )
+        await inTransaction( async con =>
+            con.query( `UPDATE world as w
+                        SET randomnumber = wc.randomnumber
+                        FROM (
+                                 SELECT win.id, win.randomnumber
+                                 FROM world wb,
+                                      (VALUES ${
+                                              //0 -> 1,2 ; 1 -> 3,4; 2 -> 5,6; 3 -> 7,8 ... = (i+1) * 2 - 1, (i+1) * 2
+                                              worlds.map( ( _, i ) => `(\$${( i + 1 ) * 2 - 1}::int,$${( i + 1 ) * 2}::int)` ).join( ',' )
+                                      }) AS win (id, randomnumber)
+                                 WHERE wb.id = win.id
+                                     FOR UPDATE
+                             ) as wc
+                        where w.id = wc.id`,
+                args )
+        )
+        return worlds
     }
 }

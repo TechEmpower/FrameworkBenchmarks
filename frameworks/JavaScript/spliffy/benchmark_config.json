@@ -22,8 +22,6 @@
         "versus": "nodejs"
       },
       "mongodb": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "cached_query_url": "/cached-worlds?count=",
@@ -46,8 +44,6 @@
         "versus": "nodejs"
       },
       "mysql": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "cached_query_url": "/cached-worlds?count=",
@@ -70,8 +66,6 @@
         "versus": "nodejs"
       },
       "postgres": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "cached_query_url": "/cached-worlds?count=",

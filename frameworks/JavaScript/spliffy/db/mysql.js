@@ -10,7 +10,7 @@ let clientOpts = {
 
 let pool
 
-const query = async ( text, values ) => ( await pool.execute( text, values || undefined ) )[0]
+const execute = async ( text, values ) => ( await pool.execute( text, values || undefined ) )[0]
 
 module.exports = {
     async init() {
@@ -23,20 +23,20 @@ module.exports = {
         await client.end()
     },
     allFortunes: async () =>
-        query( 'SELECT * FROM fortune' ),
+        execute( 'SELECT * FROM fortune' ),
 
     worldById: async ( id ) =>
-        query( `SELECT *
+        execute( `SELECT *
                 FROM world
                 WHERE id = ?`, [id] )
             .then( arr => arr[0] ),
 
     allWorlds: async () =>
-        query( 'SELECT * FROM world' ),
+        execute( 'SELECT * FROM world' ),
 
     bulkUpdateWorld: async worlds => {
 
-        return Promise.all( worlds.map( world => query(
+        return Promise.all( worlds.map( world => execute(
             `UPDATE world
              SET randomnumber = ?
              where id = ?`,

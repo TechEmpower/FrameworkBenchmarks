@@ -9,5 +9,5 @@ if(db.allWorlds){
 module.exports = {
     GET: ( { url: { query: { count } } } ) =>
         randomUniqueIds( parseCount( count ) )
-            .map( id => worldCache.get( id ) )
+            .map(worldCache.get)
 }

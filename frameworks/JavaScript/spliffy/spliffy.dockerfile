@@ -6,8 +6,6 @@ WORKDIR /app
 RUN npm install
 COPY . /app
 
-ENV USE_CLUSTER=true
-
 EXPOSE 1420
 
 CMD ["node", "/app/start.js"]
