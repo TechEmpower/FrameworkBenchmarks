@@ -5,7 +5,7 @@ require_once __DIR__.'/app.php';
 
 init();
 
-$loop = React\EventLoop\Factory::create();
+$loop = React\EventLoop\Loop::get();
 
 $server = new React\Http\Server($loop, function (Psr\Http\Message\ServerRequestInterface $request) {
     return router($request);
