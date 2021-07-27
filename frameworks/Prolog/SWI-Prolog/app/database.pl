@@ -6,13 +6,17 @@
 :- use_module(library(random)).
 
 :- dynamic cache/2.
+:- dynamic cache/3.
 
 top_id(10001).
 
 find_random_numbers(_Connection, 0, [], _Cached).
 find_random_numbers(Connection, N, Rows, Cached) :-
-    world_by_id_statement(Connection, Statement),
-    find_random_numbers_(Statement, N, Rows, Cached).
+    setup_call_cleanup(
+        world_by_id_statement(Connection, Statement),
+        find_random_numbers_(Statement, N, Rows, Cached),
+        odbc_free_statement(Statement)
+    ).
 
 find_random_numbers_(_Statement, 0, [], _Cached).
 find_random_numbers_(Statement, N, [Row|Rows], Cached) :-
@@ -24,13 +28,19 @@ find_random_numbers_(Statement, N, [Row|Rows], Cached) :-
     find_random_numbers_(Statement, N1, Rows, Cached).
 
 find_fortunes(Connection, Rows) :-
-    fortune_statement(Connection, Statement),
-    findall(Row, odbc_execute(Statement, [], Row), Rows).
+    setup_call_cleanup(
+        fortune_statement(Connection, Statement),
+        findall(Row, odbc_execute(Statement, [], Row), Rows),
+        odbc_free_statement(Statement)
+    ).
 
 update_random_numbers(_Connection, [], []).
 update_random_numbers(Connection, Rows0, Rows) :-
-    update_world_statement(Connection, Statement),
-    update_random_numbers_(Statement, Rows0, Rows).
+    setup_call_cleanup(
+        update_world_statement(Connection, Statement),
+        update_random_numbers_(Statement, Rows0, Rows),
+        odbc_free_statement(Statement)
+    ).
 
 update_random_numbers_(_Statement, [], []).
 update_random_numbers_(Statement, [row(Id0,_)|Rows0], [Row|Rows]) :-
@@ -43,13 +53,28 @@ update_random_numbers_(Statement, [row(Id0,_)|Rows0], [Row|Rows]) :-
 % ------------------------------------------------------------------------------------
 
 world_by_id_statement(Connection, Statement) :-
-    odbc_prepare(Connection, 'SELECT id, randomNumber FROM World WHERE id = ?', [integer], Statement).
-
+    odbc_prepare(
+        Connection, 
+        'SELECT id, randomNumber FROM World WHERE id = ?', 
+        [integer], 
+        Statement
+    ).
+    
 fortune_statement(Connection, Statement) :-
-    odbc_prepare(Connection, 'SELECT id, message FROM Fortune', [], Statement).
+    odbc_prepare(
+        Connection, 
+        'SELECT id, message FROM Fortune', 
+        [], 
+        Statement
+    ).
 
 update_world_statement(Connection, Statement) :-
-    odbc_prepare(Connection, 'UPDATE World SET randomNumber = ? WHERE id = ?', [integer, integer], Statement).
+    odbc_prepare(
+        Connection, 
+        'UPDATE World SET randomNumber = ? WHERE id = ?', 
+        [integer, integer], 
+        Statement
+    ).
 
 % ------------------------------------------------------------------------------------
 
