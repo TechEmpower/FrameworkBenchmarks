@@ -28,7 +28,7 @@ module.exports = {
                         _id: world.id
                     },
                     update: {
-                        $set: { randomnumber: world.randomnumber }
+                        $set: { randomNumber: world.randomNumber }
                     }
                 }
             } ) )
