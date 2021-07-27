@@ -12,18 +12,12 @@ let pool
 
 const query = async ( text, values ) => ( await pool.query( text, values || undefined ) ).rows;
 
-const inTransaction = async ( fn ) => {
-    let con
+const withConnection = async fn => {
+    const con = await pool.connect()
     try {
-        con = await pool.connect()
-        await con.query( 'BEGIN' )
-        const res = await fn( con )
-        con.query( 'COMMIT' )
-        return res
-    } catch( e ) {
-        if( con ) con.query( 'ROLLBACK' )
+        return await fn( con )
     } finally {
-        if( con ) con.release()
+        con.release()
     }
 }
 
@@ -53,27 +47,11 @@ module.exports = {
     allWorlds: async () =>
         query( 'SELECT * FROM world' ),
 
-    bulkUpdateWorld: async worlds => {
-        let args = []
-        for( let world of worlds ) {
-            args.push( world.id, world.randomnumber )
-        }
-        await inTransaction( async con =>
-            con.query( `UPDATE world as w
-                        SET randomnumber = wc.randomnumber
-                        FROM (
-                                 SELECT win.id, win.randomnumber
-                                 FROM world wb,
-                                      (VALUES ${
-                                              //0 -> 1,2 ; 1 -> 3,4; 2 -> 5,6; 3 -> 7,8 ... = (i+1) * 2 - 1, (i+1) * 2
-                                              worlds.map( ( _, i ) => `(\$${( i + 1 ) * 2 - 1}::int,$${( i + 1 ) * 2}::int)` ).join( ',' )
-                                      }) AS win (id, randomnumber)
-                                 WHERE wb.id = win.id
-                                     FOR UPDATE
-                             ) as wc
-                        where w.id = wc.id`,
-                args )
+    bulkUpdateWorld: async worlds => Promise.all(
+        worlds.map( world =>
+            withConnection( async con =>
+                con.query( 'UPDATE world SET randomnumber = $1 WHERE id = $2',
+                    [world.randomnumber, world.id] ) )
         )
-        return worlds
-    }
+    ).then( () => worlds )
 }
