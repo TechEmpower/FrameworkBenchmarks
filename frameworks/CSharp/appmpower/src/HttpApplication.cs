@@ -66,7 +66,7 @@ namespace appMpower
             }
             else if (pathStringLength == 9 && pathStringStart == "f")
             {
-               FortunesView.Render(httpResponse.Headers, httpResponseBody.Writer, await RawDb.LoadFortunesRows());
+               await FortunesView.Render(httpResponse.Headers, httpResponseBody.Writer, await RawDb.LoadFortunesRows());
                return;
             }
             else if (pathStringLength == 8 && pathStringStart == "u")

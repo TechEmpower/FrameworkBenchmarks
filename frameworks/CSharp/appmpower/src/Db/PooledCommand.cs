@@ -203,6 +203,11 @@ namespace appMpower.Db
          _odbcCommand.Prepare();
       }
 
+      public void Release()
+      {
+         _pooledConnection.ReleaseCommand(this);
+      }
+
       public void Dispose()
       {
          _pooledConnection.ReleaseCommand(this);
