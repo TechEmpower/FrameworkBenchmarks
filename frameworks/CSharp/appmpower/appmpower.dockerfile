@@ -46,12 +46,17 @@ RUN apt-get update
 # The following installs standard versions unixodbc 2.3.6 and pgsqlodbc 11
 #RUN apt-get install -y unixodbc odbc-postgresql
 # unixodbc still needs to be installed even if compiled locally
-RUN apt-get install -y unixodbc
+RUN apt-get install -y unixodbc wget curl libpq-dev build-essential
 
-RUN apt-get -yqq install clang zlib1g-dev libkrb5-dev libtinfo5
-RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
-   libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-   xz-utils tk-dev libffi-dev liblzma-dev pgpool2 vim-tiny
+WORKDIR /odbc
+
+RUN curl -L -o pgpool-II-4.2.3.tar.gz https://www.pgpool.net/mediawiki/download.php?f=pgpool-II-4.2.3.tar.gz
+RUN tar -xvf pgpool-II-4.2.3.tar.gz
+
+WORKDIR /odbc/pgpool-II-4.2.3
+RUN ./configure
+RUN make
+RUN make install
 
 COPY --from=build /usr/local/unixODBC /usr/local/unixODBC
 
