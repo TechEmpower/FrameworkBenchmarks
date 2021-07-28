@@ -12,15 +12,6 @@ let pool
 
 const query = async ( text, values ) => ( await pool.query( text, values || undefined ) ).rows;
 
-const withConnection = async fn => {
-    const con = await pool.connect()
-    try {
-        return await fn( con )
-    } finally {
-        con.release()
-    }
-}
-
 module.exports = {
     async init() {
         const client = new Client( clientOpts )
@@ -49,9 +40,7 @@ module.exports = {
 
     bulkUpdateWorld: async worlds => Promise.all(
         worlds.map( world =>
-            withConnection( async con =>
-                con.query( 'UPDATE world SET randomnumber = $1 WHERE id = $2',
-                    [world.randomnumber, world.id] ) )
-        )
+            query( 'UPDATE world SET randomnumber = $1 WHERE id = $2',
+                [world.randomnumber, world.id] ) )
     ).then( () => worlds )
 }
