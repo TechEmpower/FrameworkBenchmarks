@@ -26,9 +26,7 @@ module.exports = {
         execute( 'SELECT * FROM fortune' ),
 
     worldById: async ( id ) =>
-        execute( `SELECT *
-                  FROM world
-                  WHERE id = ?`, [id] )
+        execute( 'SELECT * FROM world WHERE id = ?', [id] )
             .then( arr => arr[0] ),
 
     allWorlds: async () =>

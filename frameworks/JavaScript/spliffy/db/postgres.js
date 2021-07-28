@@ -30,9 +30,7 @@ module.exports = {
         query( 'SELECT * FROM fortune' ),
 
     worldById: async ( id ) =>
-        query( `SELECT *
-                FROM world
-                WHERE id = $1`, [id] )
+        query( 'SELECT * FROM world WHERE id = $1', [id] )
             .then( arr => arr[0] ),
 
     allWorlds: async () =>
