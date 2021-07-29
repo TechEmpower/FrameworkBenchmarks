@@ -1,4 +1,4 @@
 node_modules
 benchmark_config.json
 README.md
-spliffy.dockerfile
+*.dockerfile

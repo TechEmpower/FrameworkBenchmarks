@@ -38,7 +38,7 @@ async fn main() -> io::Result<()> {
 
 type HandleResult = Result<WebResponse, Infallible>;
 
-async fn handle(mut req: WebRequest<'_, AppState>) -> HandleResult {
+async fn handle(req: &mut WebRequest<'_, AppState>) -> HandleResult {
     let inner = req.request_mut();
 
     match (inner.method(), inner.uri().path()) {
@@ -52,8 +52,8 @@ async fn handle(mut req: WebRequest<'_, AppState>) -> HandleResult {
     }
 }
 
-fn plain_text(req: WebRequest<'_, AppState>) -> HandleResult {
-    let mut res = req.into_response(Bytes::from_static(b"Hello, World!"));
+fn plain_text(req: &mut WebRequest<'_, AppState>) -> HandleResult {
+    let mut res = req.as_response(Bytes::from_static(b"Hello, World!"));
 
     res.headers_mut()
         .append(SERVER, HeaderValue::from_static("TFB"));
@@ -64,21 +64,21 @@ fn plain_text(req: WebRequest<'_, AppState>) -> HandleResult {
 }
 
 #[inline(always)]
-fn json(req: WebRequest<'_, AppState>) -> HandleResult {
+fn json(req: &mut WebRequest<'_, AppState>) -> HandleResult {
     json_response(req, &Message::new())
 }
 
-async fn db(req: WebRequest<'_, AppState>) -> HandleResult {
+async fn db(req: &mut WebRequest<'_, AppState>) -> HandleResult {
     match req.state().client().get_world().await {
         Ok(ref world) => json_response(req, world),
         Err(_) => internal(),
     }
 }
 
-async fn fortunes(req: WebRequest<'_, AppState>) -> HandleResult {
+async fn fortunes(req: &mut WebRequest<'_, AppState>) -> HandleResult {
     match _fortunes(req.state().client()).await {
         Ok(body) => {
-            let mut res = req.into_response(body);
+            let mut res = req.as_response(body);
 
             res.headers_mut()
                 .append(SERVER, HeaderValue::from_static("TFB"));
@@ -93,7 +93,7 @@ async fn fortunes(req: WebRequest<'_, AppState>) -> HandleResult {
     }
 }
 
-async fn queries(mut req: WebRequest<'_, AppState>) -> HandleResult {
+async fn queries(req: &mut WebRequest<'_, AppState>) -> HandleResult {
     let num = req.request_mut().uri().query().parse_query();
 
     match req.state().client().get_worlds(num).await {
@@ -102,7 +102,7 @@ async fn queries(mut req: WebRequest<'_, AppState>) -> HandleResult {
     }
 }
 
-async fn updates(mut req: WebRequest<'_, AppState>) -> HandleResult {
+async fn updates(req: &mut WebRequest<'_, AppState>) -> HandleResult {
     let num = req.request_mut().uri().query().parse_query();
 
     match req.state().client().update(num).await {
@@ -137,7 +137,7 @@ async fn _fortunes(client: &Client) -> Result<Bytes, Box<dyn Error>> {
 }
 
 #[inline]
-fn json_response<S>(req: WebRequest<'_, AppState>, value: &S) -> HandleResult
+fn json_response<S>(req: &mut WebRequest<'_, AppState>, value: &S) -> HandleResult
 where
     S: ?Sized + Serialize,
 {
@@ -145,7 +145,7 @@ where
     simd_json::to_writer(&mut writer, value).unwrap();
     let body = writer.take();
 
-    let mut res = req.into_response(body);
+    let mut res = req.as_response(body);
     res.headers_mut()
         .append(SERVER, HeaderValue::from_static("TFB"));
     res.headers_mut()

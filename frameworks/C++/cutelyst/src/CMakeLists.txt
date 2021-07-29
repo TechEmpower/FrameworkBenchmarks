@@ -5,7 +5,7 @@ project(cutelyst_benchmarks LANGUAGES CXX)
 cmake_policy(SET CMP0069 NEW)
 
 find_package(Qt5 5.6.0 REQUIRED COMPONENTS Core Network Sql)
-find_package(ASqlQt5 0.15.0 REQUIRED)
+find_package(ASqlQt5 0.43.0 REQUIRED)
 find_package(Cutelyst2Qt5 2.12 REQUIRED)
 find_package(Cutelee5 REQUIRED)
 find_package(PostgreSQL REQUIRED)
@@ -18,7 +18,7 @@ set(CMAKE_AUTOMOC ON)
 # to always look for includes there:
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 file(GLOB_RECURSE TEMPLATES_SRC root/*)

@@ -8,9 +8,9 @@ targets:
   bench:
     main: src/bench.cr
 
-crystal: 0.35.1
+crystal: ">= 1.0.0"
 
 dependencies:
   lucky:
     github: luckyframework/lucky
-    version: ~> 0.25.0
+    version: ~> 0.28.0
