@@ -9,7 +9,7 @@ RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq wget git unzip libxml2-dev cmake make systemtap-sdt-dev \
                     zlib1g-dev libpcre3-dev libargon2-0-dev libsodium-dev \
-                    php8.0-cli php8.0-dev libphp8.0-embed php8.0-pgsql nginx > /dev/null
+                    php8.0-cli php8.0-dev libphp8.0-embed nginx > /dev/null
 
 ADD ./ ./
 
@@ -38,7 +38,7 @@ RUN chmod 777 -R app/cache/*
 
 COPY /deploy/conf/ngx/services-micro.php /app/config/ngxServices.php
 
-RUN composer require phpmv/ubiquity-devtools:dev-master
+RUN composer require phpmv/ubiquity-devtools:dev-master --quiet
 
 RUN ./vendor/bin/Ubiquity bootstrap prod
 
