@@ -1,31 +1,28 @@
-:- module(database, [find_random_numbers/4,
+:- module(database, [find_random_numbers/3,
                      update_random_numbers/3,
                      find_fortunes/2]).
 
 :- use_module(library(odbc)).
 :- use_module(library(random)).
 
-:- dynamic cache/2.
-:- dynamic cache/3.
-
 top_id(10001).
 
-find_random_numbers(_Connection, 0, [], _Cached).
-find_random_numbers(Connection, N, Rows, Cached) :-
+find_random_numbers(_Connection, 0, []).
+find_random_numbers(Connection, N, Rows) :-
     setup_call_cleanup(
         world_by_id_statement(Connection, Statement),
-        find_random_numbers_(Statement, N, Rows, Cached),
+        find_random_numbers_(Statement, N, Rows),
         odbc_free_statement(Statement)
     ).
 
-find_random_numbers_(_Statement, 0, [], _Cached).
-find_random_numbers_(Statement, N, [Row|Rows], Cached) :-
+find_random_numbers_(_Statement, 0, []).
+find_random_numbers_(Statement, N, [Row|Rows]) :-
     N > 0,
     top_id(Top),
     random(1, Top, Id),
-    odbc_execute_cached(Statement, [Id], Row, Cached),
+    odbc_execute(Statement, [Id], Row),
     N1 is N - 1,
-    find_random_numbers_(Statement, N1, Rows, Cached).
+    find_random_numbers_(Statement, N1, Rows).
 
 find_fortunes(Connection, Rows) :-
     setup_call_cleanup(
@@ -75,13 +72,3 @@ update_world_statement(Connection, Statement) :-
         [integer, integer], 
         Statement
     ).
-
-% ------------------------------------------------------------------------------------
-
-odbc_execute_cached(Statement, Params, Row, true) :-
-    ( cache(Params, Row)
-    ; odbc_execute(Statement, Params, Row),
-      assertz(cache(Params, Row))
-    ).
-odbc_execute_cached(Statement, Params, Row, false) :-
-    odbc_execute(Statement, Params, Row).

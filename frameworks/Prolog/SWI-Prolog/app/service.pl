@@ -8,6 +8,7 @@
 :- use_module(library(odbc)).
 :- use_module(library(solution_sequences)).
 
+:- table random_numbers_cached/2.
 
 random_number(Row) :-
     setup_call_cleanup(
@@ -20,17 +21,12 @@ random_numbers(0, []).
 random_numbers(N, Rows) :-
     setup_call_cleanup(
         odbc_connect('benchmark', Connection, []),
-        database:find_random_numbers(Connection, N, Rows, false),
+        database:find_random_numbers(Connection, N, Rows),
         odbc_disconnect(Connection)
     ).
 
-random_numbers_cached(0, []).
 random_numbers_cached(N, Rows) :-
-    setup_call_cleanup(
-        odbc_connect('benchmark', Connection, []),
-        database:find_random_numbers(Connection, N, Rows, true),
-        odbc_disconnect(Connection)
-    ).
+    random_numbers(N, Rows).
 
 fortunes(Rows) :-
     setup_call_cleanup(
@@ -47,8 +43,8 @@ update(0, []).
 update(N, Rows) :-
     setup_call_cleanup(
         odbc_connect('benchmark', Connection, []),
-        ( database:find_random_numbers(Connection, N, Rows0, false)
-        , database:update_random_numbers(Connection, Rows0, Rows)
+        (   database:find_random_numbers(Connection, N, Rows0)
+        ,   database:update_random_numbers(Connection, Rows0, Rows)
         ),
         odbc_disconnect(Connection)
     ).
