@@ -249,7 +249,7 @@
         "plaintext_url": "/micro/plaintext",
         "port": 8080,
         "approach": "Realistic",
-        "classification": "Fullstack",
+        "classification": "Micro",
         "database": "None",
         "framework": "Ubiquity",
         "language": "PHP",
