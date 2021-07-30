@@ -18,6 +18,7 @@ random_number(Row) :-
 
 random_numbers(0, []).
 random_numbers(N, Rows) :-
+    N > 0,
     with_connection(Connection, database:find_random_numbers(Connection, N, Rows)).
 
 random_numbers_cached(N, Rows) :-
@@ -32,6 +33,7 @@ fortunes(Rows) :-
 
 update(0, []).
 update(N, Rows) :-
+    N > 0,
     with_connection(Connection, (
         database:find_random_numbers(Connection, N, Rows0),
         database:update_random_numbers(Connection, Rows0, Rows)
