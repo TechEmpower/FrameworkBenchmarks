@@ -13,7 +13,7 @@
 random_number(Row) :-
     setup_call_cleanup(
         odbc_connect('benchmark', Connection, []),
-        database:find_random_numbers(Connection, 1, [Row], false),
+        database:find_random_numbers(Connection, 1, [Row]),
         odbc_disconnect(Connection)
     ).
 
