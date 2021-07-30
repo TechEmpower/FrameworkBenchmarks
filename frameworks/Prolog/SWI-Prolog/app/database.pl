@@ -9,11 +9,7 @@ top_id(10001).
 
 find_random_numbers(_Connection, 0, []).
 find_random_numbers(Connection, N, Rows) :-
-    setup_call_cleanup(
-        world_by_id_statement(Connection, Statement),
-        find_random_numbers_(Statement, N, Rows),
-        odbc_free_statement(Statement)
-    ).
+    with_statement(Connection, world_by_id, Statement, find_random_numbers_(Statement, N, Rows)).
 
 find_random_numbers_(_Statement, 0, []).
 find_random_numbers_(Statement, N, [Row|Rows]) :-
@@ -25,19 +21,11 @@ find_random_numbers_(Statement, N, [Row|Rows]) :-
     find_random_numbers_(Statement, N1, Rows).
 
 find_fortunes(Connection, Rows) :-
-    setup_call_cleanup(
-        fortune_statement(Connection, Statement),
-        findall(Row, odbc_execute(Statement, [], Row), Rows),
-        odbc_free_statement(Statement)
-    ).
+    with_statement(Connection, fortune, Statement, findall(Row, odbc_execute(Statement, [], Row), Rows)).
 
 update_random_numbers(_Connection, [], []).
 update_random_numbers(Connection, Rows0, Rows) :-
-    setup_call_cleanup(
-        update_world_statement(Connection, Statement),
-        update_random_numbers_(Statement, Rows0, Rows),
-        odbc_free_statement(Statement)
-    ).
+    with_statement(Connection, update_world, Statement, update_random_numbers_(Statement, Rows0, Rows)).
 
 update_random_numbers_(_Statement, [], []).
 update_random_numbers_(Statement, [row(Id0,_)|Rows0], [Row|Rows]) :-
@@ -47,28 +35,15 @@ update_random_numbers_(Statement, [row(Id0,_)|Rows0], [Row|Rows]) :-
     odbc_execute(Statement, [RandomNumber, Id0]),
     update_random_numbers_(Statement, Rows0, Rows).
 
-% ------------------------------------------------------------------------------------
+query(world_by_id,  'SELECT id, randomNumber FROM World WHERE id = ?', [integer]).
+query(fortune,      'SELECT id, message FROM Fortune',                 []).
+query(update_world, 'UPDATE World SET randomNumber = ? WHERE id = ?',  [integer, integer]).
 
-world_by_id_statement(Connection, Statement) :-
-    odbc_prepare(
-        Connection, 
-        'SELECT id, randomNumber FROM World WHERE id = ?', 
-        [integer], 
-        Statement
-    ).
-    
-fortune_statement(Connection, Statement) :-
-    odbc_prepare(
-        Connection, 
-        'SELECT id, message FROM Fortune', 
-        [], 
-        Statement
-    ).
-
-update_world_statement(Connection, Statement) :-
-    odbc_prepare(
-        Connection, 
-        'UPDATE World SET randomNumber = ? WHERE id = ?', 
-        [integer, integer], 
-        Statement
+with_statement(Connection, Name, Statement, Goal) :-
+    setup_call_cleanup(
+        (   query(Name, Query, Params)
+        ,   odbc_prepare(Connection, Query, Params, Statement)
+        ), 
+        Goal,
+        odbc_free_statement(Statement)
     ).
