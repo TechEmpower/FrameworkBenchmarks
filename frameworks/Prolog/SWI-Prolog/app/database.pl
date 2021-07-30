@@ -5,7 +5,7 @@
 :- use_module(library(odbc)).
 :- use_module(library(random)).
 
-top_id(10001).
+% --------------------------------------------------
 
 find_random_numbers(_Connection, 0, []).
 find_random_numbers(Connection, N, Rows) :-
@@ -14,8 +14,7 @@ find_random_numbers(Connection, N, Rows) :-
 find_random_numbers_(_Statement, 0, []).
 find_random_numbers_(Statement, N, [Row|Rows]) :-
     N > 0,
-    top_id(Top),
-    random(1, Top, Id),
+    random_id(Id),
     odbc_execute(Statement, [Id], Row),
     N1 is N - 1,
     find_random_numbers_(Statement, N1, Rows).
@@ -29,11 +28,12 @@ update_random_numbers(Connection, Rows0, Rows) :-
 
 update_random_numbers_(_Statement, [], []).
 update_random_numbers_(Statement, [row(Id0,_)|Rows0], [Row|Rows]) :-
-    top_id(Top),
-    random(1, Top, RandomNumber),
+    random_id(RandomNumber),
     Row = row(Id0, RandomNumber),
     odbc_execute(Statement, [RandomNumber, Id0]),
     update_random_numbers_(Statement, Rows0, Rows).
+
+% --------------------------------------------------
 
 query(world_by_id,  'SELECT id, randomNumber FROM World WHERE id = ?', [integer]).
 query(fortune,      'SELECT id, message FROM Fortune',                 []).
@@ -47,3 +47,5 @@ with_statement(Connection, Name, Statement, Goal) :-
         Goal,
         odbc_free_statement(Statement)
     ).
+
+random_id(N) :- random(1, 10001, N).

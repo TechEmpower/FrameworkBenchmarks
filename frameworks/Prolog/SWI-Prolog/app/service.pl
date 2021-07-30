@@ -8,6 +8,8 @@
 
 :- table random_numbers_cached/2.
 
+% --------------------------------------------------
+
 random_number(Row) :-
     with_connection(Connection, database:find_random_numbers(Connection, 1, [Row])).
 
@@ -34,6 +36,8 @@ update(N, Rows) :-
         database:find_random_numbers(Connection, N, Rows0),
         database:update_random_numbers(Connection, Rows0, Rows)
     )).
+
+% --------------------------------------------------
 
 fortune_to_pair(row(Id, Message), Message-row(Id, Message)).
 
