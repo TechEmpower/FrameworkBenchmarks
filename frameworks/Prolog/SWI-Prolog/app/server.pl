@@ -14,7 +14,7 @@
 server(Port) :-
     odbc_set_option(connection_pooling(true)),
     current_prolog_flag(cpu_count, Cores),
-    Workers is 8 * Cores,
+    Workers is 256 * Cores,
     http_server(http_dispatch, [workers(Workers), port(Port), timeout(30)]).
 
 
