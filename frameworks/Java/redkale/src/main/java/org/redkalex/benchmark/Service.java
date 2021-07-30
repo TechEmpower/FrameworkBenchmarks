@@ -23,6 +23,8 @@ public class Service extends AbstractService {
 
     private static final byte[] helloBytes = "Hello, world!".getBytes();
 
+    private static final boolean cached = Boolean.getBoolean("benchmarks.cache");
+
     private final ThreadLocal<RedRandom> rands = ThreadLocal.withInitial(() -> new RedRandom());
 
     @Resource
@@ -88,7 +90,7 @@ public class Service extends AbstractService {
             }
         }
         final int size = Math.min(500, Math.max(1, q));
-        return cache.random(ThreadLocalRandom.current(), size);
+        return cache.random(cached ? rands.get() : ThreadLocalRandom.current(), size);
     }
 
     protected int randomInt(Random rand, int bound) {
