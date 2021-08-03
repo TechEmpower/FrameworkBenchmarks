@@ -1,4 +1,4 @@
-defmodule Hello.Endpoint do
+defmodule HelloWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :hello
 
   plug Plug.Parsers,
@@ -6,5 +6,5 @@ defmodule Hello.Endpoint do
     pass: ["*/*"],
     json_decoder: Jason
 
-  plug Hello.Router
+  plug HelloWeb.Router
 end

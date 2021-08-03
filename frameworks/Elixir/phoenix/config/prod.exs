@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :hello, Hello.Endpoint,
+config :hello, HelloWeb.Endpoint,
   url: [host: "0.0.0.0"],
   http: [port: 8080, protocol_options: [max_keepalive: :infinity], backlog: 8096],
   cache_static_lookup: false,

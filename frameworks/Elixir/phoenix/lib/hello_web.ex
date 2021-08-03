@@ -1,30 +1,25 @@
-defmodule Hello.Web do
+defmodule HelloWeb do
   @moduledoc """
   A module that keeps using definitions for controllers,
   views and so on.
 
   This can be used in your application as:
 
-      use Hello.Web, :controller
-      use Hello.Web, :view
+      use HelloWeb, :controller
+      use HelloWeb, :view
 
-  Keep the definitions in this module short and clean,
-  mostly focused on imports, uses and aliases.
+  The definitions below will be executed for every view,
+  controller, etc, so keep them short and clean, focused
+  on imports, uses and aliases.
+
+  Do NOT define functions inside the quoted expressions
+  below. Instead, define any helper function in modules
+  and import those modules here.
   """
-
-  def model do
-    quote do
-      use Ecto.Schema
-
-      import Ecto
-      import Ecto.Changeset
-      import Ecto.Query
-    end
-  end
 
   def controller do
     quote do
-      use Phoenix.Controller, log: false
+      use Phoenix.Controller, namespace: HelloWeb, log: false
 
       # Alias the data repository and import query/model functions
       alias Hello.Repo
@@ -32,23 +27,24 @@ defmodule Hello.Web do
       import Ecto.Query
 
       # Import URL helpers from the router
-      import Hello.Router.Helpers
+      import HelloWeb.Router.Helpers
     end
   end
 
   def view do
     quote do
-      use Phoenix.View, root: "web/templates"
+      use Phoenix.View, 
+        root: "lib/hello_web/templates",
+        namespace: HelloWeb
 
       # Import convenience functions from controllers
-      import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2,
-                                        action_name: 1, controller_module: 1]
-
+      import Phoenix.Controller,
+        only: [get_csrf_token: 0, get_flash: 2, action_name: 1, controller_module: 1]
 
       # Import all HTML functions (forms, tags, etc)
       use Phoenix.HTML
 
-      import Hello.Router.Helpers
+      import HelloWeb.Router.Helpers
     end
   end
 
@@ -57,7 +53,6 @@ defmodule Hello.Web do
       use Phoenix.Router
     end
   end
-
 
   def channel do
     quote do

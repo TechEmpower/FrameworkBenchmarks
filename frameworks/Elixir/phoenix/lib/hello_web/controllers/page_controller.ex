@@ -1,7 +1,7 @@
-defmodule Hello.PageController do
-  alias Hello.{Fortune, World}
+defmodule HelloWeb.PageController do
+  alias Hello.Models.{Fortune, World}
 
-  use Hello.Web, :controller
+  use HelloWeb, :controller
 
   @json "application/json"
   @plain "text/plain"
