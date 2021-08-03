@@ -4,7 +4,7 @@ defmodule HelloWeb.Endpoint do
   plug Plug.Parsers,
     parsers: [:json, :urlencoded, :multipart],
     pass: ["*/*"],
-    json_decoder: Jason
+    json_decoder: Phoenix.json_library()
 
   plug HelloWeb.Router
 end

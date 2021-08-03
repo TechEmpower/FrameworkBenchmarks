@@ -33,7 +33,7 @@ defmodule HelloWeb do
 
   def view do
     quote do
-      use Phoenix.View, 
+      use Phoenix.View,
         root: "lib/hello_web/templates",
         namespace: HelloWeb
 

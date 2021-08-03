@@ -1,7 +1,7 @@
 ###############
 # Build stage #
 ###############
-FROM elixir:1.12.2-alpine as build
+FROM elixir:1.12.2 as build
 
 ARG MIX_ENV="prod"
 
@@ -21,7 +21,7 @@ RUN mix release --force --path /export
 ####################
 # Deployment Stage #
 ####################
-FROM erlang:24-alpine
+FROM erlang:24.0.5
 
 COPY --from=build /export /opt
 
