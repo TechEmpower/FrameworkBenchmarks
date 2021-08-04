@@ -6,7 +6,7 @@ ADD ./ /xitca-web
 WORKDIR /xitca-web
 
 RUN cargo clean
-RUN rustup default nightly-2021-07-26
+RUN rustup default nightly-2021-08-03
 RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --bin xitca-web
 
 EXPOSE 8080
