@@ -5,7 +5,12 @@ mod db;
 mod ser;
 mod util;
 
-use std::{error::Error, future::ready, io};
+use std::{
+    error::Error,
+    future::ready,
+    io,
+    sync::{Arc, Mutex},
+};
 
 use bytes::Bytes;
 use xitca_http::http::{
@@ -25,7 +30,8 @@ type State = AppState<Client>;
 async fn main() -> io::Result<()> {
     let config = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
-    let mut cores = core_affinity::get_core_ids().unwrap_or_else(Vec::new);
+    let cores = core_affinity::get_core_ids().unwrap_or_else(Vec::new);
+    let cores = Arc::new(Mutex::new(cores));
 
     HttpServer::new(move || {
         App::with_async_state(move || async move {
@@ -37,7 +43,7 @@ async fn main() -> io::Result<()> {
     .force_flat_buf()
     .max_request_headers::<8>()
     .on_worker_start(move || {
-        if let Some(core) = cores.pop() {
+        if let Some(core) = cores.lock().unwrap().pop() {
             core_affinity::set_for_current(core);
         }
         ready(())

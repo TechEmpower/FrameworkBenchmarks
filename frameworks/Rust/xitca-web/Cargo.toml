@@ -12,8 +12,8 @@ name = "xitca-web-diesel"
 path = "./src/main_diesel.rs"
 
 [dependencies]
-xitca-http = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "06474415418a12451f7910b88784cc5d9205983e" }
-xitca-web = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "06474415418a12451f7910b88784cc5d9205983e" }
+xitca-http = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "7499e8a5aa4f7e1f17bbf6b6ee0816828dff3149" }
+xitca-web = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "7499e8a5aa4f7e1f17bbf6b6ee0816828dff3149" }
 
 ahash = { version = "0.7.4", features = ["compile-time-rng"] }
 atoi = "0.4.0"
@@ -36,6 +36,6 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-http = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "06474415418a12451f7910b88784cc5d9205983e" }
-xitca-server = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "06474415418a12451f7910b88784cc5d9205983e" }
-xitca-service = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "06474415418a12451f7910b88784cc5d9205983e" }
+xitca-http = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "7499e8a5aa4f7e1f17bbf6b6ee0816828dff3149" }
+xitca-server = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "7499e8a5aa4f7e1f17bbf6b6ee0816828dff3149" }
+xitca-service = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "7499e8a5aa4f7e1f17bbf6b6ee0816828dff3149" }
