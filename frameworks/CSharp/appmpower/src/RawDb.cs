@@ -51,8 +51,13 @@ namespace appMpower
       public static async Task<List<Fortune>> LoadFortunesRows()
       {
          var fortunes = new List<Fortune>();
-
+#if MYSQL
+         //MariaDB ODBC connector does not correctly support Japanese characters - switch to MySQL ODBC connector
+         //MySQL ODBC connector is slower than MariaDB ODBC connector + does not support batched queries (in query and update)
+         var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnectionJapanese);
+#else
          var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnection);
+#endif
          pooledConnection.Open();
 
          var pooledCommand = new PooledCommand("SELECT * FROM fortune", pooledConnection);
@@ -99,7 +104,7 @@ namespace appMpower
          var ids = PlatformBenchmarks.BatchUpdateString.Ids;
          var randoms = PlatformBenchmarks.BatchUpdateString.Randoms;
          // --- only for alternative update statement - will be used for MySQL
-         var jds = PlatformBenchmarks.BatchUpdateString.Jds;
+         //var jds = PlatformBenchmarks.BatchUpdateString.Jds;
 
          for (int i = 0; i < count; i++)
          {
@@ -112,10 +117,12 @@ namespace appMpower
          }
 
          // --- only for alternative update statement - will be used for MySQL
+         /*
          for (int i = 0; i < count; i++)
          {
             updateCommand.CreateParameter(jds[i], DbType.Int32, worlds[i].Id);
          }
+         */
 
          await updateCommand.ExecuteNonQueryAsync();
 

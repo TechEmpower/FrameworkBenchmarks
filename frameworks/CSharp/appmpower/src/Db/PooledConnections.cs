@@ -9,13 +9,33 @@ namespace appMpower.Db
    {
       private static bool _connectionsCreated = false;
       private static short _createdConnections = 0;
+
+#if MYSQL || MARIADB
+      private static short _maxConnections = 1024; 
+      private static string _connectionString = ConnectionStrings.OdbcConnection; 
+#else
       private static short _maxConnections = 333;
+#endif
+
       private static ConcurrentStack<PooledConnection> _stack = new ConcurrentStack<PooledConnection>();
       private static ConcurrentQueue<TaskCompletionSource<PooledConnection>> _waitingQueue = new ConcurrentQueue<TaskCompletionSource<PooledConnection>>();
 
       public static async Task<PooledConnection> GetConnection(string connectionString)
       {
          PooledConnection pooledConnection = null;
+
+
+#if MYSQL || MARIADB
+
+         if (_connectionString != connectionString)
+         {
+            _connectionsCreated = false; 
+            _createdConnections = 0;
+            _stack = new ConcurrentStack<PooledConnection>();
+            new ConcurrentQueue<TaskCompletionSource<PooledConnection>>();
+            _connectionString = connectionString; 
+         }
+#endif
 
          if (_connectionsCreated)
          {
@@ -29,7 +49,6 @@ namespace appMpower.Db
             }
 
             return pooledConnection;
-
          }
          else
          {
