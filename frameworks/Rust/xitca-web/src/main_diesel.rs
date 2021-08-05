@@ -1,16 +1,15 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-mod db;
+#[macro_use]
+extern crate diesel;
+
+mod db_diesel;
+mod schema;
 mod ser;
 mod util;
 
-use std::{
-    error::Error,
-    future::ready,
-    io,
-    sync::{Arc, Mutex},
-};
+use std::{error::Error, io};
 
 use bytes::Bytes;
 use xitca_http::http::{
@@ -19,35 +18,27 @@ use xitca_http::http::{
 };
 use xitca_web::{dev::fn_service, request::WebRequest, App, HttpServer};
 
-use self::db::Client;
+use self::db_diesel::{connect, DieselPool};
 use self::util::{
     internal, json, json_response, not_found, plain_text, AppState, HandleResult, QueryParse,
 };
 
-type State = AppState<Client>;
+type State = AppState<DieselPool>;
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> io::Result<()> {
     let config = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
-    let cores = core_affinity::get_core_ids().unwrap_or_else(Vec::new);
-    let cores = Arc::new(Mutex::new(cores));
-
     HttpServer::new(move || {
-        App::with_async_state(move || async move {
-            let client = db::create(config).await;
-            AppState::new(client)
+        let pool = connect(config).unwrap();
+        App::with_async_state(move || {
+            let pool = pool.clone();
+            async move { AppState::new(pool.clone()) }
         })
         .service(fn_service(handle))
     })
     .force_flat_buf()
     .max_request_headers::<8>()
-    .on_worker_start(move || {
-        if let Some(core) = cores.lock().unwrap().pop() {
-            core_affinity::set_for_current(core);
-        }
-        ready(())
-    })
     .bind("0.0.0.0:8080")?
     .run()
     .await
@@ -69,7 +60,7 @@ async fn handle(req: &mut WebRequest<'_, State>) -> HandleResult {
 
 async fn db(req: &mut WebRequest<'_, State>) -> HandleResult {
     match req.state().client().get_world().await {
-        Ok(ref world) => json_response(req, world),
+        Ok(world) => json_response(req, &world),
         Err(_) => internal(),
     }
 }
@@ -111,8 +102,8 @@ async fn updates(req: &mut WebRequest<'_, State>) -> HandleResult {
 }
 
 #[inline]
-async fn _fortunes(client: &Client) -> Result<Bytes, Box<dyn Error>> {
+async fn _fortunes(pool: &DieselPool) -> Result<Bytes, Box<dyn Error + Send + Sync + 'static>> {
     use sailfish::TemplateOnce;
-    let fortunes = client.tell_fortune().await?.render_once()?;
+    let fortunes = pool.tell_fortune().await?.render_once()?;
     Ok(fortunes.into())
 }
