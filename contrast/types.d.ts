@@ -43,4 +43,13 @@ export type ProcessedStats = {
     rawMemoryUsageStats: Array<RawMemoryUsageStats>
     processedCpuUsageStats?: ProcessedCpuUsageStats
     processedMemoryUsageStats?: ProcessedMemoryUsageStats
+    latencyStats?: GenericStats
+    totalRequests?: number
+}
+
+export type ResultsData = {
+    latencyAvg: string
+    latencyMax: string
+    latencyStdev: string
+    totalRequests: number
 }

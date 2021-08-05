@@ -28,8 +28,9 @@ Object.keys(results.succeeded).forEach((testType: string) => {
 // Process stats.txt.json files
 const output = statsFiles.map((filePath: string) => {
     const rawStats = JSON.parse(readFileSync(`${techEmpowerResultsDirectory}/${filePath}`, 'utf8'));
-    
-    return { key: filePath, value: processStatsFile(rawStats, concurrencyLevels) };
+    const [framework, test] = filePath.split('/')
+
+    return { key: filePath, value: processStatsFile(rawStats, concurrencyLevels, results.rawData[test][framework]) };
 }).reduce((accumulator: any, currentValue: { key: string, value: Array<ProcessedStats> }) => {
     accumulator[currentValue.key] = currentValue.value;
     return accumulator;
