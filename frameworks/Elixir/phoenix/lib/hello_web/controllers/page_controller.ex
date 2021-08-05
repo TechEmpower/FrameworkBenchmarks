@@ -1,41 +1,52 @@
-defmodule Hello.PageController do
-  alias Hello.{Fortune, World}
+defmodule HelloWeb.PageController do
+  alias Hello.Models.{Fortune, World}
 
-  use Hello.Web, :controller
+  use HelloWeb, :controller
 
   @json "application/json"
   @plain "text/plain"
   @random_max 10_000
 
+
   def index(conn, _params) do
+    resp = Jason.encode!(%{"TE Benchmarks\n" => "Started"})
+
     conn
     |> put_resp_content_type(@json, nil)
-    |> send_resp(200, Jason.encode_to_iodata!(%{"TE Benchmarks\n" => "Started"}))
+    |> send_resp(200, resp)
   end
 
   # avoid namespace collision
   def _json(conn, _params) do
+    resp = Jason.encode!(%{"message" => "Hello, world!"})
+
     conn
     |> put_resp_content_type(@json, nil)
-    |> send_resp(200, Jason.encode_to_iodata!(%{"message" => "Hello, world!"}))
+    |> send_resp(200, resp)
   end
 
   def db(conn, _params) do
+    resp =
+      Repo.get(World, :rand.uniform(@random_max))
+      |> Jason.encode!()
+
     conn
     |> put_resp_content_type(@json, nil)
-    |> send_resp(200, Jason.encode_to_iodata!(Repo.get(World, :rand.uniform(@random_max))))
+    |> send_resp(200, resp)
   end
 
   def queries(conn, params) do
-    json =
+    resp =
       params["queries"]
       |> query_range()
-      |> parallel(fn _ -> Repo.get(World, :rand.uniform(@random_max)) end)
-      |> Jason.encode_to_iodata!()
+      |> parallel(fn _ ->
+        Repo.get(World, :rand.uniform(@random_max))
+      end)
+      |> Jason.encode!()
 
     conn
     |> put_resp_content_type(@json, nil)
-    |> send_resp(200, json)
+    |> send_resp(200, resp)
   end
 
   def fortunes(conn, _params) do
@@ -52,7 +63,7 @@ defmodule Hello.PageController do
   end
 
   def updates(conn, params) do
-    json =
+    resp =
       params["queries"]
       |> query_range()
       |> parallel(fn _ ->
@@ -66,11 +77,11 @@ defmodule Hello.PageController do
           |> Repo.update!()
         end)
       end)
-      |> Jason.encode_to_iodata!()
+      |> Jason.encode!()
 
     conn
     |> put_resp_content_type(@json, nil)
-    |> send_resp(200, json)
+    |> send_resp(200, resp)
   end
 
   def plaintext(conn, _params) do

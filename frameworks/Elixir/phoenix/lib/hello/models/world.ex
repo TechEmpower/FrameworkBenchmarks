@@ -1,5 +1,5 @@
-defmodule Hello.World do
-  use Hello.Web, :model
+defmodule Hello.Models.World do
+  use Ecto.Schema
 
   @derive {Jason.Encoder, only: [:id, :randomnumber]}
   schema "world" do
