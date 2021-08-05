@@ -56,7 +56,7 @@ namespace appMpower
          pooledConnection.Open();
 
          var pooledCommand = new PooledCommand("SELECT * FROM fortune", pooledConnection);
-         var dataReader = await pooledCommand.ExecuteReaderAsync(CommandBehavior.SingleResult);
+         var dataReader = await pooledCommand.ExecuteReaderAsync(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
 
          while (dataReader.Read())
          {
@@ -99,7 +99,7 @@ namespace appMpower
          var ids = PlatformBenchmarks.BatchUpdateString.Ids;
          var randoms = PlatformBenchmarks.BatchUpdateString.Randoms;
          // --- only for alternative update statement - will be used for MySQL
-         //var jds = PlatformBenchmarks.BatchUpdateString.Jds;
+         var jds = PlatformBenchmarks.BatchUpdateString.Jds;
 
          for (int i = 0; i < count; i++)
          {
@@ -112,10 +112,10 @@ namespace appMpower
          }
 
          // --- only for alternative update statement - will be used for MySQL
-         //for (int i = 0; i < count; i++)
-         //{
-         //   updateCommand.CreateParameter(jds[i], DbType.Int32, worlds[i].Id);
-         //}
+         for (int i = 0; i < count; i++)
+         {
+            updateCommand.CreateParameter(jds[i], DbType.Int32, worlds[i].Id);
+         }
 
          await updateCommand.ExecuteNonQueryAsync();
 
@@ -135,7 +135,7 @@ namespace appMpower
 
       private static async Task<World> ReadSingleRow(PooledCommand pooledCommand)
       {
-         var dataReader = await pooledCommand.ExecuteReaderAsync(CommandBehavior.SingleRow);
+         var dataReader = await pooledCommand.ExecuteReaderAsync(CommandBehavior.SingleRow & CommandBehavior.SequentialAccess);
 
          dataReader.Read();
 
@@ -183,7 +183,7 @@ namespace appMpower
             pooledCommand.CreateParameter(ids[i], DbType.Int32, _random.Next(1, 10001));
          }
 
-         var dataReader = await pooledCommand.ExecuteReaderAsync(CommandBehavior.Default);
+         var dataReader = await pooledCommand.ExecuteReaderAsync(CommandBehavior.Default & CommandBehavior.SequentialAccess);
 
          do
          {

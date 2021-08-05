@@ -37,13 +37,14 @@ namespace PlatformBenchmarks
          //   Enumerable.Range(0, batchSize).ToList().ForEach(i => sb.Append($"UPDATE world SET randomnumber = @Random_{i} WHERE id = @Id_{i};"));
          //}
 
+         /* --- this is extremely slow with odbc, probably due to int specification ? 
          sb.Append("UPDATE world SET randomNumber = temp.randomNumber FROM (VALUES ");
          Enumerable.Range(0, lastIndex).ToList().ForEach(i => sb.Append("(?::int,?::int),"));
          //sb.Append("(?::int,?::int) ORDER BY 1) AS temp(id, randomNumber) WHERE temp.id = world.id");
          sb.Append("(?::int,?::int)) AS temp(id, randomNumber) WHERE temp.id = world.id");
 
-         /* --- only for alternative update statement - will be used for MySQL
-         sb.Append("UPDATE world SET randomNumber = CASE id ");
+         /* --- only for alternative update statement - will be used for MySQL */
+         sb.Append("UPDATE world SET randomNumber=CASE id ");
 
          for (int i = 0; i < batchSize; i++)
          {
@@ -55,12 +56,11 @@ namespace PlatformBenchmarks
 
          for (int i = 0; i < lastIndex; i++)
          {
-            sb.Append("?, ");
+            sb.Append("?,");
          }
 
          //Enumerable.Range(0, lastIndex).ToList().ForEach(i => sb.Append("?, "));
          sb.Append("?)");
-         */
 
          return _queries[batchSize] = StringBuilderCache.GetStringAndRelease(sb);
       }
