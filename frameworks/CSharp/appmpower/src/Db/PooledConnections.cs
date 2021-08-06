@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Concurrent;
 using System.Data.Odbc;
 using System.Threading.Tasks;
@@ -10,11 +9,10 @@ namespace appMpower.Db
       private static bool _connectionsCreated = false;
       private static short _createdConnections = 0;
 
-#if MYSQL || MARIADB
-      private static short _maxConnections = 1024; 
-      private static string _connectionString = ConnectionStrings.OdbcConnection; 
+#if MYSQL
+      private static short _maxConnections = 1250; 
 #else
-      private static short _maxConnections = 333;
+      private static short _maxConnections = 500;
 #endif
 
       private static ConcurrentStack<PooledConnection> _stack = new ConcurrentStack<PooledConnection>();
@@ -23,19 +21,6 @@ namespace appMpower.Db
       public static async Task<PooledConnection> GetConnection(string connectionString)
       {
          PooledConnection pooledConnection = null;
-
-
-#if MYSQL || MARIADB
-
-         if (_connectionString != connectionString)
-         {
-            _connectionsCreated = false; 
-            _createdConnections = 0;
-            _stack = new ConcurrentStack<PooledConnection>();
-            new ConcurrentQueue<TaskCompletionSource<PooledConnection>>();
-            _connectionString = connectionString; 
-         }
-#endif
 
          if (_connectionsCreated)
          {

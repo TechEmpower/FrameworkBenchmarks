@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
+using System.Data.Common;
 using System.Threading.Tasks;
 using appMpower.Db;
 
@@ -51,13 +51,8 @@ namespace appMpower
       public static async Task<List<Fortune>> LoadFortunesRows()
       {
          var fortunes = new List<Fortune>();
-#if MYSQL
-         //MariaDB ODBC connector does not correctly support Japanese characters - switch to MySQL ODBC connector
-         //MySQL ODBC connector is slower than MariaDB ODBC connector + does not support batched queries (in query and update)
-         var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnectionJapanese);
-#else
+
          var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnection);
-#endif
          pooledConnection.Open();
 
          var pooledCommand = new PooledCommand("SELECT * FROM fortune", pooledConnection);
@@ -68,7 +63,13 @@ namespace appMpower
             fortunes.Add(new Fortune
             (
                 id: dataReader.GetInt32(0),
+#if MYSQL
+               //MariaDB ODBC connector does not correctly support Japanese characters in combination with default ADO.NET;
+               //as a solution we custom read this string
+                message: ReadColumn(dataReader, 1)
+#else
                 message: dataReader.GetString(1)
+#endif
             ));
          }
 
@@ -210,6 +211,24 @@ namespace appMpower
          pooledConnection.Release();
 
          return worlds;
+      }
+
+      public static string ReadColumn(DbDataReader dbDataReader, int column)
+      {
+         long size = dbDataReader.GetBytes(column, 0, null, 0, 0);  //get the length of data
+         byte[] values = new byte[size];
+
+         int bufferSize = 64;
+         long bytesRead = 0;
+         int currentPosition = 0;
+
+         while (bytesRead < size)
+         {
+            bytesRead += dbDataReader.GetBytes(column, currentPosition, values, currentPosition, bufferSize);
+            currentPosition += bufferSize;
+         }
+
+         return System.Text.Encoding.Default.GetString(values);
       }
    }
 }
