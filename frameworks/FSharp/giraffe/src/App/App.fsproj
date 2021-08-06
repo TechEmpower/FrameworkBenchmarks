@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.35" />
-    <PackageReference Include="Giraffe" Version="5.0.0-rc-6" />
-    <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
+    <PackageReference Include="Dapper" Version="2.0.90" />
+    <PackageReference Include="Giraffe" Version="5.0.0" />
+    <PackageReference Include="Npgsql" Version="5.0.7" />
   </ItemGroup>
 
   <ItemGroup>
