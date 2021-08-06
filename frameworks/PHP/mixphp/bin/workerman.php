@@ -4,8 +4,6 @@ require __DIR__ . '/../vendor/autoload.php';
 use App\Container\Logger;
 use App\Vega;
 
-const APP_DEBUG = false;
-
 App\Error::register();
 
 $vega = Vega::new();
