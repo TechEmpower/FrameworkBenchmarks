@@ -1,10 +1,9 @@
-FROM python:3.8-buster
-
+FROM pypy:3
 
 RUN apt-get update
 RUN apt-get install libpq-dev python3-dev -y
-ADD ./requirements.txt /flask/requirements.txt
-RUN pip3 install -r /flask/requirements.txt
+ADD ./requirements-pypy.txt /flask/requirements-pypy.txt
+RUN pip3 install -r /flask/requirements-pypy.txt
 ADD ./ /flask
 WORKDIR /flask
 
