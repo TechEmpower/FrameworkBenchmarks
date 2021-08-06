@@ -51,6 +51,9 @@ class Benchmark
         while ($queryCount--) {
             $id = mt_rand(1, 10000);
             $ret = DB::instance()->raw('SELECT id,randomNumber FROM World WHERE id=?', $id)->first();
+            if (!$ret) {
+                continue;
+            }
             $arr[] = $ret;
         }
 
@@ -86,6 +89,9 @@ class Benchmark
         while ($queryCount--) {
             $id = mt_rand(1, 10000);
             $ret = DB::instance()->raw('SELECT id,randomNumber FROM World WHERE id=?', $id)->first();
+            if (!$ret) {
+                continue;
+            }
             DB::instance()->exec('UPDATE World SET randomNumber=? WHERE id=?', $ret->randomNumber = mt_rand(1, 10000), $id);
             $arr[] = $ret;
         }
