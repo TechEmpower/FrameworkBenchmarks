@@ -3,8 +3,8 @@ pony==0.7.14
 psycopg2==2.9.1
 psycopg2-binary==2.9.1
 psycopg2-pool==1.1
-Flask==1.1.2
-greenlet==0.4.15
+Flask==2.0.1
+greenlet<0.5
 gunicorn==20.1.0
 itsdangerous==2.0.1
 Jinja2==3.0.1
@@ -12,3 +12,5 @@ MarkupSafe==2.0.1
 meinheld==1.0.2
 uWSGI==2.0.19.1
 Werkzeug==2.0.1
+ujson==4.0.2
+orjson==3.6.0
