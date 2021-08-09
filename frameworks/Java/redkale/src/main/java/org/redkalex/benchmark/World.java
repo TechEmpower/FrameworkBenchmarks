@@ -6,13 +6,14 @@
 package org.redkalex.benchmark;
 
 import java.util.*;
-import javax.persistence.Id;
+import javax.persistence.*;
 import org.redkale.convert.json.JsonConvert;
 
 /**
  *
  * @author zhangjx
  */
+@Entity
 public final class World implements Comparable<World> {
 
     @Id

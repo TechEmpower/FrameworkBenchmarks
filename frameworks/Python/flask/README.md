@@ -22,7 +22,7 @@ PostgresQL (psycopg2 on CPython, psycopg2cffi on PyPy)
 ### Server
 
 * gunicorn+meinheld on CPython
-* guinicorn on PyPy
+* gunicorn on PyPy
 
 ## Test URLs
 ### JSON Encoding 
