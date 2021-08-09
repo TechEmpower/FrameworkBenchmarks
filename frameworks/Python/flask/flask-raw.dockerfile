@@ -10,4 +10,4 @@ WORKDIR /flask
 
 EXPOSE 8080
 
-CMD gunicorn app_raw:app -c gunicorn_conf.py
+CMD gunicorn app_raw:app -c gunicorn_conf.py -k egg:meinheld#gunicorn_worker

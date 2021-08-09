@@ -13,7 +13,7 @@ All test implementations are located within a single file
 
 ## Description
 
-Flask + Flask-SQLAlchemy
+Flask + Flask-Pony
 
 ### Database
 
