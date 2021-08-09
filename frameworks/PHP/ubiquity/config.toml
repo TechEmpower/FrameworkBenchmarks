@@ -84,6 +84,19 @@ platform = "ngx_php"
 webserver = "nginx"
 versus = "ngx_php"
 
+[ngx-micro]
+urls.plaintext = "/micro/plaintext"
+urls.json = "/micro/json"
+approach = "Realistic"
+classification = "Micro"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "none"
+platform = "ngx_php"
+webserver = "nginx"
+versus = "ngx_php"
+
 [workerman]
 urls.db = "/Db_"
 urls.query = "/Db_/query/"

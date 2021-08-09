@@ -8,8 +8,8 @@ namespace appMpower.Db
 {
    public class PooledConnection : IDbConnection
    {
-      private bool _isInUse = true;
-      private byte _number = 0;
+      private bool _released = false;
+      private short _number = 0;
       private OdbcConnection _odbcConnection;
       private ConcurrentDictionary<string, PooledCommand> _pooledCommands;
 
@@ -35,19 +35,7 @@ namespace appMpower.Db
          }
       }
 
-      public bool IsInUse
-      {
-         get
-         {
-            return _isInUse;
-         }
-         set
-         {
-            _isInUse = value;
-         }
-      }
-
-      public byte Number
+      public short Number
       {
          get
          {
@@ -107,6 +95,18 @@ namespace appMpower.Db
          }
       }
 
+      public bool Released
+      {
+         get
+         {
+            return _released;
+         }
+         internal set
+         {
+            _released = value;
+         }
+      }
+
       public IDbTransaction BeginTransaction()
       {
          return _odbcConnection.BeginTransaction();
@@ -124,8 +124,8 @@ namespace appMpower.Db
 
       public void Close()
       {
-         PooledConnections.ReleaseConnection(this);
-         _isInUse = false;
+         _odbcConnection.Close();
+         _released = true;
       }
 
       public IDbCommand CreateCommand()
@@ -146,12 +146,19 @@ namespace appMpower.Db
          }
       }
 
+      public void Release()
+      {
+         if (!_released && _odbcConnection.State == ConnectionState.Open)
+         {
+            PooledConnections.Release(this);
+         }
+      }
+
       public void Dispose()
       {
-         if (_isInUse && _odbcConnection.State == ConnectionState.Open)
+         if (!_released && _odbcConnection.State == ConnectionState.Open)
          {
-            PooledConnections.ReleaseConnection(this);
-            _isInUse = false;
+            PooledConnections.Dispose(this);
          }
       }
 
@@ -159,14 +166,7 @@ namespace appMpower.Db
       {
          if (_odbcConnection.State == ConnectionState.Closed)
          {
-            try
-            {
-               await _odbcConnection.OpenAsync();
-            }
-            catch (Exception exception)
-            {
-               Console.WriteLine(exception.Message);
-            }
+            await _odbcConnection.OpenAsync();
          }
       }
 
@@ -182,11 +182,10 @@ namespace appMpower.Db
          else
          {
             pooledCommand.OdbcCommand = new OdbcCommand(commandText, this.OdbcConnection);
+            pooledCommand.OdbcCommand.Prepare();
             pooledCommand.PooledConnection = this;
-            _pooledCommands.TryAdd(commandText, pooledCommand);
 
             //Console.WriteLine("prepare pool connection: " + this._number + " for command " + _pooledCommands.Count);
-            pooledCommand.OdbcCommand.Prepare();
          }
 
          return pooledCommand;

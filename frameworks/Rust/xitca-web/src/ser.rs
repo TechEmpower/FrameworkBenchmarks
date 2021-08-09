@@ -1,7 +1,6 @@
-use std::{borrow::Cow, cell::RefMut, io};
+use std::borrow::Cow;
 
-use bytes::{Bytes, BytesMut};
-
+use diesel::Queryable;
 use sailfish::TemplateOnce;
 use serde::{Deserialize, Serialize};
 
@@ -12,7 +11,8 @@ pub struct Message {
 
 impl Message {
     #[inline]
-    pub fn new() -> Self {
+    #[allow(dead_code)]
+    pub(super) fn new() -> Self {
         Self {
             message: "Hello, World!",
         }
@@ -20,7 +20,7 @@ impl Message {
 }
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Debug)]
+#[derive(Debug, Serialize, Queryable)]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,
@@ -28,11 +28,13 @@ pub struct World {
 
 impl World {
     #[inline]
+    #[allow(dead_code)]
     pub fn new(id: i32, randomnumber: i32) -> Self {
         Self { id, randomnumber }
     }
 }
 
+#[derive(Queryable)]
 pub struct Fortune {
     pub id: i32,
     pub message: Cow<'static, str>,
@@ -58,27 +60,5 @@ impl Fortunes {
     #[inline]
     pub fn new(items: Vec<Fortune>) -> Self {
         Self { items }
-    }
-}
-
-pub struct Writer<'a>(pub RefMut<'a, BytesMut>);
-
-impl Writer<'_> {
-    #[inline]
-    pub fn take(mut self) -> Bytes {
-        self.0.split().freeze()
-    }
-}
-
-impl io::Write for &mut Writer<'_> {
-    #[inline]
-    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-        self.0.extend_from_slice(buf);
-        Ok(buf.len())
-    }
-
-    #[inline]
-    fn flush(&mut self) -> io::Result<()> {
-        Ok(())
     }
 }
