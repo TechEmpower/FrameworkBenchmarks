@@ -3,13 +3,11 @@ package http4s.techempower.benchmark
 import java.util.concurrent.{Executor, ThreadLocalRandom}
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
-import cats.effect.{ContextShift, IO => CatsIO}
+import cats.effect.{IO => CatsIO}
 import cats.syntax.all._
 import io.getquill._
 
-class DatabaseService(ctx: PostgresJAsyncContext[LowerCase.type], executor: Executor)(implicit
-    cs: ContextShift[CatsIO]
-) {
+class DatabaseService(ctx: PostgresJAsyncContext[LowerCase.type], executor: Executor) {
   implicit val dbExecutionContext: ExecutionContextExecutor = ExecutionContext.fromExecutor(executor)
   import ctx._
 
