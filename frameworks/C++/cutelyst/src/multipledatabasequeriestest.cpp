@@ -26,7 +26,7 @@ void MultipleDatabaseQueriesTest::queriesp(Context *c)
         queries = 500;
     }
 
-    auto array = QSharedPointer<QJsonArray>(new QJsonArray);
+    auto array = std::shared_ptr<QJsonArray>(new QJsonArray);
     ASync async(c);
     static thread_local auto db = APool::database();
     for (int i = 0; i < queries; ++i) {

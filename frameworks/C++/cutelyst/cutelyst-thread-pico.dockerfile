@@ -29,7 +29,7 @@ ENV CPU_AFFINITY 1
 
 EXPOSE 8080
 
-CMD cutelyst-wsgi2 \
+CMD ${TROOT}/build/cutelyst-benchmarks \
     --ini /cutelyst.ini:uwsgi \
     --application ${CUTELYST_APP} \
     --processes=${C_PROCESSES} \
