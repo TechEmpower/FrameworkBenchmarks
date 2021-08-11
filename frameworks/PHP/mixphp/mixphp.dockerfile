@@ -1,12 +1,10 @@
 FROM php:8.0-cli
 
-RUN pecl install swoole && \
-    docker-php-ext-enable swoole
+RUN pecl install swoole && docker-php-ext-enable swoole
 
 RUN docker-php-ext-install opcache pdo_mysql bcmath > /dev/null
 
-RUN apt -yqq update > /dev/null && \
-    apt -yqq install git unzip > /dev/null
+RUN apt -yqq update && apt -yqq install git unzip > /dev/null
 
 COPY . /mixphp
 COPY php.ini /usr/local/etc/php/
