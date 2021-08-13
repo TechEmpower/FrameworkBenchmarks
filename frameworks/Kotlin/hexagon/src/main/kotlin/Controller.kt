@@ -6,6 +6,7 @@ import com.hexagonkt.serialization.Json
 import com.hexagonkt.serialization.toFieldsMap
 import com.hexagonkt.store.BenchmarkStore
 import com.hexagonkt.templates.TemplatePort
+import java.net.URL
 import java.util.concurrent.ThreadLocalRandom
 
 class Controller(private val settings: Settings) {
@@ -42,7 +43,7 @@ class Controller(private val settings: Settings) {
         val context = mapOf("fortunes" to sortedFortunes)
 
         response.contentType = "text/html;charset=utf-8"
-        ok(templateAdapter.render("fortunes.$templateKind.html", context))
+        ok(templateAdapter.render(URL("classpath:fortunes.$templateKind.html"), context))
     }
 
     private fun Call.dbQuery(store: BenchmarkStore) {
