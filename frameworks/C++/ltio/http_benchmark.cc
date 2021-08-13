@@ -11,6 +11,7 @@
 using namespace lt::net;
 using namespace lt;
 using namespace base;
+using namespace co;
 
 DEFINE_int32(loops, 4, "how many loops use for handle message and io");
 DEFINE_bool(echo, false, "just echo response without any logic");
@@ -64,10 +65,10 @@ public:
       return context->Response(response);
     };
 
-    handler.reset(FLAGS_coro ? NewHttpCoroHandler(func) : NewHttpCoroHandler(func));
+    handler.reset(FLAGS_coro ? NewHttpCoroHandler(func) : NewHttpHandler(func));
 
     // ProfilerStart("perf.out");
-    wss.WithIOLoops(loops)
+    http_server.WithIOLoops(loops)
         .WithAddress(base::StrUtil::Concat("http://", FLAGS_http))
         .ServeAddress(handler.get());
     loops.back()->WaitLoopEnd();
@@ -76,7 +77,7 @@ public:
   void Stop() {
     CHECK(CO_CANYIELD);
     LOG(INFO) << __FUNCTION__ << " stop enter";
-    wss.StopServer(CO_RESUMER);
+    http_server.StopServer(CO_RESUMER);
     CO_YIELD;
     LOG(INFO) << __FUNCTION__ << " stop leave";
     loops.back()->QuitLoop();
