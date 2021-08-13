@@ -12,9 +12,9 @@ import java.util.concurrent.ThreadLocalRandom
 
 class Controller(private val settings: Settings) {
 
-    private val classLoader = Thread.currentThread().contextClassLoader
+    private val classLoader = ClassLoader.getSystemClassLoader()
     private val templates: Map<String, URL> = mapOf(
-        "pebble" to (classLoader.getResource("fortunes.pebble.html") ?: error("Template not found"))
+        "pebble" to (classLoader.getResource("/fortunes.pebble.html") ?: error("Template not found"))
     )
 
     internal val router: Router by lazy {
