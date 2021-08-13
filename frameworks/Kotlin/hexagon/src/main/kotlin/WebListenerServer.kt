@@ -10,7 +10,6 @@ import javax.servlet.annotation.WebListener
 @WebListener class WebListenerServer(settings: Settings = Settings()) : ServletServer(Controller(settings).router) {
 
     init {
-        ClasspathHandler.registerHandler()
         Json.mapper.registerModule(BlackbirdModule())
         SerializationManager.mapper = JacksonMapper
         SerializationManager.formats = linkedSetOf(Json)
