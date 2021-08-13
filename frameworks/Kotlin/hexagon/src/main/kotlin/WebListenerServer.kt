@@ -15,6 +15,4 @@ import javax.servlet.annotation.WebListener
         SerializationManager.mapper = JacksonMapper
         SerializationManager.formats = linkedSetOf(Json)
     }
-
-    val webRouter = super.router
 }
