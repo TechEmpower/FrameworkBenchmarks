@@ -14,7 +14,7 @@ class Controller(private val settings: Settings) {
 
     private val classLoader = Thread.currentThread().contextClassLoader
     private val templates: Map<String, URL> = mapOf(
-        "pebble" to (classLoader.getResource("classpath:fortunes.pebble.html") ?: error("Template not found"))
+        "pebble" to (classLoader.getResource("fortunes.pebble.html") ?: error("Template not found"))
     )
 
     internal val router: Router by lazy {
