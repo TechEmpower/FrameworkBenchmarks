@@ -12,9 +12,8 @@ import java.util.concurrent.ThreadLocalRandom
 
 class Controller(private val settings: Settings) {
 
-    private val classLoader = ClassLoader.getSystemClassLoader()
     private val templates: Map<String, URL> = mapOf(
-        "pebble" to (classLoader.getResource("fortunes.pebble.html") ?: error("Template not found"))
+        "pebble" to (urlOrNull("classpath:fortunes.pebble.html") ?: URL("file:/resin/fortunes.pebble.html"))
     )
 
     internal val router: Router by lazy {
@@ -84,4 +83,12 @@ class Controller(private val settings: Settings) {
 
     private fun randomWorld(): Int =
         ThreadLocalRandom.current().nextInt(settings.worldRows) + 1
+
+    private fun urlOrNull(path: String): URL? =
+        try {
+            URL(path)
+        }
+        catch (e: Exception) {
+            null
+        }
 }
