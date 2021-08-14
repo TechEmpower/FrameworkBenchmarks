@@ -1,4 +1,4 @@
-class WorldSerializer < BaseSerializer
+class WorldSerializer < Lucky::Serializer
   def initialize(@world : World)
   end
 

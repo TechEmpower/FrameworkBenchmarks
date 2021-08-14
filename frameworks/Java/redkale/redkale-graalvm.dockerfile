@@ -1,14 +1,27 @@
-FROM maven:3.6.3-openjdk-16-slim as maven
+FROM ubuntu:20.10
+ARG DEBIAN_FRONTEND=noninteractive
+ARG MAVEN_VERSION=3.8.1
+
 WORKDIR /redkale
+RUN apt-get update -yqq
+RUN apt-get install -yqq wget
+
+RUN wget --no-verbose https://redkale.org/graalvm-ee-java16-linux-amd64-21.2.0.tar.gz
+RUN tar -xzf graalvm-ee-java16-linux-amd64-21.2.0.tar.gz
+ENV JAVA_HOME /redkale/graalvm-ee-java16-21.2.0
+
+RUN wget --no-verbose https://ftp.wayne.edu/apache/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz
+RUN tar -xzf apache-maven-${MAVEN_VERSION}-bin.tar.gz
+ENV MAVEN_HOME /redkale/apache-maven-${MAVEN_VERSION}
+
+ENV PATH $JAVA_HOME/bin:$MAVEN_HOME/bin:$PATH
+
 COPY src src
 COPY conf conf
 COPY pom.xml pom.xml
 RUN mvn package -q
 
-FROM ghcr.io/graalvm/graalvm-ce:21.1.0
-WORKDIR /redkale
-COPY conf conf
-COPY --from=maven /redkale/target/redkale-benchmark-1.0.0.jar redkale-benchmark.jar
+RUN cp /redkale/target/redkale-benchmark-1.0.0.jar redkale-benchmark.jar
 
 EXPOSE 8080
 
