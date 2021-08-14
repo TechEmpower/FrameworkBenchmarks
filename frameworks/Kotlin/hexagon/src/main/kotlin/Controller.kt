@@ -21,10 +21,10 @@ class Controller(private val settings: Settings) {
             get("/json") { ok(Message(settings.textMessage), Json) }
 
             benchmarkStores.forEach { (storeEngine, store) ->
-                benchmarkTemplateEngines.forEach { templateKind ->
-                    val path = "/$storeEngine/${templateKind.key}/fortunes"
+                benchmarkTemplateEngines.forEach { (templateEngineId, templateEngine) ->
+                    val path = "/$storeEngine/${templateEngineId}/fortunes"
 
-                    get(path) { listFortunes(store, templateKind.key, templateKind.value) }
+                    get(path) { listFortunes(store, templateEngineId, templateEngine) }
                 }
 
                 get("/$storeEngine/db") { dbQuery(store) }

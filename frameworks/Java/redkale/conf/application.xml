@@ -6,6 +6,7 @@
         <executor threads="0"/>
         <properties>    
             <property name="system.property.convert.tiny" value="false"/>      
+            <property name="system.property.redkale.skip.counter" value="true"/>  
             <property name="system.property.net.invoker.max.onstack" value="24"/>
             <property name="system.property.http.request.pipeline.sameheaders" value="true"/>  
             <property name="system.property.http.response.header.server" value="redkale"/>

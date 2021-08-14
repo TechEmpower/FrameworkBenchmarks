@@ -1,7 +1,7 @@
 use std::{cell::RefCell, error::Error, fmt::Write};
 
 use ahash::AHashMap;
-use futures_util::stream::{FuturesUnordered, TryStreamExt};
+use futures_util::stream::{FuturesUnordered, StreamExt, TryStreamExt};
 use rand::{rngs::SmallRng, Rng, SeedableRng};
 use tokio::pin;
 use tokio_postgres::{types::ToSql, NoTls, Statement};
@@ -62,11 +62,16 @@ pub async fn create(config: &str) -> Client {
 type DbResult<T> = Result<T, Box<dyn Error>>;
 
 impl Client {
-    pub async fn get_world(&self) -> DbResult<World> {
-        let random_id = (self.rng.borrow_mut().gen::<u32>() % 10_000 + 1) as i32;
-        let row = self.client.query_one(&self.world, &[&random_id]).await?;
-
+    async fn query_one_world(&self, id: i32) -> DbResult<World> {
+        let stream = self.client.query_raw(&self.world, &[&id]).await?;
+        pin!(stream);
+        let row = stream.next().await.unwrap()?;
         Ok(World::new(row.get(0), row.get(1)))
+    }
+
+    pub async fn get_world(&self) -> DbResult<World> {
+        let id = (self.rng.borrow_mut().gen::<u32>() % 10_000 + 1) as i32;
+        self.query_one_world(id).await
     }
 
     pub async fn get_worlds(&self, num: u16) -> DbResult<Vec<World>> {
@@ -74,11 +79,8 @@ impl Client {
             let mut rng = self.rng.borrow_mut();
             (0..num)
                 .map(|_| {
-                    let w_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
-                    async move {
-                        let row = self.client.query_one(&self.world, &[&w_id]).await?;
-                        Ok(World::new(row.get(0), row.get(1)))
-                    }
+                    let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+                    self.query_one_world(id)
                 })
                 .collect::<FuturesUnordered<_>>()
         };
@@ -95,8 +97,7 @@ impl Client {
                     let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
                     let w_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
                     async move {
-                        let row = self.client.query_one(&self.world, &[&w_id]).await?;
-                        let mut world = World::new(row.get(0), row.get(1));
+                        let mut world = self.query_one_world(w_id).await?;
                         world.randomnumber = id;
                         Ok::<_, Box<dyn Error>>(world)
                     }

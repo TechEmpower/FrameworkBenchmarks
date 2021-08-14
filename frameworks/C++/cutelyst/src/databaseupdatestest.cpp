@@ -14,6 +14,8 @@
 
 #include <QLoggingCategory>
 
+#include "picojson.h"
+
 DatabaseUpdatesTest::DatabaseUpdatesTest(QObject *parent) : Controller(parent)
 {
 
@@ -28,7 +30,7 @@ void DatabaseUpdatesTest::updatep(Context *c)
         queries = 500;
     }
 
-    QJsonArray array;
+    picojson::array array;
     ASync async(c);
     static thread_local auto db = APool::database();
     for (int i = 0; i < queries; ++i) {
@@ -36,10 +38,10 @@ void DatabaseUpdatesTest::updatep(Context *c)
 
         int randomNumber = (qrand() % 10000) + 1;
 
-        array.append(QJsonObject{
-                         {QStringLiteral("id"), id},
-                         {QStringLiteral("randomNumber"), randomNumber}
-                     });
+        array.emplace_back(picojson::object({
+                            {"id", picojson::value(double(id))},
+                            {"randomNumber", picojson::value(double(randomNumber))}
+                        }));
 
         db.exec(APreparedQueryLiteral(u"SELECT randomNumber, id FROM world WHERE id=$1"),
                                {id}, [c, async] (AResult &result) {
@@ -57,7 +59,7 @@ void DatabaseUpdatesTest::updatep(Context *c)
         }, c);
     }
 
-    c->response()->setJsonArrayBody(array);
+    c->response()->setJsonBody(QByteArray::fromStdString(picojson::value(array).serialize()));
 }
 
 void DatabaseUpdatesTest::updateb(Context *c)
@@ -72,7 +74,7 @@ void DatabaseUpdatesTest::updateb(Context *c)
     QVariantList args;
     QVariantList argsIds;
 
-    QJsonArray array;
+    picojson::array array;
     ASync async(c);
     static thread_local auto db = APool::database();
     for (int i = 0; i < queries; ++i) {
@@ -84,10 +86,10 @@ void DatabaseUpdatesTest::updateb(Context *c)
         args.append(id);
         args.append(randomNumber);
 
-        array.append(QJsonObject{
-                         {QStringLiteral("id"), id},
-                         {QStringLiteral("randomNumber"), randomNumber}
-                     });
+        array.emplace_back(picojson::object({
+                            {"id", picojson::value(double(id))},
+                            {"randomNumber", picojson::value(double(randomNumber))}
+                        }));
 
         db.exec(APreparedQueryLiteral(u"SELECT randomNumber, id FROM world WHERE id=$1"),
                                {id}, [c, async] (AResult &result) {
@@ -107,7 +109,7 @@ void DatabaseUpdatesTest::updateb(Context *c)
         }
     }, c);
 
-    c->response()->setJsonArrayBody(array);
+    c->response()->setJsonBody(QByteArray::fromStdString(picojson::value(array).serialize()));
 }
 
 void DatabaseUpdatesTest::updates_postgres(Context *c)
