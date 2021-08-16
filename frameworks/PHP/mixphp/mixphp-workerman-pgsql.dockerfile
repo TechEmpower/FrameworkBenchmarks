@@ -10,7 +10,7 @@ RUN apt-get install -yqq composer
 
 RUN apt-get install -y php8.0-dev libevent-dev > /dev/null
 RUN wget http://pear.php.net/go-pear.phar --quiet && php go-pear.phar
-RUN pecl install event-3.0.4 && echo "extension=event.so" > /etc/php/8.0/cli/conf.d/event.ini
+RUN pecl install event-3.0.4 > /dev/null && echo "extension=event.so" > /etc/php/8.0/cli/conf.d/event.ini
 
 COPY php-jit.ini /etc/php/8.0/cli/php.ini
 
