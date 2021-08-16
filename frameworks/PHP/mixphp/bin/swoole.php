@@ -17,14 +17,14 @@ $http->on('Request', $vega->handler());
 $http->on('WorkerStart', function ($server, $workerId) {
     // swoole 协程不支持 set_exception_handler 需要手动捕获异常
     try {
-        // App\Container\DB::enableCoroutine();
+        App\Container\DB::enableCoroutine();
     } catch (\Throwable $ex) {
         App\Error::handle($ex);
     }
 });
 $http->set([
-    'enable_coroutine' => false,
-    'worker_num' => swoole_cpu_num() * 4,
+    'enable_coroutine' => true,
+    'worker_num' => swoole_cpu_num(),
     'log_file' => '/dev/null',
     'log_level' => 5,
 ]);
