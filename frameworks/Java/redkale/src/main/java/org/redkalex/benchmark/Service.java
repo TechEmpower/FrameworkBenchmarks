@@ -90,7 +90,7 @@ public class Service extends AbstractService {
             }
         }
         final int size = Math.min(500, Math.max(1, q));
-        return cache.random(cached ? rands.get() : ThreadLocalRandom.current(), size);
+        return cache.random(ThreadLocalRandom.current(), size);
     }
 
     protected int randomInt(Random rand, int bound) {
