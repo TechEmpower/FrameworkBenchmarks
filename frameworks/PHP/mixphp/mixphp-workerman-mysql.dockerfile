@@ -4,7 +4,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
-RUN apt-get update -yqq && apt-get install -yqq php8.0-cli php8.0-mysql php8.0-xml > /dev/null
+RUN apt-get update -yqq && apt-get install -yqq git unzip wget curl build-essential php8.0-cli php8.0-mbstring php8.0-curl php8.0-xml php8.0-mysql > /dev/null
 
 RUN apt-get install -yqq composer
 
