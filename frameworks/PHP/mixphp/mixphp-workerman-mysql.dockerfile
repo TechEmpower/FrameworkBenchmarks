@@ -9,8 +9,9 @@ RUN apt-get update -yqq && apt-get install -yqq php8.0-cli php8.0-mysql php8.0-x
 RUN apt-get install -yqq composer
 
 RUN apt-get install -y php-pear php8.0-dev libevent-dev > /dev/null
+RUN pear upgrade PEAR && pear info pear
 RUN pecl install event-3.0.4 && echo "extension=event.so" > /etc/php/8.0/cli/conf.d/event.ini
- 
+
 COPY php-jit.ini /etc/php/8.0/cli/php.ini
 
 ADD ./ /mixphp
