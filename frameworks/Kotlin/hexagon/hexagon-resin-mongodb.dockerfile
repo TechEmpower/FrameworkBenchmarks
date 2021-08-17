@@ -21,5 +21,6 @@ WORKDIR /resin
 RUN curl -sL $RESIN | tar xz --strip-components=1
 RUN rm -rf webapps/*
 COPY --from=gradle_build /hexagon/build/libs/ROOT.war webapps/ROOT.war
+COPY src/main/resources/fortunes.pebble.html fortunes.pebble.html
 EXPOSE 9090
 CMD ["java", "-jar", "lib/resin.jar", "console"]
