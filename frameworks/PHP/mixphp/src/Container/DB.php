@@ -32,8 +32,8 @@ class DB
 
     public static function enableCoroutine()
     {
-        $maxOpen = intdiv(256, swoole_cpu_num());   // 最大开启连接数
-        $maxIdle = 20;  // 最大闲置连接数
+        $maxOpen = intdiv(128, swoole_cpu_num());   // 最大开启连接数
+        $maxIdle = 15;  // 最大闲置连接数
         $maxLifetime = 0;   // 连接的最长生命周期
         $waitTimeout = 0.0; // 从池获取连接等待的时间, 0为一直等待
         self::instance()->startPool($maxOpen, $maxIdle, $maxLifetime, $waitTimeout);
