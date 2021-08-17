@@ -5,6 +5,23 @@
       "default": {
         "plaintext_url": "/plaintext",
         "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "ASP.NET Core",
+        "language": "C#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "appMpower [Middleware]",
+        "notes": "",
+        "versus": "aspcore-mw"
+      },
+      "odbc-pg": {
         "db_url": "/db",
         "query_url": "/queries?c=",
         "update_url": "/updates?c=",
@@ -21,9 +38,30 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "appMpower",
+        "display_name": "appMpower [Middleware, Odbc, Pg]",
         "notes": "",
-        "versus": "aspcore"
+        "versus": "aspcore-mw-ado-pg"
+      },
+      "odbc-my": {
+        "db_url": "/db",
+        "query_url": "/queries?c=",
+        "update_url": "/updates?c=",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "MySQL",
+        "framework": "ASP.NET Core",
+        "language": "C#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "appMpower [Middleware, Odbc, My]",
+        "notes": "",
+        "versus": "aspcore-mw-ado-my"
       }
     }
   ]
