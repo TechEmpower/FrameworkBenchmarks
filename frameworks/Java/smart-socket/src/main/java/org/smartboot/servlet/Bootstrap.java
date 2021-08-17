@@ -58,7 +58,7 @@ public class Bootstrap {
                     }
                 });
         bootstrap.setPort(8080)
-                .pipeline(new HttpServerHandler() {
+                .httpHandler(new HttpServerHandler() {
                     @Override
                     public void handle(HttpRequest request, HttpResponse response) throws IOException {
                         containerRuntime.doHandle(request, response);
