@@ -19,4 +19,4 @@ ENV CONTRAST__PROTECT__ENABLE=false
 run npm install ./node-contrast.tgz
 # End Contrast Additions
 
-CMD ["node", "-r", "node_contrast/bootstrap", "app.js"]
+CMD ["node", "-r", "@contrast/agent", "app.js"]
