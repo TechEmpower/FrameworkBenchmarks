@@ -1,4 +1,4 @@
-FROM golang:1.14
+FROM golang:1.16
 
 ENV GO111MODULE on
 WORKDIR /go-std
@@ -15,6 +15,8 @@ COPY contrast_security.yaml /etc/contrast/contrast_security.yaml
 
 ENV CONTRAST__ASSESS__ENABLE=false
 ENV CONTRAST__PROTECT__ENABLE=false
+
+RUN chmod 777 ./contrast-go
 # End Contrast Additions
 
 RUN go generate ./templates
