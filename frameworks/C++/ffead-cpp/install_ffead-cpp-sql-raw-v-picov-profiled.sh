@@ -6,6 +6,7 @@ export LD_LIBRARY_PATH=${IROOT}/:${IROOT}/lib:${FFEAD_CPP_PATH}/lib:/usr/local/l
 cd $IROOT/lang-server-backends/v/pico.v
 
 cp -f ${FFEAD_CPP_PATH}/web/te-benchmark-um-pq/config/cachememory.xml ${FFEAD_CPP_PATH}/web/te-benchmark-um-pq/config/cache.xml
+sed -i 's|"TeBkUmLpqRouter"|"TeBkUmLpqRouterPicoV"|g' ${FFEAD_CPP_PATH}/web/te-benchmark-um-pq/config/application.xml
 sed -i 's|EVH_SINGLE=false|EVH_SINGLE=true|g' ${FFEAD_CPP_PATH}/resources/server.prop
 #sed -i 's|LOGGING_ENABLED=false|LOGGING_ENABLED=true|g' ${FFEAD_CPP_PATH}/resources/server.prop
 nohup bash -c "./main --server_dir=$FFEAD_CPP_PATH --server_port=8080 > ffead.log &"
@@ -22,7 +23,11 @@ wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,applicatio
 wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' \
 	-H 'Connection: keep-alive' --latency -d 5 -c 512 --timeout 8 -t 2 "http://localhost:8080/te-benchmark-um-pq/queries?queries=20"
 wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' \
+	-H 'Connection: keep-alive' --latency -d 5 -c 512 --timeout 8 -t 2 "http://localhost:8080/te-benchmark-um-pq/querie_?queries=20"
+wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' \
 	-H 'Connection: keep-alive' --latency -d 5 -c 512 --timeout 8 -t 2 "http://localhost:8080/te-benchmark-um-pq/updates?queries=20"
+wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' \
+	-H 'Connection: keep-alive' --latency -d 5 -c 512 --timeout 8 -t 2 "http://localhost:8080/te-benchmark-um-pq/update_?queries=20"
 wrk -H 'Host: localhost' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,*/*;q=0.7' \
 	-H 'Connection: keep-alive' --latency -d 5 -c 512 --timeout 8 -t 2 "http://localhost:8080/te-benchmark-um-pq/cached-worlds?count=20"
 echo "normal shutdown"

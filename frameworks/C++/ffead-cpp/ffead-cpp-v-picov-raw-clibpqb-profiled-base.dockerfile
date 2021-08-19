@@ -1,22 +1,7 @@
-FROM sumeetchhetri/ffead-cpp-sql-raw-clibpqb-profiled-base:6.0
+FROM sumeetchhetri/ffead-cpp-base:6.0
 LABEL maintainer="Sumeet Chhetri"
 LABEL version="6.0"
-LABEL description="SQL Raw Custom libpq batch patched Base ffead-cpp-v-picov-profiled docker image with commit id - master"
-
-RUN rm -f /usr/local/lib/libffead-* /usr/local/lib/libte_benc* /usr/local/lib/libinter.so /usr/local/lib/libdinter.so && \
-	ln -s ${IROOT}/ffead-cpp-6.0-sql/lib/libte-benchmark-um.so /usr/local/lib/libte-benchmark-um.so && \
-	ln -s ${IROOT}/ffead-cpp-6.0-sql/lib/libffead-modules.so /usr/local/lib/libffead-modules.so && \
-	ln -s ${IROOT}/ffead-cpp-6.0-sql/lib/libffead-framework.so /usr/local/lib/libffead-framework.so && \
-	ln -s ${IROOT}/ffead-cpp-6.0-sql/lib/libinter.so /usr/local/lib/libinter.so && \
-	ln -s ${IROOT}/ffead-cpp-6.0-sql/lib/libdinter.so /usr/local/lib/libdinter.so && \
-	ldconfig
-
-RUN apt update -yqq && apt install -y git make && rm -rf /var/lib/apt/lists/*
-#For Latest vlang, uncomment the below mentioned line, due to lot of new enhancements and unsafe block handling, vlnag has slowed down tremendously
-#RUN git clone https://github.com/vlang/v && cd v && make && ./v symlink
-
-#For the fastest vlang performance, use 0.1.29, where the unsafe changes were only restricted to pointer arithmetic
-RUN wget -q https://github.com/vlang/v/releases/download/0.1.29/v_linux.zip && unzip -q v_linux.zip && cd v && chmod +x v && ./v symlink && cd .. && rm -f v_linux.zip
+LABEL description="SQL Raw Custom libpq batch patched Base ffead-cpp docker image with commit id - master"
 
 WORKDIR /tmp
 RUN mkdir postgresql
@@ -48,6 +33,7 @@ RUN mv pg_hba.conf /etc/postgresql/${PG_VERSION}/main/pg_hba.conf
 
 RUN chown -Rf postgres:postgres /etc/postgresql/${PG_VERSION}/main
 
+RUN mkdir /ssd
 RUN cp -R -p /var/lib/postgresql/${PG_VERSION}/main /ssd/postgresql
 RUN cp /etc/postgresql/${PG_VERSION}/main/postgresql.conf /ssd/postgresql
 RUN mv 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
@@ -92,6 +78,28 @@ ENV accept accept
 #WRK
 
 WORKDIR ${IROOT}
+
+RUN sed -i 's|"TeBkUmLpqRouter"|"TeBkUmLpqRouterPicoV"|g' $IROOT/ffead-cpp-src/web/te-benchmark-um-pq/config/application.xml
+
+COPY sql-profiled-util.sh ${IROOT}/
+RUN chmod 755 ${IROOT}/sql-profiled-util.sh
+RUN ./sql-profiled-util.sh batch clang noasync
+
+COPY sql-profiled-install-clang.sh install_ffead-cpp-sql-raw-profiled.sh ${IROOT}/
+RUN chmod 755 ${IROOT}/sql-profiled-install-clang.sh ${IROOT}/install_ffead-cpp-sql-raw-profiled.sh
+RUN ./sql-profiled-install-clang.sh nocleanup
+
+RUN apt update -yqq && apt install -y git make && rm -rf /var/lib/apt/lists/*
+#For Latest vlang, uncomment the below mentioned line, due to lot of new enhancements and unsafe block handling, vlang has slowed down tremendously
+#RUN git clone https://github.com/vlang/v && cd v && make && ./v symlink
+
+#For the fastest vlang performance, use 0.1.29, where the unsafe changes were only restricted to pointer arithmetic
+RUN wget -q https://github.com/vlang/v/releases/download/0.1.29/v_linux.zip && unzip -q v_linux.zip && cd v && chmod +x v && ./v symlink && cd .. && rm -f v_linux.zip
+
+RUN rm -f /usr/local/lib/libffead-* /usr/local/lib/libte_benc* /usr/local/lib/libinter.so /usr/local/lib/libdinter.so && \
+	ln -s ${IROOT}/ffead-cpp-6.0-sql/lib/libffead-modules.so /usr/local/lib/libffead-modules.so && \
+	ln -s ${IROOT}/ffead-cpp-6.0-sql/lib/libffead-framework.so /usr/local/lib/libffead-framework.so && \
+	ldconfig
 
 COPY sql-v-picov-profiled-install.sh install_ffead-cpp-sql-raw-v-picov-profiled.sh ${IROOT}/
 RUN chmod 755 ${IROOT}/sql-v-picov-profiled-install.sh ${IROOT}/install_ffead-cpp-sql-raw-v-picov-profiled.sh
