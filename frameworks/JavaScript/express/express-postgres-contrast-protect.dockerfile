@@ -18,4 +18,4 @@ ENV CONTRAST__PROTECT__ENABLE=true
 run npm install ./node-contrast.tgz
 # End Contrast Additions
 
-CMD ["node", "-r", "node_contrast/bootstrap", "postgresql-app.js"]
+CMD ["node", "-r", "@contrast/agent", "postgresql-app.js"]
