@@ -10,7 +10,7 @@ namespace appMpower.Db
       private static short _createdConnections = 0;
 
 #if MYSQL
-      private static short _maxConnections = 1250; 
+      private static short _maxConnections = 500; 
 #else
       private static short _maxConnections = 500;
 #endif
