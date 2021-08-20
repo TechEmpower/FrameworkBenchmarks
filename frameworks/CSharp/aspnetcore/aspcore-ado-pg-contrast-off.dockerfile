@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /app
 COPY PlatformBenchmarks .
-RUN dotnet publish -c Release -o out /p:IsDatabase=true
+RUN dotnet publish -c Release -o out /p:DatabaseProvider=Npgsql
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
 ENV ASPNETCORE_URLS http://+:8080
