@@ -121,7 +121,7 @@ public class Handler implements ExchangeHandler<Exchange> {
 				}
 			}
 		}
-		}
+	}
 
 	private static final byte[] STATIC_PLAINTEXT = "Hello, World!".getBytes(Charsets.UTF_8);
 	private static final int STATIC_PLAINTEXT_LEN = STATIC_PLAINTEXT.length;
@@ -245,28 +245,6 @@ public class Handler implements ExchangeHandler<Exchange> {
 	
 	public void handle_updates(Exchange exchange) throws HttpException {
 		int queries = this.extractQueriesParameter(exchange);
-		
-		this.poolSqlClient.get().connection(ops -> Flux.range(0, queries)
-				.flatMap(ign -> ops.queryForObject(
-						DB_SELECT_WORLD, 
-						row -> new World(row.getInteger(0), randomWorldId()), 
-						randomWorldId()
-					)
-				)
-				.collectSortedList()
-				.delayUntil(worlds -> ops.batchUpdate(
-						DB_UPDATE_WORLD, 
-						worlds.stream().map(world -> new Object[] { world.getRandomNumber(), world.getId() })
-					)
-				)
-				.map(worlds -> {
-					try {
-						return Unpooled.unreleasableBuffer(Unpooled.wrappedBuffer(this.mapper.writeValueAsBytes(worlds)));
-					} 
-					catch (JsonProcessingException e) {
-						throw new InternalServerErrorException(e);
-					}
-				}));
 		
 		exchange.response()
 			.headers(h -> h
