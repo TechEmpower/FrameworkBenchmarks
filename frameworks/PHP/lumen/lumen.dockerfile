@@ -9,7 +9,7 @@ RUN apt-get update -yqq > /dev/null && \
     php8.0-cli php8.0-fpm php8.0-mysql  > /dev/null
 RUN apt-get install -yqq php8.0-mbstring php8.0-xml  > /dev/null
 
-RUN apt-get install -yqq composer > /dev/null
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 COPY deploy/conf/* /etc/php/8.0/fpm/
 
