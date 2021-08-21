@@ -1,4 +1,4 @@
-FROM ubuntu:21.04
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -10,6 +10,8 @@ RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq wget git unzip libxml2-dev cmake make systemtap-sdt-dev \
                     zlib1g-dev libpcre3-dev libargon2-0-dev libsodium-dev \
                     php8.0-cli php8.0-dev libphp8.0-embed php8.0-pgsql nginx > /dev/null
+
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 ADD ./ ./
 
@@ -28,9 +30,8 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --add-module=/ngx_php7 > /dev/null && \
     make > /dev/null && make install > /dev/null
 
-RUN apt-get install -yqq composer > /dev/null
-
-RUN composer config -g repo.packagist composer https://packagist.phpcomposer.com
+ADD ./ /ubiquity
+WORKDIR /ubiquity
 
 RUN composer require phpmv/ubiquity-ngx:dev-master --quiet
 
@@ -38,14 +39,14 @@ RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --q
 
 RUN chmod 777 -R app/cache/*
 
-COPY /deploy/conf/ngx/pgsql/ngxServices.php /app/config/ngxServices.php
+COPY deploy/conf/ngx/pgsql/ngxServices.php app/config/ngxServices.php
 
-RUN echo "opcache.preload=/app/config/preloader.script.php" >> /deploy/conf/php.ini
-RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=function\n" >> /deploy/conf/php.ini
+RUN echo "opcache.preload=/app/config/preloader.script.php" >> deploy/conf/php.ini
+RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=function\n" >> deploy/conf/php.ini
 
 RUN export WORKERS=$(( 4 * $(nproc) )) && \
-    sed -i "s|worker_processes  auto|worker_processes $WORKERS|g" /deploy/conf/ngx/nginx.conf
+    sed -i "s|worker_processes  auto|worker_processes $WORKERS|g" /ubiquity/deploy/conf/ngx/nginx.conf
 
 EXPOSE 8080
 
-CMD /nginx/sbin/nginx -c /deploy/conf/ngx/nginx.conf
+CMD /nginx/sbin/nginx -c /ubiquity/deploy/conf/ngx/nginx.conf
