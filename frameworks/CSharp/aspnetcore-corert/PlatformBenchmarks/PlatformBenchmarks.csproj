@@ -19,6 +19,7 @@
   <ItemGroup>
     <IlcArg Include="--reflectedonly" />
     <RdXmlFile Include="rd.xml" />
+    <TrimmerRootAssembly Include="PlatformBenchmarks" />
   </ItemGroup>
   <PropertyGroup>
     <DefineConstants Condition=" '$(IsDatabase)' == 'true' ">$(DefineConstants);DATABASE</DefineConstants>
