@@ -31,7 +31,7 @@ RUN qmake -r CONFIG+=release -spec linux-clang
 
 # 2. Compile applicaton
 RUN make
-RUN sed -i 's|DriverType=.*|DriverType=QPSQL|g' config/database.ini
+RUN sed -i 's|DriverType=.*|DriverType=QMYSQL|g' config/database.ini
 RUN sed -i 's|MultiProcessingModule=.*|MultiProcessingModule=thread|g' config/application.ini
 
 EXPOSE 8080
