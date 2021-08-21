@@ -18,6 +18,7 @@
   
   <ItemGroup>
     <IlcArg Include="--reflectedonly" />
+    <RdXmlFile Include="rd.xml" />
   </ItemGroup>
   <PropertyGroup>
     <DefineConstants Condition=" '$(IsDatabase)' == 'true' ">$(DefineConstants);DATABASE</DefineConstants>

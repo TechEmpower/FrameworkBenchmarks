@@ -1,0 +1,51 @@
+<Directives>
+  <Application>
+    <Assembly Name="Npgsql">
+      <Type Name="Npgsql.TypeHandlers.NetworkHandlers.InetHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.DateTimeHandlers.DateHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.DateTimeHandlers.IntervalHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.DateTimeHandlers.TimestampTzHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.BoolHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.EnumHandler`1" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.UuidHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.VoidHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.NumericHandlers.DoubleHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.NumericHandlers.Int16Handler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.NumericHandlers.Int32Handler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.NumericHandlers.Int64Handler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.NumericHandlers.MoneyHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.NumericHandlers.SingleHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.NumericHandlers.UInt32Handler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.NetworkHandlers.CidrHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.NetworkHandlers.MacaddrHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.InternalCharHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.InternalTypeHandlers.PgLsnHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.InternalTypeHandlers.TidHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.GeometricHandlers.BoxHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.GeometricHandlers.CircleHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.GeometricHandlers.LineHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.GeometricHandlers.LineSegmentHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.GeometricHandlers.PointHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.DateTimeHandlers.TimeHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.DateTimeHandlers.TimeTzHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.BitStringHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.ByteaHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.HstoreHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.JsonHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.JsonPathHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.RangeHandler`2" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.RecordHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.UnknownTypeHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.UnmappedEnumHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.LQueryHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.LTreeHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.LTxtQueryHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.NumericHandlers.NumericHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.GeometricHandlers.PathHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.GeometricHandlers.PolygonHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.FullTextSearchHandlers.TsQueryHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.FullTextSearchHandlers.TsVectorHandler" Dynamic="Required All" />
+      <Type Name="Npgsql.TypeHandlers.CompositeHandlers.CompositeHandler`1" Dynamic="Required All" />
+    </Assembly>
+  </Application>
+</Directives>
