@@ -36,9 +36,9 @@ namespace PlatformBenchmarks
             DateHeader.SyncDateTimer();
 
             var host = BuildWebHost(args);
-#if DATABASE
             var config = (IConfiguration)host.Services.GetService(typeof(IConfiguration));
             BatchUpdateString.DatabaseServer = config.Get<AppSettings>().Database;
+#if DATABASE
             await BenchmarkApplication.Db.PopulateCache();
 #endif
             await host.RunAsync();
@@ -53,8 +53,8 @@ namespace PlatformBenchmarks
                 .AddCommandLine(args)
                 .Build();
 
-#if DATABASE
             var appSettings = config.Get<AppSettings>();
+#if DATABASE
             Console.WriteLine($"Database: {appSettings.Database}");
             Console.WriteLine($"ConnectionString: {appSettings.ConnectionString}");
 

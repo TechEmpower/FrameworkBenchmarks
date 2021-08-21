@@ -44,9 +44,7 @@ namespace PlatformBenchmarks
         private readonly static AsciiString _fortunesTableEnd = "</table></body></html>";
         private readonly static AsciiString _contentLengthGap = new string(' ', 4);
 
-#if DATABASE
         public static RawDb Db { get; set; }
-#endif
 
         [ThreadStatic]
         private static Utf8JsonWriter t_writer;
