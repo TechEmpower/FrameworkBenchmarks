@@ -147,7 +147,7 @@ public class DBController extends Controller {
             try {
                 if (res.succeeded()) {
                     PgRowSet result = res.result();
-                    ArrayList<Fortune> fortunes = new ArrayList<>(result.size() + 1);
+                    ArrayList<Fortune> fortunes = new ArrayList<>();
                     for (Row row : result) {
                         fortunes.add(new Fortune(row.getInteger(0), row.getString(1)));
                     }

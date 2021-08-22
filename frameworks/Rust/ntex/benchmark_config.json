@@ -39,23 +39,6 @@
       "notes": "",
       "versus": ""
     },
-    "sailfish": {
-      "fortune_url": "/fortunes",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "Postgres",
-      "framework": "ntex",
-      "language": "Rust",
-      "orm": "Raw",
-      "platform": "None",
-      "webserver": "ntex",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "ntex [sailfish]",
-      "notes": "",
-      "versus": ""
-    },
     "raw": {
       "json_url": "/json",
       "plaintext_url": "/plaintext",

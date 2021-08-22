@@ -5,14 +5,15 @@ import (
 	"flag"
 	"runtime"
 
-	"github.com/savsgio/gotils"
+	"github.com/savsgio/gotils/strconv"
 	"github.com/valyala/fasthttp"
 	fastprefork "github.com/valyala/fasthttp/prefork"
 )
 
-var bindHost string
-
-var prefork bool
+var (
+	bindHost string
+	prefork  bool
+)
 
 func init() {
 	flag.StringVar(&bindHost, "bind", ":8080", "set bind host")
@@ -26,7 +27,7 @@ func main() {
 	handler := func(ctx *fasthttp.RequestCtx) {}
 
 	if isNotPreforkOrIsChild {
-		maxConn := runtime.NumCPU()
+		maxConn := runtime.NumCPU() * 4
 		if fastprefork.IsChild() {
 			maxConn = 5
 		}
@@ -42,7 +43,7 @@ func main() {
 
 		// init handler
 		handler = func(ctx *fasthttp.RequestCtx) {
-			switch gotils.B2S(ctx.Path()) {
+			switch strconv.B2S(ctx.Request.URI().Path()) {
 			case "/json":
 				handlers.JSON(ctx)
 			case "/db":

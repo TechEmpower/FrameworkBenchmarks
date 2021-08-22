@@ -1,22 +1,31 @@
-FROM elixir:1.11.2
+###############
+# Build stage #
+###############
+FROM elixir:1.12.2 as build
 
-WORKDIR /phoenix
+ARG MIX_ENV="prod"
 
 RUN mix local.hex --force && \
     mix local.rebar --force
 
 COPY config ./config
 COPY lib ./lib
+COPY rel ./rel
 COPY priv ./priv
-COPY web ./web
 COPY mix.exs .
 COPY mix.lock .
 
-ENV MIX_ENV=prod
+RUN mix deps.get --force --only prod
+RUN mix release --force --path /export
 
-RUN mix do deps.get --force --only prod
-RUN mix release --force
+####################
+# Deployment Stage #
+####################
+FROM erlang:24.0.5
+
+COPY --from=build /export /opt
 
 EXPOSE 8080
 
-CMD ["_build/prod/rel/hello/bin/hello", "start"]
+ENTRYPOINT ["/opt/bin/hello"]
+CMD ["start"]

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>Benchmarks</RootNamespace>
     <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
     <GenerateRazorAssemblyInfo>false</GenerateRazorAssemblyInfo>
@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ben.Http" Version="0.0.12" />
+    <PackageReference Include="Ben.Http" Version="0.0.17" />
     <PackageReference Include="Ben.Http.Generator " Version="0.0.12" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
   </ItemGroup>
 

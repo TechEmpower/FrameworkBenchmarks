@@ -1,30 +1,19 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-use std::future::Future;
-use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::{pin::Pin, task::Context, task::Poll};
 
-use bytes::BytesMut;
-use futures::future::ok;
-use ntex::http::body::Body;
+use futures::future::{ok, Future, FutureExt};
 use ntex::http::header::{HeaderValue, CONTENT_TYPE, SERVER};
-use ntex::http::{HttpService, KeepAlive, Request, Response, StatusCode};
+use ntex::http::{HttpService, KeepAlive, Request, Response};
 use ntex::service::{Service, ServiceFactory};
-use ntex::web::Error;
-use yarte::Serialize;
+use ntex::util::BytesMut;
+use ntex::web::{Error, HttpResponse};
 
 mod db;
 mod utils;
 
-use crate::db::PgConnection;
-
-struct App {
-    db: PgConnection,
-    hdr_srv: HeaderValue,
-    hdr_ctjson: HeaderValue,
-    hdr_cthtml: HeaderValue,
-}
+struct App(db::PgConnection);
 
 impl Service for App {
     type Request = Request;
@@ -38,80 +27,51 @@ impl Service for App {
     }
 
     fn call(&self, req: Request) -> Self::Future {
-        let path = req.path();
-        match path {
-            "/db" => {
-                let h_srv = self.hdr_srv.clone();
-                let h_ct = self.hdr_ctjson.clone();
-                let fut = self.db.get_world();
-
-                Box::pin(async move {
-                    let body = fut.await?;
-                    let mut res = Response::with_body(StatusCode::OK, Body::Bytes(body));
-                    let hdrs = res.headers_mut();
-                    hdrs.insert(SERVER, h_srv);
-                    hdrs.insert(CONTENT_TYPE, h_ct);
-                    Ok(res)
-                })
-            }
-            "/fortunes" => {
-                let h_srv = self.hdr_srv.clone();
-                let h_ct = self.hdr_cthtml.clone();
-                let fut = self.db.tell_fortune();
-
-                Box::pin(async move {
-                    let body = fut.await?;
-                    let mut res = Response::with_body(StatusCode::OK, Body::Bytes(body));
-                    let hdrs = res.headers_mut();
-                    hdrs.insert(SERVER, h_srv);
-                    hdrs.insert(CONTENT_TYPE, h_ct);
-                    Ok(res)
-                })
-            }
-            "/query" => {
-                let q = utils::get_query_param(req.uri().query().unwrap_or("")) as usize;
-                let h_srv = self.hdr_srv.clone();
-                let h_ct = self.hdr_ctjson.clone();
-                let fut = self.db.get_worlds(q);
-
-                Box::pin(async move {
-                    let worlds = fut.await?;
-                    let size = 35 * worlds.len();
-                    let mut res = Response::with_body(
-                        StatusCode::OK,
-                        Body::Bytes(worlds.to_bytes::<BytesMut>(size)),
-                    );
-                    let hdrs = res.headers_mut();
-                    hdrs.insert(SERVER, h_srv);
-                    hdrs.insert(CONTENT_TYPE, h_ct);
-                    Ok(res)
-                })
-            }
-            "/update" => {
-                let q = utils::get_query_param(req.uri().query().unwrap_or(""));
-                let h_srv = self.hdr_srv.clone();
-                let h_ct = self.hdr_ctjson.clone();
-                let fut = self.db.update(q);
-
-                Box::pin(async move {
-                    let worlds = fut.await?;
-                    let size = 35 * worlds.len();
-                    let mut res = Response::with_body(
-                        StatusCode::OK,
-                        Body::Bytes(worlds.to_bytes::<BytesMut>(size)),
-                    );
-                    let hdrs = res.headers_mut();
-                    hdrs.insert(SERVER, h_srv);
-                    hdrs.insert(CONTENT_TYPE, h_ct);
-                    Ok(res)
-                })
-            }
+        match req.path() {
+            "/db" => Box::pin(self.0.get_world().map(|body| {
+                Ok(HttpResponse::Ok()
+                    .header(SERVER, HeaderValue::from_static("N"))
+                    .header(CONTENT_TYPE, HeaderValue::from_static("application/json"))
+                    .body(body))
+            })),
+            "/fortunes" => Box::pin(self.0.tell_fortune().map(|body| {
+                Ok(HttpResponse::Ok()
+                    .header(SERVER, HeaderValue::from_static("N"))
+                    .header(
+                        CONTENT_TYPE,
+                        HeaderValue::from_static("text/html; charset=utf-8"),
+                    )
+                    .body(body))
+            })),
+            "/query" => Box::pin(
+                self.0
+                    .get_worlds(utils::get_query_param(req.uri().query()))
+                    .map(|worlds| {
+                        let mut body = BytesMut::with_capacity(35 * worlds.len());
+                        let _ = simd_json::to_writer(crate::utils::Writer(&mut body), &worlds);
+                        Ok(HttpResponse::Ok()
+                            .header(SERVER, HeaderValue::from_static("N"))
+                            .header(CONTENT_TYPE, HeaderValue::from_static("application/json"))
+                            .body(body.freeze()))
+                    }),
+            ),
+            "/update" => Box::pin(
+                self.0
+                    .update(utils::get_query_param(req.uri().query()))
+                    .map(|worlds| {
+                        let mut body = BytesMut::with_capacity(35 * worlds.len());
+                        let _ = simd_json::to_writer(crate::utils::Writer(&mut body), &worlds);
+                        Ok(HttpResponse::Ok()
+                            .header(SERVER, HeaderValue::from_static("N"))
+                            .header(CONTENT_TYPE, HeaderValue::from_static("application/json"))
+                            .body(body.freeze()))
+                    }),
+            ),
             _ => Box::pin(ok(Response::new(http::StatusCode::NOT_FOUND))),
         }
     }
 }
 
-#[derive(Clone)]
 struct AppFactory;
 
 impl ServiceFactory for AppFactory {
@@ -127,15 +87,7 @@ impl ServiceFactory for AppFactory {
         const DB_URL: &str =
             "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
-        Box::pin(async move {
-            let db = PgConnection::connect(DB_URL).await;
-            Ok(App {
-                db,
-                hdr_srv: HeaderValue::from_static("N"),
-                hdr_ctjson: HeaderValue::from_static("application/json"),
-                hdr_cthtml: HeaderValue::from_static("text/html; charset=utf-8"),
-            })
-        })
+        Box::pin(async move { Ok(App(db::PgConnection::connect(DB_URL).await)) })
     }
 }
 
@@ -149,6 +101,8 @@ async fn main() -> std::io::Result<()> {
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
                 .client_timeout(0)
+                .disconnect_timeout(0)
+                .buffer_params(65535, 65535, 1024)
                 .h1(AppFactory)
                 .tcp()
         })?

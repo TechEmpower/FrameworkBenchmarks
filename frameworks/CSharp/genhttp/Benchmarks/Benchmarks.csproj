@@ -26,11 +26,11 @@
   </ItemGroup>
     
   <ItemGroup>
-    <PackageReference Include="GenHTTP.Core" Version="5.1.1" />
-    <PackageReference Include="GenHTTP.Modules.Razor" Version="5.1.0" />
-    <PackageReference Include="GenHTTP.Modules.Webservices" Version="5.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.1" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.1" />
+    <PackageReference Include="GenHTTP.Core" Version="5.2.0" />
+    <PackageReference Include="GenHTTP.Modules.Razor" Version="5.2.0" />
+    <PackageReference Include="GenHTTP.Modules.Webservices" Version="5.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.7" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7" />
   </ItemGroup>
   
 </Project>

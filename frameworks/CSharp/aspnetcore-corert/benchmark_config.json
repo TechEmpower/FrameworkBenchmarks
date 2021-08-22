@@ -16,7 +16,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core",
+      "display_name": "ASP.NET Core [Platform, CoreRT]",
       "notes": "",
       "versus": "aspcore"
     }

@@ -49,6 +49,7 @@ namespace Benchmarks.Tests
 
     public class FortuneHandler : IHandler, IPageRenderer
     {
+        private static readonly FlexibleContentType CONTENT_TYPE = new FlexibleContentType("text/html; charset=utf-8");
 
         #region Get-/Setters
 
@@ -87,14 +88,14 @@ namespace Benchmarks.Tests
         {
             return model.Request.Respond()
                                 .Content(await Template.RenderAsync(model))
-                                .Header("Content-Type", "text/html; charset=utf-8");
+                                .Type(CONTENT_TYPE);
         }
 
         private async ValueTask<FortuneModel> GetFortunes(IRequest request, IHandler handler)
         {
             using var context = DatabaseContext.CreateNoTracking();
 
-            var fortunes = await context.Fortune.ToListAsync();
+            var fortunes = await context.Fortune.ToListAsync().ConfigureAwait(false);
 
             fortunes.Add(new Fortune() { Message = "Additional fortune added at request time." });
 

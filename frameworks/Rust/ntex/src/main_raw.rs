@@ -1,61 +1,31 @@
 #[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-use std::future::Future;
-use std::io;
-use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::{cell::RefCell, future::Future, io, pin::Pin, rc::Rc, task::Context, task::Poll};
 
-use bytes::BytesMut;
-use ntex::codec::{AsyncRead, AsyncWrite, Decoder};
 use ntex::fn_service;
-use ntex::http::{h1, Request};
+use ntex::framed::{ReadTask, State, WriteTask};
+use ntex::http::h1;
 use ntex::rt::net::TcpStream;
-use yarte::Serialize;
 
 mod utils;
 
-const JSON: &[u8] = b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
-const PLAIN: &[u8] = b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
+const JSON: &[u8] =
+    b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
+const PLAIN: &[u8] =
+    b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
 const HTTPNFOUND: &[u8] = b"HTTP/1.1 400 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: N\r\n";
 const BODY: &[u8] = b"Hello, World!";
 
-#[derive(Serialize)]
+#[derive(serde::Serialize)]
 pub struct Message {
     pub message: &'static str,
 }
 
 struct App {
-    io: TcpStream,
-    read_buf: BytesMut,
-    write_buf: BytesMut,
-    write_pos: usize,
+    state: State,
     codec: h1::Codec,
-}
-
-impl App {
-    fn handle_request(&mut self, req: Request) {
-        match req.path() {
-            "/json" => {
-                self.write_buf.extend_from_slice(JSON);
-                self.codec.set_date_header(&mut self.write_buf);
-                Message {
-                    message: "Hello, World!",
-                }
-                .to_bytes_mut(&mut self.write_buf);
-            }
-            "/plaintext" => {
-                self.write_buf.extend_from_slice(PLAIN);
-                self.codec.set_date_header(&mut self.write_buf);
-                self.write_buf.extend_from_slice(BODY);
-            }
-            _ => {
-                self.write_buf.extend_from_slice(HTTPNFOUND);
-                self.write_buf.extend_from_slice(HDR_SERVER);
-            }
-        }
-    }
 }
 
 impl Future for App {
@@ -63,64 +33,59 @@ impl Future for App {
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         let this = self.as_mut().get_mut();
+        if !this.state.is_open() {
+            this.state.close();
+            return Poll::Ready(Ok(()));
+        }
 
-        if !this.write_buf.is_empty() {
-            let len = this.write_buf.len();
-            let mut written = this.write_pos;
-            while written < len {
-                match Pin::new(&mut this.io).poll_write(cx, &this.write_buf[written..]) {
-                    Poll::Pending => {
-                        break;
-                    }
-                    Poll::Ready(Ok(n)) => {
-                        if n == 0 {
-                            return Poll::Ready(Ok(()));
-                        } else {
-                            written += n;
+        let read = this.state.read();
+        let write = this.state.write();
+        loop {
+            match read.decode(&this.codec) {
+                Ok(Some((req, _))) => {
+                    write.with_buf(|buf| {
+                        // make sure we've got room
+                        let remaining = buf.capacity() - buf.len();
+                        if remaining < 1024 {
+                            buf.reserve(65535 - remaining);
                         }
-                    }
-                    Poll::Ready(Err(_)) => return Poll::Ready(Err(())),
+
+                        match req.path() {
+                            "/json" => {
+                                buf.extend_from_slice(JSON);
+                                this.codec.set_date_header(buf);
+                                let _ = simd_json::to_writer(
+                                    crate::utils::Writer(buf),
+                                    &Message {
+                                        message: "Hello, World!",
+                                    },
+                                );
+                            }
+                            "/plaintext" => {
+                                buf.extend_from_slice(PLAIN);
+                                this.codec.set_date_header(buf);
+                                buf.extend_from_slice(BODY);
+                            }
+                            _ => {
+                                buf.extend_from_slice(HTTPNFOUND);
+                                buf.extend_from_slice(HDR_SERVER);
+                            }
+                        }
+                    });
                 }
-            }
-            if written == len {
-                this.write_pos = 0;
-                unsafe { this.write_buf.set_len(0) }
-            } else if written > 0 {
-                this.write_pos = written;
-                return Poll::Pending;
-            }
-        }
-
-        if this.read_buf.capacity() - this.read_buf.len() < 4096 {
-            this.read_buf.reserve(32_768);
-        }
-
-        loop {
-            let read = Pin::new(&mut this.io).poll_read_buf(cx, &mut this.read_buf);
-            match read {
-                Poll::Pending => break,
-                Poll::Ready(Ok(n)) => {
-                    if n == 0 {
-                        return Poll::Ready(Ok(()));
-                    }
-                }
-                Poll::Ready(Err(_)) => return Poll::Ready(Err(())),
-            }
-        }
-
-        loop {
-            match this.codec.decode(&mut this.read_buf) {
-                Ok(Some(h1::Message::Item(req))) => this.handle_request(req),
                 Ok(None) => break,
-                _ => return Poll::Ready(Err(())),
+                _ => {
+                    this.state.close();
+                    return Poll::Ready(Err(()));
+                }
             }
         }
-
-        if !this.write_buf.is_empty() {
-            self.poll(cx)
+        if read.is_ready() {
+            this.state.register_dispatcher(cx.waker());
         } else {
-            Poll::Pending
+            read.wake(cx.waker())
         }
+        Poll::Pending
     }
 }
 
@@ -132,12 +97,16 @@ async fn main() -> io::Result<()> {
     ntex::server::build()
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", || {
-            fn_service(|io: TcpStream| App {
-                io,
-                read_buf: BytesMut::with_capacity(32_768),
-                write_buf: BytesMut::with_capacity(32_768),
-                write_pos: 0,
-                codec: h1::Codec::default(),
+            fn_service(|io: TcpStream| {
+                let state = State::with_params(65535, 65535, 1024, 0);
+                let io = Rc::new(RefCell::new(io));
+                ntex::rt::spawn(ReadTask::new(io.clone(), state.clone()));
+                ntex::rt::spawn(WriteTask::new(io, state.clone()));
+
+                App {
+                    state,
+                    codec: h1::Codec::default(),
+                }
             })
         })?
         .start()

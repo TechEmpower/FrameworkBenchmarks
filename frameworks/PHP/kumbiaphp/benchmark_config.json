@@ -65,7 +65,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "kumbiaphp-worker",
+        "display_name": "kumbiaphp-workerman",
         "notes": "",
         "versus": "workerman"
       },
@@ -86,7 +86,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "kumbiaphp-worker",
+        "display_name": "kumbiaphp-workerman-mysql",
         "notes": "",
         "versus": "workerman"
       }

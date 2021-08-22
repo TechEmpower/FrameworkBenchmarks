@@ -11,7 +11,7 @@
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
-		<netty.version>4.1.54.Final</netty.version>
+		<netty.version>4.1.65.Final</netty.version>
 	</properties>
 
 	<packaging>jar</packaging>
@@ -41,7 +41,7 @@
 		<dependency>
 			<groupId>io.netty.incubator</groupId>
 			<artifactId>netty-incubator-transport-native-io_uring</artifactId>
-			<version>0.0.1.Final</version>
+			<version>0.0.5.Final</version>
 			<classifier>linux-x86_64</classifier>
 		</dependency>
 
@@ -54,7 +54,7 @@
 		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.27.0-GA</version>
+			<version>3.28.0-GA</version>
 		</dependency>
 
 	</dependencies>

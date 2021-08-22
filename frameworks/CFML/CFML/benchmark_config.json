@@ -1,0 +1,55 @@
+{
+  "framework": "cfml",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json.cfm",
+        "db_url": "/db.cfm",
+        "query_url":"/queries.cfm?queries=",
+        "fortune_url": "/fortunes.cfm",
+        "plaintext_url": "/plaintext.cfm",
+        "update_url": "/updates.cfm?queries=",
+        "cached_query_url": "/cached.cfm?count=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "CFML",
+        "language": "CFML",
+        "flavor": "None",
+        "orm": "raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "cfml-lucee",
+        "notes": "Lucee Server",
+        "versus": "None"
+      },
+      "adobe": {
+        "json_url": "/json.cfm",
+        "db_url": "/db.cfm",
+        "query_url":"/queries.cfm?queries=",
+        "fortune_url": "/fortunes.cfm",
+        "plaintext_url": "/plaintext.cfm",
+        "update_url": "/updates.cfm?queries=",
+        "cached_query_url": "/cached.cfm?count=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "CFML",
+        "language": "CFML",
+        "flavor": "None",
+        "orm": "raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "cfml-adobe",
+        "notes": "Adobe ColdFusion",
+        "versus": "None"
+      }
+    }
+  ]
+}

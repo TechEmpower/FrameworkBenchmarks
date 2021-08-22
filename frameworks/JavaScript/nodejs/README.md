@@ -16,12 +16,12 @@ The server is currently in Alpha state, but aims to be a drop-in replacement for
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Node.js v8.1.0](http://nodejs.org/)
+* [Node.js v14.17.1](http://nodejs.org/)
 
-* [Node MySQL 2.15.0](https://github.com/felixge/node-mysql/)
-* [Sequelize 3.30.0](https://github.com/sequelize/sequelize)
+* [Node MySQL 2.16.0](https://github.com/felixge/node-mysql/)
+* [Sequelize 5.15.1](https://github.com/sequelize/sequelize)
 * [Node MongoDB Driver 2.2.33](https://github.com/mongodb/node-mongodb-native)
-* [Mongoose 4.12.4](http://mongoosejs.com/)
+* [Mongoose 5.7.5](http://mongoosejs.com/)
 
 ## Test URLs
 

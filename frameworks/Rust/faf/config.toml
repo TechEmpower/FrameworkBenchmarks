@@ -1,0 +1,15 @@
+[framework]
+name = "faf"
+
+[main]
+urls.plaintext = "/plaintext"
+# urls.json = "/j"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+database_os = "None"
+os = "Linux"
+orm = "None"
+platform = "None"
+webserver = "None"
+versus = "None"

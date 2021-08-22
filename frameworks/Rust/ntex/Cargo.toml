@@ -1,6 +1,6 @@
 [package]
 name = "ntex"
-version = "0.1.0"
+version = "0.2.1"
 edition = "2018"
 
 [[bin]]
@@ -15,29 +15,24 @@ path = "src/main_db.rs"
 name = "ntex-raw"
 path = "src/main_raw.rs"
 
-[[bin]]
-name = "ntex-sailfish"
-path = "src/main_sailfish.rs"
-
 [dependencies]
-ntex = "0.1.21"
-mimalloc = { version = "0.1.21", default-features = false }
-yarte = { version = "0.14", features = ["bytes-buf", "json"] }
-env_logger = "0.7"
-random-fast-rng = "0.1.1"
-bytes = "0.5.6"
-atoi = "0.3.2"
-num_cpus = "1.0"
-futures = "0.3.4"
+ntex = "0.4.0-b.1"
+mimalloc = { version = "0.1.25", default-features = false }
+snmalloc-rs = { version = "0.2.26", features = ["1mib", "native-cpu"] }
+yarte = { version = "0.15", features = ["bytes-buf", "json"] }
+env_logger = "0.8"
+nanorand = { version = "0.5", default-features = false, features = ["std", "wyrand"] }
+atoi = "0.4"
+num_cpus = "1.13"
+futures = "0.3"
 http = "0.2"
-smallvec = "1.4.0"
-simd-json = "0.3.14"
-simd-json-derive = "0.1.9"
+smallvec = "1.6.1"
+simd-json = "0.4.6"
+simd-json-derive = "0.2.2"
 serde = { version = "1.0", features = ["derive"] }
 log = { version = "0.4", features = ["release_max_level_off"] }
-tokio = "=0.2.6"
+tokio = { version = "1", default-features = false }
 tokio-postgres = { git="https://github.com/fafhrd91/postgres.git" }
-sailfish = "0.3.0"
 
 [profile.release]
 lto = true

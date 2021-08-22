@@ -11,6 +11,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
+#include "picojson.h"
+
 SingleDatabaseQueryTest::SingleDatabaseQueryTest(QObject *parent) : Controller(parent)
 {
 
@@ -22,14 +24,15 @@ void SingleDatabaseQueryTest::dbp(Context *c)
 
     ASync async(c);
     static thread_local auto db = APool::database();
-    db.execPrepared(APreparedQueryLiteral("SELECT id, randomNumber FROM world WHERE id=$1"),
+    db.exec(APreparedQueryLiteral(u"SELECT id, randomNumber FROM world WHERE id=$1"),
                            {id}, [c, async] (AResult &result) {
         if (Q_LIKELY(!result.error() && result.size())) {
             auto it = result.begin();
-            c->response()->setJsonObjectBody({
-                                                 {QStringLiteral("id"), it[0].toInt()},
-                                                 {QStringLiteral("randomNumber"), it[1].toInt()}
-                                             });
+            c->response()->setJsonBody(QByteArray::fromStdString(
+                            picojson::value(picojson::object({
+                                                {"id", picojson::value(double(it[0].toInt()))},
+                                                {"randomNumber", picojson::value(double(it[1].toInt()))}
+                                            })).serialize()));
             return;
         }
 

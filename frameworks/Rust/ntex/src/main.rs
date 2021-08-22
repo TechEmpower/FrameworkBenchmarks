@@ -1,54 +1,37 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-use bytes::Bytes;
-use ntex::{http, web};
+use ntex::http::header::{HeaderValue, CONTENT_TYPE, SERVER};
+use ntex::{http, util::Bytes, web};
 use yarte::Serialize;
 
 mod utils;
-use utils::SIZE;
 
 #[derive(Serialize)]
 pub struct Message {
     pub message: &'static str,
 }
 
+#[web::get("/json")]
 async fn json() -> web::HttpResponse {
-    let mut body = Vec::with_capacity(SIZE);
+    let mut body = Vec::with_capacity(utils::SIZE);
     Message {
         message: "Hello, World!",
     }
     .to_bytes_mut(&mut body);
 
-    let mut res = web::HttpResponse::with_body(
-        http::StatusCode::OK,
-        http::body::Body::Bytes(Bytes::from(body)),
-    );
-    res.headers_mut().insert(
-        http::header::SERVER,
-        http::header::HeaderValue::from_static("N"),
-    );
-    res.headers_mut().insert(
-        http::header::CONTENT_TYPE,
-        http::header::HeaderValue::from_static("application/json"),
-    );
-    res
+    web::HttpResponse::Ok()
+        .header(SERVER, HeaderValue::from_static("N"))
+        .header(CONTENT_TYPE, HeaderValue::from_static("application/json"))
+        .body(body)
 }
 
+#[web::get("/plaintext")]
 async fn plaintext() -> web::HttpResponse {
-    let mut res = web::HttpResponse::with_body(
-        http::StatusCode::OK,
-        http::body::Body::Bytes(Bytes::from_static(b"Hello, World!")),
-    );
-    res.headers_mut().insert(
-        http::header::SERVER,
-        http::header::HeaderValue::from_static("N"),
-    );
-    res.headers_mut().insert(
-        http::header::CONTENT_TYPE,
-        http::header::HeaderValue::from_static("text/plain"),
-    );
-    res
+    web::HttpResponse::Ok()
+        .header(SERVER, HeaderValue::from_static("N"))
+        .header(CONTENT_TYPE, HeaderValue::from_static("text/plain"))
+        .body(Bytes::from_static(b"Hello, World!"))
 }
 
 #[ntex::main]
@@ -62,12 +45,12 @@ async fn main() -> std::io::Result<()> {
             http::HttpService::build()
                 .keep_alive(http::KeepAlive::Os)
                 .client_timeout(0)
-                .h1(ntex::map_config(
-                    web::App::new()
-                        .service(web::resource("/json").to(json))
-                        .service(web::resource("/plaintext").to(plaintext)),
-                    |_| web::dev::AppConfig::default(),
-                ))
+                .disconnect_timeout(0)
+                .buffer_params(65535, 65535, 1024)
+                .h1(web::App::new()
+                    .service(json)
+                    .service(plaintext)
+                    .with_config(web::dev::AppConfig::default()))
                 .tcp()
         })?
         .start()

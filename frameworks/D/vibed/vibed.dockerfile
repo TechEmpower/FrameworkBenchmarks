@@ -1,4 +1,4 @@
-FROM dlang2/dmd-ubuntu:2.085.1
+FROM dlang2/dmd-ubuntu:2.095.0
 
 WORKDIR /dlang/app
 COPY . .

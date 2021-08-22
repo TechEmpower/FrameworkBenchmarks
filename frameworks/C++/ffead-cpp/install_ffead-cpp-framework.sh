@@ -6,18 +6,26 @@ MAX_THREADS=$(( 3 * `nproc` / 2 ))
 WRIT_THREADS=$(( $MAX_THREADS / 3 ))
 SERV_THREADS=$(( $MAX_THREADS - $WRIT_THREADS ))
 
+#git checkout e243bc096cd570cfee1edfecbcd91f4c4056fa1a -b 6.0
+git clone https://github.com/sumeetchhetri/ffead-cpp
+cd ffead-cpp
+rm -rf .git
+cd ..
+mv ffead-cpp ffead-cpp-src
+mv ffead-cpp-src/lang-server-backends ${IROOT}/
+
 cd $IROOT/ffead-cpp-src/
 
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
-rm -rf web/te-benchmark-um
-rm -rf web/te-benchmark-um-pq
-rm -rf web/te-benchmark-um-mgr
-rm -rf web/te-benchmark-um-pq-async
+#rm -rf web/te-benchmark-um
+#rm -rf web/te-benchmark-um-pq
+#rm -rf web/te-benchmark-um-mgr
+#rm -rf web/te-benchmark-um-pq-async
 mv ${IROOT}/server.sh script/
-mv ${IROOT}/te-benchmark-um web/
-mv ${IROOT}/te-benchmark-um-pq web/
-mv ${IROOT}/te-benchmark-um-mgr web/
-mv ${IROOT}/te-benchmark-um-pq-async web/
+#mv ${IROOT}/te-benchmark-um web/
+#mv ${IROOT}/te-benchmark-um-pq web/
+#mv ${IROOT}/te-benchmark-um-mgr web/
+#mv ${IROOT}/te-benchmark-um-pq-async web/
 sed -i 's|THRD_PSIZ=6|THRD_PSIZ='${SERV_THREADS}'|g' resources/server.prop
 sed -i 's|W_THRD_PSIZ=2|W_THRD_PSIZ='${WRIT_THREADS}'|g' resources/server.prop
 sed -i 's|ENABLE_CRS=true|ENABLE_CRS=false|g' resources/server.prop
@@ -56,8 +64,8 @@ sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/default/libdefault${LIB_EXT} D
 sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/flexApp/libflexApp${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
 sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/oauthApp/liboauthApp${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
 sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/markers/libmarkers${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
-sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/te-benchmark/libte_benchmark${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
-sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/peer-server/libpeer_server${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/te-benchmark/libte-benchmark${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/peer-server/libpeer-server${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
 sed -i 's|web/default/src/autotools/Makefile||g' configure.ac
 sed -i 's|web/flexApp/src/autotools/Makefile||g' configure.ac
 sed -i 's|web/oauthApp/src/autotools/Makefile||g' configure.ac
@@ -83,31 +91,51 @@ rm -f /usr/local/lib/libte_benc*
 rm -f /usr/local/lib/libinter.so
 rm -f /usr/local/lib/libdinter.so
 
-if [ ! -d "ffead-cpp-5.0-bin" ]
+if [ ! -d "ffead-cpp-6.0-bin" ]
 then
 	exit 1
 fi
 
-cd ffead-cpp-5.0-bin
+cd ffead-cpp-6.0-bin
 #cache related dockerfiles will add the cache.xml accordingly whenever needed
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 ./server.sh &
+COUNTER=0
 while [ ! -f lib/libinter.so ]
 do
-	sleep 1
+    sleep 1
+    COUNTER=$((COUNTER+1))
+    if [ "$COUNTER" = 120 ]
+    then
+    	cat logs/jobs.log
+    	echo "ffead-cpp exiting exiting due to failure...."
+    	exit 1
+    fi
 done
+COUNTER=0
 while [ ! -f lib/libdinter.so ]
 do
-	sleep 1
+    sleep 1
+    COUNTER=$((COUNTER+1))
+    if [ "$COUNTER" = 120 ]
+    then
+    	cat logs/jobs.log
+    	echo "ffead-cpp exiting exiting due to failure....ddlib"
+    	exit 1
+    fi
 done
+echo "ffead-cpp start successful"
+sleep 5
+cd tests && rm -f test.csv && cp ${IROOT}/ffead-cpp-src/tests/test-te.csv test.csv && chmod +x *.sh && ./runTests.sh
+echo "ffead-cpp normal shutdown"
 pkill ffead-cpp
 
 cd ${IROOT}/ffead-cpp-src/
-cp -rf ffead-cpp-5.0-bin ${IROOT}/ffead-cpp-5.0
-rm -rf ffead-cpp-5.0-bin
+cp -rf ffead-cpp-6.0-bin ${IROOT}/ffead-cpp-6.0
+rm -rf ffead-cpp-6.0-bin
 mv ${IROOT}/nginxfc ${IROOT}/nginx-ffead-mongo
 
-cd ${IROOT}/ffead-cpp-5.0
+cd ${IROOT}/ffead-cpp-6.0
 
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 chmod 755 *.sh
@@ -122,31 +150,51 @@ cp -f web/te-benchmark-um/sql-src/TeBkUmWorldsql.h web/te-benchmark-um/include/T
 cp -f web/te-benchmark-um/sql-src/TeBkUmWorldsql.cpp web/te-benchmark-um/src/TeBkUmWorld.cpp
 make install -j${MAX_THREADS}
 
-if [ ! -d "ffead-cpp-5.0-bin" ]
+if [ ! -d "ffead-cpp-6.0-bin" ]
 then
 	exit 1
 fi
 
-cd ffead-cpp-5.0-bin
+cd ffead-cpp-6.0-bin
 #cache related dockerfiles will add the cache.xml accordingly whenever needed
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 ./server.sh &
+COUNTER=0
 while [ ! -f lib/libinter.so ]
 do
-	sleep 1
+    sleep 1
+    COUNTER=$((COUNTER+1))
+    if [ "$COUNTER" = 120 ]
+    then
+    	cat logs/jobs.log
+    	echo "ffead-cpp exiting exiting due to failure...."
+    	exit 1
+    fi
 done
+COUNTER=0
 while [ ! -f lib/libdinter.so ]
 do
-	sleep 1
+    sleep 1
+    COUNTER=$((COUNTER+1))
+    if [ "$COUNTER" = 120 ]
+    then
+    	cat logs/jobs.log
+    	echo "ffead-cpp exiting exiting due to failure....ddlib"
+    	exit 1
+    fi
 done
+echo "ffead-cpp start successful"
+sleep 5
+cd tests && rm -f test.csv && cp ${IROOT}/ffead-cpp-src/tests/test-te.csv test.csv && chmod +x *.sh && ./runTests.sh
+echo "ffead-cpp normal shutdown"
 pkill ffead-cpp
 
 cd ${IROOT}/ffead-cpp-src/
-cp -rf ffead-cpp-5.0-bin ${IROOT}/ffead-cpp-5.0-sql
-rm -rf ffead-cpp-5.0-bin
+cp -rf ffead-cpp-6.0-bin ${IROOT}/ffead-cpp-6.0-sql
+rm -rf ffead-cpp-6.0-bin
 mv ${IROOT}/nginxfc ${IROOT}/nginx-ffead-sql
 
-cd ${IROOT}/ffead-cpp-5.0-sql
+cd ${IROOT}/ffead-cpp-6.0-sql
 
 chmod 755 *.sh resources/*.sh rtdcf/autotools/*.sh
 chmod 755 *.sh

@@ -6,13 +6,19 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
     <!-- Opt out of the "easy mode" of the CoreRT compiler (http://aka.ms/OptimizeCoreRT) -->
-    <RootAllApplicationAssemblies>false</RootAllApplicationAssemblies>
-    <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+    <TrimMode>link</TrimMode>
+    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+    <IlcPgoOptimize>true</IlcPgoOptimize>
+
+    <!-- This benchmark is marked Stripped, so we might as well do this: -->
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+    <EventSourceSupport>false</EventSourceSupport>
+    <DebuggerSupport>false</DebuggerSupport>
     <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
   </PropertyGroup>
   
   <ItemGroup>
-    <RdXmlFile Include="rd.xml" />
+    <IlcArg Include="--reflectedonly" />
   </ItemGroup>
   
   <ItemGroup>
@@ -21,6 +27,6 @@
 
   <ItemGroup>
     <PackageReference Include="Utf8Json" Version="1.3.7" />
-    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="6.0.0-alpha.*" />
+    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="6.0.0-*" />
   </ItemGroup>
 </Project>

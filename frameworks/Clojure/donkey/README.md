@@ -11,7 +11,7 @@ Benchmark tests for Donkey - Ring compliant Clojure HTTP server
 The tests were run with:
 * [Donkey](https://github.com/AppsFlyer/donkey)
 * [Clojure 1.10.1](https://clojure.org/)
-* [Vert.x Web 3.9.2](https://vertx.io/docs/vertx-web/java/)
+* [Vert.x Web 4.0.0](https://vertx.io/docs/vertx-web/java/)
 
 ## Test URLs
 ### JSON
