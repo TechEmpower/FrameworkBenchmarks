@@ -6,8 +6,6 @@ RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /de
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq && apt-get install -yqq git unzip wget curl build-essential php8.0-cli php8.0-mbstring php8.0-curl php8.0-xml php8.0-pgsql > /dev/null
 
-RUN apt-get install -yqq composer
-
 RUN apt-get install -y php8.0-dev libevent-dev > /dev/null
 RUN wget http://pear.php.net/go-pear.phar --quiet && php go-pear.phar
 RUN pecl install event-3.0.4 > /dev/null && echo "extension=event.so" > /etc/php/8.0/cli/conf.d/event.ini
@@ -19,7 +17,9 @@ WORKDIR /mixphp
 
 RUN sed -i "s|'mysql:host|'pgsql:host|g" /mixphp/src/Container/DB.php
 
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer install --no-dev --classmap-authoritative --quiet > /dev/null
+RUN composer dumpautoload -o
 
 EXPOSE 2345
 
