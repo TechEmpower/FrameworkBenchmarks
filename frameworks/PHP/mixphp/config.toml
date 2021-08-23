@@ -19,8 +19,6 @@ webserver = "None"
 versus = "swoole"
 
 [workerman-mysql]
-urls.plaintext = "/plaintext"
-urls.json = "/json"
 urls.db = "/db"
 urls.query = "/query?q="
 urls.update = "/update?q="
