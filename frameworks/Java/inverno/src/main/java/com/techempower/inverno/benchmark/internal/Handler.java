@@ -3,6 +3,7 @@ package com.techempower.inverno.benchmark.internal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -280,6 +281,8 @@ public class Handler implements ExchangeHandler<Exchange> {
 	private static final String DB_SELECT_FORTUNE = "SELECT id, message from FORTUNE";
 	private static final CharSequence MEDIA_TEXT_HTML_UTF8 = AsciiString.cached("text/html; charset=utf-8");
 	
+	private static final FortunesTemplate.Renderer<CompletableFuture<ByteBuf>> FORTUNES_RENDERER = FortunesTemplate.bytebuf(() -> Unpooled.unreleasableBuffer(Unpooled.buffer()));
+	
 	public void handle_fortunes(Exchange exchange) throws HttpException {
 		exchange.response()
 			.headers(h -> h
@@ -296,7 +299,7 @@ public class Handler implements ExchangeHandler<Exchange> {
 					.flatMap(fortunes -> {
 						fortunes.add(new Fortune(0, "Additional fortune added at request time."));
 						Collections.sort(fortunes);
-						return Mono.fromFuture(() -> FortunesTemplate.bytebuf(() -> Unpooled.unreleasableBuffer(Unpooled.buffer())).render(fortunes));
+						return Mono.fromFuture(() -> FORTUNES_RENDERER.render(fortunes));
 					})
 				);
 	}
