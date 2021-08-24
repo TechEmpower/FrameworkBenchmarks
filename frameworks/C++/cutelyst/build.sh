@@ -7,6 +7,7 @@ export CUTELYST_VER=3.1.0
 apt update -qq && \
     apt install -yqq --no-install-recommends \
     cmake \
+    git \
     pkg-config \
     qtbase5-dev \
     libqt5sql5-mysql \
