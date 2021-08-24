@@ -24,4 +24,8 @@
     <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="6.0.0-*" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <DefineConstants Condition=" '$(Database)' == 'mysql' ">$(DefineConstants);MYSQL</DefineConstants>
+  </PropertyGroup>
+
 </Project>
