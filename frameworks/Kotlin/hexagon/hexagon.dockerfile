@@ -7,7 +7,7 @@ WORKDIR /hexagon
 
 COPY src src
 COPY build.gradle build.gradle
-RUN gradle --quiet --exclude-task test
+RUN gradle --quiet
 
 #
 # RUNTIME
