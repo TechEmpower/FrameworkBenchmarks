@@ -17,14 +17,8 @@ fi;
 # Copy files into correct place
 ./copy-files.sh JavaScript $AGENT_FILE
 
-# Create tfb network if it's not already up
-if ! docker network inspect tfb >/dev/null 2>&1; then
-  docker network create tfb >/dev/null
-fi
-
-# Start contrast-service container
-docker build . -f contrast-service.dockerfile -t contrast-service   
-docker run --rm -d --network tfb --name contrast-service contrast-service
+# Start contrast-service
+./start-contrast-service.sh
 
 # Run tests
 ../tfb --tag contrast --test-lang JavaScript --type fortune --duration 5

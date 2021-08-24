@@ -20,6 +20,7 @@ echo "Agent fetched successfully"
 
 # Run the tests
 echo "Running TechEmpower"
+export IN_AWS=true
 ./benchmark-${2}.sh
 echo "TechEmpower run successfully"
 
