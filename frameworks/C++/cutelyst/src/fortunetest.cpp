@@ -28,10 +28,10 @@ void FortuneTest::fortunes_raw_p(Context *c)
         fortunes.reserve(result.size());
         auto it = result.begin();
         while (it != result.end()) {
-            fortunes.push_back({it[0].toInt(), it[1].toString()});
+            fortunes.emplace_back(Fortune{it[0].toInt(), it[1].toString()});
             ++it;
         }
-        fortunes.push_back({0, QStringLiteral("Additional fortune added at request time.")});
+        fortunes.emplace_back(Fortune{0, QStringLiteral("Additional fortune added at request time.")});
 
         std::sort(fortunes.begin(), fortunes.end(), [] (const Fortune &a1, const Fortune &a2) {
             return a1.message < a2.message;
@@ -160,24 +160,24 @@ FortuneList FortuneTest::processQuery(Context *c, QSqlQuery &query)
 
 void FortuneTest::renderRaw(Context *c, const FortuneList &fortunes) const
 {
-    QString out;
-    out.append(QStringLiteral("<!DOCTYPE html>"
-                              "<html>"
-                              "<head><title>Fortunes</title></head>"
-                              "<body>"
-                              "<table>"
-                              "<tr><th>id</th><th>message</th></tr>"));
+    QByteArray out;
+    out.append("<!DOCTYPE html>"
+                "<html>"
+                "<head><title>Fortunes</title></head>"
+                "<body>"
+                "<table>"
+                "<tr><th>id</th><th>message</th></tr>");
     out.reserve(4096);
 
     for (const Fortune &fortune : fortunes) {
-        out.append(QStringLiteral("<tr><td>"))
-                .append(QString::number(fortune.id))
-                .append(QStringLiteral("</td><td>"))
-                .append(fortune.message.toHtmlEscaped())
-                .append(QStringLiteral("</td></tr>"));
+        out.append("<tr><td>")
+            .append(QByteArray::number(fortune.id))
+            .append("</td><td>")
+            .append(fortune.message.toHtmlEscaped().toUtf8())
+            .append("</td></tr>");
     }
 
-    out.append(QStringLiteral("</table></body></html>"));
+    out.append("</table></body></html>");
 
     auto response = c->response();
     response->setBody(out);
