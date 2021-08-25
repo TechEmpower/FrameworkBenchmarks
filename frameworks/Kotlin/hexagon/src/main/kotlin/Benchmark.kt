@@ -36,7 +36,8 @@ internal val benchmarkServer: Server by lazy {
 }
 
 fun main() {
-    Json.mapper.registerModule(BlackbirdModule())
+    if (System.getenv().containsKey("ENABLE_BLACKBIRD"))
+        Json.mapper.registerModule(BlackbirdModule())
     SerializationManager.mapper = JacksonMapper
     SerializationManager.formats = linkedSetOf(Json)
 
