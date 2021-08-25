@@ -37,7 +37,7 @@
         "display_name": "Jersey",
         "notes": "",
         "versus": "servlet",
-        "tags": ["contrast", "contrast-off"]
+        "tags": ["contrast-disabled", "contrast-off"]
       },
       "contrast-assess": {
         "plaintext_url": "/plaintext",
@@ -56,7 +56,7 @@
         "display_name": "Jersey",
         "notes": "",
         "versus": "servlet",
-        "tags": ["contrast", "contrast-assess"]
+        "tags": ["contrast-disabled", "contrast-assess"]
       },
       "contrast-protect": {
         "plaintext_url": "/plaintext",
@@ -75,7 +75,7 @@
         "display_name": "Jersey",
         "notes": "",
         "versus": "servlet",
-        "tags": ["contrast", "contrast-protect"]
+        "tags": ["contrast-disabled", "contrast-protect"]
       },
       "contrast-both": {
         "plaintext_url": "/plaintext",
@@ -94,7 +94,7 @@
         "display_name": "Jersey",
         "notes": "",
         "versus": "servlet",
-        "tags": ["contrast"]
+        "tags": ["contrast-disabled"]
       }
     }
   ]
