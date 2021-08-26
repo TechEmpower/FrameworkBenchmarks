@@ -27,7 +27,7 @@ pub static DB_POOL: OnceCell<PgPool> = OnceCell::new();
 
 pub fn connect() -> Result<PooledConnection<ConnectionManager<PgConnection>>, PoolError> {
     unsafe {
-        DB_CONN.get_unchecked()
+        DB_POOL.get_unchecked()
     }
 }
 pub fn build_pool(database_url: &str) -> Result<PgPool, PoolError> {
