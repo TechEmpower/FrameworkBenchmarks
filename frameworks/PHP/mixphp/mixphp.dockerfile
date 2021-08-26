@@ -1,30 +1,25 @@
-FROM php:8.0-cli
+FROM ubuntu:20.10
 
-RUN pecl install swoole > /dev/null && docker-php-ext-enable swoole
+ARG DEBIAN_FRONTEND=noninteractive
 
-RUN docker-php-ext-install opcache pdo_mysql bcmath > /dev/null
+RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
+RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
+RUN apt-get update -yqq > /dev/null && \
+    apt-get install -yqq nginx git unzip \
+    php8.0-fpm php8.0-mysql  > /dev/null
 
-RUN apt -yqq update && apt -yqq install git unzip > /dev/null
+COPY deploy/conf/* /etc/php/8.0/fpm/
 
-COPY . /mixphp
-COPY php.ini /usr/local/etc/php/
-RUN echo "opcache.enable=1" >> /usr/local/etc/php/php.ini
-RUN echo "opcache.enable_cli=1" >> /usr/local/etc/php/php.ini
-RUN echo "pcre.jit=1" >> /usr/local/etc/php/php.ini
-RUN echo "opcache.jit=1205" >> /usr/local/etc/php/php.ini
-RUN echo "opcache.jit_buffer_size=256M" >> /usr/local/etc/php/php.ini
-
-RUN php -v && php -i | grep opcache
-
+ADD ./ /mixphp
 WORKDIR /mixphp
 
 RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-dev --classmap-authoritative --quiet > /dev/null
 RUN composer dumpautoload -o
 
-RUN mkdir -p /mixphp/runtime/logs
-RUN chmod -R 777 /mixphp/runtime/logs
+RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.0/fpm/php-fpm.conf ; fi;
 
-EXPOSE 9501
+EXPOSE 8080
 
-CMD php /mixphp/bin/swoole.php start
+CMD service php8.0-fpm start && \
+    nginx -c /mixphp/deploy/nginx.conf

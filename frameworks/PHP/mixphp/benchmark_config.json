@@ -9,6 +9,29 @@
         "fortune_url": "/fortunes",
         "update_url": "/update?q=",
         "query_url": "/query?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "MySQL",
+        "framework": "MixPHP",
+        "language": "PHP",
+        "flavor": "PHP8",
+        "orm": "micro",
+        "platform": "FPM/FastCGI",
+        "webserver": "nginx",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "mixphp",
+        "notes": "",
+        "versus": "php"
+      },
+      "mixphp-swoole-mysql": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "update_url": "/update?q=",
+        "query_url": "/query?q=",
         "port": 9501,
         "approach": "Realistic",
         "classification": "Fullstack",
@@ -69,6 +92,6 @@
         "notes": "",
         "versus": "workerman"
       }
-    }
+    },
   ]
 }
