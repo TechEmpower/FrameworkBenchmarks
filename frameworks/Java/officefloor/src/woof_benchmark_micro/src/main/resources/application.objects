@@ -4,4 +4,7 @@
 		<property-file path="datasource.properties" />
 	</managed-object>
 
+	<managed-object source="net.officefloor.cache.constant.ConstantCacheManagedObjectSource" />
+	<managed-object class="net.officefloor.benchmark.CachedWorldDataRetriever" /> 
+
 </objects>

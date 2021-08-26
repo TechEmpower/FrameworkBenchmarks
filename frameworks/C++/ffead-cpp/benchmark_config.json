@@ -60,7 +60,7 @@
 			"display_name": "ffead-cpp-crystal-http",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"d-hunt": {
 			"json_url": "/te-benchmark-um/json",
@@ -98,7 +98,7 @@
 			"display_name": "ffead-cpp-go-gnet",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"rust-actix": {
 			"json_url": "/te-benchmark-um/json",
@@ -143,6 +143,54 @@
 			"versus": "",
 			"tags": []
 		},
+		"v-picov-raw-profiled": {
+			"json_url": "/te-benchmark-um-pq/json",
+			"plaintext_url": "/plaintext",
+			"db_url": "/te-benchmark-um-pq/db",
+			"query_url": "/te-benchmark-um-pq/queries?queries=",
+			"fortune_url": "/te-benchmark-um-pq/fortunes",
+			"update_url": "/te-benchmark-um-pq/updates?queries=",
+			"cached_query_url": "/te-benchmark-um-pq/cached-worlds?count=",
+			"port": 8080,
+			"approach": "Realistic",
+			"classification": "Fullstack",
+			"database": "postgres",
+			"framework": "ffead-cpp",
+			"language": "C++",
+			"orm": "Raw",
+			"platform": "None",
+			"webserver": "picov",
+			"os": "Linux",
+			"database_os": "Linux",
+			"display_name": "ffead-cpp-v-picov-raw-profiled",
+			"notes": "",
+			"versus": "",
+			"tags": []
+		},
+		"v-picov-raw-clibpqb-profiled": {
+			"json_url": "/te-benchmark-um-pq/json",
+			"plaintext_url": "/plaintext",
+			"db_url": "/te-benchmark-um-pq/db",
+			"query_url": "/te-benchmark-um-pq/queries?queries=",
+			"fortune_url": "/te-benchmark-um-pq/fortunes",
+			"update_url": "/te-benchmark-um-pq/updates?queries=",
+			"cached_query_url": "/te-benchmark-um-pq/cached-worlds?count=",
+			"port": 8080,
+			"approach": "Realistic",
+			"classification": "Fullstack",
+			"database": "postgres",
+			"framework": "ffead-cpp",
+			"language": "C++",
+			"orm": "Raw",
+			"platform": "None",
+			"webserver": "picov",
+			"os": "Linux",
+			"database_os": "Linux",
+			"display_name": "ffead-cpp-v-picov-raw-clibpqb-profiled",
+			"notes": "",
+			"versus": "",
+			"tags": []
+		},
 		"java-firenio": {
 			"json_url": "/te-benchmark-um/json",
 			"plaintext_url": "/plaintext",
@@ -183,7 +231,7 @@
 			"display_name": "ffead-cpp-postgresql",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"postgresql-raw": {
 			"json_url": "/te-benchmark-um-pq/json",
@@ -323,7 +371,7 @@
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
-			"database": "mongodb",
+			"database": "None",
 			"framework": "ffead-cpp",
 			"language": "C++",
 			"orm": "Full",
@@ -334,7 +382,26 @@
 			"display_name": "ffead-cpp-nginx",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
+		},
+		"seastar": {
+			"json_url": "/te-benchmark-um/json",
+			"plaintext_url": "/plaintext",
+			"port": 8080,
+			"approach": "Realistic",
+			"classification": "Fullstack",
+			"database": "None",
+			"framework": "ffead-cpp",
+			"language": "C++",
+			"orm": "None",
+			"platform": "None",
+			"webserver": "seastar-http",
+			"os": "Linux",
+			"database_os": "Linux",
+			"display_name": "ffead-cpp-seastar",
+			"notes": "",
+			"versus": "",
+			"tags": ["broken"]
 		},
 		"apache": {
 			"json_url": "/te-benchmark-um/json",
@@ -514,7 +581,7 @@
 			"display_name": "ffead-cpp-go-fasthttp",
 			"notes": "",
 			"versus": "",
-			"tags": ["broken"]
+			"tags": []
 		},
 		"julia-http": {
 			"json_url": "/te-benchmark-um/json",
@@ -670,4 +737,3 @@
 		}
 	}]
 }
-

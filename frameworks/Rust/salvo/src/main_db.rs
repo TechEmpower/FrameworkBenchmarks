@@ -105,7 +105,7 @@ async fn fortunes(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
         items.push(item);
     }
     items.sort_by(|it, next| it.message.cmp(&next.message));
-
+    
     let mut body = String::new();
     write!(&mut body, "{}", FortunesTemplate { items }).unwrap();
 

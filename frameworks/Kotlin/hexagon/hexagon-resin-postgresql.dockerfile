@@ -1,13 +1,12 @@
 #
 # BUILD
 #
-FROM gradle:6.6-jdk11 AS gradle_build
+FROM gradle:7.1-jdk11 AS gradle_build
 USER root
 WORKDIR /hexagon
 
 COPY src src
 COPY build.gradle build.gradle
-COPY gradle.properties gradle.properties
 RUN gradle --quiet --exclude-task test
 
 #
@@ -22,7 +21,6 @@ WORKDIR /resin
 RUN curl -sL $RESIN | tar xz --strip-components=1
 RUN rm -rf webapps/*
 COPY --from=gradle_build /hexagon/build/libs/ROOT.war webapps/ROOT.war
-
+COPY src/main/resources/fortunes.pebble.html fortunes.pebble.html
 EXPOSE 8080
-
 CMD ["java", "-jar", "lib/resin.jar", "console"]
