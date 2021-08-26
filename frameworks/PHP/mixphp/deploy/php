@@ -1,6 +1,6 @@
 <VirtualHost *:8080>
   Alias /php/ "/mixphp/public"
-  <Directory /kumbiaphp/bench/public>
+  <Directory /mixphp/public>
           Options Indexes FollowSymLinks MultiViews
           #AllowOverride None
           Order allow,deny
