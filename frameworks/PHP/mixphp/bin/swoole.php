@@ -12,7 +12,7 @@ App\Error::register();
  */
 
 $vega = Vega::new();
-$http = new Swoole\Http\Server('0.0.0.0', 9501);
+$http = new Swoole\Http\Server('0.0.0.0', 9501, SWOOLE_BASE, SWOOLE_SOCK_TCP);
 $http->on('Request', $vega->handler());
 $http->on('WorkerStart', function ($server, $workerId) {
     // swoole 协程不支持 set_exception_handler 需要手动捕获异常
@@ -26,7 +26,7 @@ $http->set([
     'enable_coroutine' => false,
     'worker_num' => swoole_cpu_num() * 4,
     'log_file' => '/dev/null',
-    'log_level' => 5,
+    'log_level' => SWOOLE_LOG_ERROR,
 ]);
 Logger::instance()->info('Start swoole server');
 $http->start();
