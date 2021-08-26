@@ -40,7 +40,7 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
         }
 
         if (!httpEntity.headerComplete() && byteBuffer.hasRemaining()) { //解析header
-            readHeader(byteBuffer, session, httpEntity);
+            readHeader(byteBuffer, httpEntity);
         }
 
         if (httpEntity.headerComplete() && httpEntity.bodyBuffer != null && byteBuffer.hasRemaining()) {// 解析body
@@ -55,7 +55,7 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
         return null;
     }
 
-    private void readHeader(ByteBuffer byteBuffer, Session session, HttpRequestEntity httpEntity) {
+    private void readHeader(ByteBuffer byteBuffer, HttpRequestEntity httpEntity) {
         try {
             ByteBuffer buf = byteBuffer.duplicate();
             int startPos = 0;
@@ -71,6 +71,11 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
                     httpEntity.crNum = 0;
                     httpEntity.lfNum = 0;
                 }
+
+                if (httpEntity.headerComplete()) {
+                    return;
+                }
+
                 if (httpEntity.isReadHeadLine()) {
                     if (b == SPACE0) {
                         int len = endPos - startPos - 1;
@@ -80,21 +85,16 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
                         buf.position(startPos);
                         if (httpEntity.method == null) {
                             httpEntity.method = new String(bytes);
-                            continue;
-                        }
-                        if (httpEntity.url == null) {
+                        } else if (httpEntity.url == null) {
                             httpEntity.url = new String(bytes);
-                            continue;
                         }
-                    }
-                    if (httpEntity.crNum == 1 && httpEntity.lfNum == 1) {
+                    } else if (httpEntity.crNum == 1 && httpEntity.lfNum == 1) {
                         int len = endPos - startPos - 2;
                         byte[] bytes = new byte[len];
                         buf.get(bytes, 0, len);
                         startPos = endPos;
                         buf.position(startPos);
                         httpEntity.protocol = new String(bytes);
-                        continue;
                     }
                 } else {
                     if (b == COLON && httpEntity.tmp == null) {
@@ -104,9 +104,7 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
                         startPos = endPos;
                         buf.position(startPos);
                         httpEntity.tmp = new String(bytes);
-                        continue;
-                    }
-                    if (httpEntity.crNum == 1 && httpEntity.lfNum == 1) {
+                    } else if (httpEntity.crNum == 1 && httpEntity.lfNum == 1) {
                         int len = endPos - startPos - 2;
                         byte[] bytes = new byte[len];
                         buf.get(bytes, 0, len);
@@ -121,7 +119,7 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
                         }
                         if (CHUNKED.equals(httpEntity.tmp)) {
                             httpEntity.chunked = true;
-//                            throw new RuntimeException("not support chunked");
+                            throw new RuntimeException("not support chunked");
                         }
                     }
                 }
@@ -152,8 +150,8 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
 
     @Override
     public ByteBuffer encode(HttpEntity httpEntity, Session session) {
+        ByteBuffer byteBuffer = session.getHandler().getPooledByteBuff().get();
         HttpResponseEntity httpResponseEntity = (HttpResponseEntity) httpEntity;
-
-        return httpResponseEntity.toBuffer();
+        return httpResponseEntity.toBuffer(byteBuffer);
     }
 }
