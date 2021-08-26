@@ -2,15 +2,6 @@
 
 cd $IROOT
 
-git clone https://github.com/sumeetchhetri/ffead-cpp
-cd ffead-cpp
-git checkout 4e98d8ba1a11505a0b7b450285b20ac0ad7a104f -b 5.0
-rm -rf .git
-cd ..
-mv ffead-cpp ffead-cpp-src
-mv ffead-cpp-src/lang-server-backends ${IROOT}/
-cd $IROOT
-
 CURR_TYPE="lithium"
 if [ "$CURR_TYPE" = "lithium" ]
 then
@@ -27,7 +18,6 @@ then
 	CINATRA_INC="-DCINATRA_INCLUDES=${IROOT}/cinatra/include"
 	git clone https://github.com/sumeetchhetri/cinatra.git
 	cd cinatra
-	git checkout b3871a074f6107f57acf42a15fa872d4076436ab -b works
 	rm -rf .git
 fi
 
@@ -40,7 +30,6 @@ then
 	SRV_TYPE=SRV_DROGON
 	git clone --recurse-submodules https://github.com/sumeetchhetri/drogon
 	cd  drogon
-	git checkout a10934f3f85f361cde58a891d3cf1f1df3a8ea8a -b works
 	mkdir build
 	cd build
 	cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_CTL=off -DBUILD_EXAMPLES=off -DBUILD_ORM=off ..
@@ -54,26 +43,26 @@ if [ "$CURR_TYPE" = "nghttp2" ]
 then
 	apt install --no-install-recommends -y libjansson-dev libc-ares-dev libboost-all-dev
 	cd $IROOT
-	wget -q https://github.com/nghttp2/nghttp2/releases/download/v1.41.0/nghttp2-1.41.0.tar.gz
-	tar xf nghttp2-1.41.0.tar.gz
-	cd nghttp2-1.41.0
+	wget -q https://github.com/nghttp2/nghttp2/releases/download/v1.42.0/nghttp2-1.42.0.tar.gz
+	tar xf nghttp2-1.42.0.tar.gz
+	cd nghttp2-1.42.0
 	cmake -DENABLE_ASIO_LIB=on -GNinja .
 	ninja install
 	cd $IROOT
-	rm -rf nghttp2-1.41.0 nghttp2-1.41.0.tar.gz
+	rm -rf nghttp2-1.42.0 nghttp2-1.42.0.tar.gz
 fi
 
 CURR_TYPE="mongols"
 if [ "$CURR_TYPE" = "mongols" ]
 then
 	cd $IROOT
-	wget -q https://github.com/webcpp/mongols/archive/release-1.8.4.9.tar.gz
-	tar xf release-1.8.4.9.tar.gz
-	cd mongols-release-1.8.4.9/
+	wget -q https://github.com/webcpp/mongols/archive/release-1.8.4.12.tar.gz
+	tar xf release-1.8.4.12.tar.gz
+	cd mongols-release-1.8.4.12/
 	make clean && make -j4 && make install && ldconfig
 	cp -rf inc/mongols/lib/* /usr/local/include/
 	cd $IROOT
-	rm -rf mongols-release-1.8.4.9/ release-1.8.4.9.tar.gz
+	rm -rf mongols-release-1.8.4.12/ release-1.8.4.12.tar.gz
 fi
 
 CURR_TYPE="uv-cpp"
@@ -98,7 +87,8 @@ then
 	git clone https://github.com/chronoxor/CppServer
 	cd CppServer
 	gil update
-	cd build
+	cd $IROOT/CppServer/modules/CppCommon/modules/fmt && git checkout b9ab5c8836bbffbe0a877f64d6faef8fbf4fd394 -b works
+	cd $IROOT/CppServer/build
 	./unix.sh
 	cp $IROOT/CppServer/bin/libcppserver.a /usr/local/lib/
 	cp -rf $IROOT/CppServer/modules/asio/asio/include/* /usr/local/include/
@@ -109,6 +99,28 @@ then
 	cp $IROOT/CppServer/temp/modules/CppCommon/modules/libfmt.a /usr/local/lib/
 	cd $IROOT
 	rm -rf CppServer
+fi
+
+CURR_TYPE="lsquic-no"
+if [ "$CURR_TYPE" = "lsquic" ]
+then
+	apt install --no-install-recommends -y libunwind-dev golang libevent-dev
+	cd $IROOT
+	git clone https://boringssl.googlesource.com/boringssl
+	cd boringssl
+	git checkout b117a3a0b7bd11fe6ebd503ec6b45d6b910b41a1
+	sed -i "s/-Werror//g" CMakeLists.txt
+	cmake -DCMAKE_BUILD_TYPE=Release . && make -j4
+	cd $IROOT 
+	git clone https://github.com/litespeedtech/lsquic.git
+	cd lsquic
+	git submodule init
+	git submodule update
+	cmake -DBORINGSSL_DIR=${IROOT}/boringssl . && make install -j4
+	cd $IROOT
+	rm -rf lsquic boringssl
+	apt remove -y golang
+	apt autoremove -y
 fi
 
 rm -rf /var/lib/apt/lists/*

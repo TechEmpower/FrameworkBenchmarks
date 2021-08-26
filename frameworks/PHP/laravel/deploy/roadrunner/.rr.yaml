@@ -1,0 +1,22 @@
+# see https://roadrunner.dev/docs/intro-config
+server:
+  command: "php ./vendor/bin/rr-worker start --relay-dsn unix:///usr/local/var/run/rr-rpc.sock"
+  relay: "unix:///usr/local/var/run/rr-rpc.sock"
+logs:
+  mode: production
+  level: error
+http:
+  address: 0.0.0.0:8080
+  middleware: ["headers", "static", "gzip"]
+  pool:
+    max_jobs: 64 # feel free to change this
+    supervisor:
+      exec_ttl: 60s
+  headers:
+    response:
+      Server: "RoadRunner"
+  static:
+    dir: "public"
+    forbid: [".php"]
+
+

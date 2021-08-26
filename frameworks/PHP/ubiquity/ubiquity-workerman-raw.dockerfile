@@ -1,5 +1,5 @@
   
-FROM ubuntu:20.10
+FROM ubuntu:21.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -11,7 +11,7 @@ RUN apt-get update -yqq > /dev/null && \
 RUN apt-get install -yqq composer > /dev/null
 
 RUN apt-get install -y php-pear php8.0-dev libevent-dev > /dev/null
-RUN pecl install event-3.0.2 > /dev/null && echo "extension=event.so" > /etc/php/8.0/cli/conf.d/event.ini
+RUN pecl install event-3.0.5 > /dev/null && echo "extension=event.so" > /etc/php/8.0/cli/conf.d/event.ini
 
 COPY deploy/conf/php-async.ini /etc/php/8.0/cli/php.ini
 

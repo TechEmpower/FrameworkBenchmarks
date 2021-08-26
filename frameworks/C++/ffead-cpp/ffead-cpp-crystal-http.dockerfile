@@ -1,13 +1,13 @@
-FROM sumeetchhetri/ffead-cpp-5.0-base:5.2
+FROM sumeetchhetri/ffead-cpp-base:6.0
 
 ENV IROOT=/installs
 
 RUN rm -f /usr/local/lib/libffead-* /usr/local/lib/libte_benc* /usr/local/lib/libinter.so /usr/local/lib/libdinter.so && \
-	ln -s ${IROOT}/ffead-cpp-5.0/lib/libte_benchmark_um.so /usr/local/lib/libte_benchmark_um.so && \
-	ln -s ${IROOT}/ffead-cpp-5.0/lib/libffead-modules.so /usr/local/lib/libffead-modules.so && \
-	ln -s ${IROOT}/ffead-cpp-5.0/lib/libffead-framework.so /usr/local/lib/libffead-framework.so && \
-	ln -s ${IROOT}/ffead-cpp-5.0/lib/libinter.so /usr/local/lib/libinter.so && \
-	ln -s ${IROOT}/ffead-cpp-5.0/lib/libdinter.so /usr/local/lib/libdinter.so && \
+	ln -s ${IROOT}/ffead-cpp-6.0/lib/libte-benchmark-um.so /usr/local/lib/libte-benchmark-um.so && \
+	ln -s ${IROOT}/ffead-cpp-6.0/lib/libffead-modules.so /usr/local/lib/libffead-modules.so && \
+	ln -s ${IROOT}/ffead-cpp-6.0/lib/libffead-framework.so /usr/local/lib/libffead-framework.so && \
+	ln -s ${IROOT}/ffead-cpp-6.0/lib/libinter.so /usr/local/lib/libinter.so && \
+	ln -s ${IROOT}/ffead-cpp-6.0/lib/libdinter.so /usr/local/lib/libdinter.so && \
 	ldconfig
 
 RUN apt-get update -y && apt install -y --no-install-recommends gnupg && curl -sL "https://keybase.io/crystal/pgp_keys.asc" | apt-key add - \
@@ -18,6 +18,4 @@ RUN crystal build --release --no-debug crystal-ffead-cpp.cr -o crystal-ffead-cpp
 
 WORKDIR /
 
-EXPOSE 8080
-
-CMD ./run_ffead.sh ffead-cpp-5.0 crystal-http
+CMD ./run_ffead.sh ffead-cpp-6.0 crystal-http

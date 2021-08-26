@@ -16,10 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="5.0.0" />
+    <PackageReference Update="FSharp.Core" Version="5.0.2" />
     <PackageReference Include="Donald" Version="3.0.*" />
     <PackageReference Include="Falco" Version="2.0.*" />    
-    <PackageReference Include="Npgsql" Version="4.1.5" />
+    <PackageReference Include="Npgsql" Version="5.0.7" />
   </ItemGroup>
 
 </Project>

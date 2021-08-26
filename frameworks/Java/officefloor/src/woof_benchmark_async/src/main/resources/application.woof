@@ -1,22 +1,22 @@
 <woof>
   <http-continuations>
     <http-continuation path="/db" secure="false" x="87" y="172">
-      <section name="Logic" input="db"/>
+      <section name="Section" input="db"/>
     </http-continuation>
     <http-continuation path="/fortunes" secure="false" x="78" y="213">
-      <section name="Logic" input="fortunes"/>
+      <section name="Section" input="fortunes"/>
     </http-continuation>
     <http-continuation path="/json" secure="false" x="84" y="123">
-      <section name="Logic" input="json"/>
+      <section name="Section" input="json"/>
     </http-continuation>
     <http-continuation path="/plaintext" secure="false" x="84" y="66">
-      <section name="Logic" input="plaintext"/>
+      <section name="Section" input="plaintext"/>
     </http-continuation>
     <http-continuation path="/queries" secure="false" x="82" y="270">
-      <section name="Logic" input="queries"/>
+      <section name="Section" input="queries"/>
     </http-continuation>
     <http-continuation path="/update" secure="false" x="82" y="323">
-      <section name="Logic" input="update"/>
+      <section name="Section" input="update"/>
     </http-continuation>
   </http-continuations>
   <http-inputs>
@@ -24,17 +24,13 @@
   <templates>
   </templates>
   <sections>
-    <section name="Logic" source="net.officefloor.plugin.section.clazz.ClassSectionSource" location="net.officefloor.benchmark.Logic" x="281" y="140">
+    <section name="Section" source="net.officefloor.plugin.section.clazz.ClassSectionSource" location="net.officefloor.benchmark.Logic" x="376" y="115">
       <input name="db" parameter-type=""/>
-      <input name="dbService" parameter-type=""/>
       <input name="fortunes" parameter-type=""/>
-      <input name="fortunesService" parameter-type=""/>
       <input name="json" parameter-type=""/>
       <input name="plaintext" parameter-type=""/>
       <input name="queries" parameter-type=""/>
-      <input name="queriesService" parameter-type=""/>
       <input name="update" parameter-type=""/>
-      <input name="updateService" parameter-type=""/>
     </section>
   </sections>
   <procedures>

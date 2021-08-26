@@ -1,8 +1,8 @@
 #!/bin/bash
 
-export ASQL_VER=0.26.0
-export CUTELEE_VER=5.3.0
-export CUTELYST_VER=2.14.0
+export ASQL_VER=0.43.0
+export CUTELEE_VER=6.0.0
+export CUTELYST_VER=3.1.0
 
 apt update -qq && \
     apt install -yqq --no-install-recommends \
@@ -14,8 +14,8 @@ apt update -qq && \
     qtdeclarative5-dev \
     postgresql-server-dev-all
 
-wget -q https://github.com/cutelyst/cutelee/releases/download/v${CUTELEE_VER}/cutelee5_${CUTELEE_VER}_amd64.deb && \
-    apt install -yqq ./cutelee5_${CUTELEE_VER}_amd64.deb
+wget -q https://github.com/cutelyst/cutelee/releases/download/v${CUTELEE_VER}/cutelee_${CUTELEE_VER}_amd64.deb && \
+    apt install -yqq ./cutelee_${CUTELEE_VER}_amd64.deb
 
 wget -q https://github.com/cutelyst/asql/releases/download/v${ASQL_VER}/libasql_${ASQL_VER}_amd64.deb && \
     apt install -yqq ./libasql_${ASQL_VER}_amd64.deb

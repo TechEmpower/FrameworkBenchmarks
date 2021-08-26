@@ -1,6 +1,7 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
+use std::borrow::Cow;
 use std::fmt::Write;
 use std::io;
 use std::sync::atomic::{AtomicUsize, Ordering};
@@ -46,7 +47,7 @@ struct WorldRow {
 #[derive(Serialize)]
 pub struct Fortune {
     id: i32,
-    message: String,
+    message: Cow<'static, str>,
 }
 
 struct PgConnectionPool {
@@ -85,11 +86,9 @@ struct PgConnection {
 impl PgConnection {
     fn new(db_url: &str) -> Self {
         let client = may_postgres::connect(db_url).unwrap();
-        let world = client
-            .prepare("SELECT id, randomnumber FROM world WHERE id=$1")
-            .unwrap();
+        let world = client.prepare("SELECT * FROM world WHERE id=$1").unwrap();
 
-        let fortune = client.prepare("SELECT id, message FROM fortune").unwrap();
+        let fortune = client.prepare("SELECT * FROM fortune").unwrap();
 
         let mut updates = Vec::new();
         for num in 1..=500u16 {
@@ -197,10 +196,10 @@ impl PgConnection {
         Ok(worlds)
     }
 
-    fn tell_fortune(&self) -> Result<SmallVec<[Fortune; 32]>, may_postgres::Error> {
-        let mut items: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
+    fn tell_fortune(&self) -> Result<Vec<Fortune>, may_postgres::Error> {
+        let mut items = vec![Fortune {
             id: 0,
-            message: "Additional fortune added at request time.".to_string(),
+            message: Cow::Borrowed("Additional fortune added at request time."),
         }];
 
         let rows = self
@@ -211,7 +210,7 @@ impl PgConnection {
             let r = row?;
             items.push(Fortune {
                 id: r.get(0),
-                message: r.get(1),
+                message: Cow::Owned(r.get(1)),
             });
         }
 
@@ -250,7 +249,7 @@ impl HttpService for Techempower {
                 let fortunes = self.db.tell_fortune().unwrap();
                 let mut body = Vec::with_capacity(2048);
                 ywrite_html!(body, "{{> fortune }}");
-                rsp.body_mut().extend_from_slice(&body);
+                rsp.body_vec(body);
             }
             p if p.starts_with("/queries") => {
                 rsp.header("Content-Type: application/json");

@@ -5,15 +5,17 @@
  */
 package org.redkalex.benchmark;
 
+import java.util.Random;
 import javax.persistence.*;
 import org.redkale.convert.json.JsonConvert;
-
+import org.redkale.source.*;
 
 /**
  *
  * @author zhangjx
  */
-@Cacheable(direct=true)
+//@Cacheable(direct = true)
+@Entity
 @Table(name = "World")
 public final class CachedWorld implements Comparable<CachedWorld> {
 
@@ -53,4 +55,27 @@ public final class CachedWorld implements Comparable<CachedWorld> {
         return JsonConvert.root().convertTo(this);
     }
 
+    public static class WorldEntityCache {
+
+        private Object[] array;
+
+        public WorldEntityCache(DataSource source) {
+            this.array = source.queryList(CachedWorld.class).toArray();
+        }
+
+        public CachedWorld findAt(int index) {
+            return (CachedWorld) array[index];
+        }
+
+        public CachedWorld[] random(Random random, int size) {
+            final CachedWorld[] worlds = new CachedWorld[size];
+            int count = size;
+            Random rand = random;
+            for (int i = 0; i < count; i++) {
+                long index = Math.abs(rand.nextLong()) % 10000;
+                worlds[i] = (CachedWorld) array[(int) index];
+            }
+            return worlds;
+        }
+    }
 }

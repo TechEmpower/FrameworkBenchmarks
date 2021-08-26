@@ -1,6 +1,7 @@
 <?php
 
 use Benchmark\Application;
+use Cache\Adapter\PHPArray\ArrayCachePool;
 use Hamlet\Database\PDO\PDODatabase;
 use Hamlet\Http\Workerman\Bootstraps\WorkermanBootstrap;
 
@@ -11,5 +12,6 @@ $database = new PDODatabase(
     'benchmarkdbuser',
     'benchmarkdbpass'
 );
-$application = new Application($database);
+$cache = new ArrayCachePool;
+$application = new Application($database, $cache);
 WorkermanBootstrap::run('0.0.0.0', 8080, $application);

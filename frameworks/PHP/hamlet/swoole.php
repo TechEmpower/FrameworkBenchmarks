@@ -1,6 +1,7 @@
 <?php
 
 use Benchmark\Application;
+use Cache\Adapter\PHPArray\ArrayCachePool;
 use Hamlet\Database\MySQLSwoole\MySQLSwooleDatabase;
 use Hamlet\Http\Swoole\Bootstraps\SwooleBootstrap;
 
@@ -13,5 +14,5 @@ $database = new MySQLSwooleDatabase(
     'hello_world',
     intdiv(512, swoole_cpu_num())
 );
-$application = new Application($database);
+$application = new Application($database, new ArrayCachePool);
 SwooleBootstrap::run('0.0.0.0', 8080, $application, $database);
