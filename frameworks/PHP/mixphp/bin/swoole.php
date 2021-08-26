@@ -23,8 +23,10 @@ $http->on('WorkerStart', function ($server, $workerId) {
     }
 });
 $http->set([
-    'enable_coroutine' => false,
     'worker_num' => swoole_cpu_num() * 4,
+    'enable_coroutine' => false,
+    'open_tcp_nodelay' => true,
+    'max_request' => 0,
     'log_file' => '/dev/null',
     'log_level' => SWOOLE_LOG_ERROR,
 ]);
