@@ -47,7 +47,7 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
             readBody(byteBuffer, session, httpEntity);
         }
 
-        if (httpEntity.complete()) {
+        if (httpEntity.headerComplete() && httpEntity.complete()) {
             session.setAttribute(httpEntityKey, null);
             return httpEntity;
         }

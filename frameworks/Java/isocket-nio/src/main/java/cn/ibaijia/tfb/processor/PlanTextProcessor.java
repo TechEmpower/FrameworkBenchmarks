@@ -21,28 +21,26 @@ public class PlanTextProcessor implements Processor<HttpEntity> {
         HttpRequestEntity httpRequestEntity = (HttpRequestEntity) httpEntity;
         String url = httpRequestEntity.url;
         logger.trace("url:{}", url);
-        if (url.equals("/plaintext")) {
+        if ("/plaintext".equals(url)) {
             HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
             httpResponseEntity.setHeader("Content-Type", TEXT_TYPE);
             httpResponseEntity.setHeader("Server", SERVER_NAME);
             httpResponseEntity.setHeader("Date", DateUtil.getDate());
             httpResponseEntity.body = "Hello, World!";
             session.write(httpResponseEntity);
-        } else if (url.equals("/json")) {
+        } else if ("/json".equals(url)) {
             HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
             httpResponseEntity.setHeader("Content-Type", JSON_TYPE);
             httpResponseEntity.setHeader("Server", SERVER_NAME);
             httpResponseEntity.setHeader("Date", DateUtil.getDate());
             httpResponseEntity.body = JSON.toJSONString(new Message("Hello, World!"));
             session.write(httpResponseEntity);
-        } else if (url.equals("/state")) {
+        } else if ("/state".equals(url)) {
             HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
             httpResponseEntity.setHeader("Content-Type", JSON_TYPE);
             httpResponseEntity.setHeader("Server", SERVER_NAME);
             httpResponseEntity.setHeader("Date", DateUtil.getDate());
             State state = new State();
-//            state.sessionCount = SessionManager.getSessionCount();
-//            state.bufferState = new BufferState();
             httpResponseEntity.body = JSON.toJSONString(state);
             session.write(httpResponseEntity);
         } else {
