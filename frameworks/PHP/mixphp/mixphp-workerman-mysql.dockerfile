@@ -19,6 +19,9 @@ RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/loca
 RUN composer install --no-dev --classmap-authoritative --quiet > /dev/null
 RUN composer dumpautoload -o
 
+RUN mkdir -p /mixphp/runtime/logs
+RUN chmod -R 777 /mixphp/runtime/logs
+
 EXPOSE 2345
 
 CMD php /mixphp/bin/workerman.php start
