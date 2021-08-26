@@ -25,7 +25,7 @@
         "notes": "",
         "versus": "php"
       },
-      "mixphp-swoole-mysql": {
+      "swoole-mysql": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "db_url": "/db",
@@ -92,6 +92,6 @@
         "notes": "",
         "versus": "workerman"
       }
-    },
+    }
   ]
 }
