@@ -20,7 +20,9 @@ use models::*;
 const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 pub static DB_CONN: OnceCell<PgConnection> = OnceCell::new();
 pub fn connect() -> &'static PgConnection {
-    DB_CONN.get().unwrap()
+    unsafe {
+        DB_CONN.get_unchecked()
+    }
 }
 pub struct PgConnection {
     client: Client,
