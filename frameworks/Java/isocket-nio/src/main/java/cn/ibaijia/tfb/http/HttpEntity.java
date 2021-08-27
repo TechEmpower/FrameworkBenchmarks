@@ -4,7 +4,14 @@ public abstract class HttpEntity {
 
     public String charset = "UTF-8";
 
-    public abstract String getHeader(String name);
-    public abstract void setHeader(String name,String value);
+    public abstract byte[] getHeader(byte[] name);
+
+    public abstract byte[] getHeader(String name);
+
+    public abstract void setHeader(byte[] name, byte[] value);
+
+    public abstract void setContentType(String contentType);
+
+    public abstract void setContentType(byte[] contentType);
 
 }
