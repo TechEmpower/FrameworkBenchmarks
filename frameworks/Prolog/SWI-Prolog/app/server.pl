@@ -14,7 +14,7 @@
 server(Port) :-
     odbc_set_option(connection_pooling(true)),
     current_prolog_flag(cpu_count, Cores),
-    Workers is 8 * Cores,
+    Workers is 64 * Cores,
     http_server(http_dispatch, [workers(Workers), port(Port), timeout(30)]).
 
 
@@ -82,8 +82,8 @@ cached_worlds_handler(Request) :-
 
 queries(Request, Queries) :-
     catch(
-        ( http_parameters(Request, [queries(Value, [integer, optional(true), default(1)])])
-        , cut_off(Value, 1, 500, Queries)
+        (   http_parameters(Request, [queries(Value, [integer, optional(true), default(1)])])
+        ,   cut_off(Value, 1, 500, Queries)
         ),
         _Caught,
         Queries = 1

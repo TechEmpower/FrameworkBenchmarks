@@ -10,14 +10,14 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
-var worldsCache = &Worlds{W: make([]World, worldsCount)}
-
 const (
 	helloWorldStr = "Hello, World!"
 
 	contentTypeJSON = "application/json"
 	contentTypeHTML = "text/html; charset=utf-8"
 )
+
+var worldsCache = &Worlds{W: make([]World, worldsCount)}
 
 // PopulateWorldsCache populates the worlds cache for the cache test.
 func PopulateWorldsCache() {
@@ -149,7 +149,7 @@ func Updates(ctx *fasthttp.RequestCtx) {
 		return worlds.W[i].ID < worlds.W[j].ID
 	})
 
-	batch := &pgx.Batch{}
+	batch := new(pgx.Batch)
 
 	for i := 0; i < queries; i++ {
 		w := &worlds.W[i]

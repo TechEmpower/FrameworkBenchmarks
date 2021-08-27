@@ -1,7 +1,7 @@
-defmodule Hello.Router do
-  use Hello.Web, :router
+defmodule HelloWeb.Router do
+  use HelloWeb, :router
 
-  scope "/", Hello do
+  scope "/", HelloWeb do
     get("/json", PageController, :_json)
     get("/db", PageController, :db)
     get("/queries", PageController, :queries)

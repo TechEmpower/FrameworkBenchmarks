@@ -1,16 +1,16 @@
 
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.5.10"
+    id "org.jetbrains.kotlin.jvm" version "1.5.21"
 }
 
 ext {
-    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/1.3.20/gradle"
+    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/1.4.0/gradle"
 
-    hexagonVersion = "1.3.20"
-    hikariVersion = "3.4.5" // TODO Check also with 5.0.0
+    hexagonVersion = "1.4.0"
+    hikariVersion = "5.0.0"
     jettyVersion = "10.0.6"
     postgresqlVersion = "42.2.23"
-    cache2kVersion = "2.0.0.Final"
+    cache2kVersion = "2.2.1.Final"
     jacksonBlackbirdVersion = "2.12.4"
 }
 

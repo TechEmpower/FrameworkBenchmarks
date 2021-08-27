@@ -9,6 +9,8 @@ RUN docker-php-ext-install mysqli > /dev/null && \
 RUN apt-get update -yqq && \
     apt-get install -yqq git unzip
 
+COPY ./deploy/fpm/php.ini /usr/local/etc/php/conf.d/hamlet.ini
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 ADD ./ /php

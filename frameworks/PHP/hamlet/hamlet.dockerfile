@@ -1,4 +1,4 @@
-FROM ubuntu:20.10
+FROM ubuntu:21.04
 
 ENV PHP_VERSION 8.0
 ARG DEBIAN_FRONTEND=noninteractive
