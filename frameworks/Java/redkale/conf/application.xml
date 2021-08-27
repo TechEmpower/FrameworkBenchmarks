@@ -5,6 +5,11 @@
     <resources>
         <executor threads="0"/>
         <properties>    
+            <property name="system.property.vertx.threadChecks" value="false"/> 
+            <property name="system.property.vertx.disableTCCL" value="true"/> 
+            <property name="system.property.vertx.disableMetrics" value="true"/> 
+            <property name="system.property.vertx.disableContextTimings" value="true"/> 
+            
             <property name="system.property.convert.tiny" value="false"/>      
             <property name="system.property.redkale.skip.counter" value="true"/>  
             <property name="system.property.net.invoker.max.onstack" value="24"/>
