@@ -33,12 +33,12 @@
             <version>1.3.0</version>
         </dependency> 
         
-		<dependency>
-			 <groupId>io.netty</groupId>
-			 <artifactId>netty-transport-native-epoll</artifactId>
-			 <version>4.1.65.Final</version>
-			 <classifier>linux-x86_64</classifier>
-		</dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-transport-native-epoll</artifactId>
+            <version>4.1.65.Final</version>
+            <classifier>linux-x86_64</classifier>
+        </dependency>
         
         <dependency> 
             <groupId>io.vertx</groupId>
@@ -96,6 +96,9 @@
                         <arg>--allow-incomplete-classpath</arg>
                         <arg>--no-fallback</arg>
                     </nativeimageArgs>
+                    <reflectClassesArgs>
+                        <arg>org.redkalex.benchmark.FortunesTemplate</arg>
+                    </reflectClassesArgs>
                 </configuration>                                    
                 <executions>
                     <execution>
