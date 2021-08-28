@@ -24,6 +24,10 @@
             "graalvm": {
                 "plaintext_url": "/plaintext",
                 "json_url": "/json",
+                "db_url": "/db",
+                "query_url": "/queries?q=", 
+                "fortune_url": "/fortunes",
+                "update_url": "/updates?q=",
                 "cached_query_url": "/cached-worlds?q=",
                 "port": 8080,
                 "approach": "Realistic",
@@ -44,6 +48,10 @@
             "native": {
                 "plaintext_url": "/plaintext",
                 "json_url": "/json",
+                "db_url": "/db",
+                "query_url": "/queries?q=", 
+                "fortune_url": "/fortunes",
+                "update_url": "/updates?q=",
                 "cached_query_url": "/cached-worlds?q=",
                 "port": 8080,
                 "approach": "Realistic",
@@ -81,9 +89,9 @@
             },
             "postgres": {
                 "db_url": "/db",
-                "query_url2": "/queries?q=", 
+                "query_url": "/queries?q=", 
                 "fortune_url": "/fortunes",
-                "update_url2": "/updates?q=",
+                "update_url": "/updates?q=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
