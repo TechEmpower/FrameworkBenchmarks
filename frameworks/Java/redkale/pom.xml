@@ -96,9 +96,9 @@
                         <arg>--allow-incomplete-classpath</arg>
                         <arg>--no-fallback</arg>
                     </nativeimageArgs>
-                    <reflectClassesArgs>
+                    <reflectPublicConstructorArgs>
                         <arg>org.redkalex.benchmark.FortunesTemplate</arg>
-                    </reflectClassesArgs>
+                    </reflectPublicConstructorArgs>
                 </configuration>                                    
                 <executions>
                     <execution>
