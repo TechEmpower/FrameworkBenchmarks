@@ -50,7 +50,6 @@
                 "json_url": "/json",
                 "db_url": "/db",
                 "query_url": "/queries?q=", 
-                "fortune_url": "/fortunes",
                 "update_url": "/updates?q=",
                 "cached_query_url": "/cached-worlds?q=",
                 "port": 8080,
