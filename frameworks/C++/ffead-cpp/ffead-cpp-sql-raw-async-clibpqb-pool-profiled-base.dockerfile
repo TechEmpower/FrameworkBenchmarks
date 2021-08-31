@@ -81,8 +81,13 @@ WORKDIR ${IROOT}
 
 COPY sql-profiled-util.sh ${IROOT}/
 RUN chmod 755 ${IROOT}/sql-profiled-util.sh
-RUN ./sql-profiled-util.sh batch clang noasync
+RUN ./sql-profiled-util.sh batch clang async pool
 
-COPY sql-profiled-install-clang.sh install_ffead-cpp-sql-raw-profiled.sh ${IROOT}/
-RUN chmod 755 ${IROOT}/sql-profiled-install-clang.sh ${IROOT}/install_ffead-cpp-sql-raw-profiled.sh
-RUN ./sql-profiled-install-clang.sh
+#COPY TeBkUmLpqAsync.cpp ${IROOT}/ffead-cpp-src/web/te-benchmark-um-pq-async/src/
+#COPY TeBkUmLpqAsync.h ${IROOT}/ffead-cpp-src/web/te-benchmark-um-pq-async/include/
+#COPY LibpqDataSourceImpl.cpp ${IROOT}/ffead-cpp-src/src/modules/sdorm/sql/libpq/
+#COPY LibpqDataSourceImpl.h ${IROOT}/ffead-cpp-src/src/modules/sdorm/sql/libpq/
+
+COPY sql-async-profiled-install-clang.sh install_ffead-cpp-sql-raw-profiled.sh ${IROOT}/
+RUN chmod 755 ${IROOT}/sql-async-profiled-install-clang.sh ${IROOT}/install_ffead-cpp-sql-raw-profiled.sh
+RUN ./sql-async-profiled-install-clang.sh batch

@@ -1,7 +1,7 @@
 FROM sumeetchhetri/ffead-cpp-base:6.0
 LABEL maintainer="Sumeet Chhetri"
 LABEL version="6.0"
-LABEL description="SQL Raw Custom libpq batch patched Base ffead-cpp docker image with commit id - master"
+LABEL description="SQL Raw Base ffead-cpp docker image with commit id - master"
 
 WORKDIR /tmp
 RUN mkdir postgresql
@@ -81,8 +81,8 @@ WORKDIR ${IROOT}
 
 COPY sql-profiled-util.sh ${IROOT}/
 RUN chmod 755 ${IROOT}/sql-profiled-util.sh
-RUN ./sql-profiled-util.sh batch clang noasync
+RUN ./sql-profiled-util.sh nobatch noclang async pool
 
-COPY sql-profiled-install-clang.sh install_ffead-cpp-sql-raw-profiled.sh ${IROOT}/
-RUN chmod 755 ${IROOT}/sql-profiled-install-clang.sh ${IROOT}/install_ffead-cpp-sql-raw-profiled.sh
-RUN ./sql-profiled-install-clang.sh
+COPY sql-async-profiled-install.sh install_ffead-cpp-sql-raw-profiled.sh ${IROOT}/
+RUN chmod 755 ${IROOT}/sql-async-profiled-install.sh ${IROOT}/install_ffead-cpp-sql-raw-profiled.sh
+RUN ./sql-async-profiled-install.sh
