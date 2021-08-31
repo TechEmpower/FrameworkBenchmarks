@@ -1,13 +1,13 @@
 #
 # BUILD
 #
-FROM gradle:7.1-jdk11 AS gradle_build
+FROM gradle:7.2-jdk11 AS gradle_build
 USER root
 WORKDIR /hexagon
 
 COPY src src
 COPY build.gradle build.gradle
-RUN gradle --quiet --exclude-task test
+RUN gradle --quiet
 
 #
 # RUNTIME
