@@ -6,4 +6,4 @@ COPY src src
 COPY scripts scripts
 COPY pom.xml pom.xml
 RUN mvn clean package -P bootable-jar
-CMD java -Djava.net.preferIPv4Stack=true -Xmx24g -XX:+UseZGC -jar target/wildfly-ee-bootable.jar
+CMD java -Djava.net.preferIPv4Stack=true -XX:SoftMaxHeapSize=18g -Xmx24g -XX:+UseZGC -jar target/wildfly-ee-bootable.jar
