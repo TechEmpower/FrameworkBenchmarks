@@ -1,5 +1,5 @@
   
-FROM ubuntu:21.04
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -8,7 +8,7 @@ RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq php8.0 php8.0-common php8.0-cgi php8.0-pgsql php-curl > /dev/null
 
-RUN apt-get install -yqq composer > /dev/null
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 RUN apt-get install -y php-pear php-dev > /dev/null
 

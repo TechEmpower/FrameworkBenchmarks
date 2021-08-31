@@ -1,4 +1,4 @@
-FROM ubuntu:21.04
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -28,7 +28,7 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --add-module=/ngx_php7 > /dev/null && \
     make > /dev/null && make install > /dev/null
 
-RUN apt-get install -yqq composer > /dev/null
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 RUN composer config -g repo.packagist composer https://packagist.phpcomposer.com
 
