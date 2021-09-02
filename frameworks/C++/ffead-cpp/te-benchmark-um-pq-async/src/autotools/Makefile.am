@@ -8,7 +8,7 @@ distdir=${PACKAGE_NAME}-${PACKAGE_VERSION}-src
 fprefix=../../../../${packageIdentifier}
 prefix=${abs_builddir}
 
-lib_LTLIBRARIES = libte_benchmark_um_pq_async.la
+lib_LTLIBRARIES = libte-benchmark-um-pq-async.la
 libte_benchmark_um_pq_async_la_SOURCES = ../TeBkUmLpqAsync.cpp
 
 libte_benchmark_um_pq_async_la_LDFLAGS = -no-undefined 

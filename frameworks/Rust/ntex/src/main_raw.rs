@@ -7,7 +7,6 @@ use ntex::fn_service;
 use ntex::framed::{ReadTask, State, WriteTask};
 use ntex::http::h1;
 use ntex::rt::net::TcpStream;
-use yarte::Serialize;
 
 mod utils;
 
@@ -19,7 +18,7 @@ const HTTPNFOUND: &[u8] = b"HTTP/1.1 400 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: N\r\n";
 const BODY: &[u8] = b"Hello, World!";
 
-#[derive(Serialize)]
+#[derive(serde::Serialize)]
 pub struct Message {
     pub message: &'static str,
 }
@@ -55,10 +54,12 @@ impl Future for App {
                             "/json" => {
                                 buf.extend_from_slice(JSON);
                                 this.codec.set_date_header(buf);
-                                Message {
-                                    message: "Hello, World!",
-                                }
-                                .to_bytes_mut(buf);
+                                let _ = simd_json::to_writer(
+                                    crate::utils::Writer(buf),
+                                    &Message {
+                                        message: "Hello, World!",
+                                    },
+                                );
                             }
                             "/plaintext" => {
                                 buf.extend_from_slice(PLAIN);

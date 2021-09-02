@@ -2,7 +2,7 @@
 
 cd $IROOT
 
-#chown -R www-data:www-data ffead-cpp-5.0
+#chown -R www-data:www-data ffead-cpp-6.0
 
 #wget -q https://archive.apache.org/dist/httpd/httpd-2.4.25.tar.gz
 #wget -q https://archive.apache.org/dist/apr/apr-1.5.2.tar.gz
@@ -23,13 +23,13 @@ cd $IROOT
 #make install
 #cd ${IROOT}
 
-sed -i 's|#define PACKAGE_BUGREPORT "sumeet.chhetri@gmail.com"| |g' ${IROOT}/ffead-cpp-5.0/include/AppDefines.h
-sed -i 's|#define PACKAGE_NAME "ffead-cpp"| |g' ${IROOT}/ffead-cpp-5.0/include/AppDefines.h
-sed -i 's|#define PACKAGE_STRING "ffead-cpp 5.0"| |g' ${IROOT}/ffead-cpp-5.0/include/AppDefines.h
-sed -i 's|#define PACKAGE_TARNAME "ffead-cpp"| |g' ${IROOT}/ffead-cpp-5.0/include/AppDefines.h
-sed -i 's|#define PACKAGE_VERSION "5.0"| |g' ${IROOT}/ffead-cpp-5.0/include/AppDefines.h
+sed -i 's|#define PACKAGE_BUGREPORT "sumeet.chhetri@gmail.com"| |g' ${IROOT}/ffead-cpp-6.0/include/AppDefines.h
+sed -i 's|#define PACKAGE_NAME "ffead-cpp"| |g' ${IROOT}/ffead-cpp-6.0/include/AppDefines.h
+sed -i 's|#define PACKAGE_STRING "ffead-cpp 6.0"| |g' ${IROOT}/ffead-cpp-6.0/include/AppDefines.h
+sed -i 's|#define PACKAGE_TARNAME "ffead-cpp"| |g' ${IROOT}/ffead-cpp-6.0/include/AppDefines.h
+sed -i 's|#define PACKAGE_VERSION "6.0"| |g' ${IROOT}/ffead-cpp-6.0/include/AppDefines.h
 
-FFEADROOT=${IROOT}/ffead-cpp-5.0
+FFEADROOT=${IROOT}/ffead-cpp-6.0
 ETROOT=${FFEADROOT//\//\\/}
 EIROOT=${IROOT//\//\\/}
 

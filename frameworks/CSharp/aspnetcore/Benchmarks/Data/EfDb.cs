@@ -54,23 +54,19 @@ namespace Benchmarks.Data
         public async Task<World[]> LoadMultipleUpdatesRows(int count)
         {
             var results = new World[count];
-            int currentValue, newValue;
-
-            var ids = Enumerable.Range(1, 10000).Select(x => _random.Next(1, 10001)).Distinct().Take(count).ToArray();
-
+            var usedIds = new HashSet<int>(count);
+            
             for (var i = 0; i < count; i++)
             {
-                results[i] = await _firstWorldTrackedQuery(_dbContext, ids[i]);
-
-                currentValue = results[i].RandomNumber;
-
+                int id;
                 do
                 {
-                    newValue = _random.Next(1, 10001);
-                }
-                while (newValue == currentValue);
+                    id = _random.Next(1, 10001);
+                } while (!usedIds.Add(id));
+                
+                results[i] = await _firstWorldTrackedQuery(_dbContext, id);
 
-                results[i].RandomNumber = newValue;
+                results[i].RandomNumber = _random.Next(1, 10001);
 
                 _dbContext.Entry(results[i]).State = EntityState.Modified;
             }

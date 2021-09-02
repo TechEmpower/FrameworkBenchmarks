@@ -2,15 +2,6 @@
 
 cd $IROOT
 
-git clone https://github.com/sumeetchhetri/ffead-cpp
-cd ffead-cpp
-git checkout 75bba206221cb6a3595cb5f7ba75108964c19138 -b 5.0
-rm -rf .git
-cd ..
-mv ffead-cpp ffead-cpp-src
-mv ffead-cpp-src/lang-server-backends ${IROOT}/
-cd $IROOT
-
 CURR_TYPE="lithium"
 if [ "$CURR_TYPE" = "lithium" ]
 then
@@ -96,7 +87,8 @@ then
 	git clone https://github.com/chronoxor/CppServer
 	cd CppServer
 	gil update
-	cd build
+	#cd $IROOT/CppServer/modules/CppCommon/modules/fmt && git checkout b9ab5c8836bbffbe0a877f64d6faef8fbf4fd394 -b works
+	cd $IROOT/CppServer/build
 	./unix.sh
 	cp $IROOT/CppServer/bin/libcppserver.a /usr/local/lib/
 	cp -rf $IROOT/CppServer/modules/asio/asio/include/* /usr/local/include/

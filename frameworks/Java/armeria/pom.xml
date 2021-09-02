@@ -16,7 +16,7 @@
     <maven.compiler.target>11</maven.compiler.target>
 
     <!-- Dependency versions -->
-    <armeria.version>0.98.4</armeria.version>
+    <armeria.version>1.9.1</armeria.version>
   </properties>
 
   <dependencies>
@@ -77,5 +77,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>

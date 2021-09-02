@@ -16,7 +16,7 @@ RUN chmod -R 777 /laravel
 
 RUN apt-get update > /dev/null && \
     apt-get install -yqq git unzip > /dev/null
-RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" && php composer-setup.php && php -r "unlink('composer-setup.php');"
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php && php -r "unlink('composer-setup.php');"
 RUN mv composer.phar /usr/local/bin/composer
 
 COPY deploy/laravel-s/composer.json ./

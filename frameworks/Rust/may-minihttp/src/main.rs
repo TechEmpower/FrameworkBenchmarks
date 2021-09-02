@@ -86,11 +86,9 @@ struct PgConnection {
 impl PgConnection {
     fn new(db_url: &str) -> Self {
         let client = may_postgres::connect(db_url).unwrap();
-        let world = client
-            .prepare("SELECT id, randomnumber FROM world WHERE id=$1")
-            .unwrap();
+        let world = client.prepare("SELECT * FROM world WHERE id=$1").unwrap();
 
-        let fortune = client.prepare("SELECT id, message FROM fortune").unwrap();
+        let fortune = client.prepare("SELECT * FROM fortune").unwrap();
 
         let mut updates = Vec::new();
         for num in 1..=500u16 {
@@ -198,8 +196,8 @@ impl PgConnection {
         Ok(worlds)
     }
 
-    fn tell_fortune(&self) -> Result<SmallVec<[Fortune; 32]>, may_postgres::Error> {
-        let mut items: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
+    fn tell_fortune(&self) -> Result<Vec<Fortune>, may_postgres::Error> {
+        let mut items = vec![Fortune {
             id: 0,
             message: Cow::Borrowed("Additional fortune added at request time."),
         }];

@@ -12,7 +12,7 @@ This is the Express portion of a [benchmarking test suite](../) comparing a vari
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Node.js v14.15.0](http://nodejs.org/)
+* [Node.js v14.17.5](http://nodejs.org/)
 * [Express 4.17.1](http://expressjs.com/)
 
 ## Resources

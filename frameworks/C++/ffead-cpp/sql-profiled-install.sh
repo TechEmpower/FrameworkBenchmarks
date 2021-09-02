@@ -4,7 +4,7 @@ rm -rf build
 mkdir build
 cd build
 CXXFLAGS="-march=native -flto -fprofile-dir=/tmp/profile-data -fprofile-generate" cmake -DSRV_EMB=on -DMOD_REDIS=on ..
-make install && mv $IROOT/ffead-cpp-src/ffead-cpp-5.0-bin $IROOT/ffead-cpp-sql-raw
+make install && mv $IROOT/ffead-cpp-src/ffead-cpp-6.0-bin $IROOT/ffead-cpp-sql-raw
 
 #Start postgresql
 service postgresql stop
@@ -20,7 +20,7 @@ rm -rf build
 mkdir build
 cd build
 CXXFLAGS="-march=native -flto -fprofile-dir=/tmp/profile-data -fprofile-use=/tmp/profile-data -fprofile-correction" cmake -DSRV_EMB=on -DMOD_REDIS=on ..
-make install && mv $IROOT/ffead-cpp-src/ffead-cpp-5.0-bin $IROOT/ffead-cpp-sql-raw
+make install && mv $IROOT/ffead-cpp-src/ffead-cpp-6.0-bin $IROOT/ffead-cpp-sql-raw
 
 #Start postgresql
 service postgresql stop
@@ -29,13 +29,15 @@ service postgresql stop
 cd $IROOT/
 #sed -i 's|cmake |CXXFLAGS="-march=native -fprofile-dir=/tmp/profile-data -fprofile-use -fprofile-correction" cmake |g' $IROOT/ffead-cpp-sql-raw/resources/rundyn-automake.sh
 ./install_ffead-cpp-sql-raw-profiled.sh
-mv $IROOT/ffead-cpp-sql-raw $IROOT/ffead-cpp-5.0-sql
+mv $IROOT/ffead-cpp-sql-raw $IROOT/ffead-cpp-6.0-sql
 
-sed -i 's|localhost|tfb-database|g' $IROOT/ffead-cpp-5.0-sql/web/te-benchmark-um-pq/config/sdorm.xml
+sed -i 's|localhost|tfb-database|g' $IROOT/ffead-cpp-6.0-sql/web/te-benchmark-um-pq/config/sdorm.xml
 
-apt remove -yqq postgresql-13 postgresql-contrib-13 gnupg lsb-release
-apt autoremove -yqq
-rm -rf /ssd/postgresql
-rm -rf /tmp/postgresql
-rm -rf /tmp/wrk /usr/local/bin/wrk
-
+if [ "$#" = 0 ]
+then
+	apt remove -yqq postgresql-13 postgresql-contrib-13 gnupg lsb-release
+	apt autoremove -yqq
+	rm -rf /ssd/postgresql
+	rm -rf /tmp/postgresql
+	rm -rf /tmp/wrk /usr/local/bin/wrk
+fi

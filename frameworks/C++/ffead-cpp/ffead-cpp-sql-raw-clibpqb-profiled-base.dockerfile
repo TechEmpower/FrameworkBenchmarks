@@ -1,6 +1,6 @@
-FROM sumeetchhetri/ffead-cpp-5.0-base:5.3
+FROM sumeetchhetri/ffead-cpp-base:6.0
 LABEL maintainer="Sumeet Chhetri"
-LABEL version="5.3"
+LABEL version="6.0"
 LABEL description="SQL Raw Custom libpq batch patched Base ffead-cpp docker image with commit id - master"
 
 WORKDIR /tmp
@@ -85,4 +85,4 @@ RUN ./sql-profiled-util.sh batch clang noasync
 
 COPY sql-profiled-install-clang.sh install_ffead-cpp-sql-raw-profiled.sh ${IROOT}/
 RUN chmod 755 ${IROOT}/sql-profiled-install-clang.sh ${IROOT}/install_ffead-cpp-sql-raw-profiled.sh
-RUN ./sql-profiled-install-clang.sh batch
+RUN ./sql-profiled-install-clang.sh

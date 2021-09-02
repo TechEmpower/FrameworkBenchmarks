@@ -1,10 +1,9 @@
 package org.smartboot.servlet;
 
-import org.smartboot.aio.EnhanceAsynchronousChannelProvider;
 import org.smartboot.http.server.HttpBootstrap;
 import org.smartboot.http.server.HttpRequest;
 import org.smartboot.http.server.HttpResponse;
-import org.smartboot.http.server.HttpServerHandle;
+import org.smartboot.http.server.HttpServerHandler;
 import org.smartboot.http.server.impl.Request;
 import org.smartboot.servlet.conf.ServletInfo;
 import org.smartboot.socket.StateMachineEnum;
@@ -20,11 +19,9 @@ import java.io.IOException;
 public class Bootstrap {
 
     public static void main(String[] args) {
-        System.setProperty("java.nio.channels.spi.AsynchronousChannelProvider", EnhanceAsynchronousChannelProvider.class.getName());
-
         ContainerRuntime containerRuntime = new ContainerRuntime();
         // plaintext
-        ApplicationRuntime applicationRuntime = new ApplicationRuntime("/");
+        ServletContextRuntime applicationRuntime = new ServletContextRuntime("/");
         ServletInfo plainTextServletInfo = new ServletInfo();
         plainTextServletInfo.setServletName("plaintext");
         plainTextServletInfo.setServletClass(HelloWorldServlet.class.getName());
@@ -61,9 +58,9 @@ public class Bootstrap {
                     }
                 });
         bootstrap.setPort(8080)
-                .pipeline(new HttpServerHandle() {
+                .httpHandler(new HttpServerHandler() {
                     @Override
-                    public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
+                    public void handle(HttpRequest request, HttpResponse response) throws IOException {
                         containerRuntime.doHandle(request, response);
                     }
                 })

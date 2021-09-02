@@ -21,7 +21,7 @@
                 "notes": "",
                 "versus": "Redkale"
             },
-            "j8": {
+            "graalvm": {
                 "plaintext_url": "/plaintext",
                 "json_url": "/json",
                 "cached_query_url": "/cached-worlds?q=",
@@ -37,7 +37,27 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-j8",
+                "display_name": "redkale-graalvm",
+                "notes": "",
+                "versus": "Redkale"
+            },
+            "native": {
+                "plaintext_url": "/plaintext",
+                "json_url": "/json",
+                "cached_query_url": "/cached-worlds?q=",
+                "port": 8080,
+                "approach": "Realistic",
+                "classification": "Fullstack",
+                "database": "Postgres",
+                "framework": "Redkale",
+                "language": "Java",
+                "flavor": "None",
+                "orm": "Raw",
+                "platform": "Redkale",
+                "webserver": "Redkale",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "redkale-native",
                 "notes": "",
                 "versus": "Redkale"
             },
@@ -61,8 +81,8 @@
             },
             "postgres": {
                 "db_url": "/db",
-                "query_url": "/queries?q=", 
-                "fortune_url2": "/fortunes",
+                "query_url2": "/queries?q=", 
+                "fortune_url": "/fortunes",
                 "update_url2": "/updates?q=",
                 "port": 8080,
                 "approach": "Realistic",
@@ -76,7 +96,7 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale",
+                "display_name": "redkale-postgres",
                 "notes": "",
                 "versus": "Redkale"
             }

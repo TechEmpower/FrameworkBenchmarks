@@ -1,36 +1,19 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-use std::{cell::Cell, pin::Pin, task::Context, task::Poll};
+use std::{pin::Pin, task::Context, task::Poll};
 
-use bytes::BytesMut;
 use futures::future::{ok, Future, FutureExt};
 use ntex::http::header::{HeaderValue, CONTENT_TYPE, SERVER};
 use ntex::http::{HttpService, KeepAlive, Request, Response};
 use ntex::service::{Service, ServiceFactory};
+use ntex::util::BytesMut;
 use ntex::web::{Error, HttpResponse};
-use yarte::Serialize;
 
 mod db;
 mod utils;
 
-struct App {
-    c1: db::PgConnection,
-    c2: db::PgConnection,
-    next: Cell<bool>,
-}
-
-impl App {
-    fn get_db(&self) -> &db::PgConnection {
-        if self.next.get() {
-            self.next.set(!self.next.get());
-            &self.c1
-        } else {
-            self.next.set(!self.next.get());
-            &self.c2
-        }
-    }
-}
+struct App(db::PgConnection);
 
 impl Service for App {
     type Request = Request;
@@ -45,13 +28,13 @@ impl Service for App {
 
     fn call(&self, req: Request) -> Self::Future {
         match req.path() {
-            "/db" => Box::pin(self.get_db().get_world().map(|body| {
+            "/db" => Box::pin(self.0.get_world().map(|body| {
                 Ok(HttpResponse::Ok()
                     .header(SERVER, HeaderValue::from_static("N"))
                     .header(CONTENT_TYPE, HeaderValue::from_static("application/json"))
                     .body(body))
             })),
-            "/fortunes" => Box::pin(self.get_db().tell_fortune().map(|body| {
+            "/fortunes" => Box::pin(self.0.tell_fortune().map(|body| {
                 Ok(HttpResponse::Ok()
                     .header(SERVER, HeaderValue::from_static("N"))
                     .header(
@@ -61,23 +44,27 @@ impl Service for App {
                     .body(body))
             })),
             "/query" => Box::pin(
-                self.get_db()
+                self.0
                     .get_worlds(utils::get_query_param(req.uri().query()))
                     .map(|worlds| {
+                        let mut body = BytesMut::with_capacity(35 * worlds.len());
+                        let _ = simd_json::to_writer(crate::utils::Writer(&mut body), &worlds);
                         Ok(HttpResponse::Ok()
                             .header(SERVER, HeaderValue::from_static("N"))
                             .header(CONTENT_TYPE, HeaderValue::from_static("application/json"))
-                            .body(worlds.to_bytes::<BytesMut>(35 * worlds.len())))
+                            .body(body.freeze()))
                     }),
             ),
             "/update" => Box::pin(
-                self.get_db()
+                self.0
                     .update(utils::get_query_param(req.uri().query()))
                     .map(|worlds| {
+                        let mut body = BytesMut::with_capacity(35 * worlds.len());
+                        let _ = simd_json::to_writer(crate::utils::Writer(&mut body), &worlds);
                         Ok(HttpResponse::Ok()
                             .header(SERVER, HeaderValue::from_static("N"))
                             .header(CONTENT_TYPE, HeaderValue::from_static("application/json"))
-                            .body(worlds.to_bytes::<BytesMut>(35 * worlds.len())))
+                            .body(body.freeze()))
                     }),
             ),
             _ => Box::pin(ok(Response::new(http::StatusCode::NOT_FOUND))),
@@ -100,13 +87,7 @@ impl ServiceFactory for AppFactory {
         const DB_URL: &str =
             "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
-        Box::pin(async move {
-            Ok(App {
-                next: Cell::new(true),
-                c1: db::PgConnection::connect(DB_URL).await,
-                c2: db::PgConnection::connect(DB_URL).await,
-            })
-        })
+        Box::pin(async move { Ok(App(db::PgConnection::connect(DB_URL).await)) })
     }
 }
 
