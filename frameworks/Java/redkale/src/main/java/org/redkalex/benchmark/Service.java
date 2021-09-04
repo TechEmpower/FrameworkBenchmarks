@@ -5,6 +5,8 @@
  */
 package org.redkalex.benchmark;
 
+import com.fizzed.rocker.RockerOutput;
+import com.fizzed.rocker.runtime.ArrayOfByteArraysOutput;
 import java.util.Random;
 import java.util.concurrent.*;
 import javax.annotation.Resource;
@@ -42,7 +44,7 @@ public class Service extends AbstractService {
 
     @RestMapping(name = "db")
     public CompletableFuture<World> findWorldAsync(ChannelContext context) {
-        return source.findAsync(World.class, context, 1 + randomInt(ThreadLocalRandom.current(), 10000));
+        return source.findAsync(World.class, context, randomId(rands.get()));
     }
 
     @RestMapping(name = "queries")
@@ -53,7 +55,7 @@ public class Service extends AbstractService {
         final CompletableFuture[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
             final int index = i;
-            futures[index] = source.findAsync(World.class, context, 1 + randomInt(random, 10000)).thenAccept(v -> worlds[index] = v);
+            futures[index] = source.findAsync(World.class, context, randomId(random)).thenAccept(v -> worlds[index] = v);
         }
         return CompletableFuture.allOf(futures).thenApply(v -> worlds);
     }
@@ -66,17 +68,17 @@ public class Service extends AbstractService {
         final CompletableFuture[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
             final int index = i;
-            futures[index] = source.findAsync(World.class, context, 1 + randomInt(random, 10000)).thenAccept(v -> worlds[index] = v.randomNumber(1 + randomInt(random, 10000)));
+            futures[index] = source.findAsync(World.class, context, randomId(random)).thenAccept(v -> worlds[index] = v.randomNumber(randomId(random)));
         }
         return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(context, World.sort(worlds))).thenApply(v -> worlds);
     }
 
     @RestMapping(name = "fortunes")
-    public CompletableFuture<HttpResult<String>> queryFortunes() {
+    public CompletableFuture<HttpResult<byte[]>> queryFortunes() {
         return source.queryListAsync(Fortune.class).thenApply((fortunes) -> {
             fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-            String html = FortunesTemplate.template(Fortune.sort(fortunes)).render().toString();
-            return new HttpResult("text/html; charset=utf-8", html);
+            RockerOutput out = FortunesTemplate.template(Fortune.sort(fortunes)).render();
+            return new HttpResult("text/html; charset=utf-8", ((ArrayOfByteArraysOutput) out).toByteArray());
         });
     }
 
@@ -91,9 +93,9 @@ public class Service extends AbstractService {
         return cache.random(rands.get(), size);
     }
 
-    protected int randomInt(Random rand, int bound) {
+    protected int randomId(Random rand) {
         long s = rand.nextLong();
-        return (int) ((s < 0 ? -s : s) % bound);
+        return (int) ((s < 0 ? -s : s) % 10000) + 1;
     }
 
 }
