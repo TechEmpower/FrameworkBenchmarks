@@ -1,4 +1,3 @@
-  
 FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -20,18 +19,14 @@ WORKDIR /ubiquity
 
 RUN chmod -R 777 /ubiquity
 
-RUN ["chmod", "+x", "deploy/run/install-composer.sh"]
-
-RUN deploy/run/install-composer.sh
-
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq git unzip > /dev/null
 
-RUN php composer.phar require lapinskas/roadrunner-ubiquity:1.1.1 --quiet
+RUN composer require lapinskas/roadrunner-ubiquity:1.1.1 --quiet
 
 RUN vendor/bin/rr get
 
-RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 COPY deploy/roadrunner/envwrapper.sh /bin/
 RUN ln -s /ubiquity/.ubiquity/.rr.yml /ubiquity/.rr.yml
