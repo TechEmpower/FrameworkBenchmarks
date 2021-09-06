@@ -10,7 +10,7 @@ RUN apt-get update -yqq > /dev/null && \
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 RUN apt-get install -y php-pear php8.0-dev libevent-dev > /dev/null
-RUN pecl install event-3.0.4 > /dev/null && echo "extension=event.so" > /etc/php/8.0/cli/conf.d/event.ini
+RUN pecl install event-3.0.5 > /dev/null && echo "extension=event.so" > /etc/php/8.0/cli/conf.d/event.ini
 
 COPY deploy/conf/cliphp.ini /etc/php/8.0/cli/php.ini
 
