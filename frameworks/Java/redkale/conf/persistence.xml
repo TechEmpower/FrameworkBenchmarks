@@ -6,7 +6,6 @@
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://tfb-database:5432/hello_world"/>
             <property name="javax.persistence.jdbc.preparecache" value="true"/>
-            <property name="javax.persistence.connections.limit" value="512"/>
             <property name="javax.persistence.jdbc.user" value="benchmarkdbuser"/>
             <property name="javax.persistence.jdbc.password" value="benchmarkdbpass"/>
         </properties>
@@ -17,7 +16,6 @@
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://tfb-database:5432/hello_world"/>
             <property name="javax.persistence.jdbc.preparecache" value="true"/>
-            <property name="javax.persistence.connections.limit" value="512"/>
             <property name="javax.persistence.jdbc.user" value="benchmarkdbuser"/>
             <property name="javax.persistence.jdbc.password" value="benchmarkdbpass"/>
         </properties>
