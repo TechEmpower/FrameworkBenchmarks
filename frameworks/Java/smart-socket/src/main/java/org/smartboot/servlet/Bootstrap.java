@@ -42,6 +42,7 @@ public class Bootstrap {
         bootstrap.configuration()
                 .threadNum(cpuNum)
                 .bannerEnabled(false)
+                .headerLimiter(0)
                 .readBufferSize(1024 * 4)
                 .writeBufferSize(1024 * 4)
                 .readMemoryPool(16384 * 1024 * 4)
