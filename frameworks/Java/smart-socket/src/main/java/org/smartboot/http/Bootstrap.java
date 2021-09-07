@@ -55,6 +55,7 @@ public class Bootstrap {
         HttpBootstrap bootstrap = new HttpBootstrap();
         bootstrap.configuration()
                 .threadNum(cpuNum)
+                .headerLimiter(0)
                 .readBufferSize(1024 * 4)
                 .writeBufferSize(1024 * 4)
                 .readMemoryPool(16384 * 1024 * 4)

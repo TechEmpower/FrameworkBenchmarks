@@ -1,4 +1,3 @@
-  
 FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -20,16 +19,12 @@ WORKDIR /ubiquity
 
 RUN chmod -R 777 /ubiquity
 
-RUN ["chmod", "+x", "deploy/run/install-composer.sh"]
-
-RUN deploy/run/install-composer.sh
-
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq git unzip > /dev/null
 
-RUN php composer.phar require phpmv/ubiquity-devtools:dev-master phpmv/ubiquity-workerman:dev-master --quiet
+RUN composer require phpmv/ubiquity-devtools:dev-master phpmv/ubiquity-workerman:dev-master --quiet
 
-RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 RUN chmod 777 -R /ubiquity/.ubiquity/*
 
