@@ -1,6 +1,4 @@
-FROM rust:1.54
-
-RUN apt-get update -yqq && apt-get install -yqq cmake g++
+FROM rust:1.53
 
 ADD ./ /xitca-web
 WORKDIR /xitca-web

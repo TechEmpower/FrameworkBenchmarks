@@ -18,7 +18,7 @@ RUN git clone https://github.com/krakjoe/parallel \
     && make > /dev/null \
     && make install > /dev/null
 
-RUN pecl install event-3.0.4 > /dev/null \
+RUN pecl install event-3.0.5 > /dev/null \
     && echo "extension=event.so" > /usr/local/etc/php/conf.d/event.ini
 
 COPY deploy/fpm/php.ini /usr/local/etc/php/conf.d/hamlet.ini

@@ -2,7 +2,7 @@ FROM maven:3.6.3-openjdk-16-slim as maven
 WORKDIR /redkale
 COPY src src
 COPY conf conf
-COPY pom.xml pom.xml
+COPY pom-native.xml pom.xml
 RUN mvn package -q
 
 

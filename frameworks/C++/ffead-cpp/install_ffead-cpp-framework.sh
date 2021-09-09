@@ -6,9 +6,9 @@ MAX_THREADS=$(( 3 * `nproc` / 2 ))
 WRIT_THREADS=$(( $MAX_THREADS / 3 ))
 SERV_THREADS=$(( $MAX_THREADS - $WRIT_THREADS ))
 
-#git checkout e243bc096cd570cfee1edfecbcd91f4c4056fa1a -b 6.0
 git clone https://github.com/sumeetchhetri/ffead-cpp
 cd ffead-cpp
+git checkout 1d892ae2c6155aa2d36c5f125ebd36433d9eb5aa -b 6.0
 rm -rf .git
 cd ..
 mv ffead-cpp ffead-cpp-src

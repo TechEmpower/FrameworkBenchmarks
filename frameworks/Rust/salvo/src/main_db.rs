@@ -26,7 +26,9 @@ pub type PgPool = Pool<ConnectionManager<PgConnection>>;
 pub static DB_POOL: OnceCell<PgPool> = OnceCell::new();
 
 pub fn connect() -> Result<PooledConnection<ConnectionManager<PgConnection>>, PoolError> {
-    DB_POOL.get().unwrap().get()
+    unsafe {
+        DB_POOL.get_unchecked().get()
+    }
 }
 pub fn build_pool(database_url: &str) -> Result<PgPool, PoolError> {
     let manager = ConnectionManager::<PgConnection>::new(database_url);

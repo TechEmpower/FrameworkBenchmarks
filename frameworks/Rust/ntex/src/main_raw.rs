@@ -3,10 +3,8 @@ static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 use std::{cell::RefCell, future::Future, io, pin::Pin, rc::Rc, task::Context, task::Poll};
 
-use ntex::fn_service;
+use ntex::{fn_service, time::Seconds, http::h1, rt::net::TcpStream};
 use ntex::framed::{ReadTask, State, WriteTask};
-use ntex::http::h1;
-use ntex::rt::net::TcpStream;
 
 mod utils;
 
@@ -98,7 +96,7 @@ async fn main() -> io::Result<()> {
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", || {
             fn_service(|io: TcpStream| {
-                let state = State::with_params(65535, 65535, 1024, 0);
+                let state = State::with_params(65535, 65535, 1024, Seconds(0));
                 let io = Rc::new(RefCell::new(io));
                 ntex::rt::spawn(ReadTask::new(io.clone(), state.clone()));
                 ntex::rt::spawn(WriteTask::new(io, state.clone()));

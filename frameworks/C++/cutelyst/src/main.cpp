@@ -1,5 +1,6 @@
 
 #include "cutelyst-benchmarks.h"
+#include "mimalloc-new-delete.h"
 
 #include <QCoreApplication>
 
