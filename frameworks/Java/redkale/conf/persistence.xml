@@ -5,7 +5,6 @@
         <shared-cache-mode>ALL</shared-cache-mode>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://tfb-database:5432/hello_world"/>
-            <property name="javax.persistence.jdbc.preparecache" value="true"/>
             <property name="javax.persistence.jdbc.user" value="benchmarkdbuser"/>
             <property name="javax.persistence.jdbc.password" value="benchmarkdbpass"/>
         </properties>
@@ -15,7 +14,6 @@
         <shared-cache-mode>ALL</shared-cache-mode>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://tfb-database:5432/hello_world"/>
-            <property name="javax.persistence.jdbc.preparecache" value="true"/>
             <property name="javax.persistence.jdbc.user" value="benchmarkdbuser"/>
             <property name="javax.persistence.jdbc.password" value="benchmarkdbpass"/>
         </properties>
