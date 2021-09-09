@@ -6,7 +6,6 @@
 package org.redkalex.benchmark;
 
 import java.util.*;
-import java.util.concurrent.*;
 import javax.persistence.*;
 import org.redkale.convert.json.JsonConvert;
 import org.redkale.source.*;
@@ -61,9 +60,7 @@ public final class CachedWorld implements Comparable<CachedWorld> {
         private CachedWorld[] array;
 
         public WorldEntityCache(DataSource source) {
-            List<CachedWorld> list = CompletableFuture.supplyAsync(
-                () -> source.queryList(CachedWorld.class),
-                ForkJoinPool.commonPool()).join();
+            List<CachedWorld> list = source.queryList(CachedWorld.class);
             this.array = list.toArray(new CachedWorld[list.size()]);
         }
 
