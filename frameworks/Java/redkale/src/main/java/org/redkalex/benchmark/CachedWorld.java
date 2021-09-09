@@ -5,7 +5,8 @@
  */
 package org.redkalex.benchmark;
 
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.*;
 import javax.persistence.*;
 import org.redkale.convert.json.JsonConvert;
 import org.redkale.source.*;
@@ -57,10 +58,13 @@ public final class CachedWorld implements Comparable<CachedWorld> {
 
     public static class WorldEntityCache {
 
-        private Object[] array;
+        private CachedWorld[] array;
 
         public WorldEntityCache(DataSource source) {
-            this.array = source.queryList(CachedWorld.class).toArray();
+            List<CachedWorld> list = CompletableFuture.supplyAsync(
+                () -> source.queryList(CachedWorld.class),
+                ForkJoinPool.commonPool()).join();
+            this.array = list.toArray(new CachedWorld[list.size()]);
         }
 
         public CachedWorld findAt(int index) {
@@ -68,12 +72,11 @@ public final class CachedWorld implements Comparable<CachedWorld> {
         }
 
         public CachedWorld[] random(Random random, int size) {
-            final CachedWorld[] worlds = new CachedWorld[size];
-            int count = size;
             Random rand = random;
-            for (int i = 0; i < count; i++) {
+            final CachedWorld[] worlds = new CachedWorld[size];
+            for (int i = 0; i < worlds.length; i++) {
                 long index = Math.abs(rand.nextLong()) % 10000;
-                worlds[i] = (CachedWorld) array[(int) index];
+                worlds[i] = array[(int) index];
             }
             return worlds;
         }
