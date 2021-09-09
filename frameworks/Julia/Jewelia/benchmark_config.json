@@ -1,0 +1,25 @@
+{
+    "framework": "jewelia",
+    "tests": [{
+      "default": {
+        "json_url": "/jewelia/json",
+        "plaintext_url": "/jewelia/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "Jewelia",
+        "language": "Julia",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Jewelia",
+        "notes": "",
+        "versus": "None"
+      }
+    }]
+  }
+  
