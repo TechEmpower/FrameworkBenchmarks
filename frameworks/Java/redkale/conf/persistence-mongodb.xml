@@ -4,6 +4,7 @@
     <persistence-unit name=".read" transaction-type="RESOURCE_LOCAL">
         <properties>
             <property name="javax.persistence.jdbc.url" value="mongodb://tfb-database/hello_world"/>
+            <property name="javax.persistence.connections.limit" value="512"/>
             <property name="javax.persistence.jdbc.user" value="benchmarkdbuser"/>
             <property name="javax.persistence.jdbc.password" value="benchmarkdbpass"/>
         </properties>
