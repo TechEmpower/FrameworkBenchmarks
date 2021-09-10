@@ -106,6 +106,27 @@
                 "display_name": "redkale-postgres",
                 "notes": "",
                 "versus": "Redkale"
+            },
+            "mongodb": {
+                "db_url": "/db",
+                "query_url": "/queries?q=", 
+                "fortune_url": "/fortunes",
+                "update_url": "/updates?q=",
+                "port": 8080,
+                "approach": "Realistic",
+                "classification": "Fullstack",
+                "database": "Mongodb",
+                "framework": "Redkale",
+                "language": "Java",
+                "flavor": "None",
+                "orm": "Raw",
+                "platform": "Redkale",
+                "webserver": "Redkale",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "redkale-mongodb",
+                "notes": "",
+                "versus": "Redkale"
             }
         }
     ]
