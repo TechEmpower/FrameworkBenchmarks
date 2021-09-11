@@ -5,13 +5,7 @@
     <resources>
         <executor threads="0"/>
         <properties>    
-            <property name="system.property.vertx.threadChecks" value="false"/> 
-            <property name="system.property.vertx.disableTCCL" value="true"/> 
-            <property name="system.property.vertx.disableMetrics" value="true"/> 
-            <property name="system.property.vertx.disableContextTimings" value="true"/> 
-            
-            <property name="system.property.redkale.convert.tiny" value="false"/>      
-            <property name="system.property.redkale.skip.counter" value="true"/>  
+            <property name="system.property.redkale.convert.tiny" value="false"/>    
             <property name="system.property.redkale.http.request.pipeline.sameheaders" value="true"/>  
             <property name="system.property.redkale.http.response.header.server" value="redkale"/>
             <property name="system.property.redkale.http.response.header.connection" value="none"/>
@@ -20,7 +14,7 @@
         
     <server protocol="HTTP" lazy="true" port="8080">      
         <response>
-            <contenttype plain="text/plain" json="application/json"/>  
+            <content-type plain="text/plain" json="application/json"/>  
             <date period="1000"/>
         </response>
         <services autoload="true"/>        
