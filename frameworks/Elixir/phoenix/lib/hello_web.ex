@@ -37,14 +37,7 @@ defmodule HelloWeb do
         root: "lib/hello_web/templates",
         namespace: HelloWeb
 
-      # Import convenience functions from controllers
-      import Phoenix.Controller,
-        only: [get_csrf_token: 0, get_flash: 2, action_name: 1, controller_module: 1]
-
-      # Import all HTML functions (forms, tags, etc)
-      use Phoenix.HTML
-
-      import HelloWeb.Router.Helpers
+      alias HelloWeb.Router.Helpers, as: Routes
     end
   end
 

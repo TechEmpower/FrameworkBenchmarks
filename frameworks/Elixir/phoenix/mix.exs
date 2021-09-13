@@ -36,8 +36,7 @@ defmodule Hello.Mixfile do
       {:postgrex, "~> 0.15"},
       {:plug_cowboy, "~> 2.0"},
       {:jason, "~> 1.2"},
-      {:phoenix_html, "~> 2.14"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev}
+      {:phoenix_html, "~> 3.0"}
     ]
   end
 end
