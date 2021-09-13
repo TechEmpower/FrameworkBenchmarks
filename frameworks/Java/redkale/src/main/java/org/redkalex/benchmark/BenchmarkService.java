@@ -5,8 +5,6 @@
  */
 package org.redkalex.benchmark;
 
-import com.fizzed.rocker.RockerOutput;
-import com.fizzed.rocker.runtime.ArrayOfByteArraysOutput;
 import java.util.Random;
 import java.util.concurrent.*;
 import javax.annotation.Resource;
@@ -80,12 +78,10 @@ public class BenchmarkService extends AbstractService {
     }
 
     @RestMapping(name = "fortunes")
-    public CompletableFuture<HttpResult<byte[]>> queryFortunes() {
+    public CompletableFuture<HttpScope> queryFortunes() {
         return source.queryListAsync(Fortune.class).thenApply(fortunes -> {
             fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-            RockerOutput out = FortunesTemplate.template(Fortune.sort(fortunes)).render();
-            byte[] bs = ((ArrayOfByteArraysOutput) out).toByteArray();
-            return new HttpResult("text/html; charset=utf-8", bs);
+            return HttpScope.refer("").attr("fortunes", Fortune.sort(fortunes));
         });
     }
 
