@@ -22,7 +22,6 @@ class DB
             $username = 'benchmarkdbuser';
             $password = 'benchmarkdbpass';
             $db = new Database($dsn, $username, $password, [
-                \PDO::ATTR_EMULATE_PREPARES => false,
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
             ]);
             self::$instance = $db;
