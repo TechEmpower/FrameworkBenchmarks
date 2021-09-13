@@ -6,7 +6,6 @@
     <version>1.0.0</version>
 
     <properties>
-        <!-- the main class -->
         <main.class>org.redkale.boot.Application</main.class>
         <stack.version>1.0.0</stack.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
