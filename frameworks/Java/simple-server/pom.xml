@@ -18,7 +18,10 @@
 		<mainClass>com.simplyti.cloud.server.benchmark.Main</mainClass>
 
 		<!-- Simple Server -->
-		<simple-server.version>0.0.4-rc3</simple-server.version>
+		<simple-server.version>0.0.5-rc1</simple-server.version>
+		
+		<!-- Guava -->
+		<guava.version>30.1.1-jre</guava.version>
 		
 		<!-- Lombok -->
 		<lombok.version>1.18.4</lombok.version>
@@ -88,6 +91,13 @@
 			<groupId>com.simplyti.cloud</groupId>
 			<artifactId>simple-server-di-guice</artifactId>
 			<version>${simple-server.version}</version>
+		</dependency>
+		
+		<!-- Guava -->
+		<dependency>
+		    <groupId>com.google.guava</groupId>
+		    <artifactId>guava</artifactId>
+		    <version>${guava.version}</version>
 		</dependency>
 
 		<!-- Logging -->

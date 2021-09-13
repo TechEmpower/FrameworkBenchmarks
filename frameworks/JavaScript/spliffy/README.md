@@ -1,6 +1,3 @@
-
-
-
 # spliffy Benchmarking Test
 
 ### Test Type Implementation Source Code

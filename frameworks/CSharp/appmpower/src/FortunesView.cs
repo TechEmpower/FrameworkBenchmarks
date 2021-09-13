@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using System.IO.Pipelines;
+using System.Globalization;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
@@ -14,33 +17,32 @@ namespace appMpower
       private readonly static KeyValuePair<string, StringValues> _headerContentType =
          new KeyValuePair<string, StringValues>("Content-Type", "text/html; charset=UTF-8");
 
-      private readonly static AsciiString _fortunesTableStart = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
-      private readonly static AsciiString _fortunesRowStart = "<tr><td>";
-      private readonly static AsciiString _fortunesColumn = "</td><td>";
-      private readonly static AsciiString _fortunesRowEnd = "</td></tr>";
-      private readonly static AsciiString _fortunesTableEnd = "</table></body></html>";
+      public static char[] _fortunesTableStart = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>".ToCharArray();
+      public static char[] _fortunesRowStart = "<tr><td>".ToCharArray();
+      public static char[] _fortunesColumn = "</td><td>".ToCharArray();
+      public static char[] _fortunesRowEnd = "</td></tr>".ToCharArray();
+      public static char[] _fortunesTableEnd = "</table></body></html>".ToCharArray();
 
-      public static void Render(IHeaderDictionary headerDictionary, PipeWriter pipeWriter, List<Fortune> fortunes)
+      public static async Task Render(IHeaderDictionary headerDictionary, PipeWriter pipeWriter, List<Fortune> fortunes)
       {
          headerDictionary.Add(_headerServer);
          headerDictionary.Add(_headerContentType);
 
-         var bufferWriter = new BufferWriter<WriterAdapter>(new WriterAdapter(pipeWriter), 1600);
+         var writer = StringBuilderCache.Acquire();
 
-         bufferWriter.Write(_fortunesTableStart);
+         writer.Append(_fortunesTableStart);
 
          foreach (var fortune in fortunes)
          {
-            bufferWriter.Write(_fortunesRowStart);
-            bufferWriter.WriteNumeric((uint)fortune.Id);
-            bufferWriter.Write(_fortunesColumn);
-            bufferWriter.WriteUtf8String(HttpUtility.HtmlEncode(fortune.Message));
-            bufferWriter.Write(_fortunesRowEnd);
+            writer.Append(_fortunesRowStart).Append(fortune.Id.ToString(CultureInfo.InvariantCulture)).Append(_fortunesColumn).Append(HttpUtility.HtmlEncode(fortune.Message)).Append(_fortunesRowEnd);
          }
 
-         bufferWriter.Write(_fortunesTableEnd);
-         headerDictionary.Add(new KeyValuePair<string, StringValues>("Content-Length", bufferWriter.Buffered.ToString()));
-         bufferWriter.Commit();
+         writer.Append(_fortunesTableEnd);
+
+         headerDictionary.Add(new KeyValuePair<string, StringValues>("Content-Length", (writer.Length + 32).ToString()));
+
+         await pipeWriter.WriteAsync(Encoding.UTF8.GetBytes(StringBuilderCache.GetStringAndRelease(writer)));
+         pipeWriter.Complete();
       }
    }
 }

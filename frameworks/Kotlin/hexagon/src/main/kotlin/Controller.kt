@@ -1,14 +1,20 @@
 package com.hexagonkt
 
+import com.hexagonkt.helpers.require
 import com.hexagonkt.http.server.Call
 import com.hexagonkt.http.server.Router
 import com.hexagonkt.serialization.Json
 import com.hexagonkt.serialization.toFieldsMap
 import com.hexagonkt.store.BenchmarkStore
 import com.hexagonkt.templates.TemplatePort
+import java.net.URL
 import java.util.concurrent.ThreadLocalRandom
 
 class Controller(private val settings: Settings) {
+
+    private val templates: Map<String, URL> = mapOf(
+        "pebble" to (urlOrNull("classpath:fortunes.pebble.html") ?: URL("file:/resin/fortunes.pebble.html"))
+    )
 
     internal val router: Router by lazy {
         Router {
@@ -21,10 +27,10 @@ class Controller(private val settings: Settings) {
             get("/json") { ok(Message(settings.textMessage), Json) }
 
             benchmarkStores.forEach { (storeEngine, store) ->
-                benchmarkTemplateEngines.forEach { templateKind ->
-                    val path = "/$storeEngine/${templateKind.key}/fortunes"
+                benchmarkTemplateEngines.forEach { (templateEngineId, templateEngine) ->
+                    val path = "/$storeEngine/${templateEngineId}/fortunes"
 
-                    get(path) { listFortunes(store, templateKind.key, templateKind.value) }
+                    get(path) { listFortunes(store, templateEngineId, templateEngine) }
                 }
 
                 get("/$storeEngine/db") { dbQuery(store) }
@@ -42,7 +48,7 @@ class Controller(private val settings: Settings) {
         val context = mapOf("fortunes" to sortedFortunes)
 
         response.contentType = "text/html;charset=utf-8"
-        ok(templateAdapter.render("fortunes.$templateKind.html", context))
+        ok(templateAdapter.render(templates.require(templateKind), context))
     }
 
     private fun Call.dbQuery(store: BenchmarkStore) {
@@ -77,4 +83,12 @@ class Controller(private val settings: Settings) {
 
     private fun randomWorld(): Int =
         ThreadLocalRandom.current().nextInt(settings.worldRows) + 1
+
+    private fun urlOrNull(path: String): URL? =
+        try {
+            URL(path)
+        }
+        catch (e: Exception) {
+            null
+        }
 }

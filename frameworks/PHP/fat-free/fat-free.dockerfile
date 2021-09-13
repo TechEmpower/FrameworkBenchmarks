@@ -1,4 +1,4 @@
-FROM ubuntu:20.10
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -15,7 +15,7 @@ WORKDIR /fat-free
 ENV F3DIR="/fat-free/src"
 
 #RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer 
-RUN apt-get install -yqq composer > /dev/null
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 #RUN git clone -b 3.7.2 --single-branch --depth 1 "https://github.com/bcosca/fatfree-core.git" src

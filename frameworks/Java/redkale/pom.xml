@@ -31,7 +31,8 @@
             <groupId>com.fizzed</groupId>
             <artifactId>rocker-compiler</artifactId>
             <version>1.3.0</version>
-        </dependency>        
+        </dependency> 
+        
     </dependencies>
 
     <repositories>

@@ -1,4 +1,4 @@
-FROM ubuntu:20.10
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -8,7 +8,7 @@ RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq nginx git unzip \
     php8.0-cli php8.0-fpm php8.0-mysql  > /dev/null
 
-RUN apt-get install -yqq composer > /dev/null
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 COPY deploy/conf/* /etc/php/8.0/fpm/
 
