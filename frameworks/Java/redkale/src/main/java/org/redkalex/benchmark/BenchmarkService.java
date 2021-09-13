@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.*;
+import org.redkale.util.Utility;
 import org.redkalex.benchmark.CachedWorld.WorldEntityCache;
 
 /**
@@ -48,13 +49,7 @@ public class BenchmarkService extends AbstractService {
         for (int i = 0; i < size; i++) {
             futures[i] = source.findAsync(World.class, randomId(random));
         }
-        return CompletableFuture.allOf(futures).thenApply(v -> {
-            World[] worlds = new World[size];
-            for (int i = 0; i < size; i++) {
-                worlds[i] = futures[i].join();
-            }
-            return worlds;
-        });
+        return Utility.allOfFutures(futures, c -> new World[c]);
     }
 
     @RestMapping(name = "updates")
