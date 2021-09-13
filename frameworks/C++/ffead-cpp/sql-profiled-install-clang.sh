@@ -38,9 +38,11 @@ mv $IROOT/ffead-cpp-sql-raw $IROOT/ffead-cpp-6.0-sql
 
 sed -i 's|localhost|tfb-database|g' $IROOT/ffead-cpp-6.0-sql/web/te-benchmark-um-pq/config/sdorm.xml
 
-apt remove -yqq postgresql-13 postgresql-contrib-13 gnupg lsb-release
-apt autoremove -yqq
-rm -rf /ssd/postgresql
-rm -rf /tmp/postgresql
-rm -rf /tmp/wrk /usr/local/bin/wrk
-
+if [ "$#" = 0 ]
+then
+	apt remove -yqq postgresql-13 postgresql-contrib-13 gnupg lsb-release
+	apt autoremove -yqq
+	rm -rf /ssd/postgresql
+	rm -rf /tmp/postgresql
+	rm -rf /tmp/wrk /usr/local/bin/wrk
+fi
