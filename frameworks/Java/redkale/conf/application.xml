@@ -17,6 +17,7 @@
             <content-type plain="text/plain" json="application/json"/>  
             <date period="1000"/>
         </response>
+        <render value="org.redkalex.benchmark.FortuneRender"/>
         <services autoload="true"/>        
         <rest autoload="true"/>
         <servlets autoload="true"/>
