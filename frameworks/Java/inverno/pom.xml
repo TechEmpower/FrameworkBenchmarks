@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>io.inverno.dist</groupId>
 		<artifactId>inverno-parent</artifactId>
-		<version>1.2.1</version>
+		<version>1.2.2</version>
 	</parent>
 	<groupId>com.techempower</groupId>
 	<artifactId>inverno-benchmark</artifactId>
