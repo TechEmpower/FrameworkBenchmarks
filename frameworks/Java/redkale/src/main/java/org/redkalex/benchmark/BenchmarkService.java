@@ -5,15 +5,13 @@
  */
 package org.redkalex.benchmark;
 
-import com.fizzed.rocker.RockerOutput;
-import com.fizzed.rocker.runtime.ArrayOfByteArraysOutput;
 import java.util.Random;
 import java.util.concurrent.*;
 import javax.annotation.Resource;
-import org.redkale.net.ChannelContext;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.*;
+import org.redkale.util.Utility;
 import org.redkalex.benchmark.CachedWorld.WorldEntityCache;
 
 /**
@@ -21,16 +19,12 @@ import org.redkalex.benchmark.CachedWorld.WorldEntityCache;
  * @author zhangjx
  */
 @RestService(name = " ", repair = false)
-public class Service extends AbstractService {
+public class BenchmarkService extends AbstractService {
 
     private static final byte[] helloBytes = "Hello, world!".getBytes();
 
-    private final ThreadLocal<RedRandom> rands = ThreadLocal.withInitial(() -> new RedRandom());
-
     @Resource
     private DataSource source;
-
-    private WorldEntityCache cache;
 
     @RestMapping(name = "plaintext")
     public byte[] getHelloBytes() {
@@ -43,44 +37,48 @@ public class Service extends AbstractService {
     }
 
     @RestMapping(name = "db")
-    public CompletableFuture<World> findWorldAsync(ChannelContext context) {
-        return source.findAsync(World.class, context, randomId(rands.get()));
+    public CompletableFuture<World> findWorldAsync() {
+        return source.findAsync(World.class, randomId(ThreadLocalRandom.current()));
     }
 
     @RestMapping(name = "queries")
-    public CompletableFuture<World[]> queryWorldAsync(ChannelContext context, int q) {
+    public CompletableFuture<World[]> queryWorldAsync(int q) {
         final int size = Math.min(500, Math.max(1, q));
-        final World[] worlds = new World[size];
-        final Random random = rands.get();
-        final CompletableFuture[] futures = new CompletableFuture[size];
+        final Random random = ThreadLocalRandom.current();
+        final CompletableFuture<World>[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
-            final int index = i;
-            futures[index] = source.findAsync(World.class, context, randomId(random)).thenAccept(v -> worlds[index] = v);
+            futures[i] = source.findAsync(World.class, randomId(random));
         }
-        return CompletableFuture.allOf(futures).thenApply(v -> worlds);
+        return Utility.allOfFutures(futures, c -> new World[c]);
     }
 
     @RestMapping(name = "updates")
-    public CompletableFuture<World[]> updateWorldAsync(ChannelContext context, int q) {
+    public CompletableFuture<World[]> updateWorldAsync(int q) {
         final int size = Math.min(500, Math.max(1, q));
-        final World[] worlds = new World[size];
         final Random random = ThreadLocalRandom.current();
-        final CompletableFuture[] futures = new CompletableFuture[size];
+        final CompletableFuture<World>[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
-            final int index = i;
-            futures[index] = source.findAsync(World.class, context, randomId(random)).thenAccept(v -> worlds[index] = v.randomNumber(randomId(random)));
+            futures[i] = source.findAsync(World.class, randomId(random));
         }
-        return CompletableFuture.allOf(futures).thenCompose(v -> source.updateAsync(context, World.sort(worlds))).thenApply(v -> worlds);
+        return CompletableFuture.allOf(futures).thenCompose(v -> {
+            final Random r = ThreadLocalRandom.current();
+            final World[] worlds = new World[size];
+            for (int i = 0; i < size; i++) {
+                worlds[i] = futures[i].join().randomNumber(randomId(r));
+            }
+            return source.updateAsync(World.sort(worlds)).thenApply(u -> worlds);
+        });
     }
 
     @RestMapping(name = "fortunes")
-    public CompletableFuture<HttpResult<byte[]>> queryFortunes() {
-        return source.queryListAsync(Fortune.class).thenApply((fortunes) -> {
+    public CompletableFuture<HttpScope> queryFortunes() {
+        return source.queryListAsync(Fortune.class).thenApply(fortunes -> {
             fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-            RockerOutput out = FortunesTemplate.template(Fortune.sort(fortunes)).render();
-            return new HttpResult("text/html; charset=utf-8", ((ArrayOfByteArraysOutput) out).toByteArray());
+            return HttpScope.refer("").attr("fortunes", Fortune.sort(fortunes));
         });
     }
+
+    private WorldEntityCache cache;
 
     @RestMapping(name = "cached-worlds")
     public CachedWorld[] cachedWorlds(int q) {
@@ -90,7 +88,7 @@ public class Service extends AbstractService {
             }
         }
         final int size = Math.min(500, Math.max(1, q));
-        return cache.random(rands.get(), size);
+        return cache.random(ThreadLocalRandom.current(), size);
     }
 
     protected int randomId(Random rand) {
