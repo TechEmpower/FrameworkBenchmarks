@@ -44,7 +44,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "one",
+        "display_name": "one-disable-coroutine",
         "notes": "",
         "versus": "swoole"
       }
