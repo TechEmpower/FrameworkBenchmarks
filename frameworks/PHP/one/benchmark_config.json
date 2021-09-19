@@ -25,7 +25,7 @@
         "notes": "",
         "versus": "swoole"
       },
-      "disable-coroutine": {
+      "no-coroutine": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "db_url": "/db",
@@ -44,7 +44,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "one-disable-coroutine",
+        "display_name": "one-no-coroutine",
         "notes": "",
         "versus": "swoole"
       }
