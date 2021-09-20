@@ -5,16 +5,16 @@
   "main": "app.js",
   "private": true,
   "dependencies": {
-    "bluebird": "3.5.1",
+    "bluebird": "3.7.2",
     "handlebars": "4.3.0",
-    "koa": "2.5.0",
+    "koa": "2.13.1",
     "koa-bodyparser": "4.2.0",
     "koa-hbs": "1.0.0",
     "koa-router": "7.4.0",
     "mongoose": "5.7.5",
-    "mysql2": "1.5.3",
-    "pg": "8.5.1",
-    "pg-hstore": "2.3.2",
+    "mysql2": "2.3.0",
+    "pg": "8.7.1",
+    "pg-hstore": "2.3.4",
     "sequelize": "5.15.1"
   }
 }
