@@ -8,6 +8,7 @@
     "bluebird": "3.7.2",
     "koa": "2.13.1",
     "koa-bodyparser": "4.3.0",
+    "handlebars": "4.7.7",
     "koa-router": "10.1.1",
     "mongoose": "5.13.9",
     "mysql2": "2.3.0",
