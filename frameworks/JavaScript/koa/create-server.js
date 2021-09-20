@@ -1,8 +1,6 @@
 const Koa = require('koa');
 const Router = require('koa-router');
-const hbs = require('koa-hbs');
 const bodyParser = require('koa-bodyparser');
-const handlebars = require('handlebars');
 const handler = require('./handlers/handler');
 
 const app = new Koa();
@@ -31,10 +29,6 @@ if (handlerName) {
 
   router
     .use(bodyParser())
-    .use(hbs.middleware({
-      handlebars: handlebars,
-      viewPath: __dirname + '/views'
-    }))
     .get('/db', routerHandler.SingleQuery)
     .get('/queries', routerHandler.MultipleQueries)
     .get('/fortunes', routerHandler.Fortunes)
