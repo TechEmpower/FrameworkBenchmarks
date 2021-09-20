@@ -58,9 +58,11 @@ class IndexController extends Controller
             $row->randomNumber = mt_rand(1, 10000);
             $list[]    = $row;
         }
+        World::beginTransaction();
         foreach($list as $r){
             $r->repeatStatement()->update(['randomNumber' => $r->randomNumber]);
         }
+        World::commit();
         return $this->json($list);
     }
 
