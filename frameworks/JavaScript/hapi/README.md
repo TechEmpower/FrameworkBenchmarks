@@ -12,7 +12,7 @@ This is the Hapi portion of a [benchmarking test suite](../) comparing a variety
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Node.js v14.15.1](http://nodejs.org/)
+* [Node.js v16.9.1](http://nodejs.org/)
 * [Hapi 20.1.0](http://hapijs.com/)
 
 ## Resources
