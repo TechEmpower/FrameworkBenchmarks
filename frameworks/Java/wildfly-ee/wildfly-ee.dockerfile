@@ -1,4 +1,4 @@
-FROM maven:3.6.3-openjdk-16
+FROM maven:3-openjdk-17
 WORKDIR /wildfly
 EXPOSE 8080
 ENV MAVEN_OPTS="--add-exports=java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED --add-exports=java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED"
