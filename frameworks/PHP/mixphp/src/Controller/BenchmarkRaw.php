@@ -16,6 +16,7 @@ class BenchmarkRaw
             'benchmarkdbpass',
             [
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+                \PDO::ATTR_EMULATE_PREPARES => false
             ]
         );
         $world = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
