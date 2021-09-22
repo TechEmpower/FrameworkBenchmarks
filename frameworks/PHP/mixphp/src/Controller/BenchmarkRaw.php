@@ -7,16 +7,19 @@ use Mix\Vega\Context;
 class BenchmarkRaw
 {
 
-    public function init()
+    public function init(): void
     {
         global $world, $fortune, $update;
+        if (isset($world)) {
+            return;
+        }
+
         $pdo = new \PDO(
-            'pgsql:host=tfb-database;dbname=hello_world',
+            'mysql:host=tfb-database;dbname=hello_world',
             'benchmarkdbuser',
             'benchmarkdbpass',
             [
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-                \PDO::ATTR_EMULATE_PREPARES => false
             ]
         );
         $world = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
@@ -47,6 +50,7 @@ class BenchmarkRaw
      */
     public function db(Context $ctx)
     {
+        $this->init();
         global $world;
 
         $world->execute([mt_rand(1, 10000)]);
@@ -60,6 +64,7 @@ class BenchmarkRaw
      */
     public function query(Context $ctx)
     {
+        $this->init();
         global $world;
 
         $queryCount = 1;
@@ -83,6 +88,7 @@ class BenchmarkRaw
      */
     public function fortunes(Context $ctx)
     {
+        $this->init();
         global $fortune;
 
         $fortune->execute();
@@ -105,6 +111,7 @@ class BenchmarkRaw
      */
     public function update(Context $ctx)
     {
+        $this->init();
         global $world, $update;
 
         $queryCount = 1;
