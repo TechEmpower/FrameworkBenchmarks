@@ -5,14 +5,13 @@
  */
 package org.redkalex.benchmark;
 
-import com.fizzed.rocker.RockerOutput;
-import com.fizzed.rocker.runtime.ArrayOfByteArraysOutput;
 import java.util.Random;
 import java.util.concurrent.*;
 import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.*;
+import org.redkale.util.Utility;
 import org.redkalex.benchmark.CachedWorld.WorldEntityCache;
 
 /**
@@ -23,8 +22,6 @@ import org.redkalex.benchmark.CachedWorld.WorldEntityCache;
 public class BenchmarkService extends AbstractService {
 
     private static final byte[] helloBytes = "Hello, world!".getBytes();
-
-    private final ThreadLocal<RedRandom> rands = ThreadLocal.withInitial(RedRandom::new);
 
     @Resource
     private DataSource source;
@@ -41,36 +38,30 @@ public class BenchmarkService extends AbstractService {
 
     @RestMapping(name = "db")
     public CompletableFuture<World> findWorldAsync() {
-        return source.findAsync(World.class, randomId(rands.get()));
+        return source.findAsync(World.class, randomId(ThreadLocalRandom.current()));
     }
 
     @RestMapping(name = "queries")
     public CompletableFuture<World[]> queryWorldAsync(int q) {
         final int size = Math.min(500, Math.max(1, q));
-        final Random random = rands.get();
+        final Random random = ThreadLocalRandom.current();
         final CompletableFuture<World>[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
             futures[i] = source.findAsync(World.class, randomId(random));
         }
-        return CompletableFuture.allOf(futures).thenApply(v -> {
-            World[] worlds = new World[size];
-            for (int i = 0; i < size; i++) {
-                worlds[i] = futures[i].join();
-            }
-            return worlds;
-        });
+        return Utility.allOfFutures(futures, c -> new World[c]);
     }
 
     @RestMapping(name = "updates")
     public CompletableFuture<World[]> updateWorldAsync(int q) {
         final int size = Math.min(500, Math.max(1, q));
-        final Random random = rands.get();
+        final Random random = ThreadLocalRandom.current();
         final CompletableFuture<World>[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
             futures[i] = source.findAsync(World.class, randomId(random));
         }
         return CompletableFuture.allOf(futures).thenCompose(v -> {
-            final Random r = rands.get();
+            final Random r = ThreadLocalRandom.current();
             final World[] worlds = new World[size];
             for (int i = 0; i < size; i++) {
                 worlds[i] = futures[i].join().randomNumber(randomId(r));
@@ -80,12 +71,10 @@ public class BenchmarkService extends AbstractService {
     }
 
     @RestMapping(name = "fortunes")
-    public CompletableFuture<HttpResult<byte[]>> queryFortunes() {
+    public CompletableFuture<HttpScope> queryFortunes() {
         return source.queryListAsync(Fortune.class).thenApply(fortunes -> {
             fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-            RockerOutput out = FortunesTemplate.template(Fortune.sort(fortunes)).render();
-            byte[] bs = ((ArrayOfByteArraysOutput) out).toByteArray();
-            return new HttpResult("text/html; charset=utf-8", bs);
+            return HttpScope.refer("").attr("fortunes", Fortune.sort(fortunes));
         });
     }
 
@@ -99,7 +88,7 @@ public class BenchmarkService extends AbstractService {
             }
         }
         final int size = Math.min(500, Math.max(1, q));
-        return cache.random(rands.get(), size);
+        return cache.random(ThreadLocalRandom.current(), size);
     }
 
     protected int randomId(Random rand) {
