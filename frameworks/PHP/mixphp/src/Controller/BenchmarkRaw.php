@@ -7,7 +7,7 @@ use Mix\Vega\Context;
 class BenchmarkRaw
 {
 
-    public function init(): void
+    public function init()
     {
         global $world, $fortune, $update;
         if (isset($world)) {
@@ -15,7 +15,7 @@ class BenchmarkRaw
         }
 
         $pdo = new \PDO(
-            'mysql:host=tfb-database;dbname=hello_world',
+            'pgsql:host=tfb-database;dbname=hello_world',
             'benchmarkdbuser',
             'benchmarkdbpass',
             [

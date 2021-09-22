@@ -49,8 +49,7 @@ class Benchmark
 
         $arr = [];
         while ($queryCount--) {
-            $id = mt_rand(1, 10000);
-            $ret = DB::instance()->raw('SELECT id,randomNumber FROM World WHERE id=?', $id)->first();
+            $ret = DB::instance()->raw('SELECT id,randomNumber FROM World WHERE id=?', mt_rand(1, 10000))->first();
             $arr[] = $ret;
         }
 
