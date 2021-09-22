@@ -18,6 +18,8 @@ config :hello, Hello.Repo,
   queue_target: 5000,
   log: false
 
+config :phoenix, :logger, false
+
 config :logger,
   compile_time_purge_matching: [
     [level_lower_than: :error]
