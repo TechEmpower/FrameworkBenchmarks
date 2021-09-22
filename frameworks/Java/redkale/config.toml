@@ -77,6 +77,21 @@ platform = "Redkale"
 webserver = "Redkale"
 versus = "Redkale"
 
+[mysql]
+urls.db = "/db"
+urls.fortune = "/fortunes"
+urls.query = "/queries?q="
+urls.update = "/updates?q="
+approach = "Realistic"
+classification = "Fullstack"
+database = "Mysql"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Redkale"
+webserver = "Redkale"
+versus = "Redkale"
+
 [mongodb]
 urls.db = "/db"
 urls.fortune = "/fortunes"
