@@ -4,10 +4,11 @@
       "default": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
+        "db_url": "/db",
         "port": 8080,
         "approach": "Realistic",
         "classification": "None",
-        "database": "None",
+        "database": "MySQL",
         "framework": "Jewelia",
         "language": "Julia",
         "flavor": "None",
