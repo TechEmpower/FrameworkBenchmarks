@@ -101,7 +101,7 @@ class Benchmark
     {
         $request = $ctx->request;
         if ($request instanceof \Swoole\Http\Request) {
-            return (int)$request->get['q'] ?? '';
+            return (int)($request->get['q'] ?? '');
         } elseif ($request instanceof \Workerman\Protocols\Http\Request) {
             return (int)$request->get('q');
         } else {
