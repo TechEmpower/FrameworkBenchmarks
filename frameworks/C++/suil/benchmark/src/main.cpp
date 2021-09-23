@@ -2,7 +2,7 @@
 // Created by Mpho Mbotho on 2021-01-15.
 //
 
-#include <suil/base/env.hpp>
+#include    <suil/base/env.hpp>
 #include <suil/http/server/pgsqlmw.hpp>
 #include <suil/http/server/endpoint.hpp>
 #include <suil/http/server/sysattrs.hpp>
@@ -32,22 +32,6 @@ static inline int randnum()
     static int g_seed = 0;
     g_seed = (214013*g_seed+2531011);
     return 1 + ((g_seed>>16)&0x7FFF)%MAX_VALUE;
-}
-
-int decodeParameter(suil::Return<int>& q)
-{
-    if (q) {
-        int count = *q;
-        if (count < 1) {
-            return 1;
-        }
-        else if (count > 500) {
-            return 500;
-        }
-        return count;
-    }
-    strace("queries=? %s", q.exception().what());
-    return 1;
 }
 
 #if SUIL_BENCH_DEV==1
@@ -120,16 +104,14 @@ int main(int argc, char *argv[])
     ("GET"_method)
     .attrs(opt(ReplyType, "application/json"))
     ([&ep](const Request& req, Response& resp) {
-        auto queries = req.query().get<int>("queries");
-        int count = decodeParameter(queries);
+        auto queries = req.query().get<int>("queries") or int(1);
+        int count = std::max(1, std::min(*queries, 500));
 
         scoped(conn, ep.context<PgSqlMiddleware>(req).conn());
-        std::vector<World> objects;
-        objects.reserve(count);
+        std::vector<World> objects(count);
         WorldOrm orm("World", conn);
-        for (int i = 0; i < count; i++) {
-            objects.emplace_back(World{});
-            orm.find(opt(id, randnum()), objects.back());
+        for (auto& obj: objects) {
+            orm.find(opt(id, randnum()), obj);
         }
 
         resp.append(objects);
@@ -140,8 +122,8 @@ int main(int argc, char *argv[])
     ("GET"_method)
     .attrs(opt(ReplyType, "application/json"))
     ([&ep](const Request& req, Response& resp) {
-        auto queries = req.query().get<int>("queries");
-        int count = decodeParameter(queries);
+        auto queries = req.query().get<int>("queries") or int(1);
+        int count = std::max(1, std::min(*queries, 500));
 
         scoped(conn, ep.context<PgSqlMiddleware>(req).conn());
         std::vector<World> objects(count);
