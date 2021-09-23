@@ -68,7 +68,7 @@ class BenchmarkRaw
         global $world;
 
         $queryCount = 1;
-        $q = (int)$ctx->query('q');
+        $q = static::getQuery($ctx);
         if ($q > 1) {
             $queryCount = min($q, 500);
         }
@@ -115,7 +115,7 @@ class BenchmarkRaw
         global $world, $update;
 
         $queryCount = 1;
-        $q = (int)$ctx->query('q');
+        $q = static::getQuery($ctx);
         if ($q > 1) {
             $queryCount = min($q, 500);
         }
@@ -133,6 +133,22 @@ class BenchmarkRaw
 
         $ctx->setHeader('Content-Type', 'application/json');
         $ctx->string(200, json_encode($arr));
+    }
+
+    /**
+     * @param Context $ctx
+     * @return int
+     */
+    protected static function getQuery(Context $ctx): int
+    {
+        $request = $ctx->request;
+        if ($request instanceof \Swoole\Http\Request) {
+            return (int)$request->get['q'] ?? '';
+        } elseif ($request instanceof \Workerman\Protocols\Http\Request) {
+            return (int)$request->get('q');
+        } else {
+            return (int)$ctx->query('q');
+        }
     }
 
 }
