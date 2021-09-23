@@ -1,19 +1,23 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+// #[global_allocator]
+// static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 #[macro_use]
 extern crate diesel;
 
+use std::cmp;
+use std::fmt::Write;
+
 use anyhow::Error;
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool, PoolError, PooledConnection};
+use hyper::server::conn::AddrIncoming;
 use once_cell::sync::OnceCell;
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
 use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
-use std::cmp;
-use std::fmt::Write;
 
 mod models;
 mod schema;
@@ -26,9 +30,7 @@ pub type PgPool = Pool<ConnectionManager<PgConnection>>;
 pub static DB_POOL: OnceCell<PgPool> = OnceCell::new();
 
 pub fn connect() -> Result<PooledConnection<ConnectionManager<PgConnection>>, PoolError> {
-    unsafe {
-        DB_POOL.get_unchecked().get()
-    }
+    unsafe { DB_POOL.get_unchecked().get() }
 }
 pub fn build_pool(database_url: &str) -> Result<PgPool, PoolError> {
     let manager = ConnectionManager::<PgConnection>::new(database_url);
@@ -50,7 +52,6 @@ async fn world_row(_req: &mut Request, res: &mut Response) -> Result<(), Error> 
 async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let count = req.get_query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
-
     let mut worlds = Vec::with_capacity(count);
     let mut rng = SmallRng::from_entropy();
     let conn = connect()?;
@@ -67,7 +68,6 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
 async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let count = req.get_query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
-
     let conn = connect()?;
     let mut worlds = Vec::with_capacity(count);
     let mut rng = SmallRng::from_entropy();
@@ -95,17 +95,14 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
 
 #[fn_handler]
 async fn fortunes(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let mut items = vec![Fortune {
+    let conn = connect()?;
+    let mut items = fortune::table.get_results::<Fortune>(&conn)?;
+    items.push(Fortune {
         id: 0,
         message: "Additional fortune added at request time.".to_string(),
-    }];
+    });
 
-    let conn = connect()?;
-    for item in fortune::table.get_results::<Fortune>(&conn)? {
-        items.push(item);
-    }
     items.sort_by(|it, next| it.message.cmp(&next.message));
-    
     let mut body = String::new();
     write!(&mut body, "{}", FortunesTemplate { items }).unwrap();
 
@@ -148,5 +145,13 @@ async fn main() {
         .push(Router::new().path("fortunes").get(fortunes))
         .push(Router::new().path("queries").get(queries))
         .push(Router::new().path("updates").get(updates));
-    Server::new(router).bind(([0, 0, 0, 0], 8080)).await;
+
+    // Server::new(router).bind(([0, 0, 0, 0], 8080)).await;
+    let mut incoming = AddrIncoming::bind(&(([0, 0, 0, 0], 8080)).into()).unwrap();
+    incoming.set_nodelay(true);
+    salvo::server::builder(incoming)
+        .http1_only(true)
+        .serve(Service::new(router))
+        .await
+        .unwrap();
 }
