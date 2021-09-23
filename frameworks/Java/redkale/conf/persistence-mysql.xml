@@ -2,7 +2,6 @@
 <persistence version="2.0">
     
     <persistence-unit name=".read" transaction-type="RESOURCE_LOCAL">
-        <shared-cache-mode>ALL</shared-cache-mode>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://tfb-database:3306/hello_world?useSSL=false&amp;rewriteBatchedStatements=true&amp;serverTimezone=UTC&amp;characterEncoding=utf8"/>
             <property name="javax.persistence.jdbc.user" value="benchmarkdbuser"/>
@@ -11,7 +10,6 @@
     </persistence-unit>
     
     <persistence-unit name=".write" transaction-type="RESOURCE_LOCAL">
-        <shared-cache-mode>ALL</shared-cache-mode>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://tfb-database:3306/hello_world?useSSL=false&amp;rewriteBatchedStatements=true&amp;serverTimezone=UTC&amp;characterEncoding=utf8"/>
             <property name="javax.persistence.jdbc.user" value="benchmarkdbuser"/>
