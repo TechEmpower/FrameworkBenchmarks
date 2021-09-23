@@ -1,10 +1,11 @@
 using Pkg
-using Random
 using Dates
 
-Pkg.add("HTTP")
-Pkg.add("MySQL")
-import JSON3
+Pkg.activate(@__DIR__)
+
+using HTTP
+using MySQL
+using JSON3
 
 HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
     if endswith(http.message.target, "/plaintext")
@@ -36,10 +37,10 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
         results = DBInterface.execute(conn, sqlQuery)
         row = first(results)
         dbNumber = row[2]
-        jsonString = "{"id":$randNum,"randomNumber":$dbNumber}"
+        jsonString = "{\"id\":$randNum,\"randomNumber\":$dbNumber}"
 
         startwrite(http)
-        JSON3.write(http, (jsonString))
+        JSON3.write(http, (JSON3.read(jsonString)))
 
     else
         HTTP.setstatus(http, 404)
