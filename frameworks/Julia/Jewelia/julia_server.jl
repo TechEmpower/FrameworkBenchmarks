@@ -52,19 +52,20 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
         HTTP.setstatus(http, 200)
 
         try
-            numQueries = parse(Int64, (split(target, "="))[2])
+            numQueries = (split(target, "="))[2]
 
         catch ArgumentError
             numQueries = -1
 
         finally
-            if numQueries == -1 or occursin("foo", numQueries)
+            if numQueries == -1 or occursin("foo", numQueries) == true
                 HTTP.setstatus(http, 404)
                 startwrite(http)
                 write(http, "Not Found")
                 break
         end
 
+        numQueries = parse(Int64, numQueries)
         randNumList = rand(Int64, 1:10000, numQueries)
         conn = DBInterface.connect(MySQL.Connection, "tfb-database", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
 
