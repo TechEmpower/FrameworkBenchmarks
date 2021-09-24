@@ -68,12 +68,13 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
             end
         end
 
-        randNumList = rand(Int64, 1:10000, numQueries)
+        # randNumList = rand(Int64, 1:10000, numQueries)
         conn = DBInterface.connect(MySQL.Connection, "tfb-database", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
 
         responseArray = Array{Int64}(undef, numQueries)
         for i in 1:numQueries
-            randNum = randNumList[i]
+            # randNum = randNumList[i]
+            randNum = rand(1:10000)
             sqlQuery = "SELECT * FROM World WHERE id = $randNum"
             results = DBInterface.execute(conn, sqlQuery)
             row = first(results)
