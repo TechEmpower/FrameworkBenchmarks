@@ -58,11 +58,12 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
             numQueries = -1
 
         finally
-            if numQueries == -1 or occursin("foo", numQueries) == true
+            if numQueries == -1 || occursin("foo", numQueries) == true
                 HTTP.setstatus(http, 404)
                 startwrite(http)
                 write(http, "Not Found")
                 break
+            end
         end
 
         numQueries = parse(Int64, numQueries)
