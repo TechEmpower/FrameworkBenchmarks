@@ -69,11 +69,10 @@ public final class CachedWorld implements Comparable<CachedWorld> {
         }
 
         public CachedWorld[] random(Random random, int size) {
-            Random rand = random;
+            int[] pks = random.ints(size, 1, 10001).toArray();
             final CachedWorld[] worlds = new CachedWorld[size];
             for (int i = 0; i < worlds.length; i++) {
-                long index = Math.abs(rand.nextLong()) % 10000;
-                worlds[i] = array[(int) index];
+                worlds[i] = array[pks[i]];
             }
             return worlds;
         }
