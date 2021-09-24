@@ -5,6 +5,7 @@ using System;
 using System.Buffers.Text;
 using System.IO.Pipelines;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
@@ -35,7 +36,15 @@ namespace PlatformBenchmarks
 
         private readonly static AsciiString _plainTextBody = "Hello, World!";
 
-        private static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions();
+        private static readonly JsonContext SerializerContext = JsonContext.Default;
+
+        [JsonSourceGenerationOptions(GenerationMode = JsonSourceGenerationMode.Serialization)]
+        [JsonSerializable(typeof(JsonMessage))]
+        [JsonSerializable(typeof(CachedWorld[]))]
+        [JsonSerializable(typeof(World[]))]
+        private partial class JsonContext : JsonSerializerContext
+        {
+        }
 
         private readonly static AsciiString _fortunesTableStart = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
         private readonly static AsciiString _fortunesRowStart = "<tr><td>";
@@ -65,17 +74,10 @@ namespace PlatformBenchmarks
         private RequestType _requestType;
         private int _queries;
 
-#if NET5_0
         public void OnStartLine(HttpVersionAndMethod versionAndMethod, TargetOffsetPathLength targetPath, Span<byte> startLine)
         {
             _requestType = versionAndMethod.Method == HttpMethod.Get ? GetRequestType(startLine.Slice(targetPath.Offset, targetPath.Length), ref _queries) : RequestType.NotRecognized;
         }
-#else
-        public void OnStartLine(HttpMethod method, HttpVersion version, Span<byte> target, Span<byte> path, Span<byte> query, Span<byte> customMethod, bool pathEncoded)
-        {
-            _requestType = method == HttpMethod.Get ? GetRequestType(path, ref _queries) : RequestType.NotRecognized;
-        }
-#endif
 
         private RequestType GetRequestType(ReadOnlySpan<byte> path, ref int queries)
         {
