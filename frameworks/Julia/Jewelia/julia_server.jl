@@ -70,23 +70,18 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
         randNumList = rand(Int64, 1:10000, numQueries)
         conn = DBInterface.connect(MySQL.Connection, "tfb-database", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
 
-        responseArray = "["
+        responseArray = Array{Int64}(undef, numQueries)
         for i in 1:numQueries
             randNum = randNumList[i]
             sqlQuery = "SELECT * FROM World WHERE id = $randNum"
             results = DBInterface.execute(conn, sqlQuery)
             row = first(results)
             dbNumber = row[2]
-            responseArray = reponseArray * "{\"id\":$randNum,\"randomNumber\":$dbNumber}"
-
-            if i < numQueries
-                reponseArray = responseArray * ","
-            end
+            responseArray[i] = "{\"id\":$randNum,\"randomNumber\":$dbNumber}"
         end
-        reponseArray = responseArray * "]"
 
         startwrite(http)
-        JSON3.write(http, (JSON3.read(responseArray)))
+        JSON3.write(http, (JSON3.read(responseArray, JSON3.Array)))
 
     else
         HTTP.setstatus(http, 404)
