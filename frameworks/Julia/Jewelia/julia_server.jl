@@ -1,8 +1,7 @@
 using Pkg
-using Dates
-
 Pkg.activate(@__DIR__)
 
+using Dates
 using HTTP
 using MySQL
 using JSON3
@@ -16,6 +15,7 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
 
         HTTP.startwrite(http)
         write(http, "Hello, World!")
+
     elseif endswith(http.message.target, "/json")
         HTTP.setheader(http, "Content-Type" => "application/json")
         HTTP.setheader(http, "Server" => "Julia-HTTP")
@@ -24,6 +24,7 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
 
         startwrite(http)
         JSON3.write(http, (;message = "Hello, World!"))
+
     elseif endswith(http.message.target, "/db")
         randNum = rand(1:10000)
 
