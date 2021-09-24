@@ -62,7 +62,6 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
                 HTTP.setstatus(http, 404)
                 startwrite(http)
                 write(http, "Not Found")
-                break
             end
         end
 
