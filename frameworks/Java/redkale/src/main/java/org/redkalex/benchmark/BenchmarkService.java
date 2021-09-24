@@ -7,6 +7,7 @@ package org.redkalex.benchmark;
 
 import java.util.Random;
 import java.util.concurrent.*;
+import java.util.function.IntFunction;
 import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
@@ -22,6 +23,8 @@ import org.redkalex.benchmark.CachedWorld.WorldEntityCache;
 public class BenchmarkService extends AbstractService {
 
     private static final byte[] helloBytes = "Hello, world!".getBytes();
+
+    private static final IntFunction<World[]> wordArrayFunc = c -> new World[c];
 
     @Resource
     private DataSource source;
@@ -49,7 +52,7 @@ public class BenchmarkService extends AbstractService {
         for (int i = 0; i < size; i++) {
             futures[i] = source.findAsync(World.class, pks[i]);
         }
-        return Utility.allOfFutures(futures, c -> new World[c]);
+        return Utility.allOfFutures(futures, wordArrayFunc);
     }
 
     @RestMapping(name = "updates")
@@ -60,14 +63,9 @@ public class BenchmarkService extends AbstractService {
         for (int i = 0; i < size; i++) {
             futures[i] = source.findAsync(World.class, pks[i]);
         }
-        return CompletableFuture.allOf(futures).thenCompose(v -> {
-            final Random r = ThreadLocalRandom.current();
-            final World[] worlds = new World[size];
-            for (int i = 0; i < size; i++) {
-                worlds[i] = futures[i].join().randomNumber(randomId(r));
-            }
-            return source.updateAsync(World.sort(worlds)).thenApply(u -> worlds);
-        });
+        final int[] newnums = ThreadLocalRandom.current().ints(size, 1, 10001).toArray();
+        return Utility.allOfFutures(futures, wordArrayFunc, (i, v) -> v.setRandomNumber(newnums[i]))
+            .thenCompose(worlds -> source.updateAsync(World.sort(worlds)).thenApply(u -> worlds));
     }
 
     @RestMapping(name = "fortunes")
