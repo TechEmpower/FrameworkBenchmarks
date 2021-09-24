@@ -2,8 +2,10 @@
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
 JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
 MySQL = "39abe10b-433b-5dbd-92d4-e302a9df00cd"
+StructTypes = "856f2bd8-1eba-4b0a-8007-ebc267875bd4"
 
 [compat]
 HTTP = "^0.9.14"
 JSON3 = "^1.9.1"
 MySQL = "^1.2.1"
+StructTypes = "^1.7.3"

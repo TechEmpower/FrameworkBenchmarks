@@ -5,6 +5,12 @@ using Dates
 using HTTP
 using MySQL
 using JSON3
+using StructTypes
+
+struct jsonObj
+    id::Int
+    randomNumber::Int
+end
 
 HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
     target = http.message.target
@@ -71,7 +77,7 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
         # randNumList = rand(Int64, 1:10000, numQueries)
         conn = DBInterface.connect(MySQL.Connection, "tfb-database", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
 
-        responseArray = Array{String}(undef, numQueries)
+        responseArray = Array{jsonObj}(undef, numQueries)
         for i in 1:numQueries
             # randNum = randNumList[i]
             randNum = rand(1:10000)
@@ -79,11 +85,13 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
             results = DBInterface.execute(conn, sqlQuery)
             row = first(results)
             dbNumber = row[2]
-            responseArray[i] = "{\"id\":$randNum,\"randomNumber\":$dbNumber}"
+            StructTypes.StructType(::Type{jsonObj}) = StructTypes.Struct()
+            responseArray[i] = JSON3.read("{\"id\":$randNum,\"randomNumber\":$dbNumber}", jsonObj)
         end
 
         startwrite(http)
-        JSON3.write(http, (JSON3.read(responseArray, JSON3.Array)))
+        JSON3.write(http, responseArray)
+        # JSON3.write(http, (JSON3.read(responseArray, JSON3.Array)))
 
     else
         HTTP.setstatus(http, 404)
