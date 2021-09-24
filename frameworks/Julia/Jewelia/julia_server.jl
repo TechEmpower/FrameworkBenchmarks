@@ -57,6 +57,7 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
 
         responseArray = "["
         for i in 1:numQueries
+            randNum = randNumList[i]
             sqlQuery = "SELECT * FROM World WHERE id = $randNum"
             results = DBInterface.execute(conn, sqlQuery)
             row = first(results)
