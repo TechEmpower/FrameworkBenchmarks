@@ -44,10 +44,10 @@ public class BenchmarkService extends AbstractService {
     @RestMapping(name = "queries")
     public CompletableFuture<World[]> queryWorldAsync(int q) {
         final int size = Math.min(500, Math.max(1, q));
-        final Random random = ThreadLocalRandom.current();
+        final int[] pks = ThreadLocalRandom.current().ints(size, 1, 10001).toArray();
         final CompletableFuture<World>[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
-            futures[i] = source.findAsync(World.class, randomId(random));
+            futures[i] = source.findAsync(World.class, pks[i]);
         }
         return Utility.allOfFutures(futures, c -> new World[c]);
     }
@@ -55,10 +55,10 @@ public class BenchmarkService extends AbstractService {
     @RestMapping(name = "updates")
     public CompletableFuture<World[]> updateWorldAsync(int q) {
         final int size = Math.min(500, Math.max(1, q));
-        final Random random = ThreadLocalRandom.current();
+        final int[] pks = ThreadLocalRandom.current().ints(size, 1, 10001).toArray();
         final CompletableFuture<World>[] futures = new CompletableFuture[size];
         for (int i = 0; i < size; i++) {
-            futures[i] = source.findAsync(World.class, randomId(random));
+            futures[i] = source.findAsync(World.class, pks[i]);
         }
         return CompletableFuture.allOf(futures).thenCompose(v -> {
             final Random r = ThreadLocalRandom.current();
