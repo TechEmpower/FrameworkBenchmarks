@@ -51,7 +51,18 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
         HTTP.setheader(http, "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT")
         HTTP.setstatus(http, 200)
 
-        numQueries = parse(Int64, (split(target, "="))[2])
+        try
+            numQueries = parse(Int64, (split(target, "="))[2])
+
+        catch ArgumentError
+            numQueries = -1
+            
+        finally
+            if numQueries == -1 or occursin("foo", numQueries)
+                HTTP.setstatus(http, 404)
+                startwrite(http)
+                write(http, "Not Found")
+
         randNumList = rand(Int64, 1:10000, numQueries)
         conn = DBInterface.connect(MySQL.Connection, "tfb-database", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
 
@@ -77,5 +88,6 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
         HTTP.setstatus(http, 404)
         startwrite(http)
         write(http, "Not Found")
+
     end
 end
