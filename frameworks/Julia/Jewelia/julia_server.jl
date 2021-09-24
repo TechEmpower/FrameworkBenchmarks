@@ -7,6 +7,7 @@ using MySQL
 using JSON3
 using StructTypes
 
+
 struct jsonObj
     id::Int
     randomNumber::Int
@@ -17,31 +18,21 @@ StructTypes.StructType(::Type{jsonObj}) = StructTypes.Struct()
 HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
     target = http.message.target
 
-    if endswith(target, "/plaintext")
-        HTTP.setstatus(http, 200)
-        HTTP.setheader(http, "Content-Type" => "text/plain")
-        HTTP.setheader(http, "Server" => "Julia-HTTP")
-        HTTP.setheader(http, "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT")
+    HTTP.setstatus(http, 200)
+    HTTP.setheader(http, "Content-Type" => "text/plain")
+    HTTP.setheader(http, "Server" => "Julia-HTTP")
+    HTTP.setheader(http, "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT")
 
+    if endswith(target, "/plaintext")
         HTTP.startwrite(http)
         write(http, "Hello, World!")
 
     elseif endswith(target, "/json")
-        HTTP.setheader(http, "Content-Type" => "application/json")
-        HTTP.setheader(http, "Server" => "Julia-HTTP")
-        HTTP.setheader(http, "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT")
-        HTTP.setstatus(http, 200)
-
         startwrite(http)
         JSON3.write(http, (;message = "Hello, World!"))
 
     elseif endswith(target, "/db")
         randNum = rand(1:10000)
-
-        HTTP.setheader(http, "Content-Type" => "application/json")
-        HTTP.setheader(http, "Server" => "Julia-HTTP")
-        HTTP.setheader(http, "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT")
-        HTTP.setstatus(http, 200)
 
         conn = DBInterface.connect(MySQL.Connection, "tfb-database", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
         sqlQuery = "SELECT * FROM World WHERE id = $randNum"
@@ -54,10 +45,6 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
         JSON3.write(http, (JSON3.read(jsonString)))
 
     elseif occursin("/queries", target)
-        HTTP.setheader(http, "Content-Type" => "application/json")
-        HTTP.setheader(http, "Server" => "Julia-HTTP")
-        HTTP.setheader(http, "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT")
-        HTTP.setstatus(http, 200)
         numQueries = -1
 
         try
@@ -92,7 +79,6 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
 
         startwrite(http)
         JSON3.write(http, responseArray)
-        # JSON3.write(http, (JSON3.read(responseArray, JSON3.Array)))
 
     else
         HTTP.setstatus(http, 404)
