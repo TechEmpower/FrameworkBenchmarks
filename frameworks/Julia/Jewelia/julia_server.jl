@@ -71,7 +71,7 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
         # randNumList = rand(Int64, 1:10000, numQueries)
         conn = DBInterface.connect(MySQL.Connection, "tfb-database", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
 
-        responseArray = Array{Int64}(undef, numQueries)
+        responseArray = Array{String}(undef, numQueries)
         for i in 1:numQueries
             # randNum = randNumList[i]
             randNum = rand(1:10000)
