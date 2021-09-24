@@ -12,6 +12,8 @@ struct jsonObj
     randomNumber::Int
 end
 
+StructTypes.StructType(::Type{jsonObj}) = StructTypes.Struct()
+
 HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
     target = http.message.target
 
@@ -85,7 +87,6 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
             results = DBInterface.execute(conn, sqlQuery)
             row = first(results)
             dbNumber = row[2]
-            StructTypes.StructType(::Type{jsonObj}) = StructTypes.Struct()
             responseArray[i] = JSON3.read("{\"id\":$randNum,\"randomNumber\":$dbNumber}", jsonObj)
         end
 
