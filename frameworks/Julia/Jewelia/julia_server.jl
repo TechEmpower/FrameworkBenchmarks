@@ -50,7 +50,7 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
         HTTP.setheader(http, "Server" => "Julia-HTTP")
         HTTP.setheader(http, "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT")
         HTTP.setstatus(http, 200)
-        numQueries = 5
+        numQueries = -1
 
         try
             numQueries = parse(Int64, (split(target, "="))[2])
