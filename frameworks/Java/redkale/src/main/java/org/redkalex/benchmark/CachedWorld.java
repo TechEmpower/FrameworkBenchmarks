@@ -55,11 +55,24 @@ public final class CachedWorld implements Comparable<CachedWorld> {
         return JsonConvert.root().convertTo(this);
     }
 
-    public static class WorldEntityCache {
+    public static class Cache {
+
+        private static Cache instance;
+
+        static Cache instance(DataSource source) {
+            if (instance == null) {
+                synchronized (Cache.class) {
+                    if (instance == null) {
+                        instance = new Cache(source);
+                    }
+                }
+            }
+            return instance;
+        }
 
         private CachedWorld[] array;
 
-        public WorldEntityCache(DataSource source) {
+        public Cache(DataSource source) {
             List<CachedWorld> list = source.queryList(CachedWorld.class);
             this.array = list.toArray(new CachedWorld[list.size()]);
         }
