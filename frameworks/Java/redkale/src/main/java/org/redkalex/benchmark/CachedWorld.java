@@ -59,7 +59,7 @@ public final class CachedWorld implements Comparable<CachedWorld> {
 
         private static Cache instance;
 
-        static Cache instance(DataSource source) {
+        static Cache getInstance(DataSource source) {
             if (instance == null) {
                 synchronized (Cache.class) {
                     if (instance == null) {

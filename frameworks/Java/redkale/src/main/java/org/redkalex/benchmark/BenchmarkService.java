@@ -75,7 +75,7 @@ public class BenchmarkService extends AbstractService {
 
     @RestMapping(name = "cached-worlds")
     public CachedWorld[] cachedWorlds(int q) {
-        if (cache == null) cache = CachedWorld.Cache.instance(source);
+        if (cache == null) cache = CachedWorld.Cache.getInstance(source);
         final int size = Math.min(500, Math.max(1, q));
         return cache.random(ThreadLocalRandom.current(), size);
     }
