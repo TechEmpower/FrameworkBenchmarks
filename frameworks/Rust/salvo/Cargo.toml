@@ -17,6 +17,7 @@ path = "src/main_pg.rs"
 
 [dependencies]
 anyhow = "1.0.38"
+async-trait = "0.1.51"
 diesel = { version = "1.4", features = ["postgres", "r2d2"] }
 futures = "0.3"
 hyper = "0.14"

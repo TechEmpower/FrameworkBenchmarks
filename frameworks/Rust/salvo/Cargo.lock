@@ -1149,6 +1149,7 @@ name = "salvo_test"
 version = "0.6.5"
 dependencies = [
  "anyhow",
+ "async-trait",
  "diesel",
  "futures",
  "hyper",
