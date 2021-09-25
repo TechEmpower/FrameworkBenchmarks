@@ -6,6 +6,8 @@
 package org.redkalex.benchmark;
 
 import java.util.*;
+import java.util.function.IntFunction;
+import java.util.stream.IntStream;
 import javax.persistence.*;
 import org.redkale.convert.json.JsonConvert;
 import org.redkale.source.*;
@@ -72,22 +74,18 @@ public final class CachedWorld implements Comparable<CachedWorld> {
 
         private CachedWorld[] array;
 
+        private IntFunction<CachedWorld> mapFunc = c -> array[c];
+
+        private IntFunction<CachedWorld[]> arrayFunc = c -> new CachedWorld[c];
+
         public Cache(DataSource source) {
             List<CachedWorld> list = source.queryList(CachedWorld.class);
             this.array = list.toArray(new CachedWorld[list.size()]);
         }
 
-        public CachedWorld findAt(int index) {
-            return (CachedWorld) array[index];
-        }
-
         public CachedWorld[] random(Random random, int size) {
-            int[] pks = random.ints(size, 0, 10000).toArray();
-            final CachedWorld[] worlds = new CachedWorld[size];
-            for (int i = 0; i < worlds.length; i++) {
-                worlds[i] = array[pks[i]];
-            }
-            return worlds;
+            IntStream ids = random.ints(size, 0, 10000);
+            return ids.mapToObj(mapFunc).toArray(arrayFunc);
         }
     }
 }
