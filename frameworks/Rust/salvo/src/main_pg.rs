@@ -11,7 +11,6 @@ use std::io;
 use anyhow::Error;
 use futures::stream::futures_unordered::FuturesUnordered;
 use futures::TryStreamExt;
-use hyper::server::conn::AddrIncoming;
 use once_cell::sync::OnceCell;
 use rand::distributions::{Distribution, Uniform};
 use rand::rngs::SmallRng;
@@ -22,6 +21,7 @@ use tokio_postgres::types::ToSql;
 use tokio_postgres::{self, Client, NoTls, Statement};
 
 mod models;
+mod server;
 use models::*;
 
 const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
@@ -178,14 +178,31 @@ markup::define! {
     }
 }
 
-#[tokio::main]
-async fn main() {
-    println!("Started http server: 127.0.0.1:8080");
+fn main() {
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+    rt.block_on(async {
+        let conn = PgConnection::create(DB_URL)
+            .await
+            .expect(&format!("Error connecting to {}", &DB_URL));
+        DB_CONN.set(conn).ok();
+    });
+    for _ in 1..num_cpus::get() {
+        std::thread::spawn(move || {
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()
+                .unwrap();
+            rt.block_on(serve());
+        });
+    }
+    rt.block_on(serve());
+}
 
-    let conn = PgConnection::create(DB_URL)
-        .await
-        .expect(&format!("Error connecting to {}", &DB_URL));
-    DB_CONN.set(conn).ok();
+async fn serve() {
+    println!("Started http server: 127.0.0.1:8080");
 
     #[fn_handler]
     async fn world_row(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
@@ -236,12 +253,5 @@ async fn main() {
         .push(Router::new().path("queries").get(queries))
         .push(Router::new().path("updates").get(updates));
 
-    // Server::new(router).bind(([0, 0, 0, 0], 8080)).await;
-    let mut incoming = AddrIncoming::bind(&(([0, 0, 0, 0], 8080)).into()).unwrap();
-    incoming.set_nodelay(true);
-    salvo::server::builder(incoming)
-        .http1_only(true)
-        .serve(Service::new(router))
-        .await
-        .unwrap();
+    server::builder().serve(Service::new(router)).await.unwrap();
 }

@@ -9,7 +9,8 @@ extern crate serde_json;
 
 use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
-use hyper::server::conn::AddrIncoming;
+
+mod server;
 
 static HELLO_WORLD: &'static [u8] = b"Hello, world!";
 #[derive(Serialize)]
@@ -31,15 +32,32 @@ async fn plaintext(res: &mut Response) {
     res.render_binary(HeaderValue::from_static("text/plain"), HELLO_WORLD);
 }
 
-#[tokio::main]
-async fn main() {
+fn main() {
+    for _ in 1..num_cpus::get() {
+        std::thread::spawn(move || {
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()
+                .unwrap();
+            rt.block_on(serve());
+        });
+    }
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+    rt.block_on(serve());
+}
+
+async fn serve() {
     println!("Started http server: 127.0.0.1:8080");
     let router = Router::new()
         .push(Router::new().path("plaintext").get(plaintext))
         .push(Router::new().path("json").get(json));
-    // Server::new(router).bind(([0, 0, 0, 0], 8080)).await;
 
-    let mut incoming = AddrIncoming::bind(&(([0, 0, 0, 0], 8080)).into()).unwrap();
-    incoming.set_nodelay(true);
-    salvo::server::builder(incoming).http1_only(true).http1_pipeline_flush(true).serve(Service::new(router)).await.unwrap();
+    server::builder()
+        .http1_pipeline_flush(true)
+        .serve(Service::new(router))
+        .await
+        .unwrap();
 }

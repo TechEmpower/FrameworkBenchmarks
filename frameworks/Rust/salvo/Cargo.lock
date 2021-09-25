@@ -1153,6 +1153,7 @@ dependencies = [
  "futures",
  "hyper",
  "markup",
+ "num_cpus",
  "once_cell",
  "rand 0.8.4",
  "random-fast-rng",
