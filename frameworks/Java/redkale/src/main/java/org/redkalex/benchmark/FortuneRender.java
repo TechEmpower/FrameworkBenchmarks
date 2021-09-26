@@ -43,7 +43,7 @@ public class FortuneRender implements org.redkale.net.http.HttpRender {
                 .put(text3).put(escape(item.getMessage()).toString().getBytes()).put(text4);
         }
         array.put(text5);
-        response.setContentType(contentType).finish(array);
+        response.finish(contentType, array);
     }
 
     private static CharSequence escape(CharSequence value) {
