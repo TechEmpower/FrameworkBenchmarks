@@ -51,8 +51,7 @@ public class BenchmarkService extends AbstractService {
     public CompletableFuture<World[]> queryWorldAsync(int q) {
         final int size = Math.min(500, Math.max(1, q));
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
-        Integer[] pkds = ids.boxed().toArray(c -> new Integer[c]);
-        return source.findsAsync(World.class, pkds);
+        return source.findsAsync(World.class, ids.boxed());
         //final Stream<CompletableFuture<World>> futures = ids.mapToObj(wordFindFunc);
         //return Utility.allOfFutures(futures, wordArrayFunc);
     }
