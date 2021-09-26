@@ -173,24 +173,6 @@ markup::define! {
         }
     }
 }
-
-fn main() {
-    let rt = tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap();
-    for _ in 1..num_cpus::get() {
-        std::thread::spawn(move || {
-            let rt = tokio::runtime::Builder::new_current_thread()
-                .enable_all()
-                .build()
-                .unwrap();
-            rt.block_on(serve());
-        });
-    }
-    rt.block_on(serve());
-}
-
 struct WorldHandler{
     conn: PgConnection,
 }
@@ -278,9 +260,25 @@ impl Handler for FortunesHandler {
     }
 }
 
+fn main() {
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+    for _ in 1..num_cpus::get() {
+        std::thread::spawn(move || {
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()
+                .unwrap();
+            rt.block_on(serve());
+        });
+    }
+    rt.block_on(serve());
+}
+
 async fn serve() {
     println!("Started http server: 127.0.0.1:8080");
-
     let router = Router::new()
         .push(Router::new().path("db").get(WorldHandler::new().await))
         .push(Router::new().path("fortunes").get(FortunesHandler::new().await))

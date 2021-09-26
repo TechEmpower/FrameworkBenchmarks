@@ -34,7 +34,13 @@ pub fn connect() -> Result<PooledConnection<ConnectionManager<PgConnection>>, Po
 }
 pub fn build_pool(database_url: &str) -> Result<PgPool, PoolError> {
     let manager = ConnectionManager::<PgConnection>::new(database_url);
-    diesel::r2d2::Pool::builder().max_size(50).build(manager)
+    diesel::r2d2::Pool::builder()
+        .max_size(32)
+        .min_idle(Some(32))
+        .test_on_check_out(false)
+        .idle_timeout(None)
+        .max_lifetime(None)
+        .build(manager)
 }
 
 #[fn_handler]
