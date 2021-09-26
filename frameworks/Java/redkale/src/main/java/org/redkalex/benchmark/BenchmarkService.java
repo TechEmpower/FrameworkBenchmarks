@@ -50,7 +50,6 @@ public class BenchmarkService extends AbstractService {
     @RestMapping(name = "queries")
     public CompletableFuture<World[]> queryWorldAsync(int q) {
         final int size = Math.min(500, Math.max(1, q));
-        //生成id
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
         return source.findsAsync(World.class, ids.boxed());
         //final Stream<CompletableFuture<World>> futures = ids.mapToObj(wordFindFunc);
