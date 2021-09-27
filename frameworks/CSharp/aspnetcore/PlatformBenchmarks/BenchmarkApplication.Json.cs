@@ -9,7 +9,7 @@ namespace PlatformBenchmarks
     public partial class BenchmarkApplication
     {
         private readonly static uint _jsonPayloadSize = (uint)JsonSerializer.SerializeToUtf8Bytes(new JsonMessage { message = "Hello, World!" }, SerializerContext.JsonMessage).Length;
-        
+
         private readonly static AsciiString _jsonPreamble =
             _http11OK +
             _headerServer + _crlf +

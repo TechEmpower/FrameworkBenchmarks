@@ -38,7 +38,7 @@ namespace PlatformBenchmarks
 
         private static readonly JsonContext SerializerContext = JsonContext.Default;
 
-        [JsonSourceGenerationOptions(GenerationMode = JsonSourceGenerationMode.Serialization)]
+        [JsonSourceGenerationOptions(GenerationMode = JsonSourceGenerationMode.Serialization, PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
         [JsonSerializable(typeof(JsonMessage))]
         [JsonSerializable(typeof(CachedWorld[]))]
         [JsonSerializable(typeof(World[]))]

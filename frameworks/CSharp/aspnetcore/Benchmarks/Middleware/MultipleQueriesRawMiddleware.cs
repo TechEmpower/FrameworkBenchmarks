@@ -15,7 +15,7 @@ namespace Benchmarks.Middleware
     public class MultipleQueriesRawMiddleware
     {
         private static readonly PathString _path = new PathString(Scenarios.GetPath(s => s.DbMultiQueryRaw));
-        private static readonly JsonSerializerOptions _serializerOptions = new JsonSerializerOptions();
+        private static readonly JsonSerializerOptions _serializerOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
         private readonly RequestDelegate _next;
 
