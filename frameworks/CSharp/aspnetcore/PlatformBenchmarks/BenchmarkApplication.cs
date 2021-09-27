@@ -42,7 +42,7 @@ namespace PlatformBenchmarks
         [JsonSerializable(typeof(JsonMessage))]
         [JsonSerializable(typeof(CachedWorld[]))]
         [JsonSerializable(typeof(World[]))]
-        private partial class JsonContext : JsonSerializerContext
+        private sealed partial class JsonContext : JsonSerializerContext
         {
         }
 
