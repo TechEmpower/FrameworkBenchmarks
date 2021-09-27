@@ -8,6 +8,7 @@ extern crate diesel;
 
 use std::cmp;
 use std::fmt::Write;
+use std::sync::Arc;
 
 use anyhow::Error;
 use diesel::prelude::*;
@@ -139,6 +140,13 @@ markup::define! {
 }
 
 fn main() {
+    let router = Arc::new(
+        Router::new()
+            .push(Router::new().path("db").get(world_row))
+            .push(Router::new().path("fortunes").get(fortunes))
+            .push(Router::new().path("queries").get(queries))
+            .push(Router::new().path("updates").get(updates)),
+    );
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
@@ -149,25 +157,19 @@ fn main() {
             .ok();
     });
     for _ in 1..num_cpus::get() {
+        let router = router.clone();
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
                 .enable_all()
                 .build()
                 .unwrap();
-            rt.block_on(serve());
+            rt.block_on(serve(router));
         });
     }
-    rt.block_on(serve());
+    rt.block_on(serve(router));
 }
 
-async fn serve() {
+async fn serve(router: Arc<Router>) {
     println!("Starting http server: 127.0.0.1:8080");
-    let router = Router::new()
-        .push(Router::new().path("db").get(world_row))
-        .push(Router::new().path("fortunes").get(fortunes))
-        .push(Router::new().path("queries").get(queries))
-        .push(Router::new().path("updates").get(updates));
-
-    // Server::new(router).bind(([0, 0, 0, 0], 8080)).await;
     server::builder().serve(Service::new(router)).await.unwrap();
 }

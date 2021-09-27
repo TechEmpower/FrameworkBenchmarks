@@ -7,6 +7,8 @@ static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 extern crate serde_derive;
 extern crate serde_json;
 
+use std::sync::Arc;
+
 use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
 
@@ -33,28 +35,31 @@ async fn plaintext(res: &mut Response) {
 }
 
 fn main() {
+    let router = Arc::new(
+        Router::new()
+            .push(Router::new().path("plaintext").get(plaintext))
+            .push(Router::new().path("json").get(json)),
+    );
+
     for _ in 1..num_cpus::get() {
+        let router = router.clone();
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
                 .enable_all()
                 .build()
                 .unwrap();
-            rt.block_on(serve());
+            rt.block_on(serve(router));
         });
     }
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
         .unwrap();
-    rt.block_on(serve());
+    rt.block_on(serve(router));
 }
 
-async fn serve() {
+async fn serve(router: Arc<Router>) {
     println!("Started http server: 127.0.0.1:8080");
-    let router = Router::new()
-        .push(Router::new().path("plaintext").get(plaintext))
-        .push(Router::new().path("json").get(json));
-
     server::builder()
         .http1_pipeline_flush(true)
         .serve(Service::new(router))
