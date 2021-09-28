@@ -24,7 +24,6 @@ namespace PlatformBenchmarks
                     options.IOQueueCount = threadCount;
                 }
 
-#if NET5_0
                 options.WaitForDataBeforeAllocatingBuffer = false;
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
@@ -32,7 +31,6 @@ namespace PlatformBenchmarks
                 }
 
                 Console.WriteLine($"Options: WaitForData={options.WaitForDataBeforeAllocatingBuffer}, PreferInlineScheduling={options.UnsafePreferInlineScheduling}, IOQueue={options.IOQueueCount}");
-#endif
             });
 
             return builder;
