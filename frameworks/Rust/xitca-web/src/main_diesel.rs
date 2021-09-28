@@ -13,12 +13,12 @@ use std::{error::Error, io};
 
 use bytes::Bytes;
 use xitca_http::http::{
-    header::{HeaderValue, CONTENT_TYPE, SERVER},
+    header::{CONTENT_TYPE, SERVER},
     Method,
 };
 use xitca_web::{dev::fn_service, request::WebRequest, App, HttpServer};
 
-use self::db_diesel::{connect, DieselPool};
+use self::db_diesel::{create, DieselPool};
 use self::util::{
     internal, json, json_response, not_found, plain_text, AppState, HandleResult, QueryParse,
 };
@@ -30,10 +30,9 @@ async fn main() -> io::Result<()> {
     let config = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
     HttpServer::new(move || {
-        let pool = connect(config).unwrap();
-        App::with_async_state(move || {
-            let pool = pool.clone();
-            async move { AppState::new(pool.clone()) }
+        App::with_async_state(move || async move {
+            let pool = create(config).await.unwrap();
+            AppState::new(pool)
         })
         .service(fn_service(handle))
     })
@@ -70,12 +69,9 @@ async fn fortunes(req: &mut WebRequest<'_, State>) -> HandleResult {
         Ok(body) => {
             let mut res = req.as_response(body);
 
+            res.headers_mut().append(SERVER, util::SERVER_HEADER_VALUE);
             res.headers_mut()
-                .append(SERVER, HeaderValue::from_static("TFB"));
-            res.headers_mut().append(
-                CONTENT_TYPE,
-                HeaderValue::from_static("text/html; charset=utf-8"),
-            );
+                .append(CONTENT_TYPE, util::HTML_HEADER_VALUE);
 
             Ok(res)
         }

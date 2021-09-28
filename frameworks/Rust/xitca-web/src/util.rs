@@ -83,13 +83,19 @@ impl<C> AppState<C> {
     }
 }
 
+pub const SERVER_HEADER_VALUE: HeaderValue = HeaderValue::from_static("TFB");
+
+pub const HTML_HEADER_VALUE: HeaderValue = HeaderValue::from_static("text/html; charset=utf-8");
+
+const TEXT_HEADER_VALUE: HeaderValue = HeaderValue::from_static("text/plain");
+
+const JSON_HEADER_VALUE: HeaderValue = HeaderValue::from_static("application/json");
+
 pub(super) fn plain_text<D>(req: &mut WebRequest<'_, D>) -> HandleResult {
     let mut res = req.as_response(Bytes::from_static(b"Hello, World!"));
 
-    res.headers_mut()
-        .append(SERVER, HeaderValue::from_static("TFB"));
-    res.headers_mut()
-        .append(CONTENT_TYPE, HeaderValue::from_static("text/plain"));
+    res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
+    res.headers_mut().append(CONTENT_TYPE, TEXT_HEADER_VALUE);
 
     Ok(res)
 }
@@ -109,10 +115,8 @@ where
     let body = writer.take();
 
     let mut res = req.as_response(body);
-    res.headers_mut()
-        .append(SERVER, HeaderValue::from_static("TFB"));
-    res.headers_mut()
-        .append(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+    res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
+    res.headers_mut().append(CONTENT_TYPE, JSON_HEADER_VALUE);
 
     Ok(res)
 }
@@ -124,7 +128,7 @@ macro_rules! error {
         pub(super) fn $error() -> HandleResult {
             Ok(WebResponseBuilder::new()
                 .status($code)
-                .header(SERVER, HeaderValue::from_static("TFB"))
+                .header(SERVER, SERVER_HEADER_VALUE)
                 .body(Bytes::new().into())
                 .unwrap())
         }
