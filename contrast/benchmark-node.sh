@@ -21,7 +21,7 @@ fi;
 ./start-contrast-service.sh
 
 # Run tests
-../tfb --tag contrast --test-lang JavaScript --type fortune --duration 5
+../tfb --tag contrast --test-lang JavaScript --type fortune --duration 60
 
 # Stop contrast-service container
 docker stop contrast-service
