@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "spring-jdbc",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["contrast"]
     },
     "jpa": {
       "db_url": "/db",
@@ -160,7 +161,7 @@
       "display_name": "spring-jdbc",
       "notes": "",
       "versus": "",
-      "tags": ["contrast"]
+      "tags": ["contrast", "contrast-both"]
     }
   }]
 }

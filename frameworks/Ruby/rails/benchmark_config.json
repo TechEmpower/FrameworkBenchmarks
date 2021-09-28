@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "rails-postgresql",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["contrast"]
     },
     "mysql": {
       "json_url": "/json",
