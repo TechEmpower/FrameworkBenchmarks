@@ -10,6 +10,7 @@ agent:
   java:
     standalone_app_name: "Agent Performance - $LANG - $FRAMEWORK"
   service: 
+    grpc: $GRPC
     logger: 
       path: contrast_service.log
       level: INFO
