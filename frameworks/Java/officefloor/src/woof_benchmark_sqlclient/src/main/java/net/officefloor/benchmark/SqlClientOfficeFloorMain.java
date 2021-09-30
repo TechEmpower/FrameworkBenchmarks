@@ -130,7 +130,7 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 		// Nothing thread specific to set up
 	}
 
-	private static final int DB_COUNT = 2;
+	private static final int DB_COUNT = 1;
 
 	@Override
 	public void db(DbSendResponse sender) {
@@ -152,7 +152,7 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 				});
 	}
 
-	private static final int QUERIES_COUNT = 2;
+	private static final int QUERIES_COUNT = 1;
 
 	@Override
 	public void queries(int queryCount, QueriesSendResponse sender) {
@@ -182,7 +182,7 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 		}
 	}
 
-	private static final int FORTUNES_COUNT = 2;
+	private static final int FORTUNES_COUNT = 1;
 
 	@Override
 	public void fortunes(FortunesSendResponse sender) {
@@ -202,7 +202,7 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 				});
 	}
 
-	private static final int UPDATE_COUNT = 2;
+	private static final int UPDATE_COUNT = 1;
 
 	@Override
 	public void update(int queryCount, UpdateSendResponse sender) {
