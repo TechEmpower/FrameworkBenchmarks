@@ -1,5 +1,6 @@
 package io.vertx.benchmark;
 
+import com.fasterxml.jackson.module.blackbird.BlackbirdModule;
 import com.github.susom.database.Config;
 import com.github.susom.database.ConfigFrom;
 import com.github.susom.database.DatabaseProviderVertx;
@@ -12,6 +13,7 @@ import io.vertx.core.*;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.json.jackson.DatabindCodec;
 import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -27,6 +29,11 @@ import java.util.*;
 import static io.vertx.benchmark.Helper.randomWorld;
 
 public class App extends AbstractVerticle {
+
+  static {
+    DatabindCodec.mapper().registerModule(new BlackbirdModule());
+    DatabindCodec.prettyMapper().registerModule(new BlackbirdModule());
+  }
 
   /**
    * MongoDB implementation
@@ -162,7 +169,7 @@ public class App extends AbstractVerticle {
 
               final int newRandomNumber = randomWorld();
 
-              database.update("world", query, new JsonObject().put("$set", new JsonObject().put("randomNumber", newRandomNumber)), update -> {
+              database.updateCollection("world", query, new JsonObject().put("$set", new JsonObject().put("randomNumber", newRandomNumber)), update -> {
                 if (update.failed()) {
                   ctx.fail(update.cause());
                   return;
@@ -200,7 +207,8 @@ public class App extends AbstractVerticle {
         .setPort(config.getInteger("port", 5432))
         .setUser(config.getString("username"))
         .setPassword(config.getString("password"))
-        .setDatabase(config.getString("database"));
+        .setDatabase(config.getString("database"))
+        .setPipeliningLimit(100_000); // Large pipelining means less flushing and we use a single connection anyway;
 
       client = PgPool.pool(vertx, options, new PoolOptions().setMaxSize(4));
       this.engine = RockerTemplateEngine.create();

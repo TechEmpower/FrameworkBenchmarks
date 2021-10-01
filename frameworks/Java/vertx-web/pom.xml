@@ -7,12 +7,12 @@
 
   <groupId>io.vertx</groupId>
   <artifactId>vertx-web-benchmark</artifactId>
-  <version>3.9.2</version>
+  <version>4.1.4</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>8</maven.compiler.source>
-    <maven.compiler.target>8</maven.compiler.target>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
     <!-- the main class -->
     <main.verticle>io.vertx.benchmark.App</main.verticle>
   </properties>
@@ -33,6 +33,12 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-blackbird</artifactId>
+      <version>2.12.4</version>
     </dependency>
 
     <dependency>
@@ -64,13 +70,13 @@
     <dependency>
       <groupId>com.github.susom</groupId>
       <artifactId>database</artifactId>
-      <version>3.0</version>
+      <version>3.3</version>
     </dependency>
 
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.2.5</version>
+      <version>42.2.24</version>
     </dependency>
 
     <dependency>
