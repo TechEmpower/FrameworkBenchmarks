@@ -26,7 +26,7 @@ namespace appMpower
 
       public static async Task<World> LoadSingleQueryRow()
       {
-         var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnection);
+         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
          pooledConnection.Open();
 
          var (pooledCommand, _) = CreateReadCommand(pooledConnection);
@@ -42,7 +42,7 @@ namespace appMpower
       {
          var worlds = new World[count];
 
-         var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnection);
+         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
          pooledConnection.Open();
 
          var (pooledCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
@@ -63,7 +63,7 @@ namespace appMpower
       {
          var fortunes = new List<Fortune>();
 
-         var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnection);
+         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
          pooledConnection.Open();
 
          var pooledCommand = new PooledCommand("SELECT * FROM fortune", pooledConnection);
@@ -98,7 +98,7 @@ namespace appMpower
       {
          var worlds = new World[count];
 
-         var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnection);
+         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
          pooledConnection.Open();
 
          var (queryCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
@@ -193,7 +193,7 @@ namespace appMpower
             queryString = _queriesMultipleRows[count] = PlatformBenchmarks.StringBuilderCache.GetStringAndRelease(stringBuilder);
          }
 
-         var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnection);
+         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
          pooledConnection.Open();
 
          var pooledCommand = new PooledCommand(queryString, pooledConnection);
@@ -245,7 +245,7 @@ namespace appMpower
 
       public static async Task PopulateCache()
       {
-         var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnection);
+         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
          pooledConnection.Open();
 
          var (pooledCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
@@ -295,7 +295,7 @@ namespace appMpower
       //static async Task<CachedWorld[]> LoadUncachedQueries(int id, int i, int count, RawDb rawdb, CachedWorld[] result)
       static async Task<CachedWorld[]> LoadUncachedQueries(int id, int i, int count, CachedWorld[] result)
       {
-         var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnection);
+         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
          pooledConnection.Open();
 
          var (pooledCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
