@@ -10,11 +10,11 @@ WORKDIR /odbc
 # To compile the latest postgresql odbc driver, postgresql itself needs to be installed
 RUN curl -L -o postgresql-13.4.tar.gz https://ftp.postgresql.org/pub/source/v13.4/postgresql-13.4.tar.gz
 RUN curl -L -o unixODBC-2.3.9.tar.gz ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.9.tar.gz
-RUN curl -L -o psqlodbc-13.01.0000.tar.gz https://ftp.postgresql.org/pub/odbc/versions/src/psqlodbc-13.01.0000.tar.gz
+RUN curl -L -o psqlodbc-13.02.0000.tar.gz https://ftp.postgresql.org/pub/odbc/versions/src/psqlodbc-13.02.0000.tar.gz
 
 RUN tar -xvf postgresql-13.4.tar.gz
 RUN tar -xvf unixODBC-2.3.9.tar.gz
-RUN tar -xvf psqlodbc-13.01.0000.tar.gz
+RUN tar -xvf psqlodbc-13.02.0000.tar.gz
 
 WORKDIR /odbc/postgresql-13.4
 RUN ./configure
@@ -30,7 +30,7 @@ RUN make install
 
 ENV PATH=/usr/local/unixODBC/lib:$PATH
 
-WORKDIR /odbc/psqlodbc-13.01.0000
+WORKDIR /odbc/psqlodbc-13.02.0000
 RUN ./configure --with-unixodbc=/usr/local/unixODBC --with-libpq=/usr/local/pgsql --prefix=/usr/local/pgsqlodbc
 RUN make
 RUN make install
