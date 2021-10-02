@@ -8,15 +8,15 @@ RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
 WORKDIR /odbc
 
 # To compile the latest postgresql odbc driver, postgresql itself needs to be installed
-RUN curl -L -o postgresql-13.4.tar.gz https://ftp.postgresql.org/pub/source/v13.4/postgresql-13.4.tar.gz
+RUN curl -L -o postgresql-14.0.tar.gz https://ftp.postgresql.org/pub/source/v14.0/postgresql-14.0.tar.gz
 RUN curl -L -o unixODBC-2.3.9.tar.gz ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.9.tar.gz
 RUN curl -L -o psqlodbc-13.02.0000.tar.gz https://ftp.postgresql.org/pub/odbc/versions/src/psqlodbc-13.02.0000.tar.gz
 
-RUN tar -xvf postgresql-13.4.tar.gz
+RUN tar -xvf postgresql-14.0.tar.gz
 RUN tar -xvf unixODBC-2.3.9.tar.gz
 RUN tar -xvf psqlodbc-13.02.0000.tar.gz
 
-WORKDIR /odbc/postgresql-13.4
+WORKDIR /odbc/postgresql-14.0
 RUN ./configure
 RUN make
 RUN make install
