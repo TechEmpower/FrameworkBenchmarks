@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using System.Data;
 using System.Data.Common;
-using System.Data.Odbc;
 using System.Threading.Tasks;
 
 namespace appMpower.Db
@@ -176,18 +175,15 @@ namespace appMpower.Db
          }
          else
          {
+            pooledCommand.DbCommand = this.DbConnection.CreateCommand();
+            pooledCommand.DbCommand.CommandText = commandText;
+            pooledCommand.PooledConnection = this;
+
+            //For future use with non odbc drivers like Npgsql which do not support Prepare
             if (DataProvider.IsOdbcConnection)
             {
-               pooledCommand.DbCommand = new OdbcCommand(commandText, this.DbConnection as OdbcConnection);
                pooledCommand.DbCommand.Prepare();
             }
-            else
-            {
-               //For future use with non odbc drivers which can be AOT compiled without reflection
-               //pooledCommand.DbCommand = new NpgsqlCommand(commandText, this.DbConnection as NpgsqlConnection);
-            }
-
-            pooledCommand.PooledConnection = this;
 
             //Console.WriteLine("prepare pool connection: " + this._number + " for command " + _pooledCommands.Count);
          }

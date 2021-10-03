@@ -95,7 +95,7 @@ namespace appMpower.Db
          }
          set
          {
-            _dbCommand.Connection = (OdbcConnection?)value;
+            _dbCommand.Connection = (IDbConnection?)value;
          }
       }
 #nullable disable
@@ -118,7 +118,7 @@ namespace appMpower.Db
          }
          set
          {
-            _dbCommand.Transaction = (OdbcTransaction?)value;
+            _dbCommand.Transaction = (IDbTransaction?)value;
          }
       }
 #nullable disable
@@ -178,11 +178,13 @@ namespace appMpower.Db
 
       public async Task<int> ExecuteNonQueryAsync()
       {
+         if (DataProvider.IsOdbcConnection) return await (_dbCommand as OdbcCommand).ExecuteNonQueryAsync();
          return await (_dbCommand as DbCommand).ExecuteNonQueryAsync();
       }
 
       public async Task<DbDataReader> ExecuteReaderAsync(CommandBehavior behavior)
       {
+         if (DataProvider.IsOdbcConnection) return await (_dbCommand as OdbcCommand).ExecuteReaderAsync(behavior);
          return await (_dbCommand as DbCommand).ExecuteReaderAsync(behavior);
       }
 
