@@ -2,11 +2,30 @@
 
 namespace App\Controller;
 
-use App\Container\DB;
 use Mix\Vega\Context;
 
-class Benchmark
+class BenchmarkRaw
 {
+
+    public function init()
+    {
+        global $world, $fortune, $update;
+        if (isset($world)) {
+            return;
+        }
+
+        $pdo = new \PDO(
+            'pgsql:host=tfb-database;dbname=hello_world',
+            'benchmarkdbuser',
+            'benchmarkdbpass',
+            [
+                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+            ]
+        );
+        $world = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
+        $fortune = $pdo->prepare('SELECT id,message FROM Fortune');
+        $update = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
+    }
 
     /**
      * @param Context $ctx
@@ -31,9 +50,13 @@ class Benchmark
      */
     public function db(Context $ctx)
     {
+        $this->init();
+        global $world;
+
+        $world->execute([mt_rand(1, 10000)]);
+
         $ctx->setHeader('Content-Type', 'application/json');
-        $ret = DB::instance()->raw('SELECT id,randomNumber FROM World WHERE id=?', mt_rand(1, 10000))->first();
-        $ctx->string(200, json_encode($ret));
+        $ctx->string(200, json_encode($world->fetch()));
     }
 
     /**
@@ -41,6 +64,9 @@ class Benchmark
      */
     public function query(Context $ctx)
     {
+        $this->init();
+        global $world;
+
         $queryCount = 1;
         $q = static::getQuery($ctx);
         if ($q > 1) {
@@ -49,8 +75,8 @@ class Benchmark
 
         $arr = [];
         while ($queryCount--) {
-            $ret = DB::instance()->raw('SELECT id,randomNumber FROM World WHERE id=?', mt_rand(1, 10000))->first();
-            $arr[] = $ret;
+            $world->execute([mt_rand(1, 10000)]);
+            $arr[] = $world->fetch();
         }
 
         $ctx->setHeader('Content-Type', 'application/json');
@@ -62,12 +88,22 @@ class Benchmark
      */
     public function fortunes(Context $ctx)
     {
-        $rows = DB::instance()->raw('SELECT id,message FROM Fortune')->get();
-        $rows[] = (object)['id' => 0, 'message' => 'Additional fortune added at request time.'];
-        usort($rows, function ($left, $right) {
-            return $left->message <=> $right->message;
-        });
-        $ctx->HTML(200, 'fortunes', ['rows' => $rows]);
+        $this->init();
+        global $fortune;
+
+        $fortune->execute();
+
+        $arr = $fortune->fetchAll(\PDO::FETCH_KEY_PAIR);
+        $arr[0] = 'Additional fortune added at request time.';
+        asort($arr);
+
+        $html = '';
+        foreach ($arr as $id => $message) {
+            $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+            $html .= "<tr><td>$id</td><td>$message</td></tr>";
+        }
+
+        $ctx->string(200, "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>$html</table></body></html>");
     }
 
     /**
@@ -75,6 +111,9 @@ class Benchmark
      */
     public function update(Context $ctx)
     {
+        $this->init();
+        global $world, $update;
+
         $queryCount = 1;
         $q = static::getQuery($ctx);
         if ($q > 1) {
@@ -84,8 +123,11 @@ class Benchmark
         $arr = [];
         while ($queryCount--) {
             $id = mt_rand(1, 10000);
-            $ret = DB::instance()->raw('SELECT id,randomNumber FROM World WHERE id=?', $id)->first();
-            DB::instance()->exec('UPDATE World SET randomNumber=? WHERE id=?', $ret->randomNumber = mt_rand(1, 10000), $id);
+            $world->execute([$id]);
+            $ret = $world->fetch();
+            $update->execute(
+                [$ret['randomNumber'] = mt_rand(1, 10000), $id]
+            );
             $arr[] = $ret;
         }
 
