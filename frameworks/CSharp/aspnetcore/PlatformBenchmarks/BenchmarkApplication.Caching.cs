@@ -12,7 +12,7 @@ namespace PlatformBenchmarks
     {
         private async Task Caching(PipeWriter pipeWriter, int count)
         {
-            OutputMultipleQueries(pipeWriter, await Db.LoadCachedQueries(count));
+            OutputMultipleQueries(pipeWriter, await Db.LoadCachedQueries(count), SerializerContext.CachedWorldArray);
         }
     }
 }

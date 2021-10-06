@@ -14,7 +14,7 @@ use std::{
 
 use bytes::Bytes;
 use xitca_http::http::{
-    header::{HeaderValue, CONTENT_TYPE, SERVER},
+    header::{CONTENT_TYPE, SERVER},
     Method,
 };
 use xitca_web::{dev::fn_service, request::WebRequest, App, HttpServer};
@@ -79,12 +79,9 @@ async fn fortunes(req: &mut WebRequest<'_, State>) -> HandleResult {
         Ok(body) => {
             let mut res = req.as_response(body);
 
+            res.headers_mut().append(SERVER, util::SERVER_HEADER_VALUE);
             res.headers_mut()
-                .append(SERVER, HeaderValue::from_static("TFB"));
-            res.headers_mut().append(
-                CONTENT_TYPE,
-                HeaderValue::from_static("text/html; charset=utf-8"),
-            );
+                .append(CONTENT_TYPE, util::HTML_HEADER_VALUE);
 
             Ok(res)
         }
