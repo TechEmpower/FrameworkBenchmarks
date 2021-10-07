@@ -82,7 +82,34 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
         startwrite(http)
         JSON3.write(http, responseArray)
         # JSON3.write(http, (JSON3.read(responseArray, JSON3.Array)))
-
+        
+    elseif endswith(target, "/fortunes")
+        HTTP.setheader(http, "Content-Type" => "text/html; charset=utf-8")
+    
+        fortunesList = []
+        sqlQuery = "SELECT * FROM fortune"
+        output = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"
+        conn = DBInterface.connect(MySQL.Connection, "tfb-database", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
+        results = DBInterface.execute(conn, sqlQuery)
+    
+        for row in results
+            push!(fortunesList, [string(row[1]), row[2]])
+        end
+    
+        push!(fortunesList, [string(0), "Additional fortune added at request time."])
+    
+        sort!(fortunesList, by = x -> x[2])
+    
+        for fortune in fortunesList
+            id = fortune[1]
+            message = HTTP.Strings.escapehtml(fortune[2])
+            output = string(output, "<tr><td>$id</td><td>$message</td></tr>")
+        end
+    
+        output = string(output, "</table></body></html>")
+    
+        write(http, output)
+        
     else
         HTTP.setstatus(http, 404)
         startwrite(http)
