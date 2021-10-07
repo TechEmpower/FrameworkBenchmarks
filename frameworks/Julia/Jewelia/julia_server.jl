@@ -84,7 +84,7 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
         # JSON3.write(http, (JSON3.read(responseArray, JSON3.Array)))
         
     elseif endswith(target, "/fortunes")
-        HTTP.setheader(http, "Content-Type" => "text/plain")
+        HTTP.setheader(http, "Content-Type" => "text/html; charset=utf-8")
     
         fortunesList = []
         sqlQuery = "SELECT * FROM fortune"
