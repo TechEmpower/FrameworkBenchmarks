@@ -182,7 +182,7 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 		}
 	}
 
-	private static final int FORTUNES_COUNT = 2;
+	private static final int FORTUNES_COUNT = 1;
 
 	@Override
 	public void fortunes(FortunesSendResponse sender) {

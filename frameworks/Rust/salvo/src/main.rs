@@ -1,13 +1,18 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+// #[global_allocator]
+// static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
 
+use std::sync::Arc;
+
 use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
-use hyper::server::conn::AddrIncoming;
+
+mod server;
 
 static HELLO_WORLD: &'static [u8] = b"Hello, world!";
 #[derive(Serialize)]
@@ -29,15 +34,35 @@ async fn plaintext(res: &mut Response) {
     res.render_binary(HeaderValue::from_static("text/plain"), HELLO_WORLD);
 }
 
-#[tokio::main]
-async fn main() {
-    println!("Started http server: 127.0.0.1:8080");
-    let router = Router::new()
-        .push(Router::new().path("plaintext").get(plaintext))
-        .push(Router::new().path("json").get(json));
-    // Server::new(router).bind(([0, 0, 0, 0], 8080)).await;
+fn main() {
+    let router = Arc::new(
+        Router::new()
+            .push(Router::new().path("plaintext").get(plaintext))
+            .push(Router::new().path("json").get(json)),
+    );
 
-    let mut incoming = AddrIncoming::bind(&(([0, 0, 0, 0], 8080)).into()).unwrap();
-    incoming.set_nodelay(true);
-    salvo::server::builder(incoming).http1_pipeline_flush(true).serve(Service::new(router)).await.unwrap();
+    for _ in 1..num_cpus::get() {
+        let router = router.clone();
+        std::thread::spawn(move || {
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()
+                .unwrap();
+            rt.block_on(serve(router));
+        });
+    }
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+    rt.block_on(serve(router));
+}
+
+async fn serve(router: Arc<Router>) {
+    println!("Started http server: 127.0.0.1:8080");
+    server::builder()
+        .http1_pipeline_flush(true)
+        .serve(Service::new(router))
+        .await
+        .unwrap();
 }
