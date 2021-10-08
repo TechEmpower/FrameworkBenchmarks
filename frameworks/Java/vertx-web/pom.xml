@@ -48,11 +48,6 @@
 
     <dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-mongo-client</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.vertx</groupId>
       <artifactId>vertx-pg-client</artifactId>
     </dependency>
 

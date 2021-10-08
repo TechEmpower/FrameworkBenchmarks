@@ -9,7 +9,6 @@ import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.jackson.DatabindCodec;
-import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.templ.rocker.RockerTemplateEngine;
@@ -28,157 +27,6 @@ public class App extends AbstractVerticle {
   static {
     DatabindCodec.mapper().registerModule(new BlackbirdModule());
     DatabindCodec.prettyMapper().registerModule(new BlackbirdModule());
-  }
-
-  /**
-   * MongoDB implementation
-   */
-  private final class MongoDBBenchmark {
-    private final JsonObject FIELDS = new JsonObject().put("_id", 0);
-
-    private final MongoClient database;
-    // In order to use a template we first need to create an engine
-    private final RockerTemplateEngine engine;
-
-    public MongoDBBenchmark(Vertx vertx, JsonObject config) {
-      final JsonObject mongoConfig = config.copy();
-
-      // mongo is configured without credentials
-      mongoConfig.remove("username");
-      mongoConfig.remove("password");
-
-      this.database = MongoClient.createShared(vertx, mongoConfig);
-      this.engine = RockerTemplateEngine.create();
-    }
-
-    public final void dbHandler(final RoutingContext ctx) {
-      database.findOne("world", new JsonObject().put("_id", randomWorld()), FIELDS, findOne -> {
-        if (findOne.failed()) {
-          ctx.fail(findOne.cause());
-          return;
-        }
-
-        ctx.response()
-            .putHeader(HttpHeaders.SERVER, SERVER)
-            .putHeader(HttpHeaders.DATE, date)
-            .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-            .end(Json.encodeToBuffer(new World(findOne.result())));
-      });
-    }
-
-    public final void queriesHandler(final RoutingContext ctx) {
-      final int queries = Helper.getQueries(ctx.request());
-
-      final World[] worlds = new World[queries];
-
-      new Handler<Integer>() {
-        @Override
-        public void handle(Integer idx) {
-          if (idx == queries) {
-            // stop condition
-            ctx.response()
-                .putHeader(HttpHeaders.SERVER, SERVER)
-                .putHeader(HttpHeaders.DATE, date)
-                .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-                .end(Json.encodeToBuffer(worlds));
-
-          } else {
-
-            final Handler<Integer> self = this;
-
-            database.findOne("world", new JsonObject().put("_id", randomWorld()), FIELDS, findOne -> {
-              if (findOne.failed()) {
-                ctx.fail(findOne.cause());
-                return;
-              }
-
-              worlds[idx] = new World(findOne.result());
-              self.handle(idx + 1);
-            });
-          }
-        }
-      }.handle(0);
-    }
-
-    public final void fortunesHandler(final RoutingContext ctx) {
-      final List<Fortune> fortunes = new LinkedList<>();
-
-      database.find("fortune", new JsonObject(), find -> {
-        if (find.failed()) {
-          ctx.fail(find.cause());
-          return;
-        }
-
-        for (JsonObject document : find.result()) {
-          fortunes.add(new Fortune(document));
-        }
-
-        fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-        Collections.sort(fortunes);
-
-        ctx.put("fortunes", fortunes);
-
-        // and now delegate to the engine to render it.
-        engine.render(ctx.data(), "templates/Fortunes.rocker.html", res -> {
-          if (res.succeeded()) {
-            ctx.response()
-                .putHeader(HttpHeaders.SERVER, SERVER)
-                .putHeader(HttpHeaders.DATE, date)
-                .putHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=UTF-8")
-                .end(res.result());
-          } else {
-            ctx.fail(res.cause());
-          }
-        });
-      });
-    }
-
-    public final void updateHandler(final RoutingContext ctx) {
-      final int queries = Helper.getQueries(ctx.request());
-      final World[] worlds = new World[queries];
-
-      new Handler<Integer>() {
-        @Override
-        public void handle(Integer idx) {
-          if (idx == queries) {
-            // stop condition
-            ctx.response()
-                .putHeader(HttpHeaders.SERVER, SERVER)
-                .putHeader(HttpHeaders.DATE, date)
-                .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-                .end(Json.encodeToBuffer(worlds));
-
-          } else {
-
-            final Handler<Integer> self = this;
-
-            final int id = randomWorld();
-
-            final JsonObject query = new JsonObject().put("_id", id);
-
-            database.findOne("world", query, FIELDS, findOne -> {
-              if (findOne.failed()) {
-                ctx.fail(findOne.cause());
-                return;
-              }
-
-              final int newRandomNumber = randomWorld();
-
-              database.updateCollection("world", query, new JsonObject().put("$set", new JsonObject().put("randomNumber", newRandomNumber)), update -> {
-                if (update.failed()) {
-                  ctx.fail(update.cause());
-                  return;
-                }
-
-                worlds[idx] = new World(id, newRandomNumber);
-                self.handle(idx + 1);
-              });
-            });
-
-          }
-        }
-      }.handle(0);
-    }
   }
 
   /**
@@ -209,7 +57,7 @@ public class App extends AbstractVerticle {
       this.engine = RockerTemplateEngine.create();
     }
 
-    public final void dbHandler(final RoutingContext ctx) {
+    public void dbHandler(final RoutingContext ctx) {
       client
         .preparedQuery(SELECT_WORLD)
         .execute(Tuple.of(randomWorld()), res -> {
@@ -234,7 +82,7 @@ public class App extends AbstractVerticle {
       });
     }
 
-    public final void queriesHandler(final RoutingContext ctx) {
+    public void queriesHandler(final RoutingContext ctx) {
 
       final int queries = Helper.getQueries(ctx.request());
       final World[] worlds = new World[queries];
@@ -267,7 +115,7 @@ public class App extends AbstractVerticle {
       }
     }
 
-    public final void fortunesHandler(final RoutingContext ctx) {
+    public void fortunesHandler(final RoutingContext ctx) {
 
       client.preparedQuery(SELECT_FORTUNE).execute(ar -> {
           if (ar.succeeded()) {
@@ -307,7 +155,7 @@ public class App extends AbstractVerticle {
         });
     }
 
-    public final void updateHandler(final RoutingContext ctx) {
+    public void updateHandler(final RoutingContext ctx) {
 
          final int queries = Helper.getQueries(ctx.request());
          final World[] worlds = new World[queries];
@@ -365,7 +213,6 @@ public class App extends AbstractVerticle {
     // refresh the value as a periodic task
     vertx.setPeriodic(1000, handler -> date = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now()));
 
-    final MongoDBBenchmark mongoDBBenchmark = new MongoDBBenchmark(vertx, config());
     final PgClientBenchmark pgClientBenchmark= new PgClientBenchmark(vertx, config());
 
     /*
@@ -384,31 +231,27 @@ public class App extends AbstractVerticle {
      * This test exercises the framework's object-relational mapper (ORM), random number generator, database driver,
      * and database connection pool.
      */
-    app.get("/mongo/db").handler(mongoDBBenchmark::dbHandler);
-    app.get("/psql/db").handler(pgClientBenchmark::dbHandler);
+    app.get("/db").handler(pgClientBenchmark::dbHandler);
 
     /*
      * This test is a variation of Test #2 and also uses the World table. Multiple rows are fetched to more dramatically
      * punish the database driver and connection pool. At the highest queries-per-request tested (20), this test
      * demonstrates all frameworks' convergence toward zero requests-per-second as database activity increases.
      */
-    app.get("/mongo/queries").handler(mongoDBBenchmark::queriesHandler);
-    app.get("/psql/queries").handler(pgClientBenchmark::queriesHandler);
+    app.get("/queries").handler(pgClientBenchmark::queriesHandler);
 
     /*
      * This test exercises the ORM, database connectivity, dynamic-size collections, sorting, server-side templates,
      * XSS countermeasures, and character encoding.
      */
-    app.get("/mongo/fortunes").handler(mongoDBBenchmark::fortunesHandler);
-    app.get("/psql/fortunes").handler(pgClientBenchmark::fortunesHandler);
+    app.get("/fortunes").handler(pgClientBenchmark::fortunesHandler);
 
     /*
      * This test is a variation of Test #3 that exercises the ORM's persistence of objects and the database driver's
      * performance at running UPDATE statements or similar. The spirit of this test is to exercise a variable number of
      * read-then-write style database operations.
      */
-    app.route("/mongo/update").handler(mongoDBBenchmark::updateHandler);
-    app.route("/psql/update").handler(pgClientBenchmark::updateHandler);
+    app.route("/update").handler(pgClientBenchmark::updateHandler);
 
     /*
      * This test is an exercise of the request-routing fundamentals only, designed to demonstrate the capacity of
