@@ -24,7 +24,7 @@ CMD java \
     -Dio.netty.buffer.checkBounds=false               \
     -Dio.netty.buffer.checkAccessible=false           \
     -jar                                              \
-    target/vertx-web-benchmark-4.1.4-fat.jar          \
+    target/vertx-web-benchmark-4.1.5-fat.jar          \
     --instances                                       \
     `grep --count ^processor /proc/cpuinfo`           \
     --conf                                            \
