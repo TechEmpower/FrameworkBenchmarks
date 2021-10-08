@@ -61,27 +61,6 @@
       "display_name": "vertx-web-postgres",
       "notes": "",
       "versus": ""
-    },
-    "susom-postgres": {
-      "db_url": "/dbpsql/db",
-      "query_url": "/dbpsql/queries?queries=",
-      "fortune_url": "/dbpsql/fortunes",
-      "update_url": "/dbpsql/update?queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "Postgres",
-      "framework": "vertx-web",
-      "language": "Java",
-      "flavor": "None",
-      "orm": "Raw",
-      "platform": "Vert.x",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "vertx-web-susom",
-      "notes": "",
-      "versus": ""
     }
   }]
 }
