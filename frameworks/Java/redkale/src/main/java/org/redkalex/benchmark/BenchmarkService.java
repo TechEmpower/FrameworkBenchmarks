@@ -12,7 +12,6 @@ import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.*;
-import org.redkale.util.Utility;
 
 /**
  *
@@ -60,10 +59,10 @@ public class BenchmarkService extends AbstractService {
     public CompletableFuture<World[]> updateWorldAsync(int q) {
         final int size = Math.min(500, Math.max(1, q));
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
-        final Stream<CompletableFuture<World>> futures = ids.mapToObj(wordFindFunc);
         final int[] newNumbers = ThreadLocalRandom.current().ints(size, 1, 10001).toArray();
-        return Utility.allOfFutures(futures, wordArrayFunc, (i, v) -> v.setRandomNumber(newNumbers[i]))
-            .thenCompose(worlds -> source.updateAsync(World.sort(worlds)).thenApply(u -> worlds));
+        return source.findsAsync(World.class, ids.boxed()).thenCompose(words -> source.updateAsync(World.setNewNumbers(words, newNumbers)).thenApply(v -> words));
+        //final Stream<CompletableFuture<World>> futures = ids.mapToObj(wordFindFunc);
+        //return Utility.allOfFutures(futures, wordArrayFunc).thenCompose(worlds -> source.updateAsync(World.setNewNumbers(worlds, newNumbers)).thenApply(u -> worlds));
     }
 
     @RestMapping(name = "fortunes")
@@ -80,4 +79,5 @@ public class BenchmarkService extends AbstractService {
         final int size = Math.min(500, Math.max(1, q));
         return cache.random(ThreadLocalRandom.current(), size);
     }
+
 }
