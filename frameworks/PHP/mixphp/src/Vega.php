@@ -17,6 +17,7 @@ class Vega
     public static function new(): Engine
     {
         $vega = new Engine();
+        $vega->mode(Engine::FAST_MODE);
 
         // 500
         $vega->use(function (Context $ctx) {
