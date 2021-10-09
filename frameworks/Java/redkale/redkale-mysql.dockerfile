@@ -6,7 +6,7 @@ WORKDIR /redkale
 RUN apt-get update -yqq
 RUN apt-get install -yqq wget
 
-RUN wget --no-verbose https://ftp.wayne.edu/apache/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz
+RUN wget --no-verbose https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/${MAVEN_VERSION}/apache-maven-${MAVEN_VERSION}-bin.tar.gz
 RUN tar -xzf apache-maven-${MAVEN_VERSION}-bin.tar.gz
 ENV MAVEN_HOME /redkale/apache-maven-${MAVEN_VERSION}
 ENV PATH $MAVEN_HOME/bin:$PATH
