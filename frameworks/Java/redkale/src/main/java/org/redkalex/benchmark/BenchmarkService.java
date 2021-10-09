@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.*;
+import org.redkale.util.AnyValue;
 
 /**
  *
@@ -25,11 +26,14 @@ public class BenchmarkService extends AbstractService {
     @Resource
     private DataSource source;
 
-    private CachedWorld.Cache cache;
-
     private final IntFunction<World[]> wordArrayFunc = c -> new World[c];
 
     private final IntFunction<CompletableFuture<World>> wordFindFunc = id -> source.findAsync(World.class, id);
+
+    @Override
+    public void init(AnyValue conf) {
+        CachedWorld.Cache.getInstance(source);
+    }
 
     @RestMapping(name = "plaintext")
     public byte[] getHelloBytes() {
@@ -75,9 +79,8 @@ public class BenchmarkService extends AbstractService {
 
     @RestMapping(name = "cached-worlds")
     public CachedWorld[] cachedWorlds(int q) {
-        if (cache == null) cache = CachedWorld.Cache.getInstance(source);
         final int size = Math.min(500, Math.max(1, q));
-        return cache.random(ThreadLocalRandom.current(), size);
+        return CachedWorld.Cache.getInstance(source).random(ThreadLocalRandom.current(), size);
     }
 
 }
