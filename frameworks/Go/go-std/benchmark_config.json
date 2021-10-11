@@ -39,7 +39,8 @@
       "database_os": "Linux",
       "display_name": "Go",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["contrast"]
     },
     "pgx-easyjson": {
       "json_url": "/json",

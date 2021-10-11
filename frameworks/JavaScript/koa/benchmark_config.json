@@ -65,7 +65,8 @@
         "database_os": "Linux",
         "display_name": "koa",
         "notes": "",
-        "versus": "nodejs"
+        "versus": "nodejs",
+        "tags": ["contrast"]
       },
       "postgres-contrast-off": {
         "db_url": "/db",

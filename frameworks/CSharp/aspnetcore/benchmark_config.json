@@ -39,7 +39,8 @@
       "database_os": "Linux",
       "display_name": "ASP.NET Core [Platform, Pg]",
       "notes": "",
-      "versus": "aspcore-ado-pg"
+      "versus": "aspcore-ado-pg",
+      "tags": ["contrast"]
     },
     "ado-pg-up": {
       "update_url": "/updates/",

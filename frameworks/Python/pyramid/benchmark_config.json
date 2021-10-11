@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "Pyramid",
       "notes": "",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["contrast"]
     },
     "py2": {
       "json_url": "/json",
