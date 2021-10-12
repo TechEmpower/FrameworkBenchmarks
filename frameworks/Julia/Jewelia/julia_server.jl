@@ -82,7 +82,47 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
         startwrite(http)
         JSON3.write(http, responseArray)
         # JSON3.write(http, (JSON3.read(responseArray, JSON3.Array)))
-        
+    
+    elseif occursin("/updates", target)
+        HTTP.setheader(http, "Content-Type" => "application/json")
+        numQueries = -1
+
+        try
+            numQueries = parse(Int64, (split(target, "="))[2])
+
+        catch ArgumentError
+            numQueries = 1
+
+        finally
+            if numQueries > 500
+                numQueries = 500
+            end
+
+            if numQueries < 1
+                numQueries = 1
+            end
+        end
+
+        # randNumList = rand(Int64, 1:10000, numQueries)
+        conn = DBInterface.connect(MySQL.Connection, "tfb-database", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
+
+        responseArray = Array{jsonObj}(undef, numQueries)
+        for i in 1:numQueries
+            randId = rand(1:10000)
+            randNum = rand(1:10000)
+            sqlQuery = "SELECT * FROM World WHERE id = $randId"
+            results = DBInterface.execute(conn, sqlQuery)
+            row = first(results)
+            dbNumber = row[2]
+
+            sqlQuery = "UPDATE World SET randomnumber = $randNum WHERE id = $randId"
+            results = DBInterface.execute(conn, sqlQuery)
+            responseArray[i] = JSON3.read("{\"id\":$randId,\"randomNumber\":$randNum}", jsonObj)
+        end
+
+        startwrite(http)
+        JSON3.write(http, responseArray)
+
     elseif endswith(target, "/fortunes")
         HTTP.setheader(http, "Content-Type" => "text/html; charset=utf-8")
     
