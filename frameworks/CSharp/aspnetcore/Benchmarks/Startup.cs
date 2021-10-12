@@ -1,22 +1,20 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
 using Benchmarks.Configuration;
 using Benchmarks.Data;
 using Benchmarks.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MySqlConnector;
 using Npgsql;
+using System;
+using System.Data.Common;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 namespace Benchmarks
 {
@@ -106,10 +104,7 @@ namespace Benchmarks
 
             if (Scenarios.Any("Mvc"))
             {
-                var mvcBuilder = services
-                    .AddMvcCore()
-                    .SetCompatibilityVersion(CompatibilityVersion.Latest)
-                    ;
+                var mvcBuilder = services.AddMvcCore();
 
                 if (Scenarios.MvcViews || Scenarios.Any("MvcDbFortunes"))
                 {
