@@ -142,10 +142,10 @@ markup::define! {
 fn main() {
     let router = Arc::new(
         Router::new()
-            .push(Router::new().path("db").get(world_row))
-            .push(Router::new().path("fortunes").get(fortunes))
-            .push(Router::new().path("queries").get(queries))
-            .push(Router::new().path("updates").get(updates)),
+            .push(Router::with_path("db").get(world_row))
+            .push(Router::with_path("fortunes").get(fortunes))
+            .push(Router::with_path("queries").get(queries))
+            .push(Router::with_path("updates").get(updates)),
     );
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()

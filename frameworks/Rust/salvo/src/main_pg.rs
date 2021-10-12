@@ -280,10 +280,10 @@ fn main() {
 async fn serve() {
     println!("Started http server: 127.0.0.1:8080");
     let router = Router::new()
-        .push(Router::new().path("db").get(WorldHandler::new().await))
-        .push(Router::new().path("fortunes").get(FortunesHandler::new().await))
-        .push(Router::new().path("queries").get(WorldsHandler::new().await))
-        .push(Router::new().path("updates").get(UpdatesHandler::new().await));
+        .push(Router::with_path("db").get(WorldHandler::new().await))
+        .push(Router::with_path("fortunes").get(FortunesHandler::new().await))
+        .push(Router::with_path("queries").get(WorldsHandler::new().await))
+        .push(Router::with_path("updates").get(UpdatesHandler::new().await));
 
     server::builder().serve(Service::new(router)).await.unwrap();
 }
