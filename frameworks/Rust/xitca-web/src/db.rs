@@ -1,7 +1,7 @@
 use std::{cell::RefCell, error::Error, fmt::Write};
 
 use ahash::AHashMap;
-use futures_util::stream::{FuturesUnordered, StreamExt, TryStreamExt};
+use futures_util::stream::{StreamExt, TryStreamExt};
 use rand::{rngs::SmallRng, Rng, SeedableRng};
 use tokio::pin;
 use tokio_postgres::{types::ToSql, NoTls, Statement};
@@ -24,10 +24,7 @@ pub async fn create(config: &str) -> Client {
     });
 
     let fortune = client.prepare("SELECT * FROM fortune").await.unwrap();
-    let world = client
-        .prepare("SELECT * FROM world WHERE id=$1")
-        .await
-        .unwrap();
+
     let mut updates = AHashMap::new();
     for num in 1..=500u16 {
         let mut pl = 1;
@@ -49,6 +46,11 @@ pub async fn create(config: &str) -> Client {
         updates.insert(num, st);
     }
 
+    let world = client
+        .prepare("SELECT * FROM world WHERE id=$1")
+        .await
+        .unwrap();
+
     Client {
         client,
         rng: RefCell::new(SmallRng::from_entropy()),
@@ -68,53 +70,51 @@ impl Client {
         Ok(World::new(row.get(0), row.get(1)))
     }
 
+    #[inline]
     pub async fn get_world(&self) -> DbResult<World> {
         let id = (self.rng.borrow_mut().gen::<u32>() % 10_000 + 1) as i32;
         self.query_one_world(id).await
     }
 
     pub async fn get_worlds(&self, num: u16) -> DbResult<Vec<World>> {
-        let worlds = {
-            let mut rng = self.rng.borrow_mut();
-            (0..num)
-                .map(|_| {
-                    let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
-                    self.query_one_world(id)
-                })
-                .collect::<FuturesUnordered<_>>()
-        };
+        let mut worlds = Vec::with_capacity(num as usize);
 
-        worlds.try_collect().await
+        for _ in 0..num {
+            let world = self.get_world().await?;
+            worlds.push(world);
+        }
+
+        Ok(worlds)
     }
 
     pub async fn update(&self, num: u16) -> DbResult<Vec<World>> {
-        let worlds = {
-            let mut rng = self.rng.borrow_mut();
+        let mut worlds = Vec::with_capacity(num as usize);
 
-            (0..num)
-                .map(|_| {
-                    let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
-                    let w_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
-                    async move {
-                        let mut world = self.query_one_world(w_id).await?;
-                        world.randomnumber = id;
-                        Ok::<_, Box<dyn Error>>(world)
-                    }
-                })
-                .collect::<FuturesUnordered<_>>()
-        };
+        for _ in 0..num {
+            let (id, w_id) = {
+                let mut rng = self.rng.borrow_mut();
+                (
+                    (rng.gen::<u32>() % 10_000 + 1) as i32,
+                    (rng.gen::<u32>() % 10_000 + 1) as i32,
+                )
+            };
 
-        let worlds = worlds.try_collect::<Vec<_>>().await?;
+            let mut world = self.query_one_world(w_id).await?;
+            world.randomnumber = id;
+
+            worlds.push(world);
+        }
 
         let mut params = Vec::<&(dyn ToSql + Sync)>::with_capacity(num as usize * 3);
 
-        for w in &worlds {
+        worlds.iter().for_each(|w| {
             params.push(&w.id);
             params.push(&w.randomnumber);
-        }
-        for w in &worlds {
+        });
+
+        worlds.iter().for_each(|w| {
             params.push(&w.id);
-        }
+        });
 
         let st = self.updates.get(&num).unwrap();
 
