@@ -16,7 +16,7 @@ name = "main-pg"
 path = "src/main_pg.rs"
 
 [dependencies]
-anyhow = "1.0.38"
+anyhow = "1"
 async-trait = "0.1.51"
 diesel = { version = "1.4", features = ["postgres", "r2d2"] }
 futures = "0.3"
@@ -35,7 +35,7 @@ smallvec = "1.6.1"
 snmalloc-rs = { version = "0.2.24", features = ["1mib", "native-cpu"] }
 tokio = { version = "1", features = ["macros", "rt"] }
 tokio-postgres = "0.7.2"
-v_htmlescape = "0.13.0"
+v_htmlescape = "0.14"
 
 [profile.release]
 lto = true
