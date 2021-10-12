@@ -16,7 +16,7 @@ name = "ntex-raw"
 path = "src/main_raw.rs"
 
 [dependencies]
-ntex = "0.4.0-b.1"
+ntex = "0.4.0-b.12"
 mimalloc = { version = "0.1.25", default-features = false }
 snmalloc-rs = { version = "0.2.26", features = ["1mib", "native-cpu"] }
 yarte = { version = "0.15", features = ["bytes-buf", "json"] }

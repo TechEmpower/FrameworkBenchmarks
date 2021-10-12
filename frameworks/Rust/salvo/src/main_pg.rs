@@ -20,7 +20,9 @@ use models::*;
 const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 pub static DB_CONN: OnceCell<PgConnection> = OnceCell::new();
 pub fn connect() -> &'static PgConnection {
-    DB_CONN.get().unwrap()
+    unsafe {
+        DB_CONN.get_unchecked()
+    }
 }
 pub struct PgConnection {
     client: Client,
@@ -74,7 +76,7 @@ impl PgConnection {
 async fn world_row(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let conn = connect();
     let mut rng = SmallRng::from_entropy();
-    let random_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+    let random_id = rng.gen_range(1..10_001);
     let row = conn.client.query_one(&conn.world, &[&random_id]).await?;
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
     let world = &World {
@@ -94,7 +96,7 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let mut rng = SmallRng::from_entropy();
     let conn = connect();
     for _ in 0..count {
-        let w_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+        let w_id = rng.gen_range(1..10_001);
         let row = conn.client.query_one(&conn.world, &[&w_id]).await?;
         worlds.push(World {
             id: row.get(0),
@@ -115,8 +117,8 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let mut rng = SmallRng::from_entropy();
     let conn = connect();
     for _ in 0..count {
-        let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
-        let w_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+        let id = rng.gen_range(1..10_001);
+        let w_id = rng.gen_range(1..10_001);
         let row = conn.client.query_one(&conn.world, &[&w_id]).await?;
         worlds.push(World {
             id: row.get(0),

@@ -37,6 +37,16 @@ void TeBkUmMgrWorld::setRandomNumber(int randomNumber) {
 	this->randomNumber = randomNumber;
 }
 
+TeBkUmMgrWorld::TeBkUmMgrWorld(int id) {
+	this->id = id;
+	randomNumber = 0;
+}
+
+TeBkUmMgrWorld::TeBkUmMgrWorld(int id, int randomNumber) {
+	this->id = id;
+	this->randomNumber = randomNumber;
+}
+
 TeBkUmMgrWorld::TeBkUmMgrWorld() {
 	id = 0;
 	randomNumber = 0;
@@ -211,7 +221,7 @@ void TeBkUmMgrRouter::updateCache() {
 			TeBkUmMgrWorld& w = wlist.at(c);
 			char str[12];
 			sprintf(str, "%d;%d", w.getId(), w.getRandomNumber());
-			cchi->setRaw(CastUtil::fromNumber(w.getId()), str);
+			cchi->setRaw(w.getId(), str);
 		}
 		CacheManager::cleanImpl(cchi);
 		CacheManager::triggerAppInitCompletion();
@@ -251,26 +261,21 @@ void TeBkUmMgrRouter::cachedWorlds(const char* q, int ql, std::vector<TeBkUmMgrW
 
 	CacheInterface* cchi = CacheManager::getImpl();
 	try {
-		std::vector<std::string> keys;
+		std::vector<unsigned long long> keys;
 		for (int c = 0; c < queryCount; ++c) {
 			int rid = rand() % 10000 + 1;
-			keys.push_back(CastUtil::fromNumber(rid));
+			keys.emplace_back(rid);
 		}
-
 		std::vector<std::string> values;
-		cchi->mgetRaw(keys, values);
-
-		for (int c = 0; c < (int)values.size(); ++c) {
-			TeBkUmMgrWorld w;
+		cchi->getValues(keys, values);
+		for (int c = 0; c < queryCount; ++c) {
 			std::string& v = values.at(c);
 			size_t fn = v.find(";");
 			int tmp = 0;
-			strToNum(v.substr(0, fn).c_str(), fn, tmp);
-			w.setId(tmp);
-			tmp = 0;
-			strToNum(v.substr(fn+1).c_str(), v.length()-fn-1, tmp);
-			w.setRandomNumber(tmp);
-			wlst.push_back(w);
+			CommonUtils::fastStrToNum(v.substr(0, fn).c_str(), fn, tmp);
+			int tmp1 = 0;
+			CommonUtils::fastStrToNum(v.substr(fn+1).c_str(), v.length()-fn-1, tmp1);
+			wlst.emplace_back(tmp, tmp1);
 		}
 		CacheManager::cleanImpl(cchi);
 	} catch(const std::exception& e) {
@@ -295,7 +300,7 @@ void TeBkUmMgrRouter::getContext(HttpRequest* request, Context* context) {
 		flst->push_back(nf);
 		std::sort (flst->begin(), flst->end());
 
-		context->insert(std::pair<std::string, void*>("fortunes", flst));
+		context->emplace("fortunes", flst);
 	} catch(...) {
 		throw;
 	}
@@ -368,7 +373,7 @@ bool TeBkUmMgrRouter::route(HttpRequest* req, HttpResponse* res, SocketInterface
 			fcpstream str;
 			tmplFunc(&ctx, str);
 			res->setContent(str.str());
-			res->setContentType(ContentTypes::CONTENT_TYPE_TEXT_SHTML);
+			res->setContentType(ContentTypes::CONTENT_TYPE_TEXT_HTML);
 			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
 		}
 	} else if(StringUtil::endsWith(path, "/updates")) {

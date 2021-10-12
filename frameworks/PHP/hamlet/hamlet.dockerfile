@@ -1,4 +1,4 @@
-FROM ubuntu:21.04
+FROM ubuntu:20.04
 
 ENV PHP_VERSION 8.0
 ARG DEBIAN_FRONTEND=noninteractive
@@ -9,7 +9,7 @@ RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq nginx git unzip curl \
     php${PHP_VERSION}-cli php${PHP_VERSION}-fpm php${PHP_VERSION}-apcu php${PHP_VERSION}-pdo-mysql > /dev/null
 
-RUN apt-get install -yqq composer > /dev/null
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 ADD ./ /app
 WORKDIR /app

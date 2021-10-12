@@ -18,7 +18,7 @@ path = "src/main_pg.rs"
 [dependencies]
 anyhow = "1.0.38"
 diesel = { version = "1.4", features = ["postgres", "r2d2"] }
-salvo = { version = "0.11", features = ["anyhow"] }
+salvo = { version = "0.12", features = ["anyhow"] }
 tokio = { version = "1", features = ["full"] }
 snmalloc-rs = { version = "0.2.24", features = ["1mib", "native-cpu"] }
 random-fast-rng = "0.1.1"
