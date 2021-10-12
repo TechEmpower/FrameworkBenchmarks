@@ -2,7 +2,7 @@ FROM buildpack-deps:focal
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NOWARNINGS yes
-ENV TFVER=1.31.1
+ENV TFVER=2.1.0
 
 RUN apt-get update -yqq && apt-get upgrade -yq && apt-get install -yqq --no-install-recommends \
     software-properties-common unzip wget make cmake gcc clang libjemalloc-dev qt5-qmake qt5-default qtbase5-dev \
@@ -31,11 +31,10 @@ RUN qmake -r CONFIG+=release -spec linux-clang
 
 # 2. Compile applicaton
 RUN make
-RUN sed -i 's|DriverType=.*|DriverType=QMYSQL|g' config/database.ini
+RUN sed -i 's|DriverType=.*|DriverType=QPSQL|g' config/database.ini
 RUN sed -i 's|MultiProcessingModule=.*|MultiProcessingModule=epoll|g' config/application.ini
 
 EXPOSE 8080
 
 # 3. Start TreeFrog
-CMD service redis-server start && \
-    treefrog /workspace
+CMD treefrog /workspace

@@ -24,7 +24,10 @@ pub async fn create(config: &str) -> Client {
     });
 
     let fortune = client.prepare("SELECT * FROM fortune").await.unwrap();
-
+    let world = client
+        .prepare("SELECT * FROM world WHERE id=$1")
+        .await
+        .unwrap();
     let mut updates = AHashMap::new();
     for num in 1..=500u16 {
         let mut pl = 1;
@@ -45,10 +48,6 @@ pub async fn create(config: &str) -> Client {
         let st = client.prepare(&q).await.unwrap();
         updates.insert(num, st);
     }
-    let world = client
-        .prepare("SELECT * FROM world WHERE id=$1")
-        .await
-        .unwrap();
 
     Client {
         client,

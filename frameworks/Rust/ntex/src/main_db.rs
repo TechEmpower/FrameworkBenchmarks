@@ -7,7 +7,7 @@ use futures::future::{ok, Future, FutureExt};
 use ntex::http::header::{HeaderValue, CONTENT_TYPE, SERVER};
 use ntex::http::{HttpService, KeepAlive, Request, Response};
 use ntex::service::{Service, ServiceFactory};
-use ntex::util::BytesMut;
+use ntex::{util::BytesMut, time::Seconds};
 use ntex::web::{Error, HttpResponse};
 
 mod db;
@@ -100,8 +100,8 @@ async fn main() -> std::io::Result<()> {
         .bind("techempower", "0.0.0.0:8080", || {
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
-                .client_timeout(0)
-                .disconnect_timeout(0)
+                .client_timeout(Seconds(0))
+                .disconnect_timeout(Seconds(0))
                 .buffer_params(65535, 65535, 1024)
                 .h1(AppFactory)
                 .tcp()
