@@ -23,6 +23,8 @@ public class Service extends AbstractService {
 
     private static final byte[] helloBytes = "Hello, world!".getBytes();
 
+    private static final boolean cached = Boolean.getBoolean("benchmarks.cache");
+
     private final ThreadLocal<RedRandom> rands = ThreadLocal.withInitial(() -> new RedRandom());
 
     @Resource

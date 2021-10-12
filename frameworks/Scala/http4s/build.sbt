@@ -2,7 +2,7 @@ name := "http4s"
 
 version := "1.0"
 
-scalaVersion := "2.13.5"
+scalaVersion := "2.13.6"
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -18,7 +18,7 @@ scalacOptions ++= Seq(
 
 enablePlugins(SbtTwirl)
 
-val http4sVersion = "0.21.22"
+val http4sVersion = "0.23.1"
 
 assembly / assemblyMergeStrategy := {
   case PathList(xs @ _*) if xs.last == "io.netty.versions.properties" => MergeStrategy.rename
@@ -31,13 +31,13 @@ libraryDependencies ++= Seq(
   "org.http4s" %% "http4s-twirl" % http4sVersion,
   "org.http4s" %% "http4s-circe" % http4sVersion,
   // Optional for auto-derivation of JSON codecs
-  "io.circe" %% "circe-generic" % "0.13.0",
-  "org.typelevel" %% "cats-effect" % "2.5.0",
-  "co.fs2" %% "fs2-core" % "2.5.5",
-  "co.fs2" %% "fs2-io" % "2.5.5",
-  "io.getquill" %% "quill-jasync-postgres" % "3.7.0",
-  "io.getquill" %% "quill-jasync" % "3.7.0",
-  "ch.qos.logback" % "logback-classic" % "1.2.3"
+  "io.circe" %% "circe-generic" % "0.14.1",
+  "org.typelevel" %% "cats-effect" % "3.2.2",
+  "co.fs2" %% "fs2-core" % "3.1.0",
+  "co.fs2" %% "fs2-io" % "3.1.0",
+  "io.getquill" %% "quill-jasync-postgres" % "3.9.0",
+  "io.getquill" %% "quill-jasync" % "3.9.0",
+  "ch.qos.logback" % "logback-classic" % "1.2.5"
 )
 
 addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1")

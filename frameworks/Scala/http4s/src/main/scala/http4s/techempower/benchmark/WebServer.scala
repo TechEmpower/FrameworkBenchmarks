@@ -1,7 +1,6 @@
 package http4s.techempower.benchmark
 
 import java.util.concurrent.Executors
-
 import scala.concurrent.ExecutionContext
 import cats.effect.{ExitCode, IO, IOApp, Resource}
 import com.typesafe.config.ConfigValueFactory
@@ -15,7 +14,8 @@ import org.http4s.dsl._
 import org.http4s.circe._
 import org.http4s.implicits._
 import org.http4s.server.Router
-import org.http4s.server.blaze.BlazeServerBuilder
+import org.http4s.blaze.server.BlazeServerBuilder
+import org.http4s.headers.Server
 import org.http4s.twirl._
 
 final case class Message(message: String)
@@ -63,8 +63,10 @@ object WebServer extends IOApp with Http4sDsl[IO] {
   // Add Server header container server address
   def addServerHeader(service: HttpRoutes[IO]): HttpRoutes[IO] =
     cats.data.Kleisli { req: Request[IO] =>
-      service.run(req).map(_.putHeaders(Header("Server", req.serverAddr)))
+      service.run(req).map(_.putHeaders(server))
     }
+
+  val server = Server(ProductId("http4s", None))
 
   // HTTP service definition
   def service(db: DatabaseService) =
