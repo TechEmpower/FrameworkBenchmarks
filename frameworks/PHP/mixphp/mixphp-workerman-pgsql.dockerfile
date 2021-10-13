@@ -15,7 +15,7 @@ COPY php-jit.ini /etc/php/8.0/cli/php.ini
 ADD ./ /mixphp
 WORKDIR /mixphp
 
-RUN sed -i "s|'mysql:host|'pgsql:host|g" /mixphp/src/Container/DB.php
+RUN sed -i "s|Benchmark();|BenchmarkRaw();|g" /mixphp/routes/index.php
 
 RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-dev --classmap-authoritative --quiet > /dev/null
