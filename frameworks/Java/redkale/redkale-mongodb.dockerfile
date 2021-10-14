@@ -1,6 +1,6 @@
 FROM openjdk:17-jdk-slim
 ARG DEBIAN_FRONTEND=noninteractive
-ARG MAVEN_VERSION=3.8.1
+ARG MAVEN_VERSION=3.8.3
 
 WORKDIR /redkale
 RUN apt-get update -yqq
