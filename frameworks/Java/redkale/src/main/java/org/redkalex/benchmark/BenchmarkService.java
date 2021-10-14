@@ -47,16 +47,16 @@ public class BenchmarkService extends AbstractService {
 
     @RestMapping(name = "queries")
     public CompletableFuture<World[]> queryWorldAsync(int q) {
-        final int size = Math.min(500, Math.max(1, q));
+        int size = Math.min(500, Math.max(1, q));
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
         return source.findsAsync(World.class, ids.boxed());
     }
 
     @RestMapping(name = "updates")
     public CompletableFuture<World[]> updateWorldAsync(int q) {
-        final int size = Math.min(500, Math.max(1, q));
+        int size = Math.min(500, Math.max(1, q));
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
-        final int[] newNumbers = ThreadLocalRandom.current().ints(size, 1, 10001).toArray();
+        int[] newNumbers = ThreadLocalRandom.current().ints(size, 1, 10001).toArray();
         return source.findsAsync(World.class, ids.boxed()).thenCompose(words -> source.updateAsync(World.setNewNumbers(words, newNumbers)).thenApply(v -> words));
     }
 
@@ -70,7 +70,7 @@ public class BenchmarkService extends AbstractService {
 
     @RestMapping(name = "cached-worlds")
     public CachedWorld[] cachedWorlds(int q) {
-        final int size = Math.min(500, Math.max(1, q));
+        int size = Math.min(500, Math.max(1, q));
         return CachedWorld.Cache.getInstance(source).random(ThreadLocalRandom.current(), size);
     }
 }
