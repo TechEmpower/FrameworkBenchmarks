@@ -26,7 +26,10 @@ public final class World implements Comparable<World> {
         return this;
     }
 
-    public static World[] sort(World[] worlds) {
+    public static World[] setNewNumbers(World[] worlds, int[] newNumbers) {
+        for (int i = 0; i < worlds.length; i++) {
+            worlds[i].randomNumber = newNumbers[i];
+        }
         Arrays.sort(worlds);
         return worlds;
     }

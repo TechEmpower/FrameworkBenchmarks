@@ -5,14 +5,13 @@
  */
 package org.redkalex.benchmark;
 
-import java.util.Random;
 import java.util.concurrent.*;
+import java.util.stream.*;
 import javax.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.*;
-import org.redkale.util.Utility;
-import org.redkalex.benchmark.CachedWorld.WorldEntityCache;
+import org.redkale.util.AnyValue;
 
 /**
  *
@@ -26,6 +25,11 @@ public class BenchmarkService extends AbstractService {
     @Resource
     private DataSource source;
 
+    @Override
+    public void init(AnyValue conf) {
+        CachedWorld.Cache.getInstance(source);
+    }
+
     @RestMapping(name = "plaintext")
     public byte[] getHelloBytes() {
         return helloBytes;
@@ -38,36 +42,22 @@ public class BenchmarkService extends AbstractService {
 
     @RestMapping(name = "db")
     public CompletableFuture<World> findWorldAsync() {
-        return source.findAsync(World.class, randomId(ThreadLocalRandom.current()));
+        return source.findAsync(World.class, ThreadLocalRandom.current().nextInt(10000) + 1);
     }
 
     @RestMapping(name = "queries")
     public CompletableFuture<World[]> queryWorldAsync(int q) {
         final int size = Math.min(500, Math.max(1, q));
-        final Random random = ThreadLocalRandom.current();
-        final CompletableFuture<World>[] futures = new CompletableFuture[size];
-        for (int i = 0; i < size; i++) {
-            futures[i] = source.findAsync(World.class, randomId(random));
-        }
-        return Utility.allOfFutures(futures, c -> new World[c]);
+        IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
+        return source.findsAsync(World.class, ids.boxed());
     }
 
     @RestMapping(name = "updates")
     public CompletableFuture<World[]> updateWorldAsync(int q) {
         final int size = Math.min(500, Math.max(1, q));
-        final Random random = ThreadLocalRandom.current();
-        final CompletableFuture<World>[] futures = new CompletableFuture[size];
-        for (int i = 0; i < size; i++) {
-            futures[i] = source.findAsync(World.class, randomId(random));
-        }
-        return CompletableFuture.allOf(futures).thenCompose(v -> {
-            final Random r = ThreadLocalRandom.current();
-            final World[] worlds = new World[size];
-            for (int i = 0; i < size; i++) {
-                worlds[i] = futures[i].join().randomNumber(randomId(r));
-            }
-            return source.updateAsync(World.sort(worlds)).thenApply(u -> worlds);
-        });
+        IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
+        final int[] newNumbers = ThreadLocalRandom.current().ints(size, 1, 10001).toArray();
+        return source.findsAsync(World.class, ids.boxed()).thenCompose(words -> source.updateAsync(World.setNewNumbers(words, newNumbers)).thenApply(v -> words));
     }
 
     @RestMapping(name = "fortunes")
@@ -78,22 +68,9 @@ public class BenchmarkService extends AbstractService {
         });
     }
 
-    private WorldEntityCache cache;
-
     @RestMapping(name = "cached-worlds")
     public CachedWorld[] cachedWorlds(int q) {
-        if (cache == null) {
-            synchronized (this) {
-                if (cache == null) cache = new WorldEntityCache(source);
-            }
-        }
         final int size = Math.min(500, Math.max(1, q));
-        return cache.random(ThreadLocalRandom.current(), size);
+        return CachedWorld.Cache.getInstance(source).random(ThreadLocalRandom.current(), size);
     }
-
-    protected int randomId(Random rand) {
-        long s = rand.nextLong();
-        return (int) ((s < 0 ? -s : s) % 10000) + 1;
-    }
-
 }

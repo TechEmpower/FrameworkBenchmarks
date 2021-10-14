@@ -14,6 +14,8 @@ ENV PATH $MAVEN_HOME/bin:$PATH
 COPY src src
 COPY conf conf
 COPY pom.xml pom.xml
+RUN rm conf/persistence.xml
+RUN mv conf/persistence-mysql.xml  conf/persistence.xml
 RUN mvn package -q
 
 RUN cp /redkale/target/redkale-benchmark-1.0.0.jar redkale-benchmark.jar
