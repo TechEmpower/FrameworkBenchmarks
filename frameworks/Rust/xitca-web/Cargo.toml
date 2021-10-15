@@ -1,7 +1,7 @@
 [package]
 name = "xitca-web"
 version = "0.1.0"
-edition = "2018"
+edition = "2021"
 
 [[bin]]
 name = "xitca-web"
@@ -12,8 +12,8 @@ name = "xitca-web-diesel"
 path = "./src/main_diesel.rs"
 
 [dependencies]
-xitca-http = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "a470092d8f1e1c3bb7a9831c175bf112b70f81e7" }
-xitca-web = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "a470092d8f1e1c3bb7a9831c175bf112b70f81e7" }
+xitca-http = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "0984c3ea8172603c21019c3b073f9af510e4a11c" }
+xitca-web = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "0984c3ea8172603c21019c3b073f9af510e4a11c" }
 
 ahash = { version = "0.7.4", features = ["compile-time-rng"] }
 atoi = "0.4.0"
@@ -27,8 +27,8 @@ sailfish = "0.3.3"
 serde = "1"
 simd-json = "0.4.6"
 tang-rs = "0.2"
-tokio = { version = "1.7", features = ["macros", "rt"] }
-tokio-postgres = "0.7.2"
+tokio = { version = "1.12", features = ["macros", "rt"] }
+tokio-postgres = "0.7.3"
 
 [profile.release]
 lto = true
@@ -37,6 +37,6 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-http = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "a470092d8f1e1c3bb7a9831c175bf112b70f81e7" }
-xitca-server = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "a470092d8f1e1c3bb7a9831c175bf112b70f81e7" }
-xitca-service = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "a470092d8f1e1c3bb7a9831c175bf112b70f81e7" }
+xitca-http = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "0984c3ea8172603c21019c3b073f9af510e4a11c" }
+xitca-server = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "0984c3ea8172603c21019c3b073f9af510e4a11c" }
+xitca-service = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "0984c3ea8172603c21019c3b073f9af510e4a11c" }

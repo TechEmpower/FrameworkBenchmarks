@@ -160,7 +160,6 @@ dependencies = [
  "byteorder",
  "diesel_derives",
  "pq-sys",
- "r2d2",
 ]
 
 [[package]]
@@ -599,18 +598,18 @@ checksum = "d4fd5641d01c8f18a23da7b6fe29298ff4b55afcccdf78973b24cf3175fee32e"
 
 [[package]]
 name = "phf"
-version = "0.8.0"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3dfb61232e34fcb633f43d12c58f83c1df82962dcdfa565a4e866ffc17dafe12"
+checksum = "b9fc3db1018c4b59d7d582a739436478b6035138b6aecbce989fc91c3e98409f"
 dependencies = [
  "phf_shared",
 ]
 
 [[package]]
 name = "phf_shared"
-version = "0.8.0"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c00cf8b9eafe68dde5e9eaa2cef8ee84a9336a47d566ec55ca16589633b65af7"
+checksum = "b6796ad771acdc0123d2a88dc428b5e38ef24456743ddb1744ed628f9815c096"
 dependencies = [
  "siphasher",
 ]
@@ -647,9 +646,9 @@ dependencies = [
 
 [[package]]
 name = "postgres-types"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "430f4131e1b7657b0cd9a2b0c3408d77c9a43a042d300b8c77f981dffcc43a2f"
+checksum = "04619f94ba0cc80999f4fc7073607cb825bc739a883cb6d20900fc5e009d6b0d"
 dependencies = [
  "bytes",
  "fallible-iterator",
@@ -699,17 +698,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c3d0b9745dc2debf507c8422de05d7226cc1f0644216dfdfead988f9b1ab32a7"
 dependencies = [
  "proc-macro2",
-]
-
-[[package]]
-name = "r2d2"
-version = "0.8.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "545c5bc2b880973c9c10e4067418407a0ccaa3091781d1671d46eb35107cb26f"
-dependencies = [
- "log",
- "parking_lot",
- "scheduled-thread-pool",
 ]
 
 [[package]]
@@ -802,15 +790,6 @@ checksum = "6bba2458ef07ae12c9aed2edb866c3db2f9c21cf19a2c3f2613b2982bc1a4a46"
 dependencies = [
  "proc-macro2",
  "sailfish-compiler",
-]
-
-[[package]]
-name = "scheduled-thread-pool"
-version = "0.2.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dc6f74fd1204073fa02d5d5d68bec8021be4c38690b61264b2fdb48083d0e7d7"
-dependencies = [
- "parking_lot",
 ]
 
 [[package]]
@@ -947,6 +926,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "tang-rs"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b625cb7d76f7bb1887a11d2e7b97677539924010773844ed17252c6ec7877595"
+
+[[package]]
 name = "tiny-keccak"
 version = "2.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1003,9 +988,9 @@ dependencies = [
 
 [[package]]
 name = "tokio-postgres"
-version = "0.7.2"
+version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2d2b1383c7e4fb9a09e292c7c6afb7da54418d53b045f1c1fac7a911411a2b8b"
+checksum = "2f916ee7e52c8a74dfe4162dd73a073d0d7d4b387ea7b97a774c0c10b0776531"
 dependencies = [
  "async-trait",
  "byteorder",
@@ -1152,7 +1137,7 @@ checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 [[package]]
 name = "xitca-http"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/xitca-web.git?rev=7499e8a5aa4f7e1f17bbf6b6ee0816828dff3149#7499e8a5aa4f7e1f17bbf6b6ee0816828dff3149"
+source = "git+https://github.com/fakeshadow/xitca-web.git?rev=0984c3ea8172603c21019c3b073f9af510e4a11c#0984c3ea8172603c21019c3b073f9af510e4a11c"
 dependencies = [
  "bytes",
  "futures-core",
@@ -1170,7 +1155,7 @@ dependencies = [
 [[package]]
 name = "xitca-server"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/xitca-web.git?rev=7499e8a5aa4f7e1f17bbf6b6ee0816828dff3149#7499e8a5aa4f7e1f17bbf6b6ee0816828dff3149"
+source = "git+https://github.com/fakeshadow/xitca-web.git?rev=0984c3ea8172603c21019c3b073f9af510e4a11c#0984c3ea8172603c21019c3b073f9af510e4a11c"
 dependencies = [
  "bytes",
  "futures-core",
@@ -1184,7 +1169,7 @@ dependencies = [
 [[package]]
 name = "xitca-service"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/xitca-web.git?rev=7499e8a5aa4f7e1f17bbf6b6ee0816828dff3149#7499e8a5aa4f7e1f17bbf6b6ee0816828dff3149"
+source = "git+https://github.com/fakeshadow/xitca-web.git?rev=0984c3ea8172603c21019c3b073f9af510e4a11c#0984c3ea8172603c21019c3b073f9af510e4a11c"
 
 [[package]]
 name = "xitca-web"
@@ -1201,16 +1186,17 @@ dependencies = [
  "sailfish",
  "serde",
  "simd-json",
+ "tang-rs",
  "tokio",
  "tokio-postgres",
  "xitca-http",
- "xitca-web 0.1.0 (git+https://github.com/fakeshadow/xitca-web.git?rev=7499e8a5aa4f7e1f17bbf6b6ee0816828dff3149)",
+ "xitca-web 0.1.0 (git+https://github.com/fakeshadow/xitca-web.git?rev=0984c3ea8172603c21019c3b073f9af510e4a11c)",
 ]
 
 [[package]]
 name = "xitca-web"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/xitca-web.git?rev=7499e8a5aa4f7e1f17bbf6b6ee0816828dff3149#7499e8a5aa4f7e1f17bbf6b6ee0816828dff3149"
+source = "git+https://github.com/fakeshadow/xitca-web.git?rev=0984c3ea8172603c21019c3b073f9af510e4a11c#0984c3ea8172603c21019c3b073f9af510e4a11c"
 dependencies = [
  "bytes",
  "futures-core",
