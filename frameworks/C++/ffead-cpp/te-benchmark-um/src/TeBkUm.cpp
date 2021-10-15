@@ -260,7 +260,7 @@ bool TeBkUmRouter::route(HttpRequest* req, HttpResponse* res, SocketInterface* s
 			fcpstream str;
 			tmplFunc(&ctx, str);
 			res->setContent(str.str());
-			res->setContentType(ContentTypes::CONTENT_TYPE_TEXT_SHTML);
+			res->setContentType(ContentTypes::CONTENT_TYPE_TEXT_HTML);
 			res->setHTTPResponseStatus(HTTPResponseStatus::Ok);
 		}
 	} else if(StringUtil::endsWith(path, "/updates")) {

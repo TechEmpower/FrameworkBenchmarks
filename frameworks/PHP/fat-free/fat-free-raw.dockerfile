@@ -1,4 +1,4 @@
-FROM ubuntu:21.04
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -14,7 +14,7 @@ WORKDIR /fat-free
 
 ENV F3DIR="/fat-free/src"
 
-RUN apt-get install -yqq composer > /dev/null
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 

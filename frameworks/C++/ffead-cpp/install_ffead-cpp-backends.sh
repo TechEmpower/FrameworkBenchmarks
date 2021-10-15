@@ -87,7 +87,7 @@ then
 	git clone https://github.com/chronoxor/CppServer
 	cd CppServer
 	gil update
-	cd $IROOT/CppServer/modules/CppCommon/modules/fmt && git checkout b9ab5c8836bbffbe0a877f64d6faef8fbf4fd394 -b works
+	#cd $IROOT/CppServer/modules/CppCommon/modules/fmt && git checkout b9ab5c8836bbffbe0a877f64d6faef8fbf4fd394 -b works
 	cd $IROOT/CppServer/build
 	./unix.sh
 	cp $IROOT/CppServer/bin/libcppserver.a /usr/local/lib/

@@ -12,6 +12,7 @@ public class HttpBootstrap {
     private static final Logger logger = LoggerFactory.getLogger(HttpBootstrap.class);
 
     public static void main(String[] args) {
+        DateUtil.start();
         Server server = new Server("0.0.0.0", 8080);
         server.addProtocol(new SimpleHttpProtocol());
         server.setProcessor(new PlanTextProcessor());
@@ -23,10 +24,12 @@ public class HttpBootstrap {
         });
         int processorNumber = Runtime.getRuntime().availableProcessors();
         server.setThreadNumber(processorNumber);
-//        server.setUseDirectBuffer(true);
-        server.setPoolSize(16 * 1024);
-        server.setReadBuffSize(4 * 1024);
-        server.setBacklog(1024 * 8);
+        server.setUseDirectBuffer(true);
+        server.setReadFirst(true);
+        server.setUsePool(true);
+        server.setPoolPageSize(16 * 1024);
+        server.setBuffSize(1 * 1024);
+        server.setBacklog(1024 * 4);
         server.start();
     }
 

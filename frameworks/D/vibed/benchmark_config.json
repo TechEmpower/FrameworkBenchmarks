@@ -12,7 +12,7 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "MongoDB",
-      "framework": "vibe.d",
+      "framework": "vibed",
       "language": "D",
       "flavor": "DLang2",
       "orm": "Micro",

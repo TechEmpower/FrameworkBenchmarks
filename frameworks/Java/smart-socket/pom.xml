@@ -11,8 +11,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <log4j.version>2.11.0</log4j.version>
-        <smartservlet.version>0.1.6</smartservlet.version>
-        <smartsocket.version>1.5.11</smartsocket.version>
+        <smartservlet.version>0.1.7-SNAPSHOT</smartservlet.version>
     </properties>
 
     <dependencies>
@@ -25,11 +24,6 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>3.4.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.smartboot.socket</groupId>
-            <artifactId>aio-pro</artifactId>
-            <version>${smartsocket.version}</version>
         </dependency>
         <dependency>
             <groupId>com.jsoniter</groupId>
@@ -79,12 +73,6 @@
             <id>sonatype-nexus-snapshots</id>
             <name>Sonatype Nexus Snapshots</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
         </repository>
     </repositories>
     <pluginRepositories>
