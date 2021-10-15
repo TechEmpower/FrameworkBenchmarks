@@ -1145,6 +1145,7 @@ dependencies = [
  "serde_json",
  "smallvec",
  "snmalloc-rs",
+ "socket2",
  "tokio",
  "tokio-postgres",
  "v_htmlescape",
