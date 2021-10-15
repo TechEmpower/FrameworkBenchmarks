@@ -71,6 +71,14 @@
 				<artifactId>guava</artifactId>
 				<version>29.0-jre</version>
 			</dependency>
+
+			<!-- Necessary for PostGresql -->
+			<dependency>
+				<groupId>com.ongres.scram</groupId>
+				<artifactId>client</artifactId>
+				<version>2.1</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 	<build>
