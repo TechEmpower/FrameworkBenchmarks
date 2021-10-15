@@ -270,9 +270,9 @@ async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Err
     let mut worlds = Vec::with_capacity(count);
     let mut rng = SmallRng::from_entropy();
     for _ in 0..count {
-        let id = rng.gen_range(1..10_001);
+        let idx = rng.gen_range(0..10_000);
         unsafe {
-            let w = CACHED_WORLDS.get_unchecked().get(id).unwrap();
+            let w = CACHED_WORLDS.get_unchecked().get(idx).unwrap();
             worlds.push(w);
         }
     }
@@ -283,7 +283,7 @@ async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Err
 
 async fn populate_cache() -> Result<(), Error> {
     let conn = PgConnection::create(DB_URL).await?;
-    let worlds = conn.get_worlds(10000).await?;
+    let worlds = conn.get_worlds(10_000).await?;
     CACHED_WORLDS.set(worlds).unwrap();
     Ok(())
 }

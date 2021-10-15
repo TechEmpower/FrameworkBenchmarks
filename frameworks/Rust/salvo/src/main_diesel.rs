@@ -80,9 +80,9 @@ async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Err
     let mut worlds = Vec::with_capacity(count);
     let mut rng = SmallRng::from_entropy();
     for _ in 0..count {
-        let id = rng.gen_range(1..10_001);
+        let idx = rng.gen_range(0..10_000);
         unsafe {
-            let w = CACHED_WORLDS.get_unchecked().get(id).unwrap();
+            let w = CACHED_WORLDS.get_unchecked().get(idx).unwrap();
             worlds.push(w);
         }
     }
@@ -162,7 +162,7 @@ markup::define! {
 
 fn populate_cache() -> Result<(), Error> {
     let conn = connect()?;
-    let worlds = world::table.limit(10000).get_results::<World>(&conn)?;
+    let worlds = world::table.limit(10_000).get_results::<World>(&conn)?;
     CACHED_WORLDS.set(worlds).unwrap();
     Ok(())
 }
