@@ -26,14 +26,15 @@ use models::*;
 use schema::*;
 
 const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
-pub type PgPool = Pool<ConnectionManager<PgConnection>>;
+type PgPool = Pool<ConnectionManager<PgConnection>>;
 
-pub static DB_POOL: OnceCell<PgPool> = OnceCell::new();
+static DB_POOL: OnceCell<PgPool> = OnceCell::new();
+static CACHED_WORLDS: OnceCell<Vec<World>> = OnceCell::new();
 
-pub fn connect() -> Result<PooledConnection<ConnectionManager<PgConnection>>, PoolError> {
+fn connect() -> Result<PooledConnection<ConnectionManager<PgConnection>>, PoolError> {
     unsafe { DB_POOL.get_unchecked().get() }
 }
-pub fn build_pool(database_url: &str, size: u32) -> Result<PgPool, PoolError> {
+fn build_pool(database_url: &str, size: u32) -> Result<PgPool, PoolError> {
     let manager = ConnectionManager::<PgConnection>::new(database_url);
     diesel::r2d2::Pool::builder()
         .max_size(size)
@@ -71,6 +72,25 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     res.render_json(&worlds);
     Ok(())
 }
+
+#[fn_handler]
+async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
+    let count = req.get_query::<usize>("q").unwrap_or(1);
+    let count = cmp::min(500, cmp::max(1, count));
+    let mut worlds = Vec::with_capacity(count);
+    let mut rng = SmallRng::from_entropy();
+    for _ in 0..count {
+        let id = rng.gen_range(1..10_001);
+        unsafe {
+            let w = CACHED_WORLDS.get_unchecked().get(id).unwrap();
+            worlds.push(w);
+        }
+    }
+    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
+    res.render_json(&worlds);
+    Ok(())
+}
+
 #[fn_handler]
 async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let count = req.get_query::<usize>("q").unwrap_or(1);
@@ -117,6 +137,7 @@ async fn fortunes(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
     res.render_html_text(&body);
     Ok(())
 }
+
 markup::define! {
     FortunesTemplate(items: Vec<Fortune>) {
         {markup::doctype()}
@@ -139,24 +160,27 @@ markup::define! {
     }
 }
 
+fn populate_cache() -> Result<(), Error> {
+    let conn = connect()?;
+    let worlds = world::table.limit(10000).get_results::<World>(&conn)?;
+    CACHED_WORLDS.set(worlds).unwrap();
+    Ok(())
+}
+
 fn main() {
     let router = Arc::new(
         Router::new()
             .push(Router::with_path("db").get(world_row))
             .push(Router::with_path("fortunes").get(fortunes))
             .push(Router::with_path("queries").get(queries))
+            .push(Router::with_path("cached_queries").get(cached_queries))
             .push(Router::with_path("updates").get(updates)),
     );
-    let rt = tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap();
     let cpus = num_cpus::get();
-    rt.block_on(async {
-        DB_POOL
-            .set(build_pool(&DB_URL, cpus as u32).expect(&format!("Error connecting to {}", &DB_URL)))
-            .ok();
-    });
+    DB_POOL
+        .set(build_pool(&DB_URL, cpus as u32).expect(&format!("Error connecting to {}", &DB_URL)))
+        .ok();
+    populate_cache().expect("error cache worlds");
     for _ in 1..cpus {
         let router = router.clone();
         std::thread::spawn(move || {
@@ -167,6 +191,10 @@ fn main() {
             rt.block_on(serve(router));
         });
     }
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
     rt.block_on(serve(router));
 }
 
