@@ -10,4 +10,4 @@ RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
 
 EXPOSE 8080
 
-CMD ./target/release/main-db
+CMD ./target/release/main-diesel

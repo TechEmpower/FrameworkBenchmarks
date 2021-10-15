@@ -33,11 +33,11 @@ pub static DB_POOL: OnceCell<PgPool> = OnceCell::new();
 pub fn connect() -> Result<PooledConnection<ConnectionManager<PgConnection>>, PoolError> {
     unsafe { DB_POOL.get_unchecked().get() }
 }
-pub fn build_pool(database_url: &str) -> Result<PgPool, PoolError> {
+pub fn build_pool(database_url: &str, size: u32) -> Result<PgPool, PoolError> {
     let manager = ConnectionManager::<PgConnection>::new(database_url);
     diesel::r2d2::Pool::builder()
-        .max_size(32)
-        .min_idle(Some(32))
+        .max_size(size)
+        .min_idle(Some(size))
         .test_on_check_out(false)
         .idle_timeout(None)
         .max_lifetime(None)
@@ -151,12 +151,13 @@ fn main() {
         .enable_all()
         .build()
         .unwrap();
+    let cpus = num_cpus::get();
     rt.block_on(async {
         DB_POOL
-            .set(build_pool(&DB_URL).expect(&format!("Error connecting to {}", &DB_URL)))
+            .set(build_pool(&DB_URL, cpus as u32).expect(&format!("Error connecting to {}", &DB_URL)))
             .ok();
     });
-    for _ in 1..num_cpus::get() {
+    for _ in 1..cpus {
         let router = router.clone();
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()

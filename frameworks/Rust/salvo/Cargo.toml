@@ -8,8 +8,8 @@ name = "main"
 path = "src/main.rs"
 
 [[bin]]
-name = "main-db"
-path = "src/main_db.rs"
+name = "main-diesel"
+path = "src/main_diesel.rs"
 
 [[bin]]
 name = "main-pg"

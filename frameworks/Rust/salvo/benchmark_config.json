@@ -21,7 +21,7 @@
         "notes": "",
         "versus": "None"
       },
-      "db": {
+      "diesel": {
         "db_url": "/db",
         "fortune_url": "/fortunes",
         "query_url": "/queries?q=",
