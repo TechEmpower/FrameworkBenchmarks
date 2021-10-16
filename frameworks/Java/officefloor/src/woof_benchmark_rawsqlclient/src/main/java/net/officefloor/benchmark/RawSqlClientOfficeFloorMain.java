@@ -229,33 +229,32 @@ public class RawSqlClientOfficeFloorMain implements DatabaseOperations {
 	public void update(int queryCount, UpdateSendResponse sender) {
 		QueryExecutor executor = threadLocalQueryExecutor.get();
 		World[] worlds = new World[queryCount];
-		AtomicInteger index = new AtomicInteger();
-		BiConsumer<List<Row>, Throwable> handler = (result, failure) -> {
+		AtomicInteger updateIndex = new AtomicInteger();
+		BiConsumer<List<Row>, Throwable> updateHandler = (result, failure) -> {
 			if (failure != null) {
 				sender.sendError(failure);
 				return;
 			}
-			int lastIndex = -1;
-			for (Row row : result) {
-				lastIndex = index.getAndIncrement();
-				worlds[lastIndex] = new World(row.getInteger(0), ThreadLocalRandom.current().nextInt(1, 10001));
-			}
-			if ((lastIndex + 1) >= queryCount) {
-				for (int i = 0; i < worlds.length; i++) {
-					World world = worlds[i];
-					executor.execute("UPDATE world SET randomnumber=$1 WHERE id=$2",
-							Tuple.of(world.randomNumber, world.id), (updateResult, updateFailure) -> {
-								if (failure != null) {
-									sender.sendError(failure);
-								}
-							});
-				}
+			if (updateIndex.incrementAndGet() >= queryCount) {
 				sender.sendUpdate(worlds);
+			}
+		};
+		AtomicInteger selectIndex = new AtomicInteger();
+		BiConsumer<List<Row>, Throwable> selectHandler = (result, failure) -> {
+			if (failure != null) {
+				sender.sendError(failure);
+				return;
+			}
+			for (Row row : result) {
+				World world = new World(row.getInteger(0), ThreadLocalRandom.current().nextInt(1, 10001));
+				worlds[selectIndex.getAndIncrement()] = world;
+				executor.execute("UPDATE world SET randomnumber=$1 WHERE id=$2", Tuple.of(world.randomNumber, world.id),
+						updateHandler);
 			}
 		};
 		for (int i = 0; i < queryCount; i++) {
 			executor.execute("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID=$1",
-					Tuple.of(ThreadLocalRandom.current().nextInt(1, 10001)), handler);
+					Tuple.of(ThreadLocalRandom.current().nextInt(1, 10001)), selectHandler);
 		}
 	}
 
