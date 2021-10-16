@@ -1,6 +1,6 @@
 extern crate futures;
 extern crate hyper;
-extern crate net2;
+extern crate socket2;
 extern crate tokio_core;
 extern crate tokio_postgres;
 

@@ -41,7 +41,6 @@ where
     let server = tcp
         .incoming()
         .for_each(move |(sock, _addr)| {
-            let _ = sock.set_nodelay(true);
             per_connection(sock, &mut http, &handle);
             Ok(())
         })
@@ -51,22 +50,17 @@ where
 }
 
 fn reuse_listener(addr: &SocketAddr, handle: &Handle) -> io::Result<TcpListener> {
-    let builder = match *addr {
-        SocketAddr::V4(_) => net2::TcpBuilder::new_v4()?,
-        SocketAddr::V6(_) => net2::TcpBuilder::new_v6()?,
+    let socket = match *addr {
+        SocketAddr::V4(_) => socket2::Socket::new(socket2::Domain::IPV4, socket2::Type::STREAM, None)?,
+        SocketAddr::V6(_) => socket2::Socket::new(socket2::Domain::IPV6, socket2::Type::STREAM, None)?,
     };
 
-    #[cfg(unix)]
-    {
-        use net2::unix::UnixTcpBuilderExt;
-        if let Err(e) = builder.reuse_port(true) {
-            eprintln!("error setting SO_REUSEPORT: {}", e);
-        }
-    }
-
-    builder.reuse_address(true)?;
-    builder.bind(addr)?;
-    builder
-        .listen(1024)
-        .and_then(|l| TcpListener::from_listener(l, addr, handle))
+    socket.set_reuse_address(true)?;
+    socket.set_reuse_port(true)?;
+    // Accepted socket can inherit TCP_NODELAY form listening socket.
+    // https://github.com/h2o/h2o/pull/1568
+    socket.set_nodelay(true)?;
+    socket.bind(&socket2::SockAddr::from(*addr))?;
+    socket.listen(4096)?;
+    TcpListener::from_listener(socket.into(), addr, handle)
 }

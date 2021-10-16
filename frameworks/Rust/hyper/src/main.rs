@@ -1,10 +1,10 @@
 extern crate futures;
 extern crate hyper;
-extern crate net2;
 extern crate num_cpus;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
+extern crate socket2;
 extern crate tokio_core;
 
 use futures::Future;
