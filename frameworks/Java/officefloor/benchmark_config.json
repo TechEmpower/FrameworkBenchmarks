@@ -90,7 +90,7 @@
 				"webserver": "WoOF",
 				"os": "Linux",
 				"database_os": "Linux",
-				"display_name": "OfficeFloor-sqlclient",
+				"display_name": "OfficeFloor-rawsqlclient",
 				"notes": ""
 			},
 			"async": {
