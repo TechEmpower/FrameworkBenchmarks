@@ -54,6 +54,8 @@ public class RawSqlClientOfficeFloorMain implements DatabaseOperations {
 
 		private final CommandScheduler scheduler;
 
+		private final String[] optimisedUpdates = new String[500];
+
 		private QueryExecutor(CommandScheduler scheduler) {
 			this.scheduler = scheduler;
 		}
@@ -78,6 +80,33 @@ public class RawSqlClientOfficeFloorMain implements DatabaseOperations {
 
 			// Execute query
 			this.scheduler.schedule(query, this);
+		}
+
+		public String getOptimisedUpdate(World[] worlds) {
+			int count = worlds.length;
+			String updateSql = this.optimisedUpdates[count - 1];
+			if (updateSql == null) {
+
+				// Build the SQL
+				StringBuilder sql = new StringBuilder();
+				sql.append("UPDATE WORLD SET RANDOMNUMBER = CASE ID");
+				for (int i = 0; i < count; i++) {
+					int offset = (i * 2) + 1;
+					sql.append(" WHEN $" + offset + " THEN $" + (offset + 1));
+				}
+				sql.append(" ELSE RANDOMNUMBER");
+				sql.append(" END WHERE ID IN ($1");
+				for (int i = 1; i < count; i++) {
+					int offset = (i * 2) + 1;
+					sql.append(",$" + offset);
+				}
+				sql.append(")");
+				updateSql = sql.toString();
+
+				// Cache
+				this.optimisedUpdates[count - 1] = updateSql;
+			}
+			return updateSql;
 		}
 
 		/*
@@ -229,27 +258,33 @@ public class RawSqlClientOfficeFloorMain implements DatabaseOperations {
 	public void update(int queryCount, UpdateSendResponse sender) {
 		QueryExecutor executor = threadLocalQueryExecutor.get();
 		World[] worlds = new World[queryCount];
-		AtomicInteger updateIndex = new AtomicInteger();
-		BiConsumer<List<Row>, Throwable> updateHandler = (result, failure) -> {
+		BiConsumer<List<Row>, Throwable> sendHandler = (result, failure) -> {
 			if (failure != null) {
 				sender.sendError(failure);
 				return;
 			}
-			if (updateIndex.incrementAndGet() >= queryCount) {
-				sender.sendUpdate(worlds);
-			}
+			sender.sendUpdate(worlds);
 		};
-		AtomicInteger selectIndex = new AtomicInteger();
+		AtomicInteger index = new AtomicInteger();
+		String optimisedUpate = executor.getOptimisedUpdate(worlds);
 		BiConsumer<List<Row>, Throwable> selectHandler = (result, failure) -> {
 			if (failure != null) {
 				sender.sendError(failure);
 				return;
 			}
+			int lastIndex = -1;
 			for (Row row : result) {
-				World world = new World(row.getInteger(0), ThreadLocalRandom.current().nextInt(1, 10001));
-				worlds[selectIndex.getAndIncrement()] = world;
-				executor.execute("UPDATE world SET randomnumber=$1 WHERE id=$2", Tuple.of(world.randomNumber, world.id),
-						updateHandler);
+				lastIndex = index.getAndIncrement();
+				worlds[lastIndex] = new World(row.getInteger(0), ThreadLocalRandom.current().nextInt(1, 10001));
+			}
+			if ((lastIndex + 1) >= queryCount) {
+				List<Integer> params = new ArrayList<>(queryCount * 2);
+				for (int i = 0; i < worlds.length; i++) {
+					World world = worlds[i];
+					params.add(world.id);
+					params.add(world.randomNumber);
+				}
+				executor.execute(optimisedUpate, Tuple.wrap(params), sendHandler);
 			}
 		};
 		for (int i = 0; i < queryCount; i++) {
