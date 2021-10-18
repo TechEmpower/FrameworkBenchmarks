@@ -1,17 +1,17 @@
 
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.5.21"
+    id "org.jetbrains.kotlin.jvm" version "1.5.31"
 }
 
 ext {
-    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/1.4.2/gradle"
+    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/1.4.7/gradle"
 
-    hexagonVersion = "1.4.2"
+    hexagonVersion = "1.4.7"
     hikariVersion = "5.0.0"
-    jettyVersion = "10.0.6"
-    postgresqlVersion = "42.2.23"
+    jettyVersion = "10.0.7"
+    postgresqlVersion = "42.2.24"
     cache2kVersion = "2.2.1.Final"
-    jacksonBlackbirdVersion = "2.12.4"
+    jacksonBlackbirdVersion = "2.13.0"
 }
 
 apply(from: "$gradleScripts/kotlin.gradle")
