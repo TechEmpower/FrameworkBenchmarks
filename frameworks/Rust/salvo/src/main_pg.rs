@@ -8,8 +8,11 @@ use std::collections::HashMap;
 use std::fmt::Write;
 use std::io;
 
+use anyhow::Error;
+use async_trait::async_trait;
 use futures::stream::futures_unordered::FuturesUnordered;
 use futures::TryStreamExt;
+use once_cell::sync::OnceCell;
 use rand::distributions::{Distribution, Uniform};
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
@@ -17,16 +20,16 @@ use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{self, Client, NoTls, Statement};
-use async_trait::async_trait;
 
 mod models;
 mod server;
 use models::*;
 
 const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
+static CACHED_WORLDS: OnceCell<Vec<World>> = OnceCell::new();
 type DbResult<T> = Result<T, tokio_postgres::Error>;
 
-pub struct PgConnection {
+struct PgConnection {
     client: Client,
     fortune: Statement,
     world: Statement,
@@ -173,15 +176,15 @@ markup::define! {
         }
     }
 }
-struct WorldHandler{
+struct WorldHandler {
     conn: PgConnection,
 }
 impl WorldHandler {
     async fn new() -> Self {
         Self {
             conn: PgConnection::create(DB_URL)
-            .await
-            .expect(&format!("Error connecting to {}", &DB_URL))
+                .await
+                .expect(&format!("Error connecting to {}", &DB_URL)),
         }
     }
 }
@@ -193,15 +196,15 @@ impl Handler for WorldHandler {
         res.render_json(&world);
     }
 }
-struct WorldsHandler{
+struct WorldsHandler {
     conn: PgConnection,
 }
 impl WorldsHandler {
     async fn new() -> Self {
         Self {
             conn: PgConnection::create(DB_URL)
-            .await
-            .expect(&format!("Error connecting to {}", &DB_URL))
+                .await
+                .expect(&format!("Error connecting to {}", &DB_URL)),
         }
     }
 }
@@ -215,15 +218,15 @@ impl Handler for WorldsHandler {
         res.render_json(&worlds);
     }
 }
-struct UpdatesHandler{
+struct UpdatesHandler {
     conn: PgConnection,
 }
 impl UpdatesHandler {
     async fn new() -> Self {
         Self {
             conn: PgConnection::create(DB_URL)
-            .await
-            .expect(&format!("Error connecting to {}", &DB_URL))
+                .await
+                .expect(&format!("Error connecting to {}", &DB_URL)),
         }
     }
 }
@@ -237,15 +240,15 @@ impl Handler for UpdatesHandler {
         res.render_json(&worlds);
     }
 }
-struct FortunesHandler{
+struct FortunesHandler {
     conn: PgConnection,
 }
 impl FortunesHandler {
     async fn new() -> Self {
         Self {
             conn: PgConnection::create(DB_URL)
-            .await
-            .expect(&format!("Error connecting to {}", &DB_URL))
+                .await
+                .expect(&format!("Error connecting to {}", &DB_URL)),
         }
     }
 }
@@ -260,11 +263,39 @@ impl Handler for FortunesHandler {
     }
 }
 
+#[fn_handler]
+async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
+    let count = req.get_query::<usize>("q").unwrap_or(1);
+    let count = cmp::min(500, cmp::max(1, count));
+    let mut worlds = Vec::with_capacity(count);
+    let mut rng = SmallRng::from_entropy();
+    for _ in 0..count {
+        let idx = rng.gen_range(0..10_000);
+        unsafe {
+            let w = CACHED_WORLDS.get_unchecked().get(idx).unwrap();
+            worlds.push(w);
+        }
+    }
+    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
+    res.render_json(&worlds);
+    Ok(())
+}
+
+async fn populate_cache() -> Result<(), Error> {
+    let conn = PgConnection::create(DB_URL).await?;
+    let worlds = conn.get_worlds(10_000).await?;
+    CACHED_WORLDS.set(worlds).unwrap();
+    Ok(())
+}
+
 fn main() {
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
         .unwrap();
+    rt.block_on(async {
+        populate_cache().await.expect("error cache worlds");
+    });
     for _ in 1..num_cpus::get() {
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
@@ -280,10 +311,11 @@ fn main() {
 async fn serve() {
     println!("Started http server: 127.0.0.1:8080");
     let router = Router::new()
-        .push(Router::new().path("db").get(WorldHandler::new().await))
-        .push(Router::new().path("fortunes").get(FortunesHandler::new().await))
-        .push(Router::new().path("queries").get(WorldsHandler::new().await))
-        .push(Router::new().path("updates").get(UpdatesHandler::new().await));
+        .push(Router::with_path("db").get(WorldHandler::new().await))
+        .push(Router::with_path("fortunes").get(FortunesHandler::new().await))
+        .push(Router::with_path("queries").get(WorldsHandler::new().await))
+        .push(Router::with_path("cached_queries").get(cached_queries))
+        .push(Router::with_path("updates").get(UpdatesHandler::new().await));
 
     server::builder().serve(Service::new(router)).await.unwrap();
 }
