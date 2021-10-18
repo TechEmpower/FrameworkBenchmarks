@@ -1133,7 +1133,6 @@ dependencies = [
  "async-trait",
  "diesel",
  "futures",
- "hyper",
  "markup",
  "num_cpus",
  "once_cell",
