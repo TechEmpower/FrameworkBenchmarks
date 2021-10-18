@@ -2,6 +2,7 @@ package net.officefloor.benchmark;
 
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -278,6 +279,7 @@ public class RawSqlClientOfficeFloorMain implements DatabaseOperations {
 				worlds[lastIndex] = new World(row.getInteger(0), ThreadLocalRandom.current().nextInt(1, 10001));
 			}
 			if ((lastIndex + 1) >= queryCount) {
+				Arrays.sort(worlds, (a, b) -> a.id - b.id);
 				List<Integer> params = new ArrayList<>(queryCount * 2);
 				for (int i = 0; i < worlds.length; i++) {
 					World world = worlds[i];
