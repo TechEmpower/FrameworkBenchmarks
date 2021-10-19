@@ -83,7 +83,7 @@
         "framework": "MixPHP",
         "language": "PHP",
         "flavor": "PHP8",
-        "orm": "micro",
+        "orm": "raw",
         "platform": "workerman",
         "webserver": "None",
         "os": "Linux",

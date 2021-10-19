@@ -35,4 +35,13 @@
   <ItemGroup>
     <RdXmlFile Condition=" '$(DatabaseProvider)' == 'Npgsql' " Include="npgsql.rd.xml" />
   </ItemGroup>
+   
+  <Target Name="ConfigureTrimming"
+    BeforeTargets="PrepareForILLink">
+    <ItemGroup>
+      <ManagedAssemblyToLink>
+        <TrimMode>link</TrimMode>
+      </ManagedAssemblyToLink>
+    </ItemGroup>
+  </Target>
 </Project>
