@@ -10,7 +10,6 @@ ENV ASPNETCORE_URLS http://+:8080
 ENV DOTNET_SYSTEM_NET_SOCKETS_INLINE_COMPLETIONS 1
 WORKDIR /app
 COPY --from=build /app/out ./
-COPY Benchmarks/appsettings.json ./appsettings.json
 
 EXPOSE 8080
 
