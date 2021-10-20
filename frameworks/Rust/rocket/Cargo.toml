@@ -1,26 +1,26 @@
 [package]
-name = "rocket"
-version = "0.1.0"
-authors = ["Marcelo Barbosa <mbarbosa@gmail.com>", "Brendan Hansknecht <brendan.hansknecht@gmail.com>"]
+name = "rocket_benchmark"
+version = "0.2.0"
+authors = ["Marcelo Barbosa <mbarbosa@gmail.com>", "Brendan Hansknecht <brendan.hansknecht@gmail.com>", "Dragos Varovici <dvarovici.work@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-diesel = { version = "1.4.5", features = ["postgres", "r2d2"] }
-num_cpus = "1.13.0"
-rand = "0.7.3"
-rocket = "0.4.5"
-serde = "1.0.115"
-serde_json = "1.0.57"
-serde_derive = "1.0.115"
-yarte = "0.12.2"
-lazy_static = "1.4.0"
+num_cpus = { version = "^1.13" }
+rand = { version = "^0.8" }
+yarte = { version = "^0.15" }
+lazy_static = { version = "^1.4" }
+async-stream = { version = "^0.3" }
+async-trait = { version = "0.1" }
+futures = { version = "^0.3" }
+futures-util = { version = "^0.3" }
+rocket = { git = "https://github.com/SergioBenitez/Rocket", features = [
+    "json",
+] }
+sqlx = { version = "^0.5", features = [ "postgres", "macros", "migrate", "sqlite" ] }
+rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket", features = [ "sqlx_postgres" ] }
+figment = { version = "^0.10" }
+dotenv = { version = "^0.15" }
 
-[dependencies.rocket_contrib]
-version = "*"
-default-features = false
-features = ["json"]
-
-[profile.release]
-lto = true
-opt-level = 3
-codegen-units = 1
+serde = { version = "^1" }
+serde_json = { version = "^1" }
+serde_derive = { version = "^1" }
