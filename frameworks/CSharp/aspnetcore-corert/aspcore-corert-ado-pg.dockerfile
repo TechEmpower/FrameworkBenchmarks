@@ -3,14 +3,14 @@ RUN apt-get update
 RUN apt-get -yqq install clang zlib1g-dev libkrb5-dev
 WORKDIR /app
 COPY PlatformBenchmarks .
-RUN dotnet publish -c Release -o out -r linux-x64
+RUN dotnet publish -c Release -o out /p:DatabaseProvider=Npgsql -r linux-x64
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0.0-rc.2 AS runtime
 ENV ASPNETCORE_URLS http://+:8080
-ENV DOTNET_SYSTEM_NET_SOCKETS_INLINE_COMPLETIONS 1
+
 WORKDIR /app
 COPY --from=build /app/out ./
-COPY Benchmarks/appsettings.json ./appsettings.json
+COPY PlatformBenchmarks/appsettings.postgresql.json ./appsettings.json
 
 EXPOSE 8080
 
