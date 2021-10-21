@@ -6,7 +6,7 @@ COPY settings.gradle settings.gradle
 COPY gradlew gradlew
 COPY gradle gradle
 COPY src src
-RUN ./gradlew build nativeImage --no-daemon
+RUN sh ./gradlew build nativeImage --no-daemon
 
 EXPOSE 8080
 
