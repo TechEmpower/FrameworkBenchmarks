@@ -25,4 +25,4 @@ ENV CONTRAST__ASSESS__ENABLE=true
 ENV CONTRAST__PROTECT__ENABLE=true
 ENV CONTRAST_CONFIG_PATH=contrast_security.yaml
 
-CMD ["java", "-javaagent:contrast.jar", "-jar", "lib/resin.jar", "console"]
+CMD ["java", "-XX:MaxRAMPercentage=75", "-javaagent:contrast.jar", "-jar", "lib/resin.jar", "console"]
