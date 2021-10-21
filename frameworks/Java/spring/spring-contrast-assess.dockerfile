@@ -17,4 +17,4 @@ ENV CONTRAST__ASSESS__ENABLE=true
 ENV CONTRAST__PROTECT__ENABLE=false
 ENV CONTRAST_CONFIG_PATH=contrast_security.yaml
 
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dlogging.level.root=OFF", "-javaagent:contrast.jar", "-jar", "app.jar", "--spring.profiles.active=jdbc"]
+CMD ["java", "-server", "-XX:MaxRAMPercentage=75", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dlogging.level.root=OFF", "-javaagent:contrast.jar", "-jar", "app.jar", "--spring.profiles.active=jdbc"]
