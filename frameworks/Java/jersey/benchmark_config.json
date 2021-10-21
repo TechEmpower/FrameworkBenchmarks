@@ -20,6 +20,25 @@
         "notes": "",
         "versus": "servlet"
       },
+      "contrast-unattached": {
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "None",
+        "framework": "Jersey",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "Servlet",
+        "webserver": "Resin",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Jersey",
+        "notes": "",
+        "versus": "servlet",
+        "tags": ["contrast-disabled", "contrast-unattached"]
+      },
       "contrast-off": {
         "plaintext_url": "/plaintext",
         "port": 8080,

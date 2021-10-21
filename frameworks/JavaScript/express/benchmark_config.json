@@ -94,8 +94,29 @@
       "database_os": "Linux",
       "display_name": "express",
       "notes": "",
+      "versus": "nodejs"
+    },
+    "postgres-contrast-unattached": {
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
+      "fortune_url": "/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "express",
+      "language": "JavaScript",
+      "flavor": "NodeJS",
+      "platform": "nodejs",
+      "webserver": "None",
+      "orm": "Full",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "express",
+      "notes": "",
       "versus": "nodejs",
-      "tags": ["contrast"]
+      "tags": ["contrast", "contrast-unattached"]
     },
     "postgres-contrast-off": {
       "db_url": "/db",

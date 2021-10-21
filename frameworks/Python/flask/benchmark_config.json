@@ -22,8 +22,7 @@
       "database_os": "Linux",
       "display_name": "Flask",
       "notes": "",
-      "versus": "wsgi",
-      "tags": ["contrast"]
+      "versus": "wsgi"
     },
     "raw": {
       "json_url": "/json",
@@ -116,6 +115,30 @@
       "display_name": "Flask",
       "notes": "",
       "versus": "wsgi"
+    },
+    "contrast-unattached": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/query?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "flask",
+      "language": "Python",
+      "flavor": "Python3",
+      "orm": "Full",
+      "platform": "Meinheld",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Flask",
+      "notes": "",
+      "versus": "wsgi",
+      "tags": ["contrast", "contrast-unattached"]
     },
     "contrast-off": {
       "json_url": "/json",

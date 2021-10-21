@@ -22,8 +22,7 @@
       "database_os": "Linux",
       "display_name": "rails-postgresql",
       "notes": "",
-      "versus": "",
-      "tags": ["contrast"]
+      "versus": ""
     },
     "mysql": {
       "json_url": "/json",
@@ -47,6 +46,30 @@
       "display_name": "rails-mysql",
       "notes": "",
       "versus": "rack-puma-mri"
+    },
+    "contrast-unattached": {
+      "db_url": "/db",
+      "json_url": "/json",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "cached_query_url": "/cached?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "rails",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "Rack",
+      "webserver": "Puma",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rails-postgresql",
+      "notes": "",
+      "versus": "",
+      "tags": ["contrast", "contrast-unattached"]
     },
     "contrast-off": {
       "db_url": "/db",

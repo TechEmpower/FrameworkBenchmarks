@@ -65,8 +65,29 @@
         "database_os": "Linux",
         "display_name": "koa",
         "notes": "",
+        "versus": "nodejs"
+      },
+      "postgres-contrast-unattached": {
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "koa",
+        "language": "JavaScript",
+        "flavor": "NodeJS",
+        "orm": "Raw",
+        "platform": "nodejs",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "koa",
+        "notes": "",
         "versus": "nodejs",
-        "tags": ["contrast"]
+        "tags": ["contrast", "contrast-unattached"]
       },
       "postgres-contrast-off": {
         "db_url": "/db",

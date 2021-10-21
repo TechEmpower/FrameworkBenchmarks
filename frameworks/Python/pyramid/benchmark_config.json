@@ -22,8 +22,7 @@
       "database_os": "Linux",
       "display_name": "Pyramid",
       "notes": "",
-      "versus": "wsgi",
-      "tags": ["contrast"]
+      "versus": "wsgi"
     },
     "py2": {
       "json_url": "/json",
@@ -47,6 +46,30 @@
       "display_name": "Pyramid",
       "notes": "",
       "versus": "wsgi"
+    },
+    "contrast-unattached": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "pyramid",
+      "language": "Python",
+      "flavor": "Python3",
+      "orm": "Full",
+      "platform": "None",
+      "webserver": "Meinheld",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Pyramid",
+      "notes": "",
+      "versus": "wsgi",
+      "tags": ["contrast", "contrast-unattached"]
     },
     "contrast-off": {
       "json_url": "/json",

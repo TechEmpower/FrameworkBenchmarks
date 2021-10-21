@@ -39,8 +39,7 @@
       "database_os": "Linux",
       "display_name": "ASP.NET Core [Platform, Pg]",
       "notes": "",
-      "versus": "aspcore-ado-pg",
-      "tags": ["contrast"]
+      "versus": "aspcore-ado-pg"
     },
     "ado-pg-up": {
       "update_url": "/updates/",
@@ -412,6 +411,28 @@
       "display_name": "ASP.NET Core [Platform, My]",
       "notes": "",
       "versus": "aspcore-ado-my"
+    },
+    "ado-pg-contrast-unattached": {
+      "fortune_url": "/fortunes",
+      "db_url": "/db",
+      "query_url": "/queries/",
+      "cached_query_url": "/cached-worlds/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "ASP.NET Core",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "flavor": "CoreCLR",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ASP.NET Core, ADO.NET",
+      "notes": "",
+      "versus": "aspcore-ado-pg",
+      "tags": ["contrast", "contrast-unattached"]
     },
     "ado-pg-contrast-off": {
       "fortune_url": "/fortunes",
