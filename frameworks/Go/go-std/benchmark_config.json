@@ -39,8 +39,7 @@
       "database_os": "Linux",
       "display_name": "Go",
       "notes": "",
-      "versus": "go",
-      "tags": ["contrast"]
+      "versus": "go"
     },
     "pgx-easyjson": {
       "json_url": "/json",
@@ -226,6 +225,28 @@
       "display_name": "Go",
       "notes": "mongodb implementation for go net/http",
       "versus": "go"
+    },
+    "pgx-contrast-unattached": {
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "None",
+      "language": "Go",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Go",
+      "notes": "",
+      "versus": "go",
+      "tags": ["contrast", "contrast-unattached"]
     },
     "pgx-contrast-off": {
       "db_url": "/db",

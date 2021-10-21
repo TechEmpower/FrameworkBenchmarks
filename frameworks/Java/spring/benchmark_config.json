@@ -22,8 +22,7 @@
       "database_os": "Linux",
       "display_name": "spring-jdbc",
       "notes": "",
-      "versus": "",
-      "tags": ["contrast"]
+      "versus": ""
     },
     "jpa": {
       "db_url": "/db",
@@ -66,6 +65,30 @@
       "display_name": "spring-mongo",
       "notes": "",
       "versus": "spring"
+    },
+    "contrast-unattached": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "plaintext_url": "/plaintext",
+      "update_url": "/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "spring",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Micro",
+      "platform": "Tomcat",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "spring-jdbc",
+      "notes": "",
+      "versus": "",
+      "tags": ["contrast", "contrast-unattached"]
     },
     "contrast-off": {
       "json_url": "/json",

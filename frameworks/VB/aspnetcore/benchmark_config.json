@@ -39,8 +39,7 @@
       "database_os": "Linux",
       "display_name": "ASP.NET Core, Middleware, ADO.NET",
       "notes": "",
-      "versus": "aspcore-ado-pg",
-      "tags": ["contrast"]
+      "versus": "aspcore-ado-pg"
     },
     "ado-my": {
       "db_url": "/db",
@@ -62,6 +61,28 @@
       "display_name": "ASP.NET Core, Middleware, ADO.NET",
       "notes": "",
       "versus": "aspcore-ado-my"
+    },
+    "ado-pg-contrast-unattached": {
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
+      "fortune_url": "/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "ASP.NET Core",
+      "language": "VB",
+      "orm": "Raw",
+      "platform": ".NET",
+      "flavor": "CoreCLR",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ASP.NET Core, Middleware, ADO.NET",
+      "notes": "",
+      "versus": "aspcore-ado-pg",
+      "tags": ["contrast", "contrast-unattached"]
     },
     "ado-pg-contrast-off": {
       "db_url": "/db",
