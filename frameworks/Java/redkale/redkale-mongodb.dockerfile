@@ -4,7 +4,7 @@ COPY src src
 COPY conf conf
 RUN rm conf/persistence.xml
 RUN mv conf/persistence-mongodb.xml  conf/persistence.xml
-COPY pom.xml pom.xml
+COPY pom-mongodb.xml pom.xml
 RUN mvn package -q
 
 EXPOSE 8080
