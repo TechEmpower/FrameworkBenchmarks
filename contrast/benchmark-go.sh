@@ -1,4 +1,6 @@
 #!/bin/bash
+source ./benchmark-variables.sh
+
 set -e
 
 cd "${0%/*}"
@@ -21,7 +23,7 @@ fi;
 ./start-contrast-service.sh
 
 # Run tests
-../tfb --tag contrast --test-lang Go --type fortune --duration 60
+../tfb --tag $TAG --test-lang Go --type fortune --duration $DURATION --concurrency-levels $CONCURRENCY_LEVELS
 
 # Stop contrast-service container
 docker stop contrast-service
