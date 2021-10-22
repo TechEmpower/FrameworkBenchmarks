@@ -44,7 +44,9 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
 
         startwrite(http)
         JSON3.write(http, (JSON3.read(jsonString)))
-
+        
+        DBInterface.close!(conn)
+        
     elseif occursin("/queries", target)
         HTTP.setheader(http, "Content-Type" => "application/json")
         numQueries = -1
@@ -65,7 +67,6 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
             end
         end
 
-        # randNumList = rand(Int64, 1:10000, numQueries)
         conn = DBInterface.connect(MySQL.Connection, "tfb-database", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
 
         responseArray = Array{jsonObj}(undef, numQueries)
@@ -81,7 +82,8 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
 
         startwrite(http)
         JSON3.write(http, responseArray)
-        # JSON3.write(http, (JSON3.read(responseArray, JSON3.Array)))
+        
+        DBInterface.close!(conn)
     
     elseif occursin("/updates", target)
         HTTP.setheader(http, "Content-Type" => "application/json")
@@ -103,7 +105,6 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
             end
         end
 
-        # randNumList = rand(Int64, 1:10000, numQueries)
         conn = DBInterface.connect(MySQL.Connection, "tfb-database", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
 
         responseArray = Array{jsonObj}(undef, numQueries)
@@ -122,6 +123,8 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
 
         startwrite(http)
         JSON3.write(http, responseArray)
+        
+        DBInterface.close!(conn)
 
     elseif endswith(target, "/fortunes")
         HTTP.setheader(http, "Content-Type" => "text/html; charset=utf-8")
@@ -149,6 +152,8 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
         output = string(output, "</table></body></html>")
     
         write(http, output)
+        
+        DBInterface.close!(conn)
         
     else
         HTTP.setstatus(http, 404)
