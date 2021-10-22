@@ -112,21 +112,10 @@ namespace PlatformBenchmarks
 
             if (state == State.StartLine)
             {
-#if NET5_0
                 if (Parser.ParseRequestLine(new ParsingAdapter(this), ref reader))
                 {
                     state = State.Headers;
                 }
-#else
-                var unconsumedSequence = reader.Sequence.Slice(reader.Position);
-                if (Parser.ParseRequestLine(new ParsingAdapter(this), unconsumedSequence, out var consumed, out _))
-                {
-                    state = State.Headers;
-
-                    var parsedLength = unconsumedSequence.Slice(reader.Position, consumed).Length;
-                    reader.Advance(parsedLength);
-                }
-#endif
             }
 
             if (state == State.Headers)
@@ -197,21 +186,10 @@ namespace PlatformBenchmarks
 
             if (state == State.StartLine)
             {
-#if NET5_0
                 if (Parser.ParseRequestLine(new ParsingAdapter(this), ref reader))
                 {
                     state = State.Headers;
                 }
-#else
-                var unconsumedSequence = reader.Sequence.Slice(reader.Position);
-                if (Parser.ParseRequestLine(new ParsingAdapter(this), unconsumedSequence, out var consumed, out _))
-                {
-                    state = State.Headers;
-
-                    var parsedLength = unconsumedSequence.Slice(reader.Position, consumed).Length;
-                    reader.Advance(parsedLength);
-                }
-#endif
             }
 
             if (state == State.Headers)
@@ -246,8 +224,6 @@ namespace PlatformBenchmarks
         }
 #endif
 
-#if NET5_0
-
         public void OnStaticIndexedHeader(int index)
         {
         }
@@ -259,17 +235,10 @@ namespace PlatformBenchmarks
         public void OnHeader(ReadOnlySpan<byte> name, ReadOnlySpan<byte> value)
         {
         }
+
         public void OnHeadersComplete(bool endStream)
         {
         }
-#else
-        public void OnHeader(Span<byte> name, Span<byte> value)
-        {
-        }
-        public void OnHeadersComplete()
-        {
-        }
-#endif
 
         private static void ThrowUnexpectedEndOfData()
         {
@@ -311,7 +280,6 @@ namespace PlatformBenchmarks
             public ParsingAdapter(BenchmarkApplication requestHandler)
                 => RequestHandler = requestHandler;
 
-#if NET5_0
             public void OnStaticIndexedHeader(int index) 
                 => RequestHandler.OnStaticIndexedHeader(index);
 
@@ -326,14 +294,6 @@ namespace PlatformBenchmarks
 
             public void OnStartLine(HttpVersionAndMethod versionAndMethod, TargetOffsetPathLength targetPath, Span<byte> startLine)
                 => RequestHandler.OnStartLine(versionAndMethod, targetPath, startLine);
-#else
-            public void OnHeader(Span<byte> name, Span<byte> value)
-                => RequestHandler.OnHeader(name, value);
-            public void OnHeadersComplete()
-                => RequestHandler.OnHeadersComplete();
-            public void OnStartLine(HttpMethod method, HttpVersion version, Span<byte> target, Span<byte> path, Span<byte> query, Span<byte> customMethod, bool pathEncoded)
-                => RequestHandler.OnStartLine(method, version, target, path, query, customMethod, pathEncoded);
-#endif
         }
     }
 }
