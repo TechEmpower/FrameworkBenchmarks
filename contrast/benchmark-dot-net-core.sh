@@ -1,4 +1,6 @@
 #!/bin/bash
+source ./benchmark-variables.sh
+
 set -e
 
 cd "${0%/*}"
@@ -18,4 +20,4 @@ fi;
 ./copy-files.sh CSharp $AGENT_FILE
 ./copy-files.sh VB $AGENT_FILE
 
-../tfb --tag contrast --test-lang CSharp VB --type fortune --duration 60
+../tfb --tag $TAG --test-lang CSharp VB --type fortune --duration $DURATION --concurrency-levels $CONCURRENCY_LEVELS

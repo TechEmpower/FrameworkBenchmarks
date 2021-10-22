@@ -1,4 +1,6 @@
 #!/bin/bash
+source ./benchmark-variables.sh
+
 set -e
 
 cd "${0%/*}"
@@ -17,4 +19,4 @@ fi;
 # Copy files into correct place
 ./copy-files.sh Java $AGENT_FILE
 
-../tfb --tag contrast --test-lang Java --type fortune --duration 60
+../tfb --tag $TAG --test-lang Java --type fortune --duration $DURATION --concurrency-levels $CONCURRENCY_LEVELS
