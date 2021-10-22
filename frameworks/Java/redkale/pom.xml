@@ -17,13 +17,13 @@
         <dependency>
             <groupId>org.redkale</groupId>
             <artifactId>redkale</artifactId>
-            <version>2.5.0-SNAPSHOT</version>
+            <version>2.6.0-SNAPSHOT</version>
         </dependency>
         
         <dependency>
             <groupId>org.redkalex</groupId>
             <artifactId>redkale-plugins</artifactId>
-            <version>2.5.0-SNAPSHOT</version>
+            <version>2.6.0-SNAPSHOT</version>
         </dependency>
         
     </dependencies>
