@@ -25,10 +25,8 @@
       "versus": "vibed"
     },
     "dmd-pgsql": {
-      "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "plaintext_url": "/plaintext",
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "port": 8080,
@@ -71,10 +69,8 @@
       "versus": "vibed"
     },
     "ldc-pgsql": {
-      "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "plaintext_url": "/plaintext",
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "port": 8080,
