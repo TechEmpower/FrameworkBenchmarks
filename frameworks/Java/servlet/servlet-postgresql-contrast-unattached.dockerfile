@@ -13,4 +13,4 @@ COPY resin.xml conf/resin.xml
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "lib/resin.jar", "console"]
+CMD ["java", "-XX:MaxRAMPercentage=75", "-jar", "lib/resin.jar", "console"]
