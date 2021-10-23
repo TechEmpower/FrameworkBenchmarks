@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace ImiApp\Model;
+namespace ImiApp\Model\PgSql;
 
 use Imi\Bean\Annotation\Inherit;
-use ImiApp\Model\Base\FortuneBase;
+use ImiApp\Model\PgSql\Base\FortuneBase;
 
 /**
- * fortune
+ * Fortune
  * @Inherit
  */
 class Fortune extends FortuneBase

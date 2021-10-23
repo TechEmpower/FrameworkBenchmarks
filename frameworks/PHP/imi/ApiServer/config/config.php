@@ -2,11 +2,6 @@
 return [
     'configs'    =>    [
     ],
-    // bean扫描目录
-    'beanScan'    =>    [
-        'ImiApp\ApiServer\Controller',
-        'ImiApp\Model',
-    ],
     'beans'    =>    [
         'HttpDispatcher'    =>    [
             'middlewares'    =>    [
@@ -22,8 +17,5 @@ return [
                 'php'
             ],
         ]
-    ],
-    'controller'    =>  [
-        'singleton' => true,
     ],
 ];
