@@ -1,4 +1,4 @@
-FROM ubuntu:21.04
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -11,7 +11,7 @@ RUN apt-get update -yqq > /dev/null && \
 
 ADD ./ ./
 
-ENV NGINX_VERSION 1.21.0
+ENV NGINX_VERSION 1.21.3
 
 RUN git clone -b v0.0.25 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
 

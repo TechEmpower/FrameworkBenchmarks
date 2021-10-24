@@ -1,12 +1,12 @@
 package com.hexagonkt
 
 import com.fasterxml.jackson.module.blackbird.BlackbirdModule
+import com.hexagonkt.helpers.Jvm
 import com.hexagonkt.http.server.Server
 import com.hexagonkt.http.server.ServerPort
 import com.hexagonkt.http.server.ServerSettings
 import com.hexagonkt.http.server.jetty.JettyServletAdapter
 import com.hexagonkt.serialization.*
-import com.hexagonkt.store.BenchmarkMongoDbStore
 import com.hexagonkt.store.BenchmarkSqlStore
 import com.hexagonkt.store.BenchmarkStore
 import com.hexagonkt.templates.TemplatePort
@@ -14,10 +14,7 @@ import com.hexagonkt.templates.pebble.PebbleAdapter
 import java.net.InetAddress
 
 internal val benchmarkStores: Map<String, BenchmarkStore> by lazy {
-    mapOf(
-        "mongodb" to BenchmarkMongoDbStore("mongodb"),
-        "postgresql" to BenchmarkSqlStore("postgresql")
-    )
+    mapOf("postgresql" to BenchmarkSqlStore("postgresql"))
 }
 
 internal val benchmarkTemplateEngines: Map<String, TemplatePort> by lazy {
@@ -40,7 +37,8 @@ internal val benchmarkServer: Server by lazy {
 }
 
 fun main() {
-    Json.mapper.registerModule(BlackbirdModule())
+    if (Jvm.systemFlag("ENABLE_BLACKBIRD"))
+        Json.mapper.registerModule(BlackbirdModule())
     SerializationManager.mapper = JacksonMapper
     SerializationManager.formats = linkedSetOf(Json)
 

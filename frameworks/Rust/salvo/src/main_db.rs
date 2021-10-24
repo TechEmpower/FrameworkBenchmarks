@@ -1,8 +1,14 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+// #[global_allocator]
+// static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 #[macro_use]
 extern crate diesel;
+
+use std::cmp;
+use std::fmt::Write;
+use std::sync::Arc;
 
 use anyhow::Error;
 use diesel::prelude::*;
@@ -12,11 +18,10 @@ use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
 use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
-use std::cmp;
-use std::fmt::Write;
 
 mod models;
 mod schema;
+mod server;
 use models::*;
 use schema::*;
 
@@ -26,11 +31,17 @@ pub type PgPool = Pool<ConnectionManager<PgConnection>>;
 pub static DB_POOL: OnceCell<PgPool> = OnceCell::new();
 
 pub fn connect() -> Result<PooledConnection<ConnectionManager<PgConnection>>, PoolError> {
-    DB_POOL.get().unwrap().get()
+    unsafe { DB_POOL.get_unchecked().get() }
 }
 pub fn build_pool(database_url: &str) -> Result<PgPool, PoolError> {
     let manager = ConnectionManager::<PgConnection>::new(database_url);
-    diesel::r2d2::Pool::builder().max_size(50).build(manager)
+    diesel::r2d2::Pool::builder()
+        .max_size(32)
+        .min_idle(Some(32))
+        .test_on_check_out(false)
+        .idle_timeout(None)
+        .max_lifetime(None)
+        .build(manager)
 }
 
 #[fn_handler]
@@ -48,7 +59,6 @@ async fn world_row(_req: &mut Request, res: &mut Response) -> Result<(), Error> 
 async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let count = req.get_query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
-
     let mut worlds = Vec::with_capacity(count);
     let mut rng = SmallRng::from_entropy();
     let conn = connect()?;
@@ -65,7 +75,6 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
 async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let count = req.get_query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
-
     let conn = connect()?;
     let mut worlds = Vec::with_capacity(count);
     let mut rng = SmallRng::from_entropy();
@@ -93,17 +102,14 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
 
 #[fn_handler]
 async fn fortunes(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let mut items = vec![Fortune {
+    let conn = connect()?;
+    let mut items = fortune::table.get_results::<Fortune>(&conn)?;
+    items.push(Fortune {
         id: 0,
         message: "Additional fortune added at request time.".to_string(),
-    }];
+    });
 
-    let conn = connect()?;
-    for item in fortune::table.get_results::<Fortune>(&conn)? {
-        items.push(item);
-    }
     items.sort_by(|it, next| it.message.cmp(&next.message));
-    
     let mut body = String::new();
     write!(&mut body, "{}", FortunesTemplate { items }).unwrap();
 
@@ -133,18 +139,37 @@ markup::define! {
     }
 }
 
-#[tokio::main]
-async fn main() {
+fn main() {
+    let router = Arc::new(
+        Router::new()
+            .push(Router::new().path("db").get(world_row))
+            .push(Router::new().path("fortunes").get(fortunes))
+            .push(Router::new().path("queries").get(queries))
+            .push(Router::new().path("updates").get(updates)),
+    );
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+    rt.block_on(async {
+        DB_POOL
+            .set(build_pool(&DB_URL).expect(&format!("Error connecting to {}", &DB_URL)))
+            .ok();
+    });
+    for _ in 1..num_cpus::get() {
+        let router = router.clone();
+        std::thread::spawn(move || {
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()
+                .unwrap();
+            rt.block_on(serve(router));
+        });
+    }
+    rt.block_on(serve(router));
+}
+
+async fn serve(router: Arc<Router>) {
     println!("Starting http server: 127.0.0.1:8080");
-
-    DB_POOL
-        .set(build_pool(&DB_URL).expect(&format!("Error connecting to {}", &DB_URL)))
-        .ok();
-
-    let router = Router::new()
-        .push(Router::new().path("db").get(world_row))
-        .push(Router::new().path("fortunes").get(fortunes))
-        .push(Router::new().path("queries").get(queries))
-        .push(Router::new().path("updates").get(updates));
-    Server::new(router).bind(([0, 0, 0, 0], 8080)).await;
+    server::builder().serve(Service::new(router)).await.unwrap();
 }

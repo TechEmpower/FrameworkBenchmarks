@@ -81,7 +81,7 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 		// Create connection
 		PgConnectOptions connectOptions = new PgConnectOptions().setHost(server).setPort(port).setDatabase(database)
 				.setUser(username).setPassword(password).setCachePreparedStatements(true).setTcpNoDelay(true)
-				.setTcpQuickAck(true);
+				.setTcpQuickAck(true).setPipeliningLimit(1024);
 
 		// Provide connection
 		this.threadLocalConnections = new ThreadLocal<Connections>() {
@@ -182,7 +182,7 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 		}
 	}
 
-	private static final int FORTUNES_COUNT = 2;
+	private static final int FORTUNES_COUNT = 1;
 
 	@Override
 	public void fortunes(FortunesSendResponse sender) {

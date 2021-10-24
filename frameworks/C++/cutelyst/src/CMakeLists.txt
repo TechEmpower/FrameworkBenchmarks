@@ -1,15 +1,23 @@
-cmake_minimum_required(VERSION 3.6.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.11.0 FATAL_ERROR)
 
 project(cutelyst_benchmarks LANGUAGES CXX)
 
 cmake_policy(SET CMP0069 NEW)
+
+include(FetchContent)
+
+FetchContent_Declare(
+  mimalloc
+  GIT_REPOSITORY https://github.com/microsoft/mimalloc.git
+  GIT_TAG        b3b0fb58326a96beea1f4872bc1489d1d9fda7e0 # v2.0.2
+)
+FetchContent_MakeAvailable(mimalloc)
 
 find_package(Qt5 5.6.0 REQUIRED COMPONENTS Core Network Sql)
 find_package(ASqlQt5 0.43.0 REQUIRED)
 find_package(Cutelyst3Qt5 3.1 REQUIRED)
 find_package(Cutelee6Qt5 6.0.0 REQUIRED)
 find_package(PostgreSQL REQUIRED)
-find_package(mimalloc 1.0)
 
 # Auto generate moc files
 set(CMAKE_AUTOMOC ON)
@@ -69,6 +77,7 @@ target_link_libraries(cutelyst-benchmarks
     Qt5::Network
     Qt5::Sql
     ASqlQt5::Core
+    mimalloc
 )
 if (mimalloc_FOUND)
     target_link_libraries(cutelyst-benchmarks PUBLIC mimalloc)

@@ -43,6 +43,7 @@
 #include "yuarel.h"
 #include "Router.h"
 #include "Reflector.h"
+#include <unordered_map>
 
 class TeBkUmLpqWorld {
 	int id;
@@ -56,11 +57,12 @@ public:
 	void setId(int id);
 	int getRandomNumber() const;
 	void setRandomNumber(int randomNumber);
+	bool operator < (const TeBkUmLpqWorld& other) const;
 };
 
 struct UpdQrData {
 	std::vector<TeBkUmLpqWorld>* wlist;
-	std::stringstream* ss;
+	std::stringstream ss;
 	bool status;
 	int queryCount;
 };
@@ -80,6 +82,8 @@ public:
 	bool operator < (const TeBkUmLpqFortune& other) const;
 };
 
+class TeBkUmLpqRouterPicoV;
+
 class TeBkUmLpqMessage {
 	std::string message;
 public:
@@ -92,10 +96,11 @@ public:
 
 class TeBkUmLpqRouter : public Router {
 	static const std::string HELLO_WORLD;
-	static std::string WORLD;
-	static std::string WORLD_ONE_QUERY;
-	static std::string WORLD_ALL_QUERY;
-	static std::string FORTUNE_ALL_QUERY;
+	static const std::string WORLD;
+	static const std::string WORLD_ONE_QUERY;
+	static const std::string WORLD_ALL_QUERY;
+	static const std::string FORTUNE_ALL_QUERY;
+	static int g_seed;
 
 	static TemplatePtr tmplFunc;
 
@@ -103,35 +108,32 @@ class TeBkUmLpqRouter : public Router {
 	static Ser w_ser;
 	static SerCont wcont_ser;
 
-	static bool strToNum(const char* str, int len, int& ret);
-
 	void db(TeBkUmLpqWorld&);
 	void queries(const char*, int, std::vector<TeBkUmLpqWorld>&);
 	void queriesMulti(const char*, int, std::vector<TeBkUmLpqWorld>&);
-	static void dbUtil(void* ctx, int, int, char *);
-	static void queriesMultiUtil(void* ctx, int, int, char *, int);
-
 	void updates(const char*, int, std::vector<TeBkUmLpqWorld>&);
-	static void updatesUtil(void* ctx, int, int, char *);
 	void updatesMulti(const char*, int, std::vector<TeBkUmLpqWorld>&);
-	static void updatesMultiUtil(void* ctx, int, int, char *, int);
-	static void updatesMultiUtilCh(void* ctx, bool status, const std::string& query, int counter);
-	
 	void cachedWorlds(const char*, int, std::vector<TeBkUmLpqWorld>&);
-	static void updateCacheUtil(void* ctx, int rn, std::vector<LibpqRes>& data);
+	void handleTemplate(HttpRequest* req, HttpResponse* res, SocketInterface* sif);
 
-	void handleTemplate(HttpResponse* res);
-	static void getContextUtil(void* ctx, int, int, char *, int);
-
-	std::map<int, std::string> _qC;
+	std::unordered_map<int, std::string> _qC;
 	LibpqDataSourceImpl* sqli;
 	LibpqDataSourceImpl* getDb();
 
 	std::string& getUpdQuery(int count);
+	friend class TeBkUmLpqRouterPicoV;
 public:
 	TeBkUmLpqRouter();
 	virtual ~TeBkUmLpqRouter();
 	void updateCache();
+	bool route(HttpRequest* req, HttpResponse* res, SocketInterface* sif);
+};
+
+class TeBkUmLpqRouterPicoV : public TeBkUmLpqRouter {
+	void handleTemplate(HttpResponse* res);
+public:
+	TeBkUmLpqRouterPicoV();
+	virtual ~TeBkUmLpqRouterPicoV();
 	bool route(HttpRequest* req, HttpResponse* res, SocketInterface* sif);
 };
 

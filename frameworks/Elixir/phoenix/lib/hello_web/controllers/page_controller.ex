@@ -36,13 +36,13 @@ defmodule HelloWeb.PageController do
   end
 
   def queries(conn, params) do
+    :rand.seed(:exsp)
+
     resp =
-      params["queries"]
-      |> query_range()
-      |> parallel(fn _ ->
-        Repo.get(World, :rand.uniform(@random_max))
-      end)
-      |> Jason.encode!()
+      1..@random_max
+      |> Enum.take_random(size(params["queries"]))
+      |> parallel(fn idx -> Repo.get(World, idx) end)
+      |> Jason.encode_to_iodata!()
 
     conn
     |> put_resp_content_type(@json, nil)
@@ -63,25 +63,30 @@ defmodule HelloWeb.PageController do
   end
 
   def updates(conn, params) do
-    resp =
-      params["queries"]
-      |> query_range()
-      |> parallel(fn _ ->
-        Repo.checkout(fn ->
-          world =
-            World
-            |> Repo.get(:rand.uniform(@random_max))
+    :rand.seed(:exsp)
 
-          world
-          |> Ecto.Changeset.change(randomnumber: random_but(world.randomnumber))
-          |> Repo.update!()
-        end)
+    count = size(params["queries"])
+
+    worlds =
+      1..@random_max
+      |> Enum.take_random(count)
+      |> parallel(fn idx -> Repo.get(World, idx) end)
+      |> Enum.map(fn world ->
+        %{id: world.id, randomnumber: random_but(world.randomnumber)}
       end)
-      |> Jason.encode!()
+
+    {^count, result} =
+      Repo.insert_all(
+        World,
+        worlds,
+        on_conflict: :replace_all,
+        conflict_target: [:id],
+        returning: true
+      )
 
     conn
     |> put_resp_content_type(@json, nil)
-    |> send_resp(200, resp)
+    |> send_resp(200, Jason.encode_to_iodata!(result))
   end
 
   def plaintext(conn, _params) do
@@ -106,15 +111,13 @@ defmodule HelloWeb.PageController do
     |> Enum.map(&Task.await(&1))
   end
 
-  defp query_range(queries) do
-    try do
-      case String.to_integer(queries) do
-        x when x < 1 -> 1..1
-        x when x > 500 -> 1..500
-        x -> 1..x
-      end
-    rescue
-      ArgumentError -> 1..1
+  defp size(nil), do: 1
+
+  defp size(queries) do
+    case Integer.parse(queries) do
+      {x, ""} when x in 1..500 -> x
+      {x, ""} when x > 500 -> 500
+      _ -> 1
     end
   end
 end
