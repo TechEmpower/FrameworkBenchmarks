@@ -102,7 +102,7 @@
       "display_name": "servlet",
       "notes": "",
       "versus": "servlet-raw",
-      "tags": ["contrast-new", "contrast-unattached"]
+      "tags": ["contrast", "contrast-unattached"]
     },
     "postgresql-contrast-off": {
       "db_url": "/db",
@@ -125,7 +125,7 @@
       "display_name": "servlet",
       "notes": "",
       "versus": "servlet-raw",
-      "tags": ["contrast-new", "contrast-off"]
+      "tags": ["contrast", "contrast-off"]
     },
     "postgresql-contrast-assess": {
       "db_url": "/db",
@@ -148,7 +148,7 @@
       "display_name": "servlet",
       "notes": "",
       "versus": "servlet-raw",
-      "tags": ["contrast-new", "contrast-assess"]
+      "tags": ["contrast", "contrast-assess"]
     },
     "postgresql-contrast-protect": {
       "db_url": "/db",
@@ -171,7 +171,7 @@
       "display_name": "servlet",
       "notes": "",
       "versus": "servlet-raw",
-      "tags": ["contrast-new", "contrast-protect"]
+      "tags": ["contrast", "contrast-protect"]
     },
     "postgresql-contrast-both": {
       "db_url": "/db",
@@ -194,7 +194,7 @@
       "display_name": "servlet",
       "notes": "",
       "versus": "servlet-raw",
-      "tags": ["contrast-new", "contrast-both"]
+      "tags": ["contrast", "contrast-both"]
     }
   }]
 }
