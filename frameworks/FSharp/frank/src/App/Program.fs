@@ -10,9 +10,9 @@ open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Logging
 open Dapper
+open FSharp.Data
 open Giraffe
 open Frank.Builder
-open FSharp.Control.Tasks
 open Npgsql
 open Models
 

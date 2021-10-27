@@ -65,7 +65,6 @@ module HttpHandlers =
     open Giraffe
     open Giraffe.EndpointRouting
     open Giraffe.ViewEngine
-    open FSharp.Control.Tasks
     open Dapper
     open Npgsql
 
