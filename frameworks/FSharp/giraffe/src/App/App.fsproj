@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="6.0.0" />
     <PackageReference Include="Dapper" Version="2.0.90" />
     <PackageReference Include="Giraffe" Version="5.0.0" />
     <PackageReference Include="Npgsql" Version="5.0.7" />

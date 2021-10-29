@@ -1,26 +1,27 @@
 module App.App
 
 open System
-open System.IO
 open System.Text
 open System.Text.Json.Serialization
 open System.Text.Json
 open System.Threading.Tasks
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Http
+open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Logging
 open Dapper
 open Giraffe
+open Giraffe.ViewEngine
 open Frank.Builder
-open FSharp.Control.Tasks
 open Npgsql
 open Models
 
 let inline contentLength x = new Nullable<int64> ( int64 x )
 
+let options = JsonSerializerOptions()
+options.Converters.Add(JsonFSharpConverter())
+
 let json' : HttpContext -> Task =
-    let options = JsonSerializerOptions()
-    options.Converters.Add(JsonFSharpConverter())
     fun ctx ->
         ctx.Response.ContentType <- "application/json"
         ctx.Response.StatusCode <- 200
@@ -36,21 +37,23 @@ let text' (msg:string): HttpContext -> Task =
         ctx.Response.Body.WriteAsync(bytes, 0, bytes.Length)
 
 // Pulled from Giraffe example
-let fortunes' = 
-    let extra = { id = 0; message = "Additional fortune added at request time." }
-    fun next (ctx: HttpContext) ->
-        let conn = new NpgsqlConnection(ConnectionString)
-        ctx.Response.RegisterForDispose conn
+let extra = { id = 0; message = "Additional fortune added at request time." }
+let fortunes' : HttpHandler = 
+    fun _ ctx ->
         task {
+            use conn = new NpgsqlConnection(ConnectionString)
             let! data = conn.QueryAsync<Fortune>("SELECT id, message FROM fortune")
 
-            let fortunes = 
+            let view =
                 let xs = data.AsList()
                 xs.Add extra
                 xs.Sort FortuneComparer
-                xs
+                HtmlViews.fortunes xs
 
-            return! htmlView (HtmlViews.fortunes fortunes) next ctx
+            let bytes = RenderView.AsBytes.htmlDocument view
+
+            ctx.SetContentType "text/html;charset=utf-8"
+            return! ctx.WriteBytesAsync bytes
         }
 
 // Resources
@@ -79,6 +82,7 @@ let fortunes =
 let main args = 
     webHost args {
         useDefaults
+        service (fun services -> services.AddSingleton(options))
         configure (fun bldr ->
             bldr.ConfigureLogging(fun c -> c.ClearProviders() |> ignore)
                 .UseKestrel())
