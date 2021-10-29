@@ -1,4 +1,4 @@
-FROM hayd/alpine-deno:1.8.1
+FROM hayd/alpine-deno:latest
 
 EXPOSE 8080
 

@@ -10,7 +10,7 @@ This application tests Giraffe in 3 modes:
 
 **Language**
 
-* F# 5.0
+* F# 6.0
 
 **Platforms**
 

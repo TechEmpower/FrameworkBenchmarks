@@ -389,6 +389,28 @@
       "display_name": "ASP.NET Core [MVC, My, Dapper]",
       "notes": "",
       "versus": "aspcore-ado-my"
+    },
+    "ado-my": {
+      "fortune_url": "/fortunes",
+      "db_url": "/db",
+      "query_url": "/queries/",
+      "update_url": "/updates/",
+      "cached_query_url": "/cached-worlds/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "ASP.NET Core",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "flavor": "CoreCLR",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ASP.NET Core [Platform, My]",
+      "notes": "",
+      "versus": "aspcore-ado-my"
     }
   }]
 }

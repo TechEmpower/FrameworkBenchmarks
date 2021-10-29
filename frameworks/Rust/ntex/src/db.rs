@@ -1,14 +1,16 @@
 use std::{borrow::Cow, cell::RefCell, fmt::Write as FmtWrite};
 
-use bytes::{Bytes, BytesMut};
 use futures::{Future, FutureExt};
 use nanorand::{WyRand, RNG};
+use ntex::util::{Bytes, BytesMut};
 use smallvec::SmallVec;
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, NoTls, Statement};
 use yarte::{ywrite_html, Serialize};
 
-#[derive(Copy, Clone, Serialize, Debug)]
+use crate::utils::Writer;
+
+#[derive(Copy, Clone, Serialize, Debug, serde::Serialize)]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,
@@ -72,11 +74,16 @@ impl PgConnection {
         let random_id = (self.rng.borrow_mut().generate::<u32>() % 10_000 + 1) as i32;
         self.cl.query(&self.world, &[&random_id]).map(|rows| {
             let rows = rows.unwrap();
-            World {
-                id: rows[0].get(0),
-                randomnumber: rows[0].get(1),
-            }
-            .to_bytes::<BytesMut>(40)
+            let mut body = BytesMut::new();
+            simd_json::to_writer(
+                Writer(&mut body),
+                &World {
+                    id: rows[0].get(0),
+                    randomnumber: rows[0].get(1),
+                },
+            )
+            .unwrap();
+            body.freeze()
         })
     }
 

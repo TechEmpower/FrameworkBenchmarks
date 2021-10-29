@@ -42,14 +42,16 @@
 #include "string"
 #include "yuarel.h"
 #include "Router.h"
-
-typedef void (*TeBkUmLpqAsyncTemplatePtr) (Context*, std::string&);
+#include <unordered_map>
+#include "ConfigurationData.h"
 
 class TeBkUmLpqAsyncWorld {
 	int id;
 	int randomNumber;
 public:
 	TeBkUmLpqAsyncWorld();
+	TeBkUmLpqAsyncWorld(int id);
+	TeBkUmLpqAsyncWorld(int id, int randomNumber);
 	virtual ~TeBkUmLpqAsyncWorld();
 	int getId() const;
 	void setId(int id);
@@ -59,85 +61,93 @@ public:
 
 class TeBkUmLpqAsyncFortune {
 	int id;
-	std::string message;
 public:
+	std::string message_i;
+	std::string_view message;
+	bool allocd;
+	TeBkUmLpqAsyncFortune(int id);
+	TeBkUmLpqAsyncFortune(int id, std::string message);
 	TeBkUmLpqAsyncFortune();
 	virtual ~TeBkUmLpqAsyncFortune();
 	int getId() const;
 	void setId(int id);
-	const std::string& getMessage() const;
-	void setMessage(const std::string& message);
 	bool operator < (const TeBkUmLpqAsyncFortune& other) const;
 };
 
 class TeBkUmLpqAsyncMessage {
 	std::string message;
 public:
+	TeBkUmLpqAsyncMessage();
+	TeBkUmLpqAsyncMessage(std::string message);
 	virtual ~TeBkUmLpqAsyncMessage();
 	const std::string& getMessage() const;
 	void setMessage(const std::string& message);
 };
 
-struct AsyncReq {
-	HttpResponse r;
+struct AsyncDbReq {
+	float httpVers;
+	bool conn_clos;
 	SocketInterface* sif;
-	void* d;
-	void* ddlib;
-	LibpqDataSourceImpl* sqli;
+	TeBkUmLpqAsyncWorld w;
 };
 
-struct CacheReq {
-	void* d;
+struct AsyncQueriesReq {
+	float httpVers;
+	bool conn_clos;
+	SocketInterface* sif;
+	std::vector<TeBkUmLpqAsyncWorld> vec;
+};
+
+struct AsyncUpdatesReq {
+	float httpVers;
+	bool conn_clos;
+	SocketInterface* sif;
+	LibpqDataSourceImpl* sqli;
+	std::vector<TeBkUmLpqAsyncWorld> vec;
+};
+
+struct AsyncFortuneReq {
+	float httpVers;
+	bool conn_clos;
+	SocketInterface* sif;
+	std::list<TeBkUmLpqAsyncFortune> flst;
+};
+
+struct AsyncCacheReq {
 	CacheInterface* cchi;
+	std::vector<TeBkUmLpqAsyncWorld> vec;
 };
 
 class TeBkUmLpqAsyncRouter : public Router {
 	static const std::string HELLO_WORLD;
-	static std::string WORLD;
-	static std::string WORLD_ONE_QUERY;
-	static std::string WORLD_ALL_QUERY;
-	static std::string FORTUNE_ALL_QUERY;
+	static const std::string WORLD;
+	static const std::string WORLD_ONE_QUERY;
+	static const std::string WORLD_ALL_QUERY;
+	static const std::string FORTUNE_ALL_QUERY;
+	static int g_seed;
 
-	static std::string APP_NAME;
-	static std::string TPE_FN_NAME;
+	static TemplatePtr tmplFunc;
 
-	static bool strToNum(const char* str, int len, int& ret);
-
-	void dbAsync(AsyncReq* req);
-	static void dbAsyncUtil(void* ctx, int rn, int cn, char * d);
-	static void dbAsyncCh(void* ctx, bool status, const std::string& q, int counter);
-
-	void queriesAsync(const char* q, int ql, AsyncReq* req);
-	static void queriesAsyncUtil(void* ctx, int rn, int cn, char * d);
-	static void queriesAsyncCh(void* ctx, bool status, const std::string& q, int counter);
-
-#ifndef HAVE_LIBPQ_BATCH
-	void queriesMultiAsync(const char*, int, AsyncReq*);
-	static void queriesMultiAsyncUtil(void* ctx, int, int, char *, int);
-	static void queriesMultiAsyncCh(void* ctx, bool status, const std::string& q, int counter);
-#endif
-
-	void updatesAsync(const char* q, int ql, AsyncReq* req);
-	static void updatesAsyncChQ(void* ctx, bool status, const std::string& q, int counter);
-	static void updatesAsyncChU(void* ctx, bool status, const std::string& q, int counter);
+	static Ser m_ser;
+	static Ser w_ser;
+	static SerCont wcont_ser;
 
 	static std::string& getUpdQuery(int count);
-	void updatesAsyncb(const char* q, int ql, AsyncReq* req);
-	static void updatesAsyncbChQ(void* ctx, bool status, const std::string& q, int counter);
-	static void updatesAsyncbChU(void* ctx, bool status, const std::string& q, int counter);
-	
+
+	void dbAsync(SocketInterface* sif);
+	void queriesAsync(const char* q, int ql, SocketInterface* sif);
+	void updatesAsync(const char* q, int ql, AsyncUpdatesReq* req);
+	void updatesAsyncb(const char* q, int ql, AsyncUpdatesReq* req);
 	void cachedWorlds(const char*, int, std::vector<TeBkUmLpqAsyncWorld>&);
-	static void updateCacheAsyncUtil(void* ctx, int rn, std::vector<LibpqRes>& data);
-	static void updateCacheAsyncCh(void* ctx, bool status, const std::string& q, int counter);
+	void fortunes(SocketInterface* sif);
 
-	void getContextAsync(AsyncReq* req);
-	static void getContextAsyncUtil(void* ctx, int rn, int cn, char * d, int l);
-	static void getContextAsyncCh(void* ctx, bool status, const std::string& q, int counter);
+	void queriesMultiAsync(const char*, int, SocketInterface* sif);
+	void updatesMulti(const char*, int, AsyncUpdatesReq*);
 
-	static std::map<int, std::string> _qC;
+	static std::unordered_map<int, std::string> _qC;
 	LibpqDataSourceImpl* sqli;
-	LibpqDataSourceImpl* getDb();
-	//static Logger logger;
+protected:
+	virtual LibpqDataSourceImpl* getDb(int max = 0);
 public:
 	TeBkUmLpqAsyncRouter& operator=(const TeBkUmLpqAsyncRouter& a) {
 		return *this;
@@ -148,7 +158,35 @@ public:
 	TeBkUmLpqAsyncRouter();
 	virtual ~TeBkUmLpqAsyncRouter();
 	void updateCache();
-	bool route(HttpRequest* req, HttpResponse* res, void* dlib, void* ddlib, SocketInterface* sif);
+	/* These functions are here just for test purposes and serve no purpose START */
+	static void temp() {
+	}
+	virtual void temp1() const {
+	}
+	std::map<std::string, std::string> l(std::map<std::string, std::string> a1, std::map<std::string, std::string> a2) {
+		return std::map<std::string, std::string>();
+	}
+	/* END */
+	bool route(HttpRequest* req, HttpResponse* res, SocketInterface* sif);
+};
+
+class TeBkUmLpqAsyncRouterPooled : public TeBkUmLpqAsyncRouter {
+	LibpqDataSourceImpl* getDb(int max = 0);
+	std::atomic<int> opt;
+	bool inited;
+	int maxconns;
+	std::vector<LibpqDataSourceImpl*> pool;
+public:
+	TeBkUmLpqAsyncRouterPooled& operator=(const TeBkUmLpqAsyncRouterPooled& a) {
+		return *this;
+	}
+	TeBkUmLpqAsyncRouterPooled(const TeBkUmLpqAsyncRouterPooled& a) {
+		this->opt = 0;
+		this->inited = false;
+		this->maxconns = 7;
+	}
+	TeBkUmLpqAsyncRouterPooled();
+	virtual ~TeBkUmLpqAsyncRouterPooled();
 };
 
 #endif /* WEB_TE_BENCHMARK_UM_INCLUDE_TeBkUmLpqAsync_H_ */

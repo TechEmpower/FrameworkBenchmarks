@@ -1,10 +1,9 @@
 package org.smartboot.servlet;
 
-import org.smartboot.aio.EnhanceAsynchronousChannelProvider;
 import org.smartboot.http.server.HttpBootstrap;
 import org.smartboot.http.server.HttpRequest;
 import org.smartboot.http.server.HttpResponse;
-import org.smartboot.http.server.HttpServerHandle;
+import org.smartboot.http.server.HttpServerHandler;
 import org.smartboot.http.server.impl.Request;
 import org.smartboot.servlet.conf.ServletInfo;
 import org.smartboot.socket.StateMachineEnum;
@@ -20,11 +19,9 @@ import java.io.IOException;
 public class Bootstrap {
 
     public static void main(String[] args) {
-        System.setProperty("java.nio.channels.spi.AsynchronousChannelProvider", EnhanceAsynchronousChannelProvider.class.getName());
-
         ContainerRuntime containerRuntime = new ContainerRuntime();
         // plaintext
-        ApplicationRuntime applicationRuntime = new ApplicationRuntime("/");
+        ServletContextRuntime applicationRuntime = new ServletContextRuntime("/");
         ServletInfo plainTextServletInfo = new ServletInfo();
         plainTextServletInfo.setServletName("plaintext");
         plainTextServletInfo.setServletClass(HelloWorldServlet.class.getName());
@@ -48,22 +45,11 @@ public class Bootstrap {
                 .readBufferSize(1024 * 4)
                 .writeBufferSize(1024 * 4)
                 .readMemoryPool(16384 * 1024 * 4)
-                .writeMemoryPool(10 * 1024 * 1024 * cpuNum, cpuNum)
-                .messageProcessor(processor -> new AbstractMessageProcessor<>() {
-                    @Override
-                    public void process0(AioSession session, Request msg) {
-                        processor.process(session, msg);
-                    }
-
-                    @Override
-                    public void stateEvent0(AioSession session, StateMachineEnum stateMachineEnum, Throwable throwable) {
-                        processor.stateEvent(session, stateMachineEnum, throwable);
-                    }
-                });
+                .writeMemoryPool(10 * 1024 * 1024 * cpuNum, cpuNum);
         bootstrap.setPort(8080)
-                .pipeline(new HttpServerHandle() {
+                .httpHandler(new HttpServerHandler() {
                     @Override
-                    public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
+                    public void handle(HttpRequest request, HttpResponse response) throws IOException {
                         containerRuntime.doHandle(request, response);
                     }
                 })

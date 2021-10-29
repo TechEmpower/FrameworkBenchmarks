@@ -1,6 +1,21 @@
 [framework]
 name = "aspnetcore-corert"
 
+[ado-pg]
+urls.db = "/db"
+urls.query = "/queries/"
+urls.fortune = "/fortunes"
+urls.cached_query = "/cached-worlds/"
+approach = "Stripped"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = ".NET"
+webserver = "Kestrel"
+versus = "aspcore-ado-pg"
+
 [main]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
@@ -13,3 +28,15 @@ orm = "Raw"
 platform = ".NET"
 webserver = "Kestrel"
 versus = "aspcore"
+
+[ado-pg-up]
+urls.update = "/updates/"
+approach = "Stripped"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = ".NET"
+webserver = "Kestrel"
+versus = "aspcore-ado-pg-up"

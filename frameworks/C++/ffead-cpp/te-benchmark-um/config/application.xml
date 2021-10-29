@@ -1,4 +1,4 @@
-<app libname="te_benchmark_um" router="TeBkUmRouter">
+<app router="TeBkUmRouter">
 	<cors-config>
 		<allow-origins>*</allow-origins>
 		<allow-methods>GET, POST, HEAD, PUT, DELETE</allow-methods>

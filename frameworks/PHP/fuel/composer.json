@@ -1,6 +1,6 @@
 {
   "require": {
-    "composer/installers": "~1.0",
+    "composer/installers": "~1",
     "fuel/core": "~1.8",
     "fuel/auth": "~1.8",
     "fuel/parser": "~1.8",

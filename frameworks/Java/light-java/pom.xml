@@ -25,7 +25,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <version.light-4j>2.0.1</version.light-4j>
         <version.logback>1.2.3</version.logback>
-        <version.undertow>2.0.21.Final</version.undertow>
+        <version.undertow>2.0.23.Final</version.undertow>
         <version.hikaricp>3.3.1</version.hikaricp>
         <version.mysql>8.0.18</version.mysql>
         <version.postgres>42.2.5</version.postgres>

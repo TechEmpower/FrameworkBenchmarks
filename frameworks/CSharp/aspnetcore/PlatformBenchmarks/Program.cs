@@ -3,12 +3,10 @@
 
 using System;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-#if DATABASE
-using Npgsql;
-#endif
 
 namespace PlatformBenchmarks
 {
@@ -55,7 +53,8 @@ namespace PlatformBenchmarks
             Console.WriteLine($"Database: {appSettings.Database}");
             Console.WriteLine($"ConnectionString: {appSettings.ConnectionString}");
 
-            if (appSettings.Database == DatabaseServer.PostgreSql)
+            if (appSettings.Database is DatabaseServer.PostgreSql
+                                     or DatabaseServer.MySql)
             {
                 BenchmarkApplication.Db = new RawDb(new ConcurrentRandom(), appSettings);
             }
@@ -65,7 +64,7 @@ namespace PlatformBenchmarks
             }
 #endif
 
-            var host = new WebHostBuilder()
+            var hostBuilder = new WebHostBuilder()
                 .UseBenchmarksConfiguration(config)
                 .UseKestrel((context, options) =>
                 {
@@ -76,8 +75,20 @@ namespace PlatformBenchmarks
                         builder.UseHttpApplication<BenchmarkApplication>();
                     });
                 })
-                .UseStartup<Startup>()
-                .Build();
+                .UseStartup<Startup>();
+
+            hostBuilder.UseSockets(options =>
+            {
+                options.WaitForDataBeforeAllocatingBuffer = false;
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    options.UnsafePreferInlineScheduling = Environment.GetEnvironmentVariable("DOTNET_SYSTEM_NET_SOCKETS_INLINE_COMPLETIONS") == "1";
+                }
+            });
+
+
+            var host = hostBuilder.Build();
 
             return host;
         }
