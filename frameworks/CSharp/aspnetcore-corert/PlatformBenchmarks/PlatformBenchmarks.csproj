@@ -32,9 +32,4 @@
   <ItemGroup>
       <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-
-  <ItemGroup>
-    <RdXmlFile Condition=" '$(DatabaseProvider)' == 'Npgsql' " Include="npgsql.rd.xml" />
-  </ItemGroup>
-
 </Project>
