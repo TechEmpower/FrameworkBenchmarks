@@ -1,4 +1,4 @@
-FROM maven:3.6.3-openjdk-16-slim as maven
+FROM maven:3.8.3-openjdk-11-slim as maven
 WORKDIR /redkale
 COPY src src
 COPY conf conf
@@ -6,7 +6,7 @@ COPY pom.xml pom.xml
 RUN mvn package -q
 
 
-FROM ghcr.io/graalvm/graalvm-ce:21.2.0
+FROM ghcr.io/graalvm/graalvm-ce:21.3.0 
 RUN gu install native-image
 WORKDIR /redkale
 COPY conf conf
