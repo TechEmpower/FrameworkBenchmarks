@@ -1,0 +1,30 @@
+{
+  "framework": "axum",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "port": 8000,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "postgres",
+        "framework": "Axum",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "Rust",
+        "webserver": "Hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Axum",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
