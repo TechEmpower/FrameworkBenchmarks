@@ -76,17 +76,13 @@ Amp\Loop::run(function () {
         private function doHandleRequest($request) {
             $statement = yield $this->mysql->prepare('SELECT * FROM World WHERE id = ?');
             $result = yield $statement->execute([mt_rand(1, 10000)]);
-
-            if (yield $result->advance()) {
-                $item = $result->getCurrent();
-            } else {
-                $item = null;
-            }
+            
+            yield $result->advance();
 
             return new Response(200, [
                 'Content-Type' => 'application/json',
                 'Server' => 'amphp',
-            ], \json_encode($item));
+            ], \json_encode($result->getCurrent()));
         }
     });
 
