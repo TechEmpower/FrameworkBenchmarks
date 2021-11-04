@@ -47,7 +47,7 @@ Amp\Loop::run(function () {
         }
     );
 
-    $mysql = new Amp\Mysql\Pool($config, 512 * 50, 300, $connector);
+    $mysql = new Amp\Mysql\Pool($config, 512, 300, $connector);
 
     // Case 1 - JSON
     $router->addRoute('GET', '/json', new class implements RequestHandler {
