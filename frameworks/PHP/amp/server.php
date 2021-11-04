@@ -54,7 +54,7 @@ Amp\Loop::run(function () {
         public function handleRequest(Request $request): Promise {
             return new Success(new Response(200, [
                 'Content-Type' => 'application/json',
-                'Server' => 'amphp/http-server',
+                'Server' => 'amphp',
             ], \json_encode([
                 'message' => 'Hello, World!',
             ])));
@@ -85,7 +85,7 @@ Amp\Loop::run(function () {
 
             return new Response(200, [
                 'Content-Type' => 'application/json',
-                'Server' => 'amphp/http-server',
+                'Server' => 'amphp',
             ], \json_encode($item));
         }
     });
@@ -123,7 +123,7 @@ Amp\Loop::run(function () {
 
             return new Response(200, [
                 'Content-Type' => 'application/json',
-                'Server' => 'amphp/http-server',
+                'Server' => 'amphp',
             ], \json_encode(yield $items));
         }
 
@@ -166,7 +166,7 @@ Amp\Loop::run(function () {
 
             return new Response(200, [
                 'Content-Type' => 'text/html; charset=utf-8',
-                'Server' => 'amphp/http-server',
+                'Server' => 'amphp',
             ], \ob_get_clean());
         }
 
@@ -177,7 +177,7 @@ Amp\Loop::run(function () {
         public function handleRequest(Request $request): Promise {
             return new Success(new Response(200, [
                 'Content-Type' => 'text/plain',
-                'Server' => 'amphp/http-server',
+                'Server' => 'amphp',
             ], 'Hello, World!'));
         }
     });
