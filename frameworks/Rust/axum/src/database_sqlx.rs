@@ -4,6 +4,7 @@ use axum::http::StatusCode;
 use sqlx::{PgPool, Postgres};
 use sqlx::pool::PoolConnection;
 use sqlx::postgres::PgPoolOptions;
+use crate::common::internal_error;
 
 pub async fn create_pool(database_url: String) -> PgPool {
     PgPoolOptions::new().max_connections(100).connect(&*database_url).await.unwrap()
@@ -29,11 +30,3 @@ impl<B> FromRequest<B> for DatabaseConnection
     }
 }
 
-/// Utility function for mapping any error into a `500 Internal Server Error`
-/// response.
-pub fn internal_error<E>(err: E) -> (StatusCode, String)
-    where
-        E: std::error::Error,
-{
-    (StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
-}

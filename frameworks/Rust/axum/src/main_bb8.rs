@@ -1,0 +1,149 @@
+extern crate serde_derive;
+extern crate dotenv;
+#[macro_use]
+extern crate async_trait;
+
+mod models;
+mod database_bb8;
+mod common;
+
+use dotenv::dotenv;
+use std::net::{Ipv4Addr, SocketAddr};
+use std::env;
+use crate::database_bb8::{Connection, create_bb8_pool, DatabaseConnection};
+use axum::{
+    extract::{Query},
+    http::StatusCode,
+    response::IntoResponse,
+    routing::get,
+    AddExtensionLayer, Json, Router,
+};
+use axum::http::{header, HeaderValue};
+use bb8_postgres::tokio_postgres::{Row, Statement};
+use tower_http::set_header::SetResponseHeaderLayer;
+use hyper::Body;
+use rand::rngs::SmallRng;
+use rand::{SeedableRng};
+use yarte::TemplateTrait;
+
+use models::{World, Fortune};
+use crate::common::{FortunesTemplate, internal_error, json, Params, parse_params, plaintext, random_number, Utf8Html};
+
+async fn db(DatabaseConnection(conn): DatabaseConnection) -> impl IntoResponse {
+    let mut rng = SmallRng::from_entropy();
+    let number = random_number(&mut rng);
+
+    let select = prepare_fetch_world_by_id_statement(&conn).await;
+    let world = fetch_world_by_id_using_statement(&conn, number, &select).await;
+
+    (StatusCode::OK, Json(world))
+}
+
+async fn prepare_fetch_world_by_id_statement(conn: &Connection) -> Statement {
+    conn.prepare("SELECT id, randomnumber FROM World WHERE id = $1").await.unwrap()
+}
+
+async fn fetch_world_by_id_using_statement(conn: &Connection, number: i32, select: &Statement) -> World {
+    let row: Row = conn.query_one(select, &[&number]).await.unwrap();
+
+    let id: i32 = row.get(0);
+    let random_num: i32 = row.get(1);
+
+    let world: World = World { id, random_number: random_num };
+    world
+}
+
+async fn queries(DatabaseConnection(conn): DatabaseConnection, Query(params): Query<Params>) -> impl IntoResponse {
+    let q = parse_params(params);
+
+    let mut rng = SmallRng::from_entropy();
+
+    let mut results = Vec::with_capacity(q as usize);
+
+    let select = prepare_fetch_world_by_id_statement(&conn).await;
+
+    for _ in 0..q {
+        let query_id = random_number(&mut rng);
+
+        let result :World = fetch_world_by_id_using_statement(&conn, query_id, &select).await;
+
+        results.push(result);
+    }
+
+    (StatusCode::OK, Json(results))
+}
+//
+// async fn fortunes(DatabaseConnection(mut conn): DatabaseConnection) -> impl IntoResponse {
+//     let mut fortunes: Vec<Fortune> = sqlx::query_as("SELECT * FROM Fortune").fetch_all(&mut conn).await
+//         .ok().expect("Could not load Fortunes");
+//
+//     fortunes.push(Fortune {
+//         id: 0,
+//         message: "Additional fortune added at request time.".to_string(),
+//     });
+//
+//     fortunes.sort_by(|a, b| a.message.cmp(&b.message));
+//
+//     Utf8Html(
+//         FortunesTemplate {
+//             fortunes: &fortunes,
+//         }
+//         .call()
+//         .expect("error rendering template"),
+//     )
+// }
+//
+// async fn updates(DatabaseConnection(mut conn): DatabaseConnection, Query(params): Query<Params>) -> impl IntoResponse {
+//     let q = parse_params(params);
+//
+//     let mut rng = SmallRng::from_entropy();
+//
+//     let mut results = Vec::with_capacity(q as usize);
+//
+//     for _ in 0..q {
+//         let query_id = random_number(&mut rng);
+//         let mut result :World =  sqlx::query_as("SELECT * FROM World WHERE id = $1").bind(query_id)
+//             .fetch_one(&mut conn).await.ok().expect("error loading world");
+//
+//         result.random_number = random_number(&mut rng);
+//         results.push(result);
+//     }
+//
+//     for w in &results {
+//         sqlx::query("UPDATE World SET randomnumber = $1 WHERE id = $2")
+//             .bind(w.random_number).bind(w.id)
+//             .execute(&mut conn)
+//             .await.ok().expect("could not update world");
+//     }
+//
+//     (StatusCode::OK, Json(results))
+// }
+
+#[tokio::main]
+async fn main() {
+    dotenv().ok();
+
+    let database_url = env::var("AXUM_TECHEMPOWER_DATABASE_URL").ok()
+        .expect("AXUM_TECHEMPOWER_DATABASE_URL environment variable was not set");
+
+    let addr = SocketAddr::from((Ipv4Addr::UNSPECIFIED, 8000));
+
+    // setup connection pool
+    let pool = create_bb8_pool(database_url).await;
+
+    let router = Router::new()
+        .route("/plaintext", get(plaintext))
+        .route("/json", get(json))
+        // .route("/fortunes", get(fortunes))
+        .route("/db", get(db))
+        .route("/queries", get(queries))
+        // .route("/updates", get(updates))
+        .layer(AddExtensionLayer::new(pool))
+        .layer(SetResponseHeaderLayer::<_, Body>::if_not_present(header::SERVER, HeaderValue::from_static("Axum")));
+
+    axum::Server::bind(&addr)
+        .serve(router.into_make_service())
+        .await
+        .unwrap();
+}
+
