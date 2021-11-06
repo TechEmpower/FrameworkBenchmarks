@@ -1,3 +1,5 @@
+#![allow(clippy::declare_interior_mutable_const)]
+
 use std::{
     cell::{RefCell, RefMut},
     cmp,
@@ -5,13 +7,13 @@ use std::{
     io,
 };
 
-use bytes::{Bytes, BytesMut};
 use serde::Serialize;
-use xitca_http::http::{
-    header::{HeaderValue, CONTENT_TYPE, SERVER},
-    StatusCode,
-};
 use xitca_web::{
+    dev::bytes::{Bytes, BytesMut},
+    http::{
+        header::{HeaderValue, CONTENT_TYPE, SERVER},
+        StatusCode,
+    },
     request::WebRequest,
     response::{WebResponse, WebResponseBuilder},
 };

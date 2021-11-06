@@ -11,12 +11,15 @@ mod util;
 
 use std::{error::Error, io};
 
-use bytes::Bytes;
-use xitca_http::http::{
-    header::{CONTENT_TYPE, SERVER},
-    Method,
+use xitca_web::{
+    dev::{bytes::Bytes, fn_service},
+    http::{
+        header::{CONTENT_TYPE, SERVER},
+        Method,
+    },
+    request::WebRequest,
+    App, HttpServer,
 };
-use xitca_web::{dev::fn_service, request::WebRequest, App, HttpServer};
 
 use self::db_diesel::{create, DieselPool};
 use self::util::{
