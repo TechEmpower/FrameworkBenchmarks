@@ -17,7 +17,7 @@
 			"webserver": "ffead-cpp",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "p3-b",
+			"display_name": "ffead-cpp-p3-b",
 			"notes": "async memory libpq batch patch profiled",
 			"versus": "",
 			"tags": []
@@ -41,7 +41,7 @@
 			"webserver": "picov",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "v",
+			"display_name": "ffead-cpp-v",
 			"notes": "",
 			"versus": "",
 			"tags": []
@@ -65,7 +65,7 @@
 			"webserver": "picov",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "v-prof",
+			"display_name": "ffead-cpp-v-prof",
 			"notes": "",
 			"versus": "",
 			"tags": []
@@ -89,7 +89,7 @@
 			"webserver": "picov",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "v-prof-b",
+			"display_name": "ffead-cpp-v-prof-b",
 			"notes": "",
 			"versus": "",
 			"tags": []
@@ -110,7 +110,7 @@
 			"webserver": "ffead-cpp",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "pg-raw-prof",
+			"display_name": "ffead-cpp-pg-raw-prof",
 			"notes": "memory profiled",
 			"versus": "",
 			"tags": []
@@ -131,7 +131,7 @@
 			"webserver": "ffead-cpp",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "pg-raw-prof-b",
+			"display_name": "ffead-cpp-pg-raw-prof-b",
 			"notes": "memory libpq batch patch profiled",
 			"versus": "",
 			"tags": []
@@ -152,7 +152,7 @@
 			"webserver": "ffead-cpp",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "pg-raw-async-prof",
+			"display_name": "ffead-cpp-pg-raw-async-prof",
 			"notes": "async memory profiled",
 			"versus": "",
 			"tags": []
@@ -173,7 +173,7 @@
 			"webserver": "ffead-cpp",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "pg-raw-async-prof-pool",
+			"display_name": "ffead-cpp-pg-raw-async-prof-pool",
 			"notes": "async memory profiled",
 			"versus": "",
 			"tags": []
@@ -192,7 +192,7 @@
 			"webserver": "ffead-cpp",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "pg-raw-async-prof-pool-m",
+			"display_name": "ffead-cpp-pg-raw-async-prof-pool-m",
 			"notes": "async memory profiled",
 			"versus": "",
 			"tags": []
@@ -213,7 +213,7 @@
 			"webserver": "ffead-cpp",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "pg-raw-async-prof-b",
+			"display_name": "ffead-cpp-pg-raw-async-prof-b",
 			"notes": "async memory libpq batch patch profiled",
 			"versus": "",
 			"tags": []
@@ -234,7 +234,7 @@
 			"webserver": "ffead-cpp",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "pg-raw-async-prof-b-pool",
+			"display_name": "ffead-cpp-pg-raw-async-prof-b-pool",
 			"notes": "async memory libpq batch patch profiled",
 			"versus": "",
 			"tags": []
