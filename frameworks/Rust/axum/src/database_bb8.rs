@@ -3,7 +3,7 @@ use axum::http::StatusCode;
 use bb8::{Pool, PooledConnection};
 use bb8_postgres::PostgresConnectionManager;
 use bb8_postgres::tokio_postgres::NoTls;
-use crate::common::internal_error;
+use crate::utils::internal_error;
 
 pub type ConnectionManager = PostgresConnectionManager<NoTls>;
 pub type ConnectionPool = Pool<ConnectionManager>;

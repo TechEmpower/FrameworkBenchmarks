@@ -1,36 +1,14 @@
 use std::convert::Infallible;
 use axum::body::{Bytes, Full};
 use axum::http::{header, HeaderValue, Response, StatusCode};
-use axum::Json;
 use axum::response::IntoResponse;
 use rand::Rng;
 use rand::rngs::SmallRng;
 use serde::{Deserialize};
-use yarte::Template;
-
-use crate::models::{Fortune, Message};
 
 #[derive(Debug, Deserialize)]
 pub struct Params {
     queries: Option<String>,
-}
-
-pub async fn plaintext() -> &'static str {
-    "Hello, World!"
-}
-
-pub async fn json() -> impl IntoResponse {
-    let message = Message {
-        message: "Hello, World!",
-    };
-
-    (StatusCode::OK, Json(message))
-}
-
-#[derive(Template)]
-#[template(path = "fortunes.html.hbs")]
-pub struct FortunesTemplate<'a> {
-    pub fortunes: &'a Vec<Fortune>,
 }
 
 pub fn random_number(rng: &mut SmallRng) -> i32 {

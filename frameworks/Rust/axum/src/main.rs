@@ -1,11 +1,11 @@
 extern crate serde_derive;
 extern crate dotenv;
-#[macro_use]
 extern crate async_trait;
+extern crate tokio_pg_mapper_derive;
+extern crate tokio_pg_mapper;
 
-mod models;
-mod database_sqlx;
-mod common;
+mod common_handlers;
+mod models_common;
 
 use dotenv::dotenv;
 use std::net::{Ipv4Addr, SocketAddr};
@@ -14,7 +14,7 @@ use axum::http::{header, HeaderValue};
 use tower_http::set_header::SetResponseHeaderLayer;
 use hyper::Body;
 
-use crate::common::{json, plaintext};
+use common_handlers::{json, plaintext};
 
 #[tokio::main]
 async fn main() {
@@ -36,4 +36,3 @@ async fn router() -> Router {
         .route("/json", get(json))
         .layer(SetResponseHeaderLayer::<_, Body>::if_not_present(header::SERVER, HeaderValue::from_static("Axum")))
 }
-

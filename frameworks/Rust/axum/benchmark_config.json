@@ -53,6 +53,8 @@
         "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
         "port": 8000,
         "approach": "Realistic",
         "classification": "Fullstack",

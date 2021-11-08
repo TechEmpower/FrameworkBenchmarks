@@ -3,9 +3,11 @@ extern crate dotenv;
 #[macro_use]
 extern crate async_trait;
 
-mod models;
+mod common_handlers;
+mod models_common;
+mod models_sqlx;
 mod database_sqlx;
-mod common;
+mod utils;
 
 use dotenv::dotenv;
 use std::net::{Ipv4Addr, SocketAddr};
@@ -24,11 +26,12 @@ use hyper::Body;
 use rand::rngs::SmallRng;
 use rand::{SeedableRng};
 use sqlx::PgPool;
-use yarte::TemplateTrait;
+use yarte::Template;
 
-use models::{World, Fortune};
+use models_sqlx::{World, Fortune};
 use database_sqlx::create_pool;
-use crate::common::{FortunesTemplate, json, Params, parse_params, plaintext, random_number, Utf8Html};
+use common_handlers::{json, plaintext};
+use utils::{Params, parse_params, random_number, Utf8Html};
 
 async fn db(DatabaseConnection(mut conn): DatabaseConnection) -> impl IntoResponse {
     let mut rng = SmallRng::from_entropy();
@@ -137,3 +140,8 @@ async fn router(pool: PgPool) -> Router {
         .layer(SetResponseHeaderLayer::<_, Body>::if_not_present(header::SERVER, HeaderValue::from_static("Axum")))
 }
 
+#[derive(Template)]
+#[template(path = "fortunes.html.hbs")]
+pub struct FortunesTemplate<'a> {
+    pub fortunes: &'a Vec<Fortune>,
+}
