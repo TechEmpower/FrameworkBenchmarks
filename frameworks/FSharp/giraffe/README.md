@@ -29,7 +29,7 @@ This application tests Giraffe in 3 modes:
 
 All source code is inside `Program.fs`.
 
-App listens for a signle command line argument to pick the desired JSON implementation:
+App listens for a single command line argument to pick the desired JSON implementation:
 
     - `system`: `System.Text.Json`
     - `utf8`: `Utf8Json`
