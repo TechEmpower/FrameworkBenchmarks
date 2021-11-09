@@ -1,5 +1,5 @@
 [package]
-name = "rocket_benchmark"
+name = "rocket_techempower"
 version = "0.2.0"
 authors = ["Marcelo Barbosa <mbarbosa@gmail.com>", "Brendan Hansknecht <brendan.hansknecht@gmail.com>", "Dragos Varovici <dvarovici.work@gmail.com>"]
 edition = "2018"
