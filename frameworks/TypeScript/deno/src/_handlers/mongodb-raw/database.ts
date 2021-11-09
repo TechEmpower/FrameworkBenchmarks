@@ -10,7 +10,7 @@ export let Fortune = client.database(dbName).collection("fortune");
 
 export const randomNumber = (): number => Math.floor(Math.random() * 10000) + 1;
 
-export const fillArrayWithFn = async<T = any>(v: Function, l: number) => {
+export const fillArrayWithFn = async <T = any>(v: Function, l: number) => {
   let o = [];
   for (let i = 0; i < l; i += 1) o.push(await v());
   return o;
@@ -85,7 +85,7 @@ export const updateQuery = async () => {
     {
       id: one.id,
     },
-    one
+    one,
   );
   return {
     id: one.id,

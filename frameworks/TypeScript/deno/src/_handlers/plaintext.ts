@@ -1,17 +1,11 @@
-import {
-  ServerRequest,
-  SERVER,
-  dyn_date,
-  MIME_TEXT,
-  HELLO_WORLD,
-} from "../depends.ts";
+import { dynDate, HELLO_WORLD, MIME_TEXT, SERVER } from "../depends.ts";
 
 const headers = new Headers([
   ["server", SERVER],
   ["content-type", MIME_TEXT],
 ]);
 
-export default async (req: ServerRequest): Promise<void> => {
-  headers.set("date", dyn_date());
-  req.respond({ headers, body: HELLO_WORLD });
+export default (_: Request): Promise<Response> => {
+  headers.set("date", dynDate());
+  return Promise.resolve(new Response(HELLO_WORLD, { headers }));
 };

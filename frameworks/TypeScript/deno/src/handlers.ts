@@ -1,9 +1,8 @@
-import type { ServerRequest } from "./depends.ts";
 import JSONHandler from "./_handlers/json.ts";
 import PlaintextHandler from "./_handlers/plaintext.ts";
 
 export interface Handler {
-  (request: ServerRequest): Promise<void>;
+  (request: Request): Promise<Response>;
 }
 
 export interface Handlers {
@@ -14,4 +13,3 @@ export default {
   "/json": JSONHandler,
   "/plaintext": PlaintextHandler,
 } as Handlers;
-

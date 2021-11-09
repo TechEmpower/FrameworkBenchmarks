@@ -1,5 +1,4 @@
-FROM hayd/alpine-deno:latest
-
+FROM denoland/deno:latest
 
 EXPOSE 8080
 
@@ -8,11 +7,11 @@ WORKDIR /app
 USER deno
 ENV DATABASE mongodb
 
-COPY ./src .
+COPY src/depends.ts .
+RUN deno cache depends.ts
 
-RUN deno cache main.mongoraw.ts
+ADD . .
+RUN deno cache src/main.ts
 
-EXPOSE 8080
-
-CMD ["run", "--allow-net", "main.mongoraw.ts"]
+CMD ["run", "--allow-net", "src/main.mongoraw.ts"]
 
