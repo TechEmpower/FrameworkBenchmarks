@@ -16,6 +16,10 @@ path = "src/main_sqlx.rs"
 name = "axum-bb8"
 path = "src/main_bb8.rs"
 
+[[bin]]
+name = "axum-mongo"
+path = "src/main_mongo.rs"
+
 [dependencies]
 rand = { version = "^0.8", features = ["small_rng"]}
 yarte = { version = "^0.15" }
@@ -38,6 +42,7 @@ bb8-postgres = "0.7"
 tokio-postgres = "0.7"
 tokio-pg-mapper = "0.2"
 tokio-pg-mapper-derive = "0.2"
+mongodb = "2.0"
 
 [profile.release]
 lto = true
