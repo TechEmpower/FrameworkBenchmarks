@@ -5,8 +5,8 @@ const dbName = "hello_world";
 
 export const client: MongoClient = new MongoClient();
 await client.connect(mongoUrl);
-export let World = client.database(dbName).collection("world");
-export let Fortune = client.database(dbName).collection("fortune");
+export const World = client.database(dbName).collection("world");
+export const Fortune = client.database(dbName).collection("fortune");
 
 export const randomNumber = (): number => Math.floor(Math.random() * 10000) + 1;
 
@@ -80,6 +80,7 @@ export const updateQuery = async () => {
   const one = (await World.findOne({
     id: randomNumber(),
   })) as any;
+  
   one.randomNumber = randomNumber();
   await World.updateOne(
     {
