@@ -43,7 +43,7 @@ async fn main() -> io::Result<()> {
         })
         .service(fn_service(handle))
     })
-    .force_flat_buf()
+    .disable_vectored_write()
     .max_request_headers::<8>()
     .on_worker_start(move || {
         if let Some(core) = cores.lock().unwrap().pop() {

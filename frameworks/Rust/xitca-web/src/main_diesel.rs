@@ -39,7 +39,7 @@ async fn main() -> io::Result<()> {
         })
         .service(fn_service(handle))
     })
-    .force_flat_buf()
+    .disable_vectored_write()
     .max_request_headers::<8>()
     .bind("0.0.0.0:8080")?
     .run()
