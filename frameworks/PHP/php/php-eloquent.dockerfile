@@ -25,3 +25,4 @@ EXPOSE 8080
 
 CMD service php8.1-fpm start && \
     nginx -c /php/deploy/nginx7.conf -g "daemon off;"
+
