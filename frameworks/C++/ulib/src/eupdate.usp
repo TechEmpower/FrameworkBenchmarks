@@ -3,99 +3,26 @@ Test type 5: Database updates
 TechEmpower Web Framework Benchmarks
 -->
 <!--#declaration
-#include "world.h"
-
-static char* pbuffer1;
-static char* pbuffer2;
-static char buffer1[128];
-static char buffer2[128];
-static UElasticSearchClient* es;
-
-#ifndef AS_cpoll_cppsp_DO
-static UVector<World*>* pvworld_update;
-#endif
-
-#define ULEN U_CONSTANT_SIZE("/tfb/world/")
-#define QLEN U_CONSTANT_SIZE("{\"doc\":{\"_id\":\"")
+#include "worldNoSql.h"
 
 static void usp_fork_eupdate()
 {
    U_TRACE(5, "::usp_fork_eupdate()")
 
-   U_NEW(UElasticSearchClient, es, UElasticSearchClient);
+   WorldNoSql::handlerForkElasticSearch();
 
-   if (es->connect() == false)
+   if (WorldNoSql::es)
       {
-      U_WARNING("usp_fork_eupdate(): connection disabled or failed");
+      (void) memcpy(WorldNoSql::es_buffer1,       U_CONSTANT_TO_PARAM("/tfb/world/"));
+      WorldNoSql::pbuffer1 = WorldNoSql::es_buffer1 + U_CONSTANT_SIZE("/tfb/world/");
 
-      return;
+      (void) memcpy(WorldNoSql::es_buffer2,       U_CONSTANT_TO_PARAM("{\"doc\":{\"_id\":\""));
+      WorldNoSql::pbuffer2 = WorldNoSql::es_buffer2 + U_CONSTANT_SIZE("{\"doc\":{\"_id\":\"");
       }
-
-   U_MEMCPY(buffer1, "/tfb/world/", ULEN);
-
-   pbuffer1 = buffer1 + ULEN;
-
-   U_MEMCPY(buffer2, "{\"doc\":{\"_id\":\"", QLEN);
-
-   pbuffer2 = buffer2 + QLEN;
-
-#ifndef AS_cpoll_cppsp_DO
-   U_NEW(UVector<World*>, pvworld_update, UVector<World*>(500));
-#endif
 }
-
-#ifdef DEBUG
-static void usp_end_eupdate()
-{
-   U_TRACE(5, "::usp_end_eupdate()")
-
-   delete es;
-
-#ifndef AS_cpoll_cppsp_DO
-   if (pvworld_update) delete pvworld_update;
-#endif
-}
-#endif
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
-uint32_t len1, len2, id, rnum;
-int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
-
-#ifdef AS_cpoll_cppsp_DO
-USP_PUTS_CHAR('[');
-#endif
-
-while (true)
-   {
-   len1 = u__snprintf(pbuffer1, 100, U_CONSTANT_TO_PARAM("%u/_update"), id = u_get_num_random(10000-1));
-   len2 = u__snprintf(pbuffer2, 100, U_CONSTANT_TO_PARAM("%u\"}}"),   rnum = u_get_num_random(10000-1));
-
-   (void) es->sendPOST(buffer1, len1+ULEN, buffer2, len2+QLEN);
-
-#ifdef AS_cpoll_cppsp_DO
-   USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", id, rnum);
-#else
-   World* pworld;
-
-   U_NEW(World, pworld, World(id, rnum));
-
-   pvworld_update->push_back(pworld);
-#endif
-
-   if (++i == num_queries) break;
-
-#ifdef AS_cpoll_cppsp_DO
-   USP_PUTS_CHAR(',');
-#endif
-   }
-
-#ifdef AS_cpoll_cppsp_DO
-USP_PUTS_CHAR(']');
-#else
-USP_OBJ_JSON_stringify(*pvworld_update);
-pvworld_update->clear();
-#endif
+World::doUpdateNoSql(WorldNoSql::handlerUpdateElasticSearch);
 -->

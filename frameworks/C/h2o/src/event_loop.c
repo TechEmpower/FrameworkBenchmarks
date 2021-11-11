@@ -22,7 +22,6 @@
 #include <inttypes.h>
 #include <limits.h>
 #include <netdb.h>
-#include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -37,8 +36,8 @@
 
 #include "error.h"
 #include "event_loop.h"
+#include "global_data.h"
 #include "thread.h"
-#include "utility.h"
 
 #define DEFAULT_TCP_FASTOPEN_QUEUE_LEN 4096
 
@@ -62,8 +61,10 @@ static void accept_connection(h2o_socket_t *listener, const char *err)
 		                                                      event_loop,
 		                                                      listener->data);
 
-		if (!ctx->global_data->shutdown) {
+		if (!ctx->shutdown) {
 			size_t accepted = ctx->config->max_accept;
+
+			assert(accepted);
 
 			do {
 				h2o_socket_t * const sock = h2o_evloop_socket_accept(listener);
@@ -169,16 +170,40 @@ static void on_close_connection(void *data)
 
 static void process_messages(h2o_multithread_receiver_t *receiver, h2o_linklist_t *messages)
 {
-	IGNORE_FUNCTION_PARAMETER(messages);
-
 	global_thread_data_t * const global_thread_data = H2O_STRUCT_FROM_MEMBER(global_thread_data_t,
 	                                                                         h2o_receiver,
 	                                                                         receiver);
 
-	if (global_thread_data->ctx->event_loop.h2o_https_socket)
-		h2o_socket_read_stop(global_thread_data->ctx->event_loop.h2o_https_socket);
+	while (!h2o_linklist_is_empty(messages)) {
+		message_t * const msg = H2O_STRUCT_FROM_MEMBER(message_t, super, messages->next);
 
-	h2o_socket_read_stop(global_thread_data->ctx->event_loop.h2o_socket);
+		h2o_linklist_unlink(&msg->super.link);
+
+		switch (msg->type) {
+			case SHUTDOWN:
+				// Close the listening sockets immediately, so that if another instance of
+				// the application is started before the current one exits (e.g. when doing
+				// an update), it will accept all incoming connections.
+				if (global_thread_data->ctx->event_loop.h2o_https_socket) {
+					h2o_socket_read_stop(global_thread_data->ctx->event_loop.h2o_https_socket);
+					h2o_socket_close(global_thread_data->ctx->event_loop.h2o_https_socket);
+					global_thread_data->ctx->event_loop.h2o_https_socket = NULL;
+				}
+
+				if (global_thread_data->ctx->event_loop.h2o_socket) {
+					h2o_socket_read_stop(global_thread_data->ctx->event_loop.h2o_socket);
+					h2o_socket_close(global_thread_data->ctx->event_loop.h2o_socket);
+					global_thread_data->ctx->event_loop.h2o_socket = NULL;
+				}
+
+				global_thread_data->ctx->shutdown = true;
+				break;
+			default:
+				break;
+		}
+
+		free(msg);
+	}
 }
 
 static void shutdown_server(h2o_socket_t *listener, const char *err)
@@ -190,14 +215,30 @@ static void shutdown_server(h2o_socket_t *listener, const char *err)
 		                                                      event_loop,
 		                                                      listener->data);
 
-		ctx->global_data->shutdown = true;
-		h2o_socket_read_stop(ctx->event_loop.h2o_socket);
+		ctx->shutdown = true;
 
-		if (ctx->event_loop.h2o_https_socket)
+		// Close the listening sockets immediately, so that if another instance
+		// of the application is started before the current one exits (e.g. when
+		// doing an update), it will accept all incoming connections.
+		if (ctx->event_loop.h2o_https_socket) {
 			h2o_socket_read_stop(ctx->event_loop.h2o_https_socket);
+			h2o_socket_close(ctx->event_loop.h2o_https_socket);
+			ctx->event_loop.h2o_https_socket = NULL;
+		}
 
-		for (size_t i = ctx->config->thread_num - 1; i > 0; i--)
-			h2o_multithread_send_message(&ctx->global_thread_data[i].h2o_receiver, NULL);
+		if (ctx->event_loop.h2o_socket) {
+			h2o_socket_read_stop(ctx->event_loop.h2o_socket);
+			h2o_socket_close(ctx->event_loop.h2o_socket);
+			ctx->event_loop.h2o_socket = NULL;
+		}
+
+		for (size_t i = ctx->config->thread_num - 1; i > 0; i--) {
+			message_t * const msg = h2o_mem_alloc(sizeof(*msg));
+
+			memset(msg, 0, sizeof(*msg));
+			msg->type = SHUTDOWN;
+			h2o_multithread_send_message(&ctx->global_thread_data[i].h2o_receiver, &msg->super);
+		}
 	}
 }
 
@@ -226,7 +267,7 @@ static void start_accept_polling(const config_t *config,
 
 void event_loop(thread_context_t *ctx)
 {
-	while (!ctx->global_data->shutdown || ctx->event_loop.conn_num)
+	while (!ctx->shutdown || ctx->event_loop.conn_num)
 		h2o_evloop_run(ctx->event_loop.h2o_ctx.loop, INT32_MAX);
 }
 
@@ -235,8 +276,10 @@ void free_event_loop(event_loop_t *event_loop, h2o_multithread_receiver_t *h2o_r
 	if (event_loop->h2o_https_socket)
 		h2o_socket_close(event_loop->h2o_https_socket);
 
+	if (event_loop->h2o_socket)
+		h2o_socket_close(event_loop->h2o_socket);
+
 	h2o_multithread_unregister_receiver(event_loop->h2o_ctx.queue, h2o_receiver);
-	h2o_socket_close(event_loop->h2o_socket);
 
 	h2o_loop_t * const loop = event_loop->h2o_ctx.loop;
 

@@ -1,0 +1,41 @@
+{
+  "framework": "evio",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "None",
+      "language": "Go",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Evio",
+      "notes": "",
+      "versus": "go"
+    },
+    "stdlib": {
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "None",
+      "language": "Go",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Evio",
+      "notes": "",
+      "versus": "go"
+    }
+  }]
+}

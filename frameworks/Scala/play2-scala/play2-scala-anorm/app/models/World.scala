@@ -7,19 +7,18 @@ import anorm.SqlParser._
 import java.sql.Connection
 import play.api.db.Database
 import play.api.libs.json._
-import play.db.NamedDatabase
 
-case class World(id: Id[Long], randomNumber: Long)
+case class World(id: Long, randomNumber: Long)
 
 @Singleton()
-class WorldDAO @Inject()(@NamedDatabase("hello_world") protected val db: Database) {
+class WorldDAO @Inject()(protected val db: Database) {
   /**
    * Parse a World from a ResultSet
    */
   private val simpleRowParser = {
     get[Long]("world.id") ~
     get[Long]("world.randomNumber") map {
-      case id~randomNumber => World(Id(id), randomNumber)
+      case id~randomNumber => World(id, randomNumber)
     }
   }
 
@@ -30,8 +29,8 @@ class WorldDAO @Inject()(@NamedDatabase("hello_world") protected val db: Databas
     SQL"SELECT * FROM World WHERE id = $id".as(simpleRowParser.single)
   }
 
-  def updateRandom(world: World)(implicit connection: Connection) {
-    SQL"UPDATE World SET randomNumber = ${world.randomNumber} WHERE id = ${world.id.get}".executeUpdate()
+  def updateRandom(world: World)(implicit connection: Connection): Unit = {
+    SQL"UPDATE World SET randomNumber = ${world.randomNumber} WHERE id = ${world.id}".executeUpdate()
   }
 }
 
@@ -42,7 +41,7 @@ object WorldJsonHelpers {
   implicit val toJson = new Writes[World] {
     def writes(w: World): JsValue = {
       Json.obj(
-        "id" -> w.id.get,
+        "id" -> w.id,
         "randomNumber" -> w.randomNumber
       )
     }

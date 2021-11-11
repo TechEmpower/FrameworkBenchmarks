@@ -1,0 +1,15 @@
+.idea/
+*/*.iml
+target/
+.history
+.cache
+**/*.class
+**/*.log
+
+# sbt specific
+.lib/
+dist/*
+**/target*
+project/target
+project/project/target
+project/plugins/project/

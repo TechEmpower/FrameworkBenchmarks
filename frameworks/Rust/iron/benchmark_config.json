@@ -2,11 +2,11 @@
   "framework": "iron",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "fortune_url": "/fortune",
       "query_url": "/queries?queries=",
+      "cached_query_url": "/cached-worlds?queries=",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,

@@ -2,32 +2,35 @@ const h = require('../helper');
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
-  host: 'TFB-database',
+  host: 'tfb-database',
   dialect: 'postgres',
-  logging: false
+  logging: false,
+  pool: {
+    min: 20, max: 20
+  }
 });
 
-const Worlds = sequelize.define('World', {
+const Worlds = sequelize.define('world', {
   id: {
     type: 'Sequelize.INTEGER',
     primaryKey: true
   },
   randomnumber: { type: 'Sequelize.INTEGER' }
 }, {
-  timestamps: false,
-  freezeTableName: true
-});
+    timestamps: false,
+    freezeTableName: true
+  });
 
-const Fortunes = sequelize.define('Fortune', {
+const Fortunes = sequelize.define('fortune', {
   id: {
     type: 'Sequelize.INTEGER',
     primaryKey: true
   },
   message: { type: 'Sequelize.STRING' }
 }, {
-  timestamps: false,
-  freezeTableName: true
-});
+    timestamps: false,
+    freezeTableName: true
+  });
 
 const randomWorldPromise = () => {
   return Worlds.findOne({
@@ -51,7 +54,7 @@ module.exports = {
 
     for (let i = 0; i < queries; i++) {
       worldPromises.push(randomWorldPromise());
-    } 
+    }
 
     Promise.all(worldPromises).then((worlds) => {
       h.addTfbHeaders(res, 'json');
@@ -79,16 +82,16 @@ module.exports = {
     }
 
     const worldUpdate = (world) => {
-      world.randomNumber = h.randomTfbNumber();
+      world.randomnumber = h.randomTfbNumber();
 
       return Worlds.update({
-        randomNumber: world.randomNumber
+        randomnumber: world.randomnumber
       },
-      {
-        where: { id: world.id }
-      }).then((results) => {
-        return world;
-      }).catch((err) => process.exit(1));
+        {
+          where: { id: world.id }
+        }).then((results) => {
+          return world;
+        }).catch((err) => process.exit(1));
     };
 
     Promise.all(worldPromises).then((worlds) => {

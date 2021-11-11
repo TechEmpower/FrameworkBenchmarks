@@ -31,7 +31,7 @@ under the License.
   <fileSets>
     <fileSet>
       <directory>${project.basedir}</directory>
-      <outputDirectory></outputDirectory>
+      <outputDirectory>.</outputDirectory>
       <includes>
         <include>README.md</include>
       </includes>
@@ -40,17 +40,13 @@ under the License.
       <directory>${project.build.directory}</directory>
       <outputDirectory></outputDirectory>
       <includes>
-        <include>classes/**</include>
-        <include>asset/**</include>
+        <include>classes/**/*.properties</include>
+        <include>classes/**/route*.*</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/src/main/asset</directory>
-      <outputDirectory>asset</outputDirectory>
-    </fileSet>
-    <fileSet>
       <directory>${project.basedir}/src/main/bin</directory>
-      <outputDirectory></outputDirectory>
+      <outputDirectory>.</outputDirectory>
       <includes>
         <include>*</include>
       </includes>
@@ -64,3 +60,4 @@ under the License.
     </dependencySet>
   </dependencySets>
 </assembly>
+

@@ -27,7 +27,7 @@ def connect(dbtype)
     :adapter=>(dbtype == :mysql ? 'mysql2' : 'postgresql'),
     :username=>'benchmarkdbuser',
     :password=>'benchmarkdbpass',
-    :host=>ENV.fetch('DBHOST', '127.0.0.1'),
+    :host=>'tfb-database',
     :database=>'hello_world'
   }
 

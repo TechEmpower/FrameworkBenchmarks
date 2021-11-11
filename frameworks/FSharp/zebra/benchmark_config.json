@@ -1,0 +1,46 @@
+{
+  "framework": "zebra",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "fullstack",
+        "database": "Postgres",
+        "framework": "zebra",
+        "language": "F#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Zebra, Dapper",
+        "notes": "",
+        "versus": "aspcore"
+      },
+      "simple": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "zebra",
+        "language": "F#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Zebra, Simple",
+        "notes": "",
+        "versus": "aspcore"
+      }
+    }
+  ]
+}

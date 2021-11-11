@@ -5,17 +5,19 @@
     <groupId>hello.world</groupId>
     <artifactId>hello-spark</artifactId>
     <name>Spark Test project</name>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <version>1.0.0-BUILD-SNAPSHOT</version>
 
     <properties>
-        <java-version>1.8</java-version>
-        <spark-version>2.3</spark-version>
-        <hibernate-version>4.3.0.Final</hibernate-version>
-        <gson-version>2.2.4</gson-version>
-        <mysql-connector-version>5.1.38</mysql-connector-version>
-        <slf4j-version>1.7.5</slf4j-version>
-        <db-host>localhost</db-host>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <spark-version>2.9.0</spark-version>
+        <hibernate-version>5.4.2.Final</hibernate-version>
+        <gson-version>2.8.5</gson-version>
+        <mysql-connector-version>8.0.18</mysql-connector-version>
+        <slf4j-version>1.7.25</slf4j-version>
+        <exec.mainClass>hello.web.SparkApplication</exec.mainClass>
     </properties>
 
     <prerequisites>
@@ -28,39 +30,28 @@
             <artifactId>spark-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
+            <groupId>com.sparkjava</groupId>
+            <artifactId>spark-template-mustache</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>${gson-version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>${hibernate-version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-c3p0</artifactId>
-            <version>${hibernate-version}</version>
+            <artifactId>hibernate-hikaricp</artifactId>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql-connector-version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.j2html</groupId>
-            <artifactId>j2html</artifactId>
-            <version>0.7</version>
         </dependency>
     </dependencies>
 
@@ -70,16 +61,31 @@
                 <groupId>com.sparkjava</groupId>
                 <artifactId>spark-core</artifactId>
                 <version>${spark-version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty</groupId>
-                        <artifactId>jetty-server</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty</groupId>
-                        <artifactId>jetty-webapp</artifactId>
-                    </exclusion>
-                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.sparkjava</groupId>
+                <artifactId>spark-template-mustache</artifactId>
+                <version>2.7.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>${hibernate-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-hikaricp</artifactId>
+                <version>${hibernate-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -94,21 +100,6 @@
         </dependencies>
     </dependencyManagement>
 
-    <profiles>
-        <profile>
-            <id>standalone</id>
-            <dependencyManagement>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.sparkjava</groupId>
-                        <artifactId>spark-core</artifactId>
-                        <version>${spark-version}</version>
-                    </dependency>
-                </dependencies>
-            </dependencyManagement>
-        </profile>
-    </profiles>
-
     <build>
         <resources>
             <resource>
@@ -120,27 +111,33 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
                 <configuration>
-                    <source>${java-version}</source>
-                    <target>${java-version}</target>
-                </configuration>
+                    <debug>false</debug>
+				</configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <warName>spark</warName>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.1</version>
-                    <configuration>
-                        <systemProperties>
-                            <jndi>false</jndi>
-                        </systemProperties>
-                    </configuration>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${exec.mainClass}</mainClass>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

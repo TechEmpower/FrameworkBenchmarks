@@ -4,7 +4,7 @@ from operator import itemgetter
 from gluon.storage import Storage
 from gluon.dal import DAL, Field, Row
 
-DBHOST = os.environ.get('DBHOST', 'localhost')
+DBHOST = 'tfb-database'
 DATABASE_URI = 'mysql://benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world' % DBHOST
 
 class Dal(object):
@@ -32,19 +32,14 @@ class Dal(object):
 class RawDal(Dal):
     def __init__(self):
         super(RawDal, self).__init__()
-        self.world_updates = []
 
     def get_world(self, wid):
         return self.db.executesql('SELECT * FROM World WHERE id = %s',
                                   placeholders=[wid], as_dict=True)[0]
 
     def update_world(self, wid, randomNumber):
-        self.world_updates.extend([randomNumber, wid])
-
-    def flush_world_updates(self):
-        query = ';'.join('UPDATE World SET randomNumber=%s WHERE id=%s'
-                         for _ in xrange(len(self.world_updates) / 2))
-        self.db.executesql(query, placeholders=self.world_updates)
+        self.db.executesql('UPDATE World SET randomNumber=%s WHERE id=%s',
+                           placeholders=[randomNumber, wid])
 
     def get_fortunes(self, new_message):
         fortunes = self.db.executesql('SELECT * FROM Fortune', as_dict=True)

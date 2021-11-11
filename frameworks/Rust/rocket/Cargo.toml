@@ -1,0 +1,26 @@
+[package]
+name = "rocket"
+version = "0.1.0"
+authors = ["Marcelo Barbosa <mbarbosa@gmail.com>", "Brendan Hansknecht <brendan.hansknecht@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+diesel = { version = "1.4.5", features = ["postgres", "r2d2"] }
+num_cpus = "1.13.0"
+rand = "0.7.3"
+rocket = "0.4.5"
+serde = "1.0.115"
+serde_json = "1.0.57"
+serde_derive = "1.0.115"
+yarte = "0.12.2"
+lazy_static = "1.4.0"
+
+[dependencies.rocket_contrib]
+version = "*"
+default-features = false
+features = ["json"]
+
+[profile.release]
+lto = true
+opt-level = 3
+codegen-units = 1

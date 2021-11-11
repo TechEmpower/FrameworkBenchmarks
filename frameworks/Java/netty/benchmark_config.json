@@ -2,7 +2,6 @@
   "framework": "netty",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,

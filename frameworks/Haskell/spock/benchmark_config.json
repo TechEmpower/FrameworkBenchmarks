@@ -2,11 +2,10 @@
   "framework": "spock",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 3000,
@@ -23,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "Spock",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     }
   }]
 }

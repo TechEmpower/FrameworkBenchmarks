@@ -12,8 +12,9 @@ import com.jsoniter.output.StreamImplString;
  *
  */
 public final class World {
-    public int id;
-    public int randomNumber;
+	
+    public final int id;
+    public final int randomNumber;
 
     /**
      * Constructs a new world object with the given parameters.

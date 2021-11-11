@@ -5,97 +5,58 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static World*         pworld_query;
-static UOrmSession*   psql_query;
-static UOrmStatement* pstmt_query;
+static uint32_t num_queries;
 
-#ifndef AS_cpoll_cppsp_DO
-static UVector<World*>* pvworld_query;
-#endif
-
-static void usp_fork_query()
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+static void handlerResult(void* res, uint32_t num_result)
 {
-   U_TRACE(5, "::usp_fork_query()")
+   U_TRACE(5, "::handlerResult(%p,%u)", res, num_result)
 
-   U_NEW(UOrmSession, psql_query, UOrmSession(U_CONSTANT_TO_PARAM("hello_world")));
+   U_INTERNAL_ASSERT_EQUALS(PQnfields((PGresult*)res), 1)
+   U_INTERNAL_ASSERT_EQUALS(PQntuples((PGresult*)res), 1)
 
-   if (psql_query->isReady() == false)
-      {
-      U_WARNING("usp_fork_query(): we cound't connect to db");
+   char* randomNumber = U_SYSCALL(PQgetvalue, "%p,%d,%d", (PGresult*)res, 0, 0);
 
-      return;
-      }
+   if (num_result == 1) World::initResult();
+   else                 World::addResult(num_result);
 
-   U_NEW(UOrmStatement, pstmt_query, UOrmStatement(*psql_query, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
+   World::addRandom(ntohl(*(uint32_t*)randomNumber));
 
-   if (UOrmDriver::isPGSQL()) *psql_query << "BEGIN TRANSACTION";
-
-   U_NEW(World, pworld_query, World);
-
-   pstmt_query->use( pworld_query->id);
-   pstmt_query->into(pworld_query->randomNumber);
-
-#ifndef AS_cpoll_cppsp_DO
-   U_NEW(UVector<World*>, pvworld_query, UVector<World*>(500));
-#endif
-}
-
-#ifdef DEBUG
-static void usp_end_query()
-{
-   U_TRACE(5, "::usp_end_query()")
-
-   delete psql_query;
-
-   if (pstmt_query)
-      {
-      delete pstmt_query;
-      delete pworld_query;
-
-#  ifndef AS_cpoll_cppsp_DO
-      delete pvworld_query;
-#  endif
-      }
+   if (num_result == num_queries) World::endResult();
 }
 #endif
+
+static void usp_init_query() { World::handlerInitSql(); }
+static void usp_fork_query() { World::handlerForkSql(); }
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
-int i = 0, num_queries = UHTTP::getFormFirstNumericValue(1, 500);
+uint32_t i = 0;
 
-#ifdef AS_cpoll_cppsp_DO
-USP_PUTS_CHAR('[');
-#endif
+num_queries = UHTTP::getFormFirstNumericValue(1, 500);
 
-while (true)
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+if (World::pstmt)
    {
-   pworld_query->id = u_get_num_random(10000-1);
+   while (i < num_queries) World::sendQueryPrepared(i++);
 
-   pstmt_query->execute();
-
-#ifdef AS_cpoll_cppsp_DO
-   USP_PRINTF("{\"id\":%u,\"randomNumber\":%u}", pworld_query->id, pworld_query->randomNumber);
-#else
-   World* pworld;
-
-   U_NEW(World, pworld, World(*pworld_query));
-
-   pvworld_query->push_back(pworld);
+   UServer_Base::handler_db1->handlerQuery(handlerResult, num_queries);
+   }
+else
 #endif
+{
+World::initResult();
 
-   if (++i == num_queries) break;
+for (; i < num_queries; ++i)
+   {
+   World::pworld_query->id = World::rnumber[i];
 
-#ifdef AS_cpoll_cppsp_DO
-   USP_PUTS_CHAR(',');
-#endif
+   World::pstmt_query->execute();
+
+   World::handlerResult(i, World::pworld_query->randomNumber);
    }
 
-#ifdef AS_cpoll_cppsp_DO
-USP_PUTS_CHAR(']');
-#else
-USP_OBJ_JSON_stringify(*pvworld_query);
-pvworld_query->clear();
-#endif
+World::endResult();
+}
 -->

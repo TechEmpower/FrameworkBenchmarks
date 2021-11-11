@@ -1,10 +1,30 @@
 {
+    "name": "cakephp/app",
+    "description": "CakePHP skeleton app",
+    "homepage": "https://cakephp.org",
+    "type": "project",
+    "license": "MIT",
     "require": {
-        "cakephp/cakephp": "2.5.7"
+        "cakephp/cakephp": "^4.1",
+        "cakephp/plugin-installer": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "scripts": {
+        "check": [
+            "@test",
+            "@cs-check"
+        ],
+        "cs-check": "phpcs --colors -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
+        "cs-fix": "phpcbf --colors --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
+        "stan": "phpstan analyse src/",
+        "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan-shim:^0.11 && mv composer.backup composer.json",
+        "test": "phpunit --colors=always"
     },
     "config": {
-        "vendor-dir": "app/Vendor"
+        "sort-packages": true
     }
-
 }
-

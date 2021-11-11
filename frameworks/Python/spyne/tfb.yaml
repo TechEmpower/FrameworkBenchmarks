@@ -1,0 +1,53 @@
+ServiceDaemon:
+    alert_dests: []
+    autoreload: false
+    daemonize: false
+    debug: true
+    debug_reactor: false
+    file_version: 2
+    log_cloth: false
+    log_dbconn: false
+    log_interface: false
+    log_model: false
+    log_orm: false
+    log_protocol: false
+    log_queries: false
+    log_results: false
+    log_rss: false
+    log_sqlalchemy: false
+    logger_dest_rotation_compression: gzip
+    logger_dest_rotation_period: WEEKLY
+    loggers:
+    -   Logger:
+            level: ERROR
+            path: .
+    main_store: sql_main
+    name: tfb
+    services:
+    -   HttpServer:
+            backlog: 50
+            disabled: true
+            host: 127.0.0.1
+            name: root
+            port: 8080
+            subapps:
+            -   HttpApplication:
+                    url: ''
+            type: tcp4
+    stores:
+    -   RelationalStore:
+            async_pool: true
+            backend: sqlalchemy
+            conn_str: postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
+            echo_pool: false
+            max_overflow: 3
+            name: sql_main
+            pool_pre_ping: true
+            pool_recycle: 3600
+            pool_size: 10
+            pool_timeout: 30
+            pool_use_lifo: false
+            sync_case_sensitive: false
+            sync_pool: true
+            sync_pool_type: QueuePool
+    uuid: fef52ff8-3103-11e9-b0e1-5453edabe249

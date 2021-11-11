@@ -1,0 +1,19 @@
+[package]
+name = "may-minihttp"
+version = "0.1.0"
+authors = ["Xudong Huang <huangxu008@hotmail.com>"]
+edition = "2018"
+
+[dependencies]
+may = "0.3"
+mimalloc = "0.1"
+num_cpus = "1.0"
+oorandom = "11"
+smallvec = "1.1"
+yarte = { version = "0.15", features = ["bytes-buf", "json"] }
+may_postgres = { git = "https://github.com/Xudong-Huang/may_postgres.git" }
+may_minihttp = { git = "https://github.com/Xudong-Huang/may_minihttp.git" }
+
+[profile.release]
+lto = true
+codegen-units = 1

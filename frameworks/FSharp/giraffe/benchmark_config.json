@@ -1,0 +1,63 @@
+{
+  "framework": "giraffe",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "fullstack",
+        "database": "Postgres",
+        "framework": "giraffe",
+        "language": "F#",
+        "orm": "micro",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Giraffe, Default with Dapper",
+        "notes": "",
+        "versus": "aspcore"
+      },
+      "utf8json": {
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "giraffe",
+        "language": "F#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Giraffe, Utf8Json",
+        "notes": "",
+        "versus": "aspcore"
+      },
+      "newtonsoft": {
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "Giraffe",
+        "language": "F#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Giraffe, NewtonsoftJson",
+        "notes": "",
+        "versus": "aspcore"
+      }
+    }
+  ]
+}

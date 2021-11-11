@@ -1,19 +1,19 @@
 const h = require('../helper');
 const async = require('async');
 const Mongoose = require('mongoose');
-const connection = Mongoose.connect('mongodb://TFB-database/hello_world');
+const connection = Mongoose.createConnection('mongodb://tfb-database/hello_world');
 
 // Mongoose Setup
 const WorldSchema = new Mongoose.Schema({
-    id          : Number,
-    randomNumber: Number
-  }, {
+  id: Number,
+  randomNumber: Number
+}, {
     collection: 'world'
   });
 const FortuneSchema = new Mongoose.Schema({
-    id:      Number,
-    message: String
-  }, {
+  id: Number,
+  message: String
+}, {
     collection: 'fortune'
   });
 
@@ -83,8 +83,8 @@ module.exports = {
             Worlds.update({
               id: worlds[i].id
             }, {
-              randomNumber: worlds[i].randomNumber
-            }, callback);
+                randomNumber: worlds[i].randomNumber
+              }, callback);
           });
         })(i);
       }

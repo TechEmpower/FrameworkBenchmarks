@@ -1,0 +1,32 @@
+[framework]
+name = "nancy"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries/"
+approach = "Realistic"
+classification = "Micro"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Micro"
+platform = ".NET"
+webserver = "Kestrel"
+versus = "aspcore-mono"
+
+[netcore]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries/"
+approach = "Realistic"
+classification = "Micro"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Micro"
+platform = ".NET"
+webserver = "Kestrel"
+versus = "aspcore"

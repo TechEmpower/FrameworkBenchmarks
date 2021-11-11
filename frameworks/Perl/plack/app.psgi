@@ -1,34 +1,27 @@
-use strict;
-use v5.16;
-use utf8;
-use JSON::XS qw(encode_json);
+use strict; use feature 'state';
+use JSON::XS 'encode_json';
 use DBI;
+use List::Util qw'min max';
 
-my $dbh = DBI->connect_cached(
-    'dbi:mysql:database=hello_world;host=localhost;port=3306', 
-    'benchmarkdbuser',
-    'benchmarkdbpass',
-    { AutoInactiveDestroy => 1, mysql_enable_utf8 => 1 }
-) || die $!;
-
-my $query = 'SELECT id, randomNumber FROM World WHERE id = ?';
-my $header = [qw(Content-Type application/json)];
-my $message = { message => 'Hello, World!' };
-
-my $app = sub {
+sub {
+    state $dbh = DBI->connect(
+	'dbi:mysql:database=hello_world;host=tfb-database;port=3306',
+	'benchmarkdbuser', 'benchmarkdbpass',
+	+{ qw'RaiseError 0 PrintError 0 mysql_enable_utf8 1' }
+    ) || die $!;
+    state $sth = $dbh->prepare('select id,randomnumber from world where id = ?');
     my $env = shift;
-    if ( $env->{PATH_INFO} eq '/json' ) {
-        return [ 200, $header, [ encode_json($message) ]];
-    }
-    elsif ( $env->{PATH_INFO} eq '/db' ) {
-        my ($n) = ($env->{QUERY_STRING} || "" ) =~ m!queries=(\d+)!;
-        $n //= 1;
-        my @rs = map {{id=>$_->[0]+0,randomNumber=>$_->[1]+0}} 
-            map { $dbh->selectrow_arrayref($query,{},int rand 10000 + 1) } 1..$n;
-        return [ 200, $header, [ '{}' ]] unless @rs;
-        return [ 200, $header, [ encode_json( @rs > 1 ? \@rs : $rs[0] ) ]];
+    my $path = $env->{PATH_INFO};
+    return [200, [qw(Content-Type application/json)], [encode_json(+{ message => 'Hello, World!' })]] if $path eq '/json';
+    return [200, [qw(Content-Type text/plain)], ['Hello, World!']] if $path eq '/plaintext';
+    if ( $path eq '/db' ) {
+	my ($n) = ($env->{QUERY_STRING} // '' ) =~ m/queries=(\d+)/;
+	$n = max(1, min($n//1, 500));
+	my @rs = map {
+	    $sth->execute(my $id = int(rand 10000) + 1);
+	    +{ id => $id, randomNumber => 0+ $sth->fetch->[0] }
+	} 1..$n;
+	return [ 200, [qw(Content-Type application/json)], [encode_json($env->{QUERY_STRING} ? \@rs : $rs[0] // {})]];
     }
     [ 404, [], ['not found']];
-};
-
-$app;
+}

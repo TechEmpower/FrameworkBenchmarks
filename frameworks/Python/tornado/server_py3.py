@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-
-import json
+import asyncio
+import ujson as json
 import motor
+import uvloop
 import tornado.ioloop
 import tornado.web
 import tornado.httpserver
@@ -9,9 +10,6 @@ import tornado.httpserver
 from random import randint
 from tornado.options import options
 from commons import JsonHandler, JsonHelloWorldHandler, PlaintextHelloWorldHandler, HtmlHandler
-from tornado.ioloop import IOLoop
-
-IOLoop.configure('tornado.platform.asyncio.AsyncIOLoop')
 
 
 options.define('port', default=8888, type=int, help="Server port")
@@ -37,15 +35,17 @@ class MultipleQueriesHandler(JsonHandler):
             queries = int(self.get_argument(self.QUERIES))
         except Exception:
             queries = 1
-        else:
-            if queries < 1:
-                queries = 1
-            elif queries > 500:
-                queries = 500
+
+        if queries < 1:
+            queries = 1
+        elif queries > 500:
+            queries = 500
 
         worlds = []
-        for future in [db.world.find_one(randint(1, 10000)) for _ in range(queries)]:
-            world = await future
+        futures, _ = await asyncio.wait([db.world.find_one(randint(1, 10000)) for _ in range(queries)])
+
+        for future in futures:
+            world = future.result()
 
             worlds.append({self.ID: int(world['_id']),
                     self.RANDOM_NUMBER: int(world[self.RANDOM_NUMBER])})
@@ -59,32 +59,32 @@ class UpdateHandler(JsonHandler):
             queries = int(self.get_argument(self.QUERIES))
         except Exception:
             queries = 1
-        else:
-            if queries < 1:
-                queries = 1
-            elif queries > 500:
-                queries = 500
+
+        if queries < 1:
+            queries = 1
+        elif queries > 500:
+            queries = 500
 
         worlds = []
-        futures = [db.world.find_one(randint(1, 10000)) for _ in range(queries)]
+        updates = []
+        futures, _ = await asyncio.wait([db.world.find_one(randint(1, 10000)) for _ in range(queries)])
 
-        for world in futures:
-            world = await world
+        for future in futures:
+            world = future.result()
             new_value = randint(1, 10000)
-            await db.world.update_one({'_id': world['_id']}, {"$set": {self.RANDOM_NUMBER: new_value}})
 
+            updates.append(db.world.update_one({'_id': world['_id']}, {"$set": {self.RANDOM_NUMBER: new_value}}))
             worlds.append({self.ID: int(world['_id']),
                     self.RANDOM_NUMBER: world[self.RANDOM_NUMBER]})
+        await asyncio.wait(updates)
+
         self.finish(json.dumps(worlds))
 
 
 class FortuneHandler(HtmlHandler):
     async def get(self):
-        fortunes = []
-
-        async for fortune in db.fortune.find():
-            fortunes.append(fortune)
-        fortunes.append({self.ID: 0, 'message': 'Additional fortune added at request time.'})
+        fortunes = [fortune async for fortune in db.fortune.find()]
+        fortunes.append({'id': 0, 'message': 'Additional fortune added at request time.'})
 
         fortunes.sort(key=lambda f: f['message'])
         self.render('fortunes.html', fortunes=fortunes)
@@ -101,13 +101,15 @@ application = tornado.web.Application([
     template_path="templates"
 )
 
+application.ui_modules = {}
 
 if __name__ == "__main__":
+    uvloop.install()
     tornado.options.parse_command_line()
     server = tornado.httpserver.HTTPServer(application)
-    server.bind(options.port, backlog=options.backlog)
+    server.bind(options.port, backlog=options.backlog, reuse_port=True)
     server.start(0)
 
     ioloop = tornado.ioloop.IOLoop.instance()
-    db = motor.MotorClient(options.mongo).hello_world
+    db = motor.MotorClient(options.mongo, maxPoolSize=500).hello_world
     ioloop.start()

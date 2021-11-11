@@ -1,0 +1,18 @@
+name: raze
+version: 0.1.0
+
+targets:
+  raze:
+    main: src/raze.cr
+
+crystal: 0.26.1
+
+license: MIT
+
+dependencies:
+  raze:
+    github: samueleaton/raze
+    version: 0.3.0
+  pg:
+    github: will/crystal-pg
+    version: 0.15.0

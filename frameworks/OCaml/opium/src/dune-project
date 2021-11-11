@@ -1,0 +1,47 @@
+(lang dune 2.7)
+
+(name opi)
+
+(generate_opam_files true)
+
+(source
+ (github TechEmpower/FrameworkBenchmarks))
+
+(license MIT)
+
+(authors "Robin Bjorklin" "mud")
+
+(maintainers "mud")
+
+(package
+ (name opi)
+ (synopsis "Rudimentary implementation of the Tech Empower Benchmark suite")
+ (depends
+  (dune
+   (>= 2.7.1))
+  (conf-libev
+   (>= 4-11))
+  (lwt
+   (>= 5.3.0))
+  (lwt_ppx
+   (>= 2.0.1))
+  ;; web server
+  (opium
+   (>= 0.18.0))
+  ;; Database interface
+  (caqti
+   (>= 1.2.3))
+  (caqti-lwt
+   (>= 1.2.0))
+  (caqti-driver-postgresql
+   (>= 1.2.4))
+  (ppx_rapper
+   (>= 2.0.0))
+  ;; JSON
+  (yojson
+   (>= 1.7.0))
+  (ppx_deriving_yojson
+   (>= 3.5.3))
+  ;; HTML generation
+  (tyxml
+   (>= 4.4.0))))

@@ -2,14 +2,15 @@
 installs
 *.log
 node_modules/
+.travis.bak
 
 # Added for pedestal framework test
 .lein-deps-sum
 
 # eclipse
-.classpath
-.project
-.settings
+**/.classpath
+**/.project
+**/.settings
 
 # maven
 target/
@@ -22,6 +23,10 @@ mods/
 */src/main/java/META-INF/
 *.versionsBackup
 bin/
+
+# gradle
+build/
+.gradle/
 
 # common junk
 *.log
@@ -52,36 +57,11 @@ benchmark.cfg
 # netbeans
 /nbproject
 
+# Visual Studio Code
+.vscode
+
 # vim
 .*.sw[a-p]
 
 # merge tooling
 *.orig
-
-# maven
-*.versionsBackup
-*.releaseBackup
-
-# python-isms
-*.pyc
-
-# java / ruby stuff
-*.lock
-*.war
-
-# go
-go/pkg/*
-beego/pkg/*
-
-# urweb
-frameworks/Ur/urweb/*.exe
-
-# nim
-nimcache
-
-# crystal
-.crystal
-*.out
-
-#don't ignore merge request templates
-!.github/

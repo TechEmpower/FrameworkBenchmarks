@@ -6,82 +6,91 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.vertx</groupId>
-  <artifactId>vertx-benchmark</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <artifactId>vertx-web-benchmark</artifactId>
+  <version>4.1.5</version>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
     <!-- the main class -->
     <main.verticle>io.vertx.benchmark.App</main.verticle>
-    <vertx.version>3.3.2</vertx.version>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-stack-depchain</artifactId>
+        <version>${project.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-core</artifactId>
-      <version>${vertx.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-blackbird</artifactId>
+      <version>2.12.4</version>
     </dependency>
 
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-web</artifactId>
-      <version>${vertx.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-mongo-client</artifactId>
-      <version>${vertx.version}</version>
+      <artifactId>vertx-pg-client</artifactId>
     </dependency>
 
     <dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-mysql-postgresql-client</artifactId>
-      <version>${vertx.version}</version>
+      <artifactId>vertx-web-templ-rocker</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-web-templ-handlebars</artifactId>
-      <version>${vertx.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.github.susom</groupId>
-      <artifactId>database</artifactId>
-      <version>2.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>42.1.1</version>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-transport-native-epoll</artifactId>
+      <classifier>linux-x86_64</classifier>
     </dependency>
 
   </dependencies>
 
   <build>
 
-    <pluginManagement>
-      <plugins>
-        <!-- We specify the Maven compiler plugin as we need to set it to Java 1.8 -->
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.1</version>
-          <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-
-    <!--
-    You only need the part below if you want to build your application into a fat executable jar.
-    This is a jar that contains all the dependencies required to run it, so you can just run it with
-    java -jar
-    -->
     <plugins>
+      <plugin>
+        <groupId>com.fizzed</groupId>
+        <artifactId>rocker-maven-plugin</artifactId>
+        <version>1.3.0</version>
+        <executions>
+          <execution>
+            <id>generate-rocker-templates</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <templateDirectory>${project.basedir}/src/main/resources</templateDirectory>
+              <optimize>true</optimize>
+              <javaVersion>1.8</javaVersion>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!--
+      You only need the part below if you want to build your application into a fat executable jar.
+      This is a jar that contains all the dependencies required to run it, so you can just run it with
+      java -jar
+      -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>

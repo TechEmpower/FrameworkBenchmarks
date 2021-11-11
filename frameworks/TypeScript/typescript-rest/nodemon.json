@@ -1,0 +1,14 @@
+{
+  "ignore": [
+    ".git",
+    "node_modules"
+  ],
+  "watch": [
+    "."
+  ],
+  "events": {
+    "restart": "fuser -k 3000/tcp"
+  },
+  "exec": "ts-node ./src/index.ts",
+  "ext": "ts"
+}

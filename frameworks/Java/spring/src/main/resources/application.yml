@@ -1,31 +1,36 @@
 ---
 spring:
+  profiles: jdbc,jpa
   datasource:
-    initialize: false
-    driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://${database.host:localhost}:3306/hello_world?jdbcCompliantTruncation=false&elideSetAutoCommits=true&useLocalSessionState=true&cachePrepStmts=true&cacheCallableStmts=true&alwaysSendSetIsolation=false&prepStmtCacheSize=4096&cacheServerConfiguration=true&prepStmtCacheSqlLimit=2048&zeroDateTimeBehavior=convertToNull&traceProtocol=false&useUnbufferedInput=false&useReadAheadInput=false&maintainTimeStats=false&useServerPrepStmts&cacheRSMetadata=true
-    username: benchmarkdbuser
-    password: benchmarkdbpass
-  jpa:
-    show_sql: false
-    hibernate:
-      naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
-      ddl-auto: validate
-    open_in_view: false
-  http:
-    encoding:
-      enabled: false
-server:
-  server-header: Undertow
+    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
+    username: ${database.username}
+    password: ${database.password}
+
+database:
+  name: hello_world
+  host: tfb-database
+  port: 5432
+  username: benchmarkdbuser
+  password: benchmarkdbpass
 
 ---
 spring:
-  profiles: local
-  datasource:
-    initialize: true
-    driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:framework_benchmark
+  profiles: jpa
   jpa:
-    hibernate:
-      naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
-      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+---
+spring:
+  profiles: mongo
+
+spring.data.mongodb:
+  host: tfb-database
+  port: 27017
+  database: hello_world
+
+---
+spring:
+  profiles:
+    active: jdbc
+
+server.server-header: Spring

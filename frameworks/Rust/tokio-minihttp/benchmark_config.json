@@ -2,7 +2,6 @@
   "framework": "tokio-minihttp",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/db",

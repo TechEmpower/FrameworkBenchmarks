@@ -1,0 +1,40 @@
+<configuration>
+  <appender name="STDOUT_AKKA" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%date{ISO8601} %-5level %logger{36} %X{akkaSource} - %msg%n</pattern>
+      <!--pattern>%date{ISO8601} [%X{sourceThread}] %-5level %logger{36} %X{akkaTimestamp} %X{akkaSource} %X{sourceActorSystem} - %msg%n</pattern-->
+    </encoder>
+  </appender>
+
+  <appender name="ASYNC_AKKA" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="STDOUT_AKKA" />
+  </appender>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%date{ISO8601} %-5level %logger{36} - %msg%n</pattern>
+      <!--pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg%n</pattern-->
+    </encoder>
+  </appender>
+
+  <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="STDOUT" />
+  </appender>
+
+  <logger name="akka" level="ERROR" additivity="false">
+    <appender-ref ref="ASYNC_AKKA"/>
+  </logger>
+
+  <logger name="com.zaxxer.hikari" level="ERROR"/>
+
+  <logger name="slick" level="ERROR"/>
+
+  <logger name="net.benchmark.akka.http.Main" level="INFO"/>
+
+  <logger name="net.benchmark" level="ERROR"/>
+
+  <root level="ERROR">
+    <appender-ref ref="ASYNC"/>
+  </root>
+
+</configuration>

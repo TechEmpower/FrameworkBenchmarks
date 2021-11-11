@@ -1,38 +1,24 @@
 package hello;
 
-import java.io.*;
+import java.io.IOException;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * JSON Encoding Test
  */
 @SuppressWarnings("serial")
-public class JsonServlet extends HttpServlet
-{
+public class JsonServlet extends HttpServlet {
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,
+			IOException {
+		// Set content type to JSON
+		res.setHeader(Common.HEADER_CONTENT_TYPE, Common.CONTENT_TYPE_JSON);
 
-  // Response message class.
-  public static class HelloMessage {
-    public final String message = "Hello, World!";
-  }
-
-  @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse res)
-      throws ServletException, IOException
-  {
-    // Set content type to JSON
-    res.setHeader(Common.HEADER_CONTENT_TYPE, Common.CONTENT_TYPE_JSON);
-
-    // Write JSON encoded message to the response.
-    try
-    {
-      Common.MAPPER.writeValue(res.getOutputStream(), new HelloMessage());
-    }
-    catch (IOException ioe) 
-    {
-      // do nothing
-    }
-  }
-  
+		// Write JSON encoded message to the response.
+		Common.MAPPER.writeValue(res.getOutputStream(), new Common.HelloMessage());
+	}
 }

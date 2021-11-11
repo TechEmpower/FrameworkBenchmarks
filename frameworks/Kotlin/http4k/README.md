@@ -1,24 +1,33 @@
-#fintrospect Benchmarking Test
+#http4k Benchmarking Test
 
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Java Oracle 1.8.0_25](http://www.oracle.com/technetwork/java/javase)
-* [http4k](https://github.com/http4k/http4k)
+* JDK 11
+* [http4k](https://http4k.org)
 
 ## Test URLs
-
 - JSON Encoding: http://localhost:9000/json
+- Single query: http://localhost:9000/db
+- Multiple queries: http://localhost:9000/queries
+- Fortunes: http://localhost:9000/fortunes
+- Updates: http://localhost:9000/updates
+- Cached: http://localhost:9000/cached
 - Plaintext: http://localhost:9000/plaintext
 
-## Supported backends
+## Supported backends (w/ Postgres client)
+- SunHttp (default - bundled with core module - zero dependencies)
+- Apache (5)
+- Apache4
+- KtorCIO
+- KtorNetty
 - Jetty
 - Netty
+- Ratpack
 - Undertow
 
-## How to run
+## How to run example
 ```bash
-./gradlew clean build jetty
-java -jar build/libs/http4k-standalone.jar &
+gradle clean build jetty:shadowJar
+java -jar jetty/build/libs/http4k-jetty-benchmark.jar
 ```
-

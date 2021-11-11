@@ -13,8 +13,6 @@ use FrameworkBenchmarks\Controller\BenchController;
 use FrameworkBenchmarks\Entity\World;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Factory responsible for instantiating {@see \FrameworkBenchmarks\Controller\DbController}
@@ -22,18 +20,17 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @author Marco Pivetta <ocramius@gmail.com>
  * @link   http://www.techempower.com/benchmarks
  */
-class BenchControllerServiceFactory implements FactoryInterface
+class BenchControllerServiceFactory
 {
     /**
      * {@inheritDoc}
      *
      * @return \FrameworkBenchmarks\Controller\DbController
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(\Psr\Container\ContainerInterface $container)
     {
-        /* @var $serviceLocator \Zend\ServiceManager\AbstractPluginManager */
         /* @var $dbAdapter \Zend\Db\Adapter\AdapterInterface */
-        $dbAdapter          = $serviceLocator->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
+        $dbAdapter          = $container->get('Zend\Db\Adapter\Adapter');
         $resultSetPrototype = new ResultSet();
 
         $resultSetPrototype->setArrayObjectPrototype(new World());

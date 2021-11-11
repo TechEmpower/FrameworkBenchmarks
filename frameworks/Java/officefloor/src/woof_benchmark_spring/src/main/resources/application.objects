@@ -1,0 +1,10 @@
+<objects>
+
+	<supplier source="SPRING">
+		<property name="configuration.class" value="net.officefloor.benchmark.SpringSetup" />
+	</supplier>
+
+	<managed-object source="net.officefloor.cache.constant.ConstantCacheManagedObjectSource" />
+	<managed-object class="net.officefloor.benchmark.CachedWorldDataRetriever" /> 
+
+</objects>

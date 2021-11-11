@@ -3,31 +3,19 @@ package com.networknt.techempower.handler;
 import com.dslplatform.json.DslJson;
 import com.dslplatform.json.JsonWriter;
 import com.networknt.techempower.Helper;
-import com.networknt.techempower.db.mysql.MysqlStartupHookProvider;
 import com.networknt.techempower.db.postgres.PostgresStartupHookProvider;
 import com.networknt.techempower.model.World;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
-import io.undertow.util.HttpString;
 
+import javax.sql.DataSource;
 import java.nio.ByteBuffer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
-import javax.sql.DataSource;
+import static com.networknt.techempower.Helper.randomWorld;
 
 public class UpdatesPostgresqlGetHandler implements HttpHandler {
     private final DataSource ds = PostgresStartupHookProvider.ds;
@@ -36,19 +24,38 @@ public class UpdatesPostgresqlGetHandler implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
-        if (exchange.isInIoThread()) {
-            exchange.dispatch(this);
-            return;
-        }
         int queries = Helper.getQueries(exchange);
 
-        List<CompletableFuture<World>> worlds = IntStream.range(0, queries)
-                .mapToObj(i -> CompletableFuture.supplyAsync(() -> Helper.updateWorld(ds), Helper.executor))
-                .collect(Collectors.toList());
+        World[] worlds = new World[queries];
+        try (Connection connection = ds.getConnection()) {
+            try (PreparedStatement statement =
+                         connection.prepareStatement(
+                                 "SELECT * FROM World WHERE id = ?")) {
+                for (int i = 0; i < worlds.length; i++) {
+                    statement.setInt(1, randomWorld());
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        resultSet.next();
+                        int id = resultSet.getInt("id");
+                        int randomNumber = resultSet.getInt("randomNumber");
+                        worlds[i] = new World(id, randomNumber);
+                    }
+                }
+            }
+            try (PreparedStatement statement =
+                         connection.prepareStatement(
+                                 "UPDATE World SET randomNumber = ? WHERE id = ?")) {
+                for (World world : worlds) {
+                    world.randomNumber = randomWorld();
+                    statement.setInt(1, world.randomNumber);
+                    statement.setInt(2, world.id);
+                    statement.executeUpdate();
+                }
+            }
+        }
 
-        CompletableFuture<List<World>> allDone = Helper.sequence(worlds);
         writer.reset();
-        writer.serialize(allDone.get());
+        writer.serialize(worlds);
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         exchange.getResponseSender().send(ByteBuffer.wrap(writer.toByteArray()));
     }
 }

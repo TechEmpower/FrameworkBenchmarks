@@ -7,17 +7,16 @@
   "dependencies": {
     "async": "1.5.2",
     "bluebird": "3.4.1",
-    "ejs": "2.4.2",
-    "handlebars": "4.0.5",
-    "hiredis": "0.5.0",
-    "mysql": "2.11.0",
-    "pg": "6.0.2",
+    "ejs": "2.5.7",
+    "handlebars": "4.7.6",
+    "mysql": "2.16.0",
+    "mysql2": "1.6.5",
+    "pg": "6.0.5",
     "pg-hstore": "2.3.2",
     "rc": "1.1.6",
-    "redis": "2.6.2",
-    "sails": "0.12.3",
+    "sails": "0.12.7",
     "sails-disk": "0.10.10",
-    "sequelize": "3.23.4"
+    "sequelize": "5.15.1"
   },
   "scripts": {
     "start": "node app.js",

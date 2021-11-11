@@ -1,0 +1,30 @@
+{
+  "name": "benchmark",
+  "version": "0.12.0",
+  "private": true,
+  "main": "index.js",
+  "devDependencies": {
+    "@es4x/create": "0.14.2"
+  },
+  "dependencies": {
+    "@vertx/core": "4.0.3",
+    "@vertx/web": "4.0.3",
+    "@vertx/web-templ-jte": "4.0.3",
+    "@vertx/pg-client": "4.0.3"
+  },
+  "mvnDependencies": [
+    "io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.1.60.Final",
+    "xyz.jetdrone:vertx.command.template.compiler:0.3.0"
+  ],
+  "files": [
+    "util.js",
+    "templates/fortunes.jte"
+  ],
+  "scripts": {
+    "start": "es4x",
+    "postinstall": "es4x install -v node_modules/.lib/vendor-templates.jar",
+    "pretemplate": "es4x jte -d node_modules/.jte templates",
+    "template": "javac -cp node_modules/.bin/es4x-launcher.jar @node_modules/.jte/templates.lst -d node_modules/.jte/classes",
+    "posttemplate": "jar cvf node_modules/.lib/vendor-templates.jar -C node_modules/.jte/classes ."
+  }
+}

@@ -7,8 +7,16 @@
 	<version>1.0.0</version>
 	<name>proteus-techempower</name>
 	<url>http://maven.apache.org</url>
-	<build>
-	 <resources>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <rocker.version>1.2.1</rocker.version>
+    </properties>
+
+    <build>
+        <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
@@ -49,7 +57,7 @@
 										<execute />
 									</action>
 								</pluginExecution>
-								<!-- <pluginExecution>
+								 <pluginExecution>
 									<pluginExecutionFilter>
 										<groupId>com.fizzed</groupId>
 										<artifactId>rocker-maven-plugin</artifactId>
@@ -63,7 +71,7 @@
 											<runOnIncremental>true</runOnIncremental>
 										</execute>
 									</action>
-								</pluginExecution> -->
+								</pluginExecution> 
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
@@ -73,14 +81,10 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
+				<version>3.8.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
+					<debug>false</debug>
 					<compilerArgument>-parameters</compilerArgument>
-
 				</configuration>
 			</plugin>
 			<plugin>
@@ -137,7 +141,7 @@
 					<executable>java</executable>
 					<arguments>
 						<argument>-Dlogback.configurationFile=${project.build.directory}/conf/logback.xml</argument>
-						<argument>-Xbootclasspath/p:lib/alpn-boot-8.1.11.v20170118.jar</argument>
+						<argument>-Dconfig.file=${project.build.directory}/conf/application.conf</argument> 
 						<argument>-Xms1g</argument>
 						<argument>-Xmx2g</argument>
 						<argument>-XX:+AggressiveOpts</argument>
@@ -153,6 +157,7 @@
 
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
@@ -182,10 +187,11 @@
 					</archive>
 				</configuration>
 			</plugin>
-		  <!-- 	<plugin>
+			 
+		  <!-- <plugin>
 				<groupId>com.fizzed</groupId>
 				<artifactId>rocker-maven-plugin</artifactId>
-				<version>0.18.0</version>
+				<version>1.2.1</version>
 				<executions>
 					<execution>
 						<id>generate-rocker-templates</id>
@@ -199,60 +205,56 @@
 					</execution>
 					 
 				</executions>
-			</plugin>   -->
+			</plugin> -->
 		</plugins>
 	</build>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.mortbay.jetty.alpn</groupId>
-			<artifactId>alpn-boot</artifactId>
-			<version>8.1.11.v20170118</version>
-			<scope>runtime</scope>
-		</dependency>
+
 		<dependency>
 			<groupId>io.sinistral</groupId>
 			<artifactId>proteus-core</artifactId>
-			<version>0.1.2-SNAPSHOT</version>
+			<version>0.1.7.4-SNAPSHOT</version>
 			
 		</dependency>
 			<dependency>
 			<groupId>com.fizzed</groupId>
 			<artifactId>rocker-runtime</artifactId>
-			<version>0.18.0</version>
+			<version>${rocker.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fizzed</groupId>
 			<artifactId>rocker-compiler</artifactId>
-			<version>0.18.0</version>
+			<version>${rocker.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		 
+		<dependency>
+			<groupId>com.github.spullara.mustache.java</groupId>
+			<artifactId>compiler</artifactId>
+			<version>0.9.6</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
-			<version>2.6.1</version>
+			<version>3.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.41</version>
+			<version>8.0.18</version>
 		</dependency>
-		<dependency>
+	  	<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>9.4.1212</version>
-		</dependency>
+			<version>42.2.5</version>
+		</dependency>  
 	</dependencies>
-	<properties>
-		<rocker.version>0.18.0</rocker.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 	<repositories>
     <repository>
         <id>oss-sonatype</id>

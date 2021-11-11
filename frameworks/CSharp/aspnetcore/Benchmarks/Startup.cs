@@ -1,11 +1,6 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
 using Benchmarks.Configuration;
 using Benchmarks.Data;
 using Benchmarks.Middleware;
@@ -14,21 +9,28 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MySqlConnector;
 using Npgsql;
+using System;
+using System.Data.Common;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Benchmarks
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment hostingEnv, Scenarios scenarios)
+        public Startup(IWebHostEnvironment hostingEnv, Scenarios scenarios)
         {
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
                 .SetBasePath(hostingEnv.ContentRootPath)
-                .AddCommandLine(Program.Args)
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{hostingEnv.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
+                .AddEnvironmentVariables()
+                .AddCommandLine(Program.Args)
+                ;
 
             Configuration = builder.Build();
 
@@ -49,24 +51,33 @@ namespace Benchmarks
 
             // Common DB services
             services.AddSingleton<IRandom, DefaultRandom>();
-            services.AddSingleton<ApplicationDbSeeder>();
             services.AddEntityFrameworkSqlServer();
 
             var appSettings = Configuration.Get<AppSettings>();
+            BatchUpdateString.DatabaseServer = appSettings.Database;
+
+            Console.WriteLine($"Database: {appSettings.Database}");
+
             if (appSettings.Database == DatabaseServer.PostgreSql)
             {
-                services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(appSettings.ConnectionString));
+                if (Scenarios.Any("Ef"))
+                {
+                    services.AddDbContextPool<ApplicationDbContext>(options => options
+                        .UseNpgsql(appSettings.ConnectionString,
+                            o => o.ExecutionStrategy(d => new NonRetryingExecutionStrategy(d)))
+                        .EnableThreadSafetyChecks(false));
+                }
+
                 if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
                 {
                     services.AddSingleton<DbProviderFactory>(NpgsqlFactory.Instance);
                 }
             }
-            else
+            else if (appSettings.Database == DatabaseServer.MySql)
             {
-                services.AddDbContextPool<ApplicationDbContext>(options => options.UseSqlServer(appSettings.ConnectionString));
                 if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
                 {
-                    services.AddSingleton<DbProviderFactory>(SqlClientFactory.Instance);
+                    services.AddSingleton<DbProviderFactory>(MySqlConnectorFactory.Instance);
                 }
             }
 
@@ -97,14 +108,7 @@ namespace Benchmarks
 
             if (Scenarios.Any("Mvc"))
             {
-                var mvcBuilder = services
-                    .AddMvcCore()
-                    .AddControllersAsServices();
-
-                if (Scenarios.MvcJson || Scenarios.Any("MvcDbSingle") || Scenarios.Any("MvcDbMulti"))
-                {
-                    mvcBuilder.AddJsonFormatters();
-                }
+                var mvcBuilder = services.AddMvcCore();
 
                 if (Scenarios.MvcViews || Scenarios.Any("MvcDbFortunes"))
                 {
@@ -115,7 +119,7 @@ namespace Benchmarks
             }
         }
 
-        public void Configure(IApplicationBuilder app, ApplicationDbSeeder dbSeeder)
+        public void Configure(IApplicationBuilder app)
         {
             if (Scenarios.Plaintext)
             {
@@ -125,6 +129,22 @@ namespace Benchmarks
             if (Scenarios.Json)
             {
                 app.UseJson();
+            }
+
+            // Fortunes endpoints
+            if (Scenarios.DbFortunesRaw)
+            {
+                app.UseFortunesRaw();
+            }
+
+            if (Scenarios.DbFortunesDapper)
+            {
+                app.UseFortunesDapper();
+            }
+
+            if (Scenarios.DbFortunesEf)
+            {
+                app.UseFortunesEf();
             }
 
             // Single query endpoints
@@ -175,41 +195,20 @@ namespace Benchmarks
                 app.UseMultipleUpdatesEf();
             }
 
-            // Fortunes endpoints
-            if (Scenarios.DbFortunesRaw)
-            {
-                app.UseFortunesRaw();
-            }
-
-            if (Scenarios.DbFortunesDapper)
-            {
-                app.UseFortunesDapper();
-            }
-
-            if (Scenarios.DbFortunesEf)
-            {
-                app.UseFortunesEf();
-            }
-
-            if (Scenarios.Any("Db"))
-            {
-                if (!dbSeeder.Seed())
-                {
-                    Environment.Exit(1);
-                }
-            }
-
             if (Scenarios.Any("Mvc"))
             {
-                app.UseMvc();
+                app.UseRouting();
+            
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                });
             }
 
             if (Scenarios.StaticFiles)
             {
                 app.UseStaticFiles();
             }
-
-            app.RunDebugInfoPage();
         }
     }
 }

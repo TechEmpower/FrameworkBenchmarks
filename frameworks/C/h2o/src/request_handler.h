@@ -17,14 +17,14 @@
  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef REQUEST_H_
+#ifndef REQUEST_HANDLER_H_
 
-#define REQUEST_H_
+#define REQUEST_HANDLER_H_
 
 #include <h2o.h>
 #include <stdbool.h>
-#include <yajl/yajl_gen.h>
 
+#include "global_data.h"
 #include "utility.h"
 
 #define REQ_ERROR "request error\n"
@@ -43,11 +43,22 @@ typedef enum {
 	GATEWAY_TIMEOUT = 504
 } http_status_code_t;
 
+void cleanup_request_handlers(global_data_t *global_data);
+void free_request_handler_thread_data(request_handler_thread_data_t *request_handler_thread_data);
 const char *get_query_param(const char *query,
                             size_t query_len,
                             const char *param,
                             size_t param_len);
-void register_request_handlers(h2o_hostconf_t *hostconf, h2o_access_log_filehandle_t *log_handle);
+void initialize_request_handler_thread_data(
+		const config_t *config, request_handler_thread_data_t *request_handler_thread_data);
+void initialize_request_handlers(const config_t *config,
+                                 global_data_t *global_data,
+                                 h2o_hostconf_t *hostconf,
+                                 h2o_access_log_filehandle_t *log_handle);
+void register_request_handler(const char *path,
+                              int (*handler)(struct st_h2o_handler_t *, h2o_req_t *),
+                              h2o_hostconf_t *hostconf,
+                              h2o_access_log_filehandle_t *log_handle);
 void send_error(http_status_code_t status_code, const char *body, h2o_req_t *req);
 int send_json_response(json_generator_t *gen, bool free_gen, h2o_req_t *req);
 void send_service_unavailable_error(const char *body, h2o_req_t *req);
@@ -55,4 +66,4 @@ void set_default_response_param(content_type_t content_type,
                                 size_t content_length,
                                 h2o_req_t *req);
 
-#endif // REQUEST_H_
+#endif // REQUEST_HANDLER_H_

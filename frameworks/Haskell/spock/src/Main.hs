@@ -24,7 +24,7 @@ import           Views.Fortune
 creds :: PG.ConnectInfo
 creds =
     PG.ConnectInfo
-        { PG.connectHost     = "localhost"
+        { PG.connectHost     = "tfb-database"
         , PG.connectPort     = 5432
         , PG.connectUser     = "benchmarkdbuser"
         , PG.connectPassword = "benchmarkdbpass"
@@ -118,6 +118,6 @@ main = do
         get "json"        test1
         get "db"          test2
         get "queries"   $ test3 pool
-        get "fortune"     test4
+        get "fortunes"     test4
         get "updates"   $ test5 pool
         get "plaintext"   test6

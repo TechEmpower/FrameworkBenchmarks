@@ -2,10 +2,9 @@
   "framework": "ringojs",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
-      "query_url": "/db?queries=",
+      "query_url": "/dbquery?queries=",
       "plaintext_url": "/plaintext",
       "update_url": "/updates?queries=",
       "port": 8080,
@@ -25,10 +24,9 @@
       "versus": ""
     },
     "convenient": {
-      "setup_file": "setup-convenient",
       "json_url": "/json",
       "db_url": "/db",
-      "query_url": "/db/",
+      "query_url": "/dbquery/",
       "fortune_url": "/fortune",
       "plaintext_url": "/plaintext",
       "update_url": "/updates/",

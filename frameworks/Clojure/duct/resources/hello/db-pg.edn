@@ -1,0 +1,14 @@
+{
+  :duct.module/sql
+  {:adapter "postgresql"
+   :database-url "jdbc:postgresql://tfb-database:5432/hello_world?user=benchmarkdbuser&password=benchmarkdbpass&ssl=false&loggerLevel=OFF&tcpKeepAlive=true&logUnclosedConnections=false&readOnly=true&disableColumnSanitiser=true&hostRecheckSeconds=15"}
+
+ :duct.database.sql/hikaricp
+  {:auto-commit true
+   :read-only true
+   :connection-timeout 5000
+   :max-lifetime 0
+   :minimum-idle 20
+   :maximum-pool-size 20}
+
+ :duct.database.mongodb/monger {}}

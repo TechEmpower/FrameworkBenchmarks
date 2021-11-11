@@ -2,19 +2,13 @@ package controllers
 
 import (
 	"strconv"
-	"strings"
-	"sync"
 
 	"benchmark/app/models"
 
-	"aahframework.org/aah.v0"
-	"aahframework.org/ahttp.v0"
+	"aahframe.work"
 )
 
-var (
-	helloWorldMsg = "Hello, World!"
-	messagePool   = sync.Pool{New: func() interface{} { return &models.Message{} }}
-)
+const helloWorldString = "Hello, World!"
 
 // AppController struct application controller
 type AppController struct {
@@ -22,61 +16,95 @@ type AppController struct {
 }
 
 // Plaintext method is for `/plaintext` test.
-func (a *AppController) Plaintext() {
-	a.Reply().Text(helloWorldMsg)
+func (c *AppController) Plaintext() {
+	c.Reply().Text(helloWorldString)
 }
 
 // JSON method is for `/json` test.
-func (a *AppController) JSON() {
-	m := messagePool.Get().(*models.Message)
-	m.Message = helloWorldMsg
-	a.Reply().JSON(m)
+func (c *AppController) JSON() {
+	c.Reply().JSON(models.Message{Message: helloWorldString})
 }
 
-// GetWorld returns one world record randomly for `/db` test.
-func (a *AppController) GetWorld() {
+//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+// MySQL DB based implementation
+//___________________________________________________________________________
+
+// World returns one world record randomly for `/db` test.
+func (c *AppController) World() {
 	world := new(models.World)
-	if err := models.FetchRandomWorld(world); err != nil {
-		a.Reply().InternalServerError().Text(err.Error())
+	if err := models.MySQLFetchRandomWorld(world); err != nil {
+		c.Reply().InternalServerError().Text(err.Error())
 		return
 	}
-	a.Reply().JSON(world)
+	c.Reply().JSON(world)
 }
 
-// GetWorlds returns one world record randomly for `/queries` test.
-func (a *AppController) GetWorlds() {
-	a.handleResult(models.GetRandomWorlds(a.getCount()))
+// Worlds returns one world record randomly for `/db/queries` test.
+func (c *AppController) Worlds() {
+	c.handleResult(models.MySQLRandomWorlds(c.getCount()))
 }
 
-// UpdateWorlds updates record and returns those records for `/updates` test.
-func (a *AppController) UpdateWorlds() {
-	a.handleResult(models.UpdateRandomWorlds(a.getCount()))
+// UpdateWorlds updates record and returns those records for `/db/updates` test.
+func (c *AppController) UpdateWorlds() {
+	c.handleResult(models.MySQLUpdateRandomWorlds(c.getCount()))
 }
 
-// Fortunes method is for `/fortunes` test.
-func (a *AppController) Fortunes() {
-	fortunes, err := models.GetFortunes()
+// Fortunes method is for `/db/fortunes` test.
+func (c *AppController) Fortunes() {
+	fortunes, err := models.MySQLFortunes()
 	if err != nil {
-		a.Reply().InternalServerError().Text(err.Error())
+		c.Reply().InternalServerError().Text(err.Error())
 		return
 	}
 
-	a.Reply().HTML(aah.Data{
+	c.Reply().HTML(aah.Data{
 		"Fortunes": fortunes,
 	})
 }
 
-// Finally interceptor
-func (a *AppController) Finally() {
-	// TFB requirements
-	// Removing charset for json and plaintext
-	if !strings.HasPrefix(a.Reply().ContType, ahttp.ContentTypeHTML.Mime) {
-		a.Reply().ContType = a.Reply().ContType[:strings.IndexByte(a.Reply().ContType, ';')]
+//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+// PostgreSQL DB based implementation
+//___________________________________________________________________________
+
+// PGWorld returns one world record randomly for `/pg-db` test.
+func (c *AppController) PGWorld() {
+	world := new(models.World)
+	if err := models.PGFetchRandomWorld(world); err != nil {
+		c.Reply().InternalServerError().Text(err.Error())
+		return
 	}
+	c.Reply().JSON(world)
 }
 
-func (a *AppController) getCount() int {
-	cnt, err := strconv.Atoi(a.Req.QueryValue("count"))
+// PGWorlds returns one world record randomly for `/pg-db/queries` test.
+func (c *AppController) PGWorlds() {
+	c.handleResult(models.PGRandomWorlds(c.getCount()))
+}
+
+// PGUpdateWorlds updates record and returns those records for `/pg-db/updates` test.
+func (c *AppController) PGUpdateWorlds() {
+	c.handleResult(models.PGUpdateRandomWorlds(c.getCount()))
+}
+
+// PGFortunes method is for `/pg-db/fortunes` test.
+func (c *AppController) PGFortunes() {
+	fortunes, err := models.PGFortunes()
+	if err != nil {
+		c.Reply().InternalServerError().Text(err.Error())
+		return
+	}
+
+	c.Reply().HTMLf("fortunes.html", aah.Data{
+		"Fortunes": fortunes,
+	})
+}
+
+//‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+// Unexported methods
+//___________________________________________________________________________
+
+func (c *AppController) getCount() int {
+	cnt, err := strconv.Atoi(c.Req.QueryValue("count"))
 	if err != nil || cnt < 1 {
 		cnt = 1
 	} else if cnt > 500 {
@@ -85,10 +113,10 @@ func (a *AppController) getCount() int {
 	return cnt
 }
 
-func (a *AppController) handleResult(worlds *[]models.World, err error) {
+func (c *AppController) handleResult(worlds []models.World, err error) {
 	if err != nil {
-		a.Reply().InternalServerError().Text(err.Error())
+		c.Reply().InternalServerError().Text(err.Error())
 		return
 	}
-	a.Reply().JSON(worlds)
+	c.Reply().JSON(worlds)
 }

@@ -1,0 +1,48 @@
+{
+  "framework": "undertow-jersey",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db/queries?queries=",
+      "update_url": "/db/updates?queries=",
+      "fortune_url": "/fortunes",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "Jersey",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Full",
+      "platform": "JAX-RS",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "undertow-jersey-c3p0",
+      "notes": "",
+      "versus": "servlet-raw"
+    },
+    "hikaricp": {
+      "db_url": "/db",
+      "query_url": "/db/queries?queries=",
+      "update_url": "/db/updates?queries=",
+      "fortune_url": "/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "Jersey",
+      "language": "Java",
+      "orm": "Full",
+      "platform": "JAX-RS",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "undertow-jersey-hikaricp",
+      "notes": "",
+      "versus": "undertow-jersey"
+    }
+  }]
+}

@@ -1,0 +1,81 @@
+{
+    "name": "hyperf/hyperf-skeleton",
+    "type": "project",
+    "keywords": [
+        "php",
+        "swoole",
+        "framework",
+        "hyperf",
+        "microservice",
+        "middleware"
+    ],
+    "description": "A coroutine framework that focuses on hyperspeed and flexible, specifically use for build microservices and middlewares.",
+    "license": "Apache-2.0",
+    "require": {
+        "php": ">=7.2",
+        "ext-swoole": ">=4.2",
+        "hyperf/command": "~1.1.0",
+        "hyperf/config": "~1.1.0",
+        "hyperf/contract": "~1.1.0",
+        "hyperf/database": "~1.1.0",
+        "hyperf/db-connection": "~1.1.0",
+        "hyperf/di": "~1.1.0",
+        "hyperf/dispatcher": "~1.1.0",
+        "hyperf/event": "~1.1.0",
+        "hyperf/exception-handler": "~1.1.0",
+        "hyperf/framework": "~1.1.0",
+        "hyperf/http-server": "~1.1.0",
+        "hyperf/logger": "~1.1.0",
+        "hyperf/paginator": "~1.1.0",
+        "hyperf/pool": "~1.1.0",
+        "hyperf/utils": "~1.1.0",
+        "hyperf/view": "~1.1.0",
+        "duncan3dc/blade": "^4.6",
+        "hyperf/task": "~1.1.0"
+    },
+    "require-dev": {
+        "swoft/swoole-ide-helper": "^4.2",
+        "phpmd/phpmd": "^2.6",
+        "friendsofphp/php-cs-fixer": "^2.14",
+        "mockery/mockery": "^1.0",
+        "doctrine/common": "^2.9",
+        "phpstan/phpstan": "^0.11.2",
+        "hyperf/testing": "~1.1.0"
+    },
+    "suggest": {
+        "ext-openssl": "Required to use HTTPS.",
+        "ext-json": "Required to use JSON.",
+        "ext-pdo": "Required to use MySQL Client.",
+        "ext-pdo_mysql": "Required to use MySQL Client.",
+        "ext-redis": "Required to use Redis Client."
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        },
+        "files": []
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "HyperfTest\\": "./test/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": [],
+    "scripts": {
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "test": "co-phpunit -c phpunit.xml --colors=always",
+        "cs-fix": "php-cs-fixer fix $1",
+        "analyze": "phpstan analyse --memory-limit 300M -l 0 -c phpstan.neon ./app ./config",
+        "start": "php ./bin/hyperf.php start"
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://mirrors.aliyun.com/composer"
+        }
+    }
+}

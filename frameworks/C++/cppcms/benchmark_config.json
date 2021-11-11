@@ -1,0 +1,48 @@
+{
+  "framework": "cppcms",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "update_url": "/updates/",
+      "fortune_url": "/fortunes",
+      "plaintext_url": "/plaintext",
+      "cached_query_url": "/cached-worlds/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "None",
+      "language": "C++",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "CppCMS-MySQL-nginx",
+      "notes": ""
+    },
+    "postgres": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "fortune_url": "/fortunes",
+      "plaintext_url": "/plaintext",
+      "cached_query_url": "/cached-worlds/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "postgres",
+      "framework": "None",
+      "language": "C++",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "CppCMS-PostgreSQL-nginx",
+      "notes": ""
+    }
+  }]
+}

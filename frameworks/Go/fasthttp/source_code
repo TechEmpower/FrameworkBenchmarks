@@ -1,8 +1,0 @@
-./fasthttp/server.go
-./fasthttp/src/
-./fasthttp/src/common/common.go
-./fasthttp/src/server-mysql/server.go
-./fasthttp/src/server-postgresql/server.go
-./fasthttp/src/templates/
-./fasthttp/src/templates/auxiliary.go
-./fasthttp/src/templates/fortune.qtpl

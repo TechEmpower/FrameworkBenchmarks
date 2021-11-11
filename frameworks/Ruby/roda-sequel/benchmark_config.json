@@ -3,7 +3,6 @@
   "tests": [
     {
       "default": {
-        "setup_file": "run_mri_puma",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -26,7 +25,6 @@
         "notes": ""
       },
       "postgres": {
-        "setup_file": "run_mri_puma",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -49,7 +47,6 @@
         "notes": ""
       },
       "passenger-mri": {
-        "setup_file": "run_mri_passenger",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -72,7 +69,6 @@
         "notes": ""
       },
       "postgres-passenger-mri": {
-        "setup_file": "run_mri_passenger",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -95,7 +91,6 @@
         "notes": ""
       },
       "unicorn-mri": {
-        "setup_file": "run_mri_unicorn",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -118,7 +113,6 @@
         "notes": ""
       },
       "postgres-unicorn-mri": {
-        "setup_file": "run_mri_unicorn",
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -138,52 +132,6 @@
         "database_os": "Linux",
         "display_name": "roda-sequel-postgres-unicorn-mri",
         "versus": "rack-sequel-postgres-unicorn-mri",
-        "notes": ""
-      },
-      "torquebox-jruby": {
-        "setup_file": "run_jruby_torquebox",
-        "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "MySQL",
-        "framework": "roda-sequel",
-        "language": "Ruby",
-        "orm": "Full",
-        "platform": "Rack",
-        "webserver": "TorqueBox",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "roda-sequel-torquebox-jruby",
-        "versus": "rack-sequel-torquebox-jruby",
-        "notes": ""
-      },
-      "postgres-torquebox-jruby": {
-        "setup_file": "run_jruby_torquebox",
-        "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "roda-sequel",
-        "language": "Ruby",
-        "orm": "Full",
-        "platform": "Rack",
-        "webserver": "TorqueBox",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "roda-sequel-postgres-torquebox-jruby",
-        "versus": "rack-sequel-postgres-torquebox-jruby",
         "notes": ""
       }
     }

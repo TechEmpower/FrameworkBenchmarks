@@ -8,11 +8,24 @@
     <description>Ninja test for the TechEmpower/FrameworkBenchmarks project</description>
 
     <properties>
-        <java-version>1.8</java-version>
-        <ninja.version>5.3.0</ninja.version>
-        <mysql.version>5.1.38</mysql.version>
-        <jetty.version>9.3.6.v20151106</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+
+        <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
+        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
+        <maven-war-plugin.version>3.2.0</maven-war-plugin.version>
+
+        <h2.version>1.4.197</h2.version>
+        <hibernate.version>5.4.2.Final</hibernate.version>
+        <hibernate-validator.version>6.0.20.Final</hibernate-validator.version>
+        <jaxb-api.version>2.3.0</jaxb-api.version>
+        <jetty.version>9.4.18.v20190429</jetty.version>
+        <mysql.version>8.0.18</mysql.version>
+        <ninja.version>6.5.0</ninja.version>
+        <xml-apis.version>2.0.2</xml-apis.version>
     </properties>
 
     <dependencies>
@@ -20,19 +33,52 @@
             <groupId>org.ninjaframework</groupId>
             <artifactId>ninja-servlet</artifactId>
             <version>${ninja.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>com.fasterxml.jackson.core</artifactId>
+                    <groupId>jackson-core</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>com.fasterxml.jackson.module</artifactId>
+                    <groupId>jackson-module-afterburner</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>com.fasterxml.jackson.dataformat</artifactId>
+                    <groupId>jackson-dataformat-xml</groupId>
+                </exclusion>
+             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.9.9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-afterburner</artifactId>
+            <version>2.9.9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>2.9.9</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>com.fasterxml.jackson.core</artifactId>
+                    <groupId>jackson-annotations</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.9.9</version>
         </dependency>
 
         <dependency>
             <groupId>org.ninjaframework</groupId>
             <artifactId>ninja-standalone</artifactId>
             <version>${ninja.version}</version>
-        </dependency>   
-
-        <dependency>
-            <groupId>org.ninjaframework</groupId>
-            <artifactId>ninja-test-utilities</artifactId>
-            <version>${ninja.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -42,21 +88,51 @@
         </dependency>
 
         <dependency>
-          <groupId>org.hibernate</groupId>
-          <artifactId>hibernate-hikaricp</artifactId>
-          <version>4.3.8.Final</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-hikaricp</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-c3p0</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
         </dependency>
                         
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.3.174</version>
+            <version>${h2.version}</version>
         </dependency>
 
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
-            <version>1.4.01</version>
+            <version>${xml-apis.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${jaxb-api.version}</version>
         </dependency>
 
     </dependencies>
@@ -66,17 +142,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>${java-version}</source>
-                    <target>${java-version}</target>
-                </configuration>
+                <version>${maven-compiler-plugin.version}</version>
             </plugin>
 			
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
+                <version>${maven-war-plugin.version}</version>
                 <configuration>
                     <warName>ninja</warName>
                 </configuration>
@@ -91,7 +163,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.0</version>
+                <version>${maven-enforcer-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>enforce-banned-dependencies</id>
@@ -140,7 +212,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.7</version>
+                <version>${maven-deploy-plugin.version}</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -148,7 +220,7 @@
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.4</version>
+                <version>${maven-assembly-plugin.version}</version>
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>

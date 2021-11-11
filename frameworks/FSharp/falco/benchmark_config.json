@@ -1,0 +1,27 @@
+{
+  "framework": "falco",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "Falco",
+        "language": "F#",
+        "orm": "micro",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Falco, Donald",
+        "notes": "",
+        "versus": "aspcore"
+      }
+    }
+  ]
+}

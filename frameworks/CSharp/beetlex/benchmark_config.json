@@ -1,0 +1,73 @@
+{
+  "framework": "beetlex",
+  "tests": [
+    {
+      "default": {
+        "fortune_url": "/fortunes",
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "beetlex",
+        "language": "C#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "beetlex",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "beetlex",
+        "notes": "",
+        "versus": "aspcore-mvc"
+      },
+      "core": {
+        "fortune_url": "/fortunes",
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "cached_query_url": "/cached-worlds?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "beetlex",
+        "language": "C#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "beetlex",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "beetlex-core",
+        "notes": "",
+        "versus": "aspcore"
+      },
+      "core-updb": {
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "beetlex",
+        "language": "C#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "beetlex",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "beetlex-core-updb",
+        "notes": "",
+        "versus": "aspcore"
+      }
+    }
+  ]
+}

@@ -2,12 +2,11 @@
   "framework": "zend",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
-      "update_url": "/update?queries=",
-      "query_url": "/db-multi?queries=",
+      "update_url": "/updates?queries=",
+      "query_url": "/queries?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -16,13 +15,13 @@
       "language": "PHP",
       "flavor": "PHP7",
       "orm": "Full",
-      "platform": "None",
+      "platform": "FPM/FastCGI",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "zend",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     }
   }]
 }

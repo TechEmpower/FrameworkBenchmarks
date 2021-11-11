@@ -20,83 +20,63 @@ import javax.sql.DataSource;
  */
 @SuppressWarnings("serial")
 public class PostgresUpdateServlet extends HttpServlet {
+	private static final String PARAMETER_QUERIES = "queries";
 	// Database details.
 	private static final String DB_QUERY = "SELECT * FROM World WHERE id = ?";
 	private static final String UPDATE_QUERY = "UPDATE World SET randomNumber = ? WHERE id = ?";
-	private static final int DB_ROWS = 10000;
 
 	// Database connection pool.
-	@Resource(name = "jdbc/postgres_hello_world")
-	private DataSource postgresDataSource;
+	@Resource(name = "jdbc/hello_world")
+	private DataSource dataSource;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,
 			IOException {
-		// Set content type to JSON
-		res.setHeader(Common.HEADER_CONTENT_TYPE, Common.CONTENT_TYPE_JSON);
-
 		// Reference the data source.
-		final DataSource source = postgresDataSource;
-
-		// Get the count of queries to run.
-		int count = 1;
-		try {
-			count = Integer.parseInt(req.getParameter("queries"));
-
-			// Bounds check.
-			if (count > 500) {
-				count = 500;
-			}
-			if (count < 1) {
-				count = 1;
-			}
-		} catch (NumberFormatException nfexc) {
-			// Do nothing.
-		}
-
-		// Fetch some rows from the database.
+		final DataSource source = dataSource;
+		final int count = Common.normalise(req.getParameter(PARAMETER_QUERIES));
 		final World[] worlds = new World[count];
 		final Random random = ThreadLocalRandom.current();
 
-		try (Connection conn = source.getConnection()) {
-			try (PreparedStatement statement = conn.prepareStatement(DB_QUERY,
-					ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-					PreparedStatement statement2 = conn.prepareStatement(UPDATE_QUERY)) {
-				// Run the query the number of times requested.
-				for (int i = 0; i < count; i++) {
-					final int id = random.nextInt(DB_ROWS) + 1;
-					statement.setInt(1, id);
+		try (Connection conn = source.getConnection();
+				PreparedStatement statement = conn.prepareStatement(DB_QUERY,
+						ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+				PreparedStatement statement2 = conn.prepareStatement(UPDATE_QUERY)) {
+			Common.modifySQLConnectionSettings(conn);
+			// Run the query the number of times requested.
+			for (int i = 0; i < count; i++) {
+				final int id = Common.getRandom();
+				statement.setInt(1, id);
 
-					try (ResultSet results = statement.executeQuery()) {
-						if (results.next()) {
-							worlds[i] = new World(id, results.getInt("randomNumber"));
+				try (ResultSet results = statement.executeQuery()) {
+					if (results.next()) {
+						worlds[i] = new World(id, results.getInt("randomNumber"));
 
-							// Update row
-							worlds[i].setRandomNumber(random.nextInt(DB_ROWS) + 1);
-							statement2.setInt(1, worlds[i].getRandomNumber());
-							statement2.setInt(2, id);
+						// Update row
+						worlds[i].setRandomNumber(Common.getRandom());
+						statement2.setInt(1, worlds[i].getRandomNumber());
+						statement2.setInt(2, id);
 
-							// Execute the update statement
-							statement2.execute();
+						// Execute the update statement
+						statement2.execute();
 
-							/* 
-							*  Applying batch updates will lead to transaction deadlocks.
-							*  This could not be apparent on local testing but will be
-							*  visible on higher concurrencies in the TFB test  environment.
-							*/
-						}
+						/*
+						 * Applying batch updates will lead to transaction
+						 * deadlocks. This could not be apparent on local
+						 * testing but will be visible on higher concurrencies
+						 * in the TFB test environment.
+						 */
 					}
 				}
 			}
 		} catch (SQLException sqlex) {
-			System.err.println("SQL Exception: " + sqlex);
+			throw new ServletException(sqlex);
 		}
 
+		// Set content type to JSON
+		res.setHeader(Common.HEADER_CONTENT_TYPE, Common.CONTENT_TYPE_JSON);
+
 		// Write JSON encoded message to the response.
-		try {
-			Common.MAPPER.writeValue(res.getOutputStream(), worlds);
-		} catch (IOException ioe) {
-			// do nothing
-		}
+		Common.MAPPER.writeValue(res.getOutputStream(), worlds);
 	}
 }

@@ -2,7 +2,6 @@
   "framework": "revel",
   "tests": [{
     "default": {
-      "setup_file": "setup_mysql",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -19,10 +18,30 @@
       "database_os": "Linux",
       "display_name": "Revel",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
+    },
+    "fast": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "None",
+      "language": "Go",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Revel",
+      "notes": "",
+      "versus": "go",
+      "tags": ["broken"]
     },
     "raw": {
-      "setup_file": "setup_mysql",
       "db_url": "/db",
       "query_url": "/db?queries=",
       "fortune_url": "/fortune",
@@ -41,10 +60,10 @@
       "database_os": "Linux",
       "display_name": "Revel-raw",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     },
     "jet": {
-      "setup_file": "setup_mysql",
       "db_url": "/jet-db",
       "query_url": "/jet-db?queries=",
       "fortune_url": "/jet-fortune",
@@ -63,10 +82,10 @@
       "database_os": "Linux",
       "display_name": "Revel-jet",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     },
     "qbs": {
-      "setup_file": "setup_mysql",
       "db_url": "/qbs-db",
       "query_url": "/qbs-db?queries=",
       "fortune_url": "/qbs-fortune",
@@ -85,7 +104,8 @@
       "database_os": "Linux",
       "display_name": "Revel-qbs",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     }
   }]
 }

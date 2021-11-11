@@ -1,11 +1,12 @@
 package models;
 
-import play.db.jpa.JPA;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.criteria.CriteriaQuery;
-import java.util.List;
+
+import play.db.jpa.JPAApi;
 
 @Entity
 public class Fortune {
@@ -18,15 +19,15 @@ public class Fortune {
     public Fortune() {
     }
 
-    public Fortune(String message) {
+    public Fortune(final String message) {
         this.message = message;
     }
 
-    public static List<Fortune> findAll() throws Throwable {
-        return JPA.withTransaction("default", true, () -> {
-            CriteriaQuery<Fortune> criteria = JPA.em().getCriteriaBuilder().createQuery(Fortune.class);
+    public static List<Fortune> findAll(final JPAApi jpa) {
+        return jpa.withTransaction("default", true, em -> {
+            final CriteriaQuery<Fortune> criteria = em.getCriteriaBuilder().createQuery(Fortune.class);
             criteria.select(criteria.from(Fortune.class));
-            return JPA.em().createQuery(criteria).getResultList();
+            return em.createQuery(criteria).getResultList();
         });
     }
 }

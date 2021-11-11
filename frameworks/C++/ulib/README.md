@@ -44,7 +44,7 @@ This is the [ULib](http://stefanocasazza.github.io/ULib/) portion of a [benchmar
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [ULib Version 1.4.2](https://github.com/stefanocasazza/ULib/archive/v1.4.2.tar.gz)
+* [ULib Version 2.4.2](https://github.com/stefanocasazza/ULib/archive/v2.4.2.tar.gz)
 
 Output
 ======

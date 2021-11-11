@@ -2,19 +2,22 @@
 name = "tokio-minihttp"
 version = "0.1.0"
 authors = ["Gökberk Yaltıraklı <webdosusb@gmail.com>"]
+edition = "2018"
 
 [dependencies]
 futures = "0.1.9"
 httparse = "1.1"
-serde_json = "0.9"
+serde = "1.0"
+serde_json = "1.0"
+serde_derive = "1.0"
 num_cpus = "1.0"
 tokio-proto = "0.1"
 tokio-service = "0.1"
 tokio-minihttp = { git = "https://github.com/tokio-rs/tokio-minihttp" }
 
-postgres = "0.13"
+postgres = "0.15.1"
 r2d2 = "0.7"
 futures-cpupool = "0.1"
-r2d2_postgres = "0.11"
+r2d2_postgres = "0.13"
 rand = "0.3"
-url = "1.0"
+url = "1.5"

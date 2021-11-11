@@ -23,10 +23,6 @@ public class FortunesPostgresqlGetHandler implements HttpHandler {
 
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
-        if (exchange.isInIoThread()) {
-            exchange.dispatch(this);
-            return;
-        }
         List<Fortune> fortunes = new ArrayList<>();
         try (Connection connection = ds.getConnection();
              PreparedStatement statement = connection.prepareStatement(
@@ -46,7 +42,7 @@ public class FortunesPostgresqlGetHandler implements HttpHandler {
         StringWriter writer = new StringWriter();
         mustache.execute(writer, fortunes);
         exchange.getResponseHeaders().put(
-                Headers.CONTENT_TYPE, "text/html");
+                Headers.CONTENT_TYPE, "text/html;charset=utf-8");
         exchange.getResponseSender().send(writer.toString());
     }
 }

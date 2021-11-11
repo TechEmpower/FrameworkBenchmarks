@@ -5,13 +5,12 @@ import javax.inject.{Inject, Singleton}
 import anorm._
 import anorm.SqlParser._
 import play.api.db.Database
-import play.db.NamedDatabase
 import scala.language.postfixOps
 
 case class Fortune(id: Long, message: String)
 
 @Singleton()
-class FortunesDAO @Inject()(@NamedDatabase("hello_world") protected val db: Database) {
+class FortunesDAO @Inject()(protected val db: Database) {
 
   private val simpleRowParser = {
     get[Long]("fortune.id") ~

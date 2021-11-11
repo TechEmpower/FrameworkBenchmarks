@@ -1,4 +1,5 @@
 import ujson
+from email.utils import formatdate
 
 
 def application(environ, start_response):
@@ -7,7 +8,9 @@ def application(environ, start_response):
     }
     data = ujson.dumps(response)
     response_headers = [
-        ('Content-type', 'application/json'),
+        ('Server', 'uwsgi'),
+        ('Date', formatdate(timeval=None, localtime=False, usegmt=True)),
+        ('Content-Type', 'application/json'),
         ('Content-Length', str(len(data)))
     ]
     start_response('200 OK', response_headers)

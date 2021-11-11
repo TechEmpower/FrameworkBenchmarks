@@ -1,10 +1,11 @@
 require "kemal"
 require "pg"
+require "commander"
 
 # Compose Objects (like Hash) to have a to_json method
 require "json/to_json"
 
-APPDB = DB.open("postgres://benchmarkdbuser:benchmarkdbpass@#{ENV["DBHOST"]? || "127.0.0.1"}/hello_world")
+APPDB = DB.open(ENV["DATABASE_URL"])
 
 class CONTENT
   UTF8  = "; charset=UTF-8"
@@ -17,7 +18,7 @@ ID_MAXIMUM = 10_000
 
 private def random_world
   id = rand(1..ID_MAXIMUM)
-  random_number = APPDB.query_one("SELECT randomNumber FROM world WHERE id = $1", id, as: Int32)
+  id, random_number = APPDB.query_one("SELECT id, randomNumber FROM world WHERE id = $1", id, as: {Int32, Int32})
   {id: id, randomNumber: random_number}
 end
 
@@ -37,14 +38,19 @@ private def fortunes
 end
 
 private def sanitized_query_count(request)
-  queries = request.params.query["queries"].as(String)
+  queries = request.params.query["queries"]? || "1"
   queries = queries.to_i? || 1
   queries.clamp(1..500)
 end
 
+private def sanitized_concurrency(request)
+  concurrency = request.params.query["concurrency"]? || "1"
+  concurrency.to_i? || 1
+end
+
 before_all do |env|
   env.response.headers["Server"] = "Kemal"
-  env.response.headers["Date"] = Time.now.to_s
+  env.response.headers["Date"] = HTTP.format_time(Time.utc)
 end
 
 #
@@ -75,9 +81,25 @@ end
 
 # Postgres Test 3: Multiple database query
 get "/queries" do |env|
-  results = (1..sanitized_query_count(env)).map do
-    random_world
-  end
+  queries = sanitized_query_count(env)
+  concurrency = sanitized_concurrency(env)
+
+  
+  results =
+    if concurrency < 2
+      (1..queries).map do
+        random_world
+      end
+    else
+      cmd = Commander(NamedTuple(id: Int32, randomNumber: Int32)).new(queries, concurrency)
+      queries.times do
+        cmd.dispatch do
+          random_world
+        end
+      end
+
+      cmd.collect
+    end
 
   env.response.content_type = CONTENT::JSON
   results.to_json
@@ -108,5 +130,10 @@ get "/updates" do |env|
   updated.to_json
 end
 
-logging false
-Kemal.run { |cfg| cfg.server.bind(reuse_port: true) }
+Kemal.config do |cfg|
+  cfg.serve_static = false
+  cfg.logging = false
+  cfg.powered_by_header = false
+end
+
+Kemal.run { |cfg| cfg.server.not_nil!.bind_tcp(cfg.host_binding, cfg.port, reuse_port: true) }

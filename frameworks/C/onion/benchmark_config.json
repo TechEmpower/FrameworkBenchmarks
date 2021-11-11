@@ -2,29 +2,11 @@
   "framework": "onion",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "None",
-      "framework": "None",
-      "language": "C",
-      "flavor": "None",
-      "orm": "Raw",
-      "platform": "None",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "onion",
-      "notes": "",
-      "versus": "onion"
-    },
-    "raw": {
-      "setup_file": "setup",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortune",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -39,7 +21,8 @@
       "database_os": "Linux",
       "display_name": "onion",
       "notes": "",
-      "versus": "onion"
+      "versus": "onion",
+      "tags": ["broken"]
     }
   }]
 }

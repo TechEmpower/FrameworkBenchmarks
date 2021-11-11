@@ -1,0 +1,29 @@
+{
+  "framework": "suil",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/query?queries=",
+        "update_url": "/update?queries=",
+        "port": 8080,
+        "approach": "Stripped",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "suil",
+        "language": "C++",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "suil",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

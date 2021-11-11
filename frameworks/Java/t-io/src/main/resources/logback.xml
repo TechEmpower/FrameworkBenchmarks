@@ -1,0 +1,268 @@
+<configuration scan="true" scanPeriod="10 seconds" debug="true">
+	<property resource="logback.properties" />
+	
+	<contextName>${context.name}</contextName>                         <!-- 本项目的名字 -->
+   
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${conversion.pattern}</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- root file 日志 -->
+	<appender name="root-file-error"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/error.%d{${rolling.policy.file.name.pattern}}.%i.log.zip</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.file.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>${max.history}</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${conversion.pattern}</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">   
+			<level>ERROR</level>   
+			<onMatch>ACCEPT</onMatch>   
+			<onMismatch>DENY</onMismatch>   
+		</filter> 
+	</appender>
+	<appender name="root-file-warn"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/warn.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/warn.%d{${rolling.policy.file.name.pattern}}.%i.log.zip</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.file.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>${max.history}</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${conversion.pattern}</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">   
+			<level>warn</level>   
+			<onMatch>ACCEPT</onMatch>   
+			<onMismatch>DENY</onMismatch>   
+		</filter> 
+	</appender>
+	<appender name="root-file-info"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/info.%d{${rolling.policy.file.name.pattern}}.%i.log.zip</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.file.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>${max.history}</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${conversion.pattern}</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">   
+			<level>INFO</level>   
+			<onMatch>ACCEPT</onMatch>   
+			<onMismatch>DENY</onMismatch>   
+		</filter> 
+	</appender>
+	<appender name="root-file-debug"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/debug.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/debug.%d{${rolling.policy.file.name.pattern}}.%i.log.zip</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.file.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>${max.history}</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${conversion.pattern}</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">   
+			<level>debug</level>   
+			<onMatch>ACCEPT</onMatch>   
+			<onMismatch>DENY</onMismatch>   
+		</filter> 
+	</appender>
+	
+	<root level="${root.level}">
+		<appender-ref ref="root-file-error"/>
+		<appender-ref ref="root-file-warn"/>
+		<appender-ref ref="root-file-info"/>
+		<appender-ref ref="root-file-debug"/>
+		<appender-ref ref="console"/>
+	</root>
+	
+	<logger name="${app.package}" additivity="false">
+		<level value="${app.level}" />
+		<appender-ref ref="root-file-error" />
+		<appender-ref ref="root-file-warn" />
+		<appender-ref ref="root-file-info" />
+		<appender-ref ref="root-file-debug" />
+		<appender-ref ref="console"/>
+	</logger>
+	
+	<logger name="${tio.package}" additivity="false">
+		<level value="${tio.level}" />
+		<appender-ref ref="root-file-error" />
+		<appender-ref ref="root-file-warn" />
+		<appender-ref ref="root-file-info" />
+		<appender-ref ref="root-file-debug" />
+		<appender-ref ref="console"/>
+	</logger>
+	
+	<logger name="${talent.package}" additivity="false">
+		<level value="${talent.level}" />
+		<appender-ref ref="root-file-error" />
+		<appender-ref ref="root-file-warn" />
+		<appender-ref ref="root-file-info" />
+		<appender-ref ref="root-file-debug" />
+		<appender-ref ref="console"/>
+	</logger>
+	
+	
+	
+	
+	<!-- 跟踪客户端行为 -->
+	<appender name="tio-client-trace-log-appender" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<discriminator>
+			<Key>tio_client</Key>
+			<DefaultValue>unknown</DefaultValue>
+		</discriminator>
+		
+		<sift>
+			<appender name="${tio_client}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+					<fileNamePattern>${log.dir}/tio/client-trace/${tio_client}_%d{yyyyMMdd}.log</fileNamePattern>
+					<maxFileSize>20MB</maxFileSize>
+				</rollingPolicy>
+				<Append>false</Append>
+				<layout class="ch.qos.logback.classic.PatternLayout">
+					<pattern>%m%n</pattern>
+				</layout>
+			</appender>
+		</sift>
+	</appender>
+	
+	<logger name="tio-client-trace-log" additivity="false">
+		<level value="info"/>
+		<appender-ref ref="tio-client-trace-log-appender"/>
+	</logger>
+	
+
+
+
+
+
+
+
+
+	<!-- ip访问打印  -->
+	<appender name="tio-ip-trace-log-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/ip.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/ip.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.file.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>${max.history}</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d %m%n</pattern>
+		</encoder>
+	</appender>
+	<logger name="tio-ip-trace-log" additivity="false">
+		<level value="info"/>
+		<appender-ref ref="tio-ip-trace-log-appender"/>
+	</logger>
+	
+	<!-- chat日志打印  -->
+	<appender name="tio-chat-trace-log-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/chat.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/chat.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.file.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>${max.history}</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d%n %m%n</pattern>
+		</encoder>
+	</appender>
+	<logger name="tio-chat-trace-log" additivity="false">
+		<level value="info"/>
+		<appender-ref ref="tio-chat-trace-log-appender"/>
+	</logger>
+	
+	<!-- address日志打印  -->
+	<appender name="tio-address-trace-log-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/address.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/address.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.file.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>${max.history}</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d%n %m%n</pattern>
+		</encoder>
+	</appender>
+	<logger name="tio-address-trace-log" additivity="false">
+		<level value="info"/>
+		<appender-ref ref="tio-address-trace-log-appender"/>
+	</logger>
+	
+	<!-- userAgent 日志打印  -->
+	<appender name="tio-userAgent-trace-log-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/userAgent.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/userAgent.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.file.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>${max.history}</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%m%n</pattern>
+		</encoder>
+	</appender>
+	<logger name="tio-userAgent-trace-log" additivity="false">
+		<level value="info"/>
+		<appender-ref ref="tio-userAgent-trace-log-appender"/>
+	</logger>
+	
+	<!-- ipblacklist ip黑名单  -->
+	<appender name="tio-ipblacklist-trace-log-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/ipblacklist.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/ipblacklist.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.file.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>${max.history}</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%m%n</pattern>
+		</encoder>
+	</appender>
+	<logger name="tio-ipblacklist-trace-log" additivity="false">
+		<level value="info"/>
+		<appender-ref ref="tio-ipblacklist-trace-log-appender"/>
+	</logger>
+
+	
+
+</configuration>

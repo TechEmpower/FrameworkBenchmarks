@@ -2,24 +2,7 @@
 
 The information below contains information specific to Java. 
 For further guidance, review the 
-[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/).
-
-## Infrastructure Software Versions
-
-* Java 8
-
-## Adding a New Java Framework
-
-### Installation and Bash Configuration
-
-In order to declare that your framework requires Java, you 
-should have an `install.sh` that contains at least
-
-    #!/bin/bash
-
-    fw_depends java
-
-This installs the Oracle Java 8 JDK.
+[documentation](https://github.com/TechEmpower/FrameworkBenchmarks/wiki).
 
 ## Get Help
 

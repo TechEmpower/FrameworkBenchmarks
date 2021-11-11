@@ -1,100 +1,151 @@
 package com.techempower;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.techempower.Util.randomWorld;
+import static io.jooby.ExecutionMode.EVENT_LOOP;
+import static io.jooby.MediaType.JSON;
 
-import io.requery.EntityStore;
-import io.requery.Persistable;
-
-import org.jooby.Jooby;
-import org.jooby.MediaType;
-
-import static org.jooby.MediaType.*;
-import org.jooby.Result;
-import org.jooby.Results;
-import org.jooby.jdbc.Jdbc;
-import org.jooby.json.Jackson;
-import org.jooby.requery.Requery;
-import org.jooby.rocker.Rockerby;
-
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.StringJoiner;
 
-/**
- * @author jooby generator
- */
-@SuppressWarnings("unchecked")
+import javax.sql.DataSource;
+
+import io.jooby.Jooby;
+import io.jooby.hikari.HikariModule;
+import io.jooby.rocker.RockerModule;
+
 public class App extends Jooby {
-  
-  static final DateTimeFormatter fmt = DateTimeFormatter
-      .ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
-      .withZone(ZoneId.of("GMT"));
 
-  static final String H_SERVER = "Server";
-  static final String SERVER = "Netty";
+  private static final String SELECT_WORLD = "select * from world where id=?";
 
-  static final String H_DATE = "Date";
+  private static final String MESSAGE = "Hello, World!";
 
-  static final int DB_ROWS = 10000;
+  private static final byte[] MESSAGE_BYTES = MESSAGE.getBytes(StandardCharsets.US_ASCII);
 
-  static final String HELLO_WORLD = "Hello, World!";
+  private static final ByteBuffer MESSAGE_BUFFER = (ByteBuffer) ByteBuffer
+      .allocateDirect(MESSAGE_BYTES.length)
+      .put(MESSAGE_BYTES)
+      .flip();
 
   {
-    /** templates via rocker. */
-    use(new Rockerby());
 
-    /** json via jackson . */
-    ObjectMapper mapper = new ObjectMapper();
-    use(new Jackson(mapper));
+    /** Database: */
+    install(new HikariModule());
+    DataSource ds = require(DataSource.class);
 
-    /** database via requery. */
-    use(new Jdbc());
-    use(new Requery(Models.DEFAULT));
+    /** Template engine: */
+    install(new RockerModule().reuseBuffer(true));
 
-    get("/plaintext", () -> result(HELLO_WORLD, text))
-        .renderer("text");
+    get("/plaintext", ctx ->
+        ctx.send(MESSAGE_BUFFER.duplicate())
+    );
 
-    get("/json", () -> result(mapper.createObjectNode().put("message", HELLO_WORLD), json))
-        .renderer("json");
+    get("/json", ctx -> ctx
+        .setResponseType(JSON)
+        .send(Json.encode(new Message(MESSAGE)))
+    );
 
-    get("/db", req -> {
-      int id = ThreadLocalRandom.current().nextInt(DB_ROWS) + 1;
-      EntityStore<Persistable, World> store = require(EntityStore.class);
-      World world = store.select(World.class)
-          .where(World.ID.eq(id))
-          .get()
-          .first();
-      return result(world, json);
-    }).renderer("json");
+    /** Go blocking: */
+    dispatch(() -> {
 
-    get("/fortunes", req -> {
-      EntityStore<Persistable, Fortune> store = require(EntityStore.class);
-      List<Fortune> fortunes = store.select(Fortune.class) 
-          .get()
-          .collect(new LinkedList<>());
-      Fortune fortune0 = new Fortune();
-      fortune0.setMessage("Additional fortune added at request time.");
-      fortune0.setId(0);
-      fortunes.add(fortune0);
-      Collections.sort(fortunes);
-      return views.fortunes.template(fortunes);
+      /** Single query: */
+      get("/db", ctx -> {
+        World result;
+        try (Connection conn = ds.getConnection()) {
+          try (final PreparedStatement statement = conn.prepareStatement(SELECT_WORLD)) {
+            statement.setInt(1, randomWorld());
+            try (ResultSet rs = statement.executeQuery()) {
+              rs.next();
+              result = new World(rs.getInt("id"), rs.getInt("randomNumber"));
+            }
+          }
+        }
+        return ctx
+            .setResponseType(JSON)
+            .send(Json.encode(result));
+      });
+
+      /** Multiple queries: */
+      get("/queries", ctx -> {
+        World[] result = new World[Util.queries(ctx)];
+        try (Connection conn = ds.getConnection()) {
+          for (int i = 0; i < result.length; i++) {
+            try (final PreparedStatement statement = conn.prepareStatement(SELECT_WORLD)) {
+              statement.setInt(1, randomWorld());
+              try (ResultSet rs = statement.executeQuery()) {
+                rs.next();
+                result[i] = new World(rs.getInt("id"), rs.getInt("randomNumber"));
+              }
+            }
+          }
+        }
+        return ctx
+            .setResponseType(JSON)
+            .send(Json.encode(result));
+      });
+
+      /** Updates: */
+      get("/updates", ctx -> {
+        World[] result = new World[Util.queries(ctx)];
+        StringJoiner updateSql = new StringJoiner(
+            ", ",
+            "UPDATE world SET randomNumber = temp.randomNumber FROM (VALUES ",
+            " ORDER BY 1) AS temp(id, randomNumber) WHERE temp.id = world.id");
+
+        try (Connection connection = ds.getConnection()) {
+          try (PreparedStatement statement = connection.prepareStatement(SELECT_WORLD)) {
+            for (int i = 0; i < result.length; i++) {
+              statement.setInt(1, randomWorld());
+              try (ResultSet rs = statement.executeQuery()) {
+                rs.next();
+                result[i] = new World(rs.getInt("id"), randomWorld());
+              }
+              // prepare update query
+              updateSql.add("(?, ?)");
+            }
+          }
+
+          try (PreparedStatement statement = connection.prepareStatement(updateSql.toString())) {
+            int i = 0;
+            for (World world : result) {
+              statement.setInt(++i, world.getId());
+              statement.setInt(++i, world.getRandomNumber());
+            }
+            statement.executeUpdate();
+          }
+        }
+        return ctx.setResponseType(JSON)
+            .send(Json.encode(result));
+      });
+
+      /** Fortunes: */
+      get("/fortunes", ctx -> {
+        List<Fortune> fortunes = new ArrayList<>();
+        try (Connection connection = ds.getConnection()) {
+          try (PreparedStatement stt = connection.prepareStatement("select * from fortune")) {
+            try (ResultSet rs = stt.executeQuery()) {
+              while (rs.next()) {
+                fortunes.add(new Fortune(rs.getInt("id"), rs.getString("message")));
+              }
+            }
+          }
+        }
+        fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+        Collections.sort(fortunes);
+
+        /** render view: */
+        return views.fortunes.template(fortunes);
+      });
     });
   }
 
-  private Result result(final Object value, final MediaType type) {
-    return Results.ok(value)
-        .type(type)
-        .header(H_SERVER, SERVER)
-        .header(H_DATE, fmt.format(Instant.ofEpochMilli(System.currentTimeMillis())));
-  }
-
   public static void main(final String[] args) {
-    run(App::new, args);
+    runApp(args, EVENT_LOOP, App::new);
   }
-
 }

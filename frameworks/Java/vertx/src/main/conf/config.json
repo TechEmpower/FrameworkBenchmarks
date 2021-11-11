@@ -1,0 +1,6 @@
+{
+  "host": "tfb-database",
+  "username": "benchmarkdbuser",
+  "password": "benchmarkdbpass",
+  "database": "hello_world"
+}

@@ -1,3 +1,3 @@
-class Fortune < ActiveRecord::Base
+class Fortune < ApplicationRecord
   self.table_name = "Fortune"
 end

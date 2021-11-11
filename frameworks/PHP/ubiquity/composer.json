@@ -1,0 +1,17 @@
+{
+	"require" : {
+		"php" : ">=7.4",
+		"phpmv/ubiquity" : "dev-master"
+	},
+	"require-dev" : {
+		"monolog/monolog" : "^1.24",
+		"phpmv/ubiquity-annotations" : "^0.0"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"" : "app/"
+		}
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true
+}

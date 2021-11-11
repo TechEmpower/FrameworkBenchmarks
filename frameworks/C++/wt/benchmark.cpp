@@ -1,28 +1,30 @@
 #include <signal.h>
 #include <cstdlib>
+#include <cstring>
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <mutex>
 
-#include <Wt/WServer>
-#include <Wt/WResource>
-#include <Wt/Http/Request>
-#include <Wt/Http/Response>
-#include <Wt/WTemplate>
-#include <Wt/Utils>
+#include <Wt/WServer.h>
+#include <Wt/WResource.h>
+#include <Wt/Http/Request.h>
+#include <Wt/Http/Response.h>
+#include <Wt/WTemplate.h>
+#include <Wt/Utils.h>
 
-#include <Wt/Dbo/Dbo>
-#include <Wt/Dbo/Json>
+#include <Wt/Dbo/Dbo.h>
+#include <Wt/Dbo/Json.h>
 #ifndef BENCHMARK_USE_POSTGRES
-#include <Wt/Dbo/backend/MySQL>
+#include <Wt/Dbo/backend/MySQL.h>
 #else
-#include <Wt/Dbo/backend/Postgres>
+#include <Wt/Dbo/backend/Postgres.h>
 #endif
 
-#include <boost/random/uniform_int_distribution.hpp>
-#include <boost/random/taus88.hpp>
-#include <boost/thread/tss.hpp>
+#include <random>
+
+#ifndef WT_WIN32
+extern char **environ;
+#endif // WT_WIN32
 
 class MyMessage {
 public:
@@ -113,20 +115,29 @@ public:
 };
 
 struct DbStruct {
-  MyConnection connection;
+  MyConnection *connection;
   Wt::Dbo::Session session;
 
-  boost::taus88 rng;
-  boost::random::uniform_int_distribution<int> distribution;
+  std::default_random_engine rng;
+  std::uniform_int_distribution<int> distribution;
 
-#ifndef BENCHMARK_USE_POSTGRES
-  DbStruct() : connection("hello_world", "benchmarkdbuser", "benchmarkdbpass", "INSERT_DB_HOST_HERE", 3306),
-#else
-  DbStruct() : connection("host=INSERT_DB_HOST_HERE port=5432 user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world"),
-#endif
+  DbStruct()
+    : connection(0),
       rng(clock()),
       distribution(1, 10000) {
-    session.setConnection(connection);
+    std::string dbHostStr = "localhost";
+    char *dbHost = std::getenv("DBHOST");
+    if (dbHost)
+      dbHostStr = std::string(dbHost);
+#ifndef BENCHMARK_USE_POSTGRES
+    auto c = Wt::cpp14::make_unique<MyConnection>("hello_world", "benchmarkdbuser", "benchmarkdbpass", dbHostStr, 3306);
+#else
+    auto connStr = std::string("host=") + dbHostStr + " port=5432 user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world";
+    auto c = Wt::cpp14::make_unique<MyConnection>(connStr);
+#endif
+
+    connection = c.get();
+    session.setConnection(std::move(c));
     session.mapClass<World>("world");
     session.mapClass<Fortune>("fortune");
   }
@@ -137,7 +148,7 @@ struct DbStruct {
 };
 
 namespace {
-  boost::thread_specific_ptr<DbStruct> dbStruct_;
+  thread_local DbStruct *dbStruct_;
 }
 
 class DbResource : public Wt::WResource {
@@ -146,14 +157,12 @@ public:
     response.setMimeType("application/json");
     response.addHeader("Server", "Wt");
 
-    DbStruct* db = dbStruct_.get();
-    if (!db) {
-      db = new DbStruct();
-      dbStruct_.reset(db);
+    if (!dbStruct_) {
+      dbStruct_ = new DbStruct();
     }
 
-    Wt::Dbo::Transaction transaction(db->session);
-    Wt::Dbo::ptr<World> entry = db->session.load<World>(db->rand());
+    Wt::Dbo::Transaction transaction(dbStruct_->session);
+    Wt::Dbo::ptr<World> entry = dbStruct_->session.load<World>(dbStruct_->rand());
     
     Wt::Dbo::JsonSerializer writer(response.out());
     writer.serialize(entry);
@@ -177,17 +186,15 @@ public:
     response.setMimeType("application/json");
     response.addHeader("Server", "Wt");
 
-    DbStruct* db = dbStruct_.get();
-    if (!db) {
-      db = new DbStruct();
-      dbStruct_.reset(db);
+    if (!dbStruct_) {
+      dbStruct_ = new DbStruct();
     }
 
-    Wt::Dbo::Transaction transaction(db->session);
+    Wt::Dbo::Transaction transaction(dbStruct_->session);
     std::vector<Wt::Dbo::ptr<World> > results;
     results.reserve(n);
     for (int i = 0; i < n; ++i) {
-      results.push_back(db->session.load<World>(db->rand()));
+      results.push_back(dbStruct_->session.load<World>(dbStruct_->rand()));
     }
     Wt::Dbo::JsonSerializer writer(response.out());
     writer.serialize(results);
@@ -206,7 +213,11 @@ private:
   const VFortunes *fortunes_;
   mutable std::vector<Wt::Dbo::ptr<Fortune> >::const_iterator it_;
 public:
-  FortuneTemplate(const std::vector<Wt::Dbo::ptr<Fortune> >& fortunes) : fortunes_(&fortunes), it_(fortunes.end()), Wt::WTemplate(Wt::WString::tr("fortunes")) {
+  FortuneTemplate(const std::vector<Wt::Dbo::ptr<Fortune> >& fortunes)
+    : Wt::WTemplate(tr("fortunes")),
+      fortunes_(&fortunes),
+      it_(fortunes.end())
+  {
     addFunction("while", &Wt::WTemplate::Functions::while_f);
   }
 
@@ -229,7 +240,7 @@ public:
     if (varName == "id")
       result << it_->id();
     else if (varName == "message")
-      format(result, Wt::WString::fromUTF8((*it_)->message));
+      format(result, Wt::WString((*it_)->message));
     else
       Wt::WTemplate::resolveString(varName, vars, result);
   }
@@ -241,20 +252,18 @@ public:
     response.setMimeType("text/html; charset=utf-8");
     response.addHeader("Server", "Wt");
 
-    DbStruct* db = dbStruct_.get();
-    if (!db) {
-      db = new DbStruct();
-      dbStruct_.reset(db);
+    if (!dbStruct_) {
+      dbStruct_ = new DbStruct();
     }
 
-    Wt::Dbo::Transaction transaction(db->session);
-    Fortunes fortunes = db->session.find<Fortune>();
+    Wt::Dbo::Transaction transaction(dbStruct_->session);
+    Fortunes fortunes = dbStruct_->session.find<Fortune>();
     VFortunes vFortunes;
     for (Fortunes::const_iterator i = fortunes.begin(); i != fortunes.end(); ++i)
       vFortunes.push_back(*i);
-    Fortune* additionalFortune = new Fortune();
+    auto additionalFortune = Wt::cpp14::make_unique<Fortune>();
     additionalFortune->message = "Additional fortune added at request time.";
-    vFortunes.push_back(Wt::Dbo::ptr<Fortune>(additionalFortune));
+    vFortunes.push_back(Wt::Dbo::ptr<Fortune>(std::move(additionalFortune)));
 
     std::sort(vFortunes.begin(), vFortunes.end(), fortuneCmp);
 
@@ -282,10 +291,8 @@ public:
     response.setMimeType("application/json");
     response.addHeader("Server", "Wt");
 
-    DbStruct* db = dbStruct_.get();
-    if (!db) {
-      db = new DbStruct();
-      dbStruct_.reset(db);
+    if (!dbStruct_) {
+      dbStruct_ = new DbStruct();
     }
 
     std::vector<Wt::Dbo::ptr<World> > results;
@@ -294,9 +301,9 @@ public:
       bool success = false;
       while (!success) {
         try {
-          Wt::Dbo::Transaction transaction(db->session);
-          Wt::Dbo::ptr<World> world = db->session.load<World>(db->rand());
-          world.modify()->randomNumber = db->rand();
+          Wt::Dbo::Transaction transaction(dbStruct_->session);
+          Wt::Dbo::ptr<World> world = dbStruct_->session.load<World>(dbStruct_->rand());
+          world.modify()->randomNumber = dbStruct_->rand();
           transaction.commit();
           results.push_back(world);
           success = true;
@@ -323,11 +330,12 @@ class PlaintextResource : public Wt::WResource {
 int main(int argc, char** argv) {
   try {
     Wt::WServer server(argv[0]);
-    Wt::WMessageResourceBundle *bundle = new Wt::WMessageResourceBundle();
-    bundle->use("fortunes");
-    server.setLocalizedStrings(bundle);
 
     server.setServerConfiguration(argc, argv, WTHTTP_CONFIGURATION);
+
+    auto bundle = std::make_shared<Wt::WMessageResourceBundle>();
+    bundle->use(server.appRoot() + "fortunes");
+    server.setLocalizedStrings(bundle);
 
     JsonResource jsonResource;
     server.addResource(&jsonResource, "/json");
@@ -348,13 +356,15 @@ int main(int argc, char** argv) {
     server.addResource(&plaintextResource, "/plaintext");
 
     if (server.start()) {
-      int sig = Wt::WServer::waitForShutdown(argv[0]);
+      int sig = Wt::WServer::waitForShutdown();
 
       std::cerr << "Shutdown (signal = " << sig << ")" << std::endl;
       server.stop();
 
+#ifndef WT_WIN32
       if (sig == SIGHUP)
         Wt::WServer::restart(argc, argv, environ);
+#endif // WT_WIN32
     }
   } catch (Wt::WServer::Exception& e) {
     std::cerr << e.what() << "\n";

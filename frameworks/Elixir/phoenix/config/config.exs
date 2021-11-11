@@ -5,14 +5,18 @@
 # is restricted to this project.
 use Mix.Config
 
+config :phoenix, :json_library, Jason
+
+config :hello,
+  ecto_repos: [Hello.Repo]
+
 # Configures the endpoint
-config :hello, Hello.Endpoint,
+config :hello, HelloWeb.Endpoint,
   url: [host: "localhost"],
   http: [port: 8080],
   root: Path.expand(__DIR__),
   debug_errors: false,
-  secret_key_base: "Z18ZjzZslFpKd8HB41IljqMavPiOKVF9y1DIQ+S2Ytg7Op0EIauwJgd7mtRStssx",
-  pubsub: [name: Hello.PubSub, adapter: Phoenix.PubSub.PG2]
+  secret_key_base: "Z18ZjzZslFpKd8HB41IljqMavPiOKVF9y1DIQ+S2Ytg7Op0EIauwJgd7mtRStssx"
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -21,4 +25,4 @@ config :logger, :console,
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"

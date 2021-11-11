@@ -1,0 +1,16 @@
+{
+  "db": {
+    "host":     "tfb-database",
+    "port":     5432,
+    "name":     "hello_world",
+    "user":     "benchmarkdbuser",
+    "password": "benchmarkdbpass"
+  },
+  "mongodb": {
+    "host":     "tfb-database",
+    "port":     27017,
+    "name":     "hello_world",
+    "user":     "benchmarkdbuser",
+    "password": "benchmarkdbpass"
+  }
+}

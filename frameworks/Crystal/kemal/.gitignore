@@ -1,4 +1,0 @@
-libs/
-.crystal
-.shards
-!shard.lock

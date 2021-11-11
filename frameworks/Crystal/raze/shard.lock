@@ -1,0 +1,22 @@
+version: 1.0
+shards:
+  db:
+    github: crystal-lang/crystal-db
+    version: 0.5.0
+
+  kilt:
+    github: jeromegn/kilt
+    version: 0.4.0
+
+  pg:
+    github: will/crystal-pg
+    version: 0.15.0
+
+  radix:
+    github: luislavena/radix
+    version: 0.3.8
+
+  raze:
+    github: samueleaton/raze
+    version: 0.3.0
+

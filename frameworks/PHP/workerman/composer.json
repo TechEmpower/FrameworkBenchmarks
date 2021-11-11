@@ -1,0 +1,5 @@
+{
+	"require": {
+		"workerman/workerman": "dev-master"
+	}
+}

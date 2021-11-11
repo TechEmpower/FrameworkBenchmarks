@@ -8,23 +8,31 @@ use utf8;
 
 module 'JSON::XS';
 
-my $mongo   = MongoDB::MongoClient->new( host => 'localhost', port => 27017 );
-my $mdb     = $mongo->get_database('hello_world');
-my $world   = $mdb->get_collection('world');
-my $fortune = $mdb->get_collection('fortune');
+my $mongo;
+my $mdb;
+my $world;
+my $fortune;
+my @sth;
+my $dbh;
 
-my $dbh = DBI->connect(
-    "dbi:mysql:database=hello_world;host=localhost;port=3306",
-    'benchmarkdbuser',
-    'benchmarkdbpass',
-    { RaiseError => 0, PrintError => 0, mysql_enable_utf8 => 1 }
-);
-
-my @sth = map { $dbh->prepare($_) } (
-    "SELECT * FROM World WHERE id = ?",
-    "SELECT * FROM Fortune",
-    "UPDATE World SET randomNumber = ? WHERE id = ?",
-);
+if ($ENV{MONGO}) {
+    $mongo   = MongoDB::MongoClient->new( host => 'tfb-database', port => 27017 );
+    $mdb     = $mongo->get_database('hello_world');
+    $world   = $mdb->get_collection('world');
+    $fortune = $mdb->get_collection('fortune');
+} else {
+    $dbh = DBI->connect(
+        "dbi:mysql:database=hello_world;host=tfb-database;port=3306",
+        'benchmarkdbuser',
+        'benchmarkdbpass',
+        { RaiseError => 0, PrintError => 0, mysql_enable_utf8 => 1 }
+    );
+    @sth = map { $dbh->prepare($_) } (
+        "SELECT * FROM World WHERE id = ?",
+        "SELECT * FROM Fortune",
+        "UPDATE World SET randomNumber = ? WHERE id = ?",
+    );
+}
 
 get '/json' => sub {
     { message => 'Hello, World!' };
@@ -32,7 +40,16 @@ get '/json' => sub {
 
 get '/db/?db' => sub {
     my ( $self, $db ) = @_;
-    query( $db // 'mongo', 1 );
+    my $id = int rand 10000 + 1;
+    my $row;
+    if ( $db eq 'mongo' ) {
+        $row = $world->find_one( { _id => $id } );
+    }
+    else {
+        $sth[0]->execute($id);
+        $row = $sth[0]->fetchrow_hashref;
+    }
+    return { id => $id, randomNumber => $row->{randomNumber} };
 };
 
 get '/queries/?db' => sub {
@@ -100,13 +117,8 @@ sub query {
             $row = $sth[0]->fetchrow_hashref;
         }
         if ($row) {
-            if ( $count == 1 ) {
-                return { id => $id, randomNumber => $row->{randomNumber} };
-            }
-            else {
-                push @response,
+            push @response,
                   { id => $id, randomNumber => $row->{randomNumber} };
-            }
         }
     }
     return \@response;

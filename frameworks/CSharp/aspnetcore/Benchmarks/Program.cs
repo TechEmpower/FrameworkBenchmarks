@@ -10,13 +10,14 @@ using Benchmarks.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Benchmarks
 {
     public class Program
     {
         public static string[] Args;
-        public static string Server;
 
         public static void Main(string[] args)
         {
@@ -30,12 +31,10 @@ namespace Benchmarks
             Console.WriteLine($"WebHostBuilder loading from: {typeof(WebHostBuilder).GetTypeInfo().Assembly.Location}");
 
             var config = new ConfigurationBuilder()
-                .AddCommandLine(args)
-                .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .AddJsonFile("hosting.json", optional: true)
+                .AddEnvironmentVariables(prefix: "ASPNETCORE_")
+                .AddCommandLine(args)
                 .Build();
-
-            Server = config["server"] ?? "Kestrel";
 
             var webHostBuilder = new WebHostBuilder()
                 .UseContentRoot(Directory.GetCurrentDirectory())
@@ -47,89 +46,26 @@ namespace Benchmarks
                     .AddSingleton<Scenarios>()
                 )
                 .UseDefaultServiceProvider(
-                    (context, options) => options.ValidateScopes = context.HostingEnvironment.IsDevelopment());
+                    (context, options) => options.ValidateScopes = context.HostingEnvironment.IsDevelopment())
+                .UseKestrel();
 
-            if (String.Equals(Server, "Kestrel", StringComparison.OrdinalIgnoreCase))
+            var threadCount = GetThreadCount(config);
+
+            webHostBuilder.UseSockets(x =>
             {
-                var threads = GetThreadCount(config);
-                webHostBuilder = webHostBuilder.UseKestrel();
-                if (threads > 0)
+                if (threadCount > 0)
                 {
-                    webHostBuilder = webHostBuilder.UseLibuv(options => options.ThreadCount = threads);
+                    x.IOQueueCount = threadCount;
                 }
-            }
-            else if (String.Equals(Server, "HttpSys", StringComparison.OrdinalIgnoreCase))
-            {
-                webHostBuilder = webHostBuilder.UseHttpSys();
-            }
-            else
-            {
-                throw new InvalidOperationException($"Unknown server value: {Server}");
-            }
+
+                Console.WriteLine($"Using Sockets with {x.IOQueueCount} threads");
+            });
 
             var webHost = webHostBuilder.Build();
 
-            Console.WriteLine($"Using server {Server}");
             Console.WriteLine($"Server GC is currently {(GCSettings.IsServerGC ? "ENABLED" : "DISABLED")}");
 
-            var nonInteractiveValue = config["NonInteractive"];
-            if (nonInteractiveValue == null || !bool.Parse(nonInteractiveValue))
-            {
-                StartInteractiveConsoleThread();
-            }
-
             webHost.Run();
-        }
-
-        private static void StartInteractiveConsoleThread()
-        {
-            // Run the interaction on a separate thread as we don't have Console.KeyAvailable on .NET Core so can't
-            // do a pre-emptive check before we call Console.ReadKey (which blocks, hard)
-
-            var started = new ManualResetEvent(false);
-
-            var interactiveThread = new Thread(() =>
-            {
-                Console.WriteLine("Press 'C' to force GC or any other key to display GC stats");
-                Console.WriteLine();
-
-                started.Set();
-
-                while (true)
-                {
-                    var key = Console.ReadKey(intercept: true);
-
-                    if (key.Key == ConsoleKey.C)
-                    {
-                        Console.WriteLine();
-                        Console.Write("Forcing GC...");
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
-                        GC.Collect();
-                        Console.WriteLine(" done!");
-                    }
-                    else
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine($"Allocated: {GetAllocatedMemory()}");
-                        Console.WriteLine($"Gen 0: {GC.CollectionCount(0)}, Gen 1: {GC.CollectionCount(1)}, Gen 2: {GC.CollectionCount(2)}");
-                    }
-                }
-            })
-            {
-                IsBackground = true
-            };
-
-            interactiveThread.Start();
-
-            started.WaitOne();
-        }
-
-        private static string GetAllocatedMemory(bool forceFullCollection = false)
-        {
-            double bytes = GC.GetTotalMemory(forceFullCollection);
-
-            return $"{((bytes / 1024d) / 1024d).ToString("N2")} MB";
         }
 
         private static int GetThreadCount(IConfigurationRoot config)
@@ -139,4 +75,3 @@ namespace Benchmarks
         }
     }
 }
-

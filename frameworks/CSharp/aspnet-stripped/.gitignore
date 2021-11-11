@@ -1,6 +1,0 @@
-*.user
-*.suo
-*/bin/*
-*/obj/*
-lib/*
-!lib/.nuget

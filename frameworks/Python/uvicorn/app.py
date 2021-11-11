@@ -2,11 +2,10 @@ import asyncio
 import asyncpg
 import jinja2
 import os
-import ujson as json
-from functools import partial
+import ujson
 from random import randint
 from operator import itemgetter
-from urllib import parse
+from urllib.parse import parse_qs
 
 
 async def setup():
@@ -15,14 +14,43 @@ async def setup():
         user=os.getenv('PGUSER', 'benchmarkdbuser'),
         password=os.getenv('PGPASS', 'benchmarkdbpass'),
         database='hello_world',
-        host=os.getenv('DBHOST', 'localhost'),
+        host='tfb-database',
         port=5432
     )
 
 
+READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
+WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
+ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
+
+JSON_RESPONSE = {
+    'type': 'http.response.start',
+    'status': 200,
+    'headers': [
+        [b'content-type', b'application/json'],
+    ]
+}
+
+HTML_RESPONSE = {
+    'type': 'http.response.start',
+    'status': 200,
+    'headers': [
+        [b'content-type', b'text/html; charset=utf-8'],
+    ]
+}
+
+PLAINTEXT_RESPONSE = {
+    'type': 'http.response.start',
+    'status': 200,
+    'headers': [
+        [b'content-type', b'text/plain; charset=utf-8'],
+    ]
+}
+
+
 pool = None
-additional = [0, 'Additional fortune added at request time.']
 key = itemgetter(1)
+json_dumps = ujson.dumps
 template = None
 path = os.path.join('templates', 'fortune.html')
 with open(path, 'r') as template_file:
@@ -33,134 +61,161 @@ loop = asyncio.get_event_loop()
 loop.run_until_complete(setup())
 
 
-def get_query_count(query_string):
-    # helper to deal with the querystring passed in
-    queries = parse.parse_qs(query_string).get(b'queries', [None])[0]
-    if queries:
-        try:
-            query_count = int(queries)
-            if query_count < 1:
-                return 1
-            if query_count > 500:
-                return 500
-            return query_count
-        except ValueError:
-            pass
-    return 1
+def get_num_queries(scope):
+    try:
+        query_string = scope['query_string']
+        query_count = int(parse_qs(query_string)[b'queries'][0])
+    except (KeyError, IndexError, ValueError):
+        return 1
+
+    if query_count < 1:
+        return 1
+    if query_count > 500:
+        return 500
+    return query_count
 
 
-random_int = partial(randint, 1, 10000)
-
-
-async def json_endpoint(message, channels):
-    content = json.dumps({'message': 'Hello, world!'}).encode('utf-8')
-    await channels['reply'].send({
-        'status': 200,
-        'headers': [
-            [b'content-type', b'application/json'],
-        ],
-        'content': content
+async def json_serialization(scope, receive, send):
+    """
+    Test type 1: JSON Serialization
+    """
+    content = json_dumps({'message': 'Hello, world!'}).encode('utf-8')
+    await send(JSON_RESPONSE)
+    await send({
+        'type': 'http.response.body',
+        'body': content,
+        'more_body': False
     })
 
 
-async def fortunes_endpoint(message, channels):
+async def single_database_query(scope, receive, send):
+    """
+    Test type 2: Single database object
+    """
+    row_id = randint(1, 10000)
     connection = await pool.acquire()
     try:
-        fortunes = await connection.fetch('SELECT * FROM Fortune')
-        fortunes.append(additional)
-        fortunes.sort(key=key)
-        content = template.render(fortunes=fortunes).encode('utf-8')
-        await channels['reply'].send({
-            'status': 200,
-            'headers': [
-                [b'content-type', b'text/html; charset=utf-8'],
-            ],
-            'content': content
-        })
+        number = await connection.fetchval(READ_ROW_SQL, row_id)
+        world = {'id': row_id, 'randomNumber': number}
     finally:
         await pool.release(connection)
 
-
-async def plaintext_endpoint(message, channels):
-    await channels['reply'].send({
-        'status': 200,
-        'headers': [
-            [b'content-type', b'text/plain'],
-        ],
-        'content': b'Hello, world!'
+    content = json_dumps(world).encode('utf-8')
+    await send(JSON_RESPONSE)
+    await send({
+        'type': 'http.response.body',
+        'body': content,
+        'more_body': False
     })
 
 
-async def handle_404(message, channels):
-    await channels['reply'].send({
-        'status': 404,
-        'headers': [
-            [b'content-type', b'text/plain'],
-        ],
-        'content': b'Not found'
+async def multiple_database_queries(scope, receive, send):
+    """
+    Test type 3: Multiple database queries
+    """
+    num_queries = get_num_queries(scope)
+    row_ids = [randint(1, 10000) for _ in range(num_queries)]
+    worlds = []
+
+    connection = await pool.acquire()
+    try:
+        statement = await connection.prepare(READ_ROW_SQL)
+        for row_id in row_ids:
+            number = await statement.fetchval(row_id)
+            worlds.append({'id': row_id, 'randomNumber': number})
+    finally:
+        await pool.release(connection)
+
+    content = json_dumps(worlds).encode('utf-8')
+    await send(JSON_RESPONSE)
+    await send({
+        'type': 'http.response.body',
+        'body': content,
+        'more_body': False
     })
 
 
-async def db_endpoint(message, channels):
-    """Test Type 2: Single database object"""
-    async with pool.acquire() as connection:
-        row = await connection.fetchrow('SELECT id, "randomnumber" FROM "world" WHERE id = ' + str(random_int()))
-        world = {'id': row[0], 'randomNumber': row[1]}
-        await channels['reply'].send({
-            'status': 200,
-            'headers': [
-                [b'content-type', b'application/json'],
-            ],
-            'content': json.dumps(world).encode('utf-8')
-        })
+async def fortunes(scope, receive, send):
+    """
+    Test type 4: Fortunes
+    """
+    connection = await pool.acquire()
+    try:
+        fortunes = await connection.fetch('SELECT * FROM Fortune')
+    finally:
+        await pool.release(connection)
+
+    fortunes.append(ADDITIONAL_ROW)
+    fortunes.sort(key=key)
+    content = template.render(fortunes=fortunes).encode('utf-8')
+    await send(HTML_RESPONSE)
+    await send({
+        'type': 'http.response.body',
+        'body': content,
+        'more_body': False
+    })
 
 
-async def queries_endpoint(message, channels):
-    """Test Type 3: Multiple database queries"""
-    queries = get_query_count(message.get('query_string', {}))
-    async with pool.acquire() as connection:
-        worlds = []
-        for i in range(queries):
-            sql = 'SELECT id, "randomnumber" FROM "world" WHERE id = ' + str(random_int())
-            row = await connection.fetchrow(sql)
-            worlds.append({'id': row[0], 'randomNumber': row[1]})
-        await channels['reply'].send({
-            'status': 200,
-            'headers': [
-                [b'content-type', b'application/json'],
-            ],
-            'content': json.dumps(worlds).encode('utf-8')
-        })
+async def database_updates(scope, receive, send):
+    """
+    Test type 5: Database updates
+    """
+    num_queries = get_num_queries(scope)
+    updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
+    worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
+
+    connection = await pool.acquire()
+    try:
+        statement = await connection.prepare(READ_ROW_SQL)
+        for row_id, _ in updates:
+            await statement.fetchval(row_id)
+        await connection.executemany(WRITE_ROW_SQL, updates)
+    finally:
+        await pool.release(connection)
+
+    content = json_dumps(worlds).encode('utf-8')
+    await send(JSON_RESPONSE)
+    await send({
+        'type': 'http.response.body',
+        'body': content,
+        'more_body': False
+    })
 
 
-async def updates_endpoint(message, channels):
-    """Test 5: Database Updates"""
-    queries = get_query_count(message.get('query_string', {}))
-    async with pool.acquire() as connection:
-        worlds = []
-        for i in range(queries):
-            row = await connection.fetchrow('SELECT id FROM "world" WHERE id=' + str(random_int()))
-            worlds.append({'id': row[0], 'randomNumber': random_int()})
-            await connection.execute('UPDATE "world" SET "randomnumber"=%s WHERE id=%s' % (random_int(), row[0]))
-        await channels['reply'].send({
-            'status': 200,
-            'headers': [
-                [b'content-type', b'application/json'],
-            ],
-            'content': json.dumps(worlds).encode('utf-8')
-        })
+async def plaintext(scope, receive, send):
+    """
+    Test type 6: Plaintext
+    """
+    content = b'Hello, world!'
+    await send(PLAINTEXT_RESPONSE)
+    await send({
+        'type': 'http.response.body',
+        'body': content,
+        'more_body': False
+    })
+
+
+async def handle_404(scope, receive, send):
+    content = b'Not found'
+    await send(PLAINTEXT_RESPONSE)
+    await send({
+        'type': 'http.response.body',
+        'body': content,
+        'more_body': False
+    })
 
 
 routes = {
-    '/json': json_endpoint,
-    '/fortunes': fortunes_endpoint,
-    '/plaintext': plaintext_endpoint,
-    '/db': db_endpoint,
-    '/queries': queries_endpoint,
-    '/updates': updates_endpoint,
+    '/json': json_serialization,
+    '/db': single_database_query,
+    '/queries': multiple_database_queries,
+    '/fortunes': fortunes,
+    '/updates': database_updates,
+    '/plaintext': plaintext,
 }
 
 
-async def main(message, channels):
-    path = message['path']
-    await routes.get(path, handle_404)(message, channels)
+async def main(scope, receive, send):
+    path = scope['path']
+    handler = routes.get(path, handle_404)
+    await handler(scope, receive, send)

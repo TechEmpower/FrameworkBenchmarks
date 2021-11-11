@@ -3,91 +3,12 @@ Test type 4: Fortunes
 TechEmpower Web Framework Benchmarks
 -->
 <!--#declaration
-#include "fortune.h"
+#include "fortuneNoSql.h"
 
-static UString* pencoded;
-static UMongoDBClient* mc;
-static Fortune* pfortune2add;
-static UVector<Fortune*>* pvfortune;
-
-static void usp_fork_mfortune()
-{
-   U_TRACE(5, "::usp_fork_mfortune()")
-
-   U_NEW(UMongoDBClient, mc, UMongoDBClient);
-
-   if (mc->connect(U_NULLPTR, 0) == false)
-      {
-      U_WARNING("usp_fork_mfortune(): connection failed");
-
-      return;
-      }
-
-   if (mc->selectCollection("hello_world", "fortune") == false)
-      {
-      U_WARNING("usp_fork_mfortune(): selectCollection() failed");
-
-      return;
-      }
-
-   U_NEW(UString, pencoded, UString(100U));
-   U_NEW(UVector<Fortune*>, pvfortune, UVector<Fortune*>);
-   U_NEW(Fortune, pfortune2add, Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
-}
-
-#ifdef DEBUG
-static void usp_end_mfortune()
-{
-   U_TRACE(5, "::usp_end_mfortune()")
-
-   delete mc;
-
-   if (pencoded)
-      {
-      delete pencoded;
-      delete pvfortune;
-      delete pfortune2add;
-      }
-}
-#endif
+static void usp_fork_mfortune() { FortuneNoSql::handlerForkMongoDB(); }
 -->
-<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><!--#code
-Fortune* item;
-uint32_t i, n;
-UString result;
-
-U_NEW(Fortune, item, Fortune(*pfortune2add));
-
-pvfortune->push_back(item);
-
-(void) mc->findAll();
-
-for (i = 0, n = mc->vitem.size(); i < n; ++i)
-   {
-   result.clear();
-
-   (void) U_JFIND(mc->vitem[i], "message", result);
-
-   U_NEW(Fortune, item, Fortune(i+1, result));
-
-   pvfortune->push_back(item);
-   }
-
-pvfortune->sort(Fortune::cmp_obj);
-
-for (i = 0, ++n; i < n; ++i)
-   {
-   Fortune* elem = (*pvfortune)[i];
-
-   UXMLEscape::encode(elem->message, *pencoded);
-
-   USP_PRINTF_ADD(
-      "<tr>"
-      "<td>%u</td>"
-      "<td>%v</td>"
-      "</tr>",
-      elem->id, pencoded->rep);
-   }
-
-pvfortune->clear();
---></table></body></html>
+<!--#header
+-->
+<!--#code
+Fortune::doQuery(FortuneNoSql::handlerQueryMongoDB);
+-->

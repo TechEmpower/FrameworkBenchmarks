@@ -7,13 +7,14 @@ import scala.concurrent.Future
 import javax.inject.{Singleton, Inject}
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.db.slick.HasDatabaseConfigProvider
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.db.NamedDatabase
-import slick.driver.JdbcProfile
+import slick.jdbc.JdbcProfile
+import scala.concurrent.ExecutionContext
 
 @Singleton()
-class WorldDAO @Inject()(@NamedDatabase("hello_world") protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
-  import driver.api._
+class WorldDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) (implicit ec: ExecutionContext)
+  extends HasDatabaseConfigProvider[JdbcProfile] {
+
+  import profile.api._
 
   private val Worlds = TableQuery[WorldsTable]
 

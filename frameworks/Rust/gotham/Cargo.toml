@@ -1,0 +1,18 @@
+[package]
+name = "gotham_techempower"
+version = "0.1.0"
+authors = ["Isaac Whitfield <iw@whitfin.io>"]
+edition = "2018"
+
+[dependencies]
+gotham = "0.4"
+hyper = "0.12"
+mime = "0.3"
+serde = "1.0.111"
+serde_derive = "1.0"
+serde_json = "1.0"
+
+[profile.release]
+codegen-units = 1
+opt-level = 3
+lto = true

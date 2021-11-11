@@ -3,53 +3,30 @@ apply plugin: 'eclipse'
 apply plugin: 'application'
 
 // compiler options
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
-mainClassName = 'app.UndertowMain'
+mainClassName = 'app.BenchmarkMain'
 
 repositories {
     mavenCentral()
-    
-    //snapshot repository - not actually needed to run this example
-    maven {
-        url 'http://oss.sonatype.org/content/repositories/snapshots'
-    }
 }
 
 dependencies {
-	// Framework
-    def framework_version = '0.9.0'
-	compile "net.javapla.jawn:jawn-server-undertow:${framework_version}"
+    // Framework
+    def framework_version = '1.0.0'
+    implementation "net.javapla.jawn:jawn:${framework_version}"
+    implementation "net.javapla.jawn:jawn-database-hikari:${framework_version}"
+    
 
-	
-	// Database
-	compile 'mysql:mysql-connector-java:5.1.38'
-	
-	//Logging 
-	runtime group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.3' exclude group: 'org.slf4j'
+
+    // Database
+    compile 'org.postgresql:postgresql:42.2.8'
 }
 
 /* ****************** */
 /*    Application     */
 /* ****************** */
-run {
-    if(project.hasProperty('args')){
-        args project.args.split(',')
-    }
-    jvmArgs = ['-server','-XX:+UseNUMA','-XX:+UseParallelGC','-XX:+AggressiveOpts']//['-XX:+UseNUMA','-XX:+UseParallelGC','-XX:+AggressiveOpts']
-}
-applicationDistribution.from("webapp") {
-    into "webapp"
-}
-
-/* ****************** */
-/*    Eclipse         */
-/* ****************** */
-eclipse {
-	classpath {
-		// we need the output dir to be the same as the one gradle uses when running Jetty
-		// or else the dynamic loading does not apply
-		defaultOutputDir = file('build/classes/main')
-	}
+application {
+    applicationDefaultJvmArgs = ['-server', '-XX:+UseParallelGC','-XX:+UseNUMA', '-XX:+UseStringDeduplication','-Xms4g', '-Xmx4g']
 }

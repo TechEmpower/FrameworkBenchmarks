@@ -2,9 +2,9 @@ source 'https://rubygems.org'
 
 gem 'json', '~> 2.0'
 gem 'passenger', '~> 5.1', :platforms=>[:ruby, :mswin], :require=>false
-gem 'puma', '~> 3.9.1', :require=>false
-gem 'sequel', '~> 4.44'
-gem 'rack', '~> 2.0'
+gem 'puma', '~> 3.9', :require=>false
+gem 'sequel', '~> 5.0'
+gem 'rack', '2.0.8'
 gem 'torquebox-web', '>= 4.0.0.beta3', '< 5', :platforms=>:jruby, :require=>false
 gem 'unicorn', '~> 5.2', :platforms=>[:ruby, :mswin], :require=>false
 

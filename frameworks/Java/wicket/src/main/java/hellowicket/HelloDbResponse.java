@@ -1,67 +1,62 @@
 package hellowicket;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.request.resource.AbstractResource;
-import org.apache.wicket.util.string.StringValue;
-
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class HelloDbResponse extends AbstractResource
+import javax.sql.DataSource;
+
+import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.util.string.StringValue;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+public class HelloDbResponse implements IResource
 {
   private static final long serialVersionUID = 1L;
 
   private static final int DB_ROWS = 10000;
   private static final String TEXT_PLAIN = "text/plain";
 
-  protected ResourceResponse newResourceResponse(Attributes attributes)
-  {
-    final StringValue queriesParam = attributes.getRequest().getQueryParameters().getParameterValue("queries");
-    int qs = queriesParam.toInt(1);
-    if (qs < 1)
-    {
-      qs = 1;
-    }
-    else if (qs > 500)
-    {
-      qs = 500;
-    }
-    final int queries = qs;
-
-    final ResourceResponse response = new ResourceResponse();
-
-    try
-    {
-      final byte[] data = getDataFromDatabase(queriesParam, queries);
-      final WebResponse webResponse = (WebResponse) attributes.getResponse();
-      webResponse.setContentLength(data.length);
-      webResponse.setContentType(HelloJsonResponse.APPLICATION_JSON);
-      response.setWriteCallback(new WriteCallback()
-      {
-        public void writeData(Attributes attributes)
-        {
-          webResponse.write(data);
-        }
-      });
-    }
-    catch (Exception ex)
-    {
-      response.setContentType(TEXT_PLAIN);
-      response.setError(500, ex.getClass().getSimpleName() + ": " + ex.getMessage());
-      ex.printStackTrace();
-    }
-    return response;
-  }
-
   @Override
-  protected void setResponseHeaders(final ResourceResponse resourceResponse, final Attributes attributes) {
-  }
+  public void respond(Attributes attributes) 
+  {
+	  final StringValue queriesParam = attributes.getRequest().getQueryParameters().getParameterValue("queries");
+	  int qs = queriesParam.toInt(1);
+	  if (qs < 1)
+	  {
+		  qs = 1;
+	  }
+	  else if (qs > 500)
+	  {
+		  qs = 500;
+	  }
+	  final int queries = qs;
+		
+	  try 
+	  {
+		byte[] data = getDataFromDatabase(queriesParam, queries);
 
+		final WebResponse webResponse = (WebResponse) attributes.getResponse();
+		webResponse.setContentLength(data.length);
+		webResponse.setContentType(HelloJsonResponse.APPLICATION_JSON);
+		webResponse.write(data);
+	  } 
+	  catch (Exception ex)
+	  {
+		WebResponse response = (WebResponse) attributes.getResponse();
+		
+		response.setContentType(TEXT_PLAIN);
+		response.setStatus(500);
+		response.write(ex.getClass().getSimpleName() + ": " + ex.getMessage());
+		
+		ex.printStackTrace();
+	  }
+  }
+  
   private byte[] getDataFromDatabase(final StringValue queriesParam, final int queries)
       throws SQLException, JsonProcessingException
   {

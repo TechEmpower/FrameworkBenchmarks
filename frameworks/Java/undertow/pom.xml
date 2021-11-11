@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -10,89 +11,63 @@
   <version>1.0-SNAPSHOT</version>
 
   <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <version.hikaricp>2.6.1</version.hikaricp>
-    <version.jackson>2.8.8.1</version.jackson>
-    <version.maven-shade-plugin>3.0.0</version.maven-shade-plugin>
-    <version.mongodb>3.4.2</version.mongodb>
-    <version.mustache>0.9.4</version.mustache>
-    <version.mysql>5.1.41</version.mysql>
-    <version.postgresql>9.4.1212</version.postgresql>
-    <version.undertow>1.4.13.Final</version.undertow>
+    <hikaricp.version>3.4.1</hikaricp.version>
+    <jackson.version>2.10.5.1</jackson.version>
+    <maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
+    <mustache.version>0.9.6</mustache.version>
+    <postgresql.version>42.2.8</postgresql.version>
+    <undertow.version>2.0.27.Final</undertow.version>
   </properties>
 
   <prerequisites>
-    <maven>3.0</maven>
+    <maven>3.6</maven>
   </prerequisites>
 
   <dependencies>
     <dependency>
       <groupId>io.undertow</groupId>
       <artifactId>undertow-core</artifactId>
-      <version>${version.undertow}</version>
-    </dependency>
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>${version.mysql}</version>
+      <version>${undertow.version}</version>
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>${version.postgresql}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongodb-driver</artifactId>
-      <version>${version.mongodb}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongodb-driver-core</artifactId>
-      <version>${version.mongodb}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongodb-driver-async</artifactId>
-      <version>${version.mongodb}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>bson</artifactId>
-      <version>${version.mongodb}</version>
+      <version>${postgresql.version}</version>
     </dependency>
     <dependency>
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
-      <version>${version.hikaricp}</version>
+      <version>${hikaricp.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>${version.jackson}</version>
+      <version>${jackson.version}</version>
     </dependency>
     <dependency>
       <groupId>com.github.spullara.mustache.java</groupId>
       <artifactId>compiler</artifactId>
-      <version>${version.mustache}</version>
+      <version>${mustache.version}</version>
     </dependency>
   </dependencies>
 
   <build>
-    <finalName>hello-undertow</finalName>
+    <finalName>app</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>${version.maven-shade-plugin}</version>
+        <version>${maven-shade-plugin.version}</version>
         <configuration>
           <createDependencyReducedPom>false</createDependencyReducedPom>
           <filters>
             <filter>
               <artifact>*:*</artifact>
               <excludes>
+                <exclude>module-info.class</exclude>
                 <exclude>META-INF/*.SF</exclude>
                 <exclude>META-INF/*.DSA</exclude>
                 <exclude>META-INF/*.RSA</exclude>

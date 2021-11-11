@@ -1,0 +1,28 @@
+{
+  "framework": "wildfly-ee",
+  "tests": [{
+    "default" : {
+      "json_url": "/rest/json",
+      "plaintext_url": "/rest/plaintext",
+      "db_url": "/rest/db",
+      "query_url": "/rest/queries?queries=",
+      "fortune_url": "/fortunes.xhtml",
+      "update_url": "/rest/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "None",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Full",
+      "platform": "Servlet",
+      "webserver": "Wildfly",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "wildfly-ee",
+      "notes": "",
+      "versus": ""
+    }   
+  }]
+}

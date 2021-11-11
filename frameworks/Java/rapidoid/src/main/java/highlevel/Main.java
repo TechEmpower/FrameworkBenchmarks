@@ -8,7 +8,6 @@ import org.rapidoid.env.Env;
 import org.rapidoid.http.MediaType;
 import org.rapidoid.jdbc.JDBC;
 import org.rapidoid.jdbc.JdbcClient;
-import org.rapidoid.log.Log;
 import org.rapidoid.setup.App;
 import org.rapidoid.setup.On;
 
@@ -36,16 +35,13 @@ public class Main {
 	}
 
 	private static void setupDbHandlers() {
-		String dbHost = Conf.ROOT.entry("dbhost").or("localhost");
-		Log.info("Database hostname is: " + dbHost);
-
 		JdbcClient jdbc = JDBC.api();
 
 		if (Env.hasProfile("mysql")) {
-			jdbc.url("jdbc:mysql://" + dbHost + ":3306/hello_world?" + Helper.MYSQL_CONFIG);
+			jdbc.url("jdbc:mysql://tfb-database:3306/hello_world?" + Helper.MYSQL_CONFIG);
 
 		} else if (Env.hasProfile("postgres")) {
-			jdbc.url("jdbc:postgresql://" + dbHost + ":5432/hello_world?" + Helper.POSTGRES_CONFIG);
+			jdbc.url("jdbc:postgresql://tfb-database:5432/hello_world?" + Helper.POSTGRES_CONFIG);
 
 		} else {
 			throw Err.notExpected();

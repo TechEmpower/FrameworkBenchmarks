@@ -16,6 +16,7 @@ Base = declarative_base()
 if sys.version_info[0] == 3:
     xrange = range
 
+
 def getQueryNum(queryString):
     try:
         int(queryString)
@@ -23,39 +24,34 @@ def getQueryNum(queryString):
     except ValueError:
         return 1
 
+
 class Fortune(Base):
     __tablename__ = "fortune"
 
-    id = Column(Integer, primary_key = True)
+    id = Column(Integer, primary_key=True)
     message = Column(String)
 
     def serialize(self):
-        return {
-            'id' : self.id,
-            'message' : self.message
-        }
+        return {'id': self.id, 'message': self.message}
+
 
 class World(Base):
     __tablename__ = "world"
 
-    id = Column(Integer, primary_key = True)
+    id = Column(Integer, primary_key=True)
     randomNumber = Column(Integer)
 
     def serialize(self):
-        return {
-            'id' : self.id,
-            'randomNumber' : self.randomNumber
-        }
+        return {'id': self.id, 'randomNumber': self.randomNumber}
+
 
 class CherryPyBenchmark(object):
-
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def json(self):
         cherrypy.response.headers["Content-Type"] = "application/json"
-        json_message = {"message" : "Hello, world!"}
+        json_message = {"message": "Hello, world!"}
         return json_message
-
 
     @cherrypy.expose
     def plaintext(self):
@@ -97,7 +93,7 @@ class CherryPyBenchmark(object):
         worlds = []
         rp = partial(randint, 1, 10000)
         ids = [rp() for _ in xrange(num_queries)]
-        ids.sort() # To avoid deadlock
+        ids.sort()  # To avoid deadlock
         for id in ids:
             world = cherrypy.request.db.query(World).get(id)
             world.randomNumber = rp()
@@ -108,23 +104,33 @@ class CherryPyBenchmark(object):
     @cherrypy.expose
     def fortune(self):
         fortunes = cherrypy.request.db.query(Fortune).all()
-        fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
+        fortunes.append(
+            Fortune(id=0, message="Additional fortune added at request time."))
         fortunes.sort(key=attrgetter("message"))
         html = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"
         for f in fortunes:
-            html += "<tr><td>" + str(f.id) + "</td><td>" + cgi.escape(f.message) + "</td></tr>"
+            html += "<tr><td>" + str(f.id) + "</td><td>" + cgi.escape(
+                f.message) + "</td></tr>"
         html += "</table></body></html>"
         return html
+
 
 if __name__ == "__main__":
     # Register the SQLAlchemy plugin
     from saplugin import SAEnginePlugin
     DBDRIVER = 'mysql'
-    DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@TFB-database:3306/hello_world?charset=utf8' % (DBDRIVER)
+    DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@tfb-database:3306/hello_world?charset=utf8' % (
+        DBDRIVER)
     SAEnginePlugin(cherrypy.engine, DATABASE_URI).subscribe()
-    
+
     # Register the SQLAlchemy tool
     from satool import SATool
     cherrypy.tools.db = SATool()
     cherrypy.server.socket_host = '0.0.0.0'
-    cherrypy.quickstart(CherryPyBenchmark(), '', {'/': {'tools.db.on': True, 'log.screen': False, 'log.access_file': ''}})
+    cherrypy.quickstart(CherryPyBenchmark(), '', {
+        '/': {
+            'tools.db.on': True,
+            'log.screen': False,
+            'log.access_file': ''
+        }
+    })

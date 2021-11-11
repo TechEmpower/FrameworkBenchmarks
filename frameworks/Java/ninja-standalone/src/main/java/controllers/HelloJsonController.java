@@ -9,15 +9,16 @@ import com.google.inject.Singleton;
 public class HelloJsonController {
 
     public Result index() {
-	return Results.json().render(new Message("Hello, World!"));
+    	//Cache control header is set to disable the double setting of the date header.
+        return Results.json().render(new Message("Hello, World!")).addHeader(Result.CACHE_CONTROL, "");
     }
 
-    public final static class Message {
+    public static final class Message {
 
-	public final String message;
+        public final String message;
 
-	public Message(String message) {
-	    this.message = message;
-	}
+        public Message(String message) {
+            this.message = message;
+        }
     }
 }

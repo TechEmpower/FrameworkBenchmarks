@@ -3,55 +3,12 @@ Test type 2: Single database query
 TechEmpower Web Framework Benchmarks
 -->
 <!--#declaration
-#include "world.h"
+#include "worldNoSql.h"
 
-static UMongoDBClient* mc;
-
-static void usp_fork_mdb()
-{
-   U_TRACE(5, "::usp_fork_mdb()")
-
-   U_NEW(UMongoDBClient, mc, UMongoDBClient);
-
-   if (mc->connect(U_NULLPTR, 0) == false)
-      {
-      U_WARNING("usp_fork_mdb(): connection failed");
-
-      return;
-      }
-
-   if (mc->selectCollection("hello_world", "world") == false)
-      {
-      U_WARNING("usp_fork_mdb(): selectCollection() failed");
-
-      return;
-      }
-}
-
-#ifdef DEBUG
-static void usp_end_mdb()
-{
-   U_TRACE(5, "::usp_end_mdb()")
-
-   delete mc;
-}
-#endif
+static void usp_fork_mdb() { WorldNoSql::handlerForkMongoDB(); }
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
-uint32_t id;
-UString result;
-
-(void) mc->findOne(id = u_get_num_random(10000-1));
-
-(void) U_JFIND(mc->vitem[0], "randomNumber", result);
-
-#ifdef AS_cpoll_cppsp_DO
-USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%v}", id, result.rep);
-#else
-World world(id, result.strtoul());
-USP_OBJ_JSON_stringify(world);
-#endif
+WorldNoSql::doOneQuery(WorldNoSql::handlerQueryMongoDB);
 -->

@@ -11,7 +11,7 @@ return {
 	port = 8080,
 	securePort = 38080,
 	luaCodeCache = "on",
-	serverName = "localhost",
+	serverName = "tfb-server",
 	errorLog = "error_log logs/error.log;",
 	accessLog = "access_log logs/access.log;",
 	includeDrop = [[#include drop.conf;]],

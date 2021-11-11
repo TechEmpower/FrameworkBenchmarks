@@ -6,7 +6,7 @@
 require 'etc'
 
 KB_PER_WORKER = 128 * 1_024 # average of peak PSS of single-threaded processes (watch smem -k)
-MIN_WORKERS = 2
+MIN_WORKERS = 15
 MAX_WORKERS_PER_VCPU = 1.25 # virtual/logical
 MIN_THREADS_PER_WORKER = 1
 MAX_THREADS = Integer(ENV['MAX_CONCURRENCY'] || 256)
@@ -27,7 +27,7 @@ def auto_tune
 
   workers = [
     [(1.0 * avail_mem / KB_PER_WORKER).floor, MIN_WORKERS].max,
-    (Etc.nprocessors * MAX_WORKERS_PER_VCPU).ceil
+    [(Etc.nprocessors * MAX_WORKERS_PER_VCPU).ceil, MIN_WORKERS].max
   ].min
 
   threads_per_worker = [

@@ -1,0 +1,26 @@
+{
+  "framework": "thruster",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "Thruster",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "Rust",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Thruster",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

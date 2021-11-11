@@ -2,7 +2,6 @@
   "framework": "falcon",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -22,7 +21,6 @@
       "versus": "wsgi"
     },
     "py3": {
-      "setup_file": "setup_py3",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -41,8 +39,7 @@
       "notes": "CPython 3",
       "versus": "wsgi"
     },
-    "pypy": {
-      "setup_file": "setup_pypy",
+    "pypy2": {
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -51,14 +48,14 @@
       "database": "None",
       "framework": "Falcon",
       "language": "Python",
-      "flavor": "PyPy",
+      "flavor": "PyPy2",
       "orm": "Raw",
       "platform": "None",
       "webserver": "Tornado",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Falcon",
-      "notes": "PyPy",
+      "notes": "PyPy2",
       "versus": "wsgi"
     }
   }]

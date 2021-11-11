@@ -1,0 +1,17 @@
+<sdorm>
+	<data-source>
+		<config>
+			<nodes>
+				<node>
+					<dsn>PostgreSQL-DSN</dsn>
+					<username>benchmarkdbuser</username>
+					<password>benchmarkdbpass</password>
+				</node>
+			</nodes>
+			<pool-size>30</pool-size>
+			<name>PostgreSQL-DSN</name>
+			<type>sql</type>
+			<dialect>PostgresDialect</dialect>
+		</config>
+	</data-source>
+</sdorm>

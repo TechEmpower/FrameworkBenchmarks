@@ -2,7 +2,7 @@
 
 The information below contains information specific to Rack.
 For further guidance, review the
-[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/).
+[documentation](https://github.com/TechEmpower/FrameworkBenchmarks/wiki).
 Also note the additional information provided in the [Ruby README](../).
 
 This is the Ruby Rack portion of a [benchmarking test suite](../../)
@@ -18,6 +18,7 @@ The tests were run with:
 * [Unicorn 4.8.3](http://unicorn.bogomips.org/)
 * [TorqBox 0.1.7](http://torquebox.org/torqbox/)
 * [Puma 3.9](http://puma.io/)
+* [Falcon](https://github.com/socketry/falcon)
 * [Thin 1.6.2](http://code.macournoyer.com/thin/)
 
 ## Paths & Source for Tests
@@ -33,7 +34,7 @@ The tests were run with:
 
 ### Experts
 
-_No experts listed, yet. If you're an expert, add yourself!_
+* Samuel Williams (@ioquatix) -- Async & Falcon developer.
 
 ### Community
 

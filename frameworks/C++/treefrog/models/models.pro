@@ -1,6 +1,6 @@
 TARGET = model
 TEMPLATE = lib
-CONFIG += shared x86_64 c++11
+CONFIG += shared x86_64 c++14
 QT += sql qml
 QT -= gui
 DEFINES += TF_DLL
@@ -17,6 +17,9 @@ SOURCES += fortune.cpp
 HEADERS += sqlobjects/worldobject.h
 HEADERS += world.h
 SOURCES += world.cpp
+HEADERS += sqlobjects/pworldobject.h
+HEADERS += pworld.h
+SOURCES += pworld.cpp
 HEADERS += mongoobjects/mngworldobject.h
 HEADERS += mngworld.h
 SOURCES += mngworld.cpp

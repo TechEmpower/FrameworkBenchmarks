@@ -20,7 +20,7 @@
 <% for (QListIterator<World> it(worldList); it.hasNext(); ) {
      const World &i = it.next(); %>
   <tr>
-    <td><%= i.id() %></td>
+    <td><%= (ulong)i.id() %></td>
     <td><%= i.randomNumber() %></td>
     <td>
       <%== linkTo("Show", urla("show", i.id())) %>

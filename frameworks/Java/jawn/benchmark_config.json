@@ -2,7 +2,6 @@
   "framework": "jawn",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -12,18 +11,18 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "MySQL",
+      "database": "Postgres",
       "framework": "jawn",
       "language": "Java",
       "flavor": "None",
       "orm": "Raw",
-      "platform": "Servlet",
-      "webserver": "Undertow",
+      "platform": "Undertow",
+      "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "jawn",
       "notes": "",
-      "versus": "servlet"
+      "versus": "undertow"
     }
   }]
 }

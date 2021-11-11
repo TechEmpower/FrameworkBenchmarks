@@ -1,0 +1,1 @@
+<!DOCTYPE html><html lang="en"><head><title>Fortunes</title></head><body><%= @inner_content %></body></html>

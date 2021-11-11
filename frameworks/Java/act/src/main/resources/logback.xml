@@ -11,16 +11,12 @@
         </encoder>
     </appender>
 
-    <logger name="act" level="OFF" additivity="false">
+    <logger name="metric" level="OFF">
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="metric" level="OFF">
-        <appender-ref ref="METRIC_FILE" />
-    </logger>
-
     <!-- By default, the level of the root level is set to DEBUG -->
-    <root level="OFF">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>

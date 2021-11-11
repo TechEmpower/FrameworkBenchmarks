@@ -27,16 +27,19 @@ app.get('/json', function() {
    return response.json(helloObject);
 });
 
-app.get('/db/:queries?', function(request, queries) {
+app.get('/db', function() {
+      let randId = ((Math.random() * 10000) | 0) + 1;
+      let world = models.store.query('select * from World where id = :id', {id: randId})[0];
+   return response.json(world);
+});
+
+app.get('/dbquery/:queries?', function(request, queries) {
    queries = formatQueries(queries);
    let worlds = [];
    for (let i = 0; i < queries; i++) {
       let randId = ((Math.random() * 10000) | 0) + 1;
       let world = models.store.query('select * from World where id = :id', {id: randId})[0];
       worlds.push({"id": world.id, "randomNumber" : world.randomNumber});
-   }
-   if (queries == 1) {
-      worlds = worlds[0];
    }
    return response.json(worlds);
 });

@@ -2,13 +2,11 @@
   "framework": "dropwizard",
   "tests": [{
     "default": {
-      "setup_file": "setup_mysql",
       "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/db?queries=",
-      "fortune_url": "/fortunes",
-      "update_url": "/db/update?queries=",
       "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/db/query?queries=",
+      "fortune_url": "/fortunes",
       "port": 9090,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -23,12 +21,11 @@
       "database_os": "Linux",
       "display_name": "Dropwizard",
       "notes": "dropwizard mysql using hibernate",
-      "versus": "servlet"
+      "versus": "servlet-raw"
     },
     "mongodb": {
-      "setup_file": "setup_mongo",
       "db_url": "/db",
-      "query_url": "/db?queries=",
+      "query_url": "/db/query?queries=",
       "fortune_url": "/fortunes",
       "update_url": "/db/update?queries=",
       "port": 9090,
@@ -48,9 +45,8 @@
       "versus": ""
     },
     "postgres": {
-      "setup_file": "setup_postgresql",
       "db_url": "/db",
-      "query_url": "/db?queries=",
+      "query_url": "/db/query?queries=",
       "fortune_url": "/fortunes",
       "update_url": "/db/update?queries=",
       "port": 9090,
@@ -66,8 +62,30 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "dropwizard",
-      "notes": "dropwizard postgres using hibernate",
-      "versus": "servlet"
+      "notes": "dropwizard PostgreSQL using hibernate",
+      "versus": "servlet-postgres-raw",
+      "tags": []
+    },
+    "jdbi-postgres": {
+      "db_url": "/db",
+      "query_url": "/db/query?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/db/update?queries=",
+      "port": 9090,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "dropwizard",
+      "language": "Java",
+      "orm": "micro",
+      "platform": "JAX-RS",
+      "webserver": "Jetty",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "dropwizard",
+      "notes": "dropwizard PostgreSQL using jdbi",
+      "versus": "servlet-postgres-raw",
+      "tags": ["broken"]
     }
   }]
 }

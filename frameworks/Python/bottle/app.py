@@ -1,6 +1,7 @@
 from functools import partial
 from operator import attrgetter, itemgetter
 from random import randint
+from email.utils import formatdate
 import os
 import sys
 
@@ -20,7 +21,7 @@ if sys.version_info[0] == 3:
 _is_pypy = hasattr(sys, 'pypy_version_info')
 
 DBDRIVER = 'mysql+pymysql' if _is_pypy else 'mysql'
-DBHOSTNAME = os.environ.get('DBHOST', 'localhost')
+DBHOSTNAME = 'tfb-database'
 DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@%s:3306/hello_world?charset=utf8' % (DBDRIVER, DBHOSTNAME)
 
 app = Bottle()
@@ -56,6 +57,7 @@ class Fortune(Base):
 
 @app.route("/json")
 def hello():
+    response.headers['Date'] = formatdate(timeval=None, localtime=False, usegmt=True)
     response.content_type = 'application/json'
     resp = {"message": "Hello, World!"}
     return json.dumps(resp)
@@ -64,6 +66,7 @@ def hello():
 @app.route("/db")
 def get_random_world_single(db):
     """Test Type 2: Single Database Query"""
+    response.headers['Date'] = formatdate(timeval=None, localtime=False, usegmt=True)
     wid = randint(1, 10000)
     world = db.query(World).get(wid).serialize()
     response.content_type = 'application/json'
@@ -72,6 +75,7 @@ def get_random_world_single(db):
 
 @app.route("/raw-db")
 def get_random_world_single_raw():
+    response.headers['Date'] = formatdate(timeval=None, localtime=False, usegmt=True)
     connection = raw_engine.connect()
     wid = randint(1, 10000)
     try:
@@ -86,6 +90,7 @@ def get_random_world_single_raw():
 @app.route("/queries")
 def get_random_world(db):
     """Test Type 3: Multiple database queries"""
+    response.headers['Date'] = formatdate(timeval=None, localtime=False, usegmt=True)
     num_queries = request.query.get('queries', 1, type=int)
     if num_queries < 1:
         num_queries = 1
@@ -100,6 +105,7 @@ def get_random_world(db):
 
 @app.route("/raw-queries")
 def get_random_world_raw():
+    response.headers['Date'] = formatdate(timeval=None, localtime=False, usegmt=True)
     num_queries = request.query.get('queries', 1, type=int)
     if num_queries < 1:
         num_queries = 1
@@ -120,6 +126,7 @@ def get_random_world_raw():
 
 @app.route("/fortune")
 def fortune_orm(db):
+  response.headers['Date'] = formatdate(timeval=None, localtime=False, usegmt=True)
   fortunes=db.query(Fortune).all()
   fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
   fortunes.sort(key=attrgetter('message'))
@@ -128,6 +135,7 @@ def fortune_orm(db):
 
 @app.route("/raw-fortune")
 def fortune_raw():
+    response.headers['Date'] = formatdate(timeval=None, localtime=False, usegmt=True)
     connection = raw_engine.connect()
     try:
         fortunes=[(f.id, f.message) for f in connection.execute("SELECT * FROM Fortune")]
@@ -141,6 +149,7 @@ def fortune_raw():
 @app.route("/updates")
 def updates(db):
     """Test 5: Database Updates"""
+    response.headers['Date'] = formatdate(timeval=None, localtime=False, usegmt=True)
     num_queries = request.query.get('queries', 1, type=int)
     if num_queries < 1:
         num_queries = 1
@@ -163,6 +172,7 @@ def updates(db):
 @app.route("/raw-updates")
 def raw_updates():
     """Test 5: Database Updates"""
+    response.headers['Date'] = formatdate(timeval=None, localtime=False, usegmt=True)
     num_queries = request.query.get('queries', 1, type=int)
     if num_queries < 1:
         num_queries = 1
@@ -187,6 +197,7 @@ def raw_updates():
 @app.route('/plaintext')
 def plaintext():
     """Test 6: Plaintext"""
+    response.headers['Date'] = formatdate(timeval=None, localtime=False, usegmt=True)
     response.content_type = 'text/plain'
     return b'Hello, World!'
 

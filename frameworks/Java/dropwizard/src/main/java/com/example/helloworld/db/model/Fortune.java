@@ -16,12 +16,18 @@ public class Fortune implements Comparable<Fortune> {
     @Column(name = "message", nullable = false)
     private String message;
 
-    @SuppressWarnings("unused")
     public Fortune() {}
-
+    
     public Fortune(String message) {
-        this.message = message;
-    }
+		super();
+		this.message = message;
+	}
+    
+    public Fortune(int id, String message) {
+		super();
+		this.id = id;
+		this.message = message;
+	}
 
     public int getId() {
         return id;

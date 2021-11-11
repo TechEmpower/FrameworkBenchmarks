@@ -1,51 +1,68 @@
+# frozen_string_literal: true
+
 class HelloWorldController < ApplicationController
+  QUERY_RANGE = 1..10_000    # range of IDs in the Fortune DB
+  ALL_IDS = QUERY_RANGE.to_a # enumeration of all the IDs in fortune DB
+  MIN_QUERIES = 1            # min number of records that can be retrieved
+  MAX_QUERIES = 500          # max number of records that can be retrieved
 
   def plaintext
-    response.headers['Content-Type'] = "text/plain"
-    render :plain => "Hello, World!"
+    render plain: 'Hello, World!'
   end
 
   def json
-    response.headers['Content-Type'] = "application/json"
-    render :json => {:message => "Hello, World!"}
+    render json: { message: 'Hello, World!' }
   end
 
   def db
-    response.headers['Content-Type'] = "application/json"
-    render :json => World.find(Random.rand(10000) + 1)
+    render json: World.find(random_id)
   end
 
   def query
-    queries = params[:queries].to_i
-    queries = 1 if queries < 1
-    queries = 500 if queries > 500
-
-    results = (1..queries).map do
-      World.find(Random.rand(10000) + 1)
+    results = ALL_IDS.sample(query_count).map do |id|
+      World.find(id)
     end
-    response.headers['Content-Type'] = "application/json"
-    render :json => results
+
+    render json: results
+  end
+
+  def cached_query
+    items = Rails.cache.fetch_multi(*ALL_IDS.sample(query_count)) do |id|
+      World.find(id).as_json
+    end
+
+    render json: items.values
   end
 
   def fortune
     @fortunes = Fortune.all.to_a
-    @fortunes << Fortune.new(:id => 0, :message => "Additional fortune added at request time.")
-    @fortunes = @fortunes.sort_by { |x| x.message }
+    @fortunes << Fortune.new(id: 0, message: 'Additional fortune added at request time.')
+    @fortunes.sort_by!(&:message)
   end
 
   def update
-    queries = (params[:queries] || 1).to_i
-    queries = 1 if queries < 1
-    queries = 500 if queries > 500
-
-    worlds = (1..queries).map do
-      # get a random row from the database, which we know has 10000
-      # rows with ids 1 - 10000
-      world = World.select(:id, :randomNumber).find(Random.rand(10000) + 1)
-      world.update_attribute(:randomNumber, Random.rand(10000) + 1)
+    worlds = query_count.times.map { random_id }.map do |id|
+      world = World.find(id)
+      new_value = random_id
+      new_value = random_id until new_value != world.randomNumber
+      world.update_columns(randomNumber: new_value)
       world
     end
-    response.headers['Content-Type'] = "application/json"
-    render :json => worlds
+
+    render json: worlds
+  end
+
+  private
+
+  def query_count
+    queries = params[:queries].to_i
+    return MIN_QUERIES if queries < MIN_QUERIES
+    return MAX_QUERIES if queries > MAX_QUERIES
+
+    queries
+  end
+
+  def random_id
+    Random.rand(QUERY_RANGE)
   end
 end

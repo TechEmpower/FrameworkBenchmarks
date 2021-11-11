@@ -1,9 +1,0 @@
-./beego/src/hello/main.go
-./beego/src/hello/controllers/db_controller.go
-./beego/src/hello/controllers/base_controller.go
-./beego/src/hello/controllers/queries_controller.go
-./beego/src/hello/controllers/json_controller.go
-./beego/src/hello/controllers/plaintext_controller.go
-./beego/src/hello/models/init.go
-./beego/src/hello/models/message.go
-./beego/src/hello/models/world.go

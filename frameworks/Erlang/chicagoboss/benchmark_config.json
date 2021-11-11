@@ -2,7 +2,6 @@
   "framework": "chicagoboss",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "port": 8080,
@@ -19,6 +18,7 @@
       "database_os": "Linux",
       "display_name": "ChicagoBoss",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
   }}]
 }

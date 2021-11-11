@@ -5,29 +5,17 @@ of web development platforms.
 
 
 ## Running the application
-If you have [gradle](http://gradle.org) installed:
+Have [gradle](http://gradle.org) installed, then:
 ```
 gradle run
 ```
-Or use the included wrapper:
-```
-./gradlew run
-```
+
 Point your browser at `localhost:8080/json`
 
 ### A couple of commands to get going with the benchmark framework
 
-toolset/run-tests.py --install server --test jawn --verbose --install-only
+tfb --test jawn
 
-toolset/run-tests.py --test jawn --mode verify
+tfb --sleep 5 --duration 10 --clean --test jawn
 
-toolset/run-tests.py --test jawn
-
-toolset/run-tests.py --test jawn --type fortune --sleep 5
-
-
-
-### Problems with the mounting of FrameworkBenchmarks?
-* **On host**:     vagrant gem install vagrant-vbguest
-* **In guest OS**: sudo mount.vboxsf -o uid=`id -u vagrant`,gid=`getent group vagrant | cut -d: -f3`,dmode=777,fmode=777 FrameworkBenchmarks /FrameworkBenchmarks
-export FWROOT=/FrameworkBenchmarks
+tfb --sleep 5 --type fortune --test jawn

@@ -1,0 +1,37 @@
+#
+# Put this in /lib/systemd/system/tfb.service.
+#
+# Useful commands:
+#
+#   sudo service tfb start
+#   sudo service tfb stop
+#   sudo service tfb restart
+#   sudo journalctl -u tfb -f
+#
+
+[Service]
+Environment=TFB_SERVER_HOST=127.0.0.1
+Environment=TFB_CLIENT_HOST=127.0.0.1
+Environment=TFB_DATABASE_HOST=127.0.0.1
+Environment=TFB_REPOPARENT=/home/techempower
+Environment=TFB_REPONAME=FrameworkBenchmarks
+Environment=TFB_REPOURI=https://github.com/TechEmpower/FrameworkBenchmarks.git
+Environment=TFB_REPOBRANCH=master
+Environment=TFB_UPLOAD_URI=http://localhost/changeme
+Environment=TFB_ENVIRONMENT=ChangeMe
+Environment="TFB_RUN_NAME=Continuous Benchmarking Run %%Y-%%m-%%d %%H:%%M:%%S"
+Environment=HOME=/home/techempower
+Environment=LANG=en_US.UTF-8
+User=techempower
+Group=techempower
+WorkingDirectory=/home/techempower
+LimitNOFILE=1048576
+LimitNPROC=1048576
+UMask=0002
+ExecStart=/home/techempower/tfb-startup.sh
+ExecStopPost=/home/techempower/tfb-shutdown.sh
+Restart=on-success
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

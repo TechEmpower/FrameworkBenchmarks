@@ -5,90 +5,63 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "fortune.h"
 
-static Fortune*           pfortune;
-static Fortune*           pfortune2add;
-static UString*           pencoded;
-static UOrmSession*       psql_fortune;
-static UOrmStatement*     pstmt_fortune;
-static UVector<Fortune*>* pvfortune;
-
-static void usp_fork_fortune()
+static void handlerQuery()
 {
-   U_TRACE(5, "::usp_fork_fortune()")
+   U_TRACE_NO_PARAM(5, "::handlerQuery()")
 
-   U_NEW(UOrmSession, psql_fortune, UOrmSession(U_CONSTANT_TO_PARAM("fortune")));
+   uint32_t i = 0;
 
-   U_INTERNAL_DUMP("psql_fortune = %p", psql_fortune)
+   Fortune::pstmt_fortune->execute();
 
-   if (psql_fortune->isReady() == false)
-      {
-      U_WARNING("usp_fork_fortune(): we cound't connect to db");
-
-      return;
+   do {
+      Fortune::replace(i++);
       }
-
-   U_NEW(UOrmStatement, pstmt_fortune, UOrmStatement(*psql_fortune, U_CONSTANT_TO_PARAM("SELECT id, message FROM Fortune")));
-
-   if (UOrmDriver::isPGSQL()) *psql_fortune << "BEGIN ISOLATION LEVEL SERIALIZABLE; COMMIT";
-
-   U_NEW(Fortune, pfortune, Fortune);
-
-   pstmt_fortune->into(*pfortune);
-
-   U_NEW(UString, pencoded, UString(100U));
-   U_NEW(UVector<Fortune*>, pvfortune, UVector<Fortune*>);
-   U_NEW(Fortune, pfortune2add, Fortune(0, U_STRING_FROM_CONSTANT("Additional fortune added at request time.")));
+   while (Fortune::pstmt_fortune->nextRow());
 }
 
-#ifdef DEBUG
-static void usp_end_fortune()
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+static void handlerResult(void* res, uint32_t num_result)
 {
-   U_TRACE(5, "::usp_end_fortune()")
+   U_TRACE(5, "::handlerResult(%p,%u)", res, num_result)
 
-   U_INTERNAL_DUMP("psql_fortune = %p", psql_fortune)
+   U_INTERNAL_ASSERT_EQUALS(num_result, 1)
+   U_INTERNAL_ASSERT_EQUALS(PQnfields((PGresult*)res), 2)
 
-   delete psql_fortune;
+   int sz;
+   char* id;
+   char* ptr;
 
-   if (pstmt_fortune)
+   Fortune::initQuery();
+
+   for (uint32_t i = 0, n = U_SYSCALL(PQntuples, "%p", (PGresult*)res); i < n; ++i)
       {
-      delete pstmt_fortune;
-      delete pfortune;
-      delete pencoded;
-      delete pvfortune;
-      delete pfortune2add;
+       id = U_SYSCALL(PQgetvalue,  "%p,%d,%d", (PGresult*)res, i, 0);
+      ptr = U_SYSCALL(PQgetvalue,  "%p,%d,%d", (PGresult*)res, i, 1);
+      sz  = U_SYSCALL(PQgetlength, "%p,%d,%d", (PGresult*)res, i, 1);
+
+      Fortune::replace(i, ntohl(*(uint32_t*)id), ptr, sz);
       }
+
+   Fortune::endQuery();
 }
 #endif
+
+static void usp_init_fortune() { Fortune::handlerInitSql(); }
+static void usp_fork_fortune() { Fortune::handlerForkSql(); }
 -->
-<!doctype html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><!--#code
-Fortune* item;
-
-U_NEW(Fortune, item, Fortune(*pfortune2add));
-pvfortune->push_back(item);
-
-pstmt_fortune->execute();
-
-do {
-   U_NEW(Fortune, item, Fortune(*pfortune));
-   pvfortune->push_back(item);
-   }
-while (pstmt_fortune->nextRow());
-
-pvfortune->sort(Fortune::cmp_obj);
-
-for (uint32_t i = 0, n = pvfortune->size(); i < n; ++i)
+<!--#header
+-->
+<!--#code
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+if (Fortune::pstmt)
    {
-   Fortune* elem = (*pvfortune)[i];
+   Fortune::sendQueryPrepared();
 
-   UXMLEscape::encode(elem->message, *pencoded);
-
-   USP_PRINTF_ADD(
-      "<tr>"
-      "<td>%u</td>"
-      "<td>%v</td>"
-      "</tr>",
-      elem->id, pencoded->rep);
+   UServer_Base::handler_db2->handlerQuery(handlerResult);
    }
-
-pvfortune->clear();
---></table></body></html>
+else
+#endif
+{
+Fortune::doQuery(handlerQuery);
+}
+-->

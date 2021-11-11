@@ -1,0 +1,35 @@
+group 'com.wizzardo.techempower'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+mainClassName = "com.wizzardo.techempower.App"
+
+repositories {
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+    mavenCentral()
+//    jcenter()
+}
+
+dependencies {
+    compile 'com.wizzardo:http:0.4'
+    compile 'com.wizzardo:reactive-pg-client:0.10.2.1'
+}
+
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+    manifest {
+        attributes(
+                "Main-Class": mainClassName
+        )
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

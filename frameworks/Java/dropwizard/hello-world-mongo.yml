@@ -7,18 +7,19 @@ server:
     useServerHeader: true
     # There is no proxy in front of the server
     useForwardedHeaders: false
-
   # Test requirements forbid gzip compression of the replies
   gzip:
     enabled: false
-
   requestLog:
     appenders: []
 
 logging:
-  appenders: []
+  level: WARN
+  appenders:
+    - type: console
 
 mongo:
-  host: TFB-database
+  host: tfb-database
   port: 27017
   db: hello_world
+  connections: 256

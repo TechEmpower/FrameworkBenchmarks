@@ -4,14 +4,14 @@ aiopg==0.7.0
 -e git+https://github.com/Eyepea/API-Hour.git@577abbdcbb8cc2810dad46e260b338b15db4d0e3#egg=api_hour-master
 asyncio-redis==0.13.4
 chardet==2.3.0
-gunicorn==19.3.0
+gunicorn==19.9.0
 hiredis==0.2.0
-Jinja2==2.7.3
+Jinja2==2.11.3
 MarkupSafe==0.23
 piprot==0.9.1
-psycopg2==2.6
-PyYAML==3.11
-requests==2.7.0
+psycopg2==2.7.5
+PyYAML==5.4
+requests==2.20.0
 requests-futures==0.9.5
 setproctitle==1.1.8
 ujson==1.33

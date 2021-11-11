@@ -3,49 +3,50 @@ Test type 1: JSON serialization
 TechEmpower Web Framework Benchmarks
 -->
 <!--#declaration
-#ifdef AS_cpoll_cppsp_DO
-#undef AS_cpoll_cppsp_DO
-#endif
-#ifdef AS_cpoll_cppsp_DO
-#  include <json/json.h>
-#else
+static char* ptr;
 static UString* pkey;
 static UString* pvalue;
-#endif
 
 static void usp_init_json()
 {
    U_TRACE(5, "::usp_init_json()")
 
-#ifndef AS_cpoll_cppsp_DO
-   U_NEW(UString, pkey,   U_STRING_FROM_CONSTANT("message"));
-   U_NEW(UString, pvalue, U_STRING_FROM_CONSTANT("Hello, World!"));
-#endif
+   U_NEW_STRING(pkey,   UString(U_CONSTANT_TO_PARAM("message")));
+   U_NEW_STRING(pvalue, UString(U_CONSTANT_TO_PARAM("Hello, World!")));
 }
-
-#ifdef DEBUG
-static void usp_end_json()
-{
-   U_TRACE(5, "::usp_end_json()")
-
-#ifndef AS_cpoll_cppsp_DO
-   delete pkey;
-   delete pvalue;
-#endif
-}
-#endif
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
-#ifndef AS_cpoll_cppsp_DO
-UValue::stringify(*UClientImage_Base::wbuffer, UValue(*pkey, *pvalue));
-#else
-json_object* hello = json_object_new_object();
-json_object_object_add(hello, "message", json_object_new_string("Hello, World!"));
-const char* hello_str = json_object_to_json_string(hello);
-USP_PUTS_STRING(hello_str);
-json_object_put(hello);
-#endif
+char* pwbuffer = UClientImage_Base::wbuffer->data();
+
+U_INTERNAL_DUMP("pwbuffer = %#.10S", pwbuffer)
+
+if (u_get_unalignedp64(pwbuffer+44) != U_MULTICHAR_CONSTANT64('n','/','j','s','o','n','\r','\n'))
+   {
+   u_put_unalignedp64(pwbuffer,    U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
+   u_put_unalignedp64(pwbuffer+8,  U_MULTICHAR_CONSTANT64('L','e','n','g','t','h',':',' '));
+   u_put_unalignedp32(pwbuffer+16, U_MULTICHAR_CONSTANT32('x','x','\r','\n'));
+   u_put_unalignedp64(pwbuffer+20, U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
+   u_put_unalignedp64(pwbuffer+28, U_MULTICHAR_CONSTANT64('T','y','p','e',':',' ','a','p'));
+   u_put_unalignedp64(pwbuffer+36, U_MULTICHAR_CONSTANT64('p','l','i','c','a','t','i','o'));
+   u_put_unalignedp64(pwbuffer+44, U_MULTICHAR_CONSTANT64('n','/','j','s','o','n','\r','\n'));
+   u_put_unalignedp16(pwbuffer+52, U_MULTICHAR_CONSTANT16('\r','\n'));
+
+   ptr = pwbuffer + U_CONSTANT_SIZE("Content-Length: xx\r\nContent-Type: application/json\r\n\r\n");
+   }
+
+U_INTERNAL_ASSERT_EQUALS(u_get_unalignedp64(UClientImage_Base::wbuffer->data()), U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'))
+
+UValue::pstringify = ptr;
+
+UValue(*pkey, *pvalue).stringify();
+
+uint32_t content_length = (UValue::pstringify - ptr);
+
+U_INTERNAL_ASSERT_EQUALS(content_length, 27)
+
+(void) u_num2str32(content_length, ptr - U_CONSTANT_SIZE("xx\r\nContent-Type: application/json\r\n\r\n"));
+
+UClientImage_Base::wbuffer->size_adjust_constant(U_CONSTANT_SIZE("Content-Length: xx\r\nContent-Type: application/json\r\n\r\n") + content_length);
 -->

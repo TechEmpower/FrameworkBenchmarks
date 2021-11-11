@@ -2,10 +2,9 @@
   "framework": "fuel",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
-      "query_url": "/db?queries=",
+      "query_url": "/dbquery?queries=",
       "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
@@ -13,15 +12,15 @@
       "database": "MySQL",
       "framework": "Fuel",
       "language": "PHP",
-      "flavor": "PHP5",
+      "flavor": "PHP8",
       "orm": "Raw",
-      "platform": "None",
+      "platform": "FPM/FastCGI",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "fuel",
       "notes": "",
-      "versus": "php-php5"
+      "versus": "php"
     }
   }]
 }

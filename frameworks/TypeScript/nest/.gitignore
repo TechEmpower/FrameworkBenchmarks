@@ -1,0 +1,36 @@
+### Node ###
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# TypeScript v1 declaration files
+typings/
+
+# Optional npm cache directory
+.npm
+.npmrc
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Obsolete package-lock.json
+package-lock.json
+
+# dotenv environment variables file
+.env
+
+tslint.json
+
+*.spec.ts
+
+dist/

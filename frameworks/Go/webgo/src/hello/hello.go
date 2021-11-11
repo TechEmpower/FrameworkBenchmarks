@@ -12,10 +12,11 @@ type MessageStruct struct {
 	Message string `json:"message"`
 }
 
-func hello(val string) string {
+func hello(ctx *web.Context, val string) {
 	m := MessageStruct{"Hello, World!"}
 	j, _ := json.Marshal(m)
-	return string(j)
+	ctx.ContentType("application/json")
+	ctx.Write(j)
 }
 
 func main() {

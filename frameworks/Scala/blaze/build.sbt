@@ -1,17 +1,13 @@
 name := "blaze"
 
-version := "1.0-SNAPSHOT"
+version := "1.0"
 
-scalaVersion := "2.11.8"
-
-com.github.retronym.SbtOneJar.oneJarSettings
-
-val blazeVersion = "0.13.0"
+scalaVersion := "2.13.5"
 
 libraryDependencies ++= Seq(
-	"org.http4s" %% "blaze-http" % blazeVersion,
-	"com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.8.4"
+	"org.http4s" %% "blaze-http" % "0.14.16",
+	"com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "2.7.3",
+	"ch.qos.logback" % "logback-classic" % "1.2.3"
 )
 
-mainClass in oneJar := Some("blaze.techempower.benchmark.Main")
-
+crossPaths := false

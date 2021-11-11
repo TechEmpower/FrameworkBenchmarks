@@ -34,8 +34,9 @@ def update_random_records(container, limit):
             yield from cur.execute('SELECT id AS "Id", randomnumber AS "RandomNumber" FROM world WHERE id=%(idx)s LIMIT 1',
                                    {'idx': randint(1, 10000)})
             world = yield from cur.fetchone()
+            world['RandomNumber'] = randint(1, 10000)
             yield from cur.execute('UPDATE world SET randomnumber=%(random_number)s WHERE id=%(idx)s',
-                                   {'random_number': randint(1, 10000), 'idx': world['Id']})
+                                   {'random_number': world['RandomNumber'], 'idx': world['Id']})
             results.append(world)
     return results
 

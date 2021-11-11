@@ -2,134 +2,97 @@
 
 namespace app\controllers;
 
+use app\helpers\Query;
+use app\models\Fortune;
+use app\models\World;
 use Yii;
-use yii\helpers\Html;
 use yii\web\Controller;
+use yii\web\Response;
 
 class SiteController extends Controller
 {
-    private function resJson($data) {
-        header('Content-type: application/json');
-        echo  json_encode($data);
+    /**
+     * Test #1: JSON Serialization
+     */
+    public function actionJson()
+    {
+        return $this->asJson(['message' => 'Hello, World!']);
     }
 
-    public function actionJson() {
-        return $this->resJson(array('message'=>'Hello, World!'));
+    /**
+     * Test #2: Single Database Query
+     */
+    public function actionDb()
+    {
+        return $this->asJson(World::findOne(random_int(1, 10000)));
     }
 
-    public function actionDb($queries = 1) {
-        // Set up for Test
-//        $cmd = Yii::$app->db->createCommand('insert into World (randomNumber) values (:v)');
-//        for($i = 1; $i <=10000 ; $i ++ ) {
-//            $cmd->bindValue(':v',mt_rand(1, 10000))->execute();
-//        }
+    /**
+     * Test #3: Multiple Database Queries
+     */
+    public function actionQueries($queries)
+    {
+        $queries = Query::clamp($queries);
 
-        $statement =  Yii::$app->db->createCommand('select id,randomNumber from World where id = :id');
+        $worlds = [];
 
-        if ($queries == 1) {
-            $arr = $statement->bindValue(':id',mt_rand(1, 10000))->queryOne();
-            $arr['id'] = (int) $arr['id'];
-            $arr['randomNumber'] = (int) $arr['randomNumber'];
-        } else {
-            if ($queries > 500) $queries = 500;
-            elseif ($queries <= 0 ) $queries = 1;
-            // Create an array with the response string.
-            $arr = array();
-            // For each query, store the result set values in the response array
-            while (0 < $queries--) {
-                // Store result in array.
-                $result = $statement->bindValue(':id',mt_rand(1, 10000))->queryOne();
-                $result['id'] = (int) $result['id'];
-                $result['randomNumber'] = (int) $result['randomNumber'];
-                $arr[] = $result;
-            }
+        while ($queries--) {
+            $world = World::findOne(random_int(1, 10000));
+            $worlds[] = $world;
         }
 
-        return $this->resJson($arr);
+        return $this->asJson($worlds);
     }
 
-    private static function cmp($a, $b) {
+    /**
+     * Test #4: Fortunes
+     */
+    public function actionFortunes()
+    {
+        $fortunes = Fortune::find()->all();
 
-	return ($a["message"] < $b["message"]) ? -1 : 1;
+        $runtimeFortune = new Fortune();
+        $runtimeFortune->id = 0;
+        $runtimeFortune->message = 'Additional fortune added at request time.';
 
+        $fortunes[] = $runtimeFortune;
+
+        usort($fortunes, [Fortune::class, 'cmp']);
+
+        $this->view->title = 'Fortunes';
+
+        return $this->render('fortunes', ['fortunes' => $fortunes]);
     }
 
-    public function actionFortunes() {
-        // Test Data
-//        $arr = [
-//            11=>'<script>alert("This should not be displayed in a browser alert box");</script>',
-//            4=>'A bad random number generator: 1, 1, 1, 1, 1, 4.33e+67, 1, 1, 1',
-//            5=>'A computer program does what you tell it to do, not what you want it to do.',
-//            2=>'A computer scientist is someone who fixes things that aren\'t broken.',
-//            8=>'A list is only as strong as its weakest link. — Donald Knuth',
-//            //0=>'Additional fortune added at request time.',
-//            //0=>'Additional fortune added at request time.',
-//            3=>'After enough decimal places, nobody gives a damn.',
-//            7=>'Any program that runs right is obsolete.',
-//            10=>'Computers make very fast, very accurate mistakes.',
-//            6=>'Emacs is a nice operating system, but I prefer UNIX. — Tom Christaensen',
-//            9=>'Feature: A bug with seniority.',
-//            1=>'fortune: No such file or directory',
-//            12=>'フレームワークのベンチマーク'
-//        ];
-//        foreach($arr as $k=>$v) {
-//            Yii::$app->db->createCommand('insert into Fortune (id,message) values (:id,:message)',[':id'=>$k,':message'=>$v])->execute();
-//        }
+    /**
+     * Test #5: Database Updates
+     */
+    public function actionUpdates($queries)
+    {
+        $queries = Query::clamp($queries);
 
+        $worlds = [];
 
-        $arr = Yii::$app->db->createCommand('select id, message from Fortune')->queryAll();
-        $arr[] = ['id'=>0,'message'=>'Additional fortune added at request time.'];
+        while ($queries--) {
+            $world = World::findOne(random_int(1, 10000));
+            $world->randomNumber = random_int(1, 10000);
+            $world->save(false);
 
-	usort($arr, array($this, 'cmp'));	       
-
-        header("Content-Type: text/html; charset=utf-8");
-        echo <<<EOM
-            <!DOCTYPE html>
-            <html>
-            <head>
-            <title>Fortunes</title>
-            </head>
-            <body>
-            <table>
-            <tr>
-            <th>id</th>
-            <th>message</th>
-            </tr>
-EOM;
-        foreach ( $arr as $val ) {
-            echo '<tr>';
-            echo '<td>'.$val['id'].'</td>';
-            echo '<td>'.Html::encode($val['message']).'</td>';
-            echo '</tr>';
-        }
-        echo <<<EOM
-        </table>
-        </body>
-        </html>
-EOM;
-
-    }
-
-    public function actionUpdates($queries = 1) {
-        if ($queries > 500) $queries = 500;
-        elseif ($queries <= 0 ) $queries = 1;
-        $selectCommand = Yii::$app->db->createCommand('select randomNumber from World where id = :id');
-        $updateCommand = Yii::$app->db->createCommand('update World set randomNumber = :num where id = :id');
-        $arr = [];
-        while (0 < $queries--) {
-            // Store result in array.
-            $id = mt_rand(1,10000);
-            $randomNumber = mt_rand(1, 1000);
-            $selectCommand->bindParam(':id',$id)->queryScalar();
-            $updateCommand->bindValues([':id'=>$id,':num'=>$randomNumber])->execute();
-            $arr[] = array('id' => $id, 'randomNumber' => $randomNumber);
+            $worlds[] = $world;
         }
 
-        return $this->resJson($arr);
+        return $this->asJson($worlds);
     }
 
-    public function actionPlaintext() {
-        header("Content-Type: text/plain;");
-        echo 'Hello, World!';
+    /**
+     * Test #6: Plaintext
+     */
+    public function actionPlaintext()
+    {
+        Yii::$app->response->format = Response::FORMAT_RAW;
+        Yii::$app->response->getHeaders()->add('Content-Type', 'text/plain');
+        Yii::$app->response->content = 'Hello, World!';
+
+        return Yii::$app->response;
     }
 }

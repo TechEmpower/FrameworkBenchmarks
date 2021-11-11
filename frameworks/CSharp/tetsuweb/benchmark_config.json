@@ -1,0 +1,24 @@
+{
+  "framework": "tetsuweb",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 1234,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "Tetsu",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "flavor": "CoreCLR",
+      "webserver": "Tetsu",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Tetsu.Web",
+      "notes": "",
+      "versus": "aspcore"
+    }
+  }]
+}

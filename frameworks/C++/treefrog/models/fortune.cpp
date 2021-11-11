@@ -9,7 +9,7 @@ Fortune::Fortune()
 }
 
 Fortune::Fortune(const Fortune &other)
-    : TAbstractModel(), d(new FortuneObject(*other.d))
+    : TAbstractModel(), d(other.d)
 { }
 
 Fortune::Fortune(const FortuneObject &object)
@@ -78,7 +78,7 @@ int Fortune::count()
 QList<Fortune> Fortune::getAll()
 {
     TSqlQueryORMapper<FortuneObject> mapper;
-    mapper.prepare("SELECT * from Fortune");
+    mapper.prepare(QStringLiteral("SELECT * from fortune"));
 
     QList<Fortune> fortunes;
     if (mapper.exec()) {

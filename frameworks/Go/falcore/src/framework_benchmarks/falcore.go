@@ -33,7 +33,7 @@ type Fortune struct {
 
 const (
 	// Database
-	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?collation=utf8mb4_bin"
+	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(tfb-database:3306)/hello_world?collation=utf8mb4_bin"
 	worldSelect        = "SELECT id, randomNumber FROM World WHERE id = ?"
 	worldUpdate        = "UPDATE World SET randomNumber = ? WHERE id = ?"
 	fortuneSelect      = "SELECT id, message FROM Fortune;"
@@ -232,7 +232,7 @@ var fortuneFilter = falcore.NewRequestFilter(func(req *falcore.Request) *http.Re
 			pipeWriter.Close()
 		}()
 
-		textHtml := http.Header{"Content-Type": []string{"text/html"}}
+		textHtml := http.Header{"Content-Type": []string{"text/html;charset=utf-8"}}
 		return falcore.SimpleResponse(req.HttpRequest, 200, textHtml, -1, pipeReader)
 	}
 	return nil

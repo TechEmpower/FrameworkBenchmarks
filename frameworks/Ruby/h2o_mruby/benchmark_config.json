@@ -2,7 +2,6 @@
   "framework": "h2o_mruby",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -13,7 +12,7 @@
       "language": "Ruby",
       "orm": "Raw",
       "platform": "None",
-      "webserver": "H2O",
+      "webserver": "h2o",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "h2o_mruby",

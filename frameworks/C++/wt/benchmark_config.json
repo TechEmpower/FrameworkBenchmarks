@@ -2,7 +2,6 @@
   "framework": "wt",
   "tests": [{
      "default": {
-     	"setup_file": "setup",
      	"json_url": "/json",
      	"db_url": "/db",
      	"query_url": "/queries?queries=",
@@ -26,7 +25,6 @@
           "versus": "wt"
      },
      "postgres": {
-     	"setup_file": "setup_postgres",
      	"db_url": "/db",
      	"query_url": "/queries?queries=",
      	"fortune_url": "/fortune",
@@ -37,7 +35,7 @@
      	"database": "Postgres",
      	"framework": "wt",
      	"language": "C++",
-          "flavor": "None",
+        "flavor": "None",
      	"orm": "Full",
      	"platform": "None",
      	"webserver": "None",
@@ -45,7 +43,8 @@
      	"database_os": "Linux",
      	"display_name": "wt-postgres",
      	"notes": "",
-          "versus": "wt"
+        "versus": "wt",
+		"tags": ["broken"]
      }
   }]
 }

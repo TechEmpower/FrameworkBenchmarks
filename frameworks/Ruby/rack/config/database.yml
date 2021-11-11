@@ -1,6 +1,6 @@
 ---
   :encoding: utf8
-  :host: 127.0.0.1
+  :host: tfb-database
   :database: hello_world
   :username: benchmarkdbuser
   :password: benchmarkdbpass

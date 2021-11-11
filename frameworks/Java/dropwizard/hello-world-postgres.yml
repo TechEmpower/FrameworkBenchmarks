@@ -7,16 +7,16 @@ server:
     useServerHeader: true
     # There is no proxy in front of the server
     useForwardedHeaders: false
-
   # Test requirements forbid gzip compression of the replies
   gzip:
     enabled: false
-
   requestLog:
     appenders: []
 
 logging:
-  appenders: []
+  level: WARN
+  appenders:
+    - type: console
 
 database:
   # the name of your JDBC driver
@@ -29,15 +29,21 @@ database:
   password: benchmarkdbpass
 
   # the JDBC URL
-  url: jdbc:postgresql://TFB-database:5432/hello_world
+  url: jdbc:postgresql://tfb-database:5432/hello_world
 
   # any properties specific to your JDBC driver:
   properties:
     charSet: UTF-8
     hibernate.dialect: org.hibernate.dialect.PostgreSQL9Dialect
+    # enable batch updates in Hibernate
+    hibernate.jdbc.batch_size: 30
+    hibernate.jdbc.batch_versioned_data: true
 
   # the maximum amount of time to wait on an empty pool before throwing an exception
   maxWaitForConnection: 1s
+
+  # the initial number of connections
+  initialSize: 8
 
   # the minimum number of connections to keep open
   minSize: 8
@@ -47,3 +53,9 @@ database:
 
   # whether or not idle connections should be validated
   checkConnectionWhileIdle: false
+
+  # disable comments in SQL queries
+  autoCommentsEnabled: false
+
+  # disable autocommit in the JDBC driver
+  autoCommitByDefault: false

@@ -2,7 +2,8 @@
 name = "rouille"
 version = "0.1.0"
 authors = ["Gökberk Yaltıraklı <webdosusb@gmail.com>"]
+edition = "2018"
 
 [dependencies]
 rouille = "1.0"
-serde_json = "0.9"
+serde_json = "1.0"

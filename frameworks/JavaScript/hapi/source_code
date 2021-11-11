@@ -1,6 +1,0 @@
-./hapi/app.js
-./hapi/package.json
-./hapi/helper.js
-./hapi/create-server.js
-./hapi/views/
-./hapi/views/fortunes.handlebars

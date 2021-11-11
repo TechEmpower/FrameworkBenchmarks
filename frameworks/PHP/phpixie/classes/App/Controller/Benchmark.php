@@ -62,7 +62,7 @@ class Benchmark extends \PHPixie\Controller {
 	}
 	
 	public function action_plaintext() {
-		$this->response-> add_header("Content-Type: application/json");
+		$this->response-> add_header("Content-Type: text/plain");
 		$this->response->body = "Hello, World!";
 	}
 	

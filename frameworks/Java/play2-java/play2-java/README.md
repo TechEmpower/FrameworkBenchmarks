@@ -1,4 +1,4 @@
-#Play Benchmarking Test
+# Play Benchmarking Test
 
 This is the Play portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
@@ -10,7 +10,7 @@ This is the Play portion of a [benchmarking test suite](../) comparing a variety
 The tests were run with:
 
 * Java 8
-* [Play 2.5.14](http://http://www.playframework.com/)
+* [Play 2.7.0](https://www.playframework.com/)
 
 ## Test URLs
 ### JSON Encoding Test

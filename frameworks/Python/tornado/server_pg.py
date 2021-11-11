@@ -12,7 +12,7 @@ from commons import JsonHandler, JsonHelloWorldHandler, PlaintextHelloWorldHandl
 
 
 tornado.options.define('port', default=8888, type=int, help="Server port")
-tornado.options.define('postgres', default=None,
+tornado.options.define('postgres', default="localhost",
                        type=str, help="PostgreSQL host")
 tornado.options.define('backlog', default=8192, type=int,
                        help="Server backlog")
@@ -62,6 +62,7 @@ application = tornado.web.Application([
 ],
     template_path="templates"
 )
+application.ui_modules = {}
 
 if __name__ == "__main__":
     tornado.options.parse_command_line()

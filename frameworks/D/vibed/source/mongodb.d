@@ -1,40 +1,56 @@
+import vibe.core.core;
 import vibe.db.mongo.mongo;
 import vibe.http.router;
 import vibe.http.server;
 import vibe.web.web;
 
+import mir.random : unpredictableSeedOf;
+import mir.random.variable : UniformVariable;
+import mir.random.engine.xorshift : Xorshift;
+
 import std.conv : ConvException, to;
-import std.random : uniform;
 import std.array;
 
 enum worldSize = 10000;
 
 
-shared static this()
+void main()
+{
+	runWorkerTaskDist(&runServer);
+	runApplication();
+}
+
+void runServer()
 {
 	auto router = new URLRouter;
 	router.registerWebInterface(new WebInterface);
 	router.rebuild();
 
 	auto settings = new HTTPServerSettings;
-	settings.options |= HTTPServerOption.distribute;
+	settings.options |= HTTPServerOption.reusePort;
 	settings.port = 8080;
 	listenHTTP(settings, router);
 }
 
-MongoCollection _worldCollection;
-MongoCollection _fortuneCollection;
-
-// sets up the MongoDB connection pools for each thread
-static this()
-{
-	import std.process : environment;
-	auto db = connectMongoDB(environment["DBHOST"]);
-	_worldCollection = db.getCollection("hello_world.world");
-	_fortuneCollection = db.getCollection("hello_world.fortune");
-}
-
 class WebInterface {
+	private {
+		MongoCollection _worldCollection;
+		MongoCollection _fortuneCollection;
+		UniformVariable!uint _uniformVariable;
+		Xorshift _gen;
+	}
+
+	this()
+	{
+		import std.process : environment;
+		auto db = connectMongoDB("tfb-database");
+		_worldCollection = db.getCollection("hello_world.world");
+		_fortuneCollection = db.getCollection("hello_world.fortune");
+
+		_gen = Xorshift(unpredictableSeedOf!uint);
+		_uniformVariable = UniformVariable!uint(1, worldSize);
+	}
+
 	// GET /
 	void get()
 	{
@@ -53,7 +69,7 @@ class WebInterface {
 	void getDB(HTTPServerResponse res)
 	{
 		struct Q { int _id; }
-		auto query = Q(uniform(1, worldSize + 1));
+		auto query = Q(_uniformVariable(_gen));
 		auto w = WorldResponse(_worldCollection.findOne!World(query));
 		res.writeJsonBody(w, HTTPStatus.ok, "application/json");
 	}
@@ -70,11 +86,11 @@ class WebInterface {
 		try count = min(max(queries.to!int, 1), 500);
 		catch (ConvException) {}
 
-		// assemble the response array    
+		// assemble the response array
 		scope data = new WorldResponse[count];
 		foreach (ref w; data) {
 			static struct Q { int _id; }
-			auto query = Q(uniform(1, worldSize + 1));
+			auto query = Q(_uniformVariable(_gen));
 			w = WorldResponse(_worldCollection.findOne!World(query));
 		}
 
@@ -106,11 +122,11 @@ class WebInterface {
 		scope data = new WorldResponse[count];
 		foreach (ref w; data) {
 			static struct Q { int _id; }
-			auto query = Q(uniform(1, worldSize + 1));
+			auto query = Q(_uniformVariable(_gen));
 			w = WorldResponse(_worldCollection.findOne!World(query));
 
 			// update random number
-			w.randomNumber = uniform(1, worldSize+1);
+			w.randomNumber = _uniformVariable(_gen);
 
 			// persist to DB
 			static struct US {

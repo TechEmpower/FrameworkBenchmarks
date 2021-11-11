@@ -1,0 +1,14 @@
+[framework]
+name = "hug"
+
+[main]
+urls.plaintext = "/plaintext"
+approach = "Realistic"
+classification = "Micro"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Falcon"
+webserver = "None"
+versus = "wsgi"

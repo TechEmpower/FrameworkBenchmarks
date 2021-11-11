@@ -3,7 +3,6 @@
   "tests":
     [{
       "default": {
-        "setup_file"     : "setup_hhvm",
         "json_url"       : "/json.php",
         "db_url"         : "/db.php",
         "query_url"      : "/queries.php?queries=",
@@ -24,7 +23,8 @@
         "database_os"    : "Linux",
         "display_name"   : "hhvm",
         "notes"          : "",
-        "versus"         : "php7"
+        "versus"         : "php",
+        "tags": ["broken"]
       }
     }]
 }

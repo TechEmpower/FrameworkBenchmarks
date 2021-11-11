@@ -1,0 +1,48 @@
+<woof>
+  <http-continuations>
+    <http-continuation path="/db" secure="false" x="87" y="172">
+      <section name="Logic" input="db"/>
+    </http-continuation>
+    <http-continuation path="/json" secure="false" x="84" y="123">
+      <section name="Logic" input="json"/>
+    </http-continuation>
+    <http-continuation path="/queries" secure="false" x="80" y="222">
+      <section name="Logic" input="queries"/>
+    </http-continuation>
+    <http-continuation path="/update" secure="false" x="80" y="275">
+      <section name="Logic" input="update"/>
+    </http-continuation>
+    <http-continuation path="/cached-worlds" secure="false" x="81" y="329">
+      <section name="Logic" input="cached"/>
+    </http-continuation>
+  </http-continuations>
+  <http-inputs>
+  </http-inputs>
+  <templates>
+    <template path="/fortunes" location="fortunes.html" class="net.officefloor.benchmark.FortunesLogic" content-type="text/html;charset=utf-8" charset="" secure="false" redirect-values-function="" link-separator-character="" x="276" y="44">
+    </template>
+    <template path="/plaintext" location="plaintext.html" class="" content-type="text/plain" charset="" secure="false" redirect-values-function="" link-separator-character="" x="64" y="46">
+    </template>
+  </templates>
+  <sections>
+    <section name="Logic" source="net.officefloor.plugin.section.clazz.ClassSectionSource" location="net.officefloor.benchmark.Logic" x="281" y="140">
+      <input name="cached" parameter-type=""/>
+      <input name="db" parameter-type=""/>
+      <input name="json" parameter-type=""/>
+      <input name="queries" parameter-type=""/>
+      <input name="update" parameter-type=""/>
+    </section>
+  </sections>
+  <procedures>
+  </procedures>
+  <securities>
+  </securities>
+  <governances>
+  </governances>
+  <resources>
+  </resources>
+  <exceptions>
+  </exceptions>
+  <starting>
+  </starting>
+</woof>

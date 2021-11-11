@@ -1,0 +1,24 @@
+{
+  "framework": "voovan",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "voovan",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "None",
+      "platform": "Voovan",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "voovan-mvc",
+      "notes": "voovan webserver with mvc",
+      "versus": "voovan"
+    }
+  }]
+}

@@ -1,41 +1,47 @@
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.1.2-2'
+    id "org.jetbrains.kotlin.jvm" version "1.5.31"
 }
 
-apply from: "$gradleScripts/kotlin.gradle"
-apply from: "$gradleScripts/service.gradle"
+ext {
+    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/1.4.7/gradle"
 
-apply plugin: 'war'
+    hexagonVersion = "1.4.7"
+    hikariVersion = "5.0.0"
+    jettyVersion = "10.0.7"
+    postgresqlVersion = "42.2.24"
+    cache2kVersion = "2.2.1.Final"
+    jacksonBlackbirdVersion = "2.13.0"
+}
 
-defaultTasks 'installDist'
+apply(from: "$gradleScripts/kotlin.gradle")
+apply(from: "$gradleScripts/application.gradle")
 
-mainClassName = "co.there4.hexagon.BenchmarkKt"
-applicationDefaultJvmArgs = [
-    '-Xms64M', '-Xmx2G', '-XX:+UseNUMA', '-XX:+UseParallelGC', '-XX:+AggressiveOpts'
-]
+apply(plugin: "war")
+
+defaultTasks("installDist")
+
+application {
+    mainClass.set("com.hexagonkt.BenchmarkKt")
+}
 
 war {
-    archiveName = "ROOT.war"
+    archiveFileName = "ROOT.war"
 }
 
-installDist.dependsOn 'war'
+installDist.dependsOn("war")
 
 dependencies {
-    compile ("co.there4.hexagon:core:$hexagonVersion")
+    implementation("com.hexagonkt:http_server_jetty:$hexagonVersion")
+    implementation("com.hexagonkt:templates_pebble:$hexagonVersion")
+    implementation("com.hexagonkt:logging_slf4j_jul:$hexagonVersion")
+    implementation("com.hexagonkt:serialization_json:$hexagonVersion")
 
-    compile ("ch.qos.logback:logback-classic:$logbackVersion")
-    compile ("com.mitchellbosecke:pebble:$pebbleVersion")
-    compile ("org.mongodb:mongodb-driver:$mongodbVersion")
-    compile ("com.zaxxer:HikariCP:$hikariVersion")
-    compile ("org.postgresql:postgresql:$postgresqlVersion")
+    implementation("com.fasterxml.jackson.module:jackson-module-blackbird:$jacksonBlackbirdVersion")
+    implementation("org.cache2k:cache2k-core:$cache2kVersion")
+    implementation("com.zaxxer:HikariCP:$hikariVersion")
+    implementation("org.postgresql:postgresql:$postgresqlVersion")
 
     // providedCompile excludes the dependency only in the WAR, not in the distribution
-    providedCompile ("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
-
-    testCompile ("org.testng:testng:$testngVersion")
-}
-
-test {
-    useTestNG ()
+    providedCompile("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
 }

@@ -2,11 +2,11 @@ module request;
 
 import collie.codec.http;
 import collie.codec.http.server;
-import collie.utils.vector;
 import std.exception;
 import std.datetime;
 import std.conv;
 import std.string;
+import kiss.container.Vector;
 
 abstract class BaseHandler : RequestHandler
 {
@@ -43,7 +43,7 @@ protected:
 
 	final @property bool isVaild(){return _erroCode == HTTPErrorCode.NO_ERROR;}
 
-	pragma(inline,true)
+	pragma(inline)
 	final string printDate() {
 		DateTime date = cast(DateTime)Clock.currTime;
 		return format(

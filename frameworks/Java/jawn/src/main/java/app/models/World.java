@@ -2,10 +2,10 @@ package app.models;
 
 public class World {
 
-    public int id;
+    public final int id;
     public int randomNumber;
     
-    public World(int i , int r) {
+    public World(final int i , final int r) {
         id = i;
         randomNumber = r;
     }

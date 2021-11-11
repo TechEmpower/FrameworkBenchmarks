@@ -1,0 +1,15 @@
+[package]
+name = "saphir-techempower"
+version = "0.2.0"
+authors = ["richer <richer.arc@gmail.com>"]
+edition = "2018"
+
+[profile.release]
+lto = true
+codegen-units = 1
+
+[dependencies]
+saphir = { version = "2.0.1", features = ["macro", "json"] }
+serde = "1.0"
+serde_derive = "1.0"
+tokio = { version = "0.2", features = ["full"] }

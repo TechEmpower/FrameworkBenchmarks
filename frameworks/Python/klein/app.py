@@ -14,18 +14,20 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.types import String, Integer, Unicode
 
-
 if sys.version_info[0] == 3:
     xrange = range
 
-DATABASE_URI = 'mysql://benchmarkdbuser:benchmarkdbpass@TFB-database:3306/hello_world?charset=utf8'
+DATABASE_URI = 'mysql://benchmarkdbuser:benchmarkdbpass@tfb-database:3306/hello_world?charset=utf8'
 
 Base = declarative_base()
 db_engine = create_engine(DATABASE_URI)
 Session = sessionmaker(bind=db_engine)
 db_session = Session()
 
-env = Environment(loader=PackageLoader("app", "templates"), autoescape=True, auto_reload=False)
+env = Environment(
+    loader=PackageLoader("app", "templates"),
+    autoescape=True,
+    auto_reload=False)
 
 app = Klein()
 
@@ -41,15 +43,18 @@ class Fortune(Base):
             'randomNumber': self.randomNumber,
         }
 
+
 class World(Base):
     __tablename__ = "World"
     id = Column(Integer, primary_key=True)
     randomNumber = Column(Integer)
+
     def serialize(self):
         return {
             'id': self.id,
             'randomNumber': self.randomNumber,
         }
+
 
 def getQueryNum(queryString):
     try:
@@ -60,7 +65,7 @@ def getQueryNum(queryString):
             return 500
         return num_queries
     except ValueError:
-         return 1
+        return 1
 
 
 def close_session(func):
@@ -70,6 +75,7 @@ def close_session(func):
             return func(request)
         finally:
             db_session.close()
+
     return wrapper
 
 
@@ -78,10 +84,12 @@ def plaintext(request):
     request.setHeader("Content-Type", "text/plain; charset=UTF-8")
     return "Hello, World!"
 
+
 @app.route("/json")
 def jsonHandler(request):
     request.setHeader("Content-Type", "application/json; charset=UTF-8")
     return json.dumps({"message": "Hello, World!"})
+
 
 @app.route("/db")
 @close_session
@@ -90,6 +98,7 @@ def db(request):
     wid = randint(1, 10000)
     world = db_session.query(World).get(wid).serialize()
     return json.dumps(world)
+
 
 @app.route("/queries")
 @close_session
@@ -100,6 +109,7 @@ def queries(request):
     get = db_session.query(World).get
     worlds = [get(rp()).serialize() for _ in xrange(num_queries)]
     return json.dumps(worlds)
+
 
 @app.route("/updates")
 @close_session
@@ -117,15 +127,18 @@ def updates(request):
     db_session.commit()
     return json.dumps(worlds)
 
+
 @app.route("/fortune")
 @close_session
 def fortune(request):
     request.setHeader("Content-Type", "text/html; charset=UTF-8")
     fortunes = db_session.query(Fortune).all()
-    fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
+    fortunes.append(
+        Fortune(id=0, message="Additional fortune added at request time."))
     fortunes.sort(key=attrgetter("message"))
     template = env.get_template("fortunes.html")
     return template.render(fortunes=fortunes)
+
 
 if __name__ == "__main__":
     app.run("0.0.0.0", 8080)

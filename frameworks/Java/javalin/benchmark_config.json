@@ -1,0 +1,68 @@
+{
+  "framework": "javalin",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "javalin",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Jetty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "javalin",
+        "notes": "",
+        "versus": "None"
+      },
+      "postgres": {
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "javalin",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Jetty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "javalin-postgres",
+        "notes": "",
+        "versus": "None"
+      },
+      "mongodb": {
+        "db_url": "/mongo/db",
+        "query_url": "/mongo/queries?queries=",
+        "update_url": "/mongo/updates?queries=",
+        "fortune_url": "/mongo/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "MongoDB",
+        "framework": "javalin",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Jetty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "javalin-mongodb",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

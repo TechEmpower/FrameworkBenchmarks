@@ -1,0 +1,3 @@
+(library
+ (name server)
+ (libraries opi opium caqti caqti-driver-postgresql caqti-lwt tyxml lwt.unix))

@@ -5,7 +5,9 @@ require_once __DIR__.'/vendor/autoload.php';
 
 $app = new Slim\App(array(
     'db' => function ($c) {
-        $pdo = new PDO('mysql:host=localhost;dbname=hello_world;charset=utf8', 'benchmarkdbuser', 'benchmarkdbpass');
+        $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world;charset=utf8', 'benchmarkdbuser', 'benchmarkdbpass', array(
+            PDO::ATTR_PERSISTENT => true,
+        ));
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
@@ -14,7 +16,11 @@ $app = new Slim\App(array(
 
     'view' => function ($c) {
         return new Slim\Views\PhpRenderer("templates/");
-    }
+    },
+
+    'settings' => [
+        'outputBuffering' => false,
+    ]
 ));
 
 // Test 1: Plaintext
@@ -50,7 +56,12 @@ $app->get('/db', function ($request, $response) {
 
 // Test 4: Multiple database queries
 $app->get('/dbs', function ($request, $response) {
-    $queries = max(1, min($request->getParam('queries'), 500));
+    $queries = $request->getParam('queries');
+    if (is_numeric($queries)) {
+        $queries = max(1, min($queries, 500));
+    } else {
+        $queries = 1;
+    }
 
     $sth = $this->db->prepare('SELECT * FROM World WHERE id = ?');
     $worlds = array();
@@ -71,7 +82,12 @@ $app->get('/dbs', function ($request, $response) {
 
 // Test 5: Updates
 $app->get('/updates', function ($request, $response) {
-    $queries = max(1, min($request->getParam('queries'), 500));
+    $queries = $request->getParam('queries');
+    if (is_numeric($queries)) {
+        $queries = max(1, min($queries, 500));
+    } else {
+        $queries = 1;
+    }
 
     $sth = $this->db->prepare('SELECT * FROM World WHERE id = ?');
     $updateSth = $this->db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
@@ -99,14 +115,10 @@ $app->get('/updates', function ($request, $response) {
 
 // Test 6: Fortunes
 $app->get('/fortunes', function ($request, $response) {
-    $sth = $this->db->prepare('SELECT * FROM Fortune');
-    $sth->execute();
-    $fortunes = $sth->fetchAll();
+    $fortunes = $this->db->query('SELECT * FROM Fortune')->fetchAll(PDO::FETCH_KEY_PAIR);
 
-    array_push($fortunes, array('id'=> 0, 'message' => 'Additional fortune added at request time.'));
-    usort($fortunes, function($left, $right) {
-        return strcmp($left['message'], $right['message']);
-    });
+    $fortunes[0] = 'Additional fortune added at request time.';
+    asort($fortunes);
 
     return $this->view->render($response, "fortunes.php", ["fortunes" => $fortunes]);
 });

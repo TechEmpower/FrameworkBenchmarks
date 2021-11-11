@@ -1,0 +1,28 @@
+[framework]
+name = "firenio"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "None"
+platform = "firenio"
+webserver = "None"
+versus = "firenio"
+
+[http-lite]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "None"
+platform = "firenio"
+webserver = "None"
+versus = "firenio-http-lite"

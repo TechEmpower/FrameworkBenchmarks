@@ -1,11 +1,3 @@
-target/
-project/target
-bin/
-logs/
-.idea/
-.cache
-.classpath
-.project
-/bin/
-tools/
 sbt
+target/
+

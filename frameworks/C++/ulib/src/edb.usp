@@ -3,53 +3,12 @@ Test type 2: Single database query
 TechEmpower Web Framework Benchmarks
 -->
 <!--#declaration
-#include "world.h"
+#include "worldNoSql.h"
 
-static char buffer[128];
-static UElasticSearchClient* es;
-
-#define QLEN U_CONSTANT_SIZE("{\"query\":{\"match\":{\"_id\":\"")
-
-static void usp_fork_edb()
-{
-   U_TRACE(5, "::usp_fork_edb()")
-
-   U_NEW(UElasticSearchClient, es, UElasticSearchClient);
-
-   if (es->connect() == false)
-      {
-      U_WARNING("usp_fork_edb(): connection disabled or failed");
-
-      return;
-      }
-
-   U_MEMCPY(buffer,  "{\"query\":{\"match\":{\"_id\":\"", QLEN);
-}
-
-#ifdef DEBUG
-static void usp_end_edb()
-{
-   U_TRACE(5, "::usp_end_edb()")
-
-   delete es;
-}
-#endif
+static void usp_fork_edb() { WorldNoSql::handlerForkElasticSearch(); }
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
-uint32_t id;
-UString result;
-
-(void) es->sendPOST(U_CONSTANT_TO_PARAM("/tfb/world/_search"), buffer, u__snprintf(buffer+QLEN, 128, U_CONSTANT_TO_PARAM("%u\"}}}"), id = u_get_num_random(10000-1))+QLEN);
-
-(void) U_JFIND(es->getContent(), "randomNumber", result);
-
-#ifdef AS_cpoll_cppsp_DO
-USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%v}", id, result.rep);
-#else
-World world(id, result.strtoul());
-USP_OBJ_JSON_stringify(world);
-#endif
+WorldNoSql::doOneQuery(WorldNoSql::handlerQueryElasticSearch);
 -->

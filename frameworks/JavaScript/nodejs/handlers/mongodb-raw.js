@@ -5,11 +5,15 @@ const collections = {
   World: null,
   Fortune: null
 };
-MongoClient.connect('mongodb://TFB-database/hello_world?maxPoolSize=5', (err, db) => {
+
+const mongoUrl = 'mongodb://tfb-database:27017';
+const dbName = 'hello_world';
+
+MongoClient.connect(mongoUrl, (err, database) => {
   // do nothing if there is err connecting to db
 
-  collections.World = db.collection('world');
-  collections.Fortune = db.collection('fortune');
+  collections.World = database.db(dbName).collection('world');
+  collections.Fortune = database.db(dbName).collection('fortune');
 });
 
 
@@ -29,10 +33,10 @@ const mongodbGetAllFortunes = (callback) => {
 };
 
 const mongodbDriverUpdateQuery = (callback) => {
-  collections.World.findOne({id: h.randomTfbNumber()}, (err, world) => {
+  collections.World.findOne({ id: h.randomTfbNumber() }, (err, world) => {
     world.randomNumber = h.randomTfbNumber();
-    collections.World.update({id: world.id}, world, (err, updated) => { 
-      callback(err, { id: world.id, randomNumber: world.randomNumber } );
+    collections.World.update({ id: world.id }, world, (err, updated) => {
+      callback(err, { id: world.id, randomNumber: world.randomNumber });
     });
   });
 };

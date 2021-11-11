@@ -8,7 +8,7 @@ import com.twitter.util.NullMonitor
 import io.fintrospect.configuration.Host
 
 object Database {
-  def apply(dbHost: Host): Client = {
+  def apply(): Client = {
     Mysql.client
       .withCredentials("benchmarkdbuser", "benchmarkdbpass")
       .withDatabase("hello_world")
@@ -17,6 +17,6 @@ object Database {
       .withMonitor(NullMonitor)
       .withTracer(NullTracer)
       .withMaxConcurrentPrepareStatements(256)
-      .newRichClient(dbHost.value + ":3306")
+      .newRichClient("tfb-database:3306")
   }
 }

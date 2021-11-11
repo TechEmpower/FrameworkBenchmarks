@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <DebugType>portable</DebugType>
+    <AssemblyName>App</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <EnableDefaultContentItems>false</EnableDefaultContentItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.90" />
+    <PackageReference Include="Npgsql" Version="5.0.7" />
+    <PackageReference Include="Utf8Json" Version="1.3.7" />
+    <PackageReference Update="FSharp.Core" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Buffer.fs" />
+    <Compile Include="Parsers.fs" />
+    <Compile Include="Encoding.fs" />
+    <Compile Include="TemplateEngine.fs" />
+    <Compile Include="State.fs" />
+    <Compile Include="ExecNodes.fs" />
+    <Compile Include="RouteNode.fs" />
+    <Compile Include="Router.fs" />
+    <Compile Include="Composition.fs" />
+    <Compile Include="Middleware.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+</Project>

@@ -28,7 +28,7 @@
         <!-- encoders are assigned the type
              ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %X{cId} %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %X{sId} %X{cId} %-5level %logger{36} %M - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -36,7 +36,7 @@
         <File>target/test.log</File>
         <Append>false</Append>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{HH:mm:ss.SSS} [%thread] %X{cId} %-5level %class{36}:%L %M - %msg%n</Pattern>
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %X{sId} %X{cId} %-5level %class{36}:%L %M - %msg%n</Pattern>
         </layout>
     </appender>
 
@@ -44,7 +44,7 @@
     <appender name="audit" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>target/audit.log</file> <!-- logfile location -->
         <encoder>
-            <pattern>%-5level [%thread] %date{ISO8601} %F:%L - %msg%n
+            <pattern>%-5level [%thread] %date{ISO8601} %X{sId} %X{cId} %F:%L - %msg%n
             </pattern> <!-- the layout pattern used to format log entries -->
             <immediateFlush>true</immediateFlush>
         </encoder>

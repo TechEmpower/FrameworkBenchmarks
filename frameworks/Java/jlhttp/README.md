@@ -9,23 +9,27 @@ and a trade-off must be made between size (complexity) and performance.
 JLHTTP usually sides with the smaller size.
 
 
-### Plaintext Test
+### Test Type Implementation Source Code
 
-* [Plaintext test source](src/main/java/hello/HelloWebServer.java)
+* [JSON](src/main/java/benchmarks/Server.java)
+* [Plaintext](src/main/java/benchmarks/Server.java)
+* [Fortunes](src/main/java/benchmarks/Server.java)
 
-### JSON Encoding Test
-
-The JSON encoding is performed using Jackson.
-
-* [JSON test source](src/main/java/hello/HelloWebServer.java)
-
+## Important Libraries
+The tests were run with:
+* [Jackson](https://github.com/FasterXML/jackson)
+* [HikariCP](https://github.com/brettwooldridge/HikariCP)
+* [HTTL](https://httl.github.io/en/)
 
 ## Test URLs
+### JSON
 
-### Plaintext Test
+http://localhost:8080/json
+
+### Plaintext
 
 http://localhost:8080/plaintext
 
-### JSON Encoding Test
+### Fortunes
 
-http://localhost:8080/json
+http://localhost:8080/fortunes

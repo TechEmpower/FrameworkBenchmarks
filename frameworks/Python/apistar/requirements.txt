@@ -1,4 +1,0 @@
-gunicorn==19.7.1
-meinheld==0.6.1
-apistar==0.1.6
-ujson==1.35

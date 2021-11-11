@@ -2,7 +2,7 @@
 
 The information below contains information specific to the Roda benchmarking
 test. For further guidance, review the
-[documentation](http://frameworkbenchmarks.readthedocs.org/en/latest/). Also
+[documentation](https://github.com/TechEmpower/FrameworkBenchmarks/wiki). Also
 note the additional information provided in the [Ruby README](../).
 
 This is the Ruby Roda portion of a [benchmarking test suite](../../)
@@ -15,13 +15,13 @@ The tests will be run with:
 * [Ruby 2.4](http://www.ruby-lang.org)
 * [JRuby 9.1](http://jruby.org)
 * [Rubinius 3](https://rubinius.com)\*
-* [Puma 3.9](http://puma.io)
-* [Passenger 5.1](https://www.phusionpassenger.com)
-* [Unicorn 5.2](https://bogomips.org/unicorn/)
+* [Puma 3](http://puma.io)
+* [Passenger 5](https://www.phusionpassenger.com)
+* [Unicorn 5](https://bogomips.org/unicorn/)
 * [TorqueBox 4.0](http://torquebox.org)
-* [Roda 2.22](http://roda.jeremyevans.net)
-* [Sequel 4.43](http://sequel.jeremyevans.net)
-* [Erubi 1.2](https://github.com/jeremyevans/erubi)
+* [Roda 3](http://roda.jeremyevans.net)
+* [Sequel 5](http://sequel.jeremyevans.net)
+* [Erubi 1](https://github.com/jeremyevans/erubi)
 * [MySQL 5.5](https://www.mysql.com)
 * [Postgres 9.3](https://www.postgresql.org)
 

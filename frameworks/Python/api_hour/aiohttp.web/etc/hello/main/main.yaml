@@ -1,7 +1,7 @@
 ---
 engines:
   pg:
-    host: TFB-database
+    host: tfb-database
     port: 5432
     dbname: hello_world
     user: benchmarkdbuser
@@ -9,7 +9,7 @@ engines:
     minsize: 22
     maxsize: 22
   mysql:
-    host: TFB-database
+    host: tfb-database
     port: 3306
     db: hello_world
     user: benchmarkdbuser
@@ -17,6 +17,6 @@ engines:
     minsize: 22
     maxsize: 22
 #redis:
-#    host: TFB-database
+#    host: tfb-database
 #    port: 6379
 #    poolsize: 40

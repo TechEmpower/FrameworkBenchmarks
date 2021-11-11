@@ -1,0 +1,26 @@
+{
+  "framework": "$NAME",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "$APPROACH",
+        "classification": "$CLASSIFICATION",
+        "database": "$DATABASE",
+        "framework": "$FRAMEWORK",
+        "language": "$LANGUAGE",
+        "flavor": "None",
+        "orm": "$ORM",
+        "platform": "$PLATFORM",
+        "webserver": "$WEBSERVER",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "$DISPLAY_NAME",
+        "notes": "",
+        "versus": "$VERSUS"
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+(executable
+ (libraries webmachine lwt cohttp-lwt-unix caqti caqti-lwt caqti-driver-postgresql yojson atdgen-runtime lib)
+ (preprocess (pps lwt_ppx))
+ (public_name tfb)
+ (package tfb)
+ (name tfb))

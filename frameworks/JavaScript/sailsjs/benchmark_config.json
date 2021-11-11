@@ -2,7 +2,6 @@
   "framework": "sailsjs",
   "tests": [{
     "default": {
-      "setup_file": "setup-mysql",
       "json_url": "/json",
       "db_url": "/mysql/db",
       "query_url": "/mysql/queries?queries=",
@@ -12,7 +11,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "None",
+      "database": "MySQL",
       "framework": "None",
       "language": "JavaScript",
       "flavor": "NodeJS",
@@ -26,7 +25,6 @@
       "versus": "nodejs"
     },
     "postgres": {
-      "setup_file": "setup-postgresql",
       "db_url": "/postgres/db",
       "query_url": "/postgres/queries?queries=",
       "update_url": "/postgres/updates?queries=",

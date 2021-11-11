@@ -1,16 +1,14 @@
-# Go Benchmarking Test
+# [go-std](GoLang) Benchmarking Test
 
-This is the Go portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the go portion of a [benchmarking test suite](https://www.techempower.com/benchmarks/) comparing a variety of web development platforms.
 
-### JSON Encoding Test
-* [JSON test source](src/hello/hello.go)
-
-## Versions
-
-* [Go 1.6](http://golang.org/)
+"Golang standard library. For database tests PostgreSQL, MySQL and MongoDB were used."
 
 ## Test URLs
 
-### JSON Encoding Test
-
-http://localhost:8080/json
+    http://localhost:8080/json
+    http://localhost:8080/db
+    http://localhost:8080/queries?queries=[1-500]
+    http://localhost:8080/update?queries=[1-500]
+    http://localhost:8080/plaintext
+    http://localhost:8080/fortunes

@@ -2,19 +2,50 @@
   "name": "fwb",
   "description": "A simple vibe.d server application.",
   "copyright": "Copyright © 2015, jin",
-  "authors": ["jin", "Sönke Ludwig"],
+  "authors": [
+    "jin",
+    "Sönke Ludwig"
+  ],
   "dependencies": {
-    "vibe-d": "~>0.8.0-beta",
-    "vibe-core": "~>1.0.0-beta"
+    "vibe-d": "0.9.4",
+    "mir-random": "2.2.15",
+    "vibe-d:tls": "0.9.4"
   },
-  "versions": ["VibeDefaultMain"],
   "targetType": "executable",
   "sourcePaths": [],
-  "subConfigurations": {"vibe-d": "vibe-core"},
+  "subConfigurations": {
+    "vibe-d": "vibe-core",
+    "vibe-d:tls": "notls"
+  },
+  "versions": [
+    "VibeManualMemoryManagement",
+    "VibeHighEventPriority"
+  ],
   "configurations": [
-  	{
-  		"name": "mongodb",
-  		"mainSourceFile": "source/mongodb.d"
-  	}
-  ]
+    {
+      "name": "mongodb",
+      "mainSourceFile": "source/mongodb.d"
+    },
+    {
+      "name": "postgresql",
+      "mainSourceFile": "source/postgresql.d",
+      "dependencies": {
+        "vibe-d-postgresql": "3.1.0-rc.1",
+        "dpq2": "1.0.17"
+      },
+      "subConfigurations": {
+        "dpq2": "dynamic"
+      }
+    }
+  ],
+  "buildTypes": {
+      "debug": {
+          "buildOptions": ["debugMode", "optimize"]
+      },
+      "release": {
+          "buildOptions": ["releaseMode", "optimize", "inline"],
+          "dflags": ["-boundscheck=off", "-mcpu=native"],
+          "dflags-ldc": ["-flto=thin"]
+      }
+  }
 }

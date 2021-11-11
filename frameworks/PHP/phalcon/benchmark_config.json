@@ -2,7 +2,6 @@
   "framework": "phalcon",
   "tests": [{
     "default": {
-      "setup_file": "setup-mysql",
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "db_url": "/db",
@@ -17,16 +16,15 @@
       "language": "PHP",
       "flavor": "PHP7",
       "orm": "raw",
-      "platform": "None",
+      "platform": "FPM/FastCGI",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "phalcon",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
     },
     "mongodb": {
-      "setup_file": "setup-mongodb",
       "db_url": "/mongodb/db",
       "query_url": "/mongodb/queries?queries=",
       "fortune_url": "/mongodb/fortunes",
@@ -38,13 +36,35 @@
       "language": "PHP",
       "flavor": "PHP7",
       "orm": "raw",
-      "platform": "None",
+      "platform": "FPM/FastCGI",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "phalcon",
+      "display_name": "phalcon-mongodb",
       "notes": "",
-      "versus": "php7"
+      "versus": "php"
+    },
+    "micro": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "phalcon",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "raw",
+      "platform": "FPM/FastCGI",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "phalcon-micro",
+      "notes": "",
+      "versus": "php"
     }
   }]
 }

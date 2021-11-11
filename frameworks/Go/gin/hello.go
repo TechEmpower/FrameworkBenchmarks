@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
-	"os"
 	"runtime"
 	"sort"
 	"strconv"
@@ -147,7 +146,7 @@ func main() {
 	r.Use(func(c *gin.Context) {
 		c.Writer.Header()["Server"] = serverHeader
 	})
-	r.LoadHTMLFiles("fortune.html")
+	r.LoadHTMLGlob("/templates/fortune.html")
 	r.GET("/json", json)
 	r.GET("/db", db)
 	r.GET("/dbs", dbs)
@@ -161,7 +160,7 @@ func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	dsn := "benchmarkdbuser:benchmarkdbpass@tcp(%s:3306)/hello_world"
-	dbhost := os.Getenv("DBHOST")
+	dbhost := "tfb-database"
 
 	db, err := sql.Open("mysql", fmt.Sprintf(dsn, dbhost))
 	if err != nil {

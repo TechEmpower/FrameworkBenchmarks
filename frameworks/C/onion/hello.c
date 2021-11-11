@@ -221,7 +221,8 @@ onion_connection_status return_fortune(MYSQL *db, onion_request *req, onion_resp
 	}
 	
 	onion_dict_add(context,"fortunes",fortunes, OD_DICT|OD_FREE_VALUE);
-	
+
+	onion_response_set_header(res, "Content-Type","text/html;charset=utf-8");
 	onion_connection_status ret=fortunes_html_template(context, req, res);
 	free(fortune_list.list);
 	return ret;
@@ -334,7 +335,7 @@ int main(void){
 			ONION_ERROR("Cant create db connection: %s", mysql_error(data.db[i]));
 			return 1;
 		}
-		if (mysql_real_connect(data.db[i], "127.0.0.1", 
+		if (mysql_real_connect(data.db[i], "tfb-database",
                         "benchmarkdbuser", "benchmarkdbpass", "hello_world", 0, NULL, 0) == NULL) {
 			ONION_ERROR("Error %u: %s\n", mysql_errno(data.db[i]), mysql_error(data.db[i]));
 			return 1;

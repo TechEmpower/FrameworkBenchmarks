@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <!-- Opt out of the "easy mode" of the CoreRT compiler (http://aka.ms/OptimizeCoreRT) -->
+    <TrimmerDefaultAction>link</TrimmerDefaultAction>
+    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+    <IlcPgoOptimize>true</IlcPgoOptimize>
+    <IlcTrimMetadata>true</IlcTrimMetadata>
+
+    <!-- This benchmark is marked Stripped, so we might as well do this: -->
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+    <EventSourceSupport>false</EventSourceSupport>
+    <DebuggerSupport>false</DebuggerSupport>
+    <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <DefineConstants Condition=" '$(DatabaseProvider)' != '' ">$(DefineConstants);DATABASE</DefineConstants>
+    <DefineConstants Condition=" '$(DatabaseProvider)' == 'Npgsql' ">$(DefineConstants);NPGSQL</DefineConstants>
+    <DefineConstants Condition=" '$(DatabaseProvider)' == 'MySqlConnector' ">$(DefineConstants);MYSQLCONNECTOR</DefineConstants>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Condition=" '$(DatabaseProvider)' == 'Npgsql' " Include="Npgsql" Version="6.0.0-preview4" />
+    <PackageReference Condition=" '$(DatabaseProvider)' == 'MySqlConnector' " Include="MySqlConnector" Version="1.3.12" />
+    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-*" />
+  </ItemGroup>
+
+  <ItemGroup>
+      <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RdXmlFile Condition=" '$(DatabaseProvider)' == 'Npgsql' " Include="npgsql.rd.xml" />
+  </ItemGroup>
+
+</Project>

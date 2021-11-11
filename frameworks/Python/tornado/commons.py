@@ -1,4 +1,4 @@
-import json
+import ujson as json
 import tornado.web
 
 
@@ -12,16 +12,15 @@ class BaseHandler(tornado.web.RequestHandler):
 
 
 class PlainHandler(BaseHandler):
-
     def set_default_headers(self):
         self.set_header("Content-Type", "text/plain")
 
 class HtmlHandler(BaseHandler):
+
     def set_default_headers(self):
         self.set_header("Content-Type", "text/html; charset=UTF-8")
 
 class JsonHandler(BaseHandler):
-
     def set_default_headers(self):
         self.set_header("Content-Type", "application/json")
 
@@ -34,8 +33,6 @@ class PlaintextHelloWorldHandler(PlainHandler):
 
 
 class JsonHelloWorldHandler(JsonHandler):
-    HELLO_WORLD = {"message": "Hello, World!"}
-
     def get(self):
-        obj = json.dumps(self.HELLO_WORLD)
+        obj = json.dumps({"message": "Hello, World!"})
         self.finish(obj)

@@ -6,5 +6,6 @@ return array(
 	'hello(/:name)?' => array('welcome/hello', 'name' => 'hello'),
     'json' => 'bench/json',
     'db' => 'bench/db',
+    'dbquery' => 'bench/dbquery',
     'fortunes' => 'bench/fortunes'
 );

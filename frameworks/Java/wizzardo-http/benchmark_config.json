@@ -1,0 +1,30 @@
+{
+  "framework": "wizzardo-http",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "cached_query_url": "/cached-worlds?count=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "wizzardo-http",
+        "language": "Java",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "wizzardo-http",
+        "notes": "",
+        "versus": ""
+      }
+    }
+  ]
+}

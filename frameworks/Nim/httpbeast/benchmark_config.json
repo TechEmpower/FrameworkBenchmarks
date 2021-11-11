@@ -1,0 +1,26 @@
+{
+  "framework": "httpbeast",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "None",
+        "language": "Nim",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "HttpBeast",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

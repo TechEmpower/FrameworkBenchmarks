@@ -1,67 +1,68 @@
-# Spring Benchmarking Test
+# Spring MVC Benchmarking Test
 
-This is the Spring portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the Spring MVC portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-This is using several [Spring projects](https://spring.io/projects) to build an application.
+An embedded tomcat is used for the web server, with nearly everything configured with default settings.
+The only thing changed is Hikari can use up to (2 * cores count) connections (the default is 10).
+See [About-Pool-Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing)
 
-## How to run this app locally
+Tomcat use a fixed thread pool that can grow up to 200 threads.
 
-You can easily run this sample application with an embedded H2 database.
-For that, simply run:
+There are two implementations :
+* For postgresql access, JdbcTemplate is used. See [JdbcDbRepository](src/main/java/hello/JdbcDbRepository.java).
+* For mongoDB access, MongoTemplate is used. See [MongoDbRepository](src/main/java/hello/MongoDbRepository.java).
 
-    SPRING_PROFILES_ACTIVE=local mvn spring-boot:run
+### Plaintext Test
 
-## Guides
-* [Building a REST service](https://spring.io/guides/gs/rest-service/)
-* [Building an application with Spring Boot](https://spring.io/guides/gs/spring-boot/)
-* [Accessing data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
+* [Plaintext test source](src/main/java/hello/HelloController.java)
 
-## Documentation
-See [Spring projects documentation](https://spring.io/docs).
+### JSON Serialization Test
 
-## Application Endpoints
+* [JSON test source](src/main/java/hello/HelloController.java)
 
-When deployed locally, the application uses the 'ROOT' context; for the benchmark, all
-URLs are prefixed with "/spring".
-Check out [SampleApplication, the main Application file](src/main/java/com/techempower/spring/SampleApplication.java)
+### Database Query Test
 
-### JSON serialization
+* [Database Query test source](src/main/java/hello/HelloController.java)
 
-* http://localhost:8080/json
-* [JSON Controller](src/main/java/com/techempower/spring/web/HelloController.java)
+### Database Queries Test
 
-### Single database query
+* [Database Queries test source](src/main/java/hello/HelloController.java)
 
-* http://localhost:8080/db
-* [Database Controller](src/main/java/com/techempower/spring/web/WorldDatabaseController.java)
-* [Database Entity](src/main/java/com/techempower/spring/domain/World.java)
-* [Database Repository](src/main/java/com/techempower/spring/service/WorldRepository.java)
+### Database Update Test
 
-### Multiple database queries
+* [Database Update test source](src/main/java/hello/HelloController.java)
 
-* http://localhost:8080/queries?queries=5
-* [Database Controller](src/main/java/com/techempower/spring/web/WorldDatabaseController.java)
+### Template rendering Test
 
-### Fortunes
+* [Template rendering test source](src/main/java/hello/HelloController.java)
 
-* http://localhost:8080/fortunes
-* [Fortune Controller](src/main/java/com/techempower/spring/web/FortuneController.java)
+## Versions
 
-### Database updates
+* [Java OpenJDK 11](http://openjdk.java.net/)
+* [Spring boot 2.1.2](https://spring.io/projects/spring-boot)
 
-* http://localhost:8080/updates?queries=5
-* [Database Controller](src/main/java/com/techempower/spring/web/WorldDatabaseController.java)
+## Test URLs
 
-### Plaintext
+### Plaintext Test
 
-* http://localhost:8080/plaintext
-* [Controller](src/main/java/com/techempower/spring/web/HelloController.java)
+    http://localhost:8080/plaintext
 
+### JSON Encoding Test
 
-## Infrastructure Software Versions
-The tests were run with:
+    http://localhost:8080/json
 
-* [Spring 4.1.7.RELEASE](http://projects.spring.io/spring-framework/)
-* [Spring Boot 1.2.5.RELEASE](http://projects.spring.io/spring-boot/)
-* [Spring Data JPA 1.7.3.RELEASE](http://projects.spring.io/spring-data-jpa/)
-* [Undertow 1.1.7.Final](http://undertow.io/)
+### Database Query Test
+
+    http://localhost:8080/db
+
+### Database Queries Test
+
+    http://localhost:8080/queries?queries=5
+
+### Database Update Test
+
+    http://localhost:8080/updates?queries=5
+
+### Template rendering Test
+
+    http://localhost:8080/fortunes

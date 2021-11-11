@@ -1,20 +1,23 @@
 ---
-_: &common
-  adapter: <%= RUBY_PLATFORM == 'java' ? 'jdbcmysql' : 'mysql2' %>
+default: &default
   database: hello_world
   username: benchmarkdbuser
   password: benchmarkdbpass
-  host: <%= ENV['DB_HOST'] %>
+  host: tfb-database
   timeout: 5000
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
-  <<: *common
-  pool: 5
+  <<: *default
 
 test:
-  <<: *common
-  pool: 64
+  <<: *default
 
-production:
-  <<: *common
-  pool: 256
+production_mysql:
+  <<: *default
+  adapter: mysql2
+
+production_postgresql:
+  <<: *default
+  adapter: postgresql
+  encoding: unicode

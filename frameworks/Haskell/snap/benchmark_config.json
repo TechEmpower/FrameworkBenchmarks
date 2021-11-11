@@ -2,7 +2,6 @@
   "framework": "snap",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/dbs?queries=",
@@ -21,7 +20,8 @@
       "database_os": "Linux",
       "display_name": "Snap",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     }
   }]
 }

@@ -1,0 +1,12 @@
+require "./shards"
+
+require "./app_database"
+require "./models/base_model"
+require "./models/**"
+require "./serializers/**"
+require "./actions/mixins/**"
+require "./actions/**"
+require "./handlers/**"
+require "./pages/**"
+require "../config/**"
+require "./app_server"

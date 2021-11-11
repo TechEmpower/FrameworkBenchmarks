@@ -28,7 +28,6 @@ executable         yesod-mysql-mongo
                  , auto-update
                  , primitive
                  , mwc-random
-                 , resource-pool
                  , network
                  , mongoDB
                  , monad-logger

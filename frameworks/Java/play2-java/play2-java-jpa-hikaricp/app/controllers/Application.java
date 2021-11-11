@@ -1,77 +1,45 @@
 package controllers;
 
-import akka.dispatch.ExecutionContexts;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ThreadLocalRandom;
+
+import javax.inject.Inject;
+
 import models.Fortune;
 import models.World;
-import play.Play;
-import play.core.NamedThreadFactory;
-import play.libs.F;
+import play.db.jpa.JPAApi;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import play.mvc.With;
-import scala.concurrent.ExecutionContext;
-import utils.Headers;
-import utils.Predicate;
-import utils.Predicated;
+import utils.DatabaseExecutionContext;
 
-import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-@With(Headers.class)
 public class Application extends Controller {
 
-    private static final int TEST_DATABASE_ROWS = 10000;
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private final JPAApi jpa;
+    private final DatabaseExecutionContext dbEc;
 
-    private static final int partitionCount = Play.application().configuration().getInt("db.default.partitionCount");
-    private static final int maxConnections =
-            partitionCount * Play.application().configuration().getInt("db.default.maxConnectionsPerPartition");
-    private static final int minConnections =
-            partitionCount * Play.application().configuration().getInt("db.default.minConnectionsPerPartition");
-
-    private static final ThreadPoolExecutor tpe = new ThreadPoolExecutor(minConnections, maxConnections,
-            0L, TimeUnit.MILLISECONDS,
-            new LinkedBlockingQueue<>(),
-            new NamedThreadFactory("dbEc"));
-    private static final ExecutionContext dbEc = ExecutionContexts.fromExecutorService(tpe);
-
-    public Result json() {
-        final ObjectNode result = OBJECT_MAPPER.createObjectNode();
-        result.put("message", "Hello World!");
-        return ok(result);
+    @Inject
+    public Application(final JPAApi jpa, final DatabaseExecutionContext dbEc) {
+        this.jpa = jpa;
+        this.dbEc = dbEc;
     }
 
-    // If the thread-pool used by the database grows too large then our server
-    // is probably struggling, and we should start dropping requests. Set
-    // the max size of our queue something above the number of concurrent
-    // connections that we need to handle.
-    public static class IsDbAvailable implements Predicate {
-        @Override
-        public boolean condition() {
-            return tpe.getQueue().size() <= 1024;
-        }
+    public CompletionStage<Result> db() {
+        return getRandomWorlds(1).thenApply(worlds -> ok(Json.toJson(worlds.get(0))));
     }
 
-    @Predicated(predicate = IsDbAvailable.class, failed = SERVICE_UNAVAILABLE)
-    public F.Promise<Result> db() {
-        return getRandomWorlds(1).map(worlds -> ok(Json.toJson(worlds.get(0))));
+    public CompletionStage<Result> queries(final String queries) {
+        return getRandomWorlds(queryCount(queries)).thenApply(worlds -> ok(Json.toJson(worlds)));
     }
 
-    @Predicated(predicate = IsDbAvailable.class, failed = SERVICE_UNAVAILABLE)
-    public F.Promise<Result> queries(final String queryCountString) {
-        return getRandomWorlds(queryCount(queryCountString)).map(worlds -> ok(Json.toJson(worlds)));
-    }
-
-    @Predicated(predicate = IsDbAvailable.class, failed = SERVICE_UNAVAILABLE)
-    public F.Promise<Result> fortunes() {
-        return F.Promise.promise(() -> {
-            List<Fortune> fortunes = Fortune.findAll();
+    public CompletionStage<Result> fortunes() {
+        return CompletableFuture.supplyAsync(() -> {
+            final List<Fortune> fortunes = Fortune.findAll(this.jpa);
             fortunes.add(new Fortune("Additional fortune added at request time."));
             Collections.sort(fortunes, (f1, f2) -> f1.message.compareTo(f2.message));
 
@@ -79,24 +47,23 @@ public class Application extends Controller {
         }, dbEc);
     }
 
-    @Predicated(predicate = IsDbAvailable.class, failed = SERVICE_UNAVAILABLE)
-    public F.Promise<Result> update(final String queryCountString) {
-        return getRandomWorlds(queryCount(queryCountString)).map(worlds -> {
-            Random random = ThreadLocalRandom.current();
-            for (World world : worlds) {
+    public CompletionStage<Result> update(final String queries) {
+        return getRandomWorlds(queryCount(queries)).thenApplyAsync(worlds -> {
+            final Random random = ThreadLocalRandom.current();
+            for (final World world : worlds) {
                 world.randomNumber = (long) (random.nextInt(10000) + 1);
             }
 
-            List<World> updatedWorlds = World.save(worlds);
+            final List<World> updatedWorlds = World.save(worlds, this.jpa);
             return ok(Json.toJson(updatedWorlds));
         }, dbEc);
     }
 
-    private int queryCount(String queryCountString) {
+    private int queryCount(final String queryCountString) {
         int queryCount;
         try {
             queryCount = Integer.parseInt(queryCountString, 10);
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             queryCount = 1;
         }
         if (queryCount < 1) {
@@ -108,13 +75,13 @@ public class Application extends Controller {
         return queryCount;
     }
 
-    private F.Promise<List<World>> getRandomWorlds(final int n) {
-        return F.Promise.promise(() -> {
-            Random random = ThreadLocalRandom.current();
-            List<World> worlds = new ArrayList<>(n);
+    private CompletionStage<List<World>> getRandomWorlds(final int n) {
+        return CompletableFuture.supplyAsync(() -> {
+            final Random random = ThreadLocalRandom.current();
+            final List<World> worlds = new ArrayList<>(n);
             for (int i = 0; i < n; ++i) {
-                long randomId = random.nextInt(TEST_DATABASE_ROWS) + 1;
-                World world = World.findById(randomId);
+                long randomId = random.nextInt(10000) + 1;
+                final World world = World.findById(randomId, this.jpa);
                 worlds.add(world);
             }
             return worlds;

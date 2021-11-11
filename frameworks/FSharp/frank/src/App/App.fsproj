@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <DebugType>portable</DebugType>
+    <AssemblyName>App</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <EnableDefaultContentItems>false</EnableDefaultContentItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.90" />
+    <PackageReference Include="Frank" Version="6.2.0" />
+    <PackageReference Include="FSharp.Data.JsonSchema" Version="1.0.0" />
+    <PackageReference Include="Giraffe" Version="5.0.0" />
+    <PackageReference Include="Giraffe.ViewEngine" Version="1.4.0" />
+    <PackageReference Include="Npgsql" Version="5.0.7" />
+    <PackageReference Update="FSharp.Core" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Models.fs" />
+    <Compile Include="HtmlViews.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+</Project>

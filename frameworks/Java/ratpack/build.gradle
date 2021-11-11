@@ -1,0 +1,35 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "io.ratpack:ratpack-gradle:1.7.6"
+        classpath "com.github.jengelman.gradle.plugins:shadow:5.0.0"
+    }
+}
+
+apply plugin: "io.ratpack.ratpack-java"
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: "idea"
+apply plugin: "eclipse"
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'io.ratpack:ratpack-guice:1.7.6'
+    compile 'io.ratpack:ratpack-hikari:1.7.6'
+    compile 'io.ratpack:ratpack-handlebars:1.7.6'
+    compile 'io.ratpack:ratpack-rx2:1.7.6'
+    compile 'io.reactiverse:reactive-pg-client:0.11.4'
+    compile 'io.vertx:vertx-rx-java2:3.8.5'
+
+    // Default SLF4J binding.  Note that this is a blocking implementation.
+    // See here for a non blocking appender http://logging.apache.org/log4j/2.x/manual/async.html
+    runtime 'org.slf4j:slf4j-simple:1.7.30'
+    runtime 'org.postgresql:postgresql:42.2.10'
+
+}
+
+mainClassName = "Main"

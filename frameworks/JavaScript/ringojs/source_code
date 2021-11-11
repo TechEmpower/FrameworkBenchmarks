@@ -1,5 +1,0 @@
-./ringojs/ringo-main.js
-./ringojs/templates/
-./ringojs/templates/fortune.mustache
-./ringojs/app/models.js
-./ringojs/app/views.js

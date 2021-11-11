@@ -5,57 +5,41 @@ TechEmpower Web Framework Benchmarks
 <!--#declaration
 #include "world.h"
 
-static World*         pworld_db;
-static UOrmSession*   psql_db;
-static UOrmStatement* pstmt_db;
-
-static void usp_fork_db()
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+static void handlerResult(void* res, uint32_t num_result)
 {
-   U_TRACE(5, "::usp_fork_db()")
+   U_TRACE(5, "::handlerResult(%p,%u)", res, num_result)
 
-   U_NEW(UOrmSession, psql_db, UOrmSession(U_CONSTANT_TO_PARAM("hello_world")));
+   U_INTERNAL_ASSERT_EQUALS(num_result, 1)
+   U_INTERNAL_ASSERT_EQUALS(PQnfields((PGresult*)res), 1)
+   U_INTERNAL_ASSERT_EQUALS(PQntuples((PGresult*)res), 1)
 
-   if (psql_db->isReady() == false)
-      {
-      U_WARNING("usp_fork_db(): we cound't connect to db");
+   char* randomNumber = U_SYSCALL(PQgetvalue, "%p,%d,%d", (PGresult*)res, 0, 0);
 
-      return;
-      }
-
-   U_NEW(UOrmStatement, pstmt_db, UOrmStatement(*psql_db, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
-
-   U_NEW(World, pworld_db, World);
-
-   pstmt_db->use( pworld_db->id);
-   pstmt_db->into(pworld_db->randomNumber);
-}
-
-#ifdef DEBUG
-static void usp_end_db()
-{
-   U_TRACE(5, "::usp_end_db()")
-
-   delete psql_db;
-
-   if (pstmt_db)
-      {
-      delete  pstmt_db;
-      delete pworld_db;
-      }
+   World::handlerOneResult(ntohl(*(uint32_t*)randomNumber));
 }
 #endif
+
+static void usp_init_db() { World::handlerInitSql(); }
+static void usp_fork_db() { World::handlerForkSql(); }
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
-pworld_db->id = u_get_num_random(10000-1);
+#ifdef U_STATIC_ORM_DRIVER_PGSQL
+if (World::pstmt)
+   {
+   World::sendQueryPrepared();
 
-pstmt_db->execute();
-
-#ifdef AS_cpoll_cppsp_DO
-USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%u}", pworld_db->id, pworld_db->randomNumber);
-#else
-USP_OBJ_JSON_stringify(*pworld_db);
+   UServer_Base::handler_db1->handlerQuery(handlerResult);
+   }
+else
 #endif
+{
+World::pworld_query->id = World::rnumber[0];
+
+(void) World::pstmt_query->execute();
+
+World::handlerOneResult(World::pworld_query->randomNumber);
+}
 -->

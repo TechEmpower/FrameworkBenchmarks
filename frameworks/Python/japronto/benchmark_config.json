@@ -1,0 +1,23 @@
+{
+  "framework": "japronto",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "framework": "japronto",
+      "language": "Python",
+      "flavor": "Python3",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "orm": "Raw",
+      "database_os": "Linux",
+      "database": "None",
+      "display_name": "Japronto",
+      "notes": ""
+    }
+  }]
+}

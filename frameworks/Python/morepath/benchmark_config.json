@@ -1,0 +1,27 @@
+{
+  "framework": "morepath",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "morepath",
+      "language": "Python",
+      "flavor": "Python3",
+      "orm": "Full",
+      "platform": "Meinheld",
+      "webserver": "gunicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Morepath",
+      "notes": "uses Morepath with PonyORM for database access"
+    }
+  }]
+}

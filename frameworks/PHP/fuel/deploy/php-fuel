@@ -1,6 +1,5 @@
 <VirtualHost *:8080>
-  Alias /php-fuel/ "/home/ubuntu/FrameworkBenchmarks/php-fuel/public/"
-  <Directory /home/ubuntu/FrameworkBenchmarks/php-fuel/public/>
+  <Directory /fuel/public/>
           Options Indexes FollowSymLinks MultiViews
           #AllowOverride None
           Order allow,deny

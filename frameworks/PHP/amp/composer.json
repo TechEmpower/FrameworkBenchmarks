@@ -1,0 +1,8 @@
+{
+    "require": {
+        "amphp/cluster": "^1",
+        "amphp/http-server": "^2",
+        "amphp/http-server-router": "^1",
+        "amphp/mysql": "^2"
+    }
+}

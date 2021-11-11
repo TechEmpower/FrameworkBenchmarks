@@ -1,8 +1,10 @@
 use Mojolicious::Lite;
 use Mojo::Pg;
+use Mojo::Promise;
 
 use Cpanel::JSON::XS 'encode_json';
 use Scalar::Util 'looks_like_number';
+use Data::Dumper;
 
 # configuration
 
@@ -14,12 +16,13 @@ use Scalar::Util 'looks_like_number';
     graceful_timeout => 1,
     requests => 10000,
     workers => $nproc,
+    backlog => 256
   });
 }
 
 {
-  my $db_host = $ENV{DBHOST} || 'localhost';
-  helper pg => sub { state $pg = Mojo::Pg->new('postgresql://benchmarkdbuser:benchmarkdbpass@' . $db_host . '/hello_world') };
+  my $db_host = 'tfb-database';
+  helper pg => sub { state $pg = Mojo::Pg->new('postgresql://benchmarkdbuser:benchmarkdbpass@' . $db_host . '/hello_world')->max_connections(50) };
 }
 
 helper render_json => sub {
@@ -41,9 +44,13 @@ get '/queries' => sub {
 
 get '/fortunes' => sub {
   my $c = shift;
-  my $docs = $c->helpers->pg->db->query('SELECT id, message FROM Fortune')->arrays;
-  push @$docs, [0, 'Additional fortune added at request time.'];
-  $c->render( fortunes => docs => $docs->sort(sub{ $a->[1] cmp $b->[1] }) );
+  $c->render_later;
+  my $docs = $c->helpers->pg->db->query_p('SELECT id, message FROM Fortune')
+  ->then(sub{
+    my $docs = $_[0]->arrays;
+    push @$docs, [0, 'Additional fortune added at request time.'];
+    $c->render(fortunes => docs => $docs->sort(sub{ $a->[1] cmp $b->[1] }) )
+  });
 };
 
 get '/updates' => sub {
@@ -51,16 +58,13 @@ get '/updates' => sub {
   $c->helpers->render_query(scalar $c->param('queries'), {update => 1});
 };
 
-get '/plaintext' => sub {
-  my $c = shift;
-  $c->res->headers->content_type('text/plain');
-  $c->render( text => 'Hello, World!' );
-};
+get '/plaintext' => { text => 'Hello, World!', format => 'txt' };
 
 # Additional helpers (shared code)
 
 helper 'render_query' => sub {
   my ($self, $q, $args) = @_;
+  $self->render_later;
   $args ||= {};
   my $update = $args->{update};
 
@@ -71,17 +75,42 @@ helper 'render_query' => sub {
   my $r  = [];
   my $tx = $self->tx;
 
-  my $db = $self->helpers->pg->db;
 
+  my @queries;
   foreach (1 .. $q) {
-    my $id = int rand 10_000;
-    my $randomNumber = $db->query('SELECT randomnumber FROM World WHERE id=?', $id)->array->[0];
-    $db->query('UPDATE World SET randomnumber=? WHERE id=?', ($randomNumber = 1 + int rand 10_000), $id) if $update;
-    push @$r, { id => $id, randomNumber => $randomNumber };
+    my $id = 1 + int rand 10_000;
+
+    push @queries, $self->helpers->pg->db->query_p('SELECT id,randomnumber FROM World WHERE id=?', $id)
+    ->then(sub{
+	my $randomNumber = $_[0]->array->[0];
+
+	return Mojo::Promise->new->resolve($id, $randomNumber)
+        ->then(sub{
+	   if($update) {
+		$randomNumber = 1 + int rand 10_000;
+		return Mojo::Promise->all(
+		    Mojo::Promise->new->resolve($_[0], $randomNumber),
+		    $self->helpers->pg->db->query_p('UPDATE World SET randomnumber=? WHERE id=?', $randomNumber, $id)
+		)
+		->then(sub {
+	            return $_[0];
+	        })
+	    }
+            return [shift, shift];
+        })
+    });
   }
 
-  $r = $r->[0] if $args->{single};
-  $self->helpers->render_json($r);
+  Mojo::Promise->all(@queries)
+  ->then(sub{
+      my @responses = @_;
+      foreach my $resp (@responses) {
+          push @$r, { id => $resp->[0][0], randomNumber => $resp->[0][1] };
+      }
+      $r = $r->[0] if $args->{single};
+      $self->helpers->render_json($r);
+  })
+
 };
 
 app->start;

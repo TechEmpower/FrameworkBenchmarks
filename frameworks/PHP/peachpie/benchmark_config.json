@@ -1,0 +1,29 @@
+{
+  "framework": "peachpie",
+  "tests": [{
+    "default": {
+      "json_url": "/json.php",
+      "plaintext_url": "/plaintext.php",
+      "db_url": "/db.php",
+      "query_url": "/query.php?queries=",
+      "fortune_url": "/fortune.php",
+      "update_url": "/updateraw.php?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "MySQL",
+      "framework": "None",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "Raw",
+      "platform": ".NET",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "peachpie",
+      "notes": "",
+      "versus": "php",
+      "tags": []
+    }
+  }]
+}

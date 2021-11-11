@@ -1,9 +1,0 @@
-resolver: lts-6.5
-packages:
-- '.'
-
-extra-deps:
-- hasql-pool-0.4.1
-
-flags: {}
-extra-package-dbs: []

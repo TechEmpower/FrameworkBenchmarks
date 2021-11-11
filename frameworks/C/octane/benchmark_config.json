@@ -2,11 +2,10 @@
   "framework": "octane",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "port": 8000,
-      "approach": "Realistic",
+      "approach": "Stripped",
       "classification": "Platform",
       "database": "None",
       "framework": "None",
@@ -18,7 +17,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "notes": "",
-      "versus": "octane"
+      "versus": "octane",
+      "tags": ["broken"]
     }
   }]
 }

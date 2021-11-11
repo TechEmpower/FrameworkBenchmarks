@@ -1,0 +1,24 @@
+name: onyx
+version: 0.2.0
+
+authors:
+  - Vlad Faust
+  - Carlos Donderis
+
+crystal: 0.27.2
+
+license: MIT
+
+dependencies:
+  onyx:
+    github: onyxframework/onyx
+    version: ~> 0.3.0
+  onyx-http:
+    github: onyxframework/http
+    version: ~> 0.7.0
+  onyx-sql:
+    github: onyxframework/sql
+    version: ~> 0.7.0
+  pg:
+    github: will/crystal-pg
+    version: ~> 0.15.0

@@ -1,0 +1,15 @@
+[framework]
+name = "http.jl"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "None"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "None"
+platform = "None"
+webserver = "HTTP.jl"
+versus = ""

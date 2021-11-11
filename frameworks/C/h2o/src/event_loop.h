@@ -23,8 +23,13 @@
 
 #include <h2o.h>
 #include <stdbool.h>
+#include <stddef.h>
 
-#include "utility.h"
+#include "global_data.h"
+
+typedef enum {
+	SHUTDOWN
+} message_type_t;
 
 typedef struct thread_context_t thread_context_t;
 
@@ -35,6 +40,11 @@ typedef struct {
 	h2o_accept_ctx_t h2o_accept_ctx;
 	h2o_context_t h2o_ctx;
 } event_loop_t;
+
+typedef struct {
+	message_type_t type;
+	h2o_multithread_message_t super;
+} message_t;
 
 void event_loop(thread_context_t *ctx);
 void free_event_loop(event_loop_t *event_loop, h2o_multithread_receiver_t *h2o_receiver);

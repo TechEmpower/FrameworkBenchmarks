@@ -1,23 +1,26 @@
 {
   "framework": "jester",
-  "tests": [{
-    "default": {
-      "setup_file": "setup",
-      "json_url": "/json",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "MySQL",
-      "framework": "jester",
-      "language": "Nim",
-      "orm": "Raw",
-      "platform": "None",
-      "webserver": "nginx",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "jester",
-      "notes": "",
-      "versus": ""
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "jester",
+        "language": "Nim",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Jester",
+        "notes": "",
+        "versus": "httpbeast"
+      }
     }
-  }]
+  ]
 }

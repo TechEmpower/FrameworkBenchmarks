@@ -22,35 +22,17 @@
 #define DATABASE_H_
 
 #include <h2o.h>
-#include <inttypes.h>
 #include <stdint.h>
 #include <postgresql/libpq-fe.h>
 
+#include "global_data.h"
 #include "list.h"
-#include "utility.h"
 
 #define DB_ERROR "database error\n"
 #define DB_REQ_ERROR "too many concurrent database requests\n"
 #define DB_TIMEOUT_ERROR "database timeout\n"
-#define FORTUNE_TABLE_NAME "Fortune"
-#define ID_FIELD_NAME "id"
 #define IS_PREPARED 1
 #define IS_SINGLE_ROW 2
-#define MAX_ID 10000
-#define MESSAGE_FIELD_NAME "message"
-#define WORLD_TABLE_NAME "World"
-
-#define UPDATE_QUERY_BEGIN \
-	"UPDATE " WORLD_TABLE_NAME " SET randomNumber = v.randomNumber " \
-	"FROM (VALUES(%" PRIu32 ", %" PRIu32 ")"
-
-#define UPDATE_QUERY_ELEM ", (%" PRIu32 ", %" PRIu32 ")"
-#define UPDATE_QUERY_END ") AS v (id, randomNumber) WHERE " WORLD_TABLE_NAME ".id = v.id;"
-
-#define MAX_UPDATE_QUERY_LEN(n) \
-	(sizeof(UPDATE_QUERY_BEGIN) + sizeof(UPDATE_QUERY_END) - sizeof(UPDATE_QUERY_ELEM) + \
-	 (n) * (sizeof(UPDATE_QUERY_ELEM) - 1 + \
-	        2 * (sizeof(MKSTR(MAX_ID)) - 1) - 2 * (sizeof(PRIu32) - 1) - 2))
 
 typedef enum {
 	SUCCESS,
@@ -90,9 +72,10 @@ typedef struct {
 	h2o_timeout_t h2o_timeout;
 } db_state_t;
 
-void connect_to_database(thread_context_t *ctx);
+void add_prepared_statement(const char *name, const char *query, list_t **prepared_statements);
 int execute_query(thread_context_t *ctx, db_query_param_t *param);
 void free_database_state(h2o_loop_t *loop, db_state_t *db_state);
 void initialize_database_state(h2o_loop_t *loop, db_state_t *db_state);
+void remove_prepared_statements(list_t *prepared_statements);
 
 #endif // DATABASE_H_

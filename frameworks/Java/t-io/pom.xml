@@ -1,0 +1,106 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>tio-http-server-benchmark</artifactId>
+	<name>${project.artifactId}</name>
+
+	<parent>
+		<groupId>org.t-io</groupId>
+		<artifactId>tio-http-parent</artifactId>
+		<version>3.5.5.v20191010-RELEASE</version>
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+		<main.class>org.tio.http.server.benchmark.TioBenchmarkStarter</main.class>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.t-io</groupId>
+			<artifactId>tio-http-server</artifactId>
+		</dependency>
+		
+		<!-- slf4j-logback绑定 -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun.mail</groupId>
+					<artifactId>javax.mail</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+ 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<configuration>
+					<debug>false</debug>
+				</configuration>
+            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+						<addMavenDescriptor>false</addMavenDescriptor><!-- 生成的jar中，不要包含pom.xml和pom.properties这两个文件 -->
+					</archive>
+
+					<finalName>${project.artifactId}</finalName>
+
+					<excludes>
+						<exclude>config/**/*</exclude>
+						<exclude>*.properties</exclude>
+						<exclude>*.xml</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<!-- The configuration of maven-assembly-plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>make-assembly</id> <!--名字任意 -->
+						<phase>package</phase>  <!-- 绑定到package生命周期阶段上 -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<appendAssemblyId>false</appendAssemblyId>
+							<descriptors>
+								<descriptor>script/pkg.xml</descriptor>
+							</descriptors>
+							<outputDirectory>${project.build.directory}/</outputDirectory>
+							<finalName>${project.artifactId}</finalName>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+

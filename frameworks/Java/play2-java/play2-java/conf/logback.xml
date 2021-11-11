@@ -1,11 +1,17 @@
 <configuration>
     
-  <conversionRule conversionWord="coloredLevel" converterClass="play.api.Logger$ColoredLevel" />
+  <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel" />
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%coloredLevel - %logger - %message%n%xException</pattern>
+      <pattern>%coloredLevel %logger{15} - %message%n%xException{10}</pattern>
     </encoder>
+  </appender>
+
+  <appender name="ASYNCSTDOUT" class="ch.qos.logback.classic.AsyncAppender">
+    <queueSize>500</queueSize>
+    <discardingThreshold>0</discardingThreshold>
+    <appender-ref ref="STDOUT" />
   </appender>
 
   <!--
@@ -14,9 +20,10 @@
   -->
   <logger name="play" level="INFO" />
   <logger name="application" level="INFO" />
+  <logger name="startup" level="INFO" />
 
   <root level="ERROR">
-    <appender-ref ref="STDOUT" />
+    <appender-ref ref="ASYNCSTDOUT" />
   </root>
 
 </configuration>

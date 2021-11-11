@@ -2,9 +2,8 @@
   "framework": "servlet",
   "tests": [{
     "default": {
-      "setup_file": "setup",
-      "json_url": "/servlet/json",
-      "plaintext_url": "/servlet/plaintext",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -21,12 +20,30 @@
       "notes": "",
       "versus": "servlet"
     },
-    "raw": {
-      "setup_file": "setup_mysql",
-      "db_url": "/servlet/db",
-      "query_url": "/servlet/db?queries=",
-      "fortune_url": "/servlet/fortunes",
-      "update_url": "/servlet/update?queries=",
+    "lib-native": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "None",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Servlet",
+      "webserver": "Resin",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "servlet",
+      "notes": "Using compiled native Resin library",
+      "versus": "servlet"
+    },
+    "mysql": {
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -42,12 +59,12 @@
       "display_name": "servlet",
       "notes": ""
     },
-    "postgres-raw": {
-      "setup_file": "setup_postgresql",
-      "db_url": "/servlet/postgres",
-      "query_url": "/servlet/postgres?queries=",
-      "fortune_url": "/servlet/postgres-fortunes",
-      "update_url": "/servlet/postgres-update?queries=",
+    "postgresql": {
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "cached_query_url": "/cached-worlds?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",

@@ -5,16 +5,29 @@ require_relative 'core'
 
 Vagrant.configure("2") do |config|
 
+  ENV['LC_ALL']="en_US.UTF-8"
+
   config.vm.provision :file do |file|
       file.source = "custom_motd.sh"
       file.destination = "~/.custom_motd.sh"
   end
 
   config.vm.network "private_network", ip: "172.16.0.16"
-  config.vm.network :forwarded_port, guest: 8080, host: 28080
+
+  TCP_PORTS = [2001, 3000, 8000, 8080, 8081, 8082, 8085, 9000]
+
+  TCP_PORTS.each do |port|
+      config.vm.network :forwarded_port, guest: port, host: 20000 + port
+  end
 
   provision_bootstrap(config)
   provider_virtualbox(config)
   provider_libvirt(config)
+
+  config.ssh.insert_key = false
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+  end
 
 end

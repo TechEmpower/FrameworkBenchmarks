@@ -2,7 +2,6 @@
   "framework": "h2o",
   "tests": [{
     "default": {
-      "setup_file": "setup",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
@@ -19,7 +18,7 @@
       "flavor": "None",
       "orm": "Raw",
       "platform": "None",
-      "webserver": "H2O",
+      "webserver": "h2o",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "H2O",

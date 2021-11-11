@@ -2,37 +2,25 @@
   "framework": "vapor",
   "tests": [{
     "default": {
-      "setup_file": "setup-mysql",
-      "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/queries?queries=",
-      "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
+      "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "MySQL",
       "framework": "Vapor",
       "language": "Swift",
       "flavor": "None",
-      "orm": "Full",
       "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Vapor",
       "notes": "",
-      "versus": ""
+      "versus": "None"
     },
-    "postgresql": {
-      "setup_file": "setup-postgresql",
-      "json_url": "/json",
+    "fluent": {
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
-      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -47,31 +35,45 @@
       "database_os": "Linux",
       "display_name": "Vapor",
       "notes": "",
-      "versus": ""
+      "versus": "None"
     },
-    "mongodb": {
-      "setup_file": "setup-mongodb",
-      "json_url": "/json",
+    "sql-kit": {
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
-      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "MongoDB",
+      "database": "Postgres",
       "framework": "Vapor",
       "language": "Swift",
       "flavor": "None",
-      "orm": "Full",
+      "orm": "Micro",
       "platform": "None",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Vapor",
       "notes": "",
-      "versus": ""
+      "versus": "None"
+    },
+    "postgres": {
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "Vapor",
+      "language": "Swift",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Vapor",
+      "notes": "",
+      "versus": "None"
     }
   }]
 }

@@ -3,49 +3,12 @@ Test type 2: Single database query
 TechEmpower Web Framework Benchmarks
 -->
 <!--#declaration
-#include "world.h"
+#include "worldNoSql.h"
 
-static char buffer[128];
-static char* ptr = buffer+6;
-static UREDISClient_Base* rc;
-
-static void usp_fork_rdb()
-{
-   U_TRACE(5, "::usp_fork_rdb()")
-
-   U_NEW(UREDISClient<UTCPSocket>, rc, UREDISClient<UTCPSocket>);
-
-   if (rc->connect() == false)
-      {
-      U_WARNING("usp_fork_rdb(): %V", rc->UClient_Base::getResponse().rep);
-
-      return;
-      }
-
-   U_MEMCPY(buffer, "world:", U_CONSTANT_SIZE("world:"));
-}
-
-#ifdef DEBUG
-static void usp_end_rdb()
-{
-   U_TRACE(5, "::usp_end_rdb()")
-
-   delete rc;
-}
-#endif
+static void usp_fork_rdb() { WorldNoSql::handlerForkREDIS(); }
 -->
 <!--#header
-Content-Type: application/json
 -->
 <!--#code
-uint32_t id;
-
-(void) rc->get(buffer, 6+u_num2str32(id = u_get_num_random(10000-1), ptr)-ptr);
-
-#ifdef AS_cpoll_cppsp_DO
-USP_PRINTF_ADD("{\"id\":%u,\"randomNumber\":%v}", id, rc->vitem[0].rep);
-#else
-World world(id, rc->vitem[0].strtoul());
-USP_OBJ_JSON_stringify(world);
-#endif
+WorldNoSql::doOneQuery(WorldNoSql::handlerQueryREDIS);
 -->

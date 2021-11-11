@@ -2,7 +2,6 @@
   "framework": "web-simple",
   "tests": [{
     "default": {
-      "setup_file": "setup-mysql",
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/query?queries=",
@@ -19,7 +18,8 @@
       "database_os": "Linux",
       "display_name": "web-simple",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     }
   }]
 }

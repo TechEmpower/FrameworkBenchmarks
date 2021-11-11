@@ -1,0 +1,4 @@
+gunicorn==20.0.4
+httptools==0.1.1
+uvicorn==0.11.3
+websockets==8.1

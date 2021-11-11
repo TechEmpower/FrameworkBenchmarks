@@ -4,41 +4,31 @@ This is the Vapor portion of a [benchmarking tests suite](../../) comparing a va
 
 ### Targets
 
-Three executable targets. Each listens on port 8080. All handle same URLs.  
-`vapor-tfb-mysql` is for MySQL  
-`vapor-tfb-postgresql` is for PostgreSQL  
-`vapor-tfb-mongodb` is for MongoDB
-
-### Dependencies
-
-Linked MySQL and PostgreSQL client libraries are required to build the app, please consult Vapor's documentation [for MySQL](https://github.com/vapor/mysql), [for PostgreSQL](https://github.com/vapor/postgresql).
+One executable target. Listens on port 8080.
 
 ### Database
 
-MySQL  
-PostgreSQL  
-MongoDB
+PostgreSQL
 
 ## Versions
-[Swift 3.0.2](http://swift.org/)
-[Vapor 1.5](https://vapor.codes/)
 
-## Test URLs
+[Swift 5.1](https://swift.org/)
+[Vapor 4](https://vapor.codes/)
 
-### JSON serialization test
+## Test URLs: `vapor`
+
+### Plaintext test
+
+http://localhost:8080/plaintext
+
+#### JSON serialization test
+
 http://localhost:8080/json
 
 ### Single database query test
+
 http://localhost:8080/db
 
 ### Multiple database queries test
-http://localhost:8080/queries?queries=[1...500]
 
-### Fortunes test
-http://localhost:8080/fortunes
-
-### Database updates test
-http://localhost:8080/updates?queries=[1...500]
-
-### Plaintext test
-http://localhost:8080/plaintext
+http://localhost:8080/queries/[1...500]

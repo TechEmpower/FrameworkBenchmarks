@@ -1,18 +1,31 @@
 use Mix.Config
 
-config :hello, Hello.Endpoint,
+config :hello, HelloWeb.Endpoint,
   url: [host: "0.0.0.0"],
-  http: [port: 8080, protocol_options: [max_keepalive: 5_000_000]],
+  http: [port: 8080, protocol_options: [max_keepalive: :infinity], backlog: 8096],
   cache_static_lookup: false,
+  check_origin: false,
+  debug_errors: false,
+  code_reloader: false,
   server: true
 
 config :hello, Hello.Repo,
-  adapter: Ecto.Adapters.Postgres,
   username: "benchmarkdbuser",
   password: "benchmarkdbpass",
   database: "hello_world",
-  hostname: "127.0.0.1",
-  pool_size: 20
+  hostname: "tfb-database",
+  pool_size: 40,
+  queue_target: 5000,
+  log: false
+
+config :phoenix, :logger, false
+
+config :logger,
+  compile_time_purge_matching: [
+    [level_lower_than: :error]
+  ],
+  level: :error,
+  backends: []
 
 # ## SSL Support
 #
@@ -27,5 +40,3 @@ config :hello, Hello.Repo,
 #
 # Where those two env variables point to a file on
 # disk for the key and cert.
-
-config :logger, level: :error

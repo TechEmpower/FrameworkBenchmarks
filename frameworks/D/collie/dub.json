@@ -5,6 +5,6 @@
 	"authors": ["dsby"],
 	"targetType": "executable",
 	"dependencies": {
-            "collie" : "~>0.9.6"
+            "collie" : "~>0.10.16"
 	}
 }

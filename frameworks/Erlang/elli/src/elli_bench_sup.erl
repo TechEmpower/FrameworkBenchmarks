@@ -30,7 +30,7 @@ init([]) ->
     crypto:start(),
     application:start(emysql),
     emysql:add_pool(test_pool, 256,
-       "benchmarkdbuser", "benchmarkdbpass", "TFB-database", 3306,
+       "benchmarkdbuser", "benchmarkdbpass", "tfb-database", 3306,
        "hello_world", utf8),
     emysql:prepare(db_stmt, <<"SELECT * FROM World where id = ?">>),
     ElliOpts = [{callback, elli_bench_cb}, {port, 8080}],

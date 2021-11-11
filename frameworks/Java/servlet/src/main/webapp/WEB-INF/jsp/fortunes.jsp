@@ -1,10 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="hello.*,
-                 java.util.*" %><%@ page session="false" %><%
-
-List<Fortune> fortunes = (List)request.getAttribute("fortunes");
-
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page session="false"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,15 +7,10 @@ List<Fortune> fortunes = (List)request.getAttribute("fortunes");
 </head>
 <body>
 <table>
-<tr>
-<th>id</th>
-<th>message</th>
-</tr>
-<c:forEach var="o" items="${fortunes}">
-<tr>
-<td><c:out value="${o.getId()}" /></td>
-<td><c:out value="${o.getMessage()}" /></td>
-</tr>
+<tr><th>id</th><th>message</th></tr>
+<c:forEach var="fortune" items="${fortunes}">
+<tr><td>${fortune.getId()}</td><td><c:out value="${fortune.getMessage()}" /></td></tr>
 </c:forEach>
-</table></body>
+</table>
+</body>
 </html>

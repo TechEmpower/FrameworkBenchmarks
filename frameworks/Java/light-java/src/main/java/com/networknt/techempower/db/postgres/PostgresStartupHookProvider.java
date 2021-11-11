@@ -25,4 +25,8 @@ public class PostgresStartupHookProvider implements StartupHookProvider {
         ds.setPassword(config.getPassword());
         ds.setMaximumPoolSize(config.getMaximumPoolSize());
     }
+
+    public static PostgresStartupHookProvider create() {
+        return new PostgresStartupHookProvider();
+    }
 }

@@ -1,0 +1,8 @@
+<teams>
+
+	<team size="512" source="net.officefloor.frame.impl.spi.team.ExecutorCachedTeamSource">	
+		<auto-wire type="net.officefloor.benchmark.WorldRepository" />
+		<auto-wire type="net.officefloor.benchmark.FortuneRepository" />
+	</team>
+
+</teams>

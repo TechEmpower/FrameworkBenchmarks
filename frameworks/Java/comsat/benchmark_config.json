@@ -1,0 +1,83 @@
+{
+  "framework": "comsat",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "None",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Servlet",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "comsat-servlet-jetty",
+        "notes": "Comsat servlet on embedded Jetty",
+        "versus": ""
+      },
+      "servlet-undertow": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "None",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Servlet",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Comsat",
+        "notes": "Comsat servlet on embedded Undertow",
+        "versus": "comsat"
+      },
+      "webactors-netty": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "None",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Comsat",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Comsat",
+        "notes": "Comsat Web Actors run as Netty handler",
+        "versus": ""
+      },
+      "webactors-undertow": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "None",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Comsat",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Comsat",
+        "notes": "Comsat Web Actors run as Undertow handler",
+        "versus": "comsat-webactors-netty"
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "framework": "rocket",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?q=",
+        "update_url": "/updates?q=",
+        "port": 8000,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "Rocket",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "Rust",
+        "webserver": "Hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Rocket",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

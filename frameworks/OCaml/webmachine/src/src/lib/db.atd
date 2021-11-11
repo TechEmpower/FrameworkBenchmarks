@@ -1,0 +1,6 @@
+type queries = query list
+    
+type query = {
+    id : float;
+    randomNumber : float;
+}

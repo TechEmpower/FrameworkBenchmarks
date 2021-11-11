@@ -1,0 +1,28 @@
+{
+  "framework": "webman",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/queries/",
+      "update_url": "/updates/",
+      "fortune_url": "/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "webman",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "Raw",
+      "platform": "workerman",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "webman",
+      "notes": "",
+      "versus": "workerman"
+    }
+  }]
+}

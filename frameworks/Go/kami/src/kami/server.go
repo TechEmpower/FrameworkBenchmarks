@@ -33,7 +33,7 @@ type Fortune struct {
 
 // Databases
 const (
-	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(localhost:3306)/hello_world?interpolateParams=true"
+	connectionString   = "benchmarkdbuser:benchmarkdbpass@tcp(tfb-database:3306)/hello_world?interpolateParams=true"
 	worldSelect        = "SELECT id, randomNumber FROM World WHERE id = ?"
 	worldUpdate        = "UPDATE World SET randomNumber = ? WHERE id = ?"
 	fortuneSelect      = "SELECT id, message FROM Fortune;"
@@ -141,7 +141,7 @@ func fortuneHandler(ctx context.Context, w http.ResponseWriter, r *http.Request)
 	fortunes = append(fortunes, &Fortune{Message: "Additional fortune added at request time."})
 
 	sort.Sort(ByMessage{fortunes})
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", "text/html;charset=utf-8")
 	if err := tmpl.Execute(w, fortunes); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

@@ -1,0 +1,24 @@
+name:                tfb-hasql
+version:             0.1.0.0
+homepage:            https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Haskell/warp/shared/tfb-hasql
+license:             BSD3
+author:              Naushadh
+maintainer:          naushadh@protonmail.com
+copyright:           2019 Naushadh
+category:            Web
+build-type:          Simple
+cabal-version:       >=1.10
+extra-source-files:  README.md
+
+library
+  hs-source-dirs:      .
+  default-language:    Haskell2010
+  exposed-modules:     TFB.Db
+  build-depends:
+      base >= 4.7 && < 5
+    , tfb-types
+    , bytestring
+    , text
+    , hasql >= 0.19
+    , hasql-pool >= 0.4
+    , contravariant
