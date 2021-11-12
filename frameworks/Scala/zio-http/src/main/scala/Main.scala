@@ -14,15 +14,12 @@ object Main extends App {
   val message: String                         = "Hello, World!"
   implicit val codec: JsonValueCodec[Message] = JsonCodecMaker.make
 
-  val app: Http[Any, HttpError, Request, Response] = Http.collect[Request] {
-    case Method.GET -> Root / "plaintext" =>
-      Response.http(
-        content = HttpContent.Complete(message),
-        headers = Header.contentTypeTextPlain :: headers(),
-      )
-    case Method.GET -> Root / "json"      =>
-      Response.http(
-        content = HttpContent.Complete(writeToString(Message(message))),
+  val app = HttpApp.collect{
+    case Method.GET -> !! / "plaintext" =>
+      Response(data= HttpData.fromText(message), headers = Header.contentTypeJson :: headers())
+    case Method.GET -> !! / "json"      =>
+      Response(
+        data = HttpData.fromText(writeToString(Message(message))),
         headers = Header.contentTypeJson :: headers(),
       )
   }
@@ -31,7 +28,7 @@ object Main extends App {
 
   val formatter: DateTimeFormatter                = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC)
   val constantHeaders: List[Header]               = Header("server", "zio-http") :: Nil
-  @volatile var lastHeaders: (Long, List[Header]) = (0, Nil)
+  var lastHeaders: (Long, List[Header]) = (0, Nil)
 
   def headers(): List[Header] = {
     val t = System.currentTimeMillis()
