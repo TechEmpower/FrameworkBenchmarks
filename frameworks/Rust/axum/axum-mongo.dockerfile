@@ -3,7 +3,7 @@ FROM rust:1.55-slim-buster
 ENV AXUM_TECHEMPOWER_MONGODB_URL=mongodb://tfb-database:27017
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq-dev pkg-config libssl-dev \
+    pkg-config libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /axum

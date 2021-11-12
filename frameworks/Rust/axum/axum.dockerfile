@@ -1,7 +1,7 @@
 FROM rust:1.55-slim-buster
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq-dev pkg-config libssl-dev \
+    pkg-config libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /axum

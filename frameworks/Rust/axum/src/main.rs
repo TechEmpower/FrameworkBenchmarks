@@ -22,17 +22,13 @@ async fn main() {
 
     let addr = SocketAddr::from((Ipv4Addr::UNSPECIFIED, 8000));
 
-    let app = router().await;
+    let app =  Router::new()
+        .route("/plaintext", get(plaintext))
+        .route("/json", get(json))
+        .layer(SetResponseHeaderLayer::<_, Body>::if_not_present(header::SERVER, HeaderValue::from_static("Axum")));
 
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await
         .unwrap();
-}
-
-async fn router() -> Router {
-    Router::new()
-        .route("/plaintext", get(plaintext))
-        .route("/json", get(json))
-        .layer(SetResponseHeaderLayer::<_, Body>::if_not_present(header::SERVER, HeaderValue::from_static("Axum")))
 }
