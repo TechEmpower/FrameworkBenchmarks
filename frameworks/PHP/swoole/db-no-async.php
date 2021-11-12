@@ -101,8 +101,6 @@ function updates(int $queries): string
         $query_count = $queries > 500 ? 500 : $queries;
     }
 
-    $update    = '';
-
     while ($query_count--) {
         $id = mt_rand(1, 10000);
         Db::$random->execute([$id]);
