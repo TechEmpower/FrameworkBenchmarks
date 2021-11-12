@@ -7,6 +7,12 @@ pub struct Fortune {
 }
 
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
+pub struct FortuneInfo {
+    pub id: i32,
+    pub message: String
+}
+
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct World {
     pub id: f32,
     #[serde(rename = "randomNumber")]

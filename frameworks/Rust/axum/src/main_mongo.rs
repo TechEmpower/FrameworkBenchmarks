@@ -33,6 +33,7 @@ use models_mongo::{World, Fortune};
 use common_handlers::{json, plaintext};
 use utils::{Params, parse_params, random_number, Utf8Html};
 use crate::database_mongo::DatabaseConnection;
+use crate::models_mongo::FortuneInfo;
 
 async fn db(DatabaseConnection(mut db): DatabaseConnection) -> impl IntoResponse {
     let mut rng = SmallRng::from_entropy();
@@ -88,9 +89,11 @@ async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoRespon
 
     fortunes.sort_by(|a, b| a.message.cmp(&b.message));
 
+    let fortune_infos: Vec<FortuneInfo> = fortunes.iter().map(|f| FortuneInfo { id: f.id as i32, message: f.message.clone() }).collect();
+
     Utf8Html(
         FortunesTemplate {
-            fortunes: &fortunes,
+            fortunes: &fortune_infos,
         }
         .call()
         .expect("error rendering template"),
@@ -129,5 +132,5 @@ async fn main() {
 #[derive(Template)]
 #[template(path = "fortunes.html.hbs")]
 pub struct FortunesTemplate<'a> {
-    pub fortunes: &'a Vec<Fortune>,
+    pub fortunes: &'a Vec<FortuneInfo>,
 }
