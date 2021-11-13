@@ -1,9 +1,10 @@
 import zhttp.http._
-import zhttp.service.Server
+import zhttp.service.{EventLoopGroup, Server}
 import zio.{App, ExitCode, URIO}
 import com.github.plokhotnyuk.jsoniter_scala.macros._
 import com.github.plokhotnyuk.jsoniter_scala.core._
 import zhttp.http.Response
+import zhttp.service.server.ServerChannelFactory
 
 import java.time.format.DateTimeFormatter
 import java.time.{Instant, ZoneOffset}
@@ -17,17 +18,16 @@ object Main extends App {
 
   val app = HttpApp.collect{
     case Method.GET -> !! / "plaintext" =>
-      Response(data= HttpData.fromText(message), headers = Header.contentLength(messageLength):: Header.contentTypeTextPlain :: headers())
+      Response(data= HttpData.fromText(message), headers = Header.contentTypeTextPlain :: headers())
     case Method.GET -> !! / "json"      =>
-      val msg = writeToString(Message(message))
-      val msgLength = msg.size
       Response(
-        data = HttpData.fromText(msg),
-        headers = Header.contentLength(msgLength)::Header.contentTypeJson :: headers(),
+        data = HttpData.fromText(writeToString(Message(message))),
+        headers = Header.contentTypeJson :: headers(),
       )
   }
+  val server = Server.app(app.silent) ++ Server.port(8080) ++ Server.keepAlive ++ Server.disableLeakDetection
 
-  override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = Server.start(8080, app).exitCode
+  override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = server.make.useForever.provideCustomLayer(ServerChannelFactory.auto ++ EventLoopGroup.auto()).exitCode
 
   val formatter: DateTimeFormatter                = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC)
   val constantHeaders: List[Header]               = Header("server", "zio-http") :: Nil
