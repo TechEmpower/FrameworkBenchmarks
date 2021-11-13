@@ -15,6 +15,7 @@
     <EventSourceSupport>false</EventSourceSupport>
     <DebuggerSupport>false</DebuggerSupport>
     <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   
   <PropertyGroup>

@@ -5,12 +5,11 @@ using System.IO.Pipelines;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 
-namespace PlatformBenchmarks
+namespace PlatformBenchmarks;
+
+public interface IHttpConnection : IHttpHeadersHandler, IHttpRequestLineHandler
 {
-    public interface IHttpConnection : IHttpHeadersHandler, IHttpRequestLineHandler
-    {
-        PipeReader Reader { get; set; }
-        PipeWriter Writer { get; set; }
-        Task ExecuteAsync();
-    }
+    PipeReader Reader { get; set; }
+    PipeWriter Writer { get; set; }
+    Task ExecuteAsync();
 }
