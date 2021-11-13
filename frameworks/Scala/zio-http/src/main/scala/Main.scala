@@ -12,15 +12,18 @@ case class Message(message: String)
 
 object Main extends App {
   val message: String                         = "Hello, World!"
+  val messageLength: Long = message.size
   implicit val codec: JsonValueCodec[Message] = JsonCodecMaker.make
 
   val app = HttpApp.collect{
     case Method.GET -> !! / "plaintext" =>
-      Response(data= HttpData.fromText(message), headers = Header.contentTypeJson :: headers())
+      Response(data= HttpData.fromText(message), headers = Header.contentLength(messageLength):: Header.contentTypeTextPlain :: headers())
     case Method.GET -> !! / "json"      =>
+      val msg = writeToString(Message(message))
+      val msgLength = msg.size
       Response(
-        data = HttpData.fromText(writeToString(Message(message))),
-        headers = Header.contentTypeJson :: headers(),
+        data = HttpData.fromText(msg),
+        headers = Header.contentLength(msgLength)::Header.contentTypeJson :: headers(),
       )
   }
 
