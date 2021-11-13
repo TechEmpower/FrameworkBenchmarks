@@ -1,0 +1,9 @@
+[*.cs]
+indent_style = space
+indent_size = 4
+
+
+csharp_style_namespace_declarations = file_scoped
+
+[*.json]
+indent_size = 2
