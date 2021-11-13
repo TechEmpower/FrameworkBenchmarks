@@ -251,7 +251,7 @@ public partial class BenchmarkApplication : IHttpConnection
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static BufferWriter<WriterAdapter> GetWriter(PipeWriter pipeWriter, int sizeHint)
-        => new BufferWriter<WriterAdapter>(new WriterAdapter(pipeWriter), sizeHint);
+        => new(new WriterAdapter(pipeWriter), sizeHint);
 
     private struct WriterAdapter : IBufferWriter<byte>
     {

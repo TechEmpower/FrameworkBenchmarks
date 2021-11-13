@@ -21,7 +21,7 @@ public readonly struct AsciiString : IEquatable<AsciiString>
     public static implicit operator ReadOnlySpan<byte>(AsciiString str) => str._data;
     public static implicit operator byte[](AsciiString str) => str._data;
 
-    public static implicit operator AsciiString(string str) => new AsciiString(str);
+    public static implicit operator AsciiString(string str) => new(str);
 
     public override string ToString() => Encoding.ASCII.GetString(_data);
     public static explicit operator string(AsciiString str) => str.ToString();
@@ -31,7 +31,7 @@ public readonly struct AsciiString : IEquatable<AsciiString>
 
     public static bool operator ==(AsciiString a, AsciiString b) => a.Equals(b);
     public static bool operator !=(AsciiString a, AsciiString b) => !a.Equals(b);
-    public override bool Equals(object other) => (other is AsciiString) && Equals((AsciiString)other);
+    public override bool Equals(object other) => (other is AsciiString @string) && Equals(@string);
 
     public static AsciiString operator +(AsciiString a, AsciiString b)
     {
