@@ -15,15 +15,13 @@ object Main extends App {
   val message: String                         = "Hello, World!"
   val messageLength: Long = message.size
   implicit val codec: JsonValueCodec[Message] = JsonCodecMaker.make
+  val plaintextResp = Response(data= HttpData.fromText(message), headers = Header.contentTypeTextPlain :: headers())
+  val jsonResp = Response(data = HttpData.fromText(writeToString(Message(message))), headers = Header.contentTypeJson :: headers())
 
   val app = HttpApp.collect{
-    case Method.GET -> !! / "plaintext" =>
-      Response(data= HttpData.fromText(message), headers = Header.contentTypeTextPlain :: headers())
-    case Method.GET -> !! / "json"      =>
-      Response(
-        data = HttpData.fromText(writeToString(Message(message))),
-        headers = Header.contentTypeJson :: headers(),
-      )
+    case Method.GET -> !! / "plaintext" => plaintextResp
+    case Method.GET -> !! / "json"      => jsonResp
+
   }
   val server = Server.app(app.silent) ++ Server.port(8080) ++ Server.keepAlive ++ Server.disableLeakDetection
 
