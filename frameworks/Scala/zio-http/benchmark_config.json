@@ -4,7 +4,6 @@
     {
       "default": {
         "plaintext_url": "/plaintext",
-        "json_url": "/json",
         "port": 8080,
         "database": "None",
         "approach": "Realistic",

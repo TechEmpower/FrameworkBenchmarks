@@ -16,9 +16,7 @@ object Main extends App {
   val jsonResp = Response.jsonString(writeToString(Message(message))).addHeader("server", "zio-http")
 
   val app = HttpApp.collect{
-    case Method.GET -> !! / "plaintext" => plaintextResp
-    case Method.GET -> !! / "json"      => jsonResp
-
+    case _ => plaintextResp
   }
   val server = Server.app(app.silent) ++ Server.port(8080) ++ Server.keepAlive ++ Server.disableLeakDetection ++ Server.memoize ++ Server.serverTime
 
