@@ -7,6 +7,7 @@ lazy val zhttp = ProjectRef(uri(s"https://github.com/dream11/zio-http.git#0749df
 lazy val root  = (project in file("."))
   .settings(
     name := "helloExample",
+    fork := true,
     libraryDependencies ++=
       Seq(
         "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core"   % "2.9.1",
