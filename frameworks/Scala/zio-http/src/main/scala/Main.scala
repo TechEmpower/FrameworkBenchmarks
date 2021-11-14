@@ -8,7 +8,6 @@ import io.netty.handler.codec.http.HttpHeaderNames
 import zhttp.http.Response
 import zhttp.service.server.ServerChannelFactory
 
-import scala.util.Try
 
 case class Message(message: String)
 
