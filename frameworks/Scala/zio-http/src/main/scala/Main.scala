@@ -12,7 +12,7 @@ case class Message(message: String)
 object Main extends App {
   val message: String                         = "Hello, World!"
   val messageLength: Long = message.size
-  val buf = Unpooled.wrappedBuffer(message.getBytes(HTTP_CHARSET))
+  val buf = Unpooled.unreleasableBuffer(Unpooled.wrappedBuffer(message.getBytes(HTTP_CHARSET)))
   implicit val codec: JsonValueCodec[Message] = JsonCodecMaker.make
   val plaintextResp = Response(data = HttpData.fromByteBuf(buf)).addHeader("content-type", "text/plain").addHeader("server", "zio-http")
   val jsonResp = Response.jsonString(writeToString(Message(message))).addHeader("server", "zio-http")
