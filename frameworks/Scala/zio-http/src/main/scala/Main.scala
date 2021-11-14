@@ -15,10 +15,15 @@ object Main extends App {
   val plaintextResp = Response.text(message).addHeader("server", "zio-http")
   val jsonResp = Response.jsonString(writeToString(Message(message))).addHeader("server", "zio-http")
 
-  val app = HttpApp.collect{
-    case _ => plaintextResp
-  }
-  val server = Server.app(app.silent) ++ Server.port(8080) ++ Server.keepAlive ++ Server.disableLeakDetection ++ Server.memoize ++ Server.serverTime
+  val app = HttpApp.response(plaintextResp)
+
+  val server = Server.app(app.silent) ++
+    Server.port(8080) ++
+    Server.keepAlive ++
+    Server.disableLeakDetection ++
+    Server.memoize ++
+    Server.serverTime
+
 
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = server.make.useForever.provideCustomLayer(ServerChannelFactory.auto ++ EventLoopGroup.auto()).exitCode
 
