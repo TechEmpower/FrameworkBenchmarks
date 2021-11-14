@@ -3,7 +3,7 @@ name := "zio-http"
 version := "1.0.0"
 scalaVersion := "2.13.6"
 
-lazy val zhttp = ProjectRef(uri(s"https://github.com/dream11/zio-http.git#0749df75164758fc128ba10db6c70efc752bf532"), "zhttp")
+lazy val zhttp = ProjectRef(uri(s"https://github.com/dream11/zio-http.git#46e11be7f8024f4adbe9677289aef0765c3838ec"), "zhttp")
 lazy val root  = (project in file("."))
   .settings(
     name := "helloExample",
