@@ -31,7 +31,7 @@ object Main extends App {
 
 
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = {
-    server.make.useForever.provideCustomLayer(ServerChannelFactory.uring ++ EventLoopGroup.uring(16)).exitCode
+    server.make.useForever.provideCustomLayer(ServerChannelFactory.uring ++ EventLoopGroup.uring(8)).exitCode
   }
 
 }
