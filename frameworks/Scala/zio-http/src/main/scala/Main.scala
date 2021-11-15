@@ -27,7 +27,7 @@ object Main extends App {
     Response(data = HttpData.fromByteBuf(Unpooled.wrappedBuffer(STATIC_PLAINTEXT)))
       .addHeader(Header.contentTypeTextPlain)
       .addHeader(HttpHeaderNames.SERVER, STATIC_SERVER_NAME)
-      .addHeader(HttpHeaderNames.CONTENT_LENGTH, PLAINTEXT_CLHEADER_VALUE),
+      .addHeader(HttpHeaderNames.CONTENT_LENGTH, PLAINTEXT_CLHEADER_VALUE))
   val server = Server.app(app.silent) ++
     Server.port(8080) ++
     Server.keepAlive ++
