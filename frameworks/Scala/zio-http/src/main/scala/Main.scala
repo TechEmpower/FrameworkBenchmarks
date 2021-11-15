@@ -27,7 +27,8 @@ object Main extends App {
     Server.port(8080) ++
     Server.keepAlive ++
     Server.disableLeakDetection ++
-    Server.serverTime
+    Server.serverTime ++
+    Server.memoize
 
 
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = {
