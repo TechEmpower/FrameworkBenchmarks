@@ -18,9 +18,9 @@ lazy val root  = (project in file("."))
     testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
   )
   .dependsOn(zhttp)
-assemblyMergeStrategy in assembly := {
+assembly / assemblyMergeStrategy := {
   case x if x.contains("io.netty.versions.properties") => MergeStrategy.discard
   case x =>
-    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    val oldStrategy = (assembly / assemblyMergeStrategy).value
     oldStrategy(x)
 }
