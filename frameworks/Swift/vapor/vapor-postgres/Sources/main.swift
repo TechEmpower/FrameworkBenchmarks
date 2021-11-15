@@ -30,34 +30,50 @@ extension Request {
     }
 }
 
-app.get("db") { req in
-    req.db(pools).query("SELECT id, randomnumber FROM World WHERE id = $1", [
-        PostgresData(int32: .random(in: 1...10_000))
-    ]).map {
-        $0.first
-    }.unwrap(or: Abort(.notFound)).map {
-        World(
-            id: $0.column("id")?.int32 ?? 0,
-            randomnumber: $0.column("randomnumber")?.int ?? 0
-        )
+app.get("db") { req async throws -> World in
+    let rows = try await req.db(pools).query("SELECT id, randomnumber FROM World WHERE id = $1", [
+        PostgresData(int32: .random(in: 1...10_000))]).get()
+        
+    if (rows.count == 0) {  
+           throw Abort(.notFound)
     }
+
+    let world =  World(
+            id: rows[0].column("id")?.int32 ?? 0,
+            randomnumber: rows[0].column("randomnumber")?.int ?? 0
+        )
+
+    return world
 }
 
-app.get("queries") { req -> EventLoopFuture<[World]> in
+app.get("queries") { req async throws -> [World] in
     let queries = (req.query["queries"] ?? 1).bounded(to: 1...500)
-    let db = req.db(pools)
-    return (0 ..< queries).map { _ -> EventLoopFuture<World> in
-        db.query("SELECT id, randomnumber FROM World WHERE id = $1", [
-            PostgresData(int32: .random(in: 1...10_000))
-        ]).map {
-            $0.first
-        }.unwrap(or: Abort(.notFound)).map {
-            World(
-                id: $0.column("id")?.int32 ?? 0,
-                randomnumber: $0.column("randomnumber")?.int ?? 0
-            )
+
+    var worlds: [World] = []
+
+    for _ in queries {
+        let rows = try await req.db(pools).query("SELECT id, randomnumber FROM World WHERE id = $1", [
+            PostgresData(int32: .random(in: 1...10_000))]).get()
+            
+        if (rows.count == 0) {  
+            throw Abort(.notFound)
         }
-    }.flatten(on: req.eventLoop)
+
+        let world =  World(
+                id: rows[0].column("id")?.int32 ?? 0,
+                randomnumber: rows[0].column("randomnumber")?.int ?? 0
+            )
+
+        worlds.append(world)
+    }
+
+    return worlds
+}
+
+extension Int: Sequence {
+    public func makeIterator() -> CountableRange<Int>.Iterator {
+        return (0..<self).makeIterator()
+    }
 }
 
 try app.run()
