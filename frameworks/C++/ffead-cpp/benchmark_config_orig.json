@@ -2,13 +2,13 @@
 	"framework": "ffead-cpp",
 	"tests": [{
 		"default": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
-			"db_url": "/te-benchmark-um/db",
-			"query_url": "/te-benchmark-um/queries?queries=",
-			"fortune_url": "/te-benchmark-um/fortunes",
-			"update_url": "/te-benchmark-um/updates?queries=",
-			"cached_query_url": "/te-benchmark-um/cached-worlds?count=",
+			"db_url": "/t1/d",
+			"query_url": "/t1/quer?queries=",
+			"fortune_url": "/t1/fortu",
+			"update_url": "/t1/updt?queries=",
+			"cached_query_url": "/t1/cached-wld?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -26,7 +26,7 @@
 			"tags": []
 		},
 		"libreactor": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -45,7 +45,7 @@
 			"tags": []
 		},
 		"crystal-http": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -64,7 +64,7 @@
 			"tags": ["broken"]
 		},
 		"d-hunt": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -83,7 +83,7 @@
 			"tags": ["broken"]
 		},
 		"go-gnet": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -102,7 +102,7 @@
 			"tags": ["broken"]
 		},
 		"rust-actix": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -121,13 +121,13 @@
 			"tags": ["broken"]
 		},
 		"v-picov": {
-			"json_url": "/te-benchmark-um-pq/json",
+			"json_url": "/t3/j",
 			"plaintext_url": "/plaintext",
-			"db_url": "/te-benchmark-um-pq/db",
-			"query_url": "/te-benchmark-um-pq/queries?queries=",
-			"fortune_url": "/te-benchmark-um-pq/fortunes",
-			"update_url": "/te-benchmark-um-pq/updates?queries=",
-			"cached_query_url": "/te-benchmark-um-pq/cached-worlds?count=",
+			"db_url": "/t3/d",
+			"query_url": "/t3/quer?queries=",
+			"fortune_url": "/t3/fortu",
+			"update_url": "/t3/updt?queries=",
+			"cached_query_url": "/t3/cached-wld?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -145,13 +145,13 @@
 			"tags": []
 		},
 		"v-picov-raw-profiled": {
-			"json_url": "/te-benchmark-um-pq/json",
+			"json_url": "/t3/j",
 			"plaintext_url": "/plaintext",
-			"db_url": "/te-benchmark-um-pq/db",
-			"query_url": "/te-benchmark-um-pq/queries?queries=",
-			"fortune_url": "/te-benchmark-um-pq/fortunes",
-			"update_url": "/te-benchmark-um-pq/updates?queries=",
-			"cached_query_url": "/te-benchmark-um-pq/cached-worlds?count=",
+			"db_url": "/t3/d",
+			"query_url": "/t3/quer?queries=",
+			"fortune_url": "/t3/fortu",
+			"update_url": "/t3/updt?queries=",
+			"cached_query_url": "/t3/cached-wld?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -169,13 +169,13 @@
 			"tags": []
 		},
 		"v-picov-raw-clibpqb-profiled": {
-			"json_url": "/te-benchmark-um-pq/json",
+			"json_url": "/t3/j",
 			"plaintext_url": "/plaintext",
-			"db_url": "/te-benchmark-um-pq/db",
-			"query_url": "/te-benchmark-um-pq/queries?queries=",
-			"fortune_url": "/te-benchmark-um-pq/fortunes",
-			"update_url": "/te-benchmark-um-pq/updates?queries=",
-			"cached_query_url": "/te-benchmark-um-pq/cached-worlds?count=",
+			"db_url": "/t3/d",
+			"query_url": "/t3/quer?queries=",
+			"fortune_url": "/t3/fortu",
+			"update_url": "/t3/updt?queries=",
+			"cached_query_url": "/t3/cached-wld?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -193,7 +193,7 @@
 			"tags": []
 		},
 		"java-firenio": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -212,12 +212,12 @@
 			"tags": ["broken"]
 		},
 		"postgresql": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
-			"db_url": "/te-benchmark-um/db",
-			"query_url": "/te-benchmark-um/queries?queries=",
-			"fortune_url": "/te-benchmark-um/fortunes",
-			"update_url": "/te-benchmark-um/updates?queries=",
+			"db_url": "/t1/d",
+			"query_url": "/t1/quer?queries=",
+			"fortune_url": "/t1/fortu",
+			"update_url": "/t1/updt?queries=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -235,13 +235,13 @@
 			"tags": []
 		},
 		"postgresql-raw": {
-			"json_url": "/te-benchmark-um-pq/json",
+			"json_url": "/t3/j",
 			"plaintext_url": "/plaintext",
-			"db_url": "/te-benchmark-um-pq/db",
-			"query_url": "/te-benchmark-um-pq/queries?queries=",
-			"fortune_url": "/te-benchmark-um-pq/fortunes",
-			"update_url": "/te-benchmark-um-pq/updates?queries=",
-			"cached_query_url": "/te-benchmark-um-pq/cached-worlds?count=",
+			"db_url": "/t3/d",
+			"query_url": "/t3/quer?queries=",
+			"fortune_url": "/t3/fortu",
+			"update_url": "/t3/updt?queries=",
+			"cached_query_url": "/t3/cached-wld?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -259,13 +259,13 @@
 			"tags": []
 		},
 		"postgresql-raw-profiled": {
-			"json_url": "/te-benchmark-um-pq/json",
+			"json_url": "/t3/j",
 			"plaintext_url": "/plaintext",
-			"db_url": "/te-benchmark-um-pq/db",
-			"query_url": "/te-benchmark-um-pq/queries?queries=",
-			"fortune_url": "/te-benchmark-um-pq/fortunes",
-			"update_url": "/te-benchmark-um-pq/updates?queries=",
-			"cached_query_url": "/te-benchmark-um-pq/cached-worlds?count=",
+			"db_url": "/t3/d",
+			"query_url": "/t3/quer?queries=",
+			"fortune_url": "/t3/fortu",
+			"update_url": "/t3/updt?queries=",
+			"cached_query_url": "/t3/cached-wld?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -283,13 +283,13 @@
 			"tags": []
 		},
 		"postgresql-raw-clibpqb-profiled": {
-			"json_url": "/te-benchmark-um-pq/json",
+			"json_url": "/t3/j",
 			"plaintext_url": "/plaintext",
-			"db_url": "/te-benchmark-um-pq/db",
-			"query_url": "/te-benchmark-um-pq/queries?queries=",
-			"fortune_url": "/te-benchmark-um-pq/fortunes",
-			"update_url": "/te-benchmark-um-pq/updates?queries=",
-			"cached_query_url": "/te-benchmark-um-pq/cached-worlds?count=",
+			"db_url": "/t3/d",
+			"query_url": "/t3/quer?queries=",
+			"fortune_url": "/t3/fortu",
+			"update_url": "/t3/updt?queries=",
+			"cached_query_url": "/t3/cached-wld?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -307,13 +307,13 @@
 			"tags": []
 		},
 		"postgresql-raw-async": {
-			"json_url": "/te-benchmark-um-pq-async/json",
+			"json_url": "/t4/j",
 			"plaintext_url": "/plaintext",
-			"db_url": "/te-benchmark-um-pq-async/db",
-			"query_url": "/te-benchmark-um-pq-async/queries?queries=",
-			"fortune_url": "/te-benchmark-um-pq-async/fortunes",
-			"update_url": "/te-benchmark-um-pq-async/updates?queries=",
-			"cached_query_url": "/te-benchmark-um-pq-async/cached-worlds?count=",
+			"db_url": "/t4/d",
+			"query_url": "/t4/quer?queries=",
+			"fortune_url": "/t4/fortu",
+			"update_url": "/t4/updt?queries=",
+			"cached_query_url": "/t4/cached-wld?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -331,13 +331,13 @@
 			"tags": []
 		},
 		"postgresql-raw-async-profiled": {
-			"json_url": "/te-benchmark-um-pq-async/json",
+			"json_url": "/t4/j",
 			"plaintext_url": "/plaintext",
-			"db_url": "/te-benchmark-um-pq-async/db",
-			"query_url": "/te-benchmark-um-pq-async/queries?queries=",
-			"fortune_url": "/te-benchmark-um-pq-async/fortunes",
-			"update_url": "/te-benchmark-um-pq-async/updates?queries=",
-			"cached_query_url": "/te-benchmark-um-pq-async/cached-worlds?count=",
+			"db_url": "/t4/d",
+			"query_url": "/t4/quer?queries=",
+			"fortune_url": "/t4/fortu",
+			"update_url": "/t4/updt?queries=",
+			"cached_query_url": "/t4/cached-wld?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -355,13 +355,13 @@
 			"tags": []
 		},
 		"postgresql-raw-async-clibpqb-profiled": {
-			"json_url": "/te-benchmark-um-pq-async/json",
+			"json_url": "/t4/j",
 			"plaintext_url": "/plaintext",
-			"db_url": "/te-benchmark-um-pq-async/db",
-			"query_url": "/te-benchmark-um-pq-async/queries?queries=",
-			"fortune_url": "/te-benchmark-um-pq-async/fortunes",
-			"update_url": "/te-benchmark-um-pq-async/updates?queries=",
-			"cached_query_url": "/te-benchmark-um-pq-async/cached-worlds?count=",
+			"db_url": "/t4/d",
+			"query_url": "/t4/quer?queries=",
+			"fortune_url": "/t4/fortu",
+			"update_url": "/t4/updt?queries=",
+			"cached_query_url": "/t4/cached-wld?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -379,7 +379,7 @@
 			"tags": []
 		},
 		"nginx": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -398,7 +398,7 @@
 			"tags": ["broken"]
 		},
 		"seastar": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -417,7 +417,7 @@
 			"tags": ["broken"]
 		},
 		"apache": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -436,13 +436,13 @@
 			"tags": ["broken"]
 		},
 		"mongo-raw": {
-			"json_url": "/te-benchmark-um-mgr/json",
+			"json_url": "/t2/j",
 			"plaintext_url": "/plaintext",
-			"db_url": "/te-benchmark-um-mgr/db",
-			"query_url": "/te-benchmark-um-mgr/queries?queries=",
-			"fortune_url": "/te-benchmark-um-mgr/fortunes",
-			"update_url": "/te-benchmark-um-mgr/updates?queries=",
-			"cached_query_url": "/te-benchmark-um-mgr/cached-worlds?count=",
+			"db_url": "/t2/d",
+			"query_url": "/t2/quer?queries=",
+			"fortune_url": "/t2/fortu",
+			"update_url": "/t2/updt?queries=",
+			"cached_query_url": "/t2/cached-wld?count=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -460,7 +460,7 @@
 			"tags": ["broken"]
 		},
 		"lithium": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -479,7 +479,7 @@
 			"tags": ["broken"]
 		},
 		"cinatra": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -498,7 +498,7 @@
 			"tags": ["broken"]
 		},
 		"drogon": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -517,7 +517,7 @@
 			"tags": ["broken"]
 		},
 		"h2o": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -536,7 +536,7 @@
 			"tags": ["broken"]
 		},
 		"crystal-h2o": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -555,12 +555,12 @@
 			"tags": ["broken"]
 		},
 		"mysql": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
-			"db_url": "/te-benchmark-um/db",
-			"query_url": "/te-benchmark-um/queries?queries=",
-			"fortune_url": "/te-benchmark-um/fortunes",
-			"update_url": "/te-benchmark-um/updates?queries=",
+			"db_url": "/t1/d",
+			"query_url": "/t1/quer?queries=",
+			"fortune_url": "/t1/fortu",
+			"update_url": "/t1/updt?queries=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "Fullstack",
@@ -578,7 +578,7 @@
 			"tags": ["broken"]
 		},
 		"go-fasthttp": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -597,7 +597,7 @@
 			"tags": ["broken"]
 		},
 		"julia-http": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -616,7 +616,7 @@
 			"tags": ["broken"]
 		},
 		"swift-nio": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -635,7 +635,7 @@
 			"tags": ["broken"]
 		},
 		"rust-hyper": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -654,7 +654,7 @@
 			"tags": ["broken"]
 		},
 		"rust-thruster": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -673,7 +673,7 @@
 			"tags": ["broken"]
 		},
 		"rust-rocket": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -692,7 +692,7 @@
 			"tags": ["broken"]
 		},
 		"v-vweb": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -711,7 +711,7 @@
 			"tags": ["broken"]
 		},
 		"java-rapidoid": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
@@ -730,7 +730,7 @@
 			"tags": ["broken"]
 		},
 		"java-wizzardo-http": {
-			"json_url": "/te-benchmark-um/json",
+			"json_url": "/t1/j",
 			"plaintext_url": "/plaintext",
 			"port": 8080,
 			"approach": "Realistic",
