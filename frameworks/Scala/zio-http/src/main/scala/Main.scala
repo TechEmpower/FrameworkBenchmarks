@@ -13,18 +13,20 @@ case class Message(message: String)
 
 object Main extends App {
   val message: String                         = "Hello, World!"
-  val messageLength: Long = message.size
+
+  import io.netty.util.CharsetUtil
+
+  private val STATIC_PLAINTEXT = message.getBytes(CharsetUtil.UTF_8)
   implicit val codec: JsonValueCodec[Message] = JsonCodecMaker.make
   //val plaintextResp =
   val jsonResp = Response.jsonString(writeToString(Message(message))).addHeader("server", "zio-http")
 
-  val app = HttpApp.collect( _ => Response(data = HttpData.fromByteBuf(Unpooled.wrappedBuffer(message.getBytes(HTTP_CHARSET)))).addHeader(Header.contentTypeTextPlain).addHeader(HttpHeaderNames.SERVER, "zio-http"))
+  val app = HttpApp.collect( _ => Response(data = HttpData.fromByteBuf(Unpooled.wrappedBuffer(STATIC_PLAINTEXT))).addHeader(Header.contentTypeTextPlain).addHeader(HttpHeaderNames.SERVER, "zio-http"))
 
   val server = Server.app(app.silent) ++
     Server.port(8080) ++
     Server.keepAlive ++
     Server.disableLeakDetection ++
-    Server.memoize ++
     Server.serverTime
 
 
