@@ -5,6 +5,7 @@ import com.github.plokhotnyuk.jsoniter_scala.macros._
 import com.github.plokhotnyuk.jsoniter_scala.core._
 import io.netty.buffer.Unpooled
 import io.netty.handler.codec.http.HttpHeaderNames
+import io.netty.util.AsciiString
 import zhttp.http.Response
 import zhttp.service.server.ServerChannelFactory
 
@@ -16,13 +17,17 @@ object Main extends App {
 
   import io.netty.util.CharsetUtil
 
-  private val STATIC_PLAINTEXT = message.getBytes(CharsetUtil.UTF_8)
-  implicit val codec: JsonValueCodec[Message] = JsonCodecMaker.make
-  //val plaintextResp =
-  val jsonResp = Response.jsonString(writeToString(Message(message))).addHeader("server", "zio-http")
+  private val STATIC_PLAINTEXT     = message.getBytes(CharsetUtil.UTF_8)
+  private val STATIC_SERVER_NAME   = AsciiString.cached("zio-http")
+  private val STATIC_PLAINTEXT_LEN = STATIC_PLAINTEXT.length
 
-  val app = HttpApp.collect( _ => Response(data = HttpData.fromByteBuf(Unpooled.wrappedBuffer(STATIC_PLAINTEXT))).addHeader(Header.contentTypeTextPlain).addHeader(HttpHeaderNames.SERVER, "zio-http"))
-
+  private val PLAINTEXT_CLHEADER_VALUE = AsciiString.cached(String.valueOf(STATIC_PLAINTEXT_LEN))
+  // Create HTTP route
+  val app: HttpApp[Any, Nothing]       = HttpApp.collect(_ =>
+    Response(data = HttpData.fromByteBuf(Unpooled.wrappedBuffer(STATIC_PLAINTEXT)))
+      .addHeader(Header.contentTypeTextPlain)
+      .addHeader(HttpHeaderNames.SERVER, STATIC_SERVER_NAME)
+      .addHeader(HttpHeaderNames.CONTENT_LENGTH, PLAINTEXT_CLHEADER_VALUE),
   val server = Server.app(app.silent) ++
     Server.port(8080) ++
     Server.keepAlive ++
