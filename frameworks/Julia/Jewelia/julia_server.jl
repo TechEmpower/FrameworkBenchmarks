@@ -32,7 +32,7 @@ StructTypes.StructType(::Type{jsonObj}) = StructTypes.Struct()
         #body = JSON3.write(jsonString)
     
         json_string = "{\"Message\": \"Hello, World!\"}"
-        body = JSON3.write(JSON3.read(jsonString)
+        body = JSON3.write(JSON3.read(jsonString))
  
         return HTTP.Response(200, headers, body = body)
     end
