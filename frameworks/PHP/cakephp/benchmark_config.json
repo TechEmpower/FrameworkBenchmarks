@@ -14,7 +14,7 @@
             "database": "MySQL",
             "framework": "cakephp",
             "language": "PHP",
-            "flavor": "PHP7",
+            "flavor": "PHP8.1",
             "orm": "Full",
             "platform": "FPM/FastCGI",
             "webserver": "nginx",

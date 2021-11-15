@@ -99,14 +99,16 @@ module HttpHandlers =
             route "/fortunes" fortunes
         ]
 
+
 module Main =
     open Microsoft.AspNetCore.Builder
     open Microsoft.AspNetCore.Hosting
     open Microsoft.Extensions.DependencyInjection
     open Giraffe
     open Giraffe.EndpointRouting
+    open Microsoft.Extensions.Hosting    
 
-    [<EntryPoint>]
+    [<EntryPoint>]    
     let main args =
         let jsonMode =
             match args with
@@ -128,20 +130,25 @@ module Main =
                 NewtonsoftJson.Serializer(NewtonsoftJson.Serializer.DefaultSettings)
                 :> Json.ISerializer
 
-        WebHostBuilder()
-            .UseKestrel()
-            .Configure(
-                fun builder ->
-                    builder
-                        .UseRouting()
-                        .UseGiraffe HttpHandlers.endpoints |> ignore)
-            .ConfigureServices(
-                fun services ->
-                    services
-                        .AddRouting()
-                        .AddGiraffe()
-                        .AddSingleton(jsonSerializer)
-                    |> ignore)
-            .Build()
-            .Run()
+        let configureApp (appBuilder : IApplicationBuilder) =
+            appBuilder
+                .UseRouting()
+                .UseGiraffe HttpHandlers.endpoints
+            |> ignore
+
+        let configureServices (services : IServiceCollection) =
+            services
+                .AddRouting()
+                .AddGiraffe()
+                .AddSingleton(jsonSerializer)
+            |> ignore
+
+        let builder = WebApplication.CreateBuilder(args)
+        configureServices builder.Services
+
+        let app = builder.Build()
+
+        configureApp app
+        app.Run()
+
         0
