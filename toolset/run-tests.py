@@ -181,7 +181,7 @@ def main(argv=None):
     parser.add_argument(
         '--pipeline-concurrency-levels',
         nargs='+',
-        default=[256, 1024, 4096, 16384],
+        default=[256],
         help='List of pipeline concurrencies to benchmark')
     parser.add_argument(
         '--query-levels',
