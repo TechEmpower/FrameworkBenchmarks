@@ -27,9 +27,8 @@ StructTypes.StructType(::Type{jsonObj}) = StructTypes.Struct()
                     "Server" => "Julia-HTTP",
                     "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT" ]
     
-        jsonString = """{"Message": "Hello, World!"}"""
-        hello_world = JSON3.read(jsonString)
-        body = JSON3.write(hello_world)
+        jsonString = {"Message": "Hello, World!"}
+        body = JSON3.write(jsonString)
  
         return HTTP.Response(200, headers, body = body)
     end
