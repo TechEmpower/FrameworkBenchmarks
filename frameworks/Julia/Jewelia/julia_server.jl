@@ -29,7 +29,7 @@ StructTypes.StructType(::Type{jsonObj}) = StructTypes.Struct()
     
         #jsonObj = {"Message": "Hello, world!"}
  
-        return HTTP.Response(200, headers, body = JSON3.write(;message = "Hello, world!"))
+        return HTTP.Response(200, headers, body = JSON3.write(message = "Hello, world!"))
     end
         
     function singleQuery(req::HTTP.Request)
