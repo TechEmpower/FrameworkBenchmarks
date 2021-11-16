@@ -7,11 +7,16 @@ using MySQL
 using JSON3
 using StructTypes
 
-struct jsonObj
-    id::Int
-    randomNumber::Int
+struct jsonMsgObj
+    message
 end
 
+struct jsonObj
+    id
+    randomNumber
+end
+
+StructTypes.StructType(::Type{jsonMsgObj}) = StructTypes.Struct()
 StructTypes.StructType(::Type{jsonObj}) = StructTypes.Struct()
 
     function plaintext(req::HTTP.Request)
@@ -26,8 +31,8 @@ StructTypes.StructType(::Type{jsonObj}) = StructTypes.Struct()
         headers = [ "Content-Type" => "application/json",
                     "Server" => "Julia-HTTP",
                     "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT" ]
- 
-        return HTTP.Response(200, headers, body = JSON3.write(JSON3.read("{\"Message\" : \"Hello, World!\"}")))
+
+        return HTTP.Response(200, headers, body = JSON3.write(jsonMsgObj("Hello, World!")))
     end
         
     function singleQuery(req::HTTP.Request)
@@ -42,10 +47,9 @@ StructTypes.StructType(::Type{jsonObj}) = StructTypes.Struct()
         results = DBInterface.execute(conn, sqlQuery)
         row = first(results)
         dbNumber = row[2]
-        jsonString = "{\"id\":$randNum,\"randomNumber\":$dbNumber}"
         
         DBInterface.close!(conn)
-        return HTTP.Response(200, headers, body = JSON3.write((JSON3.read(jsonString))))
+        return HTTP.Response(200, headers, body = JSON3.write(jsonObj(randNum, dbNumber)))
     end
         
     function multipleQueries(req::HTTP.Request)
@@ -81,7 +85,7 @@ StructTypes.StructType(::Type{jsonObj}) = StructTypes.Struct()
             results = DBInterface.execute(conn, sqlQuery)
             row = first(results)
             dbNumber = row[2]
-            responseArray[i] = JSON3.read("{\"id\":$randNum,\"randomNumber\":$dbNumber}", jsonObj)
+            responseArray[i] = jsonObj(randNum, dbNumber)
         end
         
         DBInterface.close!(conn)
@@ -125,7 +129,7 @@ StructTypes.StructType(::Type{jsonObj}) = StructTypes.Struct()
 
             sqlQuery = "UPDATE World SET randomnumber = $randNum WHERE id = $randId"
             results = DBInterface.execute(conn, sqlQuery)
-            responseArray[i] = JSON3.read("{\"id\":$randId,\"randomNumber\":$randNum}", jsonObj)
+            responseArray[i] = jsonObj(randId, randNum)
         end
         
         DBInterface.close!(conn)
