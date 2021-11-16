@@ -26,10 +26,8 @@ StructTypes.StructType(::Type{jsonObj}) = StructTypes.Struct()
         headers = [ "Content-Type" => "application/json",
                     "Server" => "Julia-HTTP",
                     "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT" ]
-        
-        jsonObj = JSON3.read("{\"Message\" : \"Hello, World!\"}")
  
-        return HTTP.Response(200, headers, body = JSON3.write(jsonObj))
+        return HTTP.Response(200, headers, body = JSON3.write(JSON3.read("{\"Message\" : \"Hello, World!\"}")))
     end
         
     function singleQuery(req::HTTP.Request)
