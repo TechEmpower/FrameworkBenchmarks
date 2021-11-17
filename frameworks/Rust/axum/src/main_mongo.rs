@@ -26,7 +26,7 @@ use hyper::Body;
 use rand::rngs::SmallRng;
 use rand::{SeedableRng};
 use yarte::Template;
-use mongodb::{bson::doc, Database};
+use mongodb::{bson::doc, Client, Database};
 use mongodb::options::ClientOptions;
 
 use models_mongo::{World, Fortune};
@@ -111,8 +111,9 @@ async fn main() {
 
     // setup connection pool
     let mut client_options = ClientOptions::parse(database_url).await.unwrap();
+    client_options.max_pool_size = Some(100);
 
-    client_options.max_pool_size = Some(500);
+    let client = Client::with_options(client_options).unwrap();
 
     let app = Router::new()
         .route("/plaintext", get(plaintext))
@@ -120,7 +121,7 @@ async fn main() {
         .route("/fortunes", get(fortunes))
         .route("/db", get(db))
         .route("/queries", get(queries))
-        .layer(AddExtensionLayer::new(client_options))
+        .layer(AddExtensionLayer::new(client))
         .layer(SetResponseHeaderLayer::<_, Body>::if_not_present(header::SERVER, HeaderValue::from_static("Axum")));
 
     axum::Server::bind(&addr)

@@ -116,7 +116,7 @@ checksum = "cdb031dd78e28731d87d56cc8ffef4a8f36ca26c38fe2de700543e627f8a464a"
 
 [[package]]
 name = "axum"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -128,6 +128,7 @@ dependencies = [
  "futures-util",
  "hyper",
  "mongodb",
+ "num_cpus",
  "rand",
  "serde",
  "serde_derive",
