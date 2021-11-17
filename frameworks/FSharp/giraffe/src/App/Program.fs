@@ -117,7 +117,7 @@ module Main =
             | [| "utf8" |]       -> Utf8
             | _                  -> System
 
-        printfn "Running with %A JSON serializer" jsonMode
+        printfn $"Running with %A{jsonMode} JSON serializer"
 
         let jsonSerializer =
             match jsonMode with
@@ -131,27 +131,19 @@ module Main =
                 NewtonsoftJson.Serializer(NewtonsoftJson.Serializer.DefaultSettings)
                 :> Json.ISerializer
 
-        let configureApp (appBuilder : IApplicationBuilder) =
-            appBuilder
-                .UseRouting()
-                .UseGiraffe HttpHandlers.endpoints
-            |> ignore
-
-        let configureServices (services : IServiceCollection) =
-            services
-                .AddRouting()
-                .AddGiraffe()
-                .AddSingleton(jsonSerializer)
-            |> ignore
-
         let builder = WebApplication.CreateBuilder(args)
+
+        builder.Services
+            .AddSingleton(jsonSerializer)
+            .AddGiraffe() |> ignore
+            
         builder.Logging.ClearProviders() |> ignore
-        
-        configureServices builder.Services
 
         let app = builder.Build()
 
-        configureApp app
-        app.Run()
+        app.UseRouting()
+           .UseGiraffe HttpHandlers.endpoints |> ignore
 
+        app.Run()
+        
         0
