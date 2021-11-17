@@ -106,7 +106,8 @@ module Main =
     open Microsoft.Extensions.DependencyInjection
     open Giraffe
     open Giraffe.EndpointRouting
-    open Microsoft.Extensions.Hosting    
+    open Microsoft.Extensions.Hosting
+    open Microsoft.Extensions.Logging
 
     [<EntryPoint>]    
     let main args =
@@ -144,6 +145,8 @@ module Main =
             |> ignore
 
         let builder = WebApplication.CreateBuilder(args)
+        builder.Logging.ClearProviders() |> ignore
+        
         configureServices builder.Services
 
         let app = builder.Build()
