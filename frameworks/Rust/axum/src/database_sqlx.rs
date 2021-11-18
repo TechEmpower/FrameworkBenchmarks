@@ -4,10 +4,11 @@ use axum::http::StatusCode;
 use sqlx::{PgPool, Postgres};
 use sqlx::pool::PoolConnection;
 use sqlx::postgres::PgPoolOptions;
+use crate::common::POOL_SIZE;
 use crate::utils::internal_error;
 
 pub async fn create_pool(database_url: String) -> PgPool {
-    PgPoolOptions::new().max_connections(100).connect(&*database_url).await.unwrap()
+    PgPoolOptions::new().max_connections(POOL_SIZE).min_connections(56).connect(&*database_url).await.unwrap()
 }
 
 pub struct DatabaseConnection(pub PoolConnection<Postgres>);
