@@ -33,7 +33,7 @@ namespace Benchmarks.Tests
 
     #region Supporting data structures
 
-    public sealed class FortuneModel : PageModel
+    public sealed class FortuneModel : BasicModel
     {
 
         public List<Fortune> Cookies { get; }
@@ -80,18 +80,28 @@ namespace Benchmarks.Tests
 
         #region Functionality
 
-        public ValueTask<IResponse> HandleAsync(IRequest request) => Page.HandleAsync(request);
+        public async ValueTask PrepareAsync()
+        {
+            await Page.PrepareAsync();
+            await Template.PrepareAsync();
+        }
+
+        public ValueTask<ulong> CalculateChecksumAsync() => new(17);
 
         public IEnumerable<ContentElement> GetContent(IRequest request) => Enumerable.Empty<ContentElement>();
 
-        public async ValueTask<IResponseBuilder> RenderAsync(TemplateModel model)
+        public async ValueTask<string> RenderAsync(TemplateModel model) => await Template.RenderAsync(model);
+
+        public async ValueTask<IResponse> HandleAsync(IRequest request)
         {
-            return model.Request.Respond()
-                                .Content(await Template.RenderAsync(model))
-                                .Type(CONTENT_TYPE);
+            var response = await Page.HandleAsync(request);
+
+            response.ContentType = CONTENT_TYPE;
+
+            return response;
         }
 
-        private async ValueTask<FortuneModel> GetFortunes(IRequest request, IHandler handler)
+        private static async ValueTask<FortuneModel> GetFortunes(IRequest request, IHandler handler)
         {
             using var context = DatabaseContext.CreateNoTracking();
 
@@ -102,12 +112,6 @@ namespace Benchmarks.Tests
             fortunes.Sort();
 
             return new FortuneModel(request, handler, fortunes);
-        }
-
-        public async ValueTask PrepareAsync()
-        {
-            await Page.PrepareAsync();
-            await Template.PrepareAsync();
         }
 
         #endregion
