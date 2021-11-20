@@ -89,9 +89,9 @@ pub const SERVER_HEADER_VALUE: HeaderValue = HeaderValue::from_static("TFB");
 
 pub const HTML_HEADER_VALUE: HeaderValue = HeaderValue::from_static("text/html; charset=utf-8");
 
-const TEXT_HEADER_VALUE: HeaderValue = HeaderValue::from_static("text/plain");
+pub const TEXT_HEADER_VALUE: HeaderValue = HeaderValue::from_static("text/plain");
 
-const JSON_HEADER_VALUE: HeaderValue = HeaderValue::from_static("application/json");
+pub const JSON_HEADER_VALUE: HeaderValue = HeaderValue::from_static("application/json");
 
 pub(super) fn plain_text<D>(req: &mut WebRequest<'_, D>) -> HandleResult {
     let mut res = req.as_response(Bytes::from_static(b"Hello, World!"));
