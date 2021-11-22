@@ -59,6 +59,7 @@
     "postgres": {
       "db_url": "/db",
       "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
