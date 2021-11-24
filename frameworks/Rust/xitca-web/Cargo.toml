@@ -22,14 +22,14 @@ ahash = { version = "0.7.6", features = ["compile-time-rng"] }
 atoi = "0.4.0"
 core_affinity = "0.5.10"
 diesel = { version = "1.4.8", features = ["postgres"] }
-futures-util = { version = "0.3.17", default-features = false, features = ["alloc"] }
-mimalloc = { version = "0.1.26", default-features = false }
+futures-util = { version = "0.3.18", default-features = false, features = ["alloc"] }
+mimalloc = { version = "0.1.27", default-features = false }
 rand = { version = "0.8", default-features = false, features = ["min_const_gen", "small_rng"] }
 sailfish = "0.3.3"
 serde = "1"
 simd-json = "0.4.8"
 tang-rs = "0.2"
-tokio = { version = "1.13", features = ["macros", "rt"] }
+tokio = { version = "1.14", features = ["macros", "rt"] }
 tokio-postgres = "0.7.5"
 
 [profile.release]
@@ -39,9 +39,9 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-http = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "cce3eee576a9b303a71d4654a6c922402b5fd4f3" }
-xitca-http-codegen = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "cce3eee576a9b303a71d4654a6c922402b5fd4f3" }
-xitca-io = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "cce3eee576a9b303a71d4654a6c922402b5fd4f3" }
-xitca-server = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "cce3eee576a9b303a71d4654a6c922402b5fd4f3" }
-xitca-service = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "cce3eee576a9b303a71d4654a6c922402b5fd4f3" }
-xitca-web = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "cce3eee576a9b303a71d4654a6c922402b5fd4f3" }
+xitca-http = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "28c6719fa039a680ecf32417493fa716f6cefaba" }
+xitca-http-codegen = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "28c6719fa039a680ecf32417493fa716f6cefaba" }
+xitca-io = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "28c6719fa039a680ecf32417493fa716f6cefaba" }
+xitca-server = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "28c6719fa039a680ecf32417493fa716f6cefaba" }
+xitca-service = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "28c6719fa039a680ecf32417493fa716f6cefaba" }
+xitca-web = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "28c6719fa039a680ecf32417493fa716f6cefaba" }
