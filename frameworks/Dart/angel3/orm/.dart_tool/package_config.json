@@ -1,0 +1,728 @@
+{
+  "configVersion": 2,
+  "packages": [
+    {
+      "name": "_fe_analyzer_shared",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/_fe_analyzer_shared-30.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "analyzer",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/analyzer-2.7.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "angel3_auth",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_auth-4.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_client",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_client-4.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_configuration",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_configuration-4.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_container",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_container-3.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_framework",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_framework-4.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_hot",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_hot-4.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_http_exception",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_http_exception-3.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_jael",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_jael-4.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_migration",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_migration-4.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_migration_runner",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_migration_runner-4.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_mock_request",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_mock_request-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_model",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_model-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_orm",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_orm-4.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_orm_generator",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_orm_generator-4.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_orm_postgres",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_orm_postgres-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_production",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_production-3.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_route",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_route-5.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_serialize",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_serialize-4.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_serialize_generator",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_serialize_generator-4.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_static",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_static-4.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_test",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_test-4.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_validate",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_validate-4.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "angel3_websocket",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/angel3_websocket-4.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "args",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/args-2.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "async",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/async-2.8.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "belatuk_code_buffer",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/belatuk_code_buffer-3.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "belatuk_combinator",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/belatuk_combinator-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "belatuk_html_builder",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/belatuk_html_builder-3.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "belatuk_http_server",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/belatuk_http_server-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "belatuk_json_serializer",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/belatuk_json_serializer-5.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "belatuk_merge_map",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/belatuk_merge_map-3.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "belatuk_pretty_logging",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/belatuk_pretty_logging-4.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "belatuk_pub_sub",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/belatuk_pub_sub-4.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "belatuk_range_header",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/belatuk_range_header-4.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "belatuk_symbol_table",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/belatuk_symbol_table-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "boolean_selector",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/boolean_selector-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "buffer",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/buffer-1.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "build",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/build-2.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "build_config",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/build_config-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "build_daemon",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/build_daemon-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "build_resolvers",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/build_resolvers-2.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "build_runner",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/build_runner-2.1.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "build_runner_core",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/build_runner_core-7.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "built_collection",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/built_collection-5.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "built_value",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/built_value-8.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "charcode",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/charcode-1.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "checked_yaml",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/checked_yaml-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "cli_util",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/cli_util-0.3.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "clock",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/clock-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "code_builder",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/code_builder-4.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "collection",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/collection-1.15.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "convert",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/convert-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "coverage",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/coverage-1.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "crypto",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/crypto-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "dart_style",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/dart_style-2.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "dotenv",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/dotenv-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "file",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/file-6.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "fixnum",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/fixnum-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "frontend_server_client",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/frontend_server_client-2.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "glob",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/glob-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "graphs",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/graphs-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "http",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/http-0.13.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "http2",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/http2-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "http_multi_server",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/http_multi_server-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "http_parser",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/http_parser-4.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "inflection3",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/inflection3-0.5.3+2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "intl",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/intl-0.17.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "io",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/io-1.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "jael3",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/jael3-4.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "jael3_preprocessor",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/jael3_preprocessor-4.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "js",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/js-0.6.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "json_annotation",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/json_annotation-4.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "json_rpc_2",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/json_rpc_2-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "lints",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/lints-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "logging",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/logging-1.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "matcher",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/matcher-0.12.11",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "meta",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/meta-1.7.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "mime",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/mime-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "node_preamble",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/node_preamble-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "optional",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/optional-6.1.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "package_config",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/package_config-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "path",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/path-1.8.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "pedantic",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/pedantic-1.11.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "pool",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/pool-1.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "postgres",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/postgres-2.4.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "pub_semver",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/pub_semver-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "pubspec_parse",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/pubspec_parse-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "quiver",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/quiver-3.0.1+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "recase",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/recase-4.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "sasl_scram",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/sasl_scram-0.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "saslprep",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/saslprep-1.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "shelf",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/shelf-1.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "shelf_packages_handler",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/shelf_packages_handler-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "shelf_static",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/shelf_static-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "shelf_web_socket",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/shelf_web_socket-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "source_gen",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/source_gen-1.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "source_map_stack_trace",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/source_map_stack_trace-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "source_maps",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/source_maps-0.10.10",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "source_span",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/source_span-1.8.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "stack_trace",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/stack_trace-1.10.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "stream_channel",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/stream_channel-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "stream_transform",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/stream_transform-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "string_scanner",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/string_scanner-1.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "term_glyph",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/term_glyph-1.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "test",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/test-1.19.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "test_api",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/test_api-0.4.8",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "test_core",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/test_core-0.4.9",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "timing",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/timing-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "tuple",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/tuple-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "typed_data",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/typed_data-1.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "unorm_dart",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/unorm_dart-0.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "uuid",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/uuid-3.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "vm_service",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/vm_service-7.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "watcher",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/watcher-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "web_socket_channel",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/web_socket_channel-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "webkit_inspection_protocol",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/webkit_inspection_protocol-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "yaml",
+      "rootUri": "file:///C:/Users/thomashii/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/yaml-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "benchmark_app",
+      "rootUri": "../",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    }
+  ],
+  "generated": "2021-11-25T02:07:01.355482Z",
+  "generator": "pub",
+  "generatorVersion": "2.14.4"
+}
