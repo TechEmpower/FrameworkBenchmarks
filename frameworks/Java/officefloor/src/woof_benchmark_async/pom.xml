@@ -30,6 +30,13 @@
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- Necessary for PostGresql -->
+		<dependency>
+			<groupId>com.ongres.scram</groupId>
+			<artifactId>client</artifactId>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>

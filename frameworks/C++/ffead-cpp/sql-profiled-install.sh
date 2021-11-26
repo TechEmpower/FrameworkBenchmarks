@@ -31,7 +31,7 @@ cd $IROOT/
 ./install_ffead-cpp-sql-raw-profiled.sh
 mv $IROOT/ffead-cpp-sql-raw $IROOT/ffead-cpp-6.0-sql
 
-sed -i 's|localhost|tfb-database|g' $IROOT/ffead-cpp-6.0-sql/web/te-benchmark-um-pq/config/sdorm.xml
+sed -i 's|localhost|tfb-database|g' $IROOT/ffead-cpp-6.0-sql/web/t3/config/sdorm.xml
 
 if [ "$#" = 0 ]
 then

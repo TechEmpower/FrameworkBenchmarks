@@ -1,6 +1,7 @@
 <?php
 
 use App\Controller\Benchmark;
+use App\Controller\BenchmarkRaw;
 
 return function (Mix\Vega\Engine $vega) {
     $benchmark = new Benchmark();

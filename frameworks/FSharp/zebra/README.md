@@ -7,7 +7,7 @@ Zebra is a new F# functional Asp.net Framework Wrapper that utalises a shared st
 
 **Language**
 
-* F# 4.6
+* F# 6.0
 
 **Platforms**
 
