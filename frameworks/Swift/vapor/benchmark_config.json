@@ -77,7 +77,6 @@
     },
     "mongo": {
       "db_url": "/db",
-      "query_url": "/queries?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
