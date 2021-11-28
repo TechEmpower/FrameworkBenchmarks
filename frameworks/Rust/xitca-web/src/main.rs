@@ -24,8 +24,9 @@ use xitca_http::{
     http::{
         self,
         header::{CONTENT_TYPE, SERVER},
-        IntoResponse, Method,
+        IntoResponse,
     },
+    util::service::get,
     HttpServiceBuilder,
 };
 use xitca_server::Builder;
@@ -55,7 +56,7 @@ async fn main() -> io::Result<()> {
             .disable_vectored_write()
             .max_request_headers::<8>();
 
-        HttpServiceBuilder::h1(http).config(config)
+        HttpServiceBuilder::h1(get(http)).config(config)
     };
 
     Builder::new()
@@ -94,13 +95,13 @@ impl HttpService {
     }
 
     async fn call(&self, req: Request) -> Result<Response, Infallible> {
-        match (req.method(), req.uri().path()) {
-            (&Method::GET, "/plaintext") => self.plain_text(req),
-            (&Method::GET, "/json") => self.json(req),
-            (&Method::GET, "/db") => self.db(req).await,
-            (&Method::GET, "/fortunes") => self.fortunes(req).await,
-            (&Method::GET, "/queries") => self.queries(req).await,
-            (&Method::GET, "/updates") => self.updates(req).await,
+        match req.uri().path() {
+            "/plaintext" => self.plain_text(req),
+            "/json" => self.json(req),
+            "/db" => self.db(req).await,
+            "/fortunes" => self.fortunes(req).await,
+            "/queries" => self.queries(req).await,
+            "/updates" => self.updates(req).await,
             _ => not_found(),
         }
     }

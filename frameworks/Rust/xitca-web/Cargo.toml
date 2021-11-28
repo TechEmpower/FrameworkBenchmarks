@@ -39,9 +39,9 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-http = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "28c6719fa039a680ecf32417493fa716f6cefaba" }
-xitca-http-codegen = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "28c6719fa039a680ecf32417493fa716f6cefaba" }
-xitca-io = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "28c6719fa039a680ecf32417493fa716f6cefaba" }
-xitca-server = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "28c6719fa039a680ecf32417493fa716f6cefaba" }
-xitca-service = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "28c6719fa039a680ecf32417493fa716f6cefaba" }
-xitca-web = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "28c6719fa039a680ecf32417493fa716f6cefaba" }
+xitca-http = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "958e3c2205e6036c7e0cbf4813d08ddf6029fd1d" }
+xitca-http-codegen = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "958e3c2205e6036c7e0cbf4813d08ddf6029fd1d" }
+xitca-io = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "958e3c2205e6036c7e0cbf4813d08ddf6029fd1d" }
+xitca-server = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "958e3c2205e6036c7e0cbf4813d08ddf6029fd1d" }
+xitca-service = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "958e3c2205e6036c7e0cbf4813d08ddf6029fd1d" }
+xitca-web = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "958e3c2205e6036c7e0cbf4813d08ddf6029fd1d" }
