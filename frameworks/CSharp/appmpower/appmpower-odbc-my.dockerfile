@@ -32,9 +32,9 @@ RUN apt-get install -y unixodbc wget curl
 
 WORKDIR /odbc
 
-RUN curl -L -o mariadb-connector-odbc-3.1.13-debian-9-stretch-amd64.tar.gz https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.13/mariadb-connector-odbc-3.1.13-debian-9-stretch-amd64.tar.gz
-RUN tar -xvzf mariadb-connector-odbc-3.1.13-debian-9-stretch-amd64.tar.gz
-RUN cp mariadb-connector-odbc-3.1.13-debian-9-stretch-amd64/lib/mariadb/libm* /usr/lib/
+RUN curl -L -o mariadb-connector-odbc-3.1.14-debian-9-stretch-amd64.tar.gz https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.14/mariadb-connector-odbc-3.1.14-debian-9-stretch-amd64.tar.gz
+RUN tar -xvzf mariadb-connector-odbc-3.1.14-debian-9-stretch-amd64.tar.gz
+RUN cp mariadb-connector-odbc-3.1.14-debian-9-stretch-amd64/lib/mariadb/libm* /usr/lib/
 
 COPY --from=build /usr/local/unixODBC /usr/local/unixODBC
 
