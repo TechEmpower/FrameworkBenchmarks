@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0.100 AS build
 RUN apt-get update
 RUN apt-get -yqq install clang zlib1g-dev libkrb5-dev libtinfo5
 RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
@@ -22,7 +22,7 @@ COPY src .
 RUN dotnet publish -c Release -o out -r linux-x64 /p:Database=mysql
 
 # Construct the actual image that will run
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:6.0.0 AS runtime
 
 RUN apt-get update
 # The following installs standard versions unixodbc 2.3.6 and pgsqlodbc 11
