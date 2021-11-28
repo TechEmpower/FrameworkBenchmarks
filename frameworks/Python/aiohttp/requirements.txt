@@ -1,6 +1,6 @@
 aiohttp==3.8.1
 asyncpg==0.25.0
-cchardet==2.1.8
+cchardet==2.1.7
 gunicorn==20.1
 jinja2==3.0.3
 psycopg2==2.9.2
