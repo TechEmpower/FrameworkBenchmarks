@@ -84,7 +84,7 @@ async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoRespon
 
     fortunes.sort_by(|a, b| a.message.cmp(&b.message));
 
-    let fortune_infos: Vec<FortuneInfo> = fortunes.iter().map(|f| FortuneInfo { id: f.id as i32, message: f.message.clone() }).collect();
+    let fortune_infos: Vec<FortuneInfo> = fortunes.into_iter().map(|f| FortuneInfo { id: f.id as i32, message: f.message }).collect();
 
     Utf8Html(
         FortunesTemplate {
