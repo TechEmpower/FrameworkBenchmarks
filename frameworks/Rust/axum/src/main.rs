@@ -1,9 +1,3 @@
-extern crate serde_derive;
-extern crate dotenv;
-extern crate async_trait;
-extern crate tokio_pg_mapper_derive;
-extern crate tokio_pg_mapper;
-
 mod models_common;
 mod server;
 mod common;
