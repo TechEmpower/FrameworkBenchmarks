@@ -15,29 +15,15 @@ pub fn random_number(rng: &mut SmallRng) -> i32 {
     (rng.gen::<u32>() % 10_000 + 1) as i32
 }
 
-pub fn parse_params(params: Params) -> i32 {
-    let mut q = 0;
-
-    if params.queries.is_some() {
-        let queries = params.queries.ok_or("could not get value").unwrap();
-
-        let queries_as_int = queries.parse::<i32>();
-
-        match queries_as_int {
-            Ok(_ok) => q = queries_as_int.unwrap(),
-            Err(_e) => q = 1,
-        }
-    }
-
-    let q = if q == 0 {
-        1
-    } else if q > 500 {
-        500
-    } else {
-        q
-    };
-
-    q
+pub fn parse_params(params: Params) -> usize {
+    num::clamp(
+        params
+            .queries
+            .map(|queries| queries.parse::<i32>().unwrap_or(1))
+            .unwrap_or(0),
+        1,
+        500,
+    ) as usize
 }
 
 /// Utility function for mapping any error into a `500 Internal Server Error`

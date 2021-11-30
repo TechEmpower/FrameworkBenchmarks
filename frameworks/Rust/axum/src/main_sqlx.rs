@@ -42,7 +42,7 @@ async fn queries(DatabaseConnection(mut conn): DatabaseConnection, Query(params)
 
     let mut rng = SmallRng::from_entropy();
 
-    let mut results = Vec::with_capacity(q as usize);
+    let mut results = Vec::with_capacity(q);
 
     for _ in 0..q {
         let query_id = random_number(&mut rng);
@@ -81,7 +81,7 @@ async fn updates(DatabaseConnection(mut conn): DatabaseConnection, Query(params)
 
     let mut rng = SmallRng::from_entropy();
 
-    let mut results = Vec::with_capacity(q as usize);
+    let mut results = Vec::with_capacity(q);
 
     for _ in 0..q {
         let query_id = random_number(&mut rng);
