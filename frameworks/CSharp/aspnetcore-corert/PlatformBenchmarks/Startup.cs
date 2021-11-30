@@ -10,7 +10,6 @@ namespace PlatformBenchmarks
     {
         public void Configure(IApplicationBuilder app)
         {
-            
         }
     }
 }

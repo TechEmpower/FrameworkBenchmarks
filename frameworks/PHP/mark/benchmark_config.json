@@ -9,7 +9,7 @@
       "classification": "Micro",
       "framework": "mark",
       "language": "PHP",
-      "flavor": "PHP8",
+      "flavor": "PHP8.1",
       "orm": "Raw",
       "platform": "workerman",
       "webserver": "None",

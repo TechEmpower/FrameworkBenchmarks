@@ -48,6 +48,7 @@ func runApp() throws {
     let configuration = HBHTTPServer.Configuration(
         address: .hostname(serverHostName, port: serverPort),
         serverName: "hb-core",
+        backlog: 8192,
         withPipeliningAssistance: false
     )
 
