@@ -49,7 +49,7 @@ async fn queries(DatabaseConnection(conn): DatabaseConnection, Query(params): Qu
 
     let mut rng = SmallRng::from_entropy();
 
-    let mut results = Vec::with_capacity(q as usize);
+    let mut results = Vec::with_capacity(q);
 
     let select = prepare_fetch_world_by_id_statement(&conn).await;
 
@@ -96,7 +96,7 @@ async fn updates(DatabaseConnection(conn): DatabaseConnection, Query(params): Qu
 
     let mut rng = SmallRng::from_entropy();
 
-    let mut results = Vec::with_capacity(q as usize);
+    let mut results = Vec::with_capacity(q);
 
     let select = prepare_fetch_world_by_id_statement(&conn).await;
 
