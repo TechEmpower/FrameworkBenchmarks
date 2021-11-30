@@ -21,12 +21,9 @@ name = "axum-mongo"
 path = "src/main_mongo.rs"
 
 [dependencies]
-num_cpus = { version = "^1.13" }
-rand = { version = "^0.8", features = ["small_rng"]}
+rand = { version = "^0.8", features = ["small_rng"] }
 yarte = { version = "^0.15" }
-async-stream = { version = "^0.3" }
 async-trait = { version = "0.1" }
-async-std = "1.10"
 futures = { version = "^0.3" }
 futures-util = { version = "^0.3" }
 dotenv = { version = "^0.15" }
@@ -38,7 +35,11 @@ tokio = { version = "1.0", features = ["full"] }
 hyper = "0.14"
 tower = { version = "0.4", features = ["util"] }
 tower-http = { version = "0.1", features = ["set-header"] }
-sqlx = { version = "^0.5", features = [ "postgres", "macros", "runtime-tokio-native-tls" ] }
+sqlx = { version = "^0.5", features = [
+    "postgres",
+    "macros",
+    "runtime-tokio-native-tls",
+] }
 bb8 = "0.7"
 bb8-postgres = "0.7"
 tokio-postgres = "0.7"
