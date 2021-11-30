@@ -31,4 +31,8 @@ http://localhost:8080/db
 
 ### Multiple database queries test
 
-http://localhost:8080/queries/[1...500]
+http://localhost:8080/queries?queries=[1...500]
+
+### Database updates test
+
+http://localhost:8080/updates?queries=[1...500]
