@@ -1,8 +1,3 @@
-extern crate serde_derive;
-extern crate dotenv;
-#[macro_use]
-extern crate async_trait;
-
 mod models_common;
 mod models_bb8;
 mod database_bb8;
