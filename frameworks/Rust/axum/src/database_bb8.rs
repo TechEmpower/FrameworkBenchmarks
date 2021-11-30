@@ -3,6 +3,7 @@ use axum::http::StatusCode;
 use bb8::{Pool, PooledConnection};
 use bb8_postgres::PostgresConnectionManager;
 use bb8_postgres::tokio_postgres::NoTls;
+use crate::common::POOL_SIZE;
 use crate::utils::internal_error;
 
 pub type ConnectionManager = PostgresConnectionManager<NoTls>;
@@ -12,7 +13,7 @@ pub type Connection = PooledConnection<'static, ConnectionManager>;
 pub async fn create_bb8_pool(database_url: String) -> ConnectionPool {
     let manager = PostgresConnectionManager::new_from_stringlike(database_url, NoTls).unwrap();
 
-    Pool::builder().build(manager).await.unwrap()
+    Pool::builder().max_size(POOL_SIZE).build(manager).await.unwrap()
 }
 
 pub struct DatabaseConnection(pub Connection);
