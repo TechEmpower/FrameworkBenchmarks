@@ -1,4 +1,4 @@
-lazy val finatraVersion = "19.5.1"
+lazy val finatraVersion = "21.11.0"
 
 name := "techempower-benchmarks-finatra"
 organization := "com.twitter"
