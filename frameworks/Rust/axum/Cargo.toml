@@ -2,7 +2,7 @@
 name = "axum"
 version = "0.1.2"
 authors = ["Dragos Varovici <dvarovici.work@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [[bin]]
 name = "axum"
