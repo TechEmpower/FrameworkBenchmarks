@@ -3,14 +3,14 @@ extern crate dotenv;
 #[macro_use]
 extern crate async_trait;
 
-mod common_handlers;
 mod models_common;
 mod models_bb8;
 mod database_bb8;
 mod utils;
+mod server;
+mod common;
 
 use dotenv::dotenv;
-use std::net::{Ipv4Addr, SocketAddr};
 use std::env;
 use crate::database_bb8::{Connection, create_bb8_pool, DatabaseConnection};
 use axum::{
@@ -30,7 +30,6 @@ use tokio_pg_mapper::FromTokioPostgresRow;
 use yarte::Template;
 
 use models_bb8::{World, Fortune};
-use common_handlers::{json, plaintext};
 use utils::{Params, parse_params, random_number};
 use crate::utils::Utf8Html;
 
@@ -142,14 +141,10 @@ async fn main() {
     let database_url = env::var("AXUM_TECHEMPOWER_DATABASE_URL").ok()
         .expect("AXUM_TECHEMPOWER_DATABASE_URL environment variable was not set");
 
-    let addr = SocketAddr::from((Ipv4Addr::UNSPECIFIED, 8000));
-
     // setup connection pool
     let pool = create_bb8_pool(database_url).await;
 
     let router = Router::new()
-        .route("/plaintext", get(plaintext))
-        .route("/json", get(json))
         .route("/fortunes", get(fortunes))
         .route("/db", get(db))
         .route("/queries", get(queries))
@@ -157,7 +152,7 @@ async fn main() {
         .layer(AddExtensionLayer::new(pool))
         .layer(SetResponseHeaderLayer::<_, Body>::if_not_present(header::SERVER, HeaderValue::from_static("Axum")));
 
-    axum::Server::bind(&addr)
+    server::builder()
         .serve(router.into_make_service())
         .await
         .unwrap();
