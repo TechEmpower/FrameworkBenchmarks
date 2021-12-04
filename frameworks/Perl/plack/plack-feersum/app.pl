@@ -4,9 +4,7 @@ use Cwd 'getcwd';
 
 my $cpus = Unix::Processors->new->max_online;
 
-my @cmd = ([qw'start_server --backlog 16384 --path /dev/shm/app.sock --
-           plackup -s Feersum -E production --max-reqs-per-child 10000000
-           --max-workers', $cpus, qw'-a app.psgi'],
+my @cmd = ([qw'plackup -s Feersum -E production --listen :8080 --pre-fork=', $cpus, qw'-a app.psgi'],
            [qw'nginx -c nginx.conf -p', getcwd]);
 
 my @child;
