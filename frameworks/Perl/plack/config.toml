@@ -1,5 +1,5 @@
 [framework]
-name = "plack"
+name = "gazelle"
 
 [main]
 urls.plaintext = "/plaintext"
@@ -14,9 +14,9 @@ os = "Linux"
 orm = "Raw"
 platform = "Plack"
 webserver = "nginx"
-versus = "plack-async"
+versus = ""
 
-[async]
+[twiggy]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
@@ -27,6 +27,6 @@ database = "MySQL"
 database_os = "Linux"
 os = "Linux"
 orm = "Raw"
-platform = "AnyEvent"
+platform = "Plack"
 webserver = "nginx"
-versus = "plack"
+versus = ""
