@@ -1,0 +1,17 @@
+[framework]
+name = "feersum"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/db?queries="
+approach = "Realistic"
+classification = "Micro"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Plack"
+webserver = "nginx"
+versus = ""
