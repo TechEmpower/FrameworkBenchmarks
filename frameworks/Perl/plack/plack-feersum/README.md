@@ -7,7 +7,6 @@ Plack-Feersum
 * Plack
 * Feersum
 * Nginx
-* JSON::XS
 * Cpanel::JSON::XS
 * DBI
 * Perl
