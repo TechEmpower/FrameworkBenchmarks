@@ -1,5 +1,5 @@
 {
-  "framework": "plack",
+  "framework": "gazelle",
   "tests": [{
     "default": {
       "json_url": "/json",
@@ -17,11 +17,11 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "plack",
+      "display_name": "plack-gazelle",
       "notes": "",
       "versus": "plack-async"
     },
-    "async": {
+    "twiggy": {
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/db?queries=",
@@ -37,7 +37,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "plack-async",
+      "display_name": "plack-twiggy-async",
       "notes": "",
       "versus": "plack"
     }
