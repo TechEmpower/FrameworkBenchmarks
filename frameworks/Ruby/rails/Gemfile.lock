@@ -1,7 +1,4 @@
 GEM
-  specs:
-
-GEM
   remote: https://rubygems.org/
   specs:
     actioncable (6.1.4.1)
@@ -156,14 +153,14 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  listen (~> 3.3)!
-  mysql2 (= 0.5.3)!
-  oj (~> 3.13)!
-  pg (= 1.2.3)!
-  puma (~> 5.5)!
-  rails (~> 6.1.3)!
-  redis (~> 4.0)!
-  tzinfo-data (= 1.2021.5)!
+  listen (~> 3.3)
+  mysql2 (= 0.5.3)
+  oj (~> 3.13)
+  pg (= 1.2.3)
+  puma (~> 5.5)
+  rails (~> 6.1.3)
+  redis (~> 4.0)
+  tzinfo-data (= 1.2021.5)
 
 RUBY VERSION
    ruby 3.0.0p0
