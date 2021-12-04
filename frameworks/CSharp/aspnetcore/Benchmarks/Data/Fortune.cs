@@ -15,8 +15,9 @@ namespace Benchmarks.Data
 
         [Column("message")]
         [StringLength(2048)]
+        [Required]
         public string Message { get; set; }
-        
+
         public int CompareTo(object obj)
         {
             return CompareTo((Fortune)obj);

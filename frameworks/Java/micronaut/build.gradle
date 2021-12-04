@@ -1,0 +1,88 @@
+plugins {
+    id 'java'
+    id "io.micronaut.application" version "2.0.6"
+    id "com.fizzed.rocker" version "1.3.0"
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+micronaut {
+    version '3.1.1'
+    processing {
+        incremental true
+    }
+}
+
+nativeImage {
+    args "--initialize-at-build-time=" +
+            "views," +
+            "io.vertx.core.logging.LoggerFactory," +
+            "io.vertx.core.logging.SLF4JLogDelegateFactory," +
+            "io.vertx.core.logging.SLF4JLogDelegate," +
+            "io.vertx.pgclient.impl.codec.DataTypeCodec"
+}
+
+sourceSets {
+    main {
+        rocker {
+            srcDir('src/main/resources')
+        }
+    }
+}
+
+rocker {
+    skip false
+    // Base directory for generated java sources, actual target is sub directory
+    // with the name of the source set. The value is passed through project.file().
+    outputBaseDirectory = "$buildDir/generated/rocker"
+    // Base directory for the directory where the hot reload feature
+    // will (re)compile classes to at runtime (and where `rocker-compiler.conf`
+    // is generated, which is used by RockerRuntime.getInstance().setReloading(true)).
+    // The actual target is a sub directory with the name of the source set.
+    // The value is passed through project.file().
+    classBaseDirectory = "$buildDir/classes"
+    failOnError true
+    skipTouch true
+    // must not be empty when skipTouch is equal to false
+    touchFile ""
+    javaVersion '11'
+    optimize true
+}
+
+mainClassName = 'benchmark.Application'
+
+ext {
+    set('vertxVersion', '4.1.5')
+    set('micronautVersion', '3.1.1')
+    set('javaxAnnotationApi', '1.3.2')
+    set('rockerVersion', '1.3.0')
+}
+
+dependencies {
+    implementation("io.micronaut:micronaut-inject:${micronautVersion}")
+    implementation("io.micronaut:micronaut-management:${micronautVersion}")
+    implementation("io.micronaut:micronaut-http-server-netty:${micronautVersion}")
+    implementation("io.micronaut.rxjava3:micronaut-rxjava3")
+    implementation("io.micronaut.sql:micronaut-vertx-pg-client")
+    implementation("io.micronaut.sql:micronaut-jdbc-hikari:4.0.2")
+    implementation("io.micronaut.views:micronaut-views-rocker")
+    implementation("com.fizzed:rocker-runtime:${rockerVersion}")
+    implementation("io.vertx:vertx-core:${vertxVersion}")
+    implementation("io.vertx:vertx-rx-java2:${vertxVersion}")
+    implementation("io.vertx:vertx-rx-java3:${vertxVersion}")
+    implementation("io.vertx:vertx-pg-client:${vertxVersion}")
+
+    runtimeOnly("ch.qos.logback:logback-classic")
+    testImplementation("io.micronaut.test:micronaut-test-junit5")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+}
+
+test {
+    useJUnitPlatform()
+}

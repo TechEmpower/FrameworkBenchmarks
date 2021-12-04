@@ -1,3 +1,5 @@
+#![allow(clippy::declare_interior_mutable_const)]
+
 use std::{
     cell::{RefCell, RefMut},
     cmp,
@@ -5,18 +7,14 @@ use std::{
     io,
 };
 
-use bytes::{Bytes, BytesMut};
-use serde::Serialize;
-use xitca_http::http::{
-    header::{HeaderValue, CONTENT_TYPE, SERVER},
-    StatusCode,
-};
 use xitca_web::{
-    request::WebRequest,
+    dev::bytes::{Bytes, BytesMut},
+    http::{
+        header::{HeaderValue, SERVER},
+        StatusCode,
+    },
     response::{WebResponse, WebResponseBuilder},
 };
-
-use super::ser::Message;
 
 pub(super) type HandleResult = Result<WebResponse, Infallible>;
 
@@ -87,39 +85,9 @@ pub const SERVER_HEADER_VALUE: HeaderValue = HeaderValue::from_static("TFB");
 
 pub const HTML_HEADER_VALUE: HeaderValue = HeaderValue::from_static("text/html; charset=utf-8");
 
-const TEXT_HEADER_VALUE: HeaderValue = HeaderValue::from_static("text/plain");
+pub const TEXT_HEADER_VALUE: HeaderValue = HeaderValue::from_static("text/plain");
 
-const JSON_HEADER_VALUE: HeaderValue = HeaderValue::from_static("application/json");
-
-pub(super) fn plain_text<D>(req: &mut WebRequest<'_, D>) -> HandleResult {
-    let mut res = req.as_response(Bytes::from_static(b"Hello, World!"));
-
-    res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
-    res.headers_mut().append(CONTENT_TYPE, TEXT_HEADER_VALUE);
-
-    Ok(res)
-}
-
-#[inline(always)]
-pub(super) fn json<D>(req: &mut WebRequest<'_, AppState<D>>) -> HandleResult {
-    json_response(req, &Message::new())
-}
-
-#[inline]
-pub(super) fn json_response<S, D>(req: &mut WebRequest<'_, AppState<D>>, value: &S) -> HandleResult
-where
-    S: ?Sized + Serialize,
-{
-    let mut writer = req.state().writer();
-    simd_json::to_writer(&mut writer, value).unwrap();
-    let body = writer.take();
-
-    let mut res = req.as_response(body);
-    res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
-    res.headers_mut().append(CONTENT_TYPE, JSON_HEADER_VALUE);
-
-    Ok(res)
-}
+pub const JSON_HEADER_VALUE: HeaderValue = HeaderValue::from_static("application/json");
 
 macro_rules! error {
     ($error: ident, $code: path) => {

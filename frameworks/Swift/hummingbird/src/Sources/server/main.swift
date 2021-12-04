@@ -13,6 +13,7 @@ func runApp() throws {
     let configuration = HBApplication.Configuration(
         address: .hostname(serverHostName, port: serverPort),
         serverName: "Hummingbird",
+        backlog: 8192,
         enableHttpPipelining: false
     )
     let app = HBApplication(configuration: configuration)
