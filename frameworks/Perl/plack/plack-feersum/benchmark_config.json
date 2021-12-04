@@ -1,0 +1,27 @@
+{
+  "framework": "feersum",
+  "tests": [
+    {
+      "default": {
+     "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "feersum",
+      "language": "Perl",
+      "orm": "Raw",
+      "platform": "Plack",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "plack-feersum",
+      "notes": "",
+      "versus": ""
+      }
+    }
+  ]
+}
