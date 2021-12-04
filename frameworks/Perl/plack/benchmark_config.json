@@ -19,7 +19,7 @@
       "database_os": "Linux",
       "display_name": "plack-gazelle",
       "notes": "",
-      "versus": "plack-async"
+      "versus": ""
     },
     "twiggy": {
       "json_url": "/json",
@@ -39,7 +39,7 @@
       "database_os": "Linux",
       "display_name": "plack-twiggy-async",
       "notes": "",
-      "versus": "plack"
+      "versus": ""
     }
   }]
 }
