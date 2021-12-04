@@ -1,5 +1,5 @@
 {
-  "framework": "appMpower",
+  "framework": "appmpower",
   "tests": [
     {
       "default": {
@@ -9,7 +9,7 @@
         "approach": "Realistic",
         "classification": "Platform",
         "database": "None",
-        "framework": "appMpower",
+        "framework": "appmpower",
         "language": "C#",
         "orm": "Raw",
         "platform": ".NET",
@@ -31,7 +31,7 @@
         "approach": "Realistic",
         "classification": "Platform",
         "database": "Postgres",
-        "framework": "appMpower",
+        "framework": "appmpower",
         "language": "C#",
         "orm": "Raw",
         "platform": ".NET",
@@ -53,7 +53,7 @@
         "approach": "Realistic",
         "classification": "Platform",
         "database": "MySQL",
-        "framework": "appMpower",
+        "framework": "appmpower",
         "language": "C#",
         "orm": "Raw",
         "platform": ".NET",
