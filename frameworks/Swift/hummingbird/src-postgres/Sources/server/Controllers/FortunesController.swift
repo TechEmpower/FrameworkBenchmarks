@@ -15,18 +15,7 @@ class FortunesController {
 
     init() {
         self.template = try! HBMustacheTemplate(string: """
-        <!DOCTYPE html>
-        <html>
-        <head><title>Fortunes</title></head>
-        <body>
-        <table>
-        <tr><th>id</th><th>message</th></tr>
-        {{#.}}
-        <tr><td>{{id}}</td><td>{{message}}</td></tr>
-        {{/.}}
-        </table>
-        </body>
-        </html>
+        <!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>{{#.}}<tr><td>{{id}}</td><td>{{message}}</td></tr>{{/.}}</table></body></html>
         """)
     }
 
@@ -38,7 +27,7 @@ class FortunesController {
         return request.db.query("SELECT id, message FROM Fortune").map { results in
             var fortunes = results.map {
                 return Fortune(
-                    id: $0.column("id")?.int32 ?? 0,
+                    id: $0.column("id")?.int32,
                     message: $0.column("message")?.string ?? ""
                 )
             }

@@ -1,0 +1,7 @@
+name: DiaBenchmark
+description: A benchmark of Dart Dia, a http simple framework
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+dependencies:
+  dia: ^0.0.7
+  dia_router: ^0.0.5

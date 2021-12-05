@@ -5,13 +5,15 @@
  */
 package org.redkalex.benchmark;
 
-import javax.persistence.Id;
+import java.util.*;
+import javax.persistence.*;
 import org.redkale.convert.json.JsonConvert;
 
 /**
  *
  * @author zhangjx
  */
+@Entity
 public final class Fortune implements Comparable<Fortune> {
 
     @Id
@@ -25,6 +27,11 @@ public final class Fortune implements Comparable<Fortune> {
     public Fortune(int id, String message) {
         this.id = id;
         this.message = message;
+    }
+
+    public static List<Fortune> sort(List<Fortune> fortunes) {
+        Collections.sort(fortunes);
+        return fortunes;
     }
 
     public int getId() {

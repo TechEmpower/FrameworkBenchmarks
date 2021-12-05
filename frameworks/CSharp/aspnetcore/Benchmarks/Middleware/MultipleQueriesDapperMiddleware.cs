@@ -2,24 +2,20 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Benchmarks.Configuration;
 using Benchmarks.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Benchmarks.Middleware
 {
     public class MultipleQueriesDapperMiddleware
     {
         private static readonly PathString _path = new PathString(Scenarios.GetPath(s => s.DbMultiQueryDapper));
-        private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
-        {
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
-        };
+        private static readonly JsonSerializerOptions _serializerOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
         private readonly RequestDelegate _next;
 
@@ -37,7 +33,7 @@ namespace Benchmarks.Middleware
                 var db = httpContext.RequestServices.GetService<DapperDb>();
                 var rows = await db.LoadMultipleQueriesRows(count);
 
-                var result = JsonConvert.SerializeObject(rows, _jsonSettings);
+                var result = JsonSerializer.Serialize(rows, _serializerOptions);
 
                 httpContext.Response.StatusCode = StatusCodes.Status200OK;
                 httpContext.Response.ContentType = "application/json";

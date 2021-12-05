@@ -1,9 +1,8 @@
 #[global_allocator]
-static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-use bytes::Bytes;
 use ntex::http::header::{HeaderValue, CONTENT_TYPE, SERVER};
-use ntex::{http, web};
+use ntex::{http, util::Bytes, web, time::Seconds};
 use yarte::Serialize;
 
 mod utils;
@@ -45,8 +44,8 @@ async fn main() -> std::io::Result<()> {
         .bind("techempower", "0.0.0.0:8080", || {
             http::HttpService::build()
                 .keep_alive(http::KeepAlive::Os)
-                .client_timeout(0)
-                .disconnect_timeout(0)
+                .client_timeout(Seconds(0))
+                .disconnect_timeout(Seconds(0))
                 .buffer_params(65535, 65535, 1024)
                 .h1(web::App::new()
                     .service(json)

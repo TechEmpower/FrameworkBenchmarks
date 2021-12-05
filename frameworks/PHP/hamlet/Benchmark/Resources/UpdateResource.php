@@ -2,11 +2,9 @@
 
 namespace Benchmark\Resources;
 
-use Benchmark\Entities\RandomNumber;
-use Hamlet\Database\Session;
+use Benchmark\Repositories\WorldRepository;
 use Hamlet\Http\Entities\JsonEntity;
 use Hamlet\Http\Requests\Request;
-use Hamlet\Http\Resources\HttpResource;
 use Hamlet\Http\Responses\{Response, SimpleOKResponse};
 
 class UpdateResource extends DbResource
@@ -15,39 +13,20 @@ class UpdateResource extends DbResource
 
     public function getResponse(Request $request): Response
     {
+        $repository = new WorldRepository;
         $count = $this->getQueriesCount($request);
-        $callables = [];
-        while ($count--) {
-            $callables[] = function (Session $session) {
-                $id = mt_rand(1, 10000);
-                $randomNumber = mt_rand(1, 10000);
-
-                $selectProcedure = $session->prepare('
-                    SELECT id,
-                           randomNumber 
-                      FROM World
-                     WHERE id = ?
-                ');
-                $selectProcedure->bindInteger($id);
-                /** @var RandomNumber $entry */
-                $entry = $selectProcedure->processOne()
-                    ->selectAll()->cast(RandomNumber::class)
-                    ->collectHead();
-                $modifiedEntry = $entry->withNumber($randomNumber);
-
-                $updateProcedure = $session->prepare('
-                    UPDATE World
-                       SET randomNumber = ? 
-                     WHERE id = ?
-                ');
-                $updateProcedure->bindInteger($modifiedEntry->number());
-                $updateProcedure->bindInteger($modifiedEntry->id());
-                $updateProcedure->execute();
-
-                return $modifiedEntry;
-            };
-        }
-        $payload = $this->database->withSessions($callables);
-        return new SimpleOKResponse(new JsonEntity($payload));
+        $entries = $this->database->withSessions(array_map(
+            fn () => $repository->findById(mt_rand(1, 10000)),
+            range(1, $count),
+        ));
+        $modifiedEntries = array_map(
+            fn ($entry) => $entry->withNumber(mt_rand(1, 10000)),
+            $entries
+        );
+        $this->database->withSessions(array_map(
+            fn ($modifiedEntry) => $repository->updateNumber($modifiedEntry),
+            $modifiedEntries
+        ));
+        return new SimpleOKResponse(new JsonEntity($modifiedEntries));
     }
 }

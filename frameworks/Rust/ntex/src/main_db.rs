@@ -3,13 +3,12 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::{pin::Pin, task::Context, task::Poll};
 
-use bytes::BytesMut;
 use futures::future::{ok, Future, FutureExt};
 use ntex::http::header::{HeaderValue, CONTENT_TYPE, SERVER};
 use ntex::http::{HttpService, KeepAlive, Request, Response};
 use ntex::service::{Service, ServiceFactory};
+use ntex::{util::BytesMut, time::Seconds};
 use ntex::web::{Error, HttpResponse};
-use yarte::Serialize;
 
 mod db;
 mod utils;
@@ -48,20 +47,24 @@ impl Service for App {
                 self.0
                     .get_worlds(utils::get_query_param(req.uri().query()))
                     .map(|worlds| {
+                        let mut body = BytesMut::with_capacity(35 * worlds.len());
+                        let _ = simd_json::to_writer(crate::utils::Writer(&mut body), &worlds);
                         Ok(HttpResponse::Ok()
                             .header(SERVER, HeaderValue::from_static("N"))
                             .header(CONTENT_TYPE, HeaderValue::from_static("application/json"))
-                            .body(worlds.to_bytes::<BytesMut>(35 * worlds.len())))
+                            .body(body.freeze()))
                     }),
             ),
             "/update" => Box::pin(
                 self.0
                     .update(utils::get_query_param(req.uri().query()))
                     .map(|worlds| {
+                        let mut body = BytesMut::with_capacity(35 * worlds.len());
+                        let _ = simd_json::to_writer(crate::utils::Writer(&mut body), &worlds);
                         Ok(HttpResponse::Ok()
                             .header(SERVER, HeaderValue::from_static("N"))
                             .header(CONTENT_TYPE, HeaderValue::from_static("application/json"))
-                            .body(worlds.to_bytes::<BytesMut>(35 * worlds.len())))
+                            .body(body.freeze()))
                     }),
             ),
             _ => Box::pin(ok(Response::new(http::StatusCode::NOT_FOUND))),
@@ -97,13 +100,12 @@ async fn main() -> std::io::Result<()> {
         .bind("techempower", "0.0.0.0:8080", || {
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
-                .client_timeout(0)
-                .disconnect_timeout(0)
+                .client_timeout(Seconds(0))
+                .disconnect_timeout(Seconds(0))
                 .buffer_params(65535, 65535, 1024)
                 .h1(AppFactory)
                 .tcp()
         })?
-        .workers((num_cpus::get() as f32 * 1.2) as usize)
         .start()
         .await
 }

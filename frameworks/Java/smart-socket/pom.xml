@@ -11,9 +11,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <log4j.version>2.11.0</log4j.version>
-        <aio-enhance.version>1.0.4-SNAPSHOT</aio-enhance.version>
-        <smartservlet.version>0.1.3-SNAPSHOT</smartservlet.version>
-        <smartsocket.version>1.5.7-SNAPSHOT</smartsocket.version>
+        <smartservlet.version>0.1.7-SNAPSHOT</smartservlet.version>
     </properties>
 
     <dependencies>
@@ -23,19 +21,9 @@
             <version>${smartservlet.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.smartboot.aio</groupId>
-            <artifactId>aio-enhance</artifactId>
-            <version>${aio-enhance.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>3.4.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.smartboot.socket</groupId>
-            <artifactId>aio-pro</artifactId>
-            <version>${smartsocket.version}</version>
         </dependency>
         <dependency>
             <groupId>com.jsoniter</groupId>

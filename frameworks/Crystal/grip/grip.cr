@@ -120,7 +120,7 @@ class Fortunes < Grip::Controllers::Http
 end
 
 class Application < Grip::Application
-  def initialize
+  def routes
     get "/json", Json
     get "/plaintext", Plaintext
     get "/db", Db
@@ -128,13 +128,29 @@ class Application < Grip::Application
     get "/updates", Updates
     get "/fortunes", Fortunes
   end
+
+  def router : Array(HTTP::Handler)
+    [
+      @http_handler,
+    ] of HTTP::Handler
+  end
+
+  def server : HTTP::Server
+    HTTP::Server.new(@router)
+  end
+
+  def reuse_port
+    true
+  end
+
+  def host
+    "0.0.0.0"
+  end
+
+  def port
+    8080
+  end
 end
 
 app = Application.new
-
-Grip.config.logging = false
-
-app.run(8080) do |config|
-  server = config.server.not_nil!
-  server.bind_tcp "0.0.0.0", 8080, reuse_port: true
-end
+app.run

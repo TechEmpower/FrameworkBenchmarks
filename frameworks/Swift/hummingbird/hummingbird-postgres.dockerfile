@@ -1,7 +1,7 @@
 # ================================
 # Build image
 # ================================
-FROM swift:5.3 as build
+FROM swift:5.5 as build
 WORKDIR /build
 
 # Copy entire repo into container
@@ -9,13 +9,13 @@ COPY ./src-postgres .
 
 # Compile with optimizations
 RUN swift build \
-	--enable-test-discovery \
-	-c release
+	-c release \
+	-Xswiftc -enforce-exclusivity=unchecked
 
 # ================================
 # Run image
 # ================================
-FROM swift:5.3-slim
+FROM swift:5.5-slim
 WORKDIR /run
 
 # Copy build artifacts

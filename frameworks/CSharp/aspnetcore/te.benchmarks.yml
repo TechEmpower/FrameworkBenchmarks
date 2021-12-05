@@ -1,0 +1,203 @@
+imports:
+  - https://raw.githubusercontent.com/dotnet/crank/main/src/Microsoft.Crank.Jobs.Wrk/wrk.yml
+  - https://github.com/aspnet/Benchmarks/blob/main/scenarios/aspnet.profiles.yml?raw=true
+
+# todo: change repository to TechEmpower
+# todo: change branch to master
+
+jobs:
+  aspnetcore:
+    source:
+      repository: https://github.com/sebastienros/FrameworkBenchmarks.git
+      branchOrCommit: sebros/net60
+      dockerContextDirectory: frameworks/CSharp/aspnetcore/
+    readyStateText: Application started.
+
+  postgresql:
+    source:
+      repository: https://github.com/TechEmpower/FrameworkBenchmarks.git
+      branchOrCommit: master
+      dockerFile: toolset/databases/postgres/postgres.dockerfile
+      dockerImageName: postgres_te
+      dockerContextDirectory: toolset/databases/postgres
+    readyStateText: ready to accept connections
+    noClean: true
+
+  mysql:
+    source:
+      repository: https://github.com/TechEmpower/FrameworkBenchmarks.git
+      branchOrCommit: master
+      dockerFile: toolset/databases/mysql/mysql.dockerfile
+      dockerImageName: mysql_te
+      dockerContextDirectory: toolset/databases/mysql
+    readyStateText: ready for connections
+    noClean: true
+
+scenarios:
+
+  plaintext:
+    application:
+      job: aspnetcore
+      source:
+          dockerFile: frameworks/CSharp/aspnetcore/aspcore.dockerfile
+          dockerImageName: aspcore
+    load:
+      job: wrk
+      variables:
+        presetHeaders: plaintext
+        path: /plaintext
+        pipeline: 16
+        serverPort: 8080
+        connections: 1024
+
+  plaintext_mw:
+    application:
+      job: aspnetcore
+      source:
+          dockerFile: frameworks/CSharp/aspnetcore/aspcore-mw.dockerfile
+          dockerImageName: aspcore-mw
+    load:
+      job: wrk
+      variables:
+        presetHeaders: plaintext
+        path: /plaintext
+        pipeline: 16
+        serverPort: 8080
+        connections: 1024
+
+  json:
+    application:
+      job: aspnetcore
+      source:
+          dockerFile: frameworks/CSharp/aspnetcore/aspcore.dockerfile
+          dockerImageName: aspcore
+    load:
+      job: wrk
+      variables:
+        presetHeaders: json
+        path: /json
+        serverPort: 8080
+        connections: 512
+
+  fortunes:
+    db:
+      job: postgresql
+    application:
+      job: aspnetcore
+      source:
+          dockerFile: frameworks/CSharp/aspnetcore/aspcore-ado-pg.dockerfile
+          dockerImageName: aspcore-ado-pg
+    load:
+      job: wrk
+      variables:
+        presetHeaders: html
+        path: /fortunes
+        serverPort: 8080
+        connections: 512
+
+  single_query:
+    db:
+      job: postgresql
+    application:
+      job: aspnetcore
+      source:
+          dockerFile: frameworks/CSharp/aspnetcore/aspcore-ado-pg.dockerfile
+          dockerImageName: aspcore-ado-pg
+    load:
+      job: wrk
+      variables:
+        presetHeaders: json
+        path: /db
+        serverPort: 8080
+  
+  multiple_queries:
+    db:
+      job: postgresql
+    application:
+      job: aspnetcore
+      source:
+          dockerFile: frameworks/CSharp/aspnetcore/aspcore-ado-pg.dockerfile
+          dockerImageName: aspcore-ado-pg
+    load:
+      job: wrk
+      variables:
+        presetHeaders: json
+        path: /queries/20
+        serverPort: 8080
+
+  updates:
+    db:
+      job: postgresql
+    application:
+      job: aspnetcore
+      source:
+          dockerFile: frameworks/CSharp/aspnetcore/aspcore-ado-pg-up.dockerfile
+          dockerImageName: aspcore-ado-pg-up
+    load:
+      job: wrk
+      variables:
+        presetHeaders: json
+        path: /updates/20
+        serverPort: 8080
+
+  caching:
+    db:
+      job: postgresql
+    application:
+      job: aspnetcore
+      source:
+          dockerFile: frameworks/CSharp/aspnetcore/aspcore-ado-pg.dockerfile
+          dockerImageName: aspcore-ado-pg
+    load:
+      job: wrk
+      variables:
+        presetHeaders: json
+        path: /cached-worlds/100
+
+  fortunes_mysql:
+    db:
+      job: mysql
+    application:
+      job: aspnetcore
+      source:
+          dockerFile: frameworks/CSharp/aspnetcore/aspcore-ado-my.dockerfile
+          dockerImageName: aspcore-ado-my
+    load:
+      job: wrk
+      variables:
+        presetHeaders: html
+        path: /fortunes
+        serverPort: 8080
+        connections: 512
+
+  fortunes_mvc_ado_pg:
+    db:
+      job: postgresql
+    application:
+      job: aspnetcore
+      source:
+          dockerFile: frameworks/CSharp/aspnetcore/aspcore-mvc-ado-pg.dockerfile
+          dockerImageName: aspcore-mvc-ado-pg
+    load:
+      job: wrk
+      variables:
+        presetHeaders: html
+        path: /mvc/fortunes/raw
+        serverPort: 8080
+        connections: 512
+
+  fortunes_mvc_ef_pg:
+    db:
+      job: postgresql
+    application:
+      job: aspnetcore
+      source:
+          dockerFile: frameworks/CSharp/aspnetcore/aspcore-mvc-ef-pg.dockerfile
+          dockerImageName: aspcore-mvc-ef-pg
+    load:
+      job: wrk
+      variables:
+        presetHeaders: html
+        path: /mvc/fortunes/ef
+        serverPort: 8080
+        connections: 512
