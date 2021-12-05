@@ -7,6 +7,7 @@ WORKDIR /rails
 
 COPY ./Gemfile* /rails/
 
+ENV BUNDLE_FORCE_RUBY_PLATFORM=true
 ENV BUNDLE_WITHOUT=mysql
 RUN bundle install --jobs=8
 
