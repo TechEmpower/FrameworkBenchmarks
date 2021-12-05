@@ -4,9 +4,7 @@ return [
     ],
     'beans'    =>    [
         'HttpDispatcher'    =>    [
-            'middlewares'    =>    [
-                \Imi\Server\Http\Middleware\RouteMiddleware::class,
-            ],
+            'middleware' => false,
         ],
         'HtmlView'    =>    [
             'templatePath'    =>    dirname(__DIR__) . '/template/',
