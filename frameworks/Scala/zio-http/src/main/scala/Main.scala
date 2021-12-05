@@ -23,13 +23,8 @@ object Main extends App {
 
   private val PLAINTEXT_CLHEADER_VALUE = AsciiString.cached(String.valueOf(STATIC_PLAINTEXT_LEN))
   // Create HTTP route
-  val app2: HttpApp[Any, Nothing] = HttpApp.response(Response.text(message).withServerTime.memoize.addHeader(HttpHeaderNames.SERVER, STATIC_SERVER_NAME))
-  val app: HttpApp[Any, Nothing]       = HttpApp.collect(_ =>
-    Response(data = HttpData.fromByteBuf(Unpooled.wrappedBuffer(STATIC_PLAINTEXT)))
-      .addHeader(Header.contentTypeTextPlain)
-      .addHeader(HttpHeaderNames.SERVER, STATIC_SERVER_NAME)
-      .addHeader(HttpHeaderNames.CONTENT_LENGTH, PLAINTEXT_CLHEADER_VALUE))
-  val server = Server.app(app2.silent) ++
+  val app: HttpApp[Any, Nothing] = Http.response(Response.text(message).withServerTime.memoize.addHeader(HttpHeaderNames.SERVER, STATIC_SERVER_NAME))
+  val server = Server.app(app) ++
     Server.port(8080) ++
     Server.keepAlive ++
     Server.disableLeakDetection
