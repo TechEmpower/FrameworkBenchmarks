@@ -10,7 +10,7 @@ use Imi\Model\Annotation\Entity;
 
 /**
  * Fortune 基类
- * @Entity
+ * @Entity(bean=false)
  * @Table(name="Fortune", id={"id"}, dbPoolName="pgsql")
  * @property int|null $id 
  * @property string|null $message 

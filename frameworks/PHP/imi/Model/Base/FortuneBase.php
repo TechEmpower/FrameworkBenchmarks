@@ -11,7 +11,7 @@ use Imi\Model\Annotation\Entity;
 
 /**
  * fortune 基类
- * @Entity
+ * @Entity(bean=false)
  * @Table(name="fortune", id={"id"})
  * @DDL(sql="CREATE TABLE `fortune` (   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,   `message` varchar(2048) CHARACTER SET utf8 NOT NULL,   PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", decode="")
  * @property int|null $id 

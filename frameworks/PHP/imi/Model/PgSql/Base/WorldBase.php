@@ -10,7 +10,7 @@ use Imi\Model\Annotation\Entity;
 
 /**
  * World 基类
- * @Entity
+ * @Entity(bean=false)
  * @Table(name="World", id={"id"}, dbPoolName="pgsql")
  * @property int|null $id 
  * @property int|null $randomnumber 
