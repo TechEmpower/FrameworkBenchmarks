@@ -1,5 +1,6 @@
-FROM php:8.0-cli
+FROM php:8.1-cli
 
+ENV SWOOLE_VERSION 4.8.3
 ARG TFB_TEST_DATABASE
 ENV TFB_TEST_DATABASE=${TFB_TEST_DATABASE}
 
@@ -10,7 +11,7 @@ RUN apt -yqq update > /dev/null && \
 
 RUN pecl update-channels
 
-RUN pecl install swoole > /dev/null && \
+RUN pecl install swoole-${SWOOLE_VERSION} > /dev/null && \
     docker-php-ext-enable swoole
 
 COPY . /imi
