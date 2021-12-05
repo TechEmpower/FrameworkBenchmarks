@@ -2,7 +2,7 @@ name := "http4s"
 
 version := "1.0"
 
-scalaVersion := "2.13.6"
+scalaVersion := "2.13.7"
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -18,7 +18,7 @@ scalacOptions ++= Seq(
 
 enablePlugins(SbtTwirl)
 
-val http4sVersion = "0.23.1"
+val http4sVersion = "0.23.6"
 
 assembly / assemblyMergeStrategy := {
   case PathList(xs @ _*) if xs.last == "io.netty.versions.properties" => MergeStrategy.rename
