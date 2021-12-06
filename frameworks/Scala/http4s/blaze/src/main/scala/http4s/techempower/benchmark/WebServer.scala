@@ -101,7 +101,7 @@ object WebServer extends IOApp with Http4sDsl[IO] {
 
   // Given a fully constructed HttpService, start the server and wait for completion
   def startServer(service: HttpRoutes[IO]) =
-    BlazeServerBuilder[IO](blazeEc)
+    BlazeServerBuilder[IO]
       .bindHttp(8080, "0.0.0.0")
       .withHttpApp(Router("/" -> service).orNotFound)
       .withSocketKeepAlive(true)
