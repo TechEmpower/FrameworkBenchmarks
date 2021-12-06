@@ -1,4 +1,4 @@
-FROM openjdk:15 AS builder
+FROM openjdk:17 AS builder
 WORKDIR /http4s
 COPY blaze/project project
 COPY blaze/src src
@@ -12,7 +12,7 @@ RUN ./sbt assembly -batch && \
     rm -Rf ~/.ivy2 && \
     rm -Rf /var/cache
     
-FROM openjdk:15
+FROM openjdk:17
 WORKDIR /http4s
 COPY --from=builder /http4s/http4s-assembly-1.0.jar /http4s/http4s-assembly-1.0.jar
 
