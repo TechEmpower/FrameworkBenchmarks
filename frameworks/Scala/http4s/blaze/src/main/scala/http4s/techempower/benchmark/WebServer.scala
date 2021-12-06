@@ -1,7 +1,6 @@
 package http4s.techempower.benchmark
 
 import java.util.concurrent.Executors
-import scala.concurrent.ExecutionContext
 import cats.effect.{ExitCode, IO, IOApp, Resource}
 import com.typesafe.config.ConfigValueFactory
 import io.circe.generic.auto._
@@ -13,7 +12,6 @@ import org.http4s._
 import org.http4s.dsl._
 import org.http4s.circe._
 import org.http4s.implicits._
-import org.http4s.server.Router
 import org.http4s.blaze.server.BlazeServerBuilder
 import org.http4s.headers.Server
 import org.http4s.twirl._
@@ -97,13 +95,11 @@ object WebServer extends IOApp with Http4sDsl[IO] {
         } yield newWorlds.asJson)
     })
 
-  val blazeEc = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(32))
-
   // Given a fully constructed HttpService, start the server and wait for completion
   def startServer(service: HttpRoutes[IO]) =
     BlazeServerBuilder[IO]
       .bindHttp(8080, "0.0.0.0")
-      .withHttpApp(Router("/" -> service).orNotFound)
+      .withHttpApp(service.orNotFound)
       .withSocketKeepAlive(true)
       .resource
 

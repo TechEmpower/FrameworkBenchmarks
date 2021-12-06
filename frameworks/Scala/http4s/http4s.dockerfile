@@ -27,7 +27,6 @@ CMD java \
       -XX:InitialCodeCacheSize=256m \
       -XX:ReservedCodeCacheSize=256m \
       -XX:+UseParallelGC \
-      -XX:-UseBiasedLocking \
       -XX:+AlwaysPreTouch \
       -Dcats.effect.stackTracingMode=disabled \
       -jar \
