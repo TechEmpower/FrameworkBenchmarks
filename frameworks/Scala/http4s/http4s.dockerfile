@@ -22,6 +22,12 @@ CMD java \
       -server \
       -Xms2g \
       -Xmx2g \
+      -XX:NewSize=1g \
+      -XX:MaxNewSize=1g \
+      -XX:InitialCodeCacheSize=256m \
+      -XX:ReservedCodeCacheSize=256m \
+      -XX:+UseParallelGC \
+      -XX:-UseBiasedLocking \
       -XX:+AlwaysPreTouch \
       -Dcats.effect.stackTracingMode=disabled \
       -jar \
