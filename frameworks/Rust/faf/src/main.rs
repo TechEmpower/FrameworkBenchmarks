@@ -7,7 +7,7 @@ use faf::const_concat_bytes;
 use faf::const_http::*;
 use faf::util::{const_len, memcmp};
 
-const ROUTE_PLAINTEXT: &[u8] = b"/p";
+const ROUTE_PLAINTEXT: &[u8] = b"/plaintext";
 const ROUTE_PLAINTEXT_LEN: usize = const_len(ROUTE_PLAINTEXT);
 
 const TEXT_PLAIN_CONTENT_TYPE: &[u8] = b"Content-Type: text/plain";
@@ -45,7 +45,6 @@ fn cb(
    unsafe {
       if likely(method_len >= GET_LEN && path_len >= ROUTE_PLAINTEXT_LEN) {
          if likely(memcmp(GET.as_ptr(), method, GET_LEN) == 0) {
-            // For performance purposes, this will successfully match '/p' to '/plaintext' and '/pickle'. Use with caution
             if likely(memcmp(ROUTE_PLAINTEXT.as_ptr(), path, ROUTE_PLAINTEXT_LEN) == 0) {
                core::ptr::copy_nonoverlapping(PLAINTEXT_BASE.as_ptr(), response_buffer, PLAINTEXT_BASE_LEN);
                core::ptr::copy_nonoverlapping(date_buff, response_buffer.add(PLAINTEXT_BASE_LEN), DATE_LEN);
