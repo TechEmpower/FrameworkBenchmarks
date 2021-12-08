@@ -49,9 +49,9 @@ public partial class BenchmarkApplication
     private readonly static AsciiString _fortunesTableEnd = "</table></body></html>";
     private readonly static AsciiString _contentLengthGap = new string(' ', 4);
 
-    #if DATABASE
-    public static RawDb Db { get; set; }
-    #endif
+#if DATABASE
+        public static RawDb Db { get; set; }
+#endif
 
     [ThreadStatic]
     private static Utf8JsonWriter t_writer;
@@ -77,7 +77,7 @@ public partial class BenchmarkApplication
 
     private RequestType GetRequestType(ReadOnlySpan<byte> path, ref int queries)
     {
-        #if !DATABASE
+#if !DATABASE
         if (path.Length == 10 && path.SequenceEqual(Paths.Plaintext))
         {
             return RequestType.PlainText;
@@ -86,36 +86,36 @@ public partial class BenchmarkApplication
         {
             return RequestType.Json;
         }
-        #else
-        if (path.Length == 3 && path[0] == '/' && path[1] == 'd' && path[2] == 'b')
-        {
-            return RequestType.SingleQuery;
-        }
-        else if (path.Length == 9 && path[1] == 'f' && path.SequenceEqual(Paths.Fortunes))
-        {
-            return RequestType.Fortunes;
-        }
-        else if (path.Length >= 15 && path[1] == 'c' && path.StartsWith(Paths.Caching))
-        {
-            queries = ParseQueries(path.Slice(15));
-            return RequestType.Caching;
-        }
-        else if (path.Length >= 9 && path[1] == 'u' && path.StartsWith(Paths.Updates))
-        {
-            queries = ParseQueries(path.Slice(9));
-            return RequestType.Updates;
-        }
-        else if (path.Length >= 9 && path[1] == 'q' && path.StartsWith(Paths.MultipleQueries))
-        {
-            queries = ParseQueries(path.Slice(9));
-            return RequestType.MultipleQueries;
-        }
-        #endif
+#else
+            if (path.Length == 3 && path[0] == '/' && path[1] == 'd' && path[2] == 'b')
+            {
+                return RequestType.SingleQuery;
+            }
+            else if (path.Length == 9 && path[1] == 'f' && path.SequenceEqual(Paths.Fortunes))
+            {
+                return RequestType.Fortunes;
+            }
+            else if (path.Length >= 15 && path[1] == 'c' && path.StartsWith(Paths.Caching))
+            {
+                queries = ParseQueries(path.Slice(15));
+                return RequestType.Caching;
+            }
+            else if (path.Length >= 9 && path[1] == 'u' && path.StartsWith(Paths.Updates))
+            {
+                queries = ParseQueries(path.Slice(9));
+                return RequestType.Updates;
+            }
+            else if (path.Length >= 9 && path[1] == 'q' && path.StartsWith(Paths.MultipleQueries))
+            {
+                queries = ParseQueries(path.Slice(9));
+                return RequestType.MultipleQueries;
+            }
+#endif
         return RequestType.NotRecognized;
     }
 
 
-    #if !DATABASE
+#if !DATABASE
     private void ProcessRequest(ref BufferWriter<WriterAdapter> writer)
     {
         if (_requestType == RequestType.PlainText)
@@ -131,40 +131,40 @@ public partial class BenchmarkApplication
             Default(ref writer);
         }
     }
-    #else
+#else
 
-    private static int ParseQueries(ReadOnlySpan<byte> parameter)
-    {
-        if (!Utf8Parser.TryParse(parameter, out int queries, out _) || queries < 1)
+        private static int ParseQueries(ReadOnlySpan<byte> parameter)
         {
-            queries = 1;
+            if (!Utf8Parser.TryParse(parameter, out int queries, out _) || queries < 1)
+            {
+                queries = 1;
+            }
+            else if (queries > 500)
+            {
+                queries = 500;
+            }
+
+            return queries;
         }
-        else if (queries > 500)
+
+        private Task ProcessRequestAsync() => _requestType switch
         {
-            queries = 500;
+            RequestType.Fortunes => Fortunes(Writer),
+            RequestType.SingleQuery => SingleQuery(Writer),
+            RequestType.Caching => Caching(Writer, _queries),
+            RequestType.Updates => Updates(Writer, _queries),
+            RequestType.MultipleQueries => MultipleQueries(Writer, _queries),
+            _ => Default(Writer)
+        };
+
+        private static Task Default(PipeWriter pipeWriter)
+        {
+            var writer = GetWriter(pipeWriter, sizeHint: _defaultPreamble.Length + DateHeader.HeaderBytes.Length);
+            Default(ref writer);
+            writer.Commit();
+            return Task.CompletedTask;
         }
-
-        return queries;
-    }
-
-    private Task ProcessRequestAsync() => _requestType switch
-    {
-        RequestType.Fortunes => Fortunes(Writer),
-        RequestType.SingleQuery => SingleQuery(Writer),
-        RequestType.Caching => Caching(Writer, _queries),
-        RequestType.Updates => Updates(Writer, _queries),
-        RequestType.MultipleQueries => MultipleQueries(Writer, _queries),
-        _ => Default(Writer)
-    };
-
-    private static Task Default(PipeWriter pipeWriter)
-    {
-        var writer = GetWriter(pipeWriter, sizeHint: _defaultPreamble.Length + DateHeader.HeaderBytes.Length);
-        Default(ref writer);
-        writer.Commit();
-        return Task.CompletedTask;
-    }
-    #endif
+#endif
     private readonly static AsciiString _defaultPreamble =
         _http11NotFound +
         _headerServer + _crlf +

@@ -18,10 +18,10 @@ public class Program
         Console.WriteLine(BenchmarkApplication.Paths.Plaintext);
         Console.WriteLine(BenchmarkApplication.Paths.Json);
 #else
-        Console.WriteLine(BenchmarkApplication.Paths.Fortunes);
-        Console.WriteLine(BenchmarkApplication.Paths.SingleQuery);
-        Console.WriteLine(BenchmarkApplication.Paths.Updates);
-        Console.WriteLine(BenchmarkApplication.Paths.MultipleQueries);
+            Console.WriteLine(BenchmarkApplication.Paths.Fortunes);
+            Console.WriteLine(BenchmarkApplication.Paths.SingleQuery);
+            Console.WriteLine(BenchmarkApplication.Paths.Updates);
+            Console.WriteLine(BenchmarkApplication.Paths.MultipleQueries);
 #endif
         DateHeader.SyncDateTimer();
 
@@ -29,7 +29,7 @@ public class Program
         var config = (IConfiguration)host.Services.GetService(typeof(IConfiguration));
         BatchUpdateString.DatabaseServer = config.Get<AppSettings>().Database;
 #if DATABASE
-        await BenchmarkApplication.Db.PopulateCache();
+            await BenchmarkApplication.Db.PopulateCache();
 #endif
         await host.RunAsync();
     }
@@ -45,18 +45,18 @@ public class Program
 
         var appSettings = config.Get<AppSettings>();
 #if DATABASE
-        Console.WriteLine($"Database: {appSettings.Database}");
-        Console.WriteLine($"ConnectionString: {appSettings.ConnectionString}");
+            Console.WriteLine($"Database: {appSettings.Database}");
+            Console.WriteLine($"ConnectionString: {appSettings.ConnectionString}");
 
-        if (appSettings.Database is DatabaseServer.PostgreSql
-                                 or DatabaseServer.MySql)
-        {
-            BenchmarkApplication.Db = new RawDb(new ConcurrentRandom(), appSettings);
-        }
-        else
-        {
-            throw new NotSupportedException($"{appSettings.Database} is not supported");
-        }
+            if (appSettings.Database is DatabaseServer.PostgreSql
+                                     or DatabaseServer.MySql)
+            {
+                BenchmarkApplication.Db = new RawDb(new ConcurrentRandom(), appSettings);
+            }
+            else
+            {
+                throw new NotSupportedException($"{appSettings.Database} is not supported");
+            }
 #endif
 
         var hostBuilder = new WebHostBuilder()
