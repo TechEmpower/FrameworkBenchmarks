@@ -1,6 +1,6 @@
 [package]
 name = "axum"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Dragos Varovici <dvarovici.work@gmail.com>"]
 edition = "2018"
 
@@ -26,6 +26,7 @@ rand = { version = "^0.8", features = ["small_rng"]}
 yarte = { version = "^0.15" }
 async-stream = { version = "^0.3" }
 async-trait = { version = "0.1" }
+async-std = "1.10"
 futures = { version = "^0.3" }
 futures-util = { version = "^0.3" }
 dotenv = { version = "^0.15" }

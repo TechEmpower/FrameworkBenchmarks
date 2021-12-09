@@ -13,6 +13,7 @@ using GenHTTP.Modules.IO;
 using GenHTTP.Modules.Razor;
 
 using Benchmarks.Model;
+using System.IO;
 
 namespace Benchmarks.Tests
 {
@@ -90,7 +91,9 @@ namespace Benchmarks.Tests
 
         public IEnumerable<ContentElement> GetContent(IRequest request) => Enumerable.Empty<ContentElement>();
 
-        public async ValueTask<string> RenderAsync(TemplateModel model) => await Template.RenderAsync(model);
+        public ValueTask<string> RenderAsync(TemplateModel model) => Template.RenderAsync(model);
+
+        public ValueTask RenderAsync(TemplateModel model, Stream target) => Template.RenderAsync(model, target);
 
         public async ValueTask<IResponse> HandleAsync(IRequest request)
         {
