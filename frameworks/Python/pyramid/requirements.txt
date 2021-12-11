@@ -6,16 +6,12 @@
 #
 chameleon==3.9.1
     # via pyramid-chameleon
-greenlet==0.4.16
-    # via
-    #   meinheld
-    #   sqlalchemy
+greenlet==1.1.2
+    # via sqlalchemy
 gunicorn==20.1.0
     # via -r requirements.in
 hupper==1.10.3
     # via pyramid
-meinheld==1.0.2
-    # via -r requirements.in
 orjson==3.6.5
     # via -r requirements.in
 pastedeploy==2.1.1
