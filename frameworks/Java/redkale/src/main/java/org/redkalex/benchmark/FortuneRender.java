@@ -5,10 +5,11 @@
  */
 package org.redkalex.benchmark;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.redkale.convert.Convert;
 import org.redkale.net.http.*;
-import org.redkale.util.AnyValue;
+import org.redkale.util.*;
 
 /**
  *
@@ -16,19 +17,34 @@ import org.redkale.util.AnyValue;
  */
 public class FortuneRender implements org.redkale.net.http.HttpRender {
 
+    private static final String contentType = "text/html; charset=utf-8";
+
+    private static final byte[] text1 = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>".getBytes(StandardCharsets.UTF_8);
+
+    private static final byte[] text2 = "<tr><td>".getBytes(StandardCharsets.UTF_8);
+
+    private static final byte[] text3 = "</td><td>".getBytes(StandardCharsets.UTF_8);
+
+    private static final byte[] text4 = "</td></tr>".getBytes(StandardCharsets.UTF_8);
+
+    private static final byte[] text5 = "</table></body></html>".getBytes(StandardCharsets.UTF_8);
+
+    private final ThreadLocal<ByteArray> localByteArray = ThreadLocal.withInitial(() -> new ByteArray(1200));
+
     @Override
     public void init(HttpContext context, AnyValue config) {
     }
 
     @Override
     public void renderTo(HttpRequest request, HttpResponse response, Convert convert, HttpScope scope) {
-        StringBuilder sb = new StringBuilder(1200);
-        sb.append("<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
+        ByteArray array = localByteArray.get().clear();
+        array.put(text1);
         for (Fortune item : (List<Fortune>) scope.find("fortunes")) {
-            sb.append("<tr><td>").append(item.getId()).append("</td><td>").append(escape(item.getMessage())).append("</td></tr>");
+            array.put(text2).put(String.valueOf(item.getId()).getBytes(StandardCharsets.UTF_8))
+                .put(text3).put(escape(item.getMessage()).toString().getBytes(StandardCharsets.UTF_8)).put(text4);
         }
-        sb.append("</table></body></html>");
-        response.setContentType("text/html; charset=utf-8").finish(sb.toString());
+        array.put(text5);
+        response.finish(contentType, array);
     }
 
     private static CharSequence escape(CharSequence value) {
