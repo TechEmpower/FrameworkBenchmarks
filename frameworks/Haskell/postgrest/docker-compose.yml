@@ -1,0 +1,16 @@
+version: '3'
+services:
+  tfb-database:
+    build: 
+      dockerfile: postgresql.dockerfile
+      context: .
+    environment: 
+      - POSTGRES_PASSWORD=benchmarkdbpass
+      - POSTGRES_USER=benchmarkdbuser
+      - POSTGRES_DB=hello_world
+  web:
+    build: 
+      dockerfile: postgrest.dockerfile
+      context: .
+    ports:
+      - 3030:3000

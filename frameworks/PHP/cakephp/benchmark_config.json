@@ -14,13 +14,13 @@
             "database": "MySQL",
             "framework": "cakephp",
             "language": "PHP",
-            "flavor": "PHP7",
+            "flavor": "PHP8.1",
             "orm": "Full",
-            "platform": "None",
+            "platform": "FPM/FastCGI",
             "webserver": "nginx",
             "os": "Linux",
             "database_os": "Linux",
-            "display_name": "CakePHP 3.7 (PHP7)",
+            "display_name": "CakePHP",
             "notes": "",
             "versus": "php"
         }

@@ -65,4 +65,7 @@ COPY --from=maven /servlet/target/servlet.war webapps/ROOT.war
 COPY resin.xml conf/resin.xml
 RUN mkdir libexec64
 RUN mv modules/c/src/resin_os/libresin_os.so libexec64/libresin_os.so
+
+EXPOSE 8080
+
 CMD ["java", "-jar", "lib/resin.jar", "console"]

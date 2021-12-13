@@ -1,22 +1,35 @@
 package com.javanut.gl.benchmark;
 
-import io.reactiverse.pgclient.PgClient;
-import io.reactiverse.pgclient.PgPool;
-import io.reactiverse.pgclient.PgPoolOptions;
+
+import io.vertx.core.Vertx;
+import io.vertx.core.VertxOptions;
+import io.vertx.pgclient.PgConnectOptions;
+import io.vertx.pgclient.PgPool;
+import io.vertx.sqlclient.PoolOptions;
 
 public class PoolManager {
 
-	private final transient PgPoolOptions options;
-	private transient PgPool pool;
+	private final transient PgConnectOptions options;
+	private transient PoolOptions poolOptions;
+	private PgPool pool;
+	private Vertx vertx;
 	
-	public PoolManager(PgPoolOptions options) {
+	public PoolManager(PgConnectOptions options, PoolOptions poolOptions) {
 		this.options = options;
+		this.poolOptions = poolOptions;
 		
+		this.vertx = Vertx.vertx(new VertxOptions()
+				  .setPreferNativeTransport(true)
+				  .setWorkerPoolSize(4)//limit threads for this track
+				);
+		
+		boolean usingNative = vertx.isNativeTransportEnabled();
+		System.out.println("Running with native: " + usingNative);
 	}
 		
 	public PgPool pool() {
 		if (null==pool) {			
-			pool = PgClient.pool(options);			
+			pool = PgPool.pool(vertx, options, poolOptions);			
 		}
 		return pool;
 	}

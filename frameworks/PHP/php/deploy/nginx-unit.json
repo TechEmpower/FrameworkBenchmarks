@@ -1,0 +1,23 @@
+{
+    "listeners": {
+        "*:8080": {
+            "pass": "applications/benchmark"
+        }
+    },
+
+    "applications": {
+        "benchmark": {
+            "type": "php 7",
+            "processes": 84,
+            "user": "www-data",
+            "group": "www-data",
+            "root": "/php/",
+            "options": {
+                "file": "/php/deploy/conf/php.ini"
+            },
+            "limits": {
+                "requests": 10000000
+            }
+        }
+    }
+}

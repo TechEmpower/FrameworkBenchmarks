@@ -1,0 +1,20 @@
+{
+  "framework": "dylan",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "platform": "Dylan",
+      "framework": "None",
+      "language": "Dylan",
+      "flavor": "OpenDylan",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "dylan",
+      "versus": "dylan"
+    }
+  }]
+}

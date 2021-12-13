@@ -47,7 +47,7 @@ app gen dbPool req respond = do
       -> respond getJson
     ("GET", ["db"])
       -> respond =<< getWorld gen dbPool
-    ("GET", ["fortune"])
+    ("GET", ["fortunes"])
       -> respond =<< getFortunes dbPool
     ("GET", ["queries"])
       -> respond =<< getWorlds gen dbPool mCount

@@ -1,12 +1,12 @@
-FROM rust:1.36
+FROM rust:1.44
 
 WORKDIR /saphir
 
 ADD . .
 
 RUN cargo clean
-RUN cargo build --release
+RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
 
 EXPOSE 8080
 
-ENTRYPOINT [ "./target/release/saphir-techempower" ]
+CMD ./target/release/saphir-techempower

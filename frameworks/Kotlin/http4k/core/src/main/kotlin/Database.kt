@@ -1,6 +1,8 @@
 import com.fasterxml.jackson.databind.JsonNode
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import org.cache2k.Cache2kBuilder
+import org.cache2k.IntCache
 import org.http4k.format.Jackson.number
 import org.http4k.format.Jackson.obj
 import java.sql.Connection
@@ -11,16 +13,43 @@ import javax.sql.DataSource
 
 interface Database {
     fun findWorld(): JsonNode
+    fun loadAll(): Map<Int, JsonNode>
     fun findWorlds(count: Int): List<JsonNode>
     fun updateWorlds(count: Int): List<JsonNode>
     fun fortunes(): List<Fortune>
 }
 
+private const val TOTAL_DB_ROWS = 10000
+
+class CachedDatabase(private val delegate: Database) : Database by delegate {
+    private val cache = object : Cache2kBuilder<Int, JsonNode>() {}
+        .name("cachedWorld")
+        .eternal(true)
+        .entryCapacity(TOTAL_DB_ROWS.toLong())
+        .buildForIntKey()
+        .apply {
+            refresh()
+        }
+
+    private fun IntCache<JsonNode>.refresh() {
+        putAll(delegate.loadAll())
+    }
+
+    override fun findWorlds(count: Int) = (1..count).map { cache.peek(randomWorld()) }
+
+    override fun updateWorlds(count: Int) =
+        delegate.updateWorlds(count).apply {
+            cache.refresh() // massively inefficient, but :shrug:
+        }
+
+    override fun loadAll(): Map<Int, JsonNode> = cache.asMap()
+}
+
 class PostgresDatabase private constructor(private val dataSource: DataSource) : Database {
 
-    override fun findWorld() = withConnection {
-        findWorld(randomWorld())
-    }
+    override fun findWorld() = withConnection { findWorld(randomWorld()) }
+
+    override fun loadAll(): Map<Int, JsonNode> = withConnection { findAll() }
 
     override fun findWorlds(count: Int) = withConnection {
         (1..count).map { findWorld(randomWorld()) }
@@ -84,6 +113,14 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
             }.first()
         }
 
+    private fun Connection.findAll() =
+        withStatement("SELECT * FROM world") {
+            executeQuery().toResultsList {
+                val id = getInt("id")
+                id to obj("id" to number(id), "randomNumber" to number(getInt("randomNumber")))
+            }.toMap()
+        }
+
     private inline fun <T> ResultSet.toResultsList(fn: ResultSet.() -> T): List<T> =
         mutableListOf<T>().apply {
             while (next()) {
@@ -92,4 +129,4 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
         }
 }
 
-private fun randomWorld() = Random().nextInt(9999) + 1
+private fun randomWorld() = Random().nextInt(TOTAL_DB_ROWS - 1) + 1

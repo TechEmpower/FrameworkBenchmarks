@@ -3,7 +3,7 @@
   "tests": [
     {
       "default": {
-        "plaintext_url": "/",
+        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",

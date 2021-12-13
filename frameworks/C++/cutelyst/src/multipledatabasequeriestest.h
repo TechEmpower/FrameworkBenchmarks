@@ -13,6 +13,9 @@ class MultipleDatabaseQueriesTest : public Controller
 public:
     explicit MultipleDatabaseQueriesTest(QObject *parent = 0);
 
+    C_ATTR(queriesp, :Local :AutoArgs)
+    void queriesp(Context *c);
+
     C_ATTR(query_postgres, :Local :AutoArgs)
     void query_postgres(Context *c);
 

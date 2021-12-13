@@ -1,4 +1,4 @@
-FROM golang:1.12
+FROM golang:1.14
 
 ADD ./ /chi
 WORKDIR /chi
@@ -8,8 +8,11 @@ ENV GOPATH /chi
 ENV PATH ${GOPATH}/bin:${PATH}
 
 RUN go get github.com/tidwall/sjson
-RUN go get github.com/jackc/pgx
+RUN go get github.com/go-sql-driver/mysql
 RUN go get github.com/go-chi/chi
 
 RUN go build -o server src/chi-sjson/*.go
+
+EXPOSE 8080
+
 CMD ./server -prefork

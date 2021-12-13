@@ -21,7 +21,8 @@
       "database_os": "Linux",
       "display_name": "Octopus",
       "notes": "",
-      "versus": "openresty"
+      "versus": "openresty",
+      "tags": ["broken"]
     }
   }]
 }

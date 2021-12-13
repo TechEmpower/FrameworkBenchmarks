@@ -8,7 +8,7 @@
     "async": "1.5.2",
     "bluebird": "3.4.1",
     "ejs": "2.5.7",
-    "handlebars": "4.1.2",
+    "handlebars": "4.7.6",
     "mysql": "2.16.0",
     "mysql2": "1.6.5",
     "pg": "6.0.5",
@@ -16,7 +16,7 @@
     "rc": "1.1.6",
     "sails": "0.12.7",
     "sails-disk": "0.10.10",
-    "sequelize": "5.10.0"
+    "sequelize": "5.15.1"
   },
   "scripts": {
     "start": "node app.js",

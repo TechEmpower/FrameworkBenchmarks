@@ -16,7 +16,7 @@
       "language": "PHP",
       "flavor": "PHP7",
       "orm": "Full",
-      "platform": "None",
+      "platform": "FPM/FastCGI",
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",

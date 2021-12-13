@@ -20,9 +20,9 @@
 			<property name="hibernate.hikari.maximumPoolSize" value="192" />
 			<property name="hibernate.hikari.idleTimeout" value="30000" />
 			<property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
-			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
-			<property name="hibernate.hikari.dataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" />
-			<property name="hibernate.hikari.dataSource.url" value="jdbc:mysql://tfb-database:3306/hello_world?jdbcCompliantTruncation=false&amp;elideSetAutoCommits=true&amp;useLocalSessionState=true&amp;cachePrepStmts=true&amp;cacheCallableStmts=true&amp;alwaysSendSetIsolation=false&amp;prepStmtCacheSize=4096&amp;cacheServerConfiguration=true&amp;prepStmtCacheSqlLimit=2048&amp;zeroDateTimeBehavior=convertToNull&amp;traceProtocol=false&amp;useUnbufferedInput=false&amp;useReadAheadInput=false&amp;maintainTimeStats=false&amp;useServerPrepStmts&amp;cacheRSMetadata=true&amp;useSSL=false" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect" />
+			<property name="hibernate.hikari.dataSourceClassName" value="com.mysql.cj.jdbc.MysqlDataSource" />
+			<property name="hibernate.hikari.dataSource.url" value="jdbc:mysql://tfb-database:3306/hello_world?jdbcCompliantTruncation=false&amp;elideSetAutoCommits=true&amp;useLocalSessionState=true&amp;cachePrepStmts=true&amp;cacheCallableStmts=true&amp;alwaysSendSetIsolation=false&amp;prepStmtCacheSize=4096&amp;cacheServerConfiguration=true&amp;prepStmtCacheSqlLimit=2048&amp;zeroDateTimeBehavior=convertToNull&amp;traceProtocol=false&amp;useUnbufferedInput=false&amp;useReadAheadInput=false&amp;maintainTimeStats=false&amp;useServerPrepStmts=true&amp;cacheRSMetadata=true&amp;useSSL=false" />
 			<property name="hibernate.hikari.dataSource.user" value="benchmarkdbuser" />
 			<property name="hibernate.hikari.dataSource.password" value="benchmarkdbpass" />
 		</properties>

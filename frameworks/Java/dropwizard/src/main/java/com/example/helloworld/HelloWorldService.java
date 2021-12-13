@@ -40,7 +40,7 @@ public class HelloWorldService extends Application<HelloWorldConfiguration> {
 
     @Override
     public void run(HelloWorldConfiguration config, Environment environment) throws UnknownHostException {
-        if ("com.mysql.jdbc.Driver".equals(config.getDatabaseConfiguration().getDriverClass())) { // register below for default dropwizard test only
+        if ("com.mysql.cj.jdbc.Driver".equals(config.getDatabaseConfiguration().getDriverClass())) { // register below for default dropwizard test only
             environment.jersey().register(new JsonResource()); // Test type 1: JSON serialization
             environment.jersey().register(new TextResource()); // Test type 6: Plaintext
         }

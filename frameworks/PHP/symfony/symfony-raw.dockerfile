@@ -1,34 +1,35 @@
-FROM ubuntu:19.04
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq nginx git unzip php7.3 php7.3-common php7.3-cli php7.3-fpm php7.3-mysql  > /dev/null
-RUN apt-get install php7.3-xml  > /dev/null
+    apt-get install -yqq nginx git unzip curl \
+    php8.0-cli php8.0-fpm php8.0-mysql  \
+    php8.0-mbstring php8.0-xml php8.0-curl > /dev/null
 
-RUN apt-get install -yqq composer > /dev/null
+RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-COPY deploy/conf/* /etc/php/7.3/fpm/
+COPY deploy/conf/* /etc/php/8.0/fpm/
+RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.0/fpm/php-fpm.conf ; fi;
 
-ADD ./ /symfony
 WORKDIR /symfony
+ADD ./composer.json /symfony/
+RUN mkdir -m 777 -p /symfony/var/cache/{dev,prod} /symfony/var/log
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts --quiet
+ADD . /symfony
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --no-dev --classmap-authoritative
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env prod
 
-RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/7.3/fpm/php-fpm.conf ; fi;
+# removes hardcoded option `ATTR_STATEMENT_CLASS` conflicting with `ATTR_PERSISTENT`. Hack not needed when upgrading to Doctrine 3
+# see https://github.com/doctrine/dbal/issues/2315
+RUN sed -i '/PDO::ATTR_STATEMENT_CLASS/d' ./vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php
 
-ENV APP_ENV prod
+RUN php bin/console cache:clear
+RUN echo "opcache.preload=/symfony/var/cache/prod/App_KernelProdContainer.preload.php" >> /etc/php/8.0/fpm/php.ini
 
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+EXPOSE 8080
 
-RUN php bin/console cache:clear --env=prod --no-debug --no-warmup
-RUN php bin/console cache:warmup --env=prod --no-debug
-
-RUN mkdir -p /symfony/var/cache/dev
-RUN chmod 777 -R /symfony/var/cache/dev
-
-RUN mkdir -p /symfony/var/log
-RUN chmod 777 -R /symfony/var/log
-
-CMD service php7.3-fpm start && \
-    nginx -c /symfony/deploy/nginx.conf -g "daemon off;"
+CMD service php8.0-fpm start && \
+    nginx -c /symfony/deploy/nginx.conf

@@ -12,6 +12,5 @@ namespace PlatformBenchmarks
         PipeReader Reader { get; set; }
         PipeWriter Writer { get; set; }
         Task ExecuteAsync();
-        ValueTask OnReadCompletedAsync();
     }
 }

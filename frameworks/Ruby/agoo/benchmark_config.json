@@ -8,7 +8,7 @@
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "approach": "Stripped",
+      "approach": "Realistic",
       "classification": "Micro",
       "database": "Postgres",
       "framework": "rack",

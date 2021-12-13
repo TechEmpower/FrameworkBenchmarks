@@ -15,6 +15,8 @@ COPY ringo-main.js ringo-main.js
 
 RUN ringo-admin install oberhamsi/sql-ringojs-client
 RUN ringo-admin install orfon/reinhardt
-RUN curl -sL -o ${RINGOJS_HOME}/packages/sql-ringojs-client/jars/mysql.jar https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.47/mysql-connector-java-5.1.47.jar
+RUN curl -sL -o ${RINGOJS_HOME}/packages/sql-ringojs-client/jars/mysql.jar https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.18/mysql-connector-java-8.0.18.jar
+
+EXPOSE 8080
 
 CMD ["ringo", "--production", "-J-server", "-J-Xmx1g", "-J-Xms1g", "ringo-main.js", "--host", "0.0.0.0"]

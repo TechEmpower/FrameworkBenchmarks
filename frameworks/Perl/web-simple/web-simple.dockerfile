@@ -1,6 +1,6 @@
 FROM perl:5.26
 
-RUN apt update -yqq && apt install -yqq nginx
+RUN apt-get update -yqq && apt-get install -yqq nginx
 
 WORKDIR /simple
 
@@ -16,6 +16,8 @@ RUN cpanm --notest --no-man-page  \
 ADD ./conf /simple/
 ADD ./app.pl /simple/
 ADD ./nginx.conf /simple/
+
+EXPOSE 8080
 
 CMD nginx -c /simple/nginx.conf && \
     plackup -E production -s Starman --workers=$(nproc) \

@@ -9,77 +9,206 @@
 #include <drogon/utils/Utilities.h>
 #include <string>
 
+using namespace drogon;
 using namespace drogon_model::hello_world;
 
-const std::string Fortune::Cols::id = "id";
-const std::string Fortune::Cols::message = "message";
+const std::string Fortune::Cols::_id = "id";
+const std::string Fortune::Cols::_message = "message";
 const std::string Fortune::primaryKeyName = "id";
 const bool Fortune::hasPrimaryKey = true;
 const std::string Fortune::tableName = "fortune";
 
-const std::vector<typename Fortune::MetaData> Fortune::_metaData={
-{"id","int32_t","integer",4,0,1,1},
-{"message","std::string","character varying",2048,0,0,1}
-};
+const std::vector<typename Fortune::MetaData> Fortune::_metaData = {
+    {"id", "int32_t", "integer", 4, 0, 1, 1},
+    {"message", "std::string", "character varying", 2048, 0, 0, 1}};
 const std::string &Fortune::getColumnName(size_t index) noexcept(false)
 {
     assert(index < _metaData.size());
     return _metaData[index]._colName;
 }
-Fortune::Fortune(const Row &r) noexcept
+Fortune::Fortune(const Row &r, const ssize_t indexOffset) noexcept
 {
-        if(!r["id"].isNull())
+    if (indexOffset < 0)
+    {
+        if (!r["id"].isNull())
         {
-            _id=std::make_shared<int32_t>(r["id"].as<int32_t>());
+            _id = std::make_shared<int32_t>(r["id"].as<int32_t>());
         }
-        if(!r["message"].isNull())
+        if (!r["message"].isNull())
         {
-            _message=std::make_shared<std::string>(r["message"].as<std::string>());
+            _message =
+                std::make_shared<std::string>(r["message"].as<std::string>());
         }
+    }
+    else
+    {
+        size_t offset = (size_t)indexOffset;
+        if (offset + 2 > r.size())
+        {
+            LOG_FATAL << "Invalid SQL result for this model";
+            return;
+        }
+        size_t index;
+        index = offset + 0;
+        if (!r[index].isNull())
+        {
+            _id = std::make_shared<int32_t>(r[index].as<int32_t>());
+        }
+        index = offset + 1;
+        if (!r[index].isNull())
+        {
+            _message =
+                std::make_shared<std::string>(r[index].as<std::string>());
+        }
+    }
 }
-const int32_t & Fortune::getValueOfId(const int32_t &defaultValue) const noexcept
+
+Fortune::Fortune(
+    const Json::Value &pJson,
+    const std::vector<std::string> &pMasqueradingVector) noexcept(false)
 {
-    if(_id)
+    if (pMasqueradingVector.size() != 2)
+    {
+        LOG_ERROR << "Bad masquerading vector";
+        return;
+    }
+    if (!pMasqueradingVector[0].empty() &&
+        pJson.isMember(pMasqueradingVector[0]))
+    {
+        _dirtyFlag[0] = true;
+        if (!pJson[pMasqueradingVector[0]].isNull())
+        {
+            _id = std::make_shared<int32_t>(
+                (int32_t)pJson[pMasqueradingVector[0]].asInt64());
+        }
+    }
+    if (!pMasqueradingVector[1].empty() &&
+        pJson.isMember(pMasqueradingVector[1]))
+    {
+        _dirtyFlag[1] = true;
+        if (!pJson[pMasqueradingVector[1]].isNull())
+        {
+            _message = std::make_shared<std::string>(
+                pJson[pMasqueradingVector[1]].asString());
+        }
+    }
+}
+
+Fortune::Fortune(const Json::Value &pJson) noexcept(false)
+{
+    if (pJson.isMember("id"))
+    {
+        _dirtyFlag[0] = true;
+        if (!pJson["id"].isNull())
+        {
+            _id = std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+        }
+    }
+    if (pJson.isMember("message"))
+    {
+        _dirtyFlag[1] = true;
+        if (!pJson["message"].isNull())
+        {
+            _message =
+                std::make_shared<std::string>(pJson["message"].asString());
+        }
+    }
+}
+
+void Fortune::updateByMasqueradedJson(
+    const Json::Value &pJson,
+    const std::vector<std::string> &pMasqueradingVector) noexcept(false)
+{
+    if (pMasqueradingVector.size() != 2)
+    {
+        LOG_ERROR << "Bad masquerading vector";
+        return;
+    }
+    if (!pMasqueradingVector[0].empty() &&
+        pJson.isMember(pMasqueradingVector[0]))
+    {
+        if (!pJson[pMasqueradingVector[0]].isNull())
+        {
+            _id = std::make_shared<int32_t>(
+                (int32_t)pJson[pMasqueradingVector[0]].asInt64());
+        }
+    }
+    if (!pMasqueradingVector[1].empty() &&
+        pJson.isMember(pMasqueradingVector[1]))
+    {
+        _dirtyFlag[1] = true;
+        if (!pJson[pMasqueradingVector[1]].isNull())
+        {
+            _message = std::make_shared<std::string>(
+                pJson[pMasqueradingVector[1]].asString());
+        }
+    }
+}
+
+void Fortune::updateByJson(const Json::Value &pJson) noexcept(false)
+{
+    if (pJson.isMember("id"))
+    {
+        if (!pJson["id"].isNull())
+        {
+            _id = std::make_shared<int32_t>((int32_t)pJson["id"].asInt64());
+        }
+    }
+    if (pJson.isMember("message"))
+    {
+        _dirtyFlag[1] = true;
+        if (!pJson["message"].isNull())
+        {
+            _message =
+                std::make_shared<std::string>(pJson["message"].asString());
+        }
+    }
+}
+
+const int32_t &Fortune::getValueOfId() const noexcept
+{
+    const static int32_t defaultValue = int32_t();
+    if (_id)
         return *_id;
     return defaultValue;
 }
-std::shared_ptr<const int32_t> Fortune::getId() const noexcept
+const std::shared_ptr<int32_t> &Fortune::getId() const noexcept
 {
     return _id;
 }
-void Fortune::setId(const int32_t &id) noexcept
+void Fortune::setId(const int32_t &pId) noexcept
 {
-    _id = std::make_shared<int32_t>(id);
+    _id = std::make_shared<int32_t>(pId);
     _dirtyFlag[0] = true;
 }
 
-const typename Fortune::PrimaryKeyType & Fortune::getPrimaryKey() const
+const typename Fortune::PrimaryKeyType &Fortune::getPrimaryKey() const
 {
     assert(_id);
     return *_id;
 }
 
-const std::string & Fortune::getValueOfMessage(const std::string &defaultValue) const noexcept
+const std::string &Fortune::getValueOfMessage() const noexcept
 {
-    if(_message)
+    const static std::string defaultValue = std::string();
+    if (_message)
         return *_message;
     return defaultValue;
 }
-std::shared_ptr<const std::string> Fortune::getMessage() const noexcept
+const std::shared_ptr<std::string> &Fortune::getMessage() const noexcept
 {
     return _message;
 }
-void Fortune::setMessage(const std::string &message) noexcept
+void Fortune::setMessage(const std::string &pMessage) noexcept
 {
-    _message = std::make_shared<std::string>(message);
+    _message = std::make_shared<std::string>(pMessage);
     _dirtyFlag[1] = true;
 }
-void Fortune::setMessage(std::string &&message) noexcept
+void Fortune::setMessage(std::string &&pMessage) noexcept
 {
-    _message = std::make_shared<std::string>(std::move(message));
+    _message = std::make_shared<std::string>(std::move(pMessage));
     _dirtyFlag[1] = true;
 }
-
 
 void Fortune::updateId(const uint64_t id)
 {
@@ -87,39 +216,42 @@ void Fortune::updateId(const uint64_t id)
 
 const std::vector<std::string> &Fortune::insertColumns() noexcept
 {
-    static const std::vector<std::string> _inCols={
-        "id",
-        "message"
-    };
+    static const std::vector<std::string> _inCols = {"id", "message"};
     return _inCols;
 }
 
 void Fortune::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 {
-    if(getId())
+    if (_dirtyFlag[0])
     {
-        binder << getValueOfId();
+        if (getId())
+        {
+            binder << getValueOfId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
     }
-    else
+    if (_dirtyFlag[1])
     {
-        binder << nullptr;
-    }
-    if(getMessage())
-    {
-        binder << getValueOfMessage();
-    }
-    else
-    {
-        binder << nullptr;
+        if (getMessage())
+        {
+            binder << getValueOfMessage();
+        }
+        else
+        {
+            binder << nullptr;
+        }
     }
 }
 
 const std::vector<std::string> Fortune::updateColumns() const
 {
     std::vector<std::string> ret;
-    for(size_t i=0;i<sizeof(_dirtyFlag);i++)
+    for (size_t i = 0; i < sizeof(_dirtyFlag); i++)
     {
-        if(_dirtyFlag[i])
+        if (_dirtyFlag[i])
         {
             ret.push_back(getColumnName(i));
         }
@@ -129,9 +261,9 @@ const std::vector<std::string> Fortune::updateColumns() const
 
 void Fortune::updateArgs(drogon::orm::internal::SqlBinder &binder) const
 {
-    if(_dirtyFlag[0])
+    if (_dirtyFlag[0])
     {
-        if(getId())
+        if (getId())
         {
             binder << getValueOfId();
         }
@@ -140,9 +272,9 @@ void Fortune::updateArgs(drogon::orm::internal::SqlBinder &binder) const
             binder << nullptr;
         }
     }
-    if(_dirtyFlag[1])
+    if (_dirtyFlag[1])
     {
-        if(getMessage())
+        if (getMessage())
         {
             binder << getValueOfMessage();
         }
@@ -155,21 +287,252 @@ void Fortune::updateArgs(drogon::orm::internal::SqlBinder &binder) const
 Json::Value Fortune::toJson() const
 {
     Json::Value ret;
-    if(getId())
+    if (getId())
     {
-        ret["id"]=getValueOfId();
+        ret["id"] = getValueOfId();
     }
     else
     {
-        ret["id"]=Json::Value();
+        ret["id"] = Json::Value();
     }
-    if(getMessage())
+    if (getMessage())
     {
-        ret["message"]=getValueOfMessage();
+        ret["message"] = getValueOfMessage();
     }
     else
     {
-        ret["message"]=Json::Value();
+        ret["message"] = Json::Value();
     }
     return ret;
+}
+
+Json::Value Fortune::toMasqueradedJson(
+    const std::vector<std::string> &pMasqueradingVector) const
+{
+    Json::Value ret;
+    if (pMasqueradingVector.size() == 2)
+    {
+        if (!pMasqueradingVector[0].empty())
+        {
+            if (getId())
+            {
+                ret[pMasqueradingVector[0]] = getValueOfId();
+            }
+            else
+            {
+                ret[pMasqueradingVector[0]] = Json::Value();
+            }
+        }
+        if (!pMasqueradingVector[1].empty())
+        {
+            if (getMessage())
+            {
+                ret[pMasqueradingVector[1]] = getValueOfMessage();
+            }
+            else
+            {
+                ret[pMasqueradingVector[1]] = Json::Value();
+            }
+        }
+        return ret;
+    }
+    LOG_ERROR << "Masquerade failed";
+    if (getId())
+    {
+        ret["id"] = getValueOfId();
+    }
+    else
+    {
+        ret["id"] = Json::Value();
+    }
+    if (getMessage())
+    {
+        ret["message"] = getValueOfMessage();
+    }
+    else
+    {
+        ret["message"] = Json::Value();
+    }
+    return ret;
+}
+
+bool Fortune::validateJsonForCreation(const Json::Value &pJson,
+                                      std::string &err)
+{
+    if (pJson.isMember("id"))
+    {
+        if (!validJsonOfField(0, "id", pJson["id"], err, true))
+            return false;
+    }
+    else
+    {
+        err = "The id column cannot be null";
+        return false;
+    }
+    if (pJson.isMember("message"))
+    {
+        if (!validJsonOfField(1, "message", pJson["message"], err, true))
+            return false;
+    }
+    else
+    {
+        err = "The message column cannot be null";
+        return false;
+    }
+    return true;
+}
+bool Fortune::validateMasqueradedJsonForCreation(
+    const Json::Value &pJson,
+    const std::vector<std::string> &pMasqueradingVector,
+    std::string &err)
+{
+    if (pMasqueradingVector.size() != 2)
+    {
+        err = "Bad masquerading vector";
+        return false;
+    }
+    if (!pMasqueradingVector[0].empty())
+    {
+        if (pJson.isMember(pMasqueradingVector[0]))
+        {
+            if (!validJsonOfField(0,
+                                  pMasqueradingVector[0],
+                                  pJson[pMasqueradingVector[0]],
+                                  err,
+                                  true))
+                return false;
+        }
+        else
+        {
+            err = "The " + pMasqueradingVector[0] + " column cannot be null";
+            return false;
+        }
+    }
+    if (!pMasqueradingVector[1].empty())
+    {
+        if (pJson.isMember(pMasqueradingVector[1]))
+        {
+            if (!validJsonOfField(1,
+                                  pMasqueradingVector[1],
+                                  pJson[pMasqueradingVector[1]],
+                                  err,
+                                  true))
+                return false;
+        }
+        else
+        {
+            err = "The " + pMasqueradingVector[1] + " column cannot be null";
+            return false;
+        }
+    }
+    return true;
+}
+bool Fortune::validateJsonForUpdate(const Json::Value &pJson, std::string &err)
+{
+    if (pJson.isMember("id"))
+    {
+        if (!validJsonOfField(0, "id", pJson["id"], err, false))
+            return false;
+    }
+    else
+    {
+        err =
+            "The value of primary key must be set in the json object for "
+            "update";
+        return false;
+    }
+    if (pJson.isMember("message"))
+    {
+        if (!validJsonOfField(1, "message", pJson["message"], err, false))
+            return false;
+    }
+    return true;
+}
+bool Fortune::validateMasqueradedJsonForUpdate(
+    const Json::Value &pJson,
+    const std::vector<std::string> &pMasqueradingVector,
+    std::string &err)
+{
+    if (pMasqueradingVector.size() != 2)
+    {
+        err = "Bad masquerading vector";
+        return false;
+    }
+    if (!pMasqueradingVector[0].empty() &&
+        pJson.isMember(pMasqueradingVector[0]))
+    {
+        if (!validJsonOfField(0,
+                              pMasqueradingVector[0],
+                              pJson[pMasqueradingVector[0]],
+                              err,
+                              false))
+            return false;
+    }
+    else
+    {
+        err =
+            "The value of primary key must be set in the json object for "
+            "update";
+        return false;
+    }
+    if (!pMasqueradingVector[1].empty() &&
+        pJson.isMember(pMasqueradingVector[1]))
+    {
+        if (!validJsonOfField(1,
+                              pMasqueradingVector[1],
+                              pJson[pMasqueradingVector[1]],
+                              err,
+                              false))
+            return false;
+    }
+    return true;
+}
+bool Fortune::validJsonOfField(size_t index,
+                               const std::string &fieldName,
+                               const Json::Value &pJson,
+                               std::string &err,
+                               bool isForCreation)
+{
+    switch (index)
+    {
+        case 0:
+            if (pJson.isNull())
+            {
+                err = "The " + fieldName + " column cannot be null";
+                return false;
+            }
+            if (!pJson.isInt())
+            {
+                err = "Type error in the " + fieldName + " field";
+                return false;
+            }
+            break;
+        case 1:
+            if (pJson.isNull())
+            {
+                err = "The " + fieldName + " column cannot be null";
+                return false;
+            }
+            if (!pJson.isString())
+            {
+                err = "Type error in the " + fieldName + " field";
+                return false;
+            }
+            // asString().length() creates a string object, is there any better
+            // way to validate the length?
+            if (pJson.isString() && pJson.asString().length() > 2048)
+            {
+                err = "String length exceeds limit for the " + fieldName +
+                      " field (the maximum value is 2048)";
+                return false;
+            }
+
+            break;
+
+        default:
+            err = "Internal error in the server";
+            return false;
+            break;
+    }
+    return true;
 }

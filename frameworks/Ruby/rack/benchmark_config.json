@@ -19,7 +19,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "rack-puma-mri",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "unicorn": {
       "json_url": "/json",
@@ -39,7 +40,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "rack-unicorn-mri",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "falcon": {
       "json_url": "/json",
@@ -59,7 +61,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "rack-falcon-mri",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     }
   }]
 }

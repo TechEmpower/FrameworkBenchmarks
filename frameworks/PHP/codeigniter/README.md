@@ -17,10 +17,10 @@ Uses the db abstraction class from Codeigniter
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Codeigniter Version 2.1.3](http://ellislab.com/codeigniter)
-* [PHP Version 5.5.17](http://www.php.net/) with FPM and APC
-* [nginx 1.4.0](http://nginx.org/)
-* [MySQL 5.5.29](https://dev.mysql.com/)
+* [Codeigniter Version 3.1.11](http://ellislab.com/codeigniter)
+* [PHP Version 7.4](http://www.php.net/) with FPM and APC
+* [nginx 1.16.1](http://nginx.org/)
+* [MySQL 8](https://dev.mysql.com/)
 
 ## Test URLs
 ### JSON Encoding Test

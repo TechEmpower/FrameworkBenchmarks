@@ -27,8 +27,11 @@ void QueriesCtrl::asyncHandleHttpRequest(
         std::make_shared<std::function<void(const HttpResponsePtr &)>>(
             std::move(callback));
     auto counter = std::make_shared<int>(queries);
-    auto client = app().getFastDbClient();
-    drogon::orm::Mapper<World> mapper(client);
+    if (!*_dbClient)
+    {
+        *_dbClient = drogon::app().getFastDbClient();
+    }
+    drogon::orm::Mapper<World> mapper(*_dbClient);
 
     for (int i = 0; i < queries; i++)
     {
@@ -40,14 +43,19 @@ void QueriesCtrl::asyncHandleHttpRequest(
                 (*counter)--;
                 if ((*counter) == 0)
                 {
-                    (*callbackPtr)(HttpResponse::newHttpJsonResponse(*json));
+                    (*callbackPtr)(
+                        HttpResponse::newHttpJsonResponse(std::move(*json)));
                 }
             },
-            [callbackPtr](const DrogonDbException &e) {
-                Json::Value ret;
-                ret["result"] = "error!";
-                auto resp = HttpResponse::newHttpJsonResponse(ret);
-                (*callbackPtr)(resp);
+            [callbackPtr, counter](const DrogonDbException &e) {
+                if ((*counter) <= 0)
+                    return;
+                (*counter) = -1;
+                Json::Value json{};
+                json["code"] = 1;
+                json["message"] = e.base().what();
+                (*callbackPtr)(
+                    HttpResponse::newHttpJsonResponse(std::move(json)));
             });
     }
 }

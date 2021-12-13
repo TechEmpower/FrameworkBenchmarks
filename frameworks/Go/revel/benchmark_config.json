@@ -18,7 +18,8 @@
       "database_os": "Linux",
       "display_name": "Revel",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     },
     "fast": {
       "json_url": "/json",
@@ -37,7 +38,8 @@
       "database_os": "Linux",
       "display_name": "Revel",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     },
     "raw": {
       "db_url": "/db",
@@ -58,7 +60,8 @@
       "database_os": "Linux",
       "display_name": "Revel-raw",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     },
     "jet": {
       "db_url": "/jet-db",
@@ -79,7 +82,8 @@
       "database_os": "Linux",
       "display_name": "Revel-jet",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     },
     "qbs": {
       "db_url": "/qbs-db",
@@ -100,7 +104,8 @@
       "database_os": "Linux",
       "display_name": "Revel-qbs",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     }
   }]
 }

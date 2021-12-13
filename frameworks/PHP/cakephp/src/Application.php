@@ -14,12 +14,10 @@
  */
 namespace App;
 
-use Cake\Core\Configure;
-use Cake\Core\Exception\MissingPluginException;
-use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
-use Cake\Routing\Middleware\AssetMiddleware;
+use Cake\Http\MiddlewareQueue;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Cake\Routing\RouteBuilder;
 
 /**
  * Application setup class.
@@ -30,68 +28,32 @@ use Cake\Routing\Middleware\RoutingMiddleware;
 class Application extends BaseApplication
 {
     /**
-     * {@inheritDoc}
-     */
-    public function bootstrap()
-    {
-        // Call parent to load bootstrap from files.
-        parent::bootstrap();
-
-        if (PHP_SAPI === 'cli') {
-            $this->bootstrapCli();
-        }
-
-        /*
-         * Only try to load DebugKit in development mode
-         * Debug Kit should not be installed on a production system
-         */
-//        if (Configure::read('debug')) {
-//            $this->addPlugin(\DebugKit\Plugin::class);
-//        }
-
-        // Load more plugins here
-    }
-
-    /**
      * Setup the middleware queue your application will use.
      *
      * @param \Cake\Http\MiddlewareQueue $middlewareQueue The middleware queue to setup.
      * @return \Cake\Http\MiddlewareQueue The updated middleware queue.
      */
-    public function middleware($middlewareQueue)
+    public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
         $middlewareQueue
-            // Catch any exceptions in the lower layers,
-            // and make an error page/response
-            ->add(new ErrorHandlerMiddleware(null, Configure::read('Error')))
-
-            // Handle plugin/theme assets like CakePHP normally does.
-            //->add(new AssetMiddleware([
-            //    'cacheTime' => Configure::read('Asset.cacheTime')
-            //]))
-
             // Add routing middleware.
-            // Routes collection cache enabled by default, to disable route caching
-            // pass null as cacheConfig, example: `new RoutingMiddleware($this)`
-            // you might want to disable this cache in case your routing is extremely simple
-            ->add(new RoutingMiddleware($this, '_cake_routes_'));
+            // If you have a large number of routes connected, turning on routes
+            // caching in production could improve performance. For that when
+            // creating the middleware instance specify the cache config name by
+            // using it's second constructor argument:
+            // `new RoutingMiddleware($this, '_cake_routes_')`
+            ->add(new RoutingMiddleware($this));
 
         return $middlewareQueue;
     }
 
-    /**
-     * @return void
-     */
-    protected function bootstrapCli()
+    public function routes(RouteBuilder $routes): void
     {
-        try {
-            $this->addPlugin('Bake');
-        } catch (MissingPluginException $e) {
-            // Do not halt if the plugin is missing
-        }
-
-        $this->addPlugin('Migrations');
-
-        // Load more plugins here
-    }
+        $routes->connect('/json', ['controller' => 'Json', 'action' => 'index']);
+        $routes->connect('/plaintext', ['controller' => 'Plaintext', 'action' => 'index']);
+        $routes->connect('/fortunes', ['controller' => 'Fortunes', 'action' => 'index']);
+        $routes->connect('/db', ['controller' => 'World', 'action' => 'query']);
+        $routes->connect('/queries', ['controller' => 'World', 'action' => 'index']);
+        $routes->connect('/updates', ['controller' => 'World', 'action' => 'updates']);
+    }    
 }

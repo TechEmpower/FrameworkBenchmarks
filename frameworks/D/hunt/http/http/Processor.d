@@ -13,7 +13,11 @@ import hunt.collection.ByteBuffer;
 import hunt.logging;
 import hunt.io;
 import hunt.util.DateTime;
-
+import std.array;
+import std.string;
+import core.stdc.string;
+import core.stdc.stdlib;
+import std.stdio;
 
 struct HttpHeader {
 	string name, value;
@@ -28,6 +32,10 @@ struct HttpRequest {
 version(NO_HTTPPARSER) {
 enum string ResponseData = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\nConnection: Keep-Alive\r\nContent-Type: text/plain\r\nServer: Hunt/1.0\r\nDate: Wed, 17 Apr 2013 12:00:00 GMT\r\n\r\nHello, World!";
 }
+
+
+enum string keepAliveResponseData = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\nConnection: Keep-Alive\r\nContent-Type: text/plain\r\nServer: Hunt/1.0\r\nDate: Wed, 17 Apr 2013 12:00:00 GMT\r\n\r\nHello, World!";
+enum string nokeepAliveResponseData = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\nConnection: close\r\nContent-Type: text/plain\r\nServer: Hunt/1.0\r\nDate: Wed, 17 Apr 2013 12:00:00 GMT\r\n\r\nHello, World!";
 
 abstract class HttpProcessor {
 private:
@@ -48,7 +56,14 @@ private:
 	HttpRequest request;
 	State state;
 	bool serving;
-	
+  string resData;
+  long index1;
+  long index2;
+  long length1;
+  long length2;
+  void * keepAliveValue;
+  void * nokeepAliveValue;
+
 public:
 	TcpStream client;
 
@@ -58,10 +73,17 @@ public:
 		headers = new HttpHeader[1];
 		pad = ScratchPad(16 * 1024);
 		parser = httpParser(this, HttpParserType.request);
+    index1 = keepAliveResponseData.indexOf("Date:") + 6;
+    length1 = keepAliveResponseData.length;
+    length2 = nokeepAliveResponseData.length;
+    keepAliveValue = malloc(length1);
+    nokeepAliveValue = malloc(length2);
+    memcpy(keepAliveValue , (cast(ubyte[])keepAliveResponseData).ptr, length1);
+    memcpy(nokeepAliveValue , (cast(ubyte[])nokeepAliveResponseData).ptr, length2);
 	}
 
 	void run() {
-		client.onReceived((ByteBuffer buffer) { 
+		client.received((ByteBuffer buffer) {
 			version(NO_HTTPPARSER) {
 				client.write(cast(ubyte[])ResponseData);
 			} else {
@@ -70,10 +92,10 @@ public:
 
 		})
 		.onClosed(() {
-			// notifyClientClosed();
+			 //notifyClientClosed();
 		})
-		.onError((string msg) { 
-			debug warning("Error: ", msg); 
+		.onError((string msg) {
+			debug warning("Error: ", msg);
 		})
 		.start();
 	}
@@ -83,27 +105,49 @@ public:
 	}
 
 	void respondWith(string _body, uint status, HttpHeader[] headers...) {
-		return respondWith(cast(const(ubyte)[]) _body, status, headers);
+    //outBuf.clear();
+
+    if (parser.shouldKeepAlive)
+    {
+      memcpy(keepAliveValue + index1 , (cast(ubyte[])(DateTimeHelper.getDateAsGMT())).ptr, 29);
+      client.write(cast(ubyte[]) keepAliveValue[0 .. length1]);
+    }else
+    {
+      memcpy(nokeepAliveValue + index2 , (cast(ubyte[])(DateTimeHelper.getDateAsGMT())).ptr, 29);
+      client.write(cast(ubyte[]) nokeepAliveValue[0 .. length2]);
+    }
+
+		//return respondWith( _body, status, headers);
 	}
 
-	void respondWith(const(ubyte)[] _body, uint status, HttpHeader[] headers...) {
-		outBuf.clear();
-		formattedWrite(outBuf, "HTTP/1.1 %s OK\r\n", status);
-		outBuf.put("Server: Hunt/1.0\r\n");
-
-		formattedWrite(outBuf, "Date: %s\r\n", DateTimeHelper.getDateAsGMT());
-		if (!parser.shouldKeepAlive)
-			outBuf.put("Connection: close\r\n");
-		foreach (ref hdr; headers) {
-			outBuf.put(hdr.name);
-			outBuf.put(": ");
-			outBuf.put(hdr.value);
-			outBuf.put("\r\n");
-		}
-		formattedWrite(outBuf, "Content-Length: %d\r\n\r\n", _body.length);
-		outBuf.put(cast(string) _body);
-		client.write(cast(ubyte[]) outBuf.data); // TODO: short-writes are quite possible
-	}
+	//void respondWith(string _body, uint status, HttpHeader[] headers...) {
+	//	outBuf.clear();
+  //  //if (parser.shouldKeepAlive)
+  //  //{
+  //  //  formattedWrite(outBuf, "HTTP/1.1 %s OK\r\n Server: Hunt/1.0\r\n Date: %s\r\n Content-Type: text/plain; charset=UTF-8\r\n Content-Length: %d\r\n\r\n%s", status,  DateTimeHelper.getDateAsGMT(), _body.length, _body);
+  //  //}else
+  //  //{
+  //  //  formattedWrite(outBuf, "HTTP/1.1 %s OK\r\n Server: Hunt/1.0\r\n Date: %s\r\n Connection: close\r\n Content-Type: text/plain; charset=UTF-8\r\n Content-Length: %d\r\n\r\n%s", status,  DateTimeHelper.getDateAsGMT(), _body.length, _body);
+  //  //}
+  //  //warning("%s", outBuf.data);
+  //  //client.write(cast(ubyte[]) outBuf.data);
+	//	formattedWrite(outBuf, "HTTP/1.1 %s OK\r\n", status);
+	//	outBuf.put("Server: Hunt/1.0\r\n");
+  //
+	//	formattedWrite(outBuf, "Date: %s\r\n", DateTimeHelper.getDateAsGMT());
+	//	if (!parser.shouldKeepAlive)
+	//		outBuf.put("Connection: close\r\n");
+	//	foreach (ref hdr; headers) {
+	//		outBuf.put(hdr.name);
+	//		outBuf.put(": ");
+	//		outBuf.put(hdr.value);
+	//		outBuf.put("\r\n");
+	//	}
+	//	formattedWrite(outBuf, "Content-Length: %d\r\n\r\n", _body.length);
+	//	outBuf.put( _body);
+  //  warning("%s", outBuf.data);
+	//	client.write(cast(ubyte[]) outBuf.data); // TODO: short-writes are quite possible
+	//}
 
 	void onStart(HttpRequest req) {
 	}

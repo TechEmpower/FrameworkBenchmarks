@@ -1,0 +1,49 @@
+{
+  "framework": "comet",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/query?q=",
+      "update_url": "/update?q=",
+      "fortune_url": "/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "comet",
+      "language": "PHP",
+      "flavor": "PHP8",
+      "orm": "Raw",
+      "platform": "workerman",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "comet",
+      "notes": "",
+      "versus": "workerman"
+    },
+    "mysql": {
+      "db_url": "/db",
+      "query_url": "/query?q=",
+      "update_url": "/update?q=",
+      "fortune_url": "/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "comet",
+      "language": "PHP",
+      "flavor": "PHP8",
+      "orm": "Raw",
+      "platform": "workerman",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "comet-mysql",
+      "notes": "",
+      "versus": "workerman"
+    }
+  }]
+}

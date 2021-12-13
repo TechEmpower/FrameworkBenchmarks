@@ -34,7 +34,7 @@
         //any synchronous interface of it.
         "is_fast": true,
         //connection_number:1 by default
-        "connection_number": 8
+        "connection_number": 1
     }],
     "app": {
         //threads_num:the number of IO threads,1 by default, if the value is set to 0, the number of threads
@@ -103,21 +103,21 @@
         "static_files_cache_time": 5,
         //simple_controllers_map:Configuring mapping from path to simple controller
         "simple_controllers_map": [
-            {
-                "path": "/plaintext",
-                "controller": "PlaintextCtrl",
-                "http_methods": [
-                    "get"
-                ]
-            },
-            {
-                "path": "/json",
-                "controller": "JsonCtrl",
-                "http_methods": [
-                    "get"
-                ],
-                "filters": []
-            },
+            // {
+            //     "path": "/plaintext",
+            //     "controller": "PlaintextCtrl",
+            //     "http_methods": [
+            //         "get"
+            //     ]
+            // },
+            // {
+            //     "path": "/json",
+            //     "controller": "JsonCtrl",
+            //     "http_methods": [
+            //         "get"
+            //     ],
+            //     "filters": []
+            // },
             {
                 "path": "/db",
                 "controller": "DbCtrl",
@@ -150,7 +150,7 @@
         ],
         //idle_connection_timeout: defaults to 60 seconds, the lifetime 
         //of the connection without read or write
-        "idle_connection_timeout": 60,
+        "idle_connection_timeout": 0,
         //server_header_field: Set the 'server' header field in each response sent by drogon,
         //empty string by default with which the 'server' header field is set to "Server: drogon/version string\r\n"
         "server_header_field": "dg",
@@ -176,14 +176,12 @@
     //plugins: Define all plugins running in the application
     "plugins": [{
         //name: The class name of the plugin
-        //"name": "TestPlugin",
+        "name": "SyncPlugin",
         //dependencies: Plugins that the plugin depends on. It can be commented out
         "dependencies": [],
         //config: The configuration of the plugin. This json object is the parameter to initialize the plugin.
         //It can be commented out
-        "config": {
-            "heartbeat_interval": 2
-        }
+        "config": {}
     }],
     //custom_config: custom configuration for users. This object can be get by the app().getCustomConfig() method. 
     "custom_config": {}

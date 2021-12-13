@@ -6,15 +6,15 @@
   "private": true,
   "dependencies": {
     "bluebird": "3.5.1",
-    "handlebars": "4.1.2",
+    "handlebars": "4.3.0",
     "koa": "2.5.0",
     "koa-bodyparser": "4.2.0",
     "koa-hbs": "1.0.0",
     "koa-router": "7.4.0",
-    "mongoose": "5.0.11",
+    "mongoose": "5.7.5",
     "mysql2": "1.5.3",
-    "pg": "7.4.1",
+    "pg": "8.5.1",
     "pg-hstore": "2.3.2",
-    "sequelize": "5.10.0"
+    "sequelize": "5.15.1"
   }
 }

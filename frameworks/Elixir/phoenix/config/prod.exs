@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :hello, Hello.Endpoint,
+config :hello, HelloWeb.Endpoint,
   url: [host: "0.0.0.0"],
   http: [port: 8080, protocol_options: [max_keepalive: :infinity], backlog: 8096],
   cache_static_lookup: false,
@@ -14,7 +14,11 @@ config :hello, Hello.Repo,
   password: "benchmarkdbpass",
   database: "hello_world",
   hostname: "tfb-database",
-  pool_size: 256
+  pool_size: 40,
+  queue_target: 5000,
+  log: false
+
+config :phoenix, :logger, false
 
 config :logger,
   compile_time_purge_matching: [

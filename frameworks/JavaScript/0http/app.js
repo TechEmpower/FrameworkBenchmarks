@@ -1,8 +1,9 @@
-const cluster = require('cluster')
-const cpus = require('os').cpus()
-
 const cero = require('0http')
-const { router, server } = cero()
+const low = require('0http/lib/server/low')
+
+const { router, server } = cero({
+  server: low()
+})
 
 router.on('GET', '/json', (req, res) => {
   res.setHeader('server', '0http')
@@ -18,8 +19,4 @@ router.on('GET', '/plaintext', (req, res) => {
   res.end('Hello, World!')
 })
 
-if (cluster.isMaster) {
-  cpus.forEach(() => cluster.fork())
-} else {
-  server.listen(8080)
-}
+server.start(8080, socket => {})

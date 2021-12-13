@@ -1,9 +1,13 @@
-FROM node:10.3.0
+FROM node:16.13.0-slim
 
 COPY ./ ./
 
-RUN yarn install
+RUN npm install
+RUN npm run build
 
-# ENV NODE_ENV production
+ENV NODE_ENV production
+ENV DATABASE_CONFIGURATION_PROFILE postgres
+ENV FRAMEWORK express
 
-CMD ["yarn", "start"]
+EXPOSE 8080
+CMD ["node", "dist/main"]

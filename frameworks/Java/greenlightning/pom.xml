@@ -4,7 +4,7 @@
 
 	<groupId>com.javanut.gl.benchmark</groupId>
 	<artifactId>benchmark-test</artifactId>
-	<version>1.1.3</version> 
+	<version>1.1.14</version> 
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -30,14 +30,20 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>4.13.1</version>
 			<type>jar</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-		    <groupId>io.reactiverse</groupId>
-		    <artifactId>reactive-pg-client</artifactId>
-		    <version>0.11.2</version>
+			 <groupId>io.netty</groupId>
+			 <artifactId>netty-transport-native-epoll</artifactId>
+			 <version>4.1.15.Final</version>
+			 <classifier>linux-x86_64</classifier>
+		</dependency>
+		<dependency>
+			 <groupId>io.vertx</groupId>
+			 <artifactId>vertx-pg-client</artifactId>
+			 <version>4.0.0-milestone3</version>
 		</dependency>
 
 	</dependencies>

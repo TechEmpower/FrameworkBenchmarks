@@ -6,7 +6,7 @@ This is the voovan portion of a [benchmarking test suite](../) comparing a varie
 ## Versions
 
 * [Java OpenJDK 1.8](http://openjdk.java.net/)
-* [Voovan 4.0.0](https://gitee.com/helyho/Voovan)
+* [Voovan 4.2.x](https://gitee.com/helyho/Voovan)
 
 ## Test URLs
 

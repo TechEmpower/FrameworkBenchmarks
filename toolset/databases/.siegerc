@@ -1,0 +1,624 @@
+# Updated by Siege %_VERSION%, %_DATE%
+# Copyright 2000-2016 by %_AUTHOR%
+# 
+# Siege configuration file -- edit as necessary
+# For more information about configuring and running this program, 
+# visit: http://www.joedog.org/
+
+#
+# Variable declarations. You can set variables here for use in the 
+# directives below. Example:
+# PROXY = proxy.joedog.org
+# Reference variables inside ${} or $(), example: 
+# proxy-host = ${PROXY} 
+#
+#
+# You can also reference ENVIRONMENT variables without actually 
+# declaring them, example:
+#
+# logfile = $(HOME)/var/siege.log
+
+#
+# Verbose mode: With this feature enabled, siege will print the
+# result of each transaction to stdout. (Enabled by default)
+#
+# ex: verbose = true|false
+#
+verbose = false
+
+#
+# Color mode: This option works in conjuction with verbose mode. 
+# It tells siege whether or not it should display its output in
+# color-coded output. (Enabled by default)
+#
+# ex: color = on | off
+# 
+color = on
+
+
+#
+# Quiet mode: With this featured enabled, siege goes mostly silent.
+# It will display the opening message and the final stats but nothing
+# else. If you enable quiet mode with -g/--get then siege will be
+# completely silent (ideal for scripting). In order to gauge the 
+# success of the run, you'll have to rely on the exit status:
+#
+#    #!/bin/sh
+#
+#    SIEGE=/home/jdfulmer/bin/siege
+#
+#    $SIEGE -g https://www.joedog.org/
+#    if [ $? -eq 0 ] ; then
+#      echo "Whoo hoo!"
+#    else
+#      echo "D'oh!"
+#    fi
+#
+# This is the same as running siege with -q/--quiet
+#
+# Ex: quiet = true
+#
+quiet = false
+
+#
+# Show logfile location. By default, siege displays the logfile 
+# location at the end of every run when logging. You can turn this
+# message off with this directive.
+# 
+# ex: show-logfile = false
+#
+show-logfile = true
+
+#
+# Default logging status, true turns logging on.
+# ex: logging = true|false
+#
+logging = false
+
+#
+# Logfile, the default siege logfile is $PREFIX/var/siege.log This
+# directive allows you to choose an alternative log file. Environment
+# variables may be used as shown in the examples:
+#
+# ex: logfile = /home/jeff/var/log/siege.log
+#     logfile = ${HOME}/var/log/siege.log
+#     logfile = ${LOGFILE}
+#
+# logfile =
+
+
+#
+# Get method: Use this directive to select an HTTP method for siege 
+# when it's run in get mode, i.e., siege -g/--get URL. You may select
+# GET or HEAD. The default method is HEAD. As expected HEAD prints just
+# the headers and GET prints the entire page. 
+# 
+# NOTE: This only applies when siege is invoked with -g/--get. All 
+# other requests methods will be made on the basis of the URL. 
+# 
+# example: gmethod = GET
+# 
+gmethod = HEAD
+
+#
+# Parser
+# This directive allows you to turn on the html parser. With this
+# feature enabled, siege will harvest resources like style sheets,
+# images, javascript, etc. and make additional requests for those 
+# items. 
+#
+# HTML parsing was added to version 4.0.0 It is enabled by default. 
+# When the parser is enabled, care must be given to other features. 
+# For example, we allow to set accept-encoding to anything you'd like
+# but if you want to parse those pages, then you MUST set the encoding
+# to a supported one.
+# 
+# With the default options set, you should be able to enable the parser
+# with success.
+#
+# Use this feature to enable it. (true = on, false = off)
+# 
+# Example: parser = true
+#
+parser = true
+
+#
+# No-follow 
+# When the parser is enabled, siege will grab HTML resources within
+# the page and download those elements as well. This directive allows
+# you to specify hostnames to which you do NOT want to make requests.
+# 
+# You can repeat this directive as many times as you like. Enter one
+# per line with 'key = value' syntax.
+# 
+# Example:  nofollow = www.joedog.org
+#
+nofollow = ad.doubleclick.net
+nofollow = pagead2.googlesyndication.com
+nofollow = ads.pubsqrd.com
+nofollow = ib.adnxs.com
+
+#
+# CSV Verbose format: with this option, you can choose to format
+# verbose output in traditional siege format or comma separated 
+# format. The latter will allow you to redirect output to a file
+# for import into a spread sheet, i.e., siege > file.csv 
+#
+# ex: csv = true|false (default false)
+#
+# csv = true
+
+#
+# Timestamp format: with this option, you can choose to print a 
+# timestamp each line of output. 
+#
+# example: timestamp = true|false (default false)
+#
+# [Sat, 2010-11-20 10:39:13] HTTP/1.1 200  0.12 secs: 4003 bytes ==> / 
+# 
+# timestamp = true
+
+#
+# Full URL verbose format: By default siege displays the URL path and
+# not the full URL. With this option, you can instruct siege to show 
+# the complete URL.
+#
+# ex: fullurl = true|false (default false)
+#
+# HTTP/1.1 301 0.34 secs: 311 bytes ==> GET  https://www.joedog.org/
+# 
+# fullurl = true
+
+#
+# Display id: in verbose mode, display the siege user id associated 
+# with the HTTP transaction information
+#
+# ex: display-id = true|false
+#
+# 100) HTTP/1.1 200   0.31 secs:   35338 bytes ==> GET  /images/bbc.jpg
+#
+# display-id = 
+
+#
+# Limit: This directive places a cap on the number of threads siege
+# will generate. The default value is 255 which corresponds with 
+# apache's default value. If you schedule more clients than apache is
+# configured to handle, then requests will back up and you will make a
+# mess. DO NOT INCREASE THIS NUMBER UNLESS YOU CONFIGURED APACHE TO 
+# HANDLE MORE THAN 256 SIMULTANEOUS REQUESTS. 
+#
+# ex: limit = 1023 (default is 255)
+# 
+limit = 512
+
+#
+# HTTP protocol.  Options HTTP/1.1 and HTTP/1.0. Some webservers have 
+# broken implementation of the 1.1 protocol which skews throughput 
+# evaluations. If you notice some siege clients hanging for extended
+# periods of time, change this to HTTP/1.0
+#
+# ex: protocol = HTTP/1.1
+#     protocol = HTTP/1.0
+#
+protocol = HTTP/1.1
+
+#
+# Chunked encoding is required by HTTP/1.1 protocol but siege allows 
+# you to turn it off as desired. This feature is generally more useful
+# to siege developers than siege users. You should probably leave it
+# set to 'true'
+# 
+# ex: chunked = true 
+# 
+chunked = true
+
+# 
+# Cache revalidation. Siege supports cache revalidation for both ETag
+# and Last-modified headers. If a copy is still fresh, the server 
+# responds with 304. While this feature is required for HTTP/1.1, it 
+# may not be welcomed for load testing. We allow you to breach the 
+# protocol and turn off caching
+#
+# HTTP/1.1 200   0.00 secs:    2326 bytes ==> /apache_pb.gif
+# HTTP/1.1 304   0.00 secs:       0 bytes ==> /apache_pb.gif
+# HTTP/1.1 304   0.00 secs:       0 bytes ==> /apache_pb.gif
+#
+# Siege also supports Cache-control headers. Consider this server 
+# response: Cache-Control: max-age=3
+# That tells siege to cache the file for three seconds. While it
+# doesn't actually store the file, it will logically grab it from
+# its cache. In verbose output, it designates a cached resource 
+# with (c):
+#
+# HTTP/1.1 200     0.25 secs:     159 bytes ==> GET  /expires/
+# HTTP/1.1 200     1.48 secs:  498419 bytes ==> GET  /expires/Otter_in_Southwold.jpg
+# HTTP/1.1 200     0.24 secs:     159 bytes ==> GET  /expires/
+# HTTP/1.1 200(C)  0.00 secs:       0 bytes ==> GET  /expires/Otter_in_Southwold.jpg
+#
+# NOTE: with color enabled, cached URLs appear in green
+# 
+# ex: cache = true
+#
+cache = false
+
+#
+# Connection directive. Options "close" and "keep-alive" Starting with
+# version 2.57, siege implements persistent connections in accordance 
+# to RFC 2068 using both chunked encoding and content-length directives
+# to determine the page size. 
+#
+# To run siege with persistent connections set this to keep-alive. 
+#
+# CAUTION:        Use the keep-alive directive with care.
+# DOUBLE CAUTION: This directive does not work well on HPUX
+# TRIPLE CAUTION: We don't recommend you set this to keep-alive
+# ex: connection = close
+#     connection = keep-alive
+#
+connection = keep-alive
+
+#
+# Default number of simulated  concurrent users. This feature 
+# corresponds with the -c NUM / --concurrent=NULL command line 
+# argument. The command line takes precedent over this directive.
+#
+# ex: concurrent = 50
+#
+concurrent = 25
+
+#
+# Default duration of the siege. The right hand argument has a modifier
+# which specifies the time units, H=hours, M=minutes, and S=seconds. If
+# a modifier is not specified, then minutes are assumed.
+# 
+# NOTE: The command line argument -t5m / --time=5m takes precedence 
+# over this directive
+#
+# ex: time = 50M
+#
+# time =
+
+#
+# Repetitions. The length of siege may be specified in client reps
+# rather than a time duration.  Instead of specifying a time span, 
+# you can tell each siege instance to hit the server X number of times.
+# So if you chose 'reps = 20' and you've selected 10 concurrent users, 
+# then siege will hit the server 200 times.
+#
+# NOTE: The command line argument -r 5 / --reps=5 / --reps=once takes 
+# precedence over this directive
+#
+# ex: reps = 20
+#
+# reps = 
+
+#
+# URLs file: Set at configuration time, the default URLs file is 
+# PREFIX/etc/urls.txt So if you configured the siege build with
+# --prefix=/usr/local then the urls.txt file is installed in 
+# /usr/local/etc/urls.txt.  Use the "file = " directive to configure 
+# an alternative URLs file. You may use environment variables
+# as shown in the examples below:
+#
+# ex: file = /export/home/jdfulmer/MYURLS.txt
+#     file = $HOME/etc/urls.txt
+#     file = $URLSFILE
+#
+# NOTE: The command line -f FILE / --file=FILE takes precedence over 
+# this directive
+#
+# file =
+
+#
+# Default URL, this is a single URL that you want to test. This is 
+# usually set at the command line with the -u option.  When used, this
+# option overrides the urls.txt (-f FILE/--file=FILE) option. You will
+# HAVE to comment this out for in order to use the urls.txt file option.
+#
+# NOTE: you may do the same thing by passing a URL to siege at the 
+# command line: 
+# $ siege -c10 -r10 "www.joedog.org/"
+#
+# Generally, it's a good idea to wrap a command line URL in quotes
+#
+# ex: url = https://shemp.whoohoo.com/docs/index.jsp
+#
+# url =
+
+#
+# Default delay between each request by a single thread. This value 
+# is not included in the request time. If a thread sleeps for two 
+# seconds then completes a 0.5 second request, the time of the request 
+# is 0.5 seconds, not 2.5 seconds.
+#
+# NOTE: the command line -d NUM / --delay=NULL takes precedent over
+# this directive
+#
+# ex: delay = 1.5
+#     delay = 5
+#
+delay = 0.0 
+
+#
+# Connection timeout value. Set the value in seconds for socket 
+# connection timeouts. The default value is 30 seconds.  
+#
+# ex: timeout = 30
+#
+# timeout = 
+
+#
+# Session expiration: This directive allows you to delete all cookies 
+# after you pass through the URLs. This means siege will grab a new 
+# session with each run through its URLs. The default value is false.
+#
+# ex: expire-session = true
+#
+# expire-session = 
+
+#
+# Cookie support: by default siege accepts cookies. This directive is
+# available to disable that support. Set cookies to 'false' to refuse 
+# cookies. Set it to 'true' to accept them. The default value is true. 
+# If you want to maintain state with the server, then this MUST be set 
+# to true.
+#
+# ex: cookies = false
+#
+# cookies = 
+
+#
+# Failures: This is the number of total connection failures allowed 
+# before siege aborts. Connection failures (timeouts, socket failures,
+# etc.) are combined with 400 and 500 level errors in the final stats, 
+# but those errors do not count against the abort total.  If you set 
+# this total to 10, then siege will abort after ten socket timeouts, 
+# but it will NOT abort after ten 404s. This is designed to prevent a 
+# run-away mess on an unattended siege. 
+#
+# The default value is 1024
+#
+# ex: failures = 50
+#
+# failures = 
+
+#
+# Internet simulation. If true, siege clients will hit the URLs in the 
+# urls.txt file randomly, thereby simulating internet usage.  If false, 
+# siege will run through the urls.txt file in order from first to last 
+# and back again.
+#
+# ex: internet = true
+#
+internet = false
+
+#
+# Default benchmarking value, If true, there is NO delay between server requests, 
+# siege runs as fast as the web server and the network will let it.  Set this to 
+# false for load testing.
+#
+# ex: benchmark = true
+# 
+benchmark = false
+
+#
+# User-agent: With this directive you can set the siege user-agent The default 
+# agent is: JoeDog/1.40 [en] (X11; I; Siege #.##) With this directive, you can 
+# mimic various browsers or you can make up something fun. Limey, our English 
+# bulldog, was recovering from minor surgery at the time we added this feature
+# so we like to dedicate the example in his honor:
+#
+# ex: user-agent = Limey The Bulldog
+#
+# Other examples harvested from our logs:
+# Chrome:  Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36k
+# IE 6:    Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)
+# IE 7:    Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30)
+# IE 8:    Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)
+# IE 9:    Mozilla/5.0 (MSIE 9.0; Windows NT 6.1; Trident/5.0)
+# IE 10:   Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)
+# FF 3.6:  Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.4410) Gecko/20110902 Firefox/3.6
+# FF 9:    Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:9.0) Gecko/20100101 Firefox/9.0
+# Safari:  Mozilla/5.0 (Windows; U; Windows NT 6.1; tr-TR) AppleWebKit/533.20.25 Version/5.0.4 Safari/533.20.27
+# Opera:   Opera/9.80 (Windows NT 6.1; U; es-ES) Presto/2.9.181 Version/12.00
+# iPhone:  Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_2 like Mac OS X; en-us) Version/5.0.2 Mobile/8H7 Safari/6533.18.5 
+# Android: Mozilla/5.0 (Linux; U; Android 2.3; en-us) AppleWebKit/999+ (KHTML, like Gecko) Safari/999.9
+# Kindle:  Mozilla/5.0 (Linux; U; en-US) AppleWebKit/528.5+ (KHTML, like Gecko, Safari/528.5+) Version/4.0 Kindle/3.0
+# Goolge:  Googlebot/2.1 (+http://www.googlebot.com/bot.html)
+# Yahoo:   Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)
+# 
+# user-agent =
+
+#
+# Accept-encoding. This option allows you to report to the server the 
+# various content-encodings you support. If you're not using HTML parser
+# (parser = false), then you can specify any encoding. When the parser is
+# disabled, siege just reads the content then immediately discards it. 
+# However, if you use the parser, then you MUST set a supported content 
+# encoder. Currently, siege supports two: deflate and gzip.
+#
+# NOTE: We plan to add support for brotli and bzip2; you can hasten
+#       that effort by showing us some love:
+#       
+#
+# ex: accept-encoding = 
+#     accept-encoding = gzip
+#     accept-encoding = deflate
+#     accept-encoding = gzip, deflate
+accept-encoding = gzip, deflate
+
+#
+# URL escaping was first added to version 3.0.3. It was considered
+# experimental until version 3.0.9 when it was turned on by default.  
+# 
+# This feature remains in siege as a mechanism to turn off escape 
+# encoding. Here is an example of two URLs. The first has spaces 
+# included in the file name and in the second those spaces were 
+# encoded to %20. 
+#
+# http://www.joedog.org/jukebox.php?band=the days of new
+# http://www.joedog.org/jukebox.php?band=the%20days%20of%20the%20new 
+#
+# ex: url-escaping = false
+#
+url-escaping = true
+
+#
+# WWW-Authenticate credentials. Currently siege supports two types 
+# of HTTP authentication: digest and basic. It has partial support for 
+# Microsoft's NTLM but in practice that only works with the -g/--get 
+# option. (as of siege 3.1.1)
+# 
+# When siege makes a request for a page that requires user authentication, 
+# it will search its logins for a matching realm. If it finds credentials 
+# for a realm, it will attempt to login with that username and password.
+#
+# If it fails to match the realm, it will use its default login credentials
+# (which are designated with the keyword "all" or no specified realm. 
+#
+# If you do not supply a realm, then it will default to "all" which instructs
+# siege to send as default.
+# 
+# You may enter many logins with each on its own separate line. The only 
+# limitation is memory and realm name. You can't use the same realm name
+# more than once.  
+#
+# ex: login = jdfulmer:topsecret:Admin
+#     login = jeff:supersecret:all 
+#     login = jeff:supersecret
+#
+# login = 
+
+#
+# Login URL. This feature was designed to provide a login url in order
+# to kick off a session with form-based authentication. If this directive
+# has a value, then every siege client will make a request to it BEFORE it
+# uses its list of URLs. 
+#
+# NOTE: siege will only make this request once. After it's hit this URL
+#       it will not request it again until its next start-up.
+#
+# ex: login-url = http://eos.joedog.org/login.jsp POST name=jeff&pass=foo
+#
+# Starting with version 2.69, siege can make multiple login request on a 
+# thread-by-thread basis. As each thread is created it grab the next unused
+# login URL in the list. If you schedule more threads than login-urls, new
+# threads will wrap back around and loop back through the list.
+# 
+# ex: login-url = http://www.haha.com/login.php?name=homer&pass=whoohoo
+#     login-url = http://www.haha.com/login.php?name=marge&pass=ohhomie
+#     login-url = http://www.haha.com/login.php?name=bart&pass=eatMyShorts
+#
+# login-url = 
+
+#
+# FTP login - There are two ways to login to an ftp server with siege. You
+# can use this directive to set login credentials or you can set them in a
+# URL in RFC-1738 format: ftp://user:pass@host.com/ink.jpg
+#
+# The format for this directive is USER:PASS:HOST separated by colon ':'
+# The host field is optional. If you don't set a host, then siege will send 
+# the same user:pass to every FTP server. You may use this directive MULTIPLE
+# times. Siege will store each instance in memory and send the appropriate 
+# credentials at login time depending on the hostname in the URL.
+#
+# ex: ftp-login: jdfulmer:whoohoo:ftp.joedog.org
+#     ftp-login: jdfulmer:password
+#
+# ftp-login = 
+
+# 
+# FTP unique - This directive determines whether siege will upload files with
+# the same name (and therefore overwrite whatever is on disk) or upload files 
+# each with a unique name. If true, siege will rewrite the file name with a 
+# timestamp in its name, i.e., p.jpg => p-3086060432.jpg 
+#
+# The default value is true.
+#
+# ex: unique = false
+# 
+unique = true
+
+#
+# SSL-cert: This optional feature allows you to specify a path to a client
+# certificate. It is not neccessary to specify a certificate in order to use
+# https. If you don't know why you would want one, then you probably don't need
+# it.  Use openssl to generate a certificate and key with the following command:
+#
+# $ openssl req -nodes -new -days 365 -newkey rsa:1024 -keyout key.pem -out cert.pem
+#
+# Specify a path to cert.pem as follows:
+# ex: ssl-cert = /home/jeff/.certs/cert.pem
+#
+# ssl-cert = 
+ 
+#
+# SSL-key: Use this option to specify the key you generated with the command
+# above. ex: ssl-key = /home/jeff/.certs/key.pem You may actually skip this 
+# option and combine both your cert and your key in a single file:
+#   $ cat key.pem > client.pem
+#   $ cat cert.pem >> client.pem
+# Now set the path for ssl-cert:
+# ex: ssl-cert = /home/jeff/.certs/client.pem
+# (in this scenario, you comment out ssl-key)
+#
+# ssl-key = 
+
+#
+# SSL-timeout: This option sets a connection timeout for the ssl library
+# ex: ssl-timeout = 30
+# 
+# ssl-timeout = 
+
+#
+# SSL-ciphers
+# You can use this feature to select a specific ssl cipher for HTTPs. To 
+# view the ones available with your library run the following command: 
+#
+# $ openssl ciphers
+#
+# ex: ssl-ciphers = EXP-RC4-MD5
+#
+# ssl-ciphers = 
+
+#
+# Proxy Host: You can use siege to test a proxy server but you need to 
+# configure it to use one. You'll need to name a proxy host and the port 
+# it's listening on. The settings are proxy-host and proxy-port. The 
+# following example shows how to use them:
+#
+# ex: proxy-host = proxy.joedog.org
+#     proxy-port = 3123
+#
+# proxy-host =
+# proxy-port =
+
+#
+# Proxy-Authenticate: When siege hits a proxy server which requires 
+# username and password authentication, it will this username and 
+# password to the server. The format is username, password and optional
+# realm each separated by a colon. You may enter more than one proxy-login 
+# as long as each one has a different realm. If you do not enter a realm, 
+# then siege will send that login information to all proxy challenges. If
+# you have more than one proxy-login, then scout will attempt to match the 
+# login to the realm.
+#
+# ex: proxy-login: jeff:secret:corporate
+#     proxy-login: jeff:whoohoo
+#
+# proxy-login = 
+
+#
+# Redirection support. By default, siege will follow a HTTP redirect to the
+# Location provided by the server. If it's parser is enabled, then it will 
+# also follow and HTML META redirect. If, for some reason, you do not wish
+# wish to follow redirects, then set this redirective to false.
+#
+# NOTE: redirect support is enabled by default.
+#
+# ex: follow-location = false
+#
+# follow-location = 
+
+#
+# end of siegerc

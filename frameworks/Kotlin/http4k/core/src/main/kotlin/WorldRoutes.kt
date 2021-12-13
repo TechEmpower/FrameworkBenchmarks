@@ -1,4 +1,3 @@
-
 import org.http4k.core.Body
 import org.http4k.core.Method.GET
 import org.http4k.core.Response
@@ -7,9 +6,10 @@ import org.http4k.core.with
 import org.http4k.format.Jackson.array
 import org.http4k.format.Jackson.json
 import org.http4k.lens.Query
+import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
-import java.lang.Math.max
-import java.lang.Math.min
+import kotlin.math.max
+import kotlin.math.min
 
 object WorldRoutes {
     private val jsonBody = Body.json().toLens()
@@ -28,6 +28,14 @@ object WorldRoutes {
 
     fun multipleRoute(db: Database) = "/queries" bind GET to {
         Response(OK).with(jsonBody of array(db.findWorlds(numberOfQueries(it))))
+    }
+
+    fun cachedRoute(db: Database): RoutingHttpHandler {
+        val cachedDb = CachedDatabase(db)
+
+        return "/cached" bind GET to {
+            Response(OK).with(jsonBody of array(cachedDb.findWorlds(numberOfQueries(it))))
+        }
     }
 
     fun updateRoute(db: Database) = "/updates" bind GET to {

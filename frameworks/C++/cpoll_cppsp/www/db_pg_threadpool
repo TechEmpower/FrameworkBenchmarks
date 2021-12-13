@@ -23,7 +23,7 @@ public:
 		db=doConnect_pg(NULL);
 		Oid oid=INT4OID;
 		PGresult* res;
-		if((res=PQprepare(db, "zxcvb", "SELECT randomnumber FROM World where id=$1", 1, &oid))==NULL)
+		if((res=PQprepare(db, "zxcvb", "SELECT id, randomnumber FROM World where id=$1", 1, &oid))==NULL)
 			goto fail;
 		PQclear(res);
 		paramLengths[0] = sizeof(int);

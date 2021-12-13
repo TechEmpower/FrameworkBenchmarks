@@ -1,10 +1,10 @@
 FROM buildpack-deps:xenial
 
-RUN apt update -yqq && apt install -yqq software-properties-common unzip cmake
+RUN apt-get update -yqq && apt-get install -yqq software-properties-common unzip cmake
 
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test -y
-RUN apt update -yqq
-RUN apt install -yqq gcc-6 g++-6
+RUN apt-get update -yqq
+RUN apt-get install -yqq gcc-6 g++-6
 
 ENV WT_VERSION 4.0.2
 ENV BOOST_ROOT /boost
@@ -80,5 +80,7 @@ RUN g++-6 \
   -lpq
 
 ENV DBHOST tfb-database
+
+EXPOSE 8080
 
 CMD ./te-benchmark-pg.wt -c wt_config.xml -t $(nproc) --docroot . --approot . --http-listen 0.0.0.0:8080 --accesslog=- --no-compression

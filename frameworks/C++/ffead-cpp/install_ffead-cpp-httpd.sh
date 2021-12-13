@@ -2,7 +2,7 @@
 
 cd $IROOT
 
-#chown -R www-data:www-data ffead-cpp-3.0
+#chown -R www-data:www-data ffead-cpp-6.0
 
 #wget -q https://archive.apache.org/dist/httpd/httpd-2.4.25.tar.gz
 #wget -q https://archive.apache.org/dist/apr/apr-1.5.2.tar.gz
@@ -23,19 +23,13 @@ cd $IROOT
 #make install
 #cd ${IROOT}
 
-sed -i 's|#define PACKAGE_BUGREPORT "sumeet.chhetri@gmail.com"| |g' ${IROOT}/ffead-cpp-3.0/include/AppDefines.h
-sed -i 's|#define PACKAGE_NAME "ffead-cpp"| |g' ${IROOT}/ffead-cpp-3.0/include/AppDefines.h
-sed -i 's|#define PACKAGE_STRING "ffead-cpp 2.0"| |g' ${IROOT}/ffead-cpp-3.0/include/AppDefines.h
-sed -i 's|#define PACKAGE_TARNAME "ffead-cpp"| |g' ${IROOT}/ffead-cpp-3.0/include/AppDefines.h
-sed -i 's|#define PACKAGE_VERSION "2.0"| |g' ${IROOT}/ffead-cpp-3.0/include/AppDefines.h
+sed -i 's|#define PACKAGE_BUGREPORT "sumeet.chhetri@gmail.com"| |g' ${IROOT}/ffead-cpp-6.0/include/AppDefines.h
+sed -i 's|#define PACKAGE_NAME "ffead-cpp"| |g' ${IROOT}/ffead-cpp-6.0/include/AppDefines.h
+sed -i 's|#define PACKAGE_STRING "ffead-cpp 6.0"| |g' ${IROOT}/ffead-cpp-6.0/include/AppDefines.h
+sed -i 's|#define PACKAGE_TARNAME "ffead-cpp"| |g' ${IROOT}/ffead-cpp-6.0/include/AppDefines.h
+sed -i 's|#define PACKAGE_VERSION "6.0"| |g' ${IROOT}/ffead-cpp-6.0/include/AppDefines.h
 
-#cd ${IROOT}/ffead-cpp-src/modules/apache_mod_ffeadcpp/
-#g++ -fpic -DSHARED_MODULE -fpermissive -std=gnu++11 -I"/usr/include/apache2" -I"/usr/include/apr-1.0" -I"${IROOT}/ffead-cpp-3.0/include/" -I"${IROOT}/include" -I"${IROOT}/include/libbson-1.0/" -I"${IROOT}/include/libmongoc-1.0" mod_ffeadcpp.cpp -L"${IROOT}/ffead-cpp-3.0/lib" -L"${IROOT}" -L"${IROOT}/lib" -lffead_common -lffead_framework -ldl -lcrypto -lssl -lhiredis -lmemcachedutil -c mod_ffeadcpp.cpp
-#g++ -shared -o mod_ffeadcpplib.so mod_ffeadcpp.o -L"${IROOT}/ffead-cpp-3.0/lib" -L"${IROOT}" -L"${IROOT}/lib" -lffead_common -lffead_framework -ldl -lcrypto -lssl -lapr-1 -laprutil-1 -lstdc++ -lhiredis -lmemcachedutil
-#apxs -i -n 'ffead_cpp_module' mod_ffeadcpplib.so
-#cd -
-
-FFEADROOT=${IROOT}/ffead-cpp-3.0
+FFEADROOT=${IROOT}/ffead-cpp-6.0
 ETROOT=${FFEADROOT//\//\\/}
 EIROOT=${IROOT//\//\\/}
 
@@ -49,15 +43,28 @@ export ODBCINI='"$IROOT"'/odbc.ini
 export ODBCSYSINI='"$IROOT"' 
 EOL'
 
-bash -c 'cat > /etc/apache2/mods-enabled/mpm_event.conf <<EOL
-<IfModule mpm_event_module>
-    AsyncRequestWorkerFactor   2
-    ThreadsPerChild           64
-    ServerLimit              100
-    StartServers              20
-    MinSpareThreads          100
-    MaxSpareThreads          200
-    ListenBacklog 			4096
+#bash -c 'cat > /etc/apache2/mods-enabled/mpm_event.conf <<EOL
+#<IfModule mpm_event_module>
+#    AsyncRequestWorkerFactor   2
+#    ThreadsPerChild           64
+#    ServerLimit              100
+#    StartServers              20
+#    MinSpareThreads          100
+#    MaxSpareThreads          200
+#    ListenBacklog 			4096
+#</IfModule>
+#EOL'
+
+bash -c 'cat > /etc/apache2/mods-enabled/mpm_worker.conf <<EOL
+<IfModule mpm_worker_module>
+    ServerLimit              250
+    StartServers              10
+    MinSpareThreads           75
+    MaxSpareThreads          250 
+    ThreadLimit               64
+    ThreadsPerChild           32
+    MaxRequestWorkers       8000
+    MaxConnectionsPerChild 10000
 </IfModule>
 EOL'
 

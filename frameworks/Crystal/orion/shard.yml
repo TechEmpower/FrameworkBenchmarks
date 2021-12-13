@@ -1,0 +1,17 @@
+name: orion
+version: 0.1.0
+
+authors:
+  - Carlos Donderis <cads@mercari.com>
+
+dependencies:
+  orion:
+    github: obsidian/orion
+  pg:
+    github: will/crystal-pg
+
+targets:
+  orion:
+    main: orion.cr
+
+crystal: 0.34.0

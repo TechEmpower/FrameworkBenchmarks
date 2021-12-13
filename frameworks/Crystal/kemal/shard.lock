@@ -1,16 +1,20 @@
 version: 1.0
 shards:
+  commander:
+    github: snluu/commander
+    commit: 9396efd427f06f0f6de5206f6e81d54fcd254abe
+
   db:
     github: crystal-lang/crystal-db
-    version: 0.5.0
+    version: 0.8.0
 
   exception_page:
     github: crystal-loot/exception_page
-    version: 0.1.1
+    version: 0.1.2
 
   kemal:
     github: kemalcr/kemal
-    version: 0.24.0
+    version: 0.26.1
 
   kilt:
     github: jeromegn/kilt
@@ -18,7 +22,7 @@ shards:
 
   pg:
     github: will/crystal-pg
-    version: 0.15.0
+    version: 0.20.0
 
   pool:
     github: ysbaddaden/pool
@@ -26,9 +30,9 @@ shards:
 
   radix:
     github: luislavena/radix
-    version: 0.3.8
+    version: 0.3.9
 
   redis:
     github: stefanwille/crystal-redis
-    version: 2.0.0
+    version: 2.5.3
 

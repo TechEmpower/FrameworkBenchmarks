@@ -1,50 +1,59 @@
 <?php
-
 namespace models;
 
-class Fortune{
-	
+class Fortune {
+
 	/**
+	 *
 	 * @id
 	 * @column("name"=>"id","nullable"=>false,"dbType"=>"int(11)")
-	 **/
+	 */
 	public $id;
 
 	/**
+	 *
 	 * @column("name"=>"message","nullable"=>false,"dbType"=>"varchar(100)")
-	 **/
-    public $message;
-    
+	 */
+	public $message;
 
-    /**
-     * @param integer $id
-     * @return Fortune
-     */
-    public function setId($id){
-        $this->id = $id;
-        return $this;
-    }
+	public function __construct($id = 0, $message = '') {
+		$this->id = $id;
+		$this->message = $message;
+	}
 
-    /**
-     * @return integer
-     */
-    public function getId(){
-        return $this->id;
-    }
+	/**
+	 *
+	 * @param integer $id
+	 * @return Fortune
+	 */
+	public function setId($id) {
+		$this->id = $id;
+		return $this;
+	}
 
-    /**
-     * @param string $message
-     * @return Fortune
-     */
-    public function setMessage($message){
-        $this->message = $message;
-        return $this;
-    }
+	/**
+	 *
+	 * @return integer
+	 */
+	public function getId() {
+		return $this->id;
+	}
 
-    /**
-     * @return string
-     */
-    public function getMessage(){
-        return $this->message;
-    }
+	/**
+	 *
+	 * @param string $message
+	 * @return Fortune
+	 */
+	public function setMessage($message) {
+		$this->message = $message;
+		return $this;
+	}
+
+	/**
+	 *
+	 * @return string
+	 */
+	public function getMessage() {
+		return $this->message;
+	}
 }

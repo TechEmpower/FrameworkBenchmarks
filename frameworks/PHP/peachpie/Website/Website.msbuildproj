@@ -1,9 +1,8 @@
-<Project Sdk="Peachpie.NET.Sdk/0.9.42">
+<Project Sdk="Peachpie.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>netstandard2.0</TargetFramework>
-	<AssemblyName>Website</AssemblyName>
+    <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>

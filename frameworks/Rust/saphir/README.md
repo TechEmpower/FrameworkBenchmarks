@@ -8,17 +8,13 @@ Saphir is a fast and lightweight web framework that aims to give lowlevel contro
 
 ### Test Type Implementation Source Code
 
-* [JSON](src/main.rs)
-* [PLAINTEXT](src/main.rs)
+* [JSON](src/json.rs)
+* [PLAINTEXT](src/plain.rs)
 * [DB](src/main.rs)
 * [QUERY](src/main.rs)
 * [CACHED QUERY](src/main.rs)
 * [UPDATE](src/main.rs)
 * [FORTUNES](src/main.rs)
-
-## Important Libraries
-The tests were run with:
-* [serde](https://github.com/serde-rs/serde)
 
 ## Test URLs
 ### JSON

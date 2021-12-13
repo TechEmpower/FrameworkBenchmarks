@@ -27,7 +27,7 @@
 
 typedef struct {
 	h2o_cache_t **cache;
-	pthread_mutex_t *cache_lock;
+	pthread_spinlock_t *cache_lock;
 	size_t cache_num;
 } cache_t;
 

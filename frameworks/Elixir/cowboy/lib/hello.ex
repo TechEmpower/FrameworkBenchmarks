@@ -1,2 +1,0 @@
-defmodule Hello do
-end

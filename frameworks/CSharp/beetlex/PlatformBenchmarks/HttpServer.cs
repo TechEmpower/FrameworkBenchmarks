@@ -11,7 +11,7 @@ namespace PlatformBenchmarks
 {
     public class HttpServer : IHostedService
     {
-        private IServer mApiServer;
+        public static IServer ApiServer;
 
         public virtual Task StartAsync(CancellationToken cancellationToken)
         {
@@ -20,19 +20,29 @@ namespace PlatformBenchmarks
             serverOptions.LogLevel = LogType.Error;
             serverOptions.DefaultListen.Port = 8080;
             serverOptions.Statistical = false;
-            serverOptions.PrivateBufferPool = true;
-            serverOptions.BufferSize = 1024 * 4;
-            serverOptions.PrivateBufferPool = true;
-            serverOptions.MaxConnections = 100000;
-            serverOptions.BufferPoolMaxMemory = 500;
-            mApiServer = SocketFactory.CreateTcpServer<HttpHandler>(serverOptions);
-            mApiServer.Open();
+            serverOptions.BufferPoolMaxMemory = 1000;
+            serverOptions.BufferPoolSize = 1024 * 24;
+            ApiServer = SocketFactory.CreateTcpServer<HttpHandler>(serverOptions);
+            ApiServer.Open();
+            if (!Program.UpDB)
+            {
+               RawDb._connectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Delay Us=500;Write Coalescing Buffer Threshold Bytes=1000";
+               // RawDb._connectionString = "Server=192.168.2.19;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3";
+            }
+            else
+            {
+
+                RawDb._connectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=64;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3;Multiplexing=true;Write Coalescing Delay Us=500;Write Coalescing Buffer Threshold Bytes=1000";
+               // RawDb._connectionString = "Server=192.168.2.19;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=64;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3";
+            }
+           // ApiServer.Log(LogType.Info, null, $"Debug mode [{Program.Debug}]");
             return Task.CompletedTask;
+
         }
 
         public virtual Task StopAsync(CancellationToken cancellationToken)
         {
-            mApiServer.Dispose();
+            ApiServer.Dispose();
             return Task.CompletedTask;
         }
     }

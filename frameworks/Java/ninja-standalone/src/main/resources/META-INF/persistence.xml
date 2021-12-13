@@ -7,8 +7,8 @@
   <persistence-unit name="mysql" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <properties>
-      <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
-      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+      <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver" />
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect" />
       <property name="hibernate.show_sql" value="false" />
       <property name="hibernate.format_sql" value="false" />
       <property name="hibernate.jdbc.batch_size" value="100" />
@@ -17,9 +17,11 @@
       <property name="hibernate.hikari.minimumIdle" value="256" />
       <property name="hibernate.hikari.maximumPoolSize" value="256" />
       <property name="hibernate.hikari.idleTimeout" value="30000" />
-      <property name="hibernate.hikari.dataSource.url" value="jdbc:mysql://tfb-database:3306/hello_world?useSSL=false&amp;jdbcCompliantTruncation=false&amp;elideSetAutoCommits=true&amp;useLocalSessionState=true&amp;cachePrepStmts=true&amp;cacheCallableStmts=true&amp;alwaysSendSetIsolation=false&amp;prepStmtCacheSize=4096&amp;cacheServerConfiguration=true&amp;prepStmtCacheSqlLimit=2048&amp;zeroDateTimeBehavior=convertToNull&amp;traceProtocol=false&amp;useUnbufferedInput=false&amp;useReadAheadInput=false&amp;maintainTimeStats=false&amp;useServerPrepStmts&amp;cacheRSMetadata=true" />
+
+<!-- It seems these settings are comming from the application.conf -->
+ <!--     <property name="hibernate.hikari.dataSource.url" value="jdbc:mysql://tfb-database:3306/hello_world?useSSL=false&amp;jdbcCompliantTruncation=false&amp;elideSetAutoCommits=true&amp;useLocalSessionState=true&amp;cachePrepStmts=true&amp;cacheCallableStmts=true&amp;alwaysSendSetIsolation=false&amp;prepStmtCacheSize=4096&amp;cacheServerConfiguration=true&amp;prepStmtCacheSqlLimit=2048&amp;zeroDateTimeBehavior=convertToNull&amp;traceProtocol=false&amp;useUnbufferedInput=false&amp;useReadAheadInput=false&amp;maintainTimeStats=false&amp;useServerPrepStmts=true&amp;cacheRSMetadata=true" />
       <property name="hibernate.hikari.dataSource.user" value="benchmarkdbuser" />
-      <property name="hibernate.hikari.dataSource.password" value="benchmarkdbpass" />
+      <property name="hibernate.hikari.dataSource.password" value="benchmarkdbpass" /> -->
     </properties>
   </persistence-unit>
 

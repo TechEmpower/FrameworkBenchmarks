@@ -1,0 +1,16 @@
+[framework]
+name = "web-simple"
+
+[main]
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/query?queries="
+approach = "Realistic"
+classification = "Micro"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Plack"
+webserver = "Starman"
+versus = ""

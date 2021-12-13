@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "yesod-mysql",
       "notes": "",
-      "versus": "wai"
+      "versus": "wai",
+      "tags": ["broken"]
     },
     "mongodb-raw": {
       "db_url": "/mongo/raw/db",
@@ -41,7 +42,8 @@
       "database_os": "Linux",
       "display_name": "yesod-mongo",
       "notes": "",
-      "versus": "wai"
+      "versus": "wai",
+      "tags": ["broken"]
     }
   }]
 }

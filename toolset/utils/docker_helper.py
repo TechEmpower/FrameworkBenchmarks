@@ -9,7 +9,7 @@ from threading import Thread
 from colorama import Fore, Style
 
 from toolset.utils.output_helper import log
-from toolset.utils.database_helper import test_database
+from toolset.databases import databases
 
 from psutil import virtual_memory
 
@@ -44,16 +44,14 @@ class DockerHelper:
                     forcerm=True,
                     timeout=3600,
                     pull=True,
-                    buildargs=buildargs
+                    buildargs=buildargs,
+                    decode=True
                 )
                 buffer = ""
                 for token in output:
-                    if token.startswith('{"stream":'):
-                        token = json.loads(token)
-                        token = token[token.keys()[0]].encode('utf-8')
-                        buffer += token
-                    elif token.startswith('{"errorDetail":'):
-                        token = json.loads(token)
+                    if 'stream' in token:
+                        buffer += token[token.keys()[0]].encode('utf-8')
+                    elif 'errorDetail' in token:
                         raise Exception(token['errorDetail']['message'])
                     while "\n" in buffer:
                         index = buffer.index("\n")
@@ -186,7 +184,11 @@ class DockerHelper:
                 }
                 name = None
 
-            sysctl = {'net.core.somaxconn': 65535}
+            if self.benchmarker.config.network_mode is None:
+                sysctl = {'net.core.somaxconn': 65535}
+            else:
+                # Do not pass `net.*` kernel params when using host network mode
+                sysctl = None
 
             ulimit = [{
                 'name': 'nofile',
@@ -321,10 +323,16 @@ class DockerHelper:
         image_name = "techempower/%s:latest" % database
         log_prefix = image_name + ": "
 
-        sysctl = {
-            'net.core.somaxconn': 65535,
-            'kernel.sem': "250 32000 256 512"
-        }
+        if self.benchmarker.config.network_mode is None:
+            sysctl = {
+                'net.core.somaxconn': 65535,
+                'kernel.sem': "250 32000 256 512"
+            }
+        else:
+            # Do not pass `net.*` kernel params when using host network mode
+            sysctl = {
+                'kernel.sem': "250 32000 256 512"
+            }
 
         ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
 
@@ -346,7 +354,7 @@ class DockerHelper:
         while not database_ready and slept < max_sleep:
             time.sleep(1)
             slept += 1
-            database_ready = test_database(self.benchmarker.config, database)
+            database_ready = databases[database].test_connection(self.benchmarker.config)
 
         if not database_ready:
             log("Database was not ready after startup", prefix=log_prefix)
@@ -403,7 +411,11 @@ class DockerHelper:
                 for line in container.logs(stream=True):
                     log(line, file=benchmark_file)
 
-        sysctl = {'net.core.somaxconn': 65535}
+        if self.benchmarker.config.network_mode is None:
+            sysctl = {'net.core.somaxconn': 65535}
+        else:
+            # Do not pass `net.*` kernel params when using host network mode
+            sysctl = None
 
         ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
 

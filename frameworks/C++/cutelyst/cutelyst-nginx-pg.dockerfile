@@ -1,7 +1,7 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
-RUN apt update -qq && \
-    apt install -yqq locales wget build-essential
+RUN apt-get update -qq && \
+    apt-get install -yqq locales wget build-essential
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
@@ -31,6 +31,8 @@ ENV CPU_AFFINITY 1
 ENV DRIVER QPSQL
 
 RUN sed -i "s|Driver=.*|Driver=${DRIVER}|g" /cutelyst_socket.ini
+
+EXPOSE 8080
 
 CMD nginx -c /nginx.conf && uwsgi \
     --ini /cutelyst_socket.ini \

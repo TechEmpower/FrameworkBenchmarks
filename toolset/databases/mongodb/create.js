@@ -1,7 +1,7 @@
-use hello_world
+db = db.getSiblingDB('hello_world')
 db.world.drop()
 for (var i = 1; i <= 10000; i++) {
-  db.world.save( { _id: i, id: i, randomNumber: (Math.floor(Math.random() * 10000) + 1) })
+  db.world.save( { _id: i, id: i, randomNumber: Math.min(Math.floor(Math.random() * 10000) + 1, 10000) })
 }
 
 db.world.createIndex({_id: 1})

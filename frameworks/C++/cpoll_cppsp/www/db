@@ -23,7 +23,7 @@ public:
 	myStatement() {
 		db=doConnect(NULL);
 		stmt=mysql_stmt_init(db);
-		const char* sql="SELECT randomNumber FROM World WHERE id = ?";
+		const char* sql="SELECT randomNumber, id FROM World WHERE id = ?";
 		mysql_stmt_prepare(stmt,sql,strlen(sql));
 		memset(param, 0, sizeof(param));
 		memset(results, 0, sizeof(results));
@@ -107,7 +107,7 @@ void doInit() override {
 	if(queries<1)queries=1;
 	if(queries>500)queries=500;
 	int i;
-	
+
 	items=(world*)sp->alloc(sizeof(world)*queries);
 	stmt=stmtPool.get();
 	poll->add(efd);

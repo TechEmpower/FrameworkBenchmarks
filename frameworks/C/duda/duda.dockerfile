@@ -8,4 +8,6 @@ RUN cd dudac && git checkout 7c3d5b03b09fb4cb5f5e338fff72df2e25e95ef0 && \
     ./dudac -r && \
     ./dudac -s
 
+EXPOSE 2001
+
 CMD ["./dudac/dudac", "-w", "webservice", "-p", "2001"]

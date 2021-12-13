@@ -36,7 +36,7 @@ class SiteController extends Controller
 
         $worlds = [];
 
-        while (0 < $queries--) {
+        while ($queries--) {
             $world = World::findOne(random_int(1, 10000));
             $worlds[] = $world;
         }
@@ -57,9 +57,7 @@ class SiteController extends Controller
 
         $fortunes[] = $runtimeFortune;
 
-        usort($fortunes, function ($left, $right) {
-            return strcmp($left->message, $right->message);
-        });
+        usort($fortunes, [Fortune::class, 'cmp']);
 
         $this->view->title = 'Fortunes';
 
@@ -75,10 +73,10 @@ class SiteController extends Controller
 
         $worlds = [];
 
-        while (0 < $queries--) {
+        while ($queries--) {
             $world = World::findOne(random_int(1, 10000));
             $world->randomNumber = random_int(1, 10000);
-            $world->save();
+            $world->save(false);
 
             $worlds[] = $world;
         }

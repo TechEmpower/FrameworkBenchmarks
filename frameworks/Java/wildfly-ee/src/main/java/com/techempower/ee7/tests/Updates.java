@@ -1,5 +1,6 @@
 package com.techempower.ee7.tests;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -25,15 +26,11 @@ public class Updates {
     @Produces(MediaType.APPLICATION_JSON)
     public List<World> update(@QueryParam("queries") final String queries) {
         final int iterations = Helpers.boundedIntegerFromNullableString(queries, MIN_QUERIES, MAX_QUERIES);
-        int attempts = 0;
-        while (attempts < 10) {
-            try {
-                return actions.updateWorlds(iterations);
-            }
-            catch (Exception e) {
-                attempts++;
-            }
+
+        final List<World> worlds = new ArrayList<>(iterations);
+        for (int i = 0; i < iterations; i++) {
+            worlds.add(actions.updateWorld(Helpers.randomWorldId()));
         }
-        throw new RuntimeException(String.format("Unable to update after %s attempts", attempts));
+        return worlds;
     }
 }

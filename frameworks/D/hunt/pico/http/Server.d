@@ -17,13 +17,16 @@ import std.stdio;
 
 import http.Parser;
 import http.Processor;
+import hunt.io.channel.Common;
 
 shared static this() {
 	DateTimeHelper.startClock();
 }
 
-import hunt.io.channel;
 
+
+import hunt.io.channel;
+import std.experimental.allocator;
 /**
 */
 abstract class AbstractTcpServer {
@@ -31,15 +34,17 @@ abstract class AbstractTcpServer {
 	protected bool _isStarted = false;
 	protected Address _address;
 	protected int _workersCount;
-	TcpStreamOption _tcpStreamoption;
+	TcpStreamOptions _tcpStreamoption;
 
 	this(Address address, int thread = (totalCPUs - 1), int workersCount = 0) {
 		this._address = address;
-		_tcpStreamoption = TcpStreamOption.createOption();
-		_tcpStreamoption.bufferSize = 1024 * 2;
+		_tcpStreamoption = TcpStreamOptions.create();
+		_tcpStreamoption.bufferSize = 1024 * 4;
 		_tcpStreamoption.isKeepalive = false;
 		_group = new EventLoopGroup(cast(uint) thread);
+    //_group = theAllocator.make!EventLoopGroup(cast(uint) thread*2);
 		this._workersCount = workersCount;
+    //defaultPoolThreads(thread);
 	}
 
 	@property Address bindingAddress() {
@@ -52,15 +57,17 @@ abstract class AbstractTcpServer {
 		_isStarted = true;
 
 		Socket server = new TcpSocket();
+    //Socket server = theAllocator.make!TcpSocket;
 		server.setOption(SocketOptionLevel.SOCKET, SocketOption.REUSEADDR, true);
 		server.bind(new InternetAddress("0.0.0.0", 8080));
+    //server.bind( theAllocator.make!(InternetAddress("0.0.0.0", 8080)));
 		server.listen(8192);
 
 		trace("Launching mini-http server");
 		debug {
-			_group.start();
+			_group.start(_tcpStreamoption.bufferSize);
 		} else {
-			_group.start(100);
+			_group.start(_tcpStreamoption.bufferSize);
 		}
 
 		if (_workersCount) {
@@ -82,7 +89,8 @@ abstract class AbstractTcpServer {
 				}
 				// EventLoop loop = _group.nextLoop();
 				EventLoop loop = _group.nextLoop(socket.handle);
-				TcpStream stream = new TcpStream(loop, socket, _tcpStreamoption);
+        TcpStream stream = theAllocator.make!TcpStream(loop, socket, _tcpStreamoption);
+				//TcpStream stream = new TcpStream(loop, socket, _tcpStreamoption);
 				onConnectionAccepted(stream);
 			} catch (Exception e) {
 				warningf("Failure on accepting %s", e);
@@ -109,7 +117,7 @@ alias ProcessorCreater = HttpProcessor delegate(TcpStream client);
 class HttpServer(T) : AbstractTcpServer if (is(T : HttpProcessor)) {
 
 	this(string ip, ushort port, int thread = (totalCPUs - 1)) {
-		super(new InternetAddress(ip, port), thread);
+		super(theAllocator.make!InternetAddress(ip, port), thread);
 	}
 
 	this(Address address, int thread = (totalCPUs - 1)) {
@@ -117,7 +125,8 @@ class HttpServer(T) : AbstractTcpServer if (is(T : HttpProcessor)) {
 	}
 
 	override protected void onConnectionAccepted(TcpStream client) {
-		HttpProcessor httpProcessor = new T(client);
+		//HttpProcessor httpProcessor = new T(client);
+    HttpProcessor httpProcessor = theAllocator.make!T(client);
 		httpProcessor.run();
 	}
 

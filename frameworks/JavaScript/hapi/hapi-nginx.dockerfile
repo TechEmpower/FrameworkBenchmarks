@@ -1,7 +1,7 @@
-FROM node:12.3.1-slim
+FROM node:16.13.0-slim
 
-RUN apt update
-RUN apt install nginx -y
+RUN apt-get update
+RUN apt-get install nginx -y
 
 WORKDIR /
 
@@ -14,5 +14,7 @@ RUN ./build-nginx-conf.sh
 ENV NODE_HANDLER sequelize-postgres
 
 RUN npm install
+
+EXPOSE 8080
 
 CMD ./start-servers.sh && nginx -c /nginx.conf -g "daemon off;"

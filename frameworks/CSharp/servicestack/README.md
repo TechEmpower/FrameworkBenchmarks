@@ -44,7 +44,7 @@
 
 ## Mono Installation
 
-    sudo apt install build-essential autoconf automake libtool zlib1g-dev git
+    sudo apt-get install build-essential autoconf automake libtool zlib1g-dev git
 
     git clone git://github.com/mono/mono
     cd mono

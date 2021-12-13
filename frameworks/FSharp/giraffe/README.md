@@ -1,15 +1,20 @@
-# girrafe Tests on Linux
-This includes tests for plaintext and json serialization.
+# Giraffe Benchmarks on Linux
+
+This application tests Giraffe in 3 modes:
+
+- Default: Using Giraffe's Endpoint Routing APIs with the `System.Text.Json` serializer
+- Utf8Json: Testing the JSON endpoint with the `Utf8Json` serializer
+- Newtonsoft: Testing the JSON endpoint with the `NewtonsoftJson` serializer
 
 ## Infrastructure Software Versions
 
 **Language**
 
-* F# 4.1
+* F# 6.0
 
 **Platforms**
 
-* .NET Core (Windows and Linux)
+* .NET 6 (Windows and Linux)
 
 **Web Servers**
 
@@ -17,16 +22,15 @@ This includes tests for plaintext and json serialization.
 
 **Web Stack**
 
-* [giraffe](https://github.com/giraffe-fsharp/Giraffe)
+* [Giraffe](https://github.com/giraffe-fsharp/Giraffe)
 * ASP.NET Core
 
 ## Paths & Source for Tests
 
-* [Plaintext](src/App/Stock.fs): "/plaintext"
-* [Plaintext handwritten](src/App/Custom.fs): "/plaintext"
-* [JSON serialization](src/App/Stock.fs): "/json"
-* [JSON serialization via utf8json lib](src/App/Custom.fs): "/json"
-* [Fortunes using Dapper](src/App/Stock.fs): "/fortunes"
-* [Fortunes using Dapper and Custom renderer](src/App/Custom.fs): "/fortunes"
+All source code is inside `Program.fs`.
 
-App listents for command line arguments to pick specific implementation. If "stock" passed as command line argument it will use out of the box handlers, otherwise will use custom ones.
+App listens for a single command line argument to pick the desired JSON implementation:
+
+    - `system`: `System.Text.Json`
+    - `utf8`: `Utf8Json`
+    - `newtonsoft`: `Newtonsoft.Json`

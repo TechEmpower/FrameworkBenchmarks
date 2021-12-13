@@ -73,7 +73,6 @@
       "db_url": "/db",
       "query_url": "/query?queries=",
       "fortune_url": "/fortune",
-      "update_url": "/update?queries=",
       "cached_query_url": "/cached_worlds?queries=",
       "port": 8080,
       "approach": "Realistic",
@@ -113,7 +112,6 @@
     "postgres_fit": {
       "db_url": "/db",
       "fortune_url": "/fortune",
-      "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",

@@ -26,14 +26,14 @@ if (u_get_unalignedp64(pwbuffer+44) != U_MULTICHAR_CONSTANT64('n','/','j','s','o
    {
    u_put_unalignedp64(pwbuffer,    U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
    u_put_unalignedp64(pwbuffer+8,  U_MULTICHAR_CONSTANT64('L','e','n','g','t','h',':',' '));
-   u_put_unalignedp32(pwbuffer+16, U_MULTICHAR_CONSTANT32('2','7','\r','\n'));
+   u_put_unalignedp32(pwbuffer+16, U_MULTICHAR_CONSTANT32('x','x','\r','\n'));
    u_put_unalignedp64(pwbuffer+20, U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'));
    u_put_unalignedp64(pwbuffer+28, U_MULTICHAR_CONSTANT64('T','y','p','e',':',' ','a','p'));
    u_put_unalignedp64(pwbuffer+36, U_MULTICHAR_CONSTANT64('p','l','i','c','a','t','i','o'));
    u_put_unalignedp64(pwbuffer+44, U_MULTICHAR_CONSTANT64('n','/','j','s','o','n','\r','\n'));
    u_put_unalignedp16(pwbuffer+52, U_MULTICHAR_CONSTANT16('\r','\n'));
 
-   ptr = pwbuffer + U_CONSTANT_SIZE("Content-Length: 27\r\nContent-Type: application/json\r\n\r\n");
+   ptr = pwbuffer + U_CONSTANT_SIZE("Content-Length: xx\r\nContent-Type: application/json\r\n\r\n");
    }
 
 U_INTERNAL_ASSERT_EQUALS(u_get_unalignedp64(UClientImage_Base::wbuffer->data()), U_MULTICHAR_CONSTANT64('C','o','n','t','e','n','t','-'))
@@ -42,5 +42,11 @@ UValue::pstringify = ptr;
 
 UValue(*pkey, *pvalue).stringify();
 
-UClientImage_Base::wbuffer->size_adjust_constant(U_CONSTANT_SIZE("Content-Length: 27\r\nContent-Type: application/json\r\n\r\n") + 27);
+uint32_t content_length = (UValue::pstringify - ptr);
+
+U_INTERNAL_ASSERT_EQUALS(content_length, 27)
+
+(void) u_num2str32(content_length, ptr - U_CONSTANT_SIZE("xx\r\nContent-Type: application/json\r\n\r\n"));
+
+UClientImage_Base::wbuffer->size_adjust_constant(U_CONSTANT_SIZE("Content-Length: xx\r\nContent-Type: application/json\r\n\r\n") + content_length);
 -->

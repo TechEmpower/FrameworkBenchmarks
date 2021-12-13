@@ -1,7 +1,7 @@
 FROM haskell:8.6.3
 
-RUN apt update -yqq && apt install -yqq xz-utils make
-RUN apt install -yqq libpq-dev
+RUN apt-get update -yqq && apt-get install -yqq xz-utils make
+RUN apt-get install -yqq libpq-dev
 
 WORKDIR /app
 
@@ -21,4 +21,7 @@ RUN ln -s ~/.local/bin/warp-postgres-wire ~/.local/bin/warp
 
 ARG TFB_TEST_NAME
 ENV TFB_TEST_NAME=${TFB_TEST_NAME}
+
+EXPOSE 7041
+
 CMD stack exec $TFB_TEST_NAME -- tfb-database +RTS -A32m -N$(nproc)

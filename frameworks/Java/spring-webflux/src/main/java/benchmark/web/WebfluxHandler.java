@@ -51,12 +51,13 @@ public class WebfluxHandler {
     public Mono<ServerResponse> queries(ServerRequest request) {
         int queries = getQueries(request);
 
-        Mono<World>[] worlds = new Mono[queries];
-        Arrays.setAll(worlds, i -> dbRepository.getWorld(randomWorldNumber()));
+        Mono<List<World>> worlds = Flux.range(0, queries)
+                .flatMap(i -> dbRepository.getWorld(randomWorldNumber()))
+                .collectList();
 
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Flux.merge(worlds).collectList(), new ParameterizedTypeReference<List<World>>() {
+                .body(worlds, new ParameterizedTypeReference<List<World>>() {
                 });
     }
 
@@ -74,14 +75,15 @@ public class WebfluxHandler {
     }
 
     public Mono<ServerResponse> updates(ServerRequest request) {
-        int count = getQueries(request);
-        Mono<World>[] worlds = new Mono[count];
-
-        Arrays.setAll(worlds, i -> dbRepository.findAndUpdateWorld(randomWorldNumber(), randomWorldNumber()));
+        int queries = getQueries(request);
+        
+        Mono<List<World>> worlds = Flux.range(0, queries)
+                .flatMap(i -> dbRepository.findAndUpdateWorld(randomWorldNumber(), randomWorldNumber()))
+                .collectList();
 
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Flux.merge(worlds).collectList(), new ParameterizedTypeReference<List<World>>() {
+                .body(worlds, new ParameterizedTypeReference<List<World>>() {
                 });
     }
 

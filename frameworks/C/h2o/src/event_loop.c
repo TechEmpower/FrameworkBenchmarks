@@ -22,7 +22,6 @@
 #include <inttypes.h>
 #include <limits.h>
 #include <netdb.h>
-#include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -39,7 +38,6 @@
 #include "event_loop.h"
 #include "global_data.h"
 #include "thread.h"
-#include "utility.h"
 
 #define DEFAULT_TCP_FASTOPEN_QUEUE_LEN 4096
 
@@ -65,6 +63,8 @@ static void accept_connection(h2o_socket_t *listener, const char *err)
 
 		if (!ctx->shutdown) {
 			size_t accepted = ctx->config->max_accept;
+
+			assert(accepted);
 
 			do {
 				h2o_socket_t * const sock = h2o_evloop_socket_accept(listener);

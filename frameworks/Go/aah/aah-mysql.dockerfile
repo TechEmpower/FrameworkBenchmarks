@@ -1,4 +1,4 @@
-FROM golang:1.12
+FROM golang:1.14
 
 RUN apt-get update -yqq
 
@@ -16,5 +16,7 @@ WORKDIR /aah/src/benchmark
 RUN aah --version
 RUN mkdir -p views/common
 RUN aah build --single
+
+EXPOSE 8080
 
 CMD build/bin/benchmark run --envprofile bm_mysql

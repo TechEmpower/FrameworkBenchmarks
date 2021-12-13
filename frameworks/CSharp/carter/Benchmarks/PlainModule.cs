@@ -9,7 +9,7 @@
 
         public PlainModule() : base("plaintext")
         {
-            Get("/", (req, res, routeData) =>
+            Get("/", (req, res) =>
             {
                 var payloadLength = _helloWorldPayload.Length;
                 res.StatusCode = 200;

@@ -1,4 +1,5 @@
 from toolset.utils.output_helper import log
+from toolset.test_types import test_types
 
 import os
 import subprocess
@@ -52,31 +53,14 @@ class Results:
         self.frameworks = [t.name for t in benchmarker.tests]
         self.duration = self.config.duration
         self.rawData = dict()
-        self.rawData['json'] = dict()
-        self.rawData['db'] = dict()
-        self.rawData['query'] = dict()
-        self.rawData['fortune'] = dict()
-        self.rawData['update'] = dict()
-        self.rawData['plaintext'] = dict()
-        self.rawData['cached_query'] = dict()
         self.completed = dict()
         self.succeeded = dict()
-        self.succeeded['json'] = []
-        self.succeeded['db'] = []
-        self.succeeded['query'] = []
-        self.succeeded['fortune'] = []
-        self.succeeded['update'] = []
-        self.succeeded['plaintext'] = []
-        self.succeeded['cached_query'] = []
         self.failed = dict()
-        self.failed['json'] = []
-        self.failed['db'] = []
-        self.failed['query'] = []
-        self.failed['fortune'] = []
-        self.failed['update'] = []
-        self.failed['plaintext'] = []
-        self.failed['cached_query'] = []
         self.verify = dict()
+        for type in test_types:
+            self.rawData[type] = dict()
+            self.failed[type] = []
+            self.succeeded[type] = []
 
     #############################################################################
     # PUBLIC FUNCTIONS
@@ -336,6 +320,7 @@ class Results:
         toRet['succeeded'] = self.succeeded
         toRet['failed'] = self.failed
         toRet['verify'] = self.verify
+        toRet['testMetadata'] = self.benchmarker.metadata.to_jsonable()
 
         return toRet
 
@@ -461,8 +446,8 @@ class Results:
         stats_file = self.get_stats_file(framework_test.name, test_type)
         with open(stats_file) as stats:
             # dstat doesn't output a completely compliant CSV file - we need to strip the header
-            while stats.next() != "\n":
-                pass
+            for _ in range(4):
+                stats.next()
             stats_reader = csv.reader(stats)
             main_header = stats_reader.next()
             sub_header = stats_reader.next()

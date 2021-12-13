@@ -2,34 +2,29 @@
 
 namespace App\Controller;
 
-use App\Model\Entity\Fortune;
-use Cake\ORM\TableRegistry;
+use Cake\Controller\Controller;
 
-class FortunesController extends AppController {
+class FortunesController extends Controller {
 
-    public function index() {
-        $this->viewBuilder()->setLayout('fortunes');
-        $this->loadModel('Fortune');
+    protected $modelClass = 'Fortune';
 
-        $fortunesTable = TableRegistry::getTableLocator()->get('Fortune');
-
-        $query = $fortunesTable->find('all');
+    public function index() 
+    {
+        $query = $this->Fortune->find('all');
 
         // Calling all() will execute the query
         // and return the result set.
         $fortunes = $query->all();
 
+        // stuffing in the dynamic data
+        $fortune = $this->Fortune->newEntity([
+            'id' => 0,
+            'message' => 'Additional fortune added at request time.'
+        ]);
 
+        $fortunes = $fortunes->appendItem($fortune);
 
-	    // stuffing in the dynamic data
-	    $fortune = TableRegistry::getTableLocator()->get('Fortune')->newEntity([
-	    	'id' => 0,
-		    'message' => 'Additional fortune added at request time.'
-	    ]);
-
-	    $fortunes = $fortunes->appendItem($fortune);
-
-	    $fortunes = $fortunes->sortBy('message', SORT_ASC, SORT_STRING)->compile(false);
+        $fortunes = $fortunes->sortBy('message', SORT_ASC, SORT_STRING)->compile(false);
 
         $this->set('fortunes', $fortunes);
     }

@@ -1,0 +1,10 @@
+pin-depends: [
+  [ "reason.dev" "git+https://github.com/facebook/reason#master"]
+  [ "piaf.dev" "git+https://github.com/anmonteiro/piaf.git#master" ]
+  [ "httpaf.dev" "git+https://github.com/anmonteiro/httpaf.git#fork" ]
+  [ "httpaf-lwt.dev" "git+https://github.com/anmonteiro/httpaf.git#fork" ]
+  [ "httpaf-lwt-unix.dev" "git+https://github.com/anmonteiro/httpaf.git#fork" ]
+  [ "ssl.dev" "git+https://github.com/savonet/ocaml-ssl.git#6b75fac" ]
+  [ "morph.dev" "git+https://github.com/reason-native-web/morph.git#master" ]
+  [ "session.dev" "git+https://github.com/inhabitedtype/ocaml-session.git#master" ]
+]

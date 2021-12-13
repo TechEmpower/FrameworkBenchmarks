@@ -7,11 +7,11 @@ from quart import Quart, jsonify, make_response, request, render_template
 
 app = Quart(__name__)
 
-GET_WORLD = "select randomnumber from world where id = $1"
+GET_WORLD = "select id,randomnumber from world where id = $1"
 UPDATE_WORLD = "update world set randomNumber = $2 where id = $1"
 
 
-@app.before_first_request
+@app.before_serving
 async def connect_to_db():
     app.db = await asyncpg.create_pool(
         user=os.getenv("PGUSER", "benchmarkdbuser"),
@@ -22,9 +22,14 @@ async def connect_to_db():
     )
 
 
+@app.after_serving
+async def disconnect_from_db():
+    await app.db.close()
+
+
 @app.route("/json")
-def json():
-    return jsonify(message="Hello, World!")
+async def json():
+    return {"message": "Hello, World!"}
 
 
 @app.route("/plaintext")

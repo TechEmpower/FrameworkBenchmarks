@@ -124,11 +124,16 @@ def main(argv=None):
         dest='test_lang',
         help='name of language directory containing all tests to run')
     parser.add_argument(
+        '--tag',
+        nargs='+',
+        dest='tag',
+        help='tests to be run by tag name')
+    parser.add_argument(
         '--exclude', default=None, nargs='+', help='names of tests to exclude')
     parser.add_argument(
         '--type',
         choices=[
-            'all', 'json', 'db', 'query', 'cached_query', 'fortune', 'update',
+            'all', 'json', 'db', 'query', 'cached-query', 'fortune', 'update',
             'plaintext'
         ],
         nargs='+',
@@ -147,7 +152,11 @@ def main(argv=None):
         action='store_true',
         default=False,
         help='lists all the known tests that can run')
-
+    parser.add_argument(
+        '--list-tag',
+        dest='list_tag',
+        default=False,
+        help='lists all the known tests with a specific tag')
     # Benchmark options
     parser.add_argument(
         '--duration',
@@ -166,6 +175,7 @@ def main(argv=None):
     parser.add_argument(
         '--concurrency-levels',
         nargs='+',
+        type=int,
         default=[16, 32, 64, 128, 256, 512],
         help='List of concurrencies to benchmark')
     parser.add_argument(
@@ -214,6 +224,13 @@ def main(argv=None):
 
             for test in all_tests:
                 log(test.name)
+
+        elif config.list_tag:
+            all_tests = benchmarker.metadata.gather_tests()
+
+            for test in all_tests:
+                if hasattr(test, "tags") and config.list_tag in test.tags:
+                    log(test.name)
 
         elif config.parse:
             all_tests = benchmarker.metadata.gather_tests()

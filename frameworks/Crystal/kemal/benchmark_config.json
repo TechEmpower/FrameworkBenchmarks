@@ -23,6 +23,24 @@
       "display_name": "Kemal (PostgreSQL)",
       "notes": "",
       "versus": "crystal"
+    },
+    "concurrent-queries": {
+      "query_url": "/queries?concurrency=2&queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "kemal",
+      "language": "Crystal",
+      "flavor": "None",
+      "orm": "micro",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Kemal (PostgreSQL) - Concurrent Queries",
+      "notes": "",
+      "versus": "crystal"
     }
   }]
 }

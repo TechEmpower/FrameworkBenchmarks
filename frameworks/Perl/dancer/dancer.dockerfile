@@ -1,6 +1,6 @@
 FROM perl:5.26
 
-RUN apt update -yqq && apt install -yqq nginx
+RUN apt-get update -yqq && apt-get install -yqq nginx
 
 ADD ./ /dancer
 WORKDIR /dancer
@@ -14,6 +14,8 @@ RUN cpanm --notest --no-man-page \
       JSON::XS@3.01 \
       Plack@1.0034 \
       Starman@0.4011
+
+EXPOSE 8080
 
 CMD nginx -c /dancer/nginx.conf && \
     plackup -E production -s Starman --workers=$(nproc) -l /tmp/perl-dancer.sock -a ./app.pl

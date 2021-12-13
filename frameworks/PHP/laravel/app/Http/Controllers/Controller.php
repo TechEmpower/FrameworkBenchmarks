@@ -6,67 +6,79 @@ use App\Models\Fortune;
 use App\Models\World;
 use Illuminate\Routing\Controller as BaseController;
 
-class Controller extends BaseController {
+class Controller extends BaseController
+{
+    public function json()
+    {
+        return response()->json(['message' => 'Hello, World!']);
+    }
 
-	public function json() {
-		return ['message' => 'Hello, World!'];
-	}
+    public function db()
+    {
+        return response()->json(World::query()->find(self::randomInt()));
+    }
 
-	public function db() {
-		return World::find(random_int(1, 10000));
-	}
+    public function queries($queries = 1)
+    {
+        $queries = self::clamp($queries);
 
-	public function queries($queries = 1) {
-		$queries = $this->clamp($queries);
+        $rows = [];
+        while ($queries--) {
+            $rows[] = World::query()->find(self::randomInt());
+        }
 
-		$rows = [];
-		while ($queries--) {
-			$rows[] = World::find(random_int(1, 10000));
-		}
+        return response()->json($rows);
+    }
 
-		return $rows;
-	}
+    public function fortunes()
+    {
+        $rows = Fortune::all();
 
-	public function fortunes() {
-		$rows = Fortune::all();
+        $insert = new Fortune();
+        $insert->id = 0;
+        $insert->message = 'Additional fortune added at request time.';
 
-		$insert = new Fortune();
-		$insert->id = 0;
-		$insert->message = "Additional fortune added at request time.";
+        $rows->add($insert);
+        $rows = $rows->sortBy('message');
 
-		$rows->add($insert);
-		$rows = $rows->sortBy("message");
+        return view('fortunes', ['rows' => $rows]);
+    }
 
-		return view("fortunes", ["rows" => $rows]);
-	}
+    public function updates($queries = 1)
+    {
+        $queries = self::clamp($queries);
 
-	public function updates($queries = 1) {
-		$queries = $this->clamp($queries);
+        $rows = [];
 
-		$rows = [];
+        while ($queries--) {
+            $row = World::query()->find(self::randomInt());
+            $row->randomNumber = self::randomInt();
+            $row->save();
 
-		while ($queries--) {
-			$row = World::find(random_int(1, 10000));
-			$row->randomNumber = random_int(1, 10000);
-			$row->save();
+            $rows[] = $row;
+        }
 
-			$rows[] = $row;
-		}
+        return response()->json($rows);
+    }
 
-		return $rows;
-	}
+    public function plaintext()
+    {
+        return response('Hello, World!', 200, ['Content-Type' => 'text/plain']);
+    }
 
-	public function plaintext() {
-		return response("Hello, World!")->header('Content-Type', 'text/plain');
-	}
+    private static function randomInt()
+    {
+        return random_int(1, 10000);
+    }
 
-	private function clamp($value): int {
-		if (!is_numeric($value) || $value < 1) {
-			return 1;
-		} else if ($value > 500) {
-			return 500;
-		} else {
-			return $value;
-		}
-	}
+    private static function clamp($value)
+    {
+        if (!is_numeric($value) || $value < 1) {
+            return 1;
+        }
+        if ($value > 500) {
+            return 500;
+        }
+        return (int)$value;
+    }
 }

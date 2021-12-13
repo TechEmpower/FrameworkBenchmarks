@@ -1,15 +1,12 @@
 package net.benchmark.akka.http.world
-import io.circe.{Decoder, Encoder}
+
+import io.circe.Codec, io.circe.generic.semiauto.deriveCodec
+
+case class World(id: Int, randomNumber: Int)
 
 object World {
 
-  implicit val decodeWorld: Decoder[World] =
-    Decoder.forProduct2("id", "randomNumber")(World.apply)
-
-  implicit val encodeWorld: Encoder[World] =
-    Encoder.forProduct2("id", "randomNumber")(v => (v.id, v.randomNumber))
+  implicit val worldCodec: Codec[World] = deriveCodec
 
   def tupled = (this.apply _).tupled
 }
-
-case class World(id: Int, randomNumber: Int)

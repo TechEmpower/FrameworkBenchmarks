@@ -1,20 +1,19 @@
 //! Db executor actor
+
 use std::io;
 
 use actix::prelude::*;
-use diesel;
 use diesel::prelude::*;
 use diesel::result::Error;
-use rand::{thread_rng, Rng, ThreadRng};
+use rand::rngs::SmallRng;
+use rand::{Rng, SeedableRng};
 
 use crate::models;
 
 pub struct DbExecutor {
     conn: PgConnection,
-    rng: ThreadRng,
+    rng: SmallRng,
 }
-
-unsafe impl Send for DbExecutor {}
 
 impl Actor for DbExecutor {
     type Context = SyncContext<Self>;
@@ -25,7 +24,7 @@ impl DbExecutor {
         DbExecutor {
             conn: PgConnection::establish(db_url)
                 .expect(&format!("Error connecting to {}", db_url)),
-            rng: thread_rng(),
+            rng: SmallRng::from_entropy(),
         }
     }
 }
@@ -94,7 +93,7 @@ impl Handler<UpdateWorld> for DbExecutor {
 
         let mut worlds = Vec::with_capacity(msg.0 as usize);
         for _ in 0..msg.0 {
-            let w_id = self.rng.gen_range::<i32>(1, 10_001);
+            let w_id: i32 = self.rng.gen_range(1, 10_001);
             let mut w = match world.filter(id.eq(w_id)).load::<models::World>(&self.conn)
             {
                 Ok(mut items) => items.pop().unwrap(),

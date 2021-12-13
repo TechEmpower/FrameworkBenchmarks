@@ -1,4 +1,12 @@
-<?php
+<!DOCTYPE html>
+<html><head><title>Fortunes</title></head>
+<body>
+  <table>
+  <tr><th>id</th><th>message</th></tr>
+<?php table(); ?>
+  </table>
+</body>
+</html><?php
 //
 // Database Test
 //
@@ -23,29 +31,8 @@ function fortune() {
   return $arr;
 }
 
-// Set content type
-header("Content-type: text/html; charset=utf-8");
-
-?>
-<!DOCTYPE html>
-<html>
-<head>
-<title>Fortunes</title>
-</head>
-<body>
-<table>
-<tr>
-<th>id</th>
-<th>message</th>
-</tr>
-<?php
-foreach ( fortune() as $id => $fortune ) {
-?>
-<tr>
-<td><?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?></td>  
-<td><?php echo htmlspecialchars($fortune, ENT_QUOTES, 'UTF-8'); ?></td>
-</tr>
-<?php } ?>
-</table>
-</body>
-</html>
+function table() {
+  foreach ( fortune() as $id => $fortune ) : ?>
+<tr><td><?= $id ?></td><td><?= htmlspecialchars($fortune, ENT_QUOTES, 'UTF-8') ?></td></tr>
+<?php endforeach;
+}

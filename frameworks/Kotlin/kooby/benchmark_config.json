@@ -11,7 +11,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "framework": "jooby for kotlin",
+      "framework": "kooby: jooby+kotlin",
       "language": "Kotlin",
       "flavor": "None",
       "platform": "Undertow",

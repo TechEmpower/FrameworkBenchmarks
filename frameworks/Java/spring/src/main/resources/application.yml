@@ -1,6 +1,6 @@
 ---
 spring:
-  profiles: jdbc
+  profiles: jdbc,jpa
   datasource:
     url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
     username: ${database.username}
@@ -12,6 +12,12 @@ database:
   port: 5432
   username: benchmarkdbuser
   password: benchmarkdbpass
+
+---
+spring:
+  profiles: jpa
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 ---
 spring:

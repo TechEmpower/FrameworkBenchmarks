@@ -12,8 +12,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
-		<cache2k-version>1.2.1.Final</cache2k-version>
-		<jackson-version>2.9.9</jackson-version>
+		<cache2k-version>1.2.3.Final</cache2k-version>
+		<jackson-version>2.10.0.pr1</jackson-version>
 		<!-- This is the default web.xml for plaintext and json only -->
 		<maven.war.xml>src/main/webapp/WEB-INF/web.xml</maven.war.xml>
 	</properties>
@@ -22,12 +22,6 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>${jackson-version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.module</groupId>
-			<artifactId>jackson-module-afterburner</artifactId>
 			<version>${jackson-version}</version>
 		</dependency>
 
@@ -71,58 +65,6 @@
 
 	<profiles>
 		<profile>
-			<id>afterburner</id>
-			<properties>
-				<maven.war.xml>src/main/resources/WEB-INF/afterburner/web.xml</maven.war.xml>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-war-plugin</artifactId>
-						<configuration>
-							<webResources>
-								<resource>
-									<directory>src/main/resources/WEB-INF/afterburner</directory>
-									<excludes>
-										<exclude>src/main/resources/WEB-INF/</exclude>
-									</excludes>
-									<targetPath>WEB-INF</targetPath>
-								</resource>
-							</webResources>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
-			<id>cjs</id>
-			<properties>
-				<maven.war.xml>src/main/resources/WEB-INF/cjs/web.xml</maven.war.xml>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-war-plugin</artifactId>
-						<configuration>
-							<webResources>
-								<resource>
-									<directory>src/main/resources/WEB-INF/cjs</directory>
-									<excludes>
-										<exclude>src/main/resources/WEB-INF/</exclude>
-									</excludes>
-									<targetPath>WEB-INF</targetPath>
-								</resource>
-							</webResources>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
 			<id>mysql</id>
 			<properties>
 				<maven.war.xml>src/main/resources/WEB-INF/mysql/web.xml</maven.war.xml>
@@ -131,7 +73,7 @@
 				<dependency>
 					<groupId>mysql</groupId>
 					<artifactId>mysql-connector-java</artifactId>
-					<version>5.1.47</version>
+					<version>8.0.18</version>
 				</dependency>
 			</dependencies>
 			<build>

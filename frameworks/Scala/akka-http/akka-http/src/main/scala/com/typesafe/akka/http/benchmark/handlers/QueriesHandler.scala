@@ -16,7 +16,7 @@ trait QueriesHandler {
   def queriesEndpoint: Route =
     get {
       path("queries") {
-        parameter('queries.?) { numQueries =>
+        parameter("queries".?) { numQueries =>
           // The queries parameter must be bounded to between 1 and 500. If the parameter is missing,
           // is not an integer, or is an integer less than 1, the value should be interpreted as 1;
           // if greater than 500, the value should be interpreted as 500.

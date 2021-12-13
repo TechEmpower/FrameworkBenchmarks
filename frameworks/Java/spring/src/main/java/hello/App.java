@@ -18,7 +18,7 @@ public class App {
     }
 
     @Bean
-    @Profile("jdbc")
+    @Profile({"jdbc", "jpa"})
     public DataSource datasource(DataSourceProperties dataSourceProperties) {
         HikariDataSource dataSource = dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
         dataSource.setMaximumPoolSize(Runtime.getRuntime().availableProcessors() * 2);

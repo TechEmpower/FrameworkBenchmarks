@@ -1,11 +1,11 @@
 {
 	"require" : {
-		"php" : "^7.1",
-		"phpmv/ubiquity" : "2.3.x-dev"
+		"php" : ">=7.4",
+		"phpmv/ubiquity" : "dev-master"
 	},
 	"require-dev" : {
 		"monolog/monolog" : "^1.24",
-		"mindplay/annotations" : "^1.3"
+		"phpmv/ubiquity-annotations" : "^0.0"
 	},
 	"autoload" : {
 		"psr-4" : {

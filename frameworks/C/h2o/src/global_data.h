@@ -22,12 +22,10 @@
 #define GLOBAL_DATA_H_
 
 #include <h2o.h>
-#include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
-#include <h2o/cache.h>
 #include <openssl/ssl.h>
 
-#include "cache.h"
 #include "list.h"
 #include "handlers/request_handler_data.h"
 

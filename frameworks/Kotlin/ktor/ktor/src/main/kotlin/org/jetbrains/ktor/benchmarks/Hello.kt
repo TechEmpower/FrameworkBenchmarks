@@ -9,15 +9,14 @@ import io.ktor.http.content.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.scheduling.*
 import kotlinx.html.*
 import kotlinx.serialization.*
+import kotlinx.serialization.builtins.*
 import kotlinx.serialization.json.*
-import java.util.*
 import java.util.concurrent.*
 
 @Serializable
-data class Message(val message: String = "Hello, World!")
+data class Message(val message: String)
 
 @Serializable
 data class World(val id: Int, var randomNumber: Int)
@@ -25,15 +24,14 @@ data class World(val id: Int, var randomNumber: Int)
 @Serializable
 data class Fortune(val id: Int, var message: String)
 
-@UseExperimental(ImplicitReflectionSerializer::class, InternalCoroutinesApi::class)
 fun Application.main() {
     val worldSerializer = World.serializer()
-    val worldListSerializer = World.serializer().list
+    val worldListSerializer = ListSerializer(World.serializer())
 
     val dbRows = 10000
     val poolSize = 48
     val pool by lazy { HikariDataSource(HikariConfig().apply { configurePostgres(poolSize) }) }
-    val databaseDispatcher by lazy { ExperimentalCoroutineDispatcher().blocking(poolSize) }
+    val databaseDispatcher = Dispatchers.IO
 
     install(DefaultHeaders)
 
@@ -45,7 +43,11 @@ fun Application.main() {
         }
 
         get("/json") {
-            call.respondText(JSON.stringify(Message()), ContentType.Application.Json, HttpStatusCode.OK)
+            call.respondText(
+                Json.encodeToString(Message("Hello, world!")),
+                ContentType.Application.Json,
+                HttpStatusCode.OK
+            )
         }
 
         get("/db") {
@@ -68,10 +70,12 @@ fun Application.main() {
                 }
             }
 
-            call.respondText(when (queries) {
-                null -> JSON.stringify(worldSerializer, result.single())
-                else -> JSON.stringify(worldListSerializer, result)
-            }, ContentType.Application.Json, HttpStatusCode.OK)
+            call.respondText(
+                when (queries) {
+                    null -> Json.encodeToString(worldSerializer, result.single())
+                    else -> Json.encodeToString(worldListSerializer, result)
+                }, ContentType.Application.Json, HttpStatusCode.OK
+            )
         }
 
         get("/fortunes") {
@@ -131,22 +135,25 @@ fun Application.main() {
 
                     result.forEach { it.randomNumber = random.nextInt(dbRows) + 1 }
 
-                    connection.prepareStatement("UPDATE World SET randomNumber = ? WHERE id = ?").use { updateStatement ->
-                        for ((id, randomNumber) in result) {
-                            updateStatement.setInt(1, randomNumber)
-                            updateStatement.setInt(2, id)
+                    connection.prepareStatement("UPDATE World SET randomNumber = ? WHERE id = ?")
+                        .use { updateStatement ->
+                            for ((id, randomNumber) in result) {
+                                updateStatement.setInt(1, randomNumber)
+                                updateStatement.setInt(2, id)
 
-                            updateStatement.executeUpdate()
+                                updateStatement.executeUpdate()
+                            }
                         }
-                    }
 
                 }
             }
 
-            call.respondText(when (queries) {
-                null -> JSON.stringify(worldSerializer, result.single())
-                else -> JSON.stringify(worldListSerializer, result)
-            }, ContentType.Application.Json, HttpStatusCode.OK)
+            call.respondText(
+                when (queries) {
+                    null -> Json.encodeToString(worldSerializer, result.single())
+                    else -> Json.encodeToString(worldListSerializer, result)
+                }, ContentType.Application.Json, HttpStatusCode.OK
+            )
         }
     }
 }

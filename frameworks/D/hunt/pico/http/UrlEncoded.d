@@ -39,8 +39,8 @@ import std.array;
  *
  * @see java.net.URLEncoder
  */
-class UrlEncoded  : MultiMap!string { 
-    
+class UrlEncoded  : MultiMap!string {
+
     enum string ENCODING = StandardCharsets.UTF_8;
 
 
@@ -104,7 +104,6 @@ class UrlEncoded  : MultiMap!string {
             charset = ENCODING;
 
         StringBuilder result = new StringBuilder(128);
-
         bool delim = false;
         foreach(string key, List!string list; map)
         {
@@ -236,7 +235,7 @@ class UrlEncoded  : MultiMap!string {
      */
     static string decodeString(string encoded, int offset, int length, string charset = ENCODING) {
         StringBuffer buffer = null;
-
+        warningf("decodeString ...............");
         for (int i = 0; i < length; i++) {
             char c = encoded.charAt(offset + i);
             if (c < 0 || c > 0xff) {
@@ -265,7 +264,7 @@ class UrlEncoded  : MultiMap!string {
                         if (i + 2 < length) {
                             int o = offset + i + 1;
                             i += 3;
-                            ba[n] = cast(byte) TypeUtils.parseInt(encoded, o, 2, 16);
+                           // ba[n] = cast(byte) TypeUtils.parseInt(encoded, o, 2, 16);
                             n++;
                         } else {
                             ba[n++] = cast(byte) '?';
@@ -323,7 +322,7 @@ class UrlEncoded  : MultiMap!string {
             charset = ENCODING;
         byte[] bytes = cast(byte[])str;
         // bytes = string.getBytes(charset);
-
+        warningf("encodeString ...............");
         int len = cast(int)bytes.length;
         byte[] encoded = new byte[bytes.length * 3];
         int n = 0;

@@ -7,14 +7,17 @@ void FortuneCtrl::asyncHandleHttpRequest(
     const HttpRequestPtr &req,
     std::function<void(const HttpResponsePtr &)> &&callback)
 {
-    auto client = drogon::app().getFastDbClient();
-    drogon::orm::Mapper<Fortune> mapper(client);
+    if (!*dbClient_)
+    {
+        *dbClient_ = drogon::app().getFastDbClient();
+    }
+    drogon::orm::Mapper<Fortune> mapper(*dbClient_);
     auto callbackPtr =
         std::make_shared<std::function<void(const HttpResponsePtr &)>>(
             std::move(callback));
 
     mapper.findAll(
-        [callbackPtr](std::vector<Fortune> rows) {
+        [callbackPtr, this](std::vector<Fortune> rows) {
             Fortune newRow;
             newRow.setId(0);
             newRow.setMessage("Additional fortune added at request time.");
@@ -31,7 +34,8 @@ void FortuneCtrl::asyncHandleHttpRequest(
                       });
             HttpViewData data;
             data.insert("rows", std::move(rows));
-            auto resp = HttpResponse::newHttpViewResponse("fortune.csp", data);
+            auto resp = HttpResponse::newHttpResponse();
+            resp->setBody(bodyTemplate_->genText(data));
             (*callbackPtr)(resp);
         },
         [callbackPtr](const DrogonDbException &err) {

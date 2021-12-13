@@ -6,7 +6,7 @@ public class Helpers {
 
     /**
      * Random number between 1 and 10,000
-     * 
+     *
      * @return
      */
     public static int randomWorldId() {
@@ -15,7 +15,7 @@ public class Helpers {
 
     /**
      * Returns a bounded integer. min if null or less than bounds. max if greater than bounds
-     * 
+     *
      * @param value
      * @param min
      * @param max

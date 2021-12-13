@@ -1,5 +1,5 @@
 <?php
-header('Content-type: application/json');
+header('Content-Type: application/json');
 
 // Database connection
 // http://www.php.net/manual/en/ref.pdo-mysql.php
@@ -12,4 +12,4 @@ $statement = $pdo->query( 'SELECT id,randomNumber FROM World WHERE id = '. mt_ra
 
 // Use the PHP standard JSON encoder.
 // http://www.php.net/manual/en/function.json-encode.php
-echo json_encode($statement->fetch(PDO::FETCH_ASSOC));
+echo json_encode($statement->fetch(PDO::FETCH_ASSOC), JSON_NUMERIC_CHECK);

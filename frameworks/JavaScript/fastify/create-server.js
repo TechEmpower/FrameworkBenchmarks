@@ -8,13 +8,23 @@ fastify.register(require("point-of-view"), {
   templates: __dirname + "/views"
 });
 
-fastify.use((req, reply, next) => {
-  reply.setHeader("Server", "Fastify");
+fastify.addHook('onRequest', (request, reply, done) => {
+  reply.header("Server", "Fastify");
+  done()
+})
 
-  next();
-});
-
-fastify.get("/json", (req, reply) => {
+fastify.get("/json", {
+  schema: {
+    response: {
+      200: {
+        type: 'object',
+        properties: {
+          message: { type: 'string' }
+        }
+      }
+    }
+  }
+}, (req, reply) => {
   reply
     .header("Content-Type", "application/json")
     .code(200)
@@ -34,10 +44,54 @@ if (database) {
   const dbLayer = require(`./db/${database}`);
   const routerHandler = handlers(dbLayer);
 
-  fastify.get("/db", routerHandler.singleQuery);
-  fastify.get("/queries", routerHandler.multipleQueries);
+  const itemSchema = {
+    type: 'object',
+    properties: {
+      id: { type: 'integer' },
+      message: { type: 'string' },
+      randomNumber: { type: 'integer' }
+    }
+  }
+
+  if (database === 'postgres') {
+    // postgres return lowercase columns
+    itemSchema.properties.randomnumber = { type: 'integer' };
+  }
+
+  const singleQuerySchema = {
+    schema: {
+      response:{
+        200: itemSchema
+      }
+    }
+  }
+
+  const multipleQueriesSchema = {
+    schema: {
+      response:{
+        200: {
+          type: 'array',
+          items: itemSchema
+        }
+      }
+    }
+  }
+
+  const updateSchema = {
+    schema: {
+      response:{
+        200: {
+          type: 'array',
+          items: itemSchema
+        }
+      }
+    }
+  }
+
+  fastify.get("/db", singleQuerySchema, routerHandler.singleQuery);
+  fastify.get("/queries", multipleQueriesSchema, routerHandler.multipleQueries);
   fastify.get("/fortunes", routerHandler.fortunes);
-  fastify.get("/updates", routerHandler.updates);
+  fastify.get("/updates", updateSchema, routerHandler.updates);
 }
 
 fastify.listen(8080, "0.0.0.0", err => {

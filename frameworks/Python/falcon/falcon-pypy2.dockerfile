@@ -7,4 +7,6 @@ COPY requirements-pypy.txt requirements-pypy.txt
 
 RUN pip install -r requirements-pypy.txt
 
+EXPOSE 8080
+
 CMD ["gunicorn", "app:app", "-c", "gunicorn_conf.py"]

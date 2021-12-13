@@ -11,44 +11,45 @@ RUN echo 'APT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/00-genera
 
 FROM debian AS racket
 
-ARG RACKET_VERSION=7.3
+ARG RACKET_VERSION=8.1
 
 RUN apt-get update -q \
     && apt-get install --no-install-recommends -q -y \
          ca-certificates curl libcurl3-gnutls \
     && rm -rf /var/lib/apt/lists/* \
     && curl -L -o racket-install.sh \
-         -O http://mirror.racket-lang.org/installers/${RACKET_VERSION}/racket-minimal-${RACKET_VERSION}-x86_64-linux-natipkg.sh \
+         -O http://mirror.racket-lang.org/installers/${RACKET_VERSION}/racket-minimal-${RACKET_VERSION}-x86_64-linux-cs.sh \
     && echo "yes\n1\n" | sh racket-install.sh --create-dir --unix-style --dest /usr/ \
     && rm racket-install.sh
 
 ENV SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
 ENV SSL_CERT_DIR="/etc/ssl/certs"
 
-RUN raco setup
-RUN raco pkg config --set catalogs \
-    "https://download.racket-lang.org/releases/${RACKET_VERSION}/catalog/"
+RUN apt-get update -q \
+  && apt-get install --no-install-recommends -q -y nginx redis-server
 
 
 FROM racket AS builder
 
+RUN raco pkg install -D --auto compiler-lib db-lib redis-lib threading-lib unix-socket-lib web-server-lib
+
 WORKDIR /racket
 ADD  . .
 
-RUN raco pkg install --auto compiler-lib
-
-RUN raco pkg install --auto db
-
-RUN raco exe servlet.rkt
+RUN raco make app.rkt \
+  && raco exe app.rkt
 
 
 FROM racket
 
-WORKDIR /racket
-COPY --from=builder /racket/servlet .
+RUN apt-get update -q \
+  && apt-get install --no-install-recommends -q -y gettext-base
 
-RUN ["chmod", "+x", "./servlet"]
+WORKDIR /racket
+COPY --from=builder /racket/app .
+ADD config config
+ADD scripts scripts
 
 EXPOSE 8080
 
-CMD ./servlet
+CMD ["/racket/scripts/run"]

@@ -19,11 +19,11 @@
 
 #define _GNU_SOURCE
 
-#include <errno.h>
 #include <h2o.h>
 #include <limits.h>
 #include <numaif.h>
 #include <pthread.h>
+#include <sched.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,8 +37,6 @@
 #include "global_data.h"
 #include "request_handler.h"
 #include "thread.h"
-#include "tls.h"
-#include "utility.h"
 
 static void *run_thread(void *arg);
 static void set_thread_memory_allocation_policy(size_t thread_num);
@@ -102,9 +100,6 @@ void free_thread_context(thread_context_t *ctx)
 			ctx->json_generator = gen->l.next;
 			free_json_generator(gen, NULL, NULL, 0);
 		} while (ctx->json_generator);
-
-	if (ctx->global_data->ssl_ctx)
-		cleanup_openssl_thread_state();
 }
 
 global_thread_data_t *initialize_global_thread_data(const config_t *config,

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+  <character-encoding>UTF-8</character-encoding>
+
+  <servlet>
+    <servlet-name>GhServlet</servlet-name>
+    <servlet-class>hello.GhServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GhServlet</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+</web-app>

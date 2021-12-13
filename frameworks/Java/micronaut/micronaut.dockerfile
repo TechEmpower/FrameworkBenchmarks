@@ -1,10 +1,16 @@
-FROM adoptopenjdk/maven-openjdk11:latest as maven
+FROM gradle:6.9-jdk11 as build
 WORKDIR /micronaut
 COPY src src
-COPY pom.xml pom.xml
-RUN mvn package -q
+COPY build.gradle build.gradle
+COPY settings.gradle settings.gradle
+RUN gradle build buildLayers --no-daemon
 
-FROM adoptopenjdk/openjdk11:jdk-11.0.3_7-slim
+FROM openjdk:11-jre-slim
 WORKDIR /micronaut
-COPY --from=maven /micronaut/target/hello-micronaut-0.1.jar app.jar
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dmicronaut.environments=benchmark", "-Dlog-root-level=OFF", "-jar", "app.jar"]
+COPY --from=build /micronaut/build/docker/layers/libs /home/app/libs
+COPY --from=build /micronaut/build/docker/layers/resources /home/app/resources
+COPY --from=build /micronaut/build/docker/layers/application.jar /home/app/application.jar
+
+EXPOSE 8080
+
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dmicronaut.environments=benchmark", "-Dlog-root-level=OFF", "-jar", "/home/app/application.jar"]

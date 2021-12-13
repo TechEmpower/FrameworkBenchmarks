@@ -1,0 +1,9 @@
+<Project>
+
+    <!-- $(PeachpieVersion) property from the current Peachpie.NET.Sdk -->
+    <Import Project="Version.props" Sdk="Peachpie.NET.Sdk" Condition=" '$(PeachpieVersion)'=='' " />
+
+    <!-- global properties -->
+    <PropertyGroup>
+    </PropertyGroup>
+</Project>

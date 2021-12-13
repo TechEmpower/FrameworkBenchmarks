@@ -1,28 +1,27 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
 using Benchmarks.Configuration;
 using Benchmarks.Data;
 using Benchmarks.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using Npgsql;
+using System;
+using System.Data.Common;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Benchmarks
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment hostingEnv, Scenarios scenarios)
+        public Startup(IWebHostEnvironment hostingEnv, Scenarios scenarios)
         {
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
@@ -55,15 +54,20 @@ namespace Benchmarks
             services.AddEntityFrameworkSqlServer();
 
             var appSettings = Configuration.Get<AppSettings>();
+            BatchUpdateString.DatabaseServer = appSettings.Database;
+
             Console.WriteLine($"Database: {appSettings.Database}");
 
             if (appSettings.Database == DatabaseServer.PostgreSql)
             {
                 if (Scenarios.Any("Ef"))
                 {
-                    services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(appSettings.ConnectionString));
+                    services.AddDbContextPool<ApplicationDbContext>(options => options
+                        .UseNpgsql(appSettings.ConnectionString,
+                            o => o.ExecutionStrategy(d => new NonRetryingExecutionStrategy(d)))
+                        .EnableThreadSafetyChecks(false));
                 }
-                
+
                 if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
                 {
                     services.AddSingleton<DbProviderFactory>(NpgsqlFactory.Instance);
@@ -73,7 +77,7 @@ namespace Benchmarks
             {
                 if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
                 {
-                    services.AddSingleton<DbProviderFactory>(MySqlClientFactory.Instance);
+                    services.AddSingleton<DbProviderFactory>(MySqlConnectorFactory.Instance);
                 }
             }
 
@@ -92,11 +96,6 @@ namespace Benchmarks
                 services.AddScoped<DapperDb>();
             }
 
-            if (Scenarios.Any("Update"))
-            {
-                BatchUpdateString.Initialize(appSettings.Database);
-            }
-
             if (Scenarios.Any("Fortunes"))
             {
                 var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);
@@ -109,15 +108,7 @@ namespace Benchmarks
 
             if (Scenarios.Any("Mvc"))
             {
-                var mvcBuilder = services
-                    .AddMvcCore()
-                    .SetCompatibilityVersion(CompatibilityVersion.Latest)
-                    ;
-
-                if (Scenarios.MvcJson || Scenarios.Any("MvcDbSingle") || Scenarios.Any("MvcDbMulti"))
-                {
-                    mvcBuilder.AddJsonFormatters();
-                }
+                var mvcBuilder = services.AddMvcCore();
 
                 if (Scenarios.MvcViews || Scenarios.Any("MvcDbFortunes"))
                 {
@@ -138,16 +129,6 @@ namespace Benchmarks
             if (Scenarios.Json)
             {
                 app.UseJson();
-            }
-
-            if (Scenarios.Utf8Json)
-            {
-                app.UseUtf8Json();
-            }
-
-            if (Scenarios.SpanJson)
-            {
-                app.UseSpanJson();
             }
 
             // Fortunes endpoints
@@ -216,7 +197,12 @@ namespace Benchmarks
 
             if (Scenarios.Any("Mvc"))
             {
-                app.UseMvc();
+                app.UseRouting();
+            
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                });
             }
 
             if (Scenarios.StaticFiles)

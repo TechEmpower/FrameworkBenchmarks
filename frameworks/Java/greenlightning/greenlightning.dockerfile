@@ -1,6 +1,6 @@
 FROM maven:3.6.1-jdk-11 as maven
 
-WORKDIR /greenlightning    
+WORKDIR /greenlightning
 COPY pom.xml pom.xml
 COPY src src
 
@@ -13,7 +13,6 @@ FROM azul/zulu-openjdk-alpine:11.0.3
 WORKDIR /greenlightning
 COPY --from=maven /greenlightning/target/greenlightning-test.jar app.jar
 
-#records to our log all the known network settings on the host connection 
-#CMD sysctl -a && java -server -Xmx26g -XX:+UseNUMA -jar app.jar
+EXPOSE 8080
 
-CMD java -server -Xmx26g -XX:+UseNUMA -jar app.jar
+CMD java -server -Xmx29g -XX:AutoBoxCacheMax=1000000 -XX:NewSize=64m -XX:+UseNUMA -jar app.jar

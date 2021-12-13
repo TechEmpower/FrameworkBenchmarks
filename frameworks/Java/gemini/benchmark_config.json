@@ -3,8 +3,8 @@
   "tests": [
     {
       "default": {
-        "json_url": "/json",
         "plaintext_url": "/plaintext",
+        "json_url": "/json",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",

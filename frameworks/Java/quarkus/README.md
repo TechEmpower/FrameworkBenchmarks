@@ -2,37 +2,21 @@
 
 This is the Quarkus portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-There is currently one repository implementation.
-* [WorldRepository](src/main/java/io/quarkus/benchmark/repository/WorldRepository.java) is using JPA.
+## Implementations
 
-### Plaintext Test
+There are currently 6 repository implementations:
 
-* [Plaintext test source](src/main/java/io/quarkus/benchmark/resource/PlainTextResource.java)
-
-### JSON Serialization Test
-
-* [JSON test source](src/main/java/io/quarkus/benchmark/resource/JsonResource.java)
-
-### Database Query Test
-
-* [Database Query test source](src/main/java/io/quarkus/benchmark/resource/DbResource.java)
-
-### Database Queries Test
-
-* [Database Queries test source](src/main/java/io/quarkus/benchmark/resource/DbResource.java)
-
-### Database Update Test
-
-* [Database Update test source](src/main/java/io/quarkus/benchmark/resource/DbResource.java)
-
-### Template rendering Test
-
-* [Template rendering test source](src/main/java/io/quarkus/benchmark/resource/FortuneResource.java)
+- RESTEasy and Hibernate ORM
+- RESTEasy Reactive and Hibernate ORM
+- RESTEasy Reactive and Hibernate Reactive
+- RESTEasy Reactive and Vert.x PG Client
+- Reactive Routes and Hibernate Reactive
+- Reactive Routes and Vert.x PG Client
 
 ## Versions
 
 * [Java OpenJDK 11](http://openjdk.java.net/)
-* [Quarkus 0.16.0](https://quarkus.io)
+* [Quarkus 1.11.0.Beta1](https://quarkus.io)
 
 ## Test URLs
 

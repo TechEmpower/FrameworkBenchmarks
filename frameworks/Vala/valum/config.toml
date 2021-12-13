@@ -1,0 +1,15 @@
+[framework]
+name = "valum"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "GLib"
+webserver = "Soup"
+versus = "vsgi"

@@ -1,41 +1,33 @@
-FROM php:7.3
+FROM php:8.0-cli
 
-ENV SWOOLE_VERSION=4.3.0
+RUN pecl install swoole > /dev/null && \
+    docker-php-ext-enable swoole
+RUN docker-php-ext-install pdo_mysql pcntl opcache > /dev/null
 
-RUN cd /tmp && curl -sSL "https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz" | tar xzf - \
-        && cd swoole-src-${SWOOLE_VERSION} \
-        && phpize && ./configure > /dev/null && make > /dev/null && make install > /dev/null \
-        && docker-php-ext-enable swoole
-
-RUN docker-php-ext-install pdo_mysql > /dev/null
+RUN echo "opcache.enable_cli=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+#RUN echo "opcache.jit=1205" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+#RUN echo "opcache.jit_buffer_size=128M" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 
 ADD ./ /laravel
 WORKDIR /laravel
-COPY deploy/swoole/php.ini /usr/local/etc/php/
 
-RUN mkdir -p /laravel/bootstrap/cache
-RUN mkdir -p /laravel/storage/framework/sessions
-RUN mkdir -p /laravel/storage/framework/views
-RUN mkdir -p /laravel/storage/framework/cache
-
+RUN mkdir -p /laravel/bootstrap/cache  /laravel/storage/framework/sessions /laravel/storage/framework/views /laravel/storage/framework/cache
 RUN chmod -R 777 /laravel
-
-RUN echo "APP_SWOOLE=true" >> .env
-
-# Install composer using the installation method documented at https://getcomposer.org/doc/faqs/how-to-install-composer-programmatically.md
-# This method was chosen because composer is not part of the apt repositories that are in the default PHP 7.3 docker image
-# Adding alternate apt php repos can potentially cause problems with extension compatibility between the php build from the docker image and the alternate php build
-# An additional benefit of this method is that the correct version of composer will be used for the environment and version of the php system in the docker image
-RUN deploy/swoole/install-composer.sh
 
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq git unzip > /dev/null
-COPY deploy/swoole/composer* ./
-RUN php composer.phar install -a --no-dev --quiet
 
-RUN php artisan config:cache
-RUN php artisan route:cache
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php && php -r "unlink('composer-setup.php');"
+RUN mv composer.phar /usr/local/bin/composer
 
-RUN chmod -R 777 /laravel
+COPY deploy/swoole/composer.json ./
+
+RUN echo "APP_SWOOLE=true" >> .env
+
+RUN composer install -a --no-dev --quiet
+RUN php artisan optimize
+
+
+EXPOSE 8080
 
 CMD php artisan swoole:http start

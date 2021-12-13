@@ -17,9 +17,10 @@ import std.stdio;
 
 import http.Parser;
 import http.Processor;
+import std.experimental.allocator;
 
 shared static this() {
-	DateTimeHelper.startClock();
+	//DateTimeHelper.startClock();
 }
 
 import hunt.io.channel;
@@ -31,11 +32,12 @@ abstract class AbstractTcpServer {
 	protected bool _isStarted = false;
 	protected Address _address;
 	protected int _workersCount;
-	TcpStreamOption _tcpStreamoption;
+	TcpStreamOptions _tcpStreamoption;
+
 
 	this(Address address, int thread = (totalCPUs - 1), int workersCount = 0) {
 		this._address = address;
-		_tcpStreamoption = TcpStreamOption.createOption();
+		_tcpStreamoption = TcpStreamOptions.create();
 		_tcpStreamoption.bufferSize = 1024 * 2;
 		_tcpStreamoption.isKeepalive = false;
 		_group = new EventLoopGroup(cast(uint) thread);
@@ -58,9 +60,9 @@ abstract class AbstractTcpServer {
 
 		trace("Launching http server");
 		debug {
-			_group.start();
+			_group.start(_tcpStreamoption.bufferSize);
 		} else {
-			_group.start(100);
+			_group.start(100, _tcpStreamoption.bufferSize);
 		}
 
 		if (_workersCount) {
@@ -82,7 +84,8 @@ abstract class AbstractTcpServer {
 				}
 				// EventLoop loop = _group.nextLoop();
 				EventLoop loop = _group.nextLoop(socket.handle);
-				TcpStream stream = new TcpStream(loop, socket, _tcpStreamoption);
+				//TcpStream stream = new TcpStream(loop, socket, _tcpStreamoption);
+        TcpStream stream = theAllocator.make!TcpStream(loop, socket, _tcpStreamoption);
 				onConnectionAccepted(stream);
 			} catch (Exception e) {
 				warningf("Failure on accepting %s", e);

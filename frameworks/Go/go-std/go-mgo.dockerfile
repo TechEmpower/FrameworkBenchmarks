@@ -1,4 +1,4 @@
-FROM golang:1.12
+FROM golang:1.14
 
 ENV GO111MODULE on
 WORKDIR /go-std
@@ -11,5 +11,7 @@ RUN go mod download
 
 RUN go generate ./templates
 RUN go build -ldflags="-s -w" -o app .
+
+EXPOSE 8080
 
 CMD ./app -db mgo -db_connection_string "tfb-database"

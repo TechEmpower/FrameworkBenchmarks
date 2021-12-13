@@ -31,7 +31,7 @@ class RawController extends Controller
         $statement = Yii::$app->db->createCommand('SELECT id, randomNumber FROM World WHERE id = :id');
 
         $worlds = [];
-        while (0 < $queries--) {
+        while ($queries--) {
             $result = $statement->bindValue(':id', mt_rand(1, 10000))->queryOne();
             $result['id'] = (int)$result['id'];
             $result['randomNumber'] = (int)$result['randomNumber'];
@@ -46,12 +46,10 @@ class RawController extends Controller
      */
     public function actionFortunes()
     {
-        $fortunes = Yii::$app->db->createCommand('SELECT id, message FROM Fortune')->queryAll();
-        $fortunes[] = ['id' => 0, 'message' => 'Additional fortune added at request time.'];
+        $fortunes = Yii::$app->db->createCommand('SELECT id, message FROM Fortune')->queryAll(\PDO::FETCH_KEY_PAIR );
+        $fortunes[0] = 'Additional fortune added at request time.';
 
-        usort($fortunes, function ($left, $right) {
-            return strcmp($left['message'], $right['message']);
-        });
+        asort($fortunes);
 
         $this->view->title = 'Fortunes';
 
@@ -65,12 +63,12 @@ class RawController extends Controller
     {
         $queries = Query::clamp($queries);
 
-        $selectCommand = Yii::$app->db->createCommand('SELECT randomNumber FROM World WHERE id = :id');
+        $selectCommand = Yii::$app->db->createCommand('SELECT id,randomNumber FROM World WHERE id = :id');
         $updateCommand = Yii::$app->db->createCommand('UPDATE World SET randomNumber = :num WHERE id = :id');
 
         $worlds = [];
 
-        while (0 < $queries--) {
+        while ($queries--) {
             $id = mt_rand(1, 10000);
             $randomNumber = mt_rand(1, 1000);
             $selectCommand->bindParam(':id', $id)->queryScalar();

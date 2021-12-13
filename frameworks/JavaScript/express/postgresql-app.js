@@ -1,89 +1,136 @@
-const express = require('express'),
-  app = express(),
-  bodyParser = require('body-parser'),
-  pgp = require('pg-promise')(),
+/**
+ * Module dependencies.
+ */
+const cluster = require('cluster'),
+  numCPUs = require('os').cpus().length,
+  express = require('express'),
   helper = require('./helper');
 
-const connection = {
-    db: 'hello_world',
-    username: 'benchmarkdbuser',
-    password: 'benchmarkdbpass',
-    host: 'tfb-database',
-    dialect: 'postgres'
-}
+// Middleware
+const bodyParser = require('body-parser');
 
-const db = pgp(`postgres://${connection.username}:${connection.password}@${connection.host}:5432/${connection.db}`);
-
-app.set('view engine', 'pug');
-app.set('views', __dirname + '/views');
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-// Set headers for all routes
-app.use((req, res, next) => {
-    res.setHeader("Server", "Express");
-    return next();
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
+  host: 'tfb-database',
+  dialect: 'postgres',
+  logging: false,
+  pool: {
+    min: 20, max: 20
+  }
 });
 
-// Routes
-app.get('/db', async (req, res) => {
+const Worlds = sequelize.define('world', {
+  id: {
+    type: 'Sequelize.INTEGER',
+    primaryKey: true
+  },
+  randomnumber: { type: 'Sequelize.INTEGER' }
+}, {
+  timestamps: false,
+  freezeTableName: true
+});
 
-    let world = await getRandomWorld();
+const Fortunes = sequelize.define('fortune', {
+  id: {
+    type: 'Sequelize.INTEGER',
+    primaryKey: true
+  },
+  message: { type: 'Sequelize.STRING' }
+}, {
+  timestamps: false,
+  freezeTableName: true
+});
+
+const randomWorldPromise = () => {
+  return Worlds.findOne({
+    where: { id: helper.randomizeNum() }
+  }).then((results) => {
+    return results;
+  }).catch((err) => process.exit(1));
+};
+
+if (cluster.isMaster) {
+  // Fork workers.
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('exit', (worker, code, signal) =>
+    console.log('worker ' + worker.pid + ' died'));
+} else {
+  const app = module.exports = express();
+
+  app.use(bodyParser.urlencoded({ extended: true }));
+
+  // Set headers for all routes
+  app.use((req, res, next) => {
+    res.setHeader("Server", "Express");
+    return next();
+  });
+
+  app.set('view engine', 'pug');
+  app.set('views', __dirname + '/views');
+
+  // Routes
+  app.get('/db', async (req, res) => {
+    let world = await randomWorldPromise();
 
     res.setHeader("Content-Type", "application/json");
     res.json(world);
-});
+  });
 
-app.get('/queries', async (req, res) => {
+  app.get('/queries', async (req, res) => {
+    const queries = Math.min(parseInt(req.query.queries) || 1, 500);
 
-    const results = [],
-        queries = Math.min(parseInt(req.query.queries) || 1, 500);
+    const promisesArray = [];
 
     for (let i = 0; i < queries; i++) {
-        
-        results.push(await getRandomWorld());
+      promisesArray.push(randomWorldPromise());
     }
 
-    res.json(results)
-});
+    res.json(await Promise.all(promisesArray))
+  });
 
-app.get('/fortunes', async (req, res) => {
-
-    let fortunes = await getAllFortunes()
+  app.get('/fortunes', async (req, res) => {
+    let fortunes = await Fortunes.findAll();
     const newFortune = { id: 0, message: "Additional fortune added at request time." };
     fortunes.push(newFortune);
     fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
 
     res.render('fortunes/index', { fortunes: fortunes });
-});
+  });
 
-app.get('/updates', async (req, res) => {
-    const results = [],
-        queries = Math.min(parseInt(req.query.queries) || 1, 500);
+  app.get('/updates', async (req, res) => {
+    const queries = Math.min(parseInt(req.query.queries) || 1, 500);
+    const worldPromises = [];
 
-    for (let i = 1; i <= queries; i++) {
-
-        results.push(await updateRandomWorld())
+    for (let i = 0; i < queries; i++) {
+      worldPromises.push(randomWorldPromise());
     }
 
-    res.json(results);
-});
+    const worldUpdate = (world) => {
+      world.randomnumber = helper.randomizeNum();
 
-const getRandomWorld = async () => {
+      return Worlds.update({
+            randomnumber: world.randomnumber
+          },
+          {
+            where: { id: world.id }
+          }).then((results) => {
+        return world;
+      }).catch((err) => process.exit(1));
+    };
 
-    return await db.one(`select * from world where id = ${helper.randomizeNum()}`, [true])
-};
+    Promise.all(worldPromises).then((worlds) => {
+      const updates = worlds.map((e) => worldUpdate(e));
 
-const updateRandomWorld = async () => {
+      Promise.all(updates).then((updated) => {
+        res.json(updated);
+      });
+    });
+  });
 
-    return await db.oneOrNone(`update world set randomNumber = ${helper.randomizeNum()} where id = ${helper.randomizeNum()} returning id, randomNumber`, [true])
-};
-
-const getAllFortunes = async () => {
-
-    return await db.many('select * from fortune', [true]);
-};
-
-app.listen(8080, () => {
+  app.listen(8080, () => {
     console.log('listening on port 8080');
-});
+  });
+}

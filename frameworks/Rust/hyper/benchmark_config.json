@@ -19,7 +19,7 @@
       "notes": ""
     },
     "db": {
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",

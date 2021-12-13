@@ -1,6 +1,6 @@
 [package]
 name = "actix"
-version = "1.0.0"
+version = "3.0.0"
 edition = "2018"
 
 [[bin]]
@@ -24,39 +24,38 @@ name = "actix-raw"
 path = "src/main_raw.rs"
 
 [dependencies]
-actix = { version="0.8.2", features=["http"] }
-actix-web = { version="1.0.0-rc", default-features = false }
-actix-http = { version="0.2.1", default-features = false }
-actix-rt = "0.2.2"
-actix-codec = "0.1.2"
-actix-server = "0.5.1"
-actix-service = "0.4.0"
-jemallocator = "0.3.0"
+actix = "0.10.0"
+actix-web = { version = "3.1.0", default-features = false }
+actix-http = { version = "2.0.0", default-features = false }
+actix-rt = "1.1.1"
+actix-codec = "0.3.0"
+actix-server = "1.0.4"
+actix-service = "1.0.6"
+snmalloc-rs = "0.2.6"
 askama = "0.8"
-markup = "0.3.1"
-serde = "1.0"
+yarte = { version = "0.14", features = ["bytes-buf"] }
+serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-serde_derive = "1.0"
-env_logger = "0.6"
-rand = "0.5"
-bytes = "0.4"
-num_cpus = "1.0"
-futures = "0.1.25"
-http = "0.1"
-diesel = { version = "1.2", features = ["postgres"] }
-url = { version="1.7", features=["query_encoding"] }
-log = { version = "0.4", features = ["release_max_level_off"] }
-v_htmlescape = "0.4"
-tokio-tcp = "0.1"
-tokio-postgres = { git="https://github.com/fafhrd91/rust-postgres.git" }
+env_logger = "0.7"
+rand = { version = "0.7", features = ["small_rng"] }
+bytes = "0.5.3"
+num_cpus = "1.13.0"
+futures = "0.3.1"
+http = "0.2"
+simd-json = "0.3"
+simd-json-derive = "0.1.9"
+diesel = { version = "1.4.3", features = ["postgres"] }
+url = "2.1.1"
+log = { version = "0.4", features = ["release_max_level_debug"] }
+v_htmlescape = "0.10"
+tokio = "0.2"
+tokio-postgres = { git = "https://github.com/fafhrd91/rust-postgres.git" }
 
 [build-dependencies]
 askama = "0.8"
+bindgen = "0.42"
 
 [profile.release]
 lto = true
 opt-level = 3
 codegen-units = 1
-
-[patch.crates-io]
-tokio-reactor = { git="https://github.com/fafhrd91/tokio.git" }

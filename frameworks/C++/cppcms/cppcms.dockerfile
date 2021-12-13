@@ -1,8 +1,8 @@
 FROM buildpack-deps:xenial
 
-RUN apt update -yqq && apt install -yqq software-properties-common unzip cmake
+RUN apt-get update -yqq && apt-get install -yqq software-properties-common unzip cmake
 
-RUN apt install -yqq libgcrypt11-dev python nginx
+RUN apt-get install -yqq libgcrypt11-dev python nginx
 
 WORKDIR /installs
 
@@ -46,5 +46,7 @@ COPY Makefile Makefile
 COPY nginx.conf nginx.conf
 
 RUN make
+
+EXPOSE 8080
 
 CMD nginx -c /cppcms/nginx.conf && ./mycppcms -c config-nginx-mysql.json

@@ -23,3 +23,9 @@ http://localhost/db/5
 
 ORM:
 http://localhost/db-orm/5
+
+## Infrastructure Software Versions
+The tests were run with:
+
+* [Fat-Free Version 3.7.1](https://github.com/bcosca/fatfree)
+* [PHP Version 7.4](http://www.php.net/) with FPM

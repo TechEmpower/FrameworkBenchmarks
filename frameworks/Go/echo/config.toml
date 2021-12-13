@@ -1,0 +1,19 @@
+[framework]
+name = "echo"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?n="
+urls.update = "/updates?n="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "go"

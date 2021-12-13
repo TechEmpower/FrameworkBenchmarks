@@ -1,6 +1,6 @@
 TARGET = view
 TEMPLATE = lib
-CONFIG += shared x86_64 c++11
+CONFIG += shared x86_64 c++14
 QT += network xml qml
 QT -= gui
 DEFINES += TF_DLL

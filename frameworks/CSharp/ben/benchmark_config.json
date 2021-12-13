@@ -1,0 +1,26 @@
+{
+  "framework": "ben",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "fortune_url": "/fortunes",
+      "db_url": "/db",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "Ben",
+      "language": "C#",
+      "orm": "micro",
+      "platform": ".NET",
+      "flavor": "CoreCLR",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Ben [Kestrel]",
+      "notes": "",
+      "versus": "aspcore"
+    }
+  }]
+}

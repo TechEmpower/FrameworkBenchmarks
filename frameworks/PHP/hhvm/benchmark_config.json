@@ -23,7 +23,8 @@
         "database_os"    : "Linux",
         "display_name"   : "hhvm",
         "notes"          : "",
-        "versus"         : "php"
+        "versus"         : "php",
+        "tags": ["broken"]
       }
     }]
 }

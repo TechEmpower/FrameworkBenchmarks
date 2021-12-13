@@ -4,11 +4,11 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, PlayNettyServer).disablePlugins(PlayFilters)
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.13.3"
 
 libraryDependencies ++= Seq(
   guice,
   jdbc,
-  "com.typesafe.play" %% "anorm" % "2.5.3",
-  "mysql" % "mysql-connector-java" % "5.1.47"
+  "org.playframework.anorm" %% "anorm" % "2.6.7",
+  "mysql" % "mysql-connector-java" % "8.0.21"
 )

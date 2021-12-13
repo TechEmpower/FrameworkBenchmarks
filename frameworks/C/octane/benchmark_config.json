@@ -17,7 +17,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "notes": "",
-      "versus": "octane"
+      "versus": "octane",
+      "tags": ["broken"]
     }
   }]
 }

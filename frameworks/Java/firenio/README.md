@@ -11,7 +11,7 @@
 ## Important Libraries
 The tests were run with:
 * [firenio](https://github.com/firenio/firenio/)
-* [fastjson](https://github.com/alibaba/fastjson/)
+* [jsoniter](https://github.com/json-iterator/java)
 
 ## Test URLs
 ### JSON

@@ -1,8 +1,8 @@
 FROM buildpack-deps:xenial
 
-RUN apt update -yqq && apt install -yqq software-properties-common unzip
+RUN apt-get update -yqq && apt-get install -yqq software-properties-common unzip
 
-RUN apt install -yqq g++-4.8 libjson0-dev
+RUN apt-get install -yqq g++-4.8 libjson0-dev
 RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
 
 WORKDIR /installs
@@ -26,5 +26,7 @@ WORKDIR /cpoll_cppsp
 RUN make clean && make
 
 WORKDIR $CPPSP_HOME
+
+EXPOSE 16969
 
 CMD ./run_application /cpoll_cppsp/www -g g++-4.8 -m /forcedynamic.cppsm

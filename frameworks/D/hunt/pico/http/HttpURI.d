@@ -32,19 +32,19 @@ import hunt.logging;
  * <li>{@link #getQuery()} - query</li>
  * <li>{@link #getFragment()} - fragment</li>
  * </ul>
- * 
+ *
 	https://bob:bobby@www.lunatech.com:8080/file;p=1?q=2#third
 	\___/   \_/ \___/ \______________/ \__/\_______/ \_/ \___/
 	|      |    |          |          |      | \_/  |    |
 	Scheme User Password    Host       Port  Path |   | Fragment
 			\_____________________________/       | Query
 						|               Path parameter
-					Authority 
+					Authority
  * <p>
  * Any parameters will be returned from {@link #getPath()}, but are excluded
  * from the return value of {@link #getDecodedPath()}. If there are multiple
  * parameters, the {@link #getParam()} method returns only the last one.
- * 
+ *
  * See_Also:
  *	 https://stackoverflow.com/questions/1634271/url-encoding-the-space-character-or-20
  *   https://web.archive.org/web/20151218094722/http://blog.lunatech.com/2009/02/03/what-every-web-developer-must-know-about-url-encoding
@@ -68,7 +68,7 @@ class HttpURI {
 
 	/**
 	 * Construct a normalized URI. Port is not set if it is the default port.
-	 * 
+	 *
 	 * @param scheme
 	 *            the URI scheme
 	 * @param host
@@ -159,7 +159,7 @@ class HttpURI {
 
 	/**
 	 * Parse according to https://tools.ietf.org/html/rfc7230#section-5.3
-	 * 
+	 *
 	 * @param method
 	 *            the request method
 	 * @param uri
@@ -345,7 +345,7 @@ class HttpURI {
 				case '[':
 					state = State.IPV6;
 					break;
-					
+
 				default:
 					break;
 				}
@@ -367,7 +367,7 @@ class HttpURI {
 						state = State.PATH;
 					}
 					break;
-					
+
 				default:
 					break;
 				}
@@ -415,7 +415,7 @@ class HttpURI {
 					if ('/' == last)
 						encoded = true;
 					break;
-					
+
 				default:
 					break;
 				}
@@ -445,7 +445,7 @@ class HttpURI {
 					// multiple parameters
 					mark = i + 1;
 					break;
-					
+
 				default:
 					break;
 				}
@@ -544,7 +544,7 @@ class HttpURI {
 
 	/**
 	 * The parsed Path.
-	 * 
+	 *
 	 * @return the path as parsed on valid URI. null for invalid URI.
 	 */
 	string getPath() {
@@ -741,7 +741,6 @@ class URIUtils
     static string decodePath(string path, int offset, int length) {
         try {
             StringBuilder builder = null;
-
             int end = offset + length;
             for (int i = offset; i < end; i++) {
                 char c = path[i];
@@ -755,10 +754,10 @@ class URIUtils
                             char u = path.charAt(i + 1);
                             if (u == 'u') {
                                 // TODO this is wrong. This is a codepoint not a char
-                                builder.append(cast(char) (0xffff & TypeUtils.parseInt(path, i + 2, 4, 16)));
+                                //builder.append(cast(char) (0xffff & TypeUtils.parseInt(path, i + 2, 4, 16)));
                                 i += 5;
                             } else {
-                                builder.append(cast(byte) (0xff & (TypeUtils.convertHexDigit(u) * 16 + TypeUtils.convertHexDigit(path.charAt(i + 2)))));
+                                //builder.append(cast(byte) (0xff & (TypeUtils.convertHexDigit(u) * 16 + TypeUtils.convertHexDigit(path.charAt(i + 2)))));
                                 i += 2;
                             }
                         } else {
@@ -820,10 +819,10 @@ class URIUtils
                         char u = path.charAt(i + 1);
                         if (u == 'u') {
                             // TODO this is wrong. This is a codepoint not a char
-                            builder.append(cast(char) (0xffff & TypeUtils.parseInt(path, i + 2, 4, 16)));
+                           // builder.append(cast(char) (0xffff & TypeUtils.parseInt(path, i + 2, 4, 16)));
                             i += 5;
                         } else {
-                            builder.append(cast(byte) (0xff & (TypeUtils.convertHexDigit(u) * 16 + TypeUtils.convertHexDigit(path.charAt(i + 2)))));
+                            //builder.append(cast(byte) (0xff & (TypeUtils.convertHexDigit(u) * 16 + TypeUtils.convertHexDigit(path.charAt(i + 2)))));
                             i += 2;
                         }
                     } else {
@@ -875,6 +874,8 @@ class URIUtils
      * @return the canonical path, or null if path traversal above root.
      */
     static string canonicalPath(string path) {
+
+      warningf("canonicalPath ...............");
         if (path.empty)
             return path;
 
@@ -984,7 +985,6 @@ class URIUtils
     static string canonicalEncodedPath(string path) {
         if (path.empty)
             return path;
-
         bool slash = true;
         int end = cast(int)path.length;
         int i = 0;
@@ -1094,7 +1094,6 @@ class URIUtils
     static string compactPath(string path) {
         if (path == null || path.length == 0)
             return path;
-
         int state = 0;
         int end = cast(int)path.length;
         int i = 0;

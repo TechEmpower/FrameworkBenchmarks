@@ -22,7 +22,7 @@
   <groupId>com.techempower</groupId>
   <artifactId>actframework</artifactId>
   <packaging>jar</packaging>
-  <version>1.8.25</version>
+  <version>1.9.0</version>
 
   <name>TEB ActFramework Project</name>
   <description>TEB benchmark project with ActFramework</description>
@@ -36,7 +36,7 @@
   <parent>
     <groupId>org.actframework</groupId>
     <artifactId>act-starter-parent</artifactId>
-    <version>1.8.25.0</version>
+    <version>1.9.0.1</version>
   </parent>
 
   <repositories>
@@ -98,6 +98,7 @@
     <dependency>
       <groupId>org.actframework</groupId>
       <artifactId>act-sql-common</artifactId>
+      <version>1.6.0</version>
       <exclusions>
         <exclusion>
           <groupId>org.avaje.ebean</groupId>

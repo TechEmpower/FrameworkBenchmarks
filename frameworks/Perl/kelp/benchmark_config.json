@@ -19,7 +19,8 @@
       "database_os": "Linux",
       "display_name": "kelp",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     },
     "mongodb": {
       "db_url": "/db/mongo",
@@ -39,7 +40,8 @@
       "database_os": "Linux",
       "display_name": "kelp",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     }
   }]
 }

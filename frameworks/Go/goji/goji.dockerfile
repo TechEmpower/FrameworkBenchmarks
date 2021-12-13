@@ -1,4 +1,4 @@
-FROM golang:1.12
+FROM golang:1.14
 
 ADD ./ /goji
 WORKDIR /goji
@@ -12,4 +12,7 @@ RUN go get github.com/zenazn/goji
 RUN go get github.com/zenazn/goji/web
 
 RUN go build -o server src/goji/server.go
+
+EXPOSE 8080
+
 CMD ./server

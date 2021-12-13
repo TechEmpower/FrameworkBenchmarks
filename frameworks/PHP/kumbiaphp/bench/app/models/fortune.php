@@ -2,8 +2,8 @@
 
 class Fortune extends \Kumbia\ActiveRecord\LiteRecord
 {
-    public static function all()
+    public static function cmp($a, $b)
     {
-        return parent::all('SELECT id, message FROM Fortune');
+        return $a->message <=> $b->message;
     }
 }

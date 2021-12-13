@@ -18,7 +18,8 @@
       "database_os": "Linux",
       "display_name": "web-simple",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     }
   }]
 }

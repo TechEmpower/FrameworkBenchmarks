@@ -1,8 +1,8 @@
 FROM buildpack-deps:xenial
 
-RUN apt update -yqq && apt install -yqq software-properties-common unzip cmake
+RUN apt-get update -yqq && apt-get install -yqq software-properties-common unzip cmake
 
-RUN apt install -yqq libgcrypt11-dev python nginx
+RUN apt-get install -yqq libgcrypt11-dev python nginx
 
 WORKDIR /installs
 
@@ -47,5 +47,7 @@ COPY config-direct-mysql.json config-direct-mysql.json
 COPY Makefile Makefile
 
 RUN make
+
+EXPOSE 8080
 
 CMD ./mycppcms -c config-direct-mysql.json

@@ -1,14 +1,14 @@
 package kooby
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.jooby.BadRequestException
+import io.jooby.exception.BadRequestException
 import io.jooby.Context
 import io.jooby.ExecutionMode.EVENT_LOOP
 import io.jooby.MediaType.JSON
 import io.jooby.hikari.HikariModule
 import io.jooby.json.JacksonModule
 import io.jooby.require
-import io.jooby.rocker.Rockerby
+import io.jooby.rocker.RockerModule
 import io.jooby.runApp
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
@@ -32,11 +32,6 @@ data class Fortune(val id: Int, var message: String)
 fun main(args: Array<String>) {
   runApp(args, EVENT_LOOP) {
 
-    /** Server options (netty only): */
-    serverOptions {
-      singleLoop = true
-    }
-
     /** JSON: */
     install(JacksonModule())
     val mapper = require(ObjectMapper::class)
@@ -46,7 +41,7 @@ fun main(args: Array<String>) {
     val ds = require(DataSource::class)
 
     /** Template engine: */
-    install(Rockerby())
+    install(RockerModule().reuseBuffer(true))
 
     get("/plaintext") {
       ctx.send(MESSAGE_BYTES)

@@ -4,7 +4,7 @@ require_once __DIR__ . '/boot-eloquent.php';
 
 // Read number of queries to run from URL parameter
 $query_count = 1;
-if (isset($_GET['queries']) && $_GET['queries'] > 0) {
+if (isset($_GET['queries']) && (int) $_GET['queries'] > 0) {
   $query_count = $_GET['queries'] > 500 ? 500 : $_GET['queries'];
 }
 
@@ -12,7 +12,7 @@ if (isset($_GET['queries']) && $_GET['queries'] > 0) {
 $arr = array();
 
 // For each query, store the result set values in the response array
-while (0 < $query_count--) {
+while ($query_count--) {
   $id = mt_rand(1, 10000);
   $randomNumber = mt_rand(1, 10000);
 
@@ -25,5 +25,5 @@ while (0 < $query_count--) {
 
 // Use the PHP standard JSON encoder.
 // http://www.php.net/manual/en/function.json-encode.php
-header('Content-type: application/json');
+header('Content-Type: application/json');
 echo json_encode($arr);

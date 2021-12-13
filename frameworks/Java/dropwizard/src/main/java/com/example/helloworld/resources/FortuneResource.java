@@ -25,7 +25,7 @@ public class FortuneResource {
 	}
 
 	@GET
-	@UnitOfWork(transactional = false) // Needed only for Hibernate - not for Mongo or JDBI
+	@UnitOfWork // Needed only for Hibernate - not for Mongo or JDBI
 	public FortuneView dbTest() {
 		final List<Fortune> fortunes = fortuneDAO.list();
 

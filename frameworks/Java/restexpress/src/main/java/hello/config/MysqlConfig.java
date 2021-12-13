@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp.datasources.SharedPoolDataSource;
 import org.restexpress.common.exception.ConfigurationException;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
+import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
 
 public class MysqlConfig {
 	private static final String PREFIX = "mysql.";
@@ -52,7 +52,11 @@ public class MysqlConfig {
 		}
 
 		if (useConfigs != null) {
-			ds.setUseConfigs(useConfigs);
+			try {
+				ds.setUseConfigs(useConfigs);
+			} catch (java.sql.SQLException e) {
+				throw new ConfigurationException("Unable to set DataSource config", e);
+			}
 		}
 		return ds;
 	}

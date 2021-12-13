@@ -4,19 +4,16 @@
 //
 namespace App\Controller;
 
-use Cake\Datasource\ConnectionManager;
+use Cake\Controller\Controller;
 
-class JsonController extends AppController {
+class JsonController extends Controller {
 
-     public function initialize()
-     {
-         parent::initialize();
-         $this->loadComponent('RequestHandler');
-     }
+    public function index() 
+    {
+        $data = ['message' => 'Hello, World!'];
 
-     public function index() {
-         $this->set('message', "Hello, World!");
-         $this->set('_serialize', array('message'));
-         $this->RequestHandler->renderAs($this, 'json');
-     }
+        return $this->response
+            ->withStringBody(\json_encode($data))
+            ->withType('application/json');
+    }
 }

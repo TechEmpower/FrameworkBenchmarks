@@ -1,18 +1,14 @@
-<%c++
-auto &rows=@@.get<std::vector<std::pair<string_view,string_view>>>("rows");
+<%inc
+#include "controllers/FortuneCtrlRaw.h"
 %>
-<!DOCTYPE html>
-<html>
-<head><title>Fortunes</title></head>
-<body>
-<table>
-<tr><th>id</th><th>message</th></tr>
+<%c++
+auto &rows=@@.get<std::vector<Fortune>>("rows");
+%>
+<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>
 <%c++for(auto const &row:rows){%>
-<tr><td>{%row.first%}</td><td><%c++ if(HttpViewData::needTranslation(row.second))
-                                         $$<<HttpViewData::htmlTranslate(row.second);
+<tr><td>{%row.id_%}</td><td><%c++ if(HttpViewData::needTranslation(row.message_))
+                                         $$<<HttpViewData::htmlTranslate(row.message_);
                                     else
-                                         $$<<row.second;%></td></tr>
+                                         $$<<row.message_;%></td></tr>
 <%c++}%>
-</table>
-</body>
-</html>
+</table></body></html>
