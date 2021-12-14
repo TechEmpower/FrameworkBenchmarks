@@ -13,4 +13,4 @@ RUN RUSTFLAGS="-Ctarget-cpu=native -Ztune-cpu=native -Zmutable-noalias=yes -Clin
    && strip ./target/x86_64-unknown-linux-gnu/release/faf-ex
 
 EXPOSE 8089
-CMD ./target/x86_64-unknown-linux-gnu/release/faf-ex
+CMD nice -20 ./target/x86_64-unknown-linux-gnu/release/faf-ex
