@@ -4,6 +4,7 @@ WORKDIR /zhttp
 COPY src src
 COPY project project
 COPY build.sbt build.sbt
+COPY zhttp-1.0.0.0.jar zhttp-1.0.0.0.jar
 RUN sbt assembly
 
 EXPOSE 8080
