@@ -1,4 +1,4 @@
-FROM rust:latest
+FROM rust:1.57
 WORKDIR /trillium
 COPY src src
 COPY templates templates
