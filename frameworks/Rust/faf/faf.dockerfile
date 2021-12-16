@@ -4,6 +4,7 @@ COPY ./Cargo.toml ./Cargo.toml
 COPY ./src ./src
 ENV CC=/usr/bin/clang-13
 ENV CXX=/usr/bin/clang++-13
+ENV test=test
 RUN /root/.cargo/bin/cargo update
 RUN RUSTFLAGS="-Ctarget-cpu=native -Ztune-cpu=native -Zmutable-noalias=yes -Clink-arg=-fexperimental-new-pass-manager \
    -Clinker=/usr/bin/clang-13 -Clink-arg=-fuse-ld=/usr/bin/ld.lld-13 -Clink-arg=-flto=thin -Clto=thin -Copt-level=3 \
