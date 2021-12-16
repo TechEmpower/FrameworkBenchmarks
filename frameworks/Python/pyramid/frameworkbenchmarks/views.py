@@ -8,6 +8,7 @@ from random import randint, sample
 from pyramid.response import Response
 from pyramid.view import view_config
 from sqlalchemy import select
+from sqlalchemy.orm.attributes import flag_modified
 
 from frameworkbenchmarks.models import Fortune, World
 
@@ -81,6 +82,9 @@ def test_5(request):
     for num in sample(range(1, 10001), queries):
         obj = sess.get(World, num)
         obj.randomNumber = randint(1, 10000)
+        # force sqlalchemy to UPDATE entry even if the value has not changed
+        # doesn't make sense in a real application, added only for pass `tfb verify`
+        flag_modified(obj, "randomNumber")
         resultset.append(obj.__json__())
     sess.commit()
     return resultset
