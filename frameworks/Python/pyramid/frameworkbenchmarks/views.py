@@ -3,8 +3,7 @@ Test views, per the spec here:
     http://www.techempower.com/benchmarks/#section=code&hw=i7&test=json
 """
 from operator import itemgetter
-from random import randint
-from frameworkbenchmarks import dbsession
+from random import randint, sample
 
 from pyramid.response import Response
 from pyramid.view import view_config
@@ -53,7 +52,7 @@ def test_3(request):
     queries = parse_query(request)
     result = [
         request.dbsession.get(World, num).__json__()
-        for num in (randint(1, 10000) for _ in range(queries))
+        for num in sample(range(1, 10001), queries)
     ]
     return result
 
@@ -63,7 +62,9 @@ def test_4(request):
     """
     Test type 4: Fortunes
     """
-    fortunes = request.dbsession.execute(select(Fortune.id, Fortune.message)).mappings().all()
+    fortunes = (
+        request.dbsession.execute(select(Fortune.id, Fortune.message)).mappings().all()
+    )
     fortunes.append({"id": 0, "message": "Additional fortune added at request time."})
     fortunes.sort(key=itemgetter("message"))
     return {"fortunes": fortunes}
@@ -75,10 +76,9 @@ def test_5(request):
     Test type 5: Database updates
     """
     queries = parse_query(request)
-
     resultset = []
     sess = request.dbsession
-    for num in (randint(1, 10000) for _ in range(queries)):
+    for num in sample(range(1, 10001), queries):
         obj = sess.get(World, num)
         obj.randomNumber = randint(1, 10000)
         resultset.append(obj.__json__())
