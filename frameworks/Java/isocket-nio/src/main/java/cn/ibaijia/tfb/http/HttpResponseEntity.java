@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * @author longzl
+ */
 public class HttpResponseEntity extends HttpEntity {
     private static final byte[] PROTOCOL = "HTTP/1.1 ".getBytes();
     private static final byte[] STATUS_200 = "200 OK".getBytes();
@@ -19,10 +22,14 @@ public class HttpResponseEntity extends HttpEntity {
     private static final byte[] CONTENT_TYPE_HEAD = "\r\nContent-Type:".getBytes();
 
     private byte[] contentType = Consts.TEXT_TYPE;
-    //响应体
+    /**
+     * 响应体
+     */
     public String body;
 
-    //请求头 或者 响应头
+    /**
+     * 请求头 或者 响应头
+     */
     public Map<byte[], byte[]> headers = new HashMap<>();
 
     @Override
@@ -78,8 +85,12 @@ public class HttpResponseEntity extends HttpEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         HttpResponseEntity that = (HttpResponseEntity) o;
         return Objects.equals(body, that.body) &&
                 Objects.equals(headers, that.headers);
