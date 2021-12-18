@@ -7,6 +7,7 @@
 
     <properties>
         <main.class>org.redkale.boot.Application</main.class>
+		<redkale.version>2.7.0-SNAPSHOT</redkale.version>
         <stack.version>1.0.0</stack.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
@@ -17,13 +18,13 @@
         <dependency>
             <groupId>org.redkale</groupId>
             <artifactId>redkale</artifactId>
-            <version>2.5.0-SNAPSHOT</version>
+            <version>${redkale.version}</version>
         </dependency>
         
         <dependency>
             <groupId>org.redkalex</groupId>
             <artifactId>redkale-plugins</artifactId>
-            <version>2.5.0-SNAPSHOT</version>
+            <version>${redkale.version}</version>
         </dependency>
         
     </dependencies>
@@ -71,7 +72,7 @@
             <plugin>
                 <groupId>org.redkale.maven.plugins</groupId>
                 <artifactId>redkale-maven-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>                                                
+                <version>1.1.0-SNAPSHOT</version>                                                
                 <configuration>		
                     <nativeimageArgs>
                         <arg>--allow-incomplete-classpath</arg>

@@ -13,7 +13,7 @@ namespace Benchmarks.Tests
 
     public sealed class QueryResource
     {
-        private static Random _Random = new Random();
+        private static readonly Random _Random = new Random();
 
         [ResourceMethod(":queries")]
         public ValueTask<List<World>> GetWorldsFromPath(string queries) => GetWorlds(queries);
