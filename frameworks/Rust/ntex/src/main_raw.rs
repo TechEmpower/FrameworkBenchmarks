@@ -1,12 +1,14 @@
 #[global_allocator]
 static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-use std::{cell::RefCell, future::Future, io, pin::Pin, rc::Rc, task::Context, task::Poll};
+use std::{future::Future, io, pin::Pin, task::Context, task::Poll};
 
-use ntex::{fn_service, time::Seconds, http::h1, rt::net::TcpStream};
-use ntex::framed::{ReadTask, State, WriteTask};
+use ntex::{fn_service, http::h1, io::Io, util::BufMut, util::PoolId};
 
 mod utils;
+
+#[cfg(target_os = "macos")]
+use serde_json as simd_json;
 
 const JSON: &[u8] =
     b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
@@ -22,7 +24,7 @@ pub struct Message {
 }
 
 struct App {
-    state: State,
+    io: Io,
     codec: h1::Codec,
 }
 
@@ -31,19 +33,18 @@ impl Future for App {
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         let this = self.as_mut().get_mut();
-        if !this.state.is_open() {
-            this.state.close();
+        if this.io.is_closed() {
             return Poll::Ready(Ok(()));
         }
 
-        let read = this.state.read();
-        let write = this.state.write();
+        let read = this.io.read();
+        let write = this.io.write();
         loop {
             match read.decode(&this.codec) {
                 Ok(Some((req, _))) => {
-                    write.with_buf(|buf| {
+                    let _ = write.with_buf(|buf| {
                         // make sure we've got room
-                        let remaining = buf.capacity() - buf.len();
+                        let remaining = buf.remaining_mut();
                         if remaining < 1024 {
                             buf.reserve(65535 - remaining);
                         }
@@ -73,16 +74,12 @@ impl Future for App {
                 }
                 Ok(None) => break,
                 _ => {
-                    this.state.close();
+                    this.io.close();
                     return Poll::Ready(Err(()));
                 }
             }
         }
-        if read.is_ready() {
-            this.state.register_dispatcher(cx.waker());
-        } else {
-            read.wake(cx.waker())
-        }
+        let _ = read.poll_read_ready(cx);
         Poll::Pending
     }
 }
@@ -95,18 +92,15 @@ async fn main() -> io::Result<()> {
     ntex::server::build()
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", || {
-            fn_service(|io: TcpStream| {
-                let state = State::with_params(65535, 65535, 1024, Seconds(0));
-                let io = Rc::new(RefCell::new(io));
-                ntex::rt::spawn(ReadTask::new(io.clone(), state.clone()));
-                ntex::rt::spawn(WriteTask::new(io, state.clone()));
+            PoolId::P1.set_read_params(65535, 8192);
+            PoolId::P1.set_write_params(65535, 8192);
 
-                App {
-                    state,
-                    codec: h1::Codec::default(),
-                }
+            fn_service(|io| App {
+                io,
+                codec: h1::Codec::default(),
             })
         })?
+        .memory_pool("techempower", PoolId::P1)
         .start()
         .await
 }

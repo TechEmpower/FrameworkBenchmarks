@@ -2,7 +2,7 @@
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use ntex::http::header::{HeaderValue, CONTENT_TYPE, SERVER};
-use ntex::{http, util::Bytes, web, time::Seconds};
+use ntex::{http, time::Seconds, util::Bytes, util::PoolId, web};
 use yarte::Serialize;
 
 mod utils;
@@ -42,17 +42,18 @@ async fn main() -> std::io::Result<()> {
     ntex::server::build()
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", || {
+            PoolId::P1.set_read_params(65535, 1024);
+            PoolId::P1.set_write_params(65535, 1024);
+
             http::HttpService::build()
                 .keep_alive(http::KeepAlive::Os)
                 .client_timeout(Seconds(0))
-                .disconnect_timeout(Seconds(0))
-                .buffer_params(65535, 65535, 1024)
                 .h1(web::App::new()
                     .service(json)
                     .service(plaintext)
                     .with_config(web::dev::AppConfig::default()))
-                .tcp()
         })?
+        .memory_pool("techempower", PoolId::P1)
         .start()
         .await
 }
