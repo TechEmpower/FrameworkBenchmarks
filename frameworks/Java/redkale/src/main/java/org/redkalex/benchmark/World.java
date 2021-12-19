@@ -5,14 +5,16 @@
  */
 package org.redkalex.benchmark;
 
-import javax.persistence.Id;
+import java.util.*;
+import javax.persistence.*;
 import org.redkale.convert.json.JsonConvert;
 
 /**
  *
  * @author zhangjx
  */
-public class World implements Comparable<World> {
+@Entity
+public final class World implements Comparable<World> {
 
     @Id
     private int id;
@@ -22,6 +24,14 @@ public class World implements Comparable<World> {
     public World randomNumber(int randomNumber) {
         this.randomNumber = randomNumber;
         return this;
+    }
+
+    public static World[] setNewNumbers(World[] worlds, int[] newNumbers) {
+        for (int i = 0; i < worlds.length; i++) {
+            worlds[i].randomNumber = newNumbers[i];
+        }
+        Arrays.sort(worlds);
+        return worlds;
     }
 
     public int getId() {

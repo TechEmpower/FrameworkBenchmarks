@@ -3,11 +3,8 @@ static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 use std::{cell::RefCell, future::Future, io, pin::Pin, rc::Rc, task::Context, task::Poll};
 
-use ntex::fn_service;
+use ntex::{fn_service, time::Seconds, http::h1, rt::net::TcpStream};
 use ntex::framed::{ReadTask, State, WriteTask};
-use ntex::http::h1;
-use ntex::rt::net::TcpStream;
-use yarte::Serialize;
 
 mod utils;
 
@@ -19,7 +16,7 @@ const HTTPNFOUND: &[u8] = b"HTTP/1.1 400 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: N\r\n";
 const BODY: &[u8] = b"Hello, World!";
 
-#[derive(Serialize)]
+#[derive(serde::Serialize)]
 pub struct Message {
     pub message: &'static str,
 }
@@ -39,11 +36,12 @@ impl Future for App {
             return Poll::Ready(Ok(()));
         }
 
-        let mut updated = false;
+        let read = this.state.read();
+        let write = this.state.write();
         loop {
-            match this.state.decode_item(&this.codec) {
+            match read.decode(&this.codec) {
                 Ok(Some((req, _))) => {
-                    this.state.with_write_buf(|buf| {
+                    write.with_buf(|buf| {
                         // make sure we've got room
                         let remaining = buf.capacity() - buf.len();
                         if remaining < 1024 {
@@ -54,10 +52,12 @@ impl Future for App {
                             "/json" => {
                                 buf.extend_from_slice(JSON);
                                 this.codec.set_date_header(buf);
-                                Message {
-                                    message: "Hello, World!",
-                                }
-                                .to_bytes_mut(buf);
+                                let _ = simd_json::to_writer(
+                                    crate::utils::Writer(buf),
+                                    &Message {
+                                        message: "Hello, World!",
+                                    },
+                                );
                             }
                             "/plaintext" => {
                                 buf.extend_from_slice(PLAIN);
@@ -70,7 +70,6 @@ impl Future for App {
                             }
                         }
                     });
-                    updated = true;
                 }
                 Ok(None) => break,
                 _ => {
@@ -79,13 +78,10 @@ impl Future for App {
                 }
             }
         }
-        if updated {
-            this.state.dsp_restart_write_task();
-        }
-        if this.state.is_read_ready() {
-            this.state.dsp_register_task(cx.waker());
+        if read.is_ready() {
+            this.state.register_dispatcher(cx.waker());
         } else {
-            this.state.dsp_read_more_data(cx.waker());
+            read.wake(cx.waker())
         }
         Poll::Pending
     }
@@ -100,7 +96,7 @@ async fn main() -> io::Result<()> {
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", || {
             fn_service(|io: TcpStream| {
-                let state = State::with_params(65535, 65535, 1024, 0);
+                let state = State::with_params(65535, 65535, 1024, Seconds(0));
                 let io = Rc::new(RefCell::new(io));
                 ntex::rt::spawn(ReadTask::new(io.clone(), state.clone()));
                 ntex::rt::spawn(WriteTask::new(io, state.clone()));

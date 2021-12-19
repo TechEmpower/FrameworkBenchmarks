@@ -5,19 +5,9 @@ namespace Benchmark\Entities;
 use Hamlet\Database\Entity;
 use JsonSerializable;
 
-class RandomNumber implements Entity, JsonSerializable
+final class RandomNumber implements Entity, JsonSerializable
 {
-    /** @var int */
-    private $id;
-
-    /** @var int */
-    private $randomNumber;
-
-    public function __construct(int $id, int $randomNumber)
-    {
-        $this->id = $id;
-        $this->randomNumber = $randomNumber;
-    }
+    public function __construct(private int $id, private int $randomNumber) {}
 
     public function id(): int
     {
@@ -29,12 +19,12 @@ class RandomNumber implements Entity, JsonSerializable
         return $this->randomNumber;
     }
 
-    public function withNumber(int $number): RandomNumber
+    public function withNumber(int $number): self
     {
         return new self($this->id, $number);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,

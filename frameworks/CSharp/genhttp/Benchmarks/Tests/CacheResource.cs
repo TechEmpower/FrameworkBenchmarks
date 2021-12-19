@@ -68,7 +68,7 @@ namespace Benchmarks.Tests
                 }
                 else
                 {
-                    var resolved = await context.World.FirstOrDefaultAsync(w => w.Id == id);
+                    var resolved = await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false);
 
                     _Cache.Set(key, resolved);
 

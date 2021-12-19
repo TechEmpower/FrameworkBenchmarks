@@ -64,26 +64,7 @@
         "webserver": "beetlex",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "beetlex-core",
-        "notes": "",
-        "versus": "aspcore"
-      },
-      "debug": {
-        "plaintext_url": "/plaintext",
-        "json_url": "/json",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Platform",
-        "database": "Postgres",
-        "framework": "beetlex",
-        "language": "C#",
-        "orm": "Raw",
-        "platform": ".NET",
-        "flavor": "CoreCLR",
-        "webserver": "beetlex",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "beetlex-core",
+        "display_name": "beetlex-core-updb",
         "notes": "",
         "versus": "aspcore"
       }

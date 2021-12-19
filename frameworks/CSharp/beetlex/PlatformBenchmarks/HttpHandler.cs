@@ -11,11 +11,11 @@ namespace PlatformBenchmarks
 {
     public partial class HttpHandler : ServerHandlerBase
     {
-        private static AsciiString _line = new AsciiString("\r\n");
+        private static readonly AsciiString _line = new AsciiString("\r\n");
 
-        private static AsciiString _2line = new AsciiString("\r\n\r\n");
+        private static readonly AsciiString _2line = new AsciiString("\r\n\r\n");
 
-        private static AsciiString _httpsuccess = new AsciiString("HTTP/1.1 200 OK\r\n");
+        private static readonly AsciiString _httpsuccess = new AsciiString("HTTP/1.1 200 OK\r\n");
 
         private static readonly AsciiString _headerServer = "Server: B\r\n";
 
@@ -28,12 +28,6 @@ namespace PlatformBenchmarks
         private static readonly AsciiString _headerContentTypeHtml = "Content-Type: text/html; charset=UTF-8\r\n";
 
         private static readonly AsciiString _headerContentTypeJson = "Content-Type: application/json\r\n";
-
-        private static readonly AsciiString _textResultHeader = _httpsuccess + _headerServer.ToString() + _headerContentTypeText.ToString();
-
-        private static readonly AsciiString _jsonResultHeader = _httpsuccess + _headerServer.ToString() + _headerContentTypeJson.ToString();
-
-        private static readonly AsciiString _htmlResultHeader = _httpsuccess + _headerServer.ToString() + _headerContentTypeHtml.ToString();
 
         private static readonly AsciiString _path_Json = "/json";
 
@@ -51,9 +45,41 @@ namespace PlatformBenchmarks
 
         private static readonly AsciiString _cached_worlds = "/cached-worlds";
 
+        private readonly static uint _jsonPayloadSize = (uint)System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(new JsonMessage { message = "Hello, World!" }, SerializerOptions).Length;
+
+
+
+        private readonly static AsciiString _jsonPreamble =
+            _httpsuccess
+            + _headerContentTypeJson
+            + _headerServer
+            + _headerContentLength + _jsonPayloadSize.ToString() + _line;
+
+        private readonly static AsciiString _plaintextPreamble =
+              _httpsuccess
+              + _headerContentTypeText
+              + _headerServer
+              + _headerContentLength + _result_plaintext.Length.ToString() + _line;
+
+
+        private readonly static AsciiString _jsonResultPreamble =
+        _httpsuccess
+        + _headerContentTypeJson
+        + _headerServer
+       + _headerContentLength;
+
+        private readonly static AsciiString _HtmlResultPreamble =
+      _httpsuccess
+      + _headerContentTypeHtml
+      + _headerServer
+     + _headerContentLength;
+
+
+
+
         private static byte _Space = 32;
 
-        public const int _LengthSize = 6;
+        public const int _LengthSize = 8;
 
         private static byte _question = 63;
 
@@ -64,13 +90,7 @@ namespace PlatformBenchmarks
 
         private BeetleX.Dispatchs.DispatchCenter<HttpToken> RequestDispatchs;
 
-        public Task Default(PipeStream stream, HttpToken token, ISession session)
-        {
-            stream.Write("<b> beetlex server</b><hr/>");
-            stream.Write("path not found!");
-            OnCompleted(stream, session, token);
-            return Task.CompletedTask;
-        }
+
 
         public override void Connected(IServer server, ConnectedEventArgs e)
         {
@@ -235,7 +255,6 @@ namespace PlatformBenchmarks
 
         public virtual async Task OnStartRequest(RequestData data, ISession session, HttpToken token, PipeStream stream)
         {
-            OnWriteHeader(stream, token, data.Action);
             ActionType type = data.Action;
             if (type == ActionType.Plaintext)
             {
@@ -272,51 +291,6 @@ namespace PlatformBenchmarks
 
         }
 
-        private void OnWriteHeader(PipeStream stream, HttpToken token, ActionType type)
-        {
-            switch (type)
-            {
-                case ActionType.Caching:
-                case ActionType.Json:
-                case ActionType.Queries:
-                case ActionType.Db:
-                case ActionType.Updates:
-                    stream.Write(_jsonResultHeader.Data, 0, _jsonResultHeader.Length);
-                    break;
-                case ActionType.Plaintext:
-                    stream.Write(_textResultHeader.Data, 0, _textResultHeader.Length);
-                    break;
-                default:
-                    stream.Write(_htmlResultHeader.Data, 0, _htmlResultHeader.Length);
-                    break;
-            }
-
-            ArraySegment<byte> date = GMTDate.Default.DATE;
-            stream.Write(date.Array, date.Offset, date.Count);
-            OnWriteContentLength(stream, token);
-        }
-
-        private void OnWriteContentLength(PipeStream stream, HttpToken token)
-        {
-            var action = token.CurrentRequest.Action;
-            if (action == ActionType.Json)
-            {
-                stream.Write(_jsonPreamble.Data, 0, _jsonPreamble.Length);
-                stream.Write(_2line, 0, 4);
-            }
-            else if (action == ActionType.Plaintext)
-            {
-                stream.Write(_plaintextPreamble.Data, 0, _plaintextPreamble.Length);
-                stream.Write(_2line, 0, 4);
-            }
-            else
-            {
-                stream.Write(_headerContentLength.Data, 0, _headerContentLength.Length);
-                token.ContentLength = stream.Allocate(HttpHandler._LengthSize);
-                stream.Write(_2line, 0, 4);
-                token.ContentPostion = stream.CacheLength;
-            }
-        }
 
         private void OnCompleted(PipeStream stream, ISession session, HttpToken token)
         {

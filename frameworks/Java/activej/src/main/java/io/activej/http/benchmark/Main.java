@@ -84,7 +84,7 @@ public final class Main extends MultithreadedHttpServerLauncher {
 				return Promise.ofException(HttpError.ofCode(400, "Failed to serialize JSON", e));
 			}
 			return HttpResponse.ok200()
-					.withBody(ByteBuf.wrapForReading(writer.toByteArray()))
+					.withBody(ByteBuf.wrap(writer.getByteBuffer(), 0, writer.size()))
 					.withHeader(HttpHeaders.CONTENT_TYPE, JSON_CONTENT_TYPE_HEADER_VALUE)
 					.withHeader(HttpHeaders.SERVER, SERVER_HEADER_VALUE)
 					.withHeader(HttpHeaders.DATE, dateRef.get());
@@ -115,7 +115,7 @@ public final class Main extends MultithreadedHttpServerLauncher {
 			Config config() {
 				return Config.create()
 						.with("http.listenAddresses", Config.ofValue(ofInetSocketAddress(), new InetSocketAddress(PORT)))
-						.with("workers", "" + Integer.toString(2 * Runtime.getRuntime().availableProcessors()))
+						.with("workers", "" + 2 * Runtime.getRuntime().availableProcessors())
 						.overrideWith(ofClassPathProperties(PROPERTIES_FILE, true))
 						.overrideWith(ofSystemProperties("config"));
 			}

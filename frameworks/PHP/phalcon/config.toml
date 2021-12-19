@@ -33,6 +33,7 @@ webserver = "nginx"
 versus = "php"
 
 [micro]
+urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
 urls.query = "/queries?queries="

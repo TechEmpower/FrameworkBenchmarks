@@ -1,0 +1,14 @@
+{
+  "name": "spliffy-benchmark",
+  "version": "1.0.0",
+  "main": "start.js",
+  "dependencies": {
+    "@srfnstack/spliffy": "0.6.1",
+    "html-escaper": "3.0.3",
+    "mongodb": "^4.0.1",
+    "mysql2": "^2.2.5",
+    "node-cache": "5.1.2",
+    "pg": "8.6.0",
+    "pg-native": "3.0.0"
+  }
+}

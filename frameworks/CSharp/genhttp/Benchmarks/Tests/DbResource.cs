@@ -21,7 +21,7 @@ namespace Benchmarks.Tests
 
             using var context = DatabaseContext.CreateNoTracking();
 
-            return await context.World.FirstOrDefaultAsync(w => w.Id == id);
+            return await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false);
         }
 
     }

@@ -4,12 +4,12 @@ This is the dart portion of a [benchmarking test suite](../) comparing a variety
 
 ## Versions
 
-* [Dart SDK version >=1.6.0](http://www.dartlang.org/)
-* [Dart args version 0.12.0+2](http://pub.dartlang.org/packages/args)
-* [Dart crypto version 0.9.0](http://pub.dartlang.org/packages/crypto)
-* [Dart mustache version 0.1.8](http://pub.dartlang.org/packages/mustache)
-* [Dart postgresql version 0.2.14](http://pub.dartlang.org/packages/postgresql)
-* [Dart yaml version 2.0.1+1](http://pub.dartlang.org/packages/yaml)
+* [Dart SDK version >=1.6.0](https://dart.dev/)
+* [Dart args version 0.12.0+2](https://pub.dev/packages/args)
+* [Dart crypto version 0.9.0](https://pub.dev/packages/crypto)
+* [Dart mustache version 0.1.8](https://pub.dev/packages/mustache)
+* [Dart postgresql version 0.2.14](https://pub.dev/packages/postgresql)
+* [Dart yaml version 2.0.1+1](https://pub.dev/packages/yaml)
 
 ## Test URLs
 

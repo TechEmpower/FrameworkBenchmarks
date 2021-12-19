@@ -10,28 +10,14 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>15</java.version>
+		<java.version>16</java.version>
 		<version.compiler.plugin>3.8.1</version.compiler.plugin>
 		<version.war.plugin>3.3.1</version.war.plugin>
 		<version.javaee.api>8.0</version.javaee.api>
+		<version.wildfly.bootable>24.0.1.Final</version.wildfly.bootable>
+		<version.wildfly.maven.jar.plugin>5.0.2.Final</version.wildfly.maven.jar.plugin>
+		<version.wildfly.galleon.datasources.feature.pack>2.0.3.Final</version.wildfly.galleon.datasources.feature.pack>
 	</properties>
-
-	<repositories>
-		<repository>
-			<id>jboss-public-repository-group</id>
-			<name>JBoss Public Maven Repository Group</name>
-			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>never</updatePolicy>
-			</snapshots>
-		</repository>
-	</repositories>
 
 	<dependencies>
 
@@ -83,16 +69,16 @@
 					<plugin>
 						<groupId>org.wildfly.plugins</groupId>
 						<artifactId>wildfly-jar-maven-plugin</artifactId>
-						<version>3.0.2.Final</version>
+						<version>${version.wildfly.maven.jar.plugin}</version>
 						<configuration>
 							<feature-packs>
 								<feature-pack>
-									<location>wildfly@maven(org.jboss.universe:community-universe)#22.0.1.Final</location>
+									<location>wildfly@maven(org.jboss.universe:community-universe)#${version.wildfly.bootable}</location>
 								</feature-pack>
 								<feature-pack>
 									<groupId>org.wildfly</groupId>
 									<artifactId>wildfly-datasources-galleon-pack</artifactId>
-									<version>1.2.1.Final</version>
+									<version>${version.wildfly.galleon.datasources.feature.pack}</version>
 								</feature-pack>
 							</feature-packs>
 							<layers>

@@ -6,11 +6,11 @@ asyncio-redis==0.13.4
 chardet==2.3.0
 gunicorn==19.9.0
 hiredis==0.2.0
-Jinja2==2.10.1
+Jinja2==2.11.3
 MarkupSafe==0.23
 piprot==0.9.1
 psycopg2==2.7.5
-PyYAML==3.11
+PyYAML==5.4
 requests==2.20.0
 requests-futures==0.9.5
 setproctitle==1.1.8
