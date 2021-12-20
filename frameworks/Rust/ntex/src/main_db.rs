@@ -7,8 +7,11 @@ use futures::future::{ok, Future, FutureExt};
 use ntex::http::header::{HeaderValue, CONTENT_TYPE, SERVER};
 use ntex::http::{HttpService, KeepAlive, Request, Response};
 use ntex::service::{Service, ServiceFactory};
-use ntex::{util::BytesMut, time::Seconds};
 use ntex::web::{Error, HttpResponse};
+use ntex::{time::Seconds, util::BytesMut, util::PoolId};
+
+#[cfg(target_os = "macos")]
+use serde_json as simd_json;
 
 mod db;
 mod utils;
@@ -98,14 +101,15 @@ async fn main() -> std::io::Result<()> {
     ntex::server::build()
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", || {
+            PoolId::P1.set_read_params(65535, 1024);
+            PoolId::P1.set_write_params(65535, 1024);
+
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
                 .client_timeout(Seconds(0))
-                .disconnect_timeout(Seconds(0))
-                .buffer_params(65535, 65535, 1024)
                 .h1(AppFactory)
-                .tcp()
         })?
+        .memory_pool("techempower", PoolId::P1)
         .start()
         .await
 }
