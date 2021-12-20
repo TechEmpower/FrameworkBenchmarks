@@ -7,4 +7,4 @@ RUN mvn package -q
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-XX:+UseZGC", "-XX:UseLargePages", "-XX:SoftMaxHeapSize=18g", "-DAPP_HOME=./", "-jar", "/redkale/target/redkale-benchmark-1.0.0.jar"]
+CMD ["java", "-server", "-XX:+UseZGC", "-XX:+UseLargePages", "-XX:SoftMaxHeapSize=18g", "-DAPP_HOME=./", "-jar", "/redkale/target/redkale-benchmark-1.0.0.jar"]
