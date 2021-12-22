@@ -13,6 +13,7 @@ namespace appMpower
       public static readonly byte[] _plainText = Encoding.UTF8.GetBytes("Hello, World!");
       private readonly static JsonMessageSerializer _jsonMessageSerializer = new JsonMessageSerializer();
       private readonly static WorldSerializer _worldSerializer = new WorldSerializer();
+      private readonly static CachedWorldSerializer _cachedWorldSerializer = new CachedWorldSerializer();
 
       public IFeatureCollection CreateContext(IFeatureCollection featureCollection)
       {
@@ -83,6 +84,22 @@ namespace appMpower
                }
 
                Json.RenderMany(httpResponse.Headers, httpResponseBody.Writer, await RawDb.LoadMultipleUpdatesRows(count), _worldSerializer);
+               return;
+            }
+            else if (pathStringLength == 14 && pathStringStart == "c")
+            {
+               int count = 1;
+
+               if (!Int32.TryParse(request.QueryString.Substring(request.QueryString.LastIndexOf("=") + 1), out count) || count < 1)
+               {
+                  count = 1;
+               }
+               else if (count > 500)
+               {
+                  count = 500;
+               }
+
+               Json.RenderMany(httpResponse.Headers, httpResponseBody.Writer, await RawDb.LoadCachedQueries(count), _cachedWorldSerializer);
                return;
             }
          }

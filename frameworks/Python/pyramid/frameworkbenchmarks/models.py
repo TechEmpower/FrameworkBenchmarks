@@ -2,50 +2,48 @@
 Benchmark models.
 """
 
-import json
-import os
-import psycopg2
-from collections import Iterable
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String
-from sqlalchemy.orm import sessionmaker
+
+from sqlalchemy import Column, Integer, MetaData, String, create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.pool import QueuePool
-from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 
 
-def get_conn():
-    return psycopg2.connect(
-        user='benchmarkdbuser',
-        password='benchmarkdbpass',
-        host='tfb-database',
-        port='5432',
-        database='hello_world')
+def get_engine(settings):
+    return create_engine(
+        settings["sqlalchemy.url"],
+        poolclass=QueuePool,
+        pool_size=100,
+        max_overflow=25,
+        enable_from_linting=False,
+        future=True,
+    )
 
 
-conn_pool = QueuePool(get_conn, pool_size=100, max_overflow=25, echo=False)
+def get_session_factory(engine):
+    Session = sessionmaker(bind=engine, autoflush=False, future=True)
+    return Session
 
-pg = create_engine('postgresql://', pool=conn_pool)
-DBSession = sessionmaker(bind=pg)()
+
 metadata = MetaData()
 
-DatabaseBase = declarative_base()
+Base = declarative_base()
 
 
-class World(DatabaseBase):
-    __tablename__ = 'world'
+class World(Base):
+    __tablename__ = "world"
 
-    id = Column('id', Integer, primary_key=True)
-    randomNumber = Column(
-        'randomnumber', Integer, nullable=False, server_default='0')
+    id = Column("id", Integer, primary_key=True)
+    randomNumber = Column("randomnumber", Integer, nullable=False, server_default="0")
 
     def __json__(self, request=None):
-        return {'id': self.id, 'randomNumber': self.randomNumber}
+        return {"id": self.id, "randomNumber": self.randomNumber}
 
 
-class Fortune(DatabaseBase):
-    __tablename__ = 'fortune'
+class Fortune(Base):
+    __tablename__ = "fortune"
 
-    id = Column('id', Integer, primary_key=True)
-    message = Column('message', String, nullable=False)
+    id = Column("id", Integer, primary_key=True)
+    message = Column("message", String, nullable=False)
 
     def __json__(self):
-        return {'id': self.id, 'message': self.message}
+        return {"id": self.id, "message": self.message}

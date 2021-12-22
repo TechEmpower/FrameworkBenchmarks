@@ -3,15 +3,16 @@ extern crate dotenv;
 #[macro_use]
 extern crate async_trait;
 
-mod common_handlers;
 mod models_common;
 mod models_mongo;
 mod database_mongo;
 mod utils;
+mod server;
+mod common;
 
 use dotenv::dotenv;
-use std::net::{Ipv4Addr, SocketAddr};
 use std::env;
+use std::time::Duration;
 use axum::{
     extract::{Query},
     http::StatusCode,
@@ -26,14 +27,13 @@ use hyper::Body;
 use rand::rngs::SmallRng;
 use rand::{SeedableRng};
 use yarte::Template;
-use mongodb::{bson::doc, Database};
+use mongodb::{bson::doc, Client, Database};
 use mongodb::options::ClientOptions;
 
 use models_mongo::{World, Fortune};
-use common_handlers::{json, plaintext};
 use utils::{Params, parse_params, random_number, Utf8Html};
-use crate::database_mongo::DatabaseConnection;
-use crate::models_mongo::FortuneInfo;
+use database_mongo::DatabaseConnection;
+use models_mongo::FortuneInfo;
 
 async fn db(DatabaseConnection(mut db): DatabaseConnection) -> impl IntoResponse {
     let mut rng = SmallRng::from_entropy();
@@ -107,23 +107,22 @@ async fn main() {
     let database_url = env::var("AXUM_TECHEMPOWER_MONGODB_URL").ok()
         .expect("AXUM_TECHEMPOWER_MONGODB_URL environment variable was not set");
 
-    let addr = SocketAddr::from((Ipv4Addr::UNSPECIFIED, 8000));
-
     // setup connection pool
     let mut client_options = ClientOptions::parse(database_url).await.unwrap();
+    client_options.max_pool_size = Some(common::POOL_SIZE);
+    client_options.min_pool_size = Some(common::POOL_SIZE);
+    client_options.connect_timeout = Some(Duration::from_millis(200));
 
-    client_options.max_pool_size = Some(500);
+    let client = Client::with_options(client_options).unwrap();
 
     let app = Router::new()
-        .route("/plaintext", get(plaintext))
-        .route("/json", get(json))
         .route("/fortunes", get(fortunes))
         .route("/db", get(db))
         .route("/queries", get(queries))
-        .layer(AddExtensionLayer::new(client_options))
+        .layer(AddExtensionLayer::new(client))
         .layer(SetResponseHeaderLayer::<_, Body>::if_not_present(header::SERVER, HeaderValue::from_static("Axum")));
 
-    axum::Server::bind(&addr)
+    server::builder()
         .serve(app.into_make_service())
         .await
         .unwrap();

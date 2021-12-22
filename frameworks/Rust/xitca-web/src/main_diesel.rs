@@ -11,16 +11,22 @@ mod util;
 
 use std::{error::Error, io};
 
-use bytes::Bytes;
-use xitca_http::http::{
-    header::{CONTENT_TYPE, SERVER},
-    Method,
+use serde::Serialize;
+use xitca_web::{
+    dev::{bytes::Bytes, fn_service},
+    http::{
+        header::{CONTENT_TYPE, SERVER},
+        Method,
+    },
+    request::WebRequest,
+    App, HttpServer,
 };
-use xitca_web::{dev::fn_service, request::WebRequest, App, HttpServer};
 
 use self::db_diesel::{create, DieselPool};
+use self::ser::Message;
 use self::util::{
-    internal, json, json_response, not_found, plain_text, AppState, HandleResult, QueryParse,
+    internal, not_found, AppState, HandleResult, QueryParse, JSON_HEADER_VALUE,
+    SERVER_HEADER_VALUE, TEXT_HEADER_VALUE,
 };
 
 type State = AppState<DieselPool>;
@@ -36,7 +42,7 @@ async fn main() -> io::Result<()> {
         })
         .service(fn_service(handle))
     })
-    .force_flat_buf()
+    .disable_vectored_write()
     .max_request_headers::<8>()
     .bind("0.0.0.0:8080")?
     .run()
@@ -59,7 +65,7 @@ async fn handle(req: &mut WebRequest<'_, State>) -> HandleResult {
 
 async fn db(req: &mut WebRequest<'_, State>) -> HandleResult {
     match req.state().client().get_world().await {
-        Ok(world) => json_response(req, &world),
+        Ok(world) => _json(req, &world),
         Err(_) => internal(),
     }
 }
@@ -83,7 +89,7 @@ async fn queries(req: &mut WebRequest<'_, State>) -> HandleResult {
     let num = req.request_mut().uri().query().parse_query();
 
     match req.state().client().get_worlds(num).await {
-        Ok(worlds) => json_response(req, worlds.as_slice()),
+        Ok(worlds) => _json(req, worlds.as_slice()),
         Err(_) => internal(),
     }
 }
@@ -92,7 +98,7 @@ async fn updates(req: &mut WebRequest<'_, State>) -> HandleResult {
     let num = req.request_mut().uri().query().parse_query();
 
     match req.state().client().update(num).await {
-        Ok(worlds) => json_response(req, worlds.as_slice()),
+        Ok(worlds) => _json(req, worlds.as_slice()),
         Err(_) => internal(),
     }
 }
@@ -102,4 +108,34 @@ async fn _fortunes(pool: &DieselPool) -> Result<Bytes, Box<dyn Error + Send + Sy
     use sailfish::TemplateOnce;
     let fortunes = pool.tell_fortune().await?.render_once()?;
     Ok(fortunes.into())
+}
+
+fn plain_text<D>(req: &mut WebRequest<'_, D>) -> HandleResult {
+    let mut res = req.as_response(Bytes::from_static(b"Hello, World!"));
+
+    res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
+    res.headers_mut().append(CONTENT_TYPE, TEXT_HEADER_VALUE);
+
+    Ok(res)
+}
+
+#[inline(always)]
+fn json<D>(req: &mut WebRequest<'_, AppState<D>>) -> HandleResult {
+    _json(req, &Message::new())
+}
+
+#[inline]
+fn _json<S, D>(req: &mut WebRequest<'_, AppState<D>>, value: &S) -> HandleResult
+where
+    S: ?Sized + Serialize,
+{
+    let mut writer = req.state().writer();
+    simd_json::to_writer(&mut writer, value).unwrap();
+    let body = writer.take();
+
+    let mut res = req.as_response(body);
+    res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
+    res.headers_mut().append(CONTENT_TYPE, JSON_HEADER_VALUE);
+
+    Ok(res)
 }

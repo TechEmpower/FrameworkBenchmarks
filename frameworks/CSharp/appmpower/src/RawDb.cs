@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using appMpower.Db;
+using PlatformBenchmarks;
 
 namespace appMpower
 {
@@ -13,9 +16,17 @@ namespace appMpower
       private static Random _random = new Random();
       private static string[] _queriesMultipleRows = new string[MaxBatch + 1];
 
+      private static readonly object[] _cacheKeys = Enumerable.Range(0, 10001).Select((i) => new CacheKey(i)).ToArray();
+
+      private static readonly appMpower.Memory.MemoryCache _cache = new appMpower.Memory.MemoryCache(
+            new appMpower.Memory.MemoryCacheOptions()
+            {
+               ExpirationScanFrequency = TimeSpan.FromMinutes(60)
+            });
+
       public static async Task<World> LoadSingleQueryRow()
       {
-         var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnection);
+         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
          pooledConnection.Open();
 
          var (pooledCommand, _) = CreateReadCommand(pooledConnection);
@@ -31,7 +42,7 @@ namespace appMpower
       {
          var worlds = new World[count];
 
-         var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnection);
+         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
          pooledConnection.Open();
 
          var (pooledCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
@@ -52,7 +63,7 @@ namespace appMpower
       {
          var fortunes = new List<Fortune>();
 
-         var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnection);
+         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
          pooledConnection.Open();
 
          var pooledCommand = new PooledCommand("SELECT * FROM fortune", pooledConnection);
@@ -87,7 +98,7 @@ namespace appMpower
       {
          var worlds = new World[count];
 
-         var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnection);
+         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
          pooledConnection.Open();
 
          var (queryCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
@@ -182,7 +193,7 @@ namespace appMpower
             queryString = _queriesMultipleRows[count] = PlatformBenchmarks.StringBuilderCache.GetStringAndRelease(stringBuilder);
          }
 
-         var pooledConnection = await PooledConnections.GetConnection(ConnectionStrings.OdbcConnection);
+         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
          pooledConnection.Open();
 
          var pooledCommand = new PooledCommand(queryString, pooledConnection);
@@ -230,6 +241,91 @@ namespace appMpower
          }
 
          return System.Text.Encoding.Default.GetString(values);
+      }
+
+      public static async Task PopulateCache()
+      {
+         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
+         pooledConnection.Open();
+
+         var (pooledCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
+
+         using (pooledCommand)
+         {
+            var cacheKeys = _cacheKeys;
+            var cache = _cache;
+
+            for (var i = 1; i < 10001; i++)
+            {
+               dbDataParameter.Value = i;
+               cache.Set<CachedWorld>(cacheKeys[i], await ReadSingleRow(pooledCommand));
+            }
+         }
+
+         pooledCommand.Release();
+         pooledConnection.Release();
+      }
+
+      public static Task<CachedWorld[]> LoadCachedQueries(int count)
+      {
+         var result = new CachedWorld[count];
+         var cacheKeys = _cacheKeys;
+         var cache = _cache;
+         var random = _random;
+
+         for (var i = 0; i < result.Length; i++)
+         {
+            var id = random.Next(1, 10001);
+            var key = cacheKeys[id];
+
+            if (cache.TryGetValue(key, out object cached))
+            {
+               result[i] = (CachedWorld)cached;
+            }
+            else
+            {
+               //return LoadUncachedQueries(id, i, count, this, result);
+               return LoadUncachedQueries(id, i, count, result);
+            }
+         }
+
+         return Task.FromResult(result);
+      }
+
+      //static async Task<CachedWorld[]> LoadUncachedQueries(int id, int i, int count, RawDb rawdb, CachedWorld[] result)
+      static async Task<CachedWorld[]> LoadUncachedQueries(int id, int i, int count, CachedWorld[] result)
+      {
+         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
+         pooledConnection.Open();
+
+         var (pooledCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
+
+         using (pooledCommand)
+         {
+            Func<ICacheEntry, Task<CachedWorld>> create = async (entry) =>
+            {
+               return await ReadSingleRow(pooledCommand);
+            };
+
+            var cacheKeys = _cacheKeys;
+            var key = cacheKeys[id];
+
+            dbDataParameter.Value = id;
+
+            for (; i < result.Length; i++)
+            {
+               result[i] = await _cache.GetOrCreateAsync<CachedWorld>(key, create);
+
+               id = _random.Next(1, 10001);
+               dbDataParameter.Value = id;
+               key = cacheKeys[id];
+            }
+
+            pooledCommand.Release();
+            pooledConnection.Release();
+         }
+
+         return result;
       }
    }
 }

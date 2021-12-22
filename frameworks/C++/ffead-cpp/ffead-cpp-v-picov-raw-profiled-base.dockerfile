@@ -79,7 +79,7 @@ ENV accept accept
 
 WORKDIR ${IROOT}
 
-RUN sed -i 's|"TeBkUmLpqRouter"|"TeBkUmLpqRouterPicoV"|g' $IROOT/ffead-cpp-src/web/te-benchmark-um-pq/config/application.xml
+RUN sed -i 's|"TeBkUmLpqRouter"|"TeBkUmLpqRouterPicoV"|g' $IROOT/ffead-cpp-src/web/t3/config/application.xml
 
 COPY sql-profiled-util.sh ${IROOT}/
 RUN chmod 755 ${IROOT}/sql-profiled-util.sh
