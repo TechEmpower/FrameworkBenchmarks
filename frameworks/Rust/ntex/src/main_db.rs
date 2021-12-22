@@ -100,7 +100,8 @@ async fn main() -> std::io::Result<()> {
 
     ntex::server::build()
         .backlog(1024)
-        .bind("techempower", "0.0.0.0:8080", || {
+        .bind("techempower", "0.0.0.0:8080", |cfg| {
+            cfg.memory_pool(PoolId::P1);
             PoolId::P1.set_read_params(65535, 1024);
             PoolId::P1.set_write_params(65535, 1024);
 
@@ -109,7 +110,6 @@ async fn main() -> std::io::Result<()> {
                 .client_timeout(Seconds(0))
                 .h1(AppFactory)
         })?
-        .memory_pool("techempower", PoolId::P1)
-        .start()
+        .run()
         .await
 }
