@@ -1,12 +1,12 @@
 #[global_allocator]
 static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+use std::{future::Future, io, pin::Pin, task::Context, task::Poll};
 
-use std::{cell::RefCell, future::Future, io, pin::Pin, rc::Rc, task::Context, task::Poll};
-
-use ntex::{fn_service, time::Seconds, http::h1, rt::net::TcpStream};
-use ntex::framed::{ReadTask, State, WriteTask};
-
+use ntex::{fn_service, http::h1, io::Io, util::ready, util::BufMut, util::PoolId};
 mod utils;
+
+#[cfg(target_os = "macos")]
+use serde_json as simd_json;
 
 const JSON: &[u8] =
     b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
@@ -22,7 +22,7 @@ pub struct Message {
 }
 
 struct App {
-    state: State,
+    io: Io,
     codec: h1::Codec,
 }
 
@@ -31,59 +31,41 @@ impl Future for App {
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         let this = self.as_mut().get_mut();
-        if !this.state.is_open() {
-            this.state.close();
-            return Poll::Ready(Ok(()));
-        }
-
-        let read = this.state.read();
-        let write = this.state.write();
         loop {
-            match read.decode(&this.codec) {
-                Ok(Some((req, _))) => {
-                    write.with_buf(|buf| {
-                        // make sure we've got room
-                        let remaining = buf.capacity() - buf.len();
-                        if remaining < 1024 {
-                            buf.reserve(65535 - remaining);
-                        }
+            if let Some(Ok((req, _))) = ready!(this.io.poll_read_next(&this.codec, cx)) {
+                let _ = this.io.with_write_buf(|buf| {
+                    // make sure we've got room
+                    let remaining = buf.remaining_mut();
+                    if remaining < 1024 {
+                        buf.reserve(65535 - remaining);
+                    }
 
-                        match req.path() {
-                            "/json" => {
-                                buf.extend_from_slice(JSON);
-                                this.codec.set_date_header(buf);
-                                let _ = simd_json::to_writer(
-                                    crate::utils::Writer(buf),
-                                    &Message {
-                                        message: "Hello, World!",
-                                    },
-                                );
-                            }
-                            "/plaintext" => {
-                                buf.extend_from_slice(PLAIN);
-                                this.codec.set_date_header(buf);
-                                buf.extend_from_slice(BODY);
-                            }
-                            _ => {
-                                buf.extend_from_slice(HTTPNFOUND);
-                                buf.extend_from_slice(HDR_SERVER);
-                            }
+                    match req.path() {
+                        "/json" => {
+                            buf.extend_from_slice(JSON);
+                            this.codec.set_date_header(buf);
+                            let _ = simd_json::to_writer(
+                                crate::utils::Writer(buf),
+                                &Message {
+                                    message: "Hello, World!",
+                                },
+                            );
                         }
-                    });
-                }
-                Ok(None) => break,
-                _ => {
-                    this.state.close();
-                    return Poll::Ready(Err(()));
-                }
+                        "/plaintext" => {
+                            buf.extend_from_slice(PLAIN);
+                            this.codec.set_date_header(buf);
+                            buf.extend_from_slice(BODY);
+                        }
+                        _ => {
+                            buf.extend_from_slice(HTTPNFOUND);
+                            buf.extend_from_slice(HDR_SERVER);
+                        }
+                    }
+                });
+            } else {
+                return Poll::Ready(Ok(()));
             }
         }
-        if read.is_ready() {
-            this.state.register_dispatcher(cx.waker());
-        } else {
-            read.wake(cx.waker())
-        }
-        Poll::Pending
     }
 }
 
@@ -94,19 +76,16 @@ async fn main() -> io::Result<()> {
     // start http server
     ntex::server::build()
         .backlog(1024)
-        .bind("techempower", "0.0.0.0:8080", || {
-            fn_service(|io: TcpStream| {
-                let state = State::with_params(65535, 65535, 1024, Seconds(0));
-                let io = Rc::new(RefCell::new(io));
-                ntex::rt::spawn(ReadTask::new(io.clone(), state.clone()));
-                ntex::rt::spawn(WriteTask::new(io, state.clone()));
+        .bind("techempower", "0.0.0.0:8080", |cfg| {
+            cfg.memory_pool(PoolId::P1);
+            PoolId::P1.set_read_params(65535, 8192);
+            PoolId::P1.set_write_params(65535, 8192);
 
-                App {
-                    state,
-                    codec: h1::Codec::default(),
-                }
+            fn_service(|io| App {
+                io,
+                codec: h1::Codec::default(),
             })
         })?
-        .start()
+        .run()
         .await
 }
