@@ -4,6 +4,6 @@ cchardet==2.1.7
 gunicorn==20.1
 jinja2==3.0.3
 psycopg2==2.9.2
-SQLAlchemy==1.4.27
+SQLAlchemy==1.4.29
 ujson==4.2
 uvloop==0.16
