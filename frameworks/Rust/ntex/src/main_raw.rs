@@ -2,7 +2,7 @@
 static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 use std::{future::Future, io, pin::Pin, task::Context, task::Poll};
 
-use ntex::{fn_service, http::h1, io::Io, util::ready, util::BufMut, util::PoolId};
+use ntex::{fn_service, http::h1, io::Io, io::RecvError, util::ready, util::BufMut, util::PoolId};
 mod utils;
 
 #[cfg(target_os = "macos")]
@@ -32,38 +32,44 @@ impl Future for App {
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         let this = self.as_mut().get_mut();
         loop {
-            if let Some(Ok((req, _))) = ready!(this.io.poll_read_next(&this.codec, cx)) {
-                let _ = this.io.with_write_buf(|buf| {
-                    // make sure we've got room
-                    let remaining = buf.remaining_mut();
-                    if remaining < 1024 {
-                        buf.reserve(65535 - remaining);
-                    }
+            match ready!(this.io.poll_recv(&this.codec, cx)) {
+                Ok((req, _)) => {
+                    let _ = this.io.with_write_buf(|buf| {
+                        // make sure we've got room
+                        let remaining = buf.remaining_mut();
+                        if remaining < 1024 {
+                            buf.reserve(65535 - remaining);
+                        }
 
-                    match req.path() {
-                        "/json" => {
-                            buf.extend_from_slice(JSON);
-                            this.codec.set_date_header(buf);
-                            let _ = simd_json::to_writer(
-                                crate::utils::Writer(buf),
-                                &Message {
-                                    message: "Hello, World!",
-                                },
-                            );
+                        match req.path() {
+                            "/json" => {
+                                buf.extend_from_slice(JSON);
+                                this.codec.set_date_header(buf);
+                                let _ = simd_json::to_writer(
+                                    crate::utils::Writer(buf),
+                                    &Message {
+                                        message: "Hello, World!",
+                                    },
+                                );
+                            }
+                            "/plaintext" => {
+                                buf.extend_from_slice(PLAIN);
+                                this.codec.set_date_header(buf);
+                                buf.extend_from_slice(BODY);
+                            }
+                            _ => {
+                                buf.extend_from_slice(HTTPNFOUND);
+                                buf.extend_from_slice(HDR_SERVER);
+                            }
                         }
-                        "/plaintext" => {
-                            buf.extend_from_slice(PLAIN);
-                            this.codec.set_date_header(buf);
-                            buf.extend_from_slice(BODY);
-                        }
-                        _ => {
-                            buf.extend_from_slice(HTTPNFOUND);
-                            buf.extend_from_slice(HDR_SERVER);
-                        }
-                    }
-                });
-            } else {
-                return Poll::Ready(Ok(()));
+                    });
+                }
+                Err(RecvError::WriteBackpressure) => {
+                    let _ = ready!(this.io.poll_flush(cx, false));
+                }
+                Err(_) => {
+                    return Poll::Ready(Ok(()));
+                }
             }
         }
     }
