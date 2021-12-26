@@ -11,14 +11,22 @@ import org.slf4j.LoggerFactory;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+/**
+ * @author longzl
+ */
 public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleHttpProtocol.class);
-
-    private static final byte CR13 = (byte) 13; // \CR \r
-    private static final byte LF10 = (byte) 10; // \LF \n
-    private static final byte SPACE0 = (byte) 32; // \SP
-    private static final byte COLON = (byte) 58; // \:
+    /**
+     * CR13 \r
+     * LF10 \n
+     * SPACE0 \SP
+     * COLON :
+     */
+    private static final byte CR13 = (byte) 13;
+    private static final byte LF10 = (byte) 10;
+    private static final byte SPACE0 = (byte) 32;
+    private static final byte COLON = (byte) 58;
 
     private static final String httpEntityKey = "httpEntity";
 
@@ -36,8 +44,8 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
             httpEntity = new HttpRequestEntity();
             session.setAttribute(httpEntityKey, httpEntity);
         }
-
-        if (!httpEntity.headerComplete() && byteBuffer.hasRemaining()) { //解析header
+        //解析header
+        if (!httpEntity.headerComplete() && byteBuffer.hasRemaining()) {
             readHeader(byteBuffer, httpEntity);
         }
 
@@ -46,7 +54,8 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
                 session.setAttribute(httpEntityKey, null);
                 return httpEntity;
             }
-            if (httpEntity.bodyBuffer != null && byteBuffer.hasRemaining()) { // 解析request body
+            // 解析request body
+            if (httpEntity.bodyBuffer != null && byteBuffer.hasRemaining()) {
                 readBody(byteBuffer, httpEntity);
             }
         }
