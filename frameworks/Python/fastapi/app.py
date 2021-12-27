@@ -1,9 +1,15 @@
-import asyncio
 import asyncpg
 import os
 from fastapi import FastAPI, Request
+from fastapi.responses import PlainTextResponse
+
+try:
+    import orjson
+    from fastapi.responses import ORJSONResponse as JSONResponse
+except ImportError:
+    from fastapi.responses import UJSONResponse as JSONResponse
+
 from fastapi.templating import Jinja2Templates
-from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from random import randint, sample
 
 READ_ROW_SQL = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
@@ -26,21 +32,29 @@ def get_num_queries(queries):
 
 connection_pool = None
 
-app = FastAPI()
-
 templates = Jinja2Templates(directory="templates")
 
+app = FastAPI()
 
-@app.on_event("startup")
+
 async def setup_database():
-    global connection_pool
-    connection_pool = await asyncpg.create_pool(
+    return await asyncpg.create_pool(
         user=os.getenv("PGUSER", "benchmarkdbuser"),
         password=os.getenv("PGPASS", "benchmarkdbpass"),
         database="hello_world",
         host="tfb-database",
         port=5432,
     )
+
+
+@app.on_event("startup")
+async def startup_event():
+    app.state.connection_pool = await setup_database()
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    await app.state.connection_pool.close()
 
 
 @app.get("/json")
@@ -51,7 +65,7 @@ async def json_serialization():
 @app.get("/db")
 async def single_database_query():
     row_id = randint(1, 10000)
-    async with connection_pool.acquire() as connection:
+    async with app.state.connection_pool.acquire() as connection:
         number = await connection.fetchval(READ_ROW_SQL, row_id)
 
     return JSONResponse({"id": row_id, "randomNumber": number})
@@ -63,7 +77,7 @@ async def multiple_database_queries(queries = None):
     row_ids = sample(range(1, 10000), num_queries)
     worlds = []
 
-    async with connection_pool.acquire() as connection:
+    async with app.state.connection_pool.acquire() as connection:
         statement = await connection.prepare(READ_ROW_SQL)
         for row_id in row_ids:
             number = await statement.fetchval(row_id)
@@ -74,7 +88,7 @@ async def multiple_database_queries(queries = None):
 
 @app.get("/fortunes")
 async def fortunes(request: Request):
-    async with connection_pool.acquire() as connection:
+    async with app.state.connection_pool.acquire() as connection:
         fortunes = await connection.fetch("SELECT * FROM Fortune")
 
     fortunes.append(ADDITIONAL_ROW)
@@ -85,12 +99,18 @@ async def fortunes(request: Request):
 @app.get("/updates")
 async def database_updates(queries = None):
     num_queries = get_num_queries(queries)
-    updates = [(row_id, randint(1, 10000)) for row_id in sample(range(1, 10000), num_queries)]
-    worlds = [{"id": row_id, "randomNumber": number} for row_id, number in updates]
+    # To avoid deadlock
+    ids = sorted(sample(range(1, 10000 + 1), num_queries))
+    numbers = sorted(sample(range(1, 10000), num_queries))
+    updates = list(zip(ids, numbers))
 
-    async with connection_pool.acquire() as connection:
+    worlds = [
+        {"id": row_id, "randomNumber": number} for row_id, number in updates
+    ]
+
+    async with app.state.connection_pool.acquire() as connection:
         statement = await connection.prepare(READ_ROW_SQL)
-        for row_id, number in updates:
+        for row_id, _ in updates:
             await statement.fetchval(row_id)
         await connection.executemany(WRITE_ROW_SQL, updates)
 
