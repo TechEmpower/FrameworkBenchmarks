@@ -1,11 +1,17 @@
-FROM python:3.8
-
-ADD ./ /fastapi
+FROM python:3.9
 
 WORKDIR /fastapi
 
-RUN pip3 install cython==0.29.13 && \
-    pip3 install -r /fastapi/requirements.txt
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+RUN pip3 install cython==0.29.13
+
+COPY requirements.txt requirements-gunicorn.txt ./
+
+RUN pip3 install -r requirements.txt -r requirements-gunicorn.txt
+
+COPY . ./
 
 EXPOSE 8080
 

@@ -1,36 +1,43 @@
-import asyncio
-import asyncpg
+import multiprocessing
 import os
-import jinja2
-from fastapi import FastAPI
-from starlette.responses import HTMLResponse, UJSONResponse, PlainTextResponse
-from random import randint
 from operator import itemgetter
-from urllib.parse import parse_qs
+from random import randint, sample
 
+import asyncpg
 
+from fastapi import FastAPI, Request
+from fastapi.responses import PlainTextResponse, UJSONResponse
+from fastapi.templating import Jinja2Templates
+
+ADDITIONAL_FORTUNE = [0, "Additional fortune added at request time."]
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
-WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
-ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
+WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$2 WHERE id=$1'
 
+sort_fortunes_key = itemgetter(1)
+
+template_path = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), "templates"
+)
+templates = Jinja2Templates(directory=template_path)
+
+app = FastAPI()
 
 
 async def setup_database():
-    global connection_pool
-    connection_pool = await asyncpg.create_pool(
-        user=os.getenv('PGUSER', 'benchmarkdbuser'),
-        password=os.getenv('PGPASS', 'benchmarkdbpass'),
-        database='hello_world',
-        host='tfb-database',
-        port=5432
+    max_size = min(1800 / multiprocessing.cpu_count(), 160)
+    max_size = max(int(max_size), 1)
+    min_size = max(int(max_size / 2), 1)
+
+    return await asyncpg.create_pool(
+        user=os.getenv("PGUSER", "benchmarkdbuser"),
+        password=os.getenv("PGPASS", "benchmarkdbpass"),
+        database="hello_world",
+        host="tfb-database",
+        port=5432,
+        min_size=min_size,
+        max_size=max_size,
+        ssl=False,
     )
-
-
-def load_fortunes_template():
-    path = os.path.join('templates', 'fortune.html')
-    with open(path, 'r') as template_file:
-        template_text = template_file.read()
-        return jinja2.Template(template_text)
 
 
 def get_num_queries(queries):
@@ -46,73 +53,80 @@ def get_num_queries(queries):
     return query_count
 
 
-connection_pool = None
-sort_fortunes_key = itemgetter(1)
-template = load_fortunes_template()
-loop = asyncio.get_event_loop()
-loop.run_until_complete(setup_database())
+@app.on_event("startup")
+async def startup_event():
+    app.state.connection_pool = await setup_database()
 
 
-app = FastAPI()
+@app.on_event("shutdown")
+async def shutdown_event():
+    await app.state.connection_pool.close()
 
 
-@app.get('/json')
+@app.get("/json")
 async def json_serialization():
-    return UJSONResponse({'message': 'Hello, world!'})
+    return UJSONResponse({"message": "Hello, world!"})
 
 
-@app.get('/db')
+@app.get("/db")
 async def single_database_query():
     row_id = randint(1, 10000)
 
-    async with connection_pool.acquire() as connection:
+    async with app.state.connection_pool.acquire() as connection:
         number = await connection.fetchval(READ_ROW_SQL, row_id)
 
-    return UJSONResponse({'id': row_id, 'randomNumber': number})
+    return UJSONResponse({"id": row_id, "randomNumber": number})
 
 
-@app.get('/queries')
-async def multiple_database_queries(queries = None):
-
+@app.get("/queries")
+async def multiple_database_queries(queries=None):
     num_queries = get_num_queries(queries)
-    row_ids = [randint(1, 10000) for _ in range(num_queries)]
-    worlds = []
+    row_ids = sorted(sample(range(1, 10000), num_queries))
+    data = []
 
-    async with connection_pool.acquire() as connection:
+    async with app.state.connection_pool.acquire() as connection:
         statement = await connection.prepare(READ_ROW_SQL)
         for row_id in row_ids:
             number = await statement.fetchval(row_id)
-            worlds.append({'id': row_id, 'randomNumber': number})
+            data.append({"id": row_id, "randomNumber": number})
 
-    return UJSONResponse(worlds)
-
-
-@app.get('/fortunes')
-async def fortunes():
-    async with connection_pool.acquire() as connection:
-        fortunes = await connection.fetch('SELECT * FROM Fortune')
-
-    fortunes.append(ADDITIONAL_ROW)
-    fortunes.sort(key=sort_fortunes_key)
-    content = template.render(fortunes=fortunes)
-    return HTMLResponse(content)
+    return UJSONResponse(data)
 
 
-@app.get('/updates')
-async def database_updates(queries = None):
+@app.get("/fortunes")
+async def fortunes(request: Request):
+    async with app.state.connection_pool.acquire() as connection:
+        data = await connection.fetch("SELECT * FROM Fortune")
+
+    data.append(ADDITIONAL_FORTUNE)
+    data.sort(key=sort_fortunes_key)
+    return templates.TemplateResponse(
+        "fortune.html", {"request": request, "fortunes": data}
+    )
+
+
+@app.get("/updates")
+async def database_updates(queries=None):
     num_queries = get_num_queries(queries)
-    updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
-    worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
-    async with connection_pool.acquire() as connection:
+    ids = sorted(sample(range(1, 10000 + 1), num_queries))
+    numbers = sample(range(1, 10000), num_queries)
+    updates = list(zip(ids, numbers))
+
+    data = [
+        {"id": row_id, "randomNumber": number} for row_id, number in updates
+    ]
+
+    async with app.state.connection_pool.acquire() as connection:
         statement = await connection.prepare(READ_ROW_SQL)
-        for row_id, number in updates:
+        for row_id, _ in updates:
             await statement.fetchval(row_id)
+
         await connection.executemany(WRITE_ROW_SQL, updates)
 
-    return UJSONResponse(worlds)
+    return UJSONResponse(data)
 
 
-@app.get('/plaintext')
+@app.get("/plaintext")
 async def plaintext():
-    return PlainTextResponse(b'Hello, world!')
+    return PlainTextResponse(b"Hello, world!")
