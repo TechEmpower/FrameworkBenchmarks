@@ -1,12 +1,13 @@
 package com.hexagonkt
 
 import com.fasterxml.jackson.module.blackbird.BlackbirdModule
-import com.hexagonkt.helpers.Jvm
+import com.hexagonkt.core.helpers.Jvm
 import com.hexagonkt.http.server.Server
 import com.hexagonkt.http.server.ServerPort
 import com.hexagonkt.http.server.ServerSettings
 import com.hexagonkt.http.server.jetty.JettyServletAdapter
 import com.hexagonkt.serialization.*
+import com.hexagonkt.serialization.json.*
 import com.hexagonkt.store.BenchmarkSqlStore
 import com.hexagonkt.store.BenchmarkStore
 import com.hexagonkt.templates.TemplatePort
