@@ -13,4 +13,4 @@ RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --features="tokio"
 
 EXPOSE 8080
 
-CMD ./target/release/ntex
+CMD ./target/release/ntex-plt
