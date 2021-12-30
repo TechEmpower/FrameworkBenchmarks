@@ -9,8 +9,8 @@ ADD ./ /ntex
 WORKDIR /ntex
 
 RUN cargo clean
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
+RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --features="async-std"
 
 EXPOSE 8080
 
-CMD ./target/release/ntex-raw
+CMD ./target/release/ntex-db-astd
