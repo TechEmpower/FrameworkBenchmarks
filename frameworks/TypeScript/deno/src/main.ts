@@ -1,15 +1,20 @@
-import { serve } from "https://deno.land/std@0.96.0/http/server.ts";
-import Handlers from "./handlers.ts";
-for await (const req of serve("0.0.0.0:8080")) {
-  if (Handlers[req.url] != undefined) {
-    Handlers[req.url](req as any).catch((e) => {
-      console.error(e);
-      Deno.exit(9);
-    });
-  } else {
-    req.respond({
-      body: "404 Not Found",
-    });
-  }
-  continue;
-}
+// deno-lint-ignore-file require-await
+import { HttpServer } from './_server/mod.ts'
+
+const headers = new Headers([
+  ["server", 'Deno'],
+  ["content-type", 'application/json'],
+]);
+
+setInterval(() => (headers.set('date', new Date().toUTCString())), 850);
+
+export const greeting: Uint8Array = new TextEncoder().encode(
+  "Hello, World!"
+);
+
+await new HttpServer()
+
+  .add('/json', async () => new Response(JSON.stringify({ message: "Hello, World!" }), {headers}))
+  .serve(Deno.listen({
+    port: 8088
+  }))

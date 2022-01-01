@@ -1,14 +1,16 @@
+// Copyright, https://github.com/QubitProducts/urlite
+
 // deno-lint-ignore-file no-explicit-any
 export interface Url {
   href?: string;
-  // path?: string;
+  path?: string;
   search?: string;
-  // protocol?: string;
-  // auth?: string;
-  // hostname?: string;
-  // port?: number;
+  protocol?: string;
+  auth?: string;
+  hostname?: string;
+  port?: number;
   pathname?: string;
-  // hash?: string;
+  hash?: string;
 
   query?: QsMap;
 }
@@ -23,15 +25,11 @@ export function parse(url: string, qs = false): Url {
   const parts: any = {}
   parts.href = url
   const matches = url.match(pattern)
-  // let l = fragments.length
-  // while (l--) { parts[fragments[l]] = matches![l + 1] }
-  parts[fragments[4]] = matches![5]
-  parts[fragments[5]] = matches![6]
-  
+  let l = fragments.length
+  while (l--) { parts[fragments[l]] = matches![l + 1] }
+  parts.path = parts.search ? (parts.pathname ? parts.pathname + parts.search : parts.search) : parts.pathname
 
-  // parts.path = parts.search ? (parts.pathname ? parts.pathname + parts.search : parts.search) : parts.pathname
-
-  if (qs && parts.query != null) {
+  if (qs && parts.search != null) {
     parts.query = Qs_parse(parts.search.slice(1));
   }
 
@@ -42,10 +40,10 @@ export function parse(url: string, qs = false): Url {
 
 export type QsMap = Record<string, string | string[] | boolean | number>
 
-const Qs_memory = new Map<string, QsMap>();
+// const Qs_memory = new Map<string, QsMap>();
 
 export function Qs_parse (qs: string): QsMap {
-  if (Qs_memory.has(qs)) return Qs_memory.get(qs)!;
+  //if (Qs_memory.has(qs)) return Qs_memory.get(qs)!;
 
   const obj: any = {}
   const params = decodeURI(qs || '').split(/&amp;|&/)
@@ -64,6 +62,6 @@ export function Qs_parse (qs: string): QsMap {
       }
     }
   }
-  Qs_memory.set(qs, obj)
+  //Qs_memory.set(qs, obj)
   return obj
 }
