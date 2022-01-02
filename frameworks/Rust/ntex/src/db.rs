@@ -5,8 +5,11 @@ use nanorand::{WyRand, RNG};
 use ntex::util::{Bytes, BytesMut};
 use smallvec::SmallVec;
 use tokio_postgres::types::ToSql;
-use tokio_postgres::{connect, Client, NoTls, Statement};
+use tokio_postgres::{connect, Client, Statement};
 use yarte::{ywrite_html, Serialize};
+
+#[cfg(target_os = "macos")]
+use serde_json as simd_json;
 
 use crate::utils::Writer;
 
@@ -33,7 +36,7 @@ pub struct PgConnection {
 
 impl PgConnection {
     pub async fn connect(db_url: &str) -> PgConnection {
-        let (cl, conn) = connect(db_url, NoTls)
+        let (cl, conn) = connect(db_url)
             .await
             .expect("can not connect to postgresql");
         ntex::rt::spawn(conn.map(|_| ()));

@@ -1,6 +1,6 @@
 [package]
 name = "ntex"
-version = "0.2.1"
+version = "0.3.0"
 edition = "2018"
 
 [[bin]]
@@ -8,15 +8,36 @@ name = "ntex"
 path = "src/main.rs"
 
 [[bin]]
+name = "ntex-astd"
+path = "src/main.rs"
+
+[[bin]]
 name = "ntex-db"
 path = "src/main_db.rs"
 
 [[bin]]
-name = "ntex-raw"
-path = "src/main_raw.rs"
+name = "ntex-db-astd"
+path = "src/main_db.rs"
+
+[[bin]]
+name = "ntex-plt"
+path = "src/main_plt.rs"
+
+[[bin]]
+name = "ntex-plt-astd"
+path = "src/main_plt.rs"
+
+[features]
+default = []
+
+# tokio runtime
+tokio = ["ntex/tokio"]
+
+# async-std runtime
+async-std = ["ntex/async-std"]
 
 [dependencies]
-ntex = "0.4.0-b.12"
+ntex = { version = "0.5.0", default-features = false }
 mimalloc = { version = "0.1.25", default-features = false }
 snmalloc-rs = { version = "0.2.26", features = ["1mib", "native-cpu"] }
 yarte = { version = "0.15", features = ["bytes-buf", "json"] }
@@ -27,11 +48,11 @@ num_cpus = "1.13"
 futures = "0.3"
 http = "0.2"
 smallvec = "1.6.1"
-simd-json = "0.4.6"
+simd-json = "0.4.13"
 simd-json-derive = "0.2.2"
 serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 log = { version = "0.4", features = ["release_max_level_off"] }
-tokio = { version = "1", default-features = false }
 tokio-postgres = { git="https://github.com/fafhrd91/postgres.git" }
 
 [profile.release]

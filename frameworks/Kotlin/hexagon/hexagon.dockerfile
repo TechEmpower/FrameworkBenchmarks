@@ -1,7 +1,7 @@
 #
 # BUILD
 #
-FROM gradle:7.2-jdk11 AS gradle_build
+FROM gradle:7.3.3-jdk11 AS gradle_build
 USER root
 WORKDIR /hexagon
 
@@ -17,6 +17,7 @@ ENV DBSTORE postgresql
 ENV POSTGRESQL_DB_HOST tfb-database
 ENV WEBENGINE jetty
 ENV PROJECT hexagon
+ENV ENABLE_BLACKBIRD true
 
 COPY --from=gradle_build /hexagon/build/install/$PROJECT /opt/$PROJECT
 

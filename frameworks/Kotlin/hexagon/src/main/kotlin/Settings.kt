@@ -1,6 +1,6 @@
 package com.hexagonkt
 
-import com.hexagonkt.helpers.Jvm.systemSetting
+import com.hexagonkt.core.helpers.Jvm.systemSetting
 
 data class Settings(
     val bindPort: Int = systemSetting("bindPort") ?: 9090,

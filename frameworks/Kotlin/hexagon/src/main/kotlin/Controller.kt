@@ -1,9 +1,9 @@
 package com.hexagonkt
 
-import com.hexagonkt.helpers.require
+import com.hexagonkt.core.helpers.require
 import com.hexagonkt.http.server.Call
 import com.hexagonkt.http.server.Router
-import com.hexagonkt.serialization.Json
+import com.hexagonkt.serialization.json.Json
 import com.hexagonkt.serialization.toFieldsMap
 import com.hexagonkt.store.BenchmarkStore
 import com.hexagonkt.templates.TemplatePort
