@@ -18,8 +18,7 @@ mod utils;
 
 struct App(db::PgConnection);
 
-impl Service for App {
-    type Request = Request;
+impl Service<Request> for App {
     type Response = Response;
     type Error = Error;
     type Future = Pin<Box<dyn Future<Output = Result<Response, Error>>>>;
@@ -77,9 +76,7 @@ impl Service for App {
 
 struct AppFactory;
 
-impl ServiceFactory for AppFactory {
-    type Config = ();
-    type Request = Request;
+impl ServiceFactory<Request> for AppFactory {
     type Response = Response;
     type Error = Error;
     type Service = App;
