@@ -3,6 +3,7 @@ jwt_secret: INSECURE_DEFAULT_SECRET
 host: 127.0.0.1
 port: 8080
 postgres:
+  #host: localhost
   host: tfb-database
   port: 5432
   database_name: hello_world
