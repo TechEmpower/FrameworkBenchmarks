@@ -44,7 +44,7 @@ http://localhost:8080/query?queries=
 
 ### UPDATE
 
-http://localhost:8080/update?queries=
+http://localhost:8080/updates?queries=
 
 ### FORTUNES
 

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 import 'package:angel3_framework/angel3_framework.dart';
 import 'package:angel3_orm/angel3_orm.dart';
-import 'package:optional/optional.dart';
 import '../../models/fortune.dart';
 import '../../models/world.dart';
 
@@ -44,9 +43,7 @@ Future configureServer(Angel app) async {
   }
 
   // Return data in json
-  app.get('/json', (req, res) async {
-    res.json({'message': 'Hello, World!'});
-  });
+  app.get('/json', (req, res) => res.json({'message': 'Hello, World!'}));
 
   // Return data in plaintext
   app.get('/plaintext', (req, res) async {
@@ -56,14 +53,21 @@ Future configureServer(Angel app) async {
 
   // Add an entry and sort a list of fortune
   app.get('/fortunes', (req, res) async {
+    //var stopwatch = Stopwatch()..start();
+
     var list = await FortuneQuery().get(executor);
+
+    //print('Query Time: ${stopwatch.elapsed.inMilliseconds}ms');
 
     list.add(
         Fortune(id: 0, message: 'Additional fortune added at request time.'));
     list.sort((a, b) => a.message?.compareTo(b.message ?? '') ?? 0);
 
+    //print('Process Time: ${stopwatch.elapsed.inMilliseconds}ms');
+    //stopwatch.stop();
+
     //res.json(list);
-    await res.render('listing', {'fortunes': list});
+    res.render('listing', {'fortunes': list});
   });
 
   // Find a random World
@@ -98,6 +102,8 @@ Future configureServer(Angel app) async {
 
   // Update a list of worlds
   app.get('/updates', (req, res) async {
+    //var stopwatch = Stopwatch()..start();
+
     var params = req.queryParameters;
     var queryLimit = _parseQueryCount(params['queries'] as String?);
     var listOfIds = _generateIds(queryLimit);
@@ -114,6 +120,9 @@ Future configureServer(Angel app) async {
       var updatedRec = await query.updateOne(executor);
       result.add(updatedRec.value);
     }
+
+    //rint('Process Time: ${stopwatch.elapsed.inMilliseconds}ms');
+    //stopwatch.stop();
 
     res.json(result);
   });
