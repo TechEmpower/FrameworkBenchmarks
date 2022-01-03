@@ -1,0 +1,45 @@
+{
+  "framework": "vertx-web",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "vertx-web",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Vert.x",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "vertx-web",
+      "notes": "",
+      "versus": "vertx"
+    },
+    "postgres": {
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "vertx-web",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Vert.x",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "vertx-web-postgres",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}
