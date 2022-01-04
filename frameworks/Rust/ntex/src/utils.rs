@@ -2,7 +2,15 @@
 use std::{cmp, io};
 
 use atoi::FromRadix10;
-use ntex::util::{BufMut, BytesMut};
+use ntex::http::header::HeaderValue;
+use ntex::util::{BufMut, Bytes, BytesMut};
+
+pub const HDR_SERVER: HeaderValue = HeaderValue::from_static("N");
+pub const HDR_JSON_CONTENT_TYPE: HeaderValue = HeaderValue::from_static("application/json");
+pub const HDR_TEXT_CONTENT_TYPE: HeaderValue = HeaderValue::from_static("text/plain");
+pub const HDR_HTML_CONTENT_TYPE: HeaderValue =
+    HeaderValue::from_static("text/html; charset=utf-8");
+pub const BODY_PLAIN_TEXT: Bytes = Bytes::from_static(b"Hello, World!");
 
 pub const SIZE: usize = 27;
 
