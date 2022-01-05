@@ -1,5 +1,5 @@
 [framework]
-name = "vertx-web"
+name = "vertx-web-kotlin-coroutines"
 
 [main]
 urls.plaintext = "/plaintext"
@@ -12,7 +12,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Vert.x"
 webserver = "None"
-versus = "vertx"
+versus = "vertx-web"
 
 [postgres]
 urls.db = "/db"
@@ -27,4 +27,4 @@ os = "Linux"
 orm = "Raw"
 platform = "Vert.x"
 webserver = "None"
-versus = ""
+versus = "vertx-web-postgres"

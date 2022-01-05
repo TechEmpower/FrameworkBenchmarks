@@ -1,9 +1,12 @@
-FROM maven:3.6.1-jdk-11-slim as maven
-WORKDIR /vertx-web
-COPY scripts scripts
+FROM gradle:7.3.3-jdk11 as gradle
+WORKDIR /vertx-web-kotlin-coroutines
+COPY gradle gradle
 COPY src src
-COPY pom.xml pom.xml
-RUN mvn package -q
+COPY build.gradle.kts build.gradle.kts
+COPY gradle.properties gradle.properties
+COPY gradlew gradlew
+COPY settings.gradle.kts settings.gradle.kts
+RUN gradle shadowJar
 
 EXPOSE 8080
 
@@ -24,7 +27,7 @@ CMD java \
     -Dio.netty.buffer.checkBounds=false               \
     -Dio.netty.buffer.checkAccessible=false           \
     -jar                                              \
-    target/vertx-web-benchmark-4.1.5-fat.jar          \
+    build/libs/vertx-web-kotlin-coroutines-benchmark-4.1.5-fat.jar \
     --instances                                       \
     `grep --count ^processor /proc/cpuinfo`           \
     --conf                                            \

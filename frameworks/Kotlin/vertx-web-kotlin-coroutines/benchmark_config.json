@@ -1,5 +1,5 @@
 {
-  "framework": "vertx-web",
+  "framework": "vertx-web-kotlin-coroutines",
   "tests": [{
     "default": {
       "json_url": "/json",
@@ -9,16 +9,16 @@
       "classification": "Micro",
       "database": "None",
       "framework": "vertx-web",
-      "language": "Java",
+      "language": "Kotlin",
       "flavor": "None",
       "orm": "Raw",
       "platform": "Vert.x",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "vertx-web",
+      "display_name": "vertx-web-kotlin-coroutines",
       "notes": "",
-      "versus": "vertx"
+      "versus": "vertx-web"
     },
     "postgres": {
       "db_url": "/db",
@@ -30,16 +30,16 @@
       "classification": "Micro",
       "database": "Postgres",
       "framework": "vertx-web",
-      "language": "Java",
+      "language": "Kotlin",
       "flavor": "None",
       "orm": "Raw",
       "platform": "Vert.x",
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "vertx-web-postgres",
+      "display_name": "vertx-web-kotlin-coroutines-postgres",
       "notes": "",
-      "versus": ""
+      "versus": "vertx-web-postgres"
     }
   }]
 }
