@@ -20,6 +20,7 @@ import io.vertx.kotlin.sqlclient.poolOptionsOf
 import io.vertx.pgclient.PgPool
 import io.vertx.sqlclient.Tuple
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -96,7 +97,7 @@ class App : CoroutineVerticle() {
                 ctx.response()
                     .setStatusCode(404)
                     .end()
-                //.await()
+                    .await()
                 return
             }
             val row = resultSet.next()
@@ -105,15 +106,15 @@ class App : CoroutineVerticle() {
                 .putHeader(HttpHeaders.DATE, date)
                 .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .end(Json.encodeToBuffer(World(row.getInteger(0), row.getInteger(1))))
-            //.await()
+                .await()
         }
 
-        fun queriesHandler(ctx: RoutingContext) {
+        suspend fun queriesHandler(ctx: RoutingContext) {
             val queries: Int = getQueries(ctx.request())
             val worlds = arrayOfNulls<World>(queries)
             val failed = booleanArrayOf(false)
             val cnt = intArrayOf(0)
-            val deferreds = List(queries) {
+            List(queries) {
                 async {
                     val result = `try` { client.preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld())).await() }
 
@@ -135,12 +136,12 @@ class App : CoroutineVerticle() {
                                 .putHeader(HttpHeaders.DATE, date)
                                 .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                                 .end(Json.encodeToBuffer(worlds))
-                            //.await()
+                                .await()
                         }
                     }
                 }
             }
-            //deferreds.awaitAll()
+                .awaitAll()
         }
 
         suspend fun fortunesHandler(ctx: RoutingContext) {
@@ -167,7 +168,7 @@ class App : CoroutineVerticle() {
                 .putHeader(HttpHeaders.DATE, date)
                 .putHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=UTF-8")
                 .end(result2)
-            //.await()
+                .await()
         }
 
         suspend fun updateHandler(ctx: RoutingContext) {
@@ -175,7 +176,7 @@ class App : CoroutineVerticle() {
             val worlds = arrayOfNulls<World>(queries)
             val failed = booleanArrayOf(false)
             val queryCount = intArrayOf(0)
-            val deffereds = List(worlds.size) {
+            List(worlds.size) {
                 val id = randomWorld()
                 async {
                     val r2 = `try` { client.preparedQuery(SELECT_WORLD).execute(Tuple.of(id)).await() }
@@ -204,13 +205,13 @@ class App : CoroutineVerticle() {
                                     .putHeader(HttpHeaders.DATE, date)
                                     .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                                     .end(Json.encodeToBuffer(worlds))
-                                //.await()
+                                    .await()
                             }
                         }
                     }
                 }
             }
-            //deffereds.awaitAll()
+                .awaitAll()
         }
     }
 
@@ -227,13 +228,13 @@ class App : CoroutineVerticle() {
          * This test exercises the framework fundamentals including keep-alive support, request routing, request header
          * parsing, object instantiation, JSON serialization, response header generation, and request count throughput.
          */
-        app["/json"].handler { ctx ->
+        app["/json"].checkedCoroutineHandler { ctx ->
             ctx.response()
                 .putHeader(HttpHeaders.SERVER, SERVER)
                 .putHeader(HttpHeaders.DATE, date)
                 .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .end(Json.encodeToBuffer(Message("Hello, World!")))
-            //.await()
+                .await()
         }
 
         /*
@@ -247,7 +248,7 @@ class App : CoroutineVerticle() {
          * punish the database driver and connection pool. At the highest queries-per-request tested (20), this test
          * demonstrates all frameworks' convergence toward zero requests-per-second as database activity increases.
          */
-        app["/queries"].handler { ctx -> pgClientBenchmark.queriesHandler(ctx) }
+        app["/queries"].checkedCoroutineHandler { ctx -> pgClientBenchmark.queriesHandler(ctx) }
 
         /*
          * This test exercises the ORM, database connectivity, dynamic-size collections, sorting, server-side templates,
@@ -268,13 +269,13 @@ class App : CoroutineVerticle() {
          * still small, meaning good performance is still necessary in order to saturate the gigabit Ethernet of the test
          * environment.
          */
-        app["/plaintext"].handler { ctx ->
+        app["/plaintext"].checkedCoroutineHandler { ctx ->
             ctx.response()
                 .putHeader(HttpHeaders.SERVER, SERVER)
                 .putHeader(HttpHeaders.DATE, date)
                 .putHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
                 .end("Hello, World!")
-            //.await()
+                .await()
         }
         try {
             vertx.createHttpServer().requestHandler(app).listen(8080).await()
