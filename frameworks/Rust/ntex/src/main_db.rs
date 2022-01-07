@@ -4,7 +4,7 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 use std::{pin::Pin, task::Context, task::Poll};
 
 use futures::future::{ok, Future, FutureExt};
-use ntex::http::header::{HeaderValue, CONTENT_TYPE, SERVER};
+use ntex::http::header::{CONTENT_TYPE, SERVER};
 use ntex::http::{HttpService, KeepAlive, Request, Response};
 use ntex::service::{Service, ServiceFactory};
 use ntex::web::{Error, HttpResponse};
@@ -31,19 +31,18 @@ impl Service<Request> for App {
     fn call(&self, req: Request) -> Self::Future {
         match req.path() {
             "/db" => Box::pin(self.0.get_world().map(|body| {
-                Ok(HttpResponse::Ok()
-                    .header(SERVER, HeaderValue::from_static("N"))
-                    .header(CONTENT_TYPE, HeaderValue::from_static("application/json"))
-                    .body(body))
+                let mut res = HttpResponse::with_body(http::StatusCode::OK, body.into());
+                res.headers_mut().append(SERVER, utils::HDR_SERVER);
+                res.headers_mut()
+                    .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+                Ok(res)
             })),
             "/fortunes" => Box::pin(self.0.tell_fortune().map(|body| {
-                Ok(HttpResponse::Ok()
-                    .header(SERVER, HeaderValue::from_static("N"))
-                    .header(
-                        CONTENT_TYPE,
-                        HeaderValue::from_static("text/html; charset=utf-8"),
-                    )
-                    .body(body))
+                let mut res = HttpResponse::with_body(http::StatusCode::OK, body.into());
+                res.headers_mut().append(SERVER, utils::HDR_SERVER);
+                res.headers_mut()
+                    .append(CONTENT_TYPE, utils::HDR_HTML_CONTENT_TYPE);
+                Ok(res)
             })),
             "/query" => Box::pin(
                 self.0
@@ -51,10 +50,11 @@ impl Service<Request> for App {
                     .map(|worlds| {
                         let mut body = BytesMut::with_capacity(35 * worlds.len());
                         let _ = simd_json::to_writer(crate::utils::Writer(&mut body), &worlds);
-                        Ok(HttpResponse::Ok()
-                            .header(SERVER, HeaderValue::from_static("N"))
-                            .header(CONTENT_TYPE, HeaderValue::from_static("application/json"))
-                            .body(body.freeze()))
+                        let mut res = HttpResponse::with_body(http::StatusCode::OK, body.into());
+                        res.headers_mut().append(SERVER, utils::HDR_SERVER);
+                        res.headers_mut()
+                            .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+                        Ok(res)
                     }),
             ),
             "/update" => Box::pin(
@@ -63,10 +63,11 @@ impl Service<Request> for App {
                     .map(|worlds| {
                         let mut body = BytesMut::with_capacity(35 * worlds.len());
                         let _ = simd_json::to_writer(crate::utils::Writer(&mut body), &worlds);
-                        Ok(HttpResponse::Ok()
-                            .header(SERVER, HeaderValue::from_static("N"))
-                            .header(CONTENT_TYPE, HeaderValue::from_static("application/json"))
-                            .body(body.freeze()))
+                        let mut res = HttpResponse::with_body(http::StatusCode::OK, body.into());
+                        res.headers_mut().append(SERVER, utils::HDR_SERVER);
+                        res.headers_mut()
+                            .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+                        Ok(res)
                     }),
             ),
             _ => Box::pin(ok(Response::new(http::StatusCode::NOT_FOUND))),
