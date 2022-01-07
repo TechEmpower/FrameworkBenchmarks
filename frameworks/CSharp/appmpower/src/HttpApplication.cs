@@ -61,8 +61,12 @@ namespace appMpower
                   count = 500;
                }
 
-               //Json.RenderMany(httpResponse.Headers, httpResponseBody.Writer, await RawDb.LoadMultipleQueriesRows(count), _worldSerializer);
+#if ADO
+               Json.RenderMany(httpResponse.Headers, httpResponseBody.Writer, await RawDb.LoadMultipleQueriesRows(count), _worldSerializer);
+#else
                Json.RenderMany(httpResponse.Headers, httpResponseBody.Writer, await RawDb.ReadMultipleRows(count), _worldSerializer);
+#endif
+
                return;
             }
             else if (pathStringLength == 9 && pathStringStart == "f")

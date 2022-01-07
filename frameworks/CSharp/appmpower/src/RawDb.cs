@@ -13,7 +13,13 @@ namespace appMpower
    public static class RawDb
    {
       private const int MaxBatch = 500;
+
+#if ADO      
+      private static ConcurrentRandom _random = new ConcurrentRandom();
+#else
       private static Random _random = new Random();
+#endif
+
       private static string[] _queriesMultipleRows = new string[MaxBatch + 1];
 
       private static readonly object[] _cacheKeys = Enumerable.Range(0, 10001).Select((i) => new CacheKey(i)).ToArray();
@@ -50,7 +56,11 @@ namespace appMpower
          for (int i = 0; i < count; i++)
          {
             worlds[i] = await ReadSingleRow(pooledCommand);
+#if ADO
+            dbDataParameter.TypedValue = _random.Next(1, 10001);
+#else
             dbDataParameter.Value = _random.Next(1, 10001);
+#endif
          }
 
          pooledCommand.Release();
@@ -106,7 +116,12 @@ namespace appMpower
          for (int i = 0; i < count; i++)
          {
             worlds[i] = await ReadSingleRow(queryCommand);
+
+#if ADO
+            dbDataParameter.TypedValue = _random.Next(1, 10001);
+#else
             dbDataParameter.Value = _random.Next(1, 10001);
+#endif
          }
 
          queryCommand.Release();
@@ -116,7 +131,7 @@ namespace appMpower
          var ids = PlatformBenchmarks.BatchUpdateString.Ids;
          var randoms = PlatformBenchmarks.BatchUpdateString.Randoms;
 
-#if !MYSQL
+#if !MYSQL // && !ADO
          var jds = PlatformBenchmarks.BatchUpdateString.Jds;
 #endif      
 
@@ -130,7 +145,7 @@ namespace appMpower
             worlds[i].RandomNumber = randomNumber;
          }
 
-#if !MYSQL
+#if !MYSQL // && !ADO
          for (int i = 0; i < count; i++)
          {
             updateCommand.CreateParameter(jds[i], DbType.Int32, worlds[i].Id);
@@ -145,13 +160,23 @@ namespace appMpower
          return worlds;
       }
 
+#if ADO
+      //private static (PooledCommand pooledCommand, IDbDataParameter dbDataParameter) CreateReadCommand(PooledConnection pooledConnection)
+      private static (PooledCommand pooledCommand, Npgsql.NpgsqlParameter<int> dbDataParameter) CreateReadCommand(PooledConnection pooledConnection)
+      {
+         //var pooledCommand = new PooledCommand("SELECT * FROM world WHERE id=@Id", pooledConnection);
+         //return (pooledCommand, pooledCommand.CreateParameter("Id", DbType.Int32, _random.Next(1, 10001)));
+
+         var pooledCommand = new PooledCommand("SELECT * FROM world WHERE id=$1", pooledConnection);
+         return (pooledCommand, pooledCommand.CreateNpgsqlParameter(_random.Next(1, 10001)));
+      }
+#else
       private static (PooledCommand pooledCommand, IDbDataParameter dbDataParameter) CreateReadCommand(PooledConnection pooledConnection)
       {
          var pooledCommand = new PooledCommand("SELECT * FROM world WHERE id=?", pooledConnection);
-         var dbDataParameter = pooledCommand.CreateParameter("@Id", DbType.Int32, _random.Next(1, 10001));
-
-         return (pooledCommand, dbDataParameter);
+         return (pooledCommand, pooledCommand.CreateParameter("@Id", DbType.Int32, _random.Next(1, 10001)));
       }
+#endif
 
       private static async Task<World> ReadSingleRow(PooledCommand pooledCommand)
       {
@@ -257,7 +282,12 @@ namespace appMpower
 
             for (var i = 1; i < 10001; i++)
             {
+#if ADO               
+               dbDataParameter.TypedValue = i;
+#else
                dbDataParameter.Value = i;
+#endif               
+
                cache.Set<CachedWorld>(cacheKeys[i], await ReadSingleRow(pooledCommand));
             }
          }
@@ -317,7 +347,13 @@ namespace appMpower
                result[i] = await _cache.GetOrCreateAsync<CachedWorld>(key, create);
 
                id = _random.Next(1, 10001);
+
+#if ADO
+               dbDataParameter.TypedValue = id;
+#else               
                dbDataParameter.Value = id;
+#endif
+
                key = cacheKeys[id];
             }
 

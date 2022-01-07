@@ -1,6 +1,5 @@
 using System.Data;
 using System.Data.Common;
-using System.Data.Odbc;
 using System.Threading.Tasks;
 
 namespace appMpower.Db
@@ -166,6 +165,28 @@ namespace appMpower.Db
          return dbDataParameter;
       }
 
+#if ADO
+      public Npgsql.NpgsqlParameter<int> CreateNpgsqlParameter(int value)
+      {
+         Npgsql.NpgsqlCommand npgsqlCommand = _dbCommand as Npgsql.NpgsqlCommand; 
+         Npgsql.NpgsqlParameter<int> dbDataParameter = null;
+
+         if (npgsqlCommand.Parameters.Count > 0)
+         {
+            dbDataParameter = npgsqlCommand.Parameters[0] as Npgsql.NpgsqlParameter<int>;
+            dbDataParameter.TypedValue = value;
+         }
+         else
+         {
+            dbDataParameter = new Npgsql.NpgsqlParameter<int> { TypedValue = value };
+
+            npgsqlCommand.Parameters.Add(dbDataParameter);
+         }
+
+         return dbDataParameter;
+      }
+#endif
+
       public int ExecuteNonQuery()
       {
          return _dbCommand.ExecuteNonQuery();
@@ -178,13 +199,11 @@ namespace appMpower.Db
 
       public async Task<int> ExecuteNonQueryAsync()
       {
-         if (DataProvider.IsOdbcConnection) return await (_dbCommand as OdbcCommand).ExecuteNonQueryAsync();
          return await (_dbCommand as DbCommand).ExecuteNonQueryAsync();
       }
 
       public async Task<DbDataReader> ExecuteReaderAsync(CommandBehavior behavior)
       {
-         if (DataProvider.IsOdbcConnection) return await (_dbCommand as OdbcCommand).ExecuteReaderAsync(behavior);
          return await (_dbCommand as DbCommand).ExecuteReaderAsync(behavior);
       }
 
