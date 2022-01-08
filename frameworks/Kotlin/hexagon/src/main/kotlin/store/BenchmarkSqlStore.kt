@@ -27,8 +27,9 @@ internal class BenchmarkSqlStore(engine: String, private val settings: Settings 
         val config = HikariConfig().apply {
             jdbcUrl = "jdbc:postgresql://$dbHost/${settings.databaseName}"
             maximumPoolSize = Jvm.systemSetting(Int::class, "maximumPoolSize") ?: poolSize
-            username = Jvm.systemSetting("databaseUsername") ?: "benchmarkdbuser"
-            password = Jvm.systemSetting("databasePassword") ?: "benchmarkdbpass"
+            driverClassName = settings.databaseDriver
+            username = settings.databaseUsername
+            password = settings.databasePassword
         }
         HikariDataSource(config)
     }

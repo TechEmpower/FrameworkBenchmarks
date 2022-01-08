@@ -20,6 +20,7 @@ data class Settings(
     val worldName: String = systemSetting("worldCollection") ?: "world",
     val fortuneName: String = systemSetting("fortuneCollection") ?: "fortune",
     val databaseName: String = systemSetting("database") ?: "hello_world",
+    val databaseDriver: String = systemSetting("databaseDriver") ?: "org.postgresql.Driver",
 
     val sendDateHeader: Boolean = systemSetting("sendDateHeader") ?: true,
     val sendServerVersion: Boolean = systemSetting("sendServerVersion") ?: true,

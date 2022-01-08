@@ -12,15 +12,11 @@ RUN gradle --quiet
 #
 # RUNTIME
 #
-FROM adoptopenjdk:11-jre-hotspot-bionic
+FROM tomcat:10.0.14-jre17-temurin
 ENV DBSTORE postgresql
 ENV POSTGRESQL_DB_HOST tfb-database
-ENV RESIN http://caucho.com/download/resin-4.0.65.tar.gz
 
-WORKDIR /resin
-RUN curl -sL $RESIN | tar xz --strip-components=1
-RUN rm -rf webapps/*
+WORKDIR /usr/local/tomcat
 COPY --from=gradle_build /hexagon/build/libs/ROOT.war webapps/ROOT.war
 COPY src/main/resources/fortunes.pebble.html fortunes.pebble.html
 EXPOSE 8080
-CMD ["java", "-jar", "lib/resin.jar", "console"]

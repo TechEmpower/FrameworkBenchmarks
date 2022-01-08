@@ -18,7 +18,7 @@ import java.util.concurrent.ThreadLocalRandom
 
 import kotlin.text.Charsets.UTF_8
 
-internal class Controller(
+class Controller(
     settings: Settings,
     stores: Map<String, BenchmarkStore>,
     templateEngines: Map<String, TemplatePort>,
@@ -32,7 +32,7 @@ internal class Controller(
     private val html: ContentType = ContentType(HTML, charset = UTF_8)
 
     private val templates: Map<String, URL> = mapOf(
-        "pebble" to (urlOrNull("classpath:fortunes.pebble.html") ?: URL("file:/resin/fortunes.pebble.html"))
+        "pebble" to URL("classpath:fortunes.pebble.html")
     )
 
     internal val path: PathHandler by lazy {
@@ -115,12 +115,4 @@ internal class Controller(
 
     private fun randomWorld(): Int =
         ThreadLocalRandom.current().nextInt(worldRows) + 1
-
-    private fun urlOrNull(path: String): URL? =
-        try {
-            URL(path)
-        }
-        catch (e: Exception) {
-            null
-        }
 }
