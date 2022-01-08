@@ -38,7 +38,7 @@ class Controller(
     internal val path: PathHandler by lazy {
         path {
             get("/plaintext") { ok(settings.textMessage, contentType = plain) }
-            get("/json") { ok(Message(settings.textMessage).serialize(Json), contentType = json) }
+            get("/json") { ok(Message(settings.textMessage).serialize(Json.raw), contentType = json) }
 
             stores.forEach { (storeEngine, store) ->
                 path("/$storeEngine") {
@@ -101,7 +101,7 @@ class Controller(
     }
 
     private fun HttpServerContext.sendJson(body: Any): HttpServerContext =
-        ok(body.serialize(Json), contentType = json)
+        ok(body.serialize(Json.raw), contentType = json)
 
     private fun HttpServerContext.getWorldsCount(parameter: String): Int =
         request.queryParameters[parameter]?.toIntOrNull().let {

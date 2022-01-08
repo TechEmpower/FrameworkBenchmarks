@@ -36,7 +36,7 @@ private val server: HttpServer by lazy {
         ),
     )
 
-    HttpServer(engine, listOf(controller.path), serverSettings)
+    HttpServer(engine, controller.path, serverSettings)
 }
 
 fun main() {
