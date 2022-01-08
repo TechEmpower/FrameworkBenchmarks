@@ -21,6 +21,10 @@ data class Settings(
     val fortuneName: String = systemSetting("fortuneCollection") ?: "fortune",
     val databaseName: String = systemSetting("database") ?: "hello_world",
 
+    val sendDateHeader: Boolean = systemSetting("sendDateHeader") ?: false,
+    val sendServerVersion: Boolean = systemSetting("sendServerVersion") ?: true,
+    val sendXPoweredBy: Boolean = systemSetting("sendXPoweredBy") ?: false,
+
     val worldRows: Int = 10_000,
     val textMessage: String = "Hello, World!",
     val queriesParam: String = "queries",
