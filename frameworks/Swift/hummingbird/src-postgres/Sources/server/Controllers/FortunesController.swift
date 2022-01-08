@@ -27,7 +27,7 @@ class FortunesController {
         return request.db.query("SELECT id, message FROM Fortune").map { results in
             var fortunes = results.map {
                 return Fortune(
-                    id: $0.column("id")?.int32 ?? 0,
+                    id: $0.column("id")?.int32,
                     message: $0.column("message")?.string ?? ""
                 )
             }

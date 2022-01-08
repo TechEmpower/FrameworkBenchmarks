@@ -8,10 +8,14 @@ import cn.ibaijia.tfb.protocol.SimpleHttpProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author longzl
+ */
 public class HttpBootstrap {
     private static final Logger logger = LoggerFactory.getLogger(HttpBootstrap.class);
 
     public static void main(String[] args) {
+        DateUtil.start();
         Server server = new Server("0.0.0.0", 8080);
         server.addProtocol(new SimpleHttpProtocol());
         server.setProcessor(new PlanTextProcessor());
@@ -21,7 +25,11 @@ public class HttpBootstrap {
                 logger.error("session on process error.", throwable);
             }
         });
-//        server.setThreadNumber(16);
+        server.setUseDirectBuffer(true);
+        server.setUsePool(true);
+        server.setPoolPageSize(32 * 1024);
+        server.setBuffSize(1 * 1024);
+        server.setBacklog(16 * 1024);
         server.start();
     }
 

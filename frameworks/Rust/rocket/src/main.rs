@@ -1,103 +1,60 @@
-#![feature(proc_macro_hygiene, decl_macro)]
-
-extern crate rand;
+#[macro_use]
+extern crate lazy_static;
 #[macro_use]
 extern crate rocket;
-extern crate rocket_contrib;
-#[macro_use]
-extern crate diesel;
-#[macro_use]
 extern crate serde_derive;
-extern crate lazy_static;
+extern crate dotenv;
 
-use diesel::prelude::*;
-use diesel::result::Error;
-use lazy_static::lazy_static;
-use rand::seq::SliceRandom;
-use rand::thread_rng;
-use rocket::config::{Config, Environment, LoggingLevel};
-use rocket::response::content;
-use rocket_contrib::json::Json;
-use std::sync::Mutex;
-use yarte::Template;
-
-mod db;
 mod models;
-mod schema;
+mod random;
+mod database;
 
-struct RandomArray {
-    pointer: usize,
-    size: i32,
-    data: Vec<i32>,
-}
+use dotenv::dotenv;
+use std::net::{IpAddr, Ipv4Addr};
+use std::env;
+use rocket::{Rocket, Build};
+use rocket::serde::json::Json;
+use rocket::response::content::RawHtml;
+use rocket::config::{Config, LogLevel};
+use yarte::Template;
+use rocket_db_pools::{sqlx, Database, Connection};
+use sqlx::Acquire;
+use figment::Figment;
 
-impl RandomArray {
-    fn new(size: i32) -> Self {
-        let mut data: Vec<i32> = (1..=size).collect();
-        let mut rng = thread_rng();
-        data.shuffle(&mut rng);
-
-        RandomArray {
-            pointer: 0,
-            size,
-            data,
-        }
-    }
-
-    fn next(&mut self) -> i32 {
-        if self.pointer >= self.size as usize {
-            self.pointer = 1;
-        } else {
-            self.pointer += 1;
-        }
-        self.data[self.pointer - 1]
-    }
-}
-
-lazy_static! {
-    static ref RANDOM_ARRAY: Mutex<RandomArray> = Mutex::new(RandomArray::new(10000));
-}
-fn random_number() -> i32 {
-    RANDOM_ARRAY
-        .lock()
-        .expect("Failed to lock RANDOM_ARRAY")
-        .next()
-}
+use models::{World, Fortune, Message};
+use database::HelloWorld;
+use random::random_number;
 
 #[get("/plaintext")]
-fn plaintext() -> &'static str {
+async fn plaintext() -> &'static str {
     "Hello, World!"
 }
 
 #[get("/json")]
-fn json() -> Json<models::Message> {
-    let message = models::Message {
+async fn json() -> Json<models::Message> {
+    let message = Message {
         message: "Hello, World!",
     };
     Json(message)
 }
 
 #[get("/db")]
-fn db(conn: db::DbConn) -> Json<models::World> {
-    use schema::world::dsl::*;
+async fn db(mut db: Connection<HelloWorld>) -> Json<World> {
+    let number = random_number();
 
-    let result = world
-        .filter(id.eq(random_number()))
-        .first::<models::World>(&*conn)
-        .expect("error loading world");
+    let result : World = sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1").bind(number)
+        .fetch_one(&mut *db).await.ok().expect("error loading world");
 
     Json(result)
 }
 
 #[get("/queries")]
-fn queries_empty(conn: db::DbConn) -> Json<Vec<models::World>> {
-    queries(conn, 1)
+async fn queries_empty(db: Connection<HelloWorld>) -> Json<Vec<World>> {
+    queries(db,1).await
 }
 
 #[get("/queries?<q>")]
-fn queries(conn: db::DbConn, q: u16) -> Json<Vec<models::World>> {
-    use schema::world::dsl::*;
-
+async fn queries(mut db: Connection<HelloWorld>, q: u16) -> Json<Vec<World>> {
     let q = if q == 0 {
         1
     } else if q > 500 {
@@ -110,10 +67,10 @@ fn queries(conn: db::DbConn, q: u16) -> Json<Vec<models::World>> {
 
     for _ in 0..q {
         let query_id = random_number();
-        let result = world
-            .filter(id.eq(query_id))
-            .first::<models::World>(&*conn)
-            .unwrap_or_else(|_| panic!("error loading world, id={}", query_id));
+
+        let result :World = sqlx::query_as("SELECT * FROM World WHERE id = $1").bind(query_id)
+            .fetch_one(&mut *db).await.ok().expect("error loading world");
+
         results.push(result);
     }
 
@@ -123,25 +80,22 @@ fn queries(conn: db::DbConn, q: u16) -> Json<Vec<models::World>> {
 #[derive(Template)]
 #[template(path = "fortunes.html.hbs")]
 pub struct FortunesTemplate<'a> {
-    pub fortunes: &'a Vec<models::Fortune>,
+    pub fortunes: &'a Vec<Fortune>,
 }
 
 #[get("/fortunes")]
-fn fortunes(conn: db::DbConn) -> content::Html<String> {
-    use schema::fortune::dsl::*;
+async fn fortunes(mut db: Connection<HelloWorld>) -> RawHtml<String> {
+    let mut fortunes: Vec<Fortune> = sqlx::query_as("SELECT * FROM Fortune").fetch_all(&mut *db).await
+        .ok().expect("Could not load Fortunes");
 
-    let mut fortunes = fortune
-        .load::<models::Fortune>(&*conn)
-        .expect("error loading fortunes");
-
-    fortunes.push(models::Fortune {
+    fortunes.push(Fortune {
         id: 0,
         message: "Additional fortune added at request time.".to_string(),
     });
 
     fortunes.sort_by(|a, b| a.message.cmp(&b.message));
 
-    content::Html(
+    RawHtml(
         FortunesTemplate {
             fortunes: &fortunes,
         }
@@ -151,14 +105,12 @@ fn fortunes(conn: db::DbConn) -> content::Html<String> {
 }
 
 #[get("/updates")]
-fn updates_empty(conn: db::DbConn) -> Json<Vec<models::World>> {
-    updates(conn, 1)
+async fn updates_empty(db: Connection<HelloWorld>) -> Json<Vec<World>> {
+    updates(db,1).await
 }
 
 #[get("/updates?<q>")]
-fn updates(conn: db::DbConn, q: u16) -> Json<Vec<models::World>> {
-    use schema::world::dsl::*;
-
+async fn updates(mut db: Connection<HelloWorld>, q: u16) -> Json<Vec<World>> {
     let q = if q == 0 {
         1
     } else if q > 500 {
@@ -171,39 +123,56 @@ fn updates(conn: db::DbConn, q: u16) -> Json<Vec<models::World>> {
 
     for _ in 0..q {
         let query_id = random_number();
-        let mut result = world
-            .filter(id.eq(query_id))
-            .first::<models::World>(&*conn)
-            .unwrap_or_else(|_| panic!("error loading world, id={}", query_id));
-        result.randomNumber = random_number();
+        let mut result :World = sqlx::query_as("SELECT * FROM World WHERE id = $1").bind(query_id)
+            .fetch_one(&mut *db).await.ok().expect("World was not found");
+
+        result.random_number = random_number();
         results.push(result);
     }
 
-    let _ = conn.transaction::<(), Error, _>(|| {
-        for w in &results {
-            let _ = diesel::update(world)
-                .filter(id.eq(w.id))
-                .set(randomnumber.eq(w.randomNumber))
-                .execute(&*conn);
-        }
-        Ok(())
-    });
+    let mut pool = db.into_inner();
+    let mut tx = pool.begin().await.ok().expect("could not start transaction");
+
+    for w in &results {
+        sqlx::query("UPDATE World SET randomnumber = $1 WHERE id = $2")
+            .bind(w.random_number).bind(w.id)
+            .execute(&mut tx)
+            .await.ok().expect("Could not update World");
+    }
+
+    tx.commit().await.ok().expect("could not update worlds");
 
     Json(results)
 }
 
-fn main() {
-    let mut config = Config::build(Environment::Production)
-        .address("0.0.0.0")
-        .port(8000)
-        .log_level(LoggingLevel::Off)
-        .workers((num_cpus::get() * 16) as u16)
-        .keep_alive(0)
-        .expect("failed to generate config");
-    config
-        .set_secret_key("dY+Rj2ybjGxKetLawKGSWi6EzESKejvENbQ3stffZg0=")
-        .expect("failed to set secret");
-    rocket::custom(config)
+#[launch]
+pub fn launch() -> Rocket<Build> {
+    if cfg!(not(test)) {
+        dotenv().ok();
+    }
+
+    let config = Config {
+        address: IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
+        port: 8000,
+        keep_alive: 0,
+        log_level: LogLevel::Off,
+        workers: num_cpus::get() * 16,
+        ..Default::default()
+    };
+
+    let database_url = env::var("ROCKET_BENCHMARK_DATABASE_URL").ok()
+        .expect("ROCKET_BENCHMARK_DATABASE_URL environment variable was not set");
+
+    let figment = Figment::from(config)
+        .merge(("databases.hello_world", rocket_db_pools::Config {
+                url: database_url,
+                min_connections: None,
+                max_connections: 100,
+                connect_timeout: 3,
+                idle_timeout: None,
+            }));
+
+    rocket::custom(figment)
         .mount(
             "/",
             routes![
@@ -217,6 +186,6 @@ fn main() {
                 updates_empty,
             ],
         )
-        .manage(db::init_pool())
-        .launch();
+        .attach(HelloWorld::init())
 }
+

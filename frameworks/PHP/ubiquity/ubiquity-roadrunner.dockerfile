@@ -1,5 +1,4 @@
-  
-FROM ubuntu:20.10
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -8,7 +7,7 @@ RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq php8.0 php8.0-common php8.0-cgi php8.0-pgsql php-curl > /dev/null
 
-RUN apt-get install -yqq composer > /dev/null
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 RUN apt-get install -y php-pear php-dev > /dev/null
 
@@ -20,18 +19,14 @@ WORKDIR /ubiquity
 
 RUN chmod -R 777 /ubiquity
 
-RUN ["chmod", "+x", "deploy/run/install-composer.sh"]
-
-RUN deploy/run/install-composer.sh
-
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq git unzip > /dev/null
 
-RUN php composer.phar require lapinskas/roadrunner-ubiquity:dev-master --quiet
+RUN composer require lapinskas/roadrunner-ubiquity:1.1.1 --quiet
 
 RUN vendor/bin/rr get
 
-RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 COPY deploy/roadrunner/envwrapper.sh /bin/
 RUN ln -s /ubiquity/.ubiquity/.rr.yml /ubiquity/.rr.yml

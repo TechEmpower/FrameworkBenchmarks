@@ -30,28 +30,48 @@ extension Request {
     }
 }
 
-app.get("db") { req in
-    req.sql(pools).select()
+app.get("db") { req async throws -> World in
+    guard let world = try await req.sql(pools).select()
         .column("id")
         .column("randomnumber")
         .from("World")
         .where("id", .equal, Int32.random(in: 1...10_000))
         .first(decoding: World.self)
-        .unwrap(or: Abort(.notFound))
+        .get() 
+        else {  
+            throw Abort(.notFound)
+        }
+
+    return world
 }
 
-app.get("queries") { req -> EventLoopFuture<[World]> in
+app.get("queries") { req async throws -> [World] in
     let queries = (req.query["queries"] ?? 1).bounded(to: 1...500)
+
+    var worlds: [World] = []
+
     let db = req.sql(pools)
-    return (0 ..< queries).map { _ -> EventLoopFuture<World> in
-        db.select()
+
+    for _ in queries {
+        guard let world = try await db.select()
             .column("id")
             .column("randomnumber")
             .from("World")
             .where("id", .equal, Int32.random(in: 1...10_000))
-            .first(decoding: World.self)
-            .unwrap(or: Abort(.notFound))
-    }.flatten(on: req.eventLoop)
+            .first(decoding: World.self).get() else {
+            throw Abort(.notFound)
+        }
+
+        worlds.append(world)
+    }
+
+    return worlds
+}
+
+extension Int: Sequence {
+    public func makeIterator() -> CountableRange<Int>.Iterator {
+        return (0..<self).makeIterator()
+    }
 }
 
 try app.run()

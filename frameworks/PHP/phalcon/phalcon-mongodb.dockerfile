@@ -8,7 +8,7 @@ RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq nginx git unzip \
         php7.4-cli php7.4-fpm php7.4-mysql php7.4-mbstring php7.4-mongodb > /dev/null
 
-RUN apt-get install -yqq composer > /dev/null
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 COPY deploy/conf/* /etc/php/7.4/fpm/
 

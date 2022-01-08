@@ -4,40 +4,28 @@
                     fortunes/1]).
 
 :- use_module(database).
-
 :- use_module(library(odbc)).
-:- use_module(library(solution_sequences)).
 
+:- table random_numbers_cached/2.
+
+% --------------------------------------------------
 
 random_number(Row) :-
-    setup_call_cleanup(
-        odbc_connect('benchmark', Connection, []),
-        database:find_random_numbers(Connection, 1, [Row], false),
-        odbc_disconnect(Connection)
-    ).
+    with_connection(Connection, database:find_random_numbers(Connection, 1, [Row])).
+
+random_number(Row) :-
+    with_connection(Connection, database:find_random_numbers(Connection, 1, [Row])).
 
 random_numbers(0, []).
 random_numbers(N, Rows) :-
-    setup_call_cleanup(
-        odbc_connect('benchmark', Connection, []),
-        database:find_random_numbers(Connection, N, Rows, false),
-        odbc_disconnect(Connection)
-    ).
+    N > 0,
+    with_connection(Connection, database:find_random_numbers(Connection, N, Rows)).
 
-random_numbers_cached(0, []).
 random_numbers_cached(N, Rows) :-
-    setup_call_cleanup(
-        odbc_connect('benchmark', Connection, []),
-        database:find_random_numbers(Connection, N, Rows, true),
-        odbc_disconnect(Connection)
-    ).
+    random_numbers(N, Rows).
 
 fortunes(Rows) :-
-    setup_call_cleanup(
-        odbc_connect('benchmark', Connection, []),
-        database:find_fortunes(Connection, Rows0),
-        odbc_disconnect(Connection)
-    ),
+    with_connection(Connection, database:find_fortunes(Connection, Rows0)),
     Rows1 = [row(0, 'Additional fortune added at request time.')|Rows0],
     maplist(fortune_to_pair, Rows1, Pairs),
     keysort(Pairs, SortedPairs),
@@ -45,14 +33,19 @@ fortunes(Rows) :-
 
 update(0, []).
 update(N, Rows) :-
-    setup_call_cleanup(
-        odbc_connect('benchmark', Connection, []),
-        ( database:find_random_numbers(Connection, N, Rows0, false)
-        , database:update_random_numbers(Connection, Rows0, Rows)
-        ),
-        odbc_disconnect(Connection)
-    ).
+    N > 0,
+    with_connection(Connection, (
+        database:find_random_numbers(Connection, N, Rows0),
+        database:update_random_numbers(Connection, Rows0, Rows)
+    )).
 
-% -----------------------------------------------------------
+% --------------------------------------------------
 
 fortune_to_pair(row(Id, Message), Message-row(Id, Message)).
+
+with_connection(Connection, Goal) :-
+    setup_call_cleanup(
+        odbc_connect('benchmark', Connection, []),
+        Goal,
+        odbc_disconnect(Connection)
+    ).

@@ -1,6 +1,5 @@
 package cn.ibaijia.tfb.protocol;
 
-import cn.ibaijia.isocket.Server;
 import cn.ibaijia.isocket.protocol.Protocol;
 import cn.ibaijia.isocket.session.Session;
 import cn.ibaijia.tfb.http.HttpEntity;
@@ -10,13 +9,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
+/**
+ * @author longzl
+ */
 public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleHttpProtocol.class);
-
-    private static final byte CRLF13 = (byte) 13; // \r
-    private static final byte CRLF10 = (byte) 10; // \n
+    /**
+     * CR13 \r
+     * LF10 \n
+     * SPACE0 \SP
+     * COLON :
+     */
+    private static final byte CR13 = (byte) 13;
+    private static final byte LF10 = (byte) 10;
+    private static final byte SPACE0 = (byte) 32;
+    private static final byte COLON = (byte) 58;
 
     private static final String httpEntityKey = "httpEntity";
 
@@ -34,37 +44,90 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
             httpEntity = new HttpRequestEntity();
             session.setAttribute(httpEntityKey, httpEntity);
         }
-
-        if (byteBuffer.hasRemaining() && !httpEntity.headerComplete()) { //解析header
-            readHeader(byteBuffer, session, httpEntity);
+        //解析header
+        if (!httpEntity.headerComplete() && byteBuffer.hasRemaining()) {
+            readHeader(byteBuffer, httpEntity);
         }
 
-        if (httpEntity.bodyBuffer != null && byteBuffer.hasRemaining() && httpEntity.headerComplete()) {// 解析body
-            readBody(byteBuffer, session, httpEntity);
+        if (httpEntity.headerComplete()) {
+            if (httpEntity.complete()) {
+                session.setAttribute(httpEntityKey, null);
+                return httpEntity;
+            }
+            // 解析request body
+            if (httpEntity.bodyBuffer != null && byteBuffer.hasRemaining()) {
+                readBody(byteBuffer, httpEntity);
+            }
         }
-
-        if (httpEntity.complete()) {
-            session.setAttribute(httpEntityKey, null);
-            return httpEntity;
-        }
-
         return null;
     }
 
-    private void readHeader(ByteBuffer byteBuffer, Session session, HttpRequestEntity httpEntity) {
+    private void readHeader(ByteBuffer byteBuffer, HttpRequestEntity httpEntity) {
         try {
+            ByteBuffer buf = byteBuffer.duplicate();
+            int startPos = 0;
+            int endPos = 0;
             while (byteBuffer.hasRemaining()) {
                 byte b = byteBuffer.get();
-                if (b == CRLF10 || b == CRLF13) {
-                    httpEntity.crlfNum++;
+                endPos++;
+                if (b == CR13) {
+                    httpEntity.crNum++;
+                } else if (b == LF10) {
+                    httpEntity.lfNum++;
                 } else {
-                    httpEntity.crlfNum = 0;
+                    httpEntity.crNum = 0;
+                    httpEntity.lfNum = 0;
                 }
-                httpEntity.headerBuffer.put(b);
-                if (httpEntity.crlfNum == 4) {
-                    //处理header
-                    httpEntity.processHeader();
-                    break;
+
+                if (httpEntity.headerComplete()) {
+                    return;
+                }
+
+                if (httpEntity.isReadHeadLine()) {
+                    if (b == SPACE0) {
+                        int len = endPos - startPos - 1;
+                        byte[] bytes = new byte[len];
+                        buf.get(bytes, 0, len);
+                        startPos = endPos;
+                        buf.position(startPos);
+                        if (httpEntity.method == null) {
+                            httpEntity.method = new String(bytes);
+                        } else if (httpEntity.url == null) {
+                            httpEntity.url = new String(bytes);
+                        }
+                    } else if (httpEntity.crNum == 1 && httpEntity.lfNum == 1) {
+                        int len = endPos - startPos - 2;
+                        byte[] bytes = new byte[len];
+                        buf.get(bytes, 0, len);
+                        startPos = endPos;
+                        buf.position(startPos);
+                        httpEntity.protocol = new String(bytes);
+                    }
+                } else {
+                    if (b == COLON && httpEntity.tmp == null) {
+                        int len = endPos - startPos - 1;
+                        byte[] bytes = new byte[len];
+                        buf.get(bytes, 0, len);
+                        startPos = endPos;
+                        buf.position(startPos);
+                        httpEntity.tmp = bytes;
+                    } else if (httpEntity.crNum == 1 && httpEntity.lfNum == 1) {
+                        int len = endPos - startPos - 2;
+                        byte[] bytes = new byte[len];
+                        buf.get(bytes, 0, len);
+                        startPos = endPos;
+                        buf.position(startPos);
+                        httpEntity.setHeader(httpEntity.tmp, bytes);
+                        httpEntity.tmp = null;
+//                        if (Arrays.equals(CONTENT_LENGTH, httpEntity.tmp)) {
+//                            httpEntity.contentLength = (value == null ? 0 : Integer.valueOf(value));
+//                            httpEntity.bodyBuffer = ByteBuffer.allocate(httpEntity.contentLength);//TODO can pooling
+//                        }
+//                        if (Arrays.equals(CHUNKED, httpEntity.tmp)) {
+//                            httpEntity.chunked = true;
+//                            throw new RuntimeException("not support chunked");
+//                        }
+                    }
                 }
             }
         } catch (Exception e) {
@@ -72,7 +135,7 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
         }
     }
 
-    private void readBody(ByteBuffer byteBuffer, Session session, HttpRequestEntity httpEntity) {
+    private void readBody(ByteBuffer byteBuffer, HttpRequestEntity httpEntity) {
         try {
             if (httpEntity.bodyBuffer.hasRemaining()) {
                 if (byteBuffer.remaining() <= httpEntity.bodyBuffer.remaining()) {
@@ -93,8 +156,8 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
 
     @Override
     public ByteBuffer encode(HttpEntity httpEntity, Session session) {
+        ByteBuffer byteBuffer = session.getHandler().getPooledByteBuff().get();
         HttpResponseEntity httpResponseEntity = (HttpResponseEntity) httpEntity;
-
-        return httpResponseEntity.toBuffer();
+        return httpResponseEntity.toBuffer(byteBuffer);
     }
 }

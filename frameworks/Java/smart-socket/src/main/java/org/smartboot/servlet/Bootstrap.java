@@ -45,20 +45,9 @@ public class Bootstrap {
                 .readBufferSize(1024 * 4)
                 .writeBufferSize(1024 * 4)
                 .readMemoryPool(16384 * 1024 * 4)
-                .writeMemoryPool(10 * 1024 * 1024 * cpuNum, cpuNum)
-                .messageProcessor(processor -> new AbstractMessageProcessor<>() {
-                    @Override
-                    public void process0(AioSession session, Request msg) {
-                        processor.process(session, msg);
-                    }
-
-                    @Override
-                    public void stateEvent0(AioSession session, StateMachineEnum stateMachineEnum, Throwable throwable) {
-                        processor.stateEvent(session, stateMachineEnum, throwable);
-                    }
-                });
+                .writeMemoryPool(10 * 1024 * 1024 * cpuNum, cpuNum);
         bootstrap.setPort(8080)
-                .pipeline(new HttpServerHandler() {
+                .httpHandler(new HttpServerHandler() {
                     @Override
                     public void handle(HttpRequest request, HttpResponse response) throws IOException {
                         containerRuntime.doHandle(request, response);

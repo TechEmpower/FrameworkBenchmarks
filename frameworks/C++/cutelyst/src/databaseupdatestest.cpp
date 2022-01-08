@@ -14,6 +14,8 @@
 
 #include <QLoggingCategory>
 
+#include "picojson.h"
+
 DatabaseUpdatesTest::DatabaseUpdatesTest(QObject *parent) : Controller(parent)
 {
 
@@ -28,7 +30,7 @@ void DatabaseUpdatesTest::updatep(Context *c)
         queries = 500;
     }
 
-    QJsonArray array;
+    picojson::array array;
     ASync async(c);
     static thread_local auto db = APool::database();
     for (int i = 0; i < queries; ++i) {
@@ -36,19 +38,19 @@ void DatabaseUpdatesTest::updatep(Context *c)
 
         int randomNumber = (qrand() % 10000) + 1;
 
-        array.append(QJsonObject{
-                         {QStringLiteral("id"), id},
-                         {QStringLiteral("randomNumber"), randomNumber}
-                     });
+        array.emplace_back(picojson::object({
+                            {"id", picojson::value(double(id))},
+                            {"randomNumber", picojson::value(double(randomNumber))}
+                        }));
 
-        db.execPrepared(APreparedQueryLiteral("SELECT randomNumber, id FROM world WHERE id=$1"),
+        db.exec(APreparedQueryLiteral(u"SELECT randomNumber, id FROM world WHERE id=$1"),
                                {id}, [c, async] (AResult &result) {
             if (Q_UNLIKELY(result.error() || !result.size())) {
                 c->res()->setStatus(Response::InternalServerError);
                 return;
             }
         }, c);
-        db.execPrepared(APreparedQueryLiteral("UPDATE world SET randomNumber=$1 WHERE id=$2"),
+        db.exec(APreparedQueryLiteral(u"UPDATE world SET randomNumber=$1 WHERE id=$2"),
                                {randomNumber, id}, [c, async] (AResult &result) {
             if (Q_UNLIKELY(result.error())) {
                 c->res()->setStatus(Response::InternalServerError);
@@ -57,7 +59,7 @@ void DatabaseUpdatesTest::updatep(Context *c)
         }, c);
     }
 
-    c->response()->setJsonArrayBody(array);
+    c->response()->setJsonBody(QByteArray::fromStdString(picojson::value(array).serialize()));
 }
 
 void DatabaseUpdatesTest::updateb(Context *c)
@@ -72,7 +74,7 @@ void DatabaseUpdatesTest::updateb(Context *c)
     QVariantList args;
     QVariantList argsIds;
 
-    QJsonArray array;
+    picojson::array array;
     ASync async(c);
     static thread_local auto db = APool::database();
     for (int i = 0; i < queries; ++i) {
@@ -84,12 +86,12 @@ void DatabaseUpdatesTest::updateb(Context *c)
         args.append(id);
         args.append(randomNumber);
 
-        array.append(QJsonObject{
-                         {QStringLiteral("id"), id},
-                         {QStringLiteral("randomNumber"), randomNumber}
-                     });
+        array.emplace_back(picojson::object({
+                            {"id", picojson::value(double(id))},
+                            {"randomNumber", picojson::value(double(randomNumber))}
+                        }));
 
-        db.execPrepared(APreparedQueryLiteral("SELECT randomNumber, id FROM world WHERE id=$1"),
+        db.exec(APreparedQueryLiteral(u"SELECT randomNumber, id FROM world WHERE id=$1"),
                                {id}, [c, async] (AResult &result) {
             if (Q_UNLIKELY(result.error() || !result.size())) {
                 c->res()->setStatus(Response::InternalServerError);
@@ -100,14 +102,14 @@ void DatabaseUpdatesTest::updateb(Context *c)
     args.append(argsIds);
 
     const APreparedQuery pq = getSql(queries);
-    db.execPrepared(pq, args, [c, async] (AResult &result) {
+    db.exec(pq, args, [c, async] (AResult &result) {
         if (Q_UNLIKELY(result.error())) {
             c->res()->setStatus(Response::InternalServerError);
             return;
         }
     }, c);
 
-    c->response()->setJsonArrayBody(array);
+    c->response()->setJsonBody(QByteArray::fromStdString(picojson::value(array).serialize()));
 }
 
 void DatabaseUpdatesTest::updates_postgres(Context *c)

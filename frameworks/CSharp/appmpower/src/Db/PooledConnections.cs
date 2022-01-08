@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Concurrent;
 using System.Data.Odbc;
 using System.Threading.Tasks;
@@ -8,8 +7,14 @@ namespace appMpower.Db
    public static class PooledConnections
    {
       private static bool _connectionsCreated = false;
-      private static byte _createdConnections = 0;
-      private static byte _maxConnections = Math.Min((byte)Environment.ProcessorCount, (byte)21);
+      private static short _createdConnections = 0;
+
+#if MYSQL
+      private static short _maxConnections = 500; 
+#else
+      private static short _maxConnections = 500;
+#endif
+
       private static ConcurrentStack<PooledConnection> _stack = new ConcurrentStack<PooledConnection>();
       private static ConcurrentQueue<TaskCompletionSource<PooledConnection>> _waitingQueue = new ConcurrentQueue<TaskCompletionSource<PooledConnection>>();
 
@@ -19,18 +24,31 @@ namespace appMpower.Db
 
          if (_connectionsCreated)
          {
-            if (!_stack.TryPop(out pooledConnection))
+            if (_stack.TryPop(out pooledConnection))
+            {
+               pooledConnection.Released = false;
+            }
+            else
             {
                pooledConnection = await GetPooledConnectionAsync();
             }
 
             return pooledConnection;
-
          }
          else
          {
             pooledConnection = new PooledConnection();
-            pooledConnection.OdbcConnection = new OdbcConnection(connectionString);
+
+            if (DataProvider.IsOdbcConnection)
+            {
+               pooledConnection.DbConnection = new OdbcConnection(connectionString);
+            }
+            else
+            {
+               //For future use with non odbc drivers which can be AOT compiled without reflection
+               //pooledConnection.DbConnection = new NpgsqlConnection(connectionString);
+            }
+
             _createdConnections++;
 
             if (_createdConnections == _maxConnections) _connectionsCreated = true;
@@ -51,22 +69,29 @@ namespace appMpower.Db
          return taskCompletionSource.Task;
       }
 
-      public static void ReleaseConnection(PooledConnection pooledConnection)
+      public static void Dispose(PooledConnection pooledConnection)
+      {
+         PooledConnection newPooledConnection = new PooledConnection();
+
+         newPooledConnection.DbConnection = pooledConnection.DbConnection;
+         newPooledConnection.Number = pooledConnection.Number;
+         newPooledConnection.PooledCommands = pooledConnection.PooledCommands;
+
+         Release(newPooledConnection);
+      }
+
+      public static void Release(PooledConnection pooledConnection)
       {
          TaskCompletionSource<PooledConnection> taskCompletionSource;
-         PooledConnection stackedConnection = new PooledConnection();
-
-         stackedConnection.OdbcConnection = pooledConnection.OdbcConnection;
-         stackedConnection.Number = pooledConnection.Number;
-         stackedConnection.PooledCommands = pooledConnection.PooledCommands;
 
          if (_waitingQueue.TryDequeue(out taskCompletionSource))
          {
-            taskCompletionSource.SetResult(stackedConnection);
+            taskCompletionSource.SetResult(pooledConnection);
          }
          else
          {
-            _stack.Push(stackedConnection);
+            pooledConnection.Released = true;
+            _stack.Push(pooledConnection);
          }
       }
    }
