@@ -10,6 +10,7 @@ import top.hserver.core.ioc.annotation.HServerBoot;
 public class StartApp {
 
     public static void main(String[] args) {
+        ConstConfig.workerPool=Runtime.getRuntime().availableProcessors();
         HServerApplication.run(StartApp.class, 8888, args);
     }
 }
