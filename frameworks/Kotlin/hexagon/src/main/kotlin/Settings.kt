@@ -21,7 +21,7 @@ data class Settings(
     val fortuneName: String = systemSetting("fortuneCollection") ?: "fortune",
     val databaseName: String = systemSetting("database") ?: "hello_world",
 
-    val sendDateHeader: Boolean = systemSetting("sendDateHeader") ?: false,
+    val sendDateHeader: Boolean = systemSetting("sendDateHeader") ?: true,
     val sendServerVersion: Boolean = systemSetting("sendServerVersion") ?: true,
     val sendXPoweredBy: Boolean = systemSetting("sendXPoweredBy") ?: false,
 
