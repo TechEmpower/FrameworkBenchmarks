@@ -16,7 +16,5 @@ FROM tomcat:10.0.14-jre17-temurin
 ENV DBSTORE postgresql
 ENV POSTGRESQL_DB_HOST tfb-database
 
-WORKDIR /usr/local/tomcat
-COPY --from=gradle_build /hexagon/build/libs/ROOT.war webapps/ROOT.war
-COPY src/main/resources/fortunes.pebble.html fortunes.pebble.html
+COPY --from=gradle_build /hexagon/build/libs/ROOT.war /usr/local/tomcat/webapps/ROOT.war
 EXPOSE 8080
