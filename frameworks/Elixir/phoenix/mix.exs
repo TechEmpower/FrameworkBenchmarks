@@ -5,7 +5,7 @@ defmodule Hello.Mixfile do
     [
       app: :hello,
       version: "0.1.0",
-      elixir: "~> 1.10",
+      elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -17,10 +17,13 @@ defmodule Hello.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [mod: {Hello, []}, extra_applications: [:logger]]
+    [
+      mod: {Hello.Application, []},
+      extra_applications: [:logger]
+    ]
   end
 
-  defp elixirc_paths(_), do: ["lib", "web"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies
   #
@@ -33,8 +36,7 @@ defmodule Hello.Mixfile do
       {:postgrex, "~> 0.15"},
       {:plug_cowboy, "~> 2.0"},
       {:jason, "~> 1.2"},
-      {:phoenix_html, "~> 2.14"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev}
+      {:phoenix_html, "~> 3.0"}
     ]
   end
 end

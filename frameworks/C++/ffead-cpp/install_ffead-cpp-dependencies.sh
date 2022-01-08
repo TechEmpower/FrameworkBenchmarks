@@ -2,9 +2,11 @@
 
 apt update -yqq && apt install --no-install-recommends -yqq autoconf-archive unzip uuid-dev odbc-postgresql unixodbc unixodbc-dev \
 	apache2 apache2-dev libapr1-dev libaprutil1-dev memcached libmemcached-dev redis-server libssl-dev \
-	zlib1g-dev cmake make clang-format-9 ninja-build libcurl4-openssl-dev libpq-dev git \
-	wget build-essential pkg-config libpcre3-dev curl libgtk2.0-dev libgdk-pixbuf2.0-dev
+	zlib1g-dev cmake make clang-format-9 ninja-build libcurl4-openssl-dev git libpq-dev \
+	wget build-essential pkg-config libpcre3-dev curl libgtk2.0-dev libgdk-pixbuf2.0-dev bison flex libreadline-dev
 apt-get install --reinstall ca-certificates
+
+cd $IROOT
 
 mkdir /usr/local/share/ca-certificates/cacert.org
 wget -P /usr/local/share/ca-certificates/cacert.org http://www.cacert.org/certs/root.crt http://www.cacert.org/certs/class3.crt
@@ -55,21 +57,21 @@ cd $IROOT
 rm -rf hiredis-1.0.0
 
 cd $IROOT
-wget -q https://github.com/microsoft/mimalloc/archive/v1.6.3.tar.gz
-tar xf v1.6.3.tar.gz
-rm -f v1.6.3.tar.gz
-cd mimalloc-1.6.3
+wget -q https://github.com/microsoft/mimalloc/archive/v2.0.2.tar.gz
+tar xf v2.0.2.tar.gz
+rm -f v2.0.2.tar.gz
+cd mimalloc-2.0.2
 mkdir -p out/release
 cd out/release
 cmake ../.. -DCMAKE_BUILD_TYPE=Release
 make && make install
 cd $IROOT
-rm -rf mimalloc-1.6.3
+rm -rf mimalloc-2.0.2
 
-wget -q https://github.com/microsoft/snmalloc/archive/0.4.2.tar.gz
-tar xf 0.4.2.tar.gz
-rm -f 0.4.2.tar.gz
-cd snmalloc-0.4.2
+wget -q https://github.com/microsoft/snmalloc/archive/0.5.3.tar.gz
+tar xf 0.5.3.tar.gz
+rm -f 0.5.3.tar.gz
+cd snmalloc-0.5.3
 mkdir build
 cd build
 cmake -G Ninja .. -DCMAKE_BUILD_TYPE=Release
