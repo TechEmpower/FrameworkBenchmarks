@@ -165,28 +165,6 @@ namespace appMpower.Db
          return dbDataParameter;
       }
 
-#if ADO
-      public Npgsql.NpgsqlParameter<int> CreateNpgsqlParameter(int value)
-      {
-         Npgsql.NpgsqlCommand npgsqlCommand = _dbCommand as Npgsql.NpgsqlCommand; 
-         Npgsql.NpgsqlParameter<int> dbDataParameter = null;
-
-         if (npgsqlCommand.Parameters.Count > 0)
-         {
-            dbDataParameter = npgsqlCommand.Parameters[0] as Npgsql.NpgsqlParameter<int>;
-            dbDataParameter.TypedValue = value;
-         }
-         else
-         {
-            dbDataParameter = new Npgsql.NpgsqlParameter<int> { TypedValue = value };
-
-            npgsqlCommand.Parameters.Add(dbDataParameter);
-         }
-
-         return dbDataParameter;
-      }
-#endif
-
       public int ExecuteNonQuery()
       {
          return _dbCommand.ExecuteNonQuery();
