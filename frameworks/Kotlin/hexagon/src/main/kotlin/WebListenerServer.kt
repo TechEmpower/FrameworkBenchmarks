@@ -13,7 +13,7 @@ import jakarta.servlet.annotation.WebListener
         fun createHandlers(settings: Settings): List<HttpHandler> {
             val controller = Controller(settings, stores, templateEngines)
             val controllerPath = controller.path
-            val serverHeaderHandler = OnHandler {
+            val serverHeaderHandler = OnHandler("*") {
                 send(headers = multiMapOf("server" to "Tomcat"))
             }
 
