@@ -1,6 +1,7 @@
 package com.hexagonkt
 
 import com.fasterxml.jackson.module.blackbird.BlackbirdModule
+import com.hexagonkt.helpers.Jvm
 import com.hexagonkt.http.server.Server
 import com.hexagonkt.http.server.ServerPort
 import com.hexagonkt.http.server.ServerSettings
@@ -36,7 +37,7 @@ internal val benchmarkServer: Server by lazy {
 }
 
 fun main() {
-    if (System.getenv().containsKey("ENABLE_BLACKBIRD"))
+    if (Jvm.systemFlag("ENABLE_BLACKBIRD"))
         Json.mapper.registerModule(BlackbirdModule())
     SerializationManager.mapper = JacksonMapper
     SerializationManager.formats = linkedSetOf(Json)
