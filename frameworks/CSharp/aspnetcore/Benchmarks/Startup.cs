@@ -15,6 +15,7 @@ using System;
 using System.Data.Common;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Benchmarks
 {
@@ -61,9 +62,12 @@ namespace Benchmarks
             {
                 if (Scenarios.Any("Ef"))
                 {
-                    services.AddDbContextPool<ApplicationDbContext>(options => options.UseNpgsql(appSettings.ConnectionString));
+                    services.AddDbContextPool<ApplicationDbContext>(options => options
+                        .UseNpgsql(appSettings.ConnectionString,
+                            o => o.ExecutionStrategy(d => new NonRetryingExecutionStrategy(d)))
+                        .EnableThreadSafetyChecks(false));
                 }
-                
+
                 if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
                 {
                     services.AddSingleton<DbProviderFactory>(NpgsqlFactory.Instance);
