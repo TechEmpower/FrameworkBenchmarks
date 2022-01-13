@@ -1,6 +1,6 @@
 package com.hexagonkt
 
-import com.hexagonkt.core.helpers.multiMapOf
+import com.hexagonkt.core.multiMapOf
 import com.hexagonkt.http.server.handlers.HttpHandler
 import com.hexagonkt.http.server.handlers.OnHandler
 import com.hexagonkt.http.server.servlet.ServletServer
