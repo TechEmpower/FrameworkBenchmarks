@@ -16,8 +16,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static com.test.util.Util.getQueries;
-import static com.test.util.Util.randomWorld;
+import static com.test.hserver.util.Util.getQueries;
+import static com.test.hserver.util.Util.randomWorld;
 
 /**
  * @author hxm
