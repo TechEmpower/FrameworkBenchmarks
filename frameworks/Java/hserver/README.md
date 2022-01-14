@@ -19,3 +19,18 @@ http://localhost:8888/json
 ### Plain Text Test
 
 http://localhost:8888/plaintext
+
+### Data-Store/Database Mapping Test
+
+http://localhost:8888/db?queries=5
+
+### Update Test
+
+http://localhost:8888/updates?queries=2
+
+### Fortunes Test
+
+http://localhost:8888/fortunes
+
+### Query Test
+http://localhost:8888/queries?queries=2
