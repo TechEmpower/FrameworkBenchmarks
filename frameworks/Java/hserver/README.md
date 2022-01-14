@@ -22,7 +22,7 @@ http://localhost:8888/plaintext
 
 ### Data-Store/Database Mapping Test
 
-http://localhost:8888/db?queries=5
+http://localhost:8888/db?queries=2
 
 ### Update Test
 
