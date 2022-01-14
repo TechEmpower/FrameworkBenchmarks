@@ -11,3 +11,5 @@ All tests are located in [julia_server.jl](https://github.com/donavindebartolo/F
 - [x] Single query
 - [x] Multiple queries
 - [x] Plaintext
+- [x] Fortunes
+- [x] Updates

@@ -15,5 +15,6 @@ $socket = new React\Socket\Server('0.0.0.0:8080', $loop);
 $server->listen($socket);
 
 echo "React Server running at http://0.0.0.0:8080\n";
+echo "EventLoop: ", $loop::class, "\n";
 
 $loop->run();

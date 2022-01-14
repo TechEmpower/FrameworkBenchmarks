@@ -14,7 +14,7 @@
 			"database": "MySQL",
 			"framework": "laravel",
 			"language": "PHP",
-			"flavor": "PHP8",
+			"flavor": "PHP8.1",
 			"orm": "Full",
 			"platform": "FPM/FastCGI",
 			"webserver": "nginx",

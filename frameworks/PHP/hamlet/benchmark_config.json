@@ -15,7 +15,7 @@
       "database": "mysql",
       "framework": "hamlet",
       "language": "PHP",
-      "flavor": "PHP8",
+      "flavor": "PHP8.1",
       "orm": "micro",
       "platform": "FPM/FastCGI",
       "webserver": "nginx",
