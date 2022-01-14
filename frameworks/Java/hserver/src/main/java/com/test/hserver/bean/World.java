@@ -1,25 +1,24 @@
 package com.test.hserver.bean;
 
 public class World implements Comparable<World> {
+  private int id;
 
-  public final int id;
+  private int randomNumber;
 
-  public final String message;
-
-  public Fortune(int id, String message) {
+  public World(int id, int randomNumber) {
     this.id = id;
-    this.message = message;
-  }
-  @Override
-  public int compareTo(Fortune other) {
-    return message.compareTo(other.message);
+    this.randomNumber = randomNumber;
   }
 
   public int getId() {
     return id;
   }
 
-  public String getMessage() {
-    return message;
+  public int getRandomNumber() {
+    return randomNumber;
+  }
+
+  @Override public int compareTo(World o) {
+    return id - o.id;
   }
 }

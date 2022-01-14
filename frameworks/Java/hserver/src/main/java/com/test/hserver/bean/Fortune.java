@@ -13,4 +13,12 @@ public final class Fortune implements Comparable<Fortune> {
   public int compareTo(Fortune other) {
     return message.compareTo(other.message);
   }
+
+  public int getId() {
+    return id;
+  }
+
+  public String getMessage() {
+    return message;
+  }
 }
