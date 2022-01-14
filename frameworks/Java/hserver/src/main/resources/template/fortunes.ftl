@@ -11,8 +11,8 @@
   </tr>
   <#list data as fortune>
     <tr>
-      <td>${fortune.id}</td>
-      <td>${fortune.message}</td>
+      <td>${fortune.id?html}</td>
+      <td>${fortune.message?html}</td>
     </tr>
   </#list>
 </table>
