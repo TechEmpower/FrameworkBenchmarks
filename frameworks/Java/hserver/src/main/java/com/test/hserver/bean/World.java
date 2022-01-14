@@ -22,4 +22,13 @@ public class World implements Comparable<World> {
   @Override public int compareTo(World o) {
     return id - o.id;
   }
+
+
+  public int getId() {
+    return id;
+  }
+
+  public String getMessage() {
+    return message;
+  }
 }

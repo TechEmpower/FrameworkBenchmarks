@@ -16,7 +16,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static com.test.hserver.util.Util.randomWorld;
+import static com.test.util.Util.getQueries;
+import static com.test.util.Util.randomWorld;
 
 /**
  * @author hxm
@@ -58,8 +59,8 @@ public class TestController {
     }
 
     @GET("/queries")
-    public void queries(int queries,HttpResponse response) throws Exception {
-        World[] result = new World[queries];
+    public void queries(String queries,HttpResponse response) throws Exception {
+        World[] result = new World[getQueries(queries)];
         try (Connection conn = dataSource.getConnection()) {
             for (int i = 0; i < result.length; i++) {
                 try (final PreparedStatement statement = conn.prepareStatement(SELECT_WORLD)) {
@@ -77,8 +78,8 @@ public class TestController {
 
 
     @GET("/updates")
-    public void updates(int queries,HttpResponse response) throws Exception {
-        World[] result = new World[queries];
+    public void updates(String queries,HttpResponse response) throws Exception {
+        World[] result = new World[getQueries(queries)];
         StringJoiner updateSql = new StringJoiner(
                 ", ",
                 "UPDATE world SET randomNumber = temp.randomNumber FROM (VALUES ",

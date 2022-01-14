@@ -9,7 +9,7 @@
     <th>id</th>
     <th>message</th>
   </tr>
-  <#list fortune as data>
+  <#list data as fortune>
     <tr>
       <td>${fortune.id}</td>
       <td>${fortune.message}</td>
