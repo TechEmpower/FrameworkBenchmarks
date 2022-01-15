@@ -2,3 +2,4 @@
 uvloop==0.16.0
 asyncpg==0.25.0
 aioworkers-pg==0.2.0
+Jinja2==3.0.3
