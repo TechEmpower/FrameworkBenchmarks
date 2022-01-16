@@ -37,6 +37,24 @@
       "notes": "",
       "versus": ""
     },
+    "glommio": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "ntex",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "ntex",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ntex [glommio]",
+      "notes": "",
+      "versus": ""
+    },
     "db": {
       "fortune_url": "/fortunes",
       "db_url": "/db",
@@ -77,6 +95,26 @@
       "notes": "",
       "versus": ""
     },
+    "db-glommio": {
+      "fortune_url": "/fortunes",
+      "db_url": "/db",
+      "query_url": "/query?q=",
+      "update_url": "/update?q=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "ntex",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "ntex",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ntex [glommio,db]",
+      "notes": "",
+      "versus": ""
+    },
     "plt": {
       "json_url": "/json",
       "plaintext_url": "/plaintext",
@@ -110,6 +148,24 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "ntex [async-std,platform]",
+      "notes": "",
+      "versus": ""
+    },
+    "plt-glommio": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "ntex",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "ntex",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ntex [glommio,platform]",
       "notes": "",
       "versus": ""
     }

@@ -27,6 +27,19 @@ platform = "None"
 webserver = "ntex"
 versus = ""
 
+[glommio]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "ntex"
+versus = ""
+
 [db]
 urls.db = "/db"
 urls.query = "/query?q="
@@ -57,6 +70,21 @@ platform = "None"
 webserver = "ntex"
 versus = ""
 
+[db-glommio]
+urls.db = "/db"
+urls.query = "/query?q="
+urls.update = "/update?q="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "ntex"
+versus = ""
+
 [plt]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
@@ -71,6 +99,19 @@ webserver = "ntex"
 versus = ""
 
 [plt-astd]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "ntex"
+versus = ""
+
+[plt-glommio]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 approach = "Realistic"
