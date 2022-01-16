@@ -9,8 +9,8 @@ ADD ./ /ntex
 WORKDIR /ntex
 
 RUN cargo clean
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --features="async-std"
+RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --features="glommio"
 
 EXPOSE 8080
 
-CMD ./target/release/ntex-db-astd
+CMD ./target/release/ntex-glommio
