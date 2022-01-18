@@ -11,10 +11,14 @@ COPY ./src ./src
 COPY ./templates ./templates
 COPY ./Cargo.toml ./Cargo.toml
 COPY ./Cargo.lock ./Cargo.lock
+COPY ./run.sh ./run.sh
+RUN chmod +x ./run.sh
 
 ENV RUSTFLAGS "-C target-cpu=native"
 RUN cargo build --release
+RUN cp ./target/release/axum-sqlx ./target/release/axum-techempower
+
 
 EXPOSE 8000
 
-CMD ["./target/release/axum-sqlx"]
+CMD ["./run.sh"]

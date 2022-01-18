@@ -3,14 +3,14 @@ extern crate dotenv;
 #[macro_use]
 extern crate async_trait;
 
-mod common_handlers;
 mod models_common;
 mod models_sqlx;
 mod database_sqlx;
 mod utils;
+mod server;
+mod common;
 
 use dotenv::dotenv;
-use std::net::{Ipv4Addr, SocketAddr};
 use std::env;
 use crate::database_sqlx::{DatabaseConnection};
 use axum::{
@@ -30,7 +30,6 @@ use yarte::Template;
 
 use models_sqlx::{World, Fortune};
 use database_sqlx::create_pool;
-use common_handlers::{json, plaintext};
 use utils::{Params, parse_params, random_number, Utf8Html};
 
 async fn db(DatabaseConnection(mut conn): DatabaseConnection) -> impl IntoResponse {
@@ -115,14 +114,12 @@ async fn main() {
     let database_url = env::var("AXUM_TECHEMPOWER_DATABASE_URL").ok()
         .expect("AXUM_TECHEMPOWER_DATABASE_URL environment variable was not set");
 
-    let addr = SocketAddr::from((Ipv4Addr::UNSPECIFIED, 8000));
-
     // setup connection pool
     let pool = create_pool(database_url).await;
 
     let app = router(pool).await;
 
-    axum::Server::bind(&addr)
+    server::builder()
         .serve(app.into_make_service())
         .await
         .unwrap();
@@ -130,8 +127,6 @@ async fn main() {
 
 async fn router(pool: PgPool) -> Router {
     Router::new()
-        .route("/plaintext", get(plaintext))
-        .route("/json", get(json))
         .route("/fortunes", get(fortunes))
         .route("/db", get(db))
         .route("/queries", get(queries))
