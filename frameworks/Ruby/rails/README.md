@@ -12,12 +12,12 @@ comparing a variety of web platforms.
 
 The tests were run with:
 
-- [Ruby 3.0.0](http://www.ruby-lang.org/)
-- [Rails 6.1.3](http://rubyonrails.org/)
-- [Puma 5.2.1](http://puma.io/)
-- [MySQL 5.5](https://dev.mysql.com/)
-- [PostgreSQL 11](https://www.postgresql.org/)
-- [Redis 5.0](https://redis.io)
+- [Ruby 3.1.0](http://www.ruby-lang.org/)
+- [Rails 7.0.1](http://rubyonrails.org/)
+- [Puma 5.5](http://puma.io/)
+- [MySQL](https://dev.mysql.com/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Redis 6](https://redis.io)
 ## Paths & Source for Tests
 
 - [JSON Serialization](app/controllers/hello_world_controller.rb): "/json"
