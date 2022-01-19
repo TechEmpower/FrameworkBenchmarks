@@ -19,7 +19,7 @@ platform = "Servlet"
 webserver = "None"
 versus = "servlet"
 
-[resin]
+[tomcat]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/postgresql/db"

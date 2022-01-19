@@ -1,6 +1,6 @@
 package com.hexagonkt
 
-import com.hexagonkt.core.helpers.Jvm.systemSetting
+import com.hexagonkt.core.Jvm.systemSetting
 
 data class Settings(
     val bindPort: Int = systemSetting("bindPort") ?: 9090,
@@ -20,6 +20,11 @@ data class Settings(
     val worldName: String = systemSetting("worldCollection") ?: "world",
     val fortuneName: String = systemSetting("fortuneCollection") ?: "fortune",
     val databaseName: String = systemSetting("database") ?: "hello_world",
+    val databaseDriver: String = systemSetting("databaseDriver") ?: "org.postgresql.Driver",
+
+    val sendDateHeader: Boolean = systemSetting("sendDateHeader") ?: true,
+    val sendServerVersion: Boolean = systemSetting("sendServerVersion") ?: true,
+    val sendXPoweredBy: Boolean = systemSetting("sendXPoweredBy") ?: false,
 
     val worldRows: Int = 10_000,
     val textMessage: String = "Hello, World!",
