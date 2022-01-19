@@ -1,4 +1,4 @@
-# Falcon Benchmark Test (ported from Flask example)
+# Falcon Benchmark Test
 
 This is the Falcon portion of a [benchmarking tests suite](../../) 
 comparing a variety of web development platforms.
@@ -10,34 +10,56 @@ the [Python README](../).
 
 ## Description
 
-Falcon API framework (http://falconframework.org)
+[**Falcon**](https://falconframework.org/) is a blazing fast, minimalist Python web API framework for building robust app backends and microservices. The framework works great with both asyncio (ASGI) and gevent/meinheld (WSGI).
+
+Features:
+* ASGI, WSGI, and WebSocket support
+Native asyncio support.
+* No reliance on magic globals for routing and state management.
+* Stable interfaces with an emphasis on backwards-compatibility.
+* Simple API modeling through centralized RESTful routing.
+* Highly-optimized, extensible code base.
+* DRY request processing via middleware components and hooks.
+* Strict adherence to RFCs.
+* Idiomatic HTTP error responses.
+* Straightforward exception handling.
+* WSGI/ASGI testing helpers and mocks.
+* CPython 3.5+ and PyPy 3.5+ support.
 
 ## Infrastructure Software
 
 ### Server
 
-* gunicorn+meinheld on CPython
-* Tornado on PyPy
+* Gunicorn + Waitress on CPython
+* Gunicorn + Meinheld on CPython
+* Gunicorn + Meinheld with Orjson on CPython
+* Gunicorn on PyPy
+
+### Database
+
+* Pony ORM [PostgreSQL] - (psycopg2-binary on CPython, psycopg2cffi on PyPy3)
 
 ## Test Paths & Sources
 
-All of the test implementations are located within a single file ([app.py](app.py)).
+All of the test implementations are located within a single file ([app.py](app.py)) and accessible via http://localhost:8080.
 
 * [JSON Serialization](app.py): "/json"
-* _Single Database Query: N/A_
-* _Multiple Database Queries: N/A_
-* _Fortunes: N/A_
-* _Database Updates: N/A_
+* [Single Database Query](app.py): "/db"
+* [Multiple Database Queries](app.py): "/queries/"
+* [Fortunes](app.py): "/fortunes"
+* [Database Updates](app.py): "/updates/"
 * [Plaintext](app.py): "/plaintext"
 
 ## Get Help
 
 ### Resources
 
-* [Falcon Source Code](https://github.com/falconry/falcon)
+* [Falcon on Github](https://github.com/falconry/falcon)
+* [Docs](https://falcon.readthedocs.io/en/stable/)
+* [FAQ](https://falcon.readthedocs.io/en/stable/user/faq.html#faq)
+* [Wiki](https://github.com/falconry/falcon/wiki)
 
-### [Community](http://falcon.readthedocs.org/en/0.2.0/community/index.html)
+### Community
 
-* `#falconframework` IRC Channel ([irc.freenode.net](https://freenode.net/))
-* Subscribe to email list by emailing falcon[at]librelist.com and 
-following the instructions in the reply.
+* Chatrooms [Falcon for Users](https://gitter.im/falconry/user) and [Falcon for Contributors](https://gitter.im/falconry/dev) @ Gitter
+* [Submit an issue](https://github.com/falconry/falcon/issues)

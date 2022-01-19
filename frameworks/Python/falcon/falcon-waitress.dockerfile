@@ -7,4 +7,4 @@ RUN pip3 install -U pip; pip3 install -r /falcon/requirements.txt
 
 EXPOSE 8080
 
-CMD ["gunicorn", "app:wsgi", "-c", "gunicorn_conf.py"]
+CMD ["python", "app_waitress.py"]

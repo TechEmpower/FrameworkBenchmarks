@@ -1,9 +1,9 @@
-FROM python:3.8-buster
+FROM pypy:3.8-7.3
 
 RUN apt-get update; apt-get install libpq-dev python3-dev -y
 COPY ./ /falcon
 WORKDIR /falcon
-RUN pip3 install -U pip; pip3 install -r /falcon/requirements.txt
+RUN pip3 install -U pip; pip3 install -r /falcon/requirements-pypy.txt
 
 EXPOSE 8080
 
