@@ -37,12 +37,12 @@ tokio = ["ntex/tokio"]
 async-std = ["ntex/async-std"]
 
 [dependencies]
-ntex = { version = "0.5.0", default-features = false }
+ntex = "0.5.8"
 mimalloc = { version = "0.1.25", default-features = false }
 snmalloc-rs = { version = "0.2.26", features = ["1mib", "native-cpu"] }
 yarte = { version = "0.15", features = ["bytes-buf", "json"] }
-env_logger = "0.8"
-nanorand = { version = "0.5", default-features = false, features = ["std", "wyrand"] }
+env_logger = "0.9"
+nanorand = { version = "0.6", default-features = false, features = ["std", "wyrand"] }
 atoi = "0.4"
 num_cpus = "1.13"
 futures = "0.3"
@@ -56,6 +56,10 @@ log = { version = "0.4", features = ["release_max_level_off"] }
 tokio-postgres = { git="https://github.com/fafhrd91/postgres.git" }
 
 [profile.release]
-lto = true
 opt-level = 3
 codegen-units = 1
+panic = 'abort'
+lto = "thin"
+debug = false
+incremental = false
+overflow-checks = false

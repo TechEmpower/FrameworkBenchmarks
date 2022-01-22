@@ -2,16 +2,21 @@
 
 (require db
          json
+         racket/async-channel
          racket/fasl
          racket/port
          racket/serialize
-         racket/unix-socket-tcp-unit
          redis
          threading
          web-server/dispatch
          web-server/http
          web-server/http/response
+         web-server/safety-limits
+         web-server/web-server
          xml)
+
+(provide
+ start)
 
 ;; db ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -97,8 +102,8 @@
     (query-exec *db* update-one-world (world-id r) (world-n r))))
 
 (define (world->hash r)
-  (hash 'id (world-id r)
-        'randomNumber (world-n r)))
+  (hasheq 'id (world-id r)
+          'randomNumber (world-n r)))
 
 
 ;; fortune ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -208,19 +213,7 @@
       (response/json
        (map world->hash worlds)))]))
 
-(module+ main
-  (require racket/async-channel
-           racket/cmdline
-           racket/format
-           web-server/http/response
-           web-server/safety-limits
-           web-server/web-server)
-
-  (define port
-    (command-line
-     #:args (port)
-     (string->number port)))
-
+(define (start host port tcp@)
   (define (app c req)
     (output-response c (dispatch req)))
 
@@ -228,9 +221,9 @@
   (define stop
     (serve
      #:dispatch app
-     #:listen-ip "127.0.0.1"
+     #:listen-ip host
      #:port port
-     #:tcp@ (make-unix-socket-tcp@ (format "~a.sock" port))
+     #:tcp@ tcp@
      #:confirmation-channel ch
      #:safety-limits (make-safety-limits
                       #:max-waiting 4096
@@ -242,11 +235,4 @@
   (when (exn:fail? ready-or-exn)
     (raise ready-or-exn))
 
-  (call-with-output-file (build-path (~a port ".ready"))
-    (lambda (out)
-      (displayln "ready" out)))
-
-  (with-handlers ([exn:break?
-                   (lambda (_e)
-                     (stop))])
-    (sync/enable-break never-evt)))
+  stop)
