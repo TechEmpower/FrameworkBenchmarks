@@ -7,7 +7,7 @@ gunicorn==19.9.0
 hyperlink==18.0.0
 idna==2.8
 incremental==17.5.0
-lxml==4.3.1
+lxml==4.6.5
 meinheld==0.6.1
 msgpack-python==0.5.6
 neurons==0.8.4
