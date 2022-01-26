@@ -1,9 +1,9 @@
 package com.hexagonkt
 
-import com.hexagonkt.core.Jvm.systemSetting
+import com.hexagonkt.core.Jvm.systemSettingOrNull
 
 data class Settings(
-    val bindPort: Int = systemSetting("bindPort") ?: 9090,
+    val bindPort: Int = systemSettingOrNull("bindPort") ?: 9090,
     val bindAddress: String = "0.0.0.0",
 
     val database: String = "hello_world",
@@ -13,18 +13,18 @@ data class Settings(
     val databaseUsername: String = "benchmarkdbuser",
     val databasePassword: String = "benchmarkdbpass",
 
-    val maximumPoolSize: Int = systemSetting("maximumPoolSize") ?: 96,
+    val maximumPoolSize: Int = systemSettingOrNull("maximumPoolSize") ?: 96,
 
-    val webEngine: String = systemSetting("WEBENGINE") ?: "jetty",
+    val webEngine: String = systemSettingOrNull("WEBENGINE") ?: "jetty",
 
-    val worldName: String = systemSetting("worldCollection") ?: "world",
-    val fortuneName: String = systemSetting("fortuneCollection") ?: "fortune",
-    val databaseName: String = systemSetting("database") ?: "hello_world",
-    val databaseDriver: String = systemSetting("databaseDriver") ?: "org.postgresql.Driver",
+    val worldName: String = systemSettingOrNull("worldCollection") ?: "world",
+    val fortuneName: String = systemSettingOrNull("fortuneCollection") ?: "fortune",
+    val databaseName: String = systemSettingOrNull("database") ?: "hello_world",
+    val databaseDriver: String = systemSettingOrNull("databaseDriver") ?: "org.postgresql.Driver",
 
-    val sendDateHeader: Boolean = systemSetting("sendDateHeader") ?: true,
-    val sendServerVersion: Boolean = systemSetting("sendServerVersion") ?: true,
-    val sendXPoweredBy: Boolean = systemSetting("sendXPoweredBy") ?: false,
+    val sendDateHeader: Boolean = systemSettingOrNull("sendDateHeader") ?: true,
+    val sendServerVersion: Boolean = systemSettingOrNull("sendServerVersion") ?: true,
+    val sendXPoweredBy: Boolean = systemSettingOrNull("sendXPoweredBy") ?: false,
 
     val worldRows: Int = 10_000,
     val textMessage: String = "Hello, World!",
