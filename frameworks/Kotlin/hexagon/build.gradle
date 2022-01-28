@@ -4,10 +4,10 @@ plugins {
 }
 
 ext {
-    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/2.0.0/gradle"
+    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/2.0.2/gradle"
 
-    hexagonVersion = "2.0.0"
-    hikariVersion = "5.0.0"
+    hexagonVersion = "2.0.2"
+    hikariVersion = "5.0.1"
     jettyVersion = "11.0.7"
     postgresqlVersion = "42.3.1"
     cache2kVersion = "2.4.1.Final"
