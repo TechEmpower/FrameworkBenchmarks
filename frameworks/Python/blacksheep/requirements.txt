@@ -4,4 +4,4 @@ Jinja2==2.11.1
 blacksheep==0.2.2
 ujson==2.0.3
 uvloop==0.14.0
-uvicorn==0.11.3
+uvicorn==0.11.7
