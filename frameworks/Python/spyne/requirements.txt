@@ -23,6 +23,6 @@ spyne==2.13.9a0
 SQLAlchemy==1.2.17
 Twisted==20.3.0
 txpostgres==1.6.0
-Werkzeug==0.14.1
+Werkzeug==0.15.3
 zope.interface==4.6.0
 uwsgi==2.0.18
