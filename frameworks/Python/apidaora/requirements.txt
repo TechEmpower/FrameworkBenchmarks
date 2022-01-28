@@ -1,4 +1,4 @@
-asyncpg==0.20.1
+asyncpg==0.21.0
 gunicorn==20.0.4
 jinja2==2.10.3
 uvloop==0.14.0
