@@ -2,6 +2,7 @@
 import 'package:angel3_configuration/angel3_configuration.dart';
 import 'package:angel3_framework/angel3_framework.dart';
 import 'package:angel3_jael/angel3_jael.dart';
+import 'package:jael3/jael3.dart';
 import 'package:file/file.dart';
 import 'plugins/plugins.dart' as plugins;
 
@@ -16,7 +17,10 @@ AngelConfigurer configureServer(FileSystem fileSystem) {
     // Configure our application to render Jael templates from the `views/` directory.
     //
     // See: https://github.com/angel-dart/jael
-    await app.configure(jael(fileSystem.directory('views'), minified: true));
+    var viewsDirectory = fileSystem.directory('views');
+    var viewCache = <String, Document>{};
+    jaelTemplatePreload(viewsDirectory, viewCache);
+    await app.configure(jael(viewsDirectory, cache: viewCache));
 
     // Apply another plug-ins, i.e. ones that *you* have written.
     //

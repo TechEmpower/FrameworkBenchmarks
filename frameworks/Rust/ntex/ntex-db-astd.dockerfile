@@ -1,4 +1,4 @@
-FROM rust:1.54.0
+FROM rust:1.57.0
 
 # Disable simd at jsonescape
 # ENV CARGO_CFG_JSONESCAPE_DISABLE_AUTO_SIMD=
@@ -9,8 +9,8 @@ ADD ./ /ntex
 WORKDIR /ntex
 
 RUN cargo clean
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
+RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --features="async-std"
 
 EXPOSE 8080
 
-CMD ./target/release/ntex-raw
+CMD ./target/release/ntex-db-astd

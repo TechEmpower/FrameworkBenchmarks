@@ -7,7 +7,7 @@ import com.hexagonkt.World
 import org.cache2k.Cache
 import org.cache2k.Cache2kBuilder
 
-internal abstract class BenchmarkStore(settings: Settings) {
+abstract class BenchmarkStore(settings: Settings) {
 
     abstract fun findAllFortunes(): List<Fortune>
     abstract fun findWorlds(ids: List<Int>): List<World>

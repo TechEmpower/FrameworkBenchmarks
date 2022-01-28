@@ -31,7 +31,7 @@ and `${TEMPLATE_ENGINE}` with: `pebble`
 * Database updates: http://localhost:9090/${DB_ENGINE}/update
 * Database queries: http://localhost:9090/${DB_ENGINE}/query
 
-### Resin
+### Tomcat
 
 * JSON Encoding Test: http://localhost:8080/json
 * Plain Text Test: http://localhost:8080/plaintext

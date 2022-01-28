@@ -16,12 +16,13 @@ dependencies:
   angel3_production: ^3.1.0
   angel3_static: ^4.1.0
   angel3_validate: ^4.0.0
+  jael3: ^4.2.0
   belatuk_pretty_logging: ^4.0.0
   optional: ^6.0.0
   logging: ^1.0.0
 dev_dependencies:
   angel3_hot: ^4.2.0
-  angel3_migration_runner: ^4.0.0
+  angel3_migration_runner: ^4.1.0
   angel3_orm_generator: ^4.1.0
   angel3_serialize_generator: ^4.2.0
   angel3_test: ^4.0.0
@@ -29,3 +30,11 @@ dev_dependencies:
   io: ^1.0.0
   test: ^1.17.5
   lints: ^1.0.0
+#dependency_overrides:
+#  angel3_orm:
+#    path: ../../../../../belatuk/packages/orm/angel_orm
+#  angel3_orm_postgres:
+#    path: ../../../../../belatuk/packages/orm/angel_orm_postgres
+#  angel3_jael:
+#    path: ../../../../../belatuk/packages/jael/angel_jael
+     

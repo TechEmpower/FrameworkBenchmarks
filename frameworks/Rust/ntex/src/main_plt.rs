@@ -1,10 +1,10 @@
 #[global_allocator]
 static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
-
 use std::{future::Future, io, pin::Pin, task::Context, task::Poll};
 
-use ntex::{fn_service, http::h1, io::Io, util::BufMut, util::PoolId};
-
+use ntex::{
+    fn_service, http::h1, io::Io, io::RecvError, util::ready, util::BufMut, util::PoolId,
+};
 mod utils;
 
 #[cfg(target_os = "macos")]
@@ -33,16 +33,10 @@ impl Future for App {
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         let this = self.as_mut().get_mut();
-        if this.io.is_closed() {
-            return Poll::Ready(Ok(()));
-        }
-
-        let read = this.io.read();
-        let write = this.io.write();
         loop {
-            match read.decode(&this.codec) {
-                Ok(Some((req, _))) => {
-                    let _ = write.with_buf(|buf| {
+            match ready!(this.io.poll_recv(&this.codec, cx)) {
+                Ok((req, _)) => {
+                    let _ = this.io.with_write_buf(|buf| {
                         // make sure we've got room
                         let remaining = buf.remaining_mut();
                         if remaining < 1024 {
@@ -72,15 +66,14 @@ impl Future for App {
                         }
                     });
                 }
-                Ok(None) => break,
-                _ => {
-                    this.io.close();
-                    return Poll::Ready(Err(()));
+                Err(RecvError::WriteBackpressure) => {
+                    let _ = ready!(this.io.poll_flush(cx, false));
+                }
+                Err(_) => {
+                    return Poll::Ready(Ok(()));
                 }
             }
         }
-        let _ = read.poll_read_ready(cx);
-        Poll::Pending
     }
 }
 
@@ -91,16 +84,16 @@ async fn main() -> io::Result<()> {
     // start http server
     ntex::server::build()
         .backlog(1024)
-        .bind("techempower", "0.0.0.0:8080", || {
-            PoolId::P1.set_read_params(65535, 8192);
-            PoolId::P1.set_write_params(65535, 8192);
+        .bind("techempower", "0.0.0.0:8080", |cfg| {
+            cfg.memory_pool(PoolId::P1);
+            PoolId::P1.set_read_params(65535, 1024);
+            PoolId::P1.set_write_params(65535, 1024);
 
             fn_service(|io| App {
                 io,
                 codec: h1::Codec::default(),
             })
         })?
-        .memory_pool("techempower", PoolId::P1)
-        .start()
+        .run()
         .await
 }

@@ -25,30 +25,7 @@
                 "notes": "http://hexagonkt.com",
                 "versus": "servlet"
             },
-            "blackbird": {
-                "json_url": "/json",
-                "db_url": "/postgresql/db",
-                "query_url": "/postgresql/query?queries=",
-                "fortune_url": "/postgresql/pebble/fortunes",
-                "update_url": "/postgresql/update?queries=",
-                "cached_query_url": "/postgresql/cached?count=",
-                "plaintext_url": "/plaintext",
-                "port": 9090,
-                "approach": "Realistic",
-                "classification": "Micro",
-                "database": "postgres",
-                "framework": "Hexagon",
-                "language": "Kotlin",
-                "orm": "Raw",
-                "platform": "Servlet",
-                "webserver": "None",
-                "os": "Linux",
-                "database_os": "Linux",
-                "display_name": "Hexagon Jetty PostgreSQL",
-                "notes": "http://hexagonkt.com",
-                "versus": "servlet"
-            },
-            "resin": {
+            "tomcat": {
                 "json_url": "/json",
                 "db_url": "/postgresql/db",
                 "query_url": "/postgresql/query?queries=",
@@ -67,7 +44,7 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "Hexagon Resin PostgreSQL",
+                "display_name": "Hexagon Tomcat PostgreSQL",
                 "notes": "http://hexagonkt.com",
                 "versus": "servlet"
             }
