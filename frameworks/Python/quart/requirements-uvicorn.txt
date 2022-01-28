@@ -1,4 +1,4 @@
 gunicorn==20.0.4
 httptools==0.1.1
-uvicorn==0.11.3
+uvicorn==0.11.7
 websockets==9.1
