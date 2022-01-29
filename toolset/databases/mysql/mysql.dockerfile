@@ -5,7 +5,7 @@ ADD my.cnf my.cnf
 ADD mysql.list mysql.list
 
 RUN cp mysql.list /etc/apt/sources.list.d/
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8C718D3B5072E1F5
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 467B942D3A79BD29
 
 RUN apt-get update > /dev/null
 RUN apt-get install -yqq locales > /dev/null

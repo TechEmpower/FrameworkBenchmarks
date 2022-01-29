@@ -21,12 +21,12 @@ internal class BenchmarkSqlStore(engine: String, private val settings: Settings 
     }
 
     private val dataSource: HikariDataSource by lazy {
-        val dbHost = Jvm.systemSetting("${engine.uppercase()}_DB_HOST") ?: "localhost"
-        val environment = Jvm.systemSetting(String::class, "BENCHMARK_ENV")?.lowercase()
+        val dbHost = Jvm.systemSettingOrNull("${engine.uppercase()}_DB_HOST") ?: "localhost"
+        val environment = Jvm.systemSettingOrNull(String::class, "BENCHMARK_ENV")?.lowercase()
         val poolSize = 8 + if (environment == "citrine") Jvm.cpuCount else Jvm.cpuCount * 2
         val config = HikariConfig().apply {
             jdbcUrl = "jdbc:postgresql://$dbHost/${settings.databaseName}"
-            maximumPoolSize = Jvm.systemSetting(Int::class, "maximumPoolSize") ?: poolSize
+            maximumPoolSize = Jvm.systemSettingOrNull(Int::class, "maximumPoolSize") ?: poolSize
             driverClassName = settings.databaseDriver
             username = settings.databaseUsername
             password = settings.databasePassword
