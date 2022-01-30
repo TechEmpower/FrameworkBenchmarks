@@ -4,14 +4,13 @@ plugins {
 }
 
 ext {
-    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/1.5.1/gradle"
+    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/2.0.2/gradle"
 
-    hexagonVersion = "1.5.1"
-    hikariVersion = "5.0.0"
-    jettyVersion = "10.0.7"
+    hexagonVersion = "2.0.2"
+    hikariVersion = "5.0.1"
+    jettyVersion = "11.0.7"
     postgresqlVersion = "42.3.1"
     cache2kVersion = "2.4.1.Final"
-    jacksonBlackbirdVersion = "2.13.0"
 }
 
 apply(from: "$gradleScripts/kotlin.gradle")
@@ -35,9 +34,8 @@ dependencies {
     implementation("com.hexagonkt:http_server_jetty:$hexagonVersion")
     implementation("com.hexagonkt:templates_pebble:$hexagonVersion")
     implementation("com.hexagonkt:logging_slf4j_jul:$hexagonVersion")
-    implementation("com.hexagonkt:serialization_json:$hexagonVersion")
+    implementation("com.hexagonkt:serialization_jackson_json:$hexagonVersion")
 
-    implementation("com.fasterxml.jackson.module:jackson-module-blackbird:$jacksonBlackbirdVersion")
     implementation("org.cache2k:cache2k-core:$cache2kVersion")
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.postgresql:postgresql:$postgresqlVersion")

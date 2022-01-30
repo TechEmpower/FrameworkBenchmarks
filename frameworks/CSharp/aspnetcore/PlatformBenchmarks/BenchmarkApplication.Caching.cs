@@ -6,14 +6,13 @@
 using System.IO.Pipelines;
 using System.Threading.Tasks;
 
-namespace PlatformBenchmarks
+namespace PlatformBenchmarks;
+
+public partial class BenchmarkApplication
 {
-    public partial class BenchmarkApplication
+    private async Task Caching(PipeWriter pipeWriter, int count)
     {
-        private async Task Caching(PipeWriter pipeWriter, int count)
-        {
-            OutputMultipleQueries(pipeWriter, await Db.LoadCachedQueries(count), SerializerContext.CachedWorldArray);
-        }
+        OutputMultipleQueries(pipeWriter, await Db.LoadCachedQueries(count), SerializerContext.CachedWorldArray);
     }
 }
 
