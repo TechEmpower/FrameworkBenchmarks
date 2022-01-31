@@ -1,0 +1,5 @@
+/target
+/docs
+/.vscode
+/prof
+/Cargo.lock

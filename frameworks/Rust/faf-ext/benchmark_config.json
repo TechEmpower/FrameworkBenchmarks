@@ -1,0 +1,26 @@
+{
+   "framework": "faf-ext",
+   "tests": [
+      {
+         "default": {
+            "plaintext_url": "/plaintext",
+            "json_url": "/json",
+            "port": 8080,
+            "approach": "Realistic",
+            "classification": "Platform",
+            "database": "None",
+            "framework": "faf-ext",
+            "language": "Rust",
+            "flavor": "None",
+            "orm": "None",
+            "platform": "None",
+            "webserver": "None",
+            "os": "Linux",
+            "database_os": "None",
+            "display_name": "faf-ext",
+            "notes": "",
+            "versus": "None"
+         }
+      }
+   ]
+}
