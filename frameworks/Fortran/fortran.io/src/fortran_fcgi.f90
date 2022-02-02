@@ -10,8 +10,6 @@
 program app
 
     use fcgi_protocol
-    use jade
-    use marsupial
 
     implicit none
 
