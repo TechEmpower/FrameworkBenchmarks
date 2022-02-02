@@ -1,0 +1,26 @@
+{
+  "framework": "fortran.io",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "None",
+        "framework": "Fortran.io",
+        "language": "Fortran",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "None",
+        "webserver": "nginx",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Fortran.io",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
