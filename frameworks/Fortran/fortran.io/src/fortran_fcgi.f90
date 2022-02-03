@@ -57,9 +57,6 @@ contains
         call cgi_get( dict, "DOCUMENT_URI", scriptName )
 
         select case (trim(scriptName))
-            case ('/json')
-                mime = 'application/json'
-                write(unitNo, AFORMAT) '{"message": "Hello, World!"}'
             case ('/plaintext')
                 mime = 'text/plain'
                 write(unitNo, AFORMAT) 'Hello, World!'
