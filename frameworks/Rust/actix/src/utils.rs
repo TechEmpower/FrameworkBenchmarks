@@ -1,9 +1,8 @@
 #![allow(dead_code, unused_braces)]
 
-use std::borrow::Cow;
-use std::{cmp, io};
+use std::{borrow::Cow, cmp, io};
 
-use bytes::{BufMut, BytesMut};
+use bytes::{BufMut as _, BytesMut};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Debug)]

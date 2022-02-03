@@ -12,7 +12,7 @@ use actix_http::{Error, HttpService, KeepAlive, Request, Response};
 use actix_server::Server;
 use actix_service::{Service, ServiceFactory};
 use bytes::{Bytes, BytesMut};
-use futures::future::ok;
+use futures::future::{ok, LocalBoxFuture};
 use serde_json::to_writer;
 use yarte::ywrite_html;
 
@@ -130,7 +130,7 @@ impl ServiceFactory for AppFactory {
     type Error = Error;
     type Service = App;
     type InitError = ();
-    type Future = Pin<Box<dyn Future<Output = Result<Self::Service, Self::InitError>>>>;
+    type Future = LocalBoxFuture<'static, Result<Self::Service, Self::InitError>>;
 
     fn new_service(&self, _: ()) -> Self::Future {
         const DB_URL: &str =

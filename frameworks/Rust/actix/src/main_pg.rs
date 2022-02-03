@@ -21,7 +21,7 @@ async fn world_row(db: web::Data<Addr<PgConnection>>) -> Result<HttpResponse, Er
     let res = db
         .send(RandomWorld)
         .await
-        .map_err(|e| ErrorInternalServerError(e))?;
+        .map_err(ErrorInternalServerError)?;
     match res {
         Ok(body) => {
             let mut res = HttpResponse::with_body(StatusCode::OK, Body::Bytes(body));
@@ -46,7 +46,7 @@ async fn queries(
     let res = db
         .send(RandomWorlds(q))
         .await
-        .map_err(|e| ErrorInternalServerError(e))?;
+        .map_err(ErrorInternalServerError)?;
     if let Ok(worlds) = res {
         let mut body = BytesMut::with_capacity(35 * worlds.len());
         serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
@@ -73,7 +73,7 @@ async fn updates(
     let res = db
         .send(UpdateWorld(q))
         .await
-        .map_err(|e| ErrorInternalServerError(e))?;
+        .map_err(ErrorInternalServerError)?;
     if let Ok(worlds) = res {
         let mut body = BytesMut::with_capacity(35 * worlds.len());
         serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
@@ -93,7 +93,7 @@ async fn fortune(db: web::Data<Addr<PgConnection>>) -> Result<HttpResponse, Erro
     let res = db
         .send(TellFortune)
         .await
-        .map_err(|e| ErrorInternalServerError(e))?;
+        .map_err(ErrorInternalServerError)?;
 
     match res {
         Ok(fortunes) => {

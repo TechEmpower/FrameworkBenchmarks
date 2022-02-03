@@ -23,7 +23,7 @@ impl DbExecutor {
     pub fn new(db_url: &str) -> DbExecutor {
         DbExecutor {
             conn: PgConnection::establish(db_url)
-                .expect(&format!("Error connecting to {}", db_url)),
+                .unwrap_or_else(|_| panic!("Error connecting to {}", db_url)),
             rng: SmallRng::from_entropy(),
         }
     }
