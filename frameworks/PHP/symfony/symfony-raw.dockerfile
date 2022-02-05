@@ -26,7 +26,7 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env prod
 # see https://github.com/doctrine/dbal/issues/2315
 #RUN sed -i '/PDO::ATTR_STATEMENT_CLASS/d' ./vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php
 
-RUN php bin/console cache:clear
+RUN php bin/console cache:clear 
 RUN echo "opcache.preload=/symfony/var/cache/prod/App_KernelProdContainer.preload.php" >> /etc/php/8.1/fpm/php.ini
 
 EXPOSE 8080
