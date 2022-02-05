@@ -1,4 +1,4 @@
-FROM ubuntu:20.10
+FROM ubuntu:21.10
 
 RUN apt-get update -yqq && \
 	apt-get install -yqq \
