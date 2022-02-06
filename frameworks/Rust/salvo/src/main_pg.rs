@@ -191,7 +191,7 @@ impl WorldHandler {
 }
 #[async_trait]
 impl Handler for WorldHandler {
-    async fn handle(&self, res: &mut Response) {
+    async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
         let world = self.conn.get_world().await.unwrap();
         res.render_json(&world);
@@ -211,7 +211,7 @@ impl WorldsHandler {
 }
 #[async_trait]
 impl Handler for WorldsHandler {
-    async fn handle(&self, req: &mut Request, res: &mut Response) {
+    async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         let count = req.get_query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
@@ -233,7 +233,7 @@ impl UpdatesHandler {
 }
 #[async_trait]
 impl Handler for UpdatesHandler {
-    async fn handle(&self, req: &mut Request, res: &mut Response) {
+    async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         let count = req.get_query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
@@ -255,7 +255,7 @@ impl FortunesHandler {
 }
 #[async_trait]
 impl Handler for FortunesHandler {
-    async fn handle(&self, res: &mut Response) {
+    async fn handle(&self, _req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         let mut body = String::new();
         write!(&mut body, "{}", self.conn.tell_fortune().await.unwrap()).unwrap();
 
