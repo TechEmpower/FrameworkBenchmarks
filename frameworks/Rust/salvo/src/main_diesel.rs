@@ -46,7 +46,7 @@ fn build_pool(database_url: &str, size: u32) -> Result<PgPool, PoolError> {
 }
 
 #[fn_handler]
-async fn world_row(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
+async fn world_row(res: &mut Response) -> Result<(), Error> {
     let mut rng = SmallRng::from_entropy();
     let random_id = rng.gen_range(1..10_001);
     let conn = connect()?;
@@ -121,7 +121,7 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
 }
 
 #[fn_handler]
-async fn fortunes(_req: &mut Request, res: &mut Response) -> Result<(), Error> {
+async fn fortunes(res: &mut Response) -> Result<(), Error> {
     let conn = connect()?;
     let mut items = fortune::table.get_results::<Fortune>(&conn)?;
     items.push(Fortune {
