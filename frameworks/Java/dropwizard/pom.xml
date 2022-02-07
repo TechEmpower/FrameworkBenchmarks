@@ -19,7 +19,7 @@
 		<jaxb.version>2.3.0</jaxb.version>
 		<mysql-connector-java.version>8.0.18</mysql-connector-java.version>
 		<mongojack.version>2.9.4</mongojack.version>
-		<postgres-jdbc.version>42.2.5</postgres-jdbc.version>
+		<postgres-jdbc.version>42.2.25</postgres-jdbc.version>
 		<maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
 		<maven-jar-plugin.version>3.1.0</maven-jar-plugin.version>
 		<maven-shade-plugin.version>3.1.1</maven-shade-plugin.version>
