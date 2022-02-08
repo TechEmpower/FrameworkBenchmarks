@@ -1,12 +1,19 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
+use std::time::Duration;
+
 use actix_http::{HttpService, KeepAlive};
 use actix_service::map_config;
-use actix_web::dev::{AppConfig, Body, Server};
-use actix_web::http::header::{CONTENT_TYPE, SERVER};
-use actix_web::http::{HeaderValue, StatusCode};
-use actix_web::{web, App, HttpResponse};
+use actix_web::{
+    body,
+    dev::{AppConfig, Server},
+    http::{
+        header::{HeaderValue, CONTENT_TYPE, SERVER},
+        StatusCode,
+    },
+    web, App, HttpResponse,
+};
 use bytes::{Bytes, BytesMut};
 use simd_json_derive::Serialize;
 
@@ -18,14 +25,14 @@ pub struct Message {
     pub message: &'static str,
 }
 
-async fn json() -> HttpResponse {
+async fn json() -> HttpResponse<Bytes> {
     let message = Message {
         message: "Hello, World!",
     };
     let mut body = BytesMut::with_capacity(SIZE);
     message.json_write(&mut Writer(&mut body)).unwrap();
 
-    let mut res = HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+    let mut res = HttpResponse::with_body(StatusCode::OK, body.freeze());
     res.headers_mut()
         .insert(SERVER, HeaderValue::from_static("A"));
     res.headers_mut()
@@ -55,7 +62,7 @@ async fn main() -> std::io::Result<()> {
         .bind("techempower", "0.0.0.0:8080", || {
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
-                .client_timeout(0)
+                .client_timeout(Duration::ZERO)
                 .h1(map_config(
                     App::new()
                         .service(web::resource("/json").to(json))
@@ -64,6 +71,6 @@ async fn main() -> std::io::Result<()> {
                 ))
                 .tcp()
         })?
-        .start()
+        .run()
         .await
 }

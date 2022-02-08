@@ -1,13 +1,20 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
+use std::time::Duration;
+
 use actix::prelude::*;
-use actix_http::error::ErrorInternalServerError;
 use actix_http::{HttpService, KeepAlive};
 use actix_service::map_config;
-use actix_web::dev::{AppConfig, Body, Server};
-use actix_web::http::{header::CONTENT_TYPE, header::SERVER, HeaderValue, StatusCode};
-use actix_web::{web, App, Error, HttpRequest, HttpResponse};
+use actix_web::{
+    dev::{AppConfig, Server},
+    error,
+    http::{
+        header::{HeaderValue, CONTENT_TYPE, SERVER},
+        StatusCode,
+    },
+    web, App, Error, HttpRequest, HttpResponse,
+};
 use bytes::{Bytes, BytesMut};
 use yarte::ywrite_html;
 
@@ -21,7 +28,7 @@ async fn world_row(db: web::Data<Addr<PgConnection>>) -> Result<HttpResponse, Er
     let res = db
         .send(RandomWorld)
         .await
-        .map_err(ErrorInternalServerError)?;
+        .map_err(error::ErrorInternalServerError)?;
     match res {
         Ok(body) => {
             let mut res = HttpResponse::with_body(StatusCode::OK, Body::Bytes(body));
@@ -46,16 +53,19 @@ async fn queries(
     let res = db
         .send(RandomWorlds(q))
         .await
-        .map_err(ErrorInternalServerError)?;
+        .map_err(error::ErrorInternalServerError)?;
+
     if let Ok(worlds) = res {
         let mut body = BytesMut::with_capacity(35 * worlds.len());
         serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
+
         let mut res =
             HttpResponse::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
         res.headers_mut()
             .insert(SERVER, HeaderValue::from_static("Actix"));
         res.headers_mut()
             .insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+
         Ok(res)
     } else {
         Ok(HttpResponse::InternalServerError().into())
@@ -73,7 +83,8 @@ async fn updates(
     let res = db
         .send(UpdateWorld(q))
         .await
-        .map_err(ErrorInternalServerError)?;
+        .map_err(error::ErrorInternalServerError)?;
+
     if let Ok(worlds) = res {
         let mut body = BytesMut::with_capacity(35 * worlds.len());
         serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
@@ -108,8 +119,10 @@ async fn fortune(db: web::Data<Addr<PgConnection>>) -> Result<HttpResponse, Erro
                 CONTENT_TYPE,
                 HeaderValue::from_static("text/html; charset=utf-8"),
             );
+
             Ok(res)
         }
+
         Err(_) => Ok(HttpResponse::InternalServerError().into()),
     }
 }
@@ -127,7 +140,7 @@ async fn main() -> std::io::Result<()> {
         .bind("techempower", "0.0.0.0:8080", move || {
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
-                .client_timeout(0)
+                .client_request_timeout(Duration::ZERO)
                 .h1(map_config(
                     App::new()
                         .data_factory(|| PgConnection::connect(DB_URL))
@@ -139,6 +152,6 @@ async fn main() -> std::io::Result<()> {
                 ))
                 .tcp()
         })?
-        .start()
+        .run()
         .await
 }

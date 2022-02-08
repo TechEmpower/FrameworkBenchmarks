@@ -13,6 +13,12 @@ pub struct World {
     pub randomnumber: i32,
 }
 
+impl World {
+    pub fn new(id: i32, randomnumber: i32) -> Self {
+        Self { id, randomnumber }
+    }
+}
+
 #[allow(non_snake_case)]
 #[derive(Serialize, Queryable, Debug)]
 pub struct Fortune {

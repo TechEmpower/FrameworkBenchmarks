@@ -5,8 +5,11 @@ static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 extern crate diesel;
 
 use actix::prelude::*;
-use actix_http::error::ErrorInternalServerError;
-use actix_web::{http, web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use actix_web::{
+    error,
+    http::{self, header::ContentType},
+    web, App, Error, HttpRequest, HttpResponse, HttpServer,
+};
 use askama::Template;
 use bytes::BytesMut;
 
@@ -21,15 +24,15 @@ async fn world_row(db: web::Data<Addr<db::DbExecutor>>) -> Result<HttpResponse, 
     let res = db
         .send(db::RandomWorld)
         .await
-        .map_err(ErrorInternalServerError)?;
+        .map_err(error::ErrorInternalServerError)?;
 
     match res {
         Ok(row) => {
             let mut body = BytesMut::with_capacity(33);
             serde_json::to_writer(Writer(&mut body), &row).unwrap();
             Ok(HttpResponse::Ok()
-                .header(http::header::SERVER, "Actix")
-                .header(http::header::CONTENT_TYPE, "application/json")
+                .insert_header((http::header::SERVER, "Actix"))
+                .insert_header((http::header::CONTENT_TYPE, ContentType::json()))
                 .body(body))
         }
         Err(_) => Ok(HttpResponse::InternalServerError().into()),
@@ -43,17 +46,17 @@ async fn queries(
     // get queries parameter
     let q = utils::get_query_param(req.query_string());
 
-    // run sql queries
+    // run SQL queries
     let res = db
         .send(db::RandomWorlds(q))
         .await
-        .map_err(ErrorInternalServerError)?;
+        .map_err(error::ErrorInternalServerError)?;
     if let Ok(worlds) = res {
         let mut body = BytesMut::with_capacity(35 * worlds.len());
         serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
         Ok(HttpResponse::Ok()
-            .header(http::header::SERVER, "Actix")
-            .header(http::header::CONTENT_TYPE, "application/json")
+            .insert_header((http::header::SERVER, "Actix"))
+            .insert_header((http::header::CONTENT_TYPE, ContentType::json()))
             .body(body))
     } else {
         Ok(HttpResponse::InternalServerError().into())
@@ -77,8 +80,8 @@ async fn updates(
         let mut body = BytesMut::with_capacity(35 * worlds.len());
         serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
         Ok(HttpResponse::Ok()
-            .header(http::header::SERVER, "Actix")
-            .header(http::header::CONTENT_TYPE, "application/json")
+            .insert_header((http::header::SERVER, "Actix"))
+            .insert_header((http::header::CONTENT_TYPE, ContentType::json()))
             .body(body))
     } else {
         Ok(HttpResponse::InternalServerError().into())
@@ -102,8 +105,8 @@ async fn fortune(db: web::Data<Addr<db::DbExecutor>>) -> Result<HttpResponse, Er
             let res = tmpl.render().unwrap();
 
             Ok(HttpResponse::Ok()
-                .header(http::header::SERVER, "Actix")
-                .header(http::header::CONTENT_TYPE, "text/html; charset=utf-8")
+                .insert_header((http::header::SERVER, "Actix"))
+                .insert_header((http::header::CONTENT_TYPE, ContentType::html()))
                 .body(res))
         }
         Err(_) => Ok(HttpResponse::InternalServerError().into()),
@@ -123,7 +126,7 @@ async fn main() -> std::io::Result<()> {
     // start http server
     HttpServer::new(move || {
         App::new()
-            .data(addr.clone())
+            .app_data(web::Data::new(addr.clone()))
             .service(web::resource("/db").to(world_row))
             .service(web::resource("/fortunes").to(fortune))
             .service(web::resource("/queries").to(queries))

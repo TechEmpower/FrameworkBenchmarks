@@ -1,18 +1,20 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-use std::future::Future;
-use std::io;
-use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::{
+    future::Future,
+    io,
+    pin::Pin,
+    task::{Context, Poll},
+};
 
 use actix_codec::{AsyncRead, AsyncWrite, Decoder};
 use actix_http::{h1, Request};
-use actix_rt::net::TcpStream;
 use actix_server::Server;
 use actix_service::fn_service;
 use bytes::{Buf, BufMut, BytesMut};
 use simd_json_derive::Serialize;
+use tokio::{io::AsyncBufRead, net::TcpStream};
 
 mod models;
 mod utils;
@@ -50,11 +52,13 @@ impl App {
                     .json_write(&mut Writer(&mut self.write_buf))
                     .unwrap();
             }
+
             "/plaintext" => {
                 self.write_buf.put_slice(PLAIN);
                 self.codec.config().set_date(&mut self.write_buf);
                 self.write_buf.put_slice(BODY);
             }
+
             _ => {
                 self.write_buf.put_slice(HTTPNFOUND);
                 self.write_buf.put_slice(HDR_SERVER);
@@ -73,7 +77,9 @@ impl Future for App {
             if this.read_buf.capacity() - this.read_buf.len() < 512 {
                 this.read_buf.reserve(32_768);
             }
+
             let read = Pin::new(&mut this.io).poll_read_buf(cx, &mut this.read_buf);
+
             match read {
                 Poll::Pending => break,
                 Poll::Ready(Ok(n)) => {
@@ -100,6 +106,7 @@ impl Future for App {
         if !this.write_buf.is_empty() {
             let len = this.write_buf.len();
             let mut written = 0;
+
             while written < len {
                 match Pin::new(&mut this.io).poll_write(cx, &this.write_buf[written..]) {
                     Poll::Pending => {
@@ -115,12 +122,14 @@ impl Future for App {
                     Poll::Ready(Err(_)) => return Poll::Ready(Err(())),
                 }
             }
+
             if written == len {
                 unsafe { this.write_buf.set_len(0) }
             } else if written > 0 {
                 this.write_buf.advance(written);
             }
         }
+
         Poll::Pending
     }
 }
@@ -140,6 +149,6 @@ async fn main() -> io::Result<()> {
                 codec: h1::Codec::default(),
             })
         })?
-        .start()
+        .run()
         .await
 }

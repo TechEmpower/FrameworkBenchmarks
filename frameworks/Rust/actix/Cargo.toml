@@ -1,5 +1,5 @@
 [package]
-name = "actix"
+name = "tfb-actix"
 version = "3.0.0"
 edition = "2018"
 
@@ -24,21 +24,21 @@ name = "actix-raw"
 path = "src/main_raw.rs"
 
 [dependencies]
-actix = "0.10.0"
-actix-web = { version = "3.1.0", default-features = false }
-actix-http = { version = "2.0.0", default-features = false }
-actix-rt = "1.1.1"
-actix-codec = "0.3.0"
-actix-server = "1.0.4"
-actix-service = "1.0.6"
+actix = "0.12"
+actix-web = { version = "4.0.0-rc.2", default-features = false, features = ["macros"] }
+actix-http = { version = "3.0.0-rc.1", default-features = false }
+actix-rt = "2"
+actix-codec = "0.4"
+actix-server = "2"
+actix-service = "2"
 snmalloc-rs = "0.2.6"
 askama = "0.11"
 yarte = { version = "0.15", features = ["bytes-buf"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 env_logger = "0.9"
-rand = { version = "0.7", features = ["small_rng"] }
-bytes = "0.5.3"
+rand = { version = "0.8", features = ["small_rng"] }
+bytes = "1"
 num_cpus = "1.13"
 futures = "0.3.7"
 http = "0.2"
@@ -48,12 +48,12 @@ diesel = { version = "1.4", features = ["postgres"] }
 url = "2.1"
 log = { version = "0.4", features = ["release_max_level_debug"] }
 v_htmlescape = "0.14"
-tokio = "0.2"
-tokio-postgres = { git = "https://github.com/fafhrd91/rust-postgres.git" }
+tokio = { version = "1", features = ["full"] }
+tokio-postgres = "0.7.5"
 
 [build-dependencies]
-askama = "0.8"
-bindgen = "0.42"
+askama = "0.11"
+bindgen = "0.59"
 
 [profile.release]
 lto = true
