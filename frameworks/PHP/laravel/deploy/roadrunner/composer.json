@@ -8,10 +8,10 @@
     ],
     "license": "MIT",
     "require": {
-        "laravel/framework": "^8.16",
+        "laravel/framework": "^8.70",
         "nyholm/psr7": "*",
-        "spiral/roadrunner": "^2.0",
-        "spiral/roadrunner-laravel": "^4.0"
+        "spiral/roadrunner": "^2.5",
+        "spiral/roadrunner-laravel": "^5.4"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

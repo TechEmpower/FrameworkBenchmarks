@@ -1,4 +1,4 @@
-lazy val finatraVersion = "21.9.0"
+lazy val finatraVersion = "22.1.0"
 
 name := "techempower-benchmarks-finatra"
 organization := "com.twitter"
@@ -21,7 +21,7 @@ libraryDependencies ++= Seq(
   ("com.twitter" %% "finatra-http-server" % finatraVersion).
     exclude("com.sun.activation", "javax.activation"),
   "org.slf4j" % "slf4j-nop" % "1.7.30",
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.11.2",
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.13.1",
 )
 
 excludeDependencies ++= Seq(

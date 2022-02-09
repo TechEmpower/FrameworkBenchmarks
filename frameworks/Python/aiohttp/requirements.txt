@@ -5,5 +5,5 @@ gunicorn==20.1
 jinja2==3.0.1
 psycopg2==2.8.6
 SQLAlchemy==1.4.18
-ujson==4.0.2
+ujson==5.1.0
 uvloop==0.15.2

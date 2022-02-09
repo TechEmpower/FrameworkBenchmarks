@@ -14,7 +14,7 @@ platform = "None"
 webserver = "salvo"
 versus = ""
 
-[db]
+[diesel]
 urls.db = "/db"
 urls.query = "/query?q="
 urls.update = "/update?q="
@@ -29,11 +29,13 @@ platform = "None"
 webserver = "salvo"
 versus = ""
 
-[raw]
-urls.plaintext = "/plaintext"
-urls.json = "/json"
+[pg]
+urls.db = "/db"
+urls.query = "/query?q="
+urls.update = "/update?q="
+urls.fortune = "/fortunes"
 approach = "Realistic"
-classification = "Platform"
+classification = "Micro"
 database = "Postgres"
 database_os = "Linux"
 os = "Linux"

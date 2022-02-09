@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Concurrent;
 using System.Data;
-using System.Data.Odbc;
+using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace appMpower.Db
@@ -10,16 +9,16 @@ namespace appMpower.Db
    {
       private bool _released = false;
       private short _number = 0;
-      private OdbcConnection _odbcConnection;
+      private IDbConnection _dbConnection;
       private ConcurrentDictionary<string, PooledCommand> _pooledCommands;
 
       internal PooledConnection()
       {
       }
 
-      internal PooledConnection(OdbcConnection odbcConnection)
+      internal PooledConnection(IDbConnection dbConnection)
       {
-         _odbcConnection = odbcConnection;
+         _dbConnection = dbConnection;
          _pooledCommands = new ConcurrentDictionary<string, PooledCommand>();
       }
 
@@ -47,15 +46,15 @@ namespace appMpower.Db
          }
       }
 
-      public OdbcConnection OdbcConnection
+      public IDbConnection DbConnection
       {
          get
          {
-            return _odbcConnection;
+            return _dbConnection;
          }
          set
          {
-            _odbcConnection = value;
+            _dbConnection = value;
          }
       }
 
@@ -63,11 +62,11 @@ namespace appMpower.Db
       {
          get
          {
-            return _odbcConnection.ConnectionString;
+            return _dbConnection.ConnectionString;
          }
          set
          {
-            _odbcConnection.ConnectionString = value;
+            _dbConnection.ConnectionString = value;
          }
       }
 
@@ -75,7 +74,7 @@ namespace appMpower.Db
       {
          get
          {
-            return _odbcConnection.ConnectionTimeout;
+            return _dbConnection.ConnectionTimeout;
          }
       }
 
@@ -83,7 +82,7 @@ namespace appMpower.Db
       {
          get
          {
-            return _odbcConnection.Database;
+            return _dbConnection.Database;
          }
       }
 
@@ -91,7 +90,7 @@ namespace appMpower.Db
       {
          get
          {
-            return _odbcConnection.State;
+            return _dbConnection.State;
          }
       }
 
@@ -109,46 +108,41 @@ namespace appMpower.Db
 
       public IDbTransaction BeginTransaction()
       {
-         return _odbcConnection.BeginTransaction();
+         return _dbConnection.BeginTransaction();
       }
 
       public IDbTransaction BeginTransaction(IsolationLevel il)
       {
-         return _odbcConnection.BeginTransaction(il);
+         return _dbConnection.BeginTransaction(il);
       }
 
       public void ChangeDatabase(string databaseName)
       {
-         _odbcConnection.ChangeDatabase(databaseName);
+         _dbConnection.ChangeDatabase(databaseName);
       }
 
       public void Close()
       {
-         _odbcConnection.Close();
+         _dbConnection.Close();
          _released = true;
       }
 
       public IDbCommand CreateCommand()
       {
-         return _odbcConnection.CreateCommand();
-      }
-
-      public OdbcCommand CreateOdbcCommand()
-      {
-         return _odbcConnection.CreateCommand();
+         return _dbConnection.CreateCommand();
       }
 
       public void Open()
       {
-         if (_odbcConnection.State == ConnectionState.Closed)
+         if (_dbConnection.State == ConnectionState.Closed)
          {
-            _odbcConnection.Open();
+            _dbConnection.Open();
          }
       }
 
       public void Release()
       {
-         if (!_released && _odbcConnection.State == ConnectionState.Open)
+         if (!_released && _dbConnection.State == ConnectionState.Open)
          {
             PooledConnections.Release(this);
          }
@@ -156,7 +150,7 @@ namespace appMpower.Db
 
       public void Dispose()
       {
-         if (!_released && _odbcConnection.State == ConnectionState.Open)
+         if (!_released && _dbConnection.State == ConnectionState.Open)
          {
             PooledConnections.Dispose(this);
          }
@@ -164,9 +158,9 @@ namespace appMpower.Db
 
       public async Task OpenAsync()
       {
-         if (_odbcConnection.State == ConnectionState.Closed)
+         if (_dbConnection.State == ConnectionState.Closed)
          {
-            await _odbcConnection.OpenAsync();
+            await (_dbConnection as DbConnection).OpenAsync();
          }
       }
 
@@ -176,14 +170,19 @@ namespace appMpower.Db
 
          if (_pooledCommands.TryRemove(commandText, out internalCommand))
          {
-            pooledCommand.OdbcCommand = internalCommand.OdbcCommand;
+            pooledCommand.DbCommand = internalCommand.DbCommand;
             pooledCommand.PooledConnection = internalCommand.PooledConnection;
          }
          else
          {
-            pooledCommand.OdbcCommand = new OdbcCommand(commandText, this.OdbcConnection);
-            pooledCommand.OdbcCommand.Prepare();
+            pooledCommand.DbCommand = this.DbConnection.CreateCommand();
+            pooledCommand.DbCommand.CommandText = commandText;
             pooledCommand.PooledConnection = this;
+
+            //For non odbc drivers like Npgsql which do not support Prepare
+#if !ADO
+            pooledCommand.DbCommand.Prepare();
+#endif            
 
             //Console.WriteLine("prepare pool connection: " + this._number + " for command " + _pooledCommands.Count);
          }

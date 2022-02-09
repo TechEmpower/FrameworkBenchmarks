@@ -10,6 +10,9 @@ import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author longzl
+ */
 public class PlanTextProcessor implements Processor<HttpEntity> {
     private static final Logger logger = LoggerFactory.getLogger(PlanTextProcessor.class);
 
@@ -18,17 +21,17 @@ public class PlanTextProcessor implements Processor<HttpEntity> {
         HttpRequestEntity httpRequestEntity = (HttpRequestEntity) httpEntity;
         String url = httpRequestEntity.url;
         logger.trace("url:{}", url);
-        if ("/plaintext".equals(url)) {
+        if (Consts.URL_TEXT_PLAIN.equals(url)) {
             HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
             httpResponseEntity.setContentType(Consts.TEXT_TYPE);
             httpResponseEntity.body = "Hello, World!";
             session.write(httpResponseEntity);
-        } else if ("/json".equals(url)) {
+        } else if (Consts.URL_JSON.equals(url)) {
             HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
             httpResponseEntity.setContentType(Consts.JSON_TYPE);
             httpResponseEntity.body = JSON.toJSONString(new Message("Hello, World!"));
             session.write(httpResponseEntity);
-        } else if ("/state".equals(url)) {
+        } else if (Consts.URL_STATE.equals(url)) {
             HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
             httpResponseEntity.setContentType(Consts.JSON_TYPE);
             State state = new State();

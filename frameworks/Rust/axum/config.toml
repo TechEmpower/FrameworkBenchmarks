@@ -1,0 +1,19 @@
+[framework]
+name = "axum"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?q="
+urls.update = "/updates?q="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Fullstack"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Rust"
+webserver = "Hyper"
+versus = "None"
