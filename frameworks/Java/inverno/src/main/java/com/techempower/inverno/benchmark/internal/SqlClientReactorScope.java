@@ -10,24 +10,23 @@ import io.inverno.mod.base.concurrent.Reactor;
 import io.inverno.mod.base.concurrent.ReactorScope;
 import io.inverno.mod.base.concurrent.VertxReactor;
 import io.inverno.mod.sql.SqlClient;
-import io.inverno.mod.sql.vertx.PooledClientSqlClient;
+import io.inverno.mod.sql.vertx.ConnectionSqlClient;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.pgclient.PgPool;
-import io.vertx.sqlclient.PoolOptions;
+import io.vertx.pgclient.PgConnection;
+import reactor.core.publisher.Mono;
 
-@Bean( name = "pooledClientSqlClient", visibility = Visibility.PRIVATE )
-public class PooledClientSqlClientReactorScope extends ReactorScope<SqlClient> {
+@Bean( name = "SqlClient", visibility = Visibility.PRIVATE )
+public class SqlClientReactorScope extends ReactorScope<Mono<SqlClient>> {
 
 	private final AppConfiguration configuration;
 	private final Reactor reactor;
 	
 	private Vertx vertx;
 	private PgConnectOptions connectOptions;
-	private PoolOptions poolOptions;
 	
-	public PooledClientSqlClientReactorScope(AppConfiguration configuration, Reactor reactor) {
+	public SqlClientReactorScope(AppConfiguration configuration, Reactor reactor) {
 		this.configuration = configuration;
 		this.reactor = reactor;
 	}
@@ -47,9 +46,8 @@ public class PooledClientSqlClientReactorScope extends ReactorScope<SqlClient> {
 				.setDatabase(this.configuration.db_database())
 				.setUser(this.configuration.db_username())
 				.setPassword(this.configuration.db_password())
-				.setCachePreparedStatements(true);
-		
-		this.poolOptions = new PoolOptions().setMaxSize(1);
+				.setCachePreparedStatements(true)
+				.setPipeliningLimit(100_100);
 	}
 	
 	@Destroy
@@ -60,8 +58,7 @@ public class PooledClientSqlClientReactorScope extends ReactorScope<SqlClient> {
 	}
 	
 	@Override
-	protected SqlClient create() {
-		return new PooledClientSqlClient(PgPool.client(this.vertx, this.connectOptions, this.poolOptions));
+	protected Mono<SqlClient> create() {
+		return Mono.fromCompletionStage(PgConnection.connect(this.vertx, this.connectOptions).toCompletionStage()).map(pgConn -> (SqlClient)new ConnectionSqlClient(pgConn)).cache();
 	}
-
 }
