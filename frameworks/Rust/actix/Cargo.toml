@@ -20,6 +20,7 @@ name = "tfb-server"
 path = "src/main_server.rs"
 
 [dependencies]
+actix = "0.12"
 actix-web = { version = "4.0.0-rc.3", default-features = false, features = ["macros"] }
 actix-http = { version = "3.0.0-rc.2", default-features = false }
 actix-rt = "2"

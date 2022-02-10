@@ -1,5 +1,5 @@
-// #[global_allocator]
-// static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+#[global_allocator]
+static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 use std::future::Future;
 use std::io;
@@ -82,7 +82,7 @@ impl Future for App {
             let n = match Pin::new(&mut this.io).poll_fill_buf(cx) {
                 Poll::Pending => break,
                 Poll::Ready(Ok(filled)) => {
-                    if filled.len() == 0 {
+                    if filled.len().is_empty() {
                         return Poll::Ready(Ok(()));
                     }
 
