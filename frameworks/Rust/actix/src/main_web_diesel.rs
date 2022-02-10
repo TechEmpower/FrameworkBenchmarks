@@ -118,8 +118,9 @@ async fn main() -> std::io::Result<()> {
     let db_url = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
     // start DB executor actors
-    let addr =
-        SyncArbiter::start(num_cpus::get() * 3, move || db_diesel::DbExecutor::new(db_url));
+    let addr = SyncArbiter::start(num_cpus::get() * 3, move || {
+        db_diesel::DbExecutor::new(db_url)
+    });
 
     println!("Starting HTTP server: 127.0.0.1:8080");
 

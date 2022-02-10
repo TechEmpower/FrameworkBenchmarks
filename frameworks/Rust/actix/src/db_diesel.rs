@@ -23,7 +23,6 @@ impl DbExecutor {
     }
 }
 
-
 impl Actor for DbExecutor {
     type Context = SyncContext<Self>;
 }

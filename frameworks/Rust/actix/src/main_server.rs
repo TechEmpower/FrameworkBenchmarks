@@ -13,15 +13,17 @@ use actix_server::Server;
 use actix_service::fn_service;
 use bytes::{Buf, BufMut, BytesMut};
 use simd_json_derive::Serialize;
-use tokio::io::{BufReader, AsyncBufRead};
+use tokio::io::{AsyncBufRead, BufReader};
 
 mod models;
 mod utils;
 
 use crate::utils::Writer;
 
-const HEAD_JSON: &[u8] = b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
-const HEAD_PLAIN: &[u8] = b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
+const HEAD_JSON: &[u8] =
+    b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
+const HEAD_PLAIN: &[u8] =
+    b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
 const HEAD_NOT_FOUND: &[u8] = b"HTTP/1.1 204 OK\r\nServer: A\r\n";
 const BODY_PLAIN: &[u8] = b"Hello, World!";
 const HDR_END: &[u8] = b"\r\n";
@@ -46,20 +48,24 @@ impl App {
                     message: "Hello, World!",
                 };
                 self.write_buf.put_slice(HEAD_JSON);
-                self.codec.config().write_date_header(&mut self.write_buf, false);
+                self.codec
+                    .config()
+                    .write_date_header(&mut self.write_buf, false);
                 self.write_buf.put_slice(HDR_END);
                 message
                     .json_write(&mut Writer(&mut self.write_buf))
                     .unwrap();
             }
-            
+
             "/plaintext" => {
                 self.write_buf.put_slice(HEAD_PLAIN);
-                self.codec.config().write_date_header(&mut self.write_buf, false);
+                self.codec
+                    .config()
+                    .write_date_header(&mut self.write_buf, false);
                 self.write_buf.put_slice(HDR_END);
                 self.write_buf.put_slice(BODY_PLAIN);
             }
-            
+
             _ => {
                 self.write_buf.put_slice(HEAD_NOT_FOUND);
                 self.write_buf.put_slice(HDR_END);
