@@ -14,6 +14,7 @@ pub struct World {
 }
 
 impl World {
+    #[allow(dead_code)]
     pub fn new(id: i32, randomnumber: i32) -> Self {
         Self { id, randomnumber }
     }

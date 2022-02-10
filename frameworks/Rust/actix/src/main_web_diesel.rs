@@ -4,7 +4,6 @@ static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 #[macro_use]
 extern crate diesel;
 
-use actix::prelude::*;
 use actix_web::{
     error,
     http::{self, header::ContentType},
@@ -13,16 +12,16 @@ use actix_web::{
 use askama::Template;
 use bytes::BytesMut;
 
-mod db;
+mod db_diesel;
 mod models;
 mod schema;
 mod utils;
 
 use utils::Writer;
 
-async fn world_row(db: web::Data<Addr<db::DbExecutor>>) -> Result<HttpResponse, Error> {
+async fn world_row(db: web::Data<db_diesel::DbExecutor>) -> Result<HttpResponse, Error> {
     let res = db
-        .send(db::RandomWorld)
+        .send(db_diesel::RandomWorld)
         .await
         .map_err(error::ErrorInternalServerError)?;
 
@@ -41,14 +40,14 @@ async fn world_row(db: web::Data<Addr<db::DbExecutor>>) -> Result<HttpResponse, 
 
 async fn queries(
     req: HttpRequest,
-    db: web::Data<Addr<db::DbExecutor>>,
+    db: web::Data<db_diesel::DbExecutor>,
 ) -> Result<HttpResponse, Error> {
     // get queries parameter
     let q = utils::get_query_param(req.query_string());
 
     // run SQL queries
     let res = db
-        .send(db::RandomWorlds(q))
+        .send(db_diesel::RandomWorlds(q))
         .await
         .map_err(error::ErrorInternalServerError)?;
     if let Ok(worlds) = res {
@@ -65,16 +64,16 @@ async fn queries(
 
 async fn updates(
     req: HttpRequest,
-    db: web::Data<Addr<db::DbExecutor>>,
+    db: web::Data<db_diesel::DbExecutor>,
 ) -> Result<HttpResponse, Error> {
     // get queries parameter
     let q = utils::get_query_param(req.query_string());
 
     // update worlds
     let res = db
-        .send(db::UpdateWorld(q))
+        .send(db_diesel::UpdateWorld(q))
         .await
-        .map_err(ErrorInternalServerError)?;
+        .map_err(error::ErrorInternalServerError)?;
 
     if let Ok(worlds) = res {
         let mut body = BytesMut::with_capacity(35 * worlds.len());
@@ -94,11 +93,11 @@ struct FortuneTemplate<'a> {
     items: &'a Vec<models::Fortune>,
 }
 
-async fn fortune(db: web::Data<Addr<db::DbExecutor>>) -> Result<HttpResponse, Error> {
+async fn fortune(db: web::Data<db_diesel::DbExecutor>) -> Result<HttpResponse, Error> {
     let res = db
-        .send(db::TellFortune)
+        .send(db_diesel::TellFortune)
         .await
-        .map_err(ErrorInternalServerError)?;
+        .map_err(error::ErrorInternalServerError)?;
     match res {
         Ok(rows) => {
             let tmpl = FortuneTemplate { items: &rows };
@@ -115,18 +114,16 @@ async fn fortune(db: web::Data<Addr<db::DbExecutor>>) -> Result<HttpResponse, Er
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!("Starting http server: 127.0.0.1:8080");
-
     let db_url = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
-    // Start db executor actors
-    let addr =
-        SyncArbiter::start(num_cpus::get() * 3, move || db::DbExecutor::new(db_url));
+    println!("Starting HTTP server: 127.0.0.1:8080");
 
-    // start http server
+    // start HTTP server
     HttpServer::new(move || {
+        let db = db_diesel::DbExecutor::new(db_url);
+
         App::new()
-            .app_data(web::Data::new(addr.clone()))
+            .app_data(web::Data::new(db))
             .service(web::resource("/db").to(world_row))
             .service(web::resource("/fortunes").to(fortune))
             .service(web::resource("/queries").to(queries))

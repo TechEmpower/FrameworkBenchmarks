@@ -11,7 +11,7 @@ pub struct Fortune {
     pub message: Cow<'static, str>,
 }
 
-pub const SIZE: usize = 27;
+pub const JSON_MSG_SIZE: usize = 27;
 
 #[derive(Serialize, Deserialize)]
 pub struct Message {

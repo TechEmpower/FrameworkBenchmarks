@@ -14,12 +14,12 @@ use bytes::{Bytes, BytesMut};
 use futures::future::{ok, LocalBoxFuture};
 use yarte::ywrite_html;
 
-mod db_pg_direct;
+mod db;
 mod models;
 mod utils;
 
 use crate::{
-    db_pg_direct::{PgConnection, PgError},
+    db::{PgConnection, PgError},
     utils::Writer,
 };
 

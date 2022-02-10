@@ -4,52 +4,48 @@ version = "3.0.0"
 edition = "2018"
 
 [[bin]]
-name = "actix"
-path = "src/main.rs"
+name = "tfb-web"
+path = "src/main_web.rs"
 
 [[bin]]
-name = "actix-platform"
-path = "src/main_platform.rs"
+name = "tfb-web-diesel"
+path = "src/main_web_diesel.rs"
 
 [[bin]]
-name = "actix-diesel"
-path = "src/main_diesel.rs"
+name = "tfb-http"
+path = "src/main_http.rs"
 
 [[bin]]
-name = "actix-pg"
-path = "src/main_pg.rs"
-
-[[bin]]
-name = "actix-raw"
-path = "src/main_raw.rs"
+name = "tfb-server"
+path = "src/main_server.rs"
 
 [dependencies]
-actix = "0.12"
-actix-web = { version = "4.0.0-rc.2", default-features = false, features = ["macros"] }
-actix-http = { version = "3.0.0-rc.1", default-features = false }
+actix-web = { version = "4.0.0-rc.3", default-features = false, features = ["macros"] }
+actix-http = { version = "3.0.0-rc.2", default-features = false }
 actix-rt = "2"
 actix-codec = "0.4"
 actix-server = "2"
 actix-service = "2"
-snmalloc-rs = "0.2.6"
+
 askama = "0.11"
-yarte = { version = "0.15", features = ["bytes-buf"] }
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-env_logger = "0.9"
-rand = { version = "0.8", features = ["small_rng"] }
 bytes = "1"
-num_cpus = "1.13"
+diesel = { version = "1.4", features = ["postgres"] }
+env_logger = "0.9"
 futures = "0.3.7"
 http = "0.2"
+log = { version = "0.4", features = ["release_max_level_debug"] }
+num_cpus = "1.13"
+rand = { version = "0.8", features = ["small_rng"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
 simd-json = "0.4"
 simd-json-derive = "0.2"
-diesel = { version = "1.4", features = ["postgres"] }
-url = "2.1"
-log = { version = "0.4", features = ["release_max_level_debug"] }
-v_htmlescape = "0.14"
+snmalloc-rs = "0.2.6"
 tokio = { version = "1", features = ["full"] }
 tokio-postgres = "0.7.5"
+url = "2.1"
+v_htmlescape = "0.14"
+yarte = { version = "0.15", features = ["bytes-buf"] }
 
 [build-dependencies]
 askama = "0.11"
