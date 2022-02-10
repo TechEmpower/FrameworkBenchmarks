@@ -12,7 +12,6 @@ import java.util.Map;
  */
 public class HttpRequestEntity extends HttpEntity {
 
-
     public ByteBuffer bodyBuffer = null;
     public boolean chunked = false;
     public int contentLength = -1;
@@ -33,7 +32,7 @@ public class HttpRequestEntity extends HttpEntity {
     /**
      * 第一次 请求header时解析 第一行不要
      */
-    private Map<byte[], byte[]> headers = new HashMap<>(8);
+    private Map<byte[], byte[]> headers = new HashMap<>(16);
     private byte[] contentType = Consts.TEXT_TYPE;
 
     @Override

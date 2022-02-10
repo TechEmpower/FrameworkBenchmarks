@@ -28,8 +28,6 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
     private static final byte SPACE0 = (byte) 32;
     private static final byte COLON = (byte) 58;
 
-    private static final String httpEntityKey = "httpEntity";
-
     /**
      * 解析HTTP请求
      *
@@ -39,10 +37,10 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
      */
     @Override
     public HttpEntity decode(ByteBuffer byteBuffer, Session session) {
-        HttpRequestEntity httpEntity = (HttpRequestEntity) session.getAttribute(httpEntityKey);
+        HttpRequestEntity httpEntity = (HttpRequestEntity) session.getAttachment();
         if (httpEntity == null) {
             httpEntity = new HttpRequestEntity();
-            session.setAttribute(httpEntityKey, httpEntity);
+            session.setAttachment(httpEntity);
         }
         //解析header
         if (!httpEntity.headerComplete() && byteBuffer.hasRemaining()) {
@@ -51,7 +49,7 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
 
         if (httpEntity.headerComplete()) {
             if (httpEntity.complete()) {
-                session.setAttribute(httpEntityKey, null);
+                session.setAttachment(null);
                 return httpEntity;
             }
             // 解析request body

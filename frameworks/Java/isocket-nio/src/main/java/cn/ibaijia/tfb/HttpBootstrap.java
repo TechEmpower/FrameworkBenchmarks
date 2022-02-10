@@ -27,9 +27,9 @@ public class HttpBootstrap {
         });
         server.setUseDirectBuffer(true);
         server.setUsePool(true);
-        server.setPoolPageSize(32 * 1024);
+        server.setPoolSize(4 * 1024);
         server.setBuffSize(1 * 1024);
-        server.setBacklog(16 * 1024);
+        server.setBacklog(4 * 1024);
         server.start();
     }
 
