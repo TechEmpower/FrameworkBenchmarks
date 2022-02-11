@@ -62,7 +62,6 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
 
     private void readHeader(ByteBuffer byteBuffer, HttpRequestEntity httpEntity) {
         try {
-            ByteBuffer buf = byteBuffer.duplicate();
             int startPos = 0;
             int endPos = 0;
             while (byteBuffer.hasRemaining()) {
@@ -85,9 +84,10 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
                     if (b == SPACE0) {
                         int len = endPos - startPos - 1;
                         byte[] bytes = new byte[len];
-                        buf.get(bytes, 0, len);
+                        byteBuffer.position(startPos);
+                        byteBuffer.get(bytes);
                         startPos = endPos;
-                        buf.position(startPos);
+                        byteBuffer.position(startPos);
                         if (httpEntity.method == null) {
                             httpEntity.method = new String(bytes);
                         } else if (httpEntity.url == null) {
@@ -96,25 +96,28 @@ public class SimpleHttpProtocol implements Protocol<ByteBuffer, HttpEntity> {
                     } else if (httpEntity.crNum == 1 && httpEntity.lfNum == 1) {
                         int len = endPos - startPos - 2;
                         byte[] bytes = new byte[len];
-                        buf.get(bytes, 0, len);
+                        byteBuffer.position(startPos);
+                        byteBuffer.get(bytes);
                         startPos = endPos;
-                        buf.position(startPos);
+                        byteBuffer.position(startPos);
                         httpEntity.protocol = new String(bytes);
                     }
                 } else {
                     if (b == COLON && httpEntity.tmp == null) {
                         int len = endPos - startPos - 1;
                         byte[] bytes = new byte[len];
-                        buf.get(bytes, 0, len);
+                        byteBuffer.position(startPos);
+                        byteBuffer.get(bytes);
                         startPos = endPos;
-                        buf.position(startPos);
+                        byteBuffer.position(startPos);
                         httpEntity.tmp = bytes;
                     } else if (httpEntity.crNum == 1 && httpEntity.lfNum == 1) {
                         int len = endPos - startPos - 2;
                         byte[] bytes = new byte[len];
-                        buf.get(bytes, 0, len);
+                        byteBuffer.position(startPos);
+                        byteBuffer.get(bytes);
                         startPos = endPos;
-                        buf.position(startPos);
+                        byteBuffer.position(startPos);
                         httpEntity.setHeader(httpEntity.tmp, bytes);
                         httpEntity.tmp = null;
 //                        if (Arrays.equals(CONTENT_LENGTH, httpEntity.tmp)) {

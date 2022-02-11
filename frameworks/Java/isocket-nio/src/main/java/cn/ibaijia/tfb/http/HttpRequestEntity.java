@@ -28,10 +28,6 @@ public class HttpRequestEntity extends HttpEntity {
      * 请求体
      */
     public String body;
-    private int count = 0;
-    /**
-     * 第一次 请求header时解析 第一行不要
-     */
     private Map<byte[], byte[]> headers = new HashMap<>(16);
     private byte[] contentType = Consts.TEXT_TYPE;
 
@@ -52,15 +48,7 @@ public class HttpRequestEntity extends HttpEntity {
 
     @Override
     public void setHeader(byte[] name, byte[] value) {
-        count ++;
         this.headers.put(name, value);
-    }
-
-    public void printAllHeaders() {
-        for (Map.Entry<byte[], byte[]> entry : headers.entrySet()) {
-            System.out.println(count);
-            System.out.println(new String(entry.getKey()) + ":" + new String(entry.getValue()));
-        }
     }
 
     @Override
