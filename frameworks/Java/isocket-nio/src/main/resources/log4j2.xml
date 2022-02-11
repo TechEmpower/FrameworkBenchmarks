@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<Configuration status="OFF">
     <Properties>
         <Property name="logName">isocket-nio-tfb</Property>
     </Properties>
@@ -25,7 +25,7 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Root level="trace">
+        <Root level="OFF">
             <AppenderRef ref="console"/>
             <AppenderRef ref="file"/>
         </Root>

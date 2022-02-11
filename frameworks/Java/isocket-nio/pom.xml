@@ -95,8 +95,8 @@
                     <verbose>true</verbose>
                     <fork>true</fork>
                     <compilerArgument>-nowarn</compilerArgument>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>11</source>
+                    <target>11</target>
                     <encoding>UTF-8</encoding>
                     <debug>false</debug>
                 </configuration>
