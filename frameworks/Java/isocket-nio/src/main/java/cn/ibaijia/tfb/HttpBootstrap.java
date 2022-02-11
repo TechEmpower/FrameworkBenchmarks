@@ -25,7 +25,7 @@ public class HttpBootstrap {
                 logger.error("session on process error.", throwable);
             }
         });
-        server.setUseDirectBuffer(true);//
+        server.setUseDirectBuffer(true);
         server.setUsePool(true);
         server.setPoolSize(16 * 1024);
         server.setBuffSize(1 * 1024);
