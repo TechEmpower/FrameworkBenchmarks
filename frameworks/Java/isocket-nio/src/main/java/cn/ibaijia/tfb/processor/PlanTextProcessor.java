@@ -20,7 +20,6 @@ public class PlanTextProcessor implements Processor<HttpEntity> {
     public boolean process(final Session session, final HttpEntity httpEntity) {
         HttpRequestEntity httpRequestEntity = (HttpRequestEntity) httpEntity;
         String url = httpRequestEntity.url;
-        logger.trace("url:{}", url);
         if (Consts.URL_TEXT_PLAIN.equals(url)) {
             HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
             httpResponseEntity.setContentType(Consts.TEXT_TYPE);
@@ -30,12 +29,6 @@ public class PlanTextProcessor implements Processor<HttpEntity> {
             HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
             httpResponseEntity.setContentType(Consts.JSON_TYPE);
             httpResponseEntity.body = JSON.toJSONString(new Message("Hello, World!"));
-            session.write(httpResponseEntity);
-        } else if (Consts.URL_STATE.equals(url)) {
-            HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
-            httpResponseEntity.setContentType(Consts.JSON_TYPE);
-            State state = new State();
-            httpResponseEntity.body = JSON.toJSONString(state);
             session.write(httpResponseEntity);
         } else {
             HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
