@@ -110,6 +110,8 @@
                 <version>3.8.0</version>
                 <configuration>
                     <debug>false</debug>
+                    <source>16</source>
+                    <target>16</target>
                 </configuration>
             </plugin>
 
