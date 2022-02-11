@@ -67,7 +67,8 @@ public class HttpResponseEntity extends HttpEntity {
         byteBuffer.put(STATUS_200);
         byteBuffer.put(DateUtil.getDate());
         byteBuffer.put(CONTENT_LENGTH_HEAD);
-        byteBuffer.put(String.valueOf(body.length()).getBytes());
+        Integer length = body.length();
+        byteBuffer.put(length.toString().getBytes());
         byteBuffer.put(CONTENT_TYPE_HEAD);
         byteBuffer.put(contentType);
         byteBuffer.put(SERVER_NAME);

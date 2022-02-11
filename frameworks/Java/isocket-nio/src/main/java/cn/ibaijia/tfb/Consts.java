@@ -1,5 +1,8 @@
 package cn.ibaijia.tfb;
 
+/**
+ * @author longzl
+ */
 public class Consts {
 
     public static final byte[] TEXT_TYPE = "text/plain".getBytes();

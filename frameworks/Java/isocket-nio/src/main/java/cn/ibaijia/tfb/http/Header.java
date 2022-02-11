@@ -1,5 +1,8 @@
 package cn.ibaijia.tfb.http;
 
+/**
+ * @author longzl
+ */
 public class Header {
 
     public String name;
