@@ -88,7 +88,7 @@ impl Future for App {
             let n = match Pin::new(&mut this.io).poll_fill_buf(cx) {
                 Poll::Pending => break,
                 Poll::Ready(Ok(filled)) => {
-                    if filled.len().is_empty() {
+                    if filled.is_empty() {
                         return Poll::Ready(Ok(()));
                     }
 
