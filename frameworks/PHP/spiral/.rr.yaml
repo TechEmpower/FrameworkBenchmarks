@@ -5,17 +5,9 @@ server:
   command: "php app.php"
   relay: pipes
 
-# serve static files
-static:
-  dir: "public"
-
 http:
   address: 0.0.0.0:8080
-  middleware: [ "gzip", "static" ]
-  static:
-    dir: "public"
-    forbid: [ ".php", ".htaccess" ]
-  pool:
-    num_workers: 1
-    supervisor:
-      max_worker_memory: 100
+
+logs:
+  mode: production
+  level: error
