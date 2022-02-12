@@ -1,7 +1,7 @@
 {
-  "framework": "Actix Web",
+  "framework": "actix-web",
   "tests": [{
-    "web": {
+    "default": {
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
