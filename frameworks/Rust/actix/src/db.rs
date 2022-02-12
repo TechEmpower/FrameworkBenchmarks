@@ -64,14 +64,14 @@ impl PgConnection {
             q.push_str("UPDATE world SET randomnumber = CASE id ");
 
             for _ in 1..=num {
-                let _ = write!(&mut q, "when ${} then ${} ", pl, pl + 1);
+                let _ = write!(q, "when ${} then ${} ", pl, pl + 1);
                 pl += 2;
             }
 
             q.push_str("ELSE randomnumber END WHERE id IN (");
 
             for _ in 1..=num {
-                let _ = write!(&mut q, "${},", pl);
+                let _ = write!(q, "${},", pl);
                 pl += 1;
             }
 

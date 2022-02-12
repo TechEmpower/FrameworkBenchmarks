@@ -1,5 +1,5 @@
 {
-  "framework": "actix-web",
+  "framework": "actix",
   "tests": [{
     "default": {
       "json_url": "/json",
