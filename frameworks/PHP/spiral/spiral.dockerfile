@@ -23,4 +23,4 @@ RUN php app.php configure > /dev/null 2>&1
 
 EXPOSE 8080
 
-CMD php app.php up > /dev/null 2>&1 && ./rr serve -o "http.workers.pool.numWorkers = 64"
+CMD php app.php up > /dev/null 2>&1 && ./rr serve -o "http.pool.num_workers = 64"
