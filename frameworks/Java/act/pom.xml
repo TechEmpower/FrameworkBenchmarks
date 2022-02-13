@@ -70,7 +70,7 @@
   <properties>
     <java.version>1.8</java.version>
     <mysql.version>5.1.47</mysql.version>
-    <postgres-jdbc.version>42.2.5</postgres-jdbc.version>
+    <postgres-jdbc.version>42.2.25</postgres-jdbc.version>
     <morphia.version>1.3.2</morphia.version>
     <ebean-annotation.version>3.4</ebean-annotation.version>
     <app.entry>com.techempower.act.AppEntry</app.entry>

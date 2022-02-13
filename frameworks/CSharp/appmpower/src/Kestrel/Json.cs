@@ -32,7 +32,7 @@ namespace appMpower.Kestrel
 
          jsonSerializer.Serialize(utf8JsonWriter, t);
          utf8JsonWriter.Flush();
-         headerDictionary.Add(new KeyValuePair<string, StringValues>("Content-Length", ((uint)utf8JsonWriter.BytesCommitted).ToString()));
+         headerDictionary.Add(new KeyValuePair<string, StringValues>("Content-Length", utf8JsonWriter.BytesCommitted.ToString()));
       }
 
       public static void RenderMany<T>(IHeaderDictionary headerDictionary, PipeWriter pipeWriter, T[] tArray, IJsonSerializer<T> jsonSerializer)
@@ -52,7 +52,7 @@ namespace appMpower.Kestrel
 
          utf8JsonWriter.WriteEndArray();
          utf8JsonWriter.Flush();
-         headerDictionary.Add(new KeyValuePair<string, StringValues>("Content-Length", ((uint)utf8JsonWriter.BytesCommitted).ToString()));
+         headerDictionary.Add(new KeyValuePair<string, StringValues>("Content-Length", utf8JsonWriter.BytesCommitted.ToString()));
       }
    }
 }

@@ -1,4 +1,4 @@
-FROM rust:1.55
+FROM rust:1.58.1
 
 RUN apt-get update -yqq && apt-get install -yqq cmake g++
 
@@ -10,4 +10,4 @@ RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
 
 EXPOSE 8080
 
-CMD ./target/release/main-db
+CMD ./target/release/main-diesel
