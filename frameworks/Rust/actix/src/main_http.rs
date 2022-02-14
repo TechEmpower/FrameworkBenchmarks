@@ -1,121 +1,142 @@
 #[global_allocator]
 static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
-use std::future::Future;
-use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::{io, rc::Rc, time::Duration};
 
-use actix_http::body::Body;
-use actix_http::http::header::{CONTENT_TYPE, SERVER};
-use actix_http::http::{HeaderValue, StatusCode};
-use actix_http::{Error, HttpService, KeepAlive, Request, Response};
+use actix_http::{
+    body::BoxBody,
+    header::{HeaderValue, CONTENT_TYPE, SERVER},
+    HttpService, KeepAlive, Request, Response, StatusCode,
+};
 use actix_server::Server;
 use actix_service::{Service, ServiceFactory};
 use bytes::{Bytes, BytesMut};
-use futures::future::ok;
-use serde_json::to_writer;
+use futures::future::{ok, LocalBoxFuture};
 use yarte::ywrite_html;
 
-mod db_pg_direct;
+mod db;
 mod models;
 mod utils;
 
-use crate::db_pg_direct::PgConnection;
-use crate::utils::Writer;
+use crate::{
+    db::{PgConnection, PgError},
+    utils::Writer,
+};
+
+#[derive(Debug)]
+enum Error {
+    Pg(PgError),
+    Io(io::Error),
+}
+
+impl From<io::Error> for Error {
+    fn from(err: io::Error) -> Self {
+        Error::Io(err)
+    }
+}
+
+impl From<PgError> for Error {
+    fn from(err: PgError) -> Self {
+        Error::Pg(err)
+    }
+}
+
+impl From<Error> for Response<BoxBody> {
+    fn from(_err: Error) -> Self {
+        Response::internal_server_error()
+    }
+}
 
 struct App {
-    db: PgConnection,
+    db: Rc<PgConnection>,
     hdr_srv: HeaderValue,
     hdr_ctjson: HeaderValue,
     hdr_cthtml: HeaderValue,
 }
 
-impl Service for App {
-    type Request = Request;
-    type Response = Response;
+impl Service<Request> for App {
+    type Response = Response<Bytes>;
     type Error = Error;
-    type Future = Pin<Box<dyn Future<Output = Result<Response, Error>>>>;
+    type Future = LocalBoxFuture<'static, Result<Self::Response, Self::Error>>;
 
-    #[inline]
-    fn poll_ready(&mut self, _: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        Poll::Ready(Ok(()))
-    }
+    actix_service::always_ready!();
 
-    fn call(&mut self, req: Request) -> Self::Future {
-        let path = req.path();
-        match path {
+    fn call(&self, req: Request) -> Self::Future {
+        match req.path() {
             "/db" => {
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
-                let fut = self.db.get_world();
+                let db = Rc::clone(&self.db);
 
                 Box::pin(async move {
-                    let body = fut.await?;
-                    let mut res = Response::with_body(StatusCode::OK, Body::Bytes(body));
+                    let body = db.get_world().await?;
+                    let mut res = Response::with_body(StatusCode::OK, body);
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
                     hdrs.insert(CONTENT_TYPE, h_ct);
                     Ok(res)
                 })
             }
+
             "/fortunes" => {
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_cthtml.clone();
-                let fut = self.db.tell_fortune();
+                let db = Rc::clone(&self.db);
 
                 Box::pin(async move {
-                    let fortunes = fut.await?;
+                    let fortunes = db.tell_fortune().await?;
 
                     let mut body = Vec::with_capacity(2048);
                     ywrite_html!(body, "{{> fortune }}");
 
-                    let mut res = Response::with_body(
-                        StatusCode::OK,
-                        Body::Bytes(Bytes::from(body)),
-                    );
+                    let mut res = Response::with_body(StatusCode::OK, Bytes::from(body));
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
                     hdrs.insert(CONTENT_TYPE, h_ct);
                     Ok(res)
                 })
             }
+
             "/queries" => {
                 let q = utils::get_query_param(req.uri().query().unwrap_or("")) as usize;
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
-                let fut = self.db.get_worlds(q);
+                let db = Rc::clone(&self.db);
 
                 Box::pin(async move {
-                    let worlds = fut.await?;
+                    let worlds = db.get_worlds(q).await?;
                     let mut body = BytesMut::with_capacity(35 * worlds.len());
-                    to_writer(Writer(&mut body), &worlds).unwrap();
-                    let mut res =
-                        Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+                    serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
+                    let mut res = Response::with_body(StatusCode::OK, body.freeze());
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
                     hdrs.insert(CONTENT_TYPE, h_ct);
                     Ok(res)
                 })
             }
+
             "/updates" => {
                 let q = utils::get_query_param(req.uri().query().unwrap_or(""));
                 let h_srv = self.hdr_srv.clone();
                 let h_ct = self.hdr_ctjson.clone();
-                let fut = self.db.update(q);
+                let db = Rc::clone(&self.db);
 
                 Box::pin(async move {
-                    let worlds = fut.await?;
+                    let worlds = db.update(q).await?;
                     let mut body = BytesMut::with_capacity(35 * worlds.len());
-                    to_writer(Writer(&mut body), &worlds).unwrap();
-                    let mut res =
-                        Response::with_body(StatusCode::OK, Body::Bytes(body.freeze()));
+                    serde_json::to_writer(Writer(&mut body), &worlds).unwrap();
+                    let mut res = Response::with_body(StatusCode::OK, body.freeze());
                     let hdrs = res.headers_mut();
                     hdrs.insert(SERVER, h_srv);
                     hdrs.insert(CONTENT_TYPE, h_ct);
                     Ok(res)
                 })
             }
-            _ => Box::pin(ok(Response::new(http::StatusCode::NOT_FOUND))),
+
+            _ => Box::pin(ok(Response::with_body(
+                http::StatusCode::NOT_FOUND,
+                Bytes::new(),
+            ))),
         }
     }
 }
@@ -123,14 +144,13 @@ impl Service for App {
 #[derive(Clone)]
 struct AppFactory;
 
-impl ServiceFactory for AppFactory {
+impl ServiceFactory<Request> for AppFactory {
     type Config = ();
-    type Request = Request;
-    type Response = Response;
+    type Response = Response<Bytes>;
     type Error = Error;
     type Service = App;
     type InitError = ();
-    type Future = Pin<Box<dyn Future<Output = Result<Self::Service, Self::InitError>>>>;
+    type Future = LocalBoxFuture<'static, Result<Self::Service, Self::InitError>>;
 
     fn new_service(&self, _: ()) -> Self::Future {
         const DB_URL: &str =
@@ -149,19 +169,18 @@ impl ServiceFactory for AppFactory {
 }
 
 fn main() -> std::io::Result<()> {
-    let sys = actix_rt::System::builder().stop_on_panic(false).build();
+    println!("Starting HTTP server on http://127.0.0.1:8080");
 
-    Server::build()
-        .backlog(1024)
-        .bind("techempower", "0.0.0.0:8080", || {
-            HttpService::build()
-                .keep_alive(KeepAlive::Os)
-                .client_timeout(0)
-                .h1(AppFactory)
-                .tcp()
-        })?
-        .start();
-
-    println!("Started http server: 127.0.0.1:8080");
-    sys.run()
+    actix_rt::System::new().block_on(
+        Server::build()
+            .backlog(1024)
+            .bind("tfb-actix-http", "0.0.0.0:8080", || {
+                HttpService::build()
+                    .keep_alive(KeepAlive::Os)
+                    .client_request_timeout(Duration::ZERO)
+                    .h1(AppFactory)
+                    .tcp()
+            })?
+            .run(),
+    )
 }
