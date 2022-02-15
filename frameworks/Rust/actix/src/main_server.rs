@@ -6,24 +6,27 @@ use std::io;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use actix_codec::{AsyncRead, AsyncWrite, Decoder};
+use actix_codec::{AsyncWrite, Decoder};
 use actix_http::{h1, Request};
 use actix_rt::net::TcpStream;
 use actix_server::Server;
 use actix_service::fn_service;
 use bytes::{Buf, BufMut, BytesMut};
 use simd_json_derive::Serialize;
+use tokio::io::{AsyncBufRead, BufReader};
 
 mod models;
 mod utils;
 
 use crate::utils::Writer;
 
-const JSON: &[u8] = b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
-const PLAIN: &[u8] = b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
-const HTTPNFOUND: &[u8] = b"HTTP/1.1 400 OK\r\n";
-const HDR_SERVER: &[u8] = b"Server: A\r\n";
-const BODY: &[u8] = b"Hello, World!";
+const HEAD_JSON: &[u8] =
+    b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
+const HEAD_PLAIN: &[u8] =
+    b"HTTP/1.1 200 OK\r\nServer: A\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n";
+const HEAD_NOT_FOUND: &[u8] = b"HTTP/1.1 204 OK\r\nServer: A\r\n";
+const BODY_PLAIN: &[u8] = b"Hello, World!";
+const HDR_END: &[u8] = b"\r\n";
 
 #[derive(Serialize)]
 pub struct Message {
@@ -31,7 +34,7 @@ pub struct Message {
 }
 
 struct App {
-    io: TcpStream,
+    io: BufReader<TcpStream>,
     read_buf: BytesMut,
     write_buf: BytesMut,
     codec: h1::Codec,
@@ -44,20 +47,28 @@ impl App {
                 let message = Message {
                     message: "Hello, World!",
                 };
-                self.write_buf.put_slice(JSON);
-                self.codec.config().set_date(&mut self.write_buf);
+                self.write_buf.put_slice(HEAD_JSON);
+                self.codec
+                    .config()
+                    .write_date_header(&mut self.write_buf, false);
+                self.write_buf.put_slice(HDR_END);
                 message
                     .json_write(&mut Writer(&mut self.write_buf))
                     .unwrap();
             }
+
             "/plaintext" => {
-                self.write_buf.put_slice(PLAIN);
-                self.codec.config().set_date(&mut self.write_buf);
-                self.write_buf.put_slice(BODY);
+                self.write_buf.put_slice(HEAD_PLAIN);
+                self.codec
+                    .config()
+                    .write_date_header(&mut self.write_buf, false);
+                self.write_buf.put_slice(HDR_END);
+                self.write_buf.put_slice(BODY_PLAIN);
             }
+
             _ => {
-                self.write_buf.put_slice(HTTPNFOUND);
-                self.write_buf.put_slice(HDR_SERVER);
+                self.write_buf.put_slice(HEAD_NOT_FOUND);
+                self.write_buf.put_slice(HDR_END);
             }
         }
     }
@@ -73,16 +84,21 @@ impl Future for App {
             if this.read_buf.capacity() - this.read_buf.len() < 512 {
                 this.read_buf.reserve(32_768);
             }
-            let read = Pin::new(&mut this.io).poll_read_buf(cx, &mut this.read_buf);
-            match read {
+
+            let n = match Pin::new(&mut this.io).poll_fill_buf(cx) {
                 Poll::Pending => break,
-                Poll::Ready(Ok(n)) => {
-                    if n == 0 {
+                Poll::Ready(Ok(filled)) => {
+                    if filled.is_empty() {
                         return Poll::Ready(Ok(()));
                     }
+
+                    this.read_buf.extend_from_slice(filled);
+                    filled.len()
                 }
                 Poll::Ready(Err(_)) => return Poll::Ready(Err(())),
-            }
+            };
+
+            Pin::new(&mut this.io).consume(n);
         }
 
         if this.write_buf.capacity() - this.write_buf.len() <= 512 {
@@ -90,7 +106,7 @@ impl Future for App {
         }
 
         loop {
-            match this.codec.decode(&mut Pin::new(&mut this.read_buf)) {
+            match this.codec.decode(&mut this.read_buf) {
                 Ok(Some(h1::Message::Item(req))) => this.handle_request(req),
                 Ok(None) => break,
                 _ => return Poll::Ready(Err(())),
@@ -115,6 +131,7 @@ impl Future for App {
                     Poll::Ready(Err(_)) => return Poll::Ready(Err(())),
                 }
             }
+
             if written == len {
                 unsafe { this.write_buf.set_len(0) }
             } else if written > 0 {
@@ -127,19 +144,19 @@ impl Future for App {
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    println!("Started http server: 127.0.0.1:8080");
+    println!("Started HTTP server: 127.0.0.1:8080");
 
     // start http server
     Server::build()
         .backlog(1024)
-        .bind("techempower", "0.0.0.0:8080", || {
+        .bind("tfb-actix-server", "0.0.0.0:8080", || {
             fn_service(|io: TcpStream| App {
-                io,
+                io: BufReader::new(io),
                 read_buf: BytesMut::with_capacity(32_768),
                 write_buf: BytesMut::with_capacity(32_768),
                 codec: h1::Codec::default(),
             })
         })?
-        .start()
+        .run()
         .await
 }
