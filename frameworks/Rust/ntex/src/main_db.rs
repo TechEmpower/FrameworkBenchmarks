@@ -7,16 +7,18 @@ use futures::future::{ok, Future, FutureExt};
 use ntex::http::header::{HeaderValue, CONTENT_TYPE, SERVER};
 use ntex::http::{HttpService, KeepAlive, Request, Response};
 use ntex::service::{Service, ServiceFactory};
-use ntex::{util::BytesMut, time::Seconds};
 use ntex::web::{Error, HttpResponse};
+use ntex::{time::Seconds, util::BytesMut, util::PoolId};
+
+#[cfg(target_os = "macos")]
+use serde_json as simd_json;
 
 mod db;
 mod utils;
 
 struct App(db::PgConnection);
 
-impl Service for App {
-    type Request = Request;
+impl Service<Request> for App {
     type Response = Response;
     type Error = Error;
     type Future = Pin<Box<dyn Future<Output = Result<Response, Error>>>>;
@@ -74,9 +76,7 @@ impl Service for App {
 
 struct AppFactory;
 
-impl ServiceFactory for AppFactory {
-    type Config = ();
-    type Request = Request;
+impl ServiceFactory<Request> for AppFactory {
     type Response = Response;
     type Error = Error;
     type Service = App;
@@ -97,15 +97,16 @@ async fn main() -> std::io::Result<()> {
 
     ntex::server::build()
         .backlog(1024)
-        .bind("techempower", "0.0.0.0:8080", || {
+        .bind("techempower", "0.0.0.0:8080", |cfg| {
+            cfg.memory_pool(PoolId::P1);
+            PoolId::P1.set_read_params(65535, 1024);
+            PoolId::P1.set_write_params(65535, 1024);
+
             HttpService::build()
                 .keep_alive(KeepAlive::Os)
                 .client_timeout(Seconds(0))
-                .disconnect_timeout(Seconds(0))
-                .buffer_params(65535, 65535, 1024)
                 .h1(AppFactory)
-                .tcp()
         })?
-        .start()
+        .run()
         .await
 }
