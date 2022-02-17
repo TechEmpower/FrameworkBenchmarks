@@ -19,7 +19,7 @@ AngelConfigurer configureServer(FileSystem fileSystem) {
     // See: https://github.com/angel-dart/jael
     var viewsDirectory = fileSystem.directory('views');
     var viewCache = <String, Document>{};
-    jaelTemplatePreload(viewsDirectory, viewCache);
+    await jaelTemplatePreload(viewsDirectory, viewCache);
     await app.configure(jael(viewsDirectory, cache: viewCache));
 
     // Apply another plug-ins, i.e. ones that *you* have written.
