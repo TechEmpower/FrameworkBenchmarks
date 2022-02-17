@@ -10,7 +10,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.hikaricp>3.3.1</version.hikaricp>
-        <version.postgres>42.2.5</version.postgres>
+        <version.postgres>42.3.3</version.postgres>
         <version.hserver>2.9.80</version.hserver>
     </properties>
 
