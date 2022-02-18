@@ -13,7 +13,7 @@
 
   <properties>
     <jooby.version>2.9.5</jooby.version>
-    <postgresql.version>42.2.25</postgresql.version>
+    <postgresql.version>42.3.3</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
