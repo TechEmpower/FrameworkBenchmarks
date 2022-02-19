@@ -84,8 +84,11 @@ async def fortunes(context, request):
 
 async def database_updates(context, request):
     num_queries = get_num_queries(request)
+    uniq = {randint(1, 10000) for _ in range(num_queries)}
+    while len(uniq) < num_queries:
+        uniq.add(randint(1, 10000))
     updates = [
-        (randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)
+        (row_id, randint(1, 10000)) for row_id in uniq
     ]
     worlds = [
         {"id": row_id, "randomNumber": number} for row_id, number in updates
