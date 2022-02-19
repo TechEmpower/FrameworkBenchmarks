@@ -1,6 +1,8 @@
+import logging
 from operator import itemgetter
 from random import randint
 
+import asyncpg.exceptions
 import jinja2
 from aioworkers_pg.base import Connector
 
@@ -12,6 +14,7 @@ READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
 sort_fortunes_key = itemgetter(1)
+logger = logging.getLogger(__name__)
 
 
 class PG(Connector):
@@ -98,6 +101,14 @@ async def database_updates(context, request):
         statement = await connection.prepare(READ_ROW_SQL)
         for row_id, number in updates:
             await statement.fetchval(row_id)
-        await connection.executemany(WRITE_ROW_SQL, updates)
+        for _ in range(99):
+            try:
+                await connection.executemany(WRITE_ROW_SQL, updates)
+            except asyncpg.exceptions.DeadlockDetectedError as e:
+                logger.debug('Deadlock %s', e)
+            else:
+                break
+        else:
+            worlds.clear()
 
     return worlds
