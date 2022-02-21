@@ -50,7 +50,7 @@ public class HelloWebServer {
                 .withAcceptLength(8_192)
                 .withMaxRequestSize(1_024 * 1_024)
                 .withReadBufferSize(1_024 * 64)
-                .withResolution(Duration.ofMillis(100))
+                .withResolution(Duration.ofMillis(1_000))
                 .withSocketTimeout(Duration.ofSeconds(90));
         EventLoop eventLoop = new EventLoop(options, new DisabledLogger(), this::handle);
         eventLoop.start();
