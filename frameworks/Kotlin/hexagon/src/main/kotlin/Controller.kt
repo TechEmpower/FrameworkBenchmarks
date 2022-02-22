@@ -4,16 +4,19 @@ import com.hexagonkt.core.require
 import com.hexagonkt.core.media.ApplicationMedia.JSON
 import com.hexagonkt.core.media.TextMedia.HTML
 import com.hexagonkt.core.media.TextMedia.PLAIN
+import com.hexagonkt.core.multiMapOf
 import com.hexagonkt.http.model.ContentType
 import com.hexagonkt.http.server.handlers.HttpServerContext
 import com.hexagonkt.http.server.handlers.PathHandler
 import com.hexagonkt.http.server.handlers.path
+import com.hexagonkt.http.toHttpFormat
 import com.hexagonkt.serialization.jackson.json.Json
 import com.hexagonkt.serialization.serialize
 import com.hexagonkt.store.BenchmarkStore
 import com.hexagonkt.templates.TemplatePort
 
 import java.net.URL
+import java.time.LocalDateTime.now
 import java.util.concurrent.ThreadLocalRandom
 
 import kotlin.text.Charsets.UTF_8
@@ -37,6 +40,15 @@ class Controller(
 
     internal val path: PathHandler by lazy {
         path {
+            on("*") {
+                val headers = multiMapOf(
+                    "server" to "Hexagon",
+                    "date" to now().toHttpFormat(),
+                )
+
+                send(headers = headers)
+            }
+
             get("/plaintext") { ok(settings.textMessage, contentType = plain) }
             get("/json") { ok(Message(settings.textMessage).serialize(Json.raw), contentType = json) }
 
