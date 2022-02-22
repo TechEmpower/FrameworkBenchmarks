@@ -1,5 +1,5 @@
-#[global_allocator]
-static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+// #[global_allocator]
+// static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 // #[global_allocator]
 // static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
@@ -37,8 +37,8 @@ async fn plaintext(res: &mut Response) {
 fn main() {
     let router = Arc::new(
         Router::new()
-            .push(Router::new().path("plaintext").get(plaintext))
-            .push(Router::new().path("json").get(json)),
+            .push(Router::with_path("plaintext").get(plaintext))
+            .push(Router::with_path("json").get(json)),
     );
 
     for _ in 1..num_cpus::get() {

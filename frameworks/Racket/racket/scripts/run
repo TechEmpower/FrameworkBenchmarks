@@ -6,37 +6,4 @@ echo never > /sys/kernel/mm/transparent_hugepage/enabled
 redis-server /racket/config/redis.conf &
 
 export PLT_INCREMENTAL_GC=1
-
-CORES=$(("$(nproc --all)" * 1))
-CONF="/racket/config/upstream.conf"
-
-cat >"$CONF" <<EOF
-upstream app {
-  least_conn;
-EOF
-
-for i in $(seq 0 $CORES); do
-    port=$((8081 + i))
-    /racket/app "$port" &
-    echo "  server unix:///racket/$port.sock;" >> "$CONF"
-done
-
-cat >>"$CONF" <<EOF
-  keepalive 512;
-}
-EOF
-
-for i in $(seq 0 $CORES); do
-    port=$((8081 + i))
-    filename="/racket/$port.ready"
-    while [ ! -f "$filename" ]; do
-        echo "Waiting for $filename..."
-        sleep 0.25;
-    done
-    chmod 0777 "/racket/$port.sock"
-done
-
-export NGINX_WORKER_PROCESES=$(("$CORES" / 4))
-envsubst '$NGINX_WORKER_PROCESES' < /racket/config/nginx.conf.tpl > /racket/config/nginx.conf
-cat /racket/config/upstream.conf
-nginx -c /racket/config/nginx.conf
+/racket/bin/app --host 0.0.0.0 --port 8080

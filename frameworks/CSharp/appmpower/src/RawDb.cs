@@ -13,7 +13,13 @@ namespace appMpower
    public static class RawDb
    {
       private const int MaxBatch = 500;
+
+#if ADO      
+      private static ConcurrentRandom _random = new ConcurrentRandom();
+#else
       private static Random _random = new Random();
+#endif
+
       private static string[] _queriesMultipleRows = new string[MaxBatch + 1];
 
       private static readonly object[] _cacheKeys = Enumerable.Range(0, 10001).Select((i) => new CacheKey(i)).ToArray();
@@ -147,10 +153,13 @@ namespace appMpower
 
       private static (PooledCommand pooledCommand, IDbDataParameter dbDataParameter) CreateReadCommand(PooledConnection pooledConnection)
       {
+#if ADO         
+         var pooledCommand = new PooledCommand("SELECT * FROM world WHERE id=@Id", pooledConnection);
+#else         
          var pooledCommand = new PooledCommand("SELECT * FROM world WHERE id=?", pooledConnection);
-         var dbDataParameter = pooledCommand.CreateParameter("@Id", DbType.Int32, _random.Next(1, 10001));
+#endif         
 
-         return (pooledCommand, dbDataParameter);
+         return (pooledCommand, pooledCommand.CreateParameter("Id", DbType.Int32, _random.Next(1, 10001)));
       }
 
       private static async Task<World> ReadSingleRow(PooledCommand pooledCommand)

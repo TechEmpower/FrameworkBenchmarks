@@ -37,8 +37,8 @@ async fn main() -> io::Result<()> {
 
     HttpServer::new(move || {
         App::with_async_state(move || async move {
-            let pool = create(config).await.unwrap();
-            AppState::new(pool)
+            let pool = create(config).await.map_err(|_| ())?;
+            Ok(AppState::new(pool))
         })
         .service(fn_service(handle))
     })
@@ -50,7 +50,7 @@ async fn main() -> io::Result<()> {
 }
 
 async fn handle(req: &mut WebRequest<'_, State>) -> HandleResult {
-    let inner = req.request_mut();
+    let inner = req.req_mut();
 
     match (inner.method(), inner.uri().path()) {
         (&Method::GET, "/plaintext") => plain_text(req),
@@ -86,7 +86,7 @@ async fn fortunes(req: &mut WebRequest<'_, State>) -> HandleResult {
 }
 
 async fn queries(req: &mut WebRequest<'_, State>) -> HandleResult {
-    let num = req.request_mut().uri().query().parse_query();
+    let num = req.req_mut().uri().query().parse_query();
 
     match req.state().client().get_worlds(num).await {
         Ok(worlds) => _json(req, worlds.as_slice()),
@@ -95,7 +95,7 @@ async fn queries(req: &mut WebRequest<'_, State>) -> HandleResult {
 }
 
 async fn updates(req: &mut WebRequest<'_, State>) -> HandleResult {
-    let num = req.request_mut().uri().query().parse_query();
+    let num = req.req_mut().uri().query().parse_query();
 
     match req.state().client().update(num).await {
         Ok(worlds) => _json(req, worlds.as_slice()),
