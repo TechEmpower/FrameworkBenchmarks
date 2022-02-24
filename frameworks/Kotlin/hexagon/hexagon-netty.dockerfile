@@ -15,7 +15,7 @@ RUN gradle --quiet
 FROM adoptopenjdk:11-jre-hotspot-bionic
 ENV DBSTORE postgresql
 ENV POSTGRESQL_DB_HOST tfb-database
-ENV WEBENGINE jetty
+ENV WEBENGINE netty
 ENV PROJECT hexagon
 
 COPY --from=gradle_build /hexagon/build/install/$PROJECT /opt/$PROJECT
