@@ -228,7 +228,7 @@ class App : CoroutineVerticle() {
          * This test exercises the framework fundamentals including keep-alive support, request routing, request header
          * parsing, object instantiation, JSON serialization, response header generation, and request count throughput.
          */
-        app["/json"].checkedCoroutineHandler { ctx ->
+        app.get("/json").checkedCoroutineHandler { ctx ->
             ctx.response()
                 .putHeader(HttpHeaders.SERVER, SERVER)
                 .putHeader(HttpHeaders.DATE, date)
@@ -241,20 +241,20 @@ class App : CoroutineVerticle() {
          * This test exercises the framework's object-relational mapper (ORM), random number generator, database driver,
          * and database connection pool.
          */
-        app["/db"].checkedCoroutineHandler { ctx -> pgClientBenchmark.dbHandler(ctx) }
+        app.get("/db").checkedCoroutineHandler { ctx -> pgClientBenchmark.dbHandler(ctx) }
 
         /*
          * This test is a variation of Test #2 and also uses the World table. Multiple rows are fetched to more dramatically
          * punish the database driver and connection pool. At the highest queries-per-request tested (20), this test
          * demonstrates all frameworks' convergence toward zero requests-per-second as database activity increases.
          */
-        app["/queries"].checkedCoroutineHandler { ctx -> pgClientBenchmark.queriesHandler(ctx) }
+        app.get("/queries").checkedCoroutineHandler { ctx -> pgClientBenchmark.queriesHandler(ctx) }
 
         /*
          * This test exercises the ORM, database connectivity, dynamic-size collections, sorting, server-side templates,
          * XSS countermeasures, and character encoding.
          */
-        app["/fortunes"].checkedCoroutineHandler { ctx -> pgClientBenchmark.fortunesHandler(ctx) }
+        app.get("/fortunes").checkedCoroutineHandler { ctx -> pgClientBenchmark.fortunesHandler(ctx) }
 
         /*
          * This test is a variation of Test #3 that exercises the ORM's persistence of objects and the database driver's
@@ -269,7 +269,7 @@ class App : CoroutineVerticle() {
          * still small, meaning good performance is still necessary in order to saturate the gigabit Ethernet of the test
          * environment.
          */
-        app["/plaintext"].checkedCoroutineHandler { ctx ->
+        app.get("/plaintext").checkedCoroutineHandler { ctx ->
             ctx.response()
                 .putHeader(HttpHeaders.SERVER, SERVER)
                 .putHeader(HttpHeaders.DATE, date)
