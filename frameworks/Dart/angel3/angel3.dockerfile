@@ -1,4 +1,4 @@
-FROM google/dart:latest
+FROM dart:latest
 
 COPY ./orm/config /app/config
 COPY ./orm/lib /app/lib
@@ -8,7 +8,7 @@ COPY ./orm/web /app/web
 COPY ./orm/*.yaml /app/
 
 WORKDIR /app
-RUN dart pub get
+RUN dart pub upgrade
 
 #RUN chmod -R 777 /app/run
 
@@ -18,4 +18,4 @@ RUN dart pub get
 # Set environment, start server
 ENV ANGEL_ENV=production
 EXPOSE 8080
-CMD dart ./run/prod.dart -p 8080 -a 0.0.0.0 -j 20
+CMD dart ./run/prod.dart -p 8080 -a 0.0.0.0 -j 50

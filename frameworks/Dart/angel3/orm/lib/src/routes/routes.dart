@@ -56,5 +56,7 @@ AngelConfigurer configureServer(FileSystem fileSystem) {
         return await oldErrorHandler(e, req, res);
       }
     };
+
+    app.enableCache();
   };
 }

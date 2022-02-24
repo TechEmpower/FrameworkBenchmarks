@@ -2,47 +2,44 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
 
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Benchmarks.Controllers
+namespace Benchmarks.Controllers;
+
+[Route("mvc")]
+public class HomeController : Controller
 {
-    [Route("mvc")]
-    public class HomeController : Controller
+    [HttpGet("plaintext")]
+    public IActionResult Plaintext()
     {
-        [HttpGet("plaintext")]
-        public IActionResult Plaintext()
-        {
-            return new PlainTextActionResult();
-        }
+        return new PlainTextActionResult();
+    }
 
-        [HttpGet("json")]
-        [Produces("application/json")]
-        public object Json()
-        {
-            return new { message = "Hello, World!" };
-        }
-        
-        [HttpGet("view")]
-        public ViewResult Index()
-        {
-            return View();
-        }
+    [HttpGet("json")]
+    [Produces("application/json")]
+    public object Json()
+    {
+        return new { message = "Hello, World!" };
+    }
 
-        private class PlainTextActionResult : IActionResult
-        {
-            private static readonly byte[] _helloWorldPayload = Encoding.UTF8.GetBytes("Hello, World!");
+    [HttpGet("view")]
+    public ViewResult Index()
+    {
+        return View();
+    }
 
-            public Task ExecuteResultAsync(ActionContext context)
-            {
-                var response = context.HttpContext.Response;
-                response.StatusCode = StatusCodes.Status200OK;
-                response.ContentType = "text/plain";
-                var payloadLength = _helloWorldPayload.Length;
-                response.ContentLength = payloadLength;
-                return response.Body.WriteAsync(_helloWorldPayload, 0, payloadLength);
-            }
+    private class PlainTextActionResult : IActionResult
+    {
+        private static readonly byte[] _helloWorldPayload = Encoding.UTF8.GetBytes("Hello, World!");
+
+        public Task ExecuteResultAsync(ActionContext context)
+        {
+            var response = context.HttpContext.Response;
+            response.StatusCode = StatusCodes.Status200OK;
+            response.ContentType = "text/plain";
+            var payloadLength = _helloWorldPayload.Length;
+            response.ContentLength = payloadLength;
+            return response.Body.WriteAsync(_helloWorldPayload, 0, payloadLength);
         }
     }
 }

@@ -24,9 +24,9 @@ use xitca_http::{
     http::{
         self,
         header::{CONTENT_TYPE, SERVER},
-        IntoResponse,
+        IntoResponse, Method,
     },
-    util::service::get,
+    util::service::Route,
     HttpServiceBuilder,
 };
 use xitca_server::Builder;
@@ -56,7 +56,9 @@ async fn main() -> io::Result<()> {
             .disable_vectored_write()
             .max_request_headers::<8>();
 
-        HttpServiceBuilder::h1(get(http)).config(config)
+        let route = Route::new(http).methods([Method::GET]);
+
+        HttpServiceBuilder::h1(route).config(config)
     };
 
     Builder::new()
