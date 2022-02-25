@@ -1,9 +1,10 @@
-FROM golang:1.15
+FROM golang:1.17
 
 ADD     ./src /goframe
 WORKDIR /goframe
+RUN     go generate ./template
 RUN     go build -o main main.go
 
 EXPOSE 8080
 
-CMD     ./main
+CMD ./main
