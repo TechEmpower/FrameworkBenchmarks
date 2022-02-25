@@ -13,7 +13,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "Postgres",
-      "framework": "atreugo",
+      "framework": "goframe",
       "language": "Go",
       "flavor": "None",
       "orm": "Raw",
@@ -21,7 +21,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Atreugo",
+      "display_name": "goframe",
       "notes": "",
       "versus": "go"
     }
