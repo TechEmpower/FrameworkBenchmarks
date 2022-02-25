@@ -1,0 +1,26 @@
+{
+  "framework": "zio-http",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "database": "None",
+        "approach": "Realistic",
+        "classification": "Micro",
+        "framework": "zio-http",
+        "language": "Scala",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Netty",
+        "webserver": "None",
+        "database_os": "Linux",
+        "os": "Linux",
+        "display_name": "zio-http",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

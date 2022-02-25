@@ -1,6 +1,0 @@
-postgres:
-  username: benchmarkdbuser
-  password: benchmarkdbpass
-  host: tfb-database
-  port: 5432
-  databaseName: hello_world

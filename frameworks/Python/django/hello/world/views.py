@@ -38,8 +38,8 @@ def json(request):
 def db(request):
     r = _random_int()
     world = uj_dumps({
-        'id' : r,
-        'randomNumber' : World.objects.get(id=r).randomnumber
+        'id': r,
+        'randomNumber': World.objects.get(id=r).randomnumber
     })
     return HttpResponse(world, content_type="application/json")
 
@@ -49,7 +49,7 @@ def dbs(request):
 
     def caller(input_):
         int_ = _random_int()
-        return {'id' : int_, 'randomNumber' : World.objects.get(id=int_).randomnumber}
+        return {'id': int_, 'randomNumber': World.objects.get(id=int_).randomnumber}
     worlds = tuple(map(caller, range(queries)))
 
     return HttpResponse(uj_dumps(worlds), content_type="application/json")
@@ -67,10 +67,10 @@ def update(request):
     queries = _get_queries(request)
 
     def caller(input_):
-        w = World.objects.get(id= _random_int())
+        w = World.objects.get(id=_random_int())
         w.randomnumber = _random_int()
         w.save()
-        return {'id' : w.id, 'randomNumber' : w.randomnumber}
+        return {'id': w.id, 'randomNumber': w.randomnumber}
     worlds = tuple(map(caller, range(queries)))
 
     return HttpResponse(uj_dumps(worlds), content_type="application/json")

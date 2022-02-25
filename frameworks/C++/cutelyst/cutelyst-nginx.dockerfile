@@ -29,6 +29,8 @@ RUN sed -i "s|SendDate=.*|SendDate=false|g" /cutelyst_socket.ini
 ENV C_THREADS 1
 ENV CPU_AFFINITY 1
 
+EXPOSE 8080
+
 CMD nginx -c /nginx.conf && uwsgi \
     --ini /cutelyst_socket.ini \
     --plugin /usr/lib/uwsgi/plugins/cutelyst2_plugin.so \

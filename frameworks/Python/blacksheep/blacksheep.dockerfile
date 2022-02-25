@@ -12,4 +12,6 @@ ADD templates/fortune.html /blacksheep/templates/
 
 ADD blacksheep_conf.py app.py /blacksheep/
 
+EXPOSE 8080
+
 CMD gunicorn app:app -k uvicorn.workers.UvicornWorker -c blacksheep_conf.py

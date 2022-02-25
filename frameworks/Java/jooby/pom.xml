@@ -11,13 +11,13 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>2.9.3</jooby.version>
+    <jooby.version>2.9.5</jooby.version>
     <netty.version>4.1.49.Final</netty.version>
     <dsl-json.version>1.9.5</dsl-json.version>
-    <postgresql.version>42.2.13</postgresql.version>
+    <postgresql.version>42.3.3</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
 
     <!-- Startup class -->
     <application.class>com.techempower.App</application.class>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2018, 2021 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,9 @@
 
 package io.helidon.benchmark;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import java.io.IOException;
+import java.util.logging.LogManager;
+
 import io.helidon.benchmark.models.DbRepository;
 import io.helidon.benchmark.models.JdbcRepository;
 import io.helidon.benchmark.services.DbService;
@@ -28,50 +26,26 @@ import io.helidon.benchmark.services.FortuneService;
 import io.helidon.benchmark.services.JsonService;
 import io.helidon.benchmark.services.PlainTextService;
 import io.helidon.config.Config;
+import io.helidon.media.jsonp.JsonpSupport;
 import io.helidon.webserver.Routing;
-import io.helidon.webserver.ServerConfiguration;
 import io.helidon.webserver.WebServer;
-import io.reactivex.Scheduler;
-import io.reactivex.schedulers.Schedulers;
-
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.logging.LogManager;
 
 /**
  * Simple Hello World rest application.
  */
 public final class Main {
 
+    private static final String SERVER_HEADER = "Server";
+    private static final String SERVER_NAME = "Helidon";
+
     /**
      * Cannot be instantiated.
      */
-    private Main() { }
-
-    private static Scheduler getScheduler() {
-        return Schedulers.from(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2));
-    }
-
-    private static DataSource getDataSource(Config config) {
-        HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(config.get("jdbcUrl").asString().get());
-        hikariConfig.setUsername(config.get("username").asString().get());
-        hikariConfig.setPassword(config.get("password").asString().get());
-        hikariConfig.setMaximumPoolSize(Runtime.getRuntime().availableProcessors() * 2);
-
-        return new HikariDataSource(hikariConfig);
+    private Main() {
     }
 
     private static DbRepository getRepository(Config config) {
-        DataSource dataSource = getDataSource(config.get("dataSource"));
-        Scheduler scheduler = getScheduler();
-        return new JdbcRepository(dataSource, scheduler);
-    }
-
-    private static Mustache getTemplate() {
-        MustacheFactory mf = new DefaultMustacheFactory();
-        return mf.compile("fortunes.mustache");
+        return new JdbcRepository(config);
     }
 
     /**
@@ -84,18 +58,19 @@ public final class Main {
 
         return Routing.builder()
                 .any((req, res) -> {
-                    res.headers().add("Server", "Helidon");
+                    res.headers().add(SERVER_HEADER, SERVER_NAME);
                     req.next();
                 })
                 .register(new JsonService())
                 .register(new PlainTextService())
                 .register(new DbService(repository))
-                .register(new FortuneService(repository, getTemplate()))
+                .register(new FortuneService(repository))
                 .build();
     }
 
     /**
      * Application main entry point.
+     *
      * @param args command line arguments.
      * @throws IOException if there are problems reading logging properties
      */
@@ -105,10 +80,11 @@ public final class Main {
 
     /**
      * Start the server.
+     *
      * @return the created {@link WebServer} instance
      * @throws IOException if there are problems reading logging properties
      */
-    protected static WebServer startServer() throws IOException {
+    private static WebServer startServer() throws IOException {
 
         // load logging configuration
         LogManager.getLogManager().readConfiguration(
@@ -117,11 +93,11 @@ public final class Main {
         // By default this will pick up application.yaml from the classpath
         Config config = Config.create();
 
-        // Get webserver config from the "server" section of application.yaml
-        ServerConfiguration serverConfig =
-                ServerConfiguration.create(config.get("server"));
-
-        WebServer server = WebServer.create(serverConfig, createRouting(config));
+        // Build server with JSONP support
+        WebServer server = WebServer.builder(createRouting(config))
+                .config(config.get("server"))
+                .addMediaSupport(JsonpSupport.create())
+                .build();
 
         // Start the server and print some info.
         server.start().thenAccept(ws -> {

@@ -1,0 +1,29 @@
+[package]
+name = "faf-ex"
+version = "0.2.0"
+authors = ["James Bates <errantmind@protonmail.com>"]
+edition = "2021"
+
+
+[profile.dev]
+opt-level = 0
+debug = true
+debug-assertions = true
+overflow-checks = true
+lto = false
+panic = 'unwind'
+incremental = true
+codegen-units = 256
+rpath = false
+
+[profile.release]
+opt-level = 3
+panic = 'abort'
+codegen-units = 1
+lto = "thin"
+debug = false
+incremental = false
+overflow-checks = false
+
+[dependencies]
+faf = { git = "https://github.com/errantmind/faf.git" } #, features = ["faf_debug"] }

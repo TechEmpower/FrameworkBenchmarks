@@ -1,91 +1,84 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Fortune;
 use App\Models\World;
 use Illuminate\Routing\Controller as BaseController;
 
-class Controller extends BaseController {
+class Controller extends BaseController
+{
+    public function json()
+    {
+        return response()->json(['message' => 'Hello, World!']);
+    }
 
-	public function json() {
-		return [
-			'message' => 'Hello, World!'
-		];
-	}
+    public function db()
+    {
+        return response()->json(World::query()->find(self::randomInt()));
+    }
 
-	public function db() {
-		return World::where('id', \mt_rand(1, 10000))->first(); // to compare with find()
-	}
+    public function queries($queries = 1)
+    {
+        $queries = self::clamp($queries);
 
-	public function queries($queries = 1) {
-		$rows = [];
-		$numbers = $this->getUniqueRandomNumbers($this->clamp($queries));
-		foreach ($numbers as $id) {
-			$rows[] = World::find($id);
-		}
+        $rows = [];
+        while ($queries--) {
+            $rows[] = World::query()->find(self::randomInt());
+        }
 
-		return $rows;
-	}
+        return response()->json($rows);
+    }
 
-	public function fortunes() {
-		$rows = Fortune::all();
+    public function fortunes()
+    {
+        $rows = Fortune::all();
 
-		$insert = new Fortune();
-		$insert->id = 0;
-		$insert->message = 'Additional fortune added at request time.';
+        $insert = new Fortune();
+        $insert->id = 0;
+        $insert->message = 'Additional fortune added at request time.';
 
-		$rows->add($insert);
-		$rows = $rows->sortBy('message');
+        $rows->add($insert);
+        $rows = $rows->sortBy('message');
 
-		return view('fortunes', [
-			'rows' => $rows
-		]);
-	}
+        return view('fortunes', ['rows' => $rows]);
+    }
 
-	public function updates($queries = 1) {
-		$rows = [];
+    public function updates($queries = 1)
+    {
+        $queries = self::clamp($queries);
 
-		$numbers = $this->getUniqueRandomNumbers($this->clamp($queries));
-		foreach ($numbers as $id) {
-			$row = World::find($id);
-			$oldId = $row->randomNumber;
-			do {
-				$newId = mt_rand(1, 10000);
-			} while ($oldId === $newId);
-			$row->randomNumber = $newId;
-			do {
-				try {
-					$saved = $row->save();
-				} catch (\Exception $e) {
-					$saved = false;
-				}
-			} while (! $saved);
-			$rows[] = $row;
-		}
+        $rows = [];
 
-		return $rows;
-	}
+        while ($queries--) {
+            $row = World::query()->find(self::randomInt());
+            $row->randomNumber = self::randomInt();
+            $row->save();
 
-	public function plaintext() {
-		return response('Hello, World!')->header('Content-Type', 'text/plain');
-	}
+            $rows[] = $row;
+        }
 
-	private function clamp($value): int {
-		if (! \is_numeric($value) || $value < 1) {
-			return 1;
-		} else if ($value > 500) {
-			return 500;
-		} else {
-			return $value;
-		}
-	}
+        return response()->json($rows);
+    }
 
-	private function getUniqueRandomNumbers($count) {
-		$res = [];
-		do {
-			$res[\mt_rand(1, 10000)] = 1;
-		} while (\count($res) < $count);
-		\ksort($res);
-		return \array_keys($res);
-	}
+    public function plaintext()
+    {
+        return response('Hello, World!', 200, ['Content-Type' => 'text/plain']);
+    }
+
+    private static function randomInt()
+    {
+        return random_int(1, 10000);
+    }
+
+    private static function clamp($value)
+    {
+        if (!is_numeric($value) || $value < 1) {
+            return 1;
+        }
+        if ($value > 500) {
+            return 500;
+        }
+        return (int)$value;
+    }
 }

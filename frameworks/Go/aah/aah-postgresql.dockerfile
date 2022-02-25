@@ -17,4 +17,6 @@ RUN aah --version
 RUN mkdir -p views/common
 RUN aah build --single
 
+EXPOSE 8080
+
 CMD build/bin/benchmark run --envprofile bm_postgresql

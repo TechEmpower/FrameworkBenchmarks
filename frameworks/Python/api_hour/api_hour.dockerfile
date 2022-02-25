@@ -9,4 +9,6 @@ RUN pip3 install -r /aiohttp.web/requirements.txt
 
 WORKDIR /aiohttp.web
 
+EXPOSE 8080
+
 CMD api_hour -ac hello:Container

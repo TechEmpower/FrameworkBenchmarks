@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+
+using Microsoft.EntityFrameworkCore;
 
 using Benchmarks.Model;
 
@@ -14,10 +17,10 @@ namespace Benchmarks.Tests
         private static Random _Random = new Random();
 
         [ResourceMethod(":queries")]
-        public List<World> UpdateWorldsFromPath(string queries) => UpdateWorlds(queries);
+        public ValueTask<List<World>> UpdateWorldsFromPath(string queries) => UpdateWorlds(queries);
 
         [ResourceMethod]
-        public List<World> UpdateWorlds(string queries)
+        public async ValueTask<List<World>> UpdateWorlds(string queries)
         {
             var count = 1;
 
@@ -30,11 +33,11 @@ namespace Benchmarks.Tests
 
             var ids = Enumerable.Range(1, 10000).Select(x => _Random.Next(1, 10001)).Distinct().Take(count).ToArray();
 
-            foreach (var id in ids)
+            using (var context = DatabaseContext.Create())
             {
-                using (var context = DatabaseContext.Create())
+                foreach (var id in ids)
                 {
-                    var record = context.World.First(w => w.Id == id);
+                    var record = await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false);
 
                     var old = record.RandomNumber;
 
@@ -51,7 +54,7 @@ namespace Benchmarks.Tests
 
                     result.Add(record);
 
-                    context.SaveChanges();
+                    await context.SaveChangesAsync();
                 }
             }
 

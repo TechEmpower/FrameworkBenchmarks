@@ -35,4 +35,6 @@ RUN xbuild /revenj/Revenj.Bench/Revenj.Bench.csproj /t:Rebuild /p:Configuration=
 
 RUN mv /revenj/Revenj.Http.exe.config /revenj/exe/Revenj.Http.exe.config
 
+EXPOSE 8080
+
 CMD ["mono", "/revenj/exe/Revenj.Http.exe"]

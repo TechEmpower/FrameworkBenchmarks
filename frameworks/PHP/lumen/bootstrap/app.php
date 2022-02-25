@@ -52,6 +52,9 @@ if (env('APP_SWOOLE', false)) {
 	$app->register(\SwooleTW\Http\LumenServiceProvider::class);
 	$app->configure('swoole_http');
 }
+if (class_exists('Hhxsv5\LaravelS\Illuminate\LaravelSServiceProvider')) {
+    $app->register(Hhxsv5\LaravelS\Illuminate\LaravelSServiceProvider::class);
+}
 $app->configure('database');
 /*
  * |--------------------------------------------------------------------------

@@ -21,4 +21,7 @@ COPY --from=builder /just-0.0.2/modules/picohttp/http.so ./
 COPY --from=builder /just-0.0.2/modules/html/html.so ./
 ENV LD_LIBRARY_PATH=/app
 ENV PGPOOL=1
+
+EXPOSE 8080
+
 CMD ["just", "spawn.js", "techempower.js"]

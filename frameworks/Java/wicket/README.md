@@ -13,9 +13,9 @@ Use JDBC for interaction with MySQL database.
 
 ## Versions
 
-* [Wicket 7.5.0](http://wicket.apache.org/)
+* [Wicket 9.6.0](http://wicket.apache.org/)
 * [MySQL 5.5.+](http://dev.mysql.com/)
-* [Jackson 2.8.5](http://wiki.fasterxml.com/JacksonHome)
+* [Jackson 2.13.x](http://wiki.fasterxml.com/JacksonHome)
 
 ## Test URLs
 

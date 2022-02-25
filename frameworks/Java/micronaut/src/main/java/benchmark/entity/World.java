@@ -1,17 +1,15 @@
 package benchmark.entity;
 
+import io.micronaut.core.annotation.Introspected;
+
 import java.util.Objects;
 
-/**
- * The model for the "world" database table.
- */
-public final class World {
-
-    public int id;
-    public int randomNumber;
+@Introspected
+public class World {
+    private int id;
+    private int randomNumber;
 
     public World() {
-        super();
     }
 
     public World(int id, int randomNumber) {
@@ -37,11 +35,14 @@ public final class World {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        World world = (World) o;
-        return id == world.id &&
-                randomNumber == world.randomNumber;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final World world = (World) o;
+        return id == world.id && randomNumber == world.randomNumber;
     }
 
     @Override

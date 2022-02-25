@@ -1,26 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <DebugType>portable</DebugType>
-    <AssemblyName>App</AssemblyName>
-    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.35" />
-    <PackageReference Include="Giraffe" Version="5.0.0-alpha-003" />
-    <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
-    <PackageReference Update="FSharp.Core" Version="5.0.0-beta.20417.1" />
+    <PackageReference Update="FSharp.Core" Version="6.0.1" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Giraffe" Version="6.0.0-alpha-2" />
+    <PackageReference Include="Npgsql" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Models.fs" />
-    <Compile Include="HtmlViews.fs" />
-    <Compile Include="StatefullRendering.fs" />
-    <Compile Include="Custom.fs" />
-    <Compile Include="Stock.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

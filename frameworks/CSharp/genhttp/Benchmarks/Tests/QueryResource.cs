@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
+
+using Microsoft.EntityFrameworkCore;
 
 using Benchmarks.Model;
 
@@ -11,13 +13,13 @@ namespace Benchmarks.Tests
 
     public sealed class QueryResource
     {
-        private static Random _Random = new Random();
+        private static readonly Random _Random = new Random();
 
         [ResourceMethod(":queries")]
-        public List<World> GetWorldsFromPath(string queries) => GetWorlds(queries);
+        public ValueTask<List<World>> GetWorldsFromPath(string queries) => GetWorlds(queries);
 
         [ResourceMethod]
-        public List<World> GetWorlds(string queries)
+        public async ValueTask<List<World>> GetWorlds(string queries)
         {
             var count = 1;
 
@@ -34,7 +36,7 @@ namespace Benchmarks.Tests
             {
                 var id = _Random.Next(1, 10001);
 
-                result.Add(context.World.First(w => w.Id == id));
+                result.Add(await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false));
             }
 
             return result;

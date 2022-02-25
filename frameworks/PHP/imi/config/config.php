@@ -36,6 +36,8 @@ return [
             'tcp_fastopen'      => true,
             'http_parse_post'   => false,
             'http_parse_cookie' => false,
+            'http_parse_files'  => false,
+            'http_compression'  => false,
         ],
     ],
 

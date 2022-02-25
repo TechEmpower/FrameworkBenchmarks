@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 using Benchmarks.Model;
 
 using GenHTTP.Modules.Webservices;
-
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Benchmarks.Tests
 {
@@ -15,7 +17,7 @@ namespace Benchmarks.Tests
     {
         private static readonly Random _Random = new Random();
 
-        private readonly MemoryCache _Cache = new MemoryCache(new MemoryCacheOptions() { ExpirationScanFrequency = TimeSpan.FromMinutes(60) });
+        private static readonly MemoryCache _Cache = new MemoryCache(new MemoryCacheOptions() { ExpirationScanFrequency = TimeSpan.FromMinutes(60) });
 
         private static readonly object[] _CacheKeys = Enumerable.Range(0, 10001).Select((i) => new CacheKey(i)).ToArray();
 
@@ -36,10 +38,10 @@ namespace Benchmarks.Tests
         }
 
         [ResourceMethod(":queries")]
-        public List<World> GetWorldsFromPath(string queries) => GetWorlds(queries);
+        public ValueTask<List<World>> GetWorldsFromPath(string queries) => GetWorlds(queries);
 
         [ResourceMethod]
-        public List<World> GetWorlds(string queries)
+        public async ValueTask<List<World>> GetWorlds(string queries)
         {
             var count = 1;
 
@@ -66,7 +68,7 @@ namespace Benchmarks.Tests
                 }
                 else
                 {
-                    var resolved = context.World.First(w => w.Id == id);
+                    var resolved = await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false);
 
                     _Cache.Set(key, resolved);
 

@@ -5,14 +5,20 @@
  */
 package org.redkalex.benchmark;
 
+import org.redkale.convert.ConvertSmallString;
 import org.redkale.convert.json.JsonConvert;
+import org.redkale.util.Bean;
 
 /**
  *
  * @author zhangjx
  */
-public class Message { 
+@Bean
+public final class Message {
 
+    private static final Message instance = new Message();
+
+    @ConvertSmallString
     private String message;
 
     public Message() {
@@ -20,6 +26,11 @@ public class Message {
 
     public Message(String message) {
         this.message = message;
+    }
+
+    public static Message create(String str) {
+        instance.message = str;
+        return instance;
     }
 
     public String getMessage() {

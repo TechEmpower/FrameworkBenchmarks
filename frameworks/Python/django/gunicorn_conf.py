@@ -24,4 +24,3 @@ else:
         # Disalbe access log
         import meinheld.server
         meinheld.server.set_access_logger(None)
-

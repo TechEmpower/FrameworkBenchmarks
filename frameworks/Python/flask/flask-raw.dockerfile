@@ -1,9 +1,13 @@
-FROM python:3.6.6-stretch
+FROM python:3.8-buster
 
+
+RUN apt-get update
+RUN apt-get install libpq-dev python3-dev -y
+ADD ./requirements.txt /flask/requirements.txt
+RUN pip3 install -r /flask/requirements.txt
 ADD ./ /flask
-
 WORKDIR /flask
 
-RUN pip3 install -r /flask/requirements.txt
+EXPOSE 8080
 
-CMD gunicorn app:app -c gunicorn_conf.py
+CMD gunicorn app_raw:app -c gunicorn_conf.py -k egg:meinheld#gunicorn_worker

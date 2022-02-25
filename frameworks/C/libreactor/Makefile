@@ -1,10 +1,16 @@
-PROG    = libreactor
-OBJS    = src/setup.o src/helpers.o src/main.o
-CFLAGS  = -std=gnu11 -Wall -Wextra -Wpedantic -O3 -g -flto
-LDADD   = -lreactor -ldynamic -lclo
+LR       = src/libreactor.o
+LRSRV    = src/libreactor-server.o
+HELPERS  = src/helpers.o
+CFLAGS   = -std=gnu11 -Wall -Wextra -Wpedantic -O3 -g -march=native -flto
+LDADD    = -lreactor -ldynamic -lclo
 
-$(PROG): $(OBJS)
-	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS) $(LDADD)
+all: libreactor libreactor-server
+
+libreactor: $(LR) $(HELPERS)
+	$(CC) -o $@ $^ $(CFLAGS) $(LDADD)
+
+libreactor-server: $(LRSRV) $(HELPERS)
+	$(CC) -o $@ $^ $(CFLAGS) $(LDADD)
 
 clean:
-	rm -f $(PROG) $(OBJS)
+	rm -f libreactor libreactor-server $(LR) $(LRSRV) $(HELPERS)

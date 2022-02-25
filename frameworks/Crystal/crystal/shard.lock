@@ -1,14 +1,14 @@
-version: 1.0
+version: 2.0
 shards:
   db:
-    github: crystal-lang/crystal-db
-    version: 0.5.0
+    git: https://github.com/crystal-lang/crystal-db.git
+    version: 0.10.1
 
   pg:
-    github: will/crystal-pg
-    version: 0.15.0
+    git: https://github.com/will/crystal-pg.git
+    version: 0.23.2
 
   radix:
-    github: luislavena/radix
-    version: 0.3.8
+    git: https://github.com/luislavena/radix.git
+    version: 0.4.1
 

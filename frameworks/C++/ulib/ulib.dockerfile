@@ -76,5 +76,7 @@ WORKDIR /ulib
 
 ENV UMEMPOOL="58,0,0,41,16401,-14,-15,11,25"
 
+EXPOSE 8080
+
 CMD setcap cap_sys_nice,cap_sys_resource,cap_net_bind_service,cap_net_raw+eip $IROOT/ULib/bin/userver_tcp && \
     $IROOT/ULib/bin/userver_tcp -c $IROOT/ULib/benchmark.cfg

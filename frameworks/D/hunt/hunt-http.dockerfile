@@ -13,4 +13,6 @@ RUN git clone https://github.com/nodejs/http-parser.git && \
 RUN dub upgrade --verbose
 RUN dub build --build=release --arch=x86_64 --compiler=ldc2 -f
 
+EXPOSE 8080
+
 CMD ["./hunt-minihttp"]

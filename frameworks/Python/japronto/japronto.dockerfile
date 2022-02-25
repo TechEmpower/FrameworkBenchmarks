@@ -6,4 +6,6 @@ WORKDIR /japronto
 
 RUN pip3 install -r /japronto/requirements.txt
 
+EXPOSE 8080
+
 CMD python3 app.py

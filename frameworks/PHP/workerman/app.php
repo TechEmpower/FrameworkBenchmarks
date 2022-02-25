@@ -21,40 +21,32 @@ function init()
 
 function router(Request $request)
 {
-    switch ($request->path()) {
-        case '/plaintext':
-            return new Response(200, [
-                'Content-Type' => 'text/plain',
-                'Date'         => Header::$date
-            ], 'Hello, World!');
+    return match($request->path()) {
+        '/plaintext' => text(),
+        '/json'      => json(), 
+        '/db'        => db(),
+        '/fortunes'  => fortune(),
+        '/query'     => query($request),
+        '/update'    => updateraw($request),
+        // '/info'      => info(),
+        default      => new Response(404, [], 'Error 404'),
+    };
+}
 
-        case '/json':
-            return new Response(200, [
-                'Content-Type' => 'application/json',
-                'Date'         => Header::$date
-            ], json_encode(['message' => 'Hello, World!']));
+function text()
+{
+    return new Response(200, [
+        'Content-Type' => 'text/plain',
+        'Date'         => Header::$date
+    ], 'Hello, World!');
+}
 
-        case '/db':
-            return db();
-
-        case '/fortunes':
-            // By default use 'Content-Type: text/html; charset=utf-8';
-            return fortune();
-
-        case '/query':
-            return query($request);
-
-        case '/update':
-            return updateraw($request);
-
-/*        case '/info':
-            ob_start();
-            phpinfo();
-            return new Response(200, ['Content-Type' => 'text/plain'], ob_get_clean());
- */
-        default:
-            return new Response(404, [], 'Error 404');
-    }
+function json()
+{
+    return new Response(200, [
+        'Content-Type' => 'application/json',
+        'Date'         => Header::$date
+    ], json_encode(['message' => 'Hello, World!']));
 }
 
 function db()
@@ -143,3 +135,11 @@ function fortune()
     ], "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>$html</table></body></html>"
     );
 }
+
+/* function info()
+{
+    ob_start();
+    phpinfo();
+    return new Response(200, ['Content-Type' => 'text/plain'], ob_get_clean());
+}
+ */

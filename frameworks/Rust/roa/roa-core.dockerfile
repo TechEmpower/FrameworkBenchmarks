@@ -8,4 +8,6 @@ WORKDIR /roa
 RUN cargo clean
 RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --bin roa-core
 
+EXPOSE 8080
+
 CMD ./target/release/roa-core

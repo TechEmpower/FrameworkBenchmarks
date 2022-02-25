@@ -18,4 +18,6 @@ RUN ringo-admin install ringo/stick
 RUN ringo-admin install orfon/reinhardt
 RUN curl -sL -o ${RINGOJS_HOME}/packages/ringo-sqlstore/jars/mysql.jar https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.18/mysql-connector-java-8.0.18.jar
 
+EXPOSE 8080
+
 CMD ["ringo", "--production", "-J-server", "-J-Xmx1g", "-J-Xms1g", "ringo-convenient-main.js", "--host", "0.0.0.0"]

@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BeetleX" Version="1.5.6.1114" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0-rc.1.20451.14" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0-rc.1.20451.14" />
-    <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
-    <PackageReference Include="SpanJson" Version="3.0.1" />
+    <PackageReference Include="BeetleX" Version="1.6.5.41" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Npgsql" Version="5.0.3" />
+    <PackageReference Include="SpanJson" Version="3.1.0" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,17 @@
+[framework]
+name = "fuel"
+
+[main]
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/dbquery?queries="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Micro"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "FPM/FastCGI"
+webserver = "nginx"
+versus = "php"

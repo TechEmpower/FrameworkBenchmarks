@@ -20,7 +20,7 @@ void FortuneController::index()
     fortune.setMessage(QStringLiteral("Additional fortune added at request time."));
     fortuneList << fortune;
     // Sort
-    qSort(fortuneList.begin(), fortuneList.end(), caseSensitiveLessThan);
+    std::sort(fortuneList.begin(), fortuneList.end(), caseSensitiveLessThan);
     texport(fortuneList);
     render();
 }
@@ -32,7 +32,7 @@ void FortuneController::mindex()
     fortune.setMessage(QStringLiteral("Additional fortune added at request time."));
     fortuneList << fortune;
     // Sort
-    qSort(fortuneList.begin(), fortuneList.end(), caseSensitiveMngFortuneLessThan);
+    std::sort(fortuneList.begin(), fortuneList.end(), caseSensitiveMngFortuneLessThan);
     texport(fortuneList);
     render("mindex");
 }

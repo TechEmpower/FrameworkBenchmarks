@@ -5,4 +5,7 @@ COPY src src
 COPY build.sbt build.sbt
 RUN sbt pack
 WORKDIR /youi/target/pack
+
+EXPOSE 8080
+
 CMD ["bin/main"]
