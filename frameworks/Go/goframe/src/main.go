@@ -31,6 +31,7 @@ func main() {
 	// Init http server and handler.
 	s := g.Server()
 	s.SetHandler(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Server", "GoFrame")
 		switch r.URL.Path {
 		case routeJson:
 			handler.JSON(w, r)
