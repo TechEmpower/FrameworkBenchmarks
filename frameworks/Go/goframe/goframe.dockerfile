@@ -3,9 +3,10 @@ FROM golang:1.17
 ADD     ./src /goframe
 WORKDIR /goframe
 RUN     go get -u github.com/valyala/quicktemplate/qtc
+RUN     go mod tidy
 RUN     go generate ./template
-RUN     go build -o main main.go
+RUN     go build -ldflags="-s -w" -o app .
 
 EXPOSE 8080
 
-CMD ./main
+CMD ./app
