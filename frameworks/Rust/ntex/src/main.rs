@@ -1,8 +1,8 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-use ntex::http::header::{HeaderValue, CONTENT_TYPE, SERVER};
-use ntex::{http, time::Seconds, util::Bytes, util::PoolId, web};
+use ntex::http::header::{CONTENT_TYPE, SERVER};
+use ntex::{http, time::Seconds, util::PoolId, web};
 use yarte::Serialize;
 
 mod utils;
@@ -20,18 +20,25 @@ async fn json() -> web::HttpResponse {
     }
     .to_bytes_mut(&mut body);
 
-    web::HttpResponse::Ok()
-        .header(SERVER, HeaderValue::from_static("N"))
-        .header(CONTENT_TYPE, HeaderValue::from_static("application/json"))
-        .body(body)
+    let mut response = web::HttpResponse::with_body(http::StatusCode::OK, body.into());
+    response.headers_mut().append(SERVER, utils::HDR_SERVER);
+    response
+        .headers_mut()
+        .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+    response
 }
 
 #[web::get("/plaintext")]
 async fn plaintext() -> web::HttpResponse {
-    web::HttpResponse::Ok()
-        .header(SERVER, HeaderValue::from_static("N"))
-        .header(CONTENT_TYPE, HeaderValue::from_static("text/plain"))
-        .body(Bytes::from_static(b"Hello, World!"))
+    let mut response = web::HttpResponse::with_body(
+        http::StatusCode::OK,
+        http::body::Body::Bytes(utils::BODY_PLAIN_TEXT),
+    );
+    response.headers_mut().append(SERVER, utils::HDR_SERVER);
+    response
+        .headers_mut()
+        .append(CONTENT_TYPE, utils::HDR_TEXT_CONTENT_TYPE);
+    response
 }
 
 #[ntex::main]
@@ -49,10 +56,7 @@ async fn main() -> std::io::Result<()> {
             http::HttpService::build()
                 .keep_alive(http::KeepAlive::Os)
                 .client_timeout(Seconds(0))
-                .h1(web::App::new()
-                    .service(json)
-                    .service(plaintext)
-                    .with_config(web::dev::AppConfig::default()))
+                .h1(web::App::new().service(json).service(plaintext).finish())
         })?
         .run()
         .await

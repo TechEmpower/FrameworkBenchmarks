@@ -2,7 +2,9 @@
 static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 use std::{future::Future, io, pin::Pin, task::Context, task::Poll};
 
-use ntex::{fn_service, http::h1, io::Io, io::RecvError, util::ready, util::BufMut, util::PoolId};
+use ntex::{
+    fn_service, http::h1, io::Io, io::RecvError, util::ready, util::BufMut, util::PoolId,
+};
 mod utils;
 
 #[cfg(target_os = "macos")]
@@ -84,8 +86,8 @@ async fn main() -> io::Result<()> {
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", |cfg| {
             cfg.memory_pool(PoolId::P1);
-            PoolId::P1.set_read_params(65535, 8192);
-            PoolId::P1.set_write_params(65535, 8192);
+            PoolId::P1.set_read_params(65535, 1024);
+            PoolId::P1.set_write_params(65535, 1024);
 
             fn_service(|io| App {
                 io,

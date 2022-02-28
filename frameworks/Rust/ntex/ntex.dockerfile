@@ -9,7 +9,7 @@ ADD ./ /ntex
 WORKDIR /ntex
 
 RUN cargo clean
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
+RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --features="tokio"
 
 EXPOSE 8080
 
