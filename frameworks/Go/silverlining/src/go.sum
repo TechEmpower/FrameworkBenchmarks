@@ -3,8 +3,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/go-www/h1 v0.0.0-20220227132510-9912cb8b336b h1:gU/LuOd7BSRH6pwW6MNj6MJkzP05h4F6JrDhM5/MORM=
 github.com/go-www/h1 v0.0.0-20220227132510-9912cb8b336b/go.mod h1:pFiXMva/K5c/blSpJXy+p37srAPG8YjbHObQ8oMZzms=
-github.com/go-www/silverlining v0.0.0-20220228071718-8def8f5742cf h1:0194v7W23IH+yU4DMadYSUQ9Gie8HsHzFcwnsmaKLRY=
-github.com/go-www/silverlining v0.0.0-20220228071718-8def8f5742cf/go.mod h1:n2aunejVU+sdtoUDqZywzYLj2B5Kc+9W2EdVUuKZWXU=
+github.com/go-www/silverlining v0.0.0-20220228140412-bf5c59e512d5 h1:ZG5qesLrYMyEiz1PkF3NTinXmerX08E+3USzg1/jUIc=
+github.com/go-www/silverlining v0.0.0-20220228140412-bf5c59e512d5/go.mod h1:n2aunejVU+sdtoUDqZywzYLj2B5Kc+9W2EdVUuKZWXU=
 github.com/gobwas/httphead v0.1.0 h1:exrUm0f4YX0L7EBwZHuCF4GDp8aJfVeBrlLQrs6NqWU=
 github.com/gobwas/httphead v0.1.0/go.mod h1:O/RXo79gxV8G+RqlR/otEwx4Q36zl9rqC5u12GKvMCM=
 github.com/gobwas/pool v0.2.1 h1:xfeeEhW7pwmX8nuLVlqbzVc7udMDrwetjEv+TZIz1og=

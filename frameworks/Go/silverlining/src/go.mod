@@ -2,7 +2,7 @@ module silverlining/src
 
 go 1.17
 
-require github.com/go-www/silverlining v0.0.0-20220228071718-8def8f5742cf
+require github.com/go-www/silverlining v0.0.0-20220228140412-bf5c59e512d5
 
 require (
 	github.com/go-www/h1 v0.0.0-20220227132510-9912cb8b336b // indirect
