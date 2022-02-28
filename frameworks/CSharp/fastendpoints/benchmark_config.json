@@ -19,7 +19,7 @@
         "database_os": "Linux",
         "display_name": "FastEndpoints",
         "notes": "",
-        "versus": "aspcore"
+        "versus": "aspcore-mvc"
       }
     }
   ]

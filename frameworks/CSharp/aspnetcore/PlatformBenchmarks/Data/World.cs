@@ -3,13 +3,12 @@
 
 using System.Runtime.InteropServices;
 
-namespace PlatformBenchmarks
-{
-    [StructLayout(LayoutKind.Sequential, Size = 8)]
-    public struct World
-    {
-        public int Id { get; set; }
+namespace PlatformBenchmarks;
 
-        public int RandomNumber { get; set; }
-    }
+[StructLayout(LayoutKind.Sequential, Size = 8)]
+public struct World
+{
+    public int Id { get; set; }
+
+    public int RandomNumber { get; set; }
 }

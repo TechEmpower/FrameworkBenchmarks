@@ -1,6 +1,5 @@
 using System.Data;
 using System.Data.Common;
-using System.Data.Odbc;
 using System.Threading.Tasks;
 
 namespace appMpower.Db
@@ -178,13 +177,11 @@ namespace appMpower.Db
 
       public async Task<int> ExecuteNonQueryAsync()
       {
-         if (DataProvider.IsOdbcConnection) return await (_dbCommand as OdbcCommand).ExecuteNonQueryAsync();
          return await (_dbCommand as DbCommand).ExecuteNonQueryAsync();
       }
 
       public async Task<DbDataReader> ExecuteReaderAsync(CommandBehavior behavior)
       {
-         if (DataProvider.IsOdbcConnection) return await (_dbCommand as OdbcCommand).ExecuteReaderAsync(behavior);
          return await (_dbCommand as DbCommand).ExecuteReaderAsync(behavior);
       }
 

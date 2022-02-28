@@ -1,6 +1,6 @@
 ﻿namespace Benchmarks.Endpoints;
 
-public class PlainTextEndpoint : Endpoint<EmptyRequest, object>
+public class PlainTextEndpoint : Endpoint<object, object>
 {
     private static readonly byte[] payload = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
 
@@ -10,8 +10,11 @@ public class PlainTextEndpoint : Endpoint<EmptyRequest, object>
         AllowAnonymous();
     }
 
-    public override Task HandleAsync(EmptyRequest r, CancellationToken ct)
+    public override Task HandleAsync(object _, CancellationToken __)
     {
-        return SendBytesAsync(payload, contentType: "text/plain");
+        HttpContext.Response.StatusCode = StatusCodes.Status200OK;
+        HttpContext.Response.ContentType = "text/plain";
+        HttpContext.Response.ContentLength = payload.Length;
+        return HttpContext.Response.Body.WriteAsync(payload, 0, payload.Length);
     }
 }

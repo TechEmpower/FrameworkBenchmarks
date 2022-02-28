@@ -1,6 +1,6 @@
 tg.devtools==2.3.8
 
-SQLAlchemy==1.0.12
+SQLAlchemy==1.3.0
 zope.sqlalchemy==0.7.6
 mysqlclient==1.3.7
 jinja2==2.11.3

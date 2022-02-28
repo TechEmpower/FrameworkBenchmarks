@@ -4,13 +4,13 @@ plugins {
 }
 
 ext {
-    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/2.0.0/gradle"
+    hexagonVersion = "2.0.5"
+    hikariVersion = "5.0.1"
+    jettyVersion = "11.0.8"
+    postgresqlVersion = "42.3.3"
+    cache2kVersion = "2.6.1.Final"
 
-    hexagonVersion = "2.0.0"
-    hikariVersion = "5.0.0"
-    jettyVersion = "11.0.7"
-    postgresqlVersion = "42.3.1"
-    cache2kVersion = "2.4.1.Final"
+    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/$hexagonVersion/gradle"
 }
 
 apply(from: "$gradleScripts/kotlin.gradle")
@@ -31,6 +31,7 @@ war {
 installDist.dependsOn("war")
 
 dependencies {
+    implementation("com.hexagonkt:http_server_netty:$hexagonVersion")
     implementation("com.hexagonkt:http_server_jetty:$hexagonVersion")
     implementation("com.hexagonkt:templates_pebble:$hexagonVersion")
     implementation("com.hexagonkt:logging_slf4j_jul:$hexagonVersion")
