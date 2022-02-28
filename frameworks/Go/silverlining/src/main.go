@@ -10,10 +10,9 @@ import (
 
 var BindAddr string
 
-var _ = func() int {
+func init() {
 	flag.StringVar(&BindAddr, "bind", ":8080", "set bind host")
 	flag.Parse()
-	return 0
 }
 
 func main() {
