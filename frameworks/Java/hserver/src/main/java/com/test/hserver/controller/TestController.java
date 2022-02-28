@@ -32,13 +32,13 @@ public class TestController {
 
     @GET("/json")
     public Message json(HttpResponse response) {
-        response.setHeader("Date", DateUtil.getNow());
+        response.setHeader("Date", DateUtil.getTime());
         return new Message();
     }
 
     @GET("/plaintext")
     public String plaintext(HttpResponse response) {
-        response.setHeader("Date", DateUtil.getNow());
+        response.setHeader("Date", DateUtil.getTime());
         return HELLO;
     }
 
@@ -54,7 +54,7 @@ public class TestController {
                 }
             }
         }
-        response.setHeader("Date", DateUtil.getNow());
+        response.setHeader("Date", DateUtil.getTime());
         response.sendJson(result);
     }
 
@@ -72,7 +72,7 @@ public class TestController {
                 }
             }
         }
-        response.setHeader("Date", DateUtil.getNow());
+        response.setHeader("Date", DateUtil.getTime());
         response.sendJson(result);
     }
 
@@ -107,7 +107,7 @@ public class TestController {
                 statement.executeUpdate();
             }
         }
-        response.setHeader("Date", DateUtil.getNow());
+        response.setHeader("Date", DateUtil.getTime());
         response.sendJson(result);
     }
 
@@ -125,7 +125,7 @@ public class TestController {
         }
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
-        response.setHeader("Date", DateUtil.getNow());
+        response.setHeader("Date", DateUtil.getTime());
         Map<String,Object> data=new HashMap<>();
         data.put("data",fortunes);
         response.sendTemplate("fortunes.ftl",data);
