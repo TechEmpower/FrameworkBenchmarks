@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using System.Data.Odbc;
 using System.Threading.Tasks;
 
 namespace appMpower.Db
@@ -8,12 +7,7 @@ namespace appMpower.Db
    {
       private static bool _connectionsCreated = false;
       private static short _createdConnections = 0;
-
-#if MYSQL
-      private static short _maxConnections = 500; 
-#else
-      private static short _maxConnections = 500;
-#endif
+      private static short _maxConnections = 240;
 
       private static ConcurrentStack<PooledConnection> _stack = new ConcurrentStack<PooledConnection>();
       private static ConcurrentQueue<TaskCompletionSource<PooledConnection>> _waitingQueue = new ConcurrentQueue<TaskCompletionSource<PooledConnection>>();
@@ -39,15 +33,11 @@ namespace appMpower.Db
          {
             pooledConnection = new PooledConnection();
 
-            if (DataProvider.IsOdbcConnection)
-            {
-               pooledConnection.DbConnection = new OdbcConnection(connectionString);
-            }
-            else
-            {
-               //For future use with non odbc drivers which can be AOT compiled without reflection
-               //pooledConnection.DbConnection = new NpgsqlConnection(connectionString);
-            }
+#if ADO
+            pooledConnection.DbConnection = new Npgsql.NpgsqlConnection(connectionString);
+#else
+            pooledConnection.DbConnection = new System.Data.Odbc.OdbcConnection(connectionString);
+#endif               
 
             _createdConnections++;
 

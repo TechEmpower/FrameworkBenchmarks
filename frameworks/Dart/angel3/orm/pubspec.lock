@@ -56,14 +56,14 @@ packages:
       name: angel3_hot
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.2"
+    version: "4.3.0"
   angel3_http_exception:
     dependency: transitive
     description:
       name: angel3_http_exception
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.2"
+    version: "3.1.0"
   angel3_jael:
     dependency: "direct main"
     description:
@@ -77,21 +77,21 @@ packages:
       name: angel3_migration
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.2"
+    version: "4.0.3"
   angel3_migration_runner:
     dependency: "direct dev"
     description:
       name: angel3_migration_runner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "4.1.1"
   angel3_mock_request:
     dependency: transitive
     description:
       name: angel3_mock_request
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.1.0"
   angel3_model:
     dependency: transitive
     description:
@@ -105,21 +105,21 @@ packages:
       name: angel3_orm
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.4"
+    version: "4.0.5"
   angel3_orm_generator:
     dependency: "direct dev"
     description:
       name: angel3_orm_generator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.3"
+    version: "4.3.0"
   angel3_orm_postgres:
     dependency: "direct main"
     description:
       name: angel3_orm_postgres
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.1"
+    version: "3.3.0"
   angel3_production:
     dependency: "direct main"
     description:
@@ -168,7 +168,7 @@ packages:
       name: angel3_validate
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.2"
+    version: "4.1.0"
   angel3_websocket:
     dependency: transitive
     description:
@@ -385,7 +385,7 @@ packages:
       name: coverage
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4"
   crypto:
     dependency: transitive
     description:
@@ -833,7 +833,7 @@ packages:
       name: vm_service
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.5.0"
+    version: "8.1.0"
   watcher:
     dependency: transitive
     description:

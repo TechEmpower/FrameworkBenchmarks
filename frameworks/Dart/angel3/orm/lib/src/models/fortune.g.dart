@@ -36,6 +36,8 @@ class FortuneQuery extends Query<Fortune, FortuneQueryWhere> {
   @override
   final FortuneQueryValues values = FortuneQueryValues();
 
+  List<String> _selectedFields = [];
+
   FortuneQueryWhere? _where;
 
   @override
@@ -50,7 +52,15 @@ class FortuneQuery extends Query<Fortune, FortuneQueryWhere> {
 
   @override
   List<String> get fields {
-    return const ['id', 'message'];
+    const _fields = ['id', 'message'];
+    return _selectedFields.isEmpty
+        ? _fields
+        : _fields.where((field) => _selectedFields.contains(field)).toList();
+  }
+
+  FortuneQuery select(List<String> selectedFields) {
+    _selectedFields = selectedFields;
+    return this;
   }
 
   @override
@@ -63,17 +73,19 @@ class FortuneQuery extends Query<Fortune, FortuneQueryWhere> {
     return FortuneQueryWhere(this);
   }
 
-  static Fortune? parseRow(List row) {
+  Optional<Fortune> parseRow(List row) {
     if (row.every((x) => x == null)) {
-      return null;
+      return Optional.empty();
     }
-    var model = Fortune(id: (row[0] as int?), message: (row[1] as String?));
-    return model;
+    var model = Fortune(
+        id: fields.contains('id') ? (row[0] as int?) : null,
+        message: fields.contains('message') ? (row[1] as String?) : null);
+    return Optional.of(model);
   }
 
   @override
   Optional<Fortune> deserialize(List row) {
-    return Optional.ofNullable(parseRow(row));
+    return parseRow(row);
   }
 }
 

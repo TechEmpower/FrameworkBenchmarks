@@ -22,8 +22,8 @@ data class Settings(
     val databaseName: String = systemSettingOrNull("database") ?: "hello_world",
     val databaseDriver: String = systemSettingOrNull("databaseDriver") ?: "org.postgresql.Driver",
 
-    val sendDateHeader: Boolean = systemSettingOrNull("sendDateHeader") ?: true,
-    val sendServerVersion: Boolean = systemSettingOrNull("sendServerVersion") ?: true,
+    val sendDateHeader: Boolean = systemSettingOrNull("sendDateHeader") ?: false,
+    val sendServerVersion: Boolean = systemSettingOrNull("sendServerVersion") ?: false,
     val sendXPoweredBy: Boolean = systemSettingOrNull("sendXPoweredBy") ?: false,
 
     val worldRows: Int = 10_000,

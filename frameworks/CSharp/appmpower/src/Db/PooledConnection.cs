@@ -179,11 +179,10 @@ namespace appMpower.Db
             pooledCommand.DbCommand.CommandText = commandText;
             pooledCommand.PooledConnection = this;
 
-            //For future use with non odbc drivers like Npgsql which do not support Prepare
-            if (DataProvider.IsOdbcConnection)
-            {
-               pooledCommand.DbCommand.Prepare();
-            }
+            //For non odbc drivers like Npgsql which do not support Prepare
+#if !ADO
+            pooledCommand.DbCommand.Prepare();
+#endif            
 
             //Console.WriteLine("prepare pool connection: " + this._number + " for command " + _pooledCommands.Count);
          }
