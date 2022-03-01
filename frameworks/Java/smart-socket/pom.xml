@@ -18,6 +18,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.edap</groupId>
+            <artifactId>edapx-json</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.smartboot.servlet</groupId>
             <artifactId>servlet-core</artifactId>
             <version>${smartservlet.version}</version>
