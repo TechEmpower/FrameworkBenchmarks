@@ -17,6 +17,8 @@ COPY contrast_security.yaml /etc/contrast/contrast_security.yaml
 ENV CONTRAST__ASSESS__ENABLE=false
 ENV CONTRAST__PROTECT__ENABLE=true
 
+ENV CONTRAST__AGENT__SERVICE__BYPASS=true
+
 RUN chmod 777 ./contrast-go
 # End Contrast Additions
 
