@@ -104,7 +104,7 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-postgres",
+                "display_name": "redkale",
                 "notes": "",
                 "versus": "Redkale"
             },
