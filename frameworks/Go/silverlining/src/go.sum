@@ -1,10 +1,11 @@
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/go-www/h1 v0.0.0-20220227132510-9912cb8b336b h1:gU/LuOd7BSRH6pwW6MNj6MJkzP05h4F6JrDhM5/MORM=
-github.com/go-www/h1 v0.0.0-20220227132510-9912cb8b336b/go.mod h1:pFiXMva/K5c/blSpJXy+p37srAPG8YjbHObQ8oMZzms=
-github.com/go-www/silverlining v0.0.0-20220228140412-bf5c59e512d5 h1:ZG5qesLrYMyEiz1PkF3NTinXmerX08E+3USzg1/jUIc=
-github.com/go-www/silverlining v0.0.0-20220228140412-bf5c59e512d5/go.mod h1:n2aunejVU+sdtoUDqZywzYLj2B5Kc+9W2EdVUuKZWXU=
+github.com/go-www/h1 v0.0.0-20220301132724-fb526c8bf224/go.mod h1:pFiXMva/K5c/blSpJXy+p37srAPG8YjbHObQ8oMZzms=
+github.com/go-www/h1 v0.0.0-20220301151111-bd1d18e71e25 h1:Twrwyh1h+gvgAMZpgrWU5jKLlsr1Ry3qUvNR5TnxAVQ=
+github.com/go-www/h1 v0.0.0-20220301151111-bd1d18e71e25/go.mod h1:pFiXMva/K5c/blSpJXy+p37srAPG8YjbHObQ8oMZzms=
+github.com/go-www/silverlining v0.0.0-20220304111112-885f34de2350 h1:QYBd6x1eDiDBVoOH6TR5NZ/KpIU8yfyAXtWNn2awLt0=
+github.com/go-www/silverlining v0.0.0-20220304111112-885f34de2350/go.mod h1:HkvBw1pdYuutXGehi2OgApGPWx0khfn4TxmNr6dIgJg=
 github.com/gobwas/httphead v0.1.0 h1:exrUm0f4YX0L7EBwZHuCF4GDp8aJfVeBrlLQrs6NqWU=
 github.com/gobwas/httphead v0.1.0/go.mod h1:O/RXo79gxV8G+RqlR/otEwx4Q36zl9rqC5u12GKvMCM=
 github.com/gobwas/pool v0.2.1 h1:xfeeEhW7pwmX8nuLVlqbzVc7udMDrwetjEv+TZIz1og=
