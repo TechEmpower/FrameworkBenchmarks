@@ -36,8 +36,6 @@ webserver = "None"
 versus = "vibed"
 
 [dmd-pgsql]
-urls.plaintext = "/plaintext"
-urls.json = "/json"
 urls.db = "/db"
 urls.query = "/queries?queries="
 urls.update = "/updates?queries="
@@ -53,8 +51,6 @@ webserver = "None"
 versus = "vibed"
 
 [ldc-pgsql]
-urls.plaintext = "/plaintext"
-urls.json = "/json"
 urls.db = "/db"
 urls.query = "/queries?queries="
 urls.update = "/updates?queries="

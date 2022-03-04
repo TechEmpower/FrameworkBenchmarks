@@ -5,24 +5,23 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq nginx git unzip php7.4 php7.4-common php7.4-cli php7.4-fpm php7.4-mysql php7.4-xml php7.4-mbstring php7.0-mcrypt php7.4-intl > /dev/null
+    apt-get install -yqq nginx git unzip \
+    php8.1-fpm php8.1-mysql php8.1-xml php8.1-mbstring php8.1-intl php8.1-dev > /dev/null
 
-RUN apt-get install -yqq composer > /dev/null
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-COPY deploy/conf/* /etc/php/7.4/fpm/
-COPY deploy/conf/* /etc/php/7.4/cli/
+COPY deploy/conf/* /etc/php/8.1/fpm/
+COPY deploy/conf/* /etc/php/8.1/cli/
 
 ADD ./ /cakephp
 WORKDIR /cakephp
 
-RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/7.4/fpm/php-fpm.conf ; fi;
+RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.1/fpm/php-fpm.conf ; fi;
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 RUN chmod -R 777 /cakephp
 
-EXPOSE 8080
-
-CMD service php7.4-fpm start && \
+CMD service php8.1-fpm start && \
     nginx -c /cakephp/deploy/nginx.conf
 

@@ -8,89 +8,52 @@ namespace PlatformBenchmarks
     {
         private readonly byte[] _data;
 
-        public byte[] Data => _data;
+        public AsciiString(string s) => _data = Encoding.ASCII.GetBytes(s);
+
+        private AsciiString(byte[] b) => _data = b;
 
         public int Length => _data.Length;
 
-        public AsciiString(string s)
-        {
-            _data = Encoding.ASCII.GetBytes(s);
-        }
+        public byte[] Data => _data;
 
-        public ReadOnlySpan<byte> AsSpan()
-        {
-            return _data;
-        }
+        public ReadOnlySpan<byte> AsSpan() => _data;
 
-        public static implicit operator ReadOnlySpan<byte>(AsciiString str)
-        {
-            return str._data;
-        }
+        public static implicit operator ReadOnlySpan<byte>(AsciiString str) => str._data;
+        public static implicit operator byte[](AsciiString str) => str._data;
 
-        public static implicit operator byte[] (AsciiString str)
-        {
-            return str._data;
-        }
+        public static implicit operator AsciiString(string str) => new AsciiString(str);
 
-        public static implicit operator AsciiString(string str)
-        {
-            return new AsciiString(str);
-        }
+        public override string ToString() => Encoding.ASCII.GetString(_data);
+        public static explicit operator string(AsciiString str) => str.ToString();
 
-        public override string ToString()
-        {
-            return Encoding.ASCII.GetString(_data);
-        }
+        public bool Equals(AsciiString other) => ReferenceEquals(_data, other._data) || SequenceEqual(_data, other._data);
+        private bool SequenceEqual(byte[] data1, byte[] data2) => new Span<byte>(data1).SequenceEqual(data2);
 
-        public static explicit operator string(AsciiString str)
-        {
-            return str.ToString();
-        }
+        public static bool operator ==(AsciiString a, AsciiString b) => a.Equals(b);
+        public static bool operator !=(AsciiString a, AsciiString b) => !a.Equals(b);
+        public override bool Equals(object other) => (other is AsciiString) && Equals((AsciiString)other);
 
-        public bool Equals(AsciiString other)
+        public static AsciiString operator +(AsciiString a, AsciiString b)
         {
-            if (_data != other._data)
-            {
-                return SequenceEqual(_data, other._data);
-            }
-            return true;
-        }
-
-        private bool SequenceEqual(byte[] data1, byte[] data2)
-        {
-            return new Span<byte>(data1).SequenceEqual(data2);
-        }
-
-        public static bool operator ==(AsciiString a, AsciiString b)
-        {
-            return a.Equals(b);
-        }
-
-        public static bool operator !=(AsciiString a, AsciiString b)
-        {
-            return !a.Equals(b);
-        }
-
-        public override bool Equals(object other)
-        {
-            if (other is AsciiString)
-            {
-                return Equals((AsciiString)other);
-            }
-            return false;
+            var result = new byte[a.Length + b.Length];
+            a._data.CopyTo(result, 0);
+            b._data.CopyTo(result, a.Length);
+            return new AsciiString(result);
         }
 
         public override int GetHashCode()
         {
-            byte[] data = _data;
-            int hash3 = 5381;
-            int hash2 = hash3;
-            byte[] array = data;
-            foreach (int b in array)
+            // Copied from x64 version of string.GetLegacyNonRandomizedHashCode()
+            // https://github.com/dotnet/coreclr/blob/master/src/mscorlib/src/System/String.Comparison.cs
+            var data = _data;
+            int hash1 = 5381;
+            int hash2 = hash1;
+            foreach (int b in data)
             {
-                hash3 = (((hash3 << 5) + hash3) ^ b);
+                hash1 = ((hash1 << 5) + hash1) ^ b;
             }
-            return hash3 + hash2 * 1566083941;
+            return hash1 + (hash2 * 1566083941);
         }
+
     }
 }

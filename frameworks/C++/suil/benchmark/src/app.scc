@@ -1,0 +1,17 @@
+#include <suil/base/string.hpp>
+#include <suil/db/symbols.scc.hpp>
+
+#pragma load sbg
+
+namespace suil::bench {
+
+    struct [[gen::sbg(json)]] Object {
+        String message{""};
+    };
+
+    struct [[gen::sbg(json)]] World {
+        [[PRIMARY_KEY]]
+        int id{0};
+        int randomNumber{0};
+    };
+}

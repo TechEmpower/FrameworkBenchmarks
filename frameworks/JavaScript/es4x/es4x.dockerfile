@@ -1,4 +1,4 @@
-FROM oracle/graalvm-ce:20.2.0-java11
+FROM ghcr.io/graalvm/graalvm-ce:20.3.1.2
 # Set working dir
 RUN mkdir /app
 WORKDIR /app

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Linq;
 using System.Web;
+using System.IO;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -33,7 +34,7 @@ namespace Benchmarks.Tests
 
     #region Supporting data structures
 
-    public sealed class FortuneModel : PageModel
+    public sealed class FortuneModel : BasicModel
     {
 
         public List<Fortune> Cookies { get; }
@@ -79,34 +80,33 @@ namespace Benchmarks.Tests
 
         #region Functionality
 
-        public ValueTask<IResponse> HandleAsync(IRequest request) => Page.HandleAsync(request);
+        public async ValueTask PrepareAsync()
+        {
+            await Page.PrepareAsync();
+            await Template.PrepareAsync();
+        }
+
+        public ValueTask<ulong> CalculateChecksumAsync() => new(17);
 
         public IEnumerable<ContentElement> GetContent(IRequest request) => Enumerable.Empty<ContentElement>();
 
-        public async ValueTask<IResponseBuilder> RenderAsync(TemplateModel model)
-        {
-            return model.Request.Respond()
-                                .Content(await Template.RenderAsync(model))
-                                .Header("Content-Type", "text/html; charset=utf-8");
-        }
+        public ValueTask<string> RenderAsync(TemplateModel model) => Template.RenderAsync(model);
 
-        private async ValueTask<FortuneModel> GetFortunes(IRequest request, IHandler handler)
+        public ValueTask RenderAsync(TemplateModel model, Stream target) => Template.RenderAsync(model, target);
+
+        public ValueTask<IResponse> HandleAsync(IRequest request) => Page.HandleAsync(request);
+
+        private static async ValueTask<FortuneModel> GetFortunes(IRequest request, IHandler handler)
         {
             using var context = DatabaseContext.CreateNoTracking();
 
-            var fortunes = await context.Fortune.ToListAsync();
+            var fortunes = await context.Fortune.ToListAsync().ConfigureAwait(false);
 
             fortunes.Add(new Fortune() { Message = "Additional fortune added at request time." });
 
             fortunes.Sort();
 
             return new FortuneModel(request, handler, fortunes);
-        }
-
-        public async ValueTask PrepareAsync()
-        {
-            await Page.PrepareAsync();
-            await Template.PrepareAsync();
         }
 
         #endregion

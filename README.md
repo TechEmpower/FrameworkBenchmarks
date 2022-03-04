@@ -95,4 +95,4 @@ If you have a `results.json` file that you would like to visualize, you can [do 
 
 The community has consistently helped in making these tests better, and we welcome any and all changes. Reviewing our contribution practices and guidelines will help to keep us all on the same page. The [contribution guide](https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Development-Contributing-Guide) can be found in the [TFB documentation](https://github.com/TechEmpower/FrameworkBenchmarks/wiki).
 
-Join in the conversation on our [mailing list](https://groups.google.com/forum/?fromgroups=#!forum/framework-benchmarks), on [Twitter](https://twitter.com/tfbenchmarks), or chat with us on [Freenode](https://webchat.freenode.net/) at `#techempower-fwbm`. 
+Join in the conversation in the [Discussions tab](https://github.com/TechEmpower/FrameworkBenchmarks/discussions), on [Twitter](https://twitter.com/tfbenchmarks), or chat with us on [Freenode](https://webchat.freenode.net/) at `#techempower-fwbm`. 

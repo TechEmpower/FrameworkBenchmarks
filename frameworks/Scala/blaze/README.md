@@ -1,11 +1,5 @@
 #blaze Benchmarking Test
 
-## Infrastructure Software Versions
-The tests were run with:
-
-* [Java Oracle 1.8.0](http://www.oracle.com/technetwork/java/javase)
-* [blaze 0.14.0-M3](https://github.com/http4s/blaze/)
-
 ## Test URLs
 ### JSON Encoding Test
 

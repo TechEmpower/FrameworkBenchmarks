@@ -13,7 +13,7 @@ namespace Benchmarks.Tests
 
     public sealed class QueryResource
     {
-        private static Random _Random = new Random();
+        private static readonly Random _Random = new Random();
 
         [ResourceMethod(":queries")]
         public ValueTask<List<World>> GetWorldsFromPath(string queries) => GetWorlds(queries);
@@ -36,7 +36,7 @@ namespace Benchmarks.Tests
             {
                 var id = _Random.Next(1, 10001);
 
-                result.Add(await context.World.FirstOrDefaultAsync(w => w.Id == id));
+                result.Add(await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false));
             }
 
             return result;

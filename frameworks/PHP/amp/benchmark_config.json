@@ -4,7 +4,7 @@
     "default": {
       "json_url": "/json",
       "db_url": "/db",
-      "query_url": "/queries?queries=",
+      "query_url": "/queries?q=",
       "fortune_url": "/fortunes",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -12,7 +12,7 @@
       "classification": "Platform",
       "framework": "amp",
       "language": "PHP",
-      "flavor": "PHP7",
+      "flavor": "PHP8.1",
       "database": "MySQL",
       "orm": "Raw",
       "platform": "amp",

@@ -1,0 +1,11 @@
+{
+    "name":"My ColdBox App",
+    "version":"1.0.0",
+    "installPaths":{
+        "coldbox":"coldbox/"
+    },
+    "dependencies":{
+        "coldbox":"^6.0.0",
+        "commandbox-cfconfig":"^1.2.1"
+    }
+}

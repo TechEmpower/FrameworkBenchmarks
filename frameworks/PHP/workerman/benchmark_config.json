@@ -14,7 +14,7 @@
       "database": "MySQL",
       "framework": "workerman",
       "language": "PHP",
-      "flavor": "PHP8",
+      "flavor": "PHP8.1",
       "orm": "Raw",
       "platform": "workerman",
       "webserver": "None",
@@ -35,7 +35,7 @@
       "database": "Postgres",
       "framework": "workerman",
       "language": "PHP",
-      "flavor": "PHP8",
+      "flavor": "PHP8.1",
       "orm": "Raw",
       "platform": "workerman",
       "webserver": "None",
@@ -62,7 +62,10 @@
       "database_os": "Linux",
       "display_name": "workerman-async-db",
       "notes": "",
-      "versus": "php"
+      "versus": "php",
+      "tags": [
+        "broken"
+      ]
     },
     "php8-jit": {
       "json_url": "/json",
@@ -77,7 +80,7 @@
       "database": "Postgres",
       "framework": "workerman",
       "language": "PHP",
-      "flavor": "PHP8",
+      "flavor": "PHP8.1",
       "orm": "Raw",
       "platform": "workerman",
       "webserver": "None",

@@ -6,9 +6,9 @@ RUN apt-get install -yqq bison flex
 
 COPY ./ ./
 
-RUN ./compile_libpq.sh batchmode
+RUN ./compile_libpq.sh batchmode_patch
 ENV LD_LIBRARY_PATH=/usr/lib
 
 EXPOSE 8080
 
-CMD ./compile-batch.sh TFB_PGSQL 0
+CMD ./compile-batch.sh TFB_PGSQL 

@@ -24,6 +24,10 @@ mods/
 *.versionsBackup
 bin/
 
+# gradle
+build/
+.gradle/
+
 # common junk
 *.log
 *.swp
@@ -61,65 +65,3 @@ benchmark.cfg
 
 # merge tooling
 *.orig
-
-# maven
-*.versionsBackup
-*.releaseBackup
-
-# python-isms
-*.pyc
-
-# java / ruby stuff
-*.lock
-*.war
-
-# go
-go/pkg/*
-beego/pkg/*
-
-# urweb
-frameworks/Ur/urweb/*.exe
-
-# nim
-nimcache
-
-# crystal
-.crystal
-*.out
-
-#don't ignore merge request templates
-!.github/
-dependency-reduced-pom.xml
-
-# dart
-.dart_tool/
-*.packages
-pubspec.lock
-
-# Gradle
-.gradle/
-build/
-
-# haskell
-.stack-work
-
-# Elixir
-_build/
-deps/
-frameworks/PHP/ubiquity/.buildpath
-
-# swift
-Package.resolved
-.swiftpm
-DerivedData
-.build
-
-#fsharp
-launchSettings.json
-.vs
-obj
-[Bb]in/
-[Oo]bj/
-[Dd]ebug/
-[Rr]elease/
-*.fsproj.user

@@ -12,7 +12,7 @@ PostgreSQL
 
 ## Versions
 
-[Swift 5.1](https://swift.org/)
+[Swift 5.5](https://swift.org/)
 [Vapor 4](https://vapor.codes/)
 
 ## Test URLs: `vapor`
@@ -31,4 +31,8 @@ http://localhost:8080/db
 
 ### Multiple database queries test
 
-http://localhost:8080/queries/[1...500]
+http://localhost:8080/queries?queries=[1...500]
+
+### Database updates test
+
+http://localhost:8080/updates?queries=[1...500]
