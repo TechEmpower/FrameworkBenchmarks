@@ -12,11 +12,6 @@ import (
 	"github.com/panjf2000/gnet/v2"
 )
 
-var (
-	errMsg      = "Internal Server Error"
-	errMsgBytes = []byte(errMsg)
-)
-
 type httpServer struct {
 	gnet.BuiltinEventEngine
 
@@ -49,21 +44,23 @@ func (hs *httpServer) OnOpen(c gnet.Conn) ([]byte, gnet.Action) {
 }
 
 func (hs *httpServer) OnTraffic(c gnet.Conn) gnet.Action {
-	hc := c.Context().(*httpCodec)
 	buf, _ := c.Next(-1)
-
+	if len(buf) == 0 {
+		return gnet.None
+	}
+	hc := c.Context().(*httpCodec)
 pipeline:
 	headerOffset, err := hc.parser.Parse(buf)
 	if err != nil {
-		c.Write(errMsgBytes)
-		return gnet.Close
+		return gnet.None
 	}
 	hc.appendResponse()
-	bodyLen := int(hc.parser.ContentLength())
-	if bodyLen == -1 {
-		bodyLen = 0
-	}
-	buf = buf[headerOffset+bodyLen:]
+	//bodyLen := int(hc.parser.ContentLength())
+	//if bodyLen == -1 {
+	//	bodyLen = 0
+	//}
+	//buf = buf[headerOffset+bodyLen:]
+	buf = buf[headerOffset:]
 	if len(buf) > 0 {
 		goto pipeline
 	}
