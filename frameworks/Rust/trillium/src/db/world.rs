@@ -21,19 +21,4 @@ impl RelationTrait for Relation {
     }
 }
 
-impl TryFrom<ActiveModel> for Model {
-    type Error = ActiveModel;
-
-    fn try_from(value: ActiveModel) -> Result<Self, Self::Error> {
-        if value.id.is_unchanged() && value.random_number.is_unchanged() {
-            Ok(Self {
-                id: value.id.unwrap(),
-                random_number: value.random_number.unwrap(),
-            })
-        } else {
-            Err(value)
-        }
-    }
-}
-
 impl ActiveModelBehavior for ActiveModel {}
