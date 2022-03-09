@@ -22,7 +22,8 @@
         "database_os": "Linux",
         "display_name": "Trillium",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["verified"]
       }
     }
   ]
