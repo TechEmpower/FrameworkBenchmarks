@@ -11,7 +11,7 @@ class HelloWorldController < ApplicationController
   end
 
   def json
-    render json: { message: 'Hello, World!' }
+    render json: JSON.generate({message: 'Hello, World!'})
   end
 
   def db
