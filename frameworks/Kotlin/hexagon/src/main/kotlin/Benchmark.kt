@@ -1,46 +1,48 @@
 package com.hexagonkt
 
-import com.fasterxml.jackson.module.blackbird.BlackbirdModule
-import com.hexagonkt.helpers.Jvm
-import com.hexagonkt.http.server.Server
-import com.hexagonkt.http.server.ServerPort
-import com.hexagonkt.http.server.ServerSettings
+import com.hexagonkt.http.server.HttpServer
+import com.hexagonkt.http.server.HttpServerPort
+import com.hexagonkt.http.server.HttpServerSettings
 import com.hexagonkt.http.server.jetty.JettyServletAdapter
-import com.hexagonkt.serialization.*
+import com.hexagonkt.http.server.netty.NettyServerAdapter
 import com.hexagonkt.store.BenchmarkSqlStore
 import com.hexagonkt.store.BenchmarkStore
 import com.hexagonkt.templates.TemplatePort
 import com.hexagonkt.templates.pebble.PebbleAdapter
 import java.net.InetAddress
 
-internal val benchmarkStores: Map<String, BenchmarkStore> by lazy {
+internal val settings = Settings()
+
+internal val stores: Map<String, BenchmarkStore> by lazy {
     mapOf("postgresql" to BenchmarkSqlStore("postgresql"))
 }
 
-internal val benchmarkTemplateEngines: Map<String, TemplatePort> by lazy {
+internal val templateEngines: Map<String, TemplatePort> by lazy {
     mapOf("pebble" to PebbleAdapter)
 }
 
-internal val benchmarkEngines: Map<String, ServerPort> by lazy {
-    mapOf("jetty" to JettyServletAdapter())
+private val engines: Map<String, HttpServerPort> by lazy {
+    mapOf(
+        "jetty" to JettyServletAdapter(
+            sendDateHeader = settings.sendDateHeader,
+            sendServerVersion = settings.sendServerVersion,
+            sendXPoweredBy = settings.sendXPoweredBy,
+        ),
+        "netty" to NettyServerAdapter(),
+    )
 }
 
-internal val benchmarkServer: Server by lazy {
-    val settings = Settings()
-    val engine = benchmarkEngines[settings.webEngine] ?: error("Unsupported server engine")
-    val serverSettings = ServerSettings(
+private val server: HttpServer by lazy {
+    val engine = engines[settings.webEngine] ?: error("Unsupported server engine")
+    val controller = Controller(settings, stores, templateEngines)
+    val serverSettings = HttpServerSettings(
         bindAddress = InetAddress.getByName(settings.bindAddress),
-        bindPort = settings.bindPort
+        bindPort = settings.bindPort,
     )
 
-    Server(engine, Controller(settings).router, serverSettings)
+    HttpServer(engine, controller.path, serverSettings)
 }
 
 fun main() {
-    if (Jvm.systemFlag("ENABLE_BLACKBIRD"))
-        Json.mapper.registerModule(BlackbirdModule())
-    SerializationManager.mapper = JacksonMapper
-    SerializationManager.formats = linkedSetOf(Json)
-
-    benchmarkServer.start()
+    server.start()
 }

@@ -4,211 +4,205 @@
 using Benchmarks.Configuration;
 using Benchmarks.Data;
 using Benchmarks.Middleware;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using MySqlConnector;
 using Npgsql;
-using System;
 using System.Data.Common;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Benchmarks
+namespace Benchmarks;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IWebHostEnvironment hostingEnv, Scenarios scenarios)
     {
-        public Startup(IWebHostEnvironment hostingEnv, Scenarios scenarios)
+        // Set up configuration sources.
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(hostingEnv.ContentRootPath)
+            .AddJsonFile("appsettings.json")
+            .AddJsonFile($"appsettings.{hostingEnv.EnvironmentName}.json", optional: true)
+            .AddEnvironmentVariables()
+            .AddCommandLine(Program.Args)
+            ;
+
+        Configuration = builder.Build();
+
+        Scenarios = scenarios;
+    }
+
+    public IConfigurationRoot Configuration { get; set; }
+
+    public Scenarios Scenarios { get; }
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.Configure<AppSettings>(Configuration);
+
+        // We re-register the Scenarios as an instance singleton here to avoid it being created again due to the
+        // registration done in Program.Main
+        services.AddSingleton(Scenarios);
+
+        // Common DB services
+        services.AddSingleton<IRandom, DefaultRandom>();
+        services.AddEntityFrameworkSqlServer();
+
+        var appSettings = Configuration.Get<AppSettings>();
+        BatchUpdateString.DatabaseServer = appSettings.Database;
+
+        Console.WriteLine($"Database: {appSettings.Database}");
+
+        if (appSettings.Database == DatabaseServer.PostgreSql)
         {
-            // Set up configuration sources.
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(hostingEnv.ContentRootPath)
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{hostingEnv.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables()
-                .AddCommandLine(Program.Args)
-                ;
-
-            Configuration = builder.Build();
-
-            Scenarios = scenarios;
-        }
-
-        public IConfigurationRoot Configuration { get; set; }
-
-        public Scenarios Scenarios { get; }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.Configure<AppSettings>(Configuration);
-
-            // We re-register the Scenarios as an instance singleton here to avoid it being created again due to the
-            // registration done in Program.Main
-            services.AddSingleton(Scenarios);
-
-            // Common DB services
-            services.AddSingleton<IRandom, DefaultRandom>();
-            services.AddEntityFrameworkSqlServer();
-
-            var appSettings = Configuration.Get<AppSettings>();
-            BatchUpdateString.DatabaseServer = appSettings.Database;
-
-            Console.WriteLine($"Database: {appSettings.Database}");
-
-            if (appSettings.Database == DatabaseServer.PostgreSql)
-            {
-                if (Scenarios.Any("Ef"))
-                {
-                    services.AddDbContextPool<ApplicationDbContext>(options => options
-                        .UseNpgsql(appSettings.ConnectionString,
-                            o => o.ExecutionStrategy(d => new NonRetryingExecutionStrategy(d)))
-                        .EnableThreadSafetyChecks(false));
-                }
-
-                if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
-                {
-                    services.AddSingleton<DbProviderFactory>(NpgsqlFactory.Instance);
-                }
-            }
-            else if (appSettings.Database == DatabaseServer.MySql)
-            {
-                if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
-                {
-                    services.AddSingleton<DbProviderFactory>(MySqlConnectorFactory.Instance);
-                }
-            }
-
             if (Scenarios.Any("Ef"))
             {
-                services.AddScoped<EfDb>();
+                services.AddDbContextPool<ApplicationDbContext>(options => options
+                    .UseNpgsql(appSettings.ConnectionString,
+                        o => o.ExecutionStrategy(d => new NonRetryingExecutionStrategy(d)))
+                    .EnableThreadSafetyChecks(false));
             }
 
-            if (Scenarios.Any("Raw"))
+            if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
             {
-                services.AddScoped<RawDb>();
+                services.AddSingleton<DbProviderFactory>(NpgsqlFactory.Instance);
             }
-
-            if (Scenarios.Any("Dapper"))
+        }
+        else if (appSettings.Database == DatabaseServer.MySql)
+        {
+            if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
             {
-                services.AddScoped<DapperDb>();
-            }
-
-            if (Scenarios.Any("Fortunes"))
-            {
-                var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);
-                settings.AllowCharacter('\u2014');  // allow EM DASH through
-                services.AddWebEncoders((options) =>
-                {
-                    options.TextEncoderSettings = settings;
-                });
-            }
-
-            if (Scenarios.Any("Mvc"))
-            {
-                var mvcBuilder = services.AddMvcCore();
-
-                if (Scenarios.MvcViews || Scenarios.Any("MvcDbFortunes"))
-                {
-                    mvcBuilder
-                        .AddViews()
-                        .AddRazorViewEngine();
-                }
+                services.AddSingleton<DbProviderFactory>(MySqlConnectorFactory.Instance);
             }
         }
 
-        public void Configure(IApplicationBuilder app)
+        if (Scenarios.Any("Ef"))
         {
-            if (Scenarios.Plaintext)
-            {
-                app.UsePlainText();
-            }
+            services.AddScoped<EfDb>();
+        }
 
-            if (Scenarios.Json)
-            {
-                app.UseJson();
-            }
+        if (Scenarios.Any("Raw"))
+        {
+            services.AddScoped<RawDb>();
+        }
 
-            // Fortunes endpoints
-            if (Scenarios.DbFortunesRaw)
-            {
-                app.UseFortunesRaw();
-            }
+        if (Scenarios.Any("Dapper"))
+        {
+            services.AddScoped<DapperDb>();
+        }
 
-            if (Scenarios.DbFortunesDapper)
+        if (Scenarios.Any("Fortunes"))
+        {
+            var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);
+            settings.AllowCharacter('\u2014');  // allow EM DASH through
+            services.AddWebEncoders((options) =>
             {
-                app.UseFortunesDapper();
-            }
+                options.TextEncoderSettings = settings;
+            });
+        }
 
-            if (Scenarios.DbFortunesEf)
-            {
-                app.UseFortunesEf();
-            }
+        if (Scenarios.Any("Mvc"))
+        {
+            var mvcBuilder = services.AddMvcCore();
 
-            // Single query endpoints
-            if (Scenarios.DbSingleQueryRaw)
+            if (Scenarios.MvcViews || Scenarios.Any("MvcDbFortunes"))
             {
-                app.UseSingleQueryRaw();
+                mvcBuilder
+                    .AddViews()
+                    .AddRazorViewEngine();
             }
+        }
+    }
 
-            if (Scenarios.DbSingleQueryDapper)
-            {
-                app.UseSingleQueryDapper();
-            }
+    public void Configure(IApplicationBuilder app)
+    {
+        if (Scenarios.Plaintext)
+        {
+            app.UsePlainText();
+        }
 
-            if (Scenarios.DbSingleQueryEf)
-            {
-                app.UseSingleQueryEf();
-            }
+        if (Scenarios.Json)
+        {
+            app.UseJson();
+        }
 
-            // Multiple query endpoints
-            if (Scenarios.DbMultiQueryRaw)
-            {
-                app.UseMultipleQueriesRaw();
-            }
+        // Fortunes endpoints
+        if (Scenarios.DbFortunesRaw)
+        {
+            app.UseFortunesRaw();
+        }
 
-            if (Scenarios.DbMultiQueryDapper)
-            {
-                app.UseMultipleQueriesDapper();
-            }
+        if (Scenarios.DbFortunesDapper)
+        {
+            app.UseFortunesDapper();
+        }
 
-            if (Scenarios.DbMultiQueryEf)
-            {
-                app.UseMultipleQueriesEf();
-            }
+        if (Scenarios.DbFortunesEf)
+        {
+            app.UseFortunesEf();
+        }
 
-            // Multiple update endpoints
-            if (Scenarios.DbMultiUpdateRaw)
-            {
-                app.UseMultipleUpdatesRaw();
-            }
+        // Single query endpoints
+        if (Scenarios.DbSingleQueryRaw)
+        {
+            app.UseSingleQueryRaw();
+        }
 
-            if (Scenarios.DbMultiUpdateDapper)
-            {
-                app.UseMultipleUpdatesDapper();
-            }
+        if (Scenarios.DbSingleQueryDapper)
+        {
+            app.UseSingleQueryDapper();
+        }
 
-            if (Scenarios.DbMultiUpdateEf)
-            {
-                app.UseMultipleUpdatesEf();
-            }
+        if (Scenarios.DbSingleQueryEf)
+        {
+            app.UseSingleQueryEf();
+        }
 
-            if (Scenarios.Any("Mvc"))
-            {
-                app.UseRouting();
-            
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllers();
-                });
-            }
+        // Multiple query endpoints
+        if (Scenarios.DbMultiQueryRaw)
+        {
+            app.UseMultipleQueriesRaw();
+        }
 
-            if (Scenarios.StaticFiles)
+        if (Scenarios.DbMultiQueryDapper)
+        {
+            app.UseMultipleQueriesDapper();
+        }
+
+        if (Scenarios.DbMultiQueryEf)
+        {
+            app.UseMultipleQueriesEf();
+        }
+
+        // Multiple update endpoints
+        if (Scenarios.DbMultiUpdateRaw)
+        {
+            app.UseMultipleUpdatesRaw();
+        }
+
+        if (Scenarios.DbMultiUpdateDapper)
+        {
+            app.UseMultipleUpdatesDapper();
+        }
+
+        if (Scenarios.DbMultiUpdateEf)
+        {
+            app.UseMultipleUpdatesEf();
+        }
+
+        if (Scenarios.Any("Mvc"))
+        {
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
             {
-                app.UseStaticFiles();
-            }
+                endpoints.MapControllers();
+            });
+        }
+
+        if (Scenarios.StaticFiles)
+        {
+            app.UseStaticFiles();
         }
     }
 }

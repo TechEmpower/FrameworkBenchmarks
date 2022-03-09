@@ -15,6 +15,8 @@ use Spiral\Bootloader;
 use Spiral\DotEnv\Bootloader as DotEnv;
 use Spiral\Framework\Kernel;
 use Spiral\Nyholm\Bootloader as Nyholm;
+use Spiral\Cycle\Bootloader as CycleBridge;
+use Spiral\RoadRunnerBridge\Bootloader as RoadRunnerBridge;
 use Spiral\Stempler\Bootloader as Stempler;
 
 class App extends Kernel
@@ -37,7 +39,8 @@ class App extends Kernel
         Bootloader\Security\FiltersBootloader::class,
         Bootloader\Security\GuardBootloader::class,
 
-        Bootloader\Http\HttpBootloader::class,
+        RoadRunnerBridge\HttpBootloader::class,
+
         DebugBootloader::class,
 
         // HTTP extensions
@@ -46,18 +49,21 @@ class App extends Kernel
         Bootloader\Http\ErrorHandlerBootloader::class,
 
         // Databases
-        Bootloader\Database\DatabaseBootloader::class,
-        Bootloader\Database\MigrationsBootloader::class,
+        CycleBridge\DatabaseBootloader::class,
+        CycleBridge\MigrationsBootloader::class,
 
         // ORM
-        Bootloader\Cycle\CycleBootloader::class,
-        Bootloader\Cycle\AnnotatedBootloader::class,
+        CycleBridge\SchemaBootloader::class,
+        CycleBridge\CycleOrmBootloader::class,
+        CycleBridge\AnnotatedBootloader::class,
+        CycleBridge\CommandBootloader::class,
 
         // Template engine
         Stempler\StemplerBootloader::class,
 
         // Framework commands
-        Bootloader\CommandBootloader::class
+        Bootloader\CommandBootloader::class,
+        RoadRunnerBridge\CommandBootloader::class,
     ];
 
     /*

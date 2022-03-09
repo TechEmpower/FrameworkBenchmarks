@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Linq;
 using System.Web;
+using System.IO;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -49,7 +50,6 @@ namespace Benchmarks.Tests
 
     public class FortuneHandler : IHandler, IPageRenderer
     {
-        private static readonly FlexibleContentType CONTENT_TYPE = new FlexibleContentType("text/html; charset=utf-8");
 
         #region Get-/Setters
 
@@ -90,16 +90,11 @@ namespace Benchmarks.Tests
 
         public IEnumerable<ContentElement> GetContent(IRequest request) => Enumerable.Empty<ContentElement>();
 
-        public async ValueTask<string> RenderAsync(TemplateModel model) => await Template.RenderAsync(model);
+        public ValueTask<string> RenderAsync(TemplateModel model) => Template.RenderAsync(model);
 
-        public async ValueTask<IResponse> HandleAsync(IRequest request)
-        {
-            var response = await Page.HandleAsync(request);
+        public ValueTask RenderAsync(TemplateModel model, Stream target) => Template.RenderAsync(model, target);
 
-            response.ContentType = CONTENT_TYPE;
-
-            return response;
-        }
+        public ValueTask<IResponse> HandleAsync(IRequest request) => Page.HandleAsync(request);
 
         private static async ValueTask<FortuneModel> GetFortunes(IRequest request, IHandler handler)
         {

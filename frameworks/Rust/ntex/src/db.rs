@@ -1,12 +1,15 @@
-use std::{borrow::Cow, cell::RefCell, fmt::Write as FmtWrite};
+use std::{borrow::Cow, fmt::Write as FmtWrite};
 
 use futures::{Future, FutureExt};
-use nanorand::{WyRand, RNG};
-use ntex::util::{Bytes, BytesMut};
+use nanorand::{WyRand, Rng};
+use ntex::util::{join_all, Bytes, BytesMut};
 use smallvec::SmallVec;
 use tokio_postgres::types::ToSql;
-use tokio_postgres::{connect, Client, NoTls, Statement};
+use tokio_postgres::{connect, Client, Statement};
 use yarte::{ywrite_html, Serialize};
+
+#[cfg(target_os = "macos")]
+use serde_json as simd_json;
 
 use crate::utils::Writer;
 
@@ -27,13 +30,13 @@ pub struct PgConnection {
     cl: Client,
     fortune: Statement,
     world: Statement,
-    rng: RefCell<WyRand>,
+    rng: WyRand,
     updates: Vec<Statement>,
 }
 
 impl PgConnection {
     pub async fn connect(db_url: &str) -> PgConnection {
-        let (cl, conn) = connect(db_url, NoTls)
+        let (cl, conn) = connect(db_url)
             .await
             .expect("can not connect to postgresql");
         ntex::rt::spawn(conn.map(|_| ()));
@@ -64,14 +67,14 @@ impl PgConnection {
             fortune,
             world,
             updates,
-            rng: RefCell::new(WyRand::new()),
+            rng: WyRand::new(),
         }
     }
 }
 
 impl PgConnection {
     pub fn get_world(&self) -> impl Future<Output = Bytes> {
-        let random_id = (self.rng.borrow_mut().generate::<u32>() % 10_000 + 1) as i32;
+        let random_id = (self.rng.clone().generate::<u32>() % 10_000 + 1) as i32;
         self.cl.query(&self.world, &[&random_id]).map(|rows| {
             let rows = rows.unwrap();
             let mut body = BytesMut::new();
@@ -89,7 +92,7 @@ impl PgConnection {
 
     pub fn get_worlds(&self, num: u16) -> impl Future<Output = Vec<World>> {
         let mut futs = Vec::with_capacity(num as usize);
-        let mut rng = self.rng.borrow_mut();
+        let mut rng = self.rng.clone();
         for _ in 0..num {
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
             futs.push(self.cl.query(&self.world, &[&w_id]));
@@ -97,8 +100,8 @@ impl PgConnection {
 
         async move {
             let mut worlds: Vec<World> = Vec::with_capacity(num as usize);
-            for q in futs {
-                let rows = q.await.unwrap();
+            for item in join_all(futs).await {
+                let rows = item.unwrap();
                 worlds.push(World {
                     id: rows[0].get(0),
                     randomnumber: rows[0].get(1),
@@ -110,25 +113,23 @@ impl PgConnection {
 
     pub fn update(&self, num: u16) -> impl Future<Output = Vec<World>> {
         let mut futs = Vec::with_capacity(num as usize);
-        let mut rng = self.rng.borrow_mut();
+        let mut rng = self.rng.clone();
         for _ in 0..num {
-            let id = (rng.generate::<u32>() % 10_000 + 1) as i32;
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
-            futs.push(self.cl.query(&self.world, &[&w_id]).map(move |res| {
-                let rows = res.unwrap();
-                World {
-                    id: rows[0].get(0),
-                    randomnumber: id,
-                }
-            }));
+            futs.push(self.cl.query(&self.world, &[&w_id]));
         }
 
         let cl = self.cl.clone();
         let st = self.updates[(num as usize) - 1].clone();
         async move {
             let mut worlds: Vec<World> = Vec::with_capacity(num as usize);
-            for q in futs {
-                worlds.push(q.await);
+            for q in join_all(futs).await {
+                let q = q.unwrap();
+                let id = (rng.generate::<u32>() % 10_000 + 1) as i32;
+                worlds.push(World {
+                    id: q[0].get(0),
+                    randomnumber: id,
+                })
             }
 
             let mut params: Vec<&dyn ToSql> = Vec::with_capacity(num as usize * 3);

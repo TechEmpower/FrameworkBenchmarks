@@ -19,8 +19,8 @@ namespace PlatformBenchmarks
     {
         private readonly ConcurrentRandom _random;
         private readonly string _connectionString;
-        private readonly MemoryCache _cache = new MemoryCache(
-            new MemoryCacheOptions()
+        private readonly MemoryCache _cache = new(
+            new MemoryCacheOptions
             {
                 ExpirationScanFrequency = TimeSpan.FromMinutes(60)
             });
@@ -98,7 +98,7 @@ namespace PlatformBenchmarks
                     var (cmd, idParameter) = await rawdb.CreateReadCommandAsync(db);
                     using (cmd)
                     {
-                        Func<ICacheEntry, Task<CachedWorld>> create = async (entry) =>
+                        Func<ICacheEntry, Task<CachedWorld>> create = async _ =>
                         {
                             return await rawdb.ReadSingleRow(cmd);
                         };
@@ -110,7 +110,7 @@ namespace PlatformBenchmarks
 
                         for (; i < result.Length; i++)
                         {
-                            result[i] = await rawdb._cache.GetOrCreateAsync<CachedWorld>(key, create);
+                            result[i] = await rawdb._cache.GetOrCreateAsync(key, create);
 
                             id = rawdb._random.Next(1, 10001);
                             idParameter.Value = id;
@@ -245,7 +245,7 @@ namespace PlatformBenchmarks
             }
         }
         
-        private static readonly object[] _cacheKeys = Enumerable.Range(0, 10001).Select((i) => new CacheKey(i)).ToArray();
+        private static readonly object[] _cacheKeys = Enumerable.Range(0, 10001).Select(i => new CacheKey(i)).ToArray();
 
         public sealed class CacheKey : IEquatable<CacheKey>
         {

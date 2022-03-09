@@ -19,7 +19,7 @@ platform = "Servlet"
 webserver = "None"
 versus = "servlet"
 
-[blackbird]
+[netty]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/postgresql/db"
@@ -33,11 +33,11 @@ database = "postgres"
 database_os = "Linux"
 os = "Linux"
 orm = "Raw"
-platform = "Servlet"
+platform = "Netty"
 webserver = "None"
-versus = "servlet"
+versus = "netty"
 
-[resin]
+[tomcat]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/postgresql/db"
@@ -52,5 +52,5 @@ database_os = "Linux"
 os = "Linux"
 orm = "Raw"
 platform = "Servlet"
-webserver = "None"
+webserver = "Tomcat"
 versus = "servlet"
