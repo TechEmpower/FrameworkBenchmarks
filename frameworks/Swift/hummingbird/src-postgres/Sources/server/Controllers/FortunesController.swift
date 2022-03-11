@@ -1,6 +1,6 @@
 import Hummingbird
 import HummingbirdMustache
-import PostgresKit
+import PostgresNIO
 
 struct HTML: HBResponseGenerator {
     let html: String
@@ -11,9 +11,11 @@ struct HTML: HBResponseGenerator {
 }
 
 class FortunesController {
+    let connectionPoolGroup: HBConnectionPoolGroup<PostgresConnectionSource>
     let template: HBMustacheTemplate
 
-    init() {
+    init(connectionPoolGroup: HBConnectionPoolGroup<PostgresConnectionSource>) {
+        self.connectionPoolGroup = connectionPoolGroup
         self.template = try! HBMustacheTemplate(string: """
         <!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>{{#.}}<tr><td>{{id}}</td><td>{{message}}</td></tr>{{/.}}</table></body></html>
         """)
@@ -24,16 +26,20 @@ class FortunesController {
     }
 
     func fortunes(request: HBRequest) -> EventLoopFuture<HTML> {
-        return request.db.query("SELECT id, message FROM Fortune").map { results in
-            var fortunes = results.map {
-                return Fortune(
-                    id: $0.column("id")?.int32,
-                    message: $0.column("message")?.string ?? ""
-                )
+        return self.connection(for: request) { connection in 
+            return connection.query("SELECT id, message FROM Fortune")
+        }.flatMapThrowing { results in
+            var fortunes = try results.map { result -> Fortune in
+                let decoded = try result.decode((Int32, String).self, context: .default)
+                return Fortune(id: decoded.0, message: decoded.1)
             }
             fortunes.append(.init(id: 0, message: "Additional fortune added at request time."))
             let sortedFortunes = fortunes.sorted { $0.message < $1.message }
             return HTML(html: self.template.render(sortedFortunes) )
         }
+    }
+
+    @discardableResult func connection<NewValue>(for request: HBRequest, closure: @escaping (PostgresConnection) -> EventLoopFuture<NewValue>) -> EventLoopFuture<NewValue> {
+        return self.connectionPoolGroup.lease(on: request.eventLoop, logger: request.logger, process: closure)
     }
 }
