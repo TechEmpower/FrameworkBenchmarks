@@ -7,7 +7,7 @@ This is the HServer portion of a [benchmarking test suite](../) comparing a vari
 
 ## Infrastructure Software Versions
 
-* [HServer 2.9.73](https://gitee.com/HServer/HServer)
+* [HServer](https://gitee.com/HServer/HServer)
 * [Java OpenJDK 1.8](http://openjdk.java.net/)
 
 ## Test URLs
