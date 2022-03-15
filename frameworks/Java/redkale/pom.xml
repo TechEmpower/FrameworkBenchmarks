@@ -8,7 +8,7 @@
     <properties>
         <main.class>org.redkale.boot.Application</main.class>
 		<redkale.version>2.7.0-SNAPSHOT</redkale.version>
-        <stack.version>1.0.0</stack.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
