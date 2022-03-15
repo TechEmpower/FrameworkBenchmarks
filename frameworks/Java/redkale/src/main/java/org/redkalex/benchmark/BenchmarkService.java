@@ -71,7 +71,7 @@ public class BenchmarkService extends AbstractService {
         });
     }
 
-    @RestMapping(name = "cached-worlds")
+    @RestMapping(name = "cacheds")
     public CachedWorld[] cachedWorlds(int q) {
         int size = Math.min(500, Math.max(1, q));
         return CachedWorld.Cache.getInstance(source).random(ThreadLocalRandom.current(), size);
