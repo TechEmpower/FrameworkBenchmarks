@@ -55,7 +55,7 @@ This is the Redkale portion of a [benchmarking test suite](../) comparing a vari
 
 ### Database Caching Test
 
-    http://localhost:8080/cacheds?q=5
+    http://localhost:8080/cached-worlds?q=5
 
 ### Database Update Test
 
