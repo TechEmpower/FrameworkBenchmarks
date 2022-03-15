@@ -32,6 +32,14 @@ func (hc *httpCodec) appendResponse() {
 	hc.buf = append(hc.buf, "\r\nContent-Length: 13\r\n\r\nHello, World!"...)
 }
 
+func (hc *httpCodec) parse(data []byte) (int, error) {
+	return hc.parser.Parse(data)
+}
+
+func (hc *httpCodec) reset() {
+	hc.buf = hc.buf[:0]
+}
+
 func (hs *httpServer) OnBoot(eng gnet.Engine) gnet.Action {
 	hs.eng = eng
 	log.Printf("echo server with multi-core=%t is listening on %s\n", hs.multicore, hs.addr)
@@ -45,14 +53,12 @@ func (hs *httpServer) OnOpen(c gnet.Conn) ([]byte, gnet.Action) {
 
 func (hs *httpServer) OnTraffic(c gnet.Conn) gnet.Action {
 	buf, _ := c.Next(-1)
-	if len(buf) == 0 {
-		return gnet.None
-	}
 	hc := c.Context().(*httpCodec)
 pipeline:
-	headerOffset, err := hc.parser.Parse(buf)
+	headerOffset, err := hc.parse(buf)
 	if err != nil {
-		return gnet.None
+		log.Println("ERROR: failed to parse HTTP request,", err)
+		goto response
 	}
 	hc.appendResponse()
 	//bodyLen := int(hc.parser.ContentLength())
@@ -64,9 +70,9 @@ pipeline:
 	if len(buf) > 0 {
 		goto pipeline
 	}
-
+response:
 	c.Write(hc.buf)
-	hc.buf = hc.buf[:0]
+	hc.reset()
 	return gnet.None
 }
 
