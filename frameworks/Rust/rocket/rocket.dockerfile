@@ -1,4 +1,4 @@
-FROM rust:1.55-slim-buster
+FROM rust:1.59-slim-buster
 
 ENV ROCKET_BENCHMARK_DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
 
