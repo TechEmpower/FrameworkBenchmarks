@@ -14,6 +14,7 @@ COPY contrast_security.yaml /etc/contrast/contrast_security.yaml
 
 ENV CONTRAST__ASSESS__ENABLE=false
 ENV CONTRAST__PROTECT__ENABLE=true
+ENV CONTRAST__AGENT__NODE__NATIVE_INPUT_ANALYSIS=true
 
 run npm install ./node-contrast.tgz
 # End Contrast Additions
