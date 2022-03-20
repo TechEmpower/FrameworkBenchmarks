@@ -17,7 +17,7 @@
    </PropertyGroup>
 
    <ItemGroup>
-      <PackageReference Include="Npgsql" Version="6.0.3" />
+      <PackageReference Include="Npgsql" Version="6.0.2" />
       <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-*" />
    </ItemGroup>
 
