@@ -23,8 +23,7 @@
         "database_os": "Linux",
         "display_name": "Lwan",
         "notes": "",
-        "versus": "None",
-        "tags": ["broken"]
+        "versus": "None"
       },
       "lua": {
         "json_url": "/lua.json",
@@ -43,8 +42,7 @@
         "database_os": "Linux",
         "display_name": "Lwan",
         "notes": "",
-        "versus": "None",
-        "tags": ["broken"]
+        "versus": "None"
       }
     }
   ]
