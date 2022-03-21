@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/jackc/pgx/v4 v4.14.1
 	github.com/savsgio/gotils v0.0.0-20211223103454-d0aaa54c5899
-	github.com/valyala/fasthttp v1.31.0
+	github.com/valyala/fasthttp v1.34.0
 	github.com/valyala/quicktemplate v1.7.0
 )
 
@@ -19,10 +19,10 @@ require (
 	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
 	github.com/jackc/pgtype v1.9.1 // indirect
 	github.com/jackc/puddle v1.2.1 // indirect
-	github.com/klauspost/compress v1.13.6 // indirect
+	github.com/klauspost/compress v1.15.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
-	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3 // indirect
-	golang.org/x/sys v0.0.0-20211216021012-1d35b9e2eb4e // indirect
+	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
+	golang.org/x/sys v0.0.0-20220227234510-4e6760a101f9 // indirect
 	golang.org/x/text v0.3.7 // indirect
 )
