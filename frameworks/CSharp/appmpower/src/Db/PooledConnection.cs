@@ -1,25 +1,19 @@
 using System.Collections.Concurrent;
 using System.Data;
-using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace appMpower.Db
 {
    public class PooledConnection : IDbConnection
    {
-      private bool _released = false;
       private short _number = 0;
+      private string _connectionString;
       private IDbConnection _dbConnection;
       private ConcurrentDictionary<string, PooledCommand> _pooledCommands;
 
-      internal PooledConnection()
+      public PooledConnection(string connectionString)
       {
-      }
-
-      internal PooledConnection(IDbConnection dbConnection)
-      {
-         _dbConnection = dbConnection;
-         _pooledCommands = new ConcurrentDictionary<string, PooledCommand>();
+         _connectionString = connectionString;
       }
 
       internal ConcurrentDictionary<string, PooledCommand> PooledCommands
@@ -90,19 +84,8 @@ namespace appMpower.Db
       {
          get
          {
+            if (_dbConnection is null) return ConnectionState.Closed;
             return _dbConnection.State;
-         }
-      }
-
-      public bool Released
-      {
-         get
-         {
-            return _released;
-         }
-         internal set
-         {
-            _released = value;
          }
       }
 
@@ -124,7 +107,11 @@ namespace appMpower.Db
       public void Close()
       {
          _dbConnection.Close();
-         _released = true;
+      }
+
+      public async Task CloseAsync()
+      {
+         await (_dbConnection as System.Data.Common.DbConnection).CloseAsync();
       }
 
       public IDbCommand CreateCommand()
@@ -140,32 +127,40 @@ namespace appMpower.Db
          }
       }
 
-      public void Release()
-      {
-         if (!_released && _dbConnection.State == ConnectionState.Open)
-         {
-            PooledConnections.Release(this);
-         }
-      }
-
       public void Dispose()
       {
-         if (!_released && _dbConnection.State == ConnectionState.Open)
-         {
-            PooledConnections.Dispose(this);
-         }
+         PooledConnections.Dispose(this);
       }
 
       public async Task OpenAsync()
       {
+#if ADO
+         _dbConnection = new Npgsql.NpgsqlConnection(_connectionString);
+#else
+         if (_dbConnection is null)
+         {
+            using var internalConnection = await PooledConnections.GetConnection(_connectionString);
+
+            _dbConnection = internalConnection.DbConnection;
+            _number = internalConnection.Number;
+            _pooledCommands = internalConnection.PooledCommands;
+         }
+#endif
+
          if (_dbConnection.State == ConnectionState.Closed)
          {
-            await (_dbConnection as DbConnection).OpenAsync();
+            await (_dbConnection as System.Data.Common.DbConnection).OpenAsync();
          }
       }
 
-      internal PooledCommand GetCommand(string commandText, PooledCommand pooledCommand)
+      internal PooledCommand GetCommand(string commandText, CommandType commandType, PooledCommand pooledCommand)
       {
+#if ADO
+         pooledCommand.DbCommand = this.DbConnection.CreateCommand();
+         pooledCommand.DbCommand.CommandText = commandText;
+         pooledCommand.DbCommand.CommandType = commandType;
+         pooledCommand.PooledConnection = this;
+#else
          PooledCommand internalCommand;
 
          if (_pooledCommands.TryRemove(commandText, out internalCommand))
@@ -177,22 +172,24 @@ namespace appMpower.Db
          {
             pooledCommand.DbCommand = this.DbConnection.CreateCommand();
             pooledCommand.DbCommand.CommandText = commandText;
+            pooledCommand.DbCommand.CommandType = commandType;
             pooledCommand.PooledConnection = this;
 
             //For non odbc drivers like Npgsql which do not support Prepare
-#if !ADO
             pooledCommand.DbCommand.Prepare();
-#endif            
 
             //Console.WriteLine("prepare pool connection: " + this._number + " for command " + _pooledCommands.Count);
          }
+#endif
 
          return pooledCommand;
       }
 
       public void ReleaseCommand(PooledCommand pooledCommand)
       {
+#if !ADO
          _pooledCommands.TryAdd(pooledCommand.CommandText, pooledCommand);
+#endif
       }
    }
 }
