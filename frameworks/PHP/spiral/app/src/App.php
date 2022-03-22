@@ -18,6 +18,7 @@ use Spiral\Nyholm\Bootloader as Nyholm;
 use Spiral\Cycle\Bootloader as CycleBridge;
 use Spiral\RoadRunnerBridge\Bootloader as RoadRunnerBridge;
 use Spiral\Stempler\Bootloader as Stempler;
+use Spiral\Scaffolder\Bootloader as Scaffolder;
 
 class App extends Kernel
 {
@@ -60,6 +61,8 @@ class App extends Kernel
 
         // Template engine
         Stempler\StemplerBootloader::class,
+
+        Scaffolder\ScaffolderBootloader::class,
 
         // Framework commands
         Bootloader\CommandBootloader::class,
