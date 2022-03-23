@@ -9,51 +9,47 @@ namespace appMpower.Db
       private static short _createdConnections = 0;
       private static short _maxConnections = 240;
 
-      private static ConcurrentStack<PooledConnection> _stack = new ConcurrentStack<PooledConnection>();
-      private static ConcurrentQueue<TaskCompletionSource<PooledConnection>> _waitingQueue = new ConcurrentQueue<TaskCompletionSource<PooledConnection>>();
+      private static ConcurrentStack<InternalConnection> _stack = new();
+      private static ConcurrentQueue<TaskCompletionSource<InternalConnection>> _waitingQueue = new();
 
-      public static async Task<PooledConnection> GetConnection(string connectionString)
+      public static async Task<InternalConnection> GetConnection(string connectionString)
       {
-         PooledConnection pooledConnection = null;
+         InternalConnection internalConnection = null;
 
          if (_connectionsCreated)
          {
-            if (_stack.TryPop(out pooledConnection))
+            if (!_stack.TryPop(out internalConnection))
             {
-               pooledConnection.Released = false;
-            }
-            else
-            {
-               pooledConnection = await GetPooledConnectionAsync();
+               internalConnection = await GetPooledConnectionAsync();
             }
 
-            return pooledConnection;
+            return internalConnection;
          }
          else
          {
-            pooledConnection = new PooledConnection();
+            internalConnection = new InternalConnection();
 
 #if ADO
-            pooledConnection.DbConnection = new Npgsql.NpgsqlConnection(connectionString);
+            internalConnection.DbConnection = new Npgsql.NpgsqlConnection(connectionString);
 #else
-            pooledConnection.DbConnection = new System.Data.Odbc.OdbcConnection(connectionString);
+            internalConnection.DbConnection = new System.Data.Odbc.OdbcConnection(connectionString);
 #endif               
 
             _createdConnections++;
 
             if (_createdConnections == _maxConnections) _connectionsCreated = true;
 
-            pooledConnection.Number = _createdConnections;
-            pooledConnection.PooledCommands = new ConcurrentDictionary<string, PooledCommand>();
+            internalConnection.Number = _createdConnections;
+            internalConnection.PooledCommands = new ConcurrentDictionary<string, PooledCommand>();
             //Console.WriteLine("opened connection number: " + pooledConnection.Number);
 
-            return pooledConnection;
+            return internalConnection;
          }
       }
 
-      public static Task<PooledConnection> GetPooledConnectionAsync()
+      public static Task<InternalConnection> GetPooledConnectionAsync()
       {
-         var taskCompletionSource = new TaskCompletionSource<PooledConnection>(TaskCreationOptions.RunContinuationsAsynchronously);
+         var taskCompletionSource = new TaskCompletionSource<InternalConnection>(TaskCreationOptions.RunContinuationsAsynchronously);
 
          _waitingQueue.Enqueue(taskCompletionSource);
          return taskCompletionSource.Task;
@@ -61,27 +57,26 @@ namespace appMpower.Db
 
       public static void Dispose(PooledConnection pooledConnection)
       {
-         PooledConnection newPooledConnection = new PooledConnection();
+         InternalConnection internalConnection = new InternalConnection();
 
-         newPooledConnection.DbConnection = pooledConnection.DbConnection;
-         newPooledConnection.Number = pooledConnection.Number;
-         newPooledConnection.PooledCommands = pooledConnection.PooledCommands;
+         internalConnection.DbConnection = pooledConnection.DbConnection;
+         internalConnection.Number = pooledConnection.Number;
+         internalConnection.PooledCommands = pooledConnection.PooledCommands;
 
-         Release(newPooledConnection);
+         Release(internalConnection);
       }
 
-      public static void Release(PooledConnection pooledConnection)
+      public static void Release(InternalConnection internalConnection)
       {
-         TaskCompletionSource<PooledConnection> taskCompletionSource;
+         TaskCompletionSource<InternalConnection> taskCompletionSource;
 
          if (_waitingQueue.TryDequeue(out taskCompletionSource))
          {
-            taskCompletionSource.SetResult(pooledConnection);
+            taskCompletionSource.SetResult(internalConnection);
          }
          else
          {
-            pooledConnection.Released = true;
-            _stack.Push(pooledConnection);
+            _stack.Push(internalConnection);
          }
       }
    }

@@ -1,6 +1,6 @@
 ﻿namespace Benchmarks.Endpoints;
 
-public class JsonEndpoint : Endpoint<object, object>
+public class JsonEndpoint : Endpoint<EmptyRequest, object>
 {
     public override void Configure()
     {
@@ -8,7 +8,7 @@ public class JsonEndpoint : Endpoint<object, object>
         AllowAnonymous();
     }
 
-    public override Task HandleAsync(object _, CancellationToken __)
+    public override Task HandleAsync(EmptyRequest _, CancellationToken __)
     {
         HttpContext.Response.ContentLength = 27;
         return SendAsync(new { message = "Hello, World!" });
