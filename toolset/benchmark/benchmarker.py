@@ -96,10 +96,14 @@ class Benchmarker:
                 file=file,
                 color=Fore.RED if success else '')
         self.time_logger.log_test_end(log_prefix=prefix, file=file)
-        if self.config.mode == "benchmark" and not self.last_test:
+        if self.config.mode == "benchmark":
             # Sleep for 60 seconds to ensure all host connects are closed
             log("Clean up: Sleep 60 seconds...", prefix=prefix, file=file)
             time.sleep(60)
+            # After benchmarks are complete for all test types in this test,
+            # let's clean up leftover test images (techempower/tfb.test.test-name)
+            self.docker_helper.clean()
+
         return success
 
     def __run_test(self, test, benchmark_log):

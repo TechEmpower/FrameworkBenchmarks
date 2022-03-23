@@ -1,5 +1,0 @@
-(executable
- (libraries tiny_httpd lib)
- (public_name tiny)
- (package tiny)
- (name tiny))
