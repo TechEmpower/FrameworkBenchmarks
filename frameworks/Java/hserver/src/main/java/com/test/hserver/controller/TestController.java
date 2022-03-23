@@ -25,6 +25,7 @@ import static com.test.hserver.util.Util.randomWorld;
 @Controller
 public class TestController {
     private static final String HELLO = "Hello, World!";
+    private static final String HServer = "HServer";
     private static final String SELECT_WORLD = "select * from world where id=?";
 
     @Autowired
@@ -33,12 +34,14 @@ public class TestController {
     @GET("/json")
     public Message json(HttpResponse response) {
         response.setHeader("Date", DateUtil.getTime());
+        response.setHeader("Server",HServer);
         return new Message();
     }
 
     @GET("/plaintext")
     public String plaintext(HttpResponse response) {
         response.setHeader("Date", DateUtil.getTime());
+        response.setHeader("Server",HServer);
         return HELLO;
     }
 
@@ -55,6 +58,7 @@ public class TestController {
             }
         }
         response.setHeader("Date", DateUtil.getTime());
+        response.setHeader("Server",HServer);
         response.sendJson(result);
     }
 
@@ -73,6 +77,7 @@ public class TestController {
             }
         }
         response.setHeader("Date", DateUtil.getTime());
+        response.setHeader("Server",HServer);
         response.sendJson(result);
     }
 
@@ -108,6 +113,7 @@ public class TestController {
             }
         }
         response.setHeader("Date", DateUtil.getTime());
+        response.setHeader("Server",HServer);
         response.sendJson(result);
     }
 
@@ -126,6 +132,7 @@ public class TestController {
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
         response.setHeader("Date", DateUtil.getTime());
+        response.setHeader("Server",HServer);
         Map<String,Object> data=new HashMap<>();
         data.put("data",fortunes);
         response.sendTemplate("fortunes.ftl",data);
