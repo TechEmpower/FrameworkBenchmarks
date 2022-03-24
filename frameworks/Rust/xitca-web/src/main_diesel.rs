@@ -9,7 +9,7 @@ mod schema;
 mod ser;
 mod util;
 
-use std::{error::Error, io};
+use std::{convert::Infallible, error::Error, io};
 
 use serde::Serialize;
 use xitca_web::{
@@ -37,8 +37,8 @@ async fn main() -> io::Result<()> {
 
     HttpServer::new(move || {
         App::with_async_state(move || async move {
-            let pool = create(config).await.map_err(|_| ())?;
-            Ok(AppState::new(pool))
+            let pool = create(config).await.unwrap();
+            Ok::<_, Infallible>(AppState::new(pool))
         })
         .service(fn_service(handle))
     })
