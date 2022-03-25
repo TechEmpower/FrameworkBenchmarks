@@ -2,7 +2,7 @@ module silverlining/src
 
 go 1.18
 
-require github.com/go-www/silverlining v1.1.0
+require github.com/go-www/silverlining v1.1.1
 
 require (
 	github.com/gobwas/httphead v0.1.0 // indirect

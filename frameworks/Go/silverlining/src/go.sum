@@ -1,7 +1,7 @@
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
-github.com/go-www/silverlining v1.1.0 h1:T6+M+2Nz4tPnoGwEqc/Q51Se6ETuwrVhQ3PAEDJPwr4=
-github.com/go-www/silverlining v1.1.0/go.mod h1:FqUQC31dCT7m21Q8nA0b7n0rfLEkUGAzjXmY7AZBoqU=
+github.com/go-www/silverlining v1.1.1 h1:PI+ggLQ7CLzG9NfqPRScnqwLwn5JmXcYkGtin1uYyD8=
+github.com/go-www/silverlining v1.1.1/go.mod h1:FqUQC31dCT7m21Q8nA0b7n0rfLEkUGAzjXmY7AZBoqU=
 github.com/gobwas/httphead v0.1.0 h1:exrUm0f4YX0L7EBwZHuCF4GDp8aJfVeBrlLQrs6NqWU=
 github.com/gobwas/httphead v0.1.0/go.mod h1:O/RXo79gxV8G+RqlR/otEwx4Q36zl9rqC5u12GKvMCM=
 github.com/gobwas/pool v0.2.1 h1:xfeeEhW7pwmX8nuLVlqbzVc7udMDrwetjEv+TZIz1og=
