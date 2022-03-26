@@ -1,5 +1,4 @@
 using System.Data;
-using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace appMpower.Db
@@ -17,7 +16,12 @@ namespace appMpower.Db
 
       public PooledCommand(string commandText, PooledConnection pooledConnection)
       {
-         pooledConnection.GetCommand(commandText, this);
+         pooledConnection.GetCommand(commandText, CommandType.Text, this);
+      }
+
+      public PooledCommand(string commandText, CommandType commandType, PooledConnection pooledConnection)
+      {
+         pooledConnection.GetCommand(commandText, commandType, this);
       }
 
       internal PooledCommand(IDbCommand dbCommand, PooledConnection pooledConnection)
@@ -143,6 +147,11 @@ namespace appMpower.Db
          return _dbCommand.CreateParameter();
       }
 
+      public IDbDataParameter CreateParameter(string name, object value)
+      {
+         return CreateParameter(name, DbType.String, value);
+      }
+
       public IDbDataParameter CreateParameter(string name, DbType dbType, object value)
       {
          IDbDataParameter dbDataParameter = null;
@@ -177,12 +186,12 @@ namespace appMpower.Db
 
       public async Task<int> ExecuteNonQueryAsync()
       {
-         return await (_dbCommand as DbCommand).ExecuteNonQueryAsync();
+         return await (_dbCommand as System.Data.Common.DbCommand).ExecuteNonQueryAsync();
       }
 
-      public async Task<DbDataReader> ExecuteReaderAsync(CommandBehavior behavior)
+      public async Task<System.Data.Common.DbDataReader> ExecuteReaderAsync(CommandBehavior behavior)
       {
-         return await (_dbCommand as DbCommand).ExecuteReaderAsync(behavior);
+         return await (_dbCommand as System.Data.Common.DbCommand).ExecuteReaderAsync(behavior);
       }
 
       public IDataReader ExecuteReader(CommandBehavior behavior)
@@ -197,14 +206,16 @@ namespace appMpower.Db
       }
 #nullable disable
 
+#nullable enable
+      public async Task<object?> ExecuteScalarAsync()
+      {
+         return await ((System.Data.Common.DbCommand)_dbCommand).ExecuteScalarAsync();
+      }
+#nullable disable
+
       public void Prepare()
       {
          _dbCommand.Prepare();
-      }
-
-      public void Release()
-      {
-         _pooledConnection.ReleaseCommand(this);
       }
 
       public void Dispose()
