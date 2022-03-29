@@ -22,8 +22,8 @@ export function calculateStats(arr: Array<number>, filterOutliers: boolean = tru
     };
 }
 
-export function processLatencyString(latency: string): number {
-    return latency.endsWith('ms') ? parseFloat(latency.slice(0,-2)) : parseFloat(latency.slice(0,-1)) * 1000;
+export function processLatencyString(latency: string): number {   
+    return latency ? latency.endsWith('ms') ? parseFloat(latency.slice(0,-2)) : parseFloat(latency.slice(0,-1)) * 1000 : NaN;
 }
 
 export function processStatsFile(rawStats: Array<any>, concurrencyLevels: Array<number>, resultsData: Array<ResultsData>): Array<ProcessedStats> {
