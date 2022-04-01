@@ -1,43 +1,46 @@
+mod common;
+mod database_sqlx;
 mod models_common;
 mod models_sqlx;
-mod database_sqlx;
-mod utils;
 mod server;
-mod common;
+mod utils;
 
-use dotenv::dotenv;
-use std::env;
-use crate::database_sqlx::{DatabaseConnection};
-use axum::{
-    extract::{Query},
-    http::StatusCode,
-    response::IntoResponse,
-    routing::get,
-    AddExtensionLayer, Json, Router,
-};
+use crate::database_sqlx::DatabaseConnection;
 use axum::http::{header, HeaderValue};
-use tower_http::set_header::SetResponseHeaderLayer;
-use hyper::Body;
+use axum::{
+    extract::Query, http::StatusCode, response::IntoResponse, routing::get, Extension,
+    Json, Router,
+};
+use dotenv::dotenv;
 use rand::rngs::SmallRng;
-use rand::{SeedableRng};
+use rand::SeedableRng;
 use sqlx::PgPool;
+use std::env;
+use tower_http::set_header::SetResponseHeaderLayer;
 use yarte::Template;
 
-use models_sqlx::{World, Fortune};
 use database_sqlx::create_pool;
-use utils::{Params, parse_params, random_number, Utf8Html};
+use models_sqlx::{Fortune, World};
+use utils::{parse_params, random_number, Params, Utf8Html};
 
 async fn db(DatabaseConnection(mut conn): DatabaseConnection) -> impl IntoResponse {
     let mut rng = SmallRng::from_entropy();
     let number = random_number(&mut rng);
 
-    let world : World = sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1").bind(number)
-        .fetch_one(&mut conn).await.ok().expect("error loading world");
+    let world: World =
+        sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1")
+            .bind(number)
+            .fetch_one(&mut conn)
+            .await
+            .expect("error loading world");
 
     (StatusCode::OK, Json(world))
 }
 
-async fn queries(DatabaseConnection(mut conn): DatabaseConnection, Query(params): Query<Params>) -> impl IntoResponse {
+async fn queries(
+    DatabaseConnection(mut conn): DatabaseConnection,
+    Query(params): Query<Params>,
+) -> impl IntoResponse {
     let q = parse_params(params);
 
     let mut rng = SmallRng::from_entropy();
@@ -47,8 +50,11 @@ async fn queries(DatabaseConnection(mut conn): DatabaseConnection, Query(params)
     for _ in 0..q {
         let query_id = random_number(&mut rng);
 
-        let result :World =  sqlx::query_as("SELECT * FROM World WHERE id = $1").bind(query_id)
-            .fetch_one(&mut conn).await.ok().expect("error loading world");
+        let result: World = sqlx::query_as("SELECT * FROM World WHERE id = $1")
+            .bind(query_id)
+            .fetch_one(&mut conn)
+            .await
+            .expect("error loading world");
 
         results.push(result);
     }
@@ -56,9 +62,13 @@ async fn queries(DatabaseConnection(mut conn): DatabaseConnection, Query(params)
     (StatusCode::OK, Json(results))
 }
 
-async fn fortunes(DatabaseConnection(mut conn): DatabaseConnection) -> impl IntoResponse {
-    let mut fortunes: Vec<Fortune> = sqlx::query_as("SELECT * FROM Fortune").fetch_all(&mut conn).await
-        .ok().expect("Could not load Fortunes");
+async fn fortunes(
+    DatabaseConnection(mut conn): DatabaseConnection,
+) -> impl IntoResponse {
+    let mut fortunes: Vec<Fortune> = sqlx::query_as("SELECT * FROM Fortune")
+        .fetch_all(&mut conn)
+        .await
+        .expect("Could not load Fortunes");
 
     fortunes.push(Fortune {
         id: 0,
@@ -76,7 +86,10 @@ async fn fortunes(DatabaseConnection(mut conn): DatabaseConnection) -> impl Into
     )
 }
 
-async fn updates(DatabaseConnection(mut conn): DatabaseConnection, Query(params): Query<Params>) -> impl IntoResponse {
+async fn updates(
+    DatabaseConnection(mut conn): DatabaseConnection,
+    Query(params): Query<Params>,
+) -> impl IntoResponse {
     let q = parse_params(params);
 
     let mut rng = SmallRng::from_entropy();
@@ -85,8 +98,11 @@ async fn updates(DatabaseConnection(mut conn): DatabaseConnection, Query(params)
 
     for _ in 0..q {
         let query_id = random_number(&mut rng);
-        let mut result :World =  sqlx::query_as("SELECT * FROM World WHERE id = $1").bind(query_id)
-            .fetch_one(&mut conn).await.ok().expect("error loading world");
+        let mut result: World = sqlx::query_as("SELECT * FROM World WHERE id = $1")
+            .bind(query_id)
+            .fetch_one(&mut conn)
+            .await
+            .expect("error loading world");
 
         result.random_number = random_number(&mut rng);
         results.push(result);
@@ -94,9 +110,11 @@ async fn updates(DatabaseConnection(mut conn): DatabaseConnection, Query(params)
 
     for w in &results {
         sqlx::query("UPDATE World SET randomnumber = $1 WHERE id = $2")
-            .bind(w.random_number).bind(w.id)
+            .bind(w.random_number)
+            .bind(w.id)
             .execute(&mut conn)
-            .await.ok().expect("could not update world");
+            .await
+            .expect("could not update world");
     }
 
     (StatusCode::OK, Json(results))
@@ -106,7 +124,7 @@ async fn updates(DatabaseConnection(mut conn): DatabaseConnection, Query(params)
 async fn main() {
     dotenv().ok();
 
-    let database_url = env::var("AXUM_TECHEMPOWER_DATABASE_URL").ok()
+    let database_url = env::var("AXUM_TECHEMPOWER_DATABASE_URL")
         .expect("AXUM_TECHEMPOWER_DATABASE_URL environment variable was not set");
 
     // setup connection pool
@@ -126,8 +144,11 @@ async fn router(pool: PgPool) -> Router {
         .route("/db", get(db))
         .route("/queries", get(queries))
         .route("/updates", get(updates))
-        .layer(AddExtensionLayer::new(pool))
-        .layer(SetResponseHeaderLayer::<_, Body>::if_not_present(header::SERVER, HeaderValue::from_static("Axum")))
+        .layer(Extension(pool))
+        .layer(SetResponseHeaderLayer::if_not_present(
+            header::SERVER,
+            HeaderValue::from_static("Axum"),
+        ))
 }
 
 #[derive(Template)]

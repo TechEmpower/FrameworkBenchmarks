@@ -1,10 +1,12 @@
-use std::convert::Infallible;
-use axum::body::{Bytes, Full};
-use axum::http::{header, HeaderValue, Response, StatusCode};
+use axum::http::{header, HeaderValue, StatusCode};
 use axum::response::IntoResponse;
-use rand::Rng;
+use axum::{
+    body::{Bytes, Full},
+    response::Response,
+};
 use rand::rngs::SmallRng;
-use serde::{Deserialize};
+use rand::Rng;
+use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct Params {
@@ -29,8 +31,8 @@ pub fn parse_params(params: Params) -> usize {
 /// Utility function for mapping any error into a `500 Internal Server Error`
 /// response.
 pub fn internal_error<E>(err: E) -> (StatusCode, String)
-    where
-        E: std::error::Error,
+where
+    E: std::error::Error,
 {
     (StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
 }
@@ -39,16 +41,15 @@ pub fn internal_error<E>(err: E) -> (StatusCode, String)
 pub struct Utf8Html<T>(pub T);
 
 impl<T> IntoResponse for Utf8Html<T>
-    where
-        T: Into<Full<Bytes>>,
+where
+    T: Into<Full<Bytes>>,
 {
-    type Body = Full<Bytes>;
-    type BodyError = Infallible;
-
-    fn into_response(self) -> Response<Self::Body> {
-        let mut res = Response::new(self.0.into());
-        res.headers_mut()
-            .insert(header::CONTENT_TYPE, HeaderValue::from_static("text/html; charset=utf-8"));
+    fn into_response(self) -> Response {
+        let mut res = self.0.into().into_response();
+        res.headers_mut().insert(
+            header::CONTENT_TYPE,
+            HeaderValue::from_static("text/html; charset=utf-8"),
+        );
         res
     }
 }

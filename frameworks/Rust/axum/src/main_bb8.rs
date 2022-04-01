@@ -1,32 +1,28 @@
-mod models_common;
-mod models_bb8;
-mod database_bb8;
-mod utils;
-mod server;
 mod common;
+mod database_bb8;
+mod models_bb8;
+mod models_common;
+mod server;
+mod utils;
 
-use dotenv::dotenv;
-use std::env;
-use crate::database_bb8::{Connection, create_bb8_pool, DatabaseConnection};
-use axum::{
-    extract::{Query},
-    http::StatusCode,
-    response::IntoResponse,
-    routing::get,
-    AddExtensionLayer, Json, Router,
-};
+use crate::database_bb8::{create_bb8_pool, Connection, DatabaseConnection};
 use axum::http::{header, HeaderValue};
+use axum::{
+    extract::Query, http::StatusCode, response::IntoResponse, routing::get, Extension,
+    Json, Router,
+};
 use bb8_postgres::tokio_postgres::{Row, Statement};
-use tower_http::set_header::SetResponseHeaderLayer;
-use hyper::Body;
+use dotenv::dotenv;
 use rand::rngs::SmallRng;
-use rand::{SeedableRng};
+use rand::SeedableRng;
+use std::env;
 use tokio_pg_mapper::FromTokioPostgresRow;
+use tower_http::set_header::SetResponseHeaderLayer;
 use yarte::Template;
 
-use models_bb8::{World, Fortune};
-use utils::{Params, parse_params, random_number};
 use crate::utils::Utf8Html;
+use models_bb8::{Fortune, World};
+use utils::{parse_params, random_number, Params};
 
 async fn db(DatabaseConnection(conn): DatabaseConnection) -> impl IntoResponse {
     let mut rng = SmallRng::from_entropy();
@@ -38,13 +34,20 @@ async fn db(DatabaseConnection(conn): DatabaseConnection) -> impl IntoResponse {
     (StatusCode::OK, Json(world))
 }
 
-async fn fetch_world_by_id_using_statement(conn: &Connection, number: i32, select: &Statement) -> World {
+async fn fetch_world_by_id_using_statement(
+    conn: &Connection,
+    number: i32,
+    select: &Statement,
+) -> World {
     let row: Row = conn.query_one(select, &[&number]).await.unwrap();
 
     World::from_row(row).unwrap()
 }
 
-async fn queries(DatabaseConnection(conn): DatabaseConnection, Query(params): Query<Params>) -> impl IntoResponse {
+async fn queries(
+    DatabaseConnection(conn): DatabaseConnection,
+    Query(params): Query<Params>,
+) -> impl IntoResponse {
     let q = parse_params(params);
 
     let mut rng = SmallRng::from_entropy();
@@ -56,7 +59,8 @@ async fn queries(DatabaseConnection(conn): DatabaseConnection, Query(params): Qu
     for _ in 0..q {
         let query_id = random_number(&mut rng);
 
-        let result :World = fetch_world_by_id_using_statement(&conn, query_id, &select).await;
+        let result: World =
+            fetch_world_by_id_using_statement(&conn, query_id, &select).await;
 
         results.push(result);
     }
@@ -91,7 +95,10 @@ async fn fortunes(DatabaseConnection(conn): DatabaseConnection) -> impl IntoResp
     )
 }
 
-async fn updates(DatabaseConnection(conn): DatabaseConnection, Query(params): Query<Params>) -> impl IntoResponse {
+async fn updates(
+    DatabaseConnection(conn): DatabaseConnection,
+    Query(params): Query<Params>,
+) -> impl IntoResponse {
     let q = parse_params(params);
 
     let mut rng = SmallRng::from_entropy();
@@ -102,7 +109,8 @@ async fn updates(DatabaseConnection(conn): DatabaseConnection, Query(params): Qu
 
     for _ in 0..q {
         let query_id = random_number(&mut rng);
-        let mut result :World = fetch_world_by_id_using_statement(&conn, query_id, &select).await;
+        let mut result: World =
+            fetch_world_by_id_using_statement(&conn, query_id, &select).await;
 
         result.randomnumber = random_number(&mut rng);
         results.push(result);
@@ -111,7 +119,9 @@ async fn updates(DatabaseConnection(conn): DatabaseConnection, Query(params): Qu
     let update = prepare_update_world_by_id_statement(&conn).await;
 
     for w in &results {
-        conn.execute(&update, &[&w.randomnumber, &w.id]).await.unwrap();
+        conn.execute(&update, &[&w.randomnumber, &w.id])
+            .await
+            .unwrap();
     }
 
     (StatusCode::OK, Json(results))
@@ -122,18 +132,22 @@ async fn prepare_fetch_all_fortunes_statement(conn: &Connection) -> Statement {
 }
 
 async fn prepare_fetch_world_by_id_statement(conn: &Connection) -> Statement {
-    conn.prepare("SELECT id, randomnumber FROM World WHERE id = $1").await.unwrap()
+    conn.prepare("SELECT id, randomnumber FROM World WHERE id = $1")
+        .await
+        .unwrap()
 }
 
 async fn prepare_update_world_by_id_statement(conn: &Connection) -> Statement {
-    conn.prepare("UPDATE World SET randomnumber = $1 WHERE id = $2").await.unwrap()
+    conn.prepare("UPDATE World SET randomnumber = $1 WHERE id = $2")
+        .await
+        .unwrap()
 }
 
 #[tokio::main]
 async fn main() {
     dotenv().ok();
 
-    let database_url = env::var("AXUM_TECHEMPOWER_DATABASE_URL").ok()
+    let database_url = env::var("AXUM_TECHEMPOWER_DATABASE_URL")
         .expect("AXUM_TECHEMPOWER_DATABASE_URL environment variable was not set");
 
     // setup connection pool
@@ -144,8 +158,11 @@ async fn main() {
         .route("/db", get(db))
         .route("/queries", get(queries))
         .route("/updates", get(updates))
-        .layer(AddExtensionLayer::new(pool))
-        .layer(SetResponseHeaderLayer::<_, Body>::if_not_present(header::SERVER, HeaderValue::from_static("Axum")));
+        .layer(Extension(pool))
+        .layer(SetResponseHeaderLayer::if_not_present(
+            header::SERVER,
+            HeaderValue::from_static("Axum"),
+        ));
 
     server::builder()
         .serve(router.into_make_service())

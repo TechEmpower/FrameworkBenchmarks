@@ -1,17 +1,16 @@
+mod common;
 mod models_common;
 mod server;
-mod common;
 
-use models_common::{Message};
+use models_common::Message;
 
 use axum::http::StatusCode;
-use axum::Json;
-use dotenv::dotenv;
-use axum::{Router, routing::get};
 use axum::http::{header, HeaderValue};
 use axum::response::IntoResponse;
+use axum::Json;
+use axum::{routing::get, Router};
+use dotenv::dotenv;
 use tower_http::set_header::SetResponseHeaderLayer;
-use hyper::Body;
 
 pub async fn plaintext() -> &'static str {
     "Hello, World!"
@@ -29,10 +28,13 @@ pub async fn json() -> impl IntoResponse {
 async fn main() {
     dotenv().ok();
 
-    let app =  Router::new()
+    let app = Router::new()
         .route("/plaintext", get(plaintext))
         .route("/json", get(json))
-        .layer(SetResponseHeaderLayer::<_, Body>::if_not_present(header::SERVER, HeaderValue::from_static("Axum")));
+        .layer(SetResponseHeaderLayer::if_not_present(
+            header::SERVER,
+            HeaderValue::from_static("Axum"),
+        ));
 
     server::builder()
         .http1_pipeline_flush(true)

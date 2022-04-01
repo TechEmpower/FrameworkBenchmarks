@@ -1,34 +1,30 @@
+mod common;
+mod database_mongo;
 mod models_common;
 mod models_mongo;
-mod database_mongo;
-mod utils;
 mod server;
-mod common;
+mod utils;
 
+use axum::http::{header, HeaderValue};
+use axum::{
+    extract::Query, http::StatusCode, response::IntoResponse, routing::get, Extension,
+    Json, Router,
+};
 use dotenv::dotenv;
+use futures::stream::StreamExt;
+use mongodb::options::ClientOptions;
+use mongodb::{bson::doc, Client, Database};
+use rand::rngs::SmallRng;
+use rand::SeedableRng;
 use std::env;
 use std::time::Duration;
-use axum::{
-    extract::{Query},
-    http::StatusCode,
-    response::IntoResponse,
-    routing::get,
-    AddExtensionLayer, Json, Router,
-};
-use axum::http::{header, HeaderValue};
-use futures::stream::StreamExt;
 use tower_http::set_header::SetResponseHeaderLayer;
-use hyper::Body;
-use rand::rngs::SmallRng;
-use rand::{SeedableRng};
 use yarte::Template;
-use mongodb::{bson::doc, Client, Database};
-use mongodb::options::ClientOptions;
 
-use models_mongo::{World, Fortune};
-use utils::{Params, parse_params, random_number, Utf8Html};
 use database_mongo::DatabaseConnection;
 use models_mongo::FortuneInfo;
+use models_mongo::{Fortune, World};
+use utils::{parse_params, random_number, Params, Utf8Html};
 
 async fn db(DatabaseConnection(mut db): DatabaseConnection) -> impl IntoResponse {
     let mut rng = SmallRng::from_entropy();
@@ -44,11 +40,18 @@ async fn find_world_by_id(db: &mut Database, number: i32) -> World {
 
     let filter = doc! { "id": number as f32 };
 
-    let world: World = world_collection.find_one(Some(filter), None).await.expect("world could not be found").unwrap();
+    let world: World = world_collection
+        .find_one(Some(filter), None)
+        .await
+        .expect("world could not be found")
+        .unwrap();
     world
 }
 
-async fn queries(DatabaseConnection(mut db): DatabaseConnection, Query(params): Query<Params>) -> impl IntoResponse {
+async fn queries(
+    DatabaseConnection(mut db): DatabaseConnection,
+    Query(params): Query<Params>,
+) -> impl IntoResponse {
     let q = parse_params(params);
 
     let mut rng = SmallRng::from_entropy();
@@ -58,7 +61,7 @@ async fn queries(DatabaseConnection(mut db): DatabaseConnection, Query(params): 
     for _ in 0..q {
         let query_id = random_number(&mut rng);
 
-        let result :World =  find_world_by_id(&mut db, query_id).await;
+        let result: World = find_world_by_id(&mut db, query_id).await;
 
         results.push(result);
     }
@@ -69,9 +72,12 @@ async fn queries(DatabaseConnection(mut db): DatabaseConnection, Query(params): 
 async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
     let fortune_collection = db.collection::<Fortune>("fortune");
 
-    let mut fortune_cursor = fortune_collection.find(None, None).await.expect("fortunes could not be loaded");
+    let mut fortune_cursor = fortune_collection
+        .find(None, None)
+        .await
+        .expect("fortunes could not be loaded");
 
-    let mut fortunes: Vec<Fortune> = Vec::with_capacity(100 as usize);
+    let mut fortunes: Vec<Fortune> = Vec::with_capacity(100);
 
     while let Some(doc) = fortune_cursor.next().await {
         fortunes.push(doc.expect("could not load fortune"));
@@ -84,7 +90,13 @@ async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoRespon
 
     fortunes.sort_by(|a, b| a.message.cmp(&b.message));
 
-    let fortune_infos: Vec<FortuneInfo> = fortunes.into_iter().map(|f| FortuneInfo { id: f.id as i32, message: f.message }).collect();
+    let fortune_infos: Vec<FortuneInfo> = fortunes
+        .into_iter()
+        .map(|f| FortuneInfo {
+            id: f.id as i32,
+            message: f.message,
+        })
+        .collect();
 
     Utf8Html(
         FortunesTemplate {
@@ -99,7 +111,7 @@ async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoRespon
 async fn main() {
     dotenv().ok();
 
-    let database_url = env::var("AXUM_TECHEMPOWER_MONGODB_URL").ok()
+    let database_url = env::var("AXUM_TECHEMPOWER_MONGODB_URL")
         .expect("AXUM_TECHEMPOWER_MONGODB_URL environment variable was not set");
 
     // setup connection pool
@@ -114,8 +126,11 @@ async fn main() {
         .route("/fortunes", get(fortunes))
         .route("/db", get(db))
         .route("/queries", get(queries))
-        .layer(AddExtensionLayer::new(client))
-        .layer(SetResponseHeaderLayer::<_, Body>::if_not_present(header::SERVER, HeaderValue::from_static("Axum")));
+        .layer(Extension(client))
+        .layer(SetResponseHeaderLayer::if_not_present(
+            header::SERVER,
+            HeaderValue::from_static("Axum"),
+        ));
 
     server::builder()
         .serve(app.into_make_service())
