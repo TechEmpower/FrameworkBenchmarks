@@ -113,7 +113,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>5.2.0.M2</version>
+            <version>5.2.21.BUILD-SNAPSHOT</version>
         </dependency>
 <!-- End of 2.2.0.M1 and 2.2.0.M2 dependency preparations -->
     </dependencies>
