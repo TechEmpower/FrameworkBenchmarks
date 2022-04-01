@@ -7,7 +7,7 @@
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/db",
-      "query_url": "/queries/",
+      "query_url": "/multiple_queries/",
       "fortune_url": "/fortunes",
       "update_url": "/updates/",
       "port": 8080,
@@ -25,7 +25,7 @@
     "mysql": {
       "setup_file": "setup_mysql",
       "db_url": "/db",
-      "query_url": "/queries/",
+      "query_url": "/multiple_queries/",
       "fortune_url": "/fortunes",
       "update_url": "/updates/",
       "port": 8080,
@@ -42,7 +42,7 @@
     },
     "cache": {
       "setup_file": "setup-postgresql",
-      "cached_query_url": "/queries/",
+      "cached_query_url": "/multiple_queries/",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -57,7 +57,7 @@
     },
     "mysql-cache": {
       "setup_file": "setup-mysql",
-      "cached_query_url": "/queries/",
+      "cached_query_url": "/multiple_queries/",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",

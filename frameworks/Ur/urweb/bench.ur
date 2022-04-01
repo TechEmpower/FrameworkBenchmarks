@@ -86,7 +86,7 @@ fun db () =
 
 (** * Test type 3: Multiple database queries *)
 
-fun queries s =
+fun multiple_queries s =
   rows <- List.tabulateM (fn _ => n <- random_id; world_find n) (parseQueries s);
   returnJson rows
 

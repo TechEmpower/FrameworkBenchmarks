@@ -14,7 +14,7 @@ Ur/Web is unusual in a few ways of favoring simplicity over performance, which h
 Code Structure & Build Instructions
 ===================================
 
-To compile a standalone executable running on port 8080, run `urweb bench`.  See `setup.py` for fancier options.
+To compile a standalone executable running on port 8080, run `urweb bench`.  See `urweb*.dockerfile`s for fancier options.
 
 `bench.ur` is the main source file.  `bench.urs` is the signature file describing the module's exported functions.  `bench.urp` is the project file giving compilation directives.
 
