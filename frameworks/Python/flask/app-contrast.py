@@ -23,7 +23,7 @@ DBHOST = "tfb-database"
 app = Flask(__name__)
 
 # Start Contrast Specific Changes
-from contrast.agent.middlewares.flask_middleware import FlaskMiddleware as ContrastMiddleware
+from contrast.flask import ContrastMiddleware
 app.wsgi_app = ContrastMiddleware(app)
 # End Contrast Specific Changes
 
