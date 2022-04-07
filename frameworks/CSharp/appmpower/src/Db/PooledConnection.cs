@@ -6,10 +6,8 @@ namespace appMpower.Db
 {
    public class PooledConnection : IDbConnection
    {
-      private short _number = 0;
       private string _connectionString;
-      private IDbConnection _dbConnection;
-      private ConcurrentDictionary<string, PooledCommand> _pooledCommands;
+      internal InternalConnection _internalConnection; 
 
       public PooledConnection(string connectionString)
       {
@@ -20,11 +18,11 @@ namespace appMpower.Db
       {
          get
          {
-            return _pooledCommands;
+            return _internalConnection.PooledCommands;
          }
          set
          {
-            _pooledCommands = value;
+            _internalConnection.PooledCommands = value;
          }
       }
 
@@ -32,11 +30,11 @@ namespace appMpower.Db
       {
          get
          {
-            return _number;
+            return _internalConnection.Number;
          }
          set
          {
-            _number = value;
+            _internalConnection.Number = value;
          }
       }
 
@@ -44,11 +42,11 @@ namespace appMpower.Db
       {
          get
          {
-            return _dbConnection;
+            return _internalConnection.DbConnection;
          }
          set
          {
-            _dbConnection = value;
+            _internalConnection.DbConnection = value;
          }
       }
 
@@ -56,11 +54,11 @@ namespace appMpower.Db
       {
          get
          {
-            return _dbConnection.ConnectionString;
+            return _internalConnection.DbConnection.ConnectionString;
          }
          set
          {
-            _dbConnection.ConnectionString = value;
+            _internalConnection.DbConnection.ConnectionString = value;
          }
       }
 
@@ -68,7 +66,7 @@ namespace appMpower.Db
       {
          get
          {
-            return _dbConnection.ConnectionTimeout;
+            return _internalConnection.DbConnection.ConnectionTimeout;
          }
       }
 
@@ -76,7 +74,7 @@ namespace appMpower.Db
       {
          get
          {
-            return _dbConnection.Database;
+            return _internalConnection.DbConnection.Database;
          }
       }
 
@@ -84,72 +82,69 @@ namespace appMpower.Db
       {
          get
          {
-            if (_dbConnection is null) return ConnectionState.Closed;
-            return _dbConnection.State;
+            if (_internalConnection is null) return ConnectionState.Closed;
+            return _internalConnection.DbConnection.State;
          }
       }
 
       public IDbTransaction BeginTransaction()
       {
-         return _dbConnection.BeginTransaction();
+         return _internalConnection.DbConnection.BeginTransaction();
       }
 
       public IDbTransaction BeginTransaction(IsolationLevel il)
       {
-         return _dbConnection.BeginTransaction(il);
+         return _internalConnection.DbConnection.BeginTransaction(il);
       }
 
       public void ChangeDatabase(string databaseName)
       {
-         _dbConnection.ChangeDatabase(databaseName);
+         _internalConnection.DbConnection.ChangeDatabase(databaseName);
       }
 
       public void Close()
       {
-         _dbConnection.Close();
+         _internalConnection.DbConnection.Close();
       }
 
       public async Task CloseAsync()
       {
-         await (_dbConnection as System.Data.Common.DbConnection).CloseAsync();
+         await (_internalConnection.DbConnection as System.Data.Common.DbConnection).CloseAsync();
       }
 
       public IDbCommand CreateCommand()
       {
-         return _dbConnection.CreateCommand();
+         return _internalConnection.DbConnection.CreateCommand();
       }
 
       public void Open()
       {
-         if (_dbConnection.State == ConnectionState.Closed)
+         if (_internalConnection.DbConnection.State == ConnectionState.Closed)
          {
-            _dbConnection.Open();
+            _internalConnection.DbConnection.Open();
          }
       }
 
       public void Dispose()
       {
-         PooledConnections.Dispose(this);
+         PooledConnections.Release(_internalConnection);
       }
 
       public async Task OpenAsync()
       {
 #if ADO
-         _dbConnection = new Npgsql.NpgsqlConnection(_connectionString);
+         _internalConnection = new(); 
+         _internalConnection.DbConnection = new Npgsql.NpgsqlConnection(_connectionString);
 #else
-         if (_dbConnection is null)
+         if (_internalConnection is null)
          {
-            using var internalConnection = await PooledConnections.GetConnection(_connectionString);
-
-            _dbConnection = internalConnection.DbConnection;
-            _number = internalConnection.Number;
-            _pooledCommands = internalConnection.PooledCommands;
+            _internalConnection = await PooledConnections.GetConnection(_connectionString);
          }
 #endif
 
-         if (_dbConnection.State == ConnectionState.Closed)
+         if (_internalConnection.DbConnection.State == ConnectionState.Closed)
          {
-            await (_dbConnection as System.Data.Common.DbConnection).OpenAsync();
+            await (_internalConnection.DbConnection as System.Data.Common.DbConnection).OpenAsync();
          }
       }
 
@@ -163,7 +158,7 @@ namespace appMpower.Db
 #else
          PooledCommand internalCommand;
 
-         if (_pooledCommands.TryRemove(commandText, out internalCommand))
+         if (_internalConnection.PooledCommands.TryRemove(commandText, out internalCommand))
          {
             pooledCommand.DbCommand = internalCommand.DbCommand;
             pooledCommand.PooledConnection = internalCommand.PooledConnection;
@@ -178,7 +173,7 @@ namespace appMpower.Db
             //For non odbc drivers like Npgsql which do not support Prepare
             pooledCommand.DbCommand.Prepare();
 
-            //Console.WriteLine("prepare pool connection: " + this._number + " for command " + _pooledCommands.Count);
+            //Console.WriteLine("prepare pool connection: " + this._internalConnection.Number + " for command " + _internalConnection.PooledCommands.Count);
          }
 #endif
 
@@ -188,7 +183,7 @@ namespace appMpower.Db
       public void ReleaseCommand(PooledCommand pooledCommand)
       {
 #if !ADO
-         _pooledCommands.TryAdd(pooledCommand.CommandText, pooledCommand);
+         _internalConnection.PooledCommands.TryAdd(pooledCommand.CommandText, pooledCommand);
 #endif
       }
    }
