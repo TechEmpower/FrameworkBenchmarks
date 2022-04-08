@@ -33,7 +33,8 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <DefineConstants Condition=" '$(Database)' == 'mysql' ">$(DefineConstants);MYSQL</DefineConstants>
+      <DefineConstants>$(DefineConstants);ODBC</DefineConstants>
+      <DefineConstants Condition=" '$(Database)' == 'mysql' ">$(DefineConstants);MYSQL</DefineConstants>
   </PropertyGroup>
 
 </Project>

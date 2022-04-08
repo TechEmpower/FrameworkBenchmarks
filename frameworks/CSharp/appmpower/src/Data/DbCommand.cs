@@ -1,36 +1,36 @@
 using System.Data;
 using System.Threading.Tasks;
 
-namespace appMpower.Db
+namespace appMpower.Data
 {
-   public class PooledCommand : IDbCommand
+   public class DbCommand : IDbCommand
    {
       private IDbCommand _dbCommand;
-      private PooledConnection _pooledConnection;
+      private DbConnection _dbConnection;
 
-      public PooledCommand(PooledConnection pooledConnection)
+      public DbCommand(DbConnection dbConnection)
       {
-         _dbCommand = pooledConnection.CreateCommand();
-         _pooledConnection = pooledConnection;
+         _dbCommand = dbConnection.CreateCommand();
+         _dbConnection = dbConnection;
       }
 
-      public PooledCommand(string commandText, PooledConnection pooledConnection)
+      public DbCommand(string commandText, DbConnection dbConnection)
       {
-         pooledConnection.GetCommand(commandText, CommandType.Text, this);
+         dbConnection.GetCommand(commandText, CommandType.Text, this);
       }
 
-      public PooledCommand(string commandText, CommandType commandType, PooledConnection pooledConnection)
+      public DbCommand(string commandText, CommandType commandType, DbConnection dbConnection)
       {
-         pooledConnection.GetCommand(commandText, commandType, this);
+         dbConnection.GetCommand(commandText, commandType, this);
       }
 
-      internal PooledCommand(IDbCommand dbCommand, PooledConnection pooledConnection)
+      internal DbCommand(IDbCommand dbCommand, DbConnection dbConnection)
       {
          _dbCommand = dbCommand;
-         _pooledConnection = pooledConnection;
+         _dbConnection = dbConnection;
       }
 
-      internal IDbCommand DbCommand
+      internal IDbCommand Command
       {
          get
          {
@@ -42,15 +42,15 @@ namespace appMpower.Db
          }
       }
 
-      internal PooledConnection PooledConnection
+      internal DbConnection DbConnection
       {
          get
          {
-            return _pooledConnection;
+            return _dbConnection;
          }
          set
          {
-            _pooledConnection = value;
+            _dbConnection = value;
          }
       }
 
@@ -102,7 +102,6 @@ namespace appMpower.Db
          }
       }
 #nullable disable
-
 
       public IDataParameterCollection Parameters
       {
@@ -220,7 +219,7 @@ namespace appMpower.Db
 
       public void Dispose()
       {
-         _pooledConnection.ReleaseCommand(this);
+         _dbConnection.ReleaseCommand(this);
       }
    }
 }
