@@ -17,13 +17,13 @@ object Main extends App {
 
   private val STATIC_SERVER_NAME = AsciiString.cached("zio-http")
 
-  private val frozenJsonResponse = Response
+  private val JsonResponse = Response
     .json(jsonMessage)
     .withServerTime
     .withServer(STATIC_SERVER_NAME)
     .freeze
 
-  private val frozenPlainTextResponse = Response
+  private val PlainTextResponse = Response
     .text(plainTextMessage)
     .withServerTime
     .withServer(STATIC_SERVER_NAME)
@@ -34,8 +34,8 @@ object Main extends App {
   private def jsonApp(json: Response) = Http.fromHExit(HExit.succeed(json)).whenPathEq(jsonPath)
 
   private def app = for {
-    plainTextResponse <- frozenPlainTextResponse
-    jsonResponse      <- frozenJsonResponse
+    plainTextResponse <- PlainTextResponse
+    jsonResponse      <- JsonResponse
   } yield plainTextApp(plainTextResponse) ++ jsonApp(jsonResponse)
 
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] =
