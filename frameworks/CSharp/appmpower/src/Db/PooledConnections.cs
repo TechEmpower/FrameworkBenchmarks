@@ -55,17 +55,6 @@ namespace appMpower.Db
          return taskCompletionSource.Task;
       }
 
-      public static void Dispose(PooledConnection pooledConnection)
-      {
-         InternalConnection internalConnection = new InternalConnection();
-
-         internalConnection.DbConnection = pooledConnection.DbConnection;
-         internalConnection.Number = pooledConnection.Number;
-         internalConnection.PooledCommands = pooledConnection.PooledCommands;
-
-         Release(internalConnection);
-      }
-
       public static void Release(InternalConnection internalConnection)
       {
          TaskCompletionSource<InternalConnection> taskCompletionSource;
