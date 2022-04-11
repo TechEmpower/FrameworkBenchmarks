@@ -27,7 +27,7 @@ public final class Message {
     }
 
     public static Message create(String str) {
-        Message instance = new Message(str)
+        Message instance = new Message(str);
         return instance;
     }
 
