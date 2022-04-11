@@ -1,16 +1,20 @@
-import java.time.format.DateTimeFormatter
-import java.time.{Instant, ZoneOffset}
-import zhttp.http._
+import zhttp.service.{EventLoopGroup, Server}
 import zio._
-import zhttp.service._
+import zhttp.http._
 import zhttp.service.server.ServerChannelFactory
 import com.github.plokhotnyuk.jsoniter_scala.core._
 import com.github.plokhotnyuk.jsoniter_scala.macros._
+
 import io.netty.util.AsciiString
 
+import java.time.format.DateTimeFormatter
+import java.time.{Instant, ZoneOffset}
+
+case class Message(message: String)
+
 object Main extends App {
-  private val plainTextMessage: String = "Hello, World!"
-  private val jsonMessage: String      = """{"message":"Hello, World!"}"""
+  private val message: String = "Hello, World!"
+  implicit val codec: JsonValueCodec[Message] = JsonCodecMaker.make
 
   private val plaintextPath = "/plaintext"
   private val jsonPath      = "/json"
@@ -18,13 +22,13 @@ object Main extends App {
   private val STATIC_SERVER_NAME = AsciiString.cached("zio-http")
 
   private val JsonResponse = Response
-    .json(jsonMessage)
+    .json(writeToString(Message(message)))
     .withServerTime
     .withServer(STATIC_SERVER_NAME)
     .freeze
 
   private val PlainTextResponse = Response
-    .text(plainTextMessage)
+    .text(message)
     .withServerTime
     .withServer(STATIC_SERVER_NAME)
     .freeze
