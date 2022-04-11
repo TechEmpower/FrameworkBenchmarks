@@ -16,8 +16,6 @@ import org.redkale.util.Bean;
 @Bean
 public final class Message {
 
-    private static final Message instance = new Message();
-
     @ConvertSmallString
     private String message;
 
@@ -29,7 +27,7 @@ public final class Message {
     }
 
     public static Message create(String str) {
-        instance.message = str;
+        Message instance = new Message(str);
         return instance;
     }
 
