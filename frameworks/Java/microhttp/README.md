@@ -9,7 +9,7 @@
 
 The tests were run with:
 * [OpenJDK 17.0.2](http://openjdk.java.net/)
-* [Microhttp 0.6](https://github.com/ebarlas/microhttp)
+* [Microhttp 0.7](https://github.com/ebarlas/microhttp)
 * [Jackson 2.13.2](https://github.com/FasterXML/jackson)
 
 ## Test URLs
