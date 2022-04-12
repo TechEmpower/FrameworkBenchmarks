@@ -51,7 +51,7 @@ public class HelloWebServer {
                 .withMaxRequestSize(1_024 * 1_024)
                 .withReadBufferSize(1_024 * 64)
                 .withResolution(Duration.ofMillis(1_000))
-                .withSocketTimeout(Duration.ofSeconds(90));
+                .withRequestTimeout(Duration.ofSeconds(90));
         EventLoop eventLoop = new EventLoop(options, new DisabledLogger(), this::handle);
         eventLoop.start();
     }
@@ -95,7 +95,7 @@ public class HelloWebServer {
         }
     }
 
-    byte[] jsonBody() {
+    static byte[] jsonBody() {
         try {
             return OBJECT_MAPPER.writeValueAsBytes(new JsonMessage(MESSAGE));
         } catch (IOException e) {
