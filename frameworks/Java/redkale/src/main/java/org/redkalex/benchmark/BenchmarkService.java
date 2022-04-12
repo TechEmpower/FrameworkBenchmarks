@@ -5,6 +5,7 @@
  */
 package org.redkalex.benchmark;
 
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.stream.*;
 import javax.annotation.Resource;
@@ -46,18 +47,20 @@ public class BenchmarkService extends AbstractService {
     }
 
     @RestMapping(name = "queries")
-    public CompletableFuture<World[]> queryWorldAsync(int q) {
+    public CompletableFuture<List<World>> queryWorldAsync(int q) {
         int size = Math.min(500, Math.max(1, q));
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
-        return source.findsAsync(World.class, ids.boxed());
+        return source.findsListAsync(World.class, ids.boxed());
     }
 
     @RestMapping(name = "updates")
-    public CompletableFuture<World[]> updateWorldAsync(int q) {
+    public CompletableFuture<List<World>> updateWorldAsync(int q) {
         int size = Math.min(500, Math.max(1, q));
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
         int[] newNumbers = ThreadLocalRandom.current().ints(size, 1, 10001).toArray();
-        return source.findsAsync(World.class, ids.boxed()).thenCompose(words -> source.updateAsync(World.setNewNumbers(words, newNumbers)).thenApply(v -> words));
+        return source.findsListAsync(World.class, ids.boxed())
+            .thenCompose(words -> source.updateAsync(World.setNewNumbers(words.toArray(new World[words.size()]), newNumbers))
+            .thenApply(v -> words));
     }
 
     @RestMapping(name = "fortunes")

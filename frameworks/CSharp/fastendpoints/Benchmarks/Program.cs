@@ -6,4 +6,4 @@ builder.Services.AddFastEndpoints();
 
 var app = builder.Build();
 app.UseFastEndpoints();
-app.Run();
+app.Run("http://0.0.0.0:8080");

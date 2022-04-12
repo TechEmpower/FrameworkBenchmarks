@@ -1,6 +1,7 @@
 asyncpg==0.21.0
 gunicorn==20.0.4
 Jinja2==2.11.3
+markupsafe==2.0.1
 fastapi==0.65.2
 orjson==2.6.5
 uvicorn==0.11.3

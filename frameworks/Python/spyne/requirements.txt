@@ -21,7 +21,7 @@ six==1.12.0
 slimit==0.8.1
 spyne==2.13.9a0
 SQLAlchemy==1.2.17
-Twisted==22.1.0
+Twisted==22.2.0
 txpostgres==1.6.0
 Werkzeug==0.15.3
 zope.interface==4.6.0
