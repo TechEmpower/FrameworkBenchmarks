@@ -4,31 +4,51 @@ use ahash::AHashMap;
 use futures_util::stream::{FuturesUnordered, StreamExt, TryStreamExt};
 use rand::{rngs::SmallRng, Rng, SeedableRng};
 use tokio::pin;
-use tokio_postgres::{types::ToSql, NoTls, Statement};
+use xitca_postgres::{Postgres, Statement, ToSql};
 
 use super::ser::{Fortune, Fortunes, World};
 
 pub struct Client {
-    client: tokio_postgres::Client,
+    client: xitca_postgres::Client,
     rng: RefCell<SmallRng>,
     fortune: Statement,
     world: Statement,
     updates: AHashMap<u16, Statement>,
 }
 
+impl Drop for Client {
+    fn drop(&mut self) {
+        drop(self.fortune.clone().into_guarded(&self.client));
+
+        drop(self.world.clone().into_guarded(&self.client));
+
+        for (_, stmt) in std::mem::take(&mut self.updates) {
+            drop(stmt.into_guarded(&self.client))
+        }
+    }
+}
+
 pub async fn create(config: &str) -> Client {
-    let (client, conn) = tokio_postgres::connect(config, NoTls).await.unwrap();
+    let (client, conn) = Postgres::new(config).connect().await.unwrap();
 
     tokio::task::spawn_local(async move {
         let _ = conn.await;
     });
 
-    let fortune = client.prepare("SELECT * FROM fortune").await.unwrap();
-    let world = client
-        .prepare("SELECT * FROM world WHERE id=$1")
+    let fortune = client
+        .prepare("SELECT * FROM fortune", &[])
         .await
-        .unwrap();
+        .unwrap()
+        .leak();
+
+    let world = client
+        .prepare("SELECT * FROM world WHERE id=$1", &[])
+        .await
+        .unwrap()
+        .leak();
+
     let mut updates = AHashMap::new();
+
     for num in 1..=500u16 {
         let mut pl = 1;
         let mut q = String::new();
@@ -45,7 +65,7 @@ pub async fn create(config: &str) -> Client {
         q.pop();
         q.push(')');
 
-        let st = client.prepare(&q).await.unwrap();
+        let st = client.prepare(&q, &[]).await.unwrap().leak();
         updates.insert(num, st);
     }
 
@@ -130,7 +150,7 @@ impl Client {
 
         let stream = self
             .client
-            .query_raw::<_, _, &[i32; 0]>(&self.fortune, &[])
+            .query_raw::<_, &[i32; 0]>(&self.fortune, &[])
             .await?;
 
         pin!(stream);

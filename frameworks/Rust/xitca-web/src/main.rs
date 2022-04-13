@@ -38,7 +38,7 @@ use self::util::{
     TEXT_HEADER_VALUE,
 };
 
-type Request = http::Request<RequestBody>;
+type Request = xitca_http::Request<RequestBody>;
 
 type Response = http::Response<ResponseBody>;
 
@@ -162,14 +162,12 @@ impl HttpService {
         }
     }
 
-    #[inline]
     async fn _fortunes(&self) -> Result<Bytes, Box<dyn Error>> {
         use sailfish::TemplateOnce;
         let fortunes = self.state.client().tell_fortune().await?.render_once()?;
         Ok(fortunes.into())
     }
 
-    #[inline]
     fn _json<S>(&self, req: Request, value: &S) -> Result<Response, Infallible>
     where
         S: ?Sized + Serialize,

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"errors"
 	"flag"
 	"fmt"
 	"log"
@@ -8,7 +10,6 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/evanphx/wildcat"
 	"github.com/panjf2000/gnet/v2"
 )
 
@@ -21,8 +22,8 @@ type httpServer struct {
 }
 
 type httpCodec struct {
-	parser *wildcat.HTTPParser
-	buf    []byte
+	delimiter []byte
+	buf       []byte
 }
 
 func (hc *httpCodec) appendResponse() {
@@ -32,6 +33,19 @@ func (hc *httpCodec) appendResponse() {
 	hc.buf = append(hc.buf, "\r\nContent-Length: 13\r\n\r\nHello, World!"...)
 }
 
+var errCRLFNotFound = errors.New("CRLF not found")
+
+func (hc *httpCodec) parse(data []byte) (int, error) {
+	if idx := bytes.Index(data, hc.delimiter); idx != -1 {
+		return idx + 4, nil
+	}
+	return -1, errCRLFNotFound
+}
+
+func (hc *httpCodec) reset() {
+	hc.buf = hc.buf[:0]
+}
+
 func (hs *httpServer) OnBoot(eng gnet.Engine) gnet.Action {
 	hs.eng = eng
 	log.Printf("echo server with multi-core=%t is listening on %s\n", hs.multicore, hs.addr)
@@ -39,34 +53,26 @@ func (hs *httpServer) OnBoot(eng gnet.Engine) gnet.Action {
 }
 
 func (hs *httpServer) OnOpen(c gnet.Conn) ([]byte, gnet.Action) {
-	c.SetContext(&httpCodec{parser: wildcat.NewHTTPParser()})
+	c.SetContext(&httpCodec{delimiter: []byte("\r\n\r\n")})
 	return nil, gnet.None
 }
 
 func (hs *httpServer) OnTraffic(c gnet.Conn) gnet.Action {
 	buf, _ := c.Next(-1)
-	if len(buf) == 0 {
-		return gnet.None
-	}
 	hc := c.Context().(*httpCodec)
 pipeline:
-	headerOffset, err := hc.parser.Parse(buf)
+	nextOffset, err := hc.parse(buf)
 	if err != nil {
-		return gnet.None
+		goto response
 	}
 	hc.appendResponse()
-	//bodyLen := int(hc.parser.ContentLength())
-	//if bodyLen == -1 {
-	//	bodyLen = 0
-	//}
-	//buf = buf[headerOffset+bodyLen:]
-	buf = buf[headerOffset:]
+	buf = buf[nextOffset:]
 	if len(buf) > 0 {
 		goto pipeline
 	}
-
+response:
 	c.Write(hc.buf)
-	hc.buf = hc.buf[:0]
+	hc.reset()
 	return gnet.None
 }
 

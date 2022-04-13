@@ -10,7 +10,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <log4j.version>2.11.0</log4j.version>
+        <log4j.version>2.17.1</log4j.version>
         <smartservlet.version>0.1.7-SNAPSHOT</smartservlet.version>
         <hikaricp.version>5.0.0</hikaricp.version>
         <jsoniter.version>0.9.23</jsoniter.version>
