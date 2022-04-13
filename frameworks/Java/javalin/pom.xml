@@ -13,7 +13,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <javalin.version>3.13.3</javalin.version>
         <slf4j.version>1.7.30</slf4j.version>
-        <jackson.version>2.12.0</jackson.version>
+        <jackson.version>2.12.6.1</jackson.version>
         <hikaricp.version>4.0.2</hikaricp.version>
         <postgresql.version>42.3.3</postgresql.version>
         <mongodb.version>4.2.0</mongodb.version>
