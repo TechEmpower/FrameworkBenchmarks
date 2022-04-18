@@ -1,6 +1,8 @@
-namespace appMpower.Db
+using System.Data;
+
+namespace appMpower.Data
 {
-   public static class DataProvider
+   public static class DbProviderFactory
    {
 #if MYSQL
       public const string ConnectionString = "Driver={MariaDB};Server=tfb-database;Database=hello_world;Uid=benchmarkdbuser;Pwd=benchmarkdbpass;Pooling=false;OPTIONS=67108864;FLAG_FORWARD_CURSOR=1"; 

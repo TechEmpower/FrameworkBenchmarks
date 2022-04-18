@@ -73,6 +73,30 @@
                 "display_name": "redkale-native",
                 "notes": "",
                 "versus": "Redkale"
+            },
+            "mysql": {
+                "plaintext_url": "/plaintext",
+                "json_url": "/json",
+                "db_url": "/db",
+                "query_url": "/queries?q=", 
+                "fortune_url": "/fortunes",
+                "update_url2": "/updates?q=",
+                "cached_query_url": "/cached-worlds?q=",
+                "port": 8080,
+                "approach": "Realistic",
+                "classification": "Fullstack",
+                "database": "MySQL",
+                "framework": "Redkale",
+                "language": "Java",
+                "flavor": "None",
+                "orm": "Raw",
+                "platform": "Redkale",
+                "webserver": "Redkale",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "redkale-mysql",
+                "notes": "",
+                "versus": "Redkale"
             }
         }
     ]

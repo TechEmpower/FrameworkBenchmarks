@@ -2,27 +2,32 @@ using System.Collections.Concurrent;
 using System.Data;
 using System.Threading.Tasks;
 
-namespace appMpower.Db
+namespace appMpower.Data
 {
-   public class PooledConnection : IDbConnection
+   public class DbConnection : IDbConnection
    {
       private string _connectionString;
-      internal InternalConnection _internalConnection; 
+      internal InternalConnection _internalConnection;
 
-      public PooledConnection(string connectionString)
+      public DbConnection()
+      {
+         _connectionString = DbProviderFactory.ConnectionString;
+      }
+
+      public DbConnection(string connectionString)
       {
          _connectionString = connectionString;
       }
 
-      internal ConcurrentDictionary<string, PooledCommand> PooledCommands
+      internal ConcurrentDictionary<string, DbCommand> DbCommands
       {
          get
          {
-            return _internalConnection.PooledCommands;
+            return _internalConnection.DbCommands;
          }
          set
          {
-            _internalConnection.PooledCommands = value;
+            _internalConnection.DbCommands = value;
          }
       }
 
@@ -38,7 +43,7 @@ namespace appMpower.Db
          }
       }
 
-      public IDbConnection DbConnection
+      public IDbConnection Connection
       {
          get
          {
@@ -127,18 +132,26 @@ namespace appMpower.Db
 
       public void Dispose()
       {
-         PooledConnections.Release(_internalConnection);
+#if ADO
+         _internalConnection.DbConnection.Dispose();
+         _internalConnection.Dispose();
+#else
+         DbConnections.Release(_internalConnection);
+#endif
       }
 
       public async Task OpenAsync()
       {
-#if ADO
+#if ADO && SQLSERVER
+         _internalConnection = new();
+         _internalConnection.DbConnection = new System.Data.SqlClient.SqlConnection(_connectionString);
+#elif ADO && POSTGRESQL
          _internalConnection = new(); 
          _internalConnection.DbConnection = new Npgsql.NpgsqlConnection(_connectionString);
 #else
          if (_internalConnection is null)
          {
-            _internalConnection = await PooledConnections.GetConnection(_connectionString);
+            _internalConnection = await DbConnections.GetConnection(_connectionString);
          }
 #endif
 
@@ -148,42 +161,42 @@ namespace appMpower.Db
          }
       }
 
-      internal PooledCommand GetCommand(string commandText, CommandType commandType, PooledCommand pooledCommand)
+      internal DbCommand GetCommand(string commandText, CommandType commandType, DbCommand dbCommand)
       {
 #if ADO
-         pooledCommand.DbCommand = this.DbConnection.CreateCommand();
-         pooledCommand.DbCommand.CommandText = commandText;
-         pooledCommand.DbCommand.CommandType = commandType;
-         pooledCommand.PooledConnection = this;
+         dbCommand.Command = _internalConnection.DbConnection.CreateCommand();
+         dbCommand.Command.CommandText = commandText;
+         dbCommand.Command.CommandType = commandType;
+         dbCommand.DbConnection = this;
 #else
-         PooledCommand internalCommand;
+         DbCommand internalCommand;
 
-         if (_internalConnection.PooledCommands.TryRemove(commandText, out internalCommand))
+         if (_internalConnection.DbCommands.TryRemove(commandText, out internalCommand))
          {
-            pooledCommand.DbCommand = internalCommand.DbCommand;
-            pooledCommand.PooledConnection = internalCommand.PooledConnection;
+            dbCommand.Command = internalCommand.Command;
+            dbCommand.DbConnection = internalCommand.DbConnection;
          }
          else
          {
-            pooledCommand.DbCommand = this.DbConnection.CreateCommand();
-            pooledCommand.DbCommand.CommandText = commandText;
-            pooledCommand.DbCommand.CommandType = commandType;
-            pooledCommand.PooledConnection = this;
+            dbCommand.Command = _internalConnection.DbConnection.CreateCommand();
+            dbCommand.Command.CommandText = commandText;
+            dbCommand.Command.CommandType = commandType;
+            dbCommand.DbConnection = this;
 
             //For non odbc drivers like Npgsql which do not support Prepare
-            pooledCommand.DbCommand.Prepare();
+            dbCommand.Command.Prepare();
 
-            //Console.WriteLine("prepare pool connection: " + this._internalConnection.Number + " for command " + _internalConnection.PooledCommands.Count);
+            //Console.WriteLine("prepare pool connection: " + this._internalConnection.Number + " for command " + _internalConnection.DbCommands.Count);
          }
 #endif
 
-         return pooledCommand;
+         return dbCommand;
       }
 
-      public void ReleaseCommand(PooledCommand pooledCommand)
+      public void ReleaseCommand(DbCommand dbCommand)
       {
 #if !ADO
-         _internalConnection.PooledCommands.TryAdd(pooledCommand.CommandText, pooledCommand);
+         _internalConnection.DbCommands.TryAdd(dbCommand.CommandText, dbCommand);
 #endif
       }
    }

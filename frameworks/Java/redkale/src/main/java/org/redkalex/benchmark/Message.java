@@ -26,11 +26,6 @@ public final class Message {
         this.message = message;
     }
 
-    public static Message create(String str) {
-        Message instance = new Message(str);
-        return instance;
-    }
-
     public String getMessage() {
         return message;
     }
