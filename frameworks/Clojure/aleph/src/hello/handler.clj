@@ -1,29 +1,27 @@
 (ns hello.handler
   (:require
-    [byte-streams :as bs]
-    [clojure.tools.cli :as cli]
-    [aleph.http :as http]
-    [jsonista.core :as json]
-    [clj-tuple :as t])
+   [aleph.http        :as http]
+   [aleph.netty       :as netty]
+   [byte-streams      :as bs]
+   [clojure.tools.cli :as cli]
+   [jsonista.core     :as json])
   (:gen-class))
 
 (def plaintext-response
-  (t/hash-map
-    :status 200
-    :headers (t/hash-map "content-type" "text/plain; charset=utf-8")
-    :body (bs/to-byte-array "Hello, World!")))
+  {:status 200
+   :headers {"Content-Type" "text/plain"}
+   :body (bs/to-byte-array "Hello, World!")})
 
 (def json-response
-  (t/hash-map
-    :status 200
-    :headers (t/hash-map "content-type" "application/json")))
+  {:status 200
+   :headers {"Content-Type" "application/json"}})
 
 (defn handler [req]
   (let [uri (:uri req)]
     (cond
       (.equals "/plaintext" uri) plaintext-response
-      (.equals "/json" uri) (assoc json-response
-                              :body (json/write-value-as-bytes (t/hash-map :message "Hello, World!")))
+      (.equals "/json" uri)      (assoc json-response
+                                        :body (json/write-value-as-bytes {:message "Hello, World!"}))
       :else {:status 404})))
 
 ;;;
@@ -41,5 +39,5 @@
       (println banner)
       (System/exit 0))
 
-    (aleph.netty/leak-detector-level! :disabled)
+    (netty/leak-detector-level! :disabled)
     (http/start-server handler {:port port, :executor :none})))

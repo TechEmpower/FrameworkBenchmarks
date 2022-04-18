@@ -1,18 +1,18 @@
 # Compojure Benchmarking Test
 
-This is the [Aleph](https://github.com/ztellman/aleph) portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the [Aleph](https://github.com/clj-commons/aleph) portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 ### JSON Encoding Test
 
-* [JSON test source](hello/src/hello/handler.clj)
+* [JSON test source](src/hello/handler.clj)
 
 ## Infrastructure Software Versions
-The dependencies are documented in [project.clj](hello/project.clj),
+The dependencies are documented in [project.clj](project.clj),
 but the main ones are:
 
-* [Aleph 0.4.5-alpha6](https://github.com/ztellman/aleph)
-* [Clojure 1.9.0](http://clojure.org/)
-* [metosin/jsonista 0.2.0](https://github.com/metosin/jsonista), which in turn uses [Jackson](http://jackson.codehaus.org/)
+* [Aleph 0.4.7](https://github.com/clj-commons/aleph)
+* [Clojure 1.11.0](http://clojure.org/)
+* [metosin/jsonista 0.3.5](https://github.com/metosin/jsonista), which in turn uses [Jackson](http://jackson.codehaus.org/)
 
 ## Test URLs
 ### JSON Encoding Test
