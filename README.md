@@ -91,6 +91,26 @@ Results of continuous benchmarking runs are available in real time [here](https:
 
 If you have a `results.json` file that you would like to visualize, you can [do that here](https://tfb-status.techempower.com/share). You can also attach a `runid` parameter to that url where `runid` is a run listed on [tfb-status](https://tfb-status.techempower.com) like so: https://www.techempower.com/benchmarks/#section=test&runid=fd07b64e-47ce-411e-8b9b-b13368e988c6
 
+Also, you could run a plaintext result parser on your bash:
+```
+ python3 prettytable_result_parser.py --files  results.json baseline.json --data latencyAvg latencyMax
+ --data slects interested data for you
+ --files is the results.json file used as input
+ 
+ Example output
+ +---------------------------------------------------------------------------------+
+|                         Type: query, Result: latencyAvg                         |
++----------------+------------------------------+---------------------------------+
+| queryIntervals |      spring-baseline.json     |      spring-optimized.json      |
++----------------+------------------------------+---------------------------------+
+|       1        |           33.34ms            |             33.08ms             |
+|       5        |           259.89ms           |             99.70ms             |
+|       10       |           156.09ms           |             185.85ms            |
+|       15       |           165.22ms           |             267.43ms            |
+|       20       |           216.60ms           |             351.01ms            |
++----------------+------------------------------+---------------------------------+
+```
+
 ## Contributing
 
 The community has consistently helped in making these tests better, and we welcome any and all changes. Reviewing our contribution practices and guidelines will help to keep us all on the same page. The [contribution guide](https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Development-Contributing-Guide) can be found in the [TFB documentation](https://github.com/TechEmpower/FrameworkBenchmarks/wiki).
