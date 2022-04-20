@@ -1,3 +1,8 @@
+extern crate dotenv;
+extern crate serde_derive;
+#[macro_use]
+extern crate async_trait;
+
 mod common;
 mod database_sqlx;
 mod models_common;
@@ -8,7 +13,10 @@ mod utils;
 use crate::database_sqlx::DatabaseConnection;
 use axum::http::{header, HeaderValue};
 use axum::{
-    extract::Query, http::StatusCode, response::IntoResponse, routing::get, Extension,
+    extract::{Extension, Query},
+    http::StatusCode,
+    response::IntoResponse,
+    routing::get,
     Json, Router,
 };
 use dotenv::dotenv;
@@ -32,6 +40,7 @@ async fn db(DatabaseConnection(mut conn): DatabaseConnection) -> impl IntoRespon
             .bind(number)
             .fetch_one(&mut conn)
             .await
+            .ok()
             .expect("error loading world");
 
     (StatusCode::OK, Json(world))
@@ -45,7 +54,7 @@ async fn queries(
 
     let mut rng = SmallRng::from_entropy();
 
-    let mut results = Vec::with_capacity(q);
+    let mut results = Vec::with_capacity(q as usize);
 
     for _ in 0..q {
         let query_id = random_number(&mut rng);
@@ -54,6 +63,7 @@ async fn queries(
             .bind(query_id)
             .fetch_one(&mut conn)
             .await
+            .ok()
             .expect("error loading world");
 
         results.push(result);
@@ -68,6 +78,7 @@ async fn fortunes(
     let mut fortunes: Vec<Fortune> = sqlx::query_as("SELECT * FROM Fortune")
         .fetch_all(&mut conn)
         .await
+        .ok()
         .expect("Could not load Fortunes");
 
     fortunes.push(Fortune {
@@ -94,7 +105,7 @@ async fn updates(
 
     let mut rng = SmallRng::from_entropy();
 
-    let mut results = Vec::with_capacity(q);
+    let mut results = Vec::with_capacity(q as usize);
 
     for _ in 0..q {
         let query_id = random_number(&mut rng);
@@ -102,6 +113,7 @@ async fn updates(
             .bind(query_id)
             .fetch_one(&mut conn)
             .await
+            .ok()
             .expect("error loading world");
 
         result.random_number = random_number(&mut rng);
@@ -109,11 +121,14 @@ async fn updates(
     }
 
     for w in &results {
+        let random_id = random_number(&mut rng);
+
         sqlx::query("UPDATE World SET randomnumber = $1 WHERE id = $2")
-            .bind(w.random_number)
+            .bind(random_id)
             .bind(w.id)
             .execute(&mut conn)
             .await
+            .ok()
             .expect("could not update world");
     }
 
@@ -125,6 +140,7 @@ async fn main() {
     dotenv().ok();
 
     let database_url = env::var("AXUM_TECHEMPOWER_DATABASE_URL")
+        .ok()
         .expect("AXUM_TECHEMPOWER_DATABASE_URL environment variable was not set");
 
     // setup connection pool

@@ -1,3 +1,8 @@
+extern crate dotenv;
+extern crate serde_derive;
+#[macro_use]
+extern crate async_trait;
+
 mod common;
 mod database_mongo;
 mod models_common;
@@ -11,90 +16,97 @@ use axum::{
     Json, Router,
 };
 use dotenv::dotenv;
-use futures::stream::StreamExt;
-use mongodb::options::ClientOptions;
-use mongodb::{bson::doc, Client, Database};
-use rand::rngs::SmallRng;
-use rand::SeedableRng;
+use mongodb::options::{ClientOptions, Compressor};
+use mongodb::{Client};
+use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
 use std::env;
 use std::time::Duration;
 use tower_http::set_header::SetResponseHeaderLayer;
 use yarte::Template;
 
+use crate::database_mongo::{
+    fetch_fortunes, find_world_by_id, find_worlds, update_worlds,
+};
 use database_mongo::DatabaseConnection;
 use models_mongo::FortuneInfo;
 use models_mongo::{Fortune, World};
-use utils::{parse_params, random_number, Params, Utf8Html};
+use utils::{parse_params, Params, Utf8Html};
 
-async fn db(DatabaseConnection(mut db): DatabaseConnection) -> impl IntoResponse {
-    let mut rng = SmallRng::from_entropy();
-    let number = random_number(&mut rng);
+async fn db(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
+    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
 
-    let world = find_world_by_id(&mut db, number).await;
+    let random_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+
+    let world = find_world_by_id(db, random_id)
+        .await
+        .expect("world could not be found");
 
     (StatusCode::OK, Json(world))
 }
 
-async fn find_world_by_id(db: &mut Database, number: i32) -> World {
-    let world_collection = db.collection::<World>("world");
-
-    let filter = doc! { "id": number as f32 };
-
-    let world: World = world_collection
-        .find_one(Some(filter), None)
-        .await
-        .expect("world could not be found")
-        .unwrap();
-    world
-}
-
 async fn queries(
-    DatabaseConnection(mut db): DatabaseConnection,
+    DatabaseConnection(db): DatabaseConnection,
     Query(params): Query<Params>,
 ) -> impl IntoResponse {
     let q = parse_params(params);
 
-    let mut rng = SmallRng::from_entropy();
-
-    let mut results = Vec::with_capacity(q);
+    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+    let mut ids: Vec<i32> = Vec::with_capacity(q as usize);
 
     for _ in 0..q {
-        let query_id = random_number(&mut rng);
+        let random_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
 
-        let result: World = find_world_by_id(&mut db, query_id).await;
-
-        results.push(result);
+        ids.push(random_id);
     }
+
+    let worlds = find_worlds(db, ids).await;
+    let results = worlds.expect("worlds could not be retrieved");
 
     (StatusCode::OK, Json(results))
 }
 
-async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
-    let fortune_collection = db.collection::<Fortune>("fortune");
+async fn updates(
+    DatabaseConnection(db): DatabaseConnection,
+    Query(params): Query<Params>,
+) -> impl IntoResponse {
+    let q = parse_params(params);
 
-    let mut fortune_cursor = fortune_collection
-        .find(None, None)
-        .await
-        .expect("fortunes could not be loaded");
+    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+    let mut ids: Vec<i32> = Vec::with_capacity(q as usize);
 
-    let mut fortunes: Vec<Fortune> = Vec::with_capacity(100);
+    for _ in 0..q {
+        let random_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
 
-    while let Some(doc) = fortune_cursor.next().await {
-        fortunes.push(doc.expect("could not load fortune"));
+        ids.push(random_id);
     }
 
-    fortunes.push(Fortune {
-        id: 0.0,
-        message: "Additional fortune added at request time.".to_string(),
-    });
+    let worlds = find_worlds(db.clone(), ids)
+        .await
+        .expect("worlds could not be retrieved");
+    let mut updated_worlds: Vec<World> = Vec::with_capacity(q as usize);
 
-    fortunes.sort_by(|a, b| a.message.cmp(&b.message));
+    for mut world in worlds {
+        let random_number = (rng.gen::<u32>() % 10_000 + 1) as i32;
+
+        world.random_number = random_number as f32;
+        updated_worlds.push(world);
+    }
+
+    update_worlds(db.clone(), updated_worlds.clone())
+        .await
+        .expect("could not update worlds");
+
+    (StatusCode::OK, Json(updated_worlds.clone()))
+}
+
+async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
+    let fortunes = fetch_fortunes(db).await.expect("could not fetch fortunes");
 
     let fortune_infos: Vec<FortuneInfo> = fortunes
-        .into_iter()
+        .iter()
         .map(|f| FortuneInfo {
             id: f.id as i32,
-            message: f.message,
+            message: f.message.clone(),
         })
         .collect();
 
@@ -112,21 +124,36 @@ async fn main() {
     dotenv().ok();
 
     let database_url = env::var("AXUM_TECHEMPOWER_MONGODB_URL")
+        .ok()
         .expect("AXUM_TECHEMPOWER_MONGODB_URL environment variable was not set");
 
-    // setup connection pool
     let mut client_options = ClientOptions::parse(database_url).await.unwrap();
-    client_options.max_pool_size = Some(common::POOL_SIZE);
-    client_options.min_pool_size = Some(common::POOL_SIZE);
+
+    // setup connection pool
+    client_options.max_pool_size = Some(common::MAX_POOL_SIZE);
+    client_options.min_pool_size = Some(common::MIN_POOL_SIZE);
     client_options.connect_timeout = Some(Duration::from_millis(200));
 
+    // the server will select the algorithm it supports from the list provided by the driver
+    client_options.compressors = Some(vec![
+        Compressor::Snappy,
+        Compressor::Zlib {
+            level: Default::default(),
+        },
+        Compressor::Zstd {
+            level: Default::default(),
+        },
+    ]);
+
     let client = Client::with_options(client_options).unwrap();
+    let database = client.database("hello_world");
 
     let app = Router::new()
         .route("/fortunes", get(fortunes))
         .route("/db", get(db))
         .route("/queries", get(queries))
-        .layer(Extension(client))
+        .route("/updates", get(updates))
+        .layer(Extension(database))
         .layer(SetResponseHeaderLayer::if_not_present(
             header::SERVER,
             HeaderValue::from_static("Axum"),

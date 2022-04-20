@@ -1,23 +1,27 @@
 use axum::extract::{Extension, FromRequest, RequestParts};
 use axum::http::StatusCode;
 
-use async_trait::async_trait;
-use sqlx::{PgPool, Postgres};
+use crate::common::{MAX_POOL_SIZE, MIN_POOL_SIZE};
+use crate::utils::internal_error;
 use sqlx::pool::PoolConnection;
 use sqlx::postgres::PgPoolOptions;
-use crate::common::POOL_SIZE;
-use crate::utils::internal_error;
+use sqlx::{PgPool, Postgres};
 
 pub async fn create_pool(database_url: String) -> PgPool {
-    PgPoolOptions::new().max_connections(POOL_SIZE).min_connections(56).connect(&*database_url).await.unwrap()
+    PgPoolOptions::new()
+        .max_connections(MAX_POOL_SIZE)
+        .min_connections(MIN_POOL_SIZE)
+        .connect(&*database_url)
+        .await
+        .unwrap()
 }
 
 pub struct DatabaseConnection(pub PoolConnection<Postgres>);
 
 #[async_trait]
 impl<B> FromRequest<B> for DatabaseConnection
-    where
-        B: Send,
+where
+    B: Send,
 {
     type Rejection = (StatusCode, String);
 
@@ -31,4 +35,3 @@ impl<B> FromRequest<B> for DatabaseConnection
         Ok(Self(conn))
     }
 }
-

@@ -1,4 +1,4 @@
-FROM rust:1.59-slim-bullseye
+FROM rust:1.60-slim-buster
 
 ENV AXUM_TECHEMPOWER_MONGODB_URL=mongodb://tfb-database:27017
 

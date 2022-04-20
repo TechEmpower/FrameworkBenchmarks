@@ -1,9 +1,9 @@
 FROM rust:1.60-slim-buster
 
-ENV AXUM_TECHEMPOWER_DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
+ENV AXUM_TECHEMPOWER_MONGODB_URL=mongodb://tfb-database:27017
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq-dev pkg-config libssl-dev \
+    pkg-config libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /axum
@@ -16,8 +16,7 @@ RUN chmod +x ./run.sh
 
 ENV RUSTFLAGS "-C target-cpu=native"
 RUN cargo build --release
-RUN cp ./target/release/axum-sqlx ./target/release/axum-techempower
-
+RUN cp ./target/release/axum-mongo-pool ./target/release/axum-techempower
 
 EXPOSE 8000
 

@@ -1,4 +1,4 @@
-FROM rust:1.59-slim-bullseye
+FROM rust:1.60-slim-buster
 
 ENV AXUM_TECHEMPOWER_DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
 
@@ -16,7 +16,7 @@ RUN chmod +x ./run.sh
 
 ENV RUSTFLAGS "-C target-cpu=native"
 RUN cargo build --release
-RUN cp ./target/release/axum-bb8 ./target/release/axum-techempower
+RUN cp ./target/release/axum-pg ./target/release/axum-techempower
 
 EXPOSE 8000
 

@@ -1,4 +1,4 @@
-FROM rust:1.59-slim-bullseye
+FROM rust:1.60-slim-buster
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     pkg-config libssl-dev \

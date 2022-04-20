@@ -16,8 +16,7 @@ RUN chmod +x ./run.sh
 
 ENV RUSTFLAGS "-C target-cpu=native"
 RUN cargo build --release
-RUN cp ./target/release/axum-sqlx ./target/release/axum-techempower
-
+RUN cp ./target/release/axum-pg-pool ./target/release/axum-techempower
 
 EXPOSE 8000
 
