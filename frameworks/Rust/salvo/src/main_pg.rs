@@ -194,7 +194,7 @@ impl Handler for WorldHandler {
     async fn handle(&self, _req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
         let world = self.conn.get_world().await.unwrap();
-        res.render_json(&world);
+        res.render(Json(world));
     }
 }
 struct WorldsHandler {
@@ -216,7 +216,7 @@ impl Handler for WorldsHandler {
         let count = cmp::min(500, cmp::max(1, count));
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
         let worlds = self.conn.get_worlds(count).await.unwrap();
-        res.render_json(&worlds);
+        res.render(Json(worlds));
     }
 }
 struct UpdatesHandler {
@@ -238,7 +238,7 @@ impl Handler for UpdatesHandler {
         let count = cmp::min(500, cmp::max(1, count));
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
         let worlds = self.conn.update(count).await.unwrap();
-        res.render_json(&worlds);
+        res.render(Json(worlds));
     }
 }
 struct FortunesHandler {
@@ -258,9 +258,8 @@ impl Handler for FortunesHandler {
     async fn handle(&self, _req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         let mut body = String::new();
         write!(&mut body, "{}", self.conn.tell_fortune().await.unwrap()).unwrap();
-
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-        res.render_html_text(&body);
+        res.render(Text::Html(body));
     }
 }
 
@@ -278,7 +277,7 @@ async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Err
         }
     }
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_json(&worlds);
+    res.render(Json(worlds));
     Ok(())
 }
 
