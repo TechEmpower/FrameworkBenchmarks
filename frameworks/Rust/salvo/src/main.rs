@@ -23,15 +23,16 @@ pub struct Message {
 #[fn_handler]
 async fn json(res: &mut Response) {
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_json(&Message {
+    res.render(Json(Message {
         message: "Hello, World!",
-    });
+    }));
 }
 
 #[fn_handler]
 async fn plaintext(res: &mut Response) {
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_binary(HeaderValue::from_static("text/plain"), HELLO_WORLD);
+    res.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static("text/plain"));
+    res.write_body(HELLO_WORLD);
 }
 
 fn main() {
