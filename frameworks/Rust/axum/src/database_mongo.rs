@@ -1,6 +1,7 @@
 use axum::extract::{Extension, FromRequest, RequestParts};
 use axum::http::StatusCode;
 
+use async_trait::async_trait;
 use mongodb::{Client, Database};
 use crate::utils::internal_error;
 
