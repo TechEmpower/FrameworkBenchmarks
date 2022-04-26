@@ -35,7 +35,7 @@ axum = { version = "0.5" }
 tokio = { version = "1.0", features = ["full"] }
 hyper = "0.14"
 tower = { version = "0.4", features = ["util"] }
-tower-http = { version = "0.2", features = ["set-header"] }
+tower-http = { version = "0.3", features = ["set-header"] }
 sqlx = { version = "^0.5", features = [
     "postgres",
     "macros",
