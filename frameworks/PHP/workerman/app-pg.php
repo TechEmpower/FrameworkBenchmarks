@@ -91,8 +91,6 @@ function updateraw($request)
 
 function fortune()
 {
-    global $fortune;
-
     DbRaw::$fortune->execute();
 
     $arr    = DbRaw::$fortune->fetchAll(PDO::FETCH_KEY_PAIR);
