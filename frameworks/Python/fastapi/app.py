@@ -14,20 +14,6 @@ WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
 
 
-# https://www.starlette.io/responses/#custom-json-serialization
-try:
-    import orjson
-
-    class CustomJSONResponse(JSONResponse):
-        def render(self, content):
-            return orjson.dumps(content)
-
-except ImportError:
-
-    class CustomJSONResponse(JSONResponse):
-        pass
-
-
 async def setup_database():
     global connection_pool
     connection_pool = await asyncpg.create_pool(
@@ -71,7 +57,7 @@ app = FastAPI()
 
 @app.get('/json')
 async def json_serialization():
-    return CustomJSONResponse({'message': 'Hello, world!'})
+    return JSONResponse({'message': 'Hello, world!'})
 
 
 @app.get('/db')
@@ -81,7 +67,7 @@ async def single_database_query():
     async with connection_pool.acquire() as connection:
         number = await connection.fetchval(READ_ROW_SQL, row_id)
 
-    return CustomJSONResponse({'id': row_id, 'randomNumber': number})
+    return JSONResponse({'id': row_id, 'randomNumber': number})
 
 
 @app.get('/queries')
@@ -96,7 +82,7 @@ async def multiple_database_queries(queries = None):
             number = await statement.fetchval(row_id)
             worlds.append({'id': row_id, 'randomNumber': number})
 
-    return CustomJSONResponse(worlds)
+    return JSONResponse(worlds)
 
 
 @app.get('/fortunes')
@@ -122,7 +108,7 @@ async def database_updates(queries = None):
             await statement.fetchval(row_id)
         await connection.executemany(WRITE_ROW_SQL, updates)
 
-    return CustomJSONResponse(worlds)
+    return JSONResponse(worlds)
 
 
 @app.get('/plaintext')
