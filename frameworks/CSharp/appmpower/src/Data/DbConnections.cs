@@ -1,13 +1,13 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace appMpower.Db
+namespace appMpower.Data
 {
-   public static class PooledConnections
+   public static class DbConnections
    {
       private static bool _connectionsCreated = false;
       private static short _createdConnections = 0;
-      private static short _maxConnections = 240;
+      private static short _maxConnections = 250;
 
       private static ConcurrentStack<InternalConnection> _stack = new();
       private static ConcurrentQueue<TaskCompletionSource<InternalConnection>> _waitingQueue = new();
@@ -20,7 +20,7 @@ namespace appMpower.Db
          {
             if (!_stack.TryPop(out internalConnection))
             {
-               internalConnection = await GetPooledConnectionAsync();
+               internalConnection = await GetDbConnectionAsync();
             }
 
             return internalConnection;
@@ -28,26 +28,21 @@ namespace appMpower.Db
          else
          {
             internalConnection = new InternalConnection();
-
-#if ADO
-            internalConnection.DbConnection = new Npgsql.NpgsqlConnection(connectionString);
-#else
             internalConnection.DbConnection = new System.Data.Odbc.OdbcConnection(connectionString);
-#endif               
 
             _createdConnections++;
 
             if (_createdConnections == _maxConnections) _connectionsCreated = true;
 
             internalConnection.Number = _createdConnections;
-            internalConnection.PooledCommands = new ConcurrentDictionary<string, PooledCommand>();
-            //Console.WriteLine("opened connection number: " + pooledConnection.Number);
+            internalConnection.DbCommands = new ConcurrentDictionary<string, DbCommand>();
+            //Console.WriteLine("opened connection number: " + dbConnection.Number);
 
             return internalConnection;
          }
       }
 
-      public static Task<InternalConnection> GetPooledConnectionAsync()
+      public static Task<InternalConnection> GetDbConnectionAsync()
       {
          var taskCompletionSource = new TaskCompletionSource<InternalConnection>(TaskCreationOptions.RunContinuationsAsynchronously);
 

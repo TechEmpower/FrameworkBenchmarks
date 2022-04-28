@@ -5,7 +5,7 @@
  */
 package org.redkalex.benchmark;
 
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.*;
 import javax.annotation.Resource;
@@ -38,7 +38,7 @@ public class BenchmarkService extends AbstractService {
 
     @RestMapping(name = "json")
     public Message getHelloMessage() {
-        return Message.create("Hello, World!");
+        return new Message("Hello, World!");
     }
 
     @RestMapping(name = "db")
@@ -67,7 +67,8 @@ public class BenchmarkService extends AbstractService {
     public CompletableFuture<HttpScope> queryFortunes() {
         return source.queryListAsync(Fortune.class).thenApply(fortunes -> {
             fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-            return HttpScope.refer("").attr("fortunes", Fortune.sort(fortunes));
+            Collections.sort(fortunes);
+            return HttpScope.refer("").referObj(fortunes);
         });
     }
 

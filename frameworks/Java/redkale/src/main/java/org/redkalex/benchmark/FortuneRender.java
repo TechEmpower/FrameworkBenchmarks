@@ -39,7 +39,7 @@ public class FortuneRender implements org.redkale.net.http.HttpRender {
     public void renderTo(HttpRequest request, HttpResponse response, Convert convert, HttpScope scope) {
         ByteArray array = localByteArray.get().clear();
         array.put(text1);
-        for (Fortune item : (List<Fortune>) scope.find("fortunes")) {
+        for (Fortune item : (List<Fortune>) scope.getReferObj()) {
             array.put(text2).put(String.valueOf(item.getId()).getBytes(StandardCharsets.UTF_8))
                 .put(text3).put(escape(item.getMessage()).toString().getBytes(StandardCharsets.UTF_8)).put(text4);
         }
