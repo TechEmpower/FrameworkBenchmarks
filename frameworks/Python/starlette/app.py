@@ -3,7 +3,7 @@ import asyncpg
 import os
 import jinja2
 from starlette.applications import Starlette
-from starlette.responses import HTMLResponse, UJSONResponse, PlainTextResponse
+from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from starlette.routing import Route
 from random import randint, sample
 from operator import itemgetter
@@ -61,7 +61,7 @@ async def single_database_query(request):
     async with connection_pool.acquire() as connection:
         number = await connection.fetchval(READ_ROW_SQL, row_id)
 
-    return UJSONResponse({'id': row_id, 'randomNumber': number})
+    return JSONResponse({'id': row_id, 'randomNumber': number})
 
 
 async def multiple_database_queries(request):
@@ -75,7 +75,7 @@ async def multiple_database_queries(request):
             number = await statement.fetchval(row_id)
             worlds.append({'id': row_id, 'randomNumber': number})
 
-    return UJSONResponse(worlds)
+    return JSONResponse(worlds)
 
 
 async def fortunes(request):
@@ -99,11 +99,11 @@ async def database_updates(request):
             await statement.fetchval(row_id)
         await connection.executemany(WRITE_ROW_SQL, updates)
 
-    return UJSONResponse(worlds)
+    return JSONResponse(worlds)
 
 
 routes = [
-    Route('/json', UJSONResponse({'message': 'Hello, world!'})),
+    Route('/json', JSONResponse({'message': 'Hello, world!'})),
     Route('/db', single_database_query),
     Route('/queries', multiple_database_queries),
     Route('/fortunes', fortunes),
