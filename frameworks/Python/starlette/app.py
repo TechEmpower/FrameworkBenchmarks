@@ -5,7 +5,7 @@ import jinja2
 from starlette.applications import Starlette
 from starlette.responses import HTMLResponse, UJSONResponse, PlainTextResponse
 from starlette.routing import Route
-from random import randint
+from random import randint, sample
 from operator import itemgetter
 from urllib.parse import parse_qs
 
@@ -66,7 +66,7 @@ async def single_database_query(request):
 
 async def multiple_database_queries(request):
     num_queries = get_num_queries(request)
-    row_ids = [randint(1, 10000) for _ in range(num_queries)]
+    row_ids = sample(range(1, 10000), num_queries)
     worlds = []
 
     async with connection_pool.acquire() as connection:
@@ -90,7 +90,7 @@ async def fortunes(request):
 
 async def database_updates(request):
     num_queries = get_num_queries(request)
-    updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
+    updates = [(row_id, randint(1, 10000)) for row_id in sample(range(1, 10000), num_queries)]
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with connection_pool.acquire() as connection:

@@ -64,8 +64,7 @@ async def queries():
     worlds = []
     async with app.db.acquire() as conn:
         pst = await conn.prepare(GET_WORLD)
-        for _ in range(queries):
-            key = random.randint(1, 10000)
+        for key in random.sample(range(1, 10000), queries):
             number = await pst.fetchval(key)
             worlds.append({"id": key, "randomNumber": number})
 
@@ -80,9 +79,8 @@ async def updates():
     async with app.db.acquire() as conn, conn.transaction():
         pst = await conn.prepare(GET_WORLD)
 
-        for _ in range(queries):
-            key = random.randint(1, 10000)
-            old_number = await pst.fetchval(key)
+        for key in random.sample(range(1, 10000), queries):
+            await pst.fetchval(key)
             new_number = random.randint(1, 10000)
             new_worlds.append((key, new_number))
 
