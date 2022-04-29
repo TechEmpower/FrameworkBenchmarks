@@ -1,7 +1,7 @@
 #
 # BUILD
 #
-FROM gradle:7.4-jdk11 AS gradle_build
+FROM gradle:7.4.2-jdk11 AS gradle_build
 USER root
 WORKDIR /hexagon
 
@@ -12,7 +12,7 @@ RUN gradle --quiet
 #
 # RUNTIME
 #
-FROM adoptopenjdk:11-jre-hotspot-bionic
+FROM eclipse-temurin:17-jre-alpine
 ENV DBSTORE postgresql
 ENV POSTGRESQL_DB_HOST tfb-database
 ENV WEBENGINE jetty

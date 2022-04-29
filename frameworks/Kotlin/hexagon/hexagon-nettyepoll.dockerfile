@@ -15,7 +15,7 @@ RUN gradle --quiet
 FROM eclipse-temurin:17-jre-alpine
 ENV DBSTORE postgresql
 ENV POSTGRESQL_DB_HOST tfb-database
-ENV WEBENGINE netty
+ENV WEBENGINE netty_epoll
 ENV PROJECT hexagon
 ENV DISABLE_CHECKS true
 
