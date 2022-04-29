@@ -45,7 +45,7 @@ connection_pool = None
 sort_fortunes_key = itemgetter(1)
 template = load_fortunes_template()
 
-app = sanic.Sanic()
+app = sanic.Sanic(name=__name__)
 
 
 @app.listener('before_server_start')
