@@ -14,17 +14,6 @@ WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
 
 
-async def setup_database():
-    global connection_pool
-    connection_pool = await asyncpg.create_pool(
-        user=os.getenv('PGUSER', 'benchmarkdbuser'),
-        password=os.getenv('PGPASS', 'benchmarkdbpass'),
-        database='hello_world',
-        host='tfb-database',
-        port=5432
-    )
-
-
 def load_fortunes_template():
     path = os.path.join('templates', 'fortune.html')
     with open(path, 'r') as template_file:
@@ -48,11 +37,20 @@ def get_num_queries(queries):
 connection_pool = None
 sort_fortunes_key = itemgetter(1)
 template = load_fortunes_template()
-loop = asyncio.get_event_loop()
-loop.run_until_complete(setup_database())
-
 
 app = FastAPI()
+
+
+@app.on_event("startup")
+async def setup_database():
+    global connection_pool
+    connection_pool = await asyncpg.create_pool(
+        user=os.getenv('PGUSER', 'benchmarkdbuser'),
+        password=os.getenv('PGPASS', 'benchmarkdbpass'),
+        database='hello_world',
+        host='tfb-database',
+        port=5432
+    )
 
 
 @app.get('/json')

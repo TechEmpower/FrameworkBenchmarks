@@ -1,4 +1,3 @@
-import asyncio
 import asyncpg
 import os
 import jinja2
@@ -51,8 +50,6 @@ def get_num_queries(request):
 connection_pool = None
 sort_fortunes_key = itemgetter(1)
 template = load_fortunes_template()
-loop = asyncio.get_event_loop()
-loop.run_until_complete(setup_database())
 
 
 async def single_database_query(request):
@@ -111,4 +108,4 @@ routes = [
     Route('/plaintext', PlainTextResponse(b'Hello, world!')),
 ]
 
-app = Starlette(routes=routes)
+app = Starlette(routes=routes, on_startup=[setup_database])
