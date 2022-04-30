@@ -8,7 +8,7 @@ use crate::utils::internal_error;
 use crate::{Fortune, World};
 use futures_util::StreamExt;
 use mongodb::bson::doc;
-use mongodb::{Database};
+use mongodb::Database;
 
 pub struct DatabaseConnection(pub Database);
 
@@ -49,7 +49,7 @@ impl From<mongodb::error::Error> for MongoError {
 pub async fn find_world_by_id(db: Database, id: i32) -> Result<World, MongoError> {
     let world_collection = db.collection::<World>("world");
 
-    let filter = doc! { "id": id as f32 };
+    let filter = doc! { "_id": id as f32 };
 
     let world: World = world_collection
         .find_one(Some(filter), None)
@@ -59,10 +59,7 @@ pub async fn find_world_by_id(db: Database, id: i32) -> Result<World, MongoError
     Ok(world)
 }
 
-pub async fn find_worlds(
-    db: Database,
-    ids: Vec<i32>,
-) -> Result<Vec<World>, MongoError> {
+pub async fn find_worlds(db: Database, ids: Vec<i32>) -> Result<Vec<World>, MongoError> {
     let future_worlds = FuturesUnordered::new();
 
     for id in ids {
