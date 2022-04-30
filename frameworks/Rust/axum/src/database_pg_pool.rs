@@ -1,8 +1,8 @@
 use axum::extract::{Extension, FromRequest, RequestParts};
 use axum::http::StatusCode;
 use deadpool_postgres::{Client, Manager, ManagerConfig, RecyclingMethod};
+use std::io;
 use std::str::FromStr;
-use std::{io};
 use tokio_postgres::NoTls;
 
 use crate::common::MAX_POOL_SIZE;

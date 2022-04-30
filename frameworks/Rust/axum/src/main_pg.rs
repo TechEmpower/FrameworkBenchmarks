@@ -10,18 +10,18 @@ mod models_pg;
 mod server;
 mod utils;
 
-use std::env;
 use axum::http::{header, HeaderValue};
 use axum::{
     extract::Query, http::StatusCode, response::IntoResponse, routing::get, Extension,
     Json, Router,
 };
 use dotenv::dotenv;
+use std::env;
 use tower_http::set_header::SetResponseHeaderLayer;
 use yarte::Template;
 
 use crate::database_pg::{DatabaseConnection, PgConnection};
-use models_pg::{Fortune};
+use models_pg::Fortune;
 use utils::{parse_params, Params};
 
 use crate::utils::Utf8Html;

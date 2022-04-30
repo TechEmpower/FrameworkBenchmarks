@@ -17,7 +17,7 @@ use axum::{
 };
 use dotenv::dotenv;
 use mongodb::options::{ClientOptions, Compressor};
-use mongodb::{Client};
+use mongodb::Client;
 use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
 use std::env;
 use std::time::Duration;
