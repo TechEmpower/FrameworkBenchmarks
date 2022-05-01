@@ -10,7 +10,9 @@ mod models_sqlx;
 mod server;
 mod utils;
 
-use crate::database_sqlx::DatabaseConnection;
+use crate::database_sqlx::{
+    fetch_fortunes, fetch_world, update_world, DatabaseConnection,
+};
 use axum::http::{header, HeaderValue};
 use axum::{
     extract::{Extension, Query},
@@ -20,9 +22,12 @@ use axum::{
     Json, Router,
 };
 use dotenv::dotenv;
+use futures_util::stream::FuturesUnordered;
+use futures_util::TryStreamExt;
 use rand::rngs::SmallRng;
-use rand::SeedableRng;
-use sqlx::PgPool;
+use rand::{thread_rng, Rng, SeedableRng};
+use sqlx::{PgPool, Postgres};
+use std::borrow::BorrowMut;
 use std::env;
 use tower_http::set_header::SetResponseHeaderLayer;
 use yarte::Template;
@@ -32,54 +37,23 @@ use models_sqlx::{Fortune, World};
 use utils::{parse_params, random_number, Params, Utf8Html};
 
 async fn db(DatabaseConnection(mut conn): DatabaseConnection) -> impl IntoResponse {
-    let mut rng = SmallRng::from_entropy();
-    let number = random_number(&mut rng);
+    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
 
-    let world: World =
-        sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1")
-            .bind(number)
-            .fetch_one(&mut conn)
-            .await
-            .ok()
-            .expect("error loading world");
+    let random_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+
+    let world = fetch_world(conn, random_id)
+        .await
+        .expect("could not fetch world");
 
     (StatusCode::OK, Json(world))
-}
-
-async fn queries(
-    DatabaseConnection(mut conn): DatabaseConnection,
-    Query(params): Query<Params>,
-) -> impl IntoResponse {
-    let q = parse_params(params);
-
-    let mut rng = SmallRng::from_entropy();
-
-    let mut results = Vec::with_capacity(q as usize);
-
-    for _ in 0..q {
-        let query_id = random_number(&mut rng);
-
-        let result: World = sqlx::query_as("SELECT * FROM World WHERE id = $1")
-            .bind(query_id)
-            .fetch_one(&mut conn)
-            .await
-            .ok()
-            .expect("error loading world");
-
-        results.push(result);
-    }
-
-    (StatusCode::OK, Json(results))
 }
 
 async fn fortunes(
     DatabaseConnection(mut conn): DatabaseConnection,
 ) -> impl IntoResponse {
-    let mut fortunes: Vec<Fortune> = sqlx::query_as("SELECT * FROM Fortune")
-        .fetch_all(&mut conn)
+    let mut fortunes = fetch_fortunes(conn)
         .await
-        .ok()
-        .expect("Could not load Fortunes");
+        .expect("could not fetch fortunes");
 
     fortunes.push(Fortune {
         id: 0,
@@ -95,44 +69,6 @@ async fn fortunes(
         .call()
         .expect("error rendering template"),
     )
-}
-
-async fn updates(
-    DatabaseConnection(mut conn): DatabaseConnection,
-    Query(params): Query<Params>,
-) -> impl IntoResponse {
-    let q = parse_params(params);
-
-    let mut rng = SmallRng::from_entropy();
-
-    let mut results = Vec::with_capacity(q as usize);
-
-    for _ in 0..q {
-        let query_id = random_number(&mut rng);
-        let mut result: World = sqlx::query_as("SELECT * FROM World WHERE id = $1")
-            .bind(query_id)
-            .fetch_one(&mut conn)
-            .await
-            .ok()
-            .expect("error loading world");
-
-        result.random_number = random_number(&mut rng);
-        results.push(result);
-    }
-
-    for w in &results {
-        let random_id = random_number(&mut rng);
-
-        sqlx::query("UPDATE World SET randomnumber = $1 WHERE id = $2")
-            .bind(random_id)
-            .bind(w.id)
-            .execute(&mut conn)
-            .await
-            .ok()
-            .expect("could not update world");
-    }
-
-    (StatusCode::OK, Json(results))
 }
 
 #[tokio::main]
@@ -158,8 +94,6 @@ async fn router(pool: PgPool) -> Router {
     Router::new()
         .route("/fortunes", get(fortunes))
         .route("/db", get(db))
-        .route("/queries", get(queries))
-        .route("/updates", get(updates))
         .layer(Extension(pool))
         .layer(SetResponseHeaderLayer::if_not_present(
             header::SERVER,

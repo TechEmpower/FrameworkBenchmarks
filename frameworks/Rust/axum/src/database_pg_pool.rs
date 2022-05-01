@@ -3,10 +3,12 @@ use axum::http::StatusCode;
 use deadpool_postgres::{Client, Manager, ManagerConfig, RecyclingMethod};
 use std::io;
 use std::str::FromStr;
-use tokio_postgres::NoTls;
+use tokio_pg_mapper::FromTokioPostgresRow;
+use tokio_postgres::{NoTls, Row, Statement};
 
 use crate::common::MAX_POOL_SIZE;
 use crate::utils::internal_error;
+use crate::{Fortune, World};
 
 #[derive(Debug)]
 pub enum PgError {
@@ -60,4 +62,61 @@ where
 
         Ok(Self(conn))
     }
+}
+
+pub async fn fetch_world_by_id(
+    client: &Client,
+    number: i32,
+    select: &Statement,
+) -> Result<World, PgError> {
+    let row: Row = client.query_one(select, &[&number]).await.unwrap();
+
+    Ok(World::from_row(row).unwrap())
+}
+
+pub async fn update_world(
+    client: &Client,
+    update: &Statement,
+    random_id: i32,
+    w_id: i32,
+) -> Result<u64, PgError> {
+    let rows_modified: u64 = client.execute(update, &[&random_id, &w_id]).await.unwrap();
+
+    Ok(rows_modified)
+}
+
+pub async fn fetch_all_fortunes(
+    client: Client,
+    select: &Statement,
+) -> Result<Vec<Fortune>, PgError> {
+    let rows: Vec<Row> = client.query(select, &[]).await.unwrap();
+
+    let mut fortunes: Vec<Fortune> = Vec::with_capacity(rows.capacity());
+
+    for row in rows {
+        fortunes.push(Fortune::from_row(row).unwrap());
+    }
+
+    Ok(fortunes)
+}
+
+pub async fn prepare_fetch_all_fortunes_statement(client: &Client) -> Statement {
+    client
+        .prepare_cached("SELECT * FROM Fortune")
+        .await
+        .unwrap()
+}
+
+pub async fn prepare_fetch_world_by_id_statement(client: &Client) -> Statement {
+    client
+        .prepare_cached("SELECT id, randomnumber FROM World WHERE id = $1")
+        .await
+        .unwrap()
+}
+
+pub async fn prepare_update_world_by_id_statement(client: &Client) -> Statement {
+    client
+        .prepare_cached("UPDATE World SET randomnumber = $1 WHERE id = $2")
+        .await
+        .unwrap()
 }

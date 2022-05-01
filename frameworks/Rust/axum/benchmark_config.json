@@ -24,8 +24,6 @@
       "sqlx": {
         "db_url": "/db",
         "fortune_url": "/fortunes",
-        "query_url": "/queries?queries=",
-        "update_url": "/updates?queries=",
         "port": 8000,
         "approach": "Realistic",
         "classification": "Fullstack",
