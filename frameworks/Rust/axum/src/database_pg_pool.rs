@@ -6,7 +6,6 @@ use std::str::FromStr;
 use tokio_pg_mapper::FromTokioPostgresRow;
 use tokio_postgres::{NoTls, Row, Statement};
 
-use crate::common::MAX_POOL_SIZE;
 use crate::utils::internal_error;
 use crate::{Fortune, World};
 
@@ -28,7 +27,10 @@ impl From<tokio_postgres::Error> for PgError {
     }
 }
 
-pub async fn create_pool(database_url: String) -> deadpool_postgres::Pool {
+pub async fn create_pool(
+    database_url: String,
+    max_pool_size: u32,
+) -> deadpool_postgres::Pool {
     let pg_config =
         tokio_postgres::Config::from_str(&*database_url).expect("invalid database url");
 
@@ -37,7 +39,7 @@ pub async fn create_pool(database_url: String) -> deadpool_postgres::Pool {
     };
     let mgr = Manager::from_config(pg_config, NoTls, mgr_config);
     let pool: deadpool_postgres::Pool = deadpool_postgres::Pool::builder(mgr)
-        .max_size(MAX_POOL_SIZE as usize)
+        .max_size(max_pool_size as usize)
         .build()
         .unwrap();
 

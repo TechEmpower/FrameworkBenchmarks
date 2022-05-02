@@ -3,7 +3,6 @@ extern crate serde_derive;
 #[macro_use]
 extern crate async_trait;
 
-mod common;
 mod database_pg_pool;
 mod models_common;
 mod models_pg_pool;
@@ -20,19 +19,15 @@ use axum::{
     extract::Query, http::StatusCode, response::IntoResponse, routing::get, Extension,
     Json, Router,
 };
-use deadpool_postgres::Client;
 use dotenv::dotenv;
 use futures_util::stream::FuturesUnordered;
 use futures_util::TryStreamExt;
 use rand::rngs::SmallRng;
 use rand::{thread_rng, Rng, SeedableRng};
-use std::env;
-use tokio_pg_mapper::FromTokioPostgresRow;
-use tokio_postgres::{Row, Statement};
 use tower_http::set_header::SetResponseHeaderLayer;
 use yarte::Template;
 
-use crate::utils::Utf8Html;
+use crate::utils::{get_environment_variable, Utf8Html};
 use models_pg_pool::{Fortune, World};
 use utils::{parse_params, random_number, Params};
 
@@ -139,12 +134,11 @@ async fn updates(
 async fn main() {
     dotenv().ok();
 
-    let database_url = env::var("AXUM_TECHEMPOWER_DATABASE_URL")
-        .ok()
-        .expect("AXUM_TECHEMPOWER_DATABASE_URL environment variable was not set");
+    let database_url: String = get_environment_variable("AXUM_TECHEMPOWER_DATABASE_URL");
+    let max_pool_size: u32 = get_environment_variable("AXUM_MAX_POOL_SIZE");
 
     // setup Client pool
-    let pool = create_pool(database_url).await;
+    let pool = create_pool(database_url, max_pool_size).await;
 
     let router = Router::new()
         .route("/fortunes", get(fortunes))

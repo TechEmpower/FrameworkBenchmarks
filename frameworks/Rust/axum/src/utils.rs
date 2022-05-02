@@ -6,15 +6,33 @@ use rand::rngs::SmallRng;
 use rand::Rng;
 use serde::Deserialize;
 
+use std::env;
+use std::fmt::Debug;
+use std::str::FromStr;
+
+pub fn get_environment_variable<T: FromStr>(key: &str) -> T
+where
+    <T as FromStr>::Err: Debug,
+{
+    T::from_str(
+        &*env::var(key)
+            .ok()
+            .expect(&*format!("{} environment variable was not set", key)),
+    )
+    .expect(&*format!("could not parse {}", key))
+}
+
 #[derive(Debug, Deserialize)]
 pub struct Params {
     queries: Option<String>,
 }
 
+#[allow(dead_code)]
 pub fn random_number(rng: &mut SmallRng) -> i32 {
     (rng.gen::<u32>() % 10_000 + 1) as i32
 }
 
+#[allow(dead_code)]
 pub fn parse_params(params: Params) -> i32 {
     let mut q = 0;
 

@@ -3,7 +3,6 @@ extern crate serde_derive;
 #[macro_use]
 extern crate async_trait;
 
-mod common;
 mod database_pg;
 mod models_common;
 mod models_pg;
@@ -16,7 +15,6 @@ use axum::{
     Json, Router,
 };
 use dotenv::dotenv;
-use std::env;
 use tower_http::set_header::SetResponseHeaderLayer;
 use yarte::Template;
 
@@ -24,7 +22,7 @@ use crate::database_pg::{DatabaseConnection, PgConnection};
 use models_pg::Fortune;
 use utils::{parse_params, Params};
 
-use crate::utils::Utf8Html;
+use crate::utils::{get_environment_variable, Utf8Html};
 
 async fn db(DatabaseConnection(conn): DatabaseConnection) -> impl IntoResponse {
     let world = conn.get_world().await.expect("error loading world");
@@ -74,9 +72,7 @@ async fn updates(
 async fn main() {
     dotenv().ok();
 
-    let database_url = env::var("AXUM_TECHEMPOWER_DATABASE_URL")
-        .ok()
-        .expect("AXUM_TECHEMPOWER_DATABASE_URL environment variable was not set");
+    let database_url: String = get_environment_variable("AXUM_TECHEMPOWER_DATABASE_URL");
 
     // setup connection pool
     let pg_connection = PgConnection::connect(database_url).await;

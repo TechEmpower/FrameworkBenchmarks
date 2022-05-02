@@ -2,12 +2,11 @@ use axum::extract::{Extension, FromRequest, RequestParts};
 use axum::http::StatusCode;
 use std::io;
 
-use crate::common::{MAX_POOL_SIZE, MIN_POOL_SIZE};
 use crate::utils::internal_error;
 use crate::{Fortune, World};
 use sqlx::pool::PoolConnection;
 use sqlx::postgres::{PgArguments, PgPoolOptions};
-use sqlx::{Arguments, PgConnection, PgPool, Postgres};
+use sqlx::{Arguments, PgPool, Postgres};
 
 #[derive(Debug)]
 pub enum PgError {
@@ -27,10 +26,14 @@ impl From<sqlx::Error> for PgError {
     }
 }
 
-pub async fn create_pool(database_url: String) -> PgPool {
+pub async fn create_pool(
+    database_url: String,
+    max_pool_size: u32,
+    min_pool_size: u32,
+) -> PgPool {
     PgPoolOptions::new()
-        .max_connections(MAX_POOL_SIZE)
-        .min_connections(MIN_POOL_SIZE)
+        .max_connections(max_pool_size)
+        .min_connections(min_pool_size)
         .connect(&*database_url)
         .await
         .unwrap()
@@ -75,24 +78,10 @@ pub async fn fetch_world(
 pub async fn fetch_fortunes(
     mut conn: PoolConnection<Postgres>,
 ) -> Result<Vec<Fortune>, PgError> {
-    let mut fortunes: Vec<Fortune> = sqlx::query_as("SELECT * FROM Fortune")
+    let fortunes: Vec<Fortune> = sqlx::query_as("SELECT * FROM Fortune")
         .fetch_all(&mut conn)
         .await
         .ok()
         .expect("error loading Fortunes");
     Ok(fortunes)
-}
-
-pub async fn update_world(
-    mut conn: PoolConnection<Postgres>,
-    w: &World,
-    random_id: i32,
-) {
-    sqlx::query("UPDATE World SET randomnumber = $1 WHERE id = $2")
-        .bind(random_id)
-        .bind(w.id)
-        .execute(&mut conn)
-        .await
-        .ok()
-        .expect("error updating world");
 }

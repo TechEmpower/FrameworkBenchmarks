@@ -3,40 +3,31 @@ extern crate serde_derive;
 #[macro_use]
 extern crate async_trait;
 
-mod common;
 mod database_sqlx;
 mod models_common;
 mod models_sqlx;
 mod server;
 mod utils;
 
-use crate::database_sqlx::{
-    fetch_fortunes, fetch_world, update_world, DatabaseConnection,
-};
+use crate::database_sqlx::{fetch_fortunes, fetch_world, DatabaseConnection};
 use axum::http::{header, HeaderValue};
 use axum::{
-    extract::{Extension, Query},
-    http::StatusCode,
-    response::IntoResponse,
-    routing::get,
-    Json, Router,
+    extract::Extension, http::StatusCode, response::IntoResponse, routing::get, Json,
+    Router,
 };
 use dotenv::dotenv;
-use futures_util::stream::FuturesUnordered;
-use futures_util::TryStreamExt;
 use rand::rngs::SmallRng;
 use rand::{thread_rng, Rng, SeedableRng};
-use sqlx::{PgPool, Postgres};
-use std::borrow::BorrowMut;
-use std::env;
+use sqlx::PgPool;
 use tower_http::set_header::SetResponseHeaderLayer;
 use yarte::Template;
 
+use crate::utils::get_environment_variable;
 use database_sqlx::create_pool;
 use models_sqlx::{Fortune, World};
-use utils::{parse_params, random_number, Params, Utf8Html};
+use utils::Utf8Html;
 
-async fn db(DatabaseConnection(mut conn): DatabaseConnection) -> impl IntoResponse {
+async fn db(DatabaseConnection(conn): DatabaseConnection) -> impl IntoResponse {
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
 
     let random_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
@@ -48,9 +39,7 @@ async fn db(DatabaseConnection(mut conn): DatabaseConnection) -> impl IntoRespon
     (StatusCode::OK, Json(world))
 }
 
-async fn fortunes(
-    DatabaseConnection(mut conn): DatabaseConnection,
-) -> impl IntoResponse {
+async fn fortunes(DatabaseConnection(conn): DatabaseConnection) -> impl IntoResponse {
     let mut fortunes = fetch_fortunes(conn)
         .await
         .expect("could not fetch fortunes");
@@ -75,12 +64,12 @@ async fn fortunes(
 async fn main() {
     dotenv().ok();
 
-    let database_url = env::var("AXUM_TECHEMPOWER_DATABASE_URL")
-        .ok()
-        .expect("AXUM_TECHEMPOWER_DATABASE_URL environment variable was not set");
+    let database_url: String = get_environment_variable("AXUM_TECHEMPOWER_DATABASE_URL");
+    let max_pool_size: u32 = get_environment_variable("AXUM_MAX_POOL_SIZE");
+    let min_pool_size: u32 = get_environment_variable("AXUM_MIN_POOL_SIZE");
 
     // setup connection pool
-    let pool = create_pool(database_url).await;
+    let pool = create_pool(database_url, max_pool_size, min_pool_size).await;
 
     let app = router(pool).await;
 

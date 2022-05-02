@@ -1,6 +1,7 @@
 FROM rust:1.60-slim-buster
 
 ENV AXUM_TECHEMPOWER_DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
+ENV AXUM_MAX_POOL_SIZE=56
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev pkg-config libssl-dev \

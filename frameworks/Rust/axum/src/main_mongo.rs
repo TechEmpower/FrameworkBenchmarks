@@ -3,7 +3,6 @@ extern crate serde_derive;
 #[macro_use]
 extern crate async_trait;
 
-mod common;
 mod database_mongo;
 mod models_common;
 mod models_mongo;
@@ -19,7 +18,6 @@ use dotenv::dotenv;
 use mongodb::options::{ClientOptions, Compressor};
 use mongodb::Client;
 use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
-use std::env;
 use std::time::Duration;
 use tower_http::set_header::SetResponseHeaderLayer;
 use yarte::Template;
@@ -27,6 +25,7 @@ use yarte::Template;
 use crate::database_mongo::{
     fetch_fortunes, find_world_by_id, find_worlds, update_worlds,
 };
+use crate::utils::get_environment_variable;
 use database_mongo::DatabaseConnection;
 use models_mongo::FortuneInfo;
 use models_mongo::{Fortune, World};
@@ -123,15 +122,15 @@ async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoRespon
 async fn main() {
     dotenv().ok();
 
-    let database_url = env::var("AXUM_TECHEMPOWER_MONGODB_URL")
-        .ok()
-        .expect("AXUM_TECHEMPOWER_MONGODB_URL environment variable was not set");
+    let database_url: String = get_environment_variable("AXUM_TECHEMPOWER_MONGODB_URL");
+    let max_pool_size: u32 = get_environment_variable("AXUM_MAX_POOL_SIZE");
+    let min_pool_size: u32 = get_environment_variable("AXUM_MIN_POOL_SIZE");
 
     let mut client_options = ClientOptions::parse(database_url).await.unwrap();
 
     // setup connection pool
-    client_options.max_pool_size = Some(common::MAX_POOL_SIZE);
-    client_options.min_pool_size = Some(common::MIN_POOL_SIZE);
+    client_options.max_pool_size = Some(max_pool_size);
+    client_options.min_pool_size = Some(min_pool_size);
     client_options.connect_timeout = Some(Duration::from_millis(200));
 
     // the server will select the algorithm it supports from the list provided by the driver
