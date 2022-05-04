@@ -55,7 +55,8 @@ class Controller(
             stores.forEach { (storeEngine, store) ->
                 path("/$storeEngine") {
                     templateEngines.forEach { (templateEngineId, templateEngine) ->
-                        get("/${templateEngineId}/fortunes") { listFortunes(store, templateEngineId, templateEngine) }
+                        val templateUrl = templates.require(templateEngineId)
+                        get("/${templateEngineId}/fortunes") { listFortunes(store, templateUrl, templateEngine) }
                     }
 
                     get("/db") { dbQuery(store) }
@@ -68,13 +69,13 @@ class Controller(
     }
 
     private fun HttpServerContext.listFortunes(
-        store: BenchmarkStore, templateKind: String, templateAdapter: TemplatePort
+        store: BenchmarkStore, templateUrl: URL, templateAdapter: TemplatePort
     ): HttpServerContext {
 
         val fortunes = store.findAllFortunes() + Fortune(0, "Additional fortune added at request time.")
         val sortedFortunes = fortunes.sortedBy { it.message }
         val context = mapOf("fortunes" to sortedFortunes)
-        val body = templateAdapter.render(templates.require(templateKind), context)
+        val body = templateAdapter.render(templateUrl, context)
 
         return ok(body, contentType = html)
     }
