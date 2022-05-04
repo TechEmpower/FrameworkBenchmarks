@@ -8,7 +8,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "Postgres",
-      "framework": "None",
+      "framework": "gramework",
       "language": "Go",
       "flavor": "None",
       "orm": "Raw",
