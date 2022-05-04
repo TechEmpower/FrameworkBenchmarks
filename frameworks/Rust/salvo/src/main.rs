@@ -1,12 +1,12 @@
-#[macro_use]
-extern crate serde_derive;
-extern crate serde_json;
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::sync::Arc;
 use std::thread::available_parallelism;
 
 use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
+use serde::Serialize;
 
 mod server;
 
@@ -27,7 +27,8 @@ async fn json(res: &mut Response) {
 #[fn_handler]
 async fn plaintext(res: &mut Response) {
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static("text/plain"));
+    res.headers_mut()
+        .insert(header::CONTENT_TYPE, HeaderValue::from_static("text/plain"));
     res.write_body(HELLO_WORLD).ok();
 }
 
