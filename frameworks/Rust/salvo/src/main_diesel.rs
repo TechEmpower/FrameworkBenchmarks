@@ -58,7 +58,7 @@ async fn world_row(res: &mut Response) -> Result<(), Error> {
 
 #[fn_handler]
 async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let count = req.get_query::<usize>("q").unwrap_or(1);
+    let count = req.query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
     let mut worlds = Vec::with_capacity(count);
     let mut rng = SmallRng::from_entropy();
@@ -75,7 +75,7 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
 
 #[fn_handler]
 async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let count = req.get_query::<usize>("q").unwrap_or(1);
+    let count = req.query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
     let mut worlds = Vec::with_capacity(count);
     let mut rng = SmallRng::from_entropy();
@@ -93,7 +93,7 @@ async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Err
 
 #[fn_handler]
 async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let count = req.get_query::<usize>("q").unwrap_or(1);
+    let count = req.query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
     let conn = connect()?;
     let mut worlds = Vec::with_capacity(count);

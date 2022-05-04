@@ -32,7 +32,7 @@ async fn json(res: &mut Response) {
 async fn plaintext(res: &mut Response) {
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
     res.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static("text/plain"));
-    res.write_body(HELLO_WORLD);
+    res.write_body(HELLO_WORLD).ok();
 }
 
 fn main() {

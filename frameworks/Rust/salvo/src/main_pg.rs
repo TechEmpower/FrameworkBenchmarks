@@ -212,7 +212,7 @@ impl WorldsHandler {
 #[async_trait]
 impl Handler for WorldsHandler {
     async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
-        let count = req.get_query::<u16>("q").unwrap_or(1);
+        let count = req.query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
         let worlds = self.conn.get_worlds(count).await.unwrap();
@@ -234,7 +234,7 @@ impl UpdatesHandler {
 #[async_trait]
 impl Handler for UpdatesHandler {
     async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
-        let count = req.get_query::<u16>("q").unwrap_or(1);
+        let count = req.query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
         let worlds = self.conn.update(count).await.unwrap();
@@ -265,7 +265,7 @@ impl Handler for FortunesHandler {
 
 #[fn_handler]
 async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let count = req.get_query::<usize>("q").unwrap_or(1);
+    let count = req.query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
     let mut worlds = Vec::with_capacity(count);
     let mut rng = SmallRng::from_entropy();
