@@ -7,6 +7,7 @@ use std::cmp;
 use std::collections::HashMap;
 use std::fmt::Write;
 use std::io;
+use std::thread::available_parallelism;
 
 use anyhow::Error;
 use async_trait::async_trait;
@@ -296,7 +297,7 @@ fn main() {
     rt.block_on(async {
         populate_cache().await.expect("error cache worlds");
     });
-    for _ in 1..num_cpus::get() {
+    for _ in 1..available_parallelism().map(|n| n.get()).unwrap_or(16) {
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
                 .enable_all()
@@ -305,11 +306,11 @@ fn main() {
             rt.block_on(serve());
         });
     }
+    println!("Started http server: 127.0.0.1:8080");
     rt.block_on(serve());
 }
 
 async fn serve() {
-    println!("Started http server: 127.0.0.1:8080");
     let router = Router::new()
         .push(Router::with_path("db").get(WorldHandler::new().await))
         .push(Router::with_path("fortunes").get(FortunesHandler::new().await))

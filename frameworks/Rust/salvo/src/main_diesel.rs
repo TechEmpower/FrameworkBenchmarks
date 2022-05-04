@@ -9,6 +9,7 @@ extern crate diesel;
 use std::cmp;
 use std::fmt::Write;
 use std::sync::Arc;
+use std::thread::available_parallelism;
 
 use anyhow::Error;
 use diesel::prelude::*;
@@ -176,12 +177,12 @@ fn main() {
             .push(Router::with_path("cached_queries").get(cached_queries))
             .push(Router::with_path("updates").get(updates)),
     );
-    let cpus = num_cpus::get();
+    let size = available_parallelism().map(|n| n.get()).unwrap_or(16);
     DB_POOL
-        .set(build_pool(&DB_URL, cpus as u32).expect(&format!("Error connecting to {}", &DB_URL)))
+        .set(build_pool(&DB_URL, size as u32).expect(&format!("Error connecting to {}", &DB_URL)))
         .ok();
     populate_cache().expect("error cache worlds");
-    for _ in 1..cpus {
+    for _ in 1..size {
         let router = router.clone();
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
@@ -191,6 +192,7 @@ fn main() {
             rt.block_on(serve(router));
         });
     }
+    println!("Starting http server: 127.0.0.1:8080");
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
@@ -199,6 +201,5 @@ fn main() {
 }
 
 async fn serve(router: Arc<Router>) {
-    println!("Starting http server: 127.0.0.1:8080");
     server::builder().serve(Service::new(router)).await.unwrap();
 }

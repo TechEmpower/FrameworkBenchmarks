@@ -8,6 +8,7 @@ extern crate serde_derive;
 extern crate serde_json;
 
 use std::sync::Arc;
+use std::thread::available_parallelism;
 
 use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
@@ -42,7 +43,7 @@ fn main() {
             .push(Router::with_path("json").get(json)),
     );
 
-    for _ in 1..num_cpus::get() {
+    for _ in 1..available_parallelism().map(|n| n.get()).unwrap_or(16) {
         let router = router.clone();
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
@@ -52,6 +53,7 @@ fn main() {
             rt.block_on(serve(router));
         });
     }
+    println!("Started http server: 127.0.0.1:8080");
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
@@ -60,7 +62,6 @@ fn main() {
 }
 
 async fn serve(router: Arc<Router>) {
-    println!("Started http server: 127.0.0.1:8080");
     server::builder()
         .http1_pipeline_flush(true)
         .serve(Service::new(router))
