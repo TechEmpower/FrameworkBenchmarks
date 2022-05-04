@@ -3,9 +3,7 @@ FROM rust:1.60.0
 # Disable simd at jsonescape
 ENV CARGO_CFG_JSONESCAPE_DISABLE_AUTO_SIMD=
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq-dev pkg-config libssl-dev \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -yqq && apt-get install -yqq cmake g++
 
 ADD ./ /salvo
 WORKDIR /salvo
