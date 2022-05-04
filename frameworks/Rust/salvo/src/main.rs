@@ -1,8 +1,3 @@
-// #[global_allocator]
-// static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
-// #[global_allocator]
-// static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
-
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
