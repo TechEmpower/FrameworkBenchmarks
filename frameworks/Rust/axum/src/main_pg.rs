@@ -24,6 +24,12 @@ use utils::{parse_params, Params};
 
 use crate::utils::{get_environment_variable, Utf8Html};
 
+#[derive(Template)]
+#[template(path = "fortunes.html.hbs")]
+pub struct FortunesTemplate<'a> {
+    pub fortunes: &'a Vec<Fortune>,
+}
+
 async fn db(DatabaseConnection(conn): DatabaseConnection) -> impl IntoResponse {
     let world = conn.get_world().await.expect("error loading world");
 
@@ -68,14 +74,32 @@ async fn updates(
     (StatusCode::OK, Json(results))
 }
 
-#[tokio::main]
-async fn main() {
+fn main() {
     dotenv().ok();
 
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+
+    for _ in 1..num_cpus::get() {
+        std::thread::spawn(move || {
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()
+                .unwrap();
+            rt.block_on(serve());
+        });
+    }
+    rt.block_on(serve());
+}
+
+async fn serve() {
     let database_url: String = get_environment_variable("AXUM_TECHEMPOWER_DATABASE_URL");
 
     // setup connection pool
     let pg_connection = PgConnection::connect(database_url).await;
+    let server_header_value = HeaderValue::from_static("Axum");
 
     let router = Router::new()
         .route("/fortunes", get(fortunes))
@@ -85,17 +109,11 @@ async fn main() {
         .layer(Extension(pg_connection.clone()))
         .layer(SetResponseHeaderLayer::if_not_present(
             header::SERVER,
-            HeaderValue::from_static("Axum"),
+            server_header_value,
         ));
 
     server::builder()
         .serve(router.into_make_service())
         .await
         .unwrap();
-}
-
-#[derive(Template)]
-#[template(path = "fortunes.html.hbs")]
-pub struct FortunesTemplate<'a> {
-    pub fortunes: &'a Vec<Fortune>,
 }

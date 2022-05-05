@@ -27,6 +27,12 @@ use database_sqlx::create_pool;
 use models_sqlx::{Fortune, World};
 use utils::Utf8Html;
 
+#[derive(Template)]
+#[template(path = "fortunes.html.hbs")]
+pub struct FortunesTemplate<'a> {
+    pub fortunes: &'a Vec<Fortune>,
+}
+
 async fn db(DatabaseConnection(conn): DatabaseConnection) -> impl IntoResponse {
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
 
@@ -65,8 +71,8 @@ async fn main() {
     dotenv().ok();
 
     let database_url: String = get_environment_variable("AXUM_TECHEMPOWER_DATABASE_URL");
-    let max_pool_size: u32 = get_environment_variable("AXUM_MAX_POOL_SIZE");
-    let min_pool_size: u32 = get_environment_variable("AXUM_MIN_POOL_SIZE");
+    let max_pool_size: u32 = get_environment_variable("AXUM_TECHEMPOWER_MAX_POOL_SIZE");
+    let min_pool_size: u32 = get_environment_variable("AXUM_TECHEMPOWER_MIN_POOL_SIZE");
 
     // setup connection pool
     let pool = create_pool(database_url, max_pool_size, min_pool_size).await;
@@ -80,18 +86,14 @@ async fn main() {
 }
 
 async fn router(pool: PgPool) -> Router {
+    let server_header_value = HeaderValue::from_static("Axum");
+
     Router::new()
         .route("/fortunes", get(fortunes))
         .route("/db", get(db))
         .layer(Extension(pool))
         .layer(SetResponseHeaderLayer::if_not_present(
             header::SERVER,
-            HeaderValue::from_static("Axum"),
-        ))
-}
-
-#[derive(Template)]
-#[template(path = "fortunes.html.hbs")]
-pub struct FortunesTemplate<'a> {
-    pub fortunes: &'a Vec<Fortune>,
+            server_header_value)
+        )
 }

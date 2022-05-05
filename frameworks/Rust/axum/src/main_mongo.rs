@@ -31,6 +31,12 @@ use models_mongo::FortuneInfo;
 use models_mongo::{Fortune, World};
 use utils::{parse_params, Params, Utf8Html};
 
+#[derive(Template)]
+#[template(path = "fortunes.html.hbs")]
+pub struct FortunesTemplate<'a> {
+    pub fortunes: &'a Vec<FortuneInfo>,
+}
+
 async fn db(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
 
@@ -118,13 +124,30 @@ async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoRespon
     )
 }
 
-#[tokio::main]
-async fn main() {
+fn main() {
     dotenv().ok();
 
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+
+    for _ in 1..num_cpus::get() {
+        std::thread::spawn(move || {
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()
+                .unwrap();
+            rt.block_on(serve());
+        });
+    }
+    rt.block_on(serve());
+}
+
+async fn serve() {
     let database_url: String = get_environment_variable("AXUM_TECHEMPOWER_MONGODB_URL");
-    let max_pool_size: u32 = get_environment_variable("AXUM_MAX_POOL_SIZE");
-    let min_pool_size: u32 = get_environment_variable("AXUM_MIN_POOL_SIZE");
+    let max_pool_size: u32 = get_environment_variable("AXUM_TECHEMPOWER_MAX_POOL_SIZE");
+    let min_pool_size: u32 = get_environment_variable("AXUM_TECHEMPOWER_MIN_POOL_SIZE");
 
     let mut client_options = ClientOptions::parse(database_url).await.unwrap();
 
@@ -146,6 +169,7 @@ async fn main() {
 
     let client = Client::with_options(client_options).unwrap();
     let database = client.database("hello_world");
+    let server_header_value = HeaderValue::from_static("Axum");
 
     let app = Router::new()
         .route("/fortunes", get(fortunes))
@@ -155,7 +179,7 @@ async fn main() {
         .layer(Extension(database))
         .layer(SetResponseHeaderLayer::if_not_present(
             header::SERVER,
-            HeaderValue::from_static("Axum"),
+            server_header_value,
         ));
 
     server::builder()
@@ -164,8 +188,4 @@ async fn main() {
         .unwrap();
 }
 
-#[derive(Template)]
-#[template(path = "fortunes.html.hbs")]
-pub struct FortunesTemplate<'a> {
-    pub fortunes: &'a Vec<FortuneInfo>,
-}
+

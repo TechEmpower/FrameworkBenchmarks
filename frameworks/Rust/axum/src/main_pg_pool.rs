@@ -31,6 +31,12 @@ use crate::utils::{get_environment_variable, Utf8Html};
 use models_pg_pool::{Fortune, World};
 use utils::{parse_params, random_number, Params};
 
+#[derive(Template)]
+#[template(path = "fortunes.html.hbs")]
+pub struct FortunesTemplate<'a> {
+    pub fortunes: &'a Vec<Fortune>,
+}
+
 async fn db(DatabaseClient(client): DatabaseClient) -> impl IntoResponse {
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
 
@@ -134,11 +140,16 @@ async fn updates(
 async fn main() {
     dotenv().ok();
 
+    serve().await;
+}
+
+async fn serve() {
     let database_url: String = get_environment_variable("AXUM_TECHEMPOWER_DATABASE_URL");
-    let max_pool_size: u32 = get_environment_variable("AXUM_MAX_POOL_SIZE");
+    let max_pool_size: u32 = get_environment_variable("AXUM_TECHEMPOWER_MAX_POOL_SIZE");
 
     // setup Client pool
     let pool = create_pool(database_url, max_pool_size).await;
+    let server_header_value = HeaderValue::from_static("Axum");
 
     let router = Router::new()
         .route("/fortunes", get(fortunes))
@@ -148,7 +159,7 @@ async fn main() {
         .layer(Extension(pool))
         .layer(SetResponseHeaderLayer::if_not_present(
             header::SERVER,
-            HeaderValue::from_static("Axum"),
+            server_header_value,
         ));
 
     server::builder()
@@ -157,8 +168,4 @@ async fn main() {
         .unwrap();
 }
 
-#[derive(Template)]
-#[template(path = "fortunes.html.hbs")]
-pub struct FortunesTemplate<'a> {
-    pub fortunes: &'a Vec<Fortune>,
-}
+

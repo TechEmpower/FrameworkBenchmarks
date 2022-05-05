@@ -33,12 +33,14 @@ pub async fn json() -> impl IntoResponse {
 async fn main() {
     dotenv().ok();
 
+    let server_header_value = HeaderValue::from_static("Axum");
+
     let app = Router::new()
         .route("/plaintext", get(plaintext))
         .route("/json", get(json))
         .layer(SetResponseHeaderLayer::if_not_present(
             header::SERVER,
-            HeaderValue::from_static("Axum"),
+            server_header_value,
         ));
 
     server::builder()
