@@ -44,3 +44,13 @@ dependencies {
     // providedCompile excludes the dependency only in the WAR, not in the distribution
     providedCompile("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
 }
+
+task("minimizeTemplate") {
+    doLast {
+        File template = file("$buildDir/resources/main/fortunes.pebble.html")
+        List<String> lines = template.readLines().collect { it.trim() }
+        template.write(lines.join(""))
+    }
+}
+
+assemble.dependsOn("minimizeTemplate")

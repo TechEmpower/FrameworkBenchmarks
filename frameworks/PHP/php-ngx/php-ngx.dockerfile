@@ -10,7 +10,7 @@ RUN apt-get update -yqq > /dev/null && \
                     php8.1-cli php8.1-dev libphp8.1-embed php8.1-mysql nginx > /dev/null
 ADD ./ ./
 
-ENV NGINX_VERSION 1.21.4
+ENV NGINX_VERSION 1.21.6
 
 RUN git clone -b v0.0.26 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
 

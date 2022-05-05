@@ -17,6 +17,7 @@ ENV DBSTORE postgresql
 ENV POSTGRESQL_DB_HOST tfb-database
 ENV WEBENGINE netty
 ENV PROJECT hexagon
+ENV DISABLE_CHECKS true
 
 COPY --from=gradle_build /hexagon/build/install/$PROJECT /opt/$PROJECT
 

@@ -1,5 +1,7 @@
 use axum::extract::{Extension, FromRequest, RequestParts};
 use axum::http::StatusCode;
+
+use async_trait::async_trait;
 use bb8::{Pool, PooledConnection};
 use bb8_postgres::PostgresConnectionManager;
 use bb8_postgres::tokio_postgres::NoTls;

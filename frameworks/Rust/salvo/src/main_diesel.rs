@@ -52,7 +52,7 @@ async fn world_row(res: &mut Response) -> Result<(), Error> {
     let conn = connect()?;
     let row = world::table.find(random_id).first::<World>(&conn)?;
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_json(&row);
+    res.render(Json(row));
     Ok(())
 }
 
@@ -69,7 +69,7 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         worlds.push(w);
     }
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_json(&worlds);
+    res.render(Json(worlds));
     Ok(())
 }
 
@@ -87,7 +87,7 @@ async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Err
         }
     }
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_json(&worlds);
+    res.render(Json(worlds));
     Ok(())
 }
 
@@ -116,7 +116,7 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     })?;
 
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_json(&worlds);
+    res.render(Json(worlds));
     Ok(())
 }
 
@@ -134,7 +134,7 @@ async fn fortunes(res: &mut Response) -> Result<(), Error> {
     write!(&mut body, "{}", FortunesTemplate { items }).unwrap();
 
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_html_text(&body);
+    res.render(Text::Html(body));
     Ok(())
 }
 

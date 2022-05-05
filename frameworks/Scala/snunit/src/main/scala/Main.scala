@@ -9,8 +9,8 @@ object Message {
 
 object Main {
   def main(args: Array[String]): Unit = {
-    AsyncServerBuilder()
-      .withRequestHandler(req =>
+    val server = SyncServerBuilder
+      .build(req =>
         if (req.method == Method.GET && req.path == "/plaintext")
           req.send(
             statusCode = StatusCode.OK,
@@ -20,8 +20,8 @@ object Main {
         else if (req.method == Method.GET && req.path == "/json")
           req.send(
             statusCode = StatusCode.OK,
-            content = stream(Message("Hello, World!")),
-            headers = Seq.empty
+            content = write(Message("Hello, World!")),
+            headers = Seq("Content-Type" -> "application/json")
           )
         else
           req.send(
@@ -30,6 +30,7 @@ object Main {
             headers = Seq("Content-Type" -> "text/plain")
           )
       )
-      .build()
+
+    server.listen()
   }
 }
