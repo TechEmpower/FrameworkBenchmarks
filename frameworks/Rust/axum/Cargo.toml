@@ -21,6 +21,10 @@ name = "axum-mongo"
 path = "src/main_mongo.rs"
 
 [[bin]]
+name = "axum-mongo-raw"
+path = "src/main_mongo_raw.rs"
+
+[[bin]]
 name = "axum-pg"
 path = "src/main_pg.rs"
 
