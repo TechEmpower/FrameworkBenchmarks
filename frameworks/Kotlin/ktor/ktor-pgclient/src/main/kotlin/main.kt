@@ -1,25 +1,17 @@
-import io.ktor.application.*
-import io.ktor.features.*
-import io.ktor.html.*
 import io.ktor.http.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
 import io.ktor.server.engine.*
+import io.ktor.server.html.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.defaultheaders.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import io.vertx.kotlin.coroutines.await
 import io.vertx.pgclient.PgConnectOptions
 import io.vertx.pgclient.PgPool
 import io.vertx.sqlclient.PoolOptions
 import io.vertx.sqlclient.Tuple
-import kotlinx.html.HTML
-import kotlinx.html.HtmlBlockTag
-import kotlinx.html.body
-import kotlinx.html.head
-import kotlinx.html.table
-import kotlinx.html.td
-import kotlinx.html.th
-import kotlinx.html.title
-import kotlinx.html.tr
+import kotlinx.html.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
@@ -57,7 +49,6 @@ class PgclientRepository : Repository {
     private val poolOptions = PoolOptions()
     private val client = ThreadLocal.withInitial { PgPool.client(connectOptions, poolOptions) }
     private fun client() = client.get()
-
 
     override suspend fun getFortunes(): List<Fortune> {
         val results = client().preparedQuery("select id, message from fortune").execute().await()
@@ -106,7 +97,7 @@ class MainTemplate : Template<HTML> {
 class FortuneTemplate(
     private val fortunes: List<Fortune>,
     private val main: MainTemplate = MainTemplate()
-): Template<HTML> {
+) : Template<HTML> {
     override fun HTML.apply() {
         insert(main) {
             content {
