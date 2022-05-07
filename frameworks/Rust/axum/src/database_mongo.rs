@@ -78,7 +78,7 @@ pub async fn fetch_fortunes(db: Database) -> Result<Vec<Fortune>, MongoError> {
         .await
         .expect("fortunes could not be loaded");
 
-    let mut fortunes: Vec<Fortune> = Vec::with_capacity(100 as usize);
+    let mut fortunes: Vec<Fortune> = Vec::new();
 
     while let Some(doc) = fortune_cursor.next().await {
         fortunes.push(doc.expect("could not load fortune"));
