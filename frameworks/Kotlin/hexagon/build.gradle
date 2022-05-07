@@ -7,7 +7,7 @@ ext {
     hexagonVersion = "2.0.8"
     hikariVersion = "5.0.1"
     jettyVersion = "11.0.9"
-    postgresqlVersion = "42.3.4"
+    postgresqlVersion = "42.3.5"
     cache2kVersion = "2.6.1.Final"
     nettyVersion = "4.1.76.Final"
 
