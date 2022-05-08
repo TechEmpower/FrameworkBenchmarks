@@ -5,9 +5,8 @@ use futures_util::TryStreamExt;
 use std::io;
 
 use crate::utils::internal_error;
-use crate::{Fortune, World};
-use futures_util::StreamExt;
-use mongodb::bson::doc;
+use crate::{World};
+use mongodb::bson::{doc, RawDocumentBuf};
 use mongodb::Database;
 
 pub struct DatabaseConnection(pub Database);
@@ -47,16 +46,20 @@ impl From<mongodb::error::Error> for MongoError {
 }
 
 pub async fn find_world_by_id(db: Database, id: i32) -> Result<World, MongoError> {
-    let world_collection = db.collection::<World>("world");
+    let world_collection = db.collection::<RawDocumentBuf>("world");
 
     let filter = doc! { "_id": id as f32 };
 
-    let world: World = world_collection
+    let raw: RawDocumentBuf = world_collection
         .find_one(Some(filter), None)
         .await
         .unwrap()
         .expect("expected world, found none");
-    Ok(world)
+
+    Ok(World {
+        id: raw.get("id").expect("expected to parse world id").expect("could not get world id").as_f64().expect("could not extract world id") as f32,
+        random_number: raw.get("randomNumber").expect("expected to parse world randomNumber").expect("expected to get world randomNumber").as_f64().expect("could not extract world randomNumber") as f32,
+    })
 }
 
 pub async fn find_worlds(db: Database, ids: Vec<i32>) -> Result<Vec<World>, MongoError> {
@@ -68,29 +71,6 @@ pub async fn find_worlds(db: Database, ids: Vec<i32>) -> Result<Vec<World>, Mong
 
     let worlds: Result<Vec<World>, MongoError> = future_worlds.try_collect().await;
     worlds
-}
-
-pub async fn fetch_fortunes(db: Database) -> Result<Vec<Fortune>, MongoError> {
-    let fortune_collection = db.collection::<Fortune>("fortune");
-
-    let mut fortune_cursor = fortune_collection
-        .find(None, None)
-        .await
-        .expect("fortunes could not be loaded");
-
-    let mut fortunes: Vec<Fortune> = Vec::new();
-
-    while let Some(doc) = fortune_cursor.next().await {
-        fortunes.push(doc.expect("could not load fortune"));
-    }
-
-    fortunes.push(Fortune {
-        id: 0.0,
-        message: "Additional fortune added at request time.".to_string(),
-    });
-
-    fortunes.sort_by(|a, b| a.message.cmp(&b.message));
-    Ok(fortunes)
 }
 
 pub async fn update_worlds(

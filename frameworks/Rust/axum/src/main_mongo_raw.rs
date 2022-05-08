@@ -3,7 +3,7 @@ extern crate serde_derive;
 #[macro_use]
 extern crate async_trait;
 
-mod database_mongo;
+mod database_mongo_raw;
 mod models_common;
 mod models_mongo;
 mod server;
@@ -20,22 +20,14 @@ use mongodb::Client;
 use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
 use std::time::Duration;
 use tower_http::set_header::SetResponseHeaderLayer;
-use yarte::Template;
 
-use crate::database_mongo::{
-    fetch_fortunes, find_world_by_id, find_worlds, update_worlds,
+use database_mongo_raw::{
+    find_world_by_id, find_worlds, update_worlds,
 };
-use crate::utils::get_environment_variable;
-use database_mongo::DatabaseConnection;
-use models_mongo::FortuneInfo;
-use models_mongo::{Fortune, World};
-use utils::{parse_params, Params, Utf8Html};
-
-#[derive(Template)]
-#[template(path = "fortunes.html.hbs")]
-pub struct FortunesTemplate<'a> {
-    pub fortunes: &'a Vec<FortuneInfo>,
-}
+use utils::get_environment_variable;
+use database_mongo_raw::DatabaseConnection;
+use models_mongo::{World};
+use utils::{parse_params, Params};
 
 async fn db(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
@@ -104,26 +96,6 @@ async fn updates(
     (StatusCode::OK, Json(updated_worlds.clone()))
 }
 
-async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
-    let fortunes = fetch_fortunes(db).await.expect("could not fetch fortunes");
-
-    let fortune_infos: Vec<FortuneInfo> = fortunes
-        .iter()
-        .map(|f| FortuneInfo {
-            id: f.id as i32,
-            message: f.message.clone(),
-        })
-        .collect();
-
-    Utf8Html(
-        FortunesTemplate {
-            fortunes: &fortune_infos,
-        }
-        .call()
-        .expect("error rendering template"),
-    )
-}
-
 fn main() {
     dotenv().ok();
 
@@ -172,7 +144,6 @@ async fn serve() {
     let server_header_value = HeaderValue::from_static("Axum");
 
     let app = Router::new()
-        .route("/fortunes", get(fortunes))
         .route("/db", get(db))
         .route("/queries", get(queries))
         .route("/updates", get(updates))

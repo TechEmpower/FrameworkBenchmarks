@@ -1,4 +1,9 @@
-mod common;
+extern crate async_trait;
+extern crate dotenv;
+extern crate serde_derive;
+extern crate tokio_pg_mapper;
+extern crate tokio_pg_mapper_derive;
+
 mod models_common;
 mod server;
 
@@ -28,12 +33,14 @@ pub async fn json() -> impl IntoResponse {
 async fn main() {
     dotenv().ok();
 
+    let server_header_value = HeaderValue::from_static("Axum");
+
     let app = Router::new()
         .route("/plaintext", get(plaintext))
         .route("/json", get(json))
         .layer(SetResponseHeaderLayer::if_not_present(
             header::SERVER,
-            HeaderValue::from_static("Axum"),
+            server_header_value,
         ));
 
     server::builder()
