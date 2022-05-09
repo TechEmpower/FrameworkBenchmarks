@@ -11,9 +11,6 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <microhttp.version>0.4</microhttp.version>
-        <jackson.version>2.13.2.1</jackson.version>
-        <junit.version>5.8.2</junit.version>
     </properties>
 
     <packaging>jar</packaging>
@@ -22,23 +19,23 @@
         <dependency>
             <groupId>org.microhttp</groupId>
             <artifactId>microhttp</artifactId>
-            <version>${microhttp.version}</version>
+            <version>0.7</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
+            <version>2.13.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
+            <version>2.13.2.2</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.8.2</version>
-            <scope>${junit.version}</scope>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

@@ -5,6 +5,7 @@ import com.hexagonkt.http.server.HttpServerPort
 import com.hexagonkt.http.server.HttpServerSettings
 import com.hexagonkt.http.server.jetty.JettyServletAdapter
 import com.hexagonkt.http.server.netty.NettyServerAdapter
+import com.hexagonkt.http.server.netty.epoll.NettyEpollServerAdapter
 import com.hexagonkt.store.BenchmarkSqlStore
 import com.hexagonkt.store.BenchmarkStore
 import com.hexagonkt.templates.TemplatePort
@@ -29,6 +30,7 @@ private val engines: Map<String, HttpServerPort> by lazy {
             sendXPoweredBy = settings.sendXPoweredBy,
         ),
         "netty" to NettyServerAdapter(),
+        "netty_epoll" to NettyEpollServerAdapter(),
     )
 }
 

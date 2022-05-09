@@ -3,32 +3,23 @@ package main
 import (
 	"flag"
 	"log"
-	"net"
 
 	"github.com/go-www/silverlining"
 )
 
 var BindAddr string
+var prefork *bool
 
 func init() {
 	flag.StringVar(&BindAddr, "bind", ":8080", "set bind host")
+	prefork = flag.Bool("prefork", false, "use prefork")
 	flag.Parse()
 }
 
 func main() {
-	ln, err := net.Listen("tcp", BindAddr)
-	if err != nil {
-		log.Fatal(err)
-	}
 	log.Printf("Listening on http://localhost%s", BindAddr)
 
-	defer ln.Close()
-
-	srv := silverlining.Server{
-		//ReadTimeout: time.Minute,
-	}
-
-	srv.Handler = func(r *silverlining.Context) {
+	Handler := func(r *silverlining.Context) {
 		switch string(r.Path()) {
 		case "/plaintext":
 			r.ResponseHeaders().Set("Content-Type", "text/plain")
@@ -44,8 +35,24 @@ func main() {
 		}
 	}
 
-	err = srv.Serve(ln)
+	var err error
+	if *prefork {
+		var id int
+		id, err = silverlining.PreforkChildID()
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		if id == 0 {
+			log.Println("Starting prefork leader process")
+		} else {
+			log.Printf("Starting prefork replica process %d", id)
+		}
+		err = silverlining.ListenAndServePrefork(BindAddr, Handler)
+	} else {
+		err = silverlining.ListenAndServe(BindAddr, Handler)
+	}
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 }

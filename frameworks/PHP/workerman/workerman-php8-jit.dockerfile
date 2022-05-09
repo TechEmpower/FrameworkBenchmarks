@@ -17,7 +17,8 @@ COPY php-jit.ini /etc/php/8.1/cli/php.ini
 ADD ./ /workerman
 WORKDIR /workerman
 
-RUN sed -i "s|'mysql:host|'pgsql:host|g" app.php
+RUN sed -i "s|'/app.php|'/app-pg.php|g" server.php
+RUN sed -i "s|init()|DbRaw::init()|g" server.php
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
