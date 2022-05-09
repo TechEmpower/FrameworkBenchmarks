@@ -58,8 +58,8 @@ where
 {
     let mut res = match service.call(ctx.reborrow()).await {
         Ok(Ok(res)) => res,
-        Ok(Err(err)) => err.respond_to(&mut ctx).await,
-        Err(err) => err.respond_to(&mut ctx).await,
+        Ok(Err(err)) => err.respond_to(ctx).await,
+        Err(err) => err.respond_to(ctx).await,
     };
 
     res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
