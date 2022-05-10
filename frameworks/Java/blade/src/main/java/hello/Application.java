@@ -68,7 +68,9 @@ public class Application {
         List<World> worlds = idList.stream()
                 .map(id -> select().from(World.class).byId(id))
                 .collect(toList());
-        ctx.json(worlds).contentType(JSON_CONTENT_TYPE).header(SERVER_HEADER, SERVER_VALUE);
+        ctx.contentType(JSON_CONTENT_TYPE)
+                .header(SERVER_HEADER, SERVER_VALUE)
+                .json(worlds);
     }
 
     private static void updates(RouteContext ctx) {
@@ -80,7 +82,9 @@ public class Application {
                 .map(id -> select().from(World.class).byId(id))
                 .peek(Application::updateWorld).collect(toList());
 
-        ctx.json(worlds).contentType(JSON_CONTENT_TYPE).header(SERVER_HEADER, SERVER_VALUE);
+        ctx.contentType(JSON_CONTENT_TYPE)
+                .header(SERVER_HEADER, SERVER_VALUE)
+                .json(worlds);
     }
 
     private static void updateWorld(World world) {
