@@ -3,6 +3,7 @@ package hello;
 import com.hellokaton.blade.Blade;
 import com.hellokaton.blade.mvc.RouteContext;
 import com.hellokaton.blade.mvc.http.StringBody;
+import com.hellokaton.blade.mvc.BladeConst;
 import hello.model.Fortune;
 import hello.model.Message;
 import hello.model.World;
@@ -13,6 +14,7 @@ import java.util.stream.Stream;
 
 import static com.hellokaton.anima.Anima.select;
 import static com.hellokaton.anima.Anima.update;
+import static com.hellokaton.blade.mvc.BladeConst.ENV_KEY_REQUEST_LOG;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
@@ -27,7 +29,7 @@ public class Application {
     private static final StringBody PLAINTEXT      = StringBody.of("Hello, World!");
     private static final String JSON_CONTENT_TYPE  = "application/json";
     private static final String SERVER_HEADER      = "Server";
-    private static final String SERVER_VALUE       = "Blade-" + Const.VERSION;
+    private static final String SERVER_VALUE       = "Blade-" + BladeConst.VERSION;
     private static final String ADDITIONAL_FORTUNE = "Additional fortune added at request time.";
 
     private static final int DB_ROWS = 10000;
@@ -120,6 +122,7 @@ public class Application {
                 .get("/updates", Application::updates)
                 .get("/fortunes", Application::fortunes)
                 .disableSession()
+                .setEnv(ENV_KEY_REQUEST_LOG, false)
                 .start(Application.class, args);
     }
 
