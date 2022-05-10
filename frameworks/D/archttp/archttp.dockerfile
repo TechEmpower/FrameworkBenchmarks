@@ -9,4 +9,4 @@ RUN dub build -b release --compiler=ldc2 --verbose
 
 EXPOSE 1111
 
-CMD ["archttp-server"]
+CMD ["./archttp-server"]
