@@ -28,8 +28,6 @@ public class Application {
 
     private static final StringBody PLAINTEXT      = StringBody.of("Hello, World!");
     private static final String JSON_CONTENT_TYPE  = "application/json";
-    private static final String SERVER_HEADER      = "Server";
-    private static final String SERVER_VALUE       = "Blade-" + BladeConst.VERSION;
     private static final String ADDITIONAL_FORTUNE = "Additional fortune added at request time.";
 
     private static final int DB_ROWS = 10000;
@@ -56,7 +54,6 @@ public class Application {
     private static void db(RouteContext ctx) {
         World world = select().from(World.class).byId(generateId());
         ctx.contentType(JSON_CONTENT_TYPE)
-                .header(SERVER_HEADER, SERVER_VALUE)
                 .json(world);
     }
 
@@ -69,7 +66,6 @@ public class Application {
                 .map(id -> select().from(World.class).byId(id))
                 .collect(toList());
         ctx.contentType(JSON_CONTENT_TYPE)
-                .header(SERVER_HEADER, SERVER_VALUE)
                 .json(worlds);
     }
 
@@ -83,7 +79,6 @@ public class Application {
                 .peek(Application::updateWorld).collect(toList());
 
         ctx.contentType(JSON_CONTENT_TYPE)
-                .header(SERVER_HEADER, SERVER_VALUE)
                 .json(worlds);
     }
 
@@ -105,7 +100,6 @@ public class Application {
         fortunes.sort(comparing(Fortune::getMessage));
 
         ctx.attribute("fortunes", fortunes);
-        ctx.header(SERVER_HEADER, SERVER_VALUE);
         ctx.render("fortunes.html");
     }
 
@@ -113,12 +107,10 @@ public class Application {
         Blade.create()
                 .get("/json", ctx ->
                         ctx.contentType(JSON_CONTENT_TYPE)
-                        .header(SERVER_HEADER, SERVER_VALUE)
                         .json(new Message())
                 )
                 .get("/plaintext", ctx ->
                         ctx.contentType("text/plain")
-                        .header(SERVER_HEADER, SERVER_VALUE)
                         .body(PLAINTEXT)
                 )
                 .get("/db", Application::db)
