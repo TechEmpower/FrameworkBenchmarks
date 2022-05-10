@@ -2,6 +2,7 @@ package hello;
 
 import com.hellokaton.blade.Blade;
 import com.hellokaton.blade.mvc.RouteContext;
+import com.hellokaton.blade.mvc.http.StringBody;
 import hello.model.Fortune;
 import hello.model.Message;
 import hello.model.World;
