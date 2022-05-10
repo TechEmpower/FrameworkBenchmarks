@@ -61,7 +61,7 @@ public class Application {
     }
 
     private static void queries(RouteContext ctx) {
-        int queries = getQueries(ctx.queryInt("queries", 1));
+        int queries = getQueries(ctx.query("queries", "1"));
 
         List<Integer> idList = generateIdList(queries);
 
@@ -72,7 +72,7 @@ public class Application {
     }
 
     private static void updates(RouteContext ctx) {
-        int queries = getQueries(ctx.queryInt("queries", 1));
+        int queries = getQueries(ctx.query("queries", "1"));
 
         List<Integer> idList = generateIdList(queries);
 
