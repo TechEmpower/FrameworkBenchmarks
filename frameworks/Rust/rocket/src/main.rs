@@ -12,6 +12,7 @@ mod database;
 use dotenv::dotenv;
 use std::net::{IpAddr, Ipv4Addr};
 use std::env;
+use std::thread::available_parallelism;
 use rocket::{Rocket, Build};
 use rocket::serde::json::Json;
 use rocket::response::content::RawHtml;
@@ -156,7 +157,7 @@ pub fn launch() -> Rocket<Build> {
         port: 8000,
         keep_alive: 0,
         log_level: LogLevel::Off,
-        workers: num_cpus::get() * 16,
+        workers: available_parallelism().expect("could not get parallelism").get() * 16,
         ..Default::default()
     };
 

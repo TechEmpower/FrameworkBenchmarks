@@ -1,26 +1,32 @@
 [package]
 name = "rocket_techempower"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Marcelo Barbosa <mbarbosa@gmail.com>", "Brendan Hansknecht <brendan.hansknecht@gmail.com>", "Dragos Varovici <dvarovici.work@gmail.com>"]
-edition = "2018"
+edition = "2021"
+
+[[bin]]
+name = "rocket"
+path = "src/main.rs"
 
 [dependencies]
-num_cpus = { version = "^1.13" }
-rand = { version = "^0.8" }
-yarte = { version = "^0.15" }
-lazy_static = { version = "^1.4" }
-async-stream = { version = "^0.3" }
-async-trait = { version = "0.1" }
-futures = { version = "^0.3" }
-futures-util = { version = "^0.3" }
-rocket = { git = "https://github.com/SergioBenitez/Rocket", features = [
+num_cpus = "1.13.1"
+rand = "0.8.5"
+yarte = "0.15.6"
+lazy_static = "1.4.0"
+async-stream = "0.3.3"
+async-trait = "0.1.53"
+futures = "0.3.21"
+futures-util = "0.3.21"
+rocket = { version = "0.5.0-rc.2", features = [
     "json",
 ] }
-sqlx = { version = "^0.5", features = [ "postgres", "macros", "migrate", "sqlite" ] }
-rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket", features = [ "sqlx_postgres" ] }
-figment = { version = "^0.10" }
-dotenv = { version = "^0.15" }
+rocket_db_pools = { version = "0.1.0-rc.2", features = [
+    "sqlx_postgres",
+] }
+sqlx = { version = "0.5.13", features = [ "postgres", "macros" ] }
+figment = "0.10.6"
+dotenv = "0.15.0"
 
-serde = { version = "^1" }
-serde_json = { version = "^1" }
-serde_derive = { version = "^1" }
+serde = "1.0.137"
+serde_json = "1.0.81"
+serde_derive = "1.0.137"
