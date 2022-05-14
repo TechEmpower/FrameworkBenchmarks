@@ -1,4 +1,4 @@
-FROM debian/debian:sid
+FROM debian:sid
 
 ADD ./ /archttp
 WORKDIR /archttp
