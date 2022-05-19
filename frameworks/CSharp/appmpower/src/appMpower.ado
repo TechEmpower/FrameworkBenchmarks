@@ -18,11 +18,14 @@
 
    <ItemGroup>
       <PackageReference Include="Npgsql" Version="6.0.2" />
+      <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+      <PackageReference Include="System.Data.Odbc" Version="6.0.0" />
       <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-*" />
    </ItemGroup>
 
    <PropertyGroup>
       <DefineConstants>$(DefineConstants);ADO</DefineConstants>
+      <DefineConstants>$(DefineConstants);POSTGRESQL</DefineConstants>
    </PropertyGroup>
 
 </Project>

@@ -7,6 +7,7 @@ use std::cmp;
 use std::collections::HashMap;
 use std::fmt::Write;
 use std::io;
+use std::thread::available_parallelism;
 
 use anyhow::Error;
 use async_trait::async_trait;
@@ -194,7 +195,7 @@ impl Handler for WorldHandler {
     async fn handle(&self, _req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
         let world = self.conn.get_world().await.unwrap();
-        res.render_json(&world);
+        res.render(Json(world));
     }
 }
 struct WorldsHandler {
@@ -212,11 +213,11 @@ impl WorldsHandler {
 #[async_trait]
 impl Handler for WorldsHandler {
     async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
-        let count = req.get_query::<u16>("q").unwrap_or(1);
+        let count = req.query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
         let worlds = self.conn.get_worlds(count).await.unwrap();
-        res.render_json(&worlds);
+        res.render(Json(worlds));
     }
 }
 struct UpdatesHandler {
@@ -234,11 +235,11 @@ impl UpdatesHandler {
 #[async_trait]
 impl Handler for UpdatesHandler {
     async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
-        let count = req.get_query::<u16>("q").unwrap_or(1);
+        let count = req.query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
         let worlds = self.conn.update(count).await.unwrap();
-        res.render_json(&worlds);
+        res.render(Json(worlds));
     }
 }
 struct FortunesHandler {
@@ -258,15 +259,14 @@ impl Handler for FortunesHandler {
     async fn handle(&self, _req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         let mut body = String::new();
         write!(&mut body, "{}", self.conn.tell_fortune().await.unwrap()).unwrap();
-
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-        res.render_html_text(&body);
+        res.render(Text::Html(body));
     }
 }
 
 #[fn_handler]
 async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let count = req.get_query::<usize>("q").unwrap_or(1);
+    let count = req.query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
     let mut worlds = Vec::with_capacity(count);
     let mut rng = SmallRng::from_entropy();
@@ -278,7 +278,7 @@ async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Err
         }
     }
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_json(&worlds);
+    res.render(Json(worlds));
     Ok(())
 }
 
@@ -297,7 +297,7 @@ fn main() {
     rt.block_on(async {
         populate_cache().await.expect("error cache worlds");
     });
-    for _ in 1..num_cpus::get() {
+    for _ in 1..available_parallelism().map(|n| n.get()).unwrap_or(16) {
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
                 .enable_all()
@@ -306,11 +306,11 @@ fn main() {
             rt.block_on(serve());
         });
     }
+    println!("Started http server: 127.0.0.1:8080");
     rt.block_on(serve());
 }
 
 async fn serve() {
-    println!("Started http server: 127.0.0.1:8080");
     let router = Router::new()
         .push(Router::with_path("db").get(WorldHandler::new().await))
         .push(Router::with_path("fortunes").get(FortunesHandler::new().await))

@@ -1,16 +1,12 @@
-// #[global_allocator]
-// static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
-// #[global_allocator]
-// static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
-
-#[macro_use]
-extern crate serde_derive;
-extern crate serde_json;
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::sync::Arc;
+use std::thread::available_parallelism;
 
 use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
+use serde::Serialize;
 
 mod server;
 
@@ -23,15 +19,17 @@ pub struct Message {
 #[fn_handler]
 async fn json(res: &mut Response) {
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_json(&Message {
+    res.render(Json(Message {
         message: "Hello, World!",
-    });
+    }));
 }
 
 #[fn_handler]
 async fn plaintext(res: &mut Response) {
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_binary(HeaderValue::from_static("text/plain"), HELLO_WORLD);
+    res.headers_mut()
+        .insert(header::CONTENT_TYPE, HeaderValue::from_static("text/plain"));
+    res.write_body(HELLO_WORLD).ok();
 }
 
 fn main() {
@@ -41,7 +39,7 @@ fn main() {
             .push(Router::with_path("json").get(json)),
     );
 
-    for _ in 1..num_cpus::get() {
+    for _ in 1..available_parallelism().map(|n| n.get()).unwrap_or(16) {
         let router = router.clone();
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
@@ -51,6 +49,7 @@ fn main() {
             rt.block_on(serve(router));
         });
     }
+    println!("Started http server: 127.0.0.1:8080");
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
@@ -59,7 +58,6 @@ fn main() {
 }
 
 async fn serve(router: Arc<Router>) {
-    println!("Started http server: 127.0.0.1:8080");
     server::builder()
         .http1_pipeline_flush(true)
         .serve(Service::new(router))
