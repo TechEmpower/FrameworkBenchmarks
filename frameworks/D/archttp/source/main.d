@@ -5,21 +5,15 @@ void main()
 {
     auto app = new Archttp;
 
-    app.Bind(1111);
-
-    app.Get("/textplain", (context) {
-        auto response = context.response();
-        response.body("Hello, World!");
+    app.get("/textplain", (req, res) {
+        res.send("Hello, World!");
     });
 
-    app.Get("/json", (context) {
+    app.get("/json", (req, res) {
         import std.json;
 
-        auto response = context.response();
-        auto j = JSONValue( ["message" : "Hello, World!"] );
-
-        response.json(j);
+        res.send( JSONValue( ["message" : "Hello, World!"] ) );
     });
 
-    app.Run();
+    app.listen(1111);
 }
