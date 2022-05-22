@@ -11,6 +11,8 @@ using System.Data.Common;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using Microsoft.EntityFrameworkCore.Storage;
+using LinqToDB.AspNet;
+using LinqToDB.Configuration;
 
 namespace Benchmarks;
 
@@ -63,6 +65,11 @@ public class Startup
                     .EnableThreadSafetyChecks(false));
             }
 
+            if (Scenarios.Any("LinqToDB"))
+            {
+                services.AddLinqToDBContext<ApplicationDataConnection>((_, options) => options.UsePostgreSQL(appSettings.ConnectionString));
+            }
+
             if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
             {
                 services.AddSingleton<DbProviderFactory>(NpgsqlFactory.Instance);
@@ -74,11 +81,21 @@ public class Startup
             {
                 services.AddSingleton<DbProviderFactory>(MySqlConnectorFactory.Instance);
             }
+
+            if (Scenarios.Any("LinqToDB"))
+            {
+                services.AddLinqToDBContext<ApplicationDataConnection>((_, options) => options.UseMySqlConnector(appSettings.ConnectionString));
+            }
         }
 
         if (Scenarios.Any("Ef"))
         {
             services.AddScoped<EfDb>();
+        }
+
+        if (Scenarios.Any("LinqToDB"))
+        {
+            services.AddScoped<LinqToDBDb>();
         }
 
         if (Scenarios.Any("Raw"))
@@ -142,6 +159,11 @@ public class Startup
             app.UseFortunesEf();
         }
 
+        if (Scenarios.DbFortunesLinqToDB)
+        {
+            app.UseFortunesLinqToDB();
+        }
+
         // Single query endpoints
         if (Scenarios.DbSingleQueryRaw)
         {
@@ -156,6 +178,11 @@ public class Startup
         if (Scenarios.DbSingleQueryEf)
         {
             app.UseSingleQueryEf();
+        }
+
+        if (Scenarios.DbSingleQueryLinqToDB)
+        {
+            app.UseSingleQueryLinqToDB();
         }
 
         // Multiple query endpoints
@@ -174,6 +201,11 @@ public class Startup
             app.UseMultipleQueriesEf();
         }
 
+        if (Scenarios.DbMultiQueryLinqToDB)
+        {
+            app.UseMultipleQueriesLinqToDB();
+        }
+
         // Multiple update endpoints
         if (Scenarios.DbMultiUpdateRaw)
         {
@@ -188,6 +220,11 @@ public class Startup
         if (Scenarios.DbMultiUpdateEf)
         {
             app.UseMultipleUpdatesEf();
+        }
+
+        if (Scenarios.DbMultiUpdateLinqToDB)
+        {
+            app.UseMultipleUpdatesLinqToDB();
         }
 
         if (Scenarios.Any("Mvc"))

@@ -29,6 +29,9 @@ public class Scenarios
     [ScenarioPath("/db/ef")]
     public bool DbSingleQueryEf { get; set; }
 
+    [ScenarioPath("/db/linq2db")]
+    public bool DbSingleQueryLinqToDB { get; set; }
+
     [ScenarioPath("/db/dapper")]
     public bool DbSingleQueryDapper { get; set; }
 
@@ -37,6 +40,9 @@ public class Scenarios
 
     [ScenarioPath("/queries/ef")]
     public bool DbMultiQueryEf { get; set; }
+
+    [ScenarioPath("/queries/linq2db")]
+    public bool DbMultiQueryLinqToDB { get; set; }
 
     [ScenarioPath("/queries/dapper")]
     public bool DbMultiQueryDapper { get; set; }
@@ -47,6 +53,9 @@ public class Scenarios
     [ScenarioPath("/updates/ef")]
     public bool DbMultiUpdateEf { get; set; }
 
+    [ScenarioPath("/updates/linq2db")]
+    public bool DbMultiUpdateLinqToDB { get; set; }
+
     [ScenarioPath("/updates/dapper")]
     public bool DbMultiUpdateDapper { get; set; }
 
@@ -55,6 +64,9 @@ public class Scenarios
 
     [ScenarioPath("/fortunes/ef")]
     public bool DbFortunesEf { get; set; }
+
+    [ScenarioPath("/fortunes/linq2db")]
+    public bool DbFortunesLinqToDB { get; set; }
 
     [ScenarioPath("/fortunes/dapper")]
     public bool DbFortunesDapper { get; set; }
@@ -77,6 +89,9 @@ public class Scenarios
     [ScenarioPath("/mvc/db/ef")]
     public bool MvcDbSingleQueryEf { get; set; }
 
+    [ScenarioPath("/mvc/db/linq2db")]
+    public bool MvcDbSingleQueryLinqToDB { get; set; }
+
     [ScenarioPath("/mvc/queries/raw")]
     public bool MvcDbMultiQueryRaw { get; set; }
 
@@ -85,6 +100,9 @@ public class Scenarios
 
     [ScenarioPath("/mvc/queries/ef")]
     public bool MvcDbMultiQueryEf { get; set; }
+
+    [ScenarioPath("/mvc/queries/linq2db")]
+    public bool MvcDbMultiQueryLinqToDB { get; set; }
 
     [ScenarioPath("/mvc/updates/raw")]
     public bool MvcDbMultiUpdateRaw { get; set; }
@@ -95,11 +113,17 @@ public class Scenarios
     [ScenarioPath("/mvc/updates/ef")]
     public bool MvcDbMultiUpdateEf { get; set; }
 
+    [ScenarioPath("/mvc/updates/linq2db")]
+    public bool MvcDbMultiUpdateLinqToDB { get; set; }
+
     [ScenarioPath("/mvc/fortunes/raw")]
     public bool MvcDbFortunesRaw { get; set; }
 
     [ScenarioPath("/mvc/fortunes/ef")]
     public bool MvcDbFortunesEf { get; set; }
+
+    [ScenarioPath("/mvc/fortunes/linq2db")]
+    public bool MvcDbFortunesLinqToDB { get; set; }
 
     [ScenarioPath("/mvc/fortunes/dapper")]
     public bool MvcDbFortunesDapper { get; set; }

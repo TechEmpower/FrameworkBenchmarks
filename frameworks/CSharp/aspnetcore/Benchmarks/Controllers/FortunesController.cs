@@ -29,4 +29,11 @@ public class FortunesController : Controller
         var db = HttpContext.RequestServices.GetRequiredService<EfDb>();
         return View("Fortunes", await db.LoadFortunesRows());
     }
+
+    [HttpGet("linq2db")]
+    public async Task<IActionResult> LinqToDB()
+    {
+        var db = HttpContext.RequestServices.GetRequiredService<LinqToDBDb>();
+        return View("Fortunes", await db.LoadFortunesRows());
+    }
 }

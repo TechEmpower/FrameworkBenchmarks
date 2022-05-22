@@ -30,6 +30,13 @@ public class MultipleQueriesController : Controller
         return ExecuteQuery<EfDb>(queries);
     }
 
+    [HttpGet("linq2db")]
+    [Produces("application/json")]
+    public Task<World[]> LinqToDB(int queries = 1)
+    {
+        return ExecuteQuery<LinqToDBDb>(queries);
+    }
+
     private Task<World[]> ExecuteQuery<T>(int queries) where T : IDb
     {
         queries = queries < 1 ? 1 : queries > 500 ? 500 : queries;
