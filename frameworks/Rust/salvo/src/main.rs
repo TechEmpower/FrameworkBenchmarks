@@ -19,7 +19,7 @@ pub struct Message {
 }
 
 #[fn_handler]
-async fn json(res: &mut Response) {
+fn json(res: &mut Response) {
     let headers = res.headers_mut();
     headers.insert(header::SERVER, HeaderValue::from_static("S"));
     headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
@@ -31,7 +31,7 @@ async fn json(res: &mut Response) {
 }
 
 #[fn_handler]
-async fn plaintext(res: &mut Response) {
+fn plaintext(res: &mut Response) {
     let headers = res.headers_mut();
     headers.insert(header::SERVER, HeaderValue::from_static("S"));
     headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("text/plain"));
