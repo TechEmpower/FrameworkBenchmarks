@@ -1,0 +1,25 @@
+{
+  "framework": "astra",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "astra",
+        "language": "Rust",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "astra",
+        "notes": "",
+        "versus": ""
+      }
+    }
+  ]
+}
