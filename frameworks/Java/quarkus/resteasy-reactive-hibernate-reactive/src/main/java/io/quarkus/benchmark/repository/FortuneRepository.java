@@ -14,12 +14,8 @@ import io.smallrye.mutiny.Uni;
 public class FortuneRepository extends BaseRepository {
 
     public Uni<List<Fortune>> findAll() {
-        return inSession(s -> {
-            CriteriaBuilder criteriaBuilder = sf.getCriteriaBuilder();
-            CriteriaQuery<Fortune> fortuneQuery = criteriaBuilder.createQuery(Fortune.class);
-            Root<Fortune> from = fortuneQuery.from(Fortune.class);
-            fortuneQuery.select(from);
-            return s.createQuery(fortuneQuery).getResultList();
-        });
+        return inStatelessSession(
+                session -> session.createQuery("SELECT F FROM Fortune F", Fortune.class).getResultList()
+        );
     }
 }
