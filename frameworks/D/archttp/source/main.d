@@ -5,7 +5,7 @@ void main()
 {
     auto app = new Archttp;
 
-    app.get("/textplain", (req, res) {
+    app.get("/plaintext", (req, res) {
         res.send("Hello, World!");
     });
 
