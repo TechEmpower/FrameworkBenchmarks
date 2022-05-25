@@ -8,6 +8,37 @@ WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 db_con <- dbConnect(RPostgres::Postgres(), dbname = "hello_world", host="tfb-database", port=5432, user="benchmarkdbuser", password="benchmarkdbpass")
 
 
+get_num_queries <- function(queries){
+  query_count <- 1
+  tryCatch({
+    query_count <- as.numeric(queries)
+  }, error = function(e) query_count <- 1)
+  if(query_count < 1) return(1)
+  if(query_count > 500) return(500)
+  return(query_count)
+}
+
+
+#* @get /query
+#* @param queries
+#* @serializer json
+function(req, res, queries) {
+  res$headers$Server <- "example"
+  num_queries = get_num_queries(queries)
+  row_ids = sample.int(10000, num_queries)
+
+  output_list <- list()
+  for(row_id in row_ids){
+    # number = dbFetch(dbSendQuery(db_con, paste0(READ_ROW_SQL_BASE, row_id)))
+    number = dbGetQuery(db_con, paste0(READ_ROW_SQL_BASE, row_id))
+
+    output_list <- c(output_list, list(list('id' = row_id, 'randomNumber'= number$randomnumber)))
+  }
+  # print(jsonlite::toJSON(plyr::ldply(output_list, as.data.frame)))
+  plyr::ldply(output_list, as.data.frame)
+}
+
+
 #* @get /json
 #* @serializer unboxedJSON
 function(req, res) {
@@ -18,6 +49,7 @@ function(req, res) {
 #* @get /plaintext
 #* @serializer text
 function(req, res) {
+  db_con <- dbConnect(RPostgres::Postgres(), dbname = "hello_world", host="tfb-database", port=5432, user="benchmarkdbuser", password="benchmarkdbpass")
   res$headers$Server <- "example"
   'Hello, World!'
 }
@@ -29,7 +61,8 @@ function(req, res) {
   res$headers$Server <- "example"
   row_id = sample.int(10000, 1)
 
-  number = dbFetch(dbSendQuery(db_con, paste0(READ_ROW_SQL_BASE, row_id)))
+  # number = dbFetch(dbSendQuery(db_con, paste0(READ_ROW_SQL_BASE, row_id)))
+  number = dbGetQuery(db_con, paste0(READ_ROW_SQL_BASE, row_id))
 
   list('id' = row_id, 'randomNumber'= number$randomnumber)
 }

@@ -4,7 +4,7 @@ RUN apt-get update
 
 RUN apt install postgresql postgresql-contrib -y
 
-RUN R -e "install.packages(c('DBI', 'RPostgres'))"
+RUN R -e "install.packages(c('DBI', 'RPostgres', 'plyr', 'dplyr'))"
 
 ADD ./ /plumber
 
