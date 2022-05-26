@@ -1,24 +1,32 @@
-# Compojure Benchmarking Test
+# Aleph Benchmarking Test
 
-This is the [Aleph](https://github.com/ztellman/aleph) portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
-
-### JSON Encoding Test
-
-* [JSON test source](hello/src/hello/handler.clj)
+This is the [Aleph](https://github.com/clj-commons/aleph) portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 ## Infrastructure Software Versions
-The dependencies are documented in [project.clj](hello/project.clj),
+The dependencies are documented in [project.clj](project.clj),
 but the main ones are:
 
-* [Aleph 0.4.5-alpha6](https://github.com/ztellman/aleph)
-* [Clojure 1.9.0](http://clojure.org/)
-* [metosin/jsonista 0.2.0](https://github.com/metosin/jsonista), which in turn uses [Jackson](http://jackson.codehaus.org/)
+* [Aleph 0.4.7](https://github.com/clj-commons/aleph)
+* [Clojure 1.11.0](http://clojure.org/)
+* [metosin/jsonista 0.3.5](https://github.com/metosin/jsonista), which in turn uses [Jackson](http://jackson.codehaus.org/)
+* [hiccup 1.0.5](https://github.com/weavejester/hiccup)
+* [porsas 0.0.1-alpha14](https://github.com/arnaudgeiser/porsas)
 
 ## Test URLs
 ### JSON Encoding Test
+`http://localhost:8080/json`
 
-http://localhost/json
+### Single Query Test
+`http://localhost:8080/db`
 
-### Plaintext Test
+### Multiple Query Test
+`http://localhost:8080/queries?queries=number`
 
-http://localhost/plaintext
+### Fortune Test
+`http://localhost:8080/fortunes`
+
+### Database Updates
+`http://localhost:8080/updates?queries=number`
+
+### Plaintext
+`http://localhost:8080/plaintext`
