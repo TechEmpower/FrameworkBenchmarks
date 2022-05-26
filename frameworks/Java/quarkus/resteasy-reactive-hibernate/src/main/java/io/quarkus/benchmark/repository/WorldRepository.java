@@ -13,7 +13,6 @@ import io.quarkus.benchmark.model.World;
 import io.quarkus.benchmark.utils.LocalRandom;
 import io.quarkus.benchmark.utils.Randomizer;
 
-
 @Singleton
 public class WorldRepository {
 
@@ -38,13 +37,12 @@ public class WorldRepository {
         }
     }
 
-    public World findSingleAndStateless(Integer id) {
+    public World loadSingleWorldById(Integer id) {
         try (StatelessSession ss = sf.openStatelessSession()) {
-            return singleStatelessWorldLoad(ss,id);
+            return (World) ss.get(World.class, id);
         }
     }
 
-    @Transactional
     public void updateAll(World[] worlds) {
         try (Session s = sf.openSession()) {
             s.setJdbcBatchSize(worlds.length);
@@ -56,21 +54,39 @@ public class WorldRepository {
         }
     }
 
-    public World[] findReadonly(int count) {
-        try (StatelessSession s = sf.openStatelessSession()) {
+    public World[] loadNWorlds(final int count) {
+        final World[] list = new World[count];
+        final LocalRandom random = Randomizer.current();
+        try (StatelessSession ss = sf.openStatelessSession()) {
             //The rules require individual load: we can't use the Hibernate feature which allows load by multiple IDs as one single operation
-            World[] list = new World[count];
-            final LocalRandom random = Randomizer.current();
             for (int i=0;i<count;i++) {
-                Integer idToLoad = random.getNextRandom();
-                list[i] = singleStatelessWorldLoad(s,idToLoad);
+                list[i] = (World) ss.get(World.class, random.getNextRandom());
             }
             return list;
         }
     }
 
-    private static World singleStatelessWorldLoad(final StatelessSession ss, final Integer id) {
-        return (World) ss.get(World.class, id);
+    public World[] updateNWorlds(final int count) {
+        final World[] list = new World[count];
+        final LocalRandom random = Randomizer.current();
+        try (Session s = sf.openSession()) {
+            s.setJdbcBatchSize(count);
+            s.setHibernateFlushMode(FlushMode.MANUAL);
+            //The rules require individual load: we can't use the Hibernate feature which allows load by multiple IDs as one single operation
+            for (int i=0;i<count;i++) {
+                //Load a random instance:
+                final World world = s.get(World.class, random.getNextRandom());
+                //Read the one field, as required by the following rule:
+                // # vi. At least the randomNumber field must be read from the database result set.
+                final int previousRead = world.getRandomNumber();
+                //Update it, but make sure to exclude the current number as Hibernate optimisations would otherwise
+                //skip the write operation:
+                world.setRandomNumber(random.getNextRandomExcluding(previousRead));
+                list[i] = world;
+            }
+            s.flush();
+        }
+        return list;
     }
 
 }

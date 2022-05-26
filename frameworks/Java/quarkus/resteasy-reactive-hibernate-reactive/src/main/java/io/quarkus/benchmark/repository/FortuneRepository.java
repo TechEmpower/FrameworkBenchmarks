@@ -18,4 +18,5 @@ public class FortuneRepository extends BaseRepository {
                 session -> session.createQuery("SELECT F FROM Fortune F", Fortune.class).getResultList()
         );
     }
+
 }
