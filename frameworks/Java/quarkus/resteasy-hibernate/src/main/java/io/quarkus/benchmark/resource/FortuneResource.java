@@ -1,6 +1,5 @@
 package io.quarkus.benchmark.resource;
 
-import com.fizzed.rocker.BindableRockerModel;
 import com.fizzed.rocker.Rocker;
 import com.fizzed.rocker.RockerOutput;
 import io.quarkus.benchmark.model.Fortune;

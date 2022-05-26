@@ -12,7 +12,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -34,7 +33,7 @@ public class FortuneResource {
     @GET
     @Path("/fortunes")
     public String fortunes() {
-        List<Fortune> fortunes = new ArrayList<>(repository.findAllStateless());
+        List<Fortune> fortunes = repository.findAllStateless();
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         fortunes.sort(fortuneComparator);
 

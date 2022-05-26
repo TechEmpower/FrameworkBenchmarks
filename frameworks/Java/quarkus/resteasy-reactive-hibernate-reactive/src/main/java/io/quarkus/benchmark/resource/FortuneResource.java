@@ -1,12 +1,9 @@
 package io.quarkus.benchmark.resource;
 
-import com.fizzed.rocker.Rocker;
-import com.fizzed.rocker.RockerOutput;
 import io.quarkus.benchmark.model.Fortune;
 import io.quarkus.benchmark.repository.FortuneRepository;
 import io.smallrye.context.api.CurrentThreadContext;
 import io.smallrye.mutiny.Uni;
-import io.vertx.core.http.HttpHeaders;
 import io.vertx.ext.web.templ.rocker.RockerTemplateEngine;
 import org.eclipse.microprofile.context.ThreadContext;
 
