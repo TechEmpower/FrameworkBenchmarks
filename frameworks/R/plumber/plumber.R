@@ -10,9 +10,8 @@ db_con <- dbConnect(RPostgres::Postgres(), dbname = "hello_world", host="tfb-dat
 
 get_num_queries <- function(queries){
   query_count <- 1
-  tryCatch({
-    query_count <- as.numeric(queries)
-  }, error = function(e) query_count <- 1)
+  query_count <- as.numeric(queries)
+  if(is.na(query_count)) query_count <- 1
   if(query_count < 1) return(1)
   if(query_count > 500) return(500)
   return(query_count)
@@ -22,8 +21,9 @@ get_num_queries <- function(queries){
 #* @get /query
 #* @param queries
 #* @serializer json
-function(req, res, queries) {
+function(req, res, queries = NULL) {
   res$headers$Server <- "example"
+  if(is.null(queries)) queries <- 1
   num_queries = get_num_queries(queries)
   row_ids = sample.int(10000, num_queries)
 
