@@ -16,7 +16,7 @@ The server is currently in Alpha state, but aims to be a drop-in replacement for
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Node.js v14.17.5](http://nodejs.org/)
+* [Node.js v16.13.0](http://nodejs.org/)
 
 * [Node MySQL 2.16.0](https://github.com/felixge/node-mysql/)
 * [Sequelize 5.15.1](https://github.com/sequelize/sequelize)

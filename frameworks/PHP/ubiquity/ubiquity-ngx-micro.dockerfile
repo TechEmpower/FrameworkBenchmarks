@@ -9,7 +9,9 @@ RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq wget git unzip libxml2-dev cmake make systemtap-sdt-dev \
                     zlib1g-dev libpcre3-dev libargon2-0-dev libsodium-dev \
-                    php8.0-cli php8.0-dev libphp8.0-embed nginx > /dev/null
+                    php8.0-cli php8.0-dev php8.0-mbstring libphp8.0-embed nginx > /dev/null
+
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 ADD ./ ./
 
@@ -28,26 +30,25 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --add-module=/ngx_php7 > /dev/null && \
     make > /dev/null && make install > /dev/null
 
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-
-RUN composer config -g repo.packagist composer https://packagist.phpcomposer.com
+ADD ./ /ubiquity
+WORKDIR /ubiquity
 
 RUN composer require phpmv/ubiquity-ngx:dev-master --quiet
 
 RUN chmod 777 -R app/cache/*
 
-COPY /deploy/conf/ngx/services-micro.php /app/config/ngxServices.php
+COPY deploy/conf/ngx/services-micro.php app/config/ngxServices.php
 
 RUN composer require phpmv/ubiquity-devtools:dev-master --quiet
 
-RUN ./vendor/bin/Ubiquity bootstrap prod
+RUN /ubiquity/vendor/bin/Ubiquity bootstrap prod
 
-RUN echo "opcache.preload=/app/config/preloader.script.php" >> /deploy/conf/php.ini
-RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=tracing\n" >> /deploy/conf/php.ini
+RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> deploy/conf/php.ini
+RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=tracing\n" >> deploy/conf/php.ini
 
-RUN export WORKERS=$(( 4 * $(nproc) )) && \
-    sed -i "s|worker_processes  auto|worker_processes $WORKERS|g" /deploy/conf/ngx/nginx.conf
+RUN export WORKERS=$(( $(nproc) )) && \
+    sed -i "s|worker_processes  auto|worker_processes $WORKERS|g" /ubiquity/deploy/conf/ngx/nginx.conf
 
 EXPOSE 8080
 
-CMD /nginx/sbin/nginx -c /deploy/conf/ngx/nginx.conf
+CMD /nginx/sbin/nginx -c /ubiquity/deploy/conf/ngx/nginx.conf

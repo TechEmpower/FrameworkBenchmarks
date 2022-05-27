@@ -9,101 +9,96 @@ mod schema;
 mod ser;
 mod util;
 
-use std::{error::Error, io};
+use std::convert::Infallible;
 
-use bytes::Bytes;
-use xitca_http::http::{
-    header::{HeaderValue, CONTENT_TYPE, SERVER},
-    Method,
+use serde::Serialize;
+use xitca_web::{
+    dev::Service,
+    handler::{handler_service, html::Html, json::Json, state::StateRef, uri::UriRef, Responder},
+    http::header::SERVER,
+    request::WebRequest,
+    response::WebResponse,
+    route::get,
+    App, HttpServer,
 };
-use xitca_web::{dev::fn_service, request::WebRequest, App, HttpServer};
 
-use self::db_diesel::{connect, DieselPool};
-use self::util::{
-    internal, json, json_response, not_found, plain_text, AppState, HandleResult, QueryParse,
-};
+use self::db_diesel::{create, DieselPool};
+use self::ser::Message;
+use self::util::{QueryParse, SERVER_HEADER_VALUE};
 
-type State = AppState<DieselPool>;
+type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
+
+type Request<'a> = WebRequest<'a, DieselPool>;
 
 #[tokio::main(flavor = "current_thread")]
-async fn main() -> io::Result<()> {
+async fn main() -> Result<(), Error> {
     let config = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
     HttpServer::new(move || {
-        let pool = connect(config).unwrap();
-        App::with_async_state(move || {
-            let pool = pool.clone();
-            async move { AppState::new(pool.clone()) }
-        })
-        .service(fn_service(handle))
+        App::with_async_state(move || async { Ok::<_, Infallible>(create(config).await.unwrap()) })
+            .at("/plaintext", get(handler_service(plain_text)))
+            .at("/json", get(handler_service(json)))
+            .at("/db", get(handler_service(db)))
+            .at("/fortunes", get(handler_service(fortunes)))
+            .at("/queries", get(handler_service(queries)))
+            .at("/updates", get(handler_service(updates)))
+            .enclosed_fn(middleware_fn)
+            .finish()
     })
-    .force_flat_buf()
-    .max_request_headers::<8>()
     .bind("0.0.0.0:8080")?
     .run()
     .await
+    .map_err(Into::into)
 }
 
-async fn handle(req: &mut WebRequest<'_, State>) -> HandleResult {
-    let inner = req.request_mut();
+async fn middleware_fn<S, E>(service: &S, mut ctx: Request<'_>) -> Result<WebResponse, Infallible>
+where
+    S: for<'r> Service<Request<'r>, Response = Result<WebResponse, Error>, Error = E>,
+    E: for<'r> Responder<Request<'r>, Output = WebResponse>,
+{
+    let mut res = match service.call(ctx.reborrow()).await {
+        Ok(Ok(res)) => res,
+        Ok(Err(err)) => err.respond_to(ctx).await,
+        Err(err) => err.respond_to(ctx).await,
+    };
 
-    match (inner.method(), inner.uri().path()) {
-        (&Method::GET, "/plaintext") => plain_text(req),
-        (&Method::GET, "/json") => json(req),
-        (&Method::GET, "/db") => db(req).await,
-        (&Method::GET, "/fortunes") => fortunes(req).await,
-        (&Method::GET, "/queries") => queries(req).await,
-        (&Method::GET, "/updates") => updates(req).await,
-        _ => not_found(),
-    }
+    res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
+
+    Ok(res)
 }
 
-async fn db(req: &mut WebRequest<'_, State>) -> HandleResult {
-    match req.state().client().get_world().await {
-        Ok(world) => json_response(req, &world),
-        Err(_) => internal(),
-    }
+async fn plain_text(_: &Request<'_>) -> Result<&'static str, Error> {
+    Ok("Hello, World!")
 }
 
-async fn fortunes(req: &mut WebRequest<'_, State>) -> HandleResult {
-    match _fortunes(req.state().client()).await {
-        Ok(body) => {
-            let mut res = req.as_response(body);
-
-            res.headers_mut()
-                .append(SERVER, HeaderValue::from_static("TFB"));
-            res.headers_mut().append(
-                CONTENT_TYPE,
-                HeaderValue::from_static("text/html; charset=utf-8"),
-            );
-
-            Ok(res)
-        }
-        Err(_) => internal(),
-    }
+async fn json(_: &Request<'_>) -> Result<Json<impl Serialize>, Error> {
+    Ok(Json(Message::new()))
 }
 
-async fn queries(req: &mut WebRequest<'_, State>) -> HandleResult {
-    let num = req.request_mut().uri().query().parse_query();
-
-    match req.state().client().get_worlds(num).await {
-        Ok(worlds) => json_response(req, worlds.as_slice()),
-        Err(_) => internal(),
-    }
+async fn db(StateRef(pool): StateRef<'_, DieselPool>) -> Result<Json<impl Serialize>, Error> {
+    pool.get_world().await.map(Json)
 }
 
-async fn updates(req: &mut WebRequest<'_, State>) -> HandleResult {
-    let num = req.request_mut().uri().query().parse_query();
-
-    match req.state().client().update(num).await {
-        Ok(worlds) => json_response(req, worlds.as_slice()),
-        Err(_) => internal(),
-    }
-}
-
-#[inline]
-async fn _fortunes(pool: &DieselPool) -> Result<Bytes, Box<dyn Error + Send + Sync + 'static>> {
+async fn fortunes(StateRef(pool): StateRef<'_, DieselPool>) -> Result<Html<String>, Error> {
     use sailfish::TemplateOnce;
     let fortunes = pool.tell_fortune().await?.render_once()?;
-    Ok(fortunes.into())
+    Ok(Html(fortunes))
+}
+
+async fn queries(
+    StateRef(pool): StateRef<'_, DieselPool>,
+    UriRef(uri): UriRef<'_>,
+) -> Result<Json<impl Serialize>, Error> {
+    let num = uri.query().parse_query();
+    let worlds = pool.get_worlds(num).await?;
+    Ok(Json(worlds))
+}
+
+async fn updates(
+    StateRef(pool): StateRef<'_, DieselPool>,
+    UriRef(uri): UriRef<'_>,
+) -> Result<Json<impl Serialize>, Error> {
+    let num = uri.query().parse_query();
+    let worlds = pool.update(num).await?;
+    Ok(Json(worlds))
 }

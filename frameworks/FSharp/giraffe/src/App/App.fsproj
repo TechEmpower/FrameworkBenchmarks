@@ -1,14 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.90" />
-    <PackageReference Include="Giraffe" Version="5.0.0" />
-    <PackageReference Include="Npgsql" Version="5.0.7" />
+    <PackageReference Update="FSharp.Core" Version="6.0.3" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Giraffe" Version="6.0.0" />
+    <PackageReference Include="Npgsql" Version="6.0.3" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,7 +7,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "None",
-      "framework": "None",
+      "framework": "gnet",
       "language": "Go",
       "flavor": "None",
       "orm": "Raw",

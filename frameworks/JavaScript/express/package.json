@@ -6,7 +6,7 @@
     "body-parser": "1.19.0",
     "dateformat": "3.0.3",
     "escape-html": "1.0.3",
-    "express": "4.17.1",
+    "express": "4.17.3",
     "mongoose": "5.7.5",
     "mysql2": "2.2.5",
     "pg": "8.5.0",

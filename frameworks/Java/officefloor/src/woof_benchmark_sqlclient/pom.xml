@@ -21,6 +21,13 @@
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-pg-client</artifactId>
 		</dependency>
+
+		<!-- Necessary for PostGresql -->
+		<dependency>
+			<groupId>com.ongres.scram</groupId>
+			<artifactId>client</artifactId>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
