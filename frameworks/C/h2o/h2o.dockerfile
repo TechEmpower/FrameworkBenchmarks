@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 WORKDIR /h2o_app_src
 COPY ./ ./
@@ -43,6 +43,8 @@ RUN mkdir -p "${H2O_BUILD_DIR}/build" && \
     cd ../.. && \
     rm -rf "$H2O_BUILD_DIR"
 
+ARG BENCHMARK_ENV
+ENV BENCHMARK_ENV=$BENCHMARK_ENV
 EXPOSE 8080
 
 CMD ["./h2o.sh"]
