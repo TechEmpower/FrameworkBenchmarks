@@ -46,23 +46,9 @@ function(req, res) {
   res$headers$Server <- "example"
 
   fortunes_result <- dbGetQuery(db_con, 'SELECT * FROM Fortune')
-  # fortunes_result <- c(fortunes_result, list(id = 0, message = 'Additional fortune added at request time.'))
-  # fortunes_result[[1]] <- c(fortunes_result[[1]], 0)
-  # fortunes_result[[2]] <- c(fortunes_result[[2]], 'Additional fortune added at request time.')
-  # print(typeof(fortunes_result))
-  # print(length(fortunes_result))
-  # print(fortunes_result[[1]])
-  # print(fortunes_result[[2]])
-  # print(length(fortunes_result[[2]]))
-  # print("hello")
   fortunes_df <- as.data.frame(fortunes_result)
-  print(nrow(fortunes_df))
   fortunes_df <- rbind(fortunes_df, data.frame(id = 0, message = 'Additional fortune added at request time.'))
-  print(fortunes_df$message[12])
   fortunes_df <- fortunes_df[order(fortunes_df$message), ]
-  print("data frame")
-  print(colnames(fortunes_df))
-  # as.data.frame(fortunes_result)
   output_string <- "<!doctype html>
   <html>
   <head>
