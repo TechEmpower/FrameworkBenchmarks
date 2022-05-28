@@ -52,6 +52,7 @@ function(req, res, queries = NULL) {
   output_list <- list()
   for(row_id in row_ids){
     new_random_number <- sample.int(10000, 1)
+    number = dbGetQuery(db_con, paste0(READ_ROW_SQL_BASE, row_id))
     dbExecute(db_con, paste0('UPDATE "world" SET "randomnumber"=', new_random_number, ' WHERE id=', row_id))
     output_list <- c(output_list, list(list('id' = row_id, 'randomNumber'= new_random_number)))
   }
