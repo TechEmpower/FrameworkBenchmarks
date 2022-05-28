@@ -1,4 +1,5 @@
 library(plumber)
+library(dplyr)
 library(DBI)
 
 
@@ -36,6 +37,48 @@ function(req, res, queries = NULL) {
   }
   # print(jsonlite::toJSON(plyr::ldply(output_list, as.data.frame)))
   plyr::ldply(output_list, as.data.frame)
+}
+
+
+#* @get /fortunes
+#* @serializer html
+function(req, res) {
+  res$headers$Server <- "example"
+
+  fortunes_result <- dbGetQuery(db_con, 'SELECT * FROM Fortune')
+  # fortunes_result <- c(fortunes_result, list(id = 0, message = 'Additional fortune added at request time.'))
+  # fortunes_result[[1]] <- c(fortunes_result[[1]], 0)
+  # fortunes_result[[2]] <- c(fortunes_result[[2]], 'Additional fortune added at request time.')
+  # print(typeof(fortunes_result))
+  # print(length(fortunes_result))
+  # print(fortunes_result[[1]])
+  # print(fortunes_result[[2]])
+  # print(length(fortunes_result[[2]]))
+  # print("hello")
+  fortunes_df <- as.data.frame(fortunes_result)
+  print(nrow(fortunes_df))
+  fortunes_df <- rbind(fortunes_df, data.frame(id = 0, message = 'Additional fortune added at request time.'))
+  print(fortunes_df$message[12])
+  fortunes_df <- fortunes_df[order(fortunes_df$message), ]
+  print("data frame")
+  print(colnames(fortunes_df))
+  # as.data.frame(fortunes_result)
+  output_string <- "<!doctype html>
+  <html>
+  <head>
+  <title>Fortunes</title>
+  </head>
+  <body>
+  <table>
+  <tr><th>id</th><th>message</th></tr>"
+
+  for(i in 1:nrow(fortunes_df)){
+    output_string <- paste0(output_string, paste0("<tr><td>", fortunes_df[i, 'id'],
+     "</td><td>", fortunes_df[i, 'message'] %>% stringr::str_replace_all("<","&lt;") %>% stringr::str_replace_all(">","&gt;"), "</td></tr>"))
+  }
+  paste0(output_string , "</table>
+  </body>
+  </html>")
 }
 
 
