@@ -10,7 +10,6 @@ public class LinqToDBDb : IDb
     public LinqToDBDb(IRandom random, ApplicationDataConnection dataConnection)
     {
         _random = random;
-
         _dataConnection = dataConnection;
     }
 
@@ -18,16 +17,9 @@ public class LinqToDBDb : IDb
         = CompiledQuery.Compile((ApplicationDataConnection db, int id)
             => db.World.FirstAsync(w => w.Id == id, default));
 
-    private Task<World> FirstWorldQuery(int id)
-    {
-        return _firstWorldQuery(_dataConnection, id);
-    }
-
     public Task<World> LoadSingleQueryRow()
     {
-        var id = _random.Next(1, 10001);
-
-        return FirstWorldQuery(id);
+        return _firstWorldQuery(_dataConnection, _random.Next(1, 10001));
     }
 
     public async Task<World[]> LoadMultipleQueriesRows(int count)
@@ -36,9 +28,7 @@ public class LinqToDBDb : IDb
 
         for (var i = 0; i < count; i++)
         {
-            var id = _random.Next(1, 10001);
-
-            result[i] = await FirstWorldQuery(id);
+            result[i] = await _firstWorldQuery(_dataConnection, _random.Next(1, 10001));
         }
 
         return result;
@@ -47,18 +37,10 @@ public class LinqToDBDb : IDb
     public async Task<World[]> LoadMultipleUpdatesRows(int count)
     {
         var results = new World[count];
-        var usedIds = new HashSet<int>(count);
 
         for (var i = 0; i < count; i++)
         {
-            int id;
-            do
-            {
-                id = _random.Next(1, 10001);
-            } while (!usedIds.Add(id));
-
-            results[i] = await FirstWorldQuery(id);
-
+            results[i] = await _dataConnection.World.FirstAsync(w => w.Id == _random.Next(1, 10001));
             results[i].RandomNumber = _random.Next(1, 10001);
         }
 
@@ -71,17 +53,9 @@ public class LinqToDBDb : IDb
         return results;
     }
 
-    private static readonly Func<ApplicationDataConnection, IAsyncEnumerable<Fortune>> _fortunesQuery
-        = CompiledQuery.Compile((ApplicationDataConnection db) => db.Fortune.AsAsyncEnumerable());
-
     public async Task<List<Fortune>> LoadFortunesRows()
     {
-        var result = new List<Fortune>();
-
-        await foreach (var element in _fortunesQuery(_dataConnection))
-        {
-            result.Add(element);
-        }
+        var result = await _dataConnection.Fortune.ToListAsync();
 
         result.Add(new Fortune { Message = "Additional fortune added at request time." });
         result.Sort();

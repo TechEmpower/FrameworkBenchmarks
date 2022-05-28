@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="linq2db.AspNet" Version="4.0.0" />
+    <PackageReference Include="linq2db.AspNet" Version="4.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
 
     <PackageReference Include="Dapper" Version="2.0.123" />
