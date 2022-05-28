@@ -40,6 +40,26 @@ function(req, res, queries = NULL) {
 }
 
 
+#* @get /updates
+#* @param queries
+#* @serializer json
+function(req, res, queries = NULL) {
+  res$headers$Server <- "example"
+  if(is.null(queries)) queries <- 1
+  num_queries = get_num_queries(queries)
+  row_ids = sample.int(10000, num_queries)
+
+  output_list <- list()
+  for(row_id in row_ids){
+    new_random_number <- sample.int(10000, 1)
+    dbExecute(db_con, paste0('UPDATE "world" SET "randomnumber"=', new_random_number, ' WHERE id=', row_id))
+    output_list <- c(output_list, list(list('id' = row_id, 'randomNumber'= new_random_number)))
+  }
+
+  plyr::ldply(output_list, as.data.frame)
+}
+
+
 #* @get /fortunes
 #* @serializer html
 function(req, res) {
