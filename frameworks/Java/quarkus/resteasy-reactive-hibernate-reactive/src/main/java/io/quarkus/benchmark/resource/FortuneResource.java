@@ -1,47 +1,43 @@
 package io.quarkus.benchmark.resource;
 
-import java.io.StringWriter;
-import java.util.Collections;
-import java.util.Comparator;
+import com.fizzed.rocker.Rocker;
+import com.fizzed.rocker.RockerOutput;
+import io.quarkus.benchmark.model.Fortune;
+import io.quarkus.benchmark.repository.FortuneRepository;
+import io.smallrye.context.api.CurrentThreadContext;
+import io.smallrye.mutiny.Uni;
+import io.vertx.core.http.HttpHeaders;
+import io.vertx.ext.web.templ.rocker.RockerTemplateEngine;
+import org.eclipse.microprofile.context.ThreadContext;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
-
-import io.quarkus.benchmark.model.Fortune;
-import io.quarkus.benchmark.repository.FortuneRepository;
-import io.smallrye.mutiny.Uni;
+import java.util.Collections;
+import java.util.Comparator;
 
 @Path("/fortunes")
 public class FortuneResource  {
 
     @Inject
     FortuneRepository repository;
-    private Mustache template;
-    private Comparator<Fortune> fortuneComparator;
 
+    private static final Comparator<Fortune> fortuneComparator = Comparator.comparing(fortune -> fortune.getMessage());
+    private static final RockerTemplateEngine templeEngine  = RockerTemplateEngine.create();
 
-    public FortuneResource() {
-        MustacheFactory mf = new DefaultMustacheFactory();
-        template = mf.compile("fortunes.mustache");
-        fortuneComparator = Comparator.comparing(fortune -> fortune.getMessage());
-    }
+    private static final String FORTUNES_MAP_KEY = "fortunes";
+    private static final String FORTUNES_TEMPLATE_FILENAME = "Fortunes.rocker.html";
 
     @Produces("text/html; charset=UTF-8")
     @GET
+    @CurrentThreadContext(propagated = {}, cleared = {}, unchanged = ThreadContext.ALL_REMAINING)
     public Uni<String> fortunes() {
         return repository.findAll()
                 .map(fortunes -> {
                     fortunes.add(new Fortune(0, "Additional fortune added at request time."));
                     fortunes.sort(fortuneComparator);
-                    StringWriter writer = new StringWriter();
-                    template.execute(writer, Collections.singletonMap("fortunes", fortunes));
-                    return writer.toString();
+                    return templeEngine.render(Collections.singletonMap(FORTUNES_MAP_KEY, fortunes), FORTUNES_TEMPLATE_FILENAME).result().toString();
                 });
     }
 }

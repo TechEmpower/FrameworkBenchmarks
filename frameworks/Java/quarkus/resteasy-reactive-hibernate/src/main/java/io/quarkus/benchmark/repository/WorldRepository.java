@@ -1,10 +1,5 @@
 package io.quarkus.benchmark.repository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.transaction.Transactional;
@@ -15,6 +10,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 
 import io.quarkus.benchmark.model.World;
+import io.quarkus.benchmark.utils.LocalRandom;
+import io.quarkus.benchmark.utils.Randomizer;
 
 
 @Singleton
@@ -31,26 +28,26 @@ public class WorldRepository {
     @Transactional
     public void createData() {
         try (StatelessSession statelessSession = sf.openStatelessSession()) {
-            final ThreadLocalRandom random = ThreadLocalRandom.current();
+            final LocalRandom random = Randomizer.current();
             for (int i=1; i<=10000; i++) {
                 final World world = new World();
                 world.setId(i);
-                world.setRandomNumber(1 + random.nextInt(10000));
+                world.setRandomNumber(random.getNextRandom());
                 statelessSession.insert(world);
             }
         }
     }
 
-    public World findSingleAndStateless(int id) {
+    public World findSingleAndStateless(Integer id) {
         try (StatelessSession ss = sf.openStatelessSession()) {
             return singleStatelessWorldLoad(ss,id);
         }
     }
 
     @Transactional
-    public void updateAll(Collection<World> worlds) {
+    public void updateAll(World[] worlds) {
         try (Session s = sf.openSession()) {
-            s.setJdbcBatchSize(worlds.size());
+            s.setJdbcBatchSize(worlds.length);
             s.setHibernateFlushMode(FlushMode.MANUAL);
             for (World w : worlds) {
                 s.update(w);
@@ -59,14 +56,16 @@ public class WorldRepository {
         }
     }
 
-    public Collection<World> findReadonly(Set<Integer> ids) {
+    public World[] findReadonly(int count) {
         try (StatelessSession s = sf.openStatelessSession()) {
             //The rules require individual load: we can't use the Hibernate feature which allows load by multiple IDs as one single operation
-            ArrayList l = new ArrayList<>(ids.size());
-            for (Integer id : ids) {
-                l.add(singleStatelessWorldLoad(s,id));
+            World[] list = new World[count];
+            final LocalRandom random = Randomizer.current();
+            for (int i=0;i<count;i++) {
+                Integer idToLoad = random.getNextRandom();
+                list[i] = singleStatelessWorldLoad(s,idToLoad);
             }
-            return l;
+            return list;
         }
     }
 
