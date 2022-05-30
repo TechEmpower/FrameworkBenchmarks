@@ -46,6 +46,10 @@
             <artifactId>netty-transport-native-epoll</artifactId>
             <classifier>linux-x86_64</classifier>
         </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web-templ-rocker</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

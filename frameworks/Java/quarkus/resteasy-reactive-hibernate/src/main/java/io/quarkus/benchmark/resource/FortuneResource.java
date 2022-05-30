@@ -1,9 +1,10 @@
 package io.quarkus.benchmark.resource;
 
 import com.fizzed.rocker.Rocker;
-import com.fizzed.rocker.RockerOutput;
 import io.quarkus.benchmark.model.Fortune;
 import io.quarkus.benchmark.repository.FortuneRepository;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.ext.web.templ.rocker.impl.VertxBufferOutput;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,15 +33,14 @@ public class FortuneResource {
 
     @GET
     @Path("/fortunes")
-    public String fortunes() {
+    public Buffer fortunes() {
         List<Fortune> fortunes = repository.findAllStateless();
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         fortunes.sort(fortuneComparator);
 
-        RockerOutput output = Rocker.template(FORTUNES_TEMPLATE_FILENAME)
+        return Rocker.template(FORTUNES_TEMPLATE_FILENAME)
                 .bind(Collections.singletonMap(FORTUNES_MAP_KEY, fortunes))
-                .render();
-
-        return output.toString();
+                .render(VertxBufferOutput.FACTORY)
+                .getBuffer();
     }
 }
