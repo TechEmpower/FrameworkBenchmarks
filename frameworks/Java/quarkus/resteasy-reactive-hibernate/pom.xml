@@ -37,9 +37,8 @@
             <artifactId>quarkus-jdbc-postgresql</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.fizzed</groupId>
-            <artifactId>rocker-compiler</artifactId>
-            <version>1.3.0</version>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web-templ-rocker</artifactId>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
@@ -64,6 +63,8 @@
                         <configuration>
                             <templateDirectory>${project.basedir}/src/main/resources</templateDirectory>
                             <optimize>true</optimize>
+                            <discardLogicWhitespace>true</discardLogicWhitespace>
+                            <markAsGenerated>false</markAsGenerated>
                         </configuration>
                     </execution>
                 </executions>

@@ -11,10 +11,7 @@ import javax.ws.rs.core.MediaType;
 
 import io.quarkus.benchmark.model.World;
 import io.quarkus.benchmark.repository.WorldRepository;
-import io.quarkus.benchmark.utils.LocalRandom;
 import io.quarkus.benchmark.utils.Randomizer;
-import io.smallrye.common.annotation.Blocking;
-
 
 @Singleton
 @Path("/")
@@ -25,24 +22,19 @@ public class DbResource {
     @Inject
     WorldRepository worldRepository;
 
-    @Blocking
     @GET
     @Path("/db")
     public World db() {
-        World world = worldRepository.findSingleAndStateless(Randomizer.current().getNextRandom());
-        if (world==null) throw new IllegalStateException( "No data found in DB. Did you seed the database? Make sure to invoke /createdata once." );
-        return world;
+        return worldRepository.loadSingleWorldById(Randomizer.current().getNextRandom());
     }
 
-    @Blocking
     @GET
     @Path("/queries")
     public World[] queries(@QueryParam("queries") String queries) {
         final int count = parseQueryCount(queries);
-        return randomWorldForRead(count);
+        return worldRepository.loadNWorlds(count);
     }
 
-    @Blocking
     @GET
     @Path("/updates")
     //Rules: https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#database-updates
@@ -52,21 +44,9 @@ public class DbResource {
     // all other tested frameworks seem to do.
     public World[] updates(@QueryParam("queries") String queries) {
         final int count = parseQueryCount(queries);
-        final World[] worlds = randomWorldForRead( count );
-        final LocalRandom random = Randomizer.current();
-        for (World w : worlds) {
-            //Read the one field, as required by the following rule:
-            // # vi. At least the randomNumber field must be read from the database result set.
-            final int previousRead = w.getRandomNumber();
-            //Update it, but make sure to exclude the current number as Hibernate optimisations would have us "fail"
-            //the verification:
-            w.setRandomNumber(random.getNextRandomExcluding(previousRead));
-        }
-        worldRepository.updateAll(worlds);
-        return worlds;
+        return worldRepository.updateNWorlds(count);
     }
 
-    @Blocking
     @GET
     @Path( "/createdata" )
     public String createData() {
@@ -74,11 +54,7 @@ public class DbResource {
         return "OK";
     }
 
-    private World[] randomWorldForRead(int count) {
-        return worldRepository.findReadonly(count);
-    }
-
-    private int parseQueryCount(String textValue) {
+    private int parseQueryCount(final String textValue) {
         if (textValue == null) {
             return 1;
         }
