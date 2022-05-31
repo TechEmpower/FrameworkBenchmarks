@@ -1,4 +1,4 @@
 asyncpg==0.21.0
 tornado==6.0.2
-ujson==1.35
+ujson==5.2.0
 uvloop==0.12.1
