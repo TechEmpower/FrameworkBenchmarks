@@ -41,13 +41,13 @@ RUN git clone https://github.com/an-tao/drogon
 
 WORKDIR $DROGON_ROOT
 
-RUN git checkout 8e6034454177e89b74deb4ae8acdb40207a9dcdb
+RUN git checkout 19e356e4f6278ae02b2760c9dae2347904a4a2a9
 RUN git submodule update --init
 RUN mkdir build
 
 WORKDIR $DROGON_ROOT/build
 
-RUN cmake -DCMAKE_BUILD_TYPE=release ..
+RUN cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_CXX_FLAGS=-flto ..
 RUN make && make install
 
 WORKDIR $IROOT
@@ -58,12 +58,12 @@ WORKDIR $MIMALLOC_ROOT
 RUN git checkout v1.6.7 -b v1.6.7
 RUN mkdir -p out/release
 WORKDIR $MIMALLOC_ROOT/out/release
-RUN cmake ../..
+RUN cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_CXX_FLAGS=-flto ../..
 RUN make && make install
 
 WORKDIR $TEST_PATH
 
-RUN cmake -DCMAKE_BUILD_TYPE=release ..
+RUN cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_CXX_FLAGS=-flto ..
 RUN make
 
 EXPOSE 8080

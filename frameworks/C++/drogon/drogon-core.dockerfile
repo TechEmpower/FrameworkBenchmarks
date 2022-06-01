@@ -47,7 +47,7 @@ RUN mkdir build
 
 WORKDIR $DROGON_ROOT/build
 
-RUN cmake -DCMAKE_BUILD_TYPE=release ..
+RUN cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_CXX_FLAGS=-flto ..
 RUN make && make install
 
 WORKDIR $IROOT
@@ -58,12 +58,12 @@ WORKDIR $MIMALLOC_ROOT
 RUN git checkout v1.6.7 -b v1.6.7
 RUN mkdir -p out/release
 WORKDIR $MIMALLOC_ROOT/out/release
-RUN cmake ../..
+RUN cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_CXX_FLAGS=-flto ../..
 RUN make && make install
 
 WORKDIR $TEST_PATH
 
-RUN cmake -DCMAKE_BUILD_TYPE=release ..
+RUN cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_CXX_FLAGS=-flto ..
 RUN make
 
 EXPOSE 8080
