@@ -38,6 +38,9 @@ class Results:
         self.environmentDescription = self.config.results_environment
         try:
             self.git = dict()
+            subprocess.call('git config --global --add safe.directory {}'.format(self.config.fw_root),
+                        shell=True,
+                        cwd=self.config.fw_root)
             self.git['commitId'] = self.__get_git_commit_id()
             self.git['repositoryUrl'] = self.__get_git_repository_url()
             self.git['branchName'] = self.__get_git_branch_name()

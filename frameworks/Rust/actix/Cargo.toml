@@ -19,7 +19,16 @@ path = "src/main_http.rs"
 name = "tfb-server"
 path = "src/main_server.rs"
 
+[[bin]]
+name = "tfb-web-mongodb"
+path = "src/main_mongodb.rs"
+
+[[bin]]
+name = "tfb-web-pg-deadpool"
+path = "src/main_pg_deadpool.rs"
+
 [dependencies]
+anyhow = "1"
 actix = "0.12"
 actix-web = { version = "4.0.0-rc.3", default-features = false, features = ["macros"] }
 actix-http = { version = "3.0.0-rc.2", default-features = false }
@@ -44,6 +53,8 @@ simd-json-derive = "0.2"
 snmalloc-rs = "0.2.6"
 tokio = { version = "1", features = ["full"] }
 tokio-postgres = "0.7.5"
+deadpool-postgres = "0.10.1"
+mongodb = "2.2.0"
 url = "2.1"
 v_htmlescape = "0.14"
 yarte = { version = "0.15", features = ["bytes-buf"] }

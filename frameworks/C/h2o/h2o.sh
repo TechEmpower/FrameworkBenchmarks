@@ -24,12 +24,9 @@ if [[ -z "$MUSTACHE_C_PREFIX" ]]; then
 	MUSTACHE_C_PREFIX=/opt/mustache-c
 fi
 
-# A hacky way to detect whether we are running in the physical hardware or the cloud environment.
-if [[ $(nproc) -gt 16 ]]; then
-	echo "Running h2o_app in the physical hardware environment."
+if [[ "$BENCHMARK_ENV" = "Azure" ]]; then
 	DB_CONN=5
 else
-	echo "Running h2o_app in the cloud environment."
 	DB_CONN=5
 fi
 
@@ -81,6 +78,7 @@ build_h2o_app "-fprofile-use"
 cmake --install .
 popd
 rm -rf "$H2O_APP_BUILD_DIR"
+echo "Running h2o_app in the $BENCHMARK_ENV environment."
 echo "Maximum database connections per thread: $DB_CONN"
 run_h2o_app 0 "${H2O_APP_PREFIX}/bin" "${H2O_APP_PREFIX}/share/h2o_app"
 wait

@@ -11,7 +11,7 @@
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
-		<netty.version>4.1.71.Final</netty.version>
+		<netty.version>4.1.77.Final</netty.version>
 	</properties>
 
 	<packaging>jar</packaging>

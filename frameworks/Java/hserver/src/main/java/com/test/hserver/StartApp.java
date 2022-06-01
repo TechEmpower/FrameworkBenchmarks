@@ -11,7 +11,6 @@ import top.hserver.core.server.context.ConstConfig;
 public class StartApp {
 
     public static void main(String[] args) {
-        ConstConfig.workerPool=Runtime.getRuntime().availableProcessors();
         HServerApplication.run(StartApp.class, 8888, args);
     }
 }
