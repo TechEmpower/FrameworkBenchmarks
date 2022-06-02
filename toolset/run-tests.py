@@ -103,6 +103,11 @@ def main(argv=None):
         help=
         'Parses the results of the given timestamp and merges that with the latest results'
     )
+    parser.add_argument(
+        '--proxy',
+        help=
+        'Run with postgres proxy tool to track and verify Bind/Exec/Sync match in wire protocol'
+    )
 
     # Test options
     parser.add_argument(

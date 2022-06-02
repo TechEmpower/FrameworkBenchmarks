@@ -39,6 +39,7 @@ class BenchmarkConfig:
         self.pipeline_concurrency_levels = args.pipeline_concurrency_levels
         self.query_levels = args.query_levels
         self.parse = args.parse
+        self.proxy = args.proxy
         self.results_environment = args.results_environment
         self.results_name = args.results_name
         self.results_upload_uri = args.results_upload_uri
@@ -76,6 +77,7 @@ class BenchmarkConfig:
         self.lang_root = os.path.join(self.fw_root, "frameworks")
         self.results_root = os.path.join(self.fw_root, "results")
         self.wrk_root = os.path.join(self.fw_root, "toolset", "wrk")
+        self.proxy_root = os.path.join(self.fw_root, "toolset", "proxy")
         self.scaffold_root = os.path.join(self.fw_root, "toolset", "scaffolding")
 
         if hasattr(self, 'parse') and self.parse is not None:

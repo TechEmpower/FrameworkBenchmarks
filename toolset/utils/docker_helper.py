@@ -306,6 +306,40 @@ class DockerHelper:
                     tag="techempower/%s" % db)
                 built.append(db)
 
+    def start_proxy(self):
+        '''
+        Sets up a container for the database proxy, and starts said docker
+        container.
+        '''
+        image_name = "techempower/proxy:latest"
+        log_prefix = image_name + ": "
+
+        if self.benchmarker.config.network_mode is None:
+            sysctl = {
+                'net.core.somaxconn': 65535,
+                'kernel.sem': "250 32000 256 512"
+            }
+        else:
+            # Do not pass `net.*` kernel params when using host network mode
+            sysctl = {
+                'kernel.sem': "250 32000 256 512"
+            }
+
+        ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
+
+        container = self.database.containers.run(
+            "techempower/proxy",
+            name="tfb-database",
+            network=self.benchmarker.config.network,
+            network_mode=self.benchmarker.config.network_mode,
+            detach=True,
+            ulimits=ulimit,
+            sysctls=sysctl,
+            remove=True,
+            log_config={'type': None})
+
+        return container
+
     def start_database(self, database):
         '''
         Sets up a container for the given database and port, and starts said docker
@@ -327,24 +361,33 @@ class DockerHelper:
 
         ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
 
+        if self.benchmarker.config.proxy is None:
+            name = "tfb-database"
+            command = "postgres"
+        else:
+            command = "postgres -p 5431"
+            name = "tfb-proxy-database"
+        
         container = self.database.containers.run(
             "techempower/%s" % database,
-            name="tfb-database",
+            name=name,
             network=self.benchmarker.config.network,
             network_mode=self.benchmarker.config.network_mode,
             detach=True,
             ulimits=ulimit,
             sysctls=sysctl,
             remove=True,
+            command=command,
             log_config={'type': None})
 
         # Sleep until the database accepts connections
         slept = 0
-        max_sleep = 60
+        max_sleep = 10
         database_ready = False
         while not database_ready and slept < max_sleep:
             time.sleep(1)
             slept += 1
+            log("Testing Connection")
             database_ready = databases[database].test_connection(self.benchmarker.config)
 
         if not database_ready:
@@ -363,6 +406,18 @@ class DockerHelper:
             log_prefix="wrk: ",
             build_log_file=os.devnull,
             tag="techempower/tfb.wrk")
+
+    def build_proxy(self):
+        '''
+        Builds the techempower/tfb.proxy container
+        '''
+        self.__build(
+            base_url=self.benchmarker.config.client_docker_host,
+            path=self.benchmarker.config.proxy_root,
+            dockerfile="proxy.dockerfile",
+            log_prefix="proxy: ",
+            build_log_file=os.devnull,
+            tag="techempower/proxy")
 
     def test_client_connection(self, url):
         '''

@@ -54,6 +54,8 @@ class Benchmarker:
         log("Running Tests...", border='=')
 
         # build wrk and all databases needed for current run
+        if not self.config.proxy is None:
+          self.docker_helper.build_proxy()
         self.docker_helper.build_wrk()
         self.docker_helper.build_databases()
 
@@ -135,7 +137,10 @@ class Benchmarker:
                 file=benchmark_log)
 
         database_container = None
+        proxy_container = None
         try:
+            if self.config.proxy is not None:
+                proxy_container = self.docker_helper.start_proxy()
             # Start database container
             if test.database.lower() != "none":
                 self.time_logger.mark_starting_database()
