@@ -1,4 +1,4 @@
-bottle==0.12.19
+bottle==0.12.20
 bottle-sqlalchemy==0.4.3
 greenlet==0.4.14
 gunicorn==19.9.0

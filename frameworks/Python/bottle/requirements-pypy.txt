@@ -1,4 +1,4 @@
-bottle==0.12.19
+bottle==0.12.20
 bottle-sqlalchemy==0.4.3
 gunicorn==19.9.0
 PyMySQL==0.8.0
