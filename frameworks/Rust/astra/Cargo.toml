@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 astra = "0.1.2"
+num_cpus = "1.13.1"
 http = "0.2.6"
 mimalloc = "0.1"
 simd-json = "0.4"
