@@ -1,4 +1,5 @@
-#![allow(dead_code)]
+use diesel::Queryable;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct Message {
@@ -10,6 +11,13 @@ pub struct Message {
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,
+}
+
+impl World {
+    #[allow(dead_code)]
+    pub fn new(id: i32, randomnumber: i32) -> Self {
+        Self { id, randomnumber }
+    }
 }
 
 #[allow(non_snake_case)]

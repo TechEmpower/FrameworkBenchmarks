@@ -1,4 +1,4 @@
-FROM mono:5.12.0.226
+FROM mono:6.12.0.122
 RUN apt-get update -yqq && apt-get install -yqq unzip
 
 RUN mkdir /java
@@ -34,5 +34,7 @@ RUN java -jar dsl-clc.jar \
 RUN xbuild /revenj/Revenj.Bench/Revenj.Bench.csproj /t:Rebuild /p:Configuration=Release
 
 RUN mv /revenj/Revenj.Http.exe.config /revenj/exe/Revenj.Http.exe.config
+
+EXPOSE 8080
 
 CMD ["mono", "/revenj/exe/Revenj.Http.exe"]

@@ -2,14 +2,42 @@
 
 #include <Cutelyst/Plugins/Utils/Sql>
 
+#include <apool.h>
+#include <aresult.h>
+#include <apreparedquery.h>
+
 #include <QSqlQuery>
 
 #include <QJsonDocument>
 #include <QJsonObject>
 
+#include "picojson.h"
+
 SingleDatabaseQueryTest::SingleDatabaseQueryTest(QObject *parent) : Controller(parent)
 {
 
+}
+
+void SingleDatabaseQueryTest::dbp(Context *c)
+{
+    const int id = (qrand() % 10000) + 1;
+
+    ASync async(c);
+    static thread_local auto db = APool::database();
+    db.exec(APreparedQueryLiteral(u"SELECT id, randomNumber FROM world WHERE id=$1"),
+                           {id}, [c, async] (AResult &result) {
+        if (Q_LIKELY(!result.error() && result.size())) {
+            auto it = result.begin();
+            c->response()->setJsonBody(QByteArray::fromStdString(
+                            picojson::value(picojson::object({
+                                                {"id", picojson::value(double(it[0].toInt()))},
+                                                {"randomNumber", picojson::value(double(it[1].toInt()))}
+                                            })).serialize()));
+            return;
+        }
+
+        c->res()->setStatus(Response::InternalServerError);
+    }, c);
 }
 
 void SingleDatabaseQueryTest::db_postgres(Context *c)

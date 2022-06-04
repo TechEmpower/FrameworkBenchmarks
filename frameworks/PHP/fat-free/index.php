@@ -4,9 +4,10 @@
 //     error_clear_last();
 
 // error_reporting(0);
+require_once 'vendor/autoload.php';
 
 /** @var Base $f3 */
-$f3 = require('src/base.php');
+$f3 = \Base::instance();
 
 error_reporting(-1);
 
@@ -172,7 +173,7 @@ $f3->route(array(
         $id = mt_rand(1, 10000);
         $row = array(
             'id' => $id,
-            'randomNumber' => $db->exec('SELECT randomNumber FROM World WHERE id = ?', $id, 0, false)
+            'randomNumber' => $db->exec('SELECT id, randomNumber FROM World WHERE id = ?', $id, 0, false)
         );
         $rnu = mt_rand(1, 10000);
         $row['randomNumber'] = $rnu;

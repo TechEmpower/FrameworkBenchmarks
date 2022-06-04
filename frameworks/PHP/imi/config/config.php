@@ -1,10 +1,13 @@
 <?php
-$dbResourceConfig = [
-    'host'        => 'tfb-database',
-    'username'    => 'benchmarkdbuser',
-    'password'    => 'benchmarkdbpass',
-    'database'    => 'hello_world',
-];
+
+use Imi\App;
+
+$mode = App::isInited() ? App::getApp()->getType() : '';
+$isMysql = ('mysql' === strtolower(getenv('TFB_TEST_DATABASE') ?: 'mysql'));
+$host = 'tfb-database';
+$username = 'benchmarkdbuser';
+$password = 'benchmarkdbpass';
+
 return [
     // 项目根命名空间
     'namespace'    =>    'ImiApp',
@@ -14,18 +17,13 @@ return [
         'beans'        =>    __DIR__ . '/beans.php',
     ],
 
-    // 扫描目录
-    'beanScan'    =>    [
-        'ImiApp\Listener',
-    ],
-
     // 组件命名空间
     'components'    =>  [],
 
     // 主服务器配置
-    'mainServer'    =>    [
+    'mainServer'    => 'swoole' === $mode ? [
         'namespace' =>  'ImiApp\ApiServer',
-        'type'      =>  Imi\Server\Type::HTTP,
+        'type'      =>  Imi\Swoole\Server\Type::HTTP,
         'host'      =>  '0.0.0.0',
         'port'      =>  8080,
         'mode'      =>  SWOOLE_BASE,
@@ -35,60 +33,94 @@ return [
             'tcp_fastopen'      => true,
             'http_parse_post'   => false,
             'http_parse_cookie' => false,
+            'http_parse_files'  => false,
+            'http_compression'  => false,
+        ],
+    ] : [],
+
+    // Workerman 服务器配置
+    'workermanServer' => 'workerman' === $mode ? [
+        // 服务器名，http 也可以改成 abc 等等，完全自定义
+        'http' => [
+            // 指定服务器命名空间
+            'namespace' => 'ImiApp\ApiServer',
+            // 服务器类型
+            'type'      => Imi\Workerman\Server\Type::HTTP, // HTTP、WEBSOCKET、TCP、UDP
+            'host'      => '0.0.0.0',
+            'port'      => 8080,
+            // socket的上下文选项，参考：http://doc3.workerman.net/315128
+            'context'   => [],
+            'configs'   => [
+                // 支持设置 Workerman 参数
+                'count' => (int) shell_exec('nproc') * 4,
+            ],
+        ],
+    ] : [],
+
+    'db'    => [
+        'defaultPool'   => $isMysql ? 'mysql' : 'pgsql', // 默认连接池
+        'connections'   => [
+            'mysql' => [
+                'host'        => $host,
+                'username'    => $username,
+                'password'    => $password,
+                'database'    => 'hello_world',
+                'dbClass'     => \Imi\Db\Mysql\Drivers\Mysqli\Driver::class,
+            ],
+            'pgsql' => [
+                'host'        => $host,
+                'username'    => $username,
+                'password'    => $password,
+                'database'    => 'hello_world',
+                'dbClass'     => \Imi\Pgsql\Db\Drivers\PdoPgsql\Driver::class,
+            ],
         ],
     ],
 
-    'db'    => [
-        'defaultPool'   => 'db', // 默认连接池
-    ],
-    'redis'    =>    [
-        'defaultPool'               =>    'redis', // 默认连接池
-        'quickFromRequestContext'   =>    true, // 从当前上下文中获取公用连接
-    ],
-    'pools' => [
+    'pools' => 'swoole' === $mode ? [
         // 连接池名称
-        'db' => [
-            // 异步池子，worker进程使用
-            'async' => [
-                'pool'    =>    [
-                    'class'        =>    \Imi\Db\Pool\CoroutineDbPool::class,
-                    'config'    =>    [
-                        // 池子中最多资源数
-                        'maxResources' => 512,
-                        // 池子中最少资源数
-                        'minResources' => 16,
-                        'gcInterval'   => null,
-                        'checkStateWhenGetResource' =>  false,
-                    ],
-                ],
-                // resource也可以定义多个连接
-                'resource'    =>    $dbResourceConfig,
-            ],
-        ],
-        'redis' =>  [
-            'pool' => [
-                // 协程池类名
-                'asyncClass'    =>    \Imi\Redis\CoroutineRedisPool::class,
-                'config' => [
+        'mysql' => [
+            'pool'    =>    [
+                'class'        =>    \Imi\Swoole\Db\Pool\CoroutineDbPool::class,
+                'config'    =>    [
                     // 池子中最多资源数
-                    'maxResources' => 512,
+                    'maxResources' => intval(1024 / swoole_cpu_num()),
                     // 池子中最少资源数
-                    'minResources' => 0,
-                    'gcInterval'   => null,
+                    'minResources' => $isMysql ? 16 : 0,
+                    'gcInterval'   => 0,
                     'checkStateWhenGetResource' =>  false,
+                    'requestResourceCheckInterval' => 0,
                 ],
             ],
-            // 数组资源配置
-            'resource' => [
-                'host'      =>  '127.0.0.1',
-                'port'      =>  6379,
-                // 是否自动序列化变量
-                'serialize' =>  true,
-                // 密码
-                'password'  =>  null,
-                // 第几个库
-                'db'        =>  0,
+            // resource也可以定义多个连接
+            'resource'    =>    [
+                'host'        => $host,
+                'username'    => $username,
+                'password'    => $password,
+                'database'    => 'hello_world',
+                'dbClass'     => \Imi\Swoole\Db\Driver\Swoole\Driver::class,
             ],
         ],
-    ],
+        'pgsql' => [
+            'pool'    =>    [
+                'class'        =>    \Imi\Swoole\Db\Pool\CoroutineDbPool::class,
+                'config'    =>    [
+                    // 池子中最多资源数
+                    'maxResources' => intval(1024 / swoole_cpu_num()),
+                    // 池子中最少资源数
+                    'minResources' => $isMysql ? 0 : 16,
+                    'checkStateWhenGetResource' =>  false,
+                    'requestResourceCheckInterval' => 0,
+                ],
+            ],
+            // resource也可以定义多个连接
+            'resource'    =>    [
+                'host'        => $host,
+                'username'    => $username,
+                'password'    => $password,
+                'database'    => 'hello_world',
+                'dbClass'     => \Imi\Pgsql\Db\Drivers\Swoole\Driver::class,
+            ],
+        ],
+    ] : [],
 ];

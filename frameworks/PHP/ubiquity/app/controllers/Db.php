@@ -3,13 +3,11 @@ namespace controllers;
 
 use Ubiquity\orm\SDAO;
 use models\World;
-use controllers\utils\DbTrait;
 
 /**
  * Bench controller.
  */
 class Db extends \Ubiquity\controllers\Controller {
-	use DbTrait;
 
 	public function __construct() {}
 
@@ -26,7 +24,7 @@ class Db extends \Ubiquity\controllers\Controller {
 
 	public function query($queries = 1) {
 		$worlds = [];
-		$count = $this->getCount($queries);
+		$count = \min(\max((int) $queries, 1), 500);
 		for ($i = 0; $i < $count; ++ $i) {
 			$worlds[] = (SDAO::getById(World::class, [
 				'id' => \mt_rand(1, 10000)
@@ -38,7 +36,7 @@ class Db extends \Ubiquity\controllers\Controller {
 	public function update($queries = 1) {
 		$worlds = [];
 
-		$count = $this->getCount($queries);
+		$count = \min(\max((int) $queries, 1), 500);
 		$ids = $this->getUniqueRandomNumbers($count);
 		foreach ($ids as $id) {
 			$world = SDAO::getById(World::class, [

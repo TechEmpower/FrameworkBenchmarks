@@ -10,4 +10,5 @@ if _is_travis:
 bind = "0.0.0.0:8080"
 keepalive = 120
 errorlog = '-'
+pidfile = '/tmp/emmett.pid'
 loglevel = 'error'

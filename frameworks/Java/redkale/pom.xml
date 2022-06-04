@@ -1,94 +1,115 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.redkalex</groupId>
-	<artifactId>redkale-benchmark</artifactId>
-	<version>0.0.1</version>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.redkalex</groupId>
+    <artifactId>redkale-benchmark</artifactId>
+    <version>1.0.0</version>
 
-	<properties>
-		<!-- the main class -->
-		<main.class>org.redkale.boot.Application</main.class>
-		<stack.version>0.0.1</stack.version>
+    <properties>
+        <main.class>org.redkale.boot.Application</main.class>
+		<redkale.version>2.7.0-SNAPSHOT</redkale.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-	</properties>
+    </properties> 
 
-	<dependencies>
-  
-		<dependency>
-			<groupId>org.redkale</groupId>
-			<artifactId>redkale</artifactId>
-			<version>2.0.0.alpha1</version>
-		</dependency>
+    <dependencies>  
+        <dependency>
+            <groupId>org.redkale</groupId>
+            <artifactId>redkale</artifactId>
+            <version>${redkale.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.redkalex</groupId>
+            <artifactId>redkale-plugins</artifactId>
+            <version>${redkale.version}</version>
+        </dependency>
+        
+    </dependencies>
 
-		<dependency>
-			<groupId>org.redkalex</groupId>
-			<artifactId>redkale-plugins</artifactId>
-			<version>2.0.0.alpha1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fizzed</groupId>
-			<artifactId>rocker-compiler</artifactId>
-			<version>1.2.1</version>
-		</dependency>
-	</dependencies>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
+    
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository> 
+    </pluginRepositories>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>                         
+            </plugin>
+                 
+            <plugin>
+                <groupId>org.redkale.maven.plugins</groupId>
+                <artifactId>redkale-maven-plugin</artifactId>
+                <version>1.1.0-SNAPSHOT</version>                                                
+                <configuration>		
+                    <nativeimageArgs>
+                        <arg>--no-fallback</arg>
+                    </nativeimageArgs>
+                </configuration>                                    
+                <executions>
+                    <execution>
+                        <id>redkale-compile</id> 
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>                   
+                    </execution>
+                </executions>    
+            </plugin>
+                 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${main.class}</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-                <configuration>
-                    <debug>false</debug>
-                </configuration>
-			</plugin>
-			<plugin>
-				<groupId>com.fizzed</groupId>
-				<artifactId>rocker-maven-plugin</artifactId>
-				<version>1.2.1</version>
-				<executions>
-					<execution>
-						<id>generate-rocker-templates</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<javaVersion>11</javaVersion>
-							<templateDirectory>${basedir}/src/main/templates</templateDirectory>
-							<outputDirectory>${basedir}/target/generated-sources/rocker</outputDirectory>
-							<discardLogicWhitespace>false</discardLogicWhitespace>
-							<addAsSources>true</addAsSources>
-							<optimize>true</optimize>
-							<failOnError>true</failOnError>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.1.1</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<transformers>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-								  <mainClass>${main.class}</mainClass>
-								</transformer>
-							  </transformers>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-
-	</build>
+    </build>
 
 </project>

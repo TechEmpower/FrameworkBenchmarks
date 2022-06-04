@@ -1,6 +1,8 @@
 package org.smartboot.http;
 
-import org.smartboot.http.server.handle.HttpHandle;
+import org.smartboot.http.server.HttpRequest;
+import org.smartboot.http.server.HttpResponse;
+import org.smartboot.http.server.HttpServerHandler;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -14,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author 三刀
  * @version V1.0 , 2020/6/16
  */
-public class SingleQueryHandler extends HttpHandle {
+public class SingleQueryHandler extends HttpServerHandler {
     private DataSource dataSource;
 
     public SingleQueryHandler(DataSource dataSource) {
@@ -22,7 +24,7 @@ public class SingleQueryHandler extends HttpHandle {
     }
 
     @Override
-    public void doHandle(HttpRequest httpRequest, HttpResponse response) throws IOException {
+    public void handle(HttpRequest httpRequest, HttpResponse response) throws IOException {
         World world = new World();
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM World WHERE id=?");) {

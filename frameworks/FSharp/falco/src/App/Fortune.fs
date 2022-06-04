@@ -1,9 +1,9 @@
 ﻿module App.Fortune    
 
 open System.Data
+open System.Threading.Tasks     
 open Donald
 open Falco
-open FSharp.Control.Tasks
  
 type FortuneModel = 
    {
@@ -11,15 +11,14 @@ type FortuneModel =
        message : string
    }
 
-   static member fromDataReader (rd : IDataReader) =
+module FortuneModel =
+   let fromDataReader (rd : IDataReader) =
        {
            id = rd.GetInt32("id")
            message = rd.GetString("message")
        }
 
 module Service = 
-    open System.Threading.Tasks     
-        
     module ListQuery =              
         type LoadFortunes = unit -> Task<FortuneModel list>
 
@@ -43,8 +42,6 @@ module Service =
 
 
 module Db =    
-    open System.Threading.Tasks    
-    
     let selectAsync (connection : IDbConnection) : Task<FortuneModel list> =        
         queryAsync 
             "SELECT id, message FROM fortune"
@@ -83,4 +80,4 @@ let handleIndex : HttpHandler =
                 |> (fortunes 
                     |> View.index 
                     |> Response.ofHtml)                    
-        }
+        } :> Task

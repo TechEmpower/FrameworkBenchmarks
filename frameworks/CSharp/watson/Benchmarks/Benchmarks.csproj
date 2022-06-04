@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    
+    <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    
+    <AssemblyTitle>EmbedIO Benchmarks</AssemblyTitle>
+    <Description>Test suite to be executed with TechEmpower FrameworkBenchmarks.</Description>
+    
+    <StartupObject>Benchmarks.Program</StartupObject>    
+    <OutputType>Exe</OutputType>
+    
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <TieredCompilation>false</TieredCompilation>
+    
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="5.0.0" />
+    <PackageReference Include="Watson" Version="4.0.0.3" />
+  </ItemGroup>
+  
+</Project>

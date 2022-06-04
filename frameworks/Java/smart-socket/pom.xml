@@ -6,42 +6,36 @@
     <artifactId>smart-socket-benchmark</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
-    <parent>
-        <groupId>org.smartboot.http</groupId>
-        <artifactId>smart-http-parent</artifactId>
-        <version>1.0.16-SNAPSHOT</version>
-    </parent>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <log4j.version>2.11.0</log4j.version>
-        <aio-enhance.version>1.0.1-SNAPSHOT</aio-enhance.version>
+        <log4j.version>2.17.1</log4j.version>
+        <smartservlet.version>0.1.7-SNAPSHOT</smartservlet.version>
+        <hikaricp.version>5.0.0</hikaricp.version>
+        <jsoniter.version>0.9.23</jsoniter.version>
     </properties>
+
     <dependencies>
         <dependency>
-            <groupId>org.smartboot.http</groupId>
-            <artifactId>smart-http-server</artifactId>
+            <groupId>io.edap</groupId>
+            <artifactId>edapx-json</artifactId>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.smartboot.aio</groupId>
-            <artifactId>aio-enhance</artifactId>
-            <version>${aio-enhance.version}</version>
+            <groupId>org.smartboot.servlet</groupId>
+            <artifactId>servlet-core</artifactId>
+            <version>${smartservlet.version}</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>3.4.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.smartboot.socket</groupId>
-            <artifactId>aio-pro</artifactId>
-            <version>1.4.13-SNAPSHOT</version>
+            <version>${hikaricp.version}</version>
         </dependency>
         <dependency>
             <groupId>com.jsoniter</groupId>
             <artifactId>jsoniter</artifactId>
-            <version>0.9.23</version>
+            <version>${jsoniter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -62,7 +56,18 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.5</version>
+            <version>42.3.3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.velocity/velocity -->
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>oro</groupId>
+            <artifactId>oro</artifactId>
+            <version>2.0.8</version>
         </dependency>
     </dependencies>
     <repositories>

@@ -334,7 +334,7 @@ public:
 				return;
 				}
 
-			U_NEW(UOrmStatement, pstmt_query, UOrmStatement(*psql_query, U_CONSTANT_TO_PARAM("SELECT randomNumber FROM World WHERE id = ?")));
+			U_NEW(UOrmStatement, pstmt_query, UOrmStatement(*psql_query, U_CONSTANT_TO_PARAM("SELECT randomNumber, id FROM World WHERE id = ?")));
 
 			U_NEW(World, pworld_query, World);
 

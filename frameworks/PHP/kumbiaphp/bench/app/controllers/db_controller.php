@@ -15,7 +15,7 @@ class DbController extends AppController
 
     public function query($count = 1)
     {
-        $count = min(max($count, 1), 500);
+        $count = min(max((int) $count, 1), 500);
 
         while ($count--) {
             $worlds[] = World::byId(mt_rand(1, 10000));
@@ -25,7 +25,7 @@ class DbController extends AppController
 
     public function update($count = 1)
     {
-        $count = min(max($count, 1), 500);
+        $count = min(max((int) $count, 1), 500);
 
         while ($count--) {
             $row = World::byId(mt_rand(1, 10000));

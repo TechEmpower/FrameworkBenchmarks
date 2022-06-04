@@ -1,39 +1,29 @@
 <?php
+
+declare(strict_types=1);
+
 namespace ImiApp\Listener;
 
+use Imi\App;
 use Imi\Db\Db;
+use Imi\Timer\Timer;
 use Imi\Event\EventParam;
-use Imi\Redis\RedisManager;
+use Imi\Queue\Model\Message;
 use Imi\Event\IEventListener;
+use Imi\Aop\Annotation\Inject;
 use Imi\Bean\Annotation\Listener;
 
 /**
- * @Listener("IMI.APP.INIT")
+ * @Listener("IMI.MAIN_SERVER.WORKER.START.APP")
+ * @Listener("IMI.WORKERMAN.SERVER.WORKER_START")
  */
 class AppInit implements IEventListener
 {
     /**
-     * 事件处理方法
-     * @param EventParam $e
-     * @return void
+     * 事件处理方法.
      */
-    public function handle(EventParam $e)
+    public function handle(EventParam $e): void
     {
-        if(getenv('WITH_REDIS') ?? false)
-        {
-            $redis = RedisManager::getInstance();
-            $page = 1;
-            while($list = Db::query()->from('world')->page($page, 1000)->select()->getArray())
-            {
-                $redisList = [];
-                foreach($list as $row)
-                {
-                    $redisList['world:' . $row['id']] = $row;
-                }
-                $redis->mset($redisList);
-                ++$page;
-            }
-        }
+        App::set('worlds', Db::query()->from('world')->select()->getArray());
     }
-
 }

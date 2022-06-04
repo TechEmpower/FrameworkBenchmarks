@@ -1,0 +1,5 @@
+{
+    "require": {
+        "bcosca/fatfree-core": "3.8.0"
+    }
+}

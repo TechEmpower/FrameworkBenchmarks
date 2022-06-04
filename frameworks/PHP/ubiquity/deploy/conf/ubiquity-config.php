@@ -10,7 +10,8 @@ return array(
 			"user" => "benchmarkdbuser", // benchmarkdbuser
 			"password" => "benchmarkdbpass", // benchmarkdbpass
 			"options" => [
-				\PDO::ATTR_PERSISTENT => true
+				\PDO::ATTR_PERSISTENT => true,
+				\PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
 			],
 			"cache" => false
 		]

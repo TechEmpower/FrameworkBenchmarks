@@ -1,0 +1,31 @@
+{
+  "framework": "ihp",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+      	"fortune_url": "/fortunes",
+        "query_url": "/query?queries=",
+        "update_url": "/update?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "postgres",
+        "framework": "IHP",
+        "language": "Haskell",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "Wai",
+        "webserver": "Wai",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Integrated Haskell Platfrom (IHP)",
+        "notes": "",
+        "versus": "None",
+        "tags": ["broken"]
+      }
+    }
+  ]
+}

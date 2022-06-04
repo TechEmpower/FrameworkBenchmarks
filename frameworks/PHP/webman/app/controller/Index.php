@@ -64,7 +64,7 @@ class Index
         $statement = Db::$statement;
 
         $query_count = 1;
-        if ($q > 1) {
+        if ((int) $q > 1) {
             $query_count = \min($q, 500);
         }
 
@@ -86,7 +86,7 @@ class Index
         $update = Db::$update;
 
         $query_count = 1;
-        if ($q > 1) {
+        if ((int) $q > 1) {
             $query_count = \min($q, 500);
         }
 

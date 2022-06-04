@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 RUN apt-get update -qq && \
     apt-get install -yqq locales wget build-essential
@@ -28,6 +28,8 @@ RUN sed -i "s|SendDate=.*|SendDate=false|g" /cutelyst_socket.ini
 
 ENV C_THREADS 1
 ENV CPU_AFFINITY 1
+
+EXPOSE 8080
 
 CMD nginx -c /nginx.conf && uwsgi \
     --ini /cutelyst_socket.ini \

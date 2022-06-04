@@ -17,4 +17,6 @@ RUN git clone https://github.com/davidmoreno/onion.git && \
 
 RUN ln -v onion/build/src/onion/libonion_static.a . && make
 
+EXPOSE 8080
+
 CMD ["./hello"]

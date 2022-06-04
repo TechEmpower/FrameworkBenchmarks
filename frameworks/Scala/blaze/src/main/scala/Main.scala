@@ -23,7 +23,7 @@ object Main {
   private val jsonHeaders = Seq("server" -> "blaze", "content-type" -> "application/json")
   private val plaintextHeaders = Seq("server" -> "blaze", "content-type" -> "text/plain")
 
-  private implicit val codec: JsonValueCodec[Message] = JsonCodecMaker.make[Message](CodecMakerConfig())
+  private implicit val codec: JsonValueCodec[Message] = JsonCodecMaker.make[Message](CodecMakerConfig)
 
   def serve(request: HttpRequest): Future[RouteAction] = Future.successful {
     request.url match {
@@ -37,7 +37,7 @@ object Main {
     Future.successful(LeafBuilder(new Http1ServerStage(serve, config)))
 
   def main(args: Array[String]): Unit =
-    NIO1SocketServerGroup.fixedGroup()
+    NIO1SocketServerGroup.fixed()
       .bind(new InetSocketAddress(8080), connect)
       .getOrElse(sys.error("Failed to start server."))
       .join()

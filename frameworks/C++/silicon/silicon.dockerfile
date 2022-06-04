@@ -34,4 +34,6 @@ RUN cd build && \
     cmake .. -DCMAKE_CXX_COMPILER=clang++-3.9 && \
     make silicon_tpc_mysql
 
+EXPOSE 8080
+
 CMD /build/silicon_tpc_mysql tfb-database 8080 $(nproc)

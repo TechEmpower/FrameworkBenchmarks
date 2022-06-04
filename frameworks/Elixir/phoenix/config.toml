@@ -1,0 +1,19 @@
+[framework]
+name = "phoenix"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.update = "/updates?queries="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Fullstack"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "full"
+platform = "Cowboy"
+webserver = "None"
+versus = "Cowboy"

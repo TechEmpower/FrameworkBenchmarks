@@ -28,14 +28,16 @@
 
 #include "list.h"
 
+// Note that the parameter must be an actual array, and not an array that has decayed into a
+// pointer, for example.
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(*(a)))
 // mainly used to silence compiler warnings about unused function parameters
 #define IGNORE_FUNCTION_PARAMETER(p) ((void) (p))
 // Do not use the following MAX and MIN macros with parameters that have side effects.
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
-#define MKSTR(x) TOSTRING(x)
 #define TOSTRING(x) # x
+#define MKSTR(x) TOSTRING(x)
 #define YAJL_STRLIT(s) (const unsigned char *) (s), sizeof(s) - 1
 
 typedef struct {
@@ -49,8 +51,8 @@ json_generator_t *get_json_generator(list_t **pool, size_t *gen_num);
 size_t get_maximum_cache_line_size(void);
 uint32_t get_random_number(uint32_t max_rand, unsigned int *seed);
 bool is_power_of_2(size_t x);
+size_t round_up_to_power_of_2(size_t x);
 // stable sort
 list_t *sort_list(list_t *head, int (*compare)(const list_t *, const list_t *));
-size_t round_up_to_power_of_2(size_t x);
 
 #endif // UTILITY_H_

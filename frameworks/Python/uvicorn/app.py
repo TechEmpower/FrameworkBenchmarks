@@ -3,7 +3,7 @@ import asyncpg
 import jinja2
 import os
 import ujson
-from random import randint
+from random import randint, sample
 from operator import itemgetter
 from urllib.parse import parse_qs
 
@@ -19,7 +19,7 @@ async def setup():
     )
 
 
-READ_ROW_SQL = 'SELECT "randomnumber" FROM "world" WHERE id = $1'
+READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
 
@@ -114,7 +114,7 @@ async def multiple_database_queries(scope, receive, send):
     Test type 3: Multiple database queries
     """
     num_queries = get_num_queries(scope)
-    row_ids = [randint(1, 10000) for _ in range(num_queries)]
+    row_ids = sample(range(1, 10000), num_queries)
     worlds = []
 
     connection = await pool.acquire()
@@ -161,7 +161,7 @@ async def database_updates(scope, receive, send):
     Test type 5: Database updates
     """
     num_queries = get_num_queries(scope)
-    updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
+    updates = [(row_id, randint(1, 10000)) for row_id in sample(range(1, 10000), num_queries)]
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     connection = await pool.acquire()

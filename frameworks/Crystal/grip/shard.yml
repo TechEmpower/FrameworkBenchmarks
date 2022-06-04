@@ -1,14 +1,13 @@
-name: hoge
-version: 0.1.0
+name: grip
+version: 0.1.1
 
 dependencies:
   grip:
     github: grip-framework/grip
+
   pg:
     github: will/crystal-pg
-    version: 0.20.0
+
 targets:
   grip:
     main: grip.cr
-
-crystal: 0.34.0

@@ -1,0 +1,23 @@
+{
+  "framework": "activej",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "framework": "activej",
+        "language": "Java",
+        "flavor": "None",
+        "platform": "activej",
+        "webserver": "None",
+        "os": "Linux",
+        "display_name": "activej",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

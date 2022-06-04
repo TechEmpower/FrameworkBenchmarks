@@ -5,16 +5,18 @@ use Swoole\Http\Response;
 
 $server = new swoole_http_server('0.0.0.0', 8080, SWOOLE_BASE);
 $server->set([
-    'worker_num' => swoole_cpu_num()
+    'worker_num' => swoole_cpu_num(),
+    'log_file' => '/dev/null',
+    'log_level' => 5,
 ]);
 
-$pool = new \DatabasePool('mysql');
+$pool = new \DatabasePool('postgres');
 
 /**
  * On start of the PHP worker. One worker per server process is started.
  */
 $server->on('workerStart', function ($srv) use ($pool) {
-	$pool->init(\intdiv(512, $srv->setting['worker_num']));
+    $pool->init(\intdiv(512, $srv->setting['worker_num']));
 });
 
 /**
@@ -25,9 +27,8 @@ $server->on('workerStart', function ($srv) use ($pool) {
  *
  * @return string
  */
-$db = function (int $queries = 0) use ($pool): string {
+$db_postgres = function (int $queries = 0) use ($pool): string {
     $db = $pool->get();
-
     // Read number of queries to run from URL parameter
     $query_count = 1;
     if ($queries > 1) {
@@ -36,16 +37,16 @@ $db = function (int $queries = 0) use ($pool): string {
 
     // Create an array with the response string.
     $arr = [];
-    // Define query
-    $db->db_test = $db->db_test ?? $db->prepare('SELECT id, randomNumber FROM World WHERE id = ?');
+
+    $db->s ??= $db->prepare('s', 'SELECT id, randomnumber FROM World WHERE id = $1');
 
     // For each query, store the result set values in the response array
     while ($query_count--) {
         $id = mt_rand(1, 10000);
-        $ret = $db->db_test->execute([$id]);
-
+        $res = $db->execute('s', [$id]);
+        $ret = $db->fetchAssoc($res);
         // Store result in array.
-        $arr[] = ['id' => $id, 'randomNumber' => $ret[0]['randomNumber']];
+        $arr[] = ['id' => $id, 'randomnumber' => $ret['randomnumber']];
     }
 
     // Use the PHP standard JSON encoder.
@@ -66,12 +67,15 @@ $db = function (int $queries = 0) use ($pool): string {
  *
  * @return string
  */
-$fortunes = function () use ($pool): string {
+$fortunes_postgres = function () use ($pool): string {
     $db = $pool->get();
 
     $fortune = [];
-    $db->fortune_test = $db->fortune_test ?? $db->prepare('SELECT id, message FROM Fortune');
-    $arr = $db->fortune_test->execute();
+
+    $db->f ??= $db->prepare('f', 'SELECT id, message FROM Fortune');
+    $res = $db->execute('f', []);
+    $arr = $db->fetchAll($res);
+
     foreach ($arr as $row) {
         $fortune[$row['id']] = $row['message'];
     }
@@ -99,7 +103,7 @@ $fortunes = function () use ($pool): string {
  *
  * @return string
  */
-$updates = function (int $queries = 0) use ($pool): string {
+$updates_postgres = function (int $queries = 0) use ($pool): string {
     $db = $pool->get();
 
     $query_count = 1;
@@ -108,12 +112,126 @@ $updates = function (int $queries = 0) use ($pool): string {
     }
 
     $arr = [];
-    $db->updates_test_select = $db->updates_test_select ?? $db->prepare('SELECT randomNumber FROM World WHERE id = ?');
-    $db->updates_test_update = $db->updates_test_update ?? $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
+
+    $db->us ??= $db->prepare('us', 'SELECT id,randomnumber FROM World WHERE id = $1');
+    $db->uu ??= $db->prepare('uu', 'UPDATE World SET randomnumber = $1 WHERE id = $2');
 
     while ($query_count--) {
-        $id = mt_rand(1, 10000);
-        $randomNumber = mt_rand(1, 10000);
+        $id = \mt_rand(1, 10000);
+        $randomNumber = \mt_rand(1, 10000);
+        $res = $db->execute('us', [$id]);
+        $ret = $db->fetchAssoc($res);
+        // Store result in array.
+        $world = ['id' => $id, 'randomnumber' => $ret['randomnumber']];
+        $world['randomnumber'] = $randomNumber;
+        $res = $db->execute('uu', [$randomNumber, $id]);
+        $arr[] = $world;
+    }
+
+    $pool->put($db);
+
+    return \json_encode($arr, JSON_NUMERIC_CHECK);
+};
+
+/**
+ * The DB test
+ *
+ * @param string $database_type
+ * @param int $queries
+ *
+ * @return string
+ */
+$db_mysql = function (int $queries = 0) use ($pool): string {
+    $db = $pool->get();
+
+    // Read number of queries to run from URL parameter
+    $query_count = 1;
+    if ($queries > 1) {
+        $query_count = $queries > 500 ? 500 : $queries;
+    }
+
+    // Create an array with the response string.
+    $arr = [];
+    // Define query
+    $db->db_test ??= $db->prepare('SELECT id, randomNumber FROM World WHERE id = ?');
+
+    // For each query, store the result set values in the response array
+    while ($query_count--) {
+        $id = \mt_rand(1, 10000);
+        $ret = $db->db_test->execute([$id]);
+
+        // Store result in array.
+        $arr[] = ['id' => $id, 'randomNumber' => $ret[0]['randomNumber']];
+    }
+
+    // Use the PHP standard JSON encoder.
+    // http://www.php.net/manual/en/function.json-encode.php
+    if ($queries === -1) {
+        $arr = $arr[0];
+    }
+
+    $pool->put($db);
+
+    return \json_encode($arr, JSON_NUMERIC_CHECK);
+};
+
+/**
+ * The Fortunes test
+ *
+ * @param string $database_type
+ *
+ * @return string
+ */
+$fortunes_mysql = function () use ($pool): string {
+    $db = $pool->get();
+
+    $fortune = [];
+
+    $db->fortune_test ??= $db->prepare('SELECT id, message FROM Fortune');
+    $arr = $db->fortune_test->execute();
+
+    foreach ($arr as $row) {
+        $fortune[$row['id']] = $row['message'];
+    }
+    $fortune[0] = 'Additional fortune added at request time.';
+    \asort($fortune);
+
+    $html = '';
+    foreach ($fortune as $id => $message) {
+        $message = \htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+        $html .= "<tr><td>{$id}</td><td>{$message}</td></tr>";
+    }
+
+    $pool->put($db);
+
+    return '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
+            .$html.
+            '</table></body></html>';
+};
+
+/**
+ * The Updates test
+ *
+ * @param string $database_type
+ * @param int $queries
+ *
+ * @return string
+ */
+$updates_mysql = function (int $queries = 0) use ($pool): string {
+    $db = $pool->get();
+
+    $query_count = 1;
+    if ($queries > 1) {
+        $query_count = $queries > 500 ? 500 : $queries;
+    }
+
+    $arr = [];
+    $db->updates_test_select ??= $db->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
+    $db->updates_test_update ??= $db->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
+
+    while ($query_count--) {
+        $id = \mt_rand(1, 10000);
+        $randomNumber = \mt_rand(1, 10000);
         $ret = $db->updates_test_select->execute([$id]);
 
         // Store result in array.
@@ -200,7 +318,7 @@ class DatabasePool
     ];
 
     private $pool;
-    
+
     private $type;
 
     public function __construct($type)
@@ -208,7 +326,7 @@ class DatabasePool
         $this->server['host'] = \gethostbyname('tfb-database');
         $this->type = $type;
     }
-    
+
     public function init($capacity)
     {
         $this->pool=new \Swoole\Coroutine\Channel($capacity);
@@ -223,15 +341,18 @@ class DatabasePool
 
     private function createDbInstance()
     {
-        if ($this->type === 'mysql') {
-            $db = new Swoole\Coroutine\Mysql;
-        }
         if ($this->type === 'postgres') {
             $db = new Swoole\Coroutine\PostgreSql;
+            if ($db->connect("host={$this->server['host']} port=5432 dbname={$this->server['database']} user={$this->server['user']} password={$this->server['password']}")){
+                return $db;
+            }
+        } else if($this->type === 'mysql') {
+            $db = new Swoole\Coroutine\Mysql;
+            if ($db->connect($this->server)){
+                return $db;
+            }
         }
-        if ($db->connect($this->server)){
-            return $db;
-        }
+
         return false;
     }
 

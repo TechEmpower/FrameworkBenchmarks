@@ -1,18 +1,20 @@
 package main
 
 import (
-	"github.com/gofiber/fiber"
-	"github.com/gofiber/utils"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/utils"
 )
 
 // go test -v  -run=^$ -bench=Benchmark_Plaintext -benchmem -count=4
 func Benchmark_Plaintext(b *testing.B) {
-	app := fiber.New()
-	app.Settings.DisableStartupMessage = true
+	app := fiber.New(fiber.Config{
+		DisableStartupMessage: true,
+	})
 
 	app.Get("/plaintext", plaintextHandler)
 
@@ -37,8 +39,9 @@ func Benchmark_Plaintext(b *testing.B) {
 
 // go test -v  -run=^$ -bench=Benchmark_JSON -benchmem -count=4
 func Benchmark_JSON(b *testing.B) {
-	app := fiber.New()
-	app.Settings.DisableStartupMessage = true
+	app := fiber.New(fiber.Config{
+		DisableStartupMessage: true,
+	})
 
 	app.Get("/json", jsonHandler)
 

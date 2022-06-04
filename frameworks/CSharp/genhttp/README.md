@@ -20,3 +20,7 @@ See the [GenHTTP website](https://genhttp.org) for more information.
 
 * [Plaintext](Benchmarks/Program.cs): "/plaintext"
 * [JSON](Benchmarks/Tests/JsonResource.cs): "/json"
+* [DB](Benchmarks/Tests/DbResource.cs): "/db"
+* [Queries](Benchmarks/Tests/QueryResource.cs): "/queries"
+* [Updates](Benchmarks/Tests/UpdateResource.cs): "/updates"
+* [Fortunes](Benchmarks/Tests/FortuneHandler.cs): "/fortunes"

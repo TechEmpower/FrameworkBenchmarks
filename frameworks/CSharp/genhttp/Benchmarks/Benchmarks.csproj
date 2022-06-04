@@ -2,10 +2,8 @@
   
   <PropertyGroup>
     
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-
-    <LangVersion>8.0</LangVersion>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>10.0</LangVersion>
     
     <AssemblyTitle>GenHTTP Benchmarks</AssemblyTitle>
     <Description>Test suite to be executed with TechEmpower FrameworkBenchmarks.</Description>
@@ -14,13 +12,25 @@
     <OutputType>Exe</OutputType>
     
     <ServerGarbageCollection>true</ServerGarbageCollection>
-    <TieredCompilation>false</TieredCompilation>
     
   </PropertyGroup>
+  
+  <ItemGroup>
+    <None Remove="Resources\Fortunes.html" />
+    <None Remove="Resources\Template.html" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Template.html" />
+    <EmbeddedResource Include="Resources\Fortunes.html" />
+  </ItemGroup>
     
   <ItemGroup>
-    <PackageReference Include="GenHTTP.Core" Version="3.0.3" />
-    <PackageReference Include="GenHTTP.Modules.Webservices" Version="3.0.3" />
+    <PackageReference Include="GenHTTP.Core" Version="6.3.4" />
+    <PackageReference Include="GenHTTP.Modules.Razor" Version="6.3.4" />
+    <PackageReference Include="GenHTTP.Modules.Webservices" Version="6.3.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.4" />
   </ItemGroup>
   
 </Project>

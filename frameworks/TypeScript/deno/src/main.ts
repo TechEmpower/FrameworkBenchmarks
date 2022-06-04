@@ -1,7 +1,15 @@
-import { serve } from "https://deno.land/std@v0.50.0/http/server.ts";
-
-import { handlers } from "./handlers.ts";
-
+import { serve } from "https://deno.land/std@0.96.0/http/server.ts";
+import Handlers from "./handlers.ts";
 for await (const req of serve("0.0.0.0:8080")) {
-  handlers[req.url](req);
+  if (Handlers[req.url] != undefined) {
+    Handlers[req.url](req as any).catch((e) => {
+      console.error(e);
+      Deno.exit(9);
+    });
+  } else {
+    req.respond({
+      body: "404 Not Found",
+    });
+  }
+  continue;
 }

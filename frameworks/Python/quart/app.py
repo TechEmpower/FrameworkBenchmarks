@@ -3,11 +3,11 @@ import random
 import os
 
 import asyncpg
-from quart import Quart, jsonify, make_response, request, render_template
+from quart import jsonify, Quart, request, render_template
 
 app = Quart(__name__)
 
-GET_WORLD = "select randomnumber from world where id = $1"
+GET_WORLD = "select id, randomnumber from world where id = $1"
 UPDATE_WORLD = "update world set randomNumber = $2 where id = $1"
 
 
@@ -27,20 +27,17 @@ async def disconnect_from_db():
     await app.db.close()
 
 
-@app.route("/json")
+@app.get("/json")
 async def json():
     return {"message": "Hello, World!"}
 
 
-@app.route("/plaintext")
+@app.get("/plaintext")
 async def plaintext():
-    response = await make_response(b"Hello, World!")
-    # Quart assumes string responses are 'text/html', so make a custom one
-    response.mimetype = "text/plain"
-    return response
+    return "Hello, World!", {"Content-Type": "text/plain"}
 
 
-@app.route("/db")
+@app.get("/db")
 async def db():
     async with app.db.acquire() as conn:
         key = random.randint(1, 10000)
@@ -48,48 +45,42 @@ async def db():
         return jsonify({"id": key, "randomNumber": number})
 
 
-def get_query_count(args):
-    qc = args.get("queries")
-
-    if qc is None:
-        return 1
-
+def get_query_count():
     try:
-        qc = int(qc)
+        num_queries = request.args.get("queries", 1, type=int)
     except ValueError:
+        num_queries = 1
+    if num_queries < 1:
         return 1
+    if num_queries > 500:
+        return 500
+    return num_queries
 
-    qc = max(qc, 1)
-    qc = min(qc, 500)
-    return qc
 
-
-@app.route("/queries")
+@app.get("/queries")
 async def queries():
-    queries = get_query_count(request.args)
+    queries = get_query_count()
 
     worlds = []
     async with app.db.acquire() as conn:
         pst = await conn.prepare(GET_WORLD)
-        for _ in range(queries):
-            key = random.randint(1, 10000)
+        for key in random.sample(range(1, 10000), queries):
             number = await pst.fetchval(key)
             worlds.append({"id": key, "randomNumber": number})
 
     return jsonify(worlds)
 
 
-@app.route("/updates")
+@app.get("/updates")
 async def updates():
-    queries = get_query_count(request.args)
+    queries = get_query_count()
 
     new_worlds = []
     async with app.db.acquire() as conn, conn.transaction():
         pst = await conn.prepare(GET_WORLD)
 
-        for _ in range(queries):
-            key = random.randint(1, 10000)
-            old_number = await pst.fetchval(key)
+        for key in random.sample(range(1, 10000), queries):
+            await pst.fetchval(key)
             new_number = random.randint(1, 10000)
             new_worlds.append((key, new_number))
 
@@ -100,7 +91,7 @@ async def updates():
     )
 
 
-@app.route("/fortunes")
+@app.get("/fortunes")
 async def fortunes():
     async with app.db.acquire() as conn:
         rows = await conn.fetch("select * from fortune")

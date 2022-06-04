@@ -6,4 +6,7 @@ RUN mvn package -q
 
 FROM openjdk:11.0.3-jdk-slim
 COPY --from=maven /build/target/appassembler /server
+
+EXPOSE 8080
+
 CMD ["/server/bin/main"]

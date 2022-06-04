@@ -21,5 +21,7 @@ ADD ./nginx.conf /kelp/
 
 ENV MONGO=1
 
+EXPOSE 8080
+
 CMD nginx -c /kelp/nginx.conf && \
     plackup -E production -s Starman --workers=$(nproc) -l /tmp/perl-kelp.sock -a ./app.pl

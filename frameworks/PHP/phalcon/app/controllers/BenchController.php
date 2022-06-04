@@ -1,35 +1,34 @@
 <?php
 
-use Phalcon\Mvc\View,
-    Phalcon\Mvc\Model\Resultset;
+use Phalcon\Mvc\Controller;
+use Phalcon\Mvc\View;
+use Phalcon\Mvc\Model\Resultset;
+use Phalcon\Http\ResponseInterface;
 
-class BenchController extends \Phalcon\Mvc\Controller
+class BenchController extends Controller
 {
-
-    public function initialize()
+    public function initialize(): void
     {
-        // views must be renderd explicitly. safes processing time when not needed.
+        // views must be rendered explicitly. safes processing time when not needed.
         $this->view->setRenderLevel(View::LEVEL_LAYOUT);
     }
 
-    public function jsonAction()
+    public function jsonAction(): ResponseInterface
     {
-        return $this->response->setJsonContent(array(
+        return $this->response->setJsonContent([
             'message' => 'Hello, World!'
-        ));
+        ]);
     }
 
-    public function dbAction()
+    public function dbAction(): ResponseInterface
     {
         return $this->response->setJsonContent($this->getRandomWorld());
     }
 
-    public function queriesAction()
+    public function queriesAction(): ResponseInterface
     {
-
-	$queries = min(500, max(1, $this->filter->sanitize($this->request->getQuery('queries', null, 1), "int")));
-
-        $worlds = array();
+        $queries = min(500, max(1, $this->request->getQuery('queries', "int", 1)));
+        $worlds = [];
 
         for ($i = 0; $i < $queries; ++$i) {
             $worlds[] = $this->getRandomWorld();
@@ -38,9 +37,8 @@ class BenchController extends \Phalcon\Mvc\Controller
         return $this->response->setJsonContent($worlds);
     }
 
-    public function fortunesAction()
+    public function fortunesAction(): void
     {
-
         $fortunes = $this->getFortunesArray();
         $fortunes[] = $this->buildFortune();
 
@@ -49,13 +47,12 @@ class BenchController extends \Phalcon\Mvc\Controller
         $this->view->fortunes = $this->sortFortunes($fortunes);
     }
 
-    public function updateAction()
+    public function updateAction(): ResponseInterface
     {
-
-        $queries = $this->request->getQuery('queries', null, 1);
+        $queries = $this->request->getQuery('queries', "int", 1);
         $queries = max(1, min(500, $queries));
 
-        $worlds = array();
+        $worlds = [];
 
         for ($i = 0; $i < $queries; ++$i) {
             $world = $this->getRandomWorld();
@@ -67,11 +64,12 @@ class BenchController extends \Phalcon\Mvc\Controller
         return $this->response->setJsonContent($worlds);
     }
 
-    public function plaintextAction()
+    public function plaintextAction(): ResponseInterface
     {
         $this->view->disable();
         $this->response->setContentType('text/plain');
         $this->response->setContent("Hello, World!");
+
         return $this->response;
     }
 
@@ -80,7 +78,7 @@ class BenchController extends \Phalcon\Mvc\Controller
         return Worlds::findFirst(mt_rand(1, 10000));
     }
 
-    protected function getFortunesArray()
+    protected function getFortunesArray(): array
     {
         // since the resultset is immutable get an array instead
         // so we can add the new fortune
@@ -89,18 +87,18 @@ class BenchController extends \Phalcon\Mvc\Controller
 
     protected function buildFortune()
     {
-        return array(
+        return [
             'id' => 0,
             'message' => 'Additional fortune added at request time.'
-        );
+        ];
     }
 
-    protected function sortFortunes($fortunes)
+    protected function sortFortunes(array $fortunes): array
     {
-        usort($fortunes,
-                function($left, $right) {
-                    return $left['message'] <=> $right['message'];
-                });
+        usort($fortunes, function ($left, $right) {
+            return $left['message'] <=> $right['message'];
+        });
+
         return $fortunes;
     }
 }

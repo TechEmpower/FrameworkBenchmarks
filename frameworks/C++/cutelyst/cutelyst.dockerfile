@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 RUN apt-get update -qq && \
     apt-get install -yqq locales wget build-essential
@@ -27,7 +27,9 @@ RUN sed -i "s|DatabaseHostName=.*|DatabaseHostName=tfb-database|g" /cutelyst_soc
 ENV C_THREADS 1
 ENV CPU_AFFINITY 1
 
-CMD cutelyst-wsgi2 \
+EXPOSE 8080
+
+CMD ${TROOT}/build/cutelyst-benchmarks \
     --ini /cutelyst.ini:uwsgi \
     --application ${CUTELYST_APP} \
     --processes=$(nproc) \

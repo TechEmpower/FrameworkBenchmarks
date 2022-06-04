@@ -1,4 +1,4 @@
-FROM crystallang/crystal:0.34.0
+FROM crystallang/crystal:1.0.0
 
 WORKDIR /grip
 COPY views views
@@ -11,5 +11,7 @@ ENV GRIP_ENV production
 
 RUN shards install
 RUN crystal build  --release --no-debug grip.cr
+
+EXPOSE 8080
 
 CMD bash run.sh

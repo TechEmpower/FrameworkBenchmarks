@@ -32,15 +32,15 @@ namespace PeachpieBenchmarks.Server
                 .Run();
         }
     }
-	
-	class Startup
+
+    class Startup
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            // disable timeout
             services.AddPhp(options =>
             {
-                options.Core.ExecutionTimeout = -1;
+                // disable timeout
+                options.Core.ExecutionTimeout = 0;
             });
         }
 

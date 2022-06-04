@@ -1,12 +1,16 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1.101 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0.100 AS build
 RUN apt-get update
-RUN apt-get -yqq install clang zlib1g-dev libkrb5-dev libtinfo5
+RUN apt-get -yqq install clang zlib1g-dev libkrb5-dev
 WORKDIR /app
 COPY PlatformBenchmarks .
 RUN dotnet publish -c Release -o out -r linux-x64
 
-FROM mcr.microsoft.com/dotnet/core/runtime-deps:3.1 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:6.0.0 AS runtime
+ENV ASPNETCORE_URLS http://+:8080
+ENV DOTNET_SYSTEM_NET_SOCKETS_INLINE_COMPLETIONS 1
 WORKDIR /app
 COPY --from=build /app/out ./
 
-ENTRYPOINT ["./PlatformBenchmarks", "--server.urls=http://+:8080"]
+EXPOSE 8080
+
+ENTRYPOINT ["./PlatformBenchmarks"]

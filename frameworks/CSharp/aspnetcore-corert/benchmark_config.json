@@ -16,17 +16,19 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core",
+      "display_name": "ASP.NET Core [Platform, CoreRT]",
       "notes": "",
       "versus": "aspcore"
     },
-    "rhtx": {
-      "plaintext_url": "/plaintext",
-      "json_url": "/json",
+    "ado-pg": {
+      "fortune_url": "/fortunes",
+      "db_url": "/db",
+      "query_url": "/queries/",
+      "cached_query_url": "/cached-worlds/",
       "port": 8080,
       "approach": "Stripped",
       "classification": "Platform",
-      "database": "None",
+      "database": "Postgres",
       "framework": "ASP.NET Core",
       "language": "C#",
       "orm": "Raw",
@@ -35,9 +37,27 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "ASP.NET Core, Red Hat Linux Transport",
+      "display_name": "ASP.NET Core [Platform, CoreRT, Pg]",
       "notes": "",
-      "versus": "aspcore"
+      "versus": "aspcore-ado-pg"
+    },
+    "ado-pg-up": {
+      "update_url": "/updates/",
+      "port": 8080,
+      "approach": "Stripped",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "ASP.NET Core",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "flavor": "CoreRT",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ASP.NET Core [Platform, CoreRT, Pg]",
+      "notes": "",
+      "versus": "aspcore-ado-pg-up"
     }
   }]
 }

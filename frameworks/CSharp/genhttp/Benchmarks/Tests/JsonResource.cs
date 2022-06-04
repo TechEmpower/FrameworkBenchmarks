@@ -3,18 +3,18 @@
 namespace Benchmarks.Tests
 {
 
-    public class JsonResult
+    public sealed class JsonResult
     {
 
-        public string? Message { get; set; }
+        public string Message { get; set; }
 
     }
 
-    public class JsonResource
+    public sealed class JsonResource
     {
 
-        [Method]
-        public JsonResult GetMessage() => new JsonResult() { Message = "Hello, World!" };
+        [ResourceMethod]
+        public JsonResult GetMessage() => new() { Message = "Hello, World!" };
 
     }
 

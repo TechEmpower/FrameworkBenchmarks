@@ -1,21 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   
   <PropertyGroup>
-    <DefineConstants Condition=" '$(IsDatabase)' == 'true' ">$(DefineConstants);DATABASE</DefineConstants>
+    <DefineConstants Condition=" '$(DatabaseProvider)' != '' ">$(DefineConstants);DATABASE</DefineConstants>
+    <DefineConstants Condition=" '$(DatabaseProvider)' == 'Npgsql' ">$(DefineConstants);NPGSQL</DefineConstants>
+    <DefineConstants Condition=" '$(DatabaseProvider)' == 'MySqlConnector' ">$(DefineConstants);MYSQLCONNECTOR</DefineConstants>
   </PropertyGroup>
   
   <ItemGroup>
-      <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <PackageReference Condition=" '$(DatabaseProvider)' == 'Npgsql' " Include="Npgsql" Version="6.0.0" />
+    <PackageReference Condition=" '$(DatabaseProvider)' == 'MySqlConnector' " Include="MySqlConnector" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
-    <PackageReference Include="RedHat.AspNetCore.Server.Kestrel.Transport.Linux" Version="3.0.0-*" />
+      <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

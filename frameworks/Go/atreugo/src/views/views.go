@@ -1,16 +1,13 @@
 package views
 
 import (
+	"atreugo/src/templates"
 	"context"
 	"sort"
-
-	"atreugo/src/templates"
 
 	pgx "github.com/jackc/pgx/v4"
 	"github.com/savsgio/atreugo/v11"
 )
-
-var worldsCache *Worlds
 
 const (
 	helloWorldStr = "Hello, World!"
@@ -18,11 +15,11 @@ const (
 	contentTypeHTML = "text/html; charset=utf-8"
 )
 
+var worldsCache = &Worlds{W: make([]World, worldsCount)}
+
 // PopulateWorldsCache populates the worlds cache for the cache test.
 func PopulateWorldsCache() {
-	worlds := &Worlds{W: make([]World, worldsCount)}
-
-	rows, err := db.Query(context.Background(), worldSelectCacheSQL, worldsCount)
+	rows, err := db.Query(context.Background(), worldSelectCacheSQL, len(worldsCache.W))
 	if err != nil {
 		panic(err)
 	}
@@ -30,7 +27,7 @@ func PopulateWorldsCache() {
 	i := 0
 
 	for rows.Next() {
-		w := &worlds.W[i]
+		w := &worldsCache.W[i]
 
 		if err := rows.Scan(&w.ID, &w.RandomNumber); err != nil {
 			panic(err)
@@ -38,8 +35,6 @@ func PopulateWorldsCache() {
 
 		i++
 	}
-
-	worldsCache = worlds
 }
 
 // JSON . Test 1: JSON serialization.
@@ -144,7 +139,7 @@ func Updates(ctx *atreugo.RequestCtx) error {
 		return worlds.W[i].ID < worlds.W[j].ID
 	})
 
-	batch := &pgx.Batch{}
+	batch := new(pgx.Batch)
 
 	for i := 0; i < queries; i++ {
 		w := &worlds.W[i]

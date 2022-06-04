@@ -4,16 +4,15 @@ CFLAGS = -mtune=native -march=native -O3 -fno-plt -flto -ffat-lto-objects -DNDEB
 	-falign-functions=32 -malign-data=abi \
 	-include /lwan/build/lwan-build-config.h \
 	-I /lwan/src/lib \
-	`pkg-config mariadb --cflags` \
-	`pkg-config sqlite3 --cflags` \
-	`pkg-config luajit --cflags` \
-	-fauto-profile=/lwan/src/gcda/techempower.gcov
+	$(shell pkg-config mariadb --cflags) \
+	$(shell pkg-config sqlite3 --cflags) \
+	$(shell pkg-config luajit --cflags)
 
 LDFLAGS = -mtune=native -march=native -O3 -flto -ffat-lto-objects -Wl,-z,now,-z,relro \
 	-Wl,-whole-archive /lwan/build/src/lib/liblwan.a -Wl,-no-whole-archive \
-	`pkg-config mariadb --libs` \
-	`pkg-config sqlite3 --libs` \
-	`pkg-config luajit --libs` \
+	$(shell pkg-config mariadb --libs) \
+	$(shell pkg-config sqlite3 --libs) \
+	$(shell pkg-config luajit --libs) \
 	-lpthread \
 	-lz
 
@@ -27,7 +26,7 @@ all: techempower
 	$(CC) $(CFLAGS) -c $< -o $@
 
 techempower: $(OBJS)
-	$(CC) $(LDFLAGS) $(OBJS) -o techempower
+	$(CC) -o techempower $(OBJS) $(LDFLAGS)
 
 clean:
 	rm -f techempower $(OBJS)

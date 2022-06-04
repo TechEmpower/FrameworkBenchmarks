@@ -4,7 +4,7 @@ require_once __DIR__ . '/boot-eloquent.php';
 
 // Read number of queries to run from URL parameter
 $query_count = 1;
-if (isset($_GET['queries']) && $_GET['queries'] > 0) {
+if (isset($_GET['queries']) && (int) $_GET['queries'] > 0) {
   $query_count = $_GET['queries'] > 500 ? 500 : $_GET['queries'];
 }
 

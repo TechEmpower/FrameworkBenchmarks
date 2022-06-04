@@ -1,7 +1,7 @@
-FROM sumeetchhetri/ffead-cpp-5.0-v-base:latest
+FROM sumeetchhetri/ffead-cpp-v-base:6.0
 
 ENV IROOT=/installs
 
 WORKDIR /
 
-CMD ./run_ffead.sh ffead-cpp-5.0 v-vweb
+CMD ./run_ffead.sh ffead-cpp-6.0 v-vweb

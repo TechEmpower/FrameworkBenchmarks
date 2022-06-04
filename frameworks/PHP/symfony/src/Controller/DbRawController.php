@@ -23,11 +23,10 @@ class DbRawController
      */
     public function db(): JsonResponse
     {
-        $statement = $this->connection->prepare('SELECT * FROM World WHERE id = ?');
-        $statement->execute([mt_rand(1, 10000)]);
-        $world = $statement->fetch(FetchMode::ASSOCIATIVE);
+        $statement = $this->connection->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
+        $world = $statement->execute([mt_rand(1, 10000)]);
 
-        return new JsonResponse($world);
+        return new JsonResponse($world->fetchAssociative());
     }
 
     /**
@@ -41,10 +40,10 @@ class DbRawController
         // possibility for enhancement is the use of SplFixedArray -> http://php.net/manual/de/class.splfixedarray.php
         $worlds = [];
 
-        $statement = $this->connection->prepare('SELECT * FROM World WHERE id = ?');
+        $statement = $this->connection->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
         for ($i = 0; $i < $queries; ++$i) {
-            $statement->execute([mt_rand(1, 10000)]);
-            $worlds[] = $statement->fetch(FetchMode::ASSOCIATIVE);
+            $world = $statement->execute([mt_rand(1, 10000)]);
+            $worlds[] = $world->fetchAssociative();
         }
 
         return new JsonResponse($worlds);
@@ -65,8 +64,8 @@ class DbRawController
 
         for ($i = 0; $i < $queries; ++$i) {
             $id = mt_rand(1, 10000);
-            $readStatement->execute([$id]);
-            $world =  $readStatement->fetch(FetchMode::ASSOCIATIVE);
+            $world = $readStatement->execute([$id]);
+            $world =  $world->fetchAssociative();
             $writeStatement->execute(
                 [$world['randomNumber'] = mt_rand(1, 10000), $id]
             );

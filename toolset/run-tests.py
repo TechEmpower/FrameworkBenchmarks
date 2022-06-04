@@ -6,7 +6,6 @@ import traceback
 from toolset.benchmark.benchmarker import Benchmarker
 from toolset.utils.scaffolding import Scaffolding
 from toolset.utils.audit import Audit
-from toolset.utils import cleaner
 from toolset.utils.benchmark_config import BenchmarkConfig
 from toolset.utils.output_helper import log
 
@@ -73,11 +72,6 @@ def main(argv=None):
         action='store_true',
         default=False,
         help='Audits framework tests for inconsistencies')
-    parser.add_argument(
-        '--clean',
-        action='store_true',
-        default=False,
-        help='Removes the results directory')
     parser.add_argument(
         '--new',
         action='store_true',
@@ -214,10 +208,6 @@ def main(argv=None):
 
         elif config.audit:
             Audit(benchmarker).start_audit()
-
-        elif config.clean:
-            cleaner.clean(benchmarker.results)
-            benchmarker.docker_helper.clean()
 
         elif config.list_tests:
             all_tests = benchmarker.metadata.gather_tests()

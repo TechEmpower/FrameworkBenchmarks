@@ -13,7 +13,7 @@ function fortune()
     ngx_header_set('Content-Type', 'text/html;charset=UTF-8');
     $my = new php\ngx\mysql();
     yield from $my->connect(DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME);
-    $ret = yield from $my->query('SELECT id,message FROM Fortune');
+    $ret = yield from $my->query2('SELECT id,message FROM Fortune');
 
     foreach ($ret as $row) {
         $arr[$row['id']] = $row['message'];
@@ -37,13 +37,13 @@ function query()
     $my = new php\ngx\mysql();
     yield from $my->connect(DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME);
     $query_count = 1;
-    $params      = ngx::query_args()['q'];
+    $params      = (int) ngx::query_args()['q'];
     if ($params > 1) {
         $query_count = min($params, 500);
     }
 
     while ($query_count--) {
-        $arr[] = (yield from $my->query('SELECT id,randomNumber FROM World WHERE id = '.mt_rand(1, 10000)))[0];
+        $arr[] = (yield from $my->query2('SELECT id,randomNumber FROM World WHERE id = '.mt_rand(1, 10000)))[0];
     }
     unset($my);
     echo json_encode($arr);
@@ -57,7 +57,7 @@ function db()
     yield from $my->connect(DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME);
 
     echo json_encode(
-        (yield from $my->query('SELECT id,randomNumber FROM World WHERE id = '.mt_rand(1, 10000)))[0]
+        (yield from $my->query2('SELECT id,randomNumber FROM World WHERE id = '.mt_rand(1, 10000)))[0]
     );
     unset($my);
 }
@@ -68,17 +68,17 @@ function update()
     $my = new php\ngx\mysql();
     yield from $my->connect(DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME);
     $query_count = 1;
-    $params      = ngx::query_args()['q'];
+    $params      = (int) ngx::query_args()['q'];
     if ($params > 1) {
         $query_count = min($params, 500);
     }
 
     while ($query_count--) {
         $id     = mt_rand(1, 10000);
-        $world  = (yield from $my->query("SELECT id,randomNumber FROM World WHERE id = $id"))[0];
+        $world  = (yield from $my->query2("SELECT id,randomNumber FROM World WHERE id = $id"))[0];
         
         $world['randomNumber'] = mt_rand(1, 10000);
-        yield from $my->query("UPDATE World SET randomNumber = {$world['randomNumber']} WHERE id = $id");
+        yield from $my->query2("UPDATE World SET randomNumber = {$world['randomNumber']} WHERE id = $id");
         $arr[] = $world;
     }
     unset($my);

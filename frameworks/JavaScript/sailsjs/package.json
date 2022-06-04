@@ -8,7 +8,7 @@
     "async": "1.5.2",
     "bluebird": "3.4.1",
     "ejs": "2.5.7",
-    "handlebars": "4.3.0",
+    "handlebars": "4.7.6",
     "mysql": "2.16.0",
     "mysql2": "1.6.5",
     "pg": "6.0.5",

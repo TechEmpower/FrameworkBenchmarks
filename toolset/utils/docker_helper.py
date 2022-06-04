@@ -44,16 +44,14 @@ class DockerHelper:
                     forcerm=True,
                     timeout=3600,
                     pull=True,
-                    buildargs=buildargs
+                    buildargs=buildargs,
+                    decode=True
                 )
                 buffer = ""
                 for token in output:
-                    if token.startswith('{"stream":'):
-                        token = json.loads(token)
-                        token = token[token.keys()[0]].encode('utf-8')
-                        buffer += token
-                    elif token.startswith('{"errorDetail":'):
-                        token = json.loads(token)
+                    if 'stream' in token:
+                        buffer += token[token.keys()[0]].encode('utf-8')
+                    elif 'errorDetail' in token:
                         raise Exception(token['errorDetail']['message'])
                     while "\n" in buffer:
                         index = buffer.index("\n")
@@ -95,25 +93,16 @@ class DockerHelper:
 
     def clean(self):
         '''
-        Cleans all the docker images from the system
+        Cleans all the docker test images from the system and prunes
         '''
-
-        self.server.images.prune()
         for image in self.server.images.list():
             if len(image.tags) > 0:
-                # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
-                image_tag = image.tags[0].split(':')[0]
-                if image_tag != 'techempower/tfb' and 'techempower' in image_tag:
-                    self.server.images.remove(image.id, force=True)
+                if 'tfb.test.'  in image.tags[0]:
+                    try:
+                        self.server.images.remove(image.id, force=True)
+                    except Exception:
+                        pass
         self.server.images.prune()
-
-        self.database.images.prune()
-        for image in self.database.images.list():
-            if len(image.tags) > 0:
-                # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
-                image_tag = image.tags[0].split(':')[0]
-                if image_tag != 'techempower/tfb' and 'techempower' in image_tag:
-                    self.database.images.remove(image.id, force=True)
         self.database.images.prune()
 
     def build(self, test, build_log_dir=os.devnull):
@@ -186,7 +175,11 @@ class DockerHelper:
                 }
                 name = None
 
-            sysctl = {'net.core.somaxconn': 65535}
+            if self.benchmarker.config.network_mode is None:
+                sysctl = {'net.core.somaxconn': 65535}
+            else:
+                # Do not pass `net.*` kernel params when using host network mode
+                sysctl = None
 
             ulimit = [{
                 'name': 'nofile',
@@ -321,10 +314,16 @@ class DockerHelper:
         image_name = "techempower/%s:latest" % database
         log_prefix = image_name + ": "
 
-        sysctl = {
-            'net.core.somaxconn': 65535,
-            'kernel.sem': "250 32000 256 512"
-        }
+        if self.benchmarker.config.network_mode is None:
+            sysctl = {
+                'net.core.somaxconn': 65535,
+                'kernel.sem': "250 32000 256 512"
+            }
+        else:
+            # Do not pass `net.*` kernel params when using host network mode
+            sysctl = {
+                'kernel.sem': "250 32000 256 512"
+            }
 
         ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
 
@@ -403,7 +402,11 @@ class DockerHelper:
                 for line in container.logs(stream=True):
                     log(line, file=benchmark_file)
 
-        sysctl = {'net.core.somaxconn': 65535}
+        if self.benchmarker.config.network_mode is None:
+            sysctl = {'net.core.somaxconn': 65535}
+        else:
+            # Do not pass `net.*` kernel params when using host network mode
+            sysctl = None
 
         ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
 

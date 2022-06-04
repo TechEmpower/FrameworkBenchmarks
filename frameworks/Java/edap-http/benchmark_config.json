@@ -1,0 +1,45 @@
+{
+  "framework": "edap-http",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "None",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "edap",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "edap-http",
+        "notes": "",
+        "versus": "edap-http"
+      },
+      "fast":{
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "None",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "edap",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "edap-http-fast",
+        "notes": "",
+        "versus": "edap-http-fast"
+      }
+    }
+  ]
+}

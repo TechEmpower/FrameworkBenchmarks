@@ -5,14 +5,15 @@
  */
 package org.redkalex.benchmark;
 
-import javax.persistence.Id;
+import javax.persistence.*;
 import org.redkale.convert.json.JsonConvert;
 
 /**
  *
  * @author zhangjx
  */
-public class Fortune implements Comparable<Fortune> {
+@Entity
+public final class Fortune implements Comparable<Fortune> {
 
     @Id
     private int id;

@@ -11,13 +11,13 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>2.8.10</jooby.version>
-    <netty.version>4.1.49.Final</netty.version>
+    <jooby.version>2.9.5</jooby.version>
+    <netty.version>4.1.77.Final</netty.version>
     <dsl-json.version>1.9.5</dsl-json.version>
-    <postgresql.version>42.2.13</postgresql.version>
+    <postgresql.version>42.3.3</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
 
     <!-- Startup class -->
     <application.class>com.techempower.App</application.class>
@@ -54,12 +54,6 @@
       <version>${postgresql.version}</version>
     </dependency>
 
-    <!-- logging -->
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-    </dependency>
-
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-pg-client</artifactId>
@@ -77,6 +71,25 @@
   <build>
     <finalName>jooby</finalName>
     <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.outputDirectory}${file.separator}generated-sources${file.separator}annotations</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>com.fizzed</groupId>
         <artifactId>rocker-maven-plugin</artifactId>

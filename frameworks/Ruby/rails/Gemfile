@@ -1,16 +1,12 @@
-source 'http://rubygems.org'
+ruby '~> 3.1.0'
 
-gem 'unicorn', '5.4.1'
-gem 'puma', '3.12.6'
-gem 'activerecord', '5.2.2', :require => 'active_record'
-gem 'rails', '5.2.2'
-gem 'tzinfo-data', '1.2018.7'
-gem 'oj', '3.7.9'
+source 'https://rubygems.org'
 
-group :mysql do
-  gem 'mysql2', '0.5.2'
-end
-
-group :postgresql do
-  gem 'pg', '1.1.4'
-end
+gem 'listen', '~> 3.3', group: :development
+gem 'mysql2', '0.5.3', group: :mysql
+gem 'oj', '~> 3.13'
+gem 'pg', '1.2.3', group: :postgresql
+gem 'puma', '~> 5.6'
+gem 'rails', '~> 7.0.1'
+gem 'redis', '~> 4.0'
+gem 'tzinfo-data', '1.2021.5'

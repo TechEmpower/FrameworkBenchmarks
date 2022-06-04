@@ -1,0 +1,30 @@
+[framework]
+name = "restexpress"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/query?queries="
+approach = "Realistic"
+classification = "Micro"
+database = "MongoDB"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Netty"
+webserver = "None"
+versus = "netty"
+
+[mysql-raw]
+urls.db = "/db"
+urls.query = "/query?queries="
+approach = "Realistic"
+classification = "Micro"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Netty"
+webserver = "None"
+versus = "netty"

@@ -4,11 +4,9 @@ import os
 import jinja2
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, ORJSONResponse, PlainTextResponse
-from random import randint
+from random import randint, sample
 from operator import itemgetter
 from functools import partial
-
-_randint = partial(randint, 1, 10000)
 
 READ_ROW_SQL = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
@@ -64,7 +62,7 @@ async def json_serialization():
 @app.get("/db")
 async def single_database_query():
     async with connection_pool.acquire() as connection:
-        record = await connection.fetchrow(READ_ROW_SQL, _randint())
+        record = await connection.fetchrow(READ_ROW_SQL, randint(1, 10000))
 
     return ORJSONResponse({"id": record['id'], "randomNumber": record['randomnumber']})
 
@@ -72,12 +70,14 @@ async def single_database_query():
 @app.get("/queries")
 async def multiple_database_queries(queries=None):
     num_queries = get_num_queries(queries)
-    worlds = tuple(map(lambda _: {"id": _randint(), "randomNumber": None}, range(num_queries)))
+    row_ids = sample(range(1, 10000), num_queries)
+    worlds = []
 
     async with connection_pool.acquire() as connection:
         statement = await connection.prepare(READ_ROW_SQL)
-        for world in worlds:
-            world["randomNumber"] = await statement.fetchval(world["id"])
+        for row_id in row_ids:
+            number = await statement.fetchval(row_id)
+            worlds.append({'id': row_id, 'randomNumber': number})
 
     return ORJSONResponse(worlds)
 
@@ -96,7 +96,7 @@ async def fortunes():
 @app.get("/updates")
 async def database_updates(queries=None):
     num_queries = get_num_queries(queries)
-    updates = [(_randint(), _randint()) for _ in range(num_queries)]
+    updates = [(row_id, randint(1, 10000)) for row_id in sample(range(1, 10000), num_queries)]
     worlds = [{"id": row_id, "randomNumber": number} for row_id, number in updates]
 
     async with connection_pool.acquire() as connection:

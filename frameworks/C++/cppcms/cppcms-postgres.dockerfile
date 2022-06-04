@@ -49,4 +49,6 @@ COPY nginx.conf nginx.conf
 
 RUN make
 
+EXPOSE 8080
+
 CMD nginx -c /cppcms/nginx.conf && ./mycppcms -c config-nginx-postgresql.json

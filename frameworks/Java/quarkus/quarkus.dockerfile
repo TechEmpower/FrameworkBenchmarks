@@ -1,18 +1,39 @@
-FROM maven:3.6.3-jdk-11-slim as maven
+FROM docker.io/maven:3.8.4-eclipse-temurin-11 as maven
 WORKDIR /quarkus
+ENV MODULE=resteasy-hibernate
+
 COPY pom.xml pom.xml
-COPY base/pom.xml base/pom.xml
-COPY hibernate/pom.xml hibernate/pom.xml
-COPY pgclient/pom.xml pgclient/pom.xml
-RUN mvn dependency:go-offline -q -pl base
-COPY base/src base/src
-COPY hibernate/src hibernate/src
-COPY pgclient/src pgclient/src
+COPY quarkus-benchmark-common quarkus-benchmark-common/
+COPY resteasy-hibernate resteasy-hibernate/
+COPY resteasy-reactive-hibernate resteasy-reactive-hibernate/
+COPY resteasy-reactive-hibernate-reactive resteasy-reactive-hibernate-reactive/
 
-RUN mvn package -q -pl hibernate -am
+# Uncomment to test pre-release quarkus
+#RUN mkdir -p /root/.m2/repository/io
+#COPY m2-quarkus /root/.m2/repository/io/quarkus
 
-FROM openjdk:11.0.6-jdk-slim
 WORKDIR /quarkus
-COPY --from=maven /quarkus/hibernate/target/lib lib
-COPY --from=maven /quarkus/hibernate/target/hibernate-1.0-SNAPSHOT-runner.jar app.jar
-CMD ["java", "-server", "-XX:-UseBiasedLocking", "-XX:+UseStringDeduplication", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Djava.lang.Integer.IntegerCache.high=10000", "-Dvertx.disableHttpHeadersValidation=true", "-Dvertx.disableMetrics=true", "-Dvertx.disableH2c=true", "-Dvertx.disableWebsockets=true", "-Dvertx.flashPolicyHandler=false", "-Dvertx.threadChecks=false", "-Dvertx.disableContextTimings=true", "-Dvertx.disableTCCL=true", "-Dhibernate.allow_update_outside_transaction=true", "-Djboss.threads.eqe.statistics=false", "-jar", "app.jar"]
+RUN mvn -DskipTests install -pl :benchmark,:quarkus-benchmark-common -B -q
+
+WORKDIR /quarkus/$MODULE
+RUN mvn dependency:go-offline -B -q
+WORKDIR /quarkus
+
+COPY $MODULE/src $MODULE/src
+
+WORKDIR /quarkus/$MODULE
+RUN mvn package -B -q
+WORKDIR /quarkus
+
+FROM docker.io/eclipse-temurin:11-jdk
+WORKDIR /quarkus
+ENV MODULE=resteasy-hibernate
+
+COPY --from=maven /quarkus/$MODULE/target/quarkus-app/lib/ lib
+COPY --from=maven /quarkus/$MODULE/target/quarkus-app/app/ app
+COPY --from=maven /quarkus/$MODULE/target/quarkus-app/quarkus/ quarkus
+COPY --from=maven /quarkus/$MODULE/target/quarkus-app/quarkus-run.jar quarkus-run.jar
+COPY run_quarkus.sh run_quarkus.sh
+
+EXPOSE 8080
+ENTRYPOINT "./run_quarkus.sh"

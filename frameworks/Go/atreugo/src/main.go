@@ -1,16 +1,17 @@
 package main
 
 import (
+	"atreugo/src/views"
 	"flag"
 	"runtime"
-
-	"atreugo/src/views"
 
 	"github.com/savsgio/atreugo/v11"
 )
 
-var bindHost string
-var prefork bool
+var (
+	bindHost string
+	prefork  bool
+)
 
 func init() { // nolint:gochecknoinits
 	flag.StringVar(&bindHost, "bind", ":8080", "set bind host")
@@ -19,29 +20,24 @@ func init() { // nolint:gochecknoinits
 	flag.Parse()
 }
 
-func numCPU() int {
-	n := runtime.NumCPU()
-	if n == 0 {
-		n = 8
-	}
-
-	return n
-}
-
 func main() {
-	maxConn := numCPU() * 4
-	if atreugo.IsPreforkChild() {
-		maxConn = numCPU()
-	}
+	isNotPreforkOrIsChild := !prefork || atreugo.IsPreforkChild()
 
 	// init database
-	if err := views.InitDB(maxConn); err != nil {
-		panic(err)
-	}
-	defer views.CloseDB()
+	if isNotPreforkOrIsChild {
+		maxConn := runtime.NumCPU() * 4
+		if atreugo.IsPreforkChild() {
+			maxConn = 5
+		}
 
-	// init and populate worlds cache
-	views.PopulateWorldsCache()
+		if err := views.InitDB(maxConn); err != nil {
+			panic(err)
+		}
+		defer views.CloseDB()
+
+		// init and populate worlds cache
+		views.PopulateWorldsCache()
+	}
 
 	// init atreugo server
 	server := atreugo.New(atreugo.Config{
@@ -52,13 +48,15 @@ func main() {
 	})
 
 	// init views
-	server.GET("/json", views.JSON)
-	server.GET("/db", views.DB)
-	server.GET("/queries", views.Queries)
-	server.GET("/cached-worlds", views.CachedWorlds)
-	server.GET("/fortunes", views.FortunesQuick)
-	server.GET("/updates", views.Updates)
-	server.GET("/plaintext", views.Plaintext)
+	if isNotPreforkOrIsChild {
+		server.GET("/json", views.JSON)
+		server.GET("/db", views.DB)
+		server.GET("/queries", views.Queries)
+		server.GET("/cached-worlds", views.CachedWorlds)
+		server.GET("/fortunes", views.FortunesQuick)
+		server.GET("/updates", views.Updates)
+		server.GET("/plaintext", views.Plaintext)
+	}
 
 	if err := server.ListenAndServe(); err != nil {
 		panic(err)

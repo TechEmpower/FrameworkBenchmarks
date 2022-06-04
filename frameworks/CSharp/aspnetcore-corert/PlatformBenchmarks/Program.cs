@@ -1,85 +1,90 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
-using System.Net;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-#if DATABASE
-using Npgsql;
-using MySql.Data.MySqlClient;
-#endif
+using System.Runtime.InteropServices;
 
-namespace PlatformBenchmarks
+namespace PlatformBenchmarks;
+
+public class Program
 {
-    public class Program
+    public static string[] Args;
+
+    public static async Task Main(string[] args)
     {
-        public static string[] Args;
+        Args = args;
 
-        public static void Main(string[] args)
-        {
-            Utf8Json.Resolvers.CompositeResolver.RegisterAndSetAsDefault(    
-                Utf8Json.Resolvers.GeneratedResolver.Instance);
-
-            Args = args;
-
-            Console.WriteLine(BenchmarkApplication.ApplicationName);
+        Console.WriteLine(BenchmarkApplication.ApplicationName);
 #if !DATABASE
-            Console.WriteLine(BenchmarkApplication.Paths.Plaintext);
-            Console.WriteLine(BenchmarkApplication.Paths.Json);
+        Console.WriteLine(BenchmarkApplication.Paths.Plaintext);
+        Console.WriteLine(BenchmarkApplication.Paths.Json);
 #else
             Console.WriteLine(BenchmarkApplication.Paths.Fortunes);
             Console.WriteLine(BenchmarkApplication.Paths.SingleQuery);
             Console.WriteLine(BenchmarkApplication.Paths.Updates);
             Console.WriteLine(BenchmarkApplication.Paths.MultipleQueries);
 #endif
-            DateHeader.SyncDateTimer();
+        DateHeader.SyncDateTimer();
 
-            var host = BuildWebHost(args);
+        var host = BuildWebHost(args);
+        var config = (IConfiguration)host.Services.GetService(typeof(IConfiguration));
+        BatchUpdateString.DatabaseServer = config.Get<AppSettings>().Database;
 #if DATABASE
-            var config = (IConfiguration)host.Services.GetService(typeof(IConfiguration));
-            BatchUpdateString.DatabaseServer = config.Get<AppSettings>().Database;
+            await BenchmarkApplication.Db.PopulateCache();
 #endif
-            host.Run();
-        }
+        await host.RunAsync();
+    }
 
-        public static IWebHost BuildWebHost(string[] args)
-        {
-            var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .AddEnvironmentVariables(prefix: "ASPNETCORE_")
-                .AddCommandLine(args)
-                .Build();
+    public static IWebHost BuildWebHost(string[] args)
+    {
+        var config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .AddEnvironmentVariables()
+            .AddEnvironmentVariables(prefix: "ASPNETCORE_")
+            .AddCommandLine(args)
+            .Build();
 
+        var appSettings = config.Get<AppSettings>();
 #if DATABASE
-            var appSettings = config.Get<AppSettings>();
             Console.WriteLine($"Database: {appSettings.Database}");
+            Console.WriteLine($"ConnectionString: {appSettings.ConnectionString}");
 
-            if (appSettings.Database == DatabaseServer.PostgreSql)
+            if (appSettings.Database is DatabaseServer.PostgreSql
+                                     or DatabaseServer.MySql)
             {
-                BenchmarkApplication.Db = new RawDb(new ConcurrentRandom(), NpgsqlFactory.Instance, appSettings);
+                BenchmarkApplication.Db = new RawDb(new ConcurrentRandom(), appSettings);
             }
-            else if (appSettings.Database == DatabaseServer.MySql)
+            else
             {
-                BenchmarkApplication.Db = new RawDb(new ConcurrentRandom(), MySqlClientFactory.Instance, appSettings);
+                throw new NotSupportedException($"{appSettings.Database} is not supported");
             }
 #endif
 
-            var host = new WebHostBuilder()
-                .UseBenchmarksConfiguration(config)
-                .UseKestrel((context, options) =>
+        var hostBuilder = new WebHostBuilder()
+            .UseBenchmarksConfiguration(config)
+            .UseKestrel((context, options) =>
+            {
+                var endPoint = context.Configuration.CreateIPEndPoint();
+
+                options.Listen(endPoint, builder =>
                 {
-                    var endPoint = context.Configuration.CreateIPEndPoint();
+                    builder.UseHttpApplication<BenchmarkApplication>();
+                });
+            })
+            .UseStartup<Startup>();
 
-                    options.Listen(endPoint, builder =>
-                    {
-                        builder.UseHttpApplication<BenchmarkApplication>();
-                    });
-                })
-                .UseStartup<Startup>()
-                .Build();
+        hostBuilder.UseSockets(options =>
+        {
+            options.WaitForDataBeforeAllocatingBuffer = false;
 
-            return host;
-        }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                options.UnsafePreferInlineScheduling = Environment.GetEnvironmentVariable("DOTNET_SYSTEM_NET_SOCKETS_INLINE_COMPLETIONS") == "1";
+            }
+        });
+
+
+        var host = hostBuilder.Build();
+
+        return host;
     }
 }

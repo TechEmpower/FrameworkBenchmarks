@@ -7,7 +7,6 @@ use controllers\utils\DbTrait;
  * Bench controller.
  */
 class Cache extends \Ubiquity\controllers\Controller {
-	use DbTrait;
 
 	protected $cache;
 
@@ -23,7 +22,7 @@ class Cache extends \Ubiquity\controllers\Controller {
 
 	public function cachedquery($queries = 1) {
 		$worlds = [];
-		$count = $this->getCount($queries);
+		$count = \min(\max((int) $queries, 1), 500);
 		while ($count --) {
 			$worlds[] = ($this->cache->fetch('models\\CachedWorld', \mt_rand(1, 10000)))->_rest;
 		}

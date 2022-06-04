@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Benchmarks.Data
 {
-    public class ConcurrentRandom
+    public class DefaultRandom : IRandom
     {
         private static int nextSeed = 0;
 

@@ -15,4 +15,7 @@ FROM scratch
 
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder /chi/server /bin/server
+
+EXPOSE 8080
+
 ENTRYPOINT ["/bin/server"]

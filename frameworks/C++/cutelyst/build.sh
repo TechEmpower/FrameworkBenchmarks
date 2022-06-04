@@ -1,35 +1,28 @@
 #!/bin/bash
 
-export CUTELYST_VER=2.4.1
+export ASQL_VER=0.46.0
+export CUTELEE_VER=6.0.0
+export CUTELYST_VER=3.1.0
 
-apt-get update -qq && \
-    apt-get install -yqq --no-install-recommends \
+apt update -qq && \
+    apt install -yqq --no-install-recommends \
     cmake \
+    git \
     pkg-config \
-    clearsilver-dev \
-    libgrantlee5-dev \
-    libjemalloc-dev \
+    qtbase5-dev \
     libqt5sql5-mysql \
     libqt5sql5-psql \
-    uwsgi \
-    uuid-dev \
-    libcap-dev \
-    libssl-dev \
-    libzmq3-dev \
-    libpcre3-dev \
-    zlib1g-dev \
-    nginx
+    qtdeclarative5-dev \
+    postgresql-server-dev-all
 
-wget -q https://github.com/cutelyst/cutelyst/archive/v$CUTELYST_VER.tar.gz -O cutelyst-$CUTELYST_VER.tar.gz && \
-    tar zxf cutelyst-$CUTELYST_VER.tar.gz && \
-    cd cutelyst-$CUTELYST_VER && mkdir build && cd build && \
-    cmake .. \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DPLUGIN_UWSGI=on \
-    -DPLUGIN_VIEW_GRANTLEE=on \
-    -DUSE_JEMALLOC=on && \
-    make && make install
+wget -q https://github.com/cutelyst/cutelee/releases/download/v${CUTELEE_VER}/cutelee_${CUTELEE_VER}_amd64.deb && \
+    apt install -yqq ./cutelee_${CUTELEE_VER}_amd64.deb
+
+wget -q https://github.com/cutelyst/asql/releases/download/v${ASQL_VER}/libasql_${ASQL_VER}_amd64.deb && \
+    apt install -yqq ./libasql_${ASQL_VER}_amd64.deb
+
+wget -q https://github.com/cutelyst/cutelyst/releases/download/v${CUTELYST_VER}/cutelyst_${CUTELYST_VER}_amd64.deb && \
+    apt install -yqq ./cutelyst_${CUTELYST_VER}_amd64.deb
 
 cd ${TROOT} && \
     mkdir -p build && \

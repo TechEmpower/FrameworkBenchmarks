@@ -25,9 +25,9 @@
   },
   "require": {
     "php": ">=7.2",
-    "workerman/webman-framework": "dev-master",
+    "workerman/webman-framework": "^1.0",
     "monolog/monolog": "^2.0",
-    "vlucas/phpdotenv": "^4.1"
+    "vlucas/phpdotenv": ">=4.1,<6.0"
   },
   "suggest": {
     "ext-event": "For better performance. "

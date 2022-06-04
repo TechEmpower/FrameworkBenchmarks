@@ -7,4 +7,7 @@ RUN mvn package -q
 
 #TODO use separate JDK/JRE for the RUN (as the other builds)
 WORKDIR /t-io/target/tio-http-server-benchmark
+
+EXPOSE 8080
+
 CMD ["java", "-server", "-Xms1G", "-Xmx1G", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dpacket.handler.mode=queue1", "-cp", "/t-io/target/tio-http-server-benchmark/config:/t-io/target/tio-http-server-benchmark/lib/*", "org.tio.http.server.benchmark.TioBenchmarkStarter"]

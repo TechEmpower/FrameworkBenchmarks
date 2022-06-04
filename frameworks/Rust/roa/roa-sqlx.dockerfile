@@ -1,4 +1,4 @@
-FROM rust:1.44
+FROM rust:1.59
 
 RUN apt-get update -yqq && apt-get install -yqq cmake g++
 
@@ -7,5 +7,7 @@ WORKDIR /roa
 
 RUN cargo clean
 RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --bin roa-db --features "sqlx-pg"
+
+EXPOSE 8080
 
 CMD ./target/release/roa-db

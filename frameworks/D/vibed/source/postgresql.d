@@ -113,7 +113,7 @@ class WebInterface {
 		foreach (ref w; data) {
 			int id = _uniformVariable(_gen);
 			qp.argsVariadic(id);
-			immutable query = "SELECT randomNumber FROM world WHERE id = " ~  id.to!string;
+			immutable query = "SELECT randomNumber, id FROM world WHERE id = " ~  id.to!string;
 			immutable result = conn.execPrepared(qp).rangify.front;
 			w = WorldResponse(id, result[0].as!PGinteger);
 		}
@@ -168,7 +168,7 @@ class WebInterface {
 		foreach (ref w; data) {
 			int id = _uniformVariable(_gen);
 			qp.argsVariadic(id);
-			immutable query = "SELECT randomNumber FROM world WHERE id = " ~  id.to!string;
+			immutable query = "SELECT id, randomNumber FROM world WHERE id = " ~  id.to!string;
 			immutable result = conn.execPrepared(qp).rangify.front;
 			w = WorldResponse(id, result[0].as!PGinteger);
 
@@ -211,7 +211,7 @@ static this()
 						~ "dbname=hello_world  user=benchmarkdbuser password=benchmarkdbpass";
 	client = new PostgresClient(connectionInfo, poolSize, (Connection cn){
 		cn.prepare("fortune_prpq", "SELECT id, message::text FROM Fortune");
-		cn.prepare("db_prpq", "SELECT randomNumber FROM world WHERE id = $1");
+		cn.prepare("db_prpq", "SELECT randomNumber, id FROM world WHERE id = $1");
 		cn.prepare("db_update_prpq", "UPDATE world SET randomNumber = $1  WHERE id = $2");
 	} );
 }

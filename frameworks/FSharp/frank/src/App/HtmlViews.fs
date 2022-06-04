@@ -1,6 +1,6 @@
 ﻿module HtmlViews
 
-open Giraffe.GiraffeViewEngine
+open Giraffe.ViewEngine
 open Models
 
 let private fortunesHead = 

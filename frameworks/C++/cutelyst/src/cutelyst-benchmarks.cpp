@@ -1,17 +1,19 @@
 #include "cutelyst-benchmarks.h"
 
 #include <Cutelyst/Plugins/Utils/Sql>
-#include <Cutelyst/Plugins/View/Grantlee/grantleeview.h>
+#include <Cutelyst/Plugins/View/Cutelee/cuteleeview.h>
 
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
 #include <QCoreApplication>
+#include <QTimer>
 #include <QThread>
 #include <QDebug>
 #include <QMutexLocker>
 #include <QDir>
 
-#include "root.h"
+#include <apool.h>
+
 #include "jsontest.h"
 #include "singledatabasequerytest.h"
 #include "multipledatabasequeriestest.h"
@@ -36,10 +38,15 @@ bool cutelyst_benchmarks::init()
 {
     if (config(QStringLiteral("SendDate")).value<bool>()) {
         qDebug() << "Manually send date";
-        new Root(this);
+        auto dateT = new QTimer(this);
+        dateT->setInterval(1000);
+        dateT->setSingleShot(false);
+        connect(dateT, &QTimer::timeout, this, [=] {
+            defaultHeaders().setDateWithDateTime(QDateTime::currentDateTimeUtc());
+        });
     }
 
-    auto view = new GrantleeView(this);
+    auto view = new CuteleeView(this);
     view->setIncludePaths({ QString::fromLatin1(qgetenv("TROOT")), QDir::currentPath() });
     view->preloadTemplates();
 
@@ -84,6 +91,13 @@ bool cutelyst_benchmarks::postFork()
             qDebug() << "Error opening MySQL db:" << db << db.connectionName() << db.lastError().databaseText();
             return false;
         }
+    } else if (driver == QLatin1String("postgres")) {
+        QUrl uri(QStringLiteral("postgresql://benchmarkdbuser:benchmarkdbpass@server/hello_world"));
+        uri.setHost(config(QStringLiteral("DatabaseHostName")).toString());
+        qDebug() << "ASql URI:" << uri.toString();
+
+        APool::addDatabase(uri.toString());
+        APool::setDatabaseMaxIdleConnections(128);
     }
 
     qDebug() << "Connections" << QCoreApplication::applicationPid() << QThread::currentThread() << QSqlDatabase::connectionNames();
@@ -96,3 +110,4 @@ bool cutelyst_benchmarks::postFork()
     return true;
 }
 
+#include "moc_cutelyst-benchmarks.cpp"

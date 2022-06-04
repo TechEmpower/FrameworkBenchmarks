@@ -1,53 +1,44 @@
 #[global_allocator]
-static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-use bytes::{Bytes, BytesMut};
-use ntex::{http, web};
+use ntex::http::header::{CONTENT_TYPE, SERVER};
+use ntex::{http, time::Seconds, util::PoolId, web};
 use yarte::Serialize;
 
 mod utils;
-use utils::SIZE;
 
 #[derive(Serialize)]
 pub struct Message {
     pub message: &'static str,
 }
 
+#[web::get("/json")]
 async fn json() -> web::HttpResponse {
-    let mut res = web::HttpResponse::with_body(
-        http::StatusCode::OK,
-        http::body::Body::Bytes(
-            Message {
-                message: "Hello, World!",
-            }
-            .to_bytes::<BytesMut>(SIZE),
-        ),
-    );
-    res.headers_mut().insert(
-        http::header::SERVER,
-        http::header::HeaderValue::from_static("N"),
-    );
-    res.headers_mut().insert(
-        http::header::CONTENT_TYPE,
-        http::header::HeaderValue::from_static("application/json"),
-    );
-    res
+    let mut body = Vec::with_capacity(utils::SIZE);
+    Message {
+        message: "Hello, World!",
+    }
+    .to_bytes_mut(&mut body);
+
+    let mut response = web::HttpResponse::with_body(http::StatusCode::OK, body.into());
+    response.headers_mut().append(SERVER, utils::HDR_SERVER);
+    response
+        .headers_mut()
+        .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+    response
 }
 
+#[web::get("/plaintext")]
 async fn plaintext() -> web::HttpResponse {
-    let mut res = web::HttpResponse::with_body(
+    let mut response = web::HttpResponse::with_body(
         http::StatusCode::OK,
-        http::body::Body::Bytes(Bytes::from_static(b"Hello, World!")),
+        http::body::Body::Bytes(utils::BODY_PLAIN_TEXT),
     );
-    res.headers_mut().insert(
-        http::header::SERVER,
-        http::header::HeaderValue::from_static("N"),
-    );
-    res.headers_mut().insert(
-        http::header::CONTENT_TYPE,
-        http::header::HeaderValue::from_static("text/plain"),
-    );
-    res
+    response.headers_mut().append(SERVER, utils::HDR_SERVER);
+    response
+        .headers_mut()
+        .append(CONTENT_TYPE, utils::HDR_TEXT_CONTENT_TYPE);
+    response
 }
 
 #[ntex::main]
@@ -57,18 +48,16 @@ async fn main() -> std::io::Result<()> {
     // start http server
     ntex::server::build()
         .backlog(1024)
-        .bind("techempower", "0.0.0.0:8080", || {
+        .bind("techempower", "0.0.0.0:8080", |cfg| {
+            cfg.memory_pool(PoolId::P1);
+            PoolId::P1.set_read_params(65535, 1024);
+            PoolId::P1.set_write_params(65535, 1024);
+
             http::HttpService::build()
                 .keep_alive(http::KeepAlive::Os)
-                .client_timeout(0)
-                .h1(ntex::map_config(
-                    web::App::new()
-                        .service(web::resource("/json").to(json))
-                        .service(web::resource("/plaintext").to(plaintext)),
-                    |_| web::dev::AppConfig::default(),
-                ))
-                .tcp()
+                .client_timeout(Seconds(0))
+                .h1(web::App::new().service(json).service(plaintext).finish())
         })?
-        .start()
+        .run()
         .await
 }

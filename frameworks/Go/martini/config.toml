@@ -1,0 +1,18 @@
+[framework]
+name = "martini"
+
+[main]
+urls.plaintext = "/bench/plaintext"
+urls.json = "/bench/json"
+urls.db = "/bench/single"
+urls.query = "/bench/multiple?queries="
+urls.update = "/bench/update?queries="
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "go"

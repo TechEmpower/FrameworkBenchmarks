@@ -1,18 +1,10 @@
-FROM golang:1.14
+FROM golang:1.15
 
-ADD ./ /echo
+ADD ./src /echo
 WORKDIR /echo
 
-RUN mkdir bin
-ENV GOPATH /echo
-ENV PATH ${GOPATH}/bin:${PATH}
+RUN go build -ldflags="-s -w" -o app ./main.go
 
-RUN curl -sL -o install_glide.sh https://glide.sh/get
-RUN sh install_glide.sh
+EXPOSE 8080
 
-WORKDIR src
-RUN glide install
-WORKDIR ..
-
-RUN go install app
-CMD app
+CMD ./app

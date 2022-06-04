@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyRpc.AspNetCore" Version="5.0.0-Beta1167" />
-    <PackageReference Include="EasyRpc.AspNetCore.Utf8Json" Version="5.0.0-Beta1167" />
-    <PackageReference Include="EasyRpc.AspNetCore.Views" Version="5.0.0-Beta1167" />
-    <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
+    <PackageReference Include="EasyRpc.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="EasyRpc.AspNetCore.Utf8Json" Version="5.0.0" />
+    <PackageReference Include="EasyRpc.AspNetCore.Views" Version="5.0.0" />
+    <PackageReference Include="Npgsql" Version="5.0.4" />
   </ItemGroup>
 </Project>

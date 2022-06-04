@@ -1,18 +1,19 @@
 package main
 
 import (
+	"fasthttp/src/handlers"
 	"flag"
 	"runtime"
 
-	"fasthttp/src/handlers"
-
-	"github.com/savsgio/gotils"
+	"github.com/savsgio/gotils/strconv"
 	"github.com/valyala/fasthttp"
 	fastprefork "github.com/valyala/fasthttp/prefork"
 )
 
-var bindHost string
-var prefork bool
+var (
+	bindHost string
+	prefork  bool
+)
 
 func init() {
 	flag.StringVar(&bindHost, "bind", ":8080", "set bind host")
@@ -21,49 +22,45 @@ func init() {
 	flag.Parse()
 }
 
-func numCPU() int {
-	n := runtime.NumCPU()
-	if n == 0 {
-		n = 8
-	}
-
-	return n
-}
-
 func main() {
-	maxConn := numCPU() * 4
-	if fastprefork.IsChild() {
-		maxConn = numCPU()
-	}
+	isNotPreforkOrIsChild := !prefork || fastprefork.IsChild()
+	handler := func(ctx *fasthttp.RequestCtx) {}
 
-	// init database
-	if err := handlers.InitDB(maxConn); err != nil {
-		panic(err)
-	}
-	defer handlers.CloseDB()
+	if isNotPreforkOrIsChild {
+		maxConn := runtime.NumCPU() * 4
+		if fastprefork.IsChild() {
+			maxConn = 5
+		}
 
-	// init and populate worlds cache
-	handlers.PopulateWorldsCache()
+		// init database
+		if err := handlers.InitDB(maxConn); err != nil {
+			panic(err)
+		}
+		defer handlers.CloseDB()
 
-	// init handler
-	handler := func(ctx *fasthttp.RequestCtx) {
-		switch gotils.B2S(ctx.Path()) {
-		case "/json":
-			handlers.JSON(ctx)
-		case "/db":
-			handlers.DB(ctx)
-		case "/queries":
-			handlers.Queries(ctx)
-		case "/cached-worlds":
-			handlers.CachedWorlds(ctx)
-		case "/fortunes":
-			handlers.FortunesQuick(ctx)
-		case "/updates":
-			handlers.Updates(ctx)
-		case "/plaintext":
-			handlers.Plaintext(ctx)
-		default:
-			ctx.Error(fasthttp.StatusMessage(fasthttp.StatusNotFound), fasthttp.StatusNotFound)
+		// init and populate worlds cache
+		handlers.PopulateWorldsCache()
+
+		// init handler
+		handler = func(ctx *fasthttp.RequestCtx) {
+			switch strconv.B2S(ctx.Request.URI().Path()) {
+			case "/json":
+				handlers.JSON(ctx)
+			case "/db":
+				handlers.DB(ctx)
+			case "/queries":
+				handlers.Queries(ctx)
+			case "/cached-worlds":
+				handlers.CachedWorlds(ctx)
+			case "/fortunes":
+				handlers.FortunesQuick(ctx)
+			case "/updates":
+				handlers.Updates(ctx)
+			case "/plaintext":
+				handlers.Plaintext(ctx)
+			default:
+				ctx.Error(fasthttp.StatusMessage(fasthttp.StatusNotFound), fasthttp.StatusNotFound)
+			}
 		}
 	}
 
