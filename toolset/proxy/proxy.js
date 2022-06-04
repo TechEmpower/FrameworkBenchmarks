@@ -1,19 +1,27 @@
-const socket = require('@socket')
+const { net } = just.library('net')
+const { sys } = just.library('sys')
 const dns = require('@dns')
 const binary = require('@binary')
 
-const { createSocket } = socket
-const { SystemError } = just
+const { EPOLLIN, EPOLLOUT, EPOLLERR, EPOLLHUP, EPOLLET } = just.loop
 const { getIPAddress } = dns
+const { 
+  AF_INET, 
+  SOCK_STREAM, 
+  SOMAXCONN, 
+  SOL_SOCKET, 
+  SO_REUSEADDR, 
+  SO_REUSEPORT,
+  SO_ERROR,
+  O_NONBLOCK
+} = net
+const { loop } = just.factory
+const { SystemError } = just
+const { errno, strerror, fcntl, F_GETFL, F_SETFL } = sys
 const { AG, AR, AY, AD, AM } = binary.ANSI
 
-const constants = {
-  AuthenticationMD5Password: 5,
-  fieldTypes: {
-    INT4OID: 23,
-    VARCHAROID: 1043
-  },
-  messageTypes: {
+const messageTypes = {
+  backend: {
     AuthenticationOk: 82,
     ErrorResponse: 69,
     RowDescription: 84,
@@ -25,6 +33,9 @@ const constants = {
     ParameterStatus: 83,
     ParameterDescription: 116,
     DataRow: 68,
+    NoticeResponse: 78
+  },
+  frontend: {
     Prepare: 80,
     Flush: 72,
     Bind: 66,
@@ -34,137 +45,263 @@ const constants = {
     Describe: 68,
     Prepare: 80,
     Bind: 66,
-    Sync: 83
+    Sync: 83,
+    Query: 81,
+    Terminate: 88
   }
 }
 
-let connections = 0
-const lookup = {}
-for (const key of Object.keys(constants.messageTypes)) {
-  lookup[constants.messageTypes[key]] = key
+const lookup = {
+  backend: {},
+  frontend: {}
+}
+for (const key of Object.keys(messageTypes.backend)) {
+  lookup.backend[messageTypes.backend[key]] = key
+}
+for (const key of Object.keys(messageTypes.frontend)) {
+  lookup.frontend[messageTypes.frontend[key]] = key
 }
 
 class PGParser {
-  constructor (buf) {
+  constructor (buf, direction = 'frontend') {
     this.buf = buf
     this.type = 0
     this.code = ''
     this.name = ''
     this.len = 0
+    this.pos = 0
     this.want = 0
-    this.dv = new DataView(buf)
+    this.u8 = new Uint8Array(buf)
+    this.direction = direction
   }
 
   parse (bytes) {
     const messages = []
-    const { dv } = this
+    const { u8 } = this
     let off = 0
     while (off < bytes) {
-      this.type = dv.getUint8(off)
-      if (this.type === 0) { 
-        this.len = dv.getUint32(off)
-        this.code = ''
+      if (this.pos === 0) {
+        this.len = 0
+        this.want = 0
+        this.type = u8[off]
+        if (this.type === 0) {
+          this.code = ''
+        } else {
+          this.code = String.fromCharCode(this.type)
+        }
+        this.name = lookup[this.direction][this.type]
+        this.pos++
+      } else if (this.pos === 1) {
+        if (this.type === 0) {
+          this.len += u8[off] << 16
+        } else {
+          this.len += u8[off] << 24
+        }
+        this.pos++
+      } else if (this.pos === 2) {
+        if (this.type === 0) {
+          this.len += u8[off] << 8
+        } else {
+          this.len += u8[off] << 16
+        }
+        this.pos++
+      } else if (this.pos === 3) {
+        if (this.type === 0) {
+          this.len += u8[off]
+          this.want = this.len - 4
+        } else {
+          this.len += u8[off] << 8
+        }
+        this.pos++
+      } else if (this.pos === 4) {
+        if (this.type === 0) {
+          this.want--
+        } else {
+          this.len += u8[off]
+          this.want = this.len - 4
+        }
+        if (this.want === 0) {
+          const { type, code, name, len } = this
+          messages.push({ type, code, name, len })
+          this.pos = 0
+        } else {
+          this.pos++
+        }
       } else {
-        this.len = dv.getUint32(off + 1)
-        this.code = String.fromCharCode(this.type)
+        this.want--
+        if (this.want === 0) {
+          const { type, code, name, len } = this
+          messages.push({ type, code, name, len })
+          this.pos = 0
+        } else {
+          this.pos++
+        }
       }
-      this.name = lookup[this.type]
-      off += this.len + 1
-      const { type, code, name, len } = this
-      messages.push({ type, code, name, len })
+      off++
     }
     return messages
   }
 }
 
-async function startClient (sock) {
-  connections++
-  const stats = {
-    client: {},
-    backend: {}
-  }
-  sock.edgeTriggered = false
-  sock.noDelay = true
-  const backend = createSocket()
-  backend.edgeTriggered = true
-  sock.parser = new PGParser(sock.buffer)
-  const ip = await getIPAddress('tfb-proxy-database')
-  await backend.connect(ip, 5431)
-  backend.noDelay = true
-  backend.parser = new PGParser(backend.buffer)
-  sock.onReadable = () => {
-    const bytes = sock.recv(0)
-    if (bytes === 0) {
-      sock.close()
-      return
-    }
-    if (bytes > 0) {
-      const messages = sock.parser.parse(bytes)
-      for (const message of messages) {
-        if (stats.client[message.name]) {
-          stats.client[message.name]++
-        } else {
-          stats.client[message.name] = 1
-        }
-      }
-      backend.send(sock.buffer, bytes, 0)
-      return
-    }
-    if (!sock.blocked) {
-      just.error(sock.error.stack)
-      sock.close()
-    }
-  }
-  sock.onClose = () => {
-    connections--
-    const { client } = stats
-    let status = 'ok'
-    //if (!((client.Bind === client.Exec) && (client.Exec === client.Sync))) {
-    if (!(client.Exec === client.Sync)) {
-      status = 'fail'
-    }
-    just.print(`${AY}Bind${AD} ${client.Bind || 0} ${AY}Exec${AD} ${client.Exec || 0} ${AY}Sync${AD} ${client.Sync || 0} ${status === 'ok' ? AG : AR }${status}${AD}`)
-    //backend.close()
-    if (connections === 0) {
-      just.print(`${AM}proxy idle${AD}`)
-    }
-  }
-  backend.onReadable = () => {
-    const bytes = backend.recv(0)
-    if (bytes === 0) {
-      backend.close()
-      return
-    }
-    if (bytes > 0) {
-      const messages = backend.parser.parse(bytes)
-      for (const message of messages) {
-        if (stats.backend[message.name]) {
-          stats.backend[message.name]++
-        } else {
-          stats.backend[message.name] = 1
-        }
-      }
-      sock.send(backend.buffer, bytes, 0)
-      return
-    }
-    if (!backend.blocked) {
-      just.error(backend.error.stack)
-      backend.close()
-    }
-  }
-  backend.onClose = () => {
-    sock.close()
-  }
+function nonBlocking (fd) {
+  let flags = fcntl(fd, F_GETFL, 0)
+  if (flags < 0) return
+  fcntl(fd, F_SETFL, flags | O_NONBLOCK)
 }
 
 async function main () {
-  const sock = createSocket()
-  if (sock.listen('0.0.0.0', 5432) !== 0) throw new SystemError('listen')
-  let client = await sock.accept()
-  while (client) {
-    await startClient(client)
-    client = await sock.accept()
+  const listenFd = net.socket(AF_INET, SOCK_STREAM | O_NONBLOCK, 0)
+  net.setsockopt(listenFd, SOL_SOCKET, SO_REUSEADDR, 1)
+  net.setsockopt(listenFd, SOL_SOCKET, SO_REUSEPORT, 1)
+  if (net.bind(listenFd, '0.0.0.0', 5432) !== 0) throw new SystemError('bind')
+  if (net.listen(listenFd, SOMAXCONN) !== 0) throw new SystemError('listen')
+  let ip
+  while (1) {
+    try {
+      ip = await getIPAddress('tfb-proxy-database')
+      break
+    } catch (err) {
+      just.sleep(1)
+    }
   }
+  //just.print(ip)
+  const buf = new ArrayBuffer(65536)
+  const parser = new PGParser(buf, 'frontend')
+  loop.add(listenFd, (fd, event) => {
+    if (event & EPOLLIN) {
+      const front = net.accept(fd)
+      if (front === -1) {
+        //just.print(`error accepting socket ${front} (${errno()}) ${strerror(errno())}`)
+        net.close(front)
+        return
+      }
+      nonBlocking(front)
+      const back = net.socket(AF_INET, SOCK_STREAM, 0)
+      nonBlocking(back)
+      if (net.connect(back, ip, 5431) === -1 && errno() !== 115) {
+        //just.print(`error connecting to backend (${errno()}) ${strerror(errno())}`)
+        net.close(back)
+        net.close(front)
+        return
+      }
+      let backendConnected = false
+      loop.remove(front)
+
+      const stats = {}
+      let missingSyncs = 0
+      let expectSync = false
+
+      function onClose () {
+        if (stats.Sync > 0) {
+          let status = 'ok'
+          if (!((stats.Bind === stats.Exec) && (stats.Sync >= stats.Exec)) || missingSyncs > 0) {
+            status = 'fail'
+          }
+          just.print(`${AY}Bind${AD} ${stats.Bind || 0} ${AY}Exec${AD} ${stats.Exec || 0} ${AY}Sync${AD} ${stats.Sync || 0} ${AY}Missing Sync${AD} ${missingSyncs} ${status === 'ok' ? AG : AR }${status}${AD}`)
+        }
+      }
+      loop.add(back, (back, event) => {
+        if (event & EPOLLOUT) {
+          if (!backendConnected) {
+            //just.print('backend writable')
+            backendConnected = true
+            //loop.update(back, EPOLLIN)
+            let frontendConnected = false
+            loop.add(front, (front, event) => {
+              //just.print(`frontend event ${event}`)
+              if (event & EPOLLOUT) {
+                if (!frontendConnected) {
+                  //just.print('frontend writable')
+                  frontendConnected = true
+                }
+              }
+              if (event & EPOLLIN) {
+                //just.print('frontend readable')
+                const bytes = net.read(front, buf, 0, buf.byteLength)
+                //just.print(`frontend bytes ${bytes}`)
+                if (bytes === 0) {
+                  //just.print(`frontend EOF`)
+                  net.close(front)
+                  net.close(back)
+                  onClose()
+                } else if (bytes > 0) {
+                  const messages = parser.parse(bytes)
+                  for (const message of messages) {
+                  if (stats[message.name]) {
+                      stats[message.name]++
+                    } else {
+                      stats[message.name] = 1
+                    }
+                    if (expectSync && message.name !== 'Sync') {
+                      missingSyncs++
+                    }
+                    if (message.name === 'Exec') {
+                      expectSync = true
+                    } else {
+                      expectSync = false
+                    }
+                  }
+                  const written = net.write(back, buf, bytes)
+                  if (written < bytes) {
+                    just.print(`backend short write ${written} of ${bytes} (${errno()}) ${strerror(errno())}`)
+                  }
+                } else {
+                  //just.print(`frontend read error (${errno()}) ${strerror(errno())}`)
+                  net.close(front)
+                  net.close(back)
+                  onClose()
+                }
+              }
+              if (event & EPOLLERR) {
+                const err = net.getsockopt(front, SOL_SOCKET, SO_ERROR)
+                //just.print(`frontend error ${err} ${strerror(err)}`)
+                net.close(front)
+                net.close(back)
+                onClose()
+              }
+              if (event & EPOLLHUP) {
+                //just.print(`frontend hangup`)
+                net.close(front)
+                net.close(back)
+                onClose()
+              }
+            }, EPOLLIN | EPOLLOUT)
+          }
+        }
+        if (event & EPOLLIN) {
+          //just.print('backend readable')
+          const bytes = net.read(back, buf, 0, buf.byteLength)
+          //just.print(`backend bytes ${bytes}`)
+          if (bytes === 0) {
+            //just.print(`backend EOF`)
+            net.close(back)
+            net.close(front)
+          } else if (bytes > 0) {
+            const written = net.write(front, buf, bytes)
+            if (written < bytes) {
+              just.print(`frontend short write ${written} of ${bytes} (${errno()}) ${strerror(errno())}`)
+            }
+          } else {
+            //just.print(`backend read error (${errno()}) ${strerror(errno())}`)
+            net.close(front)
+            net.close(back)
+          }
+        }
+        if (event & EPOLLERR) {
+          const err = net.getsockopt(front, SOL_SOCKET, SO_ERROR)
+          //just.print(`backend error ${err} ${strerror(err)}`)
+          net.close(front)
+          net.close(back)
+          return
+        }
+        if (event & EPOLLHUP) {
+          //just.print(`backend hangup`)
+          net.close(front)
+          net.close(back)
+        }
+      }, EPOLLIN | EPOLLOUT)
+    }
+  }, EPOLLIN | EPOLLOUT)
 }
 
 main().catch(err => just.error(err.stack))
