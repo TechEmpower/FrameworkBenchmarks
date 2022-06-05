@@ -255,6 +255,10 @@ class Benchmarker:
         finally:
             self.docker_helper.stop()
 
+        if self.config.proxy is not None:
+          for line in proxy_container.results:
+              log(line)
+
         return self.__exit_test(
             success=True, prefix=log_prefix, file=benchmark_log)
 

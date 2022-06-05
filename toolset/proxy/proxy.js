@@ -150,7 +150,12 @@ function nonBlocking (fd) {
   fcntl(fd, F_SETFL, flags | O_NONBLOCK)
 }
 
+function pad (val) {
+  return val.toString().padStart(8, ' ')
+}
+
 async function main () {
+  just.print(`${AY}***${AD} ${AM}POSTGRES PROTOCOL VERIFICATION${AD} ${AY}***${AD}`)
   const listenFd = net.socket(AF_INET, SOCK_STREAM | O_NONBLOCK, 0)
   net.setsockopt(listenFd, SOL_SOCKET, SO_REUSEADDR, 1)
   net.setsockopt(listenFd, SOL_SOCKET, SO_REUSEPORT, 1)
@@ -195,7 +200,7 @@ async function main () {
           if (!((stats.Bind === stats.Exec) && (stats.Sync >= stats.Exec)) || missingSyncs > 0) {
             status = 'fail'
           }
-          just.print(`${AY}Q${AD} ${stats.Query || 0} ${AY}B${AD} ${stats.Bind || 0} ${AY}E${AD} ${stats.Exec || 0} ${AY}S${AD} ${stats.Sync || 0} ${AY}MS${AD} ${missingSyncs} ${status === 'ok' ? AG : AR }${status}${AD}`)
+          just.print(`${AY}Query${AD} ${pad(stats.Query || 0)} ${AY}Bind${AD} ${pad(stats.Bind || 0)} ${AY}Exec${AD} ${pad(stats.Exec || 0)} ${AY}Sync${AD} ${pad(stats.Sync || 0)} ${AY}Miss${AD} ${pad(missingSyncs)} ${status === 'ok' ? AG : AR }${status}${AD}`)
         }
       }
       const frontend = {

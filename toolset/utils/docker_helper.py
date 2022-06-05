@@ -327,6 +327,10 @@ class DockerHelper:
 
         ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
 
+        def watch_container(docker_container):
+            for line in docker_container.logs(stream=True):
+                docker_container.results.append(line)
+
         container = self.database.containers.run(
             "techempower/proxy",
             name="tfb-database",
@@ -337,6 +341,16 @@ class DockerHelper:
             sysctls=sysctl,
             remove=True,
             log_config={'type': None})
+
+        container.results = []
+
+        watch_thread = Thread(
+            target=watch_container,
+            args=(
+                container,
+            ))
+        watch_thread.daemon = True
+        watch_thread.start()
 
         return container
 
