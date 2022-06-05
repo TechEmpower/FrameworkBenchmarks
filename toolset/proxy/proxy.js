@@ -13,7 +13,8 @@ const {
   SO_REUSEADDR, 
   SO_REUSEPORT,
   SO_ERROR,
-  O_NONBLOCK
+  O_NONBLOCK,
+  EAGAIN
 } = net
 const { loop } = just.factory
 const { SystemError } = just
@@ -164,14 +165,12 @@ async function main () {
       just.sleep(1)
     }
   }
-  //just.print(ip)
-  const buf = new ArrayBuffer(65536)
-  const parser = new PGParser(buf, 'frontend')
   loop.add(listenFd, (fd, event) => {
+    const buf = new ArrayBuffer(65536)
+    const parser = new PGParser(buf, 'frontend')
     if (event & EPOLLIN) {
       const front = net.accept(fd)
       if (front === -1) {
-        //just.print(`error accepting socket ${front} (${errno()}) ${strerror(errno())}`)
         net.close(front)
         return
       }
@@ -179,7 +178,6 @@ async function main () {
       const back = net.socket(AF_INET, SOCK_STREAM, 0)
       nonBlocking(back)
       if (net.connect(back, ip, 5431) === -1 && errno() !== 115) {
-        //just.print(`error connecting to backend (${errno()}) ${strerror(errno())}`)
         net.close(back)
         net.close(front)
         return
@@ -197,30 +195,51 @@ async function main () {
           if (!((stats.Bind === stats.Exec) && (stats.Sync >= stats.Exec)) || missingSyncs > 0) {
             status = 'fail'
           }
-          just.print(`${AY}Bind${AD} ${stats.Bind || 0} ${AY}Exec${AD} ${stats.Exec || 0} ${AY}Sync${AD} ${stats.Sync || 0} ${AY}Missing Sync${AD} ${missingSyncs} ${status === 'ok' ? AG : AR }${status}${AD}`)
+          just.print(`${AY}Q${AD} ${stats.Query || 0} ${AY}B${AD} ${stats.Bind || 0} ${AY}E${AD} ${stats.Exec || 0} ${AY}S${AD} ${stats.Sync || 0} ${AY}MS${AD} ${missingSyncs} ${status === 'ok' ? AG : AR }${status}${AD}`)
         }
+      }
+      const frontend = {
+        paused: false,
+        handler: null,
+        pendingBytes: 0,
+        off: 0
+      }
+      const backend = {
+        paused: false,
+        handler: null,
+        pendingBytes: 0,
+        off: 0
       }
       loop.add(back, (back, event) => {
         if (event & EPOLLOUT) {
-          if (!backendConnected) {
-            //just.print('backend writable')
+          if (backendConnected) {
+            if (backend.paused) {
+              //just.print('backend writable again')
+              net.write(back, buf, backend.pendingBytes, backend.off)
+              loop.add(front, backend.handler, EPOLLIN | EPOLLOUT)
+              backend.paused = false
+              backend.off = 0
+            }
+          } else {
             backendConnected = true
-            //loop.update(back, EPOLLIN)
             let frontendConnected = false
             loop.add(front, (front, event) => {
-              //just.print(`frontend event ${event}`)
               if (event & EPOLLOUT) {
-                if (!frontendConnected) {
-                  //just.print('frontend writable')
+                if (frontendConnected) {
+                  if (frontend.paused) {
+                    //just.print('frontend writable again')
+                    net.write(front, buf, frontend.pendingBytes, frontend.off)
+                    loop.add(back, frontend.handler, EPOLLIN | EPOLLOUT)
+                    frontend.paused = false
+                    frontend.off = 0
+                  }
+                } else {
                   frontendConnected = true
                 }
               }
               if (event & EPOLLIN) {
-                //just.print('frontend readable')
                 const bytes = net.read(front, buf, 0, buf.byteLength)
-                //just.print(`frontend bytes ${bytes}`)
                 if (bytes === 0) {
-                  //just.print(`frontend EOF`)
                   net.close(front)
                   net.close(back)
                   onClose()
@@ -243,10 +262,23 @@ async function main () {
                   }
                   const written = net.write(back, buf, bytes)
                   if (written < bytes) {
-                    just.print(`backend short write ${written} of ${bytes} (${errno()}) ${strerror(errno())}`)
+                    //just.print(`backend short write ${written} of ${bytes} (${errno()}) ${strerror(errno())}`)
+                    if (written === -1) {
+                      if (errno() === EAGAIN) {
+                        backend.handler = loop.handles[front]
+                        loop.remove(front)
+                        backend.pendingBytes = bytes
+                        backend.paused = true
+                      }
+                    } else {
+                      backend.handler = loop.handles[front]
+                      loop.remove(front)
+                      backend.pendingBytes = bytes - written
+                      backend.off = written
+                      backend.paused = true
+                    }
                   }
                 } else {
-                  //just.print(`frontend read error (${errno()}) ${strerror(errno())}`)
                   net.close(front)
                   net.close(back)
                   onClose()
@@ -254,13 +286,11 @@ async function main () {
               }
               if (event & EPOLLERR) {
                 const err = net.getsockopt(front, SOL_SOCKET, SO_ERROR)
-                //just.print(`frontend error ${err} ${strerror(err)}`)
                 net.close(front)
                 net.close(back)
                 onClose()
               }
               if (event & EPOLLHUP) {
-                //just.print(`frontend hangup`)
                 net.close(front)
                 net.close(back)
                 onClose()
@@ -269,33 +299,41 @@ async function main () {
           }
         }
         if (event & EPOLLIN) {
-          //just.print('backend readable')
           const bytes = net.read(back, buf, 0, buf.byteLength)
-          //just.print(`backend bytes ${bytes}`)
           if (bytes === 0) {
-            //just.print(`backend EOF`)
             net.close(back)
             net.close(front)
           } else if (bytes > 0) {
             const written = net.write(front, buf, bytes)
             if (written < bytes) {
-              just.print(`frontend short write ${written} of ${bytes} (${errno()}) ${strerror(errno())}`)
+              //just.print(`frontend short write ${written} of ${bytes} (${errno()}) ${strerror(errno())}`)
+              if (written === -1) {
+                if (errno() === EAGAIN) {
+                  frontend.handler = loop.handles[back]
+                  loop.remove(back)
+                  frontend.pendingBytes = bytes
+                  frontend.paused = true
+                }
+              } else {
+                frontend.handler = loop.handles[back]
+                loop.remove(back)
+                frontend.pendingBytes = bytes - written
+                frontend.off = written
+                frontend.paused = true
+              }
             }
           } else {
-            //just.print(`backend read error (${errno()}) ${strerror(errno())}`)
             net.close(front)
             net.close(back)
           }
         }
         if (event & EPOLLERR) {
           const err = net.getsockopt(front, SOL_SOCKET, SO_ERROR)
-          //just.print(`backend error ${err} ${strerror(err)}`)
           net.close(front)
           net.close(back)
           return
         }
         if (event & EPOLLHUP) {
-          //just.print(`backend hangup`)
           net.close(front)
           net.close(back)
         }
