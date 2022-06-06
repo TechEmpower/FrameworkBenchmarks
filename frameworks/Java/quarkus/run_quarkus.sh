@@ -10,6 +10,9 @@
 # Consider using -Dquarkus.http.io-threads=$((`grep --count ^processor /proc/cpuinfo`)) \
 
 JAVA_OPTIONS="-server \
+  -Dquarkus.thread-pool.core-threads=1 \
+  -Dquarkus.thread-pool.max-threads=512 \
+  -Dquarkus.thread-pool.growth-resistance=0.2 \
   -Djboss.threads.eqe.unlimited-queue=true \
   -Dquarkus.vertx.prefer-native-transport=true  \
   -XX:-StackTraceInThrowable \
