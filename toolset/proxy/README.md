@@ -1,24 +1,37 @@
-## Build the docker image
+## Introduction
+
+This tool runs as a postgres proxy and monitors all Query, Bind, Exec and Sync messages between frameworks and the postgres database server. It summarises total counts of all these messages in the wire protocol as well as verifying that every Exec command is followed by a paired Sync command.
+
+More details in the github discussion [here](https://github.com/TechEmpower/FrameworkBenchmarks/issues/7381#issuecomment-1146745883).
+
+## Running
+
+To run a verification with the proxy enabled, for a single framework (in this case just-js) and test
+
 ```
-docker build -t techempower/proxy .
+./tfb --mode verify --test just --proxy on --type db
 ```
 
-## Run tfb postgres on port 5431
+or for a single framework and all tests
+
 ```
-docker run -p 5431:5431 -d --rm --name tfb-database --network tfb techempower/postgres:latest postgres -p 5431
+./tfb --mode verify --test just --proxy on
 ```
 
-## Run proxy on port 5432
+## Automating the Verification and Producing a Report
+
+You can download a verification tool from this [gist](https://gist.github.com/billywhizz/bf02e0f166ba88532c25a79c58d514b1).
+
+Ensure verify.js and index.html are in the root of the Techempower repository, then install just-js runtime as follows:
+
 ```
-docker run -p 5432:5432 -d --rm --name tfb-proxy --network tfb techempower/proxy:latest 
+sh -c "$(curl -sSL https://raw.githubusercontent.com/just-js/just/0.1.9/install.sh)"
 ```
 
-## Run the tfb test with the proxy enabled
+and to run the verification and produce a results.json with all results
+
 ```
-./tfb --test just --mode benchmark --type db --proxy on
+./just verify.js
 ```
 
-## See the results from the proxy container while test is running
-```
-docker logs -f tfb-database
-```
+You can then use a local web server to serve from the root of the repo and, assuming it is serving on port 8080 you can navigate to http://127.0.0.1:8080/index.html to view the results.
