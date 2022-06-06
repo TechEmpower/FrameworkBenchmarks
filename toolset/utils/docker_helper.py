@@ -396,12 +396,11 @@ class DockerHelper:
 
         # Sleep until the database accepts connections
         slept = 0
-        max_sleep = 10
+        max_sleep = 60
         database_ready = False
         while not database_ready and slept < max_sleep:
             time.sleep(1)
             slept += 1
-            log("Testing Connection")
             database_ready = databases[database].test_connection(self.benchmarker.config)
 
         if not database_ready:
