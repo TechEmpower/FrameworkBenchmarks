@@ -197,10 +197,14 @@ async function main () {
       function onClose () {
         if (stats.Sync > 0) {
           let status = 'ok'
+          stats.Query = stats.Query || 0
+          stats.Bind = stats.Bind || 0
+          stats.Exec = stats.Exec || 0
+          stats.Sync = stats.Sync || 0
           if (!((stats.Bind === stats.Exec) && (stats.Sync >= stats.Exec)) || missingSyncs > 0) {
             status = 'fail'
           }
-          just.print(`${AY}Query${AD} ${pad(stats.Query || 0)} ${AY}Bind${AD} ${pad(stats.Bind || 0)} ${AY}Exec${AD} ${pad(stats.Exec || 0)} ${AY}Sync${AD} ${pad(stats.Sync || 0)} ${AY}Miss${AD} ${pad(missingSyncs)} ${status === 'ok' ? AG : AR }${status}${AD}`)
+          just.print(`${AY}Query${AD} ${pad(stats.Query)} ${AY}Bind${AD} ${pad(stats.Bind)} ${AY}Exec${AD} ${pad(stats.Exec)} ${AY}Sync${AD} ${pad(stats.Sync)} ${AY}Miss${AD} ${pad(missingSyncs)} ${status === 'ok' ? AG : AR }${status}${AD}`)
         }
       }
       const frontend = {
