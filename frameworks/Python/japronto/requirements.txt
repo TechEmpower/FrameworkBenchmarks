@@ -1,2 +1,2 @@
 git+https://github.com/squeaky-pl/japronto.git#egg=japronto
-ujson==1.35
+ujson==5.2.0

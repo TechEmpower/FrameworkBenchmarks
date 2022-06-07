@@ -63,6 +63,8 @@
                         <configuration>
                             <templateDirectory>${project.basedir}/src/main/resources</templateDirectory>
                             <optimize>true</optimize>
+                            <discardLogicWhitespace>true</discardLogicWhitespace>
+                            <markAsGenerated>false</markAsGenerated>
                         </configuration>
                     </execution>
                 </executions>
@@ -70,4 +72,5 @@
         </plugins>
 
     </build>
+
 </project>

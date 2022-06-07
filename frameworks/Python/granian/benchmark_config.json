@@ -27,7 +27,7 @@
       "classification": "Platform",
       "database": "Postgres",
       "framework": "granian",
-      "language": "Rust",
+      "language": "Python",
       "orm": "Raw",
       "platform": "None",
       "webserver": "granian",

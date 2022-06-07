@@ -30,9 +30,7 @@ public class DbResource {
     @GET
     @Path("/db")
     public World db() {
-        World world = randomWorldForRead();
-        if (world==null) throw new IllegalStateException( "No data found in DB. Did you seed the database? Make sure to invoke /createdata once." );
-        return world;
+        return worldRepository.findSingleAndStateless(randomWorldNumber());
     }
 
     @GET
@@ -70,10 +68,6 @@ public class DbResource {
     public String createData() {
         worldRepository.createData();
         return "OK";
-    }
-
-    private World randomWorldForRead() {
-        return worldRepository.findSingleAndStateless(randomWorldNumber());
     }
 
     private Collection<World> randomWorldForRead(int count) {
