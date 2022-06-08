@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Benchmarks.Controllers;
 
 [Route("mvc")]
-public class HomeController : Controller
+public sealed class HomeController : Controller
 {
     [HttpGet("plaintext")]
     public IActionResult Plaintext()

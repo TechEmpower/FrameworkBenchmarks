@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Benchmarks.Controllers;
 
 [Route("mvc/queries")]
-public class MultipleQueriesController : Controller
+public sealed class MultipleQueriesController : Controller
 {
     [HttpGet("raw")]
     [Produces("application/json")]

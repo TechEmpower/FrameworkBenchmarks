@@ -3,7 +3,7 @@
 
 namespace Benchmarks.Configuration;
 
-public class EnabledScenario
+public sealed class EnabledScenario
 {
     public EnabledScenario(string name, IEnumerable<string> paths)
     {

@@ -6,7 +6,7 @@ using Benchmarks.Configuration;
 
 namespace Benchmarks.Middleware;
 
-public class JsonMiddleware
+public sealed class JsonMiddleware
 {
     private static readonly PathString _path = new(Scenarios.GetPath(s => s.Json));
     private const int _bufferSize = 27;

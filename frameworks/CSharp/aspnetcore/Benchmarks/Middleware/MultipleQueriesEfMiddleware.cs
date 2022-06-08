@@ -7,7 +7,7 @@ using Benchmarks.Data;
 
 namespace Benchmarks.Middleware;
 
-public class MultipleQueriesEfMiddleware
+public sealed class MultipleQueriesEfMiddleware
 {
     private static readonly PathString _path = new(Scenarios.GetPath(s => s.DbMultiQueryEf));
     private static readonly JsonSerializerOptions _serializerOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };

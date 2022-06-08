@@ -7,7 +7,7 @@ using Benchmarks.Data;
 
 namespace Benchmarks.Middleware;
 
-public class MultipleQueriesRawMiddleware
+public sealed class MultipleQueriesRawMiddleware
 {
     private static readonly PathString _path = new(Scenarios.GetPath(s => s.DbMultiQueryRaw));
     private static readonly JsonSerializerOptions _serializerOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };

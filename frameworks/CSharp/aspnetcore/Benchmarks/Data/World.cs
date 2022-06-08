@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Benchmarks.Data;
 
 [Table("world")]
-public class World
+public sealed class World
 {
     [Column("id")]
     public int Id { get; set; }

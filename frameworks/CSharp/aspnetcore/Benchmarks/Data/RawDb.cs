@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace Benchmarks.Data;
 
-public class RawDb : IDb
+public sealed class RawDb : IDb
 {
     private static readonly Comparison<World> WorldSortComparison = (a, b) => a.Id.CompareTo(b.Id);
 

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace Benchmarks.Data;
 
-public class EfDb : IDb
+public sealed class EfDb : IDb
 {
     private readonly IRandom _random;
     private readonly ApplicationDbContext _dbContext;

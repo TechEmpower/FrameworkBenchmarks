@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Benchmarks.Configuration;
 
-public class Scenarios
+public sealed class Scenarios
 {
     public Scenarios(IScenariosConfiguration scenariosConfiguration)
     {

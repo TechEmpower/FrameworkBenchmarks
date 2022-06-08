@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Benchmarks.Controllers;
 
 [Route("mvc/updates")]
-public class MultipleUpdatesController : Controller
+public sealed class MultipleUpdatesController : Controller
 {
     [HttpGet("raw")]
     [Produces("application/json")]

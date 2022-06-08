@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Benchmarks.Controllers;
 
 [Route("mvc/db")]
-public class SingleQueryController : Controller
+public sealed class SingleQueryController : Controller
 {
     [HttpGet("raw")]
     [Produces("application/json")]

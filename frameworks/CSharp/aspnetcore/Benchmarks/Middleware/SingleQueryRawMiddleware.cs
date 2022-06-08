@@ -7,7 +7,7 @@ using Benchmarks.Data;
 
 namespace Benchmarks.Middleware;
 
-public class SingleQueryRawMiddleware
+public sealed class SingleQueryRawMiddleware
 {
     private static readonly PathString _path = new(Scenarios.GetPath(s => s.DbSingleQueryRaw));
     private static readonly JsonSerializerOptions _serializerOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };

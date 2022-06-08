@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Benchmarks.Data;
 
 [Table("fortune")]
-public class Fortune : IComparable<Fortune>, IComparable
+public sealed class Fortune : IComparable<Fortune>, IComparable
 {
     [Column("id")]
     public int Id { get; set; }

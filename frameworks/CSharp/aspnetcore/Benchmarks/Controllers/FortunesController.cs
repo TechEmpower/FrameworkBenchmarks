@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Benchmarks.Controllers;
 
 [Route("mvc/fortunes")]
-public class FortunesController : Controller
+public sealed class FortunesController : Controller
 {
     [HttpGet("raw")]
     public async Task<IActionResult> Raw()

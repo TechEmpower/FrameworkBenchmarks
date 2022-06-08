@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace PlatformBenchmarks;
 
-public class Program
+public sealed class Program
 {
     public static string[] Args;
 

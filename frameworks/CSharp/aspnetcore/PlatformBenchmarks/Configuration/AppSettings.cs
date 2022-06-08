@@ -3,7 +3,7 @@
 
 namespace PlatformBenchmarks;
 
-public class AppSettings
+public sealed class AppSettings
 {
     public string ConnectionString { get; set; }
 

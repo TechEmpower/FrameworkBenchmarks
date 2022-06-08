@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace Benchmarks.Data;
 
-public class DefaultRandom : IRandom
+public sealed class DefaultRandom : IRandom
 {
     private static int nextSeed = 0;
 

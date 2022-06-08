@@ -3,7 +3,7 @@
 
 namespace PlatformBenchmarks;
 
-public class Startup
+public sealed class Startup
 {
     public void Configure(IApplicationBuilder app)
     {

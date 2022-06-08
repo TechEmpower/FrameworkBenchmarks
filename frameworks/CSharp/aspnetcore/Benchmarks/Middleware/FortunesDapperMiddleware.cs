@@ -7,7 +7,7 @@ using Benchmarks.Data;
 
 namespace Benchmarks.Middleware;
 
-public class FortunesDapperMiddleware
+public sealed class FortunesDapperMiddleware
 {
     private static readonly PathString _path = new(Scenarios.GetPath(s => s.DbFortunesDapper));
 

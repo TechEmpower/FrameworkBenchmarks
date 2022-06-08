@@ -6,7 +6,7 @@ using Benchmarks.Configuration;
 
 namespace Benchmarks.Middleware;
 
-public class PlaintextMiddleware
+public sealed class PlaintextMiddleware
 {
     private static readonly PathString _path = new(Scenarios.GetPath(s => s.Plaintext));
     private static readonly byte[] _helloWorldPayload = Encoding.UTF8.GetBytes("Hello, World!");

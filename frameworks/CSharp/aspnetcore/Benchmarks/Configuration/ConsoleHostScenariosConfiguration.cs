@@ -3,7 +3,7 @@
 
 namespace Benchmarks.Configuration;
 
-public class ConsoleHostScenariosConfiguration : IScenariosConfiguration
+public sealed class ConsoleHostScenariosConfiguration : IScenariosConfiguration
 {
     private readonly string[] _args;
 

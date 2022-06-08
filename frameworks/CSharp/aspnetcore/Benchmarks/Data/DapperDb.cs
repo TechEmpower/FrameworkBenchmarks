@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 
 namespace Benchmarks.Data;
 
-public class DapperDb : IDb
+public sealed class DapperDb : IDb
 {
     private static readonly Comparison<World> WorldSortComparison = (a, b) => a.Id.CompareTo(b.Id);
 

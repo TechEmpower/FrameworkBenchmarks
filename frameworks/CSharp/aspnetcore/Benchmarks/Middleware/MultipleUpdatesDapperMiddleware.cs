@@ -7,7 +7,7 @@ using Benchmarks.Data;
 
 namespace Benchmarks.Middleware;
 
-public class MultipleUpdatesDapperMiddleware
+public sealed class MultipleUpdatesDapperMiddleware
 {
     private static readonly PathString _path = new(Scenarios.GetPath(s => s.DbMultiUpdateDapper));
     private static readonly JsonSerializerOptions _serializerOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };

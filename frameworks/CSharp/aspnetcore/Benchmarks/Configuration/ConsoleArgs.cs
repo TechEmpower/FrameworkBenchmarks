@@ -3,7 +3,7 @@
 
 namespace Benchmarks.Configuration;
 
-public class ConsoleArgs
+public sealed class ConsoleArgs
 {
     public ConsoleArgs(string[] args)
     {

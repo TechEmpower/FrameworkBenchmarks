@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Benchmarks;
 
-public class Startup
+public sealed class Startup
 {
     public Startup(IWebHostEnvironment hostingEnv, Scenarios scenarios)
     {
