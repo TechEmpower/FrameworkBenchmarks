@@ -5,7 +5,7 @@ using Benchmarks.Configuration;
 
 namespace Benchmarks.Data;
 
-internal class BatchUpdateString
+internal sealed class BatchUpdateString
 {
     private const int MaxBatch = 500;
 

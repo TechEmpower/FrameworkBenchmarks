@@ -28,7 +28,7 @@ public sealed class HomeController : Controller
         return View();
     }
 
-    private class PlainTextActionResult : IActionResult
+    private sealed class PlainTextActionResult : IActionResult
     {
         private static readonly byte[] _helloWorldPayload = Encoding.UTF8.GetBytes("Hello, World!");
 
