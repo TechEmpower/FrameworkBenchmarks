@@ -55,7 +55,6 @@ public class TestController {
             }
         }
         response.setHeader("Date", DateUtil.getTime());
-        response.setHeader("Server",HServer);
         response.sendJson(result);
     }
 
