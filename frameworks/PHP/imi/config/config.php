@@ -66,7 +66,7 @@ return [
                 'password'                    => $password,
                 'database'                    => 'hello_world',
                 'dbClass'                     => \Imi\Db\Mysql\Drivers\Mysqli\Driver::class,
-                'isCheckStateWhenGetResource' => false,
+                'checkStateWhenGetResource'   => false,
             ],
             'pgsql' => [
                 'host'                        => $host,
@@ -74,7 +74,7 @@ return [
                 'password'                    => $password,
                 'database'                    => 'hello_world',
                 'dbClass'                     => \Imi\Pgsql\Db\Drivers\PdoPgsql\Driver::class,
-                'isCheckStateWhenGetResource' => false,
+                'checkStateWhenGetResource'   => false,
             ],
         ],
     ],
