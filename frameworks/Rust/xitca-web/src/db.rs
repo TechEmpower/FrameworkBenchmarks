@@ -1,9 +1,9 @@
-use std::{cell::RefCell, error::Error, fmt::Write};
+use std::{cell::RefCell, collections::HashMap, error::Error, fmt::Write};
 
-use ahash::AHashMap;
 use futures_util::stream::{FuturesUnordered, StreamExt, TryStreamExt};
 use rand::{rngs::SmallRng, Rng, SeedableRng};
 use xitca_postgres::{Postgres, Statement, ToSql};
+use xitca_unsafe_collection::no_hash::NoHashBuilder;
 
 use super::ser::{Fortune, Fortunes, World};
 
@@ -12,7 +12,7 @@ pub struct Client {
     rng: RefCell<SmallRng>,
     fortune: Statement,
     world: Statement,
-    updates: AHashMap<u16, Statement>,
+    updates: HashMap<u16, Statement, NoHashBuilder>,
 }
 
 impl Drop for Client {
@@ -46,7 +46,7 @@ pub async fn create(config: &str) -> Client {
         .unwrap()
         .leak();
 
-    let mut updates = AHashMap::new();
+    let mut updates = HashMap::default();
 
     for num in 1..=500u16 {
         let mut pl = 1;
