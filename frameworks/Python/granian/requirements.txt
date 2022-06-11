@@ -1,0 +1,3 @@
+granian==0.1.0a1
+orjson==3.6.8
+uvloop==0.16.0

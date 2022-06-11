@@ -19,7 +19,7 @@
     <maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
     <mustache.version>0.9.6</mustache.version>
     <postgresql.version>42.3.3</postgresql.version>
-    <undertow.version>2.1.6.Final</undertow.version>
+    <undertow.version>2.2.11.Final</undertow.version>
   </properties>
 
   <prerequisites>
