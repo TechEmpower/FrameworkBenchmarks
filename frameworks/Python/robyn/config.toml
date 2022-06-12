@@ -1,0 +1,12 @@
+[framework]
+name = "Robyn"
+
+[main]
+urls.plaintext = "/plaintext"
+approach = "Realistic"
+classification = "Micro"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "None"

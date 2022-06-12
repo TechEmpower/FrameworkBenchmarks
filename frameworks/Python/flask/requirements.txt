@@ -12,5 +12,5 @@ MarkupSafe==2.0.1
 meinheld==1.0.2
 uWSGI==2.0.19.1
 Werkzeug==2.0.1
-ujson==5.1.0
+ujson==5.2.0
 orjson==3.6.0

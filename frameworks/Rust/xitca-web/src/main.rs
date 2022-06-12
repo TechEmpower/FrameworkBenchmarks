@@ -14,9 +14,8 @@ use std::{
 };
 
 use xitca_http::{
-    body::ResponseBody,
-    bytes::BufMutWriter,
-    bytes::BytesMut,
+    body::Once,
+    bytes::{BufMutWriter, Bytes, BytesMut},
     config::HttpServiceConfig,
     h1::RequestBody,
     http::{
@@ -42,9 +41,8 @@ use self::db::Client;
 use self::ser::Message;
 use self::util::{QueryParse, SERVER_HEADER_VALUE};
 
-type Response = http::Response<ResponseBody>;
+type Response = http::Response<Once<Bytes>>;
 type Request = request::Request<RequestBody>;
-type State = AppState<Client>;
 
 type Ctx<'a> = Context<'a, Request, State>;
 
@@ -113,7 +111,7 @@ where
 
 async fn plain_text(ctx: Ctx<'_>) -> Result<Response, Box<dyn Error>> {
     let (req, _) = ctx.into_parts();
-    let mut res = req.into_response("Hello, World!");
+    let mut res = req.into_response(Bytes::from_static(b"Hello, World!"));
     res.headers_mut().append(CONTENT_TYPE, TEXT);
     Ok(res)
 }
@@ -133,7 +131,7 @@ async fn fortunes(ctx: Ctx<'_>) -> Result<Response, Box<dyn Error>> {
     let (req, state) = ctx.into_parts();
     use sailfish::TemplateOnce;
     let fortunes = state.client().tell_fortune().await?.render_once()?;
-    let mut res = req.into_response(fortunes);
+    let mut res = req.into_response(Bytes::from(fortunes));
     res.headers_mut().append(CONTENT_TYPE, TEXT_HTML_UTF8);
     Ok(res)
 }
@@ -164,14 +162,14 @@ where
     Ok(res)
 }
 
-struct AppState<C> {
-    client: C,
+struct State {
+    client: Client,
     // a re-usable buffer for write response data.
     write_buf: RefCell<BytesMut>,
 }
 
-impl<C> AppState<C> {
-    fn new(client: C) -> Self {
+impl State {
+    fn new(client: Client) -> Self {
         let write_buf = RefCell::new(BytesMut::new());
         Self { client, write_buf }
     }
@@ -180,7 +178,7 @@ impl<C> AppState<C> {
         self.write_buf.borrow_mut()
     }
 
-    fn client(&self) -> &C {
+    fn client(&self) -> &Client {
         &self.client
     }
 }

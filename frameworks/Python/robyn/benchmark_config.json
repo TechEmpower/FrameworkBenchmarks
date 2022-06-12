@@ -1,0 +1,23 @@
+{
+  "framework": "robyn",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "framework": "Robyn",
+        "language": "Python",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "display_name": "Robyn",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
