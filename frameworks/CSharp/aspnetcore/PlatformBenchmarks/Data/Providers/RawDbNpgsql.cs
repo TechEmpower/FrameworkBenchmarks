@@ -85,7 +85,7 @@ namespace PlatformBenchmarks
 
             return Task.FromResult(result);
 
-            static async Task<CachedWorld[]> LoadUncachedQueries(int id, int i, int count, RawDb rawdb, CachedWorld[] result)
+            async Task<CachedWorld[]> LoadUncachedQueries(int id, int i, int count, RawDb rawdb, CachedWorld[] result)
             {
                 using (var db = new NpgsqlConnection(rawdb._connectionString))
                 {
