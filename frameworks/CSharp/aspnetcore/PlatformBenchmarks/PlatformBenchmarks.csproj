@@ -13,6 +13,7 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <PackageReference Include="FastCache.Cached" Version="1.4.0" />
     <PackageReference Condition=" '$(DatabaseProvider)' == 'Npgsql' " Include="Npgsql" Version="6.0.0" />
     <PackageReference Condition=" '$(DatabaseProvider)' == 'MySqlConnector' " Include="MySqlConnector" Version="2.0.0" />
   </ItemGroup>

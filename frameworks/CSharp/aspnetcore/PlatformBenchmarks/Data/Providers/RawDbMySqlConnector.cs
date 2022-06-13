@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using FastCache;
+using FastCache.Extensions;
 using Microsoft.Extensions.Caching.Memory;
 using MySqlConnector;
 
@@ -19,11 +21,6 @@ namespace PlatformBenchmarks
     {
         private readonly ConcurrentRandom _random;
         private readonly string _connectionString;
-        private readonly MemoryCache _cache = new(
-            new MemoryCacheOptions
-            {
-                ExpirationScanFrequency = TimeSpan.FromMinutes(60)
-            });
 
         public RawDb(ConcurrentRandom random, AppSettings appSettings)
         {
@@ -71,15 +68,14 @@ namespace PlatformBenchmarks
         {
             var result = new CachedWorld[count];
             var cacheKeys = _cacheKeys;
-            var cache = _cache;
             var random = _random;
             for (var i = 0; i < result.Length; i++)
             {
                 var id = random.Next(1, 10001);
                 var key = cacheKeys[id];
-                if (cache.TryGetValue(key, out object cached))
+                if (Cached<CachedWorld>.TryGet(key, out var cached))
                 {
-                    result[i] = (CachedWorld)cached;
+                    result[i] = cached.Value;
                 }
                 else
                 {
@@ -98,10 +94,7 @@ namespace PlatformBenchmarks
                     var (cmd, idParameter) = await rawdb.CreateReadCommandAsync(db);
                     using (cmd)
                     {
-                        Func<ICacheEntry, Task<CachedWorld>> create = async _ =>
-                        {
-                            return await rawdb.ReadSingleRow(cmd);
-                        };
+                        async Task<CachedWorld> create(int key) => await ReadSingleRow(cmd);
 
                         var cacheKeys = _cacheKeys;
                         var key = cacheKeys[id];
@@ -110,7 +103,7 @@ namespace PlatformBenchmarks
 
                         for (; i < result.Length; i++)
                         {
-                            result[i] = await rawdb._cache.GetOrCreateAsync(key, create);
+                            result[i] = await Cached.GetOrCompute(key, create, TimeSpan.FromMinutes(60));
 
                             id = rawdb._random.Next(1, 10001);
                             idParameter.Value = id;
@@ -133,11 +126,10 @@ namespace PlatformBenchmarks
                 using (cmd)
                 {
                     var cacheKeys = _cacheKeys;
-                    var cache = _cache;
                     for (var i = 1; i < 10001; i++)
                     {
                         idParameter.Value = i;
-                        cache.Set<CachedWorld>(cacheKeys[i], await ReadSingleRow(cmd));
+                        await ReadSingleRow(cmd).Cache(cacheKeys[i], TimeSpan.FromMinutes(60));
                     }
                 }
             }
@@ -245,27 +237,7 @@ namespace PlatformBenchmarks
             }
         }
         
-        private static readonly object[] _cacheKeys = Enumerable.Range(0, 10001).Select(i => new CacheKey(i)).ToArray();
-
-        public sealed class CacheKey : IEquatable<CacheKey>
-        {
-            private readonly int _value;
-
-            public CacheKey(int value)
-                => _value = value;
-
-            public bool Equals(CacheKey key)
-                => key._value == _value;
-
-            public override bool Equals(object obj)
-                => ReferenceEquals(obj, this);
-
-            public override int GetHashCode()
-                => _value;
-
-            public override string ToString()
-                => _value.ToString();
-        }
+        private static readonly int[] _cacheKeys = Enumerable.Range(0, 10001).ToArray();
     }
 }
 

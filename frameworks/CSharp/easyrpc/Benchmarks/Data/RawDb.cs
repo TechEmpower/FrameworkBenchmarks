@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using FastCache;
 using Microsoft.Extensions.Caching.Memory;
 using Npgsql;
 
@@ -29,17 +30,10 @@ namespace Benchmarks.Data
     public class RawDb : IRawDb
     {
         private readonly string _connectionString;
-        private readonly MemoryCache _cache;
         
         public RawDb(AppSettings appSettings)
         {
             _connectionString = appSettings.ConnectionString;
-
-            _cache = new MemoryCache(
-                new MemoryCacheOptions()
-                {
-                    ExpirationScanFrequency = TimeSpan.FromMinutes(60)
-                });
         }
 
         public async Task<World> LoadSingleQueryRow()
@@ -154,18 +148,16 @@ namespace Benchmarks.Data
         {
             var result = new World[count];
             var cacheKeys = _cacheKeys;
-            var cache = _cache;
             var random = new ConcurrentRandom();
 
             for (var i = 0; i < result.Length; i++)
             {
                 var id = random.Next(1, 10001);
                 var key = cacheKeys[id];
-                var data = cache.Get<CachedWorld>(key);
 
-                if (data != null)
+                if (Cached<CachedWorld>.TryGet(key, out var cached))
                 {
-                    result[i] = data;
+                    result[i] = cached.Value;
                 }
                 else
                 {
@@ -181,14 +173,11 @@ namespace Benchmarks.Data
                 {
                     await db.OpenAsync();
 
-                    var (cmd, idParameter) = rawdb.CreateReadCommand(db,random);
-                    
+                    var (cmd, idParameter) = CreateReadCommand(db,random);
+
                     using (cmd)
                     {
-                        Func<ICacheEntry, Task<CachedWorld>> create = async (entry) => 
-                        {
-                            return await rawdb.ReadSingleRow(cmd);
-                        };
+                        async Task<CachedWorld> create(int key) => await ReadSingleRow(cmd);
 
                         var cacheKeys = _cacheKeys;
                         var key = cacheKeys[id];
@@ -197,8 +186,7 @@ namespace Benchmarks.Data
 
                         for (; i < result.Length; i++)
                         {
-                            var data = await rawdb._cache.GetOrCreateAsync<CachedWorld>(key, create);
-                            result[i] = data;
+                            result[i] = await Cached.GetOrCompute(key, create, TimeSpan.FromMinutes(60));
 
                             id = random.Next(1, 10001);
                             idParameter.TypedValue = id;
@@ -211,7 +199,7 @@ namespace Benchmarks.Data
             }
         }
 
-        private (NpgsqlCommand readCmd, NpgsqlParameter<int> idParameter) CreateReadCommand(NpgsqlConnection connection, ConcurrentRandom random)
+        private static (NpgsqlCommand readCmd, NpgsqlParameter<int> idParameter) CreateReadCommand(NpgsqlConnection connection, ConcurrentRandom random)
         {
             var cmd = new NpgsqlCommand("SELECT id, randomnumber FROM world WHERE id = @Id", connection);
 
@@ -223,7 +211,7 @@ namespace Benchmarks.Data
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private async Task<World> ReadSingleRow(NpgsqlCommand cmd)
+        private static async Task<World> ReadSingleRow(NpgsqlCommand cmd)
         {
             using (var rdr = await cmd.ExecuteReaderAsync(System.Data.CommandBehavior.SingleRow))
             {
@@ -237,26 +225,6 @@ namespace Benchmarks.Data
             }
         }
 
-        private static readonly object[] _cacheKeys = Enumerable.Range(0, 10001).Select((i) => new CacheKey(i)).ToArray();
-
-        public sealed class CacheKey : IEquatable<CacheKey>
-        {
-            private readonly int _value;
-
-            public CacheKey(int value)
-                => _value = value;
-
-            public bool Equals(CacheKey key)
-                => key._value == _value;
-
-            public override bool Equals(object obj) 
-                => ReferenceEquals(obj, this);
-
-            public override int GetHashCode()
-                => _value;
-
-            public override string ToString()
-                => _value.ToString();
-        }
+        private static readonly int[] _cacheKeys = Enumerable.Range(0, 10001).ToArray();
     }
 }
