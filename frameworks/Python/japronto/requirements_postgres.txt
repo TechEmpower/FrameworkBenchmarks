@@ -1,0 +1,3 @@
+git+https://github.com/IterableTrucks/japronto.git
+asyncpg==0.25.0
+ujson==5.2.0
