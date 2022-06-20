@@ -18,7 +18,7 @@
         <netty.version>4.1.76.Final</netty.version>
         <anima.version>0.3.1</anima.version>
         <hikaricp.version>4.0.3</hikaricp.version>
-        <mysql-conn.version>8.0.18</mysql-conn.version>
+        <mysql-conn.version>8.0.28</mysql-conn.version>
         <blade-jetbrick.version>0.2.1</blade-jetbrick.version>
     </properties>
 
