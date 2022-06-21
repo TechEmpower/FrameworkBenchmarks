@@ -11,7 +11,7 @@
         <log4j.version>1.2.17</log4j.version>
         <log4j2.version>2.17.1</log4j2.version>
         <isocket.version>1.0.3-SNAPSHOT</isocket.version>
-        <fastjson.version>1.2.44</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
     </properties>
 
     <repositories><!-- 代码库 -->
