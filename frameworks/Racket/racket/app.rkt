@@ -226,7 +226,8 @@
      #:tcp@ tcp@
      #:confirmation-channel ch
      #:safety-limits (make-safety-limits
-                      #:max-waiting 4096
+                      #:max-concurrent 1000
+                      #:max-waiting 65535
                       #:request-read-timeout 16
                       #:response-timeout 16
                       #:response-send-timeout 16)))
@@ -236,3 +237,10 @@
     (raise ready-or-exn))
 
   stop)
+
+(module+ main
+  (require net/tcp-unit)
+  (define stop (start "127.0.0.1" 8000 tcp@))
+  (with-handlers ([exn:break? (λ (_) (stop))])
+    (displayln "ready")
+    (sync never-evt)))
