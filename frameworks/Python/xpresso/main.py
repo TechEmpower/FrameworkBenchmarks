@@ -132,7 +132,7 @@ app = App(routes=routes)
 
 if __name__ == "__main__":
     workers = multiprocessing.cpu_count()
-    if os.environ.get('TRAVIS') == 'true':
+    if os.environ.get("TRAVIS") == "true":
         workers = 2
     uvicorn.run(  # type: ignore
         "main:app",

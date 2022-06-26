@@ -45,10 +45,10 @@ app = FastAPI()
 async def setup_database():
     global connection_pool
     connection_pool = await asyncpg.create_pool(
-        user=os.getenv('PGUSER', 'benchmarkdbuser'),
-        password=os.getenv('PGPASS', 'benchmarkdbpass'),
-        database='hello_world',
-        host='tfb-database',
+        user=os.getenv('PGUSER', 'postgres'),
+        password=os.getenv('PGPASS', 'postgres'),
+        database='postgres',
+        host='localhost',
         port=5432
     )
 
