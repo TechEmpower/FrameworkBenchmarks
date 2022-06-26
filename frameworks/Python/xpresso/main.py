@@ -1,16 +1,15 @@
+import multiprocessing
 import os
 import pathlib
 from operator import itemgetter
 from random import Random
 from typing import Annotated, AsyncIterable
 
-import anyio
-import anyio.to_process
 import asyncpg  # type: ignore
 import jinja2  # type: ignore
 import uvicorn  # type: ignore
 from pydantic import BaseModel, Field
-from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
+from starlette.responses import HTMLResponse, PlainTextResponse
 from xpresso import App, Depends, Path, Response
 
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
@@ -20,16 +19,17 @@ ADDITIONAL_ROW = (0, "Additional fortune added at request time.")
 
 sort_fortunes_key = itemgetter(1)
 
-with (pathlib.Path("templates") / "fortune.html").open() as template_file:
+app_dir = pathlib.Path(__file__).parent
+with (app_dir / "templates" / "fortune.html").open() as template_file:
     template = jinja2.Template(template_file.read())
 
 
 async def get_db_pool() -> AsyncIterable[asyncpg.Pool]:
     async with asyncpg.create_pool(  # type: ignore
-        user=os.getenv("PGUSER", "benchmarkdbuser"),
-        password=os.getenv("PGPASS", "benchmarkdbpass"),
-        database="hello_world",
-        host="tfb-database",
+        user=os.getenv("PGUSER", "postgres"),
+        password=os.getenv("PGPASS", "postgres"),
+        database="postgres",
+        host="localhost",
         port=5432,
     ) as pool:
         yield pool
@@ -38,11 +38,15 @@ async def get_db_pool() -> AsyncIterable[asyncpg.Pool]:
 DBPool = Annotated[asyncpg.Pool, Depends(get_db_pool, scope="app")]
 
 
-async def json_serialization() -> Response:
-    return JSONResponse({"message": "Hello, world!"})
+class Greeting(BaseModel):
+    message: str
 
 
-async def plaintext() -> Response:
+def json_serialization() -> Greeting:
+    return Greeting(message="Hello, world!")
+
+
+def plaintext() -> Response:
     return PlainTextResponse(b"Hello, world!")
 
 
@@ -123,15 +127,19 @@ routes = [
 ]
 
 
-async def serve() -> None:
-    config = uvicorn.Config(
-        App(routes=routes),
-        host="0.0.0.0",
-        port=8080,
-        # log_level="error",
-    )
-    await uvicorn.Server(config).serve()
+app = App(routes=routes)
 
 
 if __name__ == "__main__":
-    anyio.run(serve)
+    workers = multiprocessing.cpu_count()
+    if os.environ.get('TRAVIS') == 'true':
+        workers = 2
+    uvicorn.run(  # type: ignore
+        "main:app",
+        host="0.0.0.0",
+        port=8080,
+        workers=workers,
+        log_level="error",
+        loop="uvloop",
+        http="httptools",
+    )
