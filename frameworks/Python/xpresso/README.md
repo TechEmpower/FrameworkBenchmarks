@@ -8,7 +8,7 @@ Also note that there is additional information provided in the [Python README](.
 
 ## Description
 
-[**Xpresso**](https://github.com/adriangb/xpresso) is a composable high performance Python web framework built on top of [Starlette], [Pydantic] and [di].
+[Xpresso] is a high performance Python web framework built on top of [Starlette], [Pydantic] and [di] with a focus on composability, flexibility and minimal but well defined library APIs.
 
 ## Test Paths & Sources
 
