@@ -1,13 +1,11 @@
-from functools import partial
-import multiprocessing
 import os
 import pathlib
-from concurrent.futures import ProcessPoolExecutor, wait
 from operator import itemgetter
 from random import Random
 from typing import Annotated, AsyncIterable
 
 import anyio
+import anyio.to_process
 import asyncpg  # type: ignore
 import jinja2  # type: ignore
 import uvicorn  # type: ignore
@@ -125,25 +123,15 @@ routes = [
 ]
 
 
-async def main() -> None:
+async def serve() -> None:
     config = uvicorn.Config(
         App(routes=routes),
         host="0.0.0.0",
         port=8080,
-        log_level="ERROR",
+        # log_level="error",
     )
     await uvicorn.Server(config).serve()
 
 
 if __name__ == "__main__":
-    run = partial(anyio.run, main, backend_options={"uvloop": True})
-    workers = multiprocessing.cpu_count()
-    if os.environ.get("TRAVIS") == "true":
-        workers = 2
-    with ProcessPoolExecutor(workers) as exec:
-        wait(
-            [
-                exec.submit(run)
-                for _ in range(workers)
-            ]
-        )
+    anyio.run(serve)

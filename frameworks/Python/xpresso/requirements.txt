@@ -1,7 +1,6 @@
 asyncpg==0.25.0
-gunicorn==20.1.0
 Jinja2==2.11.3
-markupsafe==2.1.1
+markupsafe==2.0.1
 uvloop==0.16.0
 uvicorn==0.18.1
 xpresso==0.41.1
