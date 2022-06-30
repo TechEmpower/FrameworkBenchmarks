@@ -1,0 +1,50 @@
+[package]
+name = "xitca-web"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "xitca-web"
+path = "./src/main.rs"
+
+[[bin]]
+name = "xitca-web-diesel"
+path = "./src/main_diesel.rs"
+
+[dependencies]
+xitca-http = { version = "0.1", features = ["util-service"] }
+xitca-server = "0.1"
+xitca-service = "0.1"
+xitca-web = { version = "0.1", features = ["json"] }
+xitca-postgres = "0.1"
+xitca-unsafe-collection = "0.1"
+
+atoi = "1.0.0"
+core_affinity = "0.5.10"
+diesel = { version = "2.0.0-rc.0", default-features = false, features = ["i-implement-a-third-party-backend-and-opt-into-breaking-changes"]}
+diesel-async = { version = "0.1.0", features = ["postgres"], default-features = false }
+futures-util = { version = "0.3.18", default-features = false, features = ["alloc"] }
+mimalloc = { version = "0.1.29", default-features = false }
+rand = { version = "0.8.5", default-features = false, features = ["min_const_gen", "nightly", "small_rng"] }
+sailfish = "0.3.4"
+serde = "1"
+simd-json = { version = "0.4.15", features = ["hints", "known-key"] }
+tang-rs = "0.2"
+tokio = { version = "1.18.0", features = ["macros", "rt"] }
+
+[profile.release]
+lto = true
+opt-level = 3
+codegen-units = 1
+panic = "abort"
+
+[patch.crates-io]
+xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "bcfd33345a77a2e4b291633af9fa340ca6d5f524" }
+xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "bcfd33345a77a2e4b291633af9fa340ca6d5f524" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "bcfd33345a77a2e4b291633af9fa340ca6d5f524" }
+xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "bcfd33345a77a2e4b291633af9fa340ca6d5f524" }
+xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "bcfd33345a77a2e4b291633af9fa340ca6d5f524" }
+xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "bcfd33345a77a2e4b291633af9fa340ca6d5f524" }
+xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "bcfd33345a77a2e4b291633af9fa340ca6d5f524" }
+
+diesel-async = { git = "https://github.com/weiznich/diesel_async.git", rev = "d74eefd18b7e738b02aa2fa5f8bfd934b1d4db95" }

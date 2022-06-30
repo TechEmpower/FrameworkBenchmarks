@@ -6,11 +6,11 @@ of web development platforms. The test utilizes Hexagon routes, serialization an
 
 ## Tests
 
-You can run tests against any running server passing the `verify.endpoint` project property. I.e.:
-`./gradlew verify -Pverify.endpoint=http://host:1234`
+You can verify the benchmarks with the following command (from the project root):
+`./tfb --mode verify --test hexagon hexagon-jetty hexagon-tomcat hexagon-netty hexagon-nettyepoll`
 
-* [Hexagon Web](src/main/kotlin/com/hexagonkt/Benchmark.kt)
-* [Hexagon Storage](src/main/kotlin/com/hexagonkt/BenchmarkStorage.kt)
+To run the full benchmarks locally, on the project root (not this directory) execute:
+`./tfb --mode benchmark --test hexagon hexagon-jetty hexagon-tomcat hexagon-netty hexagon-nettyepoll`
 
 ## Infrastructure Software Versions
 
@@ -18,10 +18,7 @@ You can run tests against any running server passing the `verify.endpoint` proje
 
 ## Test URLs
 
-In URLs replace `${DB_ENGINE}` with one of:
-
-* mongodb
-* postgresql
+In URLs replace `${DB_ENGINE}` with: `postgresql`
 
 and `${TEMPLATE_ENGINE}` with: `pebble`
 
@@ -34,7 +31,25 @@ and `${TEMPLATE_ENGINE}` with: `pebble`
 * Database updates: http://localhost:9090/${DB_ENGINE}/update
 * Database queries: http://localhost:9090/${DB_ENGINE}/query
 
-### Resin
+### Netty
+
+* JSON Encoding Test: http://localhost:9090/json
+* Plain Text Test: http://localhost:9090/plaintext
+* Data-Store/Database Mapping Test: http://localhost:9090/${DB_ENGINE}/db?queries=5
+* Fortunes: http://localhost:9090/${DB_ENGINE}/${TEMPLATE_ENGINE}/fortunes
+* Database updates: http://localhost:9090/${DB_ENGINE}/update
+* Database queries: http://localhost:9090/${DB_ENGINE}/query
+
+### Netty Epoll
+
+* JSON Encoding Test: http://localhost:9090/json
+* Plain Text Test: http://localhost:9090/plaintext
+* Data-Store/Database Mapping Test: http://localhost:9090/${DB_ENGINE}/db?queries=5
+* Fortunes: http://localhost:9090/${DB_ENGINE}/${TEMPLATE_ENGINE}/fortunes
+* Database updates: http://localhost:9090/${DB_ENGINE}/update
+* Database queries: http://localhost:9090/${DB_ENGINE}/query
+
+### Tomcat
 
 * JSON Encoding Test: http://localhost:8080/json
 * Plain Text Test: http://localhost:8080/plaintext

@@ -1,24 +1,25 @@
 package org.jetbrains.ktor.benchmarks
 
-import com.zaxxer.hikari.*
-import io.ktor.application.*
-import io.ktor.features.*
-import io.ktor.html.*
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import io.ktor.http.*
 import io.ktor.http.content.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.scheduling.*
+import io.ktor.server.application.*
+import io.ktor.server.html.*
+import io.ktor.server.plugins.defaultheaders.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.html.*
-import kotlinx.serialization.*
-import kotlinx.serialization.builtins.*
-import kotlinx.serialization.json.*
-import java.util.*
-import java.util.concurrent.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.util.concurrent.ThreadLocalRandom
 
 @Serializable
-data class Message(val message: String = "Hello, World!")
+data class Message(val message: String)
 
 @Serializable
 data class World(val id: Int, var randomNumber: Int)
@@ -26,7 +27,6 @@ data class World(val id: Int, var randomNumber: Int)
 @Serializable
 data class Fortune(val id: Int, var message: String)
 
-@OptIn(InternalCoroutinesApi::class)
 fun Application.main() {
     val worldSerializer = World.serializer()
     val worldListSerializer = ListSerializer(World.serializer())
@@ -34,7 +34,7 @@ fun Application.main() {
     val dbRows = 10000
     val poolSize = 48
     val pool by lazy { HikariDataSource(HikariConfig().apply { configurePostgres(poolSize) }) }
-    val databaseDispatcher by lazy { ExperimentalCoroutineDispatcher().blocking(poolSize) }
+    val databaseDispatcher = Dispatchers.IO
 
     install(DefaultHeaders)
 
@@ -46,7 +46,11 @@ fun Application.main() {
         }
 
         get("/json") {
-            call.respondText(Json.encodeToString(Message()), ContentType.Application.Json, HttpStatusCode.OK)
+            call.respondText(
+                Json.encodeToString(Message("Hello, world!")),
+                ContentType.Application.Json,
+                HttpStatusCode.OK
+            )
         }
 
         get("/db") {
@@ -73,7 +77,8 @@ fun Application.main() {
                 when (queries) {
                     null -> Json.encodeToString(worldSerializer, result.single())
                     else -> Json.encodeToString(worldListSerializer, result)
-                }, ContentType.Application.Json, HttpStatusCode.OK
+                },
+                ContentType.Application.Json, HttpStatusCode.OK
             )
         }
 
@@ -105,7 +110,6 @@ fun Application.main() {
                                 td { +fortune.id.toString() }
                                 td { +fortune.message }
                             }
-
                         }
                     }
                 }
@@ -129,7 +133,6 @@ fun Application.main() {
                                 }
                             }
                         }
-
                     }
 
                     result.forEach { it.randomNumber = random.nextInt(dbRows) + 1 }
@@ -143,7 +146,6 @@ fun Application.main() {
                                 updateStatement.executeUpdate()
                             }
                         }
-
                 }
             }
 
@@ -151,7 +153,8 @@ fun Application.main() {
                 when (queries) {
                     null -> Json.encodeToString(worldSerializer, result.single())
                     else -> Json.encodeToString(worldListSerializer, result)
-                }, ContentType.Application.Json, HttpStatusCode.OK
+                },
+                ContentType.Application.Json, HttpStatusCode.OK
             )
         }
     }
@@ -188,4 +191,3 @@ fun ApplicationCall.queries() = try {
 } catch (nfe: NumberFormatException) {
     1
 }
-

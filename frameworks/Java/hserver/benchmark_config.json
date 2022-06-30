@@ -1,0 +1,31 @@
+
+{
+  "framework": "hserver",
+  "tests": [
+    {
+      "default": {
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "plaintext_url": "/plaintext",
+        "update_url": "/updates?queries=",
+        "json_url": "/json",
+        "port": 8888,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "hserver",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "hserver",
+        "notes": "",
+        "versus": "hserver"
+      }
+    }
+  ]
+}

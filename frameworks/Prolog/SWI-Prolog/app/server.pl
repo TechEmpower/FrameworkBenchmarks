@@ -7,18 +7,15 @@
 :- use_module(library(http/http_json)).
 :- use_module(library(http/http_parameters)).
 :- use_module(library(http/http_unix_daemon)).
-:- use_module(library(st/st_render)).
 :- use_module(library(http/thread_httpd)).
-
+:- use_module(library(http/html_write)).
+:- use_module(library(dcg/high_order)).
 
 server(Port) :-
     odbc_set_option(connection_pooling(true)),
     current_prolog_flag(cpu_count, Cores),
-    Workers is Cores * 2,
-    server(Port, [workers(Workers)]).
-
-server(Port, Options) :-
-    http_server(http_dispatch, [port(Port),timeout(120)|Options]).
+    Workers is 64 * Cores,
+    http_server(http_dispatch, [workers(Workers), port(Port), timeout(30)]).
 
 
 :- http_handler('/plaintext',     plaintext_handler,     [chunked]).
@@ -54,12 +51,18 @@ queries_handler(Request) :-
 
 fortunes_handler(_Request) :-
     service:fortunes(Rows),
-    maplist(fortune_json, Rows, Items),
-    render_template(fortunes, _{ items: Items }, Payload, Len),
     format('Server: SWI-Prolog~n'),
-    format('Content-Type: text/html; charset=utf-8~n'),
-    format('Content-Length: ~d~n~n', [Len]),
-    format(Payload).
+    format('Content-Type: text/html; charset=utf-8~n~n'),
+    phrase(page([ head(title('Fortunes')),
+                  body(table(
+                      [tr([th('id'), th('message')]),
+                       \sequence(row, Rows)]))
+                ]),
+           Tokens),
+    print_html(Tokens).
+
+row(row(N, C)) -->
+    html(tr([td(N), td(C)])).
 
 updates_handler(Request) :-
     queries(Request, N),
@@ -79,10 +82,10 @@ cached_worlds_handler(Request) :-
 
 queries(Request, Queries) :-
     catch(
-        ( http_parameters(Request, [queries(Value, [integer, optional(true), default(1)])])
-        , cut_off(Value, 1, 500, Queries)
+        (   http_parameters(Request, [queries(Value, [integer, optional(true), default(1)])])
+        ,   cut_off(Value, 1, 500, Queries)
         ),
-        Caught,
+        _Caught,
         Queries = 1
     ).
 
@@ -91,13 +94,3 @@ cut_off(V, _, U, U) :- V > U.
 cut_off(V, _, _, V).
 
 world_json(row(Id, RandomNumber), _{ id: Id, randomNumber: RandomNumber }).
-
-fortune_json(row(Id, Message), _{ id: Id, message: Message }).
-
-render_template(Template, Data, Result, Len) :-
-    with_output_to(codes(Codes), (
-        current_output(Out),
-        st_render_file(Template, Data, Out, _{ cache: true })
-    )),
-    length(Codes, Len),
-    string_codes(Result, Codes).

@@ -18,12 +18,12 @@
         <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
         <maven-war-plugin.version>3.2.0</maven-war-plugin.version>
 
-        <h2.version>1.4.197</h2.version>
-        <hibernate.version>5.4.2.Final</hibernate.version>
+        <h2.version>2.1.210</h2.version>
+        <hibernate.version>5.4.24.Final</hibernate.version>
         <hibernate-validator.version>6.0.20.Final</hibernate-validator.version>
         <jaxb-api.version>2.3.0</jaxb-api.version>
         <jetty.version>9.4.18.v20190429</jetty.version>
-        <mysql.version>8.0.18</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
         <ninja.version>6.5.0</ninja.version>
         <xml-apis.version>2.0.2</xml-apis.version>
     </properties>

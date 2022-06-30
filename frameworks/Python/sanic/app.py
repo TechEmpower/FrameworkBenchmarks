@@ -2,7 +2,7 @@ import asyncpg
 import os
 import jinja2
 from logging import getLogger
-from random import randint
+from random import randint, sample
 from operator import itemgetter
 
 import multiprocessing
@@ -45,7 +45,7 @@ connection_pool = None
 sort_fortunes_key = itemgetter(1)
 template = load_fortunes_template()
 
-app = sanic.Sanic()
+app = sanic.Sanic(name=__name__)
 
 
 @app.listener('before_server_start')
@@ -81,7 +81,7 @@ async def single_database_query_view(request):
 @app.get('/queries')
 async def multiple_database_queries_view(request):
     num_queries = get_num_queries(request.args.get('queries', 1))
-    row_ids = [randint(1, 10000) for _ in range(num_queries)]
+    row_ids = sample(range(1, 10000), num_queries)
     worlds = []
 
     async with connection_pool.acquire() as connection:
@@ -119,8 +119,8 @@ async def database_updates_view(request):
     async with connection_pool.acquire() as connection:
         statement = await connection.prepare(READ_ROW_SQL_TO_UPDATE)
 
-        for _ in range(get_num_queries(queries)):
-            record = await statement.fetchrow(randint(1, 10000))
+        for row_id in sample(range(1, 10000), get_num_queries(queries)):
+            record = await statement.fetchrow(row_id)
             world = dict(
                 id=record['id'], randomNumber=record['randomnumber']
             )

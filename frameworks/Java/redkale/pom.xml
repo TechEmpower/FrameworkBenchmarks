@@ -6,9 +6,8 @@
     <version>1.0.0</version>
 
     <properties>
-        <!-- the main class -->
         <main.class>org.redkale.boot.Application</main.class>
-        <stack.version>1.0.0</stack.version>
+		<redkale.version>2.7.0-SNAPSHOT</redkale.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
@@ -18,20 +17,15 @@
         <dependency>
             <groupId>org.redkale</groupId>
             <artifactId>redkale</artifactId>
-            <version>2.5.0-SNAPSHOT</version>
+            <version>${redkale.version}</version>
         </dependency>
         
         <dependency>
             <groupId>org.redkalex</groupId>
             <artifactId>redkale-plugins</artifactId>
-            <version>2.5.0-SNAPSHOT</version>
+            <version>${redkale.version}</version>
         </dependency>
         
-        <dependency> 
-            <groupId>com.fizzed</groupId>
-            <artifactId>rocker-compiler</artifactId>
-            <version>1.3.0</version>
-        </dependency>        
     </dependencies>
 
     <repositories>
@@ -73,29 +67,27 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>                         
             </plugin>
+                 
             <plugin>
-                <groupId>com.fizzed</groupId>
-                <artifactId>rocker-maven-plugin</artifactId>
-                <version>1.3.0</version>
+                <groupId>org.redkale.maven.plugins</groupId>
+                <artifactId>redkale-maven-plugin</artifactId>
+                <version>1.1.0-SNAPSHOT</version>                                                
+                <configuration>		
+                    <nativeimageArgs>
+                        <arg>--no-fallback</arg>
+                    </nativeimageArgs>
+                </configuration>                                    
                 <executions>
                     <execution>
-                        <id>generate-rocker-templates</id>
-                        <phase>generate-sources</phase>
+                        <id>redkale-compile</id> 
+                        <phase>process-classes</phase>
                         <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <javaVersion>1.8</javaVersion>
-                            <templateDirectory>${basedir}/src/main/templates</templateDirectory>
-                            <outputDirectory>${basedir}/target/generated-sources/rocker</outputDirectory>
-                            <discardLogicWhitespace>false</discardLogicWhitespace>
-                            <addAsSources>true</addAsSources>
-                            <optimize>true</optimize>
-                            <failOnError>true</failOnError>
-                        </configuration>
+                            <goal>compile</goal>
+                        </goals>                   
                     </execution>
-                </executions>
+                </executions>    
             </plugin>
+                 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>

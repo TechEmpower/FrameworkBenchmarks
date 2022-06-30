@@ -4,19 +4,16 @@ This is the Quarkus portion of a [benchmarking test suite](../) comparing a vari
 
 ## Implementations
 
-There are currently 6 repository implementations:
+There are currently 3 implementations:
 
 - RESTEasy and Hibernate ORM
 - RESTEasy Reactive and Hibernate ORM
 - RESTEasy Reactive and Hibernate Reactive
-- RESTEasy Reactive and Vert.x PG Client
-- Reactive Routes and Hibernate Reactive
-- Reactive Routes and Vert.x PG Client
 
 ## Versions
 
 * [Java OpenJDK 11](http://openjdk.java.net/)
-* [Quarkus 1.11.0.Beta1](https://quarkus.io)
+* [Quarkus 2.9.1.Final](https://quarkus.io)
 
 ## Test URLs
 

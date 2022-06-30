@@ -1,7 +1,7 @@
 # ================================
 # Build image
 # ================================
-FROM swift:5.3 as build
+FROM swift:5.6-focal as build
 WORKDIR /build
 
 # Copy entire repo into container
@@ -9,14 +9,13 @@ COPY ./app .
 
 # Compile with optimizations
 RUN swift build \
-	--enable-test-discovery \
 	-c release \
 	-Xswiftc -enforce-exclusivity=unchecked
 
 # ================================
 # Run image
 # ================================
-FROM swift:5.3-slim
+FROM swift:5.6-focal-slim
 WORKDIR /run
 
 # Install Swift dependencies

@@ -57,7 +57,7 @@
     },
     "diesel": {
       "db_url": "/db",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "query_url": "/queries?q=",
       "update_url": "/updates?q=",
       "port": 8080,
@@ -77,7 +77,7 @@
     },
     "pg": {
       "db_url": "/db",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "query_url": "/queries?q=",
       "update_url": "/updates?q=",
       "port": 8080,
@@ -97,7 +97,7 @@
     },
     "sqlx": {
       "db_url": "/db",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "query_url": "/queries?q=",
       "update_url": "/updates?q=",
       "port": 8080,

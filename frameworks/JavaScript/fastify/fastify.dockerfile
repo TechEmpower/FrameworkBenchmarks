@@ -1,4 +1,4 @@
-FROM node:14.17.0
+FROM node:16.14.0
 
 COPY ./ ./
 

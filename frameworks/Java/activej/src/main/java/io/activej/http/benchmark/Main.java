@@ -115,7 +115,7 @@ public final class Main extends MultithreadedHttpServerLauncher {
 			Config config() {
 				return Config.create()
 						.with("http.listenAddresses", Config.ofValue(ofInetSocketAddress(), new InetSocketAddress(PORT)))
-						.with("workers", "" + Integer.toString(2 * Runtime.getRuntime().availableProcessors()))
+						.with("workers", "" + 2 * Runtime.getRuntime().availableProcessors())
 						.overrideWith(ofClassPathProperties(PROPERTIES_FILE, true))
 						.overrideWith(ofSystemProperties("config"));
 			}

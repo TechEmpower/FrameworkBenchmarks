@@ -10,8 +10,9 @@
 		<maven.compiler.target>11</maven.compiler.target>
 		<!-- the main class -->
 		<main.class>vertx.App</main.class>
-		<stack.version>3.7.0</stack.version>
-		<netty.version>4.1.36.Final</netty.version>
+		<stack.version>4.1.4</stack.version>
+		<jackson.version>2.13.3</jackson.version>
+		<netty.version>4.1.67.Final</netty.version>
 	</properties>
 
 	<dependencies>
@@ -19,6 +20,21 @@
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-core</artifactId>
 			<version>${stack.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-pg-client</artifactId>
+			<version>${stack.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
@@ -31,11 +47,6 @@
 			<artifactId>netty-transport-native-epoll</artifactId>
 			<version>${netty.version}</version>
 			<classifier>linux-x86_64</classifier>
-		</dependency>
-		<dependency>
-			<groupId>io.reactiverse</groupId>
-			<artifactId>reactive-pg-client</artifactId>
-			<version>0.11.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fizzed</groupId>

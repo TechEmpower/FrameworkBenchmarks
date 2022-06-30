@@ -2,13 +2,18 @@ package net.officefloor.benchmark;
 
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
+import io.vertx.core.impl.VertxBuilder;
+import io.vertx.core.impl.VertxThread;
+import io.vertx.core.spi.VertxThreadFactory;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.PgConnection;
 import io.vertx.sqlclient.Row;
@@ -18,6 +23,7 @@ import io.vertx.sqlclient.Tuple;
 import net.officefloor.server.RequestHandler;
 import net.officefloor.server.http.parse.HttpRequestParser;
 import net.officefloor.vertx.OfficeFloorVertx;
+import net.openhft.affinity.Affinity;
 
 /**
  * R2DBC server.
@@ -35,9 +41,26 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 	}
 
 	/**
+	 * Connections.
+	 */
+	private static class Connections {
+		private int index = -1;
+		private final PgConnection[] connections;
+
+		private Connections(PgConnection[] connections) {
+			this.connections = connections;
+		}
+
+		private PgConnection getConnection(int max) {
+			this.index = (this.index + 1) % max;
+			return this.connections[this.index];
+		}
+	}
+
+	/**
 	 * {@link ThreadLocal} {@link PgConnection} instances.
 	 */
-	private final ThreadLocal<PgConnection> threadLocalConnection;
+	private final ThreadLocal<Connections> threadLocalConnections;
 
 	/**
 	 * Instantiate.
@@ -52,21 +75,45 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 	public SqlClientOfficeFloorMain(int socketCount, String server, int port, String database, String username,
 			String password) {
 
-		// Obtain the vertx
-		int workerThreadCount = Math.max(1, socketCount / 4);
-		Vertx vertx = Vertx
-				.vertx(new VertxOptions().setPreferNativeTransport(true).setWorkerPoolSize(workerThreadCount));
+		// Should be all I/O processing for SQL responses
+		System.setProperty("vertx.nettyIORatio", "100");
 
 		// Create connection
 		PgConnectOptions connectOptions = new PgConnectOptions().setHost(server).setPort(port).setDatabase(database)
-				.setUser(username).setPassword(password).setCachePreparedStatements(true);
+				.setUser(username).setPassword(password).setCachePreparedStatements(true).setTcpNoDelay(true)
+				.setTcpQuickAck(true).setPipeliningLimit(1024);
 
-		// Create thread local connection
-		this.threadLocalConnection = new ThreadLocal<PgConnection>() {
+		// Provide connection
+		this.threadLocalConnections = new ThreadLocal<Connections>() {
 			@Override
-			protected PgConnection initialValue() {
+			protected Connections initialValue() {
 				try {
-					return OfficeFloorVertx.block(PgConnection.connect(vertx, connectOptions));
+					// Obtain thread affinity
+					BitSet affinity = Affinity.getAffinity();
+					System.out.println(Thread.currentThread().getName() + " has affinity " + affinity);
+
+					// Setup Vertx for connection
+					VertxOptions options = new VertxOptions().setPreferNativeTransport(true).setEventLoopPoolSize(1)
+							.setWorkerPoolSize(1).setInternalBlockingPoolSize(1);
+					VertxBuilder builder = new VertxBuilder(options).threadFactory(new VertxThreadFactory() {
+						@Override
+						public VertxThread newVertxThread(Runnable target, String name, boolean worker,
+								long maxExecTime, TimeUnit maxExecTimeUnit) {
+							return VertxThreadFactory.INSTANCE.newVertxThread(() -> {
+								Affinity.setAffinity(affinity);
+								target.run();
+							}, name, worker, maxExecTime, maxExecTimeUnit);
+						}
+					});
+					Vertx vertx = builder.init().vertx();
+
+					// Obtain the connection
+					PgConnection[] connections = new PgConnection[Math
+							.max(Math.max(Math.max(DB_COUNT, QUERIES_COUNT), FORTUNES_COUNT), UPDATE_COUNT)];
+					for (int i = 0; i < connections.length; i++) {
+						connections[i] = OfficeFloorVertx.block(PgConnection.connect(vertx, connectOptions));
+					}
+					return new Connections(connections);
 				} catch (Exception ex) {
 					throw new IllegalStateException("Failed to setup connection", ex);
 				}
@@ -83,9 +130,12 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 		// Nothing thread specific to set up
 	}
 
+	private static final int DB_COUNT = 1;
+
 	@Override
 	public void db(DbSendResponse sender) {
-		this.threadLocalConnection.get().preparedQuery("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID=$1")
+		this.threadLocalConnections.get().getConnection(DB_COUNT)
+				.preparedQuery("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID=$1")
 				.execute(Tuple.of(ThreadLocalRandom.current().nextInt(1, 10001)), result -> {
 					if (result.failed()) {
 						sender.sendError(result.cause());
@@ -102,11 +152,13 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 				});
 	}
 
+	private static final int QUERIES_COUNT = 1;
+
 	@Override
 	public void queries(int queryCount, QueriesSendResponse sender) {
 		World[] worlds = new World[queryCount];
 		AtomicInteger count = new AtomicInteger(0);
-		SqlConnection sqlConnection = this.threadLocalConnection.get();
+		SqlConnection sqlConnection = this.threadLocalConnections.get().getConnection(QUERIES_COUNT);
 		for (int i = 0; i < queryCount; i++) {
 			sqlConnection.preparedQuery("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID=$1")
 					.execute(Tuple.of(ThreadLocalRandom.current().nextInt(1, 10001)), result -> {
@@ -130,28 +182,33 @@ public class SqlClientOfficeFloorMain implements DatabaseOperations {
 		}
 	}
 
+	private static final int FORTUNES_COUNT = 1;
+
 	@Override
 	public void fortunes(FortunesSendResponse sender) {
-		this.threadLocalConnection.get().preparedQuery("SELECT ID, MESSAGE FROM FORTUNE").execute(result -> {
-			if (result.failed()) {
-				sender.sendError(result.cause());
-			} else {
-				List<Fortune> fortunes = new ArrayList<>(16);
-				RowIterator<Row> rows = result.result().iterator();
-				while (rows.hasNext()) {
-					Row row = rows.next();
-					fortunes.add(new Fortune(row.getInteger(0), row.getString(1)));
-				}
-				sender.sendFortunes(fortunes);
-			}
-		});
+		this.threadLocalConnections.get().getConnection(FORTUNES_COUNT).preparedQuery("SELECT ID, MESSAGE FROM FORTUNE")
+				.execute(result -> {
+					if (result.failed()) {
+						sender.sendError(result.cause());
+					} else {
+						List<Fortune> fortunes = new ArrayList<>(16);
+						RowIterator<Row> rows = result.result().iterator();
+						while (rows.hasNext()) {
+							Row row = rows.next();
+							fortunes.add(new Fortune(row.getInteger(0), row.getString(1)));
+						}
+						sender.sendFortunes(fortunes);
+					}
+				});
 	}
+
+	private static final int UPDATE_COUNT = 1;
 
 	@Override
 	public void update(int queryCount, UpdateSendResponse sender) {
 		World[] worlds = new World[queryCount];
 		AtomicInteger count = new AtomicInteger(0);
-		SqlConnection sqlConnection = this.threadLocalConnection.get();
+		SqlConnection sqlConnection = this.threadLocalConnections.get().getConnection(UPDATE_COUNT);
 		for (int i = 0; i < queryCount; i++) {
 			sqlConnection.preparedQuery("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID=$1")
 					.execute(Tuple.of(ThreadLocalRandom.current().nextInt(1, 10001)), result -> {

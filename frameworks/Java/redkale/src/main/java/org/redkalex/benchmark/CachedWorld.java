@@ -1,10 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.redkalex.benchmark;
 
+import java.util.*;
+import java.util.function.IntFunction;
+import java.util.stream.IntStream;
 import javax.persistence.*;
 import org.redkale.convert.json.JsonConvert;
 import org.redkale.source.*;
@@ -13,7 +11,7 @@ import org.redkale.source.*;
  *
  * @author zhangjx
  */
-//@Cacheable(direct = true)
+@Entity
 @Table(name = "World")
 public final class CachedWorld implements Comparable<CachedWorld> {
 
@@ -53,16 +51,35 @@ public final class CachedWorld implements Comparable<CachedWorld> {
         return JsonConvert.root().convertTo(this);
     }
 
-    public static class WorldEntityCache {
+    public static class Cache {
 
-        private Object[] array;
+        private static Cache instance;
 
-        public WorldEntityCache(DataSource source) {
-            this.array = source.queryList(CachedWorld.class).toArray();
+        static Cache getInstance(DataSource source) {
+            if (instance == null) {
+                synchronized (Cache.class) {
+                    if (instance == null) {
+                        instance = new Cache(source);
+                    }
+                }
+            }
+            return instance;
         }
 
-        public CachedWorld findAt(int index) {
-            return (CachedWorld) array[index];
+        private CachedWorld[] array;
+
+        private IntFunction<CachedWorld> mapFunc = c -> array[c];
+
+        private IntFunction<CachedWorld[]> arrayFunc = c -> new CachedWorld[c];
+
+        public Cache(DataSource source) {
+            List<CachedWorld> list = source.queryList(CachedWorld.class);
+            this.array = list.toArray(new CachedWorld[list.size()]);
+        }
+
+        public CachedWorld[] random(Random random, int size) {
+            IntStream ids = random.ints(size, 0, 10000);
+            return ids.mapToObj(mapFunc).toArray(arrayFunc);
         }
     }
 }

@@ -1,0 +1,18 @@
+{
+  "config": {
+    "optimize-autoloader": true,
+    "classmap-authoritative": true
+  },
+  "require": {
+    "php": "^8",
+    "hamlet-framework/http" : "@stable",
+    "hamlet-framework/http-workerman": "@stable",
+    "hamlet-framework/db-pdo": "@stable",
+    "cache/array-adapter": "@stable"
+  },
+  "autoload": {
+    "psr-4": {
+      "Benchmark\\": "Benchmark/"
+    }
+  }
+}

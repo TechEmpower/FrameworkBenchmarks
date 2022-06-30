@@ -17,6 +17,12 @@ WORKDIR /symfony
 ADD ./composer.json /symfony/
 RUN mkdir -m 777 -p /symfony/var/cache/swoole /symfony/var/log
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts --quiet
+
+# downgrade to doctrine-dbal 2.12 => due to a bug in version 2.13
+# see https://github.com/doctrine/dbal/issues/4603
+RUN composer require doctrine/orm:2.8.5 -W
+RUN composer require doctrine/dbal:2.12.x -W
+
 ADD . /symfony
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer require "k911/swoole-bundle:^0.9" --no-scripts --ignore-platform-reqs --quiet
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --no-dev --classmap-authoritative

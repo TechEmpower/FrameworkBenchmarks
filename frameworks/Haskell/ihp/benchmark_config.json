@@ -23,7 +23,8 @@
         "database_os": "Linux",
         "display_name": "Integrated Haskell Platfrom (IHP)",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       }
     }
   ]
