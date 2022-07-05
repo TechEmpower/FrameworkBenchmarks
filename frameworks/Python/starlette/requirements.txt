@@ -2,6 +2,6 @@ asyncpg==0.25.0
 gunicorn==20.1.0
 Jinja2==3.1.2
 starlette==0.19.1
-ujson==5.2.0
+ujson==5.4.0
 uvicorn==0.17.6
 uvloop==0.16.0
