@@ -19,6 +19,9 @@ fi;
 # Copy files into correct place
 ./copy-files.sh JavaScript $AGENT_FILE
 
+# Update dockerfiles to use correct package
+grep -r @contrast/agent ../frameworks/JavaScript -l | xargs -I '{}' -n 1 sed -i.bak "s#@contrast/agent#@contrast/protect-agent#" {} && ls -d ../frameworks/JavaScript/*/*.bak | xargs -n 1 rm
+
 # Start contrast-service
 ./start-contrast-service.sh
 
