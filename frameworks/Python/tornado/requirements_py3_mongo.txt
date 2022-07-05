@@ -1,4 +1,4 @@
 tornado==6.0.2
 motor==2.0.0
 uvloop==0.12.2
-ujson==1.35
+ujson==5.4.0
