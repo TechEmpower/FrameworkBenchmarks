@@ -26,7 +26,7 @@ grep -r @contrast/agent ../frameworks/JavaScript -l | xargs -I '{}' -n 1 sed -i.
 ./start-contrast-service.sh
 
 # Run tests
-../tfb --tag "contrast-unattached" --tag "contrast-off" --tag "contrast-protect" --test-lang JavaScript --type fortune --duration $DURATION --concurrency-levels $CONCURRENCY_LEVELS
+../tfb --tag contrast-unattached contrast-off contrast-protect --test-lang JavaScript --type fortune --duration $DURATION --concurrency-levels $CONCURRENCY_LEVELS
 
 # Stop contrast-service container
 docker stop contrast-service
