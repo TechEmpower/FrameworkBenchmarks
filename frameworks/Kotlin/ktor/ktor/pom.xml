@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hikaricp.version>5.0.0</hikaricp.version>
         <logback.version>1.2.4</logback.version>
-        <mysql.version>8.0.25</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
         <postgresql.version>42.2.23</postgresql.version>
     </properties>
 
