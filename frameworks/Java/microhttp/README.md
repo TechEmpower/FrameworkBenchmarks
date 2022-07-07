@@ -4,13 +4,14 @@
 
 * [JSON](src/main/java/hello/HelloWebServer.java)
 * [PLAINTEXT](src/main/java/hello/HelloWebServer.java)
+* [DB](src/main/java/db/DbWebServer.java)
 
 ## Important Libraries
 
 The tests were run with:
 * [OpenJDK 17.0.2](http://openjdk.java.net/)
 * [Microhttp 0.7](https://github.com/ebarlas/microhttp)
-* [Jackson 2.13.2](https://github.com/FasterXML/jackson)
+* [Jackson 2.13.3](https://github.com/FasterXML/jackson)
 
 ## Test URLs
 ### JSON
