@@ -1,0 +1,59 @@
+api:
+  enable: false
+  url: $URL
+  api_key: $API_KEY
+  service_key: $SERVICE_KEY
+  user_name: $USER_NAME
+application:
+  name: "Agent Performance - $LANG - $FRAMEWORK"
+  metadata: appID="Agent Performance - $LANG - $FRAMEWORK"
+agent:
+  stack_trace_limit: 10
+  logger:
+    append: false
+    level: WARN
+  security_logger:
+    level: WARN
+  node:
+    native_input_analysis: true
+server:
+  name: "Agent Performance Test Server"
+assess:
+  enable: false
+protect:
+  enable: true
+  rules:
+    cmd-injection:
+      mode: monitor
+    cmd-injection-command-backdoors:
+      mode: monitor
+    cmd-injection-semantic-chained-commands:
+      mode: monitor
+    cmd-injection-semantic-dangerous-paths:
+      mode: monitor
+    path-traversal:
+      mode: monitor
+    bot-blocker:
+      mode: monitor
+    ip-denylist:
+      mode: monitor
+    method-tampering:
+      mode: monitor
+    nosql-injection:
+      mode: monitor
+    nosql-injection-mongo:
+      mode: monitor
+    reflected-xss:
+      mode: monitor
+    sql-injection:
+      mode: monitor
+    ssjs-injection:
+      mode: monitor
+    virtual-patch:
+      mode: monitor
+    untrusted-deserialization:
+      mode: monitor
+    unsafe-file-upload:
+      mode: off
+    xxe:
+      mode: monitor  

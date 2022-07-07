@@ -39,6 +39,12 @@ else
     GRPC='false';
 fi;
 
+if [[ $LANG == 'node-protect' ]];
+then 
+    LANG='JavaScript';
+    YAML_TEMPLATE=contrast_security-node-protect-template.yaml
+fi;
+
 # Replace templated strings that are common to all configs for this agent
 sed "s#\$LANG#$1#; s#\$URL#$CONTRAST__API__URL#; s#\$API_KEY#$CONTRAST__API__API_KEY#; s#\$SERVICE_KEY#$CONTRAST__API__SERVICE_KEY#; s#\$USER_NAME#$CONTRAST__API__USER_NAME#; s#\$GRPC#$GRPC#;" $YAML_TEMPLATE > $YAML_FILE
 
