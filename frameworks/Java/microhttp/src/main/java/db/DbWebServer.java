@@ -95,7 +95,6 @@ public class DbWebServer {
                     new Header("Server", SERVER));
             callback.accept(new Response(200, "OK", headers, jsonBody(row)));
         } catch (Exception e) {
-            e.printStackTrace();
             List<Header> headers = List.of(
                     new Header("Date", date),
                     new Header("Server", SERVER));
