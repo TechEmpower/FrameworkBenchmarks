@@ -16,6 +16,8 @@ agent:
     level: WARN
   node:
     native_input_analysis: true
+  reporters:
+    file: agent-reports.log
 server:
   name: "Agent Performance Test Server"
 assess:
