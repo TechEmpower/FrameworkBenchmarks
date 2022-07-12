@@ -40,7 +40,7 @@ public class DbWebServer {
         this.executor = Executors.newFixedThreadPool(256);
     }
 
-    void start() throws IOException {
+    void start() throws IOException, InterruptedException {
         connectionPool.start();
         startDateUpdater();
         Options options = new Options()
@@ -55,6 +55,7 @@ public class DbWebServer {
                 .withRequestTimeout(Duration.ofSeconds(90));
         EventLoop eventLoop = new EventLoop(options, new DisabledLogger(), this::handle);
         eventLoop.start();
+        eventLoop.join();
     }
 
     void startDateUpdater() {
@@ -110,7 +111,7 @@ public class DbWebServer {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         int port = args.length > 0
                 ? Integer.parseInt(args[0])
                 : 8080;
