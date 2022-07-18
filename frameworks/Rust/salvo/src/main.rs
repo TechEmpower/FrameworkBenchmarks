@@ -4,7 +4,7 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 use std::sync::Arc;
 use std::thread::available_parallelism;
 
-use bytes::BytesMut;
+use bytes::Bytes;
 use salvo::http::header::{self, HeaderValue};
 use salvo::http::response::Body;
 use salvo::prelude::*;
@@ -27,7 +27,7 @@ fn json(res: &mut Response) {
         message: "Hello, World!",
     })
     .unwrap();
-    res.set_body(Body::Bytes(BytesMut::from(data.as_slice())));
+    res.set_body(Body::Once(Bytes::from(data)));
 }
 
 #[fn_handler]
@@ -35,7 +35,7 @@ fn plaintext(res: &mut Response) {
     let headers = res.headers_mut();
     headers.insert(header::SERVER, HeaderValue::from_static("S"));
     headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("text/plain"));
-    res.set_body(Body::Bytes(BytesMut::from(HELLO_WORLD)));
+    res.set_body(Body::Once(Bytes::from_static(HELLO_WORLD)));
 }
 
 fn main() {

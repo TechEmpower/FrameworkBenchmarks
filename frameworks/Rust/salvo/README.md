@@ -2,4 +2,4 @@
 
 ## Description
 
-Salvo is a simple but powerful web server framework written in Rust.
+Salvo is a powerful and simplest web server framework in Rust world.
