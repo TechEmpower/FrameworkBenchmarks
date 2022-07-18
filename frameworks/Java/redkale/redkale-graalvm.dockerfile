@@ -1,4 +1,4 @@
-FROM maven:3.8.1-openjdk-17-slim as maven
+FROM maven:3.8.6-openjdk-18-slim as maven
 WORKDIR /redkale
 COPY src src
 COPY conf conf
