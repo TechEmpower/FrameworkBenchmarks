@@ -1,6 +1,6 @@
 dependencies {
-    compile project(":core")
-    compile "org.http4k:http4k-server-ktornetty:$http4k_version"
+    api project(":core")
+    api "org.http4k:http4k-server-ktornetty:$http4k_version"
 }
 
 apply plugin: 'application'
