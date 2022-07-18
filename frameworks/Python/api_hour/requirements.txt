@@ -14,6 +14,6 @@ PyYAML==5.4
 requests==2.20.0
 requests-futures==0.9.5
 setproctitle==1.1.8
-ujson==1.33
+ujson==5.4.0
 aiomysql==0.0.7
 PyMySQL==0.6.7
