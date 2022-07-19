@@ -20,6 +20,11 @@
         "preferred-install": {
             "*": "dist"
         },
+        "allow-plugins": {
+            "symfony/flex": true,
+            "symfony/runtime": true,
+            "composer/package-versions-deprecated": true
+        },
         "sort-packages": true
     },
     "autoload": {

@@ -6,6 +6,7 @@ use http::StatusCode;
 
 fn main() {
     Server::bind("0.0.0.0:8080")
+        .max_workers(num_cpus::get() * 20)
         .http1_pipeline_flush(true)
         .http1_only(true)
         .serve(serve)

@@ -14,7 +14,10 @@ class Main extends AppBaseMain
         if(extension_loaded('swoole'))
         {
             \Co::set([
+                'socket_timeout'         => 30,
                 'socket_connect_timeout' => 5,
+                'socket_read_timeout'    => 30,
+                'socket_write_timeout'   => 30,
             ]);
         }
     }
