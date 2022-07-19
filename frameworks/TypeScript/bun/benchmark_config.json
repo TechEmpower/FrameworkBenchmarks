@@ -1,0 +1,30 @@
+{
+  "framework": "bun",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/query?q=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "bun",
+        "language": "Typescript",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "Bun",
+        "webserver": "Elysia",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Bun Elysia Posgres",
+        "notes": "",
+        "versus": ""
+      }
+    }
+  ]
+}
