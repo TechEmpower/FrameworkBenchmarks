@@ -31,8 +31,8 @@ public final class HelloController {
 
   @RequestMapping("/json")
   @ResponseBody
-  Map<String, String> json() {
-    return Map.of("message", "Hello, World!");
+  Message json() {
+    return new Message("Hello, World!");
   }
 
   @RequestMapping("/db")
@@ -112,4 +112,15 @@ public final class HelloController {
     return Math.min(500, Math.max(1, parsedValue));
   }
 
+  static class Message {
+    private final String message;
+
+    public Message(String message) {
+      this.message = message;
+    }
+
+    public String getMessage() {
+      return message;
+    }
+  }
 }
