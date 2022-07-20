@@ -29,8 +29,7 @@ type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 
 type Request<'a> = WebRequest<'a, DieselPool>;
 
-#[tokio::main(flavor = "current_thread")]
-async fn main() -> io::Result<()> {
+fn main() -> io::Result<()> {
     let config = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
     HttpServer::new(move || {
@@ -46,7 +45,7 @@ async fn main() -> io::Result<()> {
     })
     .bind("0.0.0.0:8080")?
     .run()
-    .await
+    .wait()
 }
 
 async fn middleware_fn<S, E>(service: &S, mut ctx: Request<'_>) -> Result<WebResponse, Infallible>
