@@ -6,13 +6,14 @@ mod ser;
 mod util;
 
 use std::{
-    cell::{RefCell, RefMut},
+    cell::RefCell,
     convert::Infallible,
     error::Error,
     fmt::Debug,
     sync::{Arc, Mutex},
 };
 
+use simd_json_derive::Serialize;
 use xitca_http::{
     body::Once,
     bytes::{BufMutWriter, Bytes, BytesMut},
@@ -68,7 +69,8 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 
         let service = ContextBuilder::new(|| async {
             let client = db::create(db_url).await;
-            Ok::<_, Infallible>(State::new(client))
+            let write_buf = RefCell::new(BytesMut::new());
+            Ok::<_, Infallible>(State { client, write_buf })
         })
         .service(router);
 
@@ -79,29 +81,22 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             .enclosed(tcp_config)
     };
 
-    let task = async {
-        xitca_server::Builder::new()
-            .on_worker_start(move || {
-                if let Some(core) = cores.lock().unwrap().pop() {
-                    core_affinity::set_for_current(core);
-                }
-                async {}
-            })
-            .bind("xitca-web", "0.0.0.0:8080", builder)?
-            .build()
-            .await
-            .map_err(Into::into)
-    };
-
-    tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()?
-        .block_on(task)
+    xitca_server::Builder::new()
+        .on_worker_start(move || {
+            if let Some(core) = cores.lock().unwrap().pop() {
+                core_affinity::set_for_current(core);
+            }
+            async {}
+        })
+        .bind("xitca-web", "0.0.0.0:8080", builder)?
+        .build()
+        .wait()
+        .map_err(Into::into)
 }
 
 async fn middleware_fn<S, E>(service: &S, req: Ctx<'_>) -> Result<Response, Infallible>
 where
-    S: for<'r, 'c> Service<Ctx<'c>, Response = Response, Error = E>,
+    S: for<'c> Service<Ctx<'c>, Response = Response, Error = E>,
     E: Debug,
 {
     let mut res = service.call(req).await.unwrap();
@@ -123,14 +118,14 @@ async fn json(ctx: Ctx<'_>) -> Result<Response, Box<dyn Error>> {
 
 async fn db(ctx: Ctx<'_>) -> Result<Response, Box<dyn Error>> {
     let (req, state) = ctx.into_parts();
-    let world = state.client().get_world().await?;
+    let world = state.client.get_world().await?;
     _json(req, state, &world)
 }
 
 async fn fortunes(ctx: Ctx<'_>) -> Result<Response, Box<dyn Error>> {
     let (req, state) = ctx.into_parts();
     use sailfish::TemplateOnce;
-    let fortunes = state.client().tell_fortune().await?.render_once()?;
+    let fortunes = state.client.tell_fortune().await?.render_once()?;
     let mut res = req.into_response(Bytes::from(fortunes));
     res.headers_mut().append(CONTENT_TYPE, TEXT_HTML_UTF8);
     Ok(res)
@@ -139,23 +134,23 @@ async fn fortunes(ctx: Ctx<'_>) -> Result<Response, Box<dyn Error>> {
 async fn queries(ctx: Ctx<'_>) -> Result<Response, Box<dyn Error>> {
     let (req, state) = ctx.into_parts();
     let num = req.uri().query().parse_query();
-    let worlds = state.client().get_worlds(num).await?;
+    let worlds = state.client.get_worlds(num).await?;
     _json(req, state, worlds.as_slice())
 }
 
 async fn updates(ctx: Ctx<'_>) -> Result<Response, Box<dyn Error>> {
     let (req, state) = ctx.into_parts();
     let num = req.uri().query().parse_query();
-    let worlds = state.client().update(num).await?;
+    let worlds = state.client.update(num).await?;
     _json(req, state, worlds.as_slice())
 }
 
 fn _json<S>(req: Request, state: &State, value: &S) -> Result<Response, Box<dyn Error>>
 where
-    S: ?Sized + serde::Serialize,
+    S: ?Sized + Serialize,
 {
-    let mut buf = state.write_buf();
-    simd_json::to_writer(BufMutWriter(&mut *buf), value).unwrap();
+    let mut buf = state.write_buf.borrow_mut();
+    value.json_write(&mut BufMutWriter(&mut *buf)).unwrap();
     let body = buf.split().freeze();
     let mut res = req.into_response(body);
     res.headers_mut().append(CONTENT_TYPE, JSON);
@@ -164,21 +159,5 @@ where
 
 struct State {
     client: Client,
-    // a re-usable buffer for write response data.
     write_buf: RefCell<BytesMut>,
-}
-
-impl State {
-    fn new(client: Client) -> Self {
-        let write_buf = RefCell::new(BytesMut::new());
-        Self { client, write_buf }
-    }
-
-    fn write_buf(&self) -> RefMut<'_, BytesMut> {
-        self.write_buf.borrow_mut()
-    }
-
-    fn client(&self) -> &Client {
-        &self.client
-    }
 }

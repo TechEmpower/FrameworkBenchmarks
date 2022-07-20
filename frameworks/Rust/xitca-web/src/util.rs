@@ -4,7 +4,7 @@ use std::cmp;
 
 use xitca_http::http::header::HeaderValue;
 
-pub(super) trait QueryParse {
+pub trait QueryParse {
     fn parse_query(self) -> u16;
 }
 
