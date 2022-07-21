@@ -1,7 +1,6 @@
 use axum::body::{Bytes, Full};
 use axum::http::{header, HeaderValue, StatusCode};
-use axum_core::response::IntoResponse;
-use axum_core::response::Response;
+use axum::response::{IntoResponse, Response};
 use rand::rngs::SmallRng;
 use rand::Rng;
 use serde::Deserialize;

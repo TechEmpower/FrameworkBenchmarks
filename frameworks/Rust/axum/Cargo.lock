@@ -69,7 +69,6 @@ name = "axum"
 version = "0.2.0"
 dependencies = [
  "axum 0.5.13",
- "axum-core",
  "deadpool",
  "deadpool-postgres",
  "dotenv",

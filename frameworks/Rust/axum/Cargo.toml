@@ -30,7 +30,6 @@ path = "src/main_pg.rs"
 
 [dependencies]
 axum = { version = "0.5.1", default-features = false, features = ["json", "query"] }
-axum-core = "0.2.2"
 deadpool = { version = "0.9.3", features = ["rt_tokio_1", "serde", "async-trait", "managed" ] }
 deadpool-postgres = "0.10.2"
 dotenv = "0.15.0"
