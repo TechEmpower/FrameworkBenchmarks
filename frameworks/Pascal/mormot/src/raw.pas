@@ -383,6 +383,7 @@ begin
       exit;
     res[i].id := stmt.ColumnInt(0);
     res[i].randomNumber := stmt.ColumnInt(1);
+    stmt.ReleaseRows;
   end;
 end;
 
