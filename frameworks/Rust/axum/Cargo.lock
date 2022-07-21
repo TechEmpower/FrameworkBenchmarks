@@ -198,7 +198,6 @@ version = "0.2.0"
 dependencies = [
  "async-std",
  "async-stream",
- "async-trait",
  "axum 0.5.13",
  "axum-core",
  "deadpool",

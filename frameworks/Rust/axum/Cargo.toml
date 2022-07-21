@@ -31,7 +31,6 @@ path = "src/main_pg.rs"
 [dependencies]
 async-std = "1.11.0"
 async-stream = "0.3.3"
-async-trait = "0.1.53"
 axum = { version = "0.5.1", default-features = false, features = ["json", "query"] }
 axum-core = "0.2.2"
 deadpool = { version = "0.9.3", features = ["rt_tokio_1", "serde", "async-trait", "managed" ] }

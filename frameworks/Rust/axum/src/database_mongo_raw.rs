@@ -1,3 +1,4 @@
+use axum::async_trait;
 use axum::extract::{Extension, FromRequest, RequestParts};
 use axum::http::StatusCode;
 use futures_util::stream::FuturesUnordered;
