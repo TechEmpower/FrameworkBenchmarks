@@ -15,9 +15,7 @@ where
     <T as FromStr>::Err: Debug,
 {
     T::from_str(
-        &*env::var(key)
-            .ok()
-            .expect(&*format!("{} environment variable was not set", key)),
+        &*env::var(key).expect(&*format!("{} environment variable was not set", key)),
     )
     .expect(&*format!("could not parse {}", key))
 }
@@ -47,15 +45,13 @@ pub fn parse_params(params: Params) -> i32 {
         }
     }
 
-    let q = if q == 0 {
+    if q == 0 {
         1
     } else if q > 500 {
         500
     } else {
         q
-    };
-
-    q
+    }
 }
 
 /// Utility function for mapping any error into a `500 Internal Server Error`

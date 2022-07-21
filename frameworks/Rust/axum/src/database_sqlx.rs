@@ -70,7 +70,6 @@ pub async fn fetch_world(
         sqlx::query_as_with("SELECT id, randomnumber FROM World WHERE id = $1", args)
             .fetch_one(&mut conn)
             .await
-            .ok()
             .expect("error loading world");
     Ok(world)
 }
@@ -81,7 +80,6 @@ pub async fn fetch_fortunes(
     let fortunes: Vec<Fortune> = sqlx::query_as("SELECT * FROM Fortune")
         .fetch_all(&mut conn)
         .await
-        .ok()
         .expect("error loading Fortunes");
     Ok(fortunes)
 }

@@ -200,8 +200,6 @@ where
             .await
             .map_err(internal_error)?;
 
-        let conn = pg_connection.clone();
-
-        Ok(Self(conn))
+        Ok(Self(pg_connection))
     }
 }
