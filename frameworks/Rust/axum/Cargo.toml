@@ -29,8 +29,6 @@ name = "axum-pg"
 path = "src/main_pg.rs"
 
 [dependencies]
-async-std = "1.11.0"
-async-stream = "0.3.3"
 axum = { version = "0.5.1", default-features = false, features = ["json", "query"] }
 axum-core = "0.2.2"
 deadpool = { version = "0.9.3", features = ["rt_tokio_1", "serde", "async-trait", "managed" ] }
@@ -43,7 +41,6 @@ mongodb = { version = "2.2.1", features = ["zstd-compression", "snappy-compressi
 num_cpus = "1.13.1"
 rand = { version = "0.8.5", features = ["small_rng"] }
 serde = { version = "1.0.136", features = ["derive"] }
-serde_derive = "1.0.136"
 serde_json = "1.0.79"
 sqlx = { version = "0.6.0", features = ["postgres", "macros", "runtime-tokio-native-tls"] }
 tokio = { version = "1.17.0", features = ["full"] }
