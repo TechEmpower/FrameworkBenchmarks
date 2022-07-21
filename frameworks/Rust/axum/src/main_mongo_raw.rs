@@ -21,12 +21,10 @@ use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
 use std::time::Duration;
 use tower_http::set_header::SetResponseHeaderLayer;
 
-use database_mongo_raw::{
-    find_world_by_id, find_worlds, update_worlds,
-};
-use utils::get_environment_variable;
 use database_mongo_raw::DatabaseConnection;
-use models_mongo::{World};
+use database_mongo_raw::{find_world_by_id, find_worlds, update_worlds};
+use models_mongo::World;
+use utils::get_environment_variable;
 use utils::{parse_params, Params};
 
 async fn db(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
@@ -158,5 +156,3 @@ async fn serve() {
         .await
         .unwrap();
 }
-
-

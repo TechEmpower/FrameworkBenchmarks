@@ -94,6 +94,6 @@ async fn router(pool: PgPool) -> Router {
         .layer(Extension(pool))
         .layer(SetResponseHeaderLayer::if_not_present(
             header::SERVER,
-            server_header_value)
-        )
+            server_header_value,
+        ))
 }
