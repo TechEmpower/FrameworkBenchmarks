@@ -41,9 +41,9 @@ dotenv = "0.15.0"
 serde = { version = "1.0.136", features = ["derive"] }
 serde_json = "1.0.79"
 serde_derive = "1.0.136"
-axum = "0.5.1"
+axum = { version = "0.5.1", default-features = false, features = ["json", "query"] }
 tokio = { version = "1.17.0", features = ["full"] }
-hyper = "0.14.18"
+hyper = { version = "0.14.18", features = ["http1"]}
 tower = { version = "0.4.12", features = ["util"] }
 tower-http = { version = "0.2.5", features = ["set-header"] }
 sqlx = { version = "0.5.12", features = [ "postgres", "macros", "runtime-tokio-native-tls" ] }
