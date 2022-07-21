@@ -46,13 +46,13 @@ rand = { version = "0.8.5", features = ["small_rng"] }
 serde = { version = "1.0.136", features = ["derive"] }
 serde_derive = "1.0.136"
 serde_json = "1.0.79"
-sqlx = { version = "0.5.12", features = [ "postgres", "macros", "runtime-tokio-native-tls" ] }
+sqlx = { version = "0.6.0", features = [ "postgres", "macros", "runtime-tokio-native-tls" ] }
 tokio = { version = "1.17.0", features = ["full"] }
 tokio-pg-mapper = "0.2.0"
 tokio-pg-mapper-derive = "0.2.0"
 tokio-postgres = "0.7.5"
 tower = { version = "0.4.12", features = ["util"] }
-tower-http = { version = "0.2.5", features = ["set-header"] }
+tower-http = { version = "0.3.4", features = ["set-header"] }
 yarte = "0.15.6"
 
 [profile.release]
