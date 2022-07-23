@@ -1,0 +1,30 @@
+{
+  "framework": "litespeed",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json/",
+        "db_url": "/db/",
+        "query_url": "/query/?queries=",
+        "fortune_url": "/fortunes/",
+        "update_url": "/updates/?queries=",
+        "plaintext_url": "/plaintext/",
+        "port": 8000,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "mysql",
+        "framework": "LiteSpeed",
+        "language": "Python",
+        "flavor": "CPython",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "LiteSpeed",
+        "notes": "",
+        "versus": "Flask"
+      }
+    }
+  ]
+}

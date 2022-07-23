@@ -1,0 +1,2 @@
+litespeed==1.2.0
+pymysql-pool==0.3.7
