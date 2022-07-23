@@ -17,7 +17,7 @@ require_once CORE_PATH . 'kumbia/controller.php';
 class AppController extends Controller
 {
 
-    public $limit_params = false;
+    public bool $limit_params = false;
     
     final protected function initialize()
     {
