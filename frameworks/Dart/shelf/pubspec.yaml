@@ -1,0 +1,14 @@
+name: server
+description: A benchmark of shelf
+version: 1.0.0+0
+
+environment:
+  sdk: '>=2.17.6 <3.0.0'
+
+dependencies:
+  args: ^2.3.1
+  shelf: ^1.3.1
+  shelf_router: ^1.1.3
+
+dev_dependencies:
+  lints: ^2.0.0
