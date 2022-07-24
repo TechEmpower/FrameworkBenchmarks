@@ -1,0 +1,15 @@
+@import java.util.List
+@import benchmark.data.Fortune
+@args (List<Fortune> fortunes)
+    <!DOCTYPE html>
+    <html>
+    <head><title>Fortunes</title></head>
+    <body>
+    <table>
+        <tr><th>id</th><th>message</th></tr>
+        @for (it: fortunes) {
+        <tr><td>@it.getId()</td><td>@it.getMessage()</td></tr>
+        }
+    </table>
+    </body>
+    </html>

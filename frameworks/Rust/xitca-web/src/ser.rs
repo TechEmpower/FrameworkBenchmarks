@@ -1,10 +1,13 @@
 use std::borrow::Cow;
 
-use diesel::Queryable;
 use sailfish::TemplateOnce;
-use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize)]
+#[cfg(feature = "serde")]
+use serde::Serialize;
+#[cfg(feature = "simd")]
+use simd_json_derive::Serialize;
+
+#[derive(Serialize)]
 pub struct Message {
     message: &'static str,
 }
@@ -20,7 +23,8 @@ impl Message {
 }
 
 #[allow(non_snake_case)]
-#[derive(Debug, Serialize, Queryable)]
+#[cfg_attr(feature = "orm", derive(Queryable))]
+#[derive(Debug, Serialize)]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,
@@ -34,7 +38,7 @@ impl World {
     }
 }
 
-#[derive(Queryable)]
+#[cfg_attr(feature = "orm", derive(Queryable))]
 pub struct Fortune {
     pub id: i32,
     pub message: Cow<'static, str>,
