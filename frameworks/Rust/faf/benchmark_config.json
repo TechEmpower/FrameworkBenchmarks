@@ -4,7 +4,7 @@
       {
          "default": {
             "plaintext_url": "/plaintext",
-            "port": 8089,
+            "port": 8080,
             "approach": "Realistic",
             "classification": "Platform",
             "database": "None",
