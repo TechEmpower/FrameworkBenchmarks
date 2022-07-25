@@ -3,3 +3,4 @@ Jinja2>=3.1.2
 uvicorn>=0.18.2
 starlite>=1.7.1
 gunicorn>=20.1.0
+uvloop>=0.16.0
