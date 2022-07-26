@@ -5,12 +5,12 @@ COPY pubspec.* ./
 RUN dart pub get
 
 COPY . .
-RUN dart compile exe lib/server.dart -o lib/server
+RUN dart compile exe lib/server.dart -o lib/runner
 
 
 FROM scratch
 COPY --from=build /runtime/ /
-COPY --from=build /app/lib/server /app/lib/
+COPY --from=build /app/lib/runner /app/runner
 
 EXPOSE 8080
-CMD ["/app/lib/server"]
+CMD ["/app/runner"]

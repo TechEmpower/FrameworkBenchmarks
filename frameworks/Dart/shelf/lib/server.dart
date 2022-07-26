@@ -10,6 +10,7 @@ import 'src/multithread.dart';
 import 'src/plain_text.dart';
 
 const defaultPort = 8080;
+const defaultAddress = '0.0.0.0';
 
 void main(List<String> args) => runZonedGuarded(
       () => multithread(
@@ -34,7 +35,7 @@ Service pipeline(Map<String, Service> services) {
 
 Future<HttpServer> entryPoint(Service pipeline) => serve(
       pipeline,
-      InternetAddressType.IPv4,
+      defaultAddress,
       defaultPort,
       shared: true,
     );
