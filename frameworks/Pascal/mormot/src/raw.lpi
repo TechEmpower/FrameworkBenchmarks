@@ -22,7 +22,9 @@
             <Filename Value="exe/raw"/>
           </Target>
           <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir)"/>
+            <IncludeFiles Value="../libs/mORMot/src;$(ProjOutDir)"/>
+            <Libraries Value="../libs/mORMot/static/$(TargetCPU)-$(TargetOS)"/>
+            <OtherUnitFiles Value="../libs/mORMot/src/core;../libs/mORMot/src/db;../libs/mORMot/src/rest;../libs/mORMot/src/app;../libs/mORMot/src/net;../libs/mORMot/src/lib;../libs/mORMot/src/orm;../libs/mORMot/src/crypt;../libs/mORMot/src/soa"/>
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -38,10 +40,16 @@
           </Linking>
           <Other>
             <CustomOptions Value="-dFPC_X64MM
--dFPCMM_SERVER"/>
-            <OtherDefines Count="2">
+-dFPCMM_SERVER
+-dFPCMM_REPORTMEMORYLEAKS
+-dNOSYNDBZEOS
+-dNOSYNDBIBX"/>
+            <OtherDefines Count="5">
               <Define0 Value="FPC_X64MM"/>
               <Define1 Value="FPCMM_SERVER"/>
+              <Define2 Value="FPCMM_REPORTMEMORYLEAKS"/>
+              <Define3 Value="NOSYNDBZEOS"/>
+              <Define4 Value="NOSYNDBIBX"/>
             </OtherDefines>
           </Other>
         </CompilerOptions>
@@ -54,11 +62,6 @@
     <RunParams>
       <FormatVersion Value="2"/>
     </RunParams>
-    <RequiredPackages>
-      <Item>
-        <PackageName Value="mormot2"/>
-      </Item>
-    </RequiredPackages>
     <Units>
       <Unit>
         <Filename Value="raw.pas"/>
@@ -84,7 +87,17 @@
       <CustomOptions Value="-dFPC_X64MM
 -dFPCMM_SERVER
 -dFPCMM_REPORTMEMORYLEAKS
--dFPCMM_DEBUG"/>
+-dFPCMM_DEBUG
+-dWITH_LOGS
+-dNOSYNDBZEOS
+-dNOSYNDBIBX"/>
+      <OtherDefines Count="5">
+        <Define0 Value="FPC_X64MM"/>
+        <Define1 Value="FPCMM_SERVER"/>
+        <Define2 Value="FPCMM_REPORTMEMORYLEAKS"/>
+        <Define3 Value="FPCMM_DEBUG"/>
+        <Define4 Value="WITH_LOGS"/>
+      </OtherDefines>
     </Other>
   </CompilerOptions>
   <Debugging>

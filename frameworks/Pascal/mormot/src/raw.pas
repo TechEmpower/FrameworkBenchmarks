@@ -8,10 +8,8 @@ See https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-
 {$I mormot.defines.inc}
 
 {.$define USE_SQLITE3}
-// may be defined to use a SQLite3 database instead of external PostgreSQL DB
-
-{.$define SHOW_TIME}
-// display each request time on the console (slow down the process)
+// may be defined to use a SQLite3 database instead of external PostgresSQL DB
+// - note: /rawupdates and /rawqueries are PostgresSQL specific and will fail
 
 {.$define WITH_LOGS}
 // logging is fine for debugging, less for benchmarking ;)
@@ -84,15 +82,15 @@ type
 
   TRawAsyncServer = class
   private
-    fHttpServer: THttpServerSocketGeneric;
+    fHttpServer: THttpAsyncServer;
     fDbPool: TSqlDBConnectionProperties;
     fModel: TOrmModel;
     fStore: TRestServerDB;
     fTemplate: TSynMustache;
   protected
-    // this is where the process would take place
+    // main HTTP routing method
     function DoOnRequest(ctxt: THttpServerRequestAbstract): cardinal;
-    /// return ?queries= parameter value. If missed or < 1 return 1, if > 500 return 500
+    // return ?queries= parameter value. If missed or < 1 return 1, if > 500 return 500
     function getQueriesParamValue(ctxt: THttpServerRequestAbstract;
       const search: RawUtf8 = 'QUERIES='): integer;
     procedure getRandomWorlds(cnt: PtrInt; out res: TWorlds);
@@ -119,75 +117,31 @@ type
 
 const
   TEXT_CONTENT_TYPE_NO_ENCODING: RawUtf8 = 'text/plain';
-  JSON_CONTENT_TYPE_NO_ENCODING: RawUtf8 = 'application/json';
   HELLO_WORLD: RawUtf8 = 'Hello, World!';
   WORLD_COUNT = 10000;
+
   WORLD_READ_SQL = 'select id, randomNumber from World where id=?';
   WORLD_UPDATE_SQLN ='update World as t set randomNumber = v.r from ' +
-  '(SELECT unnest(?::NUMERIC[]), unnest(?::NUMERIC[])) as v(id, r)' +
-  ' where t.id = v.id';
-
+    '(SELECT unnest(?::NUMERIC[]), unnest(?::NUMERIC[])) as v(id, r)' +
+    ' where t.id = v.id';
   FORTUNES_SQL = 'select id, message from Fortune';
+
   FORTUNES_MESSAGE = 'Additional fortune added at request time.';
   FORTUNES_TPL = '<!DOCTYPE html>'#10 +
-   '<html>'#10 +
-   '<head><title>Fortunes</title></head>'#10 +
-   '<body>'#10 +
-   '<table>'#10 +
-   '<tr><th>id</th><th>message</th></tr>'#10 +
-   '{{#list}}'#10 +
-   '<tr><td>{{id}}</td><td>{{message}}</td></tr>'#10 +
-   '{{/list}}'#10 +
-   '</table>'#10 +
-   '</body>'#10 +
-   '</html>';
+                 '<html>'#10 +
+                 '<head><title>Fortunes</title></head>'#10 +
+                 '<body>'#10 +
+                 '<table>'#10 +
+                 '<tr><th>id</th><th>message</th></tr>'#10 +
+                 '{{#list}}'#10 +
+                 '<tr><td>{{id}}</td><td>{{message}}</td></tr>'#10 +
+                 '{{/list}}'#10 +
+                 '</table>'#10 +
+                 '</body>'#10 +
+                 '</html>';
 
 
 { TRawAsyncServer }
-
-{$I-}
-
-function TRawAsyncServer.DoOnRequest(ctxt: THttpServerRequestAbstract): cardinal;
-const
-  ROUTES: array[0..11] of PAnsiChar = (
-     '/JSON', '/DB', '/QUERIES', '/FORTUNES', '/UPDATES', '/PLAINTEXT', '/CACHED-QUERIES',
-     '/RAWDB' , '/RAWQUERIES', '/RAWFORTUNES', '/RAWUPDATES', nil);
-var
-  routeIdx, routeL: PtrInt;
-  {$ifdef SHOW_TIME}
-  timer: TPrecisionTimer;
-  {$endif SHOW_TIME}
-begin
-  {$ifdef WITH_LOGS}
-  TSynLog.Add.Log(sllServiceCall, 'DoOnRequest % %', [ctxt.Method, ctxt.Url], self);
-  {$endif WITH_LOGS}
-  result := HTTP_NOTFOUND;
-  routeIdx := IdemPPChar(pointer(ctxt.Url), @ROUTES);
-  if routeIdx < 0 then
-    exit;
-  {$ifdef SHOW_TIME}
-  timer.Start;
-  {$endif SHOW_TIME}
-  routeL := StrLen(ROUTES[routeIdx]);
-  if ctxt.Url[routeL + 1] in [#0, '?', '/'] then
-    case routeIdx of
-      0: result := json(ctxt);
-      1: result := db(ctxt);
-      2: result := doqueries(ctxt, TOrmWorld, 'QUERIES=');
-      3: result := fortunes(ctxt);
-      4: result := updates(ctxt);
-      5: result := plaintext(ctxt);
-      6: result := doqueries(ctxt, TOrmCachedWorld, 'COUNT=');
-      // raw tests
-      7: result := rawdb(ctxt);
-      8: result := rawqueries(ctxt);
-      9: result := rawfortunes(ctxt);
-      10: result := rawupdates(ctxt);
-    end;
-  {$ifdef SHOW_TIME}
-  write(timer.Stop:8);
-  {$endif SHOW_TIME}
-end;
 
 constructor TRawAsyncServer.Create(threadCount: integer);
 begin
@@ -195,17 +149,16 @@ begin
   {$ifdef USE_SQLITE3}
   fDbPool := TSqlDBSQLite3ConnectionProperties.Create(
       SQLITE_MEMORY_DATABASE_NAME, '', '', '');
+  fDbPool.StatementCacheReplicates := threadcount; // shared SQlite3 connection
   {$else}
-  fDbPool := TSqlDBPostgresConnectionProperties.Create('',
-    'postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world',
-    'benchmarkdbuser',
-    'benchmarkdbpass');
+  fDbPool := TSqlDBPostgresConnectionProperties.Create(
+    'tfb-database:5432', 'hello_world', 'benchmarkdbuser', 'benchmarkdbpass');
   {$endif USE_SQLITE3}
   fModel := TOrmModel.Create([TOrmWorld, TOrmFortune, TOrmCachedWorld]);
-  VirtualTableExternalRegister(fModel, [TOrmWorld, TOrmFortune], fDbPool);
+  OrmMapExternal(fModel, [TOrmWorld, TOrmFortune], fDbPool);
   // CachedWorld table doesn't exists in DB, but should as read in requirements.
   // Use world table as in other implementations.
-  VirtualTableExternalRegister(fModel, TOrmCachedWorld, fDbPool, 'world');
+  OrmMapExternal(fModel, TOrmCachedWorld, fDbPool, 'world');
   fStore := TRestServerDB.Create(fModel, SQLITE_MEMORY_DATABASE_NAME);
   {$ifdef USE_SQLITE3}
   GenerateDB;
@@ -216,11 +169,14 @@ begin
     fStore.Server.Cache.FillFromQuery(TOrmCachedWorld, '', []);
   fTemplate := TSynMustache.Parse(FORTUNES_TPL);
   fHttpServer := THttpAsyncServer.Create(
-    '8080', nil, nil, '', threadCount, 30000,
+    '8080', nil, nil, '', threadCount,
+    5 * 60 * 1000,        // 5 minutes keep alive connections
     [hsoNoXPoweredHeader, // not needed for a benchmark
      hsoHeadersInterning, // reduce memory contention for /plaintext and /json
+     {$ifdef WITH_LOGS}
+     hsoLogVerbose,
+     {$endif WITH_LOGS}
      hsoIncludeDateHeader // required by TPW General Test Requirements #5
-     //, hsoLogVerbose
     ]);
   fHttpServer.HttpQueueLength := 100000; // needed e.g. from wrk/ab benchmarks
   fHttpServer.OnRequest := DoOnRequest;
@@ -234,6 +190,43 @@ begin
   fModel.Free;
   fDBPool.free;
   inherited Destroy;
+end;
+
+function TRawAsyncServer.DoOnRequest(ctxt: THttpServerRequestAbstract): cardinal;
+const
+  ROUTES: array[0..11] of RawUtf8 = (
+     // basic tests
+     '/PLAINTEXT', '/JSON',
+     // ORM tests
+     '/DB', '/QUERIES', '/FORTUNES', '/UPDATES', '/CACHED-QUERIES',
+     // raw tests
+     '/RAWDB' , '/RAWQUERIES', '/RAWFORTUNES', '/RAWUPDATES', '');
+var
+  route: PtrInt;
+begin
+  {$ifdef WITH_LOGS}
+  TSynLog.Add.Log(sllServiceCall, 'DoOnRequest % %', [ctxt.Method, ctxt.Url], self);
+  {$endif WITH_LOGS}
+  result := HTTP_NOTFOUND;
+  route := IdemPPChar(pointer(ctxt.Url), @ROUTES);
+  if (route >= 0) and
+     (ctxt.Url[length(ROUTES[route]) + 1] in [#0, '?', '/']) then
+    case route of
+      // basic tests
+      0: result := plaintext(ctxt);
+      1: result := json(ctxt);
+      // ORM tests
+      2: result := db(ctxt);
+      3: result := doqueries(ctxt, TOrmWorld, 'QUERIES=');
+      4: result := fortunes(ctxt);
+      5: result := updates(ctxt);
+      6: result := doqueries(ctxt, TOrmCachedWorld, 'COUNT=');
+      // raw tests
+      7: result := rawdb(ctxt);
+      8: result := rawqueries(ctxt);
+      9: result := rawfortunes(ctxt);
+      10: result := rawupdates(ctxt);
+    end;
 end;
 
 function RandomWorld: integer; inline;
@@ -298,7 +291,7 @@ var
   msgRec: TMessageRec;
 begin
   msgRec.message := HELLO_WORLD;
-  ctxt.OutContentType := JSON_CONTENT_TYPE_NO_ENCODING;
+  ctxt.OutContentType := JSON_CONTENT_TYPE;
   ctxt.OutContent := SaveJson(msgRec, TypeInfo(TMessageRec));
   result := HTTP_SUCCESS;
 end;
@@ -324,7 +317,7 @@ begin
   begin
     ctxt.OutContent := FormatUtf8('{"id":%,"randomNumber":%}',
       [stmt.ColumnInt(0), stmt.ColumnInt(1)]);
-    ctxt.OutContentType := JSON_CONTENT_TYPE_NO_ENCODING;
+    ctxt.OutContentType := JSON_CONTENT_TYPE;
     result := HTTP_SUCCESS;
     stmt.ReleaseRows;
   end;
@@ -339,7 +332,7 @@ begin
   try
     ctxt.OutContent := FormatUtf8('{"id":%,"randomNumber":%}',
       [w.IDValue, w.randomNumber]);
-    ctxt.OutContentType := JSON_CONTENT_TYPE_NO_ENCODING;
+    ctxt.OutContentType := JSON_CONTENT_TYPE;
     result := HTTP_SUCCESS;
   finally
     w.Free;
@@ -369,21 +362,15 @@ var
 begin
   SetLength(res{%H-}, cnt);
   conn := fDbPool.ThreadSafeConnection;
-  {$ifndef USE_SQLITE3}
   stmt := conn.NewStatementPrepared(WORLD_READ_SQL, true, true);
-  {$endif USE_SQLITE3}
   for i := 0 to cnt - 1 do
   begin
-    {$ifdef USE_SQLITE3}
-    stmt := conn.NewStatementPrepared(WORLD_READ_SQL, true, true);
-    {$endif USE_SQLITE3}
     stmt.Bind(1, RandomWorld);
     stmt.ExecutePrepared;
     if not stmt.Step then
       exit;
     res[i].id := stmt.ColumnInt(0);
     res[i].randomNumber := stmt.ColumnInt(1);
-    stmt.ReleaseRows;
   end;
 end;
 
@@ -396,10 +383,8 @@ begin
   getRandomWorlds(cnt, res);
   if length(res) = 0 then
     exit(HTTP_SERVERERROR);
-
-  ctxt.OutContentType := JSON_CONTENT_TYPE_NO_ENCODING;
+  ctxt.OutContentType := JSON_CONTENT_TYPE;
   ctxt.OutContent := SaveJson(res, TypeInfo(TWorlds));
-
   result := HTTP_SUCCESS;
 end;
 
@@ -425,7 +410,7 @@ begin
   finally
     w.Free;
   end;
-  ctxt.OutContentType := JSON_CONTENT_TYPE_NO_ENCODING;
+  ctxt.OutContentType := JSON_CONTENT_TYPE;
   ctxt.OutContent := SaveJson(res, TypeInfo(TWorlds));
   result := HTTP_SUCCESS;
 end;
@@ -504,7 +489,7 @@ begin
   result := HTTP_SERVERERROR;
   cnt := getQueriesParamValue(ctxt);
   SetLength(res, cnt);
-  b := TRestBatch.Create(fStore.ORM, TOrmWorld);
+  b := TRestBatch.Create(fStore.ORM, TOrmWorld, {transrows=}0);
   w := TOrmWorld.Create;
   try
     for i := 0 to cnt - 1 do
@@ -523,7 +508,7 @@ begin
   end;
   if result <> HTTP_SUCCESS then
     exit;
-  ctxt.OutContentType := JSON_CONTENT_TYPE_NO_ENCODING;
+  ctxt.OutContentType := JSON_CONTENT_TYPE;
   ctxt.OutContent := SaveJson(res, TypeInfo(TWorlds));
 end;
 
@@ -537,13 +522,10 @@ var
 begin
   cnt := getQueriesParamValue(ctxt);
   getRandomWorlds(cnt, words);
-
   if length(words) <> cnt then
     exit(HTTP_SERVERERROR);
-
   setLength(ids, cnt);
   setLength(nums, cnt);
-
   // generate new randoms, fill parameters arrays for update
   for i := 0 to cnt - 1 do
   begin
@@ -552,16 +534,14 @@ begin
     nums[i] := words[i].randomNumber;
   end;
   conn := fDbPool.ThreadSafeConnection;
-  conn.StartTransaction;
+  //conn.StartTransaction;
   stmt := conn.NewStatementPrepared(WORLD_UPDATE_SQLN, false);
   stmt.BindArray(1, nums);
   stmt.BindArray(2, ids);
   stmt.ExecutePrepared;
-  conn.Commit;
-
-  ctxt.OutContentType := JSON_CONTENT_TYPE_NO_ENCODING;
+  //conn.Commit; // autocommit
+  ctxt.OutContentType := JSON_CONTENT_TYPE;
   ctxt.OutContent := SaveJson(words, TypeInfo(TWorlds));
-
   result := HTTP_SUCCESS;
 end;
 
@@ -574,13 +554,17 @@ var
 begin
   {$ifdef WITH_LOGS}
   TSynLog.Family.Level := LOG_VERBOSE; // disable logs for benchmarking
-  TSynLog.Family.PerThreadLog := ptIdentifiedInOneFile;
+  TSynLog.Family.HighResolutionTimestamp := true;
+  TSynLog.Family.AutoFlushTimeOut := 1;
+  {$else}
+  // TSynLog.Family.Level := LOG_STACKTRACE; // minimal debug logs on fatal errors
   {$endif WITH_LOGS}
+  TSynLog.Family.PerThreadLog := ptIdentifiedInOneFile;
 
   Rtti.RegisterFromText([
     TypeInfo(TMessageRec), 'message:RawUtf8',
-    TypeInfo(TWorldRec), 'id,randomNumber:integer',
-    TypeInfo(TFortune), 'id:integer message:RawUtf8']);
+    TypeInfo(TWorldRec),   'id,randomNumber:integer',
+    TypeInfo(TFortune),    'id:integer message:RawUtf8']);
 
   if (ParamCount <> 1) or
      not TryStrToInt(ParamStr(1), threads) then
@@ -589,12 +573,14 @@ begin
     threads := 16
   else if threads > 64 then
     threads := 64; // prevents too many PostgreSQL per connection forks
+
   rawServer := TRawAsyncServer.Create(threads);
   try
     {$I-}
     writeln;
     writeln(rawServer.fHttpServer.ClassName, ' running on localhost:',
-      rawServer.fHttpServer.SockPort, '; num thread=', threads, #10);
+      rawServer.fHttpServer.SockPort, '; num thread=', threads, ' db=',
+      rawServer.fDbPool.DbmsEngineName, #10);
     {$ifdef USE_SQLITE3}
     writeln('Press [Enter] to terminate'#10);
     readln;
@@ -602,6 +588,8 @@ begin
     writeln('Press Ctrl+C or use SIGTERM to terminate'#10);
     FpPause;
     {$endif USE_SQLITE3}
+    //TSynLog.Family.Level := LOG_VERBOSE; // enable shutdown logs for debug
+    writeln(ObjectToJsonDebug(rawServer.fHttpServer));
     {$ifdef FPC_X64MM}
     WriteHeapStatus(' ', 16, 8, {compileflags=}true);
     {$endif FPC_X64MM}
