@@ -75,7 +75,9 @@
       <Filename Value="exe/raw"/>
     </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir)"/>
+      <IncludeFiles Value="../libs/mORMot/src;$(ProjOutDir)"/>
+      <Libraries Value="../libs/mORMot/static/$(TargetCPU)-$(TargetOS)"/>
+      <OtherUnitFiles Value="../libs/mORMot/src/core;../libs/mORMot/src/db;../libs/mORMot/src/rest;../libs/mORMot/src/app;../libs/mORMot/src/net;../libs/mORMot/src/lib;../libs/mORMot/src/orm;../libs/mORMot/src/crypt;../libs/mORMot/src/soa"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
@@ -88,15 +90,16 @@
 -dFPCMM_SERVER
 -dFPCMM_REPORTMEMORYLEAKS
 -dFPCMM_DEBUG
--dWITH_LOGS
 -dNOSYNDBZEOS
 -dNOSYNDBIBX"/>
-      <OtherDefines Count="5">
+      <OtherDefines Count="7">
         <Define0 Value="FPC_X64MM"/>
         <Define1 Value="FPCMM_SERVER"/>
         <Define2 Value="FPCMM_REPORTMEMORYLEAKS"/>
         <Define3 Value="FPCMM_DEBUG"/>
         <Define4 Value="WITH_LOGS"/>
+        <Define5 Value="NOSYNDBZEOS"/>
+        <Define6 Value="NOSYNDBIBX"/>
       </OtherDefines>
     </Other>
   </CompilerOptions>
