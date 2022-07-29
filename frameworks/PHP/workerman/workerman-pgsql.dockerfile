@@ -1,5 +1,4 @@
-FROM ubuntu:21.10
-
+FROM ubuntu:22.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
