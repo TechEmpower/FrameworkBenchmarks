@@ -2,15 +2,7 @@
 
 ### Test Type Implementation Source Code
 
-setup:
-
-- [SERVER](lib/server.dart)
-- [SERVER](lib/src/multithread.dart.dart)
-
-benchmarks:
-
-- [JSON](lib/src/json.dart)
-- [PLAINTEXT](lib/src/plain_text.dart)
+- `benchmark.dart`
 
 ### Important Libraries
 

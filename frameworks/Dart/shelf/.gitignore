@@ -1,8 +1,6 @@
 # Files and directories created by pub.
 .dart_tool/
 .packages
-
+*.lock
 # Conventional directory for build output.
 build/
-*.lock
-.packages
