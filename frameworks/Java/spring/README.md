@@ -2,7 +2,7 @@
 
 This is the Spring MVC portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-An embedded undertow server is used for the web server, with nearly everything configured with default settings.
+An embedded undertow is used for the web server, with nearly everything configured with default settings.
 The only thing changed is Hikari can use up to (2 * cores count) connections (the default is 10).
 See [About-Pool-Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing)
 
