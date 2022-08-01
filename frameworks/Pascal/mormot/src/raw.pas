@@ -173,6 +173,7 @@ begin
     5 * 60 * 1000,        // 5 minutes keep alive connections
     [hsoNoXPoweredHeader, // not needed for a benchmark
      hsoHeadersInterning, // reduce memory contention for /plaintext and /json
+     hsoNoStats,          // disable low-level statistic counters
      {$ifdef WITH_LOGS}
      hsoLogVerbose,
      {$endif WITH_LOGS}
