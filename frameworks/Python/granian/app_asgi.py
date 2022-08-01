@@ -61,7 +61,7 @@ asyncio.get_event_loop().run_until_complete(pg_setup())
 def get_num_queries(scope):
     try:
         query_string = scope['query_string']
-        query_count = int(parse_qs(query_string)['queries'][0])
+        query_count = int(parse_qs(query_string)[b'queries'][0])
     except (KeyError, IndexError, ValueError):
         return 1
 

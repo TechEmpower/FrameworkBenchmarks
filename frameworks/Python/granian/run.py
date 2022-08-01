@@ -13,5 +13,6 @@ if __name__ == '__main__':
         port=8080,
         workers=multiprocessing.cpu_count(),
         backlog=2048,
-        interface=interface
+        interface=interface,
+        websockets=False
     ).serve()
