@@ -1,0 +1,4 @@
+[deps]
+Genie = "c43c736e-a2d1-11e8-161f-af95117fbd1e"
+JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+LibPQ = "194296ae-ab2e-5f79-8cd4-7183a0a5a0d1"
