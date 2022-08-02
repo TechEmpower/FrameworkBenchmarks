@@ -1,0 +1,19 @@
+env: ENV["GENIE_ENV"]
+
+dev:
+  adapter: Postgres
+  database: hello_world
+  host: 127.0.0.1
+  username: postgres
+  password: postgres
+  port: 5432
+  config:
+
+prod:
+  adapter: Postgres
+  database: hello_world
+  host: tfb-database
+  username: benchmarkdbuser
+  password: benchmarkdbpass
+  port: 5432
+  config:

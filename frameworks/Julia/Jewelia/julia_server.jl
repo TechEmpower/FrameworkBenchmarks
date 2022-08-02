@@ -6,6 +6,8 @@ using HTTP
 using MySQL
 using JSON3
 using StructTypes
+using LibPQ, Tables
+
 
 struct jsonMsgObj
     message
