@@ -1,8 +1,7 @@
-// #[global_allocator]
-// static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::sync::Arc;
-use std::thread::available_parallelism;
 
 use bytes::Bytes;
 use salvo::http::header::{self, HeaderValue};
@@ -38,31 +37,22 @@ fn plaintext(res: &mut Response) {
     res.set_body(Body::Once(Bytes::from_static(HELLO_WORLD)));
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let router = Arc::new(
         Router::new()
             .push(Router::with_path("plaintext").get(plaintext))
             .push(Router::with_path("json").get(json)),
     );
 
-    for _ in 1..available_parallelism().map(|n| n.get()).unwrap_or(16) {
-        let router = router.clone();
-        std::thread::spawn(move || {
-            let rt = tokio::runtime::Builder::new_current_thread()
-                .enable_all()
-                .build()
-                .unwrap();
-            rt.block_on(serve(router));
-        });
-    }
     println!("Started http server: 127.0.0.1:8080");
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
         .unwrap();
-    rt.block_on(serve(router));
+    serve(router).await;
 }
-
+#[inline]
 async fn serve(router: Arc<Router>) {
     server::builder()
         .http1_pipeline_flush(true)
