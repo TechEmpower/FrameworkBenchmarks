@@ -4,9 +4,8 @@ authors = ["Vladyslav Zolotarov <zolotaryov.v.g@gmail.com>"]
 version = "0.1.0"
 
 [deps]
+DBInterface = "a10d1c49-ce27-4219-8d33-6db1a4562965"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 Genie = "c43c736e-a2d1-11e8-161f-af95117fbd1e"
-Inflector = "6d011eab-0732-4556-8808-e463c76bf3b6"
 Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
-SearchLight = "340e8cb6-72eb-11e8-37ce-c97ebeb32050"
-SearchLightPostgreSQL = "4327cdd6-4902-11ea-0272-430cea0431bd"
+MySQL = "39abe10b-433b-5dbd-92d4-e302a9df00cd"
