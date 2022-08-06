@@ -15,7 +15,7 @@
         <slf4j.version>1.7.30</slf4j.version>
         <jackson.version>2.12.6.1</jackson.version>
         <hikaricp.version>4.0.2</hikaricp.version>
-        <postgresql.version>42.3.3</postgresql.version>
+        <postgresql.version>42.4.1</postgresql.version>
         <mongodb.version>4.2.1</mongodb.version>
         <pebble.version>3.1.5</pebble.version>
     </properties>
