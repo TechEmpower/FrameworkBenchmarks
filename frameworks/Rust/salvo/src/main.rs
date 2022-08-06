@@ -1,5 +1,5 @@
-#[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+// #[global_allocator]
+// static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::sync::Arc;
 use std::thread::available_parallelism;
@@ -18,7 +18,7 @@ pub struct Message {
     pub message: &'static str,
 }
 
-#[fn_handler]
+#[handler]
 fn json(res: &mut Response) {
     let headers = res.headers_mut();
     headers.insert(header::SERVER, HeaderValue::from_static("S"));
@@ -30,7 +30,7 @@ fn json(res: &mut Response) {
     res.set_body(Body::Once(Bytes::from(data)));
 }
 
-#[fn_handler]
+#[handler]
 fn plaintext(res: &mut Response) {
     let headers = res.headers_mut();
     headers.insert(header::SERVER, HeaderValue::from_static("S"));
