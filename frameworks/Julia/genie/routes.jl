@@ -1,7 +1,4 @@
-using Genie, Genie.Router
-using Genie.Renderer
-using Genie.Renderer.Json
-using Genie.Responses
+using Genie, Genie.Router, Genie.Renderer, Genie.Renderer.Json, Genie.Responses
 using Dates
 using MySQL, DBInterface
 
