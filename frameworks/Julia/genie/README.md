@@ -2,14 +2,17 @@
 
 Project structure made with `Genie.Generator.newapp_webservice("GenieBenchmark")`
 
-## How to run
- * Update database configuration in config/env/dev.jl
+## How to run locally
+ * Run docker-compose up -d to setup the DB
  * Use bin/server to startup the server
+
+## How to verify
+./tfb --mode verify --test genie
 
 ### Implemented benchmarks
 - [x] JSON serialization
-- [] Single query
-- [] Multiple queries
+- [x] Single query
+- [x] Multiple queries
 - [x] Plaintext
 - [] Fortunes
 - [] Updates

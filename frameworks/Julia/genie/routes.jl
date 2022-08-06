@@ -42,7 +42,7 @@ function withConnection(operation)
   connection = if (env == "prod")
     DBInterface.connect(MySQL.Connection, "tfb-database", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
   else
-    DBInterface.connect(MySQL.Connection, "127.0.0.1", "root", "benchmarkdbpass", db="hello_world")
+    DBInterface.connect(MySQL.Connection, "127.0.0.1", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
   end
   try
     return operation(connection)

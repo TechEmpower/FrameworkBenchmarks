@@ -1,0 +1,7 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: techempower/mysql
+    ports:
+      - 3306:3306
