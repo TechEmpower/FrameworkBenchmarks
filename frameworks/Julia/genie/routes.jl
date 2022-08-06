@@ -33,14 +33,7 @@ struct World
 end
 
 function withConnection(operation)
-  env = ENV["GENIE_ENV"]
-
-
-  connection = if (env == "prod")
-    DBInterface.connect(MySQL.Connection, "tfb-database", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
-  else
-    DBInterface.connect(MySQL.Connection, "127.0.0.1", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
-  end
+  connection = DBInterface.connect(MySQL.Connection, "tfb-database", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
   try
     return operation(connection)
   finally

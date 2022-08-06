@@ -43,3 +43,5 @@ node_modules/
 
 # Database
 db/*.sqlite
+
+docker-compose.yaml

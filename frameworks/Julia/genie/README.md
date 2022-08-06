@@ -2,10 +2,6 @@
 
 Project structure made with `Genie.Generator.newapp_webservice("GenieBenchmark")`
 
-## How to run locally
- * Run docker-compose up -d to setup the DB
- * Use bin/server to startup the server
-
 ## How to verify
 ./tfb --mode verify --test genie
 
