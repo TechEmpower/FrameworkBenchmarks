@@ -2,6 +2,9 @@
 
 Project structure made with `Genie.Generator.newapp_webservice("GenieBenchmark")`
 
+
+Not using SearchLight ORM provided with Genie, because it does not support table name overrides and tries to query plural "Worlds" and "Fortunes" table
+
 ## How to verify
 ./tfb --mode verify --test genie
 
@@ -10,8 +13,8 @@ Project structure made with `Genie.Generator.newapp_webservice("GenieBenchmark")
 - [x] Single query
 - [x] Multiple queries
 - [x] Plaintext
-- [] Fortunes
-- [] Updates
+- [x] Fortunes
+- [x] Updates
 
 ## Test URLs
 ### JSON

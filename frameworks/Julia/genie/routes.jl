@@ -1,4 +1,4 @@
-using Genie, Genie.Router, Genie.Renderer, Genie.Renderer.Json, Genie.Responses
+using Genie, Genie.Router, Genie.Renderer, Genie.Renderer.Json, Genie.Renderer.Html, Genie.Responses
 using Dates
 using MySQL, DBInterface
 
@@ -42,10 +42,14 @@ function with_connection(operation)
 end
 
 function query_world(connection, id::Int)::World
-  sqlQuery = "SELECT id, randomNumber FROM World WHERE id = $id"
-  results = DBInterface.execute(connection, sqlQuery)
-  row = first(results)
-  return World(row[1], row[2])
+  statement = DBInterface.prepare(connection, "SELECT id, randomNumber FROM world WHERE id = ?")
+  try 
+    results = DBInterface.execute(statement, id)
+    row = first(results)
+    return World(row[1], row[2])
+  finally
+    DBInterface.close!(statement)
+  end  
 end
 
 route("/db") do
@@ -120,4 +124,24 @@ route("/updates") do
   end)
 
   json(worlds, headers=Genie.Renderer.HTTPHeaders(date_now_header()))
+end
+
+struct Fortune
+  id::Int
+  message::String
+end
+
+route("/fortunes") do
+  fortunes = Fortune[]
+  
+  push!(fortunes, Fortune(0, "Additional fortune added at request time."))
+  
+  with_connection(function (connection)
+    sqlQuery = "SELECT id, message FROM fortune"
+    results = DBInterface.execute(connection, sqlQuery)
+    append!(fortunes, map(row -> Fortune(row[1], Genie.Renderer.Html.escapeHTML(row[2])), results))
+  end)
+
+  sort!(fortunes, by = fortune -> fortune.message)
+  html(:fortunes, :index, fortunes = fortunes, headers=Genie.Renderer.HTTPHeaders(date_now_header()))
 end
