@@ -18,9 +18,7 @@ COPY ./ ./
 RUN julia -e 'import Pkg; Pkg.activate(@__DIR__); Pkg.instantiate()' && \
     julia -e 'import Pkg; Pkg.activate(@__DIR__); Pkg.precompile()'
 
-RUN chmod +x bin/repl
 RUN chmod +x bin/server
-RUN chmod +x bin/runtask
 
 ENV GENIE_HOST "0.0.0.0"
 ENV GENIE_ENV "prod"

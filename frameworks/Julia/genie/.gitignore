@@ -45,4 +45,4 @@ node_modules/
 db/*.sqlite
 
 docker-compose.yaml
-!bin/server
+!server
