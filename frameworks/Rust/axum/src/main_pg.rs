@@ -1,8 +1,3 @@
-extern crate dotenv;
-extern crate serde_derive;
-#[macro_use]
-extern crate async_trait;
-
 mod database_pg;
 mod models_common;
 mod models_pg;

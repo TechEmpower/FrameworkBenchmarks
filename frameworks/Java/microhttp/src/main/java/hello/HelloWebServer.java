@@ -40,7 +40,7 @@ public class HelloWebServer {
         this.port = port;
     }
 
-    void start() throws IOException {
+    void start() throws IOException, InterruptedException {
         startUpdater();
         Options options = new Options()
                 .withHost(null) // wildcard any-address binding
@@ -54,6 +54,7 @@ public class HelloWebServer {
                 .withRequestTimeout(Duration.ofSeconds(90));
         EventLoop eventLoop = new EventLoop(options, new DisabledLogger(), this::handle);
         eventLoop.start();
+        eventLoop.join();
     }
 
     void startUpdater() {
@@ -103,7 +104,7 @@ public class HelloWebServer {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         int port = args.length > 0
                 ? Integer.parseInt(args[0])
                 : 8080;

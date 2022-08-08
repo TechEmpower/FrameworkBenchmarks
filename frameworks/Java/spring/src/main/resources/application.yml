@@ -1,6 +1,8 @@
 ---
 spring:
-  profiles: jdbc,jpa
+  config:
+    activate:
+      on-profile: jdbc,jpa
   datasource:
     url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
     username: ${database.username}
@@ -15,13 +17,18 @@ database:
 
 ---
 spring:
-  profiles: jpa
+  config:
+    activate:
+      on-profile: jpa
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
 
 ---
 spring:
-  profiles: mongo
+  config:
+    activate:
+      on-profile: mongo
 
 spring.data.mongodb:
   host: tfb-database

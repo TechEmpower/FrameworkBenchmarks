@@ -264,7 +264,7 @@ impl Handler for FortunesHandler {
     }
 }
 
-#[fn_handler]
+#[handler]
 async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let count = req.query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));

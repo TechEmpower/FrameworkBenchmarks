@@ -1,8 +1,3 @@
-extern crate dotenv;
-extern crate serde_derive;
-#[macro_use]
-extern crate async_trait;
-
 mod database_mongo;
 mod models_common;
 mod models_mongo;
@@ -187,5 +182,3 @@ async fn serve() {
         .await
         .unwrap();
 }
-
-

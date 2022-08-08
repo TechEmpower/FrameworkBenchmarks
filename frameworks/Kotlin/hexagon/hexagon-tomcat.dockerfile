@@ -1,7 +1,7 @@
 #
 # BUILD
 #
-FROM gradle:7.4.2-jdk11 AS gradle_build
+FROM gradle:7.5.0-jdk17-alpine AS gradle_build
 USER root
 WORKDIR /hexagon
 
@@ -12,7 +12,7 @@ RUN gradle --quiet
 #
 # RUNTIME
 #
-FROM tomcat:10.0.14-jre17-temurin
+FROM tomcat:10.1.0-jre17-temurin
 ENV DBSTORE postgresql
 ENV POSTGRESQL_DB_HOST tfb-database
 ENV DISABLE_CHECKS true
