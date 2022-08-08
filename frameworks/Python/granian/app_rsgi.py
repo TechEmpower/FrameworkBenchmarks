@@ -55,14 +55,11 @@ def get_num_queries(scope):
     return query_count
 
 
-async def route_json(scope, receive):
-    return Response(
-        1, 200, JSON_HEADERS,
-        json_dumps({'message': 'Hello, world!'}), None, None
-    )
+async def route_json(scope, proto):
+    return Response.bytes(json_dumps({'message': 'Hello, world!'}), 200, JSON_HEADERS)
 
 
-async def route_db(scope, receive):
+async def route_db(scope, proto):
     row_id = randint(1, 10000)
     connection = await pool.acquire()
     try:
@@ -71,13 +68,10 @@ async def route_db(scope, receive):
     finally:
         await pool.release(connection)
 
-    return Response(
-        1, 200, JSON_HEADERS,
-        json_dumps(world), None, None
-    )
+    return Response.bytes(json_dumps(world), 200, JSON_HEADERS)
 
 
-async def route_queries(scope, receive):
+async def route_queries(scope, proto):
     num_queries = get_num_queries(scope)
     row_ids = [randint(1, 10000) for _ in range(num_queries)]
     worlds = []
@@ -91,13 +85,10 @@ async def route_queries(scope, receive):
     finally:
         await pool.release(connection)
 
-    return Response(
-        1, 200, JSON_HEADERS,
-        json_dumps(worlds), None, None
-    )
+    return Response.bytes(json_dumps(worlds), 200, JSON_HEADERS)
 
 
-async def route_fortunes(scope, receive):
+async def route_fortunes(scope, proto):
     connection = await pool.acquire()
     try:
         fortunes = await connection.fetch('SELECT * FROM Fortune')
@@ -107,13 +98,10 @@ async def route_fortunes(scope, receive):
     fortunes.append(ROW_ADD)
     fortunes.sort(key=key)
     content = template.render(fortunes=fortunes)
-    return Response(
-        2, 200, HTML_HEADERS,
-        None, content, None
-    )
+    return Response.str(content, 200, HTML_HEADERS)
 
 
-async def route_updates(scope, receive):
+async def route_updates(scope, proto):
     num_queries = get_num_queries(scope)
     updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
@@ -127,24 +115,15 @@ async def route_updates(scope, receive):
     finally:
         await pool.release(connection)
 
-    return Response(
-        1, 200, JSON_HEADERS,
-        json_dumps(worlds), None, None
-    )
+    return Response.bytes(json_dumps(worlds), 200, JSON_HEADERS)
 
 
-async def route_plaintext(scope, receive):
-    return Response(
-        2, 200, PLAINTEXT_HEADERS,
-        None, 'Hello, world!', None
-    )
+async def route_plaintext(scope, proto):
+    return Response.bytes(b'Hello, world!', 200, PLAINTEXT_HEADERS)
 
 
-async def handle_404(scope, receive):
-    return Response(
-        2, 404, PLAINTEXT_HEADERS,
-        None, 'Not found', None
-    )
+async def handle_404(scope, proto):
+    return Response.bytes(b'Not found', 404, PLAINTEXT_HEADERS)
 
 
 routes = {
@@ -157,6 +136,6 @@ routes = {
 }
 
 
-def main(scope, receive):
+def main(scope, proto):
     handler = routes.get(scope.path, handle_404)
-    return handler(scope, receive)
+    return handler(scope, proto)
