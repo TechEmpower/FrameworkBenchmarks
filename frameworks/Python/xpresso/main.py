@@ -2,19 +2,19 @@ import multiprocessing
 import os
 import pathlib
 from operator import itemgetter
-from random import Random
-from typing import Annotated, AsyncIterable
+from random import randint, sample
+from typing import Annotated, AsyncIterable, Optional
 
 import asyncpg  # type: ignore
 import jinja2  # type: ignore
 import uvicorn  # type: ignore
 from pydantic import BaseModel, Field
 from starlette.responses import HTMLResponse, PlainTextResponse
-from xpresso import App, Depends, Path, Response
+from xpresso import App, Depends, Path, Response, FromQuery
 
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
-ADDITIONAL_ROW = (0, "Additional fortune added at request time.")
+ADDITIONAL_ROW = (0, 'Additional fortune added at request time.')
 
 
 sort_fortunes_key = itemgetter(1)
@@ -26,16 +26,31 @@ with (app_dir / "templates" / "fortune.html").open() as template_file:
 
 async def get_db_pool() -> AsyncIterable[asyncpg.Pool]:
     async with asyncpg.create_pool(  # type: ignore
-        user=os.getenv("PGUSER", "postgres"),
-        password=os.getenv("PGPASS", "postgres"),
-        database="postgres",
-        host="localhost",
+        user=os.getenv('PGUSER', 'benchmarkdbuser'),
+        password=os.getenv('PGPASS', 'benchmarkdbpass'),
+        database=os.getenv('PGDB', 'hello_world'),
+        host=os.getenv('PGHOST', 'tfb-database'),
         port=5432,
     ) as pool:
         yield pool
 
 
 DBPool = Annotated[asyncpg.Pool, Depends(get_db_pool, scope="app")]
+
+
+def get_num_queries(queries: Optional[str]) -> int:
+    if not queries:
+        return 1
+    try:
+        queries_num = int(queries)
+    except (ValueError, TypeError):
+        return 1
+    if queries_num < 1:
+        return 1
+    if queries_num > 500:
+        return 500
+    return queries_num
+
 
 
 class Greeting(BaseModel):
@@ -55,32 +70,31 @@ class QueryResult(BaseModel):
     randomNumber: int
 
 
-async def single_database_query(pool: DBPool, random: Random) -> QueryResult:
-    row_id = random.randint(1, 10000)
+async def single_database_query(pool: DBPool) -> QueryResult:
+    row_id = randint(1, 10000)
 
     connection: "asyncpg.Connection"
     async with pool.acquire() as connection:  # type: ignore
         number: int = await connection.fetchval(READ_ROW_SQL, row_id)  # type: ignore
 
-    return QueryResult(id=row_id, randomNumber=number)
+    return QueryResult.construct(id=row_id, randomNumber=number)
 
 
-QueryCount = Annotated[int, Field(gt=0, le=500)]
+QueryCount = Annotated[str, Field(gt=0, le=500)]
 
 
 async def multiple_database_queries(
     pool: DBPool,
-    random: Random,
-    queries: QueryCount | None = None,
+    queries: FromQuery[str | None] = None,
 ) -> list[QueryResult]:
-    num_queries = queries or 1
-    row_ids = random.sample(range(1, 10000), num_queries)
+    num_queries = get_num_queries(queries)
+    row_ids = sample(range(1, 10000), num_queries)
 
     connection: "asyncpg.Connection"
     async with pool.acquire() as connection:  # type: ignore
         statement = await connection.prepare(READ_ROW_SQL)  # type: ignore
         return [
-            QueryResult(
+            QueryResult.construct(
                 id=row_id,
                 randomNumber=await statement.fetchval(row_id),  # type: ignore
             )
@@ -101,30 +115,29 @@ async def fortunes(pool: DBPool) -> Response:
 
 async def database_updates(
     pool: DBPool,
-    random: Random,
-    queries: QueryCount | None = None,
+    queries: FromQuery[str | None] = None,
 ) -> list[QueryResult]:
-    num_queries = queries or 1
-    updates = [
-        (row_id, random.randint(1, 10000))
-        for row_id in random.sample(range(1, 10000), num_queries)
-    ]
+    num_queries = get_num_queries(queries)
 
-    connection: "asyncpg.Connection"
-    async with pool.acquire() as connection:  # type: ignore
+    updates = [(row_id, randint(1, 10000)) for row_id in sample(range(1, 10000), num_queries)]
+
+    async with pool.acquire() as connection:
+        statement = await connection.prepare(READ_ROW_SQL)
+        for row_id, _ in updates:
+            await statement.fetchval(row_id)
         await connection.executemany(WRITE_ROW_SQL, updates)  # type: ignore
 
-    return [QueryResult(id=row_id, randomNumber=number) for row_id, number in updates]
+    return [QueryResult.construct(id=row_id, randomNumber=number) for row_id, number in updates]
 
 
-routes = [
+routes = (
     Path("/json", get=json_serialization),
     Path("/plaintext", get=plaintext),
     Path("/db", get=single_database_query),
     Path("/queries", get=multiple_database_queries),
     Path("/fortunes", get=fortunes),
     Path("/updates", get=database_updates),
-]
+)
 
 
 app = App(routes=routes)
