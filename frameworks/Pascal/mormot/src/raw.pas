@@ -127,17 +127,17 @@ const
   FORTUNES_SQL = 'select id, message from Fortune';
 
   FORTUNES_MESSAGE = 'Additional fortune added at request time.';
-  FORTUNES_TPL = '<!DOCTYPE html>'#10 +
-                 '<html>'#10 +
-                 '<head><title>Fortunes</title></head>'#10 +
-                 '<body>'#10 +
-                 '<table>'#10 +
-                 '<tr><th>id</th><th>message</th></tr>'#10 +
-                 '{{#list}}'#10 +
-                 '<tr><td>{{id}}</td><td>{{message}}</td></tr>'#10 +
-                 '{{/list}}'#10 +
-                 '</table>'#10 +
-                 '</body>'#10 +
+  FORTUNES_TPL = '<!DOCTYPE html>' +
+                 '<html>' +
+                 '<head><title>Fortunes</title></head>' +
+                 '<body>' +
+                 '<table>' +
+                 '<tr><th>id</th><th>message</th></tr>' +
+                 '{{#.}}' +
+                 '<tr><td>{{id}}</td><td>{{message}}</td></tr>' +
+                 '{{/.}}' +
+                 '</table>' +
+                 '</body>' +
                  '</html>';
 
 
@@ -173,6 +173,7 @@ begin
     5 * 60 * 1000,        // 5 minutes keep alive connections
     [hsoNoXPoweredHeader, // not needed for a benchmark
      hsoHeadersInterning, // reduce memory contention for /plaintext and /json
+     hsoNoStats,          // disable low-level statistic counters
      {$ifdef WITH_LOGS}
      hsoLogVerbose,
      {$endif WITH_LOGS}
@@ -436,7 +437,7 @@ begin
       arr.Add(new);
       arr.Sort(OrmFortuneCompareByMessage);
       data.InitArrayFrom(arr, JSON_FAST);
-      ctxt.OutContent := fTemplate.Render(_ObjFast(['list', variant(data)]));
+      ctxt.OutContent := fTemplate.Render(variant(data));
       ctxt.OutContentType := HTML_CONTENT_TYPE;
       result := HTTP_SUCCESS;
     finally
