@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -10,9 +10,9 @@ RUN apt-get update -yqq > /dev/null && \
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 RUN apt-get install -y php-pear php8.1-dev libevent-dev git > /dev/null
-RUN pecl install event-3.0.6 > /dev/null && echo "extension=event.so" > /etc/php/8.0/cli/conf.d/event.ini
+RUN pecl install event-3.0.6 > /dev/null && echo "extension=event.so" > /etc/php/8.1/cli/conf.d/event.ini
  
-COPY php.ini /etc/php/8.1/cli/php.ini
+COPY php-jit.ini /etc/php/8.1/cli/php.ini
 
 ADD ./ /workerman
 WORKDIR /workerman

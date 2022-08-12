@@ -146,22 +146,33 @@ dependencies = [
 
 [[package]]
 name = "diesel"
-version = "1.4.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b28135ecf6b7d446b43e27e225622a038cc4e2930a1022f51cdb97ada19b8e4d"
+version = "2.0.0"
+source = "git+https://github.com/diesel-rs/diesel.git?rev=37ec18f46ced2d6e9197414156fdb705d7a61426#37ec18f46ced2d6e9197414156fdb705d7a61426"
 dependencies = [
  "bitflags",
  "byteorder",
  "diesel_derives",
- "pq-sys",
+ "itoa",
+]
+
+[[package]]
+name = "diesel-async"
+version = "0.1.0"
+source = "git+https://github.com/weiznich/diesel_async.git?rev=06b3416826dbc8ce404f6d613daea989b23549ca#06b3416826dbc8ce404f6d613daea989b23549ca"
+dependencies = [
+ "async-trait",
+ "diesel",
+ "futures",
+ "tokio",
+ "tokio-postgres",
 ]
 
 [[package]]
 name = "diesel_derives"
-version = "1.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "45f5098f628d02a7a0f68ddba586fb61e80edec3bdc1be3b921f4ceec60858d3"
+version = "2.0.0"
+source = "git+https://github.com/diesel-rs/diesel.git?rev=37ec18f46ced2d6e9197414156fdb705d7a61426#37ec18f46ced2d6e9197414156fdb705d7a61426"
 dependencies = [
+ "proc-macro-error",
  "proc-macro2",
  "quote",
  "syn",
@@ -226,9 +237,9 @@ dependencies = [
 
 [[package]]
 name = "futures-channel"
-version = "0.3.17"
+version = "0.3.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5da6ba8c3bb3c165d3c7319fc1cc8304facf1fb8db99c5de877183c08a273888"
+checksum = "ba3dda0b6588335f360afc675d0564c17a77a2bda81ca178a4b6081bd86c7f0b"
 dependencies = [
  "futures-core",
  "futures-sink",
@@ -236,9 +247,9 @@ dependencies = [
 
 [[package]]
 name = "futures-core"
-version = "0.3.17"
+version = "0.3.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "88d1c26957f23603395cd326b0ffe64124b818f4449552f960d815cfba83a53d"
+checksum = "d0c8ff0461b82559810cdccfde3215c3f373807f5e5232b71479bff7bb2583d7"
 
 [[package]]
 name = "futures-executor"
@@ -253,18 +264,16 @@ dependencies = [
 
 [[package]]
 name = "futures-io"
-version = "0.3.17"
+version = "0.3.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "522de2a0fe3e380f1bc577ba0474108faf3f6b18321dbf60b3b9c39a75073377"
+checksum = "b1f9d34af5a1aac6fb380f735fe510746c38067c5bf16c7fd250280503c971b2"
 
 [[package]]
 name = "futures-macro"
-version = "0.3.17"
+version = "0.3.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "18e4a4b95cea4b4ccbcf1c5675ca7c4ee4e9e75eb79944d07defde18068f79bb"
+checksum = "6dbd947adfffb0efc70599b3ddcf7b5597bb5fa9e245eb99f62b3a5f7bb8bd3c"
 dependencies = [
- "autocfg",
- "proc-macro-hack",
  "proc-macro2",
  "quote",
  "syn",
@@ -272,23 +281,22 @@ dependencies = [
 
 [[package]]
 name = "futures-sink"
-version = "0.3.17"
+version = "0.3.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "36ea153c13024fe480590b3e3d4cad89a0cfacecc24577b68f86c6ced9c2bc11"
+checksum = "e3055baccb68d74ff6480350f8d6eb8fcfa3aa11bdc1a1ae3afdd0514617d508"
 
 [[package]]
 name = "futures-task"
-version = "0.3.17"
+version = "0.3.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1d3d00f4eddb73e498a54394f228cd55853bdf059259e8e7bc6e69d408892e99"
+checksum = "6ee7c6485c30167ce4dfb83ac568a849fe53274c831081476ee13e0dce1aad72"
 
 [[package]]
 name = "futures-util"
-version = "0.3.17"
+version = "0.3.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "36568465210a3a6ee45e1f165136d68671471a501e632e9a98d96872222b5481"
+checksum = "d9b5cf40b47a271f77a8b1bec03ca09044d99d2372c0de244e66430761127164"
 dependencies = [
- "autocfg",
  "futures-channel",
  "futures-core",
  "futures-io",
@@ -298,8 +306,6 @@ dependencies = [
  "memchr",
  "pin-project-lite",
  "pin-utils",
- "proc-macro-hack",
- "proc-macro-nested",
  "slab",
 ]
 
@@ -469,6 +475,12 @@ checksum = "51b9bbe6c47d51fc3e1a9b945965946b4c44142ab8792c50835a980d362c2710"
 dependencies = [
  "cfg-if",
 ]
+
+[[package]]
+name = "matchit"
+version = "0.4.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9376a4f0340565ad675d11fc1419227faf5f60cd7ac9cb2e7185a471f30af833"
 
 [[package]]
 name = "md-5"
@@ -655,12 +667,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed0cfbc8191465bed66e1718596ee0b0b35d5ee1f41c5df2189d0fe8bde535ba"
 
 [[package]]
-name = "pq-sys"
-version = "0.4.6"
+name = "proc-macro-error"
+version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6ac25eee5a0582f45a67e837e350d784e7003bd29a5f460796772061ca49ffda"
+checksum = "da25490ff9892aab3fcf7c36f08cfb902dd3e71ca0f9f9517bea02a73a5ce38c"
 dependencies = [
- "vcpkg",
+ "proc-macro-error-attr",
+ "proc-macro2",
+ "quote",
+ "syn",
+ "version_check",
+]
+
+[[package]]
+name = "proc-macro-error-attr"
+version = "1.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a1be40180e52ecc98ad80b184934baf3d0d29f979574e439af5a55274b35f869"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "version_check",
 ]
 
 [[package]]
@@ -670,16 +697,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dbf0c48bc1d91375ae5c3cd81e3722dff1abcf81a30960240640d223f59fe0e5"
 
 [[package]]
-name = "proc-macro-nested"
-version = "0.1.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bc881b2c22681370c6a780e47af9840ef841837bc98118431d4e1868bd0c1086"
-
-[[package]]
 name = "proc-macro2"
-version = "1.0.26"
+version = "1.0.36"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a152013215dca273577e18d2bf00fa862b89b24169fb78c4c95aeb07992c9cec"
+checksum = "c7342d5883fbccae1cc37a2353b09c87c9b0f3afd73f5fb9bba687a1f733b029"
 dependencies = [
  "unicode-xid",
 ]
@@ -751,8 +772,7 @@ checksum = "71d301d4193d031abdd79ff7e3dd721168a9572ef3fe51a1517aba235bd8f86e"
 [[package]]
 name = "sailfish"
 version = "0.3.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "816920a08514d9741242b3efe70c16c350ed548bc4a5ba03426e56faf9d45f77"
+source = "git+https://github.com/jdrouet/sailfish?rev=7d2b59247eaab10b67311d6c1c7d50a7d751d791#7d2b59247eaab10b67311d6c1c7d50a7d751d791"
 dependencies = [
  "itoap",
  "ryu",
@@ -763,8 +783,7 @@ dependencies = [
 [[package]]
 name = "sailfish-compiler"
 version = "0.3.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4276e7b848bde8e7813d534f014bc35ce5acd2b9e2b6b075727113fcf478ba63"
+source = "git+https://github.com/jdrouet/sailfish?rev=7d2b59247eaab10b67311d6c1c7d50a7d751d791#7d2b59247eaab10b67311d6c1c7d50a7d751d791"
 dependencies = [
  "filetime",
  "home",
@@ -778,8 +797,7 @@ dependencies = [
 [[package]]
 name = "sailfish-macros"
 version = "0.3.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6bba2458ef07ae12c9aed2edb866c3db2f9c21cf19a2c3f2613b2982bc1a4a46"
+source = "git+https://github.com/jdrouet/sailfish?rev=7d2b59247eaab10b67311d6c1c7d50a7d751d791#7d2b59247eaab10b67311d6c1c7d50a7d751d791"
 dependencies = [
  "proc-macro2",
  "sailfish-compiler",
@@ -1073,12 +1091,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "vcpkg"
-version = "0.2.15"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "accd4ea62f7bb7a82fe23066fb0957d48ef677f6eeb8215f372f52e48bb32426"
-
-[[package]]
 name = "version_check"
 version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1127,13 +1139,14 @@ checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 [[package]]
 name = "xitca-http"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/xitca-web.git?rev=cce3eee576a9b303a71d4654a6c922402b5fd4f3#cce3eee576a9b303a71d4654a6c922402b5fd4f3"
+source = "git+https://github.com/fakeshadow/xitca-web.git?rev=59827177f6c319c6fa9940fe5f146754fff90aad#59827177f6c319c6fa9940fe5f146754fff90aad"
 dependencies = [
  "futures-core",
  "http",
  "httparse",
  "httpdate",
  "itoa",
+ "matchit",
  "pin-project-lite",
  "socket2",
  "tokio",
@@ -1145,7 +1158,7 @@ dependencies = [
 [[package]]
 name = "xitca-http-codegen"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/xitca-web.git?rev=cce3eee576a9b303a71d4654a6c922402b5fd4f3#cce3eee576a9b303a71d4654a6c922402b5fd4f3"
+source = "git+https://github.com/fakeshadow/xitca-web.git?rev=59827177f6c319c6fa9940fe5f146754fff90aad#59827177f6c319c6fa9940fe5f146754fff90aad"
 dependencies = [
  "quote",
  "syn",
@@ -1154,7 +1167,7 @@ dependencies = [
 [[package]]
 name = "xitca-io"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/xitca-web.git?rev=cce3eee576a9b303a71d4654a6c922402b5fd4f3#cce3eee576a9b303a71d4654a6c922402b5fd4f3"
+source = "git+https://github.com/fakeshadow/xitca-web.git?rev=59827177f6c319c6fa9940fe5f146754fff90aad#59827177f6c319c6fa9940fe5f146754fff90aad"
 dependencies = [
  "bytes",
  "tokio",
@@ -1163,7 +1176,7 @@ dependencies = [
 [[package]]
 name = "xitca-server"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/xitca-web.git?rev=cce3eee576a9b303a71d4654a6c922402b5fd4f3#cce3eee576a9b303a71d4654a6c922402b5fd4f3"
+source = "git+https://github.com/fakeshadow/xitca-web.git?rev=59827177f6c319c6fa9940fe5f146754fff90aad#59827177f6c319c6fa9940fe5f146754fff90aad"
 dependencies = [
  "futures-core",
  "num_cpus",
@@ -1176,7 +1189,7 @@ dependencies = [
 [[package]]
 name = "xitca-service"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/xitca-web.git?rev=cce3eee576a9b303a71d4654a6c922402b5fd4f3#cce3eee576a9b303a71d4654a6c922402b5fd4f3"
+source = "git+https://github.com/fakeshadow/xitca-web.git?rev=59827177f6c319c6fa9940fe5f146754fff90aad#59827177f6c319c6fa9940fe5f146754fff90aad"
 
 [[package]]
 name = "xitca-web"
@@ -1186,6 +1199,7 @@ dependencies = [
  "atoi",
  "core_affinity",
  "diesel",
+ "diesel-async",
  "futures-util",
  "mimalloc",
  "rand",
@@ -1199,13 +1213,13 @@ dependencies = [
  "xitca-http-codegen",
  "xitca-server",
  "xitca-service",
- "xitca-web 0.1.0 (git+https://github.com/fakeshadow/xitca-web.git?rev=cce3eee576a9b303a71d4654a6c922402b5fd4f3)",
+ "xitca-web 0.1.0 (git+https://github.com/fakeshadow/xitca-web.git?rev=59827177f6c319c6fa9940fe5f146754fff90aad)",
 ]
 
 [[package]]
 name = "xitca-web"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/xitca-web.git?rev=cce3eee576a9b303a71d4654a6c922402b5fd4f3#cce3eee576a9b303a71d4654a6c922402b5fd4f3"
+source = "git+https://github.com/fakeshadow/xitca-web.git?rev=59827177f6c319c6fa9940fe5f146754fff90aad#59827177f6c319c6fa9940fe5f146754fff90aad"
 dependencies = [
  "futures-core",
  "xitca-http",

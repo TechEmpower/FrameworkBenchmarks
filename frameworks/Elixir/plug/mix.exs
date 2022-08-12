@@ -4,8 +4,8 @@ defmodule FrameworkBenchmarks.MixProject do
   def project do
     [
       app: :framework_benchmarks,
-      version: "0.1.0",
-      elixir: "~> 1.9",
+      version: "1.1.0",
+      elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -22,13 +22,12 @@ defmodule FrameworkBenchmarks.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:plug_cowboy, "~> 2.0"},
-      {:eljiffy, "~> 1.3.0"},
-      {:ecto_sql, "~> 3.0"},
-      {:postgrex, ">= 0.0.0"},
-      {:cachex, "~> 3.2"},
-      {:phoenix_html, "~> 2.13"},
-      {:ucol, "~> 2.0"}
+      {:plug_cowboy, "~> 2.5"},
+      {:eljiffy, "~> 1.3"},
+      {:ecto_sql, "~> 3.8"},
+      {:postgrex, "~> 0.16.3"},
+      {:cachex, "~> 3.4"},
+      {:phoenix_html, "~> 3.2"}
     ]
   end
 end

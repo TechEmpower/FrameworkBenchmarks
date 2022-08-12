@@ -9,9 +9,9 @@ This is the Blade portion of a [benchmarking test suite](../) comparing a variet
 
 ## Infrastructure Software Versions
 
-* [Blade 2.0.12.ALPHA](https://github.com/biezhi/blade)
+* [Blade 2.1.2.RELEASE](https://github.com/lets-blade/blade)
 * [Java OpenJDK 1.8](http://openjdk.java.net/)
-* [HikariCP 3.2.0](https://github.com/brettwooldridge/HikariCP)
+* [HikariCP 4.0.3](https://github.com/brettwooldridge/HikariCP)
 
 ## Test URLs
 

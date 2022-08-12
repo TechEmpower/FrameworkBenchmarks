@@ -1,0 +1,45 @@
+{
+  "framework": "aioworkers",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "fortune_url": "/fortunes",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "framework": "aioworkers",
+      "language": "Python",
+      "flavor": "Python3",
+      "platform": "None",
+      "webserver": "aioworkers.net.web",
+      "os": "Linux",
+      "orm": "Raw",
+      "database_os": "Linux",
+      "database": "Postgres",
+      "display_name": "aioworkers",
+      "notes": ""
+    },
+    "pypy": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "framework": "aioworkers",
+      "language": "Python",
+      "flavor": "PyPy3",
+      "platform": "None",
+      "webserver": "aioworkers.net.web",
+      "os": "Linux",
+      "orm": "Raw",
+      "database_os": "Linux",
+      "database": "Postgres",
+      "display_name": "aioworkers",
+      "notes": ""
+    }
+  }]
+}

@@ -13,7 +13,7 @@
 ## Important Libraries
 The tests were run with:
 * [Java OpenJDK 16](https://openjdk.java.net/)
-* [Inverno 1.2.1](https://inverno.io)
+* [Inverno 1.4.1](https://inverno.io)
 
 ## Test URLs
 ### JSON

@@ -7,26 +7,31 @@ use std::cmp;
 use std::collections::HashMap;
 use std::fmt::Write;
 use std::io;
+use std::thread::available_parallelism;
 
+use anyhow::Error;
+use async_trait::async_trait;
 use futures::stream::futures_unordered::FuturesUnordered;
 use futures::TryStreamExt;
+use once_cell::sync::OnceCell;
 use rand::distributions::{Distribution, Uniform};
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
 use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
+use salvo::routing::FlowCtrl;
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{self, Client, NoTls, Statement};
-use async_trait::async_trait;
 
 mod models;
 mod server;
 use models::*;
 
 const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
+static CACHED_WORLDS: OnceCell<Vec<World>> = OnceCell::new();
 type DbResult<T> = Result<T, tokio_postgres::Error>;
 
-pub struct PgConnection {
+struct PgConnection {
     client: Client,
     fortune: Statement,
     world: Statement,
@@ -173,91 +178,115 @@ markup::define! {
         }
     }
 }
-struct WorldHandler{
+struct WorldHandler {
     conn: PgConnection,
 }
 impl WorldHandler {
     async fn new() -> Self {
         Self {
             conn: PgConnection::create(DB_URL)
-            .await
-            .expect(&format!("Error connecting to {}", &DB_URL))
+                .await
+                .expect(&format!("Error connecting to {}", &DB_URL)),
         }
     }
 }
 #[async_trait]
 impl Handler for WorldHandler {
-    async fn handle(&self, _req: &mut Request, _depot: &mut Depot, res: &mut Response) {
+    async fn handle(&self, _req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
         let world = self.conn.get_world().await.unwrap();
-        res.render_json(&world);
+        res.render(Json(world));
     }
 }
-struct WorldsHandler{
+struct WorldsHandler {
     conn: PgConnection,
 }
 impl WorldsHandler {
     async fn new() -> Self {
         Self {
             conn: PgConnection::create(DB_URL)
-            .await
-            .expect(&format!("Error connecting to {}", &DB_URL))
+                .await
+                .expect(&format!("Error connecting to {}", &DB_URL)),
         }
     }
 }
 #[async_trait]
 impl Handler for WorldsHandler {
-    async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response) {
-        let count = req.get_query::<u16>("q").unwrap_or(1);
+    async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
+        let count = req.query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
         let worlds = self.conn.get_worlds(count).await.unwrap();
-        res.render_json(&worlds);
+        res.render(Json(worlds));
     }
 }
-struct UpdatesHandler{
+struct UpdatesHandler {
     conn: PgConnection,
 }
 impl UpdatesHandler {
     async fn new() -> Self {
         Self {
             conn: PgConnection::create(DB_URL)
-            .await
-            .expect(&format!("Error connecting to {}", &DB_URL))
+                .await
+                .expect(&format!("Error connecting to {}", &DB_URL)),
         }
     }
 }
 #[async_trait]
 impl Handler for UpdatesHandler {
-    async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response) {
-        let count = req.get_query::<u16>("q").unwrap_or(1);
+    async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
+        let count = req.query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
         let worlds = self.conn.update(count).await.unwrap();
-        res.render_json(&worlds);
+        res.render(Json(worlds));
     }
 }
-struct FortunesHandler{
+struct FortunesHandler {
     conn: PgConnection,
 }
 impl FortunesHandler {
     async fn new() -> Self {
         Self {
             conn: PgConnection::create(DB_URL)
-            .await
-            .expect(&format!("Error connecting to {}", &DB_URL))
+                .await
+                .expect(&format!("Error connecting to {}", &DB_URL)),
         }
     }
 }
 #[async_trait]
 impl Handler for FortunesHandler {
-    async fn handle(&self, _req: &mut Request, _depot: &mut Depot, res: &mut Response) {
+    async fn handle(&self, _req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         let mut body = String::new();
         write!(&mut body, "{}", self.conn.tell_fortune().await.unwrap()).unwrap();
-
         res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-        res.render_html_text(&body);
+        res.render(Text::Html(body));
     }
+}
+
+#[handler]
+async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
+    let count = req.query::<usize>("q").unwrap_or(1);
+    let count = cmp::min(500, cmp::max(1, count));
+    let mut worlds = Vec::with_capacity(count);
+    let mut rng = SmallRng::from_entropy();
+    for _ in 0..count {
+        let idx = rng.gen_range(0..10_000);
+        unsafe {
+            let w = CACHED_WORLDS.get_unchecked().get(idx).unwrap();
+            worlds.push(w);
+        }
+    }
+    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
+    res.render(Json(worlds));
+    Ok(())
+}
+
+async fn populate_cache() -> Result<(), Error> {
+    let conn = PgConnection::create(DB_URL).await?;
+    let worlds = conn.get_worlds(10_000).await?;
+    CACHED_WORLDS.set(worlds).unwrap();
+    Ok(())
 }
 
 fn main() {
@@ -265,7 +294,10 @@ fn main() {
         .enable_all()
         .build()
         .unwrap();
-    for _ in 1..num_cpus::get() {
+    rt.block_on(async {
+        populate_cache().await.expect("error cache worlds");
+    });
+    for _ in 1..available_parallelism().map(|n| n.get()).unwrap_or(16) {
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
                 .enable_all()
@@ -274,16 +306,17 @@ fn main() {
             rt.block_on(serve());
         });
     }
+    println!("Started http server: 127.0.0.1:8080");
     rt.block_on(serve());
 }
 
 async fn serve() {
-    println!("Started http server: 127.0.0.1:8080");
     let router = Router::new()
-        .push(Router::new().path("db").get(WorldHandler::new().await))
-        .push(Router::new().path("fortunes").get(FortunesHandler::new().await))
-        .push(Router::new().path("queries").get(WorldsHandler::new().await))
-        .push(Router::new().path("updates").get(UpdatesHandler::new().await));
+        .push(Router::with_path("db").get(WorldHandler::new().await))
+        .push(Router::with_path("fortunes").get(FortunesHandler::new().await))
+        .push(Router::with_path("queries").get(WorldsHandler::new().await))
+        .push(Router::with_path("cached_queries").get(cached_queries))
+        .push(Router::with_path("updates").get(UpdatesHandler::new().await));
 
     server::builder().serve(Service::new(router)).await.unwrap();
 }

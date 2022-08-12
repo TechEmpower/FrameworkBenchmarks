@@ -1,4 +1,15 @@
+version: '2.7'
+
+rpc:
+  listen: tcp://127.0.0.1:6001
+
+server:
+  command: "php app.php"
+  relay: pipes
+
 http:
-  address: :8080
-  workers:
-    command: "php app.php"
+  address: 0.0.0.0:8080
+
+logs:
+  mode: production
+  level: error

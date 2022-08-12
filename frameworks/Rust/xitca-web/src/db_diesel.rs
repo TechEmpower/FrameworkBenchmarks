@@ -1,12 +1,11 @@
-use std::{error::Error, fmt, future::Future, io, time::Duration};
+use std::{cell::RefCell, error::Error, fmt, future::Future, io, time::Duration};
 
-use diesel::prelude::*;
+use diesel::prelude::{ConnectionError, ExpressionMethods, QueryDsl};
+use diesel_async::{AsyncConnection, AsyncPgConnection, RunQueryDsl};
+use futures_util::stream::{FuturesUnordered, TryStreamExt};
 use rand::{rngs::SmallRng, Rng, SeedableRng};
 use tang_rs::{Manager, ManagerFuture, ManagerTimeout, Pool};
-use tokio::{
-    task::spawn_blocking,
-    time::{sleep, Sleep},
-};
+use tokio::time::{sleep, Sleep};
 
 use super::ser::{Fortune, Fortunes, World};
 
@@ -15,14 +14,17 @@ type DbResult<T> = Result<T, Box<dyn Error + Send + Sync + 'static>>;
 pub struct DieselPoolManager(String);
 
 impl Manager for DieselPoolManager {
-    type Connection = (PgConnection, SmallRng);
+    type Connection = AsyncPgConnection;
     type Error = DieselPoolError;
     type Timeout = Sleep;
     type TimeoutError = ();
 
     fn connect(&self) -> ManagerFuture<Result<Self::Connection, Self::Error>> {
-        let conn = PgConnection::establish(self.0.as_str());
-        Box::pin(async move { Ok((conn?, SmallRng::from_entropy())) })
+        let url = self.0.clone();
+        Box::pin(async move {
+            let conn = AsyncPgConnection::establish(url.as_str()).await?;
+            Ok(conn)
+        })
     }
 
     fn is_valid<'a>(
@@ -85,8 +87,10 @@ impl From<()> for DieselPoolError {
     }
 }
 
-#[derive(Clone)]
-pub struct DieselPool(Pool<DieselPoolManager>);
+pub struct DieselPool {
+    rng: RefCell<SmallRng>,
+    pool: Pool<DieselPoolManager>,
+}
 
 pub async fn create(config: &str) -> io::Result<DieselPool> {
     let pool = tang_rs::Builder::new()
@@ -99,98 +103,108 @@ pub async fn create(config: &str) -> io::Result<DieselPool> {
         .await
         .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
 
-    Ok(DieselPool(pool))
+    Ok(DieselPool {
+        rng: RefCell::new(SmallRng::from_entropy()),
+        pool,
+    })
 }
 
 impl DieselPool {
     pub async fn get_world(&self) -> DbResult<World> {
-        let mut conn = self.0.get_owned().await?;
+        use crate::schema::world::dsl::*;
 
-        spawn_blocking(move || {
-            use crate::schema::world::dsl::*;
+        let mut conn = self.pool.get().await?;
 
-            let (c, rng) = &mut *conn;
+        let random_id = self.rng.borrow_mut().gen_range(1..10_001);
 
-            let random_id = rng.gen_range(1..10_001);
-            let w = world
-                .filter(id.eq(random_id))
-                .load::<World>(c)?
-                .pop()
-                .unwrap();
+        let w = world
+            .filter(id.eq(random_id))
+            .load::<World>(&mut *conn)
+            .await?
+            .pop()
+            .unwrap();
 
-            Ok(w)
-        })
-        .await?
+        Ok(w)
     }
 
     pub async fn get_worlds(&self, num: u16) -> DbResult<Vec<World>> {
-        let mut conn = self.0.get_owned().await?;
+        use crate::schema::world::dsl::*;
 
-        spawn_blocking(move || {
-            use crate::schema::world::dsl::*;
+        let worlds = {
+            let mut conn = self.pool.get().await?;
 
-            let (c, rng) = &mut *conn;
-
+            let mut rng = self.rng.borrow_mut();
             (0..num)
                 .map(|_| {
-                    let w_id = rng.gen_range(1..10_001);
-                    let w = world.filter(id.eq(w_id)).load::<World>(c)?.pop().unwrap();
-                    Ok(w)
+                    let w_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+                    let fut = world.filter(id.eq(w_id)).load::<World>(&mut *conn);
+
+                    async {
+                        let w = fut.await?.pop().unwrap();
+                        Ok(w)
+                    }
                 })
-                .collect()
-        })
-        .await?
+                .collect::<FuturesUnordered<_>>()
+        };
+
+        worlds.try_collect().await
     }
 
     pub async fn update(&self, num: u16) -> DbResult<Vec<World>> {
-        let mut conn = self.0.get_owned().await?;
+        use crate::schema::world::dsl::*;
 
-        spawn_blocking(move || {
-            use crate::schema::world::dsl::*;
+        let worlds = {
+            let mut conn = self.pool.get().await?;
 
-            let (c, rng) = &mut *conn;
-
-            let mut worlds = (0..num)
+            let mut rng = self.rng.borrow_mut();
+            (0..num)
                 .map(|_| {
-                    let w_id: i32 = rng.gen_range(1..10_001);
-                    let mut w = world.filter(id.eq(w_id)).load::<World>(c)?.pop().unwrap();
-                    w.randomnumber = rng.gen_range(1..10_001);
-                    Ok(w)
+                    let w_id = rng.gen_range::<i32, _>(1..10_001);
+                    let new_id = rng.gen_range::<i32, _>(1..10_001);
+
+                    let fut = world.filter(id.eq(w_id)).load::<World>(&mut *conn);
+
+                    async move {
+                        let mut w = fut.await?.pop().unwrap();
+                        w.randomnumber = new_id;
+                        DbResult::Ok(w)
+                    }
                 })
-                .collect::<DbResult<Vec<_>>>()?;
+                .collect::<FuturesUnordered<_>>()
+        };
 
-            worlds.sort_by_key(|w| w.id);
+        let mut worlds = worlds.try_collect::<Vec<_>>().await?;
 
-            c.transaction::<_, diesel::result::Error, _>(|| {
-                for w in &worlds {
-                    diesel::update(world)
-                        .filter(id.eq(w.id))
-                        .set(randomnumber.eq(w.randomnumber))
-                        .execute(c)?;
-                }
-                Ok(())
-            })?;
+        worlds.sort_by_key(|w| w.id);
 
-            Ok(worlds)
-        })
-        .await?
+        self.pool
+            .get()
+            .await?
+            .transaction(move |conn| {
+                Box::pin(async move {
+                    for w in &worlds {
+                        diesel::update(world)
+                            .filter(id.eq(w.id))
+                            .set(randomnumber.eq(w.randomnumber))
+                            .execute(conn)
+                            .await?;
+                    }
+                    Ok(worlds)
+                })
+            })
+            .await
     }
 
     pub async fn tell_fortune(&self) -> DbResult<Fortunes> {
-        let mut conn = self.0.get_owned().await?;
+        use crate::schema::fortune::dsl::*;
 
-        spawn_blocking(move || {
-            use crate::schema::fortune::dsl::*;
+        let mut conn = self.pool.get().await?;
 
-            let (c, _) = &mut *conn;
+        let mut items = fortune.load::<Fortune>(&mut *conn).await?;
 
-            let mut items = fortune.load::<Fortune>(c)?;
+        items.push(Fortune::new(0, "Additional fortune added at request time."));
+        items.sort_by(|it, next| it.message.cmp(&next.message));
 
-            items.push(Fortune::new(0, "Additional fortune added at request time."));
-            items.sort_by(|it, next| it.message.cmp(&next.message));
-
-            Ok(Fortunes::new(items))
-        })
-        .await?
+        Ok(Fortunes::new(items))
     }
 }

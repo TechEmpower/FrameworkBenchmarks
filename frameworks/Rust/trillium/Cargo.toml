@@ -1,0 +1,27 @@
+[package]
+name = "trillium-techempower"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+askama = "0.11.1"
+fastrand = "1.7.0"
+futures-lite = "1.12.0"
+futures-util = "0.3.21"
+serde = { version = "1.0.136", features = ["derive"] }
+serde_json = "1.0.79"
+trillium = "0.2.2"
+trillium-api = "0.1.0"
+trillium-askama = "0.3.0"
+trillium-async-std = "0.2.0"
+trillium-logger = "0.4.0"
+trillium-router = "0.3.2"
+
+[dependencies.sea-orm]
+version = "0.6.0"
+default-features = false
+features = ["runtime-async-std-native-tls", "sqlx-postgres", "macros"]
+
+[profile.release]
+panic = "abort"
+lto = "fat"
