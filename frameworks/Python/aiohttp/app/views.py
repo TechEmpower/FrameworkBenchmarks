@@ -8,7 +8,7 @@ import ujson
 from aiohttp.web import Response, json_response
 from sqlalchemy import select
 
-from .models import sa_fortunes, sa_worlds, Fortune, World
+from .models import sa_fortunes, sa_worlds, Fortune, World #
 
 ADDITIONAL_FORTUNE_ORM = Fortune(id=0, message='Additional fortune added at request time.')
 ADDITIONAL_FORTUNE_ROW = {'id': 0, 'message': 'Additional fortune added at request time.'}
