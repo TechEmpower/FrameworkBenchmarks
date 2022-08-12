@@ -85,10 +85,15 @@ async def multiple_database_queries_raw(request):
 
     ids = [randint(1, 10000) for _ in range(num_queries)]
 
+    result = []
     async with request.app['pg'].acquire() as conn:
         stmt = await conn.prepare(READ_ROW_SQL)
-        nums = await asyncio.gather(*(stmt.fetchval(i) for i in ids))
-        return json_response([{'id': i, 'randomNumber': n} for i, n in zip(ids, nums)])
+        for id_ in ids:
+            result.append({
+                'id': id_,
+                'randomNumber': await stmt.fetchval(id_),
+            })
+    return json_response(result)
 
 
 async def fortunes(request):
@@ -126,8 +131,8 @@ async def updates(request):
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with request.app['db_session'].begin() as sess:
-        worlds = await asyncio.gather(*(sess.get(World, i, populate_existing=True) for i, _ in updates))
-        for world, (_, number) in zip(worlds, updates):
+        db_worlds = await asyncio.gather(*(sess.get(World, i, populate_existing=True) for i, _ in updates))
+        for world, (_, number) in zip(db_worlds, updates):
             world.randomnumber = number
     return json_response(worlds)
 
@@ -142,7 +147,9 @@ async def updates_raw(request):
 
     async with request.app['pg'].acquire() as conn:
         stmt = await conn.prepare(READ_ROW_SQL)
-        await asyncio.gather(*(stmt.fetchval(i) for i, _ in updates))
+        for id_, _ in updates:
+            # the result of this is the int previous random number which we don't actually use
+            await stmt.fetchval(id_)
         await conn.executemany(WRITE_ROW_SQL, updates)
 
     return json_response(worlds)
