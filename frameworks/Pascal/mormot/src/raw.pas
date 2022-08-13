@@ -33,6 +33,7 @@ uses
   mormot.core.mustache,
   mormot.orm.core,
   mormot.orm.sql,
+  mormot.db.core,
   mormot.db.raw.sqlite3,
   mormot.db.raw.sqlite3.static,
   {$ifdef USE_SQLITE3}
@@ -160,6 +161,7 @@ begin
   // Use world table as in other implementations.
   OrmMapExternal(fModel, TOrmCachedWorld, fDbPool, 'world');
   fStore := TRestServerDB.Create(fModel, SQLITE_MEMORY_DATABASE_NAME);
+  fStore.NoAjaxJson := true;
   {$ifdef USE_SQLITE3}
   GenerateDB;
   {$else}
@@ -382,7 +384,7 @@ var
 begin
   cnt := getQueriesParamValue(ctxt);
   getRandomWorlds(cnt, res);
-  if length(res) = 0 then
+  if res = nil then
     exit(HTTP_SERVERERROR);
   ctxt.OutContentType := JSON_CONTENT_TYPE;
   ctxt.OutContent := SaveJson(res, TypeInfo(TWorlds));
@@ -426,7 +428,6 @@ var
   list: TOrmFortunes;
   new: TOrmFortune;
   arr: TDynArray;
-  data: TDocVariantData;
 begin
   result := HTTP_SERVERERROR;
   arr.Init(TypeInfo(TOrmFortunes), list);
@@ -436,8 +437,7 @@ begin
       new.Message := FORTUNES_MESSAGE;
       arr.Add(new);
       arr.Sort(OrmFortuneCompareByMessage);
-      data.InitArrayFrom(arr, JSON_FAST);
-      ctxt.OutContent := fTemplate.Render(variant(data));
+      ctxt.OutContent := fTemplate.RenderDataArray(arr);
       ctxt.OutContentType := HTML_CONTENT_TYPE;
       result := HTTP_SUCCESS;
     finally
@@ -457,13 +457,13 @@ var
   list: TFortunes;
   f: TFortune;
   arr: TDynArray;
-  data: TDocVariantData;
+  n: integer;
 begin
   result := HTTP_SERVERERROR;
   conn := fDbPool.ThreadSafeConnection;
   stmt := conn.NewStatementPrepared(FORTUNES_SQL, true, true);
   stmt.ExecutePrepared;
-  arr.Init(TypeInfo(TFortunes), list);
+  arr.Init(TypeInfo(TFortunes), list, @n);
   while stmt.Step do
   begin
     f.id := stmt.ColumnInt(0);
@@ -474,8 +474,7 @@ begin
   f.message := FORTUNES_MESSAGE;
   arr.Add(f);
   arr.Sort(FortuneCompareByMessage);
-  data.InitArrayFrom(arr, JSON_FAST);
-  ctxt.OutContent := fTemplate.Render(_ObjFast(['list', variant(data)]));
+  ctxt.OutContent := fTemplate.RenderDataArray(arr);
   ctxt.OutContentType := HTML_CONTENT_TYPE;
   result := HTTP_SUCCESS;
 end;
@@ -490,7 +489,8 @@ begin
   result := HTTP_SERVERERROR;
   cnt := getQueriesParamValue(ctxt);
   SetLength(res, cnt);
-  b := TRestBatch.Create(fStore.ORM, TOrmWorld, {transrows=}0);
+  b := TRestBatch.Create(fStore.ORM, TOrmWorld, {transrows=}0,
+    [boExtendedJson, boNoModelEncoding, boPutNoCacheFlush]);
   w := TOrmWorld.Create;
   try
     for i := 0 to cnt - 1 do
@@ -558,7 +558,9 @@ begin
   TSynLog.Family.HighResolutionTimestamp := true;
   TSynLog.Family.AutoFlushTimeOut := 1;
   {$else}
-  // TSynLog.Family.Level := LOG_STACKTRACE; // minimal debug logs on fatal errors
+  {$ifdef USE_SQLITE3}
+  TSynLog.Family.Level := LOG_STACKTRACE; // minimal debug logs on fatal errors
+  {$endif USE_SQLITE3}
   {$endif WITH_LOGS}
   TSynLog.Family.PerThreadLog := ptIdentifiedInOneFile;
 
@@ -590,7 +592,7 @@ begin
     FpPause;
     {$endif USE_SQLITE3}
     //TSynLog.Family.Level := LOG_VERBOSE; // enable shutdown logs for debug
-    writeln(ObjectToJsonDebug(rawServer.fHttpServer));
+    writeln(ObjectToJsonDebug(rawServer.fHttpServer, [woDontStoreVoid, woHumanReadable]));
     {$ifdef FPC_X64MM}
     WriteHeapStatus(' ', 16, 8, {compileflags=}true);
     {$endif FPC_X64MM}
