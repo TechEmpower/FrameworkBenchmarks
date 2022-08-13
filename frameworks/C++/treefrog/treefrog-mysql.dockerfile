@@ -5,10 +5,11 @@ ENV DEBCONF_NOWARNINGS yes
 ENV TFVER=2.4.0
 
 RUN apt-get update -yqq && apt-get upgrade -yq && \
-    apt-get install -yqq --no-install-recommends software-properties-common unzip wget \
+    apt-get install -yqq --no-install-recommends software-properties-common unzip wget libjemalloc-dev \
     qmake6 qt6-base-dev qt6-base-dev-tools qt6-tools-dev-tools qt6-declarative-dev libqt6sql6-mysql \
     libqt6sql6-psql libqt6sql6-odbc libqt6sql6-sqlite libqt6core6 libqt6qml6 libqt6xml6 libpq5 libodbc1 \
     libmongoc-dev libbson-dev gcc g++ clang make cmake redis-server
+RUN rm -f /usr/bin/qmake; ln -sf /usr/bin/qmake6 /usr/bin/qmake
 
 WORKDIR /usr/src
 RUN wget -q https://github.com/treefrogframework/treefrog-framework/archive/v${TFVER}.tar.gz
