@@ -1,21 +1,21 @@
-FROM buildpack-deps:focal
+FROM buildpack-deps:jammy
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NOWARNINGS yes
-ENV TFVER=2.2.0
+ENV TFVER=2.4.0
 
-RUN apt-get update -yqq && apt-get upgrade -yq && apt-get install -yqq --no-install-recommends \
-    software-properties-common unzip wget make cmake gcc clang libjemalloc-dev qt5-qmake qt5-default qtbase5-dev \
-    qtbase5-dev-tools libqt5sql5 libqt5sql5-mysql libqt5sql5-psql libqt5qml5 libqt5xml5 \
-    qtdeclarative5-dev libqt5quick5 libqt5quickparticles5 libqt5gui5 libqt5printsupport5 \
-    libqt5widgets5 libqt5opengl5-dev libqt5quicktest5 libqt5sql5-sqlite libsqlite3-dev libmongoc-dev libbson-dev \
-    redis-server
+RUN apt-get update -yqq && apt-get upgrade -yq && \
+    apt-get install -yqq --no-install-recommends software-properties-common unzip wget libjemalloc-dev \
+    qmake6 qt6-base-dev qt6-base-dev-tools qt6-tools-dev-tools qt6-declarative-dev libqt6sql6-mysql \
+    libqt6sql6-psql libqt6sql6-odbc libqt6sql6-sqlite libqt6core6 libqt6qml6 libqt6xml6 libpq5 libodbc1 \
+    libmongoc-dev libbson-dev gcc g++ clang make cmake redis-server
+RUN rm -f /usr/bin/qmake; ln -sf /usr/bin/qmake6 /usr/bin/qmake
 
 WORKDIR /usr/src
 RUN wget -q https://github.com/treefrogframework/treefrog-framework/archive/v${TFVER}.tar.gz
 RUN tar xf v${TFVER}.tar.gz
 RUN cd treefrog-framework-${TFVER} && \
-    ./configure --spec=linux-clang && \
+    ./configure --enable-shared-mongoc --spec=linux-clang && \
     cd src && \
     make -j4 && \
     make install && \
