@@ -179,7 +179,7 @@ fn main() {
     );
     let size = available_parallelism().map(|n| n.get()).unwrap_or(16);
     DB_POOL
-        .set(build_pool(&DB_URL, size as u32).expect(&format!("Error connecting to {}", &DB_URL)))
+        .set(build_pool(DB_URL, size as u32).unwrap_or_else(|_| panic!("Error connecting to {}", &DB_URL)))
         .ok();
     populate_cache().expect("error cache worlds");
     for _ in 1..size {
