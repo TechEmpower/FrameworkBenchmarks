@@ -120,20 +120,11 @@ func main() {
 			numOf.Queries = 500
 		}
 
-		worlds := make([]World, numOf.Queries, numOf.Queries) // prealloc
-
-		// original submission with go routines, seems faster then without...
-		channel := make(chan World, numOf.Queries)
-
+		worlds := make([]World, numOf.Queries)
 		for i := 0; i < numOf.Queries; i++ {
-			go func() { channel <- getWorld(db) }()
+			worlds[i] = getWorld(db)
 		}
-
-		for i := 0; i < numOf.Queries; i++ {
-			worlds[i] = <-channel
-		}
-
-		ctx.JSON(200, worlds)
+		ctx.JSON(200, &worlds)
 	})
 	// MULTIPLE UPDATES
 	h.GET("/updates", func(c context.Context, ctx *app.RequestContext) {
@@ -147,10 +138,8 @@ func main() {
 			numOf.Queries = 500
 		}
 
-		worlds := make([]World, numOf.Queries, numOf.Queries) //prealloc
+		worlds := make([]World, numOf.Queries, numOf.Queries) // prealloc
 		var err error = nil
-
-		// ctx.Header("Server", "example") - original submission now using middleware
 
 		for i := 0; i < numOf.Queries; i++ {
 			worlds[i], err = processWorld(db)
