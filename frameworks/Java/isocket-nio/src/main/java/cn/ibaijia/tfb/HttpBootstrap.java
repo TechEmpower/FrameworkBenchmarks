@@ -16,14 +16,13 @@ public class HttpBootstrap {
     private static final Logger logger = LoggerFactory.getLogger(HttpBootstrap.class);
 
     public static void main(String[] args) {
-        DateUtil.start();
         Server server = new Server("0.0.0.0", 8080);
         server.addProtocol(new SimpleHttpProtocol());
         server.setProcessor(new PlanTextProcessor());
         server.setSessionProcessErrorListener((session, o, throwable) -> logger.error("session on process error.", throwable));
         server.setUseDirectBuffer(true);
         server.setUsePool(true);
-        server.setPoolSize(64 * 1024);
+        server.setPoolSize(1 * 1024);
         server.setBuffSize(1 * 1024);
         server.setBacklog(4 * 1024);
         server.start();
