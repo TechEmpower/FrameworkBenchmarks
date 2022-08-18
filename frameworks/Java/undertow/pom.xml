@@ -20,7 +20,7 @@
     <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
     <mustache.version>0.9.10</mustache.version>
     <postgresql.version>42.4.1</postgresql.version>
-    <undertow.version>2.2.18.Final</undertow.version>
+    <undertow.version>2.2.19.Final</undertow.version>
   </properties>
 
   <dependencies>
