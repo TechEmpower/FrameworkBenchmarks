@@ -1,0 +1,19 @@
+{
+    "private": true,
+    "type": "module",
+    "name": "uwebsockets.js",
+    "version": "1.0.0",
+    "main": "src/server.js",
+    "license": "MIT",
+    "scripts": {
+        "dev": "nodemon src/server.js",
+        "start": "node src/clustered.js"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.19"
+    },
+    "dependencies": {
+        "mysql2": "^2.3.3",
+        "uWebSockets.js": "uNetworking/uWebSockets.js#v20.10.0"
+    }
+}
