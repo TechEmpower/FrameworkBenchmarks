@@ -1,5 +1,5 @@
 dependencies {
-    compile project(":core")
+    api project(":core")
 }
 
 apply plugin: 'application'

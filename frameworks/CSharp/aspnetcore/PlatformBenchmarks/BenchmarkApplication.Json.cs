@@ -4,32 +4,31 @@
 using System.Buffers;
 using System.Text.Json;
 
-namespace PlatformBenchmarks
+namespace PlatformBenchmarks;
+
+public partial class BenchmarkApplication
 {
-    public partial class BenchmarkApplication
+    private readonly static uint _jsonPayloadSize = (uint)JsonSerializer.SerializeToUtf8Bytes(new JsonMessage { message = "Hello, World!" }, SerializerContext.JsonMessage).Length;
+
+    private readonly static AsciiString _jsonPreamble =
+        _http11OK +
+        _headerServer + _crlf +
+        _headerContentTypeJson + _crlf +
+        _headerContentLength + _jsonPayloadSize.ToString();
+
+    private static void Json(ref BufferWriter<WriterAdapter> writer, IBufferWriter<byte> bodyWriter)
     {
-        private readonly static uint _jsonPayloadSize = (uint)JsonSerializer.SerializeToUtf8Bytes(new JsonMessage { message = "Hello, World!" }, SerializerContext.JsonMessage).Length;
+        writer.Write(_jsonPreamble);
 
-        private readonly static AsciiString _jsonPreamble =
-            _http11OK +
-            _headerServer + _crlf +
-            _headerContentTypeJson + _crlf +
-            _headerContentLength + _jsonPayloadSize.ToString();
+        // Date header
+        writer.Write(DateHeader.HeaderBytes);
 
-        private static void Json(ref BufferWriter<WriterAdapter> writer, IBufferWriter<byte> bodyWriter)
-        {
-            writer.Write(_jsonPreamble);
+        writer.Commit();
 
-            // Date header
-            writer.Write(DateHeader.HeaderBytes);
+        Utf8JsonWriter utf8JsonWriter = t_writer ??= new Utf8JsonWriter(bodyWriter, new JsonWriterOptions { SkipValidation = true });
+        utf8JsonWriter.Reset(bodyWriter);
 
-            writer.Commit();
-
-            Utf8JsonWriter utf8JsonWriter = t_writer ??= new Utf8JsonWriter(bodyWriter, new JsonWriterOptions { SkipValidation = true });
-            utf8JsonWriter.Reset(bodyWriter);
-
-            // Body
-            JsonSerializer.Serialize(utf8JsonWriter, new JsonMessage { message = "Hello, World!" }, SerializerContext.JsonMessage);        
-        }
+        // Body
+        JsonSerializer.Serialize(utf8JsonWriter, new JsonMessage { message = "Hello, World!" }, SerializerContext.JsonMessage);
     }
 }

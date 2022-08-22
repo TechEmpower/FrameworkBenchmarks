@@ -34,8 +34,7 @@ void SyncPlugin::initAndStart(const Json::Value &config)
                     {
                         auto resp = HttpResponse::newHttpResponse();
                         resp->setBody("Hello, World!");
-                        resp->setContentTypeCodeAndCustomString(
-                            CT_TEXT_PLAIN, "Content-Type: text/plain\r\n");
+                        resp->setContentTypeCode(CT_TEXT_PLAIN);
                         return resp;
                     }
                     break;

@@ -15,7 +15,7 @@
 			"database": "MySQL",
 			"framework": "lumen",
 			"language": "PHP",
-			"flavor": "PHP8",
+			"flavor": "PHP8.1",
 			"orm": "Full",
 			"platform": "FPM/FastCGI",
 			"webserver": "nginx",

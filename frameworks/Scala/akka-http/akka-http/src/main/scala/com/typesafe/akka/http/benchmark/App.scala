@@ -10,7 +10,7 @@ import org.fusesource.scalate.TemplateEngine
 
 import scala.concurrent.ExecutionContext
 
-class App extends Infrastructure with RandomGenerator with MySqlDataStore with PlaintextHandler with JsonHandler with DbHandler
+class App extends Infrastructure with RandomGenerator with MySqlDataStore with JsonHandler with DbHandler
   with QueriesHandler with FortunesHandler with UpdatesHandler with RequestMapping with BenchmarkBootstrap with Templating {
 
   val templateEngine = new TemplateEngine()

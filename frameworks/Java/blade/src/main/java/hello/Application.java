@@ -1,9 +1,9 @@
 package hello;
 
-import com.blade.Blade;
-import com.blade.mvc.Const;
-import com.blade.mvc.RouteContext;
-import com.blade.mvc.http.StringBody;
+import com.hellokaton.blade.Blade;
+import com.hellokaton.blade.mvc.RouteContext;
+import com.hellokaton.blade.mvc.http.StringBody;
+import com.hellokaton.blade.mvc.BladeConst;
 import hello.model.Fortune;
 import hello.model.Message;
 import hello.model.World;
@@ -12,23 +12,22 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
-import static io.github.biezhi.anima.Anima.select;
-import static io.github.biezhi.anima.Anima.update;
+import static com.hellokaton.anima.Anima.select;
+import static com.hellokaton.anima.Anima.update;
+import static com.hellokaton.blade.mvc.BladeConst.ENV_KEY_REQUEST_LOG;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 /**
  * Blade Application
  *
- * @author biezhi
- * @date 2018/10/17
+ * @author hellokaton
+ * @date 2022/5/10
  */
 public class Application {
 
     private static final StringBody PLAINTEXT      = StringBody.of("Hello, World!");
     private static final String JSON_CONTENT_TYPE  = "application/json";
-    private static final String SERVER_HEADER      = "Server";
-    private static final String SERVER_VALUE       = "Blade-" + Const.VERSION;
     private static final String ADDITIONAL_FORTUNE = "Additional fortune added at request time.";
 
     private static final int DB_ROWS = 10000;
@@ -54,22 +53,24 @@ public class Application {
 
     private static void db(RouteContext ctx) {
         World world = select().from(World.class).byId(generateId());
-        ctx.json(world).contentType(JSON_CONTENT_TYPE).header(SERVER_HEADER, SERVER_VALUE);
+        ctx.contentType(JSON_CONTENT_TYPE)
+                .json(world);
     }
 
     private static void queries(RouteContext ctx) {
-        int queries = getQueries(ctx.fromString("queries", "1"));
+        int queries = getQueries(ctx.query("queries", "1"));
 
         List<Integer> idList = generateIdList(queries);
 
         List<World> worlds = idList.stream()
                 .map(id -> select().from(World.class).byId(id))
                 .collect(toList());
-        ctx.json(worlds).contentType(JSON_CONTENT_TYPE).header(SERVER_HEADER, SERVER_VALUE);
+        ctx.contentType(JSON_CONTENT_TYPE)
+                .json(worlds);
     }
 
     private static void updates(RouteContext ctx) {
-        int queries = getQueries(ctx.fromString("queries", "1"));
+        int queries = getQueries(ctx.query("queries", "1"));
 
         List<Integer> idList = generateIdList(queries);
 
@@ -77,7 +78,8 @@ public class Application {
                 .map(id -> select().from(World.class).byId(id))
                 .peek(Application::updateWorld).collect(toList());
 
-        ctx.json(worlds).contentType(JSON_CONTENT_TYPE).header(SERVER_HEADER, SERVER_VALUE);
+        ctx.contentType(JSON_CONTENT_TYPE)
+                .json(worlds);
     }
 
     private static void updateWorld(World world) {
@@ -98,21 +100,25 @@ public class Application {
         fortunes.sort(comparing(Fortune::getMessage));
 
         ctx.attribute("fortunes", fortunes);
-        ctx.header(SERVER_HEADER, SERVER_VALUE);
         ctx.render("fortunes.html");
     }
 
     public static void main(String[] args) {
-        Blade.of()
-                .get("/json", ctx -> ctx.json(new Message()).contentType(JSON_CONTENT_TYPE)
-                        .header(SERVER_HEADER, SERVER_VALUE))
-                .get("/plaintext", ctx -> ctx.body(PLAINTEXT).contentType("text/plain")
-                        .header(SERVER_HEADER, SERVER_VALUE))
+        Blade.create()
+                .get("/json", ctx ->
+                        ctx.contentType(JSON_CONTENT_TYPE)
+                        .json(new Message())
+                )
+                .get("/plaintext", ctx ->
+                        ctx.contentType("text/plain")
+                        .body(PLAINTEXT)
+                )
                 .get("/db", Application::db)
                 .get("/queries", Application::queries)
                 .get("/updates", Application::updates)
                 .get("/fortunes", Application::fortunes)
                 .disableSession()
+                .setEnv(ENV_KEY_REQUEST_LOG, false)
                 .start(Application.class, args);
     }
 

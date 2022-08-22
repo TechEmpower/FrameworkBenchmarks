@@ -8,7 +8,7 @@ import {
 import { MongoModule } from './mongo/mongo.module';
 import { join } from 'path';
 import { SqlModule } from './sql/sql.module';
-import cluster = require('cluster');
+import cluster from 'cluster'
 import os = require('os');
 
 const port = process.env.PORT || 8080;
@@ -57,7 +57,7 @@ async function bootstrapFastify() {
   await app.listen(8080, '0.0.0.0');
 }
 
-if (cluster.isMaster) {
+if (cluster.isPrimary) {
   const cpus = os.cpus().length;
   for (let i = 0; i < cpus; i++) {
     cluster.fork();

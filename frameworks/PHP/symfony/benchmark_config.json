@@ -65,7 +65,8 @@
       "database_os": "Linux",
       "display_name": "symfony-swoole",
       "notes": "",
-      "versus": "swoole"
+      "versus": "swoole",
+      "tags": ["broken"]
     }
   }]
 }

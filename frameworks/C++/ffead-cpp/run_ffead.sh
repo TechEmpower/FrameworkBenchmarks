@@ -1,16 +1,21 @@
 #!/bin/sh
 
 rm -f /usr/local/lib/libffead-*
-rm -f /usr/local/lib/libte_benc*
+rm -f /usr/local/lib/libt1.so*
+rm -f /usr/local/lib/libt2.so*
+rm -f /usr/local/lib/libt3.so*
+rm -f /usr/local/lib/libt4.so*
+rm -f /usr/local/lib/libt5.so*
 rm -f /usr/local/lib/libinter.so
 rm -f /usr/local/lib/libdinter.so
 
 export FFEAD_CPP_PATH=${IROOT}/$1
 
-ln -s ${FFEAD_CPP_PATH}/lib/libte-benchmark-um.so /usr/local/lib/libte-benchmark-um.so
-ln -s ${FFEAD_CPP_PATH}/lib/libte-benchmark-um-pq.so /usr/local/lib/libte-benchmark-um-pq.so
-ln -s ${FFEAD_CPP_PATH}/lib/libte-benchmark-um-mgr.so /usr/local/lib/libte-benchmark-um-mgr.so
-ln -s ${FFEAD_CPP_PATH}/lib/libte-benchmark-um-pq-async.so /usr/local/lib/libte-benchmark-um-pq-async.so
+ln -s ${FFEAD_CPP_PATH}/lib/libt1.so /usr/local/lib/libt1.so
+ln -s ${FFEAD_CPP_PATH}/lib/libt2.so /usr/local/lib/libt2.so
+ln -s ${FFEAD_CPP_PATH}/lib/libt3.so /usr/local/lib/libt3.so
+ln -s ${FFEAD_CPP_PATH}/lib/libt4.so /usr/local/lib/libt4.so
+ln -s ${FFEAD_CPP_PATH}/lib/libt5.so /usr/local/lib/libt5.so
 ln -s ${FFEAD_CPP_PATH}/lib/libffead-modules.so /usr/local/lib/libffead-modules.so
 ln -s ${FFEAD_CPP_PATH}/lib/libffead-framework.so /usr/local/lib/libffead-framework.so
 ln -s ${FFEAD_CPP_PATH}/lib/libinter.so /usr/local/lib/libinter.so
@@ -45,49 +50,62 @@ service memcached stop
 
 if [ "$3" = "mongo" ]
 then
-	WEB_DIR=$FFEAD_CPP_PATH/web/te-benchmark-um
-	rm -rf web/te-benchmark-um-mgr web/te-benchmark-um-pq web/te-benchmark-um-pq-async
+	WEB_DIR=$FFEAD_CPP_PATH/web/t1
+	rm -rf web/t2 web/t3 web/t4 web/t5
 	cp -f ${WEB_DIR}/config/sdormmongo.xml ${WEB_DIR}/config/sdorm.xml
 elif [ "$3" = "mongo-raw" ]
 then
-	WEB_DIR=$FFEAD_CPP_PATH/web/te-benchmark-um-mgr
-	rm -rf web/te-benchmark-um web/te-benchmark-um-pq web/te-benchmark-um-pq-async
+	WEB_DIR=$FFEAD_CPP_PATH/web/t2
+	rm -rf web/t1 web/t3 web/t4 web/t5
 elif [ "$3" = "mysql" ]
 then
-	WEB_DIR=$FFEAD_CPP_PATH/web/te-benchmark-um
-	rm -rf web/te-benchmark-um-mgr web/te-benchmark-um-pq web/te-benchmark-um-pq-async
+	WEB_DIR=$FFEAD_CPP_PATH/web/t1
+	rm -rf web/t2 web/t3 web/t4 web/t5
 	cp -f ${WEB_DIR}/config/sdormmysql.xml ${WEB_DIR}/config/sdorm.xml
 elif [ "$3" = "postgresql" ]
 then
-	WEB_DIR=$FFEAD_CPP_PATH/web/te-benchmark-um
-	rm -rf web/te-benchmark-um-mgr web/te-benchmark-um-pq web/te-benchmark-um-pq-async
-	cp -f web/te-benchmark-um/config/sdormpostgresql.xml web/te-benchmark-um/config/sdorm.xml
+	WEB_DIR=$FFEAD_CPP_PATH/web/t1
+	rm -rf web/t2 web/t3 web/t4 web/t5
+	cp -f web/t1/config/sdormpostgresql.xml web/t1/config/sdorm.xml
 elif [ "$3" = "postgresql-raw" ]
 then
-	WEB_DIR=$FFEAD_CPP_PATH/web/te-benchmark-um-pq
-	rm -rf web/te-benchmark-um web/te-benchmark-um-mgr web/te-benchmark-um-pq-async
+	WEB_DIR=$FFEAD_CPP_PATH/web/t3
+	rm -rf web/t1 web/t2 web/t4 web/t5
 	sed -i 's|<async>true</async>|<async>false</async>|g' ${WEB_DIR}/config/sdorm.xml
 elif [ "$3" = "postgresql-raw-async" ]
 then
-	WEB_DIR=$FFEAD_CPP_PATH/web/te-benchmark-um-pq-async
-	rm -rf web/te-benchmark-um web/te-benchmark-um-mgr web/te-benchmark-um-pq
+	WEB_DIR=$FFEAD_CPP_PATH/web/t4
+	rm -rf web/t1 web/t2 web/t3 web/t5
+	sed -i 's|<async>false</async>|<async>true</async>|g' ${WEB_DIR}/config/sdorm.xml
+elif [ "$3" = "postgresql-raw-async-qw" ]
+then
+	WEB_DIR=$FFEAD_CPP_PATH/web/t5
+	rm -rf web/t1 web/t2 web/t3 web/t4
 	sed -i 's|<async>false</async>|<async>true</async>|g' ${WEB_DIR}/config/sdorm.xml
 else
-	WEB_DIR=$FFEAD_CPP_PATH/web/te-benchmark-um
-	rm -rf web/te-benchmark-um-mgr web/te-benchmark-um-pq web/te-benchmark-um-pq-async
+	WEB_DIR=$FFEAD_CPP_PATH/web/t1
+	rm -rf web/t2 web/t3 web/t4 web/t5
 fi
 
-if [ "$4" = "memory" ]
+if [ "$5" = "batch" ]
 then
-	cp -f ${WEB_DIR}/config/cachememory.xml ${WEB_DIR}/config/cache.xml
-elif [ "$4" = "redis" ]
+	sed -i 's|<batch>false</batch>|<batch>true</batch>|g' ${WEB_DIR}/config/sdorm.xml
+fi
+
+if [ "$3" != "postgresql-raw-async-qw" ]
 then
-	service redis-server start
-	cp -f ${WEB_DIR}/config/cacheredis.xml ${WEB_DIR}/config/cache.xml
-elif [ "$4" = "memcached" ]
-then
-	service memcached start
-	cp -f ${WEB_DIR}/config/cachememcached.xml ${WEB_DIR}/config/cache.xml
+	if [ "$4" = "memory" ]
+	then
+		cp -f ${WEB_DIR}/config/cachememory.xml ${WEB_DIR}/config/cache.xml
+	elif [ "$4" = "redis" ]
+	then
+		service redis-server start
+		cp -f ${WEB_DIR}/config/cacheredis.xml ${WEB_DIR}/config/cache.xml
+	elif [ "$4" = "memcached" ]
+	then
+		service memcached start
+		cp -f ${WEB_DIR}/config/cachememcached.xml ${WEB_DIR}/config/cache.xml
+	fi
 fi
 
 rm -f rtdcf/*.d rtdcf/*.o 
@@ -101,9 +119,24 @@ chmod 700 resources/*.sh
 chmod 700 tests/*
 chmod 700 rtdcf/*
 
+if [ "$2" = "apache" ]
+then
+	sed -i 's|<pool-size>30</pool-size>|<pool-size>3</pool-size>|g' ${WEB_DIR}/config/sdorm.xml
+	sed -i 's|<pool-size>10</pool-size>|<pool-size>2</pool-size>|g' ${WEB_DIR}/config/cache.xml
+elif [ "$2" = "nginx" ]
+then
+	sed -i 's|<pool-size>30</pool-size>|<pool-size>3</pool-size>|g' ${WEB_DIR}/config/sdorm.xml
+	sed -i 's|<pool-size>10</pool-size>|<pool-size>2</pool-size>|g' ${WEB_DIR}/config/cache.xml
+fi
+
 if [ "$2" = "emb" ]
 then
 	sed -i 's|EVH_SINGLE=false|EVH_SINGLE=true|g' resources/server.prop
+	sed -i 's|REQUEST_HANDLER=RequestReaderHandler|REQUEST_HANDLER=RequestHandler2|g' $FFEAD_CPP_PATH/resources/server.prop
+	if [ "$3" = "postgresql-raw-async-qw" ]
+	then
+		sed -i 's|QUEUED_WRITES=false|QUEUED_WRITES=true|g' $FFEAD_CPP_PATH/resources/server.prop
+	fi
 	for i in $(seq 0 $(($(nproc --all)-1))); do
 		taskset -c $i ./ffead-cpp $FFEAD_CPP_PATH &
 	done
@@ -123,14 +156,10 @@ then
 		sed -i 's|/installs/ffead-cpp-6.0|'/installs/ffead-cpp-6.0-sql'|g' /etc/apache2/apache2.conf
 		sed -i 's|/installs/ffead-cpp-6.0|'/installs/ffead-cpp-6.0-sql'|g' /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/ffead-site.conf
 	fi
-	sed -i 's|<pool-size>30</pool-size>|<pool-size>3</pool-size>|g' web/te-benchmark-um/config/sdorm.xml
-	sed -i 's|<pool-size>10</pool-size>|<pool-size>2</pool-size>|g' web/te-benchmark-um/config/cache.xml
 	apachectl -D FOREGROUND
 elif [ "$2" = "nginx" ]
 then
 	mkdir -p ${IROOT}/nginxfc/logs
-	sed -i 's|<pool-size>30</pool-size>|<pool-size>3</pool-size>|g' web/te-benchmark-um/config/sdorm.xml
-	sed -i 's|<pool-size>10</pool-size>|<pool-size>2</pool-size>|g' web/te-benchmark-um/config/cache.xml
 	if [ "$3" = "mysql" ] || [ "$3" = "postgresql" ]
 	then
 		nginx -g 'daemon off;' -c ${IROOT}/nginx-ffead-sql/conf/nginx.conf
