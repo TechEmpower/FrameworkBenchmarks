@@ -24,4 +24,5 @@ Deno.serve({
     console.error(err);
     Deno.exit(9);
   },
+  port: 8080,
 });
