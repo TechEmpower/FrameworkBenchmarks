@@ -5,7 +5,6 @@ EXPOSE 8080
 WORKDIR /app
 
 USER deno
-ENV DATABASE mongodb
 
 COPY ./src .
 

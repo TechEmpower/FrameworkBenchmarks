@@ -25,4 +25,5 @@ Deno.serve({
     Deno.exit(9);
   },
   port: 8080,
+  hostname: "0.0.0.0",
 });
