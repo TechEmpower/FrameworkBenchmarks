@@ -7,7 +7,11 @@
 (provide
  make-place-tcp@)
 
-(struct place-tcp-listener ())
+(struct place-tcp-listener (sema ch)
+  #:property prop:evt (lambda (self)
+                        (handle-evt
+                         (place-tcp-listener-sema self)
+                         (lambda (_) self))))
 
 (define (make-place-tcp@ accept-ch)
   (unit
@@ -17,11 +21,11 @@
     (define (tcp-abandon-port p)
       (tcp:tcp-abandon-port p))
 
-    (define (tcp-accept _l)
-      (apply values (channel-get accept-ch)))
+    (define (tcp-accept l)
+      (apply values (channel-get (place-tcp-listener-ch l))))
 
-    (define (tcp-accept/enable-break _l)
-      (apply values (sync/enable-break accept-ch)))
+    (define (tcp-accept/enable-break l)
+      (apply values (sync/enable-break (place-tcp-listener-ch l))))
 
     (define (tcp-accept-ready? _l)
       (error 'tcp-accept-ready? "not supported"))
@@ -50,7 +54,17 @@
                         [_backlog 4]
                         [_reuse? #f]
                         [_hostname #f])
-      (place-tcp-listener))
+      (define sema (make-semaphore))
+      (define ch (make-channel))
+      (thread
+       (lambda ()
+         (let loop ()
+           (define data (channel-get accept-ch))
+           (semaphore-post sema)
+           (channel-put ch data)
+           (loop))))
+
+      (place-tcp-listener sema ch))
 
     (define (tcp-listener? l)
       (place-tcp-listener? l))))

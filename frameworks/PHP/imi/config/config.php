@@ -61,18 +61,20 @@ return [
         'defaultPool'   => $isMysql ? 'mysql' : 'pgsql', // 默认连接池
         'connections'   => [
             'mysql' => [
-                'host'        => $host,
-                'username'    => $username,
-                'password'    => $password,
-                'database'    => 'hello_world',
-                'dbClass'     => \Imi\Db\Mysql\Drivers\Mysqli\Driver::class,
+                'host'                        => $host,
+                'username'                    => $username,
+                'password'                    => $password,
+                'database'                    => 'hello_world',
+                'dbClass'                     => \Imi\Db\Mysql\Drivers\Mysqli\Driver::class,
+                'checkStateWhenGetResource'   => false,
             ],
             'pgsql' => [
-                'host'        => $host,
-                'username'    => $username,
-                'password'    => $password,
-                'database'    => 'hello_world',
-                'dbClass'     => \Imi\Pgsql\Db\Drivers\PdoPgsql\Driver::class,
+                'host'                        => $host,
+                'username'                    => $username,
+                'password'                    => $password,
+                'database'                    => 'hello_world',
+                'dbClass'                     => \Imi\Pgsql\Db\Drivers\PdoPgsql\Driver::class,
+                'checkStateWhenGetResource'   => false,
             ],
         ],
     ],
@@ -89,7 +91,6 @@ return [
                     'minResources' => $isMysql ? 16 : 0,
                     'gcInterval'   => 0,
                     'checkStateWhenGetResource' =>  false,
-                    'requestResourceCheckInterval' => 0,
                 ],
             ],
             // resource也可以定义多个连接
@@ -110,7 +111,6 @@ return [
                     // 池子中最少资源数
                     'minResources' => $isMysql ? 0 : 16,
                     'checkStateWhenGetResource' =>  false,
-                    'requestResourceCheckInterval' => 0,
                 ],
             ],
             // resource也可以定义多个连接

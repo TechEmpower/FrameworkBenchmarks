@@ -4,16 +4,32 @@
 
 This is a simple set of benchmarks as part of the TechEmpower Web Framework Benchmarks suite.
 
-Currently the suite only includes plaintext and JSON serialization benchmarks.
+The suite currently includes the plaintext, JSON serialization, single query, multiple query, database updates, and fortunes tests.
 
 All routes are contained within the [Benchmark.kt](sample/src/main/kotlin/benchmark/Benchmark.kt) file.
 
 ## Test URLs
 
-### JSON
-
-http://localhost:8080/json
-
 ### Plaintext
 
 http://localhost:8080/plaintext
+
+### JSON Serialization
+
+http://localhost:8080/json
+
+### Single Query
+
+http://localhost:8080/db
+
+### Multiple Queries
+
+http://localhost:8080/queries
+
+### Database Updates
+
+http://localhost:8080/updates
+
+### Fortunes
+
+http://localhost:8080/fortunes

@@ -111,11 +111,11 @@ pub async fn create(config: &str) -> io::Result<DieselPool> {
 
 impl DieselPool {
     pub async fn get_world(&self) -> DbResult<World> {
+        use crate::schema::world::dsl::*;
+
         let mut conn = self.pool.get().await?;
 
         let random_id = self.rng.borrow_mut().gen_range(1..10_001);
-
-        use crate::schema::world::dsl::*;
 
         let w = world
             .filter(id.eq(random_id))
@@ -128,24 +128,19 @@ impl DieselPool {
     }
 
     pub async fn get_worlds(&self, num: u16) -> DbResult<Vec<World>> {
+        use crate::schema::world::dsl::*;
+
         let worlds = {
+            let mut conn = self.pool.get().await?;
+
             let mut rng = self.rng.borrow_mut();
             (0..num)
                 .map(|_| {
                     let w_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+                    let fut = world.filter(id.eq(w_id)).load::<World>(&mut *conn);
 
-                    async move {
-                        let mut conn = self.pool.get().await?;
-
-                        use crate::schema::world::dsl::*;
-
-                        let w = world
-                            .filter(id.eq(w_id))
-                            .load::<World>(&mut *conn)
-                            .await?
-                            .pop()
-                            .unwrap();
-
+                    async {
+                        let w = fut.await?.pop().unwrap();
                         Ok(w)
                     }
                 })
@@ -159,24 +154,19 @@ impl DieselPool {
         use crate::schema::world::dsl::*;
 
         let worlds = {
+            let mut conn = self.pool.get().await?;
+
             let mut rng = self.rng.borrow_mut();
             (0..num)
                 .map(|_| {
                     let w_id = rng.gen_range::<i32, _>(1..10_001);
                     let new_id = rng.gen_range::<i32, _>(1..10_001);
 
+                    let fut = world.filter(id.eq(w_id)).load::<World>(&mut *conn);
+
                     async move {
-                        let mut conn = self.pool.get().await?;
-
-                        let mut w = world
-                            .filter(id.eq(w_id))
-                            .load::<World>(&mut *conn)
-                            .await?
-                            .pop()
-                            .unwrap();
-
+                        let mut w = fut.await?.pop().unwrap();
                         w.randomnumber = new_id;
-
                         DbResult::Ok(w)
                     }
                 })
@@ -187,27 +177,28 @@ impl DieselPool {
 
         worlds.sort_by_key(|w| w.id);
 
-        let mut conn = self.pool.get().await?;
-
-        conn.transaction(move |conn| {
-            Box::pin(async move {
-                for w in &worlds {
-                    diesel::update(world)
-                        .filter(id.eq(w.id))
-                        .set(randomnumber.eq(w.randomnumber))
-                        .execute(conn)
-                        .await?;
-                }
-                Ok(worlds)
+        self.pool
+            .get()
+            .await?
+            .transaction(move |conn| {
+                Box::pin(async move {
+                    for w in &worlds {
+                        diesel::update(world)
+                            .filter(id.eq(w.id))
+                            .set(randomnumber.eq(w.randomnumber))
+                            .execute(conn)
+                            .await?;
+                    }
+                    Ok(worlds)
+                })
             })
-        })
-        .await
+            .await
     }
 
     pub async fn tell_fortune(&self) -> DbResult<Fortunes> {
-        let mut conn = self.pool.get().await?;
-
         use crate::schema::fortune::dsl::*;
+
+        let mut conn = self.pool.get().await?;
 
         let mut items = fortune.load::<Fortune>(&mut *conn).await?;
 

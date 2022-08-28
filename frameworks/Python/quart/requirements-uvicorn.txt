@@ -1,4 +1,10 @@
+anyio==3.6.1
 gunicorn==20.1.0
 httptools==0.4.0
-uvicorn==0.17.6
+idna==3.3
+python-dotenv==0.20.0
+PyYAML==6.0
+sniffio==1.2.0
+uvicorn==0.18.2
+watchfiles==0.16.1
 websockets==10.3
