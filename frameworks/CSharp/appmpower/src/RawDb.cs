@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using appMpower.Db;
+using appMpower.Data; 
 using PlatformBenchmarks;
 
 namespace appMpower
@@ -32,35 +31,36 @@ namespace appMpower
 
       public static async Task<World> LoadSingleQueryRow()
       {
-         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
-         pooledConnection.Open();
+         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
+         await pooledConnection.OpenAsync();
 
-         var (pooledCommand, _) = CreateReadCommand(pooledConnection);
-         var world = await ReadSingleRow(pooledCommand);
+         var (dbCommand, _) = CreateReadCommand(pooledConnection);
 
-         pooledCommand.Release();
-         pooledConnection.Release();
+         using (dbCommand)
+         {
+            var world = await ReadSingleRow(dbCommand);
 
-         return world;
+            return world;
+         }
       }
 
       public static async Task<World[]> LoadMultipleQueriesRows(int count)
       {
          var worlds = new World[count];
 
-         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
-         pooledConnection.Open();
+         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
+         await pooledConnection.OpenAsync();
 
-         var (pooledCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
+         var (dbCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
 
-         for (int i = 0; i < count; i++)
+         using (dbCommand)
          {
-            worlds[i] = await ReadSingleRow(pooledCommand);
-            dbDataParameter.Value = _random.Next(1, 10001);
+            for (int i = 0; i < count; i++)
+            {
+               worlds[i] = await ReadSingleRow(dbCommand);
+               dbDataParameter.Value = _random.Next(1, 10001);
+            }
          }
-
-         pooledCommand.Release();
-         pooledConnection.Release();
 
          return worlds;
       }
@@ -69,17 +69,20 @@ namespace appMpower
       {
          var fortunes = new List<Fortune>();
 
-         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
-         pooledConnection.Open();
+         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
+         await pooledConnection.OpenAsync();
 
-         var pooledCommand = new PooledCommand("SELECT * FROM fortune", pooledConnection);
-         var dataReader = await pooledCommand.ExecuteReaderAsync(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
+         var dbCommand = new DbCommand("SELECT * FROM fortune", pooledConnection);
 
-         while (dataReader.Read())
+         using (dbCommand)
          {
-            fortunes.Add(new Fortune
-            (
-                id: dataReader.GetInt32(0),
+            var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
+
+            while (dataReader.Read())
+            {
+               fortunes.Add(new Fortune
+               (
+                   id: dataReader.GetInt32(0),
 #if MYSQL
                //MariaDB ODBC connector does not correctly support Japanese characters in combination with default ADO.NET;
                //as a solution we custom read this string
@@ -88,11 +91,10 @@ namespace appMpower
                 message: dataReader.GetString(1)
 #endif
             ));
-         }
+            }
 
-         dataReader.Close();
-         pooledCommand.Release();
-         pooledConnection.Release();
+            dataReader.Close();
+         }
 
          fortunes.Add(new Fortune(id: 0, message: "Additional fortune added at request time."));
          fortunes.Sort();
@@ -104,20 +106,21 @@ namespace appMpower
       {
          var worlds = new World[count];
 
-         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
-         pooledConnection.Open();
+         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
+         await pooledConnection.OpenAsync();
 
          var (queryCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
 
-         for (int i = 0; i < count; i++)
+         using (queryCommand)
          {
-            worlds[i] = await ReadSingleRow(queryCommand);
-            dbDataParameter.Value = _random.Next(1, 10001);
+            for (int i = 0; i < count; i++)
+            {
+               worlds[i] = await ReadSingleRow(queryCommand);
+               dbDataParameter.Value = _random.Next(1, 10001);
+            }
          }
 
-         queryCommand.Release();
-
-         var updateCommand = new PooledCommand(PlatformBenchmarks.BatchUpdateString.Query(count), pooledConnection);
+         using var updateCommand = new DbCommand(PlatformBenchmarks.BatchUpdateString.Query(count), pooledConnection);
 
          var ids = PlatformBenchmarks.BatchUpdateString.Ids;
          var randoms = PlatformBenchmarks.BatchUpdateString.Randoms;
@@ -145,26 +148,23 @@ namespace appMpower
 
          await updateCommand.ExecuteNonQueryAsync();
 
-         updateCommand.Release();
-         pooledConnection.Release();
-
          return worlds;
       }
 
-      private static (PooledCommand pooledCommand, IDbDataParameter dbDataParameter) CreateReadCommand(PooledConnection pooledConnection)
+      private static (DbCommand dbCommand, IDbDataParameter dbDataParameter) CreateReadCommand(DbConnection pooledConnection)
       {
 #if ADO         
-         var pooledCommand = new PooledCommand("SELECT * FROM world WHERE id=@Id", pooledConnection);
+         var dbCommand = new DbCommand("SELECT * FROM world WHERE id=@Id", pooledConnection);
 #else         
-         var pooledCommand = new PooledCommand("SELECT * FROM world WHERE id=?", pooledConnection);
+         var dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection);
 #endif         
 
-         return (pooledCommand, pooledCommand.CreateParameter("Id", DbType.Int32, _random.Next(1, 10001)));
+         return (dbCommand, dbCommand.CreateParameter("Id", DbType.Int32, _random.Next(1, 10001)));
       }
 
-      private static async Task<World> ReadSingleRow(PooledCommand pooledCommand)
+      private static async Task<World> ReadSingleRow(DbCommand dbCommand)
       {
-         var dataReader = await pooledCommand.ExecuteReaderAsync(CommandBehavior.SingleRow & CommandBehavior.SequentialAccess);
+         var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleRow & CommandBehavior.SequentialAccess);
 
          dataReader.Read();
 
@@ -202,17 +202,17 @@ namespace appMpower
             queryString = _queriesMultipleRows[count] = PlatformBenchmarks.StringBuilderCache.GetStringAndRelease(stringBuilder);
          }
 
-         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
-         pooledConnection.Open();
+         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
+         await pooledConnection.OpenAsync();
 
-         var pooledCommand = new PooledCommand(queryString, pooledConnection);
+         using var dbCommand = new DbCommand(queryString, pooledConnection);
 
          for (int i = 0; i < count; i++)
          {
-            pooledCommand.CreateParameter(ids[i], DbType.Int32, _random.Next(1, 10001));
+            dbCommand.CreateParameter(ids[i], DbType.Int32, _random.Next(1, 10001));
          }
 
-         var dataReader = await pooledCommand.ExecuteReaderAsync(CommandBehavior.Default & CommandBehavior.SequentialAccess);
+         var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.Default & CommandBehavior.SequentialAccess);
 
          do
          {
@@ -228,15 +228,13 @@ namespace appMpower
          } while (await dataReader.NextResultAsync());
 
          dataReader.Close();
-         pooledCommand.Release();
-         pooledConnection.Release();
 
          return worlds;
       }
 
-      public static string ReadColumn(DbDataReader dbDataReader, int column)
+      public static string ReadColumn(IDataReader dataReader, int column)
       {
-         long size = dbDataReader.GetBytes(column, 0, null, 0, 0);  //get the length of data
+         long size = dataReader.GetBytes(column, 0, null, 0, 0);  //get the length of data
          byte[] values = new byte[size];
 
          int bufferSize = 64;
@@ -245,7 +243,7 @@ namespace appMpower
 
          while (bytesRead < size)
          {
-            bytesRead += dbDataReader.GetBytes(column, currentPosition, values, currentPosition, bufferSize);
+            bytesRead += dataReader.GetBytes(column, currentPosition, values, currentPosition, bufferSize);
             currentPosition += bufferSize;
          }
 
@@ -254,12 +252,12 @@ namespace appMpower
 
       public static async Task PopulateCache()
       {
-         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
-         pooledConnection.Open();
+         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
+         await pooledConnection.OpenAsync();
 
-         var (pooledCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
+         var (dbCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
 
-         using (pooledCommand)
+         using (dbCommand)
          {
             var cacheKeys = _cacheKeys;
             var cache = _cache;
@@ -267,12 +265,9 @@ namespace appMpower
             for (var i = 1; i < 10001; i++)
             {
                dbDataParameter.Value = i;
-               cache.Set<CachedWorld>(cacheKeys[i], await ReadSingleRow(pooledCommand));
+               cache.Set<CachedWorld>(cacheKeys[i], await ReadSingleRow(dbCommand));
             }
          }
-
-         pooledCommand.Release();
-         pooledConnection.Release();
       }
 
       public static Task<CachedWorld[]> LoadCachedQueries(int count)
@@ -301,19 +296,18 @@ namespace appMpower
          return Task.FromResult(result);
       }
 
-      //static async Task<CachedWorld[]> LoadUncachedQueries(int id, int i, int count, RawDb rawdb, CachedWorld[] result)
       static async Task<CachedWorld[]> LoadUncachedQueries(int id, int i, int count, CachedWorld[] result)
       {
-         var pooledConnection = await PooledConnections.GetConnection(DataProvider.ConnectionString);
-         pooledConnection.Open();
+         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
+         await pooledConnection.OpenAsync();
 
-         var (pooledCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
+         var (dbCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
 
-         using (pooledCommand)
+         using (dbCommand)
          {
             Func<ICacheEntry, Task<CachedWorld>> create = async (entry) =>
             {
-               return await ReadSingleRow(pooledCommand);
+               return await ReadSingleRow(dbCommand);
             };
 
             var cacheKeys = _cacheKeys;
@@ -329,9 +323,6 @@ namespace appMpower
                dbDataParameter.Value = id;
                key = cacheKeys[id];
             }
-
-            pooledCommand.Release();
-            pooledConnection.Release();
          }
 
          return result;

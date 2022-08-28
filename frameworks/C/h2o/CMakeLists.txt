@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.0)
+cmake_minimum_required(VERSION 3.16.0)
 project(h2o_app)
 find_library(H2O_LIB h2o-evloop)
 find_library(MUSTACHE_C_LIB mustache_c)

@@ -95,7 +95,7 @@
 			"display_name": "ffead-cpp [v-prof-b]",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"postgresql-raw-profiled": {
 			"db_url": "/t3/d",
@@ -137,7 +137,7 @@
 			"display_name": "ffead-cpp [pg-raw-prof-b]",
 			"notes": "memory libpq batch patch profiled",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"postgresql-raw-async-profiled": {
 			"db_url": "/t4/d",
@@ -219,7 +219,7 @@
 			"display_name": "ffead-cpp [pg-raw-async-prof-b]",
 			"notes": "async memory libpq batch patch profiled",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"postgresql-raw-async-clibpqb-pool-profiled": {
 			"db_url": "/t4/d",
@@ -240,7 +240,7 @@
 			"display_name": "ffead-cpp [pg-raw-async-prof-b-pool]",
 			"notes": "async memory libpq batch patch profiled",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"postgresql-raw-async-qw-profiled": {
 			"db_url": "/t5/d",
@@ -282,7 +282,7 @@
 			"display_name": "ffead-cpp [pg-raw-async-qw-prof-b]",
 			"notes": "async memory libpq batch patch profiled",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"postgresql-raw-async-qw-pool-profiled-m": {
 			"query_url": "/t5/quem?queries=",

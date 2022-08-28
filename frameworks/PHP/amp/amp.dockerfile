@@ -1,4 +1,4 @@
-FROM ubuntu:21.10
+FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -14,7 +14,7 @@ RUN wget http://pear.php.net/go-pear.phar --quiet && php go-pear.phar
 #RUN apt-get install -y libuv1-dev > /dev/null
 RUN apt-get install -y libevent-dev > /dev/null
 #RUN pecl install uv-0.2.4 > /dev/null && echo "extension=uv.so" > /etc/php/8.1/cli/conf.d/uv.ini
-RUN pecl install event-3.0.6 > /dev/null && echo "extension=event.so" > /etc/php/8.1/cli/conf.d/event.ini
+RUN pecl install event-3.0.8 > /dev/null && echo "extension=event.so" > /etc/php/8.1/cli/conf.d/event.ini
 
 ADD ./ /amp
 WORKDIR /amp

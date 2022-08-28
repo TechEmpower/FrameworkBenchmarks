@@ -1,12 +1,12 @@
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    compile "org.http4k:http4k-core:$http4k_version"
-    compile "org.http4k:http4k-format-jackson:$http4k_version"
-    compile "org.http4k:http4k-template-pebble:$http4k_version"
-    compile "org.apache.commons:commons-lang3:3.11"
-    compile "com.zaxxer:HikariCP:3.4.5"
-    compile "org.postgresql:postgresql:42.2.16"
-    compile "org.cache2k:cache2k-base-bom:1.2.4.Final"
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    api "org.http4k:http4k-core:$http4k_version"
+    api "org.http4k:http4k-format-jackson:$http4k_version"
+    api "org.http4k:http4k-template-pebble:$http4k_version"
+    api "org.apache.commons:commons-lang3:3.11"
+    api "com.zaxxer:HikariCP:3.4.5"
+    api "org.postgresql:postgresql:42.2.16"
+    api "org.cache2k:cache2k-base-bom:1.2.4.Final"
 
 }

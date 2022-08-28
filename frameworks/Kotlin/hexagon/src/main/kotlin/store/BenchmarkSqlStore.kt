@@ -24,8 +24,15 @@ internal class BenchmarkSqlStore(engine: String, private val settings: Settings 
         val dbHost = Jvm.systemSettingOrNull("${engine.uppercase()}_DB_HOST") ?: "localhost"
         val environment = Jvm.systemSettingOrNull(String::class, "BENCHMARK_ENV")?.lowercase()
         val poolSize = 8 + if (environment == "citrine") Jvm.cpuCount else Jvm.cpuCount * 2
+        val postgresqlSettings = listOf(
+            "ssl=false",
+            "assumeMinServerVersion=12.10",
+            "databaseMetadataCacheFieldsMiB=8",
+            "prepareThreshold=1",
+            "reWriteBatchedInserts=true",
+        ).joinToString("&")
         val config = HikariConfig().apply {
-            jdbcUrl = "jdbc:postgresql://$dbHost/${settings.databaseName}"
+            jdbcUrl = "jdbc:postgresql://$dbHost/${settings.databaseName}?$postgresqlSettings"
             maximumPoolSize = Jvm.systemSettingOrNull(Int::class, "maximumPoolSize") ?: poolSize
             driverClassName = settings.databaseDriver
             username = settings.databaseUsername
@@ -35,12 +42,12 @@ internal class BenchmarkSqlStore(engine: String, private val settings: Settings 
     }
 
     override fun findAllFortunes(): List<Fortune> {
-        val fortunes = mutableListOf<Fortune>()
+        var fortunes = listOf<Fortune>()
 
         dataSource.connection.use { con: Connection ->
             val rs = con.prepareStatement(SELECT_ALL_FORTUNES).executeQuery()
             while (rs.next())
-                fortunes += Fortune(rs.getInt(1), rs.getString(2))
+                fortunes = fortunes + Fortune(rs.getInt(1), rs.getString(2))
         }
 
         return fortunes

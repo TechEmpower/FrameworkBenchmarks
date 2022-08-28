@@ -16,7 +16,8 @@
       "database_os": "Linux",
       "display_name": "ULib",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     },
     "plaintext_fit": {
       "plaintext_url": "/plaintext",
@@ -33,7 +34,8 @@
       "database_os": "Linux",
       "display_name": "ULib-fit",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     },
     "json": {
       "json_url": "/json",
@@ -50,7 +52,8 @@
       "database_os": "Linux",
       "display_name": "ULib",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     },
     "json_fit": {
       "json_url": "/json",
@@ -67,7 +70,8 @@
       "database_os": "Linux",
       "display_name": "ULib-fit",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     },
     "mysql": {
       "db_url": "/db",
@@ -87,7 +91,8 @@
       "database_os": "Linux",
       "display_name": "ULib-mysql",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     },
     "postgres": {
       "db_url": "/db",
@@ -107,7 +112,8 @@
       "database_os": "Linux",
       "display_name": "ULib-postgres",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     },
     "postgres_fit": {
       "db_url": "/db",
@@ -125,7 +131,8 @@
       "database_os": "Linux",
       "display_name": "ULib-fit",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     },
     "mongodb": {
       "setup_file": "setup_mongodb",
@@ -146,7 +153,8 @@
       "database_os": "Linux",
       "display_name": "ULib-mongodb",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     }
   }]
 }

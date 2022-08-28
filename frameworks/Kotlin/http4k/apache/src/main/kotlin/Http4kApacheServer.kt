@@ -15,8 +15,8 @@ fun main() {
 }
 
 private class TfbApacheServer(val port: Int) : ServerConfig {
-    override fun toServer(httpHandler: HttpHandler): Http4kServer = object : Http4kServer {
-        val handler = Http4kRequestHandler(httpHandler)
+    override fun toServer(http: HttpHandler): Http4kServer = object : Http4kServer {
+        val handler = Http4kRequestHandler(http)
 
         val server = ServerBootstrap.bootstrap()
             .setListenerPort(port)

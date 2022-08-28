@@ -11,7 +11,7 @@ RUN apt-get update -yqq > /dev/null && \
 
 ADD ./ ./
 
-ENV NGINX_VERSION 1.21.4
+ENV NGINX_VERSION 1.21.6
 
 RUN git clone -b v0.0.26 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
 
@@ -26,7 +26,7 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --add-module=/ngx_php7 > /dev/null && \
     make > /dev/null && make install > /dev/null
 
-RUN sed -i "s|mysql:|pgsql:|g" /app.php
+RUN sed -i "s|app.php|app-pg.php|g" /deploy/nginx.conf
 
 RUN export WORKERS=$(( 4 * $(nproc) )) && \
     sed -i "s|worker_processes  auto|worker_processes $WORKERS|g" /deploy/nginx.conf

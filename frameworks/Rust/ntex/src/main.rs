@@ -50,8 +50,8 @@ async fn main() -> std::io::Result<()> {
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", |cfg| {
             cfg.memory_pool(PoolId::P1);
-            PoolId::P1.set_read_params(65535, 1024);
-            PoolId::P1.set_write_params(65535, 1024);
+            PoolId::P1.set_read_params(65535, 8192);
+            PoolId::P1.set_write_params(65535, 8192);
 
             http::HttpService::build()
                 .keep_alive(http::KeepAlive::Os)

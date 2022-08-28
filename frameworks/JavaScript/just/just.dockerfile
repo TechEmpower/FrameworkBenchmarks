@@ -1,27 +1,20 @@
-FROM debian:stretch-slim AS builder
+FROM debian:buster-slim AS pre-build
 RUN apt update
+RUN apt upgrade -y
 RUN apt install -y g++ curl make tar gzip libfindbin-libs-perl
-RUN curl -L -o 0.0.2.tar.gz -L https://github.com/just-js/just/archive/0.0.2.tar.gz
-RUN tar -zxvf 0.0.2.tar.gz
-WORKDIR /just-0.0.2
-RUN make runtime
-RUN curl -L -o modules.tar.gz https://github.com/just-js/modules/archive/0.0.3.tar.gz
-RUN tar -zxvf modules.tar.gz
-RUN mv modules-0.0.3 modules
-RUN JUST_HOME=$(pwd) make -C modules/picohttp/ deps http.so
-RUN JUST_HOME=$(pwd) make -C modules/html/ html.so
 
-FROM debian:stretch-slim
+FROM pre-build AS builder
+WORKDIR /build
+RUN sh -c "$(curl -sSL https://raw.githubusercontent.com/just-js/just/0.1.8/install.sh)"
+RUN make -C just install
+ENV JUST_HOME=/build/just
+ENV JUST_TARGET=/build/just
 WORKDIR /app
-RUN mkdir -p /app/lib
-COPY lib/stringify.js lib/connection.js lib/dns.js lib/http.js lib/lookup.js lib/pg.js lib/stats.js lib/tcp.js lib/md5.js lib/monitor.js ./lib/
-COPY techempower.js spawn.js ./
-COPY --from=builder /just-0.0.2/just /bin/just
-COPY --from=builder /just-0.0.2/modules/picohttp/http.so ./
-COPY --from=builder /just-0.0.2/modules/html/html.so ./
-ENV LD_LIBRARY_PATH=/app
-ENV PGPOOL=1
+COPY techempower.js util.js tfb.config.js ./
+RUN just build --clean --cleanall --static techempower.js
 
-EXPOSE 8080
-
-CMD ["just", "spawn.js", "techempower.js"]
+FROM gcr.io/distroless/static:latest
+WORKDIR /app
+COPY --from=builder /app/techempower /app/techempower
+COPY fortunes.html /app/fortunes.html
+CMD ["./techempower"]

@@ -1,11 +1,11 @@
 package com.hexagonkt
 
-import com.hexagonkt.core.require
 import com.hexagonkt.core.media.ApplicationMedia.JSON
 import com.hexagonkt.core.media.TextMedia.HTML
 import com.hexagonkt.core.media.TextMedia.PLAIN
-import com.hexagonkt.core.multiMapOf
 import com.hexagonkt.http.model.ContentType
+import com.hexagonkt.http.model.Header
+import com.hexagonkt.http.model.HttpFields
 import com.hexagonkt.http.server.handlers.HttpServerContext
 import com.hexagonkt.http.server.handlers.PathHandler
 import com.hexagonkt.http.server.handlers.path
@@ -23,8 +23,8 @@ import kotlin.text.Charsets.UTF_8
 
 class Controller(
     settings: Settings,
-    stores: Map<String, BenchmarkStore>,
-    templateEngines: Map<String, TemplatePort>,
+    store: BenchmarkStore,
+    templateEngine: TemplatePort,
 ) {
     private val queriesParam: String = settings.queriesParam
     private val cachedQueriesParam: String = settings.cachedQueriesParam
@@ -34,47 +34,36 @@ class Controller(
     private val json: ContentType = ContentType(JSON)
     private val html: ContentType = ContentType(HTML, charset = UTF_8)
 
-    private val templates: Map<String, URL> = mapOf(
-        "pebble" to URL("classpath:fortunes.pebble.html")
+    private val templateUrl: URL = URL("classpath:fortunes.pebble.html")
+
+    private val headers = HttpFields(
+        Header("server", "Hexagon"),
     )
 
     internal val path: PathHandler by lazy {
         path {
             on("*") {
-                val headers = multiMapOf(
-                    "server" to "Hexagon",
-                    "date" to now().toHttpFormat(),
-                )
-
-                send(headers = headers)
+                send(headers = headers + Header("date", now().toHttpFormat()))
             }
 
             get("/plaintext") { ok(settings.textMessage, contentType = plain) }
             get("/json") { ok(Message(settings.textMessage).serialize(Json.raw), contentType = json) }
-
-            stores.forEach { (storeEngine, store) ->
-                path("/$storeEngine") {
-                    templateEngines.forEach { (templateEngineId, templateEngine) ->
-                        get("/${templateEngineId}/fortunes") { listFortunes(store, templateEngineId, templateEngine) }
-                    }
-
-                    get("/db") { dbQuery(store) }
-                    get("/query") { getWorlds(store) }
-                    get("/cached") { getCachedWorlds(store) }
-                    get("/update") { updateWorlds(store) }
-                }
-            }
+            get("/fortunes") { listFortunes(store, templateUrl, templateEngine) }
+            get("/db") { dbQuery(store) }
+            get("/query") { getWorlds(store) }
+            get("/cached-queries") { getCachedWorlds(store) }
+            get("/update") { updateWorlds(store) }
         }
     }
 
     private fun HttpServerContext.listFortunes(
-        store: BenchmarkStore, templateKind: String, templateAdapter: TemplatePort
+        store: BenchmarkStore, templateUrl: URL, templateAdapter: TemplatePort
     ): HttpServerContext {
 
         val fortunes = store.findAllFortunes() + Fortune(0, "Additional fortune added at request time.")
         val sortedFortunes = fortunes.sortedBy { it.message }
         val context = mapOf("fortunes" to sortedFortunes)
-        val body = templateAdapter.render(templates.require(templateKind), context)
+        val body = templateAdapter.render(templateUrl, context)
 
         return ok(body, contentType = html)
     }

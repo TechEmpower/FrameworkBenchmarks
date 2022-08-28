@@ -9,6 +9,7 @@ extern crate diesel;
 use std::cmp;
 use std::fmt::Write;
 use std::sync::Arc;
+use std::thread::available_parallelism;
 
 use anyhow::Error;
 use diesel::prelude::*;
@@ -45,20 +46,20 @@ fn build_pool(database_url: &str, size: u32) -> Result<PgPool, PoolError> {
         .build(manager)
 }
 
-#[fn_handler]
+#[handler]
 async fn world_row(res: &mut Response) -> Result<(), Error> {
     let mut rng = SmallRng::from_entropy();
     let random_id = rng.gen_range(1..10_001);
     let conn = connect()?;
     let row = world::table.find(random_id).first::<World>(&conn)?;
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_json(&row);
+    res.render(Json(row));
     Ok(())
 }
 
-#[fn_handler]
+#[handler]
 async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let count = req.get_query::<usize>("q").unwrap_or(1);
+    let count = req.query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
     let mut worlds = Vec::with_capacity(count);
     let mut rng = SmallRng::from_entropy();
@@ -69,13 +70,13 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         worlds.push(w);
     }
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_json(&worlds);
+    res.render(Json(worlds));
     Ok(())
 }
 
-#[fn_handler]
+#[handler]
 async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let count = req.get_query::<usize>("q").unwrap_or(1);
+    let count = req.query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
     let mut worlds = Vec::with_capacity(count);
     let mut rng = SmallRng::from_entropy();
@@ -87,13 +88,13 @@ async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Err
         }
     }
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_json(&worlds);
+    res.render(Json(worlds));
     Ok(())
 }
 
-#[fn_handler]
+#[handler]
 async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let count = req.get_query::<usize>("q").unwrap_or(1);
+    let count = req.query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
     let conn = connect()?;
     let mut worlds = Vec::with_capacity(count);
@@ -116,11 +117,11 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     })?;
 
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_json(&worlds);
+    res.render(Json(worlds));
     Ok(())
 }
 
-#[fn_handler]
+#[handler]
 async fn fortunes(res: &mut Response) -> Result<(), Error> {
     let conn = connect()?;
     let mut items = fortune::table.get_results::<Fortune>(&conn)?;
@@ -134,7 +135,7 @@ async fn fortunes(res: &mut Response) -> Result<(), Error> {
     write!(&mut body, "{}", FortunesTemplate { items }).unwrap();
 
     res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render_html_text(&body);
+    res.render(Text::Html(body));
     Ok(())
 }
 
@@ -176,12 +177,12 @@ fn main() {
             .push(Router::with_path("cached_queries").get(cached_queries))
             .push(Router::with_path("updates").get(updates)),
     );
-    let cpus = num_cpus::get();
+    let size = available_parallelism().map(|n| n.get()).unwrap_or(16);
     DB_POOL
-        .set(build_pool(&DB_URL, cpus as u32).expect(&format!("Error connecting to {}", &DB_URL)))
+        .set(build_pool(DB_URL, size as u32).unwrap_or_else(|_| panic!("Error connecting to {}", &DB_URL)))
         .ok();
     populate_cache().expect("error cache worlds");
-    for _ in 1..cpus {
+    for _ in 1..size {
         let router = router.clone();
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
@@ -191,6 +192,7 @@ fn main() {
             rt.block_on(serve(router));
         });
     }
+    println!("Starting http server: 127.0.0.1:8080");
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
@@ -199,6 +201,5 @@ fn main() {
 }
 
 async fn serve(router: Arc<Router>) {
-    println!("Starting http server: 127.0.0.1:8080");
     server::builder().serve(Service::new(router)).await.unwrap();
 }

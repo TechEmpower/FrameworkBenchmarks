@@ -12,5 +12,5 @@ RUN RUSTFLAGS="-Ctarget-cpu=native -Ztune-cpu=native -Zmutable-noalias=yes -Clin
    /root/.cargo/bin/cargo build --release --target x86_64-unknown-linux-gnu -Zbuild-std=panic_abort,core,std,alloc,proc_macro,compiler_builtins \
    && strip ./target/x86_64-unknown-linux-gnu/release/faf-ex
 
-EXPOSE 8089
+EXPOSE 8080
 CMD ./target/x86_64-unknown-linux-gnu/release/faf-ex

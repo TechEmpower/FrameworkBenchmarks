@@ -5,6 +5,7 @@
  */
 package org.redkalex.benchmark;
 
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.*;
 import javax.annotation.Resource;
@@ -37,7 +38,7 @@ public class BenchmarkService extends AbstractService {
 
     @RestMapping(name = "json")
     public Message getHelloMessage() {
-        return Message.create("Hello, World!");
+        return new Message("Hello, World!");
     }
 
     @RestMapping(name = "db")
@@ -46,25 +47,28 @@ public class BenchmarkService extends AbstractService {
     }
 
     @RestMapping(name = "queries")
-    public CompletableFuture<World[]> queryWorldAsync(int q) {
+    public CompletableFuture<List<World>> queryWorldAsync(int q) {
         int size = Math.min(500, Math.max(1, q));
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
-        return source.findsAsync(World.class, ids.boxed());
+        return source.findsListAsync(World.class, ids.boxed());
     }
 
     @RestMapping(name = "updates")
-    public CompletableFuture<World[]> updateWorldAsync(int q) {
+    public CompletableFuture<List<World>> updateWorldAsync(int q) {
         int size = Math.min(500, Math.max(1, q));
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
         int[] newNumbers = ThreadLocalRandom.current().ints(size, 1, 10001).toArray();
-        return source.findsAsync(World.class, ids.boxed()).thenCompose(words -> source.updateAsync(World.setNewNumbers(words, newNumbers)).thenApply(v -> words));
+        return source.findsListAsync(World.class, ids.boxed())
+            .thenCompose(words -> source.updateAsync(World.setNewNumbers(words.toArray(new World[words.size()]), newNumbers))
+            .thenApply(v -> words));
     }
 
     @RestMapping(name = "fortunes")
     public CompletableFuture<HttpScope> queryFortunes() {
         return source.queryListAsync(Fortune.class).thenApply(fortunes -> {
             fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-            return HttpScope.refer("").attr("fortunes", Fortune.sort(fortunes));
+            Collections.sort(fortunes);
+            return HttpScope.refer("").referObj(fortunes);
         });
     }
 
