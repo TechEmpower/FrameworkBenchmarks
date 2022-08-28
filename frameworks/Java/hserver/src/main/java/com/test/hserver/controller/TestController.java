@@ -1,13 +1,13 @@
 package com.test.hserver.controller;
 
+import cn.hserver.core.ioc.annotation.Autowired;
+import cn.hserver.plugin.web.annotation.Controller;
+import cn.hserver.plugin.web.annotation.GET;
+import cn.hserver.plugin.web.interfaces.HttpResponse;
 import com.test.hserver.bean.Fortune;
 import com.test.hserver.bean.Message;
 import com.test.hserver.bean.World;
 import com.test.hserver.util.DateUtil;
-import top.hserver.core.interfaces.HttpResponse;
-import top.hserver.core.ioc.annotation.Autowired;
-import top.hserver.core.ioc.annotation.Controller;
-import top.hserver.core.ioc.annotation.GET;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
