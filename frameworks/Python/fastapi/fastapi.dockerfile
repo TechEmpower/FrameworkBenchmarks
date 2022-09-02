@@ -1,11 +1,10 @@
-FROM python:3.8
+FROM python:3.10
 
 ADD ./ /fastapi
 
 WORKDIR /fastapi
 
-RUN pip3 install cython==0.29.13 && \
-    pip3 install -r /fastapi/requirements.txt
+RUN pip install -r /fastapi/requirements.txt
 
 EXPOSE 8080
 

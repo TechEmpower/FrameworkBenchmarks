@@ -1,10 +1,10 @@
-FROM python:3.8
+FROM python:3.10
 
 ADD ./ /fastapi
 
 WORKDIR /fastapi
 
-RUN pip3 install -r /fastapi/requirements-orjson.txt
+RUN pip install -r /fastapi/requirements-orjson.txt
 
 EXPOSE 8080
 
