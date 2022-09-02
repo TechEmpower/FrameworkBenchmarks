@@ -1,9 +1,9 @@
 import asyncpg
 import os
-import jinja2
 from starlette.applications import Starlette
 from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from starlette.routing import Route
+from starlette.templating import Jinja2Templates
 from random import randint, sample
 from operator import itemgetter
 from urllib.parse import parse_qs
@@ -26,13 +26,6 @@ async def setup_database():
     )
 
 
-def load_fortunes_template():
-    path = os.path.join('templates', 'fortune.html')
-    with open(path, 'r') as template_file:
-        template_text = template_file.read()
-        return jinja2.Template(template_text)
-
-
 def get_num_queries(request):
     try:
         query_string = request['query_string']
@@ -49,7 +42,7 @@ def get_num_queries(request):
 
 connection_pool = None
 sort_fortunes_key = itemgetter(1)
-template = load_fortunes_template()
+templates = Jinja2Templates(directory="templates")
 
 
 async def single_database_query(request):
@@ -81,8 +74,7 @@ async def fortunes(request):
 
     fortunes.append(ADDITIONAL_ROW)
     fortunes.sort(key=sort_fortunes_key)
-    content = template.render(fortunes=fortunes)
-    return HTMLResponse(content)
+    return templates.TemplateResponse("fortune.html", {"fortunes": fortunes, "request": request})
 
 
 async def database_updates(request):

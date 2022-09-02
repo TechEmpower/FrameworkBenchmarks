@@ -1,8 +1,8 @@
 import asyncio
 import asyncpg
 import os
-import jinja2
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.templating import Jinja2Templates
 from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from random import randint, sample
 from operator import itemgetter
@@ -12,14 +12,6 @@ from urllib.parse import parse_qs
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
-
-
-def load_fortunes_template():
-    path = os.path.join('templates', 'fortune.html')
-    with open(path, 'r') as template_file:
-        template_text = template_file.read()
-        return jinja2.Template(template_text)
-
 
 def get_num_queries(queries):
     try:
@@ -36,9 +28,10 @@ def get_num_queries(queries):
 
 connection_pool = None
 sort_fortunes_key = itemgetter(1)
-template = load_fortunes_template()
 
 app = FastAPI()
+
+templates = Jinja2Templates(directory="templates")
 
 
 @app.on_event("startup")
@@ -84,14 +77,13 @@ async def multiple_database_queries(queries = None):
 
 
 @app.get('/fortunes')
-async def fortunes():
+async def fortunes(request: Request):
     async with connection_pool.acquire() as connection:
         fortunes = await connection.fetch('SELECT * FROM Fortune')
 
     fortunes.append(ADDITIONAL_ROW)
     fortunes.sort(key=sort_fortunes_key)
-    content = template.render(fortunes=fortunes)
-    return HTMLResponse(content)
+    return templates.TemplateResponse("fortune.html", {"fortunes": fortunes, "request": request})
 
 
 @app.get('/updates')

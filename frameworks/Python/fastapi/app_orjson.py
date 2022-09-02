@@ -1,9 +1,9 @@
 import asyncio
 import asyncpg
 import os
-import jinja2
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, ORJSONResponse, PlainTextResponse
+from fastapi.templating import Jinja2Templates
 from random import randint, sample
 from operator import itemgetter
 from functools import partial
@@ -24,13 +24,6 @@ async def setup_database():
     )
 
 
-def load_fortunes_template():
-    path = os.path.join("templates", "fortune.html")
-    with open(path, "r") as template_file:
-        template_text = template_file.read()
-        return jinja2.Template(template_text)
-
-
 def get_num_queries(queries):
     try:
         query_count = int(queries)
@@ -46,12 +39,13 @@ def get_num_queries(queries):
 
 connection_pool = None
 sort_fortunes_key = itemgetter(1)
-template = load_fortunes_template()
 loop = asyncio.get_event_loop()
 loop.run_until_complete(setup_database())
 
 
 app = FastAPI()
+
+templates = Jinja2Templates(directory="templates")
 
 
 @app.get("/json")
@@ -83,14 +77,13 @@ async def multiple_database_queries(queries=None):
 
 
 @app.get("/fortunes")
-async def fortunes():
+async def fortunes(request: Request):
     async with connection_pool.acquire() as connection:
         fortunes = await connection.fetch("SELECT * FROM Fortune")
 
     fortunes.append(ADDITIONAL_ROW)
     fortunes.sort(key=sort_fortunes_key)
-    content = template.render(fortunes=fortunes)
-    return HTMLResponse(content)
+    return templates.TemplateResponse("fortune.html", {"fortunes": fortunes, "request": request})
 
 
 @app.get("/updates")
