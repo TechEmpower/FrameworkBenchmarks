@@ -5,7 +5,6 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, ORJSONResponse, PlainTextResponse
 from fastapi.templating import Jinja2Templates
 from random import randint, sample
-from operator import itemgetter
 
 READ_ROW_SQL = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
@@ -26,7 +25,6 @@ def get_num_queries(queries):
 
 
 connection_pool = None
-sort_fortunes_key = itemgetter(1)
 
 app = FastAPI()
 
@@ -80,7 +78,7 @@ async def fortunes(request: Request):
         fortunes = await connection.fetch("SELECT * FROM Fortune")
 
     fortunes.append(ADDITIONAL_ROW)
-    fortunes.sort(key=sort_fortunes_key)
+    fortunes.sort(key=lambda row: row[1])
     return templates.TemplateResponse("fortune.html", {"fortunes": fortunes, "request": request})
 
 

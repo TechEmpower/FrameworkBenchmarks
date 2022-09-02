@@ -5,7 +5,6 @@ from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from starlette.routing import Route
 from starlette.templating import Jinja2Templates
 from random import randint, sample
-from operator import itemgetter
 from urllib.parse import parse_qs
 
 
@@ -41,7 +40,6 @@ def get_num_queries(request):
 
 
 connection_pool = None
-sort_fortunes_key = itemgetter(1)
 templates = Jinja2Templates(directory="templates")
 
 
@@ -73,7 +71,7 @@ async def fortunes(request):
         fortunes = await connection.fetch('SELECT * FROM Fortune')
 
     fortunes.append(ADDITIONAL_ROW)
-    fortunes.sort(key=sort_fortunes_key)
+    fortunes.sort(key=lambda row: row[1])
     return templates.TemplateResponse("fortune.html", {"fortunes": fortunes, "request": request})
 
 
