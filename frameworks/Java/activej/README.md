@@ -14,7 +14,7 @@ This is the ActiveJ portion of a [benchmarking test suite](../) comparing a vari
 ## Versions
 
 * [Java OpenJDK 1.8](http://openjdk.java.net/)
-* [ActiveJ 4.0-SNAPSHOT](http://activej.io/)
+* [ActiveJ 5.0](http://activej.io/)
 * [DSL-JSON 1.9.7](https://github.com/ngs-doo/dsl-json)
 
 ## Test URLs

@@ -4,7 +4,7 @@ import com.hexagonkt.CachedWorld
 import com.hexagonkt.Fortune
 import com.hexagonkt.Settings
 import com.hexagonkt.World
-import com.hexagonkt.helpers.Jvm
+import com.hexagonkt.core.Jvm
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.cache2k.Cache
@@ -21,25 +21,33 @@ internal class BenchmarkSqlStore(engine: String, private val settings: Settings 
     }
 
     private val dataSource: HikariDataSource by lazy {
-        val dbHost = Jvm.systemSetting("${engine.uppercase()}_DB_HOST") ?: "localhost"
-        val environment = Jvm.systemSetting(String::class, "BENCHMARK_ENV")?.lowercase()
+        val dbHost = Jvm.systemSettingOrNull("${engine.uppercase()}_DB_HOST") ?: "localhost"
+        val environment = Jvm.systemSettingOrNull(String::class, "BENCHMARK_ENV")?.lowercase()
         val poolSize = 8 + if (environment == "citrine") Jvm.cpuCount else Jvm.cpuCount * 2
+        val postgresqlSettings = listOf(
+            "ssl=false",
+            "assumeMinServerVersion=12.10",
+            "databaseMetadataCacheFieldsMiB=8",
+            "prepareThreshold=1",
+            "reWriteBatchedInserts=true",
+        ).joinToString("&")
         val config = HikariConfig().apply {
-            jdbcUrl = "jdbc:postgresql://$dbHost/${settings.databaseName}"
-            maximumPoolSize = Jvm.systemSetting(Int::class, "maximumPoolSize") ?: poolSize
-            username = Jvm.systemSetting("databaseUsername") ?: "benchmarkdbuser"
-            password = Jvm.systemSetting("databasePassword") ?: "benchmarkdbpass"
+            jdbcUrl = "jdbc:postgresql://$dbHost/${settings.databaseName}?$postgresqlSettings"
+            maximumPoolSize = Jvm.systemSettingOrNull(Int::class, "maximumPoolSize") ?: poolSize
+            driverClassName = settings.databaseDriver
+            username = settings.databaseUsername
+            password = settings.databasePassword
         }
         HikariDataSource(config)
     }
 
     override fun findAllFortunes(): List<Fortune> {
-        val fortunes = mutableListOf<Fortune>()
+        var fortunes = listOf<Fortune>()
 
         dataSource.connection.use { con: Connection ->
             val rs = con.prepareStatement(SELECT_ALL_FORTUNES).executeQuery()
             while (rs.next())
-                fortunes += Fortune(rs.getInt(1), rs.getString(2))
+                fortunes = fortunes + Fortune(rs.getInt(1), rs.getString(2))
         }
 
         return fortunes

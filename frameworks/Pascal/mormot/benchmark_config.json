@@ -1,0 +1,53 @@
+{
+  "framework": "mormot",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "plaintext_url": "/plaintext",
+        "cached_query_url": "/cached-queries?count=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "postgres",
+        "framework": "mormot",
+        "language": "Pascal",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "mormot",
+        "notes": "",
+        "versus": "None"
+      },
+      "postgres-raw": {
+        "dockerfile": "mormot.dockerfile",
+        "db_url": "/rawdb",
+        "query_url": "/rawqueries?queries=",
+        "fortune_url": "/rawfortunes",
+        "update_url": "/rawupdates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "postgres",
+        "framework": "mormot",
+        "language": "Pascal",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "mormot",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

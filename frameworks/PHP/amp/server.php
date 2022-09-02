@@ -47,14 +47,14 @@ Amp\Loop::run(function () {
         }
     );
 
-    $mysql = new Amp\Mysql\Pool($config, 512 * 50, 300, $connector);
+    $mysql = new Amp\Mysql\Pool($config, 512, 300, $connector);
 
     // Case 1 - JSON
     $router->addRoute('GET', '/json', new class implements RequestHandler {
         public function handleRequest(Request $request): Promise {
             return new Success(new Response(200, [
                 'Content-Type' => 'application/json',
-                'Server' => 'amphp/http-server',
+                'Server' => 'amphp',
             ], \json_encode([
                 'message' => 'Hello, World!',
             ])));
@@ -76,17 +76,13 @@ Amp\Loop::run(function () {
         private function doHandleRequest($request) {
             $statement = yield $this->mysql->prepare('SELECT * FROM World WHERE id = ?');
             $result = yield $statement->execute([mt_rand(1, 10000)]);
-
-            if (yield $result->advance()) {
-                $item = $result->getCurrent();
-            } else {
-                $item = null;
-            }
+            
+            yield $result->advance();
 
             return new Response(200, [
                 'Content-Type' => 'application/json',
-                'Server' => 'amphp/http-server',
-            ], \json_encode($item));
+                'Server' => 'amphp',
+            ], \json_encode($result->getCurrent()));
         }
     });
 
@@ -123,7 +119,7 @@ Amp\Loop::run(function () {
 
             return new Response(200, [
                 'Content-Type' => 'application/json',
-                'Server' => 'amphp/http-server',
+                'Server' => 'amphp',
             ], \json_encode(yield $items));
         }
 
@@ -166,7 +162,7 @@ Amp\Loop::run(function () {
 
             return new Response(200, [
                 'Content-Type' => 'text/html; charset=utf-8',
-                'Server' => 'amphp/http-server',
+                'Server' => 'amphp',
             ], \ob_get_clean());
         }
 
@@ -177,7 +173,7 @@ Amp\Loop::run(function () {
         public function handleRequest(Request $request): Promise {
             return new Success(new Response(200, [
                 'Content-Type' => 'text/plain',
-                'Server' => 'amphp/http-server',
+                'Server' => 'amphp',
             ], 'Hello, World!'));
         }
     });

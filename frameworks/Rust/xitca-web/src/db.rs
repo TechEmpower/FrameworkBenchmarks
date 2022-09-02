@@ -1,31 +1,53 @@
-use std::{cell::RefCell, error::Error, fmt::Write};
+use std::{cell::RefCell, collections::HashMap, error::Error, fmt::Write};
 
-use ahash::AHashMap;
 use futures_util::stream::{FuturesUnordered, StreamExt, TryStreamExt};
 use rand::{rngs::SmallRng, Rng, SeedableRng};
-use tokio::pin;
-use tokio_postgres::{types::ToSql, NoTls, Statement};
+use xitca_postgres::{Postgres, Statement, ToSql};
+use xitca_unsafe_collection::no_hash::NoHashBuilder;
 
 use super::ser::{Fortune, Fortunes, World};
 
 pub struct Client {
-    client: tokio_postgres::Client,
+    client: xitca_postgres::Client,
     rng: RefCell<SmallRng>,
     fortune: Statement,
     world: Statement,
-    updates: AHashMap<u16, Statement>,
+    updates: HashMap<u16, Statement, NoHashBuilder>,
+}
+
+impl Drop for Client {
+    fn drop(&mut self) {
+        drop(self.fortune.clone().into_guarded(&self.client));
+
+        drop(self.world.clone().into_guarded(&self.client));
+
+        for (_, stmt) in std::mem::take(&mut self.updates) {
+            drop(stmt.into_guarded(&self.client))
+        }
+    }
 }
 
 pub async fn create(config: &str) -> Client {
-    let (client, conn) = tokio_postgres::connect(config, NoTls).await.unwrap();
+    let (client, conn) = Postgres::new(config.to_string()).connect().await.unwrap();
 
     tokio::task::spawn_local(async move {
         let _ = conn.await;
     });
 
-    let fortune = client.prepare("SELECT * FROM fortune").await.unwrap();
+    let fortune = client
+        .prepare("SELECT * FROM fortune", &[])
+        .await
+        .unwrap()
+        .leak();
 
-    let mut updates = AHashMap::new();
+    let world = client
+        .prepare("SELECT * FROM world WHERE id=$1", &[])
+        .await
+        .unwrap()
+        .leak();
+
+    let mut updates = HashMap::default();
+
     for num in 1..=500u16 {
         let mut pl = 1;
         let mut q = String::new();
@@ -42,13 +64,9 @@ pub async fn create(config: &str) -> Client {
         q.pop();
         q.push(')');
 
-        let st = client.prepare(&q).await.unwrap();
+        let st = client.prepare(&q, &[]).await.unwrap().leak();
         updates.insert(num, st);
     }
-    let world = client
-        .prepare("SELECT * FROM world WHERE id=$1")
-        .await
-        .unwrap();
 
     Client {
         client,
@@ -63,9 +81,14 @@ type DbResult<T> = Result<T, Box<dyn Error>>;
 
 impl Client {
     async fn query_one_world(&self, id: i32) -> DbResult<World> {
-        let stream = self.client.query_raw(&self.world, &[&id]).await?;
-        pin!(stream);
-        let row = stream.next().await.unwrap()?;
+        let row = self
+            .client
+            .query_raw(&self.world, &[&id])
+            .await?
+            .next()
+            .await
+            .unwrap()?;
+
         Ok(World::new(row.get(0), row.get(1)))
     }
 
@@ -129,12 +152,10 @@ impl Client {
 
         items.push(Fortune::new(0, "Additional fortune added at request time."));
 
-        let stream = self
+        let mut stream = self
             .client
-            .query_raw::<_, _, &[i32; 0]>(&self.fortune, &[])
+            .query_raw::<_, &[i32; 0]>(&self.fortune, &[])
             .await?;
-
-        pin!(stream);
 
         while let Some(row) = stream.try_next().await? {
             items.push(Fortune::new(row.get(0), row.get::<_, String>(1)));

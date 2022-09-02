@@ -13,7 +13,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "Postgres",
-      "framework": "None",
+      "framework": "libh2o",
       "language": "C",
       "flavor": "None",
       "orm": "Raw",

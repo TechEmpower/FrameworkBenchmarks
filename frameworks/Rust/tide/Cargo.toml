@@ -8,7 +8,7 @@ edition = "2018"
 askama = "0.10.5"
 async-std = { version = "1.9.0", features = ["attributes"] }
 async-trait = "0.1.42"
-diesel = { version = "1.4.5", features = ["postgres", "r2d2"] }
+diesel = { version = "1.4.6", features = ["postgres", "r2d2"] }
 http-types = "2.10.0"
 rand = { version = "0.7", features = ["small_rng"] }
 serde = { version = "1.0.123", features = ["derive"] }

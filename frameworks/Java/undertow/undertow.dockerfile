@@ -1,12 +1,13 @@
-FROM maven:3.6.1-jdk-11-slim as maven
+FROM maven:3.8.6-openjdk-18 as maven
 WORKDIR /undertow
-COPY pom.xml pom.xml
+COPY pom.xml .
 COPY src src
 RUN mvn package -q
 
-FROM openjdk:11.0.3-jdk-slim
+FROM openjdk:18
 WORKDIR /undertow
-COPY --from=maven /undertow/target/app.jar app.jar
+COPY --from=maven /undertow/target/lib lib
+COPY --from=maven /undertow/target/app.jar .
 
 EXPOSE 8080
 

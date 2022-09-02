@@ -1,4 +1,4 @@
-# [Micronaut](http://micronaut.io) Benchmarking Test (2.3.1)
+# [Micronaut](http://micronaut.io) Benchmarking Test (3.1.1)
 
 ### Test Type Implementation Source Code
 
@@ -12,6 +12,7 @@
 ## Important Libraries
 The tests were run with:
 * [OpenJDK Java 11](http://jdk.java.net/11/)
+* [GraalVM CE 21.3.0 (Java 11)](https://www.graalvm.org)
 
 ## Test URLs
 ### JSON

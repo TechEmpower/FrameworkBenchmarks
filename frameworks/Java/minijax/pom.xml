@@ -14,7 +14,7 @@
         <eclipselink.version>2.7.4</eclipselink.version>
         <jpa.version>2.2.1</jpa.version>
         <minijax.version>0.3.14</minijax.version>
-        <mysql-connector.version>8.0.18</mysql-connector.version>
+        <mysql-connector.version>8.0.28</mysql-connector.version>
         <shade.version>3.1.0</shade.version>
     </properties>
     <dependencies>
