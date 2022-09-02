@@ -5,7 +5,6 @@ from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from starlette.routing import Route
 from starlette.templating import Jinja2Templates
 from random import randint, sample
-from urllib.parse import parse_qs
 
 
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
@@ -27,8 +26,7 @@ async def setup_database():
 
 def get_num_queries(request):
     try:
-        query_string = request['query_string']
-        query_count = int(parse_qs(query_string)[b'queries'][0])
+        query_count = int(request.query_params["queries"])
     except (KeyError, IndexError, ValueError):
         return 1
 
