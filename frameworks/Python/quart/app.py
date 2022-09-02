@@ -76,7 +76,7 @@ async def updates():
     queries = get_query_count()
 
     new_worlds = []
-    async with app.db.acquire() as conn, conn.transaction():
+    async with app.db.acquire() as conn:
         pst = await conn.prepare(GET_WORLD)
 
         for key in random.sample(range(1, 10000), queries):
