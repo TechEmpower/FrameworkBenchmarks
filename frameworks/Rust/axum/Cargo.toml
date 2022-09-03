@@ -29,31 +29,26 @@ name = "axum-pg"
 path = "src/main_pg.rs"
 
 [dependencies]
-num_cpus = "1.13.1"
-rand = { version = "0.8.5", features = ["small_rng"] }
-yarte = "0.15.6"
-async-stream = "0.3.3"
-async-trait = "0.1.53"
-async-std = "1.11.0"
-futures = "0.3.21"
-futures-util = "0.3.21"
-dotenv = "0.15.0"
-serde = { version = "1.0.136", features = ["derive"] }
-serde_json = "1.0.79"
-serde_derive = "1.0.136"
-axum = "0.5.1"
-tokio = { version = "1.17.0", features = ["full"] }
-hyper = "0.14.18"
-tower = { version = "0.4.12", features = ["util"] }
-tower-http = { version = "0.2.5", features = ["set-header"] }
-sqlx = { version = "0.5.12", features = [ "postgres", "macros", "runtime-tokio-native-tls" ] }
-tokio-postgres = "0.7.5"
-tokio-pg-mapper = "0.2.0"
-tokio-pg-mapper-derive = "0.2.0"
-mongodb = { version = "2.2.1", features = [ "zstd-compression", "snappy-compression", "zlib-compression" ] }
-axum-core = "0.2.2"
+axum = { version = "0.5.1", default-features = false, features = ["json", "query"] }
 deadpool = { version = "0.9.3", features = ["rt_tokio_1", "serde", "async-trait", "managed" ] }
 deadpool-postgres = "0.10.2"
+dotenv = "0.15.0"
+futures = "0.3.21"
+futures-util = "0.3.21"
+hyper = { version = "0.14.18", features = ["http1"] }
+mongodb = { version = "2.2.1", features = ["zstd-compression", "snappy-compression", "zlib-compression"] }
+num_cpus = "1.13.1"
+rand = { version = "0.8.5", features = ["small_rng"] }
+serde = { version = "1.0.136", features = ["derive"] }
+serde_json = "1.0.79"
+sqlx = { version = "0.6.0", features = ["postgres", "macros", "runtime-tokio-native-tls"] }
+tokio = { version = "1.17.0", features = ["full"] }
+tokio-pg-mapper = "0.2.0"
+tokio-pg-mapper-derive = "0.2.0"
+tokio-postgres = "0.7.5"
+tower = { version = "0.4.12", features = ["util"] }
+tower-http = { version = "0.3.4", features = ["set-header"] }
+yarte = "0.15.6"
 
 [profile.release]
 lto = true

@@ -185,8 +185,7 @@ impl WorldHandler {
     async fn new() -> Self {
         Self {
             conn: PgConnection::create(DB_URL)
-                .await
-                .expect(&format!("Error connecting to {}", &DB_URL)),
+                .await.unwrap_or_else(|_| panic!("Error connecting to {}", &DB_URL)),
         }
     }
 }
@@ -206,7 +205,7 @@ impl WorldsHandler {
         Self {
             conn: PgConnection::create(DB_URL)
                 .await
-                .expect(&format!("Error connecting to {}", &DB_URL)),
+                .unwrap_or_else(|_| panic!("Error connecting to {}", &DB_URL)),
         }
     }
 }
@@ -228,7 +227,7 @@ impl UpdatesHandler {
         Self {
             conn: PgConnection::create(DB_URL)
                 .await
-                .expect(&format!("Error connecting to {}", &DB_URL)),
+                .unwrap_or_else(|_| panic!("Error connecting to {}", &DB_URL)),
         }
     }
 }
@@ -250,7 +249,7 @@ impl FortunesHandler {
         Self {
             conn: PgConnection::create(DB_URL)
                 .await
-                .expect(&format!("Error connecting to {}", &DB_URL)),
+                .unwrap_or_else(|_| panic!("Error connecting to {}", &DB_URL)),
         }
     }
 }
@@ -264,7 +263,7 @@ impl Handler for FortunesHandler {
     }
 }
 
-#[fn_handler]
+#[handler]
 async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let count = req.query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));

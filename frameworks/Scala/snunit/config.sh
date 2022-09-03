@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+processes=$(expr $(nproc) / 2)
+
 config='{'
 config+='  "listeners": {'
 config+='    "*:8080": {'
@@ -9,8 +11,11 @@ config+='  },'
 config+='  "applications": {'
 config+='    "example": {'
 config+='      "type": "external",'
-config+='      "processes": '"$(nproc)"','
-config+='      "executable": "/app/example"'
+config+='      "processes": '"$processes"','
+config+='      "executable": "/app/example",'
+config+='      "environment": {'
+config+='        "SCALANATIVE_GC_THREADS": "2"'
+config+='      }'
 config+='    }'
 config+='  }'
 config+='}'

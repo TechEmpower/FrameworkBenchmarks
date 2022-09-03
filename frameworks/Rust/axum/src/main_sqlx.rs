@@ -1,8 +1,3 @@
-extern crate dotenv;
-extern crate serde_derive;
-#[macro_use]
-extern crate async_trait;
-
 mod database_sqlx;
 mod models_common;
 mod models_sqlx;
@@ -94,6 +89,6 @@ async fn router(pool: PgPool) -> Router {
         .layer(Extension(pool))
         .layer(SetResponseHeaderLayer::if_not_present(
             header::SERVER,
-            server_header_value)
-        )
+            server_header_value,
+        ))
 }

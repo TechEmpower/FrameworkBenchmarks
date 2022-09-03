@@ -1,49 +1,45 @@
 buildscript {
-    ext.kotlin_version = "1.3.72"
-    ext.http4k_version = "3.260.0"
+    ext.kotlin_version = "1.6.21"
+    ext.http4k_version = "4.25.16.2"
 
     repositories {
         mavenCentral()
-        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
     }
 }
 
 allprojects {
-
     repositories {
         mavenCentral()
-        jcenter()
     }
 
     apply plugin: "kotlin"
 
-    compileKotlin.kotlinOptions.jvmTarget = "1.8"
+    compileKotlin.kotlinOptions.jvmTarget = "11"
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 
     version = project.hasProperty('releaseVersion') ? project.releaseVersion : 'LOCAL'
     group = 'org.http4k'
 
-    compileTestKotlin {
-        kotlinOptions {
-            languageVersion = "1.3"
-        }
-    }
+    compileTestKotlin.kotlinOptions.languageVersion = "1.6"
 }
 
 dependencies {
-    compile project(":core")
-    compile project(":apache")
-    compile project(":jetty")
-    compile project(":ktorcio")
-    compile project(":ktornetty")
-    compile project(":netty")
-    compile project(":ratpack")
-    compile project(":undertow")
+    api(project(":core"))
+    api(project(":apache"))
+    api(project(":jetty"))
+    api(project(":ktorcio"))
+    api(project(":ktornetty"))
+    api(project(":netty"))
+    api(project(":ratpack"))
+    api(project(":undertow"))
 }

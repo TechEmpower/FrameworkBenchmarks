@@ -1,3 +1,4 @@
+use axum::async_trait;
 use axum::extract::{Extension, FromRequest, RequestParts};
 use axum::http::StatusCode;
 use futures::{
@@ -200,8 +201,6 @@ where
             .await
             .map_err(internal_error)?;
 
-        let conn = pg_connection.clone();
-
-        Ok(Self(conn))
+        Ok(Self(pg_connection))
     }
 }

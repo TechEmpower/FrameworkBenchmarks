@@ -104,7 +104,7 @@
       "database": "MySQL",
       "framework": "PHP",
       "language": "PHP",
-      "flavor": "PHP7",
+      "flavor": "PHP8.1",
       "orm": "Raw",
       "platform": "Unit Nginx",
       "webserver": "None",

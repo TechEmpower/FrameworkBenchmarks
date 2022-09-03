@@ -1,7 +1,7 @@
 use std::{borrow::Cow, fmt::Write as FmtWrite};
 
 use futures::{Future, FutureExt};
-use nanorand::{WyRand, Rng};
+use nanorand::{Rng, WyRand};
 use ntex::util::{join_all, Bytes, BytesMut};
 use smallvec::SmallVec;
 use tokio_postgres::types::ToSql;

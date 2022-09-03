@@ -7,18 +7,28 @@
     <groupId>com.test.hserver</groupId>
     <artifactId>hserver</artifactId>
     <version>1.0</version>
+
+    <parent>
+        <artifactId>hserver-parent</artifactId>
+        <groupId>cn.hserver</groupId>
+        <version>3.0.0</version>
+    </parent>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.hikaricp>3.3.1</version.hikaricp>
         <version.postgres>42.3.3</version.postgres>
-        <version.hserver>2.9.89</version.hserver>
     </properties>
 
     <dependencies>
+        <!--    核心依赖-->
         <dependency>
-            <groupId>top.hserver</groupId>
-            <artifactId>HServer</artifactId>
-            <version>${version.hserver}</version>
+            <artifactId>hserver</artifactId>
+            <groupId>cn.hserver</groupId>
+        </dependency>
+        <!--    web框架 -->
+        <dependency>
+            <artifactId>hserver-plugin-web</artifactId>
+            <groupId>cn.hserver</groupId>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
@@ -34,25 +44,8 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>net.hserver.plugins.maven</groupId>
-                <artifactId>hserver-maven-plugin</artifactId>
-                <version>3.0</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
+                <artifactId>hserver-plugin-maven</artifactId>
+                <groupId>cn.hserver</groupId>
             </plugin>
         </plugins>
     </build>
