@@ -1,28 +1,53 @@
 {
   "framework": "angel3",
-  "tests": [{
-     "default": {
-       "json_url": "/json",
-       "plaintext_url": "/plaintext",
-       "db_url": "/db",
-       "query_url": "/query?queries=",
-       "fortune_url": "/fortunes",
-       "update_url": "/updates?queries=",
-       "port": 8080,
-       "approach": "Realistic",
-       "classification": "Fullstack",
-       "database": "Postgres",
-       "framework": "angel3",
-       "language": "Dart",
-       "flavor": "None",
-       "orm": "Micro",
-       "platform": "angel3",
-       "webserver": "None",
-       "os": "Linux",
-       "database_os": "Linux",
-       "display_name": "Angel3",
-       "notes": "",
-       "versus": "None"
-     }
-  }]
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/query?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "angel3",
+        "language": "Dart",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "angel3",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Angel3",
+        "notes": "",
+        "versus": "None"
+      },
+      "mysql": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/query?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "MySQL",
+        "framework": "angel3",
+        "language": "Dart",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "angel3",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Angel3",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
 }
