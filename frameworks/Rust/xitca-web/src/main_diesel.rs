@@ -9,11 +9,9 @@ mod schema;
 mod ser;
 mod util;
 
-use std::{convert::Infallible, io};
-
 use serde::Serialize;
 use xitca_web::{
-    dev::Service,
+    dev::service::Service,
     handler::{handler_service, html::Html, json::Json, state::StateRef, uri::UriRef, Responder},
     http::header::SERVER,
     request::WebRequest,
@@ -23,17 +21,15 @@ use xitca_web::{
 };
 
 use self::db_diesel::{create, DieselPool};
-use self::util::{QueryParse, SERVER_HEADER_VALUE};
+use self::util::{QueryParse, DB_URL, SERVER_HEADER_VALUE};
 
 type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 
 type Request<'a> = WebRequest<'a, DieselPool>;
 
-fn main() -> io::Result<()> {
-    let config = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
-
-    HttpServer::new(move || {
-        App::with_async_state(move || async { Ok::<_, Infallible>(create(config).await.unwrap()) })
+fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::with_async_state(|| create(DB_URL))
             .at("/plaintext", get(handler_service(plain_text)))
             .at("/json", get(handler_service(json)))
             .at("/db", get(handler_service(db)))
@@ -48,19 +44,15 @@ fn main() -> io::Result<()> {
     .wait()
 }
 
-async fn middleware_fn<S, E>(service: &S, mut ctx: Request<'_>) -> Result<WebResponse, Infallible>
+async fn middleware_fn<S, E>(service: &S, mut ctx: Request<'_>) -> Result<WebResponse, E>
 where
     S: for<'r> Service<Request<'r>, Response = Result<WebResponse, Error>, Error = E>,
-    E: for<'r> Responder<Request<'r>, Output = WebResponse>,
 {
-    let mut res = match service.call(ctx.reborrow()).await {
-        Ok(Ok(res)) => res,
-        Ok(Err(err)) => err.respond_to(ctx).await,
+    let mut res = match service.call(ctx.reborrow()).await? {
+        Ok(res) => res,
         Err(err) => err.respond_to(ctx).await,
     };
-
     res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
-
     Ok(res)
 }
 
