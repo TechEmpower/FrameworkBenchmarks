@@ -2,11 +2,9 @@ package io.quarkus.benchmark.resource;
 
 import io.quarkus.benchmark.model.Fortune;
 import io.quarkus.benchmark.repository.FortuneRepository;
-import io.smallrye.context.api.CurrentThreadContext;
 import io.smallrye.mutiny.Uni;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.ext.web.templ.rocker.impl.VertxBufferOutput;
-import org.eclipse.microprofile.context.ThreadContext;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -24,7 +22,6 @@ public class FortuneResource  {
 
     @Produces("text/html; charset=UTF-8")
     @GET
-    @CurrentThreadContext(propagated = {}, cleared = {}, unchanged = ThreadContext.ALL_REMAINING)
     public Uni<Buffer> fortunes() {
         return repository.findAll()
                 .map(fortunes -> {
