@@ -4,6 +4,4 @@ psycopg2-binary==2.7.7
 python-dateutil==2.7.5
 pytzdata==2018.7
 six==1.12.0
-ujson==1.35
-uvloop==0.12.0
-vibora==0.0.6
+git+https://github.com/IterableTrucks/vibora.git@f622101bbf9d4fb045b04afcb32221a5c0673ed9#egg=vibora[fast]
