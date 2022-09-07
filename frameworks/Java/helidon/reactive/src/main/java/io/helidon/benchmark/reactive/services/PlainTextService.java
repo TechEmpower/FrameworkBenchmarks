@@ -13,7 +13,7 @@ import io.helidon.reactive.webserver.Service;
 public class PlainTextService implements Service, Handler {
 
     private static final byte[] MESSAGE = "Hello, World!".getBytes(StandardCharsets.UTF_8);
-    private static final String MEDIA_TYPE = MediaTypes.TEXT_PLAIN.toString();
+    private static final String MEDIA_TYPE = MediaTypes.TEXT_PLAIN.text();
 
     @Override
     public void update(Routing.Rules rules) {
