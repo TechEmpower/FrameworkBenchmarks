@@ -1,8 +1,8 @@
 package com.test.hserver.task;
 
+import cn.hserver.core.ioc.annotation.Bean;
+import cn.hserver.core.ioc.annotation.Task;
 import com.test.hserver.util.DateUtil;
-import top.hserver.core.ioc.annotation.Bean;
-import top.hserver.core.ioc.annotation.Task;
 
 @Bean
 public class TimeAdd {

@@ -34,3 +34,12 @@ orm = "Full"
 platform = "None"
 webserver = "xitca-server"
 versus = ""
+
+[wasm]
+urls.plaintext = "/plaintext"
+approach = "Realistic"
+classification = "Micro"
+os = "wasi"
+platform = "wasm"
+webserver = "xitca-server"
+versus = ""

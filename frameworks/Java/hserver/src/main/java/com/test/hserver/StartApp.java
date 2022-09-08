@@ -1,8 +1,8 @@
 package com.test.hserver;
 
-import top.hserver.HServerApplication;
-import top.hserver.core.ioc.annotation.HServerBoot;
-import top.hserver.core.server.context.ConstConfig;
+
+import cn.hserver.HServerApplication;
+import cn.hserver.core.ioc.annotation.HServerBoot;
 
 /**
  * @author hxm

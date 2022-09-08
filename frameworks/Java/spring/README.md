@@ -2,11 +2,9 @@
 
 This is the Spring MVC portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
-An embedded tomcat is used for the web server, with nearly everything configured with default settings.
+An embedded undertow is used for the web server, with nearly everything configured with default settings.
 The only thing changed is Hikari can use up to (2 * cores count) connections (the default is 10).
 See [About-Pool-Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing)
-
-Tomcat use a fixed thread pool that can grow up to 200 threads.
 
 There are two implementations :
 * For postgresql access, JdbcTemplate is used. See [JdbcDbRepository](src/main/java/hello/JdbcDbRepository.java).
@@ -38,8 +36,10 @@ There are two implementations :
 
 ## Versions
 
-* [Java OpenJDK 11](http://openjdk.java.net/)
-* [Spring boot 2.1.2](https://spring.io/projects/spring-boot)
+* [OpenJDK Runtime Environment Temurin-11.0.16+8 (build 11.0.16+8)](https://adoptium.net/es/temurin/releases/?version=11)
+* [Spring boot 2.6.9](https://spring.io/projects/spring-boot)
+
+The change to use OpenJDK Temurin is inspired in [whichjdk](https://whichjdk.com/) page advice.
 
 ## Test URLs
 
