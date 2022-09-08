@@ -20,19 +20,24 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+import com.jsoniter.output.JsonStream;
+import com.jsoniter.output.JsonStreamPool;
+import com.jsoniter.spi.JsonException;
+import io.helidon.benchmark.nima.models.DbRepository;
+import io.helidon.benchmark.nima.models.JdbcRepository;
+import io.helidon.benchmark.nima.services.DbService;
+import io.helidon.benchmark.nima.services.FortuneHandler;
 import io.helidon.common.LogConfig;
+import io.helidon.common.http.Http;
 import io.helidon.common.http.Http.Header;
 import io.helidon.common.http.Http.HeaderValue;
 import io.helidon.common.http.Http.HeaderValues;
+import io.helidon.config.Config;
 import io.helidon.nima.webserver.WebServer;
 import io.helidon.nima.webserver.http.Handler;
 import io.helidon.nima.webserver.http.HttpRules;
 import io.helidon.nima.webserver.http.ServerRequest;
 import io.helidon.nima.webserver.http.ServerResponse;
-
-import com.jsoniter.output.JsonStream;
-import com.jsoniter.output.JsonStreamPool;
-import com.jsoniter.spi.JsonException;
 
 /**
  * Main class of the benchmark.
@@ -40,6 +45,11 @@ import com.jsoniter.spi.JsonException;
  * rules of TechEmpower benchmarking.
  */
 public final class Main {
+
+    public static final Http.HeaderValue CONTENT_TYPE_HTML =
+            Http.HeaderValue.createCached(Http.Header.CONTENT_TYPE, "text/html; charset=UTF-8");
+    public static final Http.HeaderValue SERVER = Http.HeaderValue.createCached(Http.Header.SERVER, "Nima");
+
     private Main() {
     }
 
@@ -59,12 +69,13 @@ public final class Main {
 
     // exposed for tests
     static void routing(HttpRules rules) {
+        DbRepository repository = new JdbcRepository(Config.create());
+
         rules.get("/plaintext", new PlaintextHandler())
                 .get("/json", new JsonHandler())
-                .get("/db", new PlaintextHandler())         // TODO
-                .get("/queries", new PlaintextHandler())    // TODO
-                .get("/updates", new PlaintextHandler())    // TODO
-                .get("/fortunes", new PlaintextHandler());  // TODO
+                .get("/10k", new JsonKHandler(10))
+                .get("/fortunes", new FortuneHandler(repository))
+                .register("/", new DbService(repository));
     }
 
     private static byte[] serializeMsg(Message obj) {
@@ -82,9 +93,8 @@ public final class Main {
 
     static class PlaintextHandler implements Handler {
         static final HeaderValue CONTENT_TYPE = HeaderValue.createCached(Header.CONTENT_TYPE,
-                                                                         "text/plain; charset=UTF-8");
+                "text/plain; charset=UTF-8");
         static final HeaderValue CONTENT_LENGTH = HeaderValue.createCached(Header.CONTENT_LENGTH, "13");
-        static final HeaderValue SERVER = HeaderValue.createCached(Header.SERVER, "Nima");
 
         private static final byte[] RESPONSE_BYTES = "Hello, World!".getBytes(StandardCharsets.UTF_8);
 
@@ -92,23 +102,22 @@ public final class Main {
         public void handle(ServerRequest req, ServerResponse res) {
             res.header(CONTENT_LENGTH);
             res.header(CONTENT_TYPE);
-            res.header(SERVER);
+            res.header(Main.SERVER);
             res.send(RESPONSE_BYTES);
         }
     }
 
     static class JsonHandler implements Handler {
-        static final HeaderValue SERVER = HeaderValue.createCached(Header.SERVER, "Nima");
         private static final String MESSAGE = "Hello, World!";
         private static final int JSON_LENGTH = serializeMsg(new Message(MESSAGE)).length;
         static final HeaderValue CONTENT_LENGTH = HeaderValue.createCached(Header.CONTENT_LENGTH,
-                                                                           String.valueOf(JSON_LENGTH));
+                String.valueOf(JSON_LENGTH));
 
         @Override
         public void handle(ServerRequest req, ServerResponse res) {
             res.header(CONTENT_LENGTH);
             res.header(HeaderValues.CONTENT_TYPE_JSON);
-            res.header(SERVER);
+            res.header(Main.SERVER);
             res.send(serializeMsg(newMsg()));
         }
 
@@ -118,7 +127,6 @@ public final class Main {
     }
 
     static class JsonKHandler implements Handler {
-        static final HeaderValue SERVER = HeaderValue.createCached(Header.SERVER, "Nima");
         private final HeaderValue contentLength;
         private final String message;
 
@@ -126,14 +134,14 @@ public final class Main {
             this.message = "a".repeat(1024 * kilobytes);
             int length = serializeMsg(new Message(message)).length;
             this.contentLength = HeaderValue.createCached(Header.CONTENT_LENGTH,
-                                                          String.valueOf(length));
+                    String.valueOf(length));
         }
 
         @Override
         public void handle(ServerRequest req, ServerResponse res) {
             res.header(contentLength);
             res.header(HeaderValues.CONTENT_TYPE_JSON);
-            res.header(SERVER);
+            res.header(Main.SERVER);
             res.send(serializeMsg(newMsg()));
         }
 

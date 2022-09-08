@@ -23,10 +23,13 @@ import io.helidon.nima.testing.junit5.webserver.SetUpRoute;
 import io.helidon.nima.webclient.http1.Http1Client;
 import io.helidon.nima.webclient.http1.Http1ClientResponse;
 import io.helidon.nima.webserver.http.HttpRules;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.RepeatedTest;
 
+import static io.helidon.benchmark.nima.Main.JsonHandler;
+import static io.helidon.benchmark.nima.Main.PlaintextHandler.CONTENT_LENGTH;
+import static io.helidon.benchmark.nima.Main.PlaintextHandler.CONTENT_TYPE;
+import static io.helidon.benchmark.nima.Main.SERVER;
 import static io.helidon.common.testing.http.junit5.HttpHeaderMatcher.hasHeader;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -54,9 +57,9 @@ abstract class BenchmarkTestBase {
 
             assertThat(response.status(), is(Http.Status.OK_200));
             Assertions.assertAll(
-                    () -> assertThat(headers, hasHeader(Main.PlaintextHandler.CONTENT_TYPE)),
-                    () -> assertThat(headers, hasHeader(Main.PlaintextHandler.CONTENT_LENGTH)),
-                    () -> assertThat(headers, hasHeader(Main.PlaintextHandler.SERVER)),
+                    () -> assertThat(headers, hasHeader(CONTENT_TYPE)),
+                    () -> assertThat(headers, hasHeader(CONTENT_LENGTH)),
+                    () -> assertThat(headers, hasHeader(SERVER)),
                     () -> assertThat(headers, hasHeader(HeaderValues.CONNECTION_KEEP_ALIVE)),
                     () -> assertThat(headers, hasHeader(Http.Header.DATE)),
                     () -> assertThat(response.as(String.class), is("Hello, World!"))
@@ -72,8 +75,8 @@ abstract class BenchmarkTestBase {
             assertThat(response.status(), is(Http.Status.OK_200));
             Assertions.assertAll(
                     () -> assertThat(headers, hasHeader(HeaderValues.CONTENT_TYPE_JSON)),
-                    () -> assertThat(headers, hasHeader(Main.JsonHandler.CONTENT_LENGTH)),
-                    () -> assertThat(headers, hasHeader(Main.JsonHandler.SERVER)),
+                    () -> assertThat(headers, hasHeader(JsonHandler.CONTENT_LENGTH)),
+                    () -> assertThat(headers, hasHeader(SERVER)),
                     () -> assertThat(headers, hasHeader(HeaderValues.CONNECTION_KEEP_ALIVE)),
                     () -> assertThat(headers, hasHeader(Http.Header.DATE)),
                     () -> assertThat(response.as(String.class), is("{\"message\":\"Hello, World!\"}"))

@@ -35,3 +35,8 @@ server:
       validate-path: false
       recv-log: false
       send-log: false
+
+host: "tfb-database"
+db: "hello_world"
+username: benchmarkdbuser
+password: benchmarkdbpass
