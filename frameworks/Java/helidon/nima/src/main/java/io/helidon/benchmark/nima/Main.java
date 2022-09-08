@@ -61,7 +61,10 @@ public final class Main {
     static void routing(HttpRules rules) {
         rules.get("/plaintext", new PlaintextHandler())
                 .get("/json", new JsonHandler())
-                .get("/10k", new JsonKHandler(10));
+                .get("/db", new PlaintextHandler())         // TODO
+                .get("/queries", new PlaintextHandler())    // TODO
+                .get("/updates", new PlaintextHandler())    // TODO
+                .get("/fortunes", new PlaintextHandler());  // TODO
     }
 
     private static byte[] serializeMsg(Message obj) {
