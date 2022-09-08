@@ -1,5 +1,6 @@
 package com.hexagonkt
 
+import com.hexagonkt.core.fieldsMapOf
 import com.hexagonkt.core.media.ApplicationMedia.JSON
 import com.hexagonkt.core.media.TextMedia.HTML
 import com.hexagonkt.core.media.TextMedia.PLAIN
@@ -10,7 +11,7 @@ import com.hexagonkt.http.server.handlers.HttpServerContext
 import com.hexagonkt.http.server.handlers.PathHandler
 import com.hexagonkt.http.server.handlers.path
 import com.hexagonkt.http.toHttpFormat
-import com.hexagonkt.serialization.jackson.json.Json
+import com.hexagonkt.serialization.dsl.json.Json
 import com.hexagonkt.serialization.serialize
 import com.hexagonkt.store.BenchmarkStore
 import com.hexagonkt.templates.TemplatePort
@@ -47,7 +48,7 @@ class Controller(
             }
 
             get("/plaintext") { ok(settings.textMessage, contentType = plain) }
-            get("/json") { ok(Message(settings.textMessage).serialize(Json.raw), contentType = json) }
+            get("/json") { ok(Message(settings.textMessage).toMap().serialize(Json.raw), contentType = json) }
             get("/fortunes") { listFortunes(store, templateUrl, templateEngine) }
             get("/db") { dbQuery(store) }
             get("/query") { getWorlds(store) }
@@ -71,7 +72,7 @@ class Controller(
     private fun HttpServerContext.dbQuery(store: BenchmarkStore): HttpServerContext {
         val ids = listOf(randomWorld())
         val worlds = store.findWorlds(ids)
-        val world = worlds.first()
+        val world = worlds.first().toMap()
 
         return sendJson(world)
     }
@@ -79,7 +80,7 @@ class Controller(
     private fun HttpServerContext.getWorlds(store: BenchmarkStore): HttpServerContext {
         val worldsCount = getWorldsCount(queriesParam)
         val ids = (1..worldsCount).map { randomWorld() }
-        val worlds = store.findWorlds(ids)
+        val worlds = store.findWorlds(ids).map { it.toMap() }
 
         return sendJson(worlds)
     }
@@ -87,7 +88,7 @@ class Controller(
     private fun HttpServerContext.getCachedWorlds(store: BenchmarkStore): HttpServerContext {
         val worldsCount = getWorldsCount(cachedQueriesParam)
         val ids = (1..worldsCount).map { randomWorld() }
-        val worlds = store.findCachedWorlds(ids)
+        val worlds = store.findCachedWorlds(ids).map { it.toMap() }
 
         return sendJson(worlds)
     }
@@ -98,7 +99,7 @@ class Controller(
 
         store.replaceWorlds(worlds)
 
-        return sendJson(worlds)
+        return sendJson(worlds.map { it.toMap() })
     }
 
     private fun HttpServerContext.sendJson(body: Any): HttpServerContext =
@@ -116,4 +117,19 @@ class Controller(
 
     private fun randomWorld(): Int =
         ThreadLocalRandom.current().nextInt(worldRows) + 1
+
+    private fun Message.toMap(): Map<String, *> =
+        fieldsMapOf(Message::message to message)
+
+    private fun World.toMap(): Map<String, *> =
+        fieldsMapOf(
+            World::id to id,
+            World::randomNumber to randomNumber,
+        )
+
+    private fun CachedWorld.toMap(): Map<String, *> =
+        fieldsMapOf(
+            CachedWorld::id to id,
+            CachedWorld::randomNumber to randomNumber,
+        )
 }
