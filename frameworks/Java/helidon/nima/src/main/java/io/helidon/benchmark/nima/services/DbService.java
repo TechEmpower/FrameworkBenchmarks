@@ -3,7 +3,6 @@ package io.helidon.benchmark.nima.services;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import io.helidon.benchmark.nima.models.DbRepository;
 import io.helidon.benchmark.nima.models.World;
@@ -20,6 +19,7 @@ import jakarta.json.JsonObject;
 import static io.helidon.benchmark.nima.Main.SERVER;
 
 public class DbService implements HttpService {
+    private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
 
     private final DbRepository repository;
 
@@ -36,16 +36,16 @@ public class DbService implements HttpService {
 
     private void db(ServerRequest req, ServerResponse res) {
         res.header(SERVER);
-        World world = repository.getWorld(randomWorldNumber());
+        World world = repository.getWorld();
         res.send(world.toJson());
     }
 
     private void queries(ServerRequest req, ServerResponse res) {
         res.header(SERVER);
         int count = parseQueryCount(req.query());
+        List<World> worlds = repository.getWorlds(count);
         JsonArrayBuilder arrayBuilder = JSON.createArrayBuilder();
-        for (int i = 0; i < count; i++) {
-            World world = repository.getWorld(randomWorldNumber());
+        for (World world : worlds) {
             JsonObject json = world.toJson();
             arrayBuilder.add(json);
         }
@@ -54,33 +54,22 @@ public class DbService implements HttpService {
 
     private void updates(ServerRequest req, ServerResponse res) {
         res.header(SERVER);
-        final int count = parseQueryCount(req.query());
+        int count = parseQueryCount(req.query());
+        List<World> worlds = repository.updateWorlds(count);
         JsonArrayBuilder arrayBuilder = JSON.createArrayBuilder();
-        for (int i = 0; i < count; i++) {
-            World world = repository.getWorld(randomWorldNumber());
-            world.randomNumber = randomWorldNumber();
-            repository.updateWorld(world);
+        for (World world : worlds) {
             JsonObject json = world.toJson();
             arrayBuilder.add(json);
         }
         res.send(arrayBuilder.build());
     }
 
-    private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
-
-    private int randomWorldNumber() {
-        return 1 + ThreadLocalRandom.current().nextInt(10000);
-    }
-
     private int parseQueryCount(Parameters parameters) {
         List<String> values = parameters.all("queries");
-
         if (values.isEmpty()) {
             return 1;
         }
-
         String first = values.get(0);
-
         int parsedValue;
         try {
             parsedValue = Integer.parseInt(first, 10);
