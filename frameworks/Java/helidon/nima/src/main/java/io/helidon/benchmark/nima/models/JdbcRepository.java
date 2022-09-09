@@ -18,32 +18,27 @@ import static io.helidon.benchmark.nima.models.DbRepository.randomWorldNumber;
 
 public class JdbcRepository implements DbRepository {
 
-    private final Vertx vertx;
-    private final PgConnectOptions connectOptions;
-    private final PoolOptions clientOptions;
-    private final PoolOptions poolOptions;
+    private final SqlClient pool;
 
     public JdbcRepository(Config config) {
-        vertx = Vertx.vertx(new VertxOptions()
+        Vertx vertx = Vertx.vertx(new VertxOptions()
                 .setPreferNativeTransport(true));
-        connectOptions = new PgConnectOptions()
+        PgConnectOptions connectOptions = new PgConnectOptions()
                 .setPort(config.get("port").asInt().orElse(5432))
                 .setCachePreparedStatements(config.get("cache-prepared-statements").asBoolean().orElse(true))
                 .setHost(config.get("host").asString().orElse("tfb-database"))
                 .setDatabase(config.get("db").asString().orElse("hello_world"))
                 .setUser(config.get("username").asString().orElse("benchmarkdbuser"))
                 .setPassword(config.get("password").asString().orElse("benchmarkdbpass"));
-        clientOptions = new PoolOptions().setMaxSize(10);
-        poolOptions = new PoolOptions().setMaxSize(40);
+        PoolOptions clientOptions = new PoolOptions()
+                .setMaxSize(config.get("sql-pool-size").asInt().orElse(64));
+        pool = PgPool.client(vertx, connectOptions, clientOptions);
     }
 
     @Override
     public World getWorld(int id) {
         try {
-            SqlClient client = PgPool.client(vertx, connectOptions, clientOptions);
-            World world = getWorld(id, client);
-            client.close().toCompletionStage().toCompletableFuture().get();
-            return world;
+            return getWorld(id, pool);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -53,9 +48,8 @@ public class JdbcRepository implements DbRepository {
     public List<World> getWorlds(int count) {
         try {
             List<World> result = new ArrayList<>(count);
-            SqlClient client = PgPool.client(vertx, connectOptions, clientOptions);
             for (int i = 0; i < count; i++) {
-                World world = client.preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
+                World world = pool.preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
                         .execute(Tuple.of(randomWorldNumber()))
                         .map(rows -> {
                             Row r = rows.iterator().next();
@@ -63,7 +57,6 @@ public class JdbcRepository implements DbRepository {
                         }).toCompletionStage().toCompletableFuture().get();
                 result.add(world);
             }
-            client.close().toCompletionStage().toCompletableFuture().get();
             return result;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -73,10 +66,7 @@ public class JdbcRepository implements DbRepository {
     @Override
     public World updateWorld(World world) {
         try {
-            SqlClient pool = PgPool.pool(vertx, connectOptions, poolOptions);
-            World result = updateWorld(world, pool);
-            pool.close().toCompletionStage().toCompletableFuture().get();
-            return result;
+            return updateWorld(world, pool);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -86,13 +76,11 @@ public class JdbcRepository implements DbRepository {
     public List<World> updateWorlds(int count) {
         try {
             List<World> result = new ArrayList<>(count);
-            SqlClient pool = PgPool.pool(vertx, connectOptions, clientOptions);
             for (int i = 0; i < count; i++) {
                 World world = getWorld(randomWorldNumber(), pool);
                 world.randomNumber = randomWorldNumber();
                 result.add(updateWorld(world, pool));
             }
-            pool.close().toCompletionStage().toCompletableFuture().get();
             return result;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -102,8 +90,7 @@ public class JdbcRepository implements DbRepository {
     @Override
     public List<Fortune> getFortunes() {
         try {
-            SqlClient client = PgPool.client(vertx, connectOptions, clientOptions);
-            return client.preparedQuery("SELECT id, message FROM fortune")
+            return pool.preparedQuery("SELECT id, message FROM fortune")
                     .execute()
                     .map(rows -> {
                         List<Fortune> fortunes = new ArrayList<>(rows.size() + 1);
