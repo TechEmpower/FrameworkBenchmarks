@@ -21,9 +21,8 @@ server:
       port: 8080
       backlog: 8192
       receive-buffer-size: 64000
-      write-queue-length: 8192
-      # use the following to disable asynchronous
-      # write-queue-length: 0
+      # set write-queue-length to 0 to disable async writes
+      write-queue-length: 1024
       connection-options:
         read-timeout-seconds: 0
         connect-timeout-seconds: 0
