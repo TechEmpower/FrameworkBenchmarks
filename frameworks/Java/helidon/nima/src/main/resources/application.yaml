@@ -39,4 +39,4 @@ host: "tfb-database"
 db: "hello_world"
 username: benchmarkdbuser
 password: benchmarkdbpass
-sql-pool-size: 128
+sql-pool-size: 256
