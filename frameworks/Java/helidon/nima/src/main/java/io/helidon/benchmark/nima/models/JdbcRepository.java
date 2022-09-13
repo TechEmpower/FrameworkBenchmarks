@@ -18,7 +18,8 @@ import static io.helidon.benchmark.nima.models.DbRepository.randomWorldNumber;
 
 public class JdbcRepository implements DbRepository {
 
-    private final SqlClient pool;
+    private final SqlClient queryPool;
+    private final SqlClient updatePool;
 
     public JdbcRepository(Config config) {
         Vertx vertx = Vertx.vertx(new VertxOptions()
@@ -32,13 +33,14 @@ public class JdbcRepository implements DbRepository {
                 .setPassword(config.get("password").asString().orElse("benchmarkdbpass"));
         PoolOptions clientOptions = new PoolOptions()
                 .setMaxSize(config.get("sql-pool-size").asInt().orElse(64));
-        pool = PgPool.client(vertx, connectOptions, clientOptions);
+        queryPool = PgPool.client(vertx, connectOptions, clientOptions);
+        updatePool = PgPool.client(vertx, connectOptions, clientOptions);
     }
 
     @Override
     public World getWorld(int id) {
         try {
-            return getWorld(id, pool);
+            return getWorld(id, queryPool);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -49,7 +51,7 @@ public class JdbcRepository implements DbRepository {
         try {
             List<World> result = new ArrayList<>(count);
             for (int i = 0; i < count; i++) {
-                World world = pool.preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
+                World world = queryPool.preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
                         .execute(Tuple.of(randomWorldNumber()))
                         .map(rows -> {
                             Row r = rows.iterator().next();
@@ -66,7 +68,7 @@ public class JdbcRepository implements DbRepository {
     @Override
     public World updateWorld(World world) {
         try {
-            return updateWorld(world, pool);
+            return updateWorld(world, updatePool);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -77,9 +79,9 @@ public class JdbcRepository implements DbRepository {
         try {
             List<World> result = new ArrayList<>(count);
             for (int i = 0; i < count; i++) {
-                World world = getWorld(randomWorldNumber(), pool);
+                World world = getWorld(randomWorldNumber(), queryPool);
                 world.randomNumber = randomWorldNumber();
-                result.add(updateWorld(world, pool));
+                result.add(updateWorld(world, updatePool));
             }
             return result;
         } catch (Exception e) {
@@ -90,7 +92,7 @@ public class JdbcRepository implements DbRepository {
     @Override
     public List<Fortune> getFortunes() {
         try {
-            return pool.preparedQuery("SELECT id, message FROM fortune")
+            return queryPool.preparedQuery("SELECT id, message FROM fortune")
                     .execute()
                     .map(rows -> {
                         List<Fortune> fortunes = new ArrayList<>(rows.size() + 1);
@@ -105,8 +107,8 @@ public class JdbcRepository implements DbRepository {
         }
     }
 
-    private static World getWorld(int id, SqlClient client) throws ExecutionException, InterruptedException {
-        return client.preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
+    private static World getWorld(int id, SqlClient pool) throws ExecutionException, InterruptedException {
+        return pool.preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
                 .execute(Tuple.of(id))
                 .map(rows -> {
                     Row r = rows.iterator().next();
@@ -115,8 +117,8 @@ public class JdbcRepository implements DbRepository {
 
     }
 
-    private static World updateWorld(World world, SqlClient client) throws ExecutionException, InterruptedException {
-        return client.preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
+    private static World updateWorld(World world, SqlClient pool) throws ExecutionException, InterruptedException {
+        return pool.preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
                 .execute(Tuple.of(world.randomNumber, world.id))
                 .toCompletionStage()
                 .thenApply(rows -> world)
