@@ -28,9 +28,5 @@ COPY --from=maven /helidon/target/benchmark-nima.jar app.jar
 
 EXPOSE 8080
 
-CMD java -server --enable-preview \
-    -XX:+UseNUMA \
-    -XX:+UseParallelGC \
-    -Dio.netty.buffer.checkBounds=false \
-    -Dio.netty.buffer.checkAccessible=false \
+CMD java --enable-preview \
     -jar app.jar

@@ -40,7 +40,7 @@
         "language": "Java",
         "flavor": "None",
         "orm": "Raw",
-        "platform": "Netty",
+        "platform": "Nima",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
