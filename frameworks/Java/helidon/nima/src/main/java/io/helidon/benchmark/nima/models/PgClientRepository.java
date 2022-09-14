@@ -2,6 +2,7 @@ package io.helidon.benchmark.nima.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import io.helidon.config.Config;
@@ -16,12 +17,12 @@ import io.vertx.sqlclient.Tuple;
 
 import static io.helidon.benchmark.nima.models.DbRepository.randomWorldNumber;
 
-public class JdbcRepository implements DbRepository {
+public class PgClientRepository implements DbRepository {
 
     private final SqlClient queryPool;
     private final SqlClient updatePool;
 
-    public JdbcRepository(Config config) {
+    public PgClientRepository(Config config) {
         Vertx vertx = Vertx.vertx(new VertxOptions()
                 .setPreferNativeTransport(true));
         PgConnectOptions connectOptions = new PgConnectOptions()
@@ -68,7 +69,7 @@ public class JdbcRepository implements DbRepository {
     @Override
     public World updateWorld(World world) {
         try {
-            return updateWorld(world, updatePool);
+            return updateWorld(world, updatePool).get();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -81,7 +82,8 @@ public class JdbcRepository implements DbRepository {
             for (int i = 0; i < count; i++) {
                 World world = getWorld(randomWorldNumber(), queryPool);
                 world.randomNumber = randomWorldNumber();
-                result.add(updateWorld(world, updatePool));
+                updateWorld(world, updatePool);
+                result.add(world);
             }
             return result;
         } catch (Exception e) {
@@ -117,11 +119,11 @@ public class JdbcRepository implements DbRepository {
 
     }
 
-    private static World updateWorld(World world, SqlClient pool) throws ExecutionException, InterruptedException {
+    private static CompletableFuture<World> updateWorld(World world, SqlClient pool) throws ExecutionException, InterruptedException {
         return pool.preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
                 .execute(Tuple.of(world.randomNumber, world.id))
                 .toCompletionStage()
                 .thenApply(rows -> world)
-                .toCompletableFuture().get();
+                .toCompletableFuture();
     }
 }

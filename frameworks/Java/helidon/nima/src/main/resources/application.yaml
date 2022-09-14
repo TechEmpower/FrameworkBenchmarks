@@ -35,8 +35,9 @@ server:
       recv-log: false
       send-log: false
 
-host: "tfb-database"
+host: "localhost"
 db: "hello_world"
 username: benchmarkdbuser
 password: benchmarkdbpass
 sql-pool-size: 256
+db-repository: "pgclient"     # "pgclient" (default) or "hikari"

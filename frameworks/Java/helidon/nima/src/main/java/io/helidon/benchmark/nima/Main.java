@@ -19,12 +19,14 @@ package io.helidon.benchmark.nima;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 import com.jsoniter.output.JsonStream;
 import com.jsoniter.output.JsonStreamPool;
 import com.jsoniter.spi.JsonException;
 import io.helidon.benchmark.nima.models.DbRepository;
-import io.helidon.benchmark.nima.models.JdbcRepository;
+import io.helidon.benchmark.nima.models.HikariJdbcRepository;
+import io.helidon.benchmark.nima.models.PgClientRepository;
 import io.helidon.benchmark.nima.services.DbService;
 import io.helidon.benchmark.nima.services.FortuneHandler;
 import io.helidon.common.LogConfig;
@@ -33,6 +35,7 @@ import io.helidon.common.http.Http.Header;
 import io.helidon.common.http.Http.HeaderValue;
 import io.helidon.common.http.Http.HeaderValues;
 import io.helidon.config.Config;
+import io.helidon.config.ConfigException;
 import io.helidon.nima.webserver.WebServer;
 import io.helidon.nima.webserver.http.Handler;
 import io.helidon.nima.webserver.http.HttpRules;
@@ -45,6 +48,7 @@ import io.helidon.nima.webserver.http.ServerResponse;
  * rules of TechEmpower benchmarking.
  */
 public final class Main {
+    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
     public static final Http.HeaderValue CONTENT_TYPE_HTML =
             Http.HeaderValue.createCached(Http.Header.CONTENT_TYPE, "text/html; charset=UTF-8");
@@ -69,7 +73,19 @@ public final class Main {
 
     // exposed for tests
     static void routing(HttpRules rules) {
-        DbRepository repository = new JdbcRepository(Config.create());
+        Config config = Config.create();
+
+        DbRepository repository;
+        String name = config.get("db-repository").asString().orElse("pgclient");
+        if (name.equalsIgnoreCase("hikari")) {
+            repository = new HikariJdbcRepository(config);
+        } else if (name.equalsIgnoreCase("pgclient")) {
+            repository = new PgClientRepository(config);
+        } else {
+            throw new ConfigException("Allowed values for 'db-repository' are 'hikari' and 'pgclient'");
+        }
+
+        LOGGER.info("Using '" + name + "' as DB repository");
 
         rules.get("/plaintext", new PlaintextHandler())
                 .get("/json", new JsonHandler())
