@@ -20,7 +20,7 @@ fi;
 ./copy-files.sh node-protect $AGENT_FILE
 
 # Update dockerfiles to use correct package
-grep -r @contrast/agent ../frameworks/JavaScript -l | xargs -I '{}' -n 1 sed -i.bak "s#@contrast/agent#@contrast/protect-agent#" {} && ls -d ../frameworks/JavaScript/*/*.bak | xargs -n 1 rm
+grep -r @contrast/agent ../frameworks/JavaScript -l | xargs -I '{}' -n 1 sed -i.bak "s#@contrast/agent#@contrast/mono-workspace/protect-agent#" {} && ls -d ../frameworks/JavaScript/*/*.bak | xargs -n 1 rm
 
 # Start contrast-service
 ./start-contrast-service.sh
