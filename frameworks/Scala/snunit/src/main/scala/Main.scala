@@ -1,10 +1,10 @@
 import snunit._
 import upickle.default._
 
-case class Message(message: String)
+final case class Message(message: String)
 
 object Message {
-  implicit val messageRW: ReadWriter[Message] = macroRW[Message]
+  implicit final val messageRW: ReadWriter[Message] = macroRW[Message]
 }
 
 object Main {
