@@ -77,6 +77,7 @@ public final class Main {
 
         DbRepository repository;
         String name = config.get("db-repository").asString().orElse("pgclient");
+        LOGGER.info("Using '" + name + "' as DB repository");
         if (name.equalsIgnoreCase("hikari")) {
             repository = new HikariJdbcRepository(config);
         } else if (name.equalsIgnoreCase("pgclient")) {
@@ -84,8 +85,6 @@ public final class Main {
         } else {
             throw new ConfigException("Allowed values for 'db-repository' are 'hikari' and 'pgclient'");
         }
-
-        LOGGER.info("Using '" + name + "' as DB repository");
 
         rules.get("/plaintext", new PlaintextHandler())
                 .get("/json", new JsonHandler())
