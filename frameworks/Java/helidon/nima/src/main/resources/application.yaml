@@ -45,5 +45,5 @@ db-repository: "pgclient"     # "pgclient" (default) or "hikari"
 
 # The following for pgclient only
 update-batch-size: 10
-update-timeout-millis: 5000
+update-timeout-millis: 10000
 update-max-retries: 3
