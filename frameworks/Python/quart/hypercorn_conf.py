@@ -9,4 +9,5 @@ if _is_travis:
 
 bind = ["0.0.0.0:8080"]
 keep_alive_timeout = 120
+loglevel = "error"
 worker_class = "uvloop"
