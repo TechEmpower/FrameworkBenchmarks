@@ -1,4 +1,4 @@
-FROM golang:1.17
+FROM docker.io/golang:1.19
 
 WORKDIR /atreugo
 
