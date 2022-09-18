@@ -123,7 +123,7 @@ Future configureServer(Angel app) async {
       result.add(updatedRec.value);
     }
 
-    //rint('Process Time: ${stopwatch.elapsed.inMilliseconds}ms');
+    //print('Process Time: ${stopwatch.elapsed.inMilliseconds}ms');
     //stopwatch.stop();
 
     res.json(result);

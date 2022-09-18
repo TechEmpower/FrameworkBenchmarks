@@ -30,7 +30,11 @@ dev_dependencies:
   io: ^1.0.0
   test: ^1.17.5
   lints: ^2.0.0
-#dependency_overrides:
+dependency_overrides:
+  mysql_client:
+    git: 
+      url: https://github.com/dukefirehawk/mysql.dart
+      ref: feature/timeout 
 #  angel3_orm:
 #    path: ../../../../../belatuk/packages/orm/angel_orm
 #  angel3_orm_postgres:

@@ -70,6 +70,6 @@ Future<MySQLConnection> connectToMysql(Map configuration) async {
       password: mysqlConfig['password'] as String? ?? '',
       secure: mysqlConfig['use_ssl'] as bool? ?? false);
 
-  await connection.connect(timeoutMs: 10000);
+  await connection.connect(timeoutMs: 30000);
   return connection;
 }

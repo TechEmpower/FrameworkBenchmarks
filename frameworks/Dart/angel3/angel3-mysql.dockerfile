@@ -18,4 +18,5 @@ RUN dart pub upgrade
 # Set environment, start server
 ENV ANGEL_ENV=production
 EXPOSE 8080
-CMD dart ./run/prod.dart -p 8080 -a 0.0.0.0 -j 50
+CMD dart ./run/prod.dart -p 8080 -a 0.0.0.0 -j 100
+#CMD dart ./run/dev.dart
