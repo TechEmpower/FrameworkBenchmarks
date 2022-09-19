@@ -1,6 +1,6 @@
 module gearbox/src
 
-go 1.14
+go 1.19
 
 require (
 	github.com/gogearbox/gearbox v1.1.1
