@@ -1,4 +1,4 @@
-module fasthttp/src
+module fasthttp/app
 
 go 1.19
 
