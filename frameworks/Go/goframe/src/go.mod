@@ -1,4 +1,4 @@
-module goframe
+module goframe/app
 
 go 1.19
 
