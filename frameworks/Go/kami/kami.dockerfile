@@ -5,4 +5,4 @@ WORKDIR /kami
 
 EXPOSE 8080
 
-CMD go run ./kami/server.go
+CMD GOAMD64=v3 go run ./kami/server.go
