@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.19-alpine
+FROM docker.io/golang:1.19
 
 WORKDIR /home
 COPY . .
