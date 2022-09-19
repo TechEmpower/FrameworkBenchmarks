@@ -1,4 +1,4 @@
-module chi
+module chi/server
 
 go 1.19
 
