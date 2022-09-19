@@ -1,5 +1,5 @@
 # build layer
-FROM golang:1.14-alpine as builder
+FROM docker.io/golang:1.19-alpine as builder
 
 ADD ./src/chi /chi
 WORKDIR /chi
