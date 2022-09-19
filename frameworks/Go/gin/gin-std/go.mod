@@ -1,4 +1,4 @@
-module gin
+module gin-std/server
 
 go 1.19
 
