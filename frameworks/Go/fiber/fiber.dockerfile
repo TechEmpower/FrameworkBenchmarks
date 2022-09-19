@@ -6,7 +6,7 @@ COPY ./src /fiber
 
 RUN go generate -x ./templates
 
-RUN go build -ldflags="-s -w" -o app .
+RUN gGOAMD64=v3 o build -ldflags="-s -w" -o app .
 
 EXPOSE 8080
 
