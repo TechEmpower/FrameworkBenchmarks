@@ -1,4 +1,4 @@
-module evio
+module evio/app
 
 go 1.19
 
