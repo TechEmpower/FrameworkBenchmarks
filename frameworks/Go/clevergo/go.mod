@@ -1,4 +1,4 @@
-module clevergo
+module clevergo/app
 
 go 1.19
 
