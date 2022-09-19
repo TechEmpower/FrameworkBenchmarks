@@ -3,13 +3,8 @@ FROM docker.io/golang:1.19-alpine
 WORKDIR /home
 COPY . .
 
-RUN mkdir -p bin
-ENV GOPATH /home
-ENV path ${GOPATH}/bin:${PATH}
-
-RUN go get github.com/go-martini/martini
-RUN go get github.com/lib/pq
+RUN go mod download
 
 EXPOSE 8080
 
-CMD go run randomNumber.go sanitizeQueries.go main.go
+CMD go run .
