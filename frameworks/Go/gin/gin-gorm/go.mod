@@ -1,6 +1,6 @@
 module gin-gorm/main
 
-go 1.15
+go 1.19
 
 require (
 	github.com/gin-gonic/gin v1.6.3

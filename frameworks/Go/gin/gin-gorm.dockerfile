@@ -1,4 +1,4 @@
-FROM golang as build-env
+FROM docker.io/golang:1.19 as build-env
 
 WORKDIR /src/
 ADD ./gin-gorm /src/
