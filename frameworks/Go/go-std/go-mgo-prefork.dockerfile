@@ -13,4 +13,4 @@ RUN go build -ldflags="-s -w" -o app .
 
 EXPOSE 8080
 
-CMD ./app -db mgo -prefork -db_connection_string "tfb-database"
+CMD ./app -db mgo -db_connection_string "tfb-database" -prefork
