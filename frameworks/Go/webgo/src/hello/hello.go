@@ -1,29 +1,33 @@
 package main
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"runtime"
 
-	"github.com/hoisie/web"
+	"github.com/JaCoB1123/web"
+	"github.com/tidwall/sjson"
 )
 
 type MessageStruct struct {
 	Message string `json:"message"`
 }
 
-func hello(ctx *web.Context, val string) {
-	m := MessageStruct{"Hello, World!"}
-	j, _ := json.Marshal(m)
-	ctx.ContentType("application/json")
-	ctx.Write(j)
+func getJSON(ctx *web.Context) []byte {
+	ctx.SetHeader("Server", "web.go", false)
+	ctx.SetHeader("Content-Type", "application/json", true)
+	j, _ := sjson.SetBytes(nil, "message", "Hello, World!")
+	return j
 }
 
 func main() {
 	logger := log.New(ioutil.Discard, "", 0)
 	runtime.GOMAXPROCS(runtime.NumCPU())
-	web.Get("/(.*)", hello)
-	web.SetLogger(logger)
-	web.Run("0.0.0.0:8080")
+
+	server := web.NewServer()
+	server.Get("/json", getJSON)
+	server.SetLogger(logger)
+
+	http.ListenAndServe(":8080", server)
 }
