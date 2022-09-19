@@ -1,6 +1,6 @@
 module silverlining/src
 
-go 1.18
+go 1.19
 
 require github.com/go-www/silverlining v1.1.1
 
