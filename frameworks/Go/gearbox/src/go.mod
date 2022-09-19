@@ -1,4 +1,4 @@
-module gearbox/src
+module gearbox/app
 
 go 1.19
 
