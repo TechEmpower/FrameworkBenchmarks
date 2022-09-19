@@ -1,6 +1,6 @@
 module clevergo
 
-go 1.14
+go 1.19
 
 require (
 	clevergo.tech/clevergo v0.3.0
