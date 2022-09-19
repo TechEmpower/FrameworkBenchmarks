@@ -1,4 +1,4 @@
-module fiber/src
+module fiber/app
 
 go 1.19
 

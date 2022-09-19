@@ -10,7 +10,7 @@ import (
 	"sort"
 	"sync"
 
-	"fiber/src/templates"
+	"fiber/app/templates"
 
 	"github.com/gofiber/fiber/v2"
 	pgx "github.com/jackc/pgx/v4"
