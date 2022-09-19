@@ -1,6 +1,5 @@
 FROM docker.io/golang:1.19
 
-ENV GO111MODULE on
 WORKDIR /go-std
 
 COPY ./src /go-std
