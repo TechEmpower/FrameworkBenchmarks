@@ -1,6 +1,6 @@
 FROM golang:1.14
 
-ADD ./ /goji
+ADD ./src /goji
 WORKDIR /goji
 
 RUN mkdir bin
@@ -11,7 +11,7 @@ RUN go get github.com/go-sql-driver/mysql
 RUN go get github.com/zenazn/goji
 RUN go get github.com/zenazn/goji/web
 
-RUN go build -o server src/goji/server.go
+RUN go build -o server ./goji/server.go
 
 EXPOSE 8080
 
