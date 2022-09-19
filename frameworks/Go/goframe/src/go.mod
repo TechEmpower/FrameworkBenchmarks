@@ -1,6 +1,6 @@
 module goframe
 
-go 1.17
+go 1.19
 
 require (
 	github.com/bytedance/sonic v1.1.0
