@@ -2,7 +2,7 @@ module ronykit
 
 go 1.19
 
-require github.com/clubpay/ronykit v0.6.19
+require github.com/clubpay/ronykit v0.6.24
 
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
