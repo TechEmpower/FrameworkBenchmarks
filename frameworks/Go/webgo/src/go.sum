@@ -1,0 +1,6 @@
+github.com/hoisie/web v0.1.0 h1:oCXxaS9BnWgJZsubx4X+NuOyKPc9y4kB8Eg0jof6SUc=
+github.com/hoisie/web v0.1.0/go.mod h1:9rKIjxNOF05p21HiYMbaQy+ijn3nHaWi2mV3l/KnoIE=
+github.com/josharian/intern v1.0.0 h1:vlS4z54oSdjm0bgjRigI+G1HpF+tI+9rE5LLzOg8HmY=
+github.com/josharian/intern v1.0.0/go.mod h1:5DoeVV0s6jJacbCEi61lwdGj/aVlrQvzHFFd8Hwg//Y=
+github.com/mailru/easyjson v0.7.7 h1:UGYAvKxe3sBsEDzO8ZeWOSlIQfWFlxbzLZe7hwFURr0=
+github.com/mailru/easyjson v0.7.7/go.mod h1:xzfreul335JAWq5oZzymOObrkdz5UnU4kGfJJLY9Nlc=

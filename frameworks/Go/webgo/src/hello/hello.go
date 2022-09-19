@@ -2,10 +2,11 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/hoisie/web"
 	"io/ioutil"
 	"log"
 	"runtime"
+
+	"github.com/hoisie/web"
 )
 
 type MessageStruct struct {
