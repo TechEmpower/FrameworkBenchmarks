@@ -5,12 +5,14 @@ WORKDIR /go-std
 
 COPY ./src /go-std
 
-RUN go get github.com/valyala/quicktemplate/qtc
-RUN go get -u github.com/mailru/easyjson/...
 RUN go mod download
 
-RUN go generate ./templates
-RUN easyjson -pkg
+# next line intentionnaly commented to prevent generating easyjson code:
+# RUN go generate -x ./...
+
+# generate only quicktempalte code:
+RUN go generate -x ./templates
+
 RUN go build -ldflags="-s -w" -o app .
 
 EXPOSE 8080
