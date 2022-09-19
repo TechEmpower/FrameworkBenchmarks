@@ -1,4 +1,4 @@
-module ronykit
+module ronykit/app
 
 go 1.19
 
