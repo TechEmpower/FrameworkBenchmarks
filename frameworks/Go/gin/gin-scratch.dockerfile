@@ -4,7 +4,7 @@ FROM golang:1.14-alpine as builder
 WORKDIR /gin
 ENV GO111MODULE=on
 
-COPY ./ /gin
+COPY ./gin-std /gin
 
 RUN apk update \
     apk add --no-cache git \

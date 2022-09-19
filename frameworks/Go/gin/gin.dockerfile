@@ -2,9 +2,8 @@ FROM golang:1.18
 
 ENV GO111MODULE=off
 
-ADD ./ /gin
-COPY ./templates /templates
 WORKDIR /gin
+COPY ./gin-std /gin
 
 RUN mkdir bin
 ENV GOPATH /gin
