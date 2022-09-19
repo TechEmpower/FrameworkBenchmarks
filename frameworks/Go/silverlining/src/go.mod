@@ -1,4 +1,4 @@
-module silverlining/src
+module silverlining/app
 
 go 1.19
 
