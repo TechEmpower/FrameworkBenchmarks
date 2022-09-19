@@ -4,6 +4,8 @@ WORKDIR /fiber
 
 COPY ./src /fiber
 
+RUN go mod download
+
 RUN go generate -x ./templates
 
 RUN GOAMD64=v3 go build -ldflags="-s -w" -o app .
