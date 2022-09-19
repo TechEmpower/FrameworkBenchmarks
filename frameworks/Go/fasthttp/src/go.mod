@@ -1,6 +1,6 @@
 module fasthttp/src
 
-go 1.17
+go 1.19
 
 require (
 	github.com/jackc/pgx/v4 v4.14.1
