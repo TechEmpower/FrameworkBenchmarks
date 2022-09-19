@@ -4,9 +4,7 @@ WORKDIR /gnet
 
 COPY ./src /gnet
 
-RUN go mod tidy
-
-RUN go build -o app -tags=poll_opt -gcflags="-l=4" -ldflags="-s -w" .
+RUN GOAMD64=v3 go build -o app -tags=poll_opt -gcflags="-l=4" -ldflags="-s -w" .
 
 EXPOSE 8080
 
