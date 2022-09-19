@@ -1,4 +1,4 @@
-FROM golang:1.15
+FROM docker.io/golang:1.19
 
 ADD ./src /echo
 WORKDIR /echo
