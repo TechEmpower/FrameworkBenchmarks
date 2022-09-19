@@ -1,4 +1,4 @@
-module echo/src
+module echo/app
 
 go 1.19
 
