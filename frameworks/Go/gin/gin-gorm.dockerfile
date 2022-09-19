@@ -3,9 +3,7 @@ FROM docker.io/golang:1.19 as build-env
 WORKDIR /src/
 ADD ./gin-gorm /src/
 
-#- original submission
-RUN go build -o app 
-#RUN go build -tags=jsoniter -o app - tryed this but slower on my pc
+RUN GOAMD64=v3 go build -o app .
 
 FROM gcr.io/distroless/base:debug
 
