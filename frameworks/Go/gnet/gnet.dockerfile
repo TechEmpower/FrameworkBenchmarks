@@ -1,6 +1,4 @@
-FROM golang:1.17
-
-ENV GO111MODULE on
+FROM docker.io/golang:1.19
 
 WORKDIR /gnet
 
