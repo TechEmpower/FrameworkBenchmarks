@@ -562,14 +562,12 @@ packages:
     source: hosted
     version: "0.20.0"
   mysql_client:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "."
-      ref: "feature/timeout"
-      resolved-ref: f82a002f81155c0ff502940479dd165020967d29
-      url: "https://github.com/dukefirehawk/mysql.dart"
-    source: git
-    version: "0.0.24"
+      name: mysql_client
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.26"
   node_preamble:
     dependency: transitive
     description:
