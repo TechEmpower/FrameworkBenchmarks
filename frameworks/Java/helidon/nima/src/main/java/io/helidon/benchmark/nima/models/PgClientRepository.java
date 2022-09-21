@@ -8,6 +8,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
+import io.helidon.common.reactive.Multi;
+import io.helidon.common.reactive.Single;
 import io.helidon.config.Config;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
@@ -17,11 +19,14 @@ import io.vertx.sqlclient.PoolOptions;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.SqlClient;
 import io.vertx.sqlclient.Tuple;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonArrayBuilder;
 
 import static io.helidon.benchmark.nima.models.DbRepository.randomWorldNumber;
 
 public class PgClientRepository implements DbRepository {
     private static final Logger LOGGER = Logger.getLogger(PgClientRepository.class.getName());
+
 
     private final SqlClient queryPool;
     private final SqlClient updatePool;
@@ -58,7 +63,21 @@ public class PgClientRepository implements DbRepository {
     @Override
     public World getWorld(int id) {
         try {
-            return getWorld(id, queryPool);
+            return getWorld(id, queryPool).toCompletableFuture().get();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public JsonArray getWorldsAsJson(int count) {
+        try {
+            return Multi.range(0, count)
+                    .flatMap(i -> getWorld(randomWorldNumber(), queryPool))
+                    .map(World::toJson)
+                    .reduce(JSON::createArrayBuilder, JsonArrayBuilder::add)
+                    .map(JsonArrayBuilder::build)
+                    .await();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -151,13 +170,13 @@ public class PgClientRepository implements DbRepository {
         }
     }
 
-    private static World getWorld(int id, SqlClient pool) throws ExecutionException, InterruptedException {
-        return pool.preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
+    private static Single<World> getWorld(int id, SqlClient pool) {
+        return Single.create(pool.preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
                 .execute(Tuple.of(id))
                 .map(rows -> {
                     Row r = rows.iterator().next();
                     return new World(r.getInteger(0), r.getInteger(1));
-                }).toCompletionStage().toCompletableFuture().get();
+                }).toCompletionStage());
 
     }
 

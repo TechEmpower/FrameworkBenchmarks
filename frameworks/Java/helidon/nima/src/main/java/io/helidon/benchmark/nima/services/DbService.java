@@ -43,13 +43,7 @@ public class DbService implements HttpService {
     private void queries(ServerRequest req, ServerResponse res) {
         res.header(SERVER);
         int count = parseQueryCount(req.query());
-        List<World> worlds = repository.getWorlds(count);
-        JsonArrayBuilder arrayBuilder = JSON.createArrayBuilder();
-        for (World world : worlds) {
-            JsonObject json = world.toJson();
-            arrayBuilder.add(json);
-        }
-        res.send(arrayBuilder.build());
+        res.send(repository.getWorldsAsJson(count));
     }
 
     private void updates(ServerRequest req, ServerResponse res) {
