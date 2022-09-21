@@ -1,1 +1,1 @@
-use Mix.Config
+use Config
