@@ -3,17 +3,17 @@ package io.helidon.benchmark.reactive.services;
 import java.nio.charset.StandardCharsets;
 
 import io.helidon.common.http.Http;
-import io.helidon.common.media.type.MediaTypes;
-import io.helidon.reactive.webserver.Handler;
-import io.helidon.reactive.webserver.Routing;
-import io.helidon.reactive.webserver.ServerRequest;
-import io.helidon.reactive.webserver.ServerResponse;
-import io.helidon.reactive.webserver.Service;
+import io.helidon.common.http.MediaType;
+import io.helidon.webserver.Handler;
+import io.helidon.webserver.Routing;
+import io.helidon.webserver.ServerRequest;
+import io.helidon.webserver.ServerResponse;
+import io.helidon.webserver.Service;
 
 public class PlainTextService implements Service, Handler {
 
     private static final byte[] MESSAGE = "Hello, World!".getBytes(StandardCharsets.UTF_8);
-    private static final String MEDIA_TYPE = MediaTypes.TEXT_PLAIN.text();
+    private static final String MEDIA_TYPE = MediaType.TEXT_PLAIN.toString();
 
     @Override
     public void update(Routing.Rules rules) {

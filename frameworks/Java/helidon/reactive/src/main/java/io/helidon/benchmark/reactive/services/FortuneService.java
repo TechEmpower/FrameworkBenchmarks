@@ -1,28 +1,22 @@
 package io.helidon.benchmark.reactive.services;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 
+import com.fizzed.rocker.runtime.ArrayOfByteArraysOutput;
 import io.helidon.benchmark.reactive.models.DbRepository;
 import io.helidon.benchmark.reactive.models.Fortune;
-import io.helidon.common.http.HttpMediaType;
-import io.helidon.common.media.type.MediaTypes;
-import io.helidon.reactive.webserver.Handler;
-import io.helidon.reactive.webserver.Routing;
-import io.helidon.reactive.webserver.ServerRequest;
-import io.helidon.reactive.webserver.ServerResponse;
-import io.helidon.reactive.webserver.Service;
-
-import com.fizzed.rocker.runtime.ArrayOfByteArraysOutput;
+import io.helidon.common.http.MediaType;
+import io.helidon.webserver.Handler;
+import io.helidon.webserver.Routing;
+import io.helidon.webserver.ServerRequest;
+import io.helidon.webserver.ServerResponse;
+import io.helidon.webserver.Service;
 import views.fortunes;
 
 public class FortuneService implements Service, Handler {
 
     private static final Fortune ADDITIONAL_FORTUNE = new Fortune(0, "Additional fortune added at request time.");
-
-    private static final HttpMediaType TEXT_HTML = HttpMediaType.builder()
-            .mediaType(MediaTypes.TEXT_HTML)
-            .charset("UTF-8")
-            .build();
 
     private final DbRepository repository;
 
@@ -37,12 +31,12 @@ public class FortuneService implements Service, Handler {
 
     @Override
     public void accept(ServerRequest req, ServerResponse res) {
-        res.headers().contentType(TEXT_HTML);
+        res.headers().contentType(MediaType.TEXT_HTML.withCharset(StandardCharsets.UTF_8.name()));
         repository.getFortunes()
                 .forSingle(fortuneList -> {
                     fortuneList.add(ADDITIONAL_FORTUNE);
                     fortuneList.sort(Comparator.comparing(Fortune::getMessage));
-                    res.headers().contentType(TEXT_HTML);
+                    res.headers().contentType(MediaType.TEXT_HTML.withCharset(StandardCharsets.UTF_8.name()));
                     res.send(fortunes.template(fortuneList)
                             .render(ArrayOfByteArraysOutput.FACTORY)
                             .toByteArray());

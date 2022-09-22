@@ -22,23 +22,21 @@ import java.util.logging.LogManager;
 
 import io.helidon.benchmark.reactive.models.DbRepository;
 import io.helidon.benchmark.reactive.models.JdbcRepository;
-import io.helidon.benchmark.reactive.services.PlainTextService;
 import io.helidon.benchmark.reactive.services.DbService;
 import io.helidon.benchmark.reactive.services.FortuneService;
 import io.helidon.benchmark.reactive.services.JsonService;
+import io.helidon.benchmark.reactive.services.PlainTextService;
 import io.helidon.config.Config;
-import io.helidon.common.http.Http.Header;
-import io.helidon.common.http.Http.HeaderName;
-import io.helidon.reactive.media.jsonp.JsonpSupport;
-import io.helidon.reactive.webserver.Routing;
-import io.helidon.reactive.webserver.WebServer;
+import io.helidon.media.jsonp.JsonpSupport;
+import io.helidon.webserver.Routing;
+import io.helidon.webserver.WebServer;
 
 /**
  * Simple Hello World rest application.
  */
 public final class Main {
 
-    private static final HeaderName SERVER_HEADER = Header.create("Server");
+    private static final String SERVER_HEADER = "Server";
     private static final String SERVER_NAME = "Helidon";
 
     /**

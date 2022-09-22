@@ -21,7 +21,7 @@
     <parent>
         <groupId>io.helidon.applications</groupId>
         <artifactId>helidon-se</artifactId>
-        <version>4.0.0-ALPHA1</version>
+        <version>3.0.1</version>
         <relativePath/>
     </parent>
     <groupId>io.helidon</groupId>
@@ -40,12 +40,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.helidon.reactive.webserver</groupId>
-            <artifactId>helidon-reactive-webserver</artifactId>
+            <groupId>io.helidon.webserver</groupId>
+            <artifactId>helidon-webserver</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.helidon.reactive.media</groupId>
-            <artifactId>helidon-reactive-media-jsonp</artifactId>
+            <groupId>io.helidon.media</groupId>
+            <artifactId>helidon-media-jsonp</artifactId>
         </dependency>
         <dependency>
             <groupId>io.helidon.config</groupId>
