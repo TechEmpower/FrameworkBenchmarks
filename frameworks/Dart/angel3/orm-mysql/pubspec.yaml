@@ -1,4 +1,4 @@
-name: benchmark_app
+name: orm_mysql_app
 version: 1.0.0
 description: A basic starter application template for Angel3 framework
 publish_to: none
@@ -11,7 +11,7 @@ dependencies:
   angel3_jael: ^7.0.0
   angel3_migration: ^7.0.0
   angel3_orm: ^7.0.0
-  angel3_orm_postgres: ^7.0.0
+  angel3_orm_mysql: ^7.0.0
   angel3_serialize: ^7.0.0
   angel3_production: ^7.0.0
   angel3_static: ^7.0.0
@@ -30,7 +30,7 @@ dev_dependencies:
   io: ^1.0.0
   test: ^1.17.5
   lints: ^2.0.0
-#dependency_overrides:
+# dependency_overrides:
 #  angel3_orm:
 #    path: ../../../../../belatuk/packages/orm/angel_orm
 #  angel3_orm_postgres:

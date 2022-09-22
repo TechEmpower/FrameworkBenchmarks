@@ -113,10 +113,10 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.0.0"
-  angel3_orm_postgres:
+  angel3_orm_mysql:
     dependency: "direct main"
     description:
-      name: angel3_orm_postgres
+      name: angel3_orm_mysql
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.0.1"
@@ -280,7 +280,7 @@ packages:
       name: build
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   build_config:
     dependency: transitive
     description:
@@ -301,21 +301,21 @@ packages:
       name: build_resolvers
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.9"
+    version: "2.0.10"
   build_runner:
     dependency: "direct dev"
     description:
       name: build_runner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0"
+    version: "2.2.1"
   build_runner_core:
     dependency: transitive
     description:
       name: build_runner_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.2.3"
+    version: "7.2.4"
   built_collection:
     dependency: transitive
     description:
@@ -357,7 +357,7 @@ packages:
       name: code_builder
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.0"
+    version: "4.3.0"
   collection:
     dependency: transitive
     description:
@@ -378,7 +378,7 @@ packages:
       name: coverage
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.0"
+    version: "1.6.0"
   crypto:
     dependency: transitive
     description:
@@ -392,7 +392,7 @@ packages:
       name: dart_style
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.3"
+    version: "2.2.4"
   dotenv:
     dependency: transitive
     description:
@@ -400,13 +400,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.1"
-  executor:
-    dependency: transitive
-    description:
-      name: executor
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.2"
   file:
     dependency: transitive
     description:
@@ -574,7 +567,7 @@ packages:
       name: mysql_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.25"
+    version: "0.0.26"
   node_preamble:
     dependency: transitive
     description:
@@ -623,14 +616,7 @@ packages:
       name: postgres
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.6"
-  postgres_pool:
-    dependency: transitive
-    description:
-      name: postgres_pool
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.3"
+    version: "2.5.2"
   pub_semver:
     dependency: transitive
     description:
@@ -659,13 +645,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
-  retry:
-    dependency: transitive
-    description:
-      name: retry
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.1.0"
   sasl_scram:
     dependency: transitive
     description:
@@ -714,7 +693,7 @@ packages:
       name: source_gen
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.2"
+    version: "1.2.3"
   source_map_stack_trace:
     dependency: transitive
     description:
@@ -777,21 +756,21 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.21.5"
+    version: "1.21.6"
   test_api:
     dependency: transitive
     description:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.13"
+    version: "0.4.14"
   test_core:
     dependency: transitive
     description:
       name: test_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.17"
+    version: "0.4.18"
   timing:
     dependency: transitive
     description:
@@ -833,7 +812,7 @@ packages:
       name: vm_service
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "9.3.0"
+    version: "9.4.0"
   watcher:
     dependency: transitive
     description:
@@ -863,4 +842,4 @@ packages:
     source: hosted
     version: "3.1.1"
 sdks:
-  dart: ">=2.18.0-146.0.dev <3.0.0"
+  dart: ">=2.18.0 <3.0.0"
