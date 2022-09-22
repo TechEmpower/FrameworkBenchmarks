@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -95,7 +94,17 @@ public class HikariJdbcRepository implements DbRepository {
 
     @Override
     public List<Fortune> getFortunes() {
-        return Collections.emptyList();     // TODO
+        try (Connection c = getConnection()) {
+            List<Fortune> result = new ArrayList<>();
+            PreparedStatement ps = c.prepareStatement("SELECT id, message FROM fortune");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                result.add(new Fortune(rs.getInt(1), rs.getString(2)));
+            }
+            return result;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private World getWorld(int id, Connection c) throws SQLException {
