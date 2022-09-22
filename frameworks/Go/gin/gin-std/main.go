@@ -146,7 +146,7 @@ func main() {
 	r.Use(func(c *gin.Context) {
 		c.Writer.Header()["Server"] = serverHeader
 	})
-	r.LoadHTMLGlob("/templates/fortune.html")
+	r.LoadHTMLGlob("templates/fortune.html")
 	r.GET("/json", json)
 	r.GET("/db", db)
 	r.GET("/dbs", dbs)
