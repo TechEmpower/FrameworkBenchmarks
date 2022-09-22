@@ -21,6 +21,7 @@ import io.vertx.sqlclient.SqlClient;
 import io.vertx.sqlclient.Tuple;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
 
 import static io.helidon.benchmark.nima.models.DbRepository.randomWorldNumber;
 
@@ -58,6 +59,11 @@ public class PgClientRepository implements DbRepository {
 
         queryPool = PgPool.client(vertx, connectOptions, clientOptions);
         updatePool = PgPool.client(vertx, connectOptions, clientOptions);
+    }
+
+    @Override
+    public JsonObject getWorldAsJson(int id) {
+        return getWorld(id, queryPool).map(World::toJson).await();
     }
 
     @Override

@@ -11,12 +11,14 @@ import io.helidon.nima.webserver.http.HttpRules;
 import io.helidon.nima.webserver.http.HttpService;
 import io.helidon.nima.webserver.http.ServerRequest;
 import io.helidon.nima.webserver.http.ServerResponse;
+
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonBuilderFactory;
 import jakarta.json.JsonObject;
 
 import static io.helidon.benchmark.nima.Main.SERVER;
+import static io.helidon.benchmark.nima.models.DbRepository.randomWorldNumber;
 
 public class DbService implements HttpService {
     private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
@@ -36,8 +38,7 @@ public class DbService implements HttpService {
 
     private void db(ServerRequest req, ServerResponse res) {
         res.header(SERVER);
-        World world = repository.getWorld();
-        res.send(world.toJson());
+        res.send(repository.getWorldAsJson(randomWorldNumber()));
     }
 
     private void queries(ServerRequest req, ServerResponse res) {

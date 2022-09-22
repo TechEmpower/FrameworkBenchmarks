@@ -9,6 +9,7 @@ import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonBuilderFactory;
+import jakarta.json.JsonObject;
 
 public interface DbRepository {
 
@@ -19,6 +20,10 @@ public interface DbRepository {
     }
 
     World getWorld(int id);
+
+    default JsonObject getWorldAsJson(int id) {
+        return getWorld().toJson();
+    }
 
     List<World> getWorlds(int count);
 
