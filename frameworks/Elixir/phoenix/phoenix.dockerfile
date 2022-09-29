@@ -8,14 +8,17 @@ ARG MIX_ENV="prod"
 RUN mix local.hex --force && \
     mix local.rebar --force
 
-COPY config ./config
-COPY lib ./lib
-COPY rel ./rel
-COPY priv ./priv
-COPY mix.exs .
-COPY mix.lock .
-
+COPY mix.exs mix.lock ./
 RUN mix deps.get --force --only prod
+
+COPY config ./config
+
+RUN mix deps.compile
+
+COPY priv ./priv
+COPY lib ./lib
+
+COPY rel ./rel
 RUN mix release --force --path /export
 
 ####################
