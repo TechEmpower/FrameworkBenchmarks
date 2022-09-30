@@ -1,8 +1,8 @@
 package io.quarkus.benchmark.repository;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.transaction.Transactional;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.transaction.Transactional;
 
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
