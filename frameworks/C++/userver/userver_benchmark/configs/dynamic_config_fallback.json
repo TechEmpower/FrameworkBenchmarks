@@ -1,0 +1,36 @@
+{
+  "USERVER_CACHES": {},
+  "USERVER_CANCEL_HANDLE_REQUEST_BY_DEADLINE": false,
+  "USERVER_CHECK_AUTH_IN_HANDLERS": false,
+  "USERVER_DUMPS": {},
+  "USERVER_HTTP_PROXY": "",
+  "USERVER_LOG_REQUEST": true,
+  "USERVER_LOG_REQUEST_HEADERS": false,
+  "USERVER_LRU_CACHES": {},
+  "USERVER_RPS_CCONTROL_CUSTOM_STATUS": {},
+  "USERVER_TASK_PROCESSOR_PROFILER_DEBUG": {},
+  "HTTP_CLIENT_CONNECTION_POOL_SIZE": 1000,
+  "HTTP_CLIENT_CONNECT_THROTTLE": {
+    "http-limit": 6000,
+    "http-per-second": 1500,
+    "https-limit": 100,
+    "https-per-second": 25,
+    "per-host-limit": 3000,
+    "per-host-per-second": 500
+  },
+  "HTTP_CLIENT_ENFORCE_TASK_DEADLINE": {
+    "cancel-request": false,
+    "update-timeout": false
+  },
+  "USERVER_TASK_PROCESSOR_QOS": {
+    "default-service": {
+      "default-task-processor": {
+        "wait_queue_overload": {
+          "action": "ignore",
+          "length_limit": 5000,
+          "time_limit_us": 3000
+        }
+      }
+    }
+  }
+}

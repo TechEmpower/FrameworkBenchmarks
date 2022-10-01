@@ -1,0 +1,25 @@
+{
+  "framework": "userver",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "port": 8090,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "Userver",
+        "language": "C++",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Userver",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+# yaml
+components_manager:
+    coro_pool:
+        initial_size: 1000             # Preallocate 1000 coroutines at startup.
+        max_size: 16385                # Do not keep more than 16385 preallocated coroutines.
+        stack_size: 12288              # 12Kb cause why not
+
+    task_processors:                  # Task processor is an executor for coroutine tasks
+
+        main-task-processor:          # Make a task processor for CPU-bound couroutine tasks.
+            thread_name: main-worker  # OS will show the threads of this task processor with 'main-worker' prefix.
+            worker_threads: 4
+            guess-cpu-limit: true
+
+        fs-task-processor:            # Make a separate task processor for filesystem bound tasks.
+            thread_name: fs-worker
+            worker_threads: 4
+
+    default_task_processor: main-task-processor
+
+    components:                       # Configuring components that were registered via component_list
+        server:
+            listener:                 # configuring the main listening socket...
+                port: 8090            # ...to listen on this port and...
+                task_processor: main-task-processor    # ...process incoming requests on this task processor.
+        logging:
+            fs-task-processor: fs-task-processor
+            loggers:
+                default:
+                    file_path: '@stderr'
+                    level: ERROR
+                    overflow_behavior: discard  # Drop logs if the system is too busy to write them down.
+
+        tracer:                           # Component that helps to trace execution times and requests in logs.
+            service-name: hello-service   # "You know. You all know exactly who I am. Say my name. " (c)
+
+        dynamic-config:                      # Dynamic config storage options, do nothing
+            fs-cache-path: ''
+        dynamic-config-fallbacks:            # Load options from file and push them into the dynamic config storage.
+            fallback-path: /src/dynamic_config_fallback.json
+
+        plaintext-handler:
+            path: /plaintext
+            method: GET
+            task_processor: main-task-processor
