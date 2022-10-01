@@ -43,3 +43,8 @@ components_manager:
             path: /plaintext
             method: GET
             task_processor: main-task-processor
+
+        json-handler:
+            path: /json
+            method: GET
+            task_processor: main-task-processor

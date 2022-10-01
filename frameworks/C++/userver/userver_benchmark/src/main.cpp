@@ -23,9 +23,32 @@ class Handler final : public userver::server::handlers::HttpHandlerBase {
 
 }  // namespace plaintext
 
+namespace json {
+
+class Handler final : public userver::server::handlers::HttpHandlerJsonBase {
+ public:
+  static constexpr std::string_view kName = "json-handler";
+
+  using HttpHandlerJsonBase::HttpHandlerJsonBase;
+
+  userver::formats::json::Value HandleRequestJsonThrow(
+      const userver::server::http::HttpRequest&,
+      const userver::formats::json::Value&,
+      userver::server::request::RequestContext&) const override {
+    userver::formats::json::ValueBuilder builder{
+        userver::formats::json::Type::kObject};
+    builder["message"] = "Hello, World!";
+
+    return builder.ExtractValue();
+  }
+};
+
+}  // namespace json
+
 int main(int argc, char* argv[]) {
   auto component_list = userver::components::MinimalServerComponentList()
-                            .Append<plaintext::Handler>();
+                            .Append<plaintext::Handler>()
+                            .Append<json::Handler>();
 
   return userver::utils::DaemonMain(argc, argv, component_list);
 }
