@@ -1,0 +1,12 @@
+psycopg2-binary
+psycopg2-pool
+asyncpg
+
+jinja2
+cachetools
+asyncache
+
+alchemical
+microdot
+gunicorn
+uvicorn
