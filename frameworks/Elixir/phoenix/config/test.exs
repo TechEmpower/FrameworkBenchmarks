@@ -1,1 +1,1 @@
-use Config
+import Config

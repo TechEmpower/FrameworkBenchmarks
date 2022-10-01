@@ -1,4 +1,4 @@
-use Config
+import Config
 
 config :hello, HelloWeb.Endpoint,
   url: [host: "0.0.0.0"],
