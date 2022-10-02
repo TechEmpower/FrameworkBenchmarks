@@ -7,4 +7,4 @@ include(GNUInstallDirs)
 add_subdirectory(third_party/userver)
 
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} PRIVATE userver-core)
+target_link_libraries(${PROJECT_NAME} PRIVATE userver-core userver-postgresql)

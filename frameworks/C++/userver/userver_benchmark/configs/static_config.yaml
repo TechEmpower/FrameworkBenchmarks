@@ -3,7 +3,7 @@ components_manager:
     coro_pool:
         initial_size: 1000             # Preallocate 1000 coroutines at startup.
         max_size: 16385                # Do not keep more than 16385 preallocated coroutines.
-        stack_size: 12288              # 12Kb cause why not
+        stack_size: 66560              # 64Kb cause why not
 
     task_processors:                  # Task processor is an executor for coroutine tasks
 
@@ -39,6 +39,12 @@ components_manager:
         dynamic-config-fallbacks:            # Load options from file and push them into the dynamic config storage.
             fallback-path: /src/dynamic_config_fallback.json
 
+        testsuite-support:
+
+        secdist: # Component that stores configuration of hosts and passwords
+            config: /src/secure_data.json  # Values are supposed to be stored in this file
+            missing-ok: false                             # ... but if the file is missing it is still ok
+
         plaintext-handler:
             path: /plaintext
             method: GET
@@ -48,3 +54,17 @@ components_manager:
             path: /json
             method: GET
             task_processor: main-task-processor
+
+        hello-world-db:
+            dbalias: hello_world
+            blocking_task_processor: fs-task-processor
+            min_pool_size: 20
+            max_pool_size: 500
+            max_queue_size: 500
+            max_statement_metrics: 50
+
+        single-query-handler:
+            path: /db
+            method: GET
+            task_processor: main-task-processor
+

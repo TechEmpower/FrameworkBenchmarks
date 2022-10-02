@@ -32,5 +32,26 @@
         }
       }
     }
-  }
+  },
+
+  "POSTGRES_STATEMENT_METRICS_SETTINGS": {
+    "key-value-database": {
+      "max_statement_metrics": 5
+    }
+  },
+  "POSTGRES_CONNECTION_PIPELINE_ENABLED": false,
+  "POSTGRES_CONNECTION_POOL_SETTINGS": {
+    "hello_world": {
+      "max_pool_size": 15,
+      "max_queue_size": 200,
+      "min_pool_size": 8
+    }
+  },
+  "POSTGRES_CONNECTION_SETTINGS": {},
+  "POSTGRES_DEFAULT_COMMAND_CONTROL": {
+    "network_timeout_ms": 750,
+    "statement_timeout_ms": 500
+  },
+  "POSTGRES_HANDLERS_COMMAND_CONTROL": {},
+  "POSTGRES_QUERIES_COMMAND_CONTROL": {}
 }
