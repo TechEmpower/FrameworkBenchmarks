@@ -4,7 +4,7 @@
   "USERVER_CHECK_AUTH_IN_HANDLERS": false,
   "USERVER_DUMPS": {},
   "USERVER_HTTP_PROXY": "",
-  "USERVER_LOG_REQUEST": true,
+  "USERVER_LOG_REQUEST": false,
   "USERVER_LOG_REQUEST_HEADERS": false,
   "USERVER_LRU_CACHES": {},
   "USERVER_RPS_CCONTROL_CUSTOM_STATUS": {},
@@ -27,24 +27,20 @@
       "default-task-processor": {
         "wait_queue_overload": {
           "action": "ignore",
-          "length_limit": 5000,
+          "length_limit": 16385,
           "time_limit_us": 3000
         }
       }
     }
   },
 
-  "POSTGRES_STATEMENT_METRICS_SETTINGS": {
-    "key-value-database": {
-      "max_statement_metrics": 5
-    }
-  },
+  "POSTGRES_STATEMENT_METRICS_SETTINGS": {},
   "POSTGRES_CONNECTION_PIPELINE_ENABLED": false,
   "POSTGRES_CONNECTION_POOL_SETTINGS": {
     "hello_world": {
-      "max_pool_size": 15,
-      "max_queue_size": 200,
-      "min_pool_size": 8
+      "max_pool_size": 500,
+      "max_queue_size": 500,
+      "min_pool_size": 20
     }
   },
   "POSTGRES_CONNECTION_SETTINGS": {},

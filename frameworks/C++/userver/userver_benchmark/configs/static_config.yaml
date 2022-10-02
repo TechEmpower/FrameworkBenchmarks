@@ -9,7 +9,7 @@ components_manager:
 
         main-task-processor:          # Make a task processor for CPU-bound couroutine tasks.
             thread_name: main-worker  # OS will show the threads of this task processor with 'main-worker' prefix.
-            worker_threads: 4
+            worker_threads: 12
             guess-cpu-limit: true
 
         fs-task-processor:            # Make a separate task processor for filesystem bound tasks.
@@ -31,8 +31,8 @@ components_manager:
                     level: ERROR
                     overflow_behavior: discard  # Drop logs if the system is too busy to write them down.
 
-        tracer:                           # Component that helps to trace execution times and requests in logs.
-            service-name: hello-service   # "You know. You all know exactly who I am. Say my name. " (c)
+        tracer:                                 # Component that helps to trace execution times and requests in logs.
+            service-name: userver-techempower   # "You know. You all know exactly who I am. Say my name. " (c)
 
         dynamic-config:                      # Dynamic config storage options, do nothing
             fs-cache-path: ''
@@ -61,7 +61,6 @@ components_manager:
             min_pool_size: 20
             max_pool_size: 500
             max_queue_size: 500
-            max_statement_metrics: 50
 
         single-query-handler:
             path: /db
