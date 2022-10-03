@@ -1,6 +1,6 @@
 <?php
 
-use Phalcon\Config\Config;
+use Phalcon\Config;
 
 return new Config([
     'database'     => [

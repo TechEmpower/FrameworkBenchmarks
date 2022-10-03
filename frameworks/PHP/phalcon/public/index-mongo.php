@@ -3,9 +3,10 @@
 use MongoDB\Client;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\DI\FactoryDefault;
+use Phalcon\Exception as PhalconException;
 use Phalcon\Http\Request;
 use Phalcon\Incubator\MongoDB\Mvc\Collection\Manager as MongoDBCollectionManager;
-use Phalcon\Autoload\Loader;
+use Phalcon\Loader;
 use Phalcon\Mvc\Application;
 use Phalcon\Mvc\Model\MetaData\Apc;
 use Phalcon\Mvc\Model\MetaData\Memory;
@@ -17,11 +18,11 @@ require APP_PATH . "/vendor/autoload.php";
 
 try {
     // Load the config
-    $config = include APP_PATH . "/app/config/config.php";
+    $config = include APP_PATH . "/app/config/config-mongo.php";
 
     // Register an autoloader
     $loader = new Loader();
-    $loader->setDirectories([
+    $loader->registerDirs([
         $config->application->controllersDir,
         $config->application->modelsDir,
         $config->application->collectionsDir,
@@ -98,6 +99,6 @@ try {
     $application = new Application();
     $application->setDI($di);
     $application->handle($request->getURI())->send();
-} catch (Exception $e) {
-    echo "Exception: ", $e->getMessage();
+} catch (PhalconException $e) {
+    echo "PhalconException: ", $e->getMessage();
 }
