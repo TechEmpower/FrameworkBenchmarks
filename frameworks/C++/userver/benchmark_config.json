@@ -10,7 +10,7 @@
         "approach": "Realistic",
         "classification": "Micro",
         "database": "postgres",
-        "framework": "Userver",
+        "framework": "userver",
         "language": "C++",
         "flavor": "None",
         "orm": "Raw",
@@ -18,7 +18,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Userver",
+        "display_name": "userver",
         "notes": "",
         "versus": "None"
       }
