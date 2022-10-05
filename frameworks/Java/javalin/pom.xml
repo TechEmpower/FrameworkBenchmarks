@@ -11,19 +11,24 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <javalin.version>3.13.3</javalin.version>
-        <slf4j.version>1.7.30</slf4j.version>
-        <jackson.version>2.12.6.1</jackson.version>
-        <hikaricp.version>4.0.2</hikaricp.version>
-        <postgresql.version>42.4.1</postgresql.version>
-        <mongodb.version>4.2.1</mongodb.version>
-        <pebble.version>3.1.5</pebble.version>
+        <javalin.version>5.0.1</javalin.version>
+        <slf4j.version>1.7.36</slf4j.version>
+        <jackson.version>2.13.4</jackson.version>
+        <hikaricp.version>5.0.1</hikaricp.version>
+        <postgresql.version>42.5.0</postgresql.version>
+        <mongodb.version>4.7.2</mongodb.version>
+        <pebble.version>3.1.6</pebble.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>
+            <version>${javalin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.javalin</groupId>
+            <artifactId>javalin-rendering</artifactId>
             <version>${javalin.version}</version>
         </dependency>
         <dependency>

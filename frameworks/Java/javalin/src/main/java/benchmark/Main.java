@@ -3,11 +3,12 @@ package benchmark;
 import benchmark.model.Fortune;
 import benchmark.repository.DbFactory;
 import benchmark.repository.DbService;
+import com.mitchellbosecke.pebble.PebbleEngine;
+import com.mitchellbosecke.pebble.loader.ClasspathLoader;
 import io.javalin.Javalin;
-import io.javalin.core.compression.CompressionStrategy;
 import io.javalin.http.Context;
-import io.javalin.plugin.rendering.template.JavalinPebble;
 
+import io.javalin.rendering.template.JavalinPebble;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,13 @@ public class Main {
 
     public static void main(String[] args) {
 
+        JavalinPebble.init(new PebbleEngine.Builder()
+            .loader(new ClasspathLoader())
+            .strictVariables(false)
+            .build());
+
         Javalin app = Javalin
-                .create(config -> config.compressionStrategy(CompressionStrategy.NONE))
+                .create(config -> config.compression.none())
                 .start(8080);
 
         app.get("/plaintext", Main::handlePlainText);
@@ -63,7 +69,7 @@ public class Main {
 
     private static void handleMultipleDbQueries(Context ctx) {
 
-        int num = getBoundedRowNumber(ctx.queryParam("queries", String.class).getOrNull());
+        int num = getBoundedRowNumber(ctx.queryParam("queries"));
         DbService dbService = getDbServiceFromPath(ctx.path());
 
         try {
@@ -80,8 +86,7 @@ public class Main {
         try {
             List<Fortune> fortuneList = dbService.getFortune();
             Map<String, List<Fortune>> map = Collections.singletonMap("list", fortuneList);
-            ctx.html(JavalinPebble.INSTANCE.render("fortune.html", map, ctx))
-                    .header("Content-Type", "text/html; charset=utf-8");
+            ctx.render("fortune.html", map).header("Content-Type", "text/html; charset=utf-8");
         } catch (Throwable t) {
             ctx.status(SERVICE_UNAVAILABLE_CODE).result(SERVICE_UNAVAILABLE_TEXT);
         }
@@ -89,7 +94,7 @@ public class Main {
 
     private static void handleUpdates(Context ctx) {
 
-        int num = getBoundedRowNumber(ctx.queryParam("queries", String.class).getOrNull());
+        int num = getBoundedRowNumber(ctx.queryParam("queries"));
         DbService dbService = getDbServiceFromPath(ctx.path());
 
         try {
