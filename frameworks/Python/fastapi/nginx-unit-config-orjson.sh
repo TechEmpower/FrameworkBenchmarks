@@ -16,7 +16,8 @@ config+='      "module": "app",'
 config+='      "callable": "app",'
 config+='      "processes": '"$(nproc)"','
 config+='    }'
-config+='  }'
+config+='  }',
+config+='  "access_log": "/dev/null"'
 config+='}'
 
 curl -X PUT \
