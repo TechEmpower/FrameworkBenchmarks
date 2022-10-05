@@ -1,0 +1,9 @@
+server:
+  port: 8080
+  host: 0.0.0.0
+
+db:
+  host: "tfb-database"
+  name: "hello_world"
+  username: benchmarkdbuser
+  password: benchmarkdbpass
