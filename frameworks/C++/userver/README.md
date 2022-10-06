@@ -4,9 +4,9 @@ This is the [userver](https://github.com/userver-framework/userver) portion of a
 
 ### Test Type Implementation Source Code
 
-* [JSON](Relative/Path/To/Your/Source/File)
-* [PLAINTEXT](Relative/Path/To/Your/Source/File)
-* [DB](Relative/Path/To/Your/Source/File)
+* [JSON](userver_benchmark/src/main.cpp)
+* [PLAINTEXT](userver_benchmark/src/main.cpp)
+* [DB](userver_benchmark/src/main.cpp)
 
 ## Test URLs
 ### JSON
