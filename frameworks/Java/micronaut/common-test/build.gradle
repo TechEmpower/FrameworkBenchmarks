@@ -1,0 +1,14 @@
+plugins {
+    id "java-library"
+     id "io.micronaut.library"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api("io.micronaut:micronaut-http-client")
+    api("io.micronaut.test:micronaut-test-junit5")
+    api("org.junit.jupiter:junit-jupiter-engine")
+}
