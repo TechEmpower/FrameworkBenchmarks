@@ -17,7 +17,7 @@
         <hikaricp.version>5.0.1</hikaricp.version>
         <postgresql.version>42.5.0</postgresql.version>
         <mongodb.version>4.7.2</mongodb.version>
-        <pebble.version>3.1.6</pebble.version>
+        <jte.version>2.2.1</jte.version>
     </properties>
 
     <dependencies>
@@ -57,9 +57,14 @@
             <version>${mongodb.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.pebbletemplates</groupId>
-            <artifactId>pebble</artifactId>
-            <version>${pebble.version}</version>
+            <groupId>gg.jte</groupId>
+            <artifactId>jte</artifactId>
+            <version>${jte.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>gg.jte</groupId>
+            <artifactId>jte-kotlin</artifactId>
+            <version>${jte.version}</version>
         </dependency>
     </dependencies>
 
@@ -95,6 +100,24 @@
                                 </transformer>
                             </transformers>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>gg.jte</groupId>
+                <artifactId>jte-maven-plugin</artifactId>
+                <version>${jte.version}</version>
+                <configuration>
+                    <sourceDirectory>${basedir}/src/main/jte</sourceDirectory>
+                    <contentType>Html</contentType>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

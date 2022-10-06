@@ -3,12 +3,12 @@ package benchmark;
 import benchmark.model.Fortune;
 import benchmark.repository.DbFactory;
 import benchmark.repository.DbService;
-import com.mitchellbosecke.pebble.PebbleEngine;
-import com.mitchellbosecke.pebble.loader.ClasspathLoader;
+import gg.jte.ContentType;
+import gg.jte.TemplateEngine;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-import io.javalin.rendering.template.JavalinPebble;
+import io.javalin.rendering.template.JavalinJte;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +22,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-        JavalinPebble.init(new PebbleEngine.Builder()
-            .loader(new ClasspathLoader())
-            .strictVariables(false)
-            .build());
+        TemplateEngine templateEngine = TemplateEngine.createPrecompiled(ContentType.Html);
+        templateEngine.setTrimControlStructures(true);
+        JavalinJte.init(templateEngine, c -> false);
 
         Javalin app = Javalin
                 .create(config -> config.compression.none())
@@ -86,7 +85,7 @@ public class Main {
         try {
             List<Fortune> fortuneList = dbService.getFortune();
             Map<String, List<Fortune>> map = Collections.singletonMap("list", fortuneList);
-            ctx.render("fortune.pebble", map).header("Content-Type", "text/html; charset=utf-8");
+            ctx.render("fortune.jte", map).header("Content-Type", "text/html; charset=utf-8");
         } catch (Throwable t) {
             ctx.status(SERVICE_UNAVAILABLE_CODE).result(SERVICE_UNAVAILABLE_TEXT);
         }
