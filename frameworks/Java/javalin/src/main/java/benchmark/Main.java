@@ -86,7 +86,7 @@ public class Main {
         try {
             List<Fortune> fortuneList = dbService.getFortune();
             Map<String, List<Fortune>> map = Collections.singletonMap("list", fortuneList);
-            ctx.render("fortune.html", map).header("Content-Type", "text/html; charset=utf-8");
+            ctx.render("fortune.pebble", map).header("Content-Type", "text/html; charset=utf-8");
         } catch (Throwable t) {
             ctx.status(SERVICE_UNAVAILABLE_CODE).result(SERVICE_UNAVAILABLE_TEXT);
         }
