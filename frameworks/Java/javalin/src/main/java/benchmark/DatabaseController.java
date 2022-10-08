@@ -3,7 +3,6 @@ package benchmark;
 import benchmark.model.Fortune;
 import benchmark.repository.DbService;
 import io.javalin.http.Context;
-import io.javalin.json.JsonMapper;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,10 +13,10 @@ public class DatabaseController {
     private static final int MIN_QUERIES = 1;
     private static final int MAX_QUERIES = 500;
 
-    private final CustomJsonMapper jsonMapper;
+    private final DslJsonMapper jsonMapper;
     private final DbService dbService;
 
-    public DatabaseController(CustomJsonMapper jsonMapper, DbService dbService) {
+    public DatabaseController(DslJsonMapper jsonMapper, DbService dbService) {
         this.jsonMapper = jsonMapper;
         this.dbService = dbService;
     }
