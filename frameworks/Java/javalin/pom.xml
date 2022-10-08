@@ -37,9 +37,9 @@
             <version>${slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
+            <groupId>com.dslplatform</groupId>
+            <artifactId>dsl-json-java8</artifactId>
+            <version>1.9.9</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
