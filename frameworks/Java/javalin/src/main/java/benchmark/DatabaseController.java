@@ -3,6 +3,8 @@ package benchmark;
 import benchmark.model.Fortune;
 import benchmark.repository.DbService;
 import io.javalin.http.Context;
+import io.javalin.json.JsonMapper;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -12,19 +14,21 @@ public class DatabaseController {
     private static final int MIN_QUERIES = 1;
     private static final int MAX_QUERIES = 500;
 
+    private final CustomJsonMapper jsonMapper;
     private final DbService dbService;
 
-    public DatabaseController(DbService dbService) {
+    public DatabaseController(CustomJsonMapper jsonMapper, DbService dbService) {
+        this.jsonMapper = jsonMapper;
         this.dbService = dbService;
     }
 
     public void handleSingleDbQuery(Context ctx) {
-        ctx.json(dbService.getWorld(1).get(0));
+        jsonMapper.writeJson(dbService.getWorld(1).get(0), ctx);
     }
 
     public void handleMultipleDbQueries(Context ctx) {
         int num = getBoundedRowNumber(ctx.queryParam("queries"));
-        ctx.json(dbService.getWorld(num));
+        jsonMapper.writeJson(dbService.getWorld(num), ctx);
     }
 
     public void handleFortunes(Context ctx) {
@@ -35,7 +39,7 @@ public class DatabaseController {
 
     public void handleUpdates(Context ctx) {
         int num = getBoundedRowNumber(ctx.queryParam("queries"));
-        ctx.json(dbService.updateWorld(num));
+        jsonMapper.writeJson(dbService.updateWorld(num), ctx);
     }
 
     private static int getBoundedRowNumber(String number) {

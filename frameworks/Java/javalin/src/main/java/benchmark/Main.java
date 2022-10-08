@@ -23,17 +23,22 @@ public class Main {
         templateEngine.setTrimControlStructures(true);
         JavalinJte.init(templateEngine, c -> false);
 
-        DatabaseController postgres = new DatabaseController(DbFactory.INSTANCE.getDbService(DbFactory.DbType.POSTGRES));
-        DatabaseController mongo = new DatabaseController(DbFactory.INSTANCE.getDbService(DbFactory.DbType.MONGODB));
+        CustomJsonMapper jsonMapper = new CustomJsonMapper();
+
+        DatabaseController postgres = new DatabaseController(jsonMapper, DbFactory.INSTANCE.getDbService(DbFactory.DbType.POSTGRES));
+        DatabaseController mongo = new DatabaseController(jsonMapper, DbFactory.INSTANCE.getDbService(DbFactory.DbType.MONGODB));
 
         Javalin app = Javalin.create(config -> {
             config.compression.none();
+            config.jsonMapper(jsonMapper);
             config.jetty.server(Main::createServer);
             config.pvt.servletRequestLifecycle = List.of(DefaultTasks.INSTANCE.getHTTP());
         }).start(8080);
 
         app.get("/plaintext", ctx -> ctx.result("Hello, World!"));
-        app.get("/json", ctx -> ctx.json(Collections.singletonMap("message", "Hello, World!")));
+        app.get("/json", ctx -> {
+            jsonMapper.writeJson(Collections.singletonMap("message", "Hello, World!"), ctx);
+        });
 
         // PostgreSQL
         app.get("/db", postgres::handleSingleDbQuery);
