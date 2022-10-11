@@ -10,7 +10,7 @@ public interface WorldRepository {
 
     void initDb(Collection<World> worlds);
 
-    World findById(int id);
+    World findById(Integer id);
 
     default List<World> findByIds(List<Integer> ids) {
         // Batch cannot be used by rules

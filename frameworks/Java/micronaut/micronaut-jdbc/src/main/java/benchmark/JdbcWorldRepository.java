@@ -41,7 +41,7 @@ public class JdbcWorldRepository implements WorldRepository {
     }
 
     @Override
-    public World findById(int id) {
+    public World findById(Integer id) {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM world WHERE id = ?")) {
                 statement.setInt(1, id);

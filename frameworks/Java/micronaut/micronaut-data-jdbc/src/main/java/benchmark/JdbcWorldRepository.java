@@ -20,7 +20,6 @@ public interface JdbcWorldRepository extends GenericRepository<World, Integer>, 
 
     void saveAll(Collection<World> worlds);
 
-    @ReadOnly
     @Override
     default List<World> findByIds(List<Integer> ids) {
         return WorldRepository.super.findByIds(ids);

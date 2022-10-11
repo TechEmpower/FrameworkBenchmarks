@@ -55,7 +55,7 @@ public class R2dbcWorldRepository implements ReactiveWorldRepository {
     }
 
     @Override
-    public Publisher<World> findById(int id) {
+    public Publisher<World> findById(Integer id) {
         return Mono.usingWhen(connectionFactory.create(),
                 connection -> Mono.from(connection.createStatement("SELECT * FROM world WHERE id = $1").bind(0, id).execute())
                         .flatMap(result -> Mono.from(result.map((row, rowMetadata) -> new World(row.get(0, Integer.class), row.get(1, Integer.class))))),

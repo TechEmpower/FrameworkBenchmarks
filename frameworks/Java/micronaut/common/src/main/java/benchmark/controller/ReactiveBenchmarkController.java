@@ -18,6 +18,7 @@ import views.fortunes;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ import static java.util.Comparator.comparing;
 
 @Requires(beans = {ReactiveFortuneRepository.class, ReactiveWorldRepository.class})
 @Controller
-public class ReactiveBenchmarkController {
+public class ReactiveBenchmarkController extends AbstractBenchmarkController {
 
     private final ReactiveWorldRepository worldRepository;
     private final ReactiveFortuneRepository fortuneRepository;
@@ -40,27 +41,7 @@ public class ReactiveBenchmarkController {
 
     @Get("/prepare-data-for-test")
     public Mono<Void> prepareDataForTest() {
-        return createWorlds().then(createFortunes());
-    }
-
-    private Mono<Void> createWorlds() {
-        List<Integer> ids = IntStream.range(1, 10001).boxed().collect(Collectors.toList());
-        Collections.shuffle(ids);
-        List<World> worlds = new ArrayList<>(ids.size());
-        for (Integer id : ids) {
-            worlds.add(new World(id, randomWorldNumber()));
-        }
-        return Mono.from(worldRepository.initDb(worlds));
-    }
-
-    private Mono<Void> createFortunes() {
-        List<Integer> fortuneMessages = IntStream.range(0, 10).boxed().collect(Collectors.toList());
-        List<Fortune> fortunes = new ArrayList<>(fortuneMessages.size());
-        for (Integer number : fortuneMessages) {
-            fortunes.add(new Fortune(number + 1, "message" + number));
-        }
-        Collections.shuffle(fortunes);
-        return Mono.from(fortuneRepository.initDb(fortunes));
+        return Mono.from(worldRepository.initDb(createWords())).then(Mono.from(fortuneRepository.initDb(createFortunes())));
     }
 
     // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#single-database-query
@@ -102,28 +83,9 @@ public class ReactiveBenchmarkController {
             for (World world : worlds) {
                 world.setRandomNumber(randomWorldNumber());
             }
+            worlds.sort(Comparator.comparingInt(World::getId)); // Avoid deadlock
             return Mono.from(worldRepository.updateAll(worlds)).thenReturn(worlds);
         });
     }
 
-    private int randomId() {
-        return 1 + ThreadLocalRandom.current().nextInt(10000);
-    }
-
-    private int randomWorldNumber() {
-        return 1 + ThreadLocalRandom.current().nextInt(10000);
-    }
-
-    private int parseQueryCount(String textValue) {
-        if (textValue == null) {
-            return 1;
-        }
-        int parsedValue;
-        try {
-            parsedValue = Integer.parseInt(textValue);
-        } catch (NumberFormatException e) {
-            return 1;
-        }
-        return Math.min(500, Math.max(1, parsedValue));
-    }
 }

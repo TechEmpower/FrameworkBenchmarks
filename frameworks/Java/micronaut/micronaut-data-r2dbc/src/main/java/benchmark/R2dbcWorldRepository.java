@@ -20,7 +20,6 @@ public interface R2dbcWorldRepository extends GenericRepository<World, Integer>,
         return deleteAll().then(saveAll(worlds));
     }
 
-    @ReadOnly
     @Override
     default Publisher<List<World>> findByIds(List<Integer> ids) {
         return ReactiveWorldRepository.super.findByIds(ids);

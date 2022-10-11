@@ -11,7 +11,7 @@ public interface ReactiveWorldRepository {
 
     Publisher<Void> initDb(Collection<World> worlds);
 
-    Publisher<World> findById(int id);
+    Publisher<World> findById(Integer id);
 
     default Publisher<List<World>> findByIds(List<Integer> ids) {
         return Flux.fromIterable(ids).flatMap(this::findById).collectList();

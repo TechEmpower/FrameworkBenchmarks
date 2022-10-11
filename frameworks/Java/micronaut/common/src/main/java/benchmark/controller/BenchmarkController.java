@@ -14,8 +14,10 @@ import io.micronaut.scheduling.annotation.ExecuteOn;
 import views.fortunes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -26,7 +28,7 @@ import static java.util.Comparator.comparing;
 @ExecuteOn(TaskExecutors.IO)
 @Requires(missingBeans = ReactiveBenchmarkController.class)
 @Controller
-public class BenchmarkController {
+public class BenchmarkController extends AbstractBenchmarkController {
 
     private final WorldRepository worldRepository;
     private final FortuneRepository fortuneRepository;
@@ -39,21 +41,8 @@ public class BenchmarkController {
 
     @Get("/prepare-data-for-test")
     public void prepareDataForTest() {
-        List<Integer> ids = IntStream.range(1, 10001).boxed().collect(Collectors.toList());
-        Collections.shuffle(ids);
-        List<World> worlds = new ArrayList<>(ids.size());
-        for (Integer id : ids) {
-            worlds.add(new World(id, randomWorldNumber()));
-        }
-        worldRepository.initDb(worlds);
-
-        List<Integer> fortuneMessages = IntStream.range(0, 10).boxed().collect(Collectors.toList());
-        List<Fortune> fortunes = new ArrayList<>(fortuneMessages.size());
-        for (Integer number : fortuneMessages) {
-            fortunes.add(new Fortune(number + 1, "message" + number));
-        }
-        Collections.shuffle(fortunes);
-        fortuneRepository.initDb(fortunes);
+        worldRepository.initDb(createWords());
+        fortuneRepository.initDb(createFortunes());
     }
 
     // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#single-database-query
@@ -92,28 +81,9 @@ public class BenchmarkController {
         for (World world : worldList) {
             world.setRandomNumber(randomWorldNumber());
         }
+        worldList.sort(Comparator.comparingInt(World::getId)); // Avoid deadlock
         worldRepository.updateAll(worldList);
         return worldList;
     }
-
-    private int randomId() {
-        return 1 + ThreadLocalRandom.current().nextInt(10000);
-    }
-
-    private int randomWorldNumber() {
-        return 1 + ThreadLocalRandom.current().nextInt(10000);
-    }
-
-    private int parseQueryCount(String textValue) {
-        if (textValue == null) {
-            return 1;
-        }
-        int parsedValue;
-        try {
-            parsedValue = Integer.parseInt(textValue);
-        } catch (NumberFormatException e) {
-            return 1;
-        }
-        return Math.min(500, Math.max(1, parsedValue));
-    }
+    
 }
