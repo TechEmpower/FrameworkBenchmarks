@@ -30,8 +30,8 @@ public class VertxPgFortuneRepository extends AbstractVertxSqlClientRepository i
     }
 
     @Override
-    public Publisher<Fortune> findAll() {
-        return execute("SELECT * FROM Fortune").map(row -> new Fortune(row.getInteger(0), row.getString(1)));
+    public Publisher<List<Fortune>> findAll() {
+        return executeAndCollectList("SELECT * FROM Fortune", row -> new Fortune(row.getInteger(0), row.getString(1)));
     }
 
 }

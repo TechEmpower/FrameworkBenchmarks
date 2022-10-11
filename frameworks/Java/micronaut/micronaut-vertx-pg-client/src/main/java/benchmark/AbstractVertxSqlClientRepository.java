@@ -3,13 +3,17 @@ package benchmark;
 import io.vertx.core.AsyncResult;
 import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.Row;
+import io.vertx.sqlclient.RowIterator;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.SqlClient;
 import io.vertx.sqlclient.Tuple;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class AbstractVertxSqlClientRepository {
 
@@ -27,8 +31,37 @@ public class AbstractVertxSqlClientRepository {
         });
     }
 
-    protected Flux<Row> execute(String sql, Tuple data) {
-        return execute(client, sql, data);
+    protected <T> Mono<T> executeAndCollectOne(String sql, Tuple tuple, Function<Row, T> mapper) {
+        Sinks.One<T> sink = Sinks.one();
+        client.preparedQuery(sql).execute(tuple, event -> {
+            if (event.failed()) {
+                sink.emitError(event.cause(), Sinks.EmitFailureHandler.FAIL_FAST);
+            } else  {
+                RowIterator<Row> iterator = event.result().iterator();
+                if (iterator.hasNext()) {
+                    sink.emitValue(mapper.apply(iterator.next()), Sinks.EmitFailureHandler.FAIL_FAST);
+                } else {
+                    sink.emitEmpty(Sinks.EmitFailureHandler.FAIL_FAST);
+                }
+            }
+        });
+        return sink.asMono();
+    }
+
+    protected <T> Mono<List<T>> executeAndCollectList(String sql, Function<Row, T> mapper) {
+        Sinks.One<List<T>> sink = Sinks.one();
+        client.preparedQuery(sql).execute(event -> {
+            if (event.failed()) {
+                sink.emitError(event.cause(), Sinks.EmitFailureHandler.FAIL_FAST);
+            } else {
+                List<T> list = new ArrayList<>();
+                for (Row row : event.result()) {
+                    list.add(mapper.apply(row));
+                }
+                sink.emitValue(list, Sinks.EmitFailureHandler.FAIL_FAST);
+            }
+        });
+        return sink.asMono();
     }
 
     protected Flux<Row> execute(SqlClient sqlClient, String sql, Tuple data) {

@@ -12,6 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
+import java.util.List;
 
 @Singleton
 public class R2dbcFortuneRepository implements ReactiveFortuneRepository {
@@ -54,10 +55,11 @@ public class R2dbcFortuneRepository implements ReactiveFortuneRepository {
     }
 
     @Override
-    public Publisher<Fortune> findAll() {
+    public Publisher<List<Fortune>> findAll() {
         return Flux.usingWhen(connectionFactory.create(),
                 connection -> Flux.from(connection.createStatement("SELECT id, message FROM fortune").execute())
-                        .flatMap(result -> result.map((row, rowMetadata) -> new Fortune(row.get(0, Integer.class), row.get(1, String.class)))),
+                        .flatMap(result -> result.map((row, rowMetadata) -> new Fortune(row.get(0, Integer.class), row.get(1, String.class))))
+                        .collectList(),
                 Connection::close);
     }
 

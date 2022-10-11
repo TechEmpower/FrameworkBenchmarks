@@ -33,8 +33,7 @@ public class VertxPgWorldRepository extends AbstractVertxSqlClientRepository imp
 
     @Override
     public Publisher<World> findById(Integer id) {
-        return execute("SELECT * FROM world WHERE id = $1", Tuple.of(id))
-                .map(row -> new World(row.getInteger(0), row.getInteger(1)));
+        return executeAndCollectOne("SELECT * FROM world WHERE id = $1", Tuple.of(id), row -> new World(row.getInteger(0), row.getInteger(1)));
     }
 
     @Override

@@ -67,10 +67,12 @@ public class ReactiveBenchmarkController extends AbstractBenchmarkController {
     @Get(value = "/fortunes", produces = "text/html;charset=utf-8")
     @SingleResult
     public Mono<HttpResponse<String>> fortune() {
-        return Flux.from(fortuneRepository.findAll()).collectList().map(fortuneList -> {
-            fortuneList.add(new Fortune(0, "Additional fortune added at request time."));
-            fortuneList.sort(comparing(Fortune::getMessage));
-            String body = fortunes.template(fortuneList).render().toString();
+        return Mono.from(fortuneRepository.findAll()).map(fortuneList -> {
+            List<Fortune> all = new ArrayList<>(fortuneList.size() + 1);
+            all.add(new Fortune(0, "Additional fortune added at request time."));
+            all.addAll(fortuneList);
+            all.sort(comparing(Fortune::getMessage));
+            String body = fortunes.template(all).render().toString();
             return HttpResponse.ok(body).contentType("text/html;charset=utf-8");
         });
     }

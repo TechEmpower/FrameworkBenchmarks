@@ -39,7 +39,8 @@ dependencies {
 
     implementation("com.fizzed:rocker-runtime")
 
-    runtimeOnly("ch.qos.logback:logback-classic")
+//    runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("org.slf4j:slf4j-nop:2.0.3")
 }
 
 test {
