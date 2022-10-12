@@ -27,7 +27,8 @@ r2dbc:
       dialect: POSTGRES
       options:
         protocol: postgres
-        max-size: 48
+        initialSize: 48
+        maxSize: 48
 
 mongodb:
   package-names:
