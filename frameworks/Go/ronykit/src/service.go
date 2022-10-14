@@ -12,14 +12,14 @@ var serviceDesc = desc.NewService("RonyKIT_Bench").
         AddContract(
             desc.NewContract().
                 Selector(fasthttp.REST(http.MethodGet, "/json")).
-                SetInput(&EmptyRequest{}).
+                SetInput(ronykit.RawMessage{}).
                 SetOutput(&JSONMessage{}).
                 SetHandler(jsonHandler),
         ).
         AddContract(
             desc.NewContract().
                 Selector(fasthttp.REST(http.MethodGet, "/plaintext")).
-                SetInput(&EmptyRequest{}).
+                SetInput(ronykit.RawMessage{}).
                 SetOutput(ronykit.RawMessage{}).
                 SetHandler(plaintextHandler),
         )
