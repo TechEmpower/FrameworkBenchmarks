@@ -1,0 +1,30 @@
+{
+  "framework": "bareasgi",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "fortune_url": "/fortunes",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "bareasgi",
+        "language": "Python",
+        "flavor": "Python3",
+        "orm": "Raw",
+        "platform": "asyncio",
+        "webserver": "Hypercorn",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "bareASGI",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
