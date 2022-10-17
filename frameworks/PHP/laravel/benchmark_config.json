@@ -112,7 +112,7 @@
 			"webserver": "None",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "laravel",
+			"display_name": "laravel-workerman",
 			"notes": "",
 			"versus": "php"
 		}
