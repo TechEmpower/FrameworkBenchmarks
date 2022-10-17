@@ -17,7 +17,7 @@ $http_worker->onWorkerStart = function () {
          Header::$date = gmdate('D, d M Y H:i:s').' GMT';
     });
     //init();
-    require __DIR__.'/index-man.php';
+    require __DIR__.'/start.php';
 };
 
 $http_worker->onMessage = static function ($connection, $request) {
