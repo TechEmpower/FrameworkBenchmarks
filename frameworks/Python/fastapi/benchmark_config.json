@@ -1,8 +1,7 @@
 {
   "framework": "fastapi",
-  "tests": [
-    {
-      "gunicorn": {
+  "tests": [{
+      "default": {
         "json_url": "/json",
         "fortune_url": "/fortunes",
         "plaintext_url": "/plaintext",
@@ -208,6 +207,5 @@
         "notes": "",
         "versus": "None"
       }
-    }
-  ]
+    }]
 }
