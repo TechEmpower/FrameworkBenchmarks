@@ -45,9 +45,14 @@ async def handle_plaintext_request(_request: HttpRequest) -> HttpResponse:
 
 async def handle_db_request(_request: HttpRequest) -> HttpResponse:
     key = randint(1, 10000)
+
     async with app.info['db'].acquire() as conn:
         number = await conn.fetchval(GET_WORLD, key)
-    return HttpResponse.from_json({"id": key, "randomNumber": number})
+
+    return HttpResponse.from_json(
+        {"id": key, "randomNumber": number},
+        encode_bytes=orjson.dumps
+    )
 
 
 def get_query_count(request: HttpRequest):
@@ -60,6 +65,7 @@ def get_query_count(request: HttpRequest):
         return 1
     if num_queries > 500:
         return 500
+        
     return num_queries
 
 
@@ -73,7 +79,10 @@ async def handle_queries_request(request: HttpRequest) -> HttpResponse:
             number = await pst.fetchval(key)
             worlds.append({"id": key, "randomNumber": number})
 
-    return HttpResponse.from_json(worlds)
+    return HttpResponse.from_json(
+        worlds,
+        encode_bytes=orjson.dumps
+    )
 
 
 async def handle_updates_request(request: HttpRequest) -> HttpResponse:
