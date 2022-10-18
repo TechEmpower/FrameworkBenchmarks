@@ -1,7 +1,6 @@
 {
   "framework": "silverlining",
-  "tests": [
-    {
+  "tests": [{
       "default": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
@@ -20,9 +19,7 @@
         "display_name": "silverlining",
         "notes": "",
         "versus": "go"
-      }
-    },
-    {
+      },
       "prefork": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
@@ -42,6 +39,5 @@
         "notes": "",
         "versus": "go"
       }
-    }
-  ]
+    }]
 }
