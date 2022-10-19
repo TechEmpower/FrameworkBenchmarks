@@ -32,17 +32,14 @@ function run()
     global $kernel;
 
     ob_start();
-    try {
-        $request = Request::createFromGlobals();
-        $response = $kernel->handle($request);
-        $response->send();
 
-        header('Date: ' . Header::$date); // To pass the bench, nginx auto add it
+    $request = Request::createFromGlobals();
+    $response = $kernel->handle($request);
+    $response->send();
 
-        $kernel->terminate($request, $response);
-    } catch (Throwable $e) {
-        echo $e->getMessage();
-    }
+    header('Date: ' . Header::$date); // To pass the bench, nginx auto add it
+
+    $kernel->terminate($request, $response);
     
     return ob_get_clean();
 }
