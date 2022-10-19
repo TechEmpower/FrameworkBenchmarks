@@ -6,8 +6,8 @@ class FortunesController extends AppController
     {
         View::select(null,'fortune');
         $data = Fortune::all('SELECT * FROM Fortune');
-        $data[] = (object) ['id' => 0,'message' => 'Additional fortune added at request time.'];
-        usort($data, 'Fortune::cmp');
+        $data[] = (object) ['id' => 0, 'message' => 'Additional fortune added at request time.'];
+        usort($data, fn($a, $b) => $a->message <=> $b->message );
         $this->data = $data;
     }
 }
