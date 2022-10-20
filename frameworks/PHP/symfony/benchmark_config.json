@@ -40,7 +40,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "symfony",
+      "display_name": "symfony-raw",
       "notes": "",
       "versus": "php"
     },
