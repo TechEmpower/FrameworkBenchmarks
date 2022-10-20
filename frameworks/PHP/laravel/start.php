@@ -59,18 +59,15 @@ function run()
     global $kernel;
 
     ob_start();
-    try {
-        $response = $kernel->handle(
-            $request = Illuminate\Http\Request::capture()
-        );
 
-        $response->send();
-        header('Date: ' . Header::$date); // To pass the bench, nginx auto add it
+    $response = $kernel->handle(
+        $request = Illuminate\Http\Request::capture()
+    );
 
-        $kernel->terminate($request, $response);
-    } catch (Throwable $e) {
-        echo $e->getMessage();
-    }
+    $response->send();
+    header('Date: ' . Header::$date); // To pass the bench, nginx auto add it
+
+    $kernel->terminate($request, $response);
     
     return ob_get_clean();
 }
