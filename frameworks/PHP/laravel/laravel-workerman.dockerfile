@@ -22,12 +22,9 @@ RUN mkdir -p /laravel/bootstrap/cache /laravel/storage/logs /laravel/storage/fra
 RUN chmod -R 777 /laravel
 
 COPY deploy/workerman/composer.json ./
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev 
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 RUN php artisan optimize
 
 COPY deploy/conf/cli-php.ini /etc/php/8.1/cli/php.ini
-
-#RUN sed -i 's|$app->run();|//$app->run();|g' index.php
-#RUN sed -i 's|//PDO::ATTR_EMULATE_PREPARES|PDO::ATTR_EMULATE_PREPARES|g' index.php
 
 CMD php server-man.php start

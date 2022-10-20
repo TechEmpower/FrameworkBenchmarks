@@ -10,7 +10,7 @@
     "require": {
         "php": "^8.0",
         "laravel/framework": "^8.0",
-        "joanhey/adapterman": "0.4"
+        "joanhey/adapterman": "^0.5"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

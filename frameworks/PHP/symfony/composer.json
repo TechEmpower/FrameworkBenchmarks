@@ -13,7 +13,7 @@
         "symfony/orm-pack": "^2.1",
         "symfony/twig-bundle": "^6.0",
         "symfony/yaml": "^6.0",
-        "joanhey/adapterman": "0.4"
+        "joanhey/adapterman": "^0.5"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
