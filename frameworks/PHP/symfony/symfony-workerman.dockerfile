@@ -18,7 +18,7 @@ EXPOSE 8080
 WORKDIR /symfony
 ADD ./composer.json /symfony/
 RUN mkdir -m 777 -p /symfony/var/cache/{dev,prod} /symfony/var/log
-RUN composer install --no-dev --no-scripts
+RUN composer install --no-dev --no-scripts --quiet
 
 # downgrade to doctrine-dbal 2.12 => due to a bug in version 2.13
 # see https://github.com/doctrine/dbal/issues/4603
