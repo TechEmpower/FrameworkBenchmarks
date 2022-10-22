@@ -1,4 +1,4 @@
-package io.helidon.benchmark.services;
+package io.helidon.benchmark.reactive.services;
 
 import java.nio.charset.StandardCharsets;
 

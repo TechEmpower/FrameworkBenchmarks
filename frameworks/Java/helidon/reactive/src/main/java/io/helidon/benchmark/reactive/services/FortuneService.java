@@ -1,18 +1,17 @@
-package io.helidon.benchmark.services;
+package io.helidon.benchmark.reactive.services;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 
-import io.helidon.benchmark.models.DbRepository;
-import io.helidon.benchmark.models.Fortune;
+import com.fizzed.rocker.runtime.ArrayOfByteArraysOutput;
+import io.helidon.benchmark.reactive.models.DbRepository;
+import io.helidon.benchmark.reactive.models.Fortune;
 import io.helidon.common.http.MediaType;
 import io.helidon.webserver.Handler;
 import io.helidon.webserver.Routing;
 import io.helidon.webserver.ServerRequest;
 import io.helidon.webserver.ServerResponse;
 import io.helidon.webserver.Service;
-
-import com.fizzed.rocker.runtime.ArrayOfByteArraysOutput;
 import views.fortunes;
 
 public class FortuneService implements Service, Handler {

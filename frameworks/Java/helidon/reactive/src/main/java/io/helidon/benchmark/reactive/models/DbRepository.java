@@ -1,4 +1,4 @@
-package io.helidon.benchmark.models;
+package io.helidon.benchmark.reactive.models;
 
 import java.util.List;
 

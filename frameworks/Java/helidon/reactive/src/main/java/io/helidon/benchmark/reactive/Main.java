@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2018, 2021 Oracle and/or its affiliates.
  *
@@ -14,17 +15,17 @@
  * limitations under the License.
  */
 
-package io.helidon.benchmark;
+package io.helidon.benchmark.reactive;
 
 import java.io.IOException;
 import java.util.logging.LogManager;
 
-import io.helidon.benchmark.models.DbRepository;
-import io.helidon.benchmark.models.JdbcRepository;
-import io.helidon.benchmark.services.DbService;
-import io.helidon.benchmark.services.FortuneService;
-import io.helidon.benchmark.services.JsonService;
-import io.helidon.benchmark.services.PlainTextService;
+import io.helidon.benchmark.reactive.models.DbRepository;
+import io.helidon.benchmark.reactive.models.JdbcRepository;
+import io.helidon.benchmark.reactive.services.DbService;
+import io.helidon.benchmark.reactive.services.FortuneService;
+import io.helidon.benchmark.reactive.services.JsonService;
+import io.helidon.benchmark.reactive.services.PlainTextService;
 import io.helidon.config.Config;
 import io.helidon.media.jsonp.JsonpSupport;
 import io.helidon.webserver.Routing;

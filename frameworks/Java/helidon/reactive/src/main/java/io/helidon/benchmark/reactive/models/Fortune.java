@@ -1,4 +1,4 @@
-package io.helidon.benchmark.models;
+package io.helidon.benchmark.reactive.models;
 
 public final class Fortune {
     public int id;
