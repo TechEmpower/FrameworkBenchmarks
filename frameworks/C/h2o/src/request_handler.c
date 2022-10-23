@@ -29,6 +29,7 @@
 #include "handlers/fortune.h"
 #include "handlers/json_serializer.h"
 #include "handlers/plaintext.h"
+#include "handlers/request_handler_data.h"
 #include "handlers/world.h"
 
 static const char *status_code_to_string(http_status_code_t status_code)
@@ -58,15 +59,15 @@ static const char *status_code_to_string(http_status_code_t status_code)
 	return ret;
 }
 
-void cleanup_request_handlers(global_data_t *global_data)
+void cleanup_request_handler_thread_data(request_handler_thread_data_t *data)
 {
-	cleanup_fortunes_handler(global_data);
-	cleanup_world_handlers(global_data);
+	cleanup_world_handler_thread_data(data);
 }
 
-void free_request_handler_thread_data(request_handler_thread_data_t *request_handler_thread_data)
+void cleanup_request_handlers(request_handler_data_t *data)
 {
-	IGNORE_FUNCTION_PARAMETER(request_handler_thread_data);
+	cleanup_fortunes_handler(data);
+	cleanup_world_handlers(data);
 }
 
 const char *get_query_param(const char *query,
@@ -94,22 +95,24 @@ const char *get_query_param(const char *query,
 	return ret;
 }
 
-void initialize_request_handler_thread_data(
-		const config_t *config, request_handler_thread_data_t *request_handler_thread_data)
+void initialize_request_handler_thread_data(thread_context_t *ctx)
 {
-	IGNORE_FUNCTION_PARAMETER(config);
-	IGNORE_FUNCTION_PARAMETER(request_handler_thread_data);
+	const request_handler_data_t * const data =
+		&ctx->global_thread_data->global_data->request_handler_data;
+
+	initialize_world_handler_thread_data(ctx, data, &ctx->request_handler_data);
 }
 
 void initialize_request_handlers(const config_t *config,
-                                 global_data_t *global_data,
                                  h2o_hostconf_t *hostconf,
-                                 h2o_access_log_filehandle_t *log_handle)
+                                 h2o_access_log_filehandle_t *log_handle,
+                                 list_t **postinitialization_tasks,
+                                 request_handler_data_t *data)
 {
-	initialize_fortunes_handler(config, global_data, hostconf, log_handle);
+	initialize_fortunes_handler(config, hostconf, log_handle, data);
 	initialize_json_serializer_handler(hostconf, log_handle);
 	initialize_plaintext_handler(hostconf, log_handle);
-	initialize_world_handlers(config, global_data, hostconf, log_handle);
+	initialize_world_handlers(config, hostconf, log_handle, postinitialization_tasks, data);
 }
 
 void register_request_handler(const char *path,
@@ -151,7 +154,7 @@ int send_json_response(json_generator_t *gen, bool free_gen, h2o_req_t *req)
 			free_json_generator(gen,
 			                    &ctx->json_generator,
 			                    &ctx->json_generator_num,
-			                    ctx->config->max_json_generator);
+			                    ctx->global_thread_data->config->max_json_generator);
 		}
 		else {
 			h2o_generator_t generator;
