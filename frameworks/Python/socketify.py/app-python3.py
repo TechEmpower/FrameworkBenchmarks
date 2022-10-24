@@ -1,0 +1,61 @@
+
+import threading
+import time
+import os
+
+from ujson import dumps as json
+from datetime import datetime
+
+from socketify import App
+
+current_http_date = datetime.utcnow().astimezone().strftime("%a, %d %b %Y %H:%M:%S %Z")
+
+def time_thread():
+    while True:
+        global current_http_date
+        current_http_date = datetime.utcnow().astimezone().strftime("%a, %d %b %Y %H:%M:%S %Z")
+        time.sleep(1)
+
+def plaintext(res, req):
+    res.write_header("Date", current_http_date)
+    res.write_header("Server", "socketify")
+    res.write_header("Content-Type", "text/plain")
+    res.end("Hello, World!")
+
+def applicationjson(res, req):
+    res.write_header("Date", current_http_date)
+    res.write_header("Server", "socketify")
+    res.write_header("Content-Type", "application/json")
+    res.end(json({"message":"Hello, World!"}))
+
+
+def run_app():
+    timing = threading.Thread(target=time_thread, args=())
+    timing.start()
+    app = App()
+    
+    app.get("/", plaintext)
+    app.get("/json", applicationjson)
+    app.get("/plaintext", plaintext)
+    app.listen(3000)
+    app.run()
+    
+def create_fork():
+    n = os.fork()
+    # n greater than 0 means parent process
+    if not n > 0:
+        run_app()
+
+def get_worker_count():
+    try:
+        return int(os.environ["WORKER_COUNT"])
+    except:
+        return 2
+
+WORKER_COUNT = get_worker_count() - 1
+
+for index in range(WORKER_COUNT):
+    create_fork()
+
+run_app()
+
