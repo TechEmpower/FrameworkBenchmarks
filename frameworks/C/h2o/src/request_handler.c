@@ -109,10 +109,11 @@ void initialize_request_handlers(const config_t *config,
                                  list_t **postinitialization_tasks,
                                  request_handler_data_t *data)
 {
+	IGNORE_FUNCTION_PARAMETER(postinitialization_tasks);
 	initialize_fortunes_handler(config, hostconf, log_handle, data);
 	initialize_json_serializer_handler(hostconf, log_handle);
 	initialize_plaintext_handler(hostconf, log_handle);
-	initialize_world_handlers(config, hostconf, log_handle, postinitialization_tasks, data);
+	initialize_world_handlers(hostconf, log_handle, data);
 }
 
 void register_request_handler(const char *path,

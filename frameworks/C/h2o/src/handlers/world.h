@@ -33,10 +33,8 @@ void cleanup_world_handlers(request_handler_data_t *data);
 void initialize_world_handler_thread_data(thread_context_t *ctx,
                                           const request_handler_data_t *data,
                                           request_handler_thread_data_t *thread_data);
-void initialize_world_handlers(const config_t *config,
-                               h2o_hostconf_t *hostconf,
+void initialize_world_handlers(h2o_hostconf_t *hostconf,
                                h2o_access_log_filehandle_t *log_handle,
-                               list_t **postinitialization_tasks,
                                request_handler_data_t *data);
 
 #endif // WORLD_H_
