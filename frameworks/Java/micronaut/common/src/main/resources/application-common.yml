@@ -7,6 +7,7 @@ micronaut:
     date-header: false
 
 netty:
+  resource-leak-detector-level: DISABLED
   default:
     allocator:
       max-order: 3
