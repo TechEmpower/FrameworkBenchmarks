@@ -1,4 +1,4 @@
-FROM ghcr.io/graalvm/graalvm-ce:ol7-java17-22.2.0 as build
+FROM ghcr.io/graalvm/graalvm-ce:ol7-java17-22.3.0 as build
 COPY . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN ./gradlew  --no-daemon
