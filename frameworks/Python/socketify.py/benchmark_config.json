@@ -34,23 +34,6 @@
             "database_os": "Linux",
             "display_name": "socketify.py-python3",
             "notes": ""
-        },
-        "python3-alpine": {
-            "json_url": "/json",
-            "plaintext_url": "/plaintext",
-            "port": 3000,
-            "approach": "Realistic",
-            "classification": "Micro",
-            "database": "None",
-            "framework": "None",
-            "language": "Ruby",
-            "orm": "Raw",
-            "platform": "None",
-            "webserver": "socketify.py-python3-alpine",
-            "os": "Linux",
-            "database_os": "Linux",
-            "display_name": "socketify.py-python3-alpine",
-            "notes": ""
         }
     }]
 }
