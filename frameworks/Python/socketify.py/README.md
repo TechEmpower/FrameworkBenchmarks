@@ -1,6 +1,8 @@
 # socketify.py
 Fast WebSocket and Http/Https server using CFFI with C API from [uNetworking/uWebSockets](https://github.com/uNetworking/uWebSockets)
 
+This project aims at High Performance PyPy3 Web Development and WebSockets
+
 > This project will adapt the full capi from uNetworking/uWebSockets but for now it's just this.
 
 ### Overly simple hello world app
