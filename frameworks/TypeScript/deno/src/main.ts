@@ -1,15 +1,29 @@
-import { serve } from "https://deno.land/std@0.96.0/http/server.ts";
-import Handlers from "./handlers.ts";
-for await (const req of serve("0.0.0.0:8080")) {
-  if (Handlers[req.url] != undefined) {
-    Handlers[req.url](req as any).catch((e) => {
-      console.error(e);
-      Deno.exit(9);
-    });
-  } else {
-    req.respond({
-      body: "404 Not Found",
-    });
-  }
-  continue;
-}
+const options = {
+  // Date and Content-Type headers are automatically set.
+  headers: {
+    "Server": "Deno",
+  },
+};
+
+type HandlerFn = (req: Request) => Promise<Response> | Response;
+
+const handlers: Record<string, HandlerFn> = {
+  "/json": () => Response.json({ message: "Hello, World!" }, options),
+  "/plaintext": () => new Response("Hello, World!", options),
+};
+
+Deno.serve({
+  handler: (req: Request) => {
+    const path = req.url.slice(req.url.indexOf("/", 8));
+    const fn = handlers[path];
+    return fn
+      ? fn(req)
+      : new Response("404 Not Found", { status: 404, ...options });
+  },
+  onError(err) {
+    console.error(err);
+    Deno.exit(9);
+  },
+  port: 8080,
+  hostname: "0.0.0.0",
+});

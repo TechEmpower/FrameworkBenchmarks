@@ -1,6 +1,7 @@
 package hello.model;
 
 import javax.persistence.Entity;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -9,16 +10,17 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Entity
 public final class World {
 
-  @Id
-  @javax.persistence.Id
-  public int id;
-  @Field("randomNumber")
-  public int randomnumber;
+	@Id
+	@javax.persistence.Id
+	public int id;
+	@Field("randomNumber")
+	public int randomnumber;
 
-  protected World() {}
+	protected World() {
+	}
 
-  public World(int id, int randomnumber) {
-    this.id = id;
-    this.randomnumber = randomnumber;
-  }
+	public World(int id, int randomnumber) {
+		this.id = id;
+		this.randomnumber = randomnumber;
+	}
 }

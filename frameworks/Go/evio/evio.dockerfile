@@ -1,13 +1,10 @@
-FROM golang:1.12
+FROM docker.io/golang:1.19
 
-ENV GO111MODULE on
 WORKDIR /evio
 
 COPY ./src /evio
 
-RUN go mod download
-
-RUN go build -ldflags="-s -w" -o app .
+RUN GOAMD64=v3 go build -ldflags="-s -w" -o app .
 
 EXPOSE 8080
 

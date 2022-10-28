@@ -1,5 +1,6 @@
-asyncpg==0.25.0
-Jinja2==3.0.3
-uvicorn==0.17.1
-starlite==1.0.0
-gunicorn==20.1.0
+asyncpg>=0.26.0
+Jinja2>=3.1.2
+uvicorn>=0.18.2
+starlite>=1.7.1
+gunicorn>=20.1.0
+uvloop>=0.16.0

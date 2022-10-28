@@ -42,12 +42,12 @@ internal class BenchmarkSqlStore(engine: String, private val settings: Settings 
     }
 
     override fun findAllFortunes(): List<Fortune> {
-        val fortunes = mutableListOf<Fortune>()
+        var fortunes = listOf<Fortune>()
 
         dataSource.connection.use { con: Connection ->
             val rs = con.prepareStatement(SELECT_ALL_FORTUNES).executeQuery()
             while (rs.next())
-                fortunes += Fortune(rs.getInt(1), rs.getString(2))
+                fortunes = fortunes + Fortune(rs.getInt(1), rs.getString(2))
         }
 
         return fortunes

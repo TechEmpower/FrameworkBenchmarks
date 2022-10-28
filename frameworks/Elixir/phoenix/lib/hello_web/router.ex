@@ -8,6 +8,7 @@ defmodule HelloWeb.Router do
     get("/fortunes", PageController, :fortunes)
     get("/updates", PageController, :updates)
     get("/plaintext", PageController, :plaintext)
+    get("/cached-queries", PageController, :cached)
     get("/", PageController, :index)
   end
 end

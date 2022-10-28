@@ -7,7 +7,7 @@
 
     <properties>
         <main.class>org.redkale.boot.Application</main.class>
-		<redkale.version>2.7.0-SNAPSHOT</redkale.version>
+		<redkale.version>2.8.0-SNAPSHOT</redkale.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
@@ -65,13 +65,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>                         
+                <version>3.10.0</version>                         
             </plugin>
                  
             <plugin>
                 <groupId>org.redkale.maven.plugins</groupId>
                 <artifactId>redkale-maven-plugin</artifactId>
-                <version>1.1.0-SNAPSHOT</version>                                                
+                <version>1.2.0-SNAPSHOT</version>                                                
                 <configuration>		
                     <nativeimageArgs>
                         <arg>--no-fallback</arg>
@@ -91,7 +91,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

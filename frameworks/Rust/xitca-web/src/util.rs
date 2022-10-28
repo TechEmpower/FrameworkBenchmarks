@@ -4,7 +4,7 @@ use std::cmp;
 
 use xitca_http::http::header::HeaderValue;
 
-pub(super) trait QueryParse {
+pub trait QueryParse {
     fn parse_query(self) -> u16;
 }
 
@@ -23,3 +23,6 @@ impl QueryParse for Option<&str> {
 }
 
 pub const SERVER_HEADER_VALUE: HeaderValue = HeaderValue::from_static("TFB");
+
+#[allow(dead_code)]
+pub const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";

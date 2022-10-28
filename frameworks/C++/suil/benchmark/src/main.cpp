@@ -57,20 +57,19 @@ int main(int argc, char *argv[])
     };
 
     Endpoint<SystemAttrs, PgSqlMiddleware> ep{"/",
-          opt(serverConfig, std::move(config)),
-          opt(numberOfWorkers, 0)   /* Will run with number of available cores */
+          opt(serverConfig, std::move(config))
     };
 
     ep.middleware<PgSqlMiddleware>().setup(
             suil::env("POSTGRES_CONN", DEFAULT_POSTGRES_CONN),
-            opt(ASYNC,   true),   // connections are async
-            opt(TIMEOUT, 5_sec),  // timeout on db transactions
-            opt(EXPIRES, 30_sec)  // connections are cached for 30 seconds
+            opt(ASYNC,   true),    // connections are async
+            opt(TIMEOUT, 10_sec),  // timeout on db transactions
+            opt(EXPIRES, 30_sec)   // connections are cached for 30 seconds
     );
 
 #if SUIL_BENCH_DEV == 1
     {
-        scoped(conn, ep.middleware<PgSqlMiddleware>().conn());
+        scoped(conn, ep.middleware<PgSqlMiddleware>().conn(false));
         seedDatabase(conn);
     }
 #endif

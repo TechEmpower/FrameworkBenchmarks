@@ -9,11 +9,9 @@ mod schema;
 mod ser;
 mod util;
 
-use std::convert::Infallible;
-
 use serde::Serialize;
 use xitca_web::{
-    dev::Service,
+    dev::service::Service,
     handler::{handler_service, html::Html, json::Json, state::StateRef, uri::UriRef, Responder},
     http::header::SERVER,
     request::WebRequest,
@@ -23,19 +21,15 @@ use xitca_web::{
 };
 
 use self::db_diesel::{create, DieselPool};
-use self::ser::Message;
-use self::util::{QueryParse, SERVER_HEADER_VALUE};
+use self::util::{QueryParse, DB_URL, SERVER_HEADER_VALUE};
 
 type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 
 type Request<'a> = WebRequest<'a, DieselPool>;
 
-#[tokio::main(flavor = "current_thread")]
-async fn main() -> Result<(), Error> {
-    let config = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
-
-    HttpServer::new(move || {
-        App::with_async_state(move || async { Ok::<_, Infallible>(create(config).await.unwrap()) })
+fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::with_async_state(|| create(DB_URL))
             .at("/plaintext", get(handler_service(plain_text)))
             .at("/json", get(handler_service(json)))
             .at("/db", get(handler_service(db)))
@@ -47,32 +41,27 @@ async fn main() -> Result<(), Error> {
     })
     .bind("0.0.0.0:8080")?
     .run()
-    .await
-    .map_err(Into::into)
+    .wait()
 }
 
-async fn middleware_fn<S, E>(service: &S, mut ctx: Request<'_>) -> Result<WebResponse, Infallible>
+async fn middleware_fn<S, E>(service: &S, mut ctx: Request<'_>) -> Result<WebResponse, E>
 where
     S: for<'r> Service<Request<'r>, Response = Result<WebResponse, Error>, Error = E>,
-    E: for<'r> Responder<Request<'r>, Output = WebResponse>,
 {
-    let mut res = match service.call(ctx.reborrow()).await {
-        Ok(Ok(res)) => res,
-        Ok(Err(err)) => err.respond_to(ctx).await,
+    let mut res = match service.call(ctx.reborrow()).await? {
+        Ok(res) => res,
         Err(err) => err.respond_to(ctx).await,
     };
-
     res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
-
     Ok(res)
 }
 
-async fn plain_text(_: &Request<'_>) -> Result<&'static str, Error> {
+async fn plain_text() -> Result<&'static str, Error> {
     Ok("Hello, World!")
 }
 
-async fn json(_: &Request<'_>) -> Result<Json<impl Serialize>, Error> {
-    Ok(Json(Message::new()))
+async fn json() -> Result<Json<impl Serialize>, Error> {
+    Ok(Json(ser::Message::new()))
 }
 
 async fn db(StateRef(pool): StateRef<'_, DieselPool>) -> Result<Json<impl Serialize>, Error> {
@@ -90,8 +79,7 @@ async fn queries(
     UriRef(uri): UriRef<'_>,
 ) -> Result<Json<impl Serialize>, Error> {
     let num = uri.query().parse_query();
-    let worlds = pool.get_worlds(num).await?;
-    Ok(Json(worlds))
+    pool.get_worlds(num).await.map(Json)
 }
 
 async fn updates(
@@ -99,6 +87,5 @@ async fn updates(
     UriRef(uri): UriRef<'_>,
 ) -> Result<Json<impl Serialize>, Error> {
     let num = uri.query().parse_query();
-    let worlds = pool.update(num).await?;
-    Ok(Json(worlds))
+    pool.update(num).await.map(Json)
 }

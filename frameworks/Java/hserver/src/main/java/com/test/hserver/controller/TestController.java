@@ -1,13 +1,13 @@
 package com.test.hserver.controller;
 
+import cn.hserver.core.ioc.annotation.Autowired;
+import cn.hserver.plugin.web.annotation.Controller;
+import cn.hserver.plugin.web.annotation.GET;
+import cn.hserver.plugin.web.interfaces.HttpResponse;
 import com.test.hserver.bean.Fortune;
 import com.test.hserver.bean.Message;
 import com.test.hserver.bean.World;
 import com.test.hserver.util.DateUtil;
-import top.hserver.core.interfaces.HttpResponse;
-import top.hserver.core.ioc.annotation.Autowired;
-import top.hserver.core.ioc.annotation.Controller;
-import top.hserver.core.ioc.annotation.GET;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -25,7 +25,6 @@ import static com.test.hserver.util.Util.randomWorld;
 @Controller
 public class TestController {
     private static final String HELLO = "Hello, World!";
-    private static final String HServer = "HServer";
     private static final String SELECT_WORLD = "select * from world where id=?";
 
     @Autowired
@@ -34,14 +33,12 @@ public class TestController {
     @GET("/json")
     public Message json(HttpResponse response) {
         response.setHeader("Date", DateUtil.getTime());
-        response.setHeader("Server",HServer);
         return new Message();
     }
 
     @GET("/plaintext")
     public String plaintext(HttpResponse response) {
         response.setHeader("Date", DateUtil.getTime());
-        response.setHeader("Server",HServer);
         return HELLO;
     }
 
@@ -58,7 +55,6 @@ public class TestController {
             }
         }
         response.setHeader("Date", DateUtil.getTime());
-        response.setHeader("Server",HServer);
         response.sendJson(result);
     }
 
@@ -77,7 +73,6 @@ public class TestController {
             }
         }
         response.setHeader("Date", DateUtil.getTime());
-        response.setHeader("Server",HServer);
         response.sendJson(result);
     }
 
@@ -113,7 +108,6 @@ public class TestController {
             }
         }
         response.setHeader("Date", DateUtil.getTime());
-        response.setHeader("Server",HServer);
         response.sendJson(result);
     }
 
@@ -132,7 +126,6 @@ public class TestController {
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
         response.setHeader("Date", DateUtil.getTime());
-        response.setHeader("Server",HServer);
         Map<String,Object> data=new HashMap<>();
         data.put("data",fortunes);
         response.sendTemplate("fortunes.ftl",data);

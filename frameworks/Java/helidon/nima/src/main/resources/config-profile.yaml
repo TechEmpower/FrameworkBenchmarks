@@ -1,0 +1,7 @@
+sources:
+  # disabled env vars and sys props to reduce configuration keys
+  # - type: "environment-variables"
+  # - type: "system-properties"
+  - type: "classpath"
+    properties:
+      resource: "application.yaml"

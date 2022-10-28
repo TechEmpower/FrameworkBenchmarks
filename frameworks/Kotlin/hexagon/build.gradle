@@ -1,15 +1,15 @@
 
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.6.21"
+    id "org.jetbrains.kotlin.jvm" version "1.7.10"
 }
 
 ext {
-    hexagonVersion = "2.0.8"
+    hexagonVersion = "2.0.23"
     hikariVersion = "5.0.1"
-    jettyVersion = "11.0.9"
-    postgresqlVersion = "42.3.5"
+    jettyVersion = "11.0.11"
+    postgresqlVersion = "42.5.0"
     cache2kVersion = "2.6.1.Final"
-    nettyVersion = "4.1.76.Final"
+    nettyVersion = "4.1.80.Final"
 
     gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/$hexagonVersion/gradle"
 }
@@ -32,12 +32,11 @@ war {
 installDist.dependsOn("war")
 
 dependencies {
-    implementation("com.hexagonkt:http_server_netty:$hexagonVersion")
     implementation("com.hexagonkt:http_server_netty_epoll:$hexagonVersion")
     implementation("com.hexagonkt:http_server_jetty:$hexagonVersion")
     implementation("com.hexagonkt:templates_pebble:$hexagonVersion")
     implementation("com.hexagonkt:logging_slf4j_jul:$hexagonVersion")
-    implementation("com.hexagonkt:serialization_jackson_json:$hexagonVersion")
+    implementation("com.hexagonkt:serialization_dsl_json:$hexagonVersion")
 
     implementation("io.netty:netty-transport-native-epoll:$nettyVersion:linux-x86_64")
     implementation("org.cache2k:cache2k-core:$cache2kVersion")
