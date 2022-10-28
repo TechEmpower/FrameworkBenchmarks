@@ -7,28 +7,18 @@ from datetime import datetime
 
 from socketify import App
 
-current_http_date = datetime.utcnow().isoformat() + "Z"
-def time_thread():
-    while True:
-        global current_http_date
-        current_http_date = datetime.utcnow().isoformat() + "Z"
-        time.sleep(1)
 
 def plaintext(res, req):
-    res.write_header("Date", current_http_date)
     res.write_header("Server", "socketify")
     res.write_header("Content-Type", "text/plain")
     res.end("Hello, World!")
 
 def applicationjson(res, req):
-    res.write_header("Date", current_http_date)
     res.write_header("Server", "socketify")
     res.end({"message":"Hello, World!"})
 
 
 def run_app():
-    timing = threading.Thread(target=time_thread, args=())
-    timing.start()
     app = App()
     app.get("/", plaintext)
     app.get("/json", applicationjson)
