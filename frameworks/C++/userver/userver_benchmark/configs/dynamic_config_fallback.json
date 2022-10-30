@@ -28,7 +28,7 @@
         "wait_queue_overload": {
           "action": "ignore",
           "length_limit": 16385,
-          "time_limit_us": 3000
+          "time_limit_us": 30000
         }
       }
     }
