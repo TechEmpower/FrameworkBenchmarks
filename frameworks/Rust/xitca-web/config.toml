@@ -35,6 +35,15 @@ platform = "None"
 webserver = "xitca-server"
 versus = ""
 
+[iou]
+urls.plaintext = "/plaintext"
+approach = "Realistic"
+classification = "Micro"
+os = "Linux"
+platform = "None"
+webserver = "xitca-server"
+versus = ""
+
 [wasm]
 urls.plaintext = "/plaintext"
 approach = "Realistic"

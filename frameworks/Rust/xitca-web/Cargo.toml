@@ -6,12 +6,17 @@ edition = "2021"
 [[bin]]
 name = "xitca-web"
 path = "./src/main.rs"
-required-features = ["raw", "simd"]
+required-features = ["raw", "sailfish", "simd"]
 
 [[bin]]
 name = "xitca-web-diesel"
 path = "./src/main_diesel.rs"
-required-features = ["orm", "serde", "web"]
+required-features = ["orm", "sailfish", "serde", "web"]
+
+[[bin]]
+name = "xitca-web-iou"
+path = "./src/main_iou.rs"
+required-features = ["io-uring"]
 
 [[bin]]
 name = "xitca-web-wasm"
@@ -29,9 +34,14 @@ simd = ["simd-json", "simd-json-derive"]
 serde = ["dep:serde"]
 # web optional
 web = ["xitca-web"]
+# templating optional
+sailfish = ["dep:sailfish"]
+# io-uring optional
+io-uring = ["tokio-uring", "xitca-server/io-uring"]
 
 [dependencies]
 xitca-http = { version = "0.1", features = ["util-service"] }
+xitca-io = "0.1"
 xitca-server = "0.1"
 xitca-service = "0.1"
 xitca-unsafe-collection = "0.1"
@@ -56,14 +66,19 @@ simd-json-derive = { version = "0.6.3", default-features = false, optional = tru
 # serde optional
 serde = { version = "1", features = ["derive"], optional = true }
 
+# io-uring optional
+tokio-uring = { version = "0.3", features = ["bytes"], optional = true }
+
+# templating optional
+sailfish = { version = "0.5.0", optional = true }
+
 # stuff can not be used or not needed in wasi target
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 mimalloc = { version = "0.1.29", default-features = false }
 core_affinity = "0.5.10"
 futures-util = { version = "0.3.18", default-features = false, features = ["alloc"] }
 rand = { version = "0.8.5", default-features = false, features = ["min_const_gen", "nightly", "small_rng"] }
-sailfish = "0.5.0"
-tokio = "1.21"
+tokio = "1.21.2"
 
 [profile.release]
 lto = true
@@ -72,10 +87,12 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "cd9a03dccde56f8583e9a15e013888438f57dece" }
-xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "cd9a03dccde56f8583e9a15e013888438f57dece" }
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "cd9a03dccde56f8583e9a15e013888438f57dece" }
-xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "cd9a03dccde56f8583e9a15e013888438f57dece" }
-xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "cd9a03dccde56f8583e9a15e013888438f57dece" }
-xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "cd9a03dccde56f8583e9a15e013888438f57dece" }
-xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "cd9a03dccde56f8583e9a15e013888438f57dece" }
+xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "9c3ca2eb2ad6ea7267f0225f0bc4bc2b8f3f6639" }
+xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "9c3ca2eb2ad6ea7267f0225f0bc4bc2b8f3f6639" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "9c3ca2eb2ad6ea7267f0225f0bc4bc2b8f3f6639" }
+xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "9c3ca2eb2ad6ea7267f0225f0bc4bc2b8f3f6639" }
+xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "9c3ca2eb2ad6ea7267f0225f0bc4bc2b8f3f6639" }
+xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "9c3ca2eb2ad6ea7267f0225f0bc4bc2b8f3f6639" }
+xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "9c3ca2eb2ad6ea7267f0225f0bc4bc2b8f3f6639" }
+
+tokio-uring = { git = "https://github.com/tokio-rs/tokio-uring.git", rev = "8725b81b862cc480be93b1a11c80b9990d51d890" }
