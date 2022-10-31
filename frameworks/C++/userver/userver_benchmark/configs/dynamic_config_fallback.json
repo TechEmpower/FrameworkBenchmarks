@@ -38,15 +38,15 @@
   "POSTGRES_CONNECTION_PIPELINE_ENABLED": false,
   "POSTGRES_CONNECTION_POOL_SETTINGS": {
     "hello_world": {
-      "max_pool_size": 500,
-      "max_queue_size": 500,
+      "max_pool_size": 520,
+      "max_queue_size": 520,
       "min_pool_size": 20
     }
   },
   "POSTGRES_CONNECTION_SETTINGS": {},
   "POSTGRES_DEFAULT_COMMAND_CONTROL": {
-    "network_timeout_ms": 750,
-    "statement_timeout_ms": 500
+    "network_timeout_ms": 1750,
+    "statement_timeout_ms": 1500
   },
   "POSTGRES_HANDLERS_COMMAND_CONTROL": {},
   "POSTGRES_QUERIES_COMMAND_CONTROL": {}

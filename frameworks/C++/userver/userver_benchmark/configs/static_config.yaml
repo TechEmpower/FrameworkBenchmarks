@@ -59,11 +59,21 @@ components_manager:
             dbalias: hello_world
             blocking_task_processor: fs-task-processor
             min_pool_size: 20
-            max_pool_size: 500
+            max_pool_size: 520
             max_queue_size: 500
 
         single-query-handler:
             path: /db
+            method: GET
+            task_processor: main-task-processor
+
+        multiple-queries-handler:
+            path: /queries
+            method: GET
+            task_processor: main-task-processor
+
+        updates-handler:
+            path: /updates
             method: GET
             task_processor: main-task-processor
 
