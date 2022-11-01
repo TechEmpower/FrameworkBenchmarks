@@ -77,3 +77,14 @@ components_manager:
             method: GET
             task_processor: main-task-processor
 
+        world-pg-cache:
+            pgcomponent: hello-world-db
+            update-types: only-full
+            update-interval: 1s
+            update-correction: 50ms
+
+        cached-queries-handler:
+            path: /cached-queries
+            method: GET
+            task_processor: main-task-processor
+

@@ -8,6 +8,7 @@
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
+        "cached_query_url": "/cached-queries?count=",
         "port": 8090,
         "approach": "Realistic",
         "classification": "Micro",
