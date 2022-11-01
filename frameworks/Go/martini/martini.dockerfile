@@ -1,15 +1,10 @@
-FROM golang:1.14
+FROM docker.io/golang:1.19
 
 WORKDIR /home
 COPY . .
 
-RUN mkdir -p bin
-ENV GOPATH /home
-ENV path ${GOPATH}/bin:${PATH}
-
-RUN go get github.com/go-martini/martini
-RUN go get github.com/lib/pq
+RUN go mod download
 
 EXPOSE 8080
 
-CMD go run randomNumber.go sanitizeQueries.go main.go
+CMD GOAMD64=v3 go run .
