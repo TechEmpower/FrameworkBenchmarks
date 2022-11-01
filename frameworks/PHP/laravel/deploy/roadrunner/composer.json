@@ -8,9 +8,9 @@
     ],
     "license": "MIT",
     "require": {
-        "laravel/framework": "^8.70",
+        "laravel/framework": "^9",
         "nyholm/psr7": "*",
-        "spiral/roadrunner": "^2.9",
+        "spiral/roadrunner": "^2.11",
         "spiral/roadrunner-laravel": "^5.9"
     },
     "config": {
