@@ -3,25 +3,25 @@ components_manager:
     coro_pool:
         initial_size: 10000             # Preallocate 10000 coroutines at startup.
         max_size: 65536                 # Do not keep more than 65536 preallocated coroutines.
-        stack_size: 66560               # 64Kb cause why not
+        stack_size: 66560               # 64Kb for coroutine stack
 
-    task_processors:                   # Task processor is an executor for coroutine tasks
+    task_processors:                    # Task processor is an executor for coroutine tasks
 
-        main-task-processor:           # Make a task processor for CPU-bound couroutine tasks.
-            thread_name: main-worker   # OS will show the threads of this task processor with 'main-worker' prefix.
-            worker_threads: 12
+        main-task-processor:            # Make a task processor for CPU-bound couroutine tasks.
+            thread_name: main-worker    # OS will show the threads of this task processor with 'main-worker' prefix.
+            worker_threads: 26
             guess-cpu-limit: true
 
-        fs-task-processor:             # Make a separate task processor for filesystem bound tasks.
+        fs-task-processor:              # Make a separate task processor for filesystem bound tasks.
             thread_name: fs-worker
             worker_threads: 4
 
     default_task_processor: main-task-processor
 
-    components:                        # Configuring components that were registered via component_list
+    components:                         # Configuring components that were registered via component_list
         server:
-            listener:                  # configuring the main listening socket...
-                port: 8090             # ...to listen on this port and...
+            listener:                   # configuring the main listening socket...
+                port: 8080              # ...to listen on this port and...
                 task_processor: main-task-processor    # ...process incoming requests on this task processor.
         logging:
             fs-task-processor: fs-task-processor
