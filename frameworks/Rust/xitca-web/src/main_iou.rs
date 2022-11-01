@@ -13,7 +13,7 @@ use std::{
 };
 
 use futures_util::stream::Stream;
-use tracing::{span, trace, Level};
+use tracing::{span, Level};
 use xitca_http::{
     body::{BodySize, Once},
     date::DateTimeService,
@@ -44,7 +44,7 @@ fn main() -> io::Result<()> {
     xitca_server::Builder::new()
         .bind("xitca-io-uring", "0.0.0.0:8080", || {
             Http1IOU::new(fn_service(handler))
-                .enclosed(Logger::with_span(span!(Level::TRACE, "xitca-iou")))
+                .enclosed(Logger::with_span(span!(Level::ERROR, "xitca-iou")))
         })?
         .build()
         .wait()
@@ -131,8 +131,6 @@ where
 
             let mut ctx = Context::<_, 8>::new(self.date.get());
 
-            trace!("accepted connection");
-
             loop {
                 let (res, buf) = stream.read(read_buf).await;
                 let n = res?;
@@ -140,8 +138,6 @@ where
                 if n == 0 {
                     break;
                 }
-
-                trace!("read request");
 
                 read_buf = buf;
 
@@ -163,8 +159,6 @@ where
                     if n == 0 {
                         break;
                     }
-
-                    trace!("written response");
 
                     w.advance(n);
                     write_buf = w;
