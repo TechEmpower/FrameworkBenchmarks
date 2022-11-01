@@ -1,6 +1,14 @@
 {
     "require": {
-        "slim/slim": "3.12.4",
-        "slim/php-view": "3.2.0"
+        "slim/slim": "^4.10",
+        "slim/php-view": "3.2.0",
+        "slim/psr7": "1.*",
+        "slim/http": "1.*",
+        "php-di/php-di": "^6.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Db\\": "db/"
+        }
     }
 }
