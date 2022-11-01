@@ -17,8 +17,6 @@ RUN pecl install event-3.0.8 > /dev/null && echo "extension=event.so" > /etc/php
 ADD ./ /lumen
 WORKDIR /lumen
 
-RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.1/fpm/php-fpm.conf ; fi;
-
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 RUN composer require joanhey/adapterman --quiet
 

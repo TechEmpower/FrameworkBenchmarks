@@ -25,7 +25,7 @@ RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq git unzip > /dev/null
 
 COPY deploy/swoole/composer* ./
-RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev 
+RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 RUN echo "APP_SWOOLE=true" >> .env
 
