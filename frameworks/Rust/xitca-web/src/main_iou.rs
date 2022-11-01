@@ -13,6 +13,7 @@ use std::{
 };
 
 use futures_util::stream::Stream;
+use tracing::{span, trace, Level};
 use xitca_http::{
     body::{BodySize, Once},
     date::DateTimeService,
@@ -22,13 +23,14 @@ use xitca_http::{
         header::{CONTENT_TYPE, SERVER},
         IntoResponse, Response,
     },
+    util::middleware::Logger,
     Request,
 };
 use xitca_io::{
-    bytes::{Bytes, BytesMut},
+    bytes::{Buf, Bytes, BytesMut},
     net::TcpStream,
 };
-use xitca_service::{fn_service, ready::ReadyService, Service};
+use xitca_service::{fn_service, ready::ReadyService, Service, ServiceExt};
 use xitca_unsafe_collection::pin;
 
 mod util;
@@ -36,9 +38,13 @@ mod util;
 use self::util::SERVER_HEADER_VALUE;
 
 fn main() -> io::Result<()> {
+    tracing_subscriber::fmt()
+        .with_env_filter("[xitca-iou]=trace")
+        .init();
     xitca_server::Builder::new()
         .bind("xitca-io-uring", "0.0.0.0:8080", || {
             Http1IOU::new(fn_service(handler))
+                .enclosed(Logger::with_span(span!(Level::TRACE, "xitca-iou")))
         })?
         .build()
         .wait()
@@ -125,6 +131,8 @@ where
 
             let mut ctx = Context::<_, 8>::new(self.date.get());
 
+            trace!("accepted connection");
+
             loop {
                 let (res, buf) = stream.read(read_buf).await;
                 let n = res?;
@@ -132,6 +140,8 @@ where
                 if n == 0 {
                     break;
                 }
+
+                trace!("read request");
 
                 read_buf = buf;
 
@@ -153,7 +163,10 @@ where
                     if n == 0 {
                         break;
                     }
-                    w.clear();
+
+                    trace!("written response");
+
+                    w.advance(n);
                     write_buf = w;
                 }
 

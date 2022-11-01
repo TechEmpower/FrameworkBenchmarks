@@ -47,6 +47,8 @@ xitca-service = "0.1"
 xitca-unsafe-collection = "0.1"
 
 atoi = "2"
+tracing = "0.1.37"
+tracing-subscriber = { version = "0.3.1", features = ["env-filter"] }
 
 # web optional
 xitca-web = { version = "0.1", features = ["json"], optional = true }
