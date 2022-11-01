@@ -1,4 +1,4 @@
-FROM php:7.4
+FROM php:8.1-cli
 
 RUN pecl install swoole > /dev/null && \
     docker-php-ext-enable swoole
@@ -25,7 +25,7 @@ RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq git unzip > /dev/null
 
 COPY deploy/swoole/composer* ./
-RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev 
 
 RUN echo "APP_SWOOLE=true" >> .env
 
