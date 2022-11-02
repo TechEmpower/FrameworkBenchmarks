@@ -5,13 +5,7 @@ mod db;
 mod ser;
 mod util;
 
-use std::{
-    cell::RefCell,
-    convert::Infallible,
-    error::Error,
-    fmt::Debug,
-    sync::{Arc, Mutex},
-};
+use std::{cell::RefCell, convert::Infallible, error::Error, fmt::Debug, io, sync::Mutex};
 
 use simd_json_derive::Serialize;
 use xitca_http::{
@@ -40,18 +34,15 @@ use xitca_service::{fn_service, BuildServiceExt, Service};
 
 use self::db::Client;
 use self::ser::Message;
-use self::util::{QueryParse, SERVER_HEADER_VALUE};
+use self::util::{QueryParse, DB_URL, SERVER_HEADER_VALUE};
 
 type Response = http::Response<Once<Bytes>>;
 type Request = request::Request<RequestBody>;
-
 type Ctx<'a> = Context<'a, Request, State>;
 
-fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
+fn main() -> io::Result<()> {
     let cores = core_affinity::get_core_ids().unwrap_or_default();
-    let cores = Arc::new(Mutex::new(cores));
-
-    let db_url = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
+    let cores = Mutex::new(cores);
 
     let builder = || {
         let config = HttpServiceConfig::new()
@@ -68,9 +59,10 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
             .enclosed_fn(middleware_fn);
 
         let service = ContextBuilder::new(|| async {
-            let client = db::create(db_url).await;
-            let write_buf = RefCell::new(BytesMut::new());
-            Ok::<_, Infallible>(State { client, write_buf })
+            db::create(DB_URL).await.map(|client| {
+                let write_buf = RefCell::new(BytesMut::new());
+                State { client, write_buf }
+            })
         })
         .service(router);
 
@@ -91,7 +83,6 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         .bind("xitca-web", "0.0.0.0:8080", builder)?
         .build()
         .wait()
-        .map_err(Into::into)
 }
 
 async fn middleware_fn<S, E>(service: &S, req: Ctx<'_>) -> Result<Response, Infallible>
@@ -150,7 +141,7 @@ where
     S: ?Sized + Serialize,
 {
     let mut buf = state.write_buf.borrow_mut();
-    value.json_write(&mut BufMutWriter(&mut *buf)).unwrap();
+    value.json_write(&mut BufMutWriter(&mut *buf))?;
     let body = buf.split().freeze();
     let mut res = req.into_response(body);
     res.headers_mut().append(CONTENT_TYPE, JSON);

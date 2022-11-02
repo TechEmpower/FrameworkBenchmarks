@@ -45,6 +45,23 @@
         "display_name": "xitca-web [diesel]",
         "notes": "",
         "versus": ""
+      },
+      "wasm": {
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "realistic",
+        "classification": "micro",
+        "database": "none",
+        "framework": "xitca-web",
+        "language": "rust",
+        "orm": "raw",
+        "platform": "none",
+        "webserver": "xitca-server",
+        "os": "linux",
+        "database_os": "linux",
+        "display_name": "xitca-web [wasm]",
+        "notes": "",
+        "versus": ""
       }
     }
   ]

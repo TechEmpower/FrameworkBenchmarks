@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"runtime"
 
-	"go-std/src/handlers"
-	"go-std/src/storage"
-	"go-std/src/templates"
+	"go-std/app/handlers"
+	"go-std/app/storage"
+	"go-std/app/templates"
 )
 
 func initSyncPools() {

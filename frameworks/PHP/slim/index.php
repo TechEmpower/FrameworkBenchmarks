@@ -16,11 +16,7 @@ $app = new Slim\App(array(
 
     'view' => function ($c) {
         return new Slim\Views\PhpRenderer("templates/");
-    },
-
-    'settings' => [
-        'outputBuffering' => false,
-    ]
+    }
 ));
 
 // Test 1: Plaintext

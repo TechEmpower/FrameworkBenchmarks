@@ -1,0 +1,24 @@
+{
+  "framework": "archttp",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 1111,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "Archttp",
+      "language": "D",
+      "flavor": "LDC",
+      "orm": "Raw",
+      "platform": "Archttp",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Archttp",
+      "notes": "",
+      "versus": "Archttp"
+  }
+  }]
+}
