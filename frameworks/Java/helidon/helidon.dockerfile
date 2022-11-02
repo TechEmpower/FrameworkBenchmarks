@@ -1,5 +1,4 @@
-FROM docker.io/maven:3.8.6-eclipse-temurin-19
-
+FROM docker.io/maven:3.8.6-eclipse-temurin-19 as maven
 WORKDIR /helidon
 COPY reactive/src src
 COPY reactive/pom.xml pom.xml

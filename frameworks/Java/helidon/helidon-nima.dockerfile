@@ -1,5 +1,4 @@
-FROM docker.io/maven:3.8.6-eclipse-temurin-19
-
+FROM docker.io/maven:3.8.6-eclipse-temurin-19 as maven
 WORKDIR /helidon
 COPY nima/src src
 COPY nima/pom.xml pom.xml
