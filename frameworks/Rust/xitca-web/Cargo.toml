@@ -89,12 +89,12 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "9c3ca2eb2ad6ea7267f0225f0bc4bc2b8f3f6639" }
-xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "9c3ca2eb2ad6ea7267f0225f0bc4bc2b8f3f6639" }
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "9c3ca2eb2ad6ea7267f0225f0bc4bc2b8f3f6639" }
-xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "9c3ca2eb2ad6ea7267f0225f0bc4bc2b8f3f6639" }
-xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "9c3ca2eb2ad6ea7267f0225f0bc4bc2b8f3f6639" }
-xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "9c3ca2eb2ad6ea7267f0225f0bc4bc2b8f3f6639" }
-xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "9c3ca2eb2ad6ea7267f0225f0bc4bc2b8f3f6639" }
+xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "7a2b6c37011f41fe851ad73480320b2e753c5e7c" }
+xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "7a2b6c37011f41fe851ad73480320b2e753c5e7c" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "7a2b6c37011f41fe851ad73480320b2e753c5e7c" }
+xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "7a2b6c37011f41fe851ad73480320b2e753c5e7c" }
+xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "7a2b6c37011f41fe851ad73480320b2e753c5e7c" }
+xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "7a2b6c37011f41fe851ad73480320b2e753c5e7c" }
+xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "7a2b6c37011f41fe851ad73480320b2e753c5e7c" }
 
 tokio-uring = { git = "https://github.com/tokio-rs/tokio-uring.git", rev = "8725b81b862cc480be93b1a11c80b9990d51d890" }

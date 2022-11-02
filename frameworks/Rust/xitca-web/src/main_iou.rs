@@ -21,7 +21,7 @@ use xitca_http::{
     http::{
         const_header_value::TEXT,
         header::{CONTENT_TYPE, SERVER},
-        IntoResponse, Response,
+        IntoResponse, Response, StatusCode,
     },
     util::middleware::Logger,
     Request,
@@ -42,7 +42,7 @@ fn main() -> io::Result<()> {
         .with_env_filter("[xitca-iou]=trace")
         .init();
     xitca_server::Builder::new()
-        .bind("xitca-io-uring", "0.0.0.0:8080", || {
+        .bind("xitca-iou", "0.0.0.0:8080", || {
             Http1IOU::new(fn_service(handler))
                 .enclosed(Logger::with_span(span!(Level::ERROR, "xitca-iou")))
         })?
@@ -51,8 +51,19 @@ fn main() -> io::Result<()> {
 }
 
 async fn handler<B>(req: Request<B>) -> Result<Response<Once<Bytes>>, Infallible> {
-    let mut res = req.into_response(Once::new(Bytes::from_static(b"Hello, World!")));
-    res.headers_mut().insert(CONTENT_TYPE, TEXT);
+    let mut res = match req.uri().path() {
+        "/plaintext" => {
+            let mut res = req.into_response(Bytes::from_static(b"Hello, World!"));
+            res.headers_mut().insert(CONTENT_TYPE, TEXT);
+            res
+        }
+        _ => {
+            let mut res = req.into_response(Bytes::new());
+            *res.status_mut() = StatusCode::NOT_FOUND;
+            res
+        }
+    };
+
     res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);
     Ok(res)
 }
