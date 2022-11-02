@@ -8,21 +8,13 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 use Slim\Views\PhpRenderer;
+use Db\Raw;
 
-//global $app; // workerman
+global $app; // workerman
+
+Raw::init();
 
 $container = new Container();
-
-$container->set('db', new PDO(
-                'mysql:host=tfb-database;dbname=hello_world;charset=utf8', 
-            'benchmarkdbuser', 
-            'benchmarkdbpass',
-            [
-                    PDO::ATTR_PERSISTENT          => true,
-                    PDO::ATTR_DEFAULT_FETCH_MODE  => PDO::FETCH_ASSOC,
-                    PDO::ATTR_ERRMODE             => PDO::ERRMODE_EXCEPTION,
-                    //PDO::ATTR_EMULATE_PREPARES    => false, // workerman
-            ]));
 
 $container->set('view', new PhpRenderer('templates'));
 
@@ -45,15 +37,11 @@ $app->get('/json', fn(Request $request, Response $response) =>
 
 // Test 3: Single database query
 $app->get('/db', function (Request $request, Response $response) {
-    $sth = $this->get('db')->prepare('SELECT * FROM World WHERE id = ?');
-    $sth->execute([mt_rand(1, 10000)]);
-    $world = $sth->fetch();
-    # Cast fields to int so they don't get wrapped with quotes
-    $world['id'] = (int) $world['id'];
-    $world['randomNumber'] = (int) $world['randomNumber'];
+    
+    Raw::$random->execute([mt_rand(1, 10000)]);
 
     return $response
-        ->withJson($world);
+        ->withJson(Raw::$random->fetch());
 });
 
 // Test 4: Multiple database queries
@@ -65,15 +53,11 @@ $app->get('/dbs', function (Request $request, Response $response) {
         $queries = 1;
     }
 
-    $sth = $this->get('db')->prepare('SELECT * FROM World WHERE id = ?');
+    $sth = Raw::$random;
     $worlds = [];
     for ($i = 0; $i < $queries; ++$i) {
         $sth->execute([mt_rand(1, 10000)]);
-        $world = $sth->fetch();
-        # Cast fields to int so they don't get wrapped with quotes
-        $world['id'] = (int) $world['id'];
-        $world['randomNumber'] = (int) $world['randomNumber'];
-        $worlds[] = $world;
+        $worlds[] = $sth->fetch();
     }
 
     return $response
@@ -89,23 +73,19 @@ $app->get('/updates', function (Request $request, Response $response) {
         $queries = 1;
     }
 
-    $sth = $this->get('db')->prepare('SELECT * FROM World WHERE id = ?');
-    $updateSth = $this->get('db')->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
+    $sth = Raw::$random;
+    //$updateSth = Raw::update();
 
     $worlds = [];
     for ($i = 0; $i < $queries; ++$i) {
-        $id = mt_rand(1, 10000);
-        $random_number = mt_rand(1, 10000);
-        $sth->execute([$id]);
+        $sth->execute([mt_rand(1, 10000)]);
         $world = $sth->fetch();
-        # Cast fields to int so they don't get wrapped with quotes
-        $world['id'] = (int) $world['id'];
-        $world['randomNumber'] = $random_number;
-
-        $updateSth->execute([$world['randomNumber'], $world['id']]);
+        $world['randomNumber'] = mt_rand(1, 10000);
 
         $worlds[] = $world;
     }
+
+    Raw::update($worlds);
 
     return $response
         ->withJson($worlds);
@@ -113,7 +93,8 @@ $app->get('/updates', function (Request $request, Response $response) {
 
 // Test 6: Fortunes
 $app->get('/fortunes', function (Request $request, Response $response) {
-    $fortunes = $this->get('db')->query('SELECT * FROM Fortune')->fetchAll(PDO::FETCH_KEY_PAIR);
+    Raw::$fortune->execute();
+    $fortunes = Raw::$fortune->fetchAll(PDO::FETCH_KEY_PAIR);
 
     $fortunes[0] = 'Additional fortune added at request time.';
     asort($fortunes);
@@ -121,7 +102,7 @@ $app->get('/fortunes', function (Request $request, Response $response) {
     return $this->get('view')->render($response, 'fortunes.php', ['fortunes' => $fortunes]);
 });
 
-$app->run(); // comented with workerman
+//$app->run(); // comented with workerman
 
 // used by Workerman
 function run(): string
