@@ -48,10 +48,11 @@
       },
       "iou": {
         "plaintext_url": "/plaintext",
+        "fortune_url": "/fortunes",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
-        "database": "None",
+        "database": "Postgres",
         "framework": "xitca-web",
         "language": "Rust",
         "orm": "Raw",

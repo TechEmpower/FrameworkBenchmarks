@@ -1,9 +1,15 @@
-// used as reference of if/how moving from epoll to io-uring make sense for network io.
+// used as reference of if/how moving from epoll to io-uring(or mixture of the two) make sense for
+// network io.
 
+#![allow(dead_code)]
 #![feature(type_alias_impl_trait)]
 
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
+mod db;
+mod ser;
+mod util;
 
 use std::{
     convert::Infallible,
@@ -14,6 +20,7 @@ use std::{
 
 use futures_util::stream::Stream;
 use tracing::{span, Level};
+use xitca_http::http::const_header_value::TEXT_HTML_UTF8;
 use xitca_http::{
     body::{BodySize, Once},
     date::DateTimeService,
@@ -23,7 +30,10 @@ use xitca_http::{
         header::{CONTENT_TYPE, SERVER},
         IntoResponse, Response, StatusCode,
     },
-    util::middleware::Logger,
+    util::{
+        middleware::Logger,
+        service::context::{Context as Ctx, ContextBuilder},
+    },
     Request,
 };
 use xitca_io::{
@@ -33,9 +43,10 @@ use xitca_io::{
 use xitca_service::{fn_service, ready::ReadyService, Service, ServiceExt};
 use xitca_unsafe_collection::pin;
 
-mod util;
-
-use self::util::SERVER_HEADER_VALUE;
+use self::{
+    db::Client,
+    util::{DB_URL, SERVER_HEADER_VALUE},
+};
 
 fn main() -> io::Result<()> {
     tracing_subscriber::fmt()
@@ -43,27 +54,34 @@ fn main() -> io::Result<()> {
         .init();
     xitca_server::Builder::new()
         .bind("xitca-iou", "0.0.0.0:8080", || {
-            Http1IOU::new(fn_service(handler))
+            Http1IOU::new(ContextBuilder::new(|| db::create(DB_URL)).service(fn_service(handler)))
                 .enclosed(Logger::with_span(span!(Level::ERROR, "xitca-iou")))
         })?
         .build()
         .wait()
 }
 
-async fn handler<B>(req: Request<B>) -> Result<Response<Once<Bytes>>, Infallible> {
+async fn handler<B>(ctx: Ctx<'_, Request<B>, Client>) -> Result<Response<Once<Bytes>>, Infallible> {
+    let (req, cli) = ctx.into_parts();
     let mut res = match req.uri().path() {
         "/plaintext" => {
             let mut res = req.into_response(Bytes::from_static(b"Hello, World!"));
             res.headers_mut().insert(CONTENT_TYPE, TEXT);
             res
         }
+        "/fortunes" => {
+            use sailfish::TemplateOnce;
+            let fortunes = cli.tell_fortune().await.unwrap().render_once().unwrap();
+            let mut res = req.into_response(Bytes::from(fortunes));
+            res.headers_mut().append(CONTENT_TYPE, TEXT_HTML_UTF8);
+            res
+        }
         _ => {
-            let mut res = req.into_response(Bytes::new());
+            let mut res = req.into_response(Once::default());
             *res.status_mut() = StatusCode::NOT_FOUND;
             res
         }
     };
-
     res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);
     Ok(res)
 }
