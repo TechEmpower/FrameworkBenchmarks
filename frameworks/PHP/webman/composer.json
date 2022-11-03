@@ -42,8 +42,14 @@
     ]
   },
   "scripts": {
-    "post-autoload-dump": [
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    "post-package-install": [
+      "support\\Plugin::install"
+    ],
+    "post-package-update": [
+      "support\\Plugin::install"
+    ],
+    "pre-package-uninstall": [
+      "support\\Plugin::uninstall"
     ]
   }
 }
