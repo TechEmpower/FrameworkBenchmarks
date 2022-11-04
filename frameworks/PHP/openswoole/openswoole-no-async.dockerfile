@@ -1,4 +1,4 @@
-FROM php:8.1-rc-cli
+FROM php:8.1-cli
 
 RUN pecl install openswoole > /dev/null && \
     docker-php-ext-enable openswoole

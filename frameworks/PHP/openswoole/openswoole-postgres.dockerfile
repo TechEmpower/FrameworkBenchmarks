@@ -1,4 +1,4 @@
-FROM php:8.1-rc-cli
+FROM php:8.1-cli
 
 RUN docker-php-ext-install opcache  > /dev/null
 

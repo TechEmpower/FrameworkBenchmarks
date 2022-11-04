@@ -27,7 +27,7 @@ rm -rf ./libs
 
 # echo "Getting the latest pre-release URL..."
 # USED_TAG=$(wget -qO- https://api.github.com/repos/synopse/mORMot2/releases/latest | jq -r '.tag_name')
-USED_TAG="2.0.3780"
+USED_TAG="2.0.4148"
 
 echo "Used release tag $USED_TAG"
 URL="https://github.com/synopse/mORMot2/releases/download/$USED_TAG/mormot2static.7z"
@@ -40,8 +40,8 @@ echo "Unpacking to ./libs/mORMot/static ..."
 rm -rf ./mormot2static.7z
 
 # uncomment for fixed commit URL
-URL=https://github.com//synopse/mORMot2/tarball/e567622e45caaf7056ee8ba6d1827314d945ccb2
-#URL="https://api.github.com/repos/synopse/mORMot2/tarball/$USED_TAG"
+#URL=https://github.com//synopse/mORMot2/tarball/e567622e45caaf7056ee8ba6d1827314d945ccb2
+URL="https://api.github.com/repos/synopse/mORMot2/tarball/$USED_TAG"
 echo "Download and unpacking mORMot sources from $URL ..."
 wget -qO- "$URL" | tar -xz -C ./libs/mORMot  --strip-components=1
 
