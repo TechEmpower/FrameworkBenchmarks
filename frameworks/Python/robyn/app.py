@@ -6,7 +6,7 @@ from robyn import Robyn
 app = Robyn(__file__)
 
 
-@app.get('/plaintext')
+@app.get('/plaintext', const=True)
 async def plaintext() -> str:
     return "Hello, world!"
 

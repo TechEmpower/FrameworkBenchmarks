@@ -14,7 +14,7 @@
     <maven.compiler.release>18</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <hikaricp.version>5.0.1</hikaricp.version>
-    <jackson.version>2.13.3</jackson.version>
+    <jackson.version>2.13.4.1</jackson.version>
     <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
     <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
     <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>

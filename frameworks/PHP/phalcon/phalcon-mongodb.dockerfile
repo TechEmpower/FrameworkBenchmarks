@@ -21,6 +21,8 @@ RUN apt-get install -yqq php7.4-psr php7.4-phalcon  > /dev/null
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet --ignore-platform-reqs
 
+RUN mv /phalcon/public/index-mongo.php /phalcon/public/index.php
+
 RUN chmod -R 777 app
 
 EXPOSE 8080

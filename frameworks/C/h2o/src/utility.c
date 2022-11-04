@@ -32,7 +32,7 @@
 #include "list.h"
 #include "utility.h"
 
-#define DEFAULT_CACHE_LINE_SIZE 128
+#define DEFAULT_CACHE_LINE_SIZE 256
 
 static list_t *get_sorted_sublist(list_t *head, int (*compare)(const list_t *, const list_t *));
 static list_t *merge_lists(list_t *head1,

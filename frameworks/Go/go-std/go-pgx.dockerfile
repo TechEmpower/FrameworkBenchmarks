@@ -1,17 +1,18 @@
-FROM golang:1.14
+FROM docker.io/golang:1.19
 
-ENV GO111MODULE on
 WORKDIR /go-std
 
 COPY ./src /go-std
 
-RUN go get github.com/valyala/quicktemplate/qtc
-RUN go get -u github.com/mailru/easyjson/...
 RUN go mod download
 
-RUN go generate ./templates
-RUN easyjson -pkg
-RUN go build -ldflags="-s -w" -o app .
+# next line intentionnaly commented to prevent generating easyjson code:
+# RUN go generate -x ./...
+
+# generate only quicktempalte code:
+RUN go generate -x ./templates
+
+RUN GOAMD64=v3 go build -ldflags="-s -w" -o app .
 
 EXPOSE 8080
 

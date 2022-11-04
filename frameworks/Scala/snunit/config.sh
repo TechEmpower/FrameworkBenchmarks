@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-processes=$(expr $(nproc) / 2)
+processes=$(("$(nproc)" / 2))
 
 config='{'
 config+='  "listeners": {'

@@ -3,10 +3,12 @@ defmodule HelloWeb.PageController do
 
   use HelloWeb, :controller
 
+  alias Hello.Cache
+
   @json "application/json"
   @plain "text/plain"
   @random_max 10_000
-
+  @all_ids 1..10_000
 
   def index(conn, _params) do
     resp = Jason.encode!(%{"TE Benchmarks\n" => "Started"})
@@ -95,6 +97,32 @@ defmodule HelloWeb.PageController do
     |> send_resp(200, "Hello, world!")
   end
 
+  def cached(conn, params) do
+    :rand.seed(:exsp)
+
+    resp =
+      @all_ids
+      |> Enum.take_random(size(params["count"]))
+      |> parallel(&get_cached_world/1)
+      |> Jason.encode_to_iodata!()
+
+    conn
+    |> put_resp_content_type(@json, nil)
+    |> send_resp(200, resp)
+  end
+
+  defp get_cached_world(idx) do
+    case Cache.get(idx) do
+      nil ->
+        world = Repo.get(World, idx)
+        :ok = Cache.put(idx, world)
+        world
+      world ->
+        world
+    end
+  end
+
+
   defp random_but(not_this_value) do
     case :rand.uniform(@random_max) do
       new_value when new_value == not_this_value ->
@@ -108,7 +136,7 @@ defmodule HelloWeb.PageController do
   defp parallel(collection, func) do
     collection
     |> Enum.map(&Task.async(fn -> func.(&1) end))
-    |> Enum.map(&Task.await(&1))
+    |> Task.await_many()
   end
 
   defp size(nil), do: 1
