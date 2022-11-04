@@ -1,10 +1,10 @@
-import com.fasterxml.jackson.databind.JsonNode
+import argo.jdom.JsonNode
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.cache2k.Cache2kBuilder
 import org.cache2k.IntCache
-import org.http4k.format.Jackson.number
-import org.http4k.format.Jackson.obj
+import org.http4k.format.Argo.number
+import org.http4k.format.Argo.obj
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
