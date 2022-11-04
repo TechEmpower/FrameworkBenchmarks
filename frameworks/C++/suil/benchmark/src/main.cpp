@@ -58,7 +58,8 @@ int main(int argc, char *argv[])
 
     Endpoint<SystemAttrs, PgSqlMiddleware> ep{"/",
           opt(serverConfig, std::move(config)),
-          opt(numberOfWorkers, 0)   /* Will run with number of available cores */
+          opt(numberOfWorkers, 0),   /* Will run with number of available cores */
+          opt(connectionTimeout, 60_sec)
     };
 
     ep.middleware<PgSqlMiddleware>().setup(
