@@ -6,19 +6,25 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-mbstring": "*",
-        "symfony/console": "5.1.*",
-        "symfony/dotenv": "5.1.*",
-        "symfony/flex": "^1.6.0",
-        "symfony/framework-bundle": "5.1.*",
-        "symfony/orm-pack": "^1.0",
-        "symfony/twig-bundle": "5.1.*",
-        "symfony/yaml": "5.1.*"
+        "symfony/console": "^6.0",
+        "symfony/dotenv": "^6.0",
+        "symfony/flex": "^2.0",
+        "symfony/framework-bundle": "^6.0",
+        "symfony/orm-pack": "^2.1",
+        "symfony/twig-bundle": "^6.0",
+        "symfony/yaml": "^6.0",
+        "joanhey/adapterman": "^0.5"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
         "preferred-install": {
             "*": "dist"
+        },
+        "allow-plugins": {
+            "symfony/flex": true,
+            "symfony/runtime": true,
+            "composer/package-versions-deprecated": true
         },
         "sort-packages": true
     },

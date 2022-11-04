@@ -1,14 +1,17 @@
 use std::io;
-use std::net::SocketAddr;
+use std::net::{Ipv4Addr, SocketAddr};
 
-use hyper::server::conn::AddrIncoming;
+use salvo::hyper;
+use salvo::hyper::server::conn::AddrIncoming;
 use tokio::net::{TcpListener, TcpSocket};
 
 pub fn builder() -> hyper::server::Builder<AddrIncoming> {
-    let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
+    let addr = SocketAddr::from((Ipv4Addr::UNSPECIFIED, 8080));
     let listener = reuse_listener(addr).expect("couldn't bind to addr");
     let incoming = AddrIncoming::from_listener(listener).unwrap();
-    salvo::server::builder(incoming).http1_only(true).tcp_nodelay(true)
+    hyper::Server::builder(incoming)
+        .http1_only(true)
+        .tcp_nodelay(true)
 }
 
 fn reuse_listener(addr: SocketAddr) -> io::Result<TcpListener> {

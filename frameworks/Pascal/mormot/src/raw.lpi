@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="12"/>
+    <General>
+      <Flags>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+        <MainUnitHasScaledStatement Value="False"/>
+      </Flags>
+      <SessionStorage Value="InProjectDir"/>
+      <Title Value="raw"/>
+      <UseAppBundle Value="False"/>
+      <ResourceType Value="res"/>
+    </General>
+    <BuildModes>
+      <Item Name="Debug" Default="True"/>
+      <Item Name="Release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="exe/raw"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="../libs/mORMot/src;$(ProjOutDir)"/>
+            <Libraries Value="../libs/mORMot/static/$(TargetCPU)-$(TargetOS)"/>
+            <OtherUnitFiles Value="../libs/mORMot/src/core;../libs/mORMot/src/db;../libs/mORMot/src/rest;../libs/mORMot/src/app;../libs/mORMot/src/net;../libs/mORMot/src/lib;../libs/mORMot/src/orm;../libs/mORMot/src/crypt;../libs/mORMot/src/soa"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <DebugInfoType Value="dsDwarf3"/>
+            </Debugging>
+          </Linking>
+          <Other>
+            <CustomOptions Value="-dFPC_X64MM
+-dFPCMM_SERVER
+-dFPCMM_REPORTMEMORYLEAKS
+-dNOSYNDBZEOS
+-dNOSYNDBIBX"/>
+            <OtherDefines Count="5">
+              <Define0 Value="FPC_X64MM"/>
+              <Define1 Value="FPCMM_SERVER"/>
+              <Define2 Value="FPCMM_REPORTMEMORYLEAKS"/>
+              <Define3 Value="NOSYNDBZEOS"/>
+              <Define4 Value="NOSYNDBIBX"/>
+            </OtherDefines>
+          </Other>
+        </CompilerOptions>
+      </Item>
+    </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+      <UseFileFilters Value="True"/>
+    </PublishOptions>
+    <RunParams>
+      <FormatVersion Value="2"/>
+    </RunParams>
+    <Units>
+      <Unit>
+        <Filename Value="raw.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <Target>
+      <Filename Value="exe/raw"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="../libs/mORMot/src;$(ProjOutDir)"/>
+      <Libraries Value="../libs/mORMot/static/$(TargetCPU)-$(TargetOS)"/>
+      <OtherUnitFiles Value="../libs/mORMot/src/core;../libs/mORMot/src/db;../libs/mORMot/src/rest;../libs/mORMot/src/app;../libs/mORMot/src/net;../libs/mORMot/src/lib;../libs/mORMot/src/orm;../libs/mORMot/src/crypt;../libs/mORMot/src/soa"/>
+      <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <Linking>
+      <Debugging>
+        <DebugInfoType Value="dsDwarf3"/>
+      </Debugging>
+    </Linking>
+    <Other>
+      <CustomOptions Value="-dFPC_X64MM
+-dFPCMM_SERVER
+-dFPCMM_REPORTMEMORYLEAKS
+-dFPCMM_DEBUG
+-dNOSYNDBZEOS
+-dNOSYNDBIBX"/>
+      <OtherDefines Count="7">
+        <Define0 Value="FPC_X64MM"/>
+        <Define1 Value="FPCMM_SERVER"/>
+        <Define2 Value="FPCMM_REPORTMEMORYLEAKS"/>
+        <Define3 Value="FPCMM_DEBUG"/>
+        <Define4 Value="WITH_LOGS"/>
+        <Define5 Value="NOSYNDBZEOS"/>
+        <Define6 Value="NOSYNDBIBX"/>
+      </OtherDefines>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions>
+      <Item>
+        <Name Value="EAbort"/>
+      </Item>
+      <Item>
+        <Name Value="ECodetoolError"/>
+      </Item>
+      <Item>
+        <Name Value="EFOpenError"/>
+      </Item>
+      <Item>
+        <Name Value="EInterfaceFactoryException"/>
+      </Item>
+      <Item>
+        <Name Value="EAssertionFailed"/>
+      </Item>
+      <Item>
+        <Name Value="ERttiException"/>
+      </Item>
+      <Item>
+        <Name Value="EFastReader"/>
+      </Item>
+      <Item>
+        <Name Value="RunError(216)"/>
+      </Item>
+      <Item>
+        <Name Value="ENetSock"/>
+      </Item>
+      <Item>
+        <Name Value="EThreadError"/>
+      </Item>
+      <Item>
+        <Name Value="ESynCrypto"/>
+      </Item>
+      <Item>
+        <Name Value="ERelayProtocol"/>
+      </Item>
+      <Item>
+        <Name Value="EServiceException"/>
+      </Item>
+      <Item>
+        <Name Value="EFCreateError"/>
+      </Item>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

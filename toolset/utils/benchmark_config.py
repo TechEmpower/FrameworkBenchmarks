@@ -30,7 +30,6 @@ class BenchmarkConfig:
         self.client_host = args.client_host
         self.audit = args.audit
         self.new = args.new
-        self.clean = args.clean
         self.mode = args.mode
         self.list_tests = args.list_tests
         self.list_tag = args.list_tag

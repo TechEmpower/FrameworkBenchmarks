@@ -25,7 +25,7 @@ namespace Benchmarks.Model
         {
             var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
 
-            optionsBuilder.UseNpgsql("Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=18;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4");
+            optionsBuilder.UseNpgsql("Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4");
 
             if (!tracking)
             {

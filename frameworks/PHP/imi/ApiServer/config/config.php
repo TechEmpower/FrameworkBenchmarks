@@ -2,16 +2,9 @@
 return [
     'configs'    =>    [
     ],
-    // bean扫描目录
-    'beanScan'    =>    [
-        'ImiApp\ApiServer\Controller',
-        'ImiApp\Model',
-    ],
     'beans'    =>    [
         'HttpDispatcher'    =>    [
-            'middlewares'    =>    [
-                \Imi\Server\Http\Middleware\RouteMiddleware::class,
-            ],
+            'middleware' => false,
         ],
         'HtmlView'    =>    [
             'templatePath'    =>    dirname(__DIR__) . '/template/',
@@ -22,8 +15,5 @@ return [
                 'php'
             ],
         ]
-    ],
-    'controller'    =>  [
-        'singleton' => true,
     ],
 ];

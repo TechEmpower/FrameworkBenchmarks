@@ -11,7 +11,7 @@
       "approach": "Stripped",
       "classification": "Platform",
       "database": "MySQL",
-      "framework": "None",
+      "framework": "Mochiweb",
       "language": "Erlang",
       "flavor": "None",
       "orm": "Raw",

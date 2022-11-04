@@ -9,7 +9,7 @@ futures = "0.3.12"
 rand = { version = "0.8.2", features = ["small_rng"] }
 serde = { version = "1.0.120", features = ["derive"] }
 sqlx = { version = "0.5.1", features = ["runtime-tokio-rustls", "postgres"] }
-tokio = { version = "1.0.2", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.13.1", features = ["macros", "rt-multi-thread"] }
 warp = "0.3.0"
 yarte = "0.15.3"
 

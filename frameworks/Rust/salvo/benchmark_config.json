@@ -21,11 +21,12 @@
         "notes": "",
         "versus": "None"
       },
-      "db": {
+      "diesel": {
         "db_url": "/db",
         "fortune_url": "/fortunes",
         "query_url": "/queries?q=",
         "update_url": "/updates?q=",
+        "cached_query_url": "/cached_queries?q=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -46,6 +47,7 @@
         "fortune_url": "/fortunes",
         "query_url": "/queries?q=",
         "update_url": "/updates?q=",
+        "cached_query_url": "/cached_queries?q=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",

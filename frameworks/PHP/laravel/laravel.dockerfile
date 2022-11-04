@@ -3,11 +3,11 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
-RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
-RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq nginx git unzip \
-    php8.1-cli php8.1-fpm php8.1-mysql  > /dev/null
-RUN apt-get install -yqq php8.1-mbstring php8.1-xml php8.1-dev > /dev/null
+RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null && \
+    apt-get update -yqq > /dev/null && apt-get upgrade -yqq > /dev/null
+
+RUN apt-get install -yqq nginx git unzip \
+    php8.1-cli php8.1-fpm php8.1-mysql  php8.1-mbstring php8.1-xml php8.1-dev > /dev/null
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
@@ -30,5 +30,5 @@ EXPOSE 8080
 # RUN echo "catch_workers_output = yes" >> /etc/php/8.1/fpm/php-fpm.conf
 
 RUN mkdir -p /run/php
-CMD /usr/sbin/php-fpm8.1 --fpm-config /etc/php/8.1/fpm/php-fpm.conf && nginx -c /laravel/deploy/nginx.conf
-
+CMD /usr/sbin/php-fpm8.1 --fpm-config /etc/php/8.1/fpm/php-fpm.conf && \
+    nginx -c /laravel/deploy/nginx.conf

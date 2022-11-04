@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"go-std/src/storage"
+	"go-std/app/storage"
 
 	"github.com/mailru/easyjson"
 )

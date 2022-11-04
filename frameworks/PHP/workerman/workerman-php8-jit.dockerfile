@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -10,14 +10,15 @@ RUN apt-get update -yqq > /dev/null && \
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 RUN apt-get install -y php-pear php8.1-dev libevent-dev git > /dev/null
-RUN pecl install event-3.0.6 > /dev/null && echo "extension=event.so" > /etc/php/8.1/cli/conf.d/event.ini
+RUN pecl install event-3.0.8 > /dev/null && echo "extension=event.so" > /etc/php/8.1/cli/conf.d/event.ini
  
 COPY php-jit.ini /etc/php/8.1/cli/php.ini
 
 ADD ./ /workerman
 WORKDIR /workerman
 
-RUN sed -i "s|'mysql:host|'pgsql:host|g" app.php
+RUN sed -i "s|'/app.php|'/app-pg.php|g" server.php
+RUN sed -i "s|init()|DbRaw::init()|g" server.php
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 

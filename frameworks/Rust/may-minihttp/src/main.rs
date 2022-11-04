@@ -15,7 +15,6 @@ use yarte::{ywrite_html, Serialize};
 
 mod utils {
     use may_postgres::types::ToSql;
-    use std::cmp;
 
     pub fn get_query_param(query: &str) -> u16 {
         let q = if let Some(pos) = query.find("?q") {
@@ -23,7 +22,7 @@ mod utils {
         } else {
             1
         };
-        cmp::min(500, cmp::max(1, q))
+        q.clamp(1, 500)
     }
 
     pub fn slice_iter<'a>(
