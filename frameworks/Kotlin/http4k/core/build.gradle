@@ -1,12 +1,11 @@
 dependencies {
-    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    api "org.http4k:http4k-core:$http4k_version"
-    api "org.http4k:http4k-format-jackson:$http4k_version"
-    api "org.http4k:http4k-template-pebble:$http4k_version"
-    api "org.apache.commons:commons-lang3:3.11"
-    api "com.zaxxer:HikariCP:3.4.5"
-    api "org.postgresql:postgresql:42.2.16"
-    api "org.cache2k:cache2k-base-bom:1.2.4.Final"
-
+    api("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
+    api("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
+    api("org.http4k:http4k-core:$http4k_version")
+    api("org.http4k:http4k-format-argo:$http4k_version")
+    api("org.http4k:http4k-template-pebble:$http4k_version")
+    api("org.apache.commons:commons-lang3:3.12.0")
+    api("com.zaxxer:HikariCP:5.0.1")
+    api("org.postgresql:postgresql:42.5.0")
+    api("org.cache2k:cache2k-base-bom:1.6.0.Final")
 }
