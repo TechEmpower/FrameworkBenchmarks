@@ -30,7 +30,7 @@ use xitca_http::{
     },
     HttpServiceBuilder,
 };
-use xitca_service::{fn_service, BuildServiceExt, Service};
+use xitca_service::{fn_service, Service, ServiceExt};
 
 use self::db::Client;
 use self::ser::Message;

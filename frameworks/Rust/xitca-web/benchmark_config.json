@@ -46,6 +46,24 @@
         "notes": "",
         "versus": ""
       },
+      "iou": {
+        "plaintext_url": "/plaintext",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "xitca-web",
+        "language": "Rust",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "xitca-server",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "xitca-web [io-uring]",
+        "notes": "",
+        "versus": ""
+      },
       "wasm": {
         "plaintext_url": "/plaintext",
         "port": 8080,
