@@ -57,7 +57,8 @@ int main(int argc, char *argv[])
     };
 
     Endpoint<SystemAttrs, PgSqlMiddleware> ep{"/",
-          opt(serverConfig, std::move(config))
+          opt(serverConfig, std::move(config)),
+          opt(connectionTimeout, 60_sec)
     };
 
     ep.middleware<PgSqlMiddleware>().setup(
