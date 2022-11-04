@@ -30,7 +30,7 @@ allprojects {
     version = project.hasProperty('releaseVersion') ? project.releaseVersion : 'LOCAL'
     group = 'org.http4k'
 
-    compileTestKotlin.kotlinOptions.languageVersion = "1.6"
+    compileTestKotlin.kotlinOptions.languageVersion = "1.7"
 }
 
 dependencies {
