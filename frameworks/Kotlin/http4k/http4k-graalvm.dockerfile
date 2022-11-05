@@ -15,10 +15,10 @@ COPY --from=gradle /http4k/graalvm/build/libs/graalvm-LOCAL-all.jar /home/app/ht
 
 WORKDIR /home/app/http4k-graalvm
 
-RUN native-image --no-fallback -cp graalvm-LOCAL-all.jar http4k.Http4kGraalVMServerKt
+RUN native-image --no-fallback -cp graalvm-LOCAL-all.jar http4k.Http4kGraalVMBenchmarkServerKt
 
 FROM frolvlad/alpine-glibc
 RUN apk update && apk add libstdc++
 EXPOSE 9000
-COPY --from=graalvm /home/app/http4k-graalvm/http4k.http4kgraalvmserverkt /app/http4k-graalvm
+COPY --from=graalvm /home/app/http4k-graalvm/http4k.http4kgraalvmbenchmarkserverkt /app/http4k-graalvm
 ENTRYPOINT ["/app/http4k-graalvm"]
