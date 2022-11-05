@@ -1,12 +1,8 @@
 package http4k
 
 import AddHeaders
-import Database
-import FortunesRoute
 import JsonRoute
 import PlainTextRoute
-import PostgresDatabase
-import WorldRoutes
 import org.apache.hc.core5.http.impl.bootstrap.ServerBootstrap
 import org.apache.hc.core5.http.io.SocketConfig
 import org.http4k.core.HttpHandler
@@ -18,22 +14,18 @@ import org.http4k.server.ServerConfig
 import start
 
 object Http4kGraalVMBenchmarkServer {
-    operator fun invoke(database: Database, addDateHeader: Boolean = true) =
+    operator fun invoke(addDateHeader: Boolean = true) =
         AddHeaders(addDateHeader)
             .then(
                 routes(
                     JsonRoute(),
                     PlainTextRoute(),
-                    FortunesRoute(database),
-                    WorldRoutes.queryRoute(database),
-                    WorldRoutes.updateRoute(database),
-                    WorldRoutes.multipleRoute(database),
                 )
             )
 }
 
 fun main() {
-    Http4kGraalVMBenchmarkServer(PostgresDatabase("tfb-database")).start(TfbApacheServer(8080))
+    Http4kGraalVMBenchmarkServer().start(TfbApacheServer(8080))
 }
 
 /**

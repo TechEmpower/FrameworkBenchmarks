@@ -71,12 +71,6 @@
       },
       "graalvm": {
         "orm": "Raw",
-        "database_os": "Linux",
-        "db_url": "/db",
-        "fortune_url": "/fortunes",
-        "query_url": "/queries?queries=",
-        "update_url": "/updates?queries=",
-        "database": "Postgres",
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
