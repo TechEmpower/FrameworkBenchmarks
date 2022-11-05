@@ -1,8 +1,8 @@
 import argo.jdom.JsonNode
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import org.cache2k.Cache
 import org.cache2k.Cache2kBuilder
-import org.cache2k.IntCache
 import org.http4k.format.Argo.number
 import org.http4k.format.Argo.obj
 import java.sql.Connection
@@ -26,12 +26,12 @@ class CachedDatabase(private val delegate: Database) : Database by delegate {
         .name("cachedWorld")
         .eternal(true)
         .entryCapacity(TOTAL_DB_ROWS.toLong())
-        .buildForIntKey()
+        .build()
         .apply {
             refresh()
         }
 
-    private fun IntCache<JsonNode>.refresh() {
+    private fun Cache<Int, JsonNode>.refresh() {
         putAll(delegate.loadAll())
     }
 
@@ -70,7 +70,8 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
     }
 
     override fun fortunes() = withConnection {
-        val original = withStatement("select * from fortune") { executeQuery().toResultsList { Fortune(getInt(1), getString(2)) } }
+        val original =
+            withStatement("select * from fortune") { executeQuery().toResultsList { Fortune(getInt(1), getString(2)) } }
         (original + Fortune(0, "Additional fortune added at request time.")).sortedBy { it.message }
     }
 
@@ -103,7 +104,8 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
 
     private inline fun <T> withConnection(fn: Connection.() -> T): T = dataSource.connection.use(fn)
 
-    private inline fun <T> Connection.withStatement(stmt: String, fn: PreparedStatement.() -> T): T = prepareStatement(stmt).use(fn)
+    private inline fun <T> Connection.withStatement(stmt: String, fn: PreparedStatement.() -> T): T =
+        prepareStatement(stmt).use(fn)
 
     private fun Connection.findWorld(id: Int) =
         withStatement("SELECT * FROM world WHERE id = ?") {
