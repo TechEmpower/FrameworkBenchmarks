@@ -112,7 +112,7 @@
         "notes": "https://http4k.org",
         "versus": "jetty"
       },
-      "jetty-loom": {
+      "jettyloom": {
         "orm": "Raw",
         "database_os": "Linux",
         "cached_query_url": "/cached?queries=",
