@@ -1,6 +1,6 @@
 buildscript {
     ext.kotlin_version = "1.7.20"
-    ext.http4k_version = "4.33.2.1"
+    ext.http4k_version = "4.33.3.0"
 
     repositories {
         mavenCentral()
