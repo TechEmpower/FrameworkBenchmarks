@@ -40,7 +40,7 @@ host: "tfb-database"
 db: "hello_world"
 username: benchmarkdbuser
 password: benchmarkdbpass
-sql-pool-size: 256
+sql-pool-size: 1024
 db-repository: "pgclient"     # "pgclient" (default) or "hikari"
 
 # The following for pgclient only

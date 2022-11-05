@@ -9,7 +9,6 @@ import (
 )
 
 func main() {
-
     opts := []kit.Option{
         kit.RegisterGateway(
             fasthttp.MustNew(

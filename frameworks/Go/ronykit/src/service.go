@@ -43,6 +43,7 @@ func releaseJSON(m *JSONMessage) {
 func jsonHandler(ctx *kit.Context) {
     jsonMsg := acquireJSON()
     jsonMsg.Message = "Hello, World!"
+
     ctx.Out().
         SetHdr("Content-Type", "application/json; charset=utf-8").
         SetMsg(jsonMsg).
