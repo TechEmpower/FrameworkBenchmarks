@@ -11,5 +11,4 @@ shadowJar {
     baseName = "http4k-$project.name-benchmark"
     classifier = null
     version = null
-    mergeServiceFiles()
 }
