@@ -23,7 +23,7 @@ ENV GRADLE_VERSION 7.6-milestone-1
 ARG GRADLE_DOWNLOAD_SHA256=f6b8596b10cce501591e92f229816aa4046424f3b24d771751b06779d58c8ec4
 RUN set -o errexit -o nounset \
     && wget --no-verbose --output-document=gradle.zip "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" \
-    && unzip gradle.zip \
+    && unzip -qq gradle.zip \
     && rm gradle.zip \
     && mv "gradle-${GRADLE_VERSION}" "${GRADLE_HOME}/" \
     && ln -s "${GRADLE_HOME}/bin/gradle" /usr/bin/gradle \
@@ -38,11 +38,11 @@ COPY core core
 COPY jettyloom jettyloom
 RUN gradle --quiet jettyloom:shadowJar
 
-FROM amazoncorretto:19 as java
+FROM openjdk:19-jdk-slim as java
 COPY --from=gradle /http4k/jettyloom/build/libs/http4k-jettyloom-benchmark.jar /home/app/http4k-jettyloom/
 
 WORKDIR /home/app/http4k-jettyloom
 
-EXPOSE 9000
+EXPOSE 8080
 
 CMD ["java", "-server", "-XX:+UseNUMA", "--enable-preview", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-jar", "/home/app/http4k-jettyloom/http4k-jettyloom-benchmark.jar"]

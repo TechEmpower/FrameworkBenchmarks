@@ -7,6 +7,6 @@ COPY core core
 COPY ratpack ratpack
 RUN gradle --quiet ratpack:shadowJar
 
-EXPOSE 9000
+EXPOSE 8080
 
 CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "ratpack/build/libs/http4k-ratpack-benchmark.jar"]

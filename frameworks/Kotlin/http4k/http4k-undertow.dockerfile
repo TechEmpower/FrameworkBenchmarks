@@ -7,6 +7,6 @@ COPY core core
 COPY undertow undertow
 RUN gradle --quiet undertow:shadowJar
 
-EXPOSE 9000
+EXPOSE 8080
 
 CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "undertow/build/libs/http4k-undertow-benchmark.jar"]

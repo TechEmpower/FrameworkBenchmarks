@@ -1,3 +1,3 @@
 fun main() {
-    Http4kBenchmarkServer(PostgresDatabase("tfb-database"), false).start(JettyLoom(9000))
+    Http4kBenchmarkServer(PostgresDatabase("tfb-database"), false).start(JettyLoom(8080))
 }

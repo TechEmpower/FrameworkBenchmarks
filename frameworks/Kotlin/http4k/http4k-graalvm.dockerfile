@@ -19,6 +19,6 @@ RUN native-image --no-fallback -cp http4k-graalvm-benchmark.jar http4k.Http4kGra
 
 FROM frolvlad/alpine-glibc
 RUN apk update && apk add libstdc++
-EXPOSE 9000
+EXPOSE 8080
 COPY --from=graalvm /home/app/http4k-graalvm/http4k.http4kgraalvmbenchmarkserverkt /app/http4k-graalvm
 ENTRYPOINT ["/app/http4k-graalvm"]

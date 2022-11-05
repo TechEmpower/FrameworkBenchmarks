@@ -33,12 +33,12 @@ object Http4kGraalVMBenchmarkServer {
 }
 
 fun main() {
-    Http4kGraalVMBenchmarkServer(PostgresDatabase("tfb-database")).start(TfbApacheServer(9000))
+    Http4kGraalVMBenchmarkServer(PostgresDatabase("tfb-database")).start(TfbApacheServer(8080))
 }
 
 /**
  * we need a custom config here because of how virtual hosting is required in the TFB
- * environment. Normally we would just call the inbuilt ApacheServer(9000) function
+ * environment. Normally we would just call the inbuilt ApacheServer(8080) function
  */
 class TfbApacheServer(val port: Int) : ServerConfig {
     override fun toServer(http: HttpHandler): Http4kServer = object : Http4kServer {

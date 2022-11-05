@@ -123,7 +123,7 @@ database = "Postgres"
 database_os = "Linux"
 os = "Linux"
 orm = "Raw"
-platform = "jettyloom"
+platform = "jetty-loom"
 webserver = "None"
 versus = "jetty"
 
