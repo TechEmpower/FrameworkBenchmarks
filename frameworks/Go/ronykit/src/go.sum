@@ -1,9 +1,9 @@
 github.com/andybalholm/brotli v1.0.4 h1:V7DdXeJtZscaqfNuAdSRuRFzuiKlHSC/Zh3zl9qY3JY=
 github.com/andybalholm/brotli v1.0.4/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
-github.com/clubpay/ronykit/kit v0.8.8 h1:LzZp4tCMtHTPmfDAyd7AH7L2QJm04QvR9cu1k4zacIQ=
-github.com/clubpay/ronykit/kit v0.8.8/go.mod h1:QgK1bf6aP9aF71Ot9KyBLn2bonBmlKBCIjruUVst0t0=
-github.com/clubpay/ronykit/std/gateways/fasthttp v0.8.3 h1:+ZIzK6yIf4n5IF8Xf3Po9uMxzRPcl07I4/yB9B3kXEY=
-github.com/clubpay/ronykit/std/gateways/fasthttp v0.8.3/go.mod h1:8IiIwizx/YINne4iPlrdMSylmqgc0TAV72aTDn44E0M=
+github.com/clubpay/ronykit/kit v0.9.0 h1:/bw2CnKB428F51x1ZgLEhkyt9ZzwtQCAtNzrHtgxu8k=
+github.com/clubpay/ronykit/kit v0.9.0/go.mod h1:QgK1bf6aP9aF71Ot9KyBLn2bonBmlKBCIjruUVst0t0=
+github.com/clubpay/ronykit/std/gateways/fasthttp v0.0.0-20221105160236-d76312620245 h1:4RFY4mLYpLniFV8GNY9znVYaG11CpfKDfRd4hlEt2G8=
+github.com/clubpay/ronykit/std/gateways/fasthttp v0.0.0-20221105160236-d76312620245/go.mod h1:Zou8dVPmUxYINHkqfL/rjX6cAbG40D9J68g5Sp+DNnQ=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -42,6 +42,7 @@ github.com/valyala/bytebufferpool v1.0.0 h1:GqA5TC/0021Y/b9FG4Oi9Mr3q7XYx6Kllzaw
 github.com/valyala/bytebufferpool v1.0.0/go.mod h1:6bBcMArwyJ5K/AmCkWv1jt77kVWyCJ6HpOuEn7z0Csc=
 github.com/valyala/fasthttp v1.41.0 h1:zeR0Z1my1wDHTRiamBCXVglQdbUwgb9uWG3k1HQz6jY=
 github.com/valyala/fasthttp v1.41.0/go.mod h1:f6VbjjoI3z1NDOZOv17o6RvtRSWxC77seBFc2uWtgiY=
+github.com/valyala/tcplisten v1.0.0 h1:rBHj/Xf+E1tRGZyWIWwJDiRY0zc1Js+CV5DqwacVSA8=
 github.com/valyala/tcplisten v1.0.0/go.mod h1:T0xQ8SeCZGxckz9qRXTfG43PvQ/mcWh7FwZEA7Ioqkc=
 golang.org/x/crypto v0.0.0-20220214200702-86341886e292/go.mod h1:IxCIyHEi3zRg3s0A5j5BB6A9Jmi73HwBIUl50j+osU4=
 golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=
