@@ -15,7 +15,11 @@ COPY --from=gradle /http4k/graalvm/build/libs/http4k-graalvm-benchmark.jar /home
 
 WORKDIR /home/app/http4k-graalvm
 
-RUN native-image --no-fallback -cp http4k-graalvm-benchmark.jar http4k.Http4kGraalVMBenchmarkServerKt
+RUN native-image \
+    --initialize-at-build-time=org.slf4j.LoggerFactory \
+    --initialize-at-build-time=org.slf4j.simple.SimpleLogger \
+    --initialize-at-build-time=org.slf4j.impl.StaticLoggerBinder \
+    --no-fallback -cp http4k-graalvm-benchmark.jar http4k.Http4kGraalVMBenchmarkServerKt
 
 FROM frolvlad/alpine-glibc
 RUN apk update && apk add libstdc++
