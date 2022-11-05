@@ -3,7 +3,7 @@ USER root
 WORKDIR /http4k
 COPY build.gradle build.gradle
 COPY settings.gradle settings.gradle
-COPY apache4 apache4
+COPY apache apache
 COPY graalvm graalvm
 COPY core core
 RUN gradle --quiet graalvm:shadowJar
@@ -19,6 +19,6 @@ RUN native-image --no-fallback -cp http4k-graalvm-benchmark.jar http4k.Http4kGra
 
 FROM frolvlad/alpine-glibc
 RUN apk update && apk add libstdc++
-EXPOSE 8080
+EXPOSE 9000
 COPY --from=graalvm /home/app/http4k-graalvm/http4k.http4kgraalvmbenchmarkserverkt /app/http4k-graalvm
 ENTRYPOINT ["/app/http4k-graalvm"]

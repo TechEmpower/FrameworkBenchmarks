@@ -6,12 +6,12 @@ import org.http4k.server.Http4kServer
 import org.http4k.server.ServerConfig
 
 fun main() {
-    Http4kBenchmarkServer(PostgresDatabase("tfb-database")).start(TfbApacheServer(8080))
+    Http4kBenchmarkServer(PostgresDatabase("tfb-database")).start(TfbApacheServer(9000))
 }
 
 /**
  * we need a custom config here because of how virtual hosting is required in the TFB
- * environment. Normally we would just call the inbuilt ApacheServer(8080) function
+ * environment. Normally we would just call the inbuilt ApacheServer(9000) function
  */
 class TfbApacheServer(val port: Int) : ServerConfig {
     override fun toServer(http: HttpHandler): Http4kServer = object : Http4kServer {

@@ -1,5 +1,5 @@
 import org.http4k.server.KtorNetty
 
 fun main() {
-    Http4kBenchmarkServer(PostgresDatabase("tfb-database")).start(KtorNetty(8080))
+    Http4kBenchmarkServer(PostgresDatabase("tfb-database")).start(KtorNetty(9000))
 }

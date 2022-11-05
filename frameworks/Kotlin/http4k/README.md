@@ -7,13 +7,13 @@ The tests were run with:
 * [http4k](https://http4k.org)
 
 ## Test URLs
-- JSON Encoding: http://localhost:8080/json
-- Single query: http://localhost:8080/db
-- Multiple queries: http://localhost:8080/queries
-- Fortunes: http://localhost:8080/fortunes
-- Updates: http://localhost:8080/updates
-- Cached: http://localhost:8080/cached
-- Plaintext: http://localhost:8080/plaintext
+- JSON Encoding: http://localhost:9000/json
+- Single query: http://localhost:9000/db
+- Multiple queries: http://localhost:9000/queries
+- Fortunes: http://localhost:9000/fortunes
+- Updates: http://localhost:9000/updates
+- Cached: http://localhost:9000/cached
+- Plaintext: http://localhost:9000/plaintext
 
 ## Supported backends (w/ Postgres client)
 - SunHttp (default - bundled with core module - zero dependencies)

@@ -7,6 +7,6 @@ COPY core core
 COPY jetty jetty
 RUN gradle --quiet jetty:shadowJar
 
-EXPOSE 8080
+EXPOSE 9000
 
 CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "jetty/build/libs/http4k-jetty-benchmark.jar"]

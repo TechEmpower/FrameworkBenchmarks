@@ -1,61 +1,21 @@
 package http4k
 
-import AddHeaders
-import JsonRoute
-import PlainTextRoute
-import org.apache.hc.core5.http.impl.bootstrap.ServerBootstrap
-import org.apache.hc.core5.http.io.SocketConfig
-import org.http4k.core.HttpHandler
-import org.http4k.core.then
-import org.http4k.routing.routes
-import org.http4k.server.Http4kRequestHandler
-import org.http4k.server.Http4kServer
-import org.http4k.server.ServerConfig
+import Database
+import Fortune
+import Http4kBenchmarkServer
+import TfbApacheServer
+import argo.jdom.JsonNode
+import org.http4k.format.Argo.obj
 import start
 
-object Http4kGraalVMBenchmarkServer {
-    operator fun invoke(addDateHeader: Boolean = true) =
-        AddHeaders(addDateHeader)
-            .then(
-                routes(
-                    JsonRoute(),
-                    PlainTextRoute(),
-                )
-            )
-}
-
 fun main() {
-    Http4kGraalVMBenchmarkServer().start(TfbApacheServer(8080))
+    Http4kBenchmarkServer(NoOpDatabase).start(TfbApacheServer(9000))
 }
 
-/**
- * we need a custom config here because of how virtual hosting is required in the TFB
- * environment. Normally we would just call the inbuilt ApacheServer(8080) function
- */
-class TfbApacheServer(val port: Int) : ServerConfig {
-    override fun toServer(http: HttpHandler): Http4kServer = object : Http4kServer {
-        val handler = Http4kRequestHandler(http)
-
-        val server = ServerBootstrap.bootstrap()
-            .setListenerPort(port)
-            .setSocketConfig(
-                SocketConfig.custom()
-                    .setTcpNoDelay(true)
-                    .setSoKeepAlive(true)
-                    .setSoReuseAddress(true)
-                    .setBacklogSize(1000)
-                    .build()
-            )
-            .apply {
-                register("*", handler) // standard hosting
-                registerVirtual("10.0.0.1", "*", handler) // for virtual hosting
-                setCanonicalHostName("tfb-server")
-            }.create()
-
-        override fun start() = apply { server.start() }
-
-        override fun stop() = apply { server.stop() }
-
-        override fun port(): Int = port
-    }
+object NoOpDatabase : Database {
+    override fun findWorld() = obj()
+    override fun loadAll() = emptyMap<Int, JsonNode>()
+    override fun findWorlds(count: Int) = emptyList<JsonNode>()
+    override fun updateWorlds(count: Int) = emptyList<JsonNode>()
+    override fun fortunes() = emptyList<Fortune>()
 }

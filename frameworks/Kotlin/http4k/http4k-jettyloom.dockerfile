@@ -43,6 +43,6 @@ COPY --from=gradle /http4k/jettyloom/build/libs/http4k-jettyloom-benchmark.jar /
 
 WORKDIR /home/app/http4k-jettyloom
 
-EXPOSE 8080
+EXPOSE 9000
 
 CMD ["java", "-server", "-XX:+UseNUMA", "--enable-preview", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-jar", "/home/app/http4k-jettyloom/http4k-jettyloom-benchmark.jar"]

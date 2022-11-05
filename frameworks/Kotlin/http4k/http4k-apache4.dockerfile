@@ -7,6 +7,6 @@ COPY apache4 apache4
 COPY core core
 RUN gradle --quiet apache4:shadowJar
 
-EXPOSE 8080
+EXPOSE 9000
 
 CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "apache4/build/libs/http4k-apache4-benchmark.jar"]

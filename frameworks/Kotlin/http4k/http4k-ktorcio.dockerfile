@@ -7,6 +7,6 @@ COPY core core
 COPY ktorcio ktorcio
 RUN gradle --quiet ktorcio:shadowJar
 
-EXPOSE 8080
+EXPOSE 9000
 
 CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "ktorcio/build/libs/http4k-ktorcio-benchmark.jar"]

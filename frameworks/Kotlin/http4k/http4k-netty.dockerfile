@@ -7,6 +7,6 @@ COPY core core
 COPY netty netty
 RUN gradle --quiet netty:shadowJar
 
-EXPOSE 8080
+EXPOSE 9000
 
 CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "netty/build/libs/http4k-netty-benchmark.jar"]
