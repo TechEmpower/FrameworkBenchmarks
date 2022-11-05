@@ -72,7 +72,6 @@
       "graalvm": {
         "orm": "Raw",
         "database_os": "Linux",
-        "cached_query_url": "/cached?queries=",
         "db_url": "/db",
         "fortune_url": "/fortunes",
         "query_url": "/queries?queries=",
