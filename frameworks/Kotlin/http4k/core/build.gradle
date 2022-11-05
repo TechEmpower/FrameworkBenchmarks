@@ -7,5 +7,5 @@ dependencies {
     api('org.apache.commons:commons-lang3:3.12.0')
     api('com.zaxxer:HikariCP:5.0.1')
     api('org.postgresql:postgresql:42.5.0')
-    api('org.cache2k:cache2k-base-bom:1.6.0.Final')
+    api('org.cache2k:cache2k-core:2.6.1.Final')
 }
