@@ -2,7 +2,7 @@
   "framework": "ronykit",
   "tests": [
     {
-      "default": {
+      "fasthttp": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
@@ -20,7 +20,25 @@
         "notes": "",
         "versus": "go"
       },
-      "prefork": {
+      "fasthttp-prefork": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "ronykit",
+        "language": "Go",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "display_name": "RonyKIT",
+        "notes": "",
+        "versus": "go"
+      },
+      "silverhttp": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
