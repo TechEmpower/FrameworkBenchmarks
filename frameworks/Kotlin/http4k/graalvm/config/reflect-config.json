@@ -17,6 +17,24 @@
     "name": "com.zaxxer.hikari.util.ConcurrentBag$IConcurrentBagEntry[]"
   },
   {
+    "name": "Fortune",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredClasses": true,
+    "allPublicClasses": true
+  },
+  {
+    "name": "FortunesList",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredClasses": true,
+    "allPublicClasses": true
+  },
+  {
     "name": "com.zaxxer.hikari.util.ConcurrentBag",
     "allDeclaredConstructors": true,
     "allPublicConstructors": true,

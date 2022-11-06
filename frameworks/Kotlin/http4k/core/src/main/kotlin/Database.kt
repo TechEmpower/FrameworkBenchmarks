@@ -71,6 +71,7 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
     override fun fortunes() = withConnection {
         val original =
             withStatement("select * from fortune") { executeQuery().toResultsList { Fortune(getInt(1), getString(2)) } }
+
         (original + Fortune(0, "Additional fortune added at request time.")).sortedBy { it.message }
     }
 
