@@ -161,7 +161,7 @@ os = "Linux"
 orm = "Raw"
 platform = "graalvm"
 webserver = "None"
-versus = "netty"
+versus = "servlet"
 
 [ktorcio]
 urls.plaintext = "/plaintext"
