@@ -39,9 +39,7 @@ class CachedDatabase(private val delegate: Database) : Database by delegate {
     override fun findWorlds(count: Int) = (1..count).map { cache.peek(randomWorld()) }
 
     override fun updateWorlds(count: Int) =
-        delegate.updateWorlds(count).apply {
-            cache.refresh() // massively inefficient, but :shrug:
-        }
+        delegate.updateWorlds(count).onEach { cache.put(it.getNumberValue("id").toInt(), it) }
 
     override fun loadAll(): Map<Int, JsonNode> = cache.asMap()
 }
