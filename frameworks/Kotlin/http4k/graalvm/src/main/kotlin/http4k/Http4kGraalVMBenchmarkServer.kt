@@ -3,13 +3,14 @@ package http4k
 import Database
 import Fortune
 import Http4kBenchmarkServer
+import PostgresDatabase
 import TfbApacheServer
 import argo.jdom.JsonNode
 import org.http4k.format.Argo.obj
 import start
 
 fun main() {
-    Http4kBenchmarkServer(NoOpDatabase).start(TfbApacheServer(9000))
+    Http4kBenchmarkServer(PostgresDatabase("tfb-database")).start(TfbApacheServer(9000))
 }
 
 object NoOpDatabase : Database {
