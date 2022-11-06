@@ -1,15 +1,14 @@
 dependencies {
-    api(project(":core-jdbc"))
-    api("org.http4k:http4k-server-undertow:$http4k_version")
+    api(project(":core-pgclient"))
+    api("org.http4k:http4k-server-jetty:$http4k_version")
 }
 
 apply plugin: 'application'
-mainClassName = "Http4kUndertowServerKt"
+mainClassName = "Http4kJettyLoomServerKt"
 apply plugin: 'com.github.johnrengelman.shadow'
 
 shadowJar {
     baseName = "http4k-benchmark"
     classifier = null
     version = null
-    mergeServiceFiles()
 }

@@ -6,5 +6,5 @@ import TfbApacheServer
 import start
 
 fun main() {
-    Http4kBenchmarkServer(PostgresDatabase("tfb-database")).start(TfbApacheServer(9000))
+    Http4kBenchmarkServer(PostgresDatabase()).start(TfbApacheServer(9000))
 }

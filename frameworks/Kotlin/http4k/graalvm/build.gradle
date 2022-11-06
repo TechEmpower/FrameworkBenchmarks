@@ -1,5 +1,6 @@
 dependencies {
-    api project(":apache")
+    api(project(":core-jdbc"))
+    api(project(":apache"))
 }
 
 apply plugin: 'application'
@@ -13,7 +14,7 @@ jar {
 }
 
 shadowJar {
-    baseName = "http4k-$project.name-benchmark"
+    baseName = "http4k-benchmark"
     classifier = null
     version = null
     mergeServiceFiles()

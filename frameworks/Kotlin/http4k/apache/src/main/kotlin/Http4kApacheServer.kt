@@ -6,7 +6,7 @@ import org.http4k.server.Http4kServer
 import org.http4k.server.ServerConfig
 
 fun main() {
-    Http4kBenchmarkServer(PostgresDatabase("tfb-database")).start(TfbApacheServer(9000))
+    Http4kBenchmarkServer(PostgresDatabase()).start(TfbApacheServer(9000))
 }
 
 /**

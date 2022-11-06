@@ -35,14 +35,15 @@ WORKDIR /http4k
 COPY build.gradle build.gradle
 COPY settings.gradle settings.gradle
 COPY core core
-COPY jettyloom jettyloom
-RUN gradle --quiet jettyloom:shadowJar
+COPY core-pgclient core-pgclient
+COPY jettyloom-pgclient jettyloom-pgclient
+RUN gradle --quiet jettyloom-pgclient:shadowJar
 
 FROM openjdk:19-jdk-slim as java
-COPY --from=gradle /http4k/jettyloom/build/libs/http4k-jettyloom-benchmark.jar /home/app/http4k-jettyloom/
+COPY --from=gradle /http4k/jettyloom-pgclient/build/libs/http4k-benchmark.jar /home/app/
 
-WORKDIR /home/app/http4k-jettyloom
+WORKDIR /home/app
 
 EXPOSE 9000
 
-CMD ["java", "-server", "-XX:+UseNUMA", "--enable-preview", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-jar", "/home/app/http4k-jettyloom/http4k-jettyloom-benchmark.jar"]
+CMD ["java", "-server", "-XX:+UseNUMA", "--enable-preview", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-jar", "/home/app/http4k-benchmark.jar"]
