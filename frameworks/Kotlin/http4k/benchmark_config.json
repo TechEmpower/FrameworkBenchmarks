@@ -70,10 +70,15 @@
         "versus": "servlet"
       },
       "graalvm": {
-        "orm": "Raw",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "database": "Postgres",
+        "database_os": "Linux",
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 9000,
+        "orm": "Raw",
         "approach": "Realistic",
         "classification": "Micro",
         "framework": "http4k",

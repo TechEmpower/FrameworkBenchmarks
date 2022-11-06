@@ -16,15 +16,11 @@ COPY --from=gradle /http4k/graalvm/reflect-config.json /home/app/http4k-graalvm/
 
 WORKDIR /home/app/http4k-graalvm
 
-#RUN $JAVA_HOME/bin/java -agentlib:native-image-agent=config-output-dir=META-INF/native-image -cp http4k-graalvm-benchmark.jar http4k.Http4kGraalVMBenchmarkServerKt || :
-#RUN ls -al META-INF/native-image
-#RUN cat META-INF/native-image/reflect-config.json
+#--initialize-at-run-time="org.postgresql.Driver" \
 
 RUN native-image \
     -H:ReflectionConfigurationFiles=reflect-config.json \
-    --initialize-at-build-time=org.slf4j.LoggerFactory \
-    --initialize-at-build-time=org.slf4j.simple.SimpleLogger \
-    --initialize-at-build-time=org.slf4j.impl.StaticLoggerBinder \
+    --initialize-at-build-time="org.slf4j.LoggerFactory,org.slf4j.simple.SimpleLogger,org.slf4j.impl.StaticLoggerBinder" \
     --no-fallback -cp http4k-graalvm-benchmark.jar http4k.Http4kGraalVMBenchmarkServerKt
 
 FROM frolvlad/alpine-glibc

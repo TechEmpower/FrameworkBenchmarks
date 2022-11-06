@@ -5,6 +5,7 @@ import org.cache2k.Cache
 import org.cache2k.Cache2kBuilder
 import org.http4k.format.Argo.number
 import org.http4k.format.Argo.obj
+import org.postgresql.Driver
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -98,6 +99,8 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
                     "useServerPrepStmts=true&" +
                     "cacheRSMetadata=true"
                 maximumPoolSize = 100
+                initializationFailTimeout = 10000
+                driverClassName = Driver::class.java.canonicalName
                 HikariDataSource(this)
             })
     }
