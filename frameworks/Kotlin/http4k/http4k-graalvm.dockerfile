@@ -16,8 +16,6 @@ COPY --from=gradle /http4k/graalvm/reflect-config.json /home/app/http4k-graalvm/
 
 WORKDIR /home/app/http4k-graalvm
 
-#--initialize-at-run-time="org.postgresql.Driver" \
-
 RUN native-image \
     -H:ReflectionConfigurationFiles=reflect-config.json \
     --initialize-at-build-time="org.slf4j.LoggerFactory,org.slf4j.simple.SimpleLogger,org.slf4j.impl.StaticLoggerBinder" \
