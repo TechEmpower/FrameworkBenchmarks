@@ -6,7 +6,7 @@ use std::{pin::Pin, task::Context, task::Poll};
 
 use futures::future::{ok, Future, FutureExt};
 use ntex::http::header::{CONTENT_TYPE, SERVER};
-use ntex::http::{HttpService, KeepAlive, Request, Response};
+use ntex::http::{HttpService, KeepAlive, Request, Response, StatusCode};
 use ntex::service::{Service, ServiceFactory};
 use ntex::web::{Error, HttpResponse};
 use ntex::{time::Seconds, util::BytesMut, util::PoolId};
@@ -32,14 +32,14 @@ impl Service<Request> for App {
     fn call(&self, req: Request) -> Self::Future {
         match req.path() {
             "/db" => Box::pin(self.0.get_world().map(|body| {
-                let mut res = HttpResponse::with_body(http::StatusCode::OK, body.into());
+                let mut res = HttpResponse::with_body(StatusCode::OK, body.into());
                 res.headers_mut().append(SERVER, utils::HDR_SERVER);
                 res.headers_mut()
                     .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
                 Ok(res)
             })),
             "/fortunes" => Box::pin(self.0.tell_fortune().map(|body| {
-                let mut res = HttpResponse::with_body(http::StatusCode::OK, body.into());
+                let mut res = HttpResponse::with_body(StatusCode::OK, body.into());
                 res.headers_mut().append(SERVER, utils::HDR_SERVER);
                 res.headers_mut()
                     .append(CONTENT_TYPE, utils::HDR_HTML_CONTENT_TYPE);
@@ -51,7 +51,7 @@ impl Service<Request> for App {
                     .map(|worlds| {
                         let mut body = BytesMut::with_capacity(35 * worlds.len());
                         let _ = simd_json::to_writer(crate::utils::Writer(&mut body), &worlds);
-                        let mut res = HttpResponse::with_body(http::StatusCode::OK, body.into());
+                        let mut res = HttpResponse::with_body(StatusCode::OK, body.into());
                         res.headers_mut().append(SERVER, utils::HDR_SERVER);
                         res.headers_mut()
                             .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
@@ -64,14 +64,14 @@ impl Service<Request> for App {
                     .map(|worlds| {
                         let mut body = BytesMut::with_capacity(35 * worlds.len());
                         let _ = simd_json::to_writer(crate::utils::Writer(&mut body), &worlds);
-                        let mut res = HttpResponse::with_body(http::StatusCode::OK, body.into());
+                        let mut res = HttpResponse::with_body(StatusCode::OK, body.into());
                         res.headers_mut().append(SERVER, utils::HDR_SERVER);
                         res.headers_mut()
                             .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
                         Ok(res)
                     }),
             ),
-            _ => Box::pin(ok(Response::new(http::StatusCode::NOT_FOUND))),
+            _ => Box::pin(ok(Response::new(StatusCode::NOT_FOUND))),
         }
     }
 }

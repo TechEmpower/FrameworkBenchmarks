@@ -214,7 +214,7 @@ static int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req)
 	fortune_ctx->req = req;
 	fortune_ctx->result = &fortune->l;
 
-	if (execute_query(ctx, &fortune_ctx->param)) {
+	if (execute_database_query(&ctx->request_handler_data.hello_world_db, &fortune_ctx->param)) {
 		fortune_ctx->cleanup = true;
 		send_service_unavailable_error(DB_REQ_ERROR, req);
 	}
@@ -284,9 +284,10 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 		fortune_ctx->iovec_list_iter = iovec_list;
 		fortune_ctx->result = sort_list(fortune_ctx->result, compare_fortunes);
 
-		if (mustache_render(&api,
-		                    fortune_ctx,
-		                    ctx->global_data->request_handler_data.fortunes_template)) {
+		struct mustache_token_t * const fortunes_template =
+			ctx->global_thread_data->global_data->request_handler_data.fortunes_template;
+
+		if (mustache_render(&api, fortune_ctx, fortunes_template)) {
 			fortune_ctx->iovec_list = iovec_list->l.next;
 			set_default_response_param(HTML, fortune_ctx->content_length, fortune_ctx->req);
 			h2o_start_response(fortune_ctx->req, &fortune_ctx->generator);
@@ -422,25 +423,29 @@ static void template_error(mustache_api_t *api,
 	print_error(template_input->name, lineno, "mustache_compile", error);
 }
 
-void cleanup_fortunes_handler(global_data_t *global_data)
+void cleanup_fortunes_handler(request_handler_data_t *data)
 {
-	if (global_data->request_handler_data.fortunes_template) {
+	if (data->fortunes_template) {
 		mustache_api_t api = {.freedata = NULL};
 
-		mustache_free(&api, global_data->request_handler_data.fortunes_template);
+		mustache_free(&api, data->fortunes_template);
 	}
 }
 
 void initialize_fortunes_handler(const config_t *config,
-                                 global_data_t *global_data,
                                  h2o_hostconf_t *hostconf,
-                                 h2o_access_log_filehandle_t *log_handle)
+                                 h2o_access_log_filehandle_t *log_handle,
+                                 request_handler_data_t *data)
 {
 	mustache_template_t *template = NULL;
-	const size_t template_path_prefix_len = config->template_path ? strlen(config->template_path) : 0;
+	const size_t template_path_prefix_len = config->template_path ?
+	                                        strlen(config->template_path) :
+	                                        0;
 	char path[template_path_prefix_len + sizeof(TEMPLATE_PATH_SUFFIX)];
 
-	memcpy(path, config->template_path, template_path_prefix_len);
+	if (template_path_prefix_len)
+		memcpy(path, config->template_path, template_path_prefix_len);
+
 	memcpy(path + template_path_prefix_len, TEMPLATE_PATH_SUFFIX, sizeof(TEMPLATE_PATH_SUFFIX));
 
 	template_input_t template_input = {.input = fopen(path, "rb"), .name = path};
@@ -465,10 +470,10 @@ void initialize_fortunes_handler(const config_t *config,
 		STANDARD_ERROR("fopen");
 
 	if (template) {
-		global_data->request_handler_data.fortunes_template = template;
+		data->fortunes_template = template;
 		add_prepared_statement(FORTUNE_TABLE_NAME,
 		                       FORTUNE_QUERY,
-		                       &global_data->prepared_statements);
+		                       &data->prepared_statements);
 		register_request_handler("/fortunes", fortunes, hostconf, log_handle);
 	}
 }

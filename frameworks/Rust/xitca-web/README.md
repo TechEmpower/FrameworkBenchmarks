@@ -2,7 +2,7 @@
 
 ## Description
 
-An alternative http library and web framework inspired by actix and hyper. Implementation is rewritten with similar style and types.
+An alternative http library and web framework inspired by hyper. Implementation is rewritten with similar style and types.
 
 ## Database
 

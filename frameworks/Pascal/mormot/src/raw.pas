@@ -574,8 +574,8 @@ begin
     threads := SystemInfo.dwNumberOfProcessors * 4;
   if threads < 16 then
     threads := 16
-  else if threads > 64 then
-    threads := 64; // prevents too many PostgreSQL per connection forks
+  else if threads > 256 then
+    threads := 256; // max. threads for THttpAsyncServer
 
   rawServer := TRawAsyncServer.Create(threads);
   try
