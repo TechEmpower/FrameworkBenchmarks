@@ -21,11 +21,6 @@ require __DIR__ . '/vendor/autoload.php';
 use App\Application;
 use Cake\Http\Server;
 
-// class_alias(
-//     'Cake\Error\ConsoleErrorHandler',
-//     'Cake\Console\ConsoleErrorHandler'
-// );
-
 global $server;
 
 // Bind your application to the server.
