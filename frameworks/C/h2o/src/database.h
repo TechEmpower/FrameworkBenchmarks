@@ -25,57 +25,60 @@
 #include <stdint.h>
 #include <postgresql/libpq-fe.h>
 
-#include "global_data.h"
 #include "list.h"
 
 #define DB_ERROR "database error\n"
 #define DB_REQ_ERROR "too many concurrent database requests\n"
 #define DB_TIMEOUT_ERROR "database timeout\n"
 #define IS_PREPARED 1
-#define IS_SINGLE_ROW 2
 
 typedef enum {
 	SUCCESS,
 	DONE,
-	WANT_WRITE
 } result_return_t;
 
-typedef struct thread_context_t thread_context_t;
+struct config_t;
+struct db_query_param_t;
 
-typedef struct db_query_param_t db_query_param_t;
+typedef result_return_t (*on_result_t)(struct db_query_param_t *, PGresult *);
 
-typedef result_return_t (*on_result_t)(db_query_param_t *, PGresult *);
-
-struct db_query_param_t {
+typedef struct db_query_param_t {
 	list_t l;
-	void (*on_error)(db_query_param_t *, const char *);
+	void (*on_error)(struct db_query_param_t *, const char *);
 	on_result_t on_result;
-	void (*on_timeout)(db_query_param_t *);
-	int (*on_write_ready)(db_query_param_t *, PGconn *);
+	void (*on_timeout)(struct db_query_param_t *);
 	const char *command;
 	const char * const *paramValues;
 	const int *paramLengths;
 	const int *paramFormats;
+	const Oid *paramTypes;
 	size_t nParams;
 	uint_fast32_t flags;
 	int resultFormat;
-};
+} db_query_param_t;
 
 typedef struct {
-	list_t *db_conn;
+	const struct config_t *config;
+	list_t *conn;
+	const char *conninfo;
+	h2o_loop_t *loop;
+	const list_t *prepared_statements;
 	// We use a FIFO queue instead of a simpler stack, otherwise the earlier queries may wait
 	// an unbounded amount of time to be executed.
 	queue_t queries;
-	size_t db_conn_num;
-	size_t free_db_conn_num;
+	size_t conn_num;
 	size_t query_num;
-	h2o_timeout_t h2o_timeout;
-} db_state_t;
+	h2o_timeout_t timeout;
+} db_conn_pool_t;
 
 void add_prepared_statement(const char *name, const char *query, list_t **prepared_statements);
-int execute_query(thread_context_t *ctx, db_query_param_t *param);
-void free_database_state(h2o_loop_t *loop, db_state_t *db_state);
-void initialize_database_state(h2o_loop_t *loop, db_state_t *db_state);
+int execute_database_query(db_conn_pool_t *pool, db_query_param_t *param);
+void free_database_connection_pool(db_conn_pool_t *pool);
+void initialize_database_connection_pool(const char *conninfo,
+                                         const struct config_t *config,
+                                         const list_t *prepared_statements,
+                                         h2o_loop_t *loop,
+                                         db_conn_pool_t *pool);
 void remove_prepared_statements(list_t *prepared_statements);
 
 #endif // DATABASE_H_

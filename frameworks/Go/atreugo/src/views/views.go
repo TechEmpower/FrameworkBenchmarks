@@ -5,7 +5,7 @@ import (
 	"context"
 	"sort"
 
-	pgx "github.com/jackc/pgx/v4"
+	pgx "github.com/jackc/pgx/v5"
 	"github.com/savsgio/atreugo/v11"
 )
 

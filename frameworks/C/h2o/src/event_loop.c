@@ -62,7 +62,7 @@ static void accept_connection(h2o_socket_t *listener, const char *err)
 		                                                      listener->data);
 
 		if (!ctx->shutdown) {
-			size_t accepted = ctx->config->max_accept;
+			size_t accepted = ctx->global_thread_data->config->max_accept;
 
 			assert(accepted);
 
@@ -232,12 +232,13 @@ static void shutdown_server(h2o_socket_t *listener, const char *err)
 			ctx->event_loop.h2o_socket = NULL;
 		}
 
-		for (size_t i = ctx->config->thread_num - 1; i > 0; i--) {
+		for (size_t i = ctx->global_thread_data->config->thread_num - 1; i > 0; i--) {
 			message_t * const msg = h2o_mem_alloc(sizeof(*msg));
 
 			memset(msg, 0, sizeof(*msg));
 			msg->type = SHUTDOWN;
-			h2o_multithread_send_message(&ctx->global_thread_data[i].h2o_receiver, &msg->super);
+			h2o_multithread_send_message(&ctx->global_thread_data[i].h2o_receiver,
+			                             &msg->super);
 		}
 	}
 }
@@ -265,7 +266,7 @@ static void start_accept_polling(const config_t *config,
 	h2o_socket_read_start(h2o_socket, accept_cb);
 }
 
-void event_loop(thread_context_t *ctx)
+void event_loop(struct thread_context_t *ctx)
 {
 	while (!ctx->shutdown || ctx->event_loop.conn_num)
 		h2o_evloop_run(ctx->event_loop.h2o_ctx.loop, INT32_MAX);
