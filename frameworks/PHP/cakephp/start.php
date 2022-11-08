@@ -21,10 +21,10 @@ require __DIR__ . '/vendor/autoload.php';
 use App\Application;
 use Cake\Http\Server;
 
-class_alias(
-    'Cake\Error\ConsoleErrorHandler',
-    'Cake\Console\ConsoleErrorHandler'
-);
+// class_alias(
+//     'Cake\Error\ConsoleErrorHandler',
+//     'Cake\Console\ConsoleErrorHandler'
+// );
 
 global $server;
 
