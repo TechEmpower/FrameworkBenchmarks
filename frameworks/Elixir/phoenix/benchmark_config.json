@@ -17,13 +17,13 @@
             "language": "Elixir",
             "flavor": "None",
             "orm": "full",
-            "platform": "Cowboy",
-            "webserver": "None",
+            "platform": "beam",
+            "webserver": "cowboy",
             "os": "Linux",
             "database_os": "Linux",
             "display_name": "Phoenix",
             "notes": "",
-            "versus": "Cowboy"
+            "versus": ""
         }
     }]
 }
