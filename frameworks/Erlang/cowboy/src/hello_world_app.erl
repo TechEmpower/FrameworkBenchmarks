@@ -17,23 +17,23 @@
 
 
 start(_Type, _Args) ->
-        crypto:start(),
-        application:start(emysql),
-        emysql:add_pool(test_pool, 256,
-          "benchmarkdbuser", "benchmarkdbpass", "tfb-database", 3306,
-          "hello_world", utf8),
-	emysql:prepare(db_stmt, <<"SELECT * FROM World where id = ?">>),
-	Dispatch = cowboy_router:compile([
-		{'_', [
-      {"/plaintext", plaintext_handler, []},
-			{"/json", json_handler, []},
-			{"/db", db_handler, []},
-      {"/query", query_handler, []}
-		]}
-	]),
-	{ok, _} = cowboy:start_clear(http, [{port, 8080}], #{env => #{dispatch => Dispatch}}
-	),
-	hello_world_sup:start_link().
+    crypto:start(),
+    application:start(emysql),
+    emysql:add_pool(test_pool, 256,
+                    "benchmarkdbuser", "benchmarkdbpass", "tfb-database", 3306,
+                    "hello_world", utf8),
+    emysql:prepare(db_stmt, <<"SELECT * FROM World where id = ?">>),
+    Dispatch = cowboy_router:compile([
+                                      {'_', [
+                                             {"/plaintext", plaintext_handler, []},
+                                             {"/json", json_handler, []},
+                                             {"/db", db_handler, []},
+                                             {"/query", query_handler, []}
+                                            ]}
+                                     ]),
+    {ok, _} = cowboy:start_clear(http, [{port, 8080}], #{env => #{dispatch => Dispatch}}
+                                ),
+    hello_world_sup:start_link().
 
 stop(_State) ->
-	ok.
+    ok.
