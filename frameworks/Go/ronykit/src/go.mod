@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/clubpay/ronykit/kit v0.9.7
-	github.com/clubpay/ronykit/std/gateways/fasthttp v0.0.0-20221105160236-d76312620245
+	github.com/clubpay/ronykit/std/gateways/fasthttp v0.0.0-20221109153144-bf5c74dcdd63
 	github.com/clubpay/ronykit/std/gateways/silverhttp v0.0.0-20221109153144-bf5c74dcdd63
 )
 
