@@ -14,7 +14,7 @@
       "flavor": "None",
       "orm": "Raw",
       "platform": "beam",
-      "webserver": "cowboy",
+      "webserver": "elli",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "elli",
