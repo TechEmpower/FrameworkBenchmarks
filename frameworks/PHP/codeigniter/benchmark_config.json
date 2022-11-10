@@ -2,11 +2,12 @@
   "framework": "codeigniter",
   "tests": [{
     "default": {
-      "json_url": "/index.php/bench/json",
-      "plaintext_url": "/index.php/bench/plaintext",
-      "db_url": "/index.php/bench/db",
-      "query_url": "/index.php/bench/dbquery/",
-      "fortune_url": "/index.php/bench/fortunes",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/queries/",
+      "update_url": "/update/",
+      "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -19,7 +20,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "codeigniter",
+      "display_name": "codeigniter 4",
       "notes": "",
       "versus": "php"
     }
