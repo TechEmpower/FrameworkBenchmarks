@@ -20,7 +20,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "codeigniter 4",
+      "display_name": "codeigniter4",
       "notes": "",
       "versus": "php"
     }
