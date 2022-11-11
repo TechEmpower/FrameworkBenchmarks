@@ -2,7 +2,7 @@ use std::{borrow::Cow, fmt::Write as FmtWrite};
 
 use futures::{Future, FutureExt};
 use nanorand::{Rng, WyRand};
-use ntex::util::{Bytes, BytesMut};
+use ntex::util::{BufMut, Bytes, BytesMut};
 use smallvec::SmallVec;
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, Statement};
@@ -70,12 +70,12 @@ impl PgConnection {
 impl PgConnection {
     pub fn get_world(&self) -> impl Future<Output = Bytes> {
         let random_id = (self.rng.clone().generate::<u32>() % 10_000 + 1) as i32;
-        self.cl.query(&self.world, &[&random_id]).map(|rows| {
-            let rows = rows.unwrap();
+        self.cl.query_one(&self.world, &[&random_id]).map(|row| {
+            let row = row.unwrap();
             let mut body = BytesMut::with_capacity(64);
             World {
-                id: rows[0].get(0),
-                randomnumber: rows[0].get(1),
+                id: row.get(0),
+                randomnumber: row.get(1),
             }
             .to_bytes_mut(&mut body);
             body.freeze()
@@ -87,20 +87,28 @@ impl PgConnection {
         let mut rng = self.rng.clone();
         for _ in 0..num {
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
-            futs.push(self.cl.query(&self.world, &[&w_id]));
+            futs.push(self.cl.query_one(&self.world, &[&w_id]));
         }
 
         async move {
-            let mut worlds = BytesMut::with_capacity(48 * num);
+            let mut worlds = Vec::with_capacity(num);
             for fut in futs {
-                let rows = fut.await.unwrap();
-                World {
-                    id: rows[0].get(0),
-                    randomnumber: rows[0].get(1),
-                }
-                .to_bytes_mut(&mut worlds)
+                let row = fut.await.unwrap();
+                worlds.push(World {
+                    id: row.get(0),
+                    randomnumber: row.get(1),
+                })
             }
-            worlds.freeze()
+
+            let mut buf = BytesMut::with_capacity(48 * num);
+            buf.put_u8(b'[');
+            worlds.iter().for_each(|w| {
+                w.to_bytes_mut(&mut buf);
+                buf.put_u8(b',');
+            });
+            let idx = buf.len() - 1;
+            buf[idx] = b']';
+            buf.freeze()
         }
     }
 
@@ -109,14 +117,14 @@ impl PgConnection {
         let mut rng = self.rng.clone();
         for _ in 0..num {
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
-            futs.push(self.cl.query(&self.world, &[&w_id]));
+            futs.push(self.cl.query_one(&self.world, &[&w_id]));
         }
 
         let cl = self.cl.clone();
         let st = self.updates[num - 1].clone();
         let base = num * 2;
         async move {
-            let mut worlds = BytesMut::with_capacity(48 * num);
+            let mut worlds = Vec::with_capacity(num);
             let mut params_data: Vec<i32> = Vec::with_capacity(num * 3);
             unsafe {
                 params_data.set_len(num * 3);
@@ -124,17 +132,16 @@ impl PgConnection {
             for (idx, fut) in futs.into_iter().enumerate() {
                 let q = fut.await.unwrap();
                 let id = (rng.generate::<u32>() % 10_000 + 1) as i32;
-                let wid = q[0].get(0);
+                let wid = q.get(0);
                 let randomnumber = id;
 
                 params_data[idx * 2] = wid;
                 params_data[idx * 2 + 1] = randomnumber;
                 params_data[base + idx] = wid;
-                World {
+                worlds.push(World {
                     id: wid,
                     randomnumber,
-                }
-                .to_bytes_mut(&mut worlds);
+                });
             }
 
             ntex::rt::spawn(async move {
@@ -148,7 +155,15 @@ impl PgConnection {
                     .map_err(|e| log::error!("{:?}", e));
             });
 
-            worlds.freeze()
+            let mut buf = BytesMut::with_capacity(48 * num);
+            buf.put_u8(b'[');
+            worlds.iter().for_each(|w| {
+                w.to_bytes_mut(&mut buf);
+                buf.put_u8(b',');
+            });
+            let idx = buf.len() - 1;
+            buf[idx] = b']';
+            buf.freeze()
         }
     }
 
