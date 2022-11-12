@@ -1,6 +1,6 @@
 ﻿namespace Benchmarks.Endpoints;
 
-public class JsonEndpoint : Endpoint<EmptyRequest, object>
+public sealed class JsonEndpoint : Endpoint<EmptyRequest, object>
 {
     public override void Configure()
     {

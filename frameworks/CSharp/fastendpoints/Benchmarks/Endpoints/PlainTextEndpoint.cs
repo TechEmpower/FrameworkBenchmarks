@@ -1,6 +1,6 @@
 ﻿namespace Benchmarks.Endpoints;
 
-public class PlainTextEndpoint : Endpoint<EmptyRequest, EmptyResponse>
+public sealed class PlainTextEndpoint : Endpoint<EmptyRequest, EmptyResponse>
 {
     private static readonly byte[] payload = System.Text.Encoding.UTF8.GetBytes("Hello, World!");
 
