@@ -57,9 +57,7 @@ internal static class DateHeader
                 throw new Exception("date time format failed");
             }
             Debug.Assert(written == dateTimeRLength);
-            var temp = s_headerBytesMaster;
-            s_headerBytesMaster = s_headerBytesScratch;
-            s_headerBytesScratch = temp;
+            (s_headerBytesScratch, s_headerBytesMaster) = (s_headerBytesMaster, s_headerBytesScratch);
         }
     }
 }

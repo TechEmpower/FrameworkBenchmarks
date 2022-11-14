@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace PlatformBenchmarks;
 
@@ -13,15 +14,15 @@ public class Program
     {
         Args = args;
 
-        Console.WriteLine(BenchmarkApplication.ApplicationName);
+        Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.ApplicationName));
 #if !DATABASE
-        Console.WriteLine(BenchmarkApplication.Paths.Plaintext);
-        Console.WriteLine(BenchmarkApplication.Paths.Json);
+        Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Plaintext));
+        Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Json));
 #else
-            Console.WriteLine(BenchmarkApplication.Paths.Fortunes);
-            Console.WriteLine(BenchmarkApplication.Paths.SingleQuery);
-            Console.WriteLine(BenchmarkApplication.Paths.Updates);
-            Console.WriteLine(BenchmarkApplication.Paths.MultipleQueries);
+            Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Fortunes));
+            Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.SingleQuery));
+            Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Updates));
+            Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.MultipleQueries));
 #endif
         DateHeader.SyncDateTimer();
 

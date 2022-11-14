@@ -10,11 +10,11 @@ public partial class BenchmarkApplication
 {
     private readonly static uint _jsonPayloadSize = (uint)JsonSerializer.SerializeToUtf8Bytes(new JsonMessage { message = "Hello, World!" }, SerializerContext.JsonMessage).Length;
 
-    private readonly static AsciiString _jsonPreamble =
-        _http11OK +
-        _headerServer + _crlf +
-        _headerContentTypeJson + _crlf +
-        _headerContentLength + _jsonPayloadSize.ToString();
+    private static ReadOnlySpan<byte> _jsonPreamble =>
+        "HTTP/1.1 200 OK\r\n"u8 +
+        "Server: K"u8 + "\r\n"u8 +
+        "Content-Type: application/json"u8 + "\r\n"u8 +
+        "Content-Length: 27"u8;
 
     private static void Json(ref BufferWriter<WriterAdapter> writer, IBufferWriter<byte> bodyWriter)
     {
