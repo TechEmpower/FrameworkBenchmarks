@@ -14,8 +14,7 @@ namespace PlatformBenchmarks;
 
 public partial class BenchmarkApplication
 {
-    private static ReadOnlySpan<byte> _applicationName => "Kestrel Platform-Level Application"u8;
-    public static ReadOnlySpan<byte> ApplicationName => _applicationName;
+    public static ReadOnlySpan<byte> ApplicationName => "Kestrel Platform-Level Application"u8;
 
     private static ReadOnlySpan<byte> _crlf => "\r\n"u8;
     private static ReadOnlySpan<byte> _eoh => "\r\n\r\n"u8; // End Of Headers

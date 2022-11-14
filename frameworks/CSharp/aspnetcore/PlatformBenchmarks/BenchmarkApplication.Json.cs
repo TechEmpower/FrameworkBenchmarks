@@ -12,8 +12,8 @@ public partial class BenchmarkApplication
 
     private static ReadOnlySpan<byte> _jsonPreamble =>
         "HTTP/1.1 200 OK\r\n"u8 +
-        "Server: K"u8 + "\r\n"u8 +
-        "Content-Type: application/json"u8 + "\r\n"u8 +
+        "Server: K\r\n"u8 +
+        "Content-Type: application/json\r\n"u8 +
         "Content-Length: 27"u8;
 
     private static void Json(ref BufferWriter<WriterAdapter> writer, IBufferWriter<byte> bodyWriter)
