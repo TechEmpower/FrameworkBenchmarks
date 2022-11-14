@@ -12,11 +12,11 @@ namespace PlatformBenchmarks
 {
     public partial class BenchmarkApplication
     {
-        private readonly static AsciiString _fortunesPreamble =
-            _http11OK +
-            _headerServer + _crlf +
-            _headerContentTypeHtml + _crlf +
-            _headerContentLength;
+        private static ReadOnlySpan<byte> _fortunesPreamble =>
+            "HTTP/1.1 200 OK\r\n"u8 +
+            "Server: K"u8 + "\r\n"u8 +
+            "Content-Type: text/html; charset=UTF-8"u8 + "\r\n"u8 +
+            "Content-Length: "u8;
 
         private async Task Fortunes(PipeWriter pipeWriter)
         {
