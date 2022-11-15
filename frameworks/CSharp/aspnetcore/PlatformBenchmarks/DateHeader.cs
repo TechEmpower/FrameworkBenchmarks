@@ -27,7 +27,7 @@ internal static class DateHeader
 
     static DateHeader()
     {
-        var utf8 = Encoding.ASCII.GetBytes("\r\nDate: ").AsSpan();
+        var utf8 = "\r\nDate: "u8;
 
         utf8.CopyTo(s_headerBytesMaster);
         utf8.CopyTo(s_headerBytesScratch);
