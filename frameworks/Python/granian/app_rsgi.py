@@ -108,8 +108,8 @@ async def route_fortunes(scope, proto):
 async def route_updates(scope, proto):
     num_queries = get_num_queries(scope)
     updates = list(zip(
-        sorted(sample(range(1, 10000), num_queries)),
-        sample(range(1, 10000), num_queries)
+        sample(range(1, 10000), num_queries),
+        sorted(sample(range(1, 10000), num_queries))
     ))
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
