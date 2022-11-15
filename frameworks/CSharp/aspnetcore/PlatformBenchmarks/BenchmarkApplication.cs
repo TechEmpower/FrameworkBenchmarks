@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 
 namespace PlatformBenchmarks;
 
-public partial class BenchmarkApplication
+public sealed partial class BenchmarkApplication
 {
     public static ReadOnlySpan<byte> ApplicationName => "Kestrel Platform-Level Application"u8;
 
