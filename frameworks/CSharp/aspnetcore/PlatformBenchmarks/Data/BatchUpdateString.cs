@@ -3,7 +3,7 @@
 
 namespace PlatformBenchmarks;
 
-internal class BatchUpdateString
+internal sealed class BatchUpdateString
 {
     private const int MaxBatch = 500;
 
