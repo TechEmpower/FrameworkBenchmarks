@@ -28,7 +28,7 @@ class Index
 
     public function db($request)
     {
-        $statement = Db::$statement;
+        $statement = Db::$random;
         $statement->execute([\mt_rand(1, 10000)]);
 
         return new Response(200, [
@@ -43,13 +43,13 @@ class Index
 
         $fortune->execute();
 
-        $arr    = $fortune->fetchAll(PDO::FETCH_KEY_PAIR);
+        $arr    = $fortune->fetchAll(\PDO::FETCH_KEY_PAIR);
         $arr[0] = 'Additional fortune added at request time.';
         \asort($arr);
 
         $html = '';
         foreach ($arr as $id => $message) {
-            $message = \htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+            $message = \htmlspecialchars($message, \ENT_QUOTES, 'UTF-8');
             $html .= "<tr><td>$id</td><td>$message</td></tr>";
         }
 
@@ -61,7 +61,7 @@ class Index
 
     public function queries($request, $q = 1)
     {
-        $statement = Db::$statement;
+        $statement = Db::$random;
 
         $query_count = 1;
         if ((int) $q > 1) {
@@ -83,41 +83,28 @@ class Index
     public function updates($request, $q = 1)
     {
         $random = Db::$random;
-        $update = Db::$update;
 
         $query_count = 1;
         if ((int) $q > 1) {
             $query_count = \min($q, 500);
         }
 
-        $arr = [];
+        $worlds = [];
 
         while ($query_count--) {
-            $id = \mt_rand(1, 10000);
-            $random->execute([$id]);
+            $random->execute([\mt_rand(1, 10000)]);
+            $world = $random->fetch();
+            $world['randomNumber'] = \mt_rand(1, 10000);
 
-            //$random->fetchColumn(); //
-            //$world = ['id' => $id, 'randomNumber' => \mt_rand(1, 10000)]; //
-
-            $world = ['id' => $id, 'randomNumber' => $random->fetchColumn()];
-            $update->execute(
-                [$world['randomNumber'] = mt_rand(1, 10000), $id]
-            );
-
-            $arr[] = $world;
+            $worlds[] = $world;
         }
 
-        /*$pdo = Db::$pdo;
-        $pdo->beginTransaction();
-        foreach($arr as $world) {
-             $update->execute([$world['randomNumber'], $world['id']]);
-        }
-        $pdo->commit();*/
+        Db::update($worlds);
 
         return new Response(200, [
             'Content-Type' => 'application/json',
             'Date'         => Date::$date
-        ], \json_encode($arr));
+        ], \json_encode($worlds));
     }
 
 
