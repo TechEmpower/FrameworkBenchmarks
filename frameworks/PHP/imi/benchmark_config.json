@@ -114,7 +114,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "imi-swoole",
+        "display_name": "imi-swoole-pgsql",
         "notes": "",
         "versus": "Swoole"
       },
@@ -136,7 +136,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "imi-swoole-raw",
+        "display_name": "imi-swoole-pgsql-raw",
         "notes": "",
         "versus": "Swoole"
       },
