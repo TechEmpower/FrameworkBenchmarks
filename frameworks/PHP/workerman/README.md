@@ -22,15 +22,15 @@ Using the PHP standard [JSON encoder](http://www.php.net/manual/en/function.json
 ## Test URLs
 
 ### JSON Encoding Test
-http://localhost:8080/json.php
+http://localhost:8080/json
 
 ### Data-Store/Database Mapping Test
-http://localhost:8080/dbraw.php
+http://localhost:8080/db
 
-http://localhost:8080/updateraw.php
+http://localhost:8080/update
 
 ### Variable Query Test
-http://localhost:8080/dbraw.php?queries=5
+http://localhost:8080/query
 
 ### Fortune Test
-http://localhost:8080/fortune.php
+http://localhost:8080/fortunes
