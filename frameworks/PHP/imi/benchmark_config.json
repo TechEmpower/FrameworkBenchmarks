@@ -97,7 +97,7 @@
         "versus": "Workerman"
       },
       "swoole-pgsql": {
-        "dockerfile": "imi-swoole-pgsql.dockerfile",
+        "dockerfile": "imi-swoole.dockerfile",
         "db_url": "/pgDbModel",
         "query_url": "/pgQueryModel?queries=",
         "fortune_url": "/pgFortunes",
@@ -114,12 +114,12 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "imi-swoole-pgsql",
+        "display_name": "imi-swoole",
         "notes": "",
         "versus": "Swoole"
       },
       "swoole-pgsql-raw": {
-        "dockerfile": "imi-swoole-pgsql.dockerfile",
+        "dockerfile": "imi-swoole.dockerfile",
         "db_url": "/pgDbRaw",
         "query_url": "/pgQueryRaw?queries=",
         "fortune_url": "/pgFortunesRaw",
@@ -136,7 +136,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "imi-swoole-pgsql-raw",
+        "display_name": "imi-swoole-raw",
         "notes": "",
         "versus": "Swoole"
       },
