@@ -2,7 +2,7 @@
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use ntex::http::header::{CONTENT_TYPE, SERVER};
-use ntex::{http, time::Seconds, util::PoolId, web};
+use ntex::{http, time::Seconds, util::BytesMut, util::PoolId, web};
 use yarte::Serialize;
 
 mod utils;
@@ -14,7 +14,7 @@ pub struct Message {
 
 #[web::get("/json")]
 async fn json() -> web::HttpResponse {
-    let mut body = Vec::with_capacity(utils::SIZE);
+    let mut body = BytesMut::with_capacity(utils::SIZE);
     Message {
         message: "Hello, World!",
     }
@@ -50,8 +50,8 @@ async fn main() -> std::io::Result<()> {
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", |cfg| {
             cfg.memory_pool(PoolId::P1);
-            PoolId::P1.set_read_params(65535, 8192);
-            PoolId::P1.set_write_params(65535, 8192);
+            PoolId::P1.set_read_params(65535, 1024);
+            PoolId::P1.set_write_params(65535, 1024);
 
             http::HttpService::build()
                 .keep_alive(http::KeepAlive::Os)
