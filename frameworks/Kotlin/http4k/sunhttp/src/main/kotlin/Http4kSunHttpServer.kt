@@ -1,5 +1,5 @@
 import org.http4k.server.SunHttp
 
 fun main() {
-    Http4kBenchmarkServer(PostgresDatabase("tfb-database")).start(SunHttp(9000))
+    Http4kBenchmarkServer(PostgresDatabase()).start(SunHttp(9000))
 }
