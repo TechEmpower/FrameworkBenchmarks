@@ -1,4 +1,4 @@
-FROM php:8.0
+FROM php:8.2-rc-cli
 
 RUN pecl install swoole > /dev/null && \
     docker-php-ext-enable swoole
@@ -20,17 +20,17 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts --quiet
 
 # downgrade to doctrine-dbal 2.12 => due to a bug in version 2.13
 # see https://github.com/doctrine/dbal/issues/4603
-RUN composer require doctrine/orm:2.8.5 -W
-RUN composer require doctrine/dbal:2.12.x -W
+#RUN composer require doctrine/orm:2.8.5 -W
+#RUN composer require doctrine/dbal:2.12.x -W
 
 ADD . /symfony
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer require "k911/swoole-bundle:^0.9" --no-scripts --ignore-platform-reqs --quiet
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer require "k911/swoole-bundle:^0.10" --no-scripts --with-all-dependencies
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --no-dev --classmap-authoritative
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env swoole
 
 # removes hardcoded option `ATTR_STATEMENT_CLASS` conflicting with `ATTR_PERSISTENT`. Hack not needed when upgrading to Doctrine 3
 # see https://github.com/doctrine/dbal/issues/2315
-RUN sed -i '/PDO::ATTR_STATEMENT_CLASS/d' ./vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php
+#RUN sed -i '/PDO::ATTR_STATEMENT_CLASS/d' ./vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php
 
 # Force debug=0 because env is not "prod"
 ENV APP_DEBUG=0
