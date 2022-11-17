@@ -16,7 +16,7 @@ COPY deploy/swoole/php.ini /usr/local/etc/php/
 WORKDIR /symfony
 ADD ./composer.json /symfony/
 RUN mkdir -m 777 -p /symfony/var/cache/swoole /symfony/var/log
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts --quiet
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts
 
 # downgrade to doctrine-dbal 2.12 => due to a bug in version 2.13
 # see https://github.com/doctrine/dbal/issues/4603

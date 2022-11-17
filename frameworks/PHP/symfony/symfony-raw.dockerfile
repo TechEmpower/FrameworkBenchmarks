@@ -18,7 +18,7 @@ RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children =
 WORKDIR /symfony
 ADD ./composer.json /symfony/
 RUN mkdir -m 777 -p /symfony/var/cache/{dev,prod} /symfony/var/log
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts --quiet
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts
 ADD . /symfony
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --no-dev --classmap-authoritative
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env prod
