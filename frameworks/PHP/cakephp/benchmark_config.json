@@ -20,7 +20,7 @@
             "webserver": "nginx",
             "os": "Linux",
             "database_os": "Linux",
-            "display_name": "CakePHP",
+            "display_name": "CakePHP 4.4",
             "notes": "",
             "versus": "php"
         },
