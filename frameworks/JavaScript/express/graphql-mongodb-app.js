@@ -14,7 +14,7 @@ mongoose.connect('mongodb://tfb-database/hello_world').then(() => {
   console.log('Failed connection attempt to Mongo: ', err);
 });
 
-if (cluster.isMaster) {
+if (cluster.isPrimary) {
   // Fork workers.
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
