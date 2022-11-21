@@ -20,6 +20,25 @@
       "notes": "",
       "versus": "aspcore"
     },
+    "aot": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "ASP.NET Core",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "flavor": "NativeAOT",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ASP.NET Core [Platform, NativeAOT]",
+      "notes": "",
+      "versus": "aspcore-aot"
+    },
     "ado-pg": {
       "fortune_url": "/fortunes",
       "db_url": "/db",
@@ -41,6 +60,27 @@
       "notes": "",
       "versus": "aspcore-ado-pg"
     },
+    "aot-ado-pg": {
+      "fortune_url": "/fortunes",
+      "db_url": "/db",
+      "query_url": "/queries/",
+      "cached_query_url": "/cached-worlds/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "ASP.NET Core",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "flavor": "NativeAOT",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ASP.NET Core [Platform, NativeAOT, Pg]",
+      "notes": "",
+      "versus": "aspcore-aot-ado-pg"
+    },
     "ado-pg-up": {
       "update_url": "/updates/",
       "port": 8080,
@@ -58,6 +98,24 @@
       "display_name": "ASP.NET Core [Platform, Pg]",
       "notes": "",
       "versus": "aspcore-ado-pg-up"
+    },
+    "aot-ado-pg-up": {
+      "update_url": "/updates/",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "ASP.NET Core",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "flavor": "NativeAOT",
+      "webserver": "Kestrel",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "ASP.NET Core [Platform, NativeAOT, Pg]",
+      "notes": "",
+      "versus": "aspcore-aot-ado-pg-up"
     },
     "mw": {
       "plaintext_url": "/plaintext",
