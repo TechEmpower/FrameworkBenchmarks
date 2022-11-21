@@ -24,7 +24,7 @@
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "port": 8080,
-      "approach": "Realistic",
+      "approach": "Stripped",
       "classification": "Platform",
       "database": "None",
       "framework": "ASP.NET Core",
@@ -102,7 +102,7 @@
     "aot-ado-pg-up": {
       "update_url": "/updates/",
       "port": 8080,
-      "approach": "Realistic",
+      "approach": "Stripped",
       "classification": "Platform",
       "database": "Postgres",
       "framework": "ASP.NET Core",
