@@ -4,7 +4,14 @@
     <OutputType>Exe</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- Settings applicable to JIT-based deployment -->
     <TieredPGO>true</TieredPGO>
+
+    <!-- Settings applicable to AOT-based deployment -->
+    <StripSymbols>true</StripSymbols>
+    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+    <IlcPgoOptimize>true</IlcPgoOptimize>
   </PropertyGroup>
   
   <PropertyGroup>
