@@ -1,9 +1,9 @@
 package com.test.hserver.bean;
 
 public class World implements Comparable<World> {
-  private int id;
+  private final int id;
 
-  private int randomNumber;
+  private final int randomNumber;
 
   public World(int id, int randomNumber) {
     this.id = id;

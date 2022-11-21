@@ -1,0 +1,41 @@
+{
+    "framework": "socketify.py",
+    "tests": [{
+        "default": {
+            "json_url": "/json",
+            "plaintext_url": "/plaintext",
+            "port": 3000,
+            "approach": "Realistic",
+            "classification": "Micro",
+            "database": "None",
+            "framework": "None",
+            "language": "Python",
+            "flavor": "PyPy3",
+            "orm": "Raw",
+            "platform": "None",
+            "webserver": "socketify.py",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "socketify.py",
+            "notes": ""
+        },
+        "python3": {
+            "json_url": "/json",
+            "plaintext_url": "/plaintext",
+            "port": 3000,
+            "approach": "Realistic",
+            "classification": "Micro",
+            "database": "None",
+            "framework": "None",
+            "language": "Python",
+            "flavor": "Python3",
+            "orm": "Raw",
+            "platform": "None",
+            "webserver": "socketify.py-python3",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "socketify.py-python3",
+            "notes": ""
+        }
+    }]
+}

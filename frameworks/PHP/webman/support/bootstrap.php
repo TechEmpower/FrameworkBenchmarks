@@ -22,10 +22,6 @@ use Webman\Util;
 
 $worker = $worker ?? null;
 
-if ($timezone = config('app.default_timezone')) {
-    date_default_timezone_set($timezone);
-}
-
 set_error_handler(function ($level, $message, $file = '', $line = 0) {
     if (error_reporting() & $level) {
         throw new ErrorException($message, 0, $level, $file, $line);
@@ -48,7 +44,11 @@ if (class_exists('Dotenv\Dotenv') && file_exists(base_path() . '/.env')) {
     }
 }
 
-Support\App::loadAllConfig(['route']);
+Config::clear();
+support\App::loadAllConfig(['route']);
+if ($timezone = config('app.default_timezone')) {
+    date_default_timezone_set($timezone);
+}
 
 foreach (config('autoload.files', []) as $file) {
     include_once $file;

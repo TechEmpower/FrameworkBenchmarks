@@ -15,7 +15,7 @@ Future<void> configureServer(Angel app) async {
   //var executor = await connectToPostgresPool(app.configuration, logger);
 
   app
-    ..container!.registerSingleton<QueryExecutor>(executor)
+    ..container.registerSingleton<QueryExecutor>(executor)
     ..shutdownHooks.add((_) => connection.close());
 //    ..shutdownHooks.add((_) => executor.close());
 }

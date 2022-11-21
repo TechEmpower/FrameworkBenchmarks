@@ -3,5 +3,7 @@ out
 docker
 .idea
 .gradle
+gradle/*
+gradle.properties
 /gradlew
 /gradlew.bat

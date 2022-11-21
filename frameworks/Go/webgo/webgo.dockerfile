@@ -1,14 +1,10 @@
-FROM golang:1.14
+FROM docker.io/golang:1.19
 
-ADD ./ /webgo
+ADD ./src /webgo
 WORKDIR /webgo
 
-RUN mkdir bin
-ENV GOPATH /webgo
-ENV PATH ${GOPATH}/bin:${PATH}
-
-RUN go get github.com/hoisie/web
+RUN go mod download
 
 EXPOSE 8080
 
-CMD go run src/hello/hello.go
+CMD GOAMD64=v3 go run ./hello
