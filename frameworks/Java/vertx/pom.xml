@@ -10,9 +10,9 @@
 		<maven.compiler.target>11</maven.compiler.target>
 		<!-- the main class -->
 		<main.class>vertx.App</main.class>
-		<stack.version>4.1.4</stack.version>
-		<jackson.version>2.13.3</jackson.version>
-		<netty.version>4.1.67.Final</netty.version>
+		<stack.version>4.3.5</stack.version>
+		<jackson.version>2.4.0</jackson.version>
+		<netty.version>4.1.85.Final</netty.version>
 	</properties>
 
 	<dependencies>
