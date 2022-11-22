@@ -49,6 +49,11 @@
 			<classifier>linux-x86_64</classifier>
 		</dependency>
 		<dependency>
+			<groupId>com.github.ben-manes.caffeine</groupId>
+			<artifactId>caffeine</artifactId>
+			<version>3.1.1</version>
+		</dependency>
+		<dependency>
 			<groupId>com.fizzed</groupId>
 			<artifactId>rocker-compiler</artifactId>
 			<version>1.2.1</version>
