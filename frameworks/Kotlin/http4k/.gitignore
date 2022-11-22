@@ -4,6 +4,7 @@ docker
 .idea
 .gradle
 gradle/*
+**/generated/**
 gradle.properties
 /gradlew
 /gradlew.bat
