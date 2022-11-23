@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Libraries\DbRaw;
+
 class Bench extends BaseController
 {
     public function plaintext()
@@ -17,7 +19,7 @@ class Bench extends BaseController
 
     public function db()
     {
-        $worlds = $this->db
+        $worlds = Dbraw::get()
             ->query('SELECT * FROM World WHERE id = ?', array(mt_rand(1, 10000)))
             ->getRow();
 
@@ -30,7 +32,7 @@ class Bench extends BaseController
         $queries = is_numeric($queries) ? min(max($queries, 1), 500) : 1;
 
         for ($i = 0; $i < $queries; ++$i) {
-            $worlds[] = $this->db
+            $worlds[] = Dbraw::get()
                 ->query('SELECT * FROM World WHERE id = ?', array(mt_rand(1, 10000)))
                 ->getRow();
         }
@@ -45,12 +47,12 @@ class Bench extends BaseController
 
         for ($i = 0; $i < $queries; ++$i) {
             $id = mt_rand(1, 10000);
-            $world = $this->db
+            $world = Dbraw::get()
                 ->query('SELECT * FROM World WHERE id = ?', [$id])
                 ->getRow();
             
             $world->randomNumber = mt_rand(1, 10000);
-            $this->db
+            Dbraw::get()
                 ->query('UPDATE World SET randomNumber=? WHERE id=?', [$world->randomNumber, $id]);
             $worlds[] = $world;
         }
@@ -60,7 +62,7 @@ class Bench extends BaseController
 
     public function fortunes()
     {
-        $fortunes = $this->db
+        $fortunes = Dbraw::get()
             ->query('SELECT * FROM Fortune')
             ->getResultArray();
 
