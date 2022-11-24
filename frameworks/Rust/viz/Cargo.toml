@@ -1,0 +1,47 @@
+[package]
+name = "viz"
+version = "0.1.0"
+edition = "2021"
+authors = ["Fangdun Tsai <cfddream@gmail.com>"]
+
+[[bin]]
+name = "viz"
+path = "src/main.rs"
+
+[[bin]]
+name = "viz-pg"
+path = "src/main_pg.rs"
+required-features = ["tokio-postgres", "yarte"]
+
+[[bin]]
+name = "viz-sqlx"
+path = "src/main_sqlx.rs"
+required-features = ["sqlx", "markup", "v_htmlescape"]
+
+[dependencies]
+viz = "0.4.3"
+hyper = "0.14"
+atoi = "2.0.0"
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1.21", features = ["macros", "rt-multi-thread"] }
+nanorand = "0.7"
+thiserror = "1.0"
+futures-util = "0.3.24"
+stretto = { version = "0.7", features = ["async"] }
+
+tokio-postgres = { version = "0.7.7", optional = true }
+sqlx = { version = "0.6.2", features = [
+  "postgres",
+  "macros",
+  "runtime-tokio-native-tls",
+], optional = true }
+# diesel = { version = "1.4.8", features = ["postgres"], optional = true }
+
+yarte = { version = "0.15", features = ["bytes-buf", "json"], optional = true }
+markup = { version = "0.13.1", optional = true }
+v_htmlescape = { version = "0.15.7", optional = true }
+
+[profile.release]
+lto = true
+opt-level = 3
+codegen-units = 1
