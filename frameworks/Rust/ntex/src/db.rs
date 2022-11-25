@@ -157,16 +157,13 @@ impl PgConnection {
                 });
             }
 
-            ntex::rt::spawn(async move {
-                let mut params: Vec<&dyn ToSql> = Vec::with_capacity(num as usize * 3);
-                for i in params_data.iter() {
-                    params.push(i);
-                }
-                let _ = cl
-                    .query(&st, &params)
-                    .await
-                    .map_err(|e| log::error!("{:?}", e));
-            });
+            let mut params: Vec<&dyn ToSql> = Vec::with_capacity(num as usize * 3);
+            for i in params_data.iter() {
+                params.push(i);
+            }
+            let _ = cl
+                .query(&st, &params)
+                .await;
 
             let mut body = buf.borrow_mut();
             utils::reserve(&mut body);
