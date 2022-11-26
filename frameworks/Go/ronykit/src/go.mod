@@ -3,9 +3,9 @@ module ronykit/app
 go 1.19
 
 require (
-	github.com/clubpay/ronykit/kit v0.9.7
-	github.com/clubpay/ronykit/std/gateways/fasthttp v0.0.0-20221109153144-bf5c74dcdd63
-	github.com/clubpay/ronykit/std/gateways/silverhttp v0.0.0-20221109153144-bf5c74dcdd63
+	github.com/clubpay/ronykit/kit v0.9.12
+	github.com/clubpay/ronykit/std/gateways/fasthttp v0.9.12
+	github.com/clubpay/ronykit/std/gateways/silverhttp v0.9.12
 )
 
 require (
