@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
    <PropertyGroup>
-      <TargetFramework>net6.0</TargetFramework>
+      <TargetFramework>net7.0</TargetFramework>
       <OutputType>Exe</OutputType>
       <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
@@ -17,9 +17,9 @@
    </PropertyGroup>
 
    <ItemGroup>
-      <PackageReference Include="Npgsql" Version="6.0.5" />
-      <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
-      <PackageReference Include="System.Data.Odbc" Version="6.0.0" />
+      <PackageReference Include="Npgsql" Version="7.0.0" />
+      <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+      <PackageReference Include="System.Data.Odbc" Version="7.0.0" />
       <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-*" />
    </ItemGroup>
 
