@@ -10,7 +10,6 @@
     <!-- Normal .NET 7 -->
     <PublishAot>true</PublishAot>
     <SelfContained>true</SelfContained>
-    <TrimmerDefaultAction>link</TrimmerDefaultAction>
     <InvariantGlobalization>true</InvariantGlobalization>
     <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
     <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
@@ -44,7 +43,6 @@
 
   <ItemGroup>
     <PackageReference Include="System.Data.Odbc" Version="7.0.0" />
-    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-*" />
   </ItemGroup>
 
   <PropertyGroup>

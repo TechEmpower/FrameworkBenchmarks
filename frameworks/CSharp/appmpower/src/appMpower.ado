@@ -8,7 +8,6 @@
       <!-- Normal .NET 7 -->
       <PublishAot>true</PublishAot>
       <SelfContained>true</SelfContained>
-      <TrimmerDefaultAction>link</TrimmerDefaultAction>
       <InvariantGlobalization>true</InvariantGlobalization>
       <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
       <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
@@ -20,9 +19,6 @@
       <IlcTrimMetadata>true</IlcTrimMetadata>
       <IlcInvariantGlobalization>true</IlcInvariantGlobalization>
       <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
-
-      <!-- Still works from the experimental AOT version, but high risk -->
-      <IlcDisableReflection>true</IlcDisableReflection>
 
       <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
 
@@ -43,7 +39,6 @@
       <PackageReference Include="Npgsql" Version="7.0.0" />
       <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
       <PackageReference Include="System.Data.Odbc" Version="7.0.0" />
-      <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-*" />
    </ItemGroup>
 
    <PropertyGroup>
