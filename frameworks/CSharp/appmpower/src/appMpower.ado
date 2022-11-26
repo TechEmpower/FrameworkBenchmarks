@@ -5,15 +5,38 @@
       <OutputType>Exe</OutputType>
       <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
+      <!-- Normal .NET 7 -->
+      <PublishAot>true</PublishAot>
+      <SelfContained>true</SelfContained>
       <TrimmerDefaultAction>link</TrimmerDefaultAction>
+      <InvariantGlobalization>true</InvariantGlobalization>
+      <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
       <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
-      <IlcPgoOptimize>true</IlcPgoOptimize>
-      <IlcTrimMetadata>true</IlcTrimMetadata>
+      <DebugType>none</DebugType>
+      <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
 
+      <!-- Only some may work - From the experimental AOT version -->
+      <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+      <IlcTrimMetadata>true</IlcTrimMetadata>
+      <IlcInvariantGlobalization>true</IlcInvariantGlobalization>
+      <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+
+      <!-- Still works from the experimental AOT version, but high risk -->
+      <IlcDisableReflection>true</IlcDisableReflection>
+
+      <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
+
+      <!--
+      <TrimMode>link</TrimMode>
+      -->
+
+      <!-- Opt out of the "easy mode" of the CoreRT compiler (http://aka.ms/OptimizeCoreRT) -->
+      <IlcPgoOptimize>true</IlcPgoOptimize>
+
+      <!-- This benchmark is marked Stripped, so we might as well do this: -->
       <UseSystemResourceKeys>true</UseSystemResourceKeys>
       <EventSourceSupport>false</EventSourceSupport>
       <DebuggerSupport>false</DebuggerSupport>
-      <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
    </PropertyGroup>
 
    <ItemGroup>
