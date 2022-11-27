@@ -1,12 +1,10 @@
 buildscript {
-    ext.kotlin_version = "1.7.20"
-    ext.http4k_version = "4.33.3.0"
+    ext.kotlin_version = "1.7.21"
+    ext.http4k_version = "4.34.1.0"
 
     repositories {
         mavenCentral()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        gradlePluginPortal()
     }
 
     dependencies {
