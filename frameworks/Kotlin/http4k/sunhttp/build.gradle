@@ -1,5 +1,5 @@
 dependencies {
-    api project(":core")
+    api(project(":core-jdbc"))
 }
 
 apply plugin: 'application'
@@ -7,7 +7,7 @@ mainClassName = "Http4kSunHttpServerKt"
 apply plugin: 'com.github.johnrengelman.shadow'
 
 shadowJar {
-    baseName = "http4k-$project.name-benchmark"
+    baseName = "http4k-benchmark"
     classifier = null
     version = null
     mergeServiceFiles()

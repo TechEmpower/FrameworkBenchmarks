@@ -4,11 +4,10 @@
 -define(world_max_records, 10000).
 
 init() ->
-    random:seed(erlang:now()),
     emysql:prepare(find_random, <<"SELECT id, randomNumber FROM World WHERE id = ? LIMIT 1;">>),
     emysql:prepare(update_random, <<"UPDATE World SET randomNumber = ? WHERE id = ? LIMIT 1;">>).
 
-random_id() -> random:uniform(?world_max_records).
+random_id() -> rand:uniform(?world_max_records).
 
 random_ids(Times) -> random_ids(Times, []).
 
@@ -20,7 +19,7 @@ find(Id) ->
     {Id, RandomNumber}.
 
 update(Id) ->
-    NewRandomNumber = random:uniform(10000),
+    NewRandomNumber = rand:uniform(10000),
     emysql:execute(db_pool, update_random, [NewRandomNumber, Id]),
     {Id, NewRandomNumber}.
 

@@ -1,5 +1,5 @@
 import org.http4k.server.KtorCIO
 
 fun main() {
-    Http4kBenchmarkServer(PostgresDatabase("tfb-database")).start(KtorCIO(9000))
+    Http4kBenchmarkServer(PostgresDatabase()).start(KtorCIO(9000))
 }
