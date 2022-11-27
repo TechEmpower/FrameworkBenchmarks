@@ -3,36 +3,36 @@ package main
 import (
     "net/http"
 
-    "github.com/clubpay/ronykit"
-    "github.com/clubpay/ronykit/desc"
-    "github.com/clubpay/ronykit/std/gateway/fasthttp"
+    "github.com/clubpay/ronykit/kit"
+    "github.com/clubpay/ronykit/kit/desc"
+    "github.com/clubpay/ronykit/std/gateways/fasthttp"
 )
 
 var serviceDesc = desc.NewService("RonyKIT_Bench").
         AddContract(
             desc.NewContract().
                 Selector(fasthttp.REST(http.MethodGet, "/json")).
-                SetInput(&EmptyRequest{}).
+                SetInput(kit.RawMessage{}).
                 SetOutput(&JSONMessage{}).
                 SetHandler(jsonHandler),
         ).
         AddContract(
             desc.NewContract().
                 Selector(fasthttp.REST(http.MethodGet, "/plaintext")).
-                SetInput(&EmptyRequest{}).
-                SetOutput(ronykit.RawMessage{}).
+                SetInput(kit.RawMessage{}).
+                SetOutput(kit.RawMessage{}).
                 SetHandler(plaintextHandler),
         )
 
-func jsonHandler(ctx *ronykit.Context) {
+func jsonHandler(ctx *kit.Context) {
     ctx.Out().
         SetHdr("Content-Type", "application/json; charset=utf-8").
         SetMsg(&JSONMessage{Message: "Hello, World!"}).
         Send()
 }
 
-func plaintextHandler(ctx *ronykit.Context) {
+func plaintextHandler(ctx *kit.Context) {
     ctx.Out().
-        SetMsg(ronykit.RawMessage("Hello, World!")).
+        SetMsg(kit.RawMessage("Hello, World!")).
         Send()
 }

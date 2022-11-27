@@ -17,7 +17,7 @@ COPY deploy/conf/cli-php.ini /etc/php/8.1/cli/php.ini
 ADD ./ /yii2
 WORKDIR /yii2
 
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 RUN sed -i 's|(new  yii\\web\\Application|//(new  yii\\web\\Application|' app/index.php
 RUN sed -i 's|(headers_sent($file, $line))|(headers_sent())|g' vendor/yiisoft/yii2/web/Response.php

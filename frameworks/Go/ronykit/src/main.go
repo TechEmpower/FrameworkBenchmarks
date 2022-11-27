@@ -4,19 +4,19 @@ import (
     "context"
     "os"
 
-    "github.com/clubpay/ronykit"
-    "github.com/clubpay/ronykit/std/gateway/fasthttp"
+    "github.com/clubpay/ronykit/kit"
+    "github.com/clubpay/ronykit/std/gateways/fasthttp"
 )
 
 func main() {
-    defer ronykit.NewServer(
-        ronykit.RegisterBundle(
+    defer kit.NewServer(
+        kit.RegisterGateway(
             fasthttp.MustNew(
                 fasthttp.Listen(":8080"),
                 fasthttp.WithServerName("ronykit"),
             ),
         ),
-        ronykit.RegisterService(serviceDesc.Generate()),
+        kit.RegisterService(serviceDesc.Generate()),
     ).
         Start(context.Background()).
         PrintRoutes(os.Stdout).
