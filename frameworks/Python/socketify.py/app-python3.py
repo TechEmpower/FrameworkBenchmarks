@@ -20,7 +20,7 @@ def applicationjson(res, req):
 
 
 def run_app():
-    app = App(request_response_factory_max_itens=0)
+    app = App(request_response_factory_max_itens=200_000)
     
     app.get("/", plaintext)
     app.get("/json", applicationjson)
