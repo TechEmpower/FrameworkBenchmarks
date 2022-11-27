@@ -15,7 +15,7 @@ public class ServerUtil {
      * @return a new Javalin server with the {@code Server} header enabled.
      */
     public static Server createServer() {
-        Server server = new Server(ConcurrencyUtil.INSTANCE.jettyThreadPool("JettyServerThreadPool"));
+        Server server = new Server(ConcurrencyUtil.jettyThreadPool("JettyServerThreadPool", 8, 250));
         ServerConnector connector;
 
         //The http configuration object
