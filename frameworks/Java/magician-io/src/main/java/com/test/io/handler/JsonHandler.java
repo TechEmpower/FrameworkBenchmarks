@@ -1,6 +1,6 @@
 package com.test.io.handler;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.test.io.vo.MessageVO;
 import io.magician.application.request.MagicianRequest;
 import io.magician.application.request.MagicianResponse;
@@ -28,7 +28,7 @@ public class JsonHandler implements HttpBaseHandler {
             magicianResponse
                     .setResponseHeader("Server","magician")
                     .setResponseHeader("Date", str)
-                    .sendJson(JSON.toJSONString(messageVO));
+                    .sendJson(JSONObject.toJSONString(messageVO));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

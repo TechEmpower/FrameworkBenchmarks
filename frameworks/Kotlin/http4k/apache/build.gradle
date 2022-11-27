@@ -1,6 +1,6 @@
 dependencies {
-    api project(":core")
-    api "org.http4k:http4k-server-apache:$http4k_version"
+    api(project(":core-jdbc"))
+    api("org.http4k:http4k-server-apache:$http4k_version")
 }
 
 apply plugin: 'application'
@@ -8,7 +8,7 @@ mainClassName = "Http4kApacheServerKt"
 apply plugin: 'com.github.johnrengelman.shadow'
 
 shadowJar {
-    baseName = "http4k-$project.name-benchmark"
+    baseName = "http4k-benchmark"
     classifier = null
     version = null
     mergeServiceFiles()

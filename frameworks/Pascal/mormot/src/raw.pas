@@ -7,10 +7,6 @@ See https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-
 
 {$I mormot.defines.inc}
 
-{.$define USE_SQLITE3}
-// may be defined to use a SQLite3 database instead of external PostgresSQL DB
-// - note: /rawupdates and /rawqueries are PostgresSQL specific and will fail
-
 {.$define WITH_LOGS}
 // logging is fine for debugging, less for benchmarking ;)
 
@@ -36,9 +32,6 @@ uses
   mormot.db.core,
   mormot.db.raw.sqlite3,
   mormot.db.raw.sqlite3.static,
-  {$ifdef USE_SQLITE3}
-  mormot.db.sql.sqlite3,
-  {$endif USE_SQLITE3}
   mormot.rest.sqlite3,
   mormot.net.http,
   mormot.net.server,
@@ -95,9 +88,6 @@ type
     function getQueriesParamValue(ctxt: THttpServerRequestAbstract;
       const search: RawUtf8 = 'QUERIES='): integer;
     procedure getRandomWorlds(cnt: PtrInt; out res: TWorlds);
-    {$ifdef USE_SQLITE3}
-    procedure GenerateDB;
-    {$endif USE_SQLITE3}
   public
     constructor Create(threadCount: integer);
     destructor Destroy; override;
@@ -147,14 +137,8 @@ const
 constructor TRawAsyncServer.Create(threadCount: integer);
 begin
   inherited Create;
-  {$ifdef USE_SQLITE3}
-  fDbPool := TSqlDBSQLite3ConnectionProperties.Create(
-      SQLITE_MEMORY_DATABASE_NAME, '', '', '');
-  fDbPool.StatementCacheReplicates := threadcount; // shared SQlite3 connection
-  {$else}
   fDbPool := TSqlDBPostgresConnectionProperties.Create(
     'tfb-database:5432', 'hello_world', 'benchmarkdbuser', 'benchmarkdbpass');
-  {$endif USE_SQLITE3}
   fModel := TOrmModel.Create([TOrmWorld, TOrmFortune, TOrmCachedWorld]);
   OrmMapExternal(fModel, [TOrmWorld, TOrmFortune], fDbPool);
   // CachedWorld table doesn't exists in DB, but should as read in requirements.
@@ -162,11 +146,7 @@ begin
   OrmMapExternal(fModel, TOrmCachedWorld, fDbPool, 'world');
   fStore := TRestServerDB.Create(fModel, SQLITE_MEMORY_DATABASE_NAME);
   fStore.NoAjaxJson := true;
-  {$ifdef USE_SQLITE3}
-  GenerateDB;
-  {$else}
   fStore.Server.CreateMissingTables; // create SQlite3 virtual tables
-  {$endif USE_SQLITE3}
   if fStore.Server.Cache.SetCache(TOrmCachedWorld) then
     fStore.Server.Cache.FillFromQuery(TOrmCachedWorld, '', []);
   fTemplate := TSynMustache.Parse(FORTUNES_TPL);
@@ -236,58 +216,6 @@ function RandomWorld: integer; inline;
 begin
   result := Random32(WORLD_COUNT) + 1;
 end;
-
-{$ifdef USE_SQLITE3}
-
-const
-  _FORTUNES: array[1..12] of RawUtf8 = (
-  'fortune: No such file or directory',
-  'A computer scientist is someone who fixes things that aren''t broken.',
-  'After enough decimal places, nobody gives a damn.',
-  'A bad random number generator: 1, 1, 1, 1, 1, 4.33e+67, 1, 1, 1',
-  'A computer program does what you tell it to do, not what you want it to do.',
-  'Emacs is a nice operating system, but I prefer UNIX. — Tom Christaensen',
-  'Any program that runs right is obsolete.',
-  'A list is only as strong as its weakest link. — Donald Knuth',
-  'Feature: A bug with seniority.',
-  'Computers make very fast, very accurate mistakes.',
-  '<script>alert("This should not be displayed in a browser alert box.");</script>',
-  'フレームワークのベンチマーク');
-
-procedure TRawAsyncServer.GenerateDB;
-var
-  i: PtrInt;
-  b: TRestBatch;
-  w: TOrmWorld;
-  f: TOrmFortune;
-begin
-  fStore.Server.CreateMissingTables;
-  w := TOrmWorld.Create;
-  f := TOrmFortune.Create;
-  b := TRestBatch.Create(fStore.Orm, nil);
-  try
-    for i := 1 to WORLD_COUNT do
-    begin
-      w.IDValue := i;
-      w.RandomNumber := RandomWorld;
-      b.Add(w, true, true);
-    end;
-    for i := low(_FORTUNES) to high(_FORTUNES) do
-    begin
-      f.IDValue := i;
-      f.Message := _FORTUNES[i];
-      b.Add(f, true, true);
-    end;
-    if fStore.Orm.BatchSend(b) <> HTTP_SUCCESS then
-      raise EOrmBatchException.Create('GenerateDB failed');
-  finally
-    b.Free;
-    f.Free;
-    w.Free;
-  end;
-end;
-
-{$endif USE_SQLITE3}
 
 function TRawAsyncServer.json(ctxt: THttpServerRequestAbstract): cardinal;
 var
@@ -361,11 +289,15 @@ procedure TRawAsyncServer.getRandomWorlds(cnt: PtrInt; out res: TWorlds);
 var
   conn: TSqlDBConnection;
   stmt: ISQLDBStatement;
+  {$ifndef NO_PIPELINING}
+  pStmt: TSqlDBPostgresStatement;
+  {$endif NO_PIPELINING}
   i: PtrInt;
 begin
   SetLength(res{%H-}, cnt);
   conn := fDbPool.ThreadSafeConnection;
   stmt := conn.NewStatementPrepared(WORLD_READ_SQL, true, true);
+  {$ifdef NO_PIPELINING}
   for i := 0 to cnt - 1 do
   begin
     stmt.Bind(1, RandomWorld);
@@ -375,6 +307,26 @@ begin
     res[i].id := stmt.ColumnInt(0);
     res[i].randomNumber := stmt.ColumnInt(1);
   end;
+  {$else}
+  // specific code to use PostgresSQL pipelining mode
+  TSqlDBPostgresConnection(conn).EnterPipelineMode;
+  pStmt := (stmt as TSqlDBPostgresStatement);
+  for i := 0 to cnt - 1 do
+  begin
+    stmt.Bind(1, RandomWorld);
+    pStmt.SendPipelinePrepared;
+  end;
+  TSqlDBPostgresConnection(conn).PipelineSync;
+  for i := 0 to cnt - 1 do
+  begin
+    pStmt.GetPipelineResult(i = 0);
+    if not stmt.Step then
+      exit;
+    res[i].id := stmt.ColumnInt(0);
+    res[i].randomNumber := stmt.ColumnInt(1);
+  end;
+  TSqlDBPostgresConnection(conn).ExitPipelineMode(true);
+  {$endif NO_PIPELINING}
 end;
 
 function TRawAsyncServer.rawqueries(ctxt: THttpServerRequestAbstract): cardinal;
@@ -558,9 +510,9 @@ begin
   TSynLog.Family.HighResolutionTimestamp := true;
   TSynLog.Family.AutoFlushTimeOut := 1;
   {$else}
-  {$ifdef USE_SQLITE3}
+  {$ifdef NO_PIPELINING}
   TSynLog.Family.Level := LOG_STACKTRACE; // minimal debug logs on fatal errors
-  {$endif USE_SQLITE3}
+  {$endif NO_PIPELINING}
   {$endif WITH_LOGS}
   TSynLog.Family.PerThreadLog := ptIdentifiedInOneFile;
 
@@ -571,7 +523,7 @@ begin
 
   if (ParamCount <> 1) or
      not TryStrToInt(ParamStr(1), threads) then
-    threads := SystemInfo.dwNumberOfProcessors * 4;
+    threads := SystemInfo.dwNumberOfProcessors * 5;
   if threads < 16 then
     threads := 16
   else if threads > 256 then
@@ -584,13 +536,13 @@ begin
     writeln(rawServer.fHttpServer.ClassName, ' running on localhost:',
       rawServer.fHttpServer.SockPort, '; num thread=', threads, ' db=',
       rawServer.fDbPool.DbmsEngineName, #10);
-    {$ifdef USE_SQLITE3}
+    {$ifdef NO_PIPELINING}
     writeln('Press [Enter] to terminate'#10);
     readln;
     {$else}
     writeln('Press Ctrl+C or use SIGTERM to terminate'#10);
-    FpPause;
-    {$endif USE_SQLITE3}
+    FpPause; // mandatory for the actual benchmark tool
+    {$endif NO_PIPELINING}
     //TSynLog.Family.Level := LOG_VERBOSE; // enable shutdown logs for debug
     writeln(ObjectToJsonDebug(rawServer.fHttpServer, [woDontStoreVoid, woHumanReadable]));
     {$ifdef FPC_X64MM}
@@ -601,3 +553,4 @@ begin
   end;
 
 end.
+
