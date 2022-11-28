@@ -2,8 +2,6 @@ package hello.repository;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,7 +13,6 @@ import hello.model.World;
 @Repository
 @Profile("jdbc")
 public class JdbcDbRepository implements DbRepository {
-	private final Logger log = LoggerFactory.getLogger(getClass());
 	private final JdbcTemplate jdbcTemplate;
 
 	public JdbcDbRepository(JdbcTemplate jdbcTemplate) {
@@ -24,7 +21,6 @@ public class JdbcDbRepository implements DbRepository {
 
 	@Override
 	public World getWorld(int id) {
-		log.debug("getWorld({})", id);
 		try {
 			return jdbcTemplate.queryForObject("SELECT * FROM world WHERE id = ?",
 					(rs, rn) -> new World(rs.getInt("id"), rs.getInt("randomnumber")), id);
