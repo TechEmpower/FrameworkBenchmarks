@@ -54,7 +54,7 @@ module.exports = databaseLayer => ({
   }
 });
 
-// fater then localeCompare
+// faster than localeCompare
 function compare(a, b) {
   if(a.message < b.message){
     return -1;
