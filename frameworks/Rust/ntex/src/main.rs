@@ -21,10 +21,10 @@ async fn json() -> web::HttpResponse {
     .to_bytes_mut(&mut body);
 
     let mut response = web::HttpResponse::with_body(http::StatusCode::OK, body.into());
-    response.headers_mut().append(SERVER, utils::HDR_SERVER);
+    response.headers_mut().insert(SERVER, utils::HDR_SERVER);
     response
         .headers_mut()
-        .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+        .insert(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
     response
 }
 
@@ -34,10 +34,10 @@ async fn plaintext() -> web::HttpResponse {
         http::StatusCode::OK,
         http::body::Body::Bytes(utils::BODY_PLAIN_TEXT),
     );
-    response.headers_mut().append(SERVER, utils::HDR_SERVER);
+    response.headers_mut().insert(SERVER, utils::HDR_SERVER);
     response
         .headers_mut()
-        .append(CONTENT_TYPE, utils::HDR_TEXT_CONTENT_TYPE);
+        .insert(CONTENT_TYPE, utils::HDR_TEXT_CONTENT_TYPE);
     response
 }
 

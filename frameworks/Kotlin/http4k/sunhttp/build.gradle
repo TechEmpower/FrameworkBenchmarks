@@ -1,5 +1,5 @@
 dependencies {
-    api(project(":core-jdbc"))
+    api(project(":core-pgclient"))
 }
 
 apply plugin: 'application'

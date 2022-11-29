@@ -30,16 +30,16 @@ impl Service<Request> for App {
         match req.path() {
             "/db" => Box::pin(self.0.get_world().map(|body| {
                 let mut res = HttpResponse::with_body(StatusCode::OK, body.into());
-                res.headers_mut().append(SERVER, utils::HDR_SERVER);
+                res.headers_mut().insert(SERVER, utils::HDR_SERVER);
                 res.headers_mut()
-                    .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+                    .insert(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
                 Ok(res)
             })),
             "/fortunes" => Box::pin(self.0.tell_fortune().map(|body| {
                 let mut res = HttpResponse::with_body(StatusCode::OK, body.into());
-                res.headers_mut().append(SERVER, utils::HDR_SERVER);
+                res.headers_mut().insert(SERVER, utils::HDR_SERVER);
                 res.headers_mut()
-                    .append(CONTENT_TYPE, utils::HDR_HTML_CONTENT_TYPE);
+                    .insert(CONTENT_TYPE, utils::HDR_HTML_CONTENT_TYPE);
                 Ok(res)
             })),
             "/query" => Box::pin(
@@ -47,9 +47,9 @@ impl Service<Request> for App {
                     .get_worlds(utils::get_query_param(req.uri().query()))
                     .map(|worlds| {
                         let mut res = HttpResponse::with_body(StatusCode::OK, worlds.into());
-                        res.headers_mut().append(SERVER, utils::HDR_SERVER);
+                        res.headers_mut().insert(SERVER, utils::HDR_SERVER);
                         res.headers_mut()
-                            .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+                            .insert(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
                         Ok(res)
                     }),
             ),
@@ -58,9 +58,9 @@ impl Service<Request> for App {
                     .update(utils::get_query_param(req.uri().query()))
                     .map(|worlds| {
                         let mut res = HttpResponse::with_body(StatusCode::OK, worlds.into());
-                        res.headers_mut().append(SERVER, utils::HDR_SERVER);
+                        res.headers_mut().insert(SERVER, utils::HDR_SERVER);
                         res.headers_mut()
-                            .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+                            .insert(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
                         Ok(res)
                     }),
             ),

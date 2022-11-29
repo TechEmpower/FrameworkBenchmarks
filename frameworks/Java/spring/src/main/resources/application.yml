@@ -41,3 +41,4 @@ spring:
     active: jdbc
 
 server.server-header: Spring
+server.servlet.encoding.force: true

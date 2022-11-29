@@ -36,10 +36,8 @@ There are two implementations :
 
 ## Versions
 
-* [OpenJDK Runtime Environment Temurin-11.0.16+8 (build 11.0.16+8)](https://adoptium.net/es/temurin/releases/?version=11)
-* [Spring boot 2.6.9](https://spring.io/projects/spring-boot)
-
-The change to use OpenJDK Temurin is inspired in [whichjdk](https://whichjdk.com/) page advice.
+* [OpenJDK Runtime Environment Temurin-17](https://adoptium.net/es/temurin/releases/?version=17)
+* [Spring-Boot 3.0.0](https://spring.io/projects/spring-boot)
 
 ## Test URLs
 

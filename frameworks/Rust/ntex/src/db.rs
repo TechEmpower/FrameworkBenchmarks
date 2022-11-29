@@ -1,4 +1,5 @@
-use std::{borrow::Cow, fmt::Write as FmtWrite};
+#![allow(clippy::uninit_vec)]
+use std::{borrow::Cow, cell::RefCell, fmt::Write as FmtWrite, rc::Rc};
 
 use futures::{Future, FutureExt};
 use nanorand::{Rng, WyRand};
@@ -7,6 +8,8 @@ use smallvec::SmallVec;
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, Statement};
 use yarte::{ywrite_html, Serialize};
+
+use super::utils;
 
 #[derive(Copy, Clone, Serialize, Debug)]
 pub struct World {
@@ -27,6 +30,7 @@ pub struct PgConnection {
     world: Statement,
     rng: WyRand,
     updates: Vec<Statement>,
+    buf: Rc<RefCell<BytesMut>>,
 }
 
 impl PgConnection {
@@ -63,36 +67,42 @@ impl PgConnection {
             world,
             updates,
             rng: WyRand::new(),
+            buf: Rc::new(RefCell::new(BytesMut::with_capacity(65535))),
         }
     }
 }
 
 impl PgConnection {
     pub fn get_world(&self) -> impl Future<Output = Bytes> {
+        let buf = self.buf.clone();
         let random_id = (self.rng.clone().generate::<u32>() % 10_000 + 1) as i32;
-        self.cl.query_one(&self.world, &[&random_id]).map(|row| {
-            let row = row.unwrap();
-            let mut body = BytesMut::with_capacity(64);
-            World {
-                id: row.get(0),
-                randomnumber: row.get(1),
-            }
-            .to_bytes_mut(&mut body);
-            body.freeze()
-        })
+        self.cl
+            .query_one(&self.world, &[&random_id])
+            .map(move |row| {
+                let row = row.unwrap();
+                let mut body = buf.borrow_mut();
+                utils::reserve(&mut body);
+                World {
+                    id: row.get(0),
+                    randomnumber: row.get(1),
+                }
+                .to_bytes_mut(&mut *body);
+                body.split().freeze()
+            })
     }
 
     pub fn get_worlds(&self, num: usize) -> impl Future<Output = Bytes> {
-        let mut futs = Vec::with_capacity(num);
+        let buf = self.buf.clone();
         let mut rng = self.rng.clone();
-        for _ in 0..num {
+        let mut queries = SmallVec::<[_; 32]>::new();
+        (0..num).for_each(|_| {
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
-            futs.push(self.cl.query_one(&self.world, &[&w_id]));
-        }
+            queries.push(self.cl.query_one(&self.world, &[&w_id]));
+        });
 
         async move {
-            let mut worlds = Vec::with_capacity(num);
-            for fut in futs {
+            let mut worlds = SmallVec::<[_; 32]>::new();
+            for fut in queries {
                 let row = fut.await.unwrap();
                 worlds.push(World {
                     id: row.get(0),
@@ -100,36 +110,39 @@ impl PgConnection {
                 })
             }
 
-            let mut buf = BytesMut::with_capacity(48 * num);
-            buf.put_u8(b'[');
+            let mut body = buf.borrow_mut();
+            utils::reserve(&mut body);
+
+            body.put_u8(b'[');
             worlds.iter().for_each(|w| {
-                w.to_bytes_mut(&mut buf);
-                buf.put_u8(b',');
+                w.to_bytes_mut(&mut *body);
+                body.put_u8(b',');
             });
-            let idx = buf.len() - 1;
-            buf[idx] = b']';
-            buf.freeze()
+            let idx = body.len() - 1;
+            body[idx] = b']';
+            body.split().freeze()
         }
     }
 
     pub fn update(&self, num: usize) -> impl Future<Output = Bytes> {
-        let mut futs = Vec::with_capacity(num);
+        let buf = self.buf.clone();
         let mut rng = self.rng.clone();
-        for _ in 0..num {
+        let mut queries = SmallVec::<[_; 32]>::new();
+        (0..num).for_each(|_| {
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
-            futs.push(self.cl.query_one(&self.world, &[&w_id]));
-        }
+            queries.push(self.cl.query_one(&self.world, &[&w_id]));
+        });
 
         let cl = self.cl.clone();
         let st = self.updates[num - 1].clone();
         let base = num * 2;
         async move {
-            let mut worlds = Vec::with_capacity(num);
+            let mut worlds = SmallVec::<[_; 32]>::new();
             let mut params_data: Vec<i32> = Vec::with_capacity(num * 3);
             unsafe {
                 params_data.set_len(num * 3);
             }
-            for (idx, fut) in futs.into_iter().enumerate() {
+            for (idx, fut) in queries.into_iter().enumerate() {
                 let q = fut.await.unwrap();
                 let id = (rng.generate::<u32>() % 10_000 + 1) as i32;
                 let wid = q.get(0);
@@ -144,30 +157,29 @@ impl PgConnection {
                 });
             }
 
-            ntex::rt::spawn(async move {
-                let mut params: Vec<&dyn ToSql> = Vec::with_capacity(num as usize * 3);
-                for i in params_data.iter() {
-                    params.push(i);
-                }
-                let _ = cl
-                    .query(&st, &params)
-                    .await
-                    .map_err(|e| log::error!("{:?}", e));
-            });
+            let mut params: Vec<&dyn ToSql> = Vec::with_capacity(num as usize * 3);
+            for i in params_data.iter() {
+                params.push(i);
+            }
+            let _ = cl
+                .query(&st, &params)
+                .await;
 
-            let mut buf = BytesMut::with_capacity(48 * num);
-            buf.put_u8(b'[');
+            let mut body = buf.borrow_mut();
+            utils::reserve(&mut body);
+            body.put_u8(b'[');
             worlds.iter().for_each(|w| {
-                w.to_bytes_mut(&mut buf);
-                buf.put_u8(b',');
+                w.to_bytes_mut(&mut *body);
+                body.put_u8(b',');
             });
-            let idx = buf.len() - 1;
-            buf[idx] = b']';
-            buf.freeze()
+            let idx = body.len() - 1;
+            body[idx] = b']';
+            body.split().freeze()
         }
     }
 
     pub fn tell_fortune(&self) -> impl Future<Output = Bytes> {
+        let buf = self.buf.clone();
         let fut = self.cl.query_raw(&self.fortune, &[]);
 
         async move {
@@ -186,10 +198,13 @@ impl PgConnection {
 
             fortunes.sort_by(|it, next| it.message.cmp(&next.message));
 
-            let mut buf = BytesMut::with_capacity(2048);
-            ywrite_html!(buf, "{{> fortune }}");
+            let mut body = std::mem::replace(&mut *buf.borrow_mut(), BytesMut::new());
+            utils::reserve(&mut body);
+            ywrite_html!(body, "{{> fortune }}");
 
-            buf.freeze()
+            let result = body.split().freeze();
+            let _ = std::mem::replace(&mut *buf.borrow_mut(), body);
+            result
         }
     }
 }

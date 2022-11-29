@@ -1,5 +1,5 @@
 dependencies {
-    api(project(":core-jdbc"))
+    api(project(":core-pgclient"))
     api("org.http4k:http4k-server-apache4:$http4k_version")
 }
 

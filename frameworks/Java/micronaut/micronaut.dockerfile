@@ -1,16 +1,12 @@
-FROM gradle:6.9-jdk11 as build
-WORKDIR /micronaut
-COPY src src
-COPY build.gradle build.gradle
-COPY settings.gradle settings.gradle
-RUN gradle build buildLayers --no-daemon
+FROM gradle:7.5.1-jdk18 as build
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle micronaut-vertx-pg-client:build -x test --no-daemon
 
-FROM openjdk:11-jre-slim
+FROM openjdk:19
 WORKDIR /micronaut
-COPY --from=build /micronaut/build/docker/layers/libs /home/app/libs
-COPY --from=build /micronaut/build/docker/layers/resources /home/app/resources
-COPY --from=build /micronaut/build/docker/layers/application.jar /home/app/application.jar
+COPY --from=build /home/gradle/src/micronaut-vertx-pg-client/build/libs/micronaut-vertx-pg-client-all.jar micronaut.jar
+COPY run_benchmark.sh run_benchmark.sh
 
 EXPOSE 8080
-
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dmicronaut.environments=benchmark", "-Dlog-root-level=OFF", "-jar", "/home/app/application.jar"]
+ENTRYPOINT "./run_benchmark.sh"
