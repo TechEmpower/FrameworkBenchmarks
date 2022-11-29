@@ -16,6 +16,7 @@ data class Settings(
     val maximumPoolSize: Int = systemSettingOrNull("maximumPoolSize") ?: 96,
 
     val webEngine: String = systemSettingOrNull("WEBENGINE") ?: "jetty",
+    val dataStore: String = systemSettingOrNull("DATASTORE") ?: "postgresql",
 
     val worldName: String = systemSettingOrNull("worldCollection") ?: "world",
     val fortuneName: String = systemSettingOrNull("fortuneCollection") ?: "fortune",

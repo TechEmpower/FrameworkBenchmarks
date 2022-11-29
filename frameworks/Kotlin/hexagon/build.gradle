@@ -1,15 +1,16 @@
 
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.7.10"
+    id "org.jetbrains.kotlin.jvm" version "1.7.22"
 }
 
 ext {
-    hexagonVersion = "2.0.23"
+    hexagonVersion = "2.2.7"
     hikariVersion = "5.0.1"
-    jettyVersion = "11.0.11"
+    jettyVersion = "11.0.12"
     postgresqlVersion = "42.5.0"
+    vertxVersion = "4.3.5"
     cache2kVersion = "2.6.1.Final"
-    nettyVersion = "4.1.80.Final"
+    nettyVersion = "4.1.85.Final"
 
     gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/$hexagonVersion/gradle"
 }
@@ -42,6 +43,7 @@ dependencies {
     implementation("org.cache2k:cache2k-core:$cache2kVersion")
     implementation("com.zaxxer:HikariCP:$hikariVersion")
     implementation("org.postgresql:postgresql:$postgresqlVersion")
+    implementation("io.vertx:vertx-pg-client:$vertxVersion")
 
     // providedCompile excludes the dependency only in the WAR, not in the distribution
     providedCompile("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }

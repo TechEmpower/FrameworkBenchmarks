@@ -15,7 +15,7 @@ RUN gradle --quiet -x test
 FROM eclipse-temurin:19-jre-alpine
 ENV DBSTORE postgresql
 ENV POSTGRESQL_DB_HOST tfb-database
-ENV WEBENGINE netty
+ENV WEBENGINE jetty_loom
 ENV PROJECT hexagon
 ENV DISABLE_CHECKS true
 ENV JDK_JAVA_OPTIONS --enable-preview -XX:+AlwaysPreTouch -XX:+UseParallelGC -XX:+UseNUMA
