@@ -1,4 +1,4 @@
-FROM php:8.1
+FROM php:8.2-rc
 
 RUN pecl install swoole > /dev/null && \
     docker-php-ext-enable swoole
@@ -22,6 +22,7 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts --quiet
 
 ENV APP_RUNTIME=Runtime\\Swoole\\Runtime
 RUN composer require runtime/swoole
+
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --no-dev --classmap-authoritative
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env prod
 
