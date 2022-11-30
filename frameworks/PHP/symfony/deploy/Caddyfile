@@ -15,7 +15,7 @@ route {
 
     # If the requested file does not exist, try index files
     @indexFiles file {
-        try_files {path} {path}/index.php index.php
+        try_files {path} {path}/worker.php worker.php
         split_path .php
     }
     rewrite @indexFiles {http.matchers.file.relative}
