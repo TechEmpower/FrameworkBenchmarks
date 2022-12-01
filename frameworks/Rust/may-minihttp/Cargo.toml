@@ -16,5 +16,10 @@ may_postgres = { git = "https://github.com/Xudong-Huang/may_postgres.git" }
 may_minihttp = { git = "https://github.com/Xudong-Huang/may_minihttp.git" }
 
 [profile.release]
-lto = true
+opt-level = 3
 codegen-units = 1
+panic = 'abort'
+lto = "thin"
+debug = false
+incremental = false
+overflow-checks = false

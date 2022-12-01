@@ -1,5 +1,8 @@
 package benchmark.model;
 
+import com.dslplatform.json.CompiledJson;
+
+@CompiledJson
 public class Fortune {
 
     private int id;

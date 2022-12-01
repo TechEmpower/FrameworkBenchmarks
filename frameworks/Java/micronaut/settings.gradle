@@ -1,2 +1,11 @@
-rootProject.name = 'hello-micronaut'
+rootProject.name = 'micronaut-benchmark'
 
+include 'common'
+include 'common-test'
+
+include 'micronaut-jdbc'
+include 'micronaut-r2dbc'
+include 'micronaut-data-jdbc'
+include 'micronaut-data-r2dbc'
+include 'micronaut-data-mongodb'
+include 'micronaut-vertx-pg-client'
