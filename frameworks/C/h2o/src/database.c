@@ -218,7 +218,7 @@ static void on_database_connect_read_ready(h2o_socket_t *sock, const char *err)
 		return;
 	}
 	else if (send_status) {
-		h2o_socket_notify_write(conn->sock, on_database_write_ready);
+		h2o_socket_notify_write(conn->sock, on_database_connect_write_ready);
 		return;
 	}
 
