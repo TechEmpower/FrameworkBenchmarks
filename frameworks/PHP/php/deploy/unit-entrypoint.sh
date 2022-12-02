@@ -2,6 +2,9 @@
 
 set -e
 
+echo "Using strypoint patch"
+echo "***************************************************************"
+
 curl_put()
 {
     RET=`/usr/bin/curl -s -w '%{http_code}' -X PUT --data-binary @$1 --unix-socket /var/run/control.unit.sock http://localhost/$2`
