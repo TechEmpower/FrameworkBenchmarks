@@ -1,4 +1,4 @@
-FROM gradle:7.5.1-jdk11 as gradle
+FROM gradle:7.6-jdk17 as gradle
 USER root
 WORKDIR /http4k
 COPY build.gradle build.gradle
@@ -9,7 +9,7 @@ COPY core-jdbc core-jdbc
 COPY core-pgclient core-pgclient
 COPY graalvm graalvm
 
-RUN gradle --quiet graalvm:shadowJar
+RUN gradle --quiet --no-daemon graalvm:shadowJar
 
 FROM ghcr.io/graalvm/graalvm-ce:ol7-java17-22.3.0 as graalvm
 RUN gu install native-image
