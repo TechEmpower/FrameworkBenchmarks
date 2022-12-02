@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Using strypoint patch"
+echo "Using entrypoint patch"
 echo "***************************************************************"
 
 curl_put()
