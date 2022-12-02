@@ -1,6 +1,6 @@
 dependencies {
     api(project(":core-jdbc"))
-    api(project(":sunhttp"))
+    api(project(":apache"))
 }
 
 apply plugin: 'application'
