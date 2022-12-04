@@ -43,7 +43,7 @@ const Fortune = sequelize.define('Fortune', {
     freezeTableName: true
   });
 
-if (cluster.isMaster) {
+if (cluster.isPrimary) {
   // Fork workers.
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();

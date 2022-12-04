@@ -1,0 +1,28 @@
+{
+	# Debug
+    {$CADDY_DEBUG}
+
+	frankenphp {
+		#worker /path/to/your/worker.php
+		{$FRANKENPHP_CONFIG}
+	}
+}
+
+:8080
+
+route {
+    root * /symfony/public
+
+    # If the requested file does not exist, try index files
+    @indexFiles file {
+        try_files {path} {path}/worker.php worker.php
+        split_path .php
+    }
+    rewrite @indexFiles {http.matchers.file.relative}
+    
+    # FrankenPHP!
+    @phpFiles path *.php
+    php @phpFiles
+
+    respond 404
+}

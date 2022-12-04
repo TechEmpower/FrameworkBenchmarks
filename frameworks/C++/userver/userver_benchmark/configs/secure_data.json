@@ -1,0 +1,12 @@
+{
+  "postgresql_settings": {
+    "databases": {
+      "hello_world": [{
+        "shard_number" : 0,
+        "hosts": [
+          "postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world"
+        ]
+      }]
+    }
+  }
+}

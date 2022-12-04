@@ -19,15 +19,12 @@ EXPOSE 8080
 ADD ./ /cakephp
 WORKDIR /cakephp
 
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev  --quiet
 RUN composer require joanhey/adapterman:^0.5
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev  --quiet
 
 RUN chmod -R 777 /cakephp
 
 #COPY deploy/conf/cli-php.ini /etc/php/8.1/cli/php.ini
-
-# bypass cli bootstrap for Workerman
-RUN sed -i "s|//$isCli = false|$isCli = false|g" config/bootstrap.php
 
 CMD php -c deploy/conf/cli-php.ini \
     server.php start
