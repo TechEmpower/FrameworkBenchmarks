@@ -1,7 +1,10 @@
-use std::cmp;
+use std::{cmp, ops::Range};
 
 use atoi::FromRadix10;
 use viz::header::HeaderValue;
+
+#[allow(dead_code)]
+pub const RANGE: Range<i32> = 1..10_001;
 
 pub const HDR_SERVER: HeaderValue = HeaderValue::from_static("VIZ");
 
