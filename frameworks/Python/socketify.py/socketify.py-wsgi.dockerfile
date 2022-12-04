@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD WORKER_COUNT=$(nproc) pypy3 ./app.py
+CMD WORKER_COUNT=$(nproc) pypy3 ./raw-wsgi.py
