@@ -10,7 +10,7 @@ def app(environ, start_response):
     path = environ["PATH_INFO"]
     if path == "/plaintext":
         start_response('200 OK', [('Content-Type', 'text/plain')])
-        yield b'Hello, World!\n'
+        yield b'Hello, World!'
         return
     if path == "/json":
         start_response('200 OK', [('Content-Type', 'application/json')])
