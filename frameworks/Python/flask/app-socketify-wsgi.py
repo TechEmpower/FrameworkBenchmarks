@@ -30,7 +30,7 @@ if _is_travis:
 
 
 def run_app():
-    WSGI(app).listen(8080, lambda config: logging.info(f"Listening on port http://localhost:{config.port} now\n")).run()
+    WSGI(app).listen(8080, lambda config: logging.info(f"Listening on http://localhost:{config.port} now\n")).run()
 
 
 def create_fork():
