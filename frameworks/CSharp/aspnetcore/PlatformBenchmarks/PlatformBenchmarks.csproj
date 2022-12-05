@@ -12,6 +12,7 @@
     <StripSymbols>true</StripSymbols>
     <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
     <IlcPgoOptimize>true</IlcPgoOptimize>
+    <IlcInstructionSet>x86-x64-v3</IlcInstructionSet>
   </PropertyGroup>
   
   <PropertyGroup>
