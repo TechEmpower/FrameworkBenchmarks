@@ -117,7 +117,7 @@ impl PgConnection {
         let mut rng = self.rng.clone();
         (0..num)
             .map(|_| {
-                let id = rng.generate_range(0..10_000);
+                let id = rng.generate_range(RANGE);
                 self.query_one_world(id)
             })
             .collect::<FuturesUnordered<_>>()
