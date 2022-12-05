@@ -49,10 +49,6 @@
     },
     "socketify-wsgi": {
       "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/query?queries=",
-      "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
