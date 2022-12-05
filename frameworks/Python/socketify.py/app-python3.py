@@ -17,7 +17,7 @@ def applicationjson(res, req):
 
 
 def run_app():
-    app = app = App(None, 200_000)
+    app = app = App(None, 200_000, 0)
     app.get("/", plaintext)
     app.get("/json", applicationjson)
     app.get("/plaintext", plaintext)

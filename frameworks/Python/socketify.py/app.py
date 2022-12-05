@@ -15,7 +15,7 @@ def applicationjson(res, req):
 
 
 def run_app():
-    app = App(None, 200_000)
+    app = App(None, 200_000, 0)
     app.get("/", plaintext)
     app.get("/json", applicationjson)
     app.get("/plaintext", plaintext)
@@ -41,12 +41,4 @@ for index in range(WORKER_COUNT):
 
 run_app()
 #sudo ./tfb --mode benchmark --test socketify.py --type plaintext
-<<<<<<< HEAD
 #sudo ./tfb --mode benchmark --test socketify.py --type json --network=tfb
-=======
-#sudo ./tfb --mode benchmark --test socketify.py --type json --network=tfb
-
-# 770k with timer + agressive cpu
-# 851k without timer
-# ???k with timer + relaxed cpu
->>>>>>> 9fa82a5d70db273e24cc657530a3e27e966869dc
