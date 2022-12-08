@@ -1,17 +1,14 @@
 
-import threading
-import time
 import os
 
 from ujson import dumps as json
-from datetime import datetime
 
 from socketify import App
 
 def plaintext(res, req):
     res.write_header("Server", "socketify")
     res.write_header("Content-Type", "text/plain")
-    res.end("Hello, World!")
+    res.end(b'Hello, World!')
 
 def applicationjson(res, req):
     res.write_header("Server", "socketify")
@@ -20,8 +17,7 @@ def applicationjson(res, req):
 
 
 def run_app():
-    app = App(request_response_factory_max_itens=200_000)
-    
+    app = app = App(None, 200_000, 0)
     app.get("/", plaintext)
     app.get("/json", applicationjson)
     app.get("/plaintext", plaintext)
