@@ -17,8 +17,8 @@
 
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="7.0.0" />
-    <PackageReference Include="Donald" Version="8.0.2" />
-    <PackageReference Include="Falco" Version="4.0.2" />    
+    <PackageReference Include="Donald" Version="3.0.*" />
+    <PackageReference Include="Falco" Version="2.0.*" />
     <PackageReference Include="Npgsql" Version="7.0.0" />
   </ItemGroup>
 
