@@ -1,20 +1,19 @@
-namespace Benchmarks
+namespace Benchmarks;
+
+using Carter;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+
+public class Startup
 {
-    using Carter;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.Extensions.DependencyInjection;
-
-    public class Startup
+    public void ConfigureServices(IServiceCollection services)
     {
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddCarter();
-        }
+        services.AddCarter();
+    }
 
-        public void Configure(IApplicationBuilder app)
-        {
-            app.UseRouting();
-            app.UseEndpoints(builder => builder.MapCarter());
-        }
+    public void Configure(IApplicationBuilder app)
+    {
+        app.UseRouting();
+        app.UseEndpoints(builder => builder.MapCarter());
     }
 }
