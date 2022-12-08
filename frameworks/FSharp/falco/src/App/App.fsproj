@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <DebugType>portable</DebugType>
     <AssemblyName>App</AssemblyName>
     <OutputType>Exe</OutputType>
@@ -16,10 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="6.0.3" />
+    <PackageReference Update="FSharp.Core" Version="7.0.0" />
     <PackageReference Include="Donald" Version="3.0.*" />
-    <PackageReference Include="Falco" Version="2.0.*" />    
-    <PackageReference Include="Npgsql" Version="6.0.3" />
+    <PackageReference Include="Falco" Version="2.0.*" />
+    <PackageReference Include="Npgsql" Version="7.0.0" />
   </ItemGroup>
 
 </Project>

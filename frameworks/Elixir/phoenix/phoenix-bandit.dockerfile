@@ -7,7 +7,7 @@ ARG RUNNER_IMAGE="alpine:${ALPINE}"
 
 FROM ${BUILDER_IMAGE} AS builder
 
-ARG MIX_ENV="prod"
+ARG MIX_ENV="bandit"
 
 RUN mix local.hex --force && \
     mix local.rebar --force
