@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0.100 AS build
 WORKDIR /source
 COPY src .
-RUN dotnet publish -c Release -f net5.0 -o /app
+RUN dotnet publish -c Release -f net7.0 -o /app
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 # Full PGO
