@@ -32,6 +32,7 @@ async fn main() -> Result<()> {
         .get("/json", json);
 
     server::builder()
+        .http1_pipeline_flush(true)
         .serve(ServiceMaker::from(app))
         .await
         .map_err(Error::normal)

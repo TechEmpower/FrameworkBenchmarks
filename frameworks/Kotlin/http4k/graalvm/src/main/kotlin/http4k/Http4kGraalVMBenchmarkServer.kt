@@ -2,9 +2,9 @@ package http4k
 
 import Http4kBenchmarkServer
 import PostgresDatabase
-import TfbApacheServer
+import org.http4k.server.SunHttp
 import start
 
 fun main() {
-    Http4kBenchmarkServer(PostgresDatabase()).start(TfbApacheServer(9000))
+    Http4kBenchmarkServer(PostgresDatabase()).start(SunHttp(9000))
 }
