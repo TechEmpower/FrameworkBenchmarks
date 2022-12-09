@@ -4,4 +4,4 @@ ADD ./ ./
 
 EXPOSE 8080
 
-CMD ["nginx", "-c", "/nginx.conf"]
+CMD ["nginx", "-c", "/njs/nginx.conf"]
