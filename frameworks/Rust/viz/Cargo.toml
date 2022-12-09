@@ -19,18 +19,18 @@ path = "src/main_sqlx.rs"
 required-features = ["sqlx", "markup", "v_htmlescape"]
 
 [dependencies]
-viz = "0.4.3"
+viz = "0.4.4"
 hyper = "0.14"
 atoi = "2.0.0"
+once_cell = "1"
 serde = { version = "1.0", features = ["derive"] }
-tokio = { version = "1.21", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
 nanorand = "0.7"
 thiserror = "1.0"
-futures-util = "0.3.24"
-stretto = { version = "0.7", features = ["async"] }
+futures-util = "0.3"
 
-tokio-postgres = { version = "0.7.7", optional = true }
-sqlx = { version = "0.6.2", features = [
+tokio-postgres = { version = "0.7", optional = true }
+sqlx = { version = "0.6", features = [
   "postgres",
   "macros",
   "runtime-tokio-native-tls",
@@ -38,8 +38,8 @@ sqlx = { version = "0.6.2", features = [
 # diesel = { version = "1.4.8", features = ["postgres"], optional = true }
 
 yarte = { version = "0.15", features = ["bytes-buf", "json"], optional = true }
-markup = { version = "0.13.1", optional = true }
-v_htmlescape = { version = "0.15.7", optional = true }
+markup = { version = "0.13", optional = true }
+v_htmlescape = { version = "0.15", optional = true }
 
 [profile.release]
 lto = true
