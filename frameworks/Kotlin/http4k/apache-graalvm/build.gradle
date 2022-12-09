@@ -1,0 +1,20 @@
+dependencies {
+    api(project(":core-jdbc"))
+    api(project(":apache"))
+}
+
+apply plugin: 'application'
+mainClassName = "http4k.Http4kGraalVMBenchmarkServerKt"
+apply plugin: 'com.github.johnrengelman.shadow'
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
+
+shadowJar {
+    baseName = "http4k-benchmark"
+    classifier = null
+    version = null
+}

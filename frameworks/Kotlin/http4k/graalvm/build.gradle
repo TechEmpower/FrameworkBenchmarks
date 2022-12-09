@@ -1,6 +1,6 @@
 dependencies {
     api(project(":core-jdbc"))
-    api(project(":apache"))
+    api(project(":sunhttp"))
 }
 
 apply plugin: 'application'
@@ -17,5 +17,4 @@ shadowJar {
     baseName = "http4k-benchmark"
     classifier = null
     version = null
-    mergeServiceFiles()
 }

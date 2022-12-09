@@ -30,6 +30,7 @@ defmodule Hello.Mixfile do
   # Type `mix help deps` for examples and options
   defp deps do
     [
+      {:bandit, ">= 0.6.2"},
       {:phoenix, "~> 1.6"},
       {:phoenix_ecto, "~> 4.2"},
       {:ecto_sql, "~> 3.5"},
