@@ -1,33 +1,46 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImiApp\Model\Base;
 
-use Imi\Model\Model as Model;
-use Imi\Model\Annotation\DDL;
-use Imi\Model\Annotation\Table;
+use Imi\Config\Annotation\ConfigValue;
 use Imi\Model\Annotation\Column;
 use Imi\Model\Annotation\Entity;
+use Imi\Model\Annotation\Table;
+use Imi\Pgsql\Model\PgModel as Model;
 
 /**
- * fortune 基类
- * @Entity(bean=false)
- * @Table(name="fortune", id={"id"})
- * @DDL(sql="CREATE TABLE `fortune` (   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,   `message` varchar(2048) CHARACTER SET utf8 NOT NULL,   PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", decode="")
+ * fortune 基类.
+ *
+ * @Entity
+ * @Table(name=@ConfigValue(name="@app.models.ImiApp\Model\Fortune.name", default="fortune"), usePrefix=false, id={"id"}, dbPoolName=@ConfigValue(name="@app.models.ImiApp\Model\Fortune.poolName"))
+ *
  * @property int|null $id 
  * @property string|null $message 
  */
 abstract class FortuneBase extends Model
 {
     /**
-     * id
-     * @Column(name="id", type="int", length=10, accuracy=0, nullable=false, default="", isPrimaryKey=true, primaryKeyIndex=0, isAutoIncrement=true)
-     * @var int|null
+     * {@inheritdoc}
      */
-    protected ?int $id = null;
+    public const PRIMARY_KEY = 'id';
 
     /**
-     * 获取 id
+     * {@inheritdoc}
+     */
+    public const PRIMARY_KEYS = ["id"];
+
+    /**
+     * id.
+
+     * @Column(name="id", type="int4", length=-1, accuracy=0, nullable=false, default="", isPrimaryKey=true, primaryKeyIndex=1, isAutoIncrement=false, ndims=0, virtual=false)
+     * @var int|null
+     */
+    protected ?int $id = NULL;
+
+    /**
+     * 获取 id.
      *
      * @return int|null
      */
@@ -37,25 +50,27 @@ abstract class FortuneBase extends Model
     }
 
     /**
-     * 赋值 id
+     * 赋值 id.
+     *
      * @param int|null $id id
      * @return static
      */
-    public function setId($id)
+    public function setId(?int $id)
     {
-        $this->id = null === $id ? null : (int)$id;
+        $this->id = $id;
         return $this;
     }
 
     /**
-     * message
-     * @Column(name="message", type="varchar", length=2048, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false)
+     * message.
+
+     * @Column(name="message", type="varchar", length=0, accuracy=2048, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false, ndims=0, virtual=false)
      * @var string|null
      */
-    protected ?string $message = null;
+    protected ?string $message = NULL;
 
     /**
-     * 获取 message
+     * 获取 message.
      *
      * @return string|null
      */
@@ -65,13 +80,14 @@ abstract class FortuneBase extends Model
     }
 
     /**
-     * 赋值 message
+     * 赋值 message.
+     *
      * @param string|null $message message
      * @return static
      */
-    public function setMessage($message)
+    public function setMessage(?string $message)
     {
-        $this->message = null === $message ? null : (string)$message;
+        $this->message = $message;
         return $this;
     }
 
