@@ -19,7 +19,7 @@ path = "src/main_sqlx.rs"
 required-features = ["sqlx", "markup", "v_htmlescape"]
 
 [dependencies]
-viz = "0.4.3"
+viz = "0.4.4"
 hyper = "0.14"
 atoi = "2.0.0"
 once_cell = "1"
