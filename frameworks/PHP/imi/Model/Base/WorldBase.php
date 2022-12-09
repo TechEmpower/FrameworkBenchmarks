@@ -6,18 +6,20 @@ namespace ImiApp\Model\Base;
 
 use Imi\Config\Annotation\ConfigValue;
 use Imi\Model\Annotation\Column;
+use Imi\Model\Annotation\DDL;
 use Imi\Model\Annotation\Entity;
 use Imi\Model\Annotation\Table;
-use Imi\Pgsql\Model\PgModel as Model;
+use Imi\Model\Model as Model;
 
 /**
- * World 基类.
+ * world 基类.
  *
- * @Entity(bean=false)
- * @Table(name=@ConfigValue(name="@app.models.ImiApp\Model\World.name", default="World"), usePrefix=false, id={"id"}, dbPoolName=@ConfigValue(name="@app.models.ImiApp\Model\World.poolName"))
+ * @Entity(camel=true, bean=false, incrUpdate=false)
+ * @Table(name=@ConfigValue(name="@app.models.ImiApp\Model\World.name", default="world"), usePrefix=false, id={"id"}, dbPoolName=@ConfigValue(name="@app.models.ImiApp\Model\World.poolName"))
+ * @DDL(sql="CREATE TABLE `world` (   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,   `randomNumber` int(11) NOT NULL DEFAULT '0',   PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", decode="")
  *
  * @property int|null $id 
- * @property int|null $randomnumber 
+ * @property int|null $randomNumber 
  */
 abstract class WorldBase extends Model
 {
@@ -33,8 +35,7 @@ abstract class WorldBase extends Model
 
     /**
      * id.
-
-     * @Column(name="id", type="int4", length=-1, accuracy=0, nullable=false, default="", isPrimaryKey=true, primaryKeyIndex=1, isAutoIncrement=false, ndims=0, virtual=false)
+     * @Column(name="id", type="int", length=10, accuracy=0, nullable=false, default="", isPrimaryKey=true, primaryKeyIndex=0, isAutoIncrement=true, unsigned=true, virtual=false)
      * @var int|null
      */
     protected ?int $id = NULL;
@@ -51,43 +52,40 @@ abstract class WorldBase extends Model
 
     /**
      * 赋值 id.
-     *
      * @param int|null $id id
      * @return static
      */
-    public function setId(?int $id)
+    public function setId($id)
     {
-        $this->id = $id;
+        $this->id = null === $id ? null : (int)$id;
         return $this;
     }
 
     /**
-     * randomnumber.
-
-     * @Column(name="randomnumber", type="int4", length=-1, accuracy=0, nullable=false, default="0", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false, ndims=0, virtual=false)
+     * randomNumber.
+     * @Column(name="randomNumber", type="int", length=11, accuracy=0, nullable=false, default="0", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false, unsigned=false, virtual=false)
      * @var int|null
      */
-    protected ?int $randomnumber = 0;
+    protected ?int $randomNumber = 0;
 
     /**
-     * 获取 randomnumber.
+     * 获取 randomNumber.
      *
      * @return int|null
      */
-    public function getRandomnumber(): ?int
+    public function getRandomNumber(): ?int
     {
-        return $this->randomnumber;
+        return $this->randomNumber;
     }
 
     /**
-     * 赋值 randomnumber.
-     *
-     * @param int|null $randomnumber randomnumber
+     * 赋值 randomNumber.
+     * @param int|null $randomNumber randomNumber
      * @return static
      */
-    public function setRandomnumber(?int $randomnumber)
+    public function setRandomNumber($randomNumber)
     {
-        $this->randomnumber = $randomnumber;
+        $this->randomNumber = null === $randomNumber ? null : (int)$randomNumber;
         return $this;
     }
 

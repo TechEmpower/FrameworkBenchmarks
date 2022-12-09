@@ -6,15 +6,17 @@ namespace ImiApp\Model\Base;
 
 use Imi\Config\Annotation\ConfigValue;
 use Imi\Model\Annotation\Column;
+use Imi\Model\Annotation\DDL;
 use Imi\Model\Annotation\Entity;
 use Imi\Model\Annotation\Table;
-use Imi\Pgsql\Model\PgModel as Model;
+use Imi\Model\Model as Model;
 
 /**
  * fortune 基类.
  *
- * @Entity(bean=false)
+ * @Entity(camel=true, bean=false, incrUpdate=false)
  * @Table(name=@ConfigValue(name="@app.models.ImiApp\Model\Fortune.name", default="fortune"), usePrefix=false, id={"id"}, dbPoolName=@ConfigValue(name="@app.models.ImiApp\Model\Fortune.poolName"))
+ * @DDL(sql="CREATE TABLE `fortune` (   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,   `message` varchar(2048) CHARACTER SET utf8 NOT NULL,   PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", decode="")
  *
  * @property int|null $id 
  * @property string|null $message 
@@ -33,8 +35,7 @@ abstract class FortuneBase extends Model
 
     /**
      * id.
-
-     * @Column(name="id", type="int4", length=-1, accuracy=0, nullable=false, default="", isPrimaryKey=true, primaryKeyIndex=1, isAutoIncrement=false, ndims=0, virtual=false)
+     * @Column(name="id", type="int", length=10, accuracy=0, nullable=false, default="", isPrimaryKey=true, primaryKeyIndex=0, isAutoIncrement=true, unsigned=true, virtual=false)
      * @var int|null
      */
     protected ?int $id = NULL;
@@ -51,20 +52,18 @@ abstract class FortuneBase extends Model
 
     /**
      * 赋值 id.
-     *
      * @param int|null $id id
      * @return static
      */
-    public function setId(?int $id)
+    public function setId($id)
     {
-        $this->id = $id;
+        $this->id = null === $id ? null : (int)$id;
         return $this;
     }
 
     /**
      * message.
-
-     * @Column(name="message", type="varchar", length=0, accuracy=2048, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false, ndims=0, virtual=false)
+     * @Column(name="message", type="varchar", length=2048, accuracy=0, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false, unsigned=false, virtual=false)
      * @var string|null
      */
     protected ?string $message = NULL;
@@ -81,13 +80,12 @@ abstract class FortuneBase extends Model
 
     /**
      * 赋值 message.
-     *
      * @param string|null $message message
      * @return static
      */
-    public function setMessage(?string $message)
+    public function setMessage($message)
     {
-        $this->message = $message;
+        $this->message = null === $message ? null : (string)$message;
         return $this;
     }
 
