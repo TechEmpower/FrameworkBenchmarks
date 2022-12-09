@@ -23,7 +23,6 @@ viz = "0.4.3"
 hyper = "0.14"
 atoi = "2.0.0"
 once_cell = "1"
-smallvec = "1"
 serde = { version = "1.0", features = ["derive"] }
 tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
 nanorand = "0.7"

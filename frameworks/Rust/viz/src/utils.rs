@@ -1,4 +1,4 @@
-use std::{cmp, ops::Range};
+use std::{ops::Range};
 
 use atoi::FromRadix10;
 use viz::header::HeaderValue;
@@ -16,5 +16,5 @@ pub fn get_query_param(query: Option<&str>) -> u16 {
     } else {
         1
     };
-    cmp::min(500, cmp::max(1, q))
+    q.clamp(1, 500)
 }

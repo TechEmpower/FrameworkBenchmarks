@@ -2,7 +2,6 @@ use std::{borrow::Cow, fmt::Write, io};
 
 use futures_util::{stream::FuturesUnordered, TryFutureExt, TryStreamExt};
 use nanorand::{Rng, WyRand};
-use smallvec::SmallVec;
 use tokio_postgres::{connect, types::ToSql, Client, NoTls, Statement};
 use viz::{Error, IntoResponse, Response, StatusCode};
 
@@ -175,22 +174,22 @@ impl PgConnection {
         Ok(worlds)
     }
 
-    pub async fn tell_fortune(&self) -> Result<SmallVec<[Fortune; 32]>, PgError> {
-        let mut items: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
-            id: 0,
-            message: Cow::Borrowed("Additional fortune added at request time."),
-        }];
-
-        self.client
+    pub async fn tell_fortune(&self) -> Result<Vec<Fortune>, PgError> {
+        let mut items = self
+            .client
             .query(&self.fortune, &[])
             .await?
             .iter()
-            .for_each(|row| {
-                items.push(Fortune {
-                    id: row.get(0),
-                    message: Cow::Owned(row.get(1)),
-                })
-            });
+            .map(|row| Fortune {
+                id: row.get(0),
+                message: Cow::Owned(row.get(1)),
+            })
+            .collect::<Vec<_>>();
+
+        items.push(Fortune {
+            id: 0,
+            message: Cow::Borrowed("Additional fortune added at request time."),
+        });
 
         items.sort_by(|it, next| it.message.cmp(&next.message));
 
