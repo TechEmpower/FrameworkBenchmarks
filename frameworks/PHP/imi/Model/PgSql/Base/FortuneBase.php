@@ -13,7 +13,7 @@ use Imi\Pgsql\Model\PgModel as Model;
 /**
  * fortune 基类.
  *
- * @Entity
+ * @Entity(bean=false)
  * @Table(name=@ConfigValue(name="@app.models.ImiApp\Model\PgSql\Fortune.name", default="fortune"), usePrefix=false, id={"id"}, dbPoolName=@ConfigValue(name="@app.models.ImiApp\Model\PgSql\Fortune.poolName", default="pgsql"))
  *
  * @property int|null $id 
