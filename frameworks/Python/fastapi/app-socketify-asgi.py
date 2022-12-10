@@ -10,7 +10,7 @@ try:
     import orjson
     from fastapi.responses import ORJSONResponse as JSONResponse
 except ImportError:
-    from fastapi.responses import UJSONResponse as JSONResponse
+    from fastapi.responses import JSONResponse as JSONResponse
 
 app = FastAPI()
 
