@@ -1,4 +1,4 @@
-from json import dumps as json
+from json import dumps
 
 from django.http import HttpResponse
 
@@ -9,6 +9,6 @@ def plaintext(request):
 
 def json(request):
     return HttpResponse(
-            json({"message": "Hello, World!"}),
+            dumps({"message": "Hello, World!"}),
             content_type="application/json"
         )
