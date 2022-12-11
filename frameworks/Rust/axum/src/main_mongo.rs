@@ -45,8 +45,8 @@ async fn db(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
 }
 
 async fn queries(
-    Query(params): Query<Params>,
     DatabaseConnection(db): DatabaseConnection,
+    Query(params): Query<Params>,
 ) -> impl IntoResponse {
     let q = parse_params(params);
 
@@ -66,8 +66,8 @@ async fn queries(
 }
 
 async fn updates(
-    Query(params): Query<Params>,
     DatabaseConnection(db): DatabaseConnection,
+    Query(params): Query<Params>,
 ) -> impl IntoResponse {
     let q = parse_params(params);
 

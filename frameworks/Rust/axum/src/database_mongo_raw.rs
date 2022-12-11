@@ -1,9 +1,9 @@
 use axum::async_trait;
-use axum::extract::{Extension, FromRequest};
+use axum::extract::{Extension, FromRequestParts};
+use axum::http::request::Parts;
 use axum::http::StatusCode;
 use futures_util::stream::FuturesUnordered;
 use futures_util::TryStreamExt;
-use hyper::Request;
 use std::io;
 
 use crate::utils::internal_error;
@@ -14,15 +14,17 @@ use mongodb::Database;
 pub struct DatabaseConnection(pub Database);
 
 #[async_trait]
-impl<S, B> FromRequest<S, B> for DatabaseConnection
+impl<S> FromRequestParts<S> for DatabaseConnection
 where
-    B: Send + 'static,
     S: Send + Sync,
 {
     type Rejection = (StatusCode, String);
 
-    async fn from_request(req: Request<B>, state: &S) -> Result<Self, Self::Rejection> {
-        let Extension(db) = Extension::<Database>::from_request(req, state)
+    async fn from_request_parts(
+        parts: &mut Parts,
+        state: &S,
+    ) -> Result<Self, Self::Rejection> {
+        let Extension(db) = Extension::<Database>::from_request_parts(parts, state)
             .await
             .map_err(internal_error)?;
 

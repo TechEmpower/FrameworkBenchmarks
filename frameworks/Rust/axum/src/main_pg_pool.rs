@@ -46,8 +46,8 @@ async fn db(DatabaseClient(client): DatabaseClient) -> impl IntoResponse {
 }
 
 async fn queries(
-    Query(params): Query<Params>,
     DatabaseClient(client): DatabaseClient,
+    Query(params): Query<Params>,
 ) -> impl IntoResponse {
     let q = parse_params(params);
 
@@ -93,8 +93,8 @@ async fn fortunes(DatabaseClient(client): DatabaseClient) -> impl IntoResponse {
 }
 
 async fn updates(
-    Query(params): Query<Params>,
     DatabaseClient(client): DatabaseClient,
+    Query(params): Query<Params>,
 ) -> impl IntoResponse {
     let q = parse_params(params);
 
