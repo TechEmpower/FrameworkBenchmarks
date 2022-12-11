@@ -1,7 +1,8 @@
 use axum::async_trait;
-use axum::extract::{Extension, FromRequest, RequestParts};
+use axum::extract::{Extension, FromRequest};
 use axum::http::StatusCode;
 use deadpool_postgres::{Client, Manager, ManagerConfig, RecyclingMethod};
+use hyper::Request;
 use std::io;
 use std::str::FromStr;
 use tokio_pg_mapper::FromTokioPostgresRow;
@@ -50,16 +51,18 @@ pub async fn create_pool(
 pub struct DatabaseClient(pub Client);
 
 #[async_trait]
-impl<B> FromRequest<B> for DatabaseClient
+impl<S, B> FromRequest<S, B> for DatabaseClient
 where
-    B: Send,
+    B: Send + 'static,
+    S: Send + Sync,
 {
     type Rejection = (StatusCode, String);
 
-    async fn from_request(req: &mut RequestParts<B>) -> Result<Self, Self::Rejection> {
-        let Extension(pool) = Extension::<deadpool_postgres::Pool>::from_request(req)
-            .await
-            .map_err(internal_error)?;
+    async fn from_request(req: Request<B>, state: &S) -> Result<Self, Self::Rejection> {
+        let Extension(pool) =
+            Extension::<deadpool_postgres::Pool>::from_request(req, state)
+                .await
+                .map_err(internal_error)?;
 
         let conn = pool.get().await.map_err(internal_error)?;
 

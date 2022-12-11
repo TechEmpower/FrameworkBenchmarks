@@ -1,9 +1,10 @@
 use axum::async_trait;
-use axum::extract::{Extension, FromRequest, RequestParts};
+use axum::extract::{Extension, FromRequest};
 use axum::http::StatusCode;
 use futures::{
     stream::futures_unordered::FuturesUnordered, FutureExt, StreamExt, TryStreamExt,
 };
+use hyper::Request;
 use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
 use std::sync::Arc;
 use std::{collections::HashMap, fmt::Write, io};
@@ -190,16 +191,18 @@ impl PgConnection {
 pub struct DatabaseConnection(pub Arc<PgConnection>);
 
 #[async_trait]
-impl<B> FromRequest<B> for DatabaseConnection
+impl<S, B> FromRequest<S, B> for DatabaseConnection
 where
-    B: Send,
+    B: Send + 'static,
+    S: Send + Sync,
 {
     type Rejection = (StatusCode, String);
 
-    async fn from_request(req: &mut RequestParts<B>) -> Result<Self, Self::Rejection> {
-        let Extension(pg_connection) = Extension::<Arc<PgConnection>>::from_request(req)
-            .await
-            .map_err(internal_error)?;
+    async fn from_request(req: Request<B>, state: &S) -> Result<Self, Self::Rejection> {
+        let Extension(pg_connection) =
+            Extension::<Arc<PgConnection>>::from_request(req, state)
+                .await
+                .map_err(internal_error)?;
 
         Ok(Self(pg_connection))
     }

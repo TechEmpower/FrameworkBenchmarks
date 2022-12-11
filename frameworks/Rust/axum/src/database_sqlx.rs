@@ -1,6 +1,7 @@
 use axum::async_trait;
-use axum::extract::{Extension, FromRequest, RequestParts};
+use axum::extract::{Extension, FromRequest};
 use axum::http::StatusCode;
+use hyper::Request;
 use std::io;
 
 use crate::utils::internal_error;
@@ -43,14 +44,15 @@ pub async fn create_pool(
 pub struct DatabaseConnection(pub PoolConnection<Postgres>);
 
 #[async_trait]
-impl<B> FromRequest<B> for DatabaseConnection
+impl<S, B> FromRequest<S, B> for DatabaseConnection
 where
-    B: Send,
+    B: Send + 'static,
+    S: Send + Sync,
 {
     type Rejection = (StatusCode, String);
 
-    async fn from_request(req: &mut RequestParts<B>) -> Result<Self, Self::Rejection> {
-        let Extension(pool) = Extension::<PgPool>::from_request(req)
+    async fn from_request(req: Request<B>, state: &S) -> Result<Self, Self::Rejection> {
+        let Extension(pool) = Extension::<PgPool>::from_request(req, state)
             .await
             .map_err(internal_error)?;
 
