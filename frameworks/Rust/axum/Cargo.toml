@@ -52,14 +52,5 @@ yarte = "0.15.7"
 
 
 [profile.release]
-opt-level = 3
-debug = false
-split-debuginfo = 'off'
-debug-assertions = false
-overflow-checks = false
 lto = true
-panic = 'unwind'
-incremental = true
 codegen-units = 1
-rpath = false
-strip = "symbols"
