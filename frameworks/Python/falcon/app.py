@@ -26,8 +26,7 @@ class RandomWorld(object):
 
 class RandomQueries(object):
     @session(serializable=False)
-    def on_get(self, request, response, **params):
-        num = params.get("num", "1")
+    def on_get(self, request, response, num):
         num = sanitize(num)
         worlds = [World[ident].to_dict() for ident in generate_ids(num)]
         response.media = worlds
@@ -35,8 +34,7 @@ class RandomQueries(object):
 
 class UpdateQueries(object):
     @session(serializable=False)
-    def on_get(self, request, response, **params):
-        num = params.get("num", "1")
+    def on_get(self, request, response, num):
         num = sanitize(num)
         ids = generate_ids(num)
         ids.sort()
