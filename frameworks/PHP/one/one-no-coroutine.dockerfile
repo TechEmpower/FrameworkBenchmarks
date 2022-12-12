@@ -1,6 +1,6 @@
-FROM php:8.1-cli
+FROM php:8.2-cli
 
-RUN pecl install swoole-4.8.11 > /dev/null && \
+RUN pecl install swoole-4.8.12 > /dev/null && \
     docker-php-ext-enable swoole
 
 RUN docker-php-ext-install opcache pdo_mysql bcmath > /dev/null
