@@ -59,8 +59,8 @@ async fn fortunes(DatabaseConnection(conn): DatabaseConnection) -> impl IntoResp
 }
 
 async fn updates(
-    Query(params): Query<Params>,
     DatabaseConnection(conn): DatabaseConnection,
+    Query(params): Query<Params>,
 ) -> impl IntoResponse {
     let q = parse_params(params);
 
