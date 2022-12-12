@@ -21,7 +21,7 @@ RUN php -v && php -i | grep opcache
 WORKDIR /one
 
 RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer install --no-dev --classmap-authoritative --quiet > /dev/null
+RUN composer install --no-dev --classmap-authoritative --quiet
 RUN composer dumpautoload -o
 
 RUN mkdir -p /one/App/RunCache
