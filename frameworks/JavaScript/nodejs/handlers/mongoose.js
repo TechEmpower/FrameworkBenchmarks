@@ -5,13 +5,13 @@ const connection = Mongoose.createConnection('mongodb://tfb-database/hello_world
 
 // Mongoose Setup
 const WorldSchema = new Mongoose.Schema({
-  id: Number,
+  _id: Number,
   randomNumber: Number
 }, {
     collection: 'world'
   });
 const FortuneSchema = new Mongoose.Schema({
-  id: Number,
+  _id: Number,
   message: String
 }, {
     collection: 'fortune'
@@ -22,7 +22,7 @@ const Fortunes = connection.model('Fortune', FortuneSchema);
 
 const mongooseRandomWorld = (callback) => {
   Worlds.findOne({
-    id: h.randomTfbNumber()
+    _id: h.randomTfbNumber()
   }).exec(callback);
 };
 
@@ -81,7 +81,7 @@ module.exports = {
           updateFunctions.push((callback) => {
             worlds[i].randomNumber = h.randomTfbNumber();
             Worlds.update({
-              id: worlds[i].id
+              _id: worlds[i]._id
             }, {
                 randomNumber: worlds[i].randomNumber
               }, callback);

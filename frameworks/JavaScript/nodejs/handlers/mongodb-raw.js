@@ -19,9 +19,8 @@ MongoClient.connect(mongoUrl, (err, database) => {
 
 const mongodbRandomWorld = (callback) => {
   collections.World.findOne({
-    id: h.randomTfbNumber()
+    _id: h.randomTfbNumber()
   }, (err, world) => {
-    world._id = undefined; // remove _id from query response
     callback(err, world);
   });
 };
@@ -33,10 +32,10 @@ const mongodbGetAllFortunes = (callback) => {
 };
 
 const mongodbDriverUpdateQuery = (callback) => {
-  collections.World.findOne({ id: h.randomTfbNumber() }, (err, world) => {
+  collections.World.findOne({ _id: h.randomTfbNumber() }, (err, world) => {
     world.randomNumber = h.randomTfbNumber();
-    collections.World.update({ id: world.id }, world, (err, updated) => {
-      callback(err, { id: world.id, randomNumber: world.randomNumber });
+    collections.World.update({ _id: world._id }, world, (err, updated) => {
+      callback(err, { _id: world._id, randomNumber: world.randomNumber });
     });
   });
 };
