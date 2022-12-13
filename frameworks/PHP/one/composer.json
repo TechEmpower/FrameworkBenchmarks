@@ -17,7 +17,7 @@
   ],
   "require": {
     "php": ">=7.1.0",
-    "lizhichao/one": ">=2.0.1",
+    "lizhichao/one": "dev-master",
     "ext-json": "*"
   },
   "autoload": {
