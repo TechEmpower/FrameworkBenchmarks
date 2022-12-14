@@ -72,11 +72,11 @@ class PlaintextResource(object):
         response.text = 'Hello, world!'
 
 
-app = falcon.asgi.App(middleware=[tortoise_init])
+asgi = falcon.asgi.App(middleware=[tortoise_init])
 # register resources
-app.add_route("/json", JSONResource())
-app.add_route("/db", SingleQuery())
-app.add_route("/queries/{num}", MultipleQueries())
-app.add_route("/updates/{num}", UpdateQueries())
-app.add_route("/fortunes", Fortunes())
-app.add_route("/plaintext", PlaintextResource())
+asgi.add_route("/json", JSONResource())
+asgi.add_route("/db", SingleQuery())
+asgi.add_route("/queries/{num}", MultipleQueries())
+asgi.add_route("/updates/{num}", UpdateQueries())
+asgi.add_route("/fortunes", Fortunes())
+asgi.add_route("/plaintext", PlaintextResource())
