@@ -22,6 +22,44 @@
       "display_name": "Emmett",
       "notes": "CPython 3.7",
       "versus": "uvicorn"
+    },
+    "socketify-asgi": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "Emmett",
+      "language": "Python",
+      "flavor": "Python3",
+      "orm": "Full",
+      "platform": "None",
+      "webserver": "Socketify.py",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Emmett [Socketify.py ASGI]",
+      "notes": "CPython 3.7",
+      "versus": "uvicorn"
+    },
+    "socketify-asgi-pypy": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "Emmett",
+      "language": "Python",
+      "flavor": "PyPy3",
+      "orm": "Full",
+      "platform": "None",
+      "webserver": "Socketify.py",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Emmett [Socketify.py ASGI PyPy3]",
+      "notes": "",
+      "versus": "uvicorn"
     }
   }]
 }

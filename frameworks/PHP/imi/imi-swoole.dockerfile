@@ -1,10 +1,10 @@
-FROM php:8.1-cli
+FROM php:8.2-cli
 
 ENV SWOOLE_VERSION 5.0.1
 ARG TFB_TEST_DATABASE
 ENV TFB_TEST_DATABASE=${TFB_TEST_DATABASE}
 
-RUN docker-php-ext-install -j$(nproc) opcache
+RUN docker-php-ext-install -j$(nproc) opcache mysqli
 
 RUN apt -yqq update && \
     apt -yqq install git unzip libpq-dev

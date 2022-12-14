@@ -1,3 +1,5 @@
+use std::borrow::Cow;
+
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 
@@ -10,5 +12,5 @@ pub struct World {
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize, FromRow)]
 pub struct Fortune {
     pub id: i32,
-    pub message: String,
+    pub message: Cow<'static, str>,
 }
