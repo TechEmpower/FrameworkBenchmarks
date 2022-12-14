@@ -1,9 +1,12 @@
+asyncpg==0.27.0
 Cython==0.29.26
-falcon==3.0.1
+falcon==3.1.1
 gunicorn==20.1.0
 jinja2==3.0.3
 meinheld==1.0.2
 orjson==3.6.5
 pony==0.7.14
 psycopg2-binary==2.9.3; implementation_name=='cpython'
+tortoise-orm==0.19.2
+uvicorn==0.20.0
 waitress==2.1.2
