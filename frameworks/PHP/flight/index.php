@@ -6,12 +6,12 @@ error_reporting(-1);
 Flight::register('db', PDO::class, [ 'mysql:host=tfb-database;port=3306;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', [ \PDO::ATTR_PERSISTENT => TRUE ] ]);
 
 // JSON test
-Flight::route('GET /json', function() {
+Flight::route('/json', function() {
 	Flight::json(['message' => 'Hello, World!']);
 });
 
 // Plaintext test
-Flight::route('GET /plaintext', function() {
+Flight::route('/plaintext', function() {
 	Flight::response()
 		->header('Content-Type', 'text/plain')
 		->write('Hello, World!')
@@ -19,7 +19,7 @@ Flight::route('GET /plaintext', function() {
 });
 
 // DB test
-Flight::route('GET /db', function() {
+Flight::route('/db', function() {
 	$id = mt_rand(1, 10000);
 	$db = Flight::db();
 	$stmt = $db->prepare('SELECT * FROM World WHERE id = ?');
@@ -34,7 +34,7 @@ Flight::route('GET /db', function() {
 });
 
 // DB multiple test
-Flight::route('GET /db-multiple', function () {
+Flight::route('/db-multiple', function () {
 	$queries = Flight::request()->query['queries'];
     if (is_numeric($queries)) {
         $queries = max(1, min($queries, 500));
@@ -60,7 +60,7 @@ Flight::route('GET /db-multiple', function () {
 });
 
 // DB Update Test
-Flight::route('GET /updates', function () {
+Flight::route('/updates', function () {
     $queries = Flight::request()->query['queries'];
     if (is_numeric($queries)) {
         $queries = max(1, min($queries, 500));
@@ -93,7 +93,7 @@ Flight::route('GET /updates', function () {
 });
 
 // Fortunes Test
-Flight::route('GET /fortunes', function() {
+Flight::route('/fortunes', function() {
 	$db = Flight::db();
     $fortunes = $db->query('SELECT * FROM Fortune')->fetchAll(PDO::FETCH_KEY_PAIR);
 
