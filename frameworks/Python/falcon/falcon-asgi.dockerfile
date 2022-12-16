@@ -8,6 +8,8 @@ RUN pip3 install -U pip; \
     pip3 install -r /falcon/requirements.txt; \
     pip3 install falcon==3.1.1 --no-binary :all:;
 
+ENV ASYNCIO=true
+
 EXPOSE 8080
 
-CMD ["uvicorn", "asgi_tortoise:asgi", "--host", "0.0.0.0", "--port", "8080", "--workers", "2"]
+CMD ["gunicorn", "asgi_tortoise:asgi", "-c", "gunicorn_conf.py"]
