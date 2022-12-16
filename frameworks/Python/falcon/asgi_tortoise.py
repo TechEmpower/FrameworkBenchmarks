@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import falcon.asgi
 from helpers import load_template, FortuneTuple, generate_ids, sanitize
 from operator import attrgetter
@@ -6,6 +7,7 @@ from tortoise import Tortoise
 from tortoise_models import World, Fortune
 
 
+# Middleware
 class TortoiseInit:
     async def process_startup(self, scope, event):
         await Tortoise.init(
@@ -56,7 +58,6 @@ class UpdateQueries(object):
 class Fortunes(object):
     _template = load_template()
 
-    # @in_transaction()
     async def on_get(self, request, response):
         fortunes = [FortuneTuple(id=f.id, message=f.message) for f in await Fortune.all()]
         fortunes.append(FortuneTuple(id=0, message="Additional fortune added at request time."))
