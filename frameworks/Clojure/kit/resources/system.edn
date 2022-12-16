@@ -22,14 +22,6 @@
  :router/core
  {:routes #ig/ref :router/routes}
 
-
-
- :db.sql/migrations
- {:store            :database,
-  :db               {:datasource #ig/ref :db.sql/hikari-connection},
-  ;; Note: hacky thing for TE benchmark development, turn it off, but run it manually to seed db
-  :migrate-on-init? false}
-
  :db.sql/hikari-connection
  {:jdbc-url #or [#env JDBC_URL "jdbc:postgresql://localhost:5432/hello_world?user=benchmarkdbuser&password=benchmarkdbpass"]}
 

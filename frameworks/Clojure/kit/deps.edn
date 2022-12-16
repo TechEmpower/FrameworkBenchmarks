@@ -24,10 +24,7 @@
            ;; kit Libs
            io.github.kit-clj/kit-core         {:mvn/version "1.0.3"}
            io.github.kit-clj/kit-undertow     {:mvn/version "1.0.4"}
-           io.github.kit-clj/kit-sql-conman   {:mvn/version "1.0.5"}
            io.github.kit-clj/kit-sql-hikari   {:mvn/version "1.0.2"}
-           io.github.kit-clj/kit-sql-migratus {:mvn/version "1.0.2"}
-           io.github.kit-clj/kit-postgres     {:mvn/version "1.0.2"}
            org.clojure/core.cache             {:mvn/version "1.0.225"}
 
            }

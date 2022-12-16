@@ -9,7 +9,6 @@
     [io.github.kit-clj.te-bench.cache.inmem]
     [io.github.kit-clj.te-bench.db.sql.hikari]
     [io.github.kit-clj.te-bench.web.handler]
-    [kit.edge.db.sql.migratus]
     [kit.edge.server.undertow]
 
     ;; Routes
