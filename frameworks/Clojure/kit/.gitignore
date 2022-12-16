@@ -17,3 +17,7 @@ modules/
 .clj-kondo/.cache/
 .calva/output-window/
 .lsp/.cache/
+
+# local dev files that TE benchmark doesn't want
+docker-compose.yml
+env/dev/

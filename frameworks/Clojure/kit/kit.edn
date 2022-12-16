@@ -1,8 +1,0 @@
-{:full-name "io.github.kit-clj/te-bench"
- :ns-name   "io.github.kit-clj.te-bench"
- :sanitized "io/github/kit_clj/te_bench"
- :name      "te-bench"
- :modules   {:root         "modules"
-             :repositories [{:url  "https://github.com/kit-clj/modules.git"
-                             :tag  "master"
-                             :name "kit-modules"}]}}
