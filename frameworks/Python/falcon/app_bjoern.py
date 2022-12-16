@@ -96,7 +96,29 @@ app.add_route("/plaintext", PlaintextResource())
 
 
 if __name__ == "__main__":
+    import os
+    import multiprocessing
+
+    _is_travis = os.environ.get('TRAVIS') == 'true'
+
+    workers = int(multiprocessing.cpu_count())
+    if _is_travis:
+        workers = 2
+
     host = '0.0.0.0'
     port = 8080
 
-    bjoern.run(wsgi, host=host, port=port)
+    def run_app():
+        bjoern.run(wsgi, host=host, port=port, reuse_port=True)
+
+    def create_fork():
+        n = os.fork()
+        # n greater than 0 means parent process
+        if not n > 0:
+            run_app()
+
+    # fork limiting the cpu count - 1
+    for i in range(1, workers):
+        create_fork()
+
+    run_app()  # run app on the main process too :)
