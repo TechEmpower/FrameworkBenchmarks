@@ -1,10 +1,3 @@
-5. Add your test to `.github/workflows/build.yml`
-
-Edit `.github/workflows/build.yml` to ensure that Github Actions will automatically run our verification tests against
-your new test. This file is kept in alphabetical order, so find where `TESTDIR=Clojure/kit` should be inserted
-under `env > matrix` and put it there.
-
-
 # Kit Benchmarking Test
 
 This is an implementation using the [Kit web framework](https://kit-clj.github.io/). It uses PostgreSQL
