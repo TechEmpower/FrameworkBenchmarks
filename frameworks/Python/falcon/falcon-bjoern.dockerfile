@@ -1,4 +1,4 @@
-FROM python:3.8-buster
+FROM python:3.10-bullseye
 
 RUN apt-get update; apt-get install libpq-dev python3-dev libev-dev -y
 COPY ./ /falcon
