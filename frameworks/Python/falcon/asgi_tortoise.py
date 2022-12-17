@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 import falcon.asgi
+from falcon import HTTPInternalServerError
 from helpers import load_template, FortuneTuple, generate_ids, sanitize
 from operator import attrgetter
 from random import randint
 from tortoise import Tortoise
 from tortoise_models import World, Fortune
+from tortoise.transactions import in_transaction
+from tortoise.exceptions import OperationalError
 
 
 # Middleware
@@ -37,22 +40,29 @@ class SingleQuery(object):
 
 class MultipleQueries(object):
     async def on_get(self, request, response, num):
-        num = sanitize(num)
-        worlds = await World.filter(id__in=[idx for idx in generate_ids(num)]).values()
-        response.media = worlds
+        try:
+            async with in_transaction():
+                num = sanitize(num)
+                items = await World.filter(id__in=generate_ids(num)).values()
+                response.media = [i.to_dict() for i in items]
+        except OperationalError:
+            raise HTTPInternalServerError()
 
 
 class UpdateQueries(object):
     async def on_get(self, request, response, num):
-        num = sanitize(num)
-        ids = generate_ids(num)
-        ids.sort()
-        worlds = []
-        for item in ids:
-            world = await World.get(id=item)
-            world.randomNumber = randint(1, 10000)
-            worlds.append({"id": world.id, "randomNumber": world.randomNumber})
-        response.media = worlds
+        try:
+            async with in_transaction():
+                num = sanitize(num)
+                items = await World.filter(id__in=generate_ids(num))
+                worlds = []
+                for idx in items:
+                    idx.randomNumber = randint(1, 10000)
+                    await idx.save()
+                    worlds.append({'id': idx.id, 'randomNumber': idx.randomNumber})
+                response.media = worlds
+        except OperationalError:
+            raise HTTPInternalServerError()
 
 
 class Fortunes(object):
