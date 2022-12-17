@@ -8,9 +8,6 @@ for content type coercion, [Undertow](https://github.com/luminus-framework/ring-
 server, [ring](https://github.com/ring-clojure/ring) and [reitit](https://github.com/metosin/reitit) for HTTP
 abstraction and routing.
 
-The benchmark requirements were implemented as an engineer might do a **real world application**. Meaning no effort was
-made to game the benchmark by cutting out features that are unused in the benchmark.
-
 ### Test Type Implementation Source Code
 
 * [JSON](src/clj/io/github/kit_clj/te_bench/web/controllers/bench.clj#L85)

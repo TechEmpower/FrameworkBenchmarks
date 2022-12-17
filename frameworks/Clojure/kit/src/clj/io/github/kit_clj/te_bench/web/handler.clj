@@ -8,10 +8,7 @@
   [_ {:keys [router]}]
   (ring/ring-handler
     router
-    (ring/routes
-      ;; Handle trailing slash in routes - add it + redirect to it
-      ;; https://github.com/metosin/reitit/blob/master/doc/ring/slash_handler.md
-      (ring/redirect-trailing-slash-handler))
+    nil
     {:inject-match?  false
      :inject-router? false}))
 
