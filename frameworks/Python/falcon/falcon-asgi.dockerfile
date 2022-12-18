@@ -12,4 +12,4 @@ ENV ASYNCIO=true
 
 EXPOSE 8080
 
-CMD ["gunicorn", "asgi_tortoise:asgi", "-c", "gunicorn_conf.py"]
+CMD ["gunicorn", "app_asgi_tortoise:asgi", "-c", "gunicorn_conf.py"]

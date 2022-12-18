@@ -1,5 +1,7 @@
 #!/usr/bin/env python
+import orjson
 import falcon.asgi
+from falcon import media
 from helpers import load_template, FortuneTuple, generate_ids, sanitize
 from operator import attrgetter
 from random import randint
@@ -88,6 +90,16 @@ class PlaintextResource(object):
 
 
 asgi = falcon.asgi.App(middleware=[tortoise_init])
+
+# Change JSON handler to orjson
+JSONHandler = media.JSONHandler(dumps=orjson.dumps, loads=orjson.loads)
+extra_handlers = {
+    "application/json": JSONHandler,
+    "application/json; charset=UTF-8": JSONHandler
+}
+asgi.req_options.media_handlers.update(extra_handlers)
+asgi.resp_options.media_handlers.update(extra_handlers)
+
 # register resources
 asgi.add_route("/json", JSONResource())
 asgi.add_route("/db", SingleQuery())
