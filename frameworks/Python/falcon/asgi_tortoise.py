@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 import falcon.asgi
-from falcon import HTTPInternalServerError
 from helpers import load_template, FortuneTuple, generate_ids, sanitize
 from operator import attrgetter
 from random import randint
 from tortoise import Tortoise
 from tortoise_models import World, Fortune
-from tortoise.transactions import in_transaction
+from tortoise.transactions import in_transaction, atomic
 from tortoise.exceptions import OperationalError
 
 
@@ -33,20 +32,25 @@ class JSONResource(object):
 
 
 class SingleQuery(object):
+    # Note: There's much improvement when we decorate
+    # the query, even just for retreiving data
+    @atomic()
     async def on_get(self, request, response):
         resp = await World.get(id=randint(1, 10000))
         response.media = resp.to_dict()
 
 
 class MultipleQueries(object):
+    # Note: Not much different between using atomic or
+    # in_transaction decorator here.
+    @atomic()
     async def on_get(self, request, response, num):
-        try:
-            async with in_transaction():
-                num = sanitize(num)
-                items = await World.filter(id__in=generate_ids(num)).values()
-                response.media = [i.to_dict() for i in items]
-        except OperationalError:
-            raise HTTPInternalServerError()
+        num = sanitize(num)
+        worlds = []
+        for ids in generate_ids(num):
+            data = await World.get(id=ids)
+            worlds.append(data.to_dict())
+        response.media = worlds
 
 
 class UpdateQueries(object):
@@ -56,13 +60,13 @@ class UpdateQueries(object):
                 num = sanitize(num)
                 items = await World.filter(id__in=generate_ids(num))
                 worlds = []
-                for idx in items:
-                    idx.randomNumber = randint(1, 10000)
-                    await idx.save()
-                    worlds.append({'id': idx.id, 'randomNumber': idx.randomNumber})
+                for ids in items:
+                    ids.randomNumber = randint(1, 10000)
+                    await ids.save()
+                    worlds.append({'id': ids.id, 'randomNumber': ids.randomNumber})
                 response.media = worlds
         except OperationalError:
-            raise HTTPInternalServerError()
+            pass
 
 
 class Fortunes(object):
