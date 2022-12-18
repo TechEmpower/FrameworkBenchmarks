@@ -46,7 +46,7 @@ fn build_pool(database_url: &str, size: u32) -> Result<PgPool, PoolError> {
         .build(manager)
 }
 
-#[fn_handler]
+#[handler]
 async fn world_row(res: &mut Response) -> Result<(), Error> {
     let mut rng = SmallRng::from_entropy();
     let random_id = rng.gen_range(1..10_001);
@@ -57,7 +57,7 @@ async fn world_row(res: &mut Response) -> Result<(), Error> {
     Ok(())
 }
 
-#[fn_handler]
+#[handler]
 async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let count = req.query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
@@ -74,7 +74,7 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     Ok(())
 }
 
-#[fn_handler]
+#[handler]
 async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let count = req.query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
@@ -92,7 +92,7 @@ async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Err
     Ok(())
 }
 
-#[fn_handler]
+#[handler]
 async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let count = req.query::<usize>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
@@ -121,7 +121,7 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     Ok(())
 }
 
-#[fn_handler]
+#[handler]
 async fn fortunes(res: &mut Response) -> Result<(), Error> {
     let conn = connect()?;
     let mut items = fortune::table.get_results::<Fortune>(&conn)?;
@@ -179,7 +179,7 @@ fn main() {
     );
     let size = available_parallelism().map(|n| n.get()).unwrap_or(16);
     DB_POOL
-        .set(build_pool(&DB_URL, size as u32).expect(&format!("Error connecting to {}", &DB_URL)))
+        .set(build_pool(DB_URL, size as u32).unwrap_or_else(|_| panic!("Error connecting to {}", &DB_URL)))
         .ok();
     populate_cache().expect("error cache worlds");
     for _ in 1..size {

@@ -11,7 +11,7 @@ RUN echo 'APT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/00-genera
 
 FROM debian AS racket
 
-ARG RACKET_VERSION=8.3
+ARG RACKET_VERSION=8.6
 
 RUN apt-get update -q \
     && apt-get install --no-install-recommends -q -y \
@@ -27,7 +27,6 @@ ENV SSL_CERT_DIR="/etc/ssl/certs"
 
 RUN apt-get update -q \
   && apt-get install --no-install-recommends -q -y redis-server
-
 
 FROM racket AS builder
 

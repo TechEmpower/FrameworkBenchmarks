@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PlaintextController
 {
     /**
+     * @Route("/")
      * @Route("/plaintext")
      */
     public function plaintext(): Response

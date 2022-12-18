@@ -10,7 +10,7 @@ RUN apt-get update -yqq > /dev/null && \
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 RUN apt-get install -y php-pear php8.1-dev libevent-dev > /dev/null
-RUN pecl install event-3.0.6 > /dev/null && echo "extension=event.so" > /etc/php/8.1/cli/conf.d/event.ini
+RUN pecl install event-3.0.8 > /dev/null && echo "extension=event.so" > /etc/php/8.1/cli/conf.d/event.ini
 
 COPY deploy/conf/cliphp.ini /etc/php/8.1/cli/php.ini
 
@@ -23,6 +23,8 @@ RUN git clone -b dev --single-branch --depth 1 https://github.com/KumbiaPHP/Kumb
 RUN sed -i "s|header(|\\\Workerman\\\Protocols\\\Http::header(|g" bench/app/controllers/plaintext_controller.php
 RUN sed -i "s|header(|\\\Workerman\\\Protocols\\\Http::header(|g" bench/app/controllers/json_controller.php
 RUN sed -i "s|//KuRaw::init(|KuRaw::init(|g" server.php
+#RUN sed -i "s|opcache.jit=tracing|opcache.jit=function|g" /etc/php/8.1/cli/php.ini
+RUN sed -i "s|opcache.jit_buffer_size=128M|;opcache.jit_buffer_size=128M|g" /etc/php/8.1/cli/php.ini
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 

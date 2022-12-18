@@ -1,16 +1,18 @@
 package com.hexagonkt
 
-import com.hexagonkt.core.require
+import com.hexagonkt.core.fieldsMapOf
 import com.hexagonkt.core.media.ApplicationMedia.JSON
 import com.hexagonkt.core.media.TextMedia.HTML
 import com.hexagonkt.core.media.TextMedia.PLAIN
-import com.hexagonkt.core.multiMapOf
 import com.hexagonkt.http.model.ContentType
+import com.hexagonkt.http.model.Header
+import com.hexagonkt.http.model.Headers
 import com.hexagonkt.http.server.handlers.HttpServerContext
 import com.hexagonkt.http.server.handlers.PathHandler
 import com.hexagonkt.http.server.handlers.path
 import com.hexagonkt.http.toHttpFormat
-import com.hexagonkt.serialization.jackson.json.Json
+import com.hexagonkt.model.*
+import com.hexagonkt.serialization.dsl.json.Json
 import com.hexagonkt.serialization.serialize
 import com.hexagonkt.store.BenchmarkStore
 import com.hexagonkt.templates.TemplatePort
@@ -23,8 +25,8 @@ import kotlin.text.Charsets.UTF_8
 
 class Controller(
     settings: Settings,
-    stores: Map<String, BenchmarkStore>,
-    templateEngines: Map<String, TemplatePort>,
+    store: BenchmarkStore,
+    templateEngine: TemplatePort,
 ) {
     private val queriesParam: String = settings.queriesParam
     private val cachedQueriesParam: String = settings.cachedQueriesParam
@@ -34,37 +36,25 @@ class Controller(
     private val json: ContentType = ContentType(JSON)
     private val html: ContentType = ContentType(HTML, charset = UTF_8)
 
-    private val templates: Map<String, URL> = mapOf(
-        "pebble" to URL("classpath:fortunes.pebble.html")
+    private val templateUrl: URL = URL("classpath:fortunes.pebble.html")
+
+    private val headers = Headers(
+        Header("server", "Hexagon"),
     )
 
     internal val path: PathHandler by lazy {
         path {
             on("*") {
-                val headers = multiMapOf(
-                    "server" to "Hexagon",
-                    "date" to now().toHttpFormat(),
-                )
-
-                send(headers = headers)
+                send(headers = headers + Header("date", now().toHttpFormat()))
             }
 
             get("/plaintext") { ok(settings.textMessage, contentType = plain) }
-            get("/json") { ok(Message(settings.textMessage).serialize(Json.raw), contentType = json) }
-
-            stores.forEach { (storeEngine, store) ->
-                path("/$storeEngine") {
-                    templateEngines.forEach { (templateEngineId, templateEngine) ->
-                        val templateUrl = templates.require(templateEngineId)
-                        get("/${templateEngineId}/fortunes") { listFortunes(store, templateUrl, templateEngine) }
-                    }
-
-                    get("/db") { dbQuery(store) }
-                    get("/query") { getWorlds(store) }
-                    get("/cached") { getCachedWorlds(store) }
-                    get("/update") { updateWorlds(store) }
-                }
-            }
+            get("/json") { ok(Message(settings.textMessage).toMap().serialize(Json.raw), contentType = json) }
+            get("/fortunes") { listFortunes(store, templateUrl, templateEngine) }
+            get("/db") { dbQuery(store) }
+            get("/query") { getWorlds(store) }
+            get("/cached-queries") { getCachedWorlds(store) }
+            get("/update") { updateWorlds(store) }
         }
     }
 
@@ -83,7 +73,7 @@ class Controller(
     private fun HttpServerContext.dbQuery(store: BenchmarkStore): HttpServerContext {
         val ids = listOf(randomWorld())
         val worlds = store.findWorlds(ids)
-        val world = worlds.first()
+        val world = worlds.first().toMap()
 
         return sendJson(world)
     }
@@ -91,7 +81,7 @@ class Controller(
     private fun HttpServerContext.getWorlds(store: BenchmarkStore): HttpServerContext {
         val worldsCount = getWorldsCount(queriesParam)
         val ids = (1..worldsCount).map { randomWorld() }
-        val worlds = store.findWorlds(ids)
+        val worlds = store.findWorlds(ids).map { it.toMap() }
 
         return sendJson(worlds)
     }
@@ -99,7 +89,7 @@ class Controller(
     private fun HttpServerContext.getCachedWorlds(store: BenchmarkStore): HttpServerContext {
         val worldsCount = getWorldsCount(cachedQueriesParam)
         val ids = (1..worldsCount).map { randomWorld() }
-        val worlds = store.findCachedWorlds(ids)
+        val worlds = store.findCachedWorlds(ids).map { it.toMap() }
 
         return sendJson(worlds)
     }
@@ -110,14 +100,14 @@ class Controller(
 
         store.replaceWorlds(worlds)
 
-        return sendJson(worlds)
+        return sendJson(worlds.map { it.toMap() })
     }
 
     private fun HttpServerContext.sendJson(body: Any): HttpServerContext =
         ok(body.serialize(Json.raw), contentType = json)
 
     private fun HttpServerContext.getWorldsCount(parameter: String): Int =
-        request.queryParameters[parameter]?.toIntOrNull().let {
+        request.queryParameters[parameter]?.value?.toIntOrNull().let {
             when {
                 it == null -> 1
                 it < 1 -> 1
@@ -128,4 +118,19 @@ class Controller(
 
     private fun randomWorld(): Int =
         ThreadLocalRandom.current().nextInt(worldRows) + 1
+
+    private fun Message.toMap(): Map<String, *> =
+        fieldsMapOf(Message::message to message)
+
+    private fun World.toMap(): Map<String, *> =
+        fieldsMapOf(
+            World::id to id,
+            World::randomNumber to randomNumber,
+        )
+
+    private fun CachedWorld.toMap(): Map<String, *> =
+        fieldsMapOf(
+            CachedWorld::id to id,
+            CachedWorld::randomNumber to randomNumber,
+        )
 }

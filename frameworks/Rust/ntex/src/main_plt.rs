@@ -2,13 +2,10 @@
 static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 use std::{future::Future, io, pin::Pin, task::Context, task::Poll};
 
-use ntex::{
-    fn_service, http::h1, io::Io, io::RecvError, util::ready, util::BufMut, util::PoolId,
-};
-mod utils;
+use ntex::{fn_service, http::h1, io::Io, io::RecvError, util::ready, util::PoolId};
+use yarte::Serialize;
 
-#[cfg(target_os = "macos")]
-use serde_json as simd_json;
+mod utils;
 
 const JSON: &[u8] =
     b"HTTP/1.1 200 OK\r\nServer: N\r\nContent-Type: application/json\r\nContent-Length: 27\r\n";
@@ -18,7 +15,7 @@ const HTTPNFOUND: &[u8] = b"HTTP/1.1 400 OK\r\n";
 const HDR_SERVER: &[u8] = b"Server: N\r\n";
 const BODY: &[u8] = b"Hello, World!";
 
-#[derive(serde::Serialize)]
+#[derive(Serialize)]
 pub struct Message {
     pub message: &'static str,
 }
@@ -38,22 +35,16 @@ impl Future for App {
                 Ok((req, _)) => {
                     let _ = this.io.with_write_buf(|buf| {
                         buf.with_bytes_mut(|buf| {
-                            // make sure we've got room
-                            let remaining = buf.remaining_mut();
-                            if remaining < 1024 {
-                                buf.reserve(65535 - remaining);
-                            }
-
+                            utils::reserve(buf);
                             match req.path() {
                                 "/json" => {
                                     buf.extend_from_slice(JSON);
                                     this.codec.set_date_header(buf);
-                                    let _ = simd_json::to_writer(
-                                        crate::utils::Writer(buf),
-                                        &Message {
-                                            message: "Hello, World!",
-                                        },
-                                    );
+
+                                    Message {
+                                        message: "Hello, World!",
+                                    }
+                                    .to_bytes_mut(buf);
                                 }
                                 "/plaintext" => {
                                     buf.extend_from_slice(PLAIN);

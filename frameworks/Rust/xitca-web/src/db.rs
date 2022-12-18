@@ -1,4 +1,4 @@
-use std::{cell::RefCell, collections::HashMap, error::Error, fmt::Write};
+use std::{cell::RefCell, collections::HashMap, error::Error, fmt::Write, future::Future};
 
 use futures_util::stream::{FuturesUnordered, StreamExt, TryStreamExt};
 use rand::{rngs::SmallRng, Rng, SeedableRng};
@@ -27,23 +27,18 @@ impl Drop for Client {
     }
 }
 
-pub async fn create(config: &str) -> Client {
-    let (client, conn) = Postgres::new(config.to_string()).connect().await.unwrap();
+pub async fn create(config: &str) -> DbResult<Client> {
+    let (client, conn) = Postgres::new(config.to_string()).connect().await?;
 
     tokio::task::spawn_local(async move {
         let _ = conn.await;
     });
 
-    let fortune = client
-        .prepare("SELECT * FROM fortune", &[])
-        .await
-        .unwrap()
-        .leak();
+    let fortune = client.prepare("SELECT * FROM fortune", &[]).await?.leak();
 
     let world = client
         .prepare("SELECT * FROM world WHERE id=$1", &[])
-        .await
-        .unwrap()
+        .await?
         .leak();
 
     let mut updates = HashMap::default();
@@ -64,17 +59,17 @@ pub async fn create(config: &str) -> Client {
         q.pop();
         q.push(')');
 
-        let st = client.prepare(&q, &[]).await.unwrap().leak();
+        let st = client.prepare(&q, &[]).await?.leak();
         updates.insert(num, st);
     }
 
-    Client {
+    Ok(Client {
         client,
         rng: RefCell::new(SmallRng::from_entropy()),
         fortune,
         world,
         updates,
-    }
+    })
 }
 
 type DbResult<T> = Result<T, Box<dyn Error>>;
@@ -87,17 +82,17 @@ impl Client {
             .await?
             .next()
             .await
-            .unwrap()?;
+            .ok_or_else(|| format!("World {id} does not exist"))??;
 
         Ok(World::new(row.get(0), row.get(1)))
     }
 
-    pub async fn get_world(&self) -> DbResult<World> {
+    pub fn get_world(&self) -> impl Future<Output = DbResult<World>> + '_ {
         let id = (self.rng.borrow_mut().gen::<u32>() % 10_000 + 1) as i32;
-        self.query_one_world(id).await
+        self.query_one_world(id)
     }
 
-    pub async fn get_worlds(&self, num: u16) -> DbResult<Vec<World>> {
+    pub fn get_worlds(&self, num: u16) -> impl Future<Output = DbResult<Vec<World>>> + '_ {
         let worlds = {
             let mut rng = self.rng.borrow_mut();
             (0..num)
@@ -107,8 +102,7 @@ impl Client {
                 })
                 .collect::<FuturesUnordered<_>>()
         };
-
-        worlds.try_collect().await
+        worlds.try_collect()
     }
 
     pub async fn update(&self, num: u16) -> DbResult<Vec<World>> {

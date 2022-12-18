@@ -7,9 +7,9 @@
     "Sönke Ludwig"
   ],
   "dependencies": {
-    "vibe-d": "0.9.4",
+    "vibe-d": "0.9.5",
     "mir-random": "2.2.15",
-    "vibe-d:tls": "0.9.4"
+    "vibe-d:tls": "0.9.5"
   },
   "targetType": "executable",
   "sourcePaths": [],

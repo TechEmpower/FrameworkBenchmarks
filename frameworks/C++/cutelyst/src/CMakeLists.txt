@@ -13,10 +13,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(mimalloc)
 
-find_package(Qt5 5.6.0 REQUIRED COMPONENTS Core Network Sql)
-find_package(ASqlQt5 0.43.0 REQUIRED)
-find_package(Cutelyst3Qt5 3.1 REQUIRED)
-find_package(Cutelee6Qt5 6.0.0 REQUIRED)
+find_package(Qt6 6.2.0 REQUIRED COMPONENTS Core Network Sql)
+find_package(ASqlQt6 0.74 REQUIRED)
+find_package(Cutelyst3Qt6 3.6 REQUIRED)
+find_package(Cutelee6Qt6 6.1.0 REQUIRED)
 find_package(PostgreSQL REQUIRED)
 
 # Auto generate moc files
@@ -44,10 +44,10 @@ set(cutelyst_benchmarks_SRCS
     multipledatabasequeriestest.h
     plaintexttest.cpp
     plaintexttest.h
-    root.cpp
-    root.h
     singledatabasequerytest.cpp
     singledatabasequerytest.h
+    cachedqueries.h
+    cachedqueries.cpp
     ${TEMPLATES_SRC}
 )
 
@@ -60,10 +60,11 @@ target_link_libraries(cutelyst_benchmarks
     Cutelyst::Core
     Cutelyst::Utils::Sql
     Cutelyst::View::Cutelee
-    Qt5::Core
-    Qt5::Network
-    Qt5::Sql
-    ASqlQt5::Core
+    Qt::Core
+    Qt::Network
+    Qt::Sql
+    ASql::Core
+    ASql::Pg
 )
 
 add_executable(cutelyst-benchmarks ${cutelyst_benchmarks_SRCS} main.cpp)
@@ -73,10 +74,11 @@ target_link_libraries(cutelyst-benchmarks
     Cutelyst::Server
     Cutelyst::Utils::Sql
     Cutelyst::View::Cutelee
-    Qt5::Core
-    Qt5::Network
-    Qt5::Sql
-    ASqlQt5::Core
+    Qt::Core
+    Qt::Network
+    Qt::Sql
+    ASql::Core
+    ASql::Pg
     mimalloc
 )
 if (mimalloc_FOUND)

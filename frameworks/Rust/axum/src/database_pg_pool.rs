@@ -1,3 +1,4 @@
+use axum::async_trait;
 use axum::extract::{Extension, FromRequest, RequestParts};
 use axum::http::StatusCode;
 use deadpool_postgres::{Client, Manager, ManagerConfig, RecyclingMethod};

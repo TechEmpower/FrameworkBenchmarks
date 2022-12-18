@@ -13,7 +13,7 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<cache2k-version>1.2.3.Final</cache2k-version>
-		<jackson-version>2.13.2.1</jackson-version>
+		<jackson-version>2.13.4.1</jackson-version>
 		<!-- This is the default web.xml for plaintext and json only -->
 		<maven.war.xml>src/main/webapp/WEB-INF/web.xml</maven.war.xml>
 	</properties>
@@ -108,7 +108,7 @@
 				<dependency>
 					<groupId>org.postgresql</groupId>
 					<artifactId>postgresql</artifactId>
-					<version>42.3.3</version>
+					<version>42.4.3</version>
 				</dependency>
 			</dependencies>
 			<build>

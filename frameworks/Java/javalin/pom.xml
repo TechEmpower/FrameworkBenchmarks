@@ -11,13 +11,13 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <javalin.version>3.13.3</javalin.version>
-        <slf4j.version>1.7.30</slf4j.version>
-        <jackson.version>2.12.6.1</jackson.version>
-        <hikaricp.version>4.0.2</hikaricp.version>
-        <postgresql.version>42.3.3</postgresql.version>
-        <mongodb.version>4.2.1</mongodb.version>
-        <pebble.version>3.1.5</pebble.version>
+        <javalin.version>5.2.0</javalin.version>
+        <slf4j.version>2.0.3</slf4j.version>
+        <jackson.version>2.13.4</jackson.version>
+        <hikaricp.version>5.0.1</hikaricp.version>
+        <postgresql.version>42.5.1</postgresql.version>
+        <mongodb.version>4.7.2</mongodb.version>
+        <jte.version>2.2.3</jte.version>
     </properties>
 
     <dependencies>
@@ -27,14 +27,24 @@
             <version>${javalin.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.javalin</groupId>
+            <artifactId>javalin-rendering</artifactId>
+            <version>${javalin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
+            <groupId>com.dslplatform</groupId>
+            <artifactId>dsl-json-java8</artifactId>
+            <version>1.9.9</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
@@ -52,9 +62,14 @@
             <version>${mongodb.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.pebbletemplates</groupId>
-            <artifactId>pebble</artifactId>
-            <version>${pebble.version}</version>
+            <groupId>gg.jte</groupId>
+            <artifactId>jte</artifactId>
+            <version>${jte.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>gg.jte</groupId>
+            <artifactId>jte-kotlin</artifactId>
+            <version>${jte.version}</version>
         </dependency>
     </dependencies>
 
@@ -90,6 +105,24 @@
                                 </transformer>
                             </transformers>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>gg.jte</groupId>
+                <artifactId>jte-maven-plugin</artifactId>
+                <version>${jte.version}</version>
+                <configuration>
+                    <sourceDirectory>${basedir}/src/main/jte</sourceDirectory>
+                    <contentType>Html</contentType>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

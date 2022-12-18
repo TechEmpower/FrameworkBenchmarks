@@ -69,6 +69,29 @@
 			"display_name": "lumen-laravel-s",
 			"notes": "",
 			"versus": "swoole"
+		},
+		"workerman": {
+			"json_url": "/json",
+			"db_url": "/db",
+			"query_url": "/queries/",
+			"fortune_url": "/fortunes",
+			"update_url": "/updates/",
+			"plaintext_url": "/plaintext",
+			"port": 8080,
+			"approach": "Realistic",
+			"classification": "Micro",
+			"database": "MySQL",
+			"framework": "lumen",
+			"language": "PHP",
+			"flavor": "PHP8",
+			"orm": "Full",
+			"platform": "workerman",
+			"webserver": "none",
+			"os": "Linux",
+			"database_os": "Linux",
+			"display_name": "lumen-workerman",
+			"notes": "",
+			"versus": "workerman"
 		}
 	}]
 }

@@ -1,3 +1,4 @@
+#[cfg(not(target_os = "macos"))]
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
@@ -5,13 +6,10 @@ use std::{pin::Pin, task::Context, task::Poll};
 
 use futures::future::{ok, Future, FutureExt};
 use ntex::http::header::{CONTENT_TYPE, SERVER};
-use ntex::http::{HttpService, KeepAlive, Request, Response};
+use ntex::http::{HttpService, KeepAlive, Request, Response, StatusCode};
 use ntex::service::{Service, ServiceFactory};
 use ntex::web::{Error, HttpResponse};
-use ntex::{time::Seconds, util::BytesMut, util::PoolId};
-
-#[cfg(target_os = "macos")]
-use serde_json as simd_json;
+use ntex::{time::Seconds, util::PoolId};
 
 mod db;
 mod utils;
@@ -31,29 +29,27 @@ impl Service<Request> for App {
     fn call(&self, req: Request) -> Self::Future {
         match req.path() {
             "/db" => Box::pin(self.0.get_world().map(|body| {
-                let mut res = HttpResponse::with_body(http::StatusCode::OK, body.into());
-                res.headers_mut().append(SERVER, utils::HDR_SERVER);
+                let mut res = HttpResponse::with_body(StatusCode::OK, body.into());
+                res.headers_mut().insert(SERVER, utils::HDR_SERVER);
                 res.headers_mut()
-                    .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+                    .insert(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
                 Ok(res)
             })),
             "/fortunes" => Box::pin(self.0.tell_fortune().map(|body| {
-                let mut res = HttpResponse::with_body(http::StatusCode::OK, body.into());
-                res.headers_mut().append(SERVER, utils::HDR_SERVER);
+                let mut res = HttpResponse::with_body(StatusCode::OK, body.into());
+                res.headers_mut().insert(SERVER, utils::HDR_SERVER);
                 res.headers_mut()
-                    .append(CONTENT_TYPE, utils::HDR_HTML_CONTENT_TYPE);
+                    .insert(CONTENT_TYPE, utils::HDR_HTML_CONTENT_TYPE);
                 Ok(res)
             })),
             "/query" => Box::pin(
                 self.0
                     .get_worlds(utils::get_query_param(req.uri().query()))
                     .map(|worlds| {
-                        let mut body = BytesMut::with_capacity(35 * worlds.len());
-                        let _ = simd_json::to_writer(crate::utils::Writer(&mut body), &worlds);
-                        let mut res = HttpResponse::with_body(http::StatusCode::OK, body.into());
-                        res.headers_mut().append(SERVER, utils::HDR_SERVER);
+                        let mut res = HttpResponse::with_body(StatusCode::OK, worlds.into());
+                        res.headers_mut().insert(SERVER, utils::HDR_SERVER);
                         res.headers_mut()
-                            .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+                            .insert(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
                         Ok(res)
                     }),
             ),
@@ -61,16 +57,14 @@ impl Service<Request> for App {
                 self.0
                     .update(utils::get_query_param(req.uri().query()))
                     .map(|worlds| {
-                        let mut body = BytesMut::with_capacity(35 * worlds.len());
-                        let _ = simd_json::to_writer(crate::utils::Writer(&mut body), &worlds);
-                        let mut res = HttpResponse::with_body(http::StatusCode::OK, body.into());
-                        res.headers_mut().append(SERVER, utils::HDR_SERVER);
+                        let mut res = HttpResponse::with_body(StatusCode::OK, worlds.into());
+                        res.headers_mut().insert(SERVER, utils::HDR_SERVER);
                         res.headers_mut()
-                            .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+                            .insert(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
                         Ok(res)
                     }),
             ),
-            _ => Box::pin(ok(Response::new(http::StatusCode::NOT_FOUND))),
+            _ => Box::pin(ok(Response::new(StatusCode::NOT_FOUND))),
         }
     }
 }
@@ -100,8 +94,8 @@ async fn main() -> std::io::Result<()> {
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", |cfg| {
             cfg.memory_pool(PoolId::P1);
-            PoolId::P1.set_read_params(65535, 1024);
-            PoolId::P1.set_write_params(65535, 1024);
+            PoolId::P1.set_read_params(65535, 2048);
+            PoolId::P1.set_write_params(65535, 2048);
 
             HttpService::build()
                 .keep_alive(KeepAlive::Os)

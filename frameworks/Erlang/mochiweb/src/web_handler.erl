@@ -9,51 +9,49 @@ stop() ->
     mochiweb_http:stop(?MODULE).
 
 dispatch(Req) ->
-    Method = Req:get(method),
-    Path = string:tokens(Req:get(path), "/"),
+    Method = mochiweb_request:get(method, Req),
+    Path = mochiweb_request:get(path, Req),
     handle(Method, Path, Req).
 
 %% handle
 
-handle('GET', ["json"], Req) ->
+handle('GET', "/json", Req) ->
     json(Req, erl_bench:hello_json());
 
-handle('GET', ["plaintext"], Req) ->
+handle('GET', "/plaintext", Req) ->
     plain(Req, erl_bench:hello_plain());
 
-handle('GET', ["db"], Req) ->
-    json(Req, erl_bench:random_json());
+handle('GET', "/db", Req) ->
+    Json = erl_bench:random_json(),
+    json(Req, Json);
 
-handle('GET', ["queries"], Req) ->
+handle('GET', "/queries", Req) ->
     Queries = queries(Req),
     json(Req, erl_bench:randoms_json(Queries));
 
-handle('GET', ["updates"], Req) ->
+handle('GET', "/updates", Req) ->
     Queries = queries(Req),
     json(Req, erl_bench:update_randoms_json(Queries));
 
-handle('GET', ["fortunes"], Req) ->
-    fortune(Req, erl_bench:fortunes_html());
+handle('GET', "/fortunes", Req) ->
+    html(Req, erl_bench:fortunes_html());
 
 handle(_Method, _Path, Req) ->
-    Req:respond({404, [{"Content-Type", "text/plain"}], "Not Found"}).
+    mochiweb_request:respond({404, [{"Content-Type", "text/plain"}], "404 Not Found"}, Req).
 
 %% private
 
 json(Req, Json) ->
-    Req:ok({"application/json", Json}).
+    mochiweb_request:ok({"application/json", jiffy:encode(Json)}, Req).
 
 plain(Req, Text) ->
-    Req:ok({"text/plain", Text}).
+    mochiweb_request:ok({"text/plain", Text}, Req).
 
 html(Req, Html) ->
-    Req:ok({"text/html", Html}).
-
-fortune(Req, Html) ->
-    Req:ok({"text/html;charset=UTF-8", Html}).
+    mochiweb_request:ok({"text/html;charset=UTF-8", Html}, Req).
 
 queries(Req) ->
-    Params = Req:parse_qs(),
+    Params = mochiweb_request:parse_qs(Req),
     Queries = (catch list_to_integer(proplists:get_value("queries", Params, "1"))),
     case {is_number(Queries), Queries > 500} of
         {true, true} -> 500;

@@ -20,7 +20,7 @@
         <hikaricp.version>5.0.0</hikaricp.version>
         <logback.version>1.2.4</logback.version>
         <mysql.version>8.0.28</mysql.version>
-        <postgresql.version>42.2.23</postgresql.version>
+        <postgresql.version>42.4.3</postgresql.version>
     </properties>
 
     <dependencies>

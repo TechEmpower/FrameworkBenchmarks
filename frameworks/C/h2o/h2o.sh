@@ -25,16 +25,17 @@ if [[ -z "$MUSTACHE_C_PREFIX" ]]; then
 fi
 
 if [[ "$BENCHMARK_ENV" = "Azure" ]]; then
-	DB_CONN=5
+	DB_CONN=2
 else
-	DB_CONN=5
+	DB_CONN=2
 fi
 
 build_h2o_app()
 {
 	cmake -DCMAKE_INSTALL_PREFIX="$H2O_APP_PREFIX" -DCMAKE_BUILD_TYPE=Release \
 	      -DCMAKE_PREFIX_PATH="${H2O_PREFIX};${MUSTACHE_C_PREFIX}" \
-	      -DCMAKE_C_FLAGS="-march=native $1" -G Ninja "$H2O_APP_SRC_ROOT"
+	      -DCMAKE_C_FLAGS="-march=native -mtune=native $1" -G Ninja \
+	      "$H2O_APP_SRC_ROOT"
 	cmake --build . --clean-first -j
 }
 

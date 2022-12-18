@@ -7,7 +7,7 @@ app = Robyn(__file__)
 
 
 @app.get('/plaintext')
-async def plaintext() -> str:
+def plaintext() -> str:
     return "Hello, world!"
 
 

@@ -5,9 +5,8 @@ defmodule Hello.Application do
   # for more information on OTP Applications
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
       Hello.Repo,
-      # Start the endpoint when the application starts
+      Hello.Cache,
       HelloWeb.Endpoint
     ]
 
