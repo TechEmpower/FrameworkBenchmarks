@@ -40,8 +40,8 @@ echo "Unpacking to ./libs/mORMot/static ..."
 rm -rf ./mormot2static.7z
 
 # uncomment for fixed commit URL
-#URL=https://github.com/synopse/mORMot2/tarball/b7422c9af6dbbe7710146164b46e8bff934b9f5a
-URL="https://api.github.com/repos/synopse/mORMot2/tarball/$USED_TAG"
+URL=https://github.com/synopse/mORMot2/tarball/53fff764736336c48f94202d11a578b8298d5c7e
+#URL="https://api.github.com/repos/synopse/mORMot2/tarball/$USED_TAG"
 echo "Download and unpacking mORMot sources from $URL ..."
 wget -qO- "$URL" | tar -xz -C ./libs/mORMot  --strip-components=1
 
