@@ -1,8 +1,8 @@
-FROM python:3.8-buster
+FROM python:3.9-bullseye
 
 RUN apt-get update; apt-get install libpq-dev python3-dev libev-dev -y
-COPY ./ /falcon
 WORKDIR /falcon
+COPY ./ /falcon
 RUN pip3 install -U pip; pip3 install -r /falcon/requirements-bjoern.txt
 
 EXPOSE 8080
