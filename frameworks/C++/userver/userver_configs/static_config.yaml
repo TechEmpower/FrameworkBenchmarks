@@ -24,6 +24,9 @@ components_manager:
                 port: 8080              # ...to listen on this port and...
                 task_processor: main-task-processor    # ...process incoming requests on this task processor.
             server-name: us
+        primitive-http-server:
+            port: 8081
+            task_processor: main-task-processor
         logging:
             fs-task-processor: fs-task-processor
             loggers:
