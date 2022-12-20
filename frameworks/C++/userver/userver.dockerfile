@@ -1,4 +1,4 @@
-FROM ghcr.io/userver-framework/docker-userver-build-base:v1a
+FROM ghcr.io/userver-framework/docker-userver-build-base:v1a AS builder
 WORKDIR src
 COPY userver_benchmark/src/ ./
 RUN git clone https://github.com/userver-framework/userver.git && \
@@ -11,7 +11,11 @@ RUN mkdir build && cd build && \
           -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-march=native" .. && \
     make -j $(nproc)
 
-COPY userver_benchmark/configs/* ./
+FROM builder AS runner
+WORKDIR /app
+COPY userver_configs/* ./
+COPY --from=builder /src/build/userver_techempower ./
 
 EXPOSE 8090
-CMD ./build/userver_techempower -c /src/static_config.yaml
+CMD ./userver_techempower -c ./static_config.yaml
+

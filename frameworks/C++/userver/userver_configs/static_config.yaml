@@ -38,12 +38,12 @@ components_manager:
         dynamic-config:                      # Dynamic config storage options, do nothing
             fs-cache-path: ''
         dynamic-config-fallbacks:            # Load options from file and push them into the dynamic config storage.
-            fallback-path: /src/dynamic_config_fallback.json
+            fallback-path: /app/dynamic_config_fallback.json
 
         testsuite-support:
 
         secdist: # Component that stores configuration of hosts and passwords
-            config: /src/secure_data.json  # Values are supposed to be stored in this file
+            config: /app/secure_data.json  # Values are supposed to be stored in this file
             missing-ok: false                             # ... but if the file is missing it is still ok
 
         plaintext-handler:
