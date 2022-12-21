@@ -14,7 +14,7 @@
       "database": "MySQL",
       "framework": "Flight",
       "language": "PHP",
-      "flavor": "PHP7",
+      "flavor": "PHP8",
       "orm": "Raw",
       "platform": "FPM/FastCGI",
       "webserver": "nginx",
