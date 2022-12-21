@@ -1,6 +1,6 @@
 use ohkami::{prelude::*, json};
 use sqlx::postgres::PgPoolOptions;
-mod components; use components::{
+mod utils; use utils::{
     consts::{DB_URL, MAX_CONNECTIONS},
     models::{World, Fortune},
     functions::{random_i32, random_i32s, html_from},
@@ -19,7 +19,7 @@ fn main() -> Result<()> {
         .GET("/json",      || async {Response::OK(json!("message": "Hello, World!"))})
         .GET("/plaintext", || async {Response::OK("Hello, World!")})
         .GET("/db",        handle_db)
-        .GET("/fortunes",  handle_fortunes)
+        .GET("/fortune",  handle_fortune)
         .GET("/queries",   handle_queries)
         .GET("/updates",   handle_updates)
         .serve_on(":8080")
@@ -35,7 +35,7 @@ async fn handle_db(ctx: Context) -> Result<Response> {
     Response::OK(json(&world)?)
 }
 
-async fn handle_fortunes(ctx: Context) -> Result<Response> {
+async fn handle_fortune(ctx: Context) -> Result<Response> {
     let mut fortunes = sqlx::query_as::<_, Fortune>(
         "SELECT id, message FROM fortune"
     )

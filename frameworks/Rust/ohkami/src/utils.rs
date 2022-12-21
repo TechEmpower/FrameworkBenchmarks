@@ -23,8 +23,8 @@ pub(crate) mod models {
 }
 
 pub(crate) mod functions {
+    use ohkami::prelude::Body;
     use rand::Rng;
-    use ohkami::response::Body;
     use super::{models::Fortune, consts::RAND_RANGE};
 
     pub fn random_i32() -> i32 {
