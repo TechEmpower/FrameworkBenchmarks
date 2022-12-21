@@ -15,15 +15,15 @@
         "database": "mysql",
         "framework": "Nette",
         "language": "PHP",
-        "flavor": "None",
+        "flavor": "PHP8",
         "orm": "Full",
-        "platform": "None",
+        "platform": "FPM/FastCGI",
         "webserver": "nginx",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "Nette",
         "notes": "",
-        "versus": "None"
+        "versus": "php"
       }
     }
   ]
