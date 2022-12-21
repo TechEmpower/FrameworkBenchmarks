@@ -12,6 +12,7 @@ fn main() -> Result<()> {
             pool_options: PgPoolOptions::new().max_connections(MAX_CONNECTIONS),
             url:          DB_URL,
         },
+        log_subscribe: None,
         ..Default::default()
     };
 

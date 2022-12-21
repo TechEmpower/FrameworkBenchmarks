@@ -870,8 +870,7 @@ dependencies = [
 [[package]]
 name = "ohkami"
 version = "0.3.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c5865b230c6e90ca5146fc32495d8e6fc601756727affb1567d0a9d0096de6c0"
+source = "git+https://github.com/kana-rus/ohkami#c5f609c97fe610e4daef2c8263e3bb43348efc29"
 dependencies = [
  "async-std",
  "chrono",
