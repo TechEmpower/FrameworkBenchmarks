@@ -5,7 +5,13 @@
 
 #include <userver/components/tcp_acceptor_base.hpp>
 
-namespace userver_techempower::bare {
+namespace userver_techempower {
+
+namespace single_query {
+class Handler;
+}
+
+namespace bare {
 
 class PrimitiveHttpConnection;
 
@@ -28,8 +34,10 @@ class PrimitiveHttpServer final : public userver::components::TcpAcceptorBase {
   friend class PrimitiveHttpConnection;
   [[nodiscard]] Response HandleRequest(std::string_view url) const;
 
+  const single_query::Handler& single_query_;
+
   static constexpr std::size_t kMaxFd = 65536;
   std::array<std::unique_ptr<PrimitiveHttpConnection>, kMaxFd> connections_;
 };
-
-}  // namespace userver_techempower::bare
+}  // namespace bare
+}  // namespace userver_techempower

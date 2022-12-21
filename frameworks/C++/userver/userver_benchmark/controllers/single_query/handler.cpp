@@ -19,6 +19,10 @@ userver::formats::json::Value Handler::HandleRequestJsonThrow(
     const userver::server::http::HttpRequest&,
     const userver::formats::json::Value&,
     userver::server::request::RequestContext&) const {
+  return GetResponse();
+}
+
+userver::formats::json::Value Handler::GetResponse() const {
   const auto row =
       pg_->Execute(db_helpers::kClusterHostType, db_helpers::kSelectRowQuery,
                    db_helpers::GenerateRandomId())
