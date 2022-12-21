@@ -36,10 +36,14 @@ userver::formats::json::Value Handler::HandleRequestJsonThrow(
     const userver::server::http::HttpRequest& request,
     const userver::formats::json::Value&,
     userver::server::request::RequestContext&) const {
-  const auto queries_count =
+  const auto queries =
       db_helpers::ParseParamFromQuery(request, query_arg_name_);
 
-  std::vector<int> random_ids(queries_count);
+  return GetResponse(queries);
+}
+
+userver::formats::json::Value Handler::GetResponse(int queries) const {
+  std::vector<int> random_ids(queries);
   std::generate(random_ids.begin(), random_ids.end(),
                 db_helpers::GenerateRandomId);
   std::sort(random_ids.begin(), random_ids.end());
@@ -52,7 +56,7 @@ userver::formats::json::Value Handler::HandleRequestJsonThrow(
                              userver::storages::postgres::kRowTag));
   }
 
-  std::vector<int> random_numbers(queries_count);
+  std::vector<int> random_numbers(queries);
   std::generate(random_numbers.begin(), random_numbers.end(),
                 db_helpers::GenerateRandomValue);
 

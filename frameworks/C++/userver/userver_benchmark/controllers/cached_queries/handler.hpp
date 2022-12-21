@@ -18,6 +18,8 @@ class Handler final : public userver::server::handlers::HttpHandlerJsonBase {
       const userver::formats::json::Value&,
       userver::server::request::RequestContext&) const final;
 
+  userver::formats::json::Value GetResponse(int queries) const;
+
  private:
   const WorldCacheComponent& cache_;
 

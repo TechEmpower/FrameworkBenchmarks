@@ -106,7 +106,7 @@ class ResponseBuffers final {
 
     boost::container::small_vector<userver::engine::io::IoData,
                                    kMaxResponses * 2>
-        iovec{Size() * 2};
+        iovec(Size() * 2);
 
     std::size_t index = 0;
     std::size_t total_size = 0;

@@ -29,4 +29,6 @@ userver::formats::json::Value Serialize(
 int ParseParamFromQuery(const userver::server::http::HttpRequest& request,
                         const std::string& name);
 
+int ParseParamFromQuery(std::string_view url, std::string_view name);
+
 }  // namespace userver_techempower::db_helpers

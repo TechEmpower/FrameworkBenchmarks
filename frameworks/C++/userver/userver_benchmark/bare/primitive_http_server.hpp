@@ -11,6 +11,18 @@ namespace single_query {
 class Handler;
 }
 
+namespace multiple_queries {
+class Handler;
+}
+
+namespace cached_queries {
+class Handler;
+}
+
+namespace updates {
+class Handler;
+}
+
 namespace bare {
 
 class PrimitiveHttpConnection;
@@ -35,6 +47,9 @@ class PrimitiveHttpServer final : public userver::components::TcpAcceptorBase {
   [[nodiscard]] Response HandleRequest(std::string_view url) const;
 
   const single_query::Handler& single_query_;
+  const multiple_queries::Handler& multiple_queries_;
+  const updates::Handler& updates_;
+  const cached_queries::Handler& cached_queries_;
 
   static constexpr std::size_t kMaxFd = 65536;
   std::array<std::unique_ptr<PrimitiveHttpConnection>, kMaxFd> connections_;
