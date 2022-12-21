@@ -1,0 +1,30 @@
+{
+  "framework": "nette",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/simple/json",
+        "plaintext_url": "/simple/plaintext",
+		"db_url": "/database/db",
+		"query_url": "/database/query?queries=",
+		"update_url": "/database/update?queries=",
+		"fortune_url": "/database/fortune",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "mysql",
+        "framework": "Nette",
+        "language": "PHP",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "nginx",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Nette",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
