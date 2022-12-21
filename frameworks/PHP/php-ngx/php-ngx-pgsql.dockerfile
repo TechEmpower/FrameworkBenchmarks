@@ -3,15 +3,16 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
-RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
-RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq wget git unzip libxml2-dev cmake make systemtap-sdt-dev \
-                    zlib1g-dev libpcre3-dev libargon2-0-dev libsodium-dev \
-                    php8.1-cli php8.1-dev libphp8.1-embed php8.1-pgsql nginx > /dev/null
+RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null && \
+    apt-get update -yqq > /dev/null && apt-get upgrade -yqq > /dev/null
 
-ADD ./ ./
+RUN apt-get install -yqq wget git unzip libxml2-dev cmake make systemtap-sdt-dev \
+                zlib1g-dev libpcre3-dev libargon2-0-dev libsodium-dev \
+                php8.1-cli php8.1-dev libphp8.1-embed php8.1-pgsql nginx > /dev/null
 
-ENV NGINX_VERSION 1.21.6
+ADD . .
+
+ENV NGINX_VERSION 1.23.3
 
 RUN git clone -b v0.0.26 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
 
