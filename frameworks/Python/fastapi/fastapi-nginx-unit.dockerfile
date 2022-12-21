@@ -1,4 +1,4 @@
-FROM nginx/unit:1.28.0-python3.10
+FROM nginx/unit:1.29.0-python3.11
 
 WORKDIR /fastapi
 
