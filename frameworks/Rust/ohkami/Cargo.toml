@@ -8,3 +8,4 @@ ohkami = { git = "https://github.com/kana-rus/ohkami", features = ["sqlx", "post
 serde = { version = "1.0", features = ["derive"] }
 sqlx = "0.6"
 rand = "0.8.5"
+yarte = "0.15"

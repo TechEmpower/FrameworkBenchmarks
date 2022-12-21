@@ -3,7 +3,7 @@ use sqlx::postgres::PgPoolOptions;
 mod components; use components::{
     consts::{DB_URL, MAX_CONNECTIONS},
     models::{World, Fortune},
-    functions::{random_i32, random_i32s, html_from},
+    functions::{random_i32, random_i32s, render_html},
 };
 
 fn main() -> Result<()> {
@@ -47,7 +47,7 @@ async fn handle_fortunes(ctx: Context) -> Result<Response> {
         message: "Additional fortune added at request time.".into(),
     });
     fortunes.sort_unstable_by(|it, next| it.message.cmp(&next.message));
-    Response::OK(html_from(fortunes))
+    render_html(fortunes)
 }
 
 async fn handle_queries(ctx: Context) -> Result<Response> {

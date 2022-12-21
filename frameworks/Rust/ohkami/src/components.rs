@@ -9,6 +9,7 @@ pub(crate) mod consts {
 pub(crate) mod models {
     use serde::Serialize;
     use sqlx::FromRow;
+    use yarte::Template;
 
     #[derive(FromRow, Serialize)]
     pub struct World {
@@ -19,17 +20,24 @@ pub(crate) mod models {
             self.randomnumber = new_randomnumber
         }
     }
+
     #[derive(FromRow, Serialize)]
     pub struct Fortune {
         pub id:      i32,
         pub message: String,
     }
+    #[derive(Template)]
+    #[template(path = "fortunes.hbs")]
+    pub(crate) struct FortunesTemplate {
+        pub(crate) fortunes: Vec<Fortune>
+    }
 }
 
 pub(crate) mod functions {
-    use ohkami::prelude::Body;
+    use ohkami::{prelude::Body, result::{Result, ElseResponseWithErr}, response::Response};
     use rand::Rng;
-    use super::{models::Fortune, consts::RAND_RANGE};
+    use yarte::Template;
+    use super::{models::{Fortune, FortunesTemplate}, consts::RAND_RANGE};
 
     pub fn random_i32() -> i32 {
         rand::thread_rng().gen_range(RAND_RANGE) as i32
@@ -42,13 +50,11 @@ pub(crate) mod functions {
         }
         i32s.into_iter()
     }
-    pub fn html_from(fortunes: Vec<Fortune>) -> Body {
-        Body::text_html(fortunes
-            .into_iter()
-            .fold(
-                String::from("<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"),
-                |it, next| it + &format!("<tr><td>{}</td><td>{}</td></tr>", next.id, next.message)
-            ) + "</table></body></html>"
-        )
+    pub fn render_html(fortunes: Vec<Fortune>) -> Result<Response> {
+        Response::OK(Body::html(
+            FortunesTemplate {fortunes}
+                .call()
+                ._else(|_| Response::InternalServerError("failed to render template"))?
+        ))
     }
 }
