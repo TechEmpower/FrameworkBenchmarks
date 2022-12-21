@@ -859,6 +859,16 @@ dependencies = [
 
 [[package]]
 name = "ohkami"
+version = "0.1.0"
+dependencies = [
+ "ohkami 0.3.3",
+ "rand",
+ "serde",
+ "sqlx",
+]
+
+[[package]]
+name = "ohkami"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c5865b230c6e90ca5146fc32495d8e6fc601756727affb1567d0a9d0096de6c0"
@@ -1369,16 +1379,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
-]
-
-[[package]]
-name = "techempower"
-version = "0.1.0"
-dependencies = [
- "ohkami",
- "rand",
- "serde",
- "sqlx",
 ]
 
 [[package]]

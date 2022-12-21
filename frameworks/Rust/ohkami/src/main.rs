@@ -78,7 +78,7 @@ async fn handle_updates(ctx: Context) -> Result<Response> {
         let randomnumber = new_randomnumbers.next().unwrap();
         worlds.push(
             sqlx::query_as::<_, World>(
-                "UPDATE world SET randomnumber = $1 WHERE id = $2 RETURNUNG id, randomnumber"
+                "UPDATE world SET randomnumber = $1 WHERE id = $2 RETURNING id, randomnumber"
             ).bind(randomnumber).bind(id)
                 .fetch_one(ctx.pool())
                 .await?
