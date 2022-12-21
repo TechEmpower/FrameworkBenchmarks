@@ -14,6 +14,10 @@ pub(crate) mod models {
     pub struct World {
         id:           i32,
         randomnumber: i32,
+    } impl World {
+        pub fn set_randomnumber(&mut self, new_randomnumber: i32) {
+            self.randomnumber = new_randomnumber
+        }
     }
     #[derive(FromRow, Serialize)]
     pub struct Fortune {

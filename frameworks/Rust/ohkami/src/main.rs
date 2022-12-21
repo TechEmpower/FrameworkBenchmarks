@@ -1,6 +1,6 @@
 use ohkami::{prelude::*, json};
 use sqlx::postgres::PgPoolOptions;
-mod utils; use utils::{
+mod components; use components::{
     consts::{DB_URL, MAX_CONNECTIONS},
     models::{World, Fortune},
     functions::{random_i32, random_i32s, html_from},
@@ -76,14 +76,22 @@ async fn handle_updates(ctx: Context) -> Result<Response> {
     let mut worlds = Vec::with_capacity(count);
     let mut new_randomnumbers = random_i32s(count);
     for id in random_i32s(count) {
-        let randomnumber = new_randomnumbers.next().unwrap();
-        worlds.push(
-            sqlx::query_as::<_, World>(
-                "UPDATE world SET randomnumber = $1 WHERE id = $2 RETURNING id, randomnumber"
-            ).bind(randomnumber).bind(id)
-                .fetch_one(ctx.pool())
-                .await?
-        )
+        let mut world = sqlx::query_as::<_, World>(
+            "SELECT id, randomnumber FROM world WHERE id = $1"
+        ).bind(id)
+            .fetch_one(ctx.pool())
+            .await?;
+
+        let new_randomnumber = new_randomnumbers.next().unwrap();
+        world.set_randomnumber(new_randomnumber);
+
+        sqlx::query("UPDATE world SET randomnumber = $1 WHERE id = $2")
+            .bind(new_randomnumber)
+            .bind(id)
+            .execute(ctx.pool())
+            .await?;
+
+        worlds.push(world)
     }
     Response::OK(json(&worlds)?)
 }
