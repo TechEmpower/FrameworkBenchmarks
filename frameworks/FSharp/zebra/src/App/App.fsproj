@@ -6,6 +6,8 @@
     <AssemblyName>App</AssemblyName>
     <OutputType>Exe</OutputType>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
+    <!-- Settings applicable to JIT-based deployment -->
+    <TieredPGO>true</TieredPGO>
   </PropertyGroup>
 
   <ItemGroup>
