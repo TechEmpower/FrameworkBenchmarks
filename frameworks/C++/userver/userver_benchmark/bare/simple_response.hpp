@@ -10,3 +10,4 @@ struct SimpleResponse final {
 };
 
 }  // namespace userver_techempower::bare
+

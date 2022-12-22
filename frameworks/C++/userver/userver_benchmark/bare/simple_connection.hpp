@@ -24,3 +24,4 @@ class SimpleConnection final {
 };
 
 }  // namespace userver_techempower::bare
+

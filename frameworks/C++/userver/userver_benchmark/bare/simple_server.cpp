@@ -26,3 +26,4 @@ SimpleResponse SimpleServer::HandleRequest(std::string_view url) const {
 }
 
 }  // namespace userver_techempower::bare
+

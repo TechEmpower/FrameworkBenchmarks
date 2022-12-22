@@ -40,3 +40,4 @@ class SimpleRouter final : public userver::components::LoggableComponentBase {
 
 }  // namespace bare
 }  // namespace userver_techempower
+
