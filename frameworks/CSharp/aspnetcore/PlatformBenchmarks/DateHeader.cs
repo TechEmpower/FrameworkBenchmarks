@@ -31,14 +31,14 @@ internal static class DateHeader
 
         utf8.CopyTo(s_headerBytesMaster);
         utf8.CopyTo(s_headerBytesScratch);
-        s_headerBytesMaster[suffixIndex] = (byte)'\r';
-        s_headerBytesMaster[suffixIndex + 1] = (byte)'\n';
-        s_headerBytesMaster[suffixIndex + 2] = (byte)'\r';
         s_headerBytesMaster[suffixIndex + 3] = (byte)'\n';
-        s_headerBytesScratch[suffixIndex] = (byte)'\r';
-        s_headerBytesScratch[suffixIndex + 1] = (byte)'\n';
-        s_headerBytesScratch[suffixIndex + 2] = (byte)'\r';
+        s_headerBytesMaster[suffixIndex + 2] = (byte)'\r';
+        s_headerBytesMaster[suffixIndex + 1] = (byte)'\n';
+        s_headerBytesMaster[suffixIndex] = (byte)'\r';
         s_headerBytesScratch[suffixIndex + 3] = (byte)'\n';
+        s_headerBytesScratch[suffixIndex + 2] = (byte)'\r';
+        s_headerBytesScratch[suffixIndex + 1] = (byte)'\n';
+        s_headerBytesScratch[suffixIndex] = (byte)'\r';
 
         SetDateValues(DateTimeOffset.UtcNow);
         SyncDateTimer();
