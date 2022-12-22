@@ -44,7 +44,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "userver",
+        "display_name": "userver[bare]",
         "notes": "",
         "versus": "None"
       }

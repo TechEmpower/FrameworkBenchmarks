@@ -1,5 +1,5 @@
 [framework]
-name = "drogon"
+name = "userver"
 
 [main]
 urls.plaintext = "/plaintext"
@@ -16,7 +16,7 @@ os = "Linux"
 orm = "Micro"
 platform = "None"
 webserver = "None"
-versus = "userver-bare"
+versus = "None"
 
 [bare]
 urls.plaintext = "/plaintext"
