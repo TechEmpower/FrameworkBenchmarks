@@ -1,4 +1,4 @@
-open Opium.Std
+open Opium
 open Lwt.Syntax
 
 module Tfb_headers = struct
@@ -47,7 +47,7 @@ let dump_lwt () =
     (fun (str, opt) -> Printf.eprintf "  %s = %b\n" str (Lwt_sys.have opt))
     options
 
-let create_connection_handler t addr fd=
+let create_connection_handler app addr fd=
   let f ~request_handler ~error_handler =
     Httpaf_lwt_unix.Server.create_connection_handler
       ~request_handler:(fun _ -> request_handler)
@@ -55,7 +55,7 @@ let create_connection_handler t addr fd=
       addr
       fd
   in
-  Opium_kernel.Server_connection.run f t
+  Rock.Server_connection.run f app
 
 let create_app ~port =
   let routes =
@@ -70,11 +70,11 @@ let create_app ~port =
       "/updates/:count", Routes.updates
     ]
   in
-  let add_routes app = List.fold_left (fun app (route,handler) -> (get route handler) app) app routes in
+  let add_routes app = List.fold_left (fun app (route,handler) -> (App.get route handler) app) app routes in
 
   App.empty
   |> App.cmd_name "Opium"
   |> App.port port
-  |> middleware Middleware.content_length
-  |> middleware Tfb_headers.middleware
+  |> App.middleware Middleware.content_length
+  |> App.middleware Tfb_headers.middleware
   |> add_routes

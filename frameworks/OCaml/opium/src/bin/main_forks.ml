@@ -1,4 +1,4 @@
-open Opium.Std
+open Opium
 open Lwt.Syntax
 
 let run_app app ~instances ~port =
@@ -22,7 +22,7 @@ let run_app app ~instances ~port =
     accept_loop socket handler instance
   in
 
-  let rock = App.to_rock app in
+  let rock = app in
 
   for i = 1 to instances do
     flush_all ();

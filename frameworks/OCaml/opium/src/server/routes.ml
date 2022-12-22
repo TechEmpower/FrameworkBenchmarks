@@ -1,4 +1,4 @@
-open Opium.Std
+open Opium
 open Lwt.Syntax
 
 (*

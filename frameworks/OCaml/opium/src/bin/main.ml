@@ -1,4 +1,4 @@
-open Opium.Std
+open Opium
 
 let main () =
   let port =
