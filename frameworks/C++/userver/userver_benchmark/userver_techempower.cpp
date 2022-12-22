@@ -12,7 +12,8 @@
 #include "controllers/single_query/handler.hpp"
 #include "controllers/updates/handler.hpp"
 
-#include "bare/primitive_http_server.hpp"
+#include "bare/simple_router.hpp"
+#include "bare/simple_server.hpp"
 
 namespace userver_techempower {
 
@@ -29,7 +30,9 @@ int Main(int argc, char* argv[]) {
           .Append<updates::Handler>()
           .Append<cached_queries::WorldCacheComponent>()
           .Append<cached_queries::Handler>()
-          .Append<bare::PrimitiveHttpServer>();
+          // bare
+          .Append<bare::SimpleRouter>()
+          .Append<bare::SimpleServer>();
 
   return userver::utils::DaemonMain(argc, argv, component_list);
 }

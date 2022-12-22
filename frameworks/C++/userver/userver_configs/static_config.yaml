@@ -1,5 +1,7 @@
 # yaml
 components_manager:
+    event_thread_pool:
+        threads: 3
     coro_pool:
         initial_size: 10000             # Preallocate 10000 coroutines at startup.
         max_size: 65536                 # Do not keep more than 65536 preallocated coroutines.
@@ -9,7 +11,7 @@ components_manager:
 
         main-task-processor:            # Make a task processor for CPU-bound couroutine tasks.
             thread_name: main-worker    # OS will show the threads of this task processor with 'main-worker' prefix.
-            worker_threads: 26
+            worker_threads: 25
             guess-cpu-limit: true
 
         fs-task-processor:              # Make a separate task processor for filesystem bound tasks.
@@ -26,7 +28,8 @@ components_manager:
                 handler-defaults:
                     set_tracing_headers: false
             server-name: us
-        primitive-http-server:
+        simple-router:
+        simple-server:
             port: 8081
             task_processor: main-task-processor
         logging:

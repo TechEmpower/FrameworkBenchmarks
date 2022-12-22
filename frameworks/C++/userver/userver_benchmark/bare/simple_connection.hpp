@@ -5,18 +5,18 @@
 
 namespace userver_techempower::bare {
 
-class PrimitiveHttpServer;
+class SimpleServer;
 
-class PrimitiveHttpConnection final {
+class SimpleConnection final {
  public:
-  explicit PrimitiveHttpConnection(PrimitiveHttpServer& server,
-                                   userver::engine::io::Socket&& socket);
-  ~PrimitiveHttpConnection();
+  explicit SimpleConnection(SimpleServer& server,
+                            userver::engine::io::Socket&& socket);
+  ~SimpleConnection();
 
  private:
   void Process();
 
-  const PrimitiveHttpServer& server_;
+  const SimpleServer& server_;
 
   userver::engine::io::Socket socket_;
 

@@ -1,4 +1,4 @@
-#include "primitive_http_connection.hpp"
+#include "simple_connection.hpp"
 
 #include <array>
 
@@ -6,7 +6,7 @@
 #include <http_parser.h>
 #include <boost/container/small_vector.hpp>
 
-#include "primitive_http_server.hpp"
+#include "simple_server.hpp"
 
 #include <userver/engine/async.hpp>
 #include <userver/utils/datetime/wall_coarse_clock.hpp>
@@ -48,7 +48,7 @@ struct HttpParser final {
 
   std::function<void(std::string_view)> on_request_cb{};
 
-  SmallString<100> url;
+  SmallString<50> url;
 
   explicit HttpParser(std::function<void(std::string_view)> on_request_cb)
       : on_request_cb{std::move(on_request_cb)} {
@@ -171,17 +171,15 @@ std::string_view GetCachedDate() {
 
 }  // namespace
 
-PrimitiveHttpConnection::PrimitiveHttpConnection(
-    PrimitiveHttpServer& server, userver::engine::io::Socket&& socket)
+SimpleConnection::SimpleConnection(SimpleServer& server,
+                                   userver::engine::io::Socket&& socket)
     : server_{server},
       socket_{std::move(socket)},
       processing_task_{userver::engine::AsyncNoSpan([this] { Process(); })} {}
 
-PrimitiveHttpConnection::~PrimitiveHttpConnection() {
-  processing_task_.SyncCancel();
-}
+SimpleConnection::~SimpleConnection() { processing_task_.SyncCancel(); }
 
-void PrimitiveHttpConnection::Process() {
+void SimpleConnection::Process() {
   constexpr std::size_t kBufferSize = 4096;
   std::array<char, kBufferSize> buffer{};
 
