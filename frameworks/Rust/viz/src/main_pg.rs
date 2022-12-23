@@ -7,8 +7,9 @@ use std::{
 use nanorand::{Rng, WyRand};
 use once_cell::sync::OnceCell;
 use viz::{
-    header::SERVER, types::State, Error, Request, RequestExt, Response, ResponseExt,
-    Result, Router, ServiceMaker,
+    header::{HeaderValue, SERVER},
+    types::State,
+    Error, Request, RequestExt, Response, ResponseExt, Result, Router, ServiceMaker,
 };
 use yarte::ywrite_html;
 
@@ -18,7 +19,7 @@ mod server;
 mod utils;
 
 use db_pg::{PgConnection, PgError};
-use utils::{HDR_SERVER, RANGE};
+use utils::RANGE;
 
 const DB_URL: &str =
     "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
@@ -30,7 +31,8 @@ async fn db(req: Request) -> Result<Response> {
     let world = db.get_world().await?;
 
     let mut res = Response::json(world)?;
-    res.headers_mut().insert(SERVER, HDR_SERVER);
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Viz"));
     Ok(res)
 }
 
@@ -43,7 +45,8 @@ async fn fortunes(req: Request) -> Result<Response> {
     ywrite_html!(buf, "{{> fortune }}");
 
     let mut res = Response::html(buf);
-    res.headers_mut().insert(SERVER, HDR_SERVER);
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Viz"));
     Ok(res)
 }
 
@@ -54,7 +57,8 @@ async fn queries(req: Request) -> Result<Response> {
     let worlds = db.get_worlds(count).await?;
 
     let mut res = Response::json(worlds)?;
-    res.headers_mut().insert(SERVER, HDR_SERVER);
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Viz"));
     Ok(res)
 }
 
@@ -71,7 +75,8 @@ async fn cached_queries(req: Request) -> Result<Response> {
         .collect::<Vec<_>>();
 
     let mut res = Response::json(worlds)?;
-    res.headers_mut().insert(SERVER, HDR_SERVER);
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Viz"));
     Ok(res)
 }
 
@@ -82,7 +87,8 @@ async fn updates(req: Request) -> Result<Response> {
     let worlds = db.update(count).await?;
 
     let mut res = Response::json(worlds)?;
-    res.headers_mut().insert(SERVER, HDR_SERVER);
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Viz"));
     Ok(res)
 }
 

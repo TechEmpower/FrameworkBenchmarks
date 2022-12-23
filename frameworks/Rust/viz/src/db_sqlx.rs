@@ -1,5 +1,3 @@
-use sqlx::Pool;
-
 use viz::{
     async_trait, Error, FromRequest, IntoResponse, Request, RequestExt, Response,
     StatusCode,
@@ -9,7 +7,7 @@ use crate::utils::get_query_param;
 
 pub use sqlx::{
     pool::PoolConnection,
-    postgres::{PgArguments, PgPoolOptions},
+    postgres::{PgArguments, PgPool, PgPoolOptions},
     Postgres,
 };
 
@@ -20,7 +18,7 @@ impl FromRequest for DatabaseConnection {
     type Error = PgError;
 
     async fn extract(req: &mut Request) -> Result<Self, Self::Error> {
-        req.state::<Pool<Postgres>>()
+        req.state::<PgPool>()
             .ok_or(PgError(sqlx::Error::Io(std::io::Error::from(
                 std::io::ErrorKind::NotConnected,
             ))))?
