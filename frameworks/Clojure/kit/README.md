@@ -1,7 +1,8 @@
 # Kit Benchmarking Test
 
-This is an implementation using the [Kit web framework](https://kit-clj.github.io/). It uses PostgreSQL
-with [HikariCP](https://github.com/tomekw/hikari-cp)
+This is an implementation using the [Kit web framework](https://kit-clj.github.io/).
+
+It uses PostgreSQL with [HikariCP](https://github.com/tomekw/hikari-cp)
 and [next.jdbc](https://github.com/seancorfield/next-jdbc), [Selmer](https://github.com/yogthos/Selmer) for HTTP
 templating, [Muuntaja](https://github.com/metosin/muuntaja) (with [jsonista](https://github.com/metosin/jsonista))
 for content type coercion, [Undertow](https://github.com/luminus-framework/ring-undertow-adapter) for the web
