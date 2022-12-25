@@ -42,7 +42,7 @@ pub struct PgConnection {
 
 impl PgConnection {
     pub async fn connect(db_url: String) -> Arc<PgConnection> {
-        let (cl, conn) = connect(&*db_url, NoTls)
+        let (cl, conn) = connect(&db_url, NoTls)
             .await
             .expect("can not connect to postgresql");
 

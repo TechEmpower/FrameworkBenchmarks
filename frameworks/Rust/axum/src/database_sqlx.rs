@@ -36,7 +36,7 @@ pub async fn create_pool(
     PgPoolOptions::new()
         .max_connections(max_pool_size)
         .min_connections(min_pool_size)
-        .connect(&*database_url)
+        .connect(&database_url)
         .await
         .unwrap()
 }

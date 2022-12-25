@@ -34,7 +34,7 @@ pub async fn create_pool(
     max_pool_size: u32,
 ) -> deadpool_postgres::Pool {
     let pg_config =
-        tokio_postgres::Config::from_str(&*database_url).expect("invalid database url");
+        tokio_postgres::Config::from_str(&database_url).expect("invalid database url");
 
     let mgr_config = ManagerConfig {
         recycling_method: RecyclingMethod::Fast,
