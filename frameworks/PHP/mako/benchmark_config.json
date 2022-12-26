@@ -15,7 +15,7 @@
       "framework": "mako",
       "language": "PHP",
       "flavor": "PHP8",
-      "orm": "raw",
+      "orm": "Full",
       "platform": "FPM/FastCGI",
       "webserver": "nginx",
       "os": "Linux",
