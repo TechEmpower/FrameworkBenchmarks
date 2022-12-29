@@ -20,7 +20,7 @@ path = "src/main_db.rs"
 futures = "0.1"
 # Disable default runtime, so that tokio-core can be used instead.
 # See below for why...
-hyper = { version = "0.12", default-features = false }
+hyper = { version = "0.14", default-features = false }
 # Since no logs are allowed anyways, just compile-time turn them all off
 log = { version = "0.4", features = ["release_max_level_off"] }
 markup = "0.3.1"

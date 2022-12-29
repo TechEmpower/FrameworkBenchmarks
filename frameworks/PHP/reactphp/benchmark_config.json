@@ -13,7 +13,7 @@
       "classification": "Platform",
       "framework": "reactphp",
       "language": "PHP",
-      "flavor": "PHP7",
+      "flavor": "PHP8.1",
       "database": "MySQL",
       "orm": "Raw",
       "platform": "reactphp",

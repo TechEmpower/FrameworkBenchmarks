@@ -3,30 +3,38 @@ package io.quarkus.benchmark.filter;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import javax.inject.Singleton;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerResponseContext;
-import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.Provider;
+import javax.annotation.PostConstruct;
+
+import org.jboss.resteasy.reactive.server.ServerResponseFilter;
 
 import io.quarkus.scheduler.Scheduled;
+import io.vertx.core.MultiMap;
+import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.http.HttpServerResponse;
 
-@Singleton
-@Provider
-public class ServerHeaderFilter implements ContainerResponseFilter {
+public class ServerHeaderFilter {
 
-    private String date;
+    private static final CharSequence SERVER_HEADER_NAME = HttpHeaders.createOptimized("Server");
+    private static final CharSequence SERVER_HEADER_VALUE = HttpHeaders.createOptimized("Quarkus");
+    private static final CharSequence DATE_HEADER_NAME = HttpHeaders.createOptimized("Date");
+
+    private volatile CharSequence date;
+
+    @PostConstruct
+    public void init() {
+        date = HttpHeaders.createOptimized(DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now()));
+    }
 
     @Scheduled(every="1s")
     void increment() {
-        date = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now());
+        date = HttpHeaders.createOptimized(DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now()));
     }
 
-    @Override
-    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
-        final MultivaluedMap<String, Object> headers = responseContext.getHeaders();
-        headers.add( "Server", "Quarkus");
-        headers.add( "Date", date);
+    @ServerResponseFilter
+    public void filter(HttpServerResponse response) {
+        MultiMap headers = response.headers();
+        headers.add(SERVER_HEADER_NAME, SERVER_HEADER_VALUE);
+        headers.add(DATE_HEADER_NAME, date);
     }
+
 }

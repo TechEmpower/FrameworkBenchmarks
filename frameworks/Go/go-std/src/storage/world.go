@@ -1,5 +1,7 @@
 package storage
 
+//go:generate go run github.com/mailru/easyjson/... -all -disable_members_unescape ${GOFILE}
+
 import "sync"
 
 //easyjson:json

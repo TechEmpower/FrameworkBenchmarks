@@ -1,0 +1,30 @@
+{
+  "framework": "xpresso",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "fortune_url": "/fortunes",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "Xpresso",
+        "language": "Python",
+        "flavor": "Python3",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Xpresso",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

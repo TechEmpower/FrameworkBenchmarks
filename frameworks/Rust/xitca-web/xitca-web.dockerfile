@@ -1,11 +1,11 @@
-FROM rust:1.53
+FROM rust:latest
 
 ADD ./ /xitca-web
 WORKDIR /xitca-web
 
+RUN rustup default nightly-2022-10-27
 RUN cargo clean
-RUN rustup default nightly-2021-08-03
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --bin xitca-web
+RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --bin xitca-web --features raw,sailfish,simd
 
 EXPOSE 8080
 

@@ -1,0 +1,26 @@
+{
+  "framework": "servicestack-v6",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "ServiceStack-V6",
+        "language": "C#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ServiceStack-V6",
+        "notes": "",
+        "versus": "aspcore-mvc"
+      }
+    }
+  ]
+}

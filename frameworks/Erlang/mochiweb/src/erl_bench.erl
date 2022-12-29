@@ -2,22 +2,20 @@
 -export([hello_json/0, hello_plain/0, random_json/0, randoms_json/1, update_randoms_json/1, fortunes_html/0]).
 
 hello_json() ->
-    jsonx:encode([{<<"message">>, <<"Hello, World!">>}]).
+    {[{<<"message">>, <<"Hello, World!">>}]}.
 
 hello_plain() ->
     <<"Hello, world!">>.
 
 random_json() ->
     RandomId = randoms:random_id(),
-    jsonx:encode(find(RandomId)).
+    find(RandomId).
 
 randoms_json(Count) ->
-    Json = [find(Id) || Id <- randoms:random_ids(Count)],
-    jsonx:encode(Json).
+    [find(Id) || Id <- randoms:random_ids(Count)].
 
 update_randoms_json(Count) ->
-    Json = [update(Id) || Id <- randoms:random_ids(Count)],
-    jsonx:encode(Json).
+    [update(Id) || Id <- randoms:random_ids(Count)].
 
 fortunes_html() ->
     Props = [[{message, Message}, {id, Id}] || {Message, Id} <- fortunes:all()],
@@ -28,8 +26,8 @@ fortunes_html() ->
 
 find(Id) ->
     {Id, RandomNumber} = randoms:find(Id),
-    [{<<"id">>, Id}, {<<"randomNumber">>, RandomNumber}].
+    {[{<<"id">>, Id}, {<<"randomNumber">>, RandomNumber}]}.
 
 update(Id) ->
     {Id, RandomNumber} = randoms:update(Id),
-    [{<<"id">>, Id}, {<<"randomNumber">>, RandomNumber}].
+    {[{<<"id">>, Id}, {<<"randomNumber">>, RandomNumber}]}.

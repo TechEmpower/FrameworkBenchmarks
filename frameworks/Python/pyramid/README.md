@@ -8,7 +8,7 @@ review the [documentation](https://github.com/TechEmpower/FrameworkBenchmarks/wi
 Also note that there is additional information that's provided in 
 the [Python README](../).
 
-[Pyramid](http://www.pylonsproject.org/) is a flexible Python 2/3 framework.
+[Pyramid](http://www.pylonsproject.org/) is a flexible Python 3 framework.
 This test uses [SQLAlchemy](http://www.sqlalchemy.org/) as its ORM, the default
 [Chameleon](http://www.pylonsproject.org/) for its templating, and
 [Gunicorn](https://github.com/benoitc/gunicorn) for the application server.
@@ -28,5 +28,5 @@ This test uses [SQLAlchemy](http://www.sqlalchemy.org/) as its ORM, the default
 
 ### Community
 
-* `#pyramid` IRC Channel ([irc.freenode.net](https://freenode.net/))
+* `#pyramid` IRC Channel ([irc.libera.chat](https://libera.chat))
 * [Pyramid (pylons-discuss) Google Group](https://groups.google.com/forum/#!forum/pylons-discuss)

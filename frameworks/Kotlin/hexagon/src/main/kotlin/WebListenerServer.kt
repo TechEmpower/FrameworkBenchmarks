@@ -1,17 +1,27 @@
 package com.hexagonkt
 
-import com.fasterxml.jackson.module.blackbird.BlackbirdModule
+import com.hexagonkt.http.model.Header
+import com.hexagonkt.http.model.Headers
+import com.hexagonkt.http.server.handlers.HttpHandler
+import com.hexagonkt.http.server.handlers.OnHandler
 import com.hexagonkt.http.server.servlet.ServletServer
-import com.hexagonkt.serialization.JacksonMapper
-import com.hexagonkt.serialization.Json
-import com.hexagonkt.serialization.SerializationManager
-import javax.servlet.annotation.WebListener
+import com.hexagonkt.store.BenchmarkSqlStore
+import com.hexagonkt.templates.pebble.PebbleAdapter
+import jakarta.servlet.annotation.WebListener
 
-@WebListener class WebListenerServer(settings: Settings = Settings()) : ServletServer(Controller(settings).router) {
+@WebListener class WebListenerServer(settings: Settings = Settings()) : ServletServer(createHandlers(settings)) {
 
-    init {
-        Json.mapper.registerModule(BlackbirdModule())
-        SerializationManager.mapper = JacksonMapper
-        SerializationManager.formats = linkedSetOf(Json)
+    private companion object {
+        val headers = Headers(Header("server", "Tomcat"))
+
+        fun createHandlers(settings: Settings): List<HttpHandler> {
+            val controller = Controller(settings, BenchmarkSqlStore("postgresql"), PebbleAdapter())
+            val controllerPath = controller.path
+            val serverHeaderHandler = OnHandler("*") {
+                send(headers = headers)
+            }
+
+            return listOf(serverHeaderHandler, controllerPath)
+        }
     }
 }

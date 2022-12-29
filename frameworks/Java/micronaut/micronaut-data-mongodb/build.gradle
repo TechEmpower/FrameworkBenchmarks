@@ -1,0 +1,9 @@
+plugins {
+    id 'io.micronaut.benchmark.module'
+}
+
+dependencies {
+    annotationProcessor("io.micronaut.data:micronaut-data-document-processor")
+    implementation("io.micronaut.data:micronaut-data-mongodb:3.8.1")
+    runtimeOnly("io.micronaut.mongodb:micronaut-mongo-sync")
+}

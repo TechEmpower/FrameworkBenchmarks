@@ -20,17 +20,17 @@ public:
     C_ATTR(updateb, :Local :AutoArgs)
     void updateb(Context *c);
 
-    C_ATTR(updates_postgres, :Local :AutoArgs)
+    C_ATTR(updates_postgres, :Path('ups_QPG') :AutoArgs)
     void updates_postgres(Context *c);
 
-    C_ATTR(updates_mysql, :Local :AutoArgs)
+    C_ATTR(updates_mysql, :Path('ups_QMY') :AutoArgs)
     void updates_mysql(Context *c);
 
 private:
     inline void processQuery(Context *c, QSqlQuery &query, QSqlQuery &updateQuery);
-    inline APreparedQuery getSql(int count);
+    inline ASql::APreparedQuery getSql(int count);
 
-    QMap<int, APreparedQuery> m_sqlMap;
+    QMap<int, ASql::APreparedQuery> m_sqlMap;
 };
 
 #endif // DATABASEUPDATESTEST_H

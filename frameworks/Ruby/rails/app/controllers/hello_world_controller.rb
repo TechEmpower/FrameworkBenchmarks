@@ -11,7 +11,7 @@ class HelloWorldController < ApplicationController
   end
 
   def json
-    render json: { message: 'Hello, World!' }
+    render json: JSON.generate({message: 'Hello, World!'})
   end
 
   def db
@@ -41,8 +41,8 @@ class HelloWorldController < ApplicationController
   end
 
   def update
-    worlds = query_count.times.map { random_id }.map do |id|
-      world = World.find(id)
+    worlds = Array.new(query_count) do
+      world = World.find(random_id)
       new_value = random_id
       new_value = random_id until new_value != world.randomNumber
       world.update_columns(randomNumber: new_value)

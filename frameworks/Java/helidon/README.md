@@ -1,38 +1,51 @@
 # Helidon Benchmarking Test
 
 This is the Helidon portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+Two Helidon APIs are implemented: Reactive and Nima. The Reactive API has been around since the first
+version of Helidon while Nima is a new, blocking API based on JDK 19 virtual threads. 
 
-There is currently one repository implementation.
-* [JdbcRepository](src/main/java/io/helidon/benchmark/models/JdbcRepository.java) is using JDBC and an io thread pool of size (2 * cores count) to prevent blocking netty's main event loop. It uses hikaricp to manage the connection pool. It is configured for a maximum of (2 * cores count) concurrent connections. See [About-Pool-Sizing](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing) for more information. I am assuming that the DB is running on a computer with the same spec as the one running the app, which seems to be the case based on what is written [here](https://www.techempower.com/benchmarks/#section=environment&hw=ph&test=db&l=fjd9b3)
+The code is organized into two Maven modules, namely, *reactive* and *nima*. Both modules implement the
+same set of tests outlined below. 
 
 ### Plaintext Test
 
-* [Plaintext test source](src/main/java/io/helidon/benchmark/services/PlainTextService.java)
+* [Reactive](src/main/java/io/helidon/benchmark/reactive/services/PlainTextService.java)
+* [Nima](src/main/java/io/helidon/benchmark/nima/Main.java)
 
 ### JSON Serialization Test
 
-* [JSON test source](src/main/java/io/helidon/benchmark/services/JsonService.java)
+* [Reactive](src/main/java/io/helidon/benchmark/reactive/services/JsonService.java)
+* [Nima](src/main/java/io/helidon/benchmark/nima/Main.java)
 
 ### Database Query Test
 
-* [Database Query test source](src/main/java/io/helidon/benchmark/services/DbService.java)
+* [Reactive](src/main/java/io/helidon/benchmark/reactive/services/DbService.java)
+* [Nima](src/main/java/io/helidon/benchmark/nima/services/DbService.java)
 
 ### Database Queries Test
 
-* [Database Queries test source](src/main/java/io/helidon/benchmark/services/DbService.java)
+* [Reactive](src/main/java/io/helidon/benchmark/reactive/services/DbService.java)
+* [Nima](src/main/java/io/helidon/benchmark/nima/services/DbService.java)
 
 ### Database Update Test
 
-* [Database Update test source](src/main/java/io/helidon/benchmark/services/DbService.java)
+* [Reactive](src/main/java/io/helidon/benchmark/reactive/services/DbService.java)
+* [Nima](src/main/java/io/helidon/benchmark/nima/services/DbService.java)
 
-### Template rendering Test
+### Template Rendering Test
 
-* [Template rendering test source](src/main/java/io/helidon/benchmark/services/FortuneService.java)
+* [Reactive](src/main/java/io/helidon/benchmark/reactive/services/FortuneService.java)
+* [Nima](src/main/java/io/helidon/benchmark/nima/services/FortuneHandler.java)
 
 ## Versions
 
-* [Java OpenJDK 11](http://openjdk.java.net/)
-* [Helidon 2.2.1](http://helidon.io/)
+* Reactive
+  * [Java OpenJDK 11](http://openjdk.java.net/)
+  * [Helidon 3.0.1](http://helidon.io/)
+  
+* Nima
+  * [Java OpenJDK 19 w/Loom](http://openjdk.java.net/)
+  * [Helidon 4.0.0-ALPHA1](http://helidon.io/)
 
 ## Test URLs
 

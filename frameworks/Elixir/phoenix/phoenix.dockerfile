@@ -1,29 +1,37 @@
-###############
-# Build stage #
-###############
-FROM elixir:1.12.2 as build
+ARG ELIXIR="1.14.2"
+ARG ERLANG="25.1.2"
+ARG ALPINE="3.16.2"
+
+ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR}-erlang-${ERLANG}-alpine-${ALPINE}"
+ARG RUNNER_IMAGE="alpine:${ALPINE}"
+
+FROM ${BUILDER_IMAGE} AS builder
 
 ARG MIX_ENV="prod"
 
 RUN mix local.hex --force && \
     mix local.rebar --force
 
-COPY config ./config
-COPY lib ./lib
-COPY rel ./rel
-COPY priv ./priv
-COPY mix.exs .
-COPY mix.lock .
-
+COPY mix.exs mix.lock ./
 RUN mix deps.get --force --only prod
+
+COPY config ./config
+
+RUN mix deps.compile
+
+COPY priv ./priv
+COPY lib ./lib
+
+COPY rel ./rel
 RUN mix release --force --path /export
 
-####################
-# Deployment Stage #
-####################
-FROM erlang:24.0.5
+# start a new build stage so that the final image will only contain
+# the compiled release and other runtime necessities
+FROM ${RUNNER_IMAGE}
 
-COPY --from=build /export /opt
+RUN apk add --no-cache libstdc++ openssl ncurses-libs
+
+COPY --from=builder /export /opt
 
 EXPOSE 8080
 
