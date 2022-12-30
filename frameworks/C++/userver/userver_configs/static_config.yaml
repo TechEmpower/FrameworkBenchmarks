@@ -67,9 +67,9 @@ components_manager:
         hello-world-db:
             dbalias: hello_world
             blocking_task_processor: fs-task-processor
-            min_pool_size: 20
-            max_pool_size: 520
-            max_queue_size: 500
+            min_pool_size: 28
+            max_pool_size: 28
+            max_queue_size: 512
 
         single-query-handler:
             path: /db
