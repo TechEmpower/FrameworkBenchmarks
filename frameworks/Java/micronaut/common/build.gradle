@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+    id "io.micronaut.library"
+    id "nu.studer.rocker" version "3.0.4"
+}
+
+group 'io.micronaut.benchmark'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+micronaut {
+    runtime "netty"
+    testRuntime "junit5"
+}
+
+rocker {
+    configurations {
+        main {
+            templateDir = file('src/main/resources')
+            outputDir = file('build/generated/rocker')
+            optimize = true
+        }
+    }
+}
+
+dependencies {
+    annotationProcessor("io.micronaut.data:micronaut-data-document-processor")
+
+    api("io.micronaut:micronaut-inject")
+    api("io.micronaut:micronaut-http-server-netty")
+    api("io.micronaut.reactor:micronaut-reactor")
+
+    implementation("io.micronaut.data:micronaut-data-model") {
+        transitive = false
+    }
+
+    implementation("com.fizzed:rocker-runtime")
+
+    runtimeOnly("ch.qos.logback:logback-classic")
+}
+
+test {
+    useJUnitPlatform()
+}

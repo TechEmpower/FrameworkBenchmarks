@@ -5,23 +5,13 @@ NGINX is removed in this test, and substituted by [Workerman, An asynchronous ev
 
 https://github.com/walkor/Workerman
 
-This test doesn't use the standard PHP (fw_require) because it needs PCNTL / Process Control extension. Adding PCNTL in the PHP compilation (--enable-pcntl) will fail other PHP framework test.
-
-```
-Database config
-HOST: DBHOST (from ENV) , or 127.0.0.1 if DBHOST is not available
-User : benchmarkdbuser
-Password : benchmarkdbpass
-DBNAME : hello_world
-```
 MySQL Connection is using PHP PDO::Persistent Connection.
 
-The number of threads count in PHP is (number of cores)*2.
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [PHP 7](http://www.php.net/)
-* [MySQL 5.5.54](https://dev.mysql.com/)
+* [PHP 8](http://www.php.net/)
+
 
 Pre-test:
 * [Composer](https://getcomposer.org/)
@@ -32,15 +22,15 @@ Using the PHP standard [JSON encoder](http://www.php.net/manual/en/function.json
 ## Test URLs
 
 ### JSON Encoding Test
-http://localhost:8080/json.php
+http://localhost:8080/json
 
 ### Data-Store/Database Mapping Test
-http://localhost:8080/dbraw.php
+http://localhost:8080/db
 
-http://localhost:8080/updateraw.php
+http://localhost:8080/update
 
 ### Variable Query Test
-http://localhost:8080/dbraw.php?queries=5
+http://localhost:8080/query
 
 ### Fortune Test
-http://localhost:8080/fortune.php
+http://localhost:8080/fortunes

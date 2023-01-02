@@ -1,4 +1,4 @@
-FROM pypy:3.8-7.3
+FROM pypy:3.9-bullseye
 
 RUN apt-get update; apt-get install libpq-dev python3-dev -y
 COPY ./ /falcon

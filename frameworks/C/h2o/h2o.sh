@@ -27,7 +27,7 @@ fi
 if [[ "$BENCHMARK_ENV" = "Azure" ]]; then
 	DB_CONN=2
 else
-	DB_CONN=1
+	DB_CONN=3
 fi
 
 build_h2o_app()

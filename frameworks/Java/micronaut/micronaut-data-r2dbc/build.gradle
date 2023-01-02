@@ -1,0 +1,9 @@
+plugins {
+    id 'io.micronaut.benchmark.module'
+}
+
+dependencies {
+    implementation("io.micronaut.data:micronaut-data-r2dbc")
+    runtimeOnly("org.postgresql:r2dbc-postgresql")
+    implementation("io.r2dbc:r2dbc-pool")
+}

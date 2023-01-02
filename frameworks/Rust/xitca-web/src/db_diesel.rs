@@ -153,9 +153,9 @@ impl DieselPool {
     pub async fn update(&self, num: u16) -> DbResult<Vec<World>> {
         use crate::schema::world::dsl::*;
 
-        let worlds = {
-            let mut conn = self.pool.get().await?;
+        let mut conn = self.pool.get().await?;
 
+        let mut worlds = {
             let mut rng = self.rng.borrow_mut();
             (0..num)
                 .map(|_| {
@@ -171,28 +171,25 @@ impl DieselPool {
                     }
                 })
                 .collect::<FuturesUnordered<_>>()
-        };
-
-        let mut worlds = worlds.try_collect::<Vec<_>>().await?;
+        }
+        .try_collect::<Vec<_>>()
+        .await?;
 
         worlds.sort_by_key(|w| w.id);
 
-        self.pool
-            .get()
-            .await?
-            .transaction(move |conn| {
-                Box::pin(async move {
-                    for w in &worlds {
-                        diesel::update(world)
-                            .filter(id.eq(w.id))
-                            .set(randomnumber.eq(w.randomnumber))
-                            .execute(conn)
-                            .await?;
-                    }
-                    Ok(worlds)
-                })
+        conn.transaction(move |conn| {
+            Box::pin(async move {
+                for w in &worlds {
+                    diesel::update(world)
+                        .filter(id.eq(w.id))
+                        .set(randomnumber.eq(w.randomnumber))
+                        .execute(conn)
+                        .await?;
+                }
+                Ok(worlds)
             })
-            .await
+        })
+        .await
     }
 
     pub async fn tell_fortune(&self) -> DbResult<Fortunes> {

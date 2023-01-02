@@ -1,0 +1,3 @@
+Flask==2.2.2
+git+https://github.com/cirospaciari/socketify.py.git@main#socketify
+

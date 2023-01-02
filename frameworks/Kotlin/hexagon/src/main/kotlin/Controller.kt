@@ -6,11 +6,12 @@ import com.hexagonkt.core.media.TextMedia.HTML
 import com.hexagonkt.core.media.TextMedia.PLAIN
 import com.hexagonkt.http.model.ContentType
 import com.hexagonkt.http.model.Header
-import com.hexagonkt.http.model.HttpFields
+import com.hexagonkt.http.model.Headers
 import com.hexagonkt.http.server.handlers.HttpServerContext
 import com.hexagonkt.http.server.handlers.PathHandler
 import com.hexagonkt.http.server.handlers.path
 import com.hexagonkt.http.toHttpFormat
+import com.hexagonkt.model.*
 import com.hexagonkt.serialization.dsl.json.Json
 import com.hexagonkt.serialization.serialize
 import com.hexagonkt.store.BenchmarkStore
@@ -37,7 +38,7 @@ class Controller(
 
     private val templateUrl: URL = URL("classpath:fortunes.pebble.html")
 
-    private val headers = HttpFields(
+    private val headers = Headers(
         Header("server", "Hexagon"),
     )
 
@@ -106,7 +107,7 @@ class Controller(
         ok(body.serialize(Json.raw), contentType = json)
 
     private fun HttpServerContext.getWorldsCount(parameter: String): Int =
-        request.queryParameters[parameter]?.toIntOrNull().let {
+        request.queryParameters[parameter]?.value?.toIntOrNull().let {
             when {
                 it == null -> 1
                 it < 1 -> 1

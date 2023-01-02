@@ -1,0 +1,37 @@
+micronaut:
+  application:
+    name: micronaut-benchmark
+  server:
+    port: 8080
+    server-header: Micronaut
+    date-header: false
+
+netty:
+  resource-leak-detector-level: DISABLED
+  default:
+    allocator:
+      max-order: 3
+
+datasources:
+  default:
+    driverClassName: org.postgresql.Driver
+    db-type: postgresql
+    dialect: POSTGRES
+    maximum-pool-size: 48
+    transaction-per-operation: false
+    allow-connection-per-operation: true
+
+r2dbc:
+  datasources:
+    default:
+      db-type: postgresql
+      dialect: POSTGRES
+      options:
+        protocol: postgres
+        initialSize: 48
+        maxSize: 48
+
+mongodb:
+  package-names:
+    benchmark
+  uuid-representation: STANDARD

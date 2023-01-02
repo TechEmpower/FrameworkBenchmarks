@@ -1,12 +1,14 @@
-FROM gradle:7.4.2-jdk11
+FROM gradle:7.6-jdk17
 USER root
 WORKDIR /http4k
 COPY build.gradle build.gradle
 COPY settings.gradle settings.gradle
 COPY core core
+COPY core-jdbc core-jdbc
+COPY core-pgclient core-pgclient
 COPY sunhttp sunhttp
-RUN gradle --quiet sunhttp:shadowJar
+RUN gradle --quiet --no-daemon sunhttp:shadowJar
 
 EXPOSE 9000
 
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-XX:+AlwaysPreTouch", "-jar", "sunhttp/build/libs/http4k-sunhttp-benchmark.jar"]
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-jar", "sunhttp/build/libs/http4k-benchmark.jar"]
