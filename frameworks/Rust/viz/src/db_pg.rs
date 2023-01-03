@@ -97,14 +97,11 @@ impl PgConnection {
 
 impl PgConnection {
     async fn query_one_world(&self, id: i32) -> Result<World, PgError> {
-        self.client
-            .query_one(&self.world, &[&id])
-            .await
-            .map(|row| World {
-                id: row.get(0),
-                randomnumber: row.get(1),
-            })
-            .map_err(PgError::Pg)
+        let row = self.client.query_one(&self.world, &[&id]).await?;
+        Ok(World {
+            id: row.get(0),
+            randomnumber: row.get(1),
+        })
     }
 
     pub async fn get_world(&self) -> Result<World, PgError> {

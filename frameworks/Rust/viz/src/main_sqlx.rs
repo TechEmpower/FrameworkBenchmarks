@@ -1,8 +1,8 @@
-use std::{borrow::Cow, convert::identity, thread::available_parallelism};
+use std::{convert::identity, thread::available_parallelism};
 
 use nanorand::{Rng, WyRand};
 use once_cell::sync::OnceCell;
-use sqlx::{postgres::PgRow, Arguments, Pool, Row};
+use sqlx::Pool;
 use viz::{
     header::{HeaderValue, SERVER},
     types::State,
@@ -15,9 +15,7 @@ mod models_sqlx;
 mod server;
 mod utils;
 
-use db_sqlx::{
-    Counter, DatabaseConnection, PgArguments, PgError, PgPoolOptions, Postgres,
-};
+use db_sqlx::*;
 use models_sqlx::{Fortune, World};
 use utils::RANGE;
 
@@ -31,12 +29,7 @@ async fn db(mut req: Request) -> Result<Response> {
 
     let random_id = rng.generate_range(RANGE);
 
-    let world =
-        sqlx::query_as::<_, World>("SELECT id, randomnumber FROM World WHERE id = $1")
-            .bind(random_id)
-            .fetch_one(&mut conn)
-            .await
-            .map_err(PgError)?;
+    let world = get_world(&mut conn, random_id).await?;
 
     let mut res = Response::json(world)?;
     res.headers_mut()
@@ -45,23 +38,9 @@ async fn db(mut req: Request) -> Result<Response> {
 }
 
 async fn fortunes(mut req: Request) -> Result<Response> {
-    let DatabaseConnection(mut conn) = req.extract::<DatabaseConnection>().await?;
+    let DatabaseConnection(conn) = req.extract::<DatabaseConnection>().await?;
 
-    let mut items = sqlx::query("SELECT * FROM Fortune")
-        .map(|row: PgRow| Fortune {
-            id: row.get(0),
-            message: Cow::Owned(row.get(1)),
-        })
-        .fetch_all(&mut conn)
-        .await
-        .map_err(PgError)?;
-
-    items.push(Fortune {
-        id: 0,
-        message: Cow::Borrowed("Additional fortune added at request time."),
-    });
-
-    items.sort_by(|it, next| it.message.cmp(&next.message));
+    let items = get_fortunes(conn).await?;
 
     let mut buf = BytesMut::with_capacity(2048);
     buf.extend(FortunesTemplate { items }.to_string().as_bytes());
@@ -81,13 +60,8 @@ async fn queries(mut req: Request) -> Result<Response> {
 
     for _ in 0..count {
         let id = rng.generate_range(RANGE);
-
-        sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1")
-            .bind(id)
-            .fetch_one(&mut conn)
-            .await
-            .map(|world| worlds.push(world))
-            .map_err(PgError)?;
+        let w = get_world(&mut conn, id).await?;
+        worlds.push(w);
     }
 
     let mut res = Response::json(worlds)?;
@@ -115,35 +89,11 @@ async fn cached_queries(mut req: Request) -> Result<Response> {
 }
 
 async fn updates(mut req: Request) -> Result<Response> {
-    let (Counter(count), State(mut rng), DatabaseConnection(mut conn)) = req
+    let (Counter(count), State(rng), DatabaseConnection(conn)) = req
         .extract::<(Counter, State<WyRand>, DatabaseConnection)>()
         .await?;
 
-    let mut worlds = Vec::<World>::with_capacity(count as usize);
-
-    for _ in 0..count {
-        let id = rng.generate_range(RANGE);
-
-        sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1")
-            .bind(id)
-            .fetch_one(&mut conn)
-            .await
-            .map(|world| worlds.push(world))
-            .map_err(PgError)?;
-    }
-
-    for w in &mut worlds {
-        let randomnumber = rng.generate_range(RANGE);
-        let mut args = PgArguments::default();
-        args.add(randomnumber);
-        args.add(w.id);
-        w.randomnumber = randomnumber;
-
-        sqlx::query_with("UPDATE World SET randomNumber = $1 WHERE id = $2", args)
-            .execute(&mut conn)
-            .await
-            .map_err(PgError)?;
-    }
+    let worlds = update_worlds(conn, rng, count).await?;
 
     let mut res = Response::json(worlds)?;
     res.headers_mut()
@@ -151,13 +101,9 @@ async fn updates(mut req: Request) -> Result<Response> {
     Ok(res)
 }
 
-async fn populate_cache(pool: Pool<Postgres>) -> Result<(), Error> {
-    let mut conn = pool.acquire().await.map_err(Error::normal)?;
-    let worlds = sqlx::query_as("SELECT * FROM World LIMIT $1")
-        .bind(10_000)
-        .fetch_all(&mut conn)
-        .await
-        .map_err(PgError)?;
+async fn populate_cache(pool: Pool<Postgres>) -> Result<()> {
+    let conn = pool.acquire().await.map_err(Error::normal)?;
+    let worlds = get_worlds_by_limit(conn, 10_000).await?;
     CACHED
         .set(worlds)
         .map_err(|_| PgError::from(sqlx::Error::RowNotFound).into())
