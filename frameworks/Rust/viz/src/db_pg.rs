@@ -1,5 +1,4 @@
-use std::fmt::Write;
-use std::io;
+use std::{borrow::Cow, fmt::Write, io};
 
 use futures_util::{stream::FuturesUnordered, TryFutureExt, TryStreamExt};
 use nanorand::{Rng, WyRand};
@@ -7,6 +6,7 @@ use tokio_postgres::{connect, types::ToSql, Client, NoTls, Statement};
 use viz::{Error, IntoResponse, Response, StatusCode};
 
 use crate::models::{Fortune, World};
+use crate::utils::RANGE;
 
 /// Postgres Error
 #[derive(Debug, thiserror::Error)]
@@ -41,7 +41,7 @@ pub struct PgConnection {
 }
 
 impl PgConnection {
-    pub async fn connect(db_url: &str) -> PgConnection {
+    pub async fn connect(db_url: &str) -> Self {
         let (client, conn) = connect(db_url, NoTls)
             .await
             .expect("can not connect to postgresql");
@@ -108,7 +108,7 @@ impl PgConnection {
     }
 
     pub async fn get_world(&self) -> Result<World, PgError> {
-        let random_id = (self.rng.clone().generate::<u32>() % 10_000 + 1) as i32;
+        let random_id = self.rng.clone().generate_range(RANGE);
         self.query_one_world(random_id).await
     }
 
@@ -116,7 +116,7 @@ impl PgConnection {
         let mut rng = self.rng.clone();
         (0..num)
             .map(|_| {
-                let id = (rng.generate::<u32>() % 10_000 + 1) as i32;
+                let id = rng.generate_range(RANGE);
                 self.query_one_world(id)
             })
             .collect::<FuturesUnordered<_>>()
@@ -144,8 +144,8 @@ impl PgConnection {
 
         let worlds: Vec<World> = (0..num)
             .map(|_| {
-                let id = (rng.generate::<u32>() % 10_000 + 1) as i32;
-                let rid = (rng.generate::<u32>() % 10_000 + 1) as i32;
+                let id = rng.generate_range(RANGE);
+                let rid = rng.generate_range(RANGE);
                 self.query_one_world(id).map_ok(move |mut world| {
                     world.randomnumber = rid;
                     world
@@ -155,7 +155,8 @@ impl PgConnection {
             .try_collect()
             .await?;
 
-        let mut params: Vec<&(dyn ToSql + Sync)> = Vec::with_capacity(num as usize * 3);
+        let num = num as usize;
+        let mut params: Vec<&(dyn ToSql + Sync)> = Vec::with_capacity(num * 3);
 
         for w in &worlds {
             params.push(&w.id);
@@ -166,7 +167,7 @@ impl PgConnection {
             params.push(&w.id);
         }
 
-        let st = self.updates[(num as usize) - 1].clone();
+        let st = self.updates[num - 1].clone();
 
         self.client.query(&st, &params[..]).await?;
 
@@ -174,23 +175,21 @@ impl PgConnection {
     }
 
     pub async fn tell_fortune(&self) -> Result<Vec<Fortune>, PgError> {
-        let mut items = Vec::with_capacity(32);
-
-        items.push(Fortune {
-            id: 0,
-            message: "Additional fortune added at request time.".to_string(),
-        });
-
-        self.client
+        let mut items = self
+            .client
             .query(&self.fortune, &[])
             .await?
             .iter()
-            .for_each(|row| {
-                items.push(Fortune {
-                    id: row.get(0),
-                    message: row.get(1),
-                })
-            });
+            .map(|row| Fortune {
+                id: row.get(0),
+                message: Cow::Owned(row.get(1)),
+            })
+            .collect::<Vec<_>>();
+
+        items.push(Fortune {
+            id: 0,
+            message: Cow::Borrowed("Additional fortune added at request time."),
+        });
 
         items.sort_by(|it, next| it.message.cmp(&next.message));
 

@@ -1,7 +1,10 @@
-use std::cmp;
+use std::{ops::Range};
 
 use atoi::FromRadix10;
 use viz::header::HeaderValue;
+
+#[allow(dead_code)]
+pub const RANGE: Range<i32> = 1..10_001;
 
 pub const HDR_SERVER: HeaderValue = HeaderValue::from_static("VIZ");
 
@@ -13,5 +16,5 @@ pub fn get_query_param(query: Option<&str>) -> u16 {
     } else {
         1
     };
-    cmp::min(500, cmp::max(1, q))
+    q.clamp(1, 500)
 }

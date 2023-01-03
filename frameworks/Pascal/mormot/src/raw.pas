@@ -156,6 +156,7 @@ begin
     [hsoNoXPoweredHeader, // not needed for a benchmark
      hsoHeadersInterning, // reduce memory contention for /plaintext and /json
      hsoNoStats,          // disable low-level statistic counters
+     hsoThreadCpuAffinity, // to avoid cpu-migrations of threads during high load tests
      {$ifdef WITH_LOGS}
      hsoLogVerbose,
      {$endif WITH_LOGS}
@@ -523,7 +524,7 @@ begin
 
   if (ParamCount <> 1) or
      not TryStrToInt(ParamStr(1), threads) then
-    threads := SystemInfo.dwNumberOfProcessors * 5;
+    threads := SystemInfo.dwNumberOfProcessors * 4;
   if threads < 16 then
     threads := 16
   else if threads > 256 then
