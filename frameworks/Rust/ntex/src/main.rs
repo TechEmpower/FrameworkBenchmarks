@@ -1,5 +1,5 @@
 #[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 use ntex::http::header::{CONTENT_TYPE, SERVER};
 use ntex::{http, time::Seconds, util::BytesMut, util::PoolId, web};
@@ -50,8 +50,8 @@ async fn main() -> std::io::Result<()> {
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", |cfg| {
             cfg.memory_pool(PoolId::P1);
-            PoolId::P1.set_read_params(65535, 1024);
-            PoolId::P1.set_write_params(65535, 1024);
+            PoolId::P1.set_read_params(65535, 2048);
+            PoolId::P1.set_write_params(65535, 2048);
 
             http::HttpService::build()
                 .keep_alive(http::KeepAlive::Os)
