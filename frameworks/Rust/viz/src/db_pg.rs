@@ -49,7 +49,7 @@ impl PgConnection {
         // Spawn connection
         tokio::spawn(async move {
             if let Err(error) = conn.await {
-                eprintln!("Connection error: {}", error);
+                eprintln!("Connection error: {error}");
             }
         });
 
