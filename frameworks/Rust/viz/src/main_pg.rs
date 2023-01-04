@@ -26,7 +26,7 @@ const DB_URL: &str =
 static CACHED: OnceCell<Vec<models::World>> = OnceCell::new();
 
 async fn db(req: Request) -> Result<Response> {
-    let conn = get_conn(req.state::<Arc<PgConnection>>()).await?;
+    let conn = get_conn(req.state::<Arc<PgConnection>>())?;
 
     let world = conn.get_world().await?;
 
@@ -37,7 +37,7 @@ async fn db(req: Request) -> Result<Response> {
 }
 
 async fn fortunes(req: Request) -> Result<Response> {
-    let conn = get_conn(req.state::<Arc<PgConnection>>()).await?;
+    let conn = get_conn(req.state::<Arc<PgConnection>>())?;
 
     let fortunes = conn.tell_fortune().await?;
 
@@ -52,7 +52,7 @@ async fn fortunes(req: Request) -> Result<Response> {
 
 async fn queries(req: Request) -> Result<Response> {
     let count = utils::get_query_param(req.query_string());
-    let conn = get_conn(req.state::<Arc<PgConnection>>()).await?;
+    let conn = get_conn(req.state::<Arc<PgConnection>>())?;
 
     let worlds = conn.get_worlds(count).await?;
 
@@ -82,7 +82,7 @@ async fn cached_queries(req: Request) -> Result<Response> {
 
 async fn updates(req: Request) -> Result<Response> {
     let count = utils::get_query_param(req.query_string());
-    let conn = get_conn(req.state::<Arc<PgConnection>>()).await?;
+    let conn = get_conn(req.state::<Arc<PgConnection>>())?;
 
     let worlds = conn.update(count).await?;
 

@@ -193,8 +193,6 @@ impl PgConnection {
     }
 }
 
-pub async fn get_conn(
-    pool: Option<Arc<PgConnection>>,
-) -> Result<Arc<PgConnection>, PgError> {
+pub fn get_conn(pool: Option<Arc<PgConnection>>) -> Result<Arc<PgConnection>, PgError> {
     pool.ok_or(PgError::Connect)
 }
