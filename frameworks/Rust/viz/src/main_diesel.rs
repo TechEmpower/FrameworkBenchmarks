@@ -124,11 +124,8 @@ fn main() {
         .build()
         .unwrap();
 
-    rt.block_on(async {
-        populate_cache(Some(pool.clone()))
-            .await
-            .expect("cache insert failed");
-    });
+    rt.block_on(populate_cache(Some(pool.clone())))
+        .expect("cache insert failed");
 
     let rng = WyRand::new();
 

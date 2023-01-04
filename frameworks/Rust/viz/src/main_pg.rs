@@ -9,7 +9,7 @@ use once_cell::sync::OnceCell;
 use viz::{
     header::{HeaderValue, SERVER},
     types::State,
-    Error, Request, RequestExt, Response, ResponseExt, Result, Router, ServiceMaker,
+    Request, RequestExt, Response, ResponseExt, Result, Router, ServiceMaker,
 };
 use yarte::ywrite_html;
 
@@ -18,7 +18,7 @@ mod models;
 mod server;
 mod utils;
 
-use db_pg::{PgConnection, PgError};
+use db_pg::{get_conn, PgConnection};
 use utils::RANGE;
 
 const DB_URL: &str =
@@ -26,9 +26,9 @@ const DB_URL: &str =
 static CACHED: OnceCell<Vec<models::World>> = OnceCell::new();
 
 async fn db(req: Request) -> Result<Response> {
-    let db = req.state::<Arc<PgConnection>>().ok_or(PgError::Connect)?;
+    let conn = get_conn(req.state::<Arc<PgConnection>>()).await?;
 
-    let world = db.get_world().await?;
+    let world = conn.get_world().await?;
 
     let mut res = Response::json(world)?;
     res.headers_mut()
@@ -37,9 +37,9 @@ async fn db(req: Request) -> Result<Response> {
 }
 
 async fn fortunes(req: Request) -> Result<Response> {
-    let db = req.state::<Arc<PgConnection>>().ok_or(PgError::Connect)?;
+    let conn = get_conn(req.state::<Arc<PgConnection>>()).await?;
 
-    let fortunes = db.tell_fortune().await?;
+    let fortunes = conn.tell_fortune().await?;
 
     let mut buf = String::with_capacity(2048);
     ywrite_html!(buf, "{{> fortune }}");
@@ -51,10 +51,10 @@ async fn fortunes(req: Request) -> Result<Response> {
 }
 
 async fn queries(req: Request) -> Result<Response> {
-    let db = req.state::<Arc<PgConnection>>().ok_or(PgError::Connect)?;
-
     let count = utils::get_query_param(req.query_string());
-    let worlds = db.get_worlds(count).await?;
+    let conn = get_conn(req.state::<Arc<PgConnection>>()).await?;
+
+    let worlds = conn.get_worlds(count).await?;
 
     let mut res = Response::json(worlds)?;
     res.headers_mut()
@@ -81,10 +81,10 @@ async fn cached_queries(req: Request) -> Result<Response> {
 }
 
 async fn updates(req: Request) -> Result<Response> {
-    let db = req.state::<Arc<PgConnection>>().ok_or(PgError::Connect)?;
-
     let count = utils::get_query_param(req.query_string());
-    let worlds = db.update(count).await?;
+    let conn = get_conn(req.state::<Arc<PgConnection>>()).await?;
+
+    let worlds = conn.update(count).await?;
 
     let mut res = Response::json(worlds)?;
     res.headers_mut()
@@ -92,7 +92,7 @@ async fn updates(req: Request) -> Result<Response> {
     Ok(res)
 }
 
-async fn populate_cache() -> Result<(), Error> {
+async fn populate_cache() -> Result<()> {
     let conn = PgConnection::connect(DB_URL).await;
     let worlds = conn.get_worlds_by_limit(10_000).await?;
     CACHED.set(worlds).unwrap();
@@ -105,9 +105,7 @@ fn main() {
         .build()
         .unwrap();
 
-    rt.block_on(async {
-        populate_cache().await.expect("cache insert failed");
-    });
+    rt.block_on(populate_cache()).expect("cache insert failed");
 
     for _ in 1..available_parallelism().map(|n| n.get()).unwrap_or(16) {
         spawn(move || {

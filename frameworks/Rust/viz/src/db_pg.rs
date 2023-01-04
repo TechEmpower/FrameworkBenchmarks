@@ -1,4 +1,4 @@
-use std::{borrow::Cow, fmt::Write, io};
+use std::{borrow::Cow, fmt::Write, io, sync::Arc};
 
 use futures_util::{stream::FuturesUnordered, TryStreamExt};
 use nanorand::{Rng, WyRand};
@@ -191,4 +191,10 @@ impl PgConnection {
 
         Ok(items)
     }
+}
+
+pub async fn get_conn(
+    pool: Option<Arc<PgConnection>>,
+) -> Result<Arc<PgConnection>, PgError> {
+    pool.ok_or(PgError::Connect)
 }
