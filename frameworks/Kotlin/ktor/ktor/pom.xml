@@ -12,15 +12,15 @@
     <name>org.jetbrains.ktor tech-empower-framework-benchmark</name>
 
     <properties>
-        <kotlin.version>1.5.21</kotlin.version>
-        <ktor.version>1.6.1</ktor.version>
-        <serialization.version>1.2.2</serialization.version>
+        <kotlin.version>1.6.21</kotlin.version>
+        <ktor.version>2.0.1</ktor.version>
+        <serialization.version>1.3.2</serialization.version>
         <kotlinx.html.version>0.7.3</kotlinx.html.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hikaricp.version>5.0.0</hikaricp.version>
         <logback.version>1.2.4</logback.version>
-        <mysql.version>8.0.25</mysql.version>
-        <postgresql.version>42.2.23</postgresql.version>
+        <mysql.version>8.0.28</mysql.version>
+        <postgresql.version>42.4.3</postgresql.version>
     </properties>
 
     <dependencies>
@@ -49,25 +49,14 @@
             <artifactId>kotlinx-html-jvm</artifactId>
             <version>${kotlinx.html.version}</version>
         </dependency>
-
         <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-netty</artifactId>
+            <artifactId>ktor-server-default-headers-jvm</artifactId>
             <version>${ktor.version}</version>
         </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-jetty</artifactId>
-            <version>${ktor.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-cio</artifactId>
-            <version>${ktor.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-html-builder</artifactId>
+            <artifactId>ktor-server-html-builder-jvm</artifactId>
             <version>${ktor.version}</version>
         </dependency>
         <dependency>
@@ -92,6 +81,21 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-netty-jvm</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-jetty-jvm</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-cio-jvm</artifactId>
+            <version>2.0.0</version>
         </dependency>
     </dependencies>
 

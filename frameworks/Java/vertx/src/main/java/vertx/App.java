@@ -16,7 +16,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.sqlclient.PoolOptions;
 import io.vertx.sqlclient.PreparedQuery;
 import io.vertx.sqlclient.PreparedStatement;
 import io.vertx.sqlclient.Row;
@@ -24,10 +23,11 @@ import io.vertx.sqlclient.RowIterator;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.Tuple;
 import io.vertx.sqlclient.impl.SqlClientInternal;
-import io.vertx.sqlclient.impl.command.CompositeCommand;
+import vertx.model.CachedWorld;
 import vertx.model.Fortune;
 import vertx.model.Message;
 import vertx.model.World;
+import vertx.model.WorldCache;
 import vertx.rocker.BufferRockerOutput;
 
 import java.io.ByteArrayOutputStream;
@@ -40,8 +40,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public class App extends AbstractVerticle implements Handler<HttpServerRequest> {
 
@@ -74,6 +76,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   private static final String PATH_QUERIES = "/queries";
   private static final String PATH_UPDATES = "/updates";
   private static final String PATH_FORTUNES = "/fortunes";
+  private static final String PATH_CACHING = "/cached-queries";
 
   private static final Handler<AsyncResult<Void>> NULL_HANDLER = null;
 
@@ -95,6 +98,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   private static final String UPDATE_WORLD = "UPDATE world SET randomnumber=$1 WHERE id=$2";
   private static final String SELECT_WORLD = "SELECT id, randomnumber from WORLD where id=$1";
   private static final String SELECT_FORTUNE = "SELECT id, message from FORTUNE";
+  private static final String SELECT_WORLDS = "SELECT id, randomnumber from WORLD";
 
   private HttpServer server;
 
@@ -109,6 +113,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   private PreparedQuery<RowSet<Row>> SELECT_WORLD_QUERY;
   private PreparedQuery<RowSet<Row>> SELECT_FORTUNE_QUERY;
   private PreparedQuery<RowSet<Row>> UPDATE_WORLD_QUERY;
+  private WorldCache WORLD_CACHE;
 
   public static CharSequence createDateHeader() {
     return HttpHeaders.createOptimized(DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now()));
@@ -140,10 +145,14 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
       Future<PreparedStatement> f1 = conn.prepare(SELECT_WORLD);
       Future<PreparedStatement> f2 = conn.prepare(SELECT_FORTUNE);
       Future<PreparedStatement> f3 = conn.prepare(UPDATE_WORLD);
+      Future<WorldCache> f4 = conn.preparedQuery(SELECT_WORLDS)
+          .collecting(Collectors.mapping(row -> new CachedWorld(row.getInteger(0), row.getInteger(1)), Collectors.toList()))
+          .execute().map(worlds -> new WorldCache(worlds.value()));
       f1.onSuccess(ps -> SELECT_WORLD_QUERY = ps.query());
       f2.onSuccess(ps -> SELECT_FORTUNE_QUERY = ps.query());
       f3.onSuccess(ps -> UPDATE_WORLD_QUERY = ps.query());
-      return CompositeFuture.all(f1, f2, f3);
+      f4.onSuccess(wc -> WORLD_CACHE = wc);
+      return CompositeFuture.all(f1, f2, f3, f4);
     }).onComplete(ar -> startPromise.complete());
   }
 
@@ -167,6 +176,9 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
         break;
       case PATH_FORTUNES:
         handleFortunes(request);
+        break;
+      case PATH_CACHING:
+        handleCaching(request);
         break;
       default:
         request.response().setStatusCode(404);
@@ -372,6 +384,32 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
         response.setStatusCode(500).end(err.getMessage());
       }
     });
+  }
+
+  private void handleCaching(HttpServerRequest req) {
+    int count = 1;
+    try {
+      String countStr = req.getParam("count");
+      if (countStr != null) {
+        count = Integer.parseInt(countStr);
+      }
+    } catch (NumberFormatException ignore) {
+    }
+    count = Math.max(1, count);
+    count = Math.min(500, count);
+    CachedWorld[] worlds = WORLD_CACHE.getCachedWorld(count);
+    JsonArray json = new JsonArray(new ArrayList<>(count));
+    for (int i = 0;i < count;i++) {
+      CachedWorld world = worlds[i];
+      json.add(JsonObject.of("id", world.getId(), "randomNumber", world.getRandomNumber()));
+    }
+    HttpServerResponse response = req.response();
+    MultiMap headers = response.headers();
+    headers
+        .add(HEADER_CONTENT_TYPE, RESPONSE_TYPE_JSON)
+        .add(HEADER_SERVER, SERVER)
+        .add(HEADER_DATE, dateString);
+    response.end(json.toBuffer(), NULL_HANDLER);
   }
 
   public static void main(String[] args) throws Exception {

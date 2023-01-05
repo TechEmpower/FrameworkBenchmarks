@@ -3,6 +3,7 @@ package io.quarkus.benchmark.filter;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
@@ -16,7 +17,12 @@ import io.quarkus.scheduler.Scheduled;
 @Provider
 public class ServerHeaderFilter implements ContainerResponseFilter {
 
-    private String date;
+    private volatile String date;
+
+    @PostConstruct
+    public void init() {
+        date = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now());
+    }
 
     @Scheduled(every="1s")
     void increment() {

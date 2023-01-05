@@ -10,86 +10,85 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 
-namespace PlatformBenchmarks
+namespace PlatformBenchmarks;
+
+public sealed partial class BenchmarkApplication
 {
-    public partial class BenchmarkApplication
+    public static ReadOnlySpan<byte> ApplicationName => "Kestrel Platform-Level Application"u8;
+
+    private static ReadOnlySpan<byte> _crlf => "\r\n"u8;
+    private static ReadOnlySpan<byte> _eoh => "\r\n\r\n"u8; // End Of Headers
+    private static ReadOnlySpan<byte> _http11OK => "HTTP/1.1 200 OK\r\n"u8;
+    private static ReadOnlySpan<byte> _http11NotFound => "HTTP/1.1 404 Not Found\r\n"u8;
+    private static ReadOnlySpan<byte> _headerServer => "Server: K"u8;
+    private static ReadOnlySpan<byte> _headerContentLength => "Content-Length: "u8;
+    private static ReadOnlySpan<byte> _headerContentLengthZero => "Content-Length: 0"u8;
+    private static ReadOnlySpan<byte> _headerContentTypeText => "Content-Type: text/plain"u8;
+    private static ReadOnlySpan<byte> _headerContentTypeJson => "Content-Type: application/json"u8;
+    private static ReadOnlySpan<byte> _headerContentTypeHtml => "Content-Type: text/html; charset=UTF-8"u8;
+
+    private static ReadOnlySpan<byte> _dbPreamble => 
+        "HTTP/1.1 200 OK\r\n"u8 +
+        "Server: K\r\n"u8 +
+        "Content-Type: application/json\r\n"u8 +
+        "Content-Length: "u8;
+
+    private static ReadOnlySpan<byte> _plainTextBody => "Hello, World!"u8;
+
+    private static readonly JsonContext SerializerContext = JsonContext.Default;
+
+    [JsonSourceGenerationOptions(GenerationMode = JsonSourceGenerationMode.Serialization, PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+    [JsonSerializable(typeof(JsonMessage))]
+    [JsonSerializable(typeof(CachedWorld[]))]
+    [JsonSerializable(typeof(World[]))]
+    private sealed partial class JsonContext : JsonSerializerContext
     {
-        private readonly static AsciiString _applicationName = "Kestrel Platform-Level Application";
-        public static AsciiString ApplicationName => _applicationName;
+    }
 
-        private readonly static AsciiString _crlf = "\r\n";
-        private readonly static AsciiString _eoh = "\r\n\r\n"; // End Of Headers
-        private readonly static AsciiString _http11OK = "HTTP/1.1 200 OK\r\n";
-        private readonly static AsciiString _http11NotFound = "HTTP/1.1 404 Not Found\r\n";
-        private readonly static AsciiString _headerServer = "Server: K";
-        private readonly static AsciiString _headerContentLength = "Content-Length: ";
-        private readonly static AsciiString _headerContentLengthZero = "Content-Length: 0";
-        private readonly static AsciiString _headerContentTypeText = "Content-Type: text/plain";
-        private readonly static AsciiString _headerContentTypeJson = "Content-Type: application/json";
-        private readonly static AsciiString _headerContentTypeHtml = "Content-Type: text/html; charset=UTF-8";
-
-        private readonly static AsciiString _dbPreamble =
-            _http11OK +
-            _headerServer + _crlf +
-            _headerContentTypeJson + _crlf +
-            _headerContentLength;
-
-        private readonly static AsciiString _plainTextBody = "Hello, World!";
-
-        private static readonly JsonContext SerializerContext = JsonContext.Default;
-
-        [JsonSourceGenerationOptions(GenerationMode = JsonSourceGenerationMode.Serialization, PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
-        [JsonSerializable(typeof(JsonMessage))]
-        [JsonSerializable(typeof(CachedWorld[]))]
-        [JsonSerializable(typeof(World[]))]
-        private sealed partial class JsonContext : JsonSerializerContext
-        {
-        }
-
-        private readonly static AsciiString _fortunesTableStart = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
-        private readonly static AsciiString _fortunesRowStart = "<tr><td>";
-        private readonly static AsciiString _fortunesColumn = "</td><td>";
-        private readonly static AsciiString _fortunesRowEnd = "</td></tr>";
-        private readonly static AsciiString _fortunesTableEnd = "</table></body></html>";
-        private readonly static AsciiString _contentLengthGap = new string(' ', 4);
+    private static ReadOnlySpan<byte> _fortunesTableStart => "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"u8;
+    private static ReadOnlySpan<byte> _fortunesRowStart => "<tr><td>"u8;
+    private static ReadOnlySpan<byte> _fortunesColumn => "</td><td>"u8;
+    private static ReadOnlySpan<byte> _fortunesRowEnd => "</td></tr>"u8;
+    private static ReadOnlySpan<byte> _fortunesTableEnd => "</table></body></html>"u8;
+    private static ReadOnlySpan<byte> _contentLengthGap => "    "u8;
 
 #if DATABASE
         public static RawDb Db { get; set; }
 #endif
 
-        [ThreadStatic]
-        private static Utf8JsonWriter t_writer;
+    [ThreadStatic]
+    private static Utf8JsonWriter t_writer;
 
-        public static class Paths
-        {
-            public readonly static AsciiString Json = "/json";
-            public readonly static AsciiString Plaintext = "/plaintext";
-            public readonly static AsciiString SingleQuery = "/db";
-            public readonly static AsciiString Fortunes = "/fortunes";
-            public readonly static AsciiString Updates = "/updates/";
-            public readonly static AsciiString MultipleQueries = "/queries/";
-            public readonly static AsciiString Caching = "/cached-worlds/";
-        }
+    public static class Paths
+    {
+        public static ReadOnlySpan<byte> Json => "/json"u8;
+        public static ReadOnlySpan<byte> Plaintext => "/plaintext"u8;
+        public static ReadOnlySpan<byte> SingleQuery => "/db"u8;
+        public static ReadOnlySpan<byte> Fortunes => "/fortunes"u8;
+        public static ReadOnlySpan<byte> Updates => "/updates/"u8;
+        public static ReadOnlySpan<byte> MultipleQueries => "/queries/"u8;
+        public static ReadOnlySpan<byte> Caching => "/cached-worlds/"u8;
+    }
 
-        private RequestType _requestType;
-        private int _queries;
+    private RequestType _requestType;
+    private int _queries;
 
-        public void OnStartLine(HttpVersionAndMethod versionAndMethod, TargetOffsetPathLength targetPath, Span<byte> startLine)
-        {
-            _requestType = versionAndMethod.Method == HttpMethod.Get ? GetRequestType(startLine.Slice(targetPath.Offset, targetPath.Length), ref _queries) : RequestType.NotRecognized;
-        }
+    public void OnStartLine(HttpVersionAndMethod versionAndMethod, TargetOffsetPathLength targetPath, Span<byte> startLine)
+    {
+        _requestType = versionAndMethod.Method == Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpMethod.Get ? GetRequestType(startLine.Slice(targetPath.Offset, targetPath.Length), ref _queries) : RequestType.NotRecognized;
+    }
 
-        private RequestType GetRequestType(ReadOnlySpan<byte> path, ref int queries)
-        {
+    private RequestType GetRequestType(ReadOnlySpan<byte> path, ref int queries)
+    {
 #if !DATABASE
-            if (path.Length == 10 && path.SequenceEqual(Paths.Plaintext))
-            {
-                return RequestType.PlainText;
-            }
-            else if (path.Length == 5 && path.SequenceEqual(Paths.Json))
-            {
-                return RequestType.Json;
-            }
+        if (path.Length == 10 && path.SequenceEqual(Paths.Plaintext))
+        {
+            return RequestType.PlainText;
+        }
+        else if (path.Length == 5 && path.SequenceEqual(Paths.Json))
+        {
+            return RequestType.Json;
+        }
 #else
             if (path.Length == 3 && path[0] == '/' && path[1] == 'd' && path[2] == 'b')
             {
@@ -115,26 +114,26 @@ namespace PlatformBenchmarks
                 return RequestType.MultipleQueries;
             }
 #endif
-            return RequestType.NotRecognized;
-        }
+        return RequestType.NotRecognized;
+    }
 
 
 #if !DATABASE
-        private void ProcessRequest(ref BufferWriter<WriterAdapter> writer)
+    private void ProcessRequest(ref BufferWriter<WriterAdapter> writer)
+    {
+        if (_requestType == RequestType.PlainText)
         {
-            if (_requestType == RequestType.PlainText)
-            {
-                PlainText(ref writer);
-            }
-            else if (_requestType == RequestType.Json)
-            {
-                Json(ref writer, Writer);
-            }
-            else
-            {
-                Default(ref writer);
-            }
+            PlainText(ref writer);
         }
+        else if (_requestType == RequestType.Json)
+        {
+            Json(ref writer, Writer);
+        }
+        else
+        {
+            Default(ref writer);
+        }
+    }
 #else
 
         private static int ParseQueries(ReadOnlySpan<byte> parameter)
@@ -169,30 +168,29 @@ namespace PlatformBenchmarks
             return Task.CompletedTask;
         }
 #endif
-        private readonly static AsciiString _defaultPreamble =
-            _http11NotFound +
-            _headerServer + _crlf +
-            _headerContentTypeText + _crlf +
-            _headerContentLengthZero;
+    private static ReadOnlySpan<byte> _defaultPreamble =>
+        "HTTP/1.1 200 OK\r\n"u8 +
+        "Server: K"u8 + "\r\n"u8 +
+        "Content-Type: text/plain"u8 +
+        "Content-Length: 0"u8;
 
-        private static void Default(ref BufferWriter<WriterAdapter> writer)
-        {
-            writer.Write(_defaultPreamble);
+    private static void Default(ref BufferWriter<WriterAdapter> writer)
+    {
+        writer.Write(_defaultPreamble);
 
-            // Date header
-            writer.Write(DateHeader.HeaderBytes);
-        }
+        // Date header
+        writer.Write(DateHeader.HeaderBytes);
+    }
 
-        private enum RequestType
-        {
-            NotRecognized,
-            PlainText,
-            Json,
-            Fortunes,
-            SingleQuery,
-            Caching,
-            Updates,
-            MultipleQueries
-        }
+    private enum RequestType
+    {
+        NotRecognized,
+        PlainText,
+        Json,
+        Fortunes,
+        SingleQuery,
+        Caching,
+        Updates,
+        MultipleQueries
     }
 }

@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 WORKDIR /h2o_app_src
 COPY ./ ./
@@ -19,7 +19,7 @@ RUN mkdir -p "$MUSTACHE_C_BUILD_DIR" && \
     cd "$MUSTACHE_C_BUILD_DIR" && \
     wget -qO - "https://github.com/x86-64/mustache-c/archive/${MUSTACHE_C_REVISION}.tar.gz" | \
     tar xz --strip-components=1 && \
-    CFLAGS="-O3 -flto -march=native" ./autogen.sh --prefix="$MUSTACHE_C_PREFIX" && \
+    CFLAGS="-O3 -flto -march=native -mtune=native" ./autogen.sh --prefix="$MUSTACHE_C_PREFIX" && \
     make -j "$(nproc)" install && \
     cd .. && \
     rm -rf "$MUSTACHE_C_BUILD_DIR"
@@ -36,13 +36,15 @@ RUN mkdir -p "${H2O_BUILD_DIR}/build" && \
     wget -qO - "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
     tar xz --strip-components=1 && \
     cd build && \
-    cmake -DCMAKE_INSTALL_PREFIX="$H2O_PREFIX" -DCMAKE_C_FLAGS="-flto -march=native" \
+    cmake -DCMAKE_INSTALL_PREFIX="$H2O_PREFIX" -DCMAKE_C_FLAGS="-flto -march=native -mtune=native" \
           -DCMAKE_AR=/usr/bin/gcc-ar -DCMAKE_RANLIB=/usr/bin/gcc-ranlib -G Ninja .. && \
     cmake --build . -j && \
     cmake --install . && \
     cd ../.. && \
     rm -rf "$H2O_BUILD_DIR"
 
+ARG BENCHMARK_ENV
+ENV BENCHMARK_ENV=$BENCHMARK_ENV
 EXPOSE 8080
 
 CMD ["./h2o.sh"]

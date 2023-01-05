@@ -1,13 +1,10 @@
-import asyncio
 import asyncpg
 import os
-import jinja2
 from starlette.applications import Starlette
-from starlette.responses import HTMLResponse, UJSONResponse, PlainTextResponse
+from starlette.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from starlette.routing import Route
-from random import randint
-from operator import itemgetter
-from urllib.parse import parse_qs
+from starlette.templating import Jinja2Templates
+from random import randint, sample
 
 
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
@@ -27,17 +24,9 @@ async def setup_database():
     )
 
 
-def load_fortunes_template():
-    path = os.path.join('templates', 'fortune.html')
-    with open(path, 'r') as template_file:
-        template_text = template_file.read()
-        return jinja2.Template(template_text)
-
-
 def get_num_queries(request):
     try:
-        query_string = request['query_string']
-        query_count = int(parse_qs(query_string)[b'queries'][0])
+        query_count = int(request.query_params["queries"])
     except (KeyError, IndexError, ValueError):
         return 1
 
@@ -49,10 +38,7 @@ def get_num_queries(request):
 
 
 connection_pool = None
-sort_fortunes_key = itemgetter(1)
-template = load_fortunes_template()
-loop = asyncio.get_event_loop()
-loop.run_until_complete(setup_database())
+templates = Jinja2Templates(directory="templates")
 
 
 async def single_database_query(request):
@@ -61,12 +47,12 @@ async def single_database_query(request):
     async with connection_pool.acquire() as connection:
         number = await connection.fetchval(READ_ROW_SQL, row_id)
 
-    return UJSONResponse({'id': row_id, 'randomNumber': number})
+    return JSONResponse({'id': row_id, 'randomNumber': number})
 
 
 async def multiple_database_queries(request):
     num_queries = get_num_queries(request)
-    row_ids = [randint(1, 10000) for _ in range(num_queries)]
+    row_ids = sample(range(1, 10000), num_queries)
     worlds = []
 
     async with connection_pool.acquire() as connection:
@@ -75,7 +61,7 @@ async def multiple_database_queries(request):
             number = await statement.fetchval(row_id)
             worlds.append({'id': row_id, 'randomNumber': number})
 
-    return UJSONResponse(worlds)
+    return JSONResponse(worlds)
 
 
 async def fortunes(request):
@@ -83,14 +69,13 @@ async def fortunes(request):
         fortunes = await connection.fetch('SELECT * FROM Fortune')
 
     fortunes.append(ADDITIONAL_ROW)
-    fortunes.sort(key=sort_fortunes_key)
-    content = template.render(fortunes=fortunes)
-    return HTMLResponse(content)
+    fortunes.sort(key=lambda row: row[1])
+    return templates.TemplateResponse("fortune.html", {"fortunes": fortunes, "request": request})
 
 
 async def database_updates(request):
     num_queries = get_num_queries(request)
-    updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
+    updates = [(row_id, randint(1, 10000)) for row_id in sample(range(1, 10000), num_queries)]
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with connection_pool.acquire() as connection:
@@ -99,11 +84,11 @@ async def database_updates(request):
             await statement.fetchval(row_id)
         await connection.executemany(WRITE_ROW_SQL, updates)
 
-    return UJSONResponse(worlds)
+    return JSONResponse(worlds)
 
 
 routes = [
-    Route('/json', UJSONResponse({'message': 'Hello, world!'})),
+    Route('/json', JSONResponse({'message': 'Hello, world!'})),
     Route('/db', single_database_query),
     Route('/queries', multiple_database_queries),
     Route('/fortunes', fortunes),
@@ -111,4 +96,4 @@ routes = [
     Route('/plaintext', PlainTextResponse(b'Hello, world!')),
 ]
 
-app = Starlette(routes=routes)
+app = Starlette(routes=routes, on_startup=[setup_database])

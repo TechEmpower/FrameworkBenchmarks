@@ -13,6 +13,7 @@
 #include <QDir>
 
 #include <apool.h>
+#include <apg.h>
 
 #include "jsontest.h"
 #include "singledatabasequerytest.h"
@@ -20,14 +21,17 @@
 #include "databaseupdatestest.h"
 #include "fortunetest.h"
 #include "plaintexttest.h"
+#include "cachedqueries.h"
 
 using namespace Cutelyst;
+using namespace ASql;
 
 static QMutex mutex;
 
 cutelyst_benchmarks::cutelyst_benchmarks(QObject *parent) : Application(parent)
 {
-    qsrand(QDateTime::currentMSecsSinceEpoch());
+    static std::once_flag once;
+    std::call_once(once, []() { srand(time(NULL)); });
 }
 
 cutelyst_benchmarks::~cutelyst_benchmarks()
@@ -56,6 +60,7 @@ bool cutelyst_benchmarks::init()
     new DatabaseUpdatesTest(this);
     new FortuneTest(this);
     new PlaintextTest(this);
+    new CachedQueries(this);
 
     if (defaultHeaders().server().isEmpty()) {
         defaultHeaders().setServer(QStringLiteral("Cutelyst"));
@@ -71,7 +76,7 @@ bool cutelyst_benchmarks::postFork()
 
     QSqlDatabase db;
     const auto driver = config(QStringLiteral("Driver")).toString();
-    if (driver == QLatin1String("QPSQL")) {
+    if (driver == u"QPSQL") {
         db = QSqlDatabase::addDatabase(driver, Sql::databaseNameThread(QStringLiteral("postgres")));
         db.setDatabaseName(QStringLiteral("hello_world"));
         db.setUserName(QStringLiteral("benchmarkdbuser"));
@@ -81,7 +86,7 @@ bool cutelyst_benchmarks::postFork()
             qDebug() << "Error opening PostgreSQL db:" << db << db.connectionName() << db.lastError().databaseText();
             return false;
         }
-    } else if (driver == QLatin1String("QMYSQL")) {
+    } else if (driver == u"QMYSQL") {
         db = QSqlDatabase::addDatabase(driver, Sql::databaseNameThread(QStringLiteral("mysql")));
         db.setDatabaseName(QStringLiteral("hello_world"));
         db.setUserName(QStringLiteral("benchmarkdbuser"));
@@ -91,13 +96,17 @@ bool cutelyst_benchmarks::postFork()
             qDebug() << "Error opening MySQL db:" << db << db.connectionName() << db.lastError().databaseText();
             return false;
         }
-    } else if (driver == QLatin1String("postgres")) {
+    } else if (driver == u"postgres") {
         QUrl uri(QStringLiteral("postgresql://benchmarkdbuser:benchmarkdbpass@server/hello_world"));
         uri.setHost(config(QStringLiteral("DatabaseHostName")).toString());
         qDebug() << "ASql URI:" << uri.toString();
 
-        APool::addDatabase(uri.toString());
-        APool::setDatabaseMaxIdleConnections(128);
+        APool::create(ASql::APg::factory(uri.toString()));
+        APool::setMaxIdleConnections(128);
+        APool::setSetupCallback([](ADatabase &db) {
+            // Enable Pipeline mode
+            db.enterPipelineMode(500);
+        });
     }
 
     qDebug() << "Connections" << QCoreApplication::applicationPid() << QThread::currentThread() << QSqlDatabase::connectionNames();
@@ -110,4 +119,4 @@ bool cutelyst_benchmarks::postFork()
     return true;
 }
 
-#include "moc_cutelyst-benchmarks.cpp"
+//#include "moc_cutelyst-benchmarks.cpp"

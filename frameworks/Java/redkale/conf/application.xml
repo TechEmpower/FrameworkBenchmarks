@@ -2,15 +2,14 @@
 
 <application port="8585">     
     
-    <resources>
-        <executor threads="0"/>
-        <properties>    
-            <property name="system.property.redkale.convert.tiny" value="false"/>    
-            <property name="system.property.redkale.http.request.pipeline.sameheaders" value="true"/>  
-            <property name="system.property.redkale.http.response.header.server" value="redkale"/>
-            <property name="system.property.redkale.http.response.header.connection" value="none"/>
-        </properties>
-    </resources> 
+    <executor threads="0"/>
+    
+    <properties>    
+        <property name="system.property.redkale.convert.tiny" value="false"/>    
+        <property name="system.property.redkale.http.request.pipeline.sameheaders" value="true"/>  
+        <property name="system.property.redkale.http.response.header.server" value="redkale"/>
+        <property name="system.property.redkale.http.response.header.connection" value="none"/>
+    </properties>
         
     <server protocol="HTTP" lazy="true" port="8080">      
         <response>
@@ -20,8 +19,7 @@
         <render value="org.redkalex.benchmark.FortuneRender"/>
         <services autoload="true"/>        
         <rest autoload="true"/>
-        <servlets autoload="true"/>
-        
+        <servlets autoload="true"/>        
     </server>
-    
+        
 </application>

@@ -7,9 +7,9 @@
 ## Important Libraries
 The tests were run with:
 * [Java 11](https://openjdk.java.net)
-* [Javalin 3.13.3](https://github.com/tipsy/javalin)
-* [HikariCP 4.0.2](https://github.com/brettwooldridge/HikariCP)
-* [Pebble 3.1.5](https://github.com/PebbleTemplates/pebble)
+* [Javalin 5.2.0](https://github.com/tipsy/javalin)
+* [HikariCP 5.0.1](https://github.com/brettwooldridge/HikariCP)
+* [jte 2.2.3](https://github.com/casid/jte)
 
 ## Test URLs
 ### JSON

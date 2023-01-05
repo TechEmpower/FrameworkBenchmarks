@@ -1,20 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.redkalex.benchmark;
 
 import java.util.*;
-import javax.persistence.*;
+import java.util.function.IntFunction;
+import java.util.stream.IntStream;
 import org.redkale.convert.json.JsonConvert;
-import org.redkale.source.*;
+import org.redkale.persistence.*;
+import org.redkale.source.DataSource;
 
 /**
  *
  * @author zhangjx
  */
-//@Cacheable(direct = true)
 @Entity
 @Table(name = "World")
 public final class CachedWorld implements Comparable<CachedWorld> {
@@ -55,27 +51,35 @@ public final class CachedWorld implements Comparable<CachedWorld> {
         return JsonConvert.root().convertTo(this);
     }
 
-    public static class WorldEntityCache {
+    public static class Cache {
+
+        private static Cache instance;
+
+        static Cache getInstance(DataSource source) {
+            if (instance == null) {
+                synchronized (Cache.class) {
+                    if (instance == null) {
+                        instance = new Cache(source);
+                    }
+                }
+            }
+            return instance;
+        }
 
         private CachedWorld[] array;
 
-        public WorldEntityCache(DataSource source) {
+        private IntFunction<CachedWorld> mapFunc = c -> array[c];
+
+        private IntFunction<CachedWorld[]> arrayFunc = c -> new CachedWorld[c];
+
+        public Cache(DataSource source) {
             List<CachedWorld> list = source.queryList(CachedWorld.class);
             this.array = list.toArray(new CachedWorld[list.size()]);
         }
 
-        public CachedWorld findAt(int index) {
-            return (CachedWorld) array[index];
-        }
-
         public CachedWorld[] random(Random random, int size) {
-            Random rand = random;
-            final CachedWorld[] worlds = new CachedWorld[size];
-            for (int i = 0; i < worlds.length; i++) {
-                long index = Math.abs(rand.nextLong()) % 10000;
-                worlds[i] = array[(int) index];
-            }
-            return worlds;
+            IntStream ids = random.ints(size, 0, 10000);
+            return ids.mapToObj(mapFunc).toArray(arrayFunc);
         }
     }
 }

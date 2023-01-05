@@ -1,0 +1,3 @@
+Cython==0.29.26
+falcon==3.0.1
+git+https://github.com/cirospaciari/socketify.py.git@main#socketify

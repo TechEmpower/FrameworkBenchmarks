@@ -9,10 +9,11 @@ ENV DEBUG=on
 ENV DEBIAN_FRONTEND noninteractive
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
-COPY te-benchmark-um/ /installs/te-benchmark-um/
-COPY te-benchmark-um-pq/ /installs/te-benchmark-um-pq/
-COPY te-benchmark-um-mgr/ /installs/te-benchmark-um-mgr/
-COPY te-benchmark-um-mgr/ /installs/te-benchmark-um-pq-async/
+#COPY t1/ /installs/t1/
+#COPY t3/ /installs/t3/
+#COPY t2/ /installs/t2/
+#COPY t4/ /installs/t4/
+#COPY t5/ /installs/t5/
 
 WORKDIR ${IROOT}
 

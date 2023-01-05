@@ -15,7 +15,7 @@ namespace PlatformBenchmarks
 {
     // Is semantically identical to RawDbNpgsql.cs.
     // If you are changing RawDbMySqlConnector.cs, also consider changing RawDbNpgsql.cs.
-    public class RawDb
+    public sealed class RawDb
     {
         private readonly ConcurrentRandom _random;
         private readonly string _connectionString;

@@ -1,10 +1,11 @@
 {
-	"require": {
-		"yurunsoft/imi": "~1.0"
-	},
+    "require": {
+        "imiphp/imi": "~2.1.0",
+        "imiphp/imi-pgsql": "~2.1.0"
+    },
     "autoload": {
         "psr-4" : {
-			"ImiApp\\" : "./"
+            "ImiApp\\" : "./"
         }
-	}
+    }
 }

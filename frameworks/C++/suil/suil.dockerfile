@@ -2,7 +2,7 @@ FROM suilteam/base:alpine
 
 COPY ./ suil-bench
 
-ENV SUIL_VERSION=0.1.0
+ENV SUIL_VERSION=0.1.1
 ENV SUIL_VERSION_TAG=alpha
 ENV SUIL_CONFIGURATION=Release
 

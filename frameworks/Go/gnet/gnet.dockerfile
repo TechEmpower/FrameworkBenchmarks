@@ -1,14 +1,10 @@
-FROM golang:1.14
-
-ENV GO111MODULE on
+FROM docker.io/golang:1.19
 
 WORKDIR /gnet
 
 COPY ./src /gnet
 
-RUN go mod download
-
-RUN go build -o app -gcflags="-l=4" -ldflags="-s -w" .
+RUN GOAMD64=v3 go build -o app -tags=poll_opt -gcflags="-l=4" -ldflags="-s -w" .
 
 EXPOSE 8080
 

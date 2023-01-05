@@ -1,45 +1,54 @@
 package com.hexagonkt.store
 
-import com.hexagonkt.CachedWorld
-import com.hexagonkt.Fortune
+import com.hexagonkt.model.CachedWorld
+import com.hexagonkt.model.Fortune
 import com.hexagonkt.Settings
-import com.hexagonkt.World
-import com.hexagonkt.helpers.Jvm
+import com.hexagonkt.model.World
+import com.hexagonkt.core.Jvm
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.cache2k.Cache
 import java.sql.Connection
 import java.sql.PreparedStatement
 
-internal class BenchmarkSqlStore(engine: String, private val settings: Settings = Settings())
-    : BenchmarkStore(settings) {
+internal class BenchmarkSqlStore(
+    engine: String, private val settings: Settings = Settings()
+) : BenchmarkStore(settings) {
 
     companion object {
-        private const val SELECT_WORLD = "select * from world where id = ?"
-        private const val UPDATE_WORLD = "update world set randomNumber = ? where id = ?"
-        private const val SELECT_ALL_FORTUNES = "select * from fortune"
+        private const val SELECT_WORLD: String = "select * from world where id = ?"
+        private const val UPDATE_WORLD: String = "update world set randomNumber = ? where id = ?"
+        private const val SELECT_ALL_FORTUNES: String = "select * from fortune"
     }
 
     private val dataSource: HikariDataSource by lazy {
-        val dbHost = Jvm.systemSetting("${engine.uppercase()}_DB_HOST") ?: "localhost"
-        val environment = Jvm.systemSetting(String::class, "BENCHMARK_ENV")?.lowercase()
+        val dbHost = Jvm.systemSettingOrNull("${engine.uppercase()}_DB_HOST") ?: "localhost"
+        val environment = Jvm.systemSettingOrNull(String::class, "BENCHMARK_ENV")?.lowercase()
         val poolSize = 8 + if (environment == "citrine") Jvm.cpuCount else Jvm.cpuCount * 2
+        val postgresqlSettings = listOf(
+            "ssl=false",
+            "assumeMinServerVersion=12.10",
+            "databaseMetadataCacheFieldsMiB=8",
+            "prepareThreshold=1",
+            "reWriteBatchedInserts=true",
+        ).joinToString("&")
         val config = HikariConfig().apply {
-            jdbcUrl = "jdbc:postgresql://$dbHost/${settings.databaseName}"
-            maximumPoolSize = Jvm.systemSetting(Int::class, "maximumPoolSize") ?: poolSize
-            username = Jvm.systemSetting("databaseUsername") ?: "benchmarkdbuser"
-            password = Jvm.systemSetting("databasePassword") ?: "benchmarkdbpass"
+            jdbcUrl = "jdbc:postgresql://$dbHost/${settings.databaseName}?$postgresqlSettings"
+            maximumPoolSize = Jvm.systemSettingOrNull(Int::class, "maximumPoolSize") ?: poolSize
+            driverClassName = settings.databaseDriver
+            username = settings.databaseUsername
+            password = settings.databasePassword
         }
         HikariDataSource(config)
     }
 
     override fun findAllFortunes(): List<Fortune> {
-        val fortunes = mutableListOf<Fortune>()
+        var fortunes = listOf<Fortune>()
 
         dataSource.connection.use { con: Connection ->
             val rs = con.prepareStatement(SELECT_ALL_FORTUNES).executeQuery()
             while (rs.next())
-                fortunes += Fortune(rs.getInt(1), rs.getString(2))
+                fortunes = fortunes + Fortune(rs.getInt(1), rs.getString(2))
         }
 
         return fortunes
@@ -94,7 +103,9 @@ internal class BenchmarkSqlStore(engine: String, private val settings: Settings 
         dataSource.close()
     }
 
-    private fun Connection.findWorld(id: Int, stmtSelect: PreparedStatement = prepareStatement(SELECT_WORLD)): World {
+    private fun Connection.findWorld(
+        id: Int, stmtSelect: PreparedStatement = prepareStatement(SELECT_WORLD)
+    ): World {
         stmtSelect.setInt(1, id)
         val rs = stmtSelect.executeQuery()
         rs.next()
