@@ -4,8 +4,8 @@ plugins {
 }
 
 ext {
-    hexagonVersion = "2.3.1"
-    hexagonExtraVersion = "2.3.1"
+    hexagonVersion = "2.4.0"
+    hexagonExtraVersion = "2.4.0"
     hikariVersion = "5.0.1"
     jettyVersion = "11.0.13"
     postgresqlVersion = "42.5.1"
