@@ -80,7 +80,7 @@ mimalloc = { version = "0.1.29", default-features = false }
 core_affinity = "0.5.10"
 futures-util = { version = "0.3.18", default-features = false, features = ["alloc"] }
 rand = { version = "0.8.5", default-features = false, features = ["min_const_gen", "nightly", "simd_support", "small_rng"] }
-tokio = "1.21.2"
+tokio = "1.23.1"
 
 [profile.release]
 lto = true
