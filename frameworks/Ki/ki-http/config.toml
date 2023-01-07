@@ -1,0 +1,15 @@
+[framework]
+name = "ki-http"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "None"
+approach = "Realistic"
+classification = "Micro"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "None"
+platform = "None"
+webserver = "None"
+versus = "None"
