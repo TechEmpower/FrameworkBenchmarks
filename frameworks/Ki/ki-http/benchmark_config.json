@@ -3,14 +3,14 @@
   "tests": [
     {
       "default": {
-        "json_url": "None",
+        "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
         "database": "None",
         "framework": "ki-http",
-        "language": "ki",
+        "language": "Ki",
         "flavor": "None",
         "orm": "None",
         "platform": "None",

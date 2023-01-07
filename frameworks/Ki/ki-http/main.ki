@@ -4,9 +4,9 @@ use ki:http;
 func handler(http:Request req) http:Response {
 
 	if(req.uri == "/plaintext") {
-		return http:Response.html("Hello from example");
+		return http:Response.text("Hello, World!", 200, "text/plain");
 	} else if(req.uri == "/json") {
-		return http:Response.html("TODO");
+		return http:Response.text("{\"message\":\"Hello, World!\"}", 200, "application/json");
 	}
 
 	return http:Response.error(404);
@@ -14,7 +14,7 @@ func handler(http:Request req) http:Response {
 
 func main() i32 {
 
-	@ s = http:Server.init("127.0.0.1", 8080, handler) or { panic "Failed to start server"; };
+	@ s = http:Server.init("0.0.0.0", 8080, handler) or { panic "Failed to start server"; };
 	s.start() or {
 		println("Failed to start http server");
 		return 1;
