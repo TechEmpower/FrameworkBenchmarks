@@ -111,14 +111,15 @@ impl PgConnection {
 
     pub async fn get_worlds(&self, num: u16) -> Result<Vec<World>, PgError> {
         let mut rng = self.rng.clone();
-        (0..num)
-            .map(|_| {
-                let id = rng.generate_range(RANGE);
-                self.query_one_world(id)
-            })
-            .collect::<FuturesUnordered<_>>()
-            .try_collect()
-            .await
+
+        let worlds = FuturesUnordered::new();
+
+        for _ in 0..num {
+            let id = rng.generate_range(RANGE);
+            worlds.push(self.query_one_world(id));
+        }
+
+        worlds.try_collect().await
     }
 
     pub async fn get_worlds_by_limit(&self, limit: i64) -> Result<Vec<World>, PgError> {
@@ -137,19 +138,20 @@ impl PgConnection {
     pub async fn update(&self, num: u16) -> Result<Vec<World>, PgError> {
         let mut rng = self.rng.clone();
 
-        let worlds = (0..num)
-            .map(|_| {
-                let id = rng.generate_range(RANGE);
-                let rid = rng.generate_range(RANGE);
-                async move {
-                    let mut world = self.query_one_world(id).await?;
-                    world.randomnumber = rid;
-                    Ok::<World, PgError>(world)
-                }
-            })
-            .collect::<FuturesUnordered<_>>()
-            .try_collect::<Vec<_>>()
-            .await?;
+        let worlds = FuturesUnordered::new();
+
+        for _ in 0..num {
+            let id = rng.generate_range(RANGE);
+            let rid = rng.generate_range(RANGE);
+
+            worlds.push(async move {
+                let mut world = self.query_one_world(id).await?;
+                world.randomnumber = rid;
+                Ok::<World, PgError>(world)
+            });
+        }
+
+        let worlds = worlds.try_collect::<Vec<World>>().await?;
 
         let num = num as usize;
         let mut params = Vec::<&(dyn ToSql + Sync)>::with_capacity(num * 3);
