@@ -37,7 +37,7 @@ async def app(scope, receive, send):
 
 
 def run_app():
-    ASGI(app).listen(3000, lambda config: print(f"Listening on port http://localhost:{config.port} now\n")).run()
+    ASGI(app,lifespan=False).listen(3000, lambda config: print(f"Listening on port http://localhost:{config.port} now\n")).run()
 
 def create_fork():
     n = os.fork()

@@ -5,13 +5,10 @@ from socketify import App
 
 
 def plaintext(res, req):
-    res.write_header("Server", "socketify")
-    res.write_header("Content-Type", "text/plain")
-    res.end(b'Hello, World!')
+    res.send(b'Hello, World!')
 
 def applicationjson(res, req):
-    res.write_header("Server", "socketify")
-    res.end({"message":"Hello, World!"})
+    res.send({"message":"Hello, World!"})
 
 
 def run_app():
