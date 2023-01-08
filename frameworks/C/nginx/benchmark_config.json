@@ -26,7 +26,7 @@
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",
-        "framework": "None",
+        "framework": "njs",
         "language": "C",
         "flavor": "Njs",
         "orm": "Raw",

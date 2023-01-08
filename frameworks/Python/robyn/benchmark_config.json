@@ -17,9 +17,7 @@
         "display_name": "Robyn",
         "notes": "",
         "versus": "None"
-      }
-    },
-    {
+      },
       "const": {
         "plaintext_url": "/plaintext",
         "port": 8080,

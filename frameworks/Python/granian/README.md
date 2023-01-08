@@ -12,15 +12,22 @@ Also note that there is additional information provided in the [Python README](.
 
 ## Test Paths & Source
 
-Granian includes two different implementations:
+Granian includes three different implementations:
 
-- ASGI implementation in the [app\_asgi.py](app_asgi.py)
-- RSGI implementation in the [app\_rsgi.py](app_rsgi.py)
+- ASGI implementation in [app\_asgi.py](app_asgi.py)
+- RSGI implementation in [app\_rsgi.py](app_rsgi.py)
+- WSGI implementation in [app\_wsgi.py](app_wsgi.py)
 
-Both implementations includes the following tests:
+ASGI and RSGI implementations includes the following tests:
 
 * JSON Serialization: "/json"
 * Plaintext: "/plaintext"
+* Single Database Query: "/db"
+* Multiple Database Queries: "queries?queries=#"
+* Fortunes: "/fortunes"
+* Database Updates: "updates?queries=#"
+
+while WSGI implementation only include JSON Serialization and Plaintext tests.
 
 *Replace # with an actual number.*
 

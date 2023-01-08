@@ -191,6 +191,29 @@
       "display_name": "Falcon [Pypy3]",
       "notes": "",
       "versus": "wsgi"
+    },
+    "asgi": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries/",
+      "update_url": "/updates/",
+      "fortune_url": "/fortunes",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "Falcon",
+      "language": "Python",
+      "flavor": "Python3",
+      "orm": "Full",
+      "platform": "ASGI",
+      "webserver": "Uvicorn",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Falcon [ASGI/Tortoise]",
+      "notes": "",
+      "versus": "uvicorn"
     }
   }]
 }
