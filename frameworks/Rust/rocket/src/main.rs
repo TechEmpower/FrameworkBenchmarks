@@ -1,18 +1,14 @@
 #[macro_use]
-extern crate lazy_static;
-#[macro_use]
 extern crate rocket;
 extern crate serde_derive;
 extern crate dotenv;
 
 mod models;
-mod random;
 mod database;
 
 use dotenv::dotenv;
 use std::net::{IpAddr, Ipv4Addr};
 use std::env;
-use std::thread::available_parallelism;
 use rocket::{Rocket, Build};
 use rocket::serde::json::Json;
 use rocket::response::content::RawHtml;
@@ -24,54 +20,48 @@ use figment::Figment;
 
 use models::{World, Fortune, Message};
 use database::HelloWorld;
-use random::random_number;
+use rand::{self, Rng};
 
 #[get("/plaintext")]
-async fn plaintext() -> &'static str {
+fn plaintext() -> &'static str {
     "Hello, World!"
 }
 
 #[get("/json")]
-async fn json() -> Json<models::Message> {
+fn json() -> Json<models::Message> {
     let message = Message {
-        message: "Hello, World!",
+        message: "Hello, World!".into(),
     };
     Json(message)
 }
 
+fn random_id() -> i32 {
+    // returns a random number from 1..10,000 uniformly distributed
+    let mut rng = rand::thread_rng();
+    rng.gen_range(1..=10_000)
+}
+
 #[get("/db")]
 async fn db(mut db: Connection<HelloWorld>) -> Json<World> {
-    let number = random_number();
-
-    let result : World = sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1").bind(number)
+    let result: World = sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1").bind(random_id())
         .fetch_one(&mut *db).await.ok().expect("error loading world");
-
     Json(result)
 }
 
 #[get("/queries")]
 async fn queries_empty(db: Connection<HelloWorld>) -> Json<Vec<World>> {
-    queries(db,1).await
+    queries(db, 1).await
 }
 
 #[get("/queries?<q>")]
 async fn queries(mut db: Connection<HelloWorld>, q: u16) -> Json<Vec<World>> {
-    let q = if q == 0 {
-        1
-    } else if q > 500 {
-        500
-    } else {
-        q
-    };
-
-    let mut results = Vec::with_capacity(q as usize);
+    let q = q.clamp(1, 500);
+    let mut results = Vec::with_capacity(q.into());
 
     for _ in 0..q {
-        let query_id = random_number();
-
+        let query_id = random_id();
         let result :World = sqlx::query_as("SELECT * FROM World WHERE id = $1").bind(query_id)
             .fetch_one(&mut *db).await.ok().expect("error loading world");
-
         results.push(result);
     }
 
@@ -107,27 +97,18 @@ async fn fortunes(mut db: Connection<HelloWorld>) -> RawHtml<String> {
 
 #[get("/updates")]
 async fn updates_empty(db: Connection<HelloWorld>) -> Json<Vec<World>> {
-    updates(db,1).await
+    updates(db, 1).await
 }
 
 #[get("/updates?<q>")]
 async fn updates(mut db: Connection<HelloWorld>, q: u16) -> Json<Vec<World>> {
-    let q = if q == 0 {
-        1
-    } else if q > 500 {
-        500
-    } else {
-        q
-    };
-
-    let mut results = Vec::with_capacity(q as usize);
+    let q = q.clamp(1, 500);
+    let mut results = Vec::with_capacity(q.into());
 
     for _ in 0..q {
-        let query_id = random_number();
-        let mut result :World = sqlx::query_as("SELECT * FROM World WHERE id = $1").bind(query_id)
+        let mut result: World = sqlx::query_as("SELECT * FROM World WHERE id = $1").bind(random_id())
             .fetch_one(&mut *db).await.ok().expect("World was not found");
-
-        result.random_number = random_number();
+        result.random_number = random_id();
         results.push(result);
     }
 
@@ -157,7 +138,6 @@ pub fn launch() -> Rocket<Build> {
         port: 8000,
         keep_alive: 0,
         log_level: LogLevel::Off,
-        workers: available_parallelism().expect("could not get parallelism").get() * 16,
         ..Default::default()
     };
 
@@ -189,4 +169,3 @@ pub fn launch() -> Rocket<Build> {
         )
         .attach(HelloWorld::init())
 }
-

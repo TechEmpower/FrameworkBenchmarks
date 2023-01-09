@@ -10,9 +10,8 @@ path = "src/main.rs"
 
 [dependencies]
 num_cpus = "1.13.1"
-rand = "0.8.5"
+rand = "0.8"
 yarte = "0.15.6"
-lazy_static = "1.4.0"
 async-stream = "0.3.3"
 async-trait = "0.1.53"
 futures = "0.3.21"
@@ -27,6 +26,6 @@ sqlx = { version = "0.5.13", features = [ "postgres", "macros" ] }
 figment = "0.10.6"
 dotenv = "0.15.0"
 
-serde = "1.0.137"
-serde_json = "1.0.81"
-serde_derive = "1.0.137"
+serde = "1.0"
+serde_json = "1.0"
+serde_derive = "1.0"
