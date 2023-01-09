@@ -1,6 +1,6 @@
-use std::{borrow::Cow, fmt::Write, io};
+use std::{borrow::Cow, fmt::Write, io, sync::Arc};
 
-use futures_util::{stream::FuturesUnordered, TryFutureExt, TryStreamExt};
+use futures_util::{stream::FuturesUnordered, TryStreamExt};
 use nanorand::{Rng, WyRand};
 use tokio_postgres::{connect, types::ToSql, Client, NoTls, Statement};
 use viz::{Error, IntoResponse, Response, StatusCode};
@@ -49,7 +49,7 @@ impl PgConnection {
         // Spawn connection
         tokio::spawn(async move {
             if let Err(error) = conn.await {
-                eprintln!("Connection error: {}", error);
+                eprintln!("Connection error: {error}");
             }
         });
 
@@ -97,14 +97,11 @@ impl PgConnection {
 
 impl PgConnection {
     async fn query_one_world(&self, id: i32) -> Result<World, PgError> {
-        self.client
-            .query_one(&self.world, &[&id])
-            .await
-            .map(|row| World {
-                id: row.get(0),
-                randomnumber: row.get(1),
-            })
-            .map_err(PgError::Pg)
+        let row = self.client.query_one(&self.world, &[&id]).await?;
+        Ok(World {
+            id: row.get(0),
+            randomnumber: row.get(1),
+        })
     }
 
     pub async fn get_world(&self) -> Result<World, PgError> {
@@ -114,49 +111,50 @@ impl PgConnection {
 
     pub async fn get_worlds(&self, num: u16) -> Result<Vec<World>, PgError> {
         let mut rng = self.rng.clone();
-        (0..num)
-            .map(|_| {
-                let id = rng.generate_range(RANGE);
-                self.query_one_world(id)
-            })
-            .collect::<FuturesUnordered<_>>()
-            .try_collect()
-            .await
+
+        let worlds = FuturesUnordered::new();
+
+        for _ in 0..num {
+            let id = rng.generate_range(RANGE);
+            worlds.push(self.query_one_world(id));
+        }
+
+        worlds.try_collect().await
     }
 
     pub async fn get_worlds_by_limit(&self, limit: i64) -> Result<Vec<World>, PgError> {
-        self.client
+        Ok(self
+            .client
             .query("SELECT * FROM world LIMIT $1", &[&limit])
-            .await
-            .map(|rows| {
-                rows.iter()
-                    .map(|row| World {
-                        id: row.get(0),
-                        randomnumber: row.get(1),
-                    })
-                    .collect()
+            .await?
+            .iter()
+            .map(|row| World {
+                id: row.get(0),
+                randomnumber: row.get(1),
             })
-            .map_err(PgError::Pg)
+            .collect())
     }
 
     pub async fn update(&self, num: u16) -> Result<Vec<World>, PgError> {
         let mut rng = self.rng.clone();
 
-        let worlds: Vec<World> = (0..num)
-            .map(|_| {
-                let id = rng.generate_range(RANGE);
-                let rid = rng.generate_range(RANGE);
-                self.query_one_world(id).map_ok(move |mut world| {
-                    world.randomnumber = rid;
-                    world
-                })
-            })
-            .collect::<FuturesUnordered<_>>()
-            .try_collect()
-            .await?;
+        let worlds = FuturesUnordered::new();
+
+        for _ in 0..num {
+            let id = rng.generate_range(RANGE);
+            let rid = rng.generate_range(RANGE);
+
+            worlds.push(async move {
+                let mut world = self.query_one_world(id).await?;
+                world.randomnumber = rid;
+                Ok::<World, PgError>(world)
+            });
+        }
+
+        let worlds = worlds.try_collect::<Vec<World>>().await?;
 
         let num = num as usize;
-        let mut params: Vec<&(dyn ToSql + Sync)> = Vec::with_capacity(num * 3);
+        let mut params = Vec::<&(dyn ToSql + Sync)>::with_capacity(num * 3);
 
         for w in &worlds {
             params.push(&w.id);
@@ -167,9 +165,9 @@ impl PgConnection {
             params.push(&w.id);
         }
 
-        let st = self.updates[num - 1].clone();
-
-        self.client.query(&st, &params[..]).await?;
+        self.client
+            .query(&self.updates[num - 1], &params[..])
+            .await?;
 
         Ok(worlds)
     }
@@ -195,4 +193,8 @@ impl PgConnection {
 
         Ok(items)
     }
+}
+
+pub fn get_conn(pool: Option<Arc<PgConnection>>) -> Result<Arc<PgConnection>, PgError> {
+    pool.ok_or(PgError::Connect)
 }
