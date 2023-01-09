@@ -27,7 +27,7 @@ fi
 if [[ "$BENCHMARK_ENV" = "Azure" ]]; then
 	DB_CONN=2
 else
-	DB_CONN=3
+	DB_CONN=1
 fi
 
 build_h2o_app()
@@ -49,7 +49,7 @@ run_curl()
 run_h2o_app()
 {
 	LD_LIBRARY_PATH="${MUSTACHE_C_PREFIX}/lib:$LD_LIBRARY_PATH" \
-	taskset -c "$1" "$2/h2o_app" -a20 -f "$3/template" -m "$DB_CONN" "$4" "$5" \
+	taskset -c "$1" "$2/h2o_app" -a20 -e32 -f "$3/template" -m "$DB_CONN" "$4" "$5" \
 	        -d "host=$DBHOST dbname=hello_world user=benchmarkdbuser sslmode=disable \
 	            password=benchmarkdbpass" &
 }
