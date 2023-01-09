@@ -1,16 +1,17 @@
 
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.7.22"
+    id "org.jetbrains.kotlin.jvm" version "1.8.0"
 }
 
 ext {
-    hexagonVersion = "2.2.7"
+    hexagonVersion = "2.4.1"
+    hexagonExtraVersion = "2.4.0"
     hikariVersion = "5.0.1"
-    jettyVersion = "11.0.12"
-    postgresqlVersion = "42.5.0"
-    vertxVersion = "4.3.5"
+    jettyVersion = "11.0.13"
+    postgresqlVersion = "42.5.1"
+    vertxVersion = "4.3.7"
     cache2kVersion = "2.6.1.Final"
-    nettyVersion = "4.1.85.Final"
+    nettyVersion = "4.1.86.Final"
 
     gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/$hexagonVersion/gradle"
 }
@@ -49,7 +50,7 @@ dependencies {
     providedCompile("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
 }
 
-task("minimizeTemplate") {
+tasks.register("minimizeTemplate") {
     doLast {
         File template = file("$buildDir/resources/main/fortunes.pebble.html")
         List<String> lines = template.readLines().collect { it.trim() }
