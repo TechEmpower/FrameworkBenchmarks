@@ -3,10 +3,18 @@ use ki:http;
 
 func handler(http:Request req) http:Response {
 
+	@ headers = Map<String>{};
+	headers.set("Server", "ki-http");
+
 	if(req.uri == "/plaintext") {
-		return http:Response.text("Hello, World!", 200, "text/plain");
+		@ reqh = req.headers;
+		each reqh as k, v {
+			println(k);
+			println(v);
+		}
+		return http:Response.text("Hello, World!", 200, "text/plain", headers);
 	} else if(req.uri == "/json") {
-		return http:Response.text("{\"message\":\"Hello, World!\"}", 200, "application/json");
+		return http:Response.text("{\"message\":\"Hello, World!\"}", 200, "application/json", headers);
 	}
 
 	return http:Response.error(404);

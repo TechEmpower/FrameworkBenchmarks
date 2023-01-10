@@ -12,14 +12,14 @@ RUN apt-get install libxml2-dev -y
 RUN apt-get install libc6 -y
 RUN apt-get install zlib1g-dev -y
 
-RUN echo "Download"
+RUN echo "# Download"
 
 RUN curl -s https://ki-lang.dev/dist/install.sh | bash -s techempower
 
 # Copy app code
 COPY ./main.ki /app
 # Build app
-RUN ki build main.ki -o ./server --optimize --static -v
+RUN ki build main.ki -o ./server --clean --optimize --static -v
 
 EXPOSE 8080
 
