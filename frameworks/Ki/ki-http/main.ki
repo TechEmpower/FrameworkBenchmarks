@@ -1,6 +1,8 @@
 
 use ki:http;
 use ki:json;
+use ki:async;
+use ki:sys;
 
 func handler(http:Request req) http:Response {
 
@@ -19,13 +21,30 @@ func handler(http:Request req) http:Response {
 	return http:Response.error(404);
 }
 
-func main() i32 {
-
-	@ s = http:Server.init("0.0.0.0", 8080, handler) or { panic "Failed to start server"; };
+func spawn(?ptr arg) void {
+	ifnull arg { return; }
+	@ s = arg -> http:Server;
 	s.start() or {
 		println("Failed to start http server");
-		return 1;
+		return;
 	};
+}
+
+func main() i32 {
+
+	@ s = http:Server.init("0.0.0.0", 8080, handler, 50000) or { panic "Failed to start server"; };
+	s.async = false;
+
+	@ mut core_count = (sys:CpuInfo.core_count() or value 4) - 1;
+	if(core_count < 4 || core_count > 1000) {
+		core_count = 4;
+	}
+	@ mut i = 0#u32;
+	while(i < core_count) {
+		i++;
+		@ task = async:Thread.start(spawn, s -> ptr);
+	}
+	spawn(s -> ptr);
 
 	return 0;
 }
