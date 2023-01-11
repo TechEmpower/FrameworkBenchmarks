@@ -3,7 +3,7 @@ name = "ki-http"
 
 [main]
 urls.plaintext = "/plaintext"
-urls.json = "None"
+urls.json = "/json"
 approach = "Realistic"
 classification = "Micro"
 database = "None"
