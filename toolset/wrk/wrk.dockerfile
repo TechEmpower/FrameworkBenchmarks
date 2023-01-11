@@ -1,4 +1,4 @@
-FROM buildpack-deps:bionic
+FROM buildpack-deps:jammy
 
 RUN apt-get update && apt-get install -yqq libluajit-5.1-dev libssl-dev luajit
 
