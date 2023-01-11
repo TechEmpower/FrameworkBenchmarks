@@ -1,20 +1,19 @@
 
 use ki:http;
+use ki:json;
 
 func handler(http:Request req) http:Response {
 
 	@ headers = Map<String>{};
 	headers.set("Server", "ki-http");
+	headers.set("Date", http:get_date());
 
 	if(req.uri == "/plaintext") {
-		@ reqh = req.headers;
-		each reqh as k, v {
-			println(k);
-			println(v);
-		}
 		return http:Response.text("Hello, World!", 200, "text/plain", headers);
 	} else if(req.uri == "/json") {
-		return http:Response.text("{\"message\":\"Hello, World!\"}", 200, "application/json", headers);
+		@ dec = json:decode("{\"message\":\"Hello, World!\"}") or { return http:Response.error(500); };
+		@ enc = json:encode(dec);
+		return http:Response.text(enc, 200, "application/json", headers);
 	}
 
 	return http:Response.error(404);
