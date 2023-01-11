@@ -8,7 +8,7 @@ global bool date_expired = true;
 global String date = "";
 
 func reset_date() void {
-	sys:sleep_ms(950);
+	sys:sleep_ms(500);
 	date_race = 0;
 	date_expired = true;
 }
