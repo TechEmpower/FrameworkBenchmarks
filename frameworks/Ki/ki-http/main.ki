@@ -3,9 +3,9 @@ use ki:http;
 use ki:json;
 use ki:sys;
 
-shared_global i32 date_race = 0;
-shared_global bool date_expired = true;
-shared_global String date = "";
+global i32 date_race = 0;
+global bool date_expired = true;
+global String date = "";
 
 func reset_date() void {
 	sys:sleep_ms(950);
