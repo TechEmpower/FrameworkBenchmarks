@@ -7,19 +7,16 @@ global i32 date_race = 0;
 global bool date_expired = true;
 global String date = "";
 
-func reset_date() void {
+func reset_date(ptr date_race_adr, ptr date_expired_adr) void {
 	sys:sleep_ms(500);
-	date_race = 0;
-	date_expired = true;
+	setptrv date_race_adr to 0#i32;
+	setptrv date_expired_adr to true;
 }
 
 func update_date() void {
-	@ x = atomicop date_race ADD 1;
-	if(x == 0){
-		date_expired = false;
-		date = http:get_date();
-		@ task = async reset_date();
-	}
+	date_expired = false;
+	date = http:get_date();
+	@ task = async reset_date(getptr date_race, getptr date_expired);
 }
 
 func handler(http:Request req) http:Response {
