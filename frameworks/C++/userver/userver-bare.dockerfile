@@ -16,6 +16,6 @@ WORKDIR /app
 COPY userver_configs/* ./
 COPY --from=builder /src/build/userver_techempower ./
 
-EXPOSE 8080
+EXPOSE 8081
 CMD ./userver_techempower -c ./static_config.yaml
 
