@@ -113,7 +113,7 @@ const
 
   WORLD_READ_SQL = 'select id, randomNumber from World where id=?';
   WORLD_UPDATE_SQLN ='update World as t set randomNumber = v.r from ' +
-    '(SELECT unnest(?::NUMERIC[]), unnest(?::NUMERIC[])) as v(id, r)' +
+    '(SELECT unnest(?::NUMERIC[]), unnest(?::NUMERIC[]) order by 2) as v(id, r)' +
     ' where t.id = v.id';
   FORTUNES_SQL = 'select id, message from Fortune';
 
@@ -511,7 +511,7 @@ begin
       servers := 1;
     end;
   end;
-  //if servers = 1 then
+  if servers = 1 then
     include(flags, hsoThreadSmooting); // 30% better /plaintext e.g. on i5 7300U
 
   // start the server instance(s), in hsoReusePort mode
