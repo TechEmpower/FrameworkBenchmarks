@@ -58,7 +58,7 @@ snmalloc-rs = { version = "0.3.3", features = ["native-cpu"] }
 yarte = { version = "0.15", features = ["bytes-buf", "json"] }
 buf-min = { version = "0.7", features = ["ntex-bytes"] }
 env_logger = "0.10"
-nanorand = { version = "0.7", default-features = false, features = ["std", "wyrand"] }
+nanorand = { version = "0.7", default-features = false, features = ["std", "wyrand", "tls"] }
 atoi = "2.0"
 num_cpus = "1.13"
 smallvec = "1.6.1"
