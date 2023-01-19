@@ -12,6 +12,10 @@ name = "ntex-astd"
 path = "src/main.rs"
 
 [[bin]]
+name = "ntex-glommio"
+path = "src/main.rs"
+
+[[bin]]
 name = "ntex-db"
 path = "src/main_db.rs"
 
@@ -20,11 +24,19 @@ name = "ntex-db-astd"
 path = "src/main_db.rs"
 
 [[bin]]
+name = "ntex-db-glommio"
+path = "src/main_db.rs"
+
+[[bin]]
 name = "ntex-plt"
 path = "src/main_plt.rs"
 
 [[bin]]
 name = "ntex-plt-astd"
+path = "src/main_plt.rs"
+
+[[bin]]
+name = "ntex-plt-glommio"
 path = "src/main_plt.rs"
 
 [features]
@@ -36,8 +48,11 @@ tokio = ["ntex/tokio"]
 # async-std runtime
 async-std = ["ntex/async-std"]
 
+# glommio runtime
+glommio = ["ntex/glommio"]
+
 [dependencies]
-ntex = "0.5.30"
+ntex = "0.5.31"
 mimalloc = { version = "0.1.25", default-features = false }
 snmalloc-rs = { version = "0.3.3", features = ["native-cpu"] }
 yarte = { version = "0.15", features = ["bytes-buf", "json"] }
