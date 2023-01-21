@@ -1,0 +1,26 @@
+{
+  "framework": "vert.x web kotlin",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "Vert.x Web Kotlin",
+        "language": "Kotlin",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Vert.x",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Vert.x Web Kotlin",
+        "notes": "",
+        "versus": "vertx-web"
+      }
+    }
+  ]
+}
