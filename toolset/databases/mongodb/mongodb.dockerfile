@@ -1,10 +1,10 @@
 FROM buildpack-deps:jammy
 
+ARG MONGODB_VERSION=6.0
+
 COPY ./ ./
 
-ENV MONGODB_VERSION 6.0
-
-ENV DEBIAN_FRONTEND noninteractive
+ARG DEBIAN_FRONTEND=noninteractive
 RUN wget -qO - https://www.mongodb.org/static/pgp/server-${MONGODB_VERSION}.asc > /etc/apt/keyrings/mongodb-org.asc
 RUN echo "deb [ signed-by=/etc/apt/keyrings/mongodb-org.asc ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/$MONGODB_VERSION multiverse" > \
       /etc/apt/sources.list.d/mongodb-org.list
