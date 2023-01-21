@@ -46,22 +46,15 @@ Thanks and Cheers!
 
 
 
-# Anansi Benchmarking Test
+# [Anansi](https://saru-tora.github.io/anansi/) web framework
+
+## Description
+
+Anansi is a simple full-stack web framework for Rust.
 
 ### Test Type Implementation Source Code
 
-* [JSON](Relative/Path/To/Your/Source/File)
-* [PLAINTEXT](Relative/Path/To/Your/Source/File)
-* [DB](Relative/Path/To/Your/Source/File)
-* [QUERY](Relative/Path/To/Your/Source/File)
-* [CACHED QUERY](Relative/Path/To/Your/Source/File)
-* [UPDATE](Relative/Path/To/Your/Source/File)
-* [FORTUNES](Relative/Path/To/Your/Source/File)
-
-## Important Libraries
-The tests were run with:
-* [Software](https://www.example1.com/)
-* [Example](http://www.example2.com/)
+All tests can be found in: src/hello/world/views.rs
 
 ## Test URLs
 ### JSON

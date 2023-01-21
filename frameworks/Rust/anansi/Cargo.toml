@@ -11,7 +11,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anansi = { git = "https://github.com/saru-tora/anansi", features = ["postgres"] }
+anansi = { git = "https://github.com/saru-tora/anansi", features = ["postgres", "minimal"] }
 async-trait = "0.1.57"
 rand = "0.8.4"
 serde = { version = "1.0", features = ["derive"] }
