@@ -1,5 +1,5 @@
 {
-  "framework": "vert.x web kotlin",
+  "framework": "vertx-web-kotlin",
   "tests": [
     {
       "default": {
@@ -9,7 +9,7 @@
         "approach": "Realistic",
         "classification": "Micro",
         "database": "postgres",
-        "framework": "Vert.x Web Kotlin",
+        "framework": "vertx-web-kotlin",
         "language": "Kotlin",
         "flavor": "None",
         "orm": "Raw",
@@ -17,7 +17,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Vert.x Web Kotlin",
+        "display_name": "vertx-web-kotlin",
         "notes": "",
         "versus": "vertx-web"
       }
