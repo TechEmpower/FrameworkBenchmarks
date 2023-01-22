@@ -16,7 +16,7 @@ pub struct World {
 #[async_trait]
 impl<R: BaseRequest> Relate<R> for World {
     async fn on_save(&self, _req: &R) -> Result<()> {
-        Ok(())
+        unimplemented!();
     }
     async fn on_delete(&self, _req: &R) -> Result<()> {
         unimplemented!();

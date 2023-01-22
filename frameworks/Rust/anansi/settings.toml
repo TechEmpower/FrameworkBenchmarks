@@ -16,3 +16,4 @@ name = "hello_world"
 user = "benchmarkdbuser"
 password = "benchmarkdbpass"
 address = "tfb-database"
+max_conn = 512

@@ -46,9 +46,7 @@ Thanks and Cheers!
 
 
 
-# [Anansi](https://saru-tora.github.io/anansi/) web framework
-
-## Description
+# [Anansi](https://saru-tora.github.io/anansi/) Benchmarking Test
 
 Anansi is a simple full-stack web framework for Rust.
 

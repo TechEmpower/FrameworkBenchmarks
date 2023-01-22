@@ -1,7 +1,6 @@
 {let mut _c = String::new();_c.push_str("<!DOCTYPE html>
 <html lang=\"en\">
         <head>
-                <meta charset=\"utf-8\">
                 <title>");_c.push_str(&_base_args._title);_c.push_str("</title>
         </head>
         <body>

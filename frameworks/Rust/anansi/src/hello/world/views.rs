@@ -12,7 +12,7 @@ struct Message {
 }
 
 fn get_query(params: &Parameters) -> i16 {
-    if let Ok(q) = params.get("queries") {
+    if let Ok(q) = params.get("q") {
         if let Ok(q) = q.parse() {
             if q > 1 {
                 return if q <= 500 {
@@ -75,7 +75,7 @@ impl<R: Request> WorldView<R> {
         transact!(req, {
             for world in &mut worlds {
                 world.randomNumber = random_num();
-                world.save(req).await?;
+                world.update(req).await?;
             }
             Ok(())
         })?;
