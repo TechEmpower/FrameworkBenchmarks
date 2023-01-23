@@ -1,21 +1,23 @@
 module main
 
 import vweb
-import db.sqlite // can change to 'db.mysql', 'db.pg'
+import db.mysql
 
 const (
-	http_port = 8080
-	http_host = '127.0.0.1'
-		// dbHost  = "tfb-database"
-		// dbPort  = 5432
-		// dbUser  = "benchmarkdbuser"
-		// dbPaswd = "benchmarkdbpass"
-		// dbName  = "hello_world"
+	http_port   = 8080
+	http_host   = '127.0.0.1'
+	db_host     = 'tfb-database'
+	db_port     = 5432
+	db_user     = 'benchmarkdbuser'
+	db_password = 'benchmarkdbpass'
+	db_name     = 'hello_world'
 		// worldSelectSQL      = "SELECT id, randomNumber FROM World WHERE id = $1"
 		// worldSelectCacheSQL = "SELECT id, randomNumber FROM World LIMIT $1"
 		// worldUpdateSQL      = "UPDATE World SET randomNumber = $1 WHERE id = $2"
 		// fortuneSelectSQL    = "SELECT id, message FROM Fortune"
 )
+
+type DBConnection = mysql.Connection
 
 [table: 'world']
 struct World {
@@ -33,8 +35,15 @@ struct App {
 	vweb.Context
 }
 
-pub fn create_db_connection() !sqlite.DB {
-	mut db := sqlite.connect('app.db')!
+pub fn create_db_connection() !DBConnection {
+	mut db := mysql.Connection{
+		host: db_host
+		port: db_port
+		username: db_user
+		password: db_password
+		dbname: db_name
+	}
+	db.connect() or { panic(err) }
 	return db
 }
 
@@ -45,7 +54,7 @@ fn main() {
 		create table World
 		create table Fortune
 	}
-	db.close()!
+	db.close()
 
 	vweb.run_at(new_app(), vweb.RunParams{
 		host: http_host
