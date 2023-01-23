@@ -1,5 +1,5 @@
 {
-  "framework": "vweb.v",
+  "framework": "vweb",
   "tests": [
     {
       "default": {
