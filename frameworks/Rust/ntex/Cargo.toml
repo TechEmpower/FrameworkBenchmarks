@@ -37,19 +37,16 @@ tokio = ["ntex/tokio"]
 async-std = ["ntex/async-std"]
 
 [dependencies]
-ntex = "0.5.16"
+ntex = "0.5.30"
 mimalloc = { version = "0.1.25", default-features = false }
-snmalloc-rs = { version = "0.2.26", features = ["1mib", "native-cpu"] }
+snmalloc-rs = { version = "0.3.3", features = ["native-cpu"] }
 yarte = { version = "0.15", features = ["bytes-buf", "json"] }
-env_logger = "0.9"
+buf-min = { version = "0.7", features = ["ntex-bytes"] }
+env_logger = "0.10"
 nanorand = { version = "0.7", default-features = false, features = ["std", "wyrand"] }
-atoi = "1.0"
+atoi = "2.0"
 num_cpus = "1.13"
-futures = "0.3"
-http = "0.2"
 smallvec = "1.6.1"
-simd-json = "0.4.13"
-simd-json-derive = "0.2.2"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 log = { version = "0.4", features = ["release_max_level_off"] }

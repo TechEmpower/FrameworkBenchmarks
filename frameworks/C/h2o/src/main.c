@@ -41,12 +41,23 @@
 #include "utility.h"
 
 #define USAGE_MESSAGE \
-	"Usage:\n%s [-a <max connections accepted simultaneously>] [-b <bind address>] " \
-	"[-c <certificate file>] [-d <database connection string>] [-f template file path] " \
-	"[-j <max reused JSON generators>] [-k <private key file>] [-l <log path>] " \
-	"[-m <max database connections per thread>] [-p <port>] " \
-	"[-q <max enqueued database queries per thread>] [-r <root directory>] " \
-	"[-s <HTTPS port>] [-t <thread number>]\n"
+	"Usage:\n%s " \
+	"[-a <max connections accepted simultaneously>] " \
+	"[-b <bind address>] " \
+	"[-c <certificate file>] " \
+	"[-d <database connection string>] " \
+	"[-e <max pipelined database queries>] " \
+	"[-f <template file path>] " \
+	"[-j <max reused JSON generators>] " \
+	"[-k <private key file>] " \
+	"[-l <log path>] " \
+	"[-m <max database connections per thread>] " \
+	"[-o <database query timeout in seconds>] " \
+	"[-p <port>] " \
+	"[-q <max enqueued database queries per thread>] " \
+	"[-r <root directory>] " \
+	"[-s <HTTPS port>] " \
+	"[-t <thread number>]\n"
 
 typedef struct {
 	list_t l;
@@ -73,8 +84,7 @@ static void free_global_data(global_data_t *global_data)
 	if (global_data->file_logger)
 		global_data->file_logger->dispose(global_data->file_logger);
 
-	cleanup_request_handlers(global_data);
-	remove_prepared_statements(global_data->prepared_statements);
+	cleanup_request_handlers(&global_data->request_handler_data);
 	h2o_config_dispose(&global_data->h2o_config);
 
 	if (global_data->ssl_ctx)
@@ -111,7 +121,11 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 			goto error;
 	}
 
-	initialize_request_handlers(config, global_data, hostconf, log_handle);
+	initialize_request_handlers(config,
+	                            hostconf,
+	                            log_handle,
+	                            &global_data->postinitialization_tasks,
+	                            &global_data->request_handler_data);
 
 	// Must be registered after the rest of the request handlers.
 	if (config->root) {
@@ -145,7 +159,7 @@ static int parse_options(int argc, char *argv[], config_t *config)
 	opterr = 0;
 
 	while (1) {
-		const int opt = getopt(argc, argv, "?a:b:c:d:f:j:k:l:m:p:q:r:s:t:");
+		const int opt = getopt(argc, argv, "?a:b:c:d:e:f:j:k:l:m:o:p:q:r:s:t:");
 
 		if (opt == -1)
 			break;
@@ -178,6 +192,9 @@ static int parse_options(int argc, char *argv[], config_t *config)
 			case 'd':
 				config->db_host = optarg;
 				break;
+			case 'e':
+				PARSE_NUMBER(config->max_pipeline_query_num);
+				break;
 			case 'f':
 				config->template_path = optarg;
 				break;
@@ -192,6 +209,9 @@ static int parse_options(int argc, char *argv[], config_t *config)
 				break;
 			case 'm':
 				PARSE_NUMBER(config->max_db_conn_num);
+				break;
+			case 'o':
+				PARSE_NUMBER(config->db_timeout);
 				break;
 			case 'p':
 				PARSE_NUMBER(config->port);
@@ -234,11 +254,20 @@ static void run_postinitialization_tasks(list_t **tasks, thread_context_t *ctx)
 
 static void set_default_options(config_t *config)
 {
+	if (!config->db_timeout)
+		config->db_timeout = 10;
+
+	if (!config->https_port)
+		config->https_port = 4443;
+
 	if (!config->max_accept)
 		config->max_accept = 10;
 
 	if (!config->max_db_conn_num)
 		config->max_db_conn_num = 10;
+
+	if (!config->max_pipeline_query_num)
+		config->max_pipeline_query_num = 16;
 
 	if (!config->max_query_num)
 		config->max_query_num = 10000;
@@ -248,9 +277,6 @@ static void set_default_options(config_t *config)
 
 	if (!config->thread_num)
 		config->thread_num = h2o_numproc();
-
-	if (!config->https_port)
-		config->https_port = 4443;
 }
 
 static void setup_process(void)

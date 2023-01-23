@@ -25,16 +25,17 @@ if [[ -z "$MUSTACHE_C_PREFIX" ]]; then
 fi
 
 if [[ "$BENCHMARK_ENV" = "Azure" ]]; then
-	DB_CONN=5
+	DB_CONN=2
 else
-	DB_CONN=5
+	DB_CONN=1
 fi
 
 build_h2o_app()
 {
 	cmake -DCMAKE_INSTALL_PREFIX="$H2O_APP_PREFIX" -DCMAKE_BUILD_TYPE=Release \
 	      -DCMAKE_PREFIX_PATH="${H2O_PREFIX};${MUSTACHE_C_PREFIX}" \
-	      -DCMAKE_C_FLAGS="-march=native $1" -G Ninja "$H2O_APP_SRC_ROOT"
+	      -DCMAKE_C_FLAGS="-march=native -mtune=native $1" -G Ninja \
+	      "$H2O_APP_SRC_ROOT"
 	cmake --build . --clean-first -j
 }
 
@@ -48,7 +49,7 @@ run_curl()
 run_h2o_app()
 {
 	LD_LIBRARY_PATH="${MUSTACHE_C_PREFIX}/lib:$LD_LIBRARY_PATH" \
-	taskset -c "$1" "$2/h2o_app" -a20 -f "$3/template" -m "$DB_CONN" "$4" "$5" \
+	taskset -c "$1" "$2/h2o_app" -a20 -e32 -f "$3/template" -m "$DB_CONN" "$4" "$5" \
 	        -d "host=$DBHOST dbname=hello_world user=benchmarkdbuser sslmode=disable \
 	            password=benchmarkdbpass" &
 }

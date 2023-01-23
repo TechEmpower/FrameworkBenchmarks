@@ -7,11 +7,11 @@ package org.redkalex.benchmark;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.*;
-import javax.annotation.Resource;
+import java.util.stream.IntStream;
+import org.redkale.annotation.Resource;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
-import org.redkale.source.*;
+import org.redkale.source.DataSource;
 import org.redkale.util.AnyValue;
 
 /**
