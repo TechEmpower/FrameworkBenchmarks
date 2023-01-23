@@ -65,37 +65,37 @@ pub fn (mut app App) ping() ?vweb.Result {
 	return app.text('ping')
 }
 
-['/mysql-plaintext'; get]
+['/plaintext'; get]
 pub fn (mut app App) plaintext() ?vweb.Result {
 	return app.text('Hello, World!')
 }
 
-['/mysql-fortunes'; get]
+['/fortunes'; get]
 pub fn (mut app App) fortunes() ?vweb.Result {
 	return app.text('Hello, World!')
 }
 
-['/mysql-db'; get]
+['/db'; get]
 pub fn (mut app App) single_query() ?vweb.Result {
 	return app.text('Hello, World!')
 }
 
-['/mysql-json'; get]
+['/json'; get]
 pub fn (mut app App) json() ?vweb.Result {
 	return app.text('Hello, World!')
 }
 
-['/mysql-queries'; get]
+['/queries'; get]
 pub fn (mut app App) multiple_queries() ?vweb.Result {
 	return app.text('Hello, World!')
 }
 
-['/mysql-updates'; get]
+['/updates'; get]
 pub fn (mut app App) update_queries() ?vweb.Result {
 	return app.text('Hello, World!')
 }
 
-['/mysql-cached-worlds'; get]
+['/cached-worlds'; get]
 pub fn (mut app App) cached_queries() ?vweb.Result {
 	return app.text('Hello, World!')
 }
