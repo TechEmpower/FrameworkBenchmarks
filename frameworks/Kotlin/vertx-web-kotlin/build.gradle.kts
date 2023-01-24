@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 tasks.wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
@@ -18,6 +21,10 @@ dependencies {
     implementation("io.vertx:vertx-pg-client")
     implementation("io.vertx:vertx-lang-kotlin")
     implementation("io.vertx:vertx-lang-kotlin-coroutines")
+}
+
+tasks.withType<KotlinCompile> {
+    compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
 }
 
 application.mainClass.set("MainKt")
