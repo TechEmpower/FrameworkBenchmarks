@@ -1,7 +1,7 @@
 use anansi::{check, viewer, render};
 use anansi::web::{Result, Response};
-use crate::project::Request;
 use anansi::site::Site;
+use crate::project::Request;
 
 #[viewer]
 impl<R: Request> ErrorView<R> {

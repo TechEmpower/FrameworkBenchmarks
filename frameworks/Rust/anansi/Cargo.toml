@@ -8,10 +8,11 @@ name = "tfb-anansi"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[features]
+raw = []
 
 [dependencies]
-anansi = { git = "https://github.com/saru-tora/anansi", rev = "1eafd78", features = ["postgres", "minimal"] }
+anansi = { git = "https://github.com/saru-tora/anansi", rev = "9522722", features = ["postgres", "minimal"] }
 async-trait = "0.1.57"
 rand = "0.8.4"
 serde = { version = "1.0", features = ["derive"] }

@@ -1,33 +1,18 @@
 use crate::prelude::*;
-use super::super::records::{World, Fortune};
-use serde::Serialize;
-use anansi::check;
-use anansi::web::Parameters;
 use anansi::records::Int;
+use super::super::records::{World, Fortune};
+use super::util::get_query;
+use serde::Serialize;
+use anansi::{check, raw_bulk_update};
 use rand::Rng;
+
+fn random_num() -> Int {
+    Int::new(rand::thread_rng().gen_range(1..=10_000))
+}
 
 #[derive(Serialize)]
 struct Message {
     message: &'static str,
-}
-
-fn get_query(params: &Parameters) -> i16 {
-    if let Ok(q) = params.get("q") {
-        if let Ok(q) = q.parse() {
-            if q > 1 {
-                return if q <= 500 {
-                    q
-                } else {
-                    500
-                };
-            }
-        } 
-    }
-    1
-}
-
-fn random_num() -> Int {
-    Int::new(rand::thread_rng().gen_range(1..=10_000))
 }
 
 #[base_view]
@@ -72,13 +57,10 @@ impl<R: Request> WorldView<R> {
     #[check(Site::is_visitor)]
     pub async fn updates(req: &mut R) -> Result<Response> {
         let mut worlds = Self::get_worlds(req).await?;
-        transact!(req, {
-            for world in &mut worlds {
-                world.randomNumber = random_num();
-                world.update(req).await?;
-            }
-            Ok(())
-        })?;
+        for world in &mut worlds {
+            world.randomNumber = random_num();
+        }
+        transact!(req, raw_bulk_update!(req, World, &worlds, randomNumber).await)?;
         Response::json(&worlds)
     }
     #[check(Site::is_visitor)]

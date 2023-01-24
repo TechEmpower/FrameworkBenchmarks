@@ -1,4 +1,5 @@
 pub mod urls;
+#[cfg(not(feature = "raw"))]
 pub mod records;
 pub mod migrations;
 
