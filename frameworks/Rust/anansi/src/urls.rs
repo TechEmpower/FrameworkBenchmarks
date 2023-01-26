@@ -10,6 +10,7 @@ routes! {
     path!("/fortunes", WorldView::fortunes),
     path!("/updates", WorldView::updates),
     path!("/plaintext", WorldView::plaintext),
+    path!("/cached-queries", WorldView::cached_queries),
 }
 
 #[cfg(feature = "raw")]

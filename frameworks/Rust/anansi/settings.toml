@@ -7,7 +7,7 @@ smtp_password = ""
 [caches]
 
 [caches.default]
-location = ""
+location = "redis://127.0.0.1/"
 
 [databases]
 

@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use anansi::cache::prelude::*;
 use anansi::records::Int;
 use super::super::records::{World, Fortune};
 use super::util::get_query;
@@ -6,8 +7,12 @@ use serde::Serialize;
 use anansi::{check, raw_bulk_update};
 use rand::Rng;
 
-fn random_num() -> Int {
-    Int::new(rand::thread_rng().gen_range(1..=10_000))
+fn random_i32() -> i32 {
+    rand::thread_rng().gen_range(1..=10_000)
+}
+
+fn random_int() -> Int {
+    Int::new(random_i32())
 }
 
 #[derive(Serialize)]
@@ -26,7 +31,7 @@ impl<R: Request> WorldView<R> {
         Response::json(&message)
     }
     async fn get_world(req: &R) -> Result<World> {
-        World::find(random_num()).get(req).await
+        World::find(random_int()).get(req).await
     }
     async fn get_worlds(req: &R) -> Result<Vec<World>> {
         let q = get_query(req.params());
@@ -58,7 +63,7 @@ impl<R: Request> WorldView<R> {
     pub async fn updates(req: &mut R) -> Result<Response> {
         let mut worlds = Self::get_worlds(req).await?;
         for world in &mut worlds {
-            world.randomNumber = random_num();
+            world.randomNumber = random_int();
         }
         transact!(req, raw_bulk_update!(req, World, &worlds, randomNumber).await)?;
         Response::json(&worlds)
@@ -66,5 +71,20 @@ impl<R: Request> WorldView<R> {
     #[check(Site::is_visitor)]
     pub async fn plaintext(req: &mut R) -> Result<Response> {
         Ok(Response::text("Hello, World!".to_string()))
+    }
+    #[check(Site::is_visitor)]
+    pub async fn cached_queries(req: &mut R) -> Result<Response> {
+        let q = get_query(req.params());
+        let mut ids = vec![];
+        for _ in 0..q {
+            ids.push(random_i32().to_string());
+        }
+        let mut worlds = vec!['[' as u8];
+        for mut world in req.cache().get_many(ids).await? {
+            worlds.append(&mut world);
+        }
+        worlds.pop();
+        worlds.push(']' as u8);
+        Response::json_bytes(worlds)
     }
 }
