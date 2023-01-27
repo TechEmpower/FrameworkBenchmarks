@@ -29,7 +29,7 @@ public class Bootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
-        ExecutorService executorService = new ThreadPoolExecutor(1, 1,
+        ExecutorService executorService = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().availableProcessors(),
                 0L, TimeUnit.MILLISECONDS,
                 new ArrayBlockingQueue<>(128), new ThreadPoolExecutor.CallerRunsPolicy());
         HttpRouteHandler routeHandle = new HttpRouteHandler();
