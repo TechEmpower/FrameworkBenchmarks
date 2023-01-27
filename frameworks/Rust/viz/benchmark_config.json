@@ -64,6 +64,28 @@
         "display_name": "Viz [Postgresql - SQLx]",
         "notes": "",
         "versus": "None"
+      },
+      "diesel": {
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?q=",
+        "update_url": "/updates?q=",
+        "cached_query_url": "/cached_queries?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "postgres",
+        "framework": "Viz",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "Rust",
+        "webserver": "Hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Viz [Postgresql - Diesel]",
+        "notes": "",
+        "versus": "None"
       }
     }
   ]

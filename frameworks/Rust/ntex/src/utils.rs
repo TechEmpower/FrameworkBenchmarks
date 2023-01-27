@@ -2,7 +2,7 @@
 use std::cmp;
 
 use atoi::FromRadix10;
-use ntex::{http::header::HeaderValue, util::Bytes};
+use ntex::{http::header::HeaderValue, util::BufMut, util::Bytes, util::BytesMut};
 
 pub const HDR_SERVER: HeaderValue = HeaderValue::from_static("N");
 pub const HDR_JSON_CONTENT_TYPE: HeaderValue = HeaderValue::from_static("application/json");
@@ -11,6 +11,8 @@ pub const HDR_HTML_CONTENT_TYPE: HeaderValue =
     HeaderValue::from_static("text/html; charset=utf-8");
 pub const BODY_PLAIN_TEXT: Bytes = Bytes::from_static(b"Hello, World!");
 
+const LW: usize = 1024;
+const HW: usize = 128 * 1024;
 pub const SIZE: usize = 27;
 
 pub fn get_query_param(query: Option<&str>) -> usize {
@@ -21,4 +23,11 @@ pub fn get_query_param(query: Option<&str>) -> usize {
         1
     };
     cmp::min(500, cmp::max(1, q) as usize)
+}
+
+pub fn reserve(buf: &mut BytesMut) {
+    let remaining = buf.remaining_mut();
+    if remaining < LW {
+        buf.reserve(HW);
+    }
 }

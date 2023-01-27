@@ -2,14 +2,11 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-use std::{pin::Pin, task::Context, task::Poll};
-
-use futures::future::{ok, Future, FutureExt};
 use ntex::http::header::{CONTENT_TYPE, SERVER};
 use ntex::http::{HttpService, KeepAlive, Request, Response, StatusCode};
 use ntex::service::{Service, ServiceFactory};
 use ntex::web::{Error, HttpResponse};
-use ntex::{time::Seconds, util::PoolId};
+use ntex::{time::Seconds, util::PoolId, util::BoxFuture};
 
 mod db;
 mod utils;
@@ -19,53 +16,48 @@ struct App(db::PgConnection);
 impl Service<Request> for App {
     type Response = Response;
     type Error = Error;
-    type Future = Pin<Box<dyn Future<Output = Result<Response, Error>>>>;
+    type Future<'f> = BoxFuture<'f, Result<Response, Error>> where Self: 'f;
 
-    #[inline]
-    fn poll_ready(&self, _: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        Poll::Ready(Ok(()))
-    }
-
-    fn call(&self, req: Request) -> Self::Future {
-        match req.path() {
-            "/db" => Box::pin(self.0.get_world().map(|body| {
-                let mut res = HttpResponse::with_body(StatusCode::OK, body.into());
-                res.headers_mut().append(SERVER, utils::HDR_SERVER);
-                res.headers_mut()
-                    .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
-                Ok(res)
-            })),
-            "/fortunes" => Box::pin(self.0.tell_fortune().map(|body| {
-                let mut res = HttpResponse::with_body(StatusCode::OK, body.into());
-                res.headers_mut().append(SERVER, utils::HDR_SERVER);
-                res.headers_mut()
-                    .append(CONTENT_TYPE, utils::HDR_HTML_CONTENT_TYPE);
-                Ok(res)
-            })),
-            "/query" => Box::pin(
-                self.0
-                    .get_worlds(utils::get_query_param(req.uri().query()))
-                    .map(|worlds| {
-                        let mut res = HttpResponse::with_body(StatusCode::OK, worlds.into());
-                        res.headers_mut().append(SERVER, utils::HDR_SERVER);
-                        res.headers_mut()
-                            .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
-                        Ok(res)
-                    }),
-            ),
-            "/update" => Box::pin(
-                self.0
-                    .update(utils::get_query_param(req.uri().query()))
-                    .map(|worlds| {
-                        let mut res = HttpResponse::with_body(StatusCode::OK, worlds.into());
-                        res.headers_mut().append(SERVER, utils::HDR_SERVER);
-                        res.headers_mut()
-                            .append(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
-                        Ok(res)
-                    }),
-            ),
-            _ => Box::pin(ok(Response::new(StatusCode::NOT_FOUND))),
-        }
+    fn call(&self, req: Request) -> Self::Future<'_> {
+        Box::pin(async move {
+            match req.path() {
+                "/db" => {
+                    let body = self.0.get_world().await;
+                    let mut res = HttpResponse::with_body(StatusCode::OK, body.into());
+                    res.headers_mut().insert(SERVER, utils::HDR_SERVER);
+                    res.headers_mut()
+                        .insert(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+                    Ok(res)
+                }
+                "/fortunes" => {
+                    let body = self.0.tell_fortune().await;
+                    let mut res = HttpResponse::with_body(StatusCode::OK, body.into());
+                    res.headers_mut().insert(SERVER, utils::HDR_SERVER);
+                    res.headers_mut()
+                        .insert(CONTENT_TYPE, utils::HDR_HTML_CONTENT_TYPE);
+                    Ok(res)
+                }
+                "/query" => {
+                    let worlds = self.0
+                        .get_worlds(utils::get_query_param(req.uri().query()))
+                        .await;
+                    let mut res = HttpResponse::with_body(StatusCode::OK, worlds.into());
+                    res.headers_mut().insert(SERVER, utils::HDR_SERVER);
+                    res.headers_mut()
+                        .insert(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+                    Ok(res)
+                }
+                "/update" => {
+                    let worlds = self.0.update(utils::get_query_param(req.uri().query())).await;
+                    let mut res = HttpResponse::with_body(StatusCode::OK, worlds.into());
+                    res.headers_mut().insert(SERVER, utils::HDR_SERVER);
+                    res.headers_mut()
+                        .insert(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+                    Ok(res)
+                }
+                _ => Ok(Response::new(StatusCode::NOT_FOUND)),
+            }
+        })
     }
 }
 
@@ -76,9 +68,9 @@ impl ServiceFactory<Request> for AppFactory {
     type Error = Error;
     type Service = App;
     type InitError = ();
-    type Future = Pin<Box<dyn Future<Output = Result<Self::Service, Self::InitError>>>>;
+    type Future<'f> = BoxFuture<'f, Result<Self::Service, Self::InitError>>;
 
-    fn new_service(&self, _: ()) -> Self::Future {
+    fn create(&self, _: ()) -> Self::Future<'_> {
         const DB_URL: &str =
             "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 

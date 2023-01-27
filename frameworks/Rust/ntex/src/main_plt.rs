@@ -2,9 +2,7 @@
 static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 use std::{future::Future, io, pin::Pin, task::Context, task::Poll};
 
-use ntex::{
-    fn_service, http::h1, io::Io, io::RecvError, util::ready, util::BufMut, util::PoolId,
-};
+use ntex::{fn_service, http::h1, io::Io, io::RecvError, util::ready, util::PoolId};
 use yarte::Serialize;
 
 mod utils;
@@ -37,12 +35,7 @@ impl Future for App {
                 Ok((req, _)) => {
                     let _ = this.io.with_write_buf(|buf| {
                         buf.with_bytes_mut(|buf| {
-                            // make sure we've got room
-                            let remaining = buf.remaining_mut();
-                            if remaining < 1024 {
-                                buf.reserve(65535 - remaining);
-                            }
-
+                            utils::reserve(buf);
                             match req.path() {
                                 "/json" => {
                                     buf.extend_from_slice(JSON);
@@ -86,8 +79,8 @@ async fn main() -> io::Result<()> {
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", |cfg| {
             cfg.memory_pool(PoolId::P1);
-            PoolId::P1.set_read_params(65535, 1024);
-            PoolId::P1.set_write_params(65535, 1024);
+            PoolId::P1.set_read_params(65535, 2048);
+            PoolId::P1.set_write_params(65535, 2048);
 
             fn_service(|io| App {
                 io,

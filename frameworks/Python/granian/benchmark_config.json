@@ -44,6 +44,24 @@
       "display_name": "granian [rsgi]",
       "notes": "",
       "versus": "uvicorn"
+    },
+    "wsgi": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "granian",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "granian",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "granian [wsgi]",
+      "notes": "",
+      "versus": "uvicorn"
     }
   }]
 }

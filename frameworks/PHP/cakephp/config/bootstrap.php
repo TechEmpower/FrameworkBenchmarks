@@ -30,18 +30,17 @@ require __DIR__ . '/paths.php';
 require CORE_PATH . 'config' . DS . 'bootstrap.php';
 
 use Cake\Cache\Cache;
-use Cake\Console\ConsoleErrorHandler;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
-use Cake\Core\Plugin;
-use Cake\Database\Type;
+use Cake\Database\Type\StringType;
+use Cake\Database\TypeFactory;
 use Cake\Datasource\ConnectionManager;
-use Cake\Error\ErrorHandler;
-use Cake\Http\ServerRequest;
+use Cake\Error\ErrorTrap;
+use Cake\Error\ExceptionTrap;
 use Cake\Log\Log;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
-use Cake\Utility\Inflector;
+use Cake\Routing\Router;
 use Cake\Utility\Security;
 
 /**
@@ -114,20 +113,8 @@ ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
 /*
  * Register application error and exception handlers.
  */
-$isCli = PHP_SAPI === 'cli';
-//$isCli = false; // Workerman
-if ($isCli) {
-    (new ConsoleErrorHandler(Configure::read('Error')))->register();
-} else {
-    (new ErrorHandler(Configure::read('Error')))->register();
-}
-
-/*
- * Include the CLI bootstrap overrides.
- */
-if ($isCli) {
-    require __DIR__ . '/bootstrap_cli.php';
-}
+(new ErrorTrap(Configure::read('Error')))->register();
+(new ExceptionTrap(Configure::read('Error')))->register();
 
 /*
  * Set the full base URL.
@@ -186,6 +173,9 @@ Security::setSalt(Configure::consume('Security.salt'));
 //    ->useMutable();
 // TypeFactory::build('timestamptimezone')
 //    ->useMutable();
+
+// There is no time-specific type in Cake
+TypeFactory::map('time', StringType::class);
 
 /*
  * Custom Inflector rules, can be set to correctly pluralize or singularize

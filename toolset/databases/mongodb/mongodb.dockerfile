@@ -1,17 +1,20 @@
-FROM buildpack-deps:bionic
+FROM buildpack-deps:jammy
+
+ARG MONGODB_VERSION=6.0
 
 COPY ./ ./
 
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 4B7C549A058F8B6B
-RUN echo "deb https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | tee /etc/apt/sources.list.d/mongodb-org.list
-RUN apt-get -yqq update > /dev/null
+ARG DEBIAN_FRONTEND=noninteractive
+RUN wget -qO - https://www.mongodb.org/static/pgp/server-${MONGODB_VERSION}.asc > /etc/apt/keyrings/mongodb-org.asc
+RUN echo "deb [ signed-by=/etc/apt/keyrings/mongodb-org.asc ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/$MONGODB_VERSION multiverse" > \
+      /etc/apt/sources.list.d/mongodb-org.list
 # Complete and utter hax if works
 RUN ln -s /bin/echo /bin/systemctl
-RUN DEBIAN_FRONTEND=noninteractive apt-get -yqq install apt-transport-https mongodb-org > /dev/null
+RUN apt-get -yqq update && apt-get -yqq install mongodb-org
 
 RUN mkdir -p /data/db
 RUN chmod 777 /data/db
 
-RUN mongod --fork --logpath /var/log/mongodb.log --bind_ip_all && sleep 10 && mongo < create.js && sleep 10
+RUN mongod --fork --logpath /var/log/mongodb.log --bind_ip_all && sleep 10 && mongosh < create.js && sleep 10
 
 CMD ["mongod", "--bind_ip_all"]

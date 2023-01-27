@@ -98,7 +98,7 @@ return (function() {
                     'username'    => env('DB_USERNAME', 'benchmarkdbuser'),
                     'password'    => env('DB_PASSWORD', 'benchmarkdbpass'),
                     'database'    => 'hello_world',
-                    'dbClass'     => \Imi\Swoole\Db\Driver\Swoole\Driver::class,
+                    'dbClass'     => \Imi\Db\Mysql\Drivers\Mysqli\Driver::class,
                 ],
             ],
             'pgsql' => [

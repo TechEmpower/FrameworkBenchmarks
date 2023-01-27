@@ -1,10 +1,11 @@
+import com.github.plokhotnyuk.jsoniter_scala.core._
+import com.github.plokhotnyuk.jsoniter_scala.macros._
 import snunit._
-import upickle.default._
 
 final case class Message(message: String)
 
 object Message {
-  implicit final val messageRW: ReadWriter[Message] = macroRW[Message]
+  implicit final val codec: JsonValueCodec[Message] = JsonCodecMaker.make
 }
 
 object Main {
@@ -20,7 +21,7 @@ object Main {
         else if (req.method == Method.GET && req.path == "/json")
           req.send(
             statusCode = StatusCode.OK,
-            content = write(Message("Hello, World!")),
+            content = writeToArray(Message("Hello, World!")),
             headers = Seq("Content-Type" -> "application/json")
           )
         else

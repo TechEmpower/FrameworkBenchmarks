@@ -1,25 +1,18 @@
 
-import threading
-import time
 import os
-
-from datetime import datetime
 
 from socketify import App
 
 
 def plaintext(res, req):
-    res.write_header("Server", "socketify")
-    res.write_header("Content-Type", "text/plain")
-    res.end("Hello, World!")
+    res.send(b'Hello, World!')
 
 def applicationjson(res, req):
-    res.write_header("Server", "socketify")
-    res.end({"message":"Hello, World!"})
+    res.send({"message":"Hello, World!"})
 
 
 def run_app():
-    app = App()
+    app = App(None, 200_000, 0)
     app.get("/", plaintext)
     app.get("/json", applicationjson)
     app.get("/plaintext", plaintext)

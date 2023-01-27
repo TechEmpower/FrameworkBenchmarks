@@ -5,11 +5,11 @@ namespace PlatformBenchmarks;
 
 public partial class BenchmarkApplication
 {
-    private readonly static AsciiString _plaintextPreamble =
-        _http11OK +
-        _headerServer + _crlf +
-        _headerContentTypeText + _crlf +
-        _headerContentLength + _plainTextBody.Length.ToString();
+    private static ReadOnlySpan<byte> _plaintextPreamble =>
+        "HTTP/1.1 200 OK\r\n"u8 +
+        "Server: K\r\n"u8 +
+        "Content-Type: text/plain\r\n"u8 +
+        "Content-Length: 13"u8;
 
     private static void PlainText(ref BufferWriter<WriterAdapter> writer)
     {

@@ -1,12 +1,10 @@
 buildscript {
-    ext.kotlin_version = "1.7.20"
-    ext.http4k_version = "4.33.3.0"
+    ext.kotlin_version = "1.7.22"
+    ext.http4k_version = "4.34.2.0"
 
     repositories {
         mavenCentral()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        gradlePluginPortal()
     }
 
     dependencies {
@@ -22,24 +20,13 @@ allprojects {
 
     apply plugin: "kotlin"
 
-    compileKotlin.kotlinOptions.jvmTarget = "11"
+    compileKotlin.kotlinOptions.jvmTarget = "17"
 
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 
     version = project.hasProperty('releaseVersion') ? project.releaseVersion : 'LOCAL'
     group = 'org.http4k'
 
     compileTestKotlin.kotlinOptions.languageVersion = "1.7"
-}
-
-dependencies {
-    api(project(":core"))
-    api(project(":apache"))
-    api(project(":jetty"))
-    api(project(":ktorcio"))
-    api(project(":ktornetty"))
-    api(project(":netty"))
-    api(project(":ratpack"))
-    api(project(":undertow"))
 }

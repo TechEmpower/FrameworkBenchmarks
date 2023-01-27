@@ -1,5 +1,5 @@
 dependencies {
-    api(project(":core-jdbc"))
+    api(project(":core-pgclient"))
     api("org.http4k:http4k-server-jetty:$http4k_version")
 }
 
@@ -11,5 +11,4 @@ shadowJar {
     baseName = "http4k-benchmark"
     classifier = null
     version = null
-    mergeServiceFiles()
 }

@@ -6,8 +6,8 @@ from robyn import Robyn
 app = Robyn(__file__)
 
 
-@app.get('/plaintext', const=True)
-async def plaintext() -> str:
+@app.get('/plaintext')
+def plaintext() -> str:
     return "Hello, world!"
 
 

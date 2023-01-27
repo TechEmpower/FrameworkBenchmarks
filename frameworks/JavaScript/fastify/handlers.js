@@ -28,7 +28,7 @@ module.exports = databaseLayer => ({
     const fortunes = await databaseLayer.allFortunes();
 
     fortunes.push(h.additionalFortune);
-    fortunes.sort((a, b) => a.message.localeCompare(b.message));
+    fortunes.sort(compare);
 
     reply.view("fortunes.hbs", { fortunes });
   },
@@ -53,3 +53,13 @@ module.exports = databaseLayer => ({
     reply.send(worldsToUpdate);
   }
 });
+
+// faster than localeCompare
+function compare(a, b) {
+  if(a.message < b.message){
+    return -1;
+  } else if (a.message > b.message) {
+    return 1;
+  }
+  return 0;
+}
