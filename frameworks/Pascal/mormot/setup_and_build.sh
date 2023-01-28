@@ -40,7 +40,7 @@ echo "Unpacking to ./libs/mORMot/static ..."
 rm -rf ./mormot2static.7z
 
 # uncomment for fixed commit URL
-URL=https://github.com/synopse/mORMot2/tarball/dbe44a75014ac01f3afb4fbf1880dbfd18ae0d2c
+URL=https://github.com/synopse/mORMot2/tarball/ca82bc513fab61c2be8d2abfee2729375cfef6dc
 #URL="https://api.github.com/repos/synopse/mORMot2/tarball/$USED_TAG"
 echo "Download and unpacking mORMot sources from $URL ..."
 wget -qO- "$URL" | tar -xz -C ./libs/mORMot  --strip-components=1
@@ -82,7 +82,7 @@ fpc -MDelphi -Sci -Ci -O3 -g -gl -gw2 -Xg -k'-rpath=$ORIGIN' -k-L$BIN \
   -Fu"$MSRC/core" -Fu"$MSRC/db" -Fu"$MSRC/rest" -Fu"$MSRC/crypt" \
     -Fu"$MSRC/app" -Fu"$MSRC/net" -Fu"$MSRC/lib" -Fu"$MSRC/orm" -Fu"$MSRC/soa" \
   -FU"$BIN/fpc-$ARCH_TG/.dcu" -FE"$BIN/fpc-$ARCH_TG" -o"$BIN/fpc-$ARCH_TG/$dest_fn" \
-  -dFPC_X64MM -dFPCMM_SERVER -dNOSYNDBZEOS -dNOSYNDBIBX -dFPCMM_REPORTMEMORYLEAKS \
+  -dFPC_LIBCMM -dNOSYNDBZEOS -dNOSYNDBIBX \
   -B -Se1 "./src/raw.pas" | grep "[Warning|Error|Fatal]:"
 
 script_successful
