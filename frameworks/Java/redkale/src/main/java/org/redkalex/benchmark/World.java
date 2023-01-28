@@ -5,9 +5,9 @@
  */
 package org.redkalex.benchmark;
 
-import java.util.*;
-import javax.persistence.*;
+import java.util.Arrays;
 import org.redkale.convert.json.JsonConvert;
+import org.redkale.persistence.*;
 
 /**
  *

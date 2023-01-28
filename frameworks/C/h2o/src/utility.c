@@ -220,24 +220,6 @@ uint32_t get_random_number(uint32_t max_rand, unsigned int *seed)
 	return ret / bucket_size;
 }
 
-bool is_power_of_2(size_t x)
-{
-	return !!x & !(x & (x - 1));
-}
-
-size_t round_up_to_power_of_2(size_t x)
-{
-	static_assert(sizeof(size_t) == sizeof(unsigned long),
-	              "The size_t type must have the same size as unsigned long.");
-
-	size_t ret = (SIZE_MAX ^ SIZE_MAX >> 1) >> __builtin_clzl(x);
-
-	if (x - ret)
-		ret <<= 1;
-
-	return ret;
-}
-
 // merge sort
 list_t *sort_list(list_t *head, int (*compare)(const list_t *, const list_t *))
 {

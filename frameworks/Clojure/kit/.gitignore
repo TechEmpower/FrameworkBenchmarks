@@ -1,0 +1,23 @@
+kit.git-config.edn
+.DS_Store
+.nrepl-port
+hs_err_pid*.log
+.cpcache/
+target
+log/
+.shadow-cljs/
+node_modules/
+modules/
+
+# IntelliJ
+*.iml
+.idea/
+
+# clj-kondo
+.clj-kondo/.cache/
+.calva/output-window/
+.lsp/.cache/
+
+# local dev files that TE benchmark doesn't want
+docker-compose.yml
+env/dev/

@@ -1,4 +1,4 @@
-FROM nginx/unit:1.28.0-php8.1
+FROM nginx/unit:1.29.0-php8.1
 
 ADD . /php
 WORKDIR /php
@@ -10,5 +10,4 @@ EXPOSE 8080
 
 COPY deploy/nginx-unit.json /docker-entrypoint.d/nginx-unit.json
 
-ENTRYPOINT ["bash", "deploy/unit-entrypoint.sh"]
 CMD ["unitd", "--no-daemon", "--control", "unix:/var/run/control.unit.sock"]
