@@ -6,7 +6,7 @@ RUN apt-get -yqq update && apt-get -yqq install libluajit-5.1-dev libssl-dev lua
 WORKDIR /wrk
 RUN curl -sL https://github.com/wg/wrk/archive/4.2.0.tar.gz | tar xz --strip-components=1
 ARG LDFLAGS="-O3 -march=native -mtune=native -flto"
-ARG CFLAGS="-I /usr/include/luajit-2.1 $LDFLAGS"
+ARG CFLAGS="-I /usr/include/luajit-2.1 ${LDFLAGS}"
 RUN make WITH_LUAJIT=/usr WITH_OPENSSL=/usr -j "$(nproc)"
 RUN cp wrk /usr/local/bin
 
