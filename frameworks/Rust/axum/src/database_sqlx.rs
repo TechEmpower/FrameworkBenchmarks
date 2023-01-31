@@ -1,5 +1,6 @@
 use axum::async_trait;
-use axum::extract::{Extension, FromRequest, RequestParts};
+use axum::extract::{Extension, FromRequestParts};
+use axum::http::request::Parts;
 use axum::http::StatusCode;
 use std::io;
 
@@ -35,7 +36,7 @@ pub async fn create_pool(
     PgPoolOptions::new()
         .max_connections(max_pool_size)
         .min_connections(min_pool_size)
-        .connect(&*database_url)
+        .connect(&database_url)
         .await
         .unwrap()
 }
@@ -43,14 +44,16 @@ pub async fn create_pool(
 pub struct DatabaseConnection(pub PoolConnection<Postgres>);
 
 #[async_trait]
-impl<B> FromRequest<B> for DatabaseConnection
+impl<S> FromRequestParts<S> for DatabaseConnection
 where
-    B: Send,
+    S: Send + Sync,
 {
     type Rejection = (StatusCode, String);
-
-    async fn from_request(req: &mut RequestParts<B>) -> Result<Self, Self::Rejection> {
-        let Extension(pool) = Extension::<PgPool>::from_request(req)
+    async fn from_request_parts(
+        parts: &mut Parts,
+        state: &S,
+    ) -> Result<Self, Self::Rejection> {
+        let Extension(pool) = Extension::<PgPool>::from_request_parts(parts, state)
             .await
             .map_err(internal_error)?;
 
