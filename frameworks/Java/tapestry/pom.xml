@@ -14,7 +14,7 @@
         <tapestry-release-version>5.5.0-beta-3</tapestry-release-version>
         <servlet-api-release-version>3.1.0</servlet-api-release-version>
         <jaxb.version>2.4.0-b180830.0438</jaxb.version>
-        <testng-release-version>5.14.10</testng-release-version>
+        <testng-release-version>7.7.0</testng-release-version>
         <easymock-release-version>3.0</easymock-release-version>
     </properties>
 

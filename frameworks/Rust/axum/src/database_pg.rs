@@ -1,5 +1,6 @@
 use axum::async_trait;
-use axum::extract::{Extension, FromRequest, RequestParts};
+use axum::extract::{Extension, FromRequestParts};
+use axum::http::request::Parts;
 use axum::http::StatusCode;
 use futures::{
     stream::futures_unordered::FuturesUnordered, FutureExt, StreamExt, TryStreamExt,
@@ -41,7 +42,7 @@ pub struct PgConnection {
 
 impl PgConnection {
     pub async fn connect(db_url: String) -> Arc<PgConnection> {
-        let (cl, conn) = connect(&*db_url, NoTls)
+        let (cl, conn) = connect(&db_url, NoTls)
             .await
             .expect("can not connect to postgresql");
 
@@ -190,16 +191,20 @@ impl PgConnection {
 pub struct DatabaseConnection(pub Arc<PgConnection>);
 
 #[async_trait]
-impl<B> FromRequest<B> for DatabaseConnection
+impl<S> FromRequestParts<S> for DatabaseConnection
 where
-    B: Send,
+    S: Send + Sync,
 {
     type Rejection = (StatusCode, String);
 
-    async fn from_request(req: &mut RequestParts<B>) -> Result<Self, Self::Rejection> {
-        let Extension(pg_connection) = Extension::<Arc<PgConnection>>::from_request(req)
-            .await
-            .map_err(internal_error)?;
+    async fn from_request_parts(
+        parts: &mut Parts,
+        state: &S,
+    ) -> Result<Self, Self::Rejection> {
+        let Extension(pg_connection) =
+            Extension::<Arc<PgConnection>>::from_request_parts(parts, state)
+                .await
+                .map_err(internal_error)?;
 
         Ok(Self(pg_connection))
     }

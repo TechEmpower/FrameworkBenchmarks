@@ -1,0 +1,7 @@
+/vendor/
+/cache/
+/system/logs/
+/system/maintenance_whitelist.txt
+composer.lock
+.phpunit.result.cache
+.idea

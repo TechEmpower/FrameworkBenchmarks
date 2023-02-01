@@ -1,0 +1,27 @@
+{
+    "framework": "ohkami",
+    "tests": [
+        {
+            "default": {
+                "json_url": "/json",
+                "plaintext_url": "/plaintext",
+                "fortune_url": "/fortunes",
+                "db_url": "/db",
+                "query_url": "/queries?q=",
+                "update_url": "/updates?q=",
+                "port": 8080,
+                "approach": "Realistic",
+                "classification": "Micro",
+                "database": "Postgres",
+                "framework": "ohkami",
+                "language": "Rust",
+                "orm": "Raw",
+                "platform": "Rust",
+                "webserver": "ohkami",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "ohkami"
+            }
+        }
+    ]
+}
