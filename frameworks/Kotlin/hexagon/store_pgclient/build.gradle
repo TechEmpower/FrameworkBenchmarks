@@ -1,0 +1,6 @@
+
+dependencies {
+    api(project(":core"))
+    implementation("io.vertx:vertx-pg-client:$vertxVersion")
+    implementation("com.ongres.scram:client:2.1")
+}

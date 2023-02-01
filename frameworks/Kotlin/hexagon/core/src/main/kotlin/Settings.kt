@@ -1,5 +1,6 @@
 package com.hexagonkt
 
+import com.hexagonkt.core.Jvm.systemFlag
 import com.hexagonkt.core.Jvm.systemSettingOrNull
 
 data class Settings(
@@ -23,9 +24,9 @@ data class Settings(
     val databaseName: String = systemSettingOrNull("database") ?: "hello_world",
     val databaseDriver: String = systemSettingOrNull("databaseDriver") ?: "org.postgresql.Driver",
 
-    val sendDateHeader: Boolean = systemSettingOrNull("sendDateHeader") ?: false,
-    val sendServerVersion: Boolean = systemSettingOrNull("sendServerVersion") ?: false,
-    val sendXPoweredBy: Boolean = systemSettingOrNull("sendXPoweredBy") ?: false,
+    val sendDateHeader: Boolean = systemFlag("sendDateHeader"),
+    val sendServerVersion: Boolean = systemFlag("sendServerVersion"),
+    val sendXPoweredBy: Boolean = systemFlag("sendXPoweredBy"),
 
     val worldRows: Int = 10_000,
     val textMessage: String = "Hello, World!",

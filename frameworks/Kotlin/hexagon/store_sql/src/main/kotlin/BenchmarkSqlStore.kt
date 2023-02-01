@@ -11,7 +11,7 @@ import org.cache2k.Cache
 import java.sql.Connection
 import java.sql.PreparedStatement
 
-internal class BenchmarkSqlStore(
+class BenchmarkSqlStore(
     engine: String, private val settings: Settings = Settings()
 ) : BenchmarkStore(settings) {
 
