@@ -13,6 +13,7 @@ RUN gradle --quiet -x test
 # RUNTIME
 #
 FROM tomcat:10.1.2-jre17-temurin
+ENV POSTGRESQL_DB_HOST tfb-database
 ENV MODULE /hexagon/hexagon_tomcat_postgresql
 ENV JDK_JAVA_OPTIONS -XX:+AlwaysPreTouch -XX:+UseParallelGC -XX:+UseNUMA
 

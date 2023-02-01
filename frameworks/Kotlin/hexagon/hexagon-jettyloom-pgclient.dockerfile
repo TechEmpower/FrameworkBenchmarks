@@ -13,6 +13,7 @@ RUN gradle --quiet -x test
 # RUNTIME
 #
 FROM eclipse-temurin:19-jre-alpine
+ENV POSTGRESQL_DB_HOST tfb-database
 ENV PROJECT hexagon_jetty_pgclient
 ENV JDK_JAVA_OPTIONS --enable-preview -XX:+AlwaysPreTouch -XX:+UseParallelGC -XX:+UseNUMA -DvirtualThreads=true
 

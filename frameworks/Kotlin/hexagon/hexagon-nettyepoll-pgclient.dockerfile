@@ -13,6 +13,7 @@ RUN gradle --quiet -x test
 # RUNTIME
 #
 FROM eclipse-temurin:17-jre-alpine
+ENV POSTGRESQL_DB_HOST tfb-database
 ENV PROJECT hexagon_nettyepoll_pgclient
 ENV JDK_JAVA_OPTIONS -XX:+AlwaysPreTouch -XX:+UseParallelGC -XX:+UseNUMA
 
