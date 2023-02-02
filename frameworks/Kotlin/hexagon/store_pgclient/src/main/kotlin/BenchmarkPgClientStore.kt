@@ -11,8 +11,9 @@ import io.vertx.pgclient.PgPool
 import io.vertx.sqlclient.*
 import org.cache2k.Cache
 
-internal class BenchmarkPgClientStore(
-    engine: String, private val settings: Settings = Settings()
+class BenchmarkPgClientStore(
+    engine: String,
+    private val settings: Settings = Settings(),
 ) : BenchmarkStore(settings) {
 
     companion object {
