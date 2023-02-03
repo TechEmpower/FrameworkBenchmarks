@@ -12,9 +12,8 @@ import (
 
 	"fiber/app/templates"
 
-	"github.com/gofiber/fiber/v2"
-	pgx "github.com/jackc/pgx/v4"
-	"github.com/jackc/pgx/v4/pgxpool"
+	pgx "github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 var (
