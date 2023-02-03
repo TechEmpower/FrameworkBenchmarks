@@ -3,6 +3,7 @@ module fiber/app
 go 1.19
 
 require (
+	github.com/goccy/go-json v0.10.0
 	github.com/gofiber/fiber/v2 v2.41.0
 	github.com/jackc/pgx/v5 v5.2.0
 	github.com/valyala/quicktemplate v1.7.0
