@@ -8,7 +8,7 @@ package org.redkalex.benchmark;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.IntStream;
-import org.redkale.annotation.Resource;
+import org.redkale.annotation.*;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.DataSource;
@@ -18,6 +18,7 @@ import org.redkale.util.AnyValue;
  *
  * @author zhangjx
  */
+@NonBlocking
 @RestService(name = " ", repair = false)
 public class BenchmarkService extends AbstractService {
 
