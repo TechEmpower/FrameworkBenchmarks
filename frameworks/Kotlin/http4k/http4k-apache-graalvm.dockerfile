@@ -1,4 +1,4 @@
-FROM gradle:7.6-jdk17 as gradle
+FROM gradle:7.6-jdk19 as gradle
 USER root
 WORKDIR /http4k
 COPY build.gradle build.gradle
