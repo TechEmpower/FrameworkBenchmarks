@@ -9,29 +9,33 @@ object Message {
 }
 
 object Main {
-  def main(args: Array[String]): Unit = {
-    val server = SyncServerBuilder
-      .build(req =>
-        if (req.method == Method.GET && req.path == "/plaintext")
-          req.send(
-            statusCode = StatusCode.OK,
-            content = "Hello, World!",
-            headers = Seq("Content-Type" -> "text/plain")
-          )
-        else if (req.method == Method.GET && req.path == "/json")
-          req.send(
-            statusCode = StatusCode.OK,
-            content = writeToArray(Message("Hello, World!")),
-            headers = Seq("Content-Type" -> "application/json")
-          )
-        else
-          req.send(
-            statusCode = StatusCode.NotFound,
-            content = "Not found",
-            headers = Seq("Content-Type" -> "text/plain")
-          )
-      )
+  val applicationJson = Seq("Content-Type" -> "application/json")
+  val textPlain = Seq("Content-Type" -> "text/plain")
 
-    server.listen()
+  def main(args: Array[String]): Unit = {
+    SyncServerBuilder
+      .build(req =>
+        @inline def notFound() = req.send(
+          statusCode = StatusCode.NotFound,
+          content = "Not found",
+          headers = textPlain
+        )
+        if (req.method == Method.GET) {
+          if(req.target == "/plaintext")
+            req.send(
+              statusCode = StatusCode.OK,
+              content = "Hello, World!",
+              headers = textPlain
+            )
+          else if(req.target == "/json")
+            req.send(
+              statusCode = StatusCode.OK,
+              content = writeToArray(Message("Hello, World!")),
+              headers = applicationJson
+            )
+          else notFound()
+        } else notFound()
+      )
+      .listen()
   }
 }
