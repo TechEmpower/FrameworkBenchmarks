@@ -1,4 +1,4 @@
-import io.vertx.core.CompositeFuture
+import io.netty.channel.unix.Errors.NativeIoException
 import io.vertx.core.http.HttpHeaders
 import io.vertx.core.http.HttpServer
 import io.vertx.core.http.HttpServerRequest
@@ -12,13 +12,8 @@ import io.vertx.kotlin.coroutines.await
 import io.vertx.kotlin.pgclient.pgConnectOptionsOf
 import io.vertx.kotlin.sqlclient.poolOptionsOf
 import io.vertx.pgclient.PgPool
-import io.vertx.sqlclient.Row
-import io.vertx.sqlclient.RowSet
 import io.vertx.sqlclient.Tuple
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.html.*
 import kotlinx.html.stream.createHTML
 import kotlinx.serialization.Serializable
@@ -28,9 +23,28 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class MainVerticle : CoroutineVerticle() {
+    /*
+    // TODO: remove the logging code for debugging in the next commit
+    val logger = Logger.getLogger("debug")
+
+    enum class State {
+        Plaintext, Json, Db, Queries, Fortunes, Updates
+    }
+
+    var current: State? = null
+    fun switchAndLog(state: State) {
+        if (current != state) {
+            logger.info("Switching from $current to $state")
+            current = state
+        }
+    }
+    */
+
     inline fun Route.checkedCoroutineHandler(crossinline requestHandler: suspend (RoutingContext) -> Unit): Route =
         handler { ctx ->
-            // TODO: is using `Dispatchers.Unconfined` faster?
+            /* Some conclusions from the Plaintext test results with trailing `await()`s:
+               1. `launch { /*...*/ }` < `launch(start = CoroutineStart.UNDISPATCHED) { /*...*/ }` < `launch(Dispatchers.Unconfined) { /*...*/ }`.
+               1. `launch { /*...*/ }` without `context` or `start` lead to `io.netty.channel.StacklessClosedChannelException` and `io.netty.channel.unix.Errors$NativeIoException: sendAddress(..) failed: Connection reset by peer`. */
             launch(Dispatchers.Unconfined) {
                 try {
                     requestHandler(ctx)
@@ -45,13 +59,13 @@ class MainVerticle : CoroutineVerticle() {
     lateinit var httpServer: HttpServer
 
     fun setCurrentDate() {
-        // kotlinx-datetime doesn't support the format yet
+        // kotlinx-datetime doesn't support the format yet.
         //date = Clock.System.now().toString()
         date = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now())
     }
 
     override suspend fun start() {
-        // TODO: tune the parameters
+        // Parameters are copied from the "vertx-web" portion. TODO: tune them if necessary.
         pgPool = PgPool.pool(
             vertx,
             pgConnectOptionsOf(
@@ -59,13 +73,22 @@ class MainVerticle : CoroutineVerticle() {
                 host = "tfb-database",
                 user = "benchmarkdbuser",
                 password = "benchmarkdbpass",
-            ), poolOptionsOf()
+                cachePreparedStatements = true,
+                pipeliningLimit = 100000
+            ), poolOptionsOf(maxSize = 4)
         )
         setCurrentDate()
         vertx.setPeriodic(1000) { setCurrentDate() }
         httpServer = vertx.createHttpServer(httpServerOptionsOf(port = 8080))
             .requestHandler(Router.router(vertx).apply { routes() })
-            .exceptionHandler { it.printStackTrace() }
+            .exceptionHandler {
+                // wrk resets the connections when benchmarking is finished.
+                if (it is NativeIoException && it.message == "recvAddress(..) failed: Connection reset by peer")
+                    return@exceptionHandler
+
+                logger.info("Exception in HttpServer: $it")
+                it.printStackTrace()
+            }
             .listen().await()
     }
 
@@ -76,6 +99,7 @@ class MainVerticle : CoroutineVerticle() {
         return queriesParam?.toIntOrNull()?.coerceIn(1, 500) ?: 1
     }
 
+    // TODO: is using chained calls (fluent API) faster?
     @Suppress("NOTHING_TO_INLINE")
     inline fun HttpServerResponse.putCommonHeaders() {
         putHeader(HttpHeaders.SERVER, "Vert.x Web")
@@ -93,7 +117,7 @@ class MainVerticle : CoroutineVerticle() {
             it.response().run {
                 putJsonResponseHeader()
                 // TODO: which is faster? Vert.x or kotlinx.serialization?
-                end(Json.encodeToString(requestHandler(it))).await()
+                end(Json.encodeToString(requestHandler(it)))/*.await()*/
             }
         }
 
@@ -105,9 +129,9 @@ class MainVerticle : CoroutineVerticle() {
             .map { it.toWorld() }
 
     suspend fun selectRandomWorlds(queries: Int): List<World> {
-        val rowSets = CompositeFuture.all(List(queries) {
+        val rowSets = List(queries) {
             pgPool.preparedQuery(SELECT_WORLD_SQL).execute(Tuple.of(randomIntBetween1And10000()))
-        }).await().list<RowSet<Row>>()
+        }.awaitAll()
         return rowSets.map { it.single().toWorld() }
     }
 
@@ -124,21 +148,25 @@ class MainVerticle : CoroutineVerticle() {
 
     fun Router.routes() {
         get("/json").jsonResponseHandler {
+            //switchAndLog(State.Json) // TODO: remove the logging code for debugging in the next commit
             jsonSerializationMessage
         }
 
         get("/db").jsonResponseHandler {
+            //switchAndLog(State.Db) // TODO: remove the logging code for debugging in the next commit
             val rowSet = pgPool.preparedQuery(SELECT_WORLD_SQL).execute(Tuple.of(randomIntBetween1And10000())).await()
             // TODO: how much is using `first()` faster?
             rowSet.single().toWorld()
         }
 
         get("/queries").jsonResponseHandler {
+            //switchAndLog(State.Queries) // TODO: remove the logging code for debugging in the next commit
             val queries = it.request().getQueries()
             selectRandomWorlds(queries)
         }
 
         get("/fortunes").checkedCoroutineHandler {
+            //switchAndLog(State.Fortunes) // TODO: remove the logging code for debugging in the next commit
             val fortunes = mutableListOf<Fortune>()
             pgPool.preparedQuery(SELECT_FORTUNE_SQL).execute().await()
                 .mapTo(fortunes) { it.toFortune() }
@@ -169,20 +197,33 @@ class MainVerticle : CoroutineVerticle() {
             it.response().run {
                 putCommonHeaders()
                 putHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8")
-                end(htmlString).await()
+                end(htmlString)/*.await()*/
             }
         }
 
         get("/updates").jsonResponseHandler {
+            //switchAndLog(State.Updates) // TODO: remove the logging code for debugging in the next commit
             val queries = it.request().getQueries()
             val worlds = selectRandomWorlds(queries)
             val updatedWorlds = worlds.map { it.copy(randomNumber = randomIntBetween1And10000()) }
+
+            // Approach 1
+            // The updated worlds need to be sorted first to avoid deadlocks.
             pgPool.preparedQuery(UPDATE_WORLD_SQL)
-                .executeBatch(updatedWorlds.map { Tuple.of(it.randomNumber, it.id) }).await()
+                .executeBatch(updatedWorlds.sortedBy { it.id }.map { Tuple.of(it.randomNumber, it.id) }).await()
+
+            /*
+            // Approach 2, worse performance
+            updatedWorlds.map {
+                pgPool.preparedQuery(UPDATE_WORLD_SQL).execute(Tuple.of(it.randomNumber, it.id))
+            }.awaitAll()
+            */
+
             updatedWorlds
         }
 
         get("/plaintext").checkedCoroutineHandler {
+            //switchAndLog(State.Plaintext) // TODO: remove the logging code for debugging in the next commit
             it.response().run {
                 putCommonHeaders()
                 putHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
@@ -190,10 +231,5 @@ class MainVerticle : CoroutineVerticle() {
                 end("Hello, World!").await()
             }
         }
-    }
-
-    override suspend fun stop() {
-        httpServer.close().await()
-        pgPool.close().await()
     }
 }

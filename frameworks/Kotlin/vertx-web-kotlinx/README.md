@@ -48,17 +48,24 @@ Thanks and Cheers!
 
 # Vert.x Web Kotlinx Benchmarking Test
 
-Vert.x Web in Kotlin with official kotlinx libraries, such as [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines), [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization), and [kotlinx.html](https://github.com/Kotlin/kotlinx.html).
+Vert.x Web in Kotlin with request handling implemented as much with official kotlinx libraries as possible, such as [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines), [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization), and [kotlinx.html](https://github.com/Kotlin/kotlinx.html).
+
+Code is written from scratch to be as concise as possible with common code extracted into possibly inline functions. Configs are adapted referring to [the vertx-web portion](../../Java/vertx-web). All requests are handled in coroutines and suspend `await`s are used instead of future compositions. However, compared to [the vertx-web-kotlin-coroutines portion](../vertx-web-kotlin-coroutines), this project uses more built-in Coroutine functions and avoids mutability as much as possible. JSON serialization is implemented with kotlinx-serialization and Fortunes with kotlinx-html.
 
 ### Test Type Implementation Source Code
 
 * [JSON](src/main/kotlin/MainVerticle.kt)
+
+  with kotlinx-serialization
+
 * [PLAINTEXT](src/main/kotlin/MainVerticle.kt)
 * [DB](src/main/kotlin/MainVerticle.kt)
 * [QUERY](src/main/kotlin/MainVerticle.kt)
 * [CACHED QUERY](src/main/kotlin/MainVerticle.kt)
 * [UPDATE](src/main/kotlin/MainVerticle.kt)
 * [FORTUNES](src/main/kotlin/MainVerticle.kt)
+
+  with kotlinx-html
 
 ## Important Libraries
 The tests were run with:
