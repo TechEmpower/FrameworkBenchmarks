@@ -1,4 +1,3 @@
-#![allow(clippy::uninit_vec)]
 use std::{borrow::Cow, cell::RefCell, fmt::Write as FmtWrite};
 
 use nanorand::{Rng, WyRand};
@@ -119,7 +118,7 @@ impl PgConnection {
     }
 
     pub async fn update(&self, num: usize) -> Bytes {
-        let mut rng = self.rng.clone();
+        let mut rng = nanorand::tls_rng();
         let mut queries = SmallVec::<[_; 32]>::new();
         (0..num).for_each(|_| {
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;

@@ -1,0 +1,99 @@
+# yaml
+components_manager:
+    event_thread_pool:
+        threads: 3
+    coro_pool:
+        initial_size: 10000             # Preallocate 10000 coroutines at startup.
+        max_size: 65536                 # Do not keep more than 65536 preallocated coroutines.
+        stack_size: 66560               # 64Kb for coroutine stack
+
+    task_processors:                    # Task processor is an executor for coroutine tasks
+
+        main-task-processor:            # Make a task processor for CPU-bound couroutine tasks.
+            thread_name: main-worker    # OS will show the threads of this task processor with 'main-worker' prefix.
+            worker_threads: 25
+            guess-cpu-limit: true
+
+        fs-task-processor:              # Make a separate task processor for filesystem bound tasks.
+            thread_name: fs-worker
+            worker_threads: 4
+
+    default_task_processor: main-task-processor
+
+    components:                         # Configuring components that were registered via component_list
+        server:
+            listener:                   # configuring the main listening socket...
+                port: 8080              # ...to listen on this port and...
+                task_processor: main-task-processor    # ...process incoming requests on this task processor.
+                handler-defaults:
+                    set_tracing_headers: false
+            server-name: us
+        simple-router:
+        simple-server:
+            port: 8081
+            task_processor: main-task-processor
+        logging:
+            fs-task-processor: fs-task-processor
+            loggers:
+                default:
+                    file_path: '@stderr'
+                    level: ERROR
+                    overflow_behavior: discard  # Drop logs if the system is too busy to write them down.
+
+        tracer:                                 # Component that helps to trace execution times and requests in logs.
+            service-name: userver-techempower   # "You know. You all know exactly who I am. Say my name. " (c)
+
+        dynamic-config:                      # Dynamic config storage options, do nothing
+            fs-cache-path: ''
+        dynamic-config-fallbacks:            # Load options from file and push them into the dynamic config storage.
+            fallback-path: /app/dynamic_config_fallback.json
+
+        testsuite-support:
+
+        secdist: # Component that stores configuration of hosts and passwords
+            config: /app/secure_data.json  # Values are supposed to be stored in this file
+            missing-ok: false                             # ... but if the file is missing it is still ok
+
+        plaintext-handler:
+            path: /plaintext
+            method: GET
+            task_processor: main-task-processor
+
+        json-handler:
+            path: /json
+            method: GET
+            task_processor: main-task-processor
+
+        hello-world-db:
+            dbalias: hello_world
+            blocking_task_processor: fs-task-processor
+            min_pool_size: 28
+            max_pool_size: 28
+            max_queue_size: 512
+
+        single-query-handler:
+            path: /db
+            method: GET
+            task_processor: main-task-processor
+
+        multiple-queries-handler:
+            path: /queries
+            method: GET
+            task_processor: main-task-processor
+
+        updates-handler:
+            path: /updates
+            method: GET
+            task_processor: main-task-processor
+
+        world-pg-cache:
+            pgcomponent: hello-world-db
+            update-types: only-full
+            update-interval: 1s
+            update-correction: 50ms
+
+        cached-queries-handler:
+            path: /cached-queries
+            method: GET
+            task_processor: main-task-processor
+

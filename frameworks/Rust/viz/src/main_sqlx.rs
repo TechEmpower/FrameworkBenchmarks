@@ -1,11 +1,13 @@
-use std::{borrow::Cow, convert::identity};
+use std::{convert::identity, thread::available_parallelism};
 
 use nanorand::{Rng, WyRand};
 use once_cell::sync::OnceCell;
-use sqlx::{postgres::PgRow, Arguments, Pool, Row};
+use sqlx::Pool;
 use viz::{
-    header::SERVER, types::State, BytesMut, Error, Request, RequestExt, Response,
-    ResponseExt, Result, Router, ServiceMaker,
+    header::{HeaderValue, SERVER},
+    types::State,
+    BytesMut, Error, Request, RequestExt, Response, ResponseExt, Result, Router,
+    ServiceMaker,
 };
 
 mod db_sqlx;
@@ -13,11 +15,9 @@ mod models_sqlx;
 mod server;
 mod utils;
 
-use db_sqlx::{
-    Counter, DatabaseConnection, PgArguments, PgError, PgPoolOptions, Postgres,
-};
+use db_sqlx::*;
 use models_sqlx::{Fortune, World};
-use utils::{HDR_SERVER, RANGE};
+use utils::RANGE;
 
 const DB_URL: &str =
     "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
@@ -29,42 +29,25 @@ async fn db(mut req: Request) -> Result<Response> {
 
     let random_id = rng.generate_range(RANGE);
 
-    let world: World =
-        sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1")
-            .bind(random_id)
-            .fetch_one(&mut conn)
-            .await
-            .map_err(PgError)?;
+    let world = get_world(&mut conn, random_id).await?;
 
     let mut res = Response::json(world)?;
-    res.headers_mut().insert(SERVER, HDR_SERVER);
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Viz"));
     Ok(res)
 }
 
 async fn fortunes(mut req: Request) -> Result<Response> {
-    let DatabaseConnection(mut conn) = req.extract::<DatabaseConnection>().await?;
+    let DatabaseConnection(conn) = req.extract::<DatabaseConnection>().await?;
 
-    let mut items: Vec<Fortune> = sqlx::query("SELECT * FROM Fortune")
-        .map(|row: PgRow| Fortune {
-            id: row.get(0),
-            message: Cow::Owned(row.get(1)),
-        })
-        .fetch_all(&mut conn)
-        .await
-        .map_err(PgError)?;
-
-    items.push(Fortune {
-        id: 0,
-        message: Cow::Borrowed("Additional fortune added at request time."),
-    });
-
-    items.sort_by(|it, next| it.message.cmp(&next.message));
+    let items = get_fortunes(conn).await?;
 
     let mut buf = BytesMut::with_capacity(2048);
     buf.extend(FortunesTemplate { items }.to_string().as_bytes());
 
     let mut res = Response::html(buf.freeze());
-    res.headers_mut().insert(SERVER, HDR_SERVER);
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Viz"));
     Ok(res)
 }
 
@@ -73,23 +56,17 @@ async fn queries(mut req: Request) -> Result<Response> {
         .extract::<(Counter, State<WyRand>, DatabaseConnection)>()
         .await?;
 
-    let mut worlds = Vec::with_capacity(count as usize);
+    let mut worlds = Vec::<World>::with_capacity(count as usize);
 
     for _ in 0..count {
         let id = rng.generate_range(RANGE);
-
-        let world: World =
-            sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1")
-                .bind(id)
-                .fetch_one(&mut conn)
-                .await
-                .map_err(PgError)?;
-
-        worlds.push(world);
+        let w = get_world(&mut conn, id).await?;
+        worlds.push(w);
     }
 
     let mut res = Response::json(worlds)?;
-    res.headers_mut().insert(SERVER, HDR_SERVER);
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Viz"));
     Ok(res)
 }
 
@@ -106,65 +83,39 @@ async fn cached_queries(mut req: Request) -> Result<Response> {
         .collect::<Vec<_>>();
 
     let mut res = Response::json(worlds)?;
-    res.headers_mut().insert(SERVER, HDR_SERVER);
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Viz"));
     Ok(res)
 }
 
 async fn updates(mut req: Request) -> Result<Response> {
-    let (Counter(count), State(mut rng), DatabaseConnection(mut conn)) = req
+    let (Counter(count), State(rng), DatabaseConnection(conn)) = req
         .extract::<(Counter, State<WyRand>, DatabaseConnection)>()
         .await?;
 
-    let mut worlds = Vec::with_capacity(count as usize);
-
-    for _ in 0..count {
-        let id = rng.generate_range(RANGE);
-
-        let world: World =
-            sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1")
-                .bind(id)
-                .fetch_one(&mut conn)
-                .await
-                .map_err(PgError)?;
-
-        worlds.push(world);
-    }
-
-    for w in &mut worlds {
-        let randomnumber = rng.generate_range(RANGE);
-        let mut args = PgArguments::default();
-        args.add(randomnumber);
-        args.add(w.id);
-        w.randomnumber = randomnumber;
-
-        sqlx::query_with("UPDATE World SET randomNumber = $1 WHERE id = $2", args)
-            .execute(&mut conn)
-            .await
-            .map_err(PgError)?;
-    }
+    let worlds = update_worlds(conn, rng, count).await?;
 
     let mut res = Response::json(worlds)?;
-    res.headers_mut().insert(SERVER, utils::HDR_SERVER);
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Viz"));
     Ok(res)
 }
 
-async fn populate_cache(pool: Pool<Postgres>) -> Result<(), Error> {
-    let mut conn = pool.acquire().await.map_err(Error::normal)?;
-
-    let worlds: Vec<World> = sqlx::query_as("SELECT * FROM World LIMIT $1")
-        .bind(10_000)
-        .fetch_all(&mut conn)
-        .await
-        .map_err(PgError)?;
-    CACHED.set(worlds).unwrap();
-    Ok(())
+async fn populate_cache(pool: Pool<Postgres>) -> Result<()> {
+    let conn = pool.acquire().await.map_err(Error::normal)?;
+    let worlds = get_worlds_by_limit(conn, 10_000).await?;
+    CACHED
+        .set(worlds)
+        .map_err(|_| PgError::from(sqlx::Error::RowNotFound).into())
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    let max = available_parallelism().map(|n| n.get()).unwrap_or(16) as u32;
+
     let pool = PgPoolOptions::new()
-        .max_connections(56)
-        .min_connections(56)
+        .max_connections(max)
+        .min_connections(max)
         .connect(DB_URL)
         .await
         .map_err(PgError)?;

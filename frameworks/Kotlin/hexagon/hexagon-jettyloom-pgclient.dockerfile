@@ -1,26 +1,23 @@
 #
 # BUILD
 #
-FROM gradle:7.5.1-jdk17-alpine AS build
+FROM gradle:7.6-jdk17-alpine AS build
 USER root
 WORKDIR /hexagon
 
-COPY src src
-COPY build.gradle build.gradle
+ADD . .
+RUN gradle --quiet compileRocker
 RUN gradle --quiet -x test
 
 #
 # RUNTIME
 #
 FROM eclipse-temurin:19-jre-alpine
-ENV DBSTORE pg_client
 ENV POSTGRESQL_DB_HOST tfb-database
-ENV WEBENGINE jetty_loom
-ENV PROJECT hexagon
-ENV DISABLE_CHECKS true
-ENV JDK_JAVA_OPTIONS --enable-preview -XX:+AlwaysPreTouch -XX:+UseParallelGC -XX:+UseNUMA
+ENV PROJECT hexagon_jetty_pgclient
+ENV JDK_JAVA_OPTIONS --enable-preview -XX:+AlwaysPreTouch -XX:+UseParallelGC -XX:+UseNUMA -DvirtualThreads=true
 
-COPY --from=build /hexagon/build/install/$PROJECT /opt/$PROJECT
+COPY --from=build /hexagon/$PROJECT/build/install/$PROJECT /opt/$PROJECT
 
 EXPOSE 9090
 

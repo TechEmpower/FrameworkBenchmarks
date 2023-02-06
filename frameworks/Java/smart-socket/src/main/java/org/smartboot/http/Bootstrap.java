@@ -29,7 +29,7 @@ public class Bootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
-        ExecutorService executorService = new ThreadPoolExecutor(1, 1,
+        ExecutorService executorService = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().availableProcessors(),
                 0L, TimeUnit.MILLISECONDS,
                 new ArrayBlockingQueue<>(128), new ThreadPoolExecutor.CallerRunsPolicy());
         HttpRouteHandler routeHandle = new HttpRouteHandler();
@@ -57,7 +57,7 @@ public class Bootstrap {
                         });
                     }
                 });
-        initDB(routeHandle);
+        initDB(routeHandle,executorService);
         int cpuNum = Runtime.getRuntime().availableProcessors();
         // 定义服务器接受的消息类型以及各类消息对应的处理器
         HttpBootstrap bootstrap = new HttpBootstrap();
@@ -70,7 +70,7 @@ public class Bootstrap {
         bootstrap.httpHandler(routeHandle).setPort(8080).start();
     }
 
-    private static void initDB(HttpRouteHandler routeHandle) {
+    private static void initDB(HttpRouteHandler routeHandle,ExecutorService executorService) {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
@@ -85,9 +85,9 @@ public class Bootstrap {
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         DataSource dataSource = new HikariDataSource(config);
-        routeHandle.route("/db", new SingleQueryHandler(dataSource))
-                .route("/queries", new MultipleQueriesHandler(dataSource))
-                .route("/updates", new UpdateHandler(dataSource));
+        routeHandle.route("/db", new SingleQueryHandler(dataSource,executorService))
+                .route("/queries", new MultipleQueriesHandler(dataSource,executorService))
+                .route("/updates", new UpdateHandler(dataSource,executorService));
 //                .route("/fortunes", new FortunesHandler(dataSource));
     }
 }

@@ -1,60 +1,26 @@
 
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.7.22"
+    id "org.jetbrains.kotlin.jvm" version "1.8.0" apply false
 }
 
+version = "1.0.0"
+description = "TFB benchmark"
+group = "com.hexagonkt"
+
 ext {
-    hexagonVersion = "2.2.7"
+    hexagonVersion = "2.5.0"
     hikariVersion = "5.0.1"
-    jettyVersion = "11.0.12"
-    postgresqlVersion = "42.5.0"
-    vertxVersion = "4.3.5"
+    jettyVersion = "11.0.13"
+    postgresqlVersion = "42.5.1"
+    vertxVersion = "4.3.7"
     cache2kVersion = "2.6.1.Final"
-    nettyVersion = "4.1.85.Final"
+    nettyVersion = "4.1.87.Final"
 
     gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/$hexagonVersion/gradle"
 }
 
-apply(from: "$gradleScripts/kotlin.gradle")
-apply(from: "$gradleScripts/application.gradle")
+defaultTasks("build")
 
-apply(plugin: "war")
-
-defaultTasks("installDist")
-
-application {
-    mainClass.set("com.hexagonkt.BenchmarkKt")
+subprojects {
+    apply(from: "$gradleScripts/kotlin.gradle")
 }
-
-war {
-    archiveFileName = "ROOT.war"
-}
-
-installDist.dependsOn("war")
-
-dependencies {
-    implementation("com.hexagonkt:http_server_netty_epoll:$hexagonVersion")
-    implementation("com.hexagonkt:http_server_jetty:$hexagonVersion")
-    implementation("com.hexagonkt:templates_pebble:$hexagonVersion")
-    implementation("com.hexagonkt:logging_slf4j_jul:$hexagonVersion")
-    implementation("com.hexagonkt:serialization_dsl_json:$hexagonVersion")
-
-    implementation("io.netty:netty-transport-native-epoll:$nettyVersion:linux-x86_64")
-    implementation("org.cache2k:cache2k-core:$cache2kVersion")
-    implementation("com.zaxxer:HikariCP:$hikariVersion")
-    implementation("org.postgresql:postgresql:$postgresqlVersion")
-    implementation("io.vertx:vertx-pg-client:$vertxVersion")
-
-    // providedCompile excludes the dependency only in the WAR, not in the distribution
-    providedCompile("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
-}
-
-task("minimizeTemplate") {
-    doLast {
-        File template = file("$buildDir/resources/main/fortunes.pebble.html")
-        List<String> lines = template.readLines().collect { it.trim() }
-        template.write(lines.join(""))
-    }
-}
-
-assemble.dependsOn("minimizeTemplate")

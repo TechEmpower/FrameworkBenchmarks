@@ -25,9 +25,11 @@ if [[ -z "$MUSTACHE_C_PREFIX" ]]; then
 fi
 
 if [[ "$BENCHMARK_ENV" = "Azure" ]]; then
-	DB_CONN=2
+	DB_CONN=1
+	DB_PIPELINE=64
 else
-	DB_CONN=3
+	DB_CONN=1
+	DB_PIPELINE=64
 fi
 
 build_h2o_app()
@@ -49,7 +51,7 @@ run_curl()
 run_h2o_app()
 {
 	LD_LIBRARY_PATH="${MUSTACHE_C_PREFIX}/lib:$LD_LIBRARY_PATH" \
-	taskset -c "$1" "$2/h2o_app" -a20 -f "$3/template" -m "$DB_CONN" "$4" "$5" \
+	taskset -c "$1" "$2/h2o_app" -a20 -e "$DB_PIPELINE" -f "$3/template" -m "$DB_CONN" "$4" "$5" \
 	        -d "host=$DBHOST dbname=hello_world user=benchmarkdbuser sslmode=disable \
 	            password=benchmarkdbpass" &
 }
@@ -81,5 +83,6 @@ popd
 rm -rf "$H2O_APP_BUILD_DIR"
 echo "Running h2o_app in the $BENCHMARK_ENV environment."
 echo "Maximum database connections per thread: $DB_CONN"
+echo "Maximum pipelined database queries per database connection: $DB_PIPELINE"
 run_h2o_app 0 "${H2O_APP_PREFIX}/bin" "${H2O_APP_PREFIX}/share/h2o_app"
 wait

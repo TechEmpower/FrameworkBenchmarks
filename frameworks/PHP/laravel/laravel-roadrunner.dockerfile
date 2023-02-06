@@ -23,8 +23,9 @@ COPY deploy/roadrunner/.rr.yaml ./
 RUN composer install -a --no-dev --quiet
 RUN php artisan optimize
 
-# `./vendor/bin/rr get-binary` is github rate-limited
-RUN tar xzf deploy/roadrunner/roadrunner-*.tar.gz && mv roadrunner-*/rr . && chmod +x ./rr
+# install roadrunner
+COPY --from=ghcr.io/roadrunner-server/roadrunner:2.12.1 /usr/bin/rr ./rr
+
 RUN php artisan vendor:publish --provider='Spiral\RoadRunnerLaravel\ServiceProvider' --tag=config
 
 EXPOSE 8080
