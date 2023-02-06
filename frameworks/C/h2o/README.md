@@ -17,9 +17,10 @@ The test implementations are located into the `src/handlers` directory - refer t
 ## Performance tuning
 
 If the test environment changes, it will probably be necessary to tune some of the framework
-settings in order to achieve the best performance possible. The most significant parameter is
-the maximum number of database connections per thread, which is controlled by the `DB_CONN`
-variable in the `h2o.sh` script.
+settings in order to achieve the best performance possible. The most significant parameters are the
+maximum number of database connections per thread and the maximum number of pipelined database
+queries per database connection, which are controlled by the `DB_CONN` and the `DB_PIPELINE`
+variables respectively in the `h2o.sh` script.
 
 ## Performance issues
 
