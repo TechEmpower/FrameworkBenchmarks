@@ -23,23 +23,6 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class MainVerticle : CoroutineVerticle() {
-    /*
-    // TODO: remove the logging code for debugging in the next commit
-    val logger = Logger.getLogger("debug")
-
-    enum class State {
-        Plaintext, Json, Db, Queries, Fortunes, Updates
-    }
-
-    var current: State? = null
-    fun switchAndLog(state: State) {
-        if (current != state) {
-            logger.info("Switching from $current to $state")
-            current = state
-        }
-    }
-    */
-
     inline fun Route.checkedCoroutineHandler(crossinline requestHandler: suspend (RoutingContext) -> Unit): Route =
         handler { ctx ->
             /* Some conclusions from the Plaintext test results with trailing `await()`s:
@@ -148,25 +131,21 @@ class MainVerticle : CoroutineVerticle() {
 
     fun Router.routes() {
         get("/json").jsonResponseHandler {
-            //switchAndLog(State.Json) // TODO: remove the logging code for debugging in the next commit
             jsonSerializationMessage
         }
 
         get("/db").jsonResponseHandler {
-            //switchAndLog(State.Db) // TODO: remove the logging code for debugging in the next commit
             val rowSet = pgPool.preparedQuery(SELECT_WORLD_SQL).execute(Tuple.of(randomIntBetween1And10000())).await()
             // TODO: how much is using `first()` faster?
             rowSet.single().toWorld()
         }
 
         get("/queries").jsonResponseHandler {
-            //switchAndLog(State.Queries) // TODO: remove the logging code for debugging in the next commit
             val queries = it.request().getQueries()
             selectRandomWorlds(queries)
         }
 
         get("/fortunes").checkedCoroutineHandler {
-            //switchAndLog(State.Fortunes) // TODO: remove the logging code for debugging in the next commit
             val fortunes = mutableListOf<Fortune>()
             pgPool.preparedQuery(SELECT_FORTUNE_SQL).execute().await()
                 .mapTo(fortunes) { it.toFortune() }
@@ -202,7 +181,6 @@ class MainVerticle : CoroutineVerticle() {
         }
 
         get("/updates").jsonResponseHandler {
-            //switchAndLog(State.Updates) // TODO: remove the logging code for debugging in the next commit
             val queries = it.request().getQueries()
             val worlds = selectRandomWorlds(queries)
             val updatedWorlds = worlds.map { it.copy(randomNumber = randomIntBetween1And10000()) }
@@ -223,7 +201,6 @@ class MainVerticle : CoroutineVerticle() {
         }
 
         get("/plaintext").checkedCoroutineHandler {
-            //switchAndLog(State.Plaintext) // TODO: remove the logging code for debugging in the next commit
             it.response().run {
                 putCommonHeaders()
                 putHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
