@@ -174,7 +174,7 @@ impl PgConnection {
         utils::reserve(&mut body);
         body.put_u8(b'[');
         (0..num).for_each(|_| {
-            let w_id = rng.generate::<usize>() % 10_000 + 1;
+            let w_id = rng.generate::<usize>() % 10_000;
             self.cached[w_id].to_bytes_mut(&mut *body);
             body.put_u8(b',');
         });
