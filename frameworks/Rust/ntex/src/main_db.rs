@@ -61,6 +61,16 @@ impl Service<Request> for App {
                         .insert(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
                     Ok(res)
                 }
+                "/cached_query" => {
+                    let worlds = self
+                        .0
+                        .cached_query(utils::get_query_param(req.uri().query()));
+                    let mut res = HttpResponse::with_body(StatusCode::OK, worlds.into());
+                    res.headers_mut().insert(SERVER, utils::HDR_SERVER);
+                    res.headers_mut()
+                        .insert(CONTENT_TYPE, utils::HDR_JSON_CONTENT_TYPE);
+                    Ok(res)
+                }
                 _ => Ok(Response::new(StatusCode::NOT_FOUND)),
             }
         })
