@@ -29,7 +29,6 @@ pub struct PgConnection {
     rng: WyRand,
     updates: Vec<Statement>,
     buf: RefCell<BytesMut>,
-    cached: Vec<World>,
 }
 
 impl PgConnection {
@@ -62,21 +61,11 @@ impl PgConnection {
         }
         let world = cl.prepare("SELECT * FROM world WHERE id=$1").await.unwrap();
 
-        let all_worlds = cl.prepare("SELECT * FROM world ORDER by id").await.unwrap();
-        let mut cached = Vec::new();
-        for row in cl.query_raw(&all_worlds, &[]).await.unwrap() {
-            cached.push(World {
-                id: row.get(0),
-                randomnumber: row.get(1),
-            });
-        }
-
         PgConnection {
             cl,
             fortune,
             world,
             updates,
-            cached,
             rng: WyRand::new(),
             buf: RefCell::new(BytesMut::with_capacity(65535)),
         }
@@ -160,22 +149,6 @@ impl PgConnection {
         body.put_u8(b'[');
         worlds.iter().for_each(|w| {
             w.to_bytes_mut(&mut *body);
-            body.put_u8(b',');
-        });
-        let idx = body.len() - 1;
-        body[idx] = b']';
-        body.split().freeze()
-    }
-
-    pub fn cached_query(&self, num: usize) -> Bytes {
-        let mut rng = nanorand::tls_rng();
-
-        let mut body = self.buf.borrow_mut();
-        utils::reserve(&mut body);
-        body.put_u8(b'[');
-        (0..num).for_each(|_| {
-            let w_id = rng.generate::<usize>() % 10_000;
-            self.cached[w_id].to_bytes_mut(&mut *body);
             body.put_u8(b',');
         });
         let idx = body.len() - 1;
