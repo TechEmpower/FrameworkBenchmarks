@@ -39,6 +39,7 @@ async-std = ["ntex/async-std"]
 [dependencies]
 ntex = "0.6.1"
 ntex-bytes = { version = "0.1.19", features=["simd"] }
+core_affinity = "0.8"
 mimalloc = { version = "0.1.25", default-features = false }
 snmalloc-rs = { version = "0.3.3", features = ["native-cpu"] }
 yarte = { version = "0.15", features = ["bytes-buf", "json"] }
