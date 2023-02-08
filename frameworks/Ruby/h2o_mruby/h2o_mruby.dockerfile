@@ -12,7 +12,11 @@ WORKDIR /tmp/h2o-build
 RUN apt-get -yqq update && \
     apt-get -yqq install \
       cmake \
-      ninja-build && \
+      libcap-dev \
+      libuv1-dev \
+      libwslay-dev \
+      ninja-build \
+      systemtap-sdt-dev && \
     curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
       tar --strip-components=1 -xz && \
     cmake \
@@ -29,12 +33,14 @@ RUN apt-get -yqq update && \
 
 FROM ruby:${RUBY_IMAGE_VERSION}-slim
 
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get -yqq update && apt-get -yqq install libcap2
 ARG H2O_PREFIX
 COPY --from=compile "${H2O_PREFIX}" "${H2O_PREFIX}/"
-COPY h2o.conf "${H2O_PREFIX}/"
+COPY h2o.conf "${H2O_PREFIX}/etc/"
 EXPOSE 8080
 ARG BENCHMARK_ENV
 ARG TFB_TEST_DATABASE
 ARG TFB_TEST_NAME
 
-CMD ["/opt/h2o/bin/h2o", "-c", "/opt/h2o/h2o.conf"]
+CMD ["/opt/h2o/bin/h2o", "-c", "/opt/h2o/etc/h2o.conf"]
