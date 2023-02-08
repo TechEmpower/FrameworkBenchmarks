@@ -1,4 +1,6 @@
-FROM placeos/crystal
+FROM 84codes/crystal:1.7.2-alpine
+RUN apk add --update --no-cache gmp-dev
+
 WORKDIR /usr/src/app
 
 COPY shard.yml ./
