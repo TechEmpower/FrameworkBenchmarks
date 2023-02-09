@@ -1,12 +1,15 @@
+import asyncio
 import os
 from operator import itemgetter
 from random import randint, sample
 from typing import Any
 
+import uvloop
 from asyncpg import create_pool
 from jinja2 import Template
-from starlite import Starlite, get, MediaType
+from starlite import MediaType, Starlite, get
 
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 connection_pool: Any = None
 
 

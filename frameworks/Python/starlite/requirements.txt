@@ -2,3 +2,4 @@ asyncpg>=0.27.0
 jinja2>=3.1.2
 starlite>=1.51.0
 uvicorn[standard]>=0.20.0
+uvloop>=0.17.0

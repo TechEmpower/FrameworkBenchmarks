@@ -11,4 +11,4 @@ RUN pip install --upgrade pip \
     && pip install -r /starlite/requirements.txt
 
 EXPOSE 8080
-CMD uvicorn app:app --host 0.0.0.0 --port 8080 --workers $(nproc) --log-level error
+CMD uvicorn app:app --host 0.0.0.0 --port 8080 --workers $(nproc) --log-level error --loop uvloop
