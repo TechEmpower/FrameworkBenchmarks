@@ -1,0 +1,24 @@
+@import java.util.*
+@import com.hexagonkt.model.Fortune
+@args(Map<String, Object> context)
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Fortunes</title>
+</head>
+<body>
+<table>
+  <tr>
+    <th>id</th>
+    <th>message</th>
+  </tr>
+  @for ((fortune) : (Collection<Fortune>)context.get("fortunes")) {
+  <tr>
+    <td>@fortune.getId()</td>
+    <td>@fortune.getMessage()</td>
+  </tr>
+  }
+</table>
+</body>
+</html>

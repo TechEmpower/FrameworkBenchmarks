@@ -1,11 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/utils"
 )
@@ -14,6 +16,8 @@ import (
 func Benchmark_Plaintext(b *testing.B) {
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
+		JSONEncoder:           json.Marshal,
+		JSONDecoder:           json.Unmarshal,
 	})
 
 	app.Get("/plaintext", plaintextHandler)
@@ -41,6 +45,8 @@ func Benchmark_Plaintext(b *testing.B) {
 func Benchmark_JSON(b *testing.B) {
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
+		JSONEncoder:           json.Marshal,
+		JSONDecoder:           json.Unmarshal,
 	})
 
 	app.Get("/json", jsonHandler)

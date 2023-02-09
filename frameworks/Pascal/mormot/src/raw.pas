@@ -11,7 +11,7 @@ See https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-
 // logging is fine for debugging, less for benchmarking ;)
 
 uses
-  {$I mormot.uses.inc} // include mormot.core.fpcx64mm
+  {$I mormot.uses.inc} // include mormot.core.fpcx64mm or mormot.core.fpclibcmm
   sysutils,
   classes,
   BaseUnix,
@@ -84,7 +84,7 @@ type
     fTemplate: TSynMustache;
   protected
     // as used by rawqueries and rawupdates
-    procedure getRawRandomWorlds(cnt: PtrInt; out res: TWorlds);
+    function getRawRandomWorlds(cnt: PtrInt; out res: TWorlds): boolean;
     // implements /queries and /cached-queries endpoints
     function doqueries(ctxt: THttpServerRequestAbstract; orm: TOrmWorldClass;
       const search: RawUtf8): cardinal;
@@ -111,11 +111,11 @@ const
   HELLO_WORLD: RawUtf8 = 'Hello, World!';
   WORLD_COUNT = 10000;
 
-  WORLD_READ_SQL = 'select id, randomNumber from World where id=?';
+  WORLD_READ_SQL = 'select id,randomNumber from World where id=?';
   WORLD_UPDATE_SQLN ='update World as t set randomNumber = v.r from ' +
-    '(SELECT unnest(?::NUMERIC[]), unnest(?::NUMERIC[]) order by 2) as v(id, r)' +
+    '(SELECT unnest(?::bigint[]), unnest(?::bigint[]) order by 1) as v(id, r)' +
     ' where t.id = v.id';
-  FORTUNES_SQL = 'select id, message from Fortune';
+  FORTUNES_SQL = 'select id,message from Fortune';
 
   FORTUNES_MESSAGE = 'Additional fortune added at request time.';
   FORTUNES_TPL = '<!DOCTYPE html>' +
@@ -224,8 +224,8 @@ begin
   stmt.ExecutePrepared;
   if stmt.Step then
   begin
-    ctxt.SetOutJson('{"id":%,"randomNumber":%}',
-      [stmt.ColumnInt(0), stmt.ColumnInt(1)]);
+    ctxt.SetOutJson(
+      '{"id":%,"randomNumber":%}', [stmt.ColumnInt(0), stmt.ColumnInt(1)]);
     result := HTTP_SUCCESS;
     stmt.ReleaseRows;
   end;
@@ -255,34 +255,47 @@ begin
   result := doqueries(ctxt, TOrmCachedWorld, 'COUNT=');
 end;
 
-procedure TRawAsyncServer.getRawRandomWorlds(cnt: PtrInt; out res: TWorlds);
+function TRawAsyncServer.getRawRandomWorlds(cnt: PtrInt; out res: TWorlds): boolean;
 var
   conn: TSqlDBConnection;
   stmt: ISQLDBStatement;
+  pConn: TSqlDBPostgresConnection absolute conn;
   pStmt: TSqlDBPostgresStatement;
   i: PtrInt;
 begin
+  result := false;
   SetLength(res{%H-}, cnt);
   conn := fDbPool.ThreadSafeConnection;
-  stmt := conn.NewStatementPrepared(WORLD_READ_SQL, true, true);
+  if not conn.IsConnected then
+    conn.Connect;
   // specific code to use PostgresSQL pipelining mode
-  TSqlDBPostgresConnection(conn).EnterPipelineMode;
+  // see test_nosync in
+  // https://github.com/postgres/postgres/blob/master/src/test/modules/libpq_pipeline/libpq_pipeline.c
+  stmt := conn.NewStatementPrepared(WORLD_READ_SQL, true, true);
+  //w/o transaction pg_stat_statements view returns calls-1 and tfb verify fails
+  conn.StartTransaction;
+  pConn.EnterPipelineMode;
   pStmt := (stmt as TSqlDBPostgresStatement);
   for i := 0 to cnt - 1 do
   begin
     stmt.Bind(1, RandomWorld);
     pStmt.SendPipelinePrepared;
+    pConn.Flush;
   end;
-  TSqlDBPostgresConnection(conn).PipelineSync;
+  pConn.SendFlushRequest;
+  pConn.Flush;
   for i := 0 to cnt - 1 do
   begin
-    pStmt.GetPipelineResult(i = 0);
+    pStmt.GetPipelineResult;
     if not stmt.Step then
       exit;
-    res[i].id := stmt.ColumnInt(0);
-    res[i].randomNumber := stmt.ColumnInt(1);
+    res[i].id := pStmt.ColumnInt(0);
+    res[i].randomNumber := pStmt.ColumnInt(1);
+    pStmt.ReleaseRows;
   end;
-  TSqlDBPostgresConnection(conn).ExitPipelineMode(true);
+  pConn.ExitPipelineMode;
+  conn.commit;
+  result := true;
 end;
 
 function TRawAsyncServer.rawqueries(ctxt: THttpServerRequestAbstract): cardinal;
@@ -291,8 +304,7 @@ var
   res: TWorlds;
 begin
   cnt := getQueriesParamValue(ctxt);
-  getRawRandomWorlds(cnt, res);
-  if res = nil then
+  if not getRawRandomWorlds(cnt, res) then
     exit(HTTP_SERVERERROR);
   ctxt.SetOutJson(SaveJson(res, TypeInfo(TWorlds)));
   result := HTTP_SUCCESS;
@@ -361,9 +373,9 @@ var
   conn: TSqlDBConnection;
   stmt: ISQLDBStatement;
   list: TFortunes;
-  f: TFortune;
   arr: TDynArray;
   n: integer;
+  f: ^TFortune;
 begin
   conn := fDbPool.ThreadSafeConnection;
   stmt := conn.NewStatementPrepared(FORTUNES_SQL, true, true);
@@ -371,13 +383,13 @@ begin
   arr.Init(TypeInfo(TFortunes), list, @n);
   while stmt.Step do
   begin
+    f := arr.NewPtr;
     f.id := stmt.ColumnInt(0);
     f.message := stmt.ColumnUtf8(1);
-    arr.Add(f);
   end;
+  f := arr.NewPtr;
   f.id := 0;
   f.message := FORTUNES_MESSAGE;
-  arr.Add(f);
   arr.Sort(FortuneCompareByMessage);
   ctxt.OutContent := fTemplate.RenderDataArray(arr);
   ctxt.OutContentType := HTML_CONTENT_TYPE;
@@ -425,12 +437,13 @@ var
   conn: TSqlDBConnection;
   stmt: ISQLDBStatement;
 begin
+  result := HTTP_SERVERERROR;
+  conn := fDbPool.ThreadSafeConnection;
   cnt := getQueriesParamValue(ctxt);
-  getRawRandomWorlds(cnt, words);
-  if length(words) <> cnt then
-    exit(HTTP_SERVERERROR);
-  setLength(ids, cnt);
-  setLength(nums, cnt);
+  if not getRawRandomWorlds(cnt, words) then
+    exit;
+  setLength(ids{%H-}, cnt);
+  setLength(nums{%H-}, cnt);
   // generate new randoms, fill parameters arrays for update
   for i := 0 to cnt - 1 do
   begin
@@ -438,13 +451,11 @@ begin
     ids[i] := words[i].id;
     nums[i] := words[i].randomNumber;
   end;
-  conn := fDbPool.ThreadSafeConnection;
-  //conn.StartTransaction;
   stmt := conn.NewStatementPrepared(WORLD_UPDATE_SQLN, false, true);
-  stmt.BindArray(1, nums);
-  stmt.BindArray(2, ids);
+  stmt.BindArray(1, ids);
+  stmt.BindArray(2, nums);
   stmt.ExecutePrepared;
-  //conn.Commit; // autocommit
+  //conn.Commit;
   ctxt.SetOutJson(SaveJson(words, TypeInfo(TWorlds)));
   result := HTTP_SUCCESS;
 end;
@@ -475,8 +486,8 @@ begin
     // user specified some values at command line
     if not TryStrToInt(ParamStr(1), threads) then
       threads := SystemInfo.dwNumberOfProcessors * 4;
-    if threads < 4 then
-      threads := 4
+    if threads < 2 then
+      threads := 2
     else if threads > 256 then
       threads := 256; // max. threads for THttpAsyncServer
 

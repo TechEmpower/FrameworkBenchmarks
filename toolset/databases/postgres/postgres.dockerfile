@@ -52,6 +52,6 @@ RUN service postgresql start && \
     psql -a hello_world < create-postgres.sql && \
     service postgresql stop
 
-ENV PATH=$PATH:/usr/lib/postgresql/$PG_VERSION/bin
+ENV PATH=${PATH}:/usr/lib/postgresql/${PG_VERSION}/bin
 
 CMD ["postgres"]

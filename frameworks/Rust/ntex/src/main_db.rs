@@ -2,11 +2,13 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
+use std::sync::{Arc, Mutex};
+
 use ntex::http::header::{CONTENT_TYPE, SERVER};
 use ntex::http::{HttpService, KeepAlive, Request, Response, StatusCode};
 use ntex::service::{Service, ServiceFactory};
 use ntex::web::{Error, HttpResponse};
-use ntex::{time::Seconds, util::PoolId, util::BoxFuture};
+use ntex::{time::Seconds, util::BoxFuture, util::PoolId};
 
 mod db;
 mod utils;
@@ -38,7 +40,8 @@ impl Service<Request> for App {
                     Ok(res)
                 }
                 "/query" => {
-                    let worlds = self.0
+                    let worlds = self
+                        .0
                         .get_worlds(utils::get_query_param(req.uri().query()))
                         .await;
                     let mut res = HttpResponse::with_body(StatusCode::OK, worlds.into());
@@ -48,7 +51,10 @@ impl Service<Request> for App {
                     Ok(res)
                 }
                 "/update" => {
-                    let worlds = self.0.update(utils::get_query_param(req.uri().query())).await;
+                    let worlds = self
+                        .0
+                        .update(utils::get_query_param(req.uri().query()))
+                        .await;
                     let mut res = HttpResponse::with_body(StatusCode::OK, worlds.into());
                     res.headers_mut().insert(SERVER, utils::HDR_SERVER);
                     res.headers_mut()
@@ -82,8 +88,22 @@ impl ServiceFactory<Request> for AppFactory {
 async fn main() -> std::io::Result<()> {
     println!("Starting http server: 127.0.0.1:8080");
 
+    let cores = core_affinity::get_core_ids().unwrap();
+    let total_cores = cores.len();
+    let cores = Arc::new(Mutex::new(cores));
+
     ntex::server::build()
         .backlog(1024)
+        .configure(move |cfg| {
+            let cores = cores.clone();
+            cfg.on_worker_start(move |_| {
+                if let Some(core) = cores.lock().unwrap().pop() {
+                    // Pin this worker to a single CPU core.
+                    core_affinity::set_for_current(core);
+                }
+                std::future::ready(Ok::<_, &'static str>(()))
+            })
+        })?
         .bind("techempower", "0.0.0.0:8080", |cfg| {
             cfg.memory_pool(PoolId::P1);
             PoolId::P1.set_read_params(65535, 2048);
@@ -94,6 +114,7 @@ async fn main() -> std::io::Result<()> {
                 .client_timeout(Seconds(0))
                 .h1(AppFactory)
         })?
+        .workers(total_cores)
         .run()
         .await
 }

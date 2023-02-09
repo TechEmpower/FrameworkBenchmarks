@@ -6,7 +6,7 @@ COPY ./ ./
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN wget -qO - https://www.mongodb.org/static/pgp/server-${MONGODB_VERSION}.asc > /etc/apt/keyrings/mongodb-org.asc
-RUN echo "deb [ signed-by=/etc/apt/keyrings/mongodb-org.asc ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/$MONGODB_VERSION multiverse" > \
+RUN echo "deb [ signed-by=/etc/apt/keyrings/mongodb-org.asc ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/${MONGODB_VERSION} multiverse" > \
       /etc/apt/sources.list.d/mongodb-org.list
 # Complete and utter hax if works
 RUN ln -s /bin/echo /bin/systemctl
