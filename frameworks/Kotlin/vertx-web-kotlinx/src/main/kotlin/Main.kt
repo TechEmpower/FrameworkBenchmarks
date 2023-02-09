@@ -8,13 +8,17 @@ import java.util.logging.Logger
 const val SERVER_NAME = "Vert.x Web Kotlin (with kotlinx libraries) Benchmark server"
 
 val logger = Logger.getLogger("Vert.x Web Kotlinx Benchmark")
-suspend fun main() {
+suspend fun main(args: Array<String>) {
+    val hasDb = args.getOrNull(0)?.toBooleanStrictOrNull()
+        ?: throw IllegalArgumentException("Specify the first `hasDb` Boolean argument")
+
     logger.info("$SERVER_NAME starting...")
     val vertx = Vertx.vertx(vertxOptionsOf(preferNativeTransport = true))
     vertx.exceptionHandler {
         logger.info("Vertx exception caught: $it")
         it.printStackTrace()
     }
-    vertx.deployVerticle(::MainVerticle, deploymentOptionsOf(instances = CpuCoreSensor.availableProcessors())).await()
+    vertx.deployVerticle({ MainVerticle(hasDb) }, deploymentOptionsOf(instances = CpuCoreSensor.availableProcessors()))
+        .await()
     logger.info("$SERVER_NAME started.")
 }

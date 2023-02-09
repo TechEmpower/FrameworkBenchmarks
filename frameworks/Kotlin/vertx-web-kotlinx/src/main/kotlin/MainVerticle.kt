@@ -10,19 +10,22 @@ import io.vertx.kotlin.core.http.httpServerOptionsOf
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.await
 import io.vertx.kotlin.pgclient.pgConnectOptionsOf
-import io.vertx.kotlin.sqlclient.poolOptionsOf
-import io.vertx.pgclient.PgPool
+import io.vertx.pgclient.PgConnection
+import io.vertx.sqlclient.PreparedQuery
+import io.vertx.sqlclient.Row
+import io.vertx.sqlclient.RowSet
 import io.vertx.sqlclient.Tuple
 import kotlinx.coroutines.*
 import kotlinx.html.*
-import kotlinx.html.stream.createHTML
+import kotlinx.html.stream.appendHTML
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.net.SocketException
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
-class MainVerticle : CoroutineVerticle() {
+class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
     inline fun Route.checkedCoroutineHandler(crossinline requestHandler: suspend (RoutingContext) -> Unit): Route =
         handler { ctx ->
             /* Some conclusions from the Plaintext test results with trailing `await()`s:
@@ -37,9 +40,14 @@ class MainVerticle : CoroutineVerticle() {
             }
         }
 
-    lateinit var pgPool: PgPool
+    // `PgConnection`s as used in the "vertx" portion offers better performance than `PgPool`s.
+    lateinit var pgConnection: PgConnection
     lateinit var date: String
     lateinit var httpServer: HttpServer
+
+    lateinit var selectWorldQuery: PreparedQuery<RowSet<Row>>
+    lateinit var selectFortuneQuery: PreparedQuery<RowSet<Row>>
+    lateinit var updateWordQuery: PreparedQuery<RowSet<Row>>
 
     fun setCurrentDate() {
         // kotlinx-datetime doesn't support the format yet.
@@ -48,25 +56,34 @@ class MainVerticle : CoroutineVerticle() {
     }
 
     override suspend fun start() {
-        // Parameters are copied from the "vertx-web" portion. TODO: tune them if necessary.
-        pgPool = PgPool.pool(
-            vertx,
-            pgConnectOptionsOf(
-                database = "hello_world",
-                host = "tfb-database",
-                user = "benchmarkdbuser",
-                password = "benchmarkdbpass",
-                cachePreparedStatements = true,
-                pipeliningLimit = 100000
-            ), poolOptionsOf(maxSize = 4)
-        )
+        if (hasDb) {
+            // Parameters are copied from the "vertx-web" and "vertx" portions.
+            pgConnection = PgConnection.connect(
+                vertx,
+                pgConnectOptionsOf(
+                    database = "hello_world",
+                    host = "tfb-database",
+                    user = "benchmarkdbuser",
+                    password = "benchmarkdbpass",
+                    cachePreparedStatements = true,
+                    pipeliningLimit = 100000
+                )
+            ).await()
+
+            selectWorldQuery = pgConnection.preparedQuery(SELECT_WORLD_SQL)
+            selectFortuneQuery = pgConnection.preparedQuery(SELECT_FORTUNE_SQL)
+            updateWordQuery = pgConnection.preparedQuery(UPDATE_WORLD_SQL)
+        }
+
         setCurrentDate()
         vertx.setPeriodic(1000) { setCurrentDate() }
         httpServer = vertx.createHttpServer(httpServerOptionsOf(port = 8080))
             .requestHandler(Router.router(vertx).apply { routes() })
             .exceptionHandler {
                 // wrk resets the connections when benchmarking is finished.
-                if (it is NativeIoException && it.message == "recvAddress(..) failed: Connection reset by peer")
+                if ((it is NativeIoException && it.message == "recvAddress(..) failed: Connection reset by peer")
+                    || (it is SocketException && it.message == "Connection reset")
+                )
                     return@exceptionHandler
 
                 logger.info("Exception in HttpServer: $it")
@@ -77,12 +94,10 @@ class MainVerticle : CoroutineVerticle() {
 
 
     fun HttpServerRequest.getQueries(): Int {
-        //it.queryParam("queries") // TODO: is this faster?
         val queriesParam: String? = getParam("queries")
         return queriesParam?.toIntOrNull()?.coerceIn(1, 500) ?: 1
     }
 
-    // TODO: is using chained calls (fluent API) faster?
     @Suppress("NOTHING_TO_INLINE")
     inline fun HttpServerResponse.putCommonHeaders() {
         putHeader(HttpHeaders.SERVER, "Vert.x Web")
@@ -99,35 +114,16 @@ class MainVerticle : CoroutineVerticle() {
         checkedCoroutineHandler {
             it.response().run {
                 putJsonResponseHeader()
-                // TODO: which is faster? Vert.x or kotlinx.serialization?
                 end(Json.encodeToString(requestHandler(it)))/*.await()*/
             }
         }
 
-    // batch execution which seems not permitted
-    // TODO: how much faster?
-    suspend fun batchSelectRandomWorlds(queries: Int): List<World> =
-        pgPool.preparedQuery(SELECT_WORLD_SQL)
-            .executeBatch(List(queries) { Tuple.of(randomIntBetween1And10000()) }).await()
-            .map { it.toWorld() }
-
     suspend fun selectRandomWorlds(queries: Int): List<World> {
         val rowSets = List(queries) {
-            pgPool.preparedQuery(SELECT_WORLD_SQL).execute(Tuple.of(randomIntBetween1And10000()))
+            selectWorldQuery.execute(Tuple.of(randomIntBetween1And10000()))
         }.awaitAll()
         return rowSets.map { it.single().toWorld() }
     }
-
-    // TODO: is this approach faster?
-    // an alternative approach
-    suspend fun selectRandomWorlds2(queries: Int): List<World> =
-        List(queries) {
-            async {
-                val rowSet = pgPool.preparedQuery(SELECT_WORLD_SQL)
-                    .execute(Tuple.of(randomIntBetween1And10000())).await()
-                rowSet.single().toWorld()
-            }
-        }.awaitAll()
 
     fun Router.routes() {
         get("/json").jsonResponseHandler {
@@ -135,8 +131,7 @@ class MainVerticle : CoroutineVerticle() {
         }
 
         get("/db").jsonResponseHandler {
-            val rowSet = pgPool.preparedQuery(SELECT_WORLD_SQL).execute(Tuple.of(randomIntBetween1And10000())).await()
-            // TODO: how much is using `first()` faster?
+            val rowSet = selectWorldQuery.execute(Tuple.of(randomIntBetween1And10000())).await()
             rowSet.single().toWorld()
         }
 
@@ -147,28 +142,30 @@ class MainVerticle : CoroutineVerticle() {
 
         get("/fortunes").checkedCoroutineHandler {
             val fortunes = mutableListOf<Fortune>()
-            pgPool.preparedQuery(SELECT_FORTUNE_SQL).execute().await()
+            selectFortuneQuery.execute().await()
                 .mapTo(fortunes) { it.toFortune() }
 
             fortunes.add(Fortune(0, "Additional fortune added at request time."))
             fortunes.sortBy { it.message }
 
-            // TODO: is using `buildString` faster? Refer to https://github.com/Kotlin/kotlinx.html/wiki/Streaming.
-            val htmlString = "<!DOCTYPE html>" + createHTML(false).html {
-                head {
-                    title("Fortunes")
-                }
-                body {
-                    table {
-                        tr {
-                            th { +"id" }
-                            th { +"message" }
-                        }
-                        for (fortune in fortunes)
+            val htmlString = buildString {
+                append("<!DOCTYPE html>")
+                appendHTML(false).html {
+                    head {
+                        title("Fortunes")
+                    }
+                    body {
+                        table {
                             tr {
-                                td { +fortune.id.toString() }
-                                td { +fortune.message }
+                                th { +"id" }
+                                th { +"message" }
                             }
+                            for (fortune in fortunes)
+                                tr {
+                                    td { +fortune.id.toString() }
+                                    td { +fortune.message }
+                                }
+                        }
                     }
                 }
             }
@@ -187,7 +184,7 @@ class MainVerticle : CoroutineVerticle() {
 
             // Approach 1
             // The updated worlds need to be sorted first to avoid deadlocks.
-            pgPool.preparedQuery(UPDATE_WORLD_SQL)
+            updateWordQuery
                 .executeBatch(updatedWorlds.sortedBy { it.id }.map { Tuple.of(it.randomNumber, it.id) }).await()
 
             /*
@@ -204,8 +201,7 @@ class MainVerticle : CoroutineVerticle() {
             it.response().run {
                 putCommonHeaders()
                 putHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
-                // TODO: is reusing a single cached buffer faster?
-                end("Hello, World!").await()
+                end("Hello, World!")/*.await()*/
             }
         }
     }

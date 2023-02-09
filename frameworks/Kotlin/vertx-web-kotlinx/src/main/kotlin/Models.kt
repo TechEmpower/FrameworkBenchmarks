@@ -6,7 +6,6 @@ class Message(val message: String)
 
 val jsonSerializationMessage = Message("Hello, World!")
 
-// TODO: are data classes slower?
 @Serializable
 data class World(val id: Int, val randomNumber: Int)
 

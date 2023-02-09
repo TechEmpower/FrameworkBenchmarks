@@ -10,8 +10,6 @@ RUN tar -xf build/distributions/vertx-web-kotlinx-benchmark.tar
 
 EXPOSE 8080
 
-# TODO: is running a shadow jar faster?
-# TODO: do the extra parameters in the "vertx-web" benchmark improve performance?
 CMD export JAVA_OPTS=" \
     -server \
     -XX:+UseNUMA \
@@ -27,4 +25,4 @@ CMD export JAVA_OPTS=" \
     -Dio.netty.buffer.checkBounds=false \
     -Dio.netty.buffer.checkAccessible=false \
     " && \
-    vertx-web-kotlinx-benchmark/bin/vertx-web-kotlinx-benchmark
+    vertx-web-kotlinx-benchmark/bin/vertx-web-kotlinx-benchmark true
