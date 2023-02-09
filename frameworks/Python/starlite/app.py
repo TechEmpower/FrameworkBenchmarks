@@ -90,7 +90,7 @@ async def database_updates(queries: None | str = None) -> list[dict[str, int]]:
         {"id": row_id, "randomNumber": number} for row_id, number in updates
     ]
 
-    async with app.state.connection_pool.acquire() as connection:
+    async with connection_pool.acquire() as connection:
         statement = await connection.prepare('SELECT "id", "randomnumber" FROM "world" WHERE id = $1')
         for row_id, _ in updates:
             await statement.fetchval(row_id)
