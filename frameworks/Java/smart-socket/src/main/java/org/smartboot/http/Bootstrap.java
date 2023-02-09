@@ -45,7 +45,7 @@ public class Bootstrap {
                         JsonUtil.writeJsonBytes(response, new Message("Hello, World!"));
                     }
                 });
-//        initDB(routeHandle);
+        initDB(routeHandle);
         int cpuNum = Runtime.getRuntime().availableProcessors();
         // 定义服务器接受的消息类型以及各类消息对应的处理器
         HttpBootstrap bootstrap = new HttpBootstrap();
