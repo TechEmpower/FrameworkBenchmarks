@@ -100,7 +100,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
 
     @Suppress("NOTHING_TO_INLINE")
     inline fun HttpServerResponse.putCommonHeaders() {
-        putHeader(HttpHeaders.SERVER, "Vert.x Web")
+        putHeader(HttpHeaders.SERVER, "Vert.x-Web")
         putHeader(HttpHeaders.DATE, date)
     }
 

@@ -5,9 +5,9 @@ import io.vertx.kotlin.core.vertxOptionsOf
 import io.vertx.kotlin.coroutines.await
 import java.util.logging.Logger
 
-const val SERVER_NAME = "Vert.x Web Kotlin (with kotlinx libraries) Benchmark server"
+const val SERVER_NAME = "Vert.x-Web Kotlinx Benchmark"
 
-val logger = Logger.getLogger("Vert.x Web Kotlinx Benchmark")
+val logger = Logger.getLogger("Vert.x-Web Kotlinx Benchmark")
 suspend fun main(args: Array<String>) {
     val hasDb = args.getOrNull(0)?.toBooleanStrictOrNull()
         ?: throw IllegalArgumentException("Specify the first `hasDb` Boolean argument")
