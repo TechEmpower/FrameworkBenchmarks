@@ -19,6 +19,7 @@ import io.vertx.kotlin.pgclient.pgConnectOptionsOf
 import io.vertx.kotlin.sqlclient.poolOptionsOf
 import io.vertx.pgclient.PgPool
 import io.vertx.sqlclient.Tuple
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
@@ -42,7 +43,7 @@ class App : CoroutineVerticle() {
     }
 
     inline fun Route.coroutineHandler(crossinline requestHandler: suspend (RoutingContext) -> Unit): Route =
-        handler { ctx -> launch { requestHandler(ctx) } }
+        handler { ctx -> launch(Dispatchers.Unconfined) { requestHandler(ctx) } }
 
     inline fun RoutingContext.checkedRun(block: () -> Unit): Unit =
         try {
