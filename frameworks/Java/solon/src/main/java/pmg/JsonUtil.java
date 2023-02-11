@@ -18,7 +18,7 @@ public class JsonUtil {
 	        try {
 	            writer.reset();
 	            Eson.serialize(obj, writer);
-	            c.contentLength(writer.size());
+	            //c.contentLength(writer.size());
 	            c.contentType(MimeType.APPLICATION_JSON_VALUE);
 	            writer.toStream(c.outputStream());
 	        } catch (IOException e) {
