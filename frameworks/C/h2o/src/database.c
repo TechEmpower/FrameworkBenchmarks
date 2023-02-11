@@ -186,12 +186,14 @@ static void error_notification(db_conn_pool_t *pool, bool timeout, const char *e
 
 static void on_database_connect_error(db_conn_t *conn, bool timeout, const char *error_string)
 {
-	error_notification(conn->pool, timeout, error_string);
+	db_conn_pool_t * const pool = conn->pool;
+
 	h2o_timeout_unlink(&conn->timeout);
 	h2o_socket_read_stop(conn->sock);
 	h2o_socket_close(conn->sock);
 	PQfinish(conn->conn);
 	free(conn);
+	error_notification(pool, timeout, error_string);
 }
 
 static void on_database_connect_read_ready(h2o_socket_t *sock, const char *err)
@@ -409,12 +411,10 @@ static void on_database_write_ready(h2o_socket_t *sock, const char *err)
 			LIBRARY_ERROR("PQflush", PQerrorMessage(conn->conn));
 			on_database_error(conn, DB_ERROR);
 		}
-		else {
-			if (send_status)
-				h2o_socket_notify_write(conn->sock, on_database_write_ready);
-
+		else if (send_status)
+			h2o_socket_notify_write(conn->sock, on_database_write_ready);
+		else
 			process_queries(conn);
-		}
 	}
 }
 
