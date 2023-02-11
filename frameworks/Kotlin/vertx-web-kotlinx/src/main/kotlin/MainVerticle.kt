@@ -26,7 +26,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
-    inline fun Route.checkedCoroutineHandler(crossinline requestHandler: suspend (RoutingContext) -> Unit): Route =
+    inline fun Route.checkedCoroutineHandlerUnconfined(crossinline requestHandler: suspend (RoutingContext) -> Unit): Route =
         handler { ctx ->
             /* Some conclusions from the Plaintext test results with trailing `await()`s:
                1. `launch { /*...*/ }` < `launch(start = CoroutineStart.UNDISPATCHED) { /*...*/ }` < `launch(Dispatchers.Unconfined) { /*...*/ }`.
@@ -111,7 +111,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
     }
 
     inline fun <reified T : Any> Route.jsonResponseHandler(crossinline requestHandler: suspend (RoutingContext) -> @Serializable T) =
-        checkedCoroutineHandler {
+        checkedCoroutineHandlerUnconfined {
             it.response().run {
                 putJsonResponseHeader()
                 end(Json.encodeToString(requestHandler(it)))/*.await()*/
@@ -140,7 +140,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
             selectRandomWorlds(queries)
         }
 
-        get("/fortunes").checkedCoroutineHandler {
+        get("/fortunes").checkedCoroutineHandlerUnconfined {
             val fortunes = mutableListOf<Fortune>()
             selectFortuneQuery.execute().await()
                 .mapTo(fortunes) { it.toFortune() }
@@ -197,7 +197,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
             updatedWorlds
         }
 
-        get("/plaintext").checkedCoroutineHandler {
+        get("/plaintext").checkedCoroutineHandlerUnconfined {
             it.response().run {
                 putCommonHeaders()
                 putHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
