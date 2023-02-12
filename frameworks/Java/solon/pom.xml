@@ -22,7 +22,7 @@
         </dependency>
         <dependency>
             <groupId>org.noear</groupId>
-            <artifactId>solon.serialization.fastjson2</artifactId>
+            <artifactId>solon.serialization.snack3</artifactId>
             <version>${solon.version}</version>
         </dependency>
     </dependencies>
