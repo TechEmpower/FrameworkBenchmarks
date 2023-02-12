@@ -6,7 +6,7 @@ RUN mvn compile assembly:single -q
 
 FROM openjdk:11.0.3-jdk-slim
 WORKDIR /solon
-COPY --from=maven /solon/target/solon-benchmark-1.0-jar-with-dependencies.jar app.jar
+COPY --from=maven /solon/target/solon-benchmark-jar-with-dependencies.jar app.jar
 
 EXPOSE 8080
 
