@@ -24,7 +24,8 @@
         "database_os": "Linux",
         "display_name": "cfml-lucee",
         "notes": "Lucee Server",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       },
       "adobe": {
         "json_url": "/json.cfm",

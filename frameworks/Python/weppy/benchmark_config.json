@@ -21,8 +21,7 @@
       "database_os": "Linux",
       "display_name": "weppy-Py2",
       "notes": "CPython 2.7",
-      "versus": "wsgi",
-      "tags": ["broken"]
+      "versus": "wsgi"
     },
     "py3": {
       "json_url": "/json",
@@ -67,7 +66,8 @@
       "database_os": "Linux",
       "display_name": "weppy-PyPy2",
       "notes": "PyPy2",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     },
     "nginx-uwsgi": {
       "json_url": "/json",
@@ -89,7 +89,8 @@
       "database_os": "Linux",
       "display_name": "weppy-nginx-uWSGI",
       "notes": "CPython 3.6",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     }
   }]
 }

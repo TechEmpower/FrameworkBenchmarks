@@ -152,7 +152,8 @@
       "database_os": "Linux",
       "display_name": "Flask",
       "notes": "",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     }
   }]
 }

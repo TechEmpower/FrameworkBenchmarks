@@ -93,7 +93,8 @@
       "database_os": "Linux",
       "display_name": "Vapor",
       "notes": "",
-      "versus": "None"
+      "versus": "None",
+      "tags": ["broken"]
     },
     "mongo": {
       "db_url": "/db",

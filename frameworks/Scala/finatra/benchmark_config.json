@@ -17,7 +17,8 @@
       "os": "Linux",
       "display_name": "finatra",
       "notes": "",
-      "versus": "finagle"
+      "versus": "finagle",
+      "tags": ["broken"]
     }
   }]
 }
