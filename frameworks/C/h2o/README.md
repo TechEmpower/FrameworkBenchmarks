@@ -11,8 +11,8 @@ builds directly on top of `libh2o` instead of running the standalone server.
 
 ## Test implementations
 
-The test implementations are located into the `src/handlers` directory - refer to the
-`initialize_*_handler*()` functions.
+The test implementations are located into the [src/handlers](src/handlers) directory - refer to
+the `initialize_*_handler*()` functions.
 
 ## Performance tuning
 
