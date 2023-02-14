@@ -12,7 +12,7 @@ edition = "2021"
 raw = []
 
 [dependencies]
-anansi = { git = "https://github.com/saru-tora/anansi", rev = "2567157", features = ["postgres", "minimal", "redis"] }
+anansi = { git = "https://github.com/saru-tora/anansi", rev = "7098e09", features = ["postgres", "minimal", "redis"] }
 async-trait = "0.1.57"
 rand = "0.8.4"
 serde = { version = "1.0", features = ["derive"] }
