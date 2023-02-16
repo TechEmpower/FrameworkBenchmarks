@@ -7,14 +7,14 @@ tasks.wrapper {
 }
 
 plugins {
-    kotlin("jvm") version "1.8.0"
+    kotlin("jvm") version "1.8.10"
     application
     id("nu.studer.rocker") version "3.0.4"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "io.vertx"
-version = "4.3.7"
+version = "4.3.8"
 
 repositories {
     mavenCentral()
@@ -24,7 +24,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation(platform("io.vertx:vertx-stack-depchain:$version"))
     implementation("io.vertx:vertx-core")
-    implementation("com.fasterxml.jackson.module:jackson-module-blackbird:2.14.1")
+    implementation("com.fasterxml.jackson.module:jackson-module-blackbird:2.14.2")
     implementation("io.vertx:vertx-web")
     implementation("io.vertx:vertx-pg-client")
     implementation("io.vertx:vertx-web-templ-rocker")
