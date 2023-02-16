@@ -6,7 +6,7 @@ tasks.wrapper {
 }
 
 plugins {
-    val kotlinVersion = "1.8.0"
+    val kotlinVersion = "1.8.10"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.serialization") version kotlinVersion
     application
@@ -16,7 +16,7 @@ repositories {
     mavenCentral()
 }
 
-val vertxVersion = "4.3.7"
+val vertxVersion = "4.3.8"
 dependencies {
     implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
     implementation("io.vertx:vertx-web")
