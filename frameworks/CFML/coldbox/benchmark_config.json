@@ -24,8 +24,7 @@
         "database_os": "Linux",
         "display_name": "coldbox-lucee",
         "notes": "Coldbox MVC on Lucee Server",
-        "versus": "cfml",
-        "tags": ["broken"]
+        "versus": "cfml"
       },
       "adobe": {
         "json_url": "/index.cfm?event=main.json",
