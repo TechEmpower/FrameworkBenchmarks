@@ -1,10 +1,7 @@
 #[macro_use]
 extern crate diesel;
 
-use std::{
-    convert::identity,
-    thread::{available_parallelism, spawn},
-};
+use std::{convert::identity, thread::available_parallelism};
 
 use diesel_async::{
     pooled_connection::{bb8::Pool, AsyncDieselConnectionManager},
@@ -107,7 +104,8 @@ async fn populate_cache(pool: Pool<AsyncPgConnection>) -> Result<()> {
     Ok(())
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let max = available_parallelism().map(|n| n.get()).unwrap_or(16) as u32;
 
     let pool = Pool::<AsyncPgConnection>::builder()
@@ -116,12 +114,8 @@ fn main() {
         .idle_timeout(None)
         .build_unchecked(AsyncDieselConnectionManager::new(DB_URL));
 
-    let rt = tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap();
-
-    rt.block_on(populate_cache(pool.clone()))
+    populate_cache(pool.clone())
+        .await
         .expect("cache insert failed");
 
     let rng = WyRand::new();
@@ -137,18 +131,7 @@ fn main() {
             .with(State::new(rng)),
     );
 
-    for _ in 1..max {
-        let service = service.clone();
-        spawn(move || {
-            let rt = tokio::runtime::Builder::new_current_thread()
-                .enable_all()
-                .build()
-                .unwrap();
-            rt.block_on(serve(service));
-        });
-    }
-
-    rt.block_on(serve(service));
+    serve(service).await;
 }
 
 async fn serve(service: ServiceMaker) {
