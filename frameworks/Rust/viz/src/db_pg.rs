@@ -165,9 +165,7 @@ impl PgConnection {
             params.push(&w.id);
         }
 
-        self.client
-            .query(&self.updates[num - 1], &params[..])
-            .await?;
+        self.client.query(&self.updates[num - 1], &params).await?;
 
         Ok(worlds)
     }
