@@ -1,4 +1,4 @@
-FROM gradle:7.6-jdk17
+FROM gradle:8.0-jdk17
 
 WORKDIR /vertx-web-kotlinx
 COPY build.gradle.kts build.gradle.kts
