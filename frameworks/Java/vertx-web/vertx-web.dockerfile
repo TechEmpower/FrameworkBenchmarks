@@ -1,4 +1,4 @@
-FROM maven:3.9.0-eclipse-temurin-19 as maven
+FROM maven:3.9.0-eclipse-temurin-17 as maven
 WORKDIR /vertx-web
 COPY scripts scripts
 COPY src src
