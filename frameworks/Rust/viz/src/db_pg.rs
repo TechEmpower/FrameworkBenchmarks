@@ -1,6 +1,6 @@
 use std::{borrow::Cow, fmt::Write, io, sync::Arc};
 
-use futures_util::{stream::FuturesUnordered, TryStreamExt};
+use futures_util::{stream::FuturesUnordered, TryFutureExt, TryStreamExt};
 use nanorand::{Rng, WyRand};
 use tokio_postgres::{connect, types::ToSql, Client, NoTls, Statement};
 use viz::{Error, IntoResponse, Response, StatusCode};
@@ -144,11 +144,10 @@ impl PgConnection {
             let id = rng.generate_range(RANGE);
             let rid = rng.generate_range(RANGE);
 
-            worlds.push(async move {
-                let mut world = self.query_one_world(id).await?;
+            worlds.push(self.query_one_world(id).map_ok(move |mut world| {
                 world.randomnumber = rid;
-                Ok::<World, PgError>(world)
-            });
+                world
+            }));
         }
 
         let worlds = worlds.try_collect::<Vec<World>>().await?;
