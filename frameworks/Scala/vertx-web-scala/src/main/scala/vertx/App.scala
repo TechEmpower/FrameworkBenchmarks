@@ -10,7 +10,7 @@ import com.typesafe.scalalogging.Logger
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.http.HttpHeaders
 import io.vertx.core.json.{JsonArray, JsonObject}
-import io.vertx.core.{AsyncResult, VertxOptions => JVertxOptions}
+import io.vertx.core.{AsyncResult, Handler, VertxOptions => JVertxOptions}
 import io.vertx.lang.scala.{ScalaVerticle, VertxExecutionContext}
 import io.vertx.pgclient._
 import io.vertx.scala.core.http.{HttpServer, HttpServerRequest, HttpServerResponse}
@@ -20,6 +20,7 @@ import io.vertx.sqlclient._
 import vertx.model.{Fortune, Message, World}
 
 import scala.collection.JavaConverters._
+import scala.concurrent.{Future, Promise}
 import scala.util.{Failure, Sorting, Success, Try}
 
 case class Header(name: CharSequence, value: String)
@@ -37,12 +38,11 @@ class App extends ScalaVerticle {
   private var dateString: String = ""
 
   private var server: HttpServer = _
-  private var client: PgPool = _
-  private var pool: PgPool = _
+  private var client: PgConnection = _
 
   private def refreshDateHeader(): Unit = dateString = App.createDateHeader()
 
-  override def start(): Unit = {
+  override def startFuture(): Future[_] = {
     refreshDateHeader()
     vertx.setPeriodic(1000, (_: Long) => refreshDateHeader())
 
@@ -53,10 +53,18 @@ class App extends ScalaVerticle {
       .setUser(config.getString("username"))
       .setPassword(config.getString("password"))
       .setCachePreparedStatements(true)
+      .setPipeliningLimit(100000)
 
     val jVertx = vertx.asJava.asInstanceOf[io.vertx.core.Vertx]
-    client = PgPool.pool(jVertx, pgConnectOptions, new PoolOptions().setMaxSize(1))
-    pool = PgPool.pool(jVertx, pgConnectOptions, new PoolOptions().setMaxSize(4))
+    val pgConnectionPromise = Promise[Unit]
+    PgConnection.connect(
+      jVertx,
+      pgConnectOptions,
+      (ar => {
+        client = ar.result()
+        pgConnectionPromise.success()
+      }): Handler[AsyncResult[PgConnection]]
+    )
 
     val router = Router.router(vertx)
     router.get("/plaintext").handler(context => handlePlainText(context.request()))
@@ -68,7 +76,12 @@ class App extends ScalaVerticle {
 
     val port = 8080
     server = vertx.createHttpServer()
-    server.requestHandler(router.accept).listen(port)
+    val httpServerPromise = Promise[Unit]
+    server
+      .requestHandler(router.accept)
+      .listen(port, (_ => httpServerPromise.success()): Handler[AsyncResult[HttpServer]])
+
+    pgConnectionPromise.future.flatMap(_ => httpServerPromise.future)
   }
 
   override def stop(): Unit = Option(server).foreach(_.close())
@@ -156,7 +169,6 @@ class App extends ScalaVerticle {
         .executeBatch(
           batch,
           (ar: AsyncResult[RowSet[Row]]) => {
-            conn.close()
             if (ar.failed) {
               sendError(ar.cause)
               return
@@ -173,40 +185,30 @@ class App extends ScalaVerticle {
     var failed = false
     var queryCount = 0
 
-    pool.getConnection((ar1: AsyncResult[SqlConnection]) => {
-      if (ar1.failed) {
-        failed = true
-        sendError(ar1.cause)
-        return
-      }
-      val conn = ar1.result
-      var i = 0
-      while (i < worlds.length) {
-        val id = App.randomWorld()
-        val index = i
-        conn
-          .preparedQuery("SELECT id, randomnumber from WORLD where id=$1")
-          .execute(
-            Tuple.of(id, Nil: _*),
-            (ar2: AsyncResult[RowSet[Row]]) => {
-              if (!failed) {
-                if (ar2.failed) {
-                  conn.close()
-                  failed = true
-                  sendError(ar2.cause)
-                  return
-                }
-                worlds(index) = World(ar2.result.iterator.next.getInteger(0), App.randomWorld())
-                queryCount += 1
-                if (queryCount == worlds.length) handleUpdates(conn, worlds)
+    var i = 0
+    while (i < worlds.length) {
+      val id = App.randomWorld()
+      val index = i
+      client
+        .preparedQuery("SELECT id, randomnumber from WORLD where id=$1")
+        .execute(
+          Tuple.of(id, Nil: _*),
+          (ar2: AsyncResult[RowSet[Row]]) => {
+            if (!failed) {
+              if (ar2.failed) {
+                failed = true
+                sendError(ar2.cause)
+                return
               }
+              worlds(index) = World(ar2.result.iterator.next.getInteger(0), App.randomWorld())
+              queryCount += 1
+              if (queryCount == worlds.length) handleUpdates(client, worlds)
             }
-          )
+          }
+        )
 
-        i += 1
-      }
-
-    })
+      i += 1
+    }
   }
 
   private def handleFortunes(request: HttpServerRequest): Unit =
