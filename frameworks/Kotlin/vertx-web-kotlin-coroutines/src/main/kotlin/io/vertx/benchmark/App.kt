@@ -16,13 +16,13 @@ import io.vertx.ext.web.templ.rocker.RockerTemplateEngine
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.await
 import io.vertx.kotlin.pgclient.pgConnectOptionsOf
-import io.vertx.kotlin.sqlclient.poolOptionsOf
-import io.vertx.pgclient.PgPool
+import io.vertx.pgclient.PgConnection
 import io.vertx.sqlclient.Tuple
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import java.net.UnknownHostException
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.system.exitProcess
@@ -55,35 +55,40 @@ class App : CoroutineVerticle() {
     inline fun Route.checkedCoroutineHandlerUnconfined(crossinline requestHandler: suspend (RoutingContext) -> Unit): Route =
         coroutineHandlerUnconfined { ctx -> ctx.checkedRun { requestHandler(ctx) } }
 
+    suspend fun PgClientBenchmark(vertx: Vertx, config: JsonObject): PgClientBenchmark {
+        val options = with(config) {
+            pgConnectOptionsOf(
+                cachePreparedStatements = true,
+                host = getString("host"),
+                port = getInteger("port", 5432),
+                user = getString("username"),
+                password = getString("password"),
+                database = config.getString("database"),
+                pipeliningLimit = 100000 // Large pipelining means less flushing and we use a single connection anyway;
+            )
+        }
+
+        return PgClientBenchmark(
+            try {
+                PgConnection.connect(vertx, options).await()
+            } catch (e: UnknownHostException) {
+                null
+            },
+            RockerTemplateEngine.create()
+        )
+    }
+
     /**
      * PgClient implementation
      */
-    private inner class PgClientBenchmark(vertx: Vertx, config: JsonObject) {
-        private val client: PgPool
-
+    inner class PgClientBenchmark(
+        private val client: PgConnection?,
         // In order to use a template we first need to create an engine
         private val engine: RockerTemplateEngine
-
-        init {
-            val options = with(config) {
-                pgConnectOptionsOf(
-                    cachePreparedStatements = true,
-                    host = getString("host"),
-                    port = getInteger("port", 5432),
-                    user = getString("username"),
-                    password = getString("password"),
-                    database = config.getString("database"),
-                    pipeliningLimit = 100000 // Large pipelining means less flushing and we use a single connection anyway;
-                )
-            }
-
-            client = PgPool.pool(vertx, options, poolOptionsOf(maxSize = 4))
-            engine = RockerTemplateEngine.create()
-        }
-
+    ) {
         suspend fun dbHandler(ctx: RoutingContext) {
             val result = try {
-                client
+                client!!
                     .preparedQuery(SELECT_WORLD)
                     .execute(Tuple.of(randomWorld()))
                     .await()
@@ -117,7 +122,7 @@ class App : CoroutineVerticle() {
             val cnt = intArrayOf(0)
             List(queries) {
                 async {
-                    val result = `try` { client.preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld())).await() }
+                    val result = `try` { client!!.preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld())).await() }
 
                     if (!failed[0]) {
                         if (result is Try.Failure) {
@@ -146,7 +151,7 @@ class App : CoroutineVerticle() {
         }
 
         suspend fun fortunesHandler(ctx: RoutingContext) {
-            val result = client.preparedQuery(SELECT_FORTUNE).execute().await()
+            val result = client!!.preparedQuery(SELECT_FORTUNE).execute().await()
 
             val resultSet = result.iterator()
             if (!resultSet.hasNext()) {
@@ -180,7 +185,7 @@ class App : CoroutineVerticle() {
             List(worlds.size) {
                 val id = randomWorld()
                 async {
-                    val r2 = `try` { client.preparedQuery(SELECT_WORLD).execute(Tuple.of(id)).await() }
+                    val r2 = `try` { client!!.preparedQuery(SELECT_WORLD).execute(Tuple.of(id)).await() }
 
                     if (!failed[0]) {
                         if (r2 is Try.Failure) {
@@ -198,7 +203,7 @@ class App : CoroutineVerticle() {
                                 batch.add(Tuple.of(world.randomNumber, world.id))
                             }
                             ctx.checkedRun {
-                                client.preparedQuery(UPDATE_WORLD)
+                                client!!.preparedQuery(UPDATE_WORLD)
                                     .executeBatch(batch)
                                     .await()
                                 ctx.response()
