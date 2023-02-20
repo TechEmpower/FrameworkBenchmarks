@@ -7,6 +7,7 @@ use std::borrow::Cow;
 use anansi::db::DbRow;
 use rand::Rng;
 use std::fmt::Write;
+use tokio_postgres::types::ToSql;
 
 thread_local!(static UPDATES: Vec<Cow<'static, str>> = {
     let mut updates = vec![Cow::from("")];
@@ -55,8 +56,7 @@ fn base<R: Request>(_req: &mut R) -> Result<Response> {}
 #[viewer]
 impl<R: Request> WorldView<R> {
     async fn get_world(req: &R) -> Result<PgDbRow> {
-        PgQuery::new("SELECT * FROM world WHERE id = $1")
-            .bind(random_num())
+        PgQuery::new("SELECT * FROM world WHERE id = $1", &[&random_num()])
             .fetch_one(req)
             .await
     }
@@ -90,7 +90,7 @@ impl<R: Request> WorldView<R> {
     #[view(Site::is_visitor)]
     pub async fn raw_fortunes(req: &mut R) -> Result<Response> {
         let title = "Fortunes";
-        let rows = PgQuery::new("SELECT * FROM fortune")
+        let rows = PgQuery::new("SELECT * FROM fortune", &[])
             .fetch_all(req)
             .await?;
         let mut fortunes = vec![Fortune {
@@ -113,21 +113,25 @@ impl<R: Request> WorldView<R> {
         UPDATES.with(|u| {
             update = u[q].clone();
         });
-        let mut updates = PgQuery::new(&update);
+        let mut params: Vec<&(dyn ToSql + Sync)> = Vec::with_capacity(q * 3);
         for _ in 0..q {
             let row = Self::get_world(req).await?;
             let world = World {
                 id: row.try_i32("id")?,
                 randomnumber: random_num(),
             };
-            updates = updates.bind(world.id)
-                .bind(world.randomnumber);
             worlds.push(world);
         }
         for world in &worlds {
-            updates = updates.bind(world.id);
+            params.push(&world.id);
+            params.push(&world.randomnumber);
         }
-        updates.execute(req).await?;
+        for world in &worlds {
+            params.push(&world.id);
+        }
+        PgQuery::new(&update, params.as_slice())
+            .execute(req)
+            .await?;
         Response::json(&worlds)
     }
 }
