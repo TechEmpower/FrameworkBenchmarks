@@ -10,29 +10,8 @@ the [Python README](../).
 
 ## Description# Starlite
 
-Starlite is a light, opinionated and flexible ASGI API framework built on top
-of [pydantic](https://github.com/samuelcolvin/pydantic) and [Starlette](https://github.com/encode/starlette).
+Starlite is a powerful, performant, flexible and opinionated ASGI framework,
+offering first class typing support and a full [Pydantic](https://github.com/samuelcolvin/pydantic)
+integration.
 
-## Core Features
-
-* 👉 Class based controllers
-* 👉 Decorators based configuration
-* 👉 Extended testing support
-* 👉 Extensive typing support including inference, validation and parsing
-* 👉 Full async (ASGI) support
-* 👉 Layered dependency injection
-* 👉 OpenAPI 3.1 schema generation with [Redoc](https://github.com/Redocly/redoc) UI
-* 👉 Route guards based authorization
-* 👉 Simple middleware and authentication
-* 👉 Support for pydantic models and pydantic dataclasses
-* 👉 Support for standard library dataclasses
-* 👉 Ultra-fast json serialization and deserialization using [orjson](https://github.com/ijl/orjson)
-
-## Test Paths & Sources
-
-The API is implemented in a single file ([app.py](app.py)). This Test is based on the Starlette tests.
-
-## Resources
-
-* [Starlite Documentation 📚](https://starlite-api.github.io/starlite/)
-* [Starlite Repository ](https://github.com/starlite-api/starlite)
+Check out the [documentation 📚](https://starlite-api.github.io/starlite/).
