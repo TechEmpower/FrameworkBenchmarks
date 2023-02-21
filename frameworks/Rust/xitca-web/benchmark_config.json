@@ -62,8 +62,7 @@
         "database_os": "Linux",
         "display_name": "xitca-web [io-uring]",
         "notes": "",
-        "versus": "",
-        "tags": ["broken"]
+        "versus": ""
       },
       "wasm": {
         "plaintext_url": "/plaintext",
@@ -80,8 +79,7 @@
         "database_os": "linux",
         "display_name": "xitca-web [wasm]",
         "notes": "",
-        "versus": "",
-        "tags": ["broken"]
+        "versus": ""
       }
     }
   ]

@@ -22,8 +22,7 @@
       "database_os": "Linux",
       "display_name": "Open Swoole",
       "notes": "",
-      "versus": "php",
-      "tags": ["broken"]
+      "versus": "php"
     },
     "postgres": {
       "db_url": "/db",
@@ -65,8 +64,7 @@
       "database_os": "Linux",
       "display_name": "Open Swoole no-async",
       "notes": "Without async db pool connection",
-      "versus": "php",
-      "tags": ["broken"]
+      "versus": "php"
     }
   }]
 }
