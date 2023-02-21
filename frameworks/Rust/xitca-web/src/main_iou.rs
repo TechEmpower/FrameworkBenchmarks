@@ -16,32 +16,26 @@ use std::{
     fmt,
     future::{poll_fn, Future},
     io,
+    pin::pin,
 };
 
 use futures_util::stream::Stream;
-use tracing::{span, Level};
-use xitca_http::http::const_header_value::TEXT_HTML_UTF8;
 use xitca_http::{
-    body::{BodySize, Once},
+    body::Once,
     date::DateTimeService,
     h1::proto::context::Context,
     http::{
-        const_header_value::TEXT,
+        const_header_value::{TEXT, TEXT_HTML_UTF8},
         header::{CONTENT_TYPE, SERVER},
-        IntoResponse, Response, StatusCode,
+        IntoResponse, Request, RequestExt, Response, StatusCode,
     },
-    util::{
-        middleware::Logger,
-        service::context::{Context as Ctx, ContextBuilder},
-    },
-    Request,
+    util::service::context::{Context as Ctx, ContextBuilder},
 };
 use xitca_io::{
     bytes::{Buf, Bytes, BytesMut},
     net::TcpStream,
 };
-use xitca_service::{fn_service, ready::ReadyService, Service, ServiceExt};
-use xitca_unsafe_collection::pin;
+use xitca_service::{fn_service, ready::ReadyService, Service};
 
 use self::{
     db::Client,
@@ -49,13 +43,9 @@ use self::{
 };
 
 fn main() -> io::Result<()> {
-    tracing_subscriber::fmt()
-        .with_env_filter("[xitca-iou]=trace")
-        .init();
     xitca_server::Builder::new()
         .bind("xitca-iou", "0.0.0.0:8080", || {
             Http1IOU::new(ContextBuilder::new(|| db::create(DB_URL)).service(fn_service(handler)))
-                .enclosed(Logger::with_span(span!(Level::ERROR, "xitca-iou")))
         })?
         .build()
         .wait()
@@ -140,7 +130,7 @@ where
 // runner for http service.
 impl<S> Service<TcpStream> for Http1IOUService<S>
 where
-    S: Service<Request<()>, Response = Response<Once<Bytes>>>,
+    S: Service<Request<RequestExt<()>>, Response = Response<Once<Bytes>>>,
     S::Error: fmt::Debug,
 {
     type Response = ();
@@ -172,9 +162,8 @@ where
 
                 while let Some((req, _)) = ctx.decode_head::<65535>(&mut read_buf).unwrap() {
                     let (parts, body) = self.service.call(req).await.unwrap().into_parts();
-                    let size = BodySize::from_stream(&body);
-                    let mut encoder = ctx.encode_head(parts, size, &mut write_buf).unwrap();
-                    pin!(body);
+                    let mut encoder = ctx.encode_head(parts, &body, &mut write_buf).unwrap();
+                    let mut body = pin!(body);
                     while let Some(chunk) = poll_fn(|cx| body.as_mut().poll_next(cx)).await {
                         let chunk = chunk.unwrap();
                         encoder.encode(chunk, &mut write_buf);
@@ -193,7 +182,9 @@ where
                     write_buf = w;
                 }
 
-                read_buf.reserve(4096 - read_buf.capacity());
+                if read_buf.capacity() < 256 {
+                    read_buf.reserve(4096);
+                }
             }
 
             Ok(())
