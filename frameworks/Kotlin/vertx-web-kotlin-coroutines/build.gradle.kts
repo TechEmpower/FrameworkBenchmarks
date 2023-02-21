@@ -1,25 +1,30 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+tasks.wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+}
+
 plugins {
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "1.8.10"
     application
     id("nu.studer.rocker") version "3.0.4"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "io.vertx"
-version = "4.1.5"
+version = "4.3.8"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation(platform("io.vertx:vertx-stack-depchain:$version"))
     implementation("io.vertx:vertx-core")
-    implementation("com.fasterxml.jackson.module:jackson-module-blackbird:2.12.4")
+    implementation("com.fasterxml.jackson.module:jackson-module-blackbird:2.14.2")
     implementation("io.vertx:vertx-web")
     implementation("io.vertx:vertx-pg-client")
     implementation("io.vertx:vertx-web-templ-rocker")
@@ -33,13 +38,13 @@ rocker {
         create("main") {
             templateDir.set(file("src/main/resources"))
             optimize.set(true)
-            javaVersion.set("1.8")
+            javaVersion.set("17")
         }
     }
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
+    compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
 }
 
 

@@ -1,4 +1,4 @@
-FROM maven:3.6.1-jdk-11-slim as maven
+FROM maven:3.9.0-eclipse-temurin-17 as maven
 WORKDIR /vertx
 COPY src src
 COPY pom.xml pom.xml
@@ -14,7 +14,6 @@ CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'` && \
       -server \
       -XX:+UseNUMA \
       -XX:+UseParallelGC \
-      -XX:+AggressiveOpts \
       -Dvertx.disableMetrics=true \
       -Dvertx.disableH2c=true \
       -Dvertx.disableWebsockets=true \
