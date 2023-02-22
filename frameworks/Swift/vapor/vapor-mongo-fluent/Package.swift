@@ -13,7 +13,7 @@ let package = Package(
         .package(url: "https://github.com/vapor/vapor.git", from: "4.52.2"),
         .package(url: "https://github.com/vapor/fluent.git", from: "4.4.0"),
         .package(url: "https://github.com/vapor/fluent-mongo-driver.git", from: "1.0.2"),
-        .package(url: "https://github.com/orlandos-nl/MongoKitten.git", from: "6.7.1")
+        .package(url: "https://github.com/OpenKitten/MongoKitten.git", from: "6.7.1")
     ],
     targets: [
         .executableTarget(
