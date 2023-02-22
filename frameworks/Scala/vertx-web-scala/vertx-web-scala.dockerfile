@@ -1,13 +1,6 @@
-FROM openjdk:11-jdk
+FROM sbtscala/scala-sbt:eclipse-temurin-17.0.5_8_1.8.2_2.12.17
 
-ARG SBT_VERSION=1.2.8
-
-# Install sbt
-RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list
-RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | tee /etc/apt/sources.list.d/sbt_old.list
-RUN curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | apt-key add
-RUN apt-get update -yqq
-RUN apt-get install -yqq sbt
+ARG SBT_VERSION=1.8.2
 
 WORKDIR /vertx
 COPY src src
