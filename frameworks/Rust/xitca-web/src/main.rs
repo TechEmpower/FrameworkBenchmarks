@@ -5,9 +5,8 @@ mod db;
 mod ser;
 mod util;
 
-use std::{cell::RefCell, convert::Infallible, error::Error, fmt::Debug, io, sync::Mutex};
+use std::{cell::RefCell, convert::Infallible, error::Error, fmt::Debug, io};
 
-use simd_json_derive::Serialize;
 use xitca_http::{
     body::Once,
     bytes::{BufMutWriter, Bytes, BytesMut},
@@ -17,16 +16,12 @@ use xitca_http::{
         self,
         const_header_value::{JSON, TEXT, TEXT_HTML_UTF8},
         header::{CONTENT_TYPE, SERVER},
-        IntoResponse,
+        IntoResponse, RequestExt,
     },
-    request,
-    util::{
-        middleware::TcpConfig,
-        service::{
-            context::{object::ContextObjectConstructor, Context, ContextBuilder},
-            route::get,
-            GenericRouter,
-        },
+    util::service::{
+        context::{object::ContextObjectConstructor, Context, ContextBuilder},
+        route::get,
+        GenericRouter,
     },
     HttpServiceBuilder,
 };
@@ -37,50 +32,36 @@ use self::ser::Message;
 use self::util::{QueryParse, DB_URL, SERVER_HEADER_VALUE};
 
 type Response = http::Response<Once<Bytes>>;
-type Request = request::Request<RequestBody>;
+type Request = http::Request<RequestExt<RequestBody>>;
 type Ctx<'a> = Context<'a, Request, State>;
 
 fn main() -> io::Result<()> {
-    let cores = core_affinity::get_core_ids().unwrap_or_default();
-    let cores = Mutex::new(cores);
-
-    let builder = || {
-        let config = HttpServiceConfig::new()
-            .disable_vectored_write()
-            .max_request_headers::<8>();
-
-        let router = GenericRouter::with_custom_object::<ContextObjectConstructor<_, _>>()
-            .insert("/plaintext", get(fn_service(plain_text)))
-            .insert("/json", get(fn_service(json)))
-            .insert("/db", get(fn_service(db)))
-            .insert("/fortunes", get(fn_service(fortunes)))
-            .insert("/queries", get(fn_service(queries)))
-            .insert("/updates", get(fn_service(updates)))
-            .enclosed_fn(middleware_fn);
-
-        let service = ContextBuilder::new(|| async {
-            db::create(DB_URL).await.map(|client| {
-                let write_buf = RefCell::new(BytesMut::new());
-                State { client, write_buf }
-            })
-        })
-        .service(router);
-
-        let tcp_config = TcpConfig::new().set_nodelay(true);
-
-        HttpServiceBuilder::h1(service)
-            .config(config)
-            .enclosed(tcp_config)
-    };
-
     xitca_server::Builder::new()
-        .on_worker_start(move || {
-            if let Some(core) = cores.lock().unwrap().pop() {
-                core_affinity::set_for_current(core);
-            }
-            async {}
-        })
-        .bind("xitca-web", "0.0.0.0:8080", builder)?
+        .bind("xitca-web", "0.0.0.0:8080", || {
+            HttpServiceBuilder::h1(
+                ContextBuilder::new(|| async {
+                    db::create(DB_URL).await.map(|client| State {
+                        client,
+                        write_buf: RefCell::new(BytesMut::new()),
+                    })
+                })
+                .service(
+                    GenericRouter::with_custom_object::<ContextObjectConstructor<_, _>>()
+                        .insert("/plaintext", get(fn_service(plain_text)))
+                        .insert("/json", get(fn_service(json)))
+                        .insert("/db", get(fn_service(db)))
+                        .insert("/fortunes", get(fn_service(fortunes)))
+                        .insert("/queries", get(fn_service(queries)))
+                        .insert("/updates", get(fn_service(updates)))
+                        .enclosed_fn(middleware_fn),
+                ),
+            )
+            .config(
+                HttpServiceConfig::new()
+                    .disable_vectored_write()
+                    .max_request_headers::<8>(),
+            )
+        })?
         .build()
         .wait()
 }
@@ -138,10 +119,10 @@ async fn updates(ctx: Ctx<'_>) -> Result<Response, Box<dyn Error>> {
 
 fn _json<S>(req: Request, state: &State, value: &S) -> Result<Response, Box<dyn Error>>
 where
-    S: ?Sized + Serialize,
+    S: ?Sized + serde::Serialize,
 {
     let mut buf = state.write_buf.borrow_mut();
-    value.json_write(&mut BufMutWriter(&mut *buf))?;
+    serde_json::to_writer(BufMutWriter(&mut *buf), value)?;
     let body = buf.split().freeze();
     let mut res = req.into_response(body);
     res.headers_mut().append(CONTENT_TYPE, JSON);

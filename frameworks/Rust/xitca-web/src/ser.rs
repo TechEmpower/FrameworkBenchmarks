@@ -1,21 +1,14 @@
 use std::borrow::Cow;
 
-use sailfish::TemplateOnce;
-
-#[cfg(feature = "serde")]
-use serde::Serialize;
-#[cfg(feature = "simd")]
-use simd_json_derive::Serialize;
-
-#[derive(Serialize)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
 pub struct Message {
     message: &'static str,
 }
 
 impl Message {
-    #[inline]
     #[allow(dead_code)]
-    pub(super) fn new() -> Self {
+    #[inline]
+    pub(super) const fn new() -> Self {
         Self {
             message: "Hello, World!",
         }
@@ -23,17 +16,18 @@ impl Message {
 }
 
 #[allow(non_snake_case)]
+#[derive(Debug)]
 #[cfg_attr(feature = "orm", derive(Queryable))]
-#[derive(Debug, Serialize)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize))]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,
 }
 
 impl World {
-    #[inline]
     #[allow(dead_code)]
-    pub fn new(id: i32, randomnumber: i32) -> Self {
+    #[inline]
+    pub const fn new(id: i32, randomnumber: i32) -> Self {
         Self { id, randomnumber }
     }
 }
@@ -54,15 +48,18 @@ impl Fortune {
     }
 }
 
-#[derive(TemplateOnce)]
-#[template(path = "fortune.stpl", rm_whitespace = true)]
+#[cfg_attr(
+    feature = "sailfish",
+    derive(sailfish::TemplateOnce),
+    template(path = "fortune.stpl", rm_whitespace = true)
+)]
 pub struct Fortunes {
     items: Vec<Fortune>,
 }
 
 impl Fortunes {
     #[inline]
-    pub fn new(items: Vec<Fortune>) -> Self {
+    pub const fn new(items: Vec<Fortune>) -> Self {
         Self { items }
     }
 }
