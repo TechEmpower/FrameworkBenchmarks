@@ -28,8 +28,10 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.DefaultHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.util.AsciiString;
 import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
@@ -88,6 +90,20 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		// fast path
+		if (msg == LastHttpContent.EMPTY_LAST_CONTENT) {
+			return;
+		}
+		if (msg.getClass() == DefaultHttpRequest.class) {
+			DefaultHttpRequest request = (DefaultHttpRequest) msg;
+			process(ctx, request);
+		} else {
+			channelReadSlowPath(ctx, msg);
+		}
+	}
+
+	private void channelReadSlowPath(ChannelHandlerContext ctx, Object msg) throws Exception {
+		// slow path
 		if (msg instanceof HttpRequest) {
 			try {
 				HttpRequest request = (HttpRequest) msg;
