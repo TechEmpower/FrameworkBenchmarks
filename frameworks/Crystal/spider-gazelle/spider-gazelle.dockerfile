@@ -1,5 +1,5 @@
 FROM 84codes/crystal:1.7.2-alpine
-RUN apk add --update --no-cache gmp-dev
+RUN apk add --update --no-cache bash gmp-dev
 
 WORKDIR /usr/src/app
 
