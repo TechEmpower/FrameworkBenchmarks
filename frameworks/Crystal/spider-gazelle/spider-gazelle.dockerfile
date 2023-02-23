@@ -5,6 +5,7 @@ WORKDIR /usr/src/app
 
 COPY shard.yml ./
 COPY src src
+COPY run.sh run.sh
 
 # Build App
 RUN shards build --release --no-debug
@@ -17,4 +18,4 @@ ENV SG_ENV production
 EXPOSE 8080
 ENTRYPOINT []
 
-CMD bin/app -w $(nproc) -b 0.0.0.0 -p 8080
+CMD bash run.sh
