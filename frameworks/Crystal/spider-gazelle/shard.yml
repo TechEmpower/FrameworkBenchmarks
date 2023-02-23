@@ -4,7 +4,6 @@ version: 1.0.0
 dependencies:
   action-controller:
     github: spider-gazelle/action-controller
-    version: "5.6.0"
 
   pg-orm:
     github: spider-gazelle/pg-orm
@@ -13,7 +12,6 @@ dependencies:
   # Generic template interface for Crystal
   kilt:
     github: jeromegn/kilt
-    version: "0.6.1"
 
 # compile target
 targets:
