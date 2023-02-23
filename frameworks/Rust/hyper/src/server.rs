@@ -2,14 +2,13 @@ use std::io;
 use std::net::SocketAddr;
 use std::thread;
 
-use futures::{Future, Stream};
 use hyper::server::conn::Http;
-use tokio_core::net::{TcpListener, TcpStream};
-use tokio_core::reactor::{Core, Handle};
+use tokio::net::{TcpListener, TcpStream};
+use tokio::runtime::{Builder as RuntimeBuilder, Handle};
 
 pub(crate) fn run<F>(per_connection: F)
 where
-    F: Fn(TcpStream, &mut Http, &Handle) + Clone + Send + 'static,
+    F: Fn(TcpStream, &mut Http, Handle) + Clone + Send + 'static,
 {
     // Spawn a thread for each available core, minus one, since we'll
     // reuse the main thread as a server thread as well.
@@ -24,33 +23,41 @@ where
 
 fn server_thread<F>(per_connection: F)
 where
-    F: Fn(TcpStream, &mut Http, &Handle) + Send + 'static,
+    F: Fn(TcpStream, &mut Http, Handle) + Send + 'static,
 {
     let mut http = Http::new();
     http.http1_only(true);
 
     // Our event loop...
-    let mut core = Core::new().expect("core");
+    let core = RuntimeBuilder::new_current_thread()
+        .enable_all()
+        .build()
+        .expect("runtime");
     let handle = core.handle();
 
     // Bind to 0.0.0.0:8080
     let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
-    let tcp = reuse_listener(&addr, &handle).expect("couldn't bind to addr");
 
     // For every accepted connection, spawn an HTTP task
-    let server = tcp
-        .incoming()
-        .for_each(move |(sock, _addr)| {
-            let _ = sock.set_nodelay(true);
-            per_connection(sock, &mut http, &handle);
-            Ok(())
-        })
-        .map_err(|e| eprintln!("accept error: {}", e));
+    let server = async move {
+        let tcp = reuse_listener(&addr).expect("couldn't bind to addr");
+        loop {
+            match tcp.accept().await {
+                Ok((sock, _)) => {
+                    let _ = sock.set_nodelay(true);
+                    per_connection(sock, &mut http, handle.clone());
+                }
+                Err(e) => {
+                    log::warn!("accept error: {}", e)
+                }
+            }
+        }
+    };
 
-    core.run(server).expect("server");
+    core.block_on(server);
 }
 
-fn reuse_listener(addr: &SocketAddr, handle: &Handle) -> io::Result<TcpListener> {
+fn reuse_listener(addr: &SocketAddr) -> io::Result<TcpListener> {
     let builder = match *addr {
         SocketAddr::V4(_) => net2::TcpBuilder::new_v4()?,
         SocketAddr::V6(_) => net2::TcpBuilder::new_v6()?,
@@ -66,7 +73,7 @@ fn reuse_listener(addr: &SocketAddr, handle: &Handle) -> io::Result<TcpListener>
 
     builder.reuse_address(true)?;
     builder.bind(addr)?;
-    builder
-        .listen(1024)
-        .and_then(|l| TcpListener::from_listener(l, addr, handle))
+    let listener = builder.listen(1024)?;
+    listener.set_nonblocking(true)?;
+    TcpListener::from_std(listener)
 }
