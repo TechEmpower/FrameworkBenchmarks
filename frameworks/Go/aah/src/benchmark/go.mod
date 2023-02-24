@@ -23,7 +23,7 @@ require (
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/urfave/cli v1.20.0 // indirect
 	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2 // indirect
-	golang.org/x/net v0.0.0-20190603091049-60506f45cf65 // indirect
+	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20181003184128-c57b0facaced // indirect
 	golang.org/x/sys v0.5.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
