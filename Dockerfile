@@ -10,6 +10,7 @@ RUN apt-get -yqq update && apt-get -yqq install \
       dstat                       `# Collect resource usage statistics` \
       git-core \
       libmysqlclient-dev          `# Needed for MySQL-python` \
+      libpq-dev \
       python-dev \
       python-pip \
       siege \
