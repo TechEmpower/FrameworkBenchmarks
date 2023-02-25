@@ -201,3 +201,35 @@ scenarios:
         path: /mvc/fortunes/ef
         serverPort: 8080
         connections: 512
+
+  fortunes_mvc_linq2db_pg:
+    db:
+      job: postgresql
+    application:
+      job: aspnetcore
+      source:
+          dockerFile: frameworks/CSharp/aspnetcore/aspcore-mvc-linq2db-pg.dockerfile
+          dockerImageName: aspcore-mvc-linq2db-pg
+    load:
+      job: wrk
+      variables:
+        presetHeaders: html
+        path: /mvc/fortunes/linq2db
+        serverPort: 8080
+        connections: 512
+
+  fortunes_mvc_linq2db_my:
+    db:
+      job: mysql
+    application:
+      job: aspnetcore
+      source:
+          dockerFile: frameworks/CSharp/aspnetcore/aspcore-mvc-linq2db-my.dockerfile
+          dockerImageName: aspcore-mvc-linq2db-my
+    load:
+      job: wrk
+      variables:
+        presetHeaders: html
+        path: /mvc/fortunes/linq2db
+        serverPort: 8080
+        connections: 512

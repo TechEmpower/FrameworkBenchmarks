@@ -11,6 +11,9 @@ using System.Data.Common;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using Microsoft.EntityFrameworkCore.Storage;
+using LinqToDB.AspNet;
+using LinqToDB;
+using LinqToDB.DataProvider.PostgreSQL;
 
 namespace Benchmarks;
 
@@ -63,6 +66,14 @@ public class Startup
                     .EnableThreadSafetyChecks(false));
             }
 
+            if (Scenarios.Any("LinqToDB"))
+            {
+                var options = new DataOptions()
+                    .UsePostgreSQL(appSettings.ConnectionString, PostgreSQLVersion.v15)
+                    .UseMappingSchema(ApplicationDataConnection.Mappings);
+                services.AddLinqToDBContext<ApplicationDataConnection>((_, _) => options);
+            }
+
             if (Scenarios.Any("Raw") || Scenarios.Any("Dapper"))
             {
                 services.AddSingleton<DbProviderFactory>(NpgsqlFactory.Instance);
@@ -74,11 +85,24 @@ public class Startup
             {
                 services.AddSingleton<DbProviderFactory>(MySqlConnectorFactory.Instance);
             }
+
+            if (Scenarios.Any("LinqToDB"))
+            {
+                var options = new DataOptions()
+                    .UseMySqlConnector(appSettings.ConnectionString)
+                    .UseMappingSchema(ApplicationDataConnection.Mappings);
+                services.AddLinqToDBContext<ApplicationDataConnection>((_, _) => options);
+            }
         }
 
         if (Scenarios.Any("Ef"))
         {
             services.AddScoped<EfDb>();
+        }
+
+        if (Scenarios.Any("LinqToDB"))
+        {
+            services.AddScoped<LinqToDBDb>();
         }
 
         if (Scenarios.Any("Raw"))
@@ -142,6 +166,11 @@ public class Startup
             app.UseFortunesEf();
         }
 
+        if (Scenarios.DbFortunesLinqToDB)
+        {
+            app.UseFortunesLinqToDB();
+        }
+
         // Single query endpoints
         if (Scenarios.DbSingleQueryRaw)
         {
@@ -156,6 +185,11 @@ public class Startup
         if (Scenarios.DbSingleQueryEf)
         {
             app.UseSingleQueryEf();
+        }
+
+        if (Scenarios.DbSingleQueryLinqToDB)
+        {
+            app.UseSingleQueryLinqToDB();
         }
 
         // Multiple query endpoints
@@ -174,6 +208,11 @@ public class Startup
             app.UseMultipleQueriesEf();
         }
 
+        if (Scenarios.DbMultiQueryLinqToDB)
+        {
+            app.UseMultipleQueriesLinqToDB();
+        }
+
         // Multiple update endpoints
         if (Scenarios.DbMultiUpdateRaw)
         {
@@ -188,6 +227,11 @@ public class Startup
         if (Scenarios.DbMultiUpdateEf)
         {
             app.UseMultipleUpdatesEf();
+        }
+
+        if (Scenarios.DbMultiUpdateLinqToDB)
+        {
+            app.UseMultipleUpdatesLinqToDB();
         }
 
         if (Scenarios.Any("Mvc"))

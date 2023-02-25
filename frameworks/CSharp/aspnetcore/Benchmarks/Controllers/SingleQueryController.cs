@@ -30,6 +30,13 @@ public class SingleQueryController : Controller
         return ExecuteQuery<EfDb>();
     }
 
+    [HttpGet("linq2db")]
+    [Produces("application/json")]
+    public Task<World> LinqToDB()
+    {
+        return ExecuteQuery<LinqToDBDb>();
+    }
+
     private Task<World> ExecuteQuery<T>() where T : IDb
     {
         var db = HttpContext.RequestServices.GetRequiredService<T>();
