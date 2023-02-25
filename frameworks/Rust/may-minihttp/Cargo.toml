@@ -14,18 +14,18 @@ log = { version = "0.4", features = ["release_max_level_off"] }
 mimalloc = { version = "0.1", default-features = false }
 nanorand = { version = "0.7", default-features = false, features = ["std", "wyrand"] }
 
-buf-min = { version = "0.7", features = ["bytes"] }
 yarte = { version = "0.15", features = ["bytes-buf", "json"] }
+buf-min = { version = "0.7", features = ["bytes"] }
 
-may = { version = "0.3.25", default-features = false }
-may_postgres = { git = "https://github.com/Xudong-Huang/may_postgres.git" }
-may_minihttp = { git = "https://github.com/Xudong-Huang/may_minihttp.git" }
+may = { version = "0.3", default-features = false }
+may_minihttp = { git = "https://github.com/Xudong-Huang/may_minihttp.git", rev = "dc8a146", default-features = false }
+may_postgres = { git = "https://github.com/Xudong-Huang/may_postgres.git", rev = "74e639d", default-features = false }
 
 [profile.release]
 opt-level = 3
 codegen-units = 1
 panic = 'abort'
-lto = "thin"
+lto = 'thin'
 debug = false
 incremental = false
 overflow-checks = false

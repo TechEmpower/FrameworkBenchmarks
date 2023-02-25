@@ -1,26 +1,31 @@
-FROM buildpack-deps:bionic
+FROM ubuntu:18.04
 
+ARG DEBIAN_FRONTEND=noninteractive
+# WARNING: DON'T PUT A SPACE AFTER ANY BACKSLASH OR APT WILL BREAK
 # One -q produces output suitable for logging (mostly hides
 # progress indicators)
-RUN apt-get -yqq update
+RUN apt-get -yqq update && apt-get -yqq install \
+      -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+      cloc \
+      dstat                       `# Collect resource usage statistics` \
+      git-core \
+      libmysqlclient-dev          `# Needed for MySQL-python` \
+      python-dev \
+      python-pip \
+      siege \
+      software-properties-common && \
+    pip install \
+      colorama==0.3.1 \
+      docker==4.0.2 \
+      MySQL-python \
+      psutil \
+      psycopg2-binary \
+      pymongo \
+      requests && \
+    # Fix for docker-py trying to import one package from the wrong location
+    cp -r /usr/local/lib/python2.7/dist-packages/backports/ssl_match_hostname \
+      /usr/lib/python2.7/dist-packages/backports
 
-# WARNING: DONT PUT A SPACE AFTER ANY BACKSLASH OR APT WILL BREAK
-RUN apt-get -yqq install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-  git-core \
-  cloc dstat                    `# Collect resource usage statistics` \
-  python-dev \
-  python-pip \
-  software-properties-common \
-  libmysqlclient-dev            `# Needed for MySQL-python`
-
-RUN pip install colorama==0.3.1 requests MySQL-python psycopg2-binary pymongo docker==4.0.2 psutil
-
-RUN apt-get install -yqq siege
-
-# Fix for docker-py trying to import one package from the wrong location
-RUN cp -r /usr/local/lib/python2.7/dist-packages/backports/ssl_match_hostname/ /usr/lib/python2.7/dist-packages/backports
-
-ENV PYTHONPATH /FrameworkBenchmarks
-ENV FWROOT /FrameworkBenchmarks
+ENV FWROOT=/FrameworkBenchmarks PYTHONPATH=/FrameworkBenchmarks
 
 ENTRYPOINT ["python", "/FrameworkBenchmarks/toolset/run-tests.py"]

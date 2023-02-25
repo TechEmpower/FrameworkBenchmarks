@@ -1,0 +1,52 @@
+{
+  "framework": "anansi",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?q=",
+        "update_url": "/updates?q=",
+        "cached_query_url": "/cached-queries?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "postgres",
+        "framework": "Anansi",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Anansi",
+        "notes": "",
+        "versus": "None"
+      },
+      "raw": {
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?q=",
+        "update_url": "/updates?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "postgres",
+        "framework": "Anansi",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Anansi [raw]",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

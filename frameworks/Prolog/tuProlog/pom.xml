@@ -12,7 +12,7 @@
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
         <tuprolog.version>0.18.2</tuprolog.version>
-        <vertx.version>4.1.2</vertx.version>
+        <vertx.version>4.3.8</vertx.version>
         <jackson.version>2.13.4.1</jackson.version>
     </properties>
 

@@ -88,7 +88,7 @@ async fn updates(
     for mut world in worlds {
         let random_number = (rng.gen::<u32>() % 10_000 + 1) as i32;
 
-        world.random_number = random_number as f32;
+        world.random_number = random_number;
         updated_worlds.push(world);
     }
 

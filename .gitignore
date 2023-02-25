@@ -1,6 +1,4 @@
-.DS_Store
 installs
-*.log
 node_modules/
 .travis.bak
 
@@ -65,3 +63,6 @@ benchmark.cfg
 
 # merge tooling
 *.orig
+
+# python
+.venv/

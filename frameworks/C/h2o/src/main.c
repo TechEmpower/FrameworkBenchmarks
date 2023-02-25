@@ -46,7 +46,7 @@
 	"[-b <bind address>] " \
 	"[-c <certificate file>] " \
 	"[-d <database connection string>] " \
-	"[-e <max pipelined database queries>] " \
+	"[-e <max pipelined database queries per database connection>] " \
 	"[-f <template file path>] " \
 	"[-j <max reused JSON generators>] " \
 	"[-k <private key file>] " \
@@ -264,7 +264,7 @@ static void set_default_options(config_t *config)
 		config->max_accept = 10;
 
 	if (!config->max_db_conn_num)
-		config->max_db_conn_num = 10;
+		config->max_db_conn_num = 1;
 
 	if (!config->max_pipeline_query_num)
 		config->max_pipeline_query_num = 16;

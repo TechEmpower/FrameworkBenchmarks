@@ -41,7 +41,7 @@
 #define FORTUNE_TABLE_NAME "Fortune"
 #define FORTUNE_QUERY "SELECT * FROM " FORTUNE_TABLE_NAME ";"
 #define ID_FIELD_NAME "id"
-#define MAX_IOVEC 64
+#define MAX_IOVEC 128
 #define MESSAGE_FIELD_NAME "message"
 #define NEW_FORTUNE_ID "0"
 #define NEW_FORTUNE_MESSAGE "Additional fortune added at request time."

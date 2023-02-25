@@ -181,7 +181,7 @@ begin
      {$endif WITH_LOGS}
      hsoIncludeDateHeader  // required by TPW General Test Requirements #5
     ] + flags);
-  fHttpServer.HttpQueueLength := 100000; // needed e.g. from wrk/ab benchmarks
+  fHttpServer.HttpQueueLength := 10000; // needed e.g. from wrk/ab benchmarks
   fHttpServer.Route.RunMethods([urmGet], self);
   // writeln(fHttpServer.Route.Tree[urmGet].ToText);
   fHttpServer.WaitStarted; // raise exception e.g. on binding issue
@@ -269,21 +269,18 @@ begin
   if not conn.IsConnected then
     conn.Connect;
   // specific code to use PostgresSQL pipelining mode
-  // see test_nosync in
+  // see test_multi_pipelines in
   // https://github.com/postgres/postgres/blob/master/src/test/modules/libpq_pipeline/libpq_pipeline.c
   stmt := conn.NewStatementPrepared(WORLD_READ_SQL, true, true);
-  //w/o transaction pg_stat_statements view returns calls-1 and tfb verify fails
-  conn.StartTransaction;
+  //conn.StartTransaction;
   pConn.EnterPipelineMode;
   pStmt := (stmt as TSqlDBPostgresStatement);
   for i := 0 to cnt - 1 do
   begin
     stmt.Bind(1, RandomWorld);
     pStmt.SendPipelinePrepared;
-    pConn.Flush;
+    pConn.PipelineSync;
   end;
-  pConn.SendFlushRequest;
-  pConn.Flush;
   for i := 0 to cnt - 1 do
   begin
     pStmt.GetPipelineResult;
@@ -292,9 +289,10 @@ begin
     res[i].id := pStmt.ColumnInt(0);
     res[i].randomNumber := pStmt.ColumnInt(1);
     pStmt.ReleaseRows;
+    pConn.CheckPipelineSync;
   end;
   pConn.ExitPipelineMode;
-  conn.commit;
+  //conn.commit;
   result := true;
 end;
 
@@ -373,9 +371,9 @@ var
   conn: TSqlDBConnection;
   stmt: ISQLDBStatement;
   list: TFortunes;
-  f: TFortune;
   arr: TDynArray;
   n: integer;
+  f: ^TFortune;
 begin
   conn := fDbPool.ThreadSafeConnection;
   stmt := conn.NewStatementPrepared(FORTUNES_SQL, true, true);
@@ -383,13 +381,13 @@ begin
   arr.Init(TypeInfo(TFortunes), list, @n);
   while stmt.Step do
   begin
+    f := arr.NewPtr;
     f.id := stmt.ColumnInt(0);
     f.message := stmt.ColumnUtf8(1);
-    arr.Add(f);
   end;
+  f := arr.NewPtr;
   f.id := 0;
   f.message := FORTUNES_MESSAGE;
-  arr.Add(f);
   arr.Sort(FortuneCompareByMessage);
   ctxt.OutContent := fTemplate.RenderDataArray(arr);
   ctxt.OutContentType := HTML_CONTENT_TYPE;

@@ -5,4 +5,4 @@ gunicorn==19.9.0
 itsdangerous==0.24
 meinheld==0.6.1
 uWSGI==2.0.17.1
-Werkzeug==0.15.3
+Werkzeug==0.15.5

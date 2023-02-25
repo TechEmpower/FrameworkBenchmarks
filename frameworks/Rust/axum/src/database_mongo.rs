@@ -89,7 +89,7 @@ pub async fn fetch_fortunes(db: Database) -> Result<Vec<Fortune>, MongoError> {
     }
 
     fortunes.push(Fortune {
-        id: 0.0,
+        id: 0,
         message: "Additional fortune added at request time.".to_string(),
     });
 
