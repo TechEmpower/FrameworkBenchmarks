@@ -11,10 +11,6 @@ apps! {
 
 app_statics! {}
 
-#[cfg(feature = "raw")]
-min_main!();
-
-#[cfg(not(feature = "raw"))]
 min_main!(server, {
     {
         use anansi::cache::prelude::*;
