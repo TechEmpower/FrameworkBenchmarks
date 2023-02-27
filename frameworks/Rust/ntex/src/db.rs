@@ -178,8 +178,6 @@ impl PgConnection {
         ywrite_html!(body, "{{> fortune }}");
         let result = body.split().freeze();
         let _ = std::mem::replace(&mut *self.buf.borrow_mut(), body);
-        drop(fortunes);
-        drop(rows);
         result
     }
 }
