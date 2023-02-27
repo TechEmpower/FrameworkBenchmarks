@@ -53,7 +53,8 @@
       "platform": "Ur/Web",
       "webserver": "None",
       "os": "Linux",
-      "database_os": "Linux"
+      "database_os": "Linux",
+      "tags": ["broken"]
     },
     "mysql-cache": {
       "setup_file": "setup-mysql",
@@ -68,7 +69,8 @@
       "platform": "Ur/Web",
       "webserver": "None",
       "os": "Linux",
-      "database_os": "Linux"
+      "database_os": "Linux",
+      "tags": ["broken"]
     }
   }]
 }
