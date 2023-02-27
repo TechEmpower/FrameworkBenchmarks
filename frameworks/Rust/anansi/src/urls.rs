@@ -22,4 +22,5 @@ routes! {
     path!("/queries", WorldView::queries),
     path!("/fortunes", WorldView::raw_fortunes),
     path!("/updates", WorldView::updates),
+    path!("/cached-queries", WorldView::cached_queries),
 }

@@ -1,7 +1,7 @@
 use crate::prelude::*;
 use serde::Serialize;
-use anansi::check;
-use anansi::db::postgres::{PgDbRow, PgQuery};
+use anansi::{check, prep};
+use anansi::db::postgres::PgDbRow;
 use super::util::get_query;
 use std::borrow::Cow;
 use anansi::db::DbRow;
@@ -9,30 +9,25 @@ use rand::Rng;
 use std::fmt::Write;
 use tokio_postgres::types::ToSql;
 
-thread_local!(static UPDATES: Vec<Cow<'static, str>> = {
-    let mut updates = vec![Cow::from("")];
-    for num in 1..=500u16 {
-        let mut pl = 1;
-        let mut q = "UPDATE world SET randomnumber = CASE id ".to_string();
-        for _ in 1..=num {
-            let _ = write!(q, "WHEN ${} THEN ${} ", pl, pl + 1);
-            pl += 2;
-        }
-
-        q.push_str("ELSE randomnumber END WHERE id IN (");
-
-        for _ in 1..=num {
-            let _ = write!(q, "${},", pl);
-            pl += 1;
-        }
-
-        q.pop();
-        q.push(')');
-
-        updates.push(Cow::from(q));
+fn update_statement(num: u16) -> String {
+    let mut pl = 1;
+    let mut q = "UPDATE world SET randomnumber = CASE id ".to_string();
+    for _ in 1..=num {
+        let _ = write!(q, "WHEN ${} THEN ${} ", pl, pl + 1);
+        pl += 2;
     }
-    updates
-});
+
+    q.push_str("ELSE randomnumber END WHERE id IN (");
+
+    for _ in 1..=num {
+        let _ = write!(q, "${},", pl);
+        pl += 1;
+    }
+
+    q.pop();
+    q.push(')');
+    q
+}
 
 fn random_num() -> i32 {
     rand::thread_rng().gen_range(1..=10_000)
@@ -56,9 +51,7 @@ fn base<R: Request>(_req: &mut R) -> Result<Response> {}
 #[viewer]
 impl<R: Request> WorldView<R> {
     async fn get_world(req: &R) -> Result<PgDbRow> {
-        PgQuery::new("SELECT * FROM world WHERE id = $1", &[&random_num()])
-            .fetch_one(req)
-            .await
+        prep!(req, "world", "SELECT * FROM world WHERE id = $1", &[&random_num()], fetch_one)
     }
     async fn get_worlds(req: &R) -> Result<Vec<World>> {
         let q = get_query(req.params());
@@ -90,9 +83,7 @@ impl<R: Request> WorldView<R> {
     #[view(Site::is_visitor)]
     pub async fn raw_fortunes(req: &mut R) -> Result<Response> {
         let title = "Fortunes";
-        let rows = PgQuery::new("SELECT * FROM fortune", &[])
-            .fetch_all(req)
-            .await?;
+        let rows = prep!(req, "fortune", "SELECT * FROM fortune", &[], fetch_all)?;
         let mut fortunes = vec![Fortune {
             id: 0,
             message: Cow::Borrowed("Additional fortune added at request time.")
@@ -109,10 +100,6 @@ impl<R: Request> WorldView<R> {
     pub async fn updates(req: &mut R) -> Result<Response> {
         let q = get_query(req.params()) as usize;
         let mut worlds = Vec::with_capacity(q);
-        let mut update = Cow::from("");
-        UPDATES.with(|u| {
-            update = u[q].clone();
-        });
         let mut params: Vec<&(dyn ToSql + Sync)> = Vec::with_capacity(q * 3);
         for _ in 0..q {
             let row = Self::get_world(req).await?;
@@ -129,9 +116,22 @@ impl<R: Request> WorldView<R> {
         for world in &worlds {
             params.push(&world.id);
         }
-        PgQuery::new(&update, params.as_slice())
-            .execute(req)
-            .await?;
+        prep!(req, format!("update{}", q), update_statement(q as u16), params.as_slice(), execute)?;
         Response::json(&worlds)
+    }
+    #[check(Site::is_visitor)]
+    pub async fn cached_queries(req: &mut R) -> Result<Response> {
+        let q = get_query(req.params());
+        let mut ids = vec![];
+        for _ in 0..q {
+            ids.push(random_num().to_string());
+        }
+        let mut worlds = vec!['[' as u8];
+        for mut world in req.cache().get_many(ids).await? {
+            worlds.append(&mut world);
+        }
+        worlds.pop();
+        worlds.push(']' as u8);
+        Response::json_bytes(worlds)
     }
 }
