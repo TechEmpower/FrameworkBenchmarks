@@ -3,9 +3,8 @@ const handlers = require("./handlers");
 
 fastify.register(require("@fastify/view"), {
   engine: {
-    ejs: require("handlebars")
-  },
-  templates: __dirname + "/views"
+    handlebars: require("handlebars")
+  }
 });
 
 fastify.addHook('onRequest', (request, reply, done) => {
