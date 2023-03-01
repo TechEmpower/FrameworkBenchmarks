@@ -42,7 +42,8 @@
       "database_os": "Linux",
       "display_name": "phalcon-mongodb",
       "notes": "",
-      "versus": "php"
+      "versus": "php",
+      "tags": ["broken"]
     },
     "micro": {
       "plaintext_url": "/plaintext",

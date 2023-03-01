@@ -3,9 +3,9 @@ FROM ubuntu:22.04
 WORKDIR /h2o_app_src
 COPY ./ ./
 
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && \
-    apt-get install -yqq autoconf bison cmake curl file flex g++ git libnuma-dev libpq-dev \
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get -yqq update && \
+    apt-get -yqq install autoconf bison cmake curl file flex g++ git libnuma-dev libpq-dev \
                          libssl-dev libtool libyajl-dev libz-dev make ninja-build wget
 
 ### Install mustache-c
@@ -13,7 +13,7 @@ RUN apt-get update && \
 ARG MUSTACHE_C_REVISION=c1948c599edfe48c6099ed70ab1d5911d8c3ddc8
 
 ARG MUSTACHE_C_BUILD_DIR=mustache-c-build
-ENV MUSTACHE_C_PREFIX /opt/mustache-c
+ENV MUSTACHE_C_PREFIX=/opt/mustache-c
 
 RUN mkdir -p "$MUSTACHE_C_BUILD_DIR" && \
     cd "$MUSTACHE_C_BUILD_DIR" && \
@@ -29,7 +29,7 @@ RUN mkdir -p "$MUSTACHE_C_BUILD_DIR" && \
 ARG H2O_VERSION=v2.2.6
 
 ARG H2O_BUILD_DIR=h2o-build
-ENV H2O_PREFIX /opt/h2o
+ENV H2O_PREFIX=/opt/h2o
 
 RUN mkdir -p "${H2O_BUILD_DIR}/build" && \
     cd "$H2O_BUILD_DIR" && \

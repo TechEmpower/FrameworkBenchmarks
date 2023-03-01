@@ -181,7 +181,7 @@ begin
      {$endif WITH_LOGS}
      hsoIncludeDateHeader  // required by TPW General Test Requirements #5
     ] + flags);
-  fHttpServer.HttpQueueLength := 100000; // needed e.g. from wrk/ab benchmarks
+  fHttpServer.HttpQueueLength := 10000; // needed e.g. from wrk/ab benchmarks
   fHttpServer.Route.RunMethods([urmGet], self);
   // writeln(fHttpServer.Route.Tree[urmGet].ToText);
   fHttpServer.WaitStarted; // raise exception e.g. on binding issue
@@ -269,21 +269,18 @@ begin
   if not conn.IsConnected then
     conn.Connect;
   // specific code to use PostgresSQL pipelining mode
-  // see test_nosync in
+  // see test_multi_pipelines in
   // https://github.com/postgres/postgres/blob/master/src/test/modules/libpq_pipeline/libpq_pipeline.c
   stmt := conn.NewStatementPrepared(WORLD_READ_SQL, true, true);
-  //w/o transaction pg_stat_statements view returns calls-1 and tfb verify fails
-  conn.StartTransaction;
+  //conn.StartTransaction;
   pConn.EnterPipelineMode;
   pStmt := (stmt as TSqlDBPostgresStatement);
   for i := 0 to cnt - 1 do
   begin
     stmt.Bind(1, RandomWorld);
     pStmt.SendPipelinePrepared;
-    pConn.Flush;
+    pConn.PipelineSync;
   end;
-  pConn.SendFlushRequest;
-  pConn.Flush;
   for i := 0 to cnt - 1 do
   begin
     pStmt.GetPipelineResult;
@@ -292,9 +289,10 @@ begin
     res[i].id := pStmt.ColumnInt(0);
     res[i].randomNumber := pStmt.ColumnInt(1);
     pStmt.ReleaseRows;
+    pConn.CheckPipelineSync;
   end;
   pConn.ExitPipelineMode;
-  conn.commit;
+  //conn.commit;
   result := true;
 end;
 

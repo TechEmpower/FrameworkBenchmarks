@@ -1,4 +1,4 @@
-FROM gradle:7.6-jdk17 as gradle
+FROM gradle:7.6-jdk19 as gradle
 USER root
 WORKDIR /http4k
 COPY build.gradle build.gradle
@@ -26,7 +26,7 @@ RUN native-image \
     --initialize-at-build-time="org.slf4j.LoggerFactory,org.slf4j.simple.SimpleLogger,org.slf4j.impl.StaticLoggerBinder" \
     --no-fallback -cp http4k-benchmark.jar http4k.Http4kGraalVMBenchmarkServerKt
 
-FROM frolvlad/alpine-glibc
+FROM frolvlad/alpine-glibc:glibc-2.34
 RUN apk update && apk add libstdc++
 EXPOSE 9000
 COPY --from=graalvm /home/app/http4k-graalvm/http4k.http4kgraalvmbenchmarkserverkt /app/http4k-graalvm

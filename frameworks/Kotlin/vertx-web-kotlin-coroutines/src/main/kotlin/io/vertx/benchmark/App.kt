@@ -16,12 +16,13 @@ import io.vertx.ext.web.templ.rocker.RockerTemplateEngine
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.await
 import io.vertx.kotlin.pgclient.pgConnectOptionsOf
-import io.vertx.kotlin.sqlclient.poolOptionsOf
-import io.vertx.pgclient.PgPool
+import io.vertx.pgclient.PgConnection
 import io.vertx.sqlclient.Tuple
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import java.net.UnknownHostException
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.system.exitProcess
@@ -41,8 +42,8 @@ class App : CoroutineVerticle() {
         private const val SELECT_FORTUNE = "SELECT id, message from FORTUNE"
     }
 
-    inline fun Route.coroutineHandler(crossinline requestHandler: suspend (RoutingContext) -> Unit): Route =
-        handler { ctx -> launch { requestHandler(ctx) } }
+    inline fun Route.coroutineHandlerUnconfined(crossinline requestHandler: suspend (RoutingContext) -> Unit): Route =
+        handler { ctx -> launch(Dispatchers.Unconfined) { requestHandler(ctx) } }
 
     inline fun RoutingContext.checkedRun(block: () -> Unit): Unit =
         try {
@@ -51,38 +52,43 @@ class App : CoroutineVerticle() {
             fail(t)
         }
 
-    inline fun Route.checkedCoroutineHandler(crossinline requestHandler: suspend (RoutingContext) -> Unit): Route =
-        coroutineHandler { ctx -> ctx.checkedRun { requestHandler(ctx) } }
+    inline fun Route.checkedCoroutineHandlerUnconfined(crossinline requestHandler: suspend (RoutingContext) -> Unit): Route =
+        coroutineHandlerUnconfined { ctx -> ctx.checkedRun { requestHandler(ctx) } }
+
+    suspend fun PgClientBenchmark(vertx: Vertx, config: JsonObject): PgClientBenchmark {
+        val options = with(config) {
+            pgConnectOptionsOf(
+                cachePreparedStatements = true,
+                host = getString("host"),
+                port = getInteger("port", 5432),
+                user = getString("username"),
+                password = getString("password"),
+                database = config.getString("database"),
+                pipeliningLimit = 100000 // Large pipelining means less flushing and we use a single connection anyway;
+            )
+        }
+
+        return PgClientBenchmark(
+            try {
+                PgConnection.connect(vertx, options).await()
+            } catch (e: UnknownHostException) {
+                null
+            },
+            RockerTemplateEngine.create()
+        )
+    }
 
     /**
      * PgClient implementation
      */
-    private inner class PgClientBenchmark(vertx: Vertx, config: JsonObject) {
-        private val client: PgPool
-
+    inner class PgClientBenchmark(
+        private val client: PgConnection?,
         // In order to use a template we first need to create an engine
         private val engine: RockerTemplateEngine
-
-        init {
-            val options = with(config) {
-                pgConnectOptionsOf(
-                    cachePreparedStatements = true,
-                    host = getString("host"),
-                    port = getInteger("port", 5432),
-                    user = getString("username"),
-                    password = getString("password"),
-                    database = config.getString("database"),
-                    pipeliningLimit = 100000 // Large pipelining means less flushing and we use a single connection anyway;
-                )
-            }
-
-            client = PgPool.pool(vertx, options, poolOptionsOf(maxSize = 4))
-            engine = RockerTemplateEngine.create()
-        }
-
+    ) {
         suspend fun dbHandler(ctx: RoutingContext) {
             val result = try {
-                client
+                client!!
                     .preparedQuery(SELECT_WORLD)
                     .execute(Tuple.of(randomWorld()))
                     .await()
@@ -116,7 +122,7 @@ class App : CoroutineVerticle() {
             val cnt = intArrayOf(0)
             List(queries) {
                 async {
-                    val result = `try` { client.preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld())).await() }
+                    val result = `try` { client!!.preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld())).await() }
 
                     if (!failed[0]) {
                         if (result is Try.Failure) {
@@ -145,7 +151,7 @@ class App : CoroutineVerticle() {
         }
 
         suspend fun fortunesHandler(ctx: RoutingContext) {
-            val result = client.preparedQuery(SELECT_FORTUNE).execute().await()
+            val result = client!!.preparedQuery(SELECT_FORTUNE).execute().await()
 
             val resultSet = result.iterator()
             if (!resultSet.hasNext()) {
@@ -179,7 +185,7 @@ class App : CoroutineVerticle() {
             List(worlds.size) {
                 val id = randomWorld()
                 async {
-                    val r2 = `try` { client.preparedQuery(SELECT_WORLD).execute(Tuple.of(id)).await() }
+                    val r2 = `try` { client!!.preparedQuery(SELECT_WORLD).execute(Tuple.of(id)).await() }
 
                     if (!failed[0]) {
                         if (r2 is Try.Failure) {
@@ -197,7 +203,7 @@ class App : CoroutineVerticle() {
                                 batch.add(Tuple.of(world.randomNumber, world.id))
                             }
                             ctx.checkedRun {
-                                client.preparedQuery(UPDATE_WORLD)
+                                client!!.preparedQuery(UPDATE_WORLD)
                                     .executeBatch(batch)
                                     .await()
                                 ctx.response()
@@ -228,7 +234,7 @@ class App : CoroutineVerticle() {
          * This test exercises the framework fundamentals including keep-alive support, request routing, request header
          * parsing, object instantiation, JSON serialization, response header generation, and request count throughput.
          */
-        app.get("/json").checkedCoroutineHandler { ctx ->
+        app.get("/json").checkedCoroutineHandlerUnconfined { ctx ->
             ctx.response()
                 .putHeader(HttpHeaders.SERVER, SERVER)
                 .putHeader(HttpHeaders.DATE, date)
@@ -241,27 +247,27 @@ class App : CoroutineVerticle() {
          * This test exercises the framework's object-relational mapper (ORM), random number generator, database driver,
          * and database connection pool.
          */
-        app.get("/db").checkedCoroutineHandler { ctx -> pgClientBenchmark.dbHandler(ctx) }
+        app.get("/db").checkedCoroutineHandlerUnconfined { ctx -> pgClientBenchmark.dbHandler(ctx) }
 
         /*
          * This test is a variation of Test #2 and also uses the World table. Multiple rows are fetched to more dramatically
          * punish the database driver and connection pool. At the highest queries-per-request tested (20), this test
          * demonstrates all frameworks' convergence toward zero requests-per-second as database activity increases.
          */
-        app.get("/queries").checkedCoroutineHandler { ctx -> pgClientBenchmark.queriesHandler(ctx) }
+        app.get("/queries").checkedCoroutineHandlerUnconfined { ctx -> pgClientBenchmark.queriesHandler(ctx) }
 
         /*
          * This test exercises the ORM, database connectivity, dynamic-size collections, sorting, server-side templates,
          * XSS countermeasures, and character encoding.
          */
-        app.get("/fortunes").checkedCoroutineHandler { ctx -> pgClientBenchmark.fortunesHandler(ctx) }
+        app.get("/fortunes").checkedCoroutineHandlerUnconfined { ctx -> pgClientBenchmark.fortunesHandler(ctx) }
 
         /*
          * This test is a variation of Test #3 that exercises the ORM's persistence of objects and the database driver's
          * performance at running UPDATE statements or similar. The spirit of this test is to exercise a variable number of
          * read-then-write style database operations.
          */
-        app.route("/update").checkedCoroutineHandler { ctx -> pgClientBenchmark.updateHandler(ctx) }
+        app.route("/update").checkedCoroutineHandlerUnconfined { ctx -> pgClientBenchmark.updateHandler(ctx) }
 
         /*
          * This test is an exercise of the request-routing fundamentals only, designed to demonstrate the capacity of
@@ -269,7 +275,7 @@ class App : CoroutineVerticle() {
          * still small, meaning good performance is still necessary in order to saturate the gigabit Ethernet of the test
          * environment.
          */
-        app.get("/plaintext").checkedCoroutineHandler { ctx ->
+        app.get("/plaintext").checkedCoroutineHandlerUnconfined { ctx ->
             ctx.response()
                 .putHeader(HttpHeaders.SERVER, SERVER)
                 .putHeader(HttpHeaders.DATE, date)

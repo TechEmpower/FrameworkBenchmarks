@@ -1,20 +1,40 @@
-FROM ruby:2.6
+ARG RUBY_IMAGE_VERSION=3.2
 
-ADD ./h2o.conf ./
+ARG H2O_PREFIX=/opt/h2o
 
-RUN apt-get update && apt-get install -yqq bison cmake libssl-dev make
+FROM "ruby:${RUBY_IMAGE_VERSION}" AS compile
 
-ENV H2O_VERSION=2.3.0-beta2
-ENV H2O_ARCHIVE="v${H2O_VERSION}.tar.gz"
-ENV H2O_HOME=/h2o
+ARG H2O_VERSION=9ab3feb4d7429ddda52a3cf84bd6da0e890bd52a
 
-RUN wget -q "https://github.com/h2o/h2o/archive/$H2O_ARCHIVE" && \
-    tar xf "$H2O_ARCHIVE" && \
-    cd "h2o-$H2O_VERSION" && \
-    cmake -DCMAKE_INSTALL_PREFIX="$H2O_HOME" -DCMAKE_C_FLAGS="-flto -march=native" \
-          -DCMAKE_AR=/usr/bin/gcc-ar -DCMAKE_RANLIB=/usr/bin/gcc-ranlib -DWITH_MRUBY=on . && \
-    make -j "$(nproc)" install
+ARG DEBIAN_FRONTEND=noninteractive
+ARG H2O_PREFIX
+WORKDIR /tmp/h2o-build
+RUN apt-get -yqq update && \
+    apt-get -yqq install \
+      cmake \
+      ninja-build && \
+    curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
+      tar --strip-components=1 -xz && \
+    cmake \
+      -B build \
+      -DCMAKE_AR=/usr/bin/gcc-ar \
+      -DCMAKE_C_FLAGS="-flto -march=native -mtune=native" \
+      -DCMAKE_INSTALL_PREFIX="${H2O_PREFIX}" \
+      -DCMAKE_RANLIB=/usr/bin/gcc-ranlib \
+      -DWITH_MRUBY=on \
+      -G Ninja \
+      -S . && \
+    cmake --build build -j && \
+    cmake --install build
 
+FROM ruby:${RUBY_IMAGE_VERSION}-slim
+
+ARG H2O_PREFIX
+COPY --from=compile "${H2O_PREFIX}" "${H2O_PREFIX}/"
+COPY h2o.conf "${H2O_PREFIX}/"
 EXPOSE 8080
+ARG BENCHMARK_ENV
+ARG TFB_TEST_DATABASE
+ARG TFB_TEST_NAME
 
-CMD "${H2O_HOME}/bin/h2o" -c h2o.conf
+CMD ["/opt/h2o/bin/h2o", "-c", "/opt/h2o/h2o.conf"]

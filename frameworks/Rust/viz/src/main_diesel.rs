@@ -1,13 +1,10 @@
 #[macro_use]
 extern crate diesel;
 
-use std::{
-    convert::identity,
-    thread::{available_parallelism, spawn},
-};
+use std::{convert::identity, thread::available_parallelism};
 
 use diesel_async::{
-    pooled_connection::{deadpool::Pool, AsyncDieselConnectionManager},
+    pooled_connection::{bb8::Pool, AsyncDieselConnectionManager},
     AsyncPgConnection,
 };
 use nanorand::{Rng, WyRand};
@@ -34,7 +31,7 @@ static CACHED: OnceCell<Vec<World>> = OnceCell::new();
 
 async fn db(req: Request) -> Result<Response> {
     let mut rng = req.state::<WyRand>().unwrap();
-    let pool = req.state::<Pool<AsyncPgConnection>>();
+    let pool = req.state::<Pool<AsyncPgConnection>>().unwrap();
 
     let random_id = rng.generate_range(RANGE);
 
@@ -47,7 +44,7 @@ async fn db(req: Request) -> Result<Response> {
 }
 
 async fn fortunes(req: Request) -> Result<Response> {
-    let pool = req.state::<Pool<AsyncPgConnection>>();
+    let pool = req.state::<Pool<AsyncPgConnection>>().unwrap();
 
     let fortunes = tell_fortune(pool).await?;
 
@@ -59,7 +56,7 @@ async fn fortunes(req: Request) -> Result<Response> {
 
 async fn queries(req: Request) -> Result<Response> {
     let rng = req.state::<WyRand>().unwrap();
-    let pool = req.state::<Pool<AsyncPgConnection>>();
+    let pool = req.state::<Pool<AsyncPgConnection>>().unwrap();
     let count = utils::get_query_param(req.query_string());
 
     let worlds = get_worlds(pool, rng, count).await?;
@@ -90,7 +87,7 @@ async fn cached_queries(req: Request) -> Result<Response> {
 
 async fn updates(req: Request) -> Result<Response> {
     let rng = req.state::<WyRand>().unwrap();
-    let pool = req.state::<Pool<AsyncPgConnection>>();
+    let pool = req.state::<Pool<AsyncPgConnection>>().unwrap();
     let count = utils::get_query_param(req.query_string());
 
     let worlds = update_worlds(pool, rng, count).await?;
@@ -101,30 +98,24 @@ async fn updates(req: Request) -> Result<Response> {
     Ok(res)
 }
 
-async fn populate_cache(pool: Option<Pool<AsyncPgConnection>>) -> Result<()> {
+async fn populate_cache(pool: Pool<AsyncPgConnection>) -> Result<()> {
     let worlds = get_worlds_by_limit(pool, 10_000).await?;
     CACHED.set(worlds).unwrap();
     Ok(())
 }
 
-fn main() {
-    let max = available_parallelism().map(|n| n.get()).unwrap_or(16) as usize;
+#[tokio::main]
+async fn main() {
+    let max = available_parallelism().map(|n| n.get()).unwrap_or(16) as u32;
 
-    let pool =
-        Pool::<AsyncPgConnection>::builder(AsyncDieselConnectionManager::new(DB_URL))
-            .max_size(max)
-            .wait_timeout(None)
-            .create_timeout(None)
-            .recycle_timeout(None)
-            .build()
-            .unwrap();
+    let pool = Pool::<AsyncPgConnection>::builder()
+        .max_size(max)
+        .min_idle(Some(max))
+        .idle_timeout(None)
+        .build_unchecked(AsyncDieselConnectionManager::new(DB_URL));
 
-    let rt = tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap();
-
-    rt.block_on(populate_cache(Some(pool.clone())))
+    populate_cache(pool.clone())
+        .await
         .expect("cache insert failed");
 
     let rng = WyRand::new();
@@ -140,18 +131,7 @@ fn main() {
             .with(State::new(rng)),
     );
 
-    for _ in 1..max {
-        let service = service.clone();
-        spawn(move || {
-            let rt = tokio::runtime::Builder::new_current_thread()
-                .enable_all()
-                .build()
-                .unwrap();
-            rt.block_on(serve(service));
-        });
-    }
-
-    rt.block_on(serve(service));
+    serve(service).await;
 }
 
 async fn serve(service: ServiceMaker) {

@@ -2,7 +2,7 @@ use std::borrow::Cow;
 
 use diesel::prelude::*;
 use diesel_async::{
-    pooled_connection::deadpool::{Object, Pool, PoolError},
+    pooled_connection::bb8::{Pool, RunError},
     AsyncPgConnection, RunQueryDsl,
 };
 use nanorand::{Rng, WyRand};
@@ -21,7 +21,7 @@ pub enum PgError {
     #[error(transparent)]
     DieselError(#[from] diesel::result::Error),
     #[error(transparent)]
-    PoolError(#[from] PoolError),
+    PoolError(#[from] RunError),
     #[error(transparent)]
     RenderError(#[from] RenderError),
 }
@@ -38,18 +38,11 @@ impl IntoResponse for PgError {
     }
 }
 
-pub async fn connect(
-    pool: Option<Pool<AsyncPgConnection>>,
-) -> Result<Object<AsyncPgConnection>, PgError> {
-    let obj = pool.ok_or(PgError::Missing)?.get().await?;
-    Ok(obj)
-}
-
 pub async fn get_worlds_by_limit(
-    pool: Option<Pool<AsyncPgConnection>>,
+    pool: Pool<AsyncPgConnection>,
     limit: i64,
 ) -> Result<Vec<World>, PgError> {
-    let mut conn = connect(pool).await?;
+    let mut conn = pool.get().await?;
     let worlds = world::table
         .limit(limit)
         .get_results::<World>(&mut conn)
@@ -63,19 +56,19 @@ async fn _get_world(conn: &mut AsyncPgConnection, id: i32) -> Result<World, PgEr
 }
 
 pub async fn get_world(
-    pool: Option<Pool<AsyncPgConnection>>,
+    pool: Pool<AsyncPgConnection>,
     id: i32,
 ) -> Result<World, PgError> {
-    let mut conn = connect(pool).await?;
+    let mut conn = pool.get().await?;
     _get_world(&mut conn, id).await
 }
 
 pub async fn get_worlds(
-    pool: Option<Pool<AsyncPgConnection>>,
+    pool: Pool<AsyncPgConnection>,
     mut rng: WyRand,
     count: u16,
 ) -> Result<Vec<World>, PgError> {
-    let mut conn = connect(pool).await?;
+    let mut conn = pool.get().await?;
 
     let mut worlds = Vec::<World>::with_capacity(count as usize);
 
@@ -89,11 +82,11 @@ pub async fn get_worlds(
 }
 
 pub async fn update_worlds(
-    pool: Option<Pool<AsyncPgConnection>>,
+    pool: Pool<AsyncPgConnection>,
     mut rng: WyRand,
     count: u16,
 ) -> Result<Vec<World>, PgError> {
-    let mut conn = connect(pool).await?;
+    let mut conn = pool.get().await?;
 
     let mut worlds = Vec::<World>::with_capacity(count as usize);
 
@@ -124,10 +117,8 @@ pub async fn update_worlds(
         .await
 }
 
-pub async fn tell_fortune(
-    pool: Option<Pool<AsyncPgConnection>>,
-) -> Result<String, PgError> {
-    let mut conn = connect(pool).await?;
+pub async fn tell_fortune(pool: Pool<AsyncPgConnection>) -> Result<String, PgError> {
+    let mut conn = pool.get().await?;
 
     let mut items = fortune::table.load::<Fortune>(&mut conn).await?;
 

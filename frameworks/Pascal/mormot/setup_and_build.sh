@@ -40,7 +40,7 @@ echo "Unpacking to ./libs/mORMot/static ..."
 rm -rf ./mormot2static.7z
 
 # uncomment for fixed commit URL
-URL=https://github.com/synopse/mORMot2/tarball/7cc9e10d6dfbe531ded16aa7f9ccd0fb95f8c6dd
+URL=https://github.com/synopse/mORMot2/tarball/9a186358a3695afc3065853790e90f2868d86e23
 #URL="https://api.github.com/repos/synopse/mORMot2/tarball/$USED_TAG"
 echo "Download and unpacking mORMot sources from $URL ..."
 wget -qO- "$URL" | tar -xz -C ./libs/mORMot  --strip-components=1
@@ -74,7 +74,7 @@ fi
 SUPRESS_WARN=-vm11047,6058,5092,5091,5060,5058,5057,5028,5024,5023,4081,4079,4055,3187,3124,3123,5059,5036,5089,5090
 
 echo "Start compiling..."
-fpc -MDelphi -Sci -Ci -O3 -g -gl -gw2 -Xg -k'-rpath=$ORIGIN' -k-L$BIN \
+fpc -MDelphi -Sci -Ci -O4 -g -gl -gw2 -Xg -k'-rpath=$ORIGIN' -k-L$BIN \
   -T$TARGET -P$ARCH \
   -veiq -v-n-h- $SUPRESS_WARN \
   -Fi"$BIN/fpc-$ARCH_TG/.dcu" -Fi"$MSRC" \

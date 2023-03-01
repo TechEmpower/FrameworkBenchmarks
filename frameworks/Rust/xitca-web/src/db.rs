@@ -2,7 +2,7 @@ use std::{cell::RefCell, collections::HashMap, error::Error, fmt::Write, future:
 
 use futures_util::stream::{FuturesUnordered, StreamExt, TryStreamExt};
 use rand::{rngs::SmallRng, Rng, SeedableRng};
-use xitca_postgres::{Postgres, Statement, ToSql};
+use xitca_postgres::{statement::Statement, Postgres, ToSql};
 use xitca_unsafe_collection::no_hash::NoHashBuilder;
 
 use super::ser::{Fortune, Fortunes, World};
@@ -18,9 +18,7 @@ pub struct Client {
 impl Drop for Client {
     fn drop(&mut self) {
         drop(self.fortune.clone().into_guarded(&self.client));
-
         drop(self.world.clone().into_guarded(&self.client));
-
         for (_, stmt) in std::mem::take(&mut self.updates) {
             drop(stmt.into_guarded(&self.client))
         }
@@ -28,11 +26,9 @@ impl Drop for Client {
 }
 
 pub async fn create(config: &str) -> DbResult<Client> {
-    let (client, conn) = Postgres::new(config.to_string()).connect().await?;
+    let (client, bg_task) = Postgres::new(config.to_string()).connect().await?;
 
-    tokio::task::spawn_local(async move {
-        let _ = conn.await;
-    });
+    tokio::task::spawn_local(bg_task);
 
     let fortune = client.prepare("SELECT * FROM fortune", &[]).await?.leak();
 
@@ -93,16 +89,14 @@ impl Client {
     }
 
     pub fn get_worlds(&self, num: u16) -> impl Future<Output = DbResult<Vec<World>>> + '_ {
-        let worlds = {
-            let mut rng = self.rng.borrow_mut();
-            (0..num)
-                .map(|_| {
-                    let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
-                    self.query_one_world(id)
-                })
-                .collect::<FuturesUnordered<_>>()
-        };
-        worlds.try_collect()
+        let mut rng = self.rng.borrow_mut();
+        (0..num)
+            .map(|_| {
+                let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+                self.query_one_world(id)
+            })
+            .collect::<FuturesUnordered<_>>()
+            .try_collect()
     }
 
     pub async fn update(&self, num: u16) -> DbResult<Vec<World>> {
@@ -148,11 +142,11 @@ impl Client {
 
         let mut stream = self
             .client
-            .query_raw::<_, &[i32; 0]>(&self.fortune, &[])
+            .query_raw::<&[i32; 0]>(&self.fortune, &[])
             .await?;
 
         while let Some(row) = stream.try_next().await? {
-            items.push(Fortune::new(row.get(0), row.get::<_, String>(1)));
+            items.push(Fortune::new(row.get(0), row.get::<String>(1)));
         }
 
         items.sort_by(|it, next| it.message.cmp(&next.message));
