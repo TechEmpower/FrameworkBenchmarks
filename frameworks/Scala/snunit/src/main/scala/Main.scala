@@ -12,14 +12,16 @@ object Main {
   val applicationJson = Seq("Content-Type" -> "application/json")
   val textPlain = Seq("Content-Type" -> "text/plain")
 
+  @inline
+  private def notFound(req: Request) = req.send(
+    statusCode = StatusCode.NotFound,
+    content = "Not found",
+    headers = textPlain
+  )
+
   def main(args: Array[String]): Unit = {
     SyncServerBuilder
       .build(req =>
-        @inline def notFound() = req.send(
-          statusCode = StatusCode.NotFound,
-          content = "Not found",
-          headers = textPlain
-        )
         if (req.method == Method.GET) {
           if(req.target == "/plaintext")
             req.send(
@@ -33,8 +35,8 @@ object Main {
               content = writeToArray(Message("Hello, World!")),
               headers = applicationJson
             )
-          else notFound()
-        } else notFound()
+          else notFound(req)
+        } else notFound(req)
       )
       .listen()
   }
