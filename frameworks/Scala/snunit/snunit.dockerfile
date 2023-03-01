@@ -15,7 +15,7 @@ COPY . .
 
 RUN sbt nativeLink
 
-FROM nginx/unit:1.29.0-minimal
+FROM nginx/unit:1.29.1-minimal
 
 COPY /config.sh /docker-entrypoint.d/
 COPY --from=builder /workdir/target/scala-2.13/workdir-out /app/example
