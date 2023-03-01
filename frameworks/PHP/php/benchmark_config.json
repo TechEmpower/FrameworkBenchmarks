@@ -112,8 +112,7 @@
       "database_os": "Linux",
       "display_name": "PHP Unit Nginx",
       "notes": "",
-      "versus": "php",
-      "tags": ["broken"]
+      "versus": "php"
     },
     "pools": {
       "json_url": "/json.php",
