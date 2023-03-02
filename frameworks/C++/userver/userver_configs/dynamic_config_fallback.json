@@ -38,8 +38,8 @@
   "POSTGRES_CONNECTION_PIPELINE_ENABLED": false,
   "POSTGRES_CONNECTION_POOL_SETTINGS": {
     "hello_world": {
-      "min_pool_size": 28,
-      "max_pool_size": 28,
+      "min_pool_size": 75,
+      "max_pool_size": 100,
       "max_queue_size": 512
     }
   },
