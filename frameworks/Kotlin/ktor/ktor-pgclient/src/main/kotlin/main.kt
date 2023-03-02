@@ -67,7 +67,8 @@ class PgclientRepository : Repository {
     }
 
     override suspend fun updateWorlds(worlds: List<World>) {
-        val batch = worlds.map { Tuple.of(it.id, it.randomNumber) }
+        // Worlds should be sorted before being batch-updated with to avoid data race and deadlocks.
+        val batch = worlds.sortedBy { it.id }.map { Tuple.of(it.randomNumber, it.id) }
         client()
             .preparedQuery("update world set randomNumber = $1 where id = $2")
             .executeBatch(batch)
