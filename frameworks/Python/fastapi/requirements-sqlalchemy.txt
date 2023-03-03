@@ -1,2 +1,2 @@
-psycopg2==2.9.3
-SQLAlchemy==1.4.41
+psycopg2==2.9.5
+SQLAlchemy==1.4.45
