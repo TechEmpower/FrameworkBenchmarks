@@ -1,0 +1,26 @@
+{
+  "framework": "ktor-exposed",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "ktor-exposed",
+        "language": "Kotlin",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ktor-exposed",
+        "notes": "",
+        "versus": "ktor"
+      }
+    }
+  ]
+}
