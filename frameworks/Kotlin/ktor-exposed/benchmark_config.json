@@ -12,7 +12,7 @@
         "framework": "ktor-exposed",
         "language": "Kotlin",
         "flavor": "None",
-        "orm": "Micro",
+        "orm": "Full",
         "platform": "Netty",
         "webserver": "None",
         "os": "Linux",
