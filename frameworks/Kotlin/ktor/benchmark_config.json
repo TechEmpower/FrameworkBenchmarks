@@ -139,6 +139,27 @@
         "display_name": "ktor-pgclient",
         "notes": "http://ktor.io/",
         "versus": "netty"
+      },
+      "exposed": {
+        "db_url": "/db",
+        "query_url": "/query?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "ktor-exposed",
+        "language": "Kotlin",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ktor-exposed",
+        "notes": "",
+        "versus": "ktor"
       }
     }
   ]
