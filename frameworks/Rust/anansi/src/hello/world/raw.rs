@@ -51,7 +51,7 @@ fn base<R: Request>(_req: &mut R) -> Result<Response> {}
 #[viewer]
 impl<R: Request> WorldView<R> {
     async fn get_world(req: &R) -> Result<PgDbRow> {
-        anansi::db::postgres::PgStatement::raw_one(0, &[], req.raw().pool()).await
+        anansi::db::postgres::PgStatement::raw_one(0, &[&random_num()], req.raw().pool()).await
     }
     async fn get_worlds(req: &R) -> Result<Vec<World>> {
         let q = get_query(req.params());
