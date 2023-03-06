@@ -128,9 +128,16 @@ fun Application.module() {
             withDatabaseContextAndTransaction {
                 result = selectWorlds(queries, random)
                 result.forEach { it.randomNumber = random.nextInt(dbRows) + 1 }
-                result.forEach { world ->
-                    WorldTable.update({ WorldTable.id eq world.id }) { it[randomNumber] = world.randomNumber }
-                }
+                result
+                    // to avoid data race because all updates are in one transaction
+                    .sortedBy { it.id }
+                    .forEach { world ->
+                        WorldTable.update({ WorldTable.id eq world.id }) { it[randomNumber] = world.randomNumber }
+                        /*
+                        // An alternative approach: commit every change to avoid data race
+                        commit()
+                        */
+                    }
             }
 
             call.respondText(Json.encodeToString(result), ContentType.Application.Json)
