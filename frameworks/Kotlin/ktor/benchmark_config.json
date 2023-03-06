@@ -157,7 +157,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ktor-exposed",
+        "display_name": "ktor-netty-exposed",
         "notes": "",
         "versus": "ktor"
       }

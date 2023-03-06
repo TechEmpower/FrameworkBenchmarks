@@ -27,7 +27,7 @@ dependencies {
 
     implementation("org.postgresql:postgresql:42.5.4")
     implementation("com.zaxxer:HikariCP:5.0.1")
-    implementation("org.slf4j:slf4j-simple:1.7.36")
+    runtimeOnly("org.slf4j:slf4j-simple:1.7.36")
 }
 
 application.mainClass.set("AppKt")
