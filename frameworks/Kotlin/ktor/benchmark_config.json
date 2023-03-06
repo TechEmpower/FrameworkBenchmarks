@@ -142,7 +142,7 @@
       },
       "exposed": {
         "db_url": "/db",
-        "query_url": "/query?queries=",
+        "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
         "fortune_url": "/fortunes",
         "port": 8080,
