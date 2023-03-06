@@ -33,7 +33,7 @@ nanorand = "0.7"
 thiserror = "1.0"
 futures-util = "0.3.26"
 
-tokio = { version = "1.25.0", features = ["full"] }
+tokio = { version = "1.0", features = ["full"] }
 tokio-postgres = { version = "0.7.7", optional = true }
 sqlx = { version = "0.6.2", features = [
   "postgres",
