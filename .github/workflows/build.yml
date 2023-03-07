@@ -2,7 +2,7 @@ name: build
 on: [ push, pull_request ]
 jobs:
   setup:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       # Required for workflow triggers like the auto-label for failing PRs
       - name: Save PR number
