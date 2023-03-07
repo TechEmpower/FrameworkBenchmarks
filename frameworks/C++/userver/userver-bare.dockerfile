@@ -1,7 +1,7 @@
 FROM ghcr.io/userver-framework/docker-userver-build-base:v1a AS builder
 WORKDIR /src
 RUN git clone https://github.com/userver-framework/userver.git && \
-    cd userver && git checkout b69a8db23844d3abbb68e40a502eae0ecd2e4b62
+    cd userver && git checkout 151bc1e3df01807da9cd27f9677b80f4951b1f25
 COPY userver_benchmark/ ./
 RUN mkdir build && cd build && \
     cmake -DUSERVER_IS_THE_ROOT_PROJECT=0 -DUSERVER_OPEN_SOURCE_BUILD=1 -DUSERVER_FEATURE_CRYPTOPP_BLAKE2=0 \
