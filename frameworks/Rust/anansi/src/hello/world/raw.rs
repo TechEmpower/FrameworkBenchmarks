@@ -51,7 +51,7 @@ fn base<R: Request>(_req: &mut R) -> Result<Response> {}
 #[viewer]
 impl<R: Request> WorldView<R> {
     async fn get_world(req: &R) -> Result<PgDbRow> {
-        prep!(req, "world", "SELECT * FROM world WHERE id = $1", &[&random_num()], fetch_one)
+        anansi::db::postgres::PgStatement::raw_one(0, &[&random_num()], req.raw().pool()).await
     }
     async fn get_worlds(req: &R) -> Result<Vec<World>> {
         let q = get_query(req.params());
@@ -83,7 +83,7 @@ impl<R: Request> WorldView<R> {
     #[view(Site::is_visitor)]
     pub async fn raw_fortunes(req: &mut R) -> Result<Response> {
         let title = "Fortunes";
-        let rows = prep!(req, "fortune", "SELECT * FROM fortune", &[], fetch_all)?;
+        let rows = anansi::db::postgres::PgStatement::raw_all(1, &[], req.raw().pool()).await?;
         let mut fortunes = vec![Fortune {
             id: 0,
             message: Cow::Borrowed("Additional fortune added at request time.")
