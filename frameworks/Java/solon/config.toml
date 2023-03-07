@@ -1,0 +1,15 @@
+[framework]
+name = "solon"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "solon"
+webserver = "smarthttp"
+versus = "None"
