@@ -118,7 +118,8 @@ fun Application.module(exposedMode: ExposedMode) {
             val result = withDatabaseContextAndTransaction {
                 when (exposedMode) {
                     Dsl -> selectWorlds(queries, random)
-                    Dao -> List(queries) { WorldDao[random.nextIntWithinRows()].toWorld() }
+                    Dao -> //List(queries) { WorldDao[random.nextIntWithinRows()].toWorld() }
+                        throw IllegalArgumentException("DAO not supported because it appears to cache results")
                 }
             }
 
@@ -180,7 +181,7 @@ fun Application.module(exposedMode: ExposedMode) {
                             }
                     }
 
-                    Dao -> {
+                    Dao -> /*{
                         val worldDaosAndNewRandomNumbers =
                             List(queries) { WorldDao[random.nextIntWithinRows()] to random.nextIntWithinRows() }
                         worldDaosAndNewRandomNumbers
@@ -189,7 +190,8 @@ fun Application.module(exposedMode: ExposedMode) {
                                 worldDao.randomNumber = newRandomNumber
                             }
                         result = worldDaosAndNewRandomNumbers.map { (worldDao, _) -> worldDao.toWorld() }
-                    }
+                    }*/
+                        throw IllegalArgumentException("DAO not supported because it appears to cache results")
                 }
             }
 
