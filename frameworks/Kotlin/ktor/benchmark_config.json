@@ -6,7 +6,7 @@
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "db_url": "/db",
-        "query_url": "/db?queries=",
+        "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
         "fortune_url": "/fortunes",
 
@@ -29,7 +29,7 @@
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "db_url": "/db",
-        "query_url": "/db?queries=",
+        "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
         "fortune_url": "/fortunes",
 
@@ -52,7 +52,7 @@
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "db_url": "/db",
-        "query_url": "/db?queries=",
+        "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
         "fortune_url": "/fortunes",
 
