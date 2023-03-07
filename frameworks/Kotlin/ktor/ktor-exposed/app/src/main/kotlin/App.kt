@@ -1,3 +1,4 @@
+import ExposedMode.*
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.http.*
@@ -14,14 +15,14 @@ import kotlinx.html.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.concurrent.ThreadLocalRandom
-
-@Serializable
-data class Message(val message: String)
 
 @Serializable
 data class World(val id: Int, var randomNumber: Int)
@@ -43,11 +44,33 @@ object FortuneTable : IdTable<Int>("Fortune") {
 }
 
 
-fun main() {
-    embeddedServer(Netty, port = 8080, module = Application::module).start(wait = true)
+class WorldDao(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<WorldDao>(WorldTable)
+
+    var randomNumber by WorldTable.randomNumber
+    fun toWorld() =
+        World(id.value, randomNumber)
 }
 
-fun Application.module() {
+class FortuneDao(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<FortuneDao>(FortuneTable)
+
+    var message by FortuneTable.message
+    fun toFortune() =
+        Fortune(id.value, message)
+}
+
+
+enum class ExposedMode {
+    Dsl, Dao
+}
+
+fun main(args: Array<String>) {
+    val exposedMode = valueOf(args.first())
+    embeddedServer(Netty, port = 8080) { module(exposedMode) }.start(wait = true)
+}
+
+fun Application.module(exposedMode: ExposedMode) {
     val dbRows = 10000
     val poolSize = 48
     val pool = HikariDataSource(HikariConfig().apply { configurePostgres(poolSize) })
@@ -67,36 +90,49 @@ fun Application.module() {
         fun ResultRow.toFortune() =
             Fortune(this[FortuneTable.id].value, this[FortuneTable.message])
 
-        fun Transaction.selectSingleWorld(random: ThreadLocalRandom): World {
-            val id = random.nextInt(dbRows) + 1
-            return selectWorldsWithIdQuery(id).single().toWorld()
-        }
+        fun ThreadLocalRandom.nextIntWithinRows() =
+            nextInt(dbRows) + 1
 
+        fun selectSingleWorld(random: ThreadLocalRandom): World =
+            selectWorldsWithIdQuery(random.nextIntWithinRows()).single().toWorld()
+
+        fun selectWorlds(queries: Int, random: ThreadLocalRandom): List<World> =
+            List(queries) { selectSingleWorld(random) }
 
         get("/db") {
             val random = ThreadLocalRandom.current()
-            val world = withDatabaseContextAndTransaction { selectSingleWorld(random) }
-            call.respondText(Json.encodeToString(world), ContentType.Application.Json)
+            val result = withDatabaseContextAndTransaction {
+                when (exposedMode) {
+                    Dsl -> selectSingleWorld(random)
+                    Dao -> WorldDao[random.nextIntWithinRows()].toWorld()
+                }
+            }
+            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
         }
 
-        fun Transaction.selectWorlds(queries: Int, random: ThreadLocalRandom): List<World> =
-            List(queries) { selectSingleWorld(random) }
 
         get("/queries") {
             val queries = call.queries()
             val random = ThreadLocalRandom.current()
 
-            val result = withDatabaseContextAndTransaction { selectWorlds(queries, random) }
+            val result = withDatabaseContextAndTransaction {
+                when (exposedMode) {
+                    Dsl -> selectWorlds(queries, random)
+                    Dao -> List(queries) { WorldDao[random.nextIntWithinRows()].toWorld() }
+                }
+            }
 
             call.respondText(Json.encodeToString(result), ContentType.Application.Json)
         }
 
         get("/fortunes") {
-            lateinit var result: MutableList<Fortune>
+            val result = withDatabaseContextAndTransaction {
+                when (exposedMode) {
+                    Dsl -> FortuneTable.slice(FortuneTable.id, FortuneTable.message).selectAll()
+                        .asSequence().map { it.toFortune() }
 
-            withDatabaseContextAndTransaction {
-                val query = FortuneTable.slice(FortuneTable.id, FortuneTable.message).selectAll()
-                result = query.asSequence().map { it.toFortune() }.toMutableList()
+                    Dao -> FortuneDao.all().asSequence().map { it.toFortune() }
+                }.toMutableList()
             }
 
             result.add(Fortune(0, "Additional fortune added at request time."))
@@ -126,18 +162,35 @@ fun Application.module() {
             lateinit var result: List<World>
 
             withDatabaseContextAndTransaction {
-                result = selectWorlds(queries, random)
-                result.forEach { it.randomNumber = random.nextInt(dbRows) + 1 }
-                result
-                    // to avoid data race because all updates are in one transaction
-                    .sortedBy { it.id }
-                    .forEach { world ->
-                        WorldTable.update({ WorldTable.id eq world.id }) { it[randomNumber] = world.randomNumber }
-                        /*
-                        // An alternative approach: commit every change to avoid data race
-                        commit()
-                        */
+                when (exposedMode) {
+                    Dsl -> {
+                        result = selectWorlds(queries, random)
+                        result.forEach { it.randomNumber = random.nextInt(dbRows) + 1 }
+                        result
+                            // sort the data to avoid data race because all updates are in one transaction
+                            .sortedBy { it.id }
+                            .forEach { world ->
+                                WorldTable.update({ WorldTable.id eq world.id }) {
+                                    it[randomNumber] = world.randomNumber
+                                }
+                                /*
+                                // An alternative approach: commit every change to avoid data race
+                                commit()
+                                */
+                            }
                     }
+
+                    Dao -> {
+                        val worldDaosAndNewRandomNumbers =
+                            List(queries) { WorldDao[random.nextIntWithinRows()] to random.nextIntWithinRows() }
+                        worldDaosAndNewRandomNumbers
+                            .sortedBy { (worldDao, _) -> worldDao.id.value }
+                            .forEach { (worldDao, newRandomNumber) ->
+                                worldDao.randomNumber = newRandomNumber
+                            }
+                        result = worldDaosAndNewRandomNumbers.map { (worldDao, _) -> worldDao.toWorld() }
+                    }
+                }
             }
 
             call.respondText(Json.encodeToString(result), ContentType.Application.Json)
