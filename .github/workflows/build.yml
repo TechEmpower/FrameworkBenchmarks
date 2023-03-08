@@ -20,7 +20,7 @@ jobs:
       #
       # We need to fetch more than one commit to be able to access HEAD^2 in case
       # of a pull request
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 10
       # In case of a push event, the commit we care about is simply HEAD.
@@ -108,7 +108,7 @@ jobs:
       PREVIOUS_COMMIT: ${{ needs.setup.outputs.previous_commit }}
       PR_NUMBER: ${{ github.event.pull_request.number }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 10
       - uses: actions/setup-python@v2
