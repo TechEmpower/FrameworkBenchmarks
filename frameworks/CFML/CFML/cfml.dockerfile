@@ -1,4 +1,4 @@
-FROM ortussolutions/commandbox:3.4.4
+FROM ortussolutions/commandbox:3.6.4
 
 ENV cfconfig_adminPassword=password
 ENV box_server_runwar_args=--cache-servlet-paths=true

@@ -18,7 +18,8 @@
       "database_os": "Linux",
       "display_name": "Gramework",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     }
   }]
 }

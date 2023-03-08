@@ -1,16 +1,31 @@
-FROM rust:latest
+FROM rust:1.67 AS compile
 
-ADD ./ /xitca-web
-WORKDIR /xitca-web
+ARG RUST_TOOLCHAIN_VERSION=nightly-2023-02-20
+ARG WASMTIME_VERSION=6.0.0
 
-RUN rustup default nightly-2022-10-27
-RUN rustup target add wasm32-wasi
-RUN cargo clean
-RUN RUSTFLAGS="--cfg tokio_unstable" cargo build --release --bin xitca-web-wasm --target wasm32-wasi --features web
+ARG RUSTFLAGS="-C target-feature=+simd128 --cfg tokio_unstable"
+WORKDIR /tmp
+COPY Cargo.lock Cargo.toml ./
+COPY src ./src/
+COPY templates ./templates/
+RUN curl -LSs "https://github.com/bytecodealliance/wasmtime/releases/download/v${WASMTIME_VERSION}/wasmtime-v${WASMTIME_VERSION}-$(uname -m)-linux.tar.xz" | \
+      tar --strip-components=1 -Jx && \
+    rustup default "${RUST_TOOLCHAIN_VERSION}" && \
+    rustup target add wasm32-wasi && \
+    cargo build --bin xitca-web-wasm --features web --release --target wasm32-wasi
 
-RUN curl --show-error --location --fail https://github.com/bytecodealliance/wasmtime/releases/download/v2.0.0/wasmtime-v2.0.0-x86_64-linux.tar.xz --output wasmtime.tar.xz
-RUN tar -xvf wasmtime.tar.xz
+FROM ubuntu:22.04
 
+COPY --from=compile \
+     /tmp/target/wasm32-wasi/release/xitca-web-wasm.wasm \
+     /tmp/wasmtime \
+     /opt/xitca-web-wasm/
 EXPOSE 8080
+ARG BENCHMARK_ENV
+ARG TFB_TEST_DATABASE
+ARG TFB_TEST_NAME
 
-CMD ./wasmtime-v2.0.0-x86_64-linux/wasmtime ./target/wasm32-wasi/release/xitca-web-wasm.wasm --tcplisten 0.0.0.0:8080 --env FD_COUNT=3
+CMD /opt/xitca-web-wasm/wasmtime run \
+      --env FD_COUNT=3 \
+      --tcplisten 0.0.0.0:8080 \
+      /opt/xitca-web-wasm/xitca-web-wasm.wasm

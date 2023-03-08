@@ -220,7 +220,8 @@
         "webserver": "None",
         "os": "Linux",
         "notes": "https://http4k.org",
-        "versus": "ktor-cio"
+        "versus": "ktor-cio",
+        "tags": ["broken"]
       },
       "ktornetty": {
         "orm": "Raw",

@@ -1,11 +1,11 @@
 const cluster = require("cluster");
-const numCPUs = require("os").cpus().length;
+const physicalCpuCount = require("physical-cpu-count")
 
 if (cluster.isPrimary) {
   console.log(`Primary ${process.pid} is running`);
 
   // Fork workers.
-  for (let i = 0; i < numCPUs; i++) {
+  for (let i = 0; i < physicalCpuCount; i++) {
     cluster.fork();
   }
 

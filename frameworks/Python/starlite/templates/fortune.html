@@ -3,8 +3,15 @@
 <head><title>Fortunes</title></head>
 <body>
 <table>
-<tr><th>id</th><th>message</th></tr>
-{% for fortune in fortunes %}<tr><td>{{ fortune[0] }}</td><td>{{ fortune[1]|e }}</td></tr>
-{% endfor %}</table>
+    <tr>
+        <th>id</th>
+        <th>message</th>
+    </tr>
+    {% for fortune in fortunes %}
+        <tr>
+            <td>{{ fortune[0] }}</td>
+            <td>{{ fortune[1]|e }}</td>
+        </tr>
+    {% endfor %}</table>
 </body>
 </html>

@@ -66,15 +66,14 @@ pub async fn find_world_by_id(db: Database, id: i32) -> Result<World, MongoError
             .get("id")
             .expect("expected to parse world id")
             .expect("could not get world id")
-            .as_f64()
-            .expect("could not extract world id") as f32,
+            .as_i32()
+            .expect("could not extract world id"),
         random_number: raw
-            .get("randomNumber")
-            .expect("expected to parse world randomNumber")
-            .expect("expected to get world randomNumber")
-            .as_f64()
-            .expect("could not extract world randomNumber")
-            as f32,
+            .get("id")
+            .expect("expected to parse world id")
+            .expect("could not get world id")
+            .as_i32()
+            .expect("could not extract world id"),
     })
 }
 

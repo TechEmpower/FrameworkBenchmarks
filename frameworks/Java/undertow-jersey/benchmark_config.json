@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "undertow-jersey-c3p0",
       "notes": "",
-      "versus": "servlet-raw"
+      "versus": "servlet-raw",
+      "tags": ["broken"]
     },
     "hikaricp": {
       "db_url": "/db",
@@ -42,7 +43,8 @@
       "database_os": "Linux",
       "display_name": "undertow-jersey-hikaricp",
       "notes": "",
-      "versus": "undertow-jersey"
+      "versus": "undertow-jersey",
+      "tags": ["broken"]
     }
   }]
 }

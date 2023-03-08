@@ -42,7 +42,7 @@ rand = { version = "0.8.5", features = ["small_rng"] }
 serde = { version = "1.0.149", features = ["derive"] }
 serde_json = "1.0.89"
 sqlx = { version = "0.6.2", features = ["postgres", "macros", "runtime-tokio-native-tls"] }
-tokio = { version = "1.23.0", features = ["full"] }
+tokio = { version = "1.24.2", features = ["full"] }
 tokio-pg-mapper = "0.2.0"
 tokio-pg-mapper-derive = "0.2.0"
 tokio-postgres = "0.7.7"
