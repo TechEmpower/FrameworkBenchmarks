@@ -1,10 +1,10 @@
 FROM freepascal/fpc:3.2.2-focal-full as builder
 
 RUN apt-get update -yqq
-RUN apt-get install -yqq p7zip-full zlib1g-dev
+RUN apt-get install -yqq zlib1g-dev
 
 WORKDIR /build
-COPY src/ src/
+COPY src/raw.* src/
 COPY setup_and_build.sh .
 
 RUN /bin/bash -c ./setup_and_build.sh
