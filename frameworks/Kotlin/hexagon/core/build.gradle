@@ -1,0 +1,34 @@
+
+plugins {
+    id("nu.studer.rocker") version("3.0.4")
+}
+
+dependencies {
+    api("com.hexagonkt:http_server:$hexagonVersion")
+    api("com.hexagonkt:templates_pebble:$hexagonVersion")
+    api("com.hexagonkt:templates_rocker:$hexagonVersion")
+    api("com.hexagonkt:logging_slf4j_jul:$hexagonVersion")
+    api("com.hexagonkt:serialization_dsl_json:$hexagonVersion")
+    api("org.cache2k:cache2k-core:$cache2kVersion")
+}
+
+tasks.register("minimizeTemplate") {
+    doLast {
+        [ "fortunes.pebble.html", "fortunes.rocker.html" ].forEach { t ->
+            File template = file("$buildDir/resources/main/$t")
+            List<String> lines = template.readLines().collect { it.trim() }
+            template.write(lines.join(""))
+        }
+    }
+}
+
+jar.dependsOn("minimizeTemplate")
+
+rocker {
+    configurations {
+        create("main") {
+            templateDir.set(file("src/main/resources"))
+            optimize.set(true)
+        }
+    }
+}

@@ -1,4 +1,4 @@
-const MongoClient = require("mongodb").MongoClient;
+const { MongoClient } = require("mongodb");
 
 const mongoUrl = "mongodb://tfb-database:27017";
 const dbName = "hello_world";
@@ -7,10 +7,13 @@ let client;
 
 async function getCollection(name) {
   if (!client) {
-    client = await MongoClient.connect(
+    client = await new MongoClient(
       mongoUrl,
-      { useNewUrlParser: true }
-    );
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+      }
+    ).connect();
   }
 
   const db = client.db(dbName);

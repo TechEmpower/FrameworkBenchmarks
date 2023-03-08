@@ -1,10 +1,10 @@
-FROM maven:3.6.1-jdk-11-slim as maven
+FROM maven:3.8.5-openjdk-17-slim as maven
 WORKDIR /spring
 COPY src src
 COPY pom.xml pom.xml
 RUN mvn package -q
 
-FROM openjdk:11.0.3-jdk-slim
+FROM openjdk:17.0-jdk-slim
 WORKDIR /spring
 COPY --from=maven /spring/target/spring-webflux-benchmark.jar app.jar
 

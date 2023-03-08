@@ -26,10 +26,14 @@ This is the Vert.x portion of a [benchmarking test suite](../) comparing a varie
 
 * [Template rendering test source](src/main/java/vertx/App.java)
 
+### Caching Test
+
+* [Caching test source](src/main/java/vertx/App.java)
+
 ## Versions
 
-* [Java 11](https://jdk.java.net)
-* [vertx 4.1.3](http://vertx.io/)
+* [Java 17](https://jdk.java.net)
+* [vertx 4.3.8](http://vertx.io/)
 
 ## Test URLs
 
@@ -56,3 +60,7 @@ This is the Vert.x portion of a [benchmarking test suite](../) comparing a varie
 ### Template rendering Test
 
     http://localhost:8080/fortunes
+
+### Cached Query Test
+
+    http://localhost:8080/cached-queries?count=10

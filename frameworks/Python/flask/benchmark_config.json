@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "Flask",
       "notes": "",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     },
     "raw": {
       "json_url": "/json",
@@ -45,6 +46,45 @@
       "database_os": "Linux",
       "display_name": "Flask-raw",
       "notes": "",
+      "versus": "wsgi",
+      "tags": ["broken"]
+    },
+    "socketify-wsgi": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "flask",
+      "language": "Python",
+      "flavor": "Python3",
+      "orm": "Full",
+      "platform": "None",
+      "webserver": "Socketify.py",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Flask [socketify.py WSGI]",
+      "notes": "",
+      "versus": "wsgi"
+    },
+    "socketify-wsgi-pypy": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "flask",
+      "language": "Python",
+      "flavor": "PyPy",
+      "orm": "Full",
+      "platform": "None",
+      "webserver": "Socketify.py",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Flask [socketify.py WSGI PyPy3]",
+      "notes": "PyPy",
       "versus": "wsgi"
     },
     "pypy": {
@@ -68,7 +108,8 @@
       "database_os": "Linux",
       "display_name": "Flask",
       "notes": "PyPy",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     },
     "pypy-raw": {
       "json_url": "/json",
@@ -91,7 +132,8 @@
       "database_os": "Linux",
       "display_name": "Flask-raw",
       "notes": "PyPy",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     },
     "nginx-uwsgi": {
       "json_url": "/json",
@@ -114,7 +156,8 @@
       "database_os": "Linux",
       "display_name": "Flask",
       "notes": "",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     }
   }]
 }

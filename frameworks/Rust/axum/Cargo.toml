@@ -29,26 +29,27 @@ name = "axum-pg"
 path = "src/main_pg.rs"
 
 [dependencies]
-axum = { version = "0.5.1", default-features = false, features = ["json", "query"] }
-deadpool = { version = "0.9.3", features = ["rt_tokio_1", "serde", "async-trait", "managed" ] }
-deadpool-postgres = "0.10.2"
+axum = { version = "0.6.1", default-features = false, features = ["json", "query", "headers", "http1", "tokio"] }
+deadpool = { version = "0.9.5", features = ["rt_tokio_1", "serde", "async-trait", "managed" ] }
+deadpool-postgres = "0.10.3"
 dotenv = "0.15.0"
-futures = "0.3.21"
-futures-util = "0.3.21"
-hyper = { version = "0.14.18", features = ["http1"] }
-mongodb = { version = "2.2.1", features = ["zstd-compression", "snappy-compression", "zlib-compression"] }
-num_cpus = "1.13.1"
+futures = "0.3.25"
+futures-util = "0.3.25"
+hyper = { version = "0.14.23", features = ["http1", "server"] }
+mongodb = { version = "2.3.1", features = ["zstd-compression", "snappy-compression", "zlib-compression"] }
+num_cpus = "1.14.0"
 rand = { version = "0.8.5", features = ["small_rng"] }
-serde = { version = "1.0.136", features = ["derive"] }
-serde_json = "1.0.79"
-sqlx = { version = "0.6.0", features = ["postgres", "macros", "runtime-tokio-native-tls"] }
-tokio = { version = "1.17.0", features = ["full"] }
+serde = { version = "1.0.149", features = ["derive"] }
+serde_json = "1.0.89"
+sqlx = { version = "0.6.2", features = ["postgres", "macros", "runtime-tokio-native-tls"] }
+tokio = { version = "1.24.2", features = ["full"] }
 tokio-pg-mapper = "0.2.0"
 tokio-pg-mapper-derive = "0.2.0"
-tokio-postgres = "0.7.5"
-tower = { version = "0.4.12", features = ["util"] }
-tower-http = { version = "0.3.4", features = ["set-header"] }
-yarte = "0.15.6"
+tokio-postgres = "0.7.7"
+tower = { version = "0.4.13", features = ["util"] }
+tower-http = { version = "0.3.5", features = ["set-header"] }
+yarte = "0.15.7"
+
 
 [profile.release]
 lto = true

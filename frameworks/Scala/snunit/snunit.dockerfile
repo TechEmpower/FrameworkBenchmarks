@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y curl gnupg && \
   curl -sL https://nginx.org/keys/nginx_signing.key | apt-key add - && \
   echo "deb https://packages.nginx.org/unit/debian/ bullseye unit" > /etc/apt/sources.list.d/unit.list && \
   echo "deb-src https://packages.nginx.org/unit/debian/ bullseye unit" >> /etc/apt/sources.list.d/unit.list && \
-  apt-get update && apt-get install -y clang unit-dev=1.28* openjdk-11-jdk sbt && \
+  apt-get update && apt-get install -y clang unit-dev=1.29* openjdk-11-jdk sbt && \
   apt-get purge -y gnupg
 
 WORKDIR /workdir
@@ -15,7 +15,7 @@ COPY . .
 
 RUN sbt nativeLink
 
-FROM nginx/unit:1.28.0-minimal
+FROM nginx/unit:1.29.1-minimal
 
 COPY /config.sh /docker-entrypoint.d/
 COPY --from=builder /workdir/target/scala-2.13/workdir-out /app/example

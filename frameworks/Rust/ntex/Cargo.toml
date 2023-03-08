@@ -1,6 +1,6 @@
 [package]
 name = "ntex"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2018"
 
 [[bin]]
@@ -37,23 +37,23 @@ tokio = ["ntex/tokio"]
 async-std = ["ntex/async-std"]
 
 [dependencies]
-ntex = "0.5.28"
+ntex = "0.6.1"
+ntex-bytes = { version = "0.1.19", features=["simd"] }
+core_affinity = "0.8"
 mimalloc = { version = "0.1.25", default-features = false }
 snmalloc-rs = { version = "0.3.3", features = ["native-cpu"] }
 yarte = { version = "0.15", features = ["bytes-buf", "json"] }
-env_logger = "0.9"
-nanorand = { version = "0.7", default-features = false, features = ["std", "wyrand"] }
+buf-min = { version = "0.7", features = ["ntex-bytes"] }
+env_logger = "0.10"
+nanorand = { version = "0.7", default-features = false, features = ["std", "wyrand", "tls"] }
 atoi = "2.0"
 num_cpus = "1.13"
-futures = "0.3"
 smallvec = "1.6.1"
-simd-json = "0.6.0"
-simd-json-derive = "0.6.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 log = { version = "0.4", features = ["release_max_level_off"] }
 tok_io = {version = "1", package = "tokio" }
-tokio-postgres = { git="https://github.com/fafhrd91/postgres.git" }
+tokio-postgres = { git="https://github.com/fafhrd91/postgres.git", branch="ntex-0.6" }
 
 [profile.release]
 opt-level = 3

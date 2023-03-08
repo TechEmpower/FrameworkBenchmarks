@@ -17,7 +17,8 @@
       "database_os": "Linux",
       "display_name": "uwsgi",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     },
     "nginx-uwsgi": {
       "json_url": "/json",
@@ -35,7 +36,8 @@
       "database_os": "Linux",
       "display_name": "uwsgi",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     }
   }]
 }

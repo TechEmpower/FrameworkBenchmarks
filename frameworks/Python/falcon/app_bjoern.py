@@ -27,7 +27,7 @@ class JSONResource(object):
         response.media = {'message': "Hello, world!"}
 
 
-class RandomWorld(object):
+class SingleQuery(object):
     @session(serializable=False)
     def on_get(self, request, response):
         wid = randint(1, 10000)
@@ -37,10 +37,9 @@ class RandomWorld(object):
         response.media = world.to_dict()
 
 
-class RandomQueries(object):
+class MultipleQueries(object):
     @session(serializable=False)
-    def on_get(self, request, response, **params):
-        num = params.get("num", "1")
+    def on_get(self, request, response, num):
         num = sanitize(num)
         worlds = [World[ident].to_dict() for ident in generate_ids(num)]
         response.set_header('Date', formatdate(timeval=None, localtime=False, usegmt=True))
@@ -50,8 +49,7 @@ class RandomQueries(object):
 
 class UpdateQueries(object):
     @session(serializable=False)
-    def on_get(self, request, response, **params):
-        num = params.get("num", "1")
+    def on_get(self, request, response, num):
         num = sanitize(num)
         ids = generate_ids(num)
         ids.sort()
@@ -90,15 +88,37 @@ class PlaintextResource(object):
 
 # register resources
 app.add_route("/json", JSONResource())
-app.add_route("/db", RandomWorld())
-app.add_route("/queries/{num}", RandomQueries())
+app.add_route("/db", SingleQuery())
+app.add_route("/queries/{num}", MultipleQueries())
 app.add_route("/updates/{num}", UpdateQueries())
 app.add_route("/fortunes", Fortunes())
 app.add_route("/plaintext", PlaintextResource())
 
 
 if __name__ == "__main__":
+    import os
+    import multiprocessing
+
+    _is_travis = os.environ.get('TRAVIS') == 'true'
+
+    workers = int(multiprocessing.cpu_count())
+    if _is_travis:
+        workers = 2
+
     host = '0.0.0.0'
     port = 8080
 
-    bjoern.run(wsgi, host=host, port=port)
+    def run_app():
+        bjoern.run(wsgi, host=host, port=port, reuse_port=True)
+
+    def create_fork():
+        n = os.fork()
+        # n greater than 0 means parent process
+        if not n > 0:
+            run_app()
+
+    # fork limiting the cpu count - 1
+    for i in range(1, workers):
+        create_fork()
+
+    run_app()  # run app on the main process too :)

@@ -1,0 +1,46 @@
+{:paths   ["src/clj"
+           "resources"]
+
+ :deps    {org.clojure/clojure              {:mvn/version "1.11.1"}
+
+           ;; Routing
+           metosin/reitit                   {:mvn/version "0.5.18"}
+
+           ;; Ring
+           metosin/ring-http-response       {:mvn/version "0.9.3"}
+           ring/ring-core                   {:mvn/version "1.9.5"}
+
+           ;; Data coercion
+           metosin/muuntaja                 {:mvn/version "0.6.8"}
+
+           ;; HTML templating
+           selmer/selmer                    {:mvn/version "1.12.55"}
+
+           ;; Database
+           org.postgresql/postgresql        {:mvn/version "42.5.1"}
+
+           ;; kit Libs
+           io.github.kit-clj/kit-core       {:mvn/version "1.0.3"}
+           io.github.kit-clj/kit-undertow   {:mvn/version "1.0.4"}
+           io.github.kit-clj/kit-sql-hikari {:mvn/version "1.0.2"}
+           org.clojure/core.cache           {:mvn/version "1.0.225"}
+
+           }
+
+ :aliases {:build {:deps       {io.github.clojure/tools.build {:git/sha "e3e3532"
+                                                               :git/tag "v0.8.0" :git/url "https://github.com/clojure/tools.build.git"}}
+                   :ns-default build}
+
+           :dev   {:extra-deps  {com.lambdaisland/classpath      {:mvn/version "0.0.27"}
+                                 criterium/criterium             {:mvn/version "0.4.6"}
+                                 expound/expound                 {:mvn/version "0.9.0"}
+                                 integrant/repl                  {:mvn/version "0.3.2"}
+                                 pjstadig/humane-test-output     {:mvn/version "0.11.0"}
+                                 ring/ring-devel                 {:mvn/version "1.9.5"}
+                                 ring/ring-mock                  {:mvn/version "0.4.0"}
+                                 io.github.kit-clj/kit-generator {:mvn/version "0.1.7"}
+                                 org.clojure/tools.namespace     {:mvn/version "1.2.0"}
+                                 }
+                   :extra-paths ["env/dev/clj" "env/dev/resources" "test/clj"]}
+           }
+ }

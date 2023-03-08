@@ -1,0 +1,15 @@
+
+apply(plugin: "war")
+
+war {
+    archiveFileName = "ROOT.war"
+}
+
+build.dependsOn("war")
+
+dependencies {
+    api(project(":store_sql"))
+    api("com.hexagonkt:http_server_servlet:$hexagonVersion")
+
+    compileOnly("jakarta.servlet:jakarta.servlet-api:5.0.0")
+}

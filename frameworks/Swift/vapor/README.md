@@ -12,7 +12,7 @@ PostgreSQL
 
 ## Versions
 
-[Swift 5.5](https://swift.org/)
+[Swift 5.7](https://swift.org/)
 [Vapor 4](https://vapor.codes/)
 
 ## Test URLs: `vapor`

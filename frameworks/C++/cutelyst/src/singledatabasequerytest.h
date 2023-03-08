@@ -13,13 +13,16 @@ class SingleDatabaseQueryTest : public Controller
 public:
     explicit SingleDatabaseQueryTest(QObject *parent = 0);
 
-    C_ATTR(dbp, :Local :AutoArgs)
-    void dbp(Context *c);
+    C_ATTR(db_asql_pg, :Path('pg') :AutoArgs)
+    void db_asql_pg(Context *c);
 
-    C_ATTR(db_postgres, :Local :AutoArgs)
+    C_ATTR(db_asql_pipeline_pg, :Path('Pg') :AutoArgs)
+    void db_asql_pipeline_pg(Context *c);
+
+    C_ATTR(db_postgres, :Path('PG') :AutoArgs)
     void db_postgres(Context *c);
 
-    C_ATTR(db_mysql, :Local :AutoArgs)
+    C_ATTR(db_mysql, :Path('MY') :AutoArgs)
     void db_mysql(Context *c);
 
 private:

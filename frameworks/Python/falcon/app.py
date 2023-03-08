@@ -16,7 +16,7 @@ class JSONResource(object):
         response.media = {'message': "Hello, world!"}
 
 
-class RandomWorld(object):
+class SingleQuery(object):
     @session(serializable=False)
     def on_get(self, request, response):
         wid = randint(1, 10000)
@@ -24,10 +24,9 @@ class RandomWorld(object):
         response.media = world.to_dict()
 
 
-class RandomQueries(object):
+class MultipleQueries(object):
     @session(serializable=False)
-    def on_get(self, request, response, **params):
-        num = params.get("num", "1")
+    def on_get(self, request, response, num):
         num = sanitize(num)
         worlds = [World[ident].to_dict() for ident in generate_ids(num)]
         response.media = worlds
@@ -35,8 +34,7 @@ class RandomQueries(object):
 
 class UpdateQueries(object):
     @session(serializable=False)
-    def on_get(self, request, response, **params):
-        num = params.get("num", "1")
+    def on_get(self, request, response, num):
         num = sanitize(num)
         ids = generate_ids(num)
         ids.sort()
@@ -69,8 +67,8 @@ class PlaintextResource(object):
 
 # register resources
 app.add_route("/json", JSONResource())
-app.add_route("/db", RandomWorld())
-app.add_route("/queries/{num}", RandomQueries())
+app.add_route("/db", SingleQuery())
+app.add_route("/queries/{num}", MultipleQueries())
 app.add_route("/updates/{num}", UpdateQueries())
 app.add_route("/fortunes", Fortunes())
 app.add_route("/plaintext", PlaintextResource())

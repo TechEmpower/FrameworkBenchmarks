@@ -103,4 +103,4 @@ fi
 
 test -t 1 && USE_TTY="-t"
 docker build -t techempower/tfb - < ${SCRIPT_ROOT}/Dockerfile
-exec docker run -i ${USE_TTY} --rm --network tfb -v /var/run/docker.sock:/var/run/docker.sock -v ${SCRIPT_ROOT}:/FrameworkBenchmarks techempower/tfb "${@}"
+exec docker run -i ${USE_TTY} ${EXTRA_DOCKER_ARGS} --rm --network tfb -v /var/run/docker.sock:/var/run/docker.sock -v ${SCRIPT_ROOT}:/FrameworkBenchmarks techempower/tfb "${@}"

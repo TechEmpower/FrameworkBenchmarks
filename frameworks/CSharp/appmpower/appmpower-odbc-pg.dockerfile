@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0.100 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 RUN apt-get update
 RUN apt-get -yqq install clang zlib1g-dev libkrb5-dev libtinfo5
 RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
@@ -9,11 +9,13 @@ WORKDIR /odbc
 
 # To compile the latest postgresql odbc driver, postgresql itself needs to be installed
 #RUN curl -L -o postgresql-14.1.tar.gz https://ftp.postgresql.org/pub/source/v14.1/postgresql-14.1.tar.gz
-RUN curl -L -o unixODBC-2.3.9.tar.gz ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.9.tar.gz
+#RUN curl -L -o unixODBC-2.3.9.tar.gz ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.9.tar.gz
+RUN curl -L -o unixODBC-2.3.11.tar.gz ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.11.tar.gz
 #RUN curl -L -o psqlodbc-13.02.0000.tar.gz https://ftp.postgresql.org/pub/odbc/versions/src/psqlodbc-13.02.0000.tar.gz
 
 #RUN tar -xvf postgresql-14.1.tar.gz
-RUN tar -xvf unixODBC-2.3.9.tar.gz
+#RUN tar -xvf unixODBC-2.3.9.tar.gz
+RUN tar -xvf unixODBC-2.3.11.tar.gz
 #RUN tar -xvf psqlodbc-13.02.0000.tar.gz
 
 #WORKDIR /odbc/postgresql-14.1
@@ -23,7 +25,8 @@ RUN tar -xvf unixODBC-2.3.9.tar.gz
 
 #ENV PATH=/usr/local/pgsql/bin:$PATH
 
-WORKDIR /odbc/unixODBC-2.3.9
+#WORKDIR /odbc/unixODBC-2.3.9
+WORKDIR /odbc/unixODBC-2.3.11
 RUN ./configure --prefix=/usr/local/unixODBC
 RUN make
 RUN make install
@@ -40,7 +43,7 @@ COPY src .
 RUN dotnet publish -c Release -o out -r linux-x64  /p:Database=postgresql
 
 # Construct the actual image that will run
-FROM mcr.microsoft.com/dotnet/aspnet:6.0.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 
 RUN apt-get update
 # The following installs standard versions unixodbc 2.3.6 and pgsqlodbc 11

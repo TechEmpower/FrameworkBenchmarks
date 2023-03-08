@@ -1,17 +1,28 @@
-FROM buildpack-deps:bionic
+FROM ubuntu:22.04
 
-COPY ./ ./
+ARG MONGODB_VERSION=6.0
 
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 4B7C549A058F8B6B
-RUN echo "deb https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | tee /etc/apt/sources.list.d/mongodb-org.list
-RUN apt-get -yqq update > /dev/null
-# Complete and utter hax if works
-RUN ln -s /bin/echo /bin/systemctl
-RUN DEBIAN_FRONTEND=noninteractive apt-get -yqq install apt-transport-https mongodb-org > /dev/null
+COPY create.js /tmp/
 
-RUN mkdir -p /data/db
-RUN chmod 777 /data/db
-
-RUN mongod --fork --logpath /var/log/mongodb.log --bind_ip_all && sleep 10 && mongo < create.js && sleep 10
+ARG DEBIAN_FRONTEND=noninteractive
+ADD "https://www.mongodb.org/static/pgp/server-${MONGODB_VERSION}.asc" \
+    /etc/apt/keyrings/mongodb-org.asc
+RUN apt-get -yqq update && \
+    apt-get -yqq install \
+      apt-utils \
+      ca-certificates \
+      lsb-release && \
+    chmod 644 /etc/apt/keyrings/mongodb-org.asc && \
+    echo "deb [ signed-by=/etc/apt/keyrings/mongodb-org.asc ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/${MONGODB_VERSION} multiverse" > \
+      /etc/apt/sources.list.d/mongodb-org.list && \
+    apt-get -yqq update && \
+    # Complete and utter hax if it works
+    ln -s /bin/echo /bin/systemctl && \
+    apt-get -yqq install mongodb-org && \
+    install -dm777 /data/db && \
+    mongod --fork --logpath /var/log/mongodb.log --bind_ip_all && \
+    sleep 10 && \
+    mongosh < /tmp/create.js && \
+    sleep 10
 
 CMD ["mongod", "--bind_ip_all"]

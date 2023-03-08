@@ -15,7 +15,7 @@ namespace PlatformBenchmarks
 {
     // Is semantically identical to RawDbMySqlConnector.cs.
     // If you are changing RawDbNpgsql.cs, also consider changing RawDbMySqlConnector.cs.
-    public class RawDb
+    public sealed class RawDb
     {
         private readonly ConcurrentRandom _random;
         private readonly string _connectionString;
@@ -187,7 +187,7 @@ namespace PlatformBenchmarks
 
         public async Task<List<Fortune>> LoadFortunesRows()
         {
-            var result = new List<Fortune>(20);
+            var result = new List<Fortune>();
 
             using (var db = new NpgsqlConnection(_connectionString))
             {

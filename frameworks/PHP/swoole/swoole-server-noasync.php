@@ -1,10 +1,11 @@
 <?php
 require_once __DIR__.'/db-no-async.php';
 
+use Swoole\Http\Server;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 
-$server = new swoole_http_server('0.0.0.0', 8080, SWOOLE_BASE);
+$server = new Swoole\Http\Server('0.0.0.0', 8080, SWOOLE_BASE);
 $server->set([
     'worker_num' => swoole_cpu_num() * 4,
     'log_file' => '/dev/null',

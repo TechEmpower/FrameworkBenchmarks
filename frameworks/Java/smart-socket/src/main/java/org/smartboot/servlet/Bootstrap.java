@@ -35,7 +35,7 @@ public class Bootstrap {
         jsonServletInfo.addMapping("/json");
         applicationRuntime.getDeploymentInfo().addServlet(jsonServletInfo);
         containerRuntime.addRuntime(applicationRuntime);
-        containerRuntime.start();
+
         int cpuNum = Runtime.getRuntime().availableProcessors();
         // 定义服务器接受的消息类型以及各类消息对应的处理器
         HttpBootstrap bootstrap = new HttpBootstrap();
@@ -46,6 +46,7 @@ public class Bootstrap {
                 .writeBufferSize(1024 * 4)
                 .readMemoryPool(16384 * 1024 * 4)
                 .writeMemoryPool(10 * 1024 * 1024 * cpuNum, cpuNum);
+        containerRuntime.start(bootstrap.configuration());
         bootstrap.setPort(8080)
                 .httpHandler(new HttpServerHandler() {
                     @Override
