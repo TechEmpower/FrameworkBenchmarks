@@ -93,7 +93,7 @@ jobs:
     needs: setup
     # The matrix check is necessary because an empty job matrix is otherwise considered a workflow failure
     if: ${{ !contains(needs.setup.outputs.commit_message, '[ci skip]') && contains(needs.setup.outputs.verify_matrix, 'TESTLANG') }}
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix: ${{ fromJSON(needs.setup.outputs.verify_matrix) }}
       # Disable fail-fast to allow all failing frameworks/etc to fail in a
