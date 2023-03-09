@@ -82,12 +82,12 @@ impl Client {
             .map_err(Into::into)
     }
 
-    pub fn get_world(&self) -> impl Future<Output=HandleResult<World>> + '_ {
+    pub fn get_world(&self) -> impl Future<Output = HandleResult<World>> + '_ {
         let id = self.rng.borrow_mut().gen_id();
         self.query_one_world(id)
     }
 
-    pub fn get_worlds(&self, num: u16) -> impl Future<Output=HandleResult<Vec<World>>> + '_ {
+    pub fn get_worlds(&self, num: u16) -> impl Future<Output = HandleResult<Vec<World>>> + '_ {
         let mut rng = self.rng.borrow_mut();
         (0..num)
             .map(|_| {

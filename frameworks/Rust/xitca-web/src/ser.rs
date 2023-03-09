@@ -66,9 +66,9 @@ impl Fortune {
 }
 
 #[cfg_attr(
-feature = "template",
-derive(sailfish::TemplateOnce),
-template(path = "fortune.stpl", rm_whitespace = true)
+    feature = "template",
+    derive(sailfish::TemplateOnce),
+    template(path = "fortune.stpl", rm_whitespace = true)
 )]
 pub struct Fortunes {
     items: Vec<Fortune>,
@@ -99,8 +99,8 @@ mod _serde {
 
     impl Serialize for Message {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-            where
-                S: Serializer,
+        where
+            S: Serializer,
         {
             let mut res = serializer.serialize_struct("Message", 1)?;
             res.serialize_field("message", self.message)?;
@@ -110,8 +110,8 @@ mod _serde {
 
     impl Serialize for World {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-            where
-                S: Serializer,
+        where
+            S: Serializer,
         {
             let mut res = serializer.serialize_struct("World", 2)?;
             res.serialize_field("id", &self.id)?;
@@ -125,8 +125,8 @@ mod _serde {
         buf: &mut BytesMut,
         value: &S,
     ) -> Result<Response<Once<Bytes>>, Error>
-        where
-            S: ?Sized + Serialize,
+    where
+        S: ?Sized + Serialize,
     {
         serde_json::to_writer(BufMutWriter(buf), value)?;
         let mut res = req.into_response(buf.split().freeze());

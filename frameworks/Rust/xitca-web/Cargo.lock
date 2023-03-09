@@ -8,9 +8,9 @@ version = "0.1.66"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b84f9ebcc6c1f5b8cb160f6990096a5c127f423fcb6e1ccc46c370cbdfb75dfc"
 dependencies = [
-    "proc-macro2",
-    "quote",
-    "syn",
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -46,7 +46,7 @@ version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71"
 dependencies = [
-    "generic-array",
+ "generic-array",
 ]
 
 [[package]]
@@ -110,12 +110,12 @@ version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "67d310b8050b1068b32fd03c55bd73f8d9ef5a789e2443c5b4e92f4587c63ed3"
 dependencies = [
-    "async-trait",
-    "diesel",
-    "futures",
-    "scoped-futures",
-    "tokio",
-    "tokio-postgres",
+ "async-trait",
+ "diesel",
+ "futures",
+ "scoped-futures",
+ "tokio",
+ "tokio-postgres",
 ]
 
 [[package]]
@@ -153,10 +153,10 @@ version = "0.2.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8a3de6e8d11b22ff9edc6d916f890800597d60f8b2da1caf2955c274638d6412"
 dependencies = [
-    "cfg-if",
-    "libc",
-    "redox_syscall",
-    "windows-sys",
+ "cfg-if",
+ "libc",
+ "redox_syscall",
+ "windows-sys",
 ]
 
 [[package]]
@@ -411,10 +411,10 @@ name = "mio"
 version = "0.8.6"
 source = "git+https://github.com/fakeshadow/mio.git?rev=8f9125153aecb37f638a212fe82df8671bc77a1a#8f9125153aecb37f638a212fe82df8671bc77a1a"
 dependencies = [
-    "libc",
-    "log",
-    "wasi",
-    "windows-sys",
+ "libc",
+ "log",
+ "wasi",
+ "windows-sys",
 ]
 
 [[package]]
@@ -429,7 +429,7 @@ version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "578ede34cf02f8924ab9447f50c28075b4d3e5b269972345e7e0372b38c6cdcd"
 dependencies = [
-    "autocfg",
+ "autocfg",
 ]
 
 [[package]]
@@ -464,11 +464,11 @@ version = "0.9.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9069cbb9f99e3a5083476ccb29ceb1de18b9118cafa53e90c9551235de2b9521"
 dependencies = [
-    "cfg-if",
-    "libc",
-    "redox_syscall",
-    "smallvec",
-    "windows-sys",
+ "cfg-if",
+ "libc",
+ "redox_syscall",
+ "smallvec",
+ "windows-sys",
 ]
 
 [[package]]
@@ -512,16 +512,16 @@ name = "postgres-protocol"
 version = "0.6.4"
 source = "git+https://github.com/sfackler/rust-postgres.git?rev=7cd7b187a5cb990ceb0ea9531cd3345b1e2799c3#7cd7b187a5cb990ceb0ea9531cd3345b1e2799c3"
 dependencies = [
-    "base64",
-    "byteorder",
-    "bytes",
-    "fallible-iterator",
-    "hmac",
-    "md-5",
-    "memchr",
-    "rand",
-    "sha2",
-    "stringprep",
+ "base64",
+ "byteorder",
+ "bytes",
+ "fallible-iterator",
+ "hmac",
+ "md-5",
+ "memchr",
+ "rand",
+ "sha2",
+ "stringprep",
 ]
 
 [[package]]
@@ -694,7 +694,7 @@ version = "1.0.154"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8cdd151213925e7f1ab45a9bbfb129316bd00799784b174b7cc7bcd16961c49e"
 dependencies = [
-    "serde_derive",
+ "serde_derive",
 ]
 
 [[package]]
@@ -703,9 +703,9 @@ version = "1.0.154"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4fc80d722935453bcafdc2c9a73cd6fac4dc1938f0346035d84bf99fa9e33217"
 dependencies = [
-    "proc-macro2",
-    "quote",
-    "syn",
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -714,9 +714,9 @@ version = "1.0.94"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1c533a59c9d8a93a09c6ab31f0fd5e5f4dd1b8fc9434804029839884765d04ea"
 dependencies = [
-    "itoa",
-    "ryu",
-    "serde",
+ "itoa",
+ "ryu",
+ "serde",
 ]
 
 [[package]]
@@ -766,8 +766,8 @@ version = "0.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "64a4a911eed85daf18834cfaa86a79b7d266ff93ff5ba14005426219480ed662"
 dependencies = [
-    "libc",
-    "winapi",
+ "libc",
+ "winapi",
 ]
 
 [[package]]
@@ -792,9 +792,9 @@ version = "1.0.109"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "72b64191b275b66ffe2469e8af2c1cfe3bafa67b529ead792a6d0160888b4237"
 dependencies = [
-    "proc-macro2",
-    "quote",
-    "unicode-ident",
+ "proc-macro2",
+ "quote",
+ "unicode-ident",
 ]
 
 [[package]]
@@ -824,16 +824,16 @@ version = "1.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "03201d01c3c27a29c8a5cee5b55a93ddae1ccf6f08f65365c2c918f8c1b76f64"
 dependencies = [
-    "autocfg",
-    "bytes",
-    "libc",
-    "memchr",
-    "mio",
-    "num_cpus",
-    "pin-project-lite",
-    "signal-hook-registry",
-    "socket2",
-    "windows-sys",
+ "autocfg",
+ "bytes",
+ "libc",
+ "memchr",
+ "mio",
+ "num_cpus",
+ "pin-project-lite",
+ "signal-hook-registry",
+ "socket2",
+ "windows-sys",
 ]
 
 [[package]]
@@ -1050,19 +1050,19 @@ name = "xitca-http"
 version = "0.1.0"
 source = "git+https://github.com/HFQR/xitca-web.git?rev=e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86#e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86"
 dependencies = [
-    "futures-core",
-    "http",
-    "httparse",
-    "httpdate",
-    "itoa",
-    "pin-project-lite",
-    "socket2",
-    "tokio",
-    "tracing",
-    "xitca-io",
-    "xitca-router",
-    "xitca-service",
-    "xitca-unsafe-collection",
+ "futures-core",
+ "http",
+ "httparse",
+ "httpdate",
+ "itoa",
+ "pin-project-lite",
+ "socket2",
+ "tokio",
+ "tracing",
+ "xitca-io",
+ "xitca-router",
+ "xitca-service",
+ "xitca-unsafe-collection",
 ]
 
 [[package]]
@@ -1070,8 +1070,8 @@ name = "xitca-io"
 version = "0.1.0"
 source = "git+https://github.com/HFQR/xitca-web.git?rev=e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86#e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86"
 dependencies = [
-    "bytes",
-    "tokio",
+ "bytes",
+ "tokio",
 ]
 
 [[package]]
@@ -1079,15 +1079,15 @@ name = "xitca-postgres"
 version = "0.1.0"
 source = "git+https://github.com/HFQR/xitca-web.git?rev=e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86#e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86"
 dependencies = [
-    "fallible-iterator",
-    "percent-encoding",
-    "postgres-protocol",
-    "postgres-types",
-    "tokio",
-    "tracing",
-    "xitca-io",
-    "xitca-service",
-    "xitca-unsafe-collection",
+ "fallible-iterator",
+ "percent-encoding",
+ "postgres-protocol",
+ "postgres-types",
+ "tokio",
+ "tracing",
+ "xitca-io",
+ "xitca-service",
+ "xitca-unsafe-collection",
 ]
 
 [[package]]
@@ -1095,7 +1095,7 @@ name = "xitca-router"
 version = "0.1.0"
 source = "git+https://github.com/HFQR/xitca-web.git?rev=e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86#e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86"
 dependencies = [
-    "xitca-unsafe-collection",
+ "xitca-unsafe-collection",
 ]
 
 [[package]]
@@ -1103,13 +1103,13 @@ name = "xitca-server"
 version = "0.1.0"
 source = "git+https://github.com/HFQR/xitca-web.git?rev=e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86#e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86"
 dependencies = [
-    "socket2",
-    "tokio",
-    "tokio-uring",
-    "tracing",
-    "xitca-io",
-    "xitca-service",
-    "xitca-unsafe-collection",
+ "socket2",
+ "tokio",
+ "tokio-uring",
+ "tracing",
+ "xitca-io",
+ "xitca-service",
+ "xitca-unsafe-collection",
 ]
 
 [[package]]
@@ -1122,32 +1122,32 @@ name = "xitca-unsafe-collection"
 version = "0.1.0"
 source = "git+https://github.com/HFQR/xitca-web.git?rev=e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86#e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86"
 dependencies = [
-    "bytes",
+ "bytes",
 ]
 
 [[package]]
 name = "xitca-web"
 version = "0.1.0"
 dependencies = [
-    "atoi",
-    "diesel",
-    "diesel-async",
-    "futures-util",
-    "mimalloc",
-    "nanorand",
-    "sailfish",
-    "serde",
-    "serde_json",
-    "tang-rs",
-    "tokio",
-    "tokio-uring",
-    "xitca-http",
-    "xitca-io",
-    "xitca-postgres",
-    "xitca-server",
-    "xitca-service",
-    "xitca-unsafe-collection",
-    "xitca-web 0.1.0 (git+https://github.com/HFQR/xitca-web.git?rev=e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86)",
+ "atoi",
+ "diesel",
+ "diesel-async",
+ "futures-util",
+ "mimalloc",
+ "nanorand",
+ "sailfish",
+ "serde",
+ "serde_json",
+ "tang-rs",
+ "tokio",
+ "tokio-uring",
+ "xitca-http",
+ "xitca-io",
+ "xitca-postgres",
+ "xitca-server",
+ "xitca-service",
+ "xitca-unsafe-collection",
+ "xitca-web 0.1.0 (git+https://github.com/HFQR/xitca-web.git?rev=e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86)",
 ]
 
 [[package]]
@@ -1155,12 +1155,12 @@ name = "xitca-web"
 version = "0.1.0"
 source = "git+https://github.com/HFQR/xitca-web.git?rev=e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86#e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86"
 dependencies = [
-    "futures-core",
-    "pin-project-lite",
-    "serde",
-    "serde_json",
-    "xitca-http",
-    "xitca-server",
-    "xitca-service",
-    "xitca-unsafe-collection",
+ "futures-core",
+ "pin-project-lite",
+ "serde",
+ "serde_json",
+ "xitca-http",
+ "xitca-server",
+ "xitca-service",
+ "xitca-unsafe-collection",
 ]

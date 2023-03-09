@@ -56,9 +56,9 @@ fn main() -> io::Result<()> {
                         write_buf: RefCell::new(BytesMut::new()),
                     })
                 })
-                    .service(fn_service(handler)),
+                .service(fn_service(handler)),
             )
-                .enclosed(UncheckedReady)
+            .enclosed(UncheckedReady)
         })?
         .build()
         .wait()
@@ -150,9 +150,9 @@ struct Http1IOUService<S> {
 
 // runner for http service.
 impl<S> Service<TcpStream> for Http1IOUService<S>
-    where
-        S: Service<Request, Response=Response>,
-        S::Error: fmt::Debug,
+where
+    S: Service<Request, Response = Response>,
+    S::Error: fmt::Debug,
 {
     type Response = ();
     type Error = io::Error;

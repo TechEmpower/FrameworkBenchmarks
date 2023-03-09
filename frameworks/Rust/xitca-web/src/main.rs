@@ -70,7 +70,7 @@ fn main() -> io::Result<()> {
 
 async fn middleware_fn<S, E>(service: &S, req: Ctx<'_>) -> Result<Response, E>
 where
-    S: for<'c> Service<Ctx<'c>, Response=Response, Error=E>,
+    S: for<'c> Service<Ctx<'c>, Response = Response, Error = E>,
 {
     service.call(req).await.map(|mut res| {
         res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
