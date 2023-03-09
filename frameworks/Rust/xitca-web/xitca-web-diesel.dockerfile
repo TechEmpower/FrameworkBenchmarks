@@ -3,9 +3,7 @@ FROM rust:latest
 ADD ./ /xitca-web
 WORKDIR /xitca-web
 
-RUN rustup default nightly-2023-02-20
-RUN cargo clean
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --bin xitca-web-diesel --features orm,sailfish,serde,web
+RUN cargo build --release --bin xitca-web-diesel --features pg-orm,serde,template,web
 
 EXPOSE 8080
 

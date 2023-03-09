@@ -1,7 +1,7 @@
 table! {
     world (id) {
         id -> Integer,
-        randomnumber -> Integer,
+        random_number -> Integer,
     }
 }
 

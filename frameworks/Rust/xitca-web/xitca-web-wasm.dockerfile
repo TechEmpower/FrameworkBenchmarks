@@ -1,6 +1,5 @@
 FROM rust:1.67 AS compile
 
-ARG RUST_TOOLCHAIN_VERSION=nightly-2023-02-20
 ARG WASMTIME_VERSION=6.0.0
 
 ARG RUSTFLAGS="-C target-feature=+simd128 --cfg tokio_unstable"
@@ -10,7 +9,6 @@ COPY src ./src/
 COPY templates ./templates/
 RUN curl -LSs "https://github.com/bytecodealliance/wasmtime/releases/download/v${WASMTIME_VERSION}/wasmtime-v${WASMTIME_VERSION}-$(uname -m)-linux.tar.xz" | \
       tar --strip-components=1 -Jx && \
-    rustup default "${RUST_TOOLCHAIN_VERSION}" && \
     rustup target add wasm32-wasi && \
     cargo build --bin xitca-web-wasm --features web --release --target wasm32-wasi
 
