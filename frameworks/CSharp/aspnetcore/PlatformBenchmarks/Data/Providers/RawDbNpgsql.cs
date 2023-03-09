@@ -14,22 +14,23 @@ namespace PlatformBenchmarks
     public sealed class RawDb
     {
         private readonly ConcurrentRandom _random;
-        private readonly string _connectionString;
         private readonly MemoryCache _cache = new(
             new MemoryCacheOptions
             {
                 ExpirationScanFrequency = TimeSpan.FromMinutes(60)
             });
 
+        private readonly NpgsqlDataSource _dataSource;
+
         public RawDb(ConcurrentRandom random, AppSettings appSettings)
         {
             _random = random;
-            _connectionString = appSettings.ConnectionString;
+            _dataSource = NpgsqlDataSource.Create(appSettings.ConnectionString);
         }
 
         public async Task<World> LoadSingleQueryRow()
         {
-            using var db = new NpgsqlConnection(_connectionString);
+            using var db = _dataSource.CreateConnection();
             await db.OpenAsync();
 
             var (cmd, _) = CreateReadCommand(db);
@@ -39,20 +40,37 @@ namespace PlatformBenchmarks
 
         public async Task<World[]> LoadMultipleQueriesRows(int count)
         {
-            var result = new World[count];
+            var results = new World[count];
 
-            using var db = new NpgsqlConnection(_connectionString);
-            await db.OpenAsync();
+            using var connection = await _dataSource.OpenConnectionAsync();
 
-            var (cmd, idParameter) = CreateReadCommand(db);
-            using var command = cmd;
-            for (int i = 0; i < result.Length; i++)
+            using var batch = new NpgsqlBatch(connection)
             {
-                result[i] = await ReadSingleRow(cmd);
-                idParameter.TypedValue = _random.Next(1, 10001);
+                // Inserts a PG Sync message between each statement in the batch, required for compliance with
+                // TechEmpower general test requirement 7
+                // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview
+                EnableErrorBarriers = true
+            };
+
+            for (var i = 0; i < count; i++)
+            {
+                batch.BatchCommands.Add(new()
+                {
+                    CommandText = "SELECT id, randomnumber FROM world WHERE id = $1",
+                    Parameters = { new NpgsqlParameter<int> { TypedValue = _random.Next(1, 10001) } }
+                });
             }
 
-            return result;
+            using var reader = await batch.ExecuteReaderAsync();
+
+            for (var i = 0; i < count; i++)
+            {
+                await reader.ReadAsync();
+                results[i] = new World { Id = reader.GetInt32(0), RandomNumber = reader.GetInt32(1) };
+                await reader.NextResultAsync();
+            }
+
+            return results;
         }
 
         public Task<CachedWorld[]> LoadCachedQueries(int count)
@@ -79,7 +97,7 @@ namespace PlatformBenchmarks
 
             static async Task<CachedWorld[]> LoadUncachedQueries(int id, int i, int count, RawDb rawdb, CachedWorld[] result)
             {
-                using var db = new NpgsqlConnection(rawdb._connectionString);
+                using var db = rawdb._dataSource.CreateConnection();
                 await db.OpenAsync();
 
                 var (cmd, idParameter) = rawdb.CreateReadCommand(db);
@@ -109,7 +127,7 @@ namespace PlatformBenchmarks
 
         public async Task PopulateCache()
         {
-            using var db = new NpgsqlConnection(_connectionString);
+            using var db = _dataSource.CreateConnection();
             await db.OpenAsync();
 
             var (cmd, idParameter) = CreateReadCommand(db);
@@ -129,30 +147,43 @@ namespace PlatformBenchmarks
         {
             var results = new World[count];
 
-            using var db = new NpgsqlConnection(_connectionString);
-            await db.OpenAsync();
+            using var connection = _dataSource.CreateConnection();
+            await connection.OpenAsync();
 
-            var (queryCmd, queryParameter) = CreateReadCommand(db);
-            using (queryCmd)
+            using (var batch = new NpgsqlBatch(connection))
             {
-                for (int i = 0; i < results.Length; i++)
+                // Inserts a PG Sync message between each statement in the batch, required for compliance with
+                // TechEmpower general test requirement 7
+                // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview
+                batch.EnableErrorBarriers = true;
+
+                for (var i = 0; i < count; i++)
                 {
-                    results[i] = await ReadSingleRow(queryCmd);
-                    queryParameter.TypedValue = _random.Next(1, 10001);
+                    batch.BatchCommands.Add(new()
+                    {
+                        CommandText = "SELECT id, randomnumber FROM world WHERE id = $1",
+                        Parameters = { new NpgsqlParameter<int> { TypedValue = _random.Next(1, 10001) } }
+                    });
+                }
+
+                using var reader = await batch.ExecuteReaderAsync();
+
+                for (var i = 0; i < count; i++)
+                {
+                    await reader.ReadAsync();
+                    results[i] = new World { Id = reader.GetInt32(0), RandomNumber = reader.GetInt32(1) };
+                    await reader.NextResultAsync();
                 }
             }
 
-            using (var updateCmd = new NpgsqlCommand(BatchUpdateString.Query(count), db))
+            using (var updateCmd = new NpgsqlCommand(BatchUpdateString.Query(count), connection))
             {
-                var ids = BatchUpdateString.Ids;
-                var randoms = BatchUpdateString.Randoms;
-
                 for (int i = 0; i < results.Length; i++)
                 {
                     var randomNumber = _random.Next(1, 10001);
 
-                    updateCmd.Parameters.Add(new NpgsqlParameter<int>(parameterName: ids[i], value: results[i].Id));
-                    updateCmd.Parameters.Add(new NpgsqlParameter<int>(parameterName: randoms[i], value: randomNumber));
+                    updateCmd.Parameters.Add(new NpgsqlParameter<int> { TypedValue = results[i].Id });
+                    updateCmd.Parameters.Add(new NpgsqlParameter<int> { TypedValue = randomNumber });
 
                     results[i].RandomNumber = randomNumber;
                 }
@@ -167,7 +198,7 @@ namespace PlatformBenchmarks
         {
             var result = new List<Fortune>();
 
-            using (var db = new NpgsqlConnection(_connectionString))
+            using (var db = _dataSource.CreateConnection())
             {
                 await db.OpenAsync();
 
