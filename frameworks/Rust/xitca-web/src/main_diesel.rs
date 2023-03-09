@@ -45,8 +45,8 @@ fn main() -> std::io::Result<()> {
 }
 
 async fn middleware_fn<S, E>(service: &S, mut ctx: Request<'_>) -> Result<WebResponse, E>
-    where
-        S: for<'r> Service<Request<'r>, Response=HandleResult<WebResponse>, Error=E>,
+where
+    S: for<'r> Service<Request<'r>, Response=HandleResult<WebResponse>, Error=E>,
 {
     let mut res = match service.call(ctx.reborrow()).await? {
         Ok(res) => res,
