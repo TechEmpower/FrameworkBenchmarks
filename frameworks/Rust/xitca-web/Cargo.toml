@@ -6,17 +6,17 @@ edition = "2021"
 [[bin]]
 name = "xitca-web"
 path = "./src/main.rs"
-required-features = ["raw", "sailfish", "serde"]
+required-features = ["pg", "serde", "template"]
 
 [[bin]]
 name = "xitca-web-diesel"
 path = "./src/main_diesel.rs"
-required-features = ["orm", "sailfish", "serde", "web"]
+required-features = ["pg-orm", "serde", "template", "web"]
 
 [[bin]]
 name = "xitca-web-iou"
 path = "./src/main_iou.rs"
-required-features = ["io-uring"]
+required-features = ["io-uring", "pg", "serde", "template"]
 
 [[bin]]
 name = "xitca-web-wasm"
@@ -24,16 +24,16 @@ path = "./src/main_wasm.rs"
 required-features = ["web"]
 
 [features]
-# raw-pg optional
-raw = ["xitca-postgres"]
-# diesel-pg orm optional
-orm = ["diesel", "diesel-async", "tang-rs"]
+# pg optional
+pg = ["xitca-postgres"]
+# pg orm optional
+pg-orm = ["diesel", "diesel-async", "tang-rs"]
 # serde optional
 serde = ["dep:serde", "serde_json"]
 # web optional
 web = ["xitca-web"]
-# templating optional
-sailfish = ["dep:sailfish"]
+# template optional
+template = ["sailfish"]
 # io-uring optional
 io-uring = ["tokio-uring", "xitca-server/io-uring"]
 
@@ -58,20 +58,20 @@ diesel-async = { version = "0.2", default-features = false, features = ["postgre
 tang-rs = { version = "0.2", optional = true }
 
 # serde optional
-serde = { version = "1", features = ["derive"], optional = true }
+serde = { version = "1", optional = true }
 serde_json = { version = "1", optional = true }
 
 # io-uring optional
 tokio-uring = { version = "0.4", features = ["bytes"], optional = true }
 
-# templating optional
-sailfish = { version = "0.6", optional = true }
+# template optional
+sailfish = { version = "0.6.0", optional = true }
 
 # stuff can not be used or not needed in wasi target
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 mimalloc = { version = "0.1", default-features = false }
 futures-util = { version = "0.3", default-features = false, features = ["alloc"] }
-rand = { version = "0.8", default-features = false, features = ["min_const_gen", "nightly", "simd_support", "small_rng"] }
+nanorand = { version = "0.7", default-features = false, features = ["tls"] }
 tokio = "1"
 
 [profile.release]
@@ -81,13 +81,15 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "5462c9ecc1440e1b493281b2e0cdced4a19ad7af" }
-xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "5462c9ecc1440e1b493281b2e0cdced4a19ad7af" }
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "5462c9ecc1440e1b493281b2e0cdced4a19ad7af" }
-xitca-router = { git = "https://github.com/HFQR/xitca-web.git", rev = "5462c9ecc1440e1b493281b2e0cdced4a19ad7af" }
-xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "5462c9ecc1440e1b493281b2e0cdced4a19ad7af" }
-xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "5462c9ecc1440e1b493281b2e0cdced4a19ad7af" }
-xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "5462c9ecc1440e1b493281b2e0cdced4a19ad7af" }
-xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "5462c9ecc1440e1b493281b2e0cdced4a19ad7af" }
+xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
+xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
+xitca-router = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
+xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
+xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
+xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
+xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
+
+postgres-protocol = { git = "https://github.com/sfackler/rust-postgres.git", rev = "7cd7b187a5cb990ceb0ea9531cd3345b1e2799c3" }
 
 mio = { git = "https://github.com/fakeshadow/mio.git", rev = "8f9125153aecb37f638a212fe82df8671bc77a1a" }
