@@ -87,13 +87,13 @@ async fn plain_text(ctx: Ctx<'_>) -> HandleResult<Response> {
 
 async fn json(ctx: Ctx<'_>) -> HandleResult<Response> {
     let (req, state) = ctx.into_parts();
-    json_response(req, &mut *state.write_buf.borrow_mut(), &Message::new())
+    json_response(req, &mut state.write_buf.borrow_mut(), &Message::new())
 }
 
 async fn db(ctx: Ctx<'_>) -> HandleResult<Response> {
     let (req, state) = ctx.into_parts();
     let world = state.client.get_world().await?;
-    json_response(req, &mut *state.write_buf.borrow_mut(), &world)
+    json_response(req, &mut state.write_buf.borrow_mut(), &world)
 }
 
 async fn fortunes(ctx: Ctx<'_>) -> HandleResult<Response> {
@@ -109,14 +109,14 @@ async fn queries(ctx: Ctx<'_>) -> HandleResult<Response> {
     let (req, state) = ctx.into_parts();
     let num = req.uri().query().parse_query();
     let worlds = state.client.get_worlds(num).await?;
-    json_response(req, &mut *state.write_buf.borrow_mut(), worlds.as_slice())
+    json_response(req, &mut state.write_buf.borrow_mut(), worlds.as_slice())
 }
 
 async fn updates(ctx: Ctx<'_>) -> HandleResult<Response> {
     let (req, state) = ctx.into_parts();
     let num = req.uri().query().parse_query();
     let worlds = state.client.update(num).await?;
-    json_response(req, &mut *state.write_buf.borrow_mut(), worlds.as_slice())
+    json_response(req, &mut state.write_buf.borrow_mut(), worlds.as_slice())
 }
 
 struct State {

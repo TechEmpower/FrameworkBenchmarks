@@ -72,20 +72,20 @@ async fn handler(ctx: Ctx<'_, Request, State>) -> Result<Response, Infallible> {
             res.headers_mut().insert(CONTENT_TYPE, TEXT);
             res
         }
-        "/json" => json_response(req, &mut *state.write_buf.borrow_mut(), &Message::new()).unwrap(),
+        "/json" => json_response(req, &mut state.write_buf.borrow_mut(), &Message::new()).unwrap(),
         "/db" => {
             let world = state.client.get_world().await.unwrap();
-            json_response(req, &mut *state.write_buf.borrow_mut(), &world).unwrap()
+            json_response(req, &mut state.write_buf.borrow_mut(), &world).unwrap()
         }
         "/queries" => {
             let num = req.uri().query().parse_query();
             let worlds = state.client.get_worlds(num).await.unwrap();
-            json_response(req, &mut *state.write_buf.borrow_mut(), worlds.as_slice()).unwrap()
+            json_response(req, &mut state.write_buf.borrow_mut(), worlds.as_slice()).unwrap()
         }
         "/updates" => {
             let num = req.uri().query().parse_query();
             let worlds = state.client.update(num).await.unwrap();
-            json_response(req, &mut *state.write_buf.borrow_mut(), worlds.as_slice()).unwrap()
+            json_response(req, &mut state.write_buf.borrow_mut(), worlds.as_slice()).unwrap()
         }
         "/fortunes" => {
             use sailfish::TemplateOnce;

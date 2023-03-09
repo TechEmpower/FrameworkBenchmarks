@@ -107,7 +107,7 @@ impl Client {
                     let w_id = rng.gen_id();
                     async move {
                         self.query_one_world(w_id).await.map(|mut world| {
-                            world.random_number = id;
+                            world.randomnumber = id;
                             world
                         })
                     }
@@ -121,7 +121,7 @@ impl Client {
 
         for w in &worlds {
             params.push(&w.id);
-            params.push(&w.random_number);
+            params.push(&w.randomnumber);
         }
         for w in &worlds {
             params.push(&w.id);

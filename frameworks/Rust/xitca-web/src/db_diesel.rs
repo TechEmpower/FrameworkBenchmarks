@@ -165,7 +165,7 @@ impl DieselPool {
                     let fut = world.filter(id.eq(w_id)).load::<World>(&mut *conn);
                     async move {
                         let mut w = fut.await?.pop().unwrap();
-                        w.random_number = new_id;
+                        w.randomnumber = new_id;
                         DbResult::Ok(w)
                     }
                 })
@@ -181,7 +181,7 @@ impl DieselPool {
                 for w in &worlds {
                     diesel::update(world)
                         .filter(id.eq(w.id))
-                        .set(random_number.eq(w.random_number))
+                        .set(randomnumber.eq(w.randomnumber))
                         .execute(conn)
                         .await?;
                 }

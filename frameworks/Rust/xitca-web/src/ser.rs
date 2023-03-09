@@ -19,13 +19,13 @@ impl Message {
 #[cfg_attr(feature = "pg-orm", derive(Queryable))]
 pub struct World {
     pub id: i32,
-    pub random_number: i32,
+    pub randomnumber: i32,
 }
 
 impl World {
     #[inline]
-    pub const fn new(id: i32, random_number: i32) -> Self {
-        Self { id, random_number }
+    pub const fn new(id: i32, randomnumber: i32) -> Self {
+        Self { id, randomnumber }
     }
 }
 
@@ -115,7 +115,7 @@ mod _serde {
         {
             let mut res = serializer.serialize_struct("World", 2)?;
             res.serialize_field("id", &self.id)?;
-            res.serialize_field("randomnumber", &self.random_number)?;
+            res.serialize_field("randomnumber", &self.randomnumber)?;
             res.end()
         }
     }

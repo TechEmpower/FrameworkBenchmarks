@@ -521,7 +521,7 @@ dependencies = [
     "memchr",
     "rand",
     "sha2",
- "stringprep",
+    "stringprep",
 ]
 
 [[package]]
@@ -1059,10 +1059,10 @@ dependencies = [
     "socket2",
     "tokio",
     "tracing",
- "xitca-io",
- "xitca-router",
- "xitca-service",
- "xitca-unsafe-collection",
+    "xitca-io",
+    "xitca-router",
+    "xitca-service",
+    "xitca-unsafe-collection",
 ]
 
 [[package]]
