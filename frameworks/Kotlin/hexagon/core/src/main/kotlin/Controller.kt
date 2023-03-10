@@ -1,9 +1,9 @@
 package com.hexagonkt
 
 import com.hexagonkt.core.fieldsMapOf
-import com.hexagonkt.core.media.ApplicationMedia.JSON
-import com.hexagonkt.core.media.TextMedia.HTML
-import com.hexagonkt.core.media.TextMedia.PLAIN
+import com.hexagonkt.core.media.APPLICATION_JSON
+import com.hexagonkt.core.media.TEXT_HTML
+import com.hexagonkt.core.media.TEXT_PLAIN
 import com.hexagonkt.http.model.ContentType
 import com.hexagonkt.http.model.Header
 import com.hexagonkt.http.model.Headers
@@ -16,10 +16,8 @@ import com.hexagonkt.serialization.dsl.json.Json
 import com.hexagonkt.serialization.serialize
 import com.hexagonkt.store.BenchmarkStore
 import com.hexagonkt.templates.TemplatePort
-
 import java.net.URL
 import java.util.concurrent.ThreadLocalRandom
-
 import kotlin.text.Charsets.UTF_8
 
 class Controller(
@@ -33,9 +31,9 @@ class Controller(
     private val worldRows: Int = settings.worldRows
     private val textMessage: String = settings.textMessage
 
-    private val plain: ContentType = ContentType(PLAIN)
-    private val json: ContentType = ContentType(JSON)
-    private val html: ContentType = ContentType(HTML, charset = UTF_8)
+    private val plain: ContentType = ContentType(TEXT_PLAIN)
+    private val json: ContentType = ContentType(APPLICATION_JSON)
+    private val html: ContentType = ContentType(TEXT_HTML, charset = UTF_8)
 
     private val headers = Headers(Header("server", "Hexagon"))
 
