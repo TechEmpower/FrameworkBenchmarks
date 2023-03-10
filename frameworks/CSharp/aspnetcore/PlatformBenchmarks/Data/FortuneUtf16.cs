@@ -3,9 +3,9 @@
 
 namespace PlatformBenchmarks;
 
-public readonly struct Fortune : IComparable<Fortune>, IComparable
+public readonly struct FortuneUtf16 : IComparable<FortuneUtf16>, IComparable
 {
-    public Fortune(int id, string message)
+    public FortuneUtf16(int id, string message)
     {
         Id = id;
         Message = message;
@@ -18,5 +18,5 @@ public readonly struct Fortune : IComparable<Fortune>, IComparable
     public int CompareTo(object obj) => throw new InvalidOperationException("The non-generic CompareTo should not be used");
 
     // Performance critical, using culture insensitive comparison
-    public int CompareTo(Fortune other) => string.CompareOrdinal(Message, other.Message);
+    public int CompareTo(FortuneUtf16 other) => string.CompareOrdinal(Message, other.Message);
 }

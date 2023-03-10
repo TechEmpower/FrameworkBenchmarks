@@ -194,9 +194,9 @@ namespace PlatformBenchmarks
             return results;
         }
 
-        public async Task<List<Fortune>> LoadFortunesRows()
+        public async Task<List<FortuneUtf8>> LoadFortunesRows()
         {
-            var result = new List<Fortune>();
+            var result = new List<FortuneUtf8>();
 
             using (var db = _dataSource.CreateConnection())
             {
@@ -206,19 +206,21 @@ namespace PlatformBenchmarks
                 using var rdr = await cmd.ExecuteReaderAsync();
                 while (await rdr.ReadAsync())
                 {
-                    result.Add(new Fortune
+                    result.Add(new FortuneUtf8
                     (
                         id:rdr.GetInt32(0),
-                        message: rdr.GetString(1)
+                        message: rdr.GetFieldValue<byte[]>(1)
                     ));
                 }
             }
 
-            result.Add(new Fortune(id: 0, message: "Additional fortune added at request time." ));
+            result.Add(new FortuneUtf8(id: 0, AdditionalFortune));
             result.Sort();
 
             return result;
         }
+
+        private readonly byte[] AdditionalFortune = "Additional fortune added at request time."u8.ToArray();
 
         private (NpgsqlCommand readCmd, NpgsqlParameter<int> idParameter) CreateReadCommand(NpgsqlConnection connection)
         {
