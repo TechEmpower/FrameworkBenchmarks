@@ -3,9 +3,9 @@ export {
   Context,
   Router,
   Status,
-} from "https://deno.land/x/oak@v11.1.0/mod.ts";
-export { getQuery } from "https://deno.land/x/oak@v11.1.0/helpers.ts";
-export type { ResponseBody } from "https://deno.land/x/oak@v11.1.0/response.ts";
+} from "https://deno.land/x/oak@v12.1.0/mod.ts";
+export { getQuery } from "https://deno.land/x/oak@v12.1.0/helpers.ts";
+export type { ResponseBody } from "https://deno.land/x/oak@v12.1.0/response.ts";
 
 export {
   Column,
