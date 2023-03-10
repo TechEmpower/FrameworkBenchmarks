@@ -53,6 +53,7 @@ func jsonHandler(ctx *kit.Context) {
 
 func plaintextHandler(ctx *kit.Context) {
     ctx.Out().
+        SetHdr("Content-Type", "text/plain").
         SetMsg(kit.RawMessage(utils.S2B("Hello, World!"))).
         Send()
 }
