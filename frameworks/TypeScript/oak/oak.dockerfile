@@ -10,4 +10,4 @@ COPY ./src/deps.ts .
 RUN deno cache deps.ts
 
 ADD ./src .
-CMD [ "run", "--allow-net", "main.ts" ]
+CMD [ "run", "--allow-all", "main.ts" ]
