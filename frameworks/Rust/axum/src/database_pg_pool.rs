@@ -1,4 +1,4 @@
-use std::{io, str::FromStr};
+use std::io;
 
 use axum::{
     async_trait,
@@ -33,8 +33,8 @@ pub async fn create_pool(
     database_url: String,
     max_pool_size: u32,
 ) -> deadpool_postgres::Pool {
-    let pg_config =
-        tokio_postgres::Config::from_str(&database_url).expect("invalid database url");
+    let pg_config: tokio_postgres::Config =
+        database_url.parse().expect("invalid database url");
 
     let mgr_config = ManagerConfig {
         recycling_method: RecyclingMethod::Fast,
