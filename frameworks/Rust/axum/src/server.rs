@@ -1,5 +1,7 @@
-use std::io;
-use std::net::{Ipv4Addr, SocketAddr};
+use std::{
+    io,
+    net::{Ipv4Addr, SocketAddr},
+};
 
 use hyper::server::conn::AddrIncoming;
 use tokio::net::{TcpListener, TcpSocket};

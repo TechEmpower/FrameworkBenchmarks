@@ -1,30 +1,31 @@
+use axum::{
+    extract::Query,
+    http::{header, HeaderValue, StatusCode},
+    response::IntoResponse,
+    routing::get,
+    Json, Router,
+};
+use dotenv::dotenv;
+use futures_util::{stream::FuturesUnordered, TryStreamExt};
+use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
+use tower_http::set_header::SetResponseHeaderLayer;
+use yarte::Template;
+
 mod database_pg_pool;
 mod models_common;
 mod models_pg_pool;
 mod server;
 mod utils;
 
-use crate::database_pg_pool::{
-    create_pool, fetch_all_fortunes, fetch_world_by_id,
-    prepare_fetch_all_fortunes_statement, prepare_fetch_world_by_id_statement,
-    prepare_update_world_by_id_statement, update_world, DatabaseClient, PgError,
+use self::{
+    database_pg_pool::{
+        create_pool, fetch_all_fortunes, fetch_world_by_id,
+        prepare_fetch_all_fortunes_statement, prepare_fetch_world_by_id_statement,
+        prepare_update_world_by_id_statement, update_world, DatabaseClient, PgError,
+    },
+    models_pg_pool::{Fortune, World},
+    utils::{get_environment_variable, parse_params, random_number, Params, Utf8Html},
 };
-use axum::http::{header, HeaderValue};
-use axum::{
-    extract::Query, http::StatusCode, response::IntoResponse, routing::get, Extension,
-    Json, Router,
-};
-use dotenv::dotenv;
-use futures_util::stream::FuturesUnordered;
-use futures_util::TryStreamExt;
-use rand::rngs::SmallRng;
-use rand::{thread_rng, Rng, SeedableRng};
-use tower_http::set_header::SetResponseHeaderLayer;
-use yarte::Template;
-
-use crate::utils::{get_environment_variable, Utf8Html};
-use models_pg_pool::{Fortune, World};
-use utils::{parse_params, random_number, Params};
 
 #[derive(Template)]
 #[template(path = "fortunes.html.hbs")]
@@ -151,7 +152,7 @@ async fn serve() {
         .route("/db", get(db))
         .route("/queries", get(queries))
         .route("/updates", get(updates))
-        .layer(Extension(pool))
+        .with_state(pool)
         .layer(SetResponseHeaderLayer::if_not_present(
             header::SERVER,
             server_header_value,

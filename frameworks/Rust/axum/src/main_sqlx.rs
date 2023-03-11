@@ -1,26 +1,27 @@
+use axum::{
+    http::{header, HeaderValue, StatusCode},
+    response::IntoResponse,
+    routing::get,
+    Json, Router,
+};
+use dotenv::dotenv;
+use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
+use sqlx::PgPool;
+use tower_http::set_header::SetResponseHeaderLayer;
+use yarte::Template;
+
 mod database_sqlx;
 mod models_common;
 mod models_sqlx;
 mod server;
 mod utils;
 
-use crate::database_sqlx::{fetch_fortunes, fetch_world, DatabaseConnection};
-use axum::http::{header, HeaderValue};
-use axum::{
-    extract::Extension, http::StatusCode, response::IntoResponse, routing::get, Json,
-    Router,
+use self::{
+    database_sqlx::{create_pool, fetch_fortunes, fetch_world, DatabaseConnection},
+    models_sqlx::{Fortune, World},
+    utils::get_environment_variable,
+    utils::Utf8Html,
 };
-use dotenv::dotenv;
-use rand::rngs::SmallRng;
-use rand::{thread_rng, Rng, SeedableRng};
-use sqlx::PgPool;
-use tower_http::set_header::SetResponseHeaderLayer;
-use yarte::Template;
-
-use crate::utils::get_environment_variable;
-use database_sqlx::create_pool;
-use models_sqlx::{Fortune, World};
-use utils::Utf8Html;
 
 #[derive(Template)]
 #[template(path = "fortunes.html.hbs")]
@@ -86,7 +87,7 @@ async fn router(pool: PgPool) -> Router {
     Router::new()
         .route("/fortunes", get(fortunes))
         .route("/db", get(db))
-        .layer(Extension(pool))
+        .with_state(pool)
         .layer(SetResponseHeaderLayer::if_not_present(
             header::SERVER,
             server_header_value,
