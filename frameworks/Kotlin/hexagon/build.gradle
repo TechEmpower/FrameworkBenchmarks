@@ -1,6 +1,6 @@
 
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.8.0" apply false
+    id "org.jetbrains.kotlin.jvm" version "1.8.10" apply false
 }
 
 version = "1.0.0"
@@ -8,13 +8,13 @@ description = "TFB benchmark"
 group = "com.hexagonkt"
 
 ext {
-    hexagonVersion = "2.5.0"
+    hexagonVersion = "2.6.3"
     hikariVersion = "5.0.1"
-    jettyVersion = "11.0.13"
-    postgresqlVersion = "42.5.1"
-    vertxVersion = "4.3.7"
+    jettyVersion = "11.0.14"
+    postgresqlVersion = "42.5.4"
+    vertxVersion = "4.4.0"
     cache2kVersion = "2.6.1.Final"
-    nettyVersion = "4.1.87.Final"
+    nettyVersion = "4.1.89.Final"
 
     gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/$hexagonVersion/gradle"
 }

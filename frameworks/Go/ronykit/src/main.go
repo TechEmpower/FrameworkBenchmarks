@@ -5,19 +5,28 @@ import (
     "os"
 
     "github.com/clubpay/ronykit/kit"
-    "github.com/clubpay/ronykit/std/gateways/fasthttp"
+    "github.com/clubpay/ronykit/std/gateways/silverhttp"
 )
 
 func main() {
-    defer kit.NewServer(
+    opts := []kit.Option{
+        kit.RegisterService(serviceDesc.Generate()),
         kit.RegisterGateway(
-            fasthttp.MustNew(
-                fasthttp.Listen(":8080"),
-                fasthttp.WithServerName("ronykit"),
+            silverhttp.MustNew(
+                silverhttp.Listen(":8080"),
+                silverhttp.WithServerName("ronykit"),
             ),
         ),
-        kit.RegisterService(serviceDesc.Generate()),
-    ).
+    }
+
+    for i := range os.Args[1:] {
+        switch os.Args[1:][i] {
+        case "-prefork":
+            opts = append(opts, kit.WithPrefork())
+        }
+    }
+
+    defer kit.NewServer(opts...).
         Start(context.Background()).
         PrintRoutes(os.Stdout).
         Shutdown(context.Background(), os.Interrupt, os.Kill)
