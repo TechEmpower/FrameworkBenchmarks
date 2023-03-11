@@ -7,7 +7,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -yqq update && apt-get -yqq install \
       -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
       cloc \
-      dstat                       `# Collect resource usage statistics ` \
+      dstat                       `# Collect resource usage statistics` \
       git-core \
       libmysqlclient-dev          `# Needed for MySQL-python` \
       libpq-dev \
