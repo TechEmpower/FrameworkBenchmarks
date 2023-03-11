@@ -1,4 +1,4 @@
-FROM buildpack-deps:jammy
+FROM ubuntu:22.04
 
 ARG USER_ID
 ARG GROUP_ID
@@ -19,6 +19,7 @@ RUN apt-get -yqq update && apt-get -yqq install \
       python2.7-dev \
       curl \
       siege \
+      gcc \
       software-properties-common
 RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
 RUN python2 get-pip.py
@@ -40,8 +41,8 @@ RUN pip install \
 ENV FWROOT=/FrameworkBenchmarks PYTHONPATH=/FrameworkBenchmarks
 
 # Drop permissions of user to match those of the host system
-RUN addgroup --gid $GROUP_ID user
-RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
-USER user
+# RUN addgroup --gid $GROUP_ID user
+# RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
+# USER user
 
 ENTRYPOINT ["python2", "/FrameworkBenchmarks/toolset/run-tests.py"]
