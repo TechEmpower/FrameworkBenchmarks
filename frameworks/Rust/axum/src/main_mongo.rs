@@ -105,7 +105,7 @@ async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoRespon
     let fortune_infos: Vec<FortuneInfo> = fortunes
         .iter()
         .map(|f| FortuneInfo {
-            id: f.id as i32,
+            id: f.id,
             message: f.message.clone(),
         })
         .collect();
