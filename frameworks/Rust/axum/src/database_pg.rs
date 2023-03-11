@@ -45,7 +45,7 @@ impl PgConnection {
         // Spawn connection
         tokio::spawn(async move {
             if let Err(error) = conn.await {
-                eprintln!("Connection error: {}", error);
+                eprintln!("Connection error: {error}");
             }
         });
 
@@ -59,14 +59,14 @@ impl PgConnection {
             q.push_str("UPDATE world SET randomnumber = CASE id ");
 
             for _ in 1..=num {
-                let _ = write!(q, "when ${} then ${} ", pl, pl + 1);
+                let _ = write!(q, "when ${pl} then ${} ", pl + 1);
                 pl += 2;
             }
 
             q.push_str("ELSE randomnumber END WHERE id IN (");
 
             for _ in 1..=num {
-                let _ = write!(q, "${},", pl);
+                let _ = write!(q, "${pl},");
                 pl += 1;
             }
 

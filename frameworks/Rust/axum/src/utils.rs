@@ -13,9 +13,9 @@ where
     <T as FromStr>::Err: Debug,
 {
     env::var(key)
-        .unwrap_or_else(|_| panic!("{} environment variable was not set", key))
+        .unwrap_or_else(|_| panic!("{key} environment variable was not set"))
         .parse::<T>()
-        .unwrap_or_else(|_| panic!("could not parse {}", key))
+        .unwrap_or_else(|_| panic!("could not parse {key}"))
 }
 
 #[derive(Debug, Deserialize)]
