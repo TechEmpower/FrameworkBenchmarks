@@ -7,13 +7,11 @@ package org.redkalex.benchmark;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.function.IntFunction;
 import java.util.stream.IntStream;
 import org.redkale.annotation.*;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.DataSource;
-import org.redkale.util.AnyValue;
 
 /**
  *
@@ -27,13 +25,6 @@ public class BenchmarkService extends AbstractService {
 
     @Resource
     private DataSource source;
-
-    private WorldCache cache;
-
-    @Override
-    public void init(AnyValue conf) {
-        this.cache = new WorldCache(source);
-    }
 
     @RestMapping(name = "plaintext")
     public byte[] getHelloBytes() {
@@ -77,28 +68,10 @@ public class BenchmarkService extends AbstractService {
     }
 
     @RestMapping(name = "cached-worlds")
-    public World[] cachedWorlds(int q) {
+    public CachedWorld[] cachedWorlds(int q) {
         int size = Math.min(500, Math.max(1, q));
-        return cache.random(size);
+        IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
+        return source.finds(CachedWorld.class, ids.boxed());
     }
 
-    static class WorldCache {
-
-        private final IntFunction<World[]> arrayFunc = c -> new World[c];
-
-        private final World[] array;
-
-        private final IntFunction<World> mapFunc;
-
-        public WorldCache(DataSource source) {
-            List<World> list = source.queryList(World.class);
-            this.array = list.toArray(new World[list.size()]);
-            this.mapFunc = c -> array[c];
-        }
-
-        public World[] random(int size) {
-            IntStream ids = ThreadLocalRandom.current().ints(size, 0, 10000);
-            return ids.mapToObj(mapFunc).toArray(arrayFunc);
-        }
-    }
 }
