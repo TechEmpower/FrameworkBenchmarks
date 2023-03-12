@@ -26,8 +26,6 @@
         "versus": "None"
       },
       "vertx-pg-client-graalvm": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
@@ -49,8 +47,6 @@
         "versus": "None"
       },
       "jdbc": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
@@ -72,8 +68,6 @@
         "versus": "None"
       },
       "jdbc-graalvm": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
@@ -95,8 +89,6 @@
         "versus": "None"
       },
       "r2dbc": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
@@ -118,8 +110,6 @@
         "versus": "None"
       },
       "r2dbc-graalvm": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
@@ -141,8 +131,6 @@
         "versus": "None"
       },
       "data-jdbc": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
@@ -164,8 +152,6 @@
         "versus": "None"
       },
       "data-jdbc-graalvm": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
@@ -187,8 +173,6 @@
         "versus": "None"
       },
       "data-mongodb": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
@@ -210,8 +194,6 @@
         "versus": "None"
       },
       "data-mongodb-graalvm": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
