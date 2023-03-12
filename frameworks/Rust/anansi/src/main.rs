@@ -15,10 +15,6 @@ min_main!(server, {
     use anansi::cache::prelude::*;
     use hello::records::World;
     use anansi::records::Record;
-    if cfg!(feature = "raw") {
-        server.pool.2.write().unwrap().push(Arc::new(anansi::db::postgres::PgStatement::new("SELECT * FROM world WHERE id = $1", &server.pool).await.unwrap()));
-        server.pool.2.write().unwrap().push(Arc::new(anansi::db::postgres::PgStatement::new("SELECT * FROM fortune", &server.pool).await.unwrap()));
-    }
     let worlds = World::get_all().raw_query(&server.pool).await.expect("problem fetching worlds");
     let mut items = vec![];
     for world in worlds {

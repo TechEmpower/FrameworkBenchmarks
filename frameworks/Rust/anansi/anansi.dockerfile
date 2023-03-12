@@ -1,4 +1,4 @@
-FROM rust:1.64
+FROM rust:latest
 
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends redis-server
 

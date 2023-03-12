@@ -1,4 +1,4 @@
-FROM rust:1.64
+FROM rust:latest
 
 ADD ./ /anansi
 WORKDIR /anansi
