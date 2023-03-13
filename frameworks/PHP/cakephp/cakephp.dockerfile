@@ -21,7 +21,7 @@ RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children =
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
-RUN chmod -R 777 /cakephp
+RUN chmod -R 777 /cakephp 
 
 CMD service php8.2-fpm start && \
     nginx -c /cakephp/deploy/nginx.conf
