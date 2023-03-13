@@ -29,6 +29,7 @@
 #include <sys/resource.h>
 #include <sys/signalfd.h>
 #include <sys/time.h>
+#include <sys/utsname.h>
 
 #include "database.h"
 #include "error.h"
@@ -139,7 +140,15 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	global_data->global_thread_data = initialize_global_thread_data(config, global_data);
 
 	if (global_data->global_thread_data) {
-		printf("Number of processors: %zu\nMaximum cache line size: %zu\n",
+		struct utsname name = {.sysname = {'\0'}};
+
+		uname(&name);
+		printf("Operating system: %s %s %s\n"
+		       "Number of processors: %zu\n"
+		       "Maximum cache line size: %zu\n",
+		       name.sysname,
+		       name.release,
+		       name.version,
 		       h2o_numproc(),
 		       global_data->memory_alignment);
 		return 0;
