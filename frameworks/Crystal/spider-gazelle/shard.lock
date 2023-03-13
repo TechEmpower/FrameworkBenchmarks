@@ -50,7 +50,7 @@ shards:
 
   lucky_router:
     git: https://github.com/luckyframework/lucky_router.git
-    version: 0.5.1
+    version: 0.5.2
 
   pg:
     git: https://github.com/will/crystal-pg.git
