@@ -11,6 +11,7 @@
     "mysql2": "2.2.5",
     "pg": "8.5.0",
     "pg-promise": "10.7.3",
+    "physical-cpu-count": "^2.0.0",
     "pug": "2.0.1",
     "sequelize": "5.15.1"
   }

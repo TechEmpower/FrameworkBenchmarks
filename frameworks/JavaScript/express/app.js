@@ -4,7 +4,7 @@
  */
 
 const cluster = require('cluster'),
-  numCPUs = require('os').cpus().length,
+  physicalCpuCount = require('physical-cpu-count'),
   express = require('express');
 
 const bodyParser = require('body-parser');
@@ -13,7 +13,7 @@ if (cluster.isPrimary) {
   console.log(`Primary ${process.pid} is running`);
 
   // Fork workers.
-  for (let i = 0; i < numCPUs; i++) {
+  for (let i = 0; i < physicalCpuCount; i++) {
     cluster.fork();
   }
 
@@ -41,5 +41,7 @@ if (cluster.isPrimary) {
   app.get('/plaintext', (req, res) =>
     res.header('Content-Type', 'text/plain').send('Hello, World!'));
 
-  app.listen(8080);
+  app.listen(8080, () => {
+    console.log('listening on port 8080');
+  });
 }

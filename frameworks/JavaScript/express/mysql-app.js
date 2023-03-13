@@ -4,7 +4,7 @@
  */
 
 const cluster = require('cluster'),
-  numCPUs = require('os').cpus().length,
+  physicalCpuCount = require('physical-cpu-count'),
   express = require('express'),
   Sequelize = require('sequelize');
 
@@ -45,7 +45,7 @@ const Fortune = sequelize.define('Fortune', {
 
 if (cluster.isPrimary) {
   // Fork workers.
-  for (let i = 0; i < numCPUs; i++) {
+  for (let i = 0; i < physicalCpuCount; i++) {
     cluster.fork();
   }
 
@@ -127,5 +127,7 @@ if (cluster.isPrimary) {
     res.send(results);
   });
 
-  app.listen(8080);
+  app.listen(8080, () => {
+    console.log('listening on port 8080');
+  });
 }

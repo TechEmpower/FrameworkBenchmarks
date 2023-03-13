@@ -2,7 +2,7 @@ name: build
 on: [ push, pull_request ]
 jobs:
   setup:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       # Required for workflow triggers like the auto-label for failing PRs
       - name: Save PR number
@@ -20,7 +20,7 @@ jobs:
       #
       # We need to fetch more than one commit to be able to access HEAD^2 in case
       # of a pull request
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 10
       # In case of a push event, the commit we care about is simply HEAD.
@@ -46,7 +46,7 @@ jobs:
           echo "$(git log --format=%B -n 1 HEAD^2)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           echo "PREVIOUS_COMMIT=$(git log --format=%H -n 1 HEAD^2~1)" >> $GITHUB_ENV
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: '2.7'
           architecture: 'x64'
@@ -93,7 +93,7 @@ jobs:
     needs: setup
     # The matrix check is necessary because an empty job matrix is otherwise considered a workflow failure
     if: ${{ !contains(needs.setup.outputs.commit_message, '[ci skip]') && contains(needs.setup.outputs.verify_matrix, 'TESTLANG') }}
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix: ${{ fromJSON(needs.setup.outputs.verify_matrix) }}
       # Disable fail-fast to allow all failing frameworks/etc to fail in a
@@ -108,10 +108,10 @@ jobs:
       PREVIOUS_COMMIT: ${{ needs.setup.outputs.previous_commit }}
       PR_NUMBER: ${{ github.event.pull_request.number }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 10
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: '2.7'
           architecture: 'x64'
