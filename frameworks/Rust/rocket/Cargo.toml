@@ -41,3 +41,6 @@ yarte = "0.15.6"
 # serde = "1.0.137"
 serde_json = "1.0.81"
 serde_derive = "1.0.137"
+
+# Temp issue https://github.com/SergioBenitez/Rocket/issues/2491
+proc-macro2 = "= 1.0.51"
