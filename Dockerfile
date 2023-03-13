@@ -37,7 +37,13 @@ RUN if ! getent group $GROUP_ID; then \
     fi
 
 # Drop permissions of user to match those of the host system
-RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
+# Check if the User ID is already created
+RUN if ! getent passwd $USER_ID; then \
+      adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user; \
+    else \
+      adduser --disabled-password --gecos '' --uid ${USER_ID}1 --gid $GROUP_ID user; \
+    fi
+
 USER user
 
 ENTRYPOINT ["python", "/FrameworkBenchmarks/toolset/run-tests.py"]
