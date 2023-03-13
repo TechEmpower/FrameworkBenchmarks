@@ -138,7 +138,7 @@ jobs:
           if [ "$RUN_TESTS" ]; then echo "Proceeding to run tests."; else echo 'Skipping test verification.'; fi
       - name: Build tfb dockerfile
         if: ${{ env.RUN_TESTS }}
-        run: docker build -t techempower/tfb - < ./Dockerfile;
+        run: docker build -t techempower/tfb --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) - < ./Dockerfile;
       - name: Stop services
         # Stop services that would claim ports we may need
         run: |
