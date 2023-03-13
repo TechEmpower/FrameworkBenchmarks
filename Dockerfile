@@ -1,7 +1,5 @@
 FROM ubuntu:22.04
 
-ARG USER_ID
-ARG GROUP_ID
 ARG DEBIAN_FRONTEND=noninteractive
 
 #RUN add-apt-repository universe
@@ -39,10 +37,5 @@ RUN pip install \
     #  /usr/lib/python2.7/dist-packages/backports
 
 ENV FWROOT=/FrameworkBenchmarks PYTHONPATH=/FrameworkBenchmarks
-
-# Drop permissions of user to match those of the host system
-# RUN addgroup --gid $GROUP_ID user
-# RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
-# USER user
 
 ENTRYPOINT ["python2", "/FrameworkBenchmarks/toolset/run-tests.py"]
