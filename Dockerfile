@@ -31,8 +31,12 @@ RUN apt-get -yqq update && apt-get -yqq install \
 
 ENV FWROOT=/FrameworkBenchmarks PYTHONPATH=/FrameworkBenchmarks
 
+# Check if Group is already created
+RUN if ! getent group $GROUP_ID; then \
+      addgroup --gid $GROUP_ID user; \
+    fi
+
 # Drop permissions of user to match those of the host system
-RUN addgroup --gid $GROUP_ID user
 RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
 USER user
 
