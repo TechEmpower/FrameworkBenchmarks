@@ -295,7 +295,7 @@ function TRawAsyncServer.cached_queries(ctxt: THttpServerRequest): cardinal;
 var
   i: PtrInt;
   res: TOrmWorlds;
-  cache: POrmCacheEntry;
+  cache: POrmCacheTable;
 begin
   cache := fStore.Orm.Cache.Table(TOrmCachedWorld);
   SetLength(res, GetQueriesParamValue(ctxt, 'COUNT='));
@@ -479,14 +479,16 @@ begin
   cnt := getQueriesParamValue(ctxt);
   if not getRawRandomWorlds(cnt, res) then
     exit;
-  if cnt > 20 then
+  // generate new randoms
+  for i := 0 to cnt - 1 do
+    res[i].randomNumber := ComputeRandomWorld;
+  if cnt > 15 then
   begin
+    // fill parameters arrays for update with nested select (PostgreSQL only)
     setLength(ids{%H-}, cnt);
     setLength(nums{%H-}, cnt);
-    // generate new randoms, fill parameters arrays for update
     for i := 0 to cnt - 1 do
     begin
-      res[i].randomNumber := ComputeRandomWorld;
       ids[i] := res[i].id;
       nums[i] := res[i].randomNumber;
     end;
@@ -496,10 +498,10 @@ begin
   end
   else
   begin
+    // fill parameters for update up to 15 items as CASE .. WHEN .. THEN ..
     stmt := conn.NewStatementPrepared(ComputeUpdateSql(cnt), false, true);
     for i := 0 to cnt - 1 do
     begin
-      res[i].randomNumber := ComputeRandomWorld;
       stmt.Bind(i * 2 + 1, res[i].id);
       stmt.Bind(i * 2 + 2, res[i].randomNumber);
       stmt.Bind(cnt * 2 + i + 1, res[i].id);
