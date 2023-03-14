@@ -3,7 +3,6 @@ use crate::prelude::Request;
 #[cfg(not(feature = "raw"))]
 use crate::hello::world::views::WorldView;
 
-
 #[cfg(not(feature = "raw"))]
 pub fn routes<R: Request>() -> Router<R> {
     Router::new()
