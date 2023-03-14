@@ -1,18 +1,21 @@
-FROM php:8.1-cli
+FROM php:8.2-cli
+
+RUN apt-get update && apt-get install -y git > /dev/null
+
+RUN docker-php-ext-install opcache pdo_mysql > /dev/null
 
 RUN pecl install openswoole > /dev/null && \
     docker-php-ext-enable openswoole
 
-RUN docker-php-ext-install opcache  > /dev/null
-
-WORKDIR /openswoole
-
-COPY swoole-server.php swoole-server.php
-RUN sed -i "s|DatabasePool('postgres|DatabasePool('mysql|g" swoole-server.php
-RUN sed -i "s|_mysql||g" swoole-server.php
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 COPY php.ini /usr/local/etc/php/
 
+ADD ./ /openswoole
+WORKDIR /openswoole
+
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+
 EXPOSE 8080
 
-CMD php swoole-server.php
+CMD php /openswoole/openswoole-server-mysql.php
