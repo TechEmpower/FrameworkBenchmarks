@@ -65,10 +65,7 @@ jobs:
       - id: event_out
         name: Write event outputs
         run: |
-          # Escape the multiline string for Github Actions, see https://github.community/t/set-output-truncates-multiline-strings/16852/3
-          #COMMIT_MESSAGE="${COMMIT_MESSAGE//'%'/'%25'}"
-          #COMMIT_MESSAGE="${COMMIT_MESSAGE//$'\n'/'%0A'}"
-          #COMMIT_MESSAGE="${COMMIT_MESSAGE//$'\r'/'%0D'}"
+          # Escape the multiline string for Github Actions, see https://stackoverflow.com/questions/74137120/how-to-fix-or-avoid-error-unable-to-process-file-command-output-successfully/74140298#74140298
           echo -e "commit_message=$COMMIT_MESSAGE" >> $GITHUB_OUTPUT
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
           echo "target_branch_name=$TARGET_BRANCH_NAME" >> $GITHUB_OUTPUT
