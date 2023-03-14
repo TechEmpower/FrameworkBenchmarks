@@ -24,6 +24,27 @@
       "notes": "",
       "versus": "php"
     },
+    "postgres": {
+      "db_url": "/db",
+      "query_url": "/db?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "openswoole",
+      "language": "PHP",
+      "flavor": "PHP8.2",
+      "orm": "Raw",
+      "platform": "openswoole",
+      "webserver": "none",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "openswoole Postgres",
+      "notes": "",
+      "versus": "php"
+    },
     "no-async": {
       "db_url": "/db",
       "query_url": "/query?q=",
