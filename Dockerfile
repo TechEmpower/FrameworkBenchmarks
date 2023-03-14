@@ -9,16 +9,17 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -yqq update && apt-get -yqq install \
       -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
       cloc \
+      curl \
       dstat                       `# Collect resource usage statistics` \
+      gcc \
       git-core \
       libmysqlclient-dev          `# Needed for MySQL-python` \
       libpq-dev \
       python2 \
       python2.7-dev \
-      curl \
       siege \
-      gcc \
       software-properties-common
+
 RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
 RUN python2 get-pip.py
 
