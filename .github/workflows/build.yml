@@ -65,8 +65,7 @@ jobs:
       - id: event_out
         name: Write event outputs
         run: |
-          # Escape the multiline string for Github Actions, see https://stackoverflow.com/questions/74137120/how-to-fix-or-avoid-error-unable-to-process-file-command-output-successfully/74140298#74140298
-          #echo -e "commit_message=$COMMIT_MESSAGE" >> $GITHUB_OUTPUT
+          # Escape the multiline string for Github Actions, see https://lab.amalitsky.com/posts/2022/github-actions-set-output-migration/#migration-from-set-output-to-github-output
           delimiter="$(openssl rand -hex 8)"
               {
                 echo "commit_message<<${delimiter}"
