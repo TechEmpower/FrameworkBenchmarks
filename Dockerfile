@@ -40,10 +40,8 @@ RUN if ! getent group $GROUP_ID; then \
 # Check if the User ID is already created
 RUN if ! getent passwd $USER_ID; then \
       adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user; \
-    else \
-      adduser --disabled-password --gecos '' --uid ${USER_ID}1 --gid $GROUP_ID user; \
     fi
 
-USER user
+USER $USER_ID
 
 ENTRYPOINT ["python", "/FrameworkBenchmarks/toolset/run-tests.py"]
