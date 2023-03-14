@@ -11,6 +11,7 @@ RUN apt-get -yqq update && apt-get -yqq install \
       cloc \
       dstat                       `# Collect resource usage statistics` \
       git-core \
+      gosu \
       libmysqlclient-dev          `# Needed for MySQL-python` \
       libpq-dev \
       python-dev \
@@ -42,6 +43,6 @@ RUN if ! getent passwd $USER_ID; then \
       adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user; \
     fi
 
-USER $USER_ID
+ENV USER_ID=$USER_ID
 
-ENTRYPOINT ["python", "/FrameworkBenchmarks/toolset/run-tests.py"]
+ENTRYPOINT ["/bin/bash", "FrameworkBenchmarks/entrypoint.sh" ]

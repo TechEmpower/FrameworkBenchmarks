@@ -150,7 +150,7 @@ jobs:
           # run-ci.py runs the diffing to see if github actions needs to test this framework. Ideally/eventually,
           # we'd like to try and do the diffing before github_actions_clean & setup.
           # This will run the tests exactly as you would in your own vm:
-          docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test-dir $RUN_TESTS --results-environment Github-Actions;
+          docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -e USER_ID=$(id -u) -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test-dir $RUN_TESTS --results-environment Github-Actions;
   dependabot:
     needs: verify
     runs-on: ubuntu-latest
