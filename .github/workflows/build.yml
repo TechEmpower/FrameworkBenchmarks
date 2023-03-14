@@ -70,7 +70,7 @@ jobs:
           delimiter="$(openssl rand -hex 8)"
               {
                 echo "commit_message<<${delimiter}"
-                cat $COMMIT_MESSAGE
+                echo $COMMIT_MESSAGE
                 echo "${delimiter}"
               } >> $GITHUB_OUTPUT
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
