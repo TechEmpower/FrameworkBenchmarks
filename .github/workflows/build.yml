@@ -142,7 +142,7 @@ jobs:
         with:
           args: " --file ./Dockerfile --tag techempower/tfb ."
           cache_key: "${{ hashFiles('./Dockerfile') }}"
-      - name: Stop services
+      - name: Stop services 
         # Stop services that would claim ports we may need
         run: |
           sudo service mysql stop || true
