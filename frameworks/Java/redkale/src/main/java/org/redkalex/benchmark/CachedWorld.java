@@ -3,7 +3,7 @@
  */
 package org.redkalex.benchmark;
 
-import org.redkale.convert.json.JsonConvert;
+import org.redkale.convert.json.*;
 import org.redkale.persistence.*;
 
 /**
@@ -11,7 +11,7 @@ import org.redkale.persistence.*;
  * @author zhangjx
  */
 @Entity
-@Cacheable
+@Cacheable(direct = true)
 @Table(name = "world")
 public final class CachedWorld {
 
