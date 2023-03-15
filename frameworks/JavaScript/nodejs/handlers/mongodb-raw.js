@@ -1,92 +1,94 @@
 const h = require('../helper');
-const async = require('async');
 const MongoClient = require('mongodb').MongoClient;
-const collections = {
-  World: null,
-  Fortune: null
-};
+let collections = null, connecting = false, connectionCallbacks = [];
 
 const mongoUrl = 'mongodb://tfb-database:27017';
 const dbName = 'hello_world';
 
-MongoClient.connect(mongoUrl, (err, database) => {
-  // do nothing if there is err connecting to db
-
-  collections.World = database.db(dbName).collection('world');
-  collections.Fortune = database.db(dbName).collection('fortune');
-});
-
-
-const mongodbRandomWorld = (callback) => {
-  collections.World.findOne({
-    _id: h.randomTfbNumber()
-  }, (err, world) => {
-    callback(err, world);
-  });
-};
-
-const mongodbGetAllFortunes = (callback) => {
-  collections.Fortune.find().toArray((err, fortunes) => {
-    callback(err, fortunes);
-  })
-};
-
-const mongodbDriverUpdateQuery = (callback) => {
-  collections.World.findOne({ _id: h.randomTfbNumber() }, (err, world) => {
-    world.randomNumber = h.randomTfbNumber();
-    collections.World.update({ _id: world._id }, world, (err, updated) => {
-      callback(err, { _id: world._id, randomNumber: world.randomNumber });
+const getCollections = async () => {
+  // mongoose creates a queue of requests during connection, so we don't have to wait.
+  // however, with the raw driver we need to connect first, or sometimes the test will fail randomly
+  if (collections) {
+    return collections;
+  }
+  if (connecting) {
+    const promise = new Promise((resolve) => {
+      connectionCallbacks.push(resolve);
     });
+    return await promise;
+  }
+  connecting = true;
+  const client = await MongoClient.connect(mongoUrl);
+  collections = {
+    World: null,
+    Fortune: null
+  };
+  collections.World = client.db(dbName).collection('world');
+  collections.Fortune = client.db(dbName).collection('fortune');
+  return collections;
+}
+
+
+const mongodbRandomWorld = async () => {
+  const collections = await getCollections();
+  const world = collections.World.findOne({
+    _id: h.randomTfbNumber()
   });
+  world._id = undefined; // remove _id from query response
+  return world;
+};
+
+const mongodbGetAllFortunes = async () => {
+  const collections = await getCollections();
+  return await collections.Fortune.find().lean().toArray();
+};
+
+const mongodbDriverUpdateQuery = async () => {
+  const world = await collections.World.findOne({_id: h.randomTfbNumber()}).lean().exec();
+  world.randomNumber = h.randomTfbNumber();
+  await collections.World.updateOne({_id: world._id}, {
+    $set: {
+      randomNumber: world.randomNumber
+    }
+  });
+  return world;
 };
 
 
 module.exports = {
 
-  SingleQuery: (req, res) => {
-    mongodbRandomWorld((err, result) => {
-      if (err) { return process.exit(1) }
-
-      h.addTfbHeaders(res, 'json');
-      res.end(JSON.stringify(result));
-    });
+  SingleQuery: async (req, res) => {
+    const result = await mongodbRandomWorld();
+    h.addTfbHeaders(res, 'json');
+    res.end(JSON.stringify(result));
   },
 
-  MultipleQueries: (queries, req, res) => {
-    const queryFunctions = h.fillArray(mongodbRandomWorld, queries);
+  MultipleQueries: async (queryCount, req, res) => {
+    const queryFunctions = h.fillArray(mongodbRandomWorld, queryCount);
+    const results = await Promise.all(queryFunctions);
 
-    async.parallel(queryFunctions, (err, results) => {
-      if (err) { return process.exit(1) }
-
-      h.addTfbHeaders(res, 'json');
-      res.end(JSON.stringify(results));
-    });
+    h.addTfbHeaders(res, 'json');
+    res.end(JSON.stringify(results));
   },
 
-  Fortunes: (req, res) => {
-    mongodbGetAllFortunes((err, fortunes) => {
-      if (err) { return process.exit(1) }
-
-      fortunes.push(h.additionalFortune());
-      fortunes.sort(function (a, b) {
-        return a.message.localeCompare(b.message);
-      });
-      h.addTfbHeaders(res, 'html');
-      res.end(h.fortunesTemplate({
-        fortunes: fortunes
-      }));
+  Fortunes: async (req, res) => {
+    const fortunes = await mongodbGetAllFortunes();
+    fortunes.push(h.additionalFortune());
+    fortunes.sort(function (a, b) {
+      return a.message.localeCompare(b.message);
     });
+    h.addTfbHeaders(res, 'html');
+    res.end(h.fortunesTemplate({
+      fortunes: fortunes
+    }));
   },
 
-  Updates: (queries, req, res) => {
-    const queryFunctions = h.fillArray(mongodbDriverUpdateQuery, queries);
+  Updates: async (queryCount, req, res) => {
+    const queryFunctions = h.fillArray(mongodbDriverUpdateQuery, queryCount);
+    const results = await Promise.all(queryFunctions);
 
-    async.parallel(queryFunctions, (err, results) => {
-      if (err) { return process.exit(1) }
-
-      h.addTfbHeaders(res, 'json');
-      res.end(JSON.stringify(results));
-    });
+    h.addTfbHeaders(res, 'json');
+    res.end(JSON.stringify(results));
   }
 
 };
