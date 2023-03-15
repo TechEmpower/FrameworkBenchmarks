@@ -157,7 +157,7 @@ if re.search(r'\[ci lang .+\]', last_commit_msg, re.M):
 
 
 # Ignore travis, github_actions, continuous and scaffolding changes
-if re.search(r'^toolset\/(?!(travis\/|github_actions\/|continuous\/|scaffolding\/))|^tfb|^Dockerfile', changes, re.M) is not None:
+if re.search(r'^toolset\/(?!(travis\/|continuous\/|scaffolding\/))|^tfb|^Dockerfile', changes, re.M) is not None:
     print("Found changes to core toolset. Running all tests.")
     run_tests = test_dirs
     quit_diffing()
