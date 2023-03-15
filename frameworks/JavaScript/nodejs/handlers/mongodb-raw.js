@@ -40,11 +40,11 @@ const mongodbRandomWorld = async () => {
 
 const mongodbGetAllFortunes = async () => {
   const collections = await getCollections();
-  return await collections.Fortune.find().lean().toArray();
+  return await collections.Fortune.find().toArray();
 };
 
 const mongodbDriverUpdateQuery = async () => {
-  const world = await collections.World.findOne({_id: h.randomTfbNumber()}).lean().exec();
+  const world = await collections.World.findOne({_id: h.randomTfbNumber()}).exec();
   world.randomNumber = h.randomTfbNumber();
   await collections.World.updateOne({_id: world._id}, {
     $set: {
