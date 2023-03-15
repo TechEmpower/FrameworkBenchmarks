@@ -142,7 +142,6 @@ jobs:
         with:
           args: " --file ./Dockerfile --tag techempower/tfb ."
           cache_key: "${{ hashFiles('./Dockerfile') }}"
-        #run: docker build -t techempower/tfb - < ./Dockerfile;
       - name: Stop services
         # Stop services that would claim ports we may need
         run: |
