@@ -6,7 +6,7 @@ COPY pom.xml pom.xml
 RUN mvn package -q
 
 
-FROM instructure/graalvm-ce:22-java17
+FROM ghcr.io/graalvm/graalvm-ce:ol9-java17-22.3.1
 WORKDIR /redkale
 COPY conf conf
 COPY --from=maven /redkale/target/redkale-benchmark-1.0.0.jar redkale-benchmark.jar
