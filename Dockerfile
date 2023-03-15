@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-ARG DEBIAN_FRONTEND=noninteractive
+ARG DEBIAN_FRONTEND=noninteractive 
 # WARNING: DON'T PUT A SPACE AFTER ANY BACKSLASH OR APT WILL BREAK
 # One -q produces output suitable for logging (mostly hides
 # progress indicators)
