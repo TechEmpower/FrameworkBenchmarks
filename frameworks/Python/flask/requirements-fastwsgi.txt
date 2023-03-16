@@ -1,0 +1,3 @@
+Flask==2.2.2
+click==8.0.1
+fastwsgi==0.0.8
