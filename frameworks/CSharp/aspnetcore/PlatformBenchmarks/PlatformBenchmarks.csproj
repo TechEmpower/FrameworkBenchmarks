@@ -22,6 +22,7 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <PackageReference Include="RazorSlices" Version="0.3.0" />
     <PackageReference Condition=" '$(DatabaseProvider)' == 'Npgsql' " Include="Npgsql" Version="7.0.2" />
     <PackageReference Condition=" '$(DatabaseProvider)' == 'MySqlConnector' " Include="MySqlConnector" Version="2.0.0" />
   </ItemGroup>

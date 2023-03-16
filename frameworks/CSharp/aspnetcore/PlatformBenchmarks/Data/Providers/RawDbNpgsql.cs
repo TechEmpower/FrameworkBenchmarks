@@ -83,7 +83,7 @@ namespace PlatformBenchmarks
             {
                 var id = random.Next(1, 10001);
                 var key = cacheKeys[id];
-                if (cache.TryGetValue(key, out object cached))
+                if (cache.TryGetValue(key, out var cached))
                 {
                     result[i] = (CachedWorld)cached;
                 }
@@ -102,10 +102,7 @@ namespace PlatformBenchmarks
 
                 var (cmd, idParameter) = rawdb.CreateReadCommand(db);
                 using var command = cmd;
-                Func<ICacheEntry, Task<CachedWorld>> create = async _ =>
-                {
-                    return await rawdb.ReadSingleRow(cmd);
-                };
+                async Task<CachedWorld> create(ICacheEntry _) => await ReadSingleRow(cmd);
 
                 var cacheKeys = _cacheKeys;
                 var key = cacheKeys[id];
@@ -233,7 +230,7 @@ namespace PlatformBenchmarks
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private async Task<World> ReadSingleRow(NpgsqlCommand cmd)
+        private static async Task<World> ReadSingleRow(NpgsqlCommand cmd)
         {
             using var rdr = await cmd.ExecuteReaderAsync(System.Data.CommandBehavior.SingleRow);
             await rdr.ReadAsync();

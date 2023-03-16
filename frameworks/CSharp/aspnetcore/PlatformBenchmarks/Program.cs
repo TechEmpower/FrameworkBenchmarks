@@ -19,10 +19,10 @@ public sealed class Program
         Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Plaintext));
         Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Json));
 #else
-            Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Fortunes));
-            Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.SingleQuery));
-            Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Updates));
-            Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.MultipleQueries));
+        Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Fortunes));
+        Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.SingleQuery));
+        Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Updates));
+        Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.MultipleQueries));
 #endif
         DateHeader.SyncDateTimer();
 
@@ -30,7 +30,14 @@ public sealed class Program
         var config = (IConfiguration)host.Services.GetService(typeof(IConfiguration));
         BatchUpdateString.DatabaseServer = config.Get<AppSettings>().Database;
 #if DATABASE
+        try
+        {
             await BenchmarkApplication.Db.PopulateCache();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error trying to populate database cache: {ex}");
+        }
 #endif
         await host.RunAsync();
     }
@@ -39,6 +46,9 @@ public sealed class Program
     {
         var config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
+#if DEBUG
+            .AddUserSecrets<Program>()
+#endif
             .AddEnvironmentVariables()
             .AddEnvironmentVariables(prefix: "ASPNETCORE_")
             .AddCommandLine(args)
@@ -46,18 +56,18 @@ public sealed class Program
 
         var appSettings = config.Get<AppSettings>();
 #if DATABASE
-            Console.WriteLine($"Database: {appSettings.Database}");
-            Console.WriteLine($"ConnectionString: {appSettings.ConnectionString}");
+        Console.WriteLine($"Database: {appSettings.Database}");
+        Console.WriteLine($"ConnectionString: {appSettings.ConnectionString}");
 
-            if (appSettings.Database is DatabaseServer.PostgreSql
-                                     or DatabaseServer.MySql)
-            {
-                BenchmarkApplication.Db = new RawDb(new ConcurrentRandom(), appSettings);
-            }
-            else
-            {
-                throw new NotSupportedException($"{appSettings.Database} is not supported");
-            }
+        if (appSettings.Database is DatabaseServer.PostgreSql
+                                 or DatabaseServer.MySql)
+        {
+            BenchmarkApplication.Db = new RawDb(new ConcurrentRandom(), appSettings);
+        }
+        else
+        {
+            throw new NotSupportedException($"{appSettings.Database} is not supported");
+        }
 #endif
 
         var hostBuilder = new WebHostBuilder()
