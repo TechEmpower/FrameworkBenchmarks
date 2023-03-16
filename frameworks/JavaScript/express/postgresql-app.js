@@ -2,7 +2,7 @@
  * Module dependencies.
  */
 const cluster = require('cluster'),
-  physicalCpuCount = require('physical-cpu-count'),
+  numCPUs = require('os').cpus().length,
   express = require('express'),
   helper = require('./helper');
 
@@ -51,7 +51,7 @@ const randomWorldPromise = () => {
 
 if (cluster.isPrimary) {
   // Fork workers.
-  for (let i = 0; i < physicalCpuCount; i++) {
+  for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
   }
 
