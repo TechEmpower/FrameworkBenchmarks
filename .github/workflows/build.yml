@@ -140,7 +140,10 @@ jobs:
           if [ "$RUN_TESTS" ]; then echo "Proceeding to run tests."; else echo 'Skipping test verification.'; fi
       - name: Build tfb dockerfile
         if: ${{ env.RUN_TESTS }}
-        run: docker build -t techempower/tfb - < ./Dockerfile;
+        uses: mattes/cached-docker-build-action@v1
+        with:
+          args: " --file ./Dockerfile --tag techempower/tfb ."
+          cache_key: "${{ hashFiles('./Dockerfile') }}"
       - name: Stop services
         # Stop services that would claim ports we may need
         run: |
