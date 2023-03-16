@@ -65,14 +65,16 @@ jobs:
       - id: event_out
         name: Write event outputs
         run: |
-          # Escape the multiline string for Github Actions, see https://github.community/t/set-output-truncates-multiline-strings/16852/3
-          COMMIT_MESSAGE="${COMMIT_MESSAGE//'%'/'%25'}"
-          COMMIT_MESSAGE="${COMMIT_MESSAGE//$'\n'/'%0A'}"
-          COMMIT_MESSAGE="${COMMIT_MESSAGE//$'\r'/'%0D'}"
-          echo "::set-output name=commit_message::$COMMIT_MESSAGE"
-          echo "::set-output name=branch_name::$BRANCH_NAME"
-          echo "::set-output name=target_branch_name::$TARGET_BRANCH_NAME"
-          echo "::set-output name=previous_commit::$PREVIOUS_COMMIT"
+          # Escape the multiline string for Github Actions, see https://lab.amalitsky.com/posts/2022/github-actions-set-output-migration/#migration-from-set-output-to-github-output
+          delimiter="$(openssl rand -hex 8)"
+              {
+                echo "commit_message<<${delimiter}"
+                echo $COMMIT_MESSAGE
+                echo "${delimiter}"
+              } >> $GITHUB_OUTPUT
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          echo "target_branch_name=$TARGET_BRANCH_NAME" >> $GITHUB_OUTPUT
+          echo "previous_commit=$PREVIOUS_COMMIT" >> $GITHUB_OUTPUT
       - id: verify_out
         name: Write verify job matrix
         run: |
@@ -82,7 +84,7 @@ jobs:
           #   - TESTLANG: {lang}
           # with a TESTLANG object in the include array for each language under frameworks
           VERIFY_MATRIX=$(ls -1 frameworks | jq -Rc '.+"/" | select(inside(env.RUN_TESTS))  | rtrimstr("/")' | jq -sc '{include: map({TESTLANG: .})}')
-          echo "::set-output name=verify_matrix::$VERIFY_MATRIX"
+          echo "verify_matrix=$VERIFY_MATRIX" >> $GITHUB_OUTPUT
     outputs:
       commit_message: ${{ steps.event_out.outputs.commit_message }}
       branch_name: ${{ steps.event_out.outputs.branch_name }}
