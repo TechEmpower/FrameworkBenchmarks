@@ -3,10 +3,10 @@
 
 ## Description
 
-Rocket is a web framework for Rust that makes it simple to write fast web applications without sacrificing flexibility or type safety. All with minimal code.
+> Rocket is a web framework for Rust that makes it simple to write fast, secure web applications without sacrificing flexibility, usability, or type safety.
 
 * [User Guide](https://rocket.rs/guide/)
-* [API Documentation](https://api.rocket.rs/v0.5-rc/rocket/)
+* [API Documentation](https://api.rocket.rs/)
 * Cargo package: [rocket](https://crates.io/crates/rocket)
 
 ## Database
@@ -17,7 +17,7 @@ PostgreSQL
 
 ## Test URLs
 
-### Test 1: JSON Encoding 
+### Test 1: JSON Encoding
 
     http://localhost:8000/json
 
@@ -25,7 +25,7 @@ PostgreSQL
 
     http://localhost:8000/db
 
-### Test 3: Multi Row Query 
+### Test 3: Multi Row Query
 
     http://localhost:8000/queries?q=20
 
