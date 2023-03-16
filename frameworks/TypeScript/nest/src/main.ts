@@ -9,7 +9,7 @@ import { MongoModule } from './mongo/mongo.module';
 import { join } from 'path';
 import { SqlModule } from './sql/sql.module';
 import cluster from 'cluster'
-import physicalCpuCount from 'physical-cpu-count';
+import os = require('os');
 
 const port = process.env.PORT || 8080;
 
@@ -58,7 +58,8 @@ async function bootstrapFastify() {
 }
 
 if (cluster.isPrimary) {
-  for (let i = 0; i < physicalCpuCount; i++) {
+  const cpus = os.cpus().length;
+  for (let i = 0; i < cpus; i++) {
     cluster.fork();
   }
 
