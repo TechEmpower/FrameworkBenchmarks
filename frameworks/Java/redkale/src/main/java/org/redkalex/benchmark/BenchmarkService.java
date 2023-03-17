@@ -7,11 +7,11 @@ package org.redkalex.benchmark;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.IntStream;
+import java.util.stream.*;
 import org.redkale.annotation.*;
 import org.redkale.net.http.*;
-import org.redkale.service.AbstractService;
-import org.redkale.source.DataSource;
+import org.redkale.service.*;
+import org.redkale.source.*;
 
 /**
  *
@@ -26,30 +26,30 @@ public class BenchmarkService extends AbstractService {
     @Resource
     private DataSource source;
 
-    @RestMapping(name = "plaintext")
+    @RestMapping(name = "plaintext", auth = false)
     public byte[] getHelloBytes() {
         return helloBytes;
     }
 
-    @RestMapping(name = "json")
+    @RestMapping(name = "json", auth = false)
     public Message getHelloMessage() {
         return new Message("Hello, World!");
     }
 
-    @RestMapping(name = "db")
-    public CompletableFuture<World> findWorldAsync() {
+    @RestMapping(name = "db", auth = false)
+    public CompletableFuture<World> findWorld() {
         return source.findAsync(World.class, ThreadLocalRandom.current().nextInt(10000) + 1);
     }
 
-    @RestMapping(name = "queries")
-    public CompletableFuture<List<World>> queryWorldAsync(int q) {
+    @RestMapping(name = "queries", auth = false)
+    public CompletableFuture<List<World>> queryWorld(int q) {
         int size = Math.min(500, Math.max(1, q));
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
         return source.findsListAsync(World.class, ids.boxed());
     }
 
-    @RestMapping(name = "updates")
-    public CompletableFuture<List<World>> updateWorldAsync(int q) {
+    @RestMapping(name = "updates", auth = false)
+    public CompletableFuture<List<World>> updateWorld(int q) {
         int size = Math.min(500, Math.max(1, q));
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
         int[] newNumbers = ThreadLocalRandom.current().ints(size, 1, 10001).toArray();
@@ -58,8 +58,8 @@ public class BenchmarkService extends AbstractService {
             .thenApply(v -> words));
     }
 
-    @RestMapping(name = "fortunes")
-    public CompletableFuture<HttpScope> queryFortunes() {
+    @RestMapping(name = "fortunes", auth = false)
+    public CompletableFuture<HttpScope> queryFortune() {
         return source.queryListAsync(Fortune.class).thenApply(fortunes -> {
             fortunes.add(new Fortune(0, "Additional fortune added at request time."));
             Collections.sort(fortunes);
@@ -67,7 +67,7 @@ public class BenchmarkService extends AbstractService {
         });
     }
 
-    @RestMapping(name = "cached-worlds")
+    @RestMapping(name = "cached-worlds", auth = false)
     public CachedWorld[] cachedWorlds(int q) {
         int size = Math.min(500, Math.max(1, q));
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
