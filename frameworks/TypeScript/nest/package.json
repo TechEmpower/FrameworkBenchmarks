@@ -28,7 +28,6 @@
     "mongodb": "3.5.4",
     "mysql2": "2.1.0",
     "pg": "8.5.1",
-    "physical-cpu-count": "^2.0.0",
     "point-of-view": "3.7.2",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
