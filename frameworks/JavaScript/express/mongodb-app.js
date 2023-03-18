@@ -96,14 +96,11 @@ if (cluster.isPrimary) {
   });
 
   async function getUpdateRandomWorld() {
-    const world = await MWorld.findOne({_id: randomTfbNumber()}).lean().exec();
-    world.randomNumber = randomTfbNumber();
-    await MWorld.update({
-      _id: world._id
+    return toClientWorld(await MWorld.findOneAndUpdate({_id: randomTfbNumber()}, {
+      randomNumber: randomTfbNumber()
     }, {
-      randomNumber: world.randomNumber
-    });
-    return toClientWorld(world);
+      new: true
+    }).lean().exec());
   }
 
   app.get('/mongoose-update', async (req, res) => {
