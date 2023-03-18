@@ -14,6 +14,14 @@ public sealed class Program
     {
         Args = args;
 
+#if NPGSQL
+        // This disables SQL parsing/rewriting, which requires using positional parameters and NpgsqlBatch everywhere.
+        // This helps commands where there are no parameters (Fortunes); when there are parameters, their ParameterName
+        // being null already triggers positional parameters and disables parsing)
+        // Note that Dapper and EF aren't yet compatible with this mode.
+        AppContext.SetSwitch("Npgsql.EnableSqlRewriting", false);
+#endif
+
         Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.ApplicationName));
 #if !DATABASE
         Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Plaintext));
