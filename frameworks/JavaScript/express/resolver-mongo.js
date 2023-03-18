@@ -1,83 +1,91 @@
 const mongoose = require('mongoose');
 const helper = require('./helper');
 
-const Schema = mongoose.Schema,
-  ObjectId = Schema.ObjectId;
-
 const WorldSchema = new mongoose.Schema({
-  id: Number,
+  _id: Number,
   randomNumber: Number
 }, {
-    collection: 'world'
-  }),
-  World = mongoose.model('world', WorldSchema);
+  collection: 'world'
+});
+const World = mongoose.model('world', WorldSchema);
 
 const FortuneSchema = new mongoose.Schema({
-  id: Number,
+  _id: Number,
   message: String
 }, {
-    collection: 'fortune'
-  }),
-  Fortune = mongoose.model('fortune', FortuneSchema);
+  collection: 'fortune'
+});
+const Fortune = mongoose.model('fortune', FortuneSchema);
+
+const toClientWorld = (world) => {
+  if (world) {
+    world.id = world._id;
+    delete world._id;
+  }
+  return world;
+};
+
+async function getRandomWorld() {
+  return toClientWorld(await World.findOne({_id: helper.randomizeNum()}).lean().exec());
+}
 
 // Methods
 
-async function arrayOfRandomWorlds(totalWorldToReturn) {
+async function arrayOfRandomWorlds(totalWorldsToReturn) {
+  const totalIterations = helper.sanititizeTotal(totalWorldsToReturn);
+  const promises = [];
 
-    var totalIterations = helper.sanititizeTotal(totalWorldToReturn);
-    var arr = [];
+  for (let i = 1; i <= totalIterations; i++) {
+    promises.push(getRandomWorld());
+  }
 
-    return new Promise(async (resolve, reject) => {
-        for(var i = 0; i < totalIterations; i++) {
-            arr.push(await World.findOne({ id: helper.randomizeNum() }));
-        }
-        if(arr.length == totalIterations) {
-            resolve(arr);
-        }
-    });
-};
+  return await Promise.all(promises);
+}
+
+async function getAndUpdateRandomWorld() {
+  return toClientWorld(await World.findOneAndUpdate({_id: helper.randomizeNum()}, {
+    randomNumber: helper.randomizeNum()
+  }, {
+    new: true
+  }).lean().exec());
+}
 
 async function updateRandomWorlds(totalToUpdate) {
+  const totalIterations = helper.sanititizeTotal(totalToUpdate);
+  const promises = [];
 
-    const totalIterations = helper.sanititizeTotal(totalToUpdate);
-    var arr = [];
+  for (let i = 1; i <= totalIterations; i++) {
+    promises.push(getAndUpdateRandomWorld());
+  }
 
-    return new Promise(async (resolve, reject) => {
-        for(var i = 0; i < totalIterations; i++) {
-
-            arr.push(await World.findOneAndUpdate({ id: helper.randomizeNum() }, { randomNumber: helper.randomizeNum() }));
-        }
-        if(arr.length == totalIterations) {
-            resolve(arr);
-        }
-    });
-};
+  return await Promise.all(promises);
+}
 
 const sayHello = () => {
-
-    var helloWorld = new Object;
-    helloWorld.message = "Hello, World!";
-
-    return JSON.stringify(helloWorld);
+  return JSON.stringify({
+    message: "Hello, World!"
+  });
 };
 
 module.exports = {
-    Query: {
-        helloWorld: () => sayHello(),
-        getAllWorlds: async() => await World.find({}),
-        singleDatabaseQuery: async() => await World.findOne({ id: helper.randomizeNum() }),
-        multipleDatabaseQueries: async(parent, args) => await arrayOfRandomWorlds(args.total),
-        getWorldById: async(parent, args) => await World.findById(args.id),
-        getAllFortunes: async() => await Fortune.find({}),
-        getRandomAndUpdate: async(parent, args) => await updateRandomWorlds(args.total)
+  Query: {
+    helloWorld: () => sayHello(),
+    getAllWorlds: async () => toClientWorld(await World.find({}).lean().exec()),
+    singleDatabaseQuery: async () => toClientWorld(await World.findOne({_id: helper.randomizeNum()}).lean().exec()),
+    multipleDatabaseQueries: async (parent, args) => await arrayOfRandomWorlds(args.total),
+    getWorldById: async (parent, args) => toClientWorld(await World.findById(args.id).lean().exec()),
+    getAllFortunes: async () => toClientWorld(await Fortune.find({}).lean().exec()),
+    getRandomAndUpdate: async (parent, args) => await updateRandomWorlds(args.total)
+  },
+  Mutation: {
+    createWorld: async (parent, args) => {
+      let randInt = Math.floor(Math.random() * 1000) + 1;
+      return await World.create({_id: null, randomNumber: randInt});
     },
-    Mutation: {
-        createWorld: async(parent, args) => {
-            let randInt = Math.floor(Math.random() * 1000) + 1;
-            return await World.create({ id: null, randomNumber: randInt });
-        },
-        updateWorld: async(parent, args) => {
-            return await World.update({id: args.id, randomNumber: args.randomNumber});
-        }
+    updateWorld: async (parent, args) => {
+      return await World.updateOne({_id: args.id}, {
+        randomNumber: args.randomNumber
+      });
     }
+  }
 }
