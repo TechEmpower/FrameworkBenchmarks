@@ -1,7 +1,13 @@
 const h = require('../helper');
-const async = require('async');
 const Mongoose = require('mongoose');
 const connection = Mongoose.createConnection('mongodb://tfb-database/hello_world');
+
+/**
+ * Note! The benchmarks say we should use "id" as a property name.
+ * However, Mongo provides a default index on "_id", so to be equivalent to the other tests, we use
+ * the same, default index provided by the database.
+ *
+ */
 
 // Mongoose Setup
 const WorldSchema = new Mongoose.Schema({
@@ -20,27 +26,37 @@ const FortuneSchema = new Mongoose.Schema({
 const Worlds = connection.model('World', WorldSchema);
 const Fortunes = connection.model('Fortune', FortuneSchema);
 
+const toClientWorld = (world) => {
+  if (world) {
+    world.id = world._id;
+    delete world._id;
+  }
+  return world;
+};
+
 const mongooseRandomWorld = async () => {
-  return await Worlds.findOne({
+  return toClientWorld(await Worlds.findOne({
     _id: h.randomTfbNumber()
-  }).lean().exec();
+  }).lean().exec());
 };
 
 const mongooseGetAllFortunes = async () => {
   return await Fortunes.find({})
-      .lean().exec();
+      .lean().exec().map(toClientWorld);
 };
 
-const mongooseUpdateQuery = async () => {
-  const world = await Worlds.findOne({_id: h.randomTfbNumber()}).lean().exec();
+async function getUpdateRandomWorld() {
+  const world = await Worlds.findOne({_id: (Math.floor(Math.random() * 10000) + 1)}).lean().exec();
   world.randomNumber = h.randomTfbNumber();
-  await Worlds.updateOne({_id: world._id}, {
-    $set: {
-      randomNumber: world.randomNumber
-    }
+
+  await Worlds.updateOne({
+    _id: world._id
+  }, {
+    randomNumber: world.randomNumber
   });
-  return world;
-};
+
+  return toClientWorld(world);
+}
 
 module.exports = {
 
@@ -51,7 +67,10 @@ module.exports = {
   },
 
   MultipleQueries: async (queryCount, req, res) => {
-    const queryFunctions = h.fillArray(mongooseRandomWorld, queryCount);
+    const queryFunctions = [];
+    for (let i = 0; i < queryCount; i++) {
+      queryFunctions.push(mongooseRandomWorld());
+    }
     const results = await Promise.all(queryFunctions);
 
     h.addTfbHeaders(res, 'json');
@@ -65,17 +84,17 @@ module.exports = {
       return a.message.localeCompare(b.message);
     });
     h.addTfbHeaders(res, 'html');
-    res.end(h.fortunesTemplate({
-      fortunes: fortunes
-    }));
+    res.end(h.fortunesTemplate({fortunes}));
   },
 
   Updates: async (queryCount, req, res) => {
-    const queryFunctions = h.fillArray(mongooseUpdateQuery, queryCount);
-    const results = await Promise.all(queryFunctions);
+    const promises = [];
 
-    h.addTfbHeaders(res, 'json');
-    res.end(JSON.stringify(results));
+    for (let i = 1; i <= queryCount; i++) {
+      promises.push(getUpdateRandomWorld());
+    }
+
+    res.end(JSON.stringify(await Promise.all(promises)));
   }
 
 };

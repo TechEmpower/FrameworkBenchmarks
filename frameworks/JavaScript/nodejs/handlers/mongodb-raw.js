@@ -5,6 +5,13 @@ let collections = null, connecting = false, connectionCallbacks = [];
 const mongoUrl = 'mongodb://tfb-database:27017';
 const dbName = 'hello_world';
 
+/**
+ * Note! The benchmarks say we should use "id" as a property name.
+ * However, Mongo provides a default index on "_id", so to be equivalent to the other tests, we use
+ * the same, default index provided by the database.
+ *
+ */
+
 const getCollections = async () => {
   // mongoose creates a queue of requests during connection, so we don't have to wait.
   // however, with the raw driver we need to connect first, or sometimes the test will fail randomly
@@ -28,32 +35,38 @@ const getCollections = async () => {
   return collections;
 }
 
+const toClientWorld = (world) => {
+  if (world) {
+    world.id = world._id;
+    delete world._id;
+  }
+  return world;
+};
+
 
 const mongodbRandomWorld = async () => {
   const collections = await getCollections();
-  const world = collections.World.findOne({
+  return toClientWorld(collections.World.findOne({
     _id: h.randomTfbNumber()
-  });
-  world._id = undefined; // remove _id from query response
-  return world;
+  }));
 };
 
 const mongodbGetAllFortunes = async () => {
   const collections = await getCollections();
-  return await collections.Fortune.find().toArray();
+  return await collections.Fortune.find().toArray().map(toClientWorld());
 };
 
-const mongodbDriverUpdateQuery = async () => {
-  const world = await collections.World.findOne({_id: h.randomTfbNumber()}).exec();
+async function getUpdateRandomWorld() {
+  const world = await collections.World.findOne({_id: h.randomTfbNumber()});
   world.randomNumber = h.randomTfbNumber();
-  await collections.World.updateOne({_id: world._id}, {
-    $set: {
-      randomNumber: world.randomNumber
-    }
+  await collections.World.updateOne({
+    _id: world._id
+  }, {
+    randomNumber: world.randomNumber
   });
-  return world;
-};
 
+  return toClientWorld(world);
+}
 
 module.exports = {
 
@@ -64,7 +77,10 @@ module.exports = {
   },
 
   MultipleQueries: async (queryCount, req, res) => {
-    const queryFunctions = h.fillArray(mongodbRandomWorld, queryCount);
+    const queryFunctions = [];
+    for (let i = 0; i < queryCount; i++) {
+      queryFunctions.push(mongodbRandomWorld());
+    }
     const results = await Promise.all(queryFunctions);
 
     h.addTfbHeaders(res, 'json');
@@ -78,17 +94,18 @@ module.exports = {
       return a.message.localeCompare(b.message);
     });
     h.addTfbHeaders(res, 'html');
-    res.end(h.fortunesTemplate({
-      fortunes: fortunes
-    }));
+    res.end(h.fortunesTemplate({fortunes}));
   },
 
   Updates: async (queryCount, req, res) => {
-    const queryFunctions = h.fillArray(mongodbDriverUpdateQuery, queryCount);
-    const results = await Promise.all(queryFunctions);
+    const promises = [];
+
+    for (let i = 1; i <= queryCount; i++) {
+      promises.push(getUpdateRandomWorld());
+    }
 
     h.addTfbHeaders(res, 'json');
-    res.end(JSON.stringify(results));
+    res.end(JSON.stringify(await Promise.all(promises)));
   }
 
 };
