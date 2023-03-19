@@ -8,13 +8,13 @@ description = "TFB benchmark"
 group = "com.hexagonkt"
 
 ext {
-    hexagonVersion = "2.6.3"
+    hexagonVersion = "2.6.5"
     hikariVersion = "5.0.1"
     jettyVersion = "11.0.14"
-    postgresqlVersion = "42.5.4"
+    postgresqlVersion = "42.6.0"
     vertxVersion = "4.4.0"
     cache2kVersion = "2.6.1.Final"
-    nettyVersion = "4.1.89.Final"
+    nettyVersion = "4.1.90.Final"
 
     gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/$hexagonVersion/gradle"
 }
