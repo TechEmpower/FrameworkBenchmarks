@@ -65,7 +65,7 @@ impl<R: Request> WorldView<R> {
         for world in &mut worlds {
             world.randomNumber = random_int();
         }
-        transact!(req, raw_bulk_update!(req, World, &worlds, randomNumber).await)?;
+        raw_bulk_update!(req, World, &worlds, randomNumber).await?;
         Response::json(&worlds)
     }
     #[check(Site::is_visitor)]
