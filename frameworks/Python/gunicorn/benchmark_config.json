@@ -1,0 +1,23 @@
+{
+    "framework": "gunicorn",
+    "tests": [{
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "None",
+        "language": "Python",
+        "orm": "Raw",
+        "platform": "Gunicorn",
+        "webserver": "Meinheld",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Gunicorn",
+        "notes": "",
+        "versus": "wsgi"
+      }
+    }]
+  }
