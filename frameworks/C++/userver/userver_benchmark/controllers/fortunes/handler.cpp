@@ -67,9 +67,7 @@ void AppendFortune(std::string& result, const Fortune& fortune) {
         std::memcpy(append_position, unescaped.data(), unescaped.size());
         append_position += unescaped.size();
       }
-      if (!escaped.empty()) {
-        std::memcpy(append_position, escaped.data(), escaped.size());
-      }
+      std::memcpy(append_position, escaped.data(), escaped.size());
     };
 
     std::size_t unescaped_len = 0;
@@ -78,6 +76,7 @@ void AppendFortune(std::string& result, const Fortune& fortune) {
       do_append(message.substr(0, unescaped_len), escaped);
       message = message.substr(std::exchange(unescaped_len, 0) + 1);
     };
+
     while (unescaped_len < message.size()) {
       const auto c = message[unescaped_len];
       switch (c) {
