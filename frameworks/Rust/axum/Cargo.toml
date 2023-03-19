@@ -47,9 +47,8 @@ tokio-pg-mapper = "0.2.0"
 tokio-pg-mapper-derive = "0.2.0"
 tokio-postgres = "0.7.7"
 tower = { version = "0.4.13", features = ["util"] }
-tower-http = { version = "0.3.5", features = ["set-header"] }
+tower-http = { version = "0.4.0", features = ["set-header"] }
 yarte = "0.15.7"
-
 
 [profile.release]
 lto = true

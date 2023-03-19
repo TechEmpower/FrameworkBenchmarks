@@ -1,22 +1,21 @@
-use axum::body::{Bytes, Full};
-use axum::http::{header, HeaderValue, StatusCode};
-use axum::response::{IntoResponse, Response};
-use rand::rngs::SmallRng;
-use rand::Rng;
-use serde::Deserialize;
+use std::{env, fmt::Debug, str::FromStr};
 
-use std::env;
-use std::fmt::Debug;
-use std::str::FromStr;
+use axum::{
+    body::{Bytes, Full},
+    http::{header, HeaderValue, StatusCode},
+    response::{IntoResponse, Response},
+};
+use rand::{rngs::SmallRng, Rng};
+use serde::Deserialize;
 
 pub fn get_environment_variable<T: FromStr>(key: &str) -> T
 where
     <T as FromStr>::Err: Debug,
 {
-    T::from_str(
-        &env::var(key).unwrap_or_else(|_| panic!("{} environment variable was not set", key)),
-    )
-    .unwrap_or_else(|_| panic!("could not parse {}", key))
+    env::var(key)
+        .unwrap_or_else(|_| panic!("{key} environment variable was not set"))
+        .parse::<T>()
+        .unwrap_or_else(|_| panic!("could not parse {key}"))
 }
 
 #[derive(Debug, Deserialize)]
@@ -40,6 +39,7 @@ pub fn parse_params(params: Params) -> i32 {
 
 /// Utility function for mapping any error into a `500 Internal Server Error`
 /// response.
+#[allow(dead_code)]
 pub fn internal_error<E>(err: E) -> (StatusCode, String)
 where
     E: std::error::Error,

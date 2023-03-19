@@ -158,6 +158,25 @@
       "notes": "",
       "versus": "wsgi",
       "tags": ["broken"]
+    },
+    "fastwsgi": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "flask",
+      "language": "Python",
+      "flavor": "Python3",
+      "orm": "Full",
+      "platform": "None",
+      "webserver": "FastWSGI",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Flask [FastWSGI]",
+      "notes": "",
+      "versus": "wsgi"
     }
   }]
 }

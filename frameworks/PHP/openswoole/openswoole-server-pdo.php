@@ -1,12 +1,14 @@
 <?php
 require_once __DIR__.'/db-no-async.php';
 
-use Swoole\Http\Request;
-use Swoole\Http\Response;
+use OpenSwoole\Http\Request;
+use OpenSwoole\Http\Response;
+use OpenSwoole\Http\Server;
+use OpenSwoole\Util;
 
-$server = new swoole_http_server('0.0.0.0', 8080, SWOOLE_BASE);
+$server = new Server('0.0.0.0', 8080, OpenSwoole\Server::SIMPLE_MODE);
 $server->set([
-    'worker_num' => swoole_cpu_num() * 4,
+    'worker_num' => Util::getCPUNum() * 2,
     'log_file' => '/dev/null',
     'log_level' => 5,
     'open_tcp_nodelay' => true,
@@ -27,37 +29,37 @@ $server->on('request', static function (Request $req, Response $res) {
         switch ($req->server['request_uri']) {
             case '/json':
                 $res->header('Content-Type', 'application/json');
-                $res->header('Server', 'openswoole');
+                $res->header('Server', 'os');
                 $res->end(json_encode(['message' => 'Hello, World!']));
                 break;
 
             case '/plaintext':
                 $res->header('Content-Type', 'text/plain; charset=utf-8');
-                $res->header('Server', 'openswoole');
+                $res->header('Server', 'os');
                 $res->end('Hello, World!');
                 break;
 
             case '/db':
                 $res->header('Content-Type', 'application/json');
-                $res->header('Server', 'openswoole');
+                $res->header('Server', 'os');
                 $res->end(db());
                 break;
             
             case '/query':
                 $res->header('Content-Type', 'application/json');
-                $res->header('Server', 'openswoole');
+                $res->header('Server', 'os');
                 $res->end(query((int) $req->get['q'] ?? 1));
                 break;
 
             case '/fortunes':
                 $res->header('Content-Type', 'text/html; charset=utf-8');
-                $res->header('Server', 'openswoole');
+                $res->header('Server', 'os');
                 $res->end(fortunes());
                 break;
 
             case '/updates':
                 $res->header('Content-Type', 'application/json');
-                $res->header('Server', 'openswoole');
+                $res->header('Server', 'os');
                 $res->end(updates((int) $req->get['q'] ?? 1));
                 break;
 

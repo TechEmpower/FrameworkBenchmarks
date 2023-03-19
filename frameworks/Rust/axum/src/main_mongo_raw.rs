@@ -1,26 +1,33 @@
+use std::time::Duration;
+
+use axum::{
+    extract::Query,
+    http::{header, HeaderValue, StatusCode},
+    response::IntoResponse,
+    routing::get,
+    Json, Router,
+};
+use dotenv::dotenv;
+use mongodb::{
+    options::{ClientOptions, Compressor},
+    Client,
+};
+use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
+use tower_http::set_header::SetResponseHeaderLayer;
+
 mod database_mongo_raw;
 mod models_common;
 mod models_mongo;
 mod server;
 mod utils;
 
-use axum::http::{header, HeaderValue};
-use axum::{
-    extract::Query, http::StatusCode, response::IntoResponse, routing::get, Extension,
-    Json, Router,
+use self::{
+    database_mongo_raw::{
+        find_world_by_id, find_worlds, update_worlds, DatabaseConnection,
+    },
+    models_mongo::World,
+    utils::{get_environment_variable, parse_params, Params},
 };
-use dotenv::dotenv;
-use mongodb::options::{ClientOptions, Compressor};
-use mongodb::Client;
-use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
-use std::time::Duration;
-use tower_http::set_header::SetResponseHeaderLayer;
-
-use database_mongo_raw::DatabaseConnection;
-use database_mongo_raw::{find_world_by_id, find_worlds, update_worlds};
-use models_mongo::World;
-use utils::get_environment_variable;
-use utils::{parse_params, Params};
 
 async fn db(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
@@ -140,7 +147,7 @@ async fn serve() {
         .route("/db", get(db))
         .route("/queries", get(queries))
         .route("/updates", get(updates))
-        .layer(Extension(database))
+        .with_state(database)
         .layer(SetResponseHeaderLayer::if_not_present(
             header::SERVER,
             server_header_value,
