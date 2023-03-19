@@ -61,7 +61,7 @@ impl fmt::Debug for Stmt {
 impl Stmt {
     pub async fn new(pool: &PgDbPool) -> anansi::web::Result<Self> {
         let mut updates = vec![];
-        for n in 1..500 {
+        for n in 1..=500 {
             updates.push(PgStatement::new(&update_statement(n), pool).await?);
         }
         Ok(Self(Arc::new(State {
