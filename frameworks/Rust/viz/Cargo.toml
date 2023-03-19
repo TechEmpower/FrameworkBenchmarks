@@ -25,12 +25,12 @@ required-features = ["diesel", "diesel-async", "sailfish"]
 
 [dependencies]
 viz = "0.4.8"
-hyper = "0.14.24"
+hyper = "0.14.25"
 atoi = "2.0"
 serde = { version = "1.0", features = ["derive"] }
 nanorand = "0.7"
 thiserror = "1.0"
-futures-util = "0.3.26"
+futures-util = "0.3.27"
 
 tokio = { version = "1.0", features = ["full"] }
 tokio-postgres = { version = "0.7.7", optional = true }
@@ -42,7 +42,7 @@ sqlx = { version = "0.6.2", features = [
 diesel = { version = "2.0.3", default-features = false, features = [
   "i-implement-a-third-party-backend-and-opt-into-breaking-changes",
 ], optional = true }
-diesel-async = { version = "0.2.0", default-features = false, features = [
+diesel-async = { version = "0.2.1", default-features = false, features = [
   "postgres",
   "bb8",
 ], optional = true }
