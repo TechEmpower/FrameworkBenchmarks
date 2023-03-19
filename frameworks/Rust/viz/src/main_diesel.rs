@@ -7,7 +7,7 @@ use diesel_async::{
     pooled_connection::{bb8::Pool, AsyncDieselConnectionManager},
     AsyncPgConnection,
 };
-use nanorand::WyRand;
+use nanorand::{Rng, WyRand};
 use viz::{
     header::{HeaderValue, SERVER},
     types::State,

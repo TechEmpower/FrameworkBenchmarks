@@ -16,7 +16,6 @@ mod server;
 mod utils;
 
 use db_pg::{get_conn, PgConnection};
-use utils::RANGE;
 
 const DB_URL: &str =
     "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
