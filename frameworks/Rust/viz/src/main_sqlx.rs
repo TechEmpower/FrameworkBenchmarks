@@ -1,7 +1,6 @@
-use std::{convert::identity, thread::available_parallelism};
+use std::thread::available_parallelism;
 
 use nanorand::{Rng, WyRand};
-use sqlx::Pool;
 use viz::{
     header::{HeaderValue, SERVER},
     types::State,

@@ -122,19 +122,6 @@ impl PgConnection {
         worlds.try_collect().await
     }
 
-    pub async fn get_worlds_by_limit(&self, limit: i64) -> Result<Vec<World>, PgError> {
-        Ok(self
-            .client
-            .query("SELECT * FROM world LIMIT $1", &[&limit])
-            .await?
-            .iter()
-            .map(|row| World {
-                id: row.get(0),
-                randomnumber: row.get(1),
-            })
-            .collect())
-    }
-
     pub async fn update(&self, num: u16) -> Result<Vec<World>, PgError> {
         let mut rng = self.rng.clone();
 

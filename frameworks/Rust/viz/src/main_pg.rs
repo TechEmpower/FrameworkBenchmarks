@@ -1,10 +1,8 @@
 use std::{
-    convert::identity,
     sync::Arc,
     thread::{available_parallelism, spawn},
 };
 
-use nanorand::{Rng, WyRand};
 use viz::{
     header::{HeaderValue, SERVER},
     types::State,

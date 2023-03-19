@@ -1,13 +1,13 @@
 #[macro_use]
 extern crate diesel;
 
-use std::{convert::identity, thread::available_parallelism};
+use std::thread::available_parallelism;
 
 use diesel_async::{
     pooled_connection::{bb8::Pool, AsyncDieselConnectionManager},
     AsyncPgConnection,
 };
-use nanorand::{Rng, WyRand};
+use nanorand::WyRand;
 use viz::{
     header::{HeaderValue, SERVER},
     types::State,
@@ -21,7 +21,6 @@ mod server;
 mod utils;
 
 use db_diesel::*;
-use models_diesel::World;
 use utils::RANGE;
 
 const DB_URL: &str =
