@@ -18,32 +18,6 @@ platform = "None"
 webserver = "Gunicorn"
 versus = "None"
 
-[socketify-asgi-pypy]
-urls.plaintext = "/plaintext"
-urls.json = "/json"
-approach = "Realistic"
-classification = "Micro"
-database = "Postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "None"
-webserver = "Socketify.py"
-versus = "None"
-
-[socketify-asgi]
-urls.plaintext = "/plaintext"
-urls.json = "/json"
-approach = "Realistic"
-classification = "Micro"
-database = "Postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "None"
-webserver = "Socketify.py"
-versus = "None"
-
 [gunicorn-orjson]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
@@ -60,7 +34,6 @@ orm = "Raw"
 platform = "None"
 webserver = "Gunicorn"
 versus = "None"
-
 
 [gunicorn-orm]
 urls.plaintext = "/plaintext"
@@ -95,7 +68,6 @@ orm = "Raw"
 platform = "None"
 webserver = "Hypercorn"
 versus = "None"
-
 
 [hypercorn-orjson]
 urls.plaintext = "/plaintext"
@@ -147,7 +119,6 @@ orm = "Raw"
 platform = "None"
 webserver = "nginx-unit"
 versus = "None"
-
 
 [uvicorn]
 urls.plaintext = "/plaintext"

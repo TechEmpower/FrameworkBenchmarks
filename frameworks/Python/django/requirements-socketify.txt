@@ -1,2 +1,0 @@
-Django==4.1.7
-git+https://github.com/cirospaciari/socketify.py.git@main#socketify
