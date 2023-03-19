@@ -9,6 +9,7 @@
 #include <userver/storages/secdist/provider_component.hpp>
 
 #include "controllers/cached_queries/handler.hpp"
+#include "controllers/fortunes/handler.hpp"
 #include "controllers/json/handler.hpp"
 #include "controllers/multiple_queries/handler.hpp"
 #include "controllers/plaintext/handler.hpp"
@@ -35,6 +36,7 @@ int Main(int argc, char* argv[]) {
           .Append<updates::Handler>()
           .Append<cached_queries::WorldCacheComponent>()
           .Append<cached_queries::Handler>()
+          .Append<fortunes::Handler>()
           // bare
           .Append<bare::SimpleRouter>()
           .Append<bare::SimpleServer>();
