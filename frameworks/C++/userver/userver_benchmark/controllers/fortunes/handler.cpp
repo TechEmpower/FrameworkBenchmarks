@@ -28,7 +28,7 @@ constexpr std::string_view kNewRowEnd{"</td></tr>"};
 
 constexpr std::string_view kEscapedQuote{"&quot;"};
 constexpr std::string_view kEscapedAmpersand{"&amp;"};
-constexpr std::string_view kEscapedLessThanSign{"lt;"};
+constexpr std::string_view kEscapedLessThanSign{"&lt;"};
 constexpr std::string_view kEscapedMoreThanSign{"&gt;"};
 
 void AppendFortune(std::string& result, const Fortune& fortune) {
@@ -131,7 +131,7 @@ Handler::Handler(const userver::components::ComponentConfig& config,
               .FindComponent<userver::components::Postgres>(
                   db_helpers::kDbComponentName)
               .GetCluster()},
-      select_all_fortunes_query_{"SELECT id, message FROM Fortunes"} {}
+      select_all_fortunes_query_{"SELECT id, message FROM Fortune"} {}
 
 std::string Handler::HandleRequestThrow(
     const userver::server::http::HttpRequest& request,
