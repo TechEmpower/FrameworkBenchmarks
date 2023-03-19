@@ -22,7 +22,7 @@
         "webserver": "hyper",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Anansi",
+        "display_name": "Anansi [minimal]",
         "notes": "",
         "versus": "None"
       },
@@ -44,7 +44,7 @@
         "webserver": "hyper",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Anansi [raw]",
+        "display_name": "Anansi [minimal, raw]",
         "notes": "",
         "versus": "None"
       }
