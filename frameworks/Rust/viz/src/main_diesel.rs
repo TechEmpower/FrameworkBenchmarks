@@ -8,7 +8,6 @@ use diesel_async::{
     AsyncPgConnection,
 };
 use nanorand::{Rng, WyRand};
-use once_cell::sync::OnceCell;
 use viz::{
     header::{HeaderValue, SERVER},
     types::State,
@@ -27,7 +26,6 @@ use utils::RANGE;
 
 const DB_URL: &str =
     "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
-static CACHED: OnceCell<Vec<World>> = OnceCell::new();
 
 async fn db(req: Request) -> Result<Response> {
     let mut rng = req.state::<WyRand>().unwrap();
@@ -67,24 +65,6 @@ async fn queries(req: Request) -> Result<Response> {
     Ok(res)
 }
 
-async fn cached_queries(req: Request) -> Result<Response> {
-    let count = utils::get_query_param(req.query_string());
-    let mut rng = WyRand::new();
-
-    let worlds = (0..count)
-        .map(|_| {
-            let id = rng.generate_range(RANGE) as usize;
-            CACHED.get()?.get(id)
-        })
-        .filter_map(identity)
-        .collect::<Vec<_>>();
-
-    let mut res = Response::json(worlds)?;
-    res.headers_mut()
-        .insert(SERVER, HeaderValue::from_static("Viz"));
-    Ok(res)
-}
-
 async fn updates(req: Request) -> Result<Response> {
     let rng = req.state::<WyRand>().unwrap();
     let pool = req.state::<Pool<AsyncPgConnection>>().unwrap();
@@ -98,12 +78,6 @@ async fn updates(req: Request) -> Result<Response> {
     Ok(res)
 }
 
-async fn populate_cache(pool: Pool<AsyncPgConnection>) -> Result<()> {
-    let worlds = get_worlds_by_limit(pool, 10_000).await?;
-    CACHED.set(worlds).unwrap();
-    Ok(())
-}
-
 #[tokio::main]
 async fn main() {
     let max = available_parallelism().map(|n| n.get()).unwrap_or(16) as u32;
@@ -114,10 +88,6 @@ async fn main() {
         .idle_timeout(None)
         .build_unchecked(AsyncDieselConnectionManager::new(DB_URL));
 
-    populate_cache(pool.clone())
-        .await
-        .expect("cache insert failed");
-
     let rng = WyRand::new();
 
     let service = ServiceMaker::from(
@@ -127,7 +97,6 @@ async fn main() {
             .get("/queries", queries)
             .get("/updates", updates)
             .with(State::new(pool))
-            .get("/cached_queries", cached_queries)
             .with(State::new(rng)),
     );
 
