@@ -1,2 +1,0 @@
-emmett==2.2.0
-git+https://github.com/cirospaciari/socketify.py.git@main#socketify
