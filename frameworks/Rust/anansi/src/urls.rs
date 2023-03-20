@@ -19,7 +19,10 @@ pub fn routes<R: Request>() -> Router<R> {
 use crate::hello::world::raw::WorldView;
 
 #[cfg(feature = "raw")]
-pub fn routes<R: Request>() -> Router<R> {
+use crate::hello::middleware::Pg;
+
+#[cfg(feature = "raw")]
+pub fn routes<R: Request + Pg>() -> Router<R> {
     Router::new()
         .route("/db", WorldView::db)
         .route("/queries", WorldView::queries)
