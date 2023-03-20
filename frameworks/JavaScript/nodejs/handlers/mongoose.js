@@ -1,5 +1,9 @@
 const h = require('../helper');
 const Mongoose = require('mongoose');
+// These .set() calls can be removed when mongoose is upgraded to v5.
+Mongoose.set('useNewUrlParser', true);
+Mongoose.set('useFindAndModify', false);
+Mongoose.set('useUnifiedTopology', true);
 const connection = Mongoose.createConnection('mongodb://tfb-database/hello_world');
 
 /**
@@ -41,20 +45,21 @@ const mongooseRandomWorld = async () => {
 };
 
 const mongooseGetAllFortunes = async () => {
-  return await Fortunes.find({})
-      .lean().exec().map(toClientWorld);
+  return (await Fortunes.find({})
+      .lean().exec()).map(toClientWorld);
 };
 
 async function getUpdateRandomWorld() {
-  const world = await Worlds.findOne({_id: (Math.floor(Math.random() * 10000) + 1)}).lean().exec();
+  // it would be nice to use findOneAndUpdate here, but for some reason the test fails with it.
+  const world = await Worlds.findOne({_id: h.randomTfbNumber()}).lean().exec();
   world.randomNumber = h.randomTfbNumber();
-
   await Worlds.updateOne({
     _id: world._id
   }, {
-    randomNumber: world.randomNumber
-  });
-
+    $set: {
+      randomNumber: world.randomNumber
+    }
+  }).exec();
   return toClientWorld(world);
 }
 
@@ -94,6 +99,7 @@ module.exports = {
       promises.push(getUpdateRandomWorld());
     }
 
+    h.addTfbHeaders(res, 'json');
     res.end(JSON.stringify(await Promise.all(promises)));
   }
 

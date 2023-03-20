@@ -1,6 +1,6 @@
 const h = require('../helper');
 const MongoClient = require('mongodb').MongoClient;
-let collections = null, connecting = false, connectionCallbacks = [];
+let collectionsMaybe = null, connecting = false, connectionCallbacks = [];
 
 const mongoUrl = 'mongodb://tfb-database:27017';
 const dbName = 'hello_world';
@@ -15,8 +15,8 @@ const dbName = 'hello_world';
 const getCollections = async () => {
   // mongoose creates a queue of requests during connection, so we don't have to wait.
   // however, with the raw driver we need to connect first, or sometimes the test will fail randomly
-  if (collections) {
-    return collections;
+  if (collectionsMaybe) {
+    return collectionsMaybe;
   }
   if (connecting) {
     const promise = new Promise((resolve) => {
@@ -26,13 +26,19 @@ const getCollections = async () => {
   }
   connecting = true;
   const client = await MongoClient.connect(mongoUrl);
-  collections = {
+  collectionsMaybe = {
     World: null,
     Fortune: null
   };
-  collections.World = client.db(dbName).collection('world');
-  collections.Fortune = client.db(dbName).collection('fortune');
-  return collections;
+  collectionsMaybe.World = client.db(dbName).collection('world');
+  collectionsMaybe.Fortune = client.db(dbName).collection('fortune');
+
+  // resolve pending requests in buffer
+  for (const callback of connectionCallbacks) {
+    callback(collectionsMaybe);
+  }
+
+  return collectionsMaybe;
 }
 
 const toClientWorld = (world) => {
@@ -46,25 +52,29 @@ const toClientWorld = (world) => {
 
 const mongodbRandomWorld = async () => {
   const collections = await getCollections();
-  return toClientWorld(collections.World.findOne({
+  return toClientWorld(await collections.World.findOne({
     _id: h.randomTfbNumber()
   }));
 };
 
 const mongodbGetAllFortunes = async () => {
   const collections = await getCollections();
-  return await collections.Fortune.find().toArray().map(toClientWorld());
+  return (await collections.Fortune.find({}).toArray()).map(toClientWorld);
 };
 
 async function getUpdateRandomWorld() {
-  const world = await collections.World.findOne({_id: h.randomTfbNumber()});
+  const collections = await getCollections();
+  const world = await collections.World.findOne({
+    _id: h.randomTfbNumber()
+  });
   world.randomNumber = h.randomTfbNumber();
   await collections.World.updateOne({
     _id: world._id
   }, {
-    randomNumber: world.randomNumber
-  });
-
+    $set: {
+      randomNumber: world.randomNumber
+    }
+  })
   return toClientWorld(world);
 }
 
