@@ -8,7 +8,7 @@ description = "TFB benchmark"
 group = "com.hexagonkt"
 
 ext {
-    hexagonVersion = "2.6.5"
+    hexagonVersion = "2.6.6"
     hikariVersion = "5.0.1"
     jettyVersion = "11.0.14"
     postgresqlVersion = "42.6.0"
