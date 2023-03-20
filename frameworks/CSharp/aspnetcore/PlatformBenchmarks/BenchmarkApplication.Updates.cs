@@ -11,7 +11,7 @@ namespace PlatformBenchmarks
 {
     public partial class BenchmarkApplication
     {
-        private async Task Updates(PipeWriter pipeWriter, int count)
+        private static async Task Updates(PipeWriter pipeWriter, int count)
         {
             OutputUpdates(pipeWriter, await Db.LoadMultipleUpdatesRows(count));
         }
@@ -30,11 +30,11 @@ namespace PlatformBenchmarks
 
             writer.Commit();
 
-            Utf8JsonWriter utf8JsonWriter = t_writer ??= new Utf8JsonWriter(pipeWriter, new JsonWriterOptions { SkipValidation = true });
+            var utf8JsonWriter = t_writer ??= new Utf8JsonWriter(pipeWriter, new JsonWriterOptions { SkipValidation = true });
             utf8JsonWriter.Reset(pipeWriter);
 
             // Body
-            JsonSerializer.Serialize( utf8JsonWriter, rows, SerializerContext.WorldArray);
+            JsonSerializer.Serialize(utf8JsonWriter, rows, SerializerContext.WorldArray);
 
             // Content-Length
             lengthWriter.WriteNumeric((uint)utf8JsonWriter.BytesCommitted);
