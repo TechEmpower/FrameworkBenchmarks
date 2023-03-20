@@ -26,30 +26,30 @@ public class BenchmarkService extends AbstractService {
     @Resource
     private DataSource source;
 
-    @RestMapping(name = "plaintext", auth = false)
-    public byte[] getHelloBytes() {
+    @RestMapping(auth = false)
+    public byte[] plaintext() {
         return helloBytes;
     }
 
-    @RestMapping(name = "json", auth = false)
-    public Message getHelloMessage() {
+    @RestMapping(auth = false)
+    public Message json() {
         return new Message("Hello, World!");
     }
 
-    @RestMapping(name = "db", auth = false)
-    public CompletableFuture<World> findWorld() {
+    @RestMapping(auth = false)
+    public CompletableFuture<World> db() {
         return source.findAsync(World.class, ThreadLocalRandom.current().nextInt(10000) + 1);
     }
 
-    @RestMapping(name = "queries", auth = false)
-    public CompletableFuture<List<World>> queryWorld(int q) {
+    @RestMapping(auth = false)
+    public CompletableFuture<List<World>> queries(int q) {
         int size = Math.min(500, Math.max(1, q));
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
         return source.findsListAsync(World.class, ids.boxed());
     }
 
-    @RestMapping(name = "updates", auth = false)
-    public CompletableFuture<List<World>> updateWorld(int q) {
+    @RestMapping(auth = false)
+    public CompletableFuture<List<World>> updates(int q) {
         int size = Math.min(500, Math.max(1, q));
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
         int[] newNumbers = ThreadLocalRandom.current().ints(size, 1, 10001).toArray();
@@ -58,8 +58,8 @@ public class BenchmarkService extends AbstractService {
             .thenApply(v -> words));
     }
 
-    @RestMapping(name = "fortunes", auth = false)
-    public CompletableFuture<HttpScope> queryFortune() {
+    @RestMapping(auth = false)
+    public CompletableFuture<HttpScope> fortunes() {
         return source.queryListAsync(Fortune.class).thenApply(fortunes -> {
             fortunes.add(new Fortune(0, "Additional fortune added at request time."));
             Collections.sort(fortunes);
