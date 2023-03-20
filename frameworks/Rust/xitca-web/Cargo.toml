@@ -81,14 +81,14 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
-xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
-xitca-router = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
-xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
-xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
-xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
-xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "e648bb2f6e2fd787c2dac0b7e6b0a5bcf7d12f86" }
+xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "c58463d4cd2e58a1fbbe5d15cb4e82c7cd0055bf" }
+xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "c58463d4cd2e58a1fbbe5d15cb4e82c7cd0055bf" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "c58463d4cd2e58a1fbbe5d15cb4e82c7cd0055bf" }
+xitca-router = { git = "https://github.com/HFQR/xitca-web.git", rev = "c58463d4cd2e58a1fbbe5d15cb4e82c7cd0055bf" }
+xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "c58463d4cd2e58a1fbbe5d15cb4e82c7cd0055bf" }
+xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "c58463d4cd2e58a1fbbe5d15cb4e82c7cd0055bf" }
+xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "c58463d4cd2e58a1fbbe5d15cb4e82c7cd0055bf" }
+xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "c58463d4cd2e58a1fbbe5d15cb4e82c7cd0055bf" }
 
 postgres-protocol = { git = "https://github.com/sfackler/rust-postgres.git", rev = "7cd7b187a5cb990ceb0ea9531cd3345b1e2799c3" }
 

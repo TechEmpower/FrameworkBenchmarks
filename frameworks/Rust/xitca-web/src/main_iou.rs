@@ -166,19 +166,20 @@ where
             let std = stream.into_std()?;
             let stream = tokio_uring::net::TcpStream::from_std(std);
 
-            let mut read_buf = BytesMut::new();
+            let mut read_buf = BytesMut::with_capacity(4096);
             let mut write_buf = BytesMut::with_capacity(4096);
+            let mut paged = PagedBytesMut::new();
 
             let mut ctx = Context::<_, 8>::new(self.date.get());
 
             'io: loop {
-                read_buf.reserve(4096);
                 let (res, buf) = stream.read(read_buf).await;
                 if res? == 0 {
                     break;
                 }
+                read_buf = buf;
+                paged.get_mut().extend_from_slice(&read_buf);
 
-                let mut paged = PagedBytesMut::from(buf);
                 while let Some((req, _)) = ctx.decode_head::<65535>(&mut paged).unwrap() {
                     let (parts, body) = self.service.call(req).await.unwrap().into_parts();
                     let mut encoder = ctx.encode_head(parts, &body, &mut write_buf).unwrap();
@@ -189,7 +190,6 @@ where
                     }
                     encoder.encode_eof(&mut write_buf);
                 }
-                read_buf = paged.into_inner();
 
                 while !write_buf.is_empty() {
                     let (res, mut w) = stream.write(write_buf).await;

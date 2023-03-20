@@ -78,7 +78,7 @@ impl Client {
             .next()
             .await
             .ok_or_else(|| format!("World {id} does not exist"))?
-            .map(|row| World::new(row.get(0), row.get(1)))
+            .map(|row| World::new(row.get_raw(0), row.get_raw(1)))
             .map_err(Into::into)
     }
 
@@ -137,16 +137,13 @@ impl Client {
     pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
         let mut items = Vec::with_capacity(32);
 
-        items.push(Fortune::from_static(
-            0,
-            "Additional fortune added at request time.",
-        ));
+        items.push(Fortune::new(0, "Additional fortune added at request time."));
 
         let mut stream = self.client.query_raw::<&[i32]>(&self.fortune, &[]).await?;
 
         while let Some(row) = stream.next().await {
             let row = row?;
-            items.push(Fortune::new(row.get(0), row.get(1)));
+            items.push(Fortune::new(row.get_raw(0), row.get_raw::<String>(1)));
         }
 
         items.sort_by(|it, next| it.message.cmp(&next.message));
