@@ -96,11 +96,17 @@ if (cluster.isPrimary) {
   });
 
   async function getUpdateRandomWorld() {
-    return toClientWorld(await MWorld.findOneAndUpdate({_id: randomTfbNumber()}, {
-      randomNumber: randomTfbNumber()
+    // it would be nice to use findOneAndUpdate here, but for some reason the test fails with it.
+    const world = await MWorld.findOne({_id: randomTfbNumber()}).lean().exec();
+    world.randomNumber = randomTfbNumber();
+    await MWorld.updateOne({
+      _id: world._id
     }, {
-      new: true
-    }).lean().exec());
+      $set: {
+        randomNumber: world.randomNumber
+      }
+    }).exec();
+    return toClientWorld(world);
   }
 
   app.get('/mongoose-update', async (req, res) => {

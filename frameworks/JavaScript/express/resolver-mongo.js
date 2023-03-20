@@ -43,11 +43,17 @@ async function arrayOfRandomWorlds(totalWorldsToReturn) {
 }
 
 async function getAndUpdateRandomWorld() {
-  return toClientWorld(await World.findOneAndUpdate({_id: helper.randomizeNum()}, {
-    randomNumber: helper.randomizeNum()
+  // it would be nice to use findOneAndUpdate here, but for some reason the test fails with it.
+  const world = await World.findOne({_id: helper.randomizeNum()}).lean().exec();
+  world.randomNumber = helper.randomizeNum();
+  await World.updateOne({
+    _id: world._id
   }, {
-    new: true
-  }).lean().exec());
+    $set: {
+      randomNumber: world.randomNumber
+    }
+  }).exec();
+  return toClientWorld(world);
 }
 
 async function updateRandomWorlds(totalToUpdate) {
@@ -79,13 +85,13 @@ module.exports = {
   },
   Mutation: {
     createWorld: async (parent, args) => {
-      let randInt = Math.floor(Math.random() * 1000) + 1;
+      const randInt = helper.randomizeNum();
       return await World.create({_id: null, randomNumber: randInt});
     },
     updateWorld: async (parent, args) => {
-      return await World.updateOne({_id: args.id}, {
+      return World.updateOne({_id: args.id}, {
         randomNumber: args.randomNumber
-      });
+      }).exec();
     }
   }
 }
