@@ -1,18 +1,14 @@
-use axum::async_trait;
-use axum::extract::{Extension, FromRequestParts};
-use axum::http::request::Parts;
-use axum::http::StatusCode;
+use std::{collections::HashMap, convert::Infallible, fmt::Write, io, sync::Arc};
+
+use axum::{async_trait, extract::FromRequestParts, http::request::Parts};
 use futures::{
     stream::futures_unordered::FuturesUnordered, FutureExt, StreamExt, TryStreamExt,
 };
 use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
-use std::sync::Arc;
-use std::{collections::HashMap, fmt::Write, io};
 use tokio::pin;
 use tokio_postgres::{connect, types::ToSql, Client, NoTls, Statement};
 
 use crate::models_pg::{Fortune, World};
-use crate::utils::internal_error;
 
 #[derive(Debug)]
 pub enum PgError {
@@ -49,7 +45,7 @@ impl PgConnection {
         // Spawn connection
         tokio::spawn(async move {
             if let Err(error) = conn.await {
-                eprintln!("Connection error: {}", error);
+                eprintln!("Connection error: {error}");
             }
         });
 
@@ -63,14 +59,14 @@ impl PgConnection {
             q.push_str("UPDATE world SET randomnumber = CASE id ");
 
             for _ in 1..=num {
-                let _ = write!(q, "when ${} then ${} ", pl, pl + 1);
+                let _ = write!(q, "when ${pl} then ${} ", pl + 1);
                 pl += 2;
             }
 
             q.push_str("ELSE randomnumber END WHERE id IN (");
 
             for _ in 1..=num {
-                let _ = write!(q, "${},", pl);
+                let _ = write!(q, "${pl},");
                 pl += 1;
             }
 
@@ -191,21 +187,13 @@ impl PgConnection {
 pub struct DatabaseConnection(pub Arc<PgConnection>);
 
 #[async_trait]
-impl<S> FromRequestParts<S> for DatabaseConnection
-where
-    S: Send + Sync,
-{
-    type Rejection = (StatusCode, String);
+impl FromRequestParts<Arc<PgConnection>> for DatabaseConnection {
+    type Rejection = Infallible;
 
     async fn from_request_parts(
-        parts: &mut Parts,
-        state: &S,
+        _parts: &mut Parts,
+        pg_connection: &Arc<PgConnection>,
     ) -> Result<Self, Self::Rejection> {
-        let Extension(pg_connection) =
-            Extension::<Arc<PgConnection>>::from_request_parts(parts, state)
-                .await
-                .map_err(internal_error)?;
-
-        Ok(Self(pg_connection))
+        Ok(Self(pg_connection.clone()))
     }
 }

@@ -4,7 +4,7 @@
  */
 
 const cluster = require('cluster'),
-  physicalCpuCount = require('physical-cpu-count'),
+  numCPUs = require('os').cpus().length,
   express = require('express'),
   mongoose = require('mongoose'),
   conn = mongoose.connect('mongodb://tfb-database/hello_world');
@@ -33,7 +33,7 @@ const FortuneSchema = new mongoose.Schema({
 
 if (cluster.isPrimary) {
   // Fork workers.
-  for (let i = 0; i < physicalCpuCount; i++) {
+  for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
   }
 
@@ -101,7 +101,5 @@ if (cluster.isPrimary) {
     res.send(results);
   });
 
-  app.listen(8080, () => {
-    console.log('listening on port 8080');
-  });
+  app.listen(8080);
 }

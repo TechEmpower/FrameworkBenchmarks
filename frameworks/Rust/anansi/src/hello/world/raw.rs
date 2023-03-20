@@ -1,7 +1,6 @@
 use crate::prelude::*;
 use serde::Serialize;
 use anansi::{check, prep};
-use anansi::db::postgres::PgDbRow;
 use super::util::get_query;
 use std::borrow::Cow;
 use anansi::db::DbRow;
@@ -50,14 +49,11 @@ fn base<R: Request>(_req: &mut R) -> Result<Response> {}
 
 #[viewer]
 impl<R: Request> WorldView<R> {
-    async fn get_world(req: &R) -> Result<PgDbRow> {
-        anansi::db::postgres::PgStatement::raw_one(0, &[&random_num()], req.raw().pool()).await
-    }
     async fn get_worlds(req: &R) -> Result<Vec<World>> {
         let q = get_query(req.params());
         let mut worlds = Vec::with_capacity(q as usize);
         for _ in 0..q {
-            let row = Self::get_world(req).await?;
+            let row = req.get_world().await?;
             let world = World {
                 id: row.try_i32("id")?,
                 randomnumber: row.try_i32("randomnumber")?,
@@ -68,10 +64,10 @@ impl<R: Request> WorldView<R> {
     }
     #[check(Site::is_visitor)]
     pub async fn db(req: &mut R) -> Result<Response> {
-        let row = Self::get_world(req).await?;
+        let row = req.get_world().await?;
         let world = World {
-            id: row.try_i32("id")?,
-            randomnumber: row.try_i32("randomnumber")?,
+            id: row.get_i32(0),
+            randomnumber: row.get_i32(1),
         };
         Response::json(&world)
     }
@@ -83,17 +79,16 @@ impl<R: Request> WorldView<R> {
     #[view(Site::is_visitor)]
     pub async fn raw_fortunes(req: &mut R) -> Result<Response> {
         let title = "Fortunes";
-        let rows = anansi::db::postgres::PgStatement::raw_all(1, &[], req.raw().pool()).await?;
-        let mut fortunes = vec![Fortune {
+        let rows = req.get_fortunes().await?;
+        let mut fortunes = Vec::with_capacity(rows.len() + 1);
+        fortunes.push(Fortune {
             id: 0,
             message: Cow::Borrowed("Additional fortune added at request time.")
-        }];
-        for row in rows {
-            fortunes.push(Fortune {
-                id: row.try_i32("id")?,
-                message: Cow::Owned(row.try_string("message")?),
-            })
-        }
+        });
+        fortunes.extend(rows.iter().map(|row| Fortune {
+            id: row.get(0),
+            message: Cow::Owned(row.get(1)),
+        }));
         fortunes.sort_by(|it, next| it.message.cmp(&next.message));
     }
     #[check(Site::is_visitor)]
@@ -102,7 +97,7 @@ impl<R: Request> WorldView<R> {
         let mut worlds = Vec::with_capacity(q);
         let mut params: Vec<&(dyn ToSql + Sync)> = Vec::with_capacity(q * 3);
         for _ in 0..q {
-            let row = Self::get_world(req).await?;
+            let row = req.get_world().await?;
             let world = World {
                 id: row.try_i32("id")?,
                 randomnumber: random_num(),

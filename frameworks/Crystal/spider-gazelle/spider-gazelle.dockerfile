@@ -10,7 +10,7 @@ COPY run.sh run.sh
 # Build App
 RUN shards build --release --no-debug
 
-ENV DATABASE_URL postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world
+ENV DATABASE_URL postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?initial_pool_size=56&max_idle_pool_size=56
 
 ENV SG_ENV production
 

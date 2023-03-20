@@ -44,4 +44,3 @@ impl RandomArray {
         self.data[self.pointer - 1]
     }
 }
-

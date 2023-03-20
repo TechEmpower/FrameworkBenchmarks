@@ -1,5 +1,5 @@
 const cluster = require('cluster');
-const physicalCpuCount = require('physical-cpu-count')
+const numCPUs = require('os').cpus().length;
 
 process.env.NODE_HANDLER = 'mysql-raw';
 
@@ -17,7 +17,7 @@ if (cluster.isPrimary) {
   console.log(`Primary ${process.pid} is running`);
 
   // Fork workers.
-  for (let i = 0; i < physicalCpuCount; i++) {
+  for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
   }
 
