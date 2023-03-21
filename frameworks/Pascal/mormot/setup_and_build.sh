@@ -41,7 +41,9 @@ echo "Download and unpacking mORMot sources from $URL ..."
 wget -qO- "$URL" | tar -xz -C ./libs/mORMot  --strip-components=1
 
 # download our modified libpq what do not PQflush inside PQPipelineSync
-wget https://github.com/pavelmash/postgres/releases/download/5.16_PQpipelineSync_noflush/libpq.so.5.16
+URL=https://github.com/pavelmash/postgres/releases/download/5.16_PQpipelineSync_noflush/libpq.so.5.16
+echo "Download modified libpq from $URL ..."
+wget -q -O./libpq.so.5.16 "$URL"
 
 # uncomment line below to echo commands to console
 set -x
