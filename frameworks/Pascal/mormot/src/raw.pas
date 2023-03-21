@@ -233,6 +233,7 @@ begin
     pStmt.SendPipelinePrepared;
     pConn.PipelineSync;
   end;
+  pConn.Flush; // we use modified libpq what not flush inside PQPipelineSync - flush manually
   for i := 0 to cnt - 1 do
   begin
     pStmt.GetPipelineResult;

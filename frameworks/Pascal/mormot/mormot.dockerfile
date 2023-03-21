@@ -11,8 +11,7 @@ RUN /bin/bash -c ./setup_and_build.sh
 
 FROM ubuntu:22.04
 COPY --from=builder /build/bin/fpc-x86_64-linux/raw /usr/local/bin/raw
-
-RUN apt-get update && apt-get install -yqq postgresql-client
+COPY libpq.so.5.16 /usr/lib/x86_64-linux-gnu/libpq.so.5
 
 EXPOSE 8080
 CMD ["raw"]

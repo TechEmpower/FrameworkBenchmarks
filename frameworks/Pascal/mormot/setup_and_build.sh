@@ -35,11 +35,13 @@ echo "Download statics from $URL ..."
 wget -qO- "$URL" | tar -xz -C ./libs/mORMot/static
 
 # uncomment for fixed commit URL
-URL=https://github.com/synopse/mORMot2/tarball/c57d48846f050f4f68856758d28cf76450addaf2
+URL=https://github.com/synopse/mORMot2/tarball/edf377a61aa5ac99add92d144480b12095f578c2
 #URL="https://api.github.com/repos/synopse/mORMot2/tarball/$USED_TAG"
 echo "Download and unpacking mORMot sources from $URL ..."
 wget -qO- "$URL" | tar -xz -C ./libs/mORMot  --strip-components=1
 
+# download our modified libpq what do not PQflush inside PQPipelineSync
+wget https://github.com/pavelmash/postgres/releases/download/5.16_PQpipelineSync_noflush/libpq.so.5.16
 
 # uncomment line below to echo commands to console
 set -x
