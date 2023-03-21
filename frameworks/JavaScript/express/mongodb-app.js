@@ -1,35 +1,37 @@
-
 /**
  * Module dependencies.
  */
 
-const cluster = require('cluster'),
-  numCPUs = require('os').cpus().length,
-  express = require('express'),
-  mongoose = require('mongoose'),
-  conn = mongoose.connect('mongodb://tfb-database/hello_world');
+const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
+const express = require('express');
+const mongoose = require('mongoose');
+const conn = mongoose.connect('mongodb://tfb-database/hello_world');
 
 // Middleware
 const bodyParser = require('body-parser');
 
-const Schema = mongoose.Schema,
-  ObjectId = Schema.ObjectId;
-
+/**
+ * Note! The benchmarks say we should use "id" as a property name.
+ * However, Mongo provides a default index on "_id", so to be equivalent to the other tests, we use
+ * the same, default index provided by the database.
+ *
+ */
 const WorldSchema = new mongoose.Schema({
-  id: Number,
+  _id: Number,
   randomNumber: Number
 }, {
-    collection: 'world'
-  }),
-  MWorld = mongoose.model('world', WorldSchema);
+  collection: 'world'
+});
+const MWorld = mongoose.model('world', WorldSchema);
 
 const FortuneSchema = new mongoose.Schema({
-  id: Number,
+  _id: Number,
   message: String
 }, {
-    collection: 'fortune'
-  }),
-  MFortune = mongoose.model('fortune', FortuneSchema);
+  collection: 'fortune'
+});
+const MFortune = mongoose.model('fortune', FortuneSchema);
 
 if (cluster.isPrimary) {
   // Fork workers.
@@ -37,13 +39,21 @@ if (cluster.isPrimary) {
     cluster.fork();
   }
 
-  cluster.on('exit', (worker, code, signal) =>
-    console.log('worker ' + worker.pid + ' died'));
+  cluster.on('exit', (worker, code, signal) => console.log('worker ' + worker.pid + ' died'));
 } else {
   const app = module.exports = express();
 
+  const randomTfbNumber = () => Math.floor(Math.random() * 10000) + 1;
+  const toClientWorld = (world) => {
+    if (world) {
+      world.id = world._id;
+      delete world._id;
+    }
+    return world;
+  };
+
   // Configuration
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.urlencoded({extended: true}));
 
   // Set headers for all routes
   app.use((req, res, next) => {
@@ -54,51 +64,60 @@ if (cluster.isPrimary) {
   app.set('view engine', 'pug');
   app.set('views', __dirname + '/views');
 
+  async function getRandomWorld() {
+    return toClientWorld(await MWorld.findOne({_id: randomTfbNumber()}).lean().exec());
+  }
+
   // Routes
   app.get('/mongooseq', async (req, res) => {
-    const queries = Math.min(parseInt(req.query.queries) || 1, 500),
-      results = [];
+    const queryCount = Math.min(parseInt(req.query.queries) || 1, 500);
+    const promises = [];
 
-    for (let i = 1; i <= queries; i++) {
-      results.push(await MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1) }));
+    for (let i = 1; i <= queryCount; i++) {
+      promises.push(getRandomWorld());
     }
 
-    res.send(results);
+    res.send(await Promise.all(promises));
   });
 
   app.get('/mongoose', async (req, res) => {
-    let results = await MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1) });
+    const result = await MWorld.findOne({_id: randomTfbNumber()}).lean().exec();
 
-    res.send(results);
+    res.send(toClientWorld(result));
   });
 
-  app.get('/mongoose-fortune', (req, res) => {
-    MFortune.find({}, (err, fortunes) => {
-      const newFortune = { id: 0, message: "Additional fortune added at request time." };
-      fortunes.push(newFortune);
-      fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
+  app.get('/mongoose-fortune', async (req, res) => {
+    const fortunes = (await MFortune.find({}).lean().exec()).map(toClientWorld);
+    const newFortune = {id: 0, message: "Additional fortune added at request time."};
+    fortunes.push(newFortune);
+    fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
 
-      res.render('fortunes/index', { fortunes: fortunes });
-    });
+    res.render('fortunes/index', {fortunes});
   });
+
+  async function getUpdateRandomWorld() {
+    // it would be nice to use findOneAndUpdate here, but for some reason the test fails with it.
+    const world = await MWorld.findOne({_id: randomTfbNumber()}).lean().exec();
+    world.randomNumber = randomTfbNumber();
+    await MWorld.updateOne({
+      _id: world._id
+    }, {
+      $set: {
+        randomNumber: world.randomNumber
+      }
+    }).exec();
+    return toClientWorld(world);
+  }
 
   app.get('/mongoose-update', async (req, res) => {
-    const results = [],
-      queries = Math.min(parseInt(req.query.queries) || 1, 500);
+    const queryCount = Math.min(parseInt(req.query.queries, 10) || 1, 500);
+    const promises = [];
 
-    for (let i = 1; i <= queries; i++) {
-      const world = await MWorld.findOne({ id: (Math.floor(Math.random() * 10000) + 1) });
-      world.randomNumber = ~~(Math.random() * 10000) + 1;
-      await MWorld.update({
-        id: world.id
-      }, {
-          randomNumber: world.randomNumber
-        });
-
-      results.push(world);
+    for (let i = 1; i <= queryCount; i++) {
+      promises.push(getUpdateRandomWorld());
     }
 
-    res.send(results);
+    res.send(await Promise.all(promises));
   });
 
   app.listen(8080);
