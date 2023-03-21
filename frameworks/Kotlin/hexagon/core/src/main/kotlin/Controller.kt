@@ -12,7 +12,7 @@ import com.hexagonkt.http.server.handlers.HttpServerContext
 import com.hexagonkt.http.server.handlers.PathHandler
 import com.hexagonkt.http.server.handlers.path
 import com.hexagonkt.model.*
-import com.hexagonkt.serialization.dsl.json.Json
+import com.hexagonkt.serialization.jackson.json.Json
 import com.hexagonkt.serialization.serialize
 import com.hexagonkt.store.BenchmarkStore
 import com.hexagonkt.templates.TemplatePort
