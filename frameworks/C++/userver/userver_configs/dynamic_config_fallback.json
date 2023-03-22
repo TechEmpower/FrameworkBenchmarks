@@ -9,6 +9,7 @@
   "USERVER_LRU_CACHES": {},
   "USERVER_RPS_CCONTROL_CUSTOM_STATUS": {},
   "USERVER_TASK_PROCESSOR_PROFILER_DEBUG": {},
+  "USERVER_HANDLER_STREAM_API_ENABLED": false,
   "HTTP_CLIENT_CONNECTION_POOL_SIZE": 1000,
   "HTTP_CLIENT_CONNECT_THROTTLE": {
     "http-limit": 6000,
@@ -38,8 +39,8 @@
   "POSTGRES_CONNECTION_PIPELINE_ENABLED": false,
   "POSTGRES_CONNECTION_POOL_SETTINGS": {
     "hello_world": {
-      "min_pool_size": 28,
-      "max_pool_size": 28,
+      "min_pool_size": 75,
+      "max_pool_size": 100,
       "max_queue_size": 512
     }
   },

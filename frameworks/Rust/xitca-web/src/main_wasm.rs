@@ -19,7 +19,10 @@ fn main() -> io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
-            .at("/plaintext", get(handler_service(plain_text)))
+            .at(
+                "/plaintext",
+                get(handler_service(|| async { "Hello, World!" })),
+            )
             .enclosed_fn(middleware_fn)
             .finish()
     })
@@ -32,11 +35,8 @@ async fn middleware_fn<S, E>(service: &S, ctx: WebRequest<'_>) -> Result<WebResp
 where
     S: for<'r> Service<WebRequest<'r>, Response = WebResponse, Error = E>,
 {
-    let mut res = service.call(ctx).await?;
-    res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
-    Ok(res)
-}
-
-async fn plain_text() -> &'static str {
-    "Hello, World!"
+    service.call(ctx).await.map(|mut res| {
+        res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
+        res
+    })
 }

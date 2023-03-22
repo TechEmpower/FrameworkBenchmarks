@@ -6,6 +6,6 @@ abstract class Application < ActionController::Base
 
   def set_date_header
     response.headers["Server"] = "Spider-Gazelle"
-    response.headers["Date"] = HTTP.format_time(Time.now)
+    response.headers["Date"] = HTTP.format_time(Time.local)
   end
 end

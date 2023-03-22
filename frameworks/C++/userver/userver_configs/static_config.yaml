@@ -43,6 +43,9 @@ components_manager:
         tracer:                                 # Component that helps to trace execution times and requests in logs.
             service-name: userver-techempower   # "You know. You all know exactly who I am. Say my name. " (c)
 
+        dns-client:
+            fs-task-processor: fs-task-processor
+
         dynamic-config:                      # Dynamic config storage options, do nothing
             fs-cache-path: ''
         dynamic-config-fallbacks:            # Load options from file and push them into the dynamic config storage.
@@ -50,9 +53,10 @@ components_manager:
 
         testsuite-support:
 
-        secdist: # Component that stores configuration of hosts and passwords
+        secdist: {} # Component that stores configuration of hosts and passwords
+        default-secdist-provider:
             config: /app/secure_data.json  # Values are supposed to be stored in this file
-            missing-ok: false                             # ... but if the file is missing it is still ok
+            missing-ok: false
 
         plaintext-handler:
             path: /plaintext
@@ -67,8 +71,8 @@ components_manager:
         hello-world-db:
             dbalias: hello_world
             blocking_task_processor: fs-task-processor
-            min_pool_size: 28
-            max_pool_size: 28
+            min_pool_size: 75
+            max_pool_size: 100
             max_queue_size: 512
 
         single-query-handler:
@@ -94,6 +98,11 @@ components_manager:
 
         cached-queries-handler:
             path: /cached-queries
+            method: GET
+            task_processor: main-task-processor
+
+        fortunes-handler:
+            path: /fortunes
             method: GET
             task_processor: main-task-processor
 

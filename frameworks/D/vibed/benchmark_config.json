@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "vibe.d",
       "notes": "",
-      "versus": "vibed"
+      "versus": "vibed",
+      "tags": ["broken"]
     },
     "dmd-pgsql": {
       "db_url": "/db",
@@ -66,7 +67,8 @@
       "database_os": "Linux",
       "display_name": "vibe.d-ldc",
       "notes": "",
-      "versus": "vibed"
+      "versus": "vibed",
+      "tags": ["broken"]
     },
     "ldc-pgsql": {
       "db_url": "/db",

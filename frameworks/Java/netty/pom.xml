@@ -11,7 +11,8 @@
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
-		<netty.version>4.1.86.Final</netty.version>
+		<netty.version>4.1.89.Final</netty.version>
+		<io_uring.version>0.0.18.Final</io_uring.version>
 	</properties>
 
 	<packaging>jar</packaging>
@@ -41,7 +42,7 @@
 		<dependency>
 			<groupId>io.netty.incubator</groupId>
 			<artifactId>netty-incubator-transport-native-io_uring</artifactId>
-			<version>0.0.15.Final</version>
+			<version>${io_uring.version}</version>
 			<classifier>linux-x86_64</classifier>
 		</dependency>
 

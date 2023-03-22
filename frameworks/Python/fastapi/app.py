@@ -1,3 +1,6 @@
+import multiprocessing
+from contextlib import asynccontextmanager
+
 import asyncpg
 import os
 from fastapi import FastAPI, Request
@@ -15,6 +18,8 @@ from random import randint, sample
 READ_ROW_SQL = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
+MAX_POOL_SIZE = 1000//multiprocessing.cpu_count()
+MIN_POOL_SIZE = max(int(MAX_POOL_SIZE / 2), 1)
 
 
 def get_num_queries(queries):
@@ -34,8 +39,6 @@ connection_pool = None
 
 templates = Jinja2Templates(directory="templates")
 
-app = FastAPI()
-
 
 async def setup_database():
     return await asyncpg.create_pool(
@@ -44,17 +47,21 @@ async def setup_database():
         database="hello_world",
         host="tfb-database",
         port=5432,
+        min_size=MIN_POOL_SIZE,
+        max_size=MAX_POOL_SIZE,
     )
 
 
-@app.on_event("startup")
-async def startup_event():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Setup the database connection pool
     app.state.connection_pool = await setup_database()
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
+    yield
+    # Close the database connection pool
     await app.state.connection_pool.close()
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/json")

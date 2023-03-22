@@ -2,10 +2,14 @@
 #include <userver/testsuite/testsuite_support.hpp>
 #include <userver/utils/daemon_run.hpp>
 
+#include <userver/clients/dns/component.hpp>
+
 #include <userver/storages/postgres/component.hpp>
 #include <userver/storages/secdist/component.hpp>
+#include <userver/storages/secdist/provider_component.hpp>
 
 #include "controllers/cached_queries/handler.hpp"
+#include "controllers/fortunes/handler.hpp"
 #include "controllers/json/handler.hpp"
 #include "controllers/multiple_queries/handler.hpp"
 #include "controllers/plaintext/handler.hpp"
@@ -20,7 +24,9 @@ namespace userver_techempower {
 int Main(int argc, char* argv[]) {
   auto component_list =
       userver::components::MinimalServerComponentList()
+          .Append<userver::clients::dns::Component>()
           .Append<userver::components::Secdist>()
+          .Append<userver::components::DefaultSecdistProvider>()
           .Append<userver::components::TestsuiteSupport>()
           .Append<userver::components::Postgres>("hello-world-db")
           .Append<plaintext::Handler>()
@@ -30,6 +36,7 @@ int Main(int argc, char* argv[]) {
           .Append<updates::Handler>()
           .Append<cached_queries::WorldCacheComponent>()
           .Append<cached_queries::Handler>()
+          .Append<fortunes::Handler>()
           // bare
           .Append<bare::SimpleRouter>()
           .Append<bare::SimpleServer>();

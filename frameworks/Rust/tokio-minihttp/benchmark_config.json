@@ -17,7 +17,8 @@
       "webserver": "tokio-minihttp",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "tokio-minihttp"
+      "display_name": "tokio-minihttp",
+      "tags": ["broken"]
     }
   }]
 }

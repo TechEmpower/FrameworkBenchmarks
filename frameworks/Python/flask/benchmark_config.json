@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "Flask",
       "notes": "",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     },
     "raw": {
       "json_url": "/json",
@@ -45,7 +46,8 @@
       "database_os": "Linux",
       "display_name": "Flask-raw",
       "notes": "",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     },
     "socketify-wsgi": {
       "json_url": "/json",
@@ -106,7 +108,8 @@
       "database_os": "Linux",
       "display_name": "Flask",
       "notes": "PyPy",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     },
     "pypy-raw": {
       "json_url": "/json",
@@ -129,7 +132,8 @@
       "database_os": "Linux",
       "display_name": "Flask-raw",
       "notes": "PyPy",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     },
     "nginx-uwsgi": {
       "json_url": "/json",
@@ -151,6 +155,26 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Flask",
+      "notes": "",
+      "versus": "wsgi",
+      "tags": ["broken"]
+    },
+    "fastwsgi": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "flask",
+      "language": "Python",
+      "flavor": "Python3",
+      "orm": "Full",
+      "platform": "None",
+      "webserver": "FastWSGI",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Flask [FastWSGI]",
       "notes": "",
       "versus": "wsgi"
     }

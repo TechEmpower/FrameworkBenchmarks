@@ -1,0 +1,18 @@
+secret_key = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+login_url = "/login"
+smtp_relay = ""
+smtp_username = ""
+smtp_password = ""
+
+[caches]
+
+[caches.default]
+location = "redis://127.0.0.1/"
+
+[databases]
+
+[databases.default]
+name = "hello_world"
+user = "benchmarkdbuser"
+password = "benchmarkdbpass"
+address = "tfb-database"

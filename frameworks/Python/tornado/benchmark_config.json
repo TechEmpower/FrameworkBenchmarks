@@ -66,7 +66,8 @@
       "database_os": "Linux",
       "display_name": "Tornado",
       "notes": "",
-      "versus": "tornado"
+      "versus": "tornado",
+      "tags": ["broken"]
     },
     "py3": {
       "json_url": "/json",
