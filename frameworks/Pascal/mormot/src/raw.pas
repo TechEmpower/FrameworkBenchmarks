@@ -193,7 +193,7 @@ begin
      hsoIncludeDateHeader  // required by TPW General Test Requirements #5
     ] + flags);
   fHttpServer.HttpQueueLength := 10000; // needed e.g. from wrk/ab benchmarks
-  fHttpServer.ServerName := 'M'; // better plaintext performance
+  fHttpServer.ServerName := 'mmt';
   // use default routing using RTTI on the TRawAsyncServer published methods
   fHttpServer.Route.RunMethods([urmGet], self);
   // wait for the server to be ready and raise exception e.g. on binding issue
