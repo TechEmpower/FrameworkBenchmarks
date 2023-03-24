@@ -25,6 +25,7 @@ docker build -t techempower/tfb .
 
 echo "running tfb docker image"
 docker run \
+  -e USER_ID=$(id -u) \
   --network=host \
   --mount type=bind,source=$TFB_REPOPARENT/$TFB_REPONAME,target=/FrameworkBenchmarks \
   techempower/tfb \
