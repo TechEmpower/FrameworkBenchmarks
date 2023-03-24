@@ -8,8 +8,8 @@ ARG LDFLAGS="-flto -march=native -mtune=native -O3"
 ARG CFLAGS="-I /usr/include/luajit-2.1 ${LDFLAGS}"
 ARG DEBIAN_FRONTEND=noninteractive
 WORKDIR /tmp
-RUN apt-get -yqq update && \
-    apt-get -yqq install \
+RUN apt-get -yqq update >/dev/null && \
+    apt-get -yqq install >/dev/null \
       libluajit-5.1-dev \
       libssl-dev \
       luajit && \
@@ -24,8 +24,8 @@ COPY concurrency.sh pipeline.lua pipeline.sh query.sh ./
 
 ARG DEBIAN_FRONTEND=noninteractive
 COPY --from=compile /tmp/wrk /usr/local/bin/
-RUN apt-get -yqq update && \
-    apt-get -yqq install \
+RUN apt-get -yqq update >/dev/null && \
+    apt-get -yqq install >/dev/null \
       curl \
       libluajit-5.1-2 && \
     chmod 777 concurrency.sh pipeline.sh query.sh
