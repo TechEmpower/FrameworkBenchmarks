@@ -46,7 +46,6 @@ diesel-async = { version = "0.2.1", default-features = false, features = [
   "postgres",
   "bb8",
 ], optional = true }
-# diesel = { version = "1.4.8", features = ["postgres"], optional = true }
 
 yarte = { version = "0.15.7", features = ["bytes-buf", "json"], optional = true }
 markup = { version = "0.13.1", optional = true }
