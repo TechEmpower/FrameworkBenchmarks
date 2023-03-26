@@ -24,7 +24,7 @@ path = "src/main_diesel.rs"
 required-features = ["diesel", "diesel-async", "sailfish"]
 
 [dependencies]
-viz = "0.4.8"
+viz = "0.4.9"
 hyper = "0.14.25"
 atoi = "2.0"
 serde = { version = "1.0", features = ["derive"] }
@@ -32,9 +32,9 @@ nanorand = "0.7"
 thiserror = "1.0"
 futures-util = "0.3.27"
 
-tokio = { version = "1.0", features = ["full"] }
+tokio = { version = "1.26", features = ["full"] }
 tokio-postgres = { version = "0.7.7", optional = true }
-sqlx = { version = "0.6.2", features = [
+sqlx = { version = "0.6.3", features = [
   "postgres",
   "macros",
   "runtime-tokio-native-tls",
