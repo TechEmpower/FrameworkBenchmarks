@@ -7,3 +7,5 @@ ENV MYSQL_DATABASE=hello_world
 
 COPY my.cnf /etc/mysql/
 COPY create.sql /docker-entrypoint-initdb.d/
+
+COPY 60-database-shm.conf /etc/sysctl.d/60-database-shm.conf
