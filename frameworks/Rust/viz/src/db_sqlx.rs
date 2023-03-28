@@ -62,17 +62,6 @@ impl FromRequest for Counter {
     }
 }
 
-pub async fn get_worlds_by_limit(
-    mut conn: PoolConnection<Postgres>,
-    limit: i64,
-) -> Result<Vec<World>, PgError> {
-    let worlds = sqlx::query_as("SELECT * FROM World LIMIT $1")
-        .bind(limit)
-        .fetch_all(&mut conn)
-        .await?;
-    Ok(worlds)
-}
-
 pub async fn get_world(
     conn: &mut PoolConnection<Postgres>,
     id: i32,

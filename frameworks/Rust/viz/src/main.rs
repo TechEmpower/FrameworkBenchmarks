@@ -1,3 +1,5 @@
+#![allow(clippy::unused_async)]
+
 use serde::Serialize;
 use viz::{
     header::{HeaderValue, SERVER},
