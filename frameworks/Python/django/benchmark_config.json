@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "Django",
       "notes": "CPython 3.6",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     },
     "socketify-wsgi": {
       "plaintext_url" : "/plaintext",
@@ -81,7 +82,8 @@
       "database_os": "Linux",
       "display_name": "Django",
       "notes": "CPython 3.6",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     }
   }]
 }
