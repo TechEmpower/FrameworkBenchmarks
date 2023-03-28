@@ -13,6 +13,8 @@ RUN apt-get -yqq update && \
       curl \
       flex \
       g++ \
+      libbrotli-dev \
+      libcap-dev \
       libnuma-dev \
       libpq-dev \
       libssl-dev \
@@ -23,9 +25,10 @@ RUN apt-get -yqq update && \
       libz-dev \
       make \
       ninja-build \
-      pkg-config
+      pkg-config \
+      systemtap-sdt-dev
 
-ARG H2O_VERSION=v2.2.6
+ARG H2O_VERSION=71224be1ac250502f27528e988d3a673dcf2055f
 
 WORKDIR /tmp/h2o-build
 RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
@@ -38,7 +41,8 @@ RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
       -G Ninja \
       -S . && \
     cmake --build build -j && \
-    cmake --install build
+    cmake --install build && \
+    cp -a deps/picotls/include/picotls* deps/quicly/include/quicly* /usr/local/include
 
 ARG MUSTACHE_C_REVISION=c1948c599edfe48c6099ed70ab1d5911d8c3ddc8
 
