@@ -1,4 +1,4 @@
-use std::{borrow::Cow, fmt::Write, io, sync::Arc};
+use std::{borrow::Cow, collections::HashMap, fmt::Write, io, sync::Arc};
 
 use futures_util::{stream::FuturesUnordered, TryFutureExt, TryStreamExt};
 use nanorand::{Rng, WyRand};
@@ -37,7 +37,7 @@ pub struct PgConnection {
     client: Client,
     world: Statement,
     fortune: Statement,
-    updates: Vec<Statement>,
+    updates: HashMap<u16, Statement>,
 }
 
 impl PgConnection {
@@ -54,7 +54,7 @@ impl PgConnection {
         });
 
         let fortune = client.prepare("SELECT * FROM fortune").await.unwrap();
-        let mut updates = Vec::new();
+        let mut updates = HashMap::new();
 
         for num in 1..=500u16 {
             let mut pl = 1;
@@ -77,7 +77,7 @@ impl PgConnection {
             q.pop();
             q.push(')');
 
-            updates.push(client.prepare(&q).await.unwrap());
+            updates.insert(num, client.prepare(&q).await.unwrap());
         }
 
         let world = client
@@ -137,6 +137,7 @@ impl PgConnection {
             }));
         }
 
+        let st = self.updates.get(&num).unwrap();
         let worlds = worlds.try_collect::<Vec<World>>().await?;
 
         let num = num as usize;
@@ -151,7 +152,7 @@ impl PgConnection {
             params.push(&w.id);
         }
 
-        self.client.query(&self.updates[num - 1], &params).await?;
+        self.client.query(st, &params).await?;
 
         Ok(worlds)
     }
