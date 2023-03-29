@@ -35,30 +35,30 @@ public class BenchmarkService extends AbstractService {
         this.cache = new WorldCache(source);
     }
 
-    @RestMapping(name = "plaintext")
-    public byte[] getHelloBytes() {
+    @RestMapping(auth = false)
+    public byte[] plaintext() {
         return helloBytes;
     }
 
-    @RestMapping(name = "json")
-    public Message getHelloMessage() {
+    @RestMapping(auth = false)
+    public Message json() {
         return new Message("Hello, World!");
     }
 
-    @RestMapping(name = "db")
-    public CompletableFuture<World> findWorldAsync() {
+    @RestMapping(auth = false)
+    public CompletableFuture<World> db() {
         return source.findAsync(World.class, ThreadLocalRandom.current().nextInt(10000) + 1);
     }
 
-    @RestMapping(name = "queries")
-    public CompletableFuture<List<World>> queryWorldAsync(int q) {
+    @RestMapping(auth = false)
+    public CompletableFuture<List<World>> queries(int q) {
         int size = Math.min(500, Math.max(1, q));
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
         return source.findsListAsync(World.class, ids.boxed());
     }
 
-    @RestMapping(name = "updates")
-    public CompletableFuture<List<World>> updateWorldAsync(int q) {
+    @RestMapping(auth = false)
+    public CompletableFuture<List<World>> updates(int q) {
         int size = Math.min(500, Math.max(1, q));
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
         int[] newNumbers = ThreadLocalRandom.current().ints(size, 1, 10001).toArray();
@@ -67,8 +67,8 @@ public class BenchmarkService extends AbstractService {
             .thenApply(v -> words));
     }
 
-    @RestMapping(name = "fortunes")
-    public CompletableFuture<HttpScope> queryFortunes() {
+    @RestMapping(auth = false)
+    public CompletableFuture<HttpScope> fortunes() {
         return source.queryListAsync(Fortune.class).thenApply(fortunes -> {
             fortunes.add(new Fortune(0, "Additional fortune added at request time."));
             Collections.sort(fortunes);
@@ -76,7 +76,7 @@ public class BenchmarkService extends AbstractService {
         });
     }
 
-    @RestMapping(name = "cached-worlds")
+    @RestMapping(name = "cached-worlds", auth = false)
     public World[] cachedWorlds(int q) {
         int size = Math.min(500, Math.max(1, q));
         return cache.random(size);
