@@ -6,6 +6,10 @@ RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /de
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null && \
     apt-get update -yqq > /dev/null && apt-get upgrade -yqq > /dev/null
 
+RUN apt-get install -y php-pear php8.2-dev > /dev/null
+RUN mkdir -p /etc/php/8.2/fpm/conf.d
+RUN pecl install phalcon > /dev/null && echo "extension=phalcon.so" > /etc/php/8.2/fpm/conf.d/phalcon.ini
+
 RUN apt-get install -yqq nginx git unzip \
     php8.2-cli php8.2-fpm php8.2-mysql php8.2-mbstring php8.2-xml > /dev/null
 
@@ -15,9 +19,6 @@ COPY deploy/conf/* /etc/php/8.2/fpm/
 
 ADD ./ /phalcon
 WORKDIR /phalcon
-
-RUN apt-get install -y php-pear php8.2-dev > /dev/null
-RUN pecl install phalcon > /dev/null && echo "extension=phalcon.so" > /etc/php/8.2/fpm/conf.d/phalcon.ini
 
 RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.2/fpm/php-fpm.conf ; fi;
 
