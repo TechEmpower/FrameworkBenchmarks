@@ -8,5 +8,7 @@ orjson==3.6.5
 pony==0.7.16
 psycopg2-binary==2.9.3; implementation_name=='cpython'
 tortoise-orm==0.19.2
+httptools==0.5.0
+uvloop==0.17.0
 uvicorn==0.20.0
 waitress==2.1.2
