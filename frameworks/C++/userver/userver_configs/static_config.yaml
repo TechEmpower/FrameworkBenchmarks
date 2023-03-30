@@ -56,7 +56,7 @@ components_manager:
         secdist: {} # Component that stores configuration of hosts and passwords
         default-secdist-provider:
             config: /app/secure_data.json  # Values are supposed to be stored in this file
-            missing-ok: false                             # ... but if the file is missing it is still ok
+            missing-ok: false
 
         plaintext-handler:
             path: /plaintext
@@ -98,6 +98,11 @@ components_manager:
 
         cached-queries-handler:
             path: /cached-queries
+            method: GET
+            task_processor: main-task-processor
+
+        fortunes-handler:
+            path: /fortunes
             method: GET
             task_processor: main-task-processor
 

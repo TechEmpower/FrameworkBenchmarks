@@ -59,6 +59,7 @@ typedef struct {
 	SSL_CTX *ssl_ctx;
 	size_t memory_alignment;
 	int signal_fd;
+	h2o_buffer_prototype_t buffer_prototype;
 	h2o_globalconf_t h2o_config;
 	request_handler_data_t request_handler_data;
 } global_data_t;

@@ -68,7 +68,6 @@ typedef struct {
 	queue_t queries;
 	size_t conn_num;
 	size_t query_num;
-	h2o_timeout_t timeout;
 } db_conn_pool_t;
 
 void add_prepared_statement(const char *name, const char *query, list_t **prepared_statements);

@@ -21,10 +21,13 @@ echo "moving to tfb directory"
 cd $TFB_REPOPARENT/$TFB_REPONAME
 
 echo "building tfb docker image"
-docker build -t techempower/tfb .
+docker build -t techempower/tfb \
+  --build-arg USER_ID=$(id -u) \
+  --build-arg GROUP_ID=$(id -g) .
 
 echo "running tfb docker image"
 docker run \
+  -e USER_ID=$(id -u) \
   --network=host \
   --mount type=bind,source=$TFB_REPOPARENT/$TFB_REPONAME,target=/FrameworkBenchmarks \
   techempower/tfb \

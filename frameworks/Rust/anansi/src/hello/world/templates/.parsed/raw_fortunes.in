@@ -1,6 +1,3 @@
-{_args._content = {let mut _c = String::new();_c.push_str("    <table>
-    <tr><th>id</th><th>message</th></tr>
-    ");for fortune in fortunes {_c.push_str("
-        <tr><td>");_c.push_str(&anansi::web::html_escape(&format!("{}", fortune.id)));_c.push_str("</td><td>");_c.push_str(&anansi::web::html_escape(&format!("{}", fortune.message)));_c.push_str("</td></tr>
-    ");}_c.push_str("
-    </table>"); _c};_args._title = {let mut _c = String::new();_c.push_str("");_c.push_str(&anansi::web::html_escape(&format!("{}", title)));_c.push_str(""); _c};_args}
+{_args._content = {let mut _c = String::new();_c.push_str("<table><tr><th>id</th><th>message</th></tr>");
+for fortune in fortunes {_c.push_str(&format!("<tr><td>{}</td><td>{}</td></tr>", fortune.id, anansi::web::html_escape(fortune.message)));}_c.push_str("</table>"); _c};
+_args._title = {let mut _c = String::new();_c.push_str(&format!("{}", title)); _c};_args}

@@ -1,103 +1,106 @@
 const h = require('../helper');
-const async = require('async');
 const Mongoose = require('mongoose');
+// These .set() calls can be removed when mongoose is upgraded to v5.
+Mongoose.set('useNewUrlParser', true);
+Mongoose.set('useFindAndModify', false);
+Mongoose.set('useUnifiedTopology', true);
 const connection = Mongoose.createConnection('mongodb://tfb-database/hello_world');
+
+/**
+ * Note! The benchmarks say we should use "id" as a property name.
+ * However, Mongo provides a default index on "_id", so to be equivalent to the other tests, we use
+ * the same, default index provided by the database.
+ *
+ */
 
 // Mongoose Setup
 const WorldSchema = new Mongoose.Schema({
-  id: Number,
+  _id: Number,
   randomNumber: Number
 }, {
-    collection: 'world'
-  });
+  collection: 'world'
+});
 const FortuneSchema = new Mongoose.Schema({
-  id: Number,
+  _id: Number,
   message: String
 }, {
-    collection: 'fortune'
-  });
+  collection: 'fortune'
+});
 
 const Worlds = connection.model('World', WorldSchema);
 const Fortunes = connection.model('Fortune', FortuneSchema);
 
-const mongooseRandomWorld = (callback) => {
-  Worlds.findOne({
-    id: h.randomTfbNumber()
-  }).exec(callback);
+const toClientWorld = (world) => {
+  if (world) {
+    world.id = world._id;
+    delete world._id;
+  }
+  return world;
 };
 
-const mongooseGetAllFortunes = (callback) => {
-  Fortunes.find({})
-    .exec(callback);
+const mongooseRandomWorld = async () => {
+  return toClientWorld(await Worlds.findOne({
+    _id: h.randomTfbNumber()
+  }).lean().exec());
 };
+
+const mongooseGetAllFortunes = async () => {
+  return (await Fortunes.find({})
+      .lean().exec()).map(toClientWorld);
+};
+
+async function getUpdateRandomWorld() {
+  // it would be nice to use findOneAndUpdate here, but for some reason the test fails with it.
+  const world = await Worlds.findOne({_id: h.randomTfbNumber()}).lean().exec();
+  world.randomNumber = h.randomTfbNumber();
+  await Worlds.updateOne({
+    _id: world._id
+  }, {
+    $set: {
+      randomNumber: world.randomNumber
+    }
+  }).exec();
+  return toClientWorld(world);
+}
 
 module.exports = {
 
-  SingleQuery: (req, res) => {
-    mongooseRandomWorld((err, result) => {
-      if (err) { return process.exit(1); }
-
-      h.addTfbHeaders(res, 'json');
-      res.end(JSON.stringify(result));
-    })
+  SingleQuery: async (req, res) => {
+    const result = await mongooseRandomWorld();
+    h.addTfbHeaders(res, 'json');
+    res.end(JSON.stringify(result));
   },
 
-  MultipleQueries: (queries, req, res) => {
-    const queryFunctions = h.fillArray(mongooseRandomWorld, queries);
+  MultipleQueries: async (queryCount, req, res) => {
+    const queryFunctions = [];
+    for (let i = 0; i < queryCount; i++) {
+      queryFunctions.push(mongooseRandomWorld());
+    }
+    const results = await Promise.all(queryFunctions);
 
-    async.parallel(queryFunctions, (err, results) => {
-      if (err) { return process.exit(1); }
-
-      h.addTfbHeaders(res, 'json');
-      res.end(JSON.stringify(results));
-    });
+    h.addTfbHeaders(res, 'json');
+    res.end(JSON.stringify(results));
   },
 
-  Fortunes: (req, res) => {
-    mongooseGetAllFortunes((err, fortunes) => {
-      if (err) { return process.exit(1); }
-
-      fortunes.push(h.additionalFortune());
-      fortunes.sort((a, b) => {
-        return a.message.localeCompare(b.message);
-      });
-      h.addTfbHeaders(res, 'html');
-      res.end(h.fortunesTemplate({
-        fortunes: fortunes
-      }))
+  Fortunes: async (req, res) => {
+    const fortunes = await mongooseGetAllFortunes();
+    fortunes.push(h.additionalFortune());
+    fortunes.sort((a, b) => {
+      return a.message.localeCompare(b.message);
     });
+    h.addTfbHeaders(res, 'html');
+    res.end(h.fortunesTemplate({fortunes}));
   },
 
-  Updates: (queries, req, res) => {
-    const selectFunctions = h.fillArray(mongooseRandomWorld, queries);
+  Updates: async (queryCount, req, res) => {
+    const promises = [];
 
-    async.parallel(selectFunctions, (err, worlds) => {
-      if (err) { return process.exit(1); }
+    for (let i = 1; i <= queryCount; i++) {
+      promises.push(getUpdateRandomWorld());
+    }
 
-      const updateFunctions = [];
-
-      for (let i = 0; i < queries; i++) {
-        ((i) => {
-          updateFunctions.push((callback) => {
-            worlds[i].randomNumber = h.randomTfbNumber();
-            Worlds.update({
-              id: worlds[i].id
-            }, {
-                randomNumber: worlds[i].randomNumber
-              }, callback);
-          });
-        })(i);
-      }
-
-      async.parallel(updateFunctions, (err, results) => {
-        if (err) { return process.exit(1); }
-
-        h.addTfbHeaders(res, 'json');
-        // results does not have updated document information
-        // if no err: all updates were successful
-        res.end(JSON.stringify(worlds));
-      });
-    });
+    h.addTfbHeaders(res, 'json');
+    res.end(JSON.stringify(await Promise.all(promises)));
   }
 
 };

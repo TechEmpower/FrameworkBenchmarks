@@ -1,5 +1,7 @@
 FROM ubuntu:22.04
 
+ARG USER_ID
+ARG GROUP_ID
 ARG DEBIAN_FRONTEND=noninteractive
 
 #RUN add-apt-repository universe
@@ -13,6 +15,7 @@ RUN apt-get -yqq update && apt-get -yqq install \
       dstat                       `# Collect resource usage statistics` \
       gcc \
       git-core \
+      gosu \
       libmysqlclient-dev          `# Needed for MySQL-python` \
       libpq-dev \
       python2 \
@@ -39,4 +42,17 @@ RUN pip install \
 
 ENV FWROOT=/FrameworkBenchmarks PYTHONPATH=/FrameworkBenchmarks
 
-ENTRYPOINT ["python2", "/FrameworkBenchmarks/toolset/run-tests.py"]
+# Check if Group is already created
+RUN if ! getent group $GROUP_ID; then \
+      addgroup --gid $GROUP_ID user; \
+    fi
+
+# Drop permissions of user to match those of the host system
+# Check if the User ID is already created
+RUN if ! getent passwd $USER_ID; then \
+      adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user; \
+    fi
+
+ENV USER_ID=$USER_ID
+
+ENTRYPOINT ["/bin/bash", "FrameworkBenchmarks/entrypoint.sh" ]

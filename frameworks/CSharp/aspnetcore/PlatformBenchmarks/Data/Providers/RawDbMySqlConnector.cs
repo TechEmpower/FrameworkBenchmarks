@@ -185,9 +185,9 @@ namespace PlatformBenchmarks
             return results;
         }
 
-        public async Task<List<Fortune>> LoadFortunesRows()
+        public async Task<List<FortuneUtf16>> LoadFortunesRows()
         {
-            var result = new List<Fortune>();
+            var result = new List<FortuneUtf16>();
 
             using (var db = new MySqlConnection(_connectionString))
             {
@@ -202,7 +202,7 @@ namespace PlatformBenchmarks
                         while (await rdr.ReadAsync())
                         {
                             result.Add(
-                                new Fortune
+                                new FortuneUtf16
                                 (
                                     id: rdr.GetInt32(0),
                                     message: rdr.GetString(1)
@@ -212,7 +212,7 @@ namespace PlatformBenchmarks
                 }
             }
 
-            result.Add(new Fortune(id: 0, message: "Additional fortune added at request time." ));
+            result.Add(new FortuneUtf16(id: 0, message: "Additional fortune added at request time." ));
             result.Sort();
 
             return result;

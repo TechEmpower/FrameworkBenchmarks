@@ -15,7 +15,8 @@ min_main!(server, {
     use anansi::cache::prelude::*;
     use hello::records::World;
     use anansi::records::Record;
-    let worlds = World::get_all().raw_query(&server.pool).await.expect("problem fetching worlds");
+    use anansi::db::AsDb;
+    let worlds = World::get_all().raw_query(server.app_data.as_db()).await.expect("problem fetching worlds");
     let mut items = vec![];
     for world in worlds {
         let id = world.pk().to_string();
