@@ -1,5 +1,5 @@
-#[global_allocator]
-static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+// #[global_allocator]
+// static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 // #[global_allocator]
 // static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
@@ -319,12 +319,12 @@ async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Err
     Ok(())
 }
 
-// async fn populate_cache() -> Result<(), Error> {
-//     let conn = PgConnection::create(DB_URL).await?;
-//     let worlds = conn.get_worlds(10_000).await?;
-//     CACHED_WORLDS.set(worlds).unwrap();
-//     Ok(())
-// }
+async fn populate_cache() -> Result<(), Error> {
+    let conn = PgConnection::create(DB_URL).await?;
+    let worlds = conn.get_worlds(10_000).await?;
+    CACHED_WORLDS.set(worlds).unwrap();
+    Ok(())
+}
 
 #[tokio::main]
 async fn main() {
@@ -335,6 +335,7 @@ async fn main() {
         .push(Router::with_path("cached_queries").get(cached_queries))
         .push(Router::with_path("updates").get(UpdatesHandler::new().await));
 
+    populate_cache().expect("error cache worlds");
     let addr = SocketAddr::from((Ipv4Addr::UNSPECIFIED, 8080));
     let acceptor = TcpListener::new(addr).bind().await;
     Server::new(acceptor).serve(router).await;

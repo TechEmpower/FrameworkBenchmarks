@@ -1,4 +1,4 @@
-FROM rust:1.62.1
+FROM rust:1.68.2
 
 # Disable simd at jsonescape
 ENV CARGO_CFG_JSONESCAPE_DISABLE_AUTO_SIMD=
