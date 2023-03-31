@@ -25,7 +25,7 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --prefix=/nginx \
             --with-ld-opt="-Wl,-rpath,$PHP_LIB" \
             --add-module=/ngx-php/third_party/ngx_devel_kit \
-            --add-module=/ngx-php  && \
+            --add-module=/ngx-php > /dev/null && \
     make > /dev/null && make install > /dev/null
 
 EXPOSE 8080
