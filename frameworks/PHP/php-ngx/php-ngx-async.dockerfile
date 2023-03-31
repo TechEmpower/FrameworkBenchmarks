@@ -16,7 +16,7 @@ ADD . .
 
 ENV NGINX_VERSION 1.23.4
 
-RUN git clone -b v0.0.26 --single-branch --depth 1 https://github.com/rryqszq4/ngx-php.git > /dev/null
+RUN git clone -b v0.0.26 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
 
 RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
     tar -zxf nginx-${NGINX_VERSION}.tar.gz && \
@@ -25,8 +25,8 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
     ./configure --user=www --group=www \
             --prefix=/nginx \
             --with-ld-opt="-Wl,-rpath,$PHP_LIB" \
-            --add-module=/ngx-php/third_party/ngx_devel_kit \
-            --add-module=/ngx-php > /dev/null && \
+            --add-module=/ngx_php7/third_party/ngx_devel_kit \
+            --add-module=/ngx_php7 > /dev/null && \
     make > /dev/null && make install > /dev/null
 
 EXPOSE 8080
