@@ -10,6 +10,7 @@ use std::cmp;
 use std::fmt::Write;
 use std::sync::Arc;
 use std::thread::available_parallelism;
+use std::net::{Ipv4Addr, SocketAddr};
 
 use anyhow::Error;
 use diesel::prelude::*;
@@ -22,7 +23,6 @@ use salvo::prelude::*;
 
 mod models;
 mod schema;
-mod server;
 use models::*;
 use schema::*;
 
@@ -168,7 +168,8 @@ fn populate_cache() -> Result<(), Error> {
     Ok(())
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let router = Arc::new(
         Router::new()
             .push(Router::with_path("db").get(world_row))
@@ -182,24 +183,8 @@ fn main() {
         .set(build_pool(DB_URL, size as u32).unwrap_or_else(|_| panic!("Error connecting to {}", &DB_URL)))
         .ok();
     populate_cache().expect("error cache worlds");
-    for _ in 1..size {
-        let router = router.clone();
-        std::thread::spawn(move || {
-            let rt = tokio::runtime::Builder::new_current_thread()
-                .enable_all()
-                .build()
-                .unwrap();
-            rt.block_on(serve(router));
-        });
-    }
-    println!("Starting http server: 127.0.0.1:8080");
-    let rt = tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap();
-    rt.block_on(serve(router));
-}
 
-async fn serve(router: Arc<Router>) {
-    server::builder().serve(Service::new(router)).await.unwrap();
+    let addr = SocketAddr::from((Ipv4Addr::UNSPECIFIED, 8080));
+    let acceptor = TcpListener::new(addr).bind().await;
+    Server::new(acceptor).serve(router).await;
 }

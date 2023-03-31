@@ -1,15 +1,14 @@
 // #[global_allocator]
 // static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
+use std::net::{Ipv4Addr, SocketAddr};
 use std::sync::Arc;
 
 use bytes::Bytes;
 use salvo::http::header::{self, HeaderValue};
-use salvo::http::response::Body;
+use salvo::http::body::ResBody;
 use salvo::prelude::*;
 use serde::Serialize;
-
-mod server;
 
 #[derive(Serialize)]
 pub struct Message {
@@ -28,7 +27,7 @@ fn json(res: &mut Response) {
         message: "Hello, World!",
     })
     .unwrap();
-    res.set_body(Body::Once(Bytes::from(data)));
+    res.set_body(ResBody::Once(Bytes::from(data)));
 }
 
 #[handler]
@@ -36,7 +35,7 @@ fn plaintext(res: &mut Response) {
     let headers = res.headers_mut();
     headers.insert(header::SERVER, HeaderValue::from_static("S"));
     headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("text/plain"));
-    res.set_body(Body::Once(Bytes::from_static(b"Hello, world!")));
+    res.set_body(ResBody::Once(Bytes::from_static(b"Hello, world!")));
 }
 
 #[tokio::main]
@@ -47,9 +46,7 @@ async fn main() {
             .push(Router::with_path("json").get(json)),
     );
 
-    server::builder()
-        .http1_pipeline_flush(true)
-        .serve(Service::new(router))
-        .await
-        .unwrap();
+    let addr = SocketAddr::from((Ipv4Addr::UNSPECIFIED, 8080));
+    let acceptor = TcpListener::new(addr).bind().await;
+    Server::new(acceptor).serve(router).await;
 }
