@@ -1,5 +1,5 @@
-// #[global_allocator]
-// static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::net::{Ipv4Addr, SocketAddr};
 use std::sync::Arc;

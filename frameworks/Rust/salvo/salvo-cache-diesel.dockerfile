@@ -7,4 +7,4 @@ RUN cargo build --release
 
 EXPOSE 8080
 
-CMD ./target/release/main-diesel
+CMD ./target/release/cache-diesel

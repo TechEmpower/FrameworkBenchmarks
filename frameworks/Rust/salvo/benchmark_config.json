@@ -62,6 +62,40 @@
         "display_name": "Salvo [PG]",
         "notes": "",
         "versus": ""
+      },
+      "cache-diesel": {
+        "cached_query_url": "/cached_queries?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "salvo",
+        "language": "Rust",
+        "orm": "Raw",
+        "platform": "Rust",
+        "webserver": "Hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Salvo [Diesel]",
+        "notes": "",
+        "versus": ""
+      },
+      "cache-pg": {
+        "cached_query_url": "/cached_queries?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "salvo",
+        "language": "Rust",
+        "orm": "Raw",
+        "platform": "Rust",
+        "webserver": "Hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Salvo [PG]",
+        "notes": "",
+        "versus": ""
       }
     }
   ]

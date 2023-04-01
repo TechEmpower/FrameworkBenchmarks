@@ -7,7 +7,7 @@ pub struct Message {
 }
 
 #[allow(non_snake_case)]
-#[derive(Serialize, Queryable, Debug)]
+#[derive(Serialize, Queryable, Clone, Debug)]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,

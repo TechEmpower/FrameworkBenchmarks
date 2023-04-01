@@ -1,12 +1,9 @@
-FROM rust:1.68.2
-
-RUN apt-get update -yqq && apt-get install -yqq cmake g++
+FROM rust:latest
 
 ADD ./ /salvo
 WORKDIR /salvo
 
-RUN cargo clean
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
+RUN cargo build --release
 
 EXPOSE 8080
 
