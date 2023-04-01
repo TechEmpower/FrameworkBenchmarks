@@ -138,7 +138,7 @@ async fn fortunes(res: &mut Response) -> Result<(), Error> {
     write!(&mut body, "{}", FortunesTemplate { items }).unwrap();
 
     res.headers_mut()
-        .insert(header::SERVER, HeaderValue::from_static("S"));
+        .insert(header::SERVER, HeaderValue::from_static("salvo"));
     res.render(Text::Html(body));
     Ok(())
 }

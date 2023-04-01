@@ -59,7 +59,7 @@ async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Err
         }
     }
     res.headers_mut()
-        .insert(header::SERVER, HeaderValue::from_static("S"));
+        .insert(header::SERVER, HeaderValue::from_static("salvo"));
     res.render(Json(worlds));
     Ok(())
 }

@@ -40,7 +40,7 @@ impl Handler for WorldHandler {
         _ctrl: &mut FlowCtrl,
     ) {
         res.headers_mut()
-            .insert(header::SERVER, HeaderValue::from_static("S"));
+            .insert(header::SERVER, HeaderValue::from_static("salvo"));
         let world = self.conn.get_world().await.unwrap();
         res.render(Json(world));
     }

@@ -18,7 +18,7 @@ pub struct Message {
 #[handler]
 fn json(res: &mut Response) {
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, HeaderValue::from_static("S"));
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
     headers.insert(
         header::CONTENT_TYPE,
         HeaderValue::from_static("application/json"),
