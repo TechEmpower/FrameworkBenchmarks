@@ -44,10 +44,10 @@ x-backend: &backend
     - history:/usr/local/hist
    # - ./.psqlrc:/root/.psqlrc:ro
    # - ./.bashrc:/root/.bashrc:ro
-  depends_on:
-    &backend_depends_on
-    postgres:
-      condition: service_healthy
+  # depends_on:
+  #   &backend_depends_on
+  #   postgres:
+  #     condition: service_healthy
     
 
 services:
@@ -63,14 +63,17 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - 8085:8080
   web:
     <<: *backend
+    build:
+      context: ..
+      dockerfile: rack.dockerfile
     #command: bundle exec puma -t 8:32 -w 8 --preload -b tcp://0.0.0.0:3000 -e development  
-    command: /bin/bash
+    #command: /bin/bash
     ports:
-      - 3000:3000
-  app:
+      - 8080:8080
+  dev:
     <<: *backend
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
