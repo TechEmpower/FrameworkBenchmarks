@@ -37,13 +37,7 @@
 
   "POSTGRES_STATEMENT_METRICS_SETTINGS": {},
   "POSTGRES_CONNECTION_PIPELINE_ENABLED": false,
-  "POSTGRES_CONNECTION_POOL_SETTINGS": {
-    "hello_world": {
-      "min_pool_size": 75,
-      "max_pool_size": 100,
-      "max_queue_size": 512
-    }
-  },
+  "POSTGRES_CONNECTION_POOL_SETTINGS": {},
   "POSTGRES_CONNECTION_SETTINGS": {},
   "POSTGRES_DEFAULT_COMMAND_CONTROL": {
     "network_timeout_ms": 7000,
