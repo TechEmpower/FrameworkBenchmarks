@@ -1,2 +1,2 @@
 -r requirements.txt
-fastwsgi==0.0.9
+uWSGI==2.0.21

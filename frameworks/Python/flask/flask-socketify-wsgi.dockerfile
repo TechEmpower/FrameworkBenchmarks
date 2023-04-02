@@ -1,12 +1,12 @@
-FROM python:3.10-bullseye
+FROM python:3.11-bullseye
 
 
 RUN apt-get update
 RUN apt-get install libpq-dev python3-dev libuv1 -y
-ADD ./requirements-socketify.txt /flask/requirements.txt
-RUN pip3 install -r /flask/requirements.txt
-ADD ./ /flask
+
 WORKDIR /flask
+COPY ./ /flask
+RUN pip3 install -U pip; pip3 install -r /flask/requirements-socketify.txt
 
 EXPOSE 8080
 
