@@ -60,12 +60,12 @@ RUN gem update --system && \
 
 
 # Create a directory for the app code
-RUN mkdir -p /app
-WORKDIR /app
+#RUN mkdir -p /app
+#WORKDIR /app
 
-RUN pwd
-RUN ls -lah /app
-
+#RUN pwd
+#RUN ls -lah /app
+RUN which bash
 # Document that we're going to expose port 3000
 #EXPOSE 3000
 #RUN bundle install
