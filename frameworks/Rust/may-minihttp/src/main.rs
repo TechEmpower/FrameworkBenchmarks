@@ -80,11 +80,9 @@ struct PgConnection {
 impl PgConnection {
     fn new(db_url: &str) -> Self {
         let client = may_postgres::connect(db_url).unwrap();
-        let world = client
-            .prepare("SELECT id, randomnumber FROM world WHERE id=$1")
-            .unwrap();
 
-        let fortune = client.prepare("SELECT id, message FROM fortune").unwrap();
+        let world = client.prepare("SELECT * FROM world WHERE id=$1").unwrap();
+        let fortune = client.prepare("SELECT * FROM fortune").unwrap();
 
         let mut updates = Vec::new();
         for num in 1..=500u16 {
@@ -117,7 +115,7 @@ impl PgConnection {
     fn get_world(&self, random_id: i32) -> Result<WorldRow, may_postgres::Error> {
         let mut q = self
             .client
-            .query_raw(&self.statement.world, [&random_id as _])?;
+            .query_raw(&self.statement.world, &[&random_id])?;
         match q.next().transpose()? {
             Some(row) => Ok(WorldRow {
                 id: row.get(0),
@@ -137,7 +135,7 @@ impl PgConnection {
             let random_id = (rand.generate::<u32>() % 10_000 + 1) as i32;
             queries.push(
                 self.client
-                    .query_raw(&self.statement.world, [&random_id as _])?,
+                    .query_raw(&self.statement.world, &[&random_id])?,
             );
         }
 
@@ -164,7 +162,7 @@ impl PgConnection {
             let random_id = (rand.generate::<u32>() % 10_000 + 1) as i32;
             queries.push(
                 self.client
-                    .query_raw(&self.statement.world, [&random_id as _])?,
+                    .query_raw(&self.statement.world, &[&random_id])?,
             );
         }
 
@@ -180,7 +178,7 @@ impl PgConnection {
             }
         }
 
-        let mut params: Vec<&(dyn ToSql + Sync)> = Vec::with_capacity(num * 3);
+        let mut params: Vec<&(dyn ToSql)> = Vec::with_capacity(num * 3);
         for w in &worlds {
             params.push(&w.id);
             params.push(&w.randomnumber);
@@ -197,7 +195,7 @@ impl PgConnection {
     }
 
     fn tell_fortune(&self, buf: &mut BytesMut) -> Result<(), may_postgres::Error> {
-        let rows = self.client.query_raw(&self.statement.fortune, [])?;
+        let rows = self.client.query_raw(&self.statement.fortune, &[])?;
 
         let all_rows = Vec::from_iter(rows.map(|r| r.unwrap()));
         let mut fortunes = Vec::with_capacity(all_rows.capacity() + 1);
@@ -260,7 +258,7 @@ impl HttpService for Techempower {
                 worlds.to_bytes_mut(rsp.body_mut());
             }
             _ => {
-                rsp.status_code("404", "Not Found");
+                rsp.status_code(404, "Not Found");
             }
         }
 
