@@ -33,14 +33,8 @@ impl PgConnection {
             }
         });
 
-        let fortune = client
-            .prepare("SELECT id, message FROM fortune")
-            .await
-            .unwrap();
-        let world = client
-            .prepare("SELECT * FROM world WHERE id=$1")
-            .await
-            .unwrap();
+        let fortune = client.prepare("SELECT id, message FROM fortune").await.unwrap();
+        let world = client.prepare("SELECT * FROM world WHERE id=$1").await.unwrap();
         let mut updates = HashMap::new();
         for num in 1..=500u16 {
             let mut pl: u16 = 1;
@@ -69,13 +63,10 @@ impl PgConnection {
     }
 
     async fn query_one_world(&self, w_id: i32) -> DbResult<World> {
-        self.client
-            .query_one(&self.world, &[&w_id])
-            .await
-            .map(|row| World {
-                id: row.get(0),
-                randomnumber: row.get(1),
-            })
+        self.client.query_one(&self.world, &[&w_id]).await.map(|row| World {
+            id: row.get(0),
+            randomnumber: row.get(1),
+        })
     }
 
     #[allow(dead_code)]
@@ -90,7 +81,7 @@ impl PgConnection {
             let between = Uniform::from(1..10_001);
             (0..count)
                 .map(|_| {
-                    let id: i32 = between.sample(&mut rng);
+                    let id = between.sample(&mut rng);
                     self.query_one_world(id)
                 })
                 .collect::<FuturesUnordered<_>>()

@@ -2,11 +2,10 @@
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::net::{Ipv4Addr, SocketAddr};
-use std::sync::Arc;
 
 use bytes::Bytes;
-use salvo::http::header::{self, HeaderValue};
 use salvo::http::body::ResBody;
+use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
 use serde::Serialize;
 
@@ -19,10 +18,7 @@ pub struct Message {
 fn json(res: &mut Response) {
     let headers = res.headers_mut();
     headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
-    headers.insert(
-        header::CONTENT_TYPE,
-        HeaderValue::from_static("application/json"),
-    );
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
     let data = serde_json::to_vec(&Message {
         message: "Hello, World!",
     })
@@ -33,18 +29,16 @@ fn json(res: &mut Response) {
 #[handler]
 fn plaintext(res: &mut Response) {
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, HeaderValue::from_static("S"));
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
     headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("text/plain"));
     res.set_body(ResBody::Once(Bytes::from_static(b"Hello, world!")));
 }
 
 #[tokio::main]
 async fn main() {
-    let router = Arc::new(
-        Router::new()
-            .push(Router::with_path("plaintext").get(plaintext))
-            .push(Router::with_path("json").get(json)),
-    );
+    let router = Router::new()
+        .push(Router::with_path("plaintext").get(plaintext))
+        .push(Router::with_path("json").get(json));
 
     let addr = SocketAddr::from((Ipv4Addr::UNSPECIFIED, 8080));
     let acceptor = TcpListener::new(addr).bind().await;
