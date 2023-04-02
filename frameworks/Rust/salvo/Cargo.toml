@@ -46,4 +46,4 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-salvo = { git = "https://github.com/salvo-rs/salvo.git", rev = "f14f819" }
+salvo = { git = "https://github.com/salvo-rs/salvo.git" }
