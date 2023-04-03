@@ -5,7 +5,6 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::cmp;
 use std::fmt::Write;
-use std::sync::Arc;
 use std::thread::available_parallelism;
 
 use async_trait::async_trait;
