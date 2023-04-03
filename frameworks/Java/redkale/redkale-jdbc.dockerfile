@@ -2,9 +2,7 @@ FROM maven:3.8.6-openjdk-18-slim as maven
 WORKDIR /redkale
 COPY src src
 COPY conf conf
-RUN rm pom.xml
-RUN mv pom-jdbc.xml  pom.xml
-COPY pom.xml pom.xml
+COPY pom-jdbc.xml pom.xml
 RUN mvn package -q
 
 FROM openjdk:20-jdk-slim
