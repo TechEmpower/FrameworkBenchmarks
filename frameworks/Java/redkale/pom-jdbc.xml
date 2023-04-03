@@ -8,7 +8,7 @@
     <properties>
         <main.class>org.redkale.boot.Application</main.class>
         <redkale.version>2.8.0-SNAPSHOT</redkale.version>
-        <postgresql.version>42.5.4</postgresql.version>
+        <postgresql.version>42.5.2</postgresql.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>18</maven.compiler.source>
         <maven.compiler.target>18</maven.compiler.target>
