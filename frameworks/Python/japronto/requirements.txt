@@ -1,2 +1,4 @@
+uvloop==0.17.0
 git+https://github.com/squeaky-pl/japronto.git#egg=japronto
+asyncpg==0.27.0
 ujson==5.4.0
