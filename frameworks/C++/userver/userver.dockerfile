@@ -1,7 +1,9 @@
 FROM ghcr.io/userver-framework/docker-userver-build-base:v1a AS builder
+RUN apt install -y libnghttp2-dev
+
 WORKDIR /src
 RUN git clone https://github.com/userver-framework/userver.git && \
-    cd userver && git checkout 5e33f7fe98604080b52208badef0d728c8d4aea0
+    cd userver && git checkout 7932d3f014926fc1502057a6833064e0d745b66c
 COPY userver_benchmark/ ./
 RUN mkdir build && cd build && \
     cmake -DUSERVER_IS_THE_ROOT_PROJECT=0 -DUSERVER_FEATURE_CRYPTOPP_BLAKE2=0 \
