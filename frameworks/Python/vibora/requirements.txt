@@ -1,2 +1,2 @@
 asyncpg==0.26.0
-git+https://github.com/IterableTrucks/vibora.git@f622101bbf9d4fb045b04afcb32221a5c0673ed9#egg=vibora[fast]
+git+https://github.com/IterableTrucks/vibora.git@a24bbf417a84df3a25f7e8901613a1c50ccfe63f#egg=vibora[fast]
