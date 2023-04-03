@@ -5,11 +5,14 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::cmp;
 use std::fmt::Write;
+use std::sync::Arc;
 use std::thread::available_parallelism;
 
 use async_trait::async_trait;
+use bytes::Bytes;
 use salvo::conn::tcp::TcpAcceptor;
 use salvo::http::header::{self, HeaderValue};
+use salvo::http::ResBody;
 use salvo::prelude::*;
 use salvo::routing::FlowCtrl;
 
@@ -19,6 +22,10 @@ mod utils;
 use pg_conn::PgConnection;
 
 const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
+
+static SERVER_HEADER: HeaderValue = HeaderValue::from_static("salvo");
+static JSON_HEADER: HeaderValue = HeaderValue::from_static("application/json");
+static HTML_HEADER: HeaderValue = HeaderValue::from_static("text/html; charset=utf-8");
 
 struct WorldHandler {
     conn: PgConnection,
@@ -41,10 +48,12 @@ impl Handler for WorldHandler {
         res: &mut Response,
         _ctrl: &mut FlowCtrl,
     ) {
-        res.headers_mut()
-            .insert(header::SERVER, HeaderValue::from_static("salvo"));
         let world = self.conn.get_world().await.unwrap();
-        res.render(Json(world));
+        let data = serde_json::to_vec(&world).unwrap();
+        let headers = res.headers_mut();
+        headers.insert(header::SERVER, SERVER_HEADER.clone());
+        headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+        res.set_body(ResBody::Once(Bytes::from(data)));
     }
 }
 struct WorldsHandler {
@@ -70,10 +79,13 @@ impl Handler for WorldsHandler {
     ) {
         let count = req.query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
-        res.headers_mut()
-            .insert(header::SERVER, HeaderValue::from_static("salvo"));
         let worlds = self.conn.get_worlds(count).await.unwrap();
-        res.render(Json(worlds));
+
+        let data = serde_json::to_vec(&worlds).unwrap();
+        let headers = res.headers_mut();
+        headers.insert(header::SERVER, SERVER_HEADER.clone());
+        headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+        res.set_body(ResBody::Once(Bytes::from(data)));
     }
 }
 struct UpdatesHandler {
@@ -100,9 +112,14 @@ impl Handler for UpdatesHandler {
         let count = req.query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
         res.headers_mut()
-            .insert(header::SERVER, HeaderValue::from_static("salvo"));
+            .insert(header::SERVER, SERVER_HEADER.clone());
         let worlds = self.conn.update(count).await.unwrap();
-        res.render(Json(worlds));
+
+        let data = serde_json::to_vec(&worlds).unwrap();
+        let headers = res.headers_mut();
+        headers.insert(header::SERVER, SERVER_HEADER.clone());
+        headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+        res.set_body(ResBody::Once(Bytes::from(data)));
     }
 }
 struct FortunesHandler {
@@ -126,39 +143,49 @@ impl Handler for FortunesHandler {
         res: &mut Response,
         _ctrl: &mut FlowCtrl,
     ) {
-        let mut body = String::new();
-        write!(&mut body, "{}", self.conn.tell_fortune().await.unwrap()).unwrap();
-        res.headers_mut()
-            .insert(header::SERVER, HeaderValue::from_static("salvo"));
-        res.render(Text::Html(body));
+        let mut data = String::new();
+        write!(&mut data, "{}", self.conn.tell_fortune().await.unwrap()).unwrap();
+
+        let headers = res.headers_mut();
+        headers.insert(header::SERVER, SERVER_HEADER.clone());
+        headers.insert(header::CONTENT_TYPE, HTML_HEADER.clone());
+        res.set_body(ResBody::Once(Bytes::from(data)));
     }
 }
 
 fn main() {
+    let size = available_parallelism().map(|n| n.get()).unwrap_or(16);
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
         .unwrap();
-    for _ in 1..available_parallelism().map(|n| n.get()).unwrap_or(16) {
+    let router = Arc::new(rt.block_on(async {
+        Router::new()
+            .push(Router::with_path("db").get(WorldHandler::new().await))
+            .push(Router::with_path("fortunes").get(FortunesHandler::new().await))
+            .push(Router::with_path("queries").get(WorldsHandler::new().await))
+            .push(Router::with_path("updates").get(UpdatesHandler::new().await))
+    }));
+
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+    for _ in 1..size {
+        let router = router.clone();
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
                 .enable_all()
                 .build()
                 .unwrap();
-            rt.block_on(serve());
+            rt.block_on(serve(router));
         });
     }
     println!("Started http server: 127.0.0.1:8080");
-    rt.block_on(serve());
+    rt.block_on(serve(router));
 }
 
-async fn serve() {
-    let router = Router::new()
-        .push(Router::with_path("db").get(WorldHandler::new().await))
-        .push(Router::with_path("fortunes").get(FortunesHandler::new().await))
-        .push(Router::with_path("queries").get(WorldsHandler::new().await))
-        .push(Router::with_path("updates").get(UpdatesHandler::new().await));
-
+async fn serve(router: Arc<Router>) {
     let acceptor: TcpAcceptor = utils::reuse_listener().unwrap().try_into().unwrap();
     Server::new(acceptor).serve(router).await
 }

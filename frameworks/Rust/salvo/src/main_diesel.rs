@@ -6,8 +6,10 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 #[macro_use]
 extern crate diesel;
 
+use bytes::Bytes;
 use std::cmp;
 use std::fmt::Write;
+use std::sync::Arc;
 use std::thread::available_parallelism;
 
 use anyhow::Error;
@@ -18,6 +20,7 @@ use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
 use salvo::conn::tcp::TcpAcceptor;
 use salvo::http::header::{self, HeaderValue};
+use salvo::http::ResBody;
 use salvo::prelude::*;
 
 mod models;
@@ -30,6 +33,9 @@ const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/he
 type PgPool = Pool<ConnectionManager<PgConnection>>;
 
 static DB_POOL: OnceCell<PgPool> = OnceCell::new();
+static SERVER_HEADER: HeaderValue = HeaderValue::from_static("salvo");
+static JSON_HEADER: HeaderValue = HeaderValue::from_static("application/json");
+static HTML_HEADER: HeaderValue = HeaderValue::from_static("text/html; charset=utf-8");
 
 fn connect() -> Result<PooledConnection<ConnectionManager<PgConnection>>, PoolError> {
     unsafe { DB_POOL.get_unchecked().get() }
@@ -50,10 +56,13 @@ async fn world_row(res: &mut Response) -> Result<(), Error> {
     let mut rng = SmallRng::from_entropy();
     let random_id = rng.gen_range(1..10_001);
     let mut conn = connect()?;
-    let row = world::table.find(random_id).first::<World>(&mut conn)?;
-    res.headers_mut()
-        .insert(header::SERVER, HeaderValue::from_static("salvo"));
-    res.render(Json(row));
+    let world = world::table.find(random_id).first::<World>(&mut conn)?;
+
+    let data = serde_json::to_vec(&world).unwrap();
+    let headers = res.headers_mut();
+    headers.insert(header::SERVER, SERVER_HEADER.clone());
+    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    res.set_body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
 
@@ -69,9 +78,12 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         let w = world::table.find(id).get_result::<World>(&mut conn)?;
         worlds.push(w);
     }
-    res.headers_mut()
-        .insert(header::SERVER, HeaderValue::from_static("salvo"));
-    res.render(Json(worlds));
+
+    let data = serde_json::to_vec(&worlds).unwrap();
+    let headers = res.headers_mut();
+    headers.insert(header::SERVER, SERVER_HEADER.clone());
+    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    res.set_body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
 
@@ -99,9 +111,11 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         Ok(())
     })?;
 
-    res.headers_mut()
-        .insert(header::SERVER, HeaderValue::from_static("salvo"));
-    res.render(Json(worlds));
+    let data = serde_json::to_vec(&worlds).unwrap();
+    let headers = res.headers_mut();
+    headers.insert(header::SERVER, SERVER_HEADER.clone());
+    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    res.set_body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
 
@@ -115,12 +129,13 @@ async fn fortunes(res: &mut Response) -> Result<(), Error> {
     });
 
     items.sort_by(|it, next| it.message.cmp(&next.message));
-    let mut body = String::new();
-    write!(&mut body, "{}", FortunesTemplate { items }).unwrap();
+    let mut data = String::new();
+    write!(&mut data, "{}", FortunesTemplate { items }).unwrap();
 
-    res.headers_mut()
-        .insert(header::SERVER, HeaderValue::from_static("salvo"));
-    res.render(Text::Html(body));
+    let headers = res.headers_mut();
+    headers.insert(header::SERVER, SERVER_HEADER.clone());
+    headers.insert(header::CONTENT_TYPE, HTML_HEADER.clone());
+    res.set_body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
 
@@ -155,30 +170,32 @@ fn main() {
         )
         .ok();
 
+    let router = Arc::new(
+        Router::new()
+            .push(Router::with_path("db").get(world_row))
+            .push(Router::with_path("fortunes").get(fortunes))
+            .push(Router::with_path("queries").get(queries))
+            .push(Router::with_path("updates").get(updates)),
+    );
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
         .unwrap();
     for _ in 1..size {
+        let router = router.clone();
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
                 .enable_all()
                 .build()
                 .unwrap();
-            rt.block_on(serve());
+            rt.block_on(serve(router));
         });
     }
     println!("Started http server: 127.0.0.1:8080");
-    rt.block_on(serve());
+    rt.block_on(serve(router));
 }
 
-async fn serve() {
-    let router = Router::new()
-        .push(Router::with_path("db").get(world_row))
-        .push(Router::with_path("fortunes").get(fortunes))
-        .push(Router::with_path("queries").get(queries))
-        .push(Router::with_path("updates").get(updates));
-
+async fn serve(router: Arc<Router>) {
     let acceptor: TcpAcceptor = utils::reuse_listener().unwrap().try_into().unwrap();
     Server::new(acceptor).serve(router).await
 }
