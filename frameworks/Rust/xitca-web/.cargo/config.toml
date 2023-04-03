@@ -1,3 +1,6 @@
 [build]
-rustflags = ["-Ctarget-cpu=native"]
+rustflags = ["-C", "target-cpu=native"]
 incremental = false
+
+[target.wasm32-wasi]
+rustflags = ["-C", "target-feature=+simd128", "--cfg", "tokio_unstable"]
