@@ -7,4 +7,4 @@ RUN pip3 install -U pip; pip3 install -r /falcon/requirements-fastwsgi.txt
 
 EXPOSE 8080
 
-CMD ["python3", "app_fastwsgi.py"]
+CMD ["python3", "app.py", "-s", "fastwsgi"]

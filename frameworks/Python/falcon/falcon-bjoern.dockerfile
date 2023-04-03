@@ -7,4 +7,4 @@ RUN pip3 install -U pip; pip3 install -r /falcon/requirements-bjoern.txt
 
 EXPOSE 8080
 
-CMD ["python3", "app_bjoern.py"]
+CMD ["python3", "app.py", "-s", "bjoern"]

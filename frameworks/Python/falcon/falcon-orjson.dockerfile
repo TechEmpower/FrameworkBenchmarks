@@ -10,4 +10,6 @@ RUN pip3 install -U pip; \
 
 EXPOSE 8080
 
-CMD ["gunicorn", "app_orjson:wsgi", "-c", "gunicorn_conf.py"]
+ENV USE_ORJSON=1
+
+CMD ["gunicorn", "app:wsgi", "-c", "gunicorn_conf.py"]
