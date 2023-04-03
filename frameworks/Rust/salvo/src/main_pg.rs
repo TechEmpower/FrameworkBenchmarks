@@ -159,33 +159,25 @@ fn main() {
         .enable_all()
         .build()
         .unwrap();
-    let router = Arc::new(rt.block_on(async {
-        Router::new()
-            .push(Router::with_path("db").get(WorldHandler::new().await))
-            .push(Router::with_path("fortunes").get(FortunesHandler::new().await))
-            .push(Router::with_path("queries").get(WorldsHandler::new().await))
-            .push(Router::with_path("updates").get(UpdatesHandler::new().await))
-    }));
-
-    let rt = tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap();
     for _ in 1..size {
-        let router = router.clone();
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
                 .enable_all()
                 .build()
                 .unwrap();
-            rt.block_on(serve(router));
+            rt.block_on(serve());
         });
     }
     println!("Started http server: 127.0.0.1:8080");
-    rt.block_on(serve(router));
+    rt.block_on(serve());
 }
 
-async fn serve(router: Arc<Router>) {
+async fn serve() {
+    let router = Router::new()
+        .push(Router::with_path("db").get(WorldHandler::new().await))
+        .push(Router::with_path("fortunes").get(FortunesHandler::new().await))
+        .push(Router::with_path("queries").get(WorldsHandler::new().await))
+        .push(Router::with_path("updates").get(UpdatesHandler::new().await));
     let acceptor: TcpAcceptor = utils::reuse_listener().unwrap().try_into().unwrap();
     Server::new(acceptor).serve(router).await
 }
