@@ -13,14 +13,13 @@ use salvo::conn::tcp::TcpAcceptor;
 use salvo::http::header::{self, HeaderValue};
 use salvo::http::ResBody;
 use salvo::prelude::*;
+use dotenv::dotenv;
 use salvo::routing::FlowCtrl;
 
-mod models;
-mod pg_conn;
+mod db_pg;
+mod models_pg;
 mod utils;
-use pg_conn::PgConnection;
-
-const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
+use db_pg::PgConnection;
 
 static SERVER_HEADER: HeaderValue = HeaderValue::from_static("salvo");
 static JSON_HEADER: HeaderValue = HeaderValue::from_static("application/json");
@@ -31,22 +30,17 @@ struct WorldHandler {
 }
 impl WorldHandler {
     async fn new() -> Self {
+        let db_url: String = utils::get_env_var("TECHEMPOWER_DATABASE_URL");
         Self {
-            conn: PgConnection::create(DB_URL)
+            conn: PgConnection::create(&db_url)
                 .await
-                .unwrap_or_else(|_| panic!("Error connecting to {}", &DB_URL)),
+                .unwrap_or_else(|_| panic!("Error connecting to {}", &db_url)),
         }
     }
 }
 #[async_trait]
 impl Handler for WorldHandler {
-    async fn handle(
-        &self,
-        _req: &mut Request,
-        _depot: &mut Depot,
-        res: &mut Response,
-        _ctrl: &mut FlowCtrl,
-    ) {
+    async fn handle(&self, _req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         let world = self.conn.get_world().await.unwrap();
         let data = serde_json::to_vec(&world).unwrap();
         let headers = res.headers_mut();
@@ -60,22 +54,17 @@ struct WorldsHandler {
 }
 impl WorldsHandler {
     async fn new() -> Self {
+        let db_url: String = utils::get_env_var("TECHEMPOWER_DATABASE_URL");
         Self {
-            conn: PgConnection::create(DB_URL)
+            conn: PgConnection::create(&db_url)
                 .await
-                .unwrap_or_else(|_| panic!("Error connecting to {}", &DB_URL)),
+                .unwrap_or_else(|_| panic!("Error connecting to {}", &db_url)),
         }
     }
 }
 #[async_trait]
 impl Handler for WorldsHandler {
-    async fn handle(
-        &self,
-        req: &mut Request,
-        _depot: &mut Depot,
-        res: &mut Response,
-        _ctrl: &mut FlowCtrl,
-    ) {
+    async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         let count = req.query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
         let worlds = self.conn.get_worlds(count).await.unwrap();
@@ -92,26 +81,20 @@ struct UpdatesHandler {
 }
 impl UpdatesHandler {
     async fn new() -> Self {
+        let db_url: String = utils::get_env_var("TECHEMPOWER_DATABASE_URL");
         Self {
-            conn: PgConnection::create(DB_URL)
+            conn: PgConnection::create(&db_url)
                 .await
-                .unwrap_or_else(|_| panic!("Error connecting to {}", &DB_URL)),
+                .unwrap_or_else(|_| panic!("Error connecting to {}", &db_url)),
         }
     }
 }
 #[async_trait]
 impl Handler for UpdatesHandler {
-    async fn handle(
-        &self,
-        req: &mut Request,
-        _depot: &mut Depot,
-        res: &mut Response,
-        _ctrl: &mut FlowCtrl,
-    ) {
+    async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         let count = req.query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
-        res.headers_mut()
-            .insert(header::SERVER, SERVER_HEADER.clone());
+        res.headers_mut().insert(header::SERVER, SERVER_HEADER.clone());
         let worlds = self.conn.update(count).await.unwrap();
 
         let data = serde_json::to_vec(&worlds).unwrap();
@@ -126,22 +109,17 @@ struct FortunesHandler {
 }
 impl FortunesHandler {
     async fn new() -> Self {
+        let db_url: String = utils::get_env_var("TECHEMPOWER_DATABASE_URL");
         Self {
-            conn: PgConnection::create(DB_URL)
+            conn: PgConnection::create(&db_url)
                 .await
-                .unwrap_or_else(|_| panic!("Error connecting to {}", &DB_URL)),
+                .unwrap_or_else(|_| panic!("Error connecting to {}", &db_url)),
         }
     }
 }
 #[async_trait]
 impl Handler for FortunesHandler {
-    async fn handle(
-        &self,
-        _req: &mut Request,
-        _depot: &mut Depot,
-        res: &mut Response,
-        _ctrl: &mut FlowCtrl,
-    ) {
+    async fn handle(&self, _req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         let mut data = String::new();
         write!(&mut data, "{}", self.conn.tell_fortune().await.unwrap()).unwrap();
 
@@ -153,12 +131,14 @@ impl Handler for FortunesHandler {
 }
 
 fn main() {
-    let size = available_parallelism().map(|n| n.get()).unwrap_or(16);
+    dotenv().ok();
+    
+    let thread_count = available_parallelism().map(|n| n.get()).unwrap_or(16);
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
         .unwrap();
-    for _ in 1..size {
+    for _ in 1..thread_count {
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
                 .enable_all()

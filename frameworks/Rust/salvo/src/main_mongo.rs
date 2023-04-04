@@ -3,18 +3,14 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-#[macro_use]
-extern crate diesel;
-
-use bytes::Bytes;
 use std::cmp;
 use std::fmt::Write;
 use std::sync::Arc;
 use std::thread::available_parallelism;
+use std::time::Duration;
 
 use anyhow::Error;
-use diesel::prelude::*;
-use diesel::r2d2::{ConnectionManager, Pool, PoolError, PooledConnection};
+use bytes::Bytes;
 use once_cell::sync::OnceCell;
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
@@ -23,40 +19,34 @@ use salvo::http::header::{self, HeaderValue};
 use salvo::http::ResBody;
 use salvo::prelude::*;
 use dotenv::dotenv;
+use mongodb::{
+    options::{ClientOptions, Compressor},
+    Client,Database,
+};
 
-mod models_diesel;
-mod schema;
+mod db_mongo;
+mod models_mongo;
 mod utils;
-use models_diesel::*;
-use schema::*;
 
-type PgPool = Pool<ConnectionManager<PgConnection>>;
+use db_mongo::*;
+use models_mongo::*;
 
-static DB_POOL: OnceCell<PgPool> = OnceCell::new();
+static DB: OnceCell<Database> = OnceCell::new();
+
 static SERVER_HEADER: HeaderValue = HeaderValue::from_static("salvo");
 static JSON_HEADER: HeaderValue = HeaderValue::from_static("application/json");
 static HTML_HEADER: HeaderValue = HeaderValue::from_static("text/html; charset=utf-8");
 
-fn connect() -> Result<PooledConnection<ConnectionManager<PgConnection>>, PoolError> {
-    unsafe { DB_POOL.get_unchecked().get() }
+fn database() -> Database {
+    unsafe { DB.get_unchecked().clone() }
 }
-fn create_pool(database_url: &str, size: u32) -> Result<PgPool, PoolError> {
-    let manager = ConnectionManager::<PgConnection>::new(database_url);
-    diesel::r2d2::Pool::builder()
-        .max_size(size)
-        .min_idle(Some(size))
-        .test_on_check_out(false)
-        .idle_timeout(None)
-        .max_lifetime(None)
-        .build(manager)
-}
-
 #[handler]
 async fn world_row(res: &mut Response) -> Result<(), Error> {
     let mut rng = SmallRng::from_entropy();
     let random_id = rng.gen_range(1..10_001);
-    let mut conn = connect()?;
-    let world = world::table.find(random_id).first::<World>(&mut conn)?;
+
+    let db = database();
+    let world = find_world_by_id(db, random_id).await?;
 
     let data = serde_json::to_vec(&world).unwrap();
     let headers = res.headers_mut();
@@ -70,14 +60,13 @@ async fn world_row(res: &mut Response) -> Result<(), Error> {
 async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let count = req.query::<u16>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
-    let mut worlds = Vec::with_capacity(count as usize);
+
     let mut rng = SmallRng::from_entropy();
-    let mut conn = connect()?;
+    let mut ids: Vec<i32> = Vec::with_capacity(count as usize);
     for _ in 0..count {
-        let id = rng.gen_range(1..10_001);
-        let w = world::table.find(id).get_result::<World>(&mut conn)?;
-        worlds.push(w);
+        ids.push(rng.gen_range(1..10_001));
     }
+    let worlds = find_worlds(database(), ids).await?;
 
     let data = serde_json::to_vec(&worlds).unwrap();
     let headers = res.headers_mut();
@@ -91,27 +80,22 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
 async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let count = req.query::<u16>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
-    let mut conn = connect()?;
-    let mut worlds = Vec::with_capacity(count as usize);
+
     let mut rng = SmallRng::from_entropy();
+
+    let mut ids: Vec<i32> = Vec::with_capacity(count as usize);
     for _ in 0..count {
-        let w_id: i32 = rng.gen_range(1..10_001);
-        let mut w = world::table.find(w_id).first::<World>(&mut conn)?;
-        w.randomnumber = rng.gen_range(1..10_001);
-        worlds.push(w);
+        ids.push(rng.gen_range(1..10_001));
     }
-    worlds.sort_by_key(|w| w.id);
-    conn.transaction::<(), Error, _>(|conn| {
-        for w in &worlds {
-            diesel::update(world::table)
-                .filter(world::id.eq(w.id))
-                .set(world::randomnumber.eq(w.randomnumber))
-                .execute(conn)?;
-        }
-        Ok(())
-    })?;
+
+    let mut worlds = find_worlds(database(), ids).await?;
+    for world in &mut worlds {
+        world.random_number = rng.gen_range(1..10_001);
+    }
 
     let data = serde_json::to_vec(&worlds).unwrap();
+    update_worlds(database(), worlds).await?;
+
     let headers = res.headers_mut();
     headers.insert(header::SERVER, SERVER_HEADER.clone());
     headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
@@ -121,14 +105,13 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
 
 #[handler]
 async fn fortunes(res: &mut Response) -> Result<(), Error> {
-    let mut conn = connect()?;
-    let mut items = fortune::table.get_results::<Fortune>(&mut conn)?;
+    let mut items = fetch_fortunes(database()).await?;
     items.push(Fortune {
         id: 0,
         message: "Additional fortune added at request time.".to_string(),
     });
+    items.sort_by(|a, b| a.message.cmp(&b.message));
 
-    items.sort_by(|it, next| it.message.cmp(&next.message));
     let mut data = String::new();
     write!(&mut data, "{}", FortunesTemplate { items }).unwrap();
 
@@ -163,16 +146,38 @@ markup::define! {
 
 fn main() {
     dotenv().ok();
-    
+
     let db_url: String = utils::get_env_var("TECHEMPOWER_DATABASE_URL");
     let max_pool_size: u32 = utils::get_env_var("TECHEMPOWER_MAX_POOL_SIZE");
-    DB_POOL
-        .set(
-            create_pool(&db_url, max_pool_size)
-                .unwrap_or_else(|_| panic!("Error connecting to {}", &db_url)),
-        )
-        .ok();
+    let min_pool_size: u32 = utils::get_env_var("TECHEMPOWER_MIN_POOL_SIZE");
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+    rt.block_on(async {
+        let mut client_options = ClientOptions::parse(db_url).await.unwrap();
 
+        // setup connection pool
+        client_options.max_pool_size = Some(max_pool_size);
+        client_options.min_pool_size = Some(min_pool_size);
+        client_options.connect_timeout = Some(Duration::from_millis(200));
+
+        // the server will select the algorithm it supports from the list provided by the driver
+        client_options.compressors = Some(vec![
+            Compressor::Snappy,
+            Compressor::Zlib {
+                level: Default::default(),
+            },
+            Compressor::Zstd {
+                level: Default::default(),
+            },
+        ]);
+
+        let client = Client::with_options(client_options).unwrap();
+        let database = client.database("hello_world");
+
+        DB.set(database).ok();
+    });
     let router = Arc::new(
         Router::new()
             .push(Router::with_path("db").get(world_row))

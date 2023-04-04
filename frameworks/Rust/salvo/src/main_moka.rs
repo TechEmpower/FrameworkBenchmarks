@@ -17,14 +17,14 @@ use salvo::conn::tcp::TcpAcceptor;
 use salvo::http::header::{self, HeaderValue};
 use salvo::http::ResBody;
 use salvo::prelude::*;
+use dotenv::dotenv;
 
-mod models;
+mod models_pg;
 mod utils;
-use models::*;
-mod pg_conn;
-use pg_conn::PgConnection;
+use models_pg::*;
+mod db_pg;
+use db_pg::PgConnection;
 
-const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 static CACHED_WORLDS: OnceCell<MokaCache<usize, World>> = OnceCell::new();
 
 static SERVER_HEADER: HeaderValue = HeaderValue::from_static("salvo");
@@ -52,7 +52,8 @@ fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
 }
 
 async fn populate_cache() -> Result<(), Error> {
-    let conn = PgConnection::create(DB_URL).await?;
+    let db_url: String = utils::get_env_var("TECHEMPOWER_DATABASE_URL");
+    let conn = PgConnection::create(&db_url).await?;
     let worlds = conn.get_worlds(10_000).await?;
     let cache = MokaCache::new(10_000);
     for (i, word) in worlds.into_iter().enumerate() {
@@ -63,7 +64,8 @@ async fn populate_cache() -> Result<(), Error> {
 }
 
 fn main() {
-    let size = available_parallelism().map(|n| n.get()).unwrap_or(16);
+    dotenv().ok();
+    
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
@@ -73,11 +75,12 @@ fn main() {
     });
 
     let router = Arc::new(Router::with_path("cached_queries").get(cached_queries));
+    let thread_count = available_parallelism().map(|n| n.get()).unwrap_or(16);
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
         .unwrap();
-    for _ in 1..size{
+    for _ in 1..thread_count{
         let router = router.clone();
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
