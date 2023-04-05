@@ -8,8 +8,8 @@
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
-        "database": "postgres",
-        "framework": "salvo",
+        "database": "none",
+        "framework": "Salvo",
         "language": "Rust",
         "flavor": "None",
         "orm": "Micro",
@@ -30,16 +30,16 @@
         "approach": "Realistic",
         "classification": "Micro",
         "database": "Postgres",
-        "framework": "salvo",
+        "framework": "Salvo",
         "language": "Rust",
         "orm": "Raw",
         "platform": "Rust",
         "webserver": "Hyper",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Salvo [Postgresql-diesel]",
+        "display_name": "Salvo [postgres-diesel]",
         "notes": "",
-        "versus": ""
+        "versus": "None"
       },
       "pg": {
         "db_url": "/db",
@@ -49,17 +49,17 @@
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
-        "database": "Postgres",
-        "framework": "salvo",
+        "database": "postgres",
+        "framework": "Salvo",
         "language": "Rust",
         "orm": "Raw",
         "platform": "Rust",
         "webserver": "Hyper",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Salvo [Postgresql]",
+        "display_name": "Salvo [postgres]",
         "notes": "",
-        "versus": ""
+        "versus": "None"
       },
       "pg-pool": {
         "db_url": "/db",
@@ -70,16 +70,16 @@
         "approach": "Realistic",
         "classification": "Micro",
         "database": "Postgres",
-        "framework": "salvo",
+        "framework": "Salvo",
         "language": "Rust",
         "orm": "Raw",
         "platform": "Rust",
         "webserver": "Hyper",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Salvo [Postgresql-deadpool]",
+        "display_name": "Salvo [postgres-deadpool]",
         "notes": "",
-        "versus": ""
+        "versus": "None"
       },
       "mongo": {
         "db_url": "/db",
@@ -89,17 +89,17 @@
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
-        "database": "mongodb",
-        "framework": "salvo",
+        "database": "Mongodb",
+        "framework": "Salvo",
         "language": "Rust",
         "orm": "Raw",
         "platform": "Rust",
         "webserver": "Hyper",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Salvo [Mongodb]",
+        "display_name": "Salvo [mongodb]",
         "notes": "",
-        "versus": ""
+        "versus": "None"
       },
       "mongo-raw": {
         "db_url": "/db",
@@ -108,17 +108,17 @@
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
-        "database": "mongodb",
-        "framework": "salvo",
+        "database": "Mongodb",
+        "framework": "Salvo",
         "language": "Rust",
         "orm": "Raw",
         "platform": "Rust",
         "webserver": "Hyper",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Salvo [Mongodb-raw]",
+        "display_name": "Salvo [mongodb-raw]",
         "notes": "",
-        "versus": ""
+        "versus": "None"
       },
       "sqlx": {
         "db_url": "/db",
@@ -127,16 +127,16 @@
         "approach": "Realistic",
         "classification": "Micro",
         "database": "Postgres",
-        "framework": "salvo",
+        "framework": "Salvo",
         "language": "Rust",
         "orm": "Raw",
         "platform": "Rust",
         "webserver": "Hyper",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Salvo [Postgresql-sqx]",
+        "display_name": "Salvo [postgres-sqx]",
         "notes": "",
-        "versus": ""
+        "versus": "None"
       },
       "moka": {
         "cached_query_url": "/cached_queries?q=",
@@ -144,7 +144,7 @@
         "approach": "Realistic",
         "classification": "Micro",
         "database": "Postgres",
-        "framework": "salvo",
+        "framework": "Salvo",
         "language": "Rust",
         "orm": "Raw",
         "platform": "Rust",
@@ -153,7 +153,7 @@
         "database_os": "Linux",
         "display_name": "Salvo [moka]",
         "notes": "",
-        "versus": ""
+        "versus": "None"
       }
     }
   ]

@@ -1,6 +1,6 @@
 FROM rust:1.68.2
 
-ENV TECHEMPOWER_DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
+ENV TECHEMPOWER_POSTGRES_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
 
 ADD ./ /salvo
 WORKDIR /salvo

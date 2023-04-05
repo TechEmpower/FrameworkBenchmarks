@@ -70,7 +70,7 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     }
     let worlds: Vec<World> = future_worlds.try_collect().await?;
 
-    let data = serde_json::to_vec(&worlds).unwrap();
+    let data = serde_json::to_vec(&worlds)?;
     let headers = res.headers_mut();
     headers.insert(header::SERVER, SERVER_HEADER.clone());
     headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
@@ -105,7 +105,7 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     }
     let _world_updates: Vec<u64> = future_world_updates.try_collect().await?;
 
-    let data = serde_json::to_vec(&worlds).unwrap();
+    let data = serde_json::to_vec(&worlds)?;
     let headers = res.headers_mut();
     headers.insert(header::SERVER, SERVER_HEADER.clone());
     headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
@@ -159,7 +159,7 @@ markup::define! {
 fn main() {
     dotenv().ok();
     
-    let db_url: String = utils::get_env_var("TECHEMPOWER_DATABASE_URL");
+    let db_url: String = utils::get_env_var("TECHEMPOWER_POSTGRES_URL");
     let max_pool_size: u32 = utils::get_env_var("TECHEMPOWER_MAX_POOL_SIZE");
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
@@ -168,6 +168,7 @@ fn main() {
     rt.block_on(async {
         DB_POOL.set(create_pool(db_url, max_pool_size).await).ok();
     });
+
     let router = Arc::new(
         Router::new()
             .push(Router::with_path("db").get(world_row))
@@ -176,10 +177,6 @@ fn main() {
             .push(Router::with_path("updates").get(updates)),
     );
     let thread_count = available_parallelism().map(|n| n.get()).unwrap_or(16);
-    let rt = tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap();
     for _ in 1..thread_count {
         let router = router.clone();
         std::thread::spawn(move || {

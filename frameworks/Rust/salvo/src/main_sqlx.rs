@@ -96,7 +96,7 @@ markup::define! {
 fn main() {
     dotenv().ok();
 
-    let db_url: String = utils::get_env_var("TECHEMPOWER_DATABASE_URL");
+    let db_url: String = utils::get_env_var("TECHEMPOWER_POSTGRES_URL");
     let max_pool_size: u32 = utils::get_env_var("TECHEMPOWER_MAX_POOL_SIZE");
     let min_pool_size: u32 = utils::get_env_var("TECHEMPOWER_MIN_POOL_SIZE");
     let rt = tokio::runtime::Builder::new_current_thread()
@@ -108,16 +108,13 @@ fn main() {
             .set(create_pool(db_url, max_pool_size, min_pool_size).await)
             .ok();
     });
+
     let router = Arc::new(
         Router::new()
             .push(Router::with_path("db").get(world_row))
             .push(Router::with_path("fortunes").get(fortunes)),
     );
     let thread_count = available_parallelism().map(|n| n.get()).unwrap_or(16);
-    let rt = tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap();
     for _ in 1..thread_count {
         let router = router.clone();
         std::thread::spawn(move || {

@@ -79,7 +79,7 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         worlds.push(w);
     }
 
-    let data = serde_json::to_vec(&worlds).unwrap();
+    let data = serde_json::to_vec(&worlds)?;
     let headers = res.headers_mut();
     headers.insert(header::SERVER, SERVER_HEADER.clone());
     headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
@@ -111,7 +111,7 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         Ok(())
     })?;
 
-    let data = serde_json::to_vec(&worlds).unwrap();
+    let data = serde_json::to_vec(&worlds)?;
     let headers = res.headers_mut();
     headers.insert(header::SERVER, SERVER_HEADER.clone());
     headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
@@ -164,7 +164,7 @@ markup::define! {
 fn main() {
     dotenv().ok();
     
-    let db_url: String = utils::get_env_var("TECHEMPOWER_DATABASE_URL");
+    let db_url: String = utils::get_env_var("TECHEMPOWER_POSTGRES_URL");
     let max_pool_size: u32 = utils::get_env_var("TECHEMPOWER_MAX_POOL_SIZE");
     DB_POOL
         .set(
