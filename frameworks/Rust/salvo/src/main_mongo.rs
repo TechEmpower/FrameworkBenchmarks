@@ -99,12 +99,7 @@ async fn updates(req: &mut Request, depot: &mut Depot, res: &mut Response) -> Re
 #[handler]
 async fn fortunes(res: &mut Response, depot: &mut Depot) -> Result<(), Error> {
     let db = depot.obtain::<Database>().unwrap();
-    let mut items = fetch_fortunes(db.clone()).await?;
-    items.push(Fortune {
-        id: 0,
-        message: "Additional fortune added at request time.".to_string(),
-    });
-    items.sort_by(|a, b| a.message.cmp(&b.message));
+    let items = fetch_fortunes(db.clone()).await?;
 
     let mut data = String::new();
     write!(&mut data, "{}", FortunesTemplate { items })?;
