@@ -1,0 +1,8 @@
+source 'http://rubygems.org'
+
+gem 'mysql2', '0.4.5'
+gem 'unicorn', '5.3.0'
+gem 'puma', '3.12.6'
+gem 'rack', '2.0.8'
+gem 'json', '2.1.0'
+gem 'falcon'

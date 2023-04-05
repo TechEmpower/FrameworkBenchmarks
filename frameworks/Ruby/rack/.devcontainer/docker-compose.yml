@@ -1,13 +1,14 @@
-x-common: &common
+x-common:
   # Set these vars and args according to your app
- 
+
+  &common
   build:
     context: ..
     dockerfile: .devcontainer/Dockerfile
     args:
       RUBY_VERSION: '3.1.0'
       DISTRO_NAME: 'bullseye'
-      PG_MAJOR: '15' 
+      PG_MAJOR: '15'
       POSTGRES_VERSION: '15'
       BUNDLER_VERSION: '2.3.22'
   environment:
@@ -19,7 +20,7 @@ x-common: &common
 
     # make sure you put the same database name here
     DATABASE_URL: "postgres://benchmarkdbuser:benchmarkdbpass@postgres:5438/hello_world"
-  
+
     MALLOC_ARENA_MAX: 2
     WEB_CONCURRENCY: ${WEB_CONCURRENCY:-1}
 
@@ -34,7 +35,8 @@ x-common: &common
     - /tmp
     - /app/tmp/pids
 
-x-backend: &backend
+x-backend:
+  &backend
   <<: *common
   stdin_open: true
   tty: true
@@ -42,13 +44,13 @@ x-backend: &backend
     - ../.:/app:cached
     - bundle:/usr/local/bundle
     - history:/usr/local/hist
-   # - ./.psqlrc:/root/.psqlrc:ro
-   # - ./.bashrc:/root/.bashrc:ro
+  # - ./.psqlrc:/root/.psqlrc:ro
+  # - ./.bashrc:/root/.bashrc:ro
   # depends_on:
   #   &backend_depends_on
   #   postgres:
   #     condition: service_healthy
-    
+
 
 services:
 
@@ -68,16 +70,19 @@ services:
     <<: *backend
     build:
       context: ..
-      dockerfile: rack.dockerfile
-    #command: bundle exec puma -t 8:32 -w 8 --preload -b tcp://0.0.0.0:3000 -e development  
+      dockerfile: rack-pg.dockerfile
+    command: bundle exec puma -t 8:32 -w 8 --preload -b tcp://0.0.0.0:3000 -e development
     #command: /bin/bash
     ports:
       - 8080:8080
   dev:
     <<: *backend
+    build:
+      context: ..
+      dockerfile: rack-pg.dockerfile
     # Overrides default command so things don't shut down after the process ends.
-    command: sleep infinity
 
+    command: sleep infinity
     # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
     #network_mode: service:postgres
 
@@ -88,13 +93,11 @@ services:
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
 
-  
-    
+
+
 volumes:
   bundle:
   history:
   postgres:
-
-
 
 

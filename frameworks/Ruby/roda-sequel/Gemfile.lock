@@ -27,6 +27,7 @@ GEM
       raindrops (~> 0.7)
 
 PLATFORMS
+  x86_64-darwin-20
   x86_64-linux
 
 DEPENDENCIES
@@ -43,4 +44,4 @@ DEPENDENCIES
   unicorn (~> 6.0)
 
 BUNDLED WITH
-   2.2.16
+   2.3.7

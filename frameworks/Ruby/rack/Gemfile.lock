@@ -1,0 +1,28 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    concurrent-ruby (1.2.2)
+    nio4r (2.5.9)
+    oj (3.14.2)
+    pg (1.4.6)
+    puma (6.2.1)
+      nio4r (~> 2.0)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
+    tzinfo-data (1.2023.3)
+      tzinfo (>= 1.0.0)
+
+PLATFORMS
+  x86_64-linux
+
+DEPENDENCIES
+  oj
+  pg
+  puma
+  tzinfo-data
+
+RUBY VERSION
+   ruby 3.2.2p53
+
+BUNDLED WITH
+   2.4.10

@@ -1,8 +1,14 @@
-source 'http://rubygems.org'
+ruby "~> 3.2.0"
 
-gem 'mysql2', '0.4.5'
-gem 'unicorn', '5.3.0'
-gem 'puma', '3.12.6'
-gem 'rack', '2.0.8'
-gem 'json', '2.1.0'
-gem 'falcon'
+source "https://rubygems.org"
+
+#gem "listen", "~> 3.3", group: :development
+#gem "mysql2", "0.5.3", group: :mysql
+gem "oj" , "~> 3.14"
+gem "pg" , "~>1.4" #, group: :postgresql
+gem "puma" , "~> 6.2"
+gem "connection_pool". "~>2.4"
+#gem "rails", "~> 7.0.1"
+#gem "redis", "~> 4.0"
+gem "tzinfo-data" , "1.2023.3"
+

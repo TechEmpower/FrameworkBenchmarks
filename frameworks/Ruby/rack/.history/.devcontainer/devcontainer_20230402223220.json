@@ -1,0 +1,36 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.245.2/containers/ruby
+{
+  "name": "Ruby 3.1 Rails devcontainer",
+  "dockerComposeFile": [
+    "docker-compose.yml"
+  ],
+  "service": "app",
+  "runServices": [
+    "app",
+    "postgres"
+  ],
+  "workspaceFolder": "/workspace",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rebornix.Ruby",
+        "castwide.solargraph",
+        "redhat.vscode-yaml",
+        "KoichiSasada.vscode-rdbg",
+        "soutaro.steep-vscode",
+        "soutaro.rbs-syntax",
+        "VisualStudioExptTeam.vscodeintellicode",
+        "esbenp.prettier-vscode",
+        "EditorConfig.EditorConfig"
+      ],
+      "settings": {
+        "ruby.useBundler": true,
+        "ruby.format": "rubocop",
+        "solargraph.useBundler": true
+      }
+    }
+  },
+  "initializeCommand": "if ! [ -f .env ];then cp .env.sample .env;fi",
+  "postStartCommand": "bundle install && bin/setup && bundle exec rbs collection install && bundle exec solargraph bundle"
+}
