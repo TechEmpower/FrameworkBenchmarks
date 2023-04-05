@@ -30,7 +30,7 @@ struct WorldHandler {
 }
 impl WorldHandler {
     async fn new() -> Self {
-        let db_url: String = utils::get_env_var("TECHEMPOWER_DATABASE_URL");
+        let db_url: String = utils::get_env_var("TECHEMPOWER_POSTGRES_URL");
         Self {
             conn: PgConnection::create(&db_url)
                 .await
@@ -54,7 +54,7 @@ struct WorldsHandler {
 }
 impl WorldsHandler {
     async fn new() -> Self {
-        let db_url: String = utils::get_env_var("TECHEMPOWER_DATABASE_URL");
+        let db_url: String = utils::get_env_var("TECHEMPOWER_POSTGRES_URL");
         Self {
             conn: PgConnection::create(&db_url)
                 .await
@@ -81,7 +81,7 @@ struct UpdatesHandler {
 }
 impl UpdatesHandler {
     async fn new() -> Self {
-        let db_url: String = utils::get_env_var("TECHEMPOWER_DATABASE_URL");
+        let db_url: String = utils::get_env_var("TECHEMPOWER_POSTGRES_URL");
         Self {
             conn: PgConnection::create(&db_url)
                 .await
