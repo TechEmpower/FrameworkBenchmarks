@@ -441,24 +441,18 @@ begin
   LastComputeUpdateSqlSafe.Lock;
   if cnt <> LastComputeUpdateSqlCnt then
   begin
-    // update table set randomNumber = CASE id when ? then ? when ? then ? ...
-    // when ? then ? else randomNumber end where id in (?,?,?,?,?)
-    // - this weird syntax gives best number for TFB /rawupdates?queries=20 but
-    // seems not good for smaller or higher count - we won't include it in the
-    // ORM but only for our RAW results - as other frameworks (e.g. ntex) do
+    // update table set .. from values (), (), ... where id = id
+    // we won't include it in the ORM but only for our RAW results
     LastComputeUpdateSqlCnt := cnt;
     W := TTextWriter.CreateOwnedStream(tmp);
     try
-      W.AddShort('UPDATE world SET randomnumber = CASE id');
-      for i := 1 to cnt do
-        W.AddShort(' when ? then ?');
-      W.AddShort(' else randomNumber end where id in (');
-      repeat
-        W.Add('?', ',');
-        dec(cnt);
-      until cnt = 0;
+      W.AddShort('UPDATE world SET randomNumber = v.randomNumber FROM (VALUES');
+      for i := 1 to cnt do begin
+        W.AddShort('(?::integer, ?::integer)');
+        W.Add(',');
+      end;
       W.CancelLastComma;
-      W.Add(')');
+      W.AddShort(' order by 1) AS v (id, randomNumber) WHERE world.id = v.id');
       W.SetText(LastComputeUpdateSql);
     finally
       W.Free;
@@ -484,7 +478,7 @@ begin
   // generate new randoms
   for i := 0 to cnt - 1 do
     res[i].randomNumber := ComputeRandomWorld;
-  if cnt > 15 then
+  if cnt > 20 then
   begin
     // fill parameters arrays for update with nested select (PostgreSQL only)
     setLength(ids{%H-}, cnt);
@@ -500,13 +494,12 @@ begin
   end
   else
   begin
-    // fill parameters for update up to 15 items as CASE .. WHEN .. THEN ..
+    // fill parameters for update up to 20 items as VALUES(?,?),(?,?),...
     stmt := conn.NewStatementPrepared(ComputeUpdateSql(cnt), false, true);
     for i := 0 to cnt - 1 do
     begin
       stmt.Bind(i * 2 + 1, res[i].id);
       stmt.Bind(i * 2 + 2, res[i].randomNumber);
-      stmt.Bind(cnt * 2 + i + 1, res[i].id);
     end;
   end;
   stmt.ExecutePrepared;
