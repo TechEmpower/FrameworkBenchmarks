@@ -123,8 +123,8 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
     int port = 8080;
-    server = vertx.createHttpServer(new HttpServerOptions());
-    server.requestHandler(App.this).listen(port);
+    server = vertx.createHttpServer(new HttpServerOptions())
+            .requestHandler(App.this);
     dateString = createDateHeader();
     plaintextHeaders = new CharSequence[] {
         HEADER_CONTENT_TYPE, RESPONSE_TYPE_PLAIN,
@@ -141,20 +141,32 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     options.setPassword(config.getString("password", "benchmarkdbpass"));
     options.setCachePreparedStatements(true);
     options.setPipeliningLimit(100_000); // Large pipelining means less flushing and we use a single connection anyway
-    PgConnection.connect(vertx, options).flatMap(conn -> {
-      client = (SqlClientInternal)conn;
-      Future<PreparedStatement> f1 = conn.prepare(SELECT_WORLD);
-      Future<PreparedStatement> f2 = conn.prepare(SELECT_FORTUNE);
-      Future<PreparedStatement> f3 = conn.prepare(UPDATE_WORLD);
-      Future<WorldCache> f4 = conn.preparedQuery(SELECT_WORLDS)
-          .collecting(Collectors.mapping(row -> new CachedWorld(row.getInteger(0), row.getInteger(1)), Collectors.toList()))
-          .execute().map(worlds -> new WorldCache(worlds.value()));
-      f1.onSuccess(ps -> SELECT_WORLD_QUERY = ps.query());
-      f2.onSuccess(ps -> SELECT_FORTUNE_QUERY = ps.query());
-      f3.onSuccess(ps -> UPDATE_WORLD_QUERY = ps.query());
-      f4.onSuccess(wc -> WORLD_CACHE = wc);
-      return CompositeFuture.all(f1, f2, f3, f4);
-    }).onComplete(ar -> startPromise.complete());
+    PgConnection.connect(vertx, options)
+            .flatMap(conn -> {
+              client = (SqlClientInternal) conn;
+              Future<PreparedStatement> f1 = conn.prepare(SELECT_WORLD)
+                      .andThen(onSuccess(ps -> SELECT_WORLD_QUERY = ps.query()));
+              Future<PreparedStatement> f2 = conn.prepare(SELECT_FORTUNE)
+                      .andThen(onSuccess(ps -> SELECT_FORTUNE_QUERY = ps.query()));
+              Future<PreparedStatement> f3 = conn.prepare(UPDATE_WORLD)
+                      .andThen(onSuccess(ps -> UPDATE_WORLD_QUERY = ps.query()));
+              Future<WorldCache> f4 = conn.preparedQuery(SELECT_WORLDS)
+                      .collecting(Collectors.mapping(row -> new CachedWorld(row.getInteger(0), row.getInteger(1)), Collectors.toList()))
+                      .execute()
+                      .map(worlds -> new WorldCache(worlds.value()))
+                      .andThen(onSuccess(wc -> WORLD_CACHE = wc));
+              return CompositeFuture.join(f1, f2, f3, f4);
+            })
+            .flatMap(success -> server.listen(port))
+            .onComplete(ar -> startPromise.complete());
+  }
+
+  private static <T> Handler<AsyncResult<T>> onSuccess(Handler<T> handler) {
+    return ar -> {
+      if (ar.succeeded()) {
+        handler.handle(ar.result());
+      }
+    };
   }
 
   @Override
