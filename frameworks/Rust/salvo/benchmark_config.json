@@ -134,7 +134,7 @@
         "webserver": "Hyper",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Salvo [postgres-sqx]",
+        "display_name": "Salvo [postgres-sqlx]",
         "notes": "",
         "versus": "None"
       },
