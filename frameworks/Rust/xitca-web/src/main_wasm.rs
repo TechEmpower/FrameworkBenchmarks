@@ -1,10 +1,16 @@
+mod ser;
 mod util;
 
 use std::{env, io, net::TcpListener, os::wasi::io::FromRawFd};
 
 use xitca_web::{
-    dev::service::Service, handler::handler_service, http::header::SERVER, request::WebRequest,
-    response::WebResponse, route::get, App, HttpServer,
+    dev::service::Service,
+    handler::{handler_service, json::Json},
+    http::header::SERVER,
+    request::WebRequest,
+    response::WebResponse,
+    route::get,
+    App, HttpServer,
 };
 
 use self::util::SERVER_HEADER_VALUE;
@@ -19,6 +25,12 @@ fn main() -> io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
+            .at(
+                "/json",
+                get(handler_service(|| async {
+                    Json::<ser::Message>(ser::Message::new())
+                })),
+            )
             .at(
                 "/plaintext",
                 get(handler_service(|| async { "Hello, World!" })),

@@ -21,7 +21,7 @@ required-features = ["io-uring", "pg", "serde", "template"]
 [[bin]]
 name = "xitca-web-wasm"
 path = "./src/main_wasm.rs"
-required-features = ["web"]
+required-features = ["serde", "web"]
 
 [features]
 # pg optional
