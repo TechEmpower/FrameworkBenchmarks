@@ -26,7 +26,6 @@
         "fortune_url": "/fortunes",
         "query_url": "/queries?q=",
         "update_url": "/updates?q=",
-        "cached_query_url": "/cached_queries?q=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -38,7 +37,7 @@
         "webserver": "Hyper",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Salvo [Diesel]",
+        "display_name": "Salvo [diesel]",
         "notes": "",
         "versus": ""
       },
@@ -47,6 +46,22 @@
         "fortune_url": "/fortunes",
         "query_url": "/queries?q=",
         "update_url": "/updates?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "salvo",
+        "language": "Rust",
+        "orm": "Raw",
+        "platform": "Rust",
+        "webserver": "Hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Salvo [pg]",
+        "notes": "",
+        "versus": ""
+      },
+      "moka": {
         "cached_query_url": "/cached_queries?q=",
         "port": 8080,
         "approach": "Realistic",
@@ -59,7 +74,7 @@
         "webserver": "Hyper",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Salvo [PG]",
+        "display_name": "Salvo [moka]",
         "notes": "",
         "versus": ""
       }

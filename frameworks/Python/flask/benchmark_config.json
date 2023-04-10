@@ -23,7 +23,7 @@
       "display_name": "Flask",
       "notes": "",
       "versus": "wsgi",
-      "tags": ["broken"]
+      "tags": [ ]
     },
     "raw": {
       "json_url": "/json",
@@ -47,7 +47,7 @@
       "display_name": "Flask-raw",
       "notes": "",
       "versus": "wsgi",
-      "tags": ["broken"]
+      "tags": [ ]
     },
     "socketify-wsgi": {
       "json_url": "/json",
@@ -109,7 +109,7 @@
       "display_name": "Flask",
       "notes": "PyPy",
       "versus": "wsgi",
-      "tags": ["broken"]
+      "tags": [ ]
     },
     "pypy-raw": {
       "json_url": "/json",
@@ -133,7 +133,7 @@
       "display_name": "Flask-raw",
       "notes": "PyPy",
       "versus": "wsgi",
-      "tags": ["broken"]
+      "tags": [ ]
     },
     "nginx-uwsgi": {
       "json_url": "/json",
@@ -157,7 +157,7 @@
       "display_name": "Flask",
       "notes": "",
       "versus": "wsgi",
-      "tags": ["broken"]
+      "tags": [ ]
     },
     "fastwsgi": {
       "json_url": "/json",
