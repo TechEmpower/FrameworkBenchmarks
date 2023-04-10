@@ -1,3 +1,110 @@
+# frozen_string_literal: true
+
+module Tem
+
+  QUERY_RANGE = 1..10_000 # range of IDs in the Fortune DB
+  ALL_IDS = QUERY_RANGE.to_a # enumeration of all the IDs in fortune DB
+  MIN_QUERIES = 1 # min number of records that can be retrieved
+  MAX_QUERIES = 500 # max number of records that can be retrieved
+  FORTUNTE_FOOTER='<!DOCTYPE html>
+      <html>
+      <head>
+        <title>Fortune</title>
+      </head>
+      <body>
+        <table>
+          <tr>
+            <th>id</th>
+            <th>message</th>
+          </tr>'
+
+
+  def self.call(_req)
+    f_1 = $pool.with do |conn|
+            conn.exec(<<-SQL)
+
+              SELECT id, message FROM fortune
+
+            SQL
+          end
+
+    f_2 = f_1.map(&:to_h).
+            append({ 'id' => '0', 'message' => 'Additional fortune added at request time.' }).
+              sort { |x,y| x['message'] <=> y['message'] }.
+                map { |f| "<tr><td>#{ f['id'] }</td><td>#{ Rack::Utils.escape_html(f['message']) }</td></tr>" }.
+                  join
+
+    html_response(<<-HTML)
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Fortune</title>
+        </head>
+        <body>
+          <table>
+            <tr>
+              <th>id</th>
+              <th>message</th>
+            </tr>
+            #{ f_2 }
+          </table>
+        </body
+      </html>
+    HTML
+  end
+
+
+  def self.html_response(str = '')
+    [
+        200,
+        {
+            'Content-Type' => 'text/html; charset=utf-8',
+            'Date'         => Time.now.utc.httpdate,
+            'Server'       => 'Rack'
+        },
+        [str]
+    ]
+  end
+
+  def self.json_response(obj = {})
+    [
+        200,
+        {
+            'Content-Type' => 'application/json',
+            'Date'         => Time.now.utc.httpdate,
+            'Server'       => 'Rack'
+        },
+        [Oj.dump(obj, { :mode => :strict })]
+    ]
+  end
+
+  def self.plain_response(str = '')
+    [
+        200,
+        {
+            'Content-Type' => 'text/plain',
+            'Date'         => Time.now.utc.httpdate,
+            'Server'       => 'Rack'
+        },
+        [str]
+    ]
+  end
+end
+
+module Tem
+  class Postgres
+    def initialize(pool_size=512)
+      database_url = ENV['DATABASE_URL'] || 'postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5438/hello_world'
+
+      @pool =ConnectionPool.new(size: 256, timeout: 5) do
+        PG::Connection.new(database_url)
+      end
+  end
+end
+
+
+
+
 get "json", to: JsonController.action(:index)
 get "db", to: "hello_world#db"
 get "queries", to: "hello_world#query"
@@ -5,6 +112,10 @@ get "fortunes", to: "hello_world#fortune"
 get "updates", to: "hello_world#update"
 get "plaintext", to: PlaintextController.action(:index)
 get "cached", to: "hello_world#cached_query"
+
+
+ENV['RACK_ENV']=='development'  && ENV['PG'] || "test"
+
 
 connectionString =
   "postgres://benchmarkdbuser:benchmarkdbpass@%s/hello_world?sslmode=disable"

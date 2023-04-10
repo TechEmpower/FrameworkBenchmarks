@@ -17,6 +17,7 @@ x-common:
     POSTGRES_DB: 'hello_world'
     POSTGRES_USER: 'benchmarkdbuser'
     POSTGRES_PASSWORD: 'benchmarkdbpass'
+    POSTGRES_HOST: 'postgres'
 
     # make sure you put the same database name here
     DATABASE_URL: "postgres://benchmarkdbuser:benchmarkdbpass@postgres:5438/hello_world"
