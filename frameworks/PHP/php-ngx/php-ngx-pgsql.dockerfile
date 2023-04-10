@@ -32,7 +32,7 @@ RUN sed -i "s|app.php|app-pg.php|g" /deploy/nginx.conf
 
 RUN export WORKERS=$(( 4 * $(nproc) )) && \
     sed -i "s|worker_processes  auto|worker_processes $WORKERS|g" /deploy/nginx.conf
-
+RUN sed -i "s|opcache.jit=off|opcache.jit=function|g" /etc/php/8.1/embed/conf.d/10-opcache.ini
 EXPOSE 8080
 
 CMD /nginx/sbin/nginx -c /deploy/nginx.conf
