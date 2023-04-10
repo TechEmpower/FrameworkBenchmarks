@@ -1,10 +1,5 @@
 use diesel::Queryable;
-use serde::{Deserialize, Serialize};
-
-#[derive(Serialize, Deserialize)]
-pub struct Message {
-    pub message: &'static str,
-}
+use serde::Serialize;
 
 #[allow(non_snake_case)]
 #[derive(Serialize, Queryable, Clone, Debug)]
