@@ -6,7 +6,7 @@ x-common:
     context: ..
     dockerfile: .devcontainer/Dockerfile
     args:
-      RUBY_VERSION: '3.1.0'
+      RUBY_VERSION: '3.2'
       DISTRO_NAME: 'bullseye'
       PG_MAJOR: '15'
       POSTGRES_VERSION: '15'
@@ -61,7 +61,12 @@ services:
       dockerfile: postgres.dockerfile
     ports:
       - 5432:5432
-
+  mysql:
+    build:
+      context: ../../../../toolset/databases/mysql/
+      dockerfile: mysql.dockerfile
+    ports:
+      - 3306:3306
   adminer:
     image: adminer
     restart: always
@@ -80,7 +85,7 @@ services:
     <<: *backend
     build:
       context: ..
-      dockerfile: rack-pg.dockerfile
+      dockerfile: roda-sequel.dockerfile
     # Overrides default command so things don't shut down after the process ends.
 
     command: sleep infinity

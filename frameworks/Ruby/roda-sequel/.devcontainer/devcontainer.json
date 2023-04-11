@@ -8,9 +8,10 @@
   "service": "dev",
   "runServices": [
     "dev",
-    "postgres"
+    "postgres",
+    "mysql"
   ],
-  "workspaceFolder": "/app",
+  "workspaceFolder": "/roda-sequel",
   "customizations": {
     "vscode": {
       "extensions": [
