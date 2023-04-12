@@ -74,14 +74,16 @@ static void set_thread_memory_allocation_policy(void)
 	memset(nodemask, 0, sizeof(nodemask));
 	nodemask[memory_node / (sizeof(*nodemask) * CHAR_BIT)] |=
 		1UL << (memory_node % (sizeof(*nodemask) * CHAR_BIT));
-	CHECK_ERRNO(mbind,
-	            stack_addr,
-	            stack_size,
-	            MPOL_PREFERRED,
-	            nodemask,
-	            memory_node + 1,
-	            MPOL_MF_MOVE | MPOL_MF_STRICT);
-	CHECK_ERRNO(set_mempolicy, MPOL_PREFERRED, NULL, 0);
+
+	if (mbind(stack_addr,
+	          stack_size,
+	          MPOL_PREFERRED,
+	          nodemask,
+	          memory_node + 1,
+	          MPOL_MF_MOVE | MPOL_MF_STRICT))
+		STANDARD_ERROR("mbind");
+	else if (set_mempolicy(MPOL_PREFERRED, NULL, 0))
+		STANDARD_ERROR("set_mempolicy");
 }
 
 void free_thread_context(thread_context_t *ctx)
