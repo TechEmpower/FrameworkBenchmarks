@@ -10,4 +10,7 @@ RUN pip3 install -U pip; pip3 install -r /flask/requirements-fastwsgi.txt
 
 EXPOSE 8080
 
-CMD python ./app-fastwsgi.py
+ENV USE_UJSON=1
+ENV USE_RAW=1
+
+CMD python ./app.py -s fastwsgi

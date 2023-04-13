@@ -10,4 +10,6 @@ RUN pip3 install -U pip; pip3 install -r /flask/requirements-socketify.txt
 
 EXPOSE 8080
 
-CMD python ./app-socketify-wsgi.py
+ENV USE_RAW=1
+
+CMD python ./app.py -s socketify
