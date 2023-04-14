@@ -14,7 +14,7 @@ RUN apt-get update -yqq > /dev/null && \
 
 ADD . .
 
-ENV NGINX_VERSION 1.23.4
+ENV NGINX_VERSION 1.24.0
 
 RUN git clone -b v0.0.26 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
 
@@ -28,6 +28,7 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --add-module=/ngx_php7/third_party/ngx_devel_kit \
             --add-module=/ngx_php7 > /dev/null && \
     make > /dev/null && make install > /dev/null
+RUN sed -i "s|opcache.jit=off|;opcache.jit=off|g" /etc/php/8.1/embed/conf.d/10-opcache.ini
 
 EXPOSE 8080
 
