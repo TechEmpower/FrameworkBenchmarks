@@ -1,10 +1,10 @@
-ARG RUBY_IMAGE_VERSION=3.2
+ARG UBUNTU_VERSION=22.04
 
 ARG H2O_PREFIX=/opt/h2o
 
-FROM "ruby:${RUBY_IMAGE_VERSION}" AS compile
+FROM "ubuntu:${UBUNTU_VERSION}" AS compile
 
-ARG H2O_VERSION=9ab3feb4d7429ddda52a3cf84bd6da0e890bd52a
+ARG H2O_VERSION=13ba727ad12dfb2338165d2bcfb2136457e33c8a
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG H2O_PREFIX
@@ -12,10 +12,18 @@ WORKDIR /tmp/h2o-build
 RUN apt-get -yqq update && \
     apt-get -yqq install \
       cmake \
+      curl \
+      g++ \
+      libbrotli-dev \
       libcap-dev \
+      libssl-dev \
+      libtool \
       libuv1-dev \
       libwslay-dev \
+      libz-dev \
       ninja-build \
+      pkg-config \
+      ruby \
       systemtap-sdt-dev && \
     curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
       tar --strip-components=1 -xz && \
@@ -31,12 +39,11 @@ RUN apt-get -yqq update && \
     cmake --build build -j && \
     cmake --install build
 
-FROM ruby:${RUBY_IMAGE_VERSION}-slim
+FROM "ubuntu:${UBUNTU_VERSION}"
 
-ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get -yqq update && apt-get -yqq install libcap2
 ARG H2O_PREFIX
-COPY --from=compile "${H2O_PREFIX}" "${H2O_PREFIX}/"
+COPY --from=compile "${H2O_PREFIX}/bin/h2o" "${H2O_PREFIX}/bin/"
+COPY --from=compile "${H2O_PREFIX}/share" "${H2O_PREFIX}/share/"
 COPY h2o.conf "${H2O_PREFIX}/etc/"
 EXPOSE 8080
 ARG BENCHMARK_ENV

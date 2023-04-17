@@ -4,7 +4,7 @@ ARG H2O_PREFIX=/opt/h2o
 
 FROM "ubuntu:${UBUNTU_VERSION}" AS compile
 
-ARG H2O_VERSION=9ab3feb4d7429ddda52a3cf84bd6da0e890bd52a
+ARG H2O_VERSION=13ba727ad12dfb2338165d2bcfb2136457e33c8a
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG H2O_PREFIX
@@ -57,7 +57,8 @@ RUN apt-get -yqq update && \
       "php${PHP_VERSION}-fpm" \
       "php${PHP_VERSION}-mysql"
 ARG H2O_PREFIX
-COPY --from=compile "${H2O_PREFIX}" "${H2O_PREFIX}/"
+COPY --from=compile "${H2O_PREFIX}/bin/h2o" "${H2O_PREFIX}/bin/"
+COPY --from=compile "${H2O_PREFIX}/share" "${H2O_PREFIX}/share/"
 COPY deploy/conf "/etc/php/${PHP_VERSION}/fpm/"
 RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" \
       "/etc/php/${PHP_VERSION}/fpm/php-fpm.conf"; fi;

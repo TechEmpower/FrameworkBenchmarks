@@ -28,7 +28,7 @@ RUN apt-get -yqq update && \
       pkg-config \
       systemtap-sdt-dev
 
-ARG H2O_VERSION=71224be1ac250502f27528e988d3a673dcf2055f
+ARG H2O_VERSION=13ba727ad12dfb2338165d2bcfb2136457e33c8a
 
 WORKDIR /tmp/h2o-build
 RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \

@@ -1,7 +1,7 @@
 // #[global_allocator]
 // static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
-#[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+// #[global_allocator]
+// static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 #[macro_use]
 extern crate diesel;
@@ -22,14 +22,14 @@ use salvo::conn::tcp::TcpAcceptor;
 use salvo::http::header::{self, HeaderValue};
 use salvo::http::ResBody;
 use salvo::prelude::*;
+use dotenv::dotenv;
 
-mod models;
+mod models_diesel;
 mod schema;
 mod utils;
-use models::*;
+use models_diesel::*;
 use schema::*;
 
-const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 type PgPool = Pool<ConnectionManager<PgConnection>>;
 
 static DB_POOL: OnceCell<PgPool> = OnceCell::new();
@@ -40,7 +40,7 @@ static HTML_HEADER: HeaderValue = HeaderValue::from_static("text/html; charset=u
 fn connect() -> Result<PooledConnection<ConnectionManager<PgConnection>>, PoolError> {
     unsafe { DB_POOL.get_unchecked().get() }
 }
-fn build_pool(database_url: &str, size: u32) -> Result<PgPool, PoolError> {
+fn create_pool(database_url: &str, size: u32) -> Result<PgPool, PoolError> {
     let manager = ConnectionManager::<PgConnection>::new(database_url);
     diesel::r2d2::Pool::builder()
         .max_size(size)
@@ -79,7 +79,7 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         worlds.push(w);
     }
 
-    let data = serde_json::to_vec(&worlds).unwrap();
+    let data = serde_json::to_vec(&worlds)?;
     let headers = res.headers_mut();
     headers.insert(header::SERVER, SERVER_HEADER.clone());
     headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
@@ -111,7 +111,7 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         Ok(())
     })?;
 
-    let data = serde_json::to_vec(&worlds).unwrap();
+    let data = serde_json::to_vec(&worlds)?;
     let headers = res.headers_mut();
     headers.insert(header::SERVER, SERVER_HEADER.clone());
     headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
@@ -162,11 +162,14 @@ markup::define! {
 }
 
 fn main() {
-    let size = available_parallelism().map(|n| n.get()).unwrap_or(16);
+    dotenv().ok();
+    
+    let db_url: String = utils::get_env_var("TECHEMPOWER_POSTGRES_URL");
+    let max_pool_size: u32 = utils::get_env_var("TECHEMPOWER_MAX_POOL_SIZE");
     DB_POOL
         .set(
-            build_pool(DB_URL, size as u32)
-                .unwrap_or_else(|_| panic!("Error connecting to {}", &DB_URL)),
+            create_pool(&db_url, max_pool_size)
+                .unwrap_or_else(|_| panic!("Error connecting to {}", &db_url)),
         )
         .ok();
 
@@ -177,11 +180,12 @@ fn main() {
             .push(Router::with_path("queries").get(queries))
             .push(Router::with_path("updates").get(updates)),
     );
+    let thread_count = available_parallelism().map(|n| n.get()).unwrap_or(16);
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
         .unwrap();
-    for _ in 1..size {
+    for _ in 1..thread_count {
         let router = router.clone();
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()

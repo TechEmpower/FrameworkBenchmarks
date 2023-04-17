@@ -9,7 +9,7 @@ use rand::{Rng, SeedableRng};
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{self, Client, NoTls, Statement};
 
-use crate::models::*;
+use crate::models_pg::*;
 
 type DbResult<T> = Result<T, tokio_postgres::Error>;
 

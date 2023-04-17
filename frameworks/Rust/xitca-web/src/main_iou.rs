@@ -23,7 +23,7 @@ use std::{
 use futures_util::stream::Stream;
 use xitca_http::{
     body::Once,
-    date::DateTimeService,
+    date::{DateTime, DateTimeService},
     h1::proto::context::Context,
     http::{
         self,
@@ -34,11 +34,10 @@ use xitca_http::{
     util::service::context::{Context as Ctx, ContextBuilder},
 };
 use xitca_io::{
-    bytes::{Buf, Bytes, BytesMut},
+    bytes::{Buf, Bytes, BytesMut, PagedBytesMut},
     net::TcpStream,
 };
 use xitca_service::{fn_service, middleware::UncheckedReady, Service, ServiceExt};
-use xitca_unsafe_collection::bytes::PagedBytesMut;
 
 use self::{
     db::Client,
@@ -163,47 +162,107 @@ where
         TcpStream: 's,
     {
         async {
-            let std = stream.into_std()?;
-            let stream = tokio_uring::net::TcpStream::from_std(std);
-
-            let mut read_buf = BytesMut::with_capacity(4096);
-            let mut write_buf = BytesMut::with_capacity(4096);
-            let mut paged = PagedBytesMut::new();
-
             let mut ctx = Context::<_, 8>::new(self.date.get());
+            let mut paged = PagedBytesMut::new();
+            let mut write_buf = BytesMut::with_capacity(4096);
 
-            'io: loop {
-                let (res, buf) = stream.read(read_buf).await;
-                if res? == 0 {
-                    break;
-                }
-                read_buf = buf;
-                paged.get_mut().extend_from_slice(&read_buf);
+            #[cfg(feature = "io-uring")]
+            {
+                let std = stream.into_std()?;
+                let stream = tokio_uring::net::TcpStream::from_std(std);
 
-                while let Some((req, _)) = ctx.decode_head::<65535>(&mut paged).unwrap() {
-                    let (parts, body) = self.service.call(req).await.unwrap().into_parts();
-                    let mut encoder = ctx.encode_head(parts, &body, &mut write_buf).unwrap();
-                    let mut body = pin!(body);
-                    while let Some(chunk) = poll_fn(|cx| body.as_mut().poll_next(cx)).await {
-                        let chunk = chunk.unwrap();
-                        encoder.encode(chunk, &mut write_buf);
-                    }
-                    encoder.encode_eof(&mut write_buf);
-                }
+                let mut read_buf = vec![0; 4096];
 
-                while !write_buf.is_empty() {
-                    let (res, mut w) = stream.write(write_buf).await;
+                'io: loop {
+                    let (res, buf) = stream.read(read_buf).await;
                     let n = res?;
                     if n == 0 {
-                        break 'io;
+                        break;
                     }
-                    w.advance(n);
-                    write_buf = w;
+                    read_buf = buf;
+                    paged.get_mut().extend_from_slice(&read_buf[..n]);
+
+                    request_handler(&mut ctx, &self.service, &mut paged, &mut write_buf).await;
+
+                    while !write_buf.is_empty() {
+                        let (res, mut w) = stream.write(write_buf).await;
+                        let n = res?;
+                        if n == 0 {
+                            break 'io;
+                        }
+                        w.advance(n);
+                        write_buf = w;
+                    }
                 }
+
+                stream.shutdown(std::net::Shutdown::Both)
             }
 
-            Ok(())
+            #[cfg(not(feature = "io-uring"))]
+            {
+                use xitca_io::{
+                    bytes::BufRead,
+                    io::{AsyncIo, Interest},
+                };
+
+                let mut stream = stream;
+
+                'io: loop {
+                    let interest = if write_buf.is_empty() {
+                        Interest::READABLE
+                    } else {
+                        Interest::READABLE | Interest::WRITABLE
+                    };
+
+                    let ready = stream.ready(interest).await?;
+
+                    if ready.is_readable() {
+                        paged.do_io(&mut stream)?;
+                        request_handler(&mut ctx, &self.service, &mut paged, &mut write_buf).await;
+                    }
+
+                    if ready.is_writable() {
+                        'write: loop {
+                            match io::Write::write(&mut stream, &write_buf) {
+                                Ok(0) => break 'io,
+                                Ok(n) => {
+                                    write_buf.advance(n);
+                                    if write_buf.is_empty() {
+                                        break 'write;
+                                    }
+                                }
+                                Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => break 'write,
+                                Err(e) => return Err(e),
+                            }
+                        }
+                    }
+                }
+
+                Ok(())
+            }
         }
+    }
+}
+
+async fn request_handler<D, S, const L: usize>(
+    ctx: &mut Context<'_, D, L>,
+    service: &S,
+    paged: &mut PagedBytesMut<4096>,
+    write_buf: &mut BytesMut,
+) where
+    D: DateTime,
+    S: Service<Request, Response = Response>,
+    S::Error: fmt::Debug,
+{
+    while let Some((req, _)) = ctx.decode_head::<{ usize::MAX }>(paged).unwrap() {
+        let (parts, body) = service.call(req).await.unwrap().into_parts();
+        let mut encoder = ctx.encode_head(parts, &body, write_buf).unwrap();
+        let mut body = pin!(body);
+        while let Some(chunk) = poll_fn(|cx| body.as_mut().poll_next(cx)).await {
+            let chunk = chunk.unwrap();
+            encoder.encode(chunk, write_buf);
+        }
+        encoder.encode_eof(write_buf);
     }
 }
 

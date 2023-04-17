@@ -1,7 +1,19 @@
 use std::io;
 use std::net::{Ipv4Addr, SocketAddr};
+use std::{env, fmt::Debug, str::FromStr};
 
 use tokio::net::{TcpListener, TcpSocket};
+
+#[allow(dead_code)]
+pub fn get_env_var<T: FromStr>(key: &str) -> T
+where
+    <T as FromStr>::Err: Debug,
+{
+    env::var(key)
+        .unwrap_or_else(|_| panic!("{key} environment variable was not set"))
+        .parse::<T>()
+        .unwrap_or_else(|_| panic!("could not parse {key}"))
+}
 
 #[allow(dead_code)]
 pub fn reuse_listener() -> io::Result<TcpListener> {
