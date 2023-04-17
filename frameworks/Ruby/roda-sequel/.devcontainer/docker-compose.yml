@@ -41,6 +41,9 @@ x-backend:
   <<: *common
   stdin_open: true
   tty: true
+  build:
+    context: ..
+    dockerfile: roda-sequel.dockerfile
   volumes:
     - ../.:/app:cached
     - bundle:/usr/local/bundle
@@ -74,18 +77,13 @@ services:
       - 8085:8080
   web:
     <<: *backend
-    build:
-      context: ..
-      dockerfile: rack-pg.dockerfile
     command: bundle exec puma -t 8:32 -w 8 --preload -b tcp://0.0.0.0:3000 -e development
     #command: /bin/bash
     ports:
       - 8080:8080
   dev:
     <<: *backend
-    build:
-      context: ..
-      dockerfile: roda-sequel.dockerfile
+  
     # Overrides default command so things don't shut down after the process ends.
 
     command: sleep infinity
