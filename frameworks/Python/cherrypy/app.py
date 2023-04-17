@@ -1,4 +1,3 @@
-import cgi
 import os
 import sys
 from functools import partial
@@ -10,6 +9,12 @@ import cherrypy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column
 from sqlalchemy.types import String, Integer
+
+try:
+    from cgi import escape as html_escape
+except:
+    from html import escape as html_escape
+
 
 Base = declarative_base()
 
@@ -102,35 +107,58 @@ class CherryPyBenchmark(object):
         return worlds
 
     @cherrypy.expose
-    def fortune(self):
-        fortunes = cherrypy.request.db.query(Fortune).all()
-        fortunes.append(
-            Fortune(id=0, message="Additional fortune added at request time."))
-        fortunes.sort(key=attrgetter("message"))
+    def fortunes(self):
+        _fortunes = cherrypy.request.db.query(Fortune).all()
+        _fortunes.append( Fortune(id=0, message="Additional fortune added at request time.") )
+        _fortunes.sort(key=attrgetter("message"))
         html = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"
-        for f in fortunes:
-            html += "<tr><td>" + str(f.id) + "</td><td>" + cgi.escape(
-                f.message) + "</td></tr>"
+        for f in _fortunes:
+            html += "<tr><td>" + str(f.id) + "</td><td>" + html_escape(f.message) + "</td></tr>"
         html += "</table></body></html>"
         return html
 
 
 if __name__ == "__main__":
+    import logging
+    import multiprocessing
     # Register the SQLAlchemy plugin
     from saplugin import SAEnginePlugin
     DBDRIVER = 'mysql'
-    DATABASE_URI = '%s://benchmarkdbuser:benchmarkdbpass@tfb-database:3306/hello_world?charset=utf8' % (
-        DBDRIVER)
+    DBUSER = 'benchmarkdbuser'
+    DBPSWD = 'benchmarkdbpass'
+    DATABASE_URI = '%s://%s:%s@tfb-database:3306/hello_world?charset=utf8' % (
+        DBDRIVER, DBUSER, DBPSWD)
     SAEnginePlugin(cherrypy.engine, DATABASE_URI).subscribe()
+
+    _is_travis = os.environ.get('TRAVIS') == 'true'
+
+    workers = int(multiprocessing.cpu_count())
+    if _is_travis:
+        workers = 3
+
+    cherrypy._cpconfig.environments['staging']['log.screen'] = False
+    logging.getLogger("cherrypy").propagate = False
+    log_fmt = "%(asctime)s.%(msecs)03d [%(levelname)s] (%(name)s) %(message)s"
+    logging.basicConfig(level=logging.CRITICAL, format=log_fmt, datefmt="%Y-%m-%d %H:%M:%S")
+    cherrypy.config.update({
+            'tools.db.on': True,
+            'environment': 'production',
+            'log.screen': False,
+            'log.access_file': '',
+            'log.error_file': ''
+    })    
 
     # Register the SQLAlchemy tool
     from satool import SATool
     cherrypy.tools.db = SATool()
     cherrypy.server.socket_host = '0.0.0.0'
+    cherrypy.server.socket_port = 8080
+    cherrypy.server.thread_pool = workers
     cherrypy.quickstart(CherryPyBenchmark(), '', {
         '/': {
             'tools.db.on': True,
             'log.screen': False,
-            'log.access_file': ''
+            'log.access_file': '',
+            'log.error_file': ''
         }
     })

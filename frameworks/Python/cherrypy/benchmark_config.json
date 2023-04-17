@@ -5,7 +5,7 @@
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -20,14 +20,14 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "CherryPy",
+      "display_name": "CherryPy [py2]",
       "notes": "CPython 2.7"
     },
-     "py3": {
+    "py3": {
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -43,7 +43,7 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "CherryPy",
-      "notes": "CPython 3.4"
+      "notes": "CPython 3.9"
     }
   }]
 }
