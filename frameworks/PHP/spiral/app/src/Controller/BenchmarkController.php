@@ -86,10 +86,12 @@ final class BenchmarkController implements SingletonInterface
             $world = $this->worlds->findRandom();
             $world->randomNumber = \random_int(1, 10000);
 
-            $this->entityManager->persist($world)->run();
+            $this->entityManager->persist($world);
 
             $worlds[] = $world;
         }
+
+        $this->entityManager->run();
 
         return $worlds;
     }
