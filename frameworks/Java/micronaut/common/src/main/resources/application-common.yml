@@ -28,7 +28,7 @@ r2dbc:
       dialect: POSTGRES
       options:
         protocol: postgres
-        initialSize: 0
+        initialSize: 0 # https://github.com/micronaut-projects/micronaut-data/issues/2136
         maxSize: 48
 
 mongodb:
