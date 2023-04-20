@@ -76,7 +76,7 @@ components_manager:
             dbalias: hello_world
             blocking_task_processor: fs-task-processor
             min_pool_size: 75
-            max_pool_size: 520
+            max_pool_size: 125
             max_queue_size: 512
             connecting_limit: 15
 

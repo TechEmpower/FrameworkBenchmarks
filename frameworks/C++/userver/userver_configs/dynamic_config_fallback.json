@@ -23,6 +23,10 @@
     "cancel-request": false,
     "update-timeout": false
   },
+  "BAGGAGE_SETTINGS": {
+    "allowed_keys": []
+  },
+  "USERVER_BAGGAGE_ENABLED": false,
   "USERVER_TASK_PROCESSOR_QOS": {
     "default-service": {
       "default-task-processor": {
@@ -36,6 +40,7 @@
   },
 
   "POSTGRES_STATEMENT_METRICS_SETTINGS": {},
+  "POSTGRES_CONNLIMIT_MODE_AUTO_ENABLED": false,
   "POSTGRES_CONNECTION_PIPELINE_ENABLED": false,
   "POSTGRES_CONNECTION_POOL_SETTINGS": {},
   "POSTGRES_CONNECTION_SETTINGS": {},
