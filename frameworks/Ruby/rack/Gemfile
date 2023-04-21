@@ -11,4 +11,4 @@ gem "connection_pool". "~>2.4"
 #gem "rails", "~> 7.0.1"
 #gem "redis", "~> 4.0"
 gem "tzinfo-data" , "1.2023.3"
-
+gem "unicorn", "~> 6.1", platforms: %i[ruby mswin], require: false
