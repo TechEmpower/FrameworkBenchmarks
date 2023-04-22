@@ -5,7 +5,7 @@ import sys
 _is_pypy = hasattr(sys, "pypy_version_info")
 _is_travis = os.environ.get("TRAVIS") == "true"
 
-workers = int(multiprocessing.cpu_count() * 1.5)
+workers = int(multiprocessing.cpu_count() * 2.5)
 if _is_travis:
     workers = 2
 
