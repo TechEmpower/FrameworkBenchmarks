@@ -53,11 +53,12 @@ public class WorldRepository extends BaseRepository {
         // as one single operation as Hibernate is too smart and will switch to use batched loads automatically.
         // Hence, use this awkward alternative:
         final LocalRandom localRandom = Randomizer.current();
-        List<Uni<World>> l = new ArrayList<>(count);
+        final List<World> worlds = new ArrayList<>(count);
+        Uni<Void> loopRoot = Uni.createFrom().voidItem();
         for (int i = 0; i < count; i++) {
-            l.add(s.get(World.class, localRandom.getNextRandom()));
+            loopRoot = loopRoot.chain(() -> s.get(World.class, localRandom.getNextRandom()).invoke(word -> worlds.add(word)).replaceWithVoid());
         }
-        return Uni.join().all(l).andFailFast();
+        return loopRoot.map(v -> worlds);
     }
 
     public Uni<List<World>> findManaged(Mutiny.Session s, int count) {
