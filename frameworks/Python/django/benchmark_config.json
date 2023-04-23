@@ -16,14 +16,14 @@
       "language": "Python",
       "flavor": "Python3",
       "orm": "Full",
-      "platform": "None",
+      "platform": "WSGI",
       "webserver": "Meinheld",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Django",
-      "notes": "CPython 3.6",
+      "notes": "",
       "versus": "wsgi",
-      "tags": ["broken"]
+      "tags": [ ]
     },
     "socketify-wsgi": {
       "plaintext_url" : "/plaintext",
@@ -31,17 +31,17 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "MySQL",
+      "database": "None",
       "framework": "django",
       "language": "Python",
       "flavor": "Python3",
-      "orm": "Full",
-      "platform": "None",
+      "orm": "Raw",
+      "platform": "WSGI",
       "webserver": "Socketify.py",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Django [Socketify.py WSGI]",
-      "notes": "CPython 3.6",
+      "notes": "",
       "versus": "wsgi"
     },
     "socketify-wsgi-pypy": {
@@ -50,12 +50,12 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "MySQL",
+      "database": "None",
       "framework": "django",
       "language": "Python",
       "flavor": "PyPy3",
-      "orm": "Full",
-      "platform": "None",
+      "orm": "Raw",
+      "platform": "WSGI",
       "webserver": "Socketify.py",
       "os": "Linux",
       "database_os": "Linux",
@@ -76,14 +76,14 @@
       "language": "Python",
       "flavor": "Python3",
       "orm": "Full",
-      "platform": "None",
+      "platform": "WSGI",
       "webserver": "Meinheld",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Django",
-      "notes": "CPython 3.6",
+      "notes": "",
       "versus": "wsgi",
-      "tags": ["broken"]
+      "tags": [ ]
     }
   }]
 }
