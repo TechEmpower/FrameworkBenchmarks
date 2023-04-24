@@ -26,11 +26,11 @@
       "tags": [ ]
     },
     "raw": {
-      "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/query?queries=",
-      "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
+      "json_url": "/json-raw",
+      "db_url": "/db-raw",
+      "query_url": "/query-raw?queries=",
+      "fortune_url": "/fortunes-raw",
+      "update_url": "/updates-raw?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
@@ -50,7 +50,7 @@
       "tags": [ ]
     },
     "socketify-wsgi": {
-      "json_url": "/json",
+      "json_url": "/json-raw",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
@@ -69,7 +69,7 @@
       "versus": "wsgi"
     },
     "socketify-wsgi-pypy": {
-      "json_url": "/json",
+      "json_url": "/json-raw",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
@@ -109,14 +109,14 @@
       "display_name": "Flask [Meinheld] [PyPy3]",
       "notes": "PyPy",
       "versus": "wsgi",
-      "tags": [ ]
+      "tags": ["broken"]
     },
     "pypy-raw": {
-      "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/query?queries=",
-      "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
+      "json_url": "/json-raw",
+      "db_url": "/db-raw",
+      "query_url": "/query-raw?queries=",
+      "fortune_url": "/fortunes-raw",
+      "update_url": "/updates-raw?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
@@ -133,7 +133,7 @@
       "display_name": "Flask [Meinheld] [PyPy3] [Raw]",
       "notes": "PyPy",
       "versus": "wsgi",
-      "tags": [ ]
+      "tags": ["broken"]
     },
     "nginx-uwsgi": {
       "json_url": "/json",
@@ -160,11 +160,7 @@
       "tags": [ ]
     },
     "fastwsgi": {
-      "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/query?queries=",
-      "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
+      "json_url": "/json-raw",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
