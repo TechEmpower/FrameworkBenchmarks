@@ -2,10 +2,7 @@
 
 module Tem
 
-  QUERY_RANGE = 1..10_000 # range of IDs in the Fortune DB
-  ALL_IDS = QUERY_RANGE.to_a # enumeration of all the IDs in fortune DB
-  MIN_QUERIES = 1 # min number of records that can be retrieved
-  MAX_QUERIES = 500 # max number of records that can be retrieved
+
   FORTUNTE_FOOTER='<!DOCTYPE html>
       <html>
       <head>

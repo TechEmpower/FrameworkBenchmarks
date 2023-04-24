@@ -1,15 +1,15 @@
-Bundler.require :default
-require 'erb'
-require 'yaml'
+#Bundler.require :default
+require "erb"
+require "yaml"
 
 $: << "."
 
 DB_CONFIG = YAML.load(ERB.new(File.read("config/database.yml")).result)
 
-if RUBY_PLATFORM == 'java'
- require 'app/jruby_impl'
- run App::JRuby
+if RUBY_PLATFORM == "java"
+  require "app/jruby_impl"
+  run App::JRuby
 else
- require 'app/ruby_impl'
- run App::Ruby
+  require "app/ruby_impl"
+  run App::Ruby
 end

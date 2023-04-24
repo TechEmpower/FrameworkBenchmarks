@@ -7,7 +7,7 @@ source "https://rubygems.org"
 gem "oj" , "~> 3.14"
 gem "pg" , "~>1.4" #, group: :postgresql
 gem "puma" , "~> 6.2"
-gem "connection_pool". "~>2.4"
+gem "connection_pool", "~>2.4"
 #gem "rails", "~> 7.0.1"
 #gem "redis", "~> 4.0"
 gem "tzinfo-data" , "1.2023.3"
