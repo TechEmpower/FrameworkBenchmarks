@@ -40,10 +40,10 @@ web = ["xitca-web"]
 # template optional
 template = ["sailfish"]
 # io-uring optional
-io-uring = ["tokio-uring", "xitca-server/io-uring"]
+io-uring = ["tokio-uring", "xitca-http/io-uring", "xitca-server/io-uring"]
 
 [dependencies]
-xitca-http = { version = "0.1", features = ["util-service", "io-uring"] }
+xitca-http = { version = "0.1", features = ["util-service"] }
 xitca-io = "0.1"
 xitca-server = "0.1"
 xitca-service = "0.1"
@@ -86,13 +86,13 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "b97457bfd0b42eb0c1b6fa48e469c1da99b6373d" }
-xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "b97457bfd0b42eb0c1b6fa48e469c1da99b6373d" }
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "b97457bfd0b42eb0c1b6fa48e469c1da99b6373d" }
-xitca-router = { git = "https://github.com/HFQR/xitca-web.git", rev = "b97457bfd0b42eb0c1b6fa48e469c1da99b6373d" }
-xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "b97457bfd0b42eb0c1b6fa48e469c1da99b6373d" }
-xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "b97457bfd0b42eb0c1b6fa48e469c1da99b6373d" }
-xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "b97457bfd0b42eb0c1b6fa48e469c1da99b6373d" }
-xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "b97457bfd0b42eb0c1b6fa48e469c1da99b6373d" }
+xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "508b59e9c97428bad5f29d1e6710bbb2e61cc655" }
+xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "508b59e9c97428bad5f29d1e6710bbb2e61cc655" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "508b59e9c97428bad5f29d1e6710bbb2e61cc655" }
+xitca-router = { git = "https://github.com/HFQR/xitca-web.git", rev = "508b59e9c97428bad5f29d1e6710bbb2e61cc655" }
+xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "508b59e9c97428bad5f29d1e6710bbb2e61cc655" }
+xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "508b59e9c97428bad5f29d1e6710bbb2e61cc655" }
+xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "508b59e9c97428bad5f29d1e6710bbb2e61cc655" }
+xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "508b59e9c97428bad5f29d1e6710bbb2e61cc655" }
 
 mio = { git = "https://github.com/fakeshadow/mio.git", rev = "4272250caed2f460f7be646d0fd25d53d267eb53" }
