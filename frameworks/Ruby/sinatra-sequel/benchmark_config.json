@@ -25,12 +25,10 @@
         "notes": ""
       },
       "postgres": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -69,12 +67,10 @@
         "notes": ""
       },
       "postgres-passenger-mri": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -113,12 +109,10 @@
         "notes": ""
       },
       "postgres-unicorn-mri": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -157,12 +151,10 @@
         "notes": ""
       },
       "postgres-torquebox-jruby": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
