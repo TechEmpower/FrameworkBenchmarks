@@ -3,12 +3,10 @@
   "tests": [
     {
       "default": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -45,12 +43,10 @@
         "notes": ""
       },
       "passenger-mri": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -87,12 +83,10 @@
         "notes": ""
       },
       "unicorn-mri": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -129,12 +123,10 @@
         "notes": ""
       },
       "torquebox-jruby": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
