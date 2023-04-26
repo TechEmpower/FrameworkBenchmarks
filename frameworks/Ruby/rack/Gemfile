@@ -4,11 +4,15 @@ source "https://rubygems.org"
 
 #gem "listen", "~> 3.3", group: :development
 #gem "mysql2", "0.5.3", group: :mysql
-gem "oj" , "~> 3.14"
-gem "pg" , "~>1.4" #, group: :postgresql
-gem "puma" , "~> 6.2"
+gem "oj", "~> 3.14"
+gem "pg", "~>1.4" #, group: :postgresql
+gem "puma", "~> 6.2"
 gem "connection_pool", "~>2.4"
 #gem "rails", "~> 7.0.1"
 #gem "redis", "~> 4.0"
-gem "tzinfo-data" , "1.2023.3"
+gem "tzinfo-data", "1.2023.3"
 gem "unicorn", "~> 6.1", platforms: %i[ruby mswin], require: false
+
+group :development do
+  gem "rack-test"
+end
