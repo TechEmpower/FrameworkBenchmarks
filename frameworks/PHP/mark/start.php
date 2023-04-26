@@ -27,7 +27,7 @@ $api->get('/json', function () {
 
 $date = gmdate('D, d M Y H:i:s').' GMT';
 
-$api->onWorkerStart = function () {
+$api->onWorkerStart = static function () {
     Timer::add(1, function () {
         global $date;
         $date = gmdate('D, d M Y H:i:s').' GMT';
