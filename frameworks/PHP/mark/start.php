@@ -7,6 +7,8 @@ require 'vendor/autoload.php';
 
 $api = new App('http://0.0.0.0:8080');
 
+$api->name = "Mark";
+
 $api->count = (int) shell_exec('nproc');
 
 $api->any('/plaintext', function () {
