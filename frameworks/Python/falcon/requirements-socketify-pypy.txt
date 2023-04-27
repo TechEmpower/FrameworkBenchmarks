@@ -1,2 +1,1 @@
--r requirements-pypy.txt
 git+https://github.com/cirospaciari/socketify.py.git@main#socketify
