@@ -44,7 +44,7 @@ final class BenchmarkController implements SingletonInterface
     /**
      * @throws \Exception
      */
-    public function queries(string|int $queries = 1): array
+    public function queries(mixed $queries = null): array
     {
         $queries = $this->clamp($queries);
 
@@ -77,7 +77,7 @@ final class BenchmarkController implements SingletonInterface
     /**
      * @throws \Throwable
      */
-    public function updates(string|int $queries = 1): array
+    public function updates(mixed $queries = null): array
     {
         $queries = $this->clamp($queries);
 
@@ -101,7 +101,7 @@ final class BenchmarkController implements SingletonInterface
         return $this->plain;
     }
 
-    private function clamp(string|int $value): int
+    private function clamp(mixed $value): int
     {
         if (!\is_numeric($value) || $value < 1) {
             return 1;
