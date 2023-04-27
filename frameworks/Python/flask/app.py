@@ -306,6 +306,7 @@ if __name__ == "__main__":
             import fastwsgi
             response_server = "FastWSGI"
             response_add_date = False
+            fastwsgi.server.backlog = 4096
             fastwsgi.run(app, host=opt.host, port=opt.port, loglevel=opt.verbose)
 
         if opt.server == 'socketify':

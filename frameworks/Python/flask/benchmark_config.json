@@ -26,12 +26,10 @@
       "tags": [ ]
     },
     "raw": {
-      "json_url": "/json-raw",
       "db_url": "/db-raw",
       "query_url": "/query-raw?queries=",
       "fortune_url": "/fortunes-raw",
       "update_url": "/updates-raw?queries=",
-      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
@@ -112,12 +110,10 @@
       "tags": ["broken"]
     },
     "pypy-raw": {
-      "json_url": "/json-raw",
       "db_url": "/db-raw",
       "query_url": "/query-raw?queries=",
       "fortune_url": "/fortunes-raw",
       "update_url": "/updates-raw?queries=",
-      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
