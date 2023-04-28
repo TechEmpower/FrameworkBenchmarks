@@ -96,7 +96,7 @@ async fn serve() {
         .get("/fortunes", fortunes)
         .get("/queries", queries)
         .get("/updates", updates)
-        .with(State::new(Arc::new(conn)));
+        .with(State::new(conn));
 
     server::builder()
         .serve(ServiceMaker::from(app))
