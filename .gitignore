@@ -57,6 +57,7 @@ benchmark.cfg
 
 # Visual Studio Code
 .vscode
+.history
 
 # vim
 .*.sw[a-p]
