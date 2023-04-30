@@ -22,6 +22,7 @@ class HelloWorld
         CONTENT_TYPE => content_type,
         DATE => Time.now.utc.httpdate,
         SERVER => SERVER_STRING
+        #'Content-Length' => body.length.to_s,
       },
       [body]
     ]

@@ -1,0 +1,107 @@
+x-common:
+  # Set these vars and args according to your app
+
+  &common
+  build:
+    context: ..
+    dockerfile: .devcontainer/Dockerfile
+    args:
+      RUBY_VERSION: '3.2'
+      DISTRO_NAME: 'bullseye'
+      PG_MAJOR: '15'
+      POSTGRES_VERSION: '15'
+      BUNDLER_VERSION: '2.3.22'
+  environment:
+    #for postgres PG will create the database if you specify here. If you want rails to do that leave it out
+    # and modify the DATABASE_URL
+    POSTGRES_DB: 'hello_world'
+    POSTGRES_USER: 'benchmarkdbuser'
+    POSTGRES_PASSWORD: 'benchmarkdbpass'
+    POSTGRES_HOST: 'postgres'
+
+    # make sure you put the same database name here
+    DATABASE_URL: "postgres://benchmarkdbuser:benchmarkdbpass@postgres:5438/hello_world"
+
+    MALLOC_ARENA_MAX: 2
+    WEB_CONCURRENCY: ${WEB_CONCURRENCY:-1}
+
+    XDG_DATA_HOME: /app/tmp/cache
+    YARN_CACHE_FOLDER: /app/node_modules/.yarn-cache
+    HISTFILE: /usr/local/hist/.bash_history
+    PSQL_HISTFILE: /usr/local/hist/.psql_history
+    IRB_HISTFILE: /usr/local/hist/.irb_history
+    EDITOR: vi
+
+  tmpfs:
+    - /tmp
+    - /app/tmp/pids
+
+x-backend:
+  &backend
+  <<: *common
+  stdin_open: true
+  tty: true
+  build:
+    context: ..
+    dockerfile: roda-sequel.dockerfile
+  volumes:
+    - ../.:/app:cached
+    - bundle:/usr/local/bundle
+    - history:/usr/local/hist
+  # - ./.psqlrc:/root/.psqlrc:ro
+  # - ./.bashrc:/root/.bashrc:ro
+  # depends_on:
+  #   &backend_depends_on
+  #   postgres:
+  #     condition: service_healthy
+
+
+services:
+
+  postgres:
+    build:
+      context: ../../../../toolset/databases/postgres/
+      dockerfile: postgres.dockerfile
+    ports:
+      - 5432:5432
+  mysql:
+    build:
+      context: ../../../../toolset/databases/mysql/
+      dockerfile: mysql.dockerfile
+    ports:
+      - 3306:3306
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8085:8080
+  web:
+    <<: *backend
+    command: bundle exec puma -t 8:32 -w 8 --preload -b tcp://0.0.0.0:3000 -e development
+    #command: /bin/bash
+    ports:
+      - 8080:8080
+  dev:
+    <<: *backend
+  
+    # Overrides default command so things don't shut down after the process ends.
+
+    command: sleep infinity
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    #network_mode: service:postgres
+
+    # Uncomment the next line to use a non-root user for all processes.
+    # user: vscode
+
+    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+
+
+
+volumes:
+  bundle:
+  history:
+  postgres:
+
+
