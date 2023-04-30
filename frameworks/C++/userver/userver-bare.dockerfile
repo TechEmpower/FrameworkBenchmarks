@@ -3,7 +3,7 @@ RUN apt install -y libnghttp2-dev
 
 WORKDIR /src
 RUN git clone https://github.com/userver-framework/userver.git && \
-    cd userver && git checkout 7932d3f014926fc1502057a6833064e0d745b66c
+    cd userver && git checkout 040b0bd001a078ee023aabe987e5ec7cc8ed5b6c
 COPY userver_benchmark/ ./
 RUN mkdir build && cd build && \
     cmake -DUSERVER_IS_THE_ROOT_PROJECT=0 -DUSERVER_FEATURE_CRYPTOPP_BLAKE2=0 \
