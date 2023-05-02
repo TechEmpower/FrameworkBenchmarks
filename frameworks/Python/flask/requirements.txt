@@ -1,4 +1,4 @@
-Flask==2.2.3
+Flask==2.3.2
 click==8.0.1
 pony==0.7.16
 psycopg2==2.9.3; implementation_name=='cpython'
