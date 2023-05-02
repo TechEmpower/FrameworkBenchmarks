@@ -2,7 +2,7 @@
 // network io.
 
 #![allow(dead_code)]
-#![feature(type_alias_impl_trait)]
+#![feature(impl_trait_in_assoc_type)]
 
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
@@ -168,19 +168,27 @@ where
 
             #[cfg(feature = "io-uring")]
             {
+                use tokio_uring::buf::IoBuf;
+
                 let std = stream.into_std()?;
                 let stream = tokio_uring::net::TcpStream::from_std(std);
 
-                let mut read_buf = vec![0; 4096];
-
                 'io: loop {
-                    let (res, buf) = stream.read(read_buf).await;
+                    let mut buf = paged.into_inner();
+
+                    let len = buf.len();
+                    let rem = buf.capacity() - len;
+
+                    if rem < 4096 {
+                        buf.reserve(4096 - rem);
+                    }
+
+                    let (res, buf) = stream.read(buf.slice(len..)).await;
                     let n = res?;
                     if n == 0 {
                         break;
                     }
-                    read_buf = buf;
-                    paged.get_mut().extend_from_slice(&read_buf[..n]);
+                    paged = PagedBytesMut::from(buf.into_inner());
 
                     request_handler(&mut ctx, &self.service, &mut paged, &mut write_buf).await;
 
