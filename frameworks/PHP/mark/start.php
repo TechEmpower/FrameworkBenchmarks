@@ -7,6 +7,8 @@ require 'vendor/autoload.php';
 
 $api = new App('http://0.0.0.0:8080');
 
+$api->name = "Mark";
+
 $api->count = (int) shell_exec('nproc');
 
 $api->any('/plaintext', function () {
@@ -27,7 +29,7 @@ $api->get('/json', function () {
 
 $date = gmdate('D, d M Y H:i:s').' GMT';
 
-$api->onWorkerStart = function () {
+$api->onWorkerStart = static function () {
     Timer::add(1, function () {
         global $date;
         $date = gmdate('D, d M Y H:i:s').' GMT';
