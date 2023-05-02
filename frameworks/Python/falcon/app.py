@@ -140,6 +140,8 @@ if __name__ == "__main__":
         logging.basicConfig()
         logging.getLogger().setLevel(logging.CRITICAL)
         logging.disable(True)
+        if workers < 4:
+            workers = 4
         waitress.serve(
             app=wsgi,
             listen=f"{opt.host}:{opt.port}",
@@ -170,6 +172,7 @@ if __name__ == "__main__":
             import fastwsgi
             response_server = "FastWSGI"
             response_add_date = False
+            fastwsgi.server.backlog = 4096
             fastwsgi.run(app, host=opt.host, port=opt.port, loglevel=opt.verbose)
 
         if opt.server == 'socketify':
