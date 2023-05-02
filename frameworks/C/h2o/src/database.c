@@ -61,7 +61,7 @@ typedef struct {
 } prepared_statement_t;
 
 static h2o_socket_t *create_socket(int sd, h2o_loop_t *loop);
-static int do_execute_query(db_conn_t *conn, db_query_param_t *param);
+static int do_execute_query(db_conn_t *conn, db_query_param_t *param, bool flush);
 static void error_notification(db_conn_pool_t *pool, bool timeout, const char *error_string);
 static void on_database_connect_error(db_conn_t *conn, bool timeout, const char *error_string);
 static void on_database_connect_read_ready(h2o_socket_t *sock, const char *err);
@@ -104,7 +104,7 @@ static h2o_socket_t *create_socket(int sd, h2o_loop_t *loop)
 	return ret;
 }
 
-static int do_execute_query(db_conn_t *conn, db_query_param_t *param)
+static int do_execute_query(db_conn_t *conn, db_query_param_t *param, bool flush)
 {
 	assert(conn->query_num);
 	assert((conn->queries.head && conn->query_num < conn->pool->config->max_pipeline_query_num) ||
@@ -132,19 +132,21 @@ static int do_execute_query(db_conn_t *conn, db_query_param_t *param)
 		return 1;
 	}
 
-	if (!PQpipelineSync(conn->conn)) {
-		LIBRARY_ERROR("PQpipelineSync", PQerrorMessage(conn->conn));
+	if (!PQsendSyncMessage(conn->conn)) {
+		LIBRARY_ERROR("PQsendSyncMessage", PQerrorMessage(conn->conn));
 		return 1;
 	}
 
-	const int send_status = PQflush(conn->conn);
+	if (flush) {
+		const int send_status = PQflush(conn->conn);
 
-	if (send_status < 0) {
-		LIBRARY_ERROR("PQflush", PQerrorMessage(conn->conn));
-		return 1;
+		if (send_status < 0) {
+			LIBRARY_ERROR("PQflush", PQerrorMessage(conn->conn));
+			return 1;
+		}
+		else if (send_status)
+			h2o_socket_notify_write(conn->sock, on_database_write_ready);
 	}
-	else if (send_status)
-		h2o_socket_notify_write(conn->sock, on_database_write_ready);
 
 	if (!conn->queries.head && !(conn->flags & (EXPECT_SYNC | IGNORE_RESULT))) {
 		assert(!h2o_timer_is_linked(&conn->timer));
@@ -527,8 +529,8 @@ static void prepare_statements(db_conn_t *conn)
 			iter = iter->next;
 		} while (iter);
 
-		if (!PQpipelineSync(conn->conn)) {
-			LIBRARY_ERROR("PQpipelineSync", PQerrorMessage(conn->conn));
+		if (!PQsendSyncMessage(conn->conn)) {
+			LIBRARY_ERROR("PQsendSyncMessage", PQerrorMessage(conn->conn));
 			on_database_connect_error(conn, false, DB_ERROR);
 			return;
 		}
@@ -547,6 +549,8 @@ static void prepare_statements(db_conn_t *conn)
 
 static void process_queries(db_conn_t *conn)
 {
+	const bool flush = conn->query_num && conn->pool->queries.head;
+
 	while (conn->query_num && conn->pool->queries.head) {
 		db_query_param_t * const param = H2O_STRUCT_FROM_MEMBER(db_query_param_t,
 		                                                        l,
@@ -559,7 +563,7 @@ static void process_queries(db_conn_t *conn)
 
 		conn->pool->queries.head = param->l.next;
 
-		if (do_execute_query(conn, param)) {
+		if (do_execute_query(conn, param, false)) {
 			param->on_error(param, DB_ERROR);
 
 			if (PQstatus(conn->conn) != CONNECTION_OK) {
@@ -567,6 +571,18 @@ static void process_queries(db_conn_t *conn)
 				return;
 			}
 		}
+	}
+
+	if (flush) {
+		const int send_status = PQflush(conn->conn);
+
+		if (send_status < 0) {
+			LIBRARY_ERROR("PQflush", PQerrorMessage(conn->conn));
+			on_database_error(conn, DB_ERROR);
+			return;
+		}
+		else if (send_status)
+			h2o_socket_notify_write(conn->sock, on_database_write_ready);
 	}
 
 	if (!conn->queries.head && !(conn->flags & (EXPECT_SYNC | IDLE | IGNORE_RESULT))) {
@@ -657,7 +673,7 @@ int execute_database_query(db_conn_pool_t *pool, db_query_param_t *param)
 		assert(conn->flags & IDLE);
 		assert(!(conn->flags & (EXPECT_SYNC | IGNORE_RESULT)));
 		pool->conn = conn->l.next;
-		ret = do_execute_query(conn, param);
+		ret = do_execute_query(conn, param, true);
 
 		if (ret) {
 			if (PQstatus(conn->conn) == CONNECTION_OK) {

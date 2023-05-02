@@ -15,8 +15,9 @@ RUN apt-get -yqq update && \
       g++ \
       libbrotli-dev \
       libcap-dev \
+      libicu-dev \
       libnuma-dev \
-      libpq-dev \
+      libreadline-dev \
       libssl-dev \
       libtool \
       libuv1-dev \
@@ -25,6 +26,7 @@ RUN apt-get -yqq update && \
       libz-dev \
       make \
       ninja-build \
+      patch \
       pkg-config \
       systemtap-sdt-dev
 
@@ -52,6 +54,20 @@ RUN curl -LSs "https://github.com/x86-64/mustache-c/archive/${MUSTACHE_C_REVISIO
     CFLAGS="-flto -march=native -mtune=native -O3" ./autogen.sh && \
     make -j "$(nproc)" install
 
+ARG POSTGRESQL_VERSION=7b7fa85130330128b404eddebd4f33c6739454b0
+
+WORKDIR /tmp/postgresql-build
+RUN curl -LSs "https://github.com/postgres/postgres/archive/${POSTGRESQL_VERSION}.tar.gz" | \
+      tar --strip-components=1 -xz && \
+    curl -LSs "https://www.postgresql.org/message-id/attachment/146614/v2-0001-Add-PQsendSyncMessage-to-libpq.patch" | \
+      patch -Np1 && \
+    CFLAGS="-flto -march=native -mtune=native -O3" ./configure \
+      --includedir=/usr/local/include/postgresql \
+      --prefix=/usr/local \
+      --with-ssl=openssl && \
+    make -j "$(nproc)" -C src/include install && \
+    make -j "$(nproc)" -C src/interfaces/libpq install
+
 ARG H2O_APP_PREFIX
 WORKDIR /tmp/build
 COPY CMakeLists.txt ../
@@ -72,11 +88,11 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -yqq update && \
     apt-get -yqq install \
       libnuma1 \
-      libpq5 \
       libyajl2
 ARG H2O_APP_PREFIX
 COPY --from=compile "${H2O_APP_PREFIX}" "${H2O_APP_PREFIX}/"
 COPY --from=compile /usr/local/lib/libmustache_c.so "${H2O_APP_PREFIX}/lib/"
+COPY --from=compile /usr/local/lib/libpq.so.5.16 "${H2O_APP_PREFIX}/lib/libpq.so.5"
 ENV LD_LIBRARY_PATH="${H2O_APP_PREFIX}/lib"
 EXPOSE 8080
 ARG BENCHMARK_ENV
