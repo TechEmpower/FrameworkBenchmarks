@@ -1,0 +1,2 @@
+-r requirements.txt
+uWSGI==2.0.21

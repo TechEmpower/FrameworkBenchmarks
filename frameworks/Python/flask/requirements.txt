@@ -1,16 +1,12 @@
+Flask==2.2.3
 click==8.0.1
-pony==0.7.14
-psycopg2==2.9.1
-psycopg2-binary==2.9.1
-psycopg2-pool==1.1
-Flask==2.0.1
-greenlet<0.5
-gunicorn==20.1.0
-itsdangerous==2.0.1
-Jinja2==3.0.1
-MarkupSafe==2.0.1
-meinheld==1.0.2
-uWSGI==2.0.19.1
-Werkzeug==2.0.1
+pony==0.7.16
+psycopg2==2.9.3; implementation_name=='cpython'
+psycopg2-binary==2.9.3; implementation_name=='cpython'
+psycopg2-pool==1.1; implementation_name=='cpython'
+psycopg2cffi==2.9.0; implementation_name=='pypy'
+itsdangerous==2.1.2
+Jinja2==3.0.3
+MarkupSafe==2.1.2
 ujson==5.4.0
-orjson==3.6.0
+orjson==3.8.7; implementation_name=='cpython' 

@@ -112,7 +112,8 @@
         "database_os": "Linux",
         "display_name": "ubiquity-roadrunner",
         "notes": "",
-        "versus": "php"
+        "versus": "php",
+        "tags": ["broken"]
       },
       "roadrunner-mysql": {
         "db_url": "/DbMy",
@@ -133,7 +134,8 @@
         "database_os": "Linux",
         "display_name": "ubiquity-roadrunner-mysql",
         "notes": "",
-        "versus": "php"
+        "versus": "php",
+        "tags": ["broken"]
       },
       "workerman-mysql": {
         "db_url": "/DbMy",

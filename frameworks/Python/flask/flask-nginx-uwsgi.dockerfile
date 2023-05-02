@@ -1,15 +1,15 @@
-FROM python:3.8-buster
+FROM python:3.9-bullseye
 
 RUN curl -s http://nginx.org/keys/nginx_signing.key | apt-key add -
-RUN echo "deb http://nginx.org/packages/debian/ buster nginx" >> /etc/apt/sources.list
-RUN echo "deb-src http://nginx.org/packages/debian/ buster nginx" >> /etc/apt/sources.list
+RUN echo "deb http://nginx.org/packages/debian/ bullseye nginx" >> /etc/apt/sources.list
+RUN echo "deb-src http://nginx.org/packages/debian/ bullseye nginx" >> /etc/apt/sources.list
 
 RUN apt-get update -yqq && apt-get install -yqq nginx
 RUN apt-get install libpq-dev python3-dev -y
-ADD ./requirements.txt /flask/requirements.txt
-RUN pip3 install -r /flask/requirements.txt
-ADD ./ /flask
+
 WORKDIR /flask
+COPY ./ /flask
+RUN pip3 install -U pip; pip3 install -r /flask/requirements-uwsgi.txt 
 
 RUN sed -i 's|include .*/conf/uwsgi_params;|include /etc/nginx/uwsgi_params;|g' /flask/nginx.conf
 

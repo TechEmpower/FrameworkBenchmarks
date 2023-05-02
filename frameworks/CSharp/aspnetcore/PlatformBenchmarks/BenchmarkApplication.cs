@@ -9,6 +9,8 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
+using Microsoft.Extensions.ObjectPool;
+using RazorSlices;
 
 namespace PlatformBenchmarks;
 
@@ -34,6 +36,38 @@ public sealed partial class BenchmarkApplication
         "Content-Length: "u8;
 
     private static ReadOnlySpan<byte> _plainTextBody => "Hello, World!"u8;
+    private static ReadOnlySpan<byte> _contentLengthGap => "    "u8;
+
+#if DATABASE
+        public static RawDb Db { get; set; }
+#endif
+
+    private static readonly DefaultObjectPool<ChunkedBufferWriter<WriterAdapter>> ChunkedWriterPool
+        = new(new ChunkedWriterObjectPolicy());
+
+    private sealed class ChunkedWriterObjectPolicy : IPooledObjectPolicy<ChunkedBufferWriter<WriterAdapter>>
+    {
+        public ChunkedBufferWriter<WriterAdapter> Create() => new();
+
+        public bool Return(ChunkedBufferWriter<WriterAdapter> writer)
+        {
+            writer.Reset();
+            return true;
+        }
+    }
+
+#if DATABASE
+#if NPGSQL
+    private readonly static SliceFactory<List<FortuneUtf8>> FortunesTemplateFactory = RazorSlice.ResolveSliceFactory<List<FortuneUtf8>>("/Templates/FortunesUtf8.cshtml");
+#elif MYSQLCONNECTOR
+    private readonly static SliceFactory<List<FortuneUtf16>> FortunesTemplateFactory = RazorSlice.ResolveSliceFactory<List<FortuneUtf16>>("/Templates/FortunesUtf16.cshtml");
+#else
+#error "DATABASE defined by neither NPGSQL nor MYSQLCONNECTOR are defined"
+#endif
+#endif
+
+    [ThreadStatic]
+    private static Utf8JsonWriter t_writer;
 
     private static readonly JsonContext SerializerContext = JsonContext.Default;
 
@@ -44,20 +78,6 @@ public sealed partial class BenchmarkApplication
     private sealed partial class JsonContext : JsonSerializerContext
     {
     }
-
-    private static ReadOnlySpan<byte> _fortunesTableStart => "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"u8;
-    private static ReadOnlySpan<byte> _fortunesRowStart => "<tr><td>"u8;
-    private static ReadOnlySpan<byte> _fortunesColumn => "</td><td>"u8;
-    private static ReadOnlySpan<byte> _fortunesRowEnd => "</td></tr>"u8;
-    private static ReadOnlySpan<byte> _fortunesTableEnd => "</table></body></html>"u8;
-    private static ReadOnlySpan<byte> _contentLengthGap => "    "u8;
-
-#if DATABASE
-        public static RawDb Db { get; set; }
-#endif
-
-    [ThreadStatic]
-    private static Utf8JsonWriter t_writer;
 
     public static class Paths
     {
@@ -78,41 +98,41 @@ public sealed partial class BenchmarkApplication
         _requestType = versionAndMethod.Method == Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpMethod.Get ? GetRequestType(startLine.Slice(targetPath.Offset, targetPath.Length), ref _queries) : RequestType.NotRecognized;
     }
 
-    private RequestType GetRequestType(ReadOnlySpan<byte> path, ref int queries)
+    private static RequestType GetRequestType(ReadOnlySpan<byte> path, ref int queries)
     {
 #if !DATABASE
         if (path.Length == 10 && path.SequenceEqual(Paths.Plaintext))
         {
             return RequestType.PlainText;
         }
-        else if (path.Length == 5 && path.SequenceEqual(Paths.Json))
+        if (path.Length == 5 && path.SequenceEqual(Paths.Json))
         {
             return RequestType.Json;
         }
 #else
-            if (path.Length == 3 && path[0] == '/' && path[1] == 'd' && path[2] == 'b')
-            {
-                return RequestType.SingleQuery;
-            }
-            else if (path.Length == 9 && path[1] == 'f' && path.SequenceEqual(Paths.Fortunes))
-            {
-                return RequestType.Fortunes;
-            }
-            else if (path.Length >= 15 && path[1] == 'c' && path.StartsWith(Paths.Caching))
-            {
-                queries = ParseQueries(path.Slice(15));
-                return RequestType.Caching;
-            }
-            else if (path.Length >= 9 && path[1] == 'u' && path.StartsWith(Paths.Updates))
-            {
-                queries = ParseQueries(path.Slice(9));
-                return RequestType.Updates;
-            }
-            else if (path.Length >= 9 && path[1] == 'q' && path.StartsWith(Paths.MultipleQueries))
-            {
-                queries = ParseQueries(path.Slice(9));
-                return RequestType.MultipleQueries;
-            }
+        if (path.Length == 3 && path[0] == '/' && path[1] == 'd' && path[2] == 'b')
+        {
+            return RequestType.SingleQuery;
+        }
+        if (path.Length == 9 && path[1] == 'f' && path.SequenceEqual(Paths.Fortunes))
+        {
+            return RequestType.Fortunes;
+        }
+        if (path.Length >= 15 && path[1] == 'c' && path.StartsWith(Paths.Caching))
+        {
+            queries = ParseQueries(path.Slice(15));
+            return RequestType.Caching;
+        }
+        if (path.Length >= 9 && path[1] == 'u' && path.StartsWith(Paths.Updates))
+        {
+            queries = ParseQueries(path.Slice(9));
+            return RequestType.Updates;
+        }
+        if (path.Length >= 9 && path[1] == 'q' && path.StartsWith(Paths.MultipleQueries))
+        {
+            queries = ParseQueries(path.Slice(9));
+            return RequestType.MultipleQueries;
+        }
 #endif
         return RequestType.NotRecognized;
     }
@@ -138,13 +158,13 @@ public sealed partial class BenchmarkApplication
 
         private static int ParseQueries(ReadOnlySpan<byte> parameter)
         {
-            if (!Utf8Parser.TryParse(parameter, out int queries, out _) || queries < 1)
+            if (!Utf8Parser.TryParse(parameter, out int queries, out _))
             {
                 queries = 1;
             }
-            else if (queries > 500)
+            else
             {
-                queries = 500;
+                queries = Math.Clamp(queries, 1, 500);
             }
 
             return queries;

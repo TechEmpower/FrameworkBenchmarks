@@ -1,13 +1,11 @@
-FROM python:3.8
+FROM python:3.10-slim
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-COPY requirements.txt /usr/src/app
-RUN pip install --no-cache-dir -r /usr/src/app/requirements.txt
+ADD ./ /emmett
 
-COPY ./ /app
-WORKDIR /app
+WORKDIR /emmett
+
+RUN pip install --no-cache-dir -r /emmett/requirements.txt
 
 EXPOSE 8080
 
-CMD [ "gunicorn", "app:app" , "-k", "emmett.asgi.workers.EmmettWorker", "-c", "gunicorn_conf.py" ]
+CMD python run.py

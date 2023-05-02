@@ -1,0 +1,23 @@
+{
+    "framework": "fastwsgi",
+    "tests": [{
+        "default": {
+            "json_url": "/json",
+            "plaintext_url": "/plaintext",
+            "port": 3000,
+            "approach": "Realistic",
+            "classification": "Micro",
+            "database": "None",
+            "framework": "None",
+            "language": "Python",
+            "flavor": "Python3",
+            "orm": "Raw",
+            "platform": "None",
+            "webserver": "FastWSGI",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "FastWSGI",
+            "notes": ""
+        }
+    }]
+}

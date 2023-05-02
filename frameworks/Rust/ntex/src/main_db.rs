@@ -1,6 +1,7 @@
 #[cfg(not(target_os = "macos"))]
 #[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+// static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::sync::{Arc, Mutex};
 

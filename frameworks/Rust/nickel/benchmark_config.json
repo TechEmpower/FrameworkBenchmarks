@@ -17,7 +17,8 @@
       "database_os": "Linux",
       "display_name": "nickel",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     }
   }]
 }

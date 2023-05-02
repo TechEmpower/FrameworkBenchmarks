@@ -7,4 +7,4 @@ RUN pip3 install -U pip; pip3 install -r /falcon/requirements-socketify-pypy.txt
 
 EXPOSE 8080
 
-CMD python app-socketify-wsgi.py
+CMD python app.py -s socketify

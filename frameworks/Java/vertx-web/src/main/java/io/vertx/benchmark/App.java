@@ -13,7 +13,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.templ.rocker.RockerTemplateEngine;
 import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.pgclient.PgPool;
+import io.vertx.pgclient.PgConnection;
 import io.vertx.sqlclient.*;
 
 import java.time.ZonedDateTime;
@@ -29,6 +29,22 @@ public class App extends AbstractVerticle {
     DatabindCodec.prettyMapper().registerModule(new BlackbirdModule());
   }
 
+  // TODO: this function can be moved into `PgClientBenchmark`, made static, and renamed when static declarations in inner classes are supported (when the JDK is upgraded to 16 or above).
+  private void createPgClientBenchmarkAsync(Vertx vertx, JsonObject config, Handler<PgClientBenchmark> onComplete) {
+    PgConnectOptions options = new PgConnectOptions()
+        .setCachePreparedStatements(true)
+        .setHost(config.getString("host"))
+        .setPort(config.getInteger("port", 5432))
+        .setUser(config.getString("username"))
+        .setPassword(config.getString("password"))
+        .setDatabase(config.getString("database"))
+        .setPipeliningLimit(100_000); // Large pipelining means less flushing and we use a single connection anyway;
+
+    PgConnection.connect(vertx, options).onComplete(ar ->
+      onComplete.handle(new PgClientBenchmark(ar.result(), RockerTemplateEngine.create()))
+    );
+  }
+
   /**
    * PgClient implementation
    */
@@ -38,23 +54,14 @@ public class App extends AbstractVerticle {
     private static final String SELECT_WORLD = "SELECT id, randomnumber from WORLD where id=$1";
     private static final String SELECT_FORTUNE = "SELECT id, message from FORTUNE";
 
-    private final PgPool client;
+    private final PgConnection client;
 
     // In order to use a template we first need to create an engine
     private final RockerTemplateEngine engine;
 
-    public PgClientBenchmark(Vertx vertx, JsonObject config) {
-      PgConnectOptions options = new PgConnectOptions()
-        .setCachePreparedStatements(true)
-        .setHost(config.getString("host"))
-        .setPort(config.getInteger("port", 5432))
-        .setUser(config.getString("username"))
-        .setPassword(config.getString("password"))
-        .setDatabase(config.getString("database"))
-        .setPipeliningLimit(100_000); // Large pipelining means less flushing and we use a single connection anyway;
-
-      client = PgPool.pool(vertx, options, new PoolOptions().setMaxSize(4));
-      this.engine = RockerTemplateEngine.create();
+    private PgClientBenchmark(PgConnection client, RockerTemplateEngine engine) {
+      this.client = client;
+      this.engine = engine;
     }
 
     public void dbHandler(final RoutingContext ctx) {
@@ -206,72 +213,73 @@ public class App extends AbstractVerticle {
   private String date;
 
   @Override
-  public void start() {
+  public void start(Promise<Void> startPromise) {
     final Router app = Router.router(vertx);
     // initialize the date header
     date = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now());
     // refresh the value as a periodic task
     vertx.setPeriodic(1000, handler -> date = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now()));
 
-    final PgClientBenchmark pgClientBenchmark= new PgClientBenchmark(vertx, config());
+    createPgClientBenchmarkAsync(vertx, config(), pgClientBenchmark -> {
+      /*
+       * This test exercises the framework fundamentals including keep-alive support, request routing, request header
+       * parsing, object instantiation, JSON serialization, response header generation, and request count throughput.
+       */
+      app.get("/json").handler(ctx -> {
+        ctx.response()
+            .putHeader(HttpHeaders.SERVER, SERVER)
+            .putHeader(HttpHeaders.DATE, date)
+            .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+            .end(Json.encodeToBuffer(new Message("Hello, World!")));
+      });
 
-    /*
-     * This test exercises the framework fundamentals including keep-alive support, request routing, request header
-     * parsing, object instantiation, JSON serialization, response header generation, and request count throughput.
-     */
-    app.get("/json").handler(ctx -> {
-      ctx.response()
-          .putHeader(HttpHeaders.SERVER, SERVER)
-          .putHeader(HttpHeaders.DATE, date)
-          .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-          .end(Json.encodeToBuffer(new Message("Hello, World!")));
-    });
+      /*
+       * This test exercises the framework's object-relational mapper (ORM), random number generator, database driver,
+       * and database connection pool.
+       */
+      app.get("/db").handler(pgClientBenchmark::dbHandler);
 
-    /*
-     * This test exercises the framework's object-relational mapper (ORM), random number generator, database driver,
-     * and database connection pool.
-     */
-    app.get("/db").handler(pgClientBenchmark::dbHandler);
+      /*
+       * This test is a variation of Test #2 and also uses the World table. Multiple rows are fetched to more dramatically
+       * punish the database driver and connection pool. At the highest queries-per-request tested (20), this test
+       * demonstrates all frameworks' convergence toward zero requests-per-second as database activity increases.
+       */
+      app.get("/queries").handler(pgClientBenchmark::queriesHandler);
 
-    /*
-     * This test is a variation of Test #2 and also uses the World table. Multiple rows are fetched to more dramatically
-     * punish the database driver and connection pool. At the highest queries-per-request tested (20), this test
-     * demonstrates all frameworks' convergence toward zero requests-per-second as database activity increases.
-     */
-    app.get("/queries").handler(pgClientBenchmark::queriesHandler);
+      /*
+       * This test exercises the ORM, database connectivity, dynamic-size collections, sorting, server-side templates,
+       * XSS countermeasures, and character encoding.
+       */
+      app.get("/fortunes").handler(pgClientBenchmark::fortunesHandler);
 
-    /*
-     * This test exercises the ORM, database connectivity, dynamic-size collections, sorting, server-side templates,
-     * XSS countermeasures, and character encoding.
-     */
-    app.get("/fortunes").handler(pgClientBenchmark::fortunesHandler);
+      /*
+       * This test is a variation of Test #3 that exercises the ORM's persistence of objects and the database driver's
+       * performance at running UPDATE statements or similar. The spirit of this test is to exercise a variable number of
+       * read-then-write style database operations.
+       */
+      app.route("/update").handler(pgClientBenchmark::updateHandler);
 
-    /*
-     * This test is a variation of Test #3 that exercises the ORM's persistence of objects and the database driver's
-     * performance at running UPDATE statements or similar. The spirit of this test is to exercise a variable number of
-     * read-then-write style database operations.
-     */
-    app.route("/update").handler(pgClientBenchmark::updateHandler);
+      /*
+       * This test is an exercise of the request-routing fundamentals only, designed to demonstrate the capacity of
+       * high-performance platforms in particular. Requests will be sent using HTTP pipelining. The response payload is
+       * still small, meaning good performance is still necessary in order to saturate the gigabit Ethernet of the test
+       * environment.
+       */
+      app.get("/plaintext").handler(ctx -> {
+        ctx.response()
+            .putHeader(HttpHeaders.SERVER, SERVER)
+            .putHeader(HttpHeaders.DATE, date)
+            .putHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
+            .end("Hello, World!");
+      });
 
-    /*
-     * This test is an exercise of the request-routing fundamentals only, designed to demonstrate the capacity of
-     * high-performance platforms in particular. Requests will be sent using HTTP pipelining. The response payload is
-     * still small, meaning good performance is still necessary in order to saturate the gigabit Ethernet of the test
-     * environment.
-     */
-    app.get("/plaintext").handler(ctx -> {
-      ctx.response()
-          .putHeader(HttpHeaders.SERVER, SERVER)
-          .putHeader(HttpHeaders.DATE, date)
-          .putHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
-          .end("Hello, World!");
-    });
-
-    vertx.createHttpServer().requestHandler(app).listen(8080, listen -> {
-      if (listen.failed()) {
-        listen.cause().printStackTrace();
-        System.exit(1);
-      }
+      vertx.createHttpServer().requestHandler(app).listen(8080, listen -> {
+        if (listen.failed()) {
+          listen.cause().printStackTrace();
+          System.exit(1);
+        }
+        startPromise.complete();
+      });
     });
   }
 }

@@ -23,7 +23,8 @@
                 "database_os": "Linux",
                 "display_name": "Sw-Fw-Less",
                 "notes": "",
-                "versus": "swoole"
+                "versus": "swoole",
+                "tags": ["broken"]
             }
         }
     ]

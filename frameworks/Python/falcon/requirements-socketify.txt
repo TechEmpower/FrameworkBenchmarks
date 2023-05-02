@@ -1,3 +1,2 @@
-Cython==0.29.26
-falcon==3.0.1
+-r requirements.txt
 git+https://github.com/cirospaciari/socketify.py.git@main#socketify

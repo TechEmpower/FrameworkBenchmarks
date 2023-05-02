@@ -1,30 +1,34 @@
+use std::time::Duration;
+
+use axum::{
+    extract::Query,
+    http::{header, HeaderValue, StatusCode},
+    response::IntoResponse,
+    routing::get,
+    Json, Router,
+};
+use dotenv::dotenv;
+use mongodb::{
+    options::{ClientOptions, Compressor},
+    Client,
+};
+use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
+use tower_http::set_header::SetResponseHeaderLayer;
+use yarte::Template;
+
 mod database_mongo;
 mod models_common;
 mod models_mongo;
 mod server;
 mod utils;
 
-use axum::http::{header, HeaderValue};
-use axum::{
-    extract::Query, http::StatusCode, response::IntoResponse, routing::get, Extension,
-    Json, Router,
+use self::{
+    database_mongo::{
+        fetch_fortunes, find_world_by_id, find_worlds, update_worlds, DatabaseConnection,
+    },
+    models_mongo::{Fortune, FortuneInfo, World},
+    utils::{get_environment_variable, parse_params, Params, Utf8Html},
 };
-use dotenv::dotenv;
-use mongodb::options::{ClientOptions, Compressor};
-use mongodb::Client;
-use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
-use std::time::Duration;
-use tower_http::set_header::SetResponseHeaderLayer;
-use yarte::Template;
-
-use crate::database_mongo::{
-    fetch_fortunes, find_world_by_id, find_worlds, update_worlds,
-};
-use crate::utils::get_environment_variable;
-use database_mongo::DatabaseConnection;
-use models_mongo::FortuneInfo;
-use models_mongo::{Fortune, World};
-use utils::{parse_params, Params, Utf8Html};
 
 #[derive(Template)]
 #[template(path = "fortunes.html.hbs")]
@@ -105,7 +109,7 @@ async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoRespon
     let fortune_infos: Vec<FortuneInfo> = fortunes
         .iter()
         .map(|f| FortuneInfo {
-            id: f.id as i32,
+            id: f.id,
             message: f.message.clone(),
         })
         .collect();
@@ -171,7 +175,7 @@ async fn serve() {
         .route("/db", get(db))
         .route("/queries", get(queries))
         .route("/updates", get(updates))
-        .layer(Extension(database))
+        .with_state(database)
         .layer(SetResponseHeaderLayer::if_not_present(
             header::SERVER,
             server_header_value,

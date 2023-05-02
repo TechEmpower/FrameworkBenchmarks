@@ -1,6 +1,4 @@
-.DS_Store
 installs
-*.log
 node_modules/
 .travis.bak
 
@@ -59,9 +57,13 @@ benchmark.cfg
 
 # Visual Studio Code
 .vscode
+.history
 
 # vim
 .*.sw[a-p]
 
 # merge tooling
 *.orig
+
+# python
+.venv/

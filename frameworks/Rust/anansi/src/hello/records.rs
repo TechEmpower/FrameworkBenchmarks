@@ -15,7 +15,7 @@ pub struct World {
 
 #[async_trait]
 impl<R: BaseRequest> Relate<R> for World {
-    async fn on_save(&self, _req: &R) -> Result<()> {
+    async fn on_save(&self, _req: &mut R) -> Result<()> {
         unimplemented!();
     }
     async fn on_delete(&self, _req: &R) -> Result<()> {
@@ -30,6 +30,7 @@ pub struct Fortune {
     pub message: Text,
 }
 
+#[cfg(not(feature = "raw"))]
 impl Fortune {
     pub fn additional() -> Self {
         Self {id: Int::new(0), message: Text::from("Additional fortune added at request time.".to_string())}
@@ -38,7 +39,7 @@ impl Fortune {
 
 #[async_trait]
 impl<R: BaseRequest> Relate<R> for Fortune {
-    async fn on_save(&self, _req: &R) -> Result<()> {
+    async fn on_save(&self, _req: &mut R) -> Result<()> {
         unimplemented!();
     }
     async fn on_delete(&self, _req: &R) -> Result<()> {

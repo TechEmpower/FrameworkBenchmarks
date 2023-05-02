@@ -1,4 +1,4 @@
-FROM dart:2.18.1
+FROM dart:2.19.6
 
 COPY ./orm/config /app/config
 COPY ./orm/lib /app/lib

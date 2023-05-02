@@ -3,7 +3,6 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::fmt::Write;
 use std::io;
-use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
 use bytes::BytesMut;
@@ -44,7 +43,6 @@ pub struct Fortune<'a> {
 }
 
 struct PgConnectionPool {
-    idx: AtomicUsize,
     clients: Vec<PgConnection>,
 }
 
@@ -53,18 +51,14 @@ impl PgConnectionPool {
         let clients = (0..size)
             .map(|_| std::thread::spawn(move || PgConnection::new(db_url)))
             .collect::<Vec<_>>();
-        let clients = clients.into_iter().map(|t| t.join().unwrap()).collect();
-
-        PgConnectionPool {
-            idx: AtomicUsize::new(0),
-            clients,
-        }
+        let mut clients: Vec<_> = clients.into_iter().map(|t| t.join().unwrap()).collect();
+        clients.sort_by(|a, b| (a.client.id() % size).cmp(&(b.client.id() % size)));
+        PgConnectionPool { clients }
     }
 
-    fn get_connection(&self) -> PgConnection {
-        let idx = self.idx.fetch_add(1, Ordering::Relaxed);
+    fn get_connection(&self, id: usize) -> PgConnection {
         let len = self.clients.len();
-        let connection = &self.clients[idx % len];
+        let connection = &self.clients[id % len];
         PgConnection {
             client: connection.client.clone(),
             statement: connection.statement.clone(),
@@ -86,11 +80,9 @@ struct PgConnection {
 impl PgConnection {
     fn new(db_url: &str) -> Self {
         let client = may_postgres::connect(db_url).unwrap();
-        let world = client
-            .prepare("SELECT id, randomnumber FROM world WHERE id=$1")
-            .unwrap();
 
-        let fortune = client.prepare("SELECT id, message FROM fortune").unwrap();
+        let world = client.prepare("SELECT * FROM world WHERE id=$1").unwrap();
+        let fortune = client.prepare("SELECT * FROM fortune").unwrap();
 
         let mut updates = Vec::new();
         for num in 1..=500u16 {
@@ -123,7 +115,7 @@ impl PgConnection {
     fn get_world(&self, random_id: i32) -> Result<WorldRow, may_postgres::Error> {
         let mut q = self
             .client
-            .query_raw(&self.statement.world, [&random_id as _])?;
+            .query_raw(&self.statement.world, &[&random_id])?;
         match q.next().transpose()? {
             Some(row) => Ok(WorldRow {
                 id: row.get(0),
@@ -143,7 +135,7 @@ impl PgConnection {
             let random_id = (rand.generate::<u32>() % 10_000 + 1) as i32;
             queries.push(
                 self.client
-                    .query_raw(&self.statement.world, [&random_id as _])?,
+                    .query_raw(&self.statement.world, &[&random_id])?,
             );
         }
 
@@ -170,7 +162,7 @@ impl PgConnection {
             let random_id = (rand.generate::<u32>() % 10_000 + 1) as i32;
             queries.push(
                 self.client
-                    .query_raw(&self.statement.world, [&random_id as _])?,
+                    .query_raw(&self.statement.world, &[&random_id])?,
             );
         }
 
@@ -195,13 +187,15 @@ impl PgConnection {
             params.push(&w.id);
         }
 
-        self.client
-            .query_raw(&self.statement.updates[num - 1], params)?;
+        // use `query_one` to sync wait result
+        let _ = self
+            .client
+            .query_one(&self.statement.updates[num - 1], &params);
         Ok(worlds)
     }
 
     fn tell_fortune(&self, buf: &mut BytesMut) -> Result<(), may_postgres::Error> {
-        let rows = self.client.query_raw(&self.statement.fortune, [])?;
+        let rows = self.client.query_raw(&self.statement.fortune, &[])?;
 
         let all_rows = Vec::from_iter(rows.map(|r| r.unwrap()));
         let mut fortunes = Vec::with_capacity(all_rows.capacity() + 1);
@@ -264,7 +258,7 @@ impl HttpService for Techempower {
                 worlds.to_bytes_mut(rsp.body_mut());
             }
             _ => {
-                rsp.status_code("404", "Not Found");
+                rsp.status_code(404, "Not Found");
             }
         }
 
@@ -279,8 +273,8 @@ struct HttpServer {
 impl HttpServiceFactory for HttpServer {
     type Service = Techempower;
 
-    fn new_service(&self) -> Self::Service {
-        let db = self.db_pool.get_connection();
+    fn new_service(&self, id: usize) -> Self::Service {
+        let db = self.db_pool.get_connection(id);
         let rng = WyRand::new();
         Techempower { db, rng }
     }

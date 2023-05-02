@@ -1,4 +1,4 @@
-falcon==3.0.1
+falcon==3.1.1
 gunicorn==20.1.0
 jinja2==3.0.3
 pony==0.7.16

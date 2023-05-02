@@ -44,7 +44,7 @@ public ref struct BufferWriter<T> where T : IBufferWriter<byte>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Write(ReadOnlySpan<byte> source)
+    public void Write(scoped ReadOnlySpan<byte> source)
     {
         if (_span.Length >= source.Length)
         {
@@ -77,7 +77,7 @@ public ref struct BufferWriter<T> where T : IBufferWriter<byte>
         _span = _output.GetSpan(count);
     }
 
-    private void WriteMultiBuffer(ReadOnlySpan<byte> source)
+    private void WriteMultiBuffer(scoped ReadOnlySpan<byte> source)
     {
         while (source.Length > 0)
         {
