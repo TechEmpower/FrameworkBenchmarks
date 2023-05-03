@@ -18,6 +18,7 @@ ADD ./ /mark
 WORKDIR /mark
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+RUN sed -i "s|opcache.jit=off|opcache.jit=tracing|g" /etc/php/8.2/cli/conf.d/10-opcache.ini
 
 EXPOSE 8080
 
