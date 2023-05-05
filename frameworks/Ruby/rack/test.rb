@@ -12,10 +12,12 @@ class TestApp < Test::Unit::TestCase
   def app
     HelloWorld.new
   end
-
+  def test_db
+   app.test_database
+  end
   def test_json
     get "/json"
-    pp last_response
+
     assert last_response.ok?
     assert last_response.headers["content-type"] == "application/json"
   end

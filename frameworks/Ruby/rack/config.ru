@@ -1,6 +1,12 @@
 #Bundler.require :default
 require_relative "hello_world.rb"
 
+if defined?(Falcon)
+  puts "Falcon defined"
+else
+  puts "not falcon"
+end
+
 run HelloWorld.new
 #require "erb"
 #require "yaml"

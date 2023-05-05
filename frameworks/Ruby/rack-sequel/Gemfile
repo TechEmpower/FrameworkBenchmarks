@@ -1,20 +1,21 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-gem 'json', '~> 2.0'
-gem 'passenger', '~> 5.1', :platforms=>[:ruby, :mswin], :require=>false
-gem 'puma', '~> 3.9', :require=>false
-gem 'sequel', '~> 5.0'
-gem 'rack', '2.0.8'
-gem 'torquebox-web', '>= 4.0.0.beta3', '< 5', :platforms=>:jruby, :require=>false
-gem 'unicorn', '~> 5.2', :platforms=>[:ruby, :mswin], :require=>false
+#gem 'json', '~> 2.0'
+gem "oj", "~> 3.14"
+gem "passenger", "~> 5.1", platforms: %i[ruby mswin], require: false
+gem "puma", "~> 3.9", require: false
+gem "sequel", "~> 5.0"
+gem "rack", "2.0.8"
+gem "torquebox-web", ">= 4.0.0.beta3", "< 5", platforms: :jruby, require: false
+gem "unicorn", "~> 5.2", platforms: %i[ruby mswin], require: false
 
 group :mysql do
-  gem 'jdbc-mysql', '~> 5.1', :platforms=>:jruby, :require=>'jdbc/mysql'
-  gem 'mysql2', '~> 0.4', :platforms=>[:ruby, :mswin]
+  gem "jdbc-mysql", "~> 5.1", platforms: :jruby, require: "jdbc/mysql"
+  gem "mysql2", "~> 0.4", platforms: %i[ruby mswin]
 end
 
 group :postgresql do
-  gem 'jdbc-postgres', '~> 9.4', :platforms=>:jruby, :require=>'jdbc/postgres'
-  gem 'pg', '~> 0.19', :platforms=>[:ruby, :mswin]
-  gem 'sequel_pg', '~> 1.6', :platforms=>:ruby, :require=>false
+  gem "jdbc-postgres", "~> 9.4", platforms: :jruby, require: "jdbc/postgres"
+  gem "pg", "~> 1.4", platforms: %i[ruby mswin]
+  gem "sequel_pg", "~> 1.6", platforms: :ruby, require: false
 end

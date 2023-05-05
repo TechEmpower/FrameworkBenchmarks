@@ -71,6 +71,7 @@ GEM
     samovar (2.1.4)
       console (~> 1.0)
       mapping (~> 1.0)
+    sequel (5.68.0)
     timers (4.3.5)
     traces (0.9.1)
     tzinfo (2.0.6)
@@ -82,20 +83,20 @@ GEM
       raindrops (~> 0.7)
 
 PLATFORMS
+  x86_64-darwin-20
   x86_64-linux
 
 DEPENDENCIES
   connection_pool (~> 2.4)
   falcon (~> 0.42)
+  jdbc-postgres (~> 42.2)
   oj (~> 3.14)
   pg (~> 1.4)
   puma (~> 6.2)
   rack-test
+  sequel
   tzinfo-data (= 1.2023.3)
   unicorn (~> 6.1)
-
-RUBY VERSION
-   ruby 3.2.2p53
 
 BUNDLED WITH
    2.4.10

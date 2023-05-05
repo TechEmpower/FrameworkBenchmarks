@@ -2,6 +2,11 @@
 
 # Our Rack application to be executed by rackup
 require "oj"
+
+require_relative 'pg_db'
+
+
+
 class HelloWorld
   QUERY_RANGE = 1..10_000 # range of IDs in the Fortune DB
   ALL_IDS = QUERY_RANGE.to_a # enumeration of all the IDs in fortune DB
@@ -11,10 +16,27 @@ class HelloWorld
   JSON_TYPE = "application/json"
   HTML_TYPE = "text/html; charset=utf-8"
   PLAINTEXT_TYPE = "text/plain"
-  SERVER_STRING = "Ruby Rack"
+  #SERVER_STRING = "Ruby Rack"
   DATE = "Date"
   SERVER = "Server"
+  SERVER_STRING = if defined?(PhusionPassenger)
+    "Passenger"
+  elsif defined?(Puma)
+    Puma::Const::PUMA_SERVER_STRING
+  elsif defined?(Unicorn)
+   "Unicorn"
+  elsif defined?(Falcon)
+    "Falcon"
+  end
 
+def initialize
+  @db=PgDb.new
+end
+def test_database
+  pp @db.get_one_record
+  pp @db.update_one_record
+  pp @db.get_fortunes
+end
   def respond(content_type, body = "")
     [
       200,
