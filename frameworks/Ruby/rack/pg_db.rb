@@ -13,16 +13,15 @@ class PgDb
   MAX_QUERIES = 500 # max number of records that can be retrieved
 
 
-  def initialize()
+  def initialize(connection_string=nil)
     default_connection_string =
       if RUBY_PLATFORM == "java"
         "jdbc:postgresql://fb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass"
       else
-        "postgresql://postgres/fb-database?user=benchmarkdbuser&password=benchmarkdbpass"
+        "postgresql://fb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass"
       end
-      connection_string=
-
-    @db = Sequel.connect(ENV["CONNECTION_STRING"] || default_connection_string)
+    url=connection_string || ENV["DATABASE_URL"] || default_connection_string
+    @db = Sequel.connect(url)
     prepare_statements
   end
 

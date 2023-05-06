@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require "test/unit"
 require "rack"
 require "rack/test"
@@ -12,9 +13,9 @@ class TestApp < Test::Unit::TestCase
   def app
     HelloWorld.new
   end
-  def test_db
-   app.test_database
-  end
+  # def test_db
+  #  app.test_database
+  # end
   def test_json
     get "/json"
 
@@ -25,5 +26,10 @@ class TestApp < Test::Unit::TestCase
     get "/plaintext"
     assert last_response.ok?
     assert last_response.headers["content-type"] == "text/plain"
+  end
+  def test_fortunes
+    get "/fortunes"
+    assert last_response.ok?
+    assert last_response.headers["content-type"] == "text/html; charset=utf-8"
   end
 end

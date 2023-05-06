@@ -28,9 +28,24 @@ class HelloWorld
   elsif defined?(Falcon)
     "Falcon"
   end
+  TEMPLATE_PREFIX='<!DOCTYPE html>
+<html>
+<head>
+  <title>Fortune</title>
+</head>
+<body>
+  <table>
+    <tr>
+      <th>id</th>
+      <th>message</th>
+    </tr>'
+    TEMPLATE_POSTFIX='</table>
+    </body
+  </html>'
+
 
 def initialize
-  @db=PgDb.new
+  @db=PgDb.new()
 end
 def test_database
   pp @db.get_one_record
@@ -49,6 +64,89 @@ end
       [body]
     ]
   end
+  def fortunes
+    fortunes = @db.get_fortunes
+    fortunes << {id: 0 , message: "Additional fortune added at request time."}
+    fortunes.sort_by!{|item| item[:message]}
+    buffer = String.new
+     buffer << TEMPLATE_PREFIX
+
+    fortunes.each do |item|
+      buffer <<  "<tr><td> #{item[:id]} </td> <td>#{Rack::Utils.escape_html(item[:message])}</td></tr>"
+    end
+    buffer << TEMPLATE_POSTFIX
+  end
+
+  def call(env)
+    case env["PATH_INFO"]
+    when "/json"
+      # Test type 1: JSON serialization
+      respond JSON_TYPE,
+              Oj.dump({ message: "Hello, World!" }, { mode: :strict })
+    when "/db"
+      # Test type 2: Single database query
+      ["application/json", JSON.fast_generate(db)]
+    when "/queries"
+      # Test type 3: Multiple database queries
+      ["application/json", JSON.fast_generate(queries(env))]
+    when "/fortunes"
+      # Test type 4: Fortunes
+      respond HTML_TYPE, fortunes
+    when "/updates"
+      # Test type 5: Database updates
+      ["application/json", JSON.fast_generate(updates(env))]
+    when "/plaintext"
+      # Test type 6: Plaintext
+      respond PLAINTEXT_TYPE, "Hello, World!"
+    end
+  end
+
+end
+
+
+ #   fortunes << Fortune.new(
+    #     id: 0,
+    #     message: "Additional fortune added at request time."
+    #   )
+    #   fortunes.sort_by!(&:message)
+    #   html = String.new(<<~'HTML')
+    #     <!DOCTYPE html>
+    #     <html>
+    #     <head>
+    #       <title>Fortunes</title>
+    #     </head>
+    #     <body>
+    #     <table>
+    #     <tr>
+    #       <th>id</th>
+    #       <th>message</th>
+    #     </tr>
+    #   HTML
+    #   fortunes.each { |fortune| html << <<~"HTML" }
+    #     <tr>
+    #       <td>#{fortune.id}</td>
+    #       <td>#{Rack::Utils.escape_html(fortune.message)}</td>
+    #     </tr>
+    #     HTML
+    #   html << <<~'HTML'
+    #     </table>
+    #     </body>
+    #     </html>
+    #   HTML
+    # end
+    # def updates(env)
+    #   DB.synchronize do
+    #     Array.new(bounded_queries(env)) do
+    #       world = WORLD_BY_ID.(id: rand1)
+    #       WORLD_UPDATE.(
+    #         id: world[:id],
+    #         randomnumber: (world[:randomnumber] = rand1)
+    #       )
+    #       world
+    #     end
+    #   end
+    # end
+
   #   def html_response(str = "")
   #     [
   #       200,
@@ -156,35 +254,3 @@ end
   #     end
   #   end
   # end
-  def call(env)
-    case env["PATH_INFO"]
-    when "/json"
-      # Test type 1: JSON serialization
-      respond JSON_TYPE,
-              Oj.dump({ message: "Hello, World!" }, { mode: :strict })
-    when "/db"
-      # Test type 2: Single database query
-      ["application/json", JSON.fast_generate(db)]
-    when "/queries"
-      # Test type 3: Multiple database queries
-      ["application/json", JSON.fast_generate(queries(env))]
-    when "/fortunes"
-      # Test type 4: Fortunes
-      ["text/html; charset=utf-8", fortunes]
-    when "/updates"
-      # Test type 5: Database updates
-      ["application/json", JSON.fast_generate(updates(env))]
-    when "/plaintext"
-      # Test type 6: Plaintext
-      respond PLAINTEXT_TYPE, "Hello, World!"
-    end
-  end
-  # [
-  #   200,
-  #   DEFAULT_HEADERS.merge(
-  #     CONTENT_TYPE => content_type,
-  #     "Date" => Time.now.httpdate
-  #   ),
-  #   body
-  # ]
-end
