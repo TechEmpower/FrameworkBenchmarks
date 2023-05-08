@@ -1,4 +1,4 @@
-FROM debian:stretch-slim AS debian
+FROM debian:bullseye-slim AS debian
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TERM=linux
