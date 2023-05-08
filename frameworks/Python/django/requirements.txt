@@ -1,8 +1,6 @@
-Django==4.1.7
-greenlet==0.4.17
-gunicorn==20.0.4
-meinheld==1.0.2
+Django==3.2.18
 mysqlclient==1.4.6
-psycopg2==2.8.6
+psycopg2==2.9.6; implementation_name=='cpython'
+psycopg2cffi==2.9.0; implementation_name=='pypy'
 pytz==2020.4
 ujson==5.4.0

@@ -1,23 +1,25 @@
-mod database_pg;
-mod models_common;
-mod models_pg;
-mod server;
-mod utils;
-
-use axum::http::{header, HeaderValue};
 use axum::{
-    extract::Query, http::StatusCode, response::IntoResponse, routing::get, Extension,
+    extract::Query,
+    http::{header, HeaderValue, StatusCode},
+    response::IntoResponse,
+    routing::get,
     Json, Router,
 };
 use dotenv::dotenv;
 use tower_http::set_header::SetResponseHeaderLayer;
 use yarte::Template;
 
-use crate::database_pg::{DatabaseConnection, PgConnection};
-use models_pg::Fortune;
-use utils::{parse_params, Params};
+mod database_pg;
+mod models_common;
+mod models_pg;
+mod server;
+mod utils;
 
-use crate::utils::{get_environment_variable, Utf8Html};
+use self::{
+    database_pg::{DatabaseConnection, PgConnection},
+    models_pg::Fortune,
+    utils::{get_environment_variable, parse_params, Params, Utf8Html},
+};
 
 #[derive(Template)]
 #[template(path = "fortunes.html.hbs")]
@@ -101,7 +103,7 @@ async fn serve() {
         .route("/db", get(db))
         .route("/queries", get(queries))
         .route("/updates", get(updates))
-        .layer(Extension(pg_connection.clone()))
+        .with_state(pg_connection)
         .layer(SetResponseHeaderLayer::if_not_present(
             header::SERVER,
             server_header_value,

@@ -22,7 +22,7 @@
         "webserver": "hyper",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Anansi",
+        "display_name": "Anansi [minimal]",
         "notes": "",
         "versus": "None"
       },
@@ -31,6 +31,7 @@
         "fortune_url": "/fortunes",
         "query_url": "/queries?q=",
         "update_url": "/updates?q=",
+        "cached_query_url": "/cached-queries?q=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
@@ -43,7 +44,7 @@
         "webserver": "hyper",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Anansi [raw]",
+        "display_name": "Anansi [minimal, raw]",
         "notes": "",
         "versus": "None"
       }

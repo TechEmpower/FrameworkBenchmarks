@@ -1,34 +1,22 @@
-use axum::async_trait;
-use axum::extract::{Extension, FromRequestParts};
-use axum::http::request::Parts;
-use axum::http::StatusCode;
-use futures_util::stream::FuturesUnordered;
-use futures_util::TryStreamExt;
-use std::io;
+use std::{convert::Infallible, io};
 
-use crate::utils::internal_error;
+use axum::{async_trait, extract::FromRequestParts, http::request::Parts};
+use futures_util::{stream::FuturesUnordered, StreamExt, TryStreamExt};
+use mongodb::{bson::doc, Database};
+
 use crate::{Fortune, World};
-use futures_util::StreamExt;
-use mongodb::bson::doc;
-use mongodb::Database;
 
 pub struct DatabaseConnection(pub Database);
 
 #[async_trait]
-impl<S> FromRequestParts<S> for DatabaseConnection
-where
-    S: Send + Sync,
-{
-    type Rejection = (StatusCode, String);
-    async fn from_request_parts(
-        parts: &mut Parts,
-        state: &S,
-    ) -> Result<Self, Self::Rejection> {
-        let Extension(db) = Extension::<Database>::from_request_parts(parts, state)
-            .await
-            .map_err(internal_error)?;
+impl FromRequestParts<Database> for DatabaseConnection {
+    type Rejection = Infallible;
 
-        Ok(Self(db))
+    async fn from_request_parts(
+        _parts: &mut Parts,
+        db: &Database,
+    ) -> Result<Self, Self::Rejection> {
+        Ok(Self(db.clone()))
     }
 }
 

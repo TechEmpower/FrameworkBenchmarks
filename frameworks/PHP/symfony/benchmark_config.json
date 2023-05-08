@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "symfony",
       "notes": "",
-      "versus": "php"
+      "versus": "php",
+      "tags": ["broken"]
     },
     "raw": {
       "db_url": "/raw/db",
@@ -42,7 +43,8 @@
       "database_os": "Linux",
       "display_name": "symfony-raw",
       "notes": "",
-      "versus": "php"
+      "versus": "php",
+      "tags": ["broken"]
     },
     "swoole": {
       "plaintext_url": "/plaintext",
@@ -65,7 +67,8 @@
       "database_os": "Linux",
       "display_name": "symfony-swoole",
       "notes": "",
-      "versus": "swoole"
+      "versus": "swoole",
+      "tags": ["broken"]
     },
     "workerman": {
       "plaintext_url": "/plaintext",
@@ -88,7 +91,8 @@
       "database_os": "Linux",
       "display_name": "symfony-workerman",
       "notes": "",
-      "versus": "php"
+      "versus": "php",
+      "tags": ["broken"]
     },
     "franken": {
       "plaintext_url": "/plaintext",
@@ -111,7 +115,8 @@
       "database_os": "Linux",
       "display_name": "symfony-frankenphp",
       "notes": "Use php 8.2",
-      "versus": "php"
+      "versus": "php",
+      "tags": ["broken"]
     }
   }]
 }

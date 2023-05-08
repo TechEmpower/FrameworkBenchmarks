@@ -1,6 +1,7 @@
 import logging
 import multiprocessing
 import os
+from contextlib import asynccontextmanager
 from operator import attrgetter
 from random import randint, sample
 
@@ -42,6 +43,7 @@ sa_fortunes = Fortune.__table__
 ADDITIONAL_FORTUNE = Fortune(
     id=0, message="Additional fortune added at request time."
 )
+MAX_POOL_SIZE = 1000//multiprocessing.cpu_count()
 
 sort_fortunes_key = attrgetter("message")
 
@@ -49,8 +51,6 @@ template_path = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), "templates"
 )
 templates = Jinja2Templates(directory=template_path)
-
-app = FastAPI()
 
 
 async def setup_database():
@@ -62,11 +62,24 @@ async def setup_database():
     engine = create_async_engine(
         dsn,
         future=True,
+        pool_size=MAX_POOL_SIZE,
         connect_args={
             "ssl": False  # NEEDED FOR NGINX-UNIT OTHERWISE IT FAILS
         },
     )
     return sessionmaker(engine, class_=AsyncSession)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Setup the database connection pool
+    app.state.db_session = await setup_database()
+    yield
+    # Close the database connection pool
+    await app.state.db_session.close()
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 def get_num_queries(queries):
@@ -80,16 +93,6 @@ def get_num_queries(queries):
     if query_count > 500:
         return 500
     return query_count
-
-
-@app.on_event("startup")
-async def startup_event():
-    app.state.db_session = await setup_database()
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    await app.state.db_session.close()
 
 
 @app.get("/json")

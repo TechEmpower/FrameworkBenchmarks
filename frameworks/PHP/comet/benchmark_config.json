@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "comet",
       "notes": "",
-      "versus": "workerman"
+      "versus": "workerman",
+      "tags": ["broken"]
     },
     "mysql": {
       "db_url": "/db",
@@ -43,7 +44,8 @@
       "database_os": "Linux",
       "display_name": "comet-mysql",
       "notes": "",
-      "versus": "workerman"
+      "versus": "workerman",
+      "tags": ["broken"]
     }
   }]
 }

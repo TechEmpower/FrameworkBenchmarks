@@ -21,7 +21,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Angel3",
+        "display_name": "Angel3_postgresql",
         "notes": "",
         "versus": "None"
       },
@@ -43,7 +43,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Angel3",
+        "display_name": "Angel3_mysql",
         "notes": "",
         "versus": "None"
       }
