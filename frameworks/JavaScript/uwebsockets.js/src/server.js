@@ -1,17 +1,10 @@
-import mysql from "mysql2/promise";
 import uWebSockets from "uWebSockets.js";
 import { addBenchmarkHeaders, handleError } from "./utils.js";
 
+const { DATABASE } = process.env;
+const db = import(`./database/${DATABASE}.js`);
+
 const webserver = uWebSockets.App();
-const mysqlPool = mysql.createPool({
-  host: "tfb-database",
-  user: "benchmarkdbuser",
-  password: "benchmarkdbpass",
-  database: "hello_world",
-  waitForConnections: true,
-  connectionLimit: 512,
-  queueLimit: 0,
-});
 
 webserver.get("/plaintext", (response) => {
   addBenchmarkHeaders(response);
@@ -32,10 +25,7 @@ webserver.get("/db", async (response) => {
 
   try {
     const random = Math.floor(Math.random() * 9999) + 1;
-    const [rows] = await mysqlPool.execute(
-      "SELECT * FROM world WHERE id = ? LIMIT 1",
-      [random]
-    );
+    const [rows] = await db.findOne(random);
 
     if (response.aborted) {
       return;
@@ -82,7 +72,7 @@ webserver.get("/queries", async (response, request) => {
     for (let i = 0; i < queriesCount; i++) {
       const random = Math.floor(Math.random() * 9999) + 1;
       databaseJobs.push(
-        mysqlPool.execute("SELECT * FROM world WHERE id = ? LIMIT 1", [random])
+        db.findOne("SELECT * FROM world WHERE id = ? LIMIT 1", [random])
       );
     }
 

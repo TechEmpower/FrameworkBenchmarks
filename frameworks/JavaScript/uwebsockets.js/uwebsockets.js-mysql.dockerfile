@@ -5,6 +5,7 @@ COPY ./ ./
 RUN npm install
 
 ENV NODE_ENV production
+ENV DATABASE mysql
 
 EXPOSE 8080
 
