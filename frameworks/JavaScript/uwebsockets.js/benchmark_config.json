@@ -1,0 +1,28 @@
+{
+  "framework": "uwebsockets.js",
+  "tests": [
+    {
+      "default": {
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "mysql",
+        "database_os": "Linux",
+        "db_url": "/db",
+        "display_name": "uWebSockets.js",
+        "flavor": "None",
+        "framework": "uWebSockets.js",
+        "json_url": "/json",
+        "language": "JavaScript",
+        "notes": "",
+        "orm": "Raw",
+        "os": "Linux",
+        "plaintext_url": "/plaintext",
+        "platform": "None",
+        "port": 8080,
+        "query_url": "/queries?queries=",
+        "versus": "None",
+        "webserver": "None"
+      }
+    }
+  ]
+}
