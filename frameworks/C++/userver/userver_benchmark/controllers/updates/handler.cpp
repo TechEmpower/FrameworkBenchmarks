@@ -43,27 +43,38 @@ userver::formats::json::Value Handler::HandleRequestJsonThrow(
 }
 
 userver::formats::json::Value Handler::GetResponse(int queries) const {
-  std::vector<int> random_ids(queries);
-  std::generate(random_ids.begin(), random_ids.end(),
-                db_helpers::GenerateRandomId);
-  std::sort(random_ids.begin(), random_ids.end());
+  // userver's PG doesn't accept boost::small_vector as an input, sadly
+  std::vector<db_helpers::WorldTableRow> values(queries);
+  for (auto& value : values) {
+    value.id = db_helpers::GenerateRandomId();
+  }
+  // we have to sort ids to not deadlock in update
+  std::sort(values.begin(), values.end(),
+            [](const auto& lhs, const auto& rhs) { return lhs.id < rhs.id; });
 
-  boost::container::small_vector<db_helpers::WorldTableRow, 500> result{};
-  for (auto id : random_ids) {
-    result.push_back(pg_->Execute(db_helpers::kClusterHostType,
-                                  db_helpers::kSelectRowQuery, id)
-                         .AsSingleRow<db_helpers::WorldTableRow>(
-                             userver::storages::postgres::kRowTag));
+  // even though this adds a round-trip for Begin/Commit we expect this to be
+  // faster due to the pool semaphore contention reduction - now we have a
+  // connection for ourselves until we are done with it, otherwise we would
+  // likely wait on the semaphore with every new query.
+  auto transaction = pg_->Begin(db_helpers::kClusterHostType, {});
+  for (auto& value : values) {
+    value.random_number =
+        transaction.Execute(db_helpers::kSelectRowQuery, value.id)
+            .AsSingleRow<db_helpers::WorldTableRow>(
+                userver::storages::postgres::kRowTag)
+            .random_number;
   }
 
-  std::vector<int> random_numbers(queries);
-  std::generate(random_numbers.begin(), random_numbers.end(),
-                db_helpers::GenerateRandomValue);
+  auto json_result =
+      userver::formats::json::ValueBuilder{values}.ExtractValue();
 
-  pg_->Execute(db_helpers::kClusterHostType, update_query_, random_ids,
-               random_numbers);
+  for (auto& value : values) {
+    value.random_number = db_helpers::GenerateRandomValue();
+  }
+  transaction.ExecuteDecomposeBulk(update_query_, values, values.size());
+  transaction.Commit();
 
-  return userver::formats::json::ValueBuilder{result}.ExtractValue();
+  return json_result;
 }
 
 }  // namespace userver_techempower::updates

@@ -1,0 +1,26 @@
+[framework]
+name = "ronykit"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "go"
+
+[prefork]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "go"

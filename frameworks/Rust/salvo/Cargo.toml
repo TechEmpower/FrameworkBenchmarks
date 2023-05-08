@@ -15,30 +15,56 @@ path = "src/main_diesel.rs"
 name = "main-pg"
 path = "src/main_pg.rs"
 
+[[bin]]
+name = "main-pg-pool"
+path = "src/main_pg_pool.rs"
+
+[[bin]]
+name = "main-sqlx"
+path = "src/main_sqlx.rs"
+
+[[bin]]
+name = "main-mongo"
+path = "src/main_mongo.rs"
+
+[[bin]]
+name = "main-mongo-raw"
+path = "src/main_mongo_raw.rs"
+
+[[bin]]
+name = "main-moka"
+path = "src/main_moka.rs"
+
 [dependencies]
 anyhow = "1"
 async-trait = "0.1"
 bytes = "1"
-diesel = { version = "1.4", features = ["postgres", "r2d2"] }
-futures = "0.3"
+diesel = { version = "2", features = ["postgres", "r2d2"] }
+deadpool = { version = "0.9", features = ["rt_tokio_1", "serde", "async-trait", "managed"] }
+deadpool-postgres = "0.10"
+futures-util = "0.3"
+moka = "0.10"
 markup = "0.13"
 # mimalloc = { version = "0.1", default-features = false }
+mongodb = { version = "2.4.0", features = ["zstd-compression", "snappy-compression", "zlib-compression"] }
 once_cell = "1"
 rand = { version = "0.8", features = ["min_const_gen", "small_rng"] }
-random-fast-rng = "0.1"
-salvo = { version = "0.34", default-features = false, features = ["anyhow"] }
+salvo = { version = "0.40", default-features = false, features = ["anyhow", "http1", "affix"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-smallvec = "1"
-snmalloc-rs = { version = "0.3", features = ["native-cpu"] }
+# smallvec = "1"
+# snmalloc-rs = { version = "0.3", features = ["native-cpu"] }
+sqlx = { version = "0.6.2", features = ["postgres", "macros", "runtime-tokio-native-tls"] }
 tokio = { version = "1", features = ["macros", "rt"] }
+tokio-pg-mapper = "0.2.0"
+tokio-pg-mapper-derive = "0.2.0"
 tokio-postgres = "0.7"
 v_htmlescape = "0.15"
+dotenv = "0.15.0"
 
 [profile.release]
 lto = true
 opt-level = 3
 codegen-units = 1
 panic = "abort"
-debug = false
-incremental = false
+

@@ -3,6 +3,7 @@
 #include <userver/components/component_context.hpp>
 
 #include "../controllers/cached_queries/handler.hpp"
+#include "../controllers/fortunes/handler.hpp"
 #include "../controllers/json/handler.hpp"
 #include "../controllers/multiple_queries/handler.hpp"
 #include "../controllers/plaintext/handler.hpp"
@@ -14,16 +15,19 @@ namespace userver_techempower::bare {
 namespace {
 
 constexpr std::string_view kPlainTextUrlPrefix{"/plaintext"};
-constexpr std::string_view kJsontUrlPrefix{"/json"};
+constexpr std::string_view kJsonUrlPrefix{"/json"};
 constexpr std::string_view kSingleQueryUrlPrefix{"/db"};
 constexpr std::string_view kMultipleQueriesUrlPrefix{"/queries"};
 constexpr std::string_view kUpdatesUrlPrefix{"/updates"};
 constexpr std::string_view kCachedQueriesUrlPrefix{"/cached-queries"};
+constexpr std::string_view kFortunesUrlPrefix{"/fortunes"};
 
 // NOLINTNEXTLINE
 const std::string kContentTypePlain{"text/plain"};
 // NOLINTNEXTLINE
 const std::string kContentTypeJson{"application/json"};
+// NOLINTNEXTLINE
+const std::string kContentTypeTextHtml{"text/html; charset=utf-8"};
 
 bool StartsWith(std::string_view source, std::string_view pattern) {
   return source.substr(0, pattern.length()) == pattern;
@@ -37,7 +41,8 @@ SimpleRouter::SimpleRouter(const userver::components::ComponentConfig& config,
       single_query_{context.FindComponent<single_query::Handler>()},
       multiple_queries_{context.FindComponent<multiple_queries::Handler>()},
       updates_{context.FindComponent<updates::Handler>()},
-      cached_queries_{context.FindComponent<cached_queries::Handler>()} {}
+      cached_queries_{context.FindComponent<cached_queries::Handler>()},
+      fortunes_{context.FindComponent<fortunes::Handler>()} {}
 
 SimpleRouter::~SimpleRouter() = default;
 
@@ -46,7 +51,7 @@ SimpleResponse SimpleRouter::RouteRequest(std::string_view url) const {
     return {plaintext::Handler::GetResponse(), kContentTypePlain};
   }
 
-  if (StartsWith(url, kJsontUrlPrefix)) {
+  if (StartsWith(url, kJsonUrlPrefix)) {
     return {ToString(json::Handler::GetResponse()), kContentTypeJson};
   }
 
@@ -72,7 +77,11 @@ SimpleResponse SimpleRouter::RouteRequest(std::string_view url) const {
     const auto count = db_helpers::ParseParamFromQuery(
         url.substr(kCachedQueriesUrlPrefix.size()), "count");
 
-    return {ToString(cached_queries_.GetResponse(count)), "application/json"};
+    return {ToString(cached_queries_.GetResponse(count)), kContentTypeJson};
+  }
+
+  if (StartsWith(url, kFortunesUrlPrefix)) {
+    return {fortunes_.GetResponse(), kContentTypeTextHtml};
   }
 
   throw std::runtime_error{"No handler found for url"};

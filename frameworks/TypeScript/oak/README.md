@@ -16,6 +16,7 @@ The tests were run with:
 
 - [deno](https://deno.land)
 - [oak](https://deno.land/x/oak/)
+- [cotton](https://deno.land/x/cotton/)
 
 ## Test URLs
 

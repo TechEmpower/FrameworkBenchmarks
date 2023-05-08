@@ -18,7 +18,7 @@ $web->onWorkerStart = static function () {
     Header::init();
 };
 
-$web->onMessage = static function ($connection, $request) {
+$web->onMessage = static function ($connection) {
     $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     /* if ($path === '/') {
         $connection->send(exec_php_file(WEBROOT.'/index.php', $request));
@@ -48,8 +48,8 @@ function exec_php_file($file)
     // Try to include php file.
     try {
         include $file;
-    } catch (\Exception $e) {
-        echo $e;
+    } catch (Throwable $t) {
+        echo $t;
     }
     return ob_get_clean();
 }

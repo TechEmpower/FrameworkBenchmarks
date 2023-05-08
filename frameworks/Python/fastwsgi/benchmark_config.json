@@ -1,0 +1,47 @@
+{
+    "framework": "fastwsgi",
+    "tests": [{
+        "default": {
+            "json_url": "/json",
+            "plaintext_url": "/plaintext",
+            "port": 3000,
+            "approach": "Realistic",
+            "classification": "Micro",
+            "database": "None",
+            "framework": "None",
+            "language": "Python",
+            "flavor": "Python3",
+            "orm": "Raw",
+            "platform": "WSGI",
+            "webserver": "FastWSGI",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "FastWSGI",
+            "notes": "",
+            "versus": "wsgi"
+        },
+        "asgi": {
+            "json_url": "/json",
+            "plaintext_url": "/plaintext",
+            "db_url": "/db",
+            "query_url": "/queries?queries=",
+            "update_url": "/updates?queries=",
+            "cached_query_url": "/cached-queries?count=",
+            "fortune_url": "/fortunes",
+            "port": 3000,
+            "approach": "Realistic",
+            "classification": "Micro",
+            "database": "Postgres",
+            "framework": "None",
+            "language": "Python",
+            "flavor": "Python3",
+            "orm": "Raw",
+            "platform": "ASGI",
+            "webserver": "FastWSGI",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "FastWSGI [ASGI]",
+            "notes": ""
+        }
+    }]
+}

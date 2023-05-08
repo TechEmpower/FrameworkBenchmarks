@@ -3,6 +3,7 @@ name = "uwsgi"
 
 [main]
 urls.json = "/json"
+urls.plaintext = "/plaintext"
 approach = "Stripped"
 classification = "Platform"
 database = "None"
@@ -15,6 +16,7 @@ versus = ""
 
 [nginx-uwsgi]
 urls.json = "/json"
+urls.plaintext = "/plaintext"
 approach = "Stripped"
 classification = "Platform"
 database = "None"

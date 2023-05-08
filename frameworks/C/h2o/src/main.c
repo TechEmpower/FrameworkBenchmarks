@@ -29,6 +29,7 @@
 #include <sys/resource.h>
 #include <sys/signalfd.h>
 #include <sys/time.h>
+#include <sys/utsname.h>
 
 #include "database.h"
 #include "error.h"
@@ -96,6 +97,7 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	sigset_t signals;
 
 	memset(global_data, 0, sizeof(*global_data));
+	global_data->buffer_prototype._initial_buf.capacity = H2O_SOCKET_INITIAL_INPUT_BUFFER_SIZE;
 	global_data->memory_alignment = get_maximum_cache_line_size();
 	CHECK_ERRNO(sigemptyset, &signals);
 #ifdef NDEBUG
@@ -139,7 +141,15 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	global_data->global_thread_data = initialize_global_thread_data(config, global_data);
 
 	if (global_data->global_thread_data) {
-		printf("Number of processors: %zu\nMaximum cache line size: %zu\n",
+		struct utsname name = {.sysname = {'\0'}};
+
+		uname(&name);
+		printf("Operating system: %s %s %s\n"
+		       "Number of processors: %zu\n"
+		       "Maximum cache line size: %zu\n",
+		       name.sysname,
+		       name.release,
+		       name.version,
 		       h2o_numproc(),
 		       global_data->memory_alignment);
 		return 0;

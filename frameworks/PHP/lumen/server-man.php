@@ -11,13 +11,13 @@ Adapterman::init();
 $http_worker                = new Worker('http://0.0.0.0:8080');
 $http_worker->count         = (int) shell_exec('nproc') * 4;
 $http_worker->name          = 'AdapterMan-Laravel';
-$http_worker->onWorkerStart = function () {
+$http_worker->onWorkerStart = static function () {
     HeaderDate::init();
     //init();
     require __DIR__.'/start.php';
 };
 
-$http_worker->onMessage = static function ($connection, $request) {
+$http_worker->onMessage = static function ($connection) {
 
     $connection->send(run());
 };

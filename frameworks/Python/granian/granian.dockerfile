@@ -8,4 +8,4 @@ RUN pip install -r /granian/requirements.txt
 
 EXPOSE 8080
 
-CMD python run.py asgi
+CMD python run.py asgi runtime

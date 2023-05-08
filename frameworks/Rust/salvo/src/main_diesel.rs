@@ -1,11 +1,12 @@
-#[global_allocator]
-static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+// #[global_allocator]
+// static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 // #[global_allocator]
 // static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 #[macro_use]
 extern crate diesel;
 
+use bytes::Bytes;
 use std::cmp;
 use std::fmt::Write;
 use std::sync::Arc;
@@ -17,25 +18,29 @@ use diesel::r2d2::{ConnectionManager, Pool, PoolError, PooledConnection};
 use once_cell::sync::OnceCell;
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
+use salvo::conn::tcp::TcpAcceptor;
 use salvo::http::header::{self, HeaderValue};
+use salvo::http::ResBody;
 use salvo::prelude::*;
+use dotenv::dotenv;
 
-mod models;
+mod models_diesel;
 mod schema;
-mod server;
-use models::*;
+mod utils;
+use models_diesel::*;
 use schema::*;
 
-const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 type PgPool = Pool<ConnectionManager<PgConnection>>;
 
 static DB_POOL: OnceCell<PgPool> = OnceCell::new();
-static CACHED_WORLDS: OnceCell<Vec<World>> = OnceCell::new();
+static SERVER_HEADER: HeaderValue = HeaderValue::from_static("salvo");
+static JSON_HEADER: HeaderValue = HeaderValue::from_static("application/json");
+static HTML_HEADER: HeaderValue = HeaderValue::from_static("text/html; charset=utf-8");
 
 fn connect() -> Result<PooledConnection<ConnectionManager<PgConnection>>, PoolError> {
     unsafe { DB_POOL.get_unchecked().get() }
 }
-fn build_pool(database_url: &str, size: u32) -> Result<PgPool, PoolError> {
+fn create_pool(database_url: &str, size: u32) -> Result<PgPool, PoolError> {
     let manager = ConnectionManager::<PgConnection>::new(database_url);
     diesel::r2d2::Pool::builder()
         .max_size(size)
@@ -50,92 +55,87 @@ fn build_pool(database_url: &str, size: u32) -> Result<PgPool, PoolError> {
 async fn world_row(res: &mut Response) -> Result<(), Error> {
     let mut rng = SmallRng::from_entropy();
     let random_id = rng.gen_range(1..10_001);
-    let conn = connect()?;
-    let row = world::table.find(random_id).first::<World>(&conn)?;
-    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render(Json(row));
+    let mut conn = connect()?;
+    let world = world::table.find(random_id).first::<World>(&mut conn)?;
+
+    let data = serde_json::to_vec(&world).unwrap();
+    let headers = res.headers_mut();
+    headers.insert(header::SERVER, SERVER_HEADER.clone());
+    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    res.set_body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
 
 #[handler]
 async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let count = req.query::<usize>("q").unwrap_or(1);
+    let count = req.query::<u16>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
-    let mut worlds = Vec::with_capacity(count);
+    let mut worlds = Vec::with_capacity(count as usize);
     let mut rng = SmallRng::from_entropy();
-    let conn = connect()?;
+    let mut conn = connect()?;
     for _ in 0..count {
         let id = rng.gen_range(1..10_001);
-        let w = world::table.find(id).get_result::<World>(&conn)?;
+        let w = world::table.find(id).get_result::<World>(&mut conn)?;
         worlds.push(w);
     }
-    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render(Json(worlds));
-    Ok(())
-}
 
-#[handler]
-async fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let count = req.query::<usize>("q").unwrap_or(1);
-    let count = cmp::min(500, cmp::max(1, count));
-    let mut worlds = Vec::with_capacity(count);
-    let mut rng = SmallRng::from_entropy();
-    for _ in 0..count {
-        let idx = rng.gen_range(0..10_000);
-        unsafe {
-            let w = CACHED_WORLDS.get_unchecked().get(idx).unwrap();
-            worlds.push(w);
-        }
-    }
-    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render(Json(worlds));
+    let data = serde_json::to_vec(&worlds)?;
+    let headers = res.headers_mut();
+    headers.insert(header::SERVER, SERVER_HEADER.clone());
+    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    res.set_body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
 
 #[handler]
 async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
-    let count = req.query::<usize>("q").unwrap_or(1);
+    let count = req.query::<u16>("q").unwrap_or(1);
     let count = cmp::min(500, cmp::max(1, count));
-    let conn = connect()?;
-    let mut worlds = Vec::with_capacity(count);
+    let mut conn = connect()?;
+    let mut worlds = Vec::with_capacity(count as usize);
     let mut rng = SmallRng::from_entropy();
     for _ in 0..count {
         let w_id: i32 = rng.gen_range(1..10_001);
-        let mut w = world::table.find(w_id).first::<World>(&conn)?;
+        let mut w = world::table.find(w_id).first::<World>(&mut conn)?;
         w.randomnumber = rng.gen_range(1..10_001);
         worlds.push(w);
     }
     worlds.sort_by_key(|w| w.id);
-    conn.transaction::<(), Error, _>(|| {
+    conn.transaction::<(), Error, _>(|conn| {
         for w in &worlds {
             diesel::update(world::table)
                 .filter(world::id.eq(w.id))
                 .set(world::randomnumber.eq(w.randomnumber))
-                .execute(&conn)?;
+                .execute(conn)?;
         }
         Ok(())
     })?;
 
-    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render(Json(worlds));
+    let data = serde_json::to_vec(&worlds)?;
+    let headers = res.headers_mut();
+    headers.insert(header::SERVER, SERVER_HEADER.clone());
+    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    res.set_body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
 
 #[handler]
 async fn fortunes(res: &mut Response) -> Result<(), Error> {
-    let conn = connect()?;
-    let mut items = fortune::table.get_results::<Fortune>(&conn)?;
+    let mut conn = connect()?;
+    let mut items = fortune::table.get_results::<Fortune>(&mut conn)?;
     items.push(Fortune {
         id: 0,
         message: "Additional fortune added at request time.".to_string(),
     });
 
     items.sort_by(|it, next| it.message.cmp(&next.message));
-    let mut body = String::new();
-    write!(&mut body, "{}", FortunesTemplate { items }).unwrap();
+    let mut data = String::new();
+    write!(&mut data, "{}", FortunesTemplate { items }).unwrap();
 
-    res.headers_mut().insert(header::SERVER, HeaderValue::from_static("S"));
-    res.render(Text::Html(body));
+    let headers = res.headers_mut();
+    headers.insert(header::SERVER, SERVER_HEADER.clone());
+    headers.insert(header::CONTENT_TYPE, HTML_HEADER.clone());
+    res.set_body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
 
@@ -161,28 +161,31 @@ markup::define! {
     }
 }
 
-fn populate_cache() -> Result<(), Error> {
-    let conn = connect()?;
-    let worlds = world::table.limit(10_000).get_results::<World>(&conn)?;
-    CACHED_WORLDS.set(worlds).unwrap();
-    Ok(())
-}
-
 fn main() {
+    dotenv().ok();
+    
+    let db_url: String = utils::get_env_var("TECHEMPOWER_POSTGRES_URL");
+    let max_pool_size: u32 = utils::get_env_var("TECHEMPOWER_MAX_POOL_SIZE");
+    DB_POOL
+        .set(
+            create_pool(&db_url, max_pool_size)
+                .unwrap_or_else(|_| panic!("Error connecting to {}", &db_url)),
+        )
+        .ok();
+
     let router = Arc::new(
         Router::new()
             .push(Router::with_path("db").get(world_row))
             .push(Router::with_path("fortunes").get(fortunes))
             .push(Router::with_path("queries").get(queries))
-            .push(Router::with_path("cached_queries").get(cached_queries))
             .push(Router::with_path("updates").get(updates)),
     );
-    let size = available_parallelism().map(|n| n.get()).unwrap_or(16);
-    DB_POOL
-        .set(build_pool(DB_URL, size as u32).unwrap_or_else(|_| panic!("Error connecting to {}", &DB_URL)))
-        .ok();
-    populate_cache().expect("error cache worlds");
-    for _ in 1..size {
+    let thread_count = available_parallelism().map(|n| n.get()).unwrap_or(16);
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+    for _ in 1..thread_count {
         let router = router.clone();
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()
@@ -192,14 +195,11 @@ fn main() {
             rt.block_on(serve(router));
         });
     }
-    println!("Starting http server: 127.0.0.1:8080");
-    let rt = tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap();
+    println!("Started http server: 127.0.0.1:8080");
     rt.block_on(serve(router));
 }
 
 async fn serve(router: Arc<Router>) {
-    server::builder().serve(Service::new(router)).await.unwrap();
+    let acceptor: TcpAcceptor = utils::reuse_listener().unwrap().try_into().unwrap();
+    Server::new(acceptor).serve(router).await
 }

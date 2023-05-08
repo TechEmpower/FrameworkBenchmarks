@@ -102,5 +102,5 @@ if ! docker network inspect tfb >/dev/null 2>&1; then
 fi
 
 test -t 1 && USE_TTY="-t"
-docker build -t techempower/tfb - < ${SCRIPT_ROOT}/Dockerfile
-exec docker run -i ${USE_TTY} --rm --network tfb -v /var/run/docker.sock:/var/run/docker.sock -v ${SCRIPT_ROOT}:/FrameworkBenchmarks techempower/tfb "${@}"
+docker build -t techempower/tfb --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) - < ${SCRIPT_ROOT}/Dockerfile
+exec docker run -i ${USE_TTY} ${EXTRA_DOCKER_ARGS} --rm --network tfb -e USER_ID=$(id -u) -v /var/run/docker.sock:/var/run/docker.sock -v ${SCRIPT_ROOT}:/FrameworkBenchmarks techempower/tfb "${@}"

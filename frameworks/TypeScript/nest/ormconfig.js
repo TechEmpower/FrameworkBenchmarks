@@ -23,6 +23,9 @@ switch (process.env.DATABASE_CONFIGURATION_PROFILE) {
       username: 'benchmarkdbuser',
       password: 'benchmarkdbpass',
       entities: ['./dist/sql/*.entity.js'],
+      extra: {
+        connectionLimit: 30,
+      }
     };
     break;
   case 'postgres':
@@ -34,6 +37,9 @@ switch (process.env.DATABASE_CONFIGURATION_PROFILE) {
       username: 'benchmarkdbuser',
       password: 'benchmarkdbpass',
       entities: ['./dist/sql/*.entity.js'],
+      extra: {
+        max: 30
+      }
     };
     break;
 }

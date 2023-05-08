@@ -20,7 +20,8 @@
         "database": "Postgres",
         "database_os": "Linux",
         "display_name": "typescript-rest",
-        "versus": "nodejs"
+        "versus": "nodejs",
+        "tags": ["broken"]
       }
     }
   ]

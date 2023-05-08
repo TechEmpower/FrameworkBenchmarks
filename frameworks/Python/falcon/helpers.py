@@ -1,7 +1,7 @@
 import jinja2
 from pathlib import Path
 from collections import namedtuple
-from random import randint
+import random
 
 
 def sanitize(query):
@@ -19,10 +19,7 @@ def sanitize(query):
 
 
 def generate_ids(num_queries):
-    ids = {randint(1, 10000) for _ in range(num_queries)}
-    while len(ids) < num_queries:
-        ids.add(randint(1, 10000))
-    return list(sorted(ids))
+    return random.sample(range(1, 10000), num_queries)
 
 
 def load_template():

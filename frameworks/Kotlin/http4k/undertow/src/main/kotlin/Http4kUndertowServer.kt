@@ -13,7 +13,7 @@ private fun CustomUndertow(port: Int) = object : ServerConfig {
         val server = io.undertow.Undertow.builder()
             .addHttpListener(port, "0.0.0.0")
             .setHandler(BlockingHandler(Http4kUndertowHttpHandler(http)))
-            .setWorkerThreads(32 * Runtime.getRuntime().availableProcessors())
+            .setWorkerThreads(64 * Runtime.getRuntime().availableProcessors())
             .build()
 
         override fun start() = apply { server.start() }

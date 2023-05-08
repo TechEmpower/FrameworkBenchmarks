@@ -1,15 +1,16 @@
+use axum::{
+    http::{header, HeaderValue, StatusCode},
+    response::IntoResponse,
+    routing::get,
+    Json, Router,
+};
+use dotenv::dotenv;
+use tower_http::set_header::SetResponseHeaderLayer;
+
 mod models_common;
 mod server;
 
-use models_common::Message;
-
-use axum::http::StatusCode;
-use axum::http::{header, HeaderValue};
-use axum::response::IntoResponse;
-use axum::Json;
-use axum::{routing::get, Router};
-use dotenv::dotenv;
-use tower_http::set_header::SetResponseHeaderLayer;
+use self::models_common::Message;
 
 pub async fn plaintext() -> &'static str {
     "Hello, World!"

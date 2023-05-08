@@ -3,6 +3,7 @@ defmodule HelloWeb.PageController do
 
   use HelloWeb, :controller
 
+  alias Hello.Repo
   alias Hello.Cache
 
   @json "application/json"
@@ -59,7 +60,7 @@ defmodule HelloWeb.PageController do
 
     fortunes = [additional_fortune | Repo.all(Fortune)]
 
-    render(conn, "fortunes.html",
+    render(conn, :fortunes,
       fortunes: Enum.sort(fortunes, fn f1, f2 -> f1.message < f2.message end)
     )
   end

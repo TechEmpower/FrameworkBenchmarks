@@ -2,7 +2,7 @@ name: build
 on: [ push, pull_request ]
 jobs:
   setup:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       # Required for workflow triggers like the auto-label for failing PRs
       - name: Save PR number
@@ -20,7 +20,7 @@ jobs:
       #
       # We need to fetch more than one commit to be able to access HEAD^2 in case
       # of a pull request
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 10
       # In case of a push event, the commit we care about is simply HEAD.
@@ -46,7 +46,7 @@ jobs:
           echo "$(git log --format=%B -n 1 HEAD^2)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           echo "PREVIOUS_COMMIT=$(git log --format=%H -n 1 HEAD^2~1)" >> $GITHUB_ENV
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: '2.7'
           architecture: 'x64'
@@ -65,14 +65,16 @@ jobs:
       - id: event_out
         name: Write event outputs
         run: |
-          # Escape the multiline string for Github Actions, see https://github.community/t/set-output-truncates-multiline-strings/16852/3
-          COMMIT_MESSAGE="${COMMIT_MESSAGE//'%'/'%25'}"
-          COMMIT_MESSAGE="${COMMIT_MESSAGE//$'\n'/'%0A'}"
-          COMMIT_MESSAGE="${COMMIT_MESSAGE//$'\r'/'%0D'}"
-          echo "::set-output name=commit_message::$COMMIT_MESSAGE"
-          echo "::set-output name=branch_name::$BRANCH_NAME"
-          echo "::set-output name=target_branch_name::$TARGET_BRANCH_NAME"
-          echo "::set-output name=previous_commit::$PREVIOUS_COMMIT"
+          # Escape the multiline string for Github Actions, see https://lab.amalitsky.com/posts/2022/github-actions-set-output-migration/#migration-from-set-output-to-github-output
+          delimiter="$(openssl rand -hex 8)"
+              {
+                echo "commit_message<<${delimiter}"
+                echo $COMMIT_MESSAGE
+                echo "${delimiter}"
+              } >> $GITHUB_OUTPUT
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          echo "target_branch_name=$TARGET_BRANCH_NAME" >> $GITHUB_OUTPUT
+          echo "previous_commit=$PREVIOUS_COMMIT" >> $GITHUB_OUTPUT
       - id: verify_out
         name: Write verify job matrix
         run: |
@@ -82,7 +84,7 @@ jobs:
           #   - TESTLANG: {lang}
           # with a TESTLANG object in the include array for each language under frameworks
           VERIFY_MATRIX=$(ls -1 frameworks | jq -Rc '.+"/" | select(inside(env.RUN_TESTS))  | rtrimstr("/")' | jq -sc '{include: map({TESTLANG: .})}')
-          echo "::set-output name=verify_matrix::$VERIFY_MATRIX"
+          echo "verify_matrix=$VERIFY_MATRIX" >> $GITHUB_OUTPUT
     outputs:
       commit_message: ${{ steps.event_out.outputs.commit_message }}
       branch_name: ${{ steps.event_out.outputs.branch_name }}
@@ -93,7 +95,7 @@ jobs:
     needs: setup
     # The matrix check is necessary because an empty job matrix is otherwise considered a workflow failure
     if: ${{ !contains(needs.setup.outputs.commit_message, '[ci skip]') && contains(needs.setup.outputs.verify_matrix, 'TESTLANG') }}
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix: ${{ fromJSON(needs.setup.outputs.verify_matrix) }}
       # Disable fail-fast to allow all failing frameworks/etc to fail in a
@@ -108,10 +110,10 @@ jobs:
       PREVIOUS_COMMIT: ${{ needs.setup.outputs.previous_commit }}
       PR_NUMBER: ${{ github.event.pull_request.number }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 10
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: '2.7'
           architecture: 'x64'
@@ -138,7 +140,10 @@ jobs:
           if [ "$RUN_TESTS" ]; then echo "Proceeding to run tests."; else echo 'Skipping test verification.'; fi
       - name: Build tfb dockerfile
         if: ${{ env.RUN_TESTS }}
-        run: docker build -t techempower/tfb - < ./Dockerfile;
+        uses: mattes/cached-docker-build-action@v1
+        with:
+          args: " --file ./Dockerfile --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) --tag techempower/tfb ."
+          cache_key: "${{ hashFiles('./Dockerfile') }}"
       - name: Stop services
         # Stop services that would claim ports we may need
         run: |
@@ -150,7 +155,7 @@ jobs:
           # run-ci.py runs the diffing to see if github actions needs to test this framework. Ideally/eventually,
           # we'd like to try and do the diffing before github_actions_clean & setup.
           # This will run the tests exactly as you would in your own vm:
-          docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test-dir $RUN_TESTS --results-environment Github-Actions;
+          docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -e USER_ID=$(id -u) -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test-dir $RUN_TESTS --results-environment Github-Actions;
   dependabot:
     needs: verify
     runs-on: ubuntu-latest
