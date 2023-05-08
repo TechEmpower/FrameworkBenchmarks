@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	dbHost  = "localhost" //"tfb-database"
-	dbPort  =  5435 //5432
+	dbHost  = "tfb-database"
+	dbPort  =  5432
 	dbUser  = "benchmarkdbuser"
 	dbPaswd = "benchmarkdbpass"
 	dbName  = "hello_world"
