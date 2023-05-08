@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "html-escaper": "^3.0.3",
     "mysql2": "^2.3.3",
     "pg": "^8.10.0",
     "pg-pool": "^3.6.0",

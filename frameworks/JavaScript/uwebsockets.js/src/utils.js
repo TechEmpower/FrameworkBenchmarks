@@ -25,3 +25,33 @@ export function handleError(error, response) {
     response.end("Internal Server Error");
   });
 }
+
+/**
+ * Get queries count
+ *
+ * @param {import('uWebSockets.js').HttpRequest} request
+ */
+export function getQueriesCount(request) {
+  let queriesCount = 1;
+
+  if (request.getQuery("queries")) {
+    try {
+      const queries = parseInt(request.getQuery("queries"));
+      if (queries <= 500 && queries >= 1) {
+        queriesCount = queries;
+      } else if (queries > 500) {
+        queriesCount = 500;
+      }
+    } catch {}
+  }
+
+  return queriesCount;
+}
+
+/**
+ * Generate random number
+ *
+ */
+export function generateRandomNumber() {
+  return Math.floor(Math.random() * 9999) + 1;
+}

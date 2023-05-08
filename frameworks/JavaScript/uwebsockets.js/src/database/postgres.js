@@ -9,5 +9,16 @@ const pool = new Pool({
 
 await pool.connect();
 
-export const findOne = async (random) =>
-  pool.query("SELECT * FROM world WHERE id = $1 LIMIT 1", [random]);
+const query = (text, values) =>
+  pool.query(text, values || []).then((r) => r.rows);
+
+export const fortunes = () => query("SELECT * FROM fortune");
+
+export const find = (id) =>
+  query("SELECT * FROM world WHERE id = $1", [id]).then((arr) => arr[0]);
+
+export const update = (obj) =>
+  query("UPDATE world SET randomNumber = $1 WHERE id = $2", [
+    obj.randomNumber,
+    obj.id,
+  ]);

@@ -10,5 +10,16 @@ const pool = createPool({
   queueLimit: 0,
 });
 
-export const findOne = async (random) =>
-  pool.execute("SELECT * FROM world WHERE id = ? LIMIT 1", [random]);
+const query = (text, values) =>
+  pool.execute(text, values || []).then((r) => r[0]);
+
+export const fortunes = () => query("SELECT * FROM fortune");
+
+export const find = (id) =>
+  query("SELECT * FROM world WHERE id = ?", [id]).then((arr) => arr[0]);
+
+export const update = (obj) =>
+  query("UPDATE world SET randomNumber = ? WHERE id = ?", [
+    obj.randomNumber,
+    obj.id,
+  ]);
