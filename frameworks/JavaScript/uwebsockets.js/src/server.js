@@ -2,7 +2,7 @@ import uWebSockets from "uWebSockets.js";
 import { addBenchmarkHeaders, handleError } from "./utils.js";
 
 const { DATABASE } = process.env;
-const db = import(`./database/${DATABASE}.js`);
+const db = await import(`./database/${DATABASE}.js`);
 
 const webserver = uWebSockets.App();
 
@@ -71,12 +71,11 @@ webserver.get("/queries", async (response, request) => {
 
     for (let i = 0; i < queriesCount; i++) {
       const random = Math.floor(Math.random() * 9999) + 1;
-      databaseJobs.push(
-        db.findOne("SELECT * FROM world WHERE id = ? LIMIT 1", [random])
-      );
+      databaseJobs.push(db.findOne(random));
     }
 
     const databaseJobsResults = await Promise.all(databaseJobs);
+
     const worldObjects = [];
     for (let i = 0; i < databaseJobsResults.length; i++) {
       const [rows] = databaseJobsResults[i];

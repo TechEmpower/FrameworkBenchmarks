@@ -4,7 +4,7 @@
 
 - [JSON](src/server.js)
 - [PLAINTEXT](src/server.js)
-- [DB](src/server.js)
+- [DB](src/database)
 - [QUERY](src/server.js)
 - ~~CACHED QUERY~~
 - ~~UPDATE~~
@@ -16,6 +16,7 @@ The tests were run with:
 
 - [uWebSockets.js](https://github.com/uNetworking/uWebSockets.js/)
 - [mysql2](https://github.com/sidorares/node-mysql2)
+- [pg](https://github.com/brianc/node-postgres)
 
 ## Test URLs
 
