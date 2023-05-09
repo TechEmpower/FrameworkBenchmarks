@@ -12,6 +12,7 @@ gem "falcon", "~>0.42"
 gem "tzinfo-data", "1.2023.3"
 gem "unicorn", "~> 6.1", platforms: %i[ruby mswin], require: false
 gem "sequel"
+gem "sequel_pg"
 gem "jdbc-postgres", "~> 42.2", platforms: :jruby, require: "jdbc/postgres"
 
 group :development do

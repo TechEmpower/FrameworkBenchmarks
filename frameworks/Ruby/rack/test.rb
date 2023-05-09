@@ -5,13 +5,14 @@ require "rack/test"
 require "oj"
 require_relative "hello_world.rb"
 require "prettyprint"
-#OUTER_APP = Rack::Builder.parse_file("config.ru")
+ROUTER_APP = Rack::Builder.parse_file("config.ru")
 
 class TestApp < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
-    HelloWorld.new
+    #HelloWorld.new
+    ROUTER_APP
   end
   # def test_db
   #  app.test_database
@@ -32,4 +33,24 @@ class TestApp < Test::Unit::TestCase
     assert last_response.ok?
     assert last_response.headers["content-type"] == "text/html; charset=utf-8"
   end
+  def test_db
+    get "/db"
+    assert last_response.ok?
+    assert last_response.headers["content-type"] == "application/json"
+    last_response
+  end
+  def test_queries
+    get "/queries?queries=10"
+    assert last_response.ok?
+    assert last_response.headers["content-type"] == "application/json"
+    records= Oj.load(last_response.body)
+    assert records.size == 10
+    get "/queries?queries=boo"
+    records= Oj.load(last_response.body)
+    assert records.size == 1
+    get "/queries?queries=600"
+    records= Oj.load(last_response.body)
+    assert records.size == 500
+  end
+
 end

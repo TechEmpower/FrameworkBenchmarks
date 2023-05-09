@@ -1,12 +1,8 @@
 #Bundler.require :default
 require_relative "hello_world.rb"
 
-if defined?(Falcon)
-  puts "Falcon defined"
-else
-  puts "not falcon"
-end
 
+#use Rack::ContentLength
 run HelloWorld.new
 #require "erb"
 #require "yaml"

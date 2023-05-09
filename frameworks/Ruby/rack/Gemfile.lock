@@ -72,6 +72,9 @@ GEM
       console (~> 1.0)
       mapping (~> 1.0)
     sequel (5.68.0)
+    sequel_pg (1.17.1)
+      pg (>= 0.18.0, != 1.2.0)
+      sequel (>= 4.38.0)
     timers (4.3.5)
     traces (0.9.1)
     tzinfo (2.0.6)
@@ -95,6 +98,7 @@ DEPENDENCIES
   puma (~> 6.2)
   rack-test
   sequel
+  sequel_pg
   tzinfo-data (= 1.2023.3)
   unicorn (~> 6.1)
 

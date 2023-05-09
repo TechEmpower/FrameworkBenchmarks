@@ -4,6 +4,7 @@ require 'sequel'
 if RUBY_PLATFORM == "java"
   require "jdbc/postgres"
   Jdbc::Postgres.load_driver
+
 end
 
 class PgDb
@@ -32,8 +33,24 @@ class PgDb
    @fortune_select=@db["SELECT id, message FROM Fortune"].prepare(:select, :select_all)
   end
 
-  def get_one_record
-    @world_select.call(id: random_id)
+  def get_random_record
+    @world_select.call(id: random_id)[0]
+  end
+  def get_multiple_records(queries)
+    queries = queries.to_i
+    queries = if queries < MIN_QUERIES
+      MIN_QUERIES
+    elsif queries > MAX_QUERIES
+      MAX_QUERIES
+    else
+      queries
+    end
+  results=[]
+  queries.times do
+    results << get_random_record
+  end
+  results
+
   end
   def update_one_record
     @world_update.call(id: random_id, random_number: random_id)
