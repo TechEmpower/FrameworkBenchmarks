@@ -77,7 +77,7 @@
       "webserver": "granian",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "granian [rsgi][wrk]",
+      "display_name": "granian [rsgi wrk]",
       "notes": "",
       "versus": "uvicorn"
     }
