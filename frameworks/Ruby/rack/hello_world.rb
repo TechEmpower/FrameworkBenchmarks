@@ -2,10 +2,7 @@
 
 # Our Rack application to be executed by rackup
 require "oj"
-
 require_relative 'pg_db'
-
-
 
 class HelloWorld
   QUERY_RANGE = 1..10_000 # range of IDs in the Fortune DB
@@ -17,7 +14,6 @@ class HelloWorld
   JSON_TYPE = "application/json"
   HTML_TYPE = "text/html; charset=utf-8"
   PLAINTEXT_TYPE = "text/plain"
-  #SERVER_STRING = "Ruby Rack"
   DATE = "Date"
   SERVER = "Server"
   SERVER_STRING = if defined?(PhusionPassenger)
@@ -29,7 +25,7 @@ class HelloWorld
   elsif defined?(Falcon)
     "Falcon"
   else
-    "Rack"
+    " Ruby Rack"
   end
   TEMPLATE_PREFIX='<!DOCTYPE html>
 <html>
@@ -50,11 +46,7 @@ class HelloWorld
 def initialize
   @db=PgDb.new()
 end
-def test_database
-  pp @db.get_one_record
-  pp @db.update_one_record
-  pp @db.get_fortunes
-end
+
   def respond(content_type, body = "")
     [
       200,
@@ -94,14 +86,15 @@ end
       # Test type 3: Multiple database queries
        params = Rack::Utils.parse_query(env["QUERY_STRING"])
        queries = params["queries"]
-       respond JSON_TYPE, Oj.dump(@db.get_multiple_records(queries), )
-
+       respond JSON_TYPE, Oj.dump(@db.get_multiple_records_async(queries), { mode: :strict } )
     when "/fortunes"
       # Test type 4: Fortunes
       respond HTML_TYPE, fortunes
     when "/updates"
       # Test type 5: Database updates
-      ["application/json", JSON.fast_generate(updates(env))]
+      params = Rack::Utils.parse_query(env["QUERY_STRING"])
+      queries = params["queries"]
+      respond JSON_TYPE, Oj.dump(@db.update_multiple_records_async(queries), { mode: :strict })
     when "/plaintext"
       # Test type 6: Plaintext
       respond PLAINTEXT_TYPE, "Hello, World!"
@@ -109,92 +102,3 @@ end
   end
 
 end
-
-
-
-    # def updates(env)
-    #   DB.synchronize do
-    #     Array.new(bounded_queries(env)) do
-    #       world = WORLD_BY_ID.(id: rand1)
-    #       WORLD_UPDATE.(
-    #         id: world[:id],
-    #         randomnumber: (world[:randomnumber] = rand1)
-    #       )
-    #       world
-    #     end
-    #   end
-    # end
-
-
-
-
-  # def bounded_queries(env)
-  #   params = Rack::Utils.parse_query(env["QUERY_STRING"])
-  #   queries = params["queries"].to_i
-  #   return QUERIES_MIN if queries < QUERIES_MIN
-  #   return QUERIES_MAX if queries > QUERIES_MAX
-  #   queries
-  # end
-  # # Return a random number between 1 and MAX_PK
-  # def rand1
-  #   rand(MAX_PK).succ
-  # end
-  # WORLD_BY_ID = World.naked.where(id: :$id).prepare(:first, :world_by_id)
-  # WORLD_UPDATE =
-  #   World.where(id: :$id).prepare(
-  #     :update,
-  #     :world_update,
-  #     randomnumber: :$randomnumber
-  #   )
-  # def db
-  #   WORLD_BY_ID.(id: rand1)
-  # end
-  # def queries(env)
-  #   DB.synchronize do
-  #     Array.new(bounded_queries(env)) { WORLD_BY_ID.(id: rand1) }
-  #   end
-  # end
-  # def fortunes
-  #   fortunes = Fortune.all
-  #   fortunes << Fortune.new(
-  #     id: 0,
-  #     message: "Additional fortune added at request time."
-  #   )
-  #   fortunes.sort_by!(&:message)
-  #   html = String.new(<<~'HTML')
-  #     <!DOCTYPE html>
-  #     <html>
-  #     <head>
-  #       <title>Fortunes</title>
-  #     </head>
-  #     <body>
-  #     <table>
-  #     <tr>
-  #       <th>id</th>
-  #       <th>message</th>
-  #     </tr>
-  #   HTML
-  #   fortunes.each { |fortune| html << <<~"HTML" }
-  #     <tr>
-  #       <td>#{fortune.id}</td>
-  #       <td>#{Rack::Utils.escape_html(fortune.message)}</td>
-  #     </tr>
-  #     HTML
-  #   html << <<~'HTML'
-  #     </table>
-  #     </body>
-  #     </html>
-  #   HTML
-  # end
-  # def updates(env)
-  #   DB.synchronize do
-  #     Array.new(bounded_queries(env)) do
-  #       world = WORLD_BY_ID.(id: rand1)
-  #       WORLD_UPDATE.(
-  #         id: world[:id],
-  #         randomnumber: (world[:randomnumber] = rand1)
-  #       )
-  #       world
-  #     end
-  #   end
-  # end

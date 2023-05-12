@@ -3,20 +3,18 @@ require "test/unit"
 require "rack"
 require "rack/test"
 require "oj"
-require_relative "hello_world.rb"
-require "prettyprint"
+require_relative "pg_db.rb"
+
 ROUTER_APP = Rack::Builder.parse_file("config.ru")
 
 class TestApp < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
-    #HelloWorld.new
+
     ROUTER_APP
   end
-  # def test_db
-  #  app.test_database
-  # end
+
   def test_json
     get "/json"
 
@@ -44,6 +42,7 @@ class TestApp < Test::Unit::TestCase
     assert last_response.ok?
     assert last_response.headers["content-type"] == "application/json"
     records= Oj.load(last_response.body)
+
     assert records.size == 10
     get "/queries?queries=boo"
     records= Oj.load(last_response.body)
@@ -52,5 +51,22 @@ class TestApp < Test::Unit::TestCase
     records= Oj.load(last_response.body)
     assert records.size == 500
   end
+  def test_updates
+    get "/updates?queries=10"
+    assert last_response.ok?
+    assert last_response.headers["content-type"] == "application/json"
+    records= Oj.load(last_response.body)
 
-end
+    db=PgDb.new
+    assert records.size == 10
+    records.each do | r|
+      pp r
+        id = r["id"]
+        num = r["randomnumber"]
+        record = db.get_one_record(id)
+        pp record
+        assert record[:randomnumber] == num
+
+    end
+  end
+  end
