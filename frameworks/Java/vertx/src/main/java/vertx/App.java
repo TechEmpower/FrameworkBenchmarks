@@ -3,6 +3,7 @@ package vertx;
 import com.fizzed.rocker.ContentType;
 import com.fizzed.rocker.RockerOutputFactory;
 import io.netty.util.concurrent.MultithreadEventExecutorGroup;
+import io.vertx.core.impl.VertxInternal;
 import io.vertx.pgclient.*;
 import io.vertx.core.*;
 import io.vertx.core.buffer.Buffer;
@@ -441,6 +442,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
 
   private static void printConfig(Vertx vertx) {
     boolean nativeTransport = vertx.isNativeTransportEnabled();
+    String transport = ((VertxInternal) vertx).transport().getClass().getSimpleName();
     String version = "unknown";
     try {
       InputStream in = Vertx.class.getClassLoader().getResourceAsStream("META-INF/vertx/vertx-version.txt");
@@ -463,5 +465,6 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     logger.info("Vertx: " + version);
     logger.info("Event Loop Size: " + ((MultithreadEventExecutorGroup)vertx.nettyEventLoopGroup()).executorCount());
     logger.info("Native transport : " + nativeTransport);
+    logger.info("Transport : " + transport);
   }
 }

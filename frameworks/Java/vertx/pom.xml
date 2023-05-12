@@ -10,9 +10,10 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<!-- the main class -->
 		<main.class>vertx.App</main.class>
-		<stack.version>4.3.8</stack.version>
-		<jackson.version>2.14.2</jackson.version>
-		<netty.version>4.1.89.Final</netty.version>
+		<stack.version>4.4.2</stack.version>
+		<jackson.version>2.15.0</jackson.version>
+		<netty.version>4.1.92.Final</netty.version>
+		<netty.io_uring.version>0.0.21.Final</netty.io_uring.version>
 	</properties>
 
 	<dependencies>
@@ -131,5 +132,30 @@
 		</plugins>
 
 	</build>
+
+	<profiles>
+		<profile>
+			<id>Linux</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<os>
+					<family>unix</family>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>io.vertx</groupId>
+					<artifactId>vertx-io_uring-incubator</artifactId>
+					<version>${stack.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>io.netty.incubator</groupId>
+					<artifactId>netty-incubator-transport-native-io_uring</artifactId>
+					<version>${netty.io_uring.version}</version>
+					<classifier>linux-x86_64</classifier>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 
 </project>
