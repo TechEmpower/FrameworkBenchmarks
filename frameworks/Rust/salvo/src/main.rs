@@ -42,7 +42,8 @@ fn plaintext(res: &mut Response) {
     res.body(ResBody::Once(HELLO_WORD.clone()));
 }
 #[tokio::main]
-async fn main() {
+async 
+fn main() {
     let router = Arc::new(
         Router::new()
             .push(Router::with_path("plaintext").get(plaintext))
@@ -50,7 +51,11 @@ async fn main() {
     );
 
     println!("Started http server: 127.0.0.1:8080");
-    let acceptor: TcpAcceptor = TcpListener::new("127.0.0.1:8080").bind().await;
+    serve(router).await;
+}
+
+async fn serve(router: Arc<Router>) {
+    let acceptor: TcpAcceptor = utils::reuse_listener().unwrap().try_into().unwrap();
     let mut server = Server::new(acceptor);
     let http1 = server.http1_mut();
     http1.pipeline_flush(true);
