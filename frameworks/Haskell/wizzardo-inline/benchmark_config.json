@@ -20,7 +20,8 @@
         "database_os": "Linux",
         "display_name": "wizzardo-inline",
         "notes": "",
-        "versus": "warp"
+        "versus": "warp",
+        "tags": ["broken"]
       }
     }
   ]
