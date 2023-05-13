@@ -102,15 +102,13 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   private static final String SELECT_WORLDS = "SELECT id, randomnumber from WORLD";
 
   private HttpServer server;
-
   private SqlClientInternal client;
-
   private CharSequence dateString;
-
   private CharSequence[] plaintextHeaders;
 
   private final RockerOutputFactory<BufferRockerOutput> factory = BufferRockerOutput.factory(ContentType.RAW);
 
+  private Throwable databaseErr;
   private PreparedQuery<RowSet<Row>> SELECT_WORLD_QUERY;
   private PreparedQuery<RowSet<Row>> SELECT_FORTUNE_QUERY;
   private PreparedQuery<RowSet<Row>> UPDATE_WORLD_QUERY;
@@ -157,8 +155,12 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
                       .andThen(onSuccess(wc -> WORLD_CACHE = wc));
               return CompositeFuture.join(f1, f2, f3, f4);
             })
-            .flatMap(success -> server.listen(port))
-            .onComplete(ar -> startPromise.complete());
+            .transform(ar -> {
+              databaseErr = ar.cause();
+              return server.listen(port);
+            })
+            .<Void>mapEmpty()
+            .onComplete(startPromise);
   }
 
   private static <T> Handler<AsyncResult<T>> onSuccess(Handler<T> handler) {
@@ -171,38 +173,47 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
 
   @Override
   public void handle(HttpServerRequest request) {
-    switch (request.path()) {
-      case PATH_PLAINTEXT:
-        handlePlainText(request);
-        break;
-      case PATH_JSON:
-        handleJson(request);
-        break;
-      case PATH_DB:
-        handleDb(request);
-        break;
-      case PATH_QUERIES:
-        new Queries(request).handle();
-        break;
-      case PATH_UPDATES:
-        new Update(request).handle();
-        break;
-      case PATH_FORTUNES:
-        handleFortunes(request);
-        break;
-      case PATH_CACHING:
-        handleCaching(request);
-        break;
-      default:
-        request.response().setStatusCode(404);
-        request.response().end();
-        break;
+    try {
+      switch (request.path()) {
+        case PATH_PLAINTEXT:
+          handlePlainText(request);
+          break;
+        case PATH_JSON:
+          handleJson(request);
+          break;
+        case PATH_DB:
+          handleDb(request);
+          break;
+        case PATH_QUERIES:
+          new Queries(request).handle();
+          break;
+        case PATH_UPDATES:
+          new Update(request).handle();
+          break;
+        case PATH_FORTUNES:
+          handleFortunes(request);
+          break;
+        case PATH_CACHING:
+          handleCaching(request);
+          break;
+        default:
+          request.response().setStatusCode(404);
+          request.response().end();
+          break;
+      }
+    } catch (Exception e) {
+      sendError(request, e);
     }
   }
 
   @Override
   public void stop() {
     if (server != null) server.close();
+  }
+
+  private void sendError(HttpServerRequest req, Throwable cause) {
+    logger.error(cause.getMessage(), cause);
+    req.response().setStatusCode(500).end();
   }
 
   private void handlePlainText(HttpServerRequest request) {
@@ -250,12 +261,10 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
             .putHeader(HttpHeaders.CONTENT_TYPE, RESPONSE_TYPE_JSON)
             .end(Json.encode(new World(row.getInteger(0), row.getInteger(1))), NULL_HANDLER);
       } else {
-        logger.error(res.cause());
-        resp.setStatusCode(500).end(res.cause().getMessage());
+        sendError(req, res.cause());
       }
     });
   }
-
 
   class Queries implements Handler<AsyncResult<RowSet<Row>>> {
 
@@ -284,7 +293,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
       if (!failed) {
         if (ar.failed()) {
           failed = true;
-          resp.setStatusCode(500).end(ar.cause().getMessage());
+          sendError(req, ar.cause());
           return;
         }
 
@@ -328,7 +337,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
             if (!failed) {
               if (ar2.failed()) {
                 failed = true;
-                sendError(ar2.cause());
+                sendError(req, ar2.cause());
                 return;
               }
               worlds[index] = new World(ar2.result().iterator().next().getInteger(0), randomWorld());
@@ -349,7 +358,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
       }
       UPDATE_WORLD_QUERY.executeBatch(batch, ar2 -> {
         if (ar2.failed()) {
-          sendError(ar2.cause());
+          sendError(req, ar2.cause());
           return;
         }
         JsonArray json = new JsonArray();
@@ -362,11 +371,6 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
             .putHeader(HttpHeaders.CONTENT_TYPE, RESPONSE_TYPE_JSON)
             .end(json.toBuffer(), NULL_HANDLER);
       });
-    }
-
-    void sendError(Throwable err) {
-      logger.error("", err);
-      req.response().setStatusCode(500).end(err.getMessage());
     }
   }
 
@@ -392,9 +396,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
             .putHeader(HttpHeaders.CONTENT_TYPE, RESPONSE_TYPE_HTML)
             .end(FortunesTemplate.template(fortunes).render(factory).buffer(), NULL_HANDLER);
       } else {
-        Throwable err = ar.cause();
-        logger.error("", err);
-        response.setStatusCode(500).end(err.getMessage());
+        sendError(req, ar.cause());
       }
     });
   }
