@@ -1,10 +1,10 @@
-FROM python:3.9.1-buster
+FROM python:3.9-bullseye
 
 ADD ./ /django
 
 WORKDIR /django
 
-RUN pip install -r /django/requirements.txt
+RUN pip install -r /django/requirements-gunicorn.txt
 
 EXPOSE 8080
 

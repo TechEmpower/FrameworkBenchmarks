@@ -1,9 +1,12 @@
-FROM ruby:2.7
+FROM ruby:3.2
 
 ADD ./ /roda-sequel
 WORKDIR /roda-sequel
 
-RUN bundle install --jobs=4 --gemfile=/roda-sequel/Gemfile --path=/roda-sequel/roda-sequel/bundle
+ENV BUNDLE_FORCE_RUBY_PLATFORM=true
+ENV RUBY_YJIT_ENABLE=1
+
+RUN bundle install --jobs=8
 
 ENV DBTYPE=postgresql
 

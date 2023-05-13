@@ -1,4 +1,9 @@
-use std::{cell::RefCell, collections::HashMap, fmt::Write, future::Future};
+use std::{
+    cell::RefCell,
+    collections::HashMap,
+    fmt::Write,
+    future::{Future, IntoFuture},
+};
 
 use futures_util::stream::{FuturesUnordered, TryStreamExt};
 use xitca_postgres::{statement::Statement, AsyncIterator, Postgres, ToSql};
@@ -28,9 +33,9 @@ impl Drop for Client {
 }
 
 pub async fn create(config: &str) -> HandleResult<Client> {
-    let (client, bg_task) = Postgres::new(config.to_string()).connect().await?;
+    let (client, driver) = Postgres::new(config.to_string()).connect().await?;
 
-    tokio::task::spawn_local(bg_task);
+    tokio::task::spawn_local(driver.into_future());
 
     let fortune = client.prepare("SELECT * FROM fortune", &[]).await?.leak();
 

@@ -2,7 +2,7 @@
 // network io.
 
 #![allow(dead_code)]
-#![feature(type_alias_impl_trait)]
+#![feature(impl_trait_in_assoc_type)]
 
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
@@ -34,11 +34,11 @@ use xitca_http::{
     util::service::context::{Context as Ctx, ContextBuilder},
 };
 use xitca_io::{
-    bytes::{Buf, Bytes, BytesMut},
+    bytes::{Bytes, BytesMut, PagedBytesMut},
+    io_uring::IoBuf,
     net::TcpStream,
 };
 use xitca_service::{fn_service, middleware::UncheckedReady, Service, ServiceExt};
-use xitca_unsafe_collection::bytes::PagedBytesMut;
 
 use self::{
     db::Client,
@@ -127,15 +127,17 @@ where
 {
     type Response = Http1IOUService<S::Response>;
     type Error = S::Error;
-    type Future<'f> = impl Future<Output = Result<Self::Response, Self::Error>> + 'f where Self: 'f, (): 'f ;
+    type Future<'f> = impl Future<Output = Result<Self::Response, Self::Error>> + 'f
+    where
+        Self: 'f,
+        (): 'f;
 
     fn call<'s>(&'s self, _: ()) -> Self::Future<'s>
     where
         (): 's,
     {
         async {
-            let service = self.service.call(()).await?;
-            Ok(Http1IOUService {
+            self.service.call(()).await.map(|service| Http1IOUService {
                 service,
                 date: DateTimeService::new(),
             })
@@ -156,31 +158,39 @@ where
 {
     type Response = ();
     type Error = io::Error;
-    type Future<'f> = impl Future<Output = Result<Self::Response, Self::Error>> + 'f where Self: 'f, TcpStream: 'f ;
+    type Future<'f> = impl Future<Output = Result<Self::Response, Self::Error>> + 'f
+    where
+        Self: 'f,
+        TcpStream: 'f;
 
     fn call<'s>(&'s self, stream: TcpStream) -> Self::Future<'s>
     where
         TcpStream: 's,
     {
         async {
+            let mut ctx = Context::<_, 8>::new(self.date.get());
+            let mut paged = PagedBytesMut::new();
+            let mut write_buf = BytesMut::with_capacity(4096);
+
             let std = stream.into_std()?;
             let stream = tokio_uring::net::TcpStream::from_std(std);
 
-            let mut read_buf = BytesMut::with_capacity(4096);
-            let mut write_buf = BytesMut::with_capacity(4096);
-            let mut paged = PagedBytesMut::new();
+            loop {
+                let mut buf = paged.into_inner();
 
-            let mut ctx = Context::<_, 8>::new(self.date.get());
+                let len = buf.len();
+                let rem = buf.capacity() - len;
+                if rem < 4096 {
+                    buf.reserve(4096 - rem);
+                }
 
-            'io: loop {
-                let (res, buf) = stream.read(read_buf).await;
+                let (res, buf) = stream.read(buf.slice(len..)).await;
                 if res? == 0 {
                     break;
                 }
-                read_buf = buf;
-                paged.get_mut().extend_from_slice(&read_buf);
+                paged = PagedBytesMut::from(buf.into_inner());
 
-                while let Some((req, _)) = ctx.decode_head::<65535>(&mut paged).unwrap() {
+                while let Some((req, _)) = ctx.decode_head::<{ usize::MAX }>(&mut paged).unwrap() {
                     let (parts, body) = self.service.call(req).await.unwrap().into_parts();
                     let mut encoder = ctx.encode_head(parts, &body, &mut write_buf).unwrap();
                     let mut body = pin!(body);
@@ -191,23 +201,19 @@ where
                     encoder.encode_eof(&mut write_buf);
                 }
 
-                while !write_buf.is_empty() {
-                    let (res, mut w) = stream.write(write_buf).await;
-                    let n = res?;
-                    if n == 0 {
-                        break 'io;
-                    }
-                    w.advance(n);
-                    write_buf = w;
-                }
+                let (res, b) = stream.write_all(write_buf).await;
+                res?;
+                write_buf = b;
+                write_buf.clear();
             }
 
-            Ok(())
+            stream.shutdown(std::net::Shutdown::Both)
         }
     }
 }
 
 type Request = http::Request<RequestExt<()>>;
+
 type Response = http::Response<Once<Bytes>>;
 
 struct State {

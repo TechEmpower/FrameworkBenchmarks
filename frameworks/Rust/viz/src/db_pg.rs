@@ -1,7 +1,7 @@
 use std::{borrow::Cow, collections::HashMap, fmt::Write, io, sync::Arc};
 
 use futures_util::{stream::FuturesUnordered, TryFutureExt, TryStreamExt};
-use nanorand::{Rng, WyRand};
+use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
 use tokio_postgres::{connect, types::ToSql, Client, NoTls, Statement};
 use viz::{Error, IntoResponse, Response, StatusCode};
 
@@ -33,7 +33,6 @@ impl IntoResponse for PgError {
 
 /// Postgres interface
 pub struct PgConnection {
-    rng: WyRand,
     client: Client,
     world: Statement,
     fortune: Statement,
@@ -41,7 +40,7 @@ pub struct PgConnection {
 }
 
 impl PgConnection {
-    pub async fn connect(db_url: &str) -> Self {
+    pub async fn connect(db_url: &str) -> Arc<Self> {
         let (client, conn) = connect(db_url, NoTls)
             .await
             .expect("can not connect to postgresql");
@@ -63,14 +62,14 @@ impl PgConnection {
             q.push_str("UPDATE world SET randomnumber = CASE id ");
 
             for _ in 1..=num {
-                let _ = write!(q, "when ${} then ${} ", pl, pl + 1);
+                let _ = write!(q, "when ${pl} then ${} ", pl + 1);
                 pl += 2;
             }
 
             q.push_str("ELSE randomnumber END WHERE id IN (");
 
             for _ in 1..=num {
-                let _ = write!(q, "${},", pl);
+                let _ = write!(q, "${pl},");
                 pl += 1;
             }
 
@@ -85,13 +84,12 @@ impl PgConnection {
             .await
             .unwrap();
 
-        PgConnection {
-            rng: WyRand::new(),
+        Arc::new(PgConnection {
             world,
             client,
             fortune,
             updates,
-        }
+        })
     }
 }
 
@@ -105,17 +103,19 @@ impl PgConnection {
     }
 
     pub async fn get_world(&self) -> Result<World, PgError> {
-        let random_id = self.rng.clone().generate_range(RANGE);
+        let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+        let random_id = rng.gen_range(RANGE);
+
         self.query_one_world(random_id).await
     }
 
     pub async fn get_worlds(&self, num: u16) -> Result<Vec<World>, PgError> {
-        let mut rng = self.rng.clone();
+        let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
 
         let worlds = FuturesUnordered::new();
 
         for _ in 0..num {
-            let id = rng.generate_range(RANGE);
+            let id = rng.gen_range(RANGE);
             worlds.push(self.query_one_world(id));
         }
 
@@ -123,13 +123,13 @@ impl PgConnection {
     }
 
     pub async fn update(&self, num: u16) -> Result<Vec<World>, PgError> {
-        let mut rng = self.rng.clone();
+        let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
 
         let worlds = FuturesUnordered::new();
 
         for _ in 0..num {
-            let id = rng.generate_range(RANGE);
-            let rid = rng.generate_range(RANGE);
+            let id = rng.gen_range(RANGE);
+            let rid = rng.gen_range(RANGE);
 
             worlds.push(self.query_one_world(id).map_ok(move |mut world| {
                 world.randomnumber = rid;

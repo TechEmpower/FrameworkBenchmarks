@@ -11,6 +11,9 @@ namespace userver_techempower::fortunes {
 
 namespace {
 
+const std::string kContentTypeHeader{"Content-Type"};
+const std::string kContentTypeTextHtml{"text/html; charset=utf-8"};
+
 struct Fortune final {
   int id;
   std::string message;
@@ -135,7 +138,7 @@ Handler::Handler(const userver::components::ComponentConfig& config,
 std::string Handler::HandleRequestThrow(
     const userver::server::http::HttpRequest& request,
     userver::server::request::RequestContext&) const {
-  request.GetHttpResponse().SetContentType("text/html; charset=utf-8");
+  request.GetHttpResponse().SetHeader(kContentTypeHeader, kContentTypeTextHtml);
   return GetResponse();
 }
 

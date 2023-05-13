@@ -63,6 +63,7 @@ fn main() -> io::Result<()> {
                     .disable_vectored_write()
                     .max_request_headers::<8>(),
             )
+            .io_uring()
         })?
         .build()
         .wait()

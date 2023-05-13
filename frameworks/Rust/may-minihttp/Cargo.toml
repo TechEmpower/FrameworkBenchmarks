@@ -18,8 +18,8 @@ yarte = { version = "0.15", features = ["bytes-buf", "json"] }
 buf-min = { version = "0.7", features = ["bytes"] }
 
 may = { version = "0.3", default-features = false }
-may_minihttp = { git = "https://github.com/Xudong-Huang/may_minihttp.git", rev = "dc8a146", default-features = false }
-may_postgres = { git = "https://github.com/Xudong-Huang/may_postgres.git", rev = "74e639d", default-features = false }
+may_minihttp = { git = "https://github.com/Xudong-Huang/may_minihttp.git", rev = "bbcd7f7", default-features = false }
+may_postgres = { git = "https://github.com/Xudong-Huang/may_postgres.git", rev = "bf1d86e", default-features = false }
 
 [profile.release]
 opt-level = 3
