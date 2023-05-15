@@ -1,13 +1,18 @@
 # frozen_string_literal: true
 
 require_relative 'auto_tune'
+require 'etc'
 require 'sequel'
 
 # FWBM only... use the puma_auto_tune gem in production!
 num_workers, num_threads = auto_tune
 
-workers num_workers
-threads num_threads, num_threads
+threads = Etc.nprocessors * 2
+
+if RUBY_PLATFORM != 'java'
+  workers num_workers
+  threads num_threads, num_threads
+end
 
 before_fork do
   Sequel::DATABASES.each(&:disconnect)

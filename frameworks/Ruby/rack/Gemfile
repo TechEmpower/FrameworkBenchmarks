@@ -3,13 +3,14 @@
 source 'https://rubygems.org'
 
 gem 'connection_pool', '~>2.4'
-gem 'falcon', '~>0.42'
+gem 'falcon', '~>0.42', platforms: %i[ruby mswin]
 gem 'jdbc-postgres', '~> 42.2', platforms: :jruby, require: 'jdbc/postgres'
-gem 'oj', '~> 3.14'
-gem 'pg', '~>1.5' # , group: :postgresql
+gem 'json', '~> 2.6', platforms: :jruby
+gem 'oj', '~> 3.14', platforms: %i[ruby mswin]
+gem 'pg', '~>1.5', platforms: %i[ruby mswin]
 gem 'puma', '~> 6.2'
 gem 'sequel'
-gem 'sequel_pg'
+gem 'sequel_pg', platforms: %i[ruby mswin]
 gem 'tzinfo-data', '1.2023.3'
 gem 'unicorn', '~> 6.1', platforms: %i[ruby mswin], require: false
 

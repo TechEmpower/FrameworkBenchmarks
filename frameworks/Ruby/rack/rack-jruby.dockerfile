@@ -1,5 +1,7 @@
 FROM jruby:9.4-jdk17
 
+RUN apt-get update -y && apt-get install netbase -y
+
 WORKDIR /rack
 
 COPY Gemfile  ./

@@ -1,9 +1,18 @@
 # frozen_string_literal: true
 
 # Our Rack application to be executed by rackup
-require 'oj'
+
 require_relative 'pg_db'
 require_relative 'config/auto_tune'
+
+if RUBY_PLATFORM == 'java'
+  require 'json'
+  DEFAULT_DATABASE_URL = 'jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass'
+else
+  require 'oj'
+  Oj.mimic_json
+  DEFAULT_DATABASE_URL = 'postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass'
+end
 
 class HelloWorld
   QUERY_RANGE = (1..10_000).freeze # range of IDs in the Fortune DB
@@ -44,16 +53,9 @@ class HelloWorld
   </html>'
 
   def initialize
-    connection_string =
-      if RUBY_PLATFORM == 'java'
-        'jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass'
-      else
-        'postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass'
-      end
-
-    auto_tune
+    # auto_tune
     max_connections = 512
-    @db = PgDb.new(connection_string, max_connections)
+    @db = PgDb.new(DEFAULT_DATABASE_URL, max_connections)
   end
 
   def respond(content_type, body = '')
@@ -88,15 +90,15 @@ class HelloWorld
     when '/json'
       # Test type 1: JSON serialization
       respond JSON_TYPE,
-              Oj.dump({ message: 'Hello, World!' }, { mode: :strict })
+              { message: 'Hello, World!' }.to_json
     when '/db'
       # Test type 2: Single database query
-      respond JSON_TYPE, Oj.dump(@db.select_random_world, { mode: :strict })
+      respond JSON_TYPE, @db.select_random_world.to_json
     when '/queries'
       # Test type 3: Multiple database queries
       params = Rack::Utils.parse_query(env['QUERY_STRING'])
       queries = params['queries']
-      respond JSON_TYPE, Oj.dump(@db.select_worlds(queries), { mode: :strict })
+      respond JSON_TYPE, @db.select_worlds(queries).to_json
     when '/fortunes'
       # Test type 4: Fortunes
       respond HTML_TYPE, fortunes
@@ -104,7 +106,7 @@ class HelloWorld
       # Test type 5: Database updates
       params = Rack::Utils.parse_query(env['QUERY_STRING'])
       queries = params['queries']
-      respond JSON_TYPE, Oj.dump(@db.update_worlds(queries), { mode: :strict })
+      respond JSON_TYPE, @db.update_worlds(queries).to_json
     when '/plaintext'
       # Test type 6: Plaintext
       respond PLAINTEXT_TYPE, 'Hello, World!'
