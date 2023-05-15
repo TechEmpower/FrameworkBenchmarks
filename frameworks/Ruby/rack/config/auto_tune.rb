@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 # Instantiate about one process per X MiB of available memory, scaling up to as
 # close to MAX_THREADS as possible while observing an upper bound based on the
 # number of virtual/logical CPUs. If there are fewer processes than
@@ -38,4 +40,4 @@ def auto_tune
   [workers, threads_per_worker]
 end
 
-p auto_tune if $0 == __FILE__
+p auto_tune if $PROGRAM_NAME == __FILE__

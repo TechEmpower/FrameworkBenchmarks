@@ -1,1 +1,0 @@
-wrk -H 'Host: tfb-server' -H 'Accept: application/json,text/html;q=0.9,application/xhtml+xml;q=0.9,application/xml;q=0.8,/;q=0.7' -H 'Connection: keep-alive' --latency -d 15 -c 64 --timeout 8 -t 3 "http://localhost:8080/json"

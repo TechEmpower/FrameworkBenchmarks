@@ -1,9 +1,7 @@
-# ruby "~> 3.1"
+# frozen_string_literal: true
 
 source 'https://rubygems.org'
 
-# gem "listen", "~> 3.3", group: :development
-# gem "mysql2", "0.5.3", group: :mysql
 gem 'connection_pool', '~>2.4'
 gem 'falcon', '~>0.42'
 gem 'jdbc-postgres', '~> 42.2', platforms: :jruby, require: 'jdbc/postgres'
@@ -17,5 +15,5 @@ gem 'unicorn', '~> 6.1', platforms: %i[ruby mswin], require: false
 
 group :development do
   gem 'rack-test'
-  gem 'rubocop'
+  gem 'rubocop', platforms: %i[ruby mswin]
 end

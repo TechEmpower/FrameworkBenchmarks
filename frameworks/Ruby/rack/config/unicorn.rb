@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'auto_tune'
 require 'sequel'
 num_workers, = auto_tune

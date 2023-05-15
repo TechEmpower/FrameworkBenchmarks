@@ -9,7 +9,7 @@ end
 Sequel.extension :fiber_concurrency if defined?(Falcon)
 
 class PgDb
-  QUERY_RANGE = 1..10_000 # range of IDs in the Fortune DB
+  QUERY_RANGE = (1..10_000).freeze # range of IDs in the Fortune DB
   ALL_IDS = QUERY_RANGE.to_a # enumeration of all the IDs in fortune DB
   MIN_QUERIES = 1 # min number of records that can be retrieved
   MAX_QUERIES = 500 # max number of records that can be retrieved
@@ -42,13 +42,13 @@ class PgDb
 
   def validate_count(count)
     count = count.to_i
-    count = if count < MIN_QUERIES
-              MIN_QUERIES
-            elsif count > MAX_QUERIES
-              MAX_QUERIES
-            else
-              count
-            end
+    if count < MIN_QUERIES
+      MIN_QUERIES
+    elsif count > MAX_QUERIES
+      MAX_QUERIES
+    else
+      count
+    end
   end
 
   def select_promises(count)
@@ -86,7 +86,6 @@ class PgDb
     promises = select_promises(count)
     results = []
     update_statements = String.new
-
     promises.each do |p|
       result = p.to_hash
       result[:randomnumber] = random_id

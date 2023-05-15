@@ -6,7 +6,7 @@ require_relative 'pg_db'
 require_relative 'config/auto_tune'
 
 class HelloWorld
-  QUERY_RANGE = 1..10_000 # range of IDs in the Fortune DB
+  QUERY_RANGE = (1..10_000).freeze # range of IDs in the Fortune DB
   ALL_IDS = QUERY_RANGE.to_a # enumeration of all the IDs in fortune DB
   MIN_QUERIES = 1 # min number of records that can be retrieved
   MAX_QUERIES = 500 # max number of records that can be retrieved
@@ -51,7 +51,7 @@ class HelloWorld
         'postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass'
       end
 
-    num_workers, num_threads = auto_tune
+    auto_tune
     max_connections = 512
     @db = PgDb.new(connection_string, max_connections)
   end
