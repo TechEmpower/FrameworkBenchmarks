@@ -37,7 +37,8 @@
       "database_os": "Linux",
       "display_name": "servlet",
       "notes": "Using compiled native Resin library",
-      "versus": "servlet"
+      "versus": "servlet",
+      "tags": ["broken"]
     },
     "mysql": {
       "db_url": "/db",

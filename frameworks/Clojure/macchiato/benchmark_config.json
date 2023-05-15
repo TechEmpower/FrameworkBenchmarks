@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "macchiato",
       "notes": "",
-      "versus": "nodejs"
+      "versus": "nodejs",
+      "tags": ["broken"]
     }
   }]
 }
