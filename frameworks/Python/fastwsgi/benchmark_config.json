@@ -22,7 +22,6 @@
         },
         "asgi": {
             "json_url": "/json",
-            "plaintext_url": "/plaintext",
             "db_url": "/db",
             "query_url": "/queries?queries=",
             "update_url": "/updates?queries=",
@@ -41,7 +40,8 @@
             "os": "Linux",
             "database_os": "Linux",
             "display_name": "FastWSGI [ASGI]",
-            "notes": ""
+            "notes": "",
+            "versus": "uvicorn"
         }
     }]
 }

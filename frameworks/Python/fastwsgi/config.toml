@@ -16,7 +16,6 @@ versus = "wsgi"
 
 [asgi]
 urls.json = "/json"
-urls.plaintext = "/plaintext"
 urls.db = "/db"
 urls.query = "/queries?queries="
 urls.update = "/updates?queries="
@@ -30,4 +29,4 @@ os = "Linux"
 orm = "Raw"
 platform = "ASGI"
 webserver = "FastWSGI"
-versus = "None"
+versus = "uvicorn"
