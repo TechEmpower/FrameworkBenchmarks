@@ -6,7 +6,7 @@ edition = "2021"
 [[bin]]
 name = "xitca-web"
 path = "./src/main.rs"
-required-features = ["pg", "serde", "template"]
+required-features = ["io-uring", "pg", "serde", "template"]
 
 [[bin]]
 name = "xitca-web-diesel"
@@ -17,11 +17,6 @@ required-features = ["pg-orm", "serde", "template", "web"]
 name = "xitca-web-iou"
 path = "./src/main_iou.rs"
 required-features = ["io-uring", "pg", "serde", "template"]
-
-[[bin]]
-name = "xitca-web-epoll"
-path = "./src/main_iou.rs"
-required-features = ["pg", "serde", "template"]
 
 [[bin]]
 name = "xitca-web-wasm"
@@ -40,7 +35,7 @@ web = ["xitca-web"]
 # template optional
 template = ["sailfish"]
 # io-uring optional
-io-uring = ["tokio-uring", "xitca-server/io-uring"]
+io-uring = ["tokio-uring", "xitca-http/io-uring", "xitca-server/io-uring"]
 
 [dependencies]
 xitca-http = { version = "0.1", features = ["util-service"] }
@@ -86,13 +81,13 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "d3e9a4fb6b16513ff638f43305c9c96cdb3501b2" }
-xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "d3e9a4fb6b16513ff638f43305c9c96cdb3501b2" }
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "d3e9a4fb6b16513ff638f43305c9c96cdb3501b2" }
-xitca-router = { git = "https://github.com/HFQR/xitca-web.git", rev = "d3e9a4fb6b16513ff638f43305c9c96cdb3501b2" }
-xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "d3e9a4fb6b16513ff638f43305c9c96cdb3501b2" }
-xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "d3e9a4fb6b16513ff638f43305c9c96cdb3501b2" }
-xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "d3e9a4fb6b16513ff638f43305c9c96cdb3501b2" }
-xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "d3e9a4fb6b16513ff638f43305c9c96cdb3501b2" }
+xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
+xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
+xitca-router = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
+xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
+xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
+xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
+xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
 
-mio = { git = "https://github.com/fakeshadow/mio.git", rev = "4272250caed2f460f7be646d0fd25d53d267eb53" }
+mio = { git = "https://github.com/fakeshadow/mio.git", rev = "2e80aa89ee94a0e2d343331b8df106d7321148b9" }

@@ -1,4 +1,4 @@
-Django==3.2.18
+Django==3.2.19
 mysqlclient==1.4.6
 psycopg2==2.9.6; implementation_name=='cpython'
 psycopg2cffi==2.9.0; implementation_name=='pypy'

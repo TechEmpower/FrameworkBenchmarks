@@ -7,11 +7,8 @@ WORKDIR /ihp
 RUN nix-env -i cachix
 RUN cachix use digitallyinduced
 
-# Warmup docker build cache
-RUN nix-shell -j auto --cores 0 --command "echo ok"
-
 # Build 
-RUN nix-build
+RUN nix-build -j auto --cores 0
 
 # Setup
 ENV DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world

@@ -49,13 +49,11 @@
                 "versus": "servlet"
             },
             "jettyloom-pgclient": {
-                "json_url": "/json",
                 "db_url": "/db",
                 "query_url": "/query?queries=",
                 "fortune_url": "/fortunes",
                 "update_url": "/update?queries=",
                 "cached_query_url": "/cached-queries?count=",
-                "plaintext_url": "/plaintext",
                 "port": 9090,
                 "approach": "Realistic",
                 "classification": "Micro",
@@ -118,13 +116,11 @@
                 "versus": "netty"
             },
             "nettyepoll-pgclient": {
-                "json_url": "/json",
                 "db_url": "/db",
                 "query_url": "/query?queries=",
                 "fortune_url": "/fortunes",
                 "update_url": "/update?queries=",
                 "cached_query_url": "/cached-queries?count=",
-                "plaintext_url": "/plaintext",
                 "port": 9090,
                 "approach": "Realistic",
                 "classification": "Micro",

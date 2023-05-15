@@ -68,28 +68,6 @@
         "notes": "",
         "versus": ""
       },
-      "epoll": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
-        "db_url": "/db",
-        "fortune_url": "/fortunes",
-        "query_url": "/queries?q=",
-        "update_url": "/updates?q=",
-        "port": 8080,
-        "approach": "Stripped",
-        "classification": "Platform",
-        "database": "Postgres",
-        "framework": "xitca-web",
-        "language": "Rust",
-        "orm": "Raw",
-        "platform": "None",
-        "webserver": "xitca-server",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "xitca-web [epoll]",
-        "notes": "",
-        "versus": ""
-      },
       "wasm": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
