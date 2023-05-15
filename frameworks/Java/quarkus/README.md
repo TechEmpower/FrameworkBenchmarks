@@ -12,8 +12,8 @@ There are currently 3 implementations:
 
 ## Versions
 
-* [Java OpenJDK 11](http://openjdk.java.net/)
-* [Quarkus 2.9.1.Final](https://quarkus.io)
+* [Java OpenJDK 17](http://openjdk.java.net/)
+* [Quarkus 3.0.3.Final](https://quarkus.io)
 
 ## Test URLs
 
