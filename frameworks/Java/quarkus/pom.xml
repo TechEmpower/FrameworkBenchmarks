@@ -72,11 +72,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-bootstrap-maven-plugin</artifactId>
-                <version>${quarkus.version}</version>
-            </plugin>
         </plugins>
     </build>
     <profiles>
