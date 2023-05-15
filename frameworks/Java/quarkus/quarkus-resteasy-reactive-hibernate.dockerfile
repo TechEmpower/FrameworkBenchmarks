@@ -1,4 +1,4 @@
-FROM docker.io/maven:3.8.4-eclipse-temurin-11 as maven
+FROM registry.access.redhat.com/ubi8/openjdk-17:1.15 as maven
 WORKDIR /quarkus
 ENV MODULE=resteasy-reactive-hibernate
 
@@ -25,7 +25,7 @@ WORKDIR /quarkus/$MODULE
 RUN mvn package -B -q
 WORKDIR /quarkus
 
-FROM docker.io/eclipse-temurin:11-jdk
+FROM registry.access.redhat.com/ubi8/openjdk-17-runtime:1.15
 WORKDIR /quarkus
 ENV MODULE=resteasy-reactive-hibernate
 

@@ -10,8 +10,8 @@
     <properties>
         <quarkus.version>3.0.3.Final</quarkus.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <surefire-plugin.version>3.0.0</surefire-plugin.version>
+        <maven.compiler.release>17</maven.compiler.release>
     </properties>
 
     <modules>
