@@ -1,4 +1,4 @@
-require_relative "auto_tune"
+require_relative 'auto_tune'
 require 'sequel'
 
 # FWBM only... use the puma_auto_tune gem in production!

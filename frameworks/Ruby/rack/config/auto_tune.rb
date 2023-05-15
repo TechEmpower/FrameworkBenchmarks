@@ -19,7 +19,7 @@ def meminfo(arg)
     end
   end
 
-  fail "Unable to find `#{arg}' in /proc/meminfo!"
+  raise "Unable to find `#{arg}' in /proc/meminfo!"
 end
 
 def auto_tune
