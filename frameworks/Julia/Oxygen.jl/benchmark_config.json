@@ -1,0 +1,26 @@
+{
+	"framework": "oxygen-jl",
+	"tests": [
+		{
+			"default": {
+				"json_url": "/json",
+				"plaintext_url": "/plaintext",
+				"port": 8080,
+				"approach": "Realistic",
+				"classification": "None",
+				"database": "None",
+				"framework": "Oxygen.jl",
+				"language": "Julia",
+				"orm": "None",
+				"platform": "None",
+				"webserver": "Oxygen.jl",
+				"os": "Linux",
+				"database_os": "Linux",
+				"display_name": "Oxygen.jl",
+				"notes": "",
+				"versus": "",
+				"tags": []
+			}
+		}
+	]
+}
