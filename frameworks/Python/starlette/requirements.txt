@@ -6,6 +6,6 @@ Jinja2==3.1.2
 MarkupSafe==2.1.1
 python-dotenv==0.20.0
 PyYAML==6.0
-starlette==0.25.0
+starlette==0.27.0
 uvicorn==0.20.0
 uvloop==0.17.0
