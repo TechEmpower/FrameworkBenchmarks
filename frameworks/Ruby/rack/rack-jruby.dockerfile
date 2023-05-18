@@ -5,6 +5,8 @@ RUN apt-get update -y && apt-get install netbase -y
 WORKDIR /rack
 
 COPY Gemfile  ./
+
+RUN bundle config set without 'development test'
 RUN bundle install --jobs=8
 
 #There is a mismatch in bundler versions so we have to do this

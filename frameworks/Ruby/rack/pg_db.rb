@@ -6,6 +6,7 @@ if RUBY_PLATFORM == 'java'
   require 'jdbc/postgres'
   Jdbc::Postgres.load_driver
 end
+
 Sequel.extension :fiber_concurrency if defined?(Falcon)
 
 class PgDb
@@ -17,7 +18,7 @@ class PgDb
   attr_reader :connection
 
   def initialize(connection_string = nil, max_connections = 512)
-    @connection = Sequel.connect(connection_string, max_connections: max_connections)
+    @connection = Sequel.connect(connection_string, max_connections: max_connections, sql_log_level: :warning)
     @connection.extension :async_thread_pool
     prepare_statements
   end
@@ -26,9 +27,7 @@ class PgDb
     @world_select = @connection['SELECT id, randomNumber FROM World WHERE id = ?', :$id].prepare(:select, :select_by_id)
     @world_update = @connection['UPDATE World SET randomNumber = ? WHERE id = ?', :$random_number, :$id].prepare(:update,
                                                                                                                  :update_by_id)
-    @world_update_returning = @connection['UPDATE World SET randomNumber = ? WHERE id = ? returning *', :$random_number, :$id].prepare(
-      :select, :update_by_id
-    )
+
     @fortune_select = @connection['SELECT id, message FROM Fortune'].prepare(:select, :select_all)
   end
 
@@ -52,6 +51,7 @@ class PgDb
   end
 
   def select_promises(count)
+    count = validate_count(count)
     promises = []
     count.times do
       @connection.synchronize do
@@ -59,6 +59,15 @@ class PgDb
       end
     end
     promises
+  end
+
+  def select_random_numbers(count)
+    count = validate_count(count)
+    results = []
+    count.times do
+      results << @world_random_select.call(randomvalue: random_id, id: random_id)[0]
+    end
+    results
   end
 
   def select_worlds(count)
@@ -71,42 +80,32 @@ class PgDb
   end
 
   def select_worlds_async(count)
-    count = validate_count(count)
     promises = select_promises(count)
     results = []
-
     promises.each do |p|
       results << p.to_hash
     end
     results
   end
 
-  def update_worlds_async(count)
-    count = validate_count(count)
-    promises = select_promises(count)
-    results = []
-    update_statements = String.new
-    promises.each do |p|
-      result = p.to_hash
-      result[:randomnumber] = random_id
-      results << result
-      update_statements << "UPDATE World SET randomNumber = #{result[:randomnumber]} WHERE id = #{result[:id]};\n"
+  def update_worlds(count, async = false)
+    results = if async
+      select_worlds_async(count)
+    else
+      select_worlds(count)
     end
-    @connection.run(update_statements)
+    #values = []
+    ids=[]
+    sql = String.new("UPDATE world SET randomnumber = CASE id ")
+    results.each do |r|
+      r[:randomnumber] = random_id
+      ids << r[:id]
+      sql << "when #{r[:id]} then #{r[:randomnumber]} "
+    end
+    sql << "ELSE randomnumber END WHERE id IN ( #{ids.join(',')})"
+    @connection[sql].update
     results
   end
-
-  def update_worlds(count)
-    results = select_worlds(count)
-    update_statements = String.new
-    results.each do |result|
-      result[:randomnumber] = random_id
-      update_statements << "UPDATE World SET randomNumber = #{result[:randomnumber]} WHERE id = #{result[:id]};\n"
-    end
-    @connection.run(update_statements)
-    results
-  end
-
   def select_fortunes
     @fortune_select.call
   end

@@ -8,6 +8,8 @@ ENV RUBY_YJIT_ENABLE=1
 WORKDIR /rack
 
 COPY Gemfile Gemfile.lock ./
+
+RUN bundle config set without 'development test'
 RUN bundle install --jobs=8
 
 COPY . .
