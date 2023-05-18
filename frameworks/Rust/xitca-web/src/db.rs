@@ -6,7 +6,7 @@ use std::{
 };
 
 use futures_util::stream::{FuturesUnordered, TryStreamExt};
-use xitca_postgres::{statement::Statement, AsyncIterator, Postgres, ToSql};
+use xitca_postgres::{statement::Statement, AsyncIterator, Postgres};
 use xitca_unsafe_collection::no_hash::NoHashBuilder;
 
 use super::{
@@ -78,12 +78,12 @@ pub async fn create(config: &str) -> HandleResult<Client> {
 impl Client {
     async fn query_one_world(&self, id: i32) -> HandleResult<World> {
         self.client
-            .query_raw(&self.world, &[&id])
+            .query_raw(&self.world, [id])
             .await?
             .next()
             .await
             .ok_or_else(|| format!("World {id} does not exist"))?
-            .map(|row| World::new(row.get_raw(0), row.get_raw(1)))
+            .map(|row| World::new(row.get(0), row.get(1)))
             .map_err(Into::into)
     }
 
@@ -122,19 +122,16 @@ impl Client {
 
         let worlds = worlds.try_collect::<Vec<_>>().await?;
 
-        let mut params = Vec::<&(dyn ToSql + Sync)>::with_capacity(num as usize * 3);
-
-        for w in &worlds {
-            params.push(&w.id);
-            params.push(&w.randomnumber);
-        }
-        for w in &worlds {
-            params.push(&w.id);
-        }
+        let params = worlds
+            .iter()
+            .map(|w| [w.id, w.randomnumber])
+            .flatten()
+            .chain(worlds.iter().map(|w| w.id))
+            .collect::<Vec<_>>();
 
         let st = self.updates.get(&num).unwrap();
 
-        self.client.execute(st, params.as_slice()).await?;
+        self.client.execute_raw(st, &params).await?;
 
         Ok(worlds)
     }
@@ -142,13 +139,16 @@ impl Client {
     pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
         let mut items = Vec::with_capacity(32);
 
-        items.push(Fortune::new(0, "Additional fortune added at request time."));
+        items.push(Fortune::from_static(
+            0,
+            "Additional fortune added at request time.",
+        ));
 
-        let mut stream = self.client.query_raw::<&[i32]>(&self.fortune, &[]).await?;
+        let mut stream = self.client.query_raw::<[i32; 0]>(&self.fortune, []).await?;
 
         while let Some(row) = stream.next().await {
             let row = row?;
-            items.push(Fortune::new(row.get_raw(0), row.get_raw::<String>(1)));
+            items.push(Fortune::new(row.get(0), row.get(1)));
         }
 
         items.sort_by(|it, next| it.message.cmp(&next.message));

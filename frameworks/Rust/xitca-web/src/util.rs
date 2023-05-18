@@ -23,7 +23,7 @@ impl QueryParse for Option<&str> {
 }
 
 #[allow(clippy::declare_interior_mutable_const)]
-pub const SERVER_HEADER_VALUE: HeaderValue = HeaderValue::from_static("TFB");
+pub const SERVER_HEADER_VALUE: HeaderValue = HeaderValue::from_static("X");
 
 pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 
