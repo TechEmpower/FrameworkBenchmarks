@@ -37,6 +37,7 @@ FROM roswell AS builder
 
 RUN apt-get update -q \
     && apt-get install --no-install-recommends -q -y \
+         git \
          build-essential \
          libev-dev \
     && rm -rf /var/lib/apt/lists/*
@@ -44,7 +45,15 @@ RUN apt-get update -q \
 WORKDIR /woo
 ADD  . .
 
-RUN ros build woo.ros
+RUN mkdir -p /libs && \
+    git clone https://github.com/svetlyak40wt/fast-http /libs/fast-http && \
+    cd /libs/fast-http && \
+    git checkout http-pipelining && \
+    git clone https://github.com/svetlyak40wt/woo /libs/woo && \
+    cd /libs/woo && \
+    git checkout fix-error-codes
+
+RUN CL_SOURCE_REGISTRY=/libs// ros build woo.ros
 
 
 FROM debian
