@@ -1,0 +1,14 @@
+[package]
+name = "tfb-pavex-bp"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+path = "src/bin/generate.rs"
+name = "generate"
+
+[dependencies]
+pavex_builder = { git = "https://github.com/LukeMathWalker/pavex.git", rev = "72cb987" }
+pavex_runtime = { git = "https://github.com/LukeMathWalker/pavex.git", rev = "72cb987" }
+pavex_cli_client = { git = "https://github.com/LukeMathWalker/pavex.git", rev = "72cb987" }
+cargo_px_env = "0.1"

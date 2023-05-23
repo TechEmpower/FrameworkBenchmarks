@@ -1,0 +1,25 @@
+{
+  "framework": "pavex",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "port": 8000,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "pavex",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "pavex",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
