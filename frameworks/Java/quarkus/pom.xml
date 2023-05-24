@@ -14,9 +14,11 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>3.0.3.Final</quarkus.platform.version>
+        <quarkus.platform.version>3.1.0.CR1</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.0.0</surefire-plugin.version>
+        <netty.io_uring.version>0.0.21.Final</netty.io_uring.version>
+        <vertx.version>4.4.2</vertx.version>
     </properties>
 
     <modules>
@@ -32,6 +34,11 @@
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-benchmark-common</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-core</artifactId>
+                <version>${vertx.version}</version>
             </dependency>
             <dependency>
                 <groupId>${quarkus.platform.group-id}</groupId>
@@ -113,5 +120,28 @@
                 <quarkus.package.type>native</quarkus.package.type>
             </properties>
         </profile>
+        <profile>
+            <id>Linux</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>io.vertx</groupId>
+                    <artifactId>vertx-io_uring-incubator</artifactId>
+                    <version>${vertx.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>io.netty.incubator</groupId>
+                    <artifactId>netty-incubator-transport-native-io_uring</artifactId>
+                    <version>${netty.io_uring.version}</version>
+                    <classifier>linux-x86_64</classifier>
+                </dependency>
+            </dependencies>
+        </profile>
     </profiles>
+
 </project>
