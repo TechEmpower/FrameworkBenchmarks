@@ -19,4 +19,4 @@ RUN nix-shell --run "bazel build //wizzardo-http-benchmark"
 
 EXPOSE 8080
 
-CMD nix-shell --run "bazel run //wizzardo-http-benchmark -- env=prod +RTS -A32m -N$(nproc) -RTS"
+CMD nix-shell --run "bazel-bin/wizzardo-http-benchmark/wizzardo-http-benchmark env=prod +RTS -A32m -N$(nproc) -RTS"
