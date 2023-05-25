@@ -46,7 +46,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Gearbox",
+        "display_name": "Gearbox prefork",
         "notes": "",
         "versus": "go"
       }
