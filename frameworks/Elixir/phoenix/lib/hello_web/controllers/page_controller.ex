@@ -18,7 +18,7 @@ defmodule HelloWeb.PageController do
   end
 
   def db(conn, _params) do
-    world = Repo.get(World, :rand.uniform(@random_max))
+    world = Repo.get(World, random_id())
 
     json(conn, world)
   end
@@ -27,7 +27,7 @@ defmodule HelloWeb.PageController do
     :rand.seed(:exsp)
 
     worlds =
-      Stream.repeatedly(fn -> :rand.uniform(@random_max) end)
+      Stream.repeatedly(&random_id/0)
       |> Stream.uniq()
       |> Stream.map(fn idx -> Repo.get(World, idx) end)
       |> Enum.take(size(params["queries"]))
@@ -52,7 +52,7 @@ defmodule HelloWeb.PageController do
     :rand.seed(:exsp)
 
     worlds =
-      Stream.repeatedly(fn -> :rand.uniform(@random_max) end)
+      Stream.repeatedly(&random_id/0)
       |> Stream.uniq()
       |> Stream.map(fn idx -> Repo.get(World, idx) end)
       |> Stream.map(fn world -> %{id: world.id, randomnumber: :rand.uniform(@random_max)} end)
@@ -77,7 +77,7 @@ defmodule HelloWeb.PageController do
     :rand.seed(:exsp)
 
     worlds =
-      Stream.repeatedly(fn -> :rand.uniform(@random_max) end)
+      Stream.repeatedly(&random_id/0)
       |> Stream.uniq()
       |> Stream.map(&get_cached_world/1)
       |> Enum.take(size(params["count"]))
@@ -97,14 +97,8 @@ defmodule HelloWeb.PageController do
     end
   end
 
-  defp random_but(not_this_value) do
-    case :rand.uniform(@random_max) do
-      new_value when new_value == not_this_value ->
-        random_but(not_this_value)
-
-      new_value ->
-        new_value
-    end
+  defp random_id() do
+    :rand.uniform(@random_max)
   end
 
   defp size(nil), do: 1
