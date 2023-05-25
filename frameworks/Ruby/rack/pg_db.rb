@@ -7,7 +7,7 @@ if RUBY_PLATFORM == 'java'
   Jdbc::Postgres.load_driver
 end
 
-Sequel.extension :fiber_concurrency if defined?(Falcon)
+
 
 class PgDb
   QUERY_RANGE = (1..10_000).freeze # range of IDs in the Fortune DB
@@ -19,7 +19,12 @@ class PgDb
 
   def initialize(connection_string = nil, max_connections = 512)
     @connection = Sequel.connect(connection_string, max_connections: max_connections, sql_log_level: :warning)
-    @connection.extension :async_thread_pool
+    if defined?(Falcon)
+      Sequel.extension :fiber_concurrency if defined?(Falcon)
+    else
+      @connection.extension :async_thread_pool
+    end
+
     prepare_statements
   end
 

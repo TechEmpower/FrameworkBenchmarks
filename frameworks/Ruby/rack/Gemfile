@@ -2,6 +2,7 @@
 
 source 'https://rubygems.org'
 
+gem 'rack', '~>3.0'
 gem 'connection_pool', '~>2.4'
 gem 'falcon', '~>0.42', platforms: %i[ruby mswin]
 gem 'jdbc-postgres', '~> 42.2', platforms: :jruby, require: 'jdbc/postgres'

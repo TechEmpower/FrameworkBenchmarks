@@ -4,6 +4,7 @@
 
 require_relative 'pg_db'
 require_relative 'config/auto_tune'
+require 'rack'
 
 if RUBY_PLATFORM == 'java'
   require 'json'
