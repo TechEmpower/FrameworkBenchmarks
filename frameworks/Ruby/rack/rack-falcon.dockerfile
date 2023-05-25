@@ -1,13 +1,17 @@
-FROM ruby:2.4
+FROM ruby:3.2
 
-RUN apt-get update -yqq && apt-get install -yqq nginx
-
-ADD ./ /rack
+ENV BUNDLE_FORCE_RUBY_PLATFORM=true
+ENV RUBY_YJIT_ENABLE=1
 
 WORKDIR /rack
 
-RUN bundle install --jobs=4 --gemfile=/rack/Gemfile --path=/rack/rack/bundle
+COPY Gemfile Gemfile.lock ./
+
+RUN bundle config set without 'development test'
+RUN bundle install --jobs=8
+
+COPY . .
 
 EXPOSE 8080
 
-CMD bundle exec falcon serve --forked --bind tcp://0.0.0.0:8080
+CMD bundle exec falcon host

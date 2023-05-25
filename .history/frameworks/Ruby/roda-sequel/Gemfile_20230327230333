@@ -1,0 +1,19 @@
+source 'https://rubygems.org'
+
+gem 'erubi', '~> 1.10'
+gem 'json', '~> 2.5'
+gem 'passenger', '~> 6.0', :platforms=>[:ruby, :mswin], :require=>false
+gem 'puma', '~> 5.2', :require=>false
+gem 'sequel', '~> 5.44'
+gem 'roda', '~> 3.43'
+gem 'tilt', '~> 2.0', :require=>'tilt/erb'
+gem 'unicorn', '~> 6.0', :platforms=>[:ruby, :mswin], :require=>false
+
+group :mysql do
+  gem 'mysql2', '~> 0.5', :platforms=>[:ruby, :mswin]
+end
+
+group :postgresql do
+  gem 'pg', '~> 1.2', :platforms=>[:ruby, :mswin]
+  gem 'sequel_pg', '~> 1.14', :platforms=>:ruby, :require=>false
+end

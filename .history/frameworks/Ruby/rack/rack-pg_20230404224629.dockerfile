@@ -1,0 +1,1 @@
+FROM ruby:$RUBY_VERSION-slim-$DISTRO_NAME
