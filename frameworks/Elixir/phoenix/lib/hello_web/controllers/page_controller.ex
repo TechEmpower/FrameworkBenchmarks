@@ -6,50 +6,33 @@ defmodule HelloWeb.PageController do
   alias Hello.Repo
   alias Hello.Cache
 
-  @json "application/json"
-  @plain "text/plain"
   @random_max 10_000
-  @all_ids 1..10_000
 
   def index(conn, _params) do
-    resp = Jason.encode!(%{"TE Benchmarks\n" => "Started"})
-
-    conn
-    |> put_resp_content_type(@json, nil)
-    |> send_resp(200, resp)
+    json(conn, %{"TE Benchmarks\n" => "Started"})
   end
 
   # avoid namespace collision
   def _json(conn, _params) do
-    resp = Jason.encode!(%{"message" => "Hello, world!"})
-
-    conn
-    |> put_resp_content_type(@json, nil)
-    |> send_resp(200, resp)
+    json(conn, %{message: "Hello, World!"})
   end
 
   def db(conn, _params) do
-    resp =
-      Repo.get(World, :rand.uniform(@random_max))
-      |> Jason.encode!()
+    world = Repo.get(World, :rand.uniform(@random_max))
 
-    conn
-    |> put_resp_content_type(@json, nil)
-    |> send_resp(200, resp)
+    json(conn, world)
   end
 
   def queries(conn, params) do
     :rand.seed(:exsp)
 
-    resp =
-      1..@random_max
-      |> Enum.take_random(size(params["queries"]))
-      |> parallel(fn idx -> Repo.get(World, idx) end)
-      |> Jason.encode_to_iodata!()
+    worlds =
+      Stream.repeatedly(fn -> :rand.uniform(@random_max) end)
+      |> Stream.uniq()
+      |> Stream.map(fn idx -> Repo.get(World, idx) end)
+      |> Enum.take(size(params["queries"]))
 
-    conn
-    |> put_resp_content_type(@json, nil)
-    |> send_resp(200, resp)
+    json(conn, worlds)
   end
 
   def fortunes(conn, _params) do
@@ -68,48 +51,38 @@ defmodule HelloWeb.PageController do
   def updates(conn, params) do
     :rand.seed(:exsp)
 
-    count = size(params["queries"])
-
     worlds =
-      1..@random_max
-      |> Enum.take_random(count)
-      |> parallel(fn idx -> Repo.get(World, idx) end)
-      |> Enum.map(fn world ->
-        %{id: world.id, randomnumber: random_but(world.randomnumber)}
-      end)
+      Stream.repeatedly(fn -> :rand.uniform(@random_max) end)
+      |> Stream.uniq()
+      |> Stream.map(fn idx -> Repo.get(World, idx) end)
+      |> Stream.map(fn world -> %{id: world.id, randomnumber: :rand.uniform(@random_max)} end)
+      |> Enum.take(size(params["queries"]))
 
-    {^count, result} =
-      Repo.insert_all(
-        World,
-        worlds,
-        on_conflict: :replace_all,
-        conflict_target: [:id],
-        returning: true
-      )
+    Repo.insert_all(
+      World,
+      worlds,
+      on_conflict: {:replace_all_except, [:id]},
+      conflict_target: [:id],
+      returning: false
+    )
 
-    conn
-    |> put_resp_content_type(@json, nil)
-    |> send_resp(200, Jason.encode_to_iodata!(result))
+    json(conn, worlds)
   end
 
   def plaintext(conn, _params) do
-    conn
-    |> put_resp_content_type(@plain, nil)
-    |> send_resp(200, "Hello, world!")
+    text(conn, "Hello, World!")
   end
 
   def cached(conn, params) do
     :rand.seed(:exsp)
 
-    resp =
-      @all_ids
-      |> Enum.take_random(size(params["count"]))
-      |> parallel(&get_cached_world/1)
-      |> Jason.encode_to_iodata!()
+    worlds =
+      Stream.repeatedly(fn -> :rand.uniform(@random_max) end)
+      |> Stream.uniq()
+      |> Stream.map(&get_cached_world/1)
+      |> Enum.take(size(params["count"]))
 
-    conn
-    |> put_resp_content_type(@json, nil)
-    |> send_resp(200, resp)
+    json(conn, worlds)
   end
 
   defp get_cached_world(idx) do
@@ -118,11 +91,11 @@ defmodule HelloWeb.PageController do
         world = Repo.get(World, idx)
         :ok = Cache.put(idx, world)
         world
+
       world ->
         world
     end
   end
-
 
   defp random_but(not_this_value) do
     case :rand.uniform(@random_max) do
@@ -134,19 +107,15 @@ defmodule HelloWeb.PageController do
     end
   end
 
-  defp parallel(collection, func) do
-    collection
-    |> Enum.map(&Task.async(fn -> func.(&1) end))
-    |> Task.await_many()
-  end
-
   defp size(nil), do: 1
+  defp size(""), do: 1
 
-  defp size(queries) do
+  defp size(queries) when is_bitstring(queries) do
     case Integer.parse(queries) do
-      {x, ""} when x in 1..500 -> x
-      {x, ""} when x > 500 -> 500
+      {count, _} -> max(1, min(500, count))
       _ -> 1
     end
   end
+
+  defp size(_), do: 1
 end
