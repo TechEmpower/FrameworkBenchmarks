@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.transaction.Transactional;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.transaction.Transactional;
 
 import org.hibernate.FlushMode;
 import org.hibernate.Session;

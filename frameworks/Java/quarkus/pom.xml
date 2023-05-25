@@ -8,10 +8,17 @@
     <packaging>pom</packaging>
 
     <properties>
-        <quarkus.version>2.15.0.Final</quarkus.version>
+        <compiler-plugin.version>3.11.0</compiler-plugin.version>
+        <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
+        <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
+        <quarkus.platform.version>3.1.0.CR1</quarkus.platform.version>
+        <skipITs>true</skipITs>
+        <surefire-plugin.version>3.0.0</surefire-plugin.version>
+        <netty.io_uring.version>0.0.21.Final</netty.io_uring.version>
+        <vertx.version>4.4.2</vertx.version>
     </properties>
 
     <modules>
@@ -29,9 +36,14 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-bom</artifactId>
-                <version>${quarkus.version}</version>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-core</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${quarkus.platform.group-id}</groupId>
+                <artifactId>${quarkus.platform.artifact-id}</artifactId>
+                <version>${quarkus.platform.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -41,50 +53,95 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.1.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.1</version>
-            </plugin>
-            <plugin>
-                <groupId>io.quarkus</groupId>
+                <groupId>${quarkus.platform.group-id}</groupId>
                 <artifactId>quarkus-maven-plugin</artifactId>
-                <version>${quarkus.version}</version>
+                <version>${quarkus.platform.version}</version>
+                <extensions>true</extensions>
                 <executions>
                     <execution>
                         <goals>
                             <goal>build</goal>
+                            <goal>generate-code</goal>
+                            <goal>generate-code-tests</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-bootstrap-maven-plugin</artifactId>
-                <version>${quarkus.version}</version>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler-plugin.version}</version>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire-plugin.version}</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                        <maven.home>${maven.home}</maven.home>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${surefire-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+                                <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                                <maven.home>${maven.home}</maven.home>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
     <profiles>
         <profile>
             <id>native</id>
+            <activation>
+                <property>
+                    <name>native</name>
+                </property>
+            </activation>
             <properties>
+                <skipITs>false</skipITs>
                 <quarkus.package.type>native</quarkus.package.type>
             </properties>
         </profile>
+        <profile>
+            <id>Linux</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>io.vertx</groupId>
+                    <artifactId>vertx-io_uring-incubator</artifactId>
+                    <version>${vertx.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>io.netty.incubator</groupId>
+                    <artifactId>netty-incubator-transport-native-io_uring</artifactId>
+                    <version>${netty.io_uring.version}</version>
+                    <classifier>linux-x86_64</classifier>
+                </dependency>
+            </dependencies>
+        </profile>
     </profiles>
+
 </project>
