@@ -1,0 +1,4 @@
+build --host_javabase=@local_jdk//:jdk
+build --host_platform=@io_tweag_rules_nixpkgs//nixpkgs/platforms:host
+build --compilation_mode opt
+run --compilation_mode opt

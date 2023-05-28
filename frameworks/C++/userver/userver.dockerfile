@@ -1,5 +1,4 @@
-FROM ghcr.io/userver-framework/docker-userver-build-base:v1a AS builder
-RUN apt install -y libnghttp2-dev
+FROM ghcr.io/userver-framework/ubuntu-userver-build-base:v1 AS builder
 
 WORKDIR /src
 RUN git clone https://github.com/userver-framework/userver.git && \

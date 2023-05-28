@@ -4,8 +4,8 @@ import org.hibernate.annotations.Immutable;
 
 import java.util.Objects;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 @Entity
 @Immutable

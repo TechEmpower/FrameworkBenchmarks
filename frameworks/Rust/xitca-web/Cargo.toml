@@ -19,11 +19,6 @@ path = "./src/main_iou.rs"
 required-features = ["io-uring", "pg", "serde", "template"]
 
 [[bin]]
-name = "xitca-web-epoll"
-path = "./src/main_iou.rs"
-required-features = ["pg", "serde", "template"]
-
-[[bin]]
 name = "xitca-web-wasm"
 path = "./src/main_wasm.rs"
 required-features = ["serde", "web"]
@@ -86,13 +81,13 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf" }
-xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf" }
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf" }
-xitca-router = { git = "https://github.com/HFQR/xitca-web.git", rev = "5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf" }
-xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf" }
-xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf" }
-xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf" }
-xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf" }
+xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
+xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
+xitca-router = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
+xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
+xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
+xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
+xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
 
-mio = { git = "https://github.com/fakeshadow/mio.git", rev = "4272250caed2f460f7be646d0fd25d53d267eb53" }
+mio = { git = "https://github.com/fakeshadow/mio.git", rev = "2e80aa89ee94a0e2d343331b8df106d7321148b9" }

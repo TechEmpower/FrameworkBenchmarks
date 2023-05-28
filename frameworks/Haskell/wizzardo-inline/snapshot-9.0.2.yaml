@@ -1,0 +1,9 @@
+resolver: lts-19.30
+
+packages:
+- github: tweag/distributed-closure
+  commit: b92e75ec81e646703c7bde4f578a7352ee34f1ad
+- github: ekmett/exceptions
+  commit: d7b742dc129790778f7b6d3347af80c8d69f8fcd
+- github: tweag/linear-base
+  commit: ec0b5aa6dc89f1d7c7e368b7387e363a5062e52d

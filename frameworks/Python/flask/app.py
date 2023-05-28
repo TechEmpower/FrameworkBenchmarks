@@ -94,14 +94,18 @@ if _raw:
     else:
         from psycopg2.pool import ThreadedConnectionPool
         from psycopg2.extras import execute_batch
+
+    pool_size = int(_cpu_count * 2.5 / 4)
+    if _is_travis:
+        pool_size = 5
     
     POOL = ThreadedConnectionPool(
-        minconn=int(_cpu_count * 2.0),
-        maxconn=int(_cpu_count * 2.6),
+        minconn=pool_size,
+        maxconn=pool_size,
         database="hello_world",
         user=DBUSER,
         password=DBPSWD,
-        host="tfb-database",
+        host=DBHOST,
         port=5432,
     )
     read_row_sql = (

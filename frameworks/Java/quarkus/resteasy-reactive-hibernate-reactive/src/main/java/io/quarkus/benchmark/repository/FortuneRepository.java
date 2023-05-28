@@ -2,7 +2,7 @@ package io.quarkus.benchmark.repository;
 
 import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import io.quarkus.benchmark.model.Fortune;
 import io.smallrye.mutiny.Uni;

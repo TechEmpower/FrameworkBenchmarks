@@ -1,4 +1,4 @@
-FROM debian:stretch-slim AS debian
+FROM debian:bullseye-slim AS debian
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TERM=linux
@@ -11,7 +11,7 @@ RUN echo 'APT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/00-genera
 
 FROM debian AS racket
 
-ARG RACKET_VERSION=8.6
+ARG RACKET_VERSION=8.9
 
 RUN apt-get update -q \
     && apt-get install --no-install-recommends -q -y \

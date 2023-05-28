@@ -69,6 +69,28 @@
         "display_name": "mormot [async]",
         "notes": "",
         "versus": "None"
+      },
+      "postgres-async2": {
+        "dockerfile": "mormot.dockerfile",
+        "db_url": "/asyncdb",
+        "query_url": "/asyncqueries?queries=",
+        "fortune_url": "/asyncfortunes",
+        "update_url": "/asyncupdates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "postgres",
+        "framework": "mormot",
+        "language": "Pascal",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "mormot [async,nopin]",
+        "notes": "",
+        "versus": "None"
       }
     }
   ]

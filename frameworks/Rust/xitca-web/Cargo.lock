@@ -425,12 +425,12 @@ dependencies = [
 [[package]]
 name = "mio"
 version = "0.8.6"
-source = "git+https://github.com/fakeshadow/mio.git?rev=4272250caed2f460f7be646d0fd25d53d267eb53#4272250caed2f460f7be646d0fd25d53d267eb53"
+source = "git+https://github.com/fakeshadow/mio.git?rev=2e80aa89ee94a0e2d343331b8df106d7321148b9#2e80aa89ee94a0e2d343331b8df106d7321148b9"
 dependencies = [
  "libc",
  "log",
  "wasi",
- "windows-sys 0.45.0",
+ "windows-sys 0.48.0",
 ]
 
 [[package]]
@@ -707,18 +707,18 @@ checksum = "d29ab0c6d3fc0ee92fe66e2d99f700eab17a8d57d1c1d3b748380fb20baa78cd"
 
 [[package]]
 name = "serde"
-version = "1.0.160"
+version = "1.0.162"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bb2f3770c8bce3bcda7e149193a069a0f4365bda1fa5cd88e03bca26afc1216c"
+checksum = "71b2f6e1ab5c2b98c05f0f35b236b22e8df7ead6ffbf51d7808da7f8817e7ab6"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.160"
+version = "1.0.162"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "291a097c63d8497e00160b166a967a4a79c64f3facdd01cbd7502231688d77df"
+checksum = "a2a0814352fd64b58489904a44ea8d90cb1a91dcb6b4f5ebabc32c8318e93cb6"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -971,10 +971,11 @@ dependencies = [
 
 [[package]]
 name = "tracing"
-version = "0.1.38"
+version = "0.1.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cf9cf6a813d3f40c88b0b6b6f29a5c95c6cdbf97c1f9cc53fb820200f5ad814d"
+checksum = "8ce8c33a8d48bd45d624a6e523445fd21ec13d3653cd51f681abf67418f54eb8"
 dependencies = [
+ "cfg-if",
  "pin-project-lite",
  "tracing-core",
 ]
@@ -1183,9 +1184,9 @@ checksum = "1a515f5799fe4961cb532f983ce2b23082366b898e52ffbce459c86f67c8378a"
 
 [[package]]
 name = "winnow"
-version = "0.4.1"
+version = "0.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ae8970b36c66498d8ff1d66685dc86b91b29db0c7739899012f63a63814b4b28"
+checksum = "61de7bac303dc551fe038e2b3cef0f571087a47571ea6e79a87692ac99b99699"
 dependencies = [
  "memchr",
 ]
@@ -1193,7 +1194,7 @@ dependencies = [
 [[package]]
 name = "xitca-http"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf#5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf"
+source = "git+https://github.com/HFQR/xitca-web.git?rev=024dfaabeacefdeb6b4a76eb4ef48b88b055c738#024dfaabeacefdeb6b4a76eb4ef48b88b055c738"
 dependencies = [
  "futures-core",
  "http",
@@ -1214,17 +1215,18 @@ dependencies = [
 [[package]]
 name = "xitca-io"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf#5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf"
+source = "git+https://github.com/HFQR/xitca-web.git?rev=024dfaabeacefdeb6b4a76eb4ef48b88b055c738#024dfaabeacefdeb6b4a76eb4ef48b88b055c738"
 dependencies = [
  "bytes",
  "tokio",
+ "tokio-uring",
  "xitca-unsafe-collection",
 ]
 
 [[package]]
 name = "xitca-postgres"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf#5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf"
+source = "git+https://github.com/HFQR/xitca-web.git?rev=024dfaabeacefdeb6b4a76eb4ef48b88b055c738#024dfaabeacefdeb6b4a76eb4ef48b88b055c738"
 dependencies = [
  "fallible-iterator",
  "percent-encoding",
@@ -1240,7 +1242,7 @@ dependencies = [
 [[package]]
 name = "xitca-router"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf#5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf"
+source = "git+https://github.com/HFQR/xitca-web.git?rev=024dfaabeacefdeb6b4a76eb4ef48b88b055c738#024dfaabeacefdeb6b4a76eb4ef48b88b055c738"
 dependencies = [
  "xitca-unsafe-collection",
 ]
@@ -1248,7 +1250,7 @@ dependencies = [
 [[package]]
 name = "xitca-server"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf#5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf"
+source = "git+https://github.com/HFQR/xitca-web.git?rev=024dfaabeacefdeb6b4a76eb4ef48b88b055c738#024dfaabeacefdeb6b4a76eb4ef48b88b055c738"
 dependencies = [
  "socket2 0.5.2",
  "tokio",
@@ -1262,12 +1264,12 @@ dependencies = [
 [[package]]
 name = "xitca-service"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf#5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf"
+source = "git+https://github.com/HFQR/xitca-web.git?rev=024dfaabeacefdeb6b4a76eb4ef48b88b055c738#024dfaabeacefdeb6b4a76eb4ef48b88b055c738"
 
 [[package]]
 name = "xitca-unsafe-collection"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf#5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf"
+source = "git+https://github.com/HFQR/xitca-web.git?rev=024dfaabeacefdeb6b4a76eb4ef48b88b055c738#024dfaabeacefdeb6b4a76eb4ef48b88b055c738"
 dependencies = [
  "bytes",
 ]
@@ -1294,13 +1296,13 @@ dependencies = [
  "xitca-server",
  "xitca-service",
  "xitca-unsafe-collection",
- "xitca-web 0.1.0 (git+https://github.com/HFQR/xitca-web.git?rev=5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf)",
+ "xitca-web 0.1.0 (git+https://github.com/HFQR/xitca-web.git?rev=024dfaabeacefdeb6b4a76eb4ef48b88b055c738)",
 ]
 
 [[package]]
 name = "xitca-web"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf#5f5ff12c8c33796c8b76f0f56b3e3dd33f6efdaf"
+source = "git+https://github.com/HFQR/xitca-web.git?rev=024dfaabeacefdeb6b4a76eb4ef48b88b055c738#024dfaabeacefdeb6b4a76eb4ef48b88b055c738"
 dependencies = [
  "futures-core",
  "pin-project-lite",
