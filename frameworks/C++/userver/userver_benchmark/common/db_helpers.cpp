@@ -63,4 +63,11 @@ int ParseParamFromQuery(std::string_view url, std::string_view name) {
   return ParseFromQueryVal(url.substr(pos, len));
 }
 
+DatabasePoolSemaphore::DatabasePoolSemaphore(std::size_t initial_count)
+    : semaphore_{initial_count} {}
+
+userver::engine::SemaphoreLock DatabasePoolSemaphore::Acquire() const {
+  return userver::engine::SemaphoreLock{semaphore_};
+}
+
 }  // namespace userver_techempower::db_helpers

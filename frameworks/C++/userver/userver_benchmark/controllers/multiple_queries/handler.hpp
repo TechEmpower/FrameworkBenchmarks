@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../common/db_helpers.hpp"
+
 #include <userver/server/handlers/http_handler_json_base.hpp>
 #include <userver/storages/postgres/postgres_fwd.hpp>
 
@@ -23,6 +25,8 @@ class Handler final : public userver::server::handlers::HttpHandlerJsonBase {
   const userver::storages::postgres::ClusterPtr pg_;
 
   const std::string query_arg_name_;
+
+  db_helpers::DatabasePoolSemaphore semaphore_;
 };
 
 }  // namespace userver_techempower::multiple_queries
