@@ -34,7 +34,7 @@ use xitca_http::{
     util::service::context::{Context as Ctx, ContextBuilder},
 };
 use xitca_io::{
-    bytes::{Bytes, BytesMut, PagedBytesMut},
+    bytes::{Bytes, BytesMut},
     io_uring::IoBuf,
     net::TcpStream,
 };
@@ -169,28 +169,27 @@ where
     {
         async {
             let mut ctx = Context::<_, 8>::new(self.date.get());
-            let mut paged = PagedBytesMut::new();
+            let mut read_buf = BytesMut::new();
             let mut write_buf = BytesMut::with_capacity(4096);
 
             let std = stream.into_std()?;
             let stream = tokio_uring::net::TcpStream::from_std(std);
 
             loop {
-                let mut buf = paged.into_inner();
-
-                let len = buf.len();
-                let rem = buf.capacity() - len;
+                let len = read_buf.len();
+                let rem = read_buf.capacity() - len;
                 if rem < 4096 {
-                    buf.reserve(4096 - rem);
+                    read_buf.reserve(4096 - rem);
                 }
 
-                let (res, buf) = stream.read(buf.slice(len..)).await;
+                let (res, buf) = stream.read(read_buf.slice(len..)).await;
+                read_buf = buf.into_inner();
                 if res? == 0 {
                     break;
                 }
-                paged = PagedBytesMut::from(buf.into_inner());
 
-                while let Some((req, _)) = ctx.decode_head::<{ usize::MAX }>(&mut paged).unwrap() {
+                while let Some((req, _)) = ctx.decode_head::<{ usize::MAX }>(&mut read_buf).unwrap()
+                {
                     let (parts, body) = self.service.call(req).await.unwrap().into_parts();
                     let mut encoder = ctx.encode_head(parts, &body, &mut write_buf).unwrap();
                     let mut body = pin!(body);
@@ -202,9 +201,9 @@ where
                 }
 
                 let (res, b) = stream.write_all(write_buf).await;
-                res?;
                 write_buf = b;
                 write_buf.clear();
+                res?;
             }
 
             stream.shutdown(std::net::Shutdown::Both)

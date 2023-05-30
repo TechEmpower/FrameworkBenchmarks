@@ -81,13 +81,13 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
-xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
-xitca-router = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
-xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
-xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
-xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
-xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "024dfaabeacefdeb6b4a76eb4ef48b88b055c738" }
+xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "061a61adc33205a7d7a124cee5665522a3df4d59" }
+xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "061a61adc33205a7d7a124cee5665522a3df4d59" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "061a61adc33205a7d7a124cee5665522a3df4d59" }
+xitca-router = { git = "https://github.com/HFQR/xitca-web.git", rev = "061a61adc33205a7d7a124cee5665522a3df4d59" }
+xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "061a61adc33205a7d7a124cee5665522a3df4d59" }
+xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "061a61adc33205a7d7a124cee5665522a3df4d59" }
+xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "061a61adc33205a7d7a124cee5665522a3df4d59" }
+xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "061a61adc33205a7d7a124cee5665522a3df4d59" }
 
 mio = { git = "https://github.com/fakeshadow/mio.git", rev = "2e80aa89ee94a0e2d343331b8df106d7321148b9" }
