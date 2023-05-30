@@ -125,7 +125,7 @@ const
   WORLD_COUNT       = 10000;
   WORLD_READ_SQL    = 'select id,randomNumber from World where id=?';
   WORLD_UPDATE_SQLN = 'update World as t set randomNumber = v.r from ' +
-    '(SELECT unnest(?::bigint[]), unnest(?::bigint[]) order by 1) as v(id, r)' +
+    '(SELECT unnest(?::integer[]), unnest(?::integer[]) order by 1) as v(id, r)' +
     ' where t.id = v.id';
   FORTUNES_SQL      = 'select id,message from Fortune';
 
@@ -168,6 +168,7 @@ begin
   inherited Create;
   fDbPool := TSqlDBPostgresConnectionProperties.Create(
     'tfb-database:5432', 'hello_world', 'benchmarkdbuser', 'benchmarkdbpass');
+  fDbPool.ArrayParamsAsBinary := true;
   // customize JSON serialization for TFB expectations
   TOrmWorld.OrmProps.Fields.JsonRenameProperties([
     'ID',           'id',
@@ -658,19 +659,17 @@ end;
 procedure TAsyncWorld.DoUpdates;
 var
   i: PtrInt;
-  ids, nums: TInt64DynArray;
+  params: TIntegerDynArray;
 begin
-  setLength(ids{%H-}, count);
-  setLength(nums{%H-}, count);
   for i := 0 to count - 1 do
-    with res[i] do
-    begin
-      randomNumber := ComputeRandomWorld;
-      ids[i] := id;
-      nums[i] := randomNumber;
-    end;
-  update.BindArray(1, ids);
-  update.BindArray(2, nums);
+    res[i].randomNumber := ComputeRandomWorld;
+  SetLength(params, count);
+  for i := 0 to count - 1 do
+    params[i] := res[i].id;
+  update.BindArrayInt32(1, params);
+  for i := 0 to count - 1 do
+    params[i] := res[i].randomNumber;
+  update.BindArrayInt32(2, params);
   update.ExecuteAsync(request, OnRes);
 end;
 
@@ -718,8 +717,8 @@ begin
     if GetEnvironmentVariable('TFB_TEST_NAME') = 'mormot-postgres-async' then
     begin
       // asynchronus test
-      servers := cpuCount * 2;
-      threads := 1;
+      servers := cpuCount;
+      threads := 4;
     end
     else
     if GetEnvironmentVariable('TFB_TEST_NAME') = 'mormot-postgres-async2' then
