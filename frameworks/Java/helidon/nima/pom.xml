@@ -21,7 +21,7 @@
     <parent>
         <groupId>io.helidon.applications</groupId>
         <artifactId>helidon-se</artifactId>
-        <version>4.0.0-ALPHA1</version>
+        <version>4.0.0-ALPHA6</version>
         <relativePath/>
     </parent>
 
@@ -33,10 +33,10 @@
 
     <properties>
         <mainClass>io.helidon.benchmark.nima.Main</mainClass>
-        <version.java>19</version.java>
-        <version.plugin.compiler>3.8.1</version.plugin.compiler>
+        <version.java>20</version.java>
+        <version.plugin.compiler>3.11.0</version.plugin.compiler>
         <rocker.version>1.3.0</rocker.version>
-        <vertx-pg-client.version>4.2.0</vertx-pg-client.version>
+        <vertx-pg-client.version>4.4.2</vertx-pg-client.version>
         <jsoniter.version>0.9.23</jsoniter.version>
     </properties>
 
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.5.1</version>
+            <version>42.6.0</version>
         </dependency>
         <dependency>
             <groupId>com.fizzed</groupId>

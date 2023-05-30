@@ -2,7 +2,7 @@
 
 This is the Helidon portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 Two Helidon APIs are implemented: Reactive and Nima. The Reactive API has been around since the first
-version of Helidon while Nima is a new, blocking API based on JDK 19 virtual threads. 
+version of Helidon while Nima is a new, blocking API based on JDK 20 virtual threads. 
 
 The code is organized into two Maven modules, namely, *reactive* and *nima*. Both modules implement the
 same set of tests outlined below. 

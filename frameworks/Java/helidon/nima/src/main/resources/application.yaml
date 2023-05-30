@@ -15,6 +15,7 @@
 #
 
 server:
+  port: 8080
   sockets:
     - name: "@default"
       host: 0.0.0.0
@@ -41,7 +42,7 @@ db: "hello_world"
 username: benchmarkdbuser
 password: benchmarkdbpass
 sql-pool-size: 1024
-db-repository: "pgclient"     # "pgclient" (default) or "hikari"
+db-repository: "hikari"     # "pgclient" (default) or "hikari"
 
 # The following for pgclient only
 update-batch-size: 5

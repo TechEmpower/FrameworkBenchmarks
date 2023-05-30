@@ -29,13 +29,13 @@ import io.helidon.benchmark.nima.models.HikariJdbcRepository;
 import io.helidon.benchmark.nima.models.PgClientRepository;
 import io.helidon.benchmark.nima.services.DbService;
 import io.helidon.benchmark.nima.services.FortuneHandler;
-import io.helidon.common.LogConfig;
 import io.helidon.common.http.Http;
 import io.helidon.common.http.Http.Header;
 import io.helidon.common.http.Http.HeaderValue;
 import io.helidon.common.http.Http.HeaderValues;
 import io.helidon.config.Config;
 import io.helidon.config.ConfigException;
+import io.helidon.logging.common.LogConfig;
 import io.helidon.nima.webserver.WebServer;
 import io.helidon.nima.webserver.http.Handler;
 import io.helidon.nima.webserver.http.HttpRules;
@@ -51,8 +51,8 @@ public final class Main {
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
     public static final Http.HeaderValue CONTENT_TYPE_HTML =
-            Http.HeaderValue.createCached(Http.Header.CONTENT_TYPE, "text/html; charset=UTF-8");
-    public static final Http.HeaderValue SERVER = Http.HeaderValue.createCached(Http.Header.SERVER, "Nima");
+            Http.Header.createCached(Http.Header.CONTENT_TYPE, "text/html; charset=UTF-8");
+    public static final Http.HeaderValue SERVER = Http.Header.createCached(Http.Header.SERVER, "Nima");
 
     private Main() {
     }
@@ -107,9 +107,9 @@ public final class Main {
     }
 
     static class PlaintextHandler implements Handler {
-        static final HeaderValue CONTENT_TYPE = HeaderValue.createCached(Header.CONTENT_TYPE,
+        static final HeaderValue CONTENT_TYPE = Header.createCached(Header.CONTENT_TYPE,
                 "text/plain; charset=UTF-8");
-        static final HeaderValue CONTENT_LENGTH = HeaderValue.createCached(Header.CONTENT_LENGTH, "13");
+        static final HeaderValue CONTENT_LENGTH = Header.createCached(Header.CONTENT_LENGTH, "13");
 
         private static final byte[] RESPONSE_BYTES = "Hello, World!".getBytes(StandardCharsets.UTF_8);
 
@@ -125,7 +125,7 @@ public final class Main {
     static class JsonHandler implements Handler {
         private static final String MESSAGE = "Hello, World!";
         private static final int JSON_LENGTH = serializeMsg(new Message(MESSAGE)).length;
-        static final HeaderValue CONTENT_LENGTH = HeaderValue.createCached(Header.CONTENT_LENGTH,
+        static final HeaderValue CONTENT_LENGTH = Header.createCached(Header.CONTENT_LENGTH,
                 String.valueOf(JSON_LENGTH));
 
         @Override
@@ -148,7 +148,7 @@ public final class Main {
         JsonKHandler(int kilobytes) {
             this.message = "a".repeat(1024 * kilobytes);
             int length = serializeMsg(new Message(message)).length;
-            this.contentLength = HeaderValue.createCached(Header.CONTENT_LENGTH,
+            this.contentLength = Header.createCached(Header.CONTENT_LENGTH,
                     String.valueOf(length));
         }
 
