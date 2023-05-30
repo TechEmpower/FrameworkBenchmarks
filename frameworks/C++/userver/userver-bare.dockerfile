@@ -2,7 +2,7 @@ FROM ghcr.io/userver-framework/ubuntu-userver-build-base:v1 AS builder
 
 WORKDIR /src
 RUN git clone https://github.com/userver-framework/userver.git && \
-    cd userver && git checkout 040b0bd001a078ee023aabe987e5ec7cc8ed5b6c
+    cd userver && git checkout 3a8ea5c0e6e1200a1ec5e8d5c87dfba3987cdd98
 COPY userver_benchmark/ ./
 RUN mkdir build && cd build && \
     cmake -DUSERVER_IS_THE_ROOT_PROJECT=0 -DUSERVER_FEATURE_CRYPTOPP_BLAKE2=0 \
