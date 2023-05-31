@@ -3,9 +3,9 @@ components_manager:
     event_thread_pool:
         threads: 3
     coro_pool:
-        initial_size: 10000             # Preallocate 10000 coroutines at startup.
-        max_size: 65536                 # Do not keep more than 65536 preallocated coroutines.
-        stack_size: 66560               # 64Kb for coroutine stack
+        initial_size: 10000              # Preallocate 10000 coroutines at startup.
+        max_size: 300000                 # Do not keep more than 300000 preallocated coroutines.
+        stack_size: 66560                # 64Kb for coroutine stack
 
     task_processors:                    # Task processor is an executor for coroutine tasks
 
