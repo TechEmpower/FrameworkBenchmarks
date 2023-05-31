@@ -42,7 +42,7 @@ db: "hello_world"
 username: benchmarkdbuser
 password: benchmarkdbpass
 sql-pool-size: 1024
-db-repository: "hikari"     # "pgclient" (default) or "hikari"
+db-repository: "pgclient"     # "pgclient" (default) or "hikari"
 
 # The following for pgclient only
 update-batch-size: 5
