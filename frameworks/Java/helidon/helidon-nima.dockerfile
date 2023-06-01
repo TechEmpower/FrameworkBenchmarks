@@ -14,6 +14,5 @@ EXPOSE 8080
 CMD java --enable-preview \
     -XX:+UseNUMA \
     -XX:+UseParallelGC \
-    -XX:+DisableExplicitGC \
     -XX:+UseStringDeduplication \
     -jar app.jar
