@@ -121,12 +121,12 @@
             </properties>
         </profile>
         <profile>
-            <id>Linux</id>
+            <id>iouring</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
-                <os>
-                    <family>unix</family>
-                </os>
+                <property>
+                    <!-- Not enabling this by default yet -->
+                    <name>iouring</name>
+                </property>
             </activation>
             <dependencies>
                 <dependency>
