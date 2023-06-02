@@ -35,7 +35,7 @@ web = ["xitca-web"]
 # template optional
 template = ["sailfish"]
 # io-uring optional
-io-uring = ["tokio-uring", "xitca-http/io-uring", "xitca-server/io-uring"]
+io-uring = ["xitca-http/io-uring", "xitca-server/io-uring"]
 
 [dependencies]
 xitca-http = { version = "0.1", features = ["util-service"] }
@@ -60,9 +60,6 @@ tang-rs = { version = "0.2", optional = true }
 # serde optional
 serde = { version = "1", optional = true }
 serde_json = { version = "1", optional = true }
-
-# io-uring optional
-tokio-uring = { version = "0.4", features = ["bytes"], optional = true }
 
 # template optional
 sailfish = { version = "0.6", optional = true }
@@ -90,4 +87,4 @@ xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "061a61ad
 xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "061a61adc33205a7d7a124cee5665522a3df4d59" }
 xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "061a61adc33205a7d7a124cee5665522a3df4d59" }
 
-mio = { git = "https://github.com/fakeshadow/mio.git", rev = "2e80aa89ee94a0e2d343331b8df106d7321148b9" }
+mio = { git = "https://github.com/fakeshadow/mio.git", rev = "e506b0d87aa89e06c450a3991c491de35968cb12" }
