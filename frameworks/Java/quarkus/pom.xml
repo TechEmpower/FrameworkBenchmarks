@@ -22,10 +22,9 @@
     </properties>
 
     <modules>
-        <module>resteasy-hibernate</module>
+        <module>quarkus-benchmark-common</module>
         <module>resteasy-reactive-hibernate</module>
         <module>resteasy-reactive-hibernate-reactive</module>
-        <module>quarkus-benchmark-common</module>
     </modules>
 
     <dependencyManagement>
