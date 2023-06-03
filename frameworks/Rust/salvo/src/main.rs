@@ -57,7 +57,6 @@ fn main() {
 async fn serve(router: Arc<Router>) {
     let acceptor: TcpAcceptor = utils::reuse_listener().unwrap().try_into().unwrap();
     let mut server = Server::new(acceptor);
-    let http1 = server.http1_mut();
-    http1.pipeline_flush(true);
+    server.http1_mut().pipeline_flush(true);
     server.serve(router).await
 }
