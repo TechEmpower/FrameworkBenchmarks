@@ -1,4 +1,4 @@
-FROM rust:1.70.0
+FROM rust:1.70
 
 ENV TECHEMPOWER_POSTGRES_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
 
