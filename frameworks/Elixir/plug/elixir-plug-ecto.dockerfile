@@ -1,54 +1,37 @@
-FROM erlang:25 AS builder
+ARG ELIXIR="1.14.2"
+ARG ERLANG="25.1.2"
+ARG ALPINE="3.16.2"
 
-RUN apt-get update -y && \
-  apt-get install -y libicu-dev
+ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR}-erlang-${ERLANG}-alpine-${ALPINE}"
+ARG RUNNER_IMAGE="alpine:${ALPINE}"
 
-# elixir expects utf8.
-ENV ELIXIR_VERSION="v1.13.4" \
-  LANG=C.UTF-8
+FROM ${BUILDER_IMAGE} AS builder
 
-RUN set -xe \
-  && ELIXIR_DOWNLOAD_URL="https://github.com/elixir-lang/elixir/archive/${ELIXIR_VERSION}.tar.gz" \
-  && ELIXIR_DOWNLOAD_SHA256="95daf2dd3052e6ca7d4d849457eaaba09de52d65ca38d6933c65bc1cdf6b8579" \
-  && curl -fSL -o elixir-src.tar.gz $ELIXIR_DOWNLOAD_URL \
-  && echo "$ELIXIR_DOWNLOAD_SHA256  elixir-src.tar.gz" | sha256sum -c - \
-  && mkdir -p /usr/local/src/elixir \
-  && tar -xzC /usr/local/src/elixir --strip-components=1 -f elixir-src.tar.gz \
-  && rm elixir-src.tar.gz \
-  && cd /usr/local/src/elixir \
-  && make install clean \
-  && find /usr/local/src/elixir/ -type f -not -regex "/usr/local/src/elixir/lib/[^\/]*/lib.*" -exec rm -rf {} + \
-  && find /usr/local/src/elixir/ -type d -depth -empty -delete
+ARG MIX_ENV="prod"
 
-ENV MIX_ENV=prod \
-  LANG=C.UTF-8
+RUN mix local.hex --force && \
+    mix local.rebar --force
 
-RUN mkdir /app
-WORKDIR /app
+COPY mix.exs mix.lock ./
+RUN mix deps.get --force --only prod
 
 COPY config ./config
-COPY lib ./lib
-COPY mix.exs .
-COPY mix.lock .
 
-RUN mix local.hex --force
-RUN mix local.rebar --force
-RUN mix deps.get
 RUN mix deps.compile
-RUN mix release
 
-FROM debian:bullseye-slim AS app
+COPY lib ./lib
 
-RUN apt-get update -y && \
-  apt-get install -y openssl libicu-dev
+RUN mix release --force --path /export
 
-ENV LANG=C.UTF-8
+# start a new build stage so that the final image will only contain
+# the compiled release and other runtime necessities
+FROM ${RUNNER_IMAGE}
+
+RUN apk add --no-cache libstdc++ openssl ncurses-libs
+
+COPY --from=builder /export /opt
 
 EXPOSE 8080
 
-RUN adduser -h /home/app -D app
-WORKDIR /home/app
-COPY --from=builder /app/_build .
-
-# Run the Phoenix app
-CMD ["./prod/rel/framework_benchmarks/bin/framework_benchmarks", "start"]
+ENTRYPOINT ["/opt/bin/framework_benchmarks"]
+CMD ["start"]
