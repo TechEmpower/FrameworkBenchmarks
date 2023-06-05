@@ -4,11 +4,14 @@ This is the Quarkus portion of a [benchmarking test suite](../) comparing a vari
 
 ## Implementations
 
-There are currently 3 implementations:
+There are currently 2 implementations:
 
-- RESTEasy and Hibernate ORM
-- RESTEasy Reactive and Hibernate ORM
-- RESTEasy Reactive and Hibernate Reactive
+- Quarkus using RESTEasy Reactive and Hibernate ORM (classic Hibernate for DB operations, while handling web via the reactive stack)
+- Quarkus using RESTEasy Reactive and Hibernate Reactive (fully reactive stack)
+
+## Testing
+
+    ./tfb --mode verify --test quarkus quarkus-hibernate-reactive
 
 ## Versions
 

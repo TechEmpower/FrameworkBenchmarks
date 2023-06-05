@@ -22,10 +22,9 @@
     </properties>
 
     <modules>
-        <module>resteasy-hibernate</module>
+        <module>quarkus-benchmark-common</module>
         <module>resteasy-reactive-hibernate</module>
         <module>resteasy-reactive-hibernate-reactive</module>
-        <module>quarkus-benchmark-common</module>
     </modules>
 
     <dependencyManagement>
@@ -121,12 +120,12 @@
             </properties>
         </profile>
         <profile>
-            <id>Linux</id>
+            <id>iouring</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
-                <os>
-                    <family>unix</family>
-                </os>
+                <property>
+                    <!-- Not enabling this by default yet -->
+                    <name>iouring</name>
+                </property>
             </activation>
             <dependencies>
                 <dependency>
