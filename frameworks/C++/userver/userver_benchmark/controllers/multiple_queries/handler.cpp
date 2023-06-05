@@ -1,7 +1,5 @@
 #include "handler.hpp"
 
-#include "../../common/db_helpers.hpp"
-
 #include <userver/components/component_context.hpp>
 #include <userver/formats/serialize/common_containers.hpp>
 #include <userver/storages/postgres/postgres.hpp>
@@ -10,6 +8,12 @@
 
 namespace userver_techempower::multiple_queries {
 
+namespace {
+
+constexpr std::size_t kBestConcurrencyWildGuess = 256;
+
+}
+
 Handler::Handler(const userver::components::ComponentConfig& config,
                  const userver::components::ComponentContext& context)
     : userver::server::handlers::HttpHandlerJsonBase{config, context},
@@ -17,7 +21,8 @@ Handler::Handler(const userver::components::ComponentConfig& config,
               .FindComponent<userver::components::Postgres>(
                   db_helpers::kDbComponentName)
               .GetCluster()},
-      query_arg_name_{"queries"} {}
+      query_arg_name_{"queries"},
+      semaphore_{kBestConcurrencyWildGuess} {}
 
 userver::formats::json::Value Handler::HandleRequestJsonThrow(
     const userver::server::http::HttpRequest& request,
@@ -40,18 +45,21 @@ userver::formats::json::Value Handler::GetResponse(int queries) const {
   // faster due to the pool semaphore contention reduction - now we have a
   // connection for ourselves until we are done with it, otherwise we would
   // likely wait on the semaphore with every new query.
-  auto transaction = pg_->Begin(
-      db_helpers::kClusterHostType,
-      userver::storages::postgres::TransactionOptions{
-          userver::storages::postgres::TransactionOptions::Mode::kReadOnly});
-  for (auto& value : result) {
-    value.random_number =
-        transaction.Execute(db_helpers::kSelectRowQuery, value.id)
-            .AsSingleRow<db_helpers::WorldTableRow>(
-                userver::storages::postgres::kRowTag)
-            .random_number;
+  {
+    const auto lock = semaphore_.Acquire();
+    auto transaction = pg_->Begin(
+        db_helpers::kClusterHostType,
+        userver::storages::postgres::TransactionOptions{
+            userver::storages::postgres::TransactionOptions::Mode::kReadOnly});
+    for (auto& value : result) {
+      value.random_number =
+          transaction.Execute(db_helpers::kSelectRowQuery, value.id)
+              .AsSingleRow<db_helpers::WorldTableRow>(
+                  userver::storages::postgres::kRowTag)
+              .random_number;
+    }
+    transaction.Commit();
   }
-  transaction.Commit();
 
   return userver::formats::json::ValueBuilder{result}.ExtractValue();
 }

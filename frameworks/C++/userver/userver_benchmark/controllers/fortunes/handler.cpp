@@ -2,8 +2,6 @@
 
 #include <vector>
 
-#include "../../common/db_helpers.hpp"
-
 #include <userver/components/component_context.hpp>
 #include <userver/storages/postgres/postgres.hpp>
 
@@ -124,6 +122,8 @@ std::string FormatFortunes(const std::vector<Fortune>& fortunes) {
   return result;
 }
 
+constexpr std::size_t kBestConcurrencyWildGuess = 256;
+
 }  // namespace
 
 Handler::Handler(const userver::components::ComponentConfig& config,
@@ -133,7 +133,8 @@ Handler::Handler(const userver::components::ComponentConfig& config,
               .FindComponent<userver::components::Postgres>(
                   db_helpers::kDbComponentName)
               .GetCluster()},
-      select_all_fortunes_query_{"SELECT id, message FROM Fortune"} {}
+      select_all_fortunes_query_{"SELECT id, message FROM Fortune"},
+      semaphore_{kBestConcurrencyWildGuess} {}
 
 std::string Handler::HandleRequestThrow(
     const userver::server::http::HttpRequest& request,
@@ -143,10 +144,12 @@ std::string Handler::HandleRequestThrow(
 }
 
 std::string Handler::GetResponse() const {
-  auto fortunes =
-      pg_->Execute(db_helpers::kClusterHostType, select_all_fortunes_query_)
-          .AsContainer<std::vector<Fortune>>(
-              userver::storages::postgres::kRowTag);
+  auto fortunes = [this] {
+    const auto lock = semaphore_.Acquire();
+    return pg_->Execute(db_helpers::kClusterHostType, select_all_fortunes_query_)
+        .AsContainer<std::vector<Fortune>>(
+            userver::storages::postgres::kRowTag);
+  }();
 
   fortunes.push_back({0, "Additional fortune added at request time."});
 
