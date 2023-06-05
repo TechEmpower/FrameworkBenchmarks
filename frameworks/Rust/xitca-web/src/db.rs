@@ -5,7 +5,7 @@ use std::{
     future::{Future, IntoFuture},
 };
 
-use futures_util::stream::{FuturesUnordered, TryStreamExt};
+use futures_util::future::{try_join, try_join_all, TryFutureExt};
 use xitca_postgres::{statement::Statement, AsyncIterator, Postgres};
 use xitca_unsafe_collection::no_hash::NoHashBuilder;
 
@@ -94,46 +94,37 @@ impl Client {
 
     pub fn get_worlds(&self, num: u16) -> impl Future<Output = HandleResult<Vec<World>>> + '_ {
         let mut rng = self.rng.borrow_mut();
-        (0..num)
-            .map(|_| {
-                let id = rng.gen_id();
-                self.query_one_world(id)
-            })
-            .collect::<FuturesUnordered<_>>()
-            .try_collect()
+        let gets = (0..num).map(|_| self.query_one_world(rng.gen_id()));
+        try_join_all(gets)
     }
 
     pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
-        let worlds = {
+        let len = num as usize;
+
+        let mut params = Vec::new();
+        params.reserve(len * 3);
+
+        let gets = {
             let mut rng = self.rng.borrow_mut();
-            (0..num)
-                .map(|_| {
-                    let id = rng.gen_id();
-                    let w_id = rng.gen_id();
-                    async move {
-                        self.query_one_world(w_id).await.map(|mut world| {
-                            world.randomnumber = id;
-                            world
-                        })
-                    }
+            let gets = (0..num).map(|_| {
+                let w_id = rng.gen_id();
+                let r_id = rng.gen_id();
+                params.push(w_id);
+                params.push(r_id);
+                self.query_one_world(w_id).map_ok(move |mut world| {
+                    world.randomnumber = r_id;
+                    world
                 })
-                .collect::<FuturesUnordered<_>>()
+            });
+            try_join_all(gets)
         };
 
-        let worlds = worlds.try_collect::<Vec<_>>().await?;
-
-        let params = worlds
-            .iter()
-            .map(|w| [w.id, w.randomnumber])
-            .flatten()
-            .chain(worlds.iter().map(|w| w.id))
-            .collect::<Vec<_>>();
+        params.extend_from_within(..len);
 
         let st = self.updates.get(&num).unwrap();
+        let update = self.client.execute_raw(st, &params).map_err(Into::into);
 
-        self.client.execute_raw(st, &params).await?;
-
-        Ok(worlds)
+        try_join(gets, update).await.map(|(world, _)| world)
     }
 
     pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {

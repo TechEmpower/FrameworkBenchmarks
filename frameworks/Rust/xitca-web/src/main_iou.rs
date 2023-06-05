@@ -36,7 +36,7 @@ use xitca_http::{
 use xitca_io::{
     bytes::{Bytes, BytesMut},
     io_uring::IoBuf,
-    net::TcpStream,
+    net::{io_uring::TcpStream as IOUTcpStream, TcpStream},
 };
 use xitca_service::{fn_service, middleware::UncheckedReady, Service, ServiceExt};
 
@@ -173,7 +173,7 @@ where
             let mut write_buf = BytesMut::with_capacity(4096);
 
             let std = stream.into_std()?;
-            let stream = tokio_uring::net::TcpStream::from_std(std);
+            let stream = IOUTcpStream::from_std(std);
 
             loop {
                 let len = read_buf.len();
