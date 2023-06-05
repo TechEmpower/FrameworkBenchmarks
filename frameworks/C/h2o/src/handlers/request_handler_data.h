@@ -21,18 +21,21 @@
 
 #define REQUEST_HANDLER_DATA_H_
 
-#include "cache.h"
+#include <h2o/cache.h>
+
+#include "database.h"
+#include "list.h"
 
 struct mustache_token_t;
 
 typedef struct {
 	struct mustache_token_t *fortunes_template;
-	cache_t world_cache;
+	list_t *prepared_statements;
 } request_handler_data_t;
 
 typedef struct {
-	// Replace with any actual fields; structures without members cause compiler warnings.
-	int pad;
+	h2o_cache_t *world_cache;
+	db_conn_pool_t hello_world_db;
 } request_handler_thread_data_t;
 
 #endif // REQUEST_HANDLER_DATA_H_

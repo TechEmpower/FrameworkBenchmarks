@@ -9,6 +9,8 @@
 
 #include <QSqlQuery>
 
+using namespace ASql;
+
 FortuneTest::FortuneTest(QObject *parent) : Controller(parent)
 {
 
@@ -18,7 +20,7 @@ void FortuneTest::fortunes_raw_p(Context *c)
 {
     ASync async(c);
     static thread_local auto db = APool::database();
-    db.exec(APreparedQueryLiteral(u"SELECT id, message FROM fortune"), [c, async, this] (AResult &result) {
+    db.exec(APreparedQueryLiteral(u8"SELECT id, message FROM fortune"), c, [c, async, this] (AResult &result) {
         if (Q_UNLIKELY(result.error() && !result.size())) {
             c->res()->setStatus(Response::InternalServerError);
             return;
@@ -38,7 +40,7 @@ void FortuneTest::fortunes_raw_p(Context *c)
         });
 
         renderRaw(c, fortunes);
-    }, c);
+    });
 }
 
 void FortuneTest::fortunes_raw_postgres(Context *c)
@@ -63,7 +65,7 @@ void FortuneTest::fortunes_c_p(Context *c)
 {
     ASync async(c);
     static thread_local auto db = APool::database();
-    db.exec(APreparedQueryLiteral(u"SELECT id, message FROM fortune"), [c, async] (AResult &result) {
+    db.exec(APreparedQueryLiteral(u8"SELECT id, message FROM fortune"), c, [c, async] (AResult &result) {
         if (Q_UNLIKELY(result.error() && !result.size())) {
             c->res()->setStatus(Response::InternalServerError);
             return;
@@ -91,7 +93,7 @@ void FortuneTest::fortunes_c_p(Context *c)
         static thread_local View *view = c->view();
         view->execute(c);
         c->response()->setContentType(QStringLiteral("text/html; charset=UTF-8"));
-    }, c);
+    });
 }
 
 void FortuneTest::fortunes_cutelee_postgres(Context *c)

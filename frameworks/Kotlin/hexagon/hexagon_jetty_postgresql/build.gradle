@@ -1,0 +1,13 @@
+
+apply(from: "$gradleScripts/application.gradle")
+
+application {
+    mainClass.set("com.hexagonkt.BenchmarkKt")
+}
+
+dependencies {
+    api(project(":store_sql"))
+    api("com.hexagonkt:http_server_jetty:$hexagonVersion")
+}
+
+build.dependsOn("installDist")

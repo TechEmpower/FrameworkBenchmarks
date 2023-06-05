@@ -24,7 +24,8 @@
         "database_os": "Linux",
         "display_name": "Saphir",
         "notes": "",
-        "versus": "Rocket"
+        "versus": "Rocket",
+        "tags": ["broken"]
       }
     }
   ]

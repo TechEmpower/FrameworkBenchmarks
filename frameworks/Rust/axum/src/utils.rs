@@ -1,50 +1,48 @@
-use std::convert::Infallible;
-use axum::body::{Bytes, Full};
-use axum::http::{header, HeaderValue, Response, StatusCode};
-use axum::response::IntoResponse;
-use rand::Rng;
-use rand::rngs::SmallRng;
-use serde::{Deserialize};
+use std::{env, fmt::Debug, str::FromStr};
+
+use axum::{
+    body::{Bytes, Full},
+    http::{header, HeaderValue, StatusCode},
+    response::{IntoResponse, Response},
+};
+use rand::{rngs::SmallRng, Rng};
+use serde::Deserialize;
+
+pub fn get_environment_variable<T: FromStr>(key: &str) -> T
+where
+    <T as FromStr>::Err: Debug,
+{
+    env::var(key)
+        .unwrap_or_else(|_| panic!("{key} environment variable was not set"))
+        .parse::<T>()
+        .unwrap_or_else(|_| panic!("could not parse {key}"))
+}
 
 #[derive(Debug, Deserialize)]
 pub struct Params {
     queries: Option<String>,
 }
 
+#[allow(dead_code)]
 pub fn random_number(rng: &mut SmallRng) -> i32 {
     (rng.gen::<u32>() % 10_000 + 1) as i32
 }
 
+#[allow(dead_code)]
 pub fn parse_params(params: Params) -> i32 {
-    let mut q = 0;
-
-    if params.queries.is_some() {
-        let queries = params.queries.ok_or("could not get value").unwrap();
-
-        let queries_as_int = queries.parse::<i32>();
-
-        match queries_as_int {
-            Ok(_ok) => q = queries_as_int.unwrap(),
-            Err(_e) => q = 1,
-        }
-    }
-
-    let q = if q == 0 {
-        1
-    } else if q > 500 {
-        500
-    } else {
-        q
-    };
-
-    q
+    params
+        .queries
+        .and_then(|q| q.parse().ok())
+        .unwrap_or(1)
+        .clamp(1, 500)
 }
 
 /// Utility function for mapping any error into a `500 Internal Server Error`
 /// response.
+#[allow(dead_code)]
 pub fn internal_error<E>(err: E) -> (StatusCode, String)
-    where
-        E: std::error::Error,
+where
+    E: std::error::Error,
 {
     (StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
 }
@@ -53,16 +51,15 @@ pub fn internal_error<E>(err: E) -> (StatusCode, String)
 pub struct Utf8Html<T>(pub T);
 
 impl<T> IntoResponse for Utf8Html<T>
-    where
-        T: Into<Full<Bytes>>,
+where
+    T: Into<Full<Bytes>>,
 {
-    type Body = Full<Bytes>;
-    type BodyError = Infallible;
-
-    fn into_response(self) -> Response<Self::Body> {
-        let mut res = Response::new(self.0.into());
-        res.headers_mut()
-            .insert(header::CONTENT_TYPE, HeaderValue::from_static("text/html; charset=utf-8"));
+    fn into_response(self) -> Response {
+        let mut res = (StatusCode::OK, self.0.into()).into_response();
+        res.headers_mut().insert(
+            header::CONTENT_TYPE,
+            HeaderValue::from_static("text/html; charset=utf-8"),
+        );
         res
     }
 }

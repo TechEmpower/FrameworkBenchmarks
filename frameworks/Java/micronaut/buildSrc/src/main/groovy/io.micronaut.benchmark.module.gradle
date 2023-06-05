@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id "io.micronaut.application"
+    id 'io.micronaut.test-resources'
+    id 'com.github.johnrengelman.shadow'
+}
+
+repositories {
+    mavenCentral()
+}
+
+micronaut {
+    runtime "netty"
+    testRuntime "junit5"
+    testResources {
+        enabled = true
+    }
+}
+
+configurations {
+    externalTests
+}
+
+dependencies {
+    implementation project(":common")
+    implementation project(":common-test")
+    externalTests project(":common-test")
+}
+
+graalvmNative.binaries.all {
+    buildArgs.add("--initialize-at-build-time=views")
+}
+
+test {
+    // This is needed to share tests
+    testClassesDirs += zipTree(configurations.externalTests.files.iterator().next())
+    useJUnitPlatform()
+}
+
+application {
+    mainClass.set("benchmark.Application")
+}

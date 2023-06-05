@@ -4,7 +4,6 @@ package storage
 
 import (
 	json "encoding/json"
-
 	easyjson "github.com/mailru/easyjson"
 	jlexer "github.com/mailru/easyjson/jlexer"
 	jwriter "github.com/mailru/easyjson/jwriter"
@@ -95,7 +94,7 @@ func easyjson4da0dabeDecodeGoStdSrcStorage1(in *jlexer.Lexer, out *World) {
 	}
 	in.Delim('{')
 	for !in.IsDelim('}') {
-		key := in.UnsafeString()
+		key := in.UnsafeFieldName(true)
 		in.WantColon()
 		if in.IsNull() {
 			in.Skip()
@@ -123,22 +122,12 @@ func easyjson4da0dabeEncodeGoStdSrcStorage1(out *jwriter.Writer, in World) {
 	_ = first
 	{
 		const prefix string = ",\"id\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix[1:])
 		out.Int(int(in.ID))
 	}
 	{
 		const prefix string = ",\"randomnumber\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix)
 		out.Int(int(in.RandomNumber))
 	}
 	out.RawByte('}')

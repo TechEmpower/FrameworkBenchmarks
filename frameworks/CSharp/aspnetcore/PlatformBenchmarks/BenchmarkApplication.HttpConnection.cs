@@ -251,7 +251,18 @@ public partial class BenchmarkApplication : IHttpConnection
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static BufferWriter<WriterAdapter> GetWriter(PipeWriter pipeWriter, int sizeHint)
-        => new(new WriterAdapter(pipeWriter), sizeHint);
+        => new(new(pipeWriter), sizeHint);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static ChunkedBufferWriter<WriterAdapter> GetChunkedWriter(PipeWriter pipeWriter, int chunkSizeHint)
+    {
+        var writer = ChunkedWriterPool.Get();
+        writer.SetOutput(new WriterAdapter(pipeWriter), chunkSizeHint);
+        return writer;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void ReturnChunkedWriter(ChunkedBufferWriter<WriterAdapter> writer) => ChunkedWriterPool.Return(writer);
 
     private struct WriterAdapter : IBufferWriter<byte>
     {

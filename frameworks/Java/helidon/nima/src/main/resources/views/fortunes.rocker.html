@@ -1,0 +1,24 @@
+@import io.helidon.benchmark.nima.models.Fortune
+@import java.util.List
+@args (List<Fortune> fortunes)
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fortunes</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>id</th>
+        <th>message</th>
+    </tr>
+    @for (f : fortunes) {
+    <tr>
+        <td>@f.getId()</td>
+        <td>@f.getMessage()</td>
+    </tr>
+    }
+</table>
+</body>
+</html>

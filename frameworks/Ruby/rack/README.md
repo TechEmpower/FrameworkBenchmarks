@@ -11,37 +11,31 @@ comparing a variety of web servers.
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Ruby 2.0.0-p0](http://www.ruby-lang.org/)
-* [JRuby 1.7.8](http://jruby.org/)
-* [Rubinius 2.2.10](http://rubini.us/)
-* [Rack 1.5.2](http://rack.github.com/)
-* [Unicorn 4.8.3](http://unicorn.bogomips.org/)
-* [TorqBox 0.1.7](http://torquebox.org/torqbox/)
-* [Puma 3.9](http://puma.io/)
-* [Falcon](https://github.com/socketry/falcon)
-* [Thin 1.6.2](http://code.macournoyer.com/thin/)
+* [Ruby 3.2](http://www.ruby-lang.org/)
+* [JRuby 9.4](http://jruby.org/)
+* [Rack 3.0.7](http://rack.github.com/)
+* [Unicorn 6.1.0](http://unicorn.bogomips.org/)
+* [Puma 6.2.1](http://puma.io/)
+* [Falcon 0.42.3](https://github.com/socketry/falcon)
+* [Sequel 5.68.0](https://sequel.jeremyevans.net/)
+
+
 
 ## Paths & Source for Tests
 
-* [JSON Serialization](app/ruby_impl.rb) [[jruby version](app/jruby_impl.rb)]: "/json"
-* [Single Database Query](app/ruby_impl.rb) [[jruby version](app/jruby_impl.rb)]: "/db", [World Model](models/world.rb)
-* [Multiple Database Queries](app/ruby_impl.rb) [[jruby version](app/jruby_impl.rb)]: "/query?queries={#}", [World Model](models/world.rb)
-* _Fortunes: N/A_
-* [Database Updates](app/ruby_impl.rb) [[jruby version](app/jruby_impl.rb)]: "/updates?queries={#}", [World Model](models/world.rb)
-* [Plaintext](app/ruby_impl.rb) [[jruby version](app/jruby_impl.rb)]: "/plaintext"
+* Routing and controller logic is in hello_world.rb
+* Database access is done with pg_db.rb (only postgres is supported and we are using sequel to connect and run queries)
+* No ORM is used.
 
 ## Get Help
 
 ### Experts
 
 * Samuel Williams (@ioquatix) -- Async & Falcon developer.
+* Tim Uckun (@timuckun)
 
-### Community
-
-* `#rack` IRC Channel ([irc.freenode.net](http://freenode.net/))
-* [Rack Google Group](https://groups.google.com/forum/#!forum/rack-devel)
 
 ### Resources
 
 * [Rack Source Code](https://github.com/rack/rack)
-* [PR: passenger-install-apache2-module doesn't work on ruby 2.0](https://github.com/FooBarWidget/passenger/pull/71)
+

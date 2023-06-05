@@ -1,37 +1,51 @@
 # Helidon Benchmarking Test
 
 This is the Helidon portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+Two Helidon APIs are implemented: Reactive and Nima. The Reactive API has been around since the first
+version of Helidon while Nima is a new, blocking API based on JDK 19 virtual threads. 
 
-There is currently one repository implementation.
-* [JdbcRepository](src/main/java/io/helidon/benchmark/models/JdbcRepository.java) is using Vertx pg client.
+The code is organized into two Maven modules, namely, *reactive* and *nima*. Both modules implement the
+same set of tests outlined below. 
+
 ### Plaintext Test
 
-* [Plaintext test source](src/main/java/io/helidon/benchmark/services/PlainTextService.java)
+* [Reactive](src/main/java/io/helidon/benchmark/reactive/services/PlainTextService.java)
+* [Nima](src/main/java/io/helidon/benchmark/nima/Main.java)
 
 ### JSON Serialization Test
 
-* [JSON test source](src/main/java/io/helidon/benchmark/services/JsonService.java)
+* [Reactive](src/main/java/io/helidon/benchmark/reactive/services/JsonService.java)
+* [Nima](src/main/java/io/helidon/benchmark/nima/Main.java)
 
 ### Database Query Test
 
-* [Database Query test source](src/main/java/io/helidon/benchmark/services/DbService.java)
+* [Reactive](src/main/java/io/helidon/benchmark/reactive/services/DbService.java)
+* [Nima](src/main/java/io/helidon/benchmark/nima/services/DbService.java)
 
 ### Database Queries Test
 
-* [Database Queries test source](src/main/java/io/helidon/benchmark/services/DbService.java)
+* [Reactive](src/main/java/io/helidon/benchmark/reactive/services/DbService.java)
+* [Nima](src/main/java/io/helidon/benchmark/nima/services/DbService.java)
 
 ### Database Update Test
 
-* [Database Update test source](src/main/java/io/helidon/benchmark/services/DbService.java)
+* [Reactive](src/main/java/io/helidon/benchmark/reactive/services/DbService.java)
+* [Nima](src/main/java/io/helidon/benchmark/nima/services/DbService.java)
 
-### Template rendering Test
+### Template Rendering Test
 
-* [Template rendering test source](src/main/java/io/helidon/benchmark/services/FortuneService.java)
+* [Reactive](src/main/java/io/helidon/benchmark/reactive/services/FortuneService.java)
+* [Nima](src/main/java/io/helidon/benchmark/nima/services/FortuneHandler.java)
 
 ## Versions
 
-* [Java OpenJDK 11](http://openjdk.java.net/)
-* [Helidon 2.4.0](http://helidon.io/)
+* Reactive
+  * [Java OpenJDK 11](http://openjdk.java.net/)
+  * [Helidon 3.0.1](http://helidon.io/)
+  
+* Nima
+  * [Java OpenJDK 19 w/Loom](http://openjdk.java.net/)
+  * [Helidon 4.0.0-ALPHA1](http://helidon.io/)
 
 ## Test URLs
 

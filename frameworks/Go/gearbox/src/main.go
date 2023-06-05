@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"sync"
 
-	"gearbox/src/templates"
+	"gearbox/app/templates"
 
 	"github.com/gogearbox/gearbox"
 	pgx "github.com/jackc/pgx/v4"

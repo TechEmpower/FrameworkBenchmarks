@@ -32,7 +32,7 @@
 struct global_thread_data_t;
 struct thread_context_t;
 
-typedef struct {
+typedef struct config_t {
 	const char *bind_address;
 	const char *cert;
 	const char *db_host;
@@ -40,9 +40,11 @@ typedef struct {
 	const char *log;
 	const char *root;
 	const char *template_path;
+	size_t db_timeout;
 	size_t max_accept;
 	size_t max_db_conn_num;
 	size_t max_json_generator;
+	size_t max_pipeline_query_num;
 	size_t max_query_num;
 	size_t thread_num;
 	uint16_t https_port;
@@ -53,11 +55,11 @@ typedef struct {
 	h2o_logger_t *file_logger;
 	struct global_thread_data_t *global_thread_data;
 	list_t *postinitialization_tasks;
-	list_t *prepared_statements;
 	h2o_socket_t *signals;
 	SSL_CTX *ssl_ctx;
 	size_t memory_alignment;
 	int signal_fd;
+	h2o_buffer_prototype_t buffer_prototype;
 	h2o_globalconf_t h2o_config;
 	request_handler_data_t request_handler_data;
 } global_data_t;

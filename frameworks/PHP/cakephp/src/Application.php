@@ -49,11 +49,11 @@ class Application extends BaseApplication
 
     public function routes(RouteBuilder $routes): void
     {
-        $routes->connect('/json', ['controller' => 'Json', 'action' => 'index']);
-        $routes->connect('/plaintext', ['controller' => 'Plaintext', 'action' => 'index']);
-        $routes->connect('/fortunes', ['controller' => 'Fortunes', 'action' => 'index']);
-        $routes->connect('/db', ['controller' => 'World', 'action' => 'query']);
-        $routes->connect('/queries', ['controller' => 'World', 'action' => 'index']);
-        $routes->connect('/updates', ['controller' => 'World', 'action' => 'updates']);
-    }    
+        $routes->connect('/json', ['controller' => 'Main', 'action' => 'json']);
+        $routes->connect('/plaintext', ['controller' => 'Main', 'action' => 'plaintext']);
+        $routes->connect('/fortunes', ['controller' => 'Main', 'action' => 'fortunes']);
+        $routes->connect('/db', ['controller' => 'Main', 'action' => 'db']);
+        $routes->connect('/queries', ['controller' => 'Main', 'action' => 'queries']);
+        $routes->connect('/updates', ['controller' => 'Main', 'action' => 'updates']);
+    }
 }

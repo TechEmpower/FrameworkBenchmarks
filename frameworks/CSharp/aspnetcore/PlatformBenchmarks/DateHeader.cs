@@ -17,17 +17,14 @@ internal static class DateHeader
     const int suffixLength = 2; // crlf
     const int suffixIndex = dateTimeRLength + prefixLength;
 
-    private static readonly Timer s_timer = new((s) =>
-    {
-        SetDateValues(DateTimeOffset.UtcNow);
-    }, null, 1000, 1000);
+    private static readonly Timer s_timer = new(_ => SetDateValues(DateTimeOffset.UtcNow), null, 1000, 1000);
 
     private static byte[] s_headerBytesMaster = new byte[prefixLength + dateTimeRLength + 2 * suffixLength];
     private static byte[] s_headerBytesScratch = new byte[prefixLength + dateTimeRLength + 2 * suffixLength];
 
     static DateHeader()
     {
-        var utf8 = Encoding.ASCII.GetBytes("\r\nDate: ").AsSpan();
+        var utf8 = "\r\nDate: "u8;
 
         utf8.CopyTo(s_headerBytesMaster);
         utf8.CopyTo(s_headerBytesScratch);
@@ -57,9 +54,7 @@ internal static class DateHeader
                 throw new Exception("date time format failed");
             }
             Debug.Assert(written == dateTimeRLength);
-            var temp = s_headerBytesMaster;
-            s_headerBytesMaster = s_headerBytesScratch;
-            s_headerBytesScratch = temp;
+            (s_headerBytesScratch, s_headerBytesMaster) = (s_headerBytesMaster, s_headerBytesScratch);
         }
     }
 }

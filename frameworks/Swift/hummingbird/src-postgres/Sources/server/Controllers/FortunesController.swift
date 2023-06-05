@@ -21,7 +21,7 @@ class FortunesController {
         """)
     }
 
-    func add(to router: HBRouter) {
+    func add(to router: HBRouterBuilder) {
         router.get("fortunes", use: fortunes)
     }
 

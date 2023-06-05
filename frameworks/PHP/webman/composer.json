@@ -33,13 +33,23 @@
     "ext-event": "For better performance. "
   },
   "autoload": {
+    "psr-4": {
+      "": "./",
+      "App\\": "./app"
+    },
     "files": [
       "./support/helpers.php"
     ]
   },
   "scripts": {
-    "post-autoload-dump": [
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    "post-package-install": [
+      "support\\Plugin::install"
+    ],
+    "post-package-update": [
+      "support\\Plugin::install"
+    ],
+    "pre-package-uninstall": [
+      "support\\Plugin::uninstall"
     ]
   }
 }

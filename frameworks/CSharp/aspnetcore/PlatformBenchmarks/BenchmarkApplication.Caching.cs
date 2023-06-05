@@ -10,7 +10,7 @@ namespace PlatformBenchmarks;
 
 public partial class BenchmarkApplication
 {
-    private async Task Caching(PipeWriter pipeWriter, int count)
+    private static async Task Caching(PipeWriter pipeWriter, int count)
     {
         OutputMultipleQueries(pipeWriter, await Db.LoadCachedQueries(count), SerializerContext.CachedWorldArray);
     }

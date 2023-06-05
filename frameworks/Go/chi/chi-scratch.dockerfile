@@ -1,11 +1,10 @@
 # build layer
-FROM golang:1.14-alpine as builder
+FROM docker.io/golang:1.19-alpine as builder
 
 ADD ./src/chi /chi
 WORKDIR /chi
-ENV GO111MODULE=on
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOAMD64=v3 \
     go build -ldflags="-w -s" -o server
 
 RUN apk --no-cache add --update ca-certificates

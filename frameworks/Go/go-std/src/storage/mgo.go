@@ -5,7 +5,7 @@ import (
 	"log"
 	"math/rand"
 
-	"go-std/src/templates"
+	"go-std/app/templates"
 
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"

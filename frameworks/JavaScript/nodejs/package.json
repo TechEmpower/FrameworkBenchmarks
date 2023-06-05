@@ -5,7 +5,7 @@
   "dependencies": {
     "async": "2.5.0",
     "handlebars": "4.3.0",
-    "mongodb": "3.6.4",
+    "mongodb": "3.7.3",
     "mongoose": "5.7.5",
     "mysql": "2.16.0",
     "mysql2": "1.6.5",

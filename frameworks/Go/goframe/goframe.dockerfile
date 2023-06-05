@@ -1,11 +1,13 @@
-FROM golang:1.17
+FROM docker.io/golang:1.19
 
 ADD     ./src /goframe
 WORKDIR /goframe
-RUN     go get -u github.com/valyala/quicktemplate/qtc@v1.6.3
-RUN     go mod tidy
-RUN     go generate ./template
-RUN     go build -ldflags="-s -w" -o app .
+
+RUN go mod download
+
+RUN go generate -x ./...
+
+RUN GOAMD64=v3 go build -ldflags="-s -w" -o app .
 
 EXPOSE 8080
 

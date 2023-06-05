@@ -2,6 +2,12 @@ const Handlebars = require('handlebars');
 
 const GREETING = "Hello, World!";
 
+const headerTypes = {
+  plain: 'text/plain',
+  json:  'application/json',
+  html:  'text/html; charset=UTF-8'
+};
+
 const self = module.exports = {
 
   additionalFortune: () => ({
@@ -41,12 +47,6 @@ const self = module.exports = {
   },
 
   addTfbHeaders: (res, headerType) => {
-    const headerTypes = {
-      plain: 'text/plain',
-      json:  'application/json',
-      html:  'text/html; charset=UTF-8'
-    };
-    
     res.setHeader('Server', 'Node');
     res.setHeader('Content-Type', headerTypes[headerType]);
 },

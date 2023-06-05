@@ -120,7 +120,9 @@ class Fortunes < Grip::Controllers::Http
 end
 
 class Application < Grip::Application
-  def routes
+  def initialize
+    super(environment: "production", serve_static: false)
+
     get "/json", Json
     get "/plaintext", Plaintext
     get "/db", Db

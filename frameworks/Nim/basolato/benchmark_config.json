@@ -23,7 +23,8 @@
         "database_os": "Linux",
         "display_name": "Basolato",
         "notes": "",
-        "versus": "jester"
+        "versus": "jester",
+        "tags": ["broken"]
       }
     }
   ]

@@ -1,0 +1,22 @@
+plugins {
+    id 'io.micronaut.benchmark.module'
+}
+
+graalvmNative.binaries.all {
+    buildArgs.add("--initialize-at-build-time=" +
+            "io.vertx.core.logging.LoggerFactory," +
+            "io.vertx.core.logging.SLF4JLogDelegateFactory," +
+            "io.vertx.core.logging.SLF4JLogDelegate," +
+            "io.vertx.pgclient.impl.codec.DataTypeCodec")
+}
+
+micronaut {
+    testResources {
+        additionalModules.add(JDBC_POSTGRESQL)
+    }
+}
+
+dependencies {
+    implementation("io.vertx:vertx-pg-client")
+    implementation('com.ongres.scram:client:2.1')
+}

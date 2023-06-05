@@ -14,7 +14,7 @@ public static class BenchmarkConfigurationHelpers
 
         builder.UseSockets(options =>
         {
-            if (int.TryParse(builder.GetSetting("threadCount"), out int threadCount))
+            if (int.TryParse(builder.GetSetting("threadCount"), out var threadCount))
             {
                 options.IOQueueCount = threadCount;
             }

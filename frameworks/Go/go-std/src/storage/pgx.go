@@ -6,7 +6,7 @@ import (
 	"math/rand"
 	"sort"
 
-	"go-std/src/templates"
+	"go-std/app/templates"
 
 	"github.com/jackc/pgx"
 )

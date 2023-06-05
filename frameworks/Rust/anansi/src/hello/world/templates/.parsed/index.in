@@ -1,0 +1,1 @@
+{_args._title = {let mut _c = String::new();_c.push_str("");_c.push_str(&anansi::web::html_escape(&format!("{}", title)));_c.push_str(""); _c};_args._content = {let mut _c = String::new();_c.push_str("	<h1>");_c.push_str(&anansi::web::html_escape(&format!("{}", title)));_c.push_str("</h1>"); _c};_args}

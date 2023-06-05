@@ -1,0 +1,51 @@
+plugins {
+	id 'java'
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	pippoVersion = '1.14.0'
+}
+
+dependencies {
+
+	implementation 'ch.qos.logback:logback-core:1.4.5'
+	implementation 'ch.qos.logback:logback-classic:1.4.5'
+	implementation 'org.slf4j:slf4j-api:2.0.6'
+
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+	implementation "ro.pippo:pippo-core:${pippoVersion}"
+	implementation "ro.pippo:pippo-jetty:${pippoVersion}"
+	implementation "ro.pippo:pippo-tomcat:${pippoVersion}"
+	implementation "ro.pippo:pippo-undertow:${pippoVersion}"
+	implementation "ro.pippo:pippo-pebble:${pippoVersion}"
+
+	implementation 'org.postgresql:postgresql:42.5.3'
+	implementation 'mysql:mysql-connector-java:8.0.32'
+	implementation 'org.mongodb:mongo-java-driver:3.12.11'
+
+	implementation 'com.zaxxer:HikariCP:5.0.1'
+
+	implementation 'com.dslplatform:dsl-json:1.10.0'
+	implementation 'com.dslplatform:dsl-json-java8:1.10.0'
+	annotationProcessor 'com.dslplatform:dsl-json-java8:1.10.0'
+
+	testImplementation 'junit:junit:4.13.2'
+	testImplementation 'com.squareup.okhttp3:okhttp:4.10.0'
+
+}
+
+test {
+	systemProperty 'pippo.mode', 'test'
+}
+
+task fatJar(type: Jar) {
+	archiveBaseName = 'pippo-all'
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+	with jar
+}

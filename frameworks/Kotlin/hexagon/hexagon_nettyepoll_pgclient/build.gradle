@@ -1,0 +1,14 @@
+
+apply(from: "$gradleScripts/application.gradle")
+
+application {
+    mainClass.set("com.hexagonkt.BenchmarkKt")
+}
+
+dependencies {
+    api(project(":store_pgclient"))
+    api("com.hexagonkt:http_server_netty_epoll:$hexagonVersion")
+    api("io.netty:netty-transport-native-epoll:$nettyVersion:linux-x86_64")
+}
+
+build.dependsOn("installDist")

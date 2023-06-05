@@ -1,4 +1,4 @@
-FROM node:16.14.0-slim
+FROM node:18.12.1-slim
 
 ARG TFB_TEST_NAME
 

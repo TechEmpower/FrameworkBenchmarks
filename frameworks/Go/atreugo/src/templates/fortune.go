@@ -4,7 +4,7 @@ import (
 	"sync"
 )
 
-//go:generate qtc
+//go:generate go run github.com/valyala/quicktemplate/qtc
 
 var (
 	fortunePool = sync.Pool{

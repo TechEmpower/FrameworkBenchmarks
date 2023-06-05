@@ -5,7 +5,9 @@ import (
 	"sync"
 )
 
-//go:generate qtc
+//go:generate go run github.com/valyala/quicktemplate/qtc
+
+//go:generate go run github.com/mailru/easyjson/... -all -disable_members_unescape ${GOFILE}
 
 const (
 	fortuneHTML = `<!DOCTYPE html>

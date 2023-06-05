@@ -191,17 +191,10 @@ class PgController extends HttpController
             $values[] = $row['randomNumber'] = \mt_rand(1, 10000);
             $list[] = $row;
         }
-        $db->beginTransaction();
-        try {
-            $stmtUpdate->execute([
-                ...$values,
-                ...$keys
-            ]);
-            $db->commit();
-        } catch(\Throwable $th) {
-            $db->rollBack();
-            throw $th;
-        }
+        $stmtUpdate->execute([
+            ...$values,
+            ...$keys
+        ]);
 
         return $list;
     }

@@ -1,9 +1,9 @@
 package com.test.hserver.db;
 
+import cn.hserver.core.ioc.annotation.Autowired;
+import cn.hserver.core.ioc.annotation.Bean;
+import cn.hserver.core.ioc.annotation.Configuration;
 import com.zaxxer.hikari.HikariDataSource;
-import top.hserver.core.ioc.annotation.Autowired;
-import top.hserver.core.ioc.annotation.Bean;
-import top.hserver.core.ioc.annotation.Configuration;
 
 import javax.sql.DataSource;
 

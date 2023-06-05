@@ -1,4 +1,4 @@
-FROM gradle:7.3.3-jdk11 as gradle
+FROM gradle:7.6-jdk17 as gradle
 WORKDIR /vertx-web-kotlin-coroutines
 COPY src src
 COPY build.gradle.kts build.gradle.kts
@@ -12,7 +12,6 @@ CMD java \
     -server                                           \
     -XX:+UseNUMA                                      \
     -XX:+UseParallelGC                                \
-    -XX:+AggressiveOpts                               \
     -Dvertx.disableMetrics=true                       \
     -Dvertx.disableH2c=true                           \
     -Dvertx.disableWebsockets=true                    \
@@ -25,7 +24,7 @@ CMD java \
     -Dio.netty.buffer.checkBounds=false               \
     -Dio.netty.buffer.checkAccessible=false           \
     -jar                                              \
-    build/libs/vertx-web-kotlin-coroutines-benchmark-4.1.5-fat.jar \
+    build/libs/vertx-web-kotlin-coroutines-benchmark-4.3.8-fat.jar \
     --instances                                       \
     `grep --count ^processor /proc/cpuinfo`           \
     --conf                                            \

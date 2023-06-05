@@ -73,6 +73,27 @@
                 "display_name": "redkale-native",
                 "notes": "",
                 "versus": "Redkale"
+            },
+            "jdbc": {
+                "db_url": "/db",
+                "query_url": "/queries?q=", 
+                "fortune_url": "/fortunes",
+                "update_url": "/updates?q=",
+                "port": 8080,
+                "approach": "Realistic",
+                "classification": "Fullstack",
+                "database": "Postgres",
+                "framework": "Redkale",
+                "language": "Java",
+                "flavor": "None",
+                "orm": "Raw",
+                "platform": "Redkale",
+                "webserver": "Redkale",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "redkale-jdbc",
+                "notes": "",
+                "versus": "Redkale"
             }
         }
     ]

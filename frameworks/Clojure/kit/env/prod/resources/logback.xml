@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds">
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg %n</pattern>
+        </encoder>
+    </appender>
+    <logger name="org.eclipse.aether" level="warn" />
+    <logger name="io.methvin.watcher" level="warn" />
+    <logger name="org.eclipse.jgit" level="warn" />
+    <logger name="com.zaxxer.hikari" level="warn" />
+    <logger name="org.apache.http" level="warn" />
+    <logger name="org.xnio.nio" level="warn" />
+    <logger name="io.undertow" level="warn" />
+    <root level="INFO">
+    </root>
+</configuration>

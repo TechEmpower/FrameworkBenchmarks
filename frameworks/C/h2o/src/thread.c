@@ -31,7 +31,6 @@
 #include <h2o/serverutil.h>
 #include <sys/syscall.h>
 
-#include "database.h"
 #include "error.h"
 #include "event_loop.h"
 #include "global_data.h"
@@ -39,26 +38,26 @@
 #include "thread.h"
 
 static void *run_thread(void *arg);
-static void set_thread_memory_allocation_policy(size_t thread_num);
+static void set_thread_memory_allocation_policy(void);
 
 static void *run_thread(void *arg)
 {
 	thread_context_t ctx;
 
 	initialize_thread_context(arg, false, &ctx);
-	set_thread_memory_allocation_policy(ctx.config->thread_num);
+
+	// There is no need to set a memory allocation policy unless
+	// the application controls the processor affinity as well.
+	if (!(ctx.global_thread_data->config->thread_num % h2o_numproc()))
+		set_thread_memory_allocation_policy();
+
 	event_loop(&ctx);
 	free_thread_context(&ctx);
 	pthread_exit(NULL);
 }
 
-static void set_thread_memory_allocation_policy(size_t thread_num)
+static void set_thread_memory_allocation_policy(void)
 {
-	// There is no need to set a memory allocation policy unless
-	// the application controls the processor affinity as well.
-	if (thread_num % h2o_numproc())
-		return;
-
 	void *stack_addr;
 	size_t stack_size;
 	unsigned memory_node;
@@ -75,21 +74,22 @@ static void set_thread_memory_allocation_policy(size_t thread_num)
 	memset(nodemask, 0, sizeof(nodemask));
 	nodemask[memory_node / (sizeof(*nodemask) * CHAR_BIT)] |=
 		1UL << (memory_node % (sizeof(*nodemask) * CHAR_BIT));
-	CHECK_ERRNO(mbind,
-	            stack_addr,
-	            stack_size,
-	            MPOL_PREFERRED,
-	            nodemask,
-	            memory_node + 1,
-	            MPOL_MF_MOVE | MPOL_MF_STRICT);
-	CHECK_ERRNO(set_mempolicy, MPOL_PREFERRED, NULL, 0);
+
+	if (mbind(stack_addr,
+	          stack_size,
+	          MPOL_PREFERRED,
+	          nodemask,
+	          memory_node + 1,
+	          MPOL_MF_MOVE | MPOL_MF_STRICT))
+		STANDARD_ERROR("mbind");
+	else if (set_mempolicy(MPOL_PREFERRED, NULL, 0))
+		STANDARD_ERROR("set_mempolicy");
 }
 
 void free_thread_context(thread_context_t *ctx)
 {
-	free_database_state(ctx->event_loop.h2o_ctx.loop, &ctx->db_state);
+	cleanup_request_handler_thread_data(&ctx->request_handler_data);
 	free_event_loop(&ctx->event_loop, &ctx->global_thread_data->h2o_receiver);
-	free_request_handler_thread_data(&ctx->request_handler_data);
 
 	if (ctx->json_generator)
 		do {
@@ -129,16 +129,13 @@ void initialize_thread_context(global_thread_data_t *global_thread_data,
                                thread_context_t *ctx)
 {
 	memset(ctx, 0, sizeof(*ctx));
-	ctx->config = global_thread_data->config;
-	ctx->global_data = global_thread_data->global_data;
 	ctx->global_thread_data = global_thread_data;
 	ctx->random_seed = syscall(SYS_gettid);
 	initialize_event_loop(is_main_thread,
 	                      global_thread_data->global_data,
 	                      &global_thread_data->h2o_receiver,
 	                      &ctx->event_loop);
-	initialize_database_state(ctx->event_loop.h2o_ctx.loop, &ctx->db_state);
-	initialize_request_handler_thread_data(ctx->config, &ctx->request_handler_data);
+	initialize_request_handler_thread_data(ctx);
 	global_thread_data->ctx = ctx;
 }
 

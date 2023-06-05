@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+
+<configuration>
+
+	<contextName>Pippo</contextName>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{20}:%line - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="com.techempower.benchmark.pippo" additivity="false" level="INFO">
+		<appender-ref ref="STDOUT"/>
+	</logger>
+
+	<root level="WARN">
+		<appender-ref ref="STDOUT"/>
+	</root>
+
+</configuration>

@@ -12,6 +12,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+using namespace ASql;
+
 MultipleDatabaseQueriesTest::MultipleDatabaseQueriesTest(QObject *parent) : Controller(parent)
 {
 
@@ -30,10 +32,10 @@ void MultipleDatabaseQueriesTest::queriesp(Context *c)
     ASync async(c);
     static thread_local auto db = APool::database();
     for (int i = 0; i < queries; ++i) {
-        const int id = (qrand() % 10000) + 1;
+        const int id = (rand() % 10000) + 1;
 
-        db.exec(APreparedQueryLiteral(u"SELECT id, randomNumber FROM world WHERE id=$1"),
-                               {id}, [c, async, i, queries, array] (AResult &result) {
+        db.exec(APreparedQueryLiteral(u8"SELECT id, randomNumber FROM world WHERE id=$1"),
+                               {id}, c, [c, async, i, queries, array] (AResult &result) {
             if (Q_LIKELY(!result.error() && result.size())) {
                 auto it = result.begin();
                 array->append(QJsonObject{
@@ -48,7 +50,7 @@ void MultipleDatabaseQueriesTest::queriesp(Context *c)
             }
 
             c->res()->setStatus(Response::InternalServerError);
-        }, c);
+        });
     }
 }
 
@@ -80,7 +82,7 @@ void MultipleDatabaseQueriesTest::processQuery(Context *c, QSqlQuery &query)
     }
 
     for (int i = 0; i < queries; ++i) {
-        const int id = (qrand() % 10000) + 1;
+        const int id = (rand() % 10000) + 1;
 
         query.bindValue(QStringLiteral(":id"), id);
         if (Q_LIKELY(query.exec() && query.next())) {

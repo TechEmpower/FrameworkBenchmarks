@@ -104,7 +104,7 @@
       "framework": "Jooby",
       "language": "Java",
       "flavor": "None",
-      "platform": "Undertow",
+      "platform": "Netty",
       "database": "Postgres",
       "database_os": "Linux",
       "orm": "Raw",

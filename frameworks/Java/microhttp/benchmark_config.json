@@ -20,6 +20,24 @@
         "display_name": "microhttp",
         "notes": "",
         "versus": "None"
+      },
+      "mysql": {
+        "db_url": "/db",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "MySQL",
+        "framework": "microhttp",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Microhttp",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "microhttp",
+        "notes": "",
+        "versus": "None"
       }
     }
   ]

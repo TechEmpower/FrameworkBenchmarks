@@ -1,0 +1,58 @@
+[package]
+name = "viz"
+version = "0.1.0"
+edition = "2021"
+authors = ["Fangdun Tsai <cfddream@gmail.com>"]
+
+[[bin]]
+name = "viz"
+path = "src/main.rs"
+
+[[bin]]
+name = "viz-pg"
+path = "src/main_pg.rs"
+required-features = ["tokio-postgres", "yarte"]
+
+[[bin]]
+name = "viz-sqlx"
+path = "src/main_sqlx.rs"
+required-features = ["sqlx", "markup", "v_htmlescape"]
+
+[[bin]]
+name = "viz-diesel"
+path = "src/main_diesel.rs"
+required-features = ["diesel", "diesel-async", "sailfish"]
+
+[dependencies]
+viz = "0.4.10"
+hyper = "0.14.25"
+atoi = "2.0"
+serde = { version = "1.0", features = ["derive"] }
+nanorand = "0.7"
+rand = { version = "0.8.5", features = ["small_rng"] }
+thiserror = "1.0"
+futures-util = "0.3.27"
+
+tokio = { version = "1.27", features = ["full"] }
+tokio-postgres = { version = "0.7.8", optional = true }
+sqlx = { version = "0.6.3", features = [
+  "postgres",
+  "macros",
+  "runtime-tokio-native-tls",
+], optional = true }
+diesel = { version = "2.0.3", default-features = false, features = [
+  "i-implement-a-third-party-backend-and-opt-into-breaking-changes",
+], optional = true }
+diesel-async = { version = "0.2.1", default-features = false, features = [
+  "postgres",
+  "bb8",
+], optional = true }
+
+yarte = { version = "0.15.7", features = ["bytes-buf", "json"], optional = true }
+markup = { version = "0.13.1", optional = true }
+v_htmlescape = { version = "0.15.8", optional = true }
+sailfish = { version = "0.6.0", optional = true }
+
+[profile.release]
+lto = true
+codegen-units = 1

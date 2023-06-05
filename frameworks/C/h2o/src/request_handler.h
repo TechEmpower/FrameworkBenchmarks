@@ -25,7 +25,10 @@
 #include <stdbool.h>
 
 #include "global_data.h"
+#include "list.h"
+#include "thread.h"
 #include "utility.h"
+#include "handlers/request_handler_data.h"
 
 #define REQ_ERROR "request error\n"
 
@@ -43,18 +46,18 @@ typedef enum {
 	GATEWAY_TIMEOUT = 504
 } http_status_code_t;
 
-void cleanup_request_handlers(global_data_t *global_data);
-void free_request_handler_thread_data(request_handler_thread_data_t *request_handler_thread_data);
+void cleanup_request_handler_thread_data(request_handler_thread_data_t *data);
+void cleanup_request_handlers(request_handler_data_t *data);
 const char *get_query_param(const char *query,
                             size_t query_len,
                             const char *param,
                             size_t param_len);
-void initialize_request_handler_thread_data(
-		const config_t *config, request_handler_thread_data_t *request_handler_thread_data);
+void initialize_request_handler_thread_data(thread_context_t *ctx);
 void initialize_request_handlers(const config_t *config,
-                                 global_data_t *global_data,
                                  h2o_hostconf_t *hostconf,
-                                 h2o_access_log_filehandle_t *log_handle);
+                                 h2o_access_log_filehandle_t *log_handle,
+                                 list_t **postinitialization_tasks,
+                                 request_handler_data_t *data);
 void register_request_handler(const char *path,
                               int (*handler)(struct st_h2o_handler_t *, h2o_req_t *),
                               h2o_hostconf_t *hostconf,

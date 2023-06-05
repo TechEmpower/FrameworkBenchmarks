@@ -1,0 +1,33 @@
+micronaut:
+  application:
+    name: micronaut-benchmark
+  server:
+    port: 8080
+    server-header: Micronaut
+    date-header: false
+  http:
+    client:
+      read-timeout: 60s
+
+netty:
+  default:
+    allocator:
+      max-order: 3
+
+datasources:
+  default:
+    url: jdbc:postgresql://tfb-database:5432/hello_world?loggerLevel=OFF&disableColumnSanitiser=true&assumeMinServerVersion=12&sslmode=disable
+    username: benchmarkdbuser
+    password: benchmarkdbpass
+
+r2dbc:
+  datasources:
+    default:
+      url: r2dbc:pool://tfb-database:5432/hello_world?loggerLevel=OFF&disableColumnSanitiser=true&assumeMinServerVersion=12&sslmode=disable
+      username: benchmarkdbuser
+      password: benchmarkdbpass
+      options:
+        protocol: postgres
+
+mongodb:
+  uri: mongodb://tfb-database:27017/hello_world

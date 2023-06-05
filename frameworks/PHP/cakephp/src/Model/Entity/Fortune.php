@@ -6,7 +6,7 @@ use Cake\ORM\Entity;
 
 class Fortune extends Entity
 {
-	protected $_accessible = [
-		'*' => true,
-	];
+    protected $_accessible = [
+        '*' => true,
+    ];
 }

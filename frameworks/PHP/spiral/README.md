@@ -6,11 +6,11 @@ Benchmark code is located in `app/src/Controllers/BenchmarkController.php`.
 
 ## Infrastructure and Versions
 The tests were run with:
-* [Spiral Framework Version 2](https://github.com/spiral/framework/)
+* [Spiral Framework Version 3.7](https://github.com/spiral/framework/)
 * [Spiral/Stempler](https://github.com/spiral/stempler) as template engine
 * [Cycle ORM 2.*](https://github.com/cycle/orm)
-* [RoadRunner 2.*](https://roadrunner.dev/)
-* [PHP Version 8.0.*](http://www.php.net/) in CLI mode with OPCache
+* [RoadRunner 2023.*](https://roadrunner.dev/)
+* [PHP Version 8.2.*](http://www.php.net/) in CLI mode with OPCache
 
 ## Test URLs
 Test                | URL 

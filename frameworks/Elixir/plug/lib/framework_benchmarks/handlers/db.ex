@@ -9,7 +9,7 @@ defmodule FrameworkBenchmarks.Handlers.DB do
       FrameworkBenchmarks.Repo.get(FrameworkBenchmarks.Models.World, id)
       |> Map.from_struct()
       |> Map.drop([:__meta__])
-      |> Eljiffy.encode()
+      |> Jason.encode()
 
     conn
     |> Plug.Conn.put_resp_content_type("application/json")

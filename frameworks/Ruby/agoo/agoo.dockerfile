@@ -1,4 +1,4 @@
-FROM ruby:2.6.3-slim-stretch
+FROM ruby:2.6.3-slim
 
 RUN apt-get update -q \
     && apt-get install --no-install-recommends -q -y \

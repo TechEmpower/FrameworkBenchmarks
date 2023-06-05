@@ -24,11 +24,12 @@
 #include <h2o.h>
 
 #include "global_data.h"
+#include "request_handler_data.h"
 
-void cleanup_fortunes_handler(global_data_t *global_data);
+void cleanup_fortunes_handler(request_handler_data_t *data);
 void initialize_fortunes_handler(const config_t *config,
-                                 global_data_t *global_data,
                                  h2o_hostconf_t *hostconf,
-                                 h2o_access_log_filehandle_t *log_handle);
+                                 h2o_access_log_filehandle_t *log_handle,
+                                 request_handler_data_t *data);
 
 #endif // FORTUNE_H_

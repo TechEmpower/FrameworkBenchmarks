@@ -49,7 +49,7 @@ const randomWorldPromise = () => {
   }).catch((err) => process.exit(1));
 };
 
-if (cluster.isMaster) {
+if (cluster.isPrimary) {
   // Fork workers.
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();

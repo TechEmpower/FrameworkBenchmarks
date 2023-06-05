@@ -7,7 +7,7 @@
 
     "applications": {
         "benchmark": {
-            "type": "php 7",
+            "type": "php",
             "processes": 84,
             "user": "www-data",
             "group": "www-data",

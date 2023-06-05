@@ -1,8 +1,14 @@
-FROM python:3.10
-EXPOSE 8080
-WORKDIR /starlite
+FROM python:3.11
+WORKDIR /starlite/
+
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 COPY . .
+
 RUN pip install --upgrade pip \
-    && pip install cython==0.29.26 \
+    && pip install cython==0.29.33 \
     && pip install -r /starlite/requirements.txt
-CMD gunicorn app:app -k uvicorn.workers.UvicornWorker -c starlite_conf.py
+
+EXPOSE 8080
+CMD uvicorn app:app --host 0.0.0.0 --port 8080 --workers $(nproc) --log-level error --loop uvloop

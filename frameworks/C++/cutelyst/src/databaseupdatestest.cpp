@@ -16,6 +16,8 @@
 
 #include "picojson.h"
 
+using namespace ASql;
+
 DatabaseUpdatesTest::DatabaseUpdatesTest(QObject *parent) : Controller(parent)
 {
 
@@ -34,29 +36,29 @@ void DatabaseUpdatesTest::updatep(Context *c)
     ASync async(c);
     static thread_local auto db = APool::database();
     for (int i = 0; i < queries; ++i) {
-        int id = (qrand() % 10000) + 1;
+        int id = (rand() % 10000) + 1;
 
-        int randomNumber = (qrand() % 10000) + 1;
+        int randomNumber = (rand() % 10000) + 1;
 
         array.emplace_back(picojson::object({
                             {"id", picojson::value(double(id))},
                             {"randomNumber", picojson::value(double(randomNumber))}
                         }));
 
-        db.exec(APreparedQueryLiteral(u"SELECT randomNumber, id FROM world WHERE id=$1"),
-                               {id}, [c, async] (AResult &result) {
+        db.exec(APreparedQueryLiteral(u8"SELECT randomNumber, id FROM world WHERE id=$1"),
+                               {id}, c, [c, async] (AResult &result) {
             if (Q_UNLIKELY(result.error() || !result.size())) {
                 c->res()->setStatus(Response::InternalServerError);
                 return;
             }
-        }, c);
-        db.exec(APreparedQueryLiteral(u"UPDATE world SET randomNumber=$1 WHERE id=$2"),
-                               {randomNumber, id}, [c, async] (AResult &result) {
+        });
+        db.exec(APreparedQueryLiteral(u8"UPDATE world SET randomNumber=$1 WHERE id=$2"),
+                               {randomNumber, id}, c, [c, async] (AResult &result) {
             if (Q_UNLIKELY(result.error())) {
                 c->res()->setStatus(Response::InternalServerError);
                 return;
             }
-        }, c);
+        });
     }
 
     c->response()->setJsonBody(QByteArray::fromStdString(picojson::value(array).serialize()));
@@ -78,9 +80,9 @@ void DatabaseUpdatesTest::updateb(Context *c)
     ASync async(c);
     static thread_local auto db = APool::database();
     for (int i = 0; i < queries; ++i) {
-        int id = (qrand() % 10000) + 1;
+        int id = (rand() % 10000) + 1;
 
-        int randomNumber = (qrand() % 10000) + 1;
+        int randomNumber = (rand() % 10000) + 1;
 
         argsIds.append(id);
         args.append(id);
@@ -91,23 +93,23 @@ void DatabaseUpdatesTest::updateb(Context *c)
                             {"randomNumber", picojson::value(double(randomNumber))}
                         }));
 
-        db.exec(APreparedQueryLiteral(u"SELECT randomNumber, id FROM world WHERE id=$1"),
-                               {id}, [c, async] (AResult &result) {
+        db.exec(APreparedQueryLiteral(u8"SELECT randomNumber, id FROM world WHERE id=$1"),
+                               {id}, c, [c, async] (AResult &result) {
             if (Q_UNLIKELY(result.error() || !result.size())) {
                 c->res()->setStatus(Response::InternalServerError);
                 return;
             }
-        }, c);
+        });
     }
     args.append(argsIds);
 
     const APreparedQuery pq = getSql(queries);
-    db.exec(pq, args, [c, async] (AResult &result) {
+    db.exec(pq, args, c, [c, async] (AResult &result) {
         if (Q_UNLIKELY(result.error())) {
             c->res()->setStatus(Response::InternalServerError);
             return;
         }
-    }, c);
+    });
 
     c->response()->setJsonBody(QByteArray::fromStdString(picojson::value(array).serialize()));
 }
@@ -149,7 +151,7 @@ void DatabaseUpdatesTest::processQuery(Context *c, QSqlQuery &query, QSqlQuery &
     ids.reserve(queries);
     randomNumbers.reserve(queries);
     for (int i = 0; i < queries; ++i) {
-        int id = (qrand() % 10000) + 1;
+        int id = (rand() % 10000) + 1;
 
         query.bindValue(QStringLiteral(":id"), id);
         if (Q_UNLIKELY(!query.exec() || !query.next())) {
@@ -157,7 +159,7 @@ void DatabaseUpdatesTest::processQuery(Context *c, QSqlQuery &query, QSqlQuery &
             return;
         }
 
-        int randomNumber = (qrand() % 10000) + 1;
+        int randomNumber = (rand() % 10000) + 1;
         ids.append(id);
         randomNumbers.append(randomNumber);
 
@@ -179,29 +181,28 @@ void DatabaseUpdatesTest::processQuery(Context *c, QSqlQuery &query, QSqlQuery &
 APreparedQuery DatabaseUpdatesTest::getSql(int count)
 {
     auto iter = m_sqlMap.find(count);
-    if (iter != m_sqlMap.end())
-    {
-        return iter.value();
-    }
-    QString sql = QStringLiteral("UPDATE WORLD SET randomnumber=CASE id ");
-    sql.reserve(80 + count * 25);
-    int placeholdersCounter = 1;
-    for (int i = 0; i < count; i++) {
-        sql.append(QStringLiteral("WHEN $%1 THEN $%2 ").arg(placeholdersCounter).arg(placeholdersCounter + 1));
-        placeholdersCounter += 2;
-    }
-    sql.append(QStringLiteral("ELSE randomnumber END WHERE id IN ("));
+    if (Q_UNLIKELY(iter == m_sqlMap.end())) {
+        QString sql = QStringLiteral("UPDATE WORLD SET randomnumber=CASE id ");
+        sql.reserve(80 + count * 25);
+        int placeholdersCounter = 1;
+        for (int i = 0; i < count; i++) {
+            sql.append(QStringLiteral("WHEN $%1 THEN $%2 ").arg(placeholdersCounter).arg(placeholdersCounter + 1));
+            placeholdersCounter += 2;
+        }
+        sql.append(QStringLiteral("ELSE randomnumber END WHERE id IN ("));
 
-    for (int i = 0; i < count; i++) {
-        sql.append(QLatin1Char('$') + QString::number(placeholdersCounter) + QLatin1Char(','));
-        ++placeholdersCounter;
+        for (int i = 0; i < count; i++) {
+            sql.append(QLatin1Char('$') + QString::number(placeholdersCounter) + QLatin1Char(','));
+            ++placeholdersCounter;
+        }
+
+        if (count) {
+            sql.remove(sql.size() - 1, 1);
+        }
+        sql.append(QLatin1Char(')'));
+
+        iter = m_sqlMap.insert(count, APreparedQuery(sql));
     }
 
-    if (count) {
-        sql.remove(sql.size() - 1, 1);
-    }
-    sql.append(QLatin1Char(')'));
-    m_sqlMap.insert(count, sql);
-
-    return sql;
+    return iter.value();
 }

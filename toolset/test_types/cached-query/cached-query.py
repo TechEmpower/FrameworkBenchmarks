@@ -36,7 +36,7 @@ class TestType(AbstractTestType):
         if len(self.cached_query_url) < 15:
             problems.append(
                 ("fail",
-                 "Route for cached queries must be at least 8 characters, found '{}' instead".format(self.cached_query_url),
+                 "Route for cached queries must be at least 15 characters, found '{}' instead".format(self.cached_query_url),
                  url))
 
         if len(problems) == 0:

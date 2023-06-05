@@ -4,26 +4,14 @@ version: 1.0.0
 dependencies:
   action-controller:
     github: spider-gazelle/action-controller
-    version: "1.4.2"
 
-  granite:
-    github: amberframework/granite
-    version: "0.15.0"
+  pg-orm:
+    github: spider-gazelle/pg-orm
 
   # https://github.com/jeromegn/kilt
   # Generic template interface for Crystal
   kilt:
     github: jeromegn/kilt
-    version: "0.4.0"
-
-  pg:
-    github: will/crystal-pg
-    version: "0.15.0"
-
-development_dependencies:
-  ameba:
-    github: veelenga/ameba
-    version: "0.8.1"
 
 # compile target
 targets:

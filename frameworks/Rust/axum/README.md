@@ -5,8 +5,8 @@
 
 Axum is a web application framework that focuses on ergonomics and modularity.
 
-* [User Guide](https://docs.rs/axum/0.3.0/axum/)
-* [API Documentation](https://docs.rs/axum/0.3.0/axum/)
+* [User Guide](https://docs.rs/axum/0.3/axum/)
+* [API Documentation](https://docs.rs/axum/0.3/axum/)
 * Cargo package: [axum](https://crates.io/crates/axum)
 
 ## Database
