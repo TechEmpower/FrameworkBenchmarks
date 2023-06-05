@@ -65,11 +65,13 @@ components_manager:
         plaintext-handler:
             path: /plaintext
             method: GET
+            decompress_request: false
             task_processor: main-task-processor
 
         json-handler:
             path: /json
             method: GET
+            decompress_request: false
             task_processor: main-task-processor
 
         hello-world-db:
@@ -83,16 +85,19 @@ components_manager:
         single-query-handler:
             path: /db
             method: GET
+            decompress_request: false
             task_processor: main-task-processor
 
         multiple-queries-handler:
             path: /queries
             method: GET
+            decompress_request: false
             task_processor: main-task-processor
 
         updates-handler:
             path: /updates
             method: GET
+            decompress_request: false
             task_processor: main-task-processor
 
         world-pg-cache:
@@ -104,10 +109,12 @@ components_manager:
         cached-queries-handler:
             path: /cached-queries
             method: GET
+            decompress_request: false
             task_processor: main-task-processor
 
         fortunes-handler:
             path: /fortunes
             method: GET
+            decompress_request: false
             task_processor: main-task-processor
 
