@@ -1,8 +1,6 @@
+FROM jruby:9.4-jdk17
 
-FROM ruby:3.2
-
-ENV BUNDLE_FORCE_RUBY_PLATFORM=true
-ENV RUBY_YJIT_ENABLE=1
+RUN apt-get update -y && apt-get install netbase -y
 
 WORKDIR /rack
 
@@ -16,4 +14,3 @@ COPY . .
 EXPOSE 8080
 
 CMD bundle exec puma -C config/puma.rb -b tcp://0.0.0.0:8080 -e production
-
