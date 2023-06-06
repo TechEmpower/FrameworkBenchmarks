@@ -1,4 +1,4 @@
-FROM rust:1.59-slim
+FROM rust:latest
 
 WORKDIR /saphir
 
