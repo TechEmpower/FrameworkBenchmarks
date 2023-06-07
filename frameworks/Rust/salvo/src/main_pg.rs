@@ -46,7 +46,7 @@ impl Handler for WorldHandler {
         let headers = res.headers_mut();
         headers.insert(header::SERVER, SERVER_HEADER.clone());
         headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
-        res.set_body(ResBody::Once(Bytes::from(data)));
+        res.body(ResBody::Once(Bytes::from(data)));
     }
 }
 struct WorldsHandler {
@@ -73,7 +73,7 @@ impl Handler for WorldsHandler {
         let headers = res.headers_mut();
         headers.insert(header::SERVER, SERVER_HEADER.clone());
         headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
-        res.set_body(ResBody::Once(Bytes::from(data)));
+        res.body(ResBody::Once(Bytes::from(data)));
     }
 }
 struct UpdatesHandler {
@@ -101,7 +101,7 @@ impl Handler for UpdatesHandler {
         let headers = res.headers_mut();
         headers.insert(header::SERVER, SERVER_HEADER.clone());
         headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
-        res.set_body(ResBody::Once(Bytes::from(data)));
+        res.body(ResBody::Once(Bytes::from(data)));
     }
 }
 struct FortunesHandler {
@@ -126,7 +126,7 @@ impl Handler for FortunesHandler {
         let headers = res.headers_mut();
         headers.insert(header::SERVER, SERVER_HEADER.clone());
         headers.insert(header::CONTENT_TYPE, HTML_HEADER.clone());
-        res.set_body(ResBody::Once(Bytes::from(data)));
+        res.body(ResBody::Once(Bytes::from(data)));
     }
 }
 

@@ -62,7 +62,7 @@ async fn world_row(res: &mut Response) -> Result<(), Error> {
     let headers = res.headers_mut();
     headers.insert(header::SERVER, SERVER_HEADER.clone());
     headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
-    res.set_body(ResBody::Once(Bytes::from(data)));
+    res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
 
@@ -83,7 +83,7 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let headers = res.headers_mut();
     headers.insert(header::SERVER, SERVER_HEADER.clone());
     headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
-    res.set_body(ResBody::Once(Bytes::from(data)));
+    res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
 
@@ -115,7 +115,7 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let headers = res.headers_mut();
     headers.insert(header::SERVER, SERVER_HEADER.clone());
     headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
-    res.set_body(ResBody::Once(Bytes::from(data)));
+    res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
 
@@ -135,7 +135,7 @@ async fn fortunes(res: &mut Response) -> Result<(), Error> {
     let headers = res.headers_mut();
     headers.insert(header::SERVER, SERVER_HEADER.clone());
     headers.insert(header::CONTENT_TYPE, HTML_HEADER.clone());
-    res.set_body(ResBody::Once(Bytes::from(data)));
+    res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
 

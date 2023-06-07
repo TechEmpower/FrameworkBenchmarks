@@ -11,7 +11,7 @@ MarkupSafe==0.23
 piprot==0.9.1
 psycopg2==2.7.5
 PyYAML==5.4
-requests==2.20.0
+requests==2.31.0
 requests-futures==0.9.5
 setproctitle==1.1.8
 ujson==1.33

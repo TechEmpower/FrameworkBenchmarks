@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 
-use std::borrow::Cow;
+#[cfg(feature = "pg")]
+use xitca_unsafe_collection::bytes::BytesStr;
 
 pub struct Message {
     message: &'static str,
@@ -31,12 +32,32 @@ impl World {
 #[cfg_attr(feature = "pg-orm", derive(Queryable))]
 pub struct Fortune {
     pub id: i32,
-    pub message: Cow<'static, str>,
+    #[cfg(feature = "pg")]
+    pub message: BytesStr,
+    #[cfg(not(feature = "pg"))]
+    pub message: String,
 }
 
+#[cfg(feature = "pg")]
 impl Fortune {
     #[inline]
-    pub fn new(id: i32, message: impl Into<Cow<'static, str>>) -> Self {
+    pub const fn from_static(id: i32, message: &'static str) -> Self {
+        Self {
+            id,
+            message: BytesStr::from_static(message),
+        }
+    }
+
+    #[inline]
+    pub const fn new(id: i32, message: BytesStr) -> Self {
+        Self { id, message }
+    }
+}
+
+#[cfg(not(feature = "pg"))]
+impl Fortune {
+    #[inline]
+    pub fn new(id: i32, message: impl Into<String>) -> Self {
         Self {
             id,
             message: message.into(),

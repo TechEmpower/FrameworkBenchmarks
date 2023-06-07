@@ -7,12 +7,8 @@ from granian import Granian
 if __name__ == '__main__':
     interface = sys.argv[1]
     threading_mode = sys.argv[2]
-    if threading_mode == "runtime":
-        workers = multiprocessing.cpu_count()
-        threads = 2
-    else:
-        workers = multiprocessing.cpu_count() // 2
-        threads = 1
+    workers = multiprocessing.cpu_count()
+    threads = 2 if threading_mode == "runtime" else 1
 
     Granian(
         f"app_{interface}:main",

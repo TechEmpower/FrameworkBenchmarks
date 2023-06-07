@@ -3,9 +3,9 @@ components_manager:
     event_thread_pool:
         threads: 3
     coro_pool:
-        initial_size: 10000             # Preallocate 10000 coroutines at startup.
-        max_size: 65536                 # Do not keep more than 65536 preallocated coroutines.
-        stack_size: 66560               # 64Kb for coroutine stack
+        initial_size: 10000              # Preallocate 10000 coroutines at startup.
+        max_size: 300000                 # Do not keep more than 300000 preallocated coroutines.
+        stack_size: 66560                # 64Kb for coroutine stack
 
     task_processors:                    # Task processor is an executor for coroutine tasks
 
@@ -65,34 +65,39 @@ components_manager:
         plaintext-handler:
             path: /plaintext
             method: GET
+            decompress_request: false
             task_processor: main-task-processor
 
         json-handler:
             path: /json
             method: GET
+            decompress_request: false
             task_processor: main-task-processor
 
         hello-world-db:
             dbalias: hello_world
             blocking_task_processor: fs-task-processor
-            min_pool_size: 75
-            max_pool_size: 125
+            min_pool_size: 80
+            max_pool_size: 260
             max_queue_size: 512
             connecting_limit: 15
 
         single-query-handler:
             path: /db
             method: GET
+            decompress_request: false
             task_processor: main-task-processor
 
         multiple-queries-handler:
             path: /queries
             method: GET
+            decompress_request: false
             task_processor: main-task-processor
 
         updates-handler:
             path: /updates
             method: GET
+            decompress_request: false
             task_processor: main-task-processor
 
         world-pg-cache:
@@ -104,10 +109,12 @@ components_manager:
         cached-queries-handler:
             path: /cached-queries
             method: GET
+            decompress_request: false
             task_processor: main-task-processor
 
         fortunes-handler:
             path: /fortunes
             method: GET
+            decompress_request: false
             task_processor: main-task-processor
 

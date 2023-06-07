@@ -3,7 +3,7 @@ package io.quarkus.benchmark.filter;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.jboss.resteasy.reactive.server.ServerResponseFilter;
 

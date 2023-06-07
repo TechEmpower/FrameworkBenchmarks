@@ -41,6 +41,8 @@
 #include "tls.h"
 #include "utility.h"
 
+#define HOST_NAME "default"
+#define SERVER_NAME "h2o"
 #define USAGE_MESSAGE \
 	"Usage:\n%s " \
 	"[-a <max connections accepted simultaneously>] " \
@@ -106,11 +108,12 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	CHECK_ERRNO(sigaddset, &signals, SIGTERM);
 	CHECK_ERRNO_RETURN(global_data->signal_fd, signalfd, -1, &signals, SFD_NONBLOCK | SFD_CLOEXEC);
 	h2o_config_init(&global_data->h2o_config);
+	global_data->h2o_config.server_name = h2o_iovec_init(H2O_STRLIT(SERVER_NAME));
 
 	if (config->cert && config->key)
 		initialize_openssl(config, global_data);
 
-	const h2o_iovec_t host = h2o_iovec_init(H2O_STRLIT("default"));
+	const h2o_iovec_t host = h2o_iovec_init(H2O_STRLIT(HOST_NAME));
 	h2o_hostconf_t * const hostconf = h2o_config_register_host(&global_data->h2o_config,
 	                                                           host,
 	                                                           config->port);
