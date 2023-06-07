@@ -3,9 +3,16 @@ package com.hexagonkt
 import com.hexagonkt.http.server.netty.epoll.NettyEpollServerAdapter
 import com.hexagonkt.store.BenchmarkSqlStore
 import com.hexagonkt.templates.rocker.RockerAdapter
+import io.netty.util.ResourceLeakDetector
+import io.netty.util.ResourceLeakDetector.Level.DISABLED
 import java.net.URL
 
 fun main() {
+    ResourceLeakDetector.setLevel(DISABLED)
+
+    System.setProperty("io.netty.buffer.checkBounds", "false")
+    System.setProperty("io.netty.buffer.checkAccessible", "false")
+
     val settings = Settings()
     val store = BenchmarkSqlStore("postgresql")
     val templateEngine = RockerAdapter()
