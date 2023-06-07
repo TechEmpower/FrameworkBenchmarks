@@ -7,7 +7,7 @@ WORKDIR /hexagon
 
 ADD . .
 RUN gradle --quiet classes
-RUN gradle --quiet -x test
+RUN gradle --quiet -x test war
 
 #
 # RUNTIME
