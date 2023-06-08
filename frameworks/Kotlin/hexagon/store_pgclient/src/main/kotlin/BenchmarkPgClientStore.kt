@@ -24,7 +24,7 @@ class BenchmarkPgClientStore(
 
     private val connectOptions: PgConnectOptions by lazy {
         PgConnectOptions().apply {
-            host = Jvm.systemSettingOrNull("${engine.uppercase()}_DB_HOST") ?: "localhost"
+            host = Jvm.systemSettingOrNull("${engine.uppercase()}_DB_HOST") ?: "tfb-database"
             database = settings.databaseName
             user = settings.databaseUsername
             password = settings.databasePassword

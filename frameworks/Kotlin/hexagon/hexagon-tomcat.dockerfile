@@ -1,21 +1,21 @@
 #
 # BUILD
 #
-FROM gradle:8.0.2-jdk17-alpine AS build
+FROM docker.io/gradle:8.1.1-jdk17-alpine AS build
 USER root
 WORKDIR /hexagon
 
 ADD . .
-RUN gradle --quiet compileRocker
-RUN gradle --quiet -x test
+RUN gradle --quiet classes
+RUN gradle --quiet -x test war
 
 #
 # RUNTIME
 #
-FROM tomcat:10.1.2-jre17-temurin
+FROM docker.io/tomcat:10-jre17-temurin-jammy
+ARG MODULE=/hexagon/hexagon_tomcat_postgresql
+
 ENV POSTGRESQL_DB_HOST tfb-database
-ENV MODULE /hexagon/hexagon_tomcat_postgresql
 ENV JDK_JAVA_OPTIONS -XX:+AlwaysPreTouch -XX:+UseParallelGC -XX:+UseNUMA
 
 COPY --from=build $MODULE/build/libs/ROOT.war /usr/local/tomcat/webapps/ROOT.war
-EXPOSE 8080

@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    api(project(":model"))
     api("com.hexagonkt:http_server:$hexagonVersion")
     api("com.hexagonkt:templates_rocker:$hexagonVersion")
     api("com.hexagonkt:logging_slf4j_jul:$hexagonVersion")
@@ -13,11 +14,9 @@ dependencies {
 
 tasks.register("minimizeTemplate") {
     doLast {
-        [ "fortunes.pebble.html", "fortunes.rocker.html" ].forEach { t ->
-            File template = file("$buildDir/resources/main/$t")
-            List<String> lines = template.readLines().collect { it.trim() }
-            template.write(lines.join(""))
-        }
+        File template = file("$buildDir/resources/main/fortunes.rocker.html")
+        List<String> lines = template.readLines().collect { it.trim() }
+        template.write(lines.join(""))
     }
 }
 
