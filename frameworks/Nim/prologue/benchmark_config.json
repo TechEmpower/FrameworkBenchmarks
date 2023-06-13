@@ -18,7 +18,8 @@
       "database_os": "Linux",
       "display_name": "Prologue",
       "notes": "",
-      "versus": "httpbeast"
+      "versus": "httpbeast",
+      "tags": ["broken"]
     }
   }]
 }
