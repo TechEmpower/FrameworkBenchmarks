@@ -19,7 +19,8 @@
         "database_os": "Linux",
         "display_name": "SNUnit",
         "notes": "",
-        "versus": ""
+        "versus": "",
+        "tags": ["broken"]
       }
     }
   ]
