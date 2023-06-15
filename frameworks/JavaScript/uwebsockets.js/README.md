@@ -9,14 +9,12 @@ uWebSockets is a web server written in C/C++ (https://github.com/uNetworking/uWe
 The tests were run with:
 
 - [uWebSockets.js](https://github.com/uNetworking/uWebSockets.js/)
-- [mysql2](https://github.com/sidorares/node-mysql2)
 - [pg](https://github.com/brianc/node-postgres)
 
 ## Database
 
 There are individual handlers for each DB approach. The logic for each of them are found here:
 
-- [MySQL](database/mysql.js)
 - [PostgreSQL](database/postgres.js)
 
 There are **no database endpoints** or drivers attached by default.
@@ -24,7 +22,6 @@ There are **no database endpoints** or drivers attached by default.
 To initialize the application with one of these, run any _one_ of the following commands:
 
 ```sh
-$ DATABASE=mysql npm start
 $ DATABASE=postgres npm start
 ```
 
