@@ -56,7 +56,6 @@ void initialize_request_handler_thread_data(thread_context_t *ctx);
 void initialize_request_handlers(const config_t *config,
                                  h2o_hostconf_t *hostconf,
                                  h2o_access_log_filehandle_t *log_handle,
-                                 list_t **postinitialization_tasks,
                                  request_handler_data_t *data);
 void register_request_handler(const char *path,
                               int (*handler)(struct st_h2o_handler_t *, h2o_req_t *),
