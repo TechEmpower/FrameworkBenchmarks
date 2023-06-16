@@ -1,9 +1,0 @@
-
-apply(from: "$gradleScripts/application.gradle")
-
-dependencies {
-    api(project(":store_pgclient_async"))
-    api("com.hexagonkt:http_server_vertx_async:$hexagonVersion")
-    api("io.vertx:vertx-io_uring-incubator:4.4.2")
-    api("io.netty:netty-transport-native-epoll:4.1.93.Final")
-}
