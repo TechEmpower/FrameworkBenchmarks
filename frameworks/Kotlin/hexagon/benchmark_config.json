@@ -182,7 +182,7 @@
                 "notes": "http://hexagonkt.com",
                 "versus": "netty"
             },
-            "vertx-pgclient": {
+            "nettyepoll-async-pgclient": {
                 "json_url": "/json",
                 "db_url": "/db",
                 "query_url": "/query?queries=",
@@ -197,13 +197,13 @@
                 "framework": "Hexagon",
                 "language": "Kotlin",
                 "orm": "Raw",
-                "platform": "Vertx",
+                "platform": "Netty",
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
                 "display_name": "Hexagon Vertx PgClient",
                 "notes": "http://hexagonkt.com",
-                "versus": "vertx"
+                "versus": "netty"
             },
             "tomcat": {
                 "json_url": "/json",
