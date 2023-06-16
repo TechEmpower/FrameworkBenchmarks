@@ -20,4 +20,4 @@ ENV JDK_JAVA_OPTIONS -XX:+AlwaysPreTouch -XX:+UseParallelGC -XX:+UseNUMA
 
 COPY --from=build /hexagon/$PROJECT/build/install/$PROJECT /opt/$PROJECT
 
-ENTRYPOINT [ "/opt/hexagon_vertx_pgclient/bin/hexagon_vertx_pgclient" ]
+ENTRYPOINT [ "/opt/hexagon_nettyepoll_async_pgclient/bin/hexagon_nettyepoll_async_pgclient" ]
