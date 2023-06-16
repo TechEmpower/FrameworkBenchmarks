@@ -163,7 +163,7 @@ platform = "Servlet"
 webserver = "Tomcat"
 versus = "servlet"
 
-[vertx-pgclient]
+[nettyepoll-async-pgclient]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
@@ -177,6 +177,6 @@ database = "postgres"
 database_os = "Linux"
 os = "Linux"
 orm = "Raw"
-platform = "Vertx"
+platform = "Netty"
 webserver = "None"
-versus = "vertx"
+versus = "netty"

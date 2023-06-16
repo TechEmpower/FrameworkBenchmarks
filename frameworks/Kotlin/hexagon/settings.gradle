@@ -12,7 +12,7 @@ include(
     "hexagon_netty_postgresql",
     "hexagon_netty_async_pgclient",
     "hexagon_nettyepoll_pgclient",
+    "hexagon_nettyepoll_async_pgclient",
     "hexagon_nettyepoll_postgresql",
-    "hexagon_vertx_pgclient",
     "hexagon_tomcat_postgresql",
 )
