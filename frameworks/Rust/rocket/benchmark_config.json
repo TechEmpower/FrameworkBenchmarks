@@ -22,7 +22,8 @@
         "database_os": "Linux",
         "display_name": "Rocket",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       },
       "diesel": {
         "json_url": "/json",
@@ -45,7 +46,8 @@
         "database_os": "Linux",
         "display_name": "Rocket (Diesel)",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       }
     }]
 }

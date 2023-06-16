@@ -41,7 +41,8 @@
       "database_os": "Linux",
       "display_name": "spring-webflux-mongo",
       "notes": "",
-      "versus": "spring"
+      "versus": "spring",
+      "tags": ["broken"]
     },
     "pgclient": {
       "db_url": "/db",
@@ -62,7 +63,8 @@
       "database_os": "Linux",
       "display_name": "spring-webflux-pgclient",
       "notes": "",
-      "versus": "spring"
+      "versus": "spring",
+      "tags": ["broken"]
     },
     "rxjdbc": {
       "db_url": "/db",
@@ -83,7 +85,8 @@
       "database_os": "Linux",
       "display_name": "spring-webflux-rxjdbc",
       "notes": "",
-      "versus": "spring"
+      "versus": "spring",
+      "tags": ["broken"]
     },
     "jdbc": {
       "db_url": "/db",
@@ -104,7 +107,8 @@
       "database_os": "Linux",
       "display_name": "spring-webflux-jdbc",
       "notes": "",
-      "versus": "spring"
+      "versus": "spring",
+      "tags": ["broken"]
     }
   }]
 }
