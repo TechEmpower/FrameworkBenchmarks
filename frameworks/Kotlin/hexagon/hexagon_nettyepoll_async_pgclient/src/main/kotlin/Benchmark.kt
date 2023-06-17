@@ -11,14 +11,6 @@ import java.net.URL
 fun main() {
     ResourceLeakDetector.setLevel(DISABLED)
 
-    System.setProperty("vertx.disableMetrics", "true")
-    System.setProperty("vertx.disableH2c", "true")
-    System.setProperty("vertx.disableWebsockets", "true")
-    System.setProperty("vertx.flashPolicyHandler", "false")
-    System.setProperty("vertx.threadChecks", "false")
-    System.setProperty("vertx.disableContextTimings", "true")
-    System.setProperty("vertx.disableTCCL", "true")
-    System.setProperty("vertx.disableHttpHeadersValidation", "true")
     System.setProperty("io.netty.buffer.checkBounds", "false")
     System.setProperty("io.netty.buffer.checkAccessible", "false")
 
