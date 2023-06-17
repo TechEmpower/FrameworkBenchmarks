@@ -1,0 +1,5 @@
+
+dependencies {
+    api(project(":core_async"))
+    implementation("com.github.jasync-sql:jasync-postgresql:$jasyncVersion")
+}
