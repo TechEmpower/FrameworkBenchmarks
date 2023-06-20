@@ -39,7 +39,7 @@ public class WorldRepository {
 
     public World loadSingleWorldById(Integer id) {
         try (StatelessSession ss = sf.openStatelessSession()) {
-            return (World) ss.get(World.class, id);
+            return ss.get(World.class, id);
         }
     }
 
@@ -49,7 +49,7 @@ public class WorldRepository {
         try (StatelessSession ss = sf.openStatelessSession()) {
             //The rules require individual load: we can't use the Hibernate feature which allows load by multiple IDs as one single operation
             for (int i=0;i<count;i++) {
-                list[i] = (World) ss.get(World.class, random.getNextRandom());
+                list[i] = ss.get(World.class, random.getNextRandom());
             }
             return list;
         }

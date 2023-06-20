@@ -56,7 +56,7 @@ public class WorldRepository extends BaseRepository {
         final List<World> worlds = new ArrayList<>(count);
         Uni<Void> loopRoot = Uni.createFrom().voidItem();
         for (int i = 0; i < count; i++) {
-            loopRoot = loopRoot.chain(() -> s.get(World.class, localRandom.getNextRandom()).invoke(word -> worlds.add(word)).replaceWithVoid());
+            loopRoot = loopRoot.chain(() -> s.get(World.class, localRandom.getNextRandom()).invoke(worlds::add).replaceWithVoid());
         }
         return loopRoot.map(v -> worlds);
     }
@@ -70,7 +70,7 @@ public class WorldRepository extends BaseRepository {
         final LocalRandom localRandom = Randomizer.current();
         Uni<Void> loopRoot = Uni.createFrom().voidItem();
         for (int i = 0; i < count; i++) {
-            loopRoot = loopRoot.chain(() -> s.find(World.class, localRandom.getNextRandom()).invoke(word -> worlds.add(word)).replaceWithVoid());
+            loopRoot = loopRoot.chain(() -> s.find(World.class, localRandom.getNextRandom()).invoke(worlds::add).replaceWithVoid());
         }
         return loopRoot.map(v -> worlds);
     }
