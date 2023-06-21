@@ -25,8 +25,6 @@ RUN apt-get -yqq update && apt-get -yqq install \
       siege \
       software-properties-common
 
-RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
-
 RUN curl https://raw.githubusercontent.com/paulfitz/mysql-connector-c/master/include/my_config.h --output /usr/include/mysql/my_config.h
 
 RUN pip install \
