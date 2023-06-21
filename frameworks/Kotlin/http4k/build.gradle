@@ -1,6 +1,6 @@
 buildscript {
-    ext.kotlin_version = "1.8.10"
-    ext.http4k_version = "4.39.0.0"
+    ext.kotlin_version = "1.8.22"
+    ext.http4k_version = "5.0.0.0"
 
     repositories {
         mavenCentral()
@@ -20,10 +20,10 @@ allprojects {
 
     apply plugin: "kotlin"
 
-    compileKotlin.kotlinOptions.jvmTarget = "17"
+    compileKotlin.kotlinOptions.jvmTarget = "19"
 
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_19
+    targetCompatibility = JavaVersion.VERSION_19
 
     version = project.hasProperty('releaseVersion') ? project.releaseVersion : 'LOCAL'
     group = 'org.http4k'
