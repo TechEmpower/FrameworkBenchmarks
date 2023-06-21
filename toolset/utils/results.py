@@ -17,6 +17,11 @@ from datetime import datetime
 # Cross-platform colored text
 from colorama import Fore, Style
 
+class ByteEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, bytes):
+            return obj.decode()
+        return super().default(obj)
 
 class Results:
     def __init__(self, benchmarker):
@@ -280,7 +285,7 @@ class Results:
                 log(Fore.CYAN + "| {!s}".format(test.name))
                 if test.name in self.verify.keys():
                     for test_type, result in self.verify[
-                            test.name].iteritems():
+                            test.name].items():
                         if result.upper() == "PASS":
                             color = Fore.GREEN
                         elif result.upper() == "WARN":
@@ -330,7 +335,7 @@ class Results:
     def __write_results(self):
         try:
             with open(self.file, 'w') as f:
-                f.write(json.dumps(self.__to_jsonable(), indent=2))
+                f.write(json.dumps(self.__to_jsonable(), indent=2, cls=ByteEncoder))
         except IOError:
             log("Error writing results.json")
 
@@ -450,10 +455,10 @@ class Results:
         with open(stats_file) as stats:
             # dstat doesn't output a completely compliant CSV file - we need to strip the header
             for _ in range(4):
-                stats.next()
+                next(stats)
             stats_reader = csv.reader(stats)
-            main_header = stats_reader.next()
-            sub_header = stats_reader.next()
+            main_header = next(stats_reader)
+            sub_header = next(stats_reader)
             time_row = sub_header.index("epoch")
             int_counter = 0
             for row in stats_reader:

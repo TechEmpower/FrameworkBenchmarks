@@ -5,7 +5,7 @@ import requests
 from colorama import Fore
 from toolset.utils.output_helper import log
 
-class AbstractTestType:
+class AbstractTestType(metaclass=abc.ABCMeta):
     '''
     Interface between a test type (json, query, plaintext, etc) and
     the rest of TFB. A test type defines a number of keys it expects
@@ -15,7 +15,6 @@ class AbstractTestType:
     passes an argument list of ['spam'], then after parsing there will
     exist a member `X.spam = 'foobar'`.
     '''
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self,
                  config,
@@ -40,12 +39,6 @@ class AbstractTestType:
         self.warned = None
 
     @classmethod
-    @abc.abstractmethod
-    def url(self):
-        pass
-
-    @classmethod
-    @abc.abstractmethod
     def accept(self, content_type):
         return {
             'json':
