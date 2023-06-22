@@ -19,7 +19,7 @@ RUN apt-get -yqq update && apt-get -yqq install \
       default-libmysqlclient-dev  `# Needed for mysqlclient` \
       build-essential             `# Needed for mysqlclient` \
       libpq-dev \
-      python3.10 \
+      python3 \
       python3-dev \
       python3-pip \
       siege \
@@ -33,12 +33,7 @@ RUN pip install \
       mysqlclient \
       psutil \
       psycopg2-binary \
-      pymongo \
-      requests==2.28.1 `# urllib3 incompatibility https://github.com/docker/docker-py/issues/3113#issuecomment-1525500104`
-
-    # Fix for docker-py trying to import one package from the wrong location
-    #cp -r /usr/local/lib/python2.7/dist-packages/backports/ssl_match_hostname \
-    #  /usr/lib/python2.7/dist-packages/backports
+      pymongo
 
 ENV FWROOT=/FrameworkBenchmarks PYTHONPATH=/FrameworkBenchmarks
 
