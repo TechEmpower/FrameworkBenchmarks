@@ -16,29 +16,24 @@ RUN apt-get -yqq update && apt-get -yqq install \
       gcc \
       git-core \
       gosu \
-      libmysqlclient-dev          `# Needed for MySQL-python` \
+      default-libmysqlclient-dev  `# Needed for mysqlclient` \
+      build-essential             `# Needed for mysqlclient` \
       libpq-dev \
-      python2 \
-      python2.7-dev \
+      python3 \
+      python3-dev \
+      python3-pip \
       siege \
       software-properties-common
-
-RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
-RUN python2 get-pip.py
 
 RUN curl https://raw.githubusercontent.com/paulfitz/mysql-connector-c/master/include/my_config.h --output /usr/include/mysql/my_config.h
 
 RUN pip install \
       colorama==0.3.1 \
       docker==4.0.2 \
-      MySQL-python \
+      mysqlclient \
       psutil \
       psycopg2-binary \
-      pymongo \
-      requests
-    # Fix for docker-py trying to import one package from the wrong location
-    #cp -r /usr/local/lib/python2.7/dist-packages/backports/ssl_match_hostname \
-    #  /usr/lib/python2.7/dist-packages/backports
+      pymongo
 
 ENV FWROOT=/FrameworkBenchmarks PYTHONPATH=/FrameworkBenchmarks
 
