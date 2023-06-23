@@ -76,7 +76,7 @@ changes = clean_output(
         'bash', '-c',
         'git --no-pager diff --name-only {0} $(git merge-base {0} {1})'
             .format(curr_branch, diff_target)
-    ]))
+    ], text=True))
 print("Determining what to run based on the following file changes: \n{!s}"
     .format('\n'.join(changes.split('\n')[0:10])))
 if len(changes.split('\n')) > 10:
