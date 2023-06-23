@@ -4,13 +4,11 @@ import com.fizzed.rocker.ContentType;
 import com.fizzed.rocker.RockerOutput;
 import com.fizzed.rocker.RockerOutputFactory;
 import io.netty.buffer.ByteBuf;
-import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.FastThreadLocal;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.buffer.impl.BufferImpl;
 import io.vertx.core.buffer.impl.VertxByteBufAllocator;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -32,7 +30,7 @@ public class HtmlUtf8BufferRockerOutput implements RockerOutput<HtmlUtf8BufferRo
         return (_contentType, charsetName) -> SCRATCH_ROCKER_OUTPUT.get().reset();
     }
 
-    private final ByteBuf buff = VertxByteBufAllocator.DEFAULT.directBuffer();
+    private final ByteBuf buff = VertxByteBufAllocator.DEFAULT.heapBuffer();
     private final Buffer vertxBuff = BufferImpl.buffer(buff);
     private final ContentType contentType;
 
@@ -41,14 +39,15 @@ public class HtmlUtf8BufferRockerOutput implements RockerOutput<HtmlUtf8BufferRo
     }
 
     @Override
-    public HtmlUtf8BufferRockerOutput w(byte[] bytes) throws IOException {
+    public HtmlUtf8BufferRockerOutput w(byte[] bytes) {
         buff.writeBytes(bytes);
         return this;
     }
 
     @Override
     public HtmlUtf8BufferRockerOutput w(String s) {
-        buff.writeCharSequence(s, CharsetUtil.UTF_8);
+        // UGLY!!! we trust vectorized & informed intrinsics for Strings here!
+        buff.writeBytes(s.getBytes(StandardCharsets.UTF_8));
         return this;
     }
 
