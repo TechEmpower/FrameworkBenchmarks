@@ -20,10 +20,16 @@ allprojects {
 
     apply plugin: "kotlin"
 
-    compileKotlin.kotlinOptions.jvmTarget = "17"
+    if(project.name.contains("graal")) {
+        compileKotlin.kotlinOptions.jvmTarget = "17"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    } else {
+        compileKotlin.kotlinOptions.jvmTarget = "19"
+        sourceCompatibility = JavaVersion.VERSION_19
+        targetCompatibility = JavaVersion.VERSION_19
+    }
 
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
 
     version = project.hasProperty('releaseVersion') ? project.releaseVersion : 'LOCAL'
     group = 'org.http4k'
