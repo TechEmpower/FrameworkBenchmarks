@@ -67,7 +67,7 @@ public class WorldRepository {
                 // # vi. At least the randomNumber field must be read from the database result set.
                 final int previousRead = w.getRandomNumber();
                 //Update it, but make sure to exclude the current number as Hibernate optimisations would otherwise
-                //skip the write operation:
+                // skip the write operation:
                 w.setRandomNumber(random.getNextRandomExcluding(previousRead));
                 s.update(w);
             }
