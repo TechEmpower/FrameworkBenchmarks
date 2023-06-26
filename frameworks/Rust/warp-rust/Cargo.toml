@@ -10,7 +10,7 @@ rand = { version = "0.8.2", features = ["small_rng"] }
 serde = { version = "1.0.120", features = ["derive"] }
 sqlx = { version = "0.5.1", features = ["runtime-tokio-rustls", "postgres"] }
 tokio = { version = "1.13.1", features = ["macros", "rt-multi-thread"] }
-warp = "0.3.0"
+warp = "0.3.3"
 yarte = "0.15.3"
 
 [profile.release]

@@ -35,6 +35,7 @@ $app->get('/plaintext',
     function ($request, $response) {        
         return $response
             ->with('Hello, World!')
+            ->withHeader('Content-Type', 'text/plain; charset=utf-8')
             ->withHeader('Date', Storage::$date);
 });
 

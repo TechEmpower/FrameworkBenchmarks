@@ -1,10 +1,5 @@
 <?php
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
+
 declare(strict_types=1);
 
 namespace App\Model;
@@ -13,19 +8,16 @@ use App\Model\Repository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
-#[Entity(table: 'Fortune', repository: Repository\FortuneRepository::class)]
+#[Entity(table: 'fortune', repository: Repository\FortuneRepository::class)]
 class Fortune implements \JsonSerializable
 {
     #[Column(type: 'primary')]
-    public $id;
+    public int $id;
 
     #[Column(type: 'text')]
-    public $message;
+    public string $message;
 
-    /**
-     * @return array
-     */
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         return ['id' => $this->id, 'message' => $this->message];
     }

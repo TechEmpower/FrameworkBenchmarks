@@ -1,6 +1,9 @@
+#![allow(clippy::unused_async)]
+
 use serde::Serialize;
 use viz::{
-    header::SERVER, Error, Request, Response, ResponseExt, Result, Router, ServiceMaker,
+    header::{HeaderValue, SERVER},
+    Error, Request, Response, ResponseExt, Result, Router, ServiceMaker,
 };
 
 mod server;
@@ -13,7 +16,8 @@ struct Message {
 
 async fn plaintext(_: Request) -> Result<Response> {
     let mut res = Response::text("Hello, World!");
-    res.headers_mut().insert(SERVER, utils::HDR_SERVER);
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Viz"));
     Ok(res)
 }
 
@@ -21,7 +25,8 @@ async fn json(_: Request) -> Result<Response> {
     let mut res = Response::json(Message {
         message: "Hello, World!",
     })?;
-    res.headers_mut().insert(SERVER, utils::HDR_SERVER);
+    res.headers_mut()
+        .insert(SERVER, HeaderValue::from_static("Viz"));
     Ok(res)
 }
 

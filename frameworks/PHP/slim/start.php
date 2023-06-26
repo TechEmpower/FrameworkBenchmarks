@@ -1,7 +1,7 @@
 <?php
 error_reporting(-1);
 
-require_once __DIR__.'/vendor/autoload.php';
+//require_once __DIR__.'/vendor/autoload.php';
 
 use DI\Container;
 use Psr\Http\Message\ResponseInterface as Response;

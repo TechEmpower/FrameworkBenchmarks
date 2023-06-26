@@ -1,23 +1,20 @@
 
 import os
 
-from ujson import dumps as json
+import ujson
 
 from socketify import App
 
 def plaintext(res, req):
-    res.write_header("Server", "socketify")
-    res.write_header("Content-Type", "text/plain")
-    res.end(b'Hello, World!')
+    res.send(b'Hello, World!')
 
 def applicationjson(res, req):
-    res.write_header("Server", "socketify")
-    res.write_header("Content-Type", "application/json")
-    res.end(json({"message":"Hello, World!"}))
+    res.send({"message":"Hello, World!"})
 
 
 def run_app():
-    app = app = App(None, 200_000, 0)
+    app = App(None, 200_000, 0)
+    app.json_serializer(ujson)
     app.get("/", plaintext)
     app.get("/json", applicationjson)
     app.get("/plaintext", plaintext)

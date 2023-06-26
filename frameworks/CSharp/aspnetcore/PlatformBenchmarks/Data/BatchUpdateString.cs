@@ -15,21 +15,25 @@ internal sealed class BatchUpdateString
     private static readonly string[] _queries = new string[MaxBatch + 1];
 
     public static string Query(int batchSize)
+        => _queries[batchSize] is null
+            ? CreateBatch(batchSize)
+            : _queries[batchSize];
+
+    private static string CreateBatch(int batchSize)
     {
-        if (_queries[batchSize] != null)
-        {
-            return _queries[batchSize];
-        }
-
-        var lastIndex = batchSize - 1;
-
         var sb = StringBuilderCache.Acquire();
 
         if (DatabaseServer == DatabaseServer.PostgreSql)
         {
             sb.Append("UPDATE world SET randomNumber = temp.randomNumber FROM (VALUES ");
-            Enumerable.Range(0, lastIndex).ToList().ForEach(i => sb.Append($"(@Id_{i}, @Random_{i}), "));
-            sb.Append($"(@Id_{lastIndex}, @Random_{lastIndex}) ORDER BY 1) AS temp(id, randomNumber) WHERE temp.id = world.id");
+            var c = 1;
+            for (var i = 0; i < batchSize; i++)
+            {
+                if (i > 0)
+                    sb.Append(", ");
+                sb.Append($"(${c++}, ${c++})");
+            }
+            sb.Append(" ORDER BY 1) AS temp(id, randomNumber) WHERE temp.id = world.id");
         }
         else
         {

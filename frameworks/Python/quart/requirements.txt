@@ -14,5 +14,5 @@ priority==2.0.0
 quart==0.18.0
 toml==0.10.2
 uvloop==0.16.0
-Werkzeug==2.2.2
+Werkzeug==2.2.3
 wsproto==1.2.0

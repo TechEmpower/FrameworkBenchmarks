@@ -23,7 +23,7 @@
 			"display_name": "ffead-cpp-mongo",
 			"notes": "mongodb redis",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"v-picov": {
 			"json_url": "/t3/j",

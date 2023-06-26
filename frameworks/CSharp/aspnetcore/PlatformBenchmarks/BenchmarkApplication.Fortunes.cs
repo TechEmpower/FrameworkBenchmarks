@@ -3,53 +3,63 @@
 
 #if DATABASE
 
-using System.Collections.Generic;
 using System.IO.Pipelines;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
+using RazorSlices;
 
 namespace PlatformBenchmarks
 {
     public partial class BenchmarkApplication
     {
-        private static ReadOnlySpan<byte> _fortunesPreamble =>
-            "HTTP/1.1 200 OK\r\n"u8 +
-            "Server: K\r\n"u8 +
-            "Content-Type: text/html; charset=UTF-8\r\n"u8 +
-            "Content-Length: "u8;
-
         private async Task Fortunes(PipeWriter pipeWriter)
         {
-            OutputFortunes(pipeWriter, await Db.LoadFortunesRows());
+            await OutputFortunes(pipeWriter, await Db.LoadFortunesRows(), FortunesTemplateFactory);
         }
 
-        private void OutputFortunes(PipeWriter pipeWriter, List<Fortune> model)
+        private ValueTask OutputFortunes<TModel>(PipeWriter pipeWriter, TModel model, SliceFactory<TModel> templateFactory)
         {
-            var writer = GetWriter(pipeWriter, sizeHint: 1600); // in reality it's 1361
+            // Render headers
+            var preamble = """
+                HTTP/1.1 200 OK
+                Server: K
+                Content-Type: text/html; charset=utf-8
+                Transfer-Encoding: chunked
+                """u8;
+            var headersLength = preamble.Length + DateHeader.HeaderBytes.Length;
+            var headersSpan = pipeWriter.GetSpan(headersLength);
+            preamble.CopyTo(headersSpan);
+            DateHeader.HeaderBytes.CopyTo(headersSpan[preamble.Length..]);
+            pipeWriter.Advance(headersLength);
 
-            writer.Write(_fortunesPreamble);
+            // Render body
+            var template = templateFactory(model);
+            // Kestrel PipeWriter span size is 4K, headers above already written to first span & template output is ~1350 bytes,
+            // so 2K chunk size should result in only a single span and chunk being used.
+            var chunkedWriter = GetChunkedWriter(pipeWriter, chunkSizeHint: 2048);
+            var renderTask = template.RenderAsync(chunkedWriter, null, HtmlEncoder);
 
-            var lengthWriter = writer;
-            writer.Write(_contentLengthGap);
-
-            // Date header
-            writer.Write(DateHeader.HeaderBytes);
-
-            var bodyStart = writer.Buffered;
-            // Body
-            writer.Write(_fortunesTableStart);
-            foreach (var item in model)
+            if (renderTask.IsCompletedSuccessfully)
             {
-                writer.Write(_fortunesRowStart);
-                writer.WriteNumeric((uint)item.Id);
-                writer.Write(_fortunesColumn);
-                writer.WriteUtf8String(HtmlEncoder.Encode(item.Message));
-                writer.Write(_fortunesRowEnd);
+                renderTask.GetAwaiter().GetResult();
+                EndTemplateRendering(chunkedWriter, template);
+                return ValueTask.CompletedTask;
             }
-            writer.Write(_fortunesTableEnd);
-            lengthWriter.WriteNumeric((uint)(writer.Buffered - bodyStart));
 
-            writer.Commit();
+            return AwaitTemplateRenderTask(renderTask, chunkedWriter, template);
+        }
+
+        private static async ValueTask AwaitTemplateRenderTask(ValueTask renderTask, ChunkedBufferWriter<WriterAdapter> chunkedWriter, RazorSlice template)
+        {
+            await renderTask;
+            EndTemplateRendering(chunkedWriter, template);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void EndTemplateRendering(ChunkedBufferWriter<WriterAdapter> chunkedWriter, RazorSlice template)
+        {
+            chunkedWriter.End();
+            ReturnChunkedWriter(chunkedWriter);
+            template.Dispose();
         }
     }
 }

@@ -17,10 +17,7 @@ internal static class DateHeader
     const int suffixLength = 2; // crlf
     const int suffixIndex = dateTimeRLength + prefixLength;
 
-    private static readonly Timer s_timer = new((s) =>
-    {
-        SetDateValues(DateTimeOffset.UtcNow);
-    }, null, 1000, 1000);
+    private static readonly Timer s_timer = new(_ => SetDateValues(DateTimeOffset.UtcNow), null, 1000, 1000);
 
     private static byte[] s_headerBytesMaster = new byte[prefixLength + dateTimeRLength + 2 * suffixLength];
     private static byte[] s_headerBytesScratch = new byte[prefixLength + dateTimeRLength + 2 * suffixLength];

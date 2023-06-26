@@ -1,4 +1,5 @@
 crax[postgresql]==0.1.5
-gunicorn==20.0.4
-uvloop==0.14.0
-uvicorn==0.11.8
+gunicorn==20.1.0
+uvloop==0.17.0
+uvicorn==0.20.0
+httptools==0.5.0

@@ -1,0 +1,6 @@
+
+dependencies {
+    api(project(":core"))
+    implementation("com.zaxxer:HikariCP:$hikariVersion")
+    implementation("org.postgresql:postgresql:$postgresqlVersion")
+}

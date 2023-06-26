@@ -1,32 +1,46 @@
 [package]
 name = "rocket_techempower"
-version = "0.3.0"
-authors = ["Marcelo Barbosa <mbarbosa@gmail.com>", "Brendan Hansknecht <brendan.hansknecht@gmail.com>", "Dragos Varovici <dvarovici.work@gmail.com>"]
+version = "0.4.0"
+authors = [
+  "Marcelo Barbosa <mbarbosa@gmail.com>",
+  "Brendan Hansknecht <brendan.hansknecht@gmail.com>",
+  "Dragos Varovici <dvarovici.work@gmail.com>",
+  "Raúl Callado <kennycallado@gmail.com>"
+]
 edition = "2021"
+
+[profile.release]
+lto = true
+opt-level = 3
 
 [[bin]]
 name = "rocket"
 path = "src/main.rs"
 
-[dependencies]
-num_cpus = "1.13.1"
-rand = "0.8.5"
-yarte = "0.15.6"
-lazy_static = "1.4.0"
-async-stream = "0.3.3"
-async-trait = "0.1.53"
-futures = "0.3.21"
-futures-util = "0.3.21"
-rocket = { version = "0.5.0-rc.2", features = [
-    "json",
-] }
-rocket_db_pools = { version = "0.1.0-rc.2", features = [
-    "sqlx_postgres",
-] }
-sqlx = { version = "0.5.13", features = [ "postgres", "macros" ] }
-figment = "0.10.6"
-dotenv = "0.15.0"
+[[bin]]
+name = "rocket-diesel"
+path = "rocket-diesel/main.rs"
 
-serde = "1.0.137"
+[dependencies]
+diesel = { version = "1.4", features = ["postgres"] }
+# rand = { version = "0.8", features = ["small_rng"] }
+# rocket = { version = "0.5.0-rc.2", features = [ "json" ] }
+rocket_sync_db_pools = { version = "0.1.0-rc.2", default-features = false, features = ["diesel_postgres_pool"] }
+rocket_dyn_templates = { version = "0.1.0-rc.2", features = ["handlebars"] }
+serde = { version = "1.0.152", features = ["derive"] }
+
+dotenv = "0.15.0"
+lazy_static = "1.4.0"
+figment = "0.10.6"
+rand = { version = "0.8", features = ["small_rng"] }
+rocket = { version = "0.5.0-rc.2", features = [ "json" ] }
+rocket_db_pools = { version = "0.1.0-rc.2", features = [ "sqlx_postgres" ] }
+sqlx = { version = "0.5.13", features = [ "postgres", "macros" ] }
+yarte = "0.15.6"
+
+# serde = "1.0.137"
 serde_json = "1.0.81"
 serde_derive = "1.0.137"
+
+# Temp issue https://github.com/SergioBenitez/Rocket/issues/2491
+proc-macro2 = "= 1.0.51"

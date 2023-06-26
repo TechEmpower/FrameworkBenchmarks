@@ -10,11 +10,13 @@ import (
 	"sort"
 	"sync"
 
+	"github.com/goccy/go-json"
+	"github.com/gofiber/fiber/v2"
+
 	"fiber/app/templates"
 
-	"github.com/gofiber/fiber/v2"
-	pgx "github.com/jackc/pgx/v4"
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 var (
@@ -47,6 +49,8 @@ func main() {
 		StrictRouting:            true,
 		DisableHeaderNormalizing: true,
 		ServerHeader:             "go",
+		JSONEncoder:              json.Marshal,
+		JSONDecoder:              json.Unmarshal,
 	}
 
 	for i := range os.Args[1:] {
@@ -157,7 +161,7 @@ func initDatabase() {
 	}
 
 	var err error
-	db, err = pgxpool.Connect(context.Background(),
+	db, err = pgxpool.New(context.Background(),
 		fmt.Sprintf(
 			"host=%s port=%d user=%s password=%s dbname=%s pool_max_conns=%d",
 			"tfb-database", 5432,

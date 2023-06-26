@@ -1,0 +1,8 @@
+
+apply(from: "$gradleScripts/application.gradle")
+apply(from: "$gradleScripts/native.gradle")
+
+dependencies {
+    api(project(":store_sql"))
+    api("com.hexagonkt:http_server_jetty:$hexagonVersion")
+}

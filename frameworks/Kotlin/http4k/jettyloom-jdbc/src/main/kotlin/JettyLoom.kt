@@ -1,5 +1,5 @@
-import org.eclipse.jetty.server.*
-import org.eclipse.jetty.util.thread.ThreadPool
+import org.eclipse.jetty.server.Server
+import org.eclipse.jetty.util.thread.QueuedThreadPool
 import org.http4k.core.HttpHandler
 import org.http4k.server.Http4kServer
 import org.http4k.server.ServerConfig
@@ -7,12 +7,12 @@ import org.http4k.server.ServerConfig.StopMode.Graceful
 import org.http4k.server.http
 import org.http4k.server.toJettyHandler
 import java.time.Duration.ofSeconds
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit.NANOSECONDS
-import kotlin.Long.Companion.MAX_VALUE
+import java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor
 
 class JettyLoom(private val port: Int) : ServerConfig {
-    private val server = Server(LoomThreadPool())
+    private val server = Server(QueuedThreadPool().apply {
+        virtualThreadsExecutor = newVirtualThreadPerTaskExecutor()
+    })
 
     override val stopMode = Graceful(ofSeconds(5))
 
@@ -24,24 +24,5 @@ class JettyLoom(private val port: Int) : ServerConfig {
             override fun stop(): Http4kServer = apply { server.stop() }
             override fun port(): Int = if (port > 0) port else server.uri.port
         }
-    }
-}
-
-class LoomThreadPool : ThreadPool {
-    private val executorService = Executors.newVirtualThreadPerTaskExecutor()
-
-    @Throws(InterruptedException::class)
-    override fun join() {
-        executorService.awaitTermination(MAX_VALUE, NANOSECONDS)
-    }
-
-    override fun getThreads() = 1
-
-    override fun getIdleThreads() = 1
-
-    override fun isLowOnThreads() = false
-
-    override fun execute(command: Runnable) {
-        executorService.submit(command)
     }
 }

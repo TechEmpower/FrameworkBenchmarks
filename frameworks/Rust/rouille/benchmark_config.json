@@ -15,7 +15,8 @@
       "webserver": "rouille",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rouille"
+      "display_name": "rouille",
+      "tags": ["broken"]
     }
   }]
 }

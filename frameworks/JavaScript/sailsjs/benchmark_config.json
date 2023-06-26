@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "Sails.js",
       "notes": "",
-      "versus": "nodejs"
+      "versus": "nodejs",
+      "tags": ["broken"]
     },
     "postgres": {
       "db_url": "/postgres/db",
@@ -43,7 +44,8 @@
       "database_os": "Linux",
       "display_name": "Sails.js",
       "notes": "",
-      "versus": "nodejs"
+      "versus": "nodejs",
+      "tags": ["broken"]
     }
   }]
 }

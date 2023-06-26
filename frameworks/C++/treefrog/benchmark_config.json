@@ -26,12 +26,10 @@
       "versus": ""
     },
     "mysql": {
-      "json_url": "/json/json",
       "db_url": "/world/random",
       "query_url": "/world/queries/",
       "fortune_url": "/fortune/index",
       "update_url": "/world/updates/",
-      "plaintext_url": "/world/plain",
       "cached_query_url": "/world/cached_queries/",
       "port": 8080,
       "approach": "Realistic",
@@ -73,12 +71,10 @@
       "versus": ""
     },
     "mongodb": {
-      "json_url": "/json/json",
       "db_url": "/world/mrandom",
       "query_url": "/world/mqueries/",
       "fortune_url": "/fortune/mindex",
       "update_url": "/world/mupdates/",
-      "plaintext_url": "/world/plain",
       "cached_query_url": "/world/cached_mqueries/",
       "port": 8080,
       "approach": "Realistic",

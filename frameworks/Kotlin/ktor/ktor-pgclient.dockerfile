@@ -12,4 +12,4 @@ COPY --from=build /app/build/libs/ktor-pgclient.jar ktor-pgclient.jar
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-Xms1G", "-Xmx1G", "-XX:-UseBiasedLocking", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-jar", "ktor-pgclient.jar"]
+CMD ["java", "-server", "-XX:MaxRAMFraction=1", "-XX:-UseBiasedLocking", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-jar", "ktor-pgclient.jar"]

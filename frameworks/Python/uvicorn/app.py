@@ -57,9 +57,6 @@ with open(path, 'r') as template_file:
     template_text = template_file.read()
     template = jinja2.Template(template_text)
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(setup())
-
 
 def get_num_queries(scope):
     try:
@@ -216,6 +213,11 @@ routes = {
 
 
 async def main(scope, receive, send):
+    if scope['type'] == 'lifespan':
+        message = await receive()
+        if message['type'] == 'lifespan.startup':
+            await setup()
+            await send({'type': 'lifespan.startup.complete'})
     path = scope['path']
     handler = routes.get(path, handle_404)
     await handler(scope, receive, send)

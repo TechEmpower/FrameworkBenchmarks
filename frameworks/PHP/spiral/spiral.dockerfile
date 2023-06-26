@@ -1,4 +1,4 @@
-FROM php:8.1.2
+FROM php:8.2.0-cli
 
 RUN docker-php-ext-install pdo_mysql > /dev/null
 

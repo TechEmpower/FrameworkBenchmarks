@@ -1,6 +1,6 @@
 #[global_allocator]
 static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
-use std::{future::Future, io, pin::Pin, task::Context, task::Poll};
+use std::{future::Future, io, pin::Pin, sync::Arc, sync::Mutex, task::Context, task::Poll};
 
 use ntex::{fn_service, http::h1, io::Io, io::RecvError, util::ready, util::PoolId};
 use yarte::Serialize;
@@ -74,9 +74,23 @@ impl Future for App {
 async fn main() -> io::Result<()> {
     println!("Started http server: 127.0.0.1:8080");
 
+    let cores = core_affinity::get_core_ids().unwrap();
+    let total_cores = cores.len();
+    let cores = Arc::new(Mutex::new(cores));
+
     // start http server
     ntex::server::build()
         .backlog(1024)
+        .configure(move |cfg| {
+            let cores = cores.clone();
+            cfg.on_worker_start(move |_| {
+                if let Some(core) = cores.lock().unwrap().pop() {
+                    // Pin this worker to a single CPU core.
+                    core_affinity::set_for_current(core);
+                }
+                std::future::ready(Ok::<_, &'static str>(()))
+            })
+        })?
         .bind("techempower", "0.0.0.0:8080", |cfg| {
             cfg.memory_pool(PoolId::P1);
             PoolId::P1.set_read_params(65535, 2048);
@@ -87,6 +101,7 @@ async fn main() -> io::Result<()> {
                 codec: h1::Codec::default(),
             })
         })?
+        .workers(total_cores)
         .run()
         .await
 }

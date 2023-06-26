@@ -165,8 +165,6 @@
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
         "database": "Postgres",
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "port": 9000,
         "approach": "Realistic",
         "classification": "Micro",
@@ -187,8 +185,6 @@
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
         "database": "Postgres",
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "port": 9000,
         "approach": "Realistic",
         "classification": "Micro",
@@ -220,7 +216,8 @@
         "webserver": "None",
         "os": "Linux",
         "notes": "https://http4k.org",
-        "versus": "ktor-cio"
+        "versus": "ktor-cio",
+        "tags": ["broken"]
       },
       "ktornetty": {
         "orm": "Raw",

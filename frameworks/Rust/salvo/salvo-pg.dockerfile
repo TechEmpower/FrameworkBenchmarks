@@ -1,12 +1,12 @@
-FROM rust:1.62.1
+FROM rust:1.68.2
 
-RUN apt-get update -yqq && apt-get install -yqq cmake g++
+ENV TECHEMPOWER_POSTGRES_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
 
 ADD ./ /salvo
 WORKDIR /salvo
 
-RUN cargo clean
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
+ENV RUSTFLAGS "-C target-cpu=native"
+RUN cargo build --release
 
 EXPOSE 8080
 

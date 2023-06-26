@@ -20,7 +20,7 @@ ADD ./ /php
 WORKDIR /php
 
 COPY deploy/workerman/composer.json ./
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev 
 
 COPY deploy/workerman/start.php ./
 

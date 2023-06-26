@@ -1,5 +1,5 @@
 {
-    "require": {
-      "joanhey/adapterman": "0.5"
-    }
+  "require": {
+    "joanhey/adapterman": "^0.6"
   }
+}

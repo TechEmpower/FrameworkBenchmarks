@@ -1,0 +1,4 @@
+asyncpg==0.27.0
+Jinja2==3.1.2
+blacksheep==1.2.13
+ujson==5.7.0

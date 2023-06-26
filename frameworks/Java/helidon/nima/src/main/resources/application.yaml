@@ -15,6 +15,7 @@
 #
 
 server:
+  port: 8080
   sockets:
     - name: "@default"
       host: 0.0.0.0

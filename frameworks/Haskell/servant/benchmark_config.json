@@ -19,7 +19,8 @@
       "display_name": "servant",
       "notes": "Uses libpq system dependency.",
       "dockerfile": "servant.dockerfile",
-      "versus": "warp"
+      "versus": "warp",
+      "tags": ["broken"]
     },
     "beam": {
       "db_url": "/db",
@@ -60,7 +61,8 @@
       "display_name": "servant-postgresql-simple",
       "notes": "Uses libpq system dependency.",
       "dockerfile": "servant-psql-simple.dockerfile",
-      "versus": "warp"
+      "versus": "warp",
+      "tags": ["broken"]
     }
   }]
 }

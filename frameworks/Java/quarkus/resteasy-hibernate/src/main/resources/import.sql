@@ -1,1 +1,0 @@
-INSERT INTO Fortune(id, message) VALUES (1, 'Test value One');

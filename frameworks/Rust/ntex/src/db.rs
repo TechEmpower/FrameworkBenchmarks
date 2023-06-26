@@ -1,5 +1,4 @@
-#![allow(clippy::uninit_vec)]
-use std::{borrow::Cow, cell::RefCell, fmt::Write as FmtWrite};
+use std::{cell::RefCell, fmt::Write as FmtWrite};
 
 use nanorand::{Rng, WyRand};
 use ntex::util::{BufMut, Bytes, BytesMut};
@@ -17,9 +16,9 @@ pub struct World {
 }
 
 #[derive(Serialize, Debug)]
-pub struct Fortune {
+pub struct Fortune<'a> {
     pub id: i32,
-    pub message: Cow<'static, str>,
+    pub message: &'a str,
 }
 
 /// Postgres interface
@@ -41,7 +40,7 @@ impl PgConnection {
             let _ = conn.await;
         });
 
-        let fortune = cl.prepare("SELECT * FROM fortune").await.unwrap();
+        let fortune = cl.prepare("SELECT id, message FROM fortune").await.unwrap();
         let mut updates = Vec::new();
         for num in 1..=500u16 {
             let mut pl: u16 = 1;
@@ -60,7 +59,10 @@ impl PgConnection {
             q.push(')');
             updates.push(cl.prepare(&q).await.unwrap());
         }
-        let world = cl.prepare("SELECT * FROM world WHERE id=$1").await.unwrap();
+        let world = cl
+            .prepare("SELECT id, randomnumber FROM world WHERE id=$1")
+            .await
+            .unwrap();
 
         PgConnection {
             cl,
@@ -119,7 +121,7 @@ impl PgConnection {
     }
 
     pub async fn update(&self, num: usize) -> Bytes {
-        let mut rng = self.rng.clone();
+        let mut rng = nanorand::tls_rng();
         let mut queries = SmallVec::<[_; 32]>::new();
         (0..num).for_each(|_| {
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
@@ -158,22 +160,18 @@ impl PgConnection {
     }
 
     pub async fn tell_fortune(&self) -> Bytes {
-        let fut = self.cl.query_raw(&self.fortune, &[]);
+        let rows = self.cl.query_raw(&self.fortune, &[]).await.unwrap();
 
-        let rows = fut.await.unwrap();
-        let mut fortunes: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
+        let mut fortunes = Vec::with_capacity(rows.len() + 1);
+        fortunes.push(Fortune {
             id: 0,
-            message: Cow::Borrowed("Additional fortune added at request time."),
-        }];
-
-        for row in rows {
-            fortunes.push(Fortune {
-                id: row.get(0),
-                message: Cow::Owned(row.get(1)),
-            });
-        }
-
-        fortunes.sort_by(|it, next| it.message.cmp(&next.message));
+            message: "Additional fortune added at request time.",
+        });
+        fortunes.extend(rows.iter().map(|row| Fortune {
+            id: row.get(0),
+            message: row.get(1),
+        }));
+        fortunes.sort_by(|it, next| it.message.cmp(next.message));
 
         let mut body = std::mem::replace(&mut *self.buf.borrow_mut(), BytesMut::new());
         utils::reserve(&mut body);

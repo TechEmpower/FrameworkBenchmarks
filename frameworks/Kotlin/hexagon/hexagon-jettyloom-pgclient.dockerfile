@@ -1,27 +1,23 @@
 #
 # BUILD
 #
-FROM gradle:7.5.1-jdk17-alpine AS build
+FROM docker.io/gradle:8.1.1-jdk17-alpine AS build
 USER root
 WORKDIR /hexagon
 
-COPY src src
-COPY build.gradle build.gradle
-RUN gradle --quiet -x test
+ADD . .
+RUN gradle --quiet classes
+RUN gradle --quiet -x test installDist
 
 #
 # RUNTIME
 #
-FROM eclipse-temurin:19-jre-alpine
-ENV DBSTORE pg_client
+FROM docker.io/eclipse-temurin:20-jre-alpine
+ARG PROJECT=hexagon_jetty_pgclient
+
 ENV POSTGRESQL_DB_HOST tfb-database
-ENV WEBENGINE jetty_loom
-ENV PROJECT hexagon
-ENV DISABLE_CHECKS true
-ENV JDK_JAVA_OPTIONS --enable-preview -XX:+AlwaysPreTouch -XX:+UseParallelGC -XX:+UseNUMA
+ENV JDK_JAVA_OPTIONS --enable-preview -XX:+AlwaysPreTouch -XX:+UseParallelGC -XX:+UseNUMA -DvirtualThreads=true
 
-COPY --from=build /hexagon/build/install/$PROJECT /opt/$PROJECT
+COPY --from=build /hexagon/$PROJECT/build/install/$PROJECT /opt/$PROJECT
 
-EXPOSE 9090
-
-ENTRYPOINT /opt/$PROJECT/bin/$PROJECT
+ENTRYPOINT [ "/opt/hexagon_jetty_pgclient/bin/hexagon_jetty_pgclient" ]

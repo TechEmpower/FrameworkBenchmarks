@@ -1,10 +1,16 @@
+mod ser;
 mod util;
 
 use std::{env, io, net::TcpListener, os::wasi::io::FromRawFd};
 
 use xitca_web::{
-    dev::service::Service, handler::handler_service, http::header::SERVER, request::WebRequest,
-    response::WebResponse, route::get, App, HttpServer,
+    dev::service::Service,
+    handler::{handler_service, json::Json},
+    http::header::SERVER,
+    request::WebRequest,
+    response::WebResponse,
+    route::get,
+    App, HttpServer,
 };
 
 use self::util::SERVER_HEADER_VALUE;
@@ -19,7 +25,16 @@ fn main() -> io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
-            .at("/plaintext", get(handler_service(plain_text)))
+            .at(
+                "/json",
+                get(handler_service(|| async {
+                    Json::<ser::Message>(ser::Message::new())
+                })),
+            )
+            .at(
+                "/plaintext",
+                get(handler_service(|| async { "Hello, World!" })),
+            )
             .enclosed_fn(middleware_fn)
             .finish()
     })
@@ -32,11 +47,8 @@ async fn middleware_fn<S, E>(service: &S, ctx: WebRequest<'_>) -> Result<WebResp
 where
     S: for<'r> Service<WebRequest<'r>, Response = WebResponse, Error = E>,
 {
-    let mut res = service.call(ctx).await?;
-    res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
-    Ok(res)
-}
-
-async fn plain_text() -> &'static str {
-    "Hello, World!"
+    service.call(ctx).await.map(|mut res| {
+        res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
+        res
+    })
 }

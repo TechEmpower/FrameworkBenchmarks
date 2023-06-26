@@ -1,14 +1,15 @@
-use axum::async_trait;
-use axum::extract::{Extension, FromRequest, RequestParts};
-use axum::http::StatusCode;
-use deadpool_postgres::{Client, Manager, ManagerConfig, RecyclingMethod};
 use std::io;
-use std::str::FromStr;
+
+use axum::{
+    async_trait,
+    extract::FromRequestParts,
+    http::{request::Parts, StatusCode},
+};
+use deadpool_postgres::{Client, Manager, ManagerConfig, RecyclingMethod};
 use tokio_pg_mapper::FromTokioPostgresRow;
 use tokio_postgres::{NoTls, Row, Statement};
 
-use crate::utils::internal_error;
-use crate::{Fortune, World};
+use crate::{utils::internal_error, Fortune, World};
 
 #[derive(Debug)]
 pub enum PgError {
@@ -32,8 +33,8 @@ pub async fn create_pool(
     database_url: String,
     max_pool_size: u32,
 ) -> deadpool_postgres::Pool {
-    let pg_config =
-        tokio_postgres::Config::from_str(&*database_url).expect("invalid database url");
+    let pg_config: tokio_postgres::Config =
+        database_url.parse().expect("invalid database url");
 
     let mgr_config = ManagerConfig {
         recycling_method: RecyclingMethod::Fast,
@@ -50,17 +51,13 @@ pub async fn create_pool(
 pub struct DatabaseClient(pub Client);
 
 #[async_trait]
-impl<B> FromRequest<B> for DatabaseClient
-where
-    B: Send,
-{
+impl FromRequestParts<deadpool_postgres::Pool> for DatabaseClient {
     type Rejection = (StatusCode, String);
 
-    async fn from_request(req: &mut RequestParts<B>) -> Result<Self, Self::Rejection> {
-        let Extension(pool) = Extension::<deadpool_postgres::Pool>::from_request(req)
-            .await
-            .map_err(internal_error)?;
-
+    async fn from_request_parts(
+        _parts: &mut Parts,
+        pool: &deadpool_postgres::Pool,
+    ) -> Result<Self, Self::Rejection> {
         let conn = pool.get().await.map_err(internal_error)?;
 
         Ok(Self(conn))

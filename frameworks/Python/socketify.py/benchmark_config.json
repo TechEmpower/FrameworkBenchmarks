@@ -16,7 +16,7 @@
             "webserver": "socketify.py",
             "os": "Linux",
             "database_os": "Linux",
-            "display_name": "socketify.py",
+            "display_name": "socketify.py [PyPy3]",
             "notes": ""
         },
         "python3": {
@@ -34,7 +34,7 @@
             "webserver": "socketify.py-python3",
             "os": "Linux",
             "database_os": "Linux",
-            "display_name": "socketify.py [Python3]",
+            "display_name": "socketify.py",
             "notes": ""
         },
         "asgi": {
@@ -52,7 +52,7 @@
             "webserver": "socketify.py-asgi",
             "os": "Linux",
             "database_os": "Linux",
-            "display_name": "socketify.py [ASGI]",
+            "display_name": "socketify.py [ASGI PyPy3]",
             "notes": ""
         },
         "asgi-python3": {
@@ -70,7 +70,7 @@
             "webserver": "socketify.py-asgi",
             "os": "Linux",
             "database_os": "Linux",
-            "display_name": "socketify.py [ASGI Python3]",
+            "display_name": "socketify.py [ASGI]",
             "notes": ""
         },
         "wsgi": {
@@ -88,7 +88,7 @@
             "webserver": "socketify.py-wsgi",
             "os": "Linux",
             "database_os": "Linux",
-            "display_name": "socketify.py [WSGI]",
+            "display_name": "socketify.py [WSGI PyPy3]",
             "notes": ""
         },
         "wsgi-python3": {
@@ -106,7 +106,7 @@
             "webserver": "socketify.py-wsgi",
             "os": "Linux",
             "database_os": "Linux",
-            "display_name": "socketify.py [WSGI Python3]",
+            "display_name": "socketify.py [WSGI]",
             "notes": ""
         }
     }]

@@ -3,11 +3,13 @@ use std::{cell::RefCell, error::Error, fmt, future::Future, io, time::Duration};
 use diesel::prelude::{ConnectionError, ExpressionMethods, QueryDsl};
 use diesel_async::{AsyncConnection, AsyncPgConnection, RunQueryDsl};
 use futures_util::stream::{FuturesUnordered, TryStreamExt};
-use rand::{rngs::SmallRng, Rng, SeedableRng};
 use tang_rs::{Manager, ManagerFuture, ManagerTimeout, Pool};
 use tokio::time::{sleep, Sleep};
 
-use super::ser::{Fortune, Fortunes, World};
+use super::{
+    ser::{Fortune, Fortunes, World},
+    util::Rand,
+};
 
 type DbResult<T> = Result<T, Box<dyn Error + Send + Sync + 'static>>;
 
@@ -88,7 +90,7 @@ impl From<()> for DieselPoolError {
 }
 
 pub struct DieselPool {
-    rng: RefCell<SmallRng>,
+    rng: RefCell<Rand>,
     pool: Pool<DieselPoolManager>,
 }
 
@@ -104,7 +106,7 @@ pub async fn create(config: &str) -> io::Result<DieselPool> {
         .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
 
     Ok(DieselPool {
-        rng: RefCell::new(SmallRng::from_entropy()),
+        rng: RefCell::new(Rand::default()),
         pool,
     })
 }
@@ -115,7 +117,7 @@ impl DieselPool {
 
         let mut conn = self.pool.get().await?;
 
-        let random_id = self.rng.borrow_mut().gen_range(1..10_001);
+        let random_id = self.rng.borrow_mut().gen_id();
 
         let w = world
             .filter(id.eq(random_id))
@@ -136,9 +138,8 @@ impl DieselPool {
             let mut rng = self.rng.borrow_mut();
             (0..num)
                 .map(|_| {
-                    let w_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+                    let w_id = rng.gen_id();
                     let fut = world.filter(id.eq(w_id)).load::<World>(&mut *conn);
-
                     async {
                         let w = fut.await?.pop().unwrap();
                         Ok(w)
@@ -159,11 +160,9 @@ impl DieselPool {
             let mut rng = self.rng.borrow_mut();
             (0..num)
                 .map(|_| {
-                    let w_id = rng.gen_range::<i32, _>(1..10_001);
-                    let new_id = rng.gen_range::<i32, _>(1..10_001);
-
+                    let w_id = rng.gen_id();
+                    let new_id = rng.gen_id();
                     let fut = world.filter(id.eq(w_id)).load::<World>(&mut *conn);
-
                     async move {
                         let mut w = fut.await?.pop().unwrap();
                         w.randomnumber = new_id;

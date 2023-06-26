@@ -10,7 +10,7 @@ let package = Package(
         .executable(name: "server", targets: ["server"])
     ],
     dependencies: [
-        .package(url: "https://github.com/hummingbird-project/hummingbird.git", .upToNextMinor(from: "0.16.0")),
+        .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "1.0.0"),
         .package(url: "https://github.com/hummingbird-project/hummingbird-mustache.git", from: "1.0.1"),
         .package(url: "https://github.com/vapor/postgres-nio.git", from: "1.8.0"),
     ],

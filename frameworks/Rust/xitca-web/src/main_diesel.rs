@@ -20,10 +20,10 @@ use xitca_web::{
     App, HttpServer,
 };
 
-use self::db_diesel::{create, DieselPool};
-use self::util::{QueryParse, DB_URL, SERVER_HEADER_VALUE};
-
-type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
+use self::{
+    db_diesel::{create, DieselPool},
+    util::{Error, HandleResult, QueryParse, DB_URL, SERVER_HEADER_VALUE},
+};
 
 type Request<'a> = WebRequest<'a, DieselPool>;
 
@@ -46,7 +46,7 @@ fn main() -> std::io::Result<()> {
 
 async fn middleware_fn<S, E>(service: &S, mut ctx: Request<'_>) -> Result<WebResponse, E>
 where
-    S: for<'r> Service<Request<'r>, Response = Result<WebResponse, Error>, Error = E>,
+    S: for<'r> Service<Request<'r>, Response = HandleResult<WebResponse>, Error = E>,
 {
     let mut res = match service.call(ctx.reborrow()).await? {
         Ok(res) => res,
@@ -64,11 +64,11 @@ async fn json() -> Result<Json<impl Serialize>, Error> {
     Ok(Json(ser::Message::new()))
 }
 
-async fn db(StateRef(pool): StateRef<'_, DieselPool>) -> Result<Json<impl Serialize>, Error> {
+async fn db(StateRef(pool): StateRef<'_, DieselPool>) -> HandleResult<Json<impl Serialize>> {
     pool.get_world().await.map(Json)
 }
 
-async fn fortunes(StateRef(pool): StateRef<'_, DieselPool>) -> Result<Html<String>, Error> {
+async fn fortunes(StateRef(pool): StateRef<'_, DieselPool>) -> HandleResult<Html<String>> {
     use sailfish::TemplateOnce;
     let fortunes = pool.tell_fortune().await?.render_once()?;
     Ok(Html(fortunes))
@@ -77,7 +77,7 @@ async fn fortunes(StateRef(pool): StateRef<'_, DieselPool>) -> Result<Html<Strin
 async fn queries(
     StateRef(pool): StateRef<'_, DieselPool>,
     UriRef(uri): UriRef<'_>,
-) -> Result<Json<impl Serialize>, Error> {
+) -> HandleResult<Json<impl Serialize>> {
     let num = uri.query().parse_query();
     pool.get_worlds(num).await.map(Json)
 }
@@ -85,7 +85,7 @@ async fn queries(
 async fn updates(
     StateRef(pool): StateRef<'_, DieselPool>,
     UriRef(uri): UriRef<'_>,
-) -> Result<Json<impl Serialize>, Error> {
+) -> HandleResult<Json<impl Serialize>> {
     let num = uri.query().parse_query();
     pool.update(num).await.map(Json)
 }

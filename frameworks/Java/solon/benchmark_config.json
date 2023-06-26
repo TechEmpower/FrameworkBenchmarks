@@ -1,0 +1,26 @@
+{
+  "framework": "solon",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "None",
+        "framework": "solon",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "solon",
+        "webserver": "smarthttp",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "solon",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

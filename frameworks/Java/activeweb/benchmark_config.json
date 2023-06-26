@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "ActiveWeb",
       "notes": "",
-      "versus": "servlet"
+      "versus": "servlet",
+      "tags": ["broken"]
     },
     "jackson": {
       "json_url": "/json/jackson",
@@ -43,7 +44,8 @@
       "database_os": "Linux",
       "display_name": "ActiveWeb",
       "notes": "",
-      "versus": "servlet"
+      "versus": "servlet",
+      "tags": ["broken"]
     }
   }]
 }

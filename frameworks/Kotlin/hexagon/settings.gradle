@@ -1,0 +1,18 @@
+
+include(
+    "model",
+    "core",
+    "core_async",
+    "store_pgclient",
+    "store_pgclient_async",
+    "store_sql",
+
+    "hexagon_jetty_pgclient",
+    "hexagon_jetty_postgresql",
+    "hexagon_netty_postgresql",
+    "hexagon_netty_async_pgclient",
+    "hexagon_nettyepoll_pgclient",
+    "hexagon_nettyepoll_async_pgclient",
+    "hexagon_nettyepoll_postgresql",
+    "hexagon_tomcat_postgresql",
+)

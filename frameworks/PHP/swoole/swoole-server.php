@@ -1,9 +1,10 @@
 <?php
 
+use Swoole\Http\Server;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 
-$server = new swoole_http_server('0.0.0.0', 8080, SWOOLE_BASE);
+$server = new Swoole\Http\Server('0.0.0.0', 8080, SWOOLE_BASE);
 $server->set([
     'worker_num' => swoole_cpu_num(),
     'log_file' => '/dev/null',

@@ -17,24 +17,17 @@ name = "hyper-db-techempower"
 path = "src/main_db.rs"
 
 [dependencies]
-futures = "0.1"
-# Disable default runtime, so that tokio-core can be used instead.
-# See below for why...
-hyper = { version = "0.14", default-features = false }
+# Disable default runtime, so that tokio single thread can be used instead.
+hyper = { version = "0.14", features = ["server", "http1"], default-features = false }
 # Since no logs are allowed anyways, just compile-time turn them all off
 log = { version = "0.4", features = ["release_max_level_off"] }
 markup = "0.3.1"
 net2 = "0.2"
 num_cpus = "1.2"
-serde = "1.0"
+serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-serde_derive = "1.0"
-# tokio-core 0.1.11 is used because its technically faster
-# in these specific benchmarks, as work-stealing executors
-# aren't needed.
-tokio-core = { git = "https://github.com/seanmonstar/tokio-core", branch = "0.1.11-fix" }
-# Disable postgres' runtime feature as well...
-tokio-postgres = { version = "0.4.0-rc.3", default-features = false }
+tokio = { version = "1", features = ["rt", "net", "time"] }
+tokio-postgres = { version = "0.7", default-features = false, features = ["runtime"] }
 v_htmlescape = "0.10"
 
 [profile.release]

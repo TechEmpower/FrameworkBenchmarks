@@ -25,7 +25,7 @@ public partial class BenchmarkApplication
 
         writer.Commit();
 
-        Utf8JsonWriter utf8JsonWriter = t_writer ??= new Utf8JsonWriter(bodyWriter, new JsonWriterOptions { SkipValidation = true });
+        var utf8JsonWriter = t_writer ??= new Utf8JsonWriter(bodyWriter, new JsonWriterOptions { SkipValidation = true });
         utf8JsonWriter.Reset(bodyWriter);
 
         // Body

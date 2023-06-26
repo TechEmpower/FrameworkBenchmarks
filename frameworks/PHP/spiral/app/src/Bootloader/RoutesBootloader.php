@@ -1,30 +1,29 @@
 <?php
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
+
 declare(strict_types=1);
 
 namespace App\Bootloader;
 
 use App\Controller\BenchmarkController;
-use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Router\Route;
-use Spiral\Router\RouterInterface;
-use Spiral\Router\Target\Controller;
+use Spiral\Bootloader\Http\RoutesBootloader as BaseRoutesBootloader;
+use Spiral\Router\Loader\Configurator\RoutingConfigurator;
 
-class RoutesBootloader extends Bootloader
+final class RoutesBootloader extends BaseRoutesBootloader
 {
-    /**
-     * @param RouterInterface $router
-     */
-    public function boot(RouterInterface $router)
+    protected function globalMiddleware(): array
     {
-        $router->addRoute(
-            'benchmark',
-            new Route('/<action>[/<queries>]', new Controller(BenchmarkController::class))
-        );
+        return [];
+    }
+
+    protected function middlewareGroups(): array
+    {
+        return [];
+    }
+
+    protected function defineRoutes(RoutingConfigurator $routes): void
+    {
+        $routes
+            ->add('benchmark', '/<action>[/<queries>]')
+            ->controller(BenchmarkController::class);
     }
 }

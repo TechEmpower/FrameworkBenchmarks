@@ -2,7 +2,7 @@
 from datetime import datetime
 from functools import lru_cache
 import os
-from random import randint
+from random import randint, sample
 
 from alchemical import Alchemical
 import sqlalchemy as sqla
@@ -53,10 +53,7 @@ def get_num_queries(request, name="queries"):
 
 
 def generate_ids(num_queries):
-    ids = {randint(1, 10000) for _ in range(num_queries)}
-    while len(ids) < num_queries:
-        ids.add(randint(1, 10000))
-    return list(ids)
+    return sample(range(1, 10001), num_queries)
 
 
 @app.route("/json")

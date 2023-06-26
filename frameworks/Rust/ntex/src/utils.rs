@@ -11,6 +11,8 @@ pub const HDR_HTML_CONTENT_TYPE: HeaderValue =
     HeaderValue::from_static("text/html; charset=utf-8");
 pub const BODY_PLAIN_TEXT: Bytes = Bytes::from_static(b"Hello, World!");
 
+const LW: usize = 1024;
+const HW: usize = 128 * 1024;
 pub const SIZE: usize = 27;
 
 pub fn get_query_param(query: Option<&str>) -> usize {
@@ -25,7 +27,7 @@ pub fn get_query_param(query: Option<&str>) -> usize {
 
 pub fn reserve(buf: &mut BytesMut) {
     let remaining = buf.remaining_mut();
-    if remaining < 1024 {
-        buf.reserve(65535 - remaining);
+    if remaining < LW {
+        buf.reserve(HW);
     }
 }

@@ -4,7 +4,7 @@ import PostgresNIO
 struct WorldController {
     let connectionPoolGroup: HBConnectionPoolGroup<PostgresConnectionSource>
 
-    func add(to router: HBRouter) {
+    func add(to router: HBRouterBuilder) {
         router.get("db", use: single)
         router.get("queries", use: multiple)
         router.get("updates", use: updates)

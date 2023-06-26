@@ -1,13 +1,17 @@
-use axum::async_trait;
-use axum::extract::{Extension, FromRequest, RequestParts};
-use axum::http::StatusCode;
 use std::io;
 
-use crate::utils::internal_error;
-use crate::{Fortune, World};
-use sqlx::pool::PoolConnection;
-use sqlx::postgres::{PgArguments, PgPoolOptions};
-use sqlx::{Arguments, PgPool, Postgres};
+use axum::{
+    async_trait,
+    extract::FromRequestParts,
+    http::{request::Parts, StatusCode},
+};
+use sqlx::{
+    pool::PoolConnection,
+    postgres::{PgArguments, PgPoolOptions},
+    Arguments, PgPool, Postgres,
+};
+
+use crate::{utils::internal_error, Fortune, World};
 
 #[derive(Debug)]
 pub enum PgError {
@@ -35,7 +39,7 @@ pub async fn create_pool(
     PgPoolOptions::new()
         .max_connections(max_pool_size)
         .min_connections(min_pool_size)
-        .connect(&*database_url)
+        .connect(&database_url)
         .await
         .unwrap()
 }
@@ -43,17 +47,13 @@ pub async fn create_pool(
 pub struct DatabaseConnection(pub PoolConnection<Postgres>);
 
 #[async_trait]
-impl<B> FromRequest<B> for DatabaseConnection
-where
-    B: Send,
-{
+impl FromRequestParts<PgPool> for DatabaseConnection {
     type Rejection = (StatusCode, String);
 
-    async fn from_request(req: &mut RequestParts<B>) -> Result<Self, Self::Rejection> {
-        let Extension(pool) = Extension::<PgPool>::from_request(req)
-            .await
-            .map_err(internal_error)?;
-
+    async fn from_request_parts(
+        _parts: &mut Parts,
+        pool: &PgPool,
+    ) -> Result<Self, Self::Rejection> {
         let conn = pool.acquire().await.map_err(internal_error)?;
 
         Ok(Self(conn))

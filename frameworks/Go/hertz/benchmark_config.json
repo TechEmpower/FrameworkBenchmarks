@@ -26,10 +26,8 @@
     },
     "gorm": {
       "db_url": "/db",
-      "json_url": "/json",
       "query_url": "/queries?queries=",
       "update_url": "/updates?queries=",
-      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",

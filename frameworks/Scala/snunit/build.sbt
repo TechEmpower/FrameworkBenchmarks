@@ -1,12 +1,14 @@
 import scala.scalanative.build._
 
-scalaVersion := "2.13.8"
+scalaVersion := "2.13.10"
 
-val snunitVersion = "0.2.4"
+val snunitVersion = "0.3.0"
+val jsoniterScalaVersion = "2.20.6"
+
 libraryDependencies ++= Seq(
   "com.github.lolgab" %%% "snunit" % snunitVersion,
-  "com.github.plokhotnyuk.jsoniter-scala" %%% "jsoniter-scala-core" % "2.19.1",
-  "com.github.plokhotnyuk.jsoniter-scala" %%% "jsoniter-scala-macros" % "2.19.1" % "compile-internal"
+  "com.github.plokhotnyuk.jsoniter-scala" %%% "jsoniter-scala-core" % jsoniterScalaVersion,
+  "com.github.plokhotnyuk.jsoniter-scala" %%% "jsoniter-scala-macros" % jsoniterScalaVersion % "compile-internal"
 )
 
 nativeConfig ~= {

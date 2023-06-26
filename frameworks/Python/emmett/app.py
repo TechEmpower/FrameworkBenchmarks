@@ -1,6 +1,5 @@
 
-from functools import partial
-from random import randint
+from random import randint, sample
 
 from emmett import App, request
 from emmett.orm import Database, Model, Field, rowmethod
@@ -67,16 +66,17 @@ def get_qparam():
 @service.json
 async def get_random_worlds():
     num_queries = get_qparam()
-    worlds = [
-        World.get(randint(1, 10000)).serialize() for _ in range(num_queries)]
+    row_ids = sample(range(1, 10000), num_queries)
+    worlds = [World.get(row_id).serialize() for row_id in row_ids]
     return worlds
 
 
 @app.route(pipeline=[db.pipe], output='template')
 async def fortunes():
+    fortune = Fortune.new(message="Additional fortune added at request time.")
+    fortune.id = 0
     fortunes = Fortune.all().select()
-    fortunes.append(
-        Fortune.new(id=0, message="Additional fortune added at request time."))
+    fortunes.append(fortune)
     fortunes.sort(lambda m: m.message)
     return {'fortunes': fortunes}
 
@@ -85,13 +85,14 @@ async def fortunes():
 @service.json
 async def updates():
     num_queries = get_qparam()
+    updates = list(zip(
+        sample(range(1, 10000), num_queries),
+        sorted(sample(range(1, 10000), num_queries))
+    ))
     worlds = []
-    rp = partial(randint, 1, 10000)
-    ids = [rp() for _ in range(num_queries)]
-    ids.sort()  # To avoid deadlock
-    for id in ids:
-        world = World.get(id)
-        world.update_record(randomnumber=rp())
+    for row_id, number in updates:
+        world = World.get(row_id)
+        world.update_record(randomnumber=number)
         worlds.append(world.serialize())
     return worlds
 

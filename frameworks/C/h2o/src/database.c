@@ -30,13 +30,16 @@
 
 #include "database.h"
 #include "error.h"
+#include "event_loop.h"
 #include "global_data.h"
 #include "list.h"
 
+#define MS_IN_S 1000
+
+// Database connection state
 #define EXPECT_SYNC 1
 #define IGNORE_RESULT 2
-#define IS_RESETTING 4
-#define MS_IN_S 1000
+#define RESET 4
 
 typedef struct {
 	list_t l;
@@ -48,7 +51,7 @@ typedef struct {
 	size_t query_num;
 	uint_fast32_t flags;
 	int sd;
-	h2o_timeout_entry_t timeout;
+	h2o_timer_t timer;
 } db_conn_t;
 
 typedef struct {
@@ -60,17 +63,20 @@ typedef struct {
 static h2o_socket_t *create_socket(int sd, h2o_loop_t *loop);
 static int do_execute_query(db_conn_t *conn, db_query_param_t *param);
 static void error_notification(db_conn_pool_t *pool, bool timeout, const char *error_string);
+static int flush_connection(h2o_socket_cb cb, db_conn_t *conn);
 static void on_database_connect_error(db_conn_t *conn, bool timeout, const char *error_string);
 static void on_database_connect_read_ready(h2o_socket_t *sock, const char *err);
-static void on_database_connect_timeout(h2o_timeout_entry_t *entry);
+static void on_database_connect_timeout(h2o_timer_t *timer);
 static void on_database_connect_write_ready(h2o_socket_t *sock, const char *err);
 static void on_database_error(db_conn_t *conn, const char *error_string);
 static void on_database_read_ready(h2o_socket_t *sock, const char *err);
-static void on_database_timeout(h2o_timeout_entry_t *timeout);
+static void on_database_timeout(h2o_timer_t *timer);
 static void on_database_write_ready(h2o_socket_t *sock, const char *err);
+static void on_process_queries(void *arg);
 static void poll_database_connection(h2o_socket_t *sock, const char *err);
 static void prepare_statements(db_conn_t *conn);
-static void process_queries(db_conn_t *conn);
+static void process_queries(db_conn_t *conn, bool removed);
+static void remove_connection(db_conn_t *conn);
 static void start_database_connect(db_conn_pool_t *pool, db_conn_t *conn);
 
 static h2o_socket_t *create_socket(int sd, h2o_loop_t *loop)
@@ -129,25 +135,15 @@ static int do_execute_query(db_conn_t *conn, db_query_param_t *param)
 		return 1;
 	}
 
-	if (!PQpipelineSync(conn->conn)) {
-		LIBRARY_ERROR("PQpipelineSync", PQerrorMessage(conn->conn));
+	if (!PQsendSyncMessage(conn->conn)) {
+		LIBRARY_ERROR("PQsendSyncMessage", PQerrorMessage(conn->conn));
 		return 1;
 	}
-
-	const int send_status = PQflush(conn->conn);
-
-	if (send_status < 0) {
-		LIBRARY_ERROR("PQflush", PQerrorMessage(conn->conn));
-		return 1;
-	}
-	else if (send_status)
-		h2o_socket_notify_write(conn->sock, on_database_write_ready);
 
 	if (!conn->queries.head && !(conn->flags & (EXPECT_SYNC | IGNORE_RESULT))) {
-		assert(!h2o_timeout_is_linked(&conn->timeout));
-		conn->timeout.cb = on_database_timeout;
-		h2o_timeout_link(conn->pool->loop, &conn->pool->timeout, &conn->timeout);
-		h2o_socket_read_start(conn->sock, on_database_read_ready);
+		assert(!h2o_timer_is_linked(&conn->timer));
+		conn->timer.cb = on_database_timeout;
+		h2o_timer_link(conn->pool->loop, conn->pool->config->db_timeout * MS_IN_S, &conn->timer);
 	}
 
 	param->l.next = NULL;
@@ -184,14 +180,28 @@ static void error_notification(db_conn_pool_t *pool, bool timeout, const char *e
 	}
 }
 
+static int flush_connection(h2o_socket_cb cb, db_conn_t *conn)
+{
+	const int send_status = PQflush(conn->conn);
+
+	if (send_status < 0)
+		LIBRARY_ERROR("PQflush", PQerrorMessage(conn->conn));
+	else if (send_status)
+		h2o_socket_notify_write(conn->sock, cb);
+
+	return send_status < 0;
+}
+
 static void on_database_connect_error(db_conn_t *conn, bool timeout, const char *error_string)
 {
-	error_notification(conn->pool, timeout, error_string);
-	h2o_timeout_unlink(&conn->timeout);
+	db_conn_pool_t * const pool = conn->pool;
+
+	h2o_timer_unlink(&conn->timer);
 	h2o_socket_read_stop(conn->sock);
 	h2o_socket_close(conn->sock);
 	PQfinish(conn->conn);
 	free(conn);
+	error_notification(pool, timeout, error_string);
 }
 
 static void on_database_connect_read_ready(h2o_socket_t *sock, const char *err)
@@ -210,15 +220,8 @@ static void on_database_connect_read_ready(h2o_socket_t *sock, const char *err)
 		return;
 	}
 
-	const int send_status = PQflush(conn->conn);
-
-	if (send_status < 0) {
-		LIBRARY_ERROR("PQflush", PQerrorMessage(conn->conn));
+	if (flush_connection(on_database_connect_write_ready, conn)) {
 		on_database_connect_error(conn, false, DB_ERROR);
-		return;
-	}
-	else if (send_status) {
-		h2o_socket_notify_write(conn->sock, on_database_connect_write_ready);
 		return;
 	}
 
@@ -231,9 +234,10 @@ static void on_database_connect_read_ready(h2o_socket_t *sock, const char *err)
 					break;
 				case PGRES_PIPELINE_SYNC:
 					PQclear(result);
-					h2o_timeout_unlink(&conn->timeout);
+					h2o_timer_unlink(&conn->timer);
 					h2o_socket_read_stop(conn->sock);
-					process_queries(conn);
+					h2o_socket_read_start(conn->sock, on_database_read_ready);
+					process_queries(conn, true);
 					return;
 				default:
 					LIBRARY_ERROR("PQresultStatus", PQresultErrorMessage(result));
@@ -247,9 +251,9 @@ static void on_database_connect_read_ready(h2o_socket_t *sock, const char *err)
 	}
 }
 
-static void on_database_connect_timeout(h2o_timeout_entry_t *entry)
+static void on_database_connect_timeout(h2o_timer_t *timer)
 {
-	db_conn_t * const conn = H2O_STRUCT_FROM_MEMBER(db_conn_t, timeout, entry);
+	db_conn_t * const conn = H2O_STRUCT_FROM_MEMBER(db_conn_t, timer, timer);
 
 	ERROR(DB_TIMEOUT_ERROR);
 	on_database_connect_error(conn, true, DB_TIMEOUT_ERROR);
@@ -263,20 +267,14 @@ static void on_database_connect_write_ready(h2o_socket_t *sock, const char *err)
 		ERROR(err);
 		on_database_connect_error(conn, false, err);
 	}
-	else {
-		const int send_status = PQflush(conn->conn);
-
-		if (send_status < 0) {
-			LIBRARY_ERROR("PQflush", PQerrorMessage(conn->conn));
-			on_database_connect_error(conn, false, DB_ERROR);
-		}
-		else if (send_status)
-			h2o_socket_notify_write(conn->sock, on_database_connect_write_ready);
-	}
+	else if (flush_connection(on_database_connect_write_ready, conn))
+		on_database_connect_error(conn, false, DB_ERROR);
 }
 
 static void on_database_error(db_conn_t *conn, const char *error_string)
 {
+	remove_connection(conn);
+
 	if (conn->queries.head)
 		do {
 			db_query_param_t * const param = H2O_STRUCT_FROM_MEMBER(db_query_param_t,
@@ -307,17 +305,12 @@ static void on_database_read_ready(h2o_socket_t *sock, const char *err)
 		return;
 	}
 
-	const int send_status = PQflush(conn->conn);
-
-	if (send_status < 0) {
-		LIBRARY_ERROR("PQflush", PQerrorMessage(conn->conn));
+	if (flush_connection(on_database_write_ready, conn)) {
 		on_database_error(conn, DB_ERROR);
 		return;
 	}
-	else if (send_status) {
-		h2o_socket_notify_write(conn->sock, on_database_write_ready);
-		return;
-	}
+
+	const bool removed = !conn->query_num;
 
 	while (!PQisBusy(conn->conn)) {
 		PGresult * const result = PQgetResult(conn->conn);
@@ -350,9 +343,11 @@ static void on_database_read_ready(h2o_socket_t *sock, const char *err)
 
 			if (param->on_result(param, result) == DONE) {
 				conn->query_num++;
-				h2o_timeout_unlink(&conn->timeout);
-				conn->timeout.cb = on_database_timeout;
-				h2o_timeout_link(conn->pool->loop, &conn->pool->timeout, &conn->timeout);
+				h2o_timer_unlink(&conn->timer);
+				conn->timer.cb = on_database_timeout;
+				h2o_timer_link(conn->pool->loop,
+				               conn->pool->config->db_timeout * MS_IN_S,
+				               &conn->timer);
 				conn->flags |= EXPECT_SYNC;
 				conn->queries.head = next;
 
@@ -367,18 +362,20 @@ static void on_database_read_ready(h2o_socket_t *sock, const char *err)
 		}
 		else {
 			assert(!result);
-			h2o_timeout_unlink(&conn->timeout);
-			h2o_socket_read_stop(conn->sock);
+			h2o_timer_unlink(&conn->timer);
 			break;
 		}
 	}
 
-	process_queries(conn);
+	for (PGnotify *notify = PQnotifies(conn->conn); notify; notify = PQnotifies(conn->conn))
+		PQfreemem(notify);
+
+	process_queries(conn, removed);
 }
 
-static void on_database_timeout(h2o_timeout_entry_t *timeout)
+static void on_database_timeout(h2o_timer_t *timer)
 {
-	db_conn_t * const conn = H2O_STRUCT_FROM_MEMBER(db_conn_t, timeout, timeout);
+	db_conn_t * const conn = H2O_STRUCT_FROM_MEMBER(db_conn_t, timer, timer);
 
 	ERROR(DB_TIMEOUT_ERROR);
 
@@ -402,20 +399,26 @@ static void on_database_write_ready(h2o_socket_t *sock, const char *err)
 		ERROR(err);
 		on_database_error(conn, err);
 	}
-	else {
-		const int send_status = PQflush(conn->conn);
+	else if (flush_connection(on_database_write_ready, conn))
+		on_database_error(conn, DB_ERROR);
+}
 
-		if (send_status < 0) {
-			LIBRARY_ERROR("PQflush", PQerrorMessage(conn->conn));
-			on_database_error(conn, DB_ERROR);
-		}
-		else {
-			if (send_status)
-				h2o_socket_notify_write(conn->sock, on_database_write_ready);
+static void on_process_queries(void *arg)
+{
+	db_conn_pool_t * const pool = arg;
 
-			process_queries(conn);
-		}
+	while (pool->queries.head && pool->conn) {
+		db_conn_t * const conn = H2O_STRUCT_FROM_MEMBER(db_conn_t, l, pool->conn);
+
+		pool->conn = conn->l.next;
+		assert(conn->query_num);
+		process_queries(conn, true);
 	}
+
+	if (pool->queries.head && pool->conn_num)
+		start_database_connect(pool, NULL);
+
+	pool->process_queries = false;
 }
 
 static void poll_database_connection(h2o_socket_t *sock, const char *err)
@@ -425,7 +428,7 @@ static void poll_database_connection(h2o_socket_t *sock, const char *err)
 	if (err)
 		ERROR(err);
 	else {
-		const PostgresPollingStatusType status = conn->flags & IS_RESETTING ?
+		const PostgresPollingStatusType status = conn->flags & RESET ?
 		                                         PQresetPoll(conn->conn) :
 		                                         PQconnectPoll(conn->conn);
 		const int sd = PQsocket(conn->conn);
@@ -450,7 +453,7 @@ static void poll_database_connection(h2o_socket_t *sock, const char *err)
 
 				return;
 			case PGRES_POLLING_OK:
-				h2o_timeout_unlink(&conn->timeout);
+				h2o_timer_unlink(&conn->timer);
 				h2o_socket_read_stop(conn->sock);
 
 				if (PQsetnonblocking(conn->conn, 1)) {
@@ -474,6 +477,7 @@ static void poll_database_connection(h2o_socket_t *sock, const char *err)
 					conn->sock = sock;
 				}
 
+				conn->flags &= ~RESET;
 				prepare_statements(conn);
 				return;
 			case PGRES_POLLING_READING:
@@ -518,24 +522,28 @@ static void prepare_statements(db_conn_t *conn)
 			iter = iter->next;
 		} while (iter);
 
-		if (!PQpipelineSync(conn->conn)) {
-			LIBRARY_ERROR("PQpipelineSync", PQerrorMessage(conn->conn));
+		if (!PQsendSyncMessage(conn->conn)) {
+			LIBRARY_ERROR("PQsendSyncMessage", PQerrorMessage(conn->conn));
 			on_database_connect_error(conn, false, DB_ERROR);
 			return;
 		}
 
 		conn->prepared_statement = NULL;
-		conn->timeout.cb = on_database_connect_timeout;
-		h2o_timeout_link(conn->pool->loop, &conn->pool->timeout, &conn->timeout);
+		conn->timer.cb = on_database_connect_timeout;
+		h2o_timer_link(conn->pool->loop, conn->pool->config->db_timeout * MS_IN_S, &conn->timer);
 		h2o_socket_read_start(conn->sock, on_database_connect_read_ready);
 		on_database_connect_write_ready(conn->sock, NULL);
 	}
-	else
-		process_queries(conn);
+	else {
+		h2o_socket_read_start(conn->sock, on_database_read_ready);
+		process_queries(conn, true);
+	}
 }
 
-static void process_queries(db_conn_t *conn)
+static void process_queries(db_conn_t *conn, bool removed)
 {
+	const bool flush = conn->query_num && conn->pool->queries.head;
+
 	while (conn->query_num && conn->pool->queries.head) {
 		db_query_param_t * const param = H2O_STRUCT_FROM_MEMBER(db_query_param_t,
 		                                                        l,
@@ -550,18 +558,32 @@ static void process_queries(db_conn_t *conn)
 
 		if (do_execute_query(conn, param)) {
 			param->on_error(param, DB_ERROR);
-
-			if (PQstatus(conn->conn) != CONNECTION_OK) {
-				on_database_error(conn, DB_ERROR);
-				return;
-			}
+			on_database_error(conn, DB_ERROR);
+			return;
 		}
 	}
 
-	if (!conn->queries.head && !(conn->flags & (EXPECT_SYNC | IGNORE_RESULT))) {
+	if (flush && flush_connection(on_database_write_ready, conn))
+		on_database_error(conn, DB_ERROR);
+	else if (conn->query_num && removed) {
 		conn->l.next = conn->pool->conn;
 		conn->pool->conn = &conn->l;
 	}
+	else if (!conn->query_num && !removed)
+		// This call should not be problematic, assuming a relatively low number of connections.
+		remove_connection(conn);
+}
+
+static void remove_connection(db_conn_t *conn)
+{
+	list_t *iter = conn->pool->conn;
+	list_t **prev = &conn->pool->conn;
+
+	for (; iter && iter != &conn->l; iter = iter->next)
+		prev = &iter->next;
+
+	if (iter)
+		*prev = iter->next;
 }
 
 static void start_database_connect(db_conn_pool_t *pool, db_conn_t *conn)
@@ -569,7 +591,7 @@ static void start_database_connect(db_conn_pool_t *pool, db_conn_t *conn)
 	if (conn) {
 		PGconn * const c = conn->conn;
 
-		h2o_timeout_unlink(&conn->timeout);
+		h2o_timer_unlink(&conn->timer);
 		h2o_socket_read_stop(conn->sock);
 		h2o_socket_close(conn->sock);
 
@@ -580,7 +602,7 @@ static void start_database_connect(db_conn_pool_t *pool, db_conn_t *conn)
 
 		memset(conn, 0, sizeof(*conn));
 		conn->conn = c;
-		conn->flags = IS_RESETTING;
+		conn->flags = RESET;
 	}
 	else {
 		assert(pool->conn_num);
@@ -610,8 +632,8 @@ static void start_database_connect(db_conn_pool_t *pool, db_conn_t *conn)
 		conn->prepared_statement = pool->prepared_statements;
 		conn->queries.tail = &conn->queries.head;
 		conn->query_num = pool->config->max_pipeline_query_num;
-		conn->timeout.cb = on_database_connect_timeout;
-		h2o_timeout_link(pool->loop, &pool->timeout, &conn->timeout);
+		conn->timer.cb = on_database_connect_timeout;
+		h2o_timer_link(pool->loop, pool->config->db_timeout * MS_IN_S, &conn->timer);
 		h2o_socket_notify_write(conn->sock, poll_database_connection);
 		return;
 	}
@@ -638,33 +660,37 @@ int execute_database_query(db_conn_pool_t *pool, db_query_param_t *param)
 {
 	int ret = 1;
 
-	if (pool->conn) {
-		db_conn_t * const conn = H2O_STRUCT_FROM_MEMBER(db_conn_t, l, pool->conn);
+	if (pool->query_num) {
+		if (pool->conn) {
+			// Delay sending the database queries to the server, so that if there is a rapid
+			// succession of calls to this function, all resultant queries would be inserted
+			// into a command pipeline with a smaller number of system calls.
+			if (!pool->process_queries) {
+				task_message_t * const msg = h2o_mem_alloc(sizeof(*msg));
 
-		assert(!conn->queries.head);
-		assert(!(conn->flags & (EXPECT_SYNC | IGNORE_RESULT)));
-		pool->conn = conn->l.next;
-		ret = do_execute_query(conn, param);
-
-		if (ret) {
-			if (PQstatus(conn->conn) == CONNECTION_OK) {
-				conn->l.next = pool->conn;
-				pool->conn = &conn->l;
+				memset(msg, 0, sizeof(*msg));
+				msg->arg = pool;
+				msg->super.type = TASK;
+				msg->task = on_process_queries;
+				send_message(&msg->super, pool->receiver);
+				pool->process_queries = true;
 			}
-			else
-				start_database_connect(conn->pool, conn);
-		}
-	}
-	else if (pool->query_num) {
-		if (pool->conn_num)
-			start_database_connect(pool, NULL);
 
-		if (pool->conn_num < pool->config->max_db_conn_num && pool->query_num) {
+			ret = 0;
+		}
+		else {
+			if (pool->conn_num)
+				start_database_connect(pool, NULL);
+
+			if (pool->conn_num < pool->config->max_db_conn_num && pool->query_num)
+				ret = 0;
+		}
+
+		if (!ret) {
 			param->l.next = NULL;
 			*pool->queries.tail = &param->l;
 			pool->queries.tail = &param->l.next;
 			pool->query_num--;
-			ret = 0;
 		}
 	}
 
@@ -684,8 +710,8 @@ void free_database_connection_pool(db_conn_pool_t *pool)
 
 			assert(!conn->queries.head);
 			assert(conn->query_num == pool->config->max_pipeline_query_num);
-			assert(!(conn->flags & (EXPECT_SYNC | IGNORE_RESULT)));
-			assert(!h2o_timeout_is_linked(&conn->timeout));
+			assert(!(conn->flags & (EXPECT_SYNC | IGNORE_RESULT | RESET)));
+			assert(!h2o_timer_is_linked(&conn->timer));
 			h2o_socket_read_stop(conn->sock);
 			h2o_socket_close(conn->sock);
 			PQfinish(conn->conn);
@@ -695,13 +721,13 @@ void free_database_connection_pool(db_conn_pool_t *pool)
 		} while (pool->conn);
 
 	assert(num + pool->conn_num == pool->config->max_db_conn_num);
-	h2o_timeout_dispose(pool->loop, &pool->timeout);
 }
 
 void initialize_database_connection_pool(const char *conninfo,
                                          const struct config_t *config,
                                          const list_t *prepared_statements,
                                          h2o_loop_t *loop,
+                                         h2o_multithread_receiver_t *receiver,
                                          db_conn_pool_t *pool)
 {
 	memset(pool, 0, sizeof(*pool));
@@ -710,9 +736,9 @@ void initialize_database_connection_pool(const char *conninfo,
 	pool->loop = loop;
 	pool->prepared_statements = prepared_statements;
 	pool->queries.tail = &pool->queries.head;
+	pool->receiver = receiver;
 	pool->conn_num = config->max_db_conn_num;
 	pool->query_num = config->max_query_num;
-	h2o_timeout_init(loop, &pool->timeout, config->db_timeout * MS_IN_S);
 }
 
 void remove_prepared_statements(list_t *prepared_statements)

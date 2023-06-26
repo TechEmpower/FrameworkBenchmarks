@@ -22,6 +22,7 @@
 #define DATABASE_H_
 
 #include <h2o.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <postgresql/libpq-fe.h>
 
@@ -63,12 +64,13 @@ typedef struct {
 	const char *conninfo;
 	h2o_loop_t *loop;
 	const list_t *prepared_statements;
+	h2o_multithread_receiver_t *receiver;
 	// We use a FIFO queue instead of a simpler stack, otherwise the earlier queries may wait
 	// an unbounded amount of time to be executed.
 	queue_t queries;
 	size_t conn_num;
 	size_t query_num;
-	h2o_timeout_t timeout;
+	bool process_queries;
 } db_conn_pool_t;
 
 void add_prepared_statement(const char *name, const char *query, list_t **prepared_statements);
@@ -78,6 +80,7 @@ void initialize_database_connection_pool(const char *conninfo,
                                          const struct config_t *config,
                                          const list_t *prepared_statements,
                                          h2o_loop_t *loop,
+                                         h2o_multithread_receiver_t *receiver,
                                          db_conn_pool_t *pool);
 void remove_prepared_statements(list_t *prepared_statements);
 

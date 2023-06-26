@@ -1,15 +1,10 @@
-FROM rust:1.62.1
-
-# Disable simd at jsonescape
-ENV CARGO_CFG_JSONESCAPE_DISABLE_AUTO_SIMD=
-
-RUN apt-get update -yqq && apt-get install -yqq cmake g++
+FROM rust:1.68.2
 
 ADD ./ /salvo
 WORKDIR /salvo
 
-RUN cargo clean
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
+ENV RUSTFLAGS "-C target-cpu=native"
+RUN cargo build --release
 
 EXPOSE 8080
 

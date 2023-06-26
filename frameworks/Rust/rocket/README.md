@@ -6,7 +6,7 @@
 Rocket is a web framework for Rust that makes it simple to write fast web applications without sacrificing flexibility or type safety. All with minimal code.
 
 * [User Guide](https://rocket.rs/guide/)
-* [API Documentation](https://api.rocket.rs/rocket/)
+* [API Documentation](https://api.rocket.rs/v0.5-rc/rocket/)
 * Cargo package: [rocket](https://crates.io/crates/rocket)
 
 ## Database

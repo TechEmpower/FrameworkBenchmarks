@@ -2,7 +2,7 @@ use std::borrow::Cow;
 
 use serde::Serialize;
 
-#[derive(Clone, Copy, Serialize, Debug, yarte::Serialize)]
+#[derive(Serialize, Debug, yarte::Serialize)]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,

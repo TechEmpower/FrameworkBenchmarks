@@ -38,26 +38,26 @@
 #include "thread.h"
 
 static void *run_thread(void *arg);
-static void set_thread_memory_allocation_policy(size_t thread_num);
+static void set_thread_memory_allocation_policy(void);
 
 static void *run_thread(void *arg)
 {
 	thread_context_t ctx;
 
 	initialize_thread_context(arg, false, &ctx);
-	set_thread_memory_allocation_policy(ctx.global_thread_data->config->thread_num);
+
+	// There is no need to set a memory allocation policy unless
+	// the application controls the processor affinity as well.
+	if (!(ctx.global_thread_data->config->thread_num % h2o_numproc()))
+		set_thread_memory_allocation_policy();
+
 	event_loop(&ctx);
 	free_thread_context(&ctx);
 	pthread_exit(NULL);
 }
 
-static void set_thread_memory_allocation_policy(size_t thread_num)
+static void set_thread_memory_allocation_policy(void)
 {
-	// There is no need to set a memory allocation policy unless
-	// the application controls the processor affinity as well.
-	if (thread_num % h2o_numproc())
-		return;
-
 	void *stack_addr;
 	size_t stack_size;
 	unsigned memory_node;
@@ -74,14 +74,16 @@ static void set_thread_memory_allocation_policy(size_t thread_num)
 	memset(nodemask, 0, sizeof(nodemask));
 	nodemask[memory_node / (sizeof(*nodemask) * CHAR_BIT)] |=
 		1UL << (memory_node % (sizeof(*nodemask) * CHAR_BIT));
-	CHECK_ERRNO(mbind,
-	            stack_addr,
-	            stack_size,
-	            MPOL_PREFERRED,
-	            nodemask,
-	            memory_node + 1,
-	            MPOL_MF_MOVE | MPOL_MF_STRICT);
-	CHECK_ERRNO(set_mempolicy, MPOL_PREFERRED, NULL, 0);
+
+	if (mbind(stack_addr,
+	          stack_size,
+	          MPOL_PREFERRED,
+	          nodemask,
+	          memory_node + 1,
+	          MPOL_MF_MOVE | MPOL_MF_STRICT))
+		STANDARD_ERROR("mbind");
+	else if (set_mempolicy(MPOL_PREFERRED, NULL, 0))
+		STANDARD_ERROR("set_mempolicy");
 }
 
 void free_thread_context(thread_context_t *ctx)

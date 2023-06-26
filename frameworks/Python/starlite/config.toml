@@ -1,7 +1,7 @@
 [framework]
 name = "starlite"
 
-[main]
+[uvicorn]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
@@ -15,5 +15,5 @@ database_os = "Linux"
 os = "Linux"
 orm = "Raw"
 platform = "None"
-webserver = "None"
+webserver = "Uvicorn"
 versus = "None"

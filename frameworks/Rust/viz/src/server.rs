@@ -12,10 +12,8 @@ pub fn builder() -> hyper::server::Builder<AddrIncoming> {
     println!("Started viz server at 8080");
 
     viz::Server::builder(incoming)
-        .tcp_keepalive(None)
-        .tcp_nodelay(true)
         .http1_only(true)
-        .http1_pipeline_flush(true)
+        .tcp_nodelay(true)
 }
 
 fn reuse_listener(addr: SocketAddr) -> io::Result<TcpListener> {
@@ -27,7 +25,7 @@ fn reuse_listener(addr: SocketAddr) -> io::Result<TcpListener> {
     #[cfg(unix)]
     {
         if let Err(e) = socket.set_reuseport(true) {
-            eprintln!("error setting SO_REUSEPORT: {}", e);
+            eprintln!("error setting SO_REUSEPORT: {e}");
         }
     }
 

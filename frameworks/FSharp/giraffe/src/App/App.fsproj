@@ -3,13 +3,16 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
+
+    <!-- Settings applicable to JIT-based deployment -->
+    <TieredPGO>true</TieredPGO>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="7.0.0" />
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Giraffe" Version="6.0.0" />
-    <PackageReference Include="Npgsql" Version="7.0.0" />
+    <PackageReference Include="Npgsql" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>

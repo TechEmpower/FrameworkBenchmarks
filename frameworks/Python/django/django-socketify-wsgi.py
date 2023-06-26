@@ -1,9 +1,13 @@
-from socketify import WSGI
 import os
+import sys
 import multiprocessing
 import logging
+import socketify
 
-from hello_socketify.hello.wsgi import application
+app_dir = os.path.dirname(os.path.abspath(__file__)) + '/hello'
+sys.path.append(app_dir)
+
+from hello.wsgi import application as app
 
 
 _is_travis = os.environ.get('TRAVIS') == 'true'
@@ -14,7 +18,8 @@ if _is_travis:
 
 
 def run_app():
-    WSGI(application).listen(8080, lambda config: logging.info(f"Listening on port http://localhost:{config.port} now\n")).run()
+    msg = f"Listening on port 8080 now\n"
+    socketify.WSGI(app).listen(8080, lambda config: logging.info(msg)).run()
 
 
 def create_fork():

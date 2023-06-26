@@ -23,12 +23,10 @@
         "versus": "nodejs"
       },
       "mysql": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "cached_query_url": "/cached-worlds?count=",
         "port": 8080,
         "approach": "Realistic",
@@ -39,16 +37,14 @@
         "orm": "Full",
         "database": "MySQL",
         "database_os": "Linux",
-        "display_name": "nestjs",
+        "display_name": "nestjs mysql",
         "versus": "nodejs"
       },
       "mongo": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "cached_query_url": "/cached-worlds?count=",
         "port": 8080,
         "approach": "Realistic",
@@ -79,16 +75,14 @@
         "orm": "Full",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "nestjs",
+        "display_name": "nestjs fastify",
         "versus": "nodejs"
       },
       "fastify-mysql": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "cached_query_url": "/cached-worlds?count=",
         "port": 8080,
         "approach": "Realistic",
@@ -99,16 +93,14 @@
         "orm": "Full",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "nestjs",
+        "display_name": "nestjs fastify mysql",
         "versus": "nodejs"
       },
       "fastify-mongo": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "cached_query_url": "/cached-worlds?count=",
         "port": 8080,
         "approach": "Realistic",
@@ -119,7 +111,7 @@
         "orm": "Full",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "nestjs",
+        "display_name": "nestjs fastify mongo",
         "versus": "nodejs"
       }
     }

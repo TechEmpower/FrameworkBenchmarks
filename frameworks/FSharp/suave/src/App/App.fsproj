@@ -4,6 +4,8 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <ServerGarbageCollection>true</ServerGarbageCollection>
+    <!-- Settings applicable to JIT-based deployment -->
+    <TieredPGO>true</TieredPGO>
   </PropertyGroup>
 
   <ItemGroup>

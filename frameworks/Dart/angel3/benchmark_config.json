@@ -21,13 +21,11 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Angel3",
+        "display_name": "Angel3_postgresql",
         "notes": "",
         "versus": "None"
       },
       "mysql": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/query?queries=",
         "fortune_url": "/fortunes",
@@ -43,7 +41,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Angel3",
+        "display_name": "Angel3_mysql",
         "notes": "",
         "versus": "None"
       }

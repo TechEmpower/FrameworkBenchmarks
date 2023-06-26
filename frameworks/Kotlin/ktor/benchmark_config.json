@@ -6,7 +6,7 @@
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "db_url": "/db",
-        "query_url": "/db?queries=",
+        "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
         "fortune_url": "/fortunes",
 
@@ -29,7 +29,7 @@
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "db_url": "/db",
-        "query_url": "/db?queries=",
+        "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
         "fortune_url": "/fortunes",
 
@@ -52,7 +52,7 @@
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "db_url": "/db",
-        "query_url": "/db?queries=",
+        "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
         "fortune_url": "/fortunes",
 
@@ -139,6 +139,46 @@
         "display_name": "ktor-pgclient",
         "notes": "http://ktor.io/",
         "versus": "netty"
+      },
+      "exposed-dsl": {
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "ktor",
+        "language": "Kotlin",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ktor-netty-exposed-dsl",
+        "notes": "",
+        "versus": "ktor"
+      },
+      "exposed-dao": {
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "ktor",
+        "language": "Kotlin",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ktor-netty-exposed-dao",
+        "notes": "",
+        "versus": "ktor"
       }
     }
   ]

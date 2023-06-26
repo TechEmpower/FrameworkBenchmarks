@@ -30,7 +30,7 @@ module.exports = databaseLayer => ({
     fortunes.push(h.additionalFortune);
     fortunes.sort(compare);
 
-    reply.view("fortunes.hbs", { fortunes });
+    return reply.view("/views/fortunes.hbs", { fortunes });
   },
 
   updates: async (req, reply) => {

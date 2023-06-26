@@ -19,19 +19,11 @@ import org.smartboot.http.server.handler.HttpRouteHandler;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 public class Bootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
-        ExecutorService executorService = new ThreadPoolExecutor(1, 1,
-                0L, TimeUnit.MILLISECONDS,
-                new ArrayBlockingQueue<>(128), new ThreadPoolExecutor.CallerRunsPolicy());
         HttpRouteHandler routeHandle = new HttpRouteHandler();
         routeHandle
                 .route("/plaintext", new HttpServerHandler() {
@@ -45,16 +37,12 @@ public class Bootstrap {
                     }
                 })
                 .route("/json", new HttpServerHandler() {
+
                     @Override
-                    public void handle(HttpRequest request, HttpResponse response, CompletableFuture<Object> completableFuture) throws IOException {
-                        executorService.execute(() -> {
-                            try {
-                                response.setContentType("application/json");
-                                JsonUtil.writeJsonBytes(response, new Message("Hello, World!"));
-                            } finally {
-                                completableFuture.complete(null);
-                            }
-                        });
+                    public void handle(HttpRequest request, HttpResponse response) throws IOException {
+
+                        response.setContentType("application/json");
+                        JsonUtil.writeJsonBytes(response, new Message("Hello, World!"));
                     }
                 });
         initDB(routeHandle);

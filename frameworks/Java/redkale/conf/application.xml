@@ -2,10 +2,7 @@
 
 <application port="8585">     
     
-    <executor threads="0"/>
-    
     <properties>    
-        <property name="system.property.redkale.convert.tiny" value="false"/>    
         <property name="system.property.redkale.http.request.pipeline.sameheaders" value="true"/>  
         <property name="system.property.redkale.http.response.header.server" value="redkale"/>
         <property name="system.property.redkale.http.response.header.connection" value="none"/>

@@ -49,6 +49,7 @@ webserver = "xitca-server"
 versus = ""
 
 [wasm]
+urls.json = "/json"
 urls.plaintext = "/plaintext"
 approach = "Realistic"
 classification = "Micro"

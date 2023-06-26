@@ -1,4 +1,4 @@
-FROM rust:1.60-slim-buster
+FROM rust:1.67-slim-buster
 
 ENV AXUM_TECHEMPOWER_MONGODB_URL=mongodb://tfb-database:27017
 ENV AXUM_TECHEMPOWER_MAX_POOL_SIZE=28

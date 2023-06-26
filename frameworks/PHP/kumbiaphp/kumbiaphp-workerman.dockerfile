@@ -23,8 +23,6 @@ RUN git clone -b dev --single-branch --depth 1 https://github.com/KumbiaPHP/Kumb
 RUN sed -i "s|header(|\\\Workerman\\\Protocols\\\Http::header(|g" bench/app/controllers/plaintext_controller.php
 RUN sed -i "s|header(|\\\Workerman\\\Protocols\\\Http::header(|g" bench/app/controllers/json_controller.php
 RUN sed -i "s|//KuRaw::init(|KuRaw::init(|g" server.php
-#RUN sed -i "s|opcache.jit=tracing|opcache.jit=function|g" /etc/php/8.1/cli/php.ini
-RUN sed -i "s|opcache.jit_buffer_size=128M|;opcache.jit_buffer_size=128M|g" /etc/php/8.1/cli/php.ini
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 

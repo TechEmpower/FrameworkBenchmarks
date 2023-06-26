@@ -153,6 +153,7 @@ func main() {
 	r.GET("/fortunes", fortunes)
 	r.GET("/update", update)
 	r.GET("/plaintext", plaintext)
+	fmt.Println("Listening and serving HTTP")
 	r.Run(":8080")
 }
 
