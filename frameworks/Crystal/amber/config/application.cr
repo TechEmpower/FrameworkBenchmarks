@@ -27,7 +27,7 @@ Amber::Server.configure do |settings|
   #
   # > Read more about Linux PORT REUSE https://lwn.net/Articles/542629/
   #
-  settings.port_reuse = true
+  settings.port_reuse = false
   #
   #
   # Process Count: This will enable Amber to be used in cluster mode,
