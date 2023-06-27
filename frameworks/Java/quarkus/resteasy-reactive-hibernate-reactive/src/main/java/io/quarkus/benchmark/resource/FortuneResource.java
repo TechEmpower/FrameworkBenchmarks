@@ -34,7 +34,7 @@ public class FortuneResource  {
     @Inject
     FortuneRepository repository;
 
-    private static final Comparator<Fortune> fortuneComparator = Comparator.comparing(fortune -> fortune.getMessage());
+    private static final Comparator<Fortune> fortuneComparator = Comparator.comparing(Fortune::getMessage);
 
     @Produces("text/html; charset=UTF-8")
     @GET
