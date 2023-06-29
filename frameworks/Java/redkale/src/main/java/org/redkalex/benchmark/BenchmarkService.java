@@ -12,6 +12,7 @@ import org.redkale.annotation.*;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.DataSource;
+import org.redkale.util.*;
 
 /**
  *
@@ -26,6 +27,22 @@ public class BenchmarkService extends AbstractService {
     @Resource
     private DataSource source;
 
+    @Override
+    public void init(AnyValue conf){
+        World w = new World();
+        testFieldName(Fortune::getMessage); 
+        testFieldName(World::getId); 
+        testFieldName(w::getId); 
+    }
+    
+    private static <T> void testFieldName(LambdaFunction<T, ?> func) {
+        System.out.println("" + LambdaFunction.readColumn(func));
+    }
+
+    private static void testFieldName(LambdaSupplier func) {
+        System.out.println("" + LambdaSupplier.readColumn(func));
+    }
+    
     @RestMapping(auth = false)
     public byte[] plaintext() {
         return helloBytes;
