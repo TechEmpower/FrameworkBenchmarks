@@ -28,13 +28,17 @@ public class BenchmarkService extends AbstractService {
     private DataSource source;
 
     @Override
-    public void init(AnyValue conf){
-        World w = new World();
-        testFieldName(Fortune::getMessage); 
-        testFieldName(World::getId); 
-        testFieldName(w::getId); 
+    public void init(AnyValue conf) {
+        try {
+            World w = new World();
+            testFieldName(Fortune::getMessage);
+            testFieldName(World::getId);
+            testFieldName(w::getId);
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
     }
-    
+
     private static <T> void testFieldName(LambdaFunction<T, ?> func) {
         System.out.println("" + LambdaFunction.readColumn(func));
     }
@@ -42,7 +46,7 @@ public class BenchmarkService extends AbstractService {
     private static void testFieldName(LambdaSupplier func) {
         System.out.println("" + LambdaSupplier.readColumn(func));
     }
-    
+
     @RestMapping(auth = false)
     public byte[] plaintext() {
         return helloBytes;
