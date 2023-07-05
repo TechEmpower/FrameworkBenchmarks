@@ -8,7 +8,7 @@ import javax.sql.DataSource;
 import static io.jooby.ExecutionMode.EVENT_LOOP;
 import static io.jooby.Jooby.runApp;
 
-public class JaxrsApp {
+public class MvcApp {
   public static void main(String[] args) {
     runApp(args, EVENT_LOOP, app -> {
       /** Database: */
