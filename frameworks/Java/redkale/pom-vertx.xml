@@ -10,8 +10,8 @@
         <redkale.version>2.8.0-SNAPSHOT</redkale.version>
         <vertx.version>4.4.4</vertx.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>18</maven.compiler.source>
+        <maven.compiler.target>18</maven.compiler.target>
     </properties> 
 
     <dependencies>  
