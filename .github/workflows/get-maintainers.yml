@@ -25,7 +25,7 @@ jobs:
           architecture: 'x64'
       - name: Save PR number
         run: |
-          mkdir -p ./pr
+          mkdir -p ./maintainers
           echo ${{ github.event.number }} > ./maintainers/NR
       - name: Get Maintainers
         run: |
