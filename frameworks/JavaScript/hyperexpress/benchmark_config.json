@@ -42,6 +42,28 @@
         "display_name": "hyperexpress",
         "notes": "",
         "versus": "nodejs"
+      },
+      "mysql": {
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "cached_query_url": "/cached-worlds?count=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "MySQL",
+        "framework": "hyperexpress",
+        "language": "JavaScript",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "NodeJS",
+        "webserver": "µws",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "hyperexpress",
+        "notes": "",
+        "versus": "nodejs"
       }
     }
   ]

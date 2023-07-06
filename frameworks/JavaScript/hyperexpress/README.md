@@ -10,12 +10,15 @@ The tests were run with:
 
 - [hyper-express](https://github.com/kartikk221/hyper-express)
 - [postgres](https://github.com/porsager/postgres)
+- [mysql2](https://github.com/sidorares/node-mysql2)
+- [lru-cache](https://github.com/isaacs/node-lru-cache)
 
 ## Database
 
 There are individual handlers for each DB approach. The logic for each of them are found here:
 
 - [Postgres](database/postgres.js)
+- [MySQL](database/mysql.js)
 
 There are **no database endpoints** or drivers attached by default.
 
@@ -23,6 +26,7 @@ To initialize the application with one of these, run any _one_ of the following 
 
 ```sh
 $ DATABASE=postgres npm start
+$ DATABASE=mysql npm start
 ```
 
 ## Test Endpoints
@@ -38,17 +42,17 @@ $ curl localhost:8080/plaintext
 $ curl localhost:8080/db
 $ curl localhost:8080/fortunes
 
-$ curl localhost:8080/queries?queries=
 $ curl localhost:8080/queries?queries=2
-$ curl localhost:8080/queries?queries=1000
-$ curl localhost:8080/queries?queries=foo
 $ curl localhost:8080/queries?queries=0
+$ curl localhost:8080/queries?queries=foo
+$ curl localhost:8080/queries?queries=501
+$ curl localhost:8080/queries?queries=
 
-$ curl localhost:8080/updates?queries=
 $ curl localhost:8080/updates?queries=2
-$ curl localhost:8080/updates?queries=1000
-$ curl localhost:8080/updates?queries=foo
 $ curl localhost:8080/updates?queries=0
+$ curl localhost:8080/updates?queries=foo
+$ curl localhost:8080/updates?queries=501
+$ curl localhost:8080/updates?queries=
 
 $ curl localhost:8080/cached-worlds?count=2
 $ curl localhost:8080/cached-worlds?count=0

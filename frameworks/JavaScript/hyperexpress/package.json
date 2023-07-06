@@ -12,6 +12,7 @@
     "html-escaper": "^3.0.3",
     "hyper-express": "^6.7.1",
     "lru-cache": "^10.0.0",
+    "mysql2": "^3.5.0",
     "postgres": "^3.3.5"
   },
   "type": "module"
