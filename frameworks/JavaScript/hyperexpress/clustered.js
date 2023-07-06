@@ -1,5 +1,5 @@
 import cluster, { isPrimary, setupPrimary, fork } from 'node:cluster'
-import {cpus} from 'node:os'
+import { cpus } from 'node:os'
 
 if (isPrimary) {
   setupPrimary({

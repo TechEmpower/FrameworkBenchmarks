@@ -1,7 +1,7 @@
 import { escape } from 'html-escaper'
 import { Server } from 'hyper-express'
-import { isWorker, worker } from 'node:cluster'
 import { LRUCache } from 'lru-cache'
+import { isWorker, worker } from 'node:cluster'
 import { maxQuery, maxRows, message, json, extra } from './config.js'
 const { DATABASE } = process.env
 const db = DATABASE ? await import(`./database/${DATABASE}.js`) : null
@@ -37,7 +37,7 @@ app.get('/json', (_request, response) => {
 if (db) {
   // populate cache
   (async () => {
-    const worlds = await db.getAllWorlds();
+    const worlds = await db.getAllWorlds()
     for (let i = 0; i < worlds.length; i++) {
       cache.set(worlds[i].id, worlds[i])
     }
@@ -55,13 +55,13 @@ if (db) {
   app.get('/queries', async (request, response) => {
     try {
       const queries = parseQueries(request.query.queries)
-      const worldPromises = [];
+      const worldPromises = []
 
       for (let i = 0; i < queries; i++) {
-        worldPromises.push(db.find(generateRandomNumber()));
+        worldPromises.push(db.find(generateRandomNumber()))
       }
 
-      const worlds = await Promise.all(worldPromises);
+      const worlds = await Promise.all(worldPromises)
       response.json(worlds)
     } catch (error) {
       throw error
@@ -71,13 +71,13 @@ if (db) {
   app.get('/updates', async (request, response) => {
     try {
       const queries = parseQueries(request.query.queries)
-      const worldPromises = [];
+      const worldPromises = []
 
       for (let i = 0; i < queries; i++) {
-        worldPromises.push(db.find(generateRandomNumber()));
+        worldPromises.push(db.find(generateRandomNumber()))
       }
 
-      const worlds = await Promise.all(worldPromises);
+      const worlds = await Promise.all(worldPromises)
 
       const updatedWorlds = await Promise.all(worlds.map(async (world) => {
         world.randomNumber = generateRandomNumber()
@@ -98,9 +98,9 @@ if (db) {
 
       fortunes.sort((a, b) => a.message.localeCompare(b.message))
 
-      let i = 0, html = '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>';
-      for (; i < fortunes.length; i++) html += `<tr><td>${fortunes[i].id}</td><td>${escape(fortunes[i].message)}</td></tr>`;
-      html += '</table></body></html>';
+      let i = 0, html = '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
+      for (; i < fortunes.length; i++) html += `<tr><td>${fortunes[i].id}</td><td>${escape(fortunes[i].message)}</td></tr>`
+      html += '</table></body></html>'
 
       response.atomic(() => {
         response
@@ -116,10 +116,10 @@ if (db) {
   app.get('/cached-worlds', async (request, response) => {
     try {
       const count = parseQueries(request.query.count)
-      const worlds = [];
+      const worlds = []
 
       for (let i = 0; i < count; i++) {
-        worlds[i] = cache.get(generateRandomNumber());
+        worlds[i] = cache.get(generateRandomNumber())
       }
 
       response.json(worlds)
@@ -130,5 +130,5 @@ if (db) {
 }
 
 app.listen(8080).then(() => {
-  console.log(`${isWorker ? `${worker.id}: `: ''}Successfully bound to http://0.0.0.0:8080`);
+  console.log(`${isWorker ? `${worker.id}: ` : ''}Successfully bound to http://0.0.0.0:8080`)
 })

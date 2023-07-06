@@ -3,3 +3,9 @@ export const maxRows = 10000
 export const message = 'Hello, World!'
 export const json = { message }
 export const extra = { id: 0, message: 'Additional fortune added at request time.' }
+export const clientOpts = {
+  host: 'tfb-database',
+  user: 'benchmarkdbuser',
+  password: 'benchmarkdbpass',
+  database: 'hello_world',
+}
