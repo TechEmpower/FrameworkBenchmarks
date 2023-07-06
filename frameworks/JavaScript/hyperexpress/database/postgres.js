@@ -10,7 +10,7 @@ const res = await sql`SHOW max_connections`
 let maxConnections = 150
 
 if (isWorker) {
-  maxConnections = cpus().length < 16 ? maxConnections: Math.ceil(res[0].max_connections * 0.96 / cpus().length)
+  maxConnections = cpus().length > 2 ? Math.ceil(res[0].max_connections * 0.96 / cpus().length): maxConnections 
 }
 
 export const fortunes = async () => sql`SELECT * FROM fortune`
