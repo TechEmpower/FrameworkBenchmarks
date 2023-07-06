@@ -1,0 +1,42 @@
+name: Ping maintainers
+on: 
+  pull_request:
+    types: [opened, reopened]
+permissions:
+  pull-requests: write
+jobs:
+  ping_maintainers:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 10
+      - name: Get commit branch and commit message from PR
+        run: |
+          echo "BRANCH_NAME=$GITHUB_HEAD_REF" >> $GITHUB_ENV
+          echo "TARGET_BRANCH_NAME=$(echo ${GITHUB_BASE_REF##*/})" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE<<EOF" >> $GITHUB_ENV
+          echo "$(git log --format=%B -n 1 HEAD^2)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "PREVIOUS_COMMIT=$(git log --format=%H -n 1 HEAD^2~1)" >> $GITHUB_ENV
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          architecture: 'x64'
+      - name: Get Maintainers
+        run: |
+          echo "MAINTAINERS_COMMENT<<EOF" >> $GITHUB_ENV
+          echo "$(./toolset/github_actions/get_maintainers.py)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      - name: Ping maintainers
+        if: env.MAINTAINERS_COMMENT
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: process.env.MAINTAINERS_COMMENT
+            });
