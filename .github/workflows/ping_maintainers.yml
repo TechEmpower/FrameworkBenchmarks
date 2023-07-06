@@ -4,6 +4,7 @@ on:
     types: [opened, reopened]
 permissions:
   pull-requests: write
+  contents: write
 jobs:
   ping_maintainers:
     runs-on: ubuntu-22.04
