@@ -1,4 +1,4 @@
-name: Get Maintainers
+name: get-maintainers
 on: 
   pull_request:
     types: [opened, reopened]

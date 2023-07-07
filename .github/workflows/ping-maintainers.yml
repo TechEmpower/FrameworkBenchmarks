@@ -20,7 +20,7 @@ jobs:
             let matchArtifact = artifacts.data.artifacts.filter((artifact) => {
               return artifact.name == "maintainers"
             })[0];
-            let download = await github.actions.downloadArtifact({
+            let download = await github.rest.actions.downloadArtifact({
                owner: context.repo.owner,
                repo: context.repo.repo,
                artifact_id: matchArtifact.id,
