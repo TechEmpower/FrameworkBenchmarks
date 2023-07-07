@@ -22,9 +22,6 @@ jobs:
             let maintainerArtifacts = artifacts.data.artifacts.filter((artifact) => {
               return artifact.name == "maintainers"
             })[0];
-            if (maintainerArtifacts === undefined) {
-              return;
-            }
             let download = await github.rest.actions.downloadArtifact({
                owner: context.repo.owner,
                repo: context.repo.repo,
@@ -42,9 +39,11 @@ jobs:
             let fs = require('fs');
             let issue_number = Number(fs.readFileSync('./NR'));
             let maintainers_comment = fs.readFileSync('./maintainers.md', 'utf8');
-            await github.rest.issues.createComment({
-              issue_number: issue_number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: maintainers_comment
-            });
+            if (maintainers_comment) {
+              await github.rest.issues.createComment({
+                issue_number: issue_number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: maintainers_comment
+              });
+            }
