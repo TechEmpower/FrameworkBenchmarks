@@ -19,9 +19,12 @@ jobs:
                repo: context.repo.repo,
                run_id: ${{github.event.workflow_run.id }},
             });
-            let matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+            let maintainerArtifacts = artifacts.data.artifacts.filter((artifact) => {
               return artifact.name == "maintainers"
             })[0];
+            if (maintainerArtifacts === undefined) {
+              return;
+            }
             let download = await github.rest.actions.downloadArtifact({
                owner: context.repo.owner,
                repo: context.repo.repo,
