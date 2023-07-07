@@ -38,7 +38,7 @@ jobs:
           script: |
             let fs = require('fs');
             let issue_number = Number(fs.readFileSync('./NR'));
-            let maintainers_comment = fs.readFileSync('./maintainers.md');
+            let maintainers_comment = fs.readFileSync('./maintainers.md', 'utf8'');
             await github.rest.issues.createComment({
               issue_number: issue_number,
               owner: context.repo.owner,
