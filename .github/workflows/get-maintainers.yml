@@ -29,15 +29,8 @@ jobs:
           echo ${{ github.event.number }} > ./maintainers/NR
       - name: Get Maintainers
         run: |
-          echo "MAINTAINERS<<EOF" >> $GITHUB_ENV
-          echo $(./toolset/github_actions/get_maintainers.py) > ./maintainers/maintainers.md
-          echo "EOF" >> $GITHUB_ENV
-      - name: Write Maintainers
-        if: ${{ env.MAINTAINERS }}
-        run: |
-          echo ${{ env.MAINTAINERS }} > ./maintainers/maintainers.md
+          python ./toolset/github_actions/get_maintainers.py > ./maintainers/maintainers.md
       - name: Save Maintainers
-        if: ${{ env.MAINTAINERS }}
         uses: actions/upload-artifact@v3
         with:
           name: maintainers
