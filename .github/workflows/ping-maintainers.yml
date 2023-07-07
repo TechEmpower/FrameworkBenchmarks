@@ -4,6 +4,8 @@ on:
     workflows: [ "get-maintainers"]
     types:
       - completed
+permissions:
+  pull-requests: write
 jobs:
   ping_maintainers:
     runs-on: ubuntu-22.04
@@ -37,7 +39,7 @@ jobs:
             let fs = require('fs');
             let issue_number = Number(fs.readFileSync('./NR'));
             let maintainers_comment = fs.readFileSync('./maintainers.md');
-            github.rest.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: issue_number,
               owner: context.repo.owner,
               repo: context.repo.repo,
