@@ -154,6 +154,8 @@ if __name__ == "__main__":
     cherrypy.server.socket_host = '0.0.0.0'
     cherrypy.server.socket_port = 8080
     cherrypy.server.thread_pool = workers
+    cherrypy.server.socket_queue_size = 25
+
     cherrypy.quickstart(CherryPyBenchmark(), '', {
         '/': {
             'tools.db.on': True,

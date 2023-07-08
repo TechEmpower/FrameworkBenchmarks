@@ -48,7 +48,7 @@ jobs:
           echo "PREVIOUS_COMMIT=$(git log --format=%H -n 1 HEAD^2~1)" >> $GITHUB_ENV
       - uses: actions/setup-python@v4
         with:
-          python-version: '2.7'
+          python-version: '3.10'
           architecture: 'x64'
       - name: Get all changes vs master
         env:
@@ -115,7 +115,7 @@ jobs:
           fetch-depth: 10
       - uses: actions/setup-python@v4
         with:
-          python-version: '2.7'
+          python-version: '3.10'
           architecture: 'x64'
       - name: Get all changes vs master
         # Runs github_actions_diff, with the the output accessible in later steps

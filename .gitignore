@@ -33,6 +33,7 @@ build/
 *.patch
 */bin/
 
+
 # intellij
 *.iml
 *.ipr
@@ -57,7 +58,8 @@ benchmark.cfg
 
 # Visual Studio Code
 .vscode
-.history
+.history/
+.devcontainer
 
 # vim
 .*.sw[a-p]

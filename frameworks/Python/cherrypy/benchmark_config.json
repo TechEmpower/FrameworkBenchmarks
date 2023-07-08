@@ -21,7 +21,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "CherryPy [py2]",
-      "notes": "CPython 2.7"
+      "notes": "CPython 2.7",
+      "tags": ["broken"]
     },
     "py3": {
       "json_url": "/json",

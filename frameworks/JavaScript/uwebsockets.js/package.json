@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "html-escaper": "^3.0.3",
+    "pg": "^8.11.0",
+    "pg-pool": "^3.6.0",
+    "uWebSockets.js": "uNetworking/uWebSockets.js#v20.30.0"
+  },
+  "license": "MIT",
+  "main": "src/server.js",
+  "name": "uwebsockets.js",
+  "private": true,
+  "scripts": {
+    "dev": "node src/server.js",
+    "start": "node src/clustered.js"
+  },
+  "type": "module",
+  "version": "0.0.1"
+}
