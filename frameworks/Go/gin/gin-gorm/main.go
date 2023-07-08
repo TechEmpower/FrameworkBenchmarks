@@ -81,7 +81,7 @@ func main() {
 	r := gin.New() // use no middleware, causes 1.83x on plaintext (pure gin still at +14% on both plaintext and json)
 
 	// setup middleware to add server header
-	// this slows things a little bit but it is the best design decision
+	// this slows things a little bit, but it is the best design decision
 	serverHeader := []string{"Gin-gorm"}
 	r.Use(func(c *gin.Context) {
 		c.Writer.Header()["Server"] = serverHeader
