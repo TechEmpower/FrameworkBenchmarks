@@ -11,12 +11,6 @@ dependencies {
     api(project(":sunhttp"))
 }
 
-kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
-}
-
 tasks {
     named<Jar>("jar") {
         manifest {
