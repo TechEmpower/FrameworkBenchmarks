@@ -4,7 +4,9 @@ WORKDIR /goev
 
 COPY ./src /goev
 
-RUN go build -o app .
+RUN go mod download
+
+RUN GOAMD64=v3 go build -o ./app main.go
 
 EXPOSE 8080
 
