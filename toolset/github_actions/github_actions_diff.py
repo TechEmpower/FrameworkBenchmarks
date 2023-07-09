@@ -76,7 +76,7 @@ changes = clean_output(
         'bash', '-c',
         'git --no-pager diff --name-only {0} $(git merge-base {0} {1})'
             .format(curr_branch, diff_target)
-    ]))
+    ], text=True))
 print("Determining what to run based on the following file changes: \n{!s}"
     .format('\n'.join(changes.split('\n')[0:10])))
 if len(changes.split('\n')) > 10:
@@ -94,16 +94,14 @@ run_tests = []
 # Break the test env variable down into test directories
 if os.getenv("TESTLANG"):
     dir = "frameworks/" + os.getenv("TESTLANG") + "/"
-    test_dirs = map(lambda x: os.getenv("TESTLANG") + "/" + x,
-                    filter(lambda x: os.path.isdir(dir + x), os.listdir(dir)))
+    test_dirs = [os.getenv("TESTLANG") + "/" + x for x in [x for x in os.listdir(dir) if os.path.isdir(dir + x)]]
+
 elif os.getenv("TESTDIR"):
     test_dirs = os.getenv("TESTDIR").split(' ')
 else:
     def get_frameworks(test_lang):
         dir = "frameworks/" + test_lang + "/"
-        return map(lambda x: test_lang + "/" + x,
-                   filter(lambda x: os.path.isdir(dir + x),
-                          os.listdir(dir)))
+        return [test_lang + "/" + x for x in [x for x in os.listdir(dir) if os.path.isdir(dir + x)]]
     test_dirs = []
     for frameworks in map(get_frameworks, os.listdir("frameworks")):
         for framework in frameworks:

@@ -90,15 +90,22 @@ class AbstractDatabase:
         cls.reset_cache(config)
         #Start siege requests with timeout (20s)
         path = config.db_root
-        process = PopenTimeout(shlex.split("siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path)), stdout = subprocess.PIPE, stderr = subprocess.STDOUT, timeout=20)
-        output, _ = process.communicate()
-        #Search for failed transactions
-        match = re.search('Failed transactions:.*?(\d+)\n', output, re.MULTILINE)
-        if match:
-            trans_failures = int(match.group(1))
-            print output
+        try:
+            process = subprocess.run(shlex.split(
+                "siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path)),
+                stdout = subprocess.PIPE, stderr = subprocess.STDOUT, timeout=20, text=True
+            )  
+        except subprocess.TimeoutExpired as e:
+            print("Verification failed: %s" % (e))
         else:
-            trans_failures = concurrency * count#Failed transactions: 100%
+            output = process.stdout
+            #Search for failed transactions
+            match = re.search('Failed transactions:.*?(\d+)\n', output, re.MULTILINE)
+            if match:
+                trans_failures = int(match.group(1))
+                print(output)
+            else:
+                trans_failures = concurrency * count #Failed transactions: 100%
 
         queries = int(cls.get_queries(config)) - queries
         rows = int(cls.get_rows(config)) - rows
