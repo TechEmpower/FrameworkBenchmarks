@@ -1,5 +1,5 @@
 application {
-    mainClass.set("http4k.Http4kHelidonServerKt")
+    mainClass.set("Http4kHelidonServerKt")
 }
 
 dependencies {
