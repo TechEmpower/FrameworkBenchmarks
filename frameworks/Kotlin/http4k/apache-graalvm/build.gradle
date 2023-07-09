@@ -5,7 +5,7 @@ dependencies {
 
 apply(plugin: "application")
 mainClassName = "http4k.Http4kGraalVMBenchmarkServerKt"
-apply plugin: "com.github.johnrengelman.shadow"
+apply(plugin: "com.github.johnrengelman.shadow")
 
 jar {
     manifest {

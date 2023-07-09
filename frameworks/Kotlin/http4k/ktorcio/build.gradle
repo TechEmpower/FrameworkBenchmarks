@@ -5,7 +5,7 @@ dependencies {
 
 apply(plugin: "application")
 mainClassName = "Http4kKtorCIOServerKt"
-apply plugin: "com.github.johnrengelman.shadow"
+apply(plugin: "com.github.johnrengelman.shadow")
 
 shadowJar {
     archiveBaseName.set("http4k-benchmark")
