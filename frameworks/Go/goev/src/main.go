@@ -86,6 +86,7 @@ func updateLiveSecond() {
 func main() {
 	fmt.Println("hello boy")
     liveSecond.Store(time.Now().Unix())
+    ticker = time.NewTicker(time.Millisecond * 1000)
     go updateLiveSecond()
 
     httpRespHeader = []byte(httpHeaderS)
