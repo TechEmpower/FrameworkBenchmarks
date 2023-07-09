@@ -45,8 +45,8 @@ class TestType(AbstractTestType):
             return problems
 
         parser = FortuneHTMLParser()
-        parser.feed(body)
-        (valid, diff) = parser.isValidFortune(self.name, body)
+        parser.feed(body.decode())
+        (valid, diff) = parser.isValidFortune(self.name, body.decode())
 
         if valid:
             problems += verify_headers(self.request_headers_and_body, headers, url, should_be='html')

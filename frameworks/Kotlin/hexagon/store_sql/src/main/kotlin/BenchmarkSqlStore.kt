@@ -22,7 +22,7 @@ class BenchmarkSqlStore(
     }
 
     private val dataSource: HikariDataSource by lazy {
-        val dbHost = Jvm.systemSettingOrNull("${engine.uppercase()}_DB_HOST") ?: "localhost"
+        val dbHost = Jvm.systemSettingOrNull("${engine.uppercase()}_DB_HOST") ?: "tfb-database"
         val environment = Jvm.systemSettingOrNull(String::class, "BENCHMARK_ENV")?.lowercase()
         val poolSize = 8 + if (environment == "citrine") Jvm.cpuCount else Jvm.cpuCount * 2
         val postgresqlSettings = listOf(

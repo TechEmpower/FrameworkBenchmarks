@@ -1,58 +1,53 @@
 FROM ubuntu:22.04
 
-ARG USER_ID
-ARG GROUP_ID
 ARG DEBIAN_FRONTEND=noninteractive
-
-#RUN add-apt-repository universe
 # WARNING: DON'T PUT A SPACE AFTER ANY BACKSLASH OR APT WILL BREAK
 # One -q produces output suitable for logging (mostly hides
 # progress indicators)
-RUN apt-get -yqq update && apt-get -yqq install \
-      -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+RUN apt-get -yqq update && \
+    apt-get -yqq install \
+      -o Dpkg::Options::="--force-confdef" \
+      -o Dpkg::Options::="--force-confold" \
       cloc \
       curl \
-      dstat                       `# Collect resource usage statistics` \
+      # Collect resource usage statistics
+      dstat \
       gcc \
       git-core \
       gosu \
-      libmysqlclient-dev          `# Needed for MySQL-python` \
+      # Needed for mysqlclient
+      libmysqlclient-dev \
       libpq-dev \
-      python2 \
-      python2.7-dev \
+      pkg-config \
+      python3 \
+      python3-dev \
+      python3-pip \
       siege \
       software-properties-common
 
-RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
-RUN python2 get-pip.py
-
-RUN curl https://raw.githubusercontent.com/paulfitz/mysql-connector-c/master/include/my_config.h --output /usr/include/mysql/my_config.h
-
-RUN pip install \
+RUN pip3 install \
       colorama==0.3.1 \
       docker==4.0.2 \
-      MySQL-python \
+      mysqlclient \
       psutil \
       psycopg2-binary \
-      pymongo \
-      requests
-    # Fix for docker-py trying to import one package from the wrong location
-    #cp -r /usr/local/lib/python2.7/dist-packages/backports/ssl_match_hostname \
-    #  /usr/lib/python2.7/dist-packages/backports
+      pymongo==3.13.0 \
+      # urllib3 incompatibility:
+      # https://github.com/docker/docker-py/issues/3113#issuecomment-1525500104
+      requests==2.28.1
 
-ENV FWROOT=/FrameworkBenchmarks PYTHONPATH=/FrameworkBenchmarks
-
-# Check if Group is already created
-RUN if ! getent group $GROUP_ID; then \
-      addgroup --gid $GROUP_ID user; \
+# Check if the group ID is already created
+ARG GROUP_ID
+RUN if ! getent group "$GROUP_ID"; then \
+      addgroup --gid "$GROUP_ID" user; \
     fi
 
-# Drop permissions of user to match those of the host system
-# Check if the User ID is already created
-RUN if ! getent passwd $USER_ID; then \
-      adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user; \
+# Check if the user ID is already created
+ARG USER_ID
+RUN if ! getent passwd "$USER_ID"; then \
+      adduser --disabled-password --gecos '' --gid "$GROUP_ID" --uid "$USER_ID" user; \
     fi
 
-ENV USER_ID=$USER_ID
+ENV FWROOT=/FrameworkBenchmarks PYTHONPATH=/FrameworkBenchmarks USER_ID="$USER_ID"
 
-ENTRYPOINT ["/bin/bash", "FrameworkBenchmarks/entrypoint.sh" ]
+ENTRYPOINT ["FrameworkBenchmarks/entrypoint.sh"]

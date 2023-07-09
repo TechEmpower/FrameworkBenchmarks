@@ -106,7 +106,7 @@ CMD ["taskset", \
      "-a20", \
      "-d", \
      "dbname=hello_world host=tfb-database password=benchmarkdbpass sslmode=disable user=benchmarkdbuser", \
-     "-e64", \
+     "-e512", \
      "-f", \
      "/opt/h2o_app/share/h2o_app/template", \
      "-m1"]

@@ -46,7 +46,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "fasthttp",
+        "display_name": "fasthttp prefork",
         "notes": "",
         "versus": "go"
       }

@@ -857,6 +857,7 @@ void initialize_world_handler_thread_data(thread_context_t *ctx,
 	                                    ctx->global_thread_data->config,
 	                                    data->prepared_statements,
 	                                    ctx->event_loop.h2o_ctx.loop,
+	                                    &ctx->global_thread_data->h2o_receiver,
 	                                    &thread_data->hello_world_db);
 }
 

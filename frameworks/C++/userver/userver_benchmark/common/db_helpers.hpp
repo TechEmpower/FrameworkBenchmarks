@@ -1,5 +1,6 @@
 #pragma once
 
+#include <userver/engine/semaphore.hpp>
 #include <userver/formats/json/value.hpp>
 #include <userver/server/http/http_request.hpp>
 #include <userver/storages/postgres/cluster_types.hpp>
@@ -30,5 +31,15 @@ int ParseParamFromQuery(const userver::server::http::HttpRequest& request,
                         const std::string& name);
 
 int ParseParamFromQuery(std::string_view url, std::string_view name);
+
+class DatabasePoolSemaphore final {
+ public:
+  explicit DatabasePoolSemaphore(std::size_t initial_count);
+
+  userver::engine::SemaphoreLock Acquire() const;
+
+ private:
+  mutable userver::engine::Semaphore semaphore_;
+};
 
 }  // namespace userver_techempower::db_helpers

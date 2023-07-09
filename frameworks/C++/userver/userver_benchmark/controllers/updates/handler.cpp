@@ -1,7 +1,5 @@
 #include "handler.hpp"
 
-#include "../../common/db_helpers.hpp"
-
 #include <userver/components/component_context.hpp>
 #include <userver/formats/serialize/common_containers.hpp>
 #include <userver/storages/postgres/postgres.hpp>
@@ -22,6 +20,8 @@ FROM ( SELECT
 WHERE w.id = new_numbers.id
 )"};
 
+constexpr std::size_t kBestConcurrencyWildGuess = 128;
+
 }
 
 Handler::Handler(const userver::components::ComponentConfig& config,
@@ -30,7 +30,8 @@ Handler::Handler(const userver::components::ComponentConfig& config,
       pg_{context.FindComponent<userver::components::Postgres>("hello-world-db")
               .GetCluster()},
       query_arg_name_{"queries"},
-      update_query_{kUpdateQueryStr} {}
+      update_query_{kUpdateQueryStr},
+      semaphore_{kBestConcurrencyWildGuess} {}
 
 userver::formats::json::Value Handler::HandleRequestJsonThrow(
     const userver::server::http::HttpRequest& request,
@@ -56,6 +57,7 @@ userver::formats::json::Value Handler::GetResponse(int queries) const {
   // faster due to the pool semaphore contention reduction - now we have a
   // connection for ourselves until we are done with it, otherwise we would
   // likely wait on the semaphore with every new query.
+  const auto lock = semaphore_.Acquire();
   auto transaction = pg_->Begin(db_helpers::kClusterHostType, {});
   for (auto& value : values) {
     value.random_number =

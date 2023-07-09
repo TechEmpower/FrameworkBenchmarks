@@ -1,8 +1,8 @@
 package io.quarkus.benchmark.repository;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.transaction.Transactional;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.transaction.Transactional;
 
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
@@ -39,7 +39,7 @@ public class WorldRepository {
 
     public World loadSingleWorldById(Integer id) {
         try (StatelessSession ss = sf.openStatelessSession()) {
-            return (World) ss.get(World.class, id);
+            return ss.get(World.class, id);
         }
     }
 
@@ -49,7 +49,7 @@ public class WorldRepository {
         try (StatelessSession ss = sf.openStatelessSession()) {
             //The rules require individual load: we can't use the Hibernate feature which allows load by multiple IDs as one single operation
             for (int i=0;i<count;i++) {
-                list[i] = (World) ss.get(World.class, random.getNextRandom());
+                list[i] = ss.get(World.class, random.getNextRandom());
             }
             return list;
         }
@@ -67,7 +67,7 @@ public class WorldRepository {
                 // # vi. At least the randomNumber field must be read from the database result set.
                 final int previousRead = w.getRandomNumber();
                 //Update it, but make sure to exclude the current number as Hibernate optimisations would otherwise
-                //skip the write operation:
+                // skip the write operation:
                 w.setRandomNumber(random.getNextRandomExcluding(previousRead));
                 s.update(w);
             }

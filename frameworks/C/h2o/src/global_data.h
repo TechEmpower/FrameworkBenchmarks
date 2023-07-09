@@ -54,7 +54,6 @@ typedef struct config_t {
 typedef struct {
 	h2o_logger_t *file_logger;
 	struct global_thread_data_t *global_thread_data;
-	list_t *postinitialization_tasks;
 	h2o_socket_t *signals;
 	SSL_CTX *ssl_ctx;
 	size_t memory_alignment;
@@ -63,9 +62,5 @@ typedef struct {
 	h2o_globalconf_t h2o_config;
 	request_handler_data_t request_handler_data;
 } global_data_t;
-
-void add_postinitialization_task(void (*task)(struct thread_context_t *, void *),
-                                 void *arg,
-                                 list_t **postinitialization_tasks);
 
 #endif // GLOBAL_DATA_H_

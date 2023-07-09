@@ -1,12 +1,7 @@
-use std::{
-    cell::RefCell,
-    collections::HashMap,
-    fmt::Write,
-    future::{Future, IntoFuture},
-};
+use std::{cell::RefCell, collections::HashMap, fmt::Write, future::Future};
 
-use futures_util::stream::{FuturesUnordered, TryStreamExt};
-use xitca_postgres::{statement::Statement, AsyncIterator, Postgres, ToSql};
+use futures_util::future::{try_join, try_join_all, TryFutureExt};
+use xitca_postgres::{statement::Statement, AsyncIterator, Postgres};
 use xitca_unsafe_collection::no_hash::NoHashBuilder;
 
 use super::{
@@ -35,7 +30,18 @@ impl Drop for Client {
 pub async fn create(config: &str) -> HandleResult<Client> {
     let (client, driver) = Postgres::new(config.to_string()).connect().await?;
 
-    tokio::task::spawn_local(driver.into_future());
+    tokio::task::spawn_local({
+        #[cfg(feature = "pg-iou")]
+        {
+            let mut drv = driver.try_into_io_uring_tcp();
+            async move { while drv.next().await.is_some() {} }
+        }
+
+        #[cfg(not(feature = "pg-iou"))]
+        {
+            std::future::IntoFuture::into_future(driver)
+        }
+    });
 
     let fortune = client.prepare("SELECT * FROM fortune", &[]).await?.leak();
 
@@ -78,7 +84,7 @@ pub async fn create(config: &str) -> HandleResult<Client> {
 impl Client {
     async fn query_one_world(&self, id: i32) -> HandleResult<World> {
         self.client
-            .query_raw(&self.world, &[&id])
+            .query_raw(&self.world, [id])
             .await?
             .next()
             .await
@@ -94,49 +100,37 @@ impl Client {
 
     pub fn get_worlds(&self, num: u16) -> impl Future<Output = HandleResult<Vec<World>>> + '_ {
         let mut rng = self.rng.borrow_mut();
-        (0..num)
-            .map(|_| {
-                let id = rng.gen_id();
-                self.query_one_world(id)
-            })
-            .collect::<FuturesUnordered<_>>()
-            .try_collect()
+        let gets = (0..num).map(|_| self.query_one_world(rng.gen_id()));
+        try_join_all(gets)
     }
 
     pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
-        let worlds = {
+        let len = num as usize;
+
+        let mut params = Vec::new();
+        params.reserve(len * 3);
+
+        let gets = {
             let mut rng = self.rng.borrow_mut();
-            (0..num)
-                .map(|_| {
-                    let id = rng.gen_id();
-                    let w_id = rng.gen_id();
-                    async move {
-                        self.query_one_world(w_id).await.map(|mut world| {
-                            world.randomnumber = id;
-                            world
-                        })
-                    }
+            let gets = (0..num).map(|_| {
+                let w_id = rng.gen_id();
+                let r_id = rng.gen_id();
+                params.push(w_id);
+                params.push(r_id);
+                self.query_one_world(w_id).map_ok(move |mut world| {
+                    world.randomnumber = r_id;
+                    world
                 })
-                .collect::<FuturesUnordered<_>>()
+            });
+            try_join_all(gets)
         };
 
-        let worlds = worlds.try_collect::<Vec<_>>().await?;
-
-        let mut params = Vec::<&(dyn ToSql + Sync)>::with_capacity(num as usize * 3);
-
-        for w in &worlds {
-            params.push(&w.id);
-            params.push(&w.randomnumber);
-        }
-        for w in &worlds {
-            params.push(&w.id);
-        }
+        params.extend_from_within(..len);
 
         let st = self.updates.get(&num).unwrap();
+        let update = self.client.execute_raw(st, &params).map_err(Into::into);
 
-        self.client.execute(st, params.as_slice()).await?;
-
-        Ok(worlds)
+        try_join(gets, update).await.map(|(world, _)| world)
     }
 
     pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
@@ -144,7 +138,7 @@ impl Client {
 
         items.push(Fortune::new(0, "Additional fortune added at request time."));
 
-        let mut stream = self.client.query_raw::<&[i32]>(&self.fortune, &[]).await?;
+        let mut stream = self.client.query_raw::<[i32; 0]>(&self.fortune, []).await?;
 
         while let Some(row) = stream.next().await {
             let row = row?;

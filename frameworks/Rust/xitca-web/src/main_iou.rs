@@ -11,16 +11,9 @@ mod db;
 mod ser;
 mod util;
 
-use std::{
-    cell::RefCell,
-    convert::Infallible,
-    fmt,
-    future::{poll_fn, Future},
-    io,
-    pin::pin,
-};
+use std::{cell::RefCell, convert::Infallible, fmt, future::Future, io};
 
-use futures_util::stream::Stream;
+use futures_util::stream::StreamExt;
 use xitca_http::{
     body::Once,
     date::DateTimeService,
@@ -34,11 +27,12 @@ use xitca_http::{
     util::service::context::{Context as Ctx, ContextBuilder},
 };
 use xitca_io::{
-    bytes::{Bytes, BytesMut, PagedBytesMut},
+    bytes::{Bytes, BytesMut},
     io_uring::IoBuf,
-    net::TcpStream,
+    net::{io_uring::TcpStream as IOUTcpStream, TcpStream},
 };
 use xitca_service::{fn_service, middleware::UncheckedReady, Service, ServiceExt};
+use xitca_unsafe_collection::futures::NowOrPanic;
 
 use self::{
     db::Client,
@@ -169,42 +163,38 @@ where
     {
         async {
             let mut ctx = Context::<_, 8>::new(self.date.get());
-            let mut paged = PagedBytesMut::new();
+            let mut read_buf = BytesMut::new();
             let mut write_buf = BytesMut::with_capacity(4096);
 
             let std = stream.into_std()?;
-            let stream = tokio_uring::net::TcpStream::from_std(std);
+            let stream = IOUTcpStream::from_std(std);
 
             loop {
-                let mut buf = paged.into_inner();
-
-                let len = buf.len();
-                let rem = buf.capacity() - len;
+                let len = read_buf.len();
+                let rem = read_buf.capacity() - len;
                 if rem < 4096 {
-                    buf.reserve(4096 - rem);
+                    read_buf.reserve(4096 - rem);
                 }
 
-                let (res, buf) = stream.read(buf.slice(len..)).await;
+                let (res, buf) = stream.read(read_buf.slice(len..)).await;
+                read_buf = buf.into_inner();
                 if res? == 0 {
                     break;
                 }
-                paged = PagedBytesMut::from(buf.into_inner());
 
-                while let Some((req, _)) = ctx.decode_head::<{ usize::MAX }>(&mut paged).unwrap() {
-                    let (parts, body) = self.service.call(req).await.unwrap().into_parts();
+                while let Some((req, _)) = ctx.decode_head::<{ usize::MAX }>(&mut read_buf).unwrap()
+                {
+                    let (parts, mut body) = self.service.call(req).await.unwrap().into_parts();
                     let mut encoder = ctx.encode_head(parts, &body, &mut write_buf).unwrap();
-                    let mut body = pin!(body);
-                    while let Some(chunk) = poll_fn(|cx| body.as_mut().poll_next(cx)).await {
-                        let chunk = chunk.unwrap();
-                        encoder.encode(chunk, &mut write_buf);
-                    }
+                    let chunk = body.next().now_or_panic().unwrap().unwrap();
+                    encoder.encode(chunk, &mut write_buf);
                     encoder.encode_eof(&mut write_buf);
                 }
 
                 let (res, b) = stream.write_all(write_buf).await;
-                res?;
                 write_buf = b;
                 write_buf.clear();
+                res?;
             }
 
             stream.shutdown(std::net::Shutdown::Both)
