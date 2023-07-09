@@ -45,13 +45,16 @@ RUN apt-get update -q \
 WORKDIR /woo
 ADD  . .
 
+# Some of the patches are not merged or not available in Quicklisp yet:
+#
+# - https://github.com/fukamachi/fast-http/pull/40
+# - https://github.com/fukamachi/woo/pull/104
+# - https://github.com/marijnh/Postmodern/pull/321
+#
 RUN mkdir -p /libs && \
-    git clone https://github.com/svetlyak40wt/fast-http /libs/fast-http && \
-    cd /libs/fast-http && \
-    git checkout http-pipelining && \
-    git clone https://github.com/svetlyak40wt/woo /libs/woo && \
-    cd /libs/woo && \
-    git checkout fix-error-codes
+    git clone --branch http-pipelining https://github.com/svetlyak40wt/fast-http /libs/fast-http && \
+    git clone --branch fix-error-codes https://github.com/svetlyak40wt/woo /libs/woo && \
+    git clone --branch fix-defprepared-threadsafety https://github.com/svetlyak40wt/Postmodern /libs/Postmodern
 
 RUN CL_SOURCE_REGISTRY=/libs// ros build woo.ros
 
@@ -69,5 +72,6 @@ COPY --from=builder /woo/woo .
 RUN ["chmod", "+x", "./woo"]
 
 EXPOSE 8080
+EXPOSE 4005
 
-CMD ./woo --worker $(nproc) --address 0.0.0.0 --port 8080
+CMD ./woo --cpu $(nproc) --address 0.0.0.0 --port 8080
