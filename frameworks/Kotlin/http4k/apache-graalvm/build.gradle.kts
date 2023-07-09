@@ -1,22 +1,4 @@
-
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
-plugins {
-    application
-}
-
-dependencies {
-    api(project(":core-jdbc"))
-    api(project(":apache"))
-}
-
-apply(plugin = "application")
-
-application {
-    mainClass.set("http4k.Http4kGraalVMBenchmarkServerKt")
-}
-
-apply(plugin = "com.github.johnrengelman.shadow")
+application.mainClass.set("Http4kGraalVMBenchmarkServerKt")
 
 kotlin {
     jvmToolchain {
@@ -24,16 +6,15 @@ kotlin {
     }
 }
 
+dependencies {
+    api(project(":core-jdbc"))
+    api(project(":apache"))
+}
+
 tasks {
     named<Jar>("jar") {
         manifest {
-            attributes["Main-Class"] = "http4k.Http4kGraalVMBenchmarkServerKt"
+            attributes["Main-Class"] = "Http4kGraalVMBenchmarkServerKt"
         }
-    }
-
-    named<ShadowJar>("shadowJar") {
-        archiveBaseName.set("http4k-benchmark")
-        archiveClassifier.set("")
-        archiveVersion.set("")
     }
 }

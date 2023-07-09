@@ -1,21 +1,15 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+application.mainClass.set("Http4kGraalVMBenchmarkServerKt")
 
-plugins {
-    application
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
 }
 
 dependencies {
     api(project(":core-jdbc"))
     api(project(":sunhttp"))
 }
-
-apply(plugin = "application")
-
-application {
-    mainClass.set("http4k.Http4kGraalVMBenchmarkServerKt")
-}
-
-apply(plugin = "com.github.johnrengelman.shadow")
 
 kotlin {
     jvmToolchain {
@@ -26,13 +20,7 @@ kotlin {
 tasks {
     named<Jar>("jar") {
         manifest {
-            attributes["Main-Class"] = "http4k.Http4kGraalVMBenchmarkServerKt"
+            attributes["Main-Class"] = "Http4kGraalVMBenchmarkServerKt"
         }
-    }
-
-    named<ShadowJar>("shadowJar") {
-        archiveBaseName.set("http4k-benchmark")
-        archiveClassifier.set("")
-        archiveVersion.set("")
     }
 }
