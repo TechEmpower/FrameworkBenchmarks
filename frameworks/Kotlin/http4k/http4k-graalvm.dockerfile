@@ -24,10 +24,10 @@ RUN native-image \
     -H:ReflectionConfigurationFiles=reflect-config.json \
     -H:ResourceConfigurationFiles=resource-config.json \
     --initialize-at-build-time="org.slf4j.LoggerFactory,org.slf4j.simple.SimpleLogger,org.slf4j.impl.StaticLoggerBinder" \
-    --no-fallback -cp http4k-benchmark.jar http4k.Http4kGraalVMBenchmarkServerKt
+    --no-fallback -cp http4k-benchmark.jar Http4kGraalVMBenchmarkServerKt
 
 FROM frolvlad/alpine-glibc:glibc-2.34
 RUN apk update && apk add libstdc++
 EXPOSE 9000
-COPY --from=graalvm /home/app/http4k-graalvm/http4k.http4kgraalvmbenchmarkserverkt /app/http4k-graalvm
+COPY --from=graalvm /home/app/http4k-graalvm/http4kgraalvmbenchmarkserverkt /app/http4k-graalvm
 ENTRYPOINT ["/app/http4k-graalvm"]
