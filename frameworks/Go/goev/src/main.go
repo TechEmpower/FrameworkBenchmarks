@@ -67,9 +67,6 @@ func (h *Http) OnClose(fd int) {
 	netfd.Close(fd)
 }
 
-type Https struct {
-	Http
-}
 func updateLiveSecond() {
 	for {
 		select {
