@@ -1,6 +1,6 @@
 buildscript {
-    ext.kotlin_version = "1.8.22"
-    ext.http4k_version = "5.1.1.1"
+    ext.kotlin_version = "1.9.0"
+    ext.http4k_version = "5.2.1.0"
 
     repositories {
         mavenCentral()
@@ -28,5 +28,5 @@ allprojects {
     version = project.hasProperty('releaseVersion') ? project.releaseVersion : 'LOCAL'
     group = 'org.http4k'
 
-    compileTestKotlin.kotlinOptions.languageVersion = "1.8"
+    compileTestKotlin.kotlinOptions.languageVersion = "1.9"
 }
