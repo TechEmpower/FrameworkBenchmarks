@@ -4,11 +4,12 @@ plugins {
 }
 
 dependencies {
-    api("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
-    api("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
-    api("org.http4k:http4k-core:$http4k_version")
-    api("org.http4k:http4k-format-argo:$http4k_version")
-    api("org.http4k:http4k-template-rocker:$http4k_version")
+    api(platform("org.http4k:http4k-bom:5.2.1.0"))
+    api("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
+    api("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
+    api("org.http4k:http4k-core")
+    api("org.http4k:http4k-format-argo")
+    api("org.http4k:http4k-template-rocker")
     api("org.apache.commons:commons-lang3:3.12.0")
     api("org.cache2k:cache2k-core:2.6.1.Final")
 

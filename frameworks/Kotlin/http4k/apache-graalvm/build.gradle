@@ -3,18 +3,18 @@ dependencies {
     api(project(":apache"))
 }
 
-apply plugin: 'application'
+apply(plugin: "application")
 mainClassName = "http4k.Http4kGraalVMBenchmarkServerKt"
-apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: "com.github.johnrengelman.shadow"
 
 jar {
     manifest {
-        attributes 'Main-Class': mainClassName
+        attributes "Main-Class": mainClassName
     }
 }
 
 shadowJar {
-    baseName = "http4k-benchmark"
-    classifier = null
-    version = null
+    archiveBaseName.set("http4k-benchmark")
+    archiveClassifier.set("")
+    archiveVersion.set("")
 }

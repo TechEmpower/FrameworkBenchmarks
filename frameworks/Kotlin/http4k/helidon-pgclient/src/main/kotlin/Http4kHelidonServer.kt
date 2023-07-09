@@ -1,5 +1,5 @@
 import org.http4k.server.Helidon
 
 fun main() {
-    Http4kBenchmarkServer(PostgresDatabase(), false).start(Helidon(9000))
+    Http4kBenchmarkServer(PostgresDatabase(), true).start(Helidon(9000))
 }
