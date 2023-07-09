@@ -1,6 +1,4 @@
-application {
-    mainClass.set("Http4kHelidonServerKt")
-}
+application.mainClass.set("Http4kHelidonServerKt")
 
 dependencies {
     api(project(":core-jdbc"))
