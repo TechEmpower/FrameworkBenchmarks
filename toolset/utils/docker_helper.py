@@ -197,8 +197,16 @@ class DockerHelper:
 
             # Expose ports in debugging mode
             ports = {}
+            environment = {}
+
             if self.benchmarker.config.mode == "debug":
+                environment['DEBUG'] = 'true'
                 ports = {test.port: test.port}
+
+                # This allows to expose a debugger port to attach
+                # to the webserver from IDE
+                if hasattr(test, 'debug_port'):
+                    ports[test.debug_port] = test.debug_port
 
             container = self.server.containers.run(
                 "techempower/tfb.test.%s" % test.name,
@@ -207,6 +215,7 @@ class DockerHelper:
                 network=self.benchmarker.config.network,
                 network_mode=self.benchmarker.config.network_mode,
                 ports=ports,
+                environment=environment,
                 stderr=True,
                 detach=True,
                 init=True,
