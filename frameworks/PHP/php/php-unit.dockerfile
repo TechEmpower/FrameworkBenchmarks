@@ -1,4 +1,4 @@
-FROM nginx/unit:1.29.1-php8.1
+FROM unit:1.30.0-php8.2
 
 ADD . /php
 WORKDIR /php
