@@ -1,7 +1,7 @@
 #
 # BUILD
 #
-FROM ghcr.io/graalvm/native-image-community:17-ol9 as build
+FROM ghcr.io/graalvm/native-image-community:20-ol9 as build
 USER root
 WORKDIR /hexagon
 
