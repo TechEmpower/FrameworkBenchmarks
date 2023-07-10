@@ -1,7 +1,7 @@
 #
 # BUILD
 #
-FROM ghcr.io/graalvm/native-image:ol9-java17-22.3.2 as build
+FROM ghcr.io/graalvm/native-image-community:17-ol9 as build
 USER root
 WORKDIR /hexagon
 
@@ -14,8 +14,8 @@ RUN ./gradlew --quiet -x test nativeCompile
 # RUNTIME
 #
 FROM scratch
-ARG PROJECT=hexagon_netty_postgresql
+ARG PROJECT=hexagon_nima_postgresql
 
 COPY --from=build /hexagon/$PROJECT/build/native/nativeCompile/$PROJECT /
 
-ENTRYPOINT [ "/hexagon_netty_postgresql" ]
+ENTRYPOINT [ "/hexagon_nima_postgresql" ]
