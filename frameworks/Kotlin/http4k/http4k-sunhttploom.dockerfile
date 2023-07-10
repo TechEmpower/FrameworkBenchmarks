@@ -1,8 +1,8 @@
-FROM gradle:7.6-jdk19
+FROM gradle:8.0.2-jdk19
 USER root
 WORKDIR /http4k
-COPY build.gradle build.gradle
-COPY settings.gradle settings.gradle
+COPY build.gradle.kts build.gradle.kts
+COPY settings.gradle.kts settings.gradle.kts
 COPY core core
 COPY core-pgclient core-pgclient
 COPY sunhttploom sunhttploom
