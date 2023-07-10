@@ -2,7 +2,7 @@ import { escape } from 'html-escaper'
 import { Server } from 'hyper-express'
 import { LRUCache } from 'lru-cache'
 import { isWorker, worker } from 'node:cluster'
-import { maxQuery, maxRows, message, json, extra } from './config.js'
+import { maxQuery, maxRows } from './config.js'
 const { DATABASE } = process.env
 const db = DATABASE ? await import(`./database/${DATABASE}.js`) : null
 
@@ -26,12 +26,12 @@ app.get('/plaintext', (_request, response) => {
   response.atomic(() => {
     response
       .type('text')
-      .send(message)
+      .send('Hello, World!')
   })
 })
 
 app.get('/json', (_request, response) => {
-  response.json(json)
+  response.json({ message: 'Hello, World!' })
 })
 
 if (db) {
@@ -94,7 +94,7 @@ if (db) {
     try {
       const fortunes = await db.fortunes()
 
-      fortunes.push(extra)
+      fortunes.push({ id: 0, message: 'Additional fortune added at request time.' })
 
       fortunes.sort((a, b) => a.message.localeCompare(b.message))
 
