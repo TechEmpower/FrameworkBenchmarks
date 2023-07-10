@@ -203,7 +203,7 @@
                 "notes": "http://hexagonkt.com",
                 "versus": "netty"
             },
-            "netty-async-pgclient": {
+            "nettyepoll-async-pgclient": {
                 "json_url": "/json",
                 "db_url": "/db",
                 "query_url": "/query?queries=",

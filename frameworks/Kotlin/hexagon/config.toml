@@ -145,7 +145,7 @@ platform = "Netty"
 webserver = "None"
 versus = "netty"
 
-[nettyepoll-async-jasync]
+[nettyepoll-async-pgclient]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"

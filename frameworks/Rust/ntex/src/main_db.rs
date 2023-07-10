@@ -7,7 +7,7 @@ use std::sync::{Arc, Mutex};
 
 use ntex::http::header::{CONTENT_TYPE, SERVER};
 use ntex::http::{HttpService, KeepAlive, Request, Response, StatusCode};
-use ntex::service::{Service, ServiceFactory};
+use ntex::service::{Service, ServiceFactory, ServiceCtx};
 use ntex::web::{Error, HttpResponse};
 use ntex::{time::Seconds, util::BoxFuture, util::PoolId};
 
@@ -21,7 +21,7 @@ impl Service<Request> for App {
     type Error = Error;
     type Future<'f> = BoxFuture<'f, Result<Response, Error>> where Self: 'f;
 
-    fn call(&self, req: Request) -> Self::Future<'_> {
+    fn call<'a>(&'a self, req: Request, _: ServiceCtx<'a, Self>) -> Self::Future<'a> {
         Box::pin(async move {
             match req.path() {
                 "/db" => {

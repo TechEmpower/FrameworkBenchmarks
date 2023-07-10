@@ -50,7 +50,7 @@ class DockerHelper:
                 buffer = ""
                 for token in output:
                     if 'stream' in token:
-                        buffer += token[token.keys()[0]].encode('utf-8')
+                        buffer += token[list(token.keys())[0]]
                     elif 'errorDetail' in token:
                         raise Exception(token['errorDetail']['message'])
                     while "\n" in buffer:
@@ -159,7 +159,7 @@ class DockerHelper:
                             run_log_dir, "%s.log" % docker_file.replace(
                                 ".dockerfile", "").lower()), 'w') as run_log:
                     for line in docker_container.logs(stream=True):
-                        log(line, prefix=log_prefix, file=run_log)
+                        log(line.decode(), prefix=log_prefix, file=run_log)
 
             extra_hosts = None
             name = "tfb-server"
@@ -400,7 +400,7 @@ class DockerHelper:
         def watch_container(container):
             with open(raw_file, 'w') as benchmark_file:
                 for line in container.logs(stream=True):
-                    log(line, file=benchmark_file)
+                    log(line.decode(), file=benchmark_file)
 
         if self.benchmarker.config.network_mode is None:
             sysctl = {'net.core.somaxconn': 65535}

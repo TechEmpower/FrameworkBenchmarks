@@ -11,16 +11,9 @@ mod db;
 mod ser;
 mod util;
 
-use std::{
-    cell::RefCell,
-    convert::Infallible,
-    fmt,
-    future::{poll_fn, Future},
-    io,
-    pin::pin,
-};
+use std::{cell::RefCell, convert::Infallible, fmt, future::Future, io};
 
-use futures_util::stream::Stream;
+use futures_util::stream::StreamExt;
 use xitca_http::{
     body::Once,
     date::DateTimeService,
@@ -39,6 +32,7 @@ use xitca_io::{
     net::{io_uring::TcpStream as IOUTcpStream, TcpStream},
 };
 use xitca_service::{fn_service, middleware::UncheckedReady, Service, ServiceExt};
+use xitca_unsafe_collection::futures::NowOrPanic;
 
 use self::{
     db::Client,
@@ -190,13 +184,10 @@ where
 
                 while let Some((req, _)) = ctx.decode_head::<{ usize::MAX }>(&mut read_buf).unwrap()
                 {
-                    let (parts, body) = self.service.call(req).await.unwrap().into_parts();
+                    let (parts, mut body) = self.service.call(req).await.unwrap().into_parts();
                     let mut encoder = ctx.encode_head(parts, &body, &mut write_buf).unwrap();
-                    let mut body = pin!(body);
-                    while let Some(chunk) = poll_fn(|cx| body.as_mut().poll_next(cx)).await {
-                        let chunk = chunk.unwrap();
-                        encoder.encode(chunk, &mut write_buf);
-                    }
+                    let chunk = body.next().now_or_panic().unwrap().unwrap();
+                    encoder.encode(chunk, &mut write_buf);
                     encoder.encode_eof(&mut write_buf);
                 }
 

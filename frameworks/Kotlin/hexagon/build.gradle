@@ -16,7 +16,6 @@ ext {
     hikariVersion = "5.0.1"
     postgresqlVersion = "42.6.0"
     vertxVersion = "4.4.3"
-    jasyncVersion = "2.2.0"
     cache2kVersion = "2.6.1.Final"
 
     applicationClass = "com.hexagonkt.BenchmarkKt"

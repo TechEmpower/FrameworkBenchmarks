@@ -169,7 +169,8 @@
         "database_os": "Linux",
         "display_name": "FastAPI-nginx-unit",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       },
       "nginx-unit-orjson": {
         "json_url": "/json",
@@ -190,7 +191,8 @@
         "database_os": "Linux",
         "display_name": "FastAPI-nginx-unit-orjson",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       },
       "uvicorn": {
         "json_url": "/json",
