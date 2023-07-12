@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "main": "app.js",
   "scripts": {
-    "dev": "node app.js",
     "start": "node clustered.js"
   },
   "author": "",

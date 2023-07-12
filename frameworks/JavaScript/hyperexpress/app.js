@@ -1,7 +1,7 @@
 import { escape } from 'html-escaper'
 import { Server } from 'hyper-express'
 import { LRUCache } from 'lru-cache'
-import { isWorker, worker } from 'node:cluster'
+import cluster, { isWorker } from 'node:cluster'
 import { maxQuery, maxRows } from './config.js'
 const { DATABASE } = process.env
 const db = DATABASE ? await import(`./database/${DATABASE}.js`) : null
@@ -130,5 +130,5 @@ if (db) {
 }
 
 app.listen(8080).then(() => {
-  console.log(`${isWorker ? `${worker.id}: ` : ''}Successfully bound to http://0.0.0.0:8080`)
+  console.log(`${isWorker ? `${cluster.worker.id}: ` : ''}Successfully bound to http://0.0.0.0:8080`)
 })

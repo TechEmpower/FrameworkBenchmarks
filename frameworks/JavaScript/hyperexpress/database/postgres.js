@@ -1,17 +1,7 @@
-import { isWorker } from 'node:cluster'
-import { cpus } from 'node:os'
 import postgres from 'postgres'
 import { clientOpts } from '../config.js'
 
-const res = await postgres(clientOpts)`SHOW max_connections`
-
-let maxConnections = 150
-
-if (isWorker) {
-  maxConnections = cpus().length > 2 ? Math.ceil(res[0].max_connections * 0.96 / cpus().length) : maxConnections
-}
-
-const sql = postgres(Object.assign({ max: maxConnections }, clientOpts))
+const sql = postgres(clientOpts)
 
 export const fortunes = async () => sql`SELECT * FROM fortune`
 
@@ -21,4 +11,4 @@ export const getAllWorlds = async () => sql`SELECT * FROM world`
 
 export const update = async (obj) => sql`UPDATE world SET randomNumber = ${obj.randomNumber} WHERE id = ${obj.id}`
 
-await Promise.all([...Array(maxConnections).keys()].map(fortunes))
+await Promise.all([...Array(150).keys()].map(fortunes))

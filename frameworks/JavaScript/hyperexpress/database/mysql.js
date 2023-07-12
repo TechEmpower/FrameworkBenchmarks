@@ -10,7 +10,7 @@ const res = await client.query('SHOW VARIABLES LIKE "max_connections"')
 let maxConnections = 150
 
 if (isWorker) {
-    maxConnections = cpus().length > 2 ? Math.ceil(res[0][0].Value * 0.96 / cpus().length): maxConnections
+    maxConnections = cpus().length > 2 ? Math.ceil(res[0][0].Value * 0.96 / cpus().length) : maxConnections
 }
 
 await client.end()
