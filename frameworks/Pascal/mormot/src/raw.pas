@@ -718,7 +718,7 @@ begin
     begin
       // asynchronus test
       servers := cpuCount;
-      threads := 4;
+      threads := 8;
     end
     else
     if GetEnvironmentVariable('TFB_TEST_NAME') = 'mormot-postgres-async2' then
