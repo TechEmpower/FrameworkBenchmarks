@@ -1,14 +1,17 @@
-{
-  "framework": "fastapi",
-  "tests": [{
-      "default": {
+"fastapi.py"
+[{_"benchmark_config.json"
+{ 
+  "_config.json"
+  "[{_"framework"_}]": "fastapi",
+  "tests": [{_
+      "default": {_
         "json_url": "/json",
         "fortune_url": "/fortunes",
         "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
-        "port": 8080,
+        "port": 8888,
         "approach": "Realistic",
         "classification": "Micro",
         "database": "Postgres",
@@ -23,7 +26,7 @@
         "display_name": "FastAPI",
         "notes": "",
         "versus": "None"
-      },
+      }_
       "socketify-asgi": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
@@ -42,7 +45,7 @@
         "display_name": "FastAPI [Socketify.py ASGI]",
         "notes": "",
         "versus": "None"
-      },
+      }_
       "socketify-asgi-pypy": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
@@ -61,7 +64,7 @@
         "display_name": "FastAPI [Socketify.py ASGI PyPy3]",
         "notes": "",
         "versus": "None"
-      },
+      }_
       "gunicorn-orjson": {
         "json_url": "/json",
         "db_url": "/db",
@@ -82,7 +85,7 @@
         "display_name": "FastAPI-gunicorn-orjson",
         "notes": "",
         "versus": "None"
-      },
+      }_
       "gunicorn-orm": {
         "fortune_url": "/fortunes",
         "db_url": "/db",
@@ -103,7 +106,7 @@
         "display_name": "FastAPI-gunicorn-orm",
         "notes": "",
         "versus": "None"
-      },
+      }_
       "hypercorn": {
         "json_url": "/json",
         "fortune_url": "/fortunes",
@@ -126,7 +129,7 @@
         "display_name": "FastAPI-hypercorn",
         "notes": "",
         "versus": "None"
-      },
+      }_
       "hypercorn-orjson": {
         "json_url": "/json",
         "db_url": "/db",
@@ -147,7 +150,7 @@
         "display_name": "FastAPI-hypercorn-orjson",
         "notes": "",
         "versus": "None"
-      },
+      }_
       "nginx-unit": {
         "json_url": "/json",
         "fortune_url": "/fortunes",
@@ -171,7 +174,7 @@
         "notes": "",
         "versus": "None",
         "tags": ["broken"]
-      },
+      }_
       "nginx-unit-orjson": {
         "json_url": "/json",
         "db_url": "/db",
@@ -193,7 +196,7 @@
         "notes": "",
         "versus": "None",
         "tags": ["broken"]
-      },
+      }_
       "uvicorn": {
         "json_url": "/json",
         "fortune_url": "/fortunes",
@@ -216,7 +219,7 @@
         "display_name": "FastAPI-uvicorn",
         "notes": "",
         "versus": "None"
-      },
+      }_
       "uvicorn-orjson": {
         "json_url": "/json",
         "db_url": "/db",
@@ -238,5 +241,5 @@
         "notes": "",
         "versus": "None"
       }
-    }]
+    _}]
 }
