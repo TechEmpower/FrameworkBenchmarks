@@ -1,6 +1,6 @@
 [package]
 name = "ntex"
-version = "0.4.0"
+version = "0.7.0"
 edition = "2018"
 
 [[bin]]
@@ -37,7 +37,7 @@ tokio = ["ntex/tokio"]
 async-std = ["ntex/async-std"]
 
 [dependencies]
-ntex = "0.6.1"
+ntex = "0.7.2"
 ntex-bytes = { version = "0.1.19", features=["simd"] }
 core_affinity = "0.8"
 mimalloc = { version = "0.1.25", default-features = false }
@@ -53,7 +53,7 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 log = { version = "0.4", features = ["release_max_level_off"] }
 tok_io = {version = "1", package = "tokio" }
-tokio-postgres = { git="https://github.com/fafhrd91/postgres.git", branch="ntex-0.6" }
+tokio-postgres = { git="https://github.com/fafhrd91/postgres.git" }
 
 [profile.release]
 opt-level = 3

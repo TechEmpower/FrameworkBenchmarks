@@ -104,7 +104,7 @@
       "database": "MySQL",
       "framework": "PHP",
       "language": "PHP",
-      "flavor": "PHP8.1",
+      "flavor": "PHP8.2",
       "orm": "Raw",
       "platform": "Unit Nginx",
       "webserver": "None",
@@ -113,7 +113,7 @@
       "display_name": "PHP Unit Nginx",
       "notes": "",
       "versus": "php",
-      "tags": ["broken"]
+      "tags": []
     },
     "pools": {
       "json_url": "/json.php",

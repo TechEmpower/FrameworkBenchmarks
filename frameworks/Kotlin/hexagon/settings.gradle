@@ -9,8 +9,8 @@ include(
 
     "hexagon_jetty_pgclient",
     "hexagon_jetty_postgresql",
-    "hexagon_netty_postgresql",
-    "hexagon_netty_async_pgclient",
+    "hexagon_nima_pgclient",
+    "hexagon_nima_postgresql",
     "hexagon_nettyepoll_pgclient",
     "hexagon_nettyepoll_async_pgclient",
     "hexagon_nettyepoll_postgresql",
