@@ -1,11 +1,11 @@
-import asyncio
+import os
+from operator import itemgetter
+from random import randint, sample
+from urllib.parse import parse_qs
+
 import asyncpg
 import jinja2
-import os
 import ujson
-from random import randint, sample
-from operator import itemgetter
-from urllib.parse import parse_qs
 
 
 async def setup():
