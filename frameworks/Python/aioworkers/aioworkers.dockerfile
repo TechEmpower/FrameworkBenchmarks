@@ -1,4 +1,4 @@
-FROM python:3.9-alpine
+FROM python:3.11.4-alpine
 RUN apk add --no-cache coreutils make gcc
 RUN apk add --no-cache python3-dev musl-dev libffi-dev
 RUN pip3 install uvloop
