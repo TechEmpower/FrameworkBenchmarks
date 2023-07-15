@@ -1,4 +1,4 @@
-FROM pypy:3.8-bullseye
+FROM pypy:3.10-bullseye
 
 ADD ./requirements.txt /aioworkers/
 

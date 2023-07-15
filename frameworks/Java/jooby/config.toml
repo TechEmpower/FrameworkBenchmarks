@@ -67,7 +67,7 @@ platform = "Jetty"
 webserver = "None"
 versus = "jetty"
 
-[jaxrs]
+[mvc]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"

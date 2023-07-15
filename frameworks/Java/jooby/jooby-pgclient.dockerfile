@@ -1,15 +1,11 @@
-FROM maven:3.6.1-jdk-11-slim as maven
+FROM maven:3.9.0-eclipse-temurin-17
 WORKDIR /jooby
 COPY pom.xml pom.xml
 COPY src src
 COPY public public
-RUN mvn package -q -P netty
-
-FROM openjdk:11.0.3-jdk-slim
-WORKDIR /jooby
-COPY --from=maven /jooby/target/jooby.jar app.jar
 COPY conf conf
+RUN mvn package -q -P netty
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-Xms4g", "-Xmx4g", "-XX:+AggressiveOpts", "-XX:-UseBiasedLocking", "-XX:+UseStringDeduplication", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-cp", "app.jar", "com.techempower.ReactivePg"]
+CMD ["java", "-server", "-Xms2g", "-Xmx2g", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dio.netty.disableHttpHeadersValidation=true", "-Dio.netty.buffer.checkBounds=false", "-Dio.netty.buffer.checkAccessible=false", "-cp", "target/jooby.jar", "com.techempower.ReactivePg"]
