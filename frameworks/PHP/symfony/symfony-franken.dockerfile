@@ -2,7 +2,7 @@ FROM dunglas/frankenphp
 
 # add additional extensions here:
 RUN install-php-extensions \
-    pdo_mysql \
+    pdo_pgsql \
     intl \
     opcache
 
@@ -24,7 +24,7 @@ RUN composer install --no-dev --no-scripts --quiet
 RUN composer require runtime/frankenphp-symfony
 ENV FRANKENPHP_CONFIG="worker ./public/worker.php"
 ENV APP_RUNTIME=Runtime\\FrankenPhpSymfony\\Runtime
-
+RUN cp deploy/postgresql/.env
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --no-dev --classmap-authoritative
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env prod
 

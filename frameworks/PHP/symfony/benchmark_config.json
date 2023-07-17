@@ -11,6 +11,30 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "symfony",
+      "language": "PHP",
+      "flavor": "PHP8",
+      "orm": "Full",
+      "platform": "FPM/FastCGI",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "symfony",
+      "notes": "",
+      "versus": "php",
+      "tags": []
+    },
+    "mysql": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "db_url": "/db",
+      "update_url": "/updates?queries=",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
       "database": "MySQL",
       "framework": "symfony",
       "language": "PHP",
@@ -23,7 +47,7 @@
       "display_name": "symfony",
       "notes": "",
       "versus": "php",
-      "tags": ["broken"]
+      "tags": []
     },
     "raw": {
       "db_url": "/raw/db",
@@ -44,7 +68,7 @@
       "display_name": "symfony-raw",
       "notes": "",
       "versus": "php",
-      "tags": ["broken"]
+      "tags": []
     },
     "swoole": {
       "plaintext_url": "/plaintext",
@@ -68,7 +92,7 @@
       "display_name": "symfony-swoole",
       "notes": "",
       "versus": "swoole",
-      "tags": ["broken"]
+      "tags": []
     },
     "workerman": {
       "plaintext_url": "/plaintext",
@@ -92,7 +116,7 @@
       "display_name": "symfony-workerman",
       "notes": "",
       "versus": "php",
-      "tags": ["broken"]
+      "tags": []
     },
     "franken": {
       "plaintext_url": "/plaintext",
@@ -116,7 +140,7 @@
       "display_name": "symfony-frankenphp",
       "notes": "Use php 8.2",
       "versus": "php",
-      "tags": ["broken"]
+      "tags": []
     }
   }]
 }

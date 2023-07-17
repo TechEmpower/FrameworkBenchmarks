@@ -21,18 +21,9 @@ ADD ./composer.json /symfony/
 RUN mkdir -m 777 -p /symfony/var/cache/{dev,prod} /symfony/var/log
 RUN composer install --no-dev --no-scripts
 
-# downgrade to doctrine-dbal 2.12 => due to a bug in version 2.13
-# see https://github.com/doctrine/dbal/issues/4603
-#RUN composer require doctrine/orm:2.10.2 -W
-#RUN composer require doctrine/dbal:2.12.x -W
-
 ADD . /symfony
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --no-dev --classmap-authoritative
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env prod
-
-# removes hardcoded option `ATTR_STATEMENT_CLASS` conflicting with `ATTR_PERSISTENT`. Hack not needed when upgrading to Doctrine 3
-# see https://github.com/doctrine/dbal/issues/2315
-#RUN sed -i '/PDO::ATTR_STATEMENT_CLASS/d' ./vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php
+RUN cp deploy/postgresql/.env . && composer dump-env prod && bin/console cache:clear
 
 RUN php bin/console cache:clear
 

@@ -8,7 +8,7 @@ RUN pecl install apcu > /dev/null && \
 
 RUN apt-get update -yqq && \
     apt-get install -yqq libicu-dev git unzip > /dev/null && \ 
-    docker-php-ext-install pdo_mysql opcache intl > /dev/null
+    docker-php-ext-install pdo_pgsql opcache intl > /dev/null
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
@@ -19,6 +19,7 @@ WORKDIR /symfony
 RUN mkdir -m 777 -p /symfony/var/cache/{dev,prod} /symfony/var/log
 #RUN mkdir -m 777 -p /symfony/var/cache/swoole /symfony/var/log
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts --quiet
+RUN cp deploy/postgresql/.env . && composer dump-env prod && bin/console cache:clear
 
 ENV APP_RUNTIME=Runtime\\Swoole\\Runtime
 RUN composer require runtime/swoole
