@@ -15,7 +15,7 @@ public class AbstractBenchmarkController {
     protected final Integer[] boxed = IntStream.range(1, 10001).boxed().toArray(Integer[]::new);
 
     protected List<Fortune> createFortunes() {
-        List<Integer> fortuneMessages = IntStream.range(0, 10).boxed().collect(Collectors.toList());
+        List<Integer> fortuneMessages = IntStream.range(0, 10).boxed().toList();
         List<Fortune> fortunes = new ArrayList<>(fortuneMessages.size());
         for (Integer number : fortuneMessages) {
             fortunes.add(new Fortune(number + 1, "message" + number));
