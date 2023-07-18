@@ -1,4 +1,4 @@
-FROM php:8.2-rc-cli
+FROM php:8.2-cli
 
 RUN pecl install swoole > /dev/null && \
     docker-php-ext-enable swoole
@@ -7,7 +7,7 @@ RUN pecl install apcu > /dev/null && \
     docker-php-ext-enable apcu
 
 RUN apt-get update -yqq && \
-    apt-get install -yqq libicu-dev git unzip > /dev/null && \ 
+    apt-get install -yqq libpq-dev libicu-dev git unzip > /dev/null && \ 
     docker-php-ext-install pdo_pgsql opcache intl > /dev/null
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
