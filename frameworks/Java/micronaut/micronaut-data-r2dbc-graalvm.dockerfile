@@ -1,4 +1,5 @@
 FROM ghcr.io/graalvm/jdk-community:latest as build
+RUN microdnf install findutils
 COPY . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN ./gradlew  --no-daemon
