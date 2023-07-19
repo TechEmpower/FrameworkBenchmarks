@@ -10,7 +10,7 @@ The tests were run with:
 
 - [hyper-express](https://github.com/kartikk221/hyper-express)
 - [postgres](https://github.com/porsager/postgres)
-- [mysql2](https://github.com/sidorares/node-mysql2)
+- [mariadb](https://github.com/mariadb-corporation/mariadb-connector-nodejs)
 - [lru-cache](https://github.com/isaacs/node-lru-cache)
 
 ## Database

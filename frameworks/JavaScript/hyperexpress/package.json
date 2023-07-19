@@ -8,10 +8,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "html-escaper": "^3.0.3",
-    "hyper-express": "^6.7.1",
+    "hyper-express": "^6.8.0",
     "lru-cache": "^10.0.0",
-    "mysql2": "^3.5.0",
+    "mariadb": "^3.2.0",
     "postgres": "^3.3.5"
   },
   "type": "module"
