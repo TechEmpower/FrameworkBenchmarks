@@ -1,4 +1,3 @@
-import { escape } from 'html-escaper'
 import { Server } from 'hyper-express'
 import { LRUCache } from 'lru-cache'
 import cluster, { isWorker } from 'node:cluster'
@@ -9,6 +8,12 @@ const db = DATABASE ? await import(`./database/${DATABASE}.js`) : null
 const generateRandomNumber = () => Math.ceil(Math.random() * maxRows)
 
 const parseQueries = (i) => Math.min(Math.max(parseInt(i, 10) || 1, 1), maxQuery)
+
+const escapeHTMLRules = { '&': '&#38;', '<': '&#60;', '>': '&#62;', '"': '&#34;', "'": '&#39;', '/': '&#47;' }
+
+const unsafeHTMLMatcher = /[&<>"'\/]/g
+
+const escapeHTMLCode = (text) => text ? text.replace(unsafeHTMLMatcher, function (m) { return escapeHTMLRules[m] || m; }) : ''
 
 const cache = new LRUCache({
   max: maxRows
@@ -99,7 +104,7 @@ if (db) {
       fortunes.sort((a, b) => a.message.localeCompare(b.message))
 
       let i = 0, html = '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
-      for (; i < fortunes.length; i++) html += `<tr><td>${fortunes[i].id}</td><td>${escape(fortunes[i].message)}</td></tr>`
+      for (; i < fortunes.length; i++) html += `<tr><td>${fortunes[i].id}</td><td>${escapeHTMLCode(fortunes[i].message)}</td></tr>`
       html += '</table></body></html>'
 
       response.atomic(() => {
