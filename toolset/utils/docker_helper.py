@@ -13,8 +13,6 @@ from toolset.databases import databases
 
 from psutil import virtual_memory
 
-# total memory limit allocated for the test container
-mem_limit = int(round(virtual_memory().total * .95))
 
 class DockerHelper:
     def __init__(self, benchmarker=None):
@@ -207,6 +205,17 @@ class DockerHelper:
                 # to the webserver from IDE
                 if hasattr(test, 'debug_port'):
                     ports[test.debug_port] = test.debug_port
+                    
+            # Total memory limit allocated for the test container
+            if self.benchmarker.config.test_container_memory is not None:
+                mem_limit = self.benchmarker.config.test_container_memory
+            else:
+                mem_limit = int(round(virtual_memory().total * .95))
+
+            # Convert extra docker runtime args to a dictionary
+            extra_docker_args = {}
+            if self.benchmarker.config.extra_docker_runtime_args is not None:
+                extra_docker_args = {key: int(value) if value.isdigit() else value for key, value in (pair.split(":") for pair in self.benchmarker.config.extra_docker_runtime_args)}
 
             container = self.server.containers.run(
                 "techempower/tfb.test.%s" % test.name,
@@ -225,7 +234,9 @@ class DockerHelper:
                 mem_limit=mem_limit,
                 sysctls=sysctl,
                 remove=True,
-                log_config={'type': None})
+                log_config={'type': None},
+                **extra_docker_args
+                )
 
             watch_thread = Thread(
                 target=watch_container,
