@@ -1,10 +1,10 @@
-import { escape } from "html-escaper";
 import uWebSockets from "uWebSockets.js";
 import {
   addBenchmarkHeaders,
   generateRandomNumber,
   getQueriesCount,
   handleError,
+  escape,
 } from "./utils.js";
 
 let db;

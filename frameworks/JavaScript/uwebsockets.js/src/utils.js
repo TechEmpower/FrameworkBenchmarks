@@ -8,7 +8,6 @@
  */
 export function addBenchmarkHeaders(response) {
   response.writeHeader("Server", "uWebSockets.js");
-  response.writeHeader("Date", new Date().toUTCString());
 }
 
 /**
@@ -42,7 +41,7 @@ export function getQueriesCount(request) {
       } else if (queries > 500) {
         queriesCount = 500;
       }
-    } catch {}
+    } catch { }
   }
 
   return queriesCount;
@@ -54,4 +53,16 @@ export function getQueriesCount(request) {
  */
 export function generateRandomNumber() {
   return Math.floor(Math.random() * 9999) + 1;
+}
+
+/**
+ * Escape unsafe HTML Code
+ *
+ */
+const escapeHTMLRules = { '&': '&#38;', '<': '&#60;', '>': '&#62;', '"': '&#34;', "'": '&#39;', '/': '&#47;' }
+
+const unsafeHTMLMatcher = /[&<>"'\/]/g
+
+export function escape(text) {
+  return text ? text.replace(unsafeHTMLMatcher, function (m) { return escapeHTMLRules[m] || m; }) : ''
 }
