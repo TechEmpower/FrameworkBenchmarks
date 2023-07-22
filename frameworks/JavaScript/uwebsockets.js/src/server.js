@@ -113,7 +113,11 @@ if (db) {
 
       rows.sort((a, b) => a.message.localeCompare(b.message));
 
-      const html = rows.map((row) => `<tr><td>${row.id}</td><td>${escape(row.message)}</td></tr>`).join("");
+      let html = "", i = 0;
+
+      for (; i < rows.length; i++) {
+        html += `<tr><td>${rows[i].id}</td><td>${escape(rows[i].message)}</td></tr>`;
+      }
 
       response.cork(() => {
         addBenchmarkHeaders(response);
