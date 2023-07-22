@@ -31,20 +31,12 @@ export function handleError(error, response) {
  * @param {import('uWebSockets.js').HttpRequest} request
  */
 export function getQueriesCount(request) {
-  let queriesCount = 1;
-
   if (request.getQuery("queries")) {
-    try {
-      const queries = parseInt(request.getQuery("queries"));
-      if (queries <= 500 && queries >= 1) {
-        queriesCount = queries;
-      } else if (queries > 500) {
-        queriesCount = 500;
-      }
-    } catch { }
+    const queries = parseInt(request.getQuery("queries"), 10) || 1;
+    return queries >= 1 && queries <= 500 ? queries : 500;
   }
 
-  return queriesCount;
+  return 1;
 }
 
 /**
@@ -64,5 +56,6 @@ const escapeHTMLRules = { '&': '&#38;', '<': '&#60;', '>': '&#62;', '"': '&#34;'
 const unsafeHTMLMatcher = /[&<>"'\/]/g
 
 export function escape(text) {
-  return text ? text.replace(unsafeHTMLMatcher, function (m) { return escapeHTMLRules[m] || m; }) : ''
+  if (unsafeHTMLMatcher.test(text) === false) return text;
+  return text.replace(unsafeHTMLMatcher, function (m) { return escapeHTMLRules[m] || m; });
 }

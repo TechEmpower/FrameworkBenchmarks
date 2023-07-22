@@ -113,21 +113,12 @@ if (db) {
 
       rows.sort((a, b) => a.message.localeCompare(b.message));
 
-      let html =
-        "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
-
-      for (let i = 0; i < rows.length; i++) {
-        html += `<tr><td>${rows[i].id}</td><td>${escape(
-          rows[i].message
-        )}</td></tr>`;
-      }
-
-      html += "</table></body></html>";
+      const html = rows.map((row) => `<tr><td>${row.id}</td><td>${escape(row.message)}</td></tr>`).join("");
 
       response.cork(() => {
         addBenchmarkHeaders(response);
         response.writeHeader("Content-Type", "text/html; charset=utf-8");
-        response.end(html);
+        response.end(`<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>${html}</table></body></html>`);
       });
     } catch (error) {
       if (response.aborted) {
