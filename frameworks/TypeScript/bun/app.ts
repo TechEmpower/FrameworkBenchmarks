@@ -2,6 +2,8 @@ import * as db from './database/postgres.ts';
 import { headerPlainText, headerJSON, headerHTML } from './headers.ts';
 import { parseQueries, generateRandomNumber } from './utils.ts';
 
+const urlParser = require('fast-url-parser');
+
 const servePlainText = () => new Response('Hello, World!', headerPlainText);
 
 const serveJSON = () =>
@@ -66,7 +68,7 @@ const serveUpdate = async (n: number) => {
 
 Bun.serve({
   async fetch(req) {
-    const url = new URL(req.url);
+    const url = urlParser.parse(req.url);
     switch (url.pathname) {
       case '/plaintext':
         return servePlainText();
@@ -81,10 +83,10 @@ Bun.serve({
         return serveFortune();
         break;
       case '/queries':
-        return serveQuery(parseQueries(url.searchParams.get('n')));
+        return serveQuery(parseQueries(url.search));
         break;
       case '/updates':
-        return serveUpdate(parseQueries(url.searchParams.get('n')));
+        return serveUpdate(parseQueries(url.search));
         break;
       default:
         return new Response('Not Found', { status: 404 });

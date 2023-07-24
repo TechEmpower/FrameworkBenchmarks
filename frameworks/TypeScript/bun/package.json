@@ -9,6 +9,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "fast-url-parser": "^1.1.3",
     "postgres": "^3.3.5"
   }
 }

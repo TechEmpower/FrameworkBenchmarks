@@ -8,6 +8,7 @@ At its core is the [Bun runtime](https://bun.sh/docs#what-is-a-runtime), a fast 
 The tests were run with:
 * [bun](https://github.com/oven-sh/bun)
 * [postgres](https://github.com/porsager/postgres)
+* [fast-url-parser](https://github.com/petkaantonov/urlparser)
 
 ## Test URLs
 ### JSON
