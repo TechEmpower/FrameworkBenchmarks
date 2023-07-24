@@ -1,0 +1,30 @@
+{
+  "framework": "bun",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?n=",
+        "update_url": "/updates?n=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "postgres",
+        "framework": "None",
+        "language": "TypeScript",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Bun",
+        "notes": "",
+        "versus": "Nodejs"
+      }
+    }
+  ]
+}
