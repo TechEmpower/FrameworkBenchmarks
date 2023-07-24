@@ -146,7 +146,8 @@ std::string Handler::HandleRequestThrow(
 std::string Handler::GetResponse() const {
   auto fortunes = [this] {
     const auto lock = semaphore_.Acquire();
-    return pg_->Execute(db_helpers::kClusterHostType, select_all_fortunes_query_)
+    return pg_
+        ->Execute(db_helpers::kClusterHostType, select_all_fortunes_query_)
         .AsContainer<std::vector<Fortune>>(
             userver::storages::postgres::kRowTag);
   }();
