@@ -15,7 +15,5 @@ export const find = async (id: number) =>
     (arr) => arr[0]
   );
 
-export const getAllWorlds = async () => sql`SELECT id, randomNumber FROM world`;
-
 export const update = async (obj: any) =>
   sql`UPDATE world SET randomNumber = ${obj.randomNumber} WHERE id = ${obj.id}`;

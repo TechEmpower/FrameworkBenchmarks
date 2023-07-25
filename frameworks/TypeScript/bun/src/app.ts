@@ -66,7 +66,7 @@ const serveUpdate = async (n: number) => {
   return new Response(JSON.stringify(worlds), headerJSON);
 };
 
-Bun.serve({
+const server = Bun.serve({
   async fetch(req) {
     const url = urlParser.parse(req.url);
     switch (url.pathname) {
@@ -94,3 +94,7 @@ Bun.serve({
   },
   port: 8080,
 });
+
+console.log(
+  `[${process.pid}] Listening on http://${server.hostname}:${server.port}`
+);
