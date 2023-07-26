@@ -12,18 +12,18 @@
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",
-        "database": "postgres",
-        "framework": "Bun",
+        "database": "Postgres",
+        "framework": "bun",
         "language": "TypeScript",
         "flavor": "None",
         "orm": "Raw",
-        "platform": "None",
-        "webserver": "None",
+        "platform": "bun",
+        "webserver": "µws",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "Bun",
         "notes": "",
-        "versus": "Nodejs"
+        "versus": "nodejs"
       }
     }
   ]
