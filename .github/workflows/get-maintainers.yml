@@ -1,11 +1,11 @@
-name: Ping maintainers
+name: get-maintainers
 on: 
   pull_request:
     types: [opened, reopened]
 permissions:
   pull-requests: write
 jobs:
-  ping_maintainers:
+  get_maintainers:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
@@ -23,20 +23,15 @@ jobs:
         with:
           python-version: '3.10'
           architecture: 'x64'
+      - name: Save PR number
+        run: |
+          mkdir -p ./maintainers
+          echo ${{ github.event.number }} > ./maintainers/NR
       - name: Get Maintainers
         run: |
-          echo "MAINTAINERS_COMMENT<<EOF" >> $GITHUB_ENV
-          echo "$(./toolset/github_actions/get_maintainers.py)" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-      - name: Ping maintainers
-        if: env.MAINTAINERS_COMMENT
-        uses: actions/github-script@v6
+          python ./toolset/github_actions/get_maintainers.py > ./maintainers/maintainers.md
+      - name: Save Maintainers
+        uses: actions/upload-artifact@v3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: process.env.MAINTAINERS_COMMENT
-            });
+          name: maintainers
+          path: maintainers/

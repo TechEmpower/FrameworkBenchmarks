@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "laravel/lumen-framework": "^9"
+        "laravel/lumen-framework": "^10"
     },
     "autoload": {
         "psr-4": {

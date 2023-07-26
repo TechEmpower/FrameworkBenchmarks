@@ -307,11 +307,11 @@ class Benchmarker:
         output_file = "{file_name}".format(
             file_name=self.results.get_stats_file(framework_test.name,
                                                   test_type))
-        dstat_string = "dstat -Tafilmprs --aio --fs --ipc --lock --socket --tcp \
+        dool_string = "dool -Tafilmprs --aio --fs --ipc --lock --socket --tcp \
                                       --raw --udp --unix --vm --disk-util \
                                       --rpc --rpcd --output {output_file}".format(
             output_file=output_file)
-        cmd = shlex.split(dstat_string)
+        cmd = shlex.split(dool_string)
         self.subprocess_handle = subprocess.Popen(
             cmd, stdout=FNULL, stderr=subprocess.STDOUT)
 

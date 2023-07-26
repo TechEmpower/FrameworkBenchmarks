@@ -1,4 +1,5 @@
 
+apply(from: "$gradleScripts/native.gradle")
 apply(from: "$gradleScripts/application.gradle")
 
 dependencies {

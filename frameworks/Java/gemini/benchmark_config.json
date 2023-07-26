@@ -1,6 +1,6 @@
 {
   "framework": "gemini",
-  "maintainers": ["ecruz-te"],
+  "maintainers": ["ecruz-te", "nbrady-techempower"],
   "tests": [
     {
       "default": {

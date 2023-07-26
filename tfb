@@ -103,4 +103,4 @@ fi
 
 test -t 1 && USE_TTY="-t"
 docker build -t techempower/tfb --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) - < ${SCRIPT_ROOT}/Dockerfile
-exec docker run -i ${USE_TTY} ${EXTRA_DOCKER_ARGS} --rm --network tfb -e USER_ID=$(id -u) -v /var/run/docker.sock:/var/run/docker.sock -v ${SCRIPT_ROOT}:/FrameworkBenchmarks techempower/tfb "${@}"
+exec docker run -i ${USE_TTY} --rm --network tfb -e USER_ID=$(id -u) -v /var/run/docker.sock:/var/run/docker.sock -v ${SCRIPT_ROOT}:/FrameworkBenchmarks techempower/tfb "${@}"

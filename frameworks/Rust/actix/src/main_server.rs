@@ -6,8 +6,9 @@ use std::io;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use actix_codec::{AsyncWrite, Decoder};
+use actix_codec::AsyncWrite;
 use actix_http::{h1, Request};
+use tokio_util::codec::Decoder;
 use actix_rt::net::TcpStream;
 use actix_server::Server;
 use actix_service::fn_service;
