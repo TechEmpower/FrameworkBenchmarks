@@ -1,24 +1,15 @@
-import Pool from "pg-pool";
+import postgres from "postgres";
 
-const pool = new Pool({
+const sql = postgres({
   host: "tfb-database",
   user: "benchmarkdbuser",
   password: "benchmarkdbpass",
   database: "hello_world",
+  max: 1
 });
 
-await pool.connect();
+export const fortunes = async () => await sql`SELECT id, message FROM fortune`;
 
-const query = (text, values) =>
-  pool.query(text, values || []).then((r) => r.rows);
+export const find = async (id) => await sql`SELECT id, randomNumber FROM world WHERE id = ${id}`.then((arr) => arr[0]);
 
-export const fortunes = () => query("SELECT * FROM fortune");
-
-export const find = (id) =>
-  query("SELECT * FROM world WHERE id = $1", [id]).then((arr) => arr[0]);
-
-export const update = (obj) =>
-  query("UPDATE world SET randomNumber = $1 WHERE id = $2", [
-    obj.randomNumber,
-    obj.id,
-  ]);
+export const update = async (obj) => await sql`UPDATE world SET randomNumber = ${obj.randomNumber} WHERE id = ${obj.id}`;

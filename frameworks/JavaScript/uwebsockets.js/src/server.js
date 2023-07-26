@@ -1,10 +1,10 @@
-import { escape } from "html-escaper";
 import uWebSockets from "uWebSockets.js";
 import {
   addBenchmarkHeaders,
   generateRandomNumber,
   getQueriesCount,
   handleError,
+  escape,
 } from "./utils.js";
 
 let db;
@@ -14,15 +14,19 @@ if (DATABASE) db = await import(`./database/${DATABASE}.js`);
 const webserver = uWebSockets.App();
 
 webserver.get("/plaintext", (response) => {
-  addBenchmarkHeaders(response);
-  response.writeHeader("Content-Type", "text/plain");
-  response.end("Hello, World!");
+  response.cork(() => {
+    addBenchmarkHeaders(response);
+    response.writeHeader("Content-Type", "text/plain");
+    response.end("Hello, World!");
+  });
 });
 
 webserver.get("/json", (response) => {
-  addBenchmarkHeaders(response);
-  response.writeHeader("Content-Type", "application/json");
-  response.end(JSON.stringify({ message: "Hello, World!" }));
+  response.cork(() => {
+    addBenchmarkHeaders(response);
+    response.writeHeader("Content-Type", "application/json");
+    response.end(JSON.stringify({ message: "Hello, World!" }));
+  });
 });
 
 if (db) {
@@ -36,10 +40,6 @@ if (db) {
 
       if (response.aborted) {
         return;
-      }
-
-      if (rows.length < 1) {
-        return handleError(new Error("Row not found"), response);
       }
 
       response.cork(() => {
@@ -64,10 +64,10 @@ if (db) {
     try {
       const queriesCount = getQueriesCount(request);
 
-      const databaseJobs = [];
+      const databaseJobs = new Array(queriesCount);
 
       for (let i = 0; i < queriesCount; i++) {
-        databaseJobs.push(db.find(generateRandomNumber()));
+        databaseJobs[i] = db.find(generateRandomNumber());
       }
 
       const worldObjects = await Promise.all(databaseJobs);
@@ -102,32 +102,24 @@ if (db) {
         return;
       }
 
-      if (rows.length < 1) {
-        return handleError(new Error("Row not found"), response);
-      }
-
       rows.push({
         id: 0,
         message: "Additional fortune added at request time.",
       });
 
-      rows.sort((a, b) => a.message.localeCompare(b.message));
+      rows.sort((a, b) => (a.message < b.message) ? -1 : 1);
 
-      let html =
-        "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
+      const n = rows.length
 
-      for (let i = 0; i < rows.length; i++) {
-        html += `<tr><td>${rows[i].id}</td><td>${escape(
-          rows[i].message
-        )}</td></tr>`;
+      let html = "", i = 0;
+      for (; i < n; i++) {
+        html += `<tr><td>${rows[i].id}</td><td>${escape(rows[i].message)}</td></tr>`;
       }
-
-      html += "</table></body></html>";
 
       response.cork(() => {
         addBenchmarkHeaders(response);
         response.writeHeader("Content-Type", "text/html; charset=utf-8");
-        response.end(html);
+        response.end(`<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>${html}</table></body></html>`);
       });
     } catch (error) {
       if (response.aborted) {
@@ -146,30 +138,28 @@ if (db) {
     try {
       const queriesCount = getQueriesCount(request);
 
-      const databaseReadJobs = [];
+      const databaseJobs = new Array(queriesCount);
 
       for (let i = 0; i < queriesCount; i++) {
-        databaseReadJobs.push(db.find(generateRandomNumber()));
+        databaseJobs[i] = db.find(generateRandomNumber());
       }
 
-      const worldObjects = await Promise.all(databaseReadJobs);
+      const worldObjects = await Promise.all(databaseJobs);
 
       if (response.aborted) {
         return;
       }
 
-      const databaseWriteJobs = [];
-
-      for (let i = 0; i < worldObjects.length; i++) {
+      for (let i = 0; i < queriesCount; i++) {
         worldObjects[i].randomNumber = generateRandomNumber();
-        databaseWriteJobs.push(db.update(worldObjects[i]));
+        databaseJobs[i] = db.update(worldObjects[i]);
       }
 
       if (response.aborted) {
         return;
       }
 
-      await Promise.all(databaseWriteJobs);
+      await Promise.all(databaseJobs);
 
       response.cork(() => {
         addBenchmarkHeaders(response);

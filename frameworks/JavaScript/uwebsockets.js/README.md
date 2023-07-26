@@ -9,7 +9,7 @@ uWebSockets is a web server written in C/C++ (https://github.com/uNetworking/uWe
 The tests were run with:
 
 - [uWebSockets.js](https://github.com/uNetworking/uWebSockets.js/)
-- [pg](https://github.com/brianc/node-postgres)
+- [postgres](https://github.com/porsager/postgres/)
 
 ## Database
 
