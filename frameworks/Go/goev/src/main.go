@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
     "time"
+    "bytes"
     "runtime"
 	"syscall"
 	"sync/atomic"
@@ -26,6 +27,7 @@ type Http struct {
 }
 
 func (h *Http) OnOpen(fd int, now int64) bool {
+    netfd.SetNoDelay(fd, 1)
     // AddEvHandler 尽量放在最后, (OnOpen 和ORead可能不在一个线程)
 	if err := h.GetReactor().AddEvHandler(h, fd, goev.EV_IN); err != nil {
 		return false
@@ -56,6 +58,9 @@ func (h *Http) OnRead(fd int, evPollSharedBuff []byte, now int64) bool {
 			return false
 		}
 	}
+	if idx := bytes.Index(buf, []byte{'\r', '\n', '\r', '\n'}); idx == -1 {
+        return false
+    }
     buf = buf[:0]
     buf = append(buf, httpRespHeader...)
     buf = append(buf, []byte(liveDate.Load().(string))...)
@@ -78,7 +83,7 @@ func updateLiveSecond() {
 
 func main() {
 	fmt.Println("hello boy")
-    runtime.GOMAXPROCS(runtime.NumCPU() * 2 - 1) // 留一部分给网卡中断
+    runtime.GOMAXPROCS(runtime.NumCPU() * 2)
 
     liveDate.Store(time.Now().Format("Mon, 02 Jan 2006 15:04:05 GMT"))
     ticker = time.NewTicker(time.Millisecond * 1000)
@@ -97,7 +102,7 @@ func main() {
 	}
 	forNewFdReactor, err := goev.NewReactor(
 		goev.EvDataArrSize(20480), // default val
-		goev.EvPollNum(runtime.NumCPU()*2 - 1),
+		goev.EvPollNum(runtime.NumCPU()*2),
 		goev.EvReadyNum(512), // auto calc
 		goev.NoTimer(true),
 	)
