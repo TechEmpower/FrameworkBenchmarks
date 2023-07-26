@@ -5,11 +5,9 @@ import benchmark.repository.ReactiveWorldRepository;
 import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.r2dbc.annotation.R2dbcRepository;
 import io.micronaut.data.repository.GenericRepository;
-import io.micronaut.transaction.annotation.ReadOnly;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
-import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
 
