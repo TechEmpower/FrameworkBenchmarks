@@ -1,7 +1,10 @@
 /**
  * Add Benchmark HTTP response headers.
  *
- * Add HTTP response headers `Server` and `Date` which are required by the test suite.
+ * Add HTTP response headers `Server` which is required by the test suite.
+ * Header `Date` is automatically added by uWebsockets
+ * https://github.com/uNetworking/uWebSockets/blob/master/src/HttpResponse.h#L78
+ * 
  * https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview
  *
  * @param {import('uWebSockets.js').HttpResponse} response
@@ -31,12 +34,7 @@ export function handleError(error, response) {
  * @param {import('uWebSockets.js').HttpRequest} request
  */
 export function getQueriesCount(request) {
-  if (request.getQuery("queries")) {
-    const queries = parseInt(request.getQuery("queries"), 10) || 1;
-    return queries >= 1 && queries <= 500 ? queries : 500;
-  }
-
-  return 1;
+  return Math.min(parseInt(request.getQuery("queries")) || 1, 500);
 }
 
 /**
@@ -44,7 +42,7 @@ export function getQueriesCount(request) {
  *
  */
 export function generateRandomNumber() {
-  return Math.floor(Math.random() * 9999) + 1;
+  return Math.floor(Math.random() * 10000) + 1;
 }
 
 /**
