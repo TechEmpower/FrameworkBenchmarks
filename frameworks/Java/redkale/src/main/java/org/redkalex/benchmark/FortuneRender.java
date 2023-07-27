@@ -29,51 +29,67 @@ public class FortuneRender implements org.redkale.net.http.HttpRender {
 
     private static final byte[] text5 = "</table></body></html>".getBytes(StandardCharsets.UTF_8);
 
-    private final ThreadLocal<ByteArray> localByteArray = ThreadLocal.withInitial(() -> new ByteArray(1200));
+    private final ThreadLocal<ByteArray> localByteArray = ThreadLocal.withInitial(() -> new ByteArray(1280));
+
+    private final ThreadLocal<ByteArray> localTmpArray = ThreadLocal.withInitial(() -> new ByteArray(128));
+
+    private byte[][] idBytesCache;
+
+    private byte[][] escapeCache;
 
     @Override
     public void init(HttpContext context, AnyValue config) {
+        escapeCache = new byte[100][];
+        escapeCache['<'] = "&lt;".getBytes();
+        escapeCache['>'] = "&gt;".getBytes();
+        escapeCache['"'] = "&quot;".getBytes();
+        escapeCache['\''] = "&#39;".getBytes();
+        escapeCache['&'] = "&amp;".getBytes();
+
+        idBytesCache = new byte[100][];
+        for (int i = 0; i < idBytesCache.length; i++) {
+            idBytesCache[i] = String.valueOf(i).getBytes(StandardCharsets.UTF_8);
+        }
     }
 
     @Override
     public void renderTo(HttpRequest request, HttpResponse response, Convert convert, HttpScope scope) {
         ByteArray array = localByteArray.get().clear();
         array.put(text1);
+        ByteArray tmp = localTmpArray.get();
         for (Fortune item : (List<Fortune>) scope.getReferObj()) {
-            array.put(text2).put(String.valueOf(item.getId()).getBytes(StandardCharsets.UTF_8))
-                .put(text3).put(escape(item.getMessage()).toString().getBytes(StandardCharsets.UTF_8)).put(text4);
+            array.put(text2).put(escapeId(item.getId()))
+                .put(text3).put(escapeMessage(tmp, item.getMessage())).put(text4);
         }
         array.put(text5);
         response.finish(contentType, array);
     }
 
-    private static CharSequence escape(CharSequence value) {
-        if (value == null || value.length() == 0) return "";
-        CharSequence cs = value;
-        StringBuilder sb = new StringBuilder(value.length() + 16);
+    private byte[] escapeId(int id) {
+        if (id >= 0 && id < idBytesCache.length) {
+            return idBytesCache[id];
+        } else {
+            return String.valueOf(id).getBytes(StandardCharsets.UTF_8);
+        }
+    }
+
+    private ByteArray escapeMessage(ByteArray tmp, String message) {
+        tmp.clear();
+        CharSequence cs = message;
         for (int i = 0; i < cs.length(); i++) {
-            char ch = cs.charAt(i);
-            switch (ch) {
-                case '<':
-                    sb.append("&lt;");
-                    break;
-                case '>':
-                    sb.append("&gt;");
-                    break;
-                case '"':
-                    sb.append("&quot;");
-                    break;
-                case '\'':
-                    sb.append("&#39;");
-                    break;
-                case '&':
-                    sb.append("&amp;");
-                    break;
-                default:
-                    sb.append(ch);
-                    break;
+            char c = cs.charAt(i);
+            byte[] bs = c < escapeCache.length ? escapeCache[c] : null;
+            if (bs != null) {
+                tmp.put(bs);
+            } else if (c < 0x80) {
+                tmp.put((byte) c);
+            } else if (c < 0x800) {
+                tmp.put((byte) (0xc0 | (c >> 6)), (byte) (0x80 | (c & 0x3f)));
+            } else {
+                tmp.put((byte) (0xe0 | ((c >> 12))), (byte) (0x80 | ((c >> 6) & 0x3f)), (byte) (0x80 | (c & 0x3f)));
             }
         }
-        return sb;
+        return tmp;
     }
+
 }
