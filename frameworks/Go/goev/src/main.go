@@ -102,7 +102,7 @@ func main() {
 	}
 	forNewFdReactor, err := goev.NewReactor(
 		goev.EvDataArrSize(20480), // default val
-		goev.EvPollNum(runtime.NumCPU()*2),
+		goev.EvPollNum(runtime.NumCPU()*2-1),
 		goev.EvReadyNum(512), // auto calc
 		goev.NoTimer(true),
 	)
