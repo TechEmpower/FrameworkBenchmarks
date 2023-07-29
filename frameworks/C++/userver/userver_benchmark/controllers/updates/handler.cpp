@@ -53,30 +53,32 @@ userver::formats::json::Value Handler::GetResponse(int queries) const {
   std::sort(values.begin(), values.end(),
             [](const auto& lhs, const auto& rhs) { return lhs.id < rhs.id; });
 
-  const auto lock = semaphore_.Acquire();
-  auto transaction = pg_->Begin(db_helpers::kClusterHostType, {});
-  for (auto& value : values) {
-    value.random_number = pg_->Execute(db_helpers::kClusterHostType,
-                                       db_helpers::kSelectRowQuery, value.id)
-                              .AsSingleRow<db_helpers::WorldTableRow>(
-                                  userver::storages::postgres::kRowTag)
-                              .random_number;
+  boost::container::small_vector<db_helpers::WorldTableRow, 20> result;
+
+  {
+    const auto lock = semaphore_.Acquire();
+
+    auto trx = pg_->Begin(db_helpers::kClusterHostType, {});
+    for (auto& value : values) {
+      value.random_number = trx.Execute(db_helpers::kSelectRowQuery, value.id)
+                                .AsSingleRow<db_helpers::WorldTableRow>(
+                                    userver::storages::postgres::kRowTag)
+                                .random_number;
+    }
+
+    // We copy values here (and hope compiler optimizes it into one memcpy call)
+    // to not serialize into json within transaction
+    result.assign(values.begin(), values.end());
+
+    for (auto& value : values) {
+      value.random_number = db_helpers::GenerateRandomValue();
+    }
+
+    trx.ExecuteDecomposeBulk(update_query_, values, values.size());
+    trx.Commit();
   }
 
-  auto json_result =
-      userver::formats::json::ValueBuilder{values}.ExtractValue();
-
-  for (auto& value : values) {
-    value.random_number = db_helpers::GenerateRandomValue();
-  }
-
-  userver::storages::postgres::io::SplitContainerByColumns(values,
-                                                           values.size())
-      .Perform([this](const auto&... args) {
-        pg_->Execute(db_helpers::kClusterHostType, update_query_, args...);
-      });
-
-  return json_result;
+  return userver::formats::json::ValueBuilder{values}.ExtractValue();
 }
 
 }  // namespace userver_techempower::updates

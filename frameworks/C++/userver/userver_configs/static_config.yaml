@@ -118,3 +118,9 @@ components_manager:
             decompress_request: false
             task_processor: main-task-processor
 
+userver_experiments:
+ # please note that this doesn't actually fully enable pipelining (which is forbidden by TFB rules):
+ # all it does is it pipelines first BEGIN, SELECT SET_CONFIG, <first execute> of a transaction, all other
+ # operations are still performed with a round-trip to a server (basically every pipeline contains a single operation).
+ - pg-connection-pipeline-enabled
+
