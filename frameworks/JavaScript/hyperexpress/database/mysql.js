@@ -13,3 +13,5 @@ export const find = (id) => execute('SELECT id, randomNumber FROM world WHERE id
 export const getAllWorlds = () => execute('SELECT id, randomNumber FROM world')
 
 export const update = (obj) => execute('UPDATE world SET randomNumber = ? WHERE id = ?', [obj.randomNumber, obj.id])
+
+export const bulkUpdate = (worlds) => Promise.all(worlds.map(world => update(world)))

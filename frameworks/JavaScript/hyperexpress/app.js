@@ -76,10 +76,9 @@ if (db) {
 
       for (let i = 0; i < queries; i++) {
         worlds[i].randomNumber = generateRandomNumber()
-        worldPromises[i] = db.update(worlds[i])
       }
 
-      await Promise.all(worldPromises)
+      await db.bulkUpdate(worlds)
 
       response.json(worlds)
     } catch (error) {
