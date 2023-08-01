@@ -5,7 +5,6 @@
     "service": {
         "api": "fastcgi",
         "socket": "/var/tmp/cppcms.sock",
-        "worker_threads": 50,
         "backlog": 65535
     },
     "http": {
