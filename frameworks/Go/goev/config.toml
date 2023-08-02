@@ -3,7 +3,7 @@ name = "goev"
 
 [main]
 urls.plaintext = "/plaintext"
-approach = "Realistic"
+approach = "Stripped"
 classification = "Platform"
 database = "None"
 database_os = "Linux"
