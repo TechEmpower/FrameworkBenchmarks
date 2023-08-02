@@ -103,8 +103,9 @@ components_manager:
 
         world-pg-cache:
             pgcomponent: hello-world-db
+            chunk-size: 0 # fetch all rows at once
             update-types: only-full
-            update-interval: 1s
+            update-interval: 60s
             update-correction: 50ms
 
         cached-queries-handler:
