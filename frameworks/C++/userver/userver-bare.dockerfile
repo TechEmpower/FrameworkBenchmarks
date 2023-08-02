@@ -5,7 +5,7 @@ RUN apt install -y lsb-release wget software-properties-common gnupg && \
 
 WORKDIR /src
 RUN git clone https://github.com/userver-framework/userver.git && \
-    cd userver && git checkout 2c06249d7a5b43253aa5d3962d44dc5fba10dc53
+    cd userver && git checkout 9ca143ebe99c70be532ed4dde386a165a833181d
 COPY userver_benchmark/ ./
 RUN mkdir build && cd build && \
     cmake -DUSERVER_IS_THE_ROOT_PROJECT=0 -DUSERVER_FEATURE_CRYPTOPP_BLAKE2=0 \
