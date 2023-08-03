@@ -35,21 +35,22 @@ userver::formats::json::Value Handler::HandleRequestJsonThrow(
 }
 
 userver::formats::json::Value Handler::GetResponse(int queries) const {
-  boost::container::small_vector<db_helpers::WorldTableRow, 500> result(
-      queries);
+  boost::container::small_vector<db_helpers::WorldTableRow, 20> result(queries);
   for (auto& value : result) {
     value.id = db_helpers::GenerateRandomId();
   }
 
   {
     const auto lock = semaphore_.Acquire();
+
+    auto trx = pg_->Begin(db_helpers::kClusterHostType, {});
     for (auto& value : result) {
-      value.random_number = pg_->Execute(db_helpers::kClusterHostType,
-                                         db_helpers::kSelectRowQuery, value.id)
+      value.random_number = trx.Execute(db_helpers::kSelectRowQuery, value.id)
                                 .AsSingleRow<db_helpers::WorldTableRow>(
                                     userver::storages::postgres::kRowTag)
                                 .random_number;
     }
+    trx.Commit();
   }
 
   return userver::formats::json::ValueBuilder{result}.ExtractValue();
