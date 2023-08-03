@@ -1,9 +1,7 @@
 {
   "dependencies": {
-    "html-escaper": "^3.0.3",
-    "pg": "^8.11.0",
-    "pg-pool": "^3.6.0",
-    "uWebSockets.js": "uNetworking/uWebSockets.js#v20.30.0"
+    "postgres": "^3.3.5",
+    "uWebSockets.js": "uNetworking/uWebSockets.js#v20.31.0"
   },
   "license": "MIT",
   "main": "src/server.js",

@@ -1,14 +1,16 @@
 /**
  * Add Benchmark HTTP response headers.
  *
- * Add HTTP response headers `Server` and `Date` which are required by the test suite.
+ * Add HTTP response headers `Server` which is required by the test suite.
+ * Header `Date` is automatically added by uWebsockets
+ * https://github.com/uNetworking/uWebSockets/blob/master/src/HttpResponse.h#L78
+ * 
  * https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview
  *
  * @param {import('uWebSockets.js').HttpResponse} response
  */
 export function addBenchmarkHeaders(response) {
   response.writeHeader("Server", "uWebSockets.js");
-  response.writeHeader("Date", new Date().toUTCString());
 }
 
 /**
@@ -32,20 +34,7 @@ export function handleError(error, response) {
  * @param {import('uWebSockets.js').HttpRequest} request
  */
 export function getQueriesCount(request) {
-  let queriesCount = 1;
-
-  if (request.getQuery("queries")) {
-    try {
-      const queries = parseInt(request.getQuery("queries"));
-      if (queries <= 500 && queries >= 1) {
-        queriesCount = queries;
-      } else if (queries > 500) {
-        queriesCount = 500;
-      }
-    } catch {}
-  }
-
-  return queriesCount;
+  return Math.min(parseInt(request.getQuery("queries")) || 1, 500);
 }
 
 /**
@@ -53,5 +42,18 @@ export function getQueriesCount(request) {
  *
  */
 export function generateRandomNumber() {
-  return Math.floor(Math.random() * 9999) + 1;
+  return Math.floor(Math.random() * 10000) + 1;
+}
+
+/**
+ * Escape unsafe HTML Code
+ *
+ */
+const escapeHTMLRules = { '&': '&#38;', '<': '&#60;', '>': '&#62;', '"': '&#34;', "'": '&#39;', '/': '&#47;' }
+
+const unsafeHTMLMatcher = /[&<>"'\/]/g
+
+export function escape(text) {
+  if (unsafeHTMLMatcher.test(text) === false) return text;
+  return text.replace(unsafeHTMLMatcher, function (m) { return escapeHTMLRules[m] || m; });
 }

@@ -10,8 +10,6 @@ RUN apt-get -yqq update && \
       -o Dpkg::Options::="--force-confold" \
       cloc \
       curl \
-      # Collect resource usage statistics
-      dstat \
       gcc \
       git-core \
       gosu \
@@ -36,6 +34,14 @@ RUN pip3 install \
       # https://github.com/docker/docker-py/issues/3113#issuecomment-1525500104
       requests==2.28.1
 
+# Collect resource usage statistics
+ARG DOOL_VERSION=v1.2.0
+
+WORKDIR /tmp
+RUN curl -LSs "https://github.com/scottchiefbaker/dool/archive/${DOOL_VERSION}.tar.gz" | \
+      tar --strip-components=1 -xz && \
+    ./install.py
+
 # Check if the group ID is already created
 ARG GROUP_ID
 RUN if ! getent group "$GROUP_ID"; then \
@@ -48,6 +54,7 @@ RUN if ! getent passwd "$USER_ID"; then \
       adduser --disabled-password --gecos '' --gid "$GROUP_ID" --uid "$USER_ID" user; \
     fi
 
-ENV FWROOT=/FrameworkBenchmarks PYTHONPATH=/FrameworkBenchmarks USER_ID="$USER_ID"
+ENV FWROOT=/FrameworkBenchmarks USER_ID="$USER_ID"
+ENV PYTHONPATH="$FWROOT"
 
-ENTRYPOINT ["FrameworkBenchmarks/entrypoint.sh"]
+ENTRYPOINT ["/FrameworkBenchmarks/entrypoint.sh"]

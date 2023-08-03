@@ -41,24 +41,15 @@ userver::formats::json::Value Handler::GetResponse(int queries) const {
     value.id = db_helpers::GenerateRandomId();
   }
 
-  // even though this adds a round-trip for Begin/Commit we expect this to be
-  // faster due to the pool semaphore contention reduction - now we have a
-  // connection for ourselves until we are done with it, otherwise we would
-  // likely wait on the semaphore with every new query.
   {
     const auto lock = semaphore_.Acquire();
-    auto transaction = pg_->Begin(
-        db_helpers::kClusterHostType,
-        userver::storages::postgres::TransactionOptions{
-            userver::storages::postgres::TransactionOptions::Mode::kReadOnly});
     for (auto& value : result) {
-      value.random_number =
-          transaction.Execute(db_helpers::kSelectRowQuery, value.id)
-              .AsSingleRow<db_helpers::WorldTableRow>(
-                  userver::storages::postgres::kRowTag)
-              .random_number;
+      value.random_number = pg_->Execute(db_helpers::kClusterHostType,
+                                         db_helpers::kSelectRowQuery, value.id)
+                                .AsSingleRow<db_helpers::WorldTableRow>(
+                                    userver::storages::postgres::kRowTag)
+                                .random_number;
     }
-    transaction.Commit();
   }
 
   return userver::formats::json::ValueBuilder{result}.ExtractValue();

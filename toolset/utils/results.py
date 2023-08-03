@@ -453,7 +453,7 @@ class Results:
         stats_dict = dict()
         stats_file = self.get_stats_file(framework_test.name, test_type)
         with open(stats_file) as stats:
-            # dstat doesn't output a completely compliant CSV file - we need to strip the header
+            # dool doesn't output a completely compliant CSV file - we need to strip the header
             for _ in range(4):
                 next(stats)
             stats_reader = csv.reader(stats)

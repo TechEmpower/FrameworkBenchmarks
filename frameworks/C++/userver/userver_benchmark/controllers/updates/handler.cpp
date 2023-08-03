@@ -22,7 +22,7 @@ WHERE w.id = new_numbers.id
 
 constexpr std::size_t kBestConcurrencyWildGuess = 128;
 
-}
+}  // namespace
 
 Handler::Handler(const userver::components::ComponentConfig& config,
                  const userver::components::ComponentContext& context)
@@ -53,18 +53,14 @@ userver::formats::json::Value Handler::GetResponse(int queries) const {
   std::sort(values.begin(), values.end(),
             [](const auto& lhs, const auto& rhs) { return lhs.id < rhs.id; });
 
-  // even though this adds a round-trip for Begin/Commit we expect this to be
-  // faster due to the pool semaphore contention reduction - now we have a
-  // connection for ourselves until we are done with it, otherwise we would
-  // likely wait on the semaphore with every new query.
   const auto lock = semaphore_.Acquire();
   auto transaction = pg_->Begin(db_helpers::kClusterHostType, {});
   for (auto& value : values) {
-    value.random_number =
-        transaction.Execute(db_helpers::kSelectRowQuery, value.id)
-            .AsSingleRow<db_helpers::WorldTableRow>(
-                userver::storages::postgres::kRowTag)
-            .random_number;
+    value.random_number = pg_->Execute(db_helpers::kClusterHostType,
+                                       db_helpers::kSelectRowQuery, value.id)
+                              .AsSingleRow<db_helpers::WorldTableRow>(
+                                  userver::storages::postgres::kRowTag)
+                              .random_number;
   }
 
   auto json_result =
@@ -73,8 +69,12 @@ userver::formats::json::Value Handler::GetResponse(int queries) const {
   for (auto& value : values) {
     value.random_number = db_helpers::GenerateRandomValue();
   }
-  transaction.ExecuteDecomposeBulk(update_query_, values, values.size());
-  transaction.Commit();
+
+  userver::storages::postgres::io::SplitContainerByColumns(values,
+                                                           values.size())
+      .Perform([this](const auto&... args) {
+        pg_->Execute(db_helpers::kClusterHostType, update_query_, args...);
+      });
 
   return json_result;
 }
