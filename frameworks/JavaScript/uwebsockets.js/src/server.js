@@ -14,19 +14,15 @@ if (DATABASE) db = await import(`./database/${DATABASE}.js`);
 const webserver = uWebSockets.App();
 
 webserver.get("/plaintext", (response) => {
-  response.cork(() => {
-    addBenchmarkHeaders(response);
-    response.writeHeader("Content-Type", "text/plain");
-    response.end("Hello, World!");
-  });
+  addBenchmarkHeaders(response);
+  response.writeHeader("Content-Type", "text/plain");
+  response.end("Hello, World!");
 });
 
 webserver.get("/json", (response) => {
-  response.cork(() => {
-    addBenchmarkHeaders(response);
-    response.writeHeader("Content-Type", "application/json");
-    response.end(JSON.stringify({ message: "Hello, World!" }));
-  });
+  addBenchmarkHeaders(response);
+  response.writeHeader("Content-Type", "application/json");
+  response.end(JSON.stringify({ message: "Hello, World!" }));
 });
 
 if (db) {
@@ -152,14 +148,13 @@ if (db) {
 
       for (let i = 0; i < queriesCount; i++) {
         worldObjects[i].randomNumber = generateRandomNumber();
-        databaseJobs[i] = db.update(worldObjects[i]);
       }
+
+      await db.bulkUpdate(worldObjects);
 
       if (response.aborted) {
         return;
       }
-
-      await Promise.all(databaseJobs);
 
       response.cork(() => {
         addBenchmarkHeaders(response);
