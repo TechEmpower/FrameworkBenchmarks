@@ -58,8 +58,8 @@ GEM
       console (~> 1.8)
       samovar (~> 2.1)
     protocol-hpack (1.4.2)
-    protocol-http (0.24.1)
-    protocol-http1 (0.15.0)
+    protocol-http (0.24.7)
+    protocol-http1 (0.15.1)
       protocol-http (~> 0.22)
     protocol-http2 (0.15.1)
       protocol-hpack (~> 1.4)
@@ -119,6 +119,7 @@ DEPENDENCIES
   oj (~> 3.14)
   pg (~> 1.5)
   puma (~> 6.2)
+  rack (~> 3.0)
   rack-test
   rubocop
   sequel
