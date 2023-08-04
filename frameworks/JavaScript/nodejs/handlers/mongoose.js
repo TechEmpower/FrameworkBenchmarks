@@ -1,10 +1,10 @@
 const h = require('../helper');
 const Mongoose = require('mongoose');
-// These .set() calls can be removed when mongoose is upgraded to v5.
-Mongoose.set('useNewUrlParser', true);
-Mongoose.set('useFindAndModify', false);
-Mongoose.set('useUnifiedTopology', true);
-const connection = Mongoose.createConnection('mongodb://tfb-database/hello_world');
+const connection = Mongoose.createConnection('mongodb://tfb-database/hello_world', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+});
 
 /**
  * Note! The benchmarks say we should use "id" as a property name.
