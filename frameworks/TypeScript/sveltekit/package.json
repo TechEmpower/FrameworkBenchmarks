@@ -1,0 +1,35 @@
+{
+	"name": "svelte-bench",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"lint": "prettier --plugin-search-dir . --check . && eslint .",
+		"format": "prettier --plugin-search-dir . --write ."
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-node": "^1.3.1",
+		"@typescript-eslint/eslint-plugin": "^6.2.1",
+		"@typescript-eslint/parser": "^6.2.1",
+		"eslint": "^8.46.0",
+		"eslint-config-prettier": "^9.0.0",
+		"eslint-plugin-svelte": "^2.32.4",
+		"prettier": "^3.0.1",
+		"prettier-plugin-svelte": "^3.0.3",
+		"rimraf": "^5.0.1",
+		"svelte": "^4.1.2",
+		"svelte-adapter-bun": "^0.4.4",
+		"svelte-check": "^3.4.6",
+		"tslib": "^2.6.1",
+		"typescript": "^5.1.6",
+		"vite": "^4.4.8"
+	},
+	"type": "module",
+	"dependencies": {
+		"@sveltejs/kit": "^1.22.4"
+	}
+}

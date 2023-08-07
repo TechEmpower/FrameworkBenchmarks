@@ -1,0 +1,45 @@
+{
+	"framework": "sveltekit",
+	"tests": [
+		{
+			"default": {
+				"json_url": "/json",
+				"plaintext_url": "/plaintext",
+				"port": 8080,
+				"approach": "Realistic",
+				"classification": "Fullstack",
+				"database": "None",
+				"framework": "sveltekit",
+				"language": "TypeScript",
+				"flavor": "None",
+				"orm": "None",
+				"platform": "nodejs",
+				"webserver": "None",
+				"os": "Linux",
+				"database_os": "Linux",
+				"display_name": "SvelteKit-node",
+				"notes": "",
+				"versus": "None"
+			},
+			"bun": {
+				"json_url": "/json",
+				"plaintext_url": "/plaintext",
+				"port": 8080,
+				"approach": "Realistic",
+				"classification": "Fullstack",
+				"database": "None",
+				"framework": "sveltekit",
+				"language": "TypeScript",
+				"flavor": "None",
+				"orm": "None",
+				"platform": "bun",
+				"webserver": "µws",
+				"os": "Linux",
+				"database_os": "Linux",
+				"display_name": "SvelteKit-bun",
+				"notes": "",
+				"versus": "None"
+			}
+		}
+	]
+}
