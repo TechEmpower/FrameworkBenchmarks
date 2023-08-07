@@ -8,13 +8,15 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm install
+RUN npm install -g bun
 
-RUN npm run check
+RUN bun install
+
+RUN bun run check
 
 ENV RUNTIME bun
 
-RUN npm run build
+RUN bun run build
 
 ###################
 # EXTRACTION
@@ -36,6 +38,6 @@ COPY --from=builder /app/bun.lockb .
 RUN bun install --production
 
 COPY --from=builder /app/build ./build
-COPY --from=builder /app/spawn.js .
+COPY --from=builder /app/spawn.ts .
 
-CMD ["bun", "spawn.js"]
+CMD ["bun", "spawn.ts"]
