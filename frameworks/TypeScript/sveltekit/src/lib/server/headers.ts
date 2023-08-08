@@ -1,3 +1,3 @@
-export const headerPlainTextInit: HeadersInit = {
+export const plainTextHeader: HeadersInit = {
 	'Content-Type': 'text/plain'
 };

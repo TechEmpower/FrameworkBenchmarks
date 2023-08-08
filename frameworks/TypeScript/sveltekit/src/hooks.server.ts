@@ -1,5 +1,5 @@
-import { bunHandle, nodeHandle } from '$lib/server/handles';
+import { bunHandler, nodeHandler } from '$lib/server/handlers';
 
 const { RUNTIME } = process.env;
 
-export const handle = RUNTIME === 'bun' ? bunHandle : nodeHandle;
+export const handle = RUNTIME === 'bun' ? bunHandler : nodeHandler;

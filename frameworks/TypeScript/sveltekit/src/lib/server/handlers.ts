@@ -1,6 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
 
-export const nodeHandle: Handle = (async ({ event, resolve }) => {
+export const nodeHandler: Handle = (async ({ event, resolve }) => {
 	const response = await resolve(event);
 
 	response.headers.set('Server', 'SvelteKit');
@@ -10,7 +10,7 @@ export const nodeHandle: Handle = (async ({ event, resolve }) => {
 }) satisfies Handle;
 
 // bun webserver adds 'Date' header by default
-export const bunHandle: Handle = (async ({ event, resolve }) => {
+export const bunHandler: Handle = (async ({ event, resolve }) => {
 	const response = await resolve(event);
 
 	response.headers.set('Server', 'SvelteKit');
