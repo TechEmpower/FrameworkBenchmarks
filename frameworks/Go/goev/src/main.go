@@ -100,9 +100,13 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
+    cpuN := runtime.NumCPU()
+    if cpuN > 1 {
+        cpuN = cpuN / 2
+    }
 	forNewFdReactor, err := goev.NewReactor(
 		goev.EvDataArrSize(20480), // default val
-		goev.EvPollNum(runtime.NumCPU()*2-1),
+		goev.EvPollNum(cpuN),
 		goev.EvReadyNum(512), // auto calc
 		goev.NoTimer(true),
 	)
