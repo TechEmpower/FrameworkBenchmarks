@@ -4,7 +4,6 @@ include(
     "core",
     "store_pgclient",
     "store_sql",
-    "test",
 
     "hexagon_jetty_pgclient",
     "hexagon_jetty_postgresql",
