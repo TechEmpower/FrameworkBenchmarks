@@ -39,8 +39,8 @@ class Controller(
 
     val path: PathHandler by lazy {
         path {
-            on("*") { send(headers = headers) }
-            on("*", DateCallback())
+            before("*") { send(headers = headers) }
+            before("*", DateCallback())
 
             get("/plaintext") { ok(textMessage, contentType = plain) }
             get("/json") { ok(Message(textMessage).toJson(), contentType = json) }
