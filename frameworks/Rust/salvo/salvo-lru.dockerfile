@@ -10,4 +10,4 @@ RUN cargo build --release
 
 EXPOSE 8080
 
-CMD ./target/release/main-moka
+CMD ./target/release/main-lru
