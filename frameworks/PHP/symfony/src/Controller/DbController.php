@@ -21,17 +21,13 @@ class DbController
         $this->worldRepository = $worldRepository;
     }
 
-    /**
-     * @Route("/db")
-     */
+    #[Route('/db')]
     public function db(): JsonResponse
     {
         return new JsonResponse($this->worldRepository->find(mt_rand(1, 10000)));
     }
 
-    /**
-     * @Route("/queries")
-     */
+    #[Route('/queries')]
     public function queries(Request $request): JsonResponse
     {
         $queries = (int) $request->query->get('queries', 1);
@@ -48,9 +44,8 @@ class DbController
         return new JsonResponse($worlds);
     }
 
-    /**
-     * @Route("/updates")
-     */
+    #[Route('/updates')]
+
     public function update(Request $request): JsonResponse
     {
         $queries = (int) $request->query->get('queries', 1);
