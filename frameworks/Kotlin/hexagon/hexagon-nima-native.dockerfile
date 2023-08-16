@@ -1,14 +1,14 @@
 #
 # BUILD
 #
-FROM ghcr.io/graalvm/native-image-community:17-ol9 as build
+FROM ghcr.io/graalvm/native-image-community:20-muslib-ol9 as build
 USER root
 WORKDIR /hexagon
 
 ADD . .
 RUN microdnf -y install findutils
 RUN ./gradlew --quiet classes
-RUN ./gradlew --quiet -x test nativeCompile
+RUN ./gradlew --quiet -x test hexagon_nima_postgresql:nativeCompile
 
 #
 # RUNTIME
