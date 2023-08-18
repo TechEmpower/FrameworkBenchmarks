@@ -1,4 +1,4 @@
-FROM rust:latest AS compile
+FROM rust:1.67 AS compile
 
 ARG WASMTIME_VERSION=11.0.1
 
