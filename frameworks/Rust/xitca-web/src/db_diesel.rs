@@ -2,7 +2,7 @@ use std::{cell::RefCell, error::Error, fmt, future::Future, io, time::Duration};
 
 use diesel::prelude::{ConnectionError, ExpressionMethods, QueryDsl};
 use diesel_async::{AsyncConnection, AsyncPgConnection, RunQueryDsl};
-use futures_util::stream::{FuturesUnordered, TryStreamExt};
+use futures_util::future::try_join_all;
 use tang_rs::{Manager, ManagerFuture, ManagerTimeout, Pool};
 use tokio::time::{sleep, Sleep};
 
@@ -132,23 +132,19 @@ impl DieselPool {
     pub async fn get_worlds(&self, num: u16) -> DbResult<Vec<World>> {
         use crate::schema::world::dsl::*;
 
-        let worlds = {
+        {
             let mut conn = self.pool.get().await?;
-
             let mut rng = self.rng.borrow_mut();
-            (0..num)
-                .map(|_| {
-                    let w_id = rng.gen_id();
-                    let fut = world.filter(id.eq(w_id)).load::<World>(&mut *conn);
-                    async {
-                        let w = fut.await?.pop().unwrap();
-                        Ok(w)
-                    }
-                })
-                .collect::<FuturesUnordered<_>>()
-        };
-
-        worlds.try_collect().await
+            try_join_all((0..num).map(|_| {
+                let w_id = rng.gen_id();
+                let fut = world.filter(id.eq(w_id)).load::<World>(&mut *conn);
+                async {
+                    let w = fut.await?.pop().unwrap();
+                    Ok(w)
+                }
+            }))
+        }
+        .await
     }
 
     pub async fn update(&self, num: u16) -> DbResult<Vec<World>> {
@@ -158,20 +154,17 @@ impl DieselPool {
 
         let mut worlds = {
             let mut rng = self.rng.borrow_mut();
-            (0..num)
-                .map(|_| {
-                    let w_id = rng.gen_id();
-                    let new_id = rng.gen_id();
-                    let fut = world.filter(id.eq(w_id)).load::<World>(&mut *conn);
-                    async move {
-                        let mut w = fut.await?.pop().unwrap();
-                        w.randomnumber = new_id;
-                        DbResult::Ok(w)
-                    }
-                })
-                .collect::<FuturesUnordered<_>>()
+            try_join_all((0..num).map(|_| {
+                let w_id = rng.gen_id();
+                let new_id = rng.gen_id();
+                let fut = world.filter(id.eq(w_id)).load::<World>(&mut *conn);
+                async move {
+                    let mut w = fut.await?.pop().unwrap();
+                    w.randomnumber = new_id;
+                    DbResult::Ok(w)
+                }
+            }))
         }
-        .try_collect::<Vec<_>>()
         .await?;
 
         worlds.sort_by_key(|w| w.id);
