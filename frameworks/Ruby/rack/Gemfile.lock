@@ -67,7 +67,7 @@ GEM
     protocol-rack (0.2.4)
       protocol-http (~> 0.23)
       rack (>= 1.0)
-    puma (6.2.1)
+    puma (6.3.1)
       nio4r (~> 2.0)
     rack (3.0.7)
     rack-test (2.1.0)
@@ -118,7 +118,7 @@ DEPENDENCIES
   json (~> 2.6)
   oj (~> 3.14)
   pg (~> 1.5)
-  puma (~> 6.2)
+  puma (~> 6.3)
   rack (~> 3.0)
   rack-test
   rubocop
