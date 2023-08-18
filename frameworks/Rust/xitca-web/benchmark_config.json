@@ -33,7 +33,7 @@
         "update_url": "/updates?q=",
         "port": 8080,
         "approach": "Realistic",
-        "classification": "Full",
+        "classification": "Fullstack",
         "database": "Postgres",
         "framework": "xitca-web",
         "language": "Rust",
