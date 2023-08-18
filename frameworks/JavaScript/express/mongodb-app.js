@@ -6,7 +6,11 @@ const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 const express = require('express');
 const mongoose = require('mongoose');
-const conn = mongoose.connect('mongodb://tfb-database/hello_world');
+const connection = mongoose.createConnection('mongodb://tfb-database/hello_world',{
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+});
 
 // Middleware
 const bodyParser = require('body-parser');
@@ -23,7 +27,7 @@ const WorldSchema = new mongoose.Schema({
 }, {
   collection: 'world'
 });
-const MWorld = mongoose.model('world', WorldSchema);
+const MWorld = connection.model('world', WorldSchema);
 
 const FortuneSchema = new mongoose.Schema({
   _id: Number,
@@ -31,7 +35,7 @@ const FortuneSchema = new mongoose.Schema({
 }, {
   collection: 'fortune'
 });
-const MFortune = mongoose.model('fortune', FortuneSchema);
+const MFortune = connection.model('fortune', FortuneSchema);
 
 if (cluster.isPrimary) {
   // Fork workers.
