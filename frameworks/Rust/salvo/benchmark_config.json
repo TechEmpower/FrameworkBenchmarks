@@ -138,7 +138,7 @@
         "notes": "",
         "versus": "None"
       },
-      "moka": {
+      "lru": {
         "cached_query_url": "/cached_queries?q=",
         "port": 8080,
         "approach": "Realistic",
@@ -151,7 +151,7 @@
         "webserver": "Hyper",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Salvo [moka]",
+        "display_name": "Salvo [lru]",
         "notes": "",
         "versus": "None"
       }
