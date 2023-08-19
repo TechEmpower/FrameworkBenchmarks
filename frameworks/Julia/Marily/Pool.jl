@@ -6,7 +6,7 @@ end
 
 function newconnection()
     return LibPQ.Connection(
-        "postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world"
+        "postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world",
         # "postgresql://benchmarkdbuser:benchmarkdbpass@localhost:5555/hello_world"
     )
 end

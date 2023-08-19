@@ -119,18 +119,19 @@ function fortunes(req::HTTP.Request)
     push!(fortunesList, [string(0), "Additional fortune added at request time."])
     sort!(fortunesList, by = x -> x[2])
 
-    body = "<!DOCTYPE html>" * string(@htl("""
-    <html>
-        <head>
-            <title>Fortunes</title>
-        </head>
-        <body>
-            <table>
-                <tr><th>id</th><th>message</th></tr>
-                $([@htl("<tr><td>$(f[1])</td><td>$(f[2])</td></tr>\n") for f in fortunesList])
-            </table>
-        </body>
-    </html>
-    """))
+    body =
+        "<!DOCTYPE html>" * string(@htl("""
+ <html>
+     <head>
+         <title>Fortunes</title>
+     </head>
+     <body>
+         <table>
+             <tr><th>id</th><th>message</th></tr>
+             $([@htl("<tr><td>$(f[1])</td><td>$(f[2])</td></tr>\n") for f in fortunesList])
+         </table>
+     </body>
+ </html>
+ """))
     return HTTP.Response(200, headers, body)
 end
