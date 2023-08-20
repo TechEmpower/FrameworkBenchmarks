@@ -1,21 +1,20 @@
-
-struct jsonMsgObj
+struct Message
     message::String
 end
 
-struct jsonObj
+struct DatabaseRow
     id::Int64
     randomNumber::Int64
 end
 
-StructTypes.StructType(::Type{jsonMsgObj}) = StructTypes.Struct()
-StructTypes.StructType(::Type{jsonObj}) = StructTypes.Struct()
+StructTypes.StructType(::Type{Message}) = StructTypes.Struct()
+StructTypes.StructType(::Type{DatabaseRow}) = StructTypes.Struct()
 
 function getqueries(req)
     params = HTTP.queryparams(HTTP.URI(req.target).query)
     return try
         min(500, max(1, parse(Int64, get(params, "queries", "1"))))
-    catch ArgumentError
+    catch ex
         1
     end
 end
@@ -37,7 +36,7 @@ function jsonSerialization(req::HTTP.Request)
         "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT",
     ]
 
-    return HTTP.Response(200, headers, body = JSON3.write(jsonMsgObj("Hello, World!")))
+    return HTTP.Response(200, headers, body = JSON3.write(Message("Hello, World!")))
 end
 
 function singleQuery(req::HTTP.Request)
@@ -55,7 +54,7 @@ function singleQuery(req::HTTP.Request)
         first(first(results))
     end
 
-    return HTTP.Response(200, headers, body = JSON3.write(jsonObj(randNum, dbNumber)))
+    return HTTP.Response(200, headers, body = JSON3.write(DatabaseRow(randNum, dbNumber)))
 end
 
 function multipleQueries(req::HTTP.Request)
@@ -66,12 +65,17 @@ function multipleQueries(req::HTTP.Request)
     ]
 
     nqueries = getqueries(req)
-    responseArray = sizehint!(Vector{jsonObj}(), nqueries)
+    responseArray = sizehint!(Vector{DatabaseRow}(), nqueries)
     withdb() do conn
         for i = 1:nqueries
             randNum = rand(1:10000)
-            results = LibPQ.async_execute(conn, "SELECT * FROM World WHERE id = \$1 ", [randNum]) |> fetch
-            push!(responseArray, jsonObj(randNum, first(results)[2]))
+            results =
+                LibPQ.async_execute(
+                    conn,
+                    "SELECT * FROM World WHERE id = \$1 ",
+                    [randNum],
+                ) |> fetch
+            push!(responseArray, DatabaseRow(randNum, first(results)[2]))
         end
     end
     return HTTP.Response(200, headers, body = JSON3.write(responseArray))
@@ -85,7 +89,7 @@ function updates(req::HTTP.Request)
     ]
 
     nqueries = getqueries(req)
-    responseArray = sizehint!(Vector{jsonObj}(), nqueries)
+    responseArray = sizehint!(Vector{DatabaseRow}(), nqueries)
     withdb() do conn
         for i = 1:nqueries
             randId = rand(1:10000)
@@ -96,7 +100,7 @@ function updates(req::HTTP.Request)
             dbNumber = row[2]
             sqlQuery = "UPDATE World SET randomnumber = $randNum WHERE id = $randId"
             results = LibPQ.async_execute(conn, sqlQuery) |> fetch
-            push!(responseArray, jsonObj(randId, randNum))
+            push!(responseArray, DatabaseRow(randId, randNum))
         end
     end
 

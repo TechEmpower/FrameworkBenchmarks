@@ -35,7 +35,7 @@ handler = HTTP.streamhandler(router)
 @info "Julia runs on $(Threads.nthreads()) threads"
 
 function restart_server()
-    server = HTTP.listen!("0.0.0.0", 8080; reuseaddr=true) do http
+    server = HTTP.listen!("0.0.0.0", 8080; reuseaddr = true) do http
         # t = ConcurrentUtilities.@spawn handler(http)
         # wait(t)
         handler(http)
@@ -48,7 +48,10 @@ for _ in Iterators.repeated(true)
         server = restart_server()
         wait(server)
     catch exc
-        try close(server) catch end
+        try
+            close(server)
+        catch
+        end
         if exc isa InterruptException
             rethrow()
         end
