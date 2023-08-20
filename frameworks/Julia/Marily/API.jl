@@ -51,7 +51,7 @@ function singleQuery(req::HTTP.Request)
 
     dbNumber = withdb() do conn
         sqlQuery = "SELECT randomnumber, id FROM world WHERE id = \$1"
-        results = LibPQ.execute(conn, sqlQuery, [randNum])
+        results = LibPQ.async_execute(conn, sqlQuery, [randNum]) |> fetch
         first(first(results))
     end
 
@@ -67,10 +67,10 @@ function multipleQueries(req::HTTP.Request)
 
     nqueries = getqueries(req)
     responseArray = sizehint!(Vector{jsonObj}(), nqueries)
-    for i = 1:nqueries
-        withdb() do conn
+    withdb() do conn
+        for i = 1:nqueries
             randNum = rand(1:10000)
-            results = LibPQ.execute(conn, "SELECT * FROM World WHERE id = \$1 ", [randNum])
+            results = LibPQ.async_execute(conn, "SELECT * FROM World WHERE id = \$1 ", [randNum]) |> fetch
             push!(responseArray, jsonObj(randNum, first(results)[2]))
         end
     end
@@ -91,11 +91,11 @@ function updates(req::HTTP.Request)
             randId = rand(1:10000)
             randNum = rand(1:10000)
             sqlQuery = "SELECT * FROM World WHERE id = $randId"
-            results = LibPQ.execute(conn, sqlQuery)
+            results = LibPQ.async_execute(conn, sqlQuery) |> fetch
             row = first(results)
             dbNumber = row[2]
             sqlQuery = "UPDATE World SET randomnumber = $randNum WHERE id = $randId"
-            results = LibPQ.execute(conn, sqlQuery)
+            results = LibPQ.async_execute(conn, sqlQuery) |> fetch
             push!(responseArray, jsonObj(randId, randNum))
         end
     end
@@ -113,7 +113,7 @@ function fortunes(req::HTTP.Request)
     sqlQuery = "SELECT * FROM fortune"
     output = ""
     results = withdb() do conn
-        LibPQ.execute(conn, sqlQuery)
+        LibPQ.async_execute(conn, sqlQuery) |> fetch
     end
     fortunesList = [[string(row[1]), row[2]] for row in results]
     push!(fortunesList, [string(0), "Additional fortune added at request time."])

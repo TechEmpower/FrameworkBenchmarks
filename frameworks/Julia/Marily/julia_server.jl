@@ -31,11 +31,27 @@ handler = HTTP.streamhandler(router)
 # running multiple processes doesn't seem to make any sense
 # https://docs.julialang.org/en/v1/stdlib/Sockets/#Base.bind
 
-# ConcurrentUtilities.init(20)
+# ConcurrentUtilities.init(40)
 @info "Julia runs on $(Threads.nthreads()) threads"
-HTTP.listen("0.0.0.0", 8080) do http
-    # t = ConcurrentUtilities.@spawn handler(http)
-    # wait(t)
-    handler(http)
-    return nothing
+
+function restart_server()
+    server = HTTP.listen!("0.0.0.0", 8080; reuseaddr=true) do http
+        # t = ConcurrentUtilities.@spawn handler(http)
+        # wait(t)
+        handler(http)
+        return nothing
+    end
+end
+
+for _ in Iterators.repeated(true)
+    try
+        server = restart_server()
+        wait(server)
+    catch exc
+        try close(server) catch end
+        if exc isa InterruptException
+            rethrow()
+        end
+        @info "Server died, restarting" (exc, catch_backtrace())
+    end
 end
