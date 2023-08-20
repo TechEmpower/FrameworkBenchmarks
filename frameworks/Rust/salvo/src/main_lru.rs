@@ -4,12 +4,15 @@
 // static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::cmp;
+use std::num::NonZeroUsize;
 use std::sync::Arc;
+use std::sync::Mutex;
 use std::thread::available_parallelism;
 
 use anyhow::Error;
 use bytes::Bytes;
-use moka::sync::Cache as MokaCache;
+use dotenv::dotenv;
+use lru::LruCache;
 use once_cell::sync::OnceCell;
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
@@ -17,7 +20,6 @@ use salvo::conn::tcp::TcpAcceptor;
 use salvo::http::header::{self, HeaderValue};
 use salvo::http::ResBody;
 use salvo::prelude::*;
-use dotenv::dotenv;
 
 mod models_pg;
 mod utils;
@@ -25,7 +27,7 @@ use models_pg::*;
 mod db_pg;
 use db_pg::PgConnection;
 
-static CACHED_WORLDS: OnceCell<MokaCache<usize, World>> = OnceCell::new();
+static CACHED_WORLDS: OnceCell<Mutex<LruCache<usize, World>>> = OnceCell::new();
 
 static SERVER_HEADER: HeaderValue = HeaderValue::from_static("salvo");
 static JSON_HEADER: HeaderValue = HeaderValue::from_static("application/json");
@@ -39,7 +41,8 @@ fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     for _ in 0..count {
         let idx = rng.gen_range(0..10_000);
         unsafe {
-            let w = CACHED_WORLDS.get_unchecked().get(&idx).unwrap();
+            let mut guard = CACHED_WORLDS.get_unchecked().lock().unwrap();
+            let w = guard.get(&idx).cloned().unwrap();
             worlds.push(w);
         }
     }
@@ -55,17 +58,17 @@ async fn populate_cache() -> Result<(), Error> {
     let db_url: String = utils::get_env_var("TECHEMPOWER_POSTGRES_URL");
     let conn = PgConnection::create(&db_url).await?;
     let worlds = conn.get_worlds(10_000).await?;
-    let cache = MokaCache::new(10_000);
+    let mut cache = LruCache::new(NonZeroUsize::new(10_000).unwrap());
     for (i, word) in worlds.into_iter().enumerate() {
-        cache.insert(i, word);
+        cache.put(i, word);
     }
-    CACHED_WORLDS.set(cache).unwrap();
+    CACHED_WORLDS.set(Mutex::new(cache)).unwrap();
     Ok(())
 }
 
 fn main() {
     dotenv().ok();
-    
+
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
@@ -76,7 +79,7 @@ fn main() {
 
     let router = Arc::new(Router::with_path("cached_queries").get(cached_queries));
     let thread_count = available_parallelism().map(|n| n.get()).unwrap_or(16);
-    for _ in 1..thread_count{
+    for _ in 1..thread_count {
         let router = router.clone();
         std::thread::spawn(move || {
             let rt = tokio::runtime::Builder::new_current_thread()

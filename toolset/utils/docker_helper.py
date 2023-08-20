@@ -215,7 +215,7 @@ class DockerHelper:
             # Convert extra docker runtime args to a dictionary
             extra_docker_args = {}
             if self.benchmarker.config.extra_docker_runtime_args is not None:
-                extra_docker_args = {key: int(value) if value.isdigit() else value for key, value in (pair.split(":") for pair in self.benchmarker.config.extra_docker_runtime_args)}
+                extra_docker_args = {key: int(value) if value.isdigit() else value for key, value in (pair.split(":", 1) for pair in self.benchmarker.config.extra_docker_runtime_args)}
 
             container = self.server.containers.run(
                 "techempower/tfb.test.%s" % test.name,
