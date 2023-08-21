@@ -1,0 +1,19 @@
+{
+  "env": {
+    "es6": true,
+    "commonjs": false,
+    "browser": false,
+    "node": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["prettier", "@typescript-eslint"],
+  "rules": {
+    "prettier/prettier": "error",
+    "no-console": "off",
+    "no-restricted-syntax": "off",
+    "no-await-in-loop": "off"
+  }
+}
