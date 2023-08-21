@@ -1,7 +1,6 @@
 FROM node:20-slim as base
 
-RUN apt update
-RUN apt install -y git
+RUN apt-get -yqq update >/dev/null && apt-get -yqq install >/dev/null git
 
 WORKDIR /app
 
