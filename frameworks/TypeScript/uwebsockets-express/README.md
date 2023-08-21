@@ -34,15 +34,15 @@ $ curl localhost:8080/db
 
 $ curl localhost:8080/fortunes
 
-$ curl localhost:8080/queries?queries=2
-$ curl localhost:8080/queries?queries=0
-$ curl localhost:8080/queries?queries=foo
-$ curl localhost:8080/queries?queries=501
-$ curl localhost:8080/queries?queries=
+$ curl localhost:8080/queries?n=2
+$ curl localhost:8080/queries?n=0
+$ curl localhost:8080/queries?n=foo
+$ curl localhost:8080/queries?n=501
+$ curl localhost:8080/queries?n=
 
-$ curl localhost:8080/updates?queries=2
-$ curl localhost:8080/updates?queries=0
-$ curl localhost:8080/updates?queries=foo
-$ curl localhost:8080/updates?queries=501
-$ curl localhost:8080/updates?queries=
+$ curl localhost:8080/updates?n=2
+$ curl localhost:8080/updates?n=0
+$ curl localhost:8080/updates?n=foo
+$ curl localhost:8080/updates?n=501
+$ curl localhost:8080/updates?n=
 ```
