@@ -1,25 +1,28 @@
 {
-	"framework": "http-jl",
-	"tests": [{
-		"default": {
-			"json_url": "/json",
-			"plaintext_url": "/plaintext",
-			"port": 8080,
-			"approach": "Realistic",
-			"classification": "None",
-			"database": "None",
-			"framework": "Http.jl",
-			"language": "Julia",
-			"orm": "None",
-			"platform": "None",
-			"webserver": "HTTP.jl",
-			"os": "Linux",
-			"database_os": "Linux",
-			"display_name": "Http.jl",
-			"notes": "",
-			"versus": "",
-			"tags": []
-		}
-	}]
+    "framework": "http-jl",
+    "tests": [{
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "None",
+        "database": "Postgres",
+        "framework": "HTTP.jl",
+        "language": "Julia",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "HTTP.jl",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "HTTP.jl",
+        "notes": "Http.jl",
+        "versus": "None"
+      }
+    }]
 }
-
