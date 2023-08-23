@@ -3,7 +3,7 @@
 ### Test Type Implementation Source Code
 
 * [JSON](src/main/scala/pekko/http/benchmark/handlers/JsonHandler.scala)
-* [PLAINTEXT](src/main/scala/pekko/http/benchmark/handlers/PlainTextRoute.scala)
+* [PLAINTEXT](src/main/scala/pekko/http/benchmark/Bootstrap.scala)
 * [DB](src/main/scala/pekko/http/benchmark/handlers/DbHandler.scala)
 * [QUERY](src/main/scala/pekko/http/benchmark/handlers/QueriesHandler.scala)
 * [UPDATE](src/main/scala/pekko/http/benchmark/handlers/UpdatesHandler.scala)
