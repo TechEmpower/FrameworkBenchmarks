@@ -1,7 +1,8 @@
 FROM ghcr.io/userver-framework/ubuntu-userver-build-base:v1 AS builder
 
-RUN apt install -y lsb-release wget software-properties-common gnupg && \
-    wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && ./llvm.sh 16
+RUN apt update && \
+    apt install -y lsb-release wget software-properties-common gnupg && \
+        wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && ./llvm.sh 16
 
 WORKDIR /src
 RUN git clone https://github.com/userver-framework/userver.git && \
