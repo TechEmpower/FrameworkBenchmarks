@@ -11,7 +11,7 @@
     "koa-bodyparser": "4.2.0",
     "koa-hbs": "1.0.0",
     "koa-router": "7.4.0",
-    "mongoose": "5.7.5",
+    "mongoose": "5.13.20",
     "mysql2": "1.5.3",
     "pg": "8.5.1",
     "pg-hstore": "2.3.2",
