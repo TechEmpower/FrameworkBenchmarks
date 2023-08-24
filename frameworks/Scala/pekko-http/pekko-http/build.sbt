@@ -22,4 +22,4 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.8" % "test"
 )
 
-mainClass in Compile := Some("pekko.http.benchmark.Main")
+Compile / mainClass := Some("pekko.http.benchmark.Main")
