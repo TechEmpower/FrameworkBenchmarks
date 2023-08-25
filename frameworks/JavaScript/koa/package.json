@@ -15,6 +15,6 @@
     "mysql2": "1.5.3",
     "pg": "8.5.1",
     "pg-hstore": "2.3.2",
-    "sequelize": "5.15.1"
+    "sequelize": "6.29.0"
   }
 }
