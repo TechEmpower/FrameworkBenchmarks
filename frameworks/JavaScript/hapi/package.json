@@ -8,7 +8,7 @@
     "async": "2.1.5",
     "bluebird": "3.4.7",
     "handlebars": "4.3.0",
-    "mongoose": "5.11.15",
+    "mongoose": "5.13.20",
     "mysql": "2.16.0",
     "mysql2": "1.6.5",
     "pg": "8.5.1",
