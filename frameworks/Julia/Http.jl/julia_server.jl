@@ -26,24 +26,15 @@ HTTP.register!(router, "GET", "/fortunes", fortunes)
 HTTP.register!(router, "/**", notfound)
 HTTP.register!(router, "/", notfound)
 
-handler = HTTP.streamhandler(router)
-
-# running multiple processes doesn't seem to make any sense
+# running multiple threads doesn't seem to make any sense
 # https://docs.julialang.org/en/v1/stdlib/Sockets/#Base.bind
 
-
 @info "Julia runs on $(Threads.nthreads()) threads"
-
 backlog = try
     parse(Int, split(readchomp(`sysctl net.core.somaxconn`), " = ")[2])
 catch
     511
 end
-
-HTTP.listen("0.0.0.0", 8080; backlog = backlog, reuseaddr = true) do http
-    try
-        handler(http)
-    finally
-        return nothing
-    end
+HTTP.serve("0.0.0.0", 8080; backlog = backlog, reuseaddr = true) do request::HTTP.Request
+    return router(request)
 end
