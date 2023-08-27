@@ -34,12 +34,16 @@ handler = HTTP.streamhandler(router)
 
 @info "Julia runs on $(Threads.nthreads()) threads"
 
-function start_server()
-    server = HTTP.listen!("0.0.0.0", 8080; reuseaddr = true) do http
-        # t = ConcurrentUtilities.@spawn handler(http)
-        # wait(t)
+backlog = try
+    parse(Int, split(readchomp(`sysctl net.core.somaxconn`), " = ")[2])
+catch
+    511
+end
+
+HTTP.listen("0.0.0.0", 8080; backlog = backlog, reuseaddr = true) do http
+    try
         handler(http)
+    finally
         return nothing
     end
 end
-wait(start_server())
