@@ -26,8 +26,6 @@
       "tags": []
     },
     "mysql": {
-      "plaintext_url": "/plaintext",
-      "json_url": "/json",
       "db_url": "/db",
       "update_url": "/updates?queries=",
       "query_url": "/queries?queries=",
@@ -44,7 +42,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "symfony",
+      "display_name": "symfony [MySQL]",
       "notes": "",
       "versus": "php",
       "tags": []

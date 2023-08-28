@@ -80,7 +80,7 @@
       "webserver": "Meinheld",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Django",
+      "display_name": "Django [Postgres]",
       "notes": "",
       "versus": "wsgi",
       "tags": [ ]
