@@ -16,7 +16,7 @@
     "rc": "1.1.6",
     "sails": "0.12.7",
     "sails-disk": "0.10.10",
-    "sequelize": "5.15.1"
+    "sequelize": "6.29.0"
   },
   "scripts": {
     "start": "node app.js",

@@ -20,7 +20,7 @@ pub async fn fetch_world(mut conn: PoolConnection<Postgres>, number: i32) -> Res
     args.add(number);
 
     let world: World = sqlx::query_as_with("SELECT id, randomnumber FROM World WHERE id = $1", args)
-        .fetch_one(&mut conn)
+        .fetch_one(&mut *conn)
         .await
         .expect("error loading world");
     Ok(world)
@@ -28,7 +28,7 @@ pub async fn fetch_world(mut conn: PoolConnection<Postgres>, number: i32) -> Res
 
 pub async fn fetch_fortunes(mut conn: PoolConnection<Postgres>) -> Result<Vec<Fortune>, Error> {
     let fortunes: Vec<Fortune> = sqlx::query_as("SELECT * FROM Fortune")
-        .fetch_all(&mut conn)
+        .fetch_all(&mut *conn)
         .await
         .expect("error loading Fortunes");
     Ok(fortunes)

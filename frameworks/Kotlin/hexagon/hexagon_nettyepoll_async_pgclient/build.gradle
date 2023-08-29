@@ -1,8 +1,0 @@
-
-apply(from: "$gradleScripts/application.gradle")
-
-dependencies {
-    api(project(":store_pgclient_async"))
-    api("com.hexagonkt:http_server_netty_epoll_async:$hexagonVersion")
-    api("io.netty:netty-transport-native-epoll:$nettyVersion:linux-x86_64")
-}

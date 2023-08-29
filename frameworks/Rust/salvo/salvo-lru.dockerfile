@@ -1,4 +1,4 @@
-FROM rust:1.68.2
+FROM rust:1.72
 
 ENV TECHEMPOWER_POSTGRES_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
 
@@ -10,4 +10,4 @@ RUN cargo build --release
 
 EXPOSE 8080
 
-CMD ./target/release/main-moka
+CMD ./target/release/main-lru
