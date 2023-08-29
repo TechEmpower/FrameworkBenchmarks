@@ -1,4 +1,4 @@
-cnxpool = Pools.Pool{LibPQ.Connection}(2)
+cnxpool = Pools.Pool{LibPQ.Connection}(25)
 
 function cnxisok(cnx::LibPQ.Connection)
     return LibPQ.status(cnx) == LibPQ.libpq_c.CONNECTION_OK

@@ -2,7 +2,7 @@
 
 julia_version = "1.9.3"
 manifest_format = "2.0"
-project_hash = "f7c00badcd2c8d6084164890ce9ab6f61656222f"
+project_hash = "350c12e51175a69408a5d41399f431a2b8090984"
 
 [[deps.Adapt]]
 deps = ["LinearAlgebra", "Requires"]
@@ -274,11 +274,6 @@ git-tree-sha1 = "a03c77519ab45eb9a34d3cfe2ca223d79c064323"
 uuid = "e6f89c97-d47a-5376-807f-9c37f3926c36"
 version = "1.0.1"
 
-[[deps.MIMEs]]
-git-tree-sha1 = "65f28ad4b594aebe22157d6fac869786a255b7eb"
-uuid = "6c6e2e6c-3030-632d-7369-2d6c69616d65"
-version = "0.1.4"
-
 [[deps.Markdown]]
 deps = ["Base64"]
 uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
@@ -344,12 +339,6 @@ version = "1.1.22+0"
 git-tree-sha1 = "2e73fe17cac3c62ad1aebe70d44c963c3cfdc3e3"
 uuid = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
 version = "1.6.2"
-
-[[deps.Oxygen]]
-deps = ["Dates", "HTTP", "JSON3", "MIMEs", "Sockets"]
-git-tree-sha1 = "dca31e833aafb6277e5aff9fdcb5029be5045255"
-uuid = "df9a0d86-3283-4920-82dc-4555fc0d1d8b"
-version = "1.1.11"
 
 [[deps.Parsers]]
 deps = ["Dates", "PrecompileTools", "UUIDs"]
