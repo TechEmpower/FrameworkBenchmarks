@@ -23,6 +23,27 @@
         "display_name": "HTTP.jl",
         "notes": "Http.jl",
         "versus": "None"
+      },
+      "oxygen": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "Oxygen",
+        "language": "Julia",
+        "flavor": "Julia",
+        "orm": "Raw",
+        "platform": "libuv",
+        "webserver": "HTTP.jl",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "HTTP.jl [Oxygen]",
+        "notes": "",
+        "versus": "Http.jl"
       }
     }]
 }

@@ -19,6 +19,10 @@ function getqueries(req)
     end
 end
 
+function notfound(request)
+    return HTTP.Response(404, [], "")
+end
+
 function plaintext(req::HTTP.Request)
     headers = [
         "Content-Type" => "text/plain",

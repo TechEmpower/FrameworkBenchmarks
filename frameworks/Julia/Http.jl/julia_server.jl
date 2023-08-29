@@ -10,11 +10,6 @@ using HypertextLiteral: @htl
 include("Pool.jl")
 include("API.jl")
 
-function notfound(request)
-    @info "Not found"
-    return HTTP.Response(404, [], "")
-end
-
 router = HTTP.Router()
 
 HTTP.register!(router, "GET", "/plaintext", plaintext)
