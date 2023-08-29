@@ -26,6 +26,7 @@ RUN git clone https://github.com/shaovie/reactor.git
 RUN cd reactor/ && make clean all
 COPY ./techempower.cpp /reactor-bench/reactor
 
+WORKDIR /reactor-bench/reactor
 RUN g++ techempower.cpp -O2 -std=c++11 -lreactor -L./bin -lpthread -o app
 
 ENV LD_LIBRARY_PATH=./bin:$LD_LIBRARY_PATH
