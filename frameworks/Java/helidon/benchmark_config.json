@@ -13,7 +13,7 @@
         "approach": "Realistic",
         "classification": "Micro",
         "database": "Postgres",
-        "framework": "Helidon Reactive",
+        "framework": "Helidon",
         "language": "Java",
         "flavor": "None",
         "orm": "Raw",
@@ -21,7 +21,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Helidon Reactive",
+        "display_name": "Helidon 3",
         "notes": "",
         "versus": "Netty"
       },
@@ -36,17 +36,17 @@
         "approach": "Realistic",
         "classification": "Micro",
         "database": "Postgres",
-        "framework": "Helidon Nima",
+        "framework": "Helidon",
         "language": "Java",
         "flavor": "None",
         "orm": "Raw",
-        "platform": "Nima",
+        "platform": "None",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Helidon Nima",
+        "display_name": "Helidon 4",
         "notes": "",
-        "versus": "Netty"
+        "versus": "None"
       }
     }
   ]
