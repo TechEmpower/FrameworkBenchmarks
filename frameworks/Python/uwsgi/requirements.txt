@@ -1,3 +1,3 @@
 gevent==22.10.2
-uwsgi==2.0.21
+uwsgi==2.0.22
 ujson==5.4.0

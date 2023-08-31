@@ -1,0 +1,34 @@
+.idea/
+*/*.iml
+
+# Created by .ignore support plugin (hsz.mobi)
+### SBT template
+# Simple Build Tool
+# http://www.scala-sbt.org/release/docs/Getting-Started/Directories.html#configuring-version-control
+
+target/
+lib_managed/
+src_managed/
+project/boot/
+.history
+.cache
+### Scala template
+*.class
+*.log
+
+# sbt specific
+.lib/
+dist/*
+project/project/
+project/plugins/project/
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
+
+# ENSIME specific
+.ensime_cache/
+.ensime
+
+# our own buffer file
+compare.txt
