@@ -1,0 +1,25 @@
+{
+   "framework": "Velocy",
+   "tests": [
+      {
+         "default": {
+            "plaintext_url": "/plaintext",
+            "port": 8080,
+            "approach": "Realistic",
+            "classification": "Micro",
+            "database": "None",
+            "framework": "Velocy",
+            "language": "JavaScript",
+            "flavor": "None",
+            "orm": "None",
+            "platform": "nodejs",
+            "webserver": "None",
+            "os": "Linux",
+            "database_os": "None",
+            "display_name": "Velocy",
+            "notes": "",
+            "versus": "nodejs"
+         }
+      }
+   ]
+}
