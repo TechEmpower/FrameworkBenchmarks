@@ -9,11 +9,6 @@ path = "./src/main.rs"
 required-features = ["io-uring", "pg", "serde", "template"]
 
 [[bin]]
-name = "xitca-web-diesel"
-path = "./src/main_diesel.rs"
-required-features = ["pg-orm", "serde", "template", "web"]
-
-[[bin]]
 name = "xitca-web-iou"
 path = "./src/main_iou.rs"
 required-features = ["io-uring", "pg-iou", "serde", "template"]
@@ -28,8 +23,6 @@ required-features = ["serde", "web"]
 pg = ["xitca-postgres"]
 # pg io_uring optional
 pg-iou = ["xitca-postgres/io-uring"]
-# pg orm optional
-pg-orm = ["diesel", "diesel-async", "tang-rs", "futures-util"]
 # serde optional
 serde = ["dep:serde", "serde_json"]
 # web optional
@@ -54,20 +47,12 @@ xitca-web = { version = "0.1", features = ["json"], optional = true }
 # raw-pg optional
 xitca-postgres = { version = "0.1", features = ["single-thread"], optional = true }
 
-# diesel-pg orm optional
-diesel = { version = "2.1", default-features = false, features = ["i-implement-a-third-party-backend-and-opt-into-breaking-changes"], optional = true }
-diesel-async = { version = "0.3", default-features = false, features = ["postgres"], optional = true }
-tang-rs = { version = "0.2", optional = true }
-
 # serde optional
 serde = { version = "1", optional = true }
 serde_json = { version = "1", optional = true }
 
 # template optional
 sailfish = { version = "0.8", default-features = false, features = ["derive", "perf-inline"], optional = true }
-
-# util optional
-futures-util = { version = "0.3", default-features = false, features = ["alloc"], optional = true }
 
 # stuff can not be used or not needed in wasi target
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
