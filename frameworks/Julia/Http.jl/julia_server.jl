@@ -6,6 +6,7 @@ using JSON3
 using StructTypes
 using ConcurrentUtilities: ConcurrentUtilities, Pools
 using HypertextLiteral: @htl
+using Logging
 
 include("Pool.jl")
 include("API.jl")
@@ -30,11 +31,9 @@ HTTP.register!(router, "/", notfound)
 # https://docs.julialang.org/en/v1/stdlib/Sockets/#Base.bind
 
 @info "Julia runs on $(Threads.nthreads()) threads"
-backlog = try
-    parse(Int, split(readchomp(`sysctl net.core.somaxconn`), " = ")[2])
-catch
-    511
-end
-HTTP.serve("0.0.0.0", 8080; backlog = backlog, reuseaddr = true) do request::HTTP.Request
+
+# Logging.disable_logging(Logging.Error)
+preinit_pool()
+HTTP.serve("0.0.0.0", 8080; backlog = -1, reuseaddr = true) do request::HTTP.Request
     return router(request)
 end
