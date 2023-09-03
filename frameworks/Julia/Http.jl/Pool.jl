@@ -1,4 +1,4 @@
-const poolsize = 20
+const poolsize = 1000
 cnxpool = Pools.Pool{LibPQ.Connection}(poolsize)
 
 function cnxisok(cnx::LibPQ.Connection)

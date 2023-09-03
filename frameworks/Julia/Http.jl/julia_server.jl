@@ -32,8 +32,10 @@ HTTP.register!(router, "/", notfound)
 
 @info "Julia runs on $(Threads.nthreads()) threads"
 
-# Logging.disable_logging(Logging.Error)
+Logging.disable_logging(Logging.Error)
 preinit_pool()
-HTTP.serve("0.0.0.0", 8080; backlog = -1, reuseaddr = true) do request::HTTP.Request
-    return router(request)
-end
+
+include("strategy.jl")
+
+# channelledmultiworker()
+simple()
