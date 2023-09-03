@@ -5,7 +5,7 @@
   "dependencies": {
     "@srfnstack/spliffy": "0.6.1",
     "html-escaper": "3.0.3",
-    "mongodb": "^4.0.1",
+    "mongodb": "^4.17.0",
     "mysql2": "^2.2.5",
     "node-cache": "5.1.2",
     "pg": "8.6.0",
