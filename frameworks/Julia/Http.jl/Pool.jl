@@ -10,6 +10,7 @@ function newconnection()
         "postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world",
         # "postgresql://benchmarkdbuser:benchmarkdbpass@localhost:5555/hello_world"
     )
+    !isdefined(LibPQ, :setnonblocking) && return cnx
     LibPQ.setnonblocking(cnx) && return cnx
     error("Could not set connection to nonblocking")
 end
