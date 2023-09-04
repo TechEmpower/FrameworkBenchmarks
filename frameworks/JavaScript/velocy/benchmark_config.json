@@ -1,5 +1,5 @@
 {
-   "framework": "Velocy",
+   "framework": "velocy",
    "tests": [
       {
          "default": {
@@ -8,7 +8,7 @@
             "approach": "Realistic",
             "classification": "Micro",
             "database": "None",
-            "framework": "Velocy",
+            "framework": "velocy",
             "language": "JavaScript",
             "flavor": "None",
             "orm": "None",
@@ -16,7 +16,7 @@
             "webserver": "None",
             "os": "Linux",
             "database_os": "None",
-            "display_name": "Velocy",
+            "display_name": "velocy",
             "notes": "",
             "versus": "nodejs"
          }
