@@ -23,29 +23,6 @@
       "display_name": "codeigniter4",
       "notes": "",
       "versus": "php"
-    },
-    "workerman": {
-      "json_url": "/json",
-      "plaintext_url": "/plaintext",
-      "db_url": "/db",
-      "query_url": "/queries/",
-      "update_url": "/update/",
-      "fortune_url": "/fortunes",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "MySQL",
-      "framework": "codeigniter",
-      "language": "PHP",
-      "flavor": "PHP8",
-      "orm": "Raw",
-      "platform": "workerman",
-      "webserver": "none",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "codeigniter4-workerman",
-      "notes": "",
-      "versus": "php"
     }
   }]
 }
