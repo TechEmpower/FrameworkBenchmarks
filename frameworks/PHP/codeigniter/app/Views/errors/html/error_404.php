@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>404 Page Not Found</title>
+    <title><?= lang('Errors.pageNotFound') ?></title>
 
     <style>
         div.logo {
@@ -70,13 +70,13 @@
 </head>
 <body>
     <div class="wrap">
-        <h1>404 - File Not Found</h1>
+        <h1>404</h1>
 
         <p>
             <?php if (ENVIRONMENT !== 'production') : ?>
                 <?= nl2br(esc($message)) ?>
             <?php else : ?>
-                Sorry! Cannot seem to find the page you were looking for.
+                <?= lang('Errors.sorryCannotFind') ?>
             <?php endif ?>
         </p>
     </div>
