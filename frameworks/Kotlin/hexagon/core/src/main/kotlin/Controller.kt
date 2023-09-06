@@ -62,6 +62,7 @@ class Controller(
         val fortunes = store.findAllFortunes() + Fortune(0, "Additional fortune added at request time.")
         val sortedFortunes = fortunes.sortedBy { it.message }
         val context = mapOf("fortunes" to sortedFortunes)
+        // TODO Pass the map with the template
         val body = templateAdapter.render(templateUrl, context)
 
         return ok(body, contentType = html)
