@@ -28,10 +28,6 @@ use models_sqlx::*;
 
 static DB_POOL: OnceCell<PgPool> = OnceCell::new();
 
-static SERVER_HEADER: HeaderValue = HeaderValue::from_static("salvo");
-static JSON_HEADER: HeaderValue = HeaderValue::from_static("application/json");
-static HTML_HEADER: HeaderValue = HeaderValue::from_static("text/html; charset=utf-8");
-
 fn pool() -> &'static PgPool {
     unsafe { DB_POOL.get_unchecked() }
 }
@@ -45,8 +41,8 @@ async fn world_row(res: &mut Response) -> Result<(), Error> {
 
     let data = serde_json::to_vec(&world).unwrap();
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, SERVER_HEADER.clone());
-    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
@@ -65,8 +61,8 @@ async fn fortunes(res: &mut Response) -> Result<(), Error> {
     write!(&mut data, "{}", FortunesTemplate { items }).unwrap();
 
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, SERVER_HEADER.clone());
-    headers.insert(header::CONTENT_TYPE, HTML_HEADER.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("text/html; charset=utf-8"));
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }

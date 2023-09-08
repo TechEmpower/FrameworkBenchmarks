@@ -28,9 +28,6 @@ mod utils;
 use db_mongo_raw::*;
 use models_mongo::*;
 
-static SERVER_HEADER: HeaderValue = HeaderValue::from_static("salvo");
-static JSON_HEADER: HeaderValue = HeaderValue::from_static("application/json");
-
 #[handler]
 async fn world_row(res: &mut Response, depot: &mut Depot) -> Result<(), Error> {
     let mut rng = SmallRng::from_entropy();
@@ -41,8 +38,8 @@ async fn world_row(res: &mut Response, depot: &mut Depot) -> Result<(), Error> {
 
     let data = serde_json::to_vec(&world).unwrap();
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, SERVER_HEADER.clone());
-    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
@@ -62,8 +59,8 @@ async fn queries(req: &mut Request, depot: &mut Depot, res: &mut Response) -> Re
 
     let data = serde_json::to_vec(&worlds)?;
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, SERVER_HEADER.clone());
-    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
@@ -90,8 +87,8 @@ async fn updates(req: &mut Request, depot: &mut Depot, res: &mut Response) -> Re
     update_worlds(db.clone(), worlds).await?;
 
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, SERVER_HEADER.clone());
-    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
