@@ -21,7 +21,7 @@
         "webserver": "Elysia",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Bun Elysia Posgres",
+        "display_name": "Bun Elysia Kysely Postgres",
         "notes": "",
         "versus": ""
       }
