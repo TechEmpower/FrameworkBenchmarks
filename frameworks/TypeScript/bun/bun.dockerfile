@@ -2,7 +2,7 @@ FROM debian:bookworm as build
 
 RUN apt-get update && apt-get upgrade -y && apt-get install -y curl unzip
 
-RUN curl -fsSL https://bun.sh/install | bash
+RUN curl -fsSL https://bun.sh/install | bash -s -- bun-v1.0.0
 
 ENV BUN_INSTALL="/root/.bun"
 ENV PATH="/root/.bun/bin:$PATH"
