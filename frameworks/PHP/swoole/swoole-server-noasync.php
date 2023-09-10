@@ -26,32 +26,32 @@ $server->on('request', static function (Request $req, Response $res) {
     try {
         switch ($req->server['request_uri']) {
             case '/json':
-                $res->header('Content-Type', 'application/json');
+                $res->header['Content-Type'] = 'application/json';
                 $res->end(json_encode(['message' => 'Hello, World!']));
                 break;
 
             case '/plaintext':
-                $res->header('Content-Type', 'text/plain; charset=utf-8');
+                $res->header['Content-Type'] = 'text/plain; charset=utf-8';
                 $res->end('Hello, World!');
                 break;
 
             case '/db':
-                $res->header('Content-Type', 'application/json');
+                $$res->header['Content-Type'] = 'application/json';
                 $res->end(db());
                 break;
             
             case '/query':
-                $res->header('Content-Type', 'application/json');
+                $res->header['Content-Type'] = 'application/json';
                 $res->end(query((int) $req->get['q'] ?? 1));
                 break;
 
             case '/fortunes':
-                $res->header('Content-Type', 'text/html; charset=utf-8');
+                $res->header['Content-Type'] = 'text/html; charset=utf-8';
                 $res->end(fortunes());
                 break;
 
             case '/updates':
-                $res->header('Content-Type', 'application/json');
+                $res->header['Content-Type'] = 'application/json';
                 $res->end(updates((int) $req->get['q'] ?? 1));
                 break;
 

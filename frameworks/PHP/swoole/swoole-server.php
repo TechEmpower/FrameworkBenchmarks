@@ -256,17 +256,17 @@ $server->on('request', function (Request $req, Response $res) use ($db, $fortune
     try {
         switch ($req->server['request_uri']) {
             case '/json':
-                $res->header('Content-Type', 'application/json');
+                $res->header['Content-Type'] = 'application/json';
                 $res->end(json_encode(['message' => 'Hello, World!']));
                 break;
 
             case '/plaintext':
-                $res->header('Content-Type', 'text/plain; charset=utf-8');
+                $res->header['Content-Type'] = 'text/plain; charset=utf-8';
                 $res->end('Hello, World!');
                 break;
 
             case '/db':
-                $res->header('Content-Type', 'application/json');
+                $res->header['Content-Type'] = 'application/json';
 
                 if (isset($req->get['queries'])) {
                     $res->end($db((int)$req->get['queries']));
@@ -276,12 +276,12 @@ $server->on('request', function (Request $req, Response $res) use ($db, $fortune
                 break;
 
             case '/fortunes':
-                $res->header('Content-Type', 'text/html; charset=utf-8');
+                $res->header['Content-Type'] = 'text/html; charset=utf-8';
                 $res->end($fortunes());
                 break;
 
             case '/updates':
-                $res->header('Content-Type', 'application/json');
+                $res->header['Content-Type'] = 'application/json';
 
                 if (isset($req->get['queries'])) {
                     $res->end($updates((int)$req->get['queries']));
