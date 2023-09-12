@@ -28,9 +28,6 @@ use db_pg::PgConnection;
 
 static CACHED_WORLDS: OnceCell<LruCache<usize, World>> = OnceCell::new();
 
-static SERVER_HEADER: HeaderValue = HeaderValue::from_static("salvo");
-static JSON_HEADER: HeaderValue = HeaderValue::from_static("application/json");
-
 #[handler]
 fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     let count = req.query::<u16>("q").unwrap_or(1);
@@ -46,8 +43,8 @@ fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     }
     let data = serde_json::to_vec(&worlds)?;
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, SERVER_HEADER.clone());
-    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
