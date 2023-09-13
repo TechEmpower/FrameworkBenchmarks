@@ -32,7 +32,7 @@ pub async fn update_world(client: &Client, update: &Statement, random_id: i32, w
     Ok(rows_modified)
 }
 
-pub async fn fetch_all_fortunes(client: Client, select: &Statement) -> Result<Vec<Fortune>, Error> {
+pub async fn fetch_all_fortunes(client: &Client, select: &Statement) -> Result<Vec<Fortune>, Error> {
     let rows: Vec<Row> = client.query(select, &[]).await.unwrap();
 
     let mut fortunes: Vec<Fortune> = Vec::with_capacity(rows.capacity());
