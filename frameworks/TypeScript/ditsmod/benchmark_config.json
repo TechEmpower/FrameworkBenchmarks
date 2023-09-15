@@ -1,0 +1,70 @@
+{
+  "framework": "ditsmod",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "Ditsmod",
+        "language": "TypeScript",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "nodejs",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Ditsmod",
+        "notes": "",
+        "versus": "nodejs"
+      },
+      "postgres": {
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "cached_query_url": "/cached-queries?count=",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "Ditsmod",
+        "language": "TypeScript",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "nodejs",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Ditsmod [PostgreSQL]",
+        "notes": "",
+        "versus": "nodejs"
+      },
+      "mysql": {
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "cached_query_url": "/cached-queries?count=",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "MySQL",
+        "framework": "Ditsmod",
+        "language": "TypeScript",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "nodejs",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Ditsmod [MySQL]",
+        "notes": "",
+        "versus": "nodejs"
+      }
+    }
+  ]
+}
