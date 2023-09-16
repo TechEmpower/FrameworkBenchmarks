@@ -6,7 +6,6 @@
 use std::cmp;
 use std::num::NonZeroUsize;
 use std::sync::Arc;
-use std::sync::Mutex;
 use std::thread::available_parallelism;
 
 use anyhow::Error;
@@ -27,10 +26,7 @@ use models_pg::*;
 mod db_pg;
 use db_pg::PgConnection;
 
-static CACHED_WORLDS: OnceCell<Mutex<LruCache<usize, World>>> = OnceCell::new();
-
-static SERVER_HEADER: HeaderValue = HeaderValue::from_static("salvo");
-static JSON_HEADER: HeaderValue = HeaderValue::from_static("application/json");
+static CACHED_WORLDS: OnceCell<LruCache<usize, World>> = OnceCell::new();
 
 #[handler]
 fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
@@ -41,15 +37,14 @@ fn cached_queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
     for _ in 0..count {
         let idx = rng.gen_range(0..10_000);
         unsafe {
-            let mut guard = CACHED_WORLDS.get_unchecked().lock().unwrap();
-            let w = guard.get(&idx).cloned().unwrap();
+            let w = CACHED_WORLDS.get_unchecked().peek(&idx).cloned().unwrap();
             worlds.push(w);
         }
     }
     let data = serde_json::to_vec(&worlds)?;
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, SERVER_HEADER.clone());
-    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
@@ -62,7 +57,7 @@ async fn populate_cache() -> Result<(), Error> {
     for (i, word) in worlds.into_iter().enumerate() {
         cache.put(i, word);
     }
-    CACHED_WORLDS.set(Mutex::new(cache)).unwrap();
+    CACHED_WORLDS.set(cache).unwrap();
     Ok(())
 }
 

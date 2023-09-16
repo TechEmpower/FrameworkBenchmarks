@@ -2,7 +2,7 @@ import { createPool } from 'mariadb'
 import { cpus } from 'node:os'
 import { clientOpts } from '../config.js'
 
-const pool = createPool({ ...clientOpts, connectionLimit: cpus().length * 2 + 1 })
+const pool = createPool({ ...clientOpts, connectionLimit: cpus().length })
 
 const execute = (text, values) => pool.execute(text, values || undefined)
 
@@ -12,6 +12,4 @@ export const find = (id) => execute('SELECT id, randomNumber FROM world WHERE id
 
 export const getAllWorlds = () => execute('SELECT id, randomNumber FROM world')
 
-export const update = (obj) => execute('UPDATE world SET randomNumber = ? WHERE id = ?', [obj.randomNumber, obj.id])
-
-export const bulkUpdate = (worlds) => Promise.all(worlds.map(world => update(world)))
+export const bulkUpdate = (worlds) => pool.batch('UPDATE world SET randomNumber = ? WHERE id = ?', worlds.map(world => [world.randomNumber, world.id]).sort((a, b) => (a[1] < b[1]) ? -1 : 1))

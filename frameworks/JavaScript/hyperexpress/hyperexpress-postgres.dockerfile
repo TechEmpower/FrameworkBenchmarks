@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:18-slim
+FROM node:20-slim
 
 WORKDIR /app
 
@@ -7,9 +7,9 @@ COPY --chown=node:node . .
 
 ENV NODE_ENV production
 
-ENV DATABASE postgres
-
 RUN npm install
+
+ENV DATABASE postgres
 
 USER node
 
