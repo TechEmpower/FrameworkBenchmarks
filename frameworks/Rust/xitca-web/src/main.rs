@@ -19,9 +19,9 @@ use xitca_http::{
         IntoResponse, RequestExt,
     },
     util::service::{
-        context::{object::ContextObjectConstructor, Context, ContextBuilder},
+        context::{Context, ContextBuilder},
         route::get,
-        Router,
+        router::Router,
     },
     HttpServiceBuilder,
 };
@@ -48,7 +48,7 @@ fn main() -> io::Result<()> {
                     })
                 })
                 .service(
-                    Router::with_custom_object::<ContextObjectConstructor>()
+                    Router::new()
                         .insert("/plaintext", get(fn_service(plain_text)))
                         .insert("/json", get(fn_service(json)))
                         .insert("/db", get(fn_service(db)))
