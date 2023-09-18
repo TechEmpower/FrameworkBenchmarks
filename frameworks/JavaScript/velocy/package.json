@@ -1,5 +1,5 @@
 {
-  "dependencies": {
-    "velocy": "0.0.12"
-  }
+    "dependencies": {
+        "velocy": "0.0.13"
+    }
 }

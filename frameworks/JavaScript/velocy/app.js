@@ -1,14 +1,7 @@
 const cluster = require("node:cluster");
 const os = require("node:os");
 const process = require("node:process");
-const { Router, createServer } = require("velocy");
-
-const CONTENT_TYPE_STR = "Content-Type";
-const CONTENT_LENGTH_STR = "Content-Length";
-const RESPONSE_STR = "Hello, world!";
-const RESPONSE_LENGTH = Buffer.byteLength(RESPONSE_STR);
-const FRAMEWORK_NAME = "Velocy";
-
+const { SimpleRouter, createServer } = require("velocy");
 
 if (cluster.isPrimary) {
     console.log(`Primary ${process.pid} is running`);
@@ -23,15 +16,28 @@ if (cluster.isPrimary) {
         process.exit(1);
     });
 } else {
-    const router = new Router();
-    
+    const router = new SimpleRouter();
+
     router.get("/plaintext", (req, res) => {
+        let p = "Hello, World!";
         res.writeHead(200, {
-            [CONTENT_TYPE_STR]: "text/plain",
-            [CONTENT_LENGTH_STR]: RESPONSE_LENGTH,
-            Server: FRAMEWORK_NAME,
+            "content-type": "text/plain",
+            "content-length": p.length,
+            Server: "Velocy",
         });
-        res.end("Hello, World!");
+        res.end(p);
+    });
+
+    router.get("/json", (req, res) => {
+        let p = JSON.stringify({ message: "Hello, World!" });
+
+        res.writeHead(200, {
+            "content-type": "application/json",
+            "content-length": p.length,
+            Server: "Velocy",
+        });
+
+        res.end(p);
     });
 
     createServer(router).listen(8080);
