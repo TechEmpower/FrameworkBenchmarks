@@ -54,6 +54,7 @@ async fn world_row(res: &mut Response) -> Result<(), Error> {
     let random_id = rng.gen_range(1..10_001);
     let mut conn = connect()?;
     let world = world::table.find(random_id).first::<World>(&mut conn)?;
+    drop(conn);
 
     let data = serde_json::to_vec(&world).unwrap();
     let headers = res.headers_mut();
@@ -75,6 +76,7 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         let w = world::table.find(id).get_result::<World>(&mut conn)?;
         worlds.push(w);
     }
+    drop(conn);
 
     let data = serde_json::to_vec(&worlds)?;
     let headers = res.headers_mut();
@@ -107,6 +109,7 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         }
         Ok(())
     })?;
+    drop(conn);
 
     let data = serde_json::to_vec(&worlds)?;
     let headers = res.headers_mut();
@@ -120,6 +123,7 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
 async fn fortunes(res: &mut Response) -> Result<(), Error> {
     let mut conn = connect()?;
     let mut items = fortune::table.get_results::<Fortune>(&mut conn)?;
+    drop(conn);
     items.push(Fortune {
         id: 0,
         message: "Additional fortune added at request time.".to_string(),
