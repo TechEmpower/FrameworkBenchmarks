@@ -1,72 +1,38 @@
-import knex, { Knex } from 'knex';
-import { Logger, injectable } from '@ditsmod/core';
+import { injectable } from '@ditsmod/core';
+import { LRUCache } from 'lru-cache';
 
-import { World } from './types.js';
 import { getNumberOfObjects, getRandomNumber } from '#utils/helper.js';
-import { CacheService } from './cache.service.js';
+import { ModelService, World } from './types.js';
 
 @injectable()
 export class DbService {
-  db: Knex;
+  #cache = new LRUCache<number, World>({ max: 10000 });
 
-  constructor(
-    private cacheService: CacheService,
-    private logger: Logger,
-  ) {
-    this.initDb();
-  }
-
-  protected async initDb() {
-    const dbType = process.env.DATABASE as 'mysql' | 'postgres';
-    if (dbType == 'mysql') {
-      this.db = knex.default({
-        client: 'mysql2',
-        connection: {
-          host: process.env.MYSQL_HOST,
-          user: process.env.MYSQL_USER,
-          password: process.env.MYSQL_PSWD,
-          database: process.env.MYSQL_DBNAME,
-        },
-      });
-    } else if (dbType == 'postgres') {
-      this.db = knex.default({
-        client: 'pg',
-        connection: {
-          host: process.env.PG_HOST,
-          user: process.env.PG_USER,
-          password: process.env.PG_PSWD,
-          database: process.env.PG_DBNAME,
-        },
-      });
-    } else {
-      this.logger.log('warn', `Unknown database "${dbType}"`);
-    }
-  }
+  constructor(private modelService: ModelService) {}
 
   findAllFortunes() {
-    return this.db('Fortune').select('*');
+    return this.modelService.fortunes();
   }
 
   /**
    * This method is called via `InitExtension` before the route handlers are created.
    */
   async setWorldsToCache(): Promise<void> {
-    const { cache } = this.cacheService;
-    const result = await this.db('World').select<World[]>('*');
-    result.forEach((obj) => cache.set(obj.id, obj));
+    const result = await this.modelService.getAllWorlds();
+    result.forEach((obj) => this.#cache.set(obj.id, obj));
   }
 
   async findOneWorld(id: number, noCache = true): Promise<World> {
     if (noCache) {
-      return this.db('World').first().where({ id });
+      return this.modelService.find(`${id}`);
     } else {
-      let obj = this.cacheService.cache.get(id);
+      let obj = this.#cache.get(id);
       if (obj) {
         return obj;
       }
-      obj = await this.db('World').first<World>().where({ id });
-      this.cacheService.cache.set(id, obj);
-      return obj;
+      obj = await this.modelService.find(`${id}`);
+      this.#cache.set(id, obj);
+      return obj!;
     }
   }
 
@@ -98,14 +64,7 @@ export class DbService {
       return world;
     });
 
-    const updates: Knex.QueryBuilder<any, number>[] = [];
-
-    worldsToUpdate.forEach((world) => {
-      const { id, randomnumber } = world;
-      updates.push(this.db('World').update({ randomnumber }).where({ id }));
-    });
-
-    await Promise.all(updates);
+    await this.modelService.bulkUpdate(worldsToUpdate);
 
     return worldsToUpdate;
   }

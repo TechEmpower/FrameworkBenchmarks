@@ -1,5 +1,4 @@
 import { Providers, rootModule } from '@ditsmod/core';
-
 import { SimpleModule } from '#routed/simple/simple.module.js';
 
 @rootModule({
