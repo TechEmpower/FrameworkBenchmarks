@@ -1,7 +1,7 @@
 #
 # BUILD
 #
-FROM ghcr.io/graalvm/native-image-community:20-muslib-ol9 as build
+FROM ghcr.io/graalvm/native-image-community:21-muslib-ol9 as build
 USER root
 WORKDIR /hexagon
 
