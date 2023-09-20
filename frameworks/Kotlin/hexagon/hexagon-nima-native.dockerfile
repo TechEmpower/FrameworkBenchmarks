@@ -8,14 +8,14 @@ WORKDIR /hexagon
 ADD . .
 RUN microdnf -y install findutils
 RUN ./gradlew --quiet classes
-RUN ./gradlew --quiet -x test hexagon_nima_postgresql:nativeCompile
+RUN ./gradlew --quiet -x test hexagon_nima_pgclient:nativeCompile
 
 #
 # RUNTIME
 #
 FROM scratch
-ARG PROJECT=hexagon_nima_postgresql
+ARG PROJECT=hexagon_nima_pgclient
 
 COPY --from=build /hexagon/$PROJECT/build/native/nativeCompile/$PROJECT /
 
-ENTRYPOINT [ "/hexagon_nima_postgresql" ]
+ENTRYPOINT [ "/hexagon_nima_pgclient" ]

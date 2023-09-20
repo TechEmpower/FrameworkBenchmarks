@@ -1,5 +1,6 @@
 
 apply(from: "$gradleScripts/application.gradle")
+apply(from: "$gradleScripts/native.gradle")
 
 dependencies {
     api(project(":store_pgclient"))
