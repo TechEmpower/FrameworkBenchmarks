@@ -182,7 +182,7 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "Hexagon Nima Native PostgreSQL",
+                "display_name": "Hexagon Nima Native PgClient",
                 "notes": "http://hexagonkt.com",
                 "versus": "helidon-nima"
             },
