@@ -11,5 +11,5 @@
  * loaded early on, and may also contain additional functions
  * that you'd like to use throughout your entire application
  *
- * @see: https://codeigniter4.github.io/CodeIgniter4/
+ * @see: https://codeigniter.com/user_guide/extending/common.html
  */

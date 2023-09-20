@@ -39,7 +39,7 @@
         "webserver": "µws",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "hyperexpress",
+        "display_name": "hyperexpress-postgres",
         "notes": "",
         "versus": "nodejs"
       },
@@ -61,7 +61,7 @@
         "webserver": "µws",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "hyperexpress",
+        "display_name": "hyperexpress-mysql",
         "notes": "",
         "versus": "nodejs"
       }

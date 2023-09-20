@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fizzed.rocker.RockerOutputFactory;
 import io.jooby.Context;
@@ -55,22 +54,20 @@ public class ReactivePg extends Jooby {
     /** Multiple queries: */
     get("/queries", ctx -> {
       int queries = Util.queries(ctx);
-      World[] result = new World[queries];
-      client.selectWorldQuery(queries, (index, statement) -> {
-        statement.execute(Tuple.of(randomWorld()), rsp -> {
-          if (rsp.succeeded()) {
-            RowIterator<Row> rs = rsp.result().iterator();
-            Row row = rs.next();
-            result[index] = new World(row.getInteger(0), row.getInteger(1));
-          } else {
-            sendError(ctx, rsp.cause());
-          }
-          // ready?
-          if (index == queries - 1) {
-            ctx.setResponseType(JSON)
-                .send(Json.encode(result));
-          }
-        });
+      var result = new ArrayList<World>(queries);
+      client.selectWorlds(queries, rsp -> {
+        if (rsp.succeeded()) {
+          RowIterator<Row> rs = rsp.result().iterator();
+          Row row = rs.next();
+          result.add(new World(row.getInteger(0), row.getInteger(1)));
+        } else {
+          sendError(ctx, rsp.cause());
+        }
+        // ready?
+        if (result.size() == queries) {
+          ctx.setResponseType(JSON)
+              .send(Json.encode(result));
+        }
       });
       return ctx;
     }).setNonBlocking(true);
@@ -114,7 +111,7 @@ public class ReactivePg extends Jooby {
     /** Fortunes: */
     RockerOutputFactory<ByteBufferOutput> factory = require(RockerOutputFactory.class);
     get("/fortunes", ctx -> {
-      client.fortuneQuery().execute(rsp -> {
+      client.fortunes(rsp -> {
         if (rsp.succeeded()) {
           RowIterator<Row> rs = rsp.result().iterator();
           List<Fortune> fortunes = new ArrayList<>();

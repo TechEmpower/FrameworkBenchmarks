@@ -48,7 +48,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Netty"
 webserver = "None"
-versus = "undertow"
+versus = "netty"
 
 [jetty]
 urls.plaintext = "/plaintext"

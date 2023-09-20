@@ -30,10 +30,6 @@ use models_pg_pool::*;
 
 static DB_POOL: OnceCell<Pool> = OnceCell::new();
 
-static SERVER_HEADER: HeaderValue = HeaderValue::from_static("salvo");
-static JSON_HEADER: HeaderValue = HeaderValue::from_static("application/json");
-static HTML_HEADER: HeaderValue = HeaderValue::from_static("text/html; charset=utf-8");
-
 fn pool() -> &'static Pool {
     unsafe { DB_POOL.get_unchecked() }
 }
@@ -45,11 +41,12 @@ async fn world_row(res: &mut Response) -> Result<(), Error> {
     let client = pool().get().await?;
     let select = prepare_fetch_world_by_id_statement(&client).await;
     let world = fetch_world_by_id(&client, random_id, &select).await?;
+    drop(client);
 
     let data = serde_json::to_vec(&world).unwrap();
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, SERVER_HEADER.clone());
-    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
@@ -69,11 +66,12 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         future_worlds.push(fetch_world_by_id(&client, w_id, &select));
     }
     let worlds: Vec<World> = future_worlds.try_collect().await?;
+    drop(client);
 
     let data = serde_json::to_vec(&worlds)?;
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, SERVER_HEADER.clone());
-    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
@@ -104,11 +102,12 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         future_world_updates.push(update_world(&client, &update, random_id, w_id));
     }
     let _world_updates: Vec<u64> = future_world_updates.try_collect().await?;
+    drop(client);
 
     let data = serde_json::to_vec(&worlds)?;
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, SERVER_HEADER.clone());
-    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
@@ -117,7 +116,8 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
 async fn fortunes(res: &mut Response) -> Result<(), Error> {
     let client = pool().get().await?;
     let select = prepare_fetch_all_fortunes_statement(&client).await;
-    let mut items = fetch_all_fortunes(client, &select).await?;
+    let mut items = fetch_all_fortunes(&client, &select).await?;
+    drop(client);
     items.push(Fortune {
         id: 0,
         message: "Additional fortune added at request time.".to_string(),
@@ -128,8 +128,8 @@ async fn fortunes(res: &mut Response) -> Result<(), Error> {
     write!(&mut data, "{}", FortunesTemplate { items }).unwrap();
 
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, SERVER_HEADER.clone());
-    headers.insert(header::CONTENT_TYPE, HTML_HEADER.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("text/html; charset=utf-8"));
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }

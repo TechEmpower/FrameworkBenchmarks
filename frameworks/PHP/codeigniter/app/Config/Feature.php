@@ -20,10 +20,8 @@ class Feature extends BaseConfig
      *   - CodeIgniter\Router\Router::handle() uses:
      *     - property $filtersInfo, instead of $filterInfo
      *     - CodeIgniter\Router\RouteCollection::getFiltersForRoute(), instead of getFilterForRoute()
-     *
-     * @var bool
      */
-    public $multipleFilters = false;
+    public bool $multipleFilters = false;
 
     /**
      * Use improved new auto routing instead of the default legacy version.

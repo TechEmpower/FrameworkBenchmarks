@@ -12,7 +12,7 @@
   <name>kooby: jooby+kotlin</name>
 
   <properties>
-    <jooby.version>3.0.0</jooby.version>
+    <jooby.version>3.0.5</jooby.version>
     <postgresql.version>42.6.0</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>17</maven.compiler.source>
@@ -64,7 +64,7 @@
 
     <dependency>
       <groupId>io.jooby</groupId>
-      <artifactId>jooby-undertow</artifactId>
+      <artifactId>jooby-netty</artifactId>
     </dependency>
 
   </dependencies>

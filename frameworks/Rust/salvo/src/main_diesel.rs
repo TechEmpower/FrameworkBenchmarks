@@ -33,9 +33,6 @@ use schema::*;
 type PgPool = Pool<ConnectionManager<PgConnection>>;
 
 static DB_POOL: OnceCell<PgPool> = OnceCell::new();
-static SERVER_HEADER: HeaderValue = HeaderValue::from_static("salvo");
-static JSON_HEADER: HeaderValue = HeaderValue::from_static("application/json");
-static HTML_HEADER: HeaderValue = HeaderValue::from_static("text/html; charset=utf-8");
 
 fn connect() -> Result<PooledConnection<ConnectionManager<PgConnection>>, PoolError> {
     unsafe { DB_POOL.get_unchecked().get() }
@@ -57,11 +54,12 @@ async fn world_row(res: &mut Response) -> Result<(), Error> {
     let random_id = rng.gen_range(1..10_001);
     let mut conn = connect()?;
     let world = world::table.find(random_id).first::<World>(&mut conn)?;
+    drop(conn);
 
     let data = serde_json::to_vec(&world).unwrap();
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, SERVER_HEADER.clone());
-    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
@@ -78,11 +76,12 @@ async fn queries(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         let w = world::table.find(id).get_result::<World>(&mut conn)?;
         worlds.push(w);
     }
+    drop(conn);
 
     let data = serde_json::to_vec(&worlds)?;
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, SERVER_HEADER.clone());
-    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
@@ -110,11 +109,12 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
         }
         Ok(())
     })?;
+    drop(conn);
 
     let data = serde_json::to_vec(&worlds)?;
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, SERVER_HEADER.clone());
-    headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
@@ -123,6 +123,7 @@ async fn updates(req: &mut Request, res: &mut Response) -> Result<(), Error> {
 async fn fortunes(res: &mut Response) -> Result<(), Error> {
     let mut conn = connect()?;
     let mut items = fortune::table.get_results::<Fortune>(&mut conn)?;
+    drop(conn);
     items.push(Fortune {
         id: 0,
         message: "Additional fortune added at request time.".to_string(),
@@ -133,8 +134,8 @@ async fn fortunes(res: &mut Response) -> Result<(), Error> {
     write!(&mut data, "{}", FortunesTemplate { items }).unwrap();
 
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, SERVER_HEADER.clone());
-    headers.insert(header::CONTENT_TYPE, HTML_HEADER.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("text/html; charset=utf-8"));
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }

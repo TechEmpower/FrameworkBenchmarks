@@ -9,21 +9,17 @@ use std::thread::available_parallelism;
 
 use async_trait::async_trait;
 use bytes::Bytes;
+use dotenv::dotenv;
 use salvo::conn::tcp::TcpAcceptor;
 use salvo::http::header::{self, HeaderValue};
 use salvo::http::ResBody;
 use salvo::prelude::*;
-use dotenv::dotenv;
 use salvo::routing::FlowCtrl;
 
 mod db_pg;
 mod models_pg;
 mod utils;
 use db_pg::PgConnection;
-
-static SERVER_HEADER: HeaderValue = HeaderValue::from_static("salvo");
-static JSON_HEADER: HeaderValue = HeaderValue::from_static("application/json");
-static HTML_HEADER: HeaderValue = HeaderValue::from_static("text/html; charset=utf-8");
 
 struct WorldHandler {
     conn: PgConnection,
@@ -40,12 +36,18 @@ impl WorldHandler {
 }
 #[async_trait]
 impl Handler for WorldHandler {
-    async fn handle(&self, _req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
+    async fn handle(
+        &self,
+        _req: &mut Request,
+        _depot: &mut Depot,
+        res: &mut Response,
+        _ctrl: &mut FlowCtrl,
+    ) {
         let world = self.conn.get_world().await.unwrap();
         let data = serde_json::to_vec(&world).unwrap();
         let headers = res.headers_mut();
-        headers.insert(header::SERVER, SERVER_HEADER.clone());
-        headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+        headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+        headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
         res.body(ResBody::Once(Bytes::from(data)));
     }
 }
@@ -64,15 +66,21 @@ impl WorldsHandler {
 }
 #[async_trait]
 impl Handler for WorldsHandler {
-    async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
+    async fn handle(
+        &self,
+        req: &mut Request,
+        _depot: &mut Depot,
+        res: &mut Response,
+        _ctrl: &mut FlowCtrl,
+    ) {
         let count = req.query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
         let worlds = self.conn.get_worlds(count).await.unwrap();
 
         let data = serde_json::to_vec(&worlds).unwrap();
         let headers = res.headers_mut();
-        headers.insert(header::SERVER, SERVER_HEADER.clone());
-        headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+        headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+        headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
         res.body(ResBody::Once(Bytes::from(data)));
     }
 }
@@ -91,16 +99,21 @@ impl UpdatesHandler {
 }
 #[async_trait]
 impl Handler for UpdatesHandler {
-    async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
+    async fn handle(
+        &self,
+        req: &mut Request,
+        _depot: &mut Depot,
+        res: &mut Response,
+        _ctrl: &mut FlowCtrl,
+    ) {
         let count = req.query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
-        res.headers_mut().insert(header::SERVER, SERVER_HEADER.clone());
         let worlds = self.conn.update(count).await.unwrap();
 
         let data = serde_json::to_vec(&worlds).unwrap();
         let headers = res.headers_mut();
-        headers.insert(header::SERVER, SERVER_HEADER.clone());
-        headers.insert(header::CONTENT_TYPE, JSON_HEADER.clone());
+        headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+        headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
         res.body(ResBody::Once(Bytes::from(data)));
     }
 }
@@ -119,20 +132,26 @@ impl FortunesHandler {
 }
 #[async_trait]
 impl Handler for FortunesHandler {
-    async fn handle(&self, _req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
+    async fn handle(
+        &self,
+        _req: &mut Request,
+        _depot: &mut Depot,
+        res: &mut Response,
+        _ctrl: &mut FlowCtrl,
+    ) {
         let mut data = String::new();
         write!(&mut data, "{}", self.conn.tell_fortune().await.unwrap()).unwrap();
 
         let headers = res.headers_mut();
-        headers.insert(header::SERVER, SERVER_HEADER.clone());
-        headers.insert(header::CONTENT_TYPE, HTML_HEADER.clone());
+        headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+        headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("text/html; charset=utf-8"));
         res.body(ResBody::Once(Bytes::from(data)));
     }
 }
 
 fn main() {
     dotenv().ok();
-    
+
     let thread_count = available_parallelism().map(|n| n.get()).unwrap_or(16);
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
