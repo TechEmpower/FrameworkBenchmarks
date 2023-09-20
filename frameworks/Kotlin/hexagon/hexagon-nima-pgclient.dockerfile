@@ -12,7 +12,7 @@ RUN gradle --quiet -x test installDist
 #
 # RUNTIME
 #
-FROM docker.io/eclipse-temurin:20-jre-alpine
+FROM docker.io/eclipse-temurin:21-jre-alpine
 ARG PROJECT=hexagon_nima_pgclient
 
 ENV POSTGRESQL_DB_HOST tfb-database
