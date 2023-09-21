@@ -2,9 +2,6 @@ plugins {
     id 'io.micronaut.benchmark.module'
 }
 
-graalvmNative.binaries.configureEach {
-    buildArgs.add("--initialize-at-build-time=io.vertx.pgclient.impl.codec.DataTypeCodec")
-}
 micronaut {
     testResources {
         additionalModules.add(JDBC_POSTGRESQL)
