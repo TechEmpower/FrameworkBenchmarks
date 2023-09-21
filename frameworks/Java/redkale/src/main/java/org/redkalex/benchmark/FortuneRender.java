@@ -45,7 +45,6 @@ public class FortuneRender implements org.redkale.net.http.HttpRender {
         escapeCache['"'] = "&quot;".getBytes();
         escapeCache['\''] = "&#39;".getBytes();
         escapeCache['&'] = "&amp;".getBytes();
-
         idBytesCache = new byte[100][];
         for (int i = 0; i < idBytesCache.length; i++) {
             idBytesCache[i] = String.valueOf(i).getBytes(StandardCharsets.UTF_8);
