@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 @Controller("/plaintext")
 public class PlainTextController {
 
-    private static final ByteBuf TEXT = Unpooled.copiedBuffer("Hello, World!".getBytes(StandardCharsets.UTF_8));
+    private static final ByteBuf TEXT = Unpooled.unreleasableBuffer(Unpooled.copiedBuffer("Hello, World!".getBytes(StandardCharsets.UTF_8)));
 
     @Get(value = "/", produces = MediaType.TEXT_PLAIN)
     public ByteBuf getPlainText() {
