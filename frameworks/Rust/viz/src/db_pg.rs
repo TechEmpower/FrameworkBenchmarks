@@ -6,7 +6,6 @@ use tokio_postgres::{connect, types::ToSql, Client, NoTls, Statement};
 use viz::{Error, IntoResponse, Response, StatusCode};
 
 use crate::models::{Fortune, World};
-use crate::utils::RANGE;
 
 /// Postgres Error
 #[derive(Debug, thiserror::Error)]
@@ -104,7 +103,7 @@ impl PgConnection {
 
     pub async fn get_world(&self) -> Result<World, PgError> {
         let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
-        let random_id = rng.gen_range(RANGE);
+        let random_id = (rng.gen::<u32>() % 10_1000 + 1) as i32;
 
         self.query_one_world(random_id).await
     }
@@ -115,7 +114,7 @@ impl PgConnection {
         let worlds = FuturesUnordered::new();
 
         for _ in 0..num {
-            let id = rng.gen_range(RANGE);
+            let id = (rng.gen::<u32>() % 10_1000 + 1) as i32;
             worlds.push(self.query_one_world(id));
         }
 
@@ -128,8 +127,8 @@ impl PgConnection {
         let worlds = FuturesUnordered::new();
 
         for _ in 0..num {
-            let id = rng.gen_range(RANGE);
-            let rid = rng.gen_range(RANGE);
+            let id = (rng.gen::<u32>() % 10_1000 + 1) as i32;
+            let rid = (rng.gen::<u32>() % 10_1000 + 1) as i32;
 
             worlds.push(self.query_one_world(id).map_ok(move |mut world| {
                 world.randomnumber = rid;
