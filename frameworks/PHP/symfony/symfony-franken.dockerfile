@@ -13,7 +13,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 EXPOSE 8080
 
-COPY deploy/Caddyfile /etc/Caddyfile
+COPY deploy/Caddyfile /etc/caddy/Caddyfile
 
 ADD . /symfony
 WORKDIR /symfony
