@@ -46,8 +46,8 @@ async fn fortunes(req: Request) -> Result<Response> {
 }
 
 async fn queries(req: Request) -> Result<Response> {
-    let count = utils::get_query_param(req.query_string());
     let conn = get_conn(req.state::<Arc<PgConnection>>())?;
+    let count = utils::get_query_param(req.query_string());
 
     let worlds = conn.get_worlds(count).await?;
 
@@ -58,8 +58,8 @@ async fn queries(req: Request) -> Result<Response> {
 }
 
 async fn updates(req: Request) -> Result<Response> {
-    let count = utils::get_query_param(req.query_string());
     let conn = get_conn(req.state::<Arc<PgConnection>>())?;
+    let count = utils::get_query_param(req.query_string());
 
     let worlds = conn.update(count).await?;
 
