@@ -84,7 +84,9 @@ class HelloWorld < Sinatra::Base
       DB.synchronize do
         Array.new(bounded_queries) do
           world = World.with_pk(rand1)
-          world.update(:randomnumber=>rand1)
+          new_value = rand1
+          new_value = rand1 while new_value == world.randomnumber
+          world.update(randomnumber: new_value)
           world
         end
       end

@@ -18,7 +18,6 @@ The tests will be run with:
 * [Puma 3](http://puma.io)
 * [Passenger 5](https://www.phusionpassenger.com)
 * [Unicorn 5](https://bogomips.org/unicorn/)
-* [TorqueBox 4.0](http://torquebox.org)
 * [Sinatra 2](http://www.sinatrarb.com)
 * [Sequel 5](http://sequel.jeremyevans.net)
 * [Slim 3](http://slim-lang.com)
