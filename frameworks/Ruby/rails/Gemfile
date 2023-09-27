@@ -2,7 +2,6 @@ ruby '~> 3.2'
 
 source 'https://rubygems.org'
 
-gem 'listen', '~> 3.3', group: :development
 gem 'mysql2', '0.5.5', group: :mysql
 gem 'oj', '~> 3.16'
 gem 'pg', '1.5.4', group: :postgresql
