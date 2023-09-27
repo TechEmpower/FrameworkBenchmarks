@@ -84,7 +84,6 @@ GEM
     drb (2.1.1)
       ruby2_keywords
     erubi (1.12.0)
-    ffi (1.15.5)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.1)
@@ -93,9 +92,6 @@ GEM
     irb (1.8.1)
       rdoc
       reline (>= 0.3.8)
-    listen (3.7.1)
-      rb-fsevent (~> 0.10, >= 0.10.3)
-      rb-inotify (~> 0.9, >= 0.9.10)
     loofah (2.21.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -172,9 +168,6 @@ GEM
       thor (~> 1.0, >= 1.2.2)
       zeitwerk (~> 2.6)
     rake (13.0.6)
-    rb-fsevent (0.11.0)
-    rb-inotify (0.10.1)
-      ffi (~> 1.0)
     rdoc (6.5.0)
       psych (>= 4.0.0)
     redis (4.5.1)
@@ -200,7 +193,6 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  listen (~> 3.3)
   mysql2 (= 0.5.5)
   oj (~> 3.16)
   pg (= 1.5.4)
