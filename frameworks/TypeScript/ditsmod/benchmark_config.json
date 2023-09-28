@@ -21,6 +21,26 @@
         "notes": "",
         "versus": "nodejs"
       },
+      "simplified-di": {
+        "dockerfile": "ditsmod.dockerfile",
+        "json_url": "/json2",
+        "plaintext_url": "/plaintext2",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "Ditsmod",
+        "language": "TypeScript",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "nodejs",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ditsmod [simplified use of di]",
+        "notes": "Simplified use of Dependency Injection (no request level injector).",
+        "versus": "nodejs"
+      },
       "postgres": {
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -39,7 +59,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Ditsmod [PostgreSQL]",
+        "display_name": "ditsmod [postgres]",
         "notes": "",
         "versus": "nodejs"
       },
@@ -61,7 +81,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Ditsmod [MySQL]",
+        "display_name": "ditsmod [mysql]",
         "notes": "",
         "versus": "nodejs"
       }
