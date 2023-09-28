@@ -3,6 +3,7 @@ const options: ResponseInit = { headers: { "Server": "Bun" } };
 
 const server = Bun.serve({
   port: 8080,
+  reusePort: true,
   fetch(req: Request) {
     const { pathname } = new URL(req.url);
 
