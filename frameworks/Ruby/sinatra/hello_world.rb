@@ -88,7 +88,9 @@ class HelloWorld < Sinatra::Base
       ActiveRecord::Base.connection_pool.with_connection do
         Array.new(bounded_queries) do
           world = World.find(rand1)
-          world.update(:randomnumber=>rand1)
+          new_value = rand1
+          new_value = rand1 while new_value == world.randomnumber
+          world.update(randomnumber: new_value)
           world
         end
       end
