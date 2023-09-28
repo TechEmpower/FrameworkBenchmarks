@@ -18,7 +18,6 @@ The tests will be run with:
 * [Puma 3](http://puma.io)
 * [Passenger 5](https://www.phusionpassenger.com)
 * [Unicorn 5](https://bogomips.org/unicorn/)
-* [TorqueBox 4.0](http://torquebox.org)\*
 * [Sinatra 2](http://www.sinatrarb.com)
 * [ActiveRecord 5](https://github.com/rails/rails/tree/master/activerecord)
 * [MySQL 5.5](https://www.mysql.com)
