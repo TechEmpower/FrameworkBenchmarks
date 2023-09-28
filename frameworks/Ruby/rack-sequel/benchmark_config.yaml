@@ -67,16 +67,3 @@ tests:
       webserver: Unicorn
       display_name: rack-sequel-postgres-unicorn-mri
       versus: ~
-    torquebox-jruby:
-      <<: *default
-      setup_file: run_jruby_torquebox
-      webserver: TorqueBox
-      display_name: rack-sequel-torquebox-jruby
-      versus: rack-torqbox-jruby
-    postgres-torquebox-jruby:
-      <<: *default
-      setup_file: run_jruby_torquebox
-      database: Postgres
-      webserver: TorqueBox
-      display_name: rack-sequel-postgres-torquebox-jruby
-      versus: ~
