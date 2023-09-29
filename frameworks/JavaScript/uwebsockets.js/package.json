@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "postgres": "^3.3.5",
-    "uWebSockets.js": "uNetworking/uWebSockets.js#v20.31.0"
+    "uWebSockets.js": "uNetworking/uWebSockets.js#v20.32.0"
   },
   "license": "MIT",
   "main": "src/server.js",
