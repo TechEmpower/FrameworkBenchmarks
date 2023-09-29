@@ -121,46 +121,6 @@
         "display_name": "sinatra-sequel-postgres-unicorn-mri",
         "versus": "rack-sequel-postgres-unicorn-mri",
         "notes": ""
-      },
-      "torquebox-jruby": {
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "MySQL",
-        "framework": "sinatra-sequel",
-        "language": "Ruby",
-        "orm": "Full",
-        "platform": "Rack",
-        "webserver": "TorqueBox",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "sinatra-sequel-torquebox-jruby",
-        "versus": "rack-sequel-torquebox-jruby",
-        "notes": ""
-      },
-      "postgres-torquebox-jruby": {
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "sinatra-sequel",
-        "language": "Ruby",
-        "orm": "Full",
-        "platform": "Rack",
-        "webserver": "TorqueBox",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "sinatra-sequel-postgres-torquebox-jruby",
-        "versus": "rack-sequel-postgres-torquebox-jruby",
-        "notes": ""
       }
     }
   ]
