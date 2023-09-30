@@ -19,8 +19,8 @@
   "author": "Костя Третяк",
   "license": "MIT",
   "dependencies": {
-    "@ditsmod/core": "~2.49.1",
-    "@ditsmod/router": "~2.7.1",
+    "@ditsmod/core": "~2.50.0",
+    "@ditsmod/routing": "~2.0.0",
     "handlebars": "^4.7.8",
     "lru-cache": "^10.0.1",
     "mariadb": "^3.2.1",

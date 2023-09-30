@@ -1,4 +1,5 @@
-import { PRE_ROUTER_EXTENSIONS, featureModule } from '@ditsmod/core';
+import { featureModule } from '@ditsmod/core';
+import { PRE_ROUTER_EXTENSIONS } from '@ditsmod/routing';
 
 import { DbService } from './db.service.js';
 import { InitExtension } from './init.extension.js';
