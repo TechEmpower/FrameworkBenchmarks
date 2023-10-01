@@ -1,4 +1,4 @@
-FROM jruby:9.1
+FROM jruby:9.4-jdk17
 
 ADD ./ /sinatra-sequel
 WORKDIR /sinatra-sequel
