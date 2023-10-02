@@ -1,5 +1,5 @@
 import cluster from 'node:cluster';
-import { ServerOptions } from 'node:http';
+import type { ServerOptions } from 'node:http';
 import { availableParallelism } from 'node:os';
 import { Application } from '@ditsmod/core';
 
