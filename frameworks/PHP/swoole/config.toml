@@ -36,7 +36,7 @@ webserver = "none"
 versus = "php"
 
 [postgres]
-dockerfile: "swoole-sync-postgres.dockerfile"
+dockerfile = "swoole-sync-postgres.dockerfile"
 urls.db = "/db"
 urls.query = "/query?queries="
 urls.update = "/updates?queries="
