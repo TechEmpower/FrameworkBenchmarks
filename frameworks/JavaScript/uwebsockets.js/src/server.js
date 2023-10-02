@@ -142,10 +142,6 @@ if (db) {
 
       const worldObjects = await Promise.all(databaseJobs);
 
-      if (response.aborted) {
-        return;
-      }
-
       for (let i = 0; i < queriesCount; i++) {
         worldObjects[i].randomNumber = generateRandomNumber();
       }
