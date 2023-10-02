@@ -2,7 +2,7 @@
 name = "swoole"
 
 [main]
-dockerfile = "swoole-sync-mysql.dockerfile",
+dockerfile = "swoole-sync-mysql.dockerfile"
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
@@ -36,7 +36,7 @@ webserver = "none"
 versus = "php"
 
 [postgres]
-dockerfile: "swoole-sync-postgres.dockerfile",
+dockerfile: "swoole-sync-postgres.dockerfile"
 urls.db = "/db"
 urls.query = "/query?queries="
 urls.update = "/updates?queries="
@@ -52,7 +52,7 @@ webserver = "none"
 versus = "php"
 
 [async-postgres]
-dockerfile = "swoole-async-postgres.dockerfile",
+dockerfile = "swoole-async-postgres.dockerfile"
 urls.db = "/db"
 urls.query = "/query?queries="
 urls.update = "/updates?queries="
