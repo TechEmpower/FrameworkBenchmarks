@@ -21,14 +21,14 @@ class Operation
     public static function fortunes(PDOStatement|PDOStatementProxy $fortune): string
     {
         $fortune->execute();
-        $results    = $fortune->fetchAll(PDO::FETCH_KEY_PAIR);
+        $results = $fortune->fetchAll(PDO::FETCH_KEY_PAIR);
         $results[0] = 'Additional fortune added at request time.';
         asort($results);
 
         $html = '';
         foreach ($results as $id => $message) {
             $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
-            $html    .= "<tr><td>$id</td><td>$message</td></tr>";
+            $html .= "<tr><td>$id</td><td>$message</td></tr>";
         }
 
         return "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>$html</table></body></html>";
@@ -87,16 +87,15 @@ class Connection
             "benchmarkdbpass",
             [
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_EMULATE_PREPARES   => false
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_EMULATE_PREPARES => false
             ]
         );
 
-        self::$db      = $pdo->prepare(Operation::WORLD_SELECT_SQL);
+        self::$db = self::$random = self::$query = $pdo->prepare(Operation::WORLD_SELECT_SQL);
         self::$fortune = $pdo->prepare(Operation::FORTUNE_SQL);
-        self::$random  = $pdo->prepare(Operation::WORLD_SELECT_SQL);
-        self::$update  = $pdo->prepare(Operation::WORLD_UPDATE_SQL);
-        self::$query   = $pdo->prepare(Operation::WORLD_SELECT_SQL);
+        self::$update = $pdo->prepare(Operation::WORLD_UPDATE_SQL);
+
     }
 
     public static function db(): string
@@ -139,7 +138,7 @@ class Connections
 
     public static function db(): string
     {
-        $pdo    = self::get();
+        $pdo = self::get();
         $result = Operation::db($pdo->prepare(Operation::WORLD_SELECT_SQL));
         self::put($pdo);
 
@@ -148,7 +147,7 @@ class Connections
 
     public static function fortunes(): string
     {
-        $pdo    = self::get();
+        $pdo = self::get();
         $result = Operation::fortunes($pdo->prepare(Operation::FORTUNE_SQL));
         self::put($pdo);
 
@@ -157,7 +156,7 @@ class Connections
 
     public static function query(int $queries): string
     {
-        $pdo    = self::get();
+        $pdo = self::get();
         $result = Operation::query($pdo->prepare(Operation::WORLD_SELECT_SQL), $queries);
         self::put($pdo);
 
@@ -166,7 +165,7 @@ class Connections
 
     public static function updates(int $queries): string
     {
-        $pdo    = self::get();
+        $pdo = self::get();
         $result = Operation::updates($pdo->prepare(Operation::WORLD_SELECT_SQL), $pdo->prepare(Operation::WORLD_UPDATE_SQL), $queries);
         self::put($pdo);
 
