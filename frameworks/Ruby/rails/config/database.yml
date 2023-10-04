@@ -15,7 +15,7 @@ test:
 
 production_mysql:
   <<: *default
-  adapter: mysql2
+  adapter: trilogy
 
 production_postgresql:
   <<: *default
