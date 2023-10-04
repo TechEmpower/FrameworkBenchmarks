@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 
-class MainController extends Controller
+class BenchController extends Controller
 {
     public function json()
     {
