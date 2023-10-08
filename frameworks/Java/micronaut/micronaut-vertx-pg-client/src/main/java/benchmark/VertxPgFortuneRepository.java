@@ -25,7 +25,7 @@ public class VertxPgFortuneRepository extends AbstractVertxSqlClientRepository i
 
     @Override
     public CompletionStage<?> initDb(Collection<Fortune> fortunes) {
-        List<Tuple> data = fortunes.stream().map(fortune -> Tuple.of(fortune.getId(), fortune.getMessage())).collect(Collectors.toList());
+        List<Tuple> data = fortunes.stream().map(fortune -> Tuple.of(fortune.id(), fortune.message())).collect(Collectors.toList());
         return createTable().thenCompose(ignore -> executeBatch("INSERT INTO Fortune VALUES ($1, $2);", data));
     }
 

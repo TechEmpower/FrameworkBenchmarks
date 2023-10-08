@@ -60,7 +60,7 @@ public class AsyncBenchmarkController extends AbstractBenchmarkController {
             List<Fortune> all = new ArrayList<>(fortuneList.size() + 1);
             all.add(new Fortune(0, "Additional fortune added at request time."));
             all.addAll(fortuneList);
-            all.sort(comparing(Fortune::getMessage));
+            all.sort(comparing(Fortune::message));
             String body = fortunes.template(all).render().toString();
             return HttpResponse.ok(body).contentType("text/html;charset=utf-8");
         });

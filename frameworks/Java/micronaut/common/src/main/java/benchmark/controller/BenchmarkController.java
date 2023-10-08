@@ -64,7 +64,7 @@ public class BenchmarkController extends AbstractBenchmarkController {
         List<Fortune> fortunesList = new ArrayList<>(all.size() + 1);
         fortunesList.add(new Fortune(0, "Additional fortune added at request time."));
         fortunesList.addAll(all);
-        fortunesList.sort(comparing(Fortune::getMessage));
+        fortunesList.sort(comparing(Fortune::message));
         String body = fortunes.template(fortunesList).render().toString();
         return HttpResponse.ok(body).contentType("text/html;charset=utf-8");
     }
