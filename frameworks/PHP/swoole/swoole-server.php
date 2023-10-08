@@ -10,7 +10,7 @@ $connection      = $enableCoroutine ? Connections::class : Connection::class;
 
 $server  = new Server('0.0.0.0', 8080);
 $setting = [
-    'worker_num'        => swoole_cpu_num(),
+    'worker_num'        => swoole_cpu_num() * 4,
     'log_file'          => '/dev/null',
     'enable_coroutine'  => $enableCoroutine,
     'enable_reuse_port' => true
@@ -18,6 +18,7 @@ $setting = [
 
 if ($enableCoroutine) {
     $setting['hook_flags'] = SWOOLE_HOOK_ALL;
+    $setting['worker_num'] = swoole_cpu_num();
 }
 
 $server->set($setting);
