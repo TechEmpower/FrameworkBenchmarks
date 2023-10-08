@@ -14,19 +14,14 @@ import io.micronaut.scheduling.annotation.ExecuteOn;
 import views.fortunes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static java.util.Comparator.comparing;
 
 @ExecuteOn(TaskExecutors.IO)
-@Requires(missingBeans = ReactiveBenchmarkController.class)
+@Requires(beans = {WorldRepository.class, FortuneRepository.class})
 @Controller
 public class BenchmarkController extends AbstractBenchmarkController {
 

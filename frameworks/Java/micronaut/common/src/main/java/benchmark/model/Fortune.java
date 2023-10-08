@@ -9,11 +9,8 @@ import java.util.Objects;
 @MappedEntity(value = "fortune", escape = false)
 public class Fortune {
     @Id
-    private int id;
-    private String message;
-
-    public Fortune() {
-    }
+    private final int id;
+    private final String message;
 
     public Fortune(int id, String message) {
         this.id = id;
@@ -24,16 +21,8 @@ public class Fortune {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     @Override
