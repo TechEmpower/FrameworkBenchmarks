@@ -122,7 +122,7 @@ class FortunesHandler < BaseHandler
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Fortune</title>
+          <title>Fortunes</title>
         </head>
         <body>
           <table>
@@ -132,7 +132,7 @@ class FortunesHandler < BaseHandler
             </tr>
             #{ f_2 }
           </table>
-        </body
+        </body>
       </html>
     HTML
   end
