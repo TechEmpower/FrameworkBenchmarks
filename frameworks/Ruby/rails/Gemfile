@@ -6,6 +6,6 @@ gem 'trilogy', group: :mysql
 gem 'oj', '~> 3.16'
 gem 'pg', '1.5.4', group: :postgresql
 gem 'puma', '~> 6.4'
-gem 'rails', '7.1.0.rc1'
+gem 'rails', '~> 7.1.0'
 gem 'redis', '~> 5.0'
 gem 'tzinfo-data'
