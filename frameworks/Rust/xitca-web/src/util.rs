@@ -1,14 +1,8 @@
 #![allow(dead_code)]
 
-use core::{cell::RefCell, cmp, future::Future, pin::Pin};
+use core::cmp;
 
-use xitca_http::{
-    bytes::BytesMut,
-    http::header::HeaderValue,
-    util::middleware::context::{Context, ContextBuilder},
-};
-
-use crate::db::{self, Client};
+use xitca_http::http::header::HeaderValue;
 
 pub trait QueryParse {
     fn parse_query(self) -> u16;
@@ -35,36 +29,52 @@ pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 
 pub type HandleResult<T> = Result<T, Error>;
 
-pub const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
-
 #[cfg(not(target_arch = "wasm32"))]
-#[derive(Default)]
-pub struct Rand(nanorand::WyRand);
+mod non_wasm {
+    use core::{cell::RefCell, future::Future, pin::Pin};
 
-#[cfg(not(target_arch = "wasm32"))]
-impl Rand {
-    #[inline]
-    pub fn gen_id(&mut self) -> i32 {
-        use nanorand::Rng;
-        (self.0.generate::<u32>() % 10_000 + 1) as _
+    use xitca_http::{
+        bytes::BytesMut,
+        util::middleware::context::{Context, ContextBuilder},
+    };
+
+    use super::*;
+
+    use crate::db::{self, Client};
+
+    pub const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
+
+    #[derive(Default)]
+    pub struct Rand(nanorand::WyRand);
+
+    #[cfg(not(target_arch = "wasm32"))]
+    impl Rand {
+        #[inline]
+        pub fn gen_id(&mut self) -> i32 {
+            use nanorand::Rng;
+            (self.0.generate::<u32>() % 10_000 + 1) as _
+        }
+    }
+
+    pub type Ctx<'a, Req> = Context<'a, Req, State>;
+
+    pub struct State {
+        pub client: Client,
+        pub write_buf: RefCell<BytesMut>,
+    }
+
+    pub fn context_mw(
+    ) -> ContextBuilder<impl Fn() -> Pin<Box<dyn Future<Output = HandleResult<State>>>>> {
+        ContextBuilder::new(|| {
+            Box::pin(async {
+                db::create(DB_URL).await.map(|client| State {
+                    client,
+                    write_buf: RefCell::new(BytesMut::new()),
+                })
+            }) as _
+        })
     }
 }
 
-pub type Ctx<'a, Req> = Context<'a, Req, State>;
-
-pub struct State {
-    pub client: Client,
-    pub write_buf: RefCell<BytesMut>,
-}
-
-pub fn context_mw(
-) -> ContextBuilder<impl Fn() -> Pin<Box<dyn Future<Output = HandleResult<State>>>>> {
-    ContextBuilder::new(|| {
-        Box::pin(async {
-            db::create(DB_URL).await.map(|client| State {
-                client,
-                write_buf: RefCell::new(BytesMut::new()),
-            })
-        }) as _
-    })
-}
+#[cfg(not(target_arch = "wasm32"))]
+pub use non_wasm::*;
