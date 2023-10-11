@@ -1,8 +1,14 @@
 #![allow(dead_code)]
 
-use std::cmp;
+use core::{cell::RefCell, cmp, future::Future, pin::Pin};
 
-use xitca_http::http::header::HeaderValue;
+use xitca_http::{
+    bytes::BytesMut,
+    http::header::HeaderValue,
+    util::middleware::context::{Context, ContextBuilder},
+};
+
+use crate::db::{self, Client};
 
 pub trait QueryParse {
     fn parse_query(self) -> u16;
@@ -42,4 +48,23 @@ impl Rand {
         use nanorand::Rng;
         (self.0.generate::<u32>() % 10_000 + 1) as _
     }
+}
+
+pub type Ctx<'a, Req> = Context<'a, Req, State>;
+
+pub struct State {
+    pub client: Client,
+    pub write_buf: RefCell<BytesMut>,
+}
+
+pub fn context_mw(
+) -> ContextBuilder<impl Fn() -> Pin<Box<dyn Future<Output = HandleResult<State>>>>> {
+    ContextBuilder::new(|| {
+        Box::pin(async {
+            db::create(DB_URL).await.map(|client| State {
+                client,
+                write_buf: RefCell::new(BytesMut::new()),
+            })
+        }) as _
+    })
 }

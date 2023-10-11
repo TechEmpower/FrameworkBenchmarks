@@ -2,7 +2,7 @@
 // network io.
 
 #![allow(dead_code)]
-#![feature(impl_trait_in_assoc_type)]
+#![feature(impl_trait_in_assoc_type, inline_const)]
 
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
@@ -12,7 +12,6 @@ mod ser;
 mod util;
 
 use std::{
-    cell::RefCell,
     convert::Infallible,
     fmt,
     future::{poll_fn, Future},
@@ -31,45 +30,44 @@ use xitca_http::{
         header::{CONTENT_TYPE, SERVER},
         IntoResponse, RequestExt, StatusCode,
     },
-    util::service::context::{Context as Ctx, ContextBuilder},
 };
 use xitca_io::{
     bytes::{Bytes, BytesMut},
     io_uring::IoBuf,
     net::{io_uring::TcpStream as IOUTcpStream, TcpStream},
 };
-use xitca_service::{fn_service, middleware::UncheckedReady, Service, ServiceExt};
-use xitca_unsafe_collection::futures::NowOrPanic;
+use xitca_service::{fn_build, fn_service, middleware::UncheckedReady, Service, ServiceExt};
 
 use self::{
-    db::Client,
     ser::{json_response, Message},
-    util::{QueryParse, DB_URL, SERVER_HEADER_VALUE},
+    util::{context_mw, Ctx, QueryParse, SERVER_HEADER_VALUE},
 };
+
+type Request = http::Request<RequestExt<()>>;
+type Response = http::Response<Once<Bytes>>;
 
 fn main() -> io::Result<()> {
     xitca_server::Builder::new()
         .bind("xitca-iou", "0.0.0.0:8080", || {
-            Http1IOU::new(
-                ContextBuilder::new(|| async {
-                    db::create(DB_URL).await.map(|client| State {
-                        client,
-                        write_buf: RefCell::new(BytesMut::new()),
+            fn_service(handler)
+                .enclosed(context_mw())
+                .enclosed(fn_build(|service| async move {
+                    Ok::<_, Infallible>(Http1IOU {
+                        service,
+                        date: DateTimeService::new(),
                     })
-                })
-                .service(fn_service(handler)),
-            )
-            .enclosed(UncheckedReady)
+                }))
+                .enclosed(UncheckedReady)
         })?
         .build()
         .wait()
 }
 
-async fn handler(ctx: Ctx<'_, Request, State>) -> Result<Response, Infallible> {
+async fn handler(ctx: Ctx<'_, Request>) -> Result<Response, Infallible> {
     let (req, state) = ctx.into_parts();
     let mut res = match req.uri().path() {
         "/plaintext" => {
-            let mut res = req.into_response(Bytes::from_static(b"Hello, World!"));
+            let mut res = req.into_response(const { Bytes::from_static(b"Hello, World!") });
             res.headers_mut().insert(CONTENT_TYPE, TEXT);
             res
         }
@@ -113,46 +111,11 @@ async fn handler(ctx: Ctx<'_, Request, State>) -> Result<Response, Infallible> {
 
 struct Http1IOU<S> {
     service: S,
-}
-
-impl<S> Http1IOU<S> {
-    fn new(service: S) -> Self {
-        Self { service }
-    }
-}
-
-// builder for http service.
-impl<S> Service for Http1IOU<S>
-where
-    S: Service,
-{
-    type Response = Http1IOUService<S::Response>;
-    type Error = S::Error;
-    type Future<'f> = impl Future<Output = Result<Self::Response, Self::Error>> + 'f
-    where
-        Self: 'f,
-        (): 'f;
-
-    fn call<'s>(&'s self, _: ()) -> Self::Future<'s>
-    where
-        (): 's,
-    {
-        async {
-            self.service.call(()).await.map(|service| Http1IOUService {
-                service,
-                date: DateTimeService::new(),
-            })
-        }
-    }
-}
-
-struct Http1IOUService<S> {
-    service: S,
     date: DateTimeService,
 }
 
 // runner for http service.
-impl<S> Service<TcpStream> for Http1IOUService<S>
+impl<S> Service<TcpStream> for Http1IOU<S>
 where
     S: Service<Request, Response = Response>,
     S::Error: fmt::Debug,
@@ -169,12 +132,12 @@ where
         TcpStream: 's,
     {
         async {
+            let std = stream.into_std()?;
+            let stream = IOUTcpStream::from_std(std);
+
             let mut ctx = Context::<_, 8>::new(self.date.get());
             let mut read_buf = BytesMut::new();
             let mut write_buf = BytesMut::with_capacity(4096);
-
-            let std = stream.into_std()?;
-            let stream = IOUTcpStream::from_std(std);
 
             loop {
                 let len = read_buf.len();
@@ -195,7 +158,7 @@ where
                     let mut encoder = ctx.encode_head(parts, &body, &mut write_buf).unwrap();
                     let mut body = pin!(body);
                     let chunk = poll_fn(|cx| body.as_mut().poll_next(cx))
-                        .now_or_panic()
+                        .await
                         .unwrap()
                         .unwrap();
                     encoder.encode(chunk, &mut write_buf);
@@ -211,13 +174,4 @@ where
             stream.shutdown(std::net::Shutdown::Both)
         }
     }
-}
-
-type Request = http::Request<RequestExt<()>>;
-
-type Response = http::Response<Once<Bytes>>;
-
-struct State {
-    client: Client,
-    write_buf: RefCell<BytesMut>,
 }

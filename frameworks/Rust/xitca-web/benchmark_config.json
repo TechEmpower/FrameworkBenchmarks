@@ -44,8 +44,7 @@
         "database_os": "Linux",
         "display_name": "xitca-web [io-uring]",
         "notes": "",
-        "versus": "",
-        "tags": ["broken"]
+        "versus": ""
       },
       "wasm": {
         "json_url": "/json",
