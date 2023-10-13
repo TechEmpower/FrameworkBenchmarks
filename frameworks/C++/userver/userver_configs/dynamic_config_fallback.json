@@ -35,7 +35,7 @@
       "default-task-processor": {
         "wait_queue_overload": {
           "action": "ignore",
-          "length_limit": 300000,
+          "length_limit": 0,
           "time_limit_us": 10000000
         }
       }
