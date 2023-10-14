@@ -5,6 +5,9 @@ import {
   getQueriesCount,
   handleError,
   escape,
+  jsonSerializer,
+  worldObjectSerializer,
+  sortByMessage
 } from "./utils.js";
 
 let db;
@@ -22,7 +25,8 @@ webserver.get("/plaintext", (response) => {
 webserver.get("/json", (response) => {
   addBenchmarkHeaders(response);
   response.writeHeader("Content-Type", "application/json");
-  response.end(JSON.stringify({ message: "Hello, World!" }));
+  // response.end(JSON.stringify({ message: "Hello, World!" }));
+  response.end(jsonSerializer({ message: "Hello, World!" }));
 });
 
 if (db) {
@@ -32,7 +36,7 @@ if (db) {
     });
 
     try {
-      const rows = await db.find(generateRandomNumber());
+      const row = await db.find(generateRandomNumber());
 
       if (response.aborted) {
         return;
@@ -41,7 +45,8 @@ if (db) {
       response.cork(() => {
         addBenchmarkHeaders(response);
         response.writeHeader("Content-Type", "application/json");
-        response.end(JSON.stringify(rows));
+        // response.end(JSON.stringify(rows));
+        response.end(worldObjectSerializer(row));
       });
     } catch (error) {
       if (response.aborted) {
@@ -103,7 +108,8 @@ if (db) {
         message: "Additional fortune added at request time.",
       });
 
-      rows.sort((a, b) => (a.message < b.message) ? -1 : 1);
+      // rows.sort((a, b) => (a.message < b.message) ? -1 : 1);
+      sortByMessage(rows)
 
       const n = rows.length
 
