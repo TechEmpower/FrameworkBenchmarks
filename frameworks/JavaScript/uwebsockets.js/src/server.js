@@ -90,6 +90,8 @@ if (db) {
       handleError(error, response);
     }
   });
+  
+  const extra = { id: 0, message: "Additional fortune added at request time." };
 
   webserver.get("/fortunes", async (response) => {
     response.onAborted(() => {
@@ -97,16 +99,16 @@ if (db) {
     });
 
     try {
-      const rows = await db.fortunes();
+      const rows = [extra, ...await db.fortunes()];
 
       if (response.aborted) {
         return;
       }
 
-      rows.push({
-        id: 0,
-        message: "Additional fortune added at request time.",
-      });
+      // rows.push({
+      //   id: 0,
+      //   message: "Additional fortune added at request time.",
+      // });
 
       // rows.sort((a, b) => (a.message < b.message) ? -1 : 1);
       sortByMessage(rows)
