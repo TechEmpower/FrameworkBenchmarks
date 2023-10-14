@@ -135,8 +135,8 @@ static int do_execute_query(db_conn_t *conn, db_query_param_t *param)
 		return 1;
 	}
 
-	if (!PQsendSyncMessage(conn->conn)) {
-		LIBRARY_ERROR("PQsendSyncMessage", PQerrorMessage(conn->conn));
+	if (!PQsendPipelineSync(conn->conn)) {
+		LIBRARY_ERROR("PQsendPipelineSync", PQerrorMessage(conn->conn));
 		return 1;
 	}
 
@@ -522,8 +522,8 @@ static void prepare_statements(db_conn_t *conn)
 			iter = iter->next;
 		} while (iter);
 
-		if (!PQsendSyncMessage(conn->conn)) {
-			LIBRARY_ERROR("PQsendSyncMessage", PQerrorMessage(conn->conn));
+		if (!PQsendPipelineSync(conn->conn)) {
+			LIBRARY_ERROR("PQsendPipelineSync", PQerrorMessage(conn->conn));
 			on_database_connect_error(conn, false, DB_ERROR);
 			return;
 		}
