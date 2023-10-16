@@ -1,6 +1,7 @@
 // Copyright (c) .NET Foundation. All rights reserved. 
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
 
+using System.Buffers.Text;
 using System.Data.Common;
 using Dapper;
 using Minimal.Models;
@@ -38,9 +39,9 @@ public class Db
                 new { Id = Random.Shared.Next(1, 10001) });
     }
 
-    public async Task<World[]> LoadMultipleQueriesRows(int count)
+    public async Task<World[]> LoadMultipleQueriesRows(string? parameter)
     {
-        count = Math.Clamp(count, 1, 500);
+        var count = ParseQueries(parameter);
 
         var results = new World[count];
         await using var db = _dbProviderFactory.CreateConnection();
@@ -56,9 +57,9 @@ public class Db
         return results;
     }
 
-    public async Task<World[]> LoadMultipleUpdatesRows(int count)
+    public async Task<World[]> LoadMultipleUpdatesRows(string? parameter)
     {
-        count = Math.Clamp(count, 1, 500);
+        var count = ParseQueries(parameter);
 
         var parameters = new Dictionary<string, object>();
 
@@ -101,5 +102,19 @@ public class Db
         result.Sort(FortuneSortComparison);
 
         return result;
+    }
+
+    private static int ParseQueries(string? parameter)
+    {
+        if (!int.TryParse(parameter, out int queries))
+        {
+            queries = 1;
+        }
+        else
+        {
+            queries = Math.Clamp(queries, 1, 500);
+        }
+
+        return queries;
     }
 }

@@ -7,9 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-#if DATABASE
 using Npgsql;
-#endif
 
 namespace PlatformBenchmarks
 {
@@ -22,20 +20,17 @@ namespace PlatformBenchmarks
             Args = args;
 
             Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.ApplicationName));
-#if !DATABASE
             Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Plaintext));
             Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Json));
-#else
             Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.FortunesRaw));
             Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.SingleQuery));
             Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Updates));
             Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.MultipleQueries));
-#endif
             DateHeader.SyncDateTimer();
 
             var host = BuildWebHost(args);
             var config = (IConfiguration)host.Services.GetService(typeof(IConfiguration));
-#if DATABASE
+
             try
             {
                 await BenchmarkApplication.RawDb.PopulateCache();
@@ -44,7 +39,7 @@ namespace PlatformBenchmarks
             {
                 Console.WriteLine($"Error trying to populate database cache: {ex}");
             }
-#endif
+
             await host.RunAsync();
         }
 
@@ -64,11 +59,9 @@ namespace PlatformBenchmarks
                 .Build();
 
             var appSettings = config.Get<AppSettings>();
-#if DATABASE
             Console.WriteLine($"ConnectionString: {appSettings.ConnectionString}");
 
             BenchmarkApplication.RawDb = new RawDb(new ConcurrentRandom(), appSettings);
-#endif
 
             var hostBuilder = new WebHostBuilder()
                 .UseBenchmarksConfiguration(config)

@@ -46,9 +46,9 @@ app.MapGet("/fortunes", async (HttpContext context, Db db) => {
     return template;
 });
 
-app.MapGet("/queries/{count?}", async (Db db, int count = 1) => await db.LoadMultipleQueriesRows(count));
+app.MapGet("/queries/{count?}", async (Db db, string? count) => await db.LoadMultipleQueriesRows(count));
 
-app.MapGet("/updates/{count?}", async (Db db, int count = 1) => await db.LoadMultipleUpdatesRows(count));
+app.MapGet("/updates/{count?}", async (Db db, string? count) => await db.LoadMultipleUpdatesRows(count));
 
 app.Lifetime.ApplicationStarted.Register(() => Console.WriteLine("Application started. Press Ctrl+C to shut down."));
 app.Lifetime.ApplicationStopping.Register(() => Console.WriteLine("Application is shutting down..."));

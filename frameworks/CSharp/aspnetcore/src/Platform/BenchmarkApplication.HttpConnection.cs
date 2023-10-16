@@ -1,15 +1,14 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using System;
 using System.Buffers;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 
 namespace PlatformBenchmarks
 {
@@ -20,9 +19,7 @@ namespace PlatformBenchmarks
         public PipeReader Reader { get; set; }
         public PipeWriter Writer { get; set; }
 
-#if DATABASE
         private HtmlEncoder HtmlEncoder { get; } = CreateHtmlEncoder();
-#endif
 
         private HttpParser<ParsingAdapter> Parser { get; } = new HttpParser<ParsingAdapter>();
 
@@ -30,7 +27,14 @@ namespace PlatformBenchmarks
         {
             try
             {
-                await ProcessRequestsAsync();
+                if (_requestType == RequestType.PlainText || _requestType == RequestType.Json)
+                {
+                    await ProcessRequestsAsync();
+                }
+                else
+                {
+                    await ProcessRequestsDbAsync();
+                }                
 
                 Reader.Complete();
             }
@@ -44,7 +48,6 @@ namespace PlatformBenchmarks
             }
         }
 
-#if !DATABASE
         private async Task ProcessRequestsAsync()
         {
             while (true)
@@ -131,8 +134,8 @@ namespace PlatformBenchmarks
             _state = state;
             return true;
         }
-#else
-        private async Task ProcessRequestsAsync()
+
+        private async Task ProcessRequestsDbAsync()
         {
             while (true)
             {
@@ -224,7 +227,6 @@ namespace PlatformBenchmarks
             settings.AllowCharacter('\u2014');  // allow EM DASH through
             return HtmlEncoder.Create(settings);
         }
-#endif
 
         public void OnStaticIndexedHeader(int index)
         {

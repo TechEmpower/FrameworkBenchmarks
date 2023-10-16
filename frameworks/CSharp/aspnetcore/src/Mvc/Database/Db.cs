@@ -53,8 +53,11 @@ public sealed class Db
         {
             var id = Random.Shared.Next(1, 10001);
             var result = await _firstWorldTrackedQuery(_dbContext, id);
+            result.RandomNumber = Random.Shared.Next(1, 10001);
 
-            _dbContext.Entry(result).Property("RandomNumber").CurrentValue = Random.Shared.Next(1, 10001);
+            // Per the rules, always send an update, even if the random new value is the same as the current value.
+            _dbContext.Entry(result).State = EntityState.Modified;
+            
             results[i] = result;
         }
 

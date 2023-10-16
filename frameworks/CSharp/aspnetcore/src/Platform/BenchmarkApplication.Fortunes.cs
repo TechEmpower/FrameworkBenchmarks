@@ -10,7 +10,6 @@ namespace PlatformBenchmarks
 {
     public partial class BenchmarkApplication
     {
-#if DATABASE
         private async Task FortunesRaw(PipeWriter pipeWriter)
         {
             await OutputFortunes(
@@ -64,6 +63,5 @@ namespace PlatformBenchmarks
             ReturnChunkedWriter(chunkedWriter);
             template.Dispose();
         }
-#endif
     }
 }

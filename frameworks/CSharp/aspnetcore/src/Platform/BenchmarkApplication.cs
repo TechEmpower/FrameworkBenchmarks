@@ -54,9 +54,7 @@ namespace PlatformBenchmarks
             }
         }
 
-#if DATABASE
         private readonly static SliceFactory<List<FortuneUtf8>> FortunesTemplateFactory = RazorSlice.ResolveSliceFactory<List<FortuneUtf8>>("/Templates/FortunesUtf8.cshtml");
-#endif
 
         [ThreadStatic]
         private static Utf8JsonWriter t_writer;
@@ -92,7 +90,6 @@ namespace PlatformBenchmarks
 
         private static RequestType GetRequestType(ReadOnlySpan<byte> path, ref int queries)
         {
-#if !DATABASE
             if (path.Length == 10 && path.SequenceEqual(Paths.Plaintext))
             {
                 return RequestType.PlainText;
@@ -101,36 +98,33 @@ namespace PlatformBenchmarks
             {
                 return RequestType.Json;
             }
-#else
-            if (path.Length == 3 && path[0] == '/' && path[1] == 'd' && path[2] == 'b')
+            else if (path.Length == 3 && path[0] == '/' && path[1] == 'd' && path[2] == 'b')
             {
                 return RequestType.SingleQuery;
             }
-            if (path.Length >= 9 && path[1] == 'f' && path.StartsWith(Paths.FortunesRaw))
+            else if (path.Length >= 9 && path[1] == 'f' && path.StartsWith(Paths.FortunesRaw))
             {
                 return RequestType.FortunesRaw;
             }
-            if (path.Length >= 15 && path[1] == 'c' && path.StartsWith(Paths.Caching))
+            else if (path.Length >= 15 && path[1] == 'c' && path.StartsWith(Paths.Caching))
             {
                 queries = ParseQueries(path.Slice(15));
                 return RequestType.Caching;
             }
-            if (path.Length >= 9 && path[1] == 'u' && path.StartsWith(Paths.Updates))
+            else if (path.Length >= 9 && path[1] == 'u' && path.StartsWith(Paths.Updates))
             {
                 queries = ParseQueries(path.Slice(9));
                 return RequestType.Updates;
             }
-            if (path.Length >= 9 && path[1] == 'q' && path.StartsWith(Paths.MultipleQueries))
+            else if (path.Length >= 9 && path[1] == 'q' && path.StartsWith(Paths.MultipleQueries))
             {
                 queries = ParseQueries(path.Slice(9));
                 return RequestType.MultipleQueries;
             }
-#endif
+
             return RequestType.NotRecognized;
         }
 
-
-#if !DATABASE
         private void ProcessRequest(ref BufferWriter<WriterAdapter> writer)
         {
             if (_requestType == RequestType.PlainText)
@@ -146,7 +140,6 @@ namespace PlatformBenchmarks
                 Default(ref writer);
             }
         }
-#else
 
         private static int ParseQueries(ReadOnlySpan<byte> parameter)
         {
@@ -179,7 +172,7 @@ namespace PlatformBenchmarks
             writer.Commit();
             return Task.CompletedTask;
         }
-#endif
+
         private static ReadOnlySpan<byte> _defaultPreamble =>
             "HTTP/1.1 200 OK\r\n"u8 +
             "Server: K"u8 + "\r\n"u8 +

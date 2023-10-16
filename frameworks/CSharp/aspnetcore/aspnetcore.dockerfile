@@ -8,6 +8,7 @@ ENV URLS http://+:8080
 
 WORKDIR /app
 COPY --from=build /app/out ./
+COPY appsettings.postgresql.json ./appsettings.json
 
 EXPOSE 8080
 
