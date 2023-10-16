@@ -181,21 +181,19 @@ public sealed class RawDb
         // Benchmark requirements explicitly prohibit pre-initializing the list size
         var result = new List<FortuneUtf8>();
 
-        using (var db = CreateConnection())
+        using var db = CreateConnection();
+        await db.OpenAsync();
+
+        using var cmd = new NpgsqlCommand("SELECT id, message FROM fortune", db);
+        using var rdr = await cmd.ExecuteReaderAsync();
+
+        while (await rdr.ReadAsync())
         {
-            await db.OpenAsync();
-
-            using var cmd = new NpgsqlCommand("SELECT id, message FROM fortune", db);
-            using var rdr = await cmd.ExecuteReaderAsync();
-
-            while (await rdr.ReadAsync())
-            {
-                result.Add(new FortuneUtf8
-                (
-                    id: rdr.GetInt32(0),
-                    message: rdr.GetFieldValue<byte[]>(1)
-                ));
-            }
+            result.Add(new FortuneUtf8
+            (
+                id: rdr.GetInt32(0),
+                message: rdr.GetFieldValue<byte[]>(1)
+            ));
         }
 
         result.Add(new FortuneUtf8(id: 0, AdditionalFortune));

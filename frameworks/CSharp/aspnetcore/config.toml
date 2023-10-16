@@ -54,8 +54,6 @@ platform = ".NET"
 webserver = "aspnetcore"
 
 [mysql]
-urls.plaintext = "/plaintext"
-urls.json = "/json"
 urls.db = "/db"
 urls.query = "/queries/"
 urls.fortune = "/fortunes"

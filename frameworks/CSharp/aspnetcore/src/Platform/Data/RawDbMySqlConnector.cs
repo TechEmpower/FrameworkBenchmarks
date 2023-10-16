@@ -5,13 +5,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using MySqlConnector;
-using Npgsql;
 
 namespace PlatformBenchmarks;
 
@@ -127,8 +125,8 @@ public sealed class RawDb
         {
             batch.BatchCommands.Add(new MySqlBatchCommand()
             {
-                CommandText = "SELECT id, randomnumber FROM world WHERE id = $1",
-                Parameters = { new NpgsqlParameter<int> { TypedValue = _random.Next(1, 10001) } }
+                CommandText = "SELECT id, randomnumber FROM world WHERE id = @id",
+                Parameters = { new MySqlParameter("@id", _random.Next(1, 10001)) }
             });
         }
 
@@ -167,8 +165,8 @@ public sealed class RawDb
             {
                 var randomNumber = _random.Next(1, 10001);
 
-                updateCmd.Parameters.Add(new NpgsqlParameter<int> { TypedValue = results[i].Id });
-                updateCmd.Parameters.Add(new NpgsqlParameter<int> { TypedValue = randomNumber });
+                updateCmd.Parameters.Add(new MySqlParameter { Value = results[i].Id });
+                updateCmd.Parameters.Add(new MySqlParameter { Value = randomNumber });
 
                 results[i].RandomNumber = randomNumber;
             }
@@ -184,21 +182,19 @@ public sealed class RawDb
         // Benchmark requirements explicitly prohibit pre-initializing the list size
         var result = new List<FortuneUtf8>();
 
-        using (var db = CreateConnection())
+        var db = CreateConnection();
+        await db.OpenAsync();
+
+        using var cmd = new MySqlCommand("SELECT id, message FROM fortune", db);
+        using var rdr = await cmd.ExecuteReaderAsync();
+
+        while (await rdr.ReadAsync())
         {
-            await db.OpenAsync();
-
-            using var cmd = new MySqlCommand("SELECT id, message FROM fortune", db);
-            using var rdr = await cmd.ExecuteReaderAsync();
-
-            while (await rdr.ReadAsync())
-            {
-                result.Add(new FortuneUtf8
-                (
-                    id: rdr.GetInt32(0),
-                    message: rdr.GetFieldValue<byte[]>(1)
-                ));
-            }
+            result.Add(new FortuneUtf8
+            (
+                id: rdr.GetInt32(0),
+                message: rdr.GetFieldValue<byte[]>(1)
+            ));
         }
 
         result.Add(new FortuneUtf8(id: 0, AdditionalFortune));
