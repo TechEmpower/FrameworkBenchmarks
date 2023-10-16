@@ -8,10 +8,6 @@
     <UserSecretsId>38063504-d08c-495a-89c9-daaad2f60f31</UserSecretsId>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <DefineConstants Condition=" '$(IsDatabase)' == 'true' ">$(DefineConstants);DATABASE</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

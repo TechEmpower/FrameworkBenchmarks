@@ -12,7 +12,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
-      "database": "None",
+      "database": "Postgres",
       "framework": "ASP.NET Core",
       "language": "C#",
       "orm": "Raw",
