@@ -8,12 +8,18 @@
     <UserSecretsId>38063504-d08c-495a-89c9-daaad2f60f31</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DefineConstants Condition=" '$(DatabaseProvider)' == '' or '$(DatabaseProvider)' == 'Npgsql'">$(DefineConstants);NPGSQL</DefineConstants>
+    <DefineConstants Condition=" '$(DatabaseProvider)' == 'MySqlConnector' ">$(DefineConstants);MYSQLCONNECTOR</DefineConstants>
+  </PropertyGroup>
+  
   <ItemGroup>
     <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="8.0.0-rc.2" />
+    <PackageReference Include="MySqlConnector" Version="2.2.7" />
     <PackageReference Include="Dapper" Version="2.1.11" />
     <PackageReference Include="RazorSlices" Version="0.7.0" />
   </ItemGroup>

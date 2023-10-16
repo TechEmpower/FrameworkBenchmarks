@@ -125,22 +125,6 @@ namespace PlatformBenchmarks
             return RequestType.NotRecognized;
         }
 
-        private void ProcessRequest(ref BufferWriter<WriterAdapter> writer)
-        {
-            if (_requestType == RequestType.PlainText)
-            {
-                PlainText(ref writer);
-            }
-            else if (_requestType == RequestType.Json)
-            {
-                Json(ref writer, Writer);
-            }
-            else
-            {
-                Default(ref writer);
-            }
-        }
-
         private static int ParseQueries(ReadOnlySpan<byte> parameter)
         {
             if (!Utf8Parser.TryParse(parameter, out int queries, out _))
@@ -157,6 +141,8 @@ namespace PlatformBenchmarks
 
         private Task ProcessRequestAsync() => _requestType switch
         {
+            RequestType.PlainText => PlainText(Writer),
+            RequestType.Json => Json(Writer),
             RequestType.FortunesRaw => FortunesRaw(Writer),
             RequestType.SingleQuery => SingleQuery(Writer),
             RequestType.Caching => Caching(Writer, _queries),

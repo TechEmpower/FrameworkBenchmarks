@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.IO.Pipelines;
+using System.Threading.Tasks;
 
 namespace PlatformBenchmarks
 {
@@ -13,8 +15,10 @@ namespace PlatformBenchmarks
             "Content-Type: text/plain\r\n"u8 +
             "Content-Length: 13"u8;
 
-        private static void PlainText(ref BufferWriter<WriterAdapter> writer)
+        private static Task PlainText(PipeWriter pipeWriter)
         {
+            var writer = GetWriter(pipeWriter, sizeHint: 160);
+
             writer.Write(_plaintextPreamble);
 
             // Date header
@@ -22,6 +26,10 @@ namespace PlatformBenchmarks
 
             // Body
             writer.Write(_plainTextBody);
+
+            writer.Commit();
+
+            return Task.CompletedTask;
         }
     }
 }

@@ -1,7 +1,6 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using System;
 using System.Buffers;
 using System.IO.Pipelines;
@@ -9,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 
 namespace PlatformBenchmarks
 {
@@ -27,14 +27,7 @@ namespace PlatformBenchmarks
         {
             try
             {
-                if (_requestType == RequestType.PlainText || _requestType == RequestType.Json)
-                {
-                    await ProcessRequestsAsync();
-                }
-                else
-                {
-                    await ProcessRequestsDbAsync();
-                }                
+                await ProcessRequestsAsync();
 
                 Reader.Complete();
             }
@@ -46,62 +39,6 @@ namespace PlatformBenchmarks
             {
                 Writer.Complete();
             }
-        }
-
-        private async Task ProcessRequestsAsync()
-        {
-            while (true)
-            {
-                var readResult = await Reader.ReadAsync(default);
-                var buffer = readResult.Buffer;
-                var isCompleted = readResult.IsCompleted;
-
-                if (buffer.IsEmpty && isCompleted)
-                {
-                    return;
-                }
-
-                if (!HandleRequests(buffer, isCompleted))
-                {
-                    return;
-                }
-
-                await Writer.FlushAsync(default);
-            }
-        }
-
-        private bool HandleRequests(in ReadOnlySequence<byte> buffer, bool isCompleted)
-        {
-            var reader = new SequenceReader<byte>(buffer);
-            var writer = GetWriter(Writer, sizeHint: 160 * 16); // 160*16 is for Plaintext, for Json 160 would be enough
-
-            while (true)
-            {
-                if (!ParseHttpRequest(ref reader, isCompleted))
-                {
-                    return false;
-                }
-
-                if (_state == State.Body)
-                {
-                    ProcessRequest(ref writer);
-
-                    _state = State.StartLine;
-
-                    if (!reader.End)
-                    {
-                        // More input data to parse
-                        continue;
-                    }
-                }
-
-                // No more input or incomplete data, Advance the Reader
-                Reader.AdvanceTo(reader.Position, buffer.End);
-                break;
-            }
-
-            writer.Commit();
-            return true;
         }
 
         private bool ParseHttpRequest(ref SequenceReader<byte> reader, bool isCompleted)
@@ -135,7 +72,7 @@ namespace PlatformBenchmarks
             return true;
         }
 
-        private async Task ProcessRequestsDbAsync()
+        private async Task ProcessRequestsAsync()
         {
             while (true)
             {
