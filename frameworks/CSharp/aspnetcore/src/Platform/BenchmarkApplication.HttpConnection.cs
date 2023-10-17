@@ -76,7 +76,7 @@ public partial class BenchmarkApplication : IHttpConnection
     {
         while (true)
         {
-            var readResult = await Reader.ReadAsync();
+            var readResult = await Reader.ReadAsync(default);
             var buffer = readResult.Buffer;
             var isCompleted = readResult.IsCompleted;
 
@@ -85,74 +85,60 @@ public partial class BenchmarkApplication : IHttpConnection
                 return;
             }
 
-            while (true)
+            if (!HandleRequests(buffer, isCompleted))
             {
-                if (!ParseHttpRequest(ref buffer, isCompleted))
-                {
-                    return;
-                }
-
-                if (_state == State.Body)
-                {
-                    await ProcessRequestAsync();
-
-                    _state = State.StartLine;
-
-                    if (!buffer.IsEmpty)
-                    {
-                        // More input data to parse
-                        continue;
-                    }
-                }
-
-                // No more input or incomplete data, Advance the Reader
-                Reader.AdvanceTo(buffer.Start, buffer.End);
-                break;
+                await ProcessRequestAsync();
             }
 
-            await Writer.FlushAsync();
+            await Writer.FlushAsync(default);
         }
     }
 
-    private bool ParseHttpRequest(ref ReadOnlySequence<byte> buffer, bool isCompleted)
+    private bool HandleRequests(in ReadOnlySequence<byte> buffer, bool isCompleted)
     {
         var reader = new SequenceReader<byte>(buffer);
-        var state = _state;
+        var hasWriter = false;
+        BufferWriter<WriterAdapter> writer = default;
 
-        if (state == State.StartLine)
+        while (true)
         {
-            if (Parser.ParseRequestLine(new ParsingAdapter(this), ref reader))
+            if (!ParseHttpRequest(ref reader, isCompleted))
             {
-                state = State.Headers;
+                return false;
             }
-        }
 
-        if (state == State.Headers)
-        {
-            var success = Parser.ParseHeaders(new ParsingAdapter(this), ref reader);
-
-            if (success)
+            // Only create the local writer if the request is Plaintext or Json
+            
+            if (!hasWriter)
             {
-                state = State.Body;
+                hasWriter = true;
+                writer = GetWriter(Writer, sizeHint: 160 * 16); // 160*16 is for Plaintext, for Json 160 would be enough
             }
+
+            if (_state == State.Body)
+            {
+                if (!ProcessRequest(ref writer))
+                {
+                    return false;
+                }
+
+                _state = State.StartLine;
+
+                if (!reader.End)
+                {
+                    // More input data to parse
+                    continue;
+                }
+            }
+
+            // No more input or incomplete data, Advance the Reader
+            Reader.AdvanceTo(reader.Position, buffer.End);
+            break;
         }
 
-        if (state != State.Body && isCompleted)
-        {
-            ThrowUnexpectedEndOfData();
-        }
-
-        _state = state;
-
-        if (state == State.Body)
-        {
-            // Complete request read, consumed and examined are the same (length 0)
-            buffer = buffer.Slice(reader.Position, 0);
-        }
-        else
-        {
-            // In-complete request read, consumed is current position and examined is the remaining.
-            buffer = buffer.Slice(reader.Position);
+        if (hasWriter)
+        { 
+            writer.Commit();
         }
 
         return true;

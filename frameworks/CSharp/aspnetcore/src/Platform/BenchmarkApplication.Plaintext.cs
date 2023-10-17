@@ -15,10 +15,8 @@ public partial class BenchmarkApplication
         "Content-Type: text/plain\r\n"u8 +
         "Content-Length: 13"u8;
 
-    private static Task PlainText(PipeWriter pipeWriter)
+    private static void PlainText(ref BufferWriter<WriterAdapter> writer)
     {
-        var writer = GetWriter(pipeWriter, sizeHint: 160);
-
         writer.Write(_plaintextPreamble);
 
         // Date header
@@ -26,9 +24,5 @@ public partial class BenchmarkApplication
 
         // Body
         writer.Write(_plainTextBody);
-
-        writer.Commit();
-
-        return Task.CompletedTask;
     }
 }

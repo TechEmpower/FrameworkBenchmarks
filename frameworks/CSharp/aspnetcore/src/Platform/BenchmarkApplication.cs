@@ -145,8 +145,6 @@ namespace PlatformBenchmarks
 
         private Task ProcessRequestAsync() => _requestType switch
         {
-            RequestType.PlainText => PlainText(Writer),
-            RequestType.Json => Json(Writer),
             RequestType.FortunesRaw => FortunesRaw(Writer),
             RequestType.SingleQuery => SingleQuery(Writer),
             RequestType.Caching => Caching(Writer, _queries),
@@ -154,6 +152,24 @@ namespace PlatformBenchmarks
             RequestType.MultipleQueries => MultipleQueries(Writer, _queries),
             _ => Default(Writer)
         };
+
+        private bool ProcessRequest(ref BufferWriter<WriterAdapter> writer)
+        {
+            if (_requestType == RequestType.PlainText)
+            {
+                PlainText(ref writer);
+            }
+            else if (_requestType == RequestType.Json)
+            {
+                Json(ref writer, Writer);
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
+        }
 
         private static Task Default(PipeWriter pipeWriter)
         {

@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Buffers;
 using System.IO.Pipelines;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -21,11 +22,8 @@ public partial class BenchmarkApplication
         "Content-Type: application/json\r\n"u8 +
         "Content-Length: 27"u8;
 
-
-    private static Task Json(PipeWriter pipeWriter)
+    private static void Json(ref BufferWriter<WriterAdapter> writer, IBufferWriter<byte> bodyWriter)
     {
-        var writer = GetWriter(pipeWriter, sizeHint: 160);
-
         writer.Write(_jsonPreamble);
 
         // Date header
@@ -33,12 +31,10 @@ public partial class BenchmarkApplication
 
         writer.Commit();
 
-        var utf8JsonWriter = t_writer ??= new Utf8JsonWriter(pipeWriter, new JsonWriterOptions { SkipValidation = true });
-        utf8JsonWriter.Reset(pipeWriter);
+        var utf8JsonWriter = t_writer ??= new Utf8JsonWriter(bodyWriter, new JsonWriterOptions { SkipValidation = true });
+        utf8JsonWriter.Reset(bodyWriter);
 
         // Body
         JsonSerializer.Serialize(utf8JsonWriter, new JsonMessage { message = "Hello, World!" }, SerializerContext.JsonMessage);
-
-        return Task.CompletedTask;
     }
 }
