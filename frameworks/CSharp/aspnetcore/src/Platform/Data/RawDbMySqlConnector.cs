@@ -33,9 +33,8 @@ public sealed class RawDb
 
     public async Task<World> LoadSingleQueryRow()
     {
-        using var db = CreateConnection();
-        await db.OpenAsync();
-
+        using var db = await _dataSource.OpenConnectionAsync();
+        
         var (cmd, _) = await CreateReadCommandAsync(db);
         using var command = cmd;
 
@@ -66,8 +65,7 @@ public sealed class RawDb
 
         static async Task<CachedWorld[]> LoadUncachedQueries(int id, int i, int count, RawDb rawdb, CachedWorld[] result)
         {
-            using var db = rawdb.CreateConnection();
-            await db.OpenAsync();
+            using var db = await rawdb._dataSource.OpenConnectionAsync();
 
             var (cmd, idParameter) = await rawdb.CreateReadCommandAsync(db);
             using var command = cmd;
@@ -146,8 +144,7 @@ public sealed class RawDb
     {
         var results = new World[count];
 
-        using var connection = CreateConnection();
-        await connection.OpenAsync();
+        using var connection = await _dataSource.OpenConnectionAsync();
 
         var (queryCmd, queryParameter) = await CreateReadCommandAsync(connection);
         using (queryCmd)
@@ -165,8 +162,8 @@ public sealed class RawDb
             {
                 var randomNumber = _random.Next(1, 10001);
 
-                updateCmd.Parameters.Add(new MySqlParameter { Value = results[i].Id });
-                updateCmd.Parameters.Add(new MySqlParameter { Value = randomNumber });
+                updateCmd.Parameters.AddWithValue($"@Id_{i}", results[i].Id);
+                updateCmd.Parameters.AddWithValue($"@Random_{i}", randomNumber);
 
                 results[i].RandomNumber = randomNumber;
             }
@@ -177,33 +174,32 @@ public sealed class RawDb
         return results;
     }
 
-    public async Task<List<FortuneUtf8>> LoadFortunesRows()
+    public async Task<List<FortuneUtf16>> LoadFortunesRows()
     {
         // Benchmark requirements explicitly prohibit pre-initializing the list size
-        var result = new List<FortuneUtf8>();
+        var result = new List<FortuneUtf16>();
 
-        var db = CreateConnection();
-        await db.OpenAsync();
+        using var connection = await _dataSource.OpenConnectionAsync();
 
-        using var cmd = new MySqlCommand("SELECT id, message FROM fortune", db);
+        using var cmd = new MySqlCommand("SELECT id, message FROM fortune", connection);
         using var rdr = await cmd.ExecuteReaderAsync();
 
         while (await rdr.ReadAsync())
         {
-            result.Add(new FortuneUtf8
+            result.Add(new FortuneUtf16
             (
                 id: rdr.GetInt32(0),
-                message: rdr.GetFieldValue<byte[]>(1)
+                message: rdr.GetString(1)
             ));
         }
 
-        result.Add(new FortuneUtf8(id: 0, AdditionalFortune));
+        result.Add(new FortuneUtf16(id: 0, AdditionalFortune));
         result.Sort();
 
         return result;
     }
 
-    private readonly byte[] AdditionalFortune = "Additional fortune added at request time."u8.ToArray();
+    private const string AdditionalFortune = "Additional fortune added at request time.";
 
     private async Task<(MySqlCommand readCmd, MySqlParameter idParameter)> CreateReadCommandAsync(MySqlConnection connection)
     {

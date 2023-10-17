@@ -8,86 +8,85 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 
-namespace PlatformBenchmarks
+namespace PlatformBenchmarks;
+
+public class Program
 {
-    public class Program
+    public static string[] Args;
+
+    public static async Task Main(string[] args)
     {
-        public static string[] Args;
+        Args = args;
 
-        public static async Task Main(string[] args)
+        Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.ApplicationName));
+        Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Plaintext));
+        Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Json));
+        Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.FortunesRaw));
+        Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.SingleQuery));
+        Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Updates));
+        Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.MultipleQueries));
+        DateHeader.SyncDateTimer();
+
+        var host = BuildWebHost(args);
+        var config = (IConfiguration)host.Services.GetService(typeof(IConfiguration));
+
+        try
         {
-            Args = args;
-
-            Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.ApplicationName));
-            Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Plaintext));
-            Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Json));
-            Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.FortunesRaw));
-            Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.SingleQuery));
-            Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.Updates));
-            Console.WriteLine(Encoding.UTF8.GetString(BenchmarkApplication.Paths.MultipleQueries));
-            DateHeader.SyncDateTimer();
-
-            var host = BuildWebHost(args);
-            var config = (IConfiguration)host.Services.GetService(typeof(IConfiguration));
-
-            try
-            {
-                await BenchmarkApplication.RawDb.PopulateCache();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error trying to populate database cache: {ex}");
-            }
-
-            await host.RunAsync();
+            await BenchmarkApplication.RawDb.PopulateCache();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error trying to populate database cache: {ex}");
         }
 
-        public static IWebHost BuildWebHost(string[] args)
-        {
-            Console.WriteLine($"BuildWebHost()");
-            Console.WriteLine($"Args: {string.Join(' ', args)}");
+        await host.RunAsync();
+    }
 
-            var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
+    public static IWebHost BuildWebHost(string[] args)
+    {
+        Console.WriteLine($"BuildWebHost()");
+        Console.WriteLine($"Args: {string.Join(' ', args)}");
+
+        var config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
 #if DEBUG
-                .AddUserSecrets<Program>()
+            .AddUserSecrets<Program>()
 #endif
-                .AddEnvironmentVariables()
-                .AddEnvironmentVariables()
-                .AddCommandLine(args)
-                .Build();
+            .AddEnvironmentVariables()
+            .AddEnvironmentVariables()
+            .AddCommandLine(args)
+            .Build();
 
-            var appSettings = config.Get<AppSettings>();
-            Console.WriteLine($"ConnectionString: {appSettings.ConnectionString}");
+        var appSettings = config.Get<AppSettings>();
+        Console.WriteLine($"ConnectionString: {appSettings.ConnectionString}");
 
-            BenchmarkApplication.RawDb = new RawDb(new ConcurrentRandom(), appSettings);
+        BenchmarkApplication.RawDb = new RawDb(new ConcurrentRandom(), appSettings);
 
-            var hostBuilder = new WebHostBuilder()
-                .UseBenchmarksConfiguration(config)
-                .UseKestrel((context, options) =>
-                {
-                    var endPoint = context.Configuration.CreateIPEndPoint();
-
-                    options.Listen(endPoint, builder =>
-                    {
-                        builder.UseHttpApplication<BenchmarkApplication>();
-                    });
-                })
-                .UseStartup<Startup>();
-
-            hostBuilder.UseSockets(options =>
+        var hostBuilder = new WebHostBuilder()
+            .UseBenchmarksConfiguration(config)
+            .UseKestrel((context, options) =>
             {
-                options.WaitForDataBeforeAllocatingBuffer = false;
+                var endPoint = context.Configuration.CreateIPEndPoint();
 
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                options.Listen(endPoint, builder =>
                 {
-                    options.UnsafePreferInlineScheduling = true;
-                }
-            });
+                    builder.UseHttpApplication<BenchmarkApplication>();
+                });
+            })
+            .UseStartup<Startup>();
 
-            var host = hostBuilder.Build();
+        hostBuilder.UseSockets(options =>
+        {
+            options.WaitForDataBeforeAllocatingBuffer = false;
 
-            return host;
-        }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                options.UnsafePreferInlineScheduling = true;
+            }
+        });
+
+        var host = hostBuilder.Build();
+
+        return host;
     }
 }

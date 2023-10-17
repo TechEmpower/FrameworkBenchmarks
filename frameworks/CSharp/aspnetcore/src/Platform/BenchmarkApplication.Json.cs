@@ -6,40 +6,39 @@ using System.IO.Pipelines;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace PlatformBenchmarks
+namespace PlatformBenchmarks;
+
+public partial class BenchmarkApplication
 {
-    public partial class BenchmarkApplication
+    private readonly static uint _jsonPayloadSize = (uint)JsonSerializer.SerializeToUtf8Bytes(
+        new JsonMessage { message = "Hello, World!" },
+        SerializerContext.JsonMessage
+        ).Length;
+
+    private static ReadOnlySpan<byte> _jsonPreamble =>
+        "HTTP/1.1 200 OK\r\n"u8 +
+        "Server: K\r\n"u8 +
+        "Content-Type: application/json\r\n"u8 +
+        "Content-Length: 27"u8;
+
+
+    private static Task Json(PipeWriter pipeWriter)
     {
-        private readonly static uint _jsonPayloadSize = (uint)JsonSerializer.SerializeToUtf8Bytes(
-            new JsonMessage { message = "Hello, World!" },
-            SerializerContext.JsonMessage
-            ).Length;
+        var writer = GetWriter(pipeWriter, sizeHint: 160);
 
-        private static ReadOnlySpan<byte> _jsonPreamble =>
-            "HTTP/1.1 200 OK\r\n"u8 +
-            "Server: K\r\n"u8 +
-            "Content-Type: application/json\r\n"u8 +
-            "Content-Length: 27"u8;
+        writer.Write(_jsonPreamble);
 
+        // Date header
+        writer.Write(DateHeader.HeaderBytes);
 
-        private static Task Json(PipeWriter pipeWriter)
-        {
-            var writer = GetWriter(pipeWriter, sizeHint: 160);
+        writer.Commit();
 
-            writer.Write(_jsonPreamble);
+        var utf8JsonWriter = t_writer ??= new Utf8JsonWriter(pipeWriter, new JsonWriterOptions { SkipValidation = true });
+        utf8JsonWriter.Reset(pipeWriter);
 
-            // Date header
-            writer.Write(DateHeader.HeaderBytes);
+        // Body
+        JsonSerializer.Serialize(utf8JsonWriter, new JsonMessage { message = "Hello, World!" }, SerializerContext.JsonMessage);
 
-            writer.Commit();
-
-            var utf8JsonWriter = t_writer ??= new Utf8JsonWriter(pipeWriter, new JsonWriterOptions { SkipValidation = true });
-            utf8JsonWriter.Reset(pipeWriter);
-
-            // Body
-            JsonSerializer.Serialize(utf8JsonWriter, new JsonMessage { message = "Hello, World!" }, SerializerContext.JsonMessage);
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

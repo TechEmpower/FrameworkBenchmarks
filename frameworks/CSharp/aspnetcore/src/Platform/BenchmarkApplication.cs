@@ -54,7 +54,11 @@ namespace PlatformBenchmarks
             }
         }
 
+#if NPGSQL
         private readonly static SliceFactory<List<FortuneUtf8>> FortunesTemplateFactory = RazorSlice.ResolveSliceFactory<List<FortuneUtf8>>("/Templates/FortunesUtf8.cshtml");
+#else
+        private readonly static SliceFactory<List<FortuneUtf16>> FortunesTemplateFactory = RazorSlice.ResolveSliceFactory<List<FortuneUtf16>>("/Templates/FortunesUtf16.cshtml");
+#endif
 
         [ThreadStatic]
         private static Utf8JsonWriter t_writer;

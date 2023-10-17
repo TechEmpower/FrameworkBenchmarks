@@ -5,37 +5,36 @@ using System.IO.Pipelines;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace PlatformBenchmarks
+namespace PlatformBenchmarks;
+
+public partial class BenchmarkApplication
 {
-    public partial class BenchmarkApplication
+    private static async Task SingleQuery(PipeWriter pipeWriter)
     {
-        private static async Task SingleQuery(PipeWriter pipeWriter)
-        {
-            OutputSingleQuery(pipeWriter, await RawDb.LoadSingleQueryRow());
-        }
+        OutputSingleQuery(pipeWriter, await RawDb.LoadSingleQueryRow());
+    }
 
-        private static void OutputSingleQuery(PipeWriter pipeWriter, World row)
-        {
-            var writer = GetWriter(pipeWriter, sizeHint: 180); // in reality it's 150
+    private static void OutputSingleQuery(PipeWriter pipeWriter, World row)
+    {
+        var writer = GetWriter(pipeWriter, sizeHint: 180); // in reality it's 150
 
-            writer.Write(_dbPreamble);
+        writer.Write(_dbPreamble);
 
-            var lengthWriter = writer;
-            writer.Write(_contentLengthGap);
+        var lengthWriter = writer;
+        writer.Write(_contentLengthGap);
 
-            // Date header
-            writer.Write(DateHeader.HeaderBytes);
+        // Date header
+        writer.Write(DateHeader.HeaderBytes);
 
-            writer.Commit();
+        writer.Commit();
 
-            var utf8JsonWriter = t_writer ??= new Utf8JsonWriter(pipeWriter, new JsonWriterOptions { SkipValidation = true });
-            utf8JsonWriter.Reset(pipeWriter);
+        var utf8JsonWriter = t_writer ??= new Utf8JsonWriter(pipeWriter, new JsonWriterOptions { SkipValidation = true });
+        utf8JsonWriter.Reset(pipeWriter);
 
-            // Body
-            JsonSerializer.Serialize(utf8JsonWriter, row, SerializerContext.World);
+        // Body
+        JsonSerializer.Serialize(utf8JsonWriter, row, SerializerContext.World);
 
-            // Content-Length
-            lengthWriter.WriteNumeric((uint)utf8JsonWriter.BytesCommitted);
-        }
+        // Content-Length
+        lengthWriter.WriteNumeric((uint)utf8JsonWriter.BytesCommitted);
     }
 }

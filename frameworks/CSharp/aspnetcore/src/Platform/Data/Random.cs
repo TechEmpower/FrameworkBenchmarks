@@ -5,28 +5,27 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-namespace PlatformBenchmarks
+namespace PlatformBenchmarks;
+
+public sealed class ConcurrentRandom
 {
-    public sealed class ConcurrentRandom
+    private static int nextSeed = 0;
+
+    // Random isn't thread safe
+    [ThreadStatic]
+    private static Random _random;
+
+    private static Random Random => _random ?? CreateRandom();
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static Random CreateRandom()
     {
-        private static int nextSeed = 0;
+        _random = new Random(Interlocked.Increment(ref nextSeed));
+        return _random;
+    }
 
-        // Random isn't thread safe
-        [ThreadStatic]
-        private static Random _random;
-
-        private static Random Random => _random ?? CreateRandom();
-
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private static Random CreateRandom()
-        {
-            _random = new Random(Interlocked.Increment(ref nextSeed));
-            return _random;
-        }
-
-        public int Next(int minValue, int maxValue)
-        {
-            return Random.Next(minValue, maxValue);
-        }
+    public int Next(int minValue, int maxValue)
+    {
+        return Random.Next(minValue, maxValue);
     }
 }

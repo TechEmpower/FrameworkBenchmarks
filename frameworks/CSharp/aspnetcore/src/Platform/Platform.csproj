@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefineConstants Condition=" '$(DatabaseProvider)' == '' or '$(DatabaseProvider)' == 'Npgsql'">$(DefineConstants);NPGSQL</DefineConstants>
+    <DefineConstants Condition=" '$(DatabaseProvider)' == '' or '$(DatabaseProvider)' == 'Npgsql'">$(DefineConstants);MYSQLCONNECTOR</DefineConstants>
     <DefineConstants Condition=" '$(DatabaseProvider)' == 'MySqlConnector' ">$(DefineConstants);MYSQLCONNECTOR</DefineConstants>
   </PropertyGroup>
   

@@ -29,10 +29,9 @@ public sealed class RawDb
 
     public async Task<World> LoadSingleQueryRow()
     {
-        using var db = CreateConnection();
-        await db.OpenAsync();
+        using var connection = await _dataSource.OpenConnectionAsync();
 
-        var (cmd, _) = CreateReadCommand(db);
+        var (cmd, _) = CreateReadCommand(connection);
         using var command = cmd;
 
         return await ReadSingleRow(cmd);
@@ -62,10 +61,9 @@ public sealed class RawDb
 
         static async Task<CachedWorld[]> LoadUncachedQueries(int id, int i, int count, RawDb rawdb, CachedWorld[] result)
         {
-            using var db = rawdb.CreateConnection();
-            await db.OpenAsync();
+            using var connection = await rawdb._dataSource.OpenConnectionAsync();
 
-            var (cmd, idParameter) = rawdb.CreateReadCommand(db);
+            var (cmd, idParameter) = rawdb.CreateReadCommand(connection);
             using var command = cmd;
             async Task<CachedWorld> create(ICacheEntry _) => await ReadSingleRow(cmd);
 
@@ -89,10 +87,9 @@ public sealed class RawDb
 
     public async Task PopulateCache()
     {
-        using var db = CreateConnection();
-        await db.OpenAsync();
+        using var connection = await _dataSource.OpenConnectionAsync();
 
-        var (cmd, idParameter) = CreateReadCommand(db);
+        var (cmd, idParameter) = CreateReadCommand(connection);
         using var command = cmd;
 
         var cacheKeys = _cacheKeys;
@@ -181,10 +178,9 @@ public sealed class RawDb
         // Benchmark requirements explicitly prohibit pre-initializing the list size
         var result = new List<FortuneUtf8>();
 
-        using var db = CreateConnection();
-        await db.OpenAsync();
+        using var connection = await _dataSource.OpenConnectionAsync();
 
-        using var cmd = new NpgsqlCommand("SELECT id, message FROM fortune", db);
+        using var cmd = new NpgsqlCommand("SELECT id, message FROM fortune", connection);
         using var rdr = await cmd.ExecuteReaderAsync();
 
         while (await rdr.ReadAsync())
