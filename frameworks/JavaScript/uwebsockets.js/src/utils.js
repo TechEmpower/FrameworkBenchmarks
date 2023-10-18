@@ -61,19 +61,14 @@ export function escape(text) {
 }
 
 /**
- * Using Slow json stringify module to get faster results as explained in just-js blog post below
- * https://just.billywhizz.io/blog/on-javascript-performance-01/
- * Microbenchmarks for reference: https://github.com/lucagez/slow-json-stringify/blob/master/benchmark.md
+ * Using Slow json stringify module to get faster results 
  */
 export const jsonSerializer = sjs({ message: attr("string")}); 
 export const worldObjectSerializer = sjs({ id: attr('number'), randomnumber: attr('number') });
 // export const worldObjectsSerializer = sjs({ rows: attr("array", worldObjectSerializer) });
 
 /**
- * Using Sort method which is performant for the test scenario as explained in just-jt blog post below
- * https://just.billywhizz.io/blog/on-javascript-performance-01/
- * Took the code directly from https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/frameworks/JavaScript/just/util.js#L64
- * @param {id:int,message:string} arr 
+ * Using Sort method which is performant for the test scenario
  * @returns 
  */
 export function sortByMessage (arr) {
