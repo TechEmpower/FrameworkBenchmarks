@@ -2,15 +2,26 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/cloudwego/hertz/pkg/app/server/render"
 	"github.com/cloudwego/hertz/pkg/common/config"
-	"github.com/cloudwego/hertz/pkg/common/utils"
-	postgres "gorm.io/driver/postgres"
+	"github.com/cloudwego/hertz/pkg/protocol"
+	"github.com/goccy/go-json"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"math/rand"
+	"sync"
+	"unsafe"
+)
+
+const (
+	helloworld = "Hello, World!"
+)
+
+var (
+	db *gorm.DB
 )
 
 // World represents an entry int the World table
@@ -25,7 +36,7 @@ func (World) TableName() string {
 }
 
 // implements the basic logic behind the query tests
-func getWorld(db *gorm.DB) World {
+func getWorld(db *gorm.DB) *World {
 	// we could actually precompute a list of random
 	// numbers and slice them but this makes no sense
 	// as I expect that this 'random' is just a placeholder
@@ -35,11 +46,11 @@ func getWorld(db *gorm.DB) World {
 	var world World
 	db.Take(&world, randomId)
 
-	return world
+	return &world
 }
 
 // implements the logic behind the updates tests
-func processWorld(tx *gorm.DB) (World, error) {
+func processWorld(tx *gorm.DB) *World {
 	// we could actually precompute a list of random
 	// numbers and slice them but this makes no sense
 	// as I expect that this 'random' is just a placeholder
@@ -51,110 +62,179 @@ func processWorld(tx *gorm.DB) (World, error) {
 	tx.Take(&world, randomId)
 
 	world.RandomNumber = randomId2
-	err := tx.Save(&world).Error
+	_ = tx.Save(&world)
 
-	return world, err
+	return &world
 }
 
+func jsonhandler(c context.Context, ctx *app.RequestContext) {
+	m := AcquireJSON()
+	m.Message = helloworld
+	ctx.JSON(200, &m)
+	ReleaseJSON(m)
+}
+
+func plaintext(c context.Context, ctx *app.RequestContext) {
+	ctx.SetStatusCode(200)
+	ctx.SetBodyString("Hello, World!")
+}
+
+func dbHandler(c context.Context, ctx *app.RequestContext) {
+	world := AcquireWorld()
+	world = getWorld(db)
+	ctx.JSON(200, &world)
+	ReleaseWorld(world)
+}
+
+func parseQueries(c context.Context, ctx *app.RequestContext) int {
+	n := getUintOrZeroFromArgs(ctx.QueryArgs(), "queries")
+	if n < 1 {
+		n = 1
+	} else if n > 500 {
+		n = 500
+	}
+	return n
+}
+
+func queries(c context.Context, ctx *app.RequestContext) {
+	n := parseQueries(c, ctx)
+	worlds := AcquireWorlds()[:n]
+	for i := 0; i < n; i++ {
+		world := getWorld(db)
+		worlds[i] = *world
+	}
+	ctx.JSON(200, &worlds)
+	ReleaseWorlds(worlds)
+}
+
+func updates(c context.Context, ctx *app.RequestContext) {
+	n := parseQueries(c, ctx)
+	worlds := AcquireWorlds()[:n]
+	for i := 0; i < n; i++ {
+		world := processWorld(db)
+		worlds[i] = *world
+	}
+
+	ctx.JSON(200, &worlds)
+	ReleaseWorlds(worlds)
+}
 func main() {
 	/* SETUP DB AND WEB SERVER */
-
 	dsn := "host=tfb-database user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world port=5432 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+	db, _ = gorm.Open(postgres.Open(dsn), &gorm.Config{
 		PrepareStmt: true,                                  // use prep statements
 		Logger:      logger.Default.LogMode(logger.Silent), // new, not inserted in original submission 2x on query
 	})
 
-	if err != nil {
-		panic("failed to connect database")
-	}
+	sqlDB, _ := db.DB()
 
-	sqlDB, err := db.DB()
-	if err != nil {
-		panic("failed to get underlying db conn pooling struct")
-	}
-
-	// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
 	sqlDB.SetMaxIdleConns(500)
 
 	h := server.New(config.Option{F: func(o *config.Options) {
 		o.Addr = ":8080"
-	}}) // use default middleware
-
-	// setup middleware to add server header
-	// this slows things a little, but it is the best design decision
-	serverHeader := []string{"Hertz-gorm"}
+		o.DisableHeaderNamesNormalizing = true
+	}})
+	render.ResetJSONMarshal(json.Marshal)
 	h.Use(func(c context.Context, ctx *app.RequestContext) {
-		ctx.Header("Server", serverHeader[0])
+		switch b2S(ctx.Path()) {
+		case "/json":
+			jsonhandler(c, ctx)
+		case "/plaintext":
+			plaintext(c, ctx)
+		case "/db":
+			dbHandler(c, ctx)
+		case "/queries":
+			queries(c, ctx)
+		case "/updates":
+			updates(c, ctx)
+		}
 	})
+	h.Spin()
+}
 
-	/* START TESTS */
-	// JSON TEST
-	h.GET("/json", func(c context.Context, ctx *app.RequestContext) {
-		// ctx.Header("Server", "example") - original submission now using middleware
-		ctx.JSON(200, utils.H{"message": "Hello, World!"})
-	})
-	// PLAINTEXT TEST
-	h.GET("/plaintext", func(c context.Context, ctx *app.RequestContext) {
-		// ctx.Header("Server", "example") - original submission now using middleware
-		ctx.String(200, "Hello, World!")
-	})
-	// SINGLE QUERY
-	h.GET("/db", func(c context.Context, ctx *app.RequestContext) {
-		world := getWorld(db)
-		// ctx.Header("Server", "example") - original submission now using middleware
-		ctx.JSON(200, world)
-	})
+func b2S(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
+}
 
-	type NumOf struct {
-		Queries int `form:"queries" query:"queries"`
+type Message struct {
+	Message string `json:"message"`
+}
+
+type Worlds []World
+
+// JSONpool ...
+var JSONpool = sync.Pool{
+	New: func() interface{} {
+		return new(Message)
+	},
+}
+
+// AcquireJSON ...
+func AcquireJSON() *Message {
+	return JSONpool.Get().(*Message)
+}
+
+// ReleaseJSON ...
+func ReleaseJSON(json *Message) {
+	json.Message = ""
+	JSONpool.Put(json)
+}
+
+// WorldPool ...
+var WorldPool = sync.Pool{
+	New: func() interface{} {
+		return new(World)
+	},
+}
+
+// AcquireWorld ...
+func AcquireWorld() *World {
+	return WorldPool.Get().(*World)
+}
+
+// ReleaseWorld ...
+func ReleaseWorld(w *World) {
+	w.ID = 0
+	w.RandomNumber = 0
+	WorldPool.Put(w)
+}
+
+// WorldsPool ...
+var WorldsPool = sync.Pool{
+	New: func() interface{} {
+		return make(Worlds, 0, 500)
+	},
+}
+
+// AcquireWorlds ...
+func AcquireWorlds() Worlds {
+	return WorldsPool.Get().(Worlds)
+}
+
+// ReleaseWorlds ...ReleaseWorlds
+func ReleaseWorlds(w Worlds) {
+	w = w[:0]
+	WorldsPool.Put(w)
+}
+
+func getUintOrZeroFromArgs(a *protocol.Args, key string) int {
+	b := a.Peek(key)
+	n := len(b)
+	if n == 0 {
+		return 0
 	}
-	// MULTIPLE QUERIES
-	h.GET("/queries", func(c context.Context, ctx *app.RequestContext) {
-		var numOf NumOf
-		if ctx.Bind(&numOf) != nil { // manage missing query num
-			numOf.Queries = 1
-		} else if numOf.Queries < 1 { // set at least 1
-			numOf.Queries = 1
-		} else if numOf.Queries > 500 { // set no more than 500
-			numOf.Queries = 500
+	v := 0
+	for i := 0; i < n; i++ {
+		c := b[i]
+		k := c - '0'
+		if k > 9 {
+			return 0
 		}
-
-		worlds := make([]World, numOf.Queries)
-		for i := 0; i < numOf.Queries; i++ {
-			worlds[i] = getWorld(db)
+		vNew := 10*v + int(k)
+		if vNew < v {
+			return 0
 		}
-		ctx.JSON(200, &worlds)
-	})
-	// MULTIPLE UPDATES
-	h.GET("/updates", func(c context.Context, ctx *app.RequestContext) {
-		var numOf NumOf
-
-		if ctx.Bind(&numOf) != nil { // manage missing query num
-			numOf.Queries = 1
-		} else if numOf.Queries < 1 { // set at least 1
-			numOf.Queries = 1
-		} else if numOf.Queries > 500 { // set no more than 500
-			numOf.Queries = 500
-		}
-
-		worlds := make([]World, numOf.Queries, numOf.Queries) // prealloc
-		var err error = nil
-
-		for i := 0; i < numOf.Queries; i++ {
-			worlds[i], err = processWorld(db)
-
-			if err != nil {
-				fmt.Println(err)
-				ctx.JSON(500, utils.H{"error": err})
-				break
-			}
-		}
-
-		ctx.JSON(200, worlds)
-	})
-
-	/* START SERVICE */
-
-	h.Spin() // listen and serve on 0.0.0.0:8080
+		v = vNew
+	}
+	return v
 }
