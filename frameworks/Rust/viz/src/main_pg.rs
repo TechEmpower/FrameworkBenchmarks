@@ -8,7 +8,7 @@ use viz::{
     types::State,
     Request, RequestExt, Response, ResponseExt, Result, Router, ServiceMaker,
 };
-use yarte::ywrite_html;
+use yarte::Template;
 
 mod db_pg;
 mod models;
@@ -16,6 +16,12 @@ mod server;
 mod utils;
 
 use db_pg::{get_conn, PgConnection};
+
+#[derive(Template)]
+#[template(path = "fortune.hbs")]
+pub struct FortunesTemplate<'a> {
+    pub fortunes: &'a Vec<models::Fortune>,
+}
 
 const DB_URL: &str =
     "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
@@ -36,8 +42,11 @@ async fn fortunes(req: Request) -> Result<Response> {
 
     let fortunes = conn.tell_fortune().await?;
 
-    let mut buf = String::with_capacity(2048);
-    ywrite_html!(buf, "{{> fortune }}");
+    let buf = FortunesTemplate {
+        fortunes: &fortunes,
+    }
+    .call()
+    .expect("error rendering template");
 
     let mut res = Response::html(buf);
     res.headers_mut()
