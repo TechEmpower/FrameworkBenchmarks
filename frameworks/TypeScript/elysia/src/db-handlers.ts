@@ -6,7 +6,7 @@ const deps = new Elysia({
   name: 'deps',
 })
   .decorate('db', postgres)
-  .decorate('generateRandomNumber', () => Math.floor(Math.random() * 10000) + 1)
+  .decorate('generateRandomNumber', () => Math.ceil(Math.random() * 10000))
   .decorate('html', (fortunes: Fortune[]) => {
     const n = fortunes.length;
 
