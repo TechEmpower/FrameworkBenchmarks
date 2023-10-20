@@ -6,8 +6,6 @@ import benchmark.model.World;
 import io.reactiverse.pgclient.PgIterator;
 import io.reactiverse.pgclient.Row;
 import io.reactiverse.pgclient.Tuple;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -16,7 +14,7 @@ import reactor.core.publisher.Mono;
 @Component
 @Profile("pgclient")
 public class PgClientDbRepository implements DbRepository {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+
     private final PgClients pgClients;
 
     public PgClientDbRepository(PgClients pgClients) {

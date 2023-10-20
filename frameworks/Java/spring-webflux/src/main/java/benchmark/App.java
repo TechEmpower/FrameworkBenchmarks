@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.r2dbc.R2dbcDataAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration;
+import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.result.view.MustacheViewResolver;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +20,8 @@ import reactor.core.scheduler.Schedulers;
 
 import java.util.concurrent.Executors;
 
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, MongoReactiveDataAutoConfiguration.class })
+@SpringBootApplication(exclude = {
+        DataSourceAutoConfiguration.class, R2dbcAutoConfiguration.class, MongoReactiveAutoConfiguration.class })
 @EnableWebFlux
 @EnableScheduling
 @EnableConfigurationProperties

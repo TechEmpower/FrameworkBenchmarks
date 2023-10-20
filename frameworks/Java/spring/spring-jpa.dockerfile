@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17 as jre-build
+FROM eclipse-temurin:21 as jre-build
 
 # Create a custom Java runtime
 RUN $JAVA_HOME/bin/jlink \
@@ -9,7 +9,7 @@ RUN $JAVA_HOME/bin/jlink \
          --compress=2 \
          --output /javaruntime
 
-FROM maven:3.8.5-openjdk-17-slim as maven
+FROM maven:3.9.5-eclipse-temurin-21 as maven
 ENV JAVA_HOME=/opt/java/openjdk
 ENV PATH "${JAVA_HOME}/bin:${PATH}"
 COPY --from=jre-build /javaruntime $JAVA_HOME

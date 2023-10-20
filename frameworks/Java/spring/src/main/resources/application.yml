@@ -17,6 +17,9 @@ database:
 
 ---
 spring:
+  threads:
+    virtual:
+      enabled: true
   config:
     activate:
       on-profile: jpa

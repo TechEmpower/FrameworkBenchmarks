@@ -1,38 +1,55 @@
----
-spring:
-  profiles: postgres
-  datasource:
-    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
-    username: ${database.username}
-    password: ${database.password}
-
 database:
   name: hello_world
   host: tfb-database
   port: 5432
   username: benchmarkdbuser
   password: benchmarkdbpass
+  
+---
+spring:
+  config:
+    activate:
+      on-profile: postgres
+  datasource:
+    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
+    username: ${database.username}
+    password: ${database.password}
 
 ---
 spring:
-  profiles: jdbc
+  config:
+    activate:
+      on-profile: jdbc
 
 ---
 spring:
-  profiles: pgclient
+  config:
+    activate:
+      on-profile: pgclient
 
 ---
 spring:
-  profiles: rxjdbc
+  config:
+    activate:
+      on-profile: rxjdbc
 
 ---
 spring:
-  profiles: r2dbc
+  config:
+    activate:
+      on-profile: r2dbc
+  r2dbc:
+    username: ${database.username}
+    password: ${database.password}
+    url: r2dbc:postgresql://${database.host}:${database.port}/${database.name}
 
 ---
 spring:
-  profiles: mongo
+  config:
+    activate:
+      on-profile: mongo
 
-database:
-  url: mongodb://tfb-database:27017/?waitQueueMultiple=200
-  name: hello_world
+  data:
+    mongodb:
+      uri: mongodb://tfb-database:27017/?waitQueueMultiple=200
+      database: hello_world
