@@ -1,9 +1,6 @@
 // used as reference of if/how moving from epoll to io-uring(or mixture of the two) make sense for
 // network io.
 
-#![allow(dead_code)]
-#![feature(impl_trait_in_assoc_type, inline_const)]
-
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
@@ -11,13 +8,7 @@ mod db;
 mod ser;
 mod util;
 
-use std::{
-    convert::Infallible,
-    fmt,
-    future::{poll_fn, Future},
-    io,
-    pin::pin,
-};
+use std::{convert::Infallible, fmt, future::poll_fn, io, pin::pin};
 
 use futures_core::stream::Stream;
 use xitca_http::{
@@ -51,7 +42,7 @@ fn main() -> io::Result<()> {
         .bind("xitca-iou", "0.0.0.0:8080", || {
             fn_service(handler)
                 .enclosed(context_mw())
-                .enclosed(fn_build(|service| async move {
+                .enclosed(fn_build(|service| async {
                     Ok::<_, Infallible>(Http1IOU {
                         service,
                         date: DateTimeService::new(),
@@ -67,7 +58,8 @@ async fn handler(ctx: Ctx<'_, Request>) -> Result<Response, Infallible> {
     let (req, state) = ctx.into_parts();
     let mut res = match req.uri().path() {
         "/plaintext" => {
-            let mut res = req.into_response(const { Bytes::from_static(b"Hello, World!") });
+            const HELLO: Bytes = Bytes::from_static(b"Hello, World!");
+            let mut res = req.into_response(HELLO);
             res.headers_mut().insert(CONTENT_TYPE, TEXT);
             res
         }
@@ -122,56 +114,46 @@ where
 {
     type Response = ();
     type Error = io::Error;
-    type Future<'f> = impl Future<Output = Result<Self::Response, Self::Error>> + 'f
-    where
-        Self: 'f,
-        TcpStream: 'f;
 
-    fn call<'s>(&'s self, stream: TcpStream) -> Self::Future<'s>
-    where
-        TcpStream: 's,
-    {
-        async {
-            let std = stream.into_std()?;
-            let stream = IOUTcpStream::from_std(std);
+    async fn call(&self, stream: TcpStream) -> Result<Self::Response, Self::Error> {
+        let std = stream.into_std()?;
+        let stream = IOUTcpStream::from_std(std);
 
-            let mut ctx = Context::<_, 8>::new(self.date.get());
-            let mut read_buf = BytesMut::new();
-            let mut write_buf = BytesMut::with_capacity(4096);
+        let mut ctx = Context::<_, 8>::new(self.date.get());
+        let mut read_buf = BytesMut::new();
+        let mut write_buf = BytesMut::with_capacity(4096);
 
-            loop {
-                let len = read_buf.len();
-                let rem = read_buf.capacity() - len;
-                if rem < 4096 {
-                    read_buf.reserve(4096 - rem);
-                }
-
-                let (res, buf) = stream.read(read_buf.slice(len..)).await;
-                read_buf = buf.into_inner();
-                if res? == 0 {
-                    break;
-                }
-
-                while let Some((req, _)) = ctx.decode_head::<{ usize::MAX }>(&mut read_buf).unwrap()
-                {
-                    let (parts, body) = self.service.call(req).await.unwrap().into_parts();
-                    let mut encoder = ctx.encode_head(parts, &body, &mut write_buf).unwrap();
-                    let mut body = pin!(body);
-                    let chunk = poll_fn(|cx| body.as_mut().poll_next(cx))
-                        .await
-                        .unwrap()
-                        .unwrap();
-                    encoder.encode(chunk, &mut write_buf);
-                    encoder.encode_eof(&mut write_buf);
-                }
-
-                let (res, b) = stream.write_all(write_buf).await;
-                write_buf = b;
-                write_buf.clear();
-                res?;
+        loop {
+            let len = read_buf.len();
+            let rem = read_buf.capacity() - len;
+            if rem < 4096 {
+                read_buf.reserve(4096 - rem);
             }
 
-            stream.shutdown(std::net::Shutdown::Both)
+            let (res, buf) = stream.read(read_buf.slice(len..)).await;
+            read_buf = buf.into_inner();
+            if res? == 0 {
+                break;
+            }
+
+            while let Some((req, _)) = ctx.decode_head::<{ usize::MAX }>(&mut read_buf).unwrap() {
+                let (parts, body) = self.service.call(req).await.unwrap().into_parts();
+                let mut encoder = ctx.encode_head(parts, &body, &mut write_buf).unwrap();
+                let mut body = pin!(body);
+                let chunk = poll_fn(|cx| body.as_mut().poll_next(cx))
+                    .await
+                    .unwrap()
+                    .unwrap();
+                encoder.encode(chunk, &mut write_buf);
+                encoder.encode_eof(&mut write_buf);
+            }
+
+            let (res, b) = stream.write_all(write_buf).await;
+            write_buf = b;
+            write_buf.clear();
+            res?;
         }
+
+        stream.shutdown(std::net::Shutdown::Both)
     }
 }

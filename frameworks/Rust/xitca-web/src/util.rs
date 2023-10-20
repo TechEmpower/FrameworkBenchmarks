@@ -47,7 +47,6 @@ mod non_wasm {
     #[derive(Default)]
     pub struct Rand(nanorand::WyRand);
 
-    #[cfg(not(target_arch = "wasm32"))]
     impl Rand {
         #[inline]
         pub fn gen_id(&mut self) -> i32 {
