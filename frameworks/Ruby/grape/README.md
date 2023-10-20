@@ -11,7 +11,7 @@ comparing a variety of web servers.
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Ruby 3.1](http://www.ruby-lang.org/)
+* [Ruby 3.3-rc1](http://www.ruby-lang.org/)
 * [Grape 1.6.2](http://www.ruby-grape.org/)
 * [Rack 2.2.3.1](https://rack.github.io/)
 * [Unicorn 6.1.0](https://yhbt.net/unicorn/)

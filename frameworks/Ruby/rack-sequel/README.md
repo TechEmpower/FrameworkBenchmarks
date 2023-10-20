@@ -18,7 +18,6 @@ The tests will be run with:
 * [Puma 3](http://puma.io)
 * [Passenger 5](https://www.phusionpassenger.com)
 * [Unicorn 5](https://bogomips.org/unicorn/)
-* [TorqueBox 4.0](http://torquebox.org)
 * [Rack 2](http://rack.rubyforge.org)
 * [Sequel 5](http://sequel.jeremyevans.net)
 * [MySQL 5.5](https://www.mysql.com)

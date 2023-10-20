@@ -7,6 +7,6 @@ use Cake\ORM\Table;
 
 class FortuneTable extends Table
 {
-    protected $_table = 'fortune';
-    protected $_entityClass = Fortune::class;
+    protected ?string $_table = 'fortune';
+    protected ?string $_entityClass = Fortune::class;
 }

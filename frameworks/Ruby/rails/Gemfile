@@ -1,12 +1,11 @@
-ruby '~> 3.1.0'
+ruby '~> 3.2'
 
 source 'https://rubygems.org'
 
-gem 'listen', '~> 3.3', group: :development
-gem 'mysql2', '0.5.3', group: :mysql
-gem 'oj', '~> 3.13'
-gem 'pg', '1.2.3', group: :postgresql
-gem 'puma', '~> 5.6'
-gem 'rails', '~> 7.0.1'
-gem 'redis', '~> 4.0'
-gem 'tzinfo-data', '1.2021.5'
+gem 'trilogy', group: :mysql
+gem 'oj', '~> 3.16'
+gem 'pg', '1.5.4', group: :postgresql
+gem 'puma', '~> 6.4'
+gem 'rails', '~> 7.1.0'
+gem 'redis', '~> 5.0'
+gem 'tzinfo-data'

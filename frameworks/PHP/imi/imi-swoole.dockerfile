@@ -1,13 +1,14 @@
 FROM php:8.2-cli
 
-ENV SWOOLE_VERSION 5.0.1
+ENV SWOOLE_VERSION 5.1.0
 ARG TFB_TEST_DATABASE
 ENV TFB_TEST_DATABASE=${TFB_TEST_DATABASE}
 
-RUN docker-php-ext-install -j$(nproc) opcache mysqli
-
 RUN apt -yqq update && \
+    apt upgrade -y && \
     apt -yqq install git unzip libpq-dev
+
+RUN docker-php-ext-install -j$(nproc) pdo_pgsql opcache mysqli
 
 RUN cd /tmp && curl -sSL "https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz" | tar xzf - \
         && cd swoole-src-${SWOOLE_VERSION} \

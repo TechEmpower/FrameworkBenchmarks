@@ -10,4 +10,4 @@ COPY ./src .
 
 ENV NODE_ENV=production
 
-CMD ["bun", "index.ts"]
+CMD ["bun", "spawn.ts"]
