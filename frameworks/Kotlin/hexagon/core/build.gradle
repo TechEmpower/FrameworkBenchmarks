@@ -1,6 +1,7 @@
 
 plugins {
-    id("nu.studer.rocker") version("3.0.4")
+//    id("nu.studer.rocker") version("3.0.4")
+    id("com.fizzed.rocker") version("1.4.0")
 }
 
 dependencies {
@@ -23,10 +24,11 @@ tasks.register("minimizeTemplate") {
 jar.dependsOn("minimizeTemplate")
 
 rocker {
-    configurations {
-        create("main") {
-            templateDir.set(file("src/main/resources"))
-            optimize.set(true)
-        }
-    }
+    classBaseDirectory = file("build")
+//    configurations {
+//        create("main") {
+//            templateDir.set(file("src/main/resources"))
+//            optimize.set(true)
+//        }
+//    }
 }

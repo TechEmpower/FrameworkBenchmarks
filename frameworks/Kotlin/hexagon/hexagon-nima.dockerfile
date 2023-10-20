@@ -1,7 +1,7 @@
 #
 # BUILD
 #
-FROM docker.io/gradle:8.3-jdk17-alpine AS build
+FROM docker.io/gradle:8.4-jdk21-alpine AS build
 USER root
 WORKDIR /hexagon
 
