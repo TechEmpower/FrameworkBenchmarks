@@ -12,6 +12,6 @@
   },
   "dependencies": {
     "elysia": "^0.7.17",
-    "postgres": "^3.3.5"
+    "postgres": "^3.4.1"
   }
 }
