@@ -102,7 +102,7 @@ func dbs(c context.Context, ctx *app.RequestContext) {
 // / Test 4: Fortunes
 func fortunes(c context.Context, ctx *app.RequestContext) {
 	rows, _ := db.Query(context.Background(), fortuneSelect)
-	fortunes := make(Fortunes, 0, 16)
+	fortunes := make(Fortunes, 0)
 	for rows.Next() { //Fetch rows
 		fortune := Fortune{}
 		_ = rows.Scan(&fortune.Id, &fortune.Message)
