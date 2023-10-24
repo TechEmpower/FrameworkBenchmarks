@@ -1,4 +1,4 @@
-module gin-gorm/main
+module hertz-gorm/main
 
 go 1.19
 
