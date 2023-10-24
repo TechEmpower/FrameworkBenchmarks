@@ -26,7 +26,7 @@ export class MysqlService implements ModelService {
 
   bulkUpdate(worlds: World[]) {
     const sql = 'update world set randomNumber = ? where id = ?';
-    const values = worlds.map((world) => [world.randomnumber, world.id]);
+    const values = worlds.map((world) => [world.randomnumber, world.id]).sort((a, b) => (a[0] < b[0]) ? -1 : 1);
     return pool.batch(sql, values);
   }
 }

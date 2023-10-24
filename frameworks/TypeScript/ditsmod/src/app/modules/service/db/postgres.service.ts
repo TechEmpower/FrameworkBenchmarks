@@ -24,7 +24,7 @@ export class PostgresService implements ModelService {
   }
 
   bulkUpdate(worlds: World[]) {
-    const values = sql(worlds.map((world) => [world.id, world.randomnumber]));
+    const values = sql(worlds.map((world) => [world.id, world.randomnumber]).sort((a, b) => (a[0] < b[0]) ? -1 : 1));
 
     return sql`update world set randomNumber = (update_data.randomNumber)::int
       from (values ${values}) as update_data (id, randomNumber)
