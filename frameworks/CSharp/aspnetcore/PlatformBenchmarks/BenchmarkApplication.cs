@@ -57,13 +57,7 @@ public sealed partial class BenchmarkApplication
     }
 
 #if DATABASE
-#if NPGSQL
     private readonly static SliceFactory<List<FortuneUtf8>> FortunesTemplateFactory = RazorSlice.ResolveSliceFactory<List<FortuneUtf8>>("/Templates/FortunesUtf8.cshtml");
-#elif MYSQLCONNECTOR
-    private readonly static SliceFactory<List<FortuneUtf16>> FortunesTemplateFactory = RazorSlice.ResolveSliceFactory<List<FortuneUtf16>>("/Templates/FortunesUtf16.cshtml");
-#else
-#error "DATABASE defined by neither NPGSQL nor MYSQLCONNECTOR are defined"
-#endif
 #endif
 
     [ThreadStatic]
