@@ -1,4 +1,4 @@
-use std::{cell::RefCell, collections::HashMap, fmt::Write};
+use std::{cell::RefCell, collections::HashMap, fmt::Write, future::IntoFuture};
 
 use xitca_postgres::{statement::Statement, AsyncIterator, Postgres};
 use xitca_unsafe_collection::no_hash::NoHashBuilder;
@@ -29,18 +29,7 @@ impl Drop for Client {
 pub async fn create(config: &str) -> HandleResult<Client> {
     let (client, driver) = Postgres::new(config.to_string()).connect().await?;
 
-    tokio::task::spawn_local({
-        #[cfg(feature = "pg-iou")]
-        {
-            let mut drv = driver.try_into_io_uring_tcp();
-            async move { while drv.next().await.is_some() {} }
-        }
-
-        #[cfg(not(feature = "pg-iou"))]
-        {
-            std::future::IntoFuture::into_future(driver)
-        }
-    });
+    tokio::task::spawn_local(tokio::task::unconstrained(driver.into_future()));
 
     let fortune = client.prepare("SELECT * FROM fortune", &[]).await?.leak();
 
