@@ -1,0 +1,24 @@
+{
+  "framework": "hanami",
+  "tests": [{
+    "default": {
+      "db_url": "/db",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "hanami",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "Rack",
+      "webserver": "Puma",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "hanami",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}
