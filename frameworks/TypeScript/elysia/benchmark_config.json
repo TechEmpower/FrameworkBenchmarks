@@ -41,6 +41,27 @@
         "display_name": "Elysia [PostgreSQL]",
         "notes": "",
         "versus": "nodejs"
+      },
+      "smol-postgres": {
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "elysia",
+        "language": "TypeScript",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "bun",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Elysia [smol] [PostgreSQL]",
+        "notes": "",
+        "versus": "nodejs"
       }
     }
   ]
