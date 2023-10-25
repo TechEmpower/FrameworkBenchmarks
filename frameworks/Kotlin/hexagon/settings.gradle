@@ -7,8 +7,8 @@ include(
 
     "hexagon_jetty_pgclient",
     "hexagon_jetty_postgresql",
-    "hexagon_nima_pgclient",
-    "hexagon_nima_postgresql",
+    "hexagon_helidon_pgclient",
+    "hexagon_helidon_postgresql",
     "hexagon_nettyepoll_pgclient",
     "hexagon_nettyepoll_postgresql",
     "hexagon_tomcat_postgresql",

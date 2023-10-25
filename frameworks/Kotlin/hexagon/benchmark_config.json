@@ -140,7 +140,7 @@
                 "notes": "http://hexagonkt.com",
                 "versus": "netty"
             },
-            "nima": {
+            "helidon": {
                 "json_url": "/json",
                 "db_url": "/db",
                 "query_url": "/query?queries=",
@@ -159,11 +159,11 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "Hexagon Nima PostgreSQL",
+                "display_name": "Hexagon Helidon PostgreSQL",
                 "notes": "http://hexagonkt.com",
-                "versus": "helidon-nima"
+                "versus": "helidon-helidon"
             },
-            "nima-native": {
+            "helidon-native": {
                 "json_url": "/json",
                 "db_url": "/db",
                 "query_url": "/query?queries=",
@@ -182,11 +182,11 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "Hexagon Nima Native PgClient",
+                "display_name": "Hexagon Helidon Native PgClient",
                 "notes": "http://hexagonkt.com",
-                "versus": "helidon-nima"
+                "versus": "helidon-helidon"
             },
-            "nima-pgclient": {
+            "helidon-pgclient": {
                 "json_url": "/json",
                 "db_url": "/db",
                 "query_url": "/query?queries=",
@@ -205,9 +205,9 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "Hexagon Nima PgClient",
+                "display_name": "Hexagon Helidon PgClient",
                 "notes": "http://hexagonkt.com",
-                "versus": "helidon-nima"
+                "versus": "helidon-helidon"
             },
             "tomcat": {
                 "json_url": "/json",

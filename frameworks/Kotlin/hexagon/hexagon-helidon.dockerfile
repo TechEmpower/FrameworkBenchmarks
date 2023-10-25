@@ -13,11 +13,11 @@ RUN gradle --quiet -x test installDist
 # RUNTIME
 #
 FROM docker.io/eclipse-temurin:21-jre-alpine
-ARG PROJECT=hexagon_nima_pgclient
+ARG PROJECT=hexagon_helidon_postgresql
 
 ENV POSTGRESQL_DB_HOST tfb-database
 ENV JDK_JAVA_OPTIONS --enable-preview -XX:+AlwaysPreTouch -XX:+UseParallelGC -XX:+UseNUMA
 
 COPY --from=build /hexagon/$PROJECT/build/install/$PROJECT /opt/$PROJECT
 
-ENTRYPOINT [ "/opt/hexagon_nima_pgclient/bin/hexagon_nima_pgclient" ]
+ENTRYPOINT [ "/opt/hexagon_helidon_postgresql/bin/hexagon_helidon_postgresql" ]
