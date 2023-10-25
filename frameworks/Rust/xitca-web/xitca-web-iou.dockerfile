@@ -3,7 +3,7 @@ FROM rust:latest
 ADD ./ /xitca-web
 WORKDIR /xitca-web
 
-RUN cargo build --release --bin xitca-web-iou --features io-uring,pg-iou,serde,template
+RUN cargo build --release --bin xitca-web-iou --features io-uring,pg-iou,template
 
 EXPOSE 8080
 

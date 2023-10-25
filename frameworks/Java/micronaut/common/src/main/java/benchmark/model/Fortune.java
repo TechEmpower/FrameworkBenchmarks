@@ -7,34 +7,7 @@ import java.util.Objects;
 
 // Disable escape to have case-insensitive Postgres columns and table name and set lowercase name for MongoDB
 @MappedEntity(value = "fortune", escape = false)
-public class Fortune {
-    @Id
-    private int id;
-    private String message;
-
-    public Fortune() {
-    }
-
-    public Fortune(int id, String message) {
-        this.id = id;
-        this.message = message;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
+public record Fortune(@Id int id, String message) {
 
     @Override
     public boolean equals(Object o) {

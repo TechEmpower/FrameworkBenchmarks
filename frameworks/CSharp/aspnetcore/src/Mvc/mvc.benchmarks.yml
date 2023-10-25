@@ -1,0 +1,119 @@
+﻿imports:
+  - https://raw.githubusercontent.com/dotnet/crank/main/src/Microsoft.Crank.Jobs.Wrk/wrk.yml
+  - https://github.com/aspnet/Benchmarks/blob/main/scenarios/aspnet.profiles.standard.yml?raw=true
+
+variables:
+    serverPort: 5000
+    
+jobs:
+  mvc:
+    source:
+      repository: https://github.com/aspnet/benchmarks.git
+      branchOrCommit: main
+      project: src/BenchmarksApps/TechEmpower/Mvc/Mvc.csproj
+    readyStateText: Application started.
+    arguments: "--urls {{serverScheme}}://{{serverAddress}}:{{serverPort}}"
+    variables:
+      serverScheme: http
+    environmentVariables:
+    # [SuppressMessage("Microsoft.Security", "CS002:SecretInNextLine", Justification="Development password, not confidential")]
+      connectionString: Server={{databaseServer}};Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=18;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Buffer Threshold Bytes=1000
+
+  postgresql:
+    source:
+      repository: https://github.com/TechEmpower/FrameworkBenchmarks.git
+      branchOrCommit: master
+      dockerFile: toolset/databases/postgres/postgres.dockerfile
+      dockerImageName: postgres_te
+      dockerContextDirectory: toolset/databases/postgres
+    readyStateText: ready to accept connections
+    noClean: true
+
+scenarios:
+  plaintext:
+    application:
+      job: mvc
+    load:
+      job: wrk
+      variables:
+        presetHeaders: plaintext
+        path: /plaintext
+        pipeline: 16
+
+  json:
+    application:
+      job: mvc
+    load:
+      job: wrk
+      variables:
+        presetHeaders: json
+        path: /json
+
+  fortunes:
+    db:
+      job: postgresql
+    application:
+      job: mvc
+    load:
+      job: wrk
+      variables:
+        presetHeaders: html
+        path: /fortunes
+
+  fortunes_dapper:
+    db:
+      job: postgresql
+    application:
+      job: mvc
+    load:
+      job: wrk
+      variables:
+        presetHeaders: html
+        path: /fortunes/dapper
+
+  single_query:
+    db:
+      job: postgresql
+    application:
+      job: mvc
+    load:
+      job: wrk
+      variables:
+        presetHeaders: json
+        path: /db
+        connections: 512
+
+  multiple_queries:
+    db:
+      job: postgresql
+    application:
+      job: mvc
+    load:
+      job: wrk
+      variables:
+        presetHeaders: json
+        path: /queries/20
+        connections: 512
+
+  updates:
+    db:
+      job: postgresql
+    application:
+      job: mvc
+    load:
+      job: wrk
+      variables:
+        presetHeaders: json
+        path: /updates/20
+        connections: 512
+
+profiles:
+  # this profile uses the local folder as the source 
+  # instead of the public repository
+  source:
+    agents:
+      main:
+        source:
+          localFolder: .
+          respository: ''
+          project: Mvc.csproj

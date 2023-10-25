@@ -6,7 +6,7 @@ const deps = new Elysia({
   name: 'deps',
 })
   .decorate('db', postgres)
-  .decorate('generateRandomNumber', () => Math.floor(Math.random() * 10000) + 1)
+  .decorate('generateRandomNumber', () => Math.ceil(Math.random() * 10000))
   .decorate('html', (fortunes: Fortune[]) => {
     const n = fortunes.length;
 
@@ -18,10 +18,7 @@ const deps = new Elysia({
     }
 
     return `<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>${html}</table></body></html>`;
-  })
-  .derive(({ query }) => ({
-    numberOfObjects: Math.min(parseInt(query.queries ?? '1') || 1, 500),
-  }));
+  });
 
 const dbHandlers = new Elysia({
   name: 'db-handlers',
@@ -32,6 +29,29 @@ const dbHandlers = new Elysia({
     async ({ db, generateRandomNumber }) =>
       await db.find(generateRandomNumber())
   )
+  .get(
+    '/fortunes',
+    async ({ db, html }) => {
+      const fortunes = await db.fortunes();
+
+      fortunes.push({
+        id: 0,
+        message: 'Additional fortune added at request time.',
+      });
+
+      fortunes.sort((a, b) => (a.message < b.message ? -1 : 1));
+
+      return html(fortunes);
+    },
+    {
+      afterHandle({ set }) {
+        set.headers['content-type'] = 'text/html; charset=utf-8';
+      },
+    }
+  )
+  .derive(({ query }) => ({
+    numberOfObjects: Math.min(parseInt(query.queries || '1') || 1, 500),
+  }))
   .get('/queries', async ({ db, generateRandomNumber, numberOfObjects }) => {
     const worldPromises = new Array<Promise<World>>(numberOfObjects);
 
@@ -59,26 +79,6 @@ const dbHandlers = new Elysia({
     await db.bulkUpdate(worlds);
 
     return worlds;
-  })
-  .get(
-    '/fortunes',
-    async ({ db, html }) => {
-      const fortunes = await db.fortunes();
-
-      fortunes.push({
-        id: 0,
-        message: 'Additional fortune added at request time.',
-      });
-
-      fortunes.sort((a, b) => (a.message < b.message ? -1 : 1));
-
-      return html(fortunes);
-    },
-    {
-      afterHandle({ set }) {
-        set.headers['content-type'] = 'text/html; charset=utf-8';
-      },
-    }
-  );
+  });
 
 export default dbHandlers;

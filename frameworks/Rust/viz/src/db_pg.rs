@@ -1,7 +1,8 @@
 use std::{borrow::Cow, collections::HashMap, fmt::Write, io, sync::Arc};
 
-use futures_util::{stream::FuturesUnordered, TryFutureExt, TryStreamExt};
+use futures_util::{stream::FuturesUnordered, StreamExt, TryFutureExt, TryStreamExt};
 use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
+use tokio::pin;
 use tokio_postgres::{connect, types::ToSql, Client, NoTls, Statement};
 use viz::{Error, IntoResponse, Response, StatusCode};
 
@@ -94,7 +95,9 @@ impl PgConnection {
 
 impl PgConnection {
     async fn query_one_world(&self, id: i32) -> Result<World, PgError> {
-        let row = self.client.query_one(&self.world, &[&id]).await?;
+        let stream = self.client.query_raw(&self.world, &[&id]).await?;
+        pin!(stream);
+        let row = stream.next().await.unwrap()?;
         Ok(World {
             id: row.get(0),
             randomnumber: row.get(1),

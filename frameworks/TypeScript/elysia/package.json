@@ -11,7 +11,7 @@
     "build": "bun build --target=bun --minify src/index.ts --outdir=build"
   },
   "dependencies": {
-    "elysia": "^0.7.15",
-    "postgres": "^3.3.5"
+    "elysia": "^0.7.17",
+    "postgres": "^3.4.1"
   }
 }

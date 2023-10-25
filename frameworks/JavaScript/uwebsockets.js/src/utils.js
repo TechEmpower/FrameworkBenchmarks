@@ -1,3 +1,5 @@
+import { sjs, attr } from 'slow-json-stringify'
+
 /**
  * Add Benchmark HTTP response headers.
  *
@@ -42,7 +44,7 @@ export function getQueriesCount(request) {
  *
  */
 export function generateRandomNumber() {
-  return Math.floor(Math.random() * 10000) + 1;
+  return Math.ceil(Math.random() * 10000);
 }
 
 /**
@@ -56,4 +58,29 @@ const unsafeHTMLMatcher = /[&<>"'\/]/g
 export function escape(text) {
   if (unsafeHTMLMatcher.test(text) === false) return text;
   return text.replace(unsafeHTMLMatcher, function (m) { return escapeHTMLRules[m] || m; });
+}
+
+/**
+ * Using Slow json stringify module to get faster results 
+ */
+export const jsonSerializer = sjs({ message: attr("string")}); 
+export const worldObjectSerializer = sjs({ id: attr('number'), randomnumber: attr('number') });
+// export const worldObjectsSerializer = sjs({ rows: attr("array", worldObjectSerializer) });
+
+/**
+ * Using Sort method which is performant for the test scenario
+ * @returns 
+ */
+export function sortByMessage (arr) {
+  const n = arr.length
+  for (let i = 1; i < n; i++) {
+    const c = arr[i]
+    let j = i - 1
+    while ((j > -1) && (c.message < arr[j].message)) {
+      arr[j + 1] = arr[j]
+      j--
+    }
+    arr[j + 1] = c
+  }
+  return arr
 }
