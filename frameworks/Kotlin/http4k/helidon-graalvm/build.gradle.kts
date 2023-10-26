@@ -2,7 +2,7 @@ application.mainClass.set("Http4kGraalVMBenchmarkServerKt")
 
 dependencies {
     api(project(":core-jdbc"))
-    api(project(":apache"))
+    api(project(":helidon-jdbc"))
 }
 
 tasks {
