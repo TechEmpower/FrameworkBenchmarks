@@ -6,10 +6,13 @@ import io.vertx.sqlclient.PoolOptions
 import io.vertx.sqlclient.Row
 import io.vertx.sqlclient.SqlClient
 import io.vertx.sqlclient.Tuple
+import java.util.Random
 
 class PostgresDatabase : Database {
     private val queryPool: SqlClient
     private val updatePool: SqlClient
+
+    private val random = Random()
 
     init {
         val vertx = Vertx.vertx(VertxOptions().setPreferNativeTransport(true))
@@ -27,7 +30,7 @@ class PostgresDatabase : Database {
     }
 
     override fun findWorld() =
-        findWorld(randomWorld(), queryPool).toCompletionStage().toCompletableFuture().get()
+        findWorld(random.world(), queryPool).toCompletionStage().toCompletableFuture().get()
 
     override fun loadAll() = queryPool.preparedQuery("SELECT id, randomnumber FROM world ")
         .execute()
@@ -36,13 +39,13 @@ class PostgresDatabase : Database {
 
     override fun findWorlds(count: Int) =
         (1..count).map {
-            findWorld(randomWorld(), queryPool)
+            findWorld(random.world(), queryPool)
                 .toCompletionStage().toCompletableFuture().get()
         }
 
     override fun updateWorlds(count: Int) =
         (1..count)
-            .map { randomWorld() to randomWorld() }
+            .map { random.world() to random.world() }
             .map { update ->
                 updatePool.preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
                     .execute(Tuple.of(update.first, update.second))

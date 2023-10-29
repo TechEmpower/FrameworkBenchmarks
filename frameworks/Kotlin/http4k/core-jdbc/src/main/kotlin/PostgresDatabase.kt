@@ -2,25 +2,27 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import java.sql.Connection
 import java.sql.ResultSet
+import java.util.Random
 import javax.sql.DataSource
 
 class PostgresDatabase private constructor(private val dataSource: DataSource) : Database {
+    private val random = Random()
 
-    override fun findWorld() = withConnection { findWorld(randomWorld()) }
+    override fun findWorld() = withConnection { findWorld(random.world()) }
 
     override fun loadAll() = withConnection {
         executeQuery("SELECT id, randomNumber FROM world") { it.toResultsList(::toWorld) }
     }
 
     override fun findWorlds(count: Int) = withConnection {
-        (1..count).map { findWorld(randomWorld()) }
+        (1..count).map { findWorld(random.world()) }
     }
 
     override fun updateWorlds(count: Int) = withConnection {
         (1..count).map {
-            val id = randomWorld()
+            val id = random.world()
             prepareStatement("UPDATE world SET randomNumber = ? WHERE id = ?").use {
-                it.setInt(1, randomWorld())
+                it.setInt(1, Random().world())
                 it.setInt(2, id)
                 it.executeUpdate()
             }
@@ -61,17 +63,17 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
     }
 
     private inline fun <T> withConnection(fn: Connection.() -> T): T = dataSource.connection.use(fn)
-
-    private fun Connection.findWorld(id: Int) =
-        executeQuery("SELECT id, randomNumber FROM world WHERE id = $id") {
-            it.toResultsList(::toWorld).first()
-        }
-
-    private inline fun <T> ResultSet.toResultsList(fn: (ResultSet) -> T): List<T> =
-        mutableListOf<T>().apply {
-            while (next()) add(fn(this@toResultsList))
-        }
 }
+
+private fun Connection.findWorld(id: Int) =
+    executeQuery("SELECT id, randomNumber FROM world WHERE id = $id") {
+        it.toResultsList(::toWorld).first()
+    }
+
+private inline fun <T> ResultSet.toResultsList(fn: (ResultSet) -> T): List<T> =
+    mutableListOf<T>().apply {
+        while (next()) add(fn(this@toResultsList))
+    }
 
 private inline fun <T> Connection.executeQuery(stmt: String, fn: (ResultSet) -> T): T =
     prepareStatement(stmt).use { fn(it.executeQuery()) }

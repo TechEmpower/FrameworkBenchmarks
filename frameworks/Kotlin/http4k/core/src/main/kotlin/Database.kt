@@ -10,4 +10,4 @@ interface Database {
 
 const val TOTAL_DB_ROWS = 10000
 
-fun randomWorld() = Random().nextInt(TOTAL_DB_ROWS - 1) + 1
+fun Random.world() = nextInt(TOTAL_DB_ROWS - 1) + 1
