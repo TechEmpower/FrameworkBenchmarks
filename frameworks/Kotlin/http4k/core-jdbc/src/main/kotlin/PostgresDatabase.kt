@@ -19,15 +19,16 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
     }
 
     override fun updateWorlds(count: Int) = withConnection {
-        (1..count).map {
-            val id = random.world()
-            prepareStatement("UPDATE world SET randomNumber = ? WHERE id = ?").use {
-                it.setInt(1, Random().world())
-                it.setInt(2, id)
-                it.executeUpdate()
+       val updatedAndSorted = (1..count).map { findWorld(random.world()).first to random.world() }
+           .sortedBy { it.first }
+
+        createStatement().use { stmt ->
+            updatedAndSorted.forEach {
+                stmt.addBatch("UPDATE world SET randomNumber = ${it.second} WHERE id = ${it.first}")
             }
-            findWorld(id)
+            stmt.executeBatch()
         }
+        updatedAndSorted
     }
 
     override fun fortunes() = withConnection {
