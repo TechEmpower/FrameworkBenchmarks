@@ -1,10 +1,8 @@
-import argo.jdom.JsonNode
 import org.http4k.core.Body
 import org.http4k.core.Method.GET
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
-import org.http4k.format.Argo
 import org.http4k.format.Argo.array
 import org.http4k.format.Argo.json
 import org.http4k.lens.Query
@@ -25,26 +23,22 @@ object WorldRoutes {
     }.defaulted("queries", 1)
 
     fun queryRoute(db: Database) = "/db" bind GET to {
-        let { Response(OK).with(jsonBody of toJson(db.findWorld())) }
+        let { Response(OK).with(jsonBody of db.findWorld()) }
     }
 
     fun multipleRoute(db: Database) = "/queries" bind GET to {
-        Response(OK).with(jsonBody of array(db.findWorlds(numberOfQueries(it)).map(::toJson)))
+        Response(OK).with(jsonBody of array(db.findWorlds(numberOfQueries(it))))
     }
 
     fun cachedRoute(db: Database): RoutingHttpHandler {
         val cachedDb = CachedDatabase(db)
 
         return "/cached" bind GET to {
-            val findWorlds = cachedDb.findWorlds(numberOfQueries(it))
-            Response(OK).with(jsonBody of array(findWorlds.mapNotNull { toJson(it) }))
+            Response(OK).with(jsonBody of array(cachedDb.findWorlds(numberOfQueries(it))))
         }
     }
 
     fun updateRoute(db: Database) = "/updates" bind GET to {
-        Response(OK).with(jsonBody of array(db.updateWorlds(numberOfQueries(it)).map(::toJson)))
+        Response(OK).with(jsonBody of array(db.updateWorlds(numberOfQueries(it))))
     }
 }
-
-private fun toJson(world: World): JsonNode =
-    Argo.obj("id" to Argo.number(world.first), "randomNumber" to Argo.number(world.second))
