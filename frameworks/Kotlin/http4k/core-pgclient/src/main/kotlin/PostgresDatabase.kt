@@ -48,13 +48,13 @@ class PostgresDatabase : Database {
         val updatedAndSorted = Future
             .all(
                 (1..count)
-                    .map { random.world() }
                     .map {
-                        findWorld(it, queryPool)
+                        findWorld(random.world(), queryPool)
                             .map { it.first to random.world() }
                     }
             )
             .toCompletionStage().toCompletableFuture().get().list<World>()
+            .sortedBy { it.first }
 
         updatePool.preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
             .executeBatch(updatedAndSorted.map { Tuple.of(it.first, it.second) })
