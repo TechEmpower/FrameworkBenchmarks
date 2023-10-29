@@ -1,9 +1,6 @@
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import org.http4k.format.Argo.number
-import org.http4k.format.Argo.obj
 import java.sql.Connection
-import java.sql.PreparedStatement
 import java.sql.ResultSet
 import javax.sql.DataSource
 
@@ -11,29 +8,27 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
 
     override fun findWorld() = withConnection { findWorld(randomWorld()) }
 
-    override fun loadAll() = withConnection { findAll() }
+    override fun loadAll() = withConnection {
+        executeQuery("SELECT id, randomNumber FROM world") { it.toResultsList(::toWorld) }
+    }
 
     override fun findWorlds(count: Int) = withConnection {
         (1..count).map { findWorld(randomWorld()) }
     }
 
     override fun updateWorlds(count: Int) = withConnection {
-        (1..count).map {
-            val id = randomWorld()
-            updateWorld(id)
-            findWorld(id)
+        val updated = (1..count).map { findWorld(it).first to randomWorld() }
+        val stmt = createStatement()
+        updated.forEach { (id, random) ->
+            stmt.addBatch("UPDATE world SET randomNumber = $id WHERE id = $random")
         }
-    }
-
-    private fun Connection.updateWorld(id: Int) = withStatement("UPDATE world SET randomNumber = ? WHERE id = ?") {
-        setInt(1, randomWorld())
-        setInt(2, id)
-        executeUpdate()
+        stmt.executeBatch()
+        stmt.close()
+        updated
     }
 
     override fun fortunes() = withConnection {
-        val original =
-            withStatement("select * from fortune") { executeQuery().toResultsList { Fortune(getInt(1), getString(2)) } }
+        val original = executeQuery("select * from fortune") { it.toResultsList(::toFortune) }
         (original + Fortune(0, "Additional fortune added at request time.")).sortedBy { it.message }
     }
 
@@ -43,22 +38,22 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
                 username = "benchmarkdbuser"
                 password = "benchmarkdbpass"
                 jdbcUrl = "jdbc:postgresql://tfb-database:5432/hello_world?" +
-                    "useSSL=false&" +
-                    "jdbcCompliantTruncation=false&" +
-                    "elideSetAutoCommits=true&" +
-                    "useLocalSessionState=true&" +
-                    "cachePrepStmts=true&" +
-                    "cacheCallableStmts=true&" +
-                    "alwaysSendSetIsolation=false&" +
-                    "prepStmtCacheSize=4096&" +
-                    "cacheServerConfiguration=true&" +
-                    "prepStmtCacheSqlLimit=2048&" +
-                    "traceProtocol=false&" +
-                    "useUnbufferedInput=false&" +
-                    "useReadAheadInput=false&" +
-                    "maintainTimeStats=false&" +
-                    "useServerPrepStmts=true&" +
-                    "cacheRSMetadata=true"
+                        "useSSL=false&" +
+                        "jdbcCompliantTruncation=false&" +
+                        "elideSetAutoCommits=true&" +
+                        "useLocalSessionState=true&" +
+                        "cachePrepStmts=true&" +
+                        "cacheCallableStmts=true&" +
+                        "alwaysSendSetIsolation=false&" +
+                        "prepStmtCacheSize=4096&" +
+                        "cacheServerConfiguration=true&" +
+                        "prepStmtCacheSqlLimit=2048&" +
+                        "traceProtocol=false&" +
+                        "useUnbufferedInput=false&" +
+                        "useReadAheadInput=false&" +
+                        "maintainTimeStats=false&" +
+                        "useServerPrepStmts=true&" +
+                        "cacheRSMetadata=true"
                 maximumPoolSize = 100
                 HikariDataSource(this)
             })
@@ -66,29 +61,20 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
 
     private inline fun <T> withConnection(fn: Connection.() -> T): T = dataSource.connection.use(fn)
 
-    private inline fun <T> Connection.withStatement(stmt: String, fn: PreparedStatement.() -> T): T =
-        prepareStatement(stmt).use(fn)
-
     private fun Connection.findWorld(id: Int) =
-        withStatement("SELECT id, randomNumber FROM world WHERE id = ?") {
-            setInt(1, id)
-            executeQuery().toResultsList {
-                obj("id" to number(getInt("id")), "randomNumber" to number(getInt("randomNumber")))
-            }.first()
+        executeQuery("SELECT id, randomNumber FROM world WHERE id = $id") {
+            it.toResultsList(::toWorld).first()
         }
 
-    private fun Connection.findAll() =
-        withStatement("SELECT id, randomNumber FROM world") {
-            executeQuery().toResultsList {
-                val id = getInt("id")
-                id to obj("id" to number(id), "randomNumber" to number(getInt("randomNumber")))
-            }.toMap()
-        }
-
-    private inline fun <T> ResultSet.toResultsList(fn: ResultSet.() -> T): List<T> =
+    private inline fun <T> ResultSet.toResultsList(fn: (ResultSet) -> T): List<T> =
         mutableListOf<T>().apply {
-            while (next()) {
-                add(fn(this@toResultsList))
-            }
+            while (next()) add(fn(this@toResultsList))
         }
 }
+
+private inline fun <T> Connection.executeQuery(stmt: String, fn: (ResultSet) -> T): T =
+    prepareStatement(stmt).use { fn(it.executeQuery()) }
+
+private fun toFortune(it: ResultSet) = Fortune(it.getInt(1), it.getString(2))
+
+private fun toWorld(resultSet: ResultSet) = resultSet.getInt("id") to resultSet.getInt("randomNumber")
