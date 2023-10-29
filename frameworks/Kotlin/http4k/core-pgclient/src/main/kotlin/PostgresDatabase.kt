@@ -1,3 +1,4 @@
+import io.vertx.core.Future
 import io.vertx.core.Vertx
 import io.vertx.core.VertxOptions
 import io.vertx.pgclient.PgConnectOptions
@@ -43,15 +44,24 @@ class PostgresDatabase : Database {
                 .toCompletionStage().toCompletableFuture().get()
         }
 
-    override fun updateWorlds(count: Int) =
-        (1..count)
-            .map { random.world() to random.world() }
-            .map { update ->
-                updatePool.preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
-                    .execute(Tuple.of(update.first, update.second))
-                    .flatMap { findWorld(update.first, queryPool) }
-                    .toCompletionStage().toCompletableFuture().get()
-            }
+    override fun updateWorlds(count: Int): List<Pair<Int, Int>> {
+        val updatedAndSorted = Future
+            .all(
+                (1..count)
+                    .map { random.world() }
+                    .map {
+                        findWorld(it, queryPool)
+                            .map { it.first to random.world() }
+                    }
+            )
+            .toCompletionStage().toCompletableFuture().get().list<World>()
+
+        updatePool.preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
+            .executeBatch(updatedAndSorted.map { Tuple.of(it.first, it.second) })
+            .toCompletionStage().toCompletableFuture().get()
+
+        return updatedAndSorted
+    }
 
     override fun fortunes() = queryPool.preparedQuery("SELECT id, message FROM fortune")
         .execute()

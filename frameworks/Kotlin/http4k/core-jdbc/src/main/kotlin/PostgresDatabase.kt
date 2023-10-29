@@ -19,7 +19,8 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
     }
 
     override fun updateWorlds(count: Int) = withConnection {
-       val updatedAndSorted = (1..count).map { findWorld(random.world()).first to random.world() }
+       val updatedAndSorted = (1..count)
+           .map { findWorld(random.world()).first to random.world() }
            .sortedBy { it.first }
 
         createStatement().use { stmt ->
