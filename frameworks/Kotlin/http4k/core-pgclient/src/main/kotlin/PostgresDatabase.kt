@@ -31,7 +31,7 @@ class PostgresDatabase : Database {
     }
 
     override fun findWorld() =
-        findWorld(random.world(), queryPool).toCompletionStage().toCompletableFuture().get()
+        queryPool.findWorld(random.world()).toCompletionStage().toCompletableFuture().get()
 
     override fun loadAll() = queryPool.preparedQuery("SELECT id, randomnumber FROM world ")
         .execute()
@@ -40,7 +40,7 @@ class PostgresDatabase : Database {
 
     override fun findWorlds(count: Int) =
         (1..count).map {
-            findWorld(random.world(), queryPool)
+            queryPool.findWorld(random.world())
                 .toCompletionStage().toCompletableFuture().get()
         }
 
@@ -49,7 +49,7 @@ class PostgresDatabase : Database {
             .all(
                 (1..count)
                     .map {
-                        findWorld(random.world(), queryPool)
+                        queryPool.findWorld(random.world())
                             .map { it.first to random.world() }
                     }
             )
@@ -67,14 +67,14 @@ class PostgresDatabase : Database {
         .execute()
         .map { it.map(::toFortune) }
         .map { (it + Fortune(0, "Additional fortune added at request time.")) }
+        .map { it.sortedBy { it.message } }
         .toCompletionStage().toCompletableFuture().get()
-        .sortedBy { it.message }
 
     companion object {
-        private fun findWorld(id: Int, pool: SqlClient) =
-            pool.preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
+        private fun SqlClient.findWorld(id: Int) =
+            preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
                 .execute(Tuple.of(id))
-                .map { toWorld(it.first()) }
+                .map { toWorld(it.single()) }
     }
 }
 
