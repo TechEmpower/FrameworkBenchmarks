@@ -19,9 +19,9 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
     }
 
     override fun updateWorlds(count: Int) = withConnection {
-       val updatedAndSorted = (1..count)
-           .map { findWorld(random.world()).first to random.world() }
-           .sortedBy { it.first }
+        val updatedAndSorted = (1..count)
+            .map { findWorld(random.world()).first to random.world() }
+            .sortedBy { it.first }
 
         createStatement().use { stmt ->
             updatedAndSorted.forEach {
@@ -69,7 +69,7 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
 
 private fun Connection.findWorld(id: Int) =
     executeQuery("SELECT id, randomNumber FROM world WHERE id = $id") {
-        it.toResultsList(::toWorld).first()
+        toWorld(it.also { it.next() })
     }
 
 private inline fun <T> ResultSet.toResultsList(fn: (ResultSet) -> T): List<T> =
