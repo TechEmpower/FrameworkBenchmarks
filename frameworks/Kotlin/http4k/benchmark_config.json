@@ -34,7 +34,6 @@
         "fortune_url": "/fortunes",
         "plaintext_url": "/plaintext",
         "query_url": "/queries?queries=",
-        "update_url": "/updates?queries=",
         "database": "Postgres",
         "port": 9000,
         "approach": "Realistic",
