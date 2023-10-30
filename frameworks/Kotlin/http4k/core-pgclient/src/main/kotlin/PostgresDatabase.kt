@@ -39,10 +39,10 @@ class PostgresDatabase : Database {
         .toCompletionStage().toCompletableFuture().get()
 
     override fun findWorlds(count: Int) =
-        (1..count).map {
-            queryPool.findWorld(random.world())
-                .toCompletionStage().toCompletableFuture().get()
-        }
+        Future
+            .all(
+                (1..count).map { queryPool.findWorld(random.world()) }
+            ).toCompletionStage().toCompletableFuture().get().list<World>()
 
     override fun updateWorlds(count: Int): List<Pair<Int, Int>> {
         val updatedAndSorted = Future
