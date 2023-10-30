@@ -67,10 +67,9 @@ class PostgresDatabase private constructor(private val dataSource: DataSource) :
     private inline fun <T> withConnection(fn: Connection.() -> T): T = dataSource.connection.use(fn)
 }
 
-private fun Connection.findWorld(id: Int) =
-    executeQuery("SELECT id, randomNumber FROM world WHERE id = $id") {
-        toWorld(it.also { it.next() })
-    }
+private fun Connection.findWorld(id: Int) = prepareStatement("SELECT id, randomNumber FROM world WHERE id = ?").use {
+    toWorld(it.apply { setInt(1, id) }.executeQuery().also { it.next() })
+}
 
 private inline fun <T> ResultSet.toResultsList(fn: (ResultSet) -> T): List<T> =
     mutableListOf<T>().apply {
