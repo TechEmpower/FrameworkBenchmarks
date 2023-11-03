@@ -5,7 +5,7 @@ default: &default
   password: benchmarkdbpass
   host: tfb-database
   timeout: 5000
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  pool: <%= require_relative 'auto_tune'; auto_tune.reduce(:*) %>
 
 development:
   <<: *default
