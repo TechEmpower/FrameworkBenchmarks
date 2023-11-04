@@ -143,16 +143,6 @@ namespace PlatformBenchmarks
             return queries;
         }
 
-        private Task ProcessRequestAsync() => _requestType switch
-        {
-            RequestType.FortunesRaw => FortunesRaw(Writer),
-            RequestType.SingleQuery => SingleQuery(Writer),
-            RequestType.Caching => Caching(Writer, _queries),
-            RequestType.Updates => Updates(Writer, _queries),
-            RequestType.MultipleQueries => MultipleQueries(Writer, _queries),
-            _ => Default(Writer)
-        };
-
         private bool ProcessRequest(ref BufferWriter<WriterAdapter> writer)
         {
             if (_requestType == RequestType.PlainText)
@@ -171,6 +161,16 @@ namespace PlatformBenchmarks
             return true;
         }
 
+        private Task ProcessRequestAsync() => _requestType switch
+        {
+            RequestType.FortunesRaw => FortunesRaw(Writer),
+            RequestType.SingleQuery => SingleQuery(Writer),
+            RequestType.Caching => Caching(Writer, _queries),
+            RequestType.Updates => Updates(Writer, _queries),
+            RequestType.MultipleQueries => MultipleQueries(Writer, _queries),
+            _ => Default(Writer)
+        };
+
         private static Task Default(PipeWriter pipeWriter)
         {
             var writer = GetWriter(pipeWriter, sizeHint: _defaultPreamble.Length + DateHeader.HeaderBytes.Length);
@@ -181,8 +181,8 @@ namespace PlatformBenchmarks
 
         private static ReadOnlySpan<byte> _defaultPreamble =>
             "HTTP/1.1 200 OK\r\n"u8 +
-            "Server: K"u8 + "\r\n"u8 +
-            "Content-Type: text/plain"u8 +
+            "Server: K\r\n"u8 +
+            "Content-Type: text/plain\r\n"u8 +
             "Content-Length: 0"u8;
 
         private static void Default(ref BufferWriter<WriterAdapter> writer)

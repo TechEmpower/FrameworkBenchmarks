@@ -50,7 +50,7 @@ var FortunesPool *sync.Pool
 func InitFortunesPool() {
 	FortunesPool = &sync.Pool{
 		New: func() interface{} {
-			return make([]Fortune, 0, 16)
+			return make([]Fortune, 0)
 		},
 	}
 }
