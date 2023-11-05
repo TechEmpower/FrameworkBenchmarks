@@ -33,12 +33,12 @@ RUN apt-get install -y unixodbc wget curl
 WORKDIR /odbc
 
 #RUN curl -L -o mariadb-connector-odbc-3.1.14-debian-9-stretch-amd64.tar.gz https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.14/mariadb-connector-odbc-3.1.14-debian-9-stretch-amd64.tar.gz
-RUN curl -L -o mariadb-connector-odbc-3.1.19-debian-bullseye-amd64.tar.gz https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.19/mariadb-connector-odbc-3.1.19-debian-bullseye-amd64.tar.gz
+RUN curl -L -o mariadb-connector-odbc-3.1.17-debian-bullseye-amd64.tar.gz https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.17/mariadb-connector-odbc-3.1.17-debian-bullseye-amd64.tar.gz
 
 #RUN tar -xvzf mariadb-connector-odbc-3.1.14-debian-9-stretch-amd64.tar.gz
 #RUN cp mariadb-connector-odbc-3.1.14-debian-9-stretch-amd64/lib/mariadb/libm* /usr/lib/
-RUN tar -xvzf mariadb-connector-odbc-3.1.19-debian-bullseye-amd64.tar.gz
-RUN cp mariadb-connector-odbc-3.1.19-debian-bullseye-amd64/lib/mariadb/libm* /usr/lib/
+RUN tar -xvzf mariadb-connector-odbc-3.1.17-debian-bullseye-amd64.tar.gz
+RUN cp mariadb-connector-odbc-3.1.17-debian-bullseye-amd64/lib/mariadb/libm* /usr/lib/
 
 COPY --from=build /usr/local/unixODBC /usr/local/unixODBC
 
