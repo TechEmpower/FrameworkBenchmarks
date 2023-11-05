@@ -18,7 +18,12 @@ fun main() {
     val store = BenchmarkPgClientStore("postgresql")
     val templateEngine = JteAdapter(TEXT_HTML, precompiled = true)
     val templateUrl = urlOf("classpath:fortunes.jte")
-    val engine = NettyEpollServerAdapter()
+    val engine = NettyEpollServerAdapter(
+        keepAliveHandler = false,
+        httpAggregatorHandler = false,
+        chunkedHandler = false,
+        enableWebsockets = false,
+    )
 
     val benchmark = Benchmark(engine, store, templateEngine, templateUrl, settings)
     benchmark.server.start()
