@@ -1,4 +1,4 @@
-FROM node:18.12.1-slim
+FROM node:slim
 
 ARG TFB_TEST_NAME
 
@@ -6,6 +6,7 @@ COPY ./ ./
 
 RUN npm install
 
+ENV NODE_ENV production
 ENV TFB_TEST_NAME=$TFB_TEST_NAME
 
 EXPOSE 8080
