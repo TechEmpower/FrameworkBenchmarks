@@ -133,7 +133,8 @@ Handler::Handler(const userver::components::ComponentConfig& config,
               .FindComponent<userver::components::Postgres>(
                   db_helpers::kDbComponentName)
               .GetCluster()},
-      select_all_fortunes_query_{"SELECT id, message FROM Fortune"},
+      select_all_fortunes_query_{
+          db_helpers::CreateNonLoggingQuery("SELECT id, message FROM Fortune")},
       semaphore_{kBestConcurrencyWildGuess} {}
 
 std::string Handler::HandleRequestThrow(
