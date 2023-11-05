@@ -7,10 +7,13 @@ RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
 
 WORKDIR /odbc
 
-RUN curl -L -o unixODBC-2.3.12.tar.gz ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.12.tar.gz
-RUN tar -xvf unixODBC-2.3.12.tar.gz
+#RUN curl -L -o unixODBC-2.3.9.tar.gz ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.9.tar.gz
+RUN curl -L -o unixODBC-2.3.11.tar.gz ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.11.tar.gz
+#RUN tar -xvf unixODBC-2.3.9.tar.gz
+RUN tar -xvf unixODBC-2.3.11.tar.gz
 
-WORKDIR /odbc/unixODBC-2.3.12
+#WORKDIR /odbc/unixODBC-2.3.9
+WORKDIR /odbc/unixODBC-2.3.11
 RUN ./configure --prefix=/usr/local/unixODBC
 RUN make
 RUN make install
