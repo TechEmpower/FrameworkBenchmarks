@@ -1,11 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
    <PropertyGroup>
-      <TargetFramework>net7.0</TargetFramework>
+      <TargetFramework>net8.0</TargetFramework>
       <OutputType>Exe</OutputType>
       <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
-      <!-- Normal .NET 7 -->
+      <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+
+      <!-- Normal .NET 8 -->
       <PublishAot>true</PublishAot>
       <SelfContained>true</SelfContained>
       <InvariantGlobalization>true</InvariantGlobalization>
@@ -19,6 +21,9 @@
       <IlcTrimMetadata>true</IlcTrimMetadata>
       <IlcInvariantGlobalization>true</IlcInvariantGlobalization>
       <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+
+      <!-- Still works from the experimental AOT version, but high risk -->
+      <IlcDisableReflection>true</IlcDisableReflection>
 
       <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
 
@@ -36,9 +41,11 @@
    </PropertyGroup>
 
    <ItemGroup>
-      <PackageReference Include="Npgsql" Version="7.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+      <Reference Include="Npgsql\Npgsql.dll" />
+      <!--<PackageReference Include="Npgsql" Version="8.0.0-rc.2" />-->
       <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
-      <PackageReference Include="System.Data.Odbc" Version="7.0.0" />
+      <PackageReference Include="System.Data.Odbc" Version="8.0.0-rc.2.23479.6" />
    </ItemGroup>
 
    <PropertyGroup>
