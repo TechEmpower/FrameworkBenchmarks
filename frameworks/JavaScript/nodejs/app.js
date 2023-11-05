@@ -13,6 +13,8 @@ if (process.env.TFB_TEST_NAME === 'nodejs-mongodb') {
   process.env.NODE_HANDLER = 'mysql-raw';
 } else if (process.env.TFB_TEST_NAME === 'nodejs-postgres') {
   process.env.NODE_HANDLER = 'sequelize-postgres';
+}else if (process.env.TFB_TEST_NAME === 'nodejs-postgresjs-raw') {
+  process.env.NODE_HANDLER = 'postgres';
 }
 
 if (cluster.isPrimary) {
