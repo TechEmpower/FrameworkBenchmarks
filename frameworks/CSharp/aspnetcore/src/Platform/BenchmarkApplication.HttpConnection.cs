@@ -110,48 +110,6 @@ public partial class BenchmarkApplication : IHttpConnection
         Reader.AdvanceTo(buffer.Start, buffer.End);
     }
 
-    private void ParseHttpRequest(ref ReadOnlySequence<byte> buffer, bool isCompleted)
-    {
-        var reader = new SequenceReader<byte>(buffer);
-        var state = _state;
-
-        if (state == State.StartLine)
-        {
-            if (Parser.ParseRequestLine(new ParsingAdapter(this), ref reader))
-            {
-                state = State.Headers;
-            }
-        }
-
-        if (state == State.Headers)
-        {
-            var success = Parser.ParseHeaders(new ParsingAdapter(this), ref reader);
-
-            if (success)
-            {
-                state = State.Body;
-            }
-        }
-
-        if (state != State.Body && isCompleted)
-        {
-            ThrowUnexpectedEndOfData();
-        }
-
-        _state = state;
-
-        if (state == State.Body)
-        {
-            // Complete request read, consumed and examined are the same (length 0)
-            buffer = buffer.Slice(reader.Position, 0);
-        }
-        else
-        {
-            // In-complete request read, consumed is current position and examined is the remaining.
-            buffer = buffer.Slice(reader.Position);
-        }
-    }
-
     private void ParseHttpRequest(ref SequenceReader<byte> reader, ref ReadOnlySequence<byte> buffer, bool isCompleted)
     {
         var state = _state;
@@ -181,15 +139,18 @@ public partial class BenchmarkApplication : IHttpConnection
 
         _state = state;
 
-        if (state == State.Body)
+        if (_requestType != RequestType.Json && _requestType != RequestType.PlainText)
         {
-            // Complete request read, consumed and examined are the same (length 0)
-            buffer = buffer.Slice(reader.Position, 0);
-        }
-        else
-        {
-            // In-complete request read, consumed is current position and examined is the remaining.
-            buffer = buffer.Slice(reader.Position);
+            if (state == State.Body)
+            {
+                // Complete request read, consumed and examined are the same (length 0)
+                buffer = buffer.Slice(reader.Position, 0);
+            }
+            else
+            {
+                // In-complete request read, consumed is current position and examined is the remaining.
+                buffer = buffer.Slice(reader.Position);
+            }
         }
     }
 
