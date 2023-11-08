@@ -2,6 +2,7 @@ package main
 
 import (
         "context"
+        "bytes"
         "log"
         "net"
         "os"
@@ -55,7 +56,7 @@ func main() {
         }
         h := server.New(
 
-                server.WithHostPorts("0.0.0.0:8081"),
+                server.WithHostPorts("0.0.0.0:8080"),
                 ///*
                 server.WithListenConfig(&net.ListenConfig{
                         Control: func(network, address string, c syscall.RawConn) error {
@@ -68,20 +69,25 @@ func main() {
                 }),
                 //*/
         )
-        //hertzpprof.Register(h, "dev3g3x/pprof")
 
-
+/*
+        h.GET("/plaintext", func(ctx context.Context, c *app.RequestContext) {
+                c.String(consts.StatusOK, "get")
+        })
+*/
+///*
         h.Use(func(cc context.Context, ctx *app.RequestContext) {
-                //log.Printf("kjhkjh323 = %s = %s", cc, ctx)
                 HertzHandler(&cc, ctx)
         })
-
+//*/
         h.Spin()
 
 }
 
 func HertzHandler(cc *context.Context, ctx *app.RequestContext) {
-        ctx.Response.Header.SetStatusCode(200)
-        ctx.Response.Header.SetContentType("text/plain")
-        ctx.Response.SetBodyRaw([]byte("Hello World!"))
+        if bytes.EqualFold(ctx.Request.URI().RequestURI(), []byte("/plaintext")) {
+                ctx.Response.Header.SetStatusCode(200)
+                ctx.Response.Header.SetContentType("text/plain")
+                ctx.Response.SetBodyRaw([]byte("Hello World!"))
+        }
 }
