@@ -1,3 +1,4 @@
+import io.vertx.core.CompositeFuture
 import io.vertx.core.Future
 import io.vertx.core.Vertx
 import io.vertx.core.VertxOptions
@@ -8,6 +9,7 @@ import io.vertx.sqlclient.Row
 import io.vertx.sqlclient.SqlClient
 import io.vertx.sqlclient.Tuple
 import java.util.Random
+
 
 class PostgresDatabase : Database {
     private val queryPool: SqlClient
@@ -44,14 +46,17 @@ class PostgresDatabase : Database {
                 (1..count).map { queryPool.findWorld(random.world()) }
             ).toCompletionStage().toCompletableFuture().get().list<World>()
 
-    override fun updateWorlds(count: Int) = (1..count)
-        .map { random.world() to random.world() }
-        .map { update ->
-            updatePool.preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
-                .execute(Tuple.of(update.first, update.second))
-                .flatMap { queryPool.findWorld(random.world()) }
-                .toCompletionStage().toCompletableFuture().get()
-        }
+    override fun updateWorlds(count: Int) =
+        Future.all((1..count)
+            .map { queryPool.findWorld(random.world()) })
+            .map<List<World>>(CompositeFuture::list)
+            .toCompletionStage()
+            .thenCompose { worlds ->
+                updatePool.preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
+                    .executeBatch((1..count).map { Tuple.of(random.world(), random.world()) })
+                    .toCompletionStage()
+                    .thenApply { worlds }
+            }.toCompletableFuture().get()
 
     override fun fortunes() = queryPool.preparedQuery("SELECT id, message FROM fortune")
         .execute()
