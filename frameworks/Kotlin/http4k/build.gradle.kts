@@ -1,5 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.gradle.api.JavaVersion.VERSION_1_8
+import org.gradle.api.JavaVersion.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -34,14 +34,14 @@ allprojects {
     }
 
     java {
-        sourceCompatibility = VERSION_1_8
-        targetCompatibility = VERSION_1_8
+        sourceCompatibility = VERSION_21
+        targetCompatibility = VERSION_21
     }
 
     tasks {
         withType<KotlinCompile> {
             kotlinOptions {
-                jvmTarget = "1.8"
+                jvmTarget = "20"
                 allWarningsAsErrors = true
             }
         }
