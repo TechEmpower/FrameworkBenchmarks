@@ -40,7 +40,7 @@ cutelyst_benchmarks::~cutelyst_benchmarks()
 
 bool cutelyst_benchmarks::init()
 {
-    if (config(QStringLiteral("SendDate")).value<bool>()) {
+    if (config(u"SendDate"_qs).value<bool>()) {
         qDebug() << "Manually send date";
         auto dateT = new QTimer(this);
         dateT->setInterval(1000);
@@ -63,9 +63,9 @@ bool cutelyst_benchmarks::init()
     new CachedQueries(this);
 
     if (defaultHeaders().server().isEmpty()) {
-        defaultHeaders().setServer(QStringLiteral("Cutelyst"));
+        defaultHeaders().setServer("Cutelyst"_qba);
     }
-    defaultHeaders().removeHeader(QStringLiteral("X-Cutelyst"));
+    defaultHeaders().removeHeader("X-Cutelyst");
 
     return true;
 }
@@ -75,48 +75,43 @@ bool cutelyst_benchmarks::postFork()
     QMutexLocker locker(&mutex); // QSqlDatabase::addDatabase is not thread-safe
 
     QSqlDatabase db;
-    const auto driver = config(QStringLiteral("Driver")).toString();
+    const auto driver = config(u"Driver"_qs).toString();
     if (driver == u"QPSQL") {
-        db = QSqlDatabase::addDatabase(driver, Sql::databaseNameThread(QStringLiteral("postgres")));
-        db.setDatabaseName(QStringLiteral("hello_world"));
-        db.setUserName(QStringLiteral("benchmarkdbuser"));
-        db.setPassword(QStringLiteral("benchmarkdbpass"));
-        db.setHostName(config(QStringLiteral("DatabaseHostName")).toString());
+        db = QSqlDatabase::addDatabase(driver, Sql::databaseNameThread(u"postgres"_qs));
+        db.setDatabaseName(u"hello_world"_qs);
+        db.setUserName(u"benchmarkdbuser"_qs);
+        db.setPassword(u"benchmarkdbpass"_qs);
+        db.setHostName(config(u"DatabaseHostName"_qs).toString());
         if (!db.open()) {
             qDebug() << "Error opening PostgreSQL db:" << db << db.connectionName() << db.lastError().databaseText();
             return false;
         }
     } else if (driver == u"QMYSQL") {
-        db = QSqlDatabase::addDatabase(driver, Sql::databaseNameThread(QStringLiteral("mysql")));
-        db.setDatabaseName(QStringLiteral("hello_world"));
-        db.setUserName(QStringLiteral("benchmarkdbuser"));
-        db.setPassword(QStringLiteral("benchmarkdbpass"));
-        db.setHostName(config(QStringLiteral("DatabaseHostName")).toString());
+        db = QSqlDatabase::addDatabase(driver, Sql::databaseNameThread(u"mysql"_qs));
+        db.setDatabaseName(u"hello_world"_qs);
+        db.setUserName(u"benchmarkdbuser"_qs);
+        db.setPassword(u"benchmarkdbpass"_qs);
+        db.setHostName(config(u"DatabaseHostName"_qs).toString());
         if (!db.open()) {
             qDebug() << "Error opening MySQL db:" << db << db.connectionName() << db.lastError().databaseText();
             return false;
         }
     } else if (driver == u"postgres") {
-        QUrl uri(QStringLiteral("postgresql://benchmarkdbuser:benchmarkdbpass@server/hello_world"));
-        uri.setHost(config(QStringLiteral("DatabaseHostName")).toString());
+        QUrl uri(u"postgresql://benchmarkdbuser:benchmarkdbpass@server/hello_world"_qs);
+        uri.setHost(config(u"DatabaseHostName"_qs).toString());
         qDebug() << "ASql URI:" << uri.toString();
 
         APool::create(ASql::APg::factory(uri.toString()));
         APool::setMaxIdleConnections(128);
-        APool::setSetupCallback([](ADatabase &db) {
+        APool::setSetupCallback([](ADatabase db) {
             // Enable Pipeline mode
             db.enterPipelineMode(500);
         });
     }
 
     qDebug() << "Connections" << QCoreApplication::applicationPid() << QThread::currentThread() << QSqlDatabase::connectionNames();
-//    db = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), QLatin1String("sqlite"));
-//    if (!db.open()) {
-//        qDebug() << "Error opening db:" << db << db.lastError().databaseText();
-//        return false;
-//    }
 
     return true;
 }
 
-//#include "moc_cutelyst-benchmarks.cpp"
+#include "moc_cutelyst-benchmarks.cpp"
