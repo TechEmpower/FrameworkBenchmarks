@@ -34,8 +34,8 @@ allprojects {
     }
 
     java {
-        sourceCompatibility = VERSION_21
-        targetCompatibility = VERSION_21
+        sourceCompatibility = VERSION_20
+        targetCompatibility = VERSION_20
     }
 
     tasks {
