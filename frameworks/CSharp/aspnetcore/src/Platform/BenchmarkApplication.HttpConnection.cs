@@ -41,7 +41,76 @@ public partial class BenchmarkApplication : IHttpConnection
         }
     }
 
-    private bool ParseHttpRequest(ref SequenceReader<byte> reader, bool isCompleted)
+    private async Task ProcessRequestsAsync()
+    {
+        while (true)
+        {
+            var readResult = await Reader.ReadAsync();
+            var buffer = readResult.Buffer;
+            var isCompleted = readResult.IsCompleted;
+
+            if (buffer.IsEmpty && isCompleted)
+            {
+                return;
+            }
+
+            if (!HandleRequests(ref buffer, isCompleted))
+            {
+                await HandleRequestAsync(buffer);
+            }
+            
+            await Writer.FlushAsync();
+        }
+    }
+
+    private bool HandleRequests(ref ReadOnlySequence<byte> buffer, bool isCompleted)
+    {
+        var reader = new SequenceReader<byte>(buffer);
+        var writer = GetWriter(Writer, sizeHint: 160 * 16); // 160*16 is for Plaintext, for Json 160 would be enough
+
+        while (true)
+        {
+            ParseHttpRequest(ref reader, ref buffer, isCompleted);
+
+            if (_state == State.Body)
+            {
+                if (!ProcessRequest(ref writer))
+                {
+                    return false;
+                }
+
+                _state = State.StartLine;
+
+                if (!reader.End)
+                {
+                    // More input data to parse
+                    continue;
+                }
+            }
+
+            // No more input or incomplete data, Advance the Reader
+            Reader.AdvanceTo(reader.Position, buffer.End);
+            break;
+        }
+
+        writer.Commit();
+        return true;
+    }
+
+    private async Task HandleRequestAsync(ReadOnlySequence<byte> buffer)
+    {
+        if (_state == State.Body)
+        {
+            await ProcessRequestAsync();
+
+            _state = State.StartLine;
+        }
+
+        // No more input or incomplete data, Advance the Reader
+        Reader.AdvanceTo(buffer.Start, buffer.End);
+    }
+
+    private void ParseHttpRequest(ref SequenceReader<byte> reader, ref ReadOnlySequence<byte> buffer, bool isCompleted)
     {
         var state = _state;
 
@@ -69,79 +138,20 @@ public partial class BenchmarkApplication : IHttpConnection
         }
 
         _state = state;
-        return true;
-    }
 
-    private async Task ProcessRequestsAsync()
-    {
-        while (true)
+        if (_requestType != RequestType.Json && _requestType != RequestType.PlainText)
         {
-            var readResult = await Reader.ReadAsync(default);
-            var buffer = readResult.Buffer;
-            var isCompleted = readResult.IsCompleted;
-
-            if (buffer.IsEmpty && isCompleted)
+            if (state == State.Body)
             {
-                return;
+                // Complete request read, consumed and examined are the same (length 0)
+                buffer = buffer.Slice(reader.Position, 0);
             }
-
-            if (!HandleRequests(buffer, isCompleted))
+            else
             {
-                await ProcessRequestAsync();
+                // In-complete request read, consumed is current position and examined is the remaining.
+                buffer = buffer.Slice(reader.Position);
             }
-
-            await Writer.FlushAsync(default);
         }
-    }
-
-    private bool HandleRequests(in ReadOnlySequence<byte> buffer, bool isCompleted)
-    {
-        var reader = new SequenceReader<byte>(buffer);
-        var hasWriter = false;
-        BufferWriter<WriterAdapter> writer = default;
-
-        while (true)
-        {
-            if (!ParseHttpRequest(ref reader, isCompleted))
-            {
-                return false;
-            }
-
-            // Only create the local writer if the request is Plaintext or Json
-            
-            if (!hasWriter)
-            {
-                hasWriter = true;
-                writer = GetWriter(Writer, sizeHint: 160 * 16); // 160*16 is for Plaintext, for Json 160 would be enough
-            }
-
-            if (_state == State.Body)
-            {
-                if (!ProcessRequest(ref writer))
-                {
-                    return false;
-                }
-
-                _state = State.StartLine;
-
-                if (!reader.End)
-                {
-                    // More input data to parse
-                    continue;
-                }
-            }
-
-            // No more input or incomplete data, Advance the Reader
-            Reader.AdvanceTo(reader.Position, buffer.End);
-            break;
-        }
-
-        if (hasWriter)
-        { 
-            writer.Commit();
-        }
-
-        return true;
     }
 
     private static HtmlEncoder CreateHtmlEncoder()

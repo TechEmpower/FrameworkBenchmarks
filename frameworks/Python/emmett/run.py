@@ -16,6 +16,5 @@ if __name__ == "__main__":
         backlog=2048,
         threading_mode='runtime',
         enable_websockets=False,
-        loop_opt=True,
         log_level="warn"
     )

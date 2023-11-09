@@ -109,7 +109,7 @@ platform = "Netty"
 webserver = "None"
 versus = "netty"
 
-[nima]
+[helidon]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
@@ -125,9 +125,9 @@ os = "Linux"
 orm = "Raw"
 platform = "Helidon"
 webserver = "None"
-versus = "helidon-nima"
+versus = "helidon-helidon"
 
-[nima-native]
+[helidon-native]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
@@ -143,9 +143,9 @@ os = "Linux"
 orm = "Raw"
 platform = "Helidon"
 webserver = "None"
-versus = "helidon-nima"
+versus = "helidon-helidon"
 
-[nima-pgclient]
+[helidon-pgclient]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
@@ -161,7 +161,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Helidon"
 webserver = "None"
-versus = "helidon-nima"
+versus = "helidon-helidon"
 
 [tomcat]
 urls.plaintext = "/plaintext"
