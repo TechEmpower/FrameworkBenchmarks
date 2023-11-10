@@ -90,4 +90,9 @@ func HertzHandler(cc *context.Context, ctx *app.RequestContext) {
                 ctx.Response.Header.SetContentType("text/plain")
                 ctx.Response.SetBodyRaw([]byte("Hello World!"))
         }
+        if bytes.EqualFold(ctx.Request.URI().RequestURI(), []byte("/json")) {
+                ctx.Response.Header.SetStatusCode(200)
+                ctx.Response.Header.SetContentType("text/json")
+                ctx.Response.SetBodyRaw([]byte("{\"Hello World!\"}"))
+        }
 }
