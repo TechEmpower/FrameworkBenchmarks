@@ -54,8 +54,13 @@ class HelloWorld
   </html>'
 
   def initialize
-    # auto_tune
-    max_connections = 512
+    if defined?(Puma)
+      num_workers, num_threads = auto_tune
+      num_threads = [num_threads, 32].min
+      max_connections = num_workers * num_threads
+    else
+      max_connections = 512
+    end
     @db = PgDb.new(DEFAULT_DATABASE_URL, max_connections)
   end
 
