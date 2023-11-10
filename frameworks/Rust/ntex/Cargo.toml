@@ -39,7 +39,6 @@ async-std = ["ntex/async-std"]
 [dependencies]
 ntex = "0.7.2"
 ntex-bytes = { version = "0.1.19", features=["simd"] }
-core_affinity = "0.8"
 mimalloc = { version = "0.1.25", default-features = false }
 snmalloc-rs = { version = "0.3.3", features = ["native-cpu"] }
 yarte = { version = "0.15", features = ["bytes-buf", "json"] }
@@ -47,8 +46,8 @@ buf-min = { version = "0.7", features = ["ntex-bytes"] }
 env_logger = "0.10"
 nanorand = { version = "0.7", default-features = false, features = ["std", "wyrand", "tls"] }
 atoi = "2.0"
-num_cpus = "1.13"
-smallvec = "1.6.1"
+num_cpus = "1.16"
+smallvec = "1.11"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 log = { version = "0.4", features = ["release_max_level_off"] }
