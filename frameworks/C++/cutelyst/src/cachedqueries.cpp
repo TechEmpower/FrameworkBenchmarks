@@ -20,7 +20,7 @@ CachedQueries::CachedQueries(QObject *parent)
 
 void CachedQueries::cached_queries(Context *c)
 {
-    int queries = c->request()->queryParam(QStringLiteral("count")).toInt();
+    int queries = c->request()->queryParam(u"count"_qs).toInt();
     if (queries < 1) {
         queries = 1;
     } else if (queries > 500) {
@@ -48,8 +48,8 @@ void CachedQueries::cached_queries(Context *c)
                 auto it = result.begin();
                 int id = it[0].toInt();
                 auto obj = new QJsonObject({
-                                               {QStringLiteral("id"), id},
-                                               {QStringLiteral("randomNumber"), it[1].toInt()}
+                                               {u"id"_qs, id},
+                                               {u"randomNumber"_qs, it[1].toInt()}
                                            });
                 array->append(*obj);
                 cache.insert(id, obj, 1);

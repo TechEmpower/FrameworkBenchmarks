@@ -8,6 +8,6 @@ PlaintextTest::PlaintextTest(QObject *parent) : Controller(parent)
 void PlaintextTest::plaintext(Context *c)
 {
     Response *res = c->response();
-    res->setBody(QByteArrayLiteral("Hello, World!"));
-    res->setContentType(QStringLiteral("text/plain"));
+    res->setBody("Hello, World!"_qba);
+    res->setContentType("text/plain"_qba);
 }
