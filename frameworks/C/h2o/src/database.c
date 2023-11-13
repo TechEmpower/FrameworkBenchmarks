@@ -672,7 +672,7 @@ int execute_database_query(db_conn_pool_t *pool, db_query_param_t *param)
 				msg->arg = pool;
 				msg->super.type = TASK;
 				msg->task = on_process_queries;
-				send_message(&msg->super, pool->receiver);
+				send_local_message(&msg->super, pool->local_messages);
 				pool->process_queries = true;
 			}
 
@@ -727,16 +727,16 @@ void initialize_database_connection_pool(const char *conninfo,
                                          const struct config_t *config,
                                          const list_t *prepared_statements,
                                          h2o_loop_t *loop,
-                                         h2o_multithread_receiver_t *receiver,
+                                         h2o_linklist_t *local_messages,
                                          db_conn_pool_t *pool)
 {
 	memset(pool, 0, sizeof(*pool));
 	pool->config = config;
 	pool->conninfo = conninfo ? conninfo : "";
+	pool->local_messages = local_messages;
 	pool->loop = loop;
 	pool->prepared_statements = prepared_statements;
 	pool->queries.tail = &pool->queries.head;
-	pool->receiver = receiver;
 	pool->conn_num = config->max_db_conn_num;
 	pool->query_num = config->max_query_num;
 }
