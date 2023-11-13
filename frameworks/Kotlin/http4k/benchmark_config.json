@@ -295,7 +295,6 @@
         "db_url": "/db",
         "json_url": "/json",
         "fortune_url": "/fortunes",
-        "plaintext_url": "/plaintext",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
         "database": "Postgres",
