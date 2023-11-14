@@ -40,7 +40,7 @@ impl PgConnection {
             let _ = conn.await;
         });
 
-        let fortune = cl.prepare("SELECT id, message FROM fortune").await.unwrap();
+        let fortune = cl.prepare("SELECT * FROM fortune").await.unwrap();
         let mut updates = Vec::new();
         for num in 1..=500u16 {
             let mut pl: u16 = 1;

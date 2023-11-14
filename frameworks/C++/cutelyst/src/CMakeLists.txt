@@ -14,8 +14,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(mimalloc)
 
 find_package(Qt6 6.2.0 REQUIRED COMPONENTS Core Network Sql)
-find_package(ASqlQt6 0.74 REQUIRED)
-find_package(Cutelyst3Qt6 3.6 REQUIRED)
+find_package(ASqlQt6 0.84 REQUIRED)
+find_package(Cutelyst4Qt6 3.6 REQUIRED)
 find_package(Cutelee6Qt6 6.1.0 REQUIRED)
 find_package(PostgreSQL REQUIRED)
 

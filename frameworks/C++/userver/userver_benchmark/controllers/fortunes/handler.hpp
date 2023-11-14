@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../common/db_helpers.hpp"
+
 #include <userver/server/handlers/http_handler_base.hpp>
 
 #include <userver/storages/postgres/postgres_fwd.hpp>
@@ -23,6 +25,8 @@ class Handler final : public userver::server::handlers::HttpHandlerBase {
  private:
   const userver::storages::postgres::ClusterPtr pg_;
   const userver::storages::postgres::Query select_all_fortunes_query_;
+
+  db_helpers::DatabasePoolSemaphore semaphore_;
 };
 
 }  // namespace userver_techempower::fortunes

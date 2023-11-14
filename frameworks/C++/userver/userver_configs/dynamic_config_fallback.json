@@ -1,6 +1,9 @@
 {
   "USERVER_CACHES": {},
   "USERVER_CANCEL_HANDLE_REQUEST_BY_DEADLINE": false,
+  "POSTGRES_CONGESTION_CONTROL_SETTINGS": {},
+  "POSTGRES_DEADLINE_PROPAGATION_VERSION": 0,
+  "POSTGRES_CONNECTION_PIPELINE_EXPERIMENT": 5,
   "USERVER_CHECK_AUTH_IN_HANDLERS": false,
   "USERVER_DUMPS": {},
   "USERVER_HTTP_PROXY": "",
@@ -32,8 +35,8 @@
       "default-task-processor": {
         "wait_queue_overload": {
           "action": "ignore",
-          "length_limit": 16385,
-          "time_limit_us": 30000
+          "length_limit": 0,
+          "time_limit_us": 10000000
         }
       }
     }
@@ -41,7 +44,7 @@
 
   "POSTGRES_STATEMENT_METRICS_SETTINGS": {},
   "POSTGRES_CONNLIMIT_MODE_AUTO_ENABLED": false,
-  "POSTGRES_CONNECTION_PIPELINE_ENABLED": false,
+  "USERVER_DEADLINE_PROPAGATION_ENABLED": false,
   "POSTGRES_CONNECTION_POOL_SETTINGS": {},
   "POSTGRES_CONNECTION_SETTINGS": {},
   "POSTGRES_DEFAULT_COMMAND_CONTROL": {

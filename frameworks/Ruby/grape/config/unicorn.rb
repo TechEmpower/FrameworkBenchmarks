@@ -1,4 +1,6 @@
-worker_processes 8
+require_relative 'auto_tune'
+
+worker_processes, = auto_tune
 listen "/tmp/unicorn.sock", :backlog => 4096
 
 preload_app true

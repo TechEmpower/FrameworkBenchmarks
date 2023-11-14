@@ -114,7 +114,7 @@ def verify_helloworld_object(json_object, url):
 
     try:
         # Make everything case insensitive
-        json_object = {k.lower(): v.lower() for k, v in json_object.iteritems()}
+        json_object = {k.lower(): v.lower() for k, v in json_object.items()}
     except:
         return [('fail', "Not a valid JSON object", url)]
 
@@ -162,7 +162,7 @@ def verify_randomnumber_object(db_object, url, max_infraction='fail'):
                  "Expected a JSON object, got '%s' instead" % got, url)]
 
     # Make keys case insensitive
-    db_object = {k.lower(): v for k, v in db_object.iteritems()}
+    db_object = {k.lower(): v for k, v in db_object.items()}
     required_keys = set(['id', 'randomnumber'])
 
     for v in (v for v in required_keys if v not in db_object):

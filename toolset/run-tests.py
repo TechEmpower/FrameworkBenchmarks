@@ -187,6 +187,15 @@ def main(argv=None):
         nargs='+',
         default=[1, 10, 20, 50, 100],
         help='List of cached query levels to benchmark')
+    parser.add_argument(
+        '--test-container-memory',
+        default=None,
+        help='Amount of memory to be given to the test container')
+    parser.add_argument(
+        '--extra-docker-runtime-args',
+        nargs='*',
+        default=None,
+        help='Extra docker arguments to be passed to the test container')
 
     # Network options
     parser.add_argument(

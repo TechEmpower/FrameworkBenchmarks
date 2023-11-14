@@ -1,7 +1,5 @@
 #include "handler.hpp"
 
-#include "../../common/db_helpers.hpp"
-
 #include <userver/components/component_context.hpp>
 #include <userver/formats/serialize/common_containers.hpp>
 #include <userver/storages/postgres/postgres.hpp>
@@ -22,7 +20,9 @@ FROM ( SELECT
 WHERE w.id = new_numbers.id
 )"};
 
-}
+constexpr std::size_t kBestConcurrencyWildGuess = 128;
+
+}  // namespace
 
 Handler::Handler(const userver::components::ComponentConfig& config,
                  const userver::components::ComponentContext& context)
@@ -30,7 +30,8 @@ Handler::Handler(const userver::components::ComponentConfig& config,
       pg_{context.FindComponent<userver::components::Postgres>("hello-world-db")
               .GetCluster()},
       query_arg_name_{"queries"},
-      update_query_{kUpdateQueryStr} {}
+      update_query_{kUpdateQueryStr},
+      semaphore_{kBestConcurrencyWildGuess} {}
 
 userver::formats::json::Value Handler::HandleRequestJsonThrow(
     const userver::server::http::HttpRequest& request,
@@ -52,29 +53,32 @@ userver::formats::json::Value Handler::GetResponse(int queries) const {
   std::sort(values.begin(), values.end(),
             [](const auto& lhs, const auto& rhs) { return lhs.id < rhs.id; });
 
-  // even though this adds a round-trip for Begin/Commit we expect this to be
-  // faster due to the pool semaphore contention reduction - now we have a
-  // connection for ourselves until we are done with it, otherwise we would
-  // likely wait on the semaphore with every new query.
-  auto transaction = pg_->Begin(db_helpers::kClusterHostType, {});
-  for (auto& value : values) {
-    value.random_number =
-        transaction.Execute(db_helpers::kSelectRowQuery, value.id)
-            .AsSingleRow<db_helpers::WorldTableRow>(
-                userver::storages::postgres::kRowTag)
-            .random_number;
+  boost::container::small_vector<db_helpers::WorldTableRow, 20> result;
+
+  {
+    const auto lock = semaphore_.Acquire();
+
+    auto trx = pg_->Begin(db_helpers::kClusterHostType, {});
+    for (auto& value : values) {
+      value.random_number = trx.Execute(db_helpers::kSelectRowQuery, value.id)
+                                .AsSingleRow<db_helpers::WorldTableRow>(
+                                    userver::storages::postgres::kRowTag)
+                                .random_number;
+    }
+
+    // We copy values here (and hope compiler optimizes it into one memcpy call)
+    // to not serialize into json within transaction
+    result.assign(values.begin(), values.end());
+
+    for (auto& value : values) {
+      value.random_number = db_helpers::GenerateRandomValue();
+    }
+
+    trx.ExecuteDecomposeBulk(update_query_, values, values.size());
+    trx.Commit();
   }
 
-  auto json_result =
-      userver::formats::json::ValueBuilder{values}.ExtractValue();
-
-  for (auto& value : values) {
-    value.random_number = db_helpers::GenerateRandomValue();
-  }
-  transaction.ExecuteDecomposeBulk(update_query_, values, values.size());
-  transaction.Commit();
-
-  return json_result;
+  return userver::formats::json::ValueBuilder{values}.ExtractValue();
 }
 
 }  // namespace userver_techempower::updates

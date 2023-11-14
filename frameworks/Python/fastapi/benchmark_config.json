@@ -64,8 +64,6 @@
       },
       "gunicorn-orjson": {
         "json_url": "/json",
-        "fortune_url": "/fortunes",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
@@ -87,7 +85,6 @@
       },
       "gunicorn-orm": {
         "fortune_url": "/fortunes",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
@@ -132,8 +129,6 @@
       },
       "hypercorn-orjson": {
         "json_url": "/json",
-        "fortune_url": "/fortunes",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
@@ -174,12 +169,11 @@
         "database_os": "Linux",
         "display_name": "FastAPI-nginx-unit",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       },
       "nginx-unit-orjson": {
         "json_url": "/json",
-        "fortune_url": "/fortunes",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
@@ -197,7 +191,8 @@
         "database_os": "Linux",
         "display_name": "FastAPI-nginx-unit-orjson",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       },
       "uvicorn": {
         "json_url": "/json",
@@ -224,8 +219,6 @@
       },
       "uvicorn-orjson": {
         "json_url": "/json",
-        "fortune_url": "/fortunes",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",

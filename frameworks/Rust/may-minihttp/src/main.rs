@@ -198,7 +198,7 @@ impl PgConnection {
         let rows = self.client.query_raw(&self.statement.fortune, &[])?;
 
         let all_rows = Vec::from_iter(rows.map(|r| r.unwrap()));
-        let mut fortunes = Vec::with_capacity(all_rows.capacity() + 1);
+        let mut fortunes = Vec::with_capacity(all_rows.len() + 1);
         fortunes.extend(all_rows.iter().map(|r| Fortune {
             id: r.get(0),
             message: r.get(1),
@@ -209,9 +209,9 @@ impl PgConnection {
         });
         fortunes.sort_by(|it, next| it.message.cmp(next.message));
 
-        let mut body = std::mem::replace(buf, BytesMut::new());
+        let mut body = unsafe { std::ptr::read(buf) };
         ywrite_html!(body, "{{> fortune }}");
-        let _ = std::mem::replace(buf, body);
+        unsafe { std::ptr::write(buf, body) };
         Ok(())
     }
 }

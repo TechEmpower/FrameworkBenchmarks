@@ -1,0 +1,52 @@
+load(
+  "@rules_haskell//haskell:defs.bzl",
+  "haskell_binary",
+)
+
+java_library(
+    name = "wizzardo-http-benchmark_java",
+    srcs = glob(['src/main/**/*.java']),
+)
+
+java_deps = [
+    "wizzardo-http-benchmark_java",
+    "@maven//:com_wizzardo_http_0_3",
+    "@maven//:com_wizzardo_epoll_0_3_4",
+    "@maven//:com_wizzardo_tools_tools_collections_0_23",
+    "@maven//:com_wizzardo_tools_tools_interfaces_0_23",
+    "@maven//:com_wizzardo_reactive_pg_client_0_10_2_1",
+    ]
+
+java_binary(
+    name = "jar",
+    main_class = "bogus",
+    visibility = ["//visibility:public"],
+    runtime_deps = java_deps,
+)
+
+haskell_binary(
+    name = "wizzardo-http-benchmark",
+    srcs = glob(['src/main/**/*.hs']),
+    extra_srcs = ["@openjdk//:rpath"],
+    compiler_flags = [
+        "-optl-Wl,@$(location @openjdk//:rpath)",
+        "-threaded",
+        "-rtsopts",
+    ],
+    deps = [
+        "@rules_haskell//tools/runfiles",
+        "@stackage//:aeson",
+        "@stackage//:base",
+        "@stackage//:bytestring",
+        "@inline_java//:inline-java",
+        "@inline_java//jni",
+        "@inline_java//jvm",
+        "@stackage//:linear-base",
+        "@stackage//:monad-logger",
+        "@stackage//:mtl",
+        "@stackage//:singletons",
+        "@stackage//:text",
+    ] + java_deps,
+    data = [":jar_deploy.jar"],
+    plugins = ["@inline_java//:inline-java-plugin"],
+)

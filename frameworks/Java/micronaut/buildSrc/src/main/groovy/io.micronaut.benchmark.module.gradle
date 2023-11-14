@@ -23,7 +23,7 @@ configurations {
 
 dependencies {
     implementation project(":common")
-    implementation project(":common-test")
+    testImplementation project(":common-test")
     externalTests project(":common-test")
 }
 

@@ -1,8 +1,8 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QualifiedDo #-}
 {-# LANGUAGE QuasiQuotes #-}
-{-# LANGUAGE RebindableSyntax #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -13,20 +13,20 @@
 -- https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/frameworks/wizzardo-http
 module DbHandler (createDbHandler) where
 
+import qualified Control.Functor.Linear as Linear
 import Control.Monad.IO.Class.Linear (MonadIO)
-import qualified Control.Monad.Linear.Builder as Linear
 import Data.Aeson (ToJSON(..), encode, object, (.=))
 import Data.ByteString.Lazy (toStrict)
 import Data.Int (Int32)
-import Data.String (fromString)
 import Foreign.JNI.Safe (newGlobalRef_)
 import qualified Language.Java as NonLinear
 import Language.Java.Inline.Safe
 import Language.Java.Function (createIntIntToObjFunction)
-import Language.Java.Safe (J, JType(..), type (<>))
+import Language.Java.Safe
+    (J, JType(..), UnsafeUnrestrictedReference(..), type (<>))
 import Wizzardo.Http.Handler (JHandler, createHandler)
-import Prelude (IO, Show, fromInteger, ($))
-import Prelude.Linear (Unrestricted(..))
+import Prelude (IO, Show, ($))
+import Prelude.Linear (Ur(..))
 import qualified System.IO.Linear as Linear
 
 imports "java.util.concurrent.ThreadLocalRandom"
@@ -40,19 +40,21 @@ imports "io.reactiverse.pgclient.impl.*"
 
 
 createDbHandler :: MonadIO m => m JHandler
-createDbHandler =
-    let Linear.Builder{..} = Linear.monadBuilder in do
+createDbHandler = Linear.do
     encodeDbResponse <- createIntIntToObjFunction encodeDbResponseAsJSON
-    Unrestricted jGlobalEncodeDbResponse <- newGlobalRef_ encodeDbResponse
+    UnsafeUnrestrictedReference jGlobalEncodeDbResponse <-
+      newGlobalRef_ encodeDbResponse
     byteBufferProviderThreadLocal <- createThreadLocalByteBufferProvider
-    Unrestricted jGlobalByteBufferProviderThreadLocal <-
+    UnsafeUnrestrictedReference jGlobalByteBufferProviderThreadLocal <-
       newGlobalRef_ byteBufferProviderThreadLocal
     poolRef <- createPgPoolRef
-    Unrestricted jGlobalPoolRef <- newGlobalRef_ poolRef
-    createHandler $ \req resp -> Linear.withLinearIO $ do
-      let uPoolRef = Unrestricted jGlobalPoolRef
-          uByteBufferProviderThreadLocal = Unrestricted jGlobalByteBufferProviderThreadLocal
-          uEncodeDbResponse = Unrestricted jGlobalEncodeDbResponse
+    UnsafeUnrestrictedReference jGlobalPoolRef <- newGlobalRef_ poolRef
+    createHandler $ \req resp -> Linear.withLinearIO $ Linear.do
+      let uPoolRef = UnsafeUnrestrictedReference jGlobalPoolRef
+          uByteBufferProviderThreadLocal =
+            UnsafeUnrestrictedReference jGlobalByteBufferProviderThreadLocal
+          uEncodeDbResponse =
+            UnsafeUnrestrictedReference jGlobalEncodeDbResponse
       [java| {
         int genWorldId = 1 + ThreadLocalRandom.current().nextInt(10000);
         $resp.async();
@@ -78,7 +80,7 @@ createDbHandler =
             $resp.reset();
         });
        } |]
-      return (Unrestricted ())
+      Linear.return (Ur ())
 
 data World = World { worldId :: Int32, worldRandomNumber :: Int32 }
   deriving Show

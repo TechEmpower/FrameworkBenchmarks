@@ -1,4 +1,6 @@
-FROM ruby:2.4
+FROM ruby:3.3-rc
+
+ENV RUBY_YJIT_ENABLE=1
 
 ADD ./ /sinatra
 WORKDIR /sinatra

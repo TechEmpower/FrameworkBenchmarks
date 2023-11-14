@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class AbstractBenchmarkController {
@@ -15,7 +14,7 @@ public class AbstractBenchmarkController {
     protected final Integer[] boxed = IntStream.range(1, 10001).boxed().toArray(Integer[]::new);
 
     protected List<Fortune> createFortunes() {
-        List<Integer> fortuneMessages = IntStream.range(0, 10).boxed().collect(Collectors.toList());
+        List<Integer> fortuneMessages = IntStream.range(0, 10).boxed().toList();
         List<Fortune> fortunes = new ArrayList<>(fortuneMessages.size());
         for (Integer number : fortuneMessages) {
             fortunes.add(new Fortune(number + 1, "message" + number));

@@ -12,7 +12,7 @@ import org.redkale.persistence.*;
  */
 @Entity
 @Table(name = "world")
-@Cacheable(direct = true, continuousid = true)
+@Cacheable(direct = true)
 public final class CachedWorld {
 
     @Id

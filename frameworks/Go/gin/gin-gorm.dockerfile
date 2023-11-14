@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.19 as build-env
+FROM docker.io/golang:1.20-bullseye as build-env
 
 WORKDIR /src/
 COPY ./gin-gorm /src/

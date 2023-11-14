@@ -2,7 +2,7 @@ package io.quarkus.benchmark.repository;
 
 import java.util.function.Function;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.hibernate.reactive.mutiny.Mutiny;
 

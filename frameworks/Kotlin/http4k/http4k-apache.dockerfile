@@ -1,8 +1,8 @@
-FROM gradle:7.6-jdk19
+FROM gradle:8.4.0-jdk21
 USER root
 WORKDIR /http4k
-COPY build.gradle build.gradle
-COPY settings.gradle settings.gradle
+COPY build.gradle.kts build.gradle.kts
+COPY settings.gradle.kts settings.gradle.kts
 COPY apache apache
 COPY core core
 COPY core-jdbc core-jdbc

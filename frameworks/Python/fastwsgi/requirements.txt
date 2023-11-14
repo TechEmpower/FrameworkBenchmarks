@@ -1,7 +1,7 @@
 click==8.0.1
 ujson==5.7.0
 #fastwsgi==0.0.9
-git+https://github.com/remittor-pr/fastwsgi.git@6093fceaac44ffdfaffd577dd2b04ad4a4c6e3bf
+git+https://github.com/jamesroberts/fastwsgi.git@5572bb31b859d690be225707b9e7e25af397544b
 asyncpg==0.27.0
 Jinja2==3.1.2
 cachetools==5.3.0

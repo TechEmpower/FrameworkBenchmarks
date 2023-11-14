@@ -1,0 +1,4 @@
+github.com/shaovie/goev v0.0.1 h1:mY176fZsNViEPpVXPdXlrJAAXRLRwV3zlr46iKo7sZw=
+github.com/shaovie/goev v0.0.1/go.mod h1:aa9aX72GpBSJAIkbhbFns3PTkhEdRVY5cCkpuZr27FE=
+golang.org/x/sys v0.10.0 h1:SqMFp9UcQJZa+pmYuAKjd9xq1f0j5rLcDIk0mj4qAsA=
+golang.org/x/sys v0.10.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=

@@ -2,7 +2,7 @@ FROM dunglas/frankenphp
 
 # add additional extensions here:
 RUN install-php-extensions \
-    pdo_mysql \
+    pdo_pgsql \
     intl \
     opcache
 
@@ -13,19 +13,19 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 EXPOSE 8080
 
-COPY deploy/Caddyfile /etc/Caddyfile
+COPY deploy/Caddyfile /etc/caddy/Caddyfile
 
 ADD . /symfony
 WORKDIR /symfony
 
 RUN mkdir -m 777 -p /symfony/var/cache/{dev,prod} /symfony/var/log
-RUN composer install --no-dev --no-scripts --quiet
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet --no-scripts
+RUN cp deploy/postgresql/.env . && composer dump-env prod && bin/console cache:clear
 
 RUN composer require runtime/frankenphp-symfony
 ENV FRANKENPHP_CONFIG="worker ./public/worker.php"
 ENV APP_RUNTIME=Runtime\\FrankenPhpSymfony\\Runtime
-
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --no-dev --classmap-authoritative
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env prod
 
 #ENV CADDY_DEBUG=debug

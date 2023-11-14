@@ -171,7 +171,7 @@ func fortunesHandler(c *clevergo.Context) error {
 	}
 	defer rows.Close()
 
-	fortunes := make(Fortunes, 0, 16)
+	fortunes := make(Fortunes, 0)
 	for rows.Next() { // Fetch rows
 		f := new(Fortune)
 		if err := rows.Scan(&f.ID, &f.Message); err != nil {

@@ -33,7 +33,7 @@ class Toolbar extends BaseConfig
      *
      * @var string[]
      */
-    public $collectors = [
+    public array $collectors = [
         Timers::class,
         Database::class,
         Logs::class,
@@ -49,12 +49,10 @@ class Toolbar extends BaseConfig
      * Collect Var Data
      * --------------------------------------------------------------------------
      *
-     * If set to false var data from the views will not be colleted. Usefull to
+     * If set to false var data from the views will not be colleted. Useful to
      * avoid high memory usage when there are lots of data passed to the view.
-     *
-     * @var bool
      */
-    public $collectVarData = true;
+    public bool $collectVarData = true;
 
     /**
      * --------------------------------------------------------------------------
@@ -64,10 +62,8 @@ class Toolbar extends BaseConfig
      * `$maxHistory` sets a limit on the number of past requests that are stored,
      * helping to conserve file space used to store them. You can set it to
      * 0 (zero) to not have any history stored, or -1 for unlimited history.
-     *
-     * @var int
      */
-    public $maxHistory = 20;
+    public int $maxHistory = 20;
 
     /**
      * --------------------------------------------------------------------------
@@ -76,10 +72,8 @@ class Toolbar extends BaseConfig
      *
      * The full path to the the views that are used by the toolbar.
      * This MUST have a trailing slash.
-     *
-     * @var string
      */
-    public $viewsPath = SYSTEMPATH . 'Debug/Toolbar/Views/';
+    public string $viewsPath = SYSTEMPATH . 'Debug/Toolbar/Views/';
 
     /**
      * --------------------------------------------------------------------------
@@ -92,8 +86,33 @@ class Toolbar extends BaseConfig
      * with hundreds of queries.
      *
      * `$maxQueries` defines the maximum amount of queries that will be stored.
-     *
-     * @var int
      */
-    public $maxQueries = 100;
+    public int $maxQueries = 100;
+
+    /**
+     * --------------------------------------------------------------------------
+     * Watched Directories
+     * --------------------------------------------------------------------------
+     *
+     * Contains an array of directories that will be watched for changes and
+     * used to determine if the hot-reload feature should reload the page or not.
+     * We restrict the values to keep performance as high as possible.
+     *
+     * NOTE: The ROOTPATH will be prepended to all values.
+     */
+    public array $watchedDirectories = [
+        'app',
+    ];
+
+    /**
+     * --------------------------------------------------------------------------
+     * Watched File Extensions
+     * --------------------------------------------------------------------------
+     *
+     * Contains an array of file extensions that will be watched for changes and
+     * used to determine if the hot-reload feature should reload the page or not.
+     */
+    public array $watchedExtensions = [
+        'php', 'css', 'js', 'html', 'svg', 'json', 'env',
+    ];
 }

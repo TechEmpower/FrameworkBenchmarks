@@ -48,8 +48,8 @@ public class R2dbcFortuneRepository implements ReactiveFortuneRepository {
             } else {
                 first = false;
             }
-            statement.bind(0, fortune.getId());
-            statement.bind(1, fortune.getMessage());
+            statement.bind(0, fortune.id());
+            statement.bind(1, fortune.message());
         }
         return Flux.from(statement.execute()).flatMap(Result::getRowsUpdated).then();
     }
