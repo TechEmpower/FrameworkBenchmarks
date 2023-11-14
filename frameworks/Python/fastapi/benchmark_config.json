@@ -241,6 +241,7 @@
       },
       "granian": {
         "json_url": "/json",
+        "fortune_url": "/fortunes",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
