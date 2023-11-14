@@ -1,6 +1,7 @@
 {
   "framework": "fastapi",
-  "tests": [{
+  "tests": [
+    {
       "default": {
         "json_url": "/json",
         "fortune_url": "/fortunes",
@@ -237,6 +238,49 @@
         "display_name": "FastAPI-uvicorn-orjson",
         "notes": "",
         "versus": "None"
+      },
+      "granian": {
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "FastAPI",
+        "language": "Python",
+        "flavor": "Python3",
+        "orm": "Raw",
+        "platform": "asyncio",
+        "webserver": "Granian",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "FastAPI-granian",
+        "notes": "",
+        "versus": "None"
+      },
+      "granian-orjson": {
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "FastAPI",
+        "language": "Python",
+        "flavor": "Python3",
+        "orm": "Raw",
+        "platform": "asyncio",
+        "webserver": "Granian",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "FastAPI-granian-orjson",
+        "notes": "",
+        "versus": "None"
       }
-    }]
+    }
+  ]
 }
