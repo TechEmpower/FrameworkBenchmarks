@@ -3,7 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"fasthttp/src/templates"
+	"fasthttp/app/templates"
 	"sort"
 
 	pgx "github.com/jackc/pgx/v4"

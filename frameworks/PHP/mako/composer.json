@@ -1,0 +1,11 @@
+{
+    "require": {
+        "php": ">=7.4.0",
+        "mako/framework": "^9.0"
+    },
+	"autoload": {
+        "psr-4": {
+            "app\\": "app"
+        }
+    }
+}

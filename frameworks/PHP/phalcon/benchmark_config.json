@@ -14,7 +14,7 @@
       "database": "MySQL",
       "framework": "phalcon",
       "language": "PHP",
-      "flavor": "PHP7",
+      "flavor": "PHP8.1",
       "orm": "raw",
       "platform": "FPM/FastCGI",
       "webserver": "nginx",
@@ -34,7 +34,7 @@
       "database": "MongoDB",
       "framework": "phalcon",
       "language": "PHP",
-      "flavor": "PHP7",
+      "flavor": "PHP8.1",
       "orm": "raw",
       "platform": "FPM/FastCGI",
       "webserver": "nginx",
@@ -42,7 +42,8 @@
       "database_os": "Linux",
       "display_name": "phalcon-mongodb",
       "notes": "",
-      "versus": "php"
+      "versus": "php",
+      "tags": ["broken"]
     },
     "micro": {
       "plaintext_url": "/plaintext",
@@ -56,7 +57,7 @@
       "database": "MySQL",
       "framework": "phalcon",
       "language": "PHP",
-      "flavor": "PHP7",
+      "flavor": "PHP8.1",
       "orm": "raw",
       "platform": "FPM/FastCGI",
       "webserver": "nginx",

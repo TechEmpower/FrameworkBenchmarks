@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fasthttp/src/handlers"
+	"fasthttp/app/handlers"
 	"flag"
 	"runtime"
 

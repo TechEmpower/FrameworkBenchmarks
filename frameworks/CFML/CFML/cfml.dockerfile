@@ -1,6 +1,7 @@
-FROM ortussolutions/commandbox:3.2.1
+FROM ortussolutions/commandbox:3.6.4
 
 ENV cfconfig_adminPassword=password
+ENV box_server_runwar_args=--cache-servlet-paths=true
 
 COPY ./src/server-lucee.json /app/server.json
 COPY ./src/.cfconfig.json /app/.cfconfig.json

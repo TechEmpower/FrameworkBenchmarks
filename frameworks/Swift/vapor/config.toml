@@ -28,6 +28,7 @@ versus = "None"
 [postgres]
 urls.db = "/db"
 urls.query = "/queries?queries="
+urls.update = "/updates?queries="
 approach = "Realistic"
 classification = "Fullstack"
 database = "Postgres"

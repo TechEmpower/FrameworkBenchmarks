@@ -6,14 +6,6 @@ class HelloWorldController < ApplicationController
   MIN_QUERIES = 1            # min number of records that can be retrieved
   MAX_QUERIES = 500          # max number of records that can be retrieved
 
-  def plaintext
-    render plain: 'Hello, World!'
-  end
-
-  def json
-    render json: { message: 'Hello, World!' }
-  end
-
   def db
     render json: World.find(random_id)
   end
@@ -41,8 +33,8 @@ class HelloWorldController < ApplicationController
   end
 
   def update
-    worlds = query_count.times.map { random_id }.map do |id|
-      world = World.find(id)
+    worlds = Array.new(query_count) do
+      world = World.find(random_id)
       new_value = random_id
       new_value = random_id until new_value != world.randomNumber
       world.update_columns(randomNumber: new_value)

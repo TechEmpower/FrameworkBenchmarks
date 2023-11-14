@@ -1,4 +1,4 @@
-FROM ruby:2.4
+FROM ruby:3.3-rc
 
 ADD ./ /rack-sequel
 
@@ -9,6 +9,7 @@ RUN bundle install --jobs=4 --gemfile=/rack-sequel/Gemfile --path=/rack-sequel/r
 # TODO: https://github.com/phusion/passenger/issues/1916
 ENV _PASSENGER_FORCE_HTTP_SESSION=true
 ENV DBTYPE=postgresql
+ENV RUBY_YJIT_ENABLE=1
 
 RUN ruby -r /rack-sequel/config/auto_tune -e 'puts auto_tune.first' > instances
 

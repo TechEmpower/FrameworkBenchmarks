@@ -1,0 +1,70 @@
+{
+  "framework": "hyperexpress",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "hyperexpress",
+        "language": "JavaScript",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "NodeJS",
+        "webserver": "µws",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "hyperexpress",
+        "notes": "",
+        "versus": "nodejs"
+      },
+      "postgres": {
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "cached_query_url": "/cached-worlds?count=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "hyperexpress",
+        "language": "JavaScript",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "NodeJS",
+        "webserver": "µws",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "hyperexpress-postgres",
+        "notes": "",
+        "versus": "nodejs"
+      },
+      "mysql": {
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "cached_query_url": "/cached-worlds?count=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "MySQL",
+        "framework": "hyperexpress",
+        "language": "JavaScript",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "NodeJS",
+        "webserver": "µws",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "hyperexpress-mysql",
+        "notes": "",
+        "versus": "nodejs"
+      }
+    }
+  ]
+}

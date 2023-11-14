@@ -1,0 +1,44 @@
+{
+  "framework": "microhttp",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "microhttp",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "Microhttp",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "microhttp",
+        "notes": "",
+        "versus": "None"
+      },
+      "mysql": {
+        "db_url": "/db",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "MySQL",
+        "framework": "microhttp",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Microhttp",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "microhttp",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

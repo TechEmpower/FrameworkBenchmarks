@@ -22,25 +22,35 @@ app.databases.use(.postgres(
     maxConnectionsPerEventLoop: System.maxConnectionsPerEventLoop
 ), as: .psql)
 
-app.get("plaintext") { req in
-    "Hello, world!"
+
+app.get("db") { req async throws -> World in
+    guard let world = try await World.find(.random(in: 1...10_000), on: req.db) else {
+        throw Abort(.notFound)
+    }
+
+    return world
 }
 
-app.get("json") { req in
-    ["message": "Hello, world!"]
-}
-
-app.get("db") { req in
-    World.find(.random(in: 1...10_000), on: req.db)
-        .unwrap(or: Abort(.notFound))
-}
-
-app.get("queries") { req -> EventLoopFuture<[World]> in
+app.get("queries") { req async throws -> [World] in
     let queries = (req.query["queries"] ?? 1).bounded(to: 1...500)
-    return (0 ..< queries).map { _ -> EventLoopFuture<World> in
-        World.find(.random(in: 1...10_000), on: req.db)
-            .unwrap(or: Abort(.notFound))
-    }.flatten(on: req.eventLoop)
+
+    var worlds: [World] = []
+
+    for _ in queries {
+        guard let world = try await World.find(.random(in: 1...10_000), on: req.db) else {
+            throw Abort(.notFound)
+        }
+
+        worlds.append(world)
+    }
+
+    return worlds
+}
+
+extension Int: Sequence {
+    public func makeIterator() -> CountableRange<Int>.Iterator {
+        return (0..<self).makeIterator()
+    }
 }
 
 try app.run()

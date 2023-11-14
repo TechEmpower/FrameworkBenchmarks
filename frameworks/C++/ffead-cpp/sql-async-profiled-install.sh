@@ -13,6 +13,7 @@ service postgresql stop
 cd $IROOT/
 #sed -i 's|cmake |cmake -DCMAKE_EXE_LINKER_FLAGS="-fprofile-dir=/tmp/profile-data -fprofile-generate" -DCMAKE_CXX_FLAGS="-march=native -fprofile-dir=/tmp/profile-data -fprofile-generate" |g' $IROOT/ffead-cpp-sql-raw/resources/rundyn-automake.sh
 ./install_ffead-cpp-sql-raw-profiled.sh async
+./install_ffead-cpp-sql-raw-profiled.sh async-qw
 rm -rf $IROOT/ffead-cpp-sql-raw
 
 cd $IROOT/ffead-cpp-src
@@ -29,9 +30,11 @@ service postgresql stop
 cd $IROOT/
 #sed -i 's|cmake |CXXFLAGS="-march=native -fprofile-dir=/tmp/profile-data -fprofile-use -fprofile-correction" cmake |g' $IROOT/ffead-cpp-sql-raw/resources/rundyn-automake.sh
 ./install_ffead-cpp-sql-raw-profiled.sh async
+./install_ffead-cpp-sql-raw-profiled.sh async-qw
 mv $IROOT/ffead-cpp-sql-raw $IROOT/ffead-cpp-6.0-sql
 
-sed -i 's|localhost|tfb-database|g' $IROOT/ffead-cpp-6.0-sql/web/te-benchmark-um-pq-async/config/sdorm.xml
+sed -i 's|localhost|tfb-database|g' $IROOT/ffead-cpp-6.0-sql/web/t4/config/sdorm.xml
+sed -i 's|localhost|tfb-database|g' $IROOT/ffead-cpp-6.0-sql/web/t5/config/sdorm.xml
 
 apt remove -yqq postgresql-13 postgresql-contrib-13 gnupg lsb-release
 apt autoremove -yqq

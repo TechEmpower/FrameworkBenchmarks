@@ -12,7 +12,7 @@ JsonTest::JsonTest(QObject *parent) : Controller(parent)
 
 void JsonTest::json(Context *c)
 {
-    c->response()->setJsonObjectBody({ {QStringLiteral("message"), QStringLiteral("Hello, World!")} });
+    c->response()->setJsonObjectBody({ {u"message"_qs, u"Hello, World!"_qs} });
 }
 
 void JsonTest::pson(Context *c)

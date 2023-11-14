@@ -37,7 +37,7 @@ public class HelloWebServer {
 	public void run() throws Exception {
 		// Configure the server.
 		if (IOUring.isAvailable()) {
-			doRun(new IOUringEventLoopGroup(), IOUringServerSocketChannel.class, IoMultiplexer.IO_URING);
+			doRun(new IOUringEventLoopGroup(Runtime.getRuntime().availableProcessors()), IOUringServerSocketChannel.class, IoMultiplexer.IO_URING);
 		} else
 			if (Epoll.isAvailable()) {
 			doRun(new EpollEventLoopGroup(), EpollServerSocketChannel.class, IoMultiplexer.EPOLL);

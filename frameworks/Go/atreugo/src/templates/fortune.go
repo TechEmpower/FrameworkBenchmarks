@@ -4,7 +4,7 @@ import (
 	"sync"
 )
 
-//go:generate qtc
+//go:generate go run github.com/valyala/quicktemplate/qtc
 
 var (
 	fortunePool = sync.Pool{
@@ -15,7 +15,7 @@ var (
 	fortunesPool = sync.Pool{
 		New: func() interface{} {
 			return &Fortunes{
-				F: make([]Fortune, 0, 16),
+				F: make([]Fortune, 0),
 			}
 		},
 	}

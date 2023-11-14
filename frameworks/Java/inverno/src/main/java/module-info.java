@@ -1,7 +1,4 @@
 @io.inverno.core.annotation.Module( excludes = { "io.inverno.mod.sql.vertx" } )
-
-@io.inverno.core.annotation.Wire(beans="pooledClientSqlClient", into="handler:pooledClientSqlClient") 
-@io.inverno.core.annotation.Wire(beans="poolSqlClient", into="handler:poolSqlClient") 
 module com.techempower.inverno.benchmark {
 	requires io.inverno.mod.boot;
 	requires io.inverno.mod.http.server;

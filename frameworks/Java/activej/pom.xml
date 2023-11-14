@@ -46,12 +46,12 @@
 		<dependency>
 			<groupId>io.activej</groupId>
 			<artifactId>activej-launchers-http</artifactId>
-			<version>4.1</version>
+			<version>5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dslplatform</groupId>
 			<artifactId>dsl-json-java8</artifactId>
-			<version>1.9.7</version>
+			<version>1.9.8</version>
 		</dependency>
 	</dependencies>
 

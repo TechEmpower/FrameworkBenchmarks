@@ -1,9 +1,6 @@
-require "granite/adapter/pg"
+require "pg-orm"
 
-class Fortune < Granite::Base
-  adapter pg
-
-  table_name fortune
-  primary id : Int32
-  field message : String
+class Fortune < PgORM::Base
+  attribute id : Int32, primary_key: true
+  attribute message : String
 end

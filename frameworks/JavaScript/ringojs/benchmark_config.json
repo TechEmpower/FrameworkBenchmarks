@@ -27,7 +27,7 @@
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/dbquery/",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "plaintext_url": "/plaintext",
       "update_url": "/updates/",
       "port": 8080,

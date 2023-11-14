@@ -16,7 +16,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "PHP-ngx",
+      "display_name": "ngx-php",
       "notes": "ngx_php",
       "versus": "php"
     },
@@ -37,7 +37,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "PHP-ngx-mysql",
+      "display_name": "ngx-php mysql",
       "notes": "ngx_php",
       "versus": "php"
     },
@@ -58,7 +58,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "PHP-ngx-Postgres",
+      "display_name": "ngx-php Postgres",
       "notes": "ngx_php Postgres",
       "versus": "php"
     },
@@ -79,7 +79,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "PHP-ngx-async",
+      "display_name": "ngx-php async",
       "notes": "ngx_php async",
       "versus": "php"
     }

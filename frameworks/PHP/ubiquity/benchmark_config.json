@@ -15,7 +15,7 @@
         "database": "MySQL",
         "framework": "ubiquity",
         "language": "PHP",
-        "flavor": "PHP8",
+        "flavor": "PHP8.1",
         "orm": "Full",
         "platform": "FPM/FastCGI",
         "webserver": "nginx",
@@ -37,7 +37,7 @@
         "database": "Postgres",
         "framework": "Ubiquity",
         "language": "PHP",
-        "flavor": "PHP8",
+        "flavor": "PHP8.1",
         "orm": "Full",
         "platform": "workerman",
         "webserver": "none",
@@ -112,7 +112,8 @@
         "database_os": "Linux",
         "display_name": "ubiquity-roadrunner",
         "notes": "",
-        "versus": "php"
+        "versus": "php",
+        "tags": ["broken"]
       },
       "roadrunner-mysql": {
         "db_url": "/DbMy",
@@ -133,7 +134,8 @@
         "database_os": "Linux",
         "display_name": "ubiquity-roadrunner-mysql",
         "notes": "",
-        "versus": "php"
+        "versus": "php",
+        "tags": ["broken"]
       },
       "workerman-mysql": {
         "db_url": "/DbMy",
@@ -146,7 +148,7 @@
         "database": "Mysql",
         "framework": "Ubiquity",
         "language": "PHP",
-        "flavor": "PHP8",
+        "flavor": "PHP8.1",
         "orm": "Full",
         "platform": "workerman",
         "webserver": "none",
@@ -167,7 +169,7 @@
         "database": "MongoDB",
         "framework": "Ubiquity",
         "language": "PHP",
-        "flavor": "PHP8",
+        "flavor": "PHP8.1",
         "orm": "Full",
         "platform": "workerman",
         "webserver": "none",
@@ -190,7 +192,7 @@
         "database": "Postgres",
         "framework": "Ubiquity",
         "language": "PHP",
-        "flavor": "PHP8",
+        "flavor": "PHP8.1",
         "orm": "raw",
         "platform": "workerman",
         "webserver": "none",

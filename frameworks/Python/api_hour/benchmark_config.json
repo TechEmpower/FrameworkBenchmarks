@@ -21,7 +21,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "API-Hour-PG",
-      "notes": "Python 3 + API-Hour + AsyncIO + aiohttp + PostgreSQL"
+      "notes": "Python 3 + API-Hour + AsyncIO + aiohttp + PostgreSQL",
+      "tags": ["broken"]
     },
     "mysql": {
       "db_url": "/db_mysql",
@@ -41,7 +42,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "API-Hour-MySQL",
-      "notes": "Python 3 + API-Hour + AsyncIO + aiohttp + MySQL"
+      "notes": "Python 3 + API-Hour + AsyncIO + aiohttp + MySQL",
+      "tags": ["broken"]
     },
     "json": {
       "json_url": "/json",
@@ -58,7 +60,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "API-Hour-yocto",
-      "notes": "Python 3 + API-Hour + AsyncIO"
+      "notes": "Python 3 + API-Hour + AsyncIO",
+      "tags": ["broken"]
     },
     "dbs": {
       "db_url": "/db",
@@ -77,7 +80,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "API-Hour-yocto",
-      "notes": "Python 3 + API-Hour + AsyncIO"
+      "notes": "Python 3 + API-Hour + AsyncIO",
+      "tags": ["broken"]
     },
     "plaintext": {
       "plaintext_url": "/plaintext",
@@ -94,7 +98,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "API-Hour-yocto",
-      "notes": "Python 3 + API-Hour + AsyncIO"
+      "notes": "Python 3 + API-Hour + AsyncIO",
+      "tags": ["broken"]
     }
   }]
 }

@@ -1,0 +1,19 @@
+[framework]
+name = "flight"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db-orm"
+urls.query = "/db-orm-multiple/"
+urls.update = "/update-orm/"
+urls.fortune = "/fortune-orm"
+approach = "Realistic"
+classification = "Micro"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "FPM/FastCGI"
+webserver = "nginx"
+versus = "php"

@@ -6,8 +6,8 @@
 package org.redkalex.benchmark;
 
 import java.util.*;
-import javax.persistence.*;
 import org.redkale.convert.json.JsonConvert;
+import org.redkale.persistence.*;
 
 /**
  *
@@ -21,12 +21,12 @@ public final class World implements Comparable<World> {
 
     private int randomNumber;
 
-    public World randomNumber(int randomNumber) {
-        this.randomNumber = randomNumber;
-        return this;
-    }
-
-    public static World[] sort(World[] worlds) {
+    public static World[] updateNewNumbers(List<World> list, int[] newNumbers) {
+        World[] worlds = new World[list.size()];
+        for (int i = 0; i < worlds.length; i++) {
+            worlds[i] = list.get(i);
+            worlds[i].randomNumber = newNumbers[i];
+        }
         Arrays.sort(worlds);
         return worlds;
     }

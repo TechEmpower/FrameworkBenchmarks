@@ -5,7 +5,6 @@ use Phalcon\Db\Enum;
 use Phalcon\Mvc\Micro;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt;
-use Phalcon\Exception as PhalconException;
 
 try {
     $app = new Micro();
@@ -101,6 +100,6 @@ try {
 
     $url = $_REQUEST['_url'] ?? '/';
     $app->handle($url);
-} catch (PhalconException $e) {
-    echo "PhalconException: ", $e->getMessage();
+} catch (Exception $e) {
+    echo "Exception: ", $e->getMessage();
 }

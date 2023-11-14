@@ -1,35 +1,23 @@
 <?php
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
+
 declare(strict_types=1);
 
 namespace App\Model;
 
+use App\Model\Repository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
-/**
- * @Entity(
- *     table="Fortune",
- *     repository="Repository/FortuneRepository"
- * )
- */
+#[Entity(table: 'fortune', repository: Repository\FortuneRepository::class)]
 class Fortune implements \JsonSerializable
 {
-    /** @Column(type="primary") */
-    public $id;
+    #[Column(type: 'primary')]
+    public int $id;
 
-    /** @Column(type="text") */
-    public $message;
+    #[Column(type: 'text')]
+    public string $message;
 
-    /**
-     * @return array|mixed
-     */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return ['id' => $this->id, 'message' => $this->message];
     }

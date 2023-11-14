@@ -1,47 +1,34 @@
 
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.5.31"
+    id "org.jetbrains.kotlin.jvm" version "1.9.20" apply false
+    id "org.graalvm.buildtools.native" version "0.9.28" apply false
 }
+
+version = "1.0.0"
+description = "TFB benchmark"
+group = "com.hexagonkt"
 
 ext {
-    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/1.4.7/gradle"
+    hexagonVersion = "3.4.3"
+    jettyVersion = "12.0.3"
+    nettyVersion = "4.1.100.Final"
 
-    hexagonVersion = "1.4.7"
-    hikariVersion = "5.0.0"
-    jettyVersion = "10.0.7"
-    postgresqlVersion = "42.2.24"
-    cache2kVersion = "2.2.1.Final"
-    jacksonBlackbirdVersion = "2.13.0"
+    hikariVersion = "5.1.0"
+    postgresqlVersion = "42.6.0"
+    vertxVersion = "4.4.6"
+    cache2kVersion = "2.6.1.Final"
+
+    applicationClass = "com.hexagonkt.BenchmarkKt"
+    modules = "java.naming,java.sql,java.management"
+    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/$hexagonVersion/gradle"
 }
 
-apply(from: "$gradleScripts/kotlin.gradle")
-apply(from: "$gradleScripts/application.gradle")
+subprojects {
+    version = rootProject.version
 
-apply(plugin: "war")
-
-defaultTasks("installDist")
-
-application {
-    mainClass.set("com.hexagonkt.BenchmarkKt")
+    apply(from: "$gradleScripts/kotlin.gradle")
 }
 
-war {
-    archiveFileName = "ROOT.war"
-}
-
-installDist.dependsOn("war")
-
-dependencies {
-    implementation("com.hexagonkt:http_server_jetty:$hexagonVersion")
-    implementation("com.hexagonkt:templates_pebble:$hexagonVersion")
-    implementation("com.hexagonkt:logging_slf4j_jul:$hexagonVersion")
-    implementation("com.hexagonkt:serialization_json:$hexagonVersion")
-
-    implementation("com.fasterxml.jackson.module:jackson-module-blackbird:$jacksonBlackbirdVersion")
-    implementation("org.cache2k:cache2k-core:$cache2kVersion")
-    implementation("com.zaxxer:HikariCP:$hikariVersion")
-    implementation("org.postgresql:postgresql:$postgresqlVersion")
-
-    // providedCompile excludes the dependency only in the WAR, not in the distribution
-    providedCompile("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
+tasks.wrapper {
+    gradleVersion = "8.4"
 }

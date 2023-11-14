@@ -10,13 +10,13 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>16</java.version>
-		<version.compiler.plugin>3.8.1</version.compiler.plugin>
-		<version.war.plugin>3.3.1</version.war.plugin>
+		<java.version>17</java.version>
+		<version.compiler.plugin>3.9.0</version.compiler.plugin>
+		<version.war.plugin>3.3.2</version.war.plugin>
 		<version.javaee.api>8.0</version.javaee.api>
-		<version.wildfly.bootable>24.0.1.Final</version.wildfly.bootable>
-		<version.wildfly.maven.jar.plugin>5.0.2.Final</version.wildfly.maven.jar.plugin>
-		<version.wildfly.galleon.datasources.feature.pack>2.0.3.Final</version.wildfly.galleon.datasources.feature.pack>
+		<version.wildfly.bootable>26.0.1.Final</version.wildfly.bootable>
+		<version.wildfly.maven.jar.plugin>7.0.0.Final</version.wildfly.maven.jar.plugin>
+		<version.wildfly.galleon.datasources.feature.pack>2.0.6.Final</version.wildfly.galleon.datasources.feature.pack>
 	</properties>
 
 	<dependencies>

@@ -1,0 +1,30 @@
+{
+  "framework": "trillium",
+  "tests": [
+    {
+      "default": {
+        "db_url": "/db",
+        "json_url": "/json",
+        "query_url": "/queries/",
+        "plaintext_url": "/plaintext",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "Trillium",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Trillium",
+        "notes": "",
+        "versus": "None",
+        "tags": ["verified"]
+      }
+    }
+  ]
+}

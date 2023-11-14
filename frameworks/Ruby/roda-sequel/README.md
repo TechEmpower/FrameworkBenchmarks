@@ -18,7 +18,6 @@ The tests will be run with:
 * [Puma 3](http://puma.io)
 * [Passenger 5](https://www.phusionpassenger.com)
 * [Unicorn 5](https://bogomips.org/unicorn/)
-* [TorqueBox 4.0](http://torquebox.org)
 * [Roda 3](http://roda.jeremyevans.net)
 * [Sequel 5](http://sequel.jeremyevans.net)
 * [Erubi 1](https://github.com/jeremyevans/erubi)

@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"sync"
 
-	"gearbox/src/templates"
+	"gearbox/app/templates"
 
 	"github.com/gogearbox/gearbox"
 	pgx "github.com/jackc/pgx/v4"
@@ -200,7 +200,7 @@ func templateHandler(ctx gearbox.Context) {
 	rows, _ := db.Query(context.Background(), fortuneselectsql)
 
 	var f templates.Fortune
-	fortunes := make([]templates.Fortune, 0, 16)
+	fortunes := make([]templates.Fortune, 0)
 	for rows.Next() {
 		_ = rows.Scan(&f.ID, &f.Message)
 		fortunes = append(fortunes, f)

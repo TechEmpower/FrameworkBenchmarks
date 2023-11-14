@@ -7,32 +7,39 @@ using MySQL
 using JSON3
 using StructTypes
 
-struct jsonObj
-    id::Int
-    randomNumber::Int
+struct jsonMsgObj
+    message
 end
 
+struct jsonObj
+    id
+    randomNumber
+end
+
+StructTypes.StructType(::Type{jsonMsgObj}) = StructTypes.Struct()
 StructTypes.StructType(::Type{jsonObj}) = StructTypes.Struct()
 
-HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
-    target = http.message.target
+    function plaintext(req::HTTP.Request)
+        headers = [ "Content-Type" => "text/plain", 
+                    "Server" => "Julia-HTTP",
+                    "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT" ]
+    
+        return HTTP.Response(200, headers, body = "Hello, World!")
+    end
+    
+    function jsonSerialization(req::HTTP.Request)
+        headers = [ "Content-Type" => "application/json",
+                    "Server" => "Julia-HTTP",
+                    "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT" ]
 
-    HTTP.setstatus(http, 200)
-    HTTP.setheader(http, "Server" => "Julia-HTTP")
-    HTTP.setheader(http, "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT")
-
-    if endswith(target, "/plaintext")
-        HTTP.setheader(http, "Content-Type" => "text/plain")
-        HTTP.startwrite(http)
-        write(http, "Hello, World!")
-
-    elseif endswith(target, "/json")
-        HTTP.setheader(http, "Content-Type" => "application/json")
-        startwrite(http)
-        JSON3.write(http, (;message = "Hello, World!"))
-
-    elseif endswith(target, "/db")
-        HTTP.setheader(http, "Content-Type" => "application/json")
+        return HTTP.Response(200, headers, body = JSON3.write(jsonMsgObj("Hello, World!")))
+    end
+        
+    function singleQuery(req::HTTP.Request)
+        headers = [ "Content-Type" => "application/json",
+                    "Server" => "Julia-HTTP",
+                    "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT" ]
+    
         randNum = rand(1:10000)
 
         conn = DBInterface.connect(MySQL.Connection, "tfb-database", "benchmarkdbuser", "benchmarkdbpass", db="hello_world")
@@ -40,19 +47,20 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
         results = DBInterface.execute(conn, sqlQuery)
         row = first(results)
         dbNumber = row[2]
-        jsonString = "{\"id\":$randNum,\"randomNumber\":$dbNumber}"
-
-        startwrite(http)
-        JSON3.write(http, (JSON3.read(jsonString)))
         
         DBInterface.close!(conn)
+        return HTTP.Response(200, headers, body = JSON3.write(jsonObj(randNum, dbNumber)))
+    end
         
-    elseif occursin("/queries", target)
-        HTTP.setheader(http, "Content-Type" => "application/json")
+    function multipleQueries(req::HTTP.Request)
+        headers = [ "Content-Type" => "application/json",
+                    "Server" => "Julia-HTTP",
+                    "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT" ]
+        
         numQueries = -1
 
         try
-            numQueries = parse(Int64, (split(target, "="))[2])
+            numQueries = parse(Int64, (split(req.target, "="))[2])
 
         catch ArgumentError
             numQueries = 1
@@ -77,20 +85,23 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
             results = DBInterface.execute(conn, sqlQuery)
             row = first(results)
             dbNumber = row[2]
-            responseArray[i] = JSON3.read("{\"id\":$randNum,\"randomNumber\":$dbNumber}", jsonObj)
+            responseArray[i] = jsonObj(randNum, dbNumber)
         end
-
-        startwrite(http)
-        JSON3.write(http, responseArray)
         
         DBInterface.close!(conn)
-    
-    elseif occursin("/updates", target)
-        HTTP.setheader(http, "Content-Type" => "application/json")
+        
+        return HTTP.Response(200, headers, body = JSON3.write(responseArray))
+    end
+        
+    function updates(req::HTTP.Request)
+        headers = [ "Content-Type" => "application/json",
+                    "Server" => "Julia-HTTP",
+                    "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT" ]
+            
         numQueries = -1
 
         try
-            numQueries = parse(Int64, (split(target, "="))[2])
+            numQueries = parse(Int64, (split(req.target, "="))[2])
 
         catch ArgumentError
             numQueries = 1
@@ -118,16 +129,17 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
 
             sqlQuery = "UPDATE World SET randomnumber = $randNum WHERE id = $randId"
             results = DBInterface.execute(conn, sqlQuery)
-            responseArray[i] = JSON3.read("{\"id\":$randId,\"randomNumber\":$randNum}", jsonObj)
+            responseArray[i] = jsonObj(randId, randNum)
         end
-
-        startwrite(http)
-        JSON3.write(http, responseArray)
         
         DBInterface.close!(conn)
-
-    elseif endswith(target, "/fortunes")
-        HTTP.setheader(http, "Content-Type" => "text/html; charset=utf-8")
+        return HTTP.Response(200, headers, body = JSON3.write(responseArray))
+    end
+        
+    function fortunes(req::HTTP.Request)
+        headers = [ "Content-Type" => "text/html; charset=utf-8",
+                    "Server" => "Julia-HTTP",
+                    "Date" => Dates.format(Dates.now(), Dates.RFC1123Format) * " GMT" ]
     
         fortunesList = []
         sqlQuery = "SELECT * FROM fortune"
@@ -150,15 +162,17 @@ HTTP.listen("0.0.0.0" , 8080, reuseaddr = true) do http
         end
     
         output = string(output, "</table></body></html>")
-    
-        write(http, output)
         
         DBInterface.close!(conn)
-        
-    else
-        HTTP.setstatus(http, 404)
-        startwrite(http)
-        write(http, "Not Found")
-
+        return HTTP.Response(200, headers, body = output)
     end
-end
+            
+const ROUTER = HTTP.Router()
+HTTP.@register(ROUTER, "GET", "/plaintext", plaintext)
+HTTP.@register(ROUTER, "GET", "/json", jsonSerialization)
+HTTP.@register(ROUTER, "GET", "/db", singleQuery)
+HTTP.@register(ROUTER, "GET", "/queries", multipleQueries)
+HTTP.@register(ROUTER, "GET", "/updates", updates)
+HTTP.@register(ROUTER, "GET", "/fortunes", fortunes)
+
+HTTP.serve(ROUTER, "0.0.0.0" , 8080, reuseaddr=true)

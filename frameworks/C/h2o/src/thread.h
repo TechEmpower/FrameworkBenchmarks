@@ -25,36 +25,30 @@
 #include <pthread.h>
 #include <stdbool.h>
 
-#include "database.h"
 #include "event_loop.h"
 #include "global_data.h"
 #include "list.h"
 #include "handlers/request_handler_data.h"
 
-typedef struct thread_context_t thread_context_t;
+struct thread_context_t;
 
 typedef struct global_thread_data_t {
 	const config_t *config;
-	thread_context_t *ctx;
+	struct thread_context_t *ctx;
 	global_data_t *global_data;
 	h2o_multithread_receiver_t h2o_receiver;
 	pthread_t thread;
 } global_thread_data_t;
 
-struct thread_context_t {
-	const config_t *config;
-	global_data_t *global_data;
-	// global_thread_data contains config and global_data as well,
-	// but keep copies here to avoid some pointer chasing.
+typedef struct thread_context_t {
 	global_thread_data_t *global_thread_data;
 	list_t *json_generator;
 	size_t json_generator_num;
 	unsigned random_seed;
 	bool shutdown;
-	db_state_t db_state;
 	event_loop_t event_loop;
 	request_handler_thread_data_t request_handler_data;
-};
+} thread_context_t;
 
 void free_thread_context(thread_context_t *ctx);
 global_thread_data_t *initialize_global_thread_data(const config_t *config,
