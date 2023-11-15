@@ -12,7 +12,7 @@ os = "Linux"
 orm = "Raw"
 platform = ".NET"
 webserver = "kestrel"
-versus = "aspcore-mw"
+versus = "aspnetcore-minimal"
 
 [odbc-pg]
 urls.db = "/db"
@@ -28,7 +28,7 @@ os = "Linux"
 orm = "Raw"
 platform = ".NET"
 webserver = "Kestrel"
-versus = "aspcore-mw-ado-pg"
+versus = "aspnetcore-minimal"
 
 [ado-pg]
 urls.db = "/db"
@@ -44,4 +44,4 @@ os = "Linux"
 orm = "Raw"
 platform = ".NET"
 webserver = "Kestrel"
-versus = "aspcore-mw-ado-pg"
+versus = "aspnetcore-minimal"
