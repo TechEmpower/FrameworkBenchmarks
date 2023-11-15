@@ -1,20 +1,21 @@
 
 plugins {
-    id("nu.studer.rocker") version("3.0.4")
+    id("gg.jte.gradle") version("3.1.4")
 }
 
 dependencies {
     api(project(":model"))
     api("com.hexagonkt:http_server:$hexagonVersion")
-    api("com.hexagonkt:templates_rocker:$hexagonVersion")
-    api("com.hexagonkt:logging_slf4j_jul:$hexagonVersion")
+    api("com.hexagonkt:templates_jte:$hexagonVersion")
     api("com.hexagonkt:serialization_jackson_json:$hexagonVersion")
     api("org.cache2k:cache2k-core:$cache2kVersion")
+
+    jteGenerate("gg.jte:jte-native-resources:3.1.4")
 }
 
 tasks.register("minimizeTemplate") {
     doLast {
-        File template = file("$buildDir/resources/main/fortunes.rocker.html")
+        File template = file("$buildDir/resources/main/fortunes.jte")
         List<String> lines = template.readLines().collect { it.trim() }
         template.write(lines.join(""))
     }
@@ -22,11 +23,11 @@ tasks.register("minimizeTemplate") {
 
 jar.dependsOn("minimizeTemplate")
 
-rocker {
-    configurations {
-        create("main") {
-            templateDir.set(file("src/main/resources"))
-            optimize.set(true)
-        }
-    }
+jte {
+    sourceDirectory.set(file("src/main/resources").toPath())
+    targetDirectory.set(file("build/classes/kotlin/main").toPath())
+
+    jteExtension("gg.jte.nativeimage.NativeResourcesExtension")
+
+    generate()
 }

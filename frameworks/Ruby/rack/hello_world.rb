@@ -41,7 +41,7 @@ class HelloWorld
   TEMPLATE_PREFIX = '<!DOCTYPE html>
 <html>
 <head>
-  <title>Fortune</title>
+  <title>Fortunes</title>
 </head>
 <body>
   <table>
@@ -50,7 +50,7 @@ class HelloWorld
       <th>message</th>
     </tr>'
   TEMPLATE_POSTFIX = '</table>
-    </body
+    </body>
   </html>'
 
   def initialize
@@ -66,8 +66,7 @@ class HelloWorld
         CONTENT_TYPE => content_type,
         DATE => Time.now.utc.httpdate,
         SERVER => SERVER_STRING,
-        CONTENT_LENGTH => body.length.to_s
-
+        CONTENT_LENGTH => body.bytesize.to_s
       },
       [body]
     ]
@@ -81,7 +80,7 @@ class HelloWorld
     buffer << TEMPLATE_PREFIX
 
     fortunes.each do |item|
-      buffer << "<tr><td> #{item[:id]} </td> <td>#{Rack::Utils.escape_html(item[:message])}</td></tr>"
+      buffer << "<tr><td>#{item[:id]}</td><td>#{Rack::Utils.escape_html(item[:message])}</td></tr>"
     end
     buffer << TEMPLATE_POSTFIX
   end

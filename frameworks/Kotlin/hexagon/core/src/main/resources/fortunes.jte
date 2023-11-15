@@ -1,6 +1,8 @@
 @import java.util.*
 @import com.hexagonkt.model.Fortune
-@args(Map<String, Object> context)
+
+@param List<Fortune> fortunes
+
 <!DOCTYPE html>
 
 <html>
@@ -13,12 +15,12 @@
     <th>id</th>
     <th>message</th>
   </tr>
-  @for ((fortune) : (Collection<Fortune>)context.get("fortunes")) {
+  @for(var fortune : fortunes)
   <tr>
-    <td>@fortune.getId()</td>
-    <td>@fortune.getMessage()</td>
+    <td>${fortune.getId()}</td>
+    <td>${fortune.getMessage()}</td>
   </tr>
-  }
+  @endfor
 </table>
 </body>
 </html>
