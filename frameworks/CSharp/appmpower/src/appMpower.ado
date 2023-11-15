@@ -41,11 +41,7 @@
    </PropertyGroup>
 
    <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-      <Reference Include="Npgsql\Npgsql.dll" />
-      <!--<PackageReference Include="Npgsql" Version="8.0.0-rc.2" />-->
-      <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
-      <PackageReference Include="System.Data.Odbc" Version="8.0.0-rc.2.23479.6" />
+      <PackageReference Include="Npgsql" Version="8.0.0-rtm-*" />
    </ItemGroup>
 
    <PropertyGroup>
