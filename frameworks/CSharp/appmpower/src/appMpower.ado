@@ -42,7 +42,7 @@
 
    <ItemGroup>
       <PackageReference Include="System.Data.Odbc" Version="8.0.0" />
-      <PackageReference Include="Npgsql" Version="8.0.0-rtm-*" />
+      <PackageReference Include="Npgsql" Version="8.0.0-*" />
    </ItemGroup>
 
    <PropertyGroup>
