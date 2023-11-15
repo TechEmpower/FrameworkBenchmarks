@@ -5,7 +5,7 @@
     <OutputType>Exe</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
-    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    <!--<RuntimeIdentifier>linux-x64</RuntimeIdentifier>-->
 
     <!-- Normal .NET 8 -->
     <PublishAot>true</PublishAot>
@@ -47,8 +47,9 @@
   </ItemGroup>
 
   <PropertyGroup>
-      <DefineConstants>$(DefineConstants);ODBC</DefineConstants>
-      <DefineConstants Condition=" '$(Database)' == 'mysql' ">$(DefineConstants);MYSQL</DefineConstants>
+      <DefineConstants>$(DefineConstants);POSTGRESQL</DefineConstants>
+      <DefineConstants Condition=" '$(Driver)' == 'odbc' ">$(DefineConstants);ODBC</DefineConstants>
+      <DefineConstants Condition=" '$(Driver)' == 'ado' ">$(DefineConstants);ADO</DefineConstants>
   </PropertyGroup>
 
 </Project>
