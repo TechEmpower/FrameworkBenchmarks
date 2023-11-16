@@ -10,11 +10,9 @@ RUN apt-get update -yqq > /dev/null && \
 
 # An extension is required!
 # We deal with concurrencies over 1k, which stream_select doesn't support.
-RUN wget http://pear.php.net/go-pear.phar --quiet && php go-pear.phar
-#RUN apt-get install -y libuv1-dev > /dev/null
-RUN apt-get install -y libevent-dev > /dev/null
-#RUN pecl install uv-0.2.4 > /dev/null && echo "extension=uv.so" > /etc/php/8.2/cli/conf.d/uv.ini
-RUN pecl install event-3.0.8 > /dev/null && echo "extension=event.so" > /etc/php/8.2/cli/conf.d/event.ini
+RUN apt-get install -yqq libuv1-dev > /dev/null \
+    && pecl install uv-beta > /dev/null \
+    && echo "extension=uv.so" > /etc/php/8.2/cli/conf.d/uv.ini
 
 ADD ./ /reactphp
 WORKDIR /reactphp
