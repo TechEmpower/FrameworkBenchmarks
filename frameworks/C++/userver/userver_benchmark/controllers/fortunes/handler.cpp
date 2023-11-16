@@ -147,12 +147,12 @@ std::string Handler::HandleRequestThrow(
 std::string Handler::GetResponse() const {
   const auto pg_result = [this] {
     const auto lock = semaphore_.Acquire();
-    return pg_
-        ->Execute(db_helpers::kClusterHostType, select_all_fortunes_query_);
+    return pg_->Execute(db_helpers::kClusterHostType,
+                        select_all_fortunes_query_);
   }();
 
   auto fortunes = pg_result.AsContainer<std::vector<Fortune>>(
-            userver::storages::postgres::kRowTag);
+      userver::storages::postgres::kRowTag);
   fortunes.push_back({0, "Additional fortune added at request time."});
 
   std::sort(fortunes.begin(), fortunes.end(),
