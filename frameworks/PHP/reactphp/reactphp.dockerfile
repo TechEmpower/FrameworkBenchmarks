@@ -27,4 +27,5 @@ COPY . .
 
 EXPOSE 8080
 
-CMD php server.php
+ENTRYPOINT ["/usr/bin/php"]
+CMD ["server.php"]
