@@ -14,14 +14,16 @@ RUN apt-get install -yqq libuv1-dev > /dev/null \
     && pecl install uv-beta > /dev/null \
     && echo "extension=uv.so" > /etc/php/8.2/cli/conf.d/uv.ini
 
-ADD ./ /reactphp
-WORKDIR /reactphp
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 COPY deploy/conf/* /etc/php/8.2/cli/conf.d/
 
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+WORKDIR /reactphp
 
+COPY composer.json .
 RUN composer install --prefer-dist --optimize-autoloader --no-dev --quiet
+
+COPY . .
 
 EXPOSE 8080
 
