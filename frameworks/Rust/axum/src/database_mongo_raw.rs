@@ -1,30 +1,25 @@
-use axum::async_trait;
-use axum::extract::{Extension, FromRequest, RequestParts};
-use axum::http::StatusCode;
-use futures_util::stream::FuturesUnordered;
-use futures_util::TryStreamExt;
-use std::io;
+use std::{convert::Infallible, io};
 
-use crate::utils::internal_error;
+use axum::{async_trait, extract::FromRequestParts, http::request::Parts};
+use futures_util::{stream::FuturesUnordered, TryStreamExt};
+use mongodb::{
+    bson::{doc, RawDocumentBuf},
+    Database,
+};
+
 use crate::World;
-use mongodb::bson::{doc, RawDocumentBuf};
-use mongodb::Database;
 
 pub struct DatabaseConnection(pub Database);
 
 #[async_trait]
-impl<B> FromRequest<B> for DatabaseConnection
-where
-    B: Send,
-{
-    type Rejection = (StatusCode, String);
+impl FromRequestParts<Database> for DatabaseConnection {
+    type Rejection = Infallible;
 
-    async fn from_request(req: &mut RequestParts<B>) -> Result<Self, Self::Rejection> {
-        let Extension(db) = Extension::<Database>::from_request(req)
-            .await
-            .map_err(internal_error)?;
-
-        Ok(Self(db))
+    async fn from_request_parts(
+        _parts: &mut Parts,
+        db: &Database,
+    ) -> Result<Self, Self::Rejection> {
+        Ok(Self(db.clone()))
     }
 }
 
@@ -62,15 +57,14 @@ pub async fn find_world_by_id(db: Database, id: i32) -> Result<World, MongoError
             .get("id")
             .expect("expected to parse world id")
             .expect("could not get world id")
-            .as_f64()
-            .expect("could not extract world id") as f32,
+            .as_i32()
+            .expect("could not extract world id"),
         random_number: raw
-            .get("randomNumber")
-            .expect("expected to parse world randomNumber")
-            .expect("expected to get world randomNumber")
-            .as_f64()
-            .expect("could not extract world randomNumber")
-            as f32,
+            .get("id")
+            .expect("expected to parse world id")
+            .expect("could not get world id")
+            .as_i32()
+            .expect("could not extract world id"),
     })
 }
 

@@ -10,3 +10,13 @@ orm = "Raw"
 platform = "None"
 webserver = "None"
 versus = "None"
+
+[const]
+urls.plaintext = "/plaintext"
+approach = "Realistic"
+classification = "Micro"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "None"

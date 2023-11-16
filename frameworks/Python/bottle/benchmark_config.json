@@ -89,7 +89,8 @@
       "database_os": "Linux",
       "display_name": "Bottle-uWSGI",
       "notes": "",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     }
   }]
 }

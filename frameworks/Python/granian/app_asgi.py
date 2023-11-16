@@ -3,7 +3,7 @@ import os
 
 from operator import itemgetter
 from pathlib import Path
-from random import randint
+from random import randint, sample
 from urllib.parse import parse_qs
 
 import asyncpg
@@ -83,34 +83,27 @@ async def route_json(scope, receive, send):
 
 async def route_db(scope, receive, send):
     row_id = randint(1, 10000)
-    connection = await pool.acquire()
-    try:
+    async with pool.acquire() as connection:
         number = await connection.fetchval(SQL_SELECT, row_id)
-        world = {'id': row_id, 'randomNumber': number}
-    finally:
-        await pool.release(connection)
 
     await send(JSON_RESPONSE)
     await send({
         'type': 'http.response.body',
-        'body': json_dumps(world),
+        'body': json_dumps({'id': row_id, 'randomNumber': number}),
         'more_body': False
     })
 
 
 async def route_queries(scope, receive, send):
     num_queries = get_num_queries(scope)
-    row_ids = [randint(1, 10000) for _ in range(num_queries)]
+    row_ids = sample(range(1, 10000), num_queries)
     worlds = []
 
-    connection = await pool.acquire()
-    try:
+    async with pool.acquire() as connection:
         statement = await connection.prepare(SQL_SELECT)
         for row_id in row_ids:
             number = await statement.fetchval(row_id)
             worlds.append({'id': row_id, 'randomNumber': number})
-    finally:
-        await pool.release(connection)
 
     await send(JSON_RESPONSE)
     await send({
@@ -121,11 +114,8 @@ async def route_queries(scope, receive, send):
 
 
 async def route_fortunes(scope, receive, send):
-    connection = await pool.acquire()
-    try:
+    async with pool.acquire() as connection:
         fortunes = await connection.fetch('SELECT * FROM Fortune')
-    finally:
-        await pool.release(connection)
 
     fortunes.append(ROW_ADD)
     fortunes.sort(key=key)
@@ -140,17 +130,17 @@ async def route_fortunes(scope, receive, send):
 
 async def route_updates(scope, receive, send):
     num_queries = get_num_queries(scope)
-    updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
+    updates = list(zip(
+        sample(range(1, 10000), num_queries),
+        sorted(sample(range(1, 10000), num_queries))
+    ))
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
-    connection = await pool.acquire()
-    try:
+    async with pool.acquire() as connection:
         statement = await connection.prepare(SQL_SELECT)
         for row_id, _ in updates:
             await statement.fetchval(row_id)
         await connection.executemany(SQL_UPDATE, updates)
-    finally:
-        await pool.release(connection)
 
     await send(JSON_RESPONSE)
     await send({

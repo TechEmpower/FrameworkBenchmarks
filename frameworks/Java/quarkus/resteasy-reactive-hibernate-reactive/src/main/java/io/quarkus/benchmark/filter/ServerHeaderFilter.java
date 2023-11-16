@@ -3,13 +3,13 @@ package io.quarkus.benchmark.filter;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Singleton;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Singleton;
 
-import io.vertx.core.MultiMap;
 import org.jboss.resteasy.reactive.server.ServerResponseFilter;
 
 import io.quarkus.scheduler.Scheduled;
+import io.vertx.core.MultiMap;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpServerResponse;
 
@@ -19,7 +19,7 @@ public class ServerHeaderFilter {
     private static final CharSequence SERVER_HEADER_NAME = HttpHeaders.createOptimized("Server");
     private static final CharSequence SERVER_HEADER_VALUE = HttpHeaders.createOptimized("Quarkus");
     private static final CharSequence DATE_HEADER_NAME = HttpHeaders.createOptimized("Date");
-    
+
     private volatile CharSequence date;
 
     @PostConstruct
@@ -38,4 +38,5 @@ public class ServerHeaderFilter {
         headers.add(SERVER_HEADER_NAME, SERVER_HEADER_VALUE);
         headers.add(DATE_HEADER_NAME, date);
     }
+
 }

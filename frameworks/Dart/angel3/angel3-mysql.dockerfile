@@ -1,4 +1,4 @@
-FROM dart:2.18.1
+FROM dart:2.19.6
 
 COPY ./orm-mysql/config /app/config
 COPY ./orm-mysql/lib /app/lib

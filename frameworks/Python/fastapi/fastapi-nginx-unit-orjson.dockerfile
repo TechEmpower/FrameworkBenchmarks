@@ -1,11 +1,11 @@
-FROM nginx/unit:1.28.0-python3.10
+FROM nginx/unit:1.29.1-python3.11
 
 WORKDIR /fastapi
 
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-RUN pip3 install cython==0.29.32
+RUN pip3 install cython==0.29.33
 
 COPY requirements.txt requirements-orjson.txt ./
 

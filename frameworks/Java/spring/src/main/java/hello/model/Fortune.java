@@ -1,6 +1,6 @@
 package hello.model;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Entity
 public final class Fortune {
 	@Id
-	@javax.persistence.Id
+	@jakarta.persistence.Id
 	public int id;
 	@Field("message")
 	public String message;

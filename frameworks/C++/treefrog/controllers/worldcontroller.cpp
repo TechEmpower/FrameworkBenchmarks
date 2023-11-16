@@ -220,7 +220,7 @@ void WorldController::cached_pqueries()
 
 void WorldController::cached_pqueries(const QString &num)
 {
-    constexpr int SECONDS = 60 * 10;  // cache time
+    constexpr int SECONDS = 60 * 30;  // cache time
     QVariantList worlds;
     QVariantMap world;
     int d = std::min(std::max(num.toInt(), 1), 500);

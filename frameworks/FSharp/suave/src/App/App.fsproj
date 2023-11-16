@@ -2,8 +2,10 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ServerGarbageCollection>true</ServerGarbageCollection>
+    <!-- Settings applicable to JIT-based deployment -->
+    <TieredPGO>true</TieredPGO>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Suave" Version="2.6.1" />
-    <PackageReference Update="FSharp.Core" Version="6.0.3" />
+    <PackageReference Include="Suave" Version="2.6.2" />
+    <PackageReference Update="FSharp.Core" Version="7.0.0" />
   </ItemGroup>
 
 </Project>

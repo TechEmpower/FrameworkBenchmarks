@@ -24,7 +24,7 @@ defmodule FrameworkBenchmarks.Handlers.Query do
         |> Map.from_struct()
         |> Map.drop([:__meta__])
       end)
-      |> Eljiffy.encode()
+      |> Jason.encode()
 
     conn
     |> Plug.Conn.put_resp_content_type("application/json")

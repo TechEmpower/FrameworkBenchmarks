@@ -1,9 +1,9 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0.100 AS build
 WORKDIR /app
 COPY src/App .
 RUN dotnet publish -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 # Full PGO
 ENV DOTNET_TieredPGO 1 
 ENV DOTNET_TC_QuickJitForLoops 1 

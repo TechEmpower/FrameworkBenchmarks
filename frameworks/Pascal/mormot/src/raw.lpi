@@ -86,13 +86,12 @@
       </Debugging>
     </Linking>
     <Other>
-      <CustomOptions Value="-dFPC_X64MM
--dFPCMM_SERVER
--dFPCMM_REPORTMEMORYLEAKS
--dFPCMM_DEBUG
+      <CustomOptions Value="-dWITH_LOGS
 -dNOSYNDBZEOS
--dNOSYNDBIBX"/>
-      <OtherDefines Count="7">
+-dNOSYNDBIBX
+-dFPC_LIBCMM
+-dFPCMM_BOOSTER"/>
+      <OtherDefines Count="9">
         <Define0 Value="FPC_X64MM"/>
         <Define1 Value="FPCMM_SERVER"/>
         <Define2 Value="FPCMM_REPORTMEMORYLEAKS"/>
@@ -100,6 +99,8 @@
         <Define4 Value="WITH_LOGS"/>
         <Define5 Value="NOSYNDBZEOS"/>
         <Define6 Value="NOSYNDBIBX"/>
+        <Define7 Value="FPC_LIBCMM"/>
+        <Define8 Value="FPCMM_BOOSTER"/>
       </OtherDefines>
     </Other>
   </CompilerOptions>

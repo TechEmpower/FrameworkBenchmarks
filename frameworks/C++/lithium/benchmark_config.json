@@ -27,12 +27,10 @@
         "versus": "None"
       },
       "postgres": {
-        "json_url"       : "/json",
         "db_url"         : "/db",
         "query_url"      : "/queries?N=",
         "fortune_url"    : "/fortunes",
         "update_url"     : "/updates?N=",
-        "plaintext_url"  : "/plaintext",
         "cached_query_url": "/cached-worlds?N=",
         "port": 8080,
         "approach": "Realistic",
@@ -51,12 +49,10 @@
         "versus": "None"
       },
       "postgres-beta": {
-        "json_url"       : "/json",
         "db_url"         : "/db",
         "query_url"      : "/queries?N=",
         "fortune_url"    : "/fortunes",
         "update_url"     : "/updates?N=",
-        "plaintext_url"  : "/plaintext",
         "cached_query_url": "/cached-worlds?N=",
         "port": 8080,
         "approach": "Realistic",

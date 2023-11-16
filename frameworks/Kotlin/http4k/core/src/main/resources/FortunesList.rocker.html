@@ -1,0 +1,2 @@
+@args (Iterable<Fortune> items)
+<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>@for ((item) : items) {<tr><td>@item.getId()</td><td>@item.getMessage()</td></tr>}</table></body></html>

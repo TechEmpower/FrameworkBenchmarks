@@ -15,7 +15,9 @@ const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpa
   dialect: 'postgres',
   logging: false,
   pool: {
-    min: 20, max: 20
+    max: 50,
+    min: 0,
+    idle: 10000
   }
 });
 
@@ -49,7 +51,7 @@ const randomWorldPromise = () => {
   }).catch((err) => process.exit(1));
 };
 
-if (cluster.isMaster) {
+if (cluster.isPrimary) {
   // Fork workers.
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();

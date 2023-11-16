@@ -5,7 +5,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const port = 8080;
 
-if (cluster.isMaster) {
+if (cluster.isPrimary) {
   // Fork workers.
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();

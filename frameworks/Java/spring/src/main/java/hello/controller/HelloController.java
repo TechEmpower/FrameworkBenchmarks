@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,29 +26,34 @@ public final class HelloController {
 		this.dbRepository = dbRepository;
 	}
 
-	@GetMapping(value = "/plaintext", produces = MediaType.TEXT_PLAIN_VALUE)
-	String plaintext() {
+	@GetMapping(value = "/plaintext")
+	String plaintext(HttpServletResponse response) {
+		response.setContentType(MediaType.TEXT_PLAIN_VALUE);
 		return "Hello, World!";
 	}
 
 	@GetMapping("/json")
-	Message json() {
+	Message json(HttpServletResponse response) {
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		return new Message("Hello, World!");
 	}
 
 	@GetMapping("/db")
-	World db() {
+	World db(HttpServletResponse response) {
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		return dbRepository.getWorld(randomWorldNumber());
 	}
 
 	@GetMapping("/queries")
-	World[] queries(@RequestParam(required = false) String queries) {
+	World[] queries(HttpServletResponse response, @RequestParam(required = false) String queries) {
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		return randomWorldNumbers().mapToObj(dbRepository::getWorld).limit(parseQueryCount(queries))
 				.toArray(World[]::new);
 	}
 
 	@GetMapping("/updates")
-	World[] updates(@RequestParam(required = false) String queries) {
+	World[] updates(HttpServletResponse response, @RequestParam(required = false) String queries) {
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		return randomWorldNumbers().mapToObj(dbRepository::getWorld).map(world -> {
 			// Ensure that the new random number is not equal to the old one.
 			// That would cause the JPA-based implementation to avoid sending the
@@ -71,7 +77,8 @@ public final class HelloController {
 
 	@GetMapping("/fortunes")
 	@ModelAttribute("fortunes")
-	List<Fortune> fortunes() {
+	List<Fortune> fortunes(HttpServletResponse response) {
+		response.setContentType(MediaType.TEXT_HTML_VALUE);
 		var fortunes = dbRepository.fortunes();
 
 		fortunes.add(new Fortune(0, "Additional fortune added at request time."));

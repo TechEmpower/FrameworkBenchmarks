@@ -1,0 +1,2 @@
+﻿@inherits RazorSliceHttpResult<List<Fortune>>
+<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>@foreach (var item in Model){<tr><td>@WriteNumber(item.Id, default, CultureInfo.InvariantCulture, false)</td><td>@item.Message</td></tr>}</table></body></html>

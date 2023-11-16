@@ -16,8 +16,7 @@ JAVA_OPTIONS="-server \
   -Dio.netty.buffer.checkBounds=false \
   -Dio.netty.buffer.checkAccessible=false \
   -Djava.util.logging.manager=org.jboss.logmanager.LogManager \
-  -XX:-UseBiasedLocking \
-  -XX:+UseStringDeduplication \
+  -Dquarkus.http.idle-timeout=0 \
   -XX:+UseNUMA \
   -XX:+UseParallelGC \
   -Djava.lang.Integer.IntegerCache.high=10000 \

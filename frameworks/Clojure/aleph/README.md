@@ -6,9 +6,9 @@ This is the [Aleph](https://github.com/clj-commons/aleph) portion of a [benchmar
 The dependencies are documented in [project.clj](project.clj),
 but the main ones are:
 
-* [Aleph 0.4.7](https://github.com/clj-commons/aleph)
-* [Clojure 1.11.0](http://clojure.org/)
-* [metosin/jsonista 0.3.5](https://github.com/metosin/jsonista), which in turn uses [Jackson](http://jackson.codehaus.org/)
+* [Aleph 0.6.1](https://github.com/clj-commons/aleph)
+* [Clojure 1.11.1](http://clojure.org/)
+* [metosin/jsonista 0.3.7](https://github.com/metosin/jsonista), which in turn uses [Jackson](http://jackson.codehaus.org/)
 * [hiccup 1.0.5](https://github.com/weavejester/hiccup)
 * [porsas 0.0.1-alpha14](https://github.com/arnaudgeiser/porsas)
 

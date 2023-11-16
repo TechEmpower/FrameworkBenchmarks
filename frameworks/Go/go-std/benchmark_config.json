@@ -203,7 +203,8 @@
       "database_os": "Linux",
       "display_name": "Go",
       "notes": "mongodb implementation for go net/http",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     },
     "mgo-prefork": {
       "db_url": "/db",
@@ -224,7 +225,8 @@
       "database_os": "Linux",
       "display_name": "Go",
       "notes": "mongodb implementation for go net/http",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     }
   }]
 }

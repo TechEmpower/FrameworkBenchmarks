@@ -12,13 +12,11 @@ comparing a variety of web platforms.
 
 The tests will be run with:
 
-* [Ruby 2.4](http://www.ruby-lang.org)
-* [JRuby 9.1](http://jruby.org)
-* [Rubinius 3](https://rubinius.com)\*
+* [Ruby 3.3-rc1](http://www.ruby-lang.org)
+* [JRuby 9.4](http://jruby.org)
 * [Puma 3](http://puma.io)
 * [Passenger 5](https://www.phusionpassenger.com)
 * [Unicorn 5](https://bogomips.org/unicorn/)
-* [TorqueBox 4.0](http://torquebox.org)
 * [Sinatra 2](http://www.sinatrarb.com)
 * [Sequel 5](http://sequel.jeremyevans.net)
 * [Slim 3](http://slim-lang.com)

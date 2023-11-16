@@ -1,6 +1,4 @@
-.DS_Store
 installs
-*.log
 node_modules/
 .travis.bak
 
@@ -35,6 +33,7 @@ build/
 *.patch
 */bin/
 
+
 # intellij
 *.iml
 *.ipr
@@ -59,9 +58,14 @@ benchmark.cfg
 
 # Visual Studio Code
 .vscode
+.history/
+.devcontainer
 
 # vim
 .*.sw[a-p]
 
 # merge tooling
 *.orig
+
+# python
+.venv/

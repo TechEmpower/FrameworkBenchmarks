@@ -5,12 +5,12 @@
   "main": "app.js",
   "private": true,
   "dependencies": {
-    "fastify": "3.27.4",
+    "@fastify/view": "7.4.1",
+    "fastify": "4.13.0",
     "handlebars": "4.7.6",
-    "knex": "0.21.17",
+    "knex": "2.4.2",
     "mongodb": "3.5.9",
     "mysql2": "2.2.5",
-    "pg": "8.5.1",
-    "point-of-view": "4.2.0"
+    "pg": "8.5.1"
   }
 }

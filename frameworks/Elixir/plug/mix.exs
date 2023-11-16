@@ -5,7 +5,7 @@ defmodule FrameworkBenchmarks.MixProject do
     [
       app: :framework_benchmarks,
       version: "1.1.0",
-      elixir: "~> 1.13",
+      elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -23,9 +23,9 @@ defmodule FrameworkBenchmarks.MixProject do
   defp deps do
     [
       {:plug_cowboy, "~> 2.5"},
-      {:eljiffy, "~> 1.3"},
+      {:jason, "~> 1.4"},
       {:ecto_sql, "~> 3.8"},
-      {:postgrex, "~> 0.16.3"},
+      {:postgrex, "~> 0.16"},
       {:cachex, "~> 3.4"},
       {:phoenix_html, "~> 3.2"}
     ]

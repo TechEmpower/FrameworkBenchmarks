@@ -16,12 +16,13 @@ The tests were run with:
 - Plaintext: http://localhost:9000/plaintext
 
 ## Supported backends (w/ Postgres client)
-- SunHttp (default - bundled with core module - zero dependencies)
+- SunHttp/SunHttpLoom (default - bundled with core module - zero dependencies)
 - Apache (5)
 - Apache4
+- Helidon
 - KtorCIO
 - KtorNetty
-- Jetty
+- Jetty/JettyLoom
 - Netty
 - Ratpack
 - Undertow

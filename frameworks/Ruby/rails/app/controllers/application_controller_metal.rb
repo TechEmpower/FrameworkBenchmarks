@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ApplicationControllerMetal < ActionController::Metal
   def add_headers
     response.set_header('Server', 'rails')

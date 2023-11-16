@@ -31,7 +31,7 @@ class TestType(AbstractTestType):
 
         # Case insensitive
         body = body.lower()
-        expected = "hello, world!"
+        expected = b"hello, world!"
         extra_bytes = len(body) - len(expected)
 
         if expected not in body:

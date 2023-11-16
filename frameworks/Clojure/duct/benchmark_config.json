@@ -42,7 +42,8 @@
         "database_os": "Linux",
         "display_name": "duct-mongodb",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       },
       "httpkit": {
         "json_url": "/json",
@@ -108,7 +109,8 @@
         "database_os": "Linux",
         "display_name": "duct-immutant",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       }
     }
   ]

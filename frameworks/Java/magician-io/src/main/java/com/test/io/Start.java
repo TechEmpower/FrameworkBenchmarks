@@ -14,19 +14,19 @@ public class Start {
     public static void main(String[] args) {
         try {
 
-            MagicianConfig magicianConfig = new MagicianConfig();
-            magicianConfig.setNumberOfPorts(1);
-            magicianConfig.setBossThreads(3);
-            magicianConfig.setWorkThreads(5);
-
-
             HttpServer httpServer = Magician.createHttp()
                     .scan("com.test.io")
-                    .setConfig(magicianConfig);
+                    .setConfig(MagicianConfig.create()
+                            .setNumberOfPorts(1)
+                            .setBossThreads(3)
+                            .setWorkThreads(8)
+                            .setCorePoolSize(8)
+                            .setMaximumPoolSize(10)
+                    );
 
             httpServer.bind(8080);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.error("启动服务出现异常", e);
         }
     }

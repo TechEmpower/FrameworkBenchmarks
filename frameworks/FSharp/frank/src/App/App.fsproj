@@ -1,21 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <DebugType>portable</DebugType>
     <AssemblyName>App</AssemblyName>
     <OutputType>Exe</OutputType>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
+    <!-- Settings applicable to JIT-based deployment -->
+    <TieredPGO>true</TieredPGO>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Frank" Version="6.2.0" />
-    <PackageReference Include="FSharp.Data.JsonSchema" Version="2.0.0" />
+    <PackageReference Include="FSharp.Data.JsonSchema" Version="2.0.1" />
     <PackageReference Include="Giraffe" Version="6.0.0" />
     <PackageReference Include="Giraffe.ViewEngine" Version="2.0.0-alpha-1" />
-    <PackageReference Include="Npgsql" Version="6.0.3" />
-    <PackageReference Update="FSharp.Core" Version="6.0.3" />
+    <PackageReference Include="Npgsql" Version="7.0.0" />
+    <PackageReference Update="FSharp.Core" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>

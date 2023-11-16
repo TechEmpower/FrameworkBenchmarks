@@ -3,10 +3,9 @@
 use MongoDB\Client;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\DI\FactoryDefault;
-use Phalcon\Exception as PhalconException;
 use Phalcon\Http\Request;
 use Phalcon\Incubator\MongoDB\Mvc\Collection\Manager as MongoDBCollectionManager;
-use Phalcon\Loader;
+use Phalcon\Autoload\Loader;
 use Phalcon\Mvc\Application;
 use Phalcon\Mvc\Model\MetaData\Apc;
 use Phalcon\Mvc\Model\MetaData\Memory;
@@ -22,7 +21,7 @@ try {
 
     // Register an autoloader
     $loader = new Loader();
-    $loader->registerDirs([
+    $loader->setDirectories([
         $config->application->controllersDir,
         $config->application->modelsDir,
         $config->application->collectionsDir,

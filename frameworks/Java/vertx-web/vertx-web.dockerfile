@@ -1,4 +1,4 @@
-FROM maven:3.6.1-jdk-11-slim as maven
+FROM maven:3.9.0-eclipse-temurin-17 as maven
 WORKDIR /vertx-web
 COPY scripts scripts
 COPY src src
@@ -11,7 +11,6 @@ CMD java \
     -server                                           \
     -XX:+UseNUMA                                      \
     -XX:+UseParallelGC                                \
-    -XX:+AggressiveOpts                               \
     -Dvertx.disableMetrics=true                       \
     -Dvertx.disableH2c=true                           \
     -Dvertx.disableWebsockets=true                    \
@@ -24,7 +23,7 @@ CMD java \
     -Dio.netty.buffer.checkBounds=false               \
     -Dio.netty.buffer.checkAccessible=false           \
     -jar                                              \
-    target/vertx-web-benchmark-4.1.5-fat.jar          \
+    target/vertx-web-benchmark-4.3.8-fat.jar          \
     --instances                                       \
     `grep --count ^processor /proc/cpuinfo`           \
     --conf                                            \

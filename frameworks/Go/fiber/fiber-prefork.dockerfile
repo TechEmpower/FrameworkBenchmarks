@@ -1,8 +1,10 @@
-FROM docker.io/golang:1.19
+FROM docker.io/golang:1.20
 
 WORKDIR /fiber
 
 COPY ./src /fiber
+
+RUN go mod download
 
 RUN go generate -x ./templates
 

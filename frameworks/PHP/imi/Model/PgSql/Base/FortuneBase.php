@@ -1,31 +1,46 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ImiApp\Model\PgSql\Base;
 
-use Imi\Pgsql\Model\PgModel as Model;
-use Imi\Model\Annotation\Table;
+use Imi\Config\Annotation\ConfigValue;
 use Imi\Model\Annotation\Column;
 use Imi\Model\Annotation\Entity;
+use Imi\Model\Annotation\Table;
+use Imi\Pgsql\Model\PgModel as Model;
 
 /**
- * Fortune 基类
+ * fortune 基类.
+ *
  * @Entity(bean=false)
- * @Table(name="Fortune", id={"id"}, dbPoolName="pgsql")
+ * @Table(name=@ConfigValue(name="@app.models.ImiApp\Model\PgSql\Fortune.name", default="fortune"), usePrefix=false, id={"id"}, dbPoolName=@ConfigValue(name="@app.models.ImiApp\Model\PgSql\Fortune.poolName", default="pgsql"))
+ *
  * @property int|null $id 
  * @property string|null $message 
  */
 abstract class FortuneBase extends Model
 {
     /**
-     * id
-     * @Column(name="id", type="int4", length=-1, accuracy=0, nullable=false, default="", isPrimaryKey=true, primaryKeyIndex=1, isAutoIncrement=false, ndims=0)
-     * @var int|null
+     * {@inheritdoc}
      */
-    protected ?int $id = null;
+    public const PRIMARY_KEY = 'id';
 
     /**
-     * 获取 id
+     * {@inheritdoc}
+     */
+    public const PRIMARY_KEYS = ["id"];
+
+    /**
+     * id.
+
+     * @Column(name="id", type="int4", length=-1, accuracy=0, nullable=false, default="", isPrimaryKey=true, primaryKeyIndex=1, isAutoIncrement=false, ndims=0, virtual=false)
+     * @var int|null
+     */
+    protected ?int $id = NULL;
+
+    /**
+     * 获取 id.
      *
      * @return int|null
      */
@@ -35,7 +50,8 @@ abstract class FortuneBase extends Model
     }
 
     /**
-     * 赋值 id
+     * 赋值 id.
+     *
      * @param int|null $id id
      * @return static
      */
@@ -46,14 +62,15 @@ abstract class FortuneBase extends Model
     }
 
     /**
-     * message
-     * @Column(name="message", type="varchar", length=0, accuracy=2048, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false, ndims=0)
+     * message.
+
+     * @Column(name="message", type="varchar", length=0, accuracy=2048, nullable=false, default="", isPrimaryKey=false, primaryKeyIndex=-1, isAutoIncrement=false, ndims=0, virtual=false)
      * @var string|null
      */
-    protected ?string $message = null;
+    protected ?string $message = NULL;
 
     /**
-     * 获取 message
+     * 获取 message.
      *
      * @return string|null
      */
@@ -63,7 +80,8 @@ abstract class FortuneBase extends Model
     }
 
     /**
-     * 赋值 message
+     * 赋值 message.
+     *
      * @param string|null $message message
      * @return static
      */

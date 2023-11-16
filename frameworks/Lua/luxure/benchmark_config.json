@@ -1,0 +1,26 @@
+{
+  "framework": "luxure",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "Luxure",
+        "language": "Lua",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Luxure",
+        "notes": "",
+        "versus": "Express"
+      }
+    }
+  ]
+}

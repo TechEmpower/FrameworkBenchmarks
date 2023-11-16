@@ -1,21 +1,21 @@
 #
 # BUILD
 #
-FROM gradle:7.5.0-jdk17-alpine AS gradle_build
+FROM docker.io/gradle:8.4-jdk21-alpine AS build
 USER root
 WORKDIR /hexagon
 
-COPY src src
-COPY build.gradle build.gradle
-RUN gradle --quiet
+ADD . .
+RUN gradle --quiet classes
+RUN gradle --quiet -x test war
 
 #
 # RUNTIME
 #
-FROM tomcat:10.1.0-jre17-temurin
-ENV DBSTORE postgresql
-ENV POSTGRESQL_DB_HOST tfb-database
-ENV DISABLE_CHECKS true
+FROM docker.io/tomcat:10-jre21-temurin-jammy
+ARG MODULE=/hexagon/hexagon_tomcat_postgresql
 
-COPY --from=gradle_build /hexagon/build/libs/ROOT.war /usr/local/tomcat/webapps/ROOT.war
-EXPOSE 8080
+ENV POSTGRESQL_DB_HOST tfb-database
+ENV JDK_JAVA_OPTIONS -XX:+AlwaysPreTouch -XX:+UseParallelGC -XX:+UseNUMA
+
+COPY --from=build $MODULE/build/libs/ROOT.war /usr/local/tomcat/webapps/ROOT.war

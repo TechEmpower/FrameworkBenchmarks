@@ -1,7 +1,7 @@
-asyncpg==0.26.0
+asyncpg==0.27.0
 Jinja2==2.11.3
 markupsafe==2.0.1
-httptools==0.4.0
-uvloop==0.16.0
-uvicorn==0.18.2
-xpresso==0.44.1
+httptools==0.5.0
+uvloop==0.17.0
+uvicorn==0.20.0
+xpresso==0.46.0

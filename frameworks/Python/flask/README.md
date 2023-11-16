@@ -13,7 +13,7 @@ All test implementations are located within a single file
 
 ## Description
 
-Flask + Flask-Pony
+Flask and Flask with Pony
 
 ### Database
 
@@ -23,24 +23,19 @@ PostgresQL (psycopg2 on CPython, psycopg2cffi on PyPy)
 
 * gunicorn+meinheld on CPython
 * gunicorn on PyPy
+* fastwsgi on CPython
+* socketify on CPython
 
 ## Test URLs
+
 ### JSON Encoding 
 
 http://localhost:8080/json
 
 ### Single Row Random Query
 
-With ORM (app.py):
-    http://localhost:8080/db
-
-Without ORM (app_raw.py):
-    http://localhost:8080/db
+http://localhost:8080/db
 
 ### Variable Row Query Test 
 
-With ORM (app.py):
-    http://localhost:8080/query?queries=2
-
-Without ORM (app_raw.py):
-    http://localhost:8080/query?queries=2
+http://localhost:8080/query?queries=2

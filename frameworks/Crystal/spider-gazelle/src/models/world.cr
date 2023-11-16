@@ -1,9 +1,6 @@
-require "granite/adapter/pg"
+require "pg-orm"
 
-class World < Granite::Base
-  adapter pg
-
-  table_name world
-  primary id : Int32
-  field randomnumber : Int32
+class World < PgORM::Base
+  attribute id : Int32, primary_key: true
+  attribute randomnumber : Int32
 end

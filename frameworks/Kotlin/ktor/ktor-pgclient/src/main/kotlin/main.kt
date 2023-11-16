@@ -13,7 +13,7 @@ import io.vertx.sqlclient.PoolOptions
 import io.vertx.sqlclient.Tuple
 import kotlinx.html.*
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.util.concurrent.ThreadLocalRandom
 
@@ -36,15 +36,15 @@ interface Repository {
 
 class PgclientRepository : Repository {
     private val connectOptions =
-        PgConnectOptions()
-            .setPort(5432)
-            .setHost("tfb-database")
-            .setDatabase("hello_world")
-            .setUser("benchmarkdbuser")
-            .setPassword("benchmarkdbpass")
-            .apply {
-                cachePreparedStatements = true
-            }
+        PgConnectOptions().apply {
+            port = 5432
+            host = "tfb-database"
+            database = "hello_world"
+            user = "benchmarkdbuser"
+            password = "benchmarkdbpass"
+            cachePreparedStatements = true
+            pipeliningLimit = 100000
+        }
 
     private val poolOptions = PoolOptions()
     private val client = ThreadLocal.withInitial { PgPool.client(connectOptions, poolOptions) }
@@ -67,7 +67,8 @@ class PgclientRepository : Repository {
     }
 
     override suspend fun updateWorlds(worlds: List<World>) {
-        val batch = worlds.map { Tuple.of(it.id, it.randomNumber) }
+        // Worlds should be sorted before being batch-updated with to avoid data race and deadlocks.
+        val batch = worlds.sortedBy { it.id }.map { Tuple.of(it.randomNumber, it.id) }
         client()
             .preparedQuery("update world set randomNumber = $1 where id = $2")
             .executeBatch(batch)
@@ -75,12 +76,8 @@ class PgclientRepository : Repository {
     }
 }
 
-fun String.toBoxedInt(range: IntRange): Int =
-    try {
-        this.toInt().coerceIn(range)
-    } catch (e: NumberFormatException) {
-        1
-    }
+fun String.toBoxedInt(range: IntRange): Int? =
+    toIntOrNull()?.coerceIn(range)
 
 class MainTemplate : Template<HTML> {
     val content = Placeholder<HtmlBlockTag>()
@@ -121,10 +118,6 @@ class FortuneTemplate(
 fun main() {
     val db = PgclientRepository()
 
-    val messageSerializer = Message.serializer()
-    val worldSerializer = World.serializer()
-    val worldListSerializer = ListSerializer(World.serializer())
-
     val server = embeddedServer(Netty, 8080, configure = {
         shareWorkGroup = true
     }) {
@@ -136,19 +129,19 @@ fun main() {
 
             get("/json") {
                 call.respondText(
-                    Json.encodeToString(messageSerializer, Message("Hello, World!")),
+                    Json.encodeToString(Message("Hello, World!")),
                     ContentType.Application.Json
                 )
             }
 
             get("/db") {
-                call.respondText(Json.encodeToString(worldSerializer, db.getWorld()), ContentType.Application.Json)
+                call.respondText(Json.encodeToString(db.getWorld()), ContentType.Application.Json)
             }
 
             get("/query") {
                 val queries = call.parameters["queries"]?.toBoxedInt(1..500) ?: 1
-                val worlds = (1..queries).map { db.getWorld() }
-                call.respondText(Json.encodeToString(worldListSerializer, worlds), ContentType.Application.Json)
+                val worlds = List(queries) { db.getWorld() }
+                call.respondText(Json.encodeToString(worlds), ContentType.Application.Json)
             }
 
             get("/fortunes") {
@@ -161,12 +154,12 @@ fun main() {
 
             get("/updates") {
                 val queries = call.parameters["queries"]?.toBoxedInt(1..500) ?: 1
-                val worlds = (1..queries).map { db.getWorld() }
+                val worlds = List(queries) { db.getWorld() }
                 val newWorlds = worlds.map { it.copy(randomNumber = rand.nextInt(1, 10001)) }
 
                 db.updateWorlds(newWorlds)
 
-                call.respondText(Json.encodeToString(worldListSerializer, newWorlds), ContentType.Application.Json)
+                call.respondText(Json.encodeToString(newWorlds), ContentType.Application.Json)
             }
         }
     }

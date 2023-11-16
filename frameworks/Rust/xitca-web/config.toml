@@ -35,7 +35,21 @@ platform = "None"
 webserver = "xitca-server"
 versus = ""
 
+[iou]
+urls.plaintext = "/plaintext"
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "xitca-server"
+versus = ""
+
 [wasm]
+urls.json = "/json"
 urls.plaintext = "/plaintext"
 approach = "Realistic"
 classification = "Micro"

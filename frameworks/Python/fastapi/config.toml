@@ -18,6 +18,32 @@ platform = "None"
 webserver = "Gunicorn"
 versus = "None"
 
+[socketify-asgi-pypy]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "Socketify.py"
+versus = "None"
+
+[socketify-asgi]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "Socketify.py"
+versus = "None"
+
 [gunicorn-orjson]
 urls.plaintext = "/plaintext"
 urls.json = "/json"

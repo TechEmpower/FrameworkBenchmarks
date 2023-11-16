@@ -1,3 +1,3 @@
-aioworkers==0.21a1
-httptools==0.3.0
-PyYAML==6.0
+aioworkers==0.24.1
+httptools==0.6.0
+PyYAML==6.0.1

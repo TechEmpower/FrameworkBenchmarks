@@ -13,13 +13,13 @@ class MultipleDatabaseQueriesTest : public Controller
 public:
     explicit MultipleDatabaseQueriesTest(QObject *parent = 0);
 
-    C_ATTR(queriesp, :Local :AutoArgs)
+    C_ATTR(queriesp, :Path('querAPG') :AutoArgs)
     void queriesp(Context *c);
 
-    C_ATTR(query_postgres, :Local :AutoArgs)
+    C_ATTR(query_postgres, :Path('queryPG') :AutoArgs)
     void query_postgres(Context *c);
 
-    C_ATTR(query_mysql, :Local :AutoArgs)
+    C_ATTR(query_mysql, :Path('queryMY') :AutoArgs)
     void query_mysql(Context *c);
 
 private:
