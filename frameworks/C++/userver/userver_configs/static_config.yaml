@@ -82,6 +82,7 @@ components_manager:
             max_pool_size: 260
             max_queue_size: 512
             connecting_limit: 15
+            ignore_unused_query_params: true
 
         single-query-handler:
             path: /db
