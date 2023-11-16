@@ -14,7 +14,7 @@ const std::string kContentTypeTextHtml{"text/html; charset=utf-8"};
 
 struct Fortune final {
   int id;
-  std::string message;
+  std::string_view message;
 };
 
 constexpr std::string_view kResultingHtmlHeader{
@@ -145,14 +145,14 @@ std::string Handler::HandleRequestThrow(
 }
 
 std::string Handler::GetResponse() const {
-  auto fortunes = [this] {
+  const auto pg_result = [this] {
     const auto lock = semaphore_.Acquire();
     return pg_
-        ->Execute(db_helpers::kClusterHostType, select_all_fortunes_query_)
-        .AsContainer<std::vector<Fortune>>(
-            userver::storages::postgres::kRowTag);
+        ->Execute(db_helpers::kClusterHostType, select_all_fortunes_query_);
   }();
 
+  auto fortunes = pg_result.AsContainer<std::vector<Fortune>>(
+            userver::storages::postgres::kRowTag);
   fortunes.push_back({0, "Additional fortune added at request time."});
 
   std::sort(fortunes.begin(), fortunes.end(),
