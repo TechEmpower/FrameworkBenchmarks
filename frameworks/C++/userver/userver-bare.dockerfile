@@ -6,7 +6,7 @@ RUN apt update && \
 
 WORKDIR /src
 RUN git clone https://github.com/userver-framework/userver.git && \
-    cd userver && git checkout 73727ce95d24f18651fc018c45f50c492f858027
+    cd userver && git checkout 1590ea7c8a6f5f1b24a74a89c4b5bdd35e2d380e
 COPY userver_benchmark/ ./
 RUN mkdir build && cd build && \
     cmake -DUSERVER_IS_THE_ROOT_PROJECT=0 -DUSERVER_FEATURE_CRYPTOPP_BLAKE2=0 \
