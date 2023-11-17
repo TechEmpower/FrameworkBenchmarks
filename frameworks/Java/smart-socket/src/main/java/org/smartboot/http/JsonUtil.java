@@ -3,9 +3,9 @@ package org.smartboot.http;
 import com.jsoniter.spi.JsonException;
 import io.edap.x.json.Eson;
 import io.edap.x.json.JsonWriter;
+import jakarta.servlet.http.HttpServletResponse;
 import org.smartboot.http.server.HttpResponse;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
