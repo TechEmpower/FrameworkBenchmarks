@@ -7,9 +7,7 @@ use React\Socket\SocketServer;
 require __DIR__ . '/vendor/autoload.php';
 require_once __DIR__.'/app.php';
 
-init();
-
-$server = new HttpServer(router(...));
+$server = new HttpServer(requestHandler());
 $socket = new SocketServer('0.0.0.0:8080');
 $server->listen($socket);
 
