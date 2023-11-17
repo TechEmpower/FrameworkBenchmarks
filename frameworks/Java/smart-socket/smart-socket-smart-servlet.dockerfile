@@ -10,4 +10,4 @@ COPY --from=maven /smart-socket/target/smart-socket-benchmark-1.0-jar-with-depen
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-cp", "app.jar", "org.smartboot.servlet.Bootstrap"]
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC",  "-cp", "app.jar", "org.smartboot.servlet.Bootstrap"]
