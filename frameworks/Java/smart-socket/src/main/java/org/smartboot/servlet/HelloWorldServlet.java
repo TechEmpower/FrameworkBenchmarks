@@ -17,7 +17,7 @@ public class HelloWorldServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentLength(BODY.length);
-        resp.setContentType("text/plain; charset=UTF-8");
+        resp.setContentType("text/plain;charset=UTF-8");
         resp.setBufferSize(0);
         resp.getOutputStream().write(BODY);
     }
