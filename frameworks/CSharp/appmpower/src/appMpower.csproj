@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
-    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    <!--<RuntimeIdentifier>linux-x64</RuntimeIdentifier>-->
 
-    <!-- Normal .NET 7 -->
+    <!-- Normal .NET 8 -->
     <PublishAot>true</PublishAot>
     <SelfContained>true</SelfContained>
     <InvariantGlobalization>true</InvariantGlobalization>
@@ -42,12 +42,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Data.Odbc" Version="7.0.0" />
+    <PackageReference Include="System.Data.Odbc" Version="8.0.0" />
+    <PackageReference Include="Npgsql" Version="8.0.0-*" />
   </ItemGroup>
 
   <PropertyGroup>
-      <DefineConstants>$(DefineConstants);ODBC</DefineConstants>
-      <DefineConstants Condition=" '$(Database)' == 'mysql' ">$(DefineConstants);MYSQL</DefineConstants>
+      <DefineConstants>$(DefineConstants);POSTGRESQL</DefineConstants>
+      <DefineConstants Condition=" '$(Driver)' == 'odbc' ">$(DefineConstants);ODBC</DefineConstants>
+      <DefineConstants Condition=" '$(Driver)' == 'ado' ">$(DefineConstants);ADO</DefineConstants>
   </PropertyGroup>
 
 </Project>
