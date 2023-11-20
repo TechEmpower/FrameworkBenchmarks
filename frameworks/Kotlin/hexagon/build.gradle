@@ -14,7 +14,7 @@ ext {
     nettyVersion = "4.1.101.Final"
 
     hikariVersion = "5.1.0"
-    postgresqlVersion = "42.6.0"
+    postgresqlVersion = "42.7.0"
     vertxVersion = "4.5.0"
     cache2kVersion = "2.6.1.Final"
 
