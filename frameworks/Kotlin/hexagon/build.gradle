@@ -32,3 +32,26 @@ subprojects {
 tasks.wrapper {
     gradleVersion = "8.5-rc-3"
 }
+
+//extensions.configure<GraalVMExtension> {
+//    fun option(name: String, value: (String) -> String): String? =
+//            getProperty(name)?.let(value)
+//
+//    binaries {
+//        named("main") {
+//            listOfNotNull(
+//                    option("static") { "--static" },
+//                    option("enableMonitoring") { "--enable-monitoring" },
+//                    option("pgoInstrument") { "--pgo-instrument" },
+//                    option("pgo") { "--pgo=../../../default.iprof" },
+//            )
+//                    .forEach(buildArgs::add)
+//        }
+//        named("test") {
+//            listOfNotNull(
+//                    option("pgoInstrument") { "--pgo-instrument" },
+//            )
+//                    .forEach(buildArgs::add)
+//        }
+//    }
+//}
