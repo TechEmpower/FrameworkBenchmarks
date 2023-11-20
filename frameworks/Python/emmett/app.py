@@ -86,8 +86,8 @@ async def fortunes():
 async def updates():
     num_queries = get_qparam()
     updates = list(zip(
-        sample(range(1, 10000), num_queries),
-        sorted(sample(range(1, 10000), num_queries))
+        sorted(sample(range(1, 10000), num_queries)),
+        sample(range(1, 10000), num_queries)
     ))
     worlds = []
     for row_id, number in updates:

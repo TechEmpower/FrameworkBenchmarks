@@ -1,4 +1,4 @@
-FROM gradle:8.3.0-jdk20 as gradle
+FROM gradle:8.4.0-jdk21 as gradle
 USER root
 WORKDIR /http4k
 COPY build.gradle.kts build.gradle.kts

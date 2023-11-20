@@ -19,7 +19,7 @@ The tests were run with:
 - SunHttp/SunHttpLoom (default - bundled with core module - zero dependencies)
 - Apache (5)
 - Apache4
-- Helidon (Nima)
+- Helidon
 - KtorCIO
 - KtorNetty
 - Jetty/JettyLoom

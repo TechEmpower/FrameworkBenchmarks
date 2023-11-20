@@ -170,11 +170,10 @@ void start_threads(global_thread_data_t *global_thread_data)
 			CHECK_ERROR(pthread_attr_setaffinity_np, &attr, cpusetsize, cpuset);
 		}
 
-		CHECK_ERROR(pthread_create,
-		            &global_thread_data[i].thread,
-		            &attr,
-		            run_thread,
-		            global_thread_data + i);
+		h2o_multithread_create_thread(&global_thread_data[i].thread,
+		                              &attr,
+		                              run_thread,
+		                              global_thread_data + i);
 	}
 
 	pthread_attr_destroy(&attr);

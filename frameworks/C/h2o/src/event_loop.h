@@ -40,6 +40,7 @@ typedef struct {
 	size_t conn_num;
 	h2o_accept_ctx_t h2o_accept_ctx;
 	h2o_context_t h2o_ctx;
+	h2o_linklist_t local_messages;
 } event_loop_t;
 
 typedef struct {
@@ -59,6 +60,7 @@ void initialize_event_loop(bool is_main_thread,
                            global_data_t *global_data,
                            h2o_multithread_receiver_t *h2o_receiver,
                            event_loop_t *loop);
+void send_local_message(message_t *msg, h2o_linklist_t *local_messages);
 void send_message(message_t *msg, h2o_multithread_receiver_t *h2o_receiver);
 
 #endif // EVENT_LOOP_H_
