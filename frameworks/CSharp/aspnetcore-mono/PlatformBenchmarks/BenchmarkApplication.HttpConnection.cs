@@ -112,7 +112,7 @@ namespace PlatformBenchmarks
 
             if (state == State.StartLine)
             {
-#if NET5_0
+#if NET8_0
                 if (Parser.ParseRequestLine(new ParsingAdapter(this), ref reader))
                 {
                     state = State.Headers;
@@ -197,7 +197,7 @@ namespace PlatformBenchmarks
 
             if (state == State.StartLine)
             {
-#if NET5_0
+#if NET8_0
                 if (Parser.ParseRequestLine(new ParsingAdapter(this), ref reader))
                 {
                     state = State.Headers;
@@ -246,7 +246,7 @@ namespace PlatformBenchmarks
         }
 #endif
 
-#if NET5_0
+#if NET8_0
 
         public void OnStaticIndexedHeader(int index)
         {
@@ -311,7 +311,7 @@ namespace PlatformBenchmarks
             public ParsingAdapter(BenchmarkApplication requestHandler)
                 => RequestHandler = requestHandler;
 
-#if NET5_0
+#if NET8_0
             public void OnStaticIndexedHeader(int index) 
                 => RequestHandler.OnStaticIndexedHeader(index);
 

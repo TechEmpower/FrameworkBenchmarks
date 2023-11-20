@@ -23,7 +23,7 @@ namespace PlatformBenchmarks
                 {
                     options.IOQueueCount = threadCount;
                 }
-#if NET5_0
+#if NET8_0
                 options.WaitForDataBeforeAllocatingBuffer = false;
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
