@@ -6,7 +6,6 @@ using System.Net;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using System.IO.Pipelines;
 using System.Runtime.InteropServices;
 
 namespace PlatformBenchmarks
