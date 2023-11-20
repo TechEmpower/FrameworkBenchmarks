@@ -16,13 +16,13 @@ namespace PlatformBenchmarks
     {
         public static string[] Args;
 
-        [RequiresUnreferencedCode(message: "The main method")]
         public static async Task Main(string[] args)
         {
             Args = args;
 
             Console.WriteLine(BenchmarkApplication.ApplicationName);
-            bool isMono = typeof(object).Assembly.GetType("Mono.RuntimeStructs") != null;
+            Type.GetType("Mono.Runtime");
+            bool isMono = Type.GetType("Mono.Runtime") != null;
             Console.WriteLine("Runtime " + (isMono ? "Mono" : "CoreCLR"));
             Console.WriteLine(typeof(object).Assembly.FullName);
             Console.WriteLine(System.Reflection.Assembly.GetEntryAssembly());
