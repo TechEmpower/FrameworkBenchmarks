@@ -7,6 +7,7 @@ using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 
