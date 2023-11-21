@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -18,7 +17,6 @@ namespace PlatformBenchmarks
     {
         public static string[] Args;
 
-        [RequiresUnreferencedCode(message: "The main method")]
         public static async Task Main(string[] args)
         {
             Args = args;
