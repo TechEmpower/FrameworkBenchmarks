@@ -4,13 +4,12 @@
 using System;
 using System.Buffers;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace PlatformBenchmarks
 {
     public partial class BenchmarkApplication
     {
-        private readonly static uint _jsonPayloadSize = (uint)JsonSerializer.SerializeToUtf8Bytes(new JsonMessage { message = "Hello, World!" }, JsonContext.Default.JsonMessage).Length;
+        private readonly static uint _jsonPayloadSize = (uint)JsonSerializer.SerializeToUtf8Bytes(new JsonMessage { message = "Hello, World!" }, SerializerOptions).Length;
 
         private readonly static AsciiString _jsonPreamble =
             _http11OK +
@@ -31,7 +30,7 @@ namespace PlatformBenchmarks
             utf8JsonWriter.Reset(bodyWriter);
 
             // Body
-            JsonSerializer.Serialize(utf8JsonWriter, new JsonMessage { message = "Hello, World!" }, JsonContext.Default.JsonMessage);
+            JsonSerializer.Serialize<JsonMessage>(utf8JsonWriter, new JsonMessage { message = "Hello, World!" }, SerializerOptions);
         }
     }
 }
