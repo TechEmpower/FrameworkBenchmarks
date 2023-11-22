@@ -17,14 +17,14 @@ const dbfind = async (id) =>
     (arr) => arr[0]
   );
 
-const dbbulkUpdate = async (worlds) =>
+const dbbulkUpdate = async (worlds) => {
+  const sorted = sql(worlds
+    .map((world) => [world.id, world.randomNumber])
+    .sort((a, b) => (a[0] < b[0] ? -1 : 1)));
   await sql`UPDATE world SET randomNumber = (update_data.randomNumber)::int
-  FROM (VALUES ${sql(
-    worlds
-      .map((world) => [world.id, world.randomNumber])
-      .sort((a, b) => (a[0] < b[0] ? -1 : 1))
-  )}) AS update_data (id, randomNumber)
+  FROM (VALUES ${sorted}) AS update_data (id, randomNumber)
   WHERE world.id = (update_data.id)::int`;
+};
 
 const dbgetAllWorlds = async () => sql`SELECT id, randomNumber FROM world`;
 
