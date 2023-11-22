@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi8/openjdk-17:1.15 as maven
 ENV LANGUAGE='en_US:en'
 
 WORKDIR /quarkus
-ENV MODULE=resteasy-reactive-hibernate
+ENV MODULE=reactive-routes-pgclient
 
 COPY --chown=185 pom.xml pom.xml
 COPY --chown=185 quarkus-benchmark-common quarkus-benchmark-common/
@@ -32,7 +32,7 @@ WORKDIR /quarkus
 FROM registry.access.redhat.com/ubi8/openjdk-17-runtime:1.15
 ENV LANGUAGE='en_US:en'
 WORKDIR /quarkus
-ENV MODULE=resteasy-reactive-hibernate
+ENV MODULE=reactive-routes-pgclient
 
 COPY --chown=185 --from=maven /quarkus/$MODULE/target/quarkus-app/lib/ lib
 COPY --chown=185 --from=maven /quarkus/$MODULE/target/quarkus-app/app/ app
