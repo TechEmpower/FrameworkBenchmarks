@@ -1,2 +1,2 @@
 [toolchain]
-channel = "beta"
+channel = "nightly-2023-11-24"

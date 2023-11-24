@@ -26,9 +26,7 @@ fn main() -> io::Result<()> {
     App::new()
         .at(
             "/json",
-            get(handler_service(|| async {
-                Json::<ser::Message>(ser::Message::new())
-            })),
+            get(handler_service(|| async { Json(ser::Message::new()) })),
         )
         .at(
             "/plaintext",
