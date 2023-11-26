@@ -59,7 +59,7 @@ mod tower_compat {
     use http_body::Body;
     use pin_project_lite::pin_project;
     use xitca_http::{
-        body::{none_body_hint, ResponseBody},
+        body::none_body_hint,
         bytes::Bytes,
         h1::RequestBody,
         http::{HeaderMap, Request, RequestExt, Response},
@@ -112,7 +112,7 @@ mod tower_compat {
         B: Body<Data = Bytes> + Send + 'static,
         B::Error: error::Error + Send + Sync,
     {
-        type Response = Response<ResponseBody>;
+        type Response = Response<ResponseBody<B>>;
         type Error = S::Error;
 
         async fn call(
@@ -128,7 +128,7 @@ mod tower_compat {
             let _ = req.extensions_mut().insert(ConnectInfo(*ext.socket_addr()));
             let fut = self.service.borrow_mut().call(req);
             let (parts, body) = fut.await?.into_parts();
-            let body = ResponseBody::box_stream(_ResponseBody { body });
+            let body = ResponseBody { body };
             let res = Response::from_parts(parts, body);
             Ok(res)
         }
@@ -158,13 +158,13 @@ mod tower_compat {
     }
 
     pin_project! {
-        pub struct _ResponseBody<B> {
+        pub struct ResponseBody<B> {
             #[pin]
             body: B
         }
     }
 
-    impl<B> Stream for _ResponseBody<B>
+    impl<B> Stream for ResponseBody<B>
     where
         B: Body<Data = Bytes>,
         B::Error: error::Error + Send + Sync + 'static,
