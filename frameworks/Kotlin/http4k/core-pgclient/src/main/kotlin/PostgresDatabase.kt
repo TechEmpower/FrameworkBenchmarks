@@ -1,4 +1,3 @@
-import io.vertx.core.CompositeFuture
 import io.vertx.core.Future
 import io.vertx.core.Vertx
 import io.vertx.core.VertxOptions
@@ -46,17 +45,17 @@ class PostgresDatabase : Database {
                 (1..count).map { queryPool.findWorld(random.world()) }
             ).toCompletionStage().toCompletableFuture().get().list<World>()
 
-    override fun updateWorlds(count: Int) =
-        Future.all((1..count)
-            .map { queryPool.findWorld(random.world()) })
-            .map<List<World>>(CompositeFuture::list)
-            .toCompletionStage()
-            .thenCompose { worlds ->
-                updatePool.preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
-                    .executeBatch((1..count).map { Tuple.of(random.world(), random.world()) })
-                    .toCompletionStage()
-                    .thenApply { worlds }
-            }.toCompletableFuture().get()
+    override fun updateWorlds(count: Int) = (1..count).map {
+            queryPool.findWorld(random.world())
+                .flatMap { world ->
+                    updatePool.preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
+                        .execute(Tuple.of(random.world(), world.first))
+                        .map { world }
+                }
+                .toCompletionStage()
+                .toCompletableFuture()
+                .get()
+        }
 
     override fun fortunes() = queryPool.preparedQuery("SELECT id, message FROM fortune")
         .execute()
