@@ -8,7 +8,6 @@ mod util;
 use xitca_http::{
     body::Once,
     bytes::Bytes,
-    config::HttpServiceConfig,
     h1::RequestBody,
     http::{
         self,
@@ -31,23 +30,19 @@ type Request = http::Request<RequestExt<RequestBody>>;
 type Ctx<'a> = self::util::Ctx<'a, Request>;
 
 fn main() -> std::io::Result<()> {
+    let service = Router::new()
+        .insert("/plaintext", get(fn_service(plain_text)))
+        .insert("/json", get(fn_service(json)))
+        .insert("/db", get(fn_service(db)))
+        .insert("/fortunes", get(fn_service(fortunes)))
+        .insert("/queries", get(fn_service(queries)))
+        .insert("/updates", get(fn_service(updates)))
+        .enclosed_fn(middleware_fn)
+        .enclosed(context_mw())
+        .enclosed(HttpServiceBuilder::h1().io_uring());
+
     xitca_server::Builder::new()
-        .bind("xitca-web", "0.0.0.0:8080", || {
-            Router::new()
-                .insert("/plaintext", get(fn_service(plain_text)))
-                .insert("/json", get(fn_service(json)))
-                .insert("/db", get(fn_service(db)))
-                .insert("/fortunes", get(fn_service(fortunes)))
-                .insert("/queries", get(fn_service(queries)))
-                .insert("/updates", get(fn_service(updates)))
-                .enclosed_fn(middleware_fn)
-                .enclosed(context_mw())
-                .enclosed(
-                    HttpServiceBuilder::h1()
-                        .io_uring()
-                        .config(HttpServiceConfig::new().max_request_headers::<8>()),
-                )
-        })?
+        .bind("xitca-web", "0.0.0.0:8080", service)?
         .build()
         .wait()
 }
@@ -57,17 +52,15 @@ where
     S: for<'c> Service<Ctx<'c>, Response = Response, Error = E>,
 {
     service.call(req).await.map(|mut res| {
-        res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
+        res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);
         res
     })
 }
 
-const HELLO: Bytes = Bytes::from_static(b"Hello, World!");
-
 async fn plain_text(ctx: Ctx<'_>) -> HandleResult<Response> {
     let (req, _) = ctx.into_parts();
-    let mut res = req.into_response(HELLO);
-    res.headers_mut().append(CONTENT_TYPE, TEXT);
+    let mut res = req.into_response(Bytes::from_static(b"Hello, World!"));
+    res.headers_mut().insert(CONTENT_TYPE, TEXT);
     Ok(res)
 }
 
@@ -87,7 +80,7 @@ async fn fortunes(ctx: Ctx<'_>) -> HandleResult<Response> {
     use sailfish::TemplateOnce;
     let fortunes = state.client.tell_fortune().await?.render_once()?;
     let mut res = req.into_response(Bytes::from(fortunes));
-    res.headers_mut().append(CONTENT_TYPE, TEXT_HTML_UTF8);
+    res.headers_mut().insert(CONTENT_TYPE, TEXT_HTML_UTF8);
     Ok(res)
 }
 
