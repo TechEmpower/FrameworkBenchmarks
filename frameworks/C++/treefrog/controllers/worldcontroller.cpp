@@ -3,6 +3,7 @@
 #include "pworld.h"
 #include "mngworld.h"
 #include <TCache>
+#include <TSqlQuery>
 
 
 void WorldController::index()
@@ -164,14 +165,44 @@ void WorldController::updates(const QString &num)
     QVariantList worlds;
     int d = std::min(std::max(num.toInt(), 1), 500);
     World world;
+    QString ids;
+    QString vals;
+
+    auto blkupdate = [&ids, &vals]() {
+        const QString statement("UPDATE world SET randomNumber = ELT(FIELD(id,%1),%2) WHERE id IN (%1)");
+
+        if (!ids.isEmpty()) {
+            ids.chop(1);
+            vals.chop(1);
+            QString q = statement.arg(ids).arg(vals);
+            TSqlQuery query;
+            query.exec(q);
+            ids.clear();
+            vals.clear();
+        }
+    };
 
     for (int i = 0; i < d; ++i) {
         int id = Tf::random(1, 10000);
         world = World::get(id);
         world.setRandomNumber( Tf::random(1, 10000) );
-        world.update();
+        ids += QString::number(id);
+        ids += ',';
+        vals += QString::number(world.randomNumber());
+        vals += ',';
         worlds << world.toVariantMap();
+
+        if (!((i + 1) % 50)) {
+            blkupdate();
+        }
     }
+
+    if (d == 1) {
+        world.update();
+    } else {
+        blkupdate();
+    }
+
     renderJson(worlds);
 }
 
@@ -246,17 +277,47 @@ void WorldController::cached_pqueries(const QString &num)
 
 void WorldController::pupdates(const QString &num)
 {
+    const QString statement("UPDATE world SET randomnumber = CASE id");
     QVariantList worlds;
+    QString ids;
+    QString q = statement;
     int d = std::min(std::max(num.toInt(), 1), 500);
     PWorld world;
+
+    auto blkupdate = [&q, &ids, &statement]() {
+        if (!ids.isEmpty()) {
+            ids.chop(1);
+            q += QStringLiteral(" END WHERE id IN (%1)").arg(ids);
+            TSqlQuery query;
+            query.exec(q);
+            ids.clear();
+            q = statement;
+        }
+    };
 
     for (int i = 0; i < d; ++i) {
         int id = Tf::random(1, 10000);
         world = PWorld::get(id);
         world.setRandomNumber( Tf::random(1, 10000) );
-        world.update();
+        q += " WHEN ";
+        q += QString::number(world.id());
+        q += " THEN ";
+        q += QString::number(world.randomNumber());
+        ids += QString::number(world.id());
+        ids += ',';
         worlds << world.toVariantMap();
+
+        if (!((i + 1) % 50)) {
+            blkupdate();
+        }
     }
+
+    if (d == 1) {
+        world.update();
+    } else {
+        blkupdate();
+    }
+
     renderJson(worlds);
 }
 
