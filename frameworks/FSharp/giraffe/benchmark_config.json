@@ -22,24 +22,6 @@
         "notes": "",
         "versus": "aspcore"
       },
-      "utf8json": {
-        "json_url": "/json",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "None",
-        "framework": "giraffe",
-        "language": "F#",
-        "orm": "Raw",
-        "platform": ".NET",
-        "flavor": "CoreCLR",
-        "webserver": "Kestrel",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "Giraffe, Utf8Json",
-        "notes": "",
-        "versus": "aspcore"
-      },
       "newtonsoft": {
         "json_url": "/json",
         "port": 8080,
