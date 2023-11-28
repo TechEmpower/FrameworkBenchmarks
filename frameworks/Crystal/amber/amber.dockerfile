@@ -9,7 +9,7 @@ COPY shard.yml shard.yml
 
 ENV GC_MARKERS 1
 ENV AMBER_ENV production
-ENV DATABASE_URL postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?initial_pool_size=28&max_idle_pool_size=28&retry_attempts=3&retry_delay=1
+ENV DATABASE_URL postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?initial_pool_size=10&max_idle_pool_size=10&retry_attempts=3&retry_delay=1&max_pool_size=10
 
 RUN apt-get update
 RUN apt-get install -yqq libyaml-dev libsqlite3-dev
