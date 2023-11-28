@@ -48,7 +48,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Netty"
 webserver = "None"
-versus = "undertow"
+versus = "netty"
 
 [jetty]
 urls.plaintext = "/plaintext"
@@ -67,7 +67,7 @@ platform = "Jetty"
 webserver = "None"
 versus = "jetty"
 
-[jaxrs]
+[mvc]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"

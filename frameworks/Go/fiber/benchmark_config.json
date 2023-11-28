@@ -45,7 +45,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Fiber",
+      "display_name": "Fiber prefork",
       "notes": "",
       "versus": "go"
     }

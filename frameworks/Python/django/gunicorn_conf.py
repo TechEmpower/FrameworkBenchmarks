@@ -5,7 +5,7 @@ import sys
 _is_pypy = hasattr(sys, 'pypy_version_info')
 _is_travis = os.environ.get('TRAVIS') == 'true'
 
-workers = multiprocessing.cpu_count() * 3
+workers = int(multiprocessing.cpu_count() * 2.5)
 if _is_travis:
     workers = 2
 
@@ -16,11 +16,14 @@ pidfile = 'gunicorn.pid'
 pythonpath = 'hello'
 
 if _is_pypy:
-    worker_class = "tornado"
+    worker_class = "sync"
 else:
     worker_class = "meinheld.gmeinheld.MeinheldWorker"
 
     def post_fork(server, worker):
-        # Disalbe access log
+        import meinheld
         import meinheld.server
+        import meinheld.patch
         meinheld.server.set_access_logger(None)
+        meinheld.set_keepalive(keepalive)
+        meinheld.patch.patch_all()

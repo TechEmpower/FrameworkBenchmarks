@@ -1,12 +1,12 @@
-use std::{borrow::Cow, fmt::Write, io, sync::Arc};
+use std::{borrow::Cow, collections::HashMap, fmt::Write, io, sync::Arc};
 
-use futures_util::{stream::FuturesUnordered, TryFutureExt, TryStreamExt};
-use nanorand::{Rng, WyRand};
+use futures_util::{stream::FuturesUnordered, StreamExt, TryFutureExt, TryStreamExt};
+use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
+use tokio::pin;
 use tokio_postgres::{connect, types::ToSql, Client, NoTls, Statement};
 use viz::{Error, IntoResponse, Response, StatusCode};
 
 use crate::models::{Fortune, World};
-use crate::utils::RANGE;
 
 /// Postgres Error
 #[derive(Debug, thiserror::Error)]
@@ -33,15 +33,14 @@ impl IntoResponse for PgError {
 
 /// Postgres interface
 pub struct PgConnection {
-    rng: WyRand,
     client: Client,
     world: Statement,
     fortune: Statement,
-    updates: Vec<Statement>,
+    updates: HashMap<u16, Statement>,
 }
 
 impl PgConnection {
-    pub async fn connect(db_url: &str) -> Self {
+    pub async fn connect(db_url: &str) -> Arc<Self> {
         let (client, conn) = connect(db_url, NoTls)
             .await
             .expect("can not connect to postgresql");
@@ -54,7 +53,7 @@ impl PgConnection {
         });
 
         let fortune = client.prepare("SELECT * FROM fortune").await.unwrap();
-        let mut updates = Vec::new();
+        let mut updates = HashMap::new();
 
         for num in 1..=500u16 {
             let mut pl = 1;
@@ -63,21 +62,21 @@ impl PgConnection {
             q.push_str("UPDATE world SET randomnumber = CASE id ");
 
             for _ in 1..=num {
-                let _ = write!(q, "when ${} then ${} ", pl, pl + 1);
+                let _ = write!(q, "when ${pl} then ${} ", pl + 1);
                 pl += 2;
             }
 
             q.push_str("ELSE randomnumber END WHERE id IN (");
 
             for _ in 1..=num {
-                let _ = write!(q, "${},", pl);
+                let _ = write!(q, "${pl},");
                 pl += 1;
             }
 
             q.pop();
             q.push(')');
 
-            updates.push(client.prepare(&q).await.unwrap());
+            updates.insert(num, client.prepare(&q).await.unwrap());
         }
 
         let world = client
@@ -85,19 +84,20 @@ impl PgConnection {
             .await
             .unwrap();
 
-        PgConnection {
-            rng: WyRand::new(),
+        Arc::new(PgConnection {
             world,
             client,
             fortune,
             updates,
-        }
+        })
     }
 }
 
 impl PgConnection {
     async fn query_one_world(&self, id: i32) -> Result<World, PgError> {
-        let row = self.client.query_one(&self.world, &[&id]).await?;
+        let stream = self.client.query_raw(&self.world, &[&id]).await?;
+        pin!(stream);
+        let row = stream.next().await.unwrap()?;
         Ok(World {
             id: row.get(0),
             randomnumber: row.get(1),
@@ -105,44 +105,33 @@ impl PgConnection {
     }
 
     pub async fn get_world(&self) -> Result<World, PgError> {
-        let random_id = self.rng.clone().generate_range(RANGE);
+        let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+        let random_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+
         self.query_one_world(random_id).await
     }
 
     pub async fn get_worlds(&self, num: u16) -> Result<Vec<World>, PgError> {
-        let mut rng = self.rng.clone();
+        let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
 
         let worlds = FuturesUnordered::new();
 
         for _ in 0..num {
-            let id = rng.generate_range(RANGE);
+            let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
             worlds.push(self.query_one_world(id));
         }
 
         worlds.try_collect().await
     }
 
-    pub async fn get_worlds_by_limit(&self, limit: i64) -> Result<Vec<World>, PgError> {
-        Ok(self
-            .client
-            .query("SELECT * FROM world LIMIT $1", &[&limit])
-            .await?
-            .iter()
-            .map(|row| World {
-                id: row.get(0),
-                randomnumber: row.get(1),
-            })
-            .collect())
-    }
-
     pub async fn update(&self, num: u16) -> Result<Vec<World>, PgError> {
-        let mut rng = self.rng.clone();
+        let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
 
         let worlds = FuturesUnordered::new();
 
         for _ in 0..num {
-            let id = rng.generate_range(RANGE);
-            let rid = rng.generate_range(RANGE);
+            let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+            let rid = (rng.gen::<u32>() % 10_000 + 1) as i32;
 
             worlds.push(self.query_one_world(id).map_ok(move |mut world| {
                 world.randomnumber = rid;
@@ -150,6 +139,7 @@ impl PgConnection {
             }));
         }
 
+        let st = self.updates.get(&num).unwrap();
         let worlds = worlds.try_collect::<Vec<World>>().await?;
 
         let num = num as usize;
@@ -164,27 +154,31 @@ impl PgConnection {
             params.push(&w.id);
         }
 
-        self.client.query(&self.updates[num - 1], &params).await?;
+        self.client.query(st, &params).await?;
 
         Ok(worlds)
     }
 
     pub async fn tell_fortune(&self) -> Result<Vec<Fortune>, PgError> {
-        let mut items = self
-            .client
-            .query(&self.fortune, &[])
-            .await?
-            .iter()
-            .map(|row| Fortune {
-                id: row.get(0),
-                message: Cow::Owned(row.get(1)),
-            })
-            .collect::<Vec<_>>();
-
-        items.push(Fortune {
+        let mut items = vec![Fortune {
             id: 0,
             message: Cow::Borrowed("Additional fortune added at request time."),
-        });
+        }];
+
+        let stream = self
+            .client
+            .query_raw::<_, _, &[i32; 0]>(&self.fortune, &[])
+            .await?;
+        pin!(stream);
+
+        while let Some(row) = stream.next().await {
+            let row = row?;
+
+            items.push(Fortune {
+                id: row.get(0),
+                message: Cow::Owned(row.get(1)),
+            });
+        }
 
         items.sort_by(|it, next| it.message.cmp(&next.message));
 

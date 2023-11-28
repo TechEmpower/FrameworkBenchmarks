@@ -3,12 +3,10 @@
   "tests": [
     {
       "default": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -25,12 +23,10 @@
         "notes": ""
       },
       "postgres": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -47,12 +43,10 @@
         "notes": ""
       },
       "passenger-mri": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -69,12 +63,10 @@
         "notes": ""
       },
       "postgres-passenger-mri": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -91,12 +83,10 @@
         "notes": ""
       },
       "unicorn-mri": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -113,12 +103,10 @@
         "notes": ""
       },
       "postgres-unicorn-mri": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -132,50 +120,6 @@
         "database_os": "Linux",
         "display_name": "sinatra-sequel-postgres-unicorn-mri",
         "versus": "rack-sequel-postgres-unicorn-mri",
-        "notes": ""
-      },
-      "torquebox-jruby": {
-        "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "MySQL",
-        "framework": "sinatra-sequel",
-        "language": "Ruby",
-        "orm": "Full",
-        "platform": "Rack",
-        "webserver": "TorqueBox",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "sinatra-sequel-torquebox-jruby",
-        "versus": "rack-sequel-torquebox-jruby",
-        "notes": ""
-      },
-      "postgres-torquebox-jruby": {
-        "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "sinatra-sequel",
-        "language": "Ruby",
-        "orm": "Full",
-        "platform": "Rack",
-        "webserver": "TorqueBox",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "sinatra-sequel-postgres-torquebox-jruby",
-        "versus": "rack-sequel-postgres-torquebox-jruby",
         "notes": ""
       }
     }

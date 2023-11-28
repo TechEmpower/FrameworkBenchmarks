@@ -1,24 +1,23 @@
 #
 # BUILD
 #
-FROM gradle:8.0.2-jdk17-alpine AS build
+FROM docker.io/gradle:8.4-jdk21-alpine AS build
 USER root
 WORKDIR /hexagon
 
 ADD . .
-RUN gradle --quiet compileRocker
-RUN gradle --quiet -x test
+RUN gradle --quiet classes
+RUN gradle --quiet -x test installDist
 
 #
 # RUNTIME
 #
-FROM eclipse-temurin:17-jre-alpine
+FROM docker.io/eclipse-temurin:21-jre-alpine
+ARG PROJECT=hexagon_nettyepoll_postgresql
+
 ENV POSTGRESQL_DB_HOST tfb-database
-ENV PROJECT hexagon_nettyepoll_postgresql
 ENV JDK_JAVA_OPTIONS -XX:+AlwaysPreTouch -XX:+UseParallelGC -XX:+UseNUMA
 
 COPY --from=build /hexagon/$PROJECT/build/install/$PROJECT /opt/$PROJECT
 
-EXPOSE 9090
-
-ENTRYPOINT /opt/$PROJECT/bin/$PROJECT
+ENTRYPOINT [ "/opt/hexagon_nettyepoll_postgresql/bin/hexagon_nettyepoll_postgresql" ]

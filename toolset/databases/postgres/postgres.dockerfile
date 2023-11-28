@@ -5,6 +5,7 @@ ENV POSTGRES_PASSWORD=benchmarkdbpass
 ENV POSTGRES_DB=hello_world
 
 ENV POSTGRES_HOST_AUTH_METHOD=md5
+ENV POSTGRES_INITDB_ARGS=--auth-host=md5
 ENV PGDATA=/ssd/postgresql
 
 COPY postgresql-min.conf /tmp/postgresql.conf

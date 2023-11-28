@@ -2,26 +2,19 @@ package io.quarkus.benchmark.resource;
 
 import java.nio.charset.StandardCharsets;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 import io.smallrye.common.annotation.NonBlocking;
 import io.vertx.core.buffer.Buffer;
 
 @Path("/plaintext")
 public class PlaintextResource {
-    private static final String HELLO_WORLD = "Hello, world!";
-    private static final Buffer HELLO_WORLD_BUFFER;
 
-    static {
-        ByteBuf nettyBuffer = ByteBufAllocator.DEFAULT.directBuffer();
-        nettyBuffer.writeBytes(HELLO_WORLD.getBytes(StandardCharsets.UTF_8));
-        HELLO_WORLD_BUFFER = Buffer.buffer(nettyBuffer);
-    }
+    // We prefer an heap Buffer, because Resteasy-Reactive would perform Buffer::getBytes on it
+    private static final Buffer HELLO_WORLD_BUFFER = Buffer.buffer("Hello, world!".getBytes(StandardCharsets.UTF_8));
 
     @Produces(MediaType.TEXT_PLAIN)
     @GET

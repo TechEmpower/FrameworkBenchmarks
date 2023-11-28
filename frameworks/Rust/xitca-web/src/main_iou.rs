@@ -1,9 +1,6 @@
 // used as reference of if/how moving from epoll to io-uring(or mixture of the two) make sense for
 // network io.
 
-#![allow(dead_code)]
-#![feature(type_alias_impl_trait)]
-
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
@@ -11,16 +8,9 @@ mod db;
 mod ser;
 mod util;
 
-use std::{
-    cell::RefCell,
-    convert::Infallible,
-    fmt,
-    future::{poll_fn, Future},
-    io,
-    pin::pin,
-};
+use std::{convert::Infallible, fmt, future::poll_fn, io, pin::pin};
 
-use futures_util::stream::Stream;
+use futures_core::stream::Stream;
 use xitca_http::{
     body::Once,
     date::DateTimeService,
@@ -31,44 +21,44 @@ use xitca_http::{
         header::{CONTENT_TYPE, SERVER},
         IntoResponse, RequestExt, StatusCode,
     },
-    util::service::context::{Context as Ctx, ContextBuilder},
 };
 use xitca_io::{
-    bytes::{Buf, Bytes, BytesMut},
-    net::TcpStream,
+    bytes::{Bytes, BytesMut},
+    io_uring::IoBuf,
+    net::{io_uring::TcpStream as IOUTcpStream, TcpStream},
 };
-use xitca_service::{fn_service, middleware::UncheckedReady, Service, ServiceExt};
-use xitca_unsafe_collection::bytes::PagedBytesMut;
+use xitca_service::{fn_build, fn_service, middleware::UncheckedReady, Service, ServiceExt};
 
 use self::{
-    db::Client,
     ser::{json_response, Message},
-    util::{QueryParse, DB_URL, SERVER_HEADER_VALUE},
+    util::{context_mw, Ctx, QueryParse, SERVER_HEADER_VALUE},
 };
 
+type Request = http::Request<RequestExt<()>>;
+type Response = http::Response<Once<Bytes>>;
+
 fn main() -> io::Result<()> {
+    let service = fn_service(handler)
+        .enclosed(context_mw())
+        .enclosed(fn_build(|service| async {
+            Ok::<_, Infallible>(Http1IOU {
+                service,
+                date: DateTimeService::new(),
+            })
+        }))
+        .enclosed(UncheckedReady);
     xitca_server::Builder::new()
-        .bind("xitca-iou", "0.0.0.0:8080", || {
-            Http1IOU::new(
-                ContextBuilder::new(|| async {
-                    db::create(DB_URL).await.map(|client| State {
-                        client,
-                        write_buf: RefCell::new(BytesMut::new()),
-                    })
-                })
-                .service(fn_service(handler)),
-            )
-            .enclosed(UncheckedReady)
-        })?
+        .bind("xitca-iou", "0.0.0.0:8080", service)?
         .build()
         .wait()
 }
 
-async fn handler(ctx: Ctx<'_, Request, State>) -> Result<Response, Infallible> {
+async fn handler(ctx: Ctx<'_, Request>) -> Result<Response, Infallible> {
     let (req, state) = ctx.into_parts();
     let mut res = match req.uri().path() {
         "/plaintext" => {
-            let mut res = req.into_response(Bytes::from_static(b"Hello, World!"));
+            const HELLO: Bytes = Bytes::from_static(b"Hello, World!");
+            let mut res = req.into_response(HELLO);
             res.headers_mut().insert(CONTENT_TYPE, TEXT);
             res
         }
@@ -112,105 +102,57 @@ async fn handler(ctx: Ctx<'_, Request, State>) -> Result<Response, Infallible> {
 
 struct Http1IOU<S> {
     service: S,
-}
-
-impl<S> Http1IOU<S> {
-    fn new(service: S) -> Self {
-        Self { service }
-    }
-}
-
-// builder for http service.
-impl<S> Service for Http1IOU<S>
-where
-    S: Service,
-{
-    type Response = Http1IOUService<S::Response>;
-    type Error = S::Error;
-    type Future<'f> = impl Future<Output = Result<Self::Response, Self::Error>> + 'f where Self: 'f, (): 'f ;
-
-    fn call<'s>(&'s self, _: ()) -> Self::Future<'s>
-    where
-        (): 's,
-    {
-        async {
-            let service = self.service.call(()).await?;
-            Ok(Http1IOUService {
-                service,
-                date: DateTimeService::new(),
-            })
-        }
-    }
-}
-
-struct Http1IOUService<S> {
-    service: S,
     date: DateTimeService,
 }
 
 // runner for http service.
-impl<S> Service<TcpStream> for Http1IOUService<S>
+impl<S> Service<TcpStream> for Http1IOU<S>
 where
     S: Service<Request, Response = Response>,
     S::Error: fmt::Debug,
 {
     type Response = ();
     type Error = io::Error;
-    type Future<'f> = impl Future<Output = Result<Self::Response, Self::Error>> + 'f where Self: 'f, TcpStream: 'f ;
 
-    fn call<'s>(&'s self, stream: TcpStream) -> Self::Future<'s>
-    where
-        TcpStream: 's,
-    {
-        async {
-            let std = stream.into_std()?;
-            let stream = tokio_uring::net::TcpStream::from_std(std);
+    async fn call(&self, stream: TcpStream) -> Result<Self::Response, Self::Error> {
+        let std = stream.into_std()?;
+        let stream = IOUTcpStream::from_std(std);
 
-            let mut read_buf = BytesMut::with_capacity(4096);
-            let mut write_buf = BytesMut::with_capacity(4096);
-            let mut paged = PagedBytesMut::new();
+        let mut ctx = Context::<_, 8>::new(self.date.get());
+        let mut read_buf = BytesMut::new();
+        let mut write_buf = BytesMut::with_capacity(4096);
 
-            let mut ctx = Context::<_, 8>::new(self.date.get());
-
-            'io: loop {
-                let (res, buf) = stream.read(read_buf).await;
-                if res? == 0 {
-                    break;
-                }
-                read_buf = buf;
-                paged.get_mut().extend_from_slice(&read_buf);
-
-                while let Some((req, _)) = ctx.decode_head::<65535>(&mut paged).unwrap() {
-                    let (parts, body) = self.service.call(req).await.unwrap().into_parts();
-                    let mut encoder = ctx.encode_head(parts, &body, &mut write_buf).unwrap();
-                    let mut body = pin!(body);
-                    while let Some(chunk) = poll_fn(|cx| body.as_mut().poll_next(cx)).await {
-                        let chunk = chunk.unwrap();
-                        encoder.encode(chunk, &mut write_buf);
-                    }
-                    encoder.encode_eof(&mut write_buf);
-                }
-
-                while !write_buf.is_empty() {
-                    let (res, mut w) = stream.write(write_buf).await;
-                    let n = res?;
-                    if n == 0 {
-                        break 'io;
-                    }
-                    w.advance(n);
-                    write_buf = w;
-                }
+        loop {
+            let len = read_buf.len();
+            let rem = read_buf.capacity() - len;
+            if rem < 4096 {
+                read_buf.reserve(4096 - rem);
             }
 
-            Ok(())
+            let (res, buf) = stream.read(read_buf.slice(len..)).await;
+            read_buf = buf.into_inner();
+            if res? == 0 {
+                break;
+            }
+
+            while let Some((req, _)) = ctx.decode_head::<{ usize::MAX }>(&mut read_buf).unwrap() {
+                let (parts, body) = self.service.call(req).await.unwrap().into_parts();
+                let mut encoder = ctx.encode_head(parts, &body, &mut write_buf).unwrap();
+                let mut body = pin!(body);
+                let chunk = poll_fn(|cx| body.as_mut().poll_next(cx))
+                    .await
+                    .unwrap()
+                    .unwrap();
+                encoder.encode(chunk, &mut write_buf);
+                encoder.encode_eof(&mut write_buf);
+            }
+
+            let (res, b) = stream.write_all(write_buf).await;
+            write_buf = b;
+            write_buf.clear();
+            res?;
         }
+
+        stream.shutdown(std::net::Shutdown::Both)
     }
-}
-
-type Request = http::Request<RequestExt<()>>;
-type Response = http::Response<Once<Bytes>>;
-
-struct State {
-    client: Client,
-    write_buf: RefCell<BytesMut>,
 }

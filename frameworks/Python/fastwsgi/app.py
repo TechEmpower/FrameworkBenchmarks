@@ -9,7 +9,8 @@ except:
 
 def app(environ, start_response):
     path = environ["PATH_INFO"]
-    headers = [ ('Server', 'FastWSGI') ]
+    headers = [ ]
+    #headers = [ ('Server', 'FastWSGI') ]
     
     if path == "/json":
         headers.append( ('Content-Type', 'application/json') )
@@ -38,7 +39,8 @@ if __name__ == "__main__":
     port = 3000
 
     def run_app():
-        fastwsgi.run(app, host, port, loglevel=0)
+        fastwsgi.server.backlog = 4096
+        fastwsgi.run(app, host, port, loglevel=2)
 
     def create_fork():
         n = os.fork()

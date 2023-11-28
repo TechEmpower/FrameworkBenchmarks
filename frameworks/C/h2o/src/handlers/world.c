@@ -55,18 +55,18 @@
 #define RANDOM_NUM_KEY "randomNumber"
 
 // MAX_UPDATE_QUERY_LEN must be updated whenever UPDATE_QUERY_BEGIN, UPDATE_QUERY_ELEM,
-// and UPDATE_QUERY_END are changed.
-#define UPDATE_QUERY_BEGIN \
-	"UPDATE " WORLD_TABLE_NAME " SET randomNumber = v.randomNumber " \
-	"FROM (VALUES(%" PRIu32 ", %" PRIu32 ")"
-
-#define UPDATE_QUERY_ELEM ", (%" PRIu32 ", %" PRIu32 ")"
-#define UPDATE_QUERY_END ") AS v (id, randomNumber) WHERE " WORLD_TABLE_NAME ".id = v.id;"
+// UPDATE_QUERY_MIDDLE, UPDATE_QUERY_ELEM2, and UPDATE_QUERY_END are changed.
+#define UPDATE_QUERY_BEGIN "UPDATE " WORLD_TABLE_NAME " SET randomNumber = CASE id "
+#define UPDATE_QUERY_ELEM "WHEN %" PRIu32 " THEN %" PRIu32 " "
+#define UPDATE_QUERY_MIDDLE "ELSE randomNumber END WHERE id IN (%" PRIu32
+#define UPDATE_QUERY_ELEM2 ",%" PRIu32
+#define UPDATE_QUERY_END ");"
 
 #define MAX_UPDATE_QUERY_LEN(n) \
-	(sizeof(UPDATE_QUERY_BEGIN) + sizeof(UPDATE_QUERY_END) - sizeof(UPDATE_QUERY_ELEM) + \
-	 (n) * (sizeof(UPDATE_QUERY_ELEM) - 1 + \
-	        2 * (sizeof(MKSTR(MAX_ID)) - 1) - 2 * (sizeof(PRIu32) - 1) - 2))
+	(sizeof(UPDATE_QUERY_BEGIN) + sizeof(UPDATE_QUERY_MIDDLE) + \
+	 sizeof(UPDATE_QUERY_END) - 1 - sizeof(UPDATE_QUERY_ELEM2) + \
+	 (n) * (sizeof(UPDATE_QUERY_ELEM) - 1 + sizeof(UPDATE_QUERY_ELEM2) - 1 + \
+	        3 * (sizeof(MKSTR(MAX_ID)) - 1) - 3 * (sizeof(PRIu32) - 1) - 3))
 
 #define USE_CACHE 2
 #define WORLD_QUERY "SELECT * FROM " WORLD_TABLE_NAME " WHERE id = $1::integer;"
@@ -336,13 +336,32 @@ static void do_updates(multiple_query_ctx_t *query_ctx)
 	query_ctx->query_param->param.paramLengths = NULL;
 	query_ctx->query_param->param.paramValues = NULL;
 	query_ctx->query_param->param.flags = 0;
-	query_ctx->res->random_number = 1 + get_random_number(MAX_ID, &query_ctx->ctx->random_seed);
 
-	int c = snprintf(iter,
-	                 sz,
-	                 UPDATE_QUERY_BEGIN,
-	                 query_ctx->res->id,
-	                 query_ctx->res->random_number);
+	int c = snprintf(iter, sz, UPDATE_QUERY_BEGIN);
+
+	if ((size_t) c >= sz)
+		goto error;
+
+	iter += c;
+	sz -= c;
+
+	for (size_t i = 0; i < query_ctx->num_result; i++) {
+		query_ctx->res[i].random_number = 1 + get_random_number(MAX_ID,
+		                                                        &query_ctx->ctx->random_seed);
+		c = snprintf(iter,
+		             sz,
+		             UPDATE_QUERY_ELEM,
+		             query_ctx->res[i].id,
+		             query_ctx->res[i].random_number);
+
+		if ((size_t) c >= sz)
+			goto error;
+
+		iter += c;
+		sz -= c;
+	}
+
+	c = snprintf(iter, sz, UPDATE_QUERY_MIDDLE, query_ctx->res->id);
 
 	if ((size_t) c >= sz)
 		goto error;
@@ -351,13 +370,7 @@ static void do_updates(multiple_query_ctx_t *query_ctx)
 	sz -= c;
 
 	for (size_t i = 1; i < query_ctx->num_result; i++) {
-		query_ctx->res[i].random_number = 1 + get_random_number(MAX_ID,
-		                                                        &query_ctx->ctx->random_seed);
-		c = snprintf(iter,
-		             sz,
-		             UPDATE_QUERY_ELEM,
-		             query_ctx->res[i].id,
-		             query_ctx->res[i].random_number);
+		c = snprintf(iter, sz, UPDATE_QUERY_ELEM2, query_ctx->res[i].id);
 
 		if ((size_t) c >= sz)
 			goto error;
@@ -857,6 +870,7 @@ void initialize_world_handler_thread_data(thread_context_t *ctx,
 	                                    ctx->global_thread_data->config,
 	                                    data->prepared_statements,
 	                                    ctx->event_loop.h2o_ctx.loop,
+	                                    &ctx->event_loop.local_messages,
 	                                    &thread_data->hello_world_db);
 }
 

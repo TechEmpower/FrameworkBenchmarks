@@ -1,11 +1,11 @@
-import asyncio
+import os
+from operator import itemgetter
+from random import randint, sample
+from urllib.parse import parse_qs
+
 import asyncpg
 import jinja2
-import os
 import ujson
-from random import randint, sample
-from operator import itemgetter
-from urllib.parse import parse_qs
 
 
 async def setup():
@@ -56,9 +56,6 @@ path = os.path.join('templates', 'fortune.html')
 with open(path, 'r') as template_file:
     template_text = template_file.read()
     template = jinja2.Template(template_text)
-
-loop = asyncio.get_event_loop()
-loop.run_until_complete(setup())
 
 
 def get_num_queries(scope):
@@ -216,6 +213,11 @@ routes = {
 
 
 async def main(scope, receive, send):
+    if scope['type'] == 'lifespan':
+        message = await receive()
+        if message['type'] == 'lifespan.startup':
+            await setup()
+            await send({'type': 'lifespan.startup.complete'})
     path = scope['path']
     handler = routes.get(path, handle_404)
     await handler(scope, receive, send)

@@ -1,9 +1,10 @@
 use rocket::serde::{Deserialize, Serialize};
 use sqlx::FromRow;
+use std::borrow::Cow;
 
 #[derive(Serialize)]
 pub struct Message {
-    pub message: &'static str,
+    pub message: Cow<'static, str>,
 }
 
 #[allow(non_snake_case)]

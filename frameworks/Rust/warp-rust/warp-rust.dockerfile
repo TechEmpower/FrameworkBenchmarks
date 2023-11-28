@@ -1,4 +1,4 @@
-FROM rust:1.59
+FROM rust:1.70
 
 WORKDIR /warp-rust
 COPY src src

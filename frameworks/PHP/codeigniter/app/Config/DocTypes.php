@@ -2,6 +2,9 @@
 
 namespace Config;
 
+/**
+ * @immutable
+ */
 class DocTypes
 {
     /**
@@ -9,7 +12,7 @@ class DocTypes
      *
      * @var array<string, string>
      */
-    public $list = [
+    public array $list = [
         'xhtml11'           => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">',
         'xhtml1-strict'     => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
         'xhtml1-trans'      => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
@@ -30,4 +33,14 @@ class DocTypes
         'xhtml-rdfa-1'      => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">',
         'xhtml-rdfa-2'      => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">',
     ];
+
+    /**
+     * Whether to remove the solidus (`/`) character for void HTML elements (e.g. `<input>`)
+     * for HTML5 compatibility.
+     *
+     * Set to:
+     *    `true` - to be HTML5 compatible
+     *    `false` - to be XHTML compatible
+     */
+    public bool $html5 = true;
 }

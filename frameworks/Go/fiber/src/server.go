@@ -219,7 +219,7 @@ func templateHandler(c *fiber.Ctx) error {
 	rows, _ := db.Query(context.Background(), fortuneselectsql)
 
 	var f templates.Fortune
-	fortunes := make([]templates.Fortune, 0, 16)
+	fortunes := make([]templates.Fortune, 0)
 	for rows.Next() {
 		_ = rows.Scan(&f.ID, &f.Message)
 		fortunes = append(fortunes, f)

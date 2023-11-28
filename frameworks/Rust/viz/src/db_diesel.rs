@@ -38,18 +38,6 @@ impl IntoResponse for PgError {
     }
 }
 
-pub async fn get_worlds_by_limit(
-    pool: Pool<AsyncPgConnection>,
-    limit: i64,
-) -> Result<Vec<World>, PgError> {
-    let mut conn = pool.get().await?;
-    let worlds = world::table
-        .limit(limit)
-        .get_results::<World>(&mut conn)
-        .await?;
-    Ok(worlds)
-}
-
 async fn _get_world(conn: &mut AsyncPgConnection, id: i32) -> Result<World, PgError> {
     let world = world::table.find(id).first(conn).await?;
     Ok(world)

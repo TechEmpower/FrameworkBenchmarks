@@ -29,6 +29,7 @@ rocker {
 dependencies {
     annotationProcessor("io.micronaut.data:micronaut-data-document-processor")
 
+    api("io.micronaut:micronaut-jackson-databind")
     api("io.micronaut:micronaut-inject")
     api("io.micronaut:micronaut-http-server-netty")
     api("io.micronaut.reactor:micronaut-reactor")
@@ -40,6 +41,7 @@ dependencies {
     implementation("com.fizzed:rocker-runtime")
 
     runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("org.yaml:snakeyaml")
 }
 
 test {

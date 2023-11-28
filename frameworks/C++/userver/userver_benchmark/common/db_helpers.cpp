@@ -1,7 +1,7 @@
 #include "db_helpers.hpp"
 
-#include <charconv>
 #include <cctype>
+#include <charconv>
 
 #include <userver/formats/json/inline.hpp>
 #include <userver/utils/rand.hpp>
@@ -16,7 +16,8 @@ int ParseFromQueryVal(std::string_view query_val) {
   }
 
   int parse_result{};
-  const auto [ptr, err] = std::from_chars(query_val.data(), query_val.data() + query_val.size(), parse_result);
+  const auto [ptr, err] = std::from_chars(
+      query_val.data(), query_val.data() + query_val.size(), parse_result);
   if (err != std::errc{} || ptr != query_val.data() + query_val.size()) {
     return 1;
   }
@@ -24,6 +25,13 @@ int ParseFromQueryVal(std::string_view query_val) {
   return std::min(500, std::max(1, parse_result));
 }
 
+}  // namespace
+
+userver::storages::postgres::Query CreateNonLoggingQuery(
+    std::string statement) {
+  return userver::storages::postgres::Query{
+      statement, std::nullopt /* name */,
+      userver::storages::postgres::Query::LogMode::kNameOnly};
 }
 
 int GenerateRandomId() {
@@ -52,7 +60,7 @@ int ParseParamFromQuery(std::string_view url, std::string_view name) {
   if (pos == std::string_view::npos) {
     return 1;
   }
-  pos += name.size() + 1; // +1 for '='
+  pos += name.size() + 1;  // +1 for '='
 
   std::size_t len = 0;
   while (pos + len < url.size() && std::isdigit(url[pos + len])) {
@@ -60,6 +68,13 @@ int ParseParamFromQuery(std::string_view url, std::string_view name) {
   }
 
   return ParseFromQueryVal(url.substr(pos, len));
+}
+
+DatabasePoolSemaphore::DatabasePoolSemaphore(std::size_t initial_count)
+    : semaphore_{initial_count} {}
+
+userver::engine::SemaphoreLock DatabasePoolSemaphore::Acquire() const {
+  return userver::engine::SemaphoreLock{semaphore_};
 }
 
 }  // namespace userver_techempower::db_helpers

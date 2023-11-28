@@ -12,6 +12,5 @@ pub fn get_query_param(query: Option<&str>) -> u16 {
             s.find('q')
                 .map(|p| u16::from_radix_10(s.split_at(p + 2).1.as_ref()).0)
         })
-        .map(|n| n.clamp(1, 500))
-        .unwrap_or(1)
+        .map_or(1, |n| n.clamp(1, 500))
 }

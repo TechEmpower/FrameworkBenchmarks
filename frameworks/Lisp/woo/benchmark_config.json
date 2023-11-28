@@ -10,6 +10,7 @@
                 "query_url": "/queries?queries=",
                 "update_url": "/updates?queries=",
                 "port": 8080,
+                "debug_port": 4005,
                 "approach": "Stripped",
                 "classification": "Micro",
                 "database": "Postgres",

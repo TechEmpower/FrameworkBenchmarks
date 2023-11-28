@@ -14,6 +14,9 @@ for folder in db_folders:
     # regex that grabs the characters between "toolset/database/"
     # and the final "/" in the db folder string to get the db name
     db_name = re.findall(r'.+\/(.+)\/$', folder, re.M)[0]
+    # ignore generate __pycache__ folder
+    if db_name == '__pycache__':
+        continue
     db = imp.load_source("Database", "%s%s.py" % (folder, db_name))
 
     if not hasattr(db.Database, "get_current_world_table")\

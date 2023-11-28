@@ -1,16 +1,17 @@
 package com.hexagonkt
 
 import com.hexagonkt.core.Jvm.systemFlag
+import com.hexagonkt.core.media.TEXT_HTML
+import com.hexagonkt.core.urlOf
 import com.hexagonkt.http.server.jetty.JettyServletAdapter
 import com.hexagonkt.store.BenchmarkSqlStore
-import com.hexagonkt.templates.rocker.RockerAdapter
-import java.net.URL
+import com.hexagonkt.templates.jte.JteAdapter
 
 fun main() {
     val settings = Settings()
     val store = BenchmarkSqlStore("postgresql")
-    val templateEngine = RockerAdapter()
-    val templateUrl = URL("classpath:fortunes.rocker.html")
+    val templateEngine = JteAdapter(TEXT_HTML, precompiled = true)
+    val templateUrl = urlOf("classpath:fortunes.jte")
     val engine = JettyServletAdapter(
         sendDateHeader = settings.sendDateHeader,
         sendServerVersion = settings.sendServerVersion,

@@ -61,12 +61,12 @@ func parseQueries(c *gin.Context) int {
 	return n
 }
 
-/// Test 1: JSON serialization
+// / Test 1: JSON serialization
 func json(c *gin.Context) {
 	c.JSON(200, gin.H{"message": "Hello, World!"})
 }
 
-/// Test 2: Single database query
+// / Test 2: Single database query
 func db(c *gin.Context) {
 	var world World
 	err := worldStatement.QueryRow(rand.Intn(worldRowCount)+1).Scan(&world.Id, &world.RandomNumber)
@@ -77,7 +77,7 @@ func db(c *gin.Context) {
 	c.JSON(200, &world)
 }
 
-/// Test 3: Multiple database queries
+// / Test 3: Multiple database queries
 func dbs(c *gin.Context) {
 	numQueries := parseQueries(c)
 
@@ -92,7 +92,7 @@ func dbs(c *gin.Context) {
 	c.JSON(200, &worlds)
 }
 
-/// Test 4: Fortunes
+// / Test 4: Fortunes
 func fortunes(c *gin.Context) {
 	rows, err := fortuneStatement.Query()
 	if err != nil {
@@ -100,7 +100,7 @@ func fortunes(c *gin.Context) {
 		return
 	}
 
-	fortunes := make(Fortunes, 0, 16)
+	fortunes := make(Fortunes, 0)
 	for rows.Next() { //Fetch rows
 		fortune := Fortune{}
 		if err := rows.Scan(&fortune.Id, &fortune.Message); err != nil {
@@ -115,7 +115,7 @@ func fortunes(c *gin.Context) {
 	c.HTML(200, "fortune.html", fortunes)
 }
 
-/// Test 5: Database updates
+// / Test 5: Database updates
 func update(c *gin.Context) {
 	numQueries := parseQueries(c)
 	world := make([]World, numQueries)
@@ -133,7 +133,7 @@ func update(c *gin.Context) {
 	c.JSON(200, world)
 }
 
-/// Test 6: plaintext
+// / Test 6: plaintext
 func plaintext(c *gin.Context) {
 	c.String(200, "Hello, World!")
 }
@@ -153,7 +153,7 @@ func main() {
 	r.GET("/fortunes", fortunes)
 	r.GET("/update", update)
 	r.GET("/plaintext", plaintext)
-	log.Print("Listening and serving HTTP\n")
+	fmt.Println("Listening and serving HTTP")
 	r.Run(":8080")
 }
 

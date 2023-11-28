@@ -18,7 +18,8 @@
       "database_os": "Linux",
       "display_name": "aah",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     },
     "mysql": {
       "dockerfile": "aah.dockerfile",
@@ -41,7 +42,8 @@
       "database_os": "Linux",
       "display_name": "aah-mysql",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     },
     "postgresql": {
       "dockerfile": "aah.dockerfile",
@@ -64,7 +66,8 @@
       "database_os": "Linux",
       "display_name": "aah-postgresql",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     }  
   }]
 }

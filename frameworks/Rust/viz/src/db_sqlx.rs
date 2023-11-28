@@ -4,8 +4,8 @@ use nanorand::{Rng, WyRand};
 
 pub use sqlx::{
     pool::PoolConnection,
-    postgres::{PgArguments, PgPool, PgPoolOptions, PgRow},
-    Arguments, Pool, Postgres, Row,
+    postgres::{PgArguments, PgPoolOptions, PgRow},
+    Arguments, PgPool, Postgres, Row,
 };
 
 use viz::{
@@ -62,25 +62,16 @@ impl FromRequest for Counter {
     }
 }
 
-pub async fn get_worlds_by_limit(
-    mut conn: PoolConnection<Postgres>,
-    limit: i64,
-) -> Result<Vec<World>, PgError> {
-    let worlds = sqlx::query_as("SELECT * FROM World LIMIT $1")
-        .bind(limit)
-        .fetch_all(&mut conn)
-        .await?;
-    Ok(worlds)
-}
-
 pub async fn get_world(
     conn: &mut PoolConnection<Postgres>,
     id: i32,
 ) -> Result<World, PgError> {
+    let mut args = PgArguments::default();
+    args.add(id);
+
     let world =
-        sqlx::query_as::<_, World>("SELECT id, randomnumber FROM World WHERE id = $1")
-            .bind(id)
-            .fetch_one(conn)
+        sqlx::query_as_with("SELECT id, randomnumber FROM World WHERE id = $1", args)
+            .fetch_one(&mut **conn)
             .await?;
     Ok(world)
 }
@@ -106,7 +97,7 @@ pub async fn update_worlds(
         args.add(w.id);
 
         sqlx::query_with("UPDATE World SET randomNumber = $1 WHERE id = $2", args)
-            .execute(&mut conn)
+            .execute(&mut *conn)
             .await?;
     }
 
@@ -121,7 +112,7 @@ pub async fn get_fortunes(
             id: row.get(0),
             message: Cow::Owned(row.get(1)),
         })
-        .fetch_all(&mut conn)
+        .fetch_all(&mut *conn)
         .await?;
 
     items.push(Fortune {

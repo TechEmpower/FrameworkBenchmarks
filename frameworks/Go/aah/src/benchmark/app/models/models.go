@@ -80,7 +80,7 @@ func MySQLFortunes() (Fortunes, error) {
 		return nil, err
 	}
 
-	fortunes := make(Fortunes, 0, 16)
+	fortunes := make(Fortunes, 0)
 	for rows.Next() {
 		var fortune Fortune
 		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {
@@ -156,7 +156,7 @@ func PGFortunes() (Fortunes, error) {
 		return nil, err
 	}
 
-	fortunes := make(Fortunes, 0, 16)
+	fortunes := make(Fortunes, 0)
 	for rows.Next() {
 		var fortune Fortune
 		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {

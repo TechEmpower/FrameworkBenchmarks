@@ -47,7 +47,7 @@
       "display_name": "jooby-netty",
       "versus": "netty"
     },
-    "jaxrs": {
+    "mvc": {
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/db",
@@ -66,7 +66,7 @@
       "orm": "Raw",
       "webserver": "None",
       "os": "Linux",
-      "notes": "Jooby JAXRS using Undertow",
+      "notes": "Jooby MVC using Undertow",
       "display_name": "jooby-jaxrs",
       "versus": "undertow"
     },
@@ -112,7 +112,7 @@
       "os": "Linux",
       "notes": "Jooby with Reactive PG client",
       "display_name": "jooby-pgclient",
-      "versus": "undertow"
+      "versus": "netty"
     }
   }]
 }

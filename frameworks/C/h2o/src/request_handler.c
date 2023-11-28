@@ -106,10 +106,8 @@ void initialize_request_handler_thread_data(thread_context_t *ctx)
 void initialize_request_handlers(const config_t *config,
                                  h2o_hostconf_t *hostconf,
                                  h2o_access_log_filehandle_t *log_handle,
-                                 list_t **postinitialization_tasks,
                                  request_handler_data_t *data)
 {
-	IGNORE_FUNCTION_PARAMETER(postinitialization_tasks);
 	initialize_fortunes_handler(config, hostconf, log_handle, data);
 	initialize_json_serializer_handler(hostconf, log_handle);
 	initialize_plaintext_handler(hostconf, log_handle);
@@ -188,6 +186,7 @@ void set_default_response_param(content_type_t content_type, size_t content_leng
 	req->res.content_length = content_length;
 	req->res.status = OK;
 	req->res.reason = status_code_to_string(req->res.status);
+	h2o_resp_add_date_header(req);
 
 	switch (content_type) {
 		case JSON:

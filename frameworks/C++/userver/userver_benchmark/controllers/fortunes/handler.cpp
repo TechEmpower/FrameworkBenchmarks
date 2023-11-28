@@ -2,8 +2,6 @@
 
 #include <vector>
 
-#include "../../common/db_helpers.hpp"
-
 #include <userver/components/component_context.hpp>
 #include <userver/storages/postgres/postgres.hpp>
 
@@ -11,9 +9,12 @@ namespace userver_techempower::fortunes {
 
 namespace {
 
+const std::string kContentTypeHeader{"Content-Type"};
+const std::string kContentTypeTextHtml{"text/html; charset=utf-8"};
+
 struct Fortune final {
   int id;
-  std::string message;
+  std::string_view message;
 };
 
 constexpr std::string_view kResultingHtmlHeader{
@@ -121,6 +122,8 @@ std::string FormatFortunes(const std::vector<Fortune>& fortunes) {
   return result;
 }
 
+constexpr std::size_t kBestConcurrencyWildGuess = 256;
+
 }  // namespace
 
 Handler::Handler(const userver::components::ComponentConfig& config,
@@ -130,21 +133,26 @@ Handler::Handler(const userver::components::ComponentConfig& config,
               .FindComponent<userver::components::Postgres>(
                   db_helpers::kDbComponentName)
               .GetCluster()},
-      select_all_fortunes_query_{"SELECT id, message FROM Fortune"} {}
+      select_all_fortunes_query_{
+          db_helpers::CreateNonLoggingQuery("SELECT id, message FROM Fortune")},
+      semaphore_{kBestConcurrencyWildGuess} {}
 
 std::string Handler::HandleRequestThrow(
     const userver::server::http::HttpRequest& request,
     userver::server::request::RequestContext&) const {
-  request.GetHttpResponse().SetContentType("text/html; charset=utf-8");
+  request.GetHttpResponse().SetHeader(kContentTypeHeader, kContentTypeTextHtml);
   return GetResponse();
 }
 
 std::string Handler::GetResponse() const {
-  auto fortunes =
-      pg_->Execute(db_helpers::kClusterHostType, select_all_fortunes_query_)
-          .AsContainer<std::vector<Fortune>>(
-              userver::storages::postgres::kRowTag);
+  const auto pg_result = [this] {
+    const auto lock = semaphore_.Acquire();
+    return pg_->Execute(db_helpers::kClusterHostType,
+                        select_all_fortunes_query_);
+  }();
 
+  auto fortunes = pg_result.AsContainer<std::vector<Fortune>>(
+      userver::storages::postgres::kRowTag);
   fortunes.push_back({0, "Additional fortune added at request time."});
 
   std::sort(fortunes.begin(), fortunes.end(),

@@ -13,8 +13,11 @@ RUN apt-get -yqq update && \
       curl \
       flex \
       g++ \
+      libbrotli-dev \
+      libcap-dev \
+      libicu-dev \
       libnuma-dev \
-      libpq-dev \
+      libreadline-dev \
       libssl-dev \
       libtool \
       libuv1-dev \
@@ -23,9 +26,11 @@ RUN apt-get -yqq update && \
       libz-dev \
       make \
       ninja-build \
-      pkg-config
+      patch \
+      pkg-config \
+      systemtap-sdt-dev
 
-ARG H2O_VERSION=v2.2.6
+ARG H2O_VERSION=13ba727ad12dfb2338165d2bcfb2136457e33c8a
 
 WORKDIR /tmp/h2o-build
 RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
@@ -38,15 +43,30 @@ RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
       -G Ninja \
       -S . && \
     cmake --build build -j && \
-    cmake --install build
+    cmake --install build && \
+    cp -a deps/picotls/include/picotls* deps/quicly/include/quicly* /usr/local/include
 
-ARG MUSTACHE_C_REVISION=c1948c599edfe48c6099ed70ab1d5911d8c3ddc8
+ARG MUSTACHE_C_REVISION=7fe52392879d0188c172d94bb4fde7c513d6b929
 
 WORKDIR /tmp/mustache-c-build
 RUN curl -LSs "https://github.com/x86-64/mustache-c/archive/${MUSTACHE_C_REVISION}.tar.gz" | \
       tar --strip-components=1 -xz && \
     CFLAGS="-flto -march=native -mtune=native -O3" ./autogen.sh && \
     make -j "$(nproc)" install
+
+ARG POSTGRESQL_VERSION=c1ec02be1d79eac95160dea7ced32ace84664617
+
+WORKDIR /tmp/postgresql-build
+RUN curl -LSs "https://github.com/postgres/postgres/archive/${POSTGRESQL_VERSION}.tar.gz" | \
+      tar --strip-components=1 -xz && \
+    curl -LSs "https://www.postgresql.org/message-id/attachment/152078/v5-0001-Add-PQsendPipelineSync-to-libpq.patch" | \
+      patch -Np1 && \
+    CFLAGS="-flto -march=native -mtune=native -O3" ./configure \
+      --includedir=/usr/local/include/postgresql \
+      --prefix=/usr/local \
+      --with-ssl=openssl && \
+    make -j "$(nproc)" -C src/include install && \
+    make -j "$(nproc)" -C src/interfaces/libpq install
 
 ARG H2O_APP_PREFIX
 WORKDIR /tmp/build
@@ -68,11 +88,11 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -yqq update && \
     apt-get -yqq install \
       libnuma1 \
-      libpq5 \
       libyajl2
 ARG H2O_APP_PREFIX
 COPY --from=compile "${H2O_APP_PREFIX}" "${H2O_APP_PREFIX}/"
 COPY --from=compile /usr/local/lib/libmustache_c.so "${H2O_APP_PREFIX}/lib/"
+COPY --from=compile /usr/local/lib/libpq.so.5.17 "${H2O_APP_PREFIX}/lib/libpq.so.5"
 ENV LD_LIBRARY_PATH="${H2O_APP_PREFIX}/lib"
 EXPOSE 8080
 ARG BENCHMARK_ENV
@@ -86,7 +106,7 @@ CMD ["taskset", \
      "-a20", \
      "-d", \
      "dbname=hello_world host=tfb-database password=benchmarkdbpass sslmode=disable user=benchmarkdbuser", \
-     "-e64", \
+     "-e256", \
      "-f", \
      "/opt/h2o_app/share/h2o_app/template", \
      "-m1"]

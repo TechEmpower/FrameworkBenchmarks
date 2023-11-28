@@ -2,7 +2,7 @@ FROM buildpack-deps:jammy
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NOWARNINGS yes
-ENV TFVER=2.6.0
+ENV TFVER=2.7.1
 
 RUN apt-get update -yqq && apt-get upgrade -yq && \
     apt-get install -yqq --no-install-recommends software-properties-common unzip wget libjemalloc-dev \

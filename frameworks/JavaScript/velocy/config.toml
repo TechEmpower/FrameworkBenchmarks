@@ -1,0 +1,14 @@
+[framework]
+name = "velocy"
+
+[main]
+urls.plaintext = "/plaintext"
+approach = "Realistic"
+classification = "Micro"
+database = "None"
+database_os = "None"
+os = "Linux"
+orm = "None"
+platform = "nodejs"
+webserver = "None"
+versus = "nodejs"

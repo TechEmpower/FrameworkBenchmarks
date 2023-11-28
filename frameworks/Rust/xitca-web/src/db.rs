@@ -1,7 +1,6 @@
-use std::{cell::RefCell, collections::HashMap, fmt::Write, future::Future};
+use std::{cell::RefCell, collections::HashMap, fmt::Write, future::IntoFuture};
 
-use futures_util::stream::{FuturesUnordered, TryStreamExt};
-use xitca_postgres::{statement::Statement, AsyncIterator, Postgres, ToSql};
+use xitca_postgres::{statement::Statement, AsyncIterator, Postgres};
 use xitca_unsafe_collection::no_hash::NoHashBuilder;
 
 use super::{
@@ -28,9 +27,9 @@ impl Drop for Client {
 }
 
 pub async fn create(config: &str) -> HandleResult<Client> {
-    let (client, bg_task) = Postgres::new(config.to_string()).connect().await?;
+    let (client, driver) = Postgres::new(config.to_string()).connect().await?;
 
-    tokio::task::spawn_local(bg_task);
+    tokio::task::spawn_local(tokio::task::unconstrained(driver.into_future()));
 
     let fortune = client.prepare("SELECT * FROM fortune", &[]).await?.leak();
 
@@ -71,9 +70,10 @@ pub async fn create(config: &str) -> HandleResult<Client> {
 }
 
 impl Client {
-    async fn query_one_world(&self, id: i32) -> HandleResult<World> {
+    pub async fn get_world(&self) -> HandleResult<World> {
+        let id = self.rng.borrow_mut().gen_id();
         self.client
-            .query_raw(&self.world, &[&id])
+            .query_raw(&self.world, [id])
             .await?
             .next()
             .await
@@ -82,70 +82,72 @@ impl Client {
             .map_err(Into::into)
     }
 
-    pub fn get_world(&self) -> impl Future<Output = HandleResult<World>> + '_ {
-        let id = self.rng.borrow_mut().gen_id();
-        self.query_one_world(id)
-    }
+    pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
+        let mut pipe = self.client.pipeline();
 
-    pub fn get_worlds(&self, num: u16) -> impl Future<Output = HandleResult<Vec<World>>> + '_ {
-        let mut rng = self.rng.borrow_mut();
-        (0..num)
-            .map(|_| {
-                let id = rng.gen_id();
-                self.query_one_world(id)
-            })
-            .collect::<FuturesUnordered<_>>()
-            .try_collect()
+        {
+            let mut rng = self.rng.borrow_mut();
+            (0..num).try_for_each(|_| pipe.query_raw(&self.world, [rng.gen_id()]))?;
+        }
+
+        let mut worlds = Vec::new();
+        worlds.reserve(num as usize);
+
+        let mut res = pipe.run().await?;
+        while let Some(mut item) = res.next().await.transpose()? {
+            while let Some(row) = item.next().await.transpose()? {
+                worlds.push(World::new(row.get_raw(0), row.get_raw(1)))
+            }
+        }
+
+        Ok(worlds)
     }
 
     pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
-        let worlds = {
+        let len = num as usize;
+
+        let mut params = Vec::new();
+        params.reserve(len * 3);
+
+        let mut pipe = self.client.pipeline();
+
+        {
             let mut rng = self.rng.borrow_mut();
-            (0..num)
-                .map(|_| {
-                    let id = rng.gen_id();
-                    let w_id = rng.gen_id();
-                    async move {
-                        self.query_one_world(w_id).await.map(|mut world| {
-                            world.randomnumber = id;
-                            world
-                        })
-                    }
-                })
-                .collect::<FuturesUnordered<_>>()
-        };
-
-        let worlds = worlds.try_collect::<Vec<_>>().await?;
-
-        let mut params = Vec::<&(dyn ToSql + Sync)>::with_capacity(num as usize * 3);
-
-        for w in &worlds {
-            params.push(&w.id);
-            params.push(&w.randomnumber);
-        }
-        for w in &worlds {
-            params.push(&w.id);
+            (0..num).try_for_each(|_| {
+                let w_id = rng.gen_id();
+                let r_id = rng.gen_id();
+                params.extend([w_id, r_id]);
+                pipe.query_raw(&self.world, [w_id])
+            })?;
         }
 
+        params.extend_from_within(..len);
         let st = self.updates.get(&num).unwrap();
+        pipe.query_raw(st, &params)?;
 
-        self.client.execute(st, params.as_slice()).await?;
+        let mut worlds = Vec::new();
+        worlds.reserve(len);
+        let mut r_ids = params.into_iter().skip(1).step_by(2);
+
+        let mut res = pipe.run().await?;
+        while let Some(mut item) = res.next().await.transpose()? {
+            while let Some(row) = item.next().await.transpose()? {
+                let r_id = r_ids.next().unwrap();
+                worlds.push(World::new(row.get_raw(0), r_id))
+            }
+        }
 
         Ok(worlds)
     }
 
     pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
         let mut items = Vec::with_capacity(32);
-
         items.push(Fortune::new(0, "Additional fortune added at request time."));
 
-        let mut stream = self.client.query_raw::<&[i32]>(&self.fortune, &[]).await?;
-
-        while let Some(row) = stream.next().await {
-            let row = row?;
+        let mut stream = self.client.query_raw::<[i32; 0]>(&self.fortune, []).await?;
+        while let Some(row) = stream.next().await.transpose()? {
             items.push(Fortune::new(row.get_raw(0), row.get_raw::<String>(1)));
         }
-
         items.sort_by(|it, next| it.message.cmp(&next.message));
 
         Ok(Fortunes::new(items))

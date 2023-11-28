@@ -76,16 +76,16 @@ void SingleDatabaseQueryTest::db_asql_pipeline_pg(Context *c)
 void SingleDatabaseQueryTest::db_postgres(Context *c)
 {
     QSqlQuery query = CPreparedSqlQueryThreadForDB(
-                QLatin1String("SELECT id, randomNumber FROM world WHERE id = :id"),
-                QStringLiteral("postgres"));
+                u"SELECT id, randomNumber FROM world WHERE id = :id"_qs,
+                u"postgres"_qs);
     processQuery(c, query);
 }
 
 void SingleDatabaseQueryTest::db_mysql(Context *c)
 {
     QSqlQuery query = CPreparedSqlQueryThreadForDB(
-                QLatin1String("SELECT id, randomNumber FROM world WHERE id = :id"),
-                QStringLiteral("mysql"));
+                u"SELECT id, randomNumber FROM world WHERE id = :id"_qs,
+                u"mysql"_qs);
     processQuery(c, query);
 }
 
@@ -93,14 +93,14 @@ void SingleDatabaseQueryTest::processQuery(Context *c, QSqlQuery &query)
 {
     int id = (rand() % 10000) + 1;
 
-    query.bindValue(QStringLiteral(":id"), id);
+    query.bindValue(u":id"_qs, id);
     if (Q_UNLIKELY(!query.exec() || !query.next())) {
         c->res()->setStatus(Response::InternalServerError);
         return;
     }
 
     c->response()->setJsonObjectBody({
-                                         {QStringLiteral("id"), query.value(0).toInt()},
-                                         {QStringLiteral("randomNumber"), query.value(1).toInt()}
+                                         {u"id"_qs, query.value(0).toInt()},
+                                         {u"randomNumber"_qs, query.value(1).toInt()}
                                      });
 }

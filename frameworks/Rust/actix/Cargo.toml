@@ -29,9 +29,9 @@ path = "src/main_pg_deadpool.rs"
 
 [dependencies]
 anyhow = "1"
-actix = "0.12"
-actix-web = { version = "4.0.0-rc.3", default-features = false, features = ["macros"] }
-actix-http = { version = "3.0.0-rc.2", default-features = false }
+actix = "0.13"
+actix-web = "4.3.1"
+actix-http = "3.3.1"
 actix-rt = "2"
 actix-codec = "0.4"
 actix-server = "2"
@@ -52,6 +52,7 @@ simd-json = "0.4"
 simd-json-derive = "0.2"
 snmalloc-rs = "0.2.6"
 tokio = { version = "1", features = ["full"] }
+tokio-util = "0.7.8"
 tokio-postgres = "0.7.5"
 deadpool-postgres = "0.10.1"
 mongodb = "2.2.0"

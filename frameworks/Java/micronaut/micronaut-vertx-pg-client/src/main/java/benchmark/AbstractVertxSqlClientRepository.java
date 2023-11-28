@@ -1,18 +1,16 @@
 package benchmark;
 
-import io.vertx.core.AsyncResult;
+import io.vertx.core.CompositeFuture;
+import io.vertx.core.Future;
 import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.Row;
-import io.vertx.sqlclient.RowIterator;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.SqlClient;
 import io.vertx.sqlclient.Tuple;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.publisher.Sinks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
 public class AbstractVertxSqlClientRepository {
@@ -23,72 +21,38 @@ public class AbstractVertxSqlClientRepository {
         this.client = client;
     }
 
-    protected Flux<Row> execute(String sql) {
-        return Flux.defer(() -> {
-            Sinks.Many<Row> sink = Sinks.many().multicast().onBackpressureBuffer();
-            client.preparedQuery(sql).execute(event -> mapResult(sink, event));
-            return sink.asFlux();
-        });
+    protected CompletionStage<?> execute(String sql) {
+        return client.preparedQuery(sql).execute().toCompletionStage();
     }
 
-    protected <T> Mono<T> executeAndCollectOne(String sql, Tuple tuple, Function<Row, T> mapper) {
-        Sinks.One<T> sink = Sinks.one();
-        client.preparedQuery(sql).execute(tuple, event -> {
-            if (event.failed()) {
-                sink.emitError(event.cause(), Sinks.EmitFailureHandler.FAIL_FAST);
-            } else  {
-                RowIterator<Row> iterator = event.result().iterator();
-                if (iterator.hasNext()) {
-                    sink.emitValue(mapper.apply(iterator.next()), Sinks.EmitFailureHandler.FAIL_FAST);
-                } else {
-                    sink.emitEmpty(Sinks.EmitFailureHandler.FAIL_FAST);
-                }
+    protected <T> CompletionStage<T> executeAndCollectOne(String sql, Tuple tuple, Function<Row, T> mapper) {
+        return client.preparedQuery(sql).execute(tuple).map(rows -> mapper.apply(rows.iterator().next()))
+                .toCompletionStage();
+    }
+
+    protected <T> CompletionStage<List<T>> executeAndCollectList(String sql, Function<Row, T> mapper) {
+        return client.preparedQuery(sql).execute().map(rows -> {
+            List<T> result = new ArrayList<>(rows.size());
+            for (Row row : rows) {
+                result.add(mapper.apply(row));
             }
-        });
-        return sink.asMono();
+            return result;
+        }).toCompletionStage();
     }
 
-    protected <T> Mono<List<T>> executeAndCollectList(String sql, Function<Row, T> mapper) {
-        Sinks.One<List<T>> sink = Sinks.one();
-        client.preparedQuery(sql).execute(event -> {
-            if (event.failed()) {
-                sink.emitError(event.cause(), Sinks.EmitFailureHandler.FAIL_FAST);
-            } else {
-                List<T> list = new ArrayList<>();
-                for (Row row : event.result()) {
-                    list.add(mapper.apply(row));
-                }
-                sink.emitValue(list, Sinks.EmitFailureHandler.FAIL_FAST);
-            }
-        });
-        return sink.asMono();
-    }
-
-    protected Flux<Row> execute(SqlClient sqlClient, String sql, Tuple data) {
-        return Flux.defer(() -> {
-            Sinks.Many<Row> sink = Sinks.many().multicast().onBackpressureBuffer();
-            sqlClient.preparedQuery(sql).execute(data, event -> mapResult(sink, event));
-            return sink.asFlux();
-        });
-    }
-
-    protected Flux<Row> executeBatch(String sql, List<Tuple> data) {
-        return Flux.defer(() -> {
-            Sinks.Many<Row> sink = Sinks.many().multicast().onBackpressureBuffer();
-            client.preparedQuery(sql).executeBatch(data, event -> mapResult(sink, event));
-            return sink.asFlux();
-        });
-    }
-
-    private void mapResult(Sinks.Many<Row> sink, AsyncResult<RowSet<Row>> event) {
-        if (event.failed()) {
-            sink.emitError(event.cause(), Sinks.EmitFailureHandler.FAIL_FAST);
-        } else {
-            for (Row row : event.result()) {
-                sink.emitNext(row, Sinks.EmitFailureHandler.FAIL_FAST);
-            }
-            sink.emitComplete(Sinks.EmitFailureHandler.FAIL_FAST);
+    protected <T> Future<List<T>> executeMany(SqlClient sqlClient, String sql, List<Tuple> data, Function<Row, T> mapper) {
+        List<Future<T>> futures = new ArrayList<>(data.size());
+        Function<RowSet<Row>, T> rowsMapper = rows -> mapper.apply(rows.iterator().next());
+        for (Tuple d : data) {
+            futures.add(
+                    sqlClient.preparedQuery(sql).execute(d).map(rowsMapper)
+            );
         }
+        return Future.all(futures).map(CompositeFuture::list);
+    }
+
+    protected CompletionStage<?> executeBatch(String sql, List<Tuple> data) {
+        return client.preparedQuery(sql).executeBatch(data).toCompletionStage();
     }
 
 }
