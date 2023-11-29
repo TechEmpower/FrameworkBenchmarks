@@ -7,7 +7,7 @@ RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null && \
     apt-get update -yqq > /dev/null && apt-get upgrade -yqq > /dev/null
 
 RUN apt-get install -yqq git unzip \
-    php8.3-cli php8.3-mysql php8.3-mbstring php8.3-intl php8.3-xml php8.3-curl php-xdebug > /dev/null
+    php8.3-cli php8.3-mysql php8.3-mbstring php8.3-intl php8.3-xml php8.3-curl > /dev/null
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
