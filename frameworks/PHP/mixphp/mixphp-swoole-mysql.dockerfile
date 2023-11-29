@@ -1,4 +1,4 @@
-FROM php:8.0-cli
+FROM php:8.3-cli
 
 RUN pecl install swoole > /dev/null && docker-php-ext-enable swoole
 
@@ -18,7 +18,7 @@ RUN php -v && php -i | grep opcache
 
 WORKDIR /mixphp
 
-RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN composer install --no-dev --classmap-authoritative --quiet > /dev/null
 RUN composer dumpautoload -o
 
