@@ -15,9 +15,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 ADD ./ ./
 
-ENV NGINX_VERSION=1.21.0
+ENV NGINX_VERSION=1.23.4
 
-RUN git clone -b v0.0.25 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
+RUN git clone -b v0.0.27 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
 
 RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
     tar -zxf nginx-${NGINX_VERSION}.tar.gz && \
