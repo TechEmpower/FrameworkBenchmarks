@@ -39,7 +39,7 @@ RUN apt-get -yqq update && \
 
 FROM "ubuntu:${UBUNTU_VERSION}"
 
-ARG PHP_VERSION=8.2
+ARG PHP_VERSION=8.3
 
 ENV TZ=America/Los_Angeles
 
@@ -70,5 +70,5 @@ ARG TFB_TEST_DATABASE
 ARG TFB_TEST_NAME
 
 CMD sed -i "s/num-threads: x/num-threads: $((2 * $(nproc)))/g" /opt/h2o/etc/h2o.conf && \
-    service php8.2-fpm start && \
+    service php8.3-fpm start && \
     /opt/h2o/bin/h2o -c /opt/h2o/etc/h2o.conf
