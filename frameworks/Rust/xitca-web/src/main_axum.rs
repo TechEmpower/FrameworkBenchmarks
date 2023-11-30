@@ -3,30 +3,47 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
+mod db;
 mod ser;
 mod util;
 
+use std::sync::Arc;
+
 use axum::{
-    http::header::{HeaderValue, SERVER},
-    response::IntoResponse,
+    body::Bytes,
+    extract::{Json, OriginalUri as Uri, State},
+    http::{
+        header::{HeaderValue, SERVER},
+        StatusCode,
+    },
+    response::{Html, IntoResponse, Response},
     routing::{get, Router},
-    Json,
 };
 use tower_http::set_header::SetResponseHeaderLayer;
 
-use crate::tower_compat::TowerHttp;
+use crate::{
+    db::Client,
+    tower_compat::TowerHttp,
+    util::{QueryParse, DB_URL},
+};
 
 fn main() -> std::io::Result<()> {
     let service = TowerHttp::service(|| async {
-        Router::new()
+        let cli = db::create(DB_URL).await?;
+        let service = Router::new()
             .route("/plaintext", get(plain_text))
             .route("/json", get(json))
+            .route("/db", get(db))
+            .route("/fortunes", get(fortunes))
+            .route("/queries", get(queries))
+            .route("/updates", get(updates))
+            .with_state(Arc::new(cli))
             .layer(SetResponseHeaderLayer::if_not_present(
                 SERVER,
                 HeaderValue::from_static("A"),
-            ))
+            ));
+        Ok(service)
     });
-
     xitca_server::Builder::new()
         .bind("xitca-axum", "0.0.0.0:8080", service)?
         .build()
@@ -41,10 +58,48 @@ async fn json() -> impl IntoResponse {
     Json(ser::Message::new())
 }
 
+async fn db(State(cli): State<Arc<Client>>) -> impl IntoResponse {
+    cli.get_world().await.map(Json).map_err(Error)
+}
+
+async fn fortunes(State(cli): State<Arc<Client>>) -> impl IntoResponse {
+    use sailfish::TemplateOnce;
+    cli.tell_fortune()
+        .await
+        .map_err(Error)?
+        .render_once()
+        .map(Html)
+        .map_err(|e| Error(Box::new(e)))
+}
+
+async fn queries(State(cli): State<Arc<Client>>, Uri(uri): Uri) -> impl IntoResponse {
+    cli.get_worlds(uri.query().parse_query())
+        .await
+        .map(Json)
+        .map_err(Error)
+}
+
+async fn updates(State(cli): State<Arc<Client>>, Uri(uri): Uri) -> impl IntoResponse {
+    cli.update(uri.query().parse_query())
+        .await
+        .map(Json)
+        .map_err(Error)
+}
+
+struct Error(util::Error);
+
+impl IntoResponse for Error {
+    fn into_response(self) -> Response {
+        let mut res = Bytes::new().into_response();
+        *res.status_mut() = StatusCode::INTERNAL_SERVER_ERROR;
+        res
+    }
+}
+
+// compat module between xitca-http and axum.
 mod tower_compat {
     use std::{
         cell::RefCell,
-        convert::Infallible,
         error, fmt,
         future::Future,
         io,
@@ -78,24 +133,23 @@ mod tower_compat {
 
     impl<S, B> TowerHttp<S, B> {
         pub fn service<F, Fut>(
-            service: F,
+            func: F,
         ) -> impl Service<
             Response = impl ReadyService + Service<(TcpStream, SocketAddr)>,
             Error = impl fmt::Debug,
         >
         where
             F: Fn() -> Fut + Send + Sync + Clone,
-            Fut: Future<Output = S>,
+            Fut: Future<Output = Result<S, crate::util::Error>>,
             S: tower::Service<Request<_RequestBody>, Response = Response<B>>,
             S::Error: fmt::Debug,
             B: Body<Data = Bytes> + Send + 'static,
             B::Error: error::Error + Send + Sync,
         {
             fn_build(move |_| {
-                let service = service.clone();
+                let func = func.clone();
                 async move {
-                    let service = service().await;
-                    Ok::<_, Infallible>(TowerHttp {
+                    func().await.map(|service| TowerHttp {
                         service: RefCell::new(service),
                         _p: PhantomData,
                     })
