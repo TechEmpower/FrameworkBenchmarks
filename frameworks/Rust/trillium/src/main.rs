@@ -1,3 +1,7 @@
+#[cfg(feature = "jemallcator")]
+#[global_allocator]
+static ALLOC: jemallocator::Jemalloc = jemallocator::Jemalloc;
+
 mod application;
 mod db;
 mod routes;
