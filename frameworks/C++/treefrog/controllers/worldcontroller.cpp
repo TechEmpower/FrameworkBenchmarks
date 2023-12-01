@@ -192,7 +192,7 @@ void WorldController::updates(const QString &num)
         vals += ',';
         worlds << world.toVariantMap();
 
-        if (!((i + 1) % 50)) {
+        if (!((i + 1) % 200)) {
             blkupdate();
         }
     }
@@ -299,15 +299,15 @@ void WorldController::pupdates(const QString &num)
         int id = Tf::random(1, 10000);
         world = PWorld::get(id);
         world.setRandomNumber( Tf::random(1, 10000) );
-        q += " WHEN ";
+        q += QLatin1String(" WHEN ");
         q += QString::number(world.id());
-        q += " THEN ";
+        q += QLatin1String(" THEN ");
         q += QString::number(world.randomNumber());
         ids += QString::number(world.id());
         ids += ',';
         worlds << world.toVariantMap();
 
-        if (!((i + 1) % 50)) {
+        if (!((i + 1) % 200)) {
             blkupdate();
         }
     }
