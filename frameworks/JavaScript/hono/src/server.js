@@ -18,7 +18,6 @@ const app = new Hono();
 app
   .get("/plaintext", (c) => {
     addBenchmarkHeaders(c);
-    c.header("Content-Type", "text/plain");
     return c.text("Hello, World!");
   })
   .get("/json", (c) => {
@@ -94,7 +93,6 @@ if (db) {
 app
   .all("/*", (c) => {
     addBenchmarkHeaders(c);
-    c.header("Content-Type", "text/plain");
     return c.text("Not Found", 404);
   })
   .onError(handleError);
