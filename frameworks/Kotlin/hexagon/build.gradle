@@ -9,7 +9,7 @@ description = "TFB benchmark"
 group = "com.hexagonkt"
 
 ext {
-    hexagonVersion = "3.4.3"
+    hexagonVersion = "3.4.4"
     jettyVersion = "12.0.3"
     nettyVersion = "4.1.101.Final"
 
@@ -30,5 +30,5 @@ subprojects {
 }
 
 tasks.wrapper {
-    gradleVersion = "8.5-rc-3"
+    gradleVersion = "8.5"
 }
