@@ -1,10 +1,10 @@
-FROM php:8.3-cli
+FROM php:8.2-cli
 
 RUN apt-get update && apt-get install -y git > /dev/null
 
 RUN docker-php-ext-install opcache  > /dev/null
 
-ENV VERSION 22.1.0
+ENV VERSION 22.0.0
 
 RUN     apt-get update && apt-get install -y libpq-dev \
         && cd /tmp && curl -sSL "https://github.com/openswoole/ext-openswoole/archive/v${VERSION}.tar.gz" | tar xzf - \
