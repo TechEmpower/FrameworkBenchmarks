@@ -1,5 +1,6 @@
 {
   "framework": "trillium",
+  "maintainers": ["jbr"],
   "tests": [
     {
       "default": {
