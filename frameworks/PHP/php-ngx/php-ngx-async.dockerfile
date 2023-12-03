@@ -14,7 +14,7 @@ RUN apt-get update -yqq > /dev/null && \
 
 ADD . .
 
-ENV NGINX_VERSION 1.24.0
+ENV NGINX_VERSION 1.25.3
 
 RUN git clone -b next --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
 

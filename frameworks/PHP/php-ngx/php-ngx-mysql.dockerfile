@@ -13,7 +13,7 @@ RUN apt-get update -yqq > /dev/null && \
                     php8.3-cli php8.3-dev libphp8.3-embed php8.3-mysql > /dev/null
 ADD . .
 
-ENV NGINX_VERSION 1.24.0
+ENV NGINX_VERSION 1.25.3
 
 RUN git clone -b next --single-branch --depth 1 https://github.com/rryqszq4/ngx-php.git > /dev/null
 
