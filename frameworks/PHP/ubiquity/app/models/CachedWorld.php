@@ -4,7 +4,7 @@ namespace models;
 /**
  * @table("World")
  */
-#[AllowDynamicProperties]
+#[\AllowDynamicProperties]
 class CachedWorld extends World{
 }
 
