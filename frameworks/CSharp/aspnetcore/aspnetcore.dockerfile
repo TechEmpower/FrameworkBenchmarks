@@ -5,7 +5,6 @@ RUN dotnet publish -c Release -o out /p:DatabaseProvider=Npgsql
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.0-rc.2 AS runtime
 ENV URLS http://+:8080
-ENV DOTNET_SYSTEM_NET_SOCKETS_INLINE_COMPLETIONS 1
 
 WORKDIR /app
 COPY --from=build /app/out ./
