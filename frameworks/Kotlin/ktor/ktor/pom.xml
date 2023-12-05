@@ -18,7 +18,7 @@
         <kotlinx.html.version>0.7.3</kotlinx.html.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hikaricp.version>5.0.0</hikaricp.version>
-        <logback.version>1.2.4</logback.version>
+        <logback.version>1.2.13</logback.version>
         <mysql.version>8.0.28</mysql.version>
         <postgresql.version>42.4.3</postgresql.version>
     </properties>
