@@ -2,13 +2,10 @@
 
 require __DIR__.'/vendor/autoload.php';
 
-app()->get("/plaintext", function () {
-    response()->plain('Hello, World!');
-});
+app()->get("/plaintext", fn() => response()->plain('Hello, World!'));
 
-app()->get('/json', function () {
-    response()->json(['message' => 'Hello, World!']);
-});
+app()->get('/json', fn() => response()->json(['message' => 'Hello, World!']));
+
 
 app()->run(); // commented with workerman
 

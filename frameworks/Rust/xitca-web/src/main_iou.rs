@@ -38,18 +38,17 @@ type Request = http::Request<RequestExt<()>>;
 type Response = http::Response<Once<Bytes>>;
 
 fn main() -> io::Result<()> {
+    let service = fn_service(handler)
+        .enclosed(context_mw())
+        .enclosed(fn_build(|service| async {
+            Ok::<_, Infallible>(Http1IOU {
+                service,
+                date: DateTimeService::new(),
+            })
+        }))
+        .enclosed(UncheckedReady);
     xitca_server::Builder::new()
-        .bind("xitca-iou", "0.0.0.0:8080", || {
-            fn_service(handler)
-                .enclosed(context_mw())
-                .enclosed(fn_build(|service| async {
-                    Ok::<_, Infallible>(Http1IOU {
-                        service,
-                        date: DateTimeService::new(),
-                    })
-                }))
-                .enclosed(UncheckedReady)
-        })?
+        .bind("xitca-iou", "0.0.0.0:8080", service)?
         .build()
         .wait()
 }

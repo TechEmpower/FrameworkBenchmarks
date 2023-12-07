@@ -1,7 +1,7 @@
 // Forked workers will run this code when found to not be
 // the master of the cluster.
 
-const http = require('http');
+const http = require('node:http');
 const parseurl = require('parseurl'); // faster than native nodejs url package
 
 // Initialize routes & their handlers (once)
