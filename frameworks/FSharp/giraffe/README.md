@@ -10,7 +10,7 @@ This application tests Giraffe in 3 modes:
 
 **Language**
 
-* F# 6.0
+* F# 8.0
 
 **Platforms**
 
@@ -32,5 +32,4 @@ All source code is inside `Program.fs`.
 App listens for a single command line argument to pick the desired JSON implementation:
 
     - `system`: `System.Text.Json`
-    - `utf8`: `Utf8Json`
     - `newtonsoft`: `Newtonsoft.Json`

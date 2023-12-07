@@ -58,7 +58,7 @@ async fn main() -> std::io::Result<()> {
                 .client_timeout(Seconds(0))
                 .h1(web::App::new().service(json).service(plaintext).finish())
         })?
-        .workers(num_cpus::get_physical())
+        .workers(num_cpus::get())
         .run()
         .await
 }

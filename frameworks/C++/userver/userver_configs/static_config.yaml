@@ -17,7 +17,7 @@ components_manager:
 
         fs-task-processor:              # Make a separate task processor for filesystem bound tasks.
             thread_name: fs-worker
-            worker_threads: 4
+            worker_threads: 1
 
     default_task_processor: main-task-processor
 
@@ -49,8 +49,8 @@ components_manager:
 
         dynamic-config:                      # Dynamic config storage options, do nothing
             fs-cache-path: ''
-        dynamic-config-fallbacks:            # Load options from file and push them into the dynamic config storage.
-            fallback-path: /app/dynamic_config_fallback.json
+            defaults-path: /app/dynamic_config_fallback.json
+            fs-task-processor: fs-task-processor
 
         testsuite-support:
 
@@ -82,6 +82,7 @@ components_manager:
             max_pool_size: 260
             max_queue_size: 512
             connecting_limit: 15
+            ignore_unused_query_params: true
 
         single-query-handler:
             path: /db

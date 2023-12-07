@@ -99,7 +99,7 @@ async fn main() -> std::io::Result<()> {
                 .client_timeout(Seconds(0))
                 .h1(AppFactory)
         })?
-        .workers(num_cpus::get_physical())
+        .workers(num_cpus::get())
         .run()
         .await
 }
