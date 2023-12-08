@@ -17,7 +17,6 @@ module Common =
 
     type JsonMode =
         | System
-        | Utf8
         | Newtonsoft
 
     let FortuneComparer =
@@ -109,12 +108,11 @@ module Main =
     open Microsoft.Extensions.Hosting
     open Microsoft.Extensions.Logging
 
-    [<EntryPoint>]    
+    [<EntryPoint>]
     let main args =
         let jsonMode =
             match args with
             | [| "newtonsoft" |] -> Newtonsoft
-            | [| "utf8" |]       -> Utf8
             | _                  -> System
 
         printfn $"Running with %A{jsonMode} JSON serializer"
@@ -123,9 +121,6 @@ module Main =
             match jsonMode with
             | System ->
                 SystemTextJson.Serializer(SystemTextJson.Serializer.DefaultOptions)
-                :> Json.ISerializer
-            | Utf8 ->
-                Utf8Json.Serializer(Utf8Json.Serializer.DefaultResolver)
                 :> Json.ISerializer
             | Newtonsoft ->
                 NewtonsoftJson.Serializer(NewtonsoftJson.Serializer.DefaultSettings)
@@ -136,7 +131,7 @@ module Main =
         builder.Services
             .AddSingleton(jsonSerializer)
             .AddGiraffe() |> ignore
-            
+
         builder.Logging.ClearProviders() |> ignore
 
         let app = builder.Build()
@@ -145,5 +140,5 @@ module Main =
            .UseGiraffe HttpHandlers.endpoints |> ignore
 
         app.Run()
-        
+
         0

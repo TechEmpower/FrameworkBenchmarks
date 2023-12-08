@@ -7,7 +7,7 @@ if (cluster.isPrimary) {
   console.log(`Primary ${process.pid} is running`);
 
   // Fork workers
-  const numCPUs = os.cpus().length;
+  const numCPUs = os.availableParallelism();
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
   }

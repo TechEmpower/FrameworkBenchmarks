@@ -27,6 +27,13 @@ int ParseFromQueryVal(std::string_view query_val) {
 
 }  // namespace
 
+userver::storages::postgres::Query CreateNonLoggingQuery(
+    std::string statement) {
+  return userver::storages::postgres::Query{
+      statement, std::nullopt /* name */,
+      userver::storages::postgres::Query::LogMode::kNameOnly};
+}
+
 int GenerateRandomId() {
   return userver::utils::RandRange(1, kMaxWorldRows + 1);
 }

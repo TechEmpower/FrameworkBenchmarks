@@ -46,7 +46,7 @@ RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
     cmake --install build && \
     cp -a deps/picotls/include/picotls* deps/quicly/include/quicly* /usr/local/include
 
-ARG MUSTACHE_C_REVISION=c1948c599edfe48c6099ed70ab1d5911d8c3ddc8
+ARG MUSTACHE_C_REVISION=7fe52392879d0188c172d94bb4fde7c513d6b929
 
 WORKDIR /tmp/mustache-c-build
 RUN curl -LSs "https://github.com/x86-64/mustache-c/archive/${MUSTACHE_C_REVISION}.tar.gz" | \
@@ -54,12 +54,12 @@ RUN curl -LSs "https://github.com/x86-64/mustache-c/archive/${MUSTACHE_C_REVISIO
     CFLAGS="-flto -march=native -mtune=native -O3" ./autogen.sh && \
     make -j "$(nproc)" install
 
-ARG POSTGRESQL_VERSION=7b7fa85130330128b404eddebd4f33c6739454b0
+ARG POSTGRESQL_VERSION=c1ec02be1d79eac95160dea7ced32ace84664617
 
 WORKDIR /tmp/postgresql-build
 RUN curl -LSs "https://github.com/postgres/postgres/archive/${POSTGRESQL_VERSION}.tar.gz" | \
       tar --strip-components=1 -xz && \
-    curl -LSs "https://www.postgresql.org/message-id/attachment/146614/v2-0001-Add-PQsendSyncMessage-to-libpq.patch" | \
+    curl -LSs "https://www.postgresql.org/message-id/attachment/152078/v5-0001-Add-PQsendPipelineSync-to-libpq.patch" | \
       patch -Np1 && \
     CFLAGS="-flto -march=native -mtune=native -O3" ./configure \
       --includedir=/usr/local/include/postgresql \
@@ -92,7 +92,7 @@ RUN apt-get -yqq update && \
 ARG H2O_APP_PREFIX
 COPY --from=compile "${H2O_APP_PREFIX}" "${H2O_APP_PREFIX}/"
 COPY --from=compile /usr/local/lib/libmustache_c.so "${H2O_APP_PREFIX}/lib/"
-COPY --from=compile /usr/local/lib/libpq.so.5.16 "${H2O_APP_PREFIX}/lib/libpq.so.5"
+COPY --from=compile /usr/local/lib/libpq.so.5.17 "${H2O_APP_PREFIX}/lib/libpq.so.5"
 ENV LD_LIBRARY_PATH="${H2O_APP_PREFIX}/lib"
 EXPOSE 8080
 ARG BENCHMARK_ENV
@@ -106,7 +106,7 @@ CMD ["taskset", \
      "-a20", \
      "-d", \
      "dbname=hello_world host=tfb-database password=benchmarkdbpass sslmode=disable user=benchmarkdbuser", \
-     "-e512", \
+     "-e256", \
      "-f", \
      "/opt/h2o_app/share/h2o_app/template", \
      "-m1"]

@@ -1,4 +1,4 @@
-FROM ruby:2.4
+FROM ruby:3.0
 
 WORKDIR /padrino
 COPY app app

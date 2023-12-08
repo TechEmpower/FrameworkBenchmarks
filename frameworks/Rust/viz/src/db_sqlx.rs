@@ -5,7 +5,7 @@ use nanorand::{Rng, WyRand};
 pub use sqlx::{
     pool::PoolConnection,
     postgres::{PgArguments, PgPoolOptions, PgRow},
-    Arguments, PgPool, Postgres, Row
+    Arguments, PgPool, Postgres, Row,
 };
 
 use viz::{

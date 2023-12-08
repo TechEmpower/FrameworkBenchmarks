@@ -17,9 +17,9 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "appMpower [Middleware]",
+        "display_name": "appMpower [aot-no-reflection]",
         "notes": "",
-        "versus": "aspcore-mw"
+        "versus": "aspnetcore-minimal"
       },
       "odbc-pg": {
         "db_url": "/db",
@@ -39,31 +39,9 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "appMpower [Middleware, Pg, Odbc]",
+        "display_name": "appMpower [aot-no-reflection,odbc]",
         "notes": "",
-        "versus": "aspcore-mw-ado-pg"
-      },
-      "odbc-my": {
-        "db_url": "/db",
-        "query_url": "/queries?c=",
-        "update_url": "/updates?c=",
-        "fortune_url": "/fortunes",
-        "cached_query_url": "/cached-worlds?c=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Platform",
-        "database": "MySQL",
-        "framework": "appmpower",
-        "language": "C#",
-        "orm": "Raw",
-        "platform": ".NET",
-        "flavor": "CoreCLR",
-        "webserver": "Kestrel",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "appMpower [Middleware, My, Odbc]",
-        "notes": "",
-        "versus": "aspcore-mw-ado-my"
+        "versus": "aspnetcore-minimal"
       },
       "ado-pg": {
         "db_url": "/db",
@@ -83,9 +61,9 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "appMpower [Middleware, Pg, Ado]",
+        "display_name": "appMpower [aot-no-reflection,ado]",
         "notes": "",
-        "versus": "aspcore-mw-ado-pg"
+        "versus": "aspnetcore-minimal"
       }
     }
   ]

@@ -7,6 +7,6 @@ use Cake\ORM\Table;
 
 class WorldTable extends Table
 {
-    protected $_table = 'world';
-    protected $_entityClass = World::class;
+    protected ?string $_table = 'world';
+    protected ?string $_entityClass = World::class;
 }

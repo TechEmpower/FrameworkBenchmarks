@@ -10,8 +10,8 @@ import (
 
 func main() {
     opts := []kit.Option{
-        kit.RegisterService(serviceDesc.Generate()),
-        kit.RegisterGateway(
+        kit.WithService(serviceDesc.Generate()),
+        kit.WithGateway(
             silverhttp.MustNew(
                 silverhttp.Listen(":8080"),
                 silverhttp.WithServerName("ronykit"),

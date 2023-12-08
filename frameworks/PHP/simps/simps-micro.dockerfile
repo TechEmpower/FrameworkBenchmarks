@@ -1,4 +1,4 @@
-FROM php:8.2-cli
+FROM php:8.3-cli
 
 RUN pecl install swoole > /dev/null && \
     docker-php-ext-enable swoole

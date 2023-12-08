@@ -1,7 +1,7 @@
 #
 # BUILD
 #
-FROM docker.io/gradle:8.3-jdk17-alpine AS build
+FROM docker.io/gradle:8.4-jdk21-alpine AS build
 USER root
 WORKDIR /hexagon
 
@@ -12,7 +12,7 @@ RUN gradle --quiet -x test installDist
 #
 # RUNTIME
 #
-FROM docker.io/eclipse-temurin:17-jre-alpine
+FROM docker.io/eclipse-temurin:21-jre-alpine
 ARG PROJECT=hexagon_nettyepoll_postgresql
 
 ENV POSTGRESQL_DB_HOST tfb-database

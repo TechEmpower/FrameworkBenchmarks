@@ -7,7 +7,6 @@ import benchmark.repository.ReactiveWorldRepository;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.async.annotation.SingleResult;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.QueryValue;
@@ -17,16 +16,12 @@ import reactor.core.publisher.Mono;
 import views.fortunes;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static java.util.Comparator.comparing;
 
-@Requires(beans = {ReactiveFortuneRepository.class, ReactiveWorldRepository.class})
+@Requires(beans = {ReactiveWorldRepository.class, ReactiveFortuneRepository.class})
 @Controller
 public class ReactiveBenchmarkController extends AbstractBenchmarkController {
 
@@ -71,7 +66,7 @@ public class ReactiveBenchmarkController extends AbstractBenchmarkController {
             List<Fortune> all = new ArrayList<>(fortuneList.size() + 1);
             all.add(new Fortune(0, "Additional fortune added at request time."));
             all.addAll(fortuneList);
-            all.sort(comparing(Fortune::getMessage));
+            all.sort(comparing(Fortune::message));
             String body = fortunes.template(all).render().toString();
             return HttpResponse.ok(body).contentType("text/html;charset=utf-8");
         });

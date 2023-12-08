@@ -4,13 +4,9 @@ import org.smartboot.http.server.HttpBootstrap;
 import org.smartboot.http.server.HttpRequest;
 import org.smartboot.http.server.HttpResponse;
 import org.smartboot.http.server.HttpServerHandler;
-import org.smartboot.http.server.impl.Request;
 import org.smartboot.servlet.conf.ServletInfo;
-import org.smartboot.socket.StateMachineEnum;
-import org.smartboot.socket.extension.processor.AbstractMessageProcessor;
-import org.smartboot.socket.transport.AioSession;
 
-import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author 三刀（zhengjunweimail@163.com）
@@ -18,7 +14,7 @@ import java.io.IOException;
  */
 public class Bootstrap {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Throwable {
         ContainerRuntime containerRuntime = new ContainerRuntime();
         // plaintext
         ServletContextRuntime applicationRuntime = new ServletContextRuntime("/");
@@ -50,8 +46,8 @@ public class Bootstrap {
         bootstrap.setPort(8080)
                 .httpHandler(new HttpServerHandler() {
                     @Override
-                    public void handle(HttpRequest request, HttpResponse response) throws IOException {
-                        containerRuntime.doHandle(request, response);
+                    public void handle(HttpRequest request, HttpResponse response, CompletableFuture<Object> completableFuture) throws Throwable {
+                        containerRuntime.doHandle(request, response, completableFuture);
                     }
                 })
                 .start();

@@ -1,4 +1,4 @@
-FROM ruby:3.2
+FROM ruby:3.3-rc
 
 #RUN apt-get update -yqq && apt-get install -yqq nginx
 
