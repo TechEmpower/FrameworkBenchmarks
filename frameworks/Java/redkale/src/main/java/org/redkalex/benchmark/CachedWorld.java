@@ -10,9 +10,8 @@ import org.redkale.persistence.*;
  *
  * @author zhangjx
  */
-@Entity
 @Table(name = "world")
-@Cacheable(direct = true)
+@Entity(cacheable = true, cacheDirect = true)
 public final class CachedWorld {
 
     @Id
