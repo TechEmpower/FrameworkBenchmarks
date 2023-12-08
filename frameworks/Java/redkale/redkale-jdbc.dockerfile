@@ -3,6 +3,7 @@ WORKDIR /redkale
 COPY src src
 COPY conf conf
 COPY pom-jdbc.xml pom.xml
+COPY BenchmarkService.java src/main/java/org/redkalex/benchmark/BenchmarkService.java
 RUN mvn package -q
 
 FROM openjdk:21-jdk-slim
