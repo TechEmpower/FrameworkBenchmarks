@@ -2,6 +2,7 @@ FROM maven:3.8.6-openjdk-18-slim as maven
 WORKDIR /redkale
 COPY src src
 COPY conf conf
+COPY pom.xml pom.xml
 COPY BenchmarkService.java src/main/java/org/redkalex/benchmark/BenchmarkService.java
 RUN mvn package -q
 
