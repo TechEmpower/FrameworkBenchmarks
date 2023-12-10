@@ -1,7 +1,5 @@
 <?php
 
-//use Workerman\Protocols\Http;
-
 class KuController extends AppController
 {
 
