@@ -1,6 +1,6 @@
 <?php
 
-use Workerman\Protocols\Http;
+//use Workerman\Protocols\Http;
 
 class KuController extends AppController
 {
@@ -8,7 +8,7 @@ class KuController extends AppController
     protected function before_filter()
     {
         View::select(null, null);
-        Http::header('Content-Type: application/json');
+        header('Content-Type: application/json');
     }
 
     public function index()
@@ -20,10 +20,11 @@ class KuController extends AppController
     public function query($count = 1)
     {
         $count = min(max((int) $count, 1), 500);
+        $random = KuRaw::$random;
 
         while ($count--) {
-            KuRaw::$random->execute([mt_rand(1, 10000)]);
-            $worlds[] = KuRaw::$random->fetch();
+            $random->execute([mt_rand(1, 10000)]);
+            $worlds[] = $random->fetch();
         }
         echo json_encode($worlds);
     }
@@ -31,11 +32,12 @@ class KuController extends AppController
     public function update($count = 1)
     {
         $count = min(max((int) $count, 1), 500);
+        $random = KuRaw::$random;
 
         while ($count--) {
 
-            KuRaw::$random->execute([mt_rand(1, 10000)]);
-            $row = KuRaw::$random->fetch();
+            $random->execute([mt_rand(1, 10000)]);
+            $row = $random->fetch();
             $row['randomNumber'] = mt_rand(1, 10000);
 
             $worlds[] = $row;
