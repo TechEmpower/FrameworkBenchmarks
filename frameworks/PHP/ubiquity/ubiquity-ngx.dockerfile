@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -9,15 +9,15 @@ RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq wget git unzip libxml2-dev cmake make systemtap-sdt-dev \
                     zlib1g-dev libpcre3-dev libargon2-0-dev libsodium-dev \
-                    php8.2-cli php8.2-dev libphp8.2-embed php8.2-pgsql nginx > /dev/null
+                    php8.3-cli php8.3-dev libphp8.3-embed php8.3-pgsql nginx > /dev/null
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 ADD ./ ./
 
-ENV NGINX_VERSION=1.23.4
+ENV NGINX_VERSION=1.25.3
 
-RUN git clone -b v0.0.27 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
+RUN git clone -b v0.0.28 --single-branch --depth 1 https://github.com/rryqszq4/ngx_php7.git > /dev/null
 
 RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
     tar -zxf nginx-${NGINX_VERSION}.tar.gz && \
