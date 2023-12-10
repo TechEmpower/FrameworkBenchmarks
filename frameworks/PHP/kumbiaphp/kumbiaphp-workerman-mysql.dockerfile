@@ -19,7 +19,7 @@ ADD ./ /kumbiaphp
 WORKDIR /kumbiaphp
 
 RUN git clone -b dev --single-branch --depth 1 https://github.com/KumbiaPHP/KumbiaPHP.git vendor/Kumbia
-RUN git clone -b master --single-branch --depth 1 https://github.com/KumbiaPHP/ActiveRecord.git vendor/Kumbia/ActiveRecord
+RUN git clone -b dev --single-branch --depth 1 https://github.com/KumbiaPHP/ActiveRecord.git vendor/Kumbia/ActiveRecord
 
 RUN sed -i "s|KuRaw::init(|//KuRaw::init(|g" server.php
 
