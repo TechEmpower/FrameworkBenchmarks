@@ -1,4 +1,4 @@
-use std::{cell::RefCell, collections::HashMap, fmt::Write, future::IntoFuture};
+use std::{collections::HashMap, fmt::Write, future::IntoFuture};
 
 use xitca_postgres::{statement::Statement, AsyncIterator, Postgres};
 use xitca_unsafe_collection::no_hash::NoHashBuilder;
@@ -10,7 +10,10 @@ use super::{
 
 pub struct Client {
     client: xitca_postgres::Client,
-    rng: RefCell<Rand>,
+    #[cfg(not(feature = "pg-sync"))]
+    rng: std::cell::RefCell<Rand>,
+    #[cfg(feature = "pg-sync")]
+    rng: std::sync::Mutex<Rand>,
     fortune: Statement,
     world: Statement,
     updates: HashMap<u16, Statement, NoHashBuilder>,
@@ -29,7 +32,7 @@ impl Drop for Client {
 pub async fn create(config: &str) -> HandleResult<Client> {
     let (client, driver) = Postgres::new(config.to_string()).connect().await?;
 
-    tokio::task::spawn_local(tokio::task::unconstrained(driver.into_future()));
+    tokio::spawn(tokio::task::unconstrained(driver.into_future()));
 
     let fortune = client.prepare("SELECT * FROM fortune", &[]).await?.leak();
 
@@ -62,7 +65,10 @@ pub async fn create(config: &str) -> HandleResult<Client> {
 
     Ok(Client {
         client,
-        rng: RefCell::new(Rand::default()),
+        #[cfg(not(feature = "pg-sync"))]
+        rng: std::cell::RefCell::new(Rand::default()),
+        #[cfg(feature = "pg-sync")]
+        rng: std::sync::Mutex::new(Rand::default()),
         fortune,
         world,
         updates,
@@ -70,8 +76,18 @@ pub async fn create(config: &str) -> HandleResult<Client> {
 }
 
 impl Client {
+    #[cfg(not(feature = "pg-sync"))]
+    fn borrow_rng_mut(&self) -> std::cell::RefMut<'_, Rand> {
+        self.rng.borrow_mut()
+    }
+
+    #[cfg(feature = "pg-sync")]
+    fn borrow_rng_mut(&self) -> std::sync::MutexGuard<'_, Rand> {
+        self.rng.lock().unwrap()
+    }
+
     pub async fn get_world(&self) -> HandleResult<World> {
-        let id = self.rng.borrow_mut().gen_id();
+        let id = self.borrow_rng_mut().gen_id();
         self.client
             .query_raw(&self.world, [id])
             .await?
@@ -86,7 +102,7 @@ impl Client {
         let mut pipe = self.client.pipeline();
 
         {
-            let mut rng = self.rng.borrow_mut();
+            let mut rng = self.borrow_rng_mut();
             (0..num).try_for_each(|_| pipe.query_raw(&self.world, [rng.gen_id()]))?;
         }
 
@@ -112,7 +128,7 @@ impl Client {
         let mut pipe = self.client.pipeline();
 
         {
-            let mut rng = self.rng.borrow_mut();
+            let mut rng = self.borrow_rng_mut();
             (0..num).try_for_each(|_| {
                 let w_id = rng.gen_id();
                 let r_id = rng.gen_id();

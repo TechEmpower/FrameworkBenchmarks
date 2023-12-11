@@ -30,7 +30,6 @@ pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 pub type HandleResult<T> = Result<T, Error>;
 
 #[cfg(not(target_arch = "wasm32"))]
-#[cfg(any(feature = "pg", feature = "pg-iou"))]
 mod non_wasm {
     use core::{cell::RefCell, future::Future, pin::Pin};
 
@@ -77,5 +76,4 @@ mod non_wasm {
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-#[cfg(any(feature = "pg", feature = "pg-iou"))]
 pub use non_wasm::*;
