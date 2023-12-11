@@ -3,6 +3,7 @@ name = "Robyn"
 
 [main]
 urls.plaintext = "/plaintext"
+urls.json = "/json"
 approach = "Realistic"
 classification = "Micro"
 os = "Linux"
@@ -13,6 +14,7 @@ versus = "None"
 
 [const]
 urls.plaintext = "/plaintext"
+urls.json = "/json"
 approach = "Realistic"
 classification = "Micro"
 os = "Linux"
