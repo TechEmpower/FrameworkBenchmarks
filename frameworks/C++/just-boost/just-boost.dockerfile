@@ -8,7 +8,7 @@ ARG CXXFLAGS=-O3
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 ENV BCPP_PG_CONN_STR="postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world"
-ENV BCPP_N_THREADS=32
+#ENV BCPP_N_THREADS=0 # default 0 : number of cores
 
 WORKDIR /usr/src/${APP}
 
