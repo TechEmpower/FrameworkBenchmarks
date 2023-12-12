@@ -1,7 +1,7 @@
 # docker build --progress=plain --build-arg CXXFLAGS="-Wall" -t just-boost -f just-boost.dockerfile .
 # docker run --rm --name just-boost -p 8000:8000 -d just-boost
 # docker container stop just-boost
-FROM alpine:3.18
+FROM alpine:3.19
 
 ARG APP=just-boost
 ARG CXXFLAGS=-O3
