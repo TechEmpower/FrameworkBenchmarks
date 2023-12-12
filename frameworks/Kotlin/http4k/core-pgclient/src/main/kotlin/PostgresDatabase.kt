@@ -1,16 +1,20 @@
+import io.vertx.core.Future
 import io.vertx.core.Vertx
 import io.vertx.core.VertxOptions
 import io.vertx.pgclient.PgConnectOptions
 import io.vertx.pgclient.PgPool.client
 import io.vertx.sqlclient.PoolOptions
+import io.vertx.sqlclient.Row
 import io.vertx.sqlclient.SqlClient
 import io.vertx.sqlclient.Tuple
-import org.http4k.format.Argo.number
-import org.http4k.format.Argo.obj
+import java.util.Random
+
 
 class PostgresDatabase : Database {
     private val queryPool: SqlClient
     private val updatePool: SqlClient
+
+    private val random = Random()
 
     init {
         val vertx = Vertx.vertx(VertxOptions().setPreferNativeTransport(true))
@@ -28,49 +32,46 @@ class PostgresDatabase : Database {
     }
 
     override fun findWorld() =
-        findWorld(randomWorld(), queryPool).map { it.toJson() }.toCompletionStage().toCompletableFuture().get()
+        queryPool.findWorld(random.world()).toCompletionStage().toCompletableFuture().get()
 
     override fun loadAll() = queryPool.preparedQuery("SELECT id, randomnumber FROM world ")
         .execute()
-        .map {
-            it.associate {
-                it.getInteger("id") to (it.getInteger("id") to it.getInteger("randomnumber")).toJson()
-            }
-        }
+        .map { it.map(::toWorld) }
         .toCompletionStage().toCompletableFuture().get()
 
     override fun findWorlds(count: Int) =
-        (1..count).map {
-            findWorld(randomWorld(), queryPool)
-                .map { it.toJson() }.toCompletionStage().toCompletableFuture().get()
-        }
+        Future
+            .all(
+                (1..count).map { queryPool.findWorld(random.world()) }
+            ).toCompletionStage().toCompletableFuture().get().list<World>()
 
-    override fun updateWorlds(count: Int) =
-        (1..count)
-            .map { randomWorld() to randomWorld() }
-            .map { update ->
-                updatePool.preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
-                    .execute(Tuple.of(update.first, update.second))
-                    .flatMap { findWorld(update.first, queryPool).map { it.toJson() } }
-                    .toCompletionStage().toCompletableFuture().get()
-            }
+    override fun updateWorlds(count: Int) = (1..count).map {
+            queryPool.findWorld(random.world())
+                .flatMap { world ->
+                    updatePool.preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
+                        .execute(Tuple.of(random.world(), world.first))
+                        .map { world }
+                }
+                .toCompletionStage()
+                .toCompletableFuture()
+                .get()
+        }
 
     override fun fortunes() = queryPool.preparedQuery("SELECT id, message FROM fortune")
         .execute()
-        .map { it.map { Fortune(it.getInteger(0), it.getString(1)) } }
+        .map { it.map(::toFortune) }
         .map { (it + Fortune(0, "Additional fortune added at request time.")) }
+        .map { it.sortedBy { it.message } }
         .toCompletionStage().toCompletableFuture().get()
-        .sortedBy { it.message }
 
     companion object {
-        private fun findWorld(id: Int, pool: SqlClient) =
-            pool.preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
+        private fun SqlClient.findWorld(id: Int) =
+            preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
                 .execute(Tuple.of(id))
-                .map { rows ->
-                    val r = rows.iterator().next()
-                    r.getInteger("id") to r.getInteger("randomnumber")
-                }
+                .map { toWorld(it.single()) }
     }
 }
 
-private fun Pair<Int, Int>.toJson() = obj("id" to number(first), "randomNumber" to number(second))
+private fun toWorld(r: Row) = r.getInteger("id") to r.getInteger("randomnumber")
+
+private fun toFortune(it: Row) = Fortune(it.getInteger(0), it.getString(1))

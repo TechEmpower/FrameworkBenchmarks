@@ -3,6 +3,7 @@
 #include "pworld.h"
 #include "mngworld.h"
 #include <TCache>
+#include <TSqlQuery>
 
 
 void WorldController::index()
@@ -246,17 +247,48 @@ void WorldController::cached_pqueries(const QString &num)
 
 void WorldController::pupdates(const QString &num)
 {
+    const QString statement("UPDATE world SET randomnumber = CASE id");
     QVariantList worlds;
+    QString ids;
+    QString q = statement;
+    q.reserve(4096);
     int d = std::min(std::max(num.toInt(), 1), 500);
     PWorld world;
+
+    auto blkupdate = [&q, &ids, &statement]() {
+        if (!ids.isEmpty()) {
+            ids.chop(1);
+            q += QStringLiteral(" END WHERE id IN (%1)").arg(ids);
+            TSqlQuery query;
+            query.exec(q);
+            ids.clear();
+            q = statement;
+        }
+    };
 
     for (int i = 0; i < d; ++i) {
         int id = Tf::random(1, 10000);
         world = PWorld::get(id);
         world.setRandomNumber( Tf::random(1, 10000) );
-        world.update();
+        q += QLatin1String(" WHEN ");
+        q += QString::number(world.id());
+        q += QLatin1String(" THEN ");
+        q += QString::number(world.randomNumber());
+        ids += QString::number(world.id());
+        ids += ',';
         worlds << world.toVariantMap();
+
+        if (!((i + 1) % 200)) {
+            blkupdate();
+        }
     }
+
+    if (d == 1) {
+        world.update();
+    } else {
+        blkupdate();
+    }
+
     renderJson(worlds);
 }
 

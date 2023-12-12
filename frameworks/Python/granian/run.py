@@ -20,6 +20,5 @@ if __name__ == '__main__':
         backlog=2048,
         interface=interface,
         http="1",
-        websockets=False,
-        loop_opt=True
+        websockets=False
     ).serve()

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PlaintextController < ApplicationControllerMetal
   def index
     add_headers

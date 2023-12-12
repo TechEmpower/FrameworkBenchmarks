@@ -21,7 +21,7 @@ MultipleDatabaseQueriesTest::MultipleDatabaseQueriesTest(QObject *parent) : Cont
 
 void MultipleDatabaseQueriesTest::queriesp(Context *c)
 {
-    int queries = c->request()->queryParam(QStringLiteral("queries")).toInt();
+    int queries = c->request()->queryParam(u"queries"_qs).toInt();
     if (queries < 1) {
         queries = 1;
     } else if (queries > 500) {
@@ -39,8 +39,8 @@ void MultipleDatabaseQueriesTest::queriesp(Context *c)
             if (Q_LIKELY(!result.error() && result.size())) {
                 auto it = result.begin();
                 array->append(QJsonObject{
-                                  {QStringLiteral("id"), it[0].toInt()},
-                                  {QStringLiteral("randomNumber"), it[1].toInt()}
+                                  {u"id"_qs, it[0].toInt()},
+                                  {u"randomNumber"_qs, it[1].toInt()}
                               });
 
                 if (i + 1 == queries) {
@@ -57,16 +57,16 @@ void MultipleDatabaseQueriesTest::queriesp(Context *c)
 void MultipleDatabaseQueriesTest::query_postgres(Context *c)
 {
     QSqlQuery query = CPreparedSqlQueryThreadForDB(
-                QLatin1String("SELECT id, randomNumber FROM world WHERE id = :id"),
-                QStringLiteral("postgres"));
+                u"SELECT id, randomNumber FROM world WHERE id = :id"_qs,
+                u"postgres"_qs);
     processQuery(c, query);
 }
 
 void MultipleDatabaseQueriesTest::query_mysql(Context *c)
 {
     QSqlQuery query = CPreparedSqlQueryThreadForDB(
-                QLatin1String("SELECT id, randomNumber FROM world WHERE id = :id"),
-                QStringLiteral("mysql"));
+                u"SELECT id, randomNumber FROM world WHERE id = :id"_qs,
+                u"mysql"_qs);
     processQuery(c, query);
 }
 
@@ -74,7 +74,7 @@ void MultipleDatabaseQueriesTest::processQuery(Context *c, QSqlQuery &query)
 {
     QJsonArray array;
 
-    int queries = c->request()->queryParam(QStringLiteral("queries")).toInt();
+    int queries = c->request()->queryParam(u"queries"_qs).toInt();
     if (queries < 1) {
         queries = 1;
     } else if (queries > 500) {
@@ -84,11 +84,11 @@ void MultipleDatabaseQueriesTest::processQuery(Context *c, QSqlQuery &query)
     for (int i = 0; i < queries; ++i) {
         const int id = (rand() % 10000) + 1;
 
-        query.bindValue(QStringLiteral(":id"), id);
+        query.bindValue(u":id"_qs, id);
         if (Q_LIKELY(query.exec() && query.next())) {
             array.append(QJsonObject{
-                             {QStringLiteral("id"), query.value(0).toInt()},
-                             {QStringLiteral("randomNumber"), query.value(1).toInt()}
+                             {u"id"_qs, query.value(0).toInt()},
+                             {u"randomNumber"_qs, query.value(1).toInt()}
                          });
         } else {
             c->res()->setStatus(Response::InternalServerError);

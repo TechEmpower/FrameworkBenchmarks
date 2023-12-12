@@ -66,7 +66,7 @@ func (mongo Mongo) UpdateWorlds(selectedWorlds []World) error {
 
 // GetFortunes finds all fortunes from table
 func (mongo Mongo) GetFortunes() ([]templates.Fortune, error) {
-	fortunes := make([]templates.Fortune, 0, 16)
+	fortunes := make([]templates.Fortune, 0)
 
 	if err := mongo.fortunes.Find(nil).All(&fortunes); err != nil {
 		return nil, err

@@ -30,7 +30,7 @@ Handler::Handler(const userver::components::ComponentConfig& config,
       pg_{context.FindComponent<userver::components::Postgres>("hello-world-db")
               .GetCluster()},
       query_arg_name_{"queries"},
-      update_query_{kUpdateQueryStr},
+      update_query_{db_helpers::CreateNonLoggingQuery(kUpdateQueryStr)},
       semaphore_{kBestConcurrencyWildGuess} {}
 
 userver::formats::json::Value Handler::HandleRequestJsonThrow(

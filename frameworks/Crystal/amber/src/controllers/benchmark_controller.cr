@@ -8,7 +8,7 @@ class BenchmarkController < Amber::Controller::Base
   before_action do
     all do
       response.headers["Server"] = "Amber"
-      response.headers["Date"] = HTTP.format_time(Time.now)
+      response.headers["Date"] = HTTP.format_time(Time.local)
     end
   end
 

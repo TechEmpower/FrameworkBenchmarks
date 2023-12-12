@@ -10,10 +10,8 @@ use xitca_web::{
     request::WebRequest,
     response::WebResponse,
     route::get,
-    App, HttpServer,
+    App,
 };
-
-use self::util::SERVER_HEADER_VALUE;
 
 fn main() -> io::Result<()> {
     let fd = env::var("FD_COUNT")
@@ -23,24 +21,20 @@ fn main() -> io::Result<()> {
 
     let listener = unsafe { TcpListener::from_raw_fd(fd) };
 
-    HttpServer::new(|| {
-        App::new()
-            .at(
-                "/json",
-                get(handler_service(|| async {
-                    Json::<ser::Message>(ser::Message::new())
-                })),
-            )
-            .at(
-                "/plaintext",
-                get(handler_service(|| async { "Hello, World!" })),
-            )
-            .enclosed_fn(middleware_fn)
-            .finish()
-    })
-    .listen(listener)?
-    .run()
-    .wait()
+    App::new()
+        .at(
+            "/json",
+            get(handler_service(|| async { Json(ser::Message::new()) })),
+        )
+        .at(
+            "/plaintext",
+            get(handler_service(|| async { "Hello, World!" })),
+        )
+        .enclosed_fn(middleware_fn)
+        .serve()
+        .listen(listener)?
+        .run()
+        .wait()
 }
 
 async fn middleware_fn<S, E>(service: &S, ctx: WebRequest<'_>) -> Result<WebResponse, E>
@@ -48,7 +42,7 @@ where
     S: for<'r> Service<WebRequest<'r>, Response = WebResponse, Error = E>,
 {
     service.call(ctx).await.map(|mut res| {
-        res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
+        res.headers_mut().append(SERVER, util::SERVER_HEADER_VALUE);
         res
     })
 }

@@ -1,7 +1,7 @@
 
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.9.10" apply false
-    id "org.graalvm.buildtools.native" version "0.9.25" apply false
+    id "org.jetbrains.kotlin.jvm" version "1.9.21" apply false
+    id "org.graalvm.buildtools.native" version "0.9.28" apply false
 }
 
 version = "1.0.0"
@@ -9,18 +9,17 @@ description = "TFB benchmark"
 group = "com.hexagonkt"
 
 ext {
-    hexagonVersion = "3.1.0"
-    jettyVersion = "12.0.0"
-    nettyVersion = "4.1.97.Final"
+    hexagonVersion = "3.4.5"
+    jettyVersion = "12.0.4"
+    nettyVersion = "4.1.101.Final"
 
-    hikariVersion = "5.0.1"
-    postgresqlVersion = "42.6.0"
-    vertxVersion = "4.4.5"
+    hikariVersion = "5.1.0"
+    postgresqlVersion = "42.7.1"
+    vertxVersion = "4.5.0"
     cache2kVersion = "2.6.1.Final"
 
     applicationClass = "com.hexagonkt.BenchmarkKt"
     modules = "java.naming,java.sql,java.management"
-    options = "--enable-preview"
     gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/$hexagonVersion/gradle"
 }
 
@@ -28,4 +27,8 @@ subprojects {
     version = rootProject.version
 
     apply(from: "$gradleScripts/kotlin.gradle")
+}
+
+tasks.wrapper {
+    gradleVersion = "8.5"
 }

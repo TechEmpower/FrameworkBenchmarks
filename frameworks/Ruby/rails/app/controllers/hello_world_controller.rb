@@ -6,14 +6,6 @@ class HelloWorldController < ApplicationController
   MIN_QUERIES = 1            # min number of records that can be retrieved
   MAX_QUERIES = 500          # max number of records that can be retrieved
 
-  def plaintext
-    render plain: 'Hello, World!'
-  end
-
-  def json
-    render json: JSON.generate({message: 'Hello, World!'})
-  end
-
   def db
     render json: World.find(random_id)
   end
