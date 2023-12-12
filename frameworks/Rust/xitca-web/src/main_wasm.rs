@@ -13,8 +13,6 @@ use xitca_web::{
     App,
 };
 
-use self::util::SERVER_HEADER_VALUE;
-
 fn main() -> io::Result<()> {
     let fd = env::var("FD_COUNT")
         .ok()
@@ -44,7 +42,7 @@ where
     S: for<'r> Service<WebRequest<'r>, Response = WebResponse, Error = E>,
 {
     service.call(ctx).await.map(|mut res| {
-        res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
+        res.headers_mut().append(SERVER, util::SERVER_HEADER_VALUE);
         res
     })
 }

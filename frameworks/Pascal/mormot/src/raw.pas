@@ -201,10 +201,11 @@ begin
      hsoNoStats,           // disable low-level statistic counters
      //hsoThreadCpuAffinity, // worse scaling on multi-servers
      hsoThreadSmooting,    // seems a good option, even if not magical
+     hsoEnablePipelining,  // as expected by /plaintext
      {$ifdef WITH_LOGS}
      hsoLogVerbose,
      {$endif WITH_LOGS}
-     hsoIncludeDateHeader  // required by TPW General Test Requirements #5
+     hsoIncludeDateHeader  // required by TFB General Test Requirements #5
     ] + flags);
   if pin2Core <> -1 then
     fHttpServer.Async.SetCpuAffinity(pin2Core);

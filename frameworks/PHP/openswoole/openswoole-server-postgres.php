@@ -40,7 +40,7 @@ $server->on('workerStart', function () use (&$pool) {
  *
  * @return string
  */
-$db_postgres = function (int $queries = 0, $pool): string {
+$db_postgres = function (int $queries, $pool): string {
     $db = $pool->get();
     // Read number of queries to run from URL parameter
     $query_count = 1;
@@ -116,7 +116,7 @@ $fortunes_postgres = function ($pool): string {
  *
  * @return string
  */
-$updates_postgres = function (int $queries = 0, $pool): string {
+$updates_postgres = function (int $queries, $pool): string {
     $db = $pool->get();
 
     $query_count = 1;

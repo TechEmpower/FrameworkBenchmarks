@@ -1,4 +1,4 @@
-FROM php:8.0
+FROM php:8.3-cli
 
 RUN apt-get update > /dev/null
 

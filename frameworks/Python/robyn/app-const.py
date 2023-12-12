@@ -1,7 +1,7 @@
 import multiprocessing
 import os
 
-from robyn import Robyn
+from robyn import Response, Robyn, jsonify
 from robyn.argument_parser import Config
 
 
@@ -21,8 +21,17 @@ def plaintext() -> str:
     return "Hello, world!"
 
 
+@app.get("/json", const=True)
+def json() -> str:
+    return Response(
+        status_code=200,
+        description=jsonify({"message": "Hello, world!"}),
+        headers={"Content-Type": "application/json"}
+        )
+
+
+
 if __name__ == "__main__":
     app.add_response_header("Server", "Robyn")
-    app.add_response_header("Content-Type", "text/plain")
 
-    app.start(url="0.0.0.0", port=8080)
+    app.start(host="0.0.0.0", port=8080)

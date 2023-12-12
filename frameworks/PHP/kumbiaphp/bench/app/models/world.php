@@ -1,5 +1,6 @@
 <?php
 
+#[\AllowDynamicProperties]
 class World extends \Kumbia\ActiveRecord\LiteRecord
 {
     public static function byId($id)
