@@ -9,7 +9,7 @@ jemallocator = ["dep:jemallocator"]
 [dependencies]
 askama = "0.11.1"
 fastrand = "2.0.1"
-futures-lite = "2.0.1"
+futures-lite = "2.1.0"
 serde = { version = "1.0.193", features = ["derive"] }
 serde_json = "1.0.108"
 trillium = "0.2.11"
@@ -24,7 +24,7 @@ moka = { version = "0.12.1", features = ["future"] }
 jemallocator = {version="0.5.4", optional = true}
 
 [dependencies.sea-orm]
-version = "0.12.7"
+version = "0.12.9"
 default-features = false
 features = ["runtime-async-std-native-tls", "sqlx-postgres", "macros"]
 
