@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use serde::Serialize;
 
 #[derive(Serialize, Debug, yarte::Serialize)]
@@ -11,5 +9,5 @@ pub struct World {
 #[derive(Serialize, Debug)]
 pub struct Fortune {
     pub id: i32,
-    pub message: Cow<'static, str>,
+    pub message: String,
 }
