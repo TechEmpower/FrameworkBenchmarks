@@ -1,7 +1,7 @@
 (library
  (name lib)
  (public_name lib)
- (libraries yojson atdgen-runtime)
+ (libraries yojson atdgen-runtime unix)
  (preprocess (pps lwt_ppx)))
 
 (rule
