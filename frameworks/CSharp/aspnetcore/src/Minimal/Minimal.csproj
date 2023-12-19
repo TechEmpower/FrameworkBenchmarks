@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Npgsql" Version="8.0.0-rc.2" />
-    <PackageReference Include="Dapper" Version="2.1.11" />
+    <PackageReference Include="Npgsql" Version="8.0.1" />
+    <PackageReference Include="Dapper" Version="2.1.21" />
     <PackageReference Include="RazorSlices" Version="0.7.0" />
   </ItemGroup>
 
