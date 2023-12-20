@@ -45,7 +45,7 @@
   <logger name="java.sql.PreparedStatement" level="DEBUG" />
 
   <!-- 日志输出级别 和输出源 -->
-  <root level="debug">
+  <root level="info">
     <appender-ref ref="STDOUT" />
     <appender-ref ref="FILE" />
   </root>
