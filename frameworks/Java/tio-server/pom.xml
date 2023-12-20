@@ -14,15 +14,29 @@
   <dependencies>
     <dependency>
       <groupId>com.litongjava</groupId>
-      <artifactId>tio-server</artifactId>
+      <artifactId>tio-http-server</artifactId>
       <version>3.7.3.v20231218-RELEASE</version>
     </dependency>
 
     <dependency>
       <groupId>com.litongjava</groupId>
-      <artifactId>tio-http-server</artifactId>
-      <version>3.7.3.v20231218-RELEASE</version>
+      <artifactId>table-to-json</artifactId>
+      <version>1.2.1</version>
     </dependency>
+
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.46</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>4.0.3</version>
+    </dependency>
+
   </dependencies>
   <profiles>
     <!-- 开发环境 -->
