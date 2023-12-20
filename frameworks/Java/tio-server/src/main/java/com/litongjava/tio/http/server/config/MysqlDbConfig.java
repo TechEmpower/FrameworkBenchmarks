@@ -3,7 +3,7 @@ package com.litongjava.tio.http.server.config;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.activerecord.OrderedFieldContainerFactory;
 import com.jfinal.plugin.hikaricp.HikariCpPlugin;
-import com.litongjava.tio.utils.enviorment.EnviormentUtils;
+import com.litongjava.tio.http.server.utils.EnviormentUtils;
 
 public class MysqlDbConfig {
 

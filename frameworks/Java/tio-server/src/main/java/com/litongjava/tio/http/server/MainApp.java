@@ -13,12 +13,13 @@ import com.litongjava.tio.http.server.controller.IndexController;
 import com.litongjava.tio.http.server.handler.HttpRoutes;
 import com.litongjava.tio.http.server.handler.SimpleHttpDispahterHanlder;
 import com.litongjava.tio.http.server.handler.SimpleHttpRoutes;
+import com.litongjava.tio.http.server.utils.EnviormentUtils;
 import com.litongjava.tio.server.ServerTioConfig;
-import com.litongjava.tio.utils.enviorment.EnviormentUtils;
 
 public class MainApp {
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
+    long start = System.currentTimeMillis();
     EnviormentUtils.buildCmdArgsMap(args);
     // add route
     IndexController controller = new IndexController();
@@ -51,11 +52,17 @@ public class MainApp {
     serverTioConfig.setHeartbeatTimeout(0);
     serverTioConfig.statOn = false;
     // start server
-    httpServerStarter.start();
-
-    new MysqlDbConfig().init();
-    new EnjoyEngineConfig().engine();
-    new CaffeineCacheConfig().register();
+    try {
+      httpServerStarter.start();
+      new MysqlDbConfig().init();
+      new EnjoyEngineConfig().engine();
+      new CaffeineCacheConfig().register();
+      long end = System.currentTimeMillis();
+      System.out.println((end - start) + "ms");
+    } catch (Exception e) {
+      e.printStackTrace();
+      System.exit(1);
+    }
 
   }
 }
