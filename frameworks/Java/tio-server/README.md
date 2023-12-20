@@ -61,7 +61,7 @@ All implementations use the same URLs.
 
 ### Cache Query Test
 
-    http://localhost:8080/cache
+    http://localhost:8080/cacheQuery?queries=10000
 
 ### Template rendering Test
 
