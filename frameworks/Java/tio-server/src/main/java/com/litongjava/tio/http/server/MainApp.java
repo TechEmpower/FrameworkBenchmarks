@@ -14,10 +14,12 @@ import com.litongjava.tio.http.server.handler.HttpRoutes;
 import com.litongjava.tio.http.server.handler.SimpleHttpDispahterHanlder;
 import com.litongjava.tio.http.server.handler.SimpleHttpRoutes;
 import com.litongjava.tio.server.ServerTioConfig;
+import com.litongjava.tio.utils.enviorment.EnviormentUtils;
 
 public class MainApp {
 
   public static void main(String[] args) throws IOException {
+    EnviormentUtils.buildCmdArgsMap(args);
     // add route
     IndexController controller = new IndexController();
     HttpRoutes simpleHttpRoutes = new SimpleHttpRoutes();
