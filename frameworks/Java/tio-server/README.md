@@ -5,8 +5,6 @@ This is the tio-server portion of a [benchmarking test suite](../) comparing a v
 ## Controller
 
 These implementations use the tio-server's controller.
-* [Plaintext test source]()
-* [JSON test source]()
 
 ### Plaintext Test
 
@@ -72,6 +70,19 @@ All implementations use the same URLs.
     http://localhost:8080/updates?queries=5
 
  ## Hot to run
+ ### install mysql 8
+ - 1.please instal mysql 8.0.32,example cmd
+ ```
+ docker run --restart=always -d --name mysql_8 --hostname mysql \
+-p 3306:3306 \
+-e 'MYSQL_ROOT_PASSWORD=robot_123456#' -e 'MYSQL_ROOT_HOST=%' -e 'MYSQL_DATABASE=hello_world' \
+mysql/mysql-server:8.0.32 \
+--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --lower_case_table_names=1
+ ```
+ - 2.create database schema hello_world
+ - 3.create tablle,[example](sql/hello_world.sql)
+ - 4.import data
+ 
  ### docker 
  ```
  docker build -t tio-server-benchmark -f tio-server.dockerfile .
@@ -81,7 +92,7 @@ The run is to specify the mysql database
 docker run --rm -p 8080:8080 \
 -e JDBC_URL="jdbc:mysql://192.168.3.9/hello_world" \
 -e JDBC_USER="root" \
--e JDBC_PSWD="robot_123456" \
+-e JDBC_PSWD="robot_123456#" \
 tio-server-benchmark
 ```
 
