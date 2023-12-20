@@ -78,20 +78,24 @@ All implementations use the same URLs.
 ```
 The run is to specify the mysql database
 ```
-docker run --rm -p 8080:8080 tio-server-benchmark --jdbc.url=jdbc:mysql://192.168.3.9/hello_world --jdbc.user=root --jdbc.pswd=robot_123456#
+docker run --rm -p 8080:8080 \
+-e JDBC_URL="jdbc:mysql://192.168.3.9/hello_world" \
+-e JDBC_USER="root" \
+-e JDBC_PSWD="robot_123456" \
+tio-server-benchmark
 ```
 
 ### windows
 
 -windows
 ```
-D:\java\jdk1.8.0_121\bin\java -jar target\tio-server-benchmark-1.0.jar --jdbc.url=jdbc:mysql://192.168.3.9/hello_world --jdbc.user=root --jdbc.pswd=robot_123456#
+D:\java\jdk1.8.0_121\bin\java -jar target\tio-server-benchmark-1.0.jar --JDBC_URL=jdbc:mysql://192.168.3.9/hello_world --jdbc.user=root --JDBC_PSWD=robot_123456#
 ```
 or 
 ```
-set jdbc.url=jdbc:mysql://192.168.3.9/hello_world
+set JDBC_URL=jdbc:mysql://192.168.3.9/hello_world
 set jdbc.user=root
-set jdbc.pswd=robot_123456#
+set JDBC_PSWD=robot_123456#
 D:\java\jdk1.8.0_121\bin\java -jar target\tio-server-benchmark-1.0.jar
 ```
 

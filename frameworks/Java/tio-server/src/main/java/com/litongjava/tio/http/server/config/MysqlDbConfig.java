@@ -9,13 +9,13 @@ public class MysqlDbConfig {
 
   public void init() {
     // start active recored
-    String jdbcUrl = EnviormentUtils.get("jdbc.url");
+    String jdbcUrl = EnviormentUtils.get("JDBC_URL");
     // String jdbcUrl = "jdbc:mysql://192.168.3.9/hello_world";
 
-    String jdbcUser = EnviormentUtils.get("jdbc.user");
+    String jdbcUser = EnviormentUtils.get("JDBC_USER");
 //    String jdbcUser = "root";
 
-    String jdbcPswd = EnviormentUtils.get("jdbc.pswd");
+    String jdbcPswd = EnviormentUtils.get("JDBC_PSWD");
 //    String jdbcPswd = "robot_123456#";
     HikariCpPlugin hikariCpPlugin = new HikariCpPlugin(jdbcUrl, jdbcUser, jdbcPswd);
 
