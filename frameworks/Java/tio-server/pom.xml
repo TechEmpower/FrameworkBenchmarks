@@ -18,6 +18,7 @@
       <version>3.7.3.v20231218-RELEASE</version>
     </dependency>
 
+
     <dependency>
       <groupId>com.litongjava</groupId>
       <artifactId>table-to-json</artifactId>
@@ -46,6 +47,11 @@
         <activeByDefault>true</activeByDefault>
       </activation>
       <dependencies>
+        <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+          <version>1.7.25</version>
+        </dependency>
         <dependency>
           <groupId>ch.qos.logback</groupId>
           <artifactId>logback-classic</artifactId>

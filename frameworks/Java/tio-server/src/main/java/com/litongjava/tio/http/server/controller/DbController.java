@@ -6,9 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import com.alibaba.fastjson2.JSON;
 import com.jfinal.plugin.activerecord.Db;
@@ -22,42 +20,19 @@ import com.litongjava.tio.http.common.HttpResponse;
 import com.litongjava.tio.http.server.model.Fortune;
 import com.litongjava.tio.http.server.util.Resps;
 import com.litongjava.tio.http.server.utils.BeanConverterUtils;
+import com.litongjava.tio.http.server.utils.RandomUtils;
+import com.litongjava.tio.utils.cache.ICache;
+import com.litongjava.tio.utils.cache.caffeine.CaffeineCache;
 
 public class DbController {
 
-  private static final int MIN_WORLD_NUMBER = 1;
-  private static final int MAX_WORLD_NUMBER_PLUS_ONE = 10_001;
 
-  private static int randomWorldNumber() {
-    return ThreadLocalRandom.current().nextInt(MIN_WORLD_NUMBER, MAX_WORLD_NUMBER_PLUS_ONE);
-  }
-
-  private static IntStream randomWorldNumbers() {
-    return ThreadLocalRandom.current().ints(MIN_WORLD_NUMBER, MAX_WORLD_NUMBER_PLUS_ONE)
-        // distinct() allows us to avoid using Hibernate's first-level cache in
-        // the JPA-based implementation. Using a cache like that would bypass
-        // querying the database, which would violate the test requirements.
-        .distinct();
-  }
-
-  private static int parseQueryCount(String textValue) {
-    if (textValue == null) {
-      return 1;
-    }
-    int parsedValue;
-    try {
-      parsedValue = Integer.parseInt(textValue);
-    } catch (NumberFormatException e) {
-      return 1;
-    }
-    return Math.min(500, Math.max(1, parsedValue));
-  }
 
   // @GetMapping("/db")
   public HttpResponse db(HttpRequest request) {
     Integer id = request.getInt("id");
     if (id == null) {
-      id = randomWorldNumber();
+      id = RandomUtils.randomWorldNumber();
     }
 
     HttpResponse httpResponse = new HttpResponse(request);
@@ -80,9 +55,9 @@ public class DbController {
   // @GetMapping("/queries")
   public HttpResponse queries(HttpRequest request) {
     String queries = request.getParam("queries");
-    List<Map<String, Object>> recordMaps = randomWorldNumbers()
+    List<Map<String, Object>> recordMaps = RandomUtils.randomWorldNumbers()
         // limit
-        .limit(parseQueryCount(queries)) // 限制查询数量
+        .limit(RandomUtils.parseQueryCount(queries)) // 限制查询数量
         .mapToObj(id -> Db.findById("world", id)) // 使用 mapToObj 将 int 映射为对象
         .filter(Objects::nonNull) // 过滤掉 null 值
         .map(Record::toMap) // 将每个 Record 对象转换为 Map
@@ -97,9 +72,13 @@ public class DbController {
 //@GetMapping("/updates")
   public HttpResponse updates(HttpRequest request) {
     String queries = request.getParam("queries");
-    List<Map<String, Object>> updatedRecords = randomWorldNumbers()// random numbers
+
+    ICache cache = CaffeineCache.getCache("world");
+    cache.clear();
+    
+    List<Map<String, Object>> updatedRecords = RandomUtils.randomWorldNumbers()// random numbers
         // limit
-        .limit(parseQueryCount(queries))
+        .limit(RandomUtils.parseQueryCount(queries))
         // map
         .mapToObj(id -> Db.findById("world", id))
         // not null
@@ -107,7 +86,7 @@ public class DbController {
           int currentRandomNumber = record.getInt("randomNumber"); // "randomnumber"
           int newRandomNumber;
           do {
-            newRandomNumber = randomWorldNumber();
+            newRandomNumber = RandomUtils.randomWorldNumber();
           } while (newRandomNumber == currentRandomNumber);
 
           record.set("randomnumber", newRandomNumber);
