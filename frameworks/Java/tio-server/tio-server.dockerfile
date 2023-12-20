@@ -2,7 +2,6 @@ FROM maven:3.6.1-jdk-8-slim as maven
 WORKDIR /t-io
 COPY pom.xml pom.xml
 COPY src src
-COPY script script
 RUN mvn package -Passembly -q
 
 #TODO use separate JDK/JRE for the RUN (as the other builds)
