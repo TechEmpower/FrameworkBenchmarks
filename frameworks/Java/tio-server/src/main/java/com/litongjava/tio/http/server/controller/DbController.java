@@ -26,8 +26,6 @@ import com.litongjava.tio.utils.cache.caffeine.CaffeineCache;
 
 public class DbController {
 
-
-
   // @GetMapping("/db")
   public HttpResponse db(HttpRequest request) {
     Integer id = request.getInt("id");
