@@ -3,7 +3,6 @@ import std/strutils
 import db_connector/db_postgres
 import allographer/connection
 
-echo "DB_PORT: ", getEnv("DB_PORT")
 let rdb* = dbopen(
   PostgreSQL, # SQLite3 or MySQL or MariaDB or PostgreSQL
   getEnv("DB_DATABASE"),
