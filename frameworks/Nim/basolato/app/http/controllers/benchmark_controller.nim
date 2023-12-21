@@ -96,7 +96,7 @@ proc update*(context:Context, params:Params):Future[Response] {.async.} =
         discard stdRdb.getRow(getFirstPrepare, i)
         rdb.raw(""" UPDATE "World" SET "randomNumber" = ? WHERE id = ? """, %*[number, index]).exec()
     )()
-    response[i-1] = %*{"id":i, "randomNumber": number}
+    response[i-1] = %*{"id": index, "randomNumber": number}
   all(futures).await
 
   return render(%response)
