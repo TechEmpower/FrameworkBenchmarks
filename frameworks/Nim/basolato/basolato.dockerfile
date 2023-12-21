@@ -25,7 +25,7 @@ ENV PATH $PATH:/root/.nimble/bin
 ADD ./ /basolato
 WORKDIR /basolato
 
-RUN nimble install -y
+RUN nimble install -y --verbose
 RUN ls -la
 RUN ducere build -p:8080 -w:4
 
