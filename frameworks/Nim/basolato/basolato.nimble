@@ -8,7 +8,8 @@ bin           = @["main"]
 backend       = "c"
 # Dependencies
 requires "nim >= 2.0.0"
-requires "https://github.com/itsumura-h/nim-basolato >= 0.14.1"
+# requires "https://github.com/itsumura-h/nim-basolato >= 0.14.1"
+requires "https://github.com/itsumura-h/nim-basolato@#head"
 requires "allographer >= 0.21.0"
 requires "interface_implements >= 0.2.2"
 requires "bcrypt >= 0.2.1"
