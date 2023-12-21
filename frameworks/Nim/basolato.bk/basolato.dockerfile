@@ -27,6 +27,8 @@ WORKDIR /basolato
 
 RUN nimble install -y
 RUN ducere build -p:8080 -w:4
+RUN chmod 111 main
+RUN chmod 111 startServer.sh
 
 
 FROM ubuntu:22.04 AS runtime
@@ -43,32 +45,7 @@ RUN apt install -y --fix-missing \
 
 WORKDIR /basolato
 COPY --from=build /basolato/main .
-RUN chmod 111 main
 COPY --from=build /basolato/startServer.sh .
-RUN chmod 111 startServer.sh
-
-
-# Secret
-ENV SECRET_KEY="pZWEVzA7h2FcKLgVM3ec5Eiik7eU9Ehpf0uLdYOZDgr0uZKIo5LdQE9sjIub3IDkUTrf3X2Jsh1Uw8b02GtAfWRn4C9NptfdSyoK"
-# DB Connection
-ENV DB_DATABASE="hello_world"
-ENV DB_USER="benchmarkdbuser"
-ENV DB_PASSWORD="benchmarkdbpass"
-ENV DB_HOST="tfb-database"
-ENV DB_PORT=5432
-ENV DB_MAX_CONNECTION=498
-ENV DB_TIMEOUT=30
-# Logging
-ENV LOG_IS_DISPLAY=false
-ENV LOG_IS_FILE=false
-ENV LOG_IS_ERROR_FILE=false
-ENV LOG_DIR="./logs"
-# Session db
-# Session type, file or redis, is defined in config.nims
-ENV SESSION_TIME=20160
-ENV COOKIE_DOMAINS=""
-ENV LOCALE=en
-
 
 EXPOSE 8080
 
