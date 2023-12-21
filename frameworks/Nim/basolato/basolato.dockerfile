@@ -26,6 +26,7 @@ ADD ./ /basolato
 WORKDIR /basolato
 
 RUN nimble install -y
+RUN ls -la
 RUN ducere build -p:8080 -w:4
 
 
