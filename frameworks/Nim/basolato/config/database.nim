@@ -10,7 +10,7 @@ let maxConnections =
   when defined(release):
     (getEnv("DB_MAX_CONNECTION").parseInt div countProcessors()) - 2
   else:
-    100
+    95
 echo "maxConnections: ",maxConnections
 
 let rdb* = dbopen(
