@@ -17,6 +17,7 @@ import ../views/pages/fortune_scf_view
 
 const range1_10000 = 1..10000
 let getFirstPrepare = stdRdb.prepare("getFirst", sql""" SELECT * FROM "World" WHERE id = $1 LIMIT 1 """, 1)
+let getFortunePrepare = stdRdb.prepare("getFortunes", sql""" SELECT * FROM "Fortune" ORDER BY message ASC """, 0)
 
 
 proc plaintext*(context:Context, params:Params):Future[Response] {.async.} =
@@ -55,12 +56,11 @@ proc query*(context:Context, params:Params):Future[Response] {.async.} =
     proc(x:Row):JsonNode =
       %*{"id": x[0].parseInt, "randomNumber": x[1].parseInt}
   )
-
   return render(%response)
 
 
 proc fortune*(context:Context, params:Params):Future[Response] {.async.} =
-  let results = stdRdb.getAllRows(sql"""SELECT * FROM "Fortune" ORDER BY message ASC""")
+  let results = stdRdb.getAllRows(getFortunePrepare)
   var rows = results.map(
     proc(x:seq[string]):Fortune =
       return Fortune(id: x[0].parseInt, message: x[1])
@@ -91,12 +91,12 @@ proc update*(context:Context, params:Params):Future[Response] {.async.} =
   for i in 1..countNum:
     let index = rand(range1_10000)
     let number = rand(range1_10000)
+    response[i-1] = %*{"id": index, "randomNumber": number}
     futures[i-1] = (
-      proc():Future[void] =
+      proc():Future[void] {.async.} =
         discard stdRdb.getRow(getFirstPrepare, i)
         rdb.raw(""" UPDATE "World" SET "randomnumber" = ? WHERE id = ? """, %*[number, index]).exec()
     )()
-    response[i-1] = %*{"id": index, "randomNumber": number}
   all(futures).await
 
   return render(%response)

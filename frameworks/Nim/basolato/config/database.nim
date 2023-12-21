@@ -3,6 +3,16 @@ import std/strutils
 import db_connector/db_postgres
 import allographer/connection
 
+when defined(release):
+  import std/cpuinfo
+
+let maxConnections =
+  when defined(release):
+    (getEnv("DB_MAX_CONNECTION").parseInt div countProcessors()) - 1
+  else:
+    100
+echo "maxConnections: ",maxConnections
+
 let rdb* = dbopen(
   PostgreSQL, # SQLite3 or MySQL or MariaDB or PostgreSQL
   getEnv("DB_DATABASE"),
@@ -10,7 +20,7 @@ let rdb* = dbopen(
   getEnv("DB_PASSWORD"),
   getEnv("DB_HOST"),
   getEnv("DB_PORT").parseInt,
-  getEnv("DB_MAX_CONNECTION").parseInt,
+  maxConnections,
   getEnv("DB_TIMEOUT").parseInt,
   getEnv("LOG_IS_DISPLAY").parseBool,
   getEnv("LOG_IS_FILE").parseBool,
