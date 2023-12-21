@@ -29,7 +29,7 @@ name = "axum-pg"
 path = "src/main_pg.rs"
 
 [dependencies]
-axum = { version = "0.6.16", default-features = false, features = ["json", "query", "headers", "http1", "tokio"] }
+axum = { version = "0.6.16", default-features = false, features = ["json", "query", "http1", "tokio"] }
 deadpool = { version = "0.10.0", features = ["rt_tokio_1", "serde", "async-trait", "managed" ] }
 deadpool-postgres = "0.12.1"
 dotenv = "0.15.0"
