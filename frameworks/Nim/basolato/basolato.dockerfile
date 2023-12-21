@@ -12,7 +12,7 @@ RUN apt install -y --fix-missing \
         curl \
         git
 
-ARG VERSION="2.0.0"
+ARG VERSION="2.0.2"
 WORKDIR /root
 RUN curl https://nim-lang.org/choosenim/init.sh -o init.sh
 RUN sh init.sh -y
@@ -25,8 +25,7 @@ ENV PATH $PATH:/root/.nimble/bin
 ADD ./ /basolato
 WORKDIR /basolato
 
-RUN nimble install -y --verbose
-RUN ls -la
+RUN nimble install -y
 RUN ducere build -p:8080 -w:4
 
 
