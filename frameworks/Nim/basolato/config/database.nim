@@ -8,7 +8,7 @@ when defined(release):
 
 let maxConnections =
   when defined(release):
-    (getEnv("DB_MAX_CONNECTION").parseInt div countProcessors()) - 1
+    (getEnv("DB_MAX_CONNECTION").parseInt div countProcessors()) - 2
   else:
     100
 echo "maxConnections: ",maxConnections
