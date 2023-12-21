@@ -94,7 +94,7 @@ proc update*(context:Context, params:Params):Future[Response] {.async.} =
     futures[i-1] = (
       proc():Future[void] =
         discard stdRdb.getRow(getFirstPrepare, i)
-        rdb.raw(""" UPDATE "World" SET "randomNumber" = ? WHERE id = ? """, %*[number, index]).exec()
+        rdb.raw(""" UPDATE "World" SET "randomnumber" = ? WHERE id = ? """, %*[number, index]).exec()
     )()
     response[i-1] = %*{"id": index, "randomNumber": number}
   all(futures).await

@@ -62,11 +62,9 @@ ENV DB_TIMEOUT=30
 ENV LOG_IS_DISPLAY=false
 ENV LOG_IS_FILE=false
 ENV LOG_IS_ERROR_FILE=false
-ENV LOG_DIR="./logs"
 # Session db
 # Session type, file or redis, is defined in config.nims
 ENV SESSION_TIME=20160
-ENV COOKIE_DOMAINS=""
 ENV LOCALE=en
 
 
