@@ -1,9 +1,5 @@
 # framework
 import basolato
-# middleware
-import ./app/http/middlewares/session_middleware
-import ./app/http/middlewares/auth_middleware
-import ./app/http/middlewares/set_headers_middleware
 # controller
 import ./app/http/controllers/benchmark_controller
 
