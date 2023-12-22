@@ -24,7 +24,7 @@ impl Message {
     }
 }
 
-#[cfg_attr(feature = "diesel", derive(diesel::Queryable))]
+#[cfg_attr(feature = "pg-orm", derive(diesel::Queryable))]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,
@@ -37,7 +37,7 @@ impl World {
     }
 }
 
-#[cfg_attr(feature = "diesel", derive(diesel::Queryable))]
+#[cfg_attr(feature = "pg-orm", derive(diesel::Queryable))]
 pub struct Fortune {
     pub id: i32,
     pub message: Cow<'static, str>,

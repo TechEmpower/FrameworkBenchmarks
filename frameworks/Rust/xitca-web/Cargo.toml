@@ -94,14 +94,14 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-codegen = { git = "https://github.com/HFQR/xitca-web.git", rev = "4a2bd3efd1b840fc3592f5afb1382a496b3cb9d0" }
-xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "4a2bd3efd1b840fc3592f5afb1382a496b3cb9d0" }
-xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "4a2bd3efd1b840fc3592f5afb1382a496b3cb9d0" }
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "4a2bd3efd1b840fc3592f5afb1382a496b3cb9d0" }
-xitca-router = { git = "https://github.com/HFQR/xitca-web.git", rev = "4a2bd3efd1b840fc3592f5afb1382a496b3cb9d0" }
-xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "4a2bd3efd1b840fc3592f5afb1382a496b3cb9d0" }
-xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "4a2bd3efd1b840fc3592f5afb1382a496b3cb9d0" }
-xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "4a2bd3efd1b840fc3592f5afb1382a496b3cb9d0" }
-xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "4a2bd3efd1b840fc3592f5afb1382a496b3cb9d0" }
+xitca-codegen = { git = "https://github.com/HFQR/xitca-web.git", rev = "d5d9640cd213fa3b720b649ca69c0377d0f2eac6" }
+xitca-http = { git = "https://github.com/HFQR/xitca-web.git", rev = "d5d9640cd213fa3b720b649ca69c0377d0f2eac6" }
+xitca-io = { git = "https://github.com/HFQR/xitca-web.git", rev = "d5d9640cd213fa3b720b649ca69c0377d0f2eac6" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "d5d9640cd213fa3b720b649ca69c0377d0f2eac6" }
+xitca-router = { git = "https://github.com/HFQR/xitca-web.git", rev = "d5d9640cd213fa3b720b649ca69c0377d0f2eac6" }
+xitca-server = { git = "https://github.com/HFQR/xitca-web.git", rev = "d5d9640cd213fa3b720b649ca69c0377d0f2eac6" }
+xitca-service = { git = "https://github.com/HFQR/xitca-web.git", rev = "d5d9640cd213fa3b720b649ca69c0377d0f2eac6" }
+xitca-unsafe-collection = { git = "https://github.com/HFQR/xitca-web.git", rev = "d5d9640cd213fa3b720b649ca69c0377d0f2eac6" }
+xitca-web = { git = "https://github.com/HFQR/xitca-web.git", rev = "d5d9640cd213fa3b720b649ca69c0377d0f2eac6" }
 
 mio = { git = "https://github.com/fakeshadow/mio.git", rev = "52b72d372bfe5807755b7f5e3e1edf282954d6ba" }
