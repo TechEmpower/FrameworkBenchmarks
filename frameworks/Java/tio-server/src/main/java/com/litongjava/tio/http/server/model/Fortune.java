@@ -2,18 +2,18 @@ package com.litongjava.tio.http.server.model;
 
 public final class Fortune {
 
-  public int id;
+  public Integer id;
   public String message;
 
   public Fortune() {
   }
 
-  public Fortune(int id, String message) {
+  public Fortune(Integer id, String message) {
     this.id = id;
     this.message = message;
   }
 
-  public int getId() {
+  public Integer getId() {
     return id;
   }
 
