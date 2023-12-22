@@ -112,7 +112,7 @@ public class DbController {
       fortunes.add(BeanConverterUtils.toBean(record.toMap(), Fortune.class));
     }
     // 添加额外的 Fortune
-    fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+    fortunes.add(new Fortune(0L, "Additional fortune added at request time."));
 
     // 按照消息排序
     fortunes.sort(Comparator.comparing(Fortune::getMessage));

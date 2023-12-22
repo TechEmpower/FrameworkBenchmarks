@@ -12,7 +12,7 @@
   #for(fortune : fortunes)
   <tr>
     <td>#(fortune.id)</td>
-    <td>#(fortune.message)</td>
+    <td>#escape(fortune.message)</td>
   </tr>
   #end
 </table>
