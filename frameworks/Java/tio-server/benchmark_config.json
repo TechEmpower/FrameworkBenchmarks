@@ -12,7 +12,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
-      "database": "None",
+      "database": "MySQL",
       "framework": "tio-server",
       "language": "Java",
       "flavor": "None",
