@@ -42,7 +42,7 @@ router = ["xitca-http/router"]
 # web optional
 web = ["xitca-web"]
 # web codegen optional
-web-codegen = ["xitca-web/codegen"]
+web-codegen = ["xitca-web/codegen", "xitca-web/urlencoded"]
 # template optional
 template = ["sailfish"]
 # io-uring optional

@@ -6,13 +6,14 @@ mod util;
 use serde::Serialize;
 use xitca_web::{
     codegen::route,
-    handler::{html::Html, json::Json, state::StateOwn, uri::UriOwn},
+    handler::{html::Html, json::Json, query::Query, state::StateOwn},
     http::{header::SERVER, WebResponse},
     App,
 };
 
 use db_diesel::DieselPool;
-use util::{HandleResult, QueryParse, SERVER_HEADER_VALUE};
+use ser::Num;
+use util::{HandleResult, SERVER_HEADER_VALUE};
 
 fn main() -> std::io::Result<()> {
     let pool = db_diesel::create()?;
@@ -61,18 +62,16 @@ fn fortunes(StateOwn(pool): StateOwn<DieselPool>) -> HandleResult<Html<String>> 
 
 #[route("/queries", method = get)]
 fn queries(
-    UriOwn(uri): UriOwn,
+    Query(Num(num)): Query<Num>,
     StateOwn(pool): StateOwn<DieselPool>,
 ) -> HandleResult<Json<impl Serialize>> {
-    let num = uri.query().parse_query();
     pool.get_worlds(num).map(Json)
 }
 
 #[route("/updates", method = get)]
 fn updates(
-    UriOwn(uri): UriOwn,
+    Query(Num(num)): Query<Num>,
     StateOwn(pool): StateOwn<DieselPool>,
 ) -> HandleResult<Json<impl Serialize>> {
-    let num = uri.query().parse_query();
     pool.update(num).map(Json)
 }

@@ -1406,6 +1406,7 @@ dependencies = [
  "pin-project-lite",
  "serde",
  "serde_json",
+ "serde_urlencoded",
  "tokio",
  "xitca-codegen",
  "xitca-http",
