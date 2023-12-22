@@ -40,8 +40,8 @@ type Response = http::Response<Once<Bytes>>;
 fn main() -> io::Result<()> {
     let service = fn_service(handler)
         .enclosed(context_mw())
-        .enclosed(fn_build(|service| async {
-            Ok::<_, Infallible>(Http1IOU {
+        .enclosed(fn_build(|res: Result<_, _>| async {
+            res.map(|service| Http1IOU {
                 service,
                 date: DateTimeService::new(),
             })
