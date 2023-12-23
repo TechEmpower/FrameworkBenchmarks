@@ -1,5 +1,14 @@
 # Basolato Benchmarking Test
 
+### Test Type Implementation Source Code
+
+* [JSON](./app/http/controllers/benchmark_controller.nim)
+* [PLAINTEXT](./app/http/controllers/benchmark_controller.nim)
+* [DB](./app/http/controllers/benchmark_controller.nim)
+* [QUERY](./app/http/controllers/benchmark_controller.nim)
+* [UPDATE](./app/http/controllers/benchmark_controller.nim)
+* [FORTUNES](./app/http/controllers/benchmark_controller.nim)
+
 ## Important Libraries
 The tests were run with:
 * [Software](https://github.com/itsumura-h/nim-basolato)
