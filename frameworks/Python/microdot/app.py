@@ -1,42 +1,42 @@
 #!/usr/bin/env python
-from datetime import datetime
 import os
 from random import randint, sample
 
-from alchemical.aio import Alchemical
-import sqlalchemy as sqla
+from alchemical.aio import Alchemical, Model
+import sqlalchemy.orm as so
 from asyncache import cached
 from cachetools.keys import hashkey
 
-from microdot_asgi import Microdot
-from microdot_jinja import render_template
+from microdot.asgi import Microdot
+from microdot.jinja import Template
 
 app = Microdot()
-db = Alchemical(os.environ['DATABASE_URL'])
+Template.initialize('templates', enable_async=True)
+db = Alchemical(os.environ.get('DATABASE_URL', 'sqlite:///'))
 
 
-class World(db.Model):
+class World(Model):
     __tablename__ = "world"
-    id = sqla.Column(sqla.Integer, primary_key=True)
-    randomnumber = sqla.Column(sqla.Integer)
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    randomnumber: so.Mapped[int]
 
     def to_dict(self):
         return {"id": self.id, "randomNumber": self.randomnumber}
 
 
-class CachedWorld(db.Model):
+class CachedWorld(Model):
     __tablename__ = "cachedworld"
-    id = sqla.Column(sqla.Integer, primary_key=True)
-    randomnumber = sqla.Column(sqla.Integer)
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    randomnumber: so.Mapped[int]
 
     def to_dict(self):
         return {"id": self.id, "randomNumber": self.randomnumber}
 
 
-class Fortune(db.Model):
+class Fortune(Model):
     __tablename__ = "fortune"
-    id = sqla.Column(sqla.Integer, primary_key=True)
-    message = sqla.Column(sqla.String)
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    message: so.Mapped[str]
 
 
 def get_num_queries(request, name="queries"):
@@ -81,7 +81,10 @@ async def test_fortunes(request):
         fortunes = list(await session.scalars(Fortune.select()))
     fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
     fortunes.sort(key=lambda f: f.message)
-    return render_template("fortunes.html", fortunes=fortunes), {'Content-Type': 'text/html; charset=utf-8'}
+    return (
+        await Template("fortunes.html").render_async(fortunes=fortunes),
+        {'Content-Type': 'text/html; charset=utf-8'},
+    )
 
 
 @app.route("/updates")

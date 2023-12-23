@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from datetime import datetime
 import os
 from random import randint, sample
 
@@ -7,14 +6,17 @@ import asyncpg
 from asyncache import cached
 from cachetools.keys import hashkey
 
-from microdot_asgi import Microdot
-from microdot_jinja import render_template
+from microdot.asgi import Microdot
+from microdot.jinja import Template
 
 app = Microdot()
+Template.initialize('templates', enable_async=True)
+
 get_world_sql = 'SELECT id, randomnumber FROM world WHERE id = $1'
 update_world_sql = 'UPDATE world SET randomnumber = $1 WHERE id = $2'
 fortune_sql = 'SELECT * FROM fortune'
 db = None
+
 
 async def asgi(scope, receive, send):
     if scope['type'] == 'lifespan':
@@ -81,7 +83,10 @@ async def test_fortunes(request):
         fortunes = list(await conn.fetch(fortune_sql))
     fortunes.append((0, "Additional fortune added at request time."))
     fortunes.sort(key=lambda f: f[1])
-    return render_template("fortunes_raw.html", fortunes=fortunes), {'Content-Type': 'text/html; charset=utf-8'}
+    return (
+        await Template("fortunes_raw.html").render_async(fortunes=fortunes),
+        {'Content-Type': 'text/html; charset=utf-8'},
+    )
 
 
 @app.route("/updates")
