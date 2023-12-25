@@ -98,33 +98,21 @@ impl IntoResponse for Error {
 
 // compat module between xitca-http and axum.
 mod tower_compat {
-    use std::{
-        cell::RefCell,
-        error, fmt,
-        future::Future,
-        io,
-        marker::PhantomData,
-        net::SocketAddr,
-        pin::Pin,
-        task::{Context, Poll},
-    };
+    use std::{cell::RefCell, fmt, future::Future, marker::PhantomData, net::SocketAddr};
 
     use axum::extract::ConnectInfo;
-    use futures_core::stream::Stream;
     use http_body::Body;
-    use pin_project_lite::pin_project;
     use xitca_http::{
-        body::none_body_hint,
         bytes::Bytes,
         h1::RequestBody,
-        http::{HeaderMap, Request, RequestExt, Response},
-        BodyError, HttpServiceBuilder,
+        http::{Request, RequestExt, Response},
+        HttpServiceBuilder,
     };
     use xitca_io::net::io_uring::TcpStream;
     use xitca_service::{
         fn_build, middleware::UncheckedReady, ready::ReadyService, Service, ServiceExt,
     };
-    use xitca_unsafe_collection::fake_send_sync::FakeSend;
+    use xitca_web::service::tower_http_compat::{CompatReqBody, CompatResBody};
 
     pub struct TowerHttp<S, B> {
         service: RefCell<S>,
@@ -141,10 +129,12 @@ mod tower_compat {
         where
             F: Fn() -> Fut + Send + Sync + Clone,
             Fut: Future<Output = Result<S, crate::util::Error>>,
-            S: tower::Service<Request<_RequestBody>, Response = Response<B>>,
+            S: tower::Service<
+                Request<CompatReqBody<RequestExt<RequestBody>>>,
+                Response = Response<B>,
+            >,
             S::Error: fmt::Debug,
             B: Body<Data = Bytes> + Send + 'static,
-            B::Error: error::Error + Send + Sync,
         {
             fn_build(move |_| {
                 let func = func.clone();
@@ -162,11 +152,9 @@ mod tower_compat {
 
     impl<S, B> Service<Request<RequestExt<RequestBody>>> for TowerHttp<S, B>
     where
-        S: tower::Service<Request<_RequestBody>, Response = Response<B>>,
-        B: Body<Data = Bytes> + Send + 'static,
-        B::Error: error::Error + Send + Sync,
+        S: tower::Service<Request<CompatReqBody<RequestExt<RequestBody>>>, Response = Response<B>>,
     {
-        type Response = Response<ResponseBody<B>>;
+        type Response = Response<CompatResBody<B>>;
         type Error = S::Error;
 
         async fn call(
@@ -174,70 +162,12 @@ mod tower_compat {
             req: Request<RequestExt<RequestBody>>,
         ) -> Result<Self::Response, Self::Error> {
             let (parts, ext) = req.into_parts();
-            let (ext, body) = ext.replace_body(());
-            let body = _RequestBody {
-                body: FakeSend::new(body),
-            };
-            let mut req = Request::from_parts(parts, body);
-            let _ = req.extensions_mut().insert(ConnectInfo(*ext.socket_addr()));
+            let info = ConnectInfo(*ext.socket_addr());
+            let mut req = Request::from_parts(parts, CompatReqBody::new(ext));
+            req.extensions_mut().insert(info);
             let fut = self.service.borrow_mut().call(req);
             let (parts, body) = fut.await?.into_parts();
-            let body = ResponseBody { body };
-            let res = Response::from_parts(parts, body);
-            Ok(res)
-        }
-    }
-
-    pub struct _RequestBody {
-        body: FakeSend<RequestBody>,
-    }
-
-    impl Body for _RequestBody {
-        type Data = Bytes;
-        type Error = io::Error;
-
-        fn poll_data(
-            self: Pin<&mut Self>,
-            cx: &mut Context<'_>,
-        ) -> Poll<Option<Result<Self::Data, Self::Error>>> {
-            Pin::new(&mut *self.get_mut().body).poll_next(cx)
-        }
-
-        fn poll_trailers(
-            self: Pin<&mut Self>,
-            _: &mut Context<'_>,
-        ) -> Poll<Result<Option<HeaderMap>, Self::Error>> {
-            Poll::Ready(Ok(None))
-        }
-    }
-
-    pin_project! {
-        pub struct ResponseBody<B> {
-            #[pin]
-            body: B
-        }
-    }
-
-    impl<B> Stream for ResponseBody<B>
-    where
-        B: Body<Data = Bytes>,
-        B::Error: error::Error + Send + Sync + 'static,
-    {
-        type Item = Result<Bytes, BodyError>;
-
-        fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
-            self.project()
-                .body
-                .poll_data(cx)
-                .map_err(|e| BodyError::from(Box::new(e) as Box<dyn error::Error + Send + Sync>))
-        }
-
-        fn size_hint(&self) -> (usize, Option<usize>) {
-            if Body::is_end_stream(&self.body) {
-                return none_body_hint();
-            }
-            let hint = Body::size_hint(&self.body);
-            (hint.lower() as _, hint.upper().map(|u| u as _))
+            Ok(Response::from_parts(parts, CompatResBody::new(body)))
         }
     }
 }
