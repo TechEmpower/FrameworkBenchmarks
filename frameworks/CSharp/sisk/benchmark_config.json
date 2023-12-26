@@ -1,0 +1,21 @@
+{
+  "framework": "sisk",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "Sisk",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "webserver": "Sisk",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Sisk Framework"
+    }
+  }]
+}
