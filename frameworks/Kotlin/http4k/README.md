@@ -16,13 +16,14 @@ The tests were run with:
 - Plaintext: http://localhost:9000/plaintext
 
 ## Supported backends (w/ Postgres client)
-- SunHttp/SunHttpLoom (default - bundled with core module - zero dependencies)  (+ SunHttpLoom w/GraalVM)
+- SunHttp/SunHttpLoom (default - bundled with core module - zero dependencies) (+ SunHttpLoom w/GraalVM)
 - Apache (5)
 - Apache4 (+ w/GraalVM)
 - Helidon (+ w/GraalVM)
 - KtorCIO
 - KtorNetty
 - Jetty/JettyLoom
+- Jetty/JettyLoom (v11)
 - Netty
 - Ratpack
 - Undertow
