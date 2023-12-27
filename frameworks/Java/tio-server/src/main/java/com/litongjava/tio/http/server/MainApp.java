@@ -13,10 +13,13 @@ import com.litongjava.tio.http.server.handler.SimpleHttpDispatcherHandler;
 import com.litongjava.tio.http.server.handler.SimpleHttpRoutes;
 import com.litongjava.tio.server.ServerTioConfig;
 import com.litongjava.tio.utils.environment.EnvironmentUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MainApp {
 
   public static void main(String[] args) {
+    Logger log = LoggerFactory.getLogger(MainApp.class);
     long start = System.currentTimeMillis();
     EnvironmentUtils.buildCmdArgsMap(args);
     // add route
@@ -51,9 +54,13 @@ public class MainApp {
     // start server
     try {
       httpServerStarter.start();
-      new MysqlDbConfig().init();
-      new EnjoyEngineConfig().engine();
-      new EhCachePluginConfig().ehCachePlugin();
+      if (!EnvironmentUtils.getBoolean("native")) {
+        new MysqlDbConfig().init();
+        new EnjoyEngineConfig().engine();
+        new EhCachePluginConfig().ehCachePlugin();
+      } else {
+        log.info("native mode,only start server");
+      }
       long end = System.currentTimeMillis();
       System.out.println((end - start) + "ms");
     } catch (Exception e) {
