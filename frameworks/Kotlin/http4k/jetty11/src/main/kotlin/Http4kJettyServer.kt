@@ -1,5 +1,5 @@
-import org.http4k.server.Jetty
+import org.http4k.server.Jetty11
 
 fun main() {
-    Http4kBenchmarkServer(PostgresDatabase(), false).start(Jetty(9000))
+    Http4kBenchmarkServer(PostgresDatabase(), false).start(Jetty11(9000))
 }
