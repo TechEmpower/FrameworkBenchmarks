@@ -8,7 +8,7 @@
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
-      "cached_query" : "/cachedQuery?queries=",
+      "cached_query_url" : "/cachedQuery?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
