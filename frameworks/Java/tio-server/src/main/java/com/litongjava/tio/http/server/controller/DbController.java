@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import com.alibaba.fastjson2.JSON;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.plugin.ehcache.CacheKit;
 import com.jfinal.template.Engine;
 import com.jfinal.template.Template;
 import com.litongjava.tio.http.common.HeaderName;
@@ -71,8 +72,7 @@ public class DbController {
   public HttpResponse updates(HttpRequest request) {
     String queries = request.getParam("queries");
 
-    ICache cache = CaffeineCache.getCache("world");
-    cache.clear();
+    CacheKit.removeAll("world");
     
     List<Map<String, Object>> updatedRecords = RandomUtils.randomWorldNumbers()// random numbers
         // limit

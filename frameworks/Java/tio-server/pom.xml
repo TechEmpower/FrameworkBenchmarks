@@ -15,14 +15,21 @@
     <dependency>
       <groupId>com.litongjava</groupId>
       <artifactId>tio-http-server</artifactId>
-      <version>3.7.3.v20231218-RELEASE</version>
+      <version>3.7.3.v20231224-RELEASE</version>
     </dependency>
 
 
+    <!-- https://mvnrepository.com/artifact/com.jfinal/activerecord -->
     <dependency>
-      <groupId>com.litongjava</groupId>
-      <artifactId>table-to-json</artifactId>
-      <version>1.2.1</version>
+      <groupId>com.jfinal</groupId>
+      <artifactId>activerecord</artifactId>
+      <version>5.1.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache-core</artifactId>
+      <version>2.6.11</version>
     </dependency>
 
 
@@ -155,7 +162,7 @@
         </dependency>
       </dependencies>
       <build>
-        <finalName>${final.name}</finalName>
+        <finalName>${project.build.finalName}-native</finalName>
         <plugins>
           <plugin>
             <groupId>org.graalvm.nativeimage</groupId>
@@ -171,7 +178,7 @@
             </executions>
             <configuration>
               <skip>false</skip>
-              <imageName>${project.build.finalName}</imageName>
+              <imageName>${project.build.finalName}-native</imageName>
               <mainClass>${main.class}</mainClass>
               <buildArgs>
                 -H:+RemoveSaturatedTypeFlows

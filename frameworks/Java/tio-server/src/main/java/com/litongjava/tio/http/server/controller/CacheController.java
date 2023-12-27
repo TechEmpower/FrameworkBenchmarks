@@ -25,12 +25,12 @@ public class CacheController {
   public HttpResponse cacheQuery(HttpRequest request) {
     String queries = request.getParam("queries");
     List<Map<String, Object>> recordMaps = RandomUtils.randomWorldNumbers()
-        // limit
-        .limit(RandomUtils.parseQueryCount(queries)) // 限制查询数量
-        .mapToObj(id -> findByIdWithCache("world", id)) // 使用 mapToObj 将 int 映射为对象
-        .filter(Objects::nonNull) // 过滤掉 null 值
-        .map(Record::toMap) // 将每个 Record 对象转换为 Map
-        .collect(Collectors.toList()); // 收集到 List
+      // limit
+      .limit(RandomUtils.parseQueryCount(queries)) // 限制查询数量
+      .mapToObj(id -> findByIdWithCache("world", id)) // 使用 mapToObj 将 int 映射为对象
+      .filter(Objects::nonNull) // 过滤掉 null 值
+      .map(Record::toMap) // 将每个 Record 对象转换为 Map
+      .collect(Collectors.toList()); // 收集到 List
 
     HttpResponse httpResponse = new HttpResponse(request);
     httpResponse.addHeader(HeaderName.Content_Type, HeaderValue.Content_Type.TEXT_PLAIN_JSON);
@@ -40,30 +40,7 @@ public class CacheController {
   }
 
   private Record findByIdWithCache(String tableName, int id) {
-
-    ICache cache = CaffeineCache.getCache("world");
-
-    // firsthandCreater用户查询数据库
-    FirsthandCreater<Record> firsthandCreater = new FirsthandCreater<Record>() {
-      @Override
-      public Record create() {
-        // log.info("select from db:{},id", tableName, id);
-        return Db.findById(tableName, id);
-      }
-    };
-
-    String key = id + "";
-    boolean putTempToCacheIfNull = false;
-    Record value = CacheUtils.get(cache, key, putTempToCacheIfNull, firsthandCreater);
-    return value;
-  }
-
-  public HttpResponse cacheList(HttpRequest request) {
-    Collection<String> keys = CaffeineCache.getCache("world").keys();
-
-    HttpResponse httpResponse = new HttpResponse(request);
-    httpResponse.addHeader(HeaderName.Content_Type, HeaderValue.Content_Type.TEXT_PLAIN_JSON);
-    httpResponse.setBody(JSON.toJSONString(keys).getBytes());
-    return httpResponse;
+    String sql = "SELECT id, randomNumber FROM world WHERE id = ?";
+    return Db.findFirstByCache(tableName, id, sql, id);
   }
 }
