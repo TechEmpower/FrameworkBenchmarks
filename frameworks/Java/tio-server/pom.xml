@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.litongjava</groupId>
   <artifactId>tio-server-benchmark</artifactId>
@@ -9,6 +10,8 @@
     <java.version>1.8</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
+
+    <graalvm.version>23.1.1</graalvm.version>
     <main.class>com.litongjava.tio.http.server.MainApp</main.class>
   </properties>
   <dependencies>
@@ -54,11 +57,6 @@
         <activeByDefault>true</activeByDefault>
       </activation>
       <dependencies>
-        <dependency>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
-          <version>1.7.25</version>
-        </dependency>
         <dependency>
           <groupId>ch.qos.logback</groupId>
           <artifactId>logback-classic</artifactId>
@@ -162,7 +160,7 @@
         </dependency>
       </dependencies>
       <build>
-        <finalName>${project.build.finalName}-native</finalName>
+        <finalName>${final.name}</finalName>
         <plugins>
           <plugin>
             <groupId>org.graalvm.nativeimage</groupId>
@@ -178,7 +176,7 @@
             </executions>
             <configuration>
               <skip>false</skip>
-              <imageName>${project.build.finalName}-native</imageName>
+              <imageName>${project.build.finalName}</imageName>
               <mainClass>${main.class}</mainClass>
               <buildArgs>
                 -H:+RemoveSaturatedTypeFlows
