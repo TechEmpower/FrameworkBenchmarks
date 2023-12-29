@@ -1331,7 +1331,8 @@ checksum = "dff9641d1cd4be8d1a070daf9e3773c5f67e78b4d9d42263020c057706765c04"
 [[package]]
 name = "xitca-codegen"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=d79f510197e0f36534fe22b7a467c55dbd683681#d79f510197e0f36534fe22b7a467c55dbd683681"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "185ec568d3620ab5129371e5fbfbc8c7b2791f10ed4e0ff216f8784cd896127c"
 dependencies = [
  "quote",
  "syn",
@@ -1448,13 +1449,14 @@ dependencies = [
  "xitca-server",
  "xitca-service",
  "xitca-unsafe-collection",
- "xitca-web 0.1.0 (git+https://github.com/HFQR/xitca-web.git?rev=d79f510197e0f36534fe22b7a467c55dbd683681)",
+ "xitca-web 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "xitca-web"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=d79f510197e0f36534fe22b7a467c55dbd683681#d79f510197e0f36534fe22b7a467c55dbd683681"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4ed23e2be4e1d6aa730af2646a933cbb8048de5f5549a5040672a95553f6df04"
 dependencies = [
  "futures-core",
  "http-body",

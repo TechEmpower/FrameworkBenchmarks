@@ -1,4 +1,4 @@
-FROM rust:latest
+FROM rust:1.75
 
 ADD ./ /xitca-web
 WORKDIR /xitca-web
