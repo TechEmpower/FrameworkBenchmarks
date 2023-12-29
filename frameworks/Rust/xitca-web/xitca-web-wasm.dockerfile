@@ -10,6 +10,7 @@ WORKDIR /tmp
 COPY / ./
 RUN curl -LSs "https://github.com/bytecodealliance/wasmtime/releases/download/v${WASMTIME_VERSION}/wasmtime-v${WASMTIME_VERSION}-$(uname -m)-linux.tar.xz" | \
 tar --strip-components=1 -Jx && \
+rustup default nightly && \
 rustup target add ${WASM_TARGET} && \
 cargo build --bin xitca-web-wasm --features web --release --target ${WASM_TARGET}
 
