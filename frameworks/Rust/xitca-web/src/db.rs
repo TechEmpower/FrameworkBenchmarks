@@ -5,7 +5,7 @@ use xitca_unsafe_collection::no_hash::NoHashBuilder;
 
 use super::{
     ser::{Fortune, Fortunes, World},
-    util::{HandleResult, Rand},
+    util::{HandleResult, Rand, DB_URL},
 };
 
 pub struct Client {
@@ -29,8 +29,8 @@ impl Drop for Client {
     }
 }
 
-pub async fn create(config: &str) -> HandleResult<Client> {
-    let (client, driver) = Postgres::new(config.to_string()).connect().await?;
+pub async fn create() -> HandleResult<Client> {
+    let (client, driver) = Postgres::new(DB_URL.to_string()).connect().await?;
 
     tokio::spawn(tokio::task::unconstrained(driver.into_future()));
 

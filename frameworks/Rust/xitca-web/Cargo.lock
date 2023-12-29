@@ -512,16 +512,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "302d7ab3130588088d277783b1e2d2e10c9e9e4a16dd9050e6ec93fb3e7048f4"
 
 [[package]]
-name = "libmimalloc-sys"
-version = "0.1.35"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3979b5c37ece694f1f5e51e7ecc871fdb0f517ed04ee45f88d15d6d553cb9664"
-dependencies = [
- "cc",
- "libc",
-]
-
-[[package]]
 name = "lock_api"
 version = "0.4.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -555,18 +545,9 @@ dependencies = [
 
 [[package]]
 name = "memchr"
-version = "2.6.4"
+version = "2.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f665ee40bc4a3c5590afb1e9677db74a508659dfd71e126420da8274909a0167"
-
-[[package]]
-name = "mimalloc"
-version = "0.1.39"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fa01922b5ea280a911e323e4d2fd24b7fe5cc4042e0d2cda3c40775cdc4bdc9c"
-dependencies = [
- "libmimalloc-sys",
-]
+checksum = "523dc4f511e55ab87b694dc30d0f820d60906ef06413f93d4d7a1385599cc149"
 
 [[package]]
 name = "mime"
@@ -1359,7 +1340,8 @@ dependencies = [
 [[package]]
 name = "xitca-http"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=d79f510197e0f36534fe22b7a467c55dbd683681#d79f510197e0f36534fe22b7a467c55dbd683681"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5667ed780b72789d84460bd5e13a44f009d24914bf3f7a670239d32b98bce29c"
 dependencies = [
  "futures-core",
  "http",
@@ -1380,7 +1362,8 @@ dependencies = [
 [[package]]
 name = "xitca-io"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=d79f510197e0f36534fe22b7a467c55dbd683681#d79f510197e0f36534fe22b7a467c55dbd683681"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e887cc8153538637515e0663704f3492803c5bb48eb7947c80689154d965b7e0"
 dependencies = [
  "bytes",
  "tokio",
@@ -1407,7 +1390,8 @@ dependencies = [
 [[package]]
 name = "xitca-router"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=d79f510197e0f36534fe22b7a467c55dbd683681#d79f510197e0f36534fe22b7a467c55dbd683681"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8696e96f1401baee0bc577bc4cfcdc5c6a90f0c183aa2cc011ecb60f1ae5b73e"
 dependencies = [
  "xitca-unsafe-collection",
 ]
@@ -1415,7 +1399,8 @@ dependencies = [
 [[package]]
 name = "xitca-server"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=d79f510197e0f36534fe22b7a467c55dbd683681#d79f510197e0f36534fe22b7a467c55dbd683681"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d07160d17cf458adf7f38a2f7bc37ecb15732909683e614bcfe5f6ac8202bda5"
 dependencies = [
  "socket2 0.5.5",
  "tokio",
@@ -1429,12 +1414,14 @@ dependencies = [
 [[package]]
 name = "xitca-service"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=d79f510197e0f36534fe22b7a467c55dbd683681#d79f510197e0f36534fe22b7a467c55dbd683681"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "09a4a38548b14925111dd99560f0a10d1eb9e3e117fa5471c35387ed6f77b58c"
 
 [[package]]
 name = "xitca-unsafe-collection"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=d79f510197e0f36534fe22b7a467c55dbd683681#d79f510197e0f36534fe22b7a467c55dbd683681"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c38c5b92c72ba986bb2c2f4fc40ec56e841194773c02278f3c8d4c9733807270"
 dependencies = [
  "bytes",
 ]
@@ -1448,7 +1435,6 @@ dependencies = [
  "diesel",
  "futures-core",
  "http-body",
- "mimalloc",
  "nanorand",
  "sailfish",
  "serde",

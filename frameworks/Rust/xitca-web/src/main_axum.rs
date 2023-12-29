@@ -1,8 +1,5 @@
 //! show case of axum running on proper thread per core server with io-uring enabled.
 
-#[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
-
 mod db;
 mod ser;
 mod util;
@@ -11,7 +8,7 @@ use std::sync::Arc;
 
 use axum::{
     body::Bytes,
-    extract::{Json, OriginalUri as Uri, State},
+    extract::{Json, Query, State},
     http::{
         header::{HeaderValue, SERVER},
         StatusCode,
@@ -21,15 +18,11 @@ use axum::{
 };
 use tower_http::set_header::SetResponseHeaderLayer;
 
-use crate::{
-    db::Client,
-    tower_compat::TowerHttp,
-    util::{QueryParse, DB_URL},
-};
+use crate::{db::Client, ser::Num, tower_compat::TowerHttp};
 
 fn main() -> std::io::Result<()> {
     let service = TowerHttp::service(|| async {
-        let cli = db::create(DB_URL).await?;
+        let cli = db::create().await?;
         let service = Router::new()
             .route("/plaintext", get(plain_text))
             .route("/json", get(json))
@@ -72,18 +65,12 @@ async fn fortunes(State(cli): State<Arc<Client>>) -> impl IntoResponse {
         .map_err(|e| Error(Box::new(e)))
 }
 
-async fn queries(State(cli): State<Arc<Client>>, Uri(uri): Uri) -> impl IntoResponse {
-    cli.get_worlds(uri.query().parse_query())
-        .await
-        .map(Json)
-        .map_err(Error)
+async fn queries(State(cli): State<Arc<Client>>, Query(Num(num)): Query<Num>) -> impl IntoResponse {
+    cli.get_worlds(num).await.map(Json).map_err(Error)
 }
 
-async fn updates(State(cli): State<Arc<Client>>, Uri(uri): Uri) -> impl IntoResponse {
-    cli.update(uri.query().parse_query())
-        .await
-        .map(Json)
-        .map_err(Error)
+async fn updates(State(cli): State<Arc<Client>>, Query(Num(num)): Query<Num>) -> impl IntoResponse {
+    cli.update(num).await.map(Json).map_err(Error)
 }
 
 struct Error(util::Error);

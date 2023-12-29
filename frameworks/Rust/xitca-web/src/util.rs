@@ -60,7 +60,7 @@ mod non_wasm {
 
         use crate::{
             db::{self, Client},
-            util::{HandleResult, State, DB_URL},
+            util::{HandleResult, State},
         };
 
         pub type Ctx<'a, Req> = Context<'a, Req, State<Client>>;
@@ -70,7 +70,7 @@ mod non_wasm {
         {
             ContextBuilder::new(|| {
                 Box::pin(async {
-                    db::create(DB_URL).await.map(|client| State {
+                    db::create().await.map(|client| State {
                         client,
                         write_buf: RefCell::new(BytesMut::new()),
                     })

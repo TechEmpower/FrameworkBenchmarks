@@ -1,9 +1,6 @@
 // used as reference of if/how moving from epoll to io-uring(or mixture of the two) make sense for
 // network io.
 
-#[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
-
 mod db;
 mod ser;
 mod util;

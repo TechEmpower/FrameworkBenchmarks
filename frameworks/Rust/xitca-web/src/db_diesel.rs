@@ -7,14 +7,14 @@ use crate::{
     util::{Error, HandleResult, Rand, DB_URL},
 };
 
-pub type DieselPool = Arc<Pool>;
+pub type Pool = Arc<_Pool>;
 
-pub struct Pool {
+pub struct _Pool {
     pool: r2d2::Pool<r2d2::ConnectionManager<PgConnection>>,
     rng: Mutex<Rand>,
 }
 
-pub fn create() -> std::io::Result<Arc<Pool>> {
+pub fn create() -> std::io::Result<Arc<_Pool>> {
     r2d2::Builder::new()
         .max_size(256)
         .min_idle(Some(256))
@@ -24,7 +24,7 @@ pub fn create() -> std::io::Result<Arc<Pool>> {
         .build(r2d2::ConnectionManager::new(DB_URL))
         .map_err(std::io::Error::other)
         .map(|pool| {
-            Arc::new(Pool {
+            Arc::new(_Pool {
                 pool,
                 rng: Mutex::new(Rand::default()),
             })
@@ -37,12 +37,11 @@ fn not_found() -> Error {
     format!("world not found").into()
 }
 
-impl Pool {
+impl _Pool {
     pub fn get_world(&self) -> HandleResult<World> {
         use crate::schema::world::dsl::*;
 
         let w_id = self.rng.lock().unwrap().gen_id();
-
         let mut conn = self.pool.get()?;
         world
             .filter(id.eq(w_id))
@@ -55,7 +54,6 @@ impl Pool {
         use crate::schema::world::dsl::*;
 
         let mut conn = self.pool.get()?;
-
         (0..num)
             .map(|_| {
                 let w_id = self.rng.lock().unwrap().gen_id();
@@ -71,37 +69,38 @@ impl Pool {
     pub fn update(&self, num: u16) -> HandleResult<Vec<World>> {
         use crate::schema::world::dsl::*;
 
-        let mut conn = self.pool.get()?;
+        let mut worlds = {
+            let mut conn = self.pool.get()?;
+            let worlds = (0..num)
+                .map(|_| {
+                    let mut rng = self.rng.lock().unwrap();
+                    let w_id = rng.gen_id();
+                    let r_id = rng.gen_id();
+                    drop(rng);
+                    world
+                        .filter(id.eq(w_id))
+                        .load::<World>(&mut conn)?
+                        .pop()
+                        .map(|mut w| {
+                            w.randomnumber = r_id;
+                            w
+                        })
+                        .ok_or_else(not_found)
+                })
+                .collect::<HandleResult<Vec<_>>>()?;
 
-        let mut worlds = (0..num)
-            .map(|_| {
-                let mut rng = self.rng.lock().unwrap();
-                let w_id = rng.gen_id();
-                let r_id = rng.gen_id();
-                drop(rng);
-                world
-                    .filter(id.eq(w_id))
-                    .load::<World>(&mut conn)?
-                    .pop()
-                    .map(|mut w| {
-                        w.randomnumber = r_id;
-                        w
-                    })
-                    .ok_or_else(not_found)
-            })
-            .collect::<HandleResult<Vec<_>>>()?;
-
-        worlds.sort_by_key(|w| w.id);
-
-        conn.transaction::<_, diesel::result::Error, _>(|conn| {
-            for w in &worlds {
+            worlds.iter().try_for_each(|w| {
                 diesel::update(world)
                     .filter(id.eq(w.id))
                     .set(randomnumber.eq(w.randomnumber))
-                    .execute(conn)?;
-            }
-            Ok(())
-        })?;
+                    .execute(&mut conn)
+                    .map(|_| ())
+            })?;
+
+            worlds
+        };
+
+        worlds.sort_by_key(|w| w.id);
 
         Ok(worlds)
     }
@@ -109,9 +108,10 @@ impl Pool {
     pub fn tell_fortune(&self) -> HandleResult<Fortunes> {
         use crate::schema::fortune::dsl::*;
 
-        let mut conn = self.pool.get()?;
-
-        let mut items = fortune.load::<Fortune>(&mut conn)?;
+        let mut items = {
+            let mut conn = self.pool.get()?;
+            fortune.load::<Fortune>(&mut conn)?
+        };
 
         items.push(Fortune::new(0, "Additional fortune added at request time."));
         items.sort_by(|it, next| it.message.cmp(&next.message));

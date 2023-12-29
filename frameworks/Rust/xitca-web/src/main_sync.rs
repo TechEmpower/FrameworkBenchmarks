@@ -11,13 +11,12 @@ use xitca_web::{
     App,
 };
 
-use db_diesel::DieselPool;
+use db_diesel::Pool;
 use ser::Num;
 use util::{HandleResult, SERVER_HEADER_VALUE};
 
 fn main() -> std::io::Result<()> {
-    let pool = db_diesel::create()?;
-    App::with_state(pool)
+    App::with_state(db_diesel::create()?)
         .at_typed(plaintext)
         .at_typed(json)
         .at_typed(db)
@@ -47,12 +46,12 @@ fn json() -> Json<ser::Message> {
 }
 
 #[route("/db", method = get)]
-fn db(StateOwn(pool): StateOwn<DieselPool>) -> HandleResult<Json<impl Serialize>> {
+fn db(StateOwn(pool): StateOwn<Pool>) -> HandleResult<Json<impl Serialize>> {
     pool.get_world().map(Json)
 }
 
 #[route("/fortunes", method = get)]
-fn fortunes(StateOwn(pool): StateOwn<DieselPool>) -> HandleResult<Html<String>> {
+fn fortunes(StateOwn(pool): StateOwn<Pool>) -> HandleResult<Html<String>> {
     use sailfish::TemplateOnce;
     pool.tell_fortune()?
         .render_once()
@@ -63,7 +62,7 @@ fn fortunes(StateOwn(pool): StateOwn<DieselPool>) -> HandleResult<Html<String>> 
 #[route("/queries", method = get)]
 fn queries(
     Query(Num(num)): Query<Num>,
-    StateOwn(pool): StateOwn<DieselPool>,
+    StateOwn(pool): StateOwn<Pool>,
 ) -> HandleResult<Json<impl Serialize>> {
     pool.get_worlds(num).map(Json)
 }
@@ -71,7 +70,7 @@ fn queries(
 #[route("/updates", method = get)]
 fn updates(
     Query(Num(num)): Query<Num>,
-    StateOwn(pool): StateOwn<DieselPool>,
+    StateOwn(pool): StateOwn<Pool>,
 ) -> HandleResult<Json<impl Serialize>> {
     pool.update(num).map(Json)
 }
