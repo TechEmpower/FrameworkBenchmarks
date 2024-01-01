@@ -11,36 +11,11 @@
 #include <userver/engine/async.hpp>
 #include <userver/utils/datetime/wall_coarse_clock.hpp>
 #include <userver/utils/scope_guard.hpp>
+#include <userver/utils/small_string.hpp>
 
 namespace userver_techempower::bare {
 
 namespace {
-
-template <std::size_t N>
-class SmallString final {
- public:
-  SmallString() = default;
-
-  void Append(const char* data, std::size_t length) {
-    const auto old_size = Size();
-    data_.resize(old_size + length);
-    std::memcpy(Data() + old_size, data, length);
-  }
-
-  void Append(std::string_view sw) { Append(sw.data(), sw.size()); }
-
-  [[nodiscard]] std::string_view AsSw() const { return {Data(), Size()}; }
-
-  [[nodiscard]] char* Data() { return data_.data(); }
-  [[nodiscard]] const char* Data() const { return data_.data(); }
-
-  [[nodiscard]] std::size_t Size() const { return data_.size(); }
-
-  void Clear() { data_.resize(0); }
-
- private:
-  boost::container::small_vector<char, N> data_;
-};
 
 struct HttpParser final {
   http_parser parser{};
@@ -48,7 +23,7 @@ struct HttpParser final {
 
   std::function<void(std::string_view)> on_request_cb{};
 
-  SmallString<50> url;
+  userver::utils::SmallString<50> url;
 
   explicit HttpParser(std::function<void(std::string_view)> on_request_cb)
       : on_request_cb{std::move(on_request_cb)} {
@@ -68,26 +43,26 @@ struct HttpParser final {
   static int HttpOnUrl(http_parser* parser, const char* data,
                        std::size_t length) {
     auto* self = static_cast<HttpParser*>(parser->data);
-    self->url.Append(data, length);
+    self->url.append(std::string_view{data, length});
     return 0;
   }
 
   static int HttpOnMessageBegin(http_parser* parser) {
     auto* self = static_cast<HttpParser*>(parser->data);
-    self->url.Clear();
+    self->url.clear();
     return 0;
   }
 
   static int HttpOnMessageComplete(http_parser* parser) {
     auto* self = static_cast<HttpParser*>(parser->data);
-    self->on_request_cb(self->url.AsSw());
+    self->on_request_cb(static_cast<std::string_view>(self->url));
     return 0;
   }
 };
 
 class ResponseBuffers final {
  public:
-  using HeadersString = SmallString<200>;
+  using HeadersString = userver::utils::SmallString<200>;
 
   HeadersString& Next(userver::engine::io::Socket& socket, std::string&& body) {
     if (Size() == kMaxResponses) {
@@ -111,9 +86,9 @@ class ResponseBuffers final {
     std::size_t index = 0;
     std::size_t total_size = 0;
     for (const auto& response : responses_) {
-      iovec[index++] = {response.headers.Data(), response.headers.Size()};
+      iovec[index++] = {response.headers.data(), response.headers.size()};
       iovec[index++] = {response.body.data(), response.body.size()};
-      total_size += response.headers.Size() + response.body.size();
+      total_size += response.headers.size() + response.body.size();
     }
 
     if (socket.SendAll(iovec.data(), iovec.size(), {}) != total_size) {
@@ -191,17 +166,17 @@ void SimpleConnection::Process() {
     const auto content_length_str = std::to_string(response.body.size());
     auto& headers = buffers.Next(socket_, std::move(response.body));
 
-    headers.Append(kCommonHeaders);
-    headers.Append("Content-Type: ");
-    headers.Append(response.content_type);
+    headers.append(kCommonHeaders);
+    headers.append("Content-Type: ");
+    headers.append(response.content_type);
 
-    headers.Append("\r\nContent-Length: ");
-    headers.Append(content_length_str);
+    headers.append("\r\nContent-Length: ");
+    headers.append(content_length_str);
 
-    headers.Append("\r\nDate: ");
-    headers.Append(GetCachedDate());
+    headers.append("\r\nDate: ");
+    headers.append(GetCachedDate());
 
-    headers.Append(kHeadersEnd);
+    headers.append(kHeadersEnd);
   };
   HttpParser parser{handle_request};
 
