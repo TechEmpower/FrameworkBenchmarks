@@ -24,8 +24,9 @@ path = "src/main_diesel.rs"
 required-features = ["diesel", "diesel-async", "sailfish"]
 
 [dependencies]
-viz = "0.4"
-hyper = "0.14"
+viz = "0.7"
+hyper = "1.0"
+hyper-util = "0.1"
 atoi = "2.0"
 serde = { version = "1.0", features = ["derive"] }
 nanorand = "0.7"
@@ -50,7 +51,7 @@ diesel-async = { version = "0.4", default-features = false, features = [
 ], optional = true }
 
 yarte = { version = "0.15", features = ["bytes-buf", "json"], optional = true }
-markup = { version = "0.13", optional = true }
+markup = { version = "0.15", optional = true }
 v_htmlescape = { version = "0.15", optional = true }
 sailfish = { version = "0.8", optional = true }
 
