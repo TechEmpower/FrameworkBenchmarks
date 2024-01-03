@@ -1,11 +1,11 @@
 use std::{collections::HashMap, fmt::Write, future::IntoFuture};
 
-use xitca_postgres::{statement::Statement, AsyncIterator, Postgres};
+use xitca_postgres::{statement::Statement, AsyncLendingIterator, Postgres};
 use xitca_unsafe_collection::no_hash::NoHashBuilder;
 
 use super::{
     ser::{Fortune, Fortunes, World},
-    util::{HandleResult, Rand},
+    util::{HandleResult, Rand, DB_URL},
 };
 
 pub struct Client {
@@ -29,8 +29,8 @@ impl Drop for Client {
     }
 }
 
-pub async fn create(config: &str) -> HandleResult<Client> {
-    let (client, driver) = Postgres::new(config.to_string()).connect().await?;
+pub async fn create() -> HandleResult<Client> {
+    let (client, driver) = Postgres::new(DB_URL.to_string()).connect().await?;
 
     tokio::spawn(tokio::task::unconstrained(driver.into_future()));
 
@@ -91,11 +91,10 @@ impl Client {
         self.client
             .query_raw(&self.world, [id])
             .await?
-            .next()
-            .await
-            .ok_or_else(|| format!("World {id} does not exist"))?
+            .try_next()
+            .await?
             .map(|row| World::new(row.get_raw(0), row.get_raw(1)))
-            .map_err(Into::into)
+            .ok_or_else(|| format!("World does not exist").into())
     }
 
     pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
@@ -110,8 +109,8 @@ impl Client {
         worlds.reserve(num as usize);
 
         let mut res = pipe.run().await?;
-        while let Some(mut item) = res.next().await.transpose()? {
-            while let Some(row) = item.next().await.transpose()? {
+        while let Some(mut item) = res.try_next().await? {
+            while let Some(row) = item.try_next().await? {
                 worlds.push(World::new(row.get_raw(0), row.get_raw(1)))
             }
         }
@@ -146,8 +145,8 @@ impl Client {
         let mut r_ids = params.into_iter().skip(1).step_by(2);
 
         let mut res = pipe.run().await?;
-        while let Some(mut item) = res.next().await.transpose()? {
-            while let Some(row) = item.next().await.transpose()? {
+        while let Some(mut item) = res.try_next().await? {
+            while let Some(row) = item.try_next().await? {
                 let r_id = r_ids.next().unwrap();
                 worlds.push(World::new(row.get_raw(0), r_id))
             }
@@ -161,7 +160,7 @@ impl Client {
         items.push(Fortune::new(0, "Additional fortune added at request time."));
 
         let mut stream = self.client.query_raw::<[i32; 0]>(&self.fortune, []).await?;
-        while let Some(row) = stream.next().await.transpose()? {
+        while let Some(row) = stream.try_next().await? {
             items.push(Fortune::new(row.get_raw(0), row.get_raw::<String>(1)));
         }
         items.sort_by(|it, next| it.message.cmp(&next.message));
