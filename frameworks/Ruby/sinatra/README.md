@@ -12,7 +12,7 @@ comparing a variety of web platforms.
 
 The tests will be run with:
 
-* [Ruby 3.3-rc](http://www.ruby-lang.org)
+* [Ruby 3.3](http://www.ruby-lang.org)
 * [Puma 6](http://puma.io)
 * [Passenger 6](https://www.phusionpassenger.com)
 * [Unicorn 6](https://bogomips.org/unicorn/)

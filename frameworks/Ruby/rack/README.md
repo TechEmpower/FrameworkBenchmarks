@@ -11,7 +11,7 @@ comparing a variety of web servers.
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Ruby 3.2](http://www.ruby-lang.org/)
+* [Ruby 3.3](http://www.ruby-lang.org/)
 * [JRuby 9.4](http://jruby.org/)
 * [Rack 3.0.7](http://rack.github.com/)
 * [Unicorn 6.1.0](http://unicorn.bogomips.org/)

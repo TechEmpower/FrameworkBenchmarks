@@ -1,4 +1,4 @@
-FROM ruby:3.3-rc
+FROM ruby:3.3
 
 ENV RUBY_YJIT_ENABLE=1
 

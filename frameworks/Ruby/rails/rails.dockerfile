@@ -1,4 +1,4 @@
-FROM ruby:3.3-rc
+FROM ruby:3.3
 
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends redis-server
 
