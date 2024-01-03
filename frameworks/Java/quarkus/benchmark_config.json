@@ -1,5 +1,6 @@
 {
   "framework": "quarkus",
+  "maintainers": ["franz1981", "Sanne", "geoand"],
   "tests": [
     {
       "default": {
@@ -21,7 +22,7 @@
         "webserver": "Vert.x",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Quarkus, Hibernate ORM",
+        "display_name": "Quarkus, Hibernate",
         "notes": "",
         "versus": "Netty"
       },
@@ -44,9 +45,55 @@
         "webserver": "Vert.x",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Quarkus, Hibernate Reactive",
+        "display_name": "Quarkus, Reactive",
         "notes": "",
         "versus": "Netty"
+      },
+      "vertx": {
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "Quarkus",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Vert.x",
+        "webserver": "Vert.x",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Quarkus, Vert.x",
+        "notes": "",
+        "versus": "Vert.x"
+      },
+      "reactive-routes-pgclient": {
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "fullstack",
+        "database": "Postgres",
+        "framework": "Quarkus",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Vert.x",
+        "webserver": "Vert.x",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Quarkus, PostgreSQL",
+        "notes": "",
+        "versus": "Vert.x"
       }
     }
   ]

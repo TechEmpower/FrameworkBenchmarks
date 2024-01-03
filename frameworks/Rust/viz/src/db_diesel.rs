@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use diesel::prelude::*;
 use diesel_async::{
     pooled_connection::bb8::{Pool, RunError},
@@ -112,7 +110,7 @@ pub async fn tell_fortune(pool: Pool<AsyncPgConnection>) -> Result<String, PgErr
 
     items.push(Fortune {
         id: 0,
-        message: Cow::Borrowed("Additional fortune added at request time."),
+        message: "Additional fortune added at request time.".to_string(),
     });
     items.sort_by(|it, next| it.message.cmp(&next.message));
 

@@ -83,6 +83,7 @@ components_manager:
             max_queue_size: 512
             connecting_limit: 15
             ignore_unused_query_params: true
+            connlimit_mode: manual
 
         single-query-handler:
             path: /db

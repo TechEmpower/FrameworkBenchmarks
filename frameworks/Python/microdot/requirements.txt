@@ -7,6 +7,6 @@ cachetools
 asyncache
 
 alchemical
-microdot<2
+microdot>=2.0.1
 gunicorn
 uvicorn[standard]
