@@ -1,16 +1,19 @@
-use std::{cell::RefCell, collections::HashMap, fmt::Write, future::IntoFuture};
+use std::{collections::HashMap, fmt::Write, future::IntoFuture};
 
-use xitca_postgres::{statement::Statement, AsyncIterator, Postgres};
+use xitca_postgres::{statement::Statement, AsyncLendingIterator, Postgres};
 use xitca_unsafe_collection::no_hash::NoHashBuilder;
 
 use super::{
     ser::{Fortune, Fortunes, World},
-    util::{HandleResult, Rand},
+    util::{HandleResult, Rand, DB_URL},
 };
 
 pub struct Client {
     client: xitca_postgres::Client,
-    rng: RefCell<Rand>,
+    #[cfg(not(feature = "pg-sync"))]
+    rng: std::cell::RefCell<Rand>,
+    #[cfg(feature = "pg-sync")]
+    rng: std::sync::Mutex<Rand>,
     fortune: Statement,
     world: Statement,
     updates: HashMap<u16, Statement, NoHashBuilder>,
@@ -26,10 +29,10 @@ impl Drop for Client {
     }
 }
 
-pub async fn create(config: &str) -> HandleResult<Client> {
-    let (client, driver) = Postgres::new(config.to_string()).connect().await?;
+pub async fn create() -> HandleResult<Client> {
+    let (client, driver) = Postgres::new(DB_URL.to_string()).connect().await?;
 
-    tokio::task::spawn_local(tokio::task::unconstrained(driver.into_future()));
+    tokio::spawn(tokio::task::unconstrained(driver.into_future()));
 
     let fortune = client.prepare("SELECT * FROM fortune", &[]).await?.leak();
 
@@ -62,7 +65,10 @@ pub async fn create(config: &str) -> HandleResult<Client> {
 
     Ok(Client {
         client,
-        rng: RefCell::new(Rand::default()),
+        #[cfg(not(feature = "pg-sync"))]
+        rng: std::cell::RefCell::new(Rand::default()),
+        #[cfg(feature = "pg-sync")]
+        rng: std::sync::Mutex::new(Rand::default()),
         fortune,
         world,
         updates,
@@ -70,23 +76,32 @@ pub async fn create(config: &str) -> HandleResult<Client> {
 }
 
 impl Client {
+    #[cfg(not(feature = "pg-sync"))]
+    fn borrow_rng_mut(&self) -> std::cell::RefMut<'_, Rand> {
+        self.rng.borrow_mut()
+    }
+
+    #[cfg(feature = "pg-sync")]
+    fn borrow_rng_mut(&self) -> std::sync::MutexGuard<'_, Rand> {
+        self.rng.lock().unwrap()
+    }
+
     pub async fn get_world(&self) -> HandleResult<World> {
-        let id = self.rng.borrow_mut().gen_id();
+        let id = self.borrow_rng_mut().gen_id();
         self.client
             .query_raw(&self.world, [id])
             .await?
-            .next()
-            .await
-            .ok_or_else(|| format!("World {id} does not exist"))?
+            .try_next()
+            .await?
             .map(|row| World::new(row.get_raw(0), row.get_raw(1)))
-            .map_err(Into::into)
+            .ok_or_else(|| format!("World does not exist").into())
     }
 
     pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
         let mut pipe = self.client.pipeline();
 
         {
-            let mut rng = self.rng.borrow_mut();
+            let mut rng = self.borrow_rng_mut();
             (0..num).try_for_each(|_| pipe.query_raw(&self.world, [rng.gen_id()]))?;
         }
 
@@ -94,8 +109,8 @@ impl Client {
         worlds.reserve(num as usize);
 
         let mut res = pipe.run().await?;
-        while let Some(mut item) = res.next().await.transpose()? {
-            while let Some(row) = item.next().await.transpose()? {
+        while let Some(mut item) = res.try_next().await? {
+            while let Some(row) = item.try_next().await? {
                 worlds.push(World::new(row.get_raw(0), row.get_raw(1)))
             }
         }
@@ -112,7 +127,7 @@ impl Client {
         let mut pipe = self.client.pipeline();
 
         {
-            let mut rng = self.rng.borrow_mut();
+            let mut rng = self.borrow_rng_mut();
             (0..num).try_for_each(|_| {
                 let w_id = rng.gen_id();
                 let r_id = rng.gen_id();
@@ -130,8 +145,8 @@ impl Client {
         let mut r_ids = params.into_iter().skip(1).step_by(2);
 
         let mut res = pipe.run().await?;
-        while let Some(mut item) = res.next().await.transpose()? {
-            while let Some(row) = item.next().await.transpose()? {
+        while let Some(mut item) = res.try_next().await? {
+            while let Some(row) = item.try_next().await? {
                 let r_id = r_ids.next().unwrap();
                 worlds.push(World::new(row.get_raw(0), r_id))
             }
@@ -145,7 +160,7 @@ impl Client {
         items.push(Fortune::new(0, "Additional fortune added at request time."));
 
         let mut stream = self.client.query_raw::<[i32; 0]>(&self.fortune, []).await?;
-        while let Some(row) = stream.next().await.transpose()? {
+        while let Some(row) = stream.try_next().await? {
             items.push(Fortune::new(row.get_raw(0), row.get_raw::<String>(1)));
         }
         items.sort_by(|it, next| it.message.cmp(&next.message));

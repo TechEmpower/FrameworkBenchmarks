@@ -1,4 +1,4 @@
-FROM python:3.11-buster
+FROM python:3.12-slim
 
 RUN apt-get update
 RUN apt-get install libpq-dev python3-dev -y
@@ -8,8 +8,8 @@ ADD ./ /microdot
 WORKDIR /microdot
 
 ENV PYTHONUNBUFFERED 1
-ENV DATABASE_URL "host=tfb-database port=5432 user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world"
+ENV DATABASE_URL postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world
 
 EXPOSE 8080
 
-CMD gunicorn app_sync_raw:app -c gunicorn_conf.py
+CMD gunicorn app_raw:asgi -c uvicorn_conf.py

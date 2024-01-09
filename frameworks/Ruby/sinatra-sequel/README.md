@@ -12,9 +12,9 @@ comparing a variety of web platforms.
 
 The tests will be run with:
 
-* [Ruby 3.3-rc1](http://www.ruby-lang.org)
+* [Ruby 3.3](http://www.ruby-lang.org)
 * [JRuby 9.4](http://jruby.org)
-* [Puma 3](http://puma.io)
+* [Puma 6](http://puma.io)
 * [Passenger 5](https://www.phusionpassenger.com)
 * [Unicorn 5](https://bogomips.org/unicorn/)
 * [Sinatra 2](http://www.sinatrarb.com)

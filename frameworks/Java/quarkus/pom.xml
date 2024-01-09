@@ -28,6 +28,8 @@
         <module>quarkus-benchmark-common</module>
         <module>resteasy-reactive-hibernate</module>
         <module>resteasy-reactive-hibernate-reactive</module>
+        <module>vertx</module>
+        <module>reactive-routes-pgclient</module>
     </modules>
 
     <dependencyManagement>

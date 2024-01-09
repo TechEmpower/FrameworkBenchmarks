@@ -1,9 +1,9 @@
-FROM rust:1.74
+FROM rust:1.75
 
 ADD ./ /xitca-web
 WORKDIR /xitca-web
 
-RUN cargo build --release --bin xitca-web-axum --features axum,io-uring
+RUN cargo build --release --bin xitca-web-axum --features axum,io-uring,pg-sync,template
 
 EXPOSE 8080
 

@@ -4,16 +4,12 @@ mod util;
 use std::{env, io, net::TcpListener, os::wasi::io::FromRawFd};
 
 use xitca_web::{
-    dev::service::Service,
     handler::{handler_service, json::Json},
-    http::header::SERVER,
-    request::WebRequest,
-    response::WebResponse,
+    http::{header::SERVER, WebResponse},
     route::get,
-    App,
+    service::Service,
+    App, WebContext,
 };
-
-use self::util::SERVER_HEADER_VALUE;
 
 fn main() -> io::Result<()> {
     let fd = env::var("FD_COUNT")
@@ -39,12 +35,12 @@ fn main() -> io::Result<()> {
         .wait()
 }
 
-async fn middleware_fn<S, E>(service: &S, ctx: WebRequest<'_>) -> Result<WebResponse, E>
+async fn middleware_fn<S, E>(service: &S, ctx: WebContext<'_>) -> Result<WebResponse, E>
 where
-    S: for<'r> Service<WebRequest<'r>, Response = WebResponse, Error = E>,
+    S: for<'r> Service<WebContext<'r>, Response = WebResponse, Error = E>,
 {
     service.call(ctx).await.map(|mut res| {
-        res.headers_mut().append(SERVER, SERVER_HEADER_VALUE);
+        res.headers_mut().append(SERVER, util::SERVER_HEADER_VALUE);
         res
     })
 }

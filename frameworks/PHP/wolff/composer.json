@@ -22,10 +22,7 @@
   ],
   "require": {
     "php": ">=7.1.0",
-    "usbac/wolff-framework": "~4.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "8.*"
+    "usbac/wolff-framework": "~4.1"
   },
   "autoload": {
     "psr-4": {

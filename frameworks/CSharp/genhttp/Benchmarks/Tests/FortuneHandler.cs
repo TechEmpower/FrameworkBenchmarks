@@ -88,7 +88,7 @@ namespace Benchmarks.Tests
 
         public ValueTask<ulong> CalculateChecksumAsync() => new(17);
 
-        public IEnumerable<ContentElement> GetContent(IRequest request) => Enumerable.Empty<ContentElement>();
+        public IAsyncEnumerable<ContentElement> GetContentAsync(IRequest request) => AsyncEnumerable.Empty<ContentElement>();
 
         public ValueTask<string> RenderAsync(TemplateModel model) => Template.RenderAsync(model);
 

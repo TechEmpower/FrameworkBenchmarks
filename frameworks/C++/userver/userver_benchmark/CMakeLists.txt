@@ -9,10 +9,10 @@ file(GLOB_RECURSE SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/bare/*.cpp
 )
 
-include(userver/cmake/SetupEnvironment.cmake)
 include(GNUInstallDirs)
 
 add_subdirectory(userver)
+userver_setup_environment()
 
 add_executable(${PROJECT_NAME} ${SOURCES} userver_techempower.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE userver-core userver-postgresql)

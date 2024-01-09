@@ -7,7 +7,7 @@ RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get install -yqq nginx git unzip \
     php8.3-fpm php8.3-mysql php8.3-xml php8.3-mbstring php8.3-intl php8.3-dev  php8.3-curl > /dev/null
 
-COPY deploy/conf/* /etc/php/8.3/fpm/
+COPY deploy/conf/* /etc/php/8.3/fpm/ 
 
 ADD ./ /wolff
 WORKDIR /wolff
