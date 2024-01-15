@@ -6,7 +6,7 @@ use std::{
 use viz::{
     header::{HeaderValue, SERVER},
     types::State,
-    Request, RequestExt, Response, ResponseExt, Result, Router, Tree,
+    Request, RequestExt, Response, ResponseExt, Result, Router,
 };
 use yarte::Template;
 
@@ -105,5 +105,5 @@ async fn serve() {
         .get("/updates", updates)
         .with(State::new(conn));
 
-    server::serve(Tree::from(app)).await.unwrap()
+    server::serve(app).await.unwrap()
 }

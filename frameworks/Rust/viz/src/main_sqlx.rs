@@ -4,7 +4,7 @@ use nanorand::{Rng, WyRand};
 use viz::{
     header::{HeaderValue, SERVER},
     types::State,
-    BytesMut, Error, Request, RequestExt, Response, ResponseExt, Result, Router, Tree,
+    BytesMut, Error, Request, RequestExt, Response, ResponseExt, Result, Router,
 };
 
 mod db_sqlx;
@@ -100,7 +100,7 @@ async fn main() -> Result<()> {
         .with(State::new(pool))
         .with(State::new(rng));
 
-    server::serve(Tree::from(app)).await.map_err(Error::Boxed)
+    server::serve(app).await.map_err(Error::Boxed)
 }
 
 markup::define! {
