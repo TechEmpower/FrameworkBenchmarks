@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common wget unzip cmake git
 RUN apt-get install -yqq gcc g++ openssl libssl-dev zlib1g-dev build-essential locales
 
-RUN  apt install brotli 
+RUN apt-get -y install brotli apt-utils
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
