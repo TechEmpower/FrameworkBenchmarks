@@ -15,8 +15,7 @@ WORKDIR /
 RUN wget http://59.110.4.155/benchmark.zip
 RUN unzip benchmark.zip
 RUN mv ./benchmark/* ./
-run rm ./CMakeLists.txt
-RUN mv ./benchmarks/CMakeLists.txt ./
+
 RUN cmake . -B build -DCMAKE_BUILD_TYPE=Release 
 RUN cmake --build build
 
