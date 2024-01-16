@@ -3,6 +3,7 @@ RUN apt-get update -yqq && apt-get install -yqq software-properties-common wget 
 RUN apt-get install -yqq gcc g++ openssl libssl-dev zlib1g-dev build-essential locales
 
 RUN apt-get -y install brotli apt-utils
+RUN apt-get -y install mysql-client
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
