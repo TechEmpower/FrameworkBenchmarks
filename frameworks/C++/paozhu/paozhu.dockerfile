@@ -6,6 +6,7 @@ RUN apt-get -y install apt-utils libreadline-dev
 RUN apt-get -y install mysql-server
 RUN apt-get -y install mysql-common
 RUN apt-get -y install mysql-client
+RUN apt-get -y install libmysqlclient-dev
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
