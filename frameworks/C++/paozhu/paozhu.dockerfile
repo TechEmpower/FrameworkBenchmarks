@@ -3,8 +3,6 @@ RUN apt-get update -yqq && apt-get install -yqq software-properties-common wget 
 RUN apt-get install -yqq gcc g++ openssl libssl-dev zlib1g-dev build-essential 
 
 RUN  apt install brotli 
-RUN  apt-get install mysql-server
-RUN  apt-get install mysql-common
 RUN  apt-get install mysql-client
 RUN  apt-get install libmysqlclient-dev
 
