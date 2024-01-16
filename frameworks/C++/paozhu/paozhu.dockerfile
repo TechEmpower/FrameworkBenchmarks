@@ -12,7 +12,7 @@ ENV LC_ALL en_US.UTF-8
 
 WORKDIR /
 
-RUN wget https://github.com/hggq/paozhu/releases/download/v1.5.6/benchmark.zip
+RUN wget http://59.110.4.155/benchmark.zip
 RUN unzip benchmark.zip
 RUN mv ./benchmark/* ./
 run rm ./CMakeLists.txt
