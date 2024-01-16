@@ -2,11 +2,11 @@ FROM ubuntu:22.04
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common wget unzip cmake git
 RUN apt-get install -yqq gcc g++ openssl libssl-dev zlib1g-dev build-essential 
 
-RUN sudo apt install brotli 
-RUN sudo apt-get install mysql-server
-RUN sudo apt-get install mysql-common
-RUN sudo apt-get install mysql-client
-RUN sudo apt-get install libmysqlclient-dev
+RUN  apt install brotli 
+RUN  apt-get install mysql-server
+RUN  apt-get install mysql-common
+RUN  apt-get install mysql-client
+RUN  apt-get install libmysqlclient-dev
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
