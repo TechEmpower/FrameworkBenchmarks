@@ -13,7 +13,8 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 WORKDIR /
-
+RUN ls /usr/
+RUN ls /usr/local
 RUN ls /usr/lib/x86_64-linux-gnu
 
 RUN wget http://59.110.4.155/benchmark.zip
