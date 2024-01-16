@@ -2,6 +2,7 @@ FROM ubuntu:22.04
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common wget unzip cmake git
 RUN apt-get install -yqq gcc g++ openssl libssl-dev zlib1g-dev build-essential locales
 
+RUN apt-get -y install brotli libbrotli-dev 
 RUN apt-get -y install apt-utils libreadline-dev 
 RUN apt-get -y install mysql-server
 RUN apt-get -y install mysql-common
