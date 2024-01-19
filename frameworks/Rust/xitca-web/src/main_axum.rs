@@ -7,7 +7,6 @@ mod util;
 use std::sync::Arc;
 
 use axum::{
-    body::Bytes,
     extract::{Json, Query, State},
     http::{
         header::{HeaderValue, SERVER},
@@ -77,7 +76,7 @@ struct Error(util::Error);
 
 impl IntoResponse for Error {
     fn into_response(self) -> Response {
-        let mut res = Bytes::new().into_response();
+        let mut res = self.0.to_string().into_response();
         *res.status_mut() = StatusCode::INTERNAL_SERVER_ERROR;
         res
     }
@@ -85,9 +84,8 @@ impl IntoResponse for Error {
 
 // compat module between xitca-http and axum.
 mod tower_compat {
-    use std::{cell::RefCell, fmt, future::Future, marker::PhantomData, net::SocketAddr};
+    use core::{cell::RefCell, fmt, future::Future, marker::PhantomData, net::SocketAddr};
 
-    use axum::extract::ConnectInfo;
     use http_body::Body;
     use xitca_http::{
         bytes::Bytes,
@@ -117,7 +115,7 @@ mod tower_compat {
             F: Fn() -> Fut + Send + Sync + Clone,
             Fut: Future<Output = Result<S, crate::util::Error>>,
             S: tower::Service<
-                Request<CompatReqBody<RequestExt<RequestBody>>>,
+                Request<CompatReqBody<RequestExt<RequestBody>, ()>>,
                 Response = Response<B>,
             >,
             S::Error: fmt::Debug,
@@ -139,7 +137,10 @@ mod tower_compat {
 
     impl<S, B> Service<Request<RequestExt<RequestBody>>> for TowerHttp<S, B>
     where
-        S: tower::Service<Request<CompatReqBody<RequestExt<RequestBody>>>, Response = Response<B>>,
+        S: tower::Service<
+            Request<CompatReqBody<RequestExt<RequestBody>, ()>>,
+            Response = Response<B>,
+        >,
     {
         type Response = Response<CompatResBody<B>>;
         type Error = S::Error;
@@ -149,9 +150,7 @@ mod tower_compat {
             req: Request<RequestExt<RequestBody>>,
         ) -> Result<Self::Response, Self::Error> {
             let (parts, ext) = req.into_parts();
-            let info = ConnectInfo(*ext.socket_addr());
-            let mut req = Request::from_parts(parts, CompatReqBody::new(ext));
-            req.extensions_mut().insert(info);
+            let req = Request::from_parts(parts, CompatReqBody::new(ext, ()));
             let fut = self.service.borrow_mut().call(req);
             let (parts, body) = fut.await?.into_parts();
             Ok(Response::from_parts(parts, CompatResBody::new(body)))
