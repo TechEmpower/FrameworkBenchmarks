@@ -84,7 +84,9 @@ impl IntoResponse for Error {
 
 // compat module between xitca-http and axum.
 mod tower_compat {
-    use core::{cell::RefCell, fmt, future::Future, marker::PhantomData, net::SocketAddr};
+    use core::{cell::RefCell, fmt, future::Future, marker::PhantomData};
+
+    use std::net::SocketAddr;
 
     use http_body::Body;
     use xitca_http::{
