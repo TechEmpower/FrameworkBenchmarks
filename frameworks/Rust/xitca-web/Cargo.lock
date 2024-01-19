@@ -1337,14 +1337,14 @@ dependencies = [
  "xitca-server",
  "xitca-service",
  "xitca-unsafe-collection",
- "xitca-web 0.2.0",
+ "xitca-web 0.2.1",
 ]
 
 [[package]]
 name = "xitca-web"
-version = "0.2.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d034f19d1f0e6def7b73dd9340983df9b90333cfa98f7dedd59b921dbd0e9b6a"
+checksum = "f26cb7ab5765524ce47a8c173e16a3184146440e3de3c240ba0d14a617b0f090"
 dependencies = [
  "futures-core",
  "http-body",
