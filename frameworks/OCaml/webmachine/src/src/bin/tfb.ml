@@ -39,14 +39,13 @@ let or_error m =
       Error (Database_error (Caqti_error.show err)) |> Lwt.return
 
 let select_random =
-  Caqti_request.find Caqti_type.int
-    Caqti_type.(tup2 int int)
+  let open Caqti_request.Infix in
+  Caqti_type.(int ->! tup2 int int)
     "SELECT id, randomNumber FROM World WHERE id = $1"
 
 class hello =
   object (self)
     inherit [Cohttp_lwt.Body.t] Wm.resource
-
     method! allowed_methods rd = Wm.continue [ `GET ] rd
 
     method content_types_provided rd =
@@ -68,7 +67,6 @@ class hello =
 class db =
   object (self)
     inherit [Cohttp_lwt.Body.t] Wm.resource
-
     method! allowed_methods rd = Wm.continue [ `GET ] rd
 
     method content_types_provided rd =
@@ -228,7 +226,7 @@ let main () =
       Lwt.async (fun () -> Server.create ~mode:(`TCP (`Socket socket)) config);
       let forever, _ = Lwt.wait () in
       Lwt_main.run forever;
-      exit 0 )
+      exit 0)
   done;
   while true do
     Unix.pause ()

@@ -1,4 +1,4 @@
-FROM mono:5.12.0.226
+FROM mono:6.12.0.122
 RUN apt-get update -yqq && apt-get install -yqq unzip
 
 RUN mkdir /java

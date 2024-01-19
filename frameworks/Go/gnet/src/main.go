@@ -2,62 +2,101 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"flag"
 	"fmt"
 	"log"
 	"runtime"
+	"sync/atomic"
 	"time"
 
-	"github.com/panjf2000/gnet"
+	"github.com/panjf2000/gnet/v2"
 )
 
 type httpServer struct {
-	*gnet.EventServer
+	gnet.BuiltinEventEngine
+
+	addr      string
+	multicore bool
+	eng       gnet.Engine
 }
 
 type httpCodec struct {
 	delimiter []byte
+	buf       []byte
 }
 
-func (hc *httpCodec) Encode(c gnet.Conn, buf []byte) (out []byte, err error) {
-	return buf, nil
+func (hc *httpCodec) appendResponse() {
+	hc.buf = append(hc.buf, "HTTP/1.1 200 OK\r\nServer: gnet\r\nContent-Type: text/plain\r\nDate: "...)
+	//hc.buf = time.Now().AppendFormat(hc.buf, "Mon, 02 Jan 2006 15:04:05 GMT")
+	hc.buf = append(hc.buf, NowTimeFormat()...)
+	hc.buf = append(hc.buf, "\r\nContent-Length: 13\r\n\r\nHello, World!"...)
 }
 
-func (hc *httpCodec) Decode(c gnet.Conn) (out []byte, err error) {
-	buf := c.Read()
-	if buf == nil {
-		return
+var errCRLFNotFound = errors.New("CRLF not found")
+
+func (hc *httpCodec) parse(data []byte) (int, error) {
+	if idx := bytes.Index(data, hc.delimiter); idx != -1 {
+		return idx + 4, nil
 	}
-	c.ResetBuffer()
+	return -1, errCRLFNotFound
+}
 
-	// process the pipeline
-	var i int
+func (hc *httpCodec) reset() {
+	hc.buf = hc.buf[:0]
+}
+
+func (hs *httpServer) OnBoot(eng gnet.Engine) gnet.Action {
+	hs.eng = eng
+	log.Printf("echo server with multi-core=%t is listening on %s\n", hs.multicore, hs.addr)
+	return gnet.None
+}
+
+func (hs *httpServer) OnOpen(c gnet.Conn) ([]byte, gnet.Action) {
+	c.SetContext(&httpCodec{delimiter: []byte("\r\n\r\n")})
+	return nil, gnet.None
+}
+
+func (hs *httpServer) OnTraffic(c gnet.Conn) gnet.Action {
+	buf, _ := c.Next(-1)
+	hc := c.Context().(*httpCodec)
 pipeline:
-	if i = bytes.Index(buf, hc.delimiter); i != -1 {
-		out = append(out, "HTTP/1.1 200 OK\r\nServer: gnet\r\nContent-Type: text/plain\r\nDate: "...)
-		out = time.Now().AppendFormat(out, "Mon, 02 Jan 2006 15:04:05 GMT")
-		out = append(out, "\r\nContent-Length: 13\r\n\r\nHello, World!"...)
-		buf = buf[i+4:]
+	nextOffset, err := hc.parse(buf)
+	if err != nil {
+		goto response
+	}
+	hc.appendResponse()
+	buf = buf[nextOffset:]
+	if len(buf) > 0 {
 		goto pipeline
 	}
-	// request not ready, yet
-	return
+response:
+	c.Write(hc.buf)
+	hc.reset()
+	return gnet.None
 }
 
-func (hs *httpServer) OnInitComplete(srv gnet.Server) (action gnet.Action) {
-	log.Printf("HTTP server is listening on %s (multi-cores: %t, loops: %d)\n",
-		srv.Addr.String(), srv.Multicore, srv.NumEventLoop)
-	return
+var now atomic.Value
+
+func ticktock() {
+	now.Store(nowTimeFormat())
+	for range time.Tick(time.Second) {
+		now.Store(nowTimeFormat())
+	}
 }
 
-func (hs *httpServer) React(frame []byte, c gnet.Conn) (out []byte, action gnet.Action) {
-	// handle the request
-	out = frame
-	return
+func NowTimeFormat() string {
+	return now.Load().(string)
+}
+
+func nowTimeFormat() string {
+	return time.Now().Format("Mon, 02 Jan 2006 15:04:05 GMT")
 }
 
 func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU() * 2)
+	now.Store(nowTimeFormat())
+	go ticktock()
 }
 
 func main() {
@@ -69,9 +108,8 @@ func main() {
 	flag.BoolVar(&multicore, "multicore", true, "multicore")
 	flag.Parse()
 
-	http := new(httpServer)
-	hc := &httpCodec{delimiter: []byte("\r\n\r\n")}
+	hs := &httpServer{addr: fmt.Sprintf("tcp://:%d", port), multicore: multicore}
 
 	// Start serving!
-	log.Fatal(gnet.Serve(http, fmt.Sprintf("tcp://:%d", port), gnet.WithMulticore(multicore), gnet.WithCodec(hc)))
+	log.Println("server exits:", gnet.Run(hs, hs.addr, gnet.WithMulticore(multicore)))
 }

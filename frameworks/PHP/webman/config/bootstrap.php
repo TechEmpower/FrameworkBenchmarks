@@ -13,8 +13,6 @@
  */
 
 return [
-    support\bootstrap\Container::class,
-    support\bootstrap\Log::class,
     support\bootstrap\db\Raw::class,
     support\bootstrap\Date::class,
 ];

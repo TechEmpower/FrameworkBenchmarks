@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class JsonController < ApplicationControllerMetal
   def index
     add_headers

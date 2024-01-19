@@ -20,8 +20,9 @@ return [
     'count'                => cpu_count() * 4,
     'user'                 => '',
     'group'                => '',
-    'pid_file'             => runtime_path() . '/webman.pid',
-    'max_request'          => 10000000000,
-    'stdout_file'          => runtime_path() . '/logs/stdout.log',
+    'pid_file' => runtime_path() . '/webman.pid',
+    'status_file' => runtime_path() . '/webman.status',
+    'stdout_file' => runtime_path() . '/logs/stdout.log',
+    'log_file' => runtime_path() . '/logs/workerman.log', 
     'max_package_size'     => 10*1024*1024
 ];

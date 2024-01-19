@@ -4,7 +4,8 @@
     },
     "service": {
         "api": "fastcgi",
-        "socket": "/var/tmp/cppcms.sock"
+        "socket": "/var/tmp/cppcms.sock",
+        "backlog": 65535
     },
     "http": {
         "script": "/"

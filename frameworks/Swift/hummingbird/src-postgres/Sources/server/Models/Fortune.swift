@@ -2,7 +2,7 @@ import Hummingbird
 import HummingbirdMustache
 
 struct Fortune: HBResponseEncodable {
-    var id: Int32?
+    var id: Int32
     var message: String
 }
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'package:angel3_framework/angel3_framework.dart';
 import 'package:angel3_orm/angel3_orm.dart';
@@ -8,7 +9,7 @@ import '../../models/world.dart';
 Future configureServer(Angel app) async {
   /// Controllers will not function unless wired to the application!
 
-  var executor = app.container!.make<QueryExecutor>();
+  var executor = app.container.make<QueryExecutor>();
 
   // Generate a random number between 1 and 10000
   int _genRandomId() {
@@ -45,10 +46,12 @@ Future configureServer(Angel app) async {
   // Return data in json
   app.get('/json', (req, res) => res.json({'message': 'Hello, World!'}));
 
+  const reply = "Hello, World!";
+
   // Return data in plaintext
   app.get('/plaintext', (req, res) async {
-    res.write('Hello, World!');
-    res.close();
+    res.contentLength = reply.length;
+    res.write(reply);
   });
 
   // Add an entry and sort a list of fortune
@@ -66,7 +69,6 @@ Future configureServer(Angel app) async {
     //print('Process Time: ${stopwatch.elapsed.inMilliseconds}ms');
     //stopwatch.stop();
 
-    //res.json(list);
     res.render('listing', {'fortunes': list});
   });
 
@@ -121,7 +123,7 @@ Future configureServer(Angel app) async {
       result.add(updatedRec.value);
     }
 
-    //rint('Process Time: ${stopwatch.elapsed.inMilliseconds}ms');
+    //print('Process Time: ${stopwatch.elapsed.inMilliseconds}ms');
     //stopwatch.stop();
 
     res.json(result);

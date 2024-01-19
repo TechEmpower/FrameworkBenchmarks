@@ -36,10 +36,7 @@ defmodule FrameworkBenchmarks.Handlers.Fortune do
 
     fortunes =
       fortunes
-      |> Enum.sort(fn %{message: first}, %{message: second}
-                      when is_binary(first) and is_binary(second) ->
-        :ucol.compare(first, second) != 1
-      end)
+      |> Enum.sort(fn f1, f2 -> f1.message < f2.message end)
 
     conn
     |> Plug.Conn.put_resp_content_type("text/html")

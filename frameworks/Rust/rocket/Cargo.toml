@@ -1,26 +1,43 @@
 [package]
 name = "rocket_techempower"
-version = "0.2.0"
-authors = ["Marcelo Barbosa <mbarbosa@gmail.com>", "Brendan Hansknecht <brendan.hansknecht@gmail.com>", "Dragos Varovici <dvarovici.work@gmail.com>"]
-edition = "2018"
+version = "0.4.0"
+authors = [
+  "Marcelo Barbosa <mbarbosa@gmail.com>",
+  "Brendan Hansknecht <brendan.hansknecht@gmail.com>",
+  "Dragos Varovici <dvarovici.work@gmail.com>",
+  "Raúl Callado <kennycallado@gmail.com>"
+]
+edition = "2021"
+
+[profile.release]
+lto = true
+opt-level = 3
+
+[[bin]]
+name = "rocket"
+path = "src/main.rs"
+
+[[bin]]
+name = "rocket-diesel"
+path = "rocket-diesel/main.rs"
 
 [dependencies]
-num_cpus = { version = "^1.13" }
-rand = { version = "^0.8" }
-yarte = { version = "^0.15" }
-lazy_static = { version = "^1.4" }
-async-stream = { version = "^0.3" }
-async-trait = { version = "0.1" }
-futures = { version = "^0.3" }
-futures-util = { version = "^0.3" }
-rocket = { git = "https://github.com/SergioBenitez/Rocket", features = [
-    "json",
-] }
-sqlx = { version = "^0.5", features = [ "postgres", "macros", "migrate", "sqlite" ] }
-rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket", features = [ "sqlx_postgres" ] }
-figment = { version = "^0.10" }
-dotenv = { version = "^0.15" }
-
-serde = { version = "^1" }
-serde_json = { version = "^1" }
-serde_derive = { version = "^1" }
+diesel = { version = "1.4", features = ["postgres"] }
+rocket_sync_db_pools = { version = "0.1.0-rc.2", default-features = false, features = ["diesel_postgres_pool"] }
+rocket_dyn_templates = { version = "0.1.0-rc.2", features = ["handlebars"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_derive = "1.0"
+dotenv = "0.15.0"
+figment = "0.10.6"
+rand = { version = "0.8", features = ["small_rng"] }
+rocket = { version = "0.5.0-rc.2", features = [ "json" ] }
+rocket_db_pools = { version = "0.1.0-rc.2", features = [ "sqlx_postgres" ] }
+sqlx = { version = "0.5.13", features = [ "postgres", "macros" ] }
+yarte = "0.15.6"
+# temp issue https://github.com/SergioBenitez/Rocket/issues/2491
+proc-macro2 = "= 1.0.51"
+async-stream = "0.3.3"
+async-trait = "0.1.53"
+futures = "0.3.21"
+futures-util = "0.3.21"

@@ -4,19 +4,19 @@ This is the Quarkus portion of a [benchmarking test suite](../) comparing a vari
 
 ## Implementations
 
-There are currently 6 repository implementations:
+There are currently 2 implementations:
 
-- RESTEasy and Hibernate ORM
-- RESTEasy Reactive and Hibernate ORM
-- RESTEasy Reactive and Hibernate Reactive
-- RESTEasy Reactive and Vert.x PG Client
-- Reactive Routes and Hibernate Reactive
-- Reactive Routes and Vert.x PG Client
+- Quarkus using RESTEasy Reactive and Hibernate ORM (classic Hibernate for DB operations, while handling web via the reactive stack)
+- Quarkus using RESTEasy Reactive and Hibernate Reactive (fully reactive stack)
+
+## Testing
+
+    ./tfb --mode verify --test quarkus quarkus-hibernate-reactive
 
 ## Versions
 
-* [Java OpenJDK 11](http://openjdk.java.net/)
-* [Quarkus 1.11.0.Beta1](https://quarkus.io)
+* [Java OpenJDK 17](http://openjdk.java.net/)
+* [Quarkus 3.1.0.CR1](https://quarkus.io)
 
 ## Test URLs
 

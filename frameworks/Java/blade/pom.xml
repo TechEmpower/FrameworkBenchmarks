@@ -14,44 +14,31 @@
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <blade.version>2.0.15.RELEASE</blade.version>
-        <netty.version>4.1.48.Final</netty.version>
-        <anima.version>0.2.6</anima.version>
-        <hikaricp.version>3.4.2</hikaricp.version>
-        <mysql-conn.version>8.0.18</mysql-conn.version>
-        <blade-jetbrick.version>0.1.3</blade-jetbrick.version>
-        <jetbrick-version>2.1.10</jetbrick-version>
+        <blade.version>2.1.2.RELEASE</blade.version>
+        <netty.version>4.1.76.Final</netty.version>
+        <anima.version>0.3.1</anima.version>
+        <hikaricp.version>4.0.3</hikaricp.version>
+        <mysql-conn.version>8.0.28</mysql-conn.version>
+        <blade-jetbrick.version>0.2.1</blade-jetbrick.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>com.bladejava</groupId>
-            <artifactId>blade-mvc</artifactId>
+            <groupId>com.hellokaton</groupId>
+            <artifactId>blade-core</artifactId>
             <version>${blade.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>io.github.biezhi</groupId>
+            <groupId>com.hellokaton</groupId>
             <artifactId>anima</artifactId>
             <version>${anima.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.bladejava</groupId>
+            <groupId>com.hellokaton</groupId>
             <artifactId>blade-template-jetbrick</artifactId>
             <version>${blade-jetbrick.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.github.subchen</groupId>
-                    <artifactId>jetbrick-template</artifactId>
-                </exclusion>
-			</exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.subchen</groupId>
-            <artifactId>jetbrick-template</artifactId>
-            <version>${jetbrick-version}</version>
         </dependency>
 
         <dependency>

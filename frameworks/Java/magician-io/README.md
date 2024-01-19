@@ -5,7 +5,7 @@ This is Magician's official website address[http://magician-io.com](http://magic
 ## Versions
 
 - Java OpenJDK 1.8
-- Martian 3.2.13
+- Magician 2.0.3
 
 ##Test URLs
 ### JSON Encoding Test

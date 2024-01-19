@@ -1,9 +1,9 @@
 require "granite/adapter/pg"
 
 class World < Granite::Base
-  adapter pg
+  connection pg
+  table world
 
-  table_name world
-  primary id : Int32
-  field randomnumber : Int32
+  column id : Int32, primary: true
+  column randomnumber : Int32
 end

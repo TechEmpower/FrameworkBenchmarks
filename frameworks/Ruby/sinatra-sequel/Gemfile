@@ -2,11 +2,10 @@ source 'https://rubygems.org'
 
 gem 'json', '~> 2.0'
 gem 'passenger', '~> 5.1', :platforms=>[:ruby, :mswin], :require=>false
-gem 'puma', '~> 3.9', :require=>false
+gem 'puma', '~> 6.4', :require=>false
 gem 'sequel', '~> 5.0'
 gem 'sinatra', '~> 2.0', :require=>'sinatra/base'
 gem 'slim', '~> 3.0'
-gem 'torquebox-web', '>= 4.0.0.beta3', '< 5', :platforms=>:jruby, :require=>false
 gem 'unicorn', '~> 5.2', :platforms=>[:ruby, :mswin], :require=>false
 
 group :mysql do
@@ -16,6 +15,6 @@ end
 
 group :postgresql do
   gem 'jdbc-postgres', '~> 9.4', :platforms=>:jruby, :require=>'jdbc/postgres'
-  gem 'pg', '~> 0.19', :platforms=>[:ruby, :mswin]
+  gem 'pg', '~> 1.5', :platforms=>[:ruby, :mswin]
   gem 'sequel_pg', '~> 1.6', :platforms=>:ruby, :require=>false
 end

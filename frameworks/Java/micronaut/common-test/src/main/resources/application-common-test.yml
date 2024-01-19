@@ -1,0 +1,21 @@
+micronaut:
+  http:
+    client:
+      read-timeout: 60s
+
+datasources:
+  default:
+#    url: jdbc:postgresql://localhost:5432/test?loggerLevel=OFF&disableColumnSanitiser=true&assumeMinServerVersion=12&sslmode=disable
+#    username: test
+#    password: test
+    schema-generate: CREATE_DROP
+
+r2dbc:
+  datasources:
+    default:
+#      url: r2dbc:pool://localhost:5432/test?loggerLevel=OFF&disableColumnSanitiser=true&assumeMinServerVersion=12&sslmode=disable
+#      username: test
+#      password: test
+      schema-generate: CREATE_DROP
+
+

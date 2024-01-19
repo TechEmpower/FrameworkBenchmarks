@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using GenHTTP.Api.Content;
@@ -31,7 +32,7 @@ namespace Benchmarks.Utilities
 
         #region Functionality
 
-        public IEnumerable<ContentElement> GetContent(IRequest request) => Content.GetContent(request);
+        public IAsyncEnumerable<ContentElement> GetContentAsync(IRequest request) => Content.GetContentAsync(request);
 
         public ValueTask PrepareAsync() => Content.PrepareAsync();
 

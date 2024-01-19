@@ -114,7 +114,7 @@ class FortunesHandler < BaseHandler
 
     f_2 = f_1.map(&:to_h).
             append({ 'id' => '0', 'message' => 'Additional fortune added at request time.' }).
-              sort { |x,y| x['message'] <=> y['message'] }.
+              sort_by { |item| item['message'] }.
                 map { |f| "<tr><td>#{ f['id'] }</td><td>#{ Rack::Utils.escape_html(f['message']) }</td></tr>" }.
                   join
 
@@ -122,7 +122,7 @@ class FortunesHandler < BaseHandler
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Fortune</title>
+          <title>Fortunes</title>
         </head>
         <body>
           <table>
@@ -132,7 +132,7 @@ class FortunesHandler < BaseHandler
             </tr>
             #{ f_2 }
           </table>
-        </body
+        </body>
       </html>
     HTML
   end

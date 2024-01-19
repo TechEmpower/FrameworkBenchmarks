@@ -1,4 +1,4 @@
-FROM rust:1.44
+FROM rust:latest
 
 WORKDIR /saphir
 

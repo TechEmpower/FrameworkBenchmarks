@@ -170,7 +170,7 @@ let main () =
           accept_loop socket handler);
       let forever, _ = Lwt.wait () in
       Lwt_main.run forever;
-      exit 0 )
+      exit 0)
   done;
 
   while true do

@@ -1,46 +1,10 @@
-#![allow(clippy::declare_interior_mutable_const)]
+#![allow(dead_code)]
 
-use std::{
-    cell::{RefCell, RefMut},
-    cmp,
-    convert::Infallible,
-    io,
-};
+use core::{cell::RefCell, cmp};
 
-use xitca_web::{
-    dev::bytes::{Bytes, BytesMut},
-    http::{
-        header::{HeaderValue, SERVER},
-        StatusCode,
-    },
-    response::{WebResponse, WebResponseBuilder},
-};
+use xitca_http::{bytes::BytesMut, http::header::HeaderValue};
 
-pub(super) type HandleResult = Result<WebResponse, Infallible>;
-
-pub(super) struct Writer<'a>(RefMut<'a, BytesMut>);
-
-impl Writer<'_> {
-    #[inline]
-    pub fn take(mut self) -> Bytes {
-        self.0.split().freeze()
-    }
-}
-
-impl io::Write for &mut Writer<'_> {
-    #[inline]
-    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-        self.0.extend_from_slice(buf);
-        Ok(buf.len())
-    }
-
-    #[inline]
-    fn flush(&mut self) -> io::Result<()> {
-        Ok(())
-    }
-}
-
-pub(super) trait QueryParse {
+pub trait QueryParse {
     fn parse_query(self) -> u16;
 }
 
@@ -58,50 +22,66 @@ impl QueryParse for Option<&str> {
     }
 }
 
-pub(super) struct AppState<C> {
-    client: C,
-    // a re-usable buffer for write response data.
-    write_buf: RefCell<BytesMut>,
+#[allow(clippy::declare_interior_mutable_const)]
+pub const SERVER_HEADER_VALUE: HeaderValue = HeaderValue::from_static("X");
+
+pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
+
+pub type HandleResult<T> = Result<T, Error>;
+
+pub const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
+
+pub struct State<DB> {
+    pub client: DB,
+    pub write_buf: RefCell<BytesMut>,
 }
 
-impl<C> AppState<C> {
-    pub(super) fn new(client: C) -> Self {
-        let write_buf = RefCell::new(BytesMut::new());
-        Self { client, write_buf }
-    }
+#[cfg(not(target_arch = "wasm32"))]
+mod non_wasm {
+    #[derive(Default)]
+    pub struct Rand(nanorand::WyRand);
 
-    #[inline]
-    pub(super) fn writer(&self) -> Writer<'_> {
-        Writer(self.write_buf.borrow_mut())
-    }
-
-    #[inline]
-    pub(super) fn client(&self) -> &C {
-        &self.client
-    }
-}
-
-pub const SERVER_HEADER_VALUE: HeaderValue = HeaderValue::from_static("TFB");
-
-pub const HTML_HEADER_VALUE: HeaderValue = HeaderValue::from_static("text/html; charset=utf-8");
-
-pub const TEXT_HEADER_VALUE: HeaderValue = HeaderValue::from_static("text/plain");
-
-pub const JSON_HEADER_VALUE: HeaderValue = HeaderValue::from_static("application/json");
-
-macro_rules! error {
-    ($error: ident, $code: path) => {
-        #[cold]
-        #[inline(never)]
-        pub(super) fn $error() -> HandleResult {
-            Ok(WebResponseBuilder::new()
-                .status($code)
-                .header(SERVER, SERVER_HEADER_VALUE)
-                .body(Bytes::new().into())
-                .unwrap())
+    impl Rand {
+        #[inline]
+        pub fn gen_id(&mut self) -> i32 {
+            use nanorand::Rng;
+            (self.0.generate::<u32>() % 10_000 + 1) as _
         }
-    };
+    }
+
+    #[cfg(any(feature = "pg", feature = "pg-iou"))]
+    mod pg_state {
+        use core::{cell::RefCell, future::Future, pin::Pin};
+
+        use xitca_http::{
+            bytes::BytesMut,
+            util::middleware::context::{Context, ContextBuilder},
+        };
+
+        use crate::{
+            db::{self, Client},
+            util::{HandleResult, State},
+        };
+
+        pub type Ctx<'a, Req> = Context<'a, Req, State<Client>>;
+
+        pub fn context_mw(
+        ) -> ContextBuilder<impl Fn() -> Pin<Box<dyn Future<Output = HandleResult<State<Client>>>>>>
+        {
+            ContextBuilder::new(|| {
+                Box::pin(async {
+                    db::create().await.map(|client| State {
+                        client,
+                        write_buf: RefCell::new(BytesMut::new()),
+                    })
+                }) as _
+            })
+        }
+    }
+
+    #[cfg(any(feature = "pg", feature = "pg-iou"))]
+    pub use pg_state::*;
 }
 
-error!(not_found, StatusCode::NOT_FOUND);
-error!(internal, StatusCode::INTERNAL_SERVER_ERROR);
+#[cfg(not(target_arch = "wasm32"))]
+pub use non_wasm::*;

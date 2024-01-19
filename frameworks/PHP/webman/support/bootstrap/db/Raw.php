@@ -24,30 +24,17 @@ use PDO;
  */
 class Raw implements Bootstrap
 {
-    /**
-     * @var \PDO
-     */
-    public static $pdo;
+
+    public static PDO $pdo;
+
+    public static PDOStatement $fortune;
+
+    public static PDOStatement $random;
 
     /**
-     * @var PDOStatement
+     * @var PDOStatement[]
      */
-    public static $statement;
-
-    /**
-     * @var PDOStatement
-     */
-    public static $fortune;
-
-    /**
-     * @var PDOStatement
-     */
-    public static $random;
-
-    /**
-     * @var PDOStatement
-     */
-    public static $update;
+    public static array $update;
 
     /**
      * @param Worker $worker
@@ -61,10 +48,37 @@ class Raw implements Bootstrap
             [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES    => false]
         );
-        self::$statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
-        self::$fortune   = $pdo->prepare('SELECT id,message FROM Fortune');
         self::$random    = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
-        self::$update    = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
+        self::$fortune   = $pdo->prepare('SELECT id,message FROM Fortune');
         self::$pdo = $pdo;
+    }
+
+    /**
+     * Postgres bulk update
+     *
+     * @param array $worlds
+     * @return void
+     */
+    public static function update(array $worlds)
+    {
+        $rows = count($worlds);
+
+        if (!isset(self::$update[$rows])) {
+            $sql = 'UPDATE world SET randomNumber = CASE id'
+                . str_repeat(' WHEN ?::INTEGER THEN ?::INTEGER ', $rows)
+                . 'END WHERE id IN ('
+                . str_repeat('?::INTEGER,', $rows - 1) . '?::INTEGER)';
+
+            self::$update[$rows] = self::$pdo->prepare($sql);
+        }
+
+        $val = [];
+        $keys = [];
+        foreach ($worlds as $world) {
+            $val[] = $keys[] = $world['id'];
+            $val[] = $world['randomNumber'];
+        }
+
+        self::$update[$rows]->execute([...$val, ...$keys]);
     }
 }

@@ -1,4 +1,4 @@
-// Intialized database connections, one for each db config
+// Initialized database connections, one for each db config
 // * Mongoose is a popular Node/MongoDB driver
 // * Sequelize is a popular Node/SQL driver
 

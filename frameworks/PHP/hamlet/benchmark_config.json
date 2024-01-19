@@ -23,7 +23,8 @@
       "database_os": "Linux",
       "display_name": "hamlet",
       "notes": "",
-      "versus": "php"
+      "versus": "php",
+      "tags": ["broken"]
     },
     "swoole": {
       "plaintext_url": "/plaintext",
@@ -47,7 +48,8 @@
       "database_os": "Linux",
       "display_name": "hamlet-swoole",
       "notes": "",
-      "versus": "swoole"
+      "versus": "swoole",
+      "tags": ["broken"]
     },
     "workerman": {
       "plaintext_url": "/plaintext",
@@ -71,7 +73,8 @@
       "database_os": "Linux",
       "display_name": "hamlet-workerman",
       "notes": "",
-      "versus": "workerman"
+      "versus": "workerman",
+      "tags": ["broken"]
     }
   }]
 }

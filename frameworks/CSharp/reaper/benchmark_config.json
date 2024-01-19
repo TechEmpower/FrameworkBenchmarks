@@ -1,0 +1,26 @@
+{
+  "framework": "reaper",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "Reaper",
+        "language": "C#",
+        "flavor": "CoreCLR",
+        "orm": "None",
+        "platform": ".NET",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Reaper [aot,slim]",
+        "notes": "",
+        "versus": "aspnetcore-minimal"
+      }
+    }
+  ]
+}

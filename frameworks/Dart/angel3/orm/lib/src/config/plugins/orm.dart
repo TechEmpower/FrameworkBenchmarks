@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:angel3_framework/angel3_framework.dart';
 import 'package:angel3_orm/angel3_orm.dart';
 import 'package:angel3_orm_postgres/angel3_orm_postgres.dart';
-import 'package:postgres/postgres.dart';
 import 'package:postgres_pool/postgres_pool.dart';
 
 Future<void> configureServer(Angel app) async {
@@ -16,7 +15,7 @@ Future<void> configureServer(Angel app) async {
   //var executor = await connectToPostgresPool(app.configuration, logger);
 
   app
-    ..container!.registerSingleton<QueryExecutor>(executor)
+    ..container.registerSingleton<QueryExecutor>(executor)
     ..shutdownHooks.add((_) => connection.close());
 //    ..shutdownHooks.add((_) => executor.close());
 }

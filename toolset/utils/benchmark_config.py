@@ -30,7 +30,6 @@ class BenchmarkConfig:
         self.client_host = args.client_host
         self.audit = args.audit
         self.new = args.new
-        self.clean = args.clean
         self.mode = args.mode
         self.list_tests = args.list_tests
         self.list_tag = args.list_tag
@@ -52,6 +51,8 @@ class BenchmarkConfig:
         self.database_docker_host = None
         self.client_docker_host = None
         self.network = None
+        self.test_container_memory = args.test_container_memory
+        self.extra_docker_runtime_args = args.extra_docker_runtime_args
 
         if self.network_mode is None:
             self.network = 'tfb'

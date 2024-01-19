@@ -1,4 +1,4 @@
-FROM ruby:3.1
+FROM ruby:3.3
 
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends redis-server
 
@@ -16,5 +16,5 @@ COPY . /rails/
 ENV RUBY_YJIT_ENABLE=1
 ENV RAILS_ENV=production_mysql
 ENV PORT=8080
-ENV REDIS_URL=redis://localhost:6379/0/cache
+ENV REDIS_URL=redis://localhost:6379/0
 CMD ./run-with-redis.sh

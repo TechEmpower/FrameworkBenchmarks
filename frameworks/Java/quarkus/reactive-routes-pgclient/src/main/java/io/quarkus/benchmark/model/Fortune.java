@@ -1,15 +1,11 @@
 package io.quarkus.benchmark.model;
 
-import java.util.Objects;
+public class Fortune implements Comparable<Fortune> {
 
-public class Fortune {
+    private final int id;
+    private final String message;
 
-    private int id;
-    private String message;
-
-    public Fortune() {}
-
-    public Fortune(int id, String message) {
+    public Fortune(final int id, final String message) {
         this.id = id;
         this.message = message;
     }
@@ -18,31 +14,12 @@ public class Fortune {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Fortune fortune = (Fortune) o;
-        return id == fortune.id &&
-                Objects.equals(message, fortune.message);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, message);
+    public int compareTo(final Fortune other) {
+        return message.compareTo(other.message);
     }
 }

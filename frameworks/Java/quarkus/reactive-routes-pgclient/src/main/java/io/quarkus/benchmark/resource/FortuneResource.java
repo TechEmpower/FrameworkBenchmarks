@@ -1,49 +1,43 @@
 package io.quarkus.benchmark.resource;
 
-import java.io.StringWriter;
 import java.util.Collections;
-import java.util.Comparator;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
 
 import io.quarkus.benchmark.model.Fortune;
+import io.quarkus.benchmark.rocker.VertxRawRockerOutputFactories;
 import io.quarkus.benchmark.repository.FortuneRepository;
 import io.quarkus.vertx.web.Route;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.ext.web.RoutingContext;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import views.Fortunes;
 
-@ApplicationScoped
+@Singleton
 public class FortuneResource extends BaseResource {
+
+    private static final CharSequence HTML_UTF8_CONTENT_TYPE = HttpHeaders.createOptimized("text/html; charset=UTF-8");
 
     @Inject
     FortuneRepository repository;
-    private Mustache template;
-    private Comparator<Fortune> fortuneComparator;
-
+    @Inject
+    VertxRawRockerOutputFactories factories;
 
     public FortuneResource() {
-        MustacheFactory mf = new DefaultMustacheFactory();
-        template = mf.compile("fortunes.mustache");
-        fortuneComparator = Comparator.comparing(fortune -> fortune.getMessage());
+
     }
 
     @Route(path = "fortunes")
-    public void fortunes(RoutingContext rc) {
+    public void fortunes(final RoutingContext rc) {
         repository.findAll()
-                .subscribe().with(fortunes -> {
-                    fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-                    fortunes.sort(fortuneComparator);
-                    StringWriter writer = new StringWriter();
-                    template.execute(writer, Collections.singletonMap("fortunes", fortunes));
-                    rc.response()
-                    .putHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=UTF-8")
-                    .end(writer.toString());
-                },
-                t -> handleFail(rc, t));
+                .subscribe()
+                .with(fortunes -> {
+                            fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+                            Collections.sort(fortunes);
+                            final var vertxRockerOutput = Fortunes.template(fortunes).render(factories.ioFactory());
+                            var res = rc.response();
+                            res.headers().add(HttpHeaders.CONTENT_TYPE, HTML_UTF8_CONTENT_TYPE);
+                            res.end(vertxRockerOutput.buffer(), null);
+                        },
+                        t -> handleFail(rc, t));
     }
 }

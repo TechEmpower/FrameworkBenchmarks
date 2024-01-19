@@ -76,25 +76,6 @@
       "notes": "",
       "versus": "None"
     },
-    "mongo-fluent": {
-      "db_url": "/db",
-      "query_url": "/queries?queries=",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "MongoDb",
-      "framework": "Vapor",
-      "language": "Swift",
-      "flavor": "None",
-      "orm": "Full",
-      "platform": "None",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "Vapor",
-      "notes": "",
-      "versus": "None"
-    },
     "mongo": {
       "db_url": "/db",
       "port": 8080,

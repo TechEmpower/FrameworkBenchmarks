@@ -1,0 +1,10 @@
+plugins {
+    id 'io.micronaut.benchmark.module'
+}
+
+dependencies {
+    implementation("io.micronaut.data:micronaut-data-jdbc")
+    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
+    implementation("io.micronaut:micronaut-jackson-databind")
+    implementation("org.postgresql:postgresql")
+}

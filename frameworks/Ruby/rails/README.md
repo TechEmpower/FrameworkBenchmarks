@@ -12,9 +12,9 @@ comparing a variety of web platforms.
 
 The tests were run with:
 
-- [Ruby 3.1.0](http://www.ruby-lang.org/)
-- [Rails 7.0.1](http://rubyonrails.org/)
-- [Puma 5.5](http://puma.io/)
+- [Ruby 3.3](http://www.ruby-lang.org/)
+- [Rails 7.1](http://rubyonrails.org/)
+- [Puma 6.4](http://puma.io/)
 - [MySQL](https://dev.mysql.com/)
 - [PostgreSQL](https://www.postgresql.org/)
 - [Redis 6](https://redis.io)

@@ -1,35 +1,29 @@
 package io.quarkus.benchmark.model;
 
-public class World implements Comparable<World>{
+public class World implements Comparable<World> {
 
-    private int id;
-    private int randomNumber;
+    private final Integer id;
+    private Integer randomNumber;
 
-    public World() {}
-
-    public World(int id, int randomNumber) {
+    public World(final Integer id, final Integer randomNumber) {
         this.id = id;
         this.randomNumber = randomNumber;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getRandomNumber() {
         return randomNumber;
     }
 
-    public void setRandomNumber(int randomNumber) {
+    public void setRandomNumber(final Integer randomNumber) {
         this.randomNumber = randomNumber;
     }
 
     @Override
-    public int compareTo(World o) {
-        return Integer.compare(id, o.id);
+    public int compareTo(final World o) {
+        return id.compareTo(o.id);
     }
 }

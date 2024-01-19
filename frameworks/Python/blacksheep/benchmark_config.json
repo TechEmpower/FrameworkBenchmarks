@@ -10,17 +10,18 @@
       "update_url": "/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
-      "classification": "Platform",
+      "classification": "Micro",
       "framework": "blacksheep",
       "language": "Python",
       "flavor": "Python3",
-      "platform": "None",
-      "webserver": "None",
+      "platform": "ASGI",
+      "webserver": "uvicorn",
       "os": "Linux",
       "orm": "Raw",
       "database_os": "Linux",
       "database": "Postgres",
       "display_name": "blacksheep",
+      "versus": "None",      
       "notes": ""
     }
   }]

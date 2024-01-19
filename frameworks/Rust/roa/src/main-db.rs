@@ -101,7 +101,7 @@ fn routes(prefix: &'static str) -> StdResult<RouteTable<State>> {
         .gate(gate)
         .on("/db", get(db))
         .on("/queries", get(queries))
-        .on("/fortune", get(fortune))
+        .on("/fortunes", get(fortune))
         .on("/updates", get(updates))
         .routes(prefix)
         .map_err(Into::into)

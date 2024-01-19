@@ -3,7 +3,7 @@
 ## Infrastructure Software Versions
 The tests were run with:
 
-* JDK 11
+* JDK 21
 * [http4k](https://http4k.org)
 
 ## Test URLs
@@ -16,12 +16,14 @@ The tests were run with:
 - Plaintext: http://localhost:9000/plaintext
 
 ## Supported backends (w/ Postgres client)
-- SunHttp (default - bundled with core module - zero dependencies)
+- SunHttp/SunHttpLoom (default - bundled with core module - zero dependencies) (+ SunHttpLoom w/GraalVM)
 - Apache (5)
-- Apache4
+- Apache4 (+ w/GraalVM)
+- Helidon (+ w/GraalVM)
 - KtorCIO
 - KtorNetty
-- Jetty
+- Jetty/JettyLoom
+- Jetty/JettyLoom (v11)
 - Netty
 - Ratpack
 - Undertow

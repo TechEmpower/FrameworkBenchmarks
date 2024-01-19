@@ -1,18 +1,18 @@
 package hello;
 
-import com.blade.Blade;
-import com.blade.ioc.annotation.Bean;
-import com.blade.loader.BladeLoader;
-import com.blade.mvc.view.template.JetbrickTemplateEngine;
+import com.hellokaton.anima.Anima;
+import com.hellokaton.blade.Blade;
+import com.hellokaton.blade.ioc.annotation.Bean;
+import com.hellokaton.blade.loader.BladeLoader;
+import com.hellokaton.blade.template.JetbrickTemplateEngine;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import io.github.biezhi.anima.Anima;
 
 /**
  * Application Bootstrap
  *
- * @author biezhi
- * @date 2018/10/17
+ * @author hellokaton
+ * @date 2022/5/10
  */
 @Bean
 public class Bootstrap implements BladeLoader {
@@ -25,12 +25,12 @@ public class Bootstrap implements BladeLoader {
 
             HikariConfig config = new HikariConfig();
 
-            String url                   = blade.env("jdbc.url", "");
-            String username              = blade.env("jdbc.username", "");
-            String password              = blade.env("jdbc.password", "");
-            String cachePrepStmts        = blade.env("datasource.cachePrepStmts", "true");
-            String prepStmtCacheSize     = blade.env("datasource.prepStmtCacheSize", "250");
-            String prepStmtCacheSqlLimit = blade.env("datasource.prepStmtCacheSqlLimit", "2048");
+            String url                   = blade.getEnv("jdbc.url", "");
+            String username              = blade.getEnv("jdbc.username", "");
+            String password              = blade.getEnv("jdbc.password", "");
+            String cachePrepStmts        = blade.getEnv("datasource.cachePrepStmts", "true");
+            String prepStmtCacheSize     = blade.getEnv("datasource.prepStmtCacheSize", "250");
+            String prepStmtCacheSqlLimit = blade.getEnv("datasource.prepStmtCacheSqlLimit", "2048");
 
             config.setJdbcUrl(url);
             config.setUsername(username);

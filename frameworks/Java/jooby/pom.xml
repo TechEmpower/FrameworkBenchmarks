@@ -6,46 +6,44 @@
 
   <artifactId>jooby</artifactId>
   <groupId>com.techempower</groupId>
-  <version>2.0</version>
+  <version>3.0</version>
 
   <name>jooby</name>
 
   <properties>
-    <jooby.version>2.9.5</jooby.version>
-    <netty.version>4.1.49.Final</netty.version>
-    <dsl-json.version>1.9.5</dsl-json.version>
-    <postgresql.version>42.2.25</postgresql.version>
+    <jooby.version>3.0.5</jooby.version>
+    <dsl-json.version>1.10.0</dsl-json.version>
+    <postgresql.version>42.6.0</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
 
     <!-- Startup class -->
     <application.class>com.techempower.App</application.class>
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>jakarta.ws.rs</groupId>
-      <artifactId>jakarta.ws.rs-api</artifactId>
-    </dependency>
-
     <!-- jdbc -->
     <dependency>
       <groupId>io.jooby</groupId>
       <artifactId>jooby-hikari</artifactId>
+      <version>${jooby.version}</version>
     </dependency>
 
     <!-- rocker -->
     <dependency>
       <groupId>io.jooby</groupId>
       <artifactId>jooby-rocker</artifactId>
+      <version>${jooby.version}</version>
     </dependency>
 
     <!-- mySQL -->
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
+      <version>8.0.33</version>
     </dependency>
+
 
     <!-- postgresql -->
     <dependency>
@@ -57,7 +55,7 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-pg-client</artifactId>
-      <version>3.9.2</version>
+      <version>4.4.4</version>
     </dependency>
 
     <!-- json -->
@@ -74,7 +72,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.3.0</version>
         <executions>
           <execution>
             <id>add-source</id>
@@ -112,7 +110,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
+        <version>3.11.0</version>
         <configuration>
           <annotationProcessorPaths>
             <path>
@@ -132,7 +130,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.4</version>
+        <version>3.4.1</version>
         <executions>
           <execution>
             <id>uber-jar</id>
@@ -150,6 +148,16 @@
                   <mainClass>${application.class}</mainClass>
                 </transformer>
               </transformers>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
             </configuration>
           </execution>
         </executions>
@@ -163,7 +171,7 @@
       <dependencies>
         <dependency>
           <groupId>io.jooby</groupId>
-          <artifactId>jooby-utow</artifactId>
+          <artifactId>jooby-undertow</artifactId>
           <version>${jooby.version}</version>
         </dependency>
       </dependencies>
@@ -183,54 +191,6 @@
     <profile>
       <id>netty</id>
       <dependencies>
-        <dependency>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-common</artifactId>
-          <version>${netty.version}</version>
-        </dependency>
-
-        <dependency>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-buffer</artifactId>
-          <version>${netty.version}</version>
-        </dependency>
-
-        <dependency>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-handler</artifactId>
-          <version>${netty.version}</version>
-        </dependency>
-
-        <dependency>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-codec-http</artifactId>
-          <version>${netty.version}</version>
-        </dependency>
-
-        <dependency>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-transport</artifactId>
-          <version>${netty.version}</version>
-        </dependency>
-
-        <dependency>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-transport-native-epoll</artifactId>
-          <version>${netty.version}</version>
-        </dependency>
-
-        <dependency>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-transport-native-kqueue</artifactId>
-          <version>${netty.version}</version>
-          <classifier>osx-x86_64</classifier>
-        </dependency>
-        <dependency>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-transport-native-epoll</artifactId>
-          <version>${netty.version}</version>
-          <classifier>linux-x86_64</classifier>
-        </dependency>
         <dependency>
           <groupId>io.jooby</groupId>
           <artifactId>jooby-netty</artifactId>

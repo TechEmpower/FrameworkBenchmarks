@@ -1,6 +1,6 @@
-FROM php:8.0-cli
+FROM php:8.2-cli
 
-RUN pecl install swoole > /dev/null && \
+RUN pecl install swoole-4.8.12 > /dev/null && \
     docker-php-ext-enable swoole
 
 RUN docker-php-ext-install opcache pdo_mysql bcmath > /dev/null
@@ -21,7 +21,7 @@ RUN php -v && php -i | grep opcache
 WORKDIR /one
 
 RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer install --no-dev --classmap-authoritative --quiet > /dev/null
+RUN composer install --no-dev --classmap-authoritative --quiet
 RUN composer dumpautoload -o
 
 RUN mkdir -p /one/App/RunCache

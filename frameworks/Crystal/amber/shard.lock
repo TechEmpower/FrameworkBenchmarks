@@ -1,86 +1,126 @@
-version: 1.0
+version: 2.0
 shards:
   amber:
-    github: amberframework/amber
-    version: 0.9.0
+    git: https://github.com/amberframework/amber.git
+    version: 1.4.1
 
   amber_router:
-    github: amberframework/amber-router
-    version: 0.2.0
+    git: https://github.com/amberframework/amber-router.git
+    version: 0.4.4
+
+  backtracer:
+    git: https://github.com/sija/backtracer.cr.git
+    version: 1.2.2
 
   callback:
-    github: mosop/callback
-    version: 0.6.3
+    git: https://github.com/amberframework/callback.git
+    version: 0.9.2
 
   cli:
-    github: mosop/cli
-    version: 0.7.0
+    git: https://github.com/amberframework/cli.git
+    version: 0.11.4
 
   compiled_license:
-    github: elorest/compiled_license
-    version: 0.1.3
+    git: https://github.com/elorest/compiled_license.git
+    version: 1.2.2
 
   db:
-    github: crystal-lang/crystal-db
-    version: 0.5.0
+    git: https://github.com/crystal-lang/crystal-db.git
+    version: 0.11.0
+
+  dotenv:
+    git: https://github.com/gdotdesign/cr-dotenv.git
+    version: 1.0.0
+
+  exception_page:
+    git: https://github.com/crystal-loot/exception_page.git
+    version: 0.3.1
+
+  future:
+    git: https://github.com/crystal-community/future.cr.git
+    version: 1.0.0
 
   granite:
-    github: amberframework/granite
-    version: 0.13.1
+    git: https://github.com/amberframework/granite.git
+    version: 0.23.3
+
+  i18n:
+    git: https://github.com/crimson-knight/i18n.cr.git
+    version: 0.4.1
+
+  ifrit:
+    git: https://github.com/imdrasil/ifrit.git
+    version: 0.1.3
 
   inflector:
-    github: phoffer/inflector.cr
-    version: 0.1.8
+    git: https://github.com/phoffer/inflector.cr.git
+    version: 1.0.0
+
+  jennifer:
+    git: https://github.com/imdrasil/jennifer.cr.git
+    version: 0.13.0
+
+  json_mapping:
+    git: https://github.com/crystal-lang/json_mapping.cr.git
+    version: 0.1.1
 
   kilt:
-    github: jeromegn/kilt
-    version: 0.4.0
+    git: https://github.com/jeromegn/kilt.git
+    version: 0.6.1
 
   liquid:
-    github: TechMagister/liquid.cr
-    version: 0.3.0
+    git: https://github.com/dare892/liquid.cr.git
+    version: 0.4.1+git.commit.e4ef5ca06bf5bafe74e0b270c7aae2941a91ddd3
 
   micrate:
-    github: amberframework/micrate
-    version: 0.3.3
-
-  mysql:
-    github: crystal-lang/crystal-mysql
-    version: 0.5.0
-
-  optarg:
-    github: mosop/optarg
-    version: 0.5.8
-
-  pg:
-    github: will/crystal-pg
+    git: https://github.com/amberframework/micrate.git
     version: 0.15.0
 
+  mysql:
+    git: https://github.com/crystal-lang/crystal-mysql.git
+    version: 0.14.0
+
+  optarg:
+    git: https://github.com/amberframework/optarg.git
+    version: 0.9.3
+
+  pg:
+    git: https://github.com/will/crystal-pg.git
+    version: 0.26.0
+
   pool:
-    github: ysbaddaden/pool
-    version: 0.2.3
+    git: https://github.com/ysbaddaden/pool.git
+    version: 0.3.0
 
   redis:
-    github: stefanwille/crystal-redis
-    version: 2.0.0
+    git: https://github.com/stefanwille/crystal-redis.git
+    version: 2.8.3
+
+  sam:
+    git: https://github.com/imdrasil/sam.cr.git
+    version: 0.5.0
 
   shell-table:
-    github: luckyframework/shell-table.cr
-    commit: 078a04ea58ead5203bb435a3b5fff448ddabaeea
+    git: https://github.com/luckyframework/shell-table.cr.git
+    version: 0.9.3
 
   slang:
-    github: jeromegn/slang
-    version: 1.7.1
+    git: https://github.com/jeromegn/slang.git
+    version: 1.7.3
 
   sqlite3:
-    github: crystal-lang/crystal-sqlite3
-    version: 0.10.0
-
-  string_inflection:
-    github: mosop/string_inflection
-    version: 0.2.1
+    git: https://github.com/crystal-lang/crystal-sqlite3.git
+    version: 0.19.0
 
   teeplate:
-    github: mosop/teeplate
-    version: 0.6.1
+    git: https://github.com/amberframework/teeplate.git
+    version: 0.11.2
+
+  wordsmith:
+    git: https://github.com/luckyframework/wordsmith.git
+    version: 0.4.0
+
+  yaml_mapping:
+    git: https://github.com/crystal-lang/yaml_mapping.cr.git
+    version: 0.1.1
 

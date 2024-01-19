@@ -22,7 +22,8 @@
         "database_os": "Linux",
         "display_name": "Morph",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       },
       "flambda": {
         "json_url": "/json",
@@ -44,7 +45,8 @@
         "database_os": "Linux",
         "display_name": "Morph-flambda",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       },
       "single": {
         "json_url": "/json",
@@ -66,7 +68,8 @@
         "database_os": "Linux",
         "display_name": "Morph-single-process",
         "notes": "This is using a single process since that is more realistic",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       }
     }
   ]

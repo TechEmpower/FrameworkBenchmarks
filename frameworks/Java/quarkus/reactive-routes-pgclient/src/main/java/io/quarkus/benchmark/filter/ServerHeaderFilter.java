@@ -1,33 +1,36 @@
 package io.quarkus.benchmark.filter;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-
-import javax.inject.Singleton;
-
 import io.quarkus.scheduler.Scheduled;
 import io.quarkus.vertx.web.RouteFilter;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.ext.web.RoutingContext;
+import jakarta.annotation.PostConstruct;
+import jakarta.inject.Singleton;
+
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Singleton
 public class ServerHeaderFilter {
 
-    private static final CharSequence SERVER_HEADER_NAME = HttpHeaders.createOptimized("Server");
     private static final CharSequence SERVER_HEADER_VALUE = HttpHeaders.createOptimized("Quarkus");
-    private static final CharSequence DATE_HEADER_NAME = HttpHeaders.createOptimized("Date");
-
     private CharSequence date;
 
-    @Scheduled(every="1s")
-    void increment() {
+    @PostConstruct
+    public void init() {
+        updateDate();
+    }
+
+    @Scheduled(every = "1s")
+    void updateDate() {
         date = HttpHeaders.createOptimized(DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now()));
     }
 
-    @RouteFilter(100) 
-    void myFilter(RoutingContext rc) {
-       rc.response().putHeader( SERVER_HEADER_NAME, SERVER_HEADER_VALUE);
-       rc.response().putHeader( DATE_HEADER_NAME, date);
-       rc.next(); 
+    @RouteFilter(100)
+    void addDefaultHeaders(final RoutingContext rc) {
+        final var headers = rc.response().headers();
+        headers.add(HttpHeaders.SERVER, SERVER_HEADER_VALUE);
+        headers.add(HttpHeaders.DATE, date);
+        rc.next();
     }
 }

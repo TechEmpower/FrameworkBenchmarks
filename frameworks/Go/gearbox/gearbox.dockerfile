@@ -1,13 +1,12 @@
-FROM golang:1.14
+FROM docker.io/golang:1.19
 
 WORKDIR /gearbox
 
 COPY ./src /gearbox
 
-RUN go get github.com/valyala/quicktemplate/qtc
+RUN go generate -x ./templates
 
-RUN go generate ./templates
-RUN go build -ldflags="-s -w" -o app .
+RUN GOAMD64=v3 go build -ldflags="-s -w" -o app .
 
 EXPOSE 8080
 

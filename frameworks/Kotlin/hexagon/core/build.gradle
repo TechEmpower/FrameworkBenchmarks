@@ -1,0 +1,33 @@
+
+plugins {
+    id("gg.jte.gradle") version("3.1.4")
+}
+
+dependencies {
+    api(project(":model"))
+    api("com.hexagonkt:http_server:$hexagonVersion")
+    api("com.hexagonkt:templates_jte:$hexagonVersion")
+    api("com.hexagonkt:serialization_jackson_json:$hexagonVersion")
+    api("org.cache2k:cache2k-core:$cache2kVersion")
+
+    jteGenerate("gg.jte:jte-native-resources:3.1.4")
+}
+
+tasks.register("minimizeTemplate") {
+    doLast {
+        File template = file("$buildDir/resources/main/fortunes.jte")
+        List<String> lines = template.readLines().collect { it.trim() }
+        template.write(lines.join(""))
+    }
+}
+
+jar.dependsOn("minimizeTemplate")
+
+jte {
+    sourceDirectory.set(file("src/main/resources").toPath())
+    targetDirectory.set(file("build/classes/kotlin/main").toPath())
+
+    jteExtension("gg.jte.nativeimage.NativeResourcesExtension")
+
+    generate()
+}

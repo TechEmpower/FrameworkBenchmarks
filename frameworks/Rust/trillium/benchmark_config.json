@@ -1,5 +1,6 @@
 {
   "framework": "trillium",
+  "maintainers": ["jbr"],
   "tests": [
     {
       "default": {
@@ -8,6 +9,8 @@
         "query_url": "/queries/",
         "plaintext_url": "/plaintext",
         "fortune_url": "/fortunes",
+        "cached_query_url": "/cached-queries/",
+        "update_url": "/updates/",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -22,7 +25,8 @@
         "database_os": "Linux",
         "display_name": "Trillium",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["verified"]
       }
     }
   ]

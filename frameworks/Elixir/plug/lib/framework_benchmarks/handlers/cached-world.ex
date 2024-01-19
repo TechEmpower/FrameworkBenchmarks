@@ -14,7 +14,7 @@ defmodule FrameworkBenchmarks.Handlers.CachedWorld do
     {:ok, json} =
       ids
       |> Enum.map(&FrameworkBenchmarks.CachedWorld.get/1)
-      |> Eljiffy.encode()
+      |> Jason.encode()
 
     conn
     |> Plug.Conn.put_resp_content_type("application/json")

@@ -14,5 +14,12 @@ public class DateUtil {
     public static String getNow() {
         return GMT_FMT.format(LocalDateTime.now().atZone(zoneId));
     }
-
+    public static String time;
+    public static String getTime(){
+        if (time==null){
+            time=getNow();
+            return time;
+        }
+        return time;
+    }
 }

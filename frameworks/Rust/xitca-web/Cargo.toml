@@ -6,32 +6,84 @@ edition = "2021"
 [[bin]]
 name = "xitca-web"
 path = "./src/main.rs"
+required-features = ["io-uring", "pg", "router", "template"]
 
 [[bin]]
-name = "xitca-web-diesel"
-path = "./src/main_diesel.rs"
+name = "xitca-web-iou"
+path = "./src/main_iou.rs"
+required-features = ["io-uring", "pg-iou", "template"]
+
+[[bin]]
+name = "xitca-web-wasm"
+path = "./src/main_wasm.rs"
+required-features = ["web"]
+
+[[bin]]
+name = "xitca-web-axum"
+path = "./src/main_axum.rs"
+required-features = ["axum", "io-uring", "pg-sync", "template"]
+
+[[bin]]
+name = "xitca-web-sync"
+path = "./src/main_sync.rs"
+required-features = ["pg-orm", "template", "web-codegen"]
+
+[features]
+# pg optional
+pg = ["xitca-postgres/single-thread"]
+# pg send/sync optional
+pg-sync = ["xitca-postgres"]
+# pg io_uring optional
+pg-iou = ["pg", "xitca-postgres/io-uring"]
+# pg orm optional
+pg-orm = ["diesel"]
+# http router optional
+router = ["xitca-http/router"]
+# web optional
+web = ["xitca-web"]
+# web codegen optional
+web-codegen = ["xitca-web/codegen", "xitca-web/urlencoded"]
+# template optional
+template = ["sailfish"]
+# io-uring optional
+io-uring = ["xitca-http/io-uring", "xitca-server/io-uring"]
+# axum optional
+axum = ["dep:axum", "http-body", "tower", "tower-http", "xitca-web/tower-http-compat" ]
 
 [dependencies]
 xitca-http = "0.1"
-xitca-http-codegen = "0.1"
+xitca-io = "0.1"
 xitca-server = "0.1"
 xitca-service = "0.1"
-xitca-web = "0.1"
+xitca-unsafe-collection = "0.1"
 
-ahash = { version = "0.7.6", features = ["compile-time-rng"] }
-atoi = "0.4.0"
-core_affinity = "0.5.10"
-diesel = { git = "https://github.com/diesel-rs/diesel.git", rev = "37ec18f46ced2d6e9197414156fdb705d7a61426", default-features = false }
-diesel-async = { version = "0.1.0", features = ["postgres"], default-features = false }
-futures-util = { version = "0.3.18", default-features = false, features = ["alloc"] }
-mimalloc = { version = "0.1.27", default-features = false }
-rand = { version = "0.8", default-features = false, features = ["min_const_gen", "small_rng"] }
-sailfish = "0.3.3"
-serde = "1"
-simd-json = "0.4.8"
-tang-rs = "0.2"
-tokio = { version = "1.14", features = ["macros", "rt"] }
-tokio-postgres = "0.7.5"
+atoi = "2"
+serde = { version = "1" }
+serde_json = { version = "1" }
+
+# web optional
+xitca-web = { version = "0.1", features = ["json"], optional = true }
+
+# raw-pg optional
+xitca-postgres = { version = "0.1", optional = true }
+
+# orm optional
+diesel = { version = "2", features = ["postgres", "r2d2"], optional = true }
+
+# template optional
+sailfish = { version = "0.8", default-features = false, features = ["derive", "perf-inline"], optional = true }
+
+# axum optional
+axum = { version = "0.7", optional = true }
+http-body = { version = "1", optional = true }
+tower = { version = "0.4", optional = true }
+tower-http = { version = "0.5", features = ["set-header"], optional = true }
+
+# stuff can not be used or not needed in wasi target
+[target.'cfg(not(target_family = "wasm"))'.dependencies]
+futures-core = { version = "0.3", default-features = false }
+nanorand = { version = "0.7", default-features = false, features = ["tls"] }
+tokio = "1"
 
 [profile.release]
 lto = true
@@ -40,15 +92,5 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-http = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "59827177f6c319c6fa9940fe5f146754fff90aad" }
-xitca-http-codegen = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "59827177f6c319c6fa9940fe5f146754fff90aad" }
-xitca-io = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "59827177f6c319c6fa9940fe5f146754fff90aad" }
-xitca-server = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "59827177f6c319c6fa9940fe5f146754fff90aad" }
-xitca-service = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "59827177f6c319c6fa9940fe5f146754fff90aad" }
-xitca-web = { git = "https://github.com/fakeshadow/xitca-web.git", rev = "59827177f6c319c6fa9940fe5f146754fff90aad" }
-
-diesel = { git = "https://github.com/diesel-rs/diesel.git", rev = "37ec18f46ced2d6e9197414156fdb705d7a61426" }
-diesel-async = { git = "https://github.com/weiznich/diesel_async.git", rev = "06b3416826dbc8ce404f6d613daea989b23549ca" }
-
-# this is not right. but not much can be done when the maintainer is unactive.
-sailfish = { git = "https://github.com/jdrouet/sailfish", rev = "7d2b59247eaab10b67311d6c1c7d50a7d751d791" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "d79f510197e0f36534fe22b7a467c55dbd683681" }
+mio = { git = "https://github.com/fakeshadow/mio.git", rev = "52b72d372bfe5807755b7f5e3e1edf282954d6ba" }
