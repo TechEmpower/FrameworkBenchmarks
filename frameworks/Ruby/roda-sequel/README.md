@@ -13,9 +13,7 @@ comparing a variety of web platforms.
 The tests will be run with:
 
 * [Ruby 3.3](http://www.ruby-lang.org)
-* [JRuby 9.1](http://jruby.org)
-* [Rubinius 3](https://rubinius.com)\*
-* [Puma 3](http://puma.io)
+* [Puma 6](http://puma.io)
 * [Passenger 5](https://www.phusionpassenger.com)
 * [Unicorn 5](https://bogomips.org/unicorn/)
 * [Roda 3](http://roda.jeremyevans.net)
