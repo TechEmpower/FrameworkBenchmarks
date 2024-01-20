@@ -1,4 +1,4 @@
-FROM postgres:15-bullseye
+FROM postgres:16-bullseye
 
 ENV POSTGRES_USER=benchmarkdbuser
 ENV POSTGRES_PASSWORD=benchmarkdbpass
