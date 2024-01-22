@@ -4,7 +4,7 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, PlayNettyServer).disablePlugins(PlayFilters)
 
-scalaVersion := "2.13.3"
+scalaVersion := "2.13.12"
 
 libraryDependencies ++= Seq(
   guice,
