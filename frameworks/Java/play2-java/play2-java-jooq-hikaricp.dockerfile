@@ -1,4 +1,4 @@
-FROM hseeberger/scala-sbt:8u242_1.3.8_2.13.1
+FROM sbtscala/scala-sbt:eclipse-temurin-jammy-21.0.1_12_1.9.8_2.13.12
 WORKDIR /play2
 COPY play2-java-jooq-hikaricp .
 

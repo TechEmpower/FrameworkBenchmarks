@@ -1,4 +1,4 @@
-FROM hseeberger/scala-sbt:8u265_1.3.13_2.13.3
+FROM sbtscala/scala-sbt:eclipse-temurin-jammy-21.0.1_12_1.9.8_2.13.12
 WORKDIR /play2
 COPY play2-scala-anorm .
 
