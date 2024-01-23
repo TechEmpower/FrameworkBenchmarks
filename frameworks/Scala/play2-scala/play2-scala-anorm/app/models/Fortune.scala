@@ -1,6 +1,6 @@
 package models
 
-import javax.inject.{Inject, Singleton}
+import jakarta.inject.{Inject, Singleton}
 
 import anorm._
 import anorm.SqlParser._

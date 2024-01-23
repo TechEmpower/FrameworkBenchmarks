@@ -8,7 +8,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import models.Fortune;
 import models.World;

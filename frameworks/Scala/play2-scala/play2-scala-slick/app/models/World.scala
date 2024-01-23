@@ -4,7 +4,7 @@ import play.api.libs.json._
 
 import scala.concurrent.Future
 
-import javax.inject.{Singleton, Inject}
+import jakarta.inject.{Singleton, Inject}
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.db.slick.HasDatabaseConfigProvider
 import slick.jdbc.JdbcProfile

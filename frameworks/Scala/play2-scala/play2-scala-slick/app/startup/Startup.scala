@@ -1,7 +1,7 @@
 package startup
 
 import com.typesafe.config.Config
-import javax.inject._
+import jakarta.inject._
 import play.api.Logger
 
 @Singleton
