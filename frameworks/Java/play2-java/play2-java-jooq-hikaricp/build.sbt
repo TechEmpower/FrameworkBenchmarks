@@ -6,7 +6,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayMinimalJava, PlayNettyS
 
 scalaVersion := "2.13.12"
 
-val jOOQVersion = "3.10.3"
+val jOOQVersion = "3.19.3"
 
 libraryDependencies ++= Seq(
   guice,
