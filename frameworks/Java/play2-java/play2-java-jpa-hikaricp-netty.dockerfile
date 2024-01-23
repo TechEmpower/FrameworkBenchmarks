@@ -2,7 +2,7 @@ FROM sbtscala/scala-sbt:eclipse-temurin-jammy-21.0.1_12_1.9.8_2.13.12
 WORKDIR /play2
 COPY play2-java-jpa-hikaricp .
 
-RUN sed -i 's/.enablePlugins(PlayMinimalJava, PlayNettyServer)/.enablePlugins(PlayMinimalJava, PlayNettyServer).disablePlugins(PlayAkkaHttpServer)/g' build.sbt
+RUN sed -i 's/.enablePlugins(PlayMinimalJava, PlayNettyServer)/.enablePlugins(PlayMinimalJava, PlayNettyServer).disablePlugins(PlayPekkoHttpServer)/g' build.sbt
 
 RUN sbt stage
 
