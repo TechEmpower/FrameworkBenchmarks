@@ -10,7 +10,7 @@ import play.mvc.Http
 class Application @Inject() (cc: ControllerComponents)
 extends AbstractController(cc) {
 
-  implicit final val helloWorldWrites = Json.writes[HelloWorld]
+  implicit final val helloWorldWrites: play.api.libs.json.OWrites[HelloWorld] = Json.writes[HelloWorld]
 
   def getJsonMessage = Action {
     Ok( Json.toJson(HelloWorld()) )

@@ -38,7 +38,7 @@ object WorldJsonHelpers {
   /**
    * Convert a World to Json object
    */
-  implicit val toJson = new Writes[World] {
+  implicit val toJson: Writes[World] = new Writes[World] {
     def writes(w: World): JsValue = {
       Json.obj(
         "id" -> w.id,

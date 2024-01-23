@@ -43,7 +43,7 @@ class WorldDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
 case class World(id: Int, randomNumber: Long)
 
 object WorldJsonHelpers {
-  implicit val toJson = new Writes[World] {
+  implicit val toJson: Writes[World] = new Writes[World] {
     def writes(w: World): JsValue = {
       Json.obj(
         "id" -> w.id,
