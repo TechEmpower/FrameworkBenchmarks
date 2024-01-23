@@ -10,7 +10,7 @@ libraryDependencies ++= Seq(
   guice,
   javaJpa,
   "com.mysql" % "mysql-connector-j" % "8.3.0",
-  "org.hibernate" % "hibernate-core" % "5.4.12.Final"
+  "org.hibernate" % "hibernate-core" % "6.4.2.Final"
 )
 
 PlayKeys.externalizeResourcesExcludes += baseDirectory.value / "conf" / "META-INF" / "persistence.xml"
