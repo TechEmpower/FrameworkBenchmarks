@@ -20,7 +20,7 @@ public class Startup {
         logger.info("");
         logger.info("Configuration");
         logger.info("-------------");
-        logger.info("akka.actor.default-dispatcher.fork-join-executor.parallelism-max: {}", config.getInt("akka.actor.default-dispatcher.fork-join-executor.parallelism-max"));
+        logger.info("pekko.actor.default-dispatcher.fork-join-executor.parallelism-max: {}", config.getInt("pekko.actor.default-dispatcher.fork-join-executor.parallelism-max"));
         logger.info("");
     }
 }

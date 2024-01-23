@@ -1,6 +1,6 @@
 package utils
 
-import akka.actor.ActorSystem
+import org.apache.pekko.actor.ActorSystem
 import java.sql.Connection
 import java.util.concurrent._
 import javax.inject.{Singleton, Inject}
