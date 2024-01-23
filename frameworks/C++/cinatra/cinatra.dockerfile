@@ -5,7 +5,7 @@ ENV CINATRA=/cinatra
 WORKDIR /
 RUN git clone https://github.com/qicosmos/cinatra.git
 WORKDIR $CINATRA
-RUN git checkout 849f76710e25cc638bae18b597593e26e2966085
+RUN git checkout c9bec308e27174c8b7f0f01c92652509f7b47253
 RUN mkdir build && cd build && cmake .. && make -j
 EXPOSE 8090
 CMD ./build/example/benchmark
