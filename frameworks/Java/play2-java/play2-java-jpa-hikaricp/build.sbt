@@ -9,7 +9,7 @@ scalaVersion := "2.13.12"
 libraryDependencies ++= Seq(
   guice,
   javaJpa,
-  "mysql" % "mysql-connector-java" % "8.0.19",
+  "com.mysql" % "mysql-connector-j" % "8.3.0",
   "org.hibernate" % "hibernate-core" % "5.4.12.Final"
 )
 
