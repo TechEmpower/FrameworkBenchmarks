@@ -10,4 +10,4 @@ cinatra is a high-performance, easy-to-use http framework developed in Modern C+
 
 ### PLAINTEXT
 
-http://localhost:8090/
+http://localhost:8090/plaintext
