@@ -9,4 +9,6 @@ RUN pip3 install -r /yocto_http/requirements.txt
 
 WORKDIR /yocto_http
 
+EXPOSE 8080
+
 CMD api_hour -ac hello:Container

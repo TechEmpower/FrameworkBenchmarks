@@ -1,19 +1,39 @@
-FROM elixir:1.9.4
+ARG ELIXIR="1.14.5"
+ARG ERLANG="26.0"
+ARG ALPINE="3.17.3"
 
-WORKDIR /phoenix
+ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR}-erlang-${ERLANG}-alpine-${ALPINE}"
+ARG RUNNER_IMAGE="alpine:${ALPINE}"
+
+FROM ${BUILDER_IMAGE} AS builder
+
+ARG MIX_ENV="prod"
+
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
+COPY mix.exs mix.lock ./
+RUN mix deps.get --force --only prod
 
 COPY config ./config
-COPY lib ./lib
+
+RUN mix deps.compile
+
 COPY priv ./priv
-COPY web ./web
-COPY mix.exs .
-COPY mix.lock .
+COPY lib ./lib
 
-ENV MIX_ENV=prod
+COPY rel ./rel
+RUN mix release --force --path /export
 
-RUN mix local.hex --force
-RUN mix local.rebar --force
-RUN mix deps.get --force --only prod
-RUN mix compile --force
+# start a new build stage so that the final image will only contain
+# the compiled release and other runtime necessities
+FROM ${RUNNER_IMAGE}
 
-CMD ["elixir", "--erl", "+K true +sbwt very_long +swt very_low", "-S", "mix", "phx.server"]
+RUN apk add --no-cache libstdc++ openssl ncurses-libs
+
+COPY --from=builder /export /opt
+
+EXPOSE 8080
+
+ENTRYPOINT ["/opt/bin/hello"]
+CMD ["start"]

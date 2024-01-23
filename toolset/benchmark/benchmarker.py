@@ -33,6 +33,8 @@ class Benchmarker:
         self.results = Results(self)
         self.docker_helper = DockerHelper(self)
 
+        self.last_test = False
+
     ##########################################################################################
     # Public methods
     ##########################################################################################
@@ -58,6 +60,8 @@ class Benchmarker:
         with open(os.path.join(self.results.directory, 'benchmark.log'),
                   'w') as benchmark_log:
             for test in self.tests:
+                if self.tests.index(test) + 1 == len(self.tests):
+                    self.last_test = True
                 log("Running Test: %s" % test.name, border='-')
                 with self.config.quiet_out.enable():
                     if not self.__run_test(test, benchmark_log):
@@ -92,6 +96,14 @@ class Benchmarker:
                 file=file,
                 color=Fore.RED if success else '')
         self.time_logger.log_test_end(log_prefix=prefix, file=file)
+        if self.config.mode == "benchmark":
+            # Sleep for 60 seconds to ensure all host connects are closed
+            log("Clean up: Sleep 60 seconds...", prefix=prefix, file=file)
+            time.sleep(60)
+            # After benchmarks are complete for all test types in this test,
+            # let's clean up leftover test images (techempower/tfb.test.test-name)
+            self.docker_helper.clean()
+
         return success
 
     def __run_test(self, test, benchmark_log):
@@ -295,11 +307,11 @@ class Benchmarker:
         output_file = "{file_name}".format(
             file_name=self.results.get_stats_file(framework_test.name,
                                                   test_type))
-        dstat_string = "dstat -Tafilmprs --aio --fs --ipc --lock --socket --tcp \
+        dool_string = "dool -Tafilmprs --aio --fs --ipc --lock --socket --tcp \
                                       --raw --udp --unix --vm --disk-util \
                                       --rpc --rpcd --output {output_file}".format(
             output_file=output_file)
-        cmd = shlex.split(dstat_string)
+        cmd = shlex.split(dool_string)
         self.subprocess_handle = subprocess.Popen(
             cmd, stdout=FNULL, stderr=subprocess.STDOUT)
 

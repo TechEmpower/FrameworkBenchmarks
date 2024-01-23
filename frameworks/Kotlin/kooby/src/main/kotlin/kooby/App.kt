@@ -6,10 +6,10 @@ import io.jooby.Context
 import io.jooby.ExecutionMode.EVENT_LOOP
 import io.jooby.MediaType.JSON
 import io.jooby.hikari.HikariModule
-import io.jooby.json.JacksonModule
-import io.jooby.require
+import io.jooby.jackson.JacksonModule
+import io.jooby.kt.require
 import io.jooby.rocker.RockerModule
-import io.jooby.runApp
+import io.jooby.kt.runApp
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 import javax.sql.DataSource
@@ -32,6 +32,9 @@ data class Fortune(val id: Int, var message: String)
 fun main(args: Array<String>) {
   runApp(args, EVENT_LOOP) {
 
+    /** Template engine: */
+    install(RockerModule().reuseBuffer(true))
+
     /** JSON: */
     install(JacksonModule())
     val mapper = require(ObjectMapper::class)
@@ -39,9 +42,6 @@ fun main(args: Array<String>) {
     /** Database: */
     install(HikariModule())
     val ds = require(DataSource::class)
-
-    /** Template engine: */
-    install(RockerModule())
 
     get("/plaintext") {
       ctx.send(MESSAGE_BYTES)

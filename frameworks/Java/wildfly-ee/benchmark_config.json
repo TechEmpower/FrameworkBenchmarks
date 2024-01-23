@@ -2,12 +2,12 @@
   "framework": "wildfly-ee",
   "tests": [{
     "default" : {
-      "json_url": "/wildfly-ee/rest/json",
-      "plaintext_url": "/wildfly-ee/rest/plaintext",
-      "db_url": "/wildfly-ee/rest/db",
-      "query_url": "/wildfly-ee/rest/queries?queries=",
-      "fortune_url": "/wildfly-ee/fortunes.xhtml",
-      "update_url": "/wildfly-ee/rest/updates?queries=",
+      "json_url": "/rest/json",
+      "plaintext_url": "/rest/plaintext",
+      "db_url": "/rest/db",
+      "query_url": "/rest/queries?queries=",
+      "fortune_url": "/fortunes.xhtml",
+      "update_url": "/rest/updates?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",

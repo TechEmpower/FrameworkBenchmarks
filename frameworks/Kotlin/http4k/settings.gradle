@@ -1,7 +1,0 @@
-rootProject.name = 'http4k-benchmark'
-include 'core'
-include 'apache'
-include 'jetty'
-include 'ktorcio'
-include 'netty'
-include 'undertow'

@@ -2,8 +2,8 @@ FROM ubuntu:18.04
 
 COPY ./ ./
 
-RUN apt update -yqq && \
-	 apt install -yqq software-properties-common build-essential curl locales wget unzip git \
+RUN apt-get update -yqq && \
+	 apt-get install -yqq software-properties-common build-essential curl locales wget unzip git \
     libmysqlclient-dev libpq-dev \
     libpcre3 libpcre3-dev \
     libssl-dev libcurl4-openssl-dev \
@@ -17,8 +17,8 @@ RUN apt update -yqq && \
     re2c libnuma-dev \
 	 postgresql-server-dev-all libcap2-bin && \
 	 add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
-	 apt update -yqq && \
-	 apt install -yqq gcc-8 g++-8
+	 apt-get update -yqq && \
+	 apt-get install -yqq gcc-8 g++-8
 
 RUN locale-gen en_US.UTF-8
 
@@ -44,7 +44,7 @@ RUN cd mongo-c-driver-1.4.0/ && \
     ./configure --prefix=${IROOT} --libdir=${IROOT} --disable-automatic-init-and-cleanup && \
     make && make install
 
-RUN mkdir -p $ULIB_DOCUMENT_ROOT 
+RUN mkdir -p $ULIB_DOCUMENT_ROOT
 RUN wget -q -O ULib-${ULIB_VERSION}.tar.gz https://github.com/stefanocasazza/ULib/archive/v${ULIB_VERSION}.tar.gz
 RUN tar xf ULib-${ULIB_VERSION}.tar.gz
 
@@ -84,6 +84,8 @@ WORKDIR /ulib
 
 ENV MONGODB_HOST=tfb-database
 ENV UMEMPOOL="96,0,0,97,16417,-14,-20,-18,26"
+
+EXPOSE 8080
 
 CMD setcap cap_sys_nice,cap_sys_resource,cap_net_bind_service,cap_net_raw+eip $IROOT/ULib/bin/userver_tcp && \
     $IROOT/ULib/bin/userver_tcp -c $IROOT/ULib/benchmark.cfg

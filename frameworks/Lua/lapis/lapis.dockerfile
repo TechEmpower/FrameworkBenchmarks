@@ -1,9 +1,9 @@
-FROM buildpack-deps:xenial
+FROM buildpack-deps:focal
 
 ENV LUA_VERSION="5.1"
 ENV LUA_MICRO="5"
 
-RUN apt update -yqq && apt install -yqq unzip
+RUN apt-get update -yqq && apt-get install -yqq unzip
 
 RUN wget https://github.com/LuaDist/lua/archive/$LUA_VERSION.$LUA_MICRO.tar.gz
 RUN tar xf $LUA_VERSION.$LUA_MICRO.tar.gz
@@ -33,7 +33,7 @@ RUN cd $LUAROCKS && \
     ./configure --prefix=$LUA_HOME --with-lua=$LUA_HOME && \
     make --quiet bootstrap
 
-ENV OPENRESTY_VERSION="1.11.2.1"
+ENV OPENRESTY_VERSION="1.19.9.1"
 ENV OPENRESTY=/openresty
 ENV OPENRESTY_HOME=$OPENRESTY-$OPENRESTY_VERSION
 
@@ -53,6 +53,8 @@ WORKDIR /lapis
 
 RUN luarocks install lua-resty-template
 RUN luarocks install lapis
+
+EXPOSE 8080
 
 CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'` && \
     sed -i "s|DBHOSTNAME|$DBIP|g" nginx.conf && \

@@ -1,0 +1,3 @@
+# Production-only server configuration
+debug: false
+jwt_secret: INSECURE_DEFAULT_SECRET

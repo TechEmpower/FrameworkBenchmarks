@@ -1,6 +1,0 @@
-micronaut:
-    application:
-        name: benchmark
-    server:
-        port: 8080
-        serverHeader: Micronaut

@@ -18,6 +18,13 @@ namespace Benchmarks.Controllers
             return View("Fortunes", await db.LoadFortunesRows());
         }
 
+        [HttpGet("dapper")]
+        public async Task<IActionResult> Dapper()
+        {
+            var db = HttpContext.RequestServices.GetRequiredService<DapperDb>();
+            return View("Fortunes", await db.LoadFortunesRows());
+        }
+
         [HttpGet("ef")]
         public async Task<IActionResult> Ef()
         {

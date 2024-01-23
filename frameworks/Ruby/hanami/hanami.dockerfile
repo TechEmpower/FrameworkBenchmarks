@@ -1,9 +1,20 @@
-FROM ruby:2.4
+FROM ruby:3.3
 
-ADD ./ /hanami
+ENV BUNDLE_FORCE_RUBY_PLATFORM=true
+ENV RUBY_YJIT_ENABLE=1
 
 WORKDIR /hanami
 
-RUN bundle install --jobs=4 --gemfile=/hanami/Gemfile --path=/hanami/hanami/bundle
+COPY Gemfile  ./
 
-CMD DB_HOST=tfb-database bundle exec puma -t 8:32 -w 8 --preload -b tcp://0.0.0.0:8080 -e production
+RUN bundle install --jobs=8
+
+COPY . .
+
+EXPOSE 8080
+
+ENV HANAMI_ENV=production
+ENV HANAMI_PORT=8080
+ENV DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world
+
+CMD bundle exec hanami server

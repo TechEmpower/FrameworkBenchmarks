@@ -1,0 +1,15 @@
+[framework]
+name = "mark"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "workerman"
+webserver = "None"
+versus = "workerman"

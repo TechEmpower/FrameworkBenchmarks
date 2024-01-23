@@ -19,7 +19,7 @@ For mongoDB access, spring-data-mongodb with reactive support is used. See [Mong
 
 ### JSON Serialization Test
 
-* [JSON test source](src/main/java/benchmark/web/WebfluxRouterr.java)
+* [JSON test source](src/main/java/benchmark/web/WebfluxRouter.java)
 
 ### Database Query Test
 

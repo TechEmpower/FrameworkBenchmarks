@@ -1,0 +1,3 @@
+import Prelude
+:def source readFile
+:source build/ihp-lib/applicationGhciConfig

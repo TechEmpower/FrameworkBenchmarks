@@ -19,7 +19,6 @@
 
 #include <assert.h>
 #include <ctype.h>
-#include <errno.h>
 #include <h2o.h>
 #include <mustache.h>
 #include <stdbool.h>
@@ -39,10 +38,9 @@
 #include "thread.h"
 #include "utility.h"
 
-#define ID_FIELD_NAME "id"
 #define FORTUNE_TABLE_NAME "Fortune"
 #define FORTUNE_QUERY "SELECT * FROM " FORTUNE_TABLE_NAME ";"
-#define MAX_IOVEC 64
+#define ID_FIELD_NAME "id"
 #define MESSAGE_FIELD_NAME "message"
 #define NEW_FORTUNE_ID "0"
 #define NEW_FORTUNE_MESSAGE "Additional fortune added at request time."
@@ -55,20 +53,10 @@ typedef struct {
 } fortune_t;
 
 typedef struct {
-	list_t l;
-	size_t iovcnt;
-	size_t max_iovcnt;
-	h2o_iovec_t iov[];
-} iovec_list_t;
-
-typedef struct {
-	PGresult *data;
+	h2o_buffer_t *buffer;
 	const fortune_t *fortune_iter;
-	list_t *iovec_list;
-	iovec_list_t *iovec_list_iter;
 	h2o_req_t *req;
 	list_t *result;
-	size_t content_length;
 	size_t num_result;
 	bool cleanup;
 	db_query_param_t param;
@@ -87,7 +75,6 @@ static uintmax_t add_iovec(mustache_api_t *api,
 static void cleanup_fortunes(fortune_ctx_t *fortune_ctx);
 static void cleanup_request(void *data);
 static int compare_fortunes(const list_t *x, const list_t *y);
-static void complete_fortunes(struct st_h2o_generator_t *self, h2o_req_t *req);
 static int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req);
 static void on_fortune_error(db_query_param_t *param, const char *error_string);
 static result_return_t on_fortune_result(db_query_param_t *param, PGresult *result);
@@ -121,29 +108,15 @@ static uintmax_t add_iovec(mustache_api_t *api,
 	IGNORE_FUNCTION_PARAMETER(api);
 
 	fortune_ctx_t * const fortune_ctx = userdata;
-	iovec_list_t *iovec_list = fortune_ctx->iovec_list_iter;
 
-	if (iovec_list->iovcnt >= iovec_list->max_iovcnt) {
-		const size_t sz = offsetof(iovec_list_t, iov) + MAX_IOVEC * sizeof(h2o_iovec_t);
-
-		iovec_list = h2o_mem_alloc_pool(&fortune_ctx->req->pool, sz);
-		memset(iovec_list, 0, offsetof(iovec_list_t, iov));
-		iovec_list->max_iovcnt = MAX_IOVEC;
-		fortune_ctx->iovec_list_iter->l.next = &iovec_list->l;
-		fortune_ctx->iovec_list_iter = iovec_list;
-	}
-
-	memset(iovec_list->iov + iovec_list->iovcnt, 0, sizeof(*iovec_list->iov));
-	iovec_list->iov[iovec_list->iovcnt].base = (char *) buffer;
-	iovec_list->iov[iovec_list->iovcnt++].len = buffer_size;
-	fortune_ctx->content_length += buffer_size;
+	h2o_buffer_append(&fortune_ctx->buffer, buffer, buffer_size);
 	return 1;
 }
 
 static void cleanup_fortunes(fortune_ctx_t *fortune_ctx)
 {
-	if (fortune_ctx->data)
-		PQclear(fortune_ctx->data);
+	if (fortune_ctx->buffer)
+		h2o_buffer_dispose(&fortune_ctx->buffer);
 
 	free(fortune_ctx);
 }
@@ -171,22 +144,6 @@ static int compare_fortunes(const list_t *x, const list_t *y)
 	return ret;
 }
 
-static void complete_fortunes(struct st_h2o_generator_t *self, h2o_req_t *req)
-{
-	fortune_ctx_t * const fortune_ctx = H2O_STRUCT_FROM_MEMBER(fortune_ctx_t, generator, self);
-	iovec_list_t * const iovec_list = H2O_STRUCT_FROM_MEMBER(iovec_list_t,
-	                                                         l,
-	                                                         fortune_ctx->iovec_list);
-
-	fortune_ctx->iovec_list = iovec_list->l.next;
-
-	const h2o_send_state_t state = fortune_ctx->iovec_list ?
-	                               H2O_SEND_STATE_IN_PROGRESS :
-	                               H2O_SEND_STATE_FINAL;
-
-	h2o_send(req, iovec_list->iov, iovec_list->iovcnt, state);
-}
-
 static int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req)
 {
 	IGNORE_FUNCTION_PARAMETER(self);
@@ -195,7 +152,7 @@ static int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req)
 	                                                      event_loop.h2o_ctx,
 	                                                      req->conn->ctx);
 	fortune_ctx_t * const fortune_ctx = h2o_mem_alloc(sizeof(*fortune_ctx));
-	fortune_t * const fortune = h2o_mem_alloc_pool(&req->pool, sizeof(*fortune));
+	fortune_t * const fortune = h2o_mem_alloc_pool(&req->pool, fortune_t, 1);
 	fortune_ctx_t ** const p = h2o_mem_alloc_shared(&req->pool, sizeof(*p), cleanup_request);
 
 	*p = fortune_ctx;
@@ -205,7 +162,6 @@ static int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req)
 	fortune->message.base = NEW_FORTUNE_MESSAGE;
 	fortune->message.len = sizeof(NEW_FORTUNE_MESSAGE) - 1;
 	memset(fortune_ctx, 0, sizeof(*fortune_ctx));
-	fortune_ctx->generator.proceed = complete_fortunes;
 	fortune_ctx->num_result = 1;
 	fortune_ctx->param.command = FORTUNE_TABLE_NAME;
 	fortune_ctx->param.on_error = on_fortune_error;
@@ -215,7 +171,7 @@ static int fortunes(struct st_h2o_handler_t *self, h2o_req_t *req)
 	fortune_ctx->req = req;
 	fortune_ctx->result = &fortune->l;
 
-	if (execute_query(ctx, &fortune_ctx->param)) {
+	if (execute_database_query(&ctx->request_handler_data.hello_world_db, &fortune_ctx->param)) {
 		fortune_ctx->cleanup = true;
 		send_service_unavailable_error(DB_REQ_ERROR, req);
 	}
@@ -241,7 +197,6 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 	const bool cleanup = fortune_ctx->cleanup;
 
 	fortune_ctx->cleanup = true;
-	fortune_ctx->data = result;
 
 	if (cleanup)
 		cleanup_fortunes(fortune_ctx);
@@ -252,7 +207,8 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 
 		for (size_t i = 0; i < num_rows; i++) {
 			fortune_t * const fortune = h2o_mem_alloc_pool(&fortune_ctx->req->pool,
-			                                               sizeof(*fortune));
+			                                               fortune_t,
+			                                               1);
 			char * const id = PQgetvalue(result, i, 0);
 			char * const message = PQgetvalue(result, i, 1);
 			const size_t id_len = PQgetlength(result, i, 0);
@@ -276,27 +232,22 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 		thread_context_t * const ctx = H2O_STRUCT_FROM_MEMBER(thread_context_t,
 		                                                      event_loop.h2o_ctx,
 		                                                      fortune_ctx->req->conn->ctx);
-		const size_t iovcnt = MIN(MAX_IOVEC, fortune_ctx->num_result * 5 + 2);
-		const size_t sz = offsetof(iovec_list_t, iov) + iovcnt * sizeof(h2o_iovec_t);
-		iovec_list_t * const iovec_list = h2o_mem_alloc_pool(&fortune_ctx->req->pool, sz);
 
-		memset(iovec_list, 0, offsetof(iovec_list_t, iov));
-		iovec_list->max_iovcnt = iovcnt;
-		fortune_ctx->iovec_list_iter = iovec_list;
+		h2o_buffer_init(&fortune_ctx->buffer,
+		                &ctx->global_thread_data->global_data->buffer_prototype);
 		fortune_ctx->result = sort_list(fortune_ctx->result, compare_fortunes);
 
-		if (mustache_render(&api,
-		                    fortune_ctx,
-		                    ctx->global_data->request_handler_data.fortunes_template)) {
-			fortune_ctx->iovec_list = iovec_list->l.next;
-			set_default_response_param(HTML, fortune_ctx->content_length, fortune_ctx->req);
+		struct mustache_token_t * const fortunes_template =
+			ctx->global_thread_data->global_data->request_handler_data.fortunes_template;
+
+		if (mustache_render(&api, fortune_ctx, fortunes_template)) {
+			set_default_response_param(HTML, fortune_ctx->buffer->size, fortune_ctx->req);
 			h2o_start_response(fortune_ctx->req, &fortune_ctx->generator);
 
-			const h2o_send_state_t state = fortune_ctx->iovec_list ?
-			                               H2O_SEND_STATE_IN_PROGRESS :
-			                               H2O_SEND_STATE_FINAL;
+			h2o_iovec_t body = {.base = fortune_ctx->buffer->bytes,
+			                    .len = fortune_ctx->buffer->size};
 
-			h2o_send(fortune_ctx->req, iovec_list->iov, iovec_list->iovcnt, state);
+			h2o_send(fortune_ctx->req, &body, 1, H2O_SEND_STATE_FINAL);
 		}
 		else
 			send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, fortune_ctx->req);
@@ -306,6 +257,7 @@ static result_return_t on_fortune_result(db_query_param_t *param, PGresult *resu
 		send_error(BAD_GATEWAY, DB_ERROR, fortune_ctx->req);
 	}
 
+	PQclear(result);
 	return DONE;
 }
 
@@ -423,25 +375,29 @@ static void template_error(mustache_api_t *api,
 	print_error(template_input->name, lineno, "mustache_compile", error);
 }
 
-void cleanup_fortunes_handler(global_data_t *global_data)
+void cleanup_fortunes_handler(request_handler_data_t *data)
 {
-	if (global_data->request_handler_data.fortunes_template) {
+	if (data->fortunes_template) {
 		mustache_api_t api = {.freedata = NULL};
 
-		mustache_free(&api, global_data->request_handler_data.fortunes_template);
+		mustache_free(&api, data->fortunes_template);
 	}
 }
 
 void initialize_fortunes_handler(const config_t *config,
-                                 global_data_t *global_data,
                                  h2o_hostconf_t *hostconf,
-                                 h2o_access_log_filehandle_t *log_handle)
+                                 h2o_access_log_filehandle_t *log_handle,
+                                 request_handler_data_t *data)
 {
 	mustache_template_t *template = NULL;
-	const size_t template_path_prefix_len = strlen(config->template_path);
+	const size_t template_path_prefix_len = config->template_path ?
+	                                        strlen(config->template_path) :
+	                                        0;
 	char path[template_path_prefix_len + sizeof(TEMPLATE_PATH_SUFFIX)];
 
-	memcpy(path, config->template_path, template_path_prefix_len);
+	if (template_path_prefix_len)
+		memcpy(path, config->template_path, template_path_prefix_len);
+
 	memcpy(path + template_path_prefix_len, TEMPLATE_PATH_SUFFIX, sizeof(TEMPLATE_PATH_SUFFIX));
 
 	template_input_t template_input = {.input = fopen(path, "rb"), .name = path};
@@ -466,10 +422,10 @@ void initialize_fortunes_handler(const config_t *config,
 		STANDARD_ERROR("fopen");
 
 	if (template) {
-		global_data->request_handler_data.fortunes_template = template;
+		data->fortunes_template = template;
 		add_prepared_statement(FORTUNE_TABLE_NAME,
 		                       FORTUNE_QUERY,
-		                       &global_data->prepared_statements);
+		                       &data->prepared_statements);
 		register_request_handler("/fortunes", fortunes, hostconf, log_handle);
 	}
 }

@@ -1,15 +1,17 @@
 FROM buildpack-deps:xenial
 
-RUN apt update -yqq && apt install -yqq software-properties-common unzip cmake
+RUN apt-get update -yqq && apt-get install -yqq software-properties-common unzip cmake
 
-RUN apt install -yqq g++-4.8 libjson0-dev
+RUN apt-get install -yqq g++-4.8 libjson0-dev
 RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
 
 ENV POCO_VERSION 1.6.1
 ENV POCO_HOME /poco
 
 WORKDIR ${POCO_HOME}
-RUN curl -sL http://pocoproject.org/releases/poco-${POCO_VERSION}/poco-${POCO_VERSION}-all.tar.gz | tar xz --strip-components=1
+RUN wget https://pocoproject.org/releases/poco-${POCO_VERSION}/poco-${POCO_VERSION}-all.zip
+RUN unzip poco-${POCO_VERSION}-all.zip
+RUN mv ./poco-${POCO_VERSION}-all/* ./
 
 RUN ./configure --no-tests --no-samples
 RUN make --quiet PageCompiler-libexec XML-libexec JSON-libexec
@@ -34,5 +36,7 @@ RUN g++-4.8 \
     -lPocoFoundation \
     -lPocoXML \
     -lPocoJSON
+
+EXPOSE 8080
 
 CMD ./poco 8080 $(nproc)

@@ -1,0 +1,31 @@
+(
+    creation_location: (
+        line: 10,
+        column: 18,
+        file: "blueprint/src/lib.rs",
+    ),
+    constructors: [],
+    routes: [
+        (
+            path: "/plaintext",
+            method_guard: (
+                allowed_methods: [
+                    "GET",
+                ],
+            ),
+            request_handler: (
+                callable: (
+                    registered_at: "tfb-pavex-bp",
+                    import_path: "crate :: plaintext",
+                ),
+                location: (
+                    line: 11,
+                    column: 8,
+                    file: "blueprint/src/lib.rs",
+                ),
+            ),
+            error_handler: None,
+        ),
+    ],
+    nested_blueprints: [],
+)

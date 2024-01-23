@@ -40,7 +40,7 @@ class UpdateRoute(wr: WorldRepository, sd: ExecutionContextExecutor) {
 
   def route() = {
     path("updates") {
-      parameter('queries.?) { pn =>
+      parameter("queries".?) { pn: Option[String] =>
         complete(source(parse(pn)))
       }
     }

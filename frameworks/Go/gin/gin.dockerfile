@@ -1,14 +1,12 @@
-FROM golang:1.12
+FROM docker.io/golang:1.19
 
-ADD ./ /gin
 WORKDIR /gin
+COPY ./gin-std /gin
 
-RUN mkdir bin
-ENV GOPATH /gin
-ENV PATH ${GOPATH}/bin:${PATH}
+RUN go mod download
 
-RUN go get github.com/gin-gonic/gin
-RUN go get github.com/go-sql-driver/mysql
+RUN GOAMD64=v3 go build -o hello
 
-RUN go build -o hello hello.go
+EXPOSE 8080
+
 CMD ./hello

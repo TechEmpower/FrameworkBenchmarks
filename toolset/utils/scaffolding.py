@@ -45,7 +45,7 @@ class Scaffolding:
         self.name = self.display_name.lower()
 
     def __prompt_display_name(self):
-        self.display_name = raw_input("Name: ").strip()
+        self.display_name = input("Name: ").strip()
 
         found = False
         for framework in self.benchmarker.metadata.gather_frameworks():
@@ -70,7 +70,7 @@ class Scaffolding:
             self.__prompt_language()
 
     def __prompt_language(self):
-        self.language = raw_input("Language: ").strip()
+        self.language = input("Language: ").strip()
 
         known_languages = self.benchmarker.metadata.gather_languages()
         language = None
@@ -107,7 +107,7 @@ class Scaffolding:
         return self.language
 
     def __prompt_confirm_new_language(self):
-        self.confirm_new_lang = raw_input("Create New Language '%s' (y/n): " %
+        self.confirm_new_lang = input("Create New Language '%s' (y/n): " %
                                           self.language).strip().lower()
         return self.confirm_new_lang == 'y' or self.confirm_new_lang == 'n'
 
@@ -132,7 +132,7 @@ class Scaffolding:
             valid = self.__prompt_approach()
 
     def __prompt_approach(self):
-        self.approach = raw_input("Approach [1/2]: ").strip()
+        self.approach = input("Approach [1/2]: ").strip()
         if self.approach == '1':
             self.approach = 'Realistic'
         if self.approach == '2':
@@ -166,7 +166,7 @@ class Scaffolding:
             self.__gather_platform()
 
     def __prompt_classification(self):
-        self.classification = raw_input("Classification [1/2/3]: ").strip()
+        self.classification = input("Classification [1/2/3]: ").strip()
         if self.classification == '1':
             self.classification = 'Fullstack'
         if self.classification == '2':
@@ -186,14 +186,14 @@ class Scaffolding:
   fundamentals.
 
   Not all frameworks have a platform and if your programming language provides
-  much of that by which we define a platform, leave black.
+  much of that by which we define a platform, leave blank.
 
   Example: Servlet, Wai, .NET
     """)
         self.__prompt_platform()
 
     def __prompt_platform(self):
-        self.platform = raw_input("Platform (optional): ").strip()
+        self.platform = input("Platform (optional): ").strip()
         if self.platform == '':
             self.platform = 'None'
 
@@ -218,7 +218,7 @@ class Scaffolding:
             valid = self.__prompt_database(prompt, options)
 
     def __prompt_database(self, prompt, options):
-        self.database = raw_input(prompt).strip()
+        self.database = input(prompt).strip()
         if 0 < int(self.database) <= len(options):
             self.database = options[int(self.database) - 1]
             return True
@@ -246,7 +246,7 @@ class Scaffolding:
             valid = self.__prompt_orm()
 
     def __prompt_orm(self):
-        self.orm = raw_input("ORM [1/2/3]: ").strip()
+        self.orm = input("ORM [1/2/3]: ").strip()
         if self.orm == '1':
             self.orm = 'Full'
         if self.orm == '2':
@@ -269,7 +269,7 @@ class Scaffolding:
         self.__prompt_webserver()
 
     def __prompt_webserver(self):
-        self.webserver = raw_input("Webserver (optional): ").strip()
+        self.webserver = input("Webserver (optional): ").strip()
         if self.webserver == '':
             self.webserver = 'None'
 
@@ -287,7 +287,7 @@ class Scaffolding:
         self.__prompt_versus()
 
     def __prompt_versus(self):
-        self.versus = raw_input("Versus (optional): ").strip()
+        self.versus = input("Versus (optional): ").strip()
         if self.versus == '':
             self.versus = 'None'
 
@@ -319,7 +319,7 @@ class Scaffolding:
             print('Aborting')
 
     def __prompt_confirmation(self):
-        self.confirmation = raw_input("Initialize [y/n]: ").strip().lower()
+        self.confirmation = input("Initialize [y/n]: ").strip().lower()
         return self.confirmation == 'y' or self.confirmation == 'n'
 
     def __build_scaffolding(self):

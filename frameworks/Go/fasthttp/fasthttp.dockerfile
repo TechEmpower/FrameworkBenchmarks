@@ -1,16 +1,12 @@
-FROM golang:1.13
+FROM docker.io/golang:1.19
 
 WORKDIR /fasthttp
 
 COPY ./src /fasthttp
 
-RUN go get github.com/valyala/quicktemplate/qtc
-RUN go get -u github.com/mailru/easyjson/...
-RUN go mod download
+RUN go generate -x ./templates
+RUN GOAMD64=v3 go build -ldflags="-s -w" -o app .
 
-RUN go generate ./templates
-# RUN easyjson -pkg
-# RUN easyjson -all src/common/common.go
-RUN go build -o app -gcflags='-l=4' -ldflags="-s -w" ./server-mysql
+EXPOSE 8080
 
 CMD ./app

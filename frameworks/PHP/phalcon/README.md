@@ -23,11 +23,11 @@ Uses Phalcons template engine 'Volt'
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Phalcon 3.3.1](http://phalconphp.com/)
-* [PHP Version 7.2.2](http://www.php.net/) with FPM, OPcache and Phalcon extension
-* [nginx 1.12.2](http://nginx.org/)
-* [MySQL 5.7.21](https://dev.mysql.com/)
-* [MongoDB 3.6](https://mongodb.org/)
+* [Phalcon 4](http://phalconphp.com/)
+* [PHP Version 7.4](http://www.php.net/) with FPM, OPcache and Phalcon extension
+* [nginx 1.16](http://nginx.org/)
+* [MySQL 8](https://dev.mysql.com/)
+* [MongoDB 4](https://mongodb.org/)
 
 ## Test URLs
 ### JSON Encoding Test

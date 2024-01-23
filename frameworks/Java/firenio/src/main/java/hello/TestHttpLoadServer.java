@@ -2,14 +2,13 @@ package hello;
 
 import com.firenio.Options;
 import com.firenio.buffer.ByteBuf;
+import com.firenio.codec.http11.HttpAttachment;
 import com.firenio.codec.http11.HttpCodec;
 import com.firenio.codec.http11.HttpConnection;
 import com.firenio.codec.http11.HttpContentType;
 import com.firenio.codec.http11.HttpDateUtil;
 import com.firenio.codec.http11.HttpFrame;
 import com.firenio.codec.http11.HttpStatus;
-import com.firenio.collection.AttributeKey;
-import com.firenio.collection.AttributeMap;
 import com.firenio.collection.ByteTree;
 import com.firenio.common.Util;
 import com.firenio.component.Channel;
@@ -19,7 +18,6 @@ import com.firenio.component.FastThreadLocal;
 import com.firenio.component.Frame;
 import com.firenio.component.IoEventHandle;
 import com.firenio.component.NioEventLoopGroup;
-import com.firenio.component.ProtocolCodec;
 import com.firenio.component.SocketOptions;
 import com.firenio.log.DebugUtil;
 import com.firenio.log.LoggerFactory;
@@ -29,8 +27,8 @@ import com.jsoniter.spi.Slice;
 
 public class TestHttpLoadServer {
 
-    static final AttributeKey<ByteBuf> JSON_BUF         = newByteBufKey();
-    static final byte[]                STATIC_PLAINTEXT = "Hello, World!".getBytes();
+    static final int    JSON_BUF         = FastThreadLocal.nextAttributeKey();
+    static final byte[] STATIC_PLAINTEXT = "Hello, World!".getBytes();
 
     static class Message {
 
@@ -46,13 +44,17 @@ public class TestHttpLoadServer {
 
     }
 
+    static class MyHttpAttachment extends HttpAttachment {
+
+        ByteBuf write_buf;
+
+    }
+
     public static void main(String[] args) throws Exception {
         boolean lite      = Util.getBooleanProperty("lite");
         boolean read      = Util.getBooleanProperty("read");
         boolean pool      = Util.getBooleanProperty("pool");
         boolean epoll     = Util.getBooleanProperty("epoll");
-        boolean direct    = Util.getBooleanProperty("direct");
-        boolean inline    = Util.getBooleanProperty("inline");
         boolean nodelay   = Util.getBooleanProperty("nodelay");
         boolean cachedurl = Util.getBooleanProperty("cachedurl");
         boolean unsafeBuf = Util.getBooleanProperty("unsafeBuf");
@@ -66,6 +68,7 @@ public class TestHttpLoadServer {
         Options.setChannelReadFirst(read);
         Options.setEnableEpoll(epoll);
         Options.setEnableUnsafeBuf(unsafeBuf);
+        Options.setBufFastIndexOf(true);
         DebugUtil.info("lite: {}", lite);
         DebugUtil.info("read: {}", read);
         DebugUtil.info("pool: {}", pool);
@@ -73,12 +76,29 @@ public class TestHttpLoadServer {
         DebugUtil.info("epoll: {}", epoll);
         DebugUtil.info("frame: {}", frame);
         DebugUtil.info("level: {}", level);
-        DebugUtil.info("direct: {}", direct);
-        DebugUtil.info("inline: {}", inline);
         DebugUtil.info("readBuf: {}", readBuf);
         DebugUtil.info("nodelay: {}", nodelay);
         DebugUtil.info("cachedurl: {}", cachedurl);
         DebugUtil.info("unsafeBuf: {}", unsafeBuf);
+
+        int      processors = Util.availableProcessors() * core;
+        int      fcache     = 1024 * 16;
+        int      pool_unit  = 256 * 16;
+        int      pool_cap   = 1024 * 8 * pool_unit * processors;
+        String   server     = "tfb";
+        ByteTree cachedUrls = null;
+        if (cachedurl) {
+            cachedUrls = new ByteTree();
+            cachedUrls.add("/plaintext");
+            cachedUrls.add("/json");
+        }
+        HttpCodec codec = new HttpCodec(server, fcache, lite, cachedUrls) {
+
+            @Override
+            protected Object newAttachment() {
+                return new MyHttpAttachment();
+            }
+        };
 
         IoEventHandle eventHandle = new IoEventHandle() {
 
@@ -87,11 +107,29 @@ public class TestHttpLoadServer {
                 HttpFrame f      = (HttpFrame) frame;
                 String    action = f.getRequestURL();
                 if ("/plaintext".equals(action)) {
+                    MyHttpAttachment att = (MyHttpAttachment) ch.getAttachment();
+                    ByteBuf          buf = att.write_buf;
+                    if (buf == null) {
+                        buf = ch.allocate();
+                        ByteBuf temp = buf;
+                        att.write_buf = buf;
+                        ch.getEventLoop().submit(() -> {
+                            ch.writeAndFlush(temp);
+                            att.write_buf = null;
+                        });
+                    }
                     f.setContent(STATIC_PLAINTEXT);
                     f.setContentType(HttpContentType.text_plain);
                     f.setConnection(HttpConnection.NONE);
+                    f.setDate(HttpDateUtil.getDateLine());
+                    codec.encode(ch, buf, f);
+                    codec.release(ch.getEventLoop(), f);
                 } else if ("/json".equals(action)) {
-                    ByteBuf    temp   = FastThreadLocal.get().getAttributeUnsafe(JSON_BUF);
+                    ByteBuf temp = FastThreadLocal.get().getAttribute(JSON_BUF);
+                    if (temp == null) {
+                        temp = ByteBuf.heap(0);
+                        FastThreadLocal.get().setAttribute(JSON_BUF, temp);
+                    }
                     JsonStream stream = JsonStreamPool.borrowJsonStream();
                     try {
                         stream.reset(null);
@@ -107,34 +145,25 @@ public class TestHttpLoadServer {
                     } finally {
                         JsonStreamPool.returnJsonStream(stream);
                     }
-                    return;
                 } else {
                     System.err.println("404");
                     f.setString("404,page not found!", ch);
                     f.setContentType(HttpContentType.text_plain);
                     f.setStatus(HttpStatus.C404);
+                    f.setDate(HttpDateUtil.getDateLine());
+                    ch.writeAndFlush(f);
+                    ch.release(f);
                 }
-                f.setDate(HttpDateUtil.getDateLine());
-                ch.writeAndFlush(f);
-                ch.release(f);
             }
 
         };
 
-        int fcache    = 1024 * 16;
-        int pool_cap  = 1024 * 128;
-        int pool_unit = 256;
-        if (inline) {
-            pool_cap = 1024 * 8;
-            pool_unit = 256 * 16;
-        }
         HttpDateUtil.start();
         NioEventLoopGroup group   = new NioEventLoopGroup();
         ChannelAcceptor   context = new ChannelAcceptor(group, 8080);
-        group.setMemoryPoolCapacity(pool_cap);
-        group.setEnableMemoryPoolDirect(direct);
+        group.setMemoryCapacity(pool_cap);
         group.setEnableMemoryPool(pool);
-        group.setMemoryPoolUnit(pool_unit);
+        group.setMemoryUnit(pool_unit);
         group.setWriteBuffers(32);
         group.setChannelReadBuffer(1024 * readBuf);
         group.setEventLoopSize(Util.availableProcessors() * core);
@@ -149,19 +178,10 @@ public class TestHttpLoadServer {
                 }
             });
         }
-        ByteTree cachedUrls = null;
-        if (cachedurl) {
-            cachedUrls = new ByteTree();
-            cachedUrls.add("/plaintext");
-            cachedUrls.add("/json");
-        }
-        context.addProtocolCodec(new HttpCodec("firenio", fcache, lite, inline, cachedUrls));
+        context.addProtocolCodec(codec);
         context.setIoEventHandle(eventHandle);
         context.bind(1024 * 8);
     }
 
-    static AttributeKey<ByteBuf> newByteBufKey() {
-        return FastThreadLocal.valueOfKey("JSON_BUF", (AttributeMap map, int key) -> map.setAttribute(key, ByteBuf.heap(0)));
-    }
 
 }

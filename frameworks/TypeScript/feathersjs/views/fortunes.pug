@@ -1,0 +1,13 @@
+doctype html
+html
+  head
+    title Fortunes
+  body
+    table
+      tr
+        th id
+        th message
+      each fortune in fortunes
+        tr
+          td #{fortune.id}
+          td #{fortune.message}

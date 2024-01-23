@@ -3,7 +3,7 @@ defmodule FrameworkBenchmarks.Handlers.JSON do
   This is the handle for the /json route
   """
   def handle(conn) do
-    {:ok, json} = Eljiffy.encode(%{message: "Hello, World!"})
+    {:ok, json} = Jason.encode(%{message: "Hello, World!"})
 
     conn
     |> Plug.Conn.put_resp_content_type("application/json")

@@ -12,15 +12,12 @@ comparing a variety of web platforms.
 
 The tests will be run with:
 
-* [Ruby 2.4](http://www.ruby-lang.org)
-* [JRuby 9.1](http://jruby.org)\*
-* [Rubinius 3](https://rubinius.com)\*
-* [Puma 3](http://puma.io)
-* [Passenger 5](https://www.phusionpassenger.com)
-* [Unicorn 5](https://bogomips.org/unicorn/)
-* [TorqueBox 4.0](http://torquebox.org)\*
-* [Sinatra 2](http://www.sinatrarb.com)
-* [ActiveRecord 5](https://github.com/rails/rails/tree/master/activerecord)
+* [Ruby 3.3](http://www.ruby-lang.org)
+* [Puma 6](http://puma.io)
+* [Passenger 6](https://www.phusionpassenger.com)
+* [Unicorn 6](https://bogomips.org/unicorn/)
+* [Sinatra 3](http://www.sinatrarb.com)
+* [ActiveRecord 7](https://github.com/rails/rails/tree/master/activerecord)
 * [MySQL 5.5](https://www.mysql.com)
 * [Postgres 9.3](https://www.postgresql.org)
 

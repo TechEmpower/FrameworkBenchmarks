@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fortunes</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>id</th>
+        <th>message</th>
+    </tr>
+    #foreach($i in $fortunes)
+        <tr>
+            <td>${i.id}</td>
+            <td>${i.message}</td>
+        </tr>
+    #end
+</table>
+${text}
+</body>
+</html>

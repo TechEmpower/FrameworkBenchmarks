@@ -1,4 +1,4 @@
-FROM node:12.3.1-slim
+FROM node:18.12.1-slim
 
 COPY ./ ./
 

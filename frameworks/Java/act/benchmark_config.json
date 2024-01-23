@@ -57,7 +57,8 @@
       "database_os": "Linux",
       "display_name": "act-hibernate-pgsql-rythm",
       "notes": "",
-      "versus": "undertow-postgresql"
+      "versus": "undertow-postgresql",
+      "tags": ["broken"]
     },
     "hibernate-mysql": {
       "db_url": "/db",
@@ -78,7 +79,8 @@
       "database_os": "Linux",
       "display_name": "act-hibernate-mysql",
       "notes": "",
-      "versus": "undertow-mysql"
+      "versus": "undertow-mysql",
+      "tags": ["broken"]
     },
     "hibernate-mysql-rythm": {
       "fortune_url": "/fortunes",
@@ -96,7 +98,8 @@
       "database_os": "Linux",
       "display_name": "act-hibernate-mysql-rythm",
       "notes": "",
-      "versus": "undertow-mysql"
+      "versus": "undertow-mysql",
+      "tags": ["broken"]
     },
     "eclipselink-pgsql": {
       "db_url": "/db",
@@ -135,7 +138,8 @@
       "database_os": "Linux",
       "display_name": "act-eclipselink-pgsql-rythm",
       "notes": "",
-      "versus": "undertow-postgresql"
+      "versus": "undertow-postgresql",
+      "tags": ["broken"]
     },
     "eclipselink-mysql": {
       "db_url": "/db",
@@ -174,7 +178,8 @@
       "database_os": "Linux",
       "display_name": "act-eclipselink-mysql-rythm",
       "notes": "",
-      "versus": "undertow-mysql"
+      "versus": "undertow-mysql",
+      "tags": ["broken"]
     },
     "morphia-mongo": {
       "db_url": "/db",
@@ -195,7 +200,8 @@
       "database_os": "Linux",
       "display_name": "act-morphia-mongo",
       "notes": "",
-      "versus": "undertow-mongodb"
+      "versus": "undertow-mongodb",
+      "tags": ["broken"]
     },
     "morphia-mongo-rythm": {
       "fortune_url": "/fortunes",
@@ -213,7 +219,8 @@
       "database_os": "Linux",
       "display_name": "act-morphia-mongo-rythm",
       "notes": "",
-      "versus": "undertow-mongodb"
+      "versus": "undertow-mongodb",
+      "tags": ["broken"]
     }
   }]
 }

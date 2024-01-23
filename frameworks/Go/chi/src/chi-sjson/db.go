@@ -1,47 +1,52 @@
 package main
 
 import (
-	"flag"
+	"fmt"
 	"log"
+	"runtime"
 
-	"github.com/jackc/pgx"
+	"database/sql"
+
+	_ "github.com/go-sql-driver/mysql"
+)
+
+const (
+	// Database
+	worldSelect        = "SELECT id, randomNumber FROM World WHERE id = ?"
+	worldUpdate        = "UPDATE World SET randomNumber = ? WHERE id = ?"
+	fortuneSelect      = "SELECT id, message FROM Fortune;"
+	worldRowCount      = 10000
+	maxConnectionCount = 256
 )
 
 var (
-	defaultDB *pgx.ConnPool
+	// Database
+	worldStatement   *sql.Stmt
+	fortuneStatement *sql.Stmt
+	updateStatement  *sql.Stmt
 )
 
-func initDBConnection(pgURL string) {
-	config, err := pgx.ParseConnectionString(pgURL)
-	if err != nil {
-		flag.PrintDefaults()
-		log.Fatalf("Error parsing db URL: %v", err)
-	}
+func init() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
 
-	connPoolConfig := pgx.ConnPoolConfig{
-		ConnConfig:     config,
-		MaxConnections: maxConnectionCount,
-	}
+	dsn := "benchmarkdbuser:benchmarkdbpass@tcp(%s:3306)/hello_world"
+	dbhost := "tfb-database"
 
-	defaultDB, err = pgx.NewConnPool(connPoolConfig)
+	db, err := sql.Open("mysql", fmt.Sprintf(dsn, dbhost))
 	if err != nil {
-		flag.PrintDefaults()
 		log.Fatalf("Error opening database: %v", err)
 	}
-
-	_, err = defaultDB.Prepare("worldSelect", worldSelect)
+	db.SetMaxIdleConns(maxConnectionCount)
+	worldStatement, err = db.Prepare(worldSelect)
 	if err != nil {
-		flag.PrintDefaults()
 		log.Fatal(err)
 	}
-	_, err = defaultDB.Prepare("fortuneSelect", fortuneSelect)
+	fortuneStatement, err = db.Prepare(fortuneSelect)
 	if err != nil {
-		flag.PrintDefaults()
 		log.Fatal(err)
 	}
-	_, err = defaultDB.Prepare("worldUpdate", worldUpdate)
+	updateStatement, err = db.Prepare(worldUpdate)
 	if err != nil {
-		flag.PrintDefaults()
 		log.Fatal(err)
 	}
 }

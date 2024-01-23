@@ -16,7 +16,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kitura",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "postgres": {
       "db_url": "/db",
@@ -35,7 +36,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kitura",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "postgres-orm": {
       "db_url": "/db",
@@ -52,7 +54,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kitura",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "postgres-orm-codable": {
       "db_url": "/db",
@@ -70,7 +73,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kitura",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "mongodb": {
       "db_url": "/db",
@@ -89,7 +93,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kitura",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "gcd": {
       "json_url": "/json",
@@ -106,7 +111,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kitura",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "nio": {
       "json_url": "/json",
@@ -123,7 +129,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kitura",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "gcd-postgres": {
       "db_url": "/db",
@@ -140,7 +147,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kitura",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "nio-postgres": {
       "db_url": "/db",
@@ -159,7 +167,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kitura",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "gcd-postgres-orm": {
       "db_url": "/db",
@@ -176,7 +185,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kitura",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "nio-postgres-orm": {
       "db_url": "/db",
@@ -193,7 +203,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kitura",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "gcd-postgres-orm-codable": {
       "db_url": "/db",
@@ -209,7 +220,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kitura",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "nio-postgres-orm-codable": {
       "db_url": "/db",
@@ -227,7 +239,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Kitura",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     }
   }]
 }

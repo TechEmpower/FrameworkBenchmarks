@@ -1,6 +1,5 @@
 package net.benchmark.akka.http
 import akka.actor.{ActorRef, ActorSystem, Terminated}
-import akka.stream.ActorMaterializer
 import com.typesafe.config.Config
 import net.benchmark.akka.http.ApiSupervisor.ApiMessages
 import net.benchmark.akka.http.db.{DatabaseConfiguration, DatabaseRepositoryLoader, DatabaseRepositoryLoaderModule}
@@ -17,10 +16,9 @@ object Main {
 
   def main(args: Array[String]): Unit = {
     implicit val system: ActorSystem = ActorSystem("AkkaSlickBenchmarkApp")
-    implicit val mat: ActorMaterializer = ActorMaterializer()
 
     val pus = Runtime.getRuntime.availableProcessors()
-    val pusMessage = s"Runtime.getRuntime.availableProcessors says $pus"
+    val pusMessage = s"Runtime.getRuntime.availableProcessors says ${pus.toString}"
     log.info(pusMessage)
     println(pusMessage)
 
@@ -29,7 +27,7 @@ object Main {
     val dbConfig: DatabaseConfig[PostgresProfile] = DatabaseConfiguration.getDefaultDatabaseConfiguration(config)
     val dbLoader: DatabaseRepositoryLoader = new DatabaseRepositoryLoaderModule(dbConfig)
 
-    val api: ActorRef = system.actorOf(ApiSupervisor.props(dbLoader, mat))
+    val api: ActorRef = system.actorOf(ApiSupervisor.props(dbLoader))
 
     api ! ApiMessages.StartApi
 

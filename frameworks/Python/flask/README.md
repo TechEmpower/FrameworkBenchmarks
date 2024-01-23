@@ -13,34 +13,29 @@ All test implementations are located within a single file
 
 ## Description
 
-Flask + Flask-SQLAlchemy
+Flask and Flask with Pony
 
 ### Database
 
-MySQL (mysqlclient on CPython, PyMySQL on PyPy)
+PostgresQL (psycopg2 on CPython, psycopg2cffi on PyPy)
 
 ### Server
 
 * gunicorn+meinheld on CPython
-* Tornado on PyPy
+* gunicorn on PyPy
+* fastwsgi on CPython
+* socketify on CPython
 
 ## Test URLs
+
 ### JSON Encoding 
 
 http://localhost:8080/json
 
 ### Single Row Random Query
 
-With ORM:
-    http://localhost:8080/dbs
-
-Without ORM (raw):
-    http://localhost:8080/dbsraw
+http://localhost:8080/db
 
 ### Variable Row Query Test 
 
-With ORM:
-    http://localhost:8080/db?queries=2
-
-Without ORM (raw):
-    http://localhost:8080/dbraw?queries=2
+http://localhost:8080/query?queries=2

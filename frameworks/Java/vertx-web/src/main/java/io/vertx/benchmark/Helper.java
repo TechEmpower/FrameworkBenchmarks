@@ -2,9 +2,12 @@ package io.vertx.benchmark;
 
 import io.vertx.core.http.HttpServerRequest;
 
+import java.util.SplittableRandom;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class Helper {
+
+  private static final SplittableRandom RANDOM = new SplittableRandom();
 
   private Helper() {
   }
@@ -37,6 +40,6 @@ public final class Helper {
    * @return a random world number
    */
   static int randomWorld() {
-    return 1 + ThreadLocalRandom.current().nextInt(10000);
+    return 1 + RANDOM.nextInt(10000);
   }
 }

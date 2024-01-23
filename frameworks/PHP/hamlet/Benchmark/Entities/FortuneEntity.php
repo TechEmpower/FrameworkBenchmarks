@@ -6,12 +6,7 @@ use Hamlet\Http\Entities\AbstractMustacheEntity;
 
 class FortuneEntity extends AbstractMustacheEntity
 {
-    private $messages;
-
-    public function __construct(array $messages)
-    {
-        $this->messages = $messages;
-    }
+    public function __construct(private array $messages) {}
 
     protected function getTemplateData()
     {

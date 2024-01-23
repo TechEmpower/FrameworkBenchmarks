@@ -9,21 +9,21 @@ ngx_php7 draws on the design of ngx_lua and is committed to providing non-blocki
 
 
 ## Infrastructure Software Versions
-The tests were run with [PHP Version 7.3.*](https://www.php.net/) with OPcache
+The tests were run with [PHP](https://www.php.net/) with OPcache and JIT
 
 ### Platform
 
-* [ngx-php 0.0.19](https://github.com/rryqszq4/ngx_php7) (Embeded php in nginx)
+* [ngx-php](https://github.com/rryqszq4/ngx_php7) (Embeded php in nginx)
 
 ### Webservers
 
-* [nginx 1.17.3](https://nginx.org/)
+* [nginx](https://nginx.org/)
 
 
 ### Databases
 
-* [MySQL 8](https://dev.mysql.com/)
-* [PostgreSQL 11](https://www.postgresql.org/)
+* [MySQL](https://dev.mysql.com/)
+* [PostgreSQL](https://www.postgresql.org/)
 
 
 ## Test URLs

@@ -1,0 +1,27 @@
+[framework]
+name = "hyper"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Rust"
+webserver = "hyper"
+versus = "None"
+
+[db]
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Rust"
+webserver = "hyper"
+versus = "None"

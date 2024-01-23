@@ -1,0 +1,29 @@
+{
+  "framework": "postgrest",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/rpc/json",
+        "plaintext_url": "/rpc/plaintext",
+        "db_url": "/rpc/db",
+        "query_url": "/rpc/queries?queries=",
+        "fortunes_url": "/rpc/fortunes.html",
+        "port": 3000,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "PostgREST",
+        "language": "Haskell",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "PostgREST",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

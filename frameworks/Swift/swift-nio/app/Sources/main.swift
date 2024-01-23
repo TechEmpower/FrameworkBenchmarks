@@ -41,9 +41,9 @@ private final class HTTPHandler: ChannelInboundHandler {
         switch self.unwrapInboundIn(data) {
         case .head(let request):
             switch request.uri {
-            case "/p":
+            case "/plaintext":
                 self.processPlaintext(context: context)
-            case "/j":
+            case "/json":
                 do {
                     try self.processJSON(context: context)
                 } catch {

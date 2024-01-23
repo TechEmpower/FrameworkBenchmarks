@@ -11,7 +11,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "framework": "Jooby.x",
+      "framework": "Jooby",
       "language": "Java",
       "flavor": "None",
       "platform": "Undertow",
@@ -34,7 +34,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "framework": "Jooby.x",
+      "framework": "Jooby",
       "language": "Java",
       "flavor": "None",
       "platform": "Netty",
@@ -47,7 +47,7 @@
       "display_name": "jooby-netty",
       "versus": "netty"
     },
-    "jaxrs": {
+    "mvc": {
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/db",
@@ -57,7 +57,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "framework": "Jooby.x",
+      "framework": "Jooby",
       "language": "Java",
       "flavor": "None",
       "platform": "Undertow",
@@ -67,7 +67,7 @@
       "webserver": "None",
       "os": "Linux",
       "notes": "Jooby MVC using Undertow",
-      "display_name": "jooby-mvc",
+      "display_name": "jooby-jaxrs",
       "versus": "undertow"
     },
     "jetty": {
@@ -80,7 +80,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "framework": "Jooby.x",
+      "framework": "Jooby",
       "language": "Java",
       "flavor": "None",
       "platform": "Jetty",
@@ -101,10 +101,10 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "framework": "Jooby.x",
+      "framework": "Jooby",
       "language": "Java",
       "flavor": "None",
-      "platform": "Undertow",
+      "platform": "Netty",
       "database": "Postgres",
       "database_os": "Linux",
       "orm": "Raw",
@@ -112,7 +112,7 @@
       "os": "Linux",
       "notes": "Jooby with Reactive PG client",
       "display_name": "jooby-pgclient",
-      "versus": "undertow"
+      "versus": "netty"
     }
   }]
 }

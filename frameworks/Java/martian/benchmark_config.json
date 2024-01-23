@@ -1,0 +1,23 @@
+{
+  "framework": "martian",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "martian",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "None",
+      "platform": "Martian",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "martian-mvc",
+      "notes": "martian webserver with mvc",
+      "versus": "martian"
+    }
+  }]
+}

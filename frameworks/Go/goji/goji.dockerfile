@@ -1,15 +1,10 @@
-FROM golang:1.12
+FROM docker.io/golang:1.19
 
-ADD ./ /goji
+ADD ./src /goji
 WORKDIR /goji
 
-RUN mkdir bin
-ENV GOPATH /goji
-ENV PATH ${GOPATH}/bin:${PATH}
+RUN GOAMD64=v3 go build -o server ./goji/server.go
 
-RUN go get github.com/go-sql-driver/mysql
-RUN go get github.com/zenazn/goji
-RUN go get github.com/zenazn/goji/web
+EXPOSE 8080
 
-RUN go build -o server src/goji/server.go
 CMD ./server

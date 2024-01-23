@@ -1,7 +1,7 @@
 // Connects to MySQL using the sequelize driver
 // Handles related routes
 
-const h = require('../helper');
+const helper = require('../helper');
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
@@ -32,48 +32,50 @@ const Fortunes = sequelize.define('Fortune', {
     freezeTableName: true
   });
 
-const randomWorld = async () =>
-  await Worlds.findOne({ where: { id: h.randomTfbNumber() } });
+const randomWorld = () => Worlds.findOne({ where: { id: helper.randomTfbNumber() } });
 
 module.exports = {
 
-  SingleQuery: (req, reply) => {
-    reply(randomWorld())
+  SingleQuery: async (request, h) => {
+    return h.response(await randomWorld())
       .header('Content-Type', 'application/json')
       .header('Server', 'hapi');
   },
 
-  MultipleQueries: async (req, reply) => {
-    const queries = h.getQueries(req);
+  MultipleQueries: async (request, h) => {
+    const queries = helper.getQueries(request);
     const results = [];
 
     for (let i = 0; i < queries; i++) {
       results.push(await randomWorld());
     }
 
-    reply(results)
+    return h.response(results)
       .header('Content-Type', 'application/json')
       .header('Server', 'hapi');
   },
 
-  Fortunes: (req, reply) => {
-    Fortunes.findAll().then((fortunes) => {
-      fortunes.push(h.additionalFortune());
+  Fortunes: async (request, h) => {
+    try {
+      const fortunes = await Fortunes.findAll()
+      fortunes.push(helper.additionalFortune());
       fortunes.sort((a, b) => a.message.localeCompare(b.message));
 
-      reply.view('fortunes', { fortunes })
+      return h.view('fortunes', { fortunes })
         .header('Content-Type', 'text/html')
         .header('Server', 'hapi');
-    }).catch((err) => process.exit(1));
+    } catch (err) {
+      process.exit(1)
+    }
   },
 
-  Updates: async (req, reply) => {
-    const queries = h.getQueries(req);
+  Updates: async (request, h) => {
+    const queries = helper.getQueries(request);
     const results = [];
 
     for (let i = 0; i < queries; i++) {
       const world = await randomWorld();
-      world.randomNumber = h.randomTfbNumber();
+      world.randomNumber = helper.randomTfbNumber();
       await Worlds.update(
         { randomNumber: world.randomNumber },
         { where: { id: world.id } }
@@ -81,7 +83,7 @@ module.exports = {
       results.push(world);
     }
 
-    reply(results)
+    return h.response(results)
       .header('Content-Type', 'application/json')
       .header('Server', 'hapi');
   }

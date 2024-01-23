@@ -36,10 +36,12 @@ namespace Benchmarks.Controllers
 
             public Task ExecuteResultAsync(ActionContext context)
             {
-                context.HttpContext.Response.StatusCode = StatusCodes.Status200OK;
-                context.HttpContext.Response.ContentType = "text/plain";
-                context.HttpContext.Response.ContentLength = _helloWorldPayload.Length;
-                return context.HttpContext.Response.Body.WriteAsync(_helloWorldPayload, 0, _helloWorldPayload.Length);
+                var response = context.HttpContext.Response;
+                response.StatusCode = StatusCodes.Status200OK;
+                response.ContentType = "text/plain";
+                var payloadLength = _helloWorldPayload.Length;
+                response.ContentLength = payloadLength;
+                return response.Body.WriteAsync(_helloWorldPayload, 0, payloadLength);
             }
         }
     }

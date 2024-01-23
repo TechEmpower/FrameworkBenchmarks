@@ -1,15 +1,10 @@
-FROM golang:1.12
+FROM docker.io/golang:1.19
 
-ADD ./ /chi
+ADD ./src/chi-gojay /chi
 WORKDIR /chi
 
-RUN mkdir bin
-ENV GOPATH /chi
-ENV PATH ${GOPATH}/bin:${PATH}
+RUN GOAMD64=v3 go build -o server .
 
-RUN go get github.com/francoispqt/gojay
-RUN go get github.com/jackc/pgx
-RUN go get github.com/go-chi/chi
+EXPOSE 8080
 
-RUN go build -o server src/chi-gojay/*.go
 CMD ./server

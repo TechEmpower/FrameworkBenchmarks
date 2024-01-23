@@ -1,18 +1,45 @@
-FROM maven:3.6.1-jdk-11-slim as maven
-WORKDIR /quarkus
-COPY pom.xml pom.xml
-COPY base/pom.xml base/pom.xml
-COPY hibernate/pom.xml hibernate/pom.xml
-COPY pgclient/pom.xml pgclient/pom.xml
-RUN mvn dependency:go-offline -q -pl base
-COPY base/src base/src
-COPY hibernate/src hibernate/src
-COPY pgclient/src pgclient/src
+FROM registry.access.redhat.com/ubi8/openjdk-17:1.15 as maven
+ENV LANGUAGE='en_US:en'
 
-RUN mvn package -q -pl base
-
-FROM openjdk:11.0.3-jdk-slim
 WORKDIR /quarkus
-COPY --from=maven /quarkus/base/target/lib lib
-COPY --from=maven /quarkus/base/target/base-1.0-SNAPSHOT-runner.jar app.jar
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-jar", "app.jar"]
+ENV MODULE=resteasy-reactive-hibernate
+
+COPY --chown=185 pom.xml pom.xml
+COPY --chown=185 quarkus-benchmark-common quarkus-benchmark-common/
+COPY --chown=185 resteasy-reactive-hibernate resteasy-reactive-hibernate/
+COPY --chown=185 resteasy-reactive-hibernate-reactive resteasy-reactive-hibernate-reactive/
+COPY --chown=185 vertx vertx/
+COPY --chown=185 reactive-routes-pgclient reactive-routes-pgclient/
+
+# Uncomment to test pre-release quarkus
+#RUN mkdir -p /root/.m2/repository/io
+#COPY m2-quarkus /root/.m2/repository/io/quarkus
+
+USER 185
+WORKDIR /quarkus
+RUN mvn -DskipTests install -pl :benchmark,:quarkus-benchmark-common -B -q
+
+WORKDIR /quarkus/$MODULE
+RUN mvn dependency:go-offline -B -q
+WORKDIR /quarkus
+
+COPY $MODULE/src $MODULE/src
+
+WORKDIR /quarkus/$MODULE
+RUN mvn package -B -q
+WORKDIR /quarkus
+
+FROM registry.access.redhat.com/ubi8/openjdk-17-runtime:1.15
+ENV LANGUAGE='en_US:en'
+WORKDIR /quarkus
+ENV MODULE=resteasy-reactive-hibernate
+
+COPY --chown=185 --from=maven /quarkus/$MODULE/target/quarkus-app/lib/ lib
+COPY --chown=185 --from=maven /quarkus/$MODULE/target/quarkus-app/app/ app
+COPY --chown=185 --from=maven /quarkus/$MODULE/target/quarkus-app/quarkus/ quarkus
+COPY --chown=185 --from=maven /quarkus/$MODULE/target/quarkus-app/quarkus-run.jar quarkus-run.jar
+COPY --chown=185 run_quarkus.sh run_quarkus.sh
+
+EXPOSE 8080
+USER 185
+ENTRYPOINT "./run_quarkus.sh"

@@ -1,5 +1,3 @@
-CREATE EXTENSION pg_stat_statements;
-
 CREATE USER benchmarkdbuser WITH PASSWORD 'benchmarkdbpass';
 
 ALTER USER benchmarkdbuser WITH SUPERUSER;

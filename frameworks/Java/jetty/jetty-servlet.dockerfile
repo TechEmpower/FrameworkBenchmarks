@@ -7,4 +7,7 @@ RUN mvn compile assembly:single -q -P servlet
 FROM openjdk:11.0.3-jdk-slim
 WORKDIR /jetty
 COPY --from=maven /jetty/target/jetty-example-0.1-jar-with-dependencies.jar app.jar
+
+EXPOSE 8080
+
 CMD ["java", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-jar", "app.jar"]

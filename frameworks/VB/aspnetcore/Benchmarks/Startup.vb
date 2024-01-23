@@ -9,7 +9,7 @@ Imports Microsoft.AspNetCore.Hosting
 Imports Microsoft.Extensions.Configuration
 Imports Microsoft.Extensions.DependencyInjection
 
-Imports MySql.Data.MySqlClient
+Imports MySqlConnector
 Imports Npgsql
 
 Public Class Startup
@@ -32,7 +32,7 @@ Public Class Startup
             services.AddSingleton(Of DbProviderFactory)(NpgsqlFactory.Instance)
             services.AddSingleton(Of RawDb)
         ElseIf appSettings.Database = DatabaseServer.MySql Then
-            services.AddSingleton(Of DbProviderFactory)(MySqlClientFactory.Instance)
+            services.AddSingleton(Of DbProviderFactory)(MySqlConnectorFactory.Instance)
             services.AddSingleton(Of RawDb)
         End If
 

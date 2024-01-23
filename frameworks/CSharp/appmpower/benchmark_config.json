@@ -1,0 +1,70 @@
+{
+  "framework": "appmpower",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "appmpower",
+        "language": "C#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "appMpower [aot-no-reflection]",
+        "notes": "",
+        "versus": "aspnetcore-minimal"
+      },
+      "odbc-pg": {
+        "db_url": "/db",
+        "query_url": "/queries?c=",
+        "update_url": "/updates?c=",
+        "fortune_url": "/fortunes",
+        "cached_query_url": "/cached-worlds?c=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "appmpower",
+        "language": "C#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "appMpower [aot-no-reflection,odbc]",
+        "notes": "",
+        "versus": "aspnetcore-minimal"
+      },
+      "ado-pg": {
+        "db_url": "/db",
+        "query_url": "/queries?c=",
+        "update_url": "/updates?c=",
+        "fortune_url": "/fortunes",
+        "cached_query_url": "/cached-worlds?c=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "appmpower",
+        "language": "C#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "Kestrel",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "appMpower [aot-no-reflection,ado]",
+        "notes": "",
+        "versus": "aspnetcore-minimal"
+      }
+    }
+  ]
+}

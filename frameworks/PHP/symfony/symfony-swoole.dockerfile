@@ -1,4 +1,4 @@
-FROM php:7.4
+FROM php:8.3-cli
 
 RUN pecl install swoole > /dev/null && \
     docker-php-ext-enable swoole
@@ -6,32 +6,29 @@ RUN pecl install swoole > /dev/null && \
 RUN pecl install apcu > /dev/null && \
     docker-php-ext-enable apcu
 
-RUN docker-php-ext-install pdo pdo_mysql opcache  > /dev/null
-
 RUN apt-get update -yqq && \
-    apt-get install -yqq git unzip
+    apt-get install -yqq libpq-dev libicu-dev git unzip > /dev/null && \ 
+    docker-php-ext-install pdo_pgsql opcache intl > /dev/null
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 COPY deploy/swoole/php.ini /usr/local/etc/php/
-WORKDIR /symfony
-ADD ./composer.json ./composer.lock /symfony/
-RUN mkdir -m 777 -p /symfony/var/cache/swoole /symfony/var/log
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts
+
 ADD . /symfony
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer require k911/swoole-bundle --no-scripts
+WORKDIR /symfony
+RUN mkdir -m 777 -p /symfony/var/cache/{dev,prod} /symfony/var/log
+#RUN mkdir -m 777 -p /symfony/var/cache/swoole /symfony/var/log
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts --quiet
+RUN cp deploy/postgresql/.env . && composer dump-env prod && bin/console cache:clear
+
+ENV APP_RUNTIME=Runtime\\Swoole\\Runtime
+RUN composer require runtime/swoole
+
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --no-dev --classmap-authoritative
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env swoole
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env prod
 
-# removes hardcoded option `ATTR_STATEMENT_CLASS` conflicting with `ATTR_PERSISTENT`. Hack not needed when upgrading to Doctrine 3
-# see https://github.com/doctrine/dbal/issues/2315
-RUN sed -i '/PDO::ATTR_STATEMENT_CLASS/d' ./vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php
+#ENV APP_DEBUG=1
 
-ENV APP_DEBUG=0 \
-    APP_ENV=swoole
+EXPOSE 8080
 
-RUN php bin/console cache:clear
-RUN echo "opcache.preload=/symfony/var/cache/swoole/App_KernelSwooleContainer.preload.php" >> /usr/local/etc/php/php.ini
-
-USER www-data
-CMD php bin/console swoole:server:run
+CMD php /symfony/public/swoole.php

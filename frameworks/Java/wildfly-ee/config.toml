@@ -1,0 +1,19 @@
+[framework]
+name = "wildfly-ee"
+
+[main]
+urls.plaintext = "/wildfly-ee/rest/plaintext"
+urls.json = "/wildfly-ee/rest/json"
+urls.db = "/wildfly-ee/rest/db"
+urls.query = "/wildfly-ee/rest/queries?queries="
+urls.update = "/wildfly-ee/rest/updates?queries="
+urls.fortune = "/wildfly-ee/fortunes.xhtml"
+approach = "Realistic"
+classification = "Fullstack"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Full"
+platform = "Servlet"
+webserver = "Wildfly"
+versus = ""

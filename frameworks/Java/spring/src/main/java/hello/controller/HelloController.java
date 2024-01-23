@@ -2,94 +2,127 @@ package hello.controller;
 
 import static java.util.Comparator.comparing;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
+
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import hello.model.Fortune;
 import hello.model.World;
 import hello.repository.DbRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-@Controller
+@RestController
 public final class HelloController {
 
-  @Autowired
-  private DbRepository dbRepository;
+	private DbRepository dbRepository;
 
-  @RequestMapping("/plaintext")
-  @ResponseBody
-  String plaintext() {
-    return "Hello, World!";
-  }
+	public HelloController(DbRepository dbRepository) {
+		this.dbRepository = dbRepository;
+	}
 
-  @RequestMapping("/json")
-  @ResponseBody
-  Map<String, String> json() {
-    return Map.of("message", "Hello, World!");
-  }
+	@GetMapping(value = "/plaintext")
+	String plaintext(HttpServletResponse response) {
+		response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+		return "Hello, World!";
+	}
 
-  @RequestMapping("/db")
-  @ResponseBody
+	@GetMapping("/json")
+	Message json(HttpServletResponse response) {
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		return new Message("Hello, World!");
+	}
 
-  World db() {
-    return randomWorld();
-  }
+	@GetMapping("/db")
+	World db(HttpServletResponse response) {
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		return dbRepository.getWorld(randomWorldNumber());
+	}
 
-  @RequestMapping("/queries")
-  @ResponseBody
-  World[] queries(@RequestParam String queries) {
-    var worlds = new World[parseQueryCount(queries)];
-    Arrays.setAll(worlds, i -> randomWorld());
-    return worlds;
-  }
+	@GetMapping("/queries")
+	World[] queries(HttpServletResponse response, @RequestParam(required = false) String queries) {
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		return randomWorldNumbers().mapToObj(dbRepository::getWorld).limit(parseQueryCount(queries))
+				.toArray(World[]::new);
+	}
 
-  @RequestMapping("/updates")
-  @ResponseBody
-  World[] updates(@RequestParam String queries) {
-    var worlds = new World[parseQueryCount(queries)];
-    Arrays.setAll(worlds, i -> randomWorld());
-    for (var world : worlds) {
-      dbRepository.updateWorld(world, randomWorldNumber());
-    }
-    return worlds;
-  }
+	@GetMapping("/updates")
+	World[] updates(HttpServletResponse response, @RequestParam(required = false) String queries) {
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		return randomWorldNumbers().mapToObj(dbRepository::getWorld).map(world -> {
+			// Ensure that the new random number is not equal to the old one.
+			// That would cause the JPA-based implementation to avoid sending the
+			// UPDATE query to the database, which would violate the test
+			// requirements.
 
-  @RequestMapping("/fortunes")
-  @ModelAttribute("fortunes")
-  List<Fortune> fortunes() {
-    var fortunes = dbRepository.fortunes();
+			// Locally the records doesn't exist, maybe in the yours is ok but we need to
+			// make this check
+			if (world == null) {
+				return null;
+			}
 
-    fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-    fortunes.sort(comparing(fortune -> fortune.message));
-    return fortunes;
-  }
+			int newRandomNumber;
+			do {
+				newRandomNumber = randomWorldNumber();
+			} while (newRandomNumber == world.randomnumber);
 
-  private World randomWorld() {
-    return dbRepository.getWorld(randomWorldNumber());
-  }
+			return dbRepository.updateWorld(world, newRandomNumber);
+		}).limit(parseQueryCount(queries)).toArray(World[]::new);
+	}
 
-  private static int randomWorldNumber() {
-    return 1 + ThreadLocalRandom.current().nextInt(10000);
-  }
+	@GetMapping("/fortunes")
+	@ModelAttribute("fortunes")
+	List<Fortune> fortunes(HttpServletResponse response) {
+		response.setContentType(MediaType.TEXT_HTML_VALUE);
+		var fortunes = dbRepository.fortunes();
 
-  private static int parseQueryCount(String textValue) {
-    if (textValue == null) {
-      return 1;
-    }
-    int parsedValue;
-    try {
-      parsedValue = Integer.parseInt(textValue);
-    } catch (NumberFormatException e) {
-      return 1;
-    }
-    return Math.min(500, Math.max(1, parsedValue));
-  }
+		fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+		fortunes.sort(comparing(fortune -> fortune.message));
+		return fortunes;
+	}
 
+	private static final int MIN_WORLD_NUMBER = 1;
+	private static final int MAX_WORLD_NUMBER_PLUS_ONE = 10_001;
+
+	private static int randomWorldNumber() {
+		return ThreadLocalRandom.current().nextInt(MIN_WORLD_NUMBER, MAX_WORLD_NUMBER_PLUS_ONE);
+	}
+
+	private static IntStream randomWorldNumbers() {
+		return ThreadLocalRandom.current().ints(MIN_WORLD_NUMBER, MAX_WORLD_NUMBER_PLUS_ONE)
+				// distinct() allows us to avoid using Hibernate's first-level cache in
+				// the JPA-based implementation. Using a cache like that would bypass
+				// querying the database, which would violate the test requirements.
+				.distinct();
+	}
+
+	private static int parseQueryCount(String textValue) {
+		if (textValue == null) {
+			return 1;
+		}
+		int parsedValue;
+		try {
+			parsedValue = Integer.parseInt(textValue);
+		} catch (NumberFormatException e) {
+			return 1;
+		}
+		return Math.min(500, Math.max(1, parsedValue));
+	}
+
+	static class Message {
+		private final String message;
+
+		public Message(String message) {
+			this.message = message;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+	}
 }

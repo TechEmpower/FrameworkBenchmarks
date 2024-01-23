@@ -1,0 +1,16 @@
+[package]
+name = "application"
+edition = "2021"
+version = "0.1.0"
+
+[package.metadata.px.generate]
+generator_type = "cargo_workspace_binary"
+generator_name = "generate"
+
+[dependencies]
+bytes = { version = "1.4.0", package = "bytes" }
+http = { version = "0.2.9", package = "http" }
+http_body = { version = "0.4.5", package = "http-body" }
+hyper = { version = "0.14.26", package = "hyper" }
+pavex_runtime = { version = "0.1.0", git = "https://github.com/LukeMathWalker/pavex.git", rev = "72cb987", package = "pavex_runtime" }
+tfb_pavex_bp = { version = "0.1.0", path = "../blueprint", package = "tfb-pavex-bp" }

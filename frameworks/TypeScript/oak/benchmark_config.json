@@ -5,21 +5,27 @@
       "default": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
-        "port": 8000,
+        "db_url": "/db",
+        "query_url": "/queries?q=",
+        "update_url": "/updates?q=",
+        "fortune_url": "/fortunes",
+        "cached_query_url": "/cached_queries?q=",
+        "port": 8080,
         "approach": "Realistic",
-        "classification": "Micro",
-        "database": "None",
-        "framework": "Oak",
-        "language": "TypeScript",
-        "flavor": "Deno",
-        "orm": "None",
-        "platform": "None",
+        "classification": "Platform",
+        "database": "postgres",
+        "framework": "None",
+        "language": "Typescript",
+        "flavor": "deno",
+        "orm": "Micro",
+        "platform": "deno",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Oak",
+        "display_name": "oak",
         "notes": "",
-        "versus": "nodejs"
+        "versus": "nodejs",
+        "tags": ["broken"]
       }
     }
   ]

@@ -37,6 +37,8 @@ Please note that the server holds tty so you may need nohup. See `setup.sh` for 
 
 # Contact
 
+[Leonid Stashevsky](https://github.com/e5l)
+
 [Sergey Mashkov](https://github.com/cy6erGn0m)
 
 [Ilya Ryzhenkov](https://github.com/orangy) 

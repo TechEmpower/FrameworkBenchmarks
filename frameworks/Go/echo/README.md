@@ -2,7 +2,7 @@
 
 This is the go portion of a [benchmarking test suite](https://www.techempower.com/benchmarks/) comparing a variety of web development platforms.
 
-> Echo is a fast and unfancy micro web framework for Go
+> High performance, extensible, minimalist Go web framework
 
 ## Test URLs
 

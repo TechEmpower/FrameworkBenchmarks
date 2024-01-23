@@ -1,24 +1,34 @@
-FROM ubuntu:19.04
+FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
-RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
-RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq nginx git unzip php7.3 php7.3-common php7.3-cli php7.3-fpm php7.3-mysql  > /dev/null
+RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null && \
+    apt-get update -yqq > /dev/null && apt-get upgrade -yqq > /dev/null
 
-COPY deploy/conf/* /etc/php/7.3/fpm/
+RUN apt-get install -y php-pear php8.2-dev > /dev/null
+RUN mkdir -p /etc/php/8.2/fpm/conf.d
+RUN pecl install phalcon > /dev/null && echo "extension=phalcon.so" > /etc/php/8.2/fpm/conf.d/phalcon.ini
+
+RUN apt-get install -yqq nginx git unzip \
+    php8.2-cli php8.2-fpm php8.2-mysql php8.2-mbstring php8.2-xml > /dev/null
+
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+COPY deploy/conf/* /etc/php/8.2/fpm/
 
 ADD ./ /phalcon
 WORKDIR /phalcon
 
-RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/7.3/fpm/php-fpm.conf ; fi;
+RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.2/fpm/php-fpm.conf ; fi;
 
-RUN apt-get install -yqq php7.3-phalcon php7.3-dev  > /dev/null
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --ignore-platform-reqs
 
 RUN mv /phalcon/public/index-micro.php /phalcon/public/index.php
 
 RUN chmod -R 777 app
 
-CMD service php7.3-fpm start && \
-    nginx -c /phalcon/deploy/nginx.conf -g "daemon off;"
+EXPOSE 8080
+
+CMD service php8.2-fpm start && \
+    nginx -c /phalcon/deploy/nginx.conf

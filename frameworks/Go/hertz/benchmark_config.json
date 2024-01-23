@@ -1,0 +1,48 @@
+{
+  "framework": "hertz",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/dbs?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/update?queries=",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "hertz",
+      "language": "Go",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "hertz",
+      "notes": "",
+      "versus": "go"
+    },
+    "gorm": {
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "hertz-gorm",
+      "language": "Go",
+      "flavor": "None",
+      "orm": "Full",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "hertz-gorm",
+      "notes": "",
+      "versus": "go"
+    }
+  }]
+}

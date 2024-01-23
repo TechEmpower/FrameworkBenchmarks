@@ -7,4 +7,7 @@ RUN mvn compile assembly:single -q
 FROM openjdk:11.0.3-jdk-slim
 WORKDIR /httpserver
 COPY --from=maven /httpserver/target/httpserver-1.0-jar-with-dependencies.jar app.jar
-CMD ["java", "-server", "-Xss256k", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-jar", "app.jar"]
+
+EXPOSE 8080
+
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-jar", "app.jar"]

@@ -1,8 +1,6 @@
 #include "QueriesCtrlRaw.h"
-#include "models/World.h"
+#include "World_raw.h"
 #include <stdlib.h>
-
-using namespace drogon_model::hello_world;
 
 using namespace drogon::orm;
 void QueriesCtrlRaw::asyncHandleHttpRequest(
@@ -46,7 +44,8 @@ void QueriesCtrlRaw::asyncHandleHttpRequest(
                     (*counter)--;
                     if ((*counter) == 0)
                     {
-                        (*callbackPtr)(HttpResponse::newHttpJsonResponse(std::move(*json)));
+                        (*callbackPtr)(HttpResponse::newHttpJsonResponse(
+                            std::move(*json)));
                     }
                 }
                 else
@@ -55,7 +54,8 @@ void QueriesCtrlRaw::asyncHandleHttpRequest(
                     Json::Value json{};
                     json["code"] = 0;
                     json["message"] = "Internal error";
-                    (*callbackPtr)(HttpResponse::newHttpJsonResponse(std::move(json)));
+                    (*callbackPtr)(
+                        HttpResponse::newHttpJsonResponse(std::move(json)));
                 }
             } >>
             [callbackPtr, counter](const DrogonDbException &e) {

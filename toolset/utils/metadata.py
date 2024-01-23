@@ -35,9 +35,9 @@ class Metadata:
         '''
         try:
             dir = os.path.join(self.benchmarker.config.lang_root, language)
-            tests = map(lambda x: os.path.join(language, x), os.listdir(dir))
-            return filter(lambda x: os.path.isdir(
-                os.path.join(self.benchmarker.config.lang_root, x)), tests)
+            tests = [os.path.join(language, x) for x in os.listdir(dir)]
+            return [x for x in tests if os.path.isdir(
+                os.path.join(self.benchmarker.config.lang_root, x))]
         except Exception:
             raise Exception(
                 "Unable to locate language directory: {!s}".format(language))
@@ -184,7 +184,7 @@ class Metadata:
         # Loop over them and parse each into a FrameworkTest
         for test in config['tests']:
 
-            tests_to_run = [name for (name, keys) in test.iteritems()]
+            tests_to_run = [name for (name, keys) in test.items()]
 
             if "default" not in tests_to_run:
                 log("Framework %s does not define a default test in benchmark_config.json"
@@ -193,15 +193,16 @@ class Metadata:
 
             # Check that each test configuration is acceptable
             # Throw exceptions if a field is missing, or how to improve the field
-            for test_name, test_keys in test.iteritems():
+            for test_name, test_keys in test.items():
                 # Validates and normalizes the benchmark_config entry
                 test_keys = Metadata.validate_test(test_name, test_keys,
                                                    config['framework'], directory)
 
                 # Map test type to a parsed FrameworkTestType object
                 runTests = dict()
-                for type_name, type_obj in self.benchmarker.config.types.iteritems(
-                ):
+
+                # TODO: remove self.benchmarker.config.types
+                for type_name, type_obj in self.benchmarker.config.types.items():
                     try:
                         # Makes a FrameWorkTestType object using some of the keys in config
                         # e.g. JsonTestType uses "json_url"
@@ -239,7 +240,7 @@ class Metadata:
         Returns an array suitable for jsonification
         '''
         all_tests = self.gather_tests()
-        return map(lambda test: {
+        return [{
             "project_name": test.project_name,
             "name": test.name,
             "approach": test.approach,
@@ -256,7 +257,7 @@ class Metadata:
             "notes": test.notes,
             "versus": test.versus,
             "tags": hasattr(test, "tags") and test.tags or []
-        }, all_tests)
+        } for test in all_tests]
 
     def list_test_metadata(self):
         '''

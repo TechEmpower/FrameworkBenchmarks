@@ -1,4 +1,5 @@
 server {
+    name = 'W'
     host = '0.0.0.0'
     port = 8080
     ttl = 5 * 60 * 1000

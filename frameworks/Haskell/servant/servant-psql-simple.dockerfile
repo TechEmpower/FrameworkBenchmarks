@@ -1,7 +1,7 @@
 FROM haskell:8.6.5
 
-RUN apt update -yqq && apt install -yqq xz-utils make
-RUN apt install -yqq libpq-dev
+RUN apt-get update -yqq && apt-get install -yqq xz-utils make
+RUN apt-get install -yqq libpq-dev
 
 WORKDIR /app
 
@@ -21,5 +21,7 @@ ADD ./servant-tfb ./servant-tfb
 RUN cabal v2-build all
 
 RUN cp $(find dist-newstyle -name servant-tfb-psql-simple -type f) /app/dist-newstyle/servant-tfb-psql-simple
+
+EXPOSE 7041
 
 CMD /app/dist-newstyle/servant-tfb-psql-simple +RTS -A32m -N$(nproc) -qn2 -M2G -RTS

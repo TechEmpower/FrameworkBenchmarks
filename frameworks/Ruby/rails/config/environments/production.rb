@@ -1,3 +1,5 @@
+require "active_support/core_ext/integer/time"
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -20,45 +22,55 @@ Rails.application.configure do
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
-  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  # config.action_controller.asset_host = 'http://assets.example.com'
+  # config.asset_host = "http://assets.example.com"
 
   # Specifies the header that your server uses for sending files.
-  # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
-  # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
+  # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for Apache
+  # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 
-  # Use the lowest log level to ensure availability of diagnostic information
-  # when problems arise.
-  config.log_level = :error
+  # Include generic and useful information about system operation, but avoid logging too much
+  # information to avoid inadvertent exposure of personally identifiable information (PII).
+  config.log_level = :info
 
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
 
   # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  config.cache_store = :redis_cache_store, {
+    url: ENV['REDIS_URL'],
+    connect_timeout:    30,  # Defaults to 20 seconds
+    read_timeout:       0.2, # Defaults to 1 second
+    write_timeout:      0.2, # Defaults to 1 second
+    reconnect_attempts: 1,   # Defaults to 0
 
-  # Use a real queuing backend for Active Job (and separate queues per environment)
+    error_handler: -> (method:, returning:, exception:) {
+      puts "NO REDIS DETECTED"
+    }
+  }
+
+  # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
-  # config.active_job.queue_name_prefix = "testrails522_#{Rails.env}"
+  # config.active_job.queue_name_prefix = "hello_production"
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
 
-  # Send deprecation notices to registered listeners.
-  config.active_support.deprecation = :notify
+  # Don't log any deprecations.
+  config.active_support.report_deprecations = false
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
   # Use a different logger for distributed setups.
-  # require 'syslog/logger'
-  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
+  # require "syslog/logger"
+  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     logger           = ActiveSupport::Logger.new(STDOUT)

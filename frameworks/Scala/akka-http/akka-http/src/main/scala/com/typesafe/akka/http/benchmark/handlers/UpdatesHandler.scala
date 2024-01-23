@@ -16,7 +16,7 @@ trait UpdatesHandler { _: Infrastructure with DataStore with RandomGenerator =>
   def updatesEndpoint: Route =
     get {
       path("updates") {
-        parameter('queries.?) { numQueries =>
+        parameter("queries".?) { numQueries =>
           val realNumQueries = Try(numQueries.getOrElse("1").toInt).getOrElse(1).min(500).max(1)
 
           def mutateOne(id: Int): Future[World] =

@@ -5,6 +5,6 @@ import play.api.inject._
 
 class StartupModule extends Module {
   def bindings(environment: Environment, configuration: Configuration) = Seq(
-    bind[Startup].toSelf.eagerly
+    bind[Startup].toSelf.eagerly()
   )
 }

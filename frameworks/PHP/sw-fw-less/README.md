@@ -22,8 +22,8 @@ This is the [Sw-Fw-Less](https://github.com/luoxiaojun1992/sw-fw-less) portion o
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [PHP 7.1](https://www.php.net/)
-* [Swoole v4.4.0](https://www.swoole.com/)
+* [PHP 7.4](https://www.php.net/)
+* [Swoole v4.5.6](https://www.swoole.com/)
 
 ## Test URLs
 ### JSON Encoding Test

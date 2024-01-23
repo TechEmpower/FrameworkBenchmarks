@@ -1,0 +1,32 @@
+{
+  "configVersion": 2,
+  "packages": [
+    {
+      "name": "dia",
+      "rootUri": "file:///Users/duke/.pub-cache/hosted/pub.dartlang.org/dia-0.0.8",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "dia_router",
+      "rootUri": "file:///Users/duke/.pub-cache/hosted/pub.dartlang.org/dia_router-0.0.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "path_to_regexp",
+      "rootUri": "file:///Users/duke/.pub-cache/hosted/pub.dartlang.org/path_to_regexp-0.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "DiaBenchmark",
+      "rootUri": "../",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    }
+  ],
+  "generated": "2022-09-07T13:44:12.718551Z",
+  "generator": "pub",
+  "generatorVersion": "2.18.0"
+}

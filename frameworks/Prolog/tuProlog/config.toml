@@ -1,0 +1,15 @@
+[framework]
+name = "tuprolog"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "None"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "Vert.x"
+versus = ""

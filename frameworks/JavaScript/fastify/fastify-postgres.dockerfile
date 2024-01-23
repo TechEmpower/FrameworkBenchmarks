@@ -1,4 +1,4 @@
-FROM node:12.3.1-slim
+FROM node:18.12.1-alpine
 
 COPY ./ ./
 
@@ -6,5 +6,7 @@ RUN npm install
 
 ENV NODE_ENV production
 ENV DATABASE postgres
+
+EXPOSE 8080
 
 CMD ["node", "app.js"]

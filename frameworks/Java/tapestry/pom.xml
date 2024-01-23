@@ -14,7 +14,7 @@
         <tapestry-release-version>5.5.0-beta-3</tapestry-release-version>
         <servlet-api-release-version>3.1.0</servlet-api-release-version>
         <jaxb.version>2.4.0-b180830.0438</jaxb.version>
-        <testng-release-version>5.14.10</testng-release-version>
+        <testng-release-version>7.7.0</testng-release-version>
         <easymock-release-version>3.0</easymock-release-version>
     </properties>
 
@@ -32,7 +32,7 @@
         <dependency>
           <groupId>mysql</groupId>
           <artifactId>mysql-connector-java</artifactId>
-          <version>8.0.18</version>
+          <version>8.0.28</version>
         </dependency>
 
         <!-- This adds automatic compression of JavaScript and CSS when in production mode. -->
@@ -95,7 +95,7 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.9</version>
+            <version>2.13.4.2</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>

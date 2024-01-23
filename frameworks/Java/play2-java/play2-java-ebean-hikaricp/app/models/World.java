@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import io.ebean.DB;
 import io.ebean.Finder;
 import io.ebean.Model;
 import io.ebean.Transaction;
@@ -29,12 +30,12 @@ public class World extends Model {
         final int batchSize = 25;
         final int batches = ((worlds.size() / batchSize) + 1);
         for ( int i = 0 ; i < batches ; ++i ) {
-            final Transaction transaction = World.db().beginTransaction();
+            final Transaction transaction = DB.getDefault().beginTransaction();
             try {
                 transaction.setBatchMode(true);
                 transaction.setBatchSize(batchSize);
                 for(int j = i * batchSize ; j < Math.min((i + 1) * batchSize, worlds.size()); ++j) {
-                    World.db().update(worlds.get(j), transaction);
+                    DB.getDefault().update(worlds.get(j), transaction);
                 }
                 transaction.commit();
             } finally {

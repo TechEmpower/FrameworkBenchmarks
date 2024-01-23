@@ -1,0 +1,17 @@
+[framework]
+name = "postgrest"
+
+[main]
+urls.plaintext = "/rpc/plaintext"
+urls.json = "/rpc/json"
+urls.db = "/rpc/db"
+urls.query = "/rpc/queries?queries="
+approach = "Realistic"
+classification = "Micro"
+database = "postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Full"
+platform = "None"
+webserver = "None"
+versus = "None"

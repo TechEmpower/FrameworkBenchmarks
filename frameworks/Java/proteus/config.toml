@@ -1,0 +1,30 @@
+[framework]
+name = "proteus"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Undertow"
+webserver = "None"
+versus = ""
+
+[mysql]
+urls.db = "/db/mysql"
+urls.fortune = "/fortunes/mysql"
+approach = "Realistic"
+classification = "Micro"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Undertow"
+webserver = "None"
+versus = ""

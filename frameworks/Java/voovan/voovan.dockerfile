@@ -9,5 +9,20 @@ FROM openjdk:11.0.3-jdk-slim
 WORKDIR /voovan
 COPY --from=maven /voovan/target/voovan-bench-0.1-jar-with-dependencies.jar app.jar
 COPY --from=maven /voovan/config/framework.properties config/framework.properties
-#CMD ["java", "-server", "-Xms5g", "-Xmx5g", "--illegal-access=warn", "-XX:-RestrictContended", "-XX:+UseParallelGC", "-XX:+UseNUMA", "-cp", "./config:voovan.jar:app.jar", "org.voovan.VoovanTFB"]
-CMD ["java", "-server", "-Xms5g", "-Xmx5g", "-XX:-RestrictContended", "-XX:+UseParallelGC", "-XX:+UseNUMA", "-cp", "./config:voovan.jar:app.jar", "org.voovan.VoovanTFB"]
+
+EXPOSE 8080
+
+CMD java -DCheckTimeout=false \
+    -DThreadBufferPoolSize=1024 \
+    -DByteBufferSize=4096 \
+    -DAsyncSend=false \
+    -DAsyncRecive=false \
+    -DByteBufferAnalysis=-1\
+    -DServer=v \
+    -server -Xms2g -Xmx2g \
+    -XX:+DoEscapeAnalysis \
+    -XX:+AlwaysPreTouch \
+    -XX:-RestrictContended \
+    -XX:+UseParallelGC -XX:+UseNUMA \
+    -XX:+AggressiveOpts -XX:+UseBiasedLocking \
+    -cp ./config:voovan.jar:app.jar org.voovan.VoovanTFB

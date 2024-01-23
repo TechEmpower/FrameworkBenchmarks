@@ -1,0 +1,20 @@
+[framework]
+name = "saphir"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.fortune = "/fortunes"
+urls.update = "/bulk-updates?queries="
+urls.cached_query = "/cached-worlds?count="
+approach = "Realistic"
+classification = "Micro"
+database = "MongoDB"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "Rocket"

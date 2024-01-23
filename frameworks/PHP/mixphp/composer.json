@@ -1,0 +1,28 @@
+{
+  "name": "mix/api-skeleton",
+  "description": "API development skeleton",
+  "type": "project",
+  "homepage": "https://openmix.org/mix-php",
+  "license": "Apache-2.0",
+  "scripts": {
+    "swoole:start": "php bin/swoole.php start",
+    "workerman:start": "php bin/workerman.php start"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    },
+    "files": [
+      "src/functions.php"
+    ]
+  },
+  "require": {
+    "workerman/workerman": "^4.0",
+    "mix/vega": "~3.0",
+    "mix/database": "~3.0",
+    "monolog/monolog": "^2.3"
+  },
+  "require-dev": {
+    "swoole/ide-helper": "^4.6"
+  }
+}

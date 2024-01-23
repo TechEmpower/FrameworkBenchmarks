@@ -1,0 +1,19 @@
+[framework]
+name = "spiral"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries/"
+urls.update = "/updates/"
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Fullstack"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Full"
+platform = "RoadRunner"
+webserver = "None"
+versus = "php"

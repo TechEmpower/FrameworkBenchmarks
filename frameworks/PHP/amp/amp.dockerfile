@@ -1,23 +1,30 @@
-FROM ubuntu:19.04
+FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq git unzip php7.3 php7.3-common php7.3-cli php7.3-dev php7.3-mbstring composer curl build-essential > /dev/null
+    apt-get install -yqq git unzip wget curl build-essential \
+    php8.3-cli php8.3-mbstring php8.3-dev php8.3-xml php8.3-curl > /dev/null
 
 # An extension is required!
 # We deal with concurrencies over 1k, which stream_select doesn't support.
-
-RUN apt-get install -y php-pear php-dev libuv1-dev libuv1 > /dev/null
-RUN pecl install uv-0.2.4 > /dev/null
+RUN wget http://pear.php.net/go-pear.phar --quiet && php go-pear.phar
+#RUN apt-get install -y libuv1-dev > /dev/null
+RUN apt-get install -y libevent-dev > /dev/null
+#RUN pecl install uv-0.2.4 > /dev/null && echo "extension=uv.so" > /etc/php/8.3/cli/conf.d/uv.ini
+RUN pecl install event-3.0.8 > /dev/null && echo "extension=event.so" > /etc/php/8.3/cli/conf.d/event.ini
 
 ADD ./ /amp
 WORKDIR /amp
 
-COPY deploy/conf/* /etc/php/7.3/cli/conf.d/
+COPY deploy/conf/* /etc/php/8.3/cli/conf.d/
 
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+RUN composer install --prefer-dist --optimize-autoloader --no-dev 
+
+EXPOSE 8080
 
 CMD php /amp/vendor/bin/cluster /amp/server.php

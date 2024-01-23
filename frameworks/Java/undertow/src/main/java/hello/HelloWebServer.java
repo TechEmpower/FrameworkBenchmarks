@@ -54,11 +54,10 @@ public final class HelloWebServer {
   }
 
   static HttpHandler pathHandler(Mode mode) {
-    switch (mode) {
-      case NO_DATABASE: return noDatabasePathHandler();
-      case POSTGRESQL:  return postgresqlPathHandler();
-    }
-    throw new AssertionError(mode);
+    return switch (mode) {
+      case NO_DATABASE -> noDatabasePathHandler();
+      case POSTGRESQL -> postgresqlPathHandler();
+    };
   }
 
   static HttpHandler noDatabasePathHandler() {
@@ -267,19 +266,15 @@ public final class HelloWebServer {
 
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
-  public static final class Fortune {
-    public final int id;
-    public final String message;
-
-    public Fortune(int id, String message) {
-      this.id = id;
-      this.message = Objects.requireNonNull(message);
+  public record Fortune(int id, String message) {
+    public Fortune {
+      Objects.requireNonNull(message);
     }
   }
 
   public static final class World {
-    public int id;
-    public int randomNumber;
+    public final int id;
+    public int randomNumber; // non-final, so this class can't be a record
 
     public World(int id, int randomNumber) {
       this.id = id;

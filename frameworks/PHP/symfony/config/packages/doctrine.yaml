@@ -1,11 +1,11 @@
 doctrine:
     dbal:
         # configure these for your database server
-        driver: 'pdo_mysql'
-        server_version: '8.0'
-        charset: utf8mb4
+        driver: '%env(resolve:DATABASE_DRIVER)%'
+        server_version: '%env(resolve:DATABASE_VERSION)%'
+        charset: utf8
         default_table_options:
-            charset: utf8mb4
+            charset: utf8
             collate: utf8mb4_unicode_ci
         options:
             !php/const \PDO::ATTR_PERSISTENT: true
@@ -17,7 +17,6 @@ doctrine:
         mappings:
             App:
                 is_bundle: false
-                type: annotation
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App

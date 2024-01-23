@@ -33,11 +33,11 @@ namespace Benchmarks.Middleware
                 var rows = await db.LoadFortunesRows();
 
                 await MiddlewareHelpers.RenderFortunesHtml(rows, httpContext, _htmlEncoder);
+
+                return;
             }
-            else
-            {
-                await _next(httpContext);
-            }
+
+            await _next(httpContext);
         }
     }
 

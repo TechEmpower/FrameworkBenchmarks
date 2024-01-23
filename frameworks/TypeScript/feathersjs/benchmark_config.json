@@ -1,0 +1,30 @@
+{
+  "framework": "feathersjs",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/update?queries=",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "postgres",
+        "framework": "FeathersJS",
+        "language": "TypeScript",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "FeathersJS",
+        "notes": "",
+        "versus": "nodejs"
+      }
+    }
+  ]
+}

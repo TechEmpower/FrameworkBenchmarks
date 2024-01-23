@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "es2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "outDir": "dist",
+    "sourceMap": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "skipLibCheck": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "noImplicitAny": true,
+    "strictPropertyInitialization": false,
+    "allowJs": false,
+    "paths": {
+      "#routed/*": ["./src/app/modules/routed/*"],
+      "#service/*": ["./src/app/modules/service/*"],
+      "#utils/*": ["./src/app/utils/*"],
+    }
+  },
+  "include": [
+    "src",
+    "test"
+  ]
+}

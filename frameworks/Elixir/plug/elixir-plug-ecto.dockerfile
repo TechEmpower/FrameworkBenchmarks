@@ -1,37 +1,37 @@
-FROM elixir:1.9.4 as builder
+ARG ELIXIR="1.14.2"
+ARG ERLANG="25.1.2"
+ARG ALPINE="3.16.2"
 
-RUN apt update -y && \
-  apt install -y libicu-dev
+ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR}-erlang-${ERLANG}-alpine-${ALPINE}"
+ARG RUNNER_IMAGE="alpine:${ALPINE}"
 
-ENV MIX_ENV=prod \
-  LANG=C.UTF-8
+FROM ${BUILDER_IMAGE} AS builder
 
-RUN mkdir /app
-WORKDIR /app
+ARG MIX_ENV="prod"
+
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
+COPY mix.exs mix.lock ./
+RUN mix deps.get --force --only prod
 
 COPY config ./config
-COPY lib ./lib
-COPY mix.exs .
-COPY mix.lock .
 
-RUN mix local.hex --force
-RUN mix local.rebar --force
-RUN mix deps.get
 RUN mix deps.compile
-RUN mix release
 
-FROM debian:buster-slim AS app
+COPY lib ./lib
 
-RUN apt update -y && \
-  apt install -y openssl libicu-dev
+RUN mix release --force --path /export
 
-ENV LANG=C.UTF-8
+# start a new build stage so that the final image will only contain
+# the compiled release and other runtime necessities
+FROM ${RUNNER_IMAGE}
+
+RUN apk add --no-cache libstdc++ openssl ncurses-libs
+
+COPY --from=builder /export /opt
 
 EXPOSE 8080
 
-RUN adduser -h /home/app -D app
-WORKDIR /home/app
-COPY --from=builder /app/_build .
-
-# Run the Phoenix app
-CMD ["./prod/rel/framework_benchmarks/bin/framework_benchmarks", "start"]
+ENTRYPOINT ["/opt/bin/framework_benchmarks"]
+CMD ["start"]

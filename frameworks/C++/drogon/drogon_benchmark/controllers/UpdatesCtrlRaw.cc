@@ -49,16 +49,16 @@ void UpdatesCtrlRaw::update(
     for (auto const &w : *results)
     {
         auto randId = rand() % 10000 + 1;
-        sqlBinder << w.getValueOfId();
+        sqlBinder << w.getId();
         sqlBinder << randId;
         Json::Value world;
-        world["id"] = w.getValueOfId();
+        world["id"] = w.getId();
         world["randomnumber"] = randId;
         json.append(std::move(world));
     }
     for (auto const &w : *results)
     {
-        sqlBinder << w.getValueOfId();
+        sqlBinder << w.getId();
     }
 
     sqlBinder >> [callbackPtr,

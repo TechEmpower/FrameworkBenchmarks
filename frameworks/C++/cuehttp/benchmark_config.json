@@ -1,0 +1,25 @@
+{
+  "framework": "cuehttp",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "None",
+        "framework": "cuehttp",
+        "language": "C++",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "cuehttp",
+        "notes": "",
+        "versus": "cuehttp"
+      }
+    }
+  ]
+}

@@ -6,7 +6,7 @@ use Unix::Processors;
 use List::Util qw'min max';
 
 my @dsn = ('dbi:mysql:database=hello_world;host=tfb-database;port=3306', 'benchmarkdbuser', 'benchmarkdbpass');
-my $query = 'select randomNumber from World where id = ?';
+my $query = 'select randomNumber, id from World where id = ?';
 
 sub {
     my $env = shift;

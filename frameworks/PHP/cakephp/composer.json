@@ -5,28 +5,54 @@
     "type": "project",
     "license": "MIT",
     "require": {
-        "php": ">=7.2",
-        "cakephp/cakephp": "^4.0.2",
-        "cakephp/plugin-installer": "^1.0"
+        "php": ">=8.1",
+        "cakephp/cakephp": "^5.0.1",
+        "cakephp/migrations": "^4.0.0",
+        "cakephp/plugin-installer": "^2.0",
+        "mobiledetect/mobiledetectlib": "^3.74"
+    },
+    "require-dev": {
+        "cakephp/bake": "^3.0.0",
+        "cakephp/cakephp-codesniffer": "^5.0",
+        "cakephp/debug_kit": "^5.0.0",
+        "josegonzalez/dotenv": "^4.0",
+        "phpunit/phpunit": "^10.1.0"
+    },
+    "suggest": {
+        "markstory/asset_compress": "An asset compression plugin which provides file concatenation and a flexible filter system for preprocessing and minification.",
+        "dereuromark/cakephp-ide-helper": "After baking your code, this keeps your annotations in sync with the code evolving from there on for maximum IDE and PHPStan/Psalm compatibility.",
+        "phpstan/phpstan": "PHPStan focuses on finding errors in your code without actually running it. It catches whole classes of bugs even before you write tests for the code.",
+        "cakephp/repl": "Console tools for a REPL interface for CakePHP applications."
     },
     "autoload": {
         "psr-4": {
             "App\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Test\\": "tests/",
+            "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
+        }
+    },
     "scripts": {
-        "post-autoload-dump": "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump",
+        "post-install-cmd": "App\\Console\\Installer::postInstall",
+        "post-create-project-cmd": "App\\Console\\Installer::postInstall",
         "check": [
             "@test",
             "@cs-check"
         ],
-        "cs-check": "phpcs --colors -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
-        "cs-fix": "phpcbf --colors --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
-        "stan": "phpstan analyse src/",
-        "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan-shim:^0.11 && mv composer.backup composer.json",
+        "cs-check": "phpcs --colors -p",
+        "cs-fix": "phpcbf --colors -p",
+        "stan": "phpstan analyse",
         "test": "phpunit --colors=always"
     },
     "config": {
-        "sort-packages": true
+        "platform-check": true,
+        "sort-packages": true,
+        "allow-plugins": {
+            "cakephp/plugin-installer": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }

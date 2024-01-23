@@ -1,32 +1,16 @@
 package net.benchmark.akka.http.util
-import akka.actor.ActorSystem
 import akka.event.Logging
-import akka.stream.{ActorAttributes, ActorMaterializerSettings, Attributes, Supervision}
+import akka.stream.{ActorAttributes, Attributes, Supervision}
 import org.slf4j.{Logger, LoggerFactory}
 
 object Deciders {
-
-  def stoppingMat(name: String)(implicit system: ActorSystem): ActorMaterializerSettings = {
-    ActorMaterializerSettings(system)
-      .withSupervisionStrategy(Deciders.StoppingDecider.stoppingDecider(s"materializer_$name"))
-  }
 
   def stopping(name: String): Attributes = {
     ActorAttributes.supervisionStrategy(Deciders.StoppingDecider.stoppingDecider(s"stage_$name"))
   }
 
-  def restartingMat(name: String)(implicit system: ActorSystem): ActorMaterializerSettings = {
-    ActorMaterializerSettings(system)
-      .withSupervisionStrategy(Deciders.RestartingDecider.restartingDecider(s"materializer_$name"))
-  }
-
   def restarting(name: String): Attributes = {
     ActorAttributes.supervisionStrategy(Deciders.RestartingDecider.restartingDecider(s"stage_$name"))
-  }
-
-  def resumingMat(name: String)(implicit system: ActorSystem): ActorMaterializerSettings = {
-    ActorMaterializerSettings(system)
-      .withSupervisionStrategy(Deciders.ResumingDecider.resumingDecider(s"materializer_$name"))
   }
 
   def resuming(name: String): Attributes = {

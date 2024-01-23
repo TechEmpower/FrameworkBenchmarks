@@ -9,7 +9,7 @@ sub {
 	'benchmarkdbuser', 'benchmarkdbpass',
 	+{ qw'RaiseError 0 PrintError 0 mysql_enable_utf8 1' }
     ) || die $!;
-    state $sth = $dbh->prepare('select randomnumber from world where id = ?');
+    state $sth = $dbh->prepare('select id,randomnumber from world where id = ?');
     my $env = shift;
     my $path = $env->{PATH_INFO};
     return [200, [qw(Content-Type application/json)], [encode_json(+{ message => 'Hello, World!' })]] if $path eq '/json';

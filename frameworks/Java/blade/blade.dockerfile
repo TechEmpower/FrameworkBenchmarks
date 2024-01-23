@@ -8,4 +8,6 @@ FROM openjdk:11.0.3-jdk-slim
 WORKDIR /blade
 COPY --from=maven /blade/target/hello-blade-latest.jar app.jar
 
+EXPOSE 9000
+
 CMD ["java", "-server", "-Xms1G", "-Xmx1G", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-jar", "app.jar","--server.performance=true"]

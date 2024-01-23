@@ -1,0 +1,32 @@
+[framework]
+name = "kelp"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.db = "/db/mysql"
+urls.query = "/queries/mysql?queries="
+urls.fortune = "/fortunes/mysql"
+approach = "Realistic"
+classification = "Fullstack"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Plack"
+webserver = "Starman"
+versus = ""
+
+[mongodb]
+urls.plaintext = "/plaintext"
+urls.db = "/db/mongo"
+urls.query = "/queries/mongo?queries="
+urls.fortune = "/fortunes/mongo"
+approach = "Realistic"
+classification = "Fullstack"
+database = "MongoDB"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Plack"
+webserver = "Starman"
+versus = ""

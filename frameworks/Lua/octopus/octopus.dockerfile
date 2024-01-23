@@ -3,7 +3,7 @@ FROM buildpack-deps:xenial
 ENV LUA_VERSION="5.1"
 ENV LUA_MICRO="5"
 
-RUN apt update -yqq && apt install -yqq unzip
+RUN apt-get update -yqq && apt-get install -yqq unzip
 
 RUN wget https://github.com/LuaDist/lua/archive/$LUA_VERSION.$LUA_MICRO.tar.gz
 RUN tar xf $LUA_VERSION.$LUA_MICRO.tar.gz
@@ -48,6 +48,8 @@ RUN sed -i 's|-c nginx.conf|-c nginx.conf -g "daemon off;"|g' server.sh
 
 RUN ./server.sh install
 RUN ./server.sh build
+
+EXPOSE 8080
 
 CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'` && \
     sed -i "s|DBHOSTNAME|$DBIP|g" /octo/octopus/extensions/build/src/types.lua && \

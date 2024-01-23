@@ -1,0 +1,15 @@
+[framework]
+name = "thruster"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "None"
+platform = "Rust"
+webserver = "None"
+versus = "None"

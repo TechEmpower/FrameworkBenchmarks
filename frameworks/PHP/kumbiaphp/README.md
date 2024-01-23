@@ -6,15 +6,15 @@
 
 # KumbiaPHP Benchmarking Test
 
-This is the KumbiaPHP portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the [KumbiaPHP framework](https://kumbiaphp.com) portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [KumbiaPHP Version 1.0](https://github.com/KumbiaPHP/KumbiaPHP)
-* [PHP Version 7.3.*](http://www.php.net/) with FPM and OPCache
-* [nginx 1.15.9](http://nginx.org/)
-* [MySQL 5.7.27](https://dev.mysql.com/)
+* [KumbiaPHP Version 1.1.1](https://github.com/KumbiaPHP/KumbiaPHP)
+* [PHP Version 7.4.*](http://www.php.net/)
+* [nginx 1.17.10](http://nginx.org/)
+* [MySQL 8](https://dev.mysql.com/)
 
 ### JSON Encoding Test
 Uses the PHP standard [JSON encoder](http://www.php.net/manual/en/function.json-encode.php).
